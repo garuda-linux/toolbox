@@ -1,6 +1,7 @@
 [[Category:Applications]]
 [[Category:Lists of software]]
 [[es:List of applications (Español)/Utilities]]
+[[hu:List of applications (Magyar)/Utilities]]
 [[ja:アプリケーション一覧/ユーティリティ]]
 [[pl:List of applications (Polski)/Utilities]]
 [[zh-hans:List of applications/Utilities]]
@@ -16,36 +17,39 @@ See also [[Wikipedia:Comparison of command shells]].
 
 === Terminal emulators ===
 
-Terminal emulators show a GUI Window that contains a terminal. Most emulate Xterm, which in turn emulates VT102, which emulates typewriter. For further background information, see [[Wikipedia:Terminal emulator]].
+[[Wikipedia:Terminal emulator|Terminal emulator]] shows a [[Wikipedia:Graphical user interface|graphical user interface]] (GUI) [[Wikipedia:Window (computing)|window]] that contains a [[Wikipedia:Computer terminal#Text terminals|terminal]]. Most emulate [[xterm]], which in turn emulates [[Wikipedia:VT100#Variants|VT102]], which emulates [[Wikipedia:Computer terminal#Hard-copy terminals|teletypewriter]] (TTY).
 
-For a comprehensive list, see [[Wikipedia:List of terminal emulators]].
+For a comprehensive list, see the [[Wikipedia:List of terminal emulators|List of terminal emulators]].
 
 * {{App|[[Alacritty]]|A cross-platform, GPU-accelerated terminal emulator.|https://github.com/alacritty/alacritty|{{Pkg|alacritty}}}}
 * {{App|aterm|Xterm replacement with transparency support. It has been deprecated in favour of urxvt since 2008.|http://www.afterstep.org/aterm.php|{{AUR|aterm}}}}
-* {{App|Contour|A modern and fast terminal emulator with truly full Unicode support including ZJW (unlike 99% of TE).|https://github.com/contour-terminal/contour|{{Pkg|contour}}}}
+* {{App|Contour|A modern and fast terminal emulator with truly full Unicode support including ZJW (unlike 99% of TE) and Vi-like input modes and keybindings.|https://github.com/contour-terminal/contour|{{Pkg|contour}}}}
 * {{App|cool-retro-term|A good looking terminal emulator which mimics the old cathode display.|https://github.com/Swordfish90/cool-retro-term|{{Pkg|cool-retro-term}}}}
 * {{App|CoreTerminal|Terminal emulator based on qtermwidget. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/coreterminal|{{AUR|coreterminal}}}}
+* {{App|COSMIC Terminal|Terminal emulator for the COSMIC desktop environment.|https://github.com/pop-os/cosmic-term|{{Pkg|cosmic-terminal}}}}
 * {{App|CuteCom|A graphical serial terminal.|https://gitlab.com/cutecom/cutecom|{{AUR|cutecom}}}}
+* {{App|Cutefish Terminal|Terminal emulator for Cutefish desktop.|https://github.com/cutefishos/terminal|{{Pkg|cutefish-terminal}}}}
 * {{App|Darktile|GPU rendered terminal emulator designed for tiling window managers.|https://github.com/liamg/darktile|{{AUR|darktile}}}}
 * {{App|Deepin Terminal|Terminal emulation application for Deepin desktop.|https://www.deepin.org/en/original/deepin-terminal/|{{Pkg|deepin-terminal}}}}
 * {{App|Eterm|Terminal emulator intended as a replacement for xterm and designed for the [[Enlightenment]] desktop.|https://github.com/mej/Eterm|{{AUR|eterm}}}}
 * {{App|Extraterm|A terminal emulator with support for images in terminal, Unicode, font ligature, text zoom, etc.|https://github.com/sedwards2009/extraterm|{{AUR|extraterm-bin}}}}
 * {{App|[[foot]]|Lightweight terminal emulator for Wayland with [[w:sixel|sixel]] support.|https://codeberg.org/dnkl/foot|{{Pkg|foot}}}}
-* {{App|Ghostty|Fast, native, feature-rich terminal emulator pushing modern features.|https://ghostty.org/|{{Pkg|ghostty}}}}
+* {{App|[[Ghostty]]|Fast, native, feature-rich terminal emulator pushing modern features.|https://ghostty.org/|{{Pkg|ghostty}}}}
 * {{App|Hyper|A terminal with JS/CSS support. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/vercel/hyper|{{AUR|hyper}}}}
-* {{App|[[Wikipedia:Konsole|Konsole]]|Terminal emulator included in the [[KDE]] desktop. Part of {{Grp|kde-utilities}}.|https://konsole.kde.org/|{{Pkg|konsole}}}}
 * {{App|[[kitty]]|A modern, hackable, featureful, OpenGL based terminal emulator|https://github.com/kovidgoyal/kitty|{{Pkg|kitty}}}}
+* {{App|[[Wikipedia:Konsole|Konsole]]|Terminal emulator included in the [[KDE]] desktop. Part of {{Grp|kde-utilities}}.|https://konsole.kde.org/|{{Pkg|konsole}}}}
 * {{App|Liri Terminal|Material Design terminal for Liri.|https://github.com/lirios/terminal|{{AUR|liri-terminal}}}}
-* {{App|[[mlterm]]|A multi-lingual terminal emulator supporting various character sets and encodings, variable-width fonts and bidi rendering.|https://sourceforge.net/projects/mlterm/|{{AUR|mlterm-git}}}}
+* {{App|[[mlterm]]|A multi-lingual terminal emulator supporting various character sets and encodings, variable-width fonts and bidi rendering.|https://sourceforge.net/projects/mlterm/|{{AUR|mlterm}}}}
 * {{App|[[PuTTY]]|Highly configurable ssh/telnet/serial console program.|https://www.chiark.greenend.org.uk/~sgtatham/putty/|{{Pkg|putty}}}}
 * {{App|QMLKonsole|Terminal application for Plasma Mobile.|https://apps.kde.org/qmlkonsole/|{{Pkg|qmlkonsole}}}}
 * {{App|QTerminal|Lightweight Qt-based terminal emulator.|https://github.com/qterminal/qterminal|{{Pkg|qterminal}}}}
-* {{App|[[rxvt-unicode]] (urxvt)|Customizable terminal emulator forked from [[Wikipedia:Rxvt|rxvt]], with support for [[Perl]] extensions.|http://software.schmorp.de/pkg/rxvt-unicode.html|{{Pkg|rxvt-unicode}}}}
+* {{App|Rio|A hardware-accelerated GPU terminal emulator focusing to run in desktops and browsers.|https://rioterm.com|{{Pkg|rio}}}}
+* {{App|[[rxvt-unicode]] (urxvt)|Terminal emulator forked from [[Wikipedia:Rxvt|rxvt]], customizable with source-code [[rxvt-unicode#Installation|patches]], [[rxvt-unicode#X resources|X resources]] and [[rxvt-unicode#Perl extensions|Perl extensions]].|http://software.schmorp.de/pkg/rxvt-unicode.html|{{Pkg|rxvt-unicode}}}}
 * {{App|shellinabox|A web-based SSH Terminal|https://github.com/shellinabox/shellinabox|{{AUR|shellinabox-git}}}}
 * {{App|[[st]]|Simple terminal implementation for X.|https://st.suckless.org|{{AUR|st}}}}
 * {{App|Station|Terminal emulation features different view modes such as split vertically and horizontally, a tabbed interface, and copy and paste commands. Part of {{Grp|maui}}.|https://mauikit.org/apps/station/|{{Pkg|maui-station}}}}
 * {{App|Tabby|A terminal for a more modern age with Unicode support.|https://tabby.sh/|{{AUR|tabby}}}}
-* {{App|Terminal|Terminal emulator for GNUstep.|https://www.nongnu.org/gap/terminal/index.html|{{AUR|terminal.app}}}}
+* {{App|Terminal|Terminal emulator for GNUstep.|https://www.nongnu.org/gap/terminal/|{{AUR|terminal.app}}}}
 * {{App|Terminology|Terminal emulator by the Enlightenment project team with innovative features: file thumbnails and media play like a media player.|https://www.enlightenment.org/about-terminology|{{Pkg|terminology}}}}
 * {{App|wayst|Simple terminal emulator for Wayland and X11 with OpenGL rendering and minimal dependencies.|https://github.com/91861/wayst|{{AUR|wayst-git}}}}
 * {{App|WezTerm|GPU-accelerated cross-platform terminal emulator and multiplexer implemented in [[Rust]].|https://wezfurlong.org/wezterm/|{{Pkg|wezterm}}}}
@@ -60,6 +64,7 @@ For a comprehensive list, see [[Wikipedia:List of terminal emulators]].
 * {{App|Black Box|An elegant and customizable terminal for GNOME.|https://gitlab.gnome.org/raggesilver/blackbox|{{AUR|blackbox-terminal}}}}
 * {{App|Deepin Terminal (GTK version)|Old terminal emulation application for Deepin desktop.|https://github.com/linuxdeepin/deepin-terminal-gtk|{{Pkg|deepin-terminal-gtk}}}}
 * {{App|EasySSH|SSH Connection Manager.|https://github.com/muriloventuroso/easyssh|{{AUR|easyssh}}}}
+* {{App|evilvte|Highly customizable VTE-based terminal.|http://www.calno.com/evilvte/|{{AUR|evilvte}}}}
 * {{App|GCM|SSH and telnet connection manager.|https://kuthulu.com/gcm|{{AUR|gnome-connection-manager-bin}}}}
 * {{App|Germinal|Minimalist terminal emulator which provides a borderless maximized terminal, attached to a tmux session by default, hence providing tabs and panels.|https://www.imagination-land.org/tags/germinal.html|{{AUR|germinal}}}}
 * {{App|GNOME Console|Formerly known as King’s Cross, a simple user-friendly terminal emulator for the [[GNOME]] desktop. Part of {{Grp|gnome}}.|https://apps.gnome.org/Console/|{{Pkg|gnome-console}}}}
@@ -67,51 +72,51 @@ For a comprehensive list, see [[Wikipedia:List of terminal emulators]].
 * {{App|[[Guake]]|Drop-down terminal for the GNOME desktop.|https://guake.github.io/|{{Pkg|guake}}}}
 * {{App|kermit|A VTE-based terminal emulator that aims to be simple, fast and effective.|https://github.com/orhun/kermit|{{AUR|kermit}}}}
 * {{App|LXTerminal|Desktop independent terminal emulator for [[LXDE]].|https://github.com/lxde/lxterminal|{{Pkg|lxterminal}}}}
-* {{App|MATE Terminal|A fork of [[Wikipedia:GNOME Terminal|GNOME Terminal]] for the [[MATE]] desktop.|https://www.mate-desktop.org/|{{Pkg|mate-terminal}}}}
-* {{App|Pantheon Terminal|A super lightweight, beautiful, and simple terminal emulator. It is designed to be setup with sane defaults and little to no configuration.|https://github.com/elementary/terminal|{{Pkg|pantheon-terminal}}}}
+* {{App|MATE Terminal|A fork of [[Wikipedia:GNOME Terminal|GNOME Terminal]] for the [[MATE]] desktop.|https://github.com/mate-desktop/mate-terminal|{{Pkg|mate-terminal}}}}
+* {{App|Pantheon Terminal|A super lightweight, beautiful, and simple terminal emulator. It is designed to be set up with sane defaults and little to no configuration.|https://github.com/elementary/terminal|{{Pkg|pantheon-terminal}}}}
+* {{App|Ptyxis|Terminal for GNOME with first-class support for containers.|https://gitlab.gnome.org/chergert/ptyxis|{{Pkg|ptyxis}}}}
 * {{App|ROXTerm|Tabbed terminal emulator with a small footprint.|https://roxterm.sourceforge.net/|{{AUR|roxterm}}}}
 * {{App|sakura|Terminal emulator based on GTK and VTE.|https://www.pleyades.net/david/projects/sakura|{{Pkg|sakura}}}}
 * {{App|[[Terminator]]|Terminal emulator supporting multiple resizable terminal panels.|https://gnome-terminator.org/|{{Pkg|terminator}}}}
-* {{App|[[Termite]]|Keyboard-centric VTE-based terminal, aimed at use within a window manager with tiling and/or tabbing support. Unmaintained - the developers recommend switching to Alacritty.|https://github.com/thestinger/termite|{{AUR|termite}}}}
 * {{App|Termit|Simple VTE-based terminal emulator with Lua scripting support|https://github.com/nonstop/termit|{{AUR|termit-git}}}}
+* {{App|[[Termite]]|Keyboard-centric VTE-based terminal, aimed at use within a window manager with tiling and/or tabbing support. Unmaintained - the developers recommend switching to Alacritty.|https://github.com/thestinger/termite|{{AUR|termite}}}}
 * {{App|Tilda|Configurable drop down terminal emulator.|https://github.com/lanoxx/tilda/|{{Pkg|tilda}}}}
-* {{App|Tilix|Tiling terminal emulator for GNOME.|https://gnunn1.github.io/tilix-web/|{{Pkg|tilix}}}}
+* {{App|Tilix|Tiling terminal emulator for GNOME.|https://gnunn1.github.io/tilix-web/|{{AUR|tilix}}}}
 * {{App|tym|Lua-configurable terminal emulator|https://github.com/endaaman/tym/|{{AUR|tym}}}}
 * {{App|[[Wikipedia:Terminal (Xfce)|Xfce Terminal]]|Terminal emulator included in the [[Xfce]] desktop with support for a colorized prompt and a tabbed interface.|https://docs.xfce.org/apps/terminal/start|{{Pkg|xfce4-terminal}}}}
 
 ==== KMS-based ====
 
 The following terminal emulators are based on the [[kernel mode setting]] that could be invoked without X.
-* {{App|[[KMSCON]]|A KMS/DRM-based system console(getty) with an integrated terminal emulator for Linux operating systems.|https://github.com/dvdhrm/kmscon|{{AUR|kmscon}}}}
+* {{App|[[KMSCON]]|A KMS/DRM-based system console(getty) with an integrated terminal emulator for Linux operating systems.|https://github.com/dvdhrm/kmscon|{{Pkg|kmscon}}}}
 
 ==== framebuffer-based ====
 
 In the GNU/Linux world, the [[Wikipedia:Framebuffer|framebuffer]] can refer to a virtual device in the Linux kernel ('''fbdev''') or the virtual framebuffer system for X ('''xvfb'''). This section mainly lists the terminal emulators based on the in-kernel virtual device, i.e. '''fbdev'''.
 
-* {{App|yaft|A simple terminal emulator for living without X, with UCS2 glyphs, wallpaper and 256color support.|https://github.com/uobikiemukot/yaft|{{AUR|yaft}}}}
-
 * {{App|[[Fbterm]]|a fast FrameBuffer based TERMinal emulator for linux|https://salsa.debian.org/debian/fbterm|{{AUR|fbterm}}}}
+* {{App|yaft|A simple terminal emulator for living without X, with UCS2 glyphs, wallpaper and 256color support.|https://github.com/uobikiemukot/yaft|{{AUR|yaft}}}}
 
 === Terminal pagers ===
 
 See also [[Wikipedia:Terminal pager]].
 
-* {{App|[[less]]|A program similar to more, but with support for both forward and backward scrolling, as well as partial loading of files.|https://www.gnu.org/software/less/|{{Pkg|less}}}}
 * {{App|jless|A command-line pager for JSON data.|https://github.com/PaulJuliusMartinez/jless|{{Pkg|jless}}}}
+* {{App|[[less]]|A program similar to more, but with support for both forward and backward scrolling, as well as partial loading of files.|https://www.gnu.org/software/less/|{{Pkg|less}}}}
 * {{App|mcview|A pager with mouse and colour support. It is bundled with midnight commander.|https://midnight-commander.org/|{{Pkg|mc}}}}
-* {{App|moar|Moar is a pager. It's designed to just do the right thing without any configuration.|https://github.com/walles/moar|{{AUR|moar}}}}
+* {{App|moor|Moor is a pager. It's designed to just do the right thing without any configuration.|https://github.com/walles/moor|{{Pkg|moor}}}}
 * {{App|[[Wikipedia:More_(command)|more]]|A simple and feature-light pager. It is a part of util-linux.|https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git/about/|{{Pkg|util-linux}}}}
 * {{App|[[Wikipedia:Most_(Unix)|most]]|A pager with support for multiple windows, left and right scrolling, and built-in colour support|http://www.jedsoft.org/most/|{{Pkg|most}}}}
 * {{App|ov|Feature-rich terminal-based text viewer. It is a so-called terminal pager.|https://noborus.github.io/ov/|{{AUR|ov-bin}}}}
-* [[Vim]] can [[Vim#Vim as a pager|also be used as a pager]].
-* [[Neovim]] can [[Neovim#Use as a pager|also be used as a pager]].
+
+{{Tip|[[Vim#Vim as a pager|Vim]] and [[Neovim#Use as a pager|Neovim]] can also be used as a pager.}}
 
 === Terminal multiplexers ===
 
 See also [[Wikipedia:Terminal multiplexer]].
 
 * {{App|[[abduco]]|Tool for session attach and detach support which allows a process to run independently from its controlling terminal.|https://www.brain-dump.org/projects/abduco/|{{Pkg|abduco}}}}
-* {{App|[[Wikipedia:Byobu (software)|byobu]]|An GPLv3 licensed addon for tmux or screen. It requires a terminal multiplexer installed.|https://byobu.org/|{{Pkg|byobu}}}}
+* {{App|[[Wikipedia:Byobu (software)|byobu]]|A GPLv3 licensed addon for tmux or screen. It requires a terminal multiplexer installed.|https://byobu.org/|{{Pkg|byobu}}}}
 * {{App|[[dtach]]|Program that emulates the detach feature of [[GNU Screen]].|https://dtach.sourceforge.net/|{{AUR|dtach}}}}
 * {{App|dvtm|[[dwm]]-style window manager in the console.|https://www.brain-dump.org/projects/dvtm/|{{Pkg|dvtm}}}}
 * {{App|[[GNU Screen]]|Full-screen window manager that multiplexes a physical terminal.|https://www.gnu.org/software/screen/|{{Pkg|screen}}}}
@@ -138,49 +143,54 @@ See also [[Wikipedia:Comparison of file managers]].
 * {{App|CliFM|The command line file manager: full-featured, fast, extensible, and lightweight as hell.|https://github.com/leo-arch/clifm|{{AUR|clifm}}}}
 * {{App|ded (Directory-Editor)|The enhancement of [https://groups.google.com/g/net.sources/c/_lGkTpsqyPE/m/SwhkKsBuayIJ dired], is similar to ''Emacs Dired''.|https://invisible-island.net/ded/|{{AUR|ded}}}}
 * {{App|[[Wikipedia:Dired|Dired]] (Directory Editor)|The file manager integrated with [[Emacs]].|https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html|{{Pkg|emacs}}}}
-* {{App|fff|A simple file manager written in Bash.|https://github.com/dylanaraps/fff|{{Pkg|fff}}}}
+* {{App|fff|A simple file manager written in Bash.|https://github.com/dylanaraps/fff|{{AUR|fff}}}}
 * {{App|fm|A terminal based file manager.|https://github.com/knipferrc/fm|{{AUR|fm-git}}}}
-* {{App|joshuto|ranger-like terminal file manager written in Rust.|https://github.com/kamiyaa/joshuto|{{AUR|joshuto-git}}}}
+* {{App|joshuto|ranger-like terminal file manager written in Rust.|https://github.com/kamiyaa/joshuto|{{AUR|joshuto}}}}
 * {{App|Last File Manager|Powerful file manager written in Python 3 with a curses interface.|https://inigo.katxi.org/devel/lfm/|{{AUR|lfm}}}}
 * {{App|[[lf]]|Terminal file manager written in Go using server/client architecture.|https://github.com/gokcehan/lf|{{Pkg|lf}}}}
 * {{App|[[Midnight Commander]]|Console-based, dual-paneled file manager.|https://midnight-commander.org|{{Pkg|mc}}}}
 * {{App|nffm|"Nothing Fancy File Manager", a mouseless ncurses file manager written in C.|https://github.com/mariostg/nffm|{{AUR|nffm-git}}}}
 * {{App|[[nnn]]|Tiny, lightning fast, feature-packed file manager.|https://github.com/jarun/nnn|{{Pkg|nnn}}}}
-* {{App|Pilot|File manager that comes with the [[Alpine]] email client.|https://alpineapp.email/|{{AUR|alpine-git}}}}
+* {{App|Pilot|File manager that comes with the [[Alpine]] email client.|https://alpineapp.email/|{{AUR|alpine}}}}
 * {{App|[[Ranger]]|Console-based file manager with vi bindings, customizability, and lots of features.|https://ranger.github.io/|{{Pkg|ranger}}}}
+* {{App|sff|Simple, fast, and feature-rich terminal file manager inspired by nnn|https://codeberg.org/sylphenix/sff|{{AUR|sff}}}}
 * {{App|sfm|simple file manager for unix-like systems.|https://github.com/afify/sfm|{{AUR|sfm}}}}
 * {{App|TUIFI Manager|A cross-platform terminal-based termux-oriented file manager (and component), meant to be used with a Uni-Curses project or as is.|https://github.com/GiorgosXou/TUIFIManager|{{AUR|tuifimanager}}}}
 * {{App|[[Vifm]]|Ncurses-based two-panel file manager with vi-like keybindings.|https://vifm.info|{{Pkg|vifm}}}}
 * {{App|xplr|A hackable, minimal, fast TUI file explorer.|https://xplr.dev|{{Pkg|xplr}}}}
 * {{App|yazi|Blazing fast terminal file manager written in Rust, based on async I/O.|https://yazi-rs.github.io/|{{Pkg|yazi}}}}
+* {{App|superfile| Pretty fancy and modern terminal file manager |https://superfile.netlify.app/|{{Pkg|superfile}}}}
 
 ==== Graphical ====
 
 * {{App|Caja|The file manager for the MATE desktop.|https://github.com/mate-desktop/caja|{{Pkg|caja}}}}
 * {{App|CoreFM|Simple lightweight easy to use file manager with many features like image previews, mime-icon support, split view, auto-mounting of removable media, drag-n-drop support etc. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/corefm|{{AUR|corefm}}}}
+* {{App|COSMIC Files|File manager for the COSMIC desktop environment.|https://github.com/pop-os/cosmic-files|{{Pkg|cosmic-files}}}}
+* {{App|Cutefish File Manager|File manager for Cutefish desktop.|https://github.com/cutefishos/filemanager|{{Pkg|cutefish-filemanager}}}}
 * {{App|Deepin File Manager|File manager developed for [[Deepin]].|https://www.deepin.org/en/original/dde-file-manager/|{{Pkg|deepin-file-manager}}}}
 * {{App|[[Dolphin]]|File manager included in the KDE desktop. Part of {{Grp|kde-system}}.|https://apps.kde.org/dolphin/|{{Pkg|dolphin}}}}
 * {{App|fm|Small, general purpose file manager built using GTK and Relm, written in Rust,|https://github.com/euclio/fm|{{AUR|fm-relm4-git}}}}
 * {{App|Gentoo|A lightweight file manager for GTK.|https://sourceforge.net/projects/gentoo/|{{AUR|gentoo}}}}
 * {{App|[[GNOME Files]]|Extensible, heavyweight file manager used by default in GNOME with support for custom scripts. Part of {{Grp|gnome}}.|https://apps.gnome.org/Nautilus/|{{Pkg|nautilus}}}}
+* {{App|GWorkspace|File manager for GNUStep, a reimplementation of the NeXT workspace manager.|https://www.gnustep.org/experience/GWorkspace.html|{{AUR|gworkspace}}}}
 * {{App|Index|File manager that lets you browse your system files and applications and preview your music, text, image and video files and share them with external applications. Part of {{Grp|maui}}.|https://mauikit.org/apps/index/|{{Pkg|index-fm}}}}
 * {{App|[[Wikipedia:Konqueror|Konqueror]]|File manager and web browser for the KDE desktop. Part of {{Grp|kde-network}}.|https://apps.kde.org/konqueror/|{{Pkg|konqueror}}}}
 * {{App|Liri Files|The file manager for Liri.|https://github.com/lirios/files|{{AUR|liri-files}}}}
 * {{App|[[Nemo]]|Nemo is the file manager of the Cinnamon desktop. A fork of Nautilus.|https://projects.linuxmint.com/cinnamon/|{{Pkg|nemo}}}}
 * {{App|Pantheon Files|File browser designed for elementary OS.|https://github.com/elementary/files|{{Pkg|pantheon-files}}}}
 * {{App|PathFinder|File browser that comes with the [[Wikipedia:Fox_toolkit|FOX toolkit]].|http://fox-toolkit.org/|{{Pkg|fox}}}}
-* {{App|[[PCManFM]]|Very fast and lightweight file manager which can also optionally manage the desktop icons and background.|https://github.com/lxde/pcmanfm|{{Pkg|pcmanfm}}, {{Pkg|pcmanfm-gtk3}}}}
+* {{App|[[PCManFM]]|Very fast and lightweight file manager which can also optionally manage the desktop icons and background.|https://github.com/lxde/pcmanfm|{{Pkg|pcmanfm}}}}
 * {{App|[[PCManFM]]-Qt|Qt port of PCManFM file manager.|https://github.com/lxqt/pcmanfm-qt|{{Pkg|pcmanfm-qt}}}}
 * {{App|Peony|File manager for the UKUI desktop.|https://github.com/ukui/peony|{{Pkg|peony}}}}
 * {{App|qtFM|Small, lightweight filemanager for Linux desktops based on pure Qt.|https://qtfm.eu/|{{AUR|qtfm}}}}
 * {{App|ROX Filer|Small and fast file manager which can optionally manage the desktop background and panels.|https://rox.sourceforge.net/|{{AUR|rox}}}}
-* {{App|[[Thunar]]|File manager that can be run as a daemon with excellent start up and directory load times.|https://docs.xfce.org/xfce/thunar/start|{{Pkg|thunar}}}}
+* {{App|[[Thunar]]|File manager that can be run as a daemon with excellent start-up and directory load times.|https://docs.xfce.org/xfce/thunar/start|{{Pkg|thunar}}}}
 
 ===== Twin-panel =====
 
 Note that some of these twin-panel file managers can also be set to have only one pane.
 
-* {{App|Double Commander|File manager with two panels side by side. It is inspired by Total Commander and features some new ideas.|https://doublecmd.sourceforge.io/|{{Pkg|doublecmd-qt5}}}}
+* {{App|Double Commander|File manager with two panels side by side. It is inspired by Total Commander and features some new ideas.|https://doublecmd.sourceforge.io/|{{Pkg|doublecmd-qt5}}}}, {{Pkg|doublecmd-qt6}}
 * {{App|[[Wikipedia:GNOME Commander|Gnome Commander]]|A dual-paned file manager for the GNOME Desktop.|https://gcmd.github.io/|{{Pkg|gnome-commander}}}}
 * {{App|[[Wikipedia:Krusader|Krusader]]|Advanced twin panel (Midnight Commander style) file manager for the KDE desktop.|https://krusader.org/|{{Pkg|krusader}}}}
 * {{App|muCommander|A lightweight, cross-platform file manager with a dual-pane interface written in Java.|https://www.mucommander.com/|{{AUR|mucommander}}}}
@@ -192,7 +202,7 @@ Note that some of these twin-panel file managers can also be set to have only on
 
 === Trash management ===
 
-See [[Trash management#Trash creation]].
+See [[Trash management#Tools]].
 
 === File synchronization and backup ===
 
@@ -217,17 +227,17 @@ See also [[Synchronization and backup programs]], [[Wikipedia:Comparison of file
 
 ==== Graphical ====
 
-* {{App|Déjà Dup|Simple GTK backup program. It hides the complexity of doing backups the 'right way' (encrypted, off-site, and regular) and uses [[duplicity]] as the backend.|https://apps.gnome.org/DejaDup/|{{Pkg|deja-dup}}}}
-* {{App|[[Wikipedia:DirSync Pro|DirSync Pro]]|Small, but powerful utility for file and folder synchronization.|https://dirsyncpro.org/|{{AUR|dirsyncpro}}}}
+* {{App|Déjà Dup|Simple GTK backup program. It hides the complexity of doing backups the 'right way' (encrypted, off-site, and regular) and uses [[Restic]] as the backend.|https://apps.gnome.org/DejaDup/|{{Pkg|deja-dup}}}}
 * {{App|[[Wikipedia:Duplicati|Duplicati]]|Backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file servers.|https://www.duplicati.com/|{{AUR|duplicati-canary-bin}}}}
 * {{App|[[Wikipedia:FreeFileSync|FreeFileSync]]|Folder comparison and synchronization software that creates and manages backup copies of all your important files.|https://www.freefilesync.org/|{{AUR|freefilesync-bin}}}}
 * {{App|[[Wikipedia:grsync|grsync]]|GTK GUI for rsync to synchronize folders, files and make backups|https://www.opbyte.it/grsync/|{{Pkg|grsync}}}}
 * {{App|KBackup|Backup program with an easy to use user interface based on the KDE Frameworks. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kbackup/|{{Pkg|kbackup}}}}
 * {{App|Kup|Backup scheduler for the Plasma desktop. It uses [https://bup.github.io/ bup] and [[rsync]] as backend.|https://apps.kde.org/kup/|{{Pkg|kup}}}}
-* {{App|Pika Backup|Easy to use backup tool to keep your data safe. Uses [[Borg backup|Borg]] as backend.|https://apps.gnome.org/PikaBackup/|{{Pkg|pika-backup}}}}
+* {{App|Pika Backup|Easy-to-use backup tool to keep your data safe. Uses [[Borg backup|Borg]] as backend.|https://apps.gnome.org/PikaBackup/|{{Pkg|pika-backup}}}}
 * {{App|[[Wikipedia:SparkleShare|SparkleShare]]|File sharing and collaboration application written in C#. It can sync with any Git server over SSH.|https://www.sparkleshare.org/|{{AUR|sparkleshare}}}}
-* {{App|[[Syncthing]]|Continuous file synchronization program. It synchronizes files between two or more computers in a simple way without advanced configuration.|https://syncthing.net/|{{Pkg|syncthing}}}}
+* {{App|StepSync|File and folder synchronization tool for GNUstep.|https://www.nongnu.org/gap/stepsync/|{{AUR|stepsync.app}}}}
 * {{App|Syncany|Cloud storage and filesharing application with a focus on security and abstraction of storage.|https://www.syncany.org/|{{AUR|syncany}}}}
+* {{App|[[Syncthing]]|Continuous file synchronization program. It synchronizes files between two or more computers in a simple way without advanced configuration.|https://syncthing.net/|{{Pkg|syncthing}}}}
 * {{App|[[Wikipedia:Synkron|Synkron]]|Application that helps you keep your files and folders always updated. You can easily sync your documents, music or pictures to have their latest versions everywhere.|https://synkron.sourceforge.net/|{{AUR|synkron}}}}
 * {{App|Timeshift|A system restore tool for Linux.|https://github.com/linuxmint/timeshift|{{Pkg|timeshift}}}}
 * {{App|Vorta|Encrypted, deduplicated and compressed backups using [[Borg backup|Borg]] as backend.|https://vorta.borgbase.com/|{{Pkg|vorta}}}}
@@ -242,7 +252,7 @@ For archiving and compression command-line tools, see [[Archiving and compressio
 
 * {{App|Arca|Archiver for compressed files. Part of {{Grp|maui}}.|https://mauikit.org/apps/|{{Pkg|arca}}}}
 * {{App|[[Wikipedia:Ark (software)|Ark]]|Archiving tool included in the KDE desktop. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/ark/|{{Pkg|ark}}}}
-* {{App|Arqiver|Simple Qt archive manager based on libarchive.|https://github.com/tsujan/Arqiver|{{AUR|arqiver-git}}}}
+* {{App|Arqiver|Simple Qt archive manager based on libarchive.|https://github.com/tsujan/Arqiver|{{AUR|arqiver}}}}
 * {{App|CoreArchiver|Simple file compressing/extracting utility based on Qt and libarchive-qt. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/corearchiver|{{AUR|corearchiver}}}}
 * {{App|Deepin Archive Manager|Fast and lightweight application for creating and extracting archives.|https://github.com/linuxdeepin/deepin-compressor|{{Pkg|deepin-compressor}}}}
 * {{App|Engrampa|Archive manager for [[MATE]]|https://github.com/mate-desktop/engrampa|{{Pkg|engrampa}}}}
@@ -250,7 +260,7 @@ For archiving and compression command-line tools, see [[Archiving and compressio
 * {{App|LXQt File Archiver|Simple and lightweight desktop-agnostic Qt file archiver.|https://github.com/lxqt/lxqt-archiver|{{Pkg|lxqt-archiver}}}}
 * {{App|p7zip-gui|The GUI belonging to the p7zip software.|https://github.com/p7zip-project/p7zip|{{AUR|p7zip-gui}}}}
 * {{App|[[Wikipedia:PeaZip|PeaZip]]|Open source file and archive manager.|https://peazip.github.io/peazip-linux.html|GTK: {{AUR|peazip-gtk2-bin}}, Qt: {{AUR|peazip-qt-bin}}}}
-* {{App|[[Wikipedia:Xarchiver|Xarchiver]]|Lightweight desktop independent archive manager built with GTK.|https://github.com/ib/xarchiver|GTK 3: {{Pkg|xarchiver}}, GTK 2: {{Pkg|xarchiver-gtk2}}}}
+* {{App|[[Wikipedia:Xarchiver|Xarchiver]]|Lightweight desktop independent archive manager built with GTK.|https://github.com/ib/xarchiver|{{Pkg|xarchiver}}}}
 
 === Comparison, diff, merge ===
 
@@ -263,12 +273,13 @@ For managing ''pacnew''/''pacsave'' files, specialised tools exist. See [[Pacnew
 See {{man|1|diff}} from {{Pkg|diffutils}} and [[Core utilities#diff alternatives|its alternatives]].
 
 * {{App|colordiff|A Perl script wrapper for 'diff' that produces the same output but with pretty 'syntax' highlighting.|https://www.colordiff.org/|{{Pkg|colordiff}}}}
+* {{App|delta|A diff viewer written in Rust with syntax highlighting.|https://github.com/dandavison/delta|{{Pkg|git-delta}}}}
 * {{app|diff-highlight|Perl script to highlight changed parts within pairable lines of {{ic|diff -u}} output|https://github.com/git/git/tree/master/contrib/diff-highlight|{{pkg|git}}}}
 * {{App|diffr|A Rust utility to pretty-print diff with highlighting at word-level for ease of review.|https://github.com/mookid/diffr|{{AUR|diffr}}}}
-* {{App|ydiff|A Python wrapper to get highlighted diff output from stdin or VCS-tracked file/dirs, in either unfied or side-by-side view.|https://github.com/ymattw/ydiff|{{AUR|ydiff}}}}
-* {{App|delta|A diff viewer written in Rust with syntax highlighting.|https://github.com/dandavison/delta|{{Pkg|git-delta}}}}
 * {{App|diff-so-fancy|A diff output decorator. It does not calculate the diff, it only decorates it.|https://github.com/so-fancy/diff-so-fancy|{{Pkg|diff-so-fancy}}}}
 * {{App|difftastic|Compares files using their syntax trees|https://difftastic.wilfred.me.uk|{{Pkg|difftastic}}}}
+* {{App|Text-Diff|Perl library that perform diffs on files and record sets.|https://metacpan.org/pod/Text::Diff|{{Pkg|perl-text-diff}}}}
+* {{App|ydiff|A Python wrapper to get highlighted diff output from stdin or VCS-tracked file/dirs, in either unified or side-by-side view.|https://github.com/ymattw/ydiff|{{AUR|ydiff}}}}
 
 ==== Graphical ====
 
@@ -292,11 +303,10 @@ See {{man|1|rename}} from {{Pkg|util-linux}}.
 * {{App|f2|Cross-platform command-line tool for batch renaming files and directories quickly and safely, can also rename files based on audio tags.|https://github.com/ayoisaiah/f2|{{AUR|f2}}}}
 * {{App|nomino|A batch rename utility for developers.|https://github.com/yaa110/nomino|{{AUR|nomino}}}}
 * {{App|rename.pl|Batch renamer based on perl regex.|https://search.cpan.org/~pederst/rename/|{{Pkg|perl-rename}}}}
-* {{App|vidir|Rename and delete files and directories using your editor.|https://linux.die.net/man/1/vidir|{{AUR|vidir}}}}
+* {{App|vidir|Rename and delete files and directories using your editor.|https://man.archlinux.org/man/vidir.1|{{Pkg|moreutils}}}}
 
 ==== Graphical ====
 
-* {{App|Caja-Rename|Batch renaming extension for Caja.|https://tari.in/www/software/caja-rename|{{AUR|caja-rename}}}}
 * {{App|CoreRenamer|Simple lightweight batch file renamer application. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/corerenamer|{{AUR|corerenamer}}}}
 * {{App|[[Wikipedia:GPRename|GPRename]]|GTK batch renamer for files and directories.|https://gprename.sourceforge.net|{{Pkg|gprename}}}}
 * {{App|[[Wikipedia:KRename|KRename]]|Very powerful batch file renamer for the KDE desktop.|https://apps.kde.org/krename/|{{Pkg|krename}}}}
@@ -317,19 +327,18 @@ See {{man|1|find}} from {{Pkg|findutils}} and [[Core utilities#find alternatives
 
 * {{App|Catfish|Versatile file searching tool by Xfce, can be powered by find, locate and Zeitgeist.|https://launchpad.net/catfish-search|{{Pkg|catfish}}}}
 * {{App|CoreHunt|Easy to use fast file searching tool with categorized search and search history. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/corehunt|{{AUR|corehunt}}}}
-* {{App|Czkawka|GTK file searching utility with advanced features, it can also find similar images and videos.|https://github.com/qarmin/czkawka|{{AUR|czkawka-gui}}}}
 * {{App|GNOME Search Tool|GNOME utility to search for files, depends on [[GNOME Files]].|https://gitlab.gnome.org/Archive/gnome-search-tool|{{AUR|gnome-search-tool}}}}
 * {{App|KFind|Search tool for KDE to find files by name, type or content. Has internal search and supports locate. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kfind/|{{Pkg|kfind}}}}
 * {{App|MATE Search Tool|MATE utility to search for files.|https://github.com/mate-desktop/mate-utils|{{Pkg|mate-utils}}}}
-* {{App|regexxer|Interactive search and replace tool featuring Perl-style regular expressions.|https://regexxer.sourceforge.net/|{{Pkg|regexxer}}}}
+* {{App|regexxer|Interactive search and replace tool featuring Perl-style regular expressions.|https://regexxer.sourceforge.net/|{{AUR|regexxer}}}}
 * {{App|Searchmonkey|Powerful GUI search utility for matching regex patterns.|https://sourceforge.net/projects/searchmonkey/|{{AUR|searchmonkey-gtk}}}}
 
 ===== File indexers =====
 
 These programs index your files to allow for quick searching.
 
-* {{App|fsearch|A fast file search utility for Unix-like systems based on GTK 3.|https://github.com/cboxdoerfer/fsearch|{{AUR|fsearch-git}}}}
 * {{App|angrysearch|Linux file search tool with instant results as you type.|https://github.com/DoTheEvo/ANGRYsearch|{{AUR|angrysearch}}}}
+* {{App|fsearch|A fast file search utility for Unix-like systems based on GTK 3.|https://github.com/cboxdoerfer/fsearch|{{AUR|fsearch-git}}}}
 
 === Full-text searching ===
 
@@ -349,14 +358,18 @@ See {{man|1|grep}} from {{Pkg|grep}} and [[Core utilities#grep alternatives|its 
 
 === Code forges ===
 
-* {{App|[[GitLab]]|Project management and code hosting application.|https://gitlab.com/gitlab-org/gitlab-foss|{{Pkg|gitlab}}}}
+See also [[:Category:Git web interfaces]].
+
+* {{App|[[Forgejo]]|A lightweight software forge. Community project built on top of Gitea.|https://forgejo.org|{{Pkg|forgejo}}}}
 * {{App|[[Gitea]]|Painless self-hosted Git service. Fork of Gogs.|https://gitea.io|{{Pkg|gitea}}}}
-* {{App|Forgejo|A lightweight software forge. Community project built on top of Gitea.|https://forgejo.org|{{Pkg|forgejo}}}}
+* {{App|[[GitLab]]|Project management and code hosting application.|https://gitlab.com/gitlab-org/gitlab-foss|{{Pkg|gitlab}}}}
+* {{App|[[Radicle]]|Open source, peer-to-peer code collaboration stack built on Git.|https://radicle.xyz/|{{AUR|radicle-bin}}}}
+* {{App|[[Gogs]]|Self Hosted Git Service, written in Go.|https://gogs.io|{{AUR|gogs}}}}
 
 ==== Code forge clients ====
 
-* {{App|git-open|Open a repository website (GitHub, GitLab, Bitbucket) in your browser|https://github.com/paulirish/git-open|{{AUR|git-open}}}}
 * {{App|github-cli|GitHub's official command line tool|https://github.com/cli/cli|{{Pkg|github-cli}}}}
+* {{App|git-open|Open a repository website (GitHub, GitLab, Bitbucket) in your browser|https://github.com/paulirish/git-open|{{AUR|git-open}}}}
 * {{App|hub|Command line interface for GitHub|https://hub.github.com|{{Pkg|hub}}}}
 * {{App|hut|Command line interface for Sourcehut|https://sr.ht/~emersion/hut/|{{Pkg|hut}}}}
 * {{App|lab|A hub-like tool for GitLab|https://zaquestion.github.io/lab/|{{AUR|lab}}}}
@@ -366,11 +379,12 @@ See {{man|1|grep}} from {{Pkg|grep}} and [[Core utilities#grep alternatives|its 
 
 See also [[Wikipedia:Comparison of revision control software]].
 
-* {{App|[[Bazaar]]|Distributed version control system that helps you track project history over time and to collaborate easily with others.|https://bazaar.canonical.com/|{{AUR|bzr}}}}
+* {{App|[[Wikipedia:Breezy (software)|Breezy]]|A decentralized revision control system with support for Bazaar and Git file formats.|https://www.breezy-vcs.org/|{{Pkg|breezy}}}}
 * {{App|[[CVS]]|Concurrent Versions System, a client-server revision control system.|https://cvs.nongnu.org/|{{Pkg|cvs}}}}
 * {{App|[[Wikipedia:Darcs|Darcs]]|Distributed revision control system that was designed to replace traditional, centralized source control systems such as CVS and Subversion.|https://darcs.net/|{{Pkg|darcs}}}}
 * {{App|[[Wikipedia:Fossil (software)|Fossil]]|Distributed VCS with bug tracking, wiki, forum, and technotes.|https://www.fossil-scm.org/|{{Pkg|fossil}}}}
 * {{App|[[Git]]|Distributed revision control and source code management system with an emphasis on speed.|https://git-scm.com/|{{Pkg|git}}}}
+* {{App|[[Jujutsu]]|Modern VCS designed for ease of use, offering powerful features while maintaining full Git compatibility.|https://jj-vcs.github.io/jj/|{{Pkg|jujutsu}}}}
 * {{App|[[Mercurial]]|Distributed version control system written in Python and similar in many ways to Git.|https://www.mercurial-scm.org/|{{Pkg|mercurial}}}}
 * {{App|[[Subversion]]|Full-featured centralized version control system originally designed to be a better CVS.|https://subversion.apache.org/|{{Pkg|subversion}}}}
 
@@ -383,8 +397,8 @@ See also [[Wikipedia:List of build automation software]].
 * {{App|[[Wikipedia:Bazel (software)|Bazel]]|An open-source tool that allows for the automated building and testing of software.|https://bazel.build/|{{Pkg|bazel}}}}
 * {{App|[[Wikipedia:CMake|CMake]]|Family of tools designed to build, test and package software.|https://cmake.org/|{{Pkg|cmake}}}}
 * {{App|[[Wikipedia:Make (software)|GNU make]]|GNU make utility to maintain groups of programs.|https://www.gnu.org/software/make/|{{Pkg|make}} (dependency of {{Pkg|base-devel}})}}
-* {{App|[[Wikipedia:Meson (software)|Meson]]|Extremely fast and user friendly build system.|https://mesonbuild.com/|{{Pkg|meson}}}}
 * {{App|[[Wikipedia:Gradle|Gradle]]|Powerful build system for the JVM.|https://gradle.org/|{{Pkg|gradle}}}}
+* {{App|[[Wikipedia:Meson (software)|Meson]]|Extremely fast and user friendly build system.|https://mesonbuild.com/|{{Pkg|meson}}}}
 * {{App|Phing|PHP program designed to automate tasks of all kinds.|https://www.phing.info/|{{AUR|phing}}}}
 * {{App|[[Wikipedia:Xmake|Xmake]]|A cross-platform build utility based on Lua with a built-in package manager.|https://xmake.io/|{{Pkg|xmake}}}}
 
@@ -399,12 +413,12 @@ For PHP specific list, see [[PHP#Development tools]].
 * {{App|[[Wikipedia:Aptana#Aptana_Studio|Aptana Studio]]|IDE based on Eclipse, but geared towards web development, with support for HTML, CSS, Javascript, Ruby on Rails, PHP, Adobe AIR and others.|http://www.aptana.com/|{{AUR|aptana-studio}}}}
 * {{App|[[Wikipedia:Bluefish (software)|Bluefish]]|Powerful editor targeted towards programmers and webdevelopers, with many options to write websites, scripts and programming code. It supports many programming and markup languages.|https://bluefish.openoffice.nl/|{{Pkg|bluefish}}}}
 * {{App|[[Wikipedia:GNOME Builder|Builder]]|Tool to write and contribute to great GNOME-based applications. Part of {{Grp|gnome-extra}}.|https://apps.gnome.org/Builder/|{{Pkg|gnome-builder}}}}
-* {{App|[[Wikipedia:Code::Blocks|Code::Blocks]]|C, C++ and Fortran IDE built to meet the most demanding needs of its users. It is designed to be very extensible and fully configurable.|https://codeblocks.org/|{{Pkg|codeblocks}}}}
 * {{App|[[Wikipedia:JetBrains#CLion|CLion]]|A cross-platform IDE for C and C++.|https://www.jetbrains.com/clion/|{{AUR|clion}}}}
+* {{App|[[Wikipedia:Code::Blocks|Code::Blocks]]|C, C++ and Fortran IDE built to meet the most demanding needs of its users. It is designed to be very extensible and fully configurable.|https://codeblocks.org/|{{Pkg|codeblocks}}}}
 * {{App|[[Wikipedia:CodeLite|CodeLite]]|Open source and cross-platform C/C++/PHP and Node.js IDE written in C++ .|https://codelite.org/|{{AUR|codelite}}}}
 * {{App|[[Eclipse]]|IDE for Java, C/C++, PHP, Perl and Python with subversion support and task management.|https://www.eclipse.org/|Java EE: {{AUR|eclipse-jee-bin}}, Java: {{AUR|eclipse-java-bin}}, RCP: {{AUR|eclipse-rcp-bin}}, C/C++: {{AUR|eclipse-cpp-bin}}, PHP: {{AUR|eclipse-php-bin}}}}
 * {{App|[[Wikipedia:Eric (software)|Eric]]|Full-featured Python and Ruby IDE written in PyQt5.|https://eric-ide.python-projects.org/|{{AUR|eric}}}}
-* {{App|[[Gambas]]|IDE based on a Basic interpreter with object extensions.|https://gambas.sourceforge.net/en/main.html|{{Pkg|gambas3-ide}}}}
+* {{App|[[Gambas]]|IDE based on a Basic interpreter with object extensions.|https://gambaswiki.org/website/en/main.html|{{Pkg|gambas3-ide}}}}
 * {{App|[[Wikipedia:Geany|Geany]]|Small and lightweight IDE with many supported programming and markup languages including C, Java, PHP, HTML, Python, Perl, Pascal.|https://geany.org/|{{Pkg|geany}}}}
 * {{App|[[Wikipedia:KDevelop|KDevelop]]|Feature-full, plugin extensible IDE for C/C++ and other programming languages. Part of {{Grp|kde-applications}}.|https://kdevelop.org/|{{Pkg|kdevelop}}}}
 * {{App|[[Wikipedia:Komodo_Edit|Komodo Edit]]|A free, multi-language editor.|https://www.activestate.com/products/komodo-edit/|{{AUR|komodo-edit}}}}
@@ -426,12 +440,13 @@ For PHP specific list, see [[PHP#Development tools]].
 ==== Java IDEs ====
 
 * {{App|[[Wikipedia:BlueJ|BlueJ]]|Fully featured Java IDE used mainly for educational and beginner purposes.|https://bluej.org/|{{AUR|bluej}}}}
-* {{App|[[Wikipedia:IntelliJ IDEA|IntelliJ IDEA]]|IDE for Java, Groovy and other programming languages with advanced refactoring features.|https://www.jetbrains.com/idea/|community edition: {{Pkg|intellij-idea-community-edition}}, ultimate edition: {{AUR|intellij-idea-ultimate-edition}}}}
+* {{App|[[Wikipedia:IntelliJ IDEA|IntelliJ IDEA]]|IDE for Java, Kotlin, Scala, Groovy and other programming languages. Has advanced refactoring features.|https://www.jetbrains.com/idea/|community edition: {{Pkg|intellij-idea-community-edition}}, ultimate edition: {{AUR|intellij-idea-ultimate-edition}}}}
 
 ==== Python IDEs ====
 
-* {{App|[[Wikipedia:Ninja-IDE|Ninja-IDE]]|IDE for Python development.|https://ninja-ide.org/|{{AUR|ninja-ide}}}}
-* {{App|[[Wikipedia:PyCharm|PyCharm]]|Python IDE with support for code analysis, debugging, unit testing, version control and web development with Django.|https://www.jetbrains.com/pycharm/|community edition: {{Pkg|pycharm-community-edition}}, professional edition: {{AUR|pycharm-professional}}}}
+* {{App|[[Wikipedia:Ninja-IDE|Ninja-IDE]]|Qt5 based IDE for Python development written in Python.|https://ninja-ide.org/|{{AUR|ninja-ide}}}}
+* {{App|[[Wikipedia:PyCharm|PyCharm]]|Python IDE with support for code analysis, debugging, unit testing, version control and web development with Django.|https://www.jetbrains.com/pycharm/|community edition: {{Pkg|pycharm-community-edition}}, professional/closed source edition: {{AUR|Pycharm}}}}
+* {{App|[[Wikipedia:PyDev|PyDev]]|[[Eclipse]] IDE plug-in that adds Python support.|http://pydev.org/|{{AUR|eclipse-pydev}}}}
 * {{App|[[Wikipedia:Spyder (software)|Spyder]]|Scientific Python Development Environment providing MATLAB-like features.|https://github.com/spyder-ide/spyder|{{Pkg|spyder}}}}
 * {{App|[[Wikipedia:Thonny|Thonny]]|Python IDE for beginners.|https://thonny.org/|{{AUR|thonny}}}}
 * {{App|[[Wikipedia:Wing IDE|WingIDE]]|Proprietary Python development environment. It is fully featured and meant for professional use.|https://wingware.com/|{{AUR|wingide}}}}
@@ -443,9 +458,21 @@ For PHP specific list, see [[PHP#Development tools]].
 * {{App|[[Wikipedia:Scratch (programming language)|Scratch]]|Programming system and content development tool for educational and entertainment purposes, such as creating interactive projects and simple sprite-based games. It is used primarly by unskilled users (such as children) as an entry to [[Wikipedia:Event-driven_programming|event-driven programming]].|https://scratch.mit.edu/|{{Pkg|scratch}}}}
 *{{App|Turbowarp|A mod/fork of scratch 3 primarily to run the scratch projects faster with other features|https://turbowarp.org|{{aur|turbowarp-desktop-bin}}}}
 
+=== Language Servers ===
+
+See [[Language Server Protocol]].
+
+=== Linters ===
+
+See [[Lint]].
+
+=== Code formatters ===
+
+See [[Formatter]].
+
 === Debuggers ===
 
-See also [[D-Bus#Debugging]].
+See also language-specific tools (e.g. [[C#Useful tools]], [[Java#Development tools]]) and technology-specific tools (e.g. [[D-Bus#Debugging]]). For IDE/text editor integration, see [[Debug adapter protocol|DAP]].
 
 * {{App|Accerciser|Interactive Python accessibility explorer. It uses the AT-SPI library to inspect, examine, and interact with widgets, allowing you to check if an application is providing correct information to assistive technologies and automated testing frameworks. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Accerciser|{{Pkg|accerciser}}}}
 * {{App|Accessibility Inspector|Inspector for application accessibility tree. Part of {{Grp|kde-accessibility}}.|https://apps.kde.org/accessibilityinspector/|{{Pkg|accessibility-inspector}}}}
@@ -453,23 +480,37 @@ See also [[D-Bus#Debugging]].
 * {{App|[[Wikipedia:Data Display Debugger|Data Display Debugger]]|Graphical front-end for command-line debuggers such as GDB.|https://www.gnu.org/software/ddd/|{{AUR|ddd}}}}
 * {{App|Desed|TUI-based debugger for sed. Features variable and regex preview, setting breakpoints and stepping back and forth.|https://github.com/SoptikHa2/desed|{{AUR|desed}}}}
 * {{App|DrKonqi|Crash handler for KDE software. It also provides a GUI for {{ic|coredumpctl}}, called {{ic|drkonqi-coredump-gui}}. Part of {{Grp|plasma}}.|https://invent.kde.org/plasma/drkonqi|{{Pkg|drkonqi}}}}
+* {{App|Frida|Toolkit for inspecting and intercepting function calls.|https://frida.re/|{{Aur|python-frida-tools}}}}
 * {{App|GammaRay|Qt-application inspection and manipulation tool.|https://www.kdab.com/development-resources/qt-tools/gammaray/|{{Pkg|gammaray}}}}
+* {{App|[[Debugging#GDB|GDB]]|Native code debugger from the [[GNU]] Project.|https://www.sourceware.org/gdb/|{{Pkg|gdb}}}}
 * {{App|GDBFrontend|Easy, flexible and extensible graphical debugger.|https://github.com/rohanrhu/gdb-frontend|{{AUR|gdb-frontend-bin}}}}
-* {{App|Heaptrack|A heap memory profiler for Linux.|https://apps.kde.org/heaptrack/|{{Pkg|heaptrack}}}}
-* {{App|KCachegrind|Profile data visualization tool, used to determine the most time consuming execution parts of program. Part of {{Grp|kde-sdk}}.|https://apps.kde.org/kcachegrind/|KDE: {{Pkg|kcachegrind}}, Qt: {{Pkg|qcachegrind}}}}
 * {{App|KDbg|Graphical user interface to GDB, the GNU debugger. It provides an intuitive interface for setting breakpoints, inspecting variables, and stepping through code.|https://www.kdbg.org/|{{Pkg|kdbg}}}}
 * {{App|KDebugSettings|Application to choose which QLoggingCategory are displayed by editing the user's global {{ic|qtlogging.ini}} configuration file. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kdebugsettings/|{{Pkg|kdebugsettings}}}}
-* {{App|Massif-Visualizer|Visualizer for Valgrind Massif data files.|https://apps.kde.org/massif_visualizer/|{{Pkg|massif-visualizer}}}}
+* {{App|[[Wikipedia:LLDB (debugger)|LLDB]]|Modern native code debugger from the [[LLVM]] project.|https://lldb.llvm.org/|{{Pkg|lldb}}}}
 * {{App|[[Wikipedia:Nemiver|Nemiver]]|Easy to use standalone C/C++ debugger (GDB front-end) that integrates well in the GNOME environment.|https://wiki.gnome.org/Apps/Nemiver|{{AUR|nemiver}}}}
 * {{App|scanmem|Debugging utility designed to isolate the address of an arbitrary variable in an executing process.|https://github.com/scanmem/scanmem|CLI: {{Pkg|scanmem}}, GUI: {{Pkg|gameconqueror}}}}
+* {{App|[[Valgrind]]|Tool to help find memory-management problems in programs.|https://valgrind.org/|{{Pkg|valgrind}}}}
+
+=== Profilers and trace recorders ===
+
+See [[Debugging/Profiling]] for background.
+
+* {{App|[[Wikipedia:gprof|gprof]]|Profile analysis tool for programs instrumented with [[GCC]].|https://sourceware.org/binutils/docs/gprof/|{{Pkg|binutils}}}}
+* {{App|Heaptrack|A heap memory profiler for Linux.|https://apps.kde.org/heaptrack/|{{Pkg|heaptrack}}}}
+* {{App|Hotspot|GUI for exploring profile data collected with {{Pkg|perf}}.|https://github.com/KDAB/hotspot|{{AUR|hotspot}}}}
+* {{App|KCachegrind|GUI for exploring profile data collected with Valgrind's cachegrind tool. Part of {{Grp|kde-sdk}}.|https://apps.kde.org/kcachegrind/|KDE: {{Pkg|kcachegrind}}, Qt: {{Pkg|qcachegrind}}}}
+* {{App|Massif-Visualizer|Visualizer for Valgrind Massif data files.|https://apps.kde.org/massif_visualizer/|{{Pkg|massif-visualizer}}}}
+* {{App|[[perf]]|Official CLI for the Linux kernel's ''perf_events'' profiling subsystem.|https://perfwiki.github.io/|{{Pkg|perf}}}}
 * {{App|Sysprof|Profiling tool that helps in finding the functions in which a program uses most of its time. Part of {{Grp|gnome-extra}}.|https://apps.gnome.org/Sysprof/|{{Pkg|sysprof}}}}
+
+{{Tip|Some of [[Valgrind]]'s built-in tools, such as [https://valgrind.org/docs/manual/cg-manual.html Cachegrind] and [https://valgrind.org/docs/manual/cl-manual.html Callgrind], provide profiling functionality.}}
 
 === Lexing and parsing ===
 
 [[Wikipedia:Lex (software)|Lex]] and [[Wikipedia:Yacc|Yacc]] are part of POSIX.
 
-* {{App|[[Wikipedia:Flex (lexical analyser generator)|flex]]|A tool for generating text-scanning programs, alternative to Lex.|https://github.com/westes/flex|{{Pkg|flex}}}}
 * {{App|[[Wikipedia:Berkeley Yacc|Berkeley Yacc]]|Berkeley reimplementation of the Unix parser generator Yacc.|https://invisible-island.net/byacc/|{{Pkg|byacc}}}}
+* {{App|[[Wikipedia:Flex (lexical analyser generator)|flex]]|A tool for generating text-scanning programs, alternative to Lex.|https://github.com/westes/flex|{{Pkg|flex}}}}
 * {{App|[[Wikipedia:GNU bison|GNU Bison]]|The GNU general-purpose parser generator, alternative to ''byacc''.|https://www.gnu.org/software/bison/|{{Pkg|bison}}}}
 
 And then there are also:
@@ -485,16 +526,17 @@ These programs provide ready-made user interfaces for alerting the user or promp
 
 * {{App|[[Wikipedia:Dialog (software)|Dialog]]|TUI widgets built using [[Wikipedia:ncurses|ncurses]].|https://invisible-island.net/dialog/|{{Pkg|dialog}}}}
 * {{App|KDialog|Qt-based GUI prompts by [[KDE]]. Part of {{Grp|kde-utilities}}.|https://invent.kde.org/utilities/kdialog|{{Pkg|kdialog}}}}
-* {{App|yad (Yet Another Dialog)|Zenity fork with more dialog types and support for custom buttons.|https://github.com/v1cont/yad|{{Pkg|yad}}}}
 * {{App|Qarma|Zenity clone for Qt5.|https://github.com/luebking/qarma|{{AUR|qarma-git}}}}
+* {{App|yad (Yet Another Dialog)|Zenity fork with more dialog types and support for custom buttons.|https://github.com/v1cont/yad|{{Pkg|yad}}}}
 * {{App|[[Wikipedia:Zenity|Zenity]]|GTK-based GUI prompts by [[GNOME]].|https://gitlab.gnome.org/GNOME/zenity|{{Pkg|zenity}}}}
 
 === GUI builders ===
 
 * {{App|App Icon Preview|Tool for designing applications icons which target the GNOME desktop.|https://gitlab.gnome.org/World/design/app-icon-preview|{{Pkg|app-icon-preview}}}}
+* {{App|[[Wikipedia:Glade Interface Designer#Cambalache|Cambalache]]|A RAD tool for GTK 4 and 3 with a clear MVC design and data model first philosophy. (Work in progress)|https://gitlab.gnome.org/jpu/cambalache|{{AUR|cambalache}}}}
 * {{App|Elastic|Design and export spring physics-based animations to use with libadwaita.|https://apps.gnome.org/Elastic/|{{Pkg|elastic}}}}
 * {{App|[[Wikipedia:FLUID|FLUID]]|FLTK GUI designer.|https://www.fltk.org/|{{Pkg|fltk}}}}
-* {{App|[[Wikipedia:Glade Interface Designer|Glade]]|Create or open user interface designs for GTK applications. Part of {{Grp|gnome-extra}}.|https://glade.gnome.org/|{{Pkg|glade}}}}
+* {{App|[[Wikipedia:Glade Interface Designer|Glade]]|Create or open user interface designs for GTK applications. Part of {{Grp|gnome-extra}}. (GTK 3 only)|https://glade.gnome.org/|{{Pkg|glade}}}}
 * {{App|Icon Library|Find the right icon to use on your GNOME application.|https://gitlab.gnome.org/World/design/icon-library|{{Pkg|icon-library}}}}
 * {{App|KUIViewer|Quick viewer for Qt Designer UI File. Part of {{Grp|kde-sdk}}.|https://apps.kde.org/kuiviewer/|{{Pkg|kde-dev-utils}}}}
 * {{App|Qt Widget Designer|Tool for designing and building graphical user interfaces (GUIs) with Qt Widgets.|https://doc.qt.io/qt-6/qtdesigner-manual.html|{{Pkg|qt6-tools}}}}
@@ -505,8 +547,9 @@ These programs provide ready-made user interfaces for alerting the user or promp
 
 See also [[Wikipedia:Comparison of hex editors]].
 
-* {{App|Bless|High quality, full featured hex editor.|https://web.archive.org/web/20170503150524/http://home.gna.org/bless/|{{Pkg|bless}}}}
+* {{App|Bless|High quality, full featured hex editor.|https://github.com/afrantzis/bless|{{AUR|bless}}}}
 * {{App|GHex|Hex editor for GNOME, which allows the user to load data from any file, view and edit it in either hex or ascii. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Ghex|{{Pkg|ghex}}}}
+* {{App|heh|Cross-platform terminal hex editor, it aims to replicate some of the look of hexyl while functionally acting like a terminal UI version of GHex.|https://github.com/ndd7xv/heh|{{Pkg|heh}}}}
 * {{App|hyx|A minimalistic (< 2300 lines of C) but powerful (hex/ASCII, insert/replace/delete, copy/paste, undo/redo, search, colors, vim-inspired controls) Linux terminal hex editor.|https://yx7.cc/code/|{{AUR|hyx}}}}
 * {{App|ImHex|A hex editor for reverse engineers, programmers, and people who value their retinas when working at 3 AM.|https://imhex.werwolv.net/|{{AUR|imhex}}}}
 * {{App|Okteta|KDE hex editor for viewing and editing the raw data of files.|https://apps.kde.org/okteta/|{{Pkg|okteta}}}}
@@ -522,9 +565,10 @@ See also [[Wikipedia:Hex dump]].
 * {{App|hex|Modern colored hex dump. Binary name is {{ic|hx}}.|https://github.com/sitkevij/hex|{{Pkg|hex}}}}
 * {{App|hexd|Modern colored hex dump.|https://github.com/FireyFly/hexd|{{AUR|hexd}}}}
 * {{App|hexdump|Basic hex dump from the standard package util-linux.|https://github.com/util-linux/util-linux|{{Pkg|util-linux}}}}
-* {{App|hexyl|Modern colored hex dump.|https://github.com/sharkdp/hexyl|{{Pkg|hexyl}}}}
 * {{App|hexxy|Modern colored hex dump.|https://github.com/sweetbbak/hexxy|{{AUR|hexxy-git}}}}
+* {{App|hexyl|Modern colored hex dump.|https://github.com/sharkdp/hexyl|{{Pkg|hexyl}}}}
 * {{App|huxdemp|Advanced and colored version of hexdump using a pager. Binary name is {{ic|huxd}}.|https://github.com/kiedtl/huxdemp|{{AUR|huxdemp-git}} (git), {{AUR|huxdemp}} (bin), {{AUR|hxd}} (bin)}}
+* {{App|od|Dump files in octal and other formats.|https://www.gnu.org/software/coreutils/|{{Pkg|coreutils}}}}
 * {{App|phd|Colored hex dump. {{ic|pwn phd}}.|https://docs.pwntools.com/en/stable/commandline.html#pwn-phd|{{Pkg|python-pwntools}}}}
 * {{App|ugrep|Grep alternative with a hex dump feature. {{ic|ug --hexdump}}.|https://github.com/Genivia/ugrep|{{Pkg|ugrep}}}}
 * {{App|unidump|hexdump for Unicode data.|https://github.com/Codepoints/unidump|{{AUR|unidump}}, {{AUR|unidump-git}}}}
@@ -535,16 +579,16 @@ See also [[Wikipedia:Hex dump]].
 * {{App|Emblem|Generate projects avatars for your Matrix rooms and git forges from a symbolic icon.|https://apps.gnome.org/Emblem/|{{Pkg|emblem}}}}
 * {{App|KImageMapEditor|Editor of image maps embedded inside HTML files, based on the <map> tag. Part of {{Grp|kde-graphics}}.|https://apps.kde.org/kimagemapeditor/|{{Pkg|kimagemapeditor}}}}
 * {{App|Share Preview|Preview and debug websites metadata tags for social media share.|https://apps.gnome.org/SharePreview/|{{Pkg|share-preview}}}}
-* {{App|Webfont Kit Generator|Utility to generate WOFF, WOFF2 and the necessary CSS boilerplate from non-web font formats (OTF & TTF).|https://apps.gnome.org/WebfontKitGenerator/|{{Pkg|webfont-kit-generator}}}}
+* {{App|Webfont Bundler|Utility to generate WOFF, WOFF2 and the necessary CSS boilerplate from non-web font formats (OTF & TTF).|https://apps.gnome.org/WebfontKitGenerator/|{{Pkg|webfont-kit-generator}}}}
 
 === JSON tools ===
 
 * {{App|gron|gron transforms JSON into discrete assignments to make it easier to grep.|https://github.com/tomnomnom/gron|{{Pkg|gron}}}}
-* {{App|jid|JSON incremental digger|https://github.com/simeji/jid|{{AUR|jid}}}}
+* {{App|jid|JSON incremental digger.|https://github.com/simeji/jid|{{AUR|jid}}}}
 * {{App|jo|A command to create JSON.|https://github.com/jpmens/jo|{{AUR|jo-git}}}}
-* {{App|jq|Command-line JSON processor|https://stedolan.github.io/jq/|{{Pkg|jq}}}}
+* {{App|[[Wikipedia:Jq_(programming_language)|jq]]|jq is a lightweight and flexible command-line JSON processor.|https://jqlang.org/|{{Pkg|jq}}}}
 * {{App|jshon|A JSON parser for the shell.|http://kmkeen.com/jshon/|{{Pkg|jshon}}}}
-* the [[Elvish]] shell has built-in support for JSON
+* The [[Elvish]] shell has built-in support for JSON.
 
 === Literate programming ===
 
@@ -567,13 +611,14 @@ See also [[Wikipedia:List of Unified Modeling Language tools]].
 * {{App|[[Wikipedia:Umbrello UML Modeller|Umbrello]]|Unified Modelling Language (UML) diagram program based on KDE Technology. Part of {{Grp|kde-sdk}}.|https://apps.kde.org/umbrello|{{Pkg|umbrello}}}}
 * {{App|[[Wikipedia:UMLet|UMLet]]|UML tool with a simple user interface: draw UML diagrams fast, build sequence and activity diagrams from plain text, export diagrams to eps, pdf, jpg, svg, and clipboard, share diagrams using Eclipse, and create new, custom UML elements.|https://umlet.com/|{{AUR|umlet}}}}
 * {{App|UML/INTERLIS-editor|Facilitate the application of the model driven approach to a greater number of users.|http://www.umleditor.org/|{{AUR|umleditor}}}}
-* {{App|Violet|Very easy to learn and use UML editor that draws nice-looking diagrams.|https://sourceforge.net/projects/violet/|{{AUR|violetumleditor}}}}
+* {{App|Violet|Very easy to learn; use UML editor that draws nice-looking diagrams.|https://sourceforge.net/projects/violet/|{{AUR|violetumleditor}}}}
 
 === API documentation browsers ===
 
 * {{App|Biblioteca|API documentation viewer for GNOME.|https://apps.gnome.org/Biblioteca/|{{Pkg|biblioteca}}}}
-* {{App|[[Wikipedia:GNOME Devhelp|Devhelp]]|Developer tool for browsing and searching API documentation. Part of {{Grp|gnome-extra}}.|https://apps.gnome.org/Devhelp/|{{Pkg|devhelp}}}}
+* {{App|[[Wikipedia:GNOME Devhelp|Devhelp]]|Developer tool for browsing and searching API documentation.|https://gitlab.gnome.org/Archive/devhelp|{{Pkg|devhelp}}}}
 * {{App|Doc Browser|API documentation browser with support for DevDocs and Hoogle.|https://github.com/qwfy/doc-browser|{{AUR|doc-browser-git}}}}
+* {{App|Manuals|Developer documentation browser for GNOME. Part of {{Grp|gnome-extra}}.|https://apps.gnome.org/Manuals/|{{Pkg|manuals}}}}
 * {{App|Qt Assistant|Tool for viewing on-line documentation in Qt help file format.|https://doc.qt.io/qt-6/qtassistant-index.html|{{Pkg|qt6-tools}} + {{Pkg|litehtml}}}}
 * {{App|quickDocs|Fast developer docs reader for reading Valadoc and DevDocs.|https://github.com/mdh34/quickDocs|{{AUR|quickdocs}}}}
 * {{App|Zeal|Offline API documentation browser for software developers.|https://zealdocs.org/|{{Pkg|zeal}}}}
@@ -602,20 +647,19 @@ See also [[Wikipedia:List of game engines]].
 * {{App|[[Allegro]]|A cross-platform library mainly aimed at video game and multimedia programming. |https://liballeg.org/|{{Pkg|allegro}}}}
 * {{App|GDevelop|Game creator designed to be used by everyone - no programming skills required.|https://gdevelop-app.com/|{{AUR|gdevelop}}}}
 * {{App|[[Godot]]|Advanced, feature-packed, multi-platform 2D and 3D game engine. Create games with ease, using Godot's unique approach to game development.|https://godotengine.org/|{{Pkg|godot}}}}
-* {{App|LibreSprite|Animated sprite editor and pixel art tool lets you create 2D animations for videogames.|https://github.com/LibreSprite/LibreSprite|{{AUR|libresprite}}}}
+* {{App|LibreSprite|Animated sprite editor and pixel art tool lets you create 2D animations for videogames.|https://github.com/LibreSprite/LibreSprite|{{Pkg|libresprite}}}}
 * {{App|LÖVE|Lua based game development environment.|https://love2d.org/|{{Pkg|love}}}}
 * {{App|Pixelorama|2D sprite editor with animation support, made by Orama Interactive in the Godot Engine using GDScript.|https://orama-interactive.itch.io/pixelorama|{{AUR|pixelorama}}}}
 * {{App|TIC-80|Fantasy computer/console.|https://tic80.com/|{{AUR|tic-80-git}}}}
 * {{App|Tiled|General purpose 2D level editor with powerful tile map editing features. It is built to be easy to use and is suitable for many type of games.|https://www.mapeditor.org/|{{Pkg|tiled}}}}
 * {{App|[[Unity3D|Unity]]|Unity is a flexible and powerful development platform for creating multi-platform 3D and 2D games. Proprietary, but a free version is available for certain use-cases (see [https://store.unity.com/compare-plans here] for more details).|https://unity3d.com/unity|{{AUR|unityhub}}}}
+* {{App|[[Unreal Engine 5|Unreal Engine]]|A proprietary 3D computer graphics game engine developed by Epic Games|https://www.unrealengine.com|{{AUR|unreal-engine}}}}
 
 === Repository managers ===
 
-{{Style|Redirects to company blogs should not be here.}}
-
-* {{App|Nexus 2|Nexus 2 Repository Manager (OSS)|https://www.sonatype.com/nexus-repository-oss|{{AUR|nexus}}}}
-* {{App|Nexus 3|Nexus 3 Repository OSS|https://www.sonatype.com/nexus-repository-oss|{{AUR|nexus-oss}}}}
-* {{App|Artifactory|Artifactory is an advanced Binary Repository Manager for use by build tools, dependency management tools and build servers|https://bintray.com/jfrog/product/JFrog-Artifactory-Oss/view|{{AUR|artifactory-oss}}}}
+* {{App|Nexus 2|Nexus 2 Repository Manager (OSS)|https://www.sonatype.com/nexus-repository-oss{{Dead link|2025|08|15|status=404}}|{{AUR|nexus}}}}
+* {{App|Nexus 3|Nexus 3 Repository OSS|https://www.sonatype.com/nexus-repository-oss{{Dead link|2025|08|15|status=404}}|{{AUR|nexus-oss}}}}
+* {{App|Artifactory|Artifactory is an advanced Binary Repository Manager for use by build tools, dependency management tools and build servers|https://jfrog.com/artifactory/|{{AUR|artifactory-oss}}}}
 
 == Text input ==
 
@@ -627,33 +671,34 @@ See also [[Wikipedia:List of game engines]].
 * {{App|GNOME Characters|Character map application for GNOME. Part of {{Grp|gnome}}.|https://apps.gnome.org/Characters/|{{Pkg|gnome-characters}}}}
 * {{App|[[Wikipedia:GNOME Character Map|gucharmap]]|GTK 3 character selector for GNOME.|https://wiki.gnome.org/Apps/Gucharmap|{{Pkg|gucharmap}}}}
 * {{App|Hieroglyphic|Search through over 1000 different LaTeX symbols by sketching.|https://apps.gnome.org/Hieroglyphic/|{{Pkg|hieroglyphic}}}}
+* {{App|jome|A fast, keyboard-centric emoji picker with user-defined keywords and Emoji 15.1 support.|https://github.com/eepp/jome/|{{AUR|jome}}}}
 * {{App|KCharSelect|Tool to select special characters from all installed fonts and copy them into the clipboard. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kcharselect/|{{Pkg|kcharselect}}}}
 * {{App|Plasma Emoji Selector|An emoji picker for Plasma. Run with {{ic|plasma-emojier}}. Part of {{Grp|plasma}}.|https://kde.org/plasma-desktop/|{{Pkg|plasma-desktop}}}}
 * {{App|r-clisymbols|Unicode Symbols at the R Prompt.|https://cran.r-project.org/package{{=}}clisymbols|{{AUR|r-clisymbols}}}}
 * {{App|rofimoji|Emoji, unicode and general character picker for rofi and rofi-likes|https://github.com/fdw/rofimoji|{{Pkg|rofimoji}}}}
 * {{App|Smile|An emoji picker with custom tags support and localization.|https://mijorus.it/projects/smile/|{{AUR|smile}}}}
-* {{App|unipicker|CLI utility for searching unicode characters by description and copy them to the clipboard|https://github.com/jeremija/unipicker|{{AUR|unipicker}}}}
+* {{App|unipicker|CLI utility for searching unicode characters by description and copy them to the clipboard.|https://github.com/jeremija/unipicker|{{AUR|unipicker}}}}
 
 === On-screen keyboards ===
 
 * {{App|CellWriter|Grid-entry handwriting recognition input panel.|https://github.com/risujin/cellwriter|{{AUR|cellwriter}}}}
 * {{App|CoreKeyboard|Simple X11 based Qt virtual keyboard with word suggestions. Part of C-Suite.|https://cubocore.gitlab.io/|{{AUR|corekeyboard}}}}
-* {{App|eekboard|Easy to use virtual keyboard toolkit.|https://github.com/ueno/eekboard|{{AUR|eekboard}}}}
-* {{App|Maliit Keyboard|Virtual keyboard useful for KDE Plasma-Wayland|https://maliit.github.io/|{{Pkg|maliit-keyboard}}}}
 * {{App|Onboard|Onscreen keyboard useful for tablet PC users and for mobility impaired users.|https://launchpad.net/onboard|{{Pkg|onboard}}}}
+* {{App|Plasma Keyboard|Virtual keyboard useful for KDE Plasma-Wayland.|https://kde.org/plasma-desktop/|{{Pkg|plasma-keyboard}}}}
+* {{App|qt6-virtualkeyboard|Onscreen keyboard by the Qt project.|https://www.qt.io|{{Pkg|qt6-virtualkeyboard}}}}
 * {{App|qtvkbd|Virtual keyboard written in Qt, a fork of kvkbd.|https://github.com/Alexander-r/qtvkbd|{{AUR|qtvkbd}}}}
 * {{App|QVKbd|Virtual keyboard written in Qt.|https://github.com/KivApple/qvkbd|{{AUR|qvkbd}}}}
 * {{App|Squeekboard|GTK 3 virtual keyboard for [[Wayland]], written in Rust/C.|https://gitlab.gnome.org/World/Phosh/squeekboard|{{Pkg|squeekboard}}}}
 * {{App|theShell On Screen Keyboard|Touchscreen keyboard for theShell.|https://github.com/vicr123/ts-kbd|{{AUR|ts-kbd}}}}
-* {{App|xvkbd|Virtual keyboard for X window system.|http://t-sato.in.coocan.jp/xvkbd/|{{AUR|xvkbd}}}}
 * {{App|wvkbd|Virtual keyboard for Wayland and wlroots.|https://github.com/jjsullivan5196/wvkbd/|{{AUR|wvkbd}}}}
+* {{App|xvkbd|Virtual keyboard for X window system.|http://t-sato.in.coocan.jp/xvkbd/|{{AUR|xvkbd}}}}
 
 === Keyboard layout switchers ===
 
 * {{App|fbxkb|A NETWM compliant keyboard indicator and switcher. It shows a flag of current keyboard in a systray area and allows you to switch to another one.|https://fbxkb.sourceforge.net/|{{AUR|fbxkb}}}}
-* {{App|xxkb|A lightweight keyboard layout indicator and switcher.|https://sourceforge.net/projects/xxkb/|{{Pkg|xxkb}}}}
 * {{App|gxkb|X11 keyboard layout indicator and switcher.|https://github.com/zen-tools/gxkb|{{Pkg|gxkb}}}}
 * {{App|qxkb|A keyboard switcher written in Qt.|https://github.com/disels/qxkb|{{AUR|qxkb}}}}
+* {{App|xxkb|A lightweight keyboard layout indicator and switcher.|https://sourceforge.net/projects/xxkb/|{{Pkg|xxkb}}}}
 
 === Keybinding managers ===
 
@@ -682,12 +727,11 @@ See [[Disk cloning]].
 See also [[udisks#Mount helpers]].
 
 * {{App|9mount|Mount 9p filesystems.|http://sqweek.net/code/9mount/|{{AUR|9mount}}}}
-* {{App|cryptmount|Mount an encrypted file system as a regular user.|https://sourceforge.net/projects/cryptmount/|{{AUR|cryptmount}}}}
+* {{App|cryptmount|Mount an encrypted file system as a regular user.|https://github.com/rwpenney/cryptmount/|{{AUR|cryptmount}}}}
 * {{App|KDiskFree|Displays information about hard disks and other storage devices. It also allows to mount and unmount drives and view them in a file manager. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kdf/|{{Pkg|kdf}}}}
 * {{App|ldm|A lightweight daemon that mounts drives automagically using ''udev''|https://github.com/LemonBoy/ldm|{{AUR|ldm}}}}
 * {{App|pmount|Mount ''source'' as a regular user to an automatically created destination {{ic|/media/''source_name''}}.|[[Debian:pmount]]|{{AUR|pmount}}}}
 * {{App|pmount-safe-removal|Mount removable devices as regular user with safe removal|https://mywaytoarch.tumblr.com/post/13111098534/pmount-safe-removal-of-usb-device|{{AUR|pmount-safe-removal}}}}
-* {{App|udevil|Mounts removable devices as a regular user, show device info, and monitor device changes. Only depends on ''udev'' and glib.|https://ignorantguru.github.io/udevil|{{AUR|udevil}}}}
 * {{App|ws|Mount Windows network shares ([[Wikipedia:Server Message Block|CIFS]] and [[Wikipedia:Virtual file system|VFS]]).|https://sourceforge.net/projects/winshares/|{{AUR|ws}}}}
 * {{App|zulucrypt|A GUI frontend for cryptsetup to create, manage and mount encrypted volumes; supports encfs as well|https://mhogomchungu.github.io/zuluCrypt/|{{AUR|zulucrypt}}}}
 
@@ -728,7 +772,7 @@ See also [[Securely wipe disk]].
 * {{App|duff|A command-line utility for quickly finding duplicates in a given set of files.|https://github.com/elmindreda/duff|{{AUR|duff}}}}
 * {{App|fclones|Very fast duplicate file Finder written in rust.|https://github.com/pkolaczk/fclones|{{Pkg|fclones}}}}
 * {{App|[[Wikipedia:fdupes|fdupes]]|Program for identifying or deleting duplicate files residing within specified directories.|https://github.com/adrianlopezroche/fdupes|{{Pkg|fdupes}}}}
-* {{App|jdupes|Identify and take actions upon duplicate files.|https://www.jdupes.com/|{{AUR|jdupes}}}}
+* {{App|jdupes|Identify and take actions upon duplicate files.|https://www.jdupes.com/{{Dead link|2025|08|15|status=SSL error}}|{{AUR|jdupes}}}}
 * {{App|rdfind|Command line tool that finds duplicate files. It compares files based on their content.|https://github.com/pauldreik/rdfind|{{Pkg|rdfind}}}}
 * {{App|rmlint|Tool to quickly find (and optionally remove) duplicate files and other lint.|https://github.com/sahib/rmlint|{{AUR|rmlint-git}}}}
 
@@ -738,7 +782,6 @@ See also [[Securely wipe disk]].
 * {{App|Czkawka GUI|Simple, fast and free app to remove unnecessary files from your computer. Looks similar to FSlint.|https://github.com/qarmin/czkawka|{{AUR|czkawka-gui}}}}
 * {{App|dupeGuru|GUI tool to find duplicate files in a system.|https://dupeguru.voltaicideas.net/|{{AUR|dupeguru}}}}
 * {{App|File Shredder|File deletion program designed to permanently remove sensitive files from your computer, enhancing data privacy.|https://apps.gnome.org/Raider/|{{Pkg|raider}}}}
-* {{App|FSlint|A utility to find and clean various forms of lint on a filesystem.|https://www.pixelbeat.org/fslint/|{{AUR|fslint}}}}
 * {{App|Shredder|Graphical user interface for rmlint.|https://github.com/sahib/rmlint|{{AUR|rmlint-shredder-git}}}}
 * {{App|Sweeper|System cleaning utility for KDE. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/sweeper/|{{Pkg|sweeper}}}}
 
@@ -759,9 +802,9 @@ See also [[Wikipedia:List of tools to create Live USB systems]].
 * {{App|SUSE Studio ImageWriter|Utility for writing raw disk images and hybrid ISOs to USB keys.|https://github.com/openSUSE/imagewriter|{{AUR|imagewriter}}}}
 * {{App|[[Wikipedia:UNetbootin|UNetbootin]]|Installs Linux/BSD distributions to a partition or USB drive.|https://unetbootin.github.io/|{{AUR|unetbootin}}}}
 * {{App|Usbimager|Minimal GUI application to write compressed disk images to USB drives.|https://gitlab.com/bztsrc/usbimager|{{AUR|usbimager}}}}
+* {{App|[[Ventoy]]|A New Bootable USB Solution.|https://www.ventoy.net/|{{AUR|ventoy}}}}
+* {{App|windows2usb|Windows ISO to Flash Drive burning utility for Linux with MBR/GPT, BIOS/UEFI, FAT32/NTFS support.|https://github.com/ValdikSS/windows2usb|{{AUR|windows2usb-git}}}}
 * {{App|WoeUSB|Simple tool to create USB stick windows installer from an ISO image or a real DVD. (Fork of WinUSB).|https://github.com/WoeUSB/WoeUSB|{{AUR|woeusb}}, {{AUR|woeusb-ng}}}}
-* {{App|windows2usb|Windows ISO to Flash Drive burning utility for Linux with MBR/GPT, BIOS/UEFI, FAT32/NTFS support|https://github.com/ValdikSS/windows2usb|{{AUR|windows2usb-git}}}}
-* {{App|[[Ventoy]]|A New Bootable USB Solution|https://www.ventoy.net/|{{AUR|ventoy}}}}
 
 == System ==
 
@@ -793,10 +836,12 @@ See also [[:Category:Monitoring]].
 * {{App|[[Conky]]|Lightweight, scriptable system monitor.|https://github.com/brndnmtthws/conky|{{Pkg|conky}}}}
 * {{App|CoreStats|Simple lightweight system resource viewer to monitor the CPU, RAM, Network and Disk IO statistics. Part of C-Suite.|https://cubocore.gitlab.io/|{{AUR|corestats}}}}
 * {{App|Deepin System Monitor|Monitor system process status for Deepin desktop.|https://www.deepin.org/en/original/deepin-system-monitor/|{{Pkg|deepin-system-monitor}}}}
-* {{App|[[Wikipedia:GKrellM|GKrellM]]|Simple, flexible system monitor package for [[GTK]] with many plug-ins.|https://billw2.github.io/gkrellm/gkrellm.html|{{Pkg|gkrellm}}}}
+* {{App|Evisum|GUI top/htop-like process viewer using EFL.|https://git.enlightenment.org/enlightenment/evisum|{{Pkg|evisum}}}}
+* {{App|[[Wikipedia:GKrellM|GKrellM]]|Simple, flexible system monitor package for [[GTK]] with many plug-ins.|https://billw2.github.io/gkrellm/gkrellm.html|{{AUR|gkrellm}}}}
 * {{App|GNOME System Monitor|System monitor for [[GNOME]] to view and manage system resources. Part of {{Grp|gnome}}.|https://apps.gnome.org/SystemMonitor/|{{Pkg|gnome-system-monitor}}}}
+* {{App|jdSystemMonitor|Advanced, desktop-independent system monitor for Linux. Its goal is to provide as much information about your system as possible, with a focus on process management.|https://jakobdev.codeberg.page/work/app/jdSystemMonitor|{{AUR|jdsystemmonitor}}}}
 * {{App|Linux Process Explorer|Graphical process explorer for Linux.|https://github.com/wolfc01/procexp|{{AUR|procexp}}}}
-* {{App|LXTask|Lightweight process manager for [[LXDE]].|https://github.com/lxde/lxtask|{{Pkg|lxtask}}, {{Pkg|lxtask-gtk3}}}}
+* {{App|LXTask|Lightweight process manager for [[LXDE]].|https://github.com/lxde/lxtask|{{Pkg|lxtask}}}}
 * {{App|MATE System Monitor|System monitor for [[MATE]].|https://github.com/mate-desktop/mate-system-monitor|{{Pkg|mate-system-monitor}}}}
 * {{App|Mission Center|GTK4 application for monitoring CPU, memory, disk, network and GPU usage.|https://gitlab.com/mission-center-devs/mission-center|{{Pkg|mission-center}}}}
 * {{App|Nagstamon|Status monitor that connects to multiple Nagios, Icinga, Opsview, Centreon, Op5 Monitor/Ninja, Checkmk and Thruk monitoring servers.|https://nagstamon.de/|{{AUR|nagstamon}}}}
@@ -805,6 +850,7 @@ See also [[:Category:Monitoring]].
 * {{App|Qt Process Manager|Lightweight process manager for [[LXQt]].|https://github.com/lxqt/qps|{{Pkg|qps}}}}
 * {{App|Resources|Simple and versatile monitor for graphical applications, processes and system resources (CPUs, memory, GPUs, network interfaces and block devices), written in Rust and GTK4.|https://apps.gnome.org/Resources/|{{Pkg|resources}}}}
 * {{App|Task Manager|GTK3 based process manager with basic system resource monitor for [[Xfce]].|https://goodies.xfce.org/projects/applications/xfce4-taskmanager|{{Pkg|xfce4-taskmanager}}}}
+* {{App|UKUI System Monitor|System monitor for [[UKUI]].|https://github.com/ukui/ukui-system-monitor|{{Pkg|ukui-system-monitor}}}}
 * {{App|Usage|View information about use of system resources, like memory and disk space.|https://wiki.gnome.org/Apps/Usage|{{Pkg|gnome-usage}}}}
 * {{App|xosview|System monitor that resembles gr_osview from SGI IRIX.|https://www.pogo.org.uk/~mark/xosview/|{{AUR|xosview}}}}
 
@@ -823,16 +869,18 @@ See [[lm_sensors#Graphical front-ends]].
 
 ==== Console ====
 
-* {{App|agesafetch|A tool for identifying the [https://en.wikipedia.org/wiki/AGESA AGESA] version embedded in your AMD system's [[UEFI]] firmware.|https://gitlab.com/BVollmerhaus/agesafetch|{{AUR|agesafetch}}}}
+* {{App|agesafetch|A tool for identifying the [[Wikipedia:AGESA|AGESA]] version embedded in your AMD system's [[UEFI]] firmware.|https://gitlab.com/BVollmerhaus/agesafetch|{{AUR|agesafetch}}}}
 * {{App|alsi|A system information tool for Arch Linux. It can be configured for every other system without even touching the source code of the script.|https://trizenx.blogspot.com/2012/08/alsi.html|{{AUR|alsi}}}}
 * {{App|archey4|Python script to display system information alongside the Arch Linux logo.|https://github.com/HorlogeSkynet/archey4|{{AUR|archey4}}}}
 * {{App|dmidecode|It reports information about your system's hardware as described in your system BIOS according to the SMBIOS/DMI standard.|https://www.nongnu.org/dmidecode/|{{Pkg|dmidecode}}}}
 * {{App|fastfetch|Like Neofetch, but much faster because written in C.|https://github.com/fastfetch-cli/fastfetch|{{Pkg|fastfetch}}}}
 * {{App|hwdetect|Simple script to list modules that are exported in {{ic|/sys/}}.|https://gitlab.archlinux.org/archlinux/packaging/packages/hwdetect/-/blob/main/hwdetect|{{Pkg|hwdetect}}}}
-* {{App|hwinfo|Powerful hardware detection tool come from openSUSE.|https://github.com/openSUSE/hwinfo|{{Pkg|hwinfo}}}}
+* {{App|hwinfo|Powerful hardware detection tool from openSUSE.|https://github.com/openSUSE/hwinfo|{{Pkg|hwinfo}}}}
 * {{App|[[hw-probe]]|Tool to probe for hardware, check operability and find drivers with the help of [https://linux-hardware.org/ Linux Hardware Database].|https://github.com/linuxhw/hw-probe|{{AUR|hw-probe}}}}
-* {{App|inxi|A script to get system information.|https://github.com/smxi/inxi|{{Pkg|inxi}}}}
-* {{App|neofetch|A fast, highly customizable system info script that supports displaying images with w3m.|https://github.com/dylanaraps/neofetch|{{Pkg|neofetch}}}}
+* {{App|hyfetch|Neofetch with LGBTQ+ pride flags!|https://github.com/hykilpikonna/hyfetch|{{Pkg|hyfetch}}}}
+* {{App|inxi|A script to get system information.|https://codeberg.org/smxi/inxi|{{Pkg|inxi}}}}
+* {{App|lshw|A small tool to provide detailed information on the hardware configuration of the machine with CLI and GTK interfaces.|https://ezix.org/project/wiki/HardwareLiSter|{{Pkg|lshw}}}}
+* {{App|neofetch|A fast, highly customizable system info script that supports displaying images with w3m.|https://github.com/dylanaraps/neofetch|{{AUR|neofetch}}}}
 * {{App|nmon|Console based application for monitoring various system components.|https://nmon.sourceforge.net/|{{Pkg|nmon}}}}
 * {{App|pfetch|A pretty system information tool written in POSIX sh.|https://github.com/dylanaraps/pfetch|{{AUR|pfetch}}}}
 * {{App|screenfetch|Similar to archey but has an option to take a screenshot. Written in bash.|https://github.com/KittyKatt/screenFetch|{{Pkg|screenfetch}}}}
@@ -840,9 +888,7 @@ See [[lm_sensors#Graphical front-ends]].
 ==== Graphical ====
 
 * {{App|GPU-Viewer|GUI to glxinfo, vulkaninfo, clinfo and es2_info; written in Python with GTK.|https://github.com/arunsivaramanneo/GPU-Viewer|{{AUR|gpu-viewer}}}}
-* {{App|hardinfo2|System Information and Benchmark for Linux Systems.|https://www.hardinfo2.org/|{{AUR|hardinfo2}}}}
-* {{App|i-Nex|An application that gathers information for hardware components available on your system and displays it using an user interface similar to the popular Windows tool CPU-Z.|https://i-nex.linux.pl/|{{AUR|i-nex-git}}{{Broken package link|package not found}}}}
-* {{App|lshw|A small tool to provide detailed information on the hardware configuration of the machine with CLI and GTK interfaces.|https://ezix.org/project/wiki/HardwareLiSter|{{Pkg|lshw}}}}
+* {{App|hardinfo2|System Information and Benchmark for Linux Systems.|https://www.hardinfo2.org/|{{Pkg|hardinfo2}}}}
 * {{App|[[Wikipedia:KInfoCenter|KInfoCenter]]|Centralized and convenient overview of system information for KDE. Part of {{Grp|plasma}}.|https://userbase.kde.org/KInfoCenter|{{Pkg|kinfocenter}}}}
 * {{App|USBView|Display the topology of devices on the USB bus.|http://www.kroah.com/linux/usb/|{{Pkg|usbview}}}}
 
@@ -867,7 +913,7 @@ See also [[Wikipedia:Font management software]].
 * {{App|fontpreview-ueberzug|Shell script inspired by fontpreview that uses ueberzug instead of sxiv.|https://github.com/xlucn/fontpreview-ueberzug|{{AUR|fontpreview-ueberzug-git}}}}
 * {{App|Fonty Python|Manage, view and find your fonts.|https://savannah.nongnu.org/projects/fontypython|{{AUR|fontypython}}}}
 * {{App|GNOME Fonts|Font viewer for GNOME. Part of {{Grp|gnome}}.|https://apps.gnome.org/FontViewer/|{{Pkg|gnome-font-viewer}}}}
-* {{App|gtk2fontsel|Font selection and preview tool.|https://gtk2fontsel.sourceforge.net/|{{Pkg|gtk2fontsel}}}}
+* {{App|gtk2fontsel|Font selection and preview tool.|https://gtk2fontsel.sourceforge.net/|{{AUR|gtk2fontsel}}}}
 * {{App|KFontview|KDE application to view and install different types of fonts. Part of {{Grp|plasma}}.|https://invent.kde.org/plasma/plasma-workspace|{{Pkg|plasma-workspace}}}}
 * {{App|MATE Font Viewer|Font viewer for MATE.|https://github.com/mate-desktop/mate-control-center|{{Pkg|mate-utils}}}}
 
@@ -879,7 +925,7 @@ See [[man page#Reading local man pages]].
 
 See also [[Cron]].
 
-* {{App|FcronQ|Fcron GUI, an advanced periodic command scheduler.|https://fcronq.xavion.name/|{{AUR|fcronq}}}}
+* {{App|FcronQ|Fcron GUI, an advanced periodic command scheduler.|https://fcronq.xavion.name/{{Dead link|2025|08|15|status=domain name not resolved}}|{{AUR|fcronq}}}}
 * {{App|KCron|Tool for KDE to run applications in the background at regular intervals. It is a graphical interface to the Cron command. Part of {{Grp|kde-system}}.|https://apps.kde.org/kcron/|{{Pkg|kcron}}}}
 * {{App|KTimer|Little tool for KDE to execute programs after some time. It allows you to enter several tasks and to set a timer for each of them. The timers for each task can be started, stopped, changed, or looped. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/ktimer/|{{Pkg|ktimer}}}}
 
@@ -921,7 +967,7 @@ See [[Power management#Userspace tools]].
 
 === System management ===
 
-See [[Systemd#GUI configuration tools]].
+See [[systemd#GUI configuration tools]].
 
 === Boot management ===
 
@@ -938,6 +984,7 @@ See [[pacman tips#Utilities]].
 * {{App|cdist|Simple configuration management system with Arch Linux support.|https://www.cdi.st/|{{AUR|cdist}}}}
 * {{App|[[Chef]]|Automation Software for Continuous Delivery of Secure Applications and Infrastructure.|https://www.chef.io/|{{AUR|chef-workstation}}, {{AUR|chef-client}}}}
 * {{App|[[etckeeper]]|Collection of tools to let {{ic|/etc}} be stored in a VCS repository.|https://etckeeper.branchable.com/|{{Pkg|etckeeper}}}}
+* {{App|Apache Mesos|Apache Mesos abstracts CPU, memory, storage, and other compute resources away from machines (physical or virtual), enabling fault-tolerant and elastic distributed systems to easily be built and run effectively.|https://mesos.apache.org/|{{AUR|mesos}}}}
 * {{App|[[Puppet]]|IT automation software that helps system administrators manage infrastructure throughout its lifecycle, from provisioning and configuration to patch management and compliance.|https://puppet.com/|{{Pkg|puppet}}}}
 * {{App|[[Saltstack]]|A Python-based, open-source software for event-driven IT automation, remote task execution, and configuration management.|https://saltproject.io/|{{AUR|salt}}}}
 

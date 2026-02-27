@@ -1,667 +1,3105 @@
 [
   {
+    "name": "3DSlicer",
+    "description": "Comprehensive MRI, CT, LSCM microscopy volume processing, segmentation and 3D-reconstruction",
+    "url": "https://www.slicer.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["3dslicer"],
+    "aur": true
+  },
+  {
+    "name": "aeskulap",
+    "description": "Simple DICOM data viewer",
+    "url": "https://www.nongnu.org/aeskulap/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["aeskulap"],
+    "aur": true
+  },
+  {
     "name": "Agda",
     "description": "Dependently typed functional programming language and proof assistant. It is an interactive system for writing and checking proofs.",
     "url": "https://wiki.portal.chalmers.se/agda/",
     "icon": "generic-dark.svg",
-    "pkgname": ["agda"]
+    "pkgname": ["agda"],
+    "aur": false
+  },
+  {
+    "name": "Aladin",
+    "description": "Interactive software sky atlas",
+    "url": "http://aladin.u-strasbg.fr/aladin.gml",
+    "icon": "generic-dark.svg",
+    "pkgname": ["aladin"],
+    "aur": true
+  },
+  {
+    "name": "AliceVision",
+    "description": "Photogrammetric Computer Vision Framework",
+    "url": "https://alicevision.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["alice-vision"],
+    "aur": true
+  },
+  {
+    "name": "aliza",
+    "description": "Open 2D, 3D and 4D images in DICOM, MetaIO, Nifti, Nrrd and other formats, meshes in DICOM, VTK, STL and OBJ formats",
+    "url": "https://www.aliza-dicom-viewer.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["aliza"],
+    "aur": true
+  },
+  {
+    "name": "AlphaPlot",
+    "description": "Application for scientific data analysis and visualization, fork of SciDAVis / QtiPlot.",
+    "url": "https://alphaplot.sourceforge.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["alphaplot"],
+    "aur": true
+  },
+  {
+    "name": "AmberTools",
+    "description": "AmberTools consists of several independently developed packages that work well by themselves, and with Amber18 itself. The suite can also be used to carry out complete molecular dynamics simulations, with either explicit water or generalized Born solvent models.",
+    "url": "https://ambermd.org/AmberTools.php",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ambertools"],
+    "aur": true
+  },
+  {
+    "name": "AnyLogic",
+    "description": "AnyLogic is a cross-platform proprietary multimethod simulation modeling tool, which is also available for personal use.",
+    "url": "https://www.anylogic.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["anylogic-ple"],
+    "aur": true
+  },
+  {
+    "name": "APBS",
+    "description": "Electrostatic and solvation properties for complex molecules.",
+    "url": "https://www.poissonboltzmann.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["apbs"],
+    "aur": true
+  },
+  {
+    "name": "APSYNSIM",
+    "description": "Aperture Synthesis Simulator for Radio Astronomy",
+    "url": "https://launchpad.net/apsynsim",
+    "icon": "generic-dark.svg",
+    "pkgname": ["apsynsim"],
+    "aur": true
+  },
+  {
+    "name": "APTS",
+    "description": "Set of tools for automatic astrophotography images acquisition and processing",
+    "url": "https://github.com/pozar87/apts",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-apts"],
+    "aur": true
+  },
+  {
+    "name": "asco",
+    "description": "SPICE Circuit Optimizer.",
+    "url": "https://asco.sourceforge.net",
+    "icon": "generic-dark.svg",
+    "pkgname": ["asco"],
+    "aur": true
+  },
+  {
+    "name": "Astap",
+    "description": "Astrometric (plate) solver, stacking of images, photometry and FITS viewer",
+    "url": "https://www.hnsky.org/astap.htm",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astap-bin-qt5"],
+    "aur": true
+  },
+  {
+    "name": "AstroCrop",
+    "description": "Astronomical image preprocessing tool",
+    "url": "https://www.astrodmx-capture.org.uk/astrocrop/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astrocrop"],
+    "aur": true
+  },
+  {
+    "name": "AstroImageJ",
+    "description": "ImageJ for Astronomy",
+    "url": "https://www.astro.louisville.edu/software/astroimagej/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astroimagej"],
+    "aur": true
+  },
+  {
+    "name": "Astrometry.net",
+    "description": "Automatic recognition of astronomical images",
+    "url": "https://astrometry.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astrometry.net"],
+    "aur": true
+  },
+  {
+    "name": "AstroML",
+    "description": "Machine learning, statistics, and data mining for astronomy and astrophysics",
+    "url": "https://www.astroml.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-astroml"],
+    "aur": true
   },
   {
     "name": "Astropy",
     "description": "The Astropy Project is a community effort to develop a common core package for Astronomy in Python and foster an ecosystem of interoperable astronomy packages.",
     "url": "https://www.astropy.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["python-astropy"]
+    "pkgname": ["python-astropy"],
+    "aur": false
+  },
+  {
+    "name": "astroterm",
+    "description": "Terminal-based star map written in C, which displays a star map in real time. Date, time, location and speed are configurable.",
+    "url": "https://github.com/da-luce/astroterm",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astroterm"],
+    "aur": false
+  },
+  {
+    "name": "astroTools",
+    "description": "Command-line tools for astronomy and astrophysics",
+    "url": "https://astrotools.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astrotools"],
+    "aur": true
+  },
+  {
+    "name": "AudeLA",
+    "description": "AudeLA is a TCL extension aimed at providing amateur astronomers with image processing, telescope controling, ccd camera driving, and various astronomical algorithms",
+    "url": "https://sourceforge.net/projects/audela/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["audela-bin"],
+    "aur": true
+  },
+  {
+    "name": "Avogadro",
+    "description": "Editor, viewer and simulator for 3D molecule structures (also supports downloading files from the Protein Data Bank).",
+    "url": "https://avogadro.cc/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["avogadroapp"],
+    "aur": true
+  },
+  {
+    "name": "avrcalc",
+    "description": "Calculator to speed development of Atmel AVRs.",
+    "url": "https://sourceforge.net/projects/avrcalc",
+    "icon": "generic-dark.svg",
+    "pkgname": ["avrcalc"],
+    "aur": true
   },
   {
     "name": "AVRDUDE",
     "description": "Download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers.",
     "url": "https://www.nongnu.org/avrdude/",
     "icon": "generic-dark.svg",
-    "pkgname": ["avrdude"]
+    "pkgname": ["avrdude"],
+    "aur": false
   },
   {
     "name": "AXIOM",
-    "description": "FriCAS: derivative of the powerful AXIOM-CAS",
+    "description": "FriCAS: derivative of the powerful AXIOM-CAS.",
     "url": "https://fricas.sourceforge.net",
     "icon": "generic-dark.svg",
-    "pkgname": ["fricas"]
+    "pkgname": ["fricas"],
+    "aur": false
+  },
+  {
+    "name": "BambuStudio",
+    "description": "Slicer for printers from BambuLabs. Fork of PrusaSlicer. Open source.",
+    "url": "https://github.com/bambulab/BambuStudio",
+    "icon": "generic-dark.svg",
+    "pkgname": ["bambustudio-bin"],
+    "aur": true
   },
   {
     "name": "bc",
     "description": "Arbitrary precision calculator language.",
     "url": "https://www.gnu.org/software/bc/",
     "icon": "generic-dark.svg",
-    "pkgname": ["bc"]
+    "pkgname": ["bc"],
+    "aur": false
   },
   {
     "name": "Binary",
     "description": "Simple app to convert between different hexadecimal and binary numbers.",
     "url": "https://apps.gnome.org/Binary/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/binary_io.github.fizzyizzy05.binary.png",
+    "pkgname": ["binary"],
+    "aur": false
+  },
+  {
+    "name": "Biopython",
+    "description": "Python package with tools for computational biology, as well as bioinformatics.",
+    "url": "https://biopython.org/wiki/Biopython",
     "icon": "generic-dark.svg",
-    "pkgname": ["binary"]
+    "pkgname": ["python-biopython"],
+    "aur": true
+  },
+  {
+    "name": "BRL-CAD",
+    "description": "Constructive solid geometry modeling CAD system that includes an interactive geometry editor, ray tracing support for graphics rendering and geometric analysis, computer network distributed framebuffer support, scripting, image-processing and signal-processing tools.",
+    "url": "https://brlcad.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["brlcad"],
+    "aur": true
   },
   {
     "name": "BT747",
     "description": "The swiss army knife for MTK GPS dataloggers.",
     "url": "https://sourceforge.net/projects/bt747/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bt747_bt747.png",
+    "pkgname": ["bt747"],
+    "aur": false
+  },
+  {
+    "name": "Cadabra",
+    "description": "A field-theory motivated approach to computer algebra.",
+    "url": "https://cadabra.science/",
     "icon": "generic-dark.svg",
-    "pkgname": ["bt747"]
+    "pkgname": ["cadabra2"],
+    "aur": true
   },
   {
     "name": "calc",
     "description": "Arbitrary precision console calculator.",
-    "url": "https://www.isthe.com/chongo/tech/comp/calc/",
+    "url": "http://www.isthe.com/chongo/tech/comp/calc/",
     "icon": "generic-dark.svg",
-    "pkgname": ["calc"]
+    "pkgname": ["calc"],
+    "aur": false
+  },
+  {
+    "name": "calcpy",
+    "description": "Terminal calculator and advanced math solver using Python, IPython and SymPy.",
+    "url": "https://github.com/idanpa/calcpy",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-calcpy-git"],
+    "aur": true
+  },
+  {
+    "name": "Calculix",
+    "description": "A three-dimensional structural finite element program.",
+    "url": "https://www.calculix.de/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["calculix-ccx"],
+    "aur": true
+  },
+  {
+    "name": "Cantor",
+    "description": "Application that lets you use your favorite mathematical applications from within a nice KDE-integrated Worksheet Interface. Part of kde-education.",
+    "url": "https://cantor.kde.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cantor_cantor.png",
+    "pkgname": ["cantor"],
+    "aur": false
+  },
+  {
+    "name": "CARTA",
+    "description": "Cube Analysis and Rendering Tool for Astronomy",
+    "url": "https://cartavis.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["carta-appimage"],
+    "aur": true
+  },
+  {
+    "name": "CASA",
+    "description": "the Common Astronomy Software Applications package.",
+    "url": "https://casa.nrao.edu/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["casa6-bin"],
+    "aur": true
+  },
+  {
+    "name": "Casacore",
+    "description": "package contains the core libraries of the old AIPS++/CASA package.",
+    "url": "https://casacore.github.io/casacore/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["casacore"],
+    "aur": true
+  },
+  {
+    "name": "CCDciel",
+    "description": "A CCD capture software intended for the amateur astronomer.",
+    "url": "https://www.ap-i.net/ccdciel//en/start",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ccdciel"],
+    "aur": true
+  },
+  {
+    "name": "CDF",
+    "description": "NASA Common Data Format (CDF) library for scientific data management",
+    "url": "https://cdf.gsfc.nasa.gov/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cdf-nasa"],
+    "aur": true
+  },
+  {
+    "name": "CDI",
+    "description": "Is a general purpose C-library with an additional Fortran interface for file IO in the geoscience area.",
+    "url": "https://code.mpimet.mpg.de/projects/cdi",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cdi"],
+    "aur": true
+  },
+  {
+    "name": "Celestia",
+    "description": "3D astronomy simulation program that allows users to travel through an extensive universe, modeled after reality, at any speed, in any direction and at any time in history.",
+    "url": "https://celestiaproject.space/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["celestia"],
+    "aur": true
+  },
+  {
+    "name": "ChemCalc",
+    "description": "A chemical calculator that calculates the amount of reagents to use when making solutions.",
+    "url": "https://github.com/Chris-Baba/ChemCalc/tree/main",
+    "icon": "generic-dark.svg",
+    "pkgname": ["chemcalc"],
+    "aur": true
+  },
+  {
+    "name": "Chemtool",
+    "description": "GTK-based program for drawing chemical structural formulas.",
+    "url": "http://ruby.chemie.uni-freiburg.de/~martin/chemtool/chemtool.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["chemtool"],
+    "aur": true
+  },
+  {
+    "name": "clac",
+    "description": "Command-line, stack-based calculator with postfix notation.",
+    "url": "https://github.com/soveran/clac",
+    "icon": "generic-dark.svg",
+    "pkgname": ["clac"],
+    "aur": true
+  },
+  {
+    "name": "Climate Data Operators",
+    "description": "Command line tool to manipulate and analyse Climate model Data. Supported data formats are GRIB, netCDF, SERVICE, EXTRA and IEG.",
+    "url": "https://code.mpimet.mpg.de/projects/cdo",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cdo"],
+    "aur": true
+  },
+  {
+    "name": "Cmocean",
+    "description": "Colormap setup for standardizing commonly-plotting oceanographic variables.",
+    "url": "https://github.com/matplotlib/cmocean",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-cmocean"],
+    "aur": true
+  },
+  {
+    "name": "ConvertAll",
+    "description": "Unit conversion application that allows one to combine units in any way (e.g. inches per decade), even if it does not make sense.",
+    "url": "https://convertall.bellz.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["convertall"],
+    "aur": true
+  },
+  {
+    "name": "COPASI",
+    "description": "COmplex PAthway SImulator for analysis of biochemical networks and their dynamics.",
+    "url": "https://copasi.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["copasi-bin"],
+    "aur": true
+  },
+  {
+    "name": "CORE",
+    "description": "Common Open Research Emulator.",
+    "url": "https://www.nrl.navy.mil/Our-Work/Areas-of-Research/Information-Technology/NCS/CORE/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["core"],
+    "aur": true
+  },
+  {
+    "name": "Cosmographia",
+    "description": "Cosmographia is a visualization program rendering the solar system and its bodies in 3D to create a freely navigable map of the solar system",
+    "url": "https://naif.jpl.nasa.gov/naif/cosmographia.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cosmographia-bin"],
+    "aur": true
+  },
+  {
+    "name": "Cosmonium",
+    "description": "3D astronomy and space exploration program",
+    "url": "https://github.com/cosmonium/cosmonium",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cosmonium-bin"],
+    "aur": true
+  },
+  {
+    "name": "CP2K",
+    "description": "A quantum chemistry and solid state physics software package.",
+    "url": "https://www.cp2k.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cp2k"],
+    "aur": true
+  },
+  {
+    "name": "Cruiser",
+    "description": "Map and navigation application using offline vector maps",
+    "url": "https://wiki.openstreetmap.org/wiki/Cruiser",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cruiser"],
+    "aur": true
+  },
+  {
+    "name": "Cura",
+    "description": "Slicer by Ultimaker. Aimed at their printers but supports other brands as well. Open source.",
+    "url": "https://ultimaker.com/software/ultimaker-cura",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cura"],
+    "aur": true
+  },
+  {
+    "name": "Cutefish Calculator",
+    "description": "Calculator for Cutefish desktop.",
+    "url": "https://github.com/cutefishos/calculator",
+    "icon": "generic-dark.svg",
+    "pkgname": ["cutefish-calculator"],
+    "aur": false
+  },
+  {
+    "name": "DataWarrior",
+    "description": "Open-source data visualization and analysis program with embedded chemical intelligence.",
+    "url": "https://openmolecules.org/datawarrior/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["datawarrior"],
+    "aur": true
   },
   {
     "name": "Deepin Calculator",
     "description": "Easy to use calculator for Deepin desktop.",
     "url": "https://www.deepin.org/en/original/deepin-calculator/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-calculator_deepin-calculator.png",
+    "pkgname": ["deepin-calculator"],
+    "aur": false
+  },
+  {
+    "name": "DFTB+",
+    "description": "A quantum mechanical simulation software package based on the DFTB method",
+    "url": "https://dftbplus.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["deepin-calculator"]
+    "pkgname": ["dftbplus"],
+    "aur": true
   },
   {
     "name": "dfu-util",
     "description": "Device firmware update (DFU) USB programmer.",
     "url": "https://dfu-util.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["dfu-util"]
+    "pkgname": ["dfu-util"],
+    "aur": false
   },
   {
     "name": "Digital",
-    "description": "Interactive simulator similiar to the discontinued Logisim. Features Karnaugh maps, logic tables, FSM editor, VHDL export and more, written in Java.",
+    "description": "Interactive simulator similar to the discontinued Logisim. Features Karnaugh maps, logic tables, FSM editor, VHDL export and more, written in Java.",
     "url": "https://github.com/hneemann/Digital",
     "icon": "generic-dark.svg",
-    "pkgname": ["digital"]
+    "pkgname": ["digital"],
+    "aur": true
+  },
+  {
+    "name": "easy_spice",
+    "description": "Electronic circuit simulator. SPICE frontend, using gschem for schematics and ngspice as simulator.",
+    "url": "https://easy-spice.sourceforge.net",
+    "icon": "generic-dark.svg",
+    "pkgname": ["easy_spice"],
+    "aur": true
+  },
+  {
+    "name": "edumips64",
+    "description": "Cross-platform educational MIPS64 CPU simulator.",
+    "url": "https://edumips.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["edumips64"],
+    "aur": true
+  },
+  {
+    "name": "Elmer_FEM_solver",
+    "description": "Finite element analysis (FEA/FEM) software for multiphysics problems. Includes models for fluid dynamics, structural mechanics, electromagnetics, heat transfer, and acoustics.",
+    "url": "https://www.csc.fi/web/elmer https://www.elmerfem.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["elmerfem"],
+    "aur": true
+  },
+  {
+    "name": "EMBOSS (European Molecular Biology Open Software Suite)",
+    "description": "Open source software analysis package specially developed for the needs of the molecular biology and bioinformatics user community.",
+    "url": "https://emboss.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["emboss"],
+    "aur": true
+  },
+  {
+    "name": "Engauge Digitizer",
+    "description": "Extracts data points from images of graphs.",
+    "url": "https://markummitchell.github.io/engauge-digitizer/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["engauge"],
+    "aur": true
+  },
+  {
+    "name": "EnhancedVolcano",
+    "description": "Publication-ready volcano plots with enhanced colouring and labeling.",
+    "url": "https://bioconductor.org/packages/release/bioc/html/EnhancedVolcano.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["r-enhancedvolcano"],
+    "aur": true
+  },
+  {
+    "name": "eperiodique",
+    "description": "A simple Periodic Table Of Elements viewer using the EFL.",
+    "url": "https://eperiodique.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["eperiodique"],
+    "aur": true
+  },
+  {
+    "name": "ERFA",
+    "description": "Essential Routines for Fundamental Astronomy",
+    "url": "https://github.com/liberfa/erfa",
+    "icon": "generic-dark.svg",
+    "pkgname": ["erfa"],
+    "aur": false
+  },
+  {
+    "name": "esp-idf",
+    "description": "Espressif IoT Development Framework. Official development framework for ESP32.",
+    "url": "https://github.com/espressif/esp-idf",
+    "icon": "generic-dark.svg",
+    "pkgname": ["esp-idf"],
+    "aur": true
+  },
+  {
+    "name": "Exoplanet",
+    "description": "exoplanet is a toolkit for probabilistic modeling of time series data in astronomy with a focus on observations of exoplanets",
+    "url": "https://github.com/exoplanet-dev/exoplanet",
+    "icon": "generic-dark.svg",
+    "pkgname": ["exoplanet-git"],
+    "aur": true
+  },
+  {
+    "name": "Extcalc",
+    "description": "Qt-based scientific graphical calculator.",
+    "url": "https://extcalc-linux.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["extcalc"],
+    "aur": true
+  },
+  {
+    "name": "fend",
+    "description": "An arbitrary-precision unit-aware calculator.",
+    "url": "https://github.com/printfn/fend",
+    "icon": "generic-dark.svg",
+    "pkgname": ["fend"],
+    "aur": true
+  },
+  {
+    "name": "FEniCS",
+    "description": "An open-source computing platform for solving partial differential equations, enabling users to quickly translate scientific models into efficient finite element code with the high-level Python and C++ interfaces that scale across platforms ranging from laptops to high-performance clusters.",
+    "url": "https://fenicsproject.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["dolfin"],
+    "aur": true
   },
   {
     "name": "FFTW",
     "description": "A Fast Fourier Transform library for computing discrete Fourier transforms. Used for a wide variety of numerical applications, which includes spectral methods.",
-    "url": "https://www.fftw.org/ ",
+    "url": "https://www.fftw.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["fftw"]
+    "pkgname": ["fftw"],
+    "aur": false
+  },
+  {
+    "name": "Fiji",
+    "description": "ImageJ2 distribution with a lot of plugins organized into a coherent menu structure.",
+    "url": "https://fiji.sc",
+    "icon": "generic-dark.svg",
+    "pkgname": ["fiji-bin"],
+    "aur": true
+  },
+  {
+    "name": "Finesse",
+    "description": "Frequency domain INterfErometer Simulation SoftwarE",
+    "url": "https://www.gwoptics.org/finesse/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["finesse"],
+    "aur": true
+  },
+  {
+    "name": "firebird-nspire",
+    "description": "Multi-platform emulator of TI Nspire calculators.",
+    "url": "https://github.com/nspire-emus/firebird",
+    "icon": "generic-dark.svg",
+    "pkgname": ["firebird-nspire"],
+    "aur": true
+  },
+  {
+    "name": "FireCapture",
+    "description": "The leading planetary capture tool",
+    "url": "https://www.firecapture.de/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["firecapture"],
+    "aur": true
+  },
+  {
+    "name": "FITSH",
+    "description": "a software package for astronomical image processing",
+    "url": "https://fitsh.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["fitsh"],
+    "aur": true
   },
   {
     "name": "Fityk",
     "description": "Curve fitting and data analysis application, predominantly used to fit analytical, bell-shaped functions to experimental data.",
     "url": "https://fityk.nieto.pl/",
     "icon": "generic-dark.svg",
-    "pkgname": ["fityk"]
+    "pkgname": ["fityk"],
+    "aur": true
+  },
+  {
+    "name": "FlashPrint",
+    "description": "Slicer for the FlashForge 3D printers. Closed source.",
+    "url": "http://www.ff3dp.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["flashprint"],
+    "aur": true
+  },
+  {
+    "name": "Flight Gear",
+    "description": "Open-source, multi-platform atmospheric and orbital flight simulator with a flight dynamics engine (JSBSim) that is part of a 2015 NASA benchmark to judge new simulation code to space industry standards.",
+    "url": "https://www.flightgear.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["flightgear"],
+    "aur": true
   },
   {
     "name": "FOX Calculator",
     "description": "Simple desktop calculator.",
-    "url": "https://fox-toolkit.org/",
+    "url": "http://fox-toolkit.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["fox"]
+    "pkgname": ["fox"],
+    "aur": false
+  },
+  {
+    "name": "FoxtrotGPS",
+    "description": "Lightweight and fast mapping application.",
+    "url": "https://www.foxtrotgps.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["foxtrotgps"],
+    "aur": true
+  },
+  {
+    "name": "Fpocket",
+    "description": "Fpocket is a very fast open source protein pocket detection algorithm based on Voronoi tessellation.",
+    "url": "https://github.com/Discngine/fpocket",
+    "icon": "generic-dark.svg",
+    "pkgname": ["fpocket-git"],
+    "aur": true
   },
   {
     "name": "FreeCAD",
     "description": "Parametric 3D CAD modeler based on OpenCascade, Coin3D, Qt, and Python with features such as macro recording, workbenches and the ability to run as a server.",
-    "url": "https://freecadweb.org/",
+    "url": "https://freecad.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/freecad_org.freecad.FreeCAD.png",
+    "pkgname": ["freecad"],
+    "aur": false
+  },
+  {
+    "name": "FreeMat",
+    "description": "Matlab-like program that supports many of its functions and features a codeless interface to external C, C++, and Fortran code, further parallel distributed algorithm development (via MPI), and 3D visualization capabilities.",
+    "url": "https://freemat.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["freecad"]
+    "pkgname": ["freemat"],
+    "aur": true
+  },
+  {
+    "name": "FriendlyVRI",
+    "description": "Is designed to simulate astronomical observations using linked arrays of radio antennas in a technique called earth rotation aperture synthesis",
+    "url": "https://github.com/crpurcell/friendlyVRI",
+    "icon": "generic-dark.svg",
+    "pkgname": ["friendlyvri-git"],
+    "aur": true
   },
   {
     "name": "Fritzing",
     "description": "Easy to use program to draw good-looking circuit diagrams, and also create schematics and PCBs.",
     "url": "https://fritzing.org/home/",
     "icon": "generic-dark.svg",
-    "pkgname": ["fritzing"]
+    "pkgname": ["fritzing"],
+    "aur": true
   },
   {
     "name": "Gaia Sky",
     "description": "An open source 3D universe simulator with support for more than a billion objects",
     "url": "https://zah.uni-heidelberg.de/gaia/outreach/gaiasky",
     "icon": "generic-dark.svg",
-    "pkgname": ["gaiasky"]
+    "pkgname": ["gaiasky"],
+    "aur": true
+  },
+  {
+    "name": "Galaxy2",
+    "description": "Is program which simulates the motion of stars under the influence of gravity",
+    "url": "https://www.kornelix.net/galaxy2/galaxy2.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["galaxy2"],
+    "aur": true
   },
   {
     "name": "galculator",
     "description": "GTK-based scientific calculator.",
-    "url": "https://galculator.mnim.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/galculator_galculator.png",
+    "pkgname": ["galculator"],
+    "aur": false
+  },
+  {
+    "name": "Galpy",
+    "description": "Galactic Dynamics in python",
+    "url": "https://www.galpy.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["galculator"]
+    "pkgname": ["python-galpy"],
+    "aur": true
+  },
+  {
+    "name": "GalSim",
+    "description": "Modular galaxy image simulation toolkit",
+    "url": "https://github.com/GalSim-developers/GalSim",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-galsim"],
+    "aur": true
+  },
+  {
+    "name": "Gammapy",
+    "description": "A Python package for gamma-ray astronomy",
+    "url": "https://gammapy.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-gammapy"],
+    "aur": true
   },
   {
     "name": "GAP",
     "description": "Computer algebra system for computational discrete algebra with particular emphasis on computational group theory.",
     "url": "https://www.gap-system.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gap"]
+    "pkgname": ["gap"],
+    "aur": false
+  },
+  {
+    "name": "Geant4",
+    "description": "A simulation toolkit for particle physics interactions.",
+    "url": "https://geant4.web.cern.ch/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["geant4"],
+    "aur": true
+  },
+  {
+    "name": "Gebabbel",
+    "description": "Alternative GUI for GPSBabel.",
+    "url": "https://gebabbel.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gebabbel"],
+    "aur": true
+  },
+  {
+    "name": "gEDA",
+    "description": "Full suite and toolkit of Electronic Design Automation tools that are used for electrical circuit design, schematic capture, simulation, prototyping, and production.",
+    "url": "http://www.geda-project.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["geda-gaf"],
+    "aur": true
+  },
+  {
+    "name": "gEDA PCB",
+    "description": "Interactive printed circuit board editor.",
+    "url": "http://pcb.geda-project.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["pcb"],
+    "aur": true
+  },
+  {
+    "name": "Geiger Counter Logger",
+    "description": "Is a lightweight daemon running in the background and constantly reporting your Geiger counter readings to various radiation monitoring websites",
+    "url": "https://www.dateihal.de/cms/gclog",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gclog"],
+    "aur": true
+  },
+  {
+    "name": "gElemental",
+    "description": "Periodic table of the elements with additional information.",
+    "url": "https://freshmeat.sourceforge.net/projects/gelemental",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gelemental"],
+    "aur": true
   },
   {
     "name": "Genius",
     "description": "Advanced calculator including a mathematical programming language.",
     "url": "https://www.jirka.org/genius.html",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/genius_gnome-genius.png",
+    "pkgname": ["genius"],
+    "aur": false
+  },
+  {
+    "name": "GeoDa",
+    "description": "A tool for spatial data analysis.",
+    "url": "https://geodacenter.github.io/",
     "icon": "generic-dark.svg",
-    "pkgname": ["genius"]
+    "pkgname": ["geoda-bin"],
+    "aur": true
   },
   {
     "name": "GeoGebra",
     "description": "Dynamic mathematics software with interactive graphics, algebra and spreadsheet",
     "url": "https://www.geogebra.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/geogebra_geogebra.png",
+    "pkgname": ["geogebra"],
+    "aur": false
+  },
+  {
+    "name": "GEOmap",
+    "description": "Topographic and Geologic Mapping.",
+    "url": "https://cran.r-project.org/web/packages/GEOmap/index.html",
     "icon": "generic-dark.svg",
-    "pkgname": ["geogebra"]
+    "pkgname": ["r-geomap"],
+    "aur": true
   },
   {
     "name": "gephi",
     "description": "Gephi is an open-source network analysis and visualization software package written in Java.",
     "url": "https://gephi.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gephi"]
+    "pkgname": ["gephi"],
+    "aur": false
+  },
+  {
+    "name": "GHDL",
+    "description": "Free and Open Source VHDL 2008/93/87 analyzer, compiler and simulator.",
+    "url": "https://github.com/ghdl/ghdl",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ghdl"],
+    "aur": true
+  },
+  {
+    "name": "Ghemical",
+    "description": "Computational chemistry software package used to edit, view and simulate molecular structures.",
+    "url": "http://bioinformatics.org/ghemical/ghemical/index.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ghemical"],
+    "aur": true
+  },
+  {
+    "name": "GILDAS",
+    "description": "Is a collection of state-of-the-art software oriented toward (sub-)millimeter radioastronomical applications (either single-dish or interferometer)",
+    "url": "https://www.iram.fr/IRAMFR/GILDAS/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gildas"],
+    "aur": true
+  },
+  {
+    "name": "GIMP Astronomy Plugins",
+    "description": "Set of GIMP plugins for astronomical image processing.",
+    "url": "http://hennigbuam.de/georg/gimp.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gimp-plugin-astronomy"],
+    "aur": true
+  },
+  {
+    "name": "Ginga",
+    "description": "A viewer for astronomical data FITS (Flexible Image Transport System) files",
+    "url": "https://ejeschke.github.io/ginga/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-ginga"],
+    "aur": true
   },
   {
     "name": "Gis Weather",
     "description": "Customizable weather forecast desktop widget.",
     "url": "https://sourceforge.net/projects/gis-weather/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gis-weather"]
+    "pkgname": ["gis-weather"],
+    "aur": true
+  },
+  {
+    "name": "Glue",
+    "description": "Linked data visualizations across multiple files.",
+    "url": "http://glueviz.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["glueviz"],
+    "aur": true
+  },
+  {
+    "name": "GNOME Calculator",
+    "description": "Scientific calculator included in the GNOME desktop. Part of gnome.",
+    "url": "https://apps.gnome.org/Calculator/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-calculator_org.gnome.Calculator.png",
+    "pkgname": ["gnome-calculator"],
+    "aur": false
+  },
+  {
+    "name": "GNOME Maps",
+    "description": "A simple map client for GNOME with navigation and GNSS features (adapted to Linux Mobile). Part of gnome.",
+    "url": "https://apps.gnome.org/Maps/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-maps_org.gnome.Maps.png",
+    "pkgname": ["gnome-maps"],
+    "aur": false
+  },
+  {
+    "name": "GNOME Weather",
+    "description": "Small application for GNOME that allows you to monitor the current weather conditions for your city, or anywhere in the world, and to access updated forecasts provided by various internet services. Part of gnome.",
+    "url": "https://apps.gnome.org/Weather/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-weather_org.gnome.Weather.png",
+    "pkgname": ["gnome-weather"],
+    "aur": false
+  },
+  {
+    "name": "GNS3",
+    "description": "Network software emulator using a combination of virtual and real devices to simulate complex networks.",
+    "url": "https://gns3.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gns3-gui"],
+    "aur": true
   },
   {
     "name": "GNU Radio",
     "description": "Software development toolkit that provides signal processing blocks to implement software radios.",
     "url": "https://www.gnuradio.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gnuradio"]
+    "pkgname": ["gnuradio"],
+    "aur": false
+  },
+  {
+    "name": "Gnuastro",
+    "description": "Various programs and library functions for the manipulation and analysis of astronomical data",
+    "url": "https://www.gnu.org/software/gnuastro/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gnuastro"],
+    "aur": true
+  },
+  {
+    "name": "gnucap",
+    "description": "GNU circuit simulator.",
+    "url": "http://gnucap.org",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gnucap"],
+    "aur": true
   },
   {
     "name": "Gnuplot",
     "description": "Command-line program that can generate 2D and 3D plots of functions, data, and data fits.",
-    "url": "https://www.gnuplot.info/",
+    "url": "http://www.gnuplot.info/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gnuplot"]
+    "pkgname": ["gnuplot"],
+    "aur": false
+  },
+  {
+    "name": "golly",
+    "description": "Golly is an open source, cross-platform application for exploring Conway's Game of Life and many other types of cellular automata.",
+    "url": "https://golly.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["golly"],
+    "aur": true
+  },
+  {
+    "name": "Gonvert",
+    "description": "Conversion utility that allows conversion between many units like CGS, Ancient, Imperial with many categories like length, mass, numbers, etc.",
+    "url": "http://www.unihedron.com/projects/gonvert/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gonvert"],
+    "aur": true
+  },
+  {
+    "name": "GoQat",
+    "description": "Camera acquisition software, especially for QSI cameras, that provides other features such as autoguiding, focusing help and others.",
+    "url": "https://canburytech.net/GoQat/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["goqat"],
+    "aur": true
+  },
+  {
+    "name": "Gowin EDA Edu IDE",
+    "description": "An IDE for Gowin's FGPA devices, including Sipeed Tang Nano and Sipeed Tang Nano 4K.",
+    "url": "https://www.gowinsemi.com.cn/faq.aspx",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gowin-eda-edu-ide"],
+    "aur": true
+  },
+  {
+    "name": "GPlates",
+    "description": "Is a plate tectonics program. Manipulate reconstructions of geological and paleogeographic features through geological time.",
+    "url": "https://www.gplates.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gplates"],
+    "aur": true
   },
   {
     "name": "Gpredict",
     "description": "Real-time satellite tracking and orbit prediction application.",
     "url": "https://gpredict.oz9aec.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gpredict"]
+    "pkgname": ["gpredict"],
+    "aur": true
   },
   {
     "name": "GPSBabel",
     "description": "Reads, writes, and manipulates GPS waypoints, tracks, routes in a variety of formats.",
     "url": "https://www.gpsbabel.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpsbabel"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpsbabel_gpsbabel.png",
+    "pkgname": ["gpsbabel"],
+    "aur": false
   },
   {
     "name": "gpsd",
     "description": "Service daemon that monitors one or more GPSes or AIS receivers attached to a host computer through serial or USB ports, making all data on the location/course/velocity of the sensors available to be queried on TCP port 2947 of the host computer.",
-    "url": "https://catb.org/gpsd/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpsd"]
+    "url": "http://catb.org/gpsd/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpsd_gpsd-logo.png",
+    "pkgname": ["gpsd"],
+    "aur": false
   },
   {
     "name": "GpsPrune",
     "description": "View, edit and convert coordinate data from GPS systems.",
     "url": "https://activityworkshop.net/software/gpsprune/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpsprune"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpsprune_gpsprune.png",
+    "pkgname": ["gpsprune"],
+    "aur": false
   },
   {
     "name": "GPX Viewer",
     "description": "Simple tool to visualize tracks and waypoints stored in a gpx file.",
     "url": "https://blog.sarine.nl/tag/gpxviewer/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gpx-viewer"]
+    "pkgname": ["gpx-viewer"],
+    "aur": true
   },
   {
     "name": "GPXSee",
     "description": "GPS log file viewer and analyzer.",
     "url": "https://www.gpxsee.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpxsee"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpxsee_gpxsee.png",
+    "pkgname": ["gpxsee"],
+    "aur": false
   },
   {
     "name": "Gqrx",
     "description": "Software defined radio receiver implemented using GNU Radio and the Qt GUI toolkit.",
     "url": "https://gqrx.dk/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gqrx_gqrx.png",
+    "pkgname": ["gqrx"],
+    "aur": false
+  },
+  {
+    "name": "Grace",
+    "description": "WYSIWYG 2D graph plotting tool.",
+    "url": "https://plasma-gate.weizmann.ac.il/Grace/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gqrx"]
+    "pkgname": ["grace"],
+    "aur": true
   },
   {
     "name": "Gramps",
     "description": "Genealogy program, which helps you track your family tree.",
     "url": "https://gramps-project.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gramps"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gramps_org.gramps_project.Gramps.png",
+    "pkgname": ["gramps"],
+    "aur": false
   },
   {
     "name": "Graphs",
     "description": "Tool to plot and manipulate data.",
     "url": "https://apps.gnome.org/Graphs/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["graphs"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/graphs_se.sjoerd.Graphs.png",
+    "pkgname": ["graphs"],
+    "aur": false
   },
   {
     "name": "Graphviz",
     "description": "The established tool for displaying smallish graphs in 2D.",
     "url": "https://www.graphviz.org",
     "icon": "generic-dark.svg",
-    "pkgname": ["graphviz"]
+    "pkgname": ["graphviz"],
+    "aur": false
   },
   {
     "name": "GRASS GIS",
     "description": "Geospatial data management and analysis, image processing, graphics/maps production, spatial modeling and visualization.",
     "url": "https://grass.osgeo.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["grass"]
+    "pkgname": ["grass"],
+    "aur": true
+  },
+  {
+    "name": "gretl",
+    "description": "A cross-platform software package for econometric analysis, written in the C programming language.",
+    "url": "https://gretl.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gretl"],
+    "aur": true
+  },
+  {
+    "name": "GROMACS (GROningen MAchine for Chemical Simulations)",
+    "description": "Versatile package to perform molecular dynamics, i.e. simulate the Newtonian equations of motion for systems with hundreds to millions of particles.",
+    "url": "https://www.gromacs.org",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gromacs"],
+    "aur": true
+  },
+  {
+    "name": "gspiceui",
+    "description": "GUI to various freely available Spice electronic circuit simulators.",
+    "url": "https://sourceforge.net/projects/gspiceui/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gspiceui"],
+    "aur": true
+  },
+  {
+    "name": "Gstat",
+    "description": "Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation",
+    "url": "https://cran.r-project.org/web/packages/gstat/index.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["r-gstat"],
+    "aur": true
   },
   {
     "name": "GTKWave",
     "description": "Fully featured GTK-based wave viewer which reads LXT, LXT2, VZT, FST, and GHW files as well as standard Verilog VCD/EVCD files and allows their viewing.",
     "url": "https://gtkwave.sourceforge.net/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gtkwave_gtkwave.png",
+    "pkgname": ["gtkwave"],
+    "aur": false
+  },
+  {
+    "name": "gvSIG",
+    "description": "vSIG is a geographic information system (GIS), that is, a desktop application designed for capturing, storing, handling, analyzing and deploying any kind of referenced geographic information in order to solve complex management and planning problems.",
+    "url": "http://www.gvsig.com/en",
     "icon": "generic-dark.svg",
-    "pkgname": ["gtkwave"]
+    "pkgname": ["gvsig-desktop-bin"],
+    "aur": true
+  },
+  {
+    "name": "GWtool",
+    "description": "Simple tools for working with gravitational waves",
+    "url": "https://gwtool.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gwtool"],
+    "aur": true
+  },
+  {
+    "name": "HEALPix",
+    "description": "Software for pixelization, hierarchical indexation, synthesis, analysis, and visualization of data on the sphere",
+    "url": "https://healpix.jpl.nasa.gov/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["healpix"],
+    "aur": true
+  },
+  {
+    "name": "HEASoft",
+    "description": "NASA high energy astrophysics library",
+    "url": "https://heasarc.gsfc.nasa.gov/docs/software/lheasoft/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["heasoft"],
+    "aur": true
+  },
+  {
+    "name": "Herwig",
+    "description": "Herwig is a multi-purpose particle physics event generator.",
+    "url": "https://herwig.hepforge.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["herwig"],
+    "aur": true
+  },
+  {
+    "name": "HNSKY",
+    "description": "Hallo Northern Sky is the semi professional free planetarium program",
+    "url": "https://sourceforge.net/projects/hnsky/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["hnsky-hg"],
+    "aur": true
+  },
+  {
+    "name": "icesl",
+    "description": "Modelling software with integrated slicer. Not brand specific. Closed source.",
+    "url": "https://icesl.loria.fr/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["icesl"],
+    "aur": true
+  },
+  {
+    "name": "IdeaMaker",
+    "description": "Slicer by Raise3D. Aimed at their printers but supports other brands as well. Closed source.",
+    "url": "https://www.raise3d.com/pages/ideamaker",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ideamaker"],
+    "aur": true
+  },
+  {
+    "name": "ImageJ",
+    "description": "Java-based image processing and analysing program that provides extensibility via plugins and macros. It is widely used in microscopy (e.g. for cell counting).",
+    "url": "https://imagej.net/ij/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["imagej"],
+    "aur": true
+  },
+  {
+    "name": "imSim",
+    "description": "software package that simulates the LSST telescope and survey",
+    "url": "https://github.com/LSSTDESC/imSim",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-imsim-git"],
+    "aur": true
+  },
+  {
+    "name": "IMUNES",
+    "description": "Integrated Multiprotocol Network Emulator/Simulator.",
+    "url": "https://imunes.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["imunes"],
+    "aur": true
+  },
+  {
+    "name": "Intel Quartus Prime",
+    "description": "A set of design tools for Intel's FPGA devices that includes Quartus Prime, ModelSim-Intel, HLS Compiler, etc.",
+    "url": "https://www.intel.com/content/www/us/en/software/programmable/overview.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["quartus-free"],
+    "aur": true
+  },
+  {
+    "name": "InterSpec",
+    "description": "spectral radiation analysis software",
+    "url": "https://sandialabs.github.io/InterSpec/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["interspec-bin"],
+    "aur": true
+  },
+  {
+    "name": "Isabelle",
+    "description": "Generic proof assistant that allows mathematical formulas to be expressed in a formal language and provides tools for proving those formulas in a logical calculus.",
+    "url": "https://www.cl.cam.ac.uk/research/hvg/Isabelle/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["isabelle"],
+    "aur": true
   },
   {
     "name": "iverilog",
     "description": "Icarus Verilog compiler and simulation tool (slower but older than Verilator).",
     "url": "https://steveicarus.github.io/iverilog/",
     "icon": "generic-dark.svg",
-    "pkgname": ["iverilog"]
+    "pkgname": ["iverilog"],
+    "aur": false
+  },
+  {
+    "name": "JAGS (Just another Gibbs sampler)",
+    "description": "Cross-platform program for analysis of Bayesian hierarchical models using Markov Chain Monte Carlo (MCMC) simulation.",
+    "url": "https://mcmc-jags.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["jags"],
+    "aur": true
+  },
+  {
+    "name": "jamovi",
+    "description": "Statistics package, which is easy to use, and designed to be familiar to users of SPSS. Based on the Electron platform.",
+    "url": "https://www.jamovi.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["jamovi-git"],
+    "aur": true
+  },
+  {
+    "name": "JaxoDraw",
+    "description": "A particle physics program for drawing Feynman diagrams.",
+    "url": "https://jaxodraw.sourceforge.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["jaxodraw"],
+    "aur": true
+  },
+  {
+    "name": "JHelioviewer",
+    "description": "Visualization software for solar image data in space weather context",
+    "url": "https://www.jhelioviewer.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["jhelioviewer"],
+    "aur": true
+  },
+  {
+    "name": "JMARS",
+    "description": "Java Mission-planning and Analysis for Remote Sensing.",
+    "url": "https://jmars.mars.asu.edu/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["jmars"],
+    "aur": true
   },
   {
     "name": "JOSM",
     "description": "Main editor for OpenStreetMap written in Java.",
     "url": "https://josm.openstreetmap.de/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/josm_org.openstreetmap.josm.png",
+    "pkgname": ["josm"],
+    "aur": false
+  },
+  {
+    "name": "JSkyCalc",
+    "description": "A tool for observing preparation in java",
+    "url": "https://caligari.dartmouth.edu/public/downloads/skycalc/",
     "icon": "generic-dark.svg",
-    "pkgname": ["josm"]
+    "pkgname": ["jskycalc"],
+    "aur": true
   },
   {
     "name": "Julia",
     "description": "High-level, high-performance dynamic language for technical computing.",
     "url": "https://julialang.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/julia_julia.png",
+    "pkgname": ["julia"],
+    "aur": false
+  },
+  {
+    "name": "KAlgebra",
+    "description": "Calculator and 3D plotter. Part of kde-education.",
+    "url": "https://apps.kde.org/kalgebramobile/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalgebra_kalgebra.png",
+    "pkgname": ["kalgebra"],
+    "aur": false
+  },
+  {
+    "name": "Kalk",
+    "description": "A convergent calculator application built with the Kirigami framework. Part of kde-utilities.",
+    "url": "https://apps.kde.org/kalk/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalk_org.kde.kalk.png",
+    "pkgname": ["kalk"],
+    "aur": false
+  },
+  {
+    "name": "kalker",
+    "description": "Command-line calculator with math syntax that supports user-defined variables and functions, complex numbers, and estimation of derivatives and integrals.",
+    "url": "https://github.com/PaddiM8/kalker",
     "icon": "generic-dark.svg",
-    "pkgname": ["julia"]
+    "pkgname": ["kalker"],
+    "aur": true
+  },
+  {
+    "name": "Kalzium",
+    "description": "Periodic table of the elements with molecule editor and equation solver. Part of kde-education.",
+    "url": "https://apps.kde.org/kalzium/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalzium_kalzium.png",
+    "pkgname": ["kalzium"],
+    "aur": false
+  },
+  {
+    "name": "KCalc",
+    "description": "Scientific calculator included in the KDE desktop. Part of kde-utilities.",
+    "url": "https://apps.kde.org/kcalc/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kcalc_accessories-calculator.png",
+    "pkgname": ["kcalc"],
+    "aur": false
+  },
+  {
+    "name": "KEuroCalc",
+    "description": "Universal currency converter and calculator.",
+    "url": "https://apps.kde.org/keurocalc/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["keurocalc"],
+    "aur": true
   },
   {
     "name": "KiCad",
     "description": "Software suite for electronic design automation (EDA) that facilitates the design of schematics for electronic circuits and their conversion to PCB (printed circuit board).",
     "url": "https://kicad.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["kicad"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kicad_kicad.png",
+    "pkgname": ["kicad"],
+    "aur": false
+  },
+  {
+    "name": "Kig",
+    "description": "Application for Interactive Geometry. Part of kde-education.",
+    "url": "https://apps.kde.org/kig/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kig_kig.png",
+    "pkgname": ["kig"],
+    "aur": false
+  },
+  {
+    "name": "KmPlot",
+    "description": "Program to draw graphs, their integrals or derivatives. Part of kde-education.",
+    "url": "https://apps.kde.org/kmplot/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmplot_kmplot.png",
+    "pkgname": ["kmplot"],
+    "aur": false
   },
   {
     "name": "kosmindoormap",
     "description": "Indoor cartography, levels by levels of buildings, mainly Train station, and Airport buildings. Based on OSM data.",
     "url": "https://www.kde.org",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kosmindoormap_go-home.png",
+    "pkgname": ["kosmindoormap"],
+    "aur": false
+  },
+  {
+    "name": "Kosmorro",
+    "description": "A program to calculate the ephemerides",
+    "url": "https://kosmorro.space/",
     "icon": "generic-dark.svg",
-    "pkgname": ["kosmindoormap"]
+    "pkgname": ["kosmorro"],
+    "aur": true
+  },
+  {
+    "name": "kst",
+    "description": "Real-time data viewer.",
+    "url": "https://kst-plot.kde.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["kst"],
+    "aur": true
   },
   {
     "name": "KStars",
     "description": "Planetarium application that provides an accurate graphical simulation of the night sky, from any location on Earth, at any date and time. It is included in KDE Edu.",
     "url": "https://kstars.kde.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kstars_kstars.png",
+    "pkgname": ["kstars"],
+    "aur": false
+  },
+  {
+    "name": "KTechLab",
+    "description": "IDE for microcontrollers and electronic circuit simulation.",
+    "url": "https://apps.kde.org/ktechlab/",
     "icon": "generic-dark.svg",
-    "pkgname": ["kstars"]
+    "pkgname": ["ktechlab"],
+    "aur": true
+  },
+  {
+    "name": "KTrip",
+    "description": "Public transport assistant for mobile devices. Part of kde-utilities.",
+    "url": "https://apps.kde.org/ktrip/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktrip_org.kde.ktrip.png",
+    "pkgname": ["ktrip"],
+    "aur": false
+  },
+  {
+    "name": "KWeather",
+    "description": "A convergent weather application for Plasma. Part of kde-utilities.",
+    "url": "https://apps.kde.org/kweather/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kweather_org.kde.kweather.png",
+    "pkgname": ["kweather"],
+    "aur": false
   },
   {
     "name": "LabPlot",
     "description": "Free software data analysis and visualization application, similar to SciDAVis.",
     "url": "https://labplot.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/labplot_org.kde.labplot.png",
+    "pkgname": ["labplot"],
+    "aur": false
+  },
+  {
+    "name": "LAMMPS",
+    "description": "Large-scale Atomic/Molecular Massively Parallel Simulator.",
+    "url": "https://www.lammps.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["labplot"]
+    "pkgname": ["lammps"],
+    "aur": true
+  },
+  {
+    "name": "Lattice Diamond",
+    "description": "A set of design tools for Lattice's FPGA chips.",
+    "url": "https://www.latticesemi.com",
+    "icon": "generic-dark.svg",
+    "pkgname": ["lattice-diamond"],
+    "aur": true
+  },
+  {
+    "name": "Lean Theorem Prover",
+    "description": "Proof assistant developed principally by Leonardo de Moura at Microsoft Research, used in conjunction with the Lean mathematical library.",
+    "url": "https://leanprover-community.github.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["lean-community"],
+    "aur": true
   },
   {
     "name": "LeoCAD",
     "description": "CAD program for creating virtual LEGO models. It has an easy to use interface and currently includes over 10,000 different pieces created by the LDraw community.",
     "url": "https://www.leocad.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/leocad_leocad.png",
+    "pkgname": ["leocad"],
+    "aur": false
+  },
+  {
+    "name": "Libint",
+    "description": "A high-performance library for computing Gaussian integrals in quantum mechanics",
+    "url": "https://github.com/evaleev/libint",
     "icon": "generic-dark.svg",
-    "pkgname": ["leocad"]
+    "pkgname": ["libint2"],
+    "aur": true
   },
   {
     "name": "LibreCAD",
     "description": "A 2D CAD application based on Qt5. Forked from QCAD Community Edition.",
     "url": "https://www.librecad.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/librecad_librecad.png",
+    "pkgname": ["librecad"],
+    "aur": false
+  },
+  {
+    "name": "libTheSky",
+    "description": "Fortran library to compute the positions of celestial bodies and events with great accuracy",
+    "url": "https://libthesky.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["librecad"]
+    "pkgname": ["libthesky"],
+    "aur": true
+  },
+  {
+    "name": "LifeLines",
+    "description": "Text based genealogy software for family trees and reports.",
+    "url": "https://github.com/lifelines/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["lifelines"],
+    "aur": true
+  },
+  {
+    "name": "lin_guider",
+    "description": "astronomical autoguiding program",
+    "url": "https://sourceforge.net/projects/linguider/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["lin-guider"],
+    "aur": true
+  },
+  {
+    "name": "Liri Calculator",
+    "description": "Calculator for Liri.",
+    "url": "https://github.com/lirios/calculator",
+    "icon": "generic-dark.svg",
+    "pkgname": ["liri-calculator"],
+    "aur": true
+  },
+  {
+    "name": "Logisim",
+    "description": "Educational digital logic design and simulation software, written in Java, officially its development has stopped.",
+    "url": "https://sourceforge.net/projects/circuit/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["logisim"],
+    "aur": true
+  },
+  {
+    "name": "Logisim Evolution",
+    "description": "Project which continue the development of the original Logisim with new features, written in Java.",
+    "url": "https://github.com/reds-heig/logisim-evolution",
+    "icon": "generic-dark.svg",
+    "pkgname": ["logisim-evolution-git"],
+    "aur": true
+  },
+  {
+    "name": "Madagascar",
+    "description": "Multidimensional data analysis and reproducible computational experiments.",
+    "url": "https://www.reproducibility.org",
+    "icon": "generic-dark.svg",
+    "pkgname": ["madagascar"],
+    "aur": true
+  },
+  {
+    "name": "Maple",
+    "description": "Famous commercial CAS. Often used in education.",
+    "url": "https://www.maplesoft.com/products/maple/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["maple2024"],
+    "aur": true
+  },
+  {
+    "name": "MapSCII",
+    "description": "Console Map Viewer.",
+    "url": "https://github.com/rastapasta/mapscii",
+    "icon": "generic-dark.svg",
+    "pkgname": ["nodejs-mapscii"],
+    "aur": true
+  },
+  {
+    "name": "Mapton",
+    "description": "Extensible desktop map and globe application written in Java.",
+    "url": "https://mapton.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["mapton"],
+    "aur": true
+  },
+  {
+    "name": "Marble",
+    "description": "Virtual Globe and World Atlas that can be used to learn more about the Earth. Part of kde-education.",
+    "url": "https://marble.kde.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marble_marble.png",
+    "pkgname": ["marble"],
+    "aur": false
   },
   {
     "name": "Marble Behaim",
     "description": "Viewer for the oldest existent globe of the Earth made by Martin Behaim and collaborators around 1492.",
     "url": "https://marble.kde.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["marble-behaim"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marble-behaim_org.kde.marble.behaim.png",
+    "pkgname": ["marble-behaim"],
+    "aur": false
   },
   {
     "name": "Marble Maps",
-    "description": "Vector and GNSS navigation system, with  Modular turn-by-turn car, foot, and bike navigation system (adapted to Linux Mobile).",
+    "description": "Vector and GNSS navigation system, with Modular turn-by-turn car, foot, and bike navigation system (adapted to Linux Mobile).",
     "url": "https://marble.kde.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["marble-maps"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marble-maps_org.kde.marble.maps.png",
+    "pkgname": ["marble-maps"],
+    "aur": false
   },
   {
     "name": "MATE Calc",
     "description": "Calculator for the MATE desktop environment.",
     "url": "https://mate-desktop.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mate-calc"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-calc_accessories-calculator.png",
+    "pkgname": ["mate-calc"],
+    "aur": false
   },
   {
     "name": "Mathics",
     "description": "A free CAS for symbolic mathematical computations which uses Python as its main language. It aims at achieving a Mathematica-compatible syntax and functions. It relies mostly on Sympy for most mathematical tasks and, optionally, Sage for more advanced functionality.",
     "url": "https://mathics.github.io/",
     "icon": "generic-dark.svg",
-    "pkgname": ["mathics"]
+    "pkgname": ["mathics"],
+    "aur": true
+  },
+  {
+    "name": "Mathomatic",
+    "description": "General purpose Computer Algebra System written in C.",
+    "url": "https://github.com/mfillpot/mathomatic",
+    "icon": "generic-dark.svg",
+    "pkgname": ["mathomatic"],
+    "aur": true
   },
   {
     "name": "matplotlib (PyLab)",
     "description": "Collection of Python modules (pyplot, numpy, etc.) used for scientific calculations.",
     "url": "https://www.scipy.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["python-matplotlib"]
+    "pkgname": ["python-matplotlib"],
+    "aur": false
+  },
+  {
+    "name": "MatterControl",
+    "description": "Simple 3D editor, slicer, and 3D printer control software by MatterHackers. Not brand specific. Open source.",
+    "url": "http://www.mattercontrol.com",
+    "icon": "generic-dark.svg",
+    "pkgname": ["mattercontrol"],
+    "aur": true
   },
   {
     "name": "Maxima",
     "description": "Maple/Mathematica-like computer algebra system.",
     "url": "https://maxima.sourceforge.net/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maxima_xmaxima.png",
+    "pkgname": ["maxima"],
+    "aur": false
+  },
+  {
+    "name": "mdanalysis",
+    "description": "An object-oriented python toolkit to analyze molecular dynamics trajectories in many popular formats.",
+    "url": "https://www.mdanalysis.org",
     "icon": "generic-dark.svg",
-    "pkgname": ["maxima"]
+    "pkgname": ["python-mdanalysis"],
+    "aur": true
+  },
+  {
+    "name": "MDTraj",
+    "description": "A modern, open library for the analysis of molecular dynamics trajectories.",
+    "url": "https://github.com/mdtraj/mdtraj",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-mdtraj"],
+    "aur": true
   },
   {
     "name": "Merkaartor",
     "description": "OpenStreetMap editor.",
     "url": "https://merkaartor.be/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/merkaartor_merkaartor.png",
+    "pkgname": ["merkaartor"],
+    "aur": false
+  },
+  {
+    "name": "Meshroom",
+    "description": "Node-based GUI for AliceVision",
+    "url": "https://alicevision.org/#meshroom",
     "icon": "generic-dark.svg",
-    "pkgname": ["merkaartor"]
+    "pkgname": ["meshroom"],
+    "aur": true
+  },
+  {
+    "name": "meteo-qt",
+    "description": "System tray application for weather status information.",
+    "url": "https://github.com/dglent/meteo-qt",
+    "icon": "generic-dark.svg",
+    "pkgname": ["meteo-qt"],
+    "aur": true
+  },
+  {
+    "name": "MODELLER",
+    "description": "3D structure homology modeller.",
+    "url": "https://salilab.org/modeller/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["modeller"],
+    "aur": true
+  },
+  {
+    "name": "Montage",
+    "description": "An astronomical image mosaic engine",
+    "url": "http://montage.ipac.caltech.edu/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["montage"],
+    "aur": true
+  },
+  {
+    "name": "Mrcal",
+    "description": "Is a generic toolkit built to solve the calibration and SFM-like problems we encounter at NASA/JPL.",
+    "url": "https://mrcal.secretsauce.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["mrcal"],
+    "aur": true
+  },
+  {
+    "name": "MUMmer",
+    "description": "Bioinformatics software system for sequence alignment based on suffix trees.",
+    "url": "https://mummer.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["mummer"],
+    "aur": true
+  },
+  {
+    "name": "Munipack",
+    "description": "A general astronomical image processing software",
+    "url": "http://munipack.physics.muni.cz/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["munipack"],
+    "aur": true
+  },
+  {
+    "name": "NAMD",
+    "description": "NAMD is a parallel molecular dynamics code designed for high-performance simulation of large biomolecular systems.",
+    "url": "https://www.ks.uiuc.edu/Research/namd/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["namd"],
+    "aur": true
+  },
+  {
+    "name": "Navit",
+    "description": "Modular turn-by-turn car navigation system.",
+    "url": "https://www.navit-project.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["navit"],
+    "aur": true
+  },
+  {
+    "name": "Netgen/NGSolve",
+    "description": "A high performance multiphysics finite element software, with a flexible Python interface to implement new physical equations and solution algorithms easily.",
+    "url": "https://ngsolve.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["netgen-git"],
+    "aur": true
+  },
+  {
+    "name": "Netlogo",
+    "description": "NetLogo is a multi-agent programmable modeling environment.",
+    "url": "https://ccl.northwestern.edu/netlogo/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["netlogo"],
+    "aur": true
   },
   {
     "name": "ngspice",
     "description": "The established Linux circuit simulator. Open source successor of the spice3f5 code. Has the most versatile user interface; supporting scripting within the circuit descriptions, use through an interpreter, as a C library, through tcl or various external wrappers (e.g., Python).",
     "url": "https://ngspice.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["ngspice"]
+    "pkgname": ["ngspice"],
+    "aur": false
+  },
+  {
+    "name": "ns-2",
+    "description": "Discrete event simulator targeted at networking research.",
+    "url": "https://www.isi.edu/nsnam/ns/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ns"],
+    "aur": true
+  },
+  {
+    "name": "ns-3",
+    "description": "Discrete-event network simulator for Internet systems.",
+    "url": "https://www.nsnam.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ns3"],
+    "aur": true
+  },
+  {
+    "name": "numbat",
+    "description": "A statically typed programming language for scientific computations with first class support for physical dimensions and units.",
+    "url": "https://numbat.dev/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["numbat-bin"],
+    "aur": true
+  },
+  {
+    "name": "Numbat",
+    "description": "Statically typed programming language for scientific computations with first class support for physical dimensions and units.",
+    "url": "https://github.com/sharkdp/numbat",
+    "icon": "generic-dark.svg",
+    "pkgname": ["numbat"],
+    "aur": true
+  },
+  {
+    "name": "NWChem",
+    "description": "Ab initio computational chemistry software package.",
+    "url": "https://nwchemgit.github.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["nwchem"],
+    "aur": true
+  },
+  {
+    "name": "oaCapture",
+    "description": "A planetary imaging application using Qt5",
+    "url": "https://www.openastroproject.org/oacapture/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["oacapture"],
+    "aur": true
   },
   {
     "name": "Octave",
     "description": "MATLAB-like language and interface for numerical computations.",
-    "url": "https://www.gnu.org/software/octave/ ",
+    "url": "https://www.gnu.org/software/octave/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/octave_octave.png",
+    "pkgname": ["octave"],
+    "aur": false
+  },
+  {
+    "name": "OctoPrint",
+    "description": "Web interface for FDM 3D printers using G-code. Open source.",
+    "url": "https://octoprint.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["octave"]
+    "pkgname": ["octoprint"],
+    "aur": true
   },
   {
     "name": "OffRoad",
     "description": "Offline vector map display ported from OsmAnd.",
     "url": "https://sourceforge.net/projects/offroadosm/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/offroad_offroad.png",
+    "pkgname": ["offroad"],
+    "aur": false
+  },
+  {
+    "name": "OMNeT++",
+    "description": "Component-based simulation package designed for modeling communication networks.",
+    "url": "https://omnetpp.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["offroad"]
+    "pkgname": ["omnetpp"],
+    "aur": true
+  },
+  {
+    "name": "ONELAB/Gmsh",
+    "description": "An open-source, lightweight interface to finite element software, by default containing the mesh generator Gmsh, the finite element solver GetDP and the optimization library conveks.",
+    "url": "http://onelab.info/ https://getdp.info/ https://gmsh.info/ http://onelab.info/conveks/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["gmsh"],
+    "aur": true
+  },
+  {
+    "name": "Open Babel",
+    "description": "A library designed to interconvert between many file formats used in molecular modeling and computational chemistry.",
+    "url": "https://openbabel.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openbabel"],
+    "aur": false
+  },
+  {
+    "name": "Open PHD Guiding",
+    "description": "PHD2 astrophotography autoguiding tool",
+    "url": "https://openphdguiding.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["phd2"],
+    "aur": true
+  },
+  {
+    "name": "OpenFOAM",
+    "description": "Software package and toolkit for computational fluid dynamics (CFD).",
+    "url": "https://openfoam.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openfoam-org"],
+    "aur": true
+  },
+  {
+    "name": "OpenFPGAloader",
+    "description": "Universal utility for programming FPGA. Try openfpgaloader-git if your board is not managed by the stable version.",
+    "url": "https://github.com/trabucayre/openFPGALoader",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openfpgaloader"],
+    "aur": false
+  },
+  {
+    "name": "OpenLoops 2",
+    "description": "A particle physics package for the fast numerical evaluation of tree and one-loop matrix elements.",
+    "url": "https://openloops.hepforge.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openloops"],
+    "aur": true
+  },
+  {
+    "name": "OpenMVG",
+    "description": "OpenMVG provides an end-to-end 3D reconstruction-from-images framework compounded of libraries, binaries, and pipelines.",
+    "url": "https://github.com/openMVG/openMVG",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openmvg-git"],
+    "aur": true
+  },
+  {
+    "name": "OpenMVS",
+    "description": "A library for computer-vision scientists and especially targeted to the Multi-View Stereo reconstruction community.",
+    "url": "https://cdcseacave.github.io",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openmvs"],
+    "aur": true
+  },
+  {
+    "name": "OpenOrienteering Mapper",
+    "description": "Orienteering mapmaking program.",
+    "url": "https://www.openorienteering.org/apps/mapper/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["openorienteering-mapper"],
+    "aur": true
   },
   {
     "name": "OpenSCAD",
     "description": "A 3D CAD modeler that uses a textual, programmatic approach to creating and manipulating objects.",
     "url": "https://www.openscad.org",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openscad_openscad.png",
+    "pkgname": ["openscad"],
+    "aur": false
+  },
+  {
+    "name": "OpenSpace",
+    "description": "OpenSpace is an open source, non-commercial, and freely available interactive data visualization software designed to visualize the entire known universe and portray our ongoing efforts to investigate the cosmos",
+    "url": "https://www.openspaceproject.com/",
     "icon": "generic-dark.svg",
-    "pkgname": ["openscad"]
+    "pkgname": ["openspace-git"],
+    "aur": true
+  },
+  {
+    "name": "ORCA",
+    "description": "ORCA is an ab initio, DFT, and semi-empirical SCF-MO package.",
+    "url": "https://orcaforum.kofo.mpg.de/app.php/portal",
+    "icon": "generic-dark.svg",
+    "pkgname": ["orcaqm"],
+    "aur": true
+  },
+  {
+    "name": "orca-slicer",
+    "description": "Community maintained fork of BambuStudio (in turn forked from PrusaSlicer). Open Source.",
+    "url": "https://github.com/SoftFever/OrcaSlicer",
+    "icon": "generic-dark.svg",
+    "pkgname": ["orca-slicer"],
+    "aur": true
+  },
+  {
+    "name": "Oregano",
+    "description": "Graphical software application for schematic capture and simulation of electrical circuits. The actual simulation is done by the ngspice or Gnucap engines.",
+    "url": "https://github.com/drahnr/oregano",
+    "icon": "generic-dark.svg",
+    "pkgname": ["oregano"],
+    "aur": true
+  },
+  {
+    "name": "Organic Maps",
+    "description": "GNSS based navigation, with vector off-line and routing features, and turn by turn routing",
+    "url": "https://github.com/organicmaps/organicmaps",
+    "icon": "generic-dark.svg",
+    "pkgname": ["organicmaps-git"],
+    "aur": true
+  },
+  {
+    "name": "OSMin",
+    "description": "GNSS based navigation, with vector off-line and routing features, and turn by turn car, foot, bike, and hiking routing (adapted to Linux Mobile).",
+    "url": "https://github.com/janbar/osmin",
+    "icon": "generic-dark.svg",
+    "pkgname": ["osmin"],
+    "aur": true
+  },
+  {
+    "name": "Our Galaxy",
+    "description": "Is a unique app that helps you understand the structural components of the Galaxy and visualize the locations and physical properties of deep sky objects in and around it",
+    "url": "https://www.otherwise.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ourgalaxy-bin"],
+    "aur": true
+  },
+  {
+    "name": "OVITO (Open Visualization Tool)",
+    "description": "Scientific data visualization and analysis solution for particle-based simulations.",
+    "url": "https://ovito.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ovito"],
+    "aur": true
+  },
+  {
+    "name": "Pal",
+    "description": "Positional Astronomy Library.",
+    "url": "https://github.com/Starlink/pal",
+    "icon": "generic-dark.svg",
+    "pkgname": ["starlink-pal"],
+    "aur": true
+  },
+  {
+    "name": "Panoply",
+    "description": "NetCDF, HDF and GRIB Data Viewer by NASA GISS",
+    "url": "https://www.giss.nasa.gov/tools/panoply/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["panoply"],
+    "aur": true
   },
   {
     "name": "ParaView",
     "description": "Interactive data visualization tool built using VTK that can scale across distributed computer hardware.",
     "url": "https://www.paraview.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["paraview"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/paraview_paraview.png",
+    "pkgname": ["paraview"],
+    "aur": false
   },
   {
     "name": "PARI/GP",
     "description": "Computer algebra system designed for fast computations in number theory.",
     "url": "https://pari.math.u-bordeaux.fr/",
     "icon": "generic-dark.svg",
-    "pkgname": ["pari"]
+    "pkgname": ["pari"],
+    "aur": false
+  },
+  {
+    "name": "PDB2PQR",
+    "description": "Electrostatic and solvation properties for complex molecules.",
+    "url": "https://www.poissonboltzmann.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-pdb2pqr"],
+    "aur": true
+  },
+  {
+    "name": "Period04",
+    "description": "Period04 is a computer program especially dedicated to the statistical analysis of large astronomical time series containing gaps",
+    "url": "https://period04.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["period04"],
+    "aur": true
+  },
+  {
+    "name": "Phyghtmap",
+    "description": "Generate OSM contour lines from NASA SRTM data",
+    "url": "http://katze.tfiu.de/projects/phyghtmap/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["phyghtmap"],
+    "aur": true
+  },
+  {
+    "name": "PlanetarySystemStacker",
+    "description": "Produce a sharp image of a planetary system object",
+    "url": "https://github.com/Rolf-Hempel/PlanetarySystemStacker",
+    "icon": "generic-dark.svg",
+    "pkgname": ["planetarysystemstacker-git"],
+    "aur": true
   },
   {
     "name": "platformio",
-    "description": "Collaborative platform for embedded development, embedded development, with debugger, unit testing, code analysis. Default IDE is VSCode, but can be used by Atom, Eclipse, Emacs Qt Creator, Vim and several other IDE. Core CLI utils.",
+    "description": "Collaborative platform for embedded development, embedded development, with debugger, unit testing, code analysis. Default IDE is VSCode, but can be used by Atom, Eclipse, Emacs, Qt Creator, Vim and several other IDE. Core CLI utils.",
     "url": "https://platformio.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["platformio-core"]
+    "pkgname": ["platformio-core"],
+    "aur": false
   },
   {
-    "name": "Prolog",
-    "description": "Prolog is a logic programming language associated with artificial intelligence and computational linguistics.",
-    "url": "https://www.swi-prolog.org/",
+    "name": "Plots",
+    "description": "A graph plotting application for GNOME.",
+    "url": "https://github.com/alexhuntley/Plots",
     "icon": "generic-dark.svg",
-    "pkgname": ["swi-prolog"]
+    "pkgname": ["plots"],
+    "aur": true
+  },
+  {
+    "name": "PLUMED",
+    "description": "An open source plugin for free energy calculations in molecular systems which works together with some of the most popular molecular dynamics engines.",
+    "url": "https://www.plumed.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["plumed"],
+    "aur": true
+  },
+  {
+    "name": "Pothos",
+    "description": "The Pothos project is a complete data-flow framework for creating topologies of interconnected processing blocks.",
+    "url": "https://github.com/pothosware/PothosCore/wiki",
+    "icon": "generic-dark.svg",
+    "pkgname": ["pothos"],
+    "aur": true
+  },
+  {
+    "name": "PreviSat",
+    "description": "PreviSat is a satellite tracking software for observing purposes",
+    "url": "https://previsat.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["previsat"],
+    "aur": true
+  },
+  {
+    "name": "PrintRun",
+    "description": "GUI control software for FDM 3D printers using G-code. Open source.",
+    "url": "https://github.com/kliment/Printrun",
+    "icon": "generic-dark.svg",
+    "pkgname": ["printrun"],
+    "aur": true
+  },
+  {
+    "name": "Project Pluto",
+    "description": "Project Pluto supplies astronomical software, both commercial and freeware, to amateur and professional astronomers",
+    "url": "https://www.projectpluto.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["pluto-lunar-git"],
+    "aur": true
   },
   {
     "name": "PrusaSlicer",
     "description": "Slicer by Prusa Research. A fork of Slic3r. Aimed at their printers but supports other brands as well. Open source.",
     "url": "https://github.com/prusa3d/PrusaSlicer",
     "icon": "generic-dark.svg",
-    "pkgname": ["prusa-slicer"]
+    "pkgname": ["prusa-slicer"],
+    "aur": false
+  },
+  {
+    "name": "PSI4",
+    "description": "Open-source quantum chemistry",
+    "url": "https://psicode.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["psi4-git"],
+    "aur": true
   },
   {
     "name": "PSPP",
     "description": "Free SPSS implementation.",
     "url": "https://www.gnu.org/software/pspp/",
     "icon": "generic-dark.svg",
-    "pkgname": ["pspp"]
+    "pkgname": ["pspp"],
+    "aur": true
   },
   {
     "name": "PulseView",
     "description": "Logic analyzer, oscilloscope and MSO GUI.",
     "url": "https://sigrok.org/wiki/PulseView",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pulseview_pulseview.png",
+    "pkgname": ["pulseview"],
+    "aur": false
+  },
+  {
+    "name": "Pure Maps",
+    "description": "Display vector and raster maps, places, routes, etc.",
+    "url": "https://rinigus.github.io/pure-maps/",
     "icon": "generic-dark.svg",
-    "pkgname": ["pulseview"]
+    "pkgname": ["pure-maps"],
+    "aur": true
+  },
+  {
+    "name": "PyEphem",
+    "description": "PyEphem provides scientific-grade astronomical computations",
+    "url": "https://rhodesmill.org/pyephem/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-pyephem"],
+    "aur": true
   },
   {
     "name": "PyMOL",
     "description": "Open-source molecular visualization system that can produce high quality 3D images of small molecules and biological macromolecules, such as proteins.",
     "url": "https://pymol.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pymol_pymol.png",
+    "pkgname": ["pymol"],
+    "aur": false
+  },
+  {
+    "name": "Pynterferometer",
+    "description": "Is a graphical interface designed to demonstrate the techniques of radio interferometry used by telescopes",
+    "url": "https://www.jb.man.ac.uk/pynterferometer/index.html",
     "icon": "generic-dark.svg",
-    "pkgname": ["pymol"]
+    "pkgname": ["pynterferometer"],
+    "aur": true
+  },
+  {
+    "name": "Pysolar",
+    "description": "Collection of Python libraries for simulating the irradiation of any point on earth by the sun. It includes code for extremely precise ephemeris calculations.",
+    "url": "https://pysolar.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-pysolar"],
+    "aur": true
   },
   {
     "name": "Python Data Analysis Library (pandas)",
-    "description": " Providing high-performance, easy-to-use data structures and data analysis tools with Python programming language.",
+    "description": "Providing high-performance, easy-to-use data structures and data analysis tools with Python programming language.",
     "url": "https://pandas.pydata.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["python-pandas"]
+    "pkgname": ["python-pandas"],
+    "aur": false
   },
   {
-    "name": "PyTorch",
-    "description": "An open source machine learning framework that accelerates the path from research prototyping to production deployment.",
-    "url": "https://pytorch.org/",
+    "name": "Pywwt",
+    "description": "Is the official toolkit for accessing AAS WorldWide Telescope (WWT) from Python",
+    "url": "https://pywwt.readthedocs.io/en/stable/",
     "icon": "generic-dark.svg",
-    "pkgname": ["python-pytorch"]
+    "pkgname": ["python-pywwt"],
+    "aur": true
   },
   {
     "name": "qalc",
     "description": "Command-line calculator and equation solver with fault-tolerant parsing, constant recognition and units.",
     "url": "https://qalculate.github.io/",
     "icon": "generic-dark.svg",
-    "pkgname": ["libqalculate"]
+    "pkgname": ["libqalculate"],
+    "aur": false
+  },
+  {
+    "name": "Qalculate!",
+    "description": "Calculator and equation solver with fault-tolerant parsing, constant recognition and units.",
+    "url": "https://qalculate.github.io/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qalculate-gtk_qalculate.png",
+    "pkgname": ["qalculate-gtk"],
+    "aur": false
   },
   {
     "name": "QCAD",
     "description": "A 2D CAD application based on Qt. Supports the DFX and HPGL standard file formats, and optionally the DWG format through a proprietary plugin.",
     "url": "https://www.qcad.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qcad_org.qcad.QCAD.png",
+    "pkgname": ["qcad"],
+    "aur": false
+  },
+  {
+    "name": "QElectroTech",
+    "description": "Application used to draw advanced electrical circuits.",
+    "url": "https://qelectrotech.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["qcad"]
+    "pkgname": ["qelectrotech"],
+    "aur": true
   },
   {
     "name": "QGIS",
-    "description": " Geographic Information System (GIS) that supports vector, raster & database formats.",
+    "description": "Geographic Information System (GIS) that supports vector, raster & database formats.",
     "url": "https://qgis.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qgis"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qgis_qgis.png",
+    "pkgname": ["qgis"],
+    "aur": false
   },
   {
     "name": "QMapShack",
     "description": "Plan your next outdoor trip.",
     "url": "https://github.com/Maproom/qmapshack/",
     "icon": "generic-dark.svg",
-    "pkgname": ["qmapshack"]
+    "pkgname": ["qmapshack"],
+    "aur": false
+  },
+  {
+    "name": "QtMips",
+    "description": "MIPS CPU simulator for education purposes with pipeline and cache visualization.",
+    "url": "https://github.com/cvut/QtMips",
+    "icon": "generic-dark.svg",
+    "pkgname": ["qtmips"],
+    "aur": true
+  },
+  {
+    "name": "QtRvSim",
+    "description": "RISC-V CPU simulator for education purposes.",
+    "url": "https://github.com/cvut/qtrvsim",
+    "icon": "generic-dark.svg",
+    "pkgname": ["qtrvsim"],
+    "aur": true
+  },
+  {
+    "name": "QtSpim",
+    "description": "Qt port of one of the first educational MIPS CPU simulators. No longer maintained, but still used in some classrooms.",
+    "url": "https://spimsimulator.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["qtspim"],
+    "aur": true
+  },
+  {
+    "name": "Quantum ESPRESSO",
+    "description": "Integrated suite of applications for electronic-structure calculations and materials modeling at nanoscale. It is based on density-functional theory, plane waves, and pseudopotentials (both norm-conserving and ultrasoft).",
+    "url": "https://www.quantum-espresso.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["quantum-espresso"],
+    "aur": true
+  },
+  {
+    "name": "Qucs",
+    "description": "Electronics circuit simulator application that gives you the ability to set up a circuit with a graphical user interface and simulate its large-signal, small-signal and noise behaviour.",
+    "url": "https://qucs.sourceforge.net",
+    "icon": "generic-dark.svg",
+    "pkgname": ["qucs"],
+    "aur": true
   },
   {
     "name": "qucs-s",
     "description": "Electronics circuit simulator that gives you the ability to set up a circuit with a GUI and simulate it. Fork of qucs that uses external, better, programs to do actual simulation.",
     "url": "https://ra3xdh.github.io/",
     "icon": "generic-dark.svg",
-    "pkgname": ["qucs-s"]
+    "pkgname": ["qucs-s"],
+    "aur": true
+  },
+  {
+    "name": "QuTiP",
+    "description": "QuTiP is open-source software for simulating the dynamics of open quantum systems",
+    "url": "https://qutip.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-qutip"],
+    "aur": true
   },
   {
     "name": "R",
     "description": "Software environment for statistical computing and graphics.",
     "url": "https://cran.r-project.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["r"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/r_r.png",
+    "pkgname": ["r"],
+    "aur": false
   },
   {
     "name": "Railway",
     "description": "Lets you look up travel information for many different railways, all without needing to navigate through different websites.",
     "url": "https://apps.gnome.org/DieBahn/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["railway"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/railway_de.schmidhuberj.DieBahn.png",
+    "pkgname": ["railway"],
+    "aur": false
   },
   {
     "name": "RDKit",
     "description": "A collection of cheminformatics and machine-learning software written in C++ and Python.",
     "url": "https://www.rdkit.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["rdkit"]
+    "pkgname": ["rdkit"],
+    "aur": false
+  },
+  {
+    "name": "rDock",
+    "description": "A fast, versatile and open-source program for docking ligands to proteins and nucleic acids.",
+    "url": "https://rdock.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["rdock"],
+    "aur": true
+  },
+  {
+    "name": "Repetier-Host",
+    "description": "Combined slicer and control software for 3D printers. Closed source.",
+    "url": "https://www.repetier.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["repetier-host"],
+    "aur": true
   },
   {
     "name": "Rink",
     "description": "A unit conversion tool and library written in rust. It can be used for physics and engineering calculations, as well as dimensionality analysis.",
     "url": "https://rinkcalc.app/about",
     "icon": "generic-dark.svg",
-    "pkgname": ["rink"]
+    "pkgname": ["rink"],
+    "aur": false
+  },
+  {
+    "name": "Rivet",
+    "description": "A particle physics package for data analysis and validation of Monte Carlo event generators",
+    "url": "https://rivet.hepforge.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["rivet"],
+    "aur": true
   },
   {
     "name": "RKWard",
     "description": "Frontend for the statistical language R.",
     "url": "https://rkward.kde.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rkward_rkward.png",
+    "pkgname": ["rkward"],
+    "aur": false
+  },
+  {
+    "name": "RochePlot",
+    "description": "Plot the key stages in the evolution of a binary star",
+    "url": "https://rocheplot.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["rkward"]
+    "pkgname": ["rocheplot"],
+    "aur": true
+  },
+  {
+    "name": "Rocq",
+    "description": "Formal proof management system. It provides a formal language to write mathematical definitions, executable algorithms and theorems together with an environment for semi-interactive development of machine-checked proofs.",
+    "url": "https://coq.inria.fr/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["rocq"],
+    "aur": false
+  },
+  {
+    "name": "Rocs",
+    "description": "Graph Theory IDE for everybody interested in designing and analyzing graph algorithms (e.g., lecturers, students, researchers). Part of kde-education.",
+    "url": "https://apps.kde.org/rocs/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rocs_rocs.png",
+    "pkgname": ["rocs"],
+    "aur": false
   },
   {
     "name": "ROOT",
     "description": "Data analysis program and library (originally for particle physics) developed by CERN.",
     "url": "https://root.cern.ch/",
     "icon": "generic-dark.svg",
-    "pkgname": ["root"]
+    "pkgname": ["root"],
+    "aur": false
   },
   {
     "name": "RStudio",
     "description": "A powerful and productive IDE for R written in Qt.",
     "url": "https://www.rstudio.com/",
     "icon": "generic-dark.svg",
-    "pkgname": ["rstudio-desktop"]
+    "pkgname": ["rstudio-desktop"],
+    "aur": true
+  },
+  {
+    "name": "rubin_sim",
+    "description": "Scheduler, survey strategy analysis, and other simulation tools for Rubin Observatory",
+    "url": "https://github.com/lsst/rubin_sim",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-rubinsim-git"],
+    "aur": true
+  },
+  {
+    "name": "SAGA",
+    "description": "A Geographic Information System (GIS) software with immense capabilities for geodata processing and analysis.",
+    "url": "https://saga-gis.sourceforge.io/en/index.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["saga-gis"],
+    "aur": true
   },
   {
     "name": "SageMath",
     "description": "Mathematics software system, that combines many existing open-source packages into a common Python interface. Alternative to Magma, Maple, Mathematica and Matlab.",
     "url": "https://www.sagemath.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["sagemath"]
+    "pkgname": ["sagemath"],
+    "aur": false
+  },
+  {
+    "name": "SAOImageDS9",
+    "description": "SAOImage DS9: Astronomical Data Visualization Application",
+    "url": "https://sites.google.com/cfa.harvard.edu/saoimageds9",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ds9"],
+    "aur": true
+  },
+  {
+    "name": "Satellite",
+    "description": "Displays Global Navigation Satellite System (GNSS: GPS, Galileo, Glonass etc.) information obtained from NMEA sources and saves your tracks",
+    "url": "https://codeberg.org/tpikonen/satellite",
+    "icon": "generic-dark.svg",
+    "pkgname": ["satellite-gtk"],
+    "aur": true
+  },
+  {
+    "name": "SCAMP",
+    "description": "reads SExtractor catalogs and computes astrometric and photometric solutions for any arbitrary sequence of FITS images in a completely automatic way.",
+    "url": "https://www.astromatic.net/software/scamp/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astromatic-scamp"],
+    "aur": true
+  },
+  {
+    "name": "Scilab",
+    "description": "Matlab alternative used for numerical computations. Its syntax is not equivalent to that of Matlab, but it can be easily converted.",
+    "url": "https://www.scilab.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["scilab"],
+    "aur": true
   },
   {
     "name": "sdcc",
-    "description": "Small Device C Compiler, appropriate for various 8-bit microcontrollers and microprocessors including those made by or based on Intel MCS51, Maxim/Dallas, DS80C390, Freescale/Motorola HC08, Zilog Z80, Padauk, ST Microelectronics STM8, MOS 6502, and WDC 65C02. Suite contains compiler, assembler, linker, preprocessor, various simulators, debuggers, etc. ",
+    "description": "Small Device C Compiler, appropriate for various 8-bit microcontrollers and microprocessors including those made by or based on Intel MCS51, Maxim/Dallas, DS80C390, Freescale/Motorola HC08, Zilog Z80, Padauk, ST Microelectronics STM8, MOS 6502, and WDC 65C02. Suite contains compiler, assembler, linker, preprocessor, various simulators, debuggers, etc.",
     "url": "https://sdcc.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["sdcc"]
+    "pkgname": ["sdcc"],
+    "aur": false
+  },
+  {
+    "name": "SDR#",
+    "description": "The most popular SDR program.",
+    "url": "https://airspy.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["sdrsharp"],
+    "aur": true
+  },
+  {
+    "name": "SeisComP",
+    "description": "A seismological software for data acquisition, processing, distribution and interactive analysis.",
+    "url": "https://github.com/SeisComP/seiscomp",
+    "icon": "generic-dark.svg",
+    "pkgname": ["seiscomp"],
+    "aur": true
+  },
+  {
+    "name": "Seismic Un*x",
+    "description": "A seismic processing and research environment developed at the Center for Wave Phenomena, Colorado School of Mines",
+    "url": "https://wiki.seismic-unix.org/start",
+    "icon": "generic-dark.svg",
+    "pkgname": ["seismic-unix"],
+    "aur": true
+  },
+  {
+    "name": "SExtractor",
+    "description": "Is a program that builds a catalogue of objects from an astronomical image.",
+    "url": "https://www.astromatic.net/software/sextractor/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["astromatic-sextractor"],
+    "aur": true
+  },
+  {
+    "name": "Shadow",
+    "description": "An open-source distributed system/network simulator/emulator hybrid (e.g. for Tor and Bitcoin).",
+    "url": "https://shadow.github.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["tor-shadow"],
+    "aur": true
+  },
+  {
+    "name": "Sherpa",
+    "description": "A particle physics package for Monte Carlo simulation of collider events.",
+    "url": "https://sherpa-team.gitlab.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["sherpa"],
+    "aur": true
+  },
+  {
+    "name": "SigDigger",
+    "description": "Qt-based digital signal analyzer, using Suscan core and Sigutils DSP library.",
+    "url": "https://github.com/BatchDrake/SigDigger",
+    "icon": "generic-dark.svg",
+    "pkgname": ["sigdigger-git"],
+    "aur": true
+  },
+  {
+    "name": "Silx",
+    "description": "A collection of Python packages for data analysis at synchrotron radiation facilities.",
+    "url": "http://www.silx.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-silx"],
+    "aur": true
+  },
+  {
+    "name": "SimGrid",
+    "description": "A scientific instrument to study large-scale distributed systems.",
+    "url": "https://simgrid.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["simgrid"],
+    "aur": true
   },
   {
     "name": "Singular",
     "description": "Computer algebra system for polynomial computations, with special emphasis on commutative and non-commutative algebra, algebraic geometry, and singularity theory.",
     "url": "https://www.singular.uni-kl.de/",
     "icon": "generic-dark.svg",
-    "pkgname": ["singular"]
+    "pkgname": ["singular"],
+    "aur": false
+  },
+  {
+    "name": "Siril",
+    "description": "Siril is a software application for astrophotography, which allows pre-processing and processing of images from any type of camera (CCD, planetary camera, webcam etc.)",
+    "url": "https://siril.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["siril"],
+    "aur": true
+  },
+  {
+    "name": "Skychart / Cartes du Ciel",
+    "description": "Planetarium that maps out and labels most of the constellations, planets, and objects you can see with a telescope. It can also download Digitized Sky Survey Charts and superimpose images over these charts.",
+    "url": "https://www.ap-i.net/skychart/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["skychart-git"],
+    "aur": true
+  },
+  {
+    "name": "Skyfield",
+    "description": "Elegant astronomy for Python",
+    "url": "https://rhodesmill.org/skyfield/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["python-skyfield"],
+    "aur": true
+  },
+  {
+    "name": "Slic3r",
+    "description": "One of the earliest slicers. Not used much any longer. Not brand specific. Open source.",
+    "url": "https://slic3r.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["slic3r"],
+    "aur": true
+  },
+  {
+    "name": "SmartSim",
+    "description": "Simple and beautiful digital logic circuit design and simulation software, mainly target teachers and students, very lightweight and cross platform, GPL licensed, written in Vala.",
+    "url": "https://smartsim.org.uk",
+    "icon": "generic-dark.svg",
+    "pkgname": ["smartsim-git"],
+    "aur": true
+  },
+  {
+    "name": "smina",
+    "description": "Smina is a fork of Autodock Vina that focuses on improving scoring and minimization.",
+    "url": "https://sourceforge.net/projects/smina/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["smina-bin"],
+    "aur": true
+  },
+  {
+    "name": "Snakemake",
+    "description": "Python-based language and execution environment for GNU Make-like workflows.",
+    "url": "https://snakemake.github.io/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["snakemake"],
+    "aur": true
+  },
+  {
+    "name": "Snapgene",
+    "description": "Closed source molecular cloning application that offers a fast and easy way to plan, visualize, and document molecular biology procedures. Supports a wide range of cloning and PCR manipulations. The free version allows most common visualizations of a molecular biology workflow.",
+    "url": "https://www.snapgene.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["snapgene-viewer"],
+    "aur": true
+  },
+  {
+    "name": "SOFA",
+    "description": "Set of algorithms and procedures used in fundamental astronomy",
+    "url": "http://www.iausofa.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["sofa"],
+    "aur": true
+  },
+  {
+    "name": "SolTrack",
+    "description": "A free, fast and accurate C/C++ routine to compute the position of the Sun",
+    "url": "https://soltrack.sourceforge.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["soltrack"],
+    "aur": true
   },
   {
     "name": "SolveSpace",
     "description": "Powerful 3D CAD constraint-based parametric modeler with simple mechanical simulation capabilities.",
     "url": "https://solvespace.com/",
     "icon": "generic-dark.svg",
-    "pkgname": ["solvespace"]
+    "pkgname": ["solvespace"],
+    "aur": true
+  },
+  {
+    "name": "Speaq",
+    "description": "Tools for Nuclear Magnetic Resonance (NMR) Spectra Alignment, Peak Based Processing, Quantitative Analysis and Visualizations",
+    "url": "https://cran.r-project.org/web/packages/speaq/index.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["r-speaq"],
+    "aur": true
   },
   {
     "name": "SpeedCrunch",
     "description": "Fast, high precision and powerful cross-platform calculator.",
     "url": "https://speedcrunch.org",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/speedcrunch_speedcrunch.png",
+    "pkgname": ["speedcrunch"],
+    "aur": false
+  },
+  {
+    "name": "SPICE",
+    "description": "A comprehensive toolkit and api to design, simulate and analyse space missions",
+    "url": "https://naif.jpl.nasa.gov/naif/index.html",
     "icon": "generic-dark.svg",
-    "pkgname": ["speedcrunch"]
+    "pkgname": ["cspice"],
+    "aur": true
+  },
+  {
+    "name": "SPIPGM",
+    "description": "Tool for programming serial SPI FlashROM memories attached to PC via parallel port cable.",
+    "url": "https://rayer.g6.cz/programm/programe.htm",
+    "icon": "generic-dark.svg",
+    "pkgname": ["spipgm-bin"],
+    "aur": true
+  },
+  {
+    "name": "Srt-py",
+    "description": "Small Radio Telescope Control Code for Python.",
+    "url": "https://github.com/MITHaystack/srt-py",
+    "icon": "generic-dark.svg",
+    "pkgname": ["srt-py-git"],
+    "aur": true
+  },
+  {
+    "name": "star-charter",
+    "description": "A command-line tool for producing vector-graphics charts of the night sky in SVG, PDF and PNG formats",
+    "url": "https://github.com/dcf21/star-charter",
+    "icon": "generic-dark.svg",
+    "pkgname": ["star-charter-git"],
+    "aur": true
+  },
+  {
+    "name": "StarPlot",
+    "description": "3-dimensional star chart viewer.",
+    "url": "http://starplot.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["starplot"],
+    "aur": true
   },
   {
     "name": "Stellarium",
     "description": "Beautiful 3D planetarium that uses OpenGL to render a realistic sky in real time.",
     "url": "https://stellarium.org/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/stellarium_stellarium.png",
+    "pkgname": ["stellarium"],
+    "aur": false
+  },
+  {
+    "name": "Step",
+    "description": "Two-dimensional physics simulation engine. Part of kde-education.",
+    "url": "https://apps.kde.org/step/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/step_step.png",
+    "pkgname": ["step"],
+    "aur": false
+  },
+  {
+    "name": "STILTS",
+    "description": "Starlink Tables Infrastructure Library Tool Set",
+    "url": "https://www.star.bris.ac.uk/~mbt/stilts/",
     "icon": "generic-dark.svg",
-    "pkgname": ["stellarium"]
+    "pkgname": ["stilts"],
+    "aur": true
   },
   {
     "name": "stlink",
-    "description": "Open source [https://www.st.com/en/microcontrollers-microprocessors.html STM32 MCU] programming toolset for ST microcontrollers.",
+    "description": "Open source STM32 MCU programming toolset for ST microcontrollers.",
     "url": "https://github.com/texane/stlink",
-    "icon": "generic-dark.svg",
-    "pkgname": ["stlink"]
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/stlink_stlink-gui.png",
+    "pkgname": ["stlink"],
+    "aur": false
   },
   {
-    "name": "Tensorflow",
-    "description": "An end-to-end open source machine learning platform.",
-    "url": "https://www.tensorflow.org/ ",
+    "name": "Subsurface",
+    "description": "Diving logbook to keep track of your dives by logging dive locations (with GPS coordinates), weights and exposure protection used, divemasters and dive buddies, etc.",
+    "url": "https://subsurface-divelog.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["python-tensorflow"]
+    "pkgname": ["subsurface-git"],
+    "aur": true
+  },
+  {
+    "name": "sunclock",
+    "description": "An astronomical world map that shows day and night and the Sun and Moon positions",
+    "url": "https://www.spinnaker.de/debian/sunclock.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["sunclock"],
+    "aur": true
+  },
+  {
+    "name": "Sunwait",
+    "description": "Calculate sunrise/sunset times with civil, nautical, astronomical and custom twilights",
+    "url": "https://github.com/risacher/sunwait",
+    "icon": "generic-dark.svg",
+    "pkgname": ["sunwait"],
+    "aur": true
+  },
+  {
+    "name": "SuperSlicer",
+    "description": "Community maintained improved fork of PrusaSlicer. Not brand specific. Open source.",
+    "url": "https://github.com/supermerill/SuperSlicer",
+    "icon": "generic-dark.svg",
+    "pkgname": ["superslicer-bin"],
+    "aur": true
+  },
+  {
+    "name": "SWMM",
+    "description": "Storm Water Management Model is a dynamic rainfall-runoff-subsurface runoff simulation model used for simulation of the surface/subsurface hydrology quantity and quality.",
+    "url": "https://www.epa.gov/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["swmm5-git"],
+    "aur": true
+  },
+  {
+    "name": "TauP",
+    "description": "A seismic travel time calculator.",
+    "url": "https://github.com/crotwell/TauP",
+    "icon": "generic-dark.svg",
+    "pkgname": ["taup-git"],
+    "aur": true
+  },
+  {
+    "name": "TCcalc",
+    "description": "A basic CLI Chemical thermodynamics calculator. Allows for calculating delta S and H of reactions/state changes.",
+    "url": "https://gitlab.com/calcs1/tccalc/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["tccalc"],
+    "aur": true
+  },
+  {
+    "name": "Tempo",
+    "description": "Pulsar Timing Software",
+    "url": "https://tempo.sourceforge.net/tempo_idx.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["tempo-git"],
+    "aur": true
+  },
+  {
+    "name": "THELI",
+    "description": "THELI is a data processing pipeline for optical, near-infrared and mid-infrared astronomical images",
+    "url": "https://github.com/schirmermischa/THELI",
+    "icon": "generic-dark.svg",
+    "pkgname": ["theli"],
+    "aur": true
+  },
+  {
+    "name": "ticemu",
+    "description": "Third-party TI-84 Plus CE / TI-83 Premium CE emulator, focused on developer features.",
+    "url": "https://ce-programming.github.io/CEmu/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ticemu"],
+    "aur": true
+  },
+  {
+    "name": "TiEmu",
+    "description": "Emulator of TI-89/92/92+/V200 calculators.",
+    "url": "https://github.com/debrouxl/tiemu",
+    "icon": "generic-dark.svg",
+    "pkgname": ["tiemu"],
+    "aur": true
+  },
+  {
+    "name": "TOPCAT",
+    "description": "Tool for OPerations on Catalogues And Tables",
+    "url": "https://www.star.bris.ac.uk/~mbt/topcat/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["topcat"],
+    "aur": true
+  },
+  {
+    "name": "UCSF Chimera",
+    "description": "Extensible molecular modeling system.",
+    "url": "https://rbvi.ucsf.edu/chimera/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ucsf-chimera"],
+    "aur": true
+  },
+  {
+    "name": "UCSF ChimeraX",
+    "description": "Next-generation molecular visualization program, following UCSF Chimera.",
+    "url": "https://rbvi.ucsf.edu/chimerax/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["chimerax"],
+    "aur": true
+  },
+  {
+    "name": "UDUNITS",
+    "description": "A tool for calculations of physical quantities.",
+    "url": "https://www.unidata.ucar.edu/software/udunits/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["udunits"],
+    "aur": true
+  },
+  {
+    "name": "UGENE",
+    "description": "Application that integrates dozens of well-known biological tools and algorithms, providing both graphical user and command-line interfaces.",
+    "url": "https://ugene.net/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["ugene"],
+    "aur": true
+  },
+  {
+    "name": "Units",
+    "description": "Command-line unit converter and calculator that can handle multiplicative scale changes, nonlinear conversions such as Fahrenheit to Celsius or wire gauge and others.",
+    "url": "https://www.gnu.org/software/units/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["units"],
+    "aur": true
   },
   {
     "name": "Valuta",
     "description": "Simple application for converting currencies.",
     "url": "https://apps.gnome.org/Valuta/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/valuta_io.github.idevecore.Valuta.png",
+    "pkgname": ["valuta"],
+    "aur": false
+  },
+  {
+    "name": "VaST",
+    "description": "VaST is a software tool for finding variable objects on a series of astronomical images",
+    "url": "https://scan.sai.msu.ru/vast/",
     "icon": "generic-dark.svg",
-    "pkgname": ["valuta"]
+    "pkgname": ["vast-astronomical-git"],
+    "aur": true
   },
   {
     "name": "Verilator",
     "description": "A Verilog/SystemVerilog simulator, performs lint code-quality checks, compile to threaded C++ code for simulation.",
     "url": "https://verilator.org",
     "icon": "generic-dark.svg",
-    "pkgname": ["verilator"]
+    "pkgname": ["verilator"],
+    "aur": false
+  },
+  {
+    "name": "VESTA",
+    "description": "3D visualization program for structural models, volumetric data such as electron/nuclear densities, and crystal morphologies.",
+    "url": "https://jp-minerals.org/vesta/en/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["vesta"],
+    "aur": true
   },
   {
     "name": "Viking",
     "description": "GTK 2 application to manage GPS data.",
     "url": "https://sourceforge.net/projects/viking/",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/viking_viking.png",
+    "pkgname": ["viking"],
+    "aur": false
+  },
+  {
+    "name": "Virtual Moon Atlas",
+    "description": "Software for Moon observation and survey",
+    "url": "https://www.ap-i.net/avl/en/start",
     "icon": "generic-dark.svg",
-    "pkgname": ["viking"]
+    "pkgname": ["virtualmoonatlas"],
+    "aur": true
+  },
+  {
+    "name": "VMD",
+    "description": "VMD is a molecular visualization program for displaying, animating, and analyzing large biomolecular systems using 3-D graphics and built-in scripting.",
+    "url": "https://www.ks.uiuc.edu/Research/vmd/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["vmd"],
+    "aur": true
+  },
+  {
+    "name": "VStar",
+    "description": "VStar is a multi-platform, easy-to-use variable star data visualization and analysis tool that was originally developed as part of the AAVSOs Citizen Sky project",
+    "url": "https://www.aavso.org/vstar",
+    "icon": "generic-dark.svg",
+    "pkgname": ["vstar-aavso"],
+    "aur": true
   },
   {
     "name": "VTR",
     "description": "Verilog to Routing, Open Source CAD Flow for FPGA ResearchVerilog to Route.",
     "url": "https://verilogtorouting.org",
     "icon": "generic-dark.svg",
-    "pkgname": ["vtr"]
+    "pkgname": ["vtr"],
+    "aur": false
+  },
+  {
+    "name": "WaveDrom editor",
+    "description": "Timing diagram rendering in real-time from simple textual description. Can also be edited and embedded in the browser.",
+    "url": "https://wavedrom.com/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["wavedrom-editor"],
+    "aur": true
+  },
+  {
+    "name": "WCSTools",
+    "description": "A package of programs for setting and using the world coordinate systems",
+    "url": "http://tdc-www.harvard.edu/wcstools/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["wcstools"],
+    "aur": true
+  },
+  {
+    "name": "weasis",
+    "description": "Multipurpose DICOM viewer with a highly modular architecture",
+    "url": "https://nroduit.github.io/en/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["weasis-bin"],
+    "aur": true
+  },
+  {
+    "name": "wego",
+    "description": "A terminal weather application.",
+    "url": "https://tylerwolf35.github.io/wego",
+    "icon": "generic-dark.svg",
+    "pkgname": ["wego"],
+    "aur": true
+  },
+  {
+    "name": "WHIZARD",
+    "description": "The Generator of Monte Carlo Event Generators for Tevatron, LHC, ILC, CLIC, CEPC, FCC-ee, FCC-hh, SppC and other High Energy Physics Experiments.",
+    "url": "https://whizard.hepforge.org/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["whizard"],
+    "aur": true
+  },
+  {
+    "name": "wttr",
+    "description": "A simple console application to check the weather, using data from https://wttr.in",
+    "url": "https://github.com/AmirrezaFiroozi/wttr",
+    "icon": "generic-dark.svg",
+    "pkgname": ["wttr"],
+    "aur": true
+  },
+  {
+    "name": "wxMacMolPlt",
+    "description": "An open-source GUI for preparing, submitting and visualizing input and output for the GAMESS quantum chemistry package.",
+    "url": "https://brettbode.github.io/wxmacmolplt/",
+    "icon": "generic-dark.svg",
+    "pkgname": ["wxmacmolplt"],
+    "aur": true
   },
   {
     "name": "wxMaxima",
     "description": "Graphical user interface for Maxima being a powerful computer algebra system.",
     "url": "https://andrejv.github.io/wxmaxima/",
     "icon": "generic-dark.svg",
-    "pkgname": ["wxmaxima"]
+    "pkgname": ["wxmaxima"],
+    "aur": true
+  },
+  {
+    "name": "wxwabbitemu",
+    "description": "A cross-platform TI-8x emulator based on Wabbitemu.",
+    "url": "https://github.com/alberthdev/wxwabbitemu",
+    "icon": "generic-dark.svg",
+    "pkgname": ["wxwabbitemu-git"],
+    "aur": true
   },
   {
     "name": "xcalc",
     "description": "Scientific calculator for X with algebraic and reverse polish notation modes.",
     "url": "https://www.x.org/",
     "icon": "generic-dark.svg",
-    "pkgname": ["xorg-xcalc"]
+    "pkgname": ["xorg-xcalc"],
+    "aur": false
   },
   {
     "name": "Xcas",
     "description": "User interface to Giac, a free, basic computer algebra system.",
     "url": "https://www-fourier.ujf-grenoble.fr/~parisse/giac.html",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/giac_xcas.png",
+    "pkgname": ["giac"],
+    "aur": false
+  },
+  {
+    "name": "xdrfile",
+    "description": "Allows to read GROMACS trr and xtc files and also to convert from one format to another.",
+    "url": "https://manual.gromacs.org/current/reference-manual/file-formats.html#xdr",
     "icon": "generic-dark.svg",
-    "pkgname": ["giac"]
+    "pkgname": ["xdrfile"],
+    "aur": true
+  },
+  {
+    "name": "XEphem",
+    "description": "Motif-based ephemeris and planetarium program.",
+    "url": "https://xephem.github.io/XEphem/Site/xephem.html",
+    "icon": "generic-dark.svg",
+    "pkgname": ["xephem"],
+    "aur": true
   },
   {
     "name": "Xfce Weather Panel Plugin",
     "description": "Weather forecast plugin for the Xfce4 panel.",
     "url": "https://goodies.xfce.org/projects/panel-plugins/xfce4-weather-plugin",
     "icon": "generic-dark.svg",
-    "pkgname": ["xfce4-weather-plugin"]
+    "pkgname": ["xfce4-weather-plugin"],
+    "aur": false
+  },
+  {
+    "name": "Xyce",
+    "description": "SANDIA Xyce is an open source, SPICE-compatible, high-performance analog circuit simulator, capable of solving extremely large circuit problems by supporting large-scale parallel computing platforms.",
+    "url": "https://xyce.sandia.gov https://github.com/Xyce/Xyce",
+    "icon": "generic-dark.svg",
+    "pkgname": ["xyce-serial"],
+    "aur": true
   }
 ]

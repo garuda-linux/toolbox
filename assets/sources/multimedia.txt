@@ -1,6 +1,7 @@
 [[Category:Lists of software]]
 [[Category:Multimedia]]
 [[es:List of applications (Español)/Multimedia]]
+[[hu:List of applications (Magyar)/Multimedia]]
 [[ja:アプリケーション一覧/マルチメディア]]
 [[pl:List of applications (Polski)/Multimedia]]
 [[zh-hans:List of applications/Multimedia]]
@@ -19,7 +20,7 @@ See also [[Wikipedia:Comparison of image viewers]].
 ==== Framebuffer ====
 
 * {{App|fbi|Image viewer for the linux framebuffer console.|https://www.kraxel.org/blog/linux/fbida/|{{Pkg|fbida}}}}
-* {{App|fbv|Very simple graphic file viewer for the framebuffer console.|http://s-tech.elsat.net.pl/fbv/|{{AUR|fbv}}}}
+* {{App|fbv|Very simple graphic file viewer for the framebuffer console.|https://github.com/jstkdng/fbv/|{{AUR|fbv}}}}
 * {{App|fim|Highly customizable and scriptable framebuffer image viewer based on fbi.|https://www.nongnu.org/fbi-improved/|{{AUR|fim}}}}
 * {{App|jfbview|Framebuffer PDF and image viewer based on Imlib2. Features include Vim-like controls, rotation and zoom, zoom-to-fit, and fast multi-threaded rendering.|https://github.com/jichu4n/jfbview|{{AUR|jfbview}}}}
 
@@ -29,6 +30,7 @@ See also [[Wikipedia:Comparison of image viewers]].
 
 ==== Graphical ====
 
+* {{App|ImageViewer|Simple, cross-platform image viewer.|https://github.com/AlienCowEatCake/ImageViewer/|{{AUR|imageviewer}}}}
 * {{App|CoreImage|Simple lightweight easy to use image viewer based on Qt. Part of C-Suite.|https://cubocore.gitlab.io/|{{AUR|coreimage}}}}
 * {{App|Deepin Image Viewer|Image viewer for Deepin desktop.|https://www.deepin.org/en/original/deepin-image-viewer/|{{Pkg|deepin-image-viewer}}}}
 * {{App|Ephoto|A light image viewer based on EFL.|https://www.enlightenment.org/about-ephoto|{{Pkg|ephoto}}}}
@@ -40,9 +42,10 @@ See also [[Wikipedia:Comparison of image viewers]].
 * {{App|[[Wikipedia:Gwenview|Gwenview]]|Fast and easy to use image viewer for the KDE desktop with optional dependencies for additional format support. Part of {{Grp|kde-graphics}}.|https://apps.kde.org/gwenview/|{{Pkg|gwenview}}}}
 * {{App|ida|X11 application (Motif based) for viewing images. Install the optional dependencies as needed.|https://www.kraxel.org/blog/linux/fbida/|{{Pkg|fbida}}}}
 * {{App|image-roll|Simple and fast GTK image viewer with basic image manipulation tools.|https://github.com/weclaw1/image-roll|{{AUR|image-roll}}}}
-* {{App|imv|Lightweight image viewer with support for Wayland and animated GIFs which uses FreeImage.|https://sr.ht/~exec64/imv/|{{Pkg|imv}}}}
+* {{App|imv|Lightweight image viewer with support for Wayland and animated GIFs.|https://sr.ht/~exec64/imv/|{{Pkg|imv}}}}
 * {{App|Koko|Image viewer designed for desktop and touch devices. Part of {{Grp|kde-graphics}}.|https://apps.kde.org/koko/|{{Pkg|koko}}}}
-* {{App|KuickShow|Fast and convenient image viewer for KDE.|https://userbase.kde.org/KuickShow|{{AUR|kuickshow}}}}
+* {{App|KuickShow|Fast and convenient image viewer for KDE.|https://userbase.kde.org/KuickShow|{{Pkg|kuickshow}}}}
+* {{App|LaternaMagica|Image viewer and slideshow application for GNUstep.|https://www.nongnu.org/gap/laternamagica/|{{AUR|laternamagica.app}}}}
 * {{App|LxImage-Qt|The LXQt image viewer.|https://github.com/lxde/lximage-qt|{{Pkg|lximage-qt}}}}
 * {{App|meh|meh is a small, simple, super fast image viewer using raw XLib.|https://www.johnhawthorn.com/meh/|{{AUR|meh-git}}}}
 * {{App|Mirage|PyGTK image viewer featuring support for crop and resize, custom actions and a thumbnail panel.|https://sourceforge.net/projects/mirageiv.berlios/|{{AUR|mirage}}}}
@@ -61,13 +64,12 @@ See also [[Wikipedia:Comparison of image viewers]].
 * {{App|Vimiv|An image viewer with vim-like keybindings. It is written in python3 using the Gtk3 toolkit.|https://karlch.github.io/vimiv/|{{Pkg|vimiv}}}}
 * {{App|Vimiv (Qt port)|An image viewer with vim-like keybindings. It is written in python3 and PyQt5.|https://karlch.github.io/vimiv-qt/|{{AUR|vimiv-qt}}}}
 * {{App|vpv|Image viewer designed for scientific image visualization.|https://github.com/kidanger/vpv|{{AUR|vpv}}}}
-* {{App|Xloadimage|Classic X image viewer.|https://sioseis.ucsd.edu/xloadimage.html{{Dead link|2024|03|03|status=SSL error}}|{{Pkg|xloadimage}}}}
+* {{App|Xloadimage|Classic X image viewer.|https://sioseis.ucsd.edu/xloadimage.html{{Dead link|2025|11|17|status=domain name not resolved}}|{{Pkg|xloadimage}}}}
 
 === Image organizers ===
 
 See also [[Wikipedia:Image organizer]].
 
-* {{App|Deepin Album|Photo manager for viewing and organizing pictures, for Deepin desktop.|https://github.com/linuxdeepin/deepin-album|{{Pkg|deepin-album}}}}
 * {{App|[[Wikipedia:digiKam|digiKam]]|KDE-based image organizer with built-in editing features via a plugin architecture. digiKam asserts it is more full featured than similar applications with a larger set of image manipulation features including RAW image import and manipulation.|https://www.digikam.org/|{{Pkg|digikam}}}}
 * {{App|Frogr|Small application for the GNOME desktop that allows users to manage their accounts in the Flickr image hosting website.|https://wiki.gnome.org/Apps/Frogr|{{Pkg|frogr}}}}
 * {{App|[[Wikipedia:Geeqie|Geeqie]]|Image browser and viewer (fork of GQview) that adds additional functionality such as support for RAW files.|http://geeqie.org/|{{Pkg|geeqie}}}}
@@ -117,7 +119,7 @@ See also [[Wikipedia:Image organizer]].
 ==== Graphical ====
 
 * {{App|Curtail|Image compressor that supports PNG, JPEG, WebP and SVG file types.|https://apps.gnome.org/Curtail/|{{Pkg|curtail}}}}
-* {{App|Image Optimizer|Simple lossless image optimizer built with Vala and Gtk for Elementary OS.|https://github.com/GijsGoudzwaard/Image-Optimizer|{{AUR|image-optimizer-git}}}}
+* {{App|Image Optimizer|Simple lossless image optimizer built with Vala and Gtk for Elementary OS.|https://github.com/GijsGoudzwaard/Image-Optimizer|{{AUR|image-optimizer}}}}
 * {{App|OptiImage|Useful image compressor that supports PNG, JPEG, WebP and SVG file types.|https://invent.kde.org/graphics/optiimage|{{Pkg|optiimage}}}}
 * {{App|Trimage|Qt-based tool for optimizing PNG and JPG files.|https://trimage.org/|{{AUR|trimage}}}}
 
@@ -137,12 +139,12 @@ See also [[Wikipedia:Comparison of raster graphics editors]].
 * {{App|[[Wikipedia:KolourPaint|KolourPaint]]|Free raster graphics editor for KDE, similar to Microsoft's Paint application before Windows 7, but with some additional features such as support for transparency. Part of {{Grp|kde-graphics}}.|https://apps.kde.org/kolourpaint/|{{Pkg|kolourpaint}}}}
 * {{App|[[Wikipedia:Krita|Krita]]|Digital painting and illustration software included based on the KDE platform.|https://krita.org/|{{Pkg|krita}}}}
 * {{App|KXStitch|Cross stitch pattern and chart creation.|https://apps.kde.org/kxstitch/|{{AUR|kxstitch}}}}
-* {{App|Milton|Infinite-canvas paint program.|https://www.miltonpaint.com/|{{AUR|milton-git}}}}
+* {{App|Milton|Infinite-canvas paint program.|https://www.miltonpaint.com/|{{AUR|milton}}}}
 * {{App|mtPaint|Graphics editing program geared towards creating indexed palette images and pixel art.|https://mtpaint.sourceforge.net/|{{Pkg|mtpaint}}}}
 * {{App|[[Wikipedia:MyPaint|MyPaint]]|Free software graphics application for digital painters.|http://mypaint.org|{{Pkg|mypaint}}}}
 * {{App|Obfuscate|Censor private information from any image.|https://apps.gnome.org/Obfuscate/|{{Pkg|obfuscate}}}}
 * {{App|PhotoFlare|Simple but powerful image editor originally inspired by PhotoFiltre.|https://photoflare.io/|{{Pkg|photoflare}}}}
-* {{App|[[Wikipedia:Pinta (software)|Pinta]]|Drawing and editing program modeled after [[Wikipedia:Paint.net|Paint.NET]]. Its goal is to provide a simplified alternative to GIMP for casual users.|https://pinta-project.com/|{{Pkg|pinta}}}}
+* {{App|[[Wikipedia:Pinta (software)|Pinta]]|Drawing and editing program modeled after [[Wikipedia:Paint.net|Paint.NET]]. Its goal is to provide a simplified alternative to GIMP for casual users.|https://pinta-project.com/|{{AUR|pinta}}}}
 * {{App|Pixelitor|Advanced image editor with support for layers, layer masks, text layers, multiple undo, blending modes, cropping, Gaussian blurring, unsharp masking, histograms, etc.|https://pixelitor.sourceforge.io/|{{AUR|pixelitor}}}}
 * {{App|Satty|Image annotation tool inspired by Swappy and Flameshot.|https://github.com/gabm/Satty|{{Pkg|satty}}}}
 * {{App|Swappy|Wayland native image annotation tool.|https://github.com/jtheoof/swappy|{{Pkg|swappy}}}}
@@ -159,8 +161,8 @@ Some image viewers and organizers like [[Wikipedia:digiKam|digiKam]], Ephoto, GN
 * {{App|[[Wikipedia:Hugin (software)|Hugin]]|Panorama photo stitcher.|https://hugin.sourceforge.net/|{{Pkg|hugin}}}}
 * {{App|[[Wikipedia:LightZone|LightZone]]|Professional-level digital darkroom and photo editor comparable to Photoshop Lightroom.|http://lightzoneproject.org/|{{AUR|lightzone}}}}
 * {{App|[[Wikipedia:Luminance HDR|Luminance HDR]]|Open source graphical user interface application that aims to provide a workflow for HDR imaging.|https://qtpfsgui.sourceforge.net/|{{Pkg|luminancehdr}}}}
-* {{App|[[Wikipedia:UFRaw|nUFRaw]]|Utility to read and manipulate raw images from digital cameras using DCRaw.|https://sourceforge.net/projects/nufraw/|{{Pkg|gimp-nufraw}}}}
-* {{App|[[Wikipedia:Rawstudio|Rawstudio]]|Raw-image converter written in GTK.|https://rawstudio.org/|{{AUR|rawstudio-git}}}}
+* {{App|[[Wikipedia:UFRaw|nUFRaw]]|Utility to read and manipulate raw images from digital cameras using DCRaw.|https://sourceforge.net/projects/nufraw/|{{AUR|gimp-nufraw}}}}
+* {{App|[[Wikipedia:Rawstudio|Rawstudio]]|Raw-image converter written in GTK.|https://rawstudio.org/|{{AUR|rawstudio}}}}
 * {{App|[[Wikipedia:RawTherapee|RawTherapee]]|A powerful cross-platform raw image processing program.|https://www.rawtherapee.com/|{{Pkg|rawtherapee}}}}
 * {{App|Showfoto|Photo editor with powerful image editing tools.|https://www.digikam.org/|{{Pkg|digikam}}}}
 
@@ -168,7 +170,7 @@ Some image viewers and organizers like [[Wikipedia:digiKam|digiKam]], Ephoto, GN
 
 * {{App|Geotag|Match date/time information from photos with location information from a GPS unit or from a map.|https://geotag.sourceforge.net/|{{Pkg|geotag}}}}
 * {{App|Geotagging|Photography geotagging tool to synchronize photos with gps track log (GPX).|https://github.com/jmlich/geotagging|{{AUR|geotagging}}}}
-* {{App|GottenGeography|Easy to use photo geotagging application for the GNOME desktop.|https://launchpad.net/gottengeography|{{Pkg|gottengeography}}}}
+* {{App|GottenGeography|Easy to use photo geotagging application for the GNOME desktop.|https://launchpad.net/gottengeography|{{AUR|gottengeography}}}}
 * {{App|GPicSync|Inserts location in your pictures metadata from a GPS tracklog.|https://github.com/FrancoisSchnell/GPicSync|{{AUR|gpicsync}}}}
 * {{App|GPSCorrelate|Correlate (geotagging) digital camera photos with GPS data in GPX format.|https://github.com/freefoote/gpscorrelate|{{Pkg|gpscorrelate}}}}
 * {{App|KGeoTag|Photo geotagging application based on KDE Frameworks.|https://kgeotag.kde.org/|{{Pkg|kgeotag}}}}
@@ -177,18 +179,20 @@ Some image viewers and organizers like [[Wikipedia:digiKam|digiKam]], Ephoto, GN
 
 See also [[Wikipedia:Comparison of vector graphics editors]].
 
-* {{App|[[Wikipedia:Dia (software)|Dia]]|GTK-based diagram creation program.|https://wiki.gnome.org/Apps/Dia|{{AUR|dia}}}}
+Some of these programs may require using keyboard shortcuts in conjunction with the mouse, see [[Libinput#Enable the touchpad while typing]] for touchpad users.
+
+* {{App|[[Wikipedia:Dia (software)|Dia]]|GTK-based diagram creation program.|https://wiki.gnome.org/Apps/Dia|{{AUR|dia-git}}}}
 * {{App|diagrams.net|Diagram drawing application built on web technology. Based on the [https://electronjs.org/ Electron] platform.|https://www.diagrams.net/|{{Pkg|drawio-desktop}}}}
 * {{App|Dot Matrix|The glyph playground of creativity from simple lines.|https://github.com/lainsce/dot-matrix/|{{AUR|dot-matrix}}}}
 * {{App|Figma|Unofficial desktop application for Figma collaborative design tool. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/Figma-Linux/figma-linux|{{AUR|figma-linux}}}}
-* {{App|[[Inkscape]]|Vector graphics editor, with capabilities similar to [[Wikipedia:Adobe Illustrator|Illustrator]], [[Wikipedia:CorelDRAW|CorelDraw]], or [[Wikipedia:Xara X|Xara X]], using the SVG (Scalable Vector Graphics) file format.|https://inkscape.org/|{{Pkg|inkscape}}}}
+* {{App|Inkscape|Vector graphics editor, with capabilities similar to [[Wikipedia:Adobe Illustrator|Illustrator]], [[Wikipedia:CorelDRAW|CorelDraw]], or [[Wikipedia:Xara X|Xara X]], using the SVG (Scalable Vector Graphics) file format.|https://inkscape.org/|{{Pkg|inkscape}}}}
 * {{App|[[Wikipedia:Karbon (software)|Karbon]]|Vector graphics editor, part of the Calligra Suite. Part of {{Grp|kde-office}}.|https://calligra.org/components/karbon/|{{Pkg|calligra}}}}
 * {{App|LazPaint|Image editor, like PaintBrush or Paint.Net, written in Lazarus (Free Pascal)|https://lazpaint.github.io/|{{AUR|lazpaint-bin}}}}
 * {{App|[[LibreOffice|LibreOffice Draw]]|Vector graphics editor and diagramming tool included in the LibreOffice suite similar to Microsoft Visio.|https://www.libreoffice.org/discover/draw/|{{Pkg|libreoffice-still}} or {{Pkg|libreoffice-fresh}}}}
 * {{App|Lunacy|Vector graphic design software for UI/UX and web design.|https://icons8.com/lunacy|{{AUR|lunacy-bin}}}}
-* {{App|Mockitt|Proprietary online design, prototyping, and collaboration platform. Based on the [https://electronjs.org/ Electron] platform.|https://mockitt.wondershare.com/|{{AUR|mockitt}}}}
+* {{App|Mockitt|Proprietary online design, prototyping, and collaboration platform. Based on the [https://electronjs.org/ Electron] platform.|https://mockitt.wondershare.com/{{Dead link|2025|08|15|status=domain name not resolved}}|{{AUR|mockitt}}}}
 * {{App|[[OpenOffice|OpenOffice Draw]]|Vector graphics editor and diagramming tool included in the OpenOffice suite.|https://www.openoffice.org/product/draw.html|{{AUR|openoffice-bin}}}}
-* {{App|Pencil Project|GUI prototyping and mockup tool. Based on the [https://electronjs.org/ Electron] platform.|https://pencil.evolus.vn/|{{AUR|pencil}}}}
+* {{App|Pencil Project|GUI prototyping and mockup tool. Based on the [https://electronjs.org/ Electron] platform.|https://pencil.evolus.vn/{{Dead link|2025|11|17|status=SSL error}}|{{AUR|pencil}}}}
 * {{App|[[Wikipedia:SK1 (program)|sK1]]|Replacement for Adobe Illustrator or CorelDraw, oriented for "prepress ready" PostScript & PDF output.|https://sk1project.net/|{{AUR|sk1}}}}
 * {{App|SvgVi|SVG viewer and editor using XML declarations.|https://gitlab.com/pwmc/svgvi|{{AUR|svgvi}}}}
 * {{App|SymbolEditor|Application to create libraries of QPainterPath objects with rendering hints.|https://apps.kde.org/symboleditor/|{{AUR|symboleditor}}}}
@@ -205,17 +209,17 @@ See also [[Wikipedia:Comparison of font editors]].
 
 === 2D animation ===
 
-* {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.mattbas.org/|{{AUR|glaxnimate}}}}
-* {{App|[[Wikipedia:Toonz|OpenToonz]]|2D animation creation software.|https://opentoonz.github.io/e/|{{Pkg|opentoonz}}}}
-* {{App|[[Wikipedia:Pencil2D|Pencil2D]]|Easy, intuitive tool to make 2D hand-drawn animations.|https://www.pencil2d.org/|{{Pkg|pencil2d}}}}
-* {{App|qStopMotion|Application for creating stop-motion animation movies. The users will be able to create stop-motions from pictures imported from a camera or from the harddrive and export the animation to different video formats such as mpeg or avi.|https://qstopmotion.org/|{{Pkg|qstopmotion}}}}
-* {{App|Scribl|Application to create simple video lectures that combine audio with hand-drawn animation.|https://www.scribl.ink/|{{AUR|scribl}}}}
-* {{App|Stopmotion|Application to create stop-motion animations. It helps you capture and edit the frames of your animation and export them as a single file.|http://linuxstopmotion.org/|{{AUR|stopmotion}}}}
-* {{App|[[Wikipedia:Synfig|Synfig Studio]]|2D animation software, designed as powerful industrial-strength solution for creating film-quality animation using a vector and bitmap artwork.|https://www.synfig.org/|{{Pkg|synfigstudio}}}}
-* {{App|[[Wikipedia:Tupi (software)|TupiTube Desk]]|Desktop application to create and share 2D animations, focused on kids and teenagers.|https://www.maefloresta.com/|{{AUR|tupitube}}}}
 * {{App|Aseprite|Open-source software for creating pixel art and animations. Builds can either be [https://www.aseprite.org/#buy purchased from the developers] or compiled from source.|https://www.aseprite.org/|From source: {{AUR|aseprite}}, From binary: {{AUR|aseprite-bin}}}}
+* {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.mattbas.org/|{{AUR|glaxnimate}}}}
+* {{App|[[Wikipedia:Toonz|OpenToonz]]|2D animation creation software. Gained popularity because it was used by Studio Ghibli in the past.|https://opentoonz.github.io/e/|{{Pkg|opentoonz}}}}
+* {{App|[[Wikipedia:Pencil2D|Pencil2D]]|Easy, intuitive tool to make 2D hand-drawn animations.|https://www.pencil2d.org/|{{Pkg|pencil2d}}}}
 * {{App|Pixelorama|Open-source software for creating pixel art and animations.|https://orama-interactive.itch.io/pixelorama|{{AUR|pixelorama}}}}
+* {{App|qStopMotion|Application for creating stop-motion animation movies. The users will be able to create stop-motions from pictures imported from a camera or from the harddrive and export the animation to different video formats such as mpeg or avi.|https://qstopmotion.org/|{{AUR|qstopmotion}}}}
+* {{App|Scribl|Application to create simple video lectures that combine audio with hand-drawn animation.|https://www.scribl.ink/|{{AUR|scribl}}}}
+* {{App|Stopmotion|Application to create stop-motion animations. It helps you capture and edit the frames of your animation and export them as a single file.|http://linuxstopmotion.org/|{{Pkg|stopmotion}}}}
+* {{App|[[Wikipedia:Synfig|Synfig Studio]]|2D animation software, designed as powerful industrial-strength solution for creating film-quality animation using a vector and bitmap artwork.|https://www.synfig.org/|{{Pkg|synfigstudio}}}}
 * {{App|Tahoma2D|Free and powerful software for 2D and stop motion animators. Based on [[Wikipedia:Toonz|OpenToonz]]|https://tahoma2d.org/|{{AUR|tahoma2d}} }}
+* {{App|[[Wikipedia:Tupi (software)|TupiTube Desk]]|Desktop application to create and share 2D animations, focused on kids and teenagers.|https://www.maefloresta.com/|{{AUR|tupitube}}}}
 
 The drawing application [[Wikipedia:Krita|Krita]], the 3D editor [[Blender]] (Grease Pencil mode), and the python library [[Manim]] have 2D animation features too.
 
@@ -232,8 +236,8 @@ See also [[Wikipedia:Comparison of 3D computer graphics software]].
 * {{App|Goxel|Open Source 3D voxel editor.|https://goxel.xyz/|{{Pkg|goxel}}}}
 * {{App|[[Wikipedia:MakeHuman|MakeHuman™]]|Parametrical modeling program for creating human bodies.|http://www.makehumancommunity.org/|{{AUR|makehuman}}}}
 * {{App|MeshLab|System for processing and editing 3D triangular meshes.|https://www.meshlab.net/|{{AUR|meshlab}}}}
-* {{App|[[Wikipedia:Sweet_Home_3D|Sweet Home 3D]]|Interior design software application for the planning and development of floor plans|https://sweethome3d.com/|{{Pkg|sweethome3d}}}}
 * {{App|[[Wikipedia:POV-Ray|POV-Ray]]|Script-based raytracer for creating 3D graphics.|https://www.povray.org/|{{Pkg|povray}}}}
+* {{App|[[Wikipedia:Sweet_Home_3D|Sweet Home 3D]]|Interior design software application for the planning and development of floor plans|https://sweethome3d.com/|{{Pkg|sweethome3d}}}}
 * {{App|VoxelShop|Extremely intuitive and powerful software to modify and create voxel objects.|https://github.com/simlu/voxelshop|{{AUR|voxelshop}}}}
 * {{App|[[Wikipedia:Wings3d|Wings 3D]]|Advanced subdivision modeler that is both powerful and easy to use.|https://www.wings3d.com/|{{AUR|wings3d}}}}
 
@@ -285,18 +289,21 @@ Many applications in the [[#Video players]] section also support audio playback.
 
 ==== Server ====
 
-* {{App|[[Music Player Daemon]]|Audio player that has a server-client architecture. In order to interface with it, a separate client is needed.|https://www.musicpd.org/|{{Pkg|mpd}}}}
 * {{App|[[Funkwhale]]|self-hosted, modern, free and open-source music server, heavily inspired by Grooveshark. Instances can be federated.|https://funkwhale.audio/|{{AUR|funkwhale-venv}}}}
+* {{App|[[Music Player Daemon]]|Audio player that has a server-client architecture. In order to interface with it, a separate client is needed.|https://www.musicpd.org/|{{Pkg|mpd}}}}
 * {{App|[https://www.navidrome.org/ Navidrome]| Open source music server and streamer with a built in Web UI. Compatible with a wide range of third-party Android and iOS apps.|https://github.com/navidrome/navidrome/|{{Pkg|navidrome}}}}
+* {{App|[https://www.lesbonscomptes.com/upmpdcli/ upmpdcli]|UPnP Media Renderer front-end for Music Player Daemon that interacts with internal streaming services like [[Gerbera]] or external streaming services including Internet radio, Tidal, Qobuz, [[Subsonic]]; through a control point like {{AUR|upplay}} and various mobile apps like Linn Kazoo.|https://www.lesbonscomptes.com/upmpdcli/|{{Pkg|upmpdcli}}}}
 
 ==== Console ====
 
 * {{App|[[cmus]]|Very feature-rich ncurses-based music player.|https://cmus.github.io/|{{Pkg|cmus}}}}
 * {{App|cplay-ng|Updated fork of cplay.|https://github.com/xi/cplay-ng|{{AUR|cplay-ng-git}}}}
 * {{App|davis|A CLI client for {{Pkg|mpd}}, written in Rust.|https://github.com/SimonPersson/davis|{{AUR|davis}}}}
+* {{App|kew|Terminal music player with support for custom themes and bindings.|https://github.com/ravachol/kew|{{pkg|kew}}}}
 * {{App|[[MOC]]|Ncurses console audio player with support for the MP3, OGG, and WAV formats.|https://moc.daper.net/|{{AUR|moc-pulse}}}}
 * {{App|[[Wikipedia:Mpg123|mpg123]]|Fast free MP3 console audio player for Linux, FreeBSD, Solaris, HP-UX and nearly all other UNIX systems (also decodes MP1 and MP2 files).|https://www.mpg123.org/|{{Pkg|mpg123}}}}
 * {{App|musikcube|A cross-platform, terminal-based music player, audio engine, metadata indexer, and server in c++.|https://github.com/clangen/musikcube|{{AUR|musikcube}}}}
+* {{App|tmuzika|Terminal music player using ncurses and GStreamer.|https://github.com/ivanjeka/tmuzika|{{AUR|tmuzika}}}}
 * {{App|vitunes|Curses-based music player and playlist manager with vim-like keybindings.|http://vitunes.org/|{{AUR|vitunes}}}}
 * {{App|whistle|Curses-based commandline audio player.|https://github.com/ap0calypse/whistle/|{{AUR|whistle-git}}}}
 * {{App|XMMS2|Complete rewrite of the popular music player.|https://github.com/xmms2/wiki/wiki|{{Pkg|xmms2}}}}
@@ -310,10 +317,10 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|Byte|Music player designed for elementary OS.|https://github.com/alainm23/byte|{{AUR|byte}}}}
 * {{App|[[Wikipedia:Clementine_(software)|Clementine]]|Amarok 1.4 clone, ported to Qt5. See also Strawberry (below).|https://www.clementine-player.org/|{{AUR|clementine}}}}
 * {{App|Cozy|Modern audio book player for Linux using GTK 3.|https://cozy.sh/|{{AUR|cozy-audiobooks}}}}
-* {{App|Decibels|Audio player for GNOME.|https://apps.gnome.org/Decibels/|{{Pkg|decibels}}}}
 * {{App|[[Exaile]]|GTK clone of Amarok.|https://www.exaile.org/|{{AUR|exaile}}}}
+* {{App|GNOME Audio Player|Audio player for GNOME. Part of {{Grp|gnome}}.|https://apps.gnome.org/Decibels/|{{Pkg|decibels}}}}
 * {{App|GNOME Music|Music player for GNOME. It aims to combine an elegant and immersive browsing experience with simple and straightforward controls. Part of {{Grp|gnome}}.|https://apps.gnome.org/Music/|{{Pkg|gnome-music}}}}
-* {{App|Guayadeque|Full featured media player that can easily manage large collections and uses the GStreamer media framework (no longer maintained as of September 2023).|https://www.guayadeque.org/{{Dead link|2024|10|12|status=domain name not resolved}}|{{AUR|guayadeque}}}}
+* {{App|Guayadeque|Full featured media player that can easily manage large collections and uses the GStreamer media framework (no longer maintained as of September 2023).|https://github.com/thothix/guayadeque|{{AUR|guayadeque}}}}
 * {{App|Lollypop|A GNOME music player.|https://wiki.gnome.org/Apps/Lollypop|{{Pkg|lollypop}}}}
 * {{App|Melody|Music player for listening to local music files, online radios and audio CD's.|https://anufrij.org/melody/|{{AUR|playmymusic}}}}
 * {{App|Nulloy|Music player with a waveform progress bar.|https://nulloy.com/|{{AUR|nulloy}}}}
@@ -324,27 +331,27 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|[[Rhythmbox]]|GTK clone of iTunes, used by default in GNOME.|https://wiki.gnome.org/Apps/Rhythmbox|{{Pkg|rhythmbox}}}}
 * {{App|Sayonara|Small, clear and fast audio player for Linux written in C++, uses the Qt framework.|https://sayonara-player.com/|{{AUR|sayonara-player}}}}
 * {{App|Strawberry|Fork of Clementine aimed at audio enthusiasts and music collectors. Uses Qt6.|https://www.strawberrymusicplayer.org/|{{Pkg|strawberry}}}}
-* {{App|Tauon Music Box|Modern, comfortable and streamlined music player for the playback of your music collection.|https://tauonmusicbox.rocks/|{{AUR|tauon-music-box}}}}
+* {{App|Tauon Music Box|Modern, comfortable and streamlined music player for the playback of your music collection.|https://tauonmusicbox.rocks/|{{Pkg|tauon-music-box}}}}
 
 ===== Other =====
 
-* {{App|[[Amarok]]|Mature Qt-based player known for its plethora of features.|https://amarok.kde.org/|{{AUR|amarok}}}}
+* {{App|[[Amarok]]|Mature Qt-based player known for its plethora of features.|https://amarok.kde.org/|{{Pkg|amarok}}}}
 * {{App|Aqualung|Advanced music player, which plays audio CDs, internet radio streams and podcasts as well as soundfiles in just about any audio format and has the feature of inserting no gaps between adjacent tracks.|https://aqualung.jeremyevans.net/|{{AUR|aqualung}}}}
 * {{App|[[Audacious]]|[[Wikipedia:Winamp|Winamp]] clone like Beep and old XMMS versions.|https://audacious-media-player.org/|{{Pkg|audacious}}}}
 * {{App|[[Wikipedia:DeaDBeeF|DeaDBeeF]]|Light and fast music player with many features, no GNOME or KDE dependencies, supports console-only, as well as a GTK GUI, comes with many plugins, and has a metadata editor.|https://deadbeef.sourceforge.io/|{{AUR|deadbeef}}}}
-* {{App|Deepin Music|Awesome music player with brilliant and tweakful UI Deepin-UI based.|https://www.deepin.org/en/original/deepin-music/|{{Pkg|deepin-music}}{{Broken package link|package not found}}}}
 * {{App|Drumstick MIDI File Player|MIDI file player based on Drumstick.|https://sourceforge.net/projects/dmidiplayer/|{{AUR|dmidiplayer}}}}
 * {{App|Elisa|Simple music player by the KDE community aiming to provide a nice experience for its users. Part of {{Grp|kde-multimedia}}.|https://apps.kde.org/elisa/|{{Pkg|elisa}}}}
-* {{App|fooyin|A customisable Qt-based music player.|https://github.com/ludouzi/fooyin|{{AUR|fooyin}}}}
+* {{App|fooyin|A customisable Qt-based music player.|https://www.fooyin.org/|{{AUR|fooyin}}}}
 * {{App|gmusicbrowser|Open-source jukebox for large collections of MP3/OGG/FLAC files.|https://gmusicbrowser.org/|{{AUR|gmusicbrowser}}}}
 * {{App|Goggles Music Manager|Music collection manager and player that automatically categorizes your music, supports gapless playback, features easy tag editing, and internet radio support. Uses the [[Wikipedia:Fox toolkit|Fox toolkit]].|https://gogglesmm.github.io/|{{Pkg|gogglesmm}}}}
 * {{App|[[Wikipedia:JuK|JuK]]|JuK is an audio jukebox application, supporting collections of MP3, Ogg Vorbis, and FLAC audio files. Part of {{Grp|kde-multimedia}}.|https://juk.kde.org/|{{Pkg|juk}}}}
-* {{App|LXMusic|A minimalist xmms2-based music player.|https://www.lxde.org/|{{Pkg|lxmusic}}}}
+* {{App|LXMusic|A minimalist xmms2-based music player.|https://www.lxde.org/{{Dead link|2025|08|15|status=SSL error}}|{{Pkg|lxmusic}}}}
 * {{App|museeks|Minimalistic and easy to use music player. Based on the [https://electronjs.org/ Electron] platform.|https://museeks.io/|{{AUR|museeks-bin}}}}
 * {{App|Musique|Just another music player, only better.|https://flavio.tordini.org/musique|{{AUR|musique}}}}
 * {{App|[[Wikipedia:qmmp|Qmmp]]|Qt-based multimedia player with a user interface that is similar to Winamp or XMMS.|https://qmmp.ylsoftware.com/|{{Pkg|qmmp}}}}
 * {{App|Soundux|Soundboard that features a simple user interface.|https://soundux.rocks/|{{AUR|soundux}}}}
 * {{App|Vvave|Tiny Qt music player to keep your favorite songs at hand. Part of {{Grp|maui}}.|https://mauikit.org/apps/vvave/|{{Pkg|vvave}}}}
+* {{App|Yarock|Modern looking music player, packed with features, that doesn’t depend on any specific desktop environment. Yarock is designed to provide an easy and pretty music browser based on cover art.|https://github.com/sebaro/Yarock|{{AUR|yarock}}}}
 
 === Internet radio listeners ===
 
@@ -360,25 +367,26 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|Cider|An open source and community oriented Apple Music client for Windows, Linux, macOS, and more. Based on the [https://electronjs.org/ Electron] platform.|https://cider.sh/|{{AUR|cider}}}}
 * {{App|Google Play Music Desktop Player|Beautiful cross platform desktop player for Google Play Music. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-/|{{AUR|gpmdp}}}}
 * {{App|Headset|Desktop application that turns YouTube into a world class music streaming service. Based on the [https://electronjs.org/ Electron] platform.|https://headsetapp.co/|{{AUR|headset}}}}
-* {{App|ncspot|Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes.|https://github.com/hrkfdn/ncspot|{{AUR|ncspot-bin}}}}
+* {{App|ncspot|Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes.|https://github.com/hrkfdn/ncspot|{{Pkg|ncspot}}}}
 * {{App|Nuclear|Modern music player focused on streaming from free sources. Based on the [https://electronjs.org/ Electron] platform.|https://nuclear.js.org/|{{AUR|nuclear-player-bin}}}}
 * {{App|[[pianobar]]|Console-based frontend for the online radio Pandora.|https://6xq.net/projects/pianobar/|{{Pkg|pianobar}}}}
+* {{App|Pear Desktop|Electron-based wrapper around YouTube Music with built in addons.|https://github.com/pear-devs/pear-desktop|{{AUR|pear-desktop}}}}
 * {{App|Pithos|Python/GTK Pandora Radio desktop client.|https://pithos.github.io/|{{AUR|pithos}}}}
 * {{App|[[Spotify]]|Proprietary music streaming service. It supports local playback and streaming from Spotify's vast library (requires a free account).|https://www.spotify.com/|{{AUR|spotify}}}}
 * {{App|spotify-qt|Lightweight Spotify client using Qt.|https://github.com/kraxarn/spotify-qt|{{AUR|spotify-qt}}}}
-* {{App|spotify-tui|Spotify for the terminal written in Rust.|https://github.com/Rigellute/spotify-tui|{{AUR|spotify-tui}}}}
+* {{App|spotify-tui|Spotify for the terminal written in Rust. (Project is in hiatus. Does not compile due to several library changes. See [https://github.com/Rigellute/spotify-tui/issues/1000 Rigellute/spotify-tui #1000])|https://github.com/Rigellute/spotify-tui|{{AUR|spotify-tui}}}}
 * {{App|TIDAL Hi-Fi (Max quality)|The web version of [https://listen.tidal.com TIDAL Player] running in electron with Hi-Fi (High & Max) support thanks to widevine|https://github.com/Mastermindzh/tidal-hifi|{{AUR|tidal-hifi-bin}}}}
-* {{App|YouTube Music|Electron-based wrapper around YouTube Music with built in addons.|https://github.com/th-ch/youtube-music|{{AUR|youtube-music-bin}}}}
 
 === Audio tag editors ===
 
 ==== Console ====
 
 * {{App|[[Beets]]|Music library organizer, tagger and more.|https://beets.io/|{{Pkg|beets}}}}
-* {{App|Demlo|Batch music tagger, encoder, renamer and more.|https://gitlab.com/ambrevar/demlo|{{AUR|demlo}}}}
 * {{App|id3|Command-line utility to edit ID3 1.x and 2.x tags.|https://squell.github.io/id3/|{{AUR|id3}}}}
 * {{App|id3v2|Command line editor for id3v2 tags.|https://id3v2.sourceforge.net/|{{Pkg|id3v2}}}}
-* {{App|MP3Info|MP3 technical info viewer and ID3 1.x tag editor.|https://ibiblio.org/mp3info/|{{Pkg|mp3info}}}}
+* {{App|ffmpeg|the tags of various files (e.g. mp3, flac) can be changed with {{ic|-metadata}} option, latest ID3 2.4 support with option {{ic|-id3v2_version 4}}|https://ffmpeg.org|{{Pkg|ffmpeg}}}}
+* {{App|mid3v2|CLI audio tag editor similar to 'id3v2'|https://github.com/quodlibet/mutagen|{{Pkg|python-mutagen}}}}
+* {{App|MP3Info|MP3 technical info viewer and ID3 1.x tag editor.|https://ibiblio.org/mp3info/|{{AUR|mp3info}}}}
 * {{App|MP3Unicode|Command line utility to convert ID3 tags in mp3 files between different encodings.|https://mp3unicode.sourceforge.net/|{{Pkg|mp3unicode}}}}
 * {{App|Taffy|Simple command-line tag editor for many audio formats.|https://github.com/jangler/taffy|{{AUR|taffy}}}}
 * {{App|Tagutil|CLI tool to edit music file's tag. It aims to provide both an easy-to-script interface and ease of use interactively.|https://github.com/kAworu/tagutil|{{AUR|tagutil}}}}
@@ -392,10 +400,10 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|[[Wikipedia:Ex Falso (software)|Ex Falso]]|Cross-platform free and open source audio tag editor and library organizer. Run with {{ic|exfalso}}.|https://github.com/quodlibet/quodlibet/|{{Pkg|quodlibet}}}}
 * {{App|GabTag|Audio tagging tool written in GTK.|https://github.com/lachhebo/gabtag|{{AUR|gabtag}}}}
 * {{App|Kid3|MP3, Ogg/Vorbis, FLAC, MPC, MP4/AAC, MP2, Speex, TrueAudio, WavPack, WMA, WAV and AIFF files tag editor.|https://kid3.kde.org/|KDE: {{Pkg|kid3}}, Qt: {{Pkg|kid3-qt}}}}
-* {{App|MP3Info GUI|MP3 technical info viewer and ID3 1.x tag editor. The graphical interface can be launched with the {{ic|gmp3info}} command.|https://ibiblio.org/mp3info/|{{Pkg|mp3info}}}}
+* {{App|MP3Info GUI|MP3 technical info viewer and ID3 1.x tag editor. The graphical interface can be launched with the {{ic|gmp3info}} command.|https://ibiblio.org/mp3info/|{{AUR|mp3info}}}}
 * {{App|NickvisionTagger|GTK Music file tag editor.  Can load tags from MusicBrainz database.  Works with mp3, ogg, flac, wma, and wav. Convert filenames to tags and tags to filenames.|https://github.com/nlogozzo/NickvisionTagger|{{AUR|tagger}}}}
-* {{App|[[Wikipedia:MusicBrainz Picard|Picard]]|Cross-platform audio tag editor written in Python (the official [[Wikipedia:MusicBrainz|MusicBrainz]] tagger).|https://picard.musicbrainz.org/|{{Pkg|picard}}}}
 * {{App|NTag|Graphical tag editor focused on everyday life use cases.|https://github.com/nrittsti/ntag|{{AUR|ntag}}}}
+* {{App|[[Wikipedia:MusicBrainz Picard|Picard]]|Cross-platform audio tag editor written in Python (the official [[Wikipedia:MusicBrainz|MusicBrainz]] tagger).|https://picard.musicbrainz.org/|{{Pkg|picard}}}}
 * {{App|[[Wikipedia:Puddletag|Puddletag]]|Replacement for the famous MP3tag for Windows.|https://docs.puddletag.net/|{{AUR|puddletag}}}}
 * {{App|Tag Editor|A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3v1/ID3v2, Vorbis, Opus, FLAC and Matroska.|https://github.com/Martchus/tageditor|{{AUR|tageditor}}}}
 * {{App|Thunar Media Tags Plugin|Adds special features for media files to the Thunar File Manager, including the ability to edit tags.|https://goodies.xfce.org/projects/thunar-plugins/thunar-media-tags-plugin|{{Pkg|thunar-media-tags-plugin}}}}
@@ -406,7 +414,7 @@ Many applications in the [[#Video players]] section also support audio playback.
 
 * {{App|Floodlight Presenter|Presentation and lyrics program for churches to display lyrics and media.|https://floodlight.gitlab.io/|{{AUR|floodlight-presenter}}}}
 * {{App|Give Me Lyrics|See the lyrics of the song that is playing, from any application.|https://github.com/muriloventuroso/givemelyrics|{{AUR|givemelyrics}}}}
-* {{App|OSD Lyrics|Lyric show compatible with various media players.|https://github.com/osdlyrics/osdlyrics|{{Pkg|osdlyrics}}}}
+* {{App|OSD Lyrics|Lyric show compatible with various media players.|https://github.com/osdlyrics/osdlyrics|{{AUR|osdlyrics}}}}
 
 ==== Lyrics downloaders ====
 
@@ -460,7 +468,8 @@ See also [[Professional audio]].
 * {{App|Non|Modular digital audio workstation composed of four main parts: Timeline, Sequencer, Mixer and Session Manager.|https://non.tuxfamily.org/|{{AUR|non-timeline}}, {{AUR|non-sequencer}}, {{AUR|non-mixer}}, {{Pkg|new-session-manager}}}}
 * {{App|[[Wikipedia:Qtractor|Qtractor]]|Qt-based hard disk recorder and digital audio workstation application that aims to provide digital audio workstation software simple enough for the average home user, and yet powerful enough for the professional user.|https://qtractor.sourceforge.io/qtractor-index.html|{{Pkg|qtractor}}}}
 * {{App|[[Wikipedia:REAPER|REAPER]]|Proprietary digital audio workstation, offering a full multitrack audio and MIDI recording, editing, processing, mixing and mastering toolset.|https://www.reaper.fm/|{{Pkg|reaper}}}}
-* {{App|[[Wikipedia:Rosegarden|Rosegarden]]|Digital audio workstation program developed with ALSA and Qt that acts as an audio and MIDI sequencer, scorewriter and musical composition and editing tool.|https://www.rosegardenmusic.com/|{{Pkg|rosegarden}}}}
+* {{App|[[Wikipedia:Rosegarden|Rosegarden]]|Digital audio workstation program developed with [[ALSA]] and Qt that acts as an audio and MIDI sequencer, scorewriter and musical composition and editing tool.|https://www.rosegardenmusic.com/|{{Pkg|rosegarden}}}}
+* {{App|seq192|A MIDI sequencer based on seq24 with less features and more swag.|https://seq192.ammd.net/|{{AUR|seq192-git}}}}
 * {{App|[[Wikipedia:Tracktion Waveform|Tracktion Waveform]]|Proprietary digital audio workstation, specifically designed for the needs of modern music producers.|https://www.tracktion.com/|{{AUR|tracktion-waveform}}}}
 * {{App|Zrythm|A feature-rich digital audio workstation with support for various plugin formats and advanced audio processing capabilities.|https://www.zrythm.org/|{{AUR|zrythm}}}}
 
@@ -496,7 +505,7 @@ See also [[LilyPond#Front-ends]] and [[Wikipedia:Comparison of scorewriters]].
 See also [[Wikipedia:Comparison of audio synthesis environments]].
 
 * {{App|Blue|Music composition environment for Csound, written in Java.|https://blue.kunstmusik.com/|{{AUR|csound-blue}}}}
-* {{App|Cabbage|Framework for audio software development using simple markup text and the Csound audio synthesis language.|https://cabbageaudio.com/{{Dead link|2024|12|15|status=SSL error}}|{{AUR|cabbage-bin}}}}
+* {{App|Cabbage|Framework for audio software development using simple markup text and the Csound audio synthesis language.|https://cabbageaudio.com/|{{AUR|cabbage-bin}}}}
 * {{App|[[Cardinal]]|Virtual modular synthesizer plugin based on the [[VCV Rack]], includes lots of virtualized [[Wikipedia:Eurorack|Eurorack]] modules.|https://github.com/DISTRHO/Cardinal|{{Pkg|cardinal}}}}
 * {{App|[[Wikipedia:ChucK|ChucK]]|Strongly-timed, concurrent, and on-the-fly music programming language.|https://chuck.cs.princeton.edu/|{{Pkg|chuck}}}}
 * {{App|[[Wikipedia:Csound|Csound]]|Sound and music computing system.|https://csound.com/|{{Pkg|csound}}}}
@@ -513,8 +522,8 @@ This section contains [[Wikipedia:Drum machine|drum machines]], [[Wikipedia:Soft
 
 * {{App|ADLMIDI|OPL3/OPN2 synthesizer using ADLMIDI.|https://github.com/jpcima/adljack|{{Pkg|adljack}}}}
 * {{App|ADLplug|FM Yamaha OPL3 synthesizer for ADLMIDI.|https://github.com/jpcima/ADLplug|{{Pkg|adlplug}}}}
-* {{App|Agordejo|Music and audio production session manager based on NSM.|https://www.laborejo.org/agordejo/|{{Pkg|agordejo}}}}
-* {{App|ams|Alsa Modular Synth. Realtime modular synthesizer and effect processor.|https://alsamodular.sourceforge.net/|{{Pkg|ams}}}}
+* {{App|Agordejo|Music and audio production session manager based on NSM.|https://www.laborejo.org/agordejo/{{Dead link|2025|11|17|status=SSL error}}|{{AUR|agordejo}}}}
+* {{App|ams|[[ALSA]] Modular Synth. Realtime modular synthesizer and effect processor.|https://alsamodular.sourceforge.net/|{{Pkg|ams}}}}
 * {{App|[[Wikipedia:Amsynth|amsynth]]|Analog Modelling SYNTHesizer. Easy-to-use software synthesizer with a classic subtractive synthesizer topology.|https://amsynth.github.io/|{{Pkg|amsynth}}}}
 * {{App|[[Wikipedia:Din (din is noise)|DIN]]|Sound synthesizer and musical instrument.|https://dinisnoise.org/|{{Pkg|din}}}}
 * {{App|Drumlabooh|LV2/VSTi drum machine with Hydrogen, SFZ, Drumlabooh kits support.|https://psemiletov.github.io/drumlabooh/|{{AUR|drumlabooh}}}}
@@ -529,8 +538,7 @@ This section contains [[Wikipedia:Drum machine|drum machines]], [[Wikipedia:Soft
 * {{App|[[Wikipedia:Hydrogen (software)|Hydrogen]]|Advanced drum machine to create drum sequences.|https://github.com/hydrogen-music/hydrogen|{{Pkg|hydrogen}}}}
 * {{App|JSampler|Java GUI for [[LinuxSampler]] software audio sampler.|https://jsampler.sourceforge.net/|{{Pkg|jsampler}}}}
 * {{App|OPNplug|FM Yamaha OPN2 synthesizer for OPNMIDI.|https://github.com/jpcima/ADLplug|{{Pkg|opnplug}}}}
-* {{App|Patroneo|Easy to use pattern based midi sequencer.|https://www.laborejo.org/patroneo/|{{Pkg|patroneo}}}}
-* {{App|[[Wikipedia:PySynth|PySynth]]|Suite of simple music synthesizers and helper scripts written in Python 3.|https://mdoege.github.io/PySynth/|{{AUR|python-pysynth-git}}{{Broken package link|package not found}}}}
+* {{App|Patroneo|Easy to use pattern based midi sequencer.|https://www.laborejo.org/patroneo/{{Dead link|2025|11|17|status=SSL error}}|{{AUR|patroneo}}}}
 * {{App|QMidiArp|Advanced MIDI arpeggiator, programmable step sequencer and LFO.|https://qmidiarp.sourceforge.net/|{{Pkg|qmidiarp}}}}
 * {{App|QmidiCtl|MIDI remote controller application that sends MIDI data over the network, using UDP/IP multicast.|https://qmidictl.sourceforge.io/|{{Pkg|qmidictl}}}}
 * {{App|QmidiNet|MIDI network gateway application that sends and receives MIDI data over the network, using UDP/IP multicast.|https://qmidinet.sourceforge.io/|{{Pkg|qmidinet}}}}
@@ -569,27 +577,27 @@ This section contains [[Wikipedia:Drum machine|drum machines]], [[Wikipedia:Soft
 * {{App|Linux Show Player|Powerful and feature-rich software to arrange cue lists. Designed for theater plays and live music shows.|https://www.linux-show-player.org/|{{AUR|linux-show-player}}}}
 * {{App|Luppp|Music creation tool, intended for live use. The focus is on real time processing and a fast and intuitive workflow.|http://openavproductions.com/luppp/|{{Pkg|luppp}}}}
 * {{App|[[Wikipedia:Mixxx|Mixxx]]|Integrates the tools DJs need to perform creative live mixes with digital music files.|https://mixxx.org/|{{Pkg|mixxx}}}}
-* {{App|[[Seq24]]|Minimal loop based MIDI sequencer for a live performance with a very simple interface for editing and playing MIDI 'loops'.|https://filter24.org/seq24/|{{AUR|seq24-bzr}}}}
 * {{App|[[Wikipedia:xwax|xwax]]|Digital Vinyl System (DVS) for Linux. It allows DJs and turntablists to playback digital audio files (MP3, Ogg Vorbis, FLAC, AAC and more), controlled using a normal pair of turntables via timecoded vinyls.|https://xwax.org/|{{Pkg|xwax}}}}
 
 === Audio effects ===
 
-* {{App|Calf Plugin Pack for JACK|Process and produce sounds using a set of plugins with JACK interface. ({{ic|calfjackhost}})|https://calf-studio-gear.org/|{{Pkg|calf}}}}
+* {{App|Calf Plugin Pack for JACK|Process and produce sounds using a set of plugins with JACK interface. ({{ic|calfjackhost}})|https://calf-studio-gear.org/{{Dead link|2025|08|15|status=SSL error}}|{{Pkg|calf}}}}
 * {{App|Carla|Audio plugin host, with support for many audio drivers and plugin formats.|https://kxstudio.linuxaudio.org/Applications:Carla|{{Pkg|carla}}}}
-* {{App|guitarix|Virtual guitar amplifier for JACK.|https://guitarix.org/|{{Pkg|guitarix}}}}
 * {{App|EasyEffects|Apply effects to audio applications and input sources over PipeWire (or PulseAudio with legacy package).|https://github.com/wwmm/easyeffects|{{Pkg|easyeffects}}, {{AUR|pulseeffects-legacy-git}}}}
+* {{App|guitarix|Virtual guitar amplifier for JACK.|https://guitarix.org/|{{Pkg|guitarix}}}}
 * {{App|Rakarrack|Richly featured multi-effects processor emulating a guitar effects pedalboard.|https://rakarrack.sourceforge.net/|{{AUR|rakarrack}}}}
 * {{App|ToneLib GFX|the perfect custom tone with a complete guitar studio in your computer|https://tonelib.net/gfx-overview.html|{{AUR|tonelib-gfx-bin}}}}
 
 === Audio visualizers ===
 
 * {{App|Barva|Visualizer for PulseAudio that pulses the background of your terminal.|https://github.com/Kharacternyk/barva/|{{AUR|barva-git}}}}
-* {{App|C.A.V.A.|Console-based audio visualizer for ALSA, MPD and PulseAudio.|https://github.com/karlstav/cava/|{{AUR|cava}}}}
+* {{App|C.A.V.A.|Console-based audio visualizer for [[ALSA]], MPD and PulseAudio.|https://github.com/karlstav/cava/|{{Pkg|cava}}}}
 * {{App|Cavalcade|GTK GUI for C.A.V.A.|https://github.com/worron/cavalcade/|{{AUR|cavalcade-git}}}}
 * {{App|GLava|OpenGL audio spectrum visualizer. Its primary use case is for desktop windows or backgrounds.|https://github.com/wacossusca34/glava|{{AUR|glava}}}}
 * {{App|GLMViz|Fully configurable OpenGL music visualizer.|https://github.com/hannesha/GLMViz|{{AUR|glmviz-git}}}}
 * {{App|Le Biniou|User-friendly, powerful music visualization / VJing tool.|https://biniou.lenain.info/|{{AUR|lebiniou}}}}
 * {{App|[[projectM]]|Music visualizer which uses 3D accelerated iterative image-based rendering.|https://github.com/projectM-visualizer/projectm|{{Pkg|projectm-pulseaudio}}}}
+* {{App|vibe|WGPU audio spectrum visualizer. Its primary use case is for desktop windows or backgrounds on wayland. | https://github.com/TornaxO7/vibe|{{AUR|vibe-audio-visualizer-git}}}}
 * {{App|VSXu|OpenGL-based (hardware-accelerated), modular programming environment with its main purpose to visualize music and create graphic effects in real-time.|https://www.vsxu.com/|{{AUR|vsxu}}}}
 
 === Remote audio ===
@@ -607,7 +615,7 @@ This section contains [[Wikipedia:Drum machine|drum machines]], [[Wikipedia:Soft
 
 See also [[PulseAudio#Front-ends]] and [[JACK Audio Connection Kit#Comparison of JACK control GUIs]].
 
-* {{App|[[Wikipedia:alsamixer|alsamixer]]|Soundcard mixer for ALSA soundcard driver, with ncurses interface.|https://alsa-project.org/|{{Pkg|alsa-utils}}}}
+* {{App|[[Wikipedia:alsamixer|alsamixer]]|Soundcard mixer for [[ALSA]] soundcard driver, with ncurses interface.|https://alsa-project.org/|{{Pkg|alsa-utils}}}}
 * {{App|AlsaVolume|Tray ALSA volume changer written using gtkmm.|https://github.com/Vitozz/cppAlsaVolume|{{AUR|cpp-alsa-volume}}}}
 * {{App|Emixer|Utility to control volume levels. Part of Enlightenment.|https://www.enlightenment.org/about-enlightenment|{{Pkg|enlightenment}}}}
 * {{App|Gnome Alsamixer|ALSA mixer for GNOME.|https://launchpad.net/gnome-alsamixer|{{AUR|gnome-alsamixer}}}}
@@ -646,27 +654,27 @@ See also [[Wikipedia:Comparison of video player software]].
 
 * {{App|Cinema|Video player and manager for watching local video files.|https://anufrij.org/cinema/|{{AUR|playmyvideos}}}}
 * {{App|Clapper|Media player built for the GNOME desktop environment using GTK4 toolkit and powered by GStreamer.|https://rafostar.github.io/clapper/|{{Pkg|clapper}}}}
+* {{App|COSMIC Media Player|Media player for the COSMIC desktop environment.|https://github.com/pop-os/cosmic-player|{{Pkg|cosmic-player}}}}
 * {{App|Glide|Simple and minimalistic media player relying on GStreamer for the multimedia support and GTK for the user interface.|https://github.com/philn/glide|{{Pkg|glide}}}}
-* {{App|[[Wikipedia:GNOME Videos|GNOME Videos]]|Media player (audio and video) for the GNOME desktop that uses [[GStreamer]]. Part of {{Grp|gnome}}.|https://apps.gnome.org/Totem/|{{Pkg|totem}}}}
+* {{App|GNOME Video Player|Video player for GNOME. Part of {{Grp|gnome}}.|https://apps.gnome.org/Showtime/|{{Pkg|showtime}}}}
 * {{App|Identity|Program for comparing multiple versions of an image or video.|https://apps.gnome.org/Identity/|{{Pkg|identity}}}}
 * {{App|Movie Monad|Free and simple to use video player made with Haskell using [[GStreamer]] and GTK. Precompiled and no Haskell dependency in run-time. |https://lettier.github.io/movie-monad/|{{AUR|movie-monad}}}}
 * {{App|Pantheon Videos|Video player and library designed for elementary OS using [[GStreamer]].|https://github.com/elementary/videos|{{Pkg|pantheon-videos}}}}
 * {{App|Parole|Modern media player based on the [[GStreamer]] framework.|https://docs.xfce.org/apps/parole/start|{{Pkg|parole}}}}
 * {{App|Rage|Video and audio player written with Enlightenment Foundation Libraries with some extra bells and whistles. Uses [[GStreamer]]|https://www.enlightenment.org/about-rage|{{Pkg|rage}}}}
-* {{App|Showtime|Video player for GNOME.|https://apps.gnome.org/Showtime/|{{Pkg|showtime}}}}
+* {{App|[[Wikipedia:GNOME Videos|Totem]]|Media player (audio and video) for the GNOME desktop that uses [[GStreamer]].|https://gitlab.gnome.org/GNOME/totem|{{Pkg|totem}}}}
 * {{App|Snappy|Powerful media player with a minimalistic interface that uses [[GStreamer]].|https://wiki.gnome.org/Apps/Snappy|{{AUR|snappy-player}}}}
 * {{App|Spivak|Karaoke player based on [[GStreamer]] and Qt5.|https://github.com/gyunaev/spivak|{{AUR|spivak}}}}
 
 ===== mpv-based =====
 
 * {{App|Baka MPlayer|Free and open source, cross-platform, [[mpv]] based multimedia player (Qt 5).|https://github.com/u8sand/Baka-MPlayer|{{Pkg|baka-mplayer}}}}
-* {{App|Bomi|bomi is a graphical user interface(GUI) player based on mpv for Linux.|https://bomi-player.github.io/|{{AUR|bomi-git}}}}
 * {{App|Celluloid|Simple GTK frontend for [[mpv]].|https://celluloid-player.github.io/|{{Pkg|celluloid}}}}
 * {{App|Deepin Movie|Movie player for Deepin desktop based on [[mpv]].|https://www.deepin.org/en/original/deepin-movie/|{{Pkg|deepin-movie}}}}
 * {{App|Haruna Video Player|Qt/QML video player built on top of [[mpv]].|https://haruna.kde.org/|{{Pkg|haruna}}}}
 * {{App|Kawaii-Player|Audio/video manager and multimedia player (based on [[mpv]]) with PC-to-PC casting feature, along with functionalities of portable media server and torrent streaming server.|https://github.com/kanishka-linux/kawaii-player|{{AUR|kawaii-player}}}}
-* {{App|Media Player Classic Qute Theater|Clone of [[Wikipedia:Media Player Classic|Media Player Classic]] reimplimented in Qt and based on [[mpv]].|https://mpc-qt.github.io/|{{AUR|mpc-qt}}}}
-* {{App|Minitube|YouTube desktop application written in C++ using [[mpv]] and Qt.|https://flavio.tordini.org/minitube|{{Pkg|minitube}}}}
+* {{App|Media Player Classic Qute Theater|Clone of [[Wikipedia:Media Player Classic|Media Player Classic]] reimplemented in Qt and based on [[mpv]].|https://mpc-qt.github.io/|{{AUR|mpc-qt}}}}
+* {{App|Minitube|YouTube desktop application written in C++ using [[mpv]] and Qt.|https://flavio.tordini.org/minitube|{{AUR|minitube}}}}
 * {{App|MoonPlayer|Video player for playing and downloading online videos from YouTube, Youku etc.|https://github.com/coslyk/moonplayer|{{AUR|moonplayer}}}}
 * {{App|[[mpv]]|Very basic GUI for mpv. Can be launched with {{ic|1=mpv --player-operation-mode=pseudo-gui}}.|https://mpv.io/|{{Pkg|mpv}}}}
 * {{App|mpvz|Qt5/QML based GUI for libmpv. Based on the Tethys theme for Bomi.|https://github.com/Zren/mpvz|{{AUR|mpvz-git}}}}
@@ -678,12 +686,11 @@ See also [[Wikipedia:Comparison of video player software]].
 ===== Other =====
 
 * {{App|Clip|Video player and collection manager utilizing [[FFmpeg]] as the backend. Part of {{Grp|maui}}.|https://mauikit.org/apps/clip/|{{Pkg|maui-clip}}}}
-* {{App|[[Wikipedia:Dragon Player|Dragon Player]]|Simple video player for KDE based on [[Phonon]]. Part of {{Grp|kde-multimedia}}.|https://apps.kde.org/dragonplayer/|{{Pkg|dragon}}}}
-* {{App|[[Electronplayer]]|An application using the [https://electronjs.org/ Electron] framework. It is used for viewing Netflix, YouTube, Twitch, Floatplane, Hulu, Amazon Prime Video and more. Most notably to isolate the cookies from these websites from your main web browser.|https://github.com/oscartbeaumont/ElectronPlayer/|{{AUR|electronplayer}}}}
+* {{App|[[Wikipedia:Dragon Player|Dragon Player]]|Simple video player for KDE. Part of {{Grp|kde-multimedia}}.|https://apps.kde.org/dragonplayer/|{{Pkg|dragon}}}}
+* {{App|DJV|Professional media review software for VFX, animation, and film production|https://grizzlypeak3d.github.io/DJV/|{{AUR|djv}}}}
 * {{App|FreeTube|Desktop YouTube player built with privacy in mind. Use YouTube without advertisements and prevent Google from tracking you with their cookies and JavaScript. Based on the [https://electronjs.org/ Electron] platform.|https://freetubeapp.io/|{{AUR|freetube}}}}
 * {{App|Gnome MPlayer|Simple GTK-based GUI for [[MPlayer]].|https://github.com/kdekorte/gnome-mplayer|{{Pkg|gnome-mplayer}}}}
 * {{App|[[Wikipedia:Kaffeine|Kaffeine]]|Very versatile KDE media player that, by default, utilizes [[VLC]] as its backend and has excellent support of digital TV ([[DVB-T]], DVB-C, [[DVB-S]]).|https://apps.kde.org/kaffeine/|{{Pkg|kaffeine}}}}
-* {{App|KMPlayer|Simple [[Phonon]]-based video player for KDE and video player plugin for Konqueror. It can use [[MPlayer]] as alternative backend.|https://apps.kde.org/kmplayer/|{{AUR|kmplayer}}}}
 * {{App|[[Kodi]]|Media player and entertainment hub for digital media.|https://kodi.tv/|{{Pkg|kodi}}}}
 * {{App|QMPlay2|Qt based video player. It can play and stream all formats supported by [[FFmpeg]] and libmodplug. It has on integrated module system, which includes a YouTube browser.|https://github.com/zaps166/QMPlay2|{{AUR|qmplay2}}}}
 * {{App|QtAV Player|Simple media player based on QtAV and [[FFmpeg]]. Run with {{ic|Player}} or {{ic|QMLPlayer}}.|https://www.qtav.org/|{{AUR|qtav}}}}
@@ -714,13 +721,14 @@ See also [[Wikipedia:Comparison of video converters]] and [[Codecs and container
 * {{App|QWinFF|Qt5 GUI for FFmpeg that can read audio and video files in various formats and convert them into other formats.|https://qwinff.github.io/|{{AUR|qwinff}}}}
 * {{App|Transmageddon|Simple python application for transcoding video into formats supported by GStreamer.|http://www.linuxrising.org/ |{{Pkg|transmageddon}}}}
 * {{App|WinFF|Graphical video and audio batch converter using FFmpeg.|https://github.com/WinFF/winff|{{AUR|winff-gtk3}}, {{AUR|winff-qt6}}}}
+* {{App|Vencoder|A graphical tool to transcode videos using FFmpeg.|https://github.com/lines-of-codes/Vencoder|{{AUR|vencoder-bin}}}}
 
 === Video editors ===
 
 See also [[Wikipedia:Comparison of video editing software]].
 
 * {{App|[[Wikipedia:Avidemux|Avidemux]]|Free video editor designed for simple cutting, filtering and encoding tasks.|http://fixounet.free.fr/avidemux/| {{Pkg|avidemux-qt}}}}
-* {{App|[[Wikipedia:Blender_(software)#Video_editing|Blender]]|Fully integrated 3D graphics creation suite with a built-in non-linear video editor.|https://www.blender.org/|{{Pkg|blender}}}}
+* {{App|[[Blender]]|Fully integrated 3D graphics creation suite with a built-in non-linear video editor.|https://www.blender.org/|{{Pkg|blender}}}}
 * {{App|[[Wikipedia:Cinelerra|Cinelerra (Community Version)]]|Advanced video editing and compositing environment.|http://cinelerra-cv.wikidot.com/|{{AUR|cinelerra-cv-git}}}}
 * {{App|[[Wikipedia:Cinelerra|Cinelerra GG Infinity]]|Professional video editing and compositing environment.|https://www.cinelerra-gg.org/|{{AUR|cinelerra-gg-git}}}}
 * {{App|[[DaVinci Resolve]]|Proprietary A/V post-production software suite.|https://www.blackmagicdesign.com/products/davinciresolve/|{{AUR|davinci-resolve}}}}
@@ -732,12 +740,12 @@ See also [[Wikipedia:Comparison of video editing software]].
 * {{App|[[Wikipedia:Natron (software)|Natron]]|Open-source compositing software. Node-graph based. Similar in functionalities to Adobe After Effects and Nuke by The Foundry.|https://natrongithub.github.io/|{{AUR|natron}}}}
 * {{App|Olive|Non-linear video editor aiming to provide a fully-featured alternative to high-end professional video editing software.
 |https://www.olivevideoeditor.org/|{{AUR|olive}}}}
-* {{App|[[Wikipedia:OpenShot_Video_Editor|OpenShot]]|Non-linear video editor based on MLT framework.|https://www.openshot.org/|{{Pkg|openshot}}}}
+* {{App|[[Wikipedia:OpenShot_Video_Editor|OpenShot]]|Non-linear video editor based on MLT framework.|https://www.openshot.org/|{{AUR|openshot}}}}
 * {{App|[[Wikipedia:Pitivi|Pitivi]]|Video editor designed to be intuitive and integrate well in the GNOME desktop.|https://www.pitivi.org/ |{{Pkg|pitivi}}}}
 * {{App|[[Wikipedia:Shotcut|Shotcut]]|Shotcut is a free, open source, cross-platform video editor.|https://www.shotcut.org/ |{{Pkg|shotcut}}}}
 * {{App|V2Mixer|free cross-platform movie editor,mixer|http://v2mixer.livev2.com/|{{AUR|v2mixer-bin}}}}
 * {{App|VapourSynth Editor|Editor for VapourSynth scripts.|https://bitbucket.org/mystery_keeper/vapoursynth-editor|{{AUR|vapoursynth-editor}}}}
-* {{App|VidCutter|Fast lossless media cutter + joiner w/ frame-accurate SmartCut options powered by mpv, FFmpeg via a sleek Qt5 GUI.|https://vidcutter.ozmartians.com/|{{Pkg|vidcutter}}}}
+* {{App|VidCutter|Fast lossless media cutter + joiner w/ frame-accurate SmartCut options powered by mpv, FFmpeg via a sleek Qt5 GUI.|https://vidcutter.ozmartians.com/|{{AUR|vidcutter}}}}
 * {{App|Video Trimmer|Cut out a fragment of a video given the start and end timestamps. The video is never re-encoded, so the process is very fast and does not reduce the video quality.|https://apps.gnome.org/VideoTrimmer/|{{Pkg|video-trimmer}}}}
 
 === Subtitles ===
@@ -745,13 +753,13 @@ See also [[Wikipedia:Comparison of video editing software]].
 ==== Subtitle players ====
 
 * {{App|Penguin Subtitle Player|Standalone subtitle player that provides a translucent window which always stays on the top so subtitles can be shown on top of the video without blocking anything.|https://github.com/carsonip/Penguin-Subtitle-Player|{{Pkg|penguin-subtitle-player}}}}
-* {{App|SubtitlesPrinter|Print subtitles above a X-screen, independently of the video player.|https://github.com/OlivierMarty/SubtitlesPrinter|{{AUR|subtitles-printer-git}}}}
+* {{App|SubtitlesPrinter|Print subtitles above an X-screen, independently of the video player.|https://github.com/OlivierMarty/SubtitlesPrinter|{{AUR|subtitles-printer-git}}}}
 
 ==== Subtitle downloaders ====
 
 * {{App|QNapi|Qt client for downloading movie subtitles from NapiProjekt, OpenSubtitles, Napisy24.|https://qnapi.github.io/|{{Pkg|qnapi}}}}
+* {{App|subdl|Command-line tool for downloading subtitles from opensubtitles.org.|https://github.com/akexakex/subdl|{{AUR|subdl}}}}
 * {{App|subliminal|Python library and command-line tool to search and download subtitles from different providers (opensubtitles.com, addic7ed.com, ...).|https://github.com/Diaoul/subliminal|{{AUR|subliminal}}}}
-* {{App|subdl|Command-line tool for downloading subtitles from opensubtitles.org.|https://github.com/akexakex/subdl|{{Pkg|subdl}}}}
 
 ==== Subtitle editors ====
 
@@ -763,7 +771,7 @@ See also [[Wikipedia:Comparison of subtitle editors]].
 * {{App|Jubler|Open-source multiplatform subtitle editor written in Java.|https://www.jubler.org/|{{AUR|jubler}}}}
 * {{App|Subtitle Composer|Subtitle editor for KDE supporting various formats, features different player backends, able to display wave form.|https://subtitlecomposer.kde.org/|{{AUR|subtitlecomposer}}}}
 * {{App|[[Wikipedia:Subtitle_Edit|Subtitle Edit]]|Subtitle editing program. Written in C# using mono.|https://github.com/SubtitleEdit/subtitleedit|{{AUR|subtitleedit}}}}
-* {{App|Subtitle Editor|GTK 3 tool to edit subtitles for GNU/Linux/*BSD.|https://kitone.github.io/subtitleeditor/|{{AUR|subtitleeditor}}}}
+* {{App|Subtitle Editor|GTK 3 tool to edit subtitles for GNU/Linux/*BSD.|https://kitone.github.io/subtitleeditor/{{Dead link|2025|11|17|status=404}}|{{AUR|subtitleeditor}}}}
 
 === Screencast ===
 
@@ -771,7 +779,7 @@ See [[Screen capture#Screencast software]].
 
 === Miracast ===
 
-[[Wikipedia:Miracast|Miracast]] is a standard for wireless connections from sending devices to display receivers mainly using [[Wikipedia:Wi-Fi Direct|Wi-Fi Direct]]. Use {{ic|iw dev}} to check your hardware support. Use {{ic|iw reg get}} to make sure the [[Network configuration/Wireless#Respecting the regulatory domain|regulatory domain]] is not set to "Global", as that might block some functionality.
+[[Wikipedia:Miracast|Miracast]] is a standard for wireless connections from sending devices to display receivers mainly using [[Wikipedia:Wi-Fi Direct|Wi-Fi Direct]]. Use {{ic|iw dev}} to check your hardware support. Use {{ic|iw reg get}} to make sure the [[regulatory domain]] is not set to "Global", as that might block some functionality.
 
 * {{App|GNOME Network Displays|GTK application to cast your desktop to a remote display. Not specific to the [[GNOME]] environment, depends on [[PipeWire]].|https://gitlab.gnome.org/GNOME/gnome-network-displays|{{AUR|gnome-network-displays}}}}
 * {{App|MiracleCast|Command line tools to connect external monitors to your system via Wi-Fi Display specification also known as Miracast.|https://github.com/albfan/miraclecast|{{AUR|miraclecast-git}}}}
@@ -782,7 +790,7 @@ See also [[FFmpeg#Recording webcam]] and [[Wikipedia:Comparison of webcam softwa
 
 * {{App|Booth|A convergent camera app.|https://invent.kde.org/maui/maui-booth|{{AUR|maui-booth-git}}}}
 * {{App|cameractrls|Command line and graphical application for configuring v4l2 devices.|https://github.com/soyersoyer/cameractrls|{{Pkg|cameractrls}}}}
-* {{App|[[Wikipedia:Cheese (software)|Cheese]]|Take photos and videos with your webcam, with fun graphical effects. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Cheese|{{Pkg|cheese}}}}
+* {{App|[[Wikipedia:Cheese (software)|Cheese]]|Take photos and videos with your webcam, with fun graphical effects. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Cheese|{{AUR|cheese}}}}
 * {{App|Deepin Camera|Tool to view camera, take photo and video.|https://github.com/linuxdeepin/deepin-camera|{{Pkg|deepin-camera}}}}
 * {{App|fswebcam|Small and simple command line webcam software that generates images for a webcam.|https://www.sanslogic.co.uk/fswebcam/|{{AUR|fswebcam}}}}
 * {{App|GNOME Camera|Take pictures and videos. Part of {{Grp|gnome}}.|https://apps.gnome.org/Snapshot/|{{Pkg|snapshot}}}}
@@ -791,10 +799,11 @@ See also [[FFmpeg#Recording webcam]] and [[Wikipedia:Comparison of webcam softwa
 * {{App|MJPG-streamer|Command line application which can be used to stream M-JPEG over an IP-based network from a webcam to various types of viewers.|https://github.com/jacksonliam/mjpg-streamer|{{AUR|mjpg-streamer-git}}}}
 * {{App|Motion|Highly configurable program that monitors video signals from many types of cameras. It is able to detect if a significant part of the picture has changed; in other words, it can detect motion.|https://motion-project.github.io/|{{Pkg|motion}}}}
 * {{App|Pantheon Camera|Camera application designed for elementary OS.|https://github.com/elementary/camera|{{Pkg|pantheon-camera}}}}
+* {{App|Plasma Camera|Camera application for Plasma Mobile.|https://apps.kde.org/plasma.camera/|{{Pkg|plasma-camera}}}}
 * {{App|QtCAM|Webcam software with more than 10 image control settings, extension settings and color space switching.|https://www.e-consystems.com/opensource-linux-webcam-software-application.asp|{{AUR|qtcam-git}}}}
+* {{App|v4l-utils|Provides a series of utilities for media devices.|https://linuxtv.org/|{{Pkg|v4l-utils}}}}
 * {{App|[[v4l2loopback]]|Kernel module that allows to create virtual video (v4l2) devices. This can be used to create virtual webcams with video passed by programs like FFmpeg.|https://github.com/umlaeute/v4l2loopback|{{Pkg|v4l2loopback-dkms}}}}
 * {{App|v4l2ucp|Universal control panel for V4L2 devices.|https://v4l2ucp.sourceforge.net/|{{AUR|v4l2ucp}}}}
-* {{App|v4l-utils|Provides a series of utilities for media devices.|https://linuxtv.org/|{{Pkg|v4l-utils}}}}
 * {{App|Webcamoid|Full featured webcam suite.|https://webcamoid.github.io/|{{AUR|webcamoid}}}}
 
 === DVD authoring ===
@@ -811,8 +820,9 @@ See [[Optical disc drive#DVD-Video]].
 
 === Video thumbnails ===
 
+* {{App|Hana|Application to capture thumbnails from video files.|https://apps.kde.org/hana/|{{Pkg|hana}}}}
 * {{App|vcsi|Create video contact sheets. A video contact sheet is an image composed of video capture thumbnails arranged on a grid.|https://github.com/amietn/vcsi|{{AUR|vcsi}}}}
-* {{App|Video Contact Sheet|Bash script meant to create video contact sheets (previews) of videos. Any video supported by mplayer and ffmpeg can be used.|https://p.outlyer.net/vcs|{{AUR|video-contact-sheet}}}}
+* {{App|Video Contact Sheet|Bash script meant to create video contact sheets (previews) of videos. Any video supported by mplayer and ffmpeg can be used.|https://p.outlyer.net/vcs{{Dead link|2025|11|17|status=SSL error}}|{{AUR|video-contact-sheet}}}}
 
 === Personal video recorders ===
 
@@ -825,15 +835,16 @@ See [[Optical disc drive#DVD-Video]].
 * {{App|MediaElch|Media manager for Kodi. Information about movies, TV shows, concerts and music are stored as nfo files.|https://www.kvibes.de/mediaelch/|{{Pkg|mediaelch}}}}
 * {{App|[[Wikipedia:Tellico_(software)|Tellico]]|KDE application for organizing various collections (books, video, music, coins, etc.).|https://tellico-project.org/|{{Pkg|tellico}}}}
 * {{App|tinyMediaManager|Media management tool to provide metadata for Kodi.|https://www.tinymediamanager.org/|{{AUR|tiny-media-manager}}}}
+* {{App|freeLib|Book library manager with support for inpx-based libraries; includes OPDS and Web servers.|https://github.com/petrovvlad/freeLib/|{{AUR|freelib-git}}}}
 
 == Media servers ==
 
-* {{App|Airsonic|Web-based media streamer, providing ubiquitous access to your music. (Fork of Subsonic.)|https://airsonic.github.io/|{{AUR|airsonic}}}}
+* {{App|Airsonic Advanced|Web-based media streamer, providing ubiquitous access to your music. (Fork of Subsonic.)|https://github.com/airsonic-advanced/airsonic-advanced|{{AUR|airsonic-advanced-bin}}}}
 * {{App|DMS|A UPnP DLNA Digital Media Server that includes basic video transcoding (thus with minimum dependencies).|https://github.com/anacrolix/dms|{{AUR|dms}}}}
 * {{App|[[Emby]]|Proprietary media server, which automatically converts and streams your media on-the-fly to play on any device.|https://emby.media/|{{Pkg|emby-server}}}}
 * {{App|[[Gerbera]]|UPnP Media Server to stream your media to devices on your home network. (Fork of MediaTomb.)|https://gerbera.io/|{{Pkg|gerbera}}}}
 * {{App|[[Icecast]]|Streaming media (audio/video) server which currently supports Ogg (Vorbis and Theora), Opus, WebM and MP3 streams.|https://icecast.org/|{{AUR|icecast}}}}
-* {{App|[[Jellyfin]]|Media system that puts you in control of managing and streaming your media.|https://jellyfin.org/|Server: {{Pkg|jellyfin-server}}, desktop client: {{AUR|jellyfin-media-player}}, cast client: {{Pkg|jellyfin-mpv-shim}}}}
+* {{App|[[Jellyfin]]|Media system that puts you in control of managing and streaming your media.|https://jellyfin.org/|Server: {{Pkg|jellyfin-server}}, desktop client: {{AUR|jellyfin-desktop}}, cast client: {{Pkg|jellyfin-mpv-shim}}}}
 * {{App|[[OwnTone]]|DAAP (iTunes) and MPD media server with support for AirPlay devices, Apple Remote, Chromecast, Spotify and internet radio.|https://owntone.github.io/owntone-server/|{{AUR|owntone-server}}}}
 * {{App|[[Plex]]|Proprietary media server, which organizes your personal video, music, and photo collections and streams them to all of your devices.|https://www.plex.tv/|{{AUR|plex-media-server}}}}
 * {{App|[[ReadyMedia]]|Simple media server software, with the aim of being fully compliant with DLNA/UPnP-AV clients.|https://sourceforge.net/projects/minidlna/|{{Pkg|minidlna}}}}
@@ -847,8 +858,8 @@ See [[Optical disc drive#DVD-Video]].
 
 * {{App|CoreInfo|Simple media metadata viewer built on mediainfo library. Part of C-Suite.|https://cubocore.gitlab.io/|{{AUR|coreinfo}}}}
 * {{App|DV Analyzer|Technical quality control and reporting tool that examines DV streams in order to report errors.|https://mediaarea.net/DVAnalyzer|CLI: {{AUR|dvanalyzer}}, GUI: {{AUR|dvanalyzer-gui}}}}
-* {{App|[[Wikipedia:ExifTool|ExifTool]]|Command-line application for reading, writing and editing meta information in a wide variety of files.|https://sno.phy.queensu.ca/~phil/exiftool/|{{Pkg|perl-image-exiftool}}}}
 * {{App|ExifCleaner|Desktop app to clean metadata from images, videos, PDFs, and other files.|https://exifcleaner.com|{{AUR|exifcleaner-bin}}}}
+* {{App|[[Wikipedia:ExifTool|ExifTool]]|Command-line application for reading, writing and editing meta information in a wide variety of files.|https://sno.phy.queensu.ca/~phil/exiftool/|{{Pkg|perl-image-exiftool}}}}
 * {{App|Exiv2|Command line utility to manage image metadata. It provides fast and easy read and write access to the Exif, IPTC and XMP metadata and the ICC Profile embedded within digital images in various formats.|https://exiv2.org/|{{Pkg|exiv2}}}}
 * {{App|[[Wikipedia:FFmpeg|ffprobe]]|Gather information from multimedia streams and print it in human- and machine-readable fashion.|https://ffmpeg.org/ffprobe.html|{{Pkg|ffmpeg}}}}
 * {{App|jExifToolGUI|Java/Swing graphical frontend for ExifTool, which reads and writes all kind of metadata tags from/to image files.|https://hvdwolf.github.io/jExifToolGUI/|{{AUR|jexiftoolgui}}}}
@@ -856,7 +867,7 @@ See [[Optical disc drive#DVD-Video]].
 * {{App|mat2|Metadata removal tool, supporting a wide range of commonly used file formats.|https://0xacab.org/jvoisin/mat2|{{Pkg|mat2}}}}
 * {{App|MediaConch|Implementation checker, policy checker, reporter, and fixer.|https://mediaarea.net/MediaConch|CLI: {{AUR|mediaconch}}, GUI: {{AUR|mediaconch-gui}}}}
 * {{App|[[Wikipedia:MediaInfo|MediaInfo]]|Convenient unified display of the most relevant technical and tag data for video and audio files.|https://mediaarea.net/en/MediaInfo|CLI: {{Pkg|mediainfo}}, GUI: {{Pkg|mediainfo-gui}}}}
-* {{App|Metadata Cleaner|Python GTK application to view and clean metadata in files, using mat2.|https://metadatacleaner.romainvigier.fr/|{{Pkg|metadata-cleaner}}}}
+* {{App|Metadata Cleaner|Python GTK application to view and clean metadata in files, using mat2.|https://metadatacleaner.romainvigier.fr/{{Dead link|2025|08|15|status=domain name not resolved}}|{{Pkg|metadata-cleaner}}}}
 * {{App|[[Wikipedia:libsndfile|sndfile-info]]|Obtaining information about the contents of an audio file.|http://mega-nerd.com/libsndfile/|{{Pkg|libsndfile}}}}
 
 == Mobile device managers ==
