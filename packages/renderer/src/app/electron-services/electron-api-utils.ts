@@ -290,5 +290,29 @@ export const httpDelete = createAsyncDeferredFunction<
   }>
 >('httpDelete');
 
+// Home Config operations
+export const writeHomeConfig =
+  createAsyncDeferredFunction<
+    (
+      relativePath: string,
+      content: string,
+      createDir?: boolean,
+    ) => Promise<{ success: boolean; path?: string; error?: string }>
+  >('writeHomeConfig');
+export const readHomeConfig =
+  createAsyncDeferredFunction<
+    (
+      relativePath: string,
+    ) => Promise<{ success: boolean; content?: string; path?: string; exists?: boolean; error?: string }>
+  >('readHomeConfig');
+export const homeConfigExists =
+  createAsyncDeferredFunction<(relativePath: string) => Promise<{ exists: boolean; path?: string; error?: string }>>(
+    'homeConfigExists',
+  );
+export const removeHomeConfig =
+  createAsyncDeferredFunction<(relativePath: string) => Promise<{ success: boolean; error?: string }>>(
+    'removeHomeConfig',
+  );
+
 // Export utility functions for checking preload status
 export { isPreloadReady, waitForPreload };

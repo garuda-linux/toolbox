@@ -129,6 +129,9 @@ import { on as eventsOn, off as eventsOff, once as eventsOnce, emit as eventsEmi
 // Import HTTP operations
 import { httpGet, httpPost, httpPut, httpDelete } from './http.js';
 
+// Import Home Config operations
+import { writeHomeConfig, readHomeConfig, homeConfigExists, removeHomeConfig } from './home-config.js';
+
 // Export all functions with their original names
 export {
   // Crypto
@@ -263,4 +266,10 @@ export {
   httpPost,
   httpPut,
   httpDelete,
+
+  // Home Config Operations
+  writeHomeConfig,
+  readHomeConfig,
+  homeConfigExists,
+  removeHomeConfig,
 };

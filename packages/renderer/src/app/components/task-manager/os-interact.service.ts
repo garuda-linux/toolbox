@@ -11,6 +11,15 @@ import {
 } from '../system-settings/types';
 import type { ChildProcess } from '../../types/shell';
 import { Logger } from '../../logging/logging';
+import { CONFIGS, ConfigEntry } from '../config-entries/configs';
+import {
+  exists,
+  homeConfigExists,
+  readHomeConfig,
+  readTextFile,
+  removeHomeConfig,
+  writeHomeConfig,
+} from '../../electron-services/electron-api-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +40,7 @@ export class OsInteractService {
   private readonly currentShell = signal<ShellEntry | null>(null);
   private readonly currentHblock = signal<boolean>(false);
   private readonly currentIwd = signal<boolean>(false);
+  private readonly currentConfigs = signal<Map<string, boolean>>(new Map());
 
   private readonly wantedPackages = signal<Map<string, boolean>>(new Map());
   private readonly wantedLocales = signal<Map<string, boolean>>(new Map());
@@ -38,6 +48,7 @@ export class OsInteractService {
   private readonly wantedServices = signal<Map<string, boolean>>(new Map());
   private readonly wantedServicesUser = signal<Map<string, boolean>>(new Map());
   private readonly wantedGroups = signal<Map<string, boolean>>(new Map());
+  private readonly wantedConfigs = signal<Map<string, boolean>>(new Map());
 
   readonly wantedDns = signal<DnsProvider | null>(null);
   readonly wantedShell = signal<ShellEntry | null>(null);
@@ -71,6 +82,9 @@ export class OsInteractService {
   });
   readonly iwd = computed(() => {
     return this.wantedIwd() ?? this.currentIwd();
+  });
+  readonly configs = computed(() => {
+    return new Map([...this.currentConfigs(), ...this.wantedConfigs()]);
   });
 
   constructor() {
@@ -239,6 +253,37 @@ export class OsInteractService {
       }
     }
 
+    let script_configs_user = '';
+    let script_configs_sudo = '';
+
+    for (const config of CONFIGS) {
+      const wanted = this.wantedConfigs().get(config.key);
+      const current = this.currentConfigs().get(config.key);
+      if (wanted !== undefined && wanted !== current) {
+        const prefix = config.sudo ? '' : '~/';
+        let newContent = '';
+
+        if (config.type === 'file') {
+          if (wanted) {
+            newContent += `mkdir -p "$(dirname "${prefix}${config.path}")"\n`;
+            newContent += `cat > "${prefix}${config.path}" << 'EOFCONFIG'\n${config.content}EOFCONFIG\n`;
+          } else {
+            newContent += `rm -f "${prefix}${config.path}"\n`;
+          }
+        } else if (config.type === 'regex' && config.regex) {
+          const replacement = wanted ? config.regex.enableReplacement : config.regex.disableReplacement;
+          newContent += `mkdir -p "$(dirname "${prefix}${config.regex.file}")"\n`;
+          newContent += `sed -i 's/${config.regex.pattern}/${replacement}/g' "${prefix}${config.regex.file}"\n`;
+        }
+
+        if (config.sudo) {
+          script_configs_sudo += newContent;
+        } else {
+          script_configs_user += newContent;
+        }
+      }
+    }
+
     let script_services_user = '';
     if (enableUser.length > 0) {
       script_services_user += `systemctl --user enable --now ${enableUser.join(' ')}\n`;
@@ -281,11 +326,11 @@ export class OsInteractService {
         this.taskManagerService.findTaskById('os-interact-services-user'),
         this.taskManagerService.findTaskById('os-interact-groups'),
         this.taskManagerService.findTaskById('os-interact-locales'),
+        this.taskManagerService.findTaskById('os-interact-configs-user'),
+        this.taskManagerService.findTaskById('os-interact-configs-sudo'),
       ].forEach((task) => {
         if (task !== null) {
-          if (task !== null) {
-            this.taskManagerService.removeTask(task);
-          }
+          this.taskManagerService.removeTask(task);
         }
       });
     });
@@ -358,6 +403,32 @@ export class OsInteractService {
           script_locales,
         ),
       );
+    if (script_configs_user !== '') {
+      this.logger.debug(`Creating user configs task with script: ${script_configs_user}`);
+      tasks.push(
+        this.taskManagerService.createTask(
+          14,
+          'os-interact-configs-user',
+          false,
+          'os-interact.configs-user',
+          'pi pi-cog',
+          script_configs_user,
+        ),
+      );
+    }
+    if (script_configs_sudo !== '') {
+      this.logger.debug(`Creating sudo configs task with script: ${script_configs_sudo}`);
+      tasks.push(
+        this.taskManagerService.createTask(
+          14,
+          'os-interact-configs-sudo',
+          true,
+          'os-interact.configs-sudo',
+          'pi pi-cog',
+          script_configs_sudo,
+        ),
+      );
+    }
 
     tasks.forEach((task) => {
       this.taskManagerService.scheduleTask(task);
@@ -386,26 +457,18 @@ export class OsInteractService {
    * Update the current state of the system asynchronously.
    */
   async update(): Promise<void> {
-    const [services, servicesUser, installedPackages, groups, dns, shell, hblock, locales, iwd] = await Promise.all([
-      this.getServices(),
-      this.getUserServices(),
-      this.getInstalledPackages(),
-      this.getGroups(),
-      this.getDNS(),
-      this.getShell(),
-      this.getHblock(),
-      this.getLocales(),
-      this.getIwd(),
+    await Promise.all([
+      this.getServices().then((res) => this.currentServices.set(res)),
+      this.getUserServices().then((res) => this.currentServicesUser.set(res)),
+      this.getInstalledPackages().then((res) => this.installedPackages.set(res)),
+      this.getGroups().then((res) => this.currentGroups.set(res)),
+      this.getDNS().then((res) => this.currentDNS.set(res)),
+      this.getShell().then((res) => this.currentShell.set(res)),
+      this.getHblock().then((res) => this.currentHblock.set(res)),
+      this.getLocales().then((res) => this.currentLocales.set(res)),
+      this.getIwd().then((res) => this.currentIwd.set(res)),
+      this.getConfigs().then((res) => this.currentConfigs.set(res)),
     ]);
-    this.installedPackages.set(installedPackages);
-    this.currentServices.set(services);
-    this.currentServicesUser.set(servicesUser);
-    this.currentGroups.set(groups);
-    this.currentDNS.set(dns);
-    this.currentShell.set(shell);
-    this.currentHblock.set(hblock);
-    this.currentLocales.set(locales);
-    this.currentIwd.set(iwd);
   }
 
   /**
@@ -423,7 +486,7 @@ export class OsInteractService {
     return result.stdout
       .trim()
       .split('\n')
-      .reduce((map: any, pkg: any) => {
+      .reduce((map: Map<string, boolean>, pkg: string) => {
         map.set(pkg, true);
         return map;
       }, new Map<string, boolean>());
@@ -480,7 +543,7 @@ export class OsInteractService {
     return result.stdout
       .trim()
       .split(' ')
-      .reduce((map: any, group: any) => {
+      .reduce((map: Map<string, boolean>, group: string) => {
         map.set(group, true);
         return map;
       }, new Map<string, boolean>());
@@ -542,6 +605,63 @@ export class OsInteractService {
       return false;
     }
     return parseInt(result.stdout.trim()) > 0;
+  }
+
+  /**
+   * Get the current state of all configs.
+   * @returns A map of config keys to enabled state.
+   * @private
+   */
+  private async getConfigs(): Promise<Map<string, boolean>> {
+    const configs = new Map<string, boolean>();
+    for (const config of CONFIGS) {
+      if (config.type === 'file') {
+        const result = config.sudo
+          ? { exists: await exists(config.path as string) }
+          : await homeConfigExists(config.path as string);
+        configs.set(config.key, result.exists);
+      } else if (config.type === 'regex' && config.regex) {
+        let content = '';
+        let success = false;
+        if (config.sudo) {
+          try {
+            content = await readTextFile(config.regex.file);
+            success = true;
+          } catch (e) {
+            this.logger.error(`Failed to read sudo config ${config.regex.file}: ${e}`);
+          }
+        } else {
+          const result = await readHomeConfig(config.regex.file);
+          content = result.content || '';
+          success = result.success;
+        }
+
+        if (success && content) {
+          const key = config.regex.enableReplacement.split('=')[0];
+          const regex = new RegExp(`^\\s*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*=\\s*true\\s*$`, 'm');
+          const matches = regex.test(content);
+          this.logger.debug(`Config ${config.key} (regex): key="${key}", matches=${matches}`);
+          configs.set(config.key, matches);
+        } else {
+          this.logger.debug(`Config ${config.key} (regex): no content or failed read, defaulting to false`);
+          configs.set(config.key, false);
+        }
+      }
+    }
+
+    this.logger.debug(`getConfigs result: ${JSON.stringify(Object.fromEntries(configs))}`);
+    return configs;
+  }
+
+  setWantedConfig(key: string, value: boolean): void {
+    const newMap = new Map(this.wantedConfigs());
+    newMap.set(key, value);
+    this.wantedConfigs.set(newMap);
+  }
+
+  toggleConfigState(key: string): void {
+    const current = this.configs().get(key) ?? false;
+    this.setWantedConfig(key, !current);
   }
 
   /**
@@ -636,7 +756,7 @@ export class OsInteractService {
   /**
    * Toggle a system tool entry.
    * @param name The name of the entry to toggle.
-   * @param type The type of the entry (pkg, service, serviceUser, group).
+   * @param type The type of the entry (pkg, service, serviceUser, group, config).
    * @param remove Whether to remove the entry.
    */
   toggle(name: string, type: string, remove = false): void {
@@ -652,6 +772,9 @@ export class OsInteractService {
         break;
       case 'group':
         this.toggleGroup(name, remove);
+        break;
+      case 'config':
+        this.toggleConfigState(name);
         break;
     }
   }
@@ -676,6 +799,13 @@ export class OsInteractService {
         return current ? this.currentServicesUser().get(name) == true : this.servicesUser().get(name) == true;
       case 'group':
         return current ? this.currentGroups().get(name) == true : this.groups().get(name) == true;
+      case 'config': {
+        const result = current ? this.currentConfigs().get(name) == true : this.configs().get(name) == true;
+        this.logger.debug(
+          `check config ${name}, current=${current}, result=${result}, currentConfigs=${this.currentConfigs().get(name)}, configs=${this.configs().get(name)}`,
+        );
+        return result;
+      }
     }
     return false;
   }

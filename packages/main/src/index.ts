@@ -15,6 +15,7 @@ import { createContextMenuModule } from './modules/ContextMenuModule.js';
 import { createAppMenuModule } from './modules/AppMenuModule.js';
 import { createHttpModule } from './modules/HttpModule.js';
 import { createEnhancedSecurityModule } from './modules/EnhancedSecurityModule.js';
+import { createHomeConfigModule } from './modules/HomeConfigModule.js';
 import { createAppIconModule } from './modules/AppIconModule.js';
 import { app, protocol } from 'electron';
 import { Logger } from './logging/logging.js';
@@ -84,6 +85,7 @@ async function registerBackgroundIPCHandlers(app: Electron.App, logger: Logger) 
     const contextMenuModule = createContextMenuModule();
     const appMenuModule = createAppMenuModule();
     const httpModule = createHttpModule();
+    const homeConfigModule = createHomeConfigModule();
 
     // Create module context
     const moduleContext = { app };
@@ -99,6 +101,7 @@ async function registerBackgroundIPCHandlers(app: Electron.App, logger: Logger) 
     contextMenuModule.enable(moduleContext);
     appMenuModule.enable(moduleContext);
     httpModule.enable(moduleContext);
+    homeConfigModule.enable(moduleContext);
 
     logger.debug('Background IPC handlers registered successfully');
   } catch (error) {
