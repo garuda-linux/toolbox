@@ -28,19 +28,19 @@ interface Package {
 function cleanWiki(text: string): string {
   if (!text) return '';
   return text
-    .replace(/\{\{Grp\|kde-games}\}/gi, 'Part of KDE Games')
-    .replace(/\{\{Dead link\|.*?}\}/gi, '')
-    .replace(/\{\{man\|.*?\|(.*?)(?:\|.*?)*}\}/gi, '$1')
-    .replace(/\{\{Pkg\|(.*?)(?:\|.*?)*}\}/gi, '$1')
-    .replace(/\{\{AUR\|(.*?)(?:\|.*?)*}\}/gi, '$1')
-    .replace(/\{\{=}\}/g, '=')
-    .replace(/\{\{ic\|(.*?)}\}/gi, '$1')
-    .replace(/\{\{Grp\|(.*?)}\}/gi, '$1')
-    .replace(/\{\{.*?}\}/g, '')
+    .replace(/\{\{Grp\|kde-games}}/gi, 'Part of KDE Games')
+    .replace(/\{\{Dead link\|.*?}}/gi, '')
+    .replace(/\{\{man\|.*?\|(.*?)(?:\|.*?)*}}/gi, '$1')
+    .replace(/\{\{Pkg\|(.*?)(?:\|.*?)*}}/gi, '$1')
+    .replace(/\{\{AUR\|(.*?)(?:\|.*?)*}}/gi, '$1')
+    .replace(/\{\{=}}/g, '=')
+    .replace(/\{\{ic\|(.*?)}}/gi, '$1')
+    .replace(/\{\{Grp\|(.*?)}}/gi, '$1')
+    .replace(/\{\{.*?}}/g, '')
     .replace(/\[\[Wikipedia:(.*?)\|(.*?)]]/g, '$2')
     .replace(/\[\[(.*?)\|(.*?)]]/g, '$2')
     .replace(/\[\[(.*?)]]/g, '$1')
-    .replace(/\[https?:\/\/.*?\s+(.*?)\]/g, '$1')
+    .replace(/\[https?:\/\/.*?\s+(.*?)]/g, '$1')
     .replace(/'''/g, '')
     .replace(/''/g, '')
     .replace(/&amp;/g, '&')
@@ -53,10 +53,8 @@ function cleanWiki(text: string): string {
  */
 function getAppStreamIconMap(): Map<string, string> {
   const iconMap = new Map<string, string>();
-  const xmlSearchPaths = ['/usr/share/app-info/xml/', '/usr/share/swcatalog/xml/', '/var/lib/swcatalog/xml/'];
+  const xmlSearchPaths = ['/usr/share/swcatalog/xml/'];
   const iconSearchPaths = [
-    '/usr/share/app-info/icons/archlinux/64x64/',
-    '/usr/share/app-info/icons/archlinux/128x128/',
     '/usr/share/swcatalog/icons/archlinux-arch-core/64x64/',
     '/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/',
     '/usr/share/swcatalog/icons/archlinux-arch-multilib/64x64/',
@@ -134,7 +132,7 @@ function getAppStreamIconMap(): Map<string, string> {
  * Parse an App entry from wiki source
  */
 function parseAppEntry(line: string): Package | null {
-  const appMatch = line.match(/\{\{App\|(.*)}\}/i);
+  const appMatch = line.match(/\{\{App\|(.*)}}/i);
   if (!appMatch) return null;
 
   const content = appMatch[1];
@@ -203,21 +201,44 @@ async function enrichGamingPackageLists(iconMap: Map<string, string>) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     // We only target lines that have the generic icon
-    if (line.includes("icon: 'generic-dark.svg'") || line.includes('icon: "generic-dark.svg"')) {
-      // Find the package name in the preceding lines
+    if (!line.includes("icon: 'generic-dark.svg'") && !line.includes('icon: "generic-dark.svg"')) continue;
+
+    let pkgname: string | undefined;
+
+    // Extract pkgname from current line
+    let match = line.match(/pkgname: \['([^']+)']/);
+    if (!match) match = line.match(/pkgname: \["([^"]+)"]/);
+
+    if (match) {
+      pkgname = match[1];
+    } else {
       for (let j = Math.max(0, i - 3); j < i; j++) {
-        const pkgMatch = lines[j].match(/pkgname: \['(.*?)']/);
+        let pkgMatch = lines[j].match(/pkgname: \['([^']+)']/);
+        if (!pkgMatch) pkgMatch = lines[j].match(/pkgname: \["([^"]+)"]/);
         if (pkgMatch) {
-          const pkgname = pkgMatch[1];
-          const betterIcon = iconMap.get(pkgname);
-          if (betterIcon) {
-            // Replace the generic icon with the system path safely
-            // $1 and $2 capture the existing quotes, we don't add more.
-            lines[i] = lines[i].replace(/icon: (['"])generic-dark\.svg(['"])/, `icon: $1${betterIcon}$2`);
-            updatedCount++;
-            break;
+          pkgname = pkgMatch[1];
+          break;
+        }
+      }
+    }
+
+    if (pkgname) {
+      let betterIcon = iconMap.get(pkgname);
+      if (!betterIcon) {
+        for (const suffix of ['-git', '-bin']) {
+          if (pkgname.endsWith(suffix)) {
+            betterIcon = iconMap.get(pkgname.replace(suffix, ''));
+            if (betterIcon) break;
           }
         }
+      }
+
+      if (betterIcon) {
+        const isSingleQuote = line.includes("icon: 'generic-dark.svg'");
+        const replacement = isSingleQuote ? `icon: '${betterIcon}'` : `icon: "${betterIcon}"`;
+
+        lines[i] = line.replace(/icon: (['"])generic-dark\.svg\1/, replacement);
+        updatedCount++;
       }
     }
   }
@@ -294,7 +315,17 @@ async function main() {
       const app = parseAppEntry(line);
       if (app) {
         const pkgname = app.pkgname[0];
-        const appStreamIcon = iconMap.get(pkgname);
+        let appStreamIcon = iconMap.get(pkgname);
+
+        if (!appStreamIcon) {
+          for (const suffix of ['-git', '-bin']) {
+            if (pkgname.endsWith(suffix)) {
+              appStreamIcon = iconMap.get(pkgname.replace(suffix, ''));
+              if (appStreamIcon) break;
+            }
+          }
+        }
+
         if (appStreamIcon) app.icon = appStreamIcon;
 
         if (hasPacman) {

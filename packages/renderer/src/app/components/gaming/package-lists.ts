@@ -103,7 +103,7 @@ export const gamingPackageLists: PackageSections = [
       {
         name: 'Game Conqueror',
         pkgname: ['gameconqueror'],
-        icon: 'generic-dark.svg',
+        icon: '/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gameconqueror_GameConqueror.png',
         description: 'gaming.gameconqueror',
       },
       {
@@ -712,7 +712,12 @@ export const gamingPackageLists: PackageSections = [
         description: 'gaming.libretroMeta',
       },
       { name: 'RetroArch', pkgname: ['retroarch'], icon: 'libretro.png', description: 'gaming.retroarch' },
-      { name: 'MAME', pkgname: ['mame'], icon: 'generic-dark.svg', description: 'gaming.mame' },
+      {
+        name: 'MAME',
+        pkgname: ['mame'],
+        icon: '/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mame_mame.png',
+        description: 'gaming.mame',
+      },
       { name: 'Mednafen', pkgname: ['mednafen'], icon: 'generic-dark.svg', description: 'gaming.mednafen' },
       { name: 'Nestopia', pkgname: ['nestopia-git'], icon: 'nestopia.png', description: 'gaming.nestopia' },
       { name: 'PCSX2', pkgname: ['pcsx2-git'], icon: 'pcsx2.png', description: 'gaming.pcsx2' },

@@ -96,6 +96,40 @@ export class GamingComponent implements OnInit {
   navigate(fragment: string) {
     void this.router.navigate([], { fragment });
   }
+  /**
+   * Get the source path for an icon.
+   * @param item The package entry.
+   */
+  getIconSrc(item: StatefulPackage & { icon: string }): string {
+    const pkgname = item.pkgname[0];
+    const icon = item.icon;
+
+    if (!icon || icon === 'generic-dark.svg') {
+      return this.configService.settings().darkMode
+        ? './assets/gamer/generic-dark.svg'
+        : './assets/gamer/generic-light.svg';
+    }
+
+    if (icon?.startsWith('/')) {
+      return `app-icon://${icon}`;
+    }
+
+    if (icon) {
+      if (icon.includes('.')) {
+        if (icon.includes('assets/')) return icon.startsWith('.') ? icon : `./${icon.replace(/^\//, '')}`;
+        return `./assets/gamer/${icon}`;
+      }
+      return `app-icon://${icon}`;
+    }
+
+    if (pkgname) {
+      return `app-icon://package/${pkgname}`;
+    }
+
+    return this.configService.settings().darkMode
+      ? './assets/gamer/generic-dark.svg'
+      : './assets/gamer/generic-light.svg';
+  }
 
   /**
    * Toggles the selected state of a package.

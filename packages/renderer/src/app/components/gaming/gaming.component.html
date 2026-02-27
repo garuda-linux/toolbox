@@ -60,24 +60,14 @@
                                 }
                               </div>
                             </ng-template>
-                            <div class="mt-5 min-h-16">
-                              @if (item.icon === 'generic-dark.svg' && !configService.settings().darkMode) {
-                                <img
-                                  class="mx-auto rounded-border"
-                                  [alt]="item.name"
-                                  height="50"
-                                  ngSrc="/assets/gamer/generic-light.svg"
-                                  width="50"
-                                />
-                              } @else {
-                                <img
-                                  class="mx-auto rounded-border"
-                                  [alt]="item.name"
-                                  height="50"
-                                  ngSrc="/assets/gamer/{{ item.icon }}"
-                                  width="50"
-                                />
-                              }
+                            <div class="mt-5 flex h-16 items-center justify-center">
+                              <img
+                                class="mx-auto rounded-border"
+                                [alt]="item.name"
+                                [src]="getIconSrc(item)"
+                                height="50"
+                                width="50"
+                              />
                             </div>
                           </p-card>
                         }

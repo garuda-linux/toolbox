@@ -22,6 +22,7 @@ import { Checkbox } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { PackagesService } from './packages.service';
+import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'rani-packages',
@@ -49,6 +50,7 @@ export class PackagesComponent {
 
   @ViewChild('packageTable') table!: Table;
 
+  protected readonly configService = inject(ConfigService);
   protected readonly packagesService = inject(PackagesService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly logger = Logger.getInstance();
@@ -63,6 +65,46 @@ export class PackagesComponent {
         void this.updateUi();
       }
     });
+  }
+
+  /**
+   * Get the source path for an icon.
+   * @param item The package entry.
+   */
+  getIconSrc(item: StatefulPackage & { icon: string }): string {
+    const pkgname = item.pkgname[0];
+    const icon = item.icon;
+
+    // 1. DEFAULTS: Handle generic icon light/dark mode locally
+    if (!icon || icon === 'generic-dark.svg') {
+      return this.configService.settings().darkMode
+        ? './assets/gamer/generic-dark.svg'
+        : './assets/gamer/generic-light.svg';
+    }
+
+    // 2. ABSOLUTE PATH: Use pre-resolved absolute paths
+    if (icon?.startsWith('/')) {
+      return `app-icon://${icon}`;
+    }
+
+    // 3. SPECIFIC ICON: If we have an icon name that isn't generic
+    if (icon) {
+      if (icon.includes('.')) {
+        if (icon.includes('assets/')) return icon.startsWith('.') ? icon : `./${icon.replace(/^\//, '')}`;
+        return `./assets/icons/${icon}`;
+      }
+      return `app-icon://${icon}`;
+    }
+
+    // 4. PACKAGE FALLBACK: Try to find a system icon for the package
+    if (pkgname) {
+      return `app-icon://package/${pkgname}`;
+    }
+
+    // 5. FINAL FALLBACK
+    return this.configService.settings().darkMode
+      ? './assets/gamer/generic-dark.svg'
+      : './assets/gamer/generic-light.svg';
   }
 
   /**

@@ -2194,7 +2194,7 @@
     "name": "Performous",
     "description": "An open-source karaoke, band and dancing game.",
     "url": "https://performous.org/",
-    "icon": "generic-dark.svg",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/performous_performous.png",
     "pkgname": ["performous-git"],
     "aur": true
   },

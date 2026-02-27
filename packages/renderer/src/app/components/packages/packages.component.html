@@ -39,6 +39,9 @@
       </ng-template>
       <ng-template #header>
         <tr>
+          <th [style]="{ 'min-width': '4rem' }">
+            {{ t('packages.icon') }}
+          </th>
           <th pSortableColumn="name">
             {{ t('packages.name') }}
             <p-sortIcon field="name" />
@@ -57,6 +60,11 @@
       </ng-template>
       <ng-template #body let-pkg>
         <tr>
+          <td>
+            <div class="flex h-8 w-8 items-center justify-center">
+              <img class="rounded-border" [alt]="pkg.name" [src]="getIconSrc(pkg)" height="32" width="32" />
+            </div>
+          </td>
           <td>
             <p>{{ pkg.name }}</p>
           </td>

@@ -2570,7 +2570,7 @@
     "name": "SigDigger",
     "description": "Qt-based digital signal analyzer, using Suscan core and Sigutils DSP library.",
     "url": "https://github.com/BatchDrake/SigDigger",
-    "icon": "generic-dark.svg",
+    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/sigdigger_SigDigger.png",
     "pkgname": ["sigdigger-git"],
     "aur": true
   },

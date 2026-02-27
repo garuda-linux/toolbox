@@ -15,8 +15,23 @@ import { createContextMenuModule } from './modules/ContextMenuModule.js';
 import { createAppMenuModule } from './modules/AppMenuModule.js';
 import { createHttpModule } from './modules/HttpModule.js';
 import { createEnhancedSecurityModule } from './modules/EnhancedSecurityModule.js';
-import { app } from 'electron';
+import { createAppIconModule } from './modules/AppIconModule.js';
+import { app, protocol } from 'electron';
 import { Logger } from './logging/logging.js';
+
+// Register custom schemes as privileged before the app is ready
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'app-icon',
+    privileges: {
+      secure: true,
+      standard: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+      stream: true,
+    },
+  },
+]);
 
 export async function initApp(initConfig: AppInitConfig) {
   const isDevelopment = import.meta.env.DEV;
@@ -31,6 +46,7 @@ export async function initApp(initConfig: AppInitConfig) {
       // Core modules for window creation
       .init(disallowMultipleAppInstance())
       .init(createEnhancedSecurityModule(isDevelopment))
+      .init(createAppIconModule())
 
       // Security modules
       .init(allowInternalOrigins(new Set(initConfig.renderer instanceof URL ? [initConfig.renderer.origin] : [])))
