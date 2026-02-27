@@ -546,7 +546,10 @@
     "services": "Alterar serviços",
     "services-user": "Alterar serviços do utilizador",
     "groups": "Alterar grupos de utilizadores",
-    "locales": "Alterar locais ativados"
+    "locales": "Alterar locais ativados",
+    "configs": "Alterar configurações do sistema",
+    "configs-user": "Alterar configurações do utilizador",
+    "configs-system": "Alterar configurações do sistema"
   },
   "packages": {
     "title": "Pacotes",

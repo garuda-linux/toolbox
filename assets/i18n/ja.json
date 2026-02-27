@@ -546,7 +546,10 @@
     "services": "サービスを変更",
     "services-user": "ユーザーサービスを変更",
     "groups": "ユーザーグループを変更",
-    "locales": "有効なロケールを変更"
+    "locales": "有効なロケールを変更",
+    "configs": "システム設定を変更",
+    "configs-user": "ユーザー設定を変更",
+    "configs-system": "システム設定を変更"
   },
   "packages": {
     "title": "パッケージ",

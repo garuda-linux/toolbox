@@ -546,7 +546,10 @@
     "services": "Modifica servizi",
     "services-user": "Modifica servizi utente",
     "groups": "Modifica gruppi utente",
-    "locales": "Modifica locali abilitati"
+    "locales": "Modifica locali abilitati",
+    "configs": "Modifica configurazioni di sistema",
+    "configs-user": "Modifica configurazioni utente",
+    "configs-system": "Modifica configurazioni di sistema"
   },
   "packages": {
     "title": "Pacchetti",

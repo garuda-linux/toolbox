@@ -645,7 +645,10 @@
     "services": "Dienste ändern",
     "services-user": "Benutzerdienste ändern",
     "groups": "Benutzergruppen ändern",
-    "locales": "Aktivierte Locales ändern"
+    "locales": "Aktivierte Locales ändern",
+    "configs": "Systemkonfigurationen ändern",
+    "configs-user": "Benutzerkonfigurationen ändern",
+    "configs-system": "Systemkonfigurationen ändern"
   },
   "packages": {
     "title": "Pakete",

@@ -546,7 +546,10 @@
     "services": "Szolgáltatások módosítása",
     "services-user": "Felhasználói szolgáltatások módosítása",
     "groups": "Felhasználói csoportok módosítása",
-    "locales": "Engedélyezett területi beállítások módosítása"
+    "locales": "Engedélyezett területi beállítások módosítása",
+    "configs": "Rendszerkonfigurációk módosítása",
+    "configs-user": "Felhasználói konfigurációk módosítása",
+    "configs-system": "Rendszerkonfigurációk módosítása"
   },
   "packages": {
     "title": "Csomagok",

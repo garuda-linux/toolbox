@@ -662,7 +662,9 @@
     "services-user": "Change user services",
     "groups": "Change user groups",
     "locales": "Change enabled locales",
-    "configs": "Change system configurations"
+    "configs": "Change system configurations",
+    "configs-user": "Change user configurations",
+    "configs-system": "Change system configurations"
   },
   "packages": {
     "title": "Packages",

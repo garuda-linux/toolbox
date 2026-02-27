@@ -673,7 +673,10 @@
     "services": "Ändra tjänster",
     "services-user": "Ändra användartjänster",
     "groups": "Ändra användargrupper",
-    "locales": "Ändra aktiverade språkversioner"
+    "locales": "Ändra aktiverade språkversioner",
+    "configs": "Ändra systemkonfigurationer",
+    "configs-user": "Ändra användarkonfigurationer",
+    "configs-system": "Ändra systemkonfigurationer"
   },
   "packages": {
     "title": "Paket",

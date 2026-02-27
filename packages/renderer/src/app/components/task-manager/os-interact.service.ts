@@ -423,7 +423,7 @@ export class OsInteractService {
           14,
           'os-interact-configs-sudo',
           true,
-          'os-interact.configs-sudo',
+          'os-interact.configs-system',
           'pi pi-cog',
           script_configs_sudo,
         ),

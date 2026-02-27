@@ -673,7 +673,10 @@
     "services": "Modifier les services",
     "services-user": "Modifier les services utilisateur",
     "groups": "Modifier les groupes d'utilisateurs",
-    "locales": "Modifier les locales activées"
+    "locales": "Modifier les locales activées",
+    "configs": "Modifier les configurations système",
+    "configs-user": "Modifier les configurations utilisateur",
+    "configs-system": "Modifier les configurations système"
   },
   "packages": {
     "title": "Paquets",

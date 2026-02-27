@@ -546,7 +546,10 @@
     "services": "Servisleri değiştir",
     "services-user": "Kullanıcı servislerini değiştir",
     "groups": "Kullanıcı gruplarını değiştir",
-    "locales": "Etkin yerelleri değiştir"
+    "locales": "Etkin yerelleri değiştir",
+    "configs": "Sistem yapılandırmalarını değiştir",
+    "configs-user": "Kullanıcı yapılandırmalarını değiştir",
+    "configs-system": "Sistem yapılandırmalarını değiştir"
   },
   "packages": {
     "title": "Paketler",

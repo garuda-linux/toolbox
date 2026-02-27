@@ -546,7 +546,10 @@
     "services": "更改服务",
     "services-user": "更改用户服务",
     "groups": "更改用户组",
-    "locales": "更改启用的区域设置"
+    "locales": "更改启用的区域设置",
+    "configs": "更改系统配置",
+    "configs-user": "更改用户配置",
+    "configs-system": "更改系统配置"
   },
   "packages": {
     "title": "软件包",
