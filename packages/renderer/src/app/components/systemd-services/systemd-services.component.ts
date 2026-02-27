@@ -16,7 +16,7 @@ import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 
 @Component({
-  selector: 'rani-systemd-services',
+  selector: 'toolbox-systemd-services',
   imports: [Button, IconField, InputIcon, PopoverModule, InputText, TableModule, NgClass, TranslocoDirective, Tooltip],
   templateUrl: './systemd-services.component.html',
   styleUrl: './systemd-services.component.css',
@@ -29,7 +29,7 @@ export class SystemdServicesComponent implements OnInit {
   serviceSearch = signal<string>('');
   systemdServices = signal<SystemdService[]>([]);
 
-  intervalRef: Nullable<number> = null;
+  intervalRef: ReturnType<typeof setInterval> | undefined = undefined;
 
   protected readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();
@@ -42,7 +42,6 @@ export class SystemdServicesComponent implements OnInit {
     this.systemdServices.set(await this.getServices());
 
     if (this.configService.settings().autoRefresh) {
-      // @ts-expect-error - setInterval returns a NodeJS.Timer or number depending on environment
       this.intervalRef = setInterval(async () => {
         this.systemdServices.set(await this.getServices());
       }, 5000);
@@ -199,7 +198,6 @@ export class SystemdServicesComponent implements OnInit {
     await this.configService.updateConfig('autoRefresh', !this.configService.settings().autoRefresh);
 
     if (this.configService.settings().autoRefresh) {
-      // @ts-expect-error - setInterval returns a NodeJS.Timer or number depending on environment
       this.intervalRef = setInterval(async () => {
         this.systemdServices.set(await this.getServices());
       }, 5000);

@@ -39,8 +39,8 @@
       "getHelpWiki": "Search for content in the wiki",
       "getHelpArchWiki": "Search for content in the Arch Wiki",
       "garudaStatus": "Check uptime status",
-      "about": "About Garuda Rani",
-      "aboutBody": "Garuda Rani is a system maintenance and diagnostics tool for Garuda Linux. It is designed to help users maintain their system and diagnose issues. It is built using Tauri and Angular.",
+      "about": "About Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox is a system maintenance and diagnostics tool for Garuda Linux. It is designed to help users maintain their system and diagnose issues. It is built using Tauri and Angular.",
       "callExorcist": "Call the exorcist",
       "callExorcistTitle": "Called the exorcist!",
       "callExorcistBody": "You must be pretty desperate to click this button! I set up some special voodoo for you, if you're still having issues with the app, please report them on the Garuda Linux forum or our issue tracker."
@@ -576,6 +576,17 @@
       "evdevRce": {
         "description": "Evdev RCE enabled"
       }
+    },
+    "configs": {
+      "title": "System Configurations",
+      "audioNoSuspend": {
+        "title": "Audio No-Suspend",
+        "description": "Prevent audio pop/crack by disabling PipeWire suspend"
+      },
+      "kdeBorderlessMaximize": {
+        "title": "KDE Borderless Maximize",
+        "description": "Hide window borders when maximized in KDE"
+      }
     }
   },
   "shells": {
@@ -650,10 +661,12 @@
     "services": "Change services",
     "services-user": "Change user services",
     "groups": "Change user groups",
-    "locales": "Change enabled locales"
+    "locales": "Change enabled locales",
+    "configs": "Change system configurations"
   },
   "packages": {
     "title": "Packages",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Documents",
     "multimedia": "Multimedia",

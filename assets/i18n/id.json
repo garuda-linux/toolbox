@@ -11,12 +11,13 @@
     "settings": "Pengaturan Aplikasi",
     "help": {
       "title": "Bantuan",
+      "icon": "Icon",
       "getHelpForum": "Dapatkan bantuan di forum",
       "getHelpWiki": "Cari konten di wiki",
       "getHelpArchWiki": "Cari konten di Arch Wiki",
       "garudaStatus": "Periksa status uptime",
-      "about": "Tentang Garuda Rani",
-      "aboutBody": "Garuda Rani adalah alat pemeliharaan sistem dan diagnostik untuk Garuda Linux. Ini dirancang untuk membantu pengguna memelihara sistem mereka dan mendiagnosis masalah. Dibangun menggunakan Tauri dan Angular.",
+      "about": "Tentang Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox adalah alat pemeliharaan sistem dan diagnostik untuk Garuda Linux. Ini dirancang untuk membantu pengguna memelihara sistem mereka dan mendiagnosis masalah. Dibangun menggunakan Tauri dan Angular.",
       "callExorcist": "Panggil pengusir setan",
       "callExorcistTitle": "Memanggil pengusir setan!",
       "callExorcistBody": "Kamu pasti sangat putus asa untuk mengklik tombol ini! Saya telah menyiapkan beberapa voodoo khusus untukmu, jika kamu masih mengalami masalah dengan aplikasi ini, laporkan di forum Garuda Linux atau pelacak masalah kami."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Info debug ",
+    "icon": "Icon",
     "titleTwo": "dan diagnostik",
     "subtitle": "Temukan informasi yang kamu butuhkan untuk men-debug sistemmu",
     "inxi": "Info umum (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Pilihan Bahasa",
+    "icon": "Icon",
     "tooltip": "Pilih bahasa pilihanmu"
   },
   "welcome": {
     "title": "Selamat Datang di ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Distro Linux terbaik untuk gaming dan multimedia",
     "maintenance": "Pemeliharaan",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Aplikasi ",
+    "icon": "Icon",
     "titleTwo": "Gaming",
     "subtitle": "Mari kita mulai dengan beberapa aplikasi gaming!",
     "launchers": "Peluncur Game",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Pemeliharaan ",
+    "icon": "Icon",
     "titleTwo": "Sistem",
     "subtitle": "Jaga sistemmu tetap dalam kondisi baik",
     "update": "Perbarui sistemmu",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Otentikasi diperlukan",
+    "icon": "Icon",
     "subtitle": "Silakan masukkan kata sandimu untuk melanjutkan",
     "save": "Cache di sesi ini",
     "password": "Kata Sandi",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Jalankan tindakan",
     "removeAll": "Hapus semua tindakan",
     "abortAll": "Batalkan semua tindakan",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Pengaturan ",
+    "icon": "Icon",
     "titleTwo": "Sistem",
     "systemdServices": "Layanan Systemd",
     "systemSettings": "Pengaturan Sistem",
@@ -201,6 +210,7 @@
     "packages": "Paket Lebih Lanjut",
     "audio": {
       "title": "Audio",
+      "icon": "Icon",
       "alsa": {
         "description": "Dukungan ALSA"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Virtualisasi",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU terinstal"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Kontainer",
+      "icon": "Icon",
       "docker": {
         "description": "Docker terinstal"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Jaringan",
+      "icon": "Icon",
       "networkManager": {
         "description": "Dukungan NetworkManager"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Dukungan Bluetooth"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Pencetakan",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Dukungan pencetakan"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Firewall",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld terinstal"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Lain-lain",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem terinstal"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "Gunakan IWD alih-alih wpa_supplicant",
     "common": {
       "title": "Umum",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon terinstal"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Performa",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Tweak performa"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Penghematan Daya",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Tweak penghematan daya"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Emulasi klik kanan",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Emulasi klik kanan tekan lama Evdev"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Paket",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Dokumen",
     "multimedia": "Multimedia",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Pengaturan ",
+    "icon": "Icon",
     "titleTwo": "Aplikasi",
     "leftButtons": "Tampilkan tombol jendela di kiri",
     "copyDiagnostics": "Salin diagnostik ke clipboard",

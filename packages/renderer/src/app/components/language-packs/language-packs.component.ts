@@ -11,7 +11,7 @@ import { LanguagePacksService } from './language-packs.service';
 import { LocalePipe } from '../lang-pipe/locale.pipe';
 
 @Component({
-  selector: 'rani-language-packs',
+  selector: 'toolbox-language-packs',
   imports: [TableModule, TranslocoDirective, FormsModule, NgIf, Checkbox, NgClass, LocalePipe],
   templateUrl: './language-packs.component.html',
   styleUrl: './language-packs.component.css',

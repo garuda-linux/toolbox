@@ -1,8 +1,8 @@
-# Garuda Linux's Rani
+# Garuda Linux's Toolbox
 
-[![pipeline status](https://gitlab.com/garuda-linux/applications/rani/badges/main/pipeline.svg)](https://gitlab.com/garuda-linux/applications/rani/-/pipelines)
+[![pipeline status](https://gitlab.com/garuda-linux/applications/toolbox/badges/main/pipeline.svg)](https://gitlab.com/garuda-linux/applications/toolbox/-/pipelines)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![Latest Release](https://gitlab.com/garuda-linux/applications/rani/-/badges/release.svg)](https://gitlab.com/garuda-linux/applications/rani/-/releases)
+[![Latest Release](https://gitlab.com/garuda-linux/applications/toolbox/-/badges/release.svg)](https://gitlab.com/garuda-linux/applications/toolbox/-/releases)
 
 ## Dependencies
 
@@ -17,13 +17,13 @@
 - If any packaging issues occur, don't hesitate to report them via our issues section of our PKGBUILD repo. You can
   click [here](https://gitlab.com/garuda-linux/pkgbuilds/-/issues/new) to create a new one.
 - If issues concerning the configurations and settings occur, please open a new issue on this repository.
-  Click [here](https://gitlab.com/garuda-linux/applications/rani/-/issues/new) to start the process.
+  Click [here](https://gitlab.com/garuda-linux/applications/toolbox/-/issues/new) to start the process.
 
 ## How to contribute?
 
 We highly appreciate contributions of any sort! 😊 To do so, please follow these steps:
 
-- [Create a fork of this repository](https://gitlab.com/garuda-linux/applications/rani/-/forks/new).
+- [Create a fork of this repository](https://gitlab.com/garuda-linux/applications/toolbox/-/forks/new).
 - Clone your fork locally ([short git tutorial](https://rogerdudler.github.io/git-guide/)).
 - Add the desired changes to PKGBUILDs or source code.
 - Commit using a [conventional commit message](https://www.conventionalcommits.org/en/v1.0.0/#summary) and push any
@@ -33,7 +33,7 @@ We highly appreciate contributions of any sort! 😊 To do so, please follow the
   - You can install it via [pip](https://pip.pypa.io/) as there is currently no package in Arch repos:
     `pip install --user -U Commitizen`.
   - Then proceed by running `cz commit` in the cloned folder.
-- [Create a new merge request at our main repository](https://gitlab.com/garuda-linux/applications/rani/-/merge_requests/new).
+- [Create a new merge request at our main repository](https://gitlab.com/garuda-linux/applications/toolbox/-/merge_requests/new).
 - Check if any of the pipeline runs fail and apply eventual suggestions.
 
 We will then review the changes and eventually merge them.

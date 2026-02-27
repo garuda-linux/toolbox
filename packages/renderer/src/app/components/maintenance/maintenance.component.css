@@ -11,19 +11,18 @@
 }
 
 .maintenance-big-card {
-    border: 2px solid transparent;
+  border: 2px solid transparent;
 }
-.maintenance-big-card:hover{
-    border: 2px solid var(--p-primary-color);
+.maintenance-big-card:hover {
+  border: 2px solid var(--p-primary-color);
 }
-
 
 ::ng-deep .maintenance-big-card .p-button-outlined {
   border-width: 2px;
   position: relative;
 }
 ::ng-deep .maintenance-big-card .p-button-outlined::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -54,6 +53,3 @@
 ::ng-deep .p-card-title {
   text-align: center;
 }
-
-
-

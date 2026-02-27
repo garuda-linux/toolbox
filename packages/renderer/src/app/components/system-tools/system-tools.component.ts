@@ -12,7 +12,7 @@ import { LocalesComponent } from '../locales/locales.component';
 import { Router, type UrlTree } from '@angular/router';
 
 @Component({
-  selector: 'rani-system-tools',
+  selector: 'toolbox-system-tools',
   imports: [
     TableModule,
     SystemdServicesComponent,

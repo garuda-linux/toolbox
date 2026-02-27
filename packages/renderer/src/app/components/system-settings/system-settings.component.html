@@ -52,8 +52,13 @@
         </label>
       </div>
     </div>
+    @if (configSections.length > 0) {
+      <div class="mt-10">
+        <toolbox-dynamic-checkboxes [data]="configSections"></toolbox-dynamic-checkboxes>
+      </div>
+    }
     <div>
-      <rani-dynamic-checkboxes [data]="sections"></rani-dynamic-checkboxes>
+      <toolbox-dynamic-checkboxes [data]="sections"></toolbox-dynamic-checkboxes>
     </div>
   </div>
 </ng-container>

@@ -10,4 +10,4 @@ jobs:
       - uses: codelytv/no-pull-requests@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          message: This is a read only mirror of the Garuda Rani repository. Thank you! 😊 Please submit pull requests at https://gitlab.com/garuda-linux/applications/rani.
+          message: This is a read only mirror of the Garuda Toolbox repository. Thank you! 😊 Please submit pull requests at https://gitlab.com/garuda-linux/applications/toolbox.

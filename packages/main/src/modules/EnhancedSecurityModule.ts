@@ -199,7 +199,7 @@ class EnhancedSecurityModule implements AppModule {
   }
 
   private setupAppProtection(): void {
-    app.setAppUserModelId('org.garudalinux.rani');
+    app.setAppUserModelId('org.garudalinux.toolbox');
 
     // Handle app certificate verification
     app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {

@@ -63,7 +63,7 @@ export const locales: Locales = {
   ga: { name: 'Irish', native: 'Gaeilge', flag: '🇮🇪' },
   gd: { name: 'Scottish Gaelic', native: 'Gàidhlig', flag: '🏴' },
   gl: { name: 'Galician', native: 'Galego', flag: '🇪🇸' },
-  gn: { name: 'Guarani', native: "Avañe'ẽ", flag: '🇵🇾' },
+  gn: { name: 'Guatoolbox', native: "Avañe'ẽ", flag: '🇵🇾' },
   gu: { name: 'Gujarati', native: 'ગુજરાતી', flag: '🇮🇳' },
   gv: { name: 'Manx', native: 'Gaelg', flag: '🇮🇲' },
   ha: { name: 'Hausa', native: 'هَوُسَ', flag: '🇳🇬' },

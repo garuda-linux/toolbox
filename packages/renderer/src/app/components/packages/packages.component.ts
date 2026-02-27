@@ -25,7 +25,7 @@ import { PackagesService } from './packages.service';
 import { ConfigService } from '../config/config.service';
 
 @Component({
-  selector: 'rani-packages',
+  selector: 'toolbox-packages',
   imports: [
     Tab,
     TabList,

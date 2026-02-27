@@ -1,13 +1,13 @@
 .welcome-home-big-card {
-    border: 2px solid transparent;
+  border: 2px solid transparent;
 }
-.welcome-home-big-card:hover{
-    border: 2px solid var(--p-primary-hover-color);
+.welcome-home-big-card:hover {
+  border: 2px solid var(--p-primary-hover-color);
 }
 
-.welcome-home-square-card{
-    border: 2px solid transparent;
+.welcome-home-square-card {
+  border: 2px solid transparent;
 }
 .welcome-home-square-card:hover {
-    border: 2px solid var(--p-primary-color);
+  border: 2px solid var(--p-primary-color);
 }

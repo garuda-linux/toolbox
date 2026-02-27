@@ -2,12 +2,14 @@
   "menu": {
     "file": {
       "title": "Файл",
+      "icon": "Icon",
       "preferences": "Налаштування",
       "themeDesigner": "Дизайнер тем",
       "quit": "Вийти"
     },
     "modules": {
       "title": "Модулі",
+      "icon": "Icon",
       "search": "Параметри пошуку",
       "diagnostics": "Діагностика",
       "maintenance": "Технічне обслуговування",
@@ -35,12 +37,13 @@
     "clearTasks": "Очистити завдання",
     "help": {
       "title": "Допомога",
+      "icon": "Icon",
       "getHelpForum": "Отримайте допомогу на форумі",
       "getHelpWiki": "Пошук контенту у вікі",
       "getHelpArchWiki": "Пошук контенту у вікі Arch",
       "garudaStatus": "Перевірте стан безвідмовної роботи",
-      "about": "Про Garuda Rani",
-      "aboutBody": "Garuda Rani — це інструмент для обслуговування та діагностики системи Garuda Linux. Він розроблений, щоб допомогти користувачам обслуговувати свою систему та діагностувати проблеми. Він створений з використанням Tauri та Angular.",
+      "about": "Про Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox — це інструмент для обслуговування та діагностики системи Garuda Linux. Він розроблений, щоб допомогти користувачам обслуговувати свою систему та діагностувати проблеми. Він створений з використанням Tauri та Angular.",
       "callExorcist": "Викличте екзорциста.",
       "callExorcistTitle": "Викликали екзорциста!",
       "callExorcistBody": "Мабуть, ти дуже хочеш натиснути цю кнопку! Я підготував для тебе особливе вуду. Якщо у тебе все ще виникають проблеми із застосунком, будь ласка, повідом про них на форумі Garuda Linux або в нашій системі відстеження проблем."
@@ -51,6 +54,7 @@
   },
   "diagnostics": {
     "title": "Інформація про налагодження",
+    "icon": "Icon",
     "titleTwo": "та діагностика",
     "subtitle": "Знайдіть інформацію, необхідну для налагодження системи",
     "inxi": "Загальна інформація (inxi)",
@@ -68,10 +72,12 @@
   },
   "lang": {
     "title": "Вибір мови",
+    "icon": "Icon",
     "tooltip": "Виберіть потрібну мову"
   },
   "welcome": {
     "title": "Ласкаво просимо до",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Найкращий дистрибутив Linux для ігор та мультимедіа",
     "maintenance": "Технічне обслуговування",
@@ -111,6 +117,7 @@
   },
   "gaming": {
     "title": "Ігри",
+    "icon": "Icon",
     "titleTwo": "додатки",
     "subtitle": "Давайте почнемо з кількох ігрових програм!",
     "launchers": "Запуск ігор",
@@ -211,6 +218,7 @@
   },
   "maintenance": {
     "title": "Система",
+    "icon": "Icon",
     "titleTwo": "технічне обслуговування",
     "subtitle": "Підтримуйте свою систему в хорошому стані",
     "update": "Оновіть свою систему",
@@ -264,6 +272,7 @@
   },
   "sudo": {
     "title": "Потрібна автентифікація",
+    "icon": "Icon",
     "subtitle": "Будь ласка, введіть свій пароль, щоб продовжити",
     "save": "Кеш у цьому сеансі",
     "password": "Пароль",
@@ -272,6 +281,7 @@
   },
   "terminal": {
     "title": "Термінал",
+    "icon": "Icon",
     "runActions": "Виконання дій",
     "removeAll": "Видалити всі дії",
     "abortAll": "Скасувати всі дії",
@@ -317,6 +327,7 @@
   },
   "systemTools": {
     "title": "Система",
+    "icon": "Icon",
     "titleTwo": "налаштування",
     "systemdServices": "Системні послуги",
     "systemSettings": "Системні налаштування",
@@ -326,6 +337,7 @@
     "packages": "Додаткові пакети",
     "audio": {
       "title": "Аудіо",
+      "icon": "Icon",
       "alsa": {
         "description": "Підтримка ALSA"
       },
@@ -347,6 +359,7 @@
     },
     "virtualization": {
       "title": "Віртуалізація",
+      "icon": "Icon",
       "qemu": {
         "description": "Встановлено QEMU"
       },
@@ -374,6 +387,7 @@
     },
     "containers": {
       "title": "Контейнери",
+      "icon": "Icon",
       "docker": {
         "description": "Докер встановлено"
       },
@@ -404,6 +418,7 @@
     },
     "network": {
       "title": "Мережа",
+      "icon": "Icon",
       "networkManager": {
         "description": "Підтримка NetworkManager"
       },
@@ -416,6 +431,7 @@
     },
     "bluetooth": {
       "title": "Блютуз",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Підтримка Bluetooth"
       },
@@ -434,6 +450,7 @@
     },
     "printing": {
       "title": "Друк",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Підтримка друку"
       },
@@ -458,6 +475,7 @@
     },
     "firewall": {
       "title": "Брандмауер",
+      "icon": "Icon",
       "firewalld": {
         "description": "Встановлено брандмауер"
       },
@@ -479,6 +497,7 @@
     },
     "misc": {
       "title": "Різне",
+      "icon": "Icon",
       "gns": {
         "description": "Встановлено підсистему Garuda Nix"
       }
@@ -492,6 +511,7 @@
     "enableIwd": "Використовуйте IWD замість wpa_supplicant",
     "common": {
       "title": "Звичайний",
+      "icon": "Icon",
       "psd": {
         "description": "Встановлено демон синхронізації профілю"
       },
@@ -507,6 +527,7 @@
     },
     "performance": {
       "title": "Продуктивність",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Налаштування продуктивності"
       },
@@ -534,6 +555,7 @@
     },
     "powersave": {
       "title": "Енергозбереження",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Налаштування енергозбереження"
       },
@@ -570,6 +592,7 @@
     },
     "rightclickEmulation": {
       "title": "Емуляція правого клацання миші",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Емуляція довгого натискання правою кнопкою миші Evdev"
       },
@@ -654,6 +677,7 @@
   },
   "packages": {
     "title": "Пакети",
+    "icon": "Icon",
     "internet": "Інтернет",
     "documents": "Документи",
     "multimedia": "Мультимедіа",
@@ -689,6 +713,7 @@
   },
   "settings": {
     "title": "Додаток",
+    "icon": "Icon",
     "titleTwo": "налаштування",
     "leftButtons": "Показувати кнопки вікна ліворуч",
     "copyDiagnostics": "Копіювати діагностику в буфер обміну",

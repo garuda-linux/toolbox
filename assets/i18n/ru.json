@@ -11,12 +11,13 @@
     "settings": "Настройки приложения",
     "help": {
       "title": "Помощь",
+      "icon": "Icon",
       "getHelpForum": "Получить помощь на форуме",
       "getHelpWiki": "Искать информацию на wiki",
       "getHelpArchWiki": "Искать информацию на Arch Wiki",
       "garudaStatus": "Проверить статус аптайма",
-      "about": "О Garuda Rani",
-      "aboutBody": "Garuda Rani - это инструмент для обслуживания и диагностики системы Garuda Linux. Он разработан для помощи пользователям в поддержании системы и диагностике проблем. Создан с использованием Tauri и Angular.",
+      "about": "О Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox - это инструмент для обслуживания и диагностики системы Garuda Linux. Он разработан для помощи пользователям в поддержании системы и диагностике проблем. Создан с использованием Tauri и Angular.",
       "callExorcist": "Вызвать экзорциста",
       "callExorcistTitle": "Экзорцист вызван!",
       "callExorcistBody": "Ты, должно быть, в полном отчаянии, раз нажал эту кнопку! Я настроил для тебя особое вуду. Если у тебя все еще проблемы с приложением, пожалуйста, сообщи о них на форуме Garuda Linux или в нашем баг-трекере."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Отладочная информация ",
+    "icon": "Icon",
     "titleTwo": "и диагностика",
     "subtitle": "Найди информацию, необходимую для отладки твоей системы",
     "inxi": "Общая информация (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Выбор языка",
+    "icon": "Icon",
     "tooltip": "Выбери предпочитаемый язык"
   },
   "welcome": {
     "title": "Добро пожаловать в ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Лучший дистрибутив Linux для игр и мультимедиа",
     "maintenance": "Обслуживание",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Игровые ",
+    "icon": "Icon",
     "titleTwo": "приложения",
     "subtitle": "Начнем с установки нескольких игровых приложений!",
     "launchers": "Игровые лаунчеры",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Обслуживание ",
+    "icon": "Icon",
     "titleTwo": "системы",
     "subtitle": "Поддерживай свою систему в хорошем состоянии",
     "update": "Обновить систему",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Требуется аутентификация",
+    "icon": "Icon",
     "subtitle": "Пожалуйста, введи свой пароль для продолжения",
     "save": "Кэшировать в этой сессии",
     "password": "Пароль",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Терминал",
+    "icon": "Icon",
     "runActions": "Выполнить действия",
     "removeAll": "Удалить все действия",
     "abortAll": "Прервать все действия",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Настройки ",
+    "icon": "Icon",
     "titleTwo": "системы",
     "systemdServices": "Службы Systemd",
     "systemSettings": "Настройки системы",
@@ -201,6 +210,7 @@
     "packages": "Дополнительные пакеты",
     "audio": {
       "title": "Аудио",
+      "icon": "Icon",
       "alsa": {
         "description": "Поддержка ALSA"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Виртуализация",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU установлен"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Контейнеры",
+      "icon": "Icon",
       "docker": {
         "description": "Docker установлен"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Сеть",
+      "icon": "Icon",
       "networkManager": {
         "description": "Поддержка NetworkManager"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Поддержка Bluetooth"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Печать",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Поддержка печати"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Файрвол",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld установлен"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Разное",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem установлен"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "Использовать IWD вместо wpa_supplicant",
     "common": {
       "title": "Общие",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon установлен"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Производительность",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Настройки производительности"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Энергосбережение",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Настройки энергосбережения"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Эмуляция правого клика",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Эмуляция правого клика долгим нажатием Evdev"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Пакеты",
+    "icon": "Icon",
     "internet": "Интернет",
     "documents": "Документы",
     "multimedia": "Мультимедиа",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Настройки ",
+    "icon": "Icon",
     "titleTwo": "приложения",
     "leftButtons": "Показывать кнопки окна слева",
     "copyDiagnostics": "Копировать диагностику в буфер обмена",

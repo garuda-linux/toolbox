@@ -3,7 +3,7 @@ import { RouterModule, type Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    title: 'Garuda Rani',
+    title: 'Garuda Toolbox',
     path: '',
     loadComponent: () => import('./components/home/home.component').then((m) => m.HomeComponent),
   },

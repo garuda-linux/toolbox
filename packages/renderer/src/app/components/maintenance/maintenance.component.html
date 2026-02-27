@@ -17,7 +17,7 @@
           <div class="grid grid-cols-12 gap-4 p-10">
             @for (action of actions; track action.name) {
               <div class="col-span-6 lg:col-span-3">
-                <p-card [header]="t(action.label)" class="maintenance-big-card">
+                <p-card class="maintenance-big-card" [header]="t(action.label)">
                   <div class="h-16 text-surface-200">
                     {{ t(action.description) }}
                   </div>
@@ -87,7 +87,7 @@
           <div class="grid grid-cols-12 gap-4 p-10">
             @for (action of actionsGarudaUpdate; track action.name) {
               <div class="col-span-6 lg:col-span-3">
-                <p-card [header]="t(action.label)" class="maintenance-big-card">
+                <p-card class="maintenance-big-card" [header]="t(action.label)">
                   <div class="h-16 text-surface-200">
                     {{ t(action.description) }}
                   </div>

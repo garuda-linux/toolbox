@@ -11,12 +11,13 @@
     "settings": "Mipangilio ya Programu",
     "help": {
       "title": "Msaada",
+      "icon": "Icon",
       "getHelpForum": "Pata msaada kwenye jukwaa",
       "getHelpWiki": "Tafuta maudhui katika wiki",
       "getHelpArchWiki": "Tafuta maudhui katika Arch Wiki",
       "garudaStatus": "Angalia hali ya muda wa kufanya kazi",
-      "about": "Kuhusu Garuda Rani",
-      "aboutBody": "Garuda Rani ni zana ya matengenezo ya mfumo na uchunguzi kwa Garuda Linux. Imeundwa kusaidia watumiaji kudumisha mfumo wao na kutambua matatizo. Imejengwa kwa kutumia Tauri na Angular.",
+      "about": "Kuhusu Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox ni zana ya matengenezo ya mfumo na uchunguzi kwa Garuda Linux. Imeundwa kusaidia watumiaji kudumisha mfumo wao na kutambua matatizo. Imejengwa kwa kutumia Tauri na Angular.",
       "callExorcist": "Mwite mtoa pepo",
       "callExorcistTitle": "Umemwita mtoa pepo!",
       "callExorcistBody": "Lazima uwe na shida sana kubofya kitufe hiki! Nimekuandalia uchawi maalum, ikiwa bado una matatizo na programu, tafadhali yaripoti kwenye jukwaa la Garuda Linux au kifuatiliaji chetu cha matatizo."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Maelezo ya utatuzi ",
+    "icon": "Icon",
     "titleTwo": "na uchunguzi",
     "subtitle": "Pata taarifa unayohitaji kutatua mfumo wako",
     "inxi": "Taarifa za kawaida (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Uteuzi wa lugha",
+    "icon": "Icon",
     "tooltip": "Chagua lugha unayopendelea"
   },
   "welcome": {
     "title": "Karibu kwenye ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Distro bora ya Linux kwa michezo na multimedia",
     "maintenance": "Matengenezo",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Programu za ",
+    "icon": "Icon",
     "titleTwo": "Michezo",
     "subtitle": "Tuanze na programu zingine za michezo!",
     "launchers": "Vizindua Michezo",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Matengenezo ya ",
+    "icon": "Icon",
     "titleTwo": "Mfumo",
     "subtitle": "Weka mfumo wako katika hali nzuri",
     "update": "Sasisha mfumo wako",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Uthibitishaji unahitajika",
+    "icon": "Icon",
     "subtitle": "Tafadhali ingiza nenosiri lako ili kuendelea",
     "save": "Hifadhi kwenye kashe katika kipindi hiki",
     "password": "Nenosiri",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Endesha hatua",
     "removeAll": "Ondoa hatua zote",
     "abortAll": "Acha hatua zote",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Mipangilio ya ",
+    "icon": "Icon",
     "titleTwo": "Mfumo",
     "systemdServices": "Huduma za Systemd",
     "systemSettings": "Mipangilio ya Mfumo",
@@ -201,6 +210,7 @@
     "packages": "Vifurushi zaidi",
     "audio": {
       "title": "Sauti",
+      "icon": "Icon",
       "alsa": {
         "description": "Usaidizi wa ALSA"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Uboreshaji",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU imesakinishwa"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Kontena",
+      "icon": "Icon",
       "docker": {
         "description": "Docker imesakinishwa"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Mtandao",
+      "icon": "Icon",
       "networkManager": {
         "description": "Usaidizi wa NetworkManager"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Usaidizi wa Bluetooth"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Uchapishaji",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Usaidizi wa uchapishaji"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Kinga moto",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld imesakinishwa"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Mengineyo",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem imesakinishwa"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "Tumia IWD badala ya wpa_supplicant",
     "common": {
       "title": "Kawaida",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon imesakinishwa"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Utendaji",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Marekebisho ya utendaji"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Kuokoa nishati",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Marekebisho ya kuokoa nishati"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Uigaji wa kubofya kulia",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Uigaji wa kubofya kulia kwa kubonyeza kwa muda mrefu Evdev"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Vifurushi",
+    "icon": "Icon",
     "internet": "Intaneti",
     "documents": "Nyaraka",
     "multimedia": "Multimedia",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Mipangilio ya ",
+    "icon": "Icon",
     "titleTwo": "Programu",
     "leftButtons": "Onyesha vitufe vya dirisha kushoto",
     "copyDiagnostics": "Nakili uchunguzi kwenye ubao wa kunakili",

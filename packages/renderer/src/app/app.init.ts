@@ -4,7 +4,7 @@ import { LanguageManagerService } from './components/language-manager/language-m
 import { SplashService } from './components/splash/splash.service';
 import { checkFirstBoot } from './first-boot';
 
-export async function initRani() {
+export async function initToolbox() {
   const configService = inject(ConfigService);
   const languageManagerService = inject(LanguageManagerService);
   const splashService = inject(SplashService);
@@ -14,8 +14,7 @@ export async function initRani() {
   await configService.init();
 
   if (!configService.state().isLiveSystem) {
-    if (await checkFirstBoot())
-      return;
+    if (await checkFirstBoot()) return;
   }
 
   splashService.updateStep(60, 'Initializing languages..');

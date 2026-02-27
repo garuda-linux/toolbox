@@ -115,7 +115,7 @@ export class DesignerService {
       await this.loadThemeEditor({
         preset: this.newPreset() as Preset,
         key: 'customTheme',
-        name: 'Rani theme',
+        name: 'Toolbox theme',
         config: {
           font_size: '14px',
           font_family: 'Inter var',

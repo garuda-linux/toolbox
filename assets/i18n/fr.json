@@ -2,12 +2,14 @@
   "menu": {
     "file": {
       "title": "Fichier",
+      "icon": "Icon",
       "preferences": "Préférences",
       "themeDesigner": "Concepteur de thème",
       "quit": "Quitter"
     },
     "modules": {
       "title": "Modules",
+      "icon": "Icon",
       "search": "Options de recherche",
       "diagnostics": "Diagnostics",
       "maintenance": "Maintenance",
@@ -35,12 +37,13 @@
     "clearTasks": "Effacer les tâches",
     "help": {
       "title": "Aide",
+      "icon": "Icon",
       "getHelpForum": "Obtenir de l'aide sur le forum",
       "getHelpWiki": "Rechercher du contenu dans le wiki",
       "getHelpArchWiki": "Rechercher du contenu dans le Wiki Arch",
       "garudaStatus": "Vérifier l'état de disponibilité",
-      "about": "À propos de Garuda Rani",
-      "aboutBody": "Garuda Rani est un outil de maintenance et de diagnostic système pour Garuda Linux. Il est conçu pour aider les utilisateurs à maintenir leur système et à diagnostiquer les problèmes. Il est construit avec Tauri et Angular.",
+      "about": "À propos de Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox est un outil de maintenance et de diagnostic système pour Garuda Linux. Il est conçu pour aider les utilisateurs à maintenir leur système et à diagnostiquer les problèmes. Il est construit avec Tauri et Angular.",
       "callExorcist": "Appelez l'exorciste",
       "callExorcistTitle": "Exorciste appelé !",
       "callExorcistBody": "Tu dois être bien désespéré pour cliquer sur ce bouton ! J'ai mis en place un vaudou spécial pour toi, si tu as toujours des problèmes avec l'application, merci de les signaler sur le forum Garuda Linux ou notre suivi de problèmes."
@@ -51,6 +54,7 @@
   },
   "diagnostics": {
     "title": "Infos de débogage ",
+    "icon": "Icon",
     "titleTwo": "et diagnostics",
     "subtitle": "Trouve les informations dont tu as besoin pour déboguer ton système",
     "inxi": "Infos courantes (inxi)",
@@ -68,10 +72,12 @@
   },
   "lang": {
     "title": "Sélection de la langue",
+    "icon": "Icon",
     "tooltip": "Sélectionne ta langue préférée"
   },
   "welcome": {
     "title": "Bienvenue sur ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "La distribution Linux ultime pour le jeu et le multimédia",
     "maintenance": "Maintenance",
@@ -111,6 +117,7 @@
   },
   "gaming": {
     "title": "Applications ",
+    "icon": "Icon",
     "titleTwo": "de jeux",
     "subtitle": "Commençons avec quelques applications de jeux !",
     "launchers": "Lanceurs de jeux",
@@ -211,6 +218,7 @@
   },
   "maintenance": {
     "title": "Maintenance ",
+    "icon": "Icon",
     "titleTwo": "système",
     "subtitle": "Maintiens ton système en bon état",
     "update": "Mettre à jour ton système",
@@ -264,6 +272,7 @@
   },
   "sudo": {
     "title": "Authentification requise",
+    "icon": "Icon",
     "subtitle": "Merci d'entrer ton mot de passe pour continuer",
     "save": "Mettre en cache pour cette session",
     "password": "Mot de passe",
@@ -272,6 +281,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Exécuter les actions",
     "removeAll": "Supprimer toutes les actions",
     "abortAll": "Abandonner toutes les actions",
@@ -317,6 +327,7 @@
   },
   "systemTools": {
     "title": "Paramètres ",
+    "icon": "Icon",
     "titleTwo": "système",
     "systemdServices": "Services Systemd",
     "systemSettings": "Paramètres système",
@@ -326,6 +337,7 @@
     "packages": "Autres paquets",
     "audio": {
       "title": "Audio",
+      "icon": "Icon",
       "alsa": {
         "description": "Support ALSA"
       },
@@ -347,6 +359,7 @@
     },
     "virtualization": {
       "title": "Virtualisation",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU installé"
       },
@@ -374,6 +387,7 @@
     },
     "containers": {
       "title": "Conteneurs",
+      "icon": "Icon",
       "docker": {
         "description": "Docker installé"
       },
@@ -404,6 +418,7 @@
     },
     "network": {
       "title": "Réseau",
+      "icon": "Icon",
       "networkManager": {
         "description": "Support NetworkManager"
       },
@@ -416,6 +431,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Support Bluetooth"
       },
@@ -434,6 +450,7 @@
     },
     "printing": {
       "title": "Impression",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Support d'impression"
       },
@@ -458,6 +475,7 @@
     },
     "firewall": {
       "title": "Pare-feu",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld installé"
       },
@@ -479,6 +497,7 @@
     },
     "misc": {
       "title": "Divers",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem installé"
       }
@@ -492,6 +511,7 @@
     "enableIwd": "Utiliser IWD au lieu de wpa_supplicant",
     "common": {
       "title": "Courant",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon installé"
       },
@@ -507,6 +527,7 @@
     },
     "performance": {
       "title": "Performance",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Optimisations de performance"
       },
@@ -534,6 +555,7 @@
     },
     "powersave": {
       "title": "Économie d'énergie",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Optimisations d'économie d'énergie"
       },
@@ -570,6 +592,7 @@
     },
     "rightclickEmulation": {
       "title": "Émulation du clic droit",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Émulation du clic droit par appui long Evdev"
       },
@@ -654,6 +677,7 @@
   },
   "packages": {
     "title": "Paquets",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Documents",
     "multimedia": "Multimédia",
@@ -689,6 +713,7 @@
   },
   "settings": {
     "title": "Paramètres ",
+    "icon": "Icon",
     "titleTwo": "de l'appli",
     "leftButtons": "Afficher les boutons de fenêtre à gauche",
     "copyDiagnostics": "Copier les diagnostics dans le presse-papiers",

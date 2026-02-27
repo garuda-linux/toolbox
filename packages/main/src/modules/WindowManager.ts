@@ -71,7 +71,7 @@ class WindowManager implements AppModule {
       minWidth: 700,
       show: true,
       frame: true,
-      title: 'Garuda Rani',
+      title: 'Garuda Toolbox',
       backgroundColor: '#1e1e2e',
       webPreferences: {
         nodeIntegration: false,
@@ -84,7 +84,7 @@ class WindowManager implements AppModule {
         experimentalFeatures: false,
         plugins: false,
         webgl: true, // XtermJs uses webgl
-        accessibleTitle: 'Garuda Rani',
+        accessibleTitle: 'Garuda Toolbox',
         navigateOnDragDrop: false,
         autoplayPolicy: 'user-gesture-required',
         safeDialogs: true,
@@ -110,7 +110,7 @@ class WindowManager implements AppModule {
     }
 
     // Set title explicitly to avoid issues with default title
-    browserWindow.setTitle('Garuda Rani');
+    browserWindow.setTitle('Garuda Toolbox');
 
     // Some error handling for the renderer process
     browserWindow.once('ready-to-show', () => {

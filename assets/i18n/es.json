@@ -11,12 +11,13 @@
     "settings": "Configuración de la aplicación",
     "help": {
       "title": "Ayuda",
+      "icon": "Icon",
       "getHelpForum": "Obtener ayuda en el foro",
       "getHelpWiki": "Buscar contenido en la wiki",
       "getHelpArchWiki": "Buscar contenido en la Arch Wiki",
       "garudaStatus": "Comprobar estado de actividad",
-      "about": "Acerca de Garuda Rani",
-      "aboutBody": "Garuda Rani es una herramienta de mantenimiento y diagnóstico del sistema para Garuda Linux. Está diseñada para ayudar a los usuarios a mantener su sistema y diagnosticar problemas. Está construida usando Tauri y Angular.",
+      "about": "Acerca de Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox es una herramienta de mantenimiento y diagnóstico del sistema para Garuda Linux. Está diseñada para ayudar a los usuarios a mantener su sistema y diagnosticar problemas. Está construida usando Tauri y Angular.",
       "callExorcist": "Llamar al exorcista",
       "callExorcistTitle": "¡Se ha llamado al exorcista!",
       "callExorcistBody": "¡Debes estar bastante desesperado para hacer clic en este botón! He preparado un vudú especial para ti, si sigues teniendo problemas con la aplicación, por favor repórtalos en el foro de Garuda Linux o en nuestro rastreador de incidencias."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Información de depuración ",
+    "icon": "Icon",
     "titleTwo": "y diagnósticos",
     "subtitle": "Encuentra la información que necesitas para depurar tu sistema",
     "inxi": "Información común (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Selección de idioma",
+    "icon": "Icon",
     "tooltip": "Selecciona tu idioma preferido"
   },
   "welcome": {
     "title": "Bienvenido a ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "La distro Linux definitiva para juegos y multimedia",
     "maintenance": "Mantenimiento",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Aplicaciones ",
+    "icon": "Icon",
     "titleTwo": "de juegos",
     "subtitle": "¡Empecemos con algunas aplicaciones de juegos!",
     "launchers": "Lanzadores de juegos",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Mantenimiento ",
+    "icon": "Icon",
     "titleTwo": "del sistema",
     "subtitle": "Mantén tu sistema en buen estado",
     "update": "Actualizar tu sistema",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Autenticación requerida",
+    "icon": "Icon",
     "subtitle": "Por favor, introduce tu contraseña para continuar",
     "save": "Guardar en caché en esta sesión",
     "password": "Contraseña",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Ejecutar acciones",
     "removeAll": "Eliminar todas las acciones",
     "abortAll": "Abortar todas las acciones",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Configuración ",
+    "icon": "Icon",
     "titleTwo": "del sistema",
     "systemdServices": "Servicios Systemd",
     "systemSettings": "Configuración del sistema",
@@ -201,6 +210,7 @@
     "packages": "Paquetes adicionales",
     "audio": {
       "title": "Audio",
+      "icon": "Icon",
       "alsa": {
         "description": "Soporte ALSA"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Virtualización",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU instalado"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Contenedores",
+      "icon": "Icon",
       "docker": {
         "description": "Docker instalado"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Red",
+      "icon": "Icon",
       "networkManager": {
         "description": "Soporte NetworkManager"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Soporte Bluetooth"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Impresión",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Soporte de impresión"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Firewall",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld instalado"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Miscelánea",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem instalado"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "Usar IWD en lugar de wpa_supplicant",
     "common": {
       "title": "Común",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon instalado"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Rendimiento",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Ajustes de rendimiento"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Ahorro de energía",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Ajustes de ahorro de energía"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Emulación de clic derecho",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Emulación de clic derecho con pulsación larga en Evdev"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Paquetes",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Documentos",
     "multimedia": "Multimedia",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Configuración ",
+    "icon": "Icon",
     "titleTwo": "de la aplicación",
     "leftButtons": "Mostrar botones de ventana a la izquierda",
     "copyDiagnostics": "Copiar diagnósticos al portapapeles",

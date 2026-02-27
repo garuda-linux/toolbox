@@ -27,7 +27,7 @@ import { Router, type UrlTree } from '@angular/router';
 import { DesignerService } from '../designer/designerservice';
 
 @Component({
-  selector: 'rani-diagnostics',
+  selector: 'toolbox-diagnostics',
   imports: [Button, TranslocoDirective, NgTerminalModule],
   templateUrl: './diagnostics.component.html',
   styleUrl: './diagnostics.component.css',

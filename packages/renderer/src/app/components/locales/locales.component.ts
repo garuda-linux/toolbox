@@ -10,7 +10,7 @@ import { ConfigService } from '../config/config.service';
 import { Task, TaskManagerService } from '../task-manager/task-manager.service';
 
 @Component({
-  selector: 'rani-locales',
+  selector: 'toolbox-locales',
   imports: [PickList, TranslocoDirective, LocalePipe, Select, FormsModule],
   templateUrl: './locales.component.html',
   styleUrl: './locales.component.css',

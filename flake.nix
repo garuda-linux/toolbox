@@ -1,5 +1,5 @@
 {
-  description = "Garuda Rani";
+  description = "Garuda Toolbox";
   inputs = {
     devshell = {
       url = "github:numtide/devshell";
@@ -86,31 +86,29 @@
         {
           default = mkShell {
             devshell = {
-              name = "Rani shell";
-              startup.preCommitHooks.text =
-                self.checks.${pkgs.system}.pre-commit-check.shellHook
-                + ''
-                  FLAKE_ROOT=$(${nixpkgs.lib.getExe pkgs.gitMinimal} rev-parse --show-toplevel)
-                  SYMLINK_SOURCE_PATH="${treefmtEval.config.build.configFile}"
-                  SYMLINK_TARGET_PATH="$FLAKE_ROOT/.treefmt.toml"
+              name = "Toolbox shell";
+              startup.preCommitHooks.text = self.checks.${pkgs.system}.pre-commit-check.shellHook + ''
+                FLAKE_ROOT=$(${nixpkgs.lib.getExe pkgs.gitMinimal} rev-parse --show-toplevel)
+                SYMLINK_SOURCE_PATH="${treefmtEval.config.build.configFile}"
+                SYMLINK_TARGET_PATH="$FLAKE_ROOT/.treefmt.toml"
 
-                  if [[ -e "$SYMLINK_TARGET_PATH" && ! -L "$SYMLINK_TARGET_PATH" ]]; then
-                    echo "treefmt-nix: Error: Target exists but is not a symlink."
-                    exit 1
+                if [[ -e "$SYMLINK_TARGET_PATH" && ! -L "$SYMLINK_TARGET_PATH" ]]; then
+                  echo "treefmt-nix: Error: Target exists but is not a symlink."
+                  exit 1
+                fi
+
+                if [[ -L "$SYMLINK_TARGET_PATH" ]]; then
+                  if [[ "$(readlink "$SYMLINK_TARGET_PATH")" != "$SYMLINK_SOURCE_PATH" ]]; then
+                    echo "treefmt-nix: Removing existing symlink"
+                    unlink "$SYMLINK_TARGET_PATH"
+                  else
+                    exit 0
                   fi
+                fi
 
-                  if [[ -L "$SYMLINK_TARGET_PATH" ]]; then
-                    if [[ "$(readlink "$SYMLINK_TARGET_PATH")" != "$SYMLINK_SOURCE_PATH" ]]; then
-                      echo "treefmt-nix: Removing existing symlink"
-                      unlink "$SYMLINK_TARGET_PATH"
-                    else
-                      exit 0
-                    fi
-                  fi
-
-                  nix-store --add-root "$SYMLINK_TARGET_PATH" --indirect --realise "$SYMLINK_SOURCE_PATH"
-                  echo "treefmt-nix: Created symlink successfully"
-                '';
+                nix-store --add-root "$SYMLINK_TARGET_PATH" --indirect --realise "$SYMLINK_SOURCE_PATH"
+                echo "treefmt-nix: Created symlink successfully"
+              '';
             };
             env = [
               {

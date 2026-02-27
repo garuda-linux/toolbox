@@ -1,5 +1,5 @@
 {
-  "name": "garuda-rani",
+  "name": "garuda-toolbox",
   "version": "3.0.0",
   "private": true,
   "description": "Garuda Linux app for easily managing installations. Includes Gaming apps, system settings, kernels and much more.",
@@ -12,13 +12,13 @@
     "system",
     "settings"
   ],
-  "homepage": "https://github.com/garuda-linux/applications/rani#readme",
+  "homepage": "https://github.com/garuda-linux/applications/toolbox#readme",
   "bugs": {
-    "url": "https://github.com/garuda-linux/applications/rani/issues"
+    "url": "https://github.com/garuda-linux/applications/toolbox/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/garuda-linux/applications/rani.git"
+    "url": "git+https://github.com/garuda-linux/applications/toolbox.git"
   },
   "license": "GPL-3.0",
   "author": {

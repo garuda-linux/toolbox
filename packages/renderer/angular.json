@@ -3,11 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rani": {
+    "toolbox": {
       "projectType": "application",
       "root": ".",
       "sourceRoot": "src",
-      "prefix": "rani",
+      "prefix": "toolbox",
       "architect": {
         "build": {
           "builder": "@analogjs/platform:vite",
@@ -32,16 +32,16 @@
           "builder": "@analogjs/platform:vite-dev-server",
           "defaultConfiguration": "development",
           "options": {
-            "buildTarget": "rani:build",
+            "buildTarget": "toolbox:build",
             "port": 5173
           },
           "configurations": {
             "development": {
-              "buildTarget": "rani:build:development",
+              "buildTarget": "toolbox:build:development",
               "hmr": true
             },
             "production": {
-              "buildTarget": "rani:build:production"
+              "buildTarget": "toolbox:build:production"
             }
           }
         }

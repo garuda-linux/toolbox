@@ -234,7 +234,7 @@ export class OsInteractService {
           systemctl stop NetworkManager
           systemctl disable --now wpa_supplicant.service
           systemctl mask wpa_supplicant
-          echo -e "[device]\\nwifi.backend=iwd" > /etc/NetworkManager/conf.d/20_wifi_backend_rani.conf
+          echo -e "[device]\\nwifi.backend=iwd" > /etc/NetworkManager/conf.d/20_wifi_backend_toolbox.conf
           systemctl daemon-reload
           systemctl start NetworkManager
           echo "Changed NetworkManager backend to iwd."\n
@@ -243,7 +243,7 @@ export class OsInteractService {
         script_services += `
           set -e
           systemctl stop NetworkManager
-          rm /etc/NetworkManager/conf.d/20_wifi_backend_rani.conf
+          rm /etc/NetworkManager/conf.d/20_wifi_backend_{rani,toolbox}.conf
           systemctl unmask wpa_supplicant
           systemctl enable --now wpa_supplicant
           systemctl daemon-reload
@@ -799,13 +799,8 @@ export class OsInteractService {
         return current ? this.currentServicesUser().get(name) == true : this.servicesUser().get(name) == true;
       case 'group':
         return current ? this.currentGroups().get(name) == true : this.groups().get(name) == true;
-      case 'config': {
-        const result = current ? this.currentConfigs().get(name) == true : this.configs().get(name) == true;
-        this.logger.debug(
-          `check config ${name}, current=${current}, result=${result}, currentConfigs=${this.currentConfigs().get(name)}, configs=${this.configs().get(name)}`,
-        );
-        return result;
-      }
+      case 'config':
+        return current ? this.currentConfigs().get(name) == true : this.configs().get(name) == true;
     }
     return false;
   }

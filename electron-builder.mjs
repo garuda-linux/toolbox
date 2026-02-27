@@ -54,8 +54,8 @@ async function getListOfFilesFromEachWorkspace() {
  * @see https://www.electron.build/configuration
  */
 export default {
-  productName: 'garuda-rani',
-  appId: 'org.garudalinux.rani',
+  productName: 'garuda-toolbox',
+  appId: 'org.garudalinux.toolbox',
   copyright: 'GPL-3.0',
 
   compression: 'normal',

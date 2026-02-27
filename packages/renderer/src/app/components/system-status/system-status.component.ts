@@ -14,7 +14,7 @@ import { SystemStatusService } from './system-status.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 
 @Component({
-  selector: 'rani-system-status',
+  selector: 'toolbox-system-status',
   imports: [OverlayBadge, Tooltip, TranslocoDirective, Dialog, Button, RouterLink],
   templateUrl: './system-status.component.html',
   styleUrl: './system-status.component.css',
@@ -98,7 +98,7 @@ export class SystemStatusComponent {
   }
 
   /**
-   * Refreshes all Rani system state (even though this is usually done automatically at the end of each task).
+   * Refreshes all Toolbox system state (even though this is usually done automatically at the end of each task).
    * This is useful for manual refreshes, e.g. when a user manually outside the app.
    */
   async refreshState() {

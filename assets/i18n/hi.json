@@ -11,12 +11,13 @@
     "settings": "ऐप सेटिंग्स",
     "help": {
       "title": "मदद",
+      "icon": "Icon",
       "getHelpForum": "फोरम पर मदद लें",
       "getHelpWiki": "विकी में सामग्री खोजें",
       "getHelpArchWiki": "Arch Wiki में सामग्री खोजें",
       "garudaStatus": "अपटाइम स्थिति जांचें",
-      "about": "Garuda Rani के बारे में",
-      "aboutBody": "Garuda Rani, Garuda Linux के लिए एक सिस्टम रखरखाव और निदान उपकरण है। इसे उपयोगकर्ताओं को अपने सिस्टम को बनाए रखने और समस्याओं का निदान करने में मदद करने के लिए डिज़ाइन किया गया है। यह Tauri और Angular का उपयोग करके बनाया गया है।",
+      "about": "Garuda Toolbox के बारे में",
+      "aboutBody": "Garuda Toolbox, Garuda Linux के लिए एक सिस्टम रखरखाव और निदान उपकरण है। इसे उपयोगकर्ताओं को अपने सिस्टम को बनाए रखने और समस्याओं का निदान करने में मदद करने के लिए डिज़ाइन किया गया है। यह Tauri और Angular का उपयोग करके बनाया गया है।",
       "callExorcist": "ओझा को बुलाओ",
       "callExorcistTitle": "ओझा को बुलाया!",
       "callExorcistBody": "इस बटन को क्लिक करने के लिए तुम बहुत हताश होगे! मैंने तुम्हारे लिए कुछ विशेष जादू-टोना किया है, अगर तुम्हें अभी भी ऐप से समस्या हो रही है, तो कृपया उन्हें Garuda Linux फोरम या हमारे इश्यू ट्रैकर पर रिपोर्ट करें।"
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "डीबग जानकारी ",
+    "icon": "Icon",
     "titleTwo": "और निदान",
     "subtitle": "अपने सिस्टम को डीबग करने के लिए आवश्यक जानकारी प्राप्त करें",
     "inxi": "सामान्य जानकारी (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "भाषा चयन",
+    "icon": "Icon",
     "tooltip": "अपनी पसंदीदा भाषा चुनें"
   },
   "welcome": {
     "title": "आपका स्वागत है ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux में",
     "subtitle": "गेमिंग और मल्टीमीडिया के लिए अंतिम Linux डिस्ट्रो",
     "maintenance": "रखरखाव",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "गेमिंग ",
+    "icon": "Icon",
     "titleTwo": "ऐप्स",
     "subtitle": "चलो कुछ गेमिंग ऐप्स के साथ शुरू करें!",
     "launchers": "गेम लॉन्चर",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "सिस्टम ",
+    "icon": "Icon",
     "titleTwo": "रखरखाव",
     "subtitle": "अपने सिस्टम को अच्छी स्थिति में रखें",
     "update": "अपना सिस्टम अपडेट करें",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "प्रमाणीकरण आवश्यक",
+    "icon": "Icon",
     "subtitle": "जारी रखने के लिए कृपया अपना पासवर्ड दर्ज करें",
     "save": "इस सत्र में कैश करें",
     "password": "पासवर्ड",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "टर्मिनल",
+    "icon": "Icon",
     "runActions": "क्रियाएँ चलाएँ",
     "removeAll": "सभी क्रियाएँ हटाएँ",
     "abortAll": "सभी क्रियाएँ निरस्त करें",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "सिस्टम ",
+    "icon": "Icon",
     "titleTwo": "सेटिंग्स",
     "systemdServices": "Systemd सेवाएँ",
     "systemSettings": "सिस्टम सेटिंग्स",
@@ -201,6 +210,7 @@
     "packages": "अतिरिक्त पैकेज",
     "audio": {
       "title": "ऑडियो",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA समर्थन"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "वर्चुअलाइजेशन",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU इंस्टॉल किया गया"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "कंटेनर",
+      "icon": "Icon",
       "docker": {
         "description": "Docker इंस्टॉल किया गया"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "नेटवर्क",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager समर्थन"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "ब्लूटूथ",
+      "icon": "Icon",
       "bluetooth": {
         "description": "ब्लूटूथ समर्थन"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "प्रिंटिंग",
+      "icon": "Icon",
       "printingSupport": {
         "description": "प्रिंटिंग समर्थन"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "फ़ायरवॉल",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld इंस्टॉल किया गया"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "विविध",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem इंस्टॉल किया गया"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "wpa_supplicant के बजाय IWD का उपयोग करें",
     "common": {
       "title": "सामान्य",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon इंस्टॉल किया गया"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "प्रदर्शन",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "प्रदर्शन सुधार"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "पावरसेविंग",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "पावरसेविंग सुधार"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "राइट क्लिक इम्यूलेशन",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev लॉन्ग प्रेस राइट क्लिक इम्यूलेशन"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "पैकेज",
+    "icon": "Icon",
     "internet": "इंटरनेट",
     "documents": "दस्तावेज़",
     "multimedia": "मल्टीमीडिया",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "ऐप ",
+    "icon": "Icon",
     "titleTwo": "सेटिंग्स",
     "leftButtons": "विंडो बटन बाईं ओर दिखाएँ",
     "copyDiagnostics": "निदान क्लिपबोर्ड पर कॉपी करें",

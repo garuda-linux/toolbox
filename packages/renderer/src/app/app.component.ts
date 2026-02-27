@@ -66,7 +66,7 @@ import { ShellBarEndDirective, ShellComponent } from '@garudalinux/core';
     ContextMenuModule,
     AppDesigner,
   ],
-  selector: 'rani-root',
+  selector: 'toolbox-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

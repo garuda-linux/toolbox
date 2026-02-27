@@ -11,12 +11,13 @@
     "settings": "应用设置",
     "help": {
       "title": "帮助",
+      "icon": "Icon",
       "getHelpForum": "在论坛获取帮助",
       "getHelpWiki": "在 Wiki 中搜索内容",
       "getHelpArchWiki": "在 Arch Wiki 中搜索内容",
       "garudaStatus": "检查正常运行时间状态",
-      "about": "关于 Garuda Rani",
-      "aboutBody": "Garuda Rani 是 Garuda Linux 的一个系统维护和诊断工具。它旨在帮助用户维护他们的系统并诊断问题。它是使用 Tauri 和 Angular 构建的。",
+      "about": "关于 Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox 是 Garuda Linux 的一个系统维护和诊断工具。它旨在帮助用户维护他们的系统并诊断问题。它是使用 Tauri 和 Angular 构建的。",
       "callExorcist": "召唤驱魔师",
       "callExorcistTitle": "已召唤驱魔师！",
       "callExorcistBody": "你一定是相当绝望才会点击这个按钮！我为你设置了一些特殊的巫术，如果你仍然遇到应用程序的问题，请在 Garuda Linux 论坛或我们的问题跟踪器上报告。"
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "调试信息 ",
+    "icon": "Icon",
     "titleTwo": "和诊断",
     "subtitle": "查找调试系统所需的信息",
     "inxi": "常用信息 (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "语言选择",
+    "icon": "Icon",
     "tooltip": "选择你偏好的语言"
   },
   "welcome": {
     "title": "欢迎来到 ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "终极的游戏和多媒体 Linux 发行版",
     "maintenance": "维护",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "游戏 ",
+    "icon": "Icon",
     "titleTwo": "应用",
     "subtitle": "让我们为你准备一些游戏应用吧！",
     "launchers": "游戏启动器",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "系统 ",
+    "icon": "Icon",
     "titleTwo": "维护",
     "subtitle": "保持你的系统处于良好状态",
     "update": "更新你的系统",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "需要身份验证",
+    "icon": "Icon",
     "subtitle": "请输入你的密码以继续",
     "save": "在此会话中缓存",
     "password": "密码",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "终端",
+    "icon": "Icon",
     "runActions": "运行操作",
     "removeAll": "移除所有操作",
     "abortAll": "中止所有操作",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "系统 ",
+    "icon": "Icon",
     "titleTwo": "设置",
     "systemdServices": "Systemd 服务",
     "systemSettings": "系统设置",
@@ -201,6 +210,7 @@
     "packages": "更多软件包",
     "audio": {
       "title": "音频",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA 支持"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "虚拟化",
+      "icon": "Icon",
       "qemu": {
         "description": "已安装 QEMU"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "容器",
+      "icon": "Icon",
       "docker": {
         "description": "已安装 Docker"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "网络",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager 支持"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "蓝牙",
+      "icon": "Icon",
       "bluetooth": {
         "description": "蓝牙支持"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "打印",
+      "icon": "Icon",
       "printingSupport": {
         "description": "打印支持"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "防火墙",
+      "icon": "Icon",
       "firewalld": {
         "description": "已安装 Firewalld"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "杂项",
+      "icon": "Icon",
       "gns": {
         "description": "已安装 Garuda Nix Subsystem"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "使用 IWD 替代 wpa_supplicant",
     "common": {
       "title": "常用",
+      "icon": "Icon",
       "psd": {
         "description": "已安装 Profile-sync-daemon"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "性能",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "性能调整"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "节能",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "节能调整"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "右键模拟",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev 长按右键模拟"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "软件包",
+    "icon": "Icon",
     "internet": "互联网",
     "documents": "文档",
     "multimedia": "多媒体",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "应用",
+    "icon": "Icon",
     "titleTwo": "设置",
     "leftButtons": "在左侧显示窗口按钮",
     "copyDiagnostics": "将诊断信息复制到剪贴板",

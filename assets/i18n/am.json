@@ -11,12 +11,13 @@
     "settings": "የመተግበሪያ ቅንብሮች",
     "help": {
       "title": "እርዳታ",
+      "icon": "Icon",
       "getHelpForum": "በመድረኩ ላይ እርዳታ ያግኙ",
       "getHelpWiki": "በዊኪ ውስጥ ይዘት ይፈልጉ",
       "getHelpArchWiki": "በ Arch Wiki ውስጥ ይዘት ይፈልጉ",
       "garudaStatus": "የመስራት ሁኔታን ያረጋግጡ",
-      "about": "ስለ Garuda Rani",
-      "aboutBody": "Garuda Rani ለ Garuda Linux የስርዓት ጥገና እና የምርመራ መሳሪያ ነው። ተጠቃሚዎች ስርዓታቸውን እንዲጠብቁ እና ችግሮችን እንዲመረምሩ ለመርዳት የተነደፈ ነው። የተሰራው Tauri እና Angular በመጠቀም ነው።",
+      "about": "ስለ Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox ለ Garuda Linux የስርዓት ጥገና እና የምርመራ መሳሪያ ነው። ተጠቃሚዎች ስርዓታቸውን እንዲጠብቁ እና ችግሮችን እንዲመረምሩ ለመርዳት የተነደፈ ነው። የተሰራው Tauri እና Angular በመጠቀም ነው።",
       "callExorcist": "አጋንንት አስወጪውን ጥራ",
       "callExorcistTitle": "አጋንንት አስወጪው ተጠርቷል!",
       "callExorcistBody": "ይህን ቁልፍ ለመጫን በጣም ተስፋ ቆርጠህ መሆን አለበት! ልዩ መፍትሄ አዘጋጅቼልሃለሁ፤ አሁንም በመተግበሪያው ላይ ችግሮች ካጋጠሙህ እባክህ በ Garuda Linux መድረክ ወይም በችግር መከታተያችን ላይ ሪፖርት አድርግ።"
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "የማረሚያ መረጃ ",
+    "icon": "Icon",
     "titleTwo": "እና ምርመራዎች",
     "subtitle": "ስርዓትዎን ለማረም የሚያስፈልግዎትን መረጃ ያግኙ",
     "inxi": "የተለመደ መረጃ (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "ቋንቋ ምርጫ",
+    "icon": "Icon",
     "tooltip": "የሚመርጡትን ቋንቋ ይምረጡ"
   },
   "welcome": {
     "title": "እንኳን ወደ ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux በደህና መጡ",
     "subtitle": "ለጨዋታ እና መልቲሚዲያ ምርጡ የሊኑክስ ስርጭት",
     "maintenance": "ጥገና",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "የጨዋታ ",
+    "icon": "Icon",
     "titleTwo": "መተግበሪያዎች",
     "subtitle": "በአንዳንድ የጨዋታ መተግበሪያዎች እንጀምር!",
     "launchers": "የጨዋታ አስጀማሪዎች",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "የስርዓት ",
+    "icon": "Icon",
     "titleTwo": "ጥገና",
     "subtitle": "ስርዓትዎን በጥሩ ሁኔታ ያቆዩ",
     "update": "ስርዓትዎን ያዘምኑ",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "ማረጋገጫ ያስፈልጋል",
+    "icon": "Icon",
     "subtitle": "ለመቀጠል እባክዎ የይለፍ ቃልዎን ያስገቡ",
     "save": "በዚህ ክፍለ ጊዜ አስቀምጥ",
     "password": "የይለፍ ቃል",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "ተርሚናል",
+    "icon": "Icon",
     "runActions": "እርምጃዎችን አሂድ",
     "removeAll": "ሁሉንም እርምጃዎች አስወግድ",
     "abortAll": "ሁሉንም እርምጃዎች አቋርጥ",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "የስርዓት ",
+    "icon": "Icon",
     "titleTwo": "ቅንብሮች",
     "systemdServices": "Systemd አገልግሎቶች",
     "systemSettings": "የስርዓት ቅንብሮች",
@@ -201,6 +210,7 @@
     "packages": "ተጨማሪ ፓኬጆች",
     "audio": {
       "title": "ድምጽ",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA ድጋፍ"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "ቨርቹዋልላይዜሽን",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU ተጭኗል"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "ኮንቴይነሮች",
+      "icon": "Icon",
       "docker": {
         "description": "Docker ተጭኗል"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "ኔትወርክ",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager ድጋፍ"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "ብሉቱዝ",
+      "icon": "Icon",
       "bluetooth": {
         "description": "ብሉቱዝ ድጋፍ"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "ማተም",
+      "icon": "Icon",
       "printingSupport": {
         "description": "የማተም ድጋፍ"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "ፋየርዎል",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld ተጭኗል"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "ልዩ ልዩ",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem ተጭኗል"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "ከ wpa_supplicant ይልቅ IWD ተጠቀም",
     "common": {
       "title": "የተለመደ",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon ተጭኗል"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "አፈጻጸም",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "የአፈጻጸም ማሻሻያዎች"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "ኃይል ቁጠባ",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "የኃይል ቁጠባ ማሻሻያዎች"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "የቀኝ ጠቅታ ማስመሰል",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev ረጅም ፕሬስ የቀኝ ጠቅታ ማስመሰል"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "ፓኬጆች",
+    "icon": "Icon",
     "internet": "ኢንተርኔት",
     "documents": "ሰነዶች",
     "multimedia": "መልቲሚዲያ",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "የመተግበሪያ ",
+    "icon": "Icon",
     "titleTwo": "ቅንብሮች",
     "leftButtons": "የመስኮት ቁልፎችን በግራ በኩል አሳይ",
     "copyDiagnostics": "የምርመራ መረጃ ወደ ቅንጥብ ሰሌዳ ቅዳ",

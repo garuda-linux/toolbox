@@ -11,12 +11,13 @@
     "settings": "앱 설정",
     "help": {
       "title": "도움말",
+      "icon": "Icon",
       "getHelpForum": "포럼에서 도움 받기",
       "getHelpWiki": "Wiki에서 내용 검색",
       "getHelpArchWiki": "Arch Wiki에서 내용 검색",
       "garudaStatus": "가동 시간 상태 확인",
-      "about": "Garuda Rani 정보",
-      "aboutBody": "Garuda Rani는 Garuda Linux용 시스템 유지 관리 및 진단 도구입니다. 사용자가 시스템을 유지 관리하고 문제를 진단하는 데 도움을 주도록 설계되었습니다. Tauri와 Angular를 사용하여 구축되었습니다.",
+      "about": "Garuda Toolbox 정보",
+      "aboutBody": "Garuda Toolbox는 Garuda Linux용 시스템 유지 관리 및 진단 도구입니다. 사용자가 시스템을 유지 관리하고 문제를 진단하는 데 도움을 주도록 설계되었습니다. Tauri와 Angular를 사용하여 구축되었습니다.",
       "callExorcist": "엑소시스트 부르기",
       "callExorcistTitle": "엑소시스트를 불렀습니다!",
       "callExorcistBody": "이 버튼을 클릭하다니 정말 절박하신가 보네요! 당신을 위해 특별한 부두술을 준비했습니다. 앱에 여전히 문제가 있다면 Garuda Linux 포럼이나 이슈 트래커에 보고해 주세요."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "디버그 정보 ",
+    "icon": "Icon",
     "titleTwo": "및 진단",
     "subtitle": "시스템 디버깅에 필요한 정보를 찾아보세요",
     "inxi": "일반 정보 (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "언어 선택",
+    "icon": "Icon",
     "tooltip": "선호하는 언어를 선택하세요"
   },
   "welcome": {
     "title": "에 오신 것을 환영합니다 ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "게이밍과 멀티미디어를 위한 궁극의 Linux 배포판",
     "maintenance": "유지 관리",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "게이밍 ",
+    "icon": "Icon",
     "titleTwo": "앱",
     "subtitle": "몇 가지 게이밍 앱으로 시작해 보세요!",
     "launchers": "게임 런처",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "시스템 ",
+    "icon": "Icon",
     "titleTwo": "유지 관리",
     "subtitle": "시스템을 좋은 상태로 유지하세요",
     "update": "시스템 업데이트",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "인증 필요",
+    "icon": "Icon",
     "subtitle": "계속하려면 비밀번호를 입력하세요",
     "save": "이 세션에서 캐시",
     "password": "비밀번호",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "터미널",
+    "icon": "Icon",
     "runActions": "작업 실행",
     "removeAll": "모든 작업 제거",
     "abortAll": "모든 작업 중단",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "시스템 ",
+    "icon": "Icon",
     "titleTwo": "설정",
     "systemdServices": "Systemd 서비스",
     "systemSettings": "시스템 설정",
@@ -201,6 +210,7 @@
     "packages": "추가 패키지",
     "audio": {
       "title": "오디오",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA 지원"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "가상화",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU 설치됨"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "컨테이너",
+      "icon": "Icon",
       "docker": {
         "description": "Docker 설치됨"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "네트워크",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager 지원"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Bluetooth 지원"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "인쇄",
+      "icon": "Icon",
       "printingSupport": {
         "description": "인쇄 지원"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "방화벽",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld 설치됨"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "기타",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem 설치됨"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "wpa_supplicant 대신 IWD 사용",
     "common": {
       "title": "일반",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon 설치됨"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "성능",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "성능 조정"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "절전",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "절전 조정"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "오른쪽 클릭 에뮬레이션",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev 길게 누르기 오른쪽 클릭 에뮬레이션"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "패키지",
+    "icon": "Icon",
     "internet": "인터넷",
     "documents": "문서",
     "multimedia": "멀티미디어",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "앱 ",
+    "icon": "Icon",
     "titleTwo": "설정",
     "leftButtons": "창 버튼을 왼쪽에 표시",
     "copyDiagnostics": "진단 정보를 클립보드에 복사",

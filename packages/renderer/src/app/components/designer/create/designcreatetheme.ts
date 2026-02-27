@@ -59,20 +59,20 @@ const presets: Record<string, Preset> = {
         <div class="flex flex-col gap-4 border border-surface-200 dark:border-surface-700 rounded-md p-4">
           <div class="flex items-center gap-2">
             <i class="pi pi-prime" style="font-size: 20px"></i>
-            <span class="font-semibold">Rani Preset</span>
+            <span class="font-semibold">Toolbox Preset</span>
           </div>
-          <span class="text-muted-color">Customize one of the themes shipped with Rani to your like.</span>
+          <span class="text-muted-color">Customize one of the themes shipped with Toolbox to your like.</span>
           <div class="flex justify-between">
             <div class="flex">
               <p-select
-                [(ngModel)]="raniPreset"
-                [options]="raniPresetOptions"
+                [(ngModel)]="toolboxPreset"
+                [options]="toolboxPresetOptions"
                 optionLabel="label"
                 optionValue="label"
                 placeholder="Select a preset"
               ></p-select>
             </div>
-            <button class="btn-design" (click)="createThemeFromRaniPreset()" type="button">Create</button>
+            <button class="btn-design" (click)="createThemeFromToolboxPreset()" type="button">Create</button>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@ export class DesignCreateTheme {
   designerService: DesignerService = inject(DesignerService);
   messageService: MessageService = inject(MessageService);
 
-  themeName = 'Rani theme';
+  themeName = 'Toolbox theme';
   basePreset = 'Aura';
   themeData: Theme | null = null;
   presetOptions = [
@@ -116,8 +116,8 @@ export class DesignCreateTheme {
     { label: 'Nora', value: 'Nora' },
   ];
 
-  raniPreset = '';
-  raniPresetOptions = Object.keys(themes).map((theme) => ({
+  toolboxPreset = '';
+  toolboxPresetOptions = Object.keys(themes).map((theme) => ({
     label: theme,
     value: themes[theme],
   }));
@@ -197,16 +197,16 @@ export class DesignCreateTheme {
     await this.designerService.loadThemeEditor(this.themeData);
   }
 
-  async createThemeFromRaniPreset() {
-    this.logger.debug(`Creating theme from Rani preset: ${this.raniPreset}`);
-    const preset = this.raniPresetOptions.find((p) => p.label === this.raniPreset)?.value;
+  async createThemeFromToolboxPreset() {
+    this.logger.debug(`Creating theme from Toolbox preset: ${this.toolboxPreset}`);
+    const preset = this.toolboxPresetOptions.find((p) => p.label === this.toolboxPreset)?.value;
 
     if (!preset) {
       this.messageService.add({
         key: 'designer',
         severity: 'error',
         summary: 'Error',
-        detail: 'Invalid Rani preset selected',
+        detail: 'Invalid Toolbox preset selected',
         life: 3000,
       });
       return;
@@ -214,20 +214,20 @@ export class DesignCreateTheme {
 
     const newPreset: Preset = structuredClone(preset);
     this.designerService.themeName.set(this.themeName);
-    this.designerService.basePreset.set(this.raniPresetToBasePreset(this.raniPreset));
+    this.designerService.basePreset.set(this.toolboxPresetToBasePreset(this.toolboxPreset));
     this.designerService.newPreset.set(newPreset);
     await this.designerService.createThemeFromPreset();
   }
 
-  raniPresetToBasePreset(raniPreset: string): string {
+  toolboxPresetToBasePreset(toolboxPreset: string): string {
     switch (true) {
-      case raniPreset.includes('Aura'):
+      case toolboxPreset.includes('Aura'):
         return 'Aura';
-      case raniPreset.includes('Lara'):
+      case toolboxPreset.includes('Lara'):
         return 'Lara';
-      case raniPreset.includes('Nora'):
+      case toolboxPreset.includes('Nora'):
         return 'Nora';
-      case raniPreset.includes('Material'):
+      case toolboxPreset.includes('Material'):
       default:
         return 'Aura';
     }

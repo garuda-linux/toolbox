@@ -11,12 +11,13 @@
     "settings": "Alkalmazás beállításai",
     "help": {
       "title": "Segítség",
+      "icon": "Icon",
       "getHelpForum": "Segítségkérés a fórumon",
       "getHelpWiki": "Keresés a wikiben",
       "getHelpArchWiki": "Keresés az Arch Wikiben",
       "garudaStatus": "Üzemidő állapotának ellenőrzése",
-      "about": "A Garuda Rani névjegye",
-      "aboutBody": "A Garuda Rani egy rendszerkarbantartó és diagnosztikai eszköz a Garuda Linuxhoz. Célja, hogy segítse a felhasználókat a rendszerük karbantartásában és a problémák diagnosztizálásában. Tauri és Angular segítségével készült.",
+      "about": "A Garuda Toolbox névjegye",
+      "aboutBody": "A Garuda Toolbox egy rendszerkarbantartó és diagnosztikai eszköz a Garuda Linuxhoz. Célja, hogy segítse a felhasználókat a rendszerük karbantartásában és a problémák diagnosztizálásában. Tauri és Angular segítségével készült.",
       "callExorcist": "Hívd az ördögűzőt",
       "callExorcistTitle": "Hívtad az ördögűzőt!",
       "callExorcistBody": "Elég kétségbeesettnek kell lenned, hogy erre a gombra kattints! Beállítottam neked néhány különleges voodoo-t, ha továbbra is problémáid vannak az alkalmazással, kérlek, jelentsd őket a Garuda Linux fórumán vagy a hibakövetőnkben."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Hibakeresési infó ",
+    "icon": "Icon",
     "titleTwo": "és diagnosztika",
     "subtitle": "Találd meg a rendszered hibakereséséhez szükséges információkat",
     "inxi": "Általános infó (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Nyelvválasztás",
+    "icon": "Icon",
     "tooltip": "Válaszd ki a preferált nyelvet"
   },
   "welcome": {
     "title": "Üdvözlünk a ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linuxban",
     "subtitle": "A tökéletes Linux disztró játékhoz és multimédiához",
     "maintenance": "Karbantartás",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Játék ",
+    "icon": "Icon",
     "titleTwo": "alkalmazások",
     "subtitle": "Kezdjünk neki néhány játékalkalmazással!",
     "launchers": "Játék indítók",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Rendszer ",
+    "icon": "Icon",
     "titleTwo": "karbantartás",
     "subtitle": "Tartsd a rendszered jó állapotban",
     "update": "Frissítsd a rendszered",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Hitelesítés szükséges",
+    "icon": "Icon",
     "subtitle": "Kérlek, add meg a jelszavad a folytatáshoz",
     "save": "Gyorsítótárazás ebben a munkamenetben",
     "password": "Jelszó",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminál",
+    "icon": "Icon",
     "runActions": "Műveletek futtatása",
     "removeAll": "Összes művelet eltávolítása",
     "abortAll": "Összes művelet megszakítása",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Rendszer ",
+    "icon": "Icon",
     "titleTwo": "beállítások",
     "systemdServices": "Systemd szolgáltatások",
     "systemSettings": "Rendszerbeállítások",
@@ -201,6 +210,7 @@
     "packages": "További csomagok",
     "audio": {
       "title": "Hang",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA támogatás"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Virtualizáció",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU telepítve"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Konténerek",
+      "icon": "Icon",
       "docker": {
         "description": "Docker telepítve"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Hálózat",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager támogatás"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Bluetooth támogatás"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Nyomtatás",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Nyomtatási támogatás"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Tűzfal",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld telepítve"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Egyéb",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem telepítve"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "IWD használata wpa_supplicant helyett",
     "common": {
       "title": "Általános",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon telepítve"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Teljesítmény",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Teljesítmény finomhangolások"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Energiatakarékosság",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Energiatakarékossági finomhangolások"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Jobb kattintás emuláció",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev hosszú lenyomás jobb kattintás emuláció"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Csomagok",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Dokumentumok",
     "multimedia": "Multimédia",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Alkalmazás ",
+    "icon": "Icon",
     "titleTwo": "beállításai",
     "leftButtons": "Ablakgombok megjelenítése bal oldalon",
     "copyDiagnostics": "Diagnosztika másolása vágólapra",

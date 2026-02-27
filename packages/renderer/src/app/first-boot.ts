@@ -6,7 +6,7 @@ import {
   ElectronShellService,
   ElectronFsService,
   ElectronAppService,
-  ElectronWindowService
+  ElectronWindowService,
 } from './electron-services';
 
 const logger = Logger.getInstance();

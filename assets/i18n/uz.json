@@ -11,12 +11,13 @@
     "settings": "Ilova sozlamalari",
     "help": {
       "title": "Yordam",
+      "icon": "Icon",
       "getHelpForum": "Forumdan yordam oling",
       "getHelpWiki": "Wikidan kontent qidirish",
       "getHelpArchWiki": "Arch Wikidan kontent qidirish",
       "garudaStatus": "Ishlash vaqti holatini tekshiring",
-      "about": "Garuda Rani haqida",
-      "aboutBody": "Garuda Rani - bu Garuda Linux uchun tizimga texnik xizmat koʻrsatish va diagnostika vositasi. U foydalanuvchilarga tizimini saqlashga va muammolarni tashxislashga yordam berish uchun moʻljallangan. U Tauri va Angular yordamida yaratilgan.",
+      "about": "Garuda Toolbox haqida",
+      "aboutBody": "Garuda Toolbox - bu Garuda Linux uchun tizimga texnik xizmat koʻrsatish va diagnostika vositasi. U foydalanuvchilarga tizimini saqlashga va muammolarni tashxislashga yordam berish uchun moʻljallangan. U Tauri va Angular yordamida yaratilgan.",
       "callExorcist": "Ekzorsistni chaqiring",
       "callExorcistTitle": "Ekzorsist chaqirildi!",
       "callExorcistBody": "Bu tugmani bosish uchun juda umidsiz boʻlishing kerak! Men sen uchun maxsus vudu oʻrnatdim, agar ilova bilan hali ham muammolaring boʻlsa, iltimos, ularni Garuda Linux forumida yoki bizning muammo kuzatuvchimizda xabar qiling."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Nosozliklarni tuzatish ma'lumotlari ",
+    "icon": "Icon",
     "titleTwo": "va diagnostika",
     "subtitle": "Tizimingizdagi nosozliklarni tuzatish uchun kerakli maʼlumotlarni toping",
     "inxi": "Umumiy ma'lumot (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Til tanlash",
+    "icon": "Icon",
     "tooltip": "Afzal koʻrgan tilingizni tanlang"
   },
   "welcome": {
     "title": "Xush kelibsiz: ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Oʻyin va multimedia uchun eng zoʻr Linux distributivi",
     "maintenance": "Texnik xizmat",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Oʻyin ",
+    "icon": "Icon",
     "titleTwo": "ilovalari",
     "subtitle": "Keling, sizni bir nechta oʻyin ilovalari bilan boshlaylik!",
     "launchers": "Oʻyin ishga tushiruvchilari",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Tizimga ",
+    "icon": "Icon",
     "titleTwo": "texnik xizmat koʻrsatish",
     "subtitle": "Tizimingizni yaxshi holatda saqlang",
     "update": "Tizimingizni yangilang",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Autentifikatsiya talab qilinadi",
+    "icon": "Icon",
     "subtitle": "Davom etish uchun parolingizni kiriting",
     "save": "Bu sessiyada keshlash",
     "password": "Parol",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Amallarni bajarish",
     "removeAll": "Barcha amallarni olib tashlash",
     "abortAll": "Barcha amallarni bekor qilish",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Tizim ",
+    "icon": "Icon",
     "titleTwo": "sozlamalari",
     "systemdServices": "Systemd xizmatlari",
     "systemSettings": "Tizim sozlamalari",
@@ -201,6 +210,7 @@
     "packages": "Qoʻshimcha paketlar",
     "audio": {
       "title": "Audio",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA qoʻllab-quvvatlashi"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Virtualizatsiya",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU oʻrnatilgan"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Konteynerlar",
+      "icon": "Icon",
       "docker": {
         "description": "Docker oʻrnatilgan"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Tarmoq",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager qoʻllab-quvvatlashi"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Bluetooth qoʻllab-quvvatlashi"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Chop etish",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Chop etishni qoʻllab-quvvatlash"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Xavfsizlik devori",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld oʻrnatilgan"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Har xil",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem oʻrnatilgan"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "wpa_supplicant oʻrniga IWDdan foydalanish",
     "common": {
       "title": "Umumiy",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon oʻrnatilgan"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Ishlash samaradorligi",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Ishlash samaradorligini oshirish sozlamalari"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Quvvat tejash",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Quvvat tejash sozlamalari"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Oʻng tugma emulyatsiyasi",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev uzoq bosish oʻng tugma emulyatsiyasi"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Paketlar",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Hujjatlar",
     "multimedia": "Multimedia",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Ilova",
+    "icon": "Icon",
     "titleTwo": "sozlamalari",
     "leftButtons": "Oyna tugmalarini chapda koʻrsatish",
     "copyDiagnostics": "Diagnostikani vaqtinchalik xotiraga nusxalash",

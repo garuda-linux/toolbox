@@ -11,12 +11,13 @@
     "settings": "Uygulama ayarları",
     "help": {
       "title": "Yardım",
+      "icon": "Icon",
       "getHelpForum": "Forumdan yardım al",
       "getHelpWiki": "Wiki'de içerik ara",
       "getHelpArchWiki": "Arch Wiki'de içerik ara",
       "garudaStatus": "Çalışma süresi durumunu kontrol et",
-      "about": "Garuda Rani Hakkında",
-      "aboutBody": "Garuda Rani, Garuda Linux için bir sistem bakım ve tanılama aracıdır. Kullanıcıların sistemlerini korumalarına ve sorunları teşhis etmelerine yardımcı olmak için tasarlanmıştır. Tauri ve Angular kullanılarak oluşturulmuştur.",
+      "about": "Garuda Toolbox Hakkında",
+      "aboutBody": "Garuda Toolbox, Garuda Linux için bir sistem bakım ve tanılama aracıdır. Kullanıcıların sistemlerini korumalarına ve sorunları teşhis etmelerine yardımcı olmak için tasarlanmıştır. Tauri ve Angular kullanılarak oluşturulmuştur.",
       "callExorcist": "Şeytan çıkarıcıyı çağır",
       "callExorcistTitle": "Şeytan çıkarıcı çağrıldı!",
       "callExorcistBody": "Bu düğmeye tıklamak için oldukça çaresiz olmalısın! Senin için özel bir vudu ayarladım, eğer hala uygulamayla ilgili sorunlar yaşıyorsan, lütfen bunları Garuda Linux forumunda veya sorun izleyicimizde bildir."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Hata ayıklama bilgileri ",
+    "icon": "Icon",
     "titleTwo": "ve tanılama",
     "subtitle": "Sistemindeki hataları ayıklamak için ihtiyacın olan bilgileri bul",
     "inxi": "Genel bilgi (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Dil seçimi",
+    "icon": "Icon",
     "tooltip": "Tercih ettiğin dili seç"
   },
   "welcome": {
     "title": "Hoş Geldin: ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Oyun ve multimedya için nihai Linux dağıtımı",
     "maintenance": "Bakım",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Oyun ",
+    "icon": "Icon",
     "titleTwo": "uygulamaları",
     "subtitle": "Seni bazı oyun uygulamalarıyla başlatalım!",
     "launchers": "Oyun başlatıcıları",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Sistem ",
+    "icon": "Icon",
     "titleTwo": "bakımı",
     "subtitle": "Sistemini iyi durumda tut",
     "update": "Sistemini güncelle",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Kimlik doğrulama gerekli",
+    "icon": "Icon",
     "subtitle": "Devam etmek için lütfen şifreni gir",
     "save": "Bu oturumda önbelleğe al",
     "password": "Şifre",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Eylemleri çalıştır",
     "removeAll": "Tüm eylemleri kaldır",
     "abortAll": "Tüm eylemleri iptal et",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Sistem ",
+    "icon": "Icon",
     "titleTwo": "ayarları",
     "systemdServices": "Systemd servisleri",
     "systemSettings": "Sistem ayarları",
@@ -201,6 +210,7 @@
     "packages": "Diğer paketler",
     "audio": {
       "title": "Ses",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA desteği"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Sanallaştırma",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU kurulu"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Konteynerler",
+      "icon": "Icon",
       "docker": {
         "description": "Docker kurulu"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Ağ",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager desteği"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Bluetooth desteği"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Yazdırma",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Yazdırma desteği"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Güvenlik Duvarı",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld kurulu"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Çeşitli",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem kurulu"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "wpa_supplicant yerine IWD kullan",
     "common": {
       "title": "Genel",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon kurulu"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Performans",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Performans iyileştirmeleri"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Güç tasarrufu",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Güç tasarrufu iyileştirmeleri"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Sağ tık emülasyonu",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev uzun basma sağ tık emülasyonu"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Paketler",
+    "icon": "Icon",
     "internet": "İnternet",
     "documents": "Belgeler",
     "multimedia": "Multimedya",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Uygulama",
+    "icon": "Icon",
     "titleTwo": "ayarları",
     "leftButtons": "Pencere düğmelerini solda göster",
     "copyDiagnostics": "Tanılamayı panoya kopyala",

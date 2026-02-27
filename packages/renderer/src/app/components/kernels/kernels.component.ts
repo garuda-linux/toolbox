@@ -14,7 +14,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { KernelsService } from './kernels.service';
 
 @Component({
-  selector: 'rani-kernels',
+  selector: 'toolbox-kernels',
   imports: [DataView, FormsModule, NgForOf, Tag, Checkbox, NgClass, TranslocoDirective, Tooltip, Skeleton],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',

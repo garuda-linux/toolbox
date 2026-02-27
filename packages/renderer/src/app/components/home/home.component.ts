@@ -15,7 +15,7 @@ import { OsInteractService } from '../task-manager/os-interact.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'rani-home',
+  selector: 'toolbox-home',
   imports: [TranslocoDirective, Card, RouterLink, NgOptimizedImage, SystemStatusComponent, FaIconComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

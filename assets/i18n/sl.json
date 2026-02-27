@@ -11,12 +11,13 @@
     "settings": "Nastavitve aplikacije",
     "help": {
       "title": "Pomoč",
+      "icon": "Icon",
       "getHelpForum": "Poišči pomoč na forumu",
       "getHelpWiki": "Išči vsebino v wikiju",
       "getHelpArchWiki": "Išči vsebino v Arch Wiki",
       "garudaStatus": "Preveri stanje delovanja",
-      "about": "O Garuda Rani",
-      "aboutBody": "Garuda Rani je orodje za vzdrževanje sistema in diagnostiko za Garuda Linux. Zasnovano je za pomoč uporabnikom pri vzdrževanju sistema in diagnosticiranju težav. Zgrajeno je z uporabo Tauri in Angular.",
+      "about": "O Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox je orodje za vzdrževanje sistema in diagnostiko za Garuda Linux. Zasnovano je za pomoč uporabnikom pri vzdrževanju sistema in diagnosticiranju težav. Zgrajeno je z uporabo Tauri in Angular.",
       "callExorcist": "Pokliči izganjalca",
       "callExorcistTitle": "Poklical si izganjalca!",
       "callExorcistBody": "Moraš biti precej obupan, da si kliknil ta gumb! Pripravil sem ti nekaj posebne vudu magije, če imaš še vedno težave z aplikacijo, jih prosim prijavi na forumu Garuda Linux ali v našem sledilniku težav."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "Informacije za razhroščevanje ",
+    "icon": "Icon",
     "titleTwo": "in diagnostika",
     "subtitle": "Poišči informacije, ki jih potrebuješ za razhroščevanje sistema",
     "inxi": "Splošne informacije (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "Izbira jezika",
+    "icon": "Icon",
     "tooltip": "Izberi želeni jezik"
   },
   "welcome": {
     "title": "Dobrodošli v ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Vrhunska distribucija Linuxa za igre in večpredstavnost",
     "maintenance": "Vzdrževanje",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "Igralne ",
+    "icon": "Icon",
     "titleTwo": "aplikacije",
     "subtitle": "Začnimo z nekaj igralnimi aplikacijami!",
     "launchers": "Zagonilci iger",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "Vzdrževanje ",
+    "icon": "Icon",
     "titleTwo": "sistema",
     "subtitle": "Ohrani svoj sistem v dobrem stanju",
     "update": "Posodobi svoj sistem",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "Potrebna je avtentikacija",
+    "icon": "Icon",
     "subtitle": "Prosimo, vnesi svoje geslo za nadaljevanje",
     "save": "Shrani v predpomnilnik v tej seji",
     "password": "Geslo",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Zaženi dejanja",
     "removeAll": "Odstrani vsa dejanja",
     "abortAll": "Prekini vsa dejanja",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "Sistemske ",
+    "icon": "Icon",
     "titleTwo": "nastavitve",
     "systemdServices": "Storitve Systemd",
     "systemSettings": "Sistemske nastavitve",
@@ -201,6 +210,7 @@
     "packages": "Dodatni paketi",
     "audio": {
       "title": "Zvok",
+      "icon": "Icon",
       "alsa": {
         "description": "Podpora za ALSA"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "Virtualizacija",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU nameščen"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "Vsebniki",
+      "icon": "Icon",
       "docker": {
         "description": "Docker nameščen"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "Omrežje",
+      "icon": "Icon",
       "networkManager": {
         "description": "Podpora za NetworkManager"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Podpora za Bluetooth"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "Tiskanje",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Podpora za tiskanje"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "Požarni zid",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld nameščen"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "Razno",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem nameščen"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "Uporabi IWD namesto wpa_supplicant",
     "common": {
       "title": "Splošno",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon nameščen"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "Zmogljivost",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Prilagoditve zmogljivosti"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "Varčevanje z energijo",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Prilagoditve varčevanja z energijo"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "Emulacija desnega klika",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Emulacija desnega klika z dolgim pritiskom Evdev"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "Paketi",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Dokumenti",
     "multimedia": "Večpredstavnost",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "Nastavitve ",
+    "icon": "Icon",
     "titleTwo": "aplikacije",
     "leftButtons": "Pokaži gumbe okna na levi",
     "copyDiagnostics": "Kopiraj diagnostiko v odložišče",

@@ -16,7 +16,7 @@ import { WallpaperService } from '../wallpaper/wallpaper.service';
 import { Slider } from 'primeng/slider';
 
 @Component({
-  selector: 'rani-settings',
+  selector: 'toolbox-settings',
   imports: [Checkbox, TranslocoDirective, FormsModule, Select, Panel, Button, FileUpload, Slider],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',

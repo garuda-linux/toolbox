@@ -36,7 +36,7 @@ import { DesignerService } from '../designer/designerservice';
 import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
-  selector: 'rani-terminal',
+  selector: 'toolbox-terminal',
   imports: [CommonModule, NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollPanel],
   templateUrl: './terminal.component.html',
   styleUrl: './terminal.component.css',

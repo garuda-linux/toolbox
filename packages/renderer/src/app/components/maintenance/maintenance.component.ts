@@ -17,7 +17,7 @@ import { Logger } from '../../logging/logging';
 import { Router, type UrlTree } from '@angular/router';
 
 @Component({
-  selector: 'rani-maintenance',
+  selector: 'toolbox-maintenance',
   imports: [Card, Button, TranslocoDirective, Tooltip, Checkbox, FormsModule, Tab, TabPanels, Tabs, TabList, TabPanel],
   templateUrl: './maintenance.component.html',
   styleUrl: './maintenance.component.css',

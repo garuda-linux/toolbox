@@ -6,7 +6,7 @@ import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 
 @Component({
-  selector: 'rani-operation-manager',
+  selector: 'toolbox-operation-manager',
   imports: [],
   templateUrl: './operation-manager.component.html',
   styleUrl: './operation-manager.component.css',

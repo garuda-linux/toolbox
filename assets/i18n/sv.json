@@ -2,12 +2,14 @@
   "menu": {
     "file": {
       "title": "Fil",
+      "icon": "Icon",
       "preferences": "Inställningar",
       "themeDesigner": "Temadesigner",
       "quit": "Avsluta"
     },
     "modules": {
       "title": "Moduler",
+      "icon": "Icon",
       "search": "Sökalternativ",
       "diagnostics": "Diagnosticering",
       "maintenance": "Underhåll",
@@ -35,12 +37,13 @@
     "clearTasks": "Rensa uppgifter",
     "help": {
       "title": "Hjälp",
+      "icon": "Icon",
       "getHelpForum": "Få hjälp på forumet",
       "getHelpWiki": "Sök efter innehåll i wikin",
       "getHelpArchWiki": "Sök efter innehåll i Arch Wiki",
       "garudaStatus": "Kontrollera upptidsstatus",
-      "about": "Om Garuda Rani",
-      "aboutBody": "Garuda Rani är ett systemunderhålls- och diagnostikverktyg för Garuda Linux. Det är utformat för att hjälpa användare att underhålla sitt system och diagnostisera problem. Det är byggt med Tauri och Angular.",
+      "about": "Om Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox är ett systemunderhålls- och diagnostikverktyg för Garuda Linux. Det är utformat för att hjälpa användare att underhålla sitt system och diagnostisera problem. Det är byggt med Tauri och Angular.",
       "callExorcist": "Ring exorcisten",
       "callExorcistTitle": "Exorcisten har kallats!",
       "callExorcistBody": "Du måste vara ganska desperat för att klicka på den här knappen! Jag har åkallat lite specialvoodoo åt dig, om du fortfarande har problem med appen, vänligen rapportera dem på Garuda Linux-forumet eller vår ärendehanterare."
@@ -51,6 +54,7 @@
   },
   "diagnostics": {
     "title": "Felsökningsinfo ",
+    "icon": "Icon",
     "titleTwo": "och diagnostik",
     "subtitle": "Hitta informationen du behöver för att felsöka ditt system",
     "inxi": "Vanlig info (inxi)",
@@ -68,10 +72,12 @@
   },
   "lang": {
     "title": "Språkval",
+    "icon": "Icon",
     "tooltip": "Välj önskat språk"
   },
   "welcome": {
     "title": "Välkommen till ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Den ultimata Linux-distributionen för spel och multimedia",
     "maintenance": "Underhåll",
@@ -111,6 +117,7 @@
   },
   "gaming": {
     "title": "Spel",
+    "icon": "Icon",
     "titleTwo": "-appar",
     "subtitle": "Låt oss komma igång med några spelappar!",
     "launchers": "Spelstartare",
@@ -211,6 +218,7 @@
   },
   "maintenance": {
     "title": "System",
+    "icon": "Icon",
     "titleTwo": "-underhåll",
     "subtitle": "Håll ditt system i gott skick",
     "update": "Uppdatera ditt system",
@@ -264,6 +272,7 @@
   },
   "sudo": {
     "title": "Autentisering krävs",
+    "icon": "Icon",
     "subtitle": "Ange ditt lösenord för att fortsätta",
     "save": "Cache i denna session",
     "password": "Lösenord",
@@ -272,6 +281,7 @@
   },
   "terminal": {
     "title": "Terminal",
+    "icon": "Icon",
     "runActions": "Kör åtgärder",
     "removeAll": "Ta bort alla åtgärder",
     "abortAll": "Avbryt alla åtgärder",
@@ -317,6 +327,7 @@
   },
   "systemTools": {
     "title": "System",
+    "icon": "Icon",
     "titleTwo": "-inställningar",
     "systemdServices": "Systemd-tjänster",
     "systemSettings": "Systeminställningar",
@@ -326,6 +337,7 @@
     "packages": "Ytterligare paket",
     "audio": {
       "title": "Ljud",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA-stöd"
       },
@@ -347,6 +359,7 @@
     },
     "virtualization": {
       "title": "Virtualisering",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU installerat"
       },
@@ -374,6 +387,7 @@
     },
     "containers": {
       "title": "Containers",
+      "icon": "Icon",
       "docker": {
         "description": "Docker installerat"
       },
@@ -404,6 +418,7 @@
     },
     "network": {
       "title": "Nätverk",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager-stöd"
       },
@@ -416,6 +431,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Bluetooth-stöd"
       },
@@ -434,6 +450,7 @@
     },
     "printing": {
       "title": "Utskrift",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Utskriftsstöd"
       },
@@ -458,6 +475,7 @@
     },
     "firewall": {
       "title": "Brandvägg",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld installerat"
       },
@@ -479,6 +497,7 @@
     },
     "misc": {
       "title": "Diverse",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem installerat"
       }
@@ -492,6 +511,7 @@
     "enableIwd": "Använd IWD istället för wpa_supplicant",
     "common": {
       "title": "Allmänt",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon installerat"
       },
@@ -507,6 +527,7 @@
     },
     "performance": {
       "title": "Prestanda",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Prestandajusteringar"
       },
@@ -534,6 +555,7 @@
     },
     "powersave": {
       "title": "Energisparläge",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Energisparjusteringar"
       },
@@ -570,6 +592,7 @@
     },
     "rightclickEmulation": {
       "title": "Högerklicksemulering",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev långtryck högerklicksemulering"
       },
@@ -654,6 +677,7 @@
   },
   "packages": {
     "title": "Paket",
+    "icon": "Icon",
     "internet": "Internet",
     "documents": "Dokument",
     "multimedia": "Multimedia",
@@ -689,6 +713,7 @@
   },
   "settings": {
     "title": "App",
+    "icon": "Icon",
     "titleTwo": "-inställningar",
     "leftButtons": "Visa fönsterknappar till vänster",
     "copyDiagnostics": "Kopiera diagnostik till urklipp",

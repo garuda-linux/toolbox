@@ -12,7 +12,7 @@ import { DesignerService } from './designerservice';
 import { ConfigService } from '../config/config.service';
 
 @Component({
-  selector: 'rani-designer',
+  selector: 'toolbox-designer',
   standalone: true,
   imports: [
     CommonModule,

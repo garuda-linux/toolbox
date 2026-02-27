@@ -14,7 +14,7 @@
             >{{ t('welcome.hello') }} {{ configService.state().user }}&#64;{{ configService.state().hostname }} !</span
           >
           @if (configService.state().isLiveSystem === false) {
-            <rani-system-status></rani-system-status>
+            <toolbox-system-status></toolbox-system-status>
           }
         </div>
       } @else {
@@ -46,7 +46,10 @@
     @if (configService.settings().showMainLinks) {
       <div class="mt-10 grid grid-cols-12 gap-4">
         @for (item of webLinks; track item.title) {
-          <p-card class="col-span-4 mb-4 cursor-pointer px-5 md:col-span-2 welcome-home-square-card" (click)="respondClick(item)">
+          <p-card
+            class="col-span-4 mb-4 cursor-pointer px-5 md:col-span-2 welcome-home-square-card"
+            (click)="respondClick(item)"
+          >
             <span class="shadow-2 surface-card mb-3 inline-block p-3" style="border-radius: 10px">
               <div class="min-h-8">
                 @if (typeof item.icon === 'string') {
@@ -64,7 +67,10 @@
       </div>
       <div class="mt-10 grid grid-cols-12 gap-4">
         @for (item of contactLinks; track item.title) {
-          <p-card class="col-span-12 mb-4 cursor-pointer px-5 md:col-span-2 welcome-home-square-card" (click)="respondClick(item)">
+          <p-card
+            class="col-span-12 mb-4 cursor-pointer px-5 md:col-span-2 welcome-home-square-card"
+            (click)="respondClick(item)"
+          >
             <span class="shadow-2 surface-card mb-3 inline-block p-3" style="border-radius: 10px">
               <div class="min-h-8">
                 @if (typeof item.icon === 'string') {

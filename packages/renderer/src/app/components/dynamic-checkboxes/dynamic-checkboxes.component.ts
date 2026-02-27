@@ -10,7 +10,7 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 
 @Component({
-  selector: 'rani-dynamic-checkboxes',
+  selector: 'toolbox-dynamic-checkboxes',
   imports: [Checkbox, TranslocoDirective, FormsModule, NgClass, Card],
   templateUrl: './dynamic-checkboxes.component.html',
   styleUrl: './dynamic-checkboxes.component.css',
@@ -68,16 +68,17 @@ export class DynamicCheckboxesComponent {
    * @returns Whether the entry is currently active in the system
    */
   private checkState(entry: SystemToolsSubEntry, current = false): boolean {
+    this.logger.debug(`checkState for ${entry.check.name}, type=${entry.check.type}, current=${current}`);
     switch (entry.check.type) {
       case 'pkg': {
-        this.logger.trace(`Checking package ${entry.check.name} as pkg`);
+        this.logger.debug(`Checking package ${entry.check.name} as pkg`);
         return (
           this.osInteractService.check(entry.check.name, entry.check.type, current) ||
           this.osInteractService.check(`${entry.check.name}-git`, entry.check.type, current)
         );
       }
       default: {
-        this.logger.trace(`Checking service ${entry.check.name} as ${entry.check.type}`);
+        this.logger.debug(`Checking ${entry.check.name} as ${entry.check.type}`);
         return this.osInteractService.check(entry.check.name, entry.check.type, current);
       }
     }

@@ -11,12 +11,13 @@
     "settings": "アプリ設定",
     "help": {
       "title": "ヘルプ",
+      "icon": "Icon",
       "getHelpForum": "フォーラムで助けを求める",
       "getHelpWiki": "Wikiでコンテンツを検索",
       "getHelpArchWiki": "Arch Wikiでコンテンツを検索",
       "garudaStatus": "稼働状況を確認",
-      "about": "Garuda Rani について",
-      "aboutBody": "Garuda Rani は Garuda Linux 用のシステムメンテナンスおよび診断ツールです。ユーザーがシステムを維持し、問題を診断するのを支援するように設計されています。Tauri と Angular を使用して構築されています。",
+      "about": "Garuda Toolbox について",
+      "aboutBody": "Garuda Toolbox は Garuda Linux 用のシステムメンテナンスおよび診断ツールです。ユーザーがシステムを維持し、問題を診断するのを支援するように設計されています。Tauri と Angular を使用して構築されています。",
       "callExorcist": "悪魔祓いを呼ぶ",
       "callExorcistTitle": "悪魔祓いを呼びました！",
       "callExorcistBody": "このボタンをクリックするなんて、よほど必死なんですね！あなたのために特別なブードゥーを設定しました。もしアプリにまだ問題がある場合は、Garuda Linux フォーラムまたは私たちの課題トラッカーに報告してください。"
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "デバッグ情報 ",
+    "icon": "Icon",
     "titleTwo": "と診断",
     "subtitle": "システムのデバッグに必要な情報を見つけましょう",
     "inxi": "共通情報 (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "言語選択",
+    "icon": "Icon",
     "tooltip": "優先する言語を選択してください"
   },
   "welcome": {
     "title": "ようこそ、",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux へ",
     "subtitle": "ゲーミングとマルチメディアのための究極の Linux ディストリビューション",
     "maintenance": "メンテナンス",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "ゲーミング ",
+    "icon": "Icon",
     "titleTwo": "アプリ",
     "subtitle": "いくつかのゲーミングアプリから始めましょう！",
     "launchers": "ゲームランチャー",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "システム ",
+    "icon": "Icon",
     "titleTwo": "メンテナンス",
     "subtitle": "システムを良好な状態に保ちましょう",
     "update": "システムを更新",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "認証が必要です",
+    "icon": "Icon",
     "subtitle": "続行するにはパスワードを入力してください",
     "save": "このセッションでキャッシュ",
     "password": "パスワード",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "ターミナル",
+    "icon": "Icon",
     "runActions": "アクションを実行",
     "removeAll": "すべてのアクションを削除",
     "abortAll": "すべてのアクションを中止",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "システム ",
+    "icon": "Icon",
     "titleTwo": "設定",
     "systemdServices": "Systemd サービス",
     "systemSettings": "システム設定",
@@ -201,6 +210,7 @@
     "packages": "追加パッケージ",
     "audio": {
       "title": "オーディオ",
+      "icon": "Icon",
       "alsa": {
         "description": "ALSA サポート"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "仮想化",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU インストール済み"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "コンテナ",
+      "icon": "Icon",
       "docker": {
         "description": "Docker インストール済み"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "ネットワーク",
+      "icon": "Icon",
       "networkManager": {
         "description": "NetworkManager サポート"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Bluetooth サポート"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "印刷",
+      "icon": "Icon",
       "printingSupport": {
         "description": "印刷サポート"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "ファイアウォール",
+      "icon": "Icon",
       "firewalld": {
         "description": "Firewalld インストール済み"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "その他",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem インストール済み"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "wpa_supplicant の代わりに IWD を使用",
     "common": {
       "title": "共通",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon インストール済み"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "パフォーマンス",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "パフォーマンス調整"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "省電力",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "省電力調整"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "右クリックエミュレーション",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Evdev 長押し右クリックエミュレーション"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "パッケージ",
+    "icon": "Icon",
     "internet": "インターネット",
     "documents": "ドキュメント",
     "multimedia": "マルチメディア",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "アプリ",
+    "icon": "Icon",
     "titleTwo": "設定",
     "leftButtons": "ウィンドウボタンを左側に表示",
     "copyDiagnostics": "診断情報をクリップボードにコピー",

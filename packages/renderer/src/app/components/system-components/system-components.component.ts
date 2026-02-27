@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DynamicCheckboxesComponent } from '../dynamic-checkboxes/dynamic-checkboxes.component';
 
 @Component({
-  selector: 'rani-system-components',
+  selector: 'toolbox-system-components',
   imports: [FormsModule, DynamicCheckboxesComponent],
   templateUrl: './system-components.component.html',
   styleUrl: './system-components.component.css',

@@ -11,12 +11,13 @@
     "settings": "إعدادات التطبيق",
     "help": {
       "title": "المساعدة",
+      "icon": "Icon",
       "getHelpForum": "احصل على المساعدة في المنتدى",
       "getHelpWiki": "ابحث عن محتوى في الويكي",
       "getHelpArchWiki": "ابحث عن محتوى في Arch Wiki",
       "garudaStatus": "تحقق من حالة وقت التشغيل",
-      "about": "حول Garuda Rani",
-      "aboutBody": "Garuda Rani هي أداة لصيانة وتشخيص النظام لتوزيعة Garuda Linux. مصممة لمساعدة المستخدمين على صيانة نظامهم وتشخيص المشكلات. تم بناؤها باستخدام Tauri و Angular.",
+      "about": "حول Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox هي أداة لصيانة وتشخيص النظام لتوزيعة Garuda Linux. مصممة لمساعدة المستخدمين على صيانة نظامهم وتشخيص المشكلات. تم بناؤها باستخدام Tauri و Angular.",
       "callExorcist": "استدعِ طارد الأرواح",
       "callExorcistTitle": "تم استدعاء طارد الأرواح!",
       "callExorcistBody": "لا بد أنك يائس جدًا للنقر على هذا الزر! لقد أعددت لك بعض التعويذات الخاصة، إذا كنت لا تزال تواجه مشكلات مع التطبيق، يرجى الإبلاغ عنها في منتدى Garuda Linux أو متتبع المشكلات الخاص بنا."
@@ -28,6 +29,7 @@
   },
   "diagnostics": {
     "title": "معلومات التصحيح ",
+    "icon": "Icon",
     "titleTwo": "والتشخيصات",
     "subtitle": "اعثر على المعلومات التي تحتاجها لتصحيح نظامك",
     "inxi": "معلومات عامة (inxi)",
@@ -45,10 +47,12 @@
   },
   "lang": {
     "title": "اختيار اللغة",
+    "icon": "Icon",
     "tooltip": "اختر لغتك المفضلة"
   },
   "welcome": {
     "title": "مرحبًا بك في ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "توزيعة لينكس المثالية للألعاب والوسائط المتعددة",
     "maintenance": "الصيانة",
@@ -76,6 +80,7 @@
   },
   "gaming": {
     "title": "تطبيقات ",
+    "icon": "Icon",
     "titleTwo": "الألعاب",
     "subtitle": "لنبدأ ببعض تطبيقات الألعاب!",
     "launchers": "مشغلات الألعاب",
@@ -92,6 +97,7 @@
   },
   "maintenance": {
     "title": "صيانة ",
+    "icon": "Icon",
     "titleTwo": "النظام",
     "subtitle": "حافظ على نظامك في حالة جيدة",
     "update": "حدث نظامك",
@@ -140,6 +146,7 @@
   },
   "sudo": {
     "title": "المصادقة مطلوبة",
+    "icon": "Icon",
     "subtitle": "الرجاء إدخال كلمة المرور للمتابعة",
     "save": "تخزين مؤقت في هذه الجلسة",
     "password": "كلمة المرور",
@@ -148,6 +155,7 @@
   },
   "terminal": {
     "title": "الطرفية",
+    "icon": "Icon",
     "runActions": "تشغيل الإجراءات",
     "removeAll": "إزالة جميع الإجراءات",
     "abortAll": "إلغاء جميع الإجراءات",
@@ -192,6 +200,7 @@
   },
   "systemTools": {
     "title": "إعدادات ",
+    "icon": "Icon",
     "titleTwo": "النظام",
     "systemdServices": "خدمات Systemd",
     "systemSettings": "إعدادات النظام",
@@ -201,6 +210,7 @@
     "packages": "حزم إضافية",
     "audio": {
       "title": "الصوت",
+      "icon": "Icon",
       "alsa": {
         "description": "دعم ALSA"
       },
@@ -222,6 +232,7 @@
     },
     "virtualization": {
       "title": "المحاكاة الافتراضية (Virtualization)",
+      "icon": "Icon",
       "qemu": {
         "description": "تم تثبيت QEMU"
       },
@@ -249,6 +260,7 @@
     },
     "containers": {
       "title": "الحاويات (Containers)",
+      "icon": "Icon",
       "docker": {
         "description": "تم تثبيت Docker"
       },
@@ -279,6 +291,7 @@
     },
     "network": {
       "title": "الشبكة",
+      "icon": "Icon",
       "networkManager": {
         "description": "دعم NetworkManager"
       },
@@ -291,6 +304,7 @@
     },
     "bluetooth": {
       "title": "بلوتوث",
+      "icon": "Icon",
       "bluetooth": {
         "description": "دعم بلوتوث"
       },
@@ -309,6 +323,7 @@
     },
     "printing": {
       "title": "الطباعة",
+      "icon": "Icon",
       "printingSupport": {
         "description": "دعم الطباعة"
       },
@@ -333,6 +348,7 @@
     },
     "firewall": {
       "title": "جدار الحماية",
+      "icon": "Icon",
       "firewalld": {
         "description": "تم تثبيت Firewalld"
       },
@@ -354,6 +370,7 @@
     },
     "misc": {
       "title": "متنوعات",
+      "icon": "Icon",
       "gns": {
         "description": "تم تثبيت Garuda Nix Subsystem"
       }
@@ -367,6 +384,7 @@
     "enableIwd": "استخدام IWD بدلاً من wpa_supplicant",
     "common": {
       "title": "عام",
+      "icon": "Icon",
       "psd": {
         "description": "تم تثبيت Profile-sync-daemon"
       },
@@ -382,6 +400,7 @@
     },
     "performance": {
       "title": "الأداء",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "تعديلات الأداء"
       },
@@ -409,6 +428,7 @@
     },
     "powersave": {
       "title": "توفير الطاقة",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "تعديلات توفير الطاقة"
       },
@@ -445,6 +465,7 @@
     },
     "rightclickEmulation": {
       "title": "محاكاة النقر بالزر الأيمن",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "محاكاة النقر بالزر الأيمن بالضغط المطول في Evdev"
       },
@@ -529,6 +550,7 @@
   },
   "packages": {
     "title": "الحزم",
+    "icon": "Icon",
     "internet": "الإنترنت",
     "documents": "المستندات",
     "multimedia": "الوسائط المتعددة",
@@ -564,6 +586,7 @@
   },
   "settings": {
     "title": "إعدادات ",
+    "icon": "Icon",
     "titleTwo": "التطبيق",
     "leftButtons": "إظهار أزرار النافذة على اليسار",
     "copyDiagnostics": "نسخ التشخيصات إلى الحافظة",

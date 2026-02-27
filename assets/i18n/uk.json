@@ -2,12 +2,14 @@
   "menu": {
     "file": {
       "title": "Файл",
+      "icon": "Icon",
       "preferences": "Налаштування",
       "themeDesigner": "Конструктор тем",
       "quit": "Вихід"
     },
     "modules": {
       "title": "Модулі",
+      "icon": "Icon",
       "search": "Параметри пошуку",
       "diagnostics": "Діагностика",
       "maintenance": "Обслуговування",
@@ -35,12 +37,13 @@
     "clearTasks": "Очистити завдання",
     "help": {
       "title": "Довідка",
+      "icon": "Icon",
       "getHelpForum": "Отримати допомогу на форумі",
       "getHelpWiki": "Шукати інформацію у вікі",
       "getHelpArchWiki": "Шукати інформацію в Arch Wiki",
       "garudaStatus": "Перевірити стан працездатності",
-      "about": "Про Garuda Rani",
-      "aboutBody": "Garuda Rani — це інструмент для обслуговування та діагностики системи для Garuda Linux. Він допомагає користувачам підтримувати систему в робочому стані та виявляти проблеми. Розроблений за допомогою Tauri та Angular.",
+      "about": "Про Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox — це інструмент для обслуговування та діагностики системи для Garuda Linux. Він допомагає користувачам підтримувати систему в робочому стані та виявляти проблеми. Розроблений за допомогою Tauri та Angular.",
       "callExorcist": "Викликати екзорциста",
       "callExorcistTitle": "Викликали екзорциста!",
       "callExorcistBody": "Ви, мабуть, дуже відчайдушні, щоб натиснути цю кнопку! Я підготував для вас трохи особливого вуду. Якщо додаток далі працює з помилками, повідомте про це на форумі Garuda Linux або через систему відстеження проблем."
@@ -51,6 +54,7 @@
   },
   "diagnostics": {
     "title": "Інформація для налагодження ",
+    "icon": "Icon",
     "titleTwo": "та діагностика",
     "subtitle": "Знайдіть інформацію, необхідну для вирішення проблем із системою",
     "inxi": "Загальна інформація (inxi)",
@@ -68,10 +72,12 @@
   },
   "lang": {
     "title": "Вибір мови",
+    "icon": "Icon",
     "tooltip": "Виберіть бажану мову"
   },
   "welcome": {
     "title": "Ласкаво просимо до ",
+    "icon": "Icon",
     "titleTwo": "Garuda Linux",
     "subtitle": "Найкращий дистрибутив Linux для ігор та мультимедіа",
     "maintenance": "Обслуговування",
@@ -111,6 +117,7 @@
   },
   "gaming": {
     "title": "Ігрові ",
+    "icon": "Icon",
     "titleTwo": "додатки",
     "subtitle": "Розпочнімо з встановлення кількох ігрових додатків!",
     "launchers": "Запускачі ігор",
@@ -211,6 +218,7 @@
   },
   "maintenance": {
     "title": "Обслуговування ",
+    "icon": "Icon",
     "titleTwo": "системи",
     "subtitle": "Підтримуйте систему в належному стані",
     "update": "Оновити систему",
@@ -259,6 +267,7 @@
   },
   "sudo": {
     "title": "Потрібна автентифікація",
+    "icon": "Icon",
     "subtitle": "Уведіть свій пароль, щоб продовжити",
     "save": "Зберегти у цій сесії",
     "password": "Пароль",
@@ -267,6 +276,7 @@
   },
   "terminal": {
     "title": "Термінал",
+    "icon": "Icon",
     "runActions": "Виконати дії",
     "removeAll": "Видалити всі дії",
     "abortAll": "Перервати всі дії",
@@ -312,6 +322,7 @@
   },
   "systemTools": {
     "title": "Налаштування ",
+    "icon": "Icon",
     "titleTwo": "системи",
     "systemdServices": "Сервіси Systemd",
     "systemSettings": "Налаштування системи",
@@ -321,6 +332,7 @@
     "packages": "Додаткові пакети",
     "audio": {
       "title": "Аудіо",
+      "icon": "Icon",
       "alsa": {
         "description": "Підтримка ALSA"
       },
@@ -342,6 +354,7 @@
     },
     "virtualization": {
       "title": "Віртуалізація",
+      "icon": "Icon",
       "qemu": {
         "description": "QEMU встановлено"
       },
@@ -369,6 +382,7 @@
     },
     "containers": {
       "title": "Контейнери",
+      "icon": "Icon",
       "docker": {
         "description": "Docker встановлено"
       },
@@ -399,6 +413,7 @@
     },
     "network": {
       "title": "Мережа",
+      "icon": "Icon",
       "networkManager": {
         "description": "Підтримка NetworkManager"
       },
@@ -411,6 +426,7 @@
     },
     "bluetooth": {
       "title": "Bluetooth",
+      "icon": "Icon",
       "bluetooth": {
         "description": "Підтримка Bluetooth"
       },
@@ -429,6 +445,7 @@
     },
     "printing": {
       "title": "Друк",
+      "icon": "Icon",
       "printingSupport": {
         "description": "Підтримка друку"
       },
@@ -453,6 +470,7 @@
     },
     "firewall": {
       "title": "Фаєрвол",
+      "icon": "Icon",
       "firewalld": {
         "description": "firewalld встановлено"
       },
@@ -474,6 +492,7 @@
     },
     "misc": {
       "title": "Різне",
+      "icon": "Icon",
       "gns": {
         "description": "Garuda Nix Subsystem встановлено"
       }
@@ -487,6 +506,7 @@
     "enableIwd": "Використовувати IWD замість wpa_supplicant",
     "common": {
       "title": "Загальне",
+      "icon": "Icon",
       "psd": {
         "description": "Profile-sync-daemon встановлено"
       },
@@ -502,6 +522,7 @@
     },
     "performance": {
       "title": "Продуктивність",
+      "icon": "Icon",
       "performanceTweaks": {
         "description": "Налаштування продуктивності"
       },
@@ -529,6 +550,7 @@
     },
     "powersave": {
       "title": "Енергозбереження",
+      "icon": "Icon",
       "powersaveTweaks": {
         "description": "Налаштування енергозбереження"
       },
@@ -565,6 +587,7 @@
     },
     "rightclickEmulation": {
       "title": "Емуляція правої кнопки",
+      "icon": "Icon",
       "evdevLongPressRightClick": {
         "description": "Емуляція правої кнопки за допомогою довгого натискання (evdev)"
       },
@@ -649,6 +672,7 @@
   },
   "packages": {
     "title": "Пакети",
+    "icon": "Icon",
     "internet": "Інтернет",
     "documents": "Документи",
     "multimedia": "Мультимедіа",
@@ -684,6 +708,7 @@
   },
   "settings": {
     "title": "Налаштування ",
+    "icon": "Icon",
     "titleTwo": "додатку",
     "leftButtons": "Показувати кнопки вікна зліва",
     "copyDiagnostics": "Скопіювати діагностику до буфера обміну",

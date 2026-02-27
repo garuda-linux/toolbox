@@ -21,7 +21,7 @@ import { GamingService } from './gaming.service';
 import { Router, type UrlTree } from '@angular/router';
 
 @Component({
-  selector: 'rani-gaming',
+  selector: 'toolbox-gaming',
   imports: [TranslocoDirective, TableModule, DataViewModule, Card, NgOptimizedImage, TabsModule, Tooltip],
   templateUrl: './gaming.component.html',
   styleUrl: './gaming.component.css',

@@ -271,7 +271,7 @@ export class ConfigService {
   private async checkAutoStart(): Promise<PendingConfigUpdate> {
     try {
       const result: CommandResult = await new this.shellService.Command('test')
-        .args(['-f', '$HOME/.config/autostart/org.garudalinux.rani.desktop'])
+        .args(['-f', '$HOME/.config/autostart/org.garudalinux.toolbox.desktop'])
         .execute();
 
       const has_autostartfile: boolean = result.code === 0;
@@ -338,7 +338,7 @@ export class ConfigService {
       };
     } catch (error) {
       this.logger.error(`Failed to get desktop environment: ${error}`);
-      return { state: { desktopEnvironment: 'KDE' } }; // Default to KDE for now
+      return { state: { desktopEnvironment: 'KDE' as DesktopEnvironment } };
     }
   }
 
@@ -452,13 +452,13 @@ export class ConfigService {
       this.logger.debug('Enabling auto start');
       await this.shellService.execute('sh', [
         '-c',
-        'mkdir -p $HOME/.config/autostart && echo "[Desktop Entry]\nType=Application\nExec=garuda-rani\nHidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true\nName[en_US]=Rani\nName=Rani\nIcon=garuda-rani" > $HOME/.config/autostart/garuda-rani.desktop',
+        'mkdir -p $HOME/.config/autostart && echo "[Desktop Entry]\nType=Application\nExec=garuda-toolbox\nHidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true\nName[en_US]=Toolbox\nName=Toolbox\nIcon=garuda-toolbox" > $HOME/.config/autostart/garuda-toolbox.desktop',
       ]);
     } else {
       this.logger.debug('Disabling auto start');
       await this.shellService.execute('sh', [
         '-c',
-        'rm $HOME/.config/autostart/{org.garudalinux.rani,garuda-rani}.desktop || true',
+        'rm $HOME/.config/autostart/{org.garudalinux.rani,garuda-rani,toolbox}.desktop || true',
       ]);
     }
   }
@@ -471,7 +471,7 @@ export class ConfigService {
     try {
       const result: CommandResult = await this.shellService.execute('sh', [
         '-c',
-        'test -f $HOME/.config/autostart/garuda-rani.desktop',
+        'test -f $HOME/.config/autostart/garuda-toolbox.desktop',
       ]);
       return result.code === 0;
     } catch (error) {

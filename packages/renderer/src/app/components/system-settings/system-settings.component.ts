@@ -8,12 +8,13 @@ import { Checkbox } from 'primeng/checkbox';
 import type { SystemToolsEntry } from '../../interfaces';
 import { DynamicCheckboxesComponent } from '../dynamic-checkboxes/dynamic-checkboxes.component';
 import { OsInteractService } from '../task-manager/os-interact.service';
+import { CONFIGS } from '../config-entries/configs';
 import type { ChildProcess } from '../../types/shell';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Logger } from '../../logging/logging';
 
 @Component({
-  selector: 'rani-system-settings',
+  selector: 'toolbox-system-settings',
   imports: [TranslocoDirective, FormsModule, Select, Checkbox, DynamicCheckboxesComponent],
   templateUrl: './system-settings.component.html',
   styleUrl: './system-settings.component.css',
@@ -26,6 +27,19 @@ export class SystemSettingsComponent implements OnInit {
 
   dnsProviders: DnsProvider[] = dnsProviders;
   shells: Shell[] = shells;
+  configSections: SystemToolsEntry[] = [
+    {
+      name: 'systemSettings.configs.title',
+      icon: 'pi pi-cog',
+      sections: CONFIGS.map((config) => ({
+        name: config.key,
+        fancyTitle: `systemSettings.configs.${config.key}.title`,
+        description: `systemSettings.configs.${config.key}.description`,
+        checked: false,
+        check: { type: 'config', name: config.key },
+      })),
+    },
+  ];
 
   sections: SystemToolsEntry[] = [
     {
@@ -203,14 +217,21 @@ export class SystemSettingsComponent implements OnInit {
 
   protected readonly osInteractService = inject(OsInteractService);
   protected readonly taskManagerService = inject(TaskManagerService);
+  protected readonly configs = CONFIGS;
 
   private readonly logger = Logger.getInstance();
 
   constructor() {
     effect(() => {
-      const selectedBoxes = [];
+      const selectedBoxes: string[] = [];
       if (this.osInteractService.hblock()) selectedBoxes.push('hblock');
       if (this.osInteractService.iwd()) selectedBoxes.push('iwd');
+
+      for (const config of CONFIGS) {
+        if (this.osInteractService.configs().get(config.key)) {
+          selectedBoxes.push(config.key);
+        }
+      }
 
       this.selectedBoxes.set(selectedBoxes);
       this.currentDns.set(this.osInteractService.dns());
@@ -226,7 +247,10 @@ export class SystemSettingsComponent implements OnInit {
    * Handle the selection of a new operation not included in the dynamic checkboxes.
    * @param type The type of operation to perform.
    */
-  async handleToggle(type: 'dns' | 'shell' | 'shellConfigs' | 'hblock' | 'iwd'): Promise<void> {
+  async handleToggle(
+    type: 'dns' | 'shell' | 'shellConfigs' | 'hblock' | 'iwd' | 'config',
+    configKey?: string,
+  ): Promise<void> {
     // Workaround for ngModelChange event seemingly firing before the model is updated
     await new Promise((resolve) => setTimeout(resolve, 200));
 
@@ -255,6 +279,14 @@ export class SystemSettingsComponent implements OnInit {
           this.osInteractService.togglePackage('iwd');
         }
         this.osInteractService.wantedIwd.set(this.selectedBoxes().includes('iwd'));
+        break;
+      }
+      case 'config': {
+        if (configKey) {
+          const enable = this.selectedBoxes().includes(configKey);
+          this.osInteractService.setWantedConfig(configKey, enable);
+        }
+        break;
       }
     }
   }

@@ -15,7 +15,7 @@ import { ConfirmationService } from 'primeng/api';
 import { LoadingInterceptor } from './components/loading-indicator/loading-indicator.interceptor';
 import { ConfigService } from './components/config/config.service';
 import { LanguageManagerService } from './components/language-manager/language-manager.service';
-import { initRani } from './app.init';
+import { initToolbox } from './app.init';
 import { ThemeService } from './components/theme-service/theme-service';
 import { PackagesService } from './components/packages/packages.service';
 import { NotificationService } from './components/notification/notification.service';
@@ -50,7 +50,7 @@ export const appConfig: ApplicationConfig = {
     TaskManagerService,
     ThemeService,
     provideAnimationsAsync(),
-    provideAppInitializer(initRani),
+    provideAppInitializer(initToolbox),
     provideGarudaNG(
       { font: 'InterVariable' },
       {
