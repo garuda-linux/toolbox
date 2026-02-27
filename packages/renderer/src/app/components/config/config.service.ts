@@ -4,7 +4,7 @@ import { getConfigStore } from './store';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { LogLevel } from '../../logging/interfaces';
-import { usePreset } from '@primeng/themes';
+import { usePreset } from '@primeuix/themes';
 import { AppTheme, themes } from '../../theme';
 import { ElectronShellService } from '../../electron-services';
 import type { CommandResult } from '../../types/shell';

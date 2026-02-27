@@ -8,6 +8,7 @@ import {
   type OnInit,
   type Signal,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import { Button } from 'primeng/button';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -20,7 +21,6 @@ import { type NgTerminal, NgTerminalModule } from 'ng-terminal';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
-import { WebglAddon } from '@xterm/addon-webgl';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router, type UrlTree } from '@angular/router';
@@ -107,7 +107,6 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.term.underlying?.loadAddon(new WebglAddon());
     this.term.underlying?.loadAddon(new WebLinksAddon());
   }
 
@@ -203,7 +202,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
         await writeText(result.stdout);
         this.messageToastService.info(
           this.translocoService.translate('diagnostics.copySuccess'),
-          this.translocoService.translate('diagnostics.copied'),
+          this.translocoService.translate('diagnostics.copySuccess'),
         );
       }
     } else {

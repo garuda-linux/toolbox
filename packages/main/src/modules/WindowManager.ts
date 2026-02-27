@@ -83,7 +83,7 @@ class WindowManager implements AppModule {
         webviewTag: false,
         experimentalFeatures: false,
         plugins: false,
-        webgl: true, // XtermJs uses webgl
+        webgl: false,
         accessibleTitle: 'Garuda Toolbox',
         navigateOnDragDrop: false,
         autoplayPolicy: 'user-gesture-required',

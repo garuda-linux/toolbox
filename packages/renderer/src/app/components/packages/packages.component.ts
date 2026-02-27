@@ -75,19 +75,16 @@ export class PackagesComponent {
     const pkgname = item.pkgname[0];
     const icon = item.icon;
 
-    // 1. DEFAULTS: Handle generic icon light/dark mode locally
     if (!icon || icon === 'generic-dark.svg') {
       return this.configService.settings().darkMode
         ? './assets/gamer/generic-dark.svg'
         : './assets/gamer/generic-light.svg';
     }
 
-    // 2. ABSOLUTE PATH: Use pre-resolved absolute paths
     if (icon?.startsWith('/')) {
       return `app-icon://${icon}`;
     }
 
-    // 3. SPECIFIC ICON: If we have an icon name that isn't generic
     if (icon) {
       if (icon.includes('.')) {
         if (icon.includes('assets/')) return icon.startsWith('.') ? icon : `./${icon.replace(/^\//, '')}`;
@@ -96,12 +93,10 @@ export class PackagesComponent {
       return `app-icon://${icon}`;
     }
 
-    // 4. PACKAGE FALLBACK: Try to find a system icon for the package
     if (pkgname) {
       return `app-icon://package/${pkgname}`;
     }
 
-    // 5. FINAL FALLBACK
     return this.configService.settings().darkMode
       ? './assets/gamer/generic-dark.svg'
       : './assets/gamer/generic-light.svg';

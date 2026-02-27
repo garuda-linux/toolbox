@@ -23,7 +23,6 @@ import { ProgressBar } from 'primeng/progressbar';
 import { Card } from 'primeng/card';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Logger } from '../../logging/logging';
-import { WebglAddon } from '@xterm/addon-webgl';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ConfigService } from '../config/config.service';
 import { Subscription } from 'rxjs';
@@ -166,7 +165,6 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
    * Load the xterm terminal into the terminal div, and set up the terminal.
    */
   private async loadXterm(): Promise<void> {
-    this.term.underlying?.loadAddon(new WebglAddon());
     this.term.underlying?.loadAddon(new WebLinksAddon());
     this.term.underlying?.loadAddon(this.fitAddon);
     this.term.underlying?.clear();
