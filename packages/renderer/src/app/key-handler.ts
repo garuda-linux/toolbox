@@ -13,7 +13,7 @@ export async function globalKeyHandler(this: AppComponent, event: KeyboardEvent)
         void this.shellService.open('https://wiki.garudalinux.org');
         break;
       case 'F4':
-        this.terminalComponent.visible.set(!this.terminalComponent.visible());
+        this.terminalComponent().visible.set(!this.terminalComponent().visible());
         break;
       case 'F11':
         break;

@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { DataView } from 'primeng/dataview';
-import { NgClass, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import type { DkmsModule, DkmsModules, Kernel } from './types';
 import { type Task, TaskManagerService } from '../task-manager/task-manager.service';
@@ -15,7 +14,7 @@ import { KernelsService } from './kernels.service';
 
 @Component({
   selector: 'toolbox-kernels',
-  imports: [DataView, FormsModule, NgForOf, Tag, Checkbox, NgClass, TranslocoDirective, Tooltip, Skeleton],
+  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',
 })

@@ -5,14 +5,14 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
 import { StatefulPackage } from '../gaming/interfaces';
 import { LanguagePacks } from './types';
-import { NgClass, NgIf } from '@angular/common';
+
 import { Checkbox } from 'primeng/checkbox';
 import { LanguagePacksService } from './language-packs.service';
 import { LocalePipe } from '../lang-pipe/locale.pipe';
 
 @Component({
   selector: 'toolbox-language-packs',
-  imports: [TableModule, TranslocoDirective, FormsModule, NgIf, Checkbox, NgClass, LocalePipe],
+  imports: [TableModule, TranslocoDirective, FormsModule, Checkbox, LocalePipe],
   templateUrl: './language-packs.component.html',
   styleUrl: './language-packs.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

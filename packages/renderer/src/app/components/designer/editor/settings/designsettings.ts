@@ -1,5 +1,5 @@
 import { DesignerService } from '../../designerservice';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
@@ -8,7 +8,7 @@ import { Fieldset } from 'primeng/fieldset';
 @Component({
   selector: 'design-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmPopupModule, Fieldset],
+  imports: [FormsModule, ConfirmPopupModule, Fieldset],
   template: ` <p-fieldset [toggleable]="true" legend="Font">
       <section class="grid grid-cols-4 gap-2">
         <div class="flex gap-4">
@@ -19,7 +19,9 @@ import { Fieldset } from 'primeng/fieldset';
               [(ngModel)]="designerService.designer().theme!.config!.font_size"
               (change)="changeBaseFontSize()"
             >
-              <option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</option>
+              @for (fontSize of fontSizes; track fontSize) {
+                <option [value]="fontSize">{{ fontSize }}</option>
+              }
             </select>
           </div>
 
@@ -30,7 +32,9 @@ import { Fieldset } from 'primeng/fieldset';
               [(ngModel)]="designerService.designer().theme!.config!.font_family"
               (change)="changeFont()"
             >
-              <option *ngFor="let font of fonts" [value]="font">{{ font }}</option>
+              @for (font of fonts; track font) {
+                <option [value]="font">{{ font }}</option>
+              }
             </select>
           </div>
         </div>

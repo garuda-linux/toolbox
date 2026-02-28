@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { palette } from '@primeuix/themes';
@@ -10,7 +9,7 @@ import { DesignerService } from '../../designerservice';
 @Component({
   selector: 'design-general',
   standalone: true,
-  imports: [CommonModule, DesignColorPalette, DesignTokenField, FormsModule, FieldsetModule],
+  imports: [DesignColorPalette, DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="General">
     <section class="flex justify-between items-center mb-4 gap-8">
       <div class="flex gap-2 items-center">

@@ -3,7 +3,7 @@ import type { SystemToolsEntry, SystemToolsSubEntry } from '../../interfaces';
 import { Checkbox } from 'primeng/checkbox';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+
 import { Card } from 'primeng/card';
 import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
@@ -11,7 +11,7 @@ import { OsInteractService } from '../task-manager/os-interact.service';
 
 @Component({
   selector: 'toolbox-dynamic-checkboxes',
-  imports: [Checkbox, TranslocoDirective, FormsModule, NgClass, Card],
+  imports: [Checkbox, TranslocoDirective, FormsModule, Card],
   templateUrl: './dynamic-checkboxes.component.html',
   styleUrl: './dynamic-checkboxes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

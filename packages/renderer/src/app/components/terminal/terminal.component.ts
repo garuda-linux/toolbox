@@ -11,9 +11,9 @@ import {
   type OnInit,
   signal,
   type Signal,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import type { ITerminalOptions, ITheme } from '@xterm/xterm';
 import { CatppuccinXtermJs } from '../../theme';
 import { type NgTerminal, NgTerminalModule } from 'ng-terminal';
@@ -36,7 +36,7 @@ import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
   selector: 'toolbox-terminal',
-  imports: [CommonModule, NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollPanel],
+  imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollPanel, NgTemplateOutlet],
   templateUrl: './terminal.component.html',
   styleUrl: './terminal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,8 +45,8 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
   public visible = signal<boolean>(false);
   private subscriptions: Subscription[] = [];
 
-  @ViewChild('dialog', { static: false }) dialog!: Dialog;
-  @ViewChild('term', { static: false }) term!: NgTerminal;
+  readonly dialog = viewChild<Dialog>('dialog');
+  readonly term = viewChild<NgTerminal>('term');
 
   protected readonly taskManagerService = inject(TaskManagerService);
   private readonly configService = inject(ConfigService);
@@ -91,12 +91,13 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
     effect(() => {
       const darkMode = this.configService.settings().darkMode;
       const appTheme = this.configService.settings().activeTheme;
-      if (this.term?.underlying) {
+      const term = this.term();
+      if (term?.underlying) {
         let theme: ITheme = darkMode ? CatppuccinXtermJs.dark : CatppuccinXtermJs.light;
         if (!appTheme.includes('Catppuccin Mocha')) {
           theme = this.designerService.getXtermTheme(darkMode);
         }
-        this.term.underlying.options.theme = theme;
+        term.underlying.options.theme = theme;
       }
       this.logger.trace('Terminal theme switched via effect');
     });
@@ -121,12 +122,12 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.logger.trace('Subscribing to terminal output/clear emitter');
     this.subscriptions.push(
       this.taskManagerService.dataEvents.subscribe((output: string) => {
-        this.term.write(output);
+        this.term()?.write(output);
       }),
     );
     this.subscriptions.push(
       this.taskManagerService.events.subscribe((output: string) => {
-        if (output === 'clear') this.term.underlying?.clear();
+        if (output === 'clear') this.term()?.underlying?.clear();
       }),
     );
   }
@@ -165,13 +166,16 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
    * Load the xterm terminal into the terminal div, and set up the terminal.
    */
   private async loadXterm(): Promise<void> {
-    this.term.underlying?.loadAddon(new WebLinksAddon());
-    this.term.underlying?.loadAddon(this.fitAddon);
-    this.term.underlying?.clear();
+    const term = this.term();
+    if (!term) return;
+
+    term.underlying?.loadAddon(new WebLinksAddon());
+    term.underlying?.loadAddon(this.fitAddon);
+    term.underlying?.clear();
 
     if (this.taskManagerService.data) {
       this.logger.trace('Terminal output cleared, now writing to terminal');
-      this.term.write(this.taskManagerService.data);
+      term.write(this.taskManagerService.data);
     }
   }
 

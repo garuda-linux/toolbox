@@ -7,21 +7,17 @@
   </div>
   <div class="px-10 pt-10">
     <div class="flex justify-evenly gap-4">
-      <p-button [label]="t('diagnostics.inxi')" [outlined]="true" (click)="getOutput('inxi')"></p-button>
-      <p-button
-        [label]="t('diagnostics.systemctl')"
-        [outlined]="true"
-        (click)="getOutput('systemd-analyze')"
-      ></p-button>
-      <p-button [label]="t('diagnostics.journalctl')" [outlined]="true" (click)="getOutput('journalctl')"></p-button>
-      <p-button [label]="t('diagnostics.pacman')" [outlined]="true" (click)="getOutput('pacman')"></p-button>
-      <p-button [label]="t('diagnostics.dmesg')" [outlined]="true" (click)="getOutput('dmesg')"></p-button>
-      <p-button [label]="t('diagnostics.full')" [outlined]="true" (click)="getFullLogs()"></p-button>
-      <p-button [label]="t('diagnostics.upload')" [outlined]="true" (click)="uploadPrivateBin()"></p-button>
+      <p-button [label]="t('diagnostics.inxi')" [outlined]="true" (click)="getOutput('inxi')" />
+      <p-button [label]="t('diagnostics.systemctl')" [outlined]="true" (click)="getOutput('systemd-analyze')" />
+      <p-button [label]="t('diagnostics.journalctl')" [outlined]="true" (click)="getOutput('journalctl')" />
+      <p-button [label]="t('diagnostics.pacman')" [outlined]="true" (click)="getOutput('pacman')" />
+      <p-button [label]="t('diagnostics.dmesg')" [outlined]="true" (click)="getOutput('dmesg')" />
+      <p-button [label]="t('diagnostics.full')" [outlined]="true" (click)="getFullLogs()" />
+      <p-button [label]="t('diagnostics.upload')" [outlined]="true" (click)="uploadPrivateBin()" />
     </div>
 
     <div class="mt-5 h-[80vh]">
-      <ng-terminal #term [xtermOptions]="xtermOptions()"></ng-terminal>
+      <ng-terminal #term [xtermOptions]="xtermOptions()" />
     </div>
   </div>
 </ng-container>

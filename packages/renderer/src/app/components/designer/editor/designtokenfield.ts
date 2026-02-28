@@ -1,16 +1,4 @@
-import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  EventEmitter,
-  inject,
-  input,
-  Input,
-  model,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { $dt } from '@primeuix/themes';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
@@ -21,22 +9,24 @@ import { DesignerService } from '../designerservice';
 @Component({
   selector: 'design-token-field',
   standalone: true,
-  imports: [CommonModule, AutoCompleteModule, FormsModule, TooltipModule, ReactiveFormsModule],
+  imports: [AutoCompleteModule, FormsModule, TooltipModule, ReactiveFormsModule],
   template: `<div class="group">
     <div class="flex justify-between items-center">
       <label
         class="text-xs text-zinc-700 dark:text-white/70 block capitalize text-ellipsis overflow-hidden w-full whitespace-nowrap mb-px"
         for="inputId"
         title="label"
-        >{{ label }}</label
+        >{{ label() }}</label
       >
-      <button *ngIf="switchable" (click)="transfer($event)" type="button" tabindex="-1" style="line-height:14px;">
-        <i
-          class="pi pi-sort-alt text-zinc-500 dark:text-white/50 !hidden group-hover:!inline-block animate-fadein"
-          title="Transfer between color scheme and common"
-          style="font-size: .75rem !important; line-height: 14px;"
-        ></i>
-      </button>
+      @if (switchable()) {
+        <button (click)="transfer($event)" type="button" tabindex="-1" style="line-height:14px;">
+          <i
+            class="pi pi-sort-alt text-zinc-500 dark:text-white/50 !hidden group-hover:!inline-block animate-fadein"
+            title="Transfer between color scheme and common"
+            style="font-size: .75rem !important; line-height: 14px;"
+          ></i>
+        </button>
+      }
     </div>
     <div class="relative" [id]="id">
       <p-auto-complete
@@ -64,11 +54,12 @@ import { DesignerService } from '../designerservice';
           >
             <span>{{ option.label }}</span>
             @if (getIsColor(option)) {
-              <div
-                class="border border-surface-200 dark:border-surface-700 w-4 h-4 rounded-full"
-                *ngIf="option.isColor"
-                [style]="{ backgroundColor: resolveColor(option.value) }"
-              ></div>
+              @if (option.isColor) {
+                <div
+                  class="border border-surface-200 dark:border-surface-700 w-4 h-4 rounded-full"
+                  [style]="{ backgroundColor: resolveColor(option.value) }"
+                ></div>
+              }
             } @else {
               <div class="text-xs max-w-16 text-ellipsis whitespace-nowrap overflow-hidden">
                 {{ option.value }}
@@ -77,11 +68,12 @@ import { DesignerService } from '../designerservice';
           </div>
         </ng-template>
       </p-auto-complete>
-      <div
-        class="absolute right-[4px] top-1/2 -mt-3 w-6 h-6 rounded-md border border-surface-300 dark:border-surface-600"
-        *ngIf="type() === 'color'"
-        [style]="{ backgroundColor: previewColor() }"
-      ></div>
+      @if (type() === 'color') {
+        <div
+          class="absolute right-[4px] top-1/2 -mt-3 w-6 h-6 rounded-md border border-surface-300 dark:border-surface-600"
+          [style]="{ backgroundColor: previewColor() }"
+        ></div>
+      }
     </div>
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,19 +81,19 @@ import { DesignerService } from '../designerservice';
 export class DesignTokenField implements OnInit {
   private designerService: DesignerService = inject(DesignerService);
 
-  @Input() label: string | undefined;
+  readonly label = input<string>();
 
   type = input<string>();
 
   modelValue = model<any>();
 
-  @Input() switchable = false;
+  readonly switchable = input(false);
 
-  @Input() path: string | undefined;
+  readonly path = input<string>();
 
-  @Input() componentKey: any;
+  readonly componentKey = input<any>();
 
-  @Output() modelValueChange = new EventEmitter<any>();
+  readonly modelValueChange = output<any>();
 
   id: string | undefined;
 
@@ -118,7 +110,7 @@ export class DesignTokenField implements OnInit {
     return (
       this.modelValue() == null ||
       this.modelValue().trim().length === 0 ||
-      this.modelValue().startsWith(this.componentKey) ||
+      this.modelValue().startsWith(this.componentKey()) ||
       (this.modelValue().isColor && $dt(this.modelValue()).value === undefined)
     );
   });
@@ -187,19 +179,20 @@ export class DesignTokenField implements OnInit {
 
   transfer(event: MouseEvent) {
     // @ts-expect-error - dynamic component key access on preset components object
-    const tokens = this.designerService.designer().theme.preset?.components[this.componentKey];
+    const tokens = this.designerService.designer().theme.preset?.components[this.componentKey()];
     const colorSchemePrefix = 'colorScheme.';
 
-    if (this.path?.startsWith(colorSchemePrefix)) {
-      const tokenPath = this.getPathFromColorScheme(this.path.slice(colorSchemePrefix.length));
+    const path = this.path();
+    if (path?.startsWith(colorSchemePrefix)) {
+      const tokenPath = this.getPathFromColorScheme(path.slice(colorSchemePrefix.length));
 
       this.set(tokens, tokenPath, this.modelValue());
       this.unset(tokens, 'colorScheme.light.' + tokenPath);
       this.unset(tokens, 'colorScheme.dark.' + tokenPath);
     } else {
-      this.set(tokens, 'colorScheme.light.' + this.path, this.modelValue());
-      this.set(tokens, 'colorScheme.dark.' + this.path, this.modelValue());
-      this.unset(tokens, this.path);
+      this.set(tokens, 'colorScheme.light.' + path, this.modelValue());
+      this.set(tokens, 'colorScheme.dark.' + path, this.modelValue());
+      this.unset(tokens, path);
     }
 
     this.removeEmptyProps(tokens);
@@ -211,7 +204,7 @@ export class DesignTokenField implements OnInit {
         preset: {
           ...prev.theme.preset,
           // @ts-expect-error - dynamic component key access on preset components object
-          components: { ...prev.theme.preset?.components, [this.componentKey]: { ...tokens } },
+          components: { ...prev.theme.preset?.components, [this.componentKey()]: { ...tokens } },
         },
       },
     }));

@@ -36,18 +36,15 @@
     <ng-template #body let-pkg let-rowgroup="rowgroup" let-rowspan="rowspan">
       <tr>
         <td>
-          <p-check-box
-            [(ngModel)]="pkg.selected"
-            [binary]="true"
-            (onChange)="togglePackage(pkg)"
-            ngClass="ml-5"
-          ></p-check-box>
+          <p-check-box class="ml-5" [(ngModel)]="pkg.selected" [binary]="true" (onChange)="togglePackage(pkg)" />
         </td>
-        <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
-          <div class="flex items-center gap-2">
-            {{ pkg.locale | locale: false }}
-          </div>
-        </td>
+        @if (rowgroup) {
+          <td [attr.rowspan]="rowspan">
+            <div class="flex items-center gap-2">
+              {{ pkg.locale | locale: false }}
+            </div>
+          </td>
+        }
         <td>
           <p>{{ pkg.base }}</p>
         </td>

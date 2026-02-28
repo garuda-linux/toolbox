@@ -1,7 +1,7 @@
-import { DesignerService } from '../designerservice';
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DesignerService, type Theme } from '../designerservice';
+import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
 import Aura from '@primeuix/themes/aura';
 import Lara from '@primeuix/themes/lara';
 import Nora from '@primeuix/themes/nora';
@@ -9,11 +9,11 @@ import Material from '@primeuix/themes/material';
 import { MessageService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 import { FileUploadModule } from 'primeng/fileupload';
-import { Theme } from '../designerservice';
 import { Logger } from '../../../logging/logging';
 import { themes } from '../../../theme';
 import { Select } from 'primeng/select';
 import { Preset } from '@primeuix/themes/types';
+import { ButtonDirective } from 'primeng/button';
 
 const presets: Record<string, Preset> = {
   Aura,
@@ -25,7 +25,7 @@ const presets: Record<string, Preset> = {
 @Component({
   selector: 'design-create-theme',
   standalone: true,
-  imports: [CommonModule, FormsModule, DividerModule, FileUploadModule, Select],
+  imports: [FormsModule, DividerModule, FileUploadModule, Select, ButtonDirective, NgClass],
   template: `<section class="mb-6">
     <div class="text-lg font-semibold mb-2">Foundation</div>
     <span class="block text-muted-color leading-6 mb-4">Start by choosing a built-in theme as a foundation</span>
@@ -38,20 +38,22 @@ const presets: Record<string, Preset> = {
         <span class="text-muted-color">Variety of built-in themes with distinct characteristics.</span>
         <div class="flex justify-between">
           <div class="flex">
-            <button
-              class="border border-surface-200 dark:border-surface-700 px-3 py-2 border-r-0 last:border-r first:rounded-l-md last:rounded-r-md transition-colors duration-200"
-              *ngFor="let presetOption of presetOptions"
-              [ngClass]="{
-                'bg-zinc-950 text-white dark:bg-white dark:text-black': presetOption.value === basePreset,
-                'hover:bg-gray-100 dark:hover:bg-surface-800': presetOption.value !== basePreset,
-              }"
-              (click)="updateBasePreset(presetOption)"
-              type="button"
-            >
-              {{ presetOption.label }}
-            </button>
+            @for (presetOption of presetOptions; track presetOption) {
+              <button
+                class="border border-surface-200 dark:border-surface-700 px-3 py-2 border-r-0 last:border-r first:rounded-l-md last:rounded-r-md transition-colors duration-200"
+                [ngClass]="{
+                  'bg-primary text-primary-contrast': presetOption.value === basePreset(),
+                  'hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-0/70':
+                    presetOption.value !== basePreset(),
+                }"
+                (click)="updateBasePreset(presetOption)"
+                type="button"
+              >
+                {{ presetOption.label }}
+              </button>
+            }
           </div>
-          <button class="btn-design" (click)="createThemeFromPreset()" type="button">Create</button>
+          <button class="btn-design" (click)="createThemeFromPreset()" pButton type="button">Create</button>
         </div>
       </div>
 
@@ -70,9 +72,9 @@ const presets: Record<string, Preset> = {
                 optionLabel="label"
                 optionValue="label"
                 placeholder="Select a preset"
-              ></p-select>
+              />
             </div>
-            <button class="btn-design" (click)="createThemeFromToolboxPreset()" type="button">Create</button>
+            <button class="btn-design" (click)="createThemeFromToolboxPreset()" pButton type="button">Create</button>
           </div>
         </div>
       </div>
@@ -91,23 +93,24 @@ const presets: Record<string, Preset> = {
                   [chooseButtonProps]="{ styleClass: 'btn-design choose-btn' }"
                   (onSelect)="onFileSelect($event)"
                   mode="basic"
-                ></p-fileupload>
+                />
               </div>
             </div>
-            <button class="btn-design" (click)="useThemeJson()" type="button">Create</button>
+            <button class="btn-design" (click)="useThemeJson()" pButton type="button">Create</button>
           </div>
         </div>
       </div>
     </div>
-  </section> `,
+  </section>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DesignCreateTheme {
+export class DesignCreateTheme implements OnInit {
   designerService: DesignerService = inject(DesignerService);
   messageService: MessageService = inject(MessageService);
 
+  basePreset = signal<string>('Aura');
+
   themeName = 'Toolbox theme';
-  basePreset = 'Aura';
   themeData: Theme | null = null;
   presetOptions = [
     { label: 'Aura', value: 'Aura' },
@@ -124,12 +127,19 @@ export class DesignCreateTheme {
 
   private readonly logger: Logger = Logger.getInstance();
 
+  ngOnInit(): void {
+    const serviceBasePreset = this.designerService.basePreset();
+    if (serviceBasePreset) {
+      this.basePreset.set(serviceBasePreset);
+    }
+  }
+
   async createThemeFromPreset() {
-    this.logger.debug(`Creating theme from preset: ${this.basePreset}`);
-    const newPreset: Preset = structuredClone(presets[this.basePreset]);
+    this.logger.debug(`Creating theme from preset: ${this.basePreset()}`);
+    const newPreset: Preset = structuredClone(presets[this.basePreset()]);
 
     this.designerService.themeName.set(this.themeName);
-    this.designerService.basePreset.set(this.basePreset);
+    this.designerService.basePreset.set(this.basePreset());
     this.designerService.newPreset.set(newPreset);
 
     await this.designerService.createThemeFromPreset();
@@ -180,7 +190,8 @@ export class DesignCreateTheme {
   }
 
   updateBasePreset(preset: any) {
-    this.basePreset = preset.value;
+    this.logger.debug(`DesignCreateTheme updateBasePreset: ${preset.value}`);
+    this.basePreset.set(preset.value);
   }
 
   async useThemeJson() {

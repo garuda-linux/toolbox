@@ -13,7 +13,7 @@
               (click)="clickAction(entry)"
               name="group"
             />
-            <label class="mx-2.5" [for]="entry.name" [ngClass]="{ 'text-surface-300': entry.disabled }">
+            <label class="mx-2.5" [for]="entry.name" [class.text-surface-300]="entry.disabled">
               {{ t(entry.description) }}
             </label>
           </div>

@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { FieldsetModule } from 'primeng/fieldset';
-import { CommonModule } from '@angular/common';
+
 import { DesignerService } from '../../designerservice';
 import { DesignComponentSection } from './designcomponentsection';
 import { ConfigService } from '../../../config/config.service';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'design-component',
   standalone: true,
-  imports: [CommonModule, FieldsetModule, TabsModule, DesignComponentSection, Select, FormsModule],
+  imports: [FieldsetModule, TabsModule, DesignComponentSection, Select, FormsModule],
   template: `<section class="flex flex-col gap-3">
     <p-select class="capitalize mb-2" [(ngModel)]="componentKey" [options]="availableComponents" />
 

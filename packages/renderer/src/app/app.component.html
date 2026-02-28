@@ -51,17 +51,17 @@
           }
         </div>
         <div class="mt-5">
-          <router-outlet></router-outlet>
+          <router-outlet />
         </div>
-        <p-scroll-top></p-scroll-top>
+        <p-scroll-top />
       </garuda-shell>
     </div>
 
-    <p-confirm-dialog></p-confirm-dialog>
-    <p-context-menu [model]="rightClickMenu()" [global]="true"></p-context-menu>
+    <p-confirm-dialog />
+    <p-context-menu [model]="rightClickMenu()" [global]="true" />
 
-    <toolbox-designer></toolbox-designer>
-    <toolbox-terminal #terminalComponent></toolbox-terminal>
-    <toolbox-operation-manager #operationManagerComponent></toolbox-operation-manager>
+    <toolbox-designer />
+    <toolbox-terminal #terminalComponent />
+    <toolbox-operation-manager #operationManagerComponent />
   </div>
 </ng-container>

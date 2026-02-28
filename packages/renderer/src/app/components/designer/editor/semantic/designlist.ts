@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
 import { DesignTokenField } from '../designtokenfield';
@@ -8,7 +8,7 @@ import { DesignerService } from '../../designerservice';
 @Component({
   selector: 'design-list',
   standalone: true,
-  imports: [CommonModule, DesignTokenField, FormsModule, FieldsetModule, DesignTokenField],
+  imports: [DesignTokenField, FormsModule, FieldsetModule, DesignTokenField],
   template: ` <p-fieldset [toggleable]="true" legend="List">
     <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0">Container</div>
     <section class="grid grid-cols-4 mb-3 gap-2">

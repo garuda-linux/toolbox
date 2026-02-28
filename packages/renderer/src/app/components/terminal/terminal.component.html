@@ -10,7 +10,7 @@
                   <span class="mr-2 font-bold">{{ t(op.name) }}</span>
                   <i
                     class="pi mr-2"
-                    [ngClass]="{
+                    [class]="{
                       'pi-hourglass text-yellow-500': taskManagerService.currentTask()?.id !== op.id,
                       'pi-spin pi-spinner text-orange-500': taskManagerService.currentTask()?.id === op.id,
                     }"
@@ -42,7 +42,7 @@
         </p-scroll-panel>
       </div>
       <div class="w-full">
-        <ng-terminal #term [xtermOptions]="xtermOptions()"></ng-terminal>
+        <ng-terminal #term [xtermOptions]="xtermOptions()" />
       </div>
     </div>
   </ng-template>
@@ -67,7 +67,7 @@
           }}
         </span>
         <!-- Header actions -->
-        <ng-container *ngIf="taskManagerService.count() > 0 && !taskManagerService.running()">
+        @if (taskManagerService.count() > 0 && !taskManagerService.running()) {
           <span
             class="mr-2.5 cursor-pointer"
             (click)="taskManagerService.executeTasks()"
@@ -92,8 +92,8 @@
           >
             <i class="pi pi-shopping-cart mr-1 text-primary-emphasis-alt"></i>{{ t('terminal.printScripts') }}
           </span>
-        </ng-container>
-        <ng-container *ngIf="taskManagerService.count() > 0 && taskManagerService.running()">
+        }
+        @if (taskManagerService.count() > 0 && taskManagerService.running()) {
           <span
             class="mr-2.5 cursor-pointer"
             (click)="taskManagerService.abort()"
@@ -102,8 +102,8 @@
           >
             <i class="pi pi-minus-circle mr-1 text-primary-emphasis"></i>{{ t('terminal.abortAll') }}
           </span>
-        </ng-container>
-        <ng-container *ngIf="taskManagerService.cachedData() !== ''">
+        }
+        @if (taskManagerService.cachedData() !== '') {
           <span
             class="mr-2.5 cursor-pointer"
             (click)="copyToClipboard()"
@@ -118,12 +118,12 @@
           <span class="cursor-pointer" (click)="clearCache()" (keyup.enter)="clearCache()" tabindex="0">
             <i class="pi pi-copy mr-1 text-primary-emphasis-alt"></i>{{ t('terminal.clearOutputCache') }}
           </span>
-        </ng-container>
+        }
       </div>
     </ng-template>
-    <ng-container *ngTemplateOutlet="popup"></ng-container>
-    <ng-container *ngIf="progressTracker()">
-      <p-progress-bar [value]="progressTracker()"></p-progress-bar>
-    </ng-container>
+    <ng-container *ngTemplateOutlet="popup" />
+    @if (progressTracker()) {
+      <p-progress-bar [value]="progressTracker()" />
+    }
   </p-dialog>
 </ng-container>

@@ -21,7 +21,7 @@ import { InputText } from 'primeng/inputtext';
 import { type Table, TableModule } from 'primeng/table';
 import { Checkbox } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+
 import { PackagesService } from './packages.service';
 import { ConfigService } from '../config/config.service';
 
@@ -39,7 +39,6 @@ import { ConfigService } from '../config/config.service';
     TableModule,
     Checkbox,
     FormsModule,
-    NgClass,
   ],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.css',

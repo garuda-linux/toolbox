@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
 import { DesignerService } from '../../designerservice';
@@ -8,7 +8,7 @@ import { DesignTokenField } from '../designtokenfield';
 @Component({
   selector: 'design-border-radius',
   standalone: true,
-  imports: [CommonModule, DesignTokenField, FieldsetModule, FormsModule],
+  imports: [DesignTokenField, FieldsetModule, FormsModule],
   template: ` <p-fieldset [toggleable]="true" legend="Rounded">
     <section class="grid grid-cols-4 gap-2">
       <div class="flex flex-col gap-1">

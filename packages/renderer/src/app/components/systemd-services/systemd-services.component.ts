@@ -5,7 +5,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { type Table, TableModule } from 'primeng/table';
 import type { SystemdService, SystemdServiceAction } from '../../interfaces';
-import { NgClass } from '@angular/common';
+
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { type Popover, PopoverModule } from 'primeng/popover';
 import { MessageToastService } from '@garudalinux/core';
@@ -17,7 +17,7 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 
 @Component({
   selector: 'toolbox-systemd-services',
-  imports: [Button, IconField, InputIcon, PopoverModule, InputText, TableModule, NgClass, TranslocoDirective, Tooltip],
+  imports: [Button, IconField, InputIcon, PopoverModule, InputText, TableModule, TranslocoDirective, Tooltip],
   templateUrl: './systemd-services.component.html',
   styleUrl: './systemd-services.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

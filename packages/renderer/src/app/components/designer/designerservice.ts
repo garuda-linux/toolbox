@@ -360,7 +360,33 @@ export class DesignerService {
     }
 
     // @ts-expect-error Preset type do not have complete type definitions
-    const colorScheme = darkMode ? theme.semantic.colorScheme.dark : theme.semantic.colorScheme.light;
+    const colorScheme = darkMode ? theme.semantic?.colorScheme?.dark : theme.semantic?.colorScheme?.light;
+
+    if (!colorScheme) {
+      this.logger.warn('Theme structure is incomplete, returning default xterm theme');
+      return {
+        foreground: '#ffffff',
+        background: '#000000',
+        cursor: '#ffffff',
+        cursorAccent: '#000000',
+        black: '#000000',
+        red: '#ff0000',
+        green: '#00ff00',
+        yellow: '#ffff00',
+        blue: '#0000ff',
+        magenta: '#ff00ff',
+        cyan: '#00ffff',
+        white: '#ffffff',
+        brightBlack: '#808080',
+        brightRed: '#ff8080',
+        brightGreen: '#80ff80',
+        brightYellow: '#ffff80',
+        brightBlue: '#8080ff',
+        brightMagenta: '#ff80ff',
+        brightCyan: '#80ffff',
+        brightWhite: '#ffffff',
+      };
+    }
 
     return {
       // Basic terminal settings

@@ -7,8 +7,8 @@ import {
   inject,
   type OnInit,
   type Signal,
-  ViewChild,
   OnDestroy,
+  viewChild,
 } from '@angular/core';
 import { Button } from 'primeng/button';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -36,7 +36,7 @@ import { DesignerService } from '../designer/designerservice';
 export class DiagnosticsComponent implements AfterViewInit, OnInit {
   private outputCache = '';
 
-  @ViewChild('term', { static: false }) term!: NgTerminal;
+  readonly term = viewChild<NgTerminal>('term');
 
   private readonly configService = inject(ConfigService);
   private readonly designerService = inject(DesignerService);
@@ -66,8 +66,9 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
   constructor() {
     effect(() => {
       const _darkMode: boolean = this.configService.settings().darkMode;
-      if (this.term?.underlying) {
-        this.term.underlying.options.theme = this.xtermOptions().theme;
+      const term = this.term();
+      if (term?.underlying) {
+        term.underlying.options.theme = this.xtermOptions().theme;
       }
       this.logger.trace('Terminal theme switched via effect');
     });
@@ -107,7 +108,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.term.underlying?.loadAddon(new WebLinksAddon());
+    this.term()?.underlying?.loadAddon(new WebLinksAddon());
   }
 
   /**
@@ -189,10 +190,13 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
    * @private
    */
   private async processResult(result: any): Promise<void> {
+    const term = this.term();
+    if (!term) return;
+
     if (result.code === 0) {
       this.logger.trace('Writing to clear terminal and buffer');
-      this.term.underlying?.clear();
-      this.term.write(result.stdout);
+      term.underlying?.clear();
+      term.write(result.stdout);
 
       this.outputCache = result.stdout;
 

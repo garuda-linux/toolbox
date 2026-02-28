@@ -54,8 +54,7 @@
             fluid
             optionLabel="label"
             optionValue="language"
-          >
-          </p-select>
+          />
         </div>
 
         <div class="3xl:col-span-1 col-span-3 flex flex-col gap-2 md:col-span-2">
@@ -67,8 +66,7 @@
             (onChange)="selectLogLevel($event)"
             appendTo="body"
             fluid
-          >
-          </p-select>
+          />
         </div>
       </div>
     </p-panel>
@@ -86,7 +84,7 @@
                 [disabled]="!configService.settings().background"
                 (click)="clearBackground()"
                 icon="pi pi-times"
-              ></p-button>
+              />
               <p-fileupload
                 id="customBackgroundInput"
                 [chooseButtonProps]="{ styleClass: 'btn-design choose-btn' }"
@@ -94,7 +92,7 @@
                 (onSelect)="onFileSelect($event)"
                 mode="basic"
                 accept="image/*"
-              ></p-fileupload>
+              />
             </div>
           </div>
 
@@ -106,7 +104,7 @@
                   [binary]="true"
                   (onChange)="updateConfig('backgroundFit', configService.settings().backgroundFit)"
                   inputId="backgroundFit"
-                ></p-checkbox>
+                />
                 <label class="ml-2" for="backgroundFit">
                   {{ t('settings.backgroundFit') }}
                 </label>
@@ -120,7 +118,7 @@
                   [binary]="true"
                   (onChange)="updateConfig('blurBackground', configService.settings().blurBackground)"
                   inputId="blurBackground"
-                ></p-checkbox>
+                />
                 <label class="ml-2" for="blurBackground">
                   {{ t('settings.blurBackground') }}
                 </label>

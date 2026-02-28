@@ -105,7 +105,7 @@
         <td class="text-center">
           <i
             class="pi"
-            [ngClass]="{
+            [class]="{
               'pi-check-circle text-green-500': service.active === 'active',
               'pi-times-circle text-red-500': service.active !== 'active',
             }"
@@ -117,7 +117,7 @@
             [outlined]="true"
             (click)="openPopover($event, op, service)"
             icon="pi pi-power-off"
-          ></p-button>
+          />
         </td>
       </tr>
     </ng-template>
@@ -137,7 +137,7 @@
         [outlined]="true"
         (click)="executeAction('start')"
         icon="pi pi-play"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'dead'"
@@ -145,21 +145,21 @@
         [outlined]="true"
         (click)="executeAction('stop')"
         icon="pi pi-stop"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [label]="t('systemdServices.restart')"
         [outlined]="true"
         (click)="executeAction('restart')"
         icon="pi pi-refresh"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [label]="t('systemdServices.reload')"
         [outlined]="true"
         (click)="executeAction('reload')"
         icon="pi pi-refresh"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'running'"
@@ -167,7 +167,7 @@
         [outlined]="true"
         (click)="executeAction('enable')"
         icon="pi pi-power-off"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'dead'"
@@ -175,28 +175,28 @@
         [outlined]="true"
         (click)="executeAction('disable')"
         icon="pi pi-power-off"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [label]="t('systemdServices.mask')"
         [outlined]="true"
         (click)="executeAction('mask')"
         icon="pi pi-ban"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [label]="t('systemdServices.unmask')"
         [outlined]="true"
         (click)="executeAction('unmask')"
         icon="pi pi-ban"
-      ></p-button>
+      />
       <p-button
         class="mx-2.5"
         [label]="t('systemdServices.logs')"
         [outlined]="true"
         (click)="executeAction('logs')"
         icon="pi pi-refresh"
-      ></p-button>
+      />
     </div>
   </p-popover>
 </ng-container>

@@ -34,14 +34,14 @@
                       "
                       [icon]="taskManager.findTaskById(action.name) ? 'pi pi-minus-circle' : 'pi pi-plus-circle'"
                       (click)="addToPending(action)"
-                    ></p-button>
+                    />
                     <p-button
                       [style]="{ 'margin-top': '0.5rem', 'width': '100%' }"
                       [outlined]="true"
                       [label]="t('maintenance.runNow')"
                       (click)="runNow(action)"
                       icon="pi pi-play-circle"
-                    ></p-button>
+                    />
                   </div>
                 </p-card>
               </div>
@@ -79,8 +79,7 @@
               [outlined]="true"
               (click)="confirmResetConfigs($event)"
               icon="pi pi-refresh"
-            >
-            </p-button>
+            />
           </div>
         </p-tabpanel>
         <p-tabpanel [value]="2">
@@ -104,14 +103,14 @@
                       "
                       [icon]="taskManager.findTaskById(action.name) ? 'pi pi-minus-circle' : 'pi pi-plus-circle'"
                       (click)="addToPending(action)"
-                    ></p-button>
+                    />
                     <p-button
                       [style]="{ 'margin-top': '0.5rem', 'width': '100%' }"
                       [outlined]="true"
                       [label]="t('maintenance.runNow')"
                       (click)="runNow(action)"
                       icon="pi pi-play-circle"
-                    ></p-button>
+                    />
                   </div>
                 </p-card>
               </div>

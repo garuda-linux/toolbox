@@ -7,8 +7,8 @@ import {
   signal,
   ElementRef,
   Renderer2,
-  ViewChild,
   computed,
+  viewChild,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ScrollTop } from 'primeng/scrolltop';
@@ -72,8 +72,8 @@ import { ShellBarEndDirective, ShellComponent } from '@garudalinux/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  @ViewChild('terminalComponent') terminalComponent!: TerminalComponent;
-  @ViewChild('operationManagerComponent') operationManagerComponent!: OperationManagerComponent;
+  readonly terminalComponent = viewChild.required<TerminalComponent>('terminalComponent');
+  readonly operationManagerComponent = viewChild.required<OperationManagerComponent>('operationManagerComponent');
 
   private readonly appMenuService = inject(ElectronAppMenuService);
   private readonly elementRef = inject(ElementRef);
@@ -96,20 +96,20 @@ export class AppComponent implements OnInit {
       label: 'Apply',
       icon: 'pi pi-check',
       visible: this.applyButtonVisible(),
-      command: () => this.operationManagerComponent.applyOperations(),
+      command: () => this.operationManagerComponent().applyOperations(),
     },
     {
       id: 'clear',
       label: 'Clear',
       icon: 'pi pi-trash',
       visible: this.applyButtonVisible(),
-      command: () => this.operationManagerComponent.clearOperations(),
+      command: () => this.operationManagerComponent().clearOperations(),
     },
     {
       id: 'show-terminal',
       label: 'Show terminal',
       icon: 'pi pi-hashtag',
-      command: () => this.terminalComponent.visible.set(true),
+      command: () => this.terminalComponent().visible.set(true),
     },
     {
       id: 'exit',
@@ -280,7 +280,7 @@ export class AppComponent implements OnInit {
         icon: 'pi pi-spinner',
         label: 'Terminal',
         translocoKey: 'menu.terminal',
-        command: () => this.terminalComponent.visible.set(true),
+        command: () => this.terminalComponent().visible.set(true),
       },
       {
         id: 'help',

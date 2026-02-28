@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
 import { Drawer, DrawerModule } from 'primeng/drawer';
-import { CommonModule } from '@angular/common';
+
 import { ToastModule } from 'primeng/toast';
 import { PrimeNG } from 'primeng/config';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -15,7 +15,6 @@ import { ConfigService } from '../config/config.service';
   selector: 'toolbox-designer',
   standalone: true,
   imports: [
-    CommonModule,
     DrawerModule,
     ToastModule,
     ConfirmDialogModule,
@@ -39,7 +38,7 @@ import { ConfigService } from '../config/config.service';
           </div>
           <div class="flex items-center gap-2">
             <button class="icon-btn" (click)="toggleDarkMode()" type="button">
-              <i class="pi" [ngClass]="{ 'pi-moon': isDarkTheme(), 'pi-sun': !isDarkTheme() }"></i>
+              <i class="pi" [class]="{ 'pi-moon': isDarkTheme(), 'pi-sun': !isDarkTheme() }"></i>
             </button>
             <button class="icon-btn" (click)="hide($event)" type="button">
               <i class="pi pi-times"></i>
@@ -48,12 +47,18 @@ import { ConfigService } from '../config/config.service';
         </div>
 
         <div class="flex-auto overflow-auto overflow-x-hidden pb-5 px-5">
-          <design-create-theme *ngIf="activeView() === 'create_theme'" />
-          <design-editor *ngIf="activeView() === 'editor'" />
+          @if (activeView() === 'create_theme') {
+            <design-create-theme />
+          }
+          @if (activeView() === 'editor') {
+            <design-editor />
+          }
         </div>
 
         <div class="p-5">
-          <design-editor-footer *ngIf="activeView() === 'editor'" />
+          @if (activeView() === 'editor') {
+            <design-editor-footer />
+          }
         </div>
       </ng-template>
     </p-drawer>
@@ -62,7 +67,7 @@ import { ConfigService } from '../config/config.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppDesigner {
-  @ViewChild('drawer') drawer!: Drawer;
+  readonly drawer = viewChild.required<Drawer>('drawer');
 
   designerService = inject(DesignerService);
   configService = inject(ConfigService);
@@ -88,7 +93,7 @@ export class AppDesigner {
   }
 
   hide(event: any) {
-    this.drawer.close(event);
+    this.drawer().close(event);
     this.configService.updateState('designerActive', false);
   }
 
