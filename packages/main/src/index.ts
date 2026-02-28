@@ -19,6 +19,7 @@ import { createHomeConfigModule } from './modules/HomeConfigModule.js';
 import { createAppIconModule } from './modules/AppIconModule.js';
 import { app, protocol } from 'electron';
 import { Logger } from './logging/logging.js';
+import { migrateConfig } from './modules/MigrationModule.js';
 
 // Register custom schemes as privileged before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -35,6 +36,8 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 export async function initApp(initConfig: AppInitConfig) {
+  migrateConfig();
+
   const isDevelopment = import.meta.env.DEV;
   const logger = Logger.getInstance();
 
