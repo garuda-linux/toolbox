@@ -36,10 +36,17 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 export async function initApp(initConfig: AppInitConfig) {
+  const logger = Logger.getInstance();
+
+  if (process.getuid && process.getuid() === 0) {
+    logger.error('The application should not be run as root. Exiting.');
+    app.quit();
+    return;
+  }
+
   migrateConfig();
 
   const isDevelopment = import.meta.env.DEV;
-  const logger = Logger.getInstance();
 
   // Shut the fuck up, thank you.
   process.env.ELECTRON_NO_ATTACH_CONSOLE = '1';
