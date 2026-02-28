@@ -6,7 +6,7 @@ import { Logger } from '../../logging/logging';
 import { LogLevel } from '../../logging/interfaces';
 import { usePreset } from '@primeuix/themes';
 import { AppTheme, themes } from '../../theme';
-import { ElectronShellService } from '../../electron-services';
+import { ElectronOsService, ElectronShellService } from '../../electron-services';
 import type { CommandResult } from '../../types/shell';
 import { Store, notifyConfigChange } from '../../electron-services';
 
@@ -21,7 +21,6 @@ class PendingConfigUpdate {
 export class ConfigService {
   state = signal<AppState>({
     availablePkgs: new Map<string, boolean>(),
-    borderlessMaximizedWindow: false,
     codeName: '',
     designerActive: false,
     desktopEnvironment: '' as DesktopEnvironment,
@@ -32,6 +31,7 @@ export class ConfigService {
     locale: '',
     rebootPending: false,
     user: '',
+    userHome: '',
   });
   settings = signal<AppSettings>({
     activeTheme: 'Catppuccin Mocha/Latte Aura',
@@ -53,6 +53,7 @@ export class ConfigService {
 
   private readonly loadingService = inject(LoadingService);
   private readonly logger = Logger.getInstance();
+  private readonly osService = inject(ElectronOsService);
   private readonly shellService = inject(ElectronShellService);
 
   constructor() {
@@ -94,7 +95,6 @@ export class ConfigService {
       if (firstRun) {
         initPromises.push(
           this.checkAutoStart(),
-          this.initBorderlessWindow(),
           this.initCodeName(),
           this.initDesktopEnvironment(),
           this.initHostname(),
@@ -202,13 +202,16 @@ export class ConfigService {
    */
   private async initUser(): Promise<PendingConfigUpdate> {
     try {
+      const userHome = await this.osService.homedir();
+
       const result: CommandResult = await new this.shellService.Command('whoami').execute();
       if (result.code !== 0) {
         this.logger.error('Could not get user');
+        return { state: { userHome } };
       } else {
         const user: string = result.stdout.trim();
         this.logger.debug(`User ${user}, welcome!`);
-        return { state: { user } };
+        return { state: { user, userHome } };
       }
     } catch (error) {
       this.logger.error(`Failed to get user: ${error}`);
@@ -405,27 +408,6 @@ export class ConfigService {
     } catch (error) {
       this.logger.error(`Failed to get available packages: ${error}`);
       return { state: { availablePkgs: new Map<string, boolean>() } }; // Default to empty map for now
-    }
-  }
-
-  /**
-   * Check if the borderless maximized window setting is enabled.
-   * @private
-   */
-  private async initBorderlessWindow(): Promise<PendingConfigUpdate> {
-    try {
-      const result: CommandResult = await new this.shellService.Command('sh')
-        .args(['-c', "cat ~/.config/kwinrc | grep -q 'BorderlessMaximizedWindows=true'"])
-        .execute();
-
-      this.logger.debug(`Borderless maximized window setting: ${result.code === 0 ? 'enabled' : 'disabled'}`);
-      if (result.code === 0) {
-        return { state: { borderlessMaximizedWindow: true } };
-      }
-      return { state: { borderlessMaximizedWindow: false } };
-    } catch (error) {
-      this.logger.error(`Failed to check borderless window setting: ${error}`);
-      return { state: { borderlessMaximizedWindow: false } };
     }
   }
 

@@ -1,3 +1,6 @@
+/**
+ * File will just dump/remove one file, while regex can do targeted edits
+ */
 export type ConfigType = 'file' | 'regex';
 
 export interface RegexConfig {
@@ -15,6 +18,8 @@ export interface ConfigEntry {
   path?: string;
   content?: string;
   regex?: RegexConfig;
+  /* This corresponds to output of XDG_CURRENT_DESKTOP, we use it to conditionally show entries in the UI. */
+  desktopEnv?: string[];
 }
 
 export const CONFIGS: ConfigEntry[] = [
@@ -62,6 +67,7 @@ monitor.bluez.rules = [
   {
     key: 'kdeBorderlessMaximize',
     name: 'KDE Borderless Maximize',
+    desktopEnv: ['KDE'],
     type: 'regex',
     regex: {
       file: '.config/kwinrc',

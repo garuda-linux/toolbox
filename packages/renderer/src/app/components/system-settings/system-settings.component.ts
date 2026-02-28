@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, model, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, model, signal, OnInit, computed } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
 import type { Nullable } from 'primeng/ts-helpers';
@@ -8,6 +8,7 @@ import { Checkbox } from 'primeng/checkbox';
 import type { SystemToolsEntry } from '../../interfaces';
 import { DynamicCheckboxesComponent } from '../dynamic-checkboxes/dynamic-checkboxes.component';
 import { OsInteractService } from '../task-manager/os-interact.service';
+import { ConfigService } from '../config/config.service';
 import { CONFIGS } from '../config-entries/configs';
 import type { ChildProcess } from '../../types/shell';
 import { TaskManagerService } from '../task-manager/task-manager.service';
@@ -25,21 +26,41 @@ export class SystemSettingsComponent implements OnInit {
   currentDns = signal<Nullable<DnsProvider>>(null);
   selectedBoxes = model<string[]>([]);
 
+  protected readonly configService = inject(ConfigService);
+  protected readonly osInteractService = inject(OsInteractService);
+  protected readonly taskManagerService = inject(TaskManagerService);
+  protected readonly configs = CONFIGS;
+
   dnsProviders: DnsProvider[] = dnsProviders;
   shells: Shell[] = shells;
-  configSections: SystemToolsEntry[] = [
-    {
-      name: 'systemSettings.configs.title',
-      icon: 'pi pi-cog',
-      sections: CONFIGS.map((config) => ({
-        name: config.key,
-        fancyTitle: `systemSettings.configs.${config.key}.title`,
-        description: `systemSettings.configs.${config.key}.description`,
-        checked: false,
-        check: { type: 'config', name: config.key },
-      })),
-    },
-  ];
+
+  readonly configSections = computed<SystemToolsEntry[]>(() => {
+    const currentDE = this.configService.state().desktopEnvironment;
+    const filteredConfigs = CONFIGS.filter((config) => {
+      if (!config.desktopEnv || config.desktopEnv.length === 0) {
+        return true;
+      }
+      return config.desktopEnv.includes(currentDE);
+    });
+
+    if (filteredConfigs.length === 0) {
+      return [];
+    }
+
+    return [
+      {
+        name: 'systemSettings.configs.title',
+        icon: 'pi pi-cog',
+        sections: filteredConfigs.map((config) => ({
+          name: config.key,
+          fancyTitle: `systemSettings.configs.${config.key}.title`,
+          description: `systemSettings.configs.${config.key}.description`,
+          checked: false,
+          check: { type: 'config', name: config.key },
+        })),
+      },
+    ];
+  });
 
   sections: SystemToolsEntry[] = [
     {
@@ -214,10 +235,6 @@ export class SystemSettingsComponent implements OnInit {
       ],
     },
   ];
-
-  protected readonly osInteractService = inject(OsInteractService);
-  protected readonly taskManagerService = inject(TaskManagerService);
-  protected readonly configs = CONFIGS;
 
   private readonly logger = Logger.getInstance();
 

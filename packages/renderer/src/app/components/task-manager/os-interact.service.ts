@@ -11,15 +11,8 @@ import {
 } from '../system-settings/types';
 import type { ChildProcess } from '../../types/shell';
 import { Logger } from '../../logging/logging';
-import { CONFIGS, ConfigEntry } from '../config-entries/configs';
-import {
-  exists,
-  homeConfigExists,
-  readHomeConfig,
-  readTextFile,
-  removeHomeConfig,
-  writeHomeConfig,
-} from '../../electron-services/electron-api-utils';
+import { CONFIGS } from '../config-entries/configs';
+import { exists, homeConfigExists, readHomeConfig, readTextFile } from '../../electron-services/electron-api-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -260,7 +253,7 @@ export class OsInteractService {
       const wanted = this.wantedConfigs().get(config.key);
       const current = this.currentConfigs().get(config.key);
       if (wanted !== undefined && wanted !== current) {
-        const prefix = config.sudo ? '' : '~/';
+        const prefix = config.sudo ? '' : `${this.configService.state().userHome}/`;
         let newContent = '';
 
         if (config.type === 'file') {

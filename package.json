@@ -61,7 +61,7 @@
     "@types/pako": "^2.0.4",
     "angular-eslint": "^21.2.0",
     "electron": "40.6.1",
-    "electron-builder": "26.8.1",
+    "electron-builder": "26.0.0",
     "eslint": "^10.0.2",
     "eslint-plugin-oxlint": "^1.50.0",
     "glob": "^13.0.6",
@@ -76,6 +76,6 @@
   },
   "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0"
   }
 }

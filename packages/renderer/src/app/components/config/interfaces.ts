@@ -22,7 +22,6 @@ export interface AppSettings {
 
 export interface AppState {
   availablePkgs: Map<string, boolean>;
-  borderlessMaximizedWindow: boolean;
   codeName: string;
   designerActive: boolean;
   desktopEnvironment: DesktopEnvironment;
@@ -33,6 +32,7 @@ export interface AppState {
   locale: string;
   rebootPending: boolean;
   user: string;
+  userHome: string;
   [key: string]: any;
 }
 

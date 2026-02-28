@@ -15,6 +15,7 @@ import { ConfirmationService } from 'primeng/api';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { Router, type UrlTree } from '@angular/router';
+import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'toolbox-maintenance',
@@ -370,6 +371,7 @@ export class MaintenanceComponent implements OnInit {
     },
   ];
 
+  private readonly configService = inject(ConfigService);
   private readonly messageToastService = inject(MessageToastService);
   private readonly router = inject(Router);
   private readonly translocoService = inject(TranslocoService);
@@ -421,10 +423,11 @@ export class MaintenanceComponent implements OnInit {
     this.logger.debug('Resetting configs');
     this.loadingService.loadingOn();
 
+    const userHome = this.configService.state().userHome;
     for (const config of this.selectedResetConfigs()) {
       this.logger.trace(`Resetting config: ${config.name}`);
       for (const file of config.files) {
-        const cmd = `cp ${file} ${file.replace('/etc/skel', '~')}`;
+        const cmd = `cp ${file} ${file.replace('/etc/skel', userHome)}`;
         this.logger.debug(`Running command: ${cmd}`);
 
         const output = await this.taskManager.executeAndWaitBash(cmd);
