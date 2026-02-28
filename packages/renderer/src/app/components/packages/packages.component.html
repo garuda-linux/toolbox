@@ -1,5 +1,5 @@
 <ng-container *transloco="let t">
-  <p-tabs [(value)]="tabIndex">
+  <p-tabs [(value)]="tabIndex" (valueChange)="tabChange($event)">
     <p-tablist>
       @for (section of packagesService.packages(); track section.name) {
         <p-tab #tab [value]="$index">{{ t(section.name) }}</p-tab>
@@ -12,6 +12,7 @@
       [paginator]="true"
       [rowsPerPageOptions]="[50, 100, 150]"
       [rows]="50"
+      [value]="packagesService.packages()[tabIndex()].sections"
       dataKey="name"
       sortField="name"
     >

@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   signal,
+  viewChild,
   ViewChild,
 } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
@@ -45,10 +46,10 @@ import { ConfigService } from '../config/config.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PackagesComponent {
-  tabIndex = signal<number>(0);
-  packageSearch = signal<string>('');
+  readonly tabIndex = signal<number>(0);
+  readonly packageSearch = signal<string>('');
 
-  @ViewChild('packageTable') table!: Table;
+  readonly table = viewChild.required<Table>('packageTable');
 
   protected readonly configService = inject(ConfigService);
   protected readonly packagesService = inject(PackagesService);
@@ -109,27 +110,14 @@ export class PackagesComponent {
     this.logger.trace('Updating packages UI');
 
     const installedPackages: Map<string, boolean> = this.osInteractService.packages();
-    this.packagesService.packages.update((data: PackageSections) => {
-      for (const sections of data) {
-        for (const pkg of sections.sections) {
-          pkg.selected = installedPackages.get(pkg.pkgname[0]) === true;
-        }
+    const currentPackages = this.packagesService.packages();
+
+    for (const sections of currentPackages) {
+      for (const pkg of sections.sections) {
+        pkg.selected = installedPackages.get(pkg.pkgname[0]) === true;
       }
-      return data;
-    });
-
-    // Effect runs before ViewChild initializes the table (only available in AfterViewInit)
-    // We need to wait for the table to be available before putting the data in it
-    while (!this.table) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
     }
-
-    // We do it like this because via two-way binding, the table doesn't update the data
-    // Very likely it is not compatible with zoneless change detection yet
-    this.table.value = this.packagesService.packages()[this.tabIndex()].sections;
-    this.table.totalRecords = this.table.value.length;
-
-    this.cdr.markForCheck();
+    this.packagesService.packages.set(currentPackages);
   }
 
   /**
@@ -149,5 +137,13 @@ export class PackagesComponent {
   clear(table: any): void {
     table.clear();
     this.packageSearch.set('');
+  }
+
+  /**
+   * Reset page to 0, because this doesn't happen automatically.
+   * @param $event The tab change event
+   */
+  tabChange($event: string | number | undefined) {
+    this.table().first = 0;
   }
 }
