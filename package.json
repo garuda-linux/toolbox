@@ -1,8 +1,8 @@
 {
   "name": "garuda-toolbox",
-  "version": "3.0.0",
+  "version": "3.5.2",
   "private": true,
-  "description": "Garuda Linux app for easily managing installations. Includes Gaming apps, system settings, kernels and much more.",
+  "description": "Garuda Toolbox - A collection of useful tools to manage your Garuda Linux system.",
   "keywords": [
     "garuda",
     "linux",
@@ -34,7 +34,7 @@
   "scripts": {
     "build": "pnpm -r run build",
     "check-bundle": "asar list dist/linux-unpacked/resources/app.asar",
-    "check-bundle-mac": "asar list dist/mac-arm64/garuda-rani.app/Contents/Resources/app.asar",
+    "check-bundle-mac": "asar list dist/mac-arm64/garuda-toolbox.app/Contents/Resources/app.asar",
     "check-pkglists": "pnpx tsx assets/test-package-availability.ts",
     "compile": "pnpm run build && pnpm run electron-builder",
     "dev": "node packages/dev-mode.mjs",

@@ -1,3 +1,92 @@
+## [unreleased]
+
+### 🚀 Features
+
+- _(packages)_ Improve arch wiki parsing script; enricht with appstream data; update lists
+- _(packages)_ Add appicon module, to resolve icons from different sources and display them in the app lists
+- _(settings)_ Add home config module and possibility of changing settings/configs with 2 initial configs
+- _(migration)_ Safely migrate user configs
+- _(main)_ Safeguard against running as root
+
+### 🐛 Bug Fixes
+
+- _(i18n)_ Add missing translations for new os-interact options
+- Drop webgl xterm addon as it was causing issues; resolve deprecations
+- _(configs)_ Properly determine home dir; show configs conditionally based on desktop environment
+- _(main)_ Allow app-icon protocol via CSP to fix non-rendering icons
+- _(packages)_ Properly reset pagination to 1 in case of tab change
+
+### 🚜 Refactor
+
+- Rebrand to Garuda Toolbox
+
+## [3.5.2] - 2026-01-03
+
+### 🚀 Features
+
+- _(ui)_ Added border and button hightlight on hover on cards for good user interactivity in maintenance page and fixed tab border-bottom responsive issue
+- _(ui)_ Added border and button hightlight on hover on cards for good user interactivity in maintenance page and fixed tab border-bottom responsive issue
+
+### ⚙️ Miscellaneous Tasks
+
+- _(i18n)_ Pull Transifex translations
+- _(i18n)_ Pull Transifex translations
+- _(i18n)_ Pull Transifex translations
+
+## [3.5.1] - 2025-11-02
+
+### 🐛 Bug Fixes
+
+- _(first-boot)_ Hide UI on firstboot procedure
+
+### ⚙️ Miscellaneous Tasks
+
+- Further cleanup package lists
+
+## [3.5.0] - 2025-11-01
+
+### 🚀 Features
+
+- _(ui)_ Added border on hover on cards for good user interactivity in welcome page
+
+### ⚙️ Miscellaneous Tasks
+
+- _(config)_ Migrate config renovate.json
+- _(i18n)_ Pull Transifex translations
+- Cleanup package lists
+
+## [3.4.0] - 2025-10-26
+
+### 🚀 Features
+
+- _(renderer)_ Better information about direct action failures, pass down errors
+- _(renderer)_ Introduce new refresh keyring action and be more specific about garuda-update remote actions
+- _(renderer)_ Derive more colors from currently active CSS for better custom theme support
+
+### 🐛 Bug Fixes
+
+- _(renderer)_ Refresh mirrorlist not opening reflector-simple
+- _(renderer)_ Show keyring refresh in the terminal, add missing sudo
+
+### ⚙️ Miscellaneous Tasks
+
+- Add corepack as this is no longer shipped in Node 25
+- Cleanup no more in-repo packages
+
+## [3.3.1] - 2025-10-08
+
+### 🚀 Features
+
+- _(shell.nix)_ Replace with actual working shell.nix
+
+### 🐛 Bug Fixes
+
+- _(splash)_ Do not limit application size to 100% screen size
+
+### 📚 Documentation
+
+- _(changelog)_ Update
+
 ## [3.3.0] - 2025-10-03
 
 ### 🚀 Features
