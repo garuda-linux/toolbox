@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Keresés az Arch Wikiben",
       "garudaStatus": "Üzemidő állapotának ellenőrzése",
       "about": "A Garuda Toolbox névjegye",
-      "aboutBody": "A Garuda Toolbox egy rendszerkarbantartó és diagnosztikai eszköz a Garuda Linuxhoz. Célja, hogy segítse a felhasználókat a rendszerük karbantartásában és a problémák diagnosztizálásában. Tauri és Angular segítségével készült.",
+      "aboutBody": "A Garuda Toolbox egy rendszerkarbantartó és diagnosztikai eszköz a Garuda Linuxhoz. Célja, hogy segítse a felhasználókat a rendszerük karbantartásában és a problémák diagnosztizálásában. Electron és Angular segítségével készült.",
       "callExorcist": "Hívd az ördögűzőt",
       "callExorcistTitle": "Hívtad az ördögűzőt!",
       "callExorcistBody": "Elég kétségbeesettnek kell lenned, hogy erre a gombra kattints! Beállítottam neked néhány különleges voodoo-t, ha továbbra is problémáid vannak az alkalmazással, kérlek, jelentsd őket a Garuda Linux fórumán vagy a hibakövetőnkben."

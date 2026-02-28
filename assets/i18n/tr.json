@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Arch Wiki'de içerik ara",
       "garudaStatus": "Çalışma süresi durumunu kontrol et",
       "about": "Garuda Toolbox Hakkında",
-      "aboutBody": "Garuda Toolbox, Garuda Linux için bir sistem bakım ve tanılama aracıdır. Kullanıcıların sistemlerini korumalarına ve sorunları teşhis etmelerine yardımcı olmak için tasarlanmıştır. Tauri ve Angular kullanılarak oluşturulmuştur.",
+      "aboutBody": "Garuda Toolbox, Garuda Linux için bir sistem bakım ve tanılama aracıdır. Kullanıcıların sistemlerini korumalarına ve sorunları teşhis etmelerine yardımcı olmak için tasarlanmıştır. Electron ve Angular kullanılarak oluşturulmuştur.",
       "callExorcist": "Şeytan çıkarıcıyı çağır",
       "callExorcistTitle": "Şeytan çıkarıcı çağrıldı!",
       "callExorcistBody": "Bu düğmeye tıklamak için oldukça çaresiz olmalısın! Senin için özel bir vudu ayarladım, eğer hala uygulamayla ilgili sorunlar yaşıyorsan, lütfen bunları Garuda Linux forumunda veya sorun izleyicimizde bildir."

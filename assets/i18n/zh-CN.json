@@ -17,7 +17,7 @@
       "getHelpArchWiki": "在 Arch Wiki 中搜索内容",
       "garudaStatus": "检查正常运行时间状态",
       "about": "关于 Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox 是 Garuda Linux 的一个系统维护和诊断工具。它旨在帮助用户维护他们的系统并诊断问题。它是使用 Tauri 和 Angular 构建的。",
+      "aboutBody": "Garuda Toolbox 是 Garuda Linux 的一个系统维护和诊断工具。它旨在帮助用户维护他们的系统并诊断问题。它是使用 Electron 和 Angular 构建的。",
       "callExorcist": "召唤驱魔师",
       "callExorcistTitle": "已召唤驱魔师！",
       "callExorcistBody": "你一定是相当绝望才会点击这个按钮！我为你设置了一些特殊的巫术，如果你仍然遇到应用程序的问题，请在 Garuda Linux 论坛或我们的问题跟踪器上报告。"

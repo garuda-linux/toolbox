@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Buscar contido na Arch Wiki",
       "garudaStatus": "Comprobar estado do servizo",
       "about": "Sobre Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox é unha ferramenta de mantemento e diagnóstico do sistema para Garuda Linux. Está deseñada para axudar aos usuarios a manter o seu sistema e diagnosticar problemas. Está construída usando Tauri e Angular.",
+      "aboutBody": "Garuda Toolbox é unha ferramenta de mantemento e diagnóstico do sistema para Garuda Linux. Está deseñada para axudar aos usuarios a manter o seu sistema e diagnosticar problemas. Está construída usando Electron e Angular.",
       "callExorcist": "Chamar ao exorcista",
       "callExorcistTitle": "Chamaches ao exorcista!",
       "callExorcistBody": "Debes estar bastante desesperado/a para premer este botón! Configurei un vudú especial para ti, se aínda tes problemas coa aplicación, por favor, infórmaos no foro de Garuda Linux ou no noso rastreador de incidencias."

@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { existsSync, renameSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, renameSync, readdirSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Logger } from '../logging/logging.js';
 
@@ -7,6 +7,7 @@ export function migrateConfig() {
   const logger = Logger.getInstance();
 
   try {
+    // Migrate app data directory
     const configDir = app.getPath('appData');
     const currentPath = join(configDir, 'garuda-toolbox');
     const oldPath = join(configDir, 'garuda-rani');
@@ -27,6 +28,21 @@ export function migrateConfig() {
         logger.warn(
           `Both ${oldPath} and ${currentPath} exist and the new one is not empty. Skipping migration to avoid overwriting.`,
         );
+      }
+    }
+
+    // Migrate Plasma applet config
+    const plasmaConfigPath = join(app.getPath('home'), '.config', 'plasma-org.kde.plasma.desktop-appletsrc');
+    if (existsSync(plasmaConfigPath)) {
+      const content = readFileSync(plasmaConfigPath, 'utf8');
+      if (content.includes('applications:garuda-rani.desktop')) {
+        logger.info(`Migrating Plasma applet config to garuda-toolbox.desktop in ${plasmaConfigPath}`);
+        const newContent = content.replaceAll(
+          'applications:garuda-rani.desktop',
+          'applications:garuda-toolbox.desktop',
+        );
+        writeFileSync(plasmaConfigPath, newContent, 'utf8');
+        logger.info('Plasma applet migration successful');
       }
     }
   } catch (error) {

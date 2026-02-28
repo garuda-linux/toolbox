@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Bilatu edukia Arch Wikian",
       "garudaStatus": "Egiaztatu aktibitate-egoera",
       "about": "Garuda Toolbox-ri buruz",
-      "aboutBody": "Garuda Toolbox Garuda Linuxerako sistemaren mantentze- eta diagnostiko-tresna bat da. Erabiltzaileei sistema mantentzen eta arazoak diagnostikatzen laguntzeko diseinatuta dago. Tauri eta Angular erabiliz eraikia dago.",
+      "aboutBody": "Garuda Toolbox Garuda Linuxerako sistemaren mantentze- eta diagnostiko-tresna bat da. Erabiltzaileei sistema mantentzen eta arazoak diagnostikatzen laguntzeko diseinatuta dago. Electron eta Angular erabiliz eraikia dago.",
       "callExorcist": "Deitu exorzistari",
       "callExorcistTitle": "Exorzistari deitu zaio!",
       "callExorcistBody": "Nahiko etsituta egon behar duzu botoi hau sakatzeko! Voodoo berezi bat prestatu dizut, aplikazioarekin arazoak izaten jarraitzen baduzu, mesedez jakinarazi Garuda Linux foroan edo gure arazoen jarraitzailean."

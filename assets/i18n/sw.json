@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Tafuta maudhui katika Arch Wiki",
       "garudaStatus": "Angalia hali ya muda wa kufanya kazi",
       "about": "Kuhusu Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox ni zana ya matengenezo ya mfumo na uchunguzi kwa Garuda Linux. Imeundwa kusaidia watumiaji kudumisha mfumo wao na kutambua matatizo. Imejengwa kwa kutumia Tauri na Angular.",
+      "aboutBody": "Garuda Toolbox ni zana ya matengenezo ya mfumo na uchunguzi kwa Garuda Linux. Imeundwa kusaidia watumiaji kudumisha mfumo wao na kutambua matatizo. Imejengwa kwa kutumia Electron na Angular.",
       "callExorcist": "Mwite mtoa pepo",
       "callExorcistTitle": "Umemwita mtoa pepo!",
       "callExorcistBody": "Lazima uwe na shida sana kubofya kitufe hiki! Nimekuandalia uchawi maalum, ikiwa bado una matatizo na programu, tafadhali yaripoti kwenye jukwaa la Garuda Linux au kifuatiliaji chetu cha matatizo."

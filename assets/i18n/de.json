@@ -40,7 +40,7 @@
       "getHelpArchWiki": "Inhalte im Arch Wiki suchen",
       "garudaStatus": "Uptime-Status prüfen",
       "about": "Über Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox ist ein Systemwartungs- und Diagnosewerkzeug für Garuda Linux. Es soll Benutzern helfen, ihr System zu warten und Probleme zu diagnostizieren. Es wurde mit Tauri und Angular erstellt.",
+      "aboutBody": "Garuda Toolbox ist ein Systemwartungs- und Diagnosewerkzeug für Garuda Linux. Es soll Benutzern helfen, ihr System zu warten und Probleme zu diagnostizieren. Es wurde mit Electron und Angular erstellt.",
       "callExorcist": "Den Exorzisten rufen",
       "callExorcistTitle": "Der Exorzist wurde gerufen!",
       "callExorcistBody": "Du musst ziemlich verzweifelt sein, um auf diesen Knopf zu klicken! Ich habe speziellen Voodoo für dich eingerichtet. Falls du immer noch Probleme mit der App hast, melde sie bitte im Garuda Linux Forum oder in unserem Issue Tracker."

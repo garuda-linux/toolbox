@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Arch Wikiでコンテンツを検索",
       "garudaStatus": "稼働状況を確認",
       "about": "Garuda Toolbox について",
-      "aboutBody": "Garuda Toolbox は Garuda Linux 用のシステムメンテナンスおよび診断ツールです。ユーザーがシステムを維持し、問題を診断するのを支援するように設計されています。Tauri と Angular を使用して構築されています。",
+      "aboutBody": "Garuda Toolbox は Garuda Linux 用のシステムメンテナンスおよび診断ツールです。ユーザーがシステムを維持し、問題を診断するのを支援するように設計されています。Electron と Angular を使用して構築されています。",
       "callExorcist": "悪魔祓いを呼ぶ",
       "callExorcistTitle": "悪魔祓いを呼びました！",
       "callExorcistBody": "このボタンをクリックするなんて、よほど必死なんですね！あなたのために特別なブードゥーを設定しました。もしアプリにまだ問題がある場合は、Garuda Linux フォーラムまたは私たちの課題トラッカーに報告してください。"

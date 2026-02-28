@@ -17,7 +17,7 @@
       "getHelpArchWiki": "በ Arch Wiki ውስጥ ይዘት ይፈልጉ",
       "garudaStatus": "የመስራት ሁኔታን ያረጋግጡ",
       "about": "ስለ Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox ለ Garuda Linux የስርዓት ጥገና እና የምርመራ መሳሪያ ነው። ተጠቃሚዎች ስርዓታቸውን እንዲጠብቁ እና ችግሮችን እንዲመረምሩ ለመርዳት የተነደፈ ነው። የተሰራው Tauri እና Angular በመጠቀም ነው።",
+      "aboutBody": "Garuda Toolbox ለ Garuda Linux የስርዓት ጥገና እና የምርመራ መሳሪያ ነው። ተጠቃሚዎች ስርዓታቸውን እንዲጠብቁ እና ችግሮችን እንዲመረምሩ ለመርዳት የተነደፈ ነው። የተሰራው Electron እና Angular በመጠቀም ነው።",
       "callExorcist": "አጋንንት አስወጪውን ጥራ",
       "callExorcistTitle": "አጋንንት አስወጪው ተጠርቷል!",
       "callExorcistBody": "ይህን ቁልፍ ለመጫን በጣም ተስፋ ቆርጠህ መሆን አለበት! ልዩ መፍትሄ አዘጋጅቼልሃለሁ፤ አሁንም በመተግበሪያው ላይ ችግሮች ካጋጠሙህ እባክህ በ Garuda Linux መድረክ ወይም በችግር መከታተያችን ላይ ሪፖርት አድርግ።"

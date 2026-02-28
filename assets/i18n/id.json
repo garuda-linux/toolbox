@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Cari konten di Arch Wiki",
       "garudaStatus": "Periksa status uptime",
       "about": "Tentang Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox adalah alat pemeliharaan sistem dan diagnostik untuk Garuda Linux. Ini dirancang untuk membantu pengguna memelihara sistem mereka dan mendiagnosis masalah. Dibangun menggunakan Tauri dan Angular.",
+      "aboutBody": "Garuda Toolbox adalah alat pemeliharaan sistem dan diagnostik untuk Garuda Linux. Ini dirancang untuk membantu pengguna memelihara sistem mereka dan mendiagnosis masalah. Dibangun menggunakan Electron dan Angular.",
       "callExorcist": "Panggil pengusir setan",
       "callExorcistTitle": "Memanggil pengusir setan!",
       "callExorcistBody": "Kamu pasti sangat putus asa untuk mengklik tombol ini! Saya telah menyiapkan beberapa voodoo khusus untukmu, jika kamu masih mengalami masalah dengan aplikasi ini, laporkan di forum Garuda Linux atau pelacak masalah kami."

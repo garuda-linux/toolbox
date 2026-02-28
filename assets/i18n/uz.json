@@ -17,7 +17,7 @@
       "getHelpArchWiki": "Arch Wikidan kontent qidirish",
       "garudaStatus": "Ishlash vaqti holatini tekshiring",
       "about": "Garuda Toolbox haqida",
-      "aboutBody": "Garuda Toolbox - bu Garuda Linux uchun tizimga texnik xizmat koʻrsatish va diagnostika vositasi. U foydalanuvchilarga tizimini saqlashga va muammolarni tashxislashga yordam berish uchun moʻljallangan. U Tauri va Angular yordamida yaratilgan.",
+      "aboutBody": "Garuda Toolbox - bu Garuda Linux uchun tizimga texnik xizmat koʻrsatish va diagnostika vositasi. U foydalanuvchilarga tizimini saqlashga va muammolarni tashxislashga yordam berish uchun moʻljallangan. U Electron va Angular yordamida yaratilgan.",
       "callExorcist": "Ekzorsistni chaqiring",
       "callExorcistTitle": "Ekzorsist chaqirildi!",
       "callExorcistBody": "Bu tugmani bosish uchun juda umidsiz boʻlishing kerak! Men sen uchun maxsus vudu oʻrnatdim, agar ilova bilan hali ham muammolaring boʻlsa, iltimos, ularni Garuda Linux forumida yoki bizning muammo kuzatuvchimizda xabar qiling."
