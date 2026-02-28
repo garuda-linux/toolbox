@@ -30,7 +30,7 @@ class EnhancedSecurityModule implements AppModule {
               "default-src 'self'; " +
                 "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
                 "style-src 'self' 'unsafe-inline'; " +
-                "img-src 'self' data: blob:; " +
+                "img-src 'self' data: blob: app-icon:; " +
                 "font-src 'self' data:; " +
                 "connect-src 'self';" +
                 "object-src 'none'; " +
@@ -59,7 +59,7 @@ class EnhancedSecurityModule implements AppModule {
         try {
           const url = new URL(details.url);
           const allowedDomains = ['localhost', '127.0.0.1'];
-          const allowedProtocols = ['file:', 'data:', 'blob:', 'chrome-extension:'];
+          const allowedProtocols = ['file:', 'data:', 'blob:', 'chrome-extension:', 'app-icon:'];
 
           if (allowedProtocols.includes(url.protocol) || allowedDomains.includes(url.hostname)) {
             callback({ cancel: false });
