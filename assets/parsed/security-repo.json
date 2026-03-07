@@ -1,29 +1,5 @@
 [
   {
-    "name": "1Password",
-    "description": "Proprietary tool for 1Password password manager.",
-    "url": "https://1password.com/downloads/command-line/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["1password"],
-    "aur": true
-  },
-  {
-    "name": "1Password",
-    "description": "Proprietary graphical user interface for 1Password password manager.",
-    "url": "https://support.1password.com/install-linux/#arch-linux",
-    "icon": "generic-dark.svg",
-    "pkgname": ["1password"],
-    "aur": true
-  },
-  {
-    "name": "AFICK",
-    "description": "Security tool that allows to monitor the changes on your file systems, and so can detect intrusions.",
-    "url": "https://afick.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["afick"],
-    "aur": true
-  },
-  {
     "name": "age",
     "description": "A simple, modern and secure encryption tool (and library) with small explicit keys, no config options, and UNIX-style composability.",
     "url": "https://age-encryption.org/v1",
@@ -32,20 +8,12 @@
     "aur": false
   },
   {
-    "name": "AIDE",
-    "description": "File and directory integrity checker.",
-    "url": "https://aide.github.io",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aide"],
-    "aur": true
-  },
-  {
     "name": "airgeddon",
     "description": "Multi-use bash script to audit wireless networks",
     "url": "https://github.com/v1s1t0r1sh3r3/airgeddon",
     "icon": "generic-dark.svg",
     "pkgname": ["airgeddon"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Argon2",
@@ -85,7 +53,7 @@
     "url": "https://github.com/pavanjadhaw/betterlockscreen",
     "icon": "generic-dark.svg",
     "pkgname": ["betterlockscreen"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Bitwarden",
@@ -102,30 +70,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bitwarden_bitwarden.png",
     "pkgname": ["bitwarden"],
     "aur": false
-  },
-  {
-    "name": "ccrypt",
-    "description": "A command-line utility for encrypting and decrypting files and streams based on Rijndael.",
-    "url": "https://ccrypt.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ccrypt"],
-    "aur": true
-  },
-  {
-    "name": "cfv",
-    "description": "Tiny utility to both test and create checksum files, support .sfv, .csv, .crc, .md5, md5sum, sha1sum, .torrent, par, and .par2 files.",
-    "url": "https://cfv.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cfv"],
-    "aur": true
-  },
-  {
-    "name": "Chipsec",
-    "description": "a framework for analyzing platform level security of hardware, devices, system firmware, low-level protection mechanisms, and the configuration of various platform components.It contains a set of modules, including simple tests for hardware protections and correct configuration, tests for vulnerabilities in firmware and platform components, security assessment and fuzzing tools for various platform devices and interfaces, and tools acquiring critical firmware and device artifacts.",
-    "url": "https://chipsec.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["chipsec-git"],
-    "aur": true
   },
   {
     "name": "Cinnamon Screensaver",
@@ -208,14 +152,6 @@
     "aur": false
   },
   {
-    "name": "Figaro's Password Manager 2",
-    "description": "GTK2 port of Figaro's Password Manager with some new enhancements.",
-    "url": "https://als.regnet.cz/fpm2/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fpm2"],
-    "aur": true
-  },
-  {
     "name": "GNOME Network Tools",
     "description": "GNOME interface for various networking tools.",
     "url": "https://gitlab.gnome.org/GNOME/gnome-nettool",
@@ -240,20 +176,12 @@
     "aur": false
   },
   {
-    "name": "GPG-Crypter",
-    "description": "Graphical front-end to GnuPG (GPG) using the GTK3 toolkit and GPGME library.",
-    "url": "https://sourceforge.net/projects/gpg-crypter/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpg-crypter"],
-    "aur": true
-  },
-  {
     "name": "GtkHash",
     "description": "A GTK utility for computing message digests or checksums",
     "url": "https://github.com/tristanheaven/gtkhash",
     "icon": "generic-dark.svg",
     "pkgname": ["gtkhash"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "gtklock",
@@ -280,30 +208,6 @@
     "aur": false
   },
   {
-    "name": "hashdeep",
-    "description": "A cross-platform tools to compute hashes, or message digests, for any number of files",
-    "url": "https://md5deep.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hashdeep"],
-    "aur": true
-  },
-  {
-    "name": "Himitsu",
-    "description": "Secret storage manager.",
-    "url": "https://himitsustore.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["himitsu"],
-    "aur": true
-  },
-  {
-    "name": "Hostsblock",
-    "description": "A script that downloads, sorts, and compiles multiple ad- and malware-blocking hosts files.",
-    "url": "https://gaenserich.github.io/hostsblock/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hostsblock"],
-    "aur": true
-  },
-  {
     "name": "hping",
     "description": "Command-line oriented TCP/IP packet assembler/analyzer.",
     "url": "http://hping.org/",
@@ -320,20 +224,12 @@
     "aur": false
   },
   {
-    "name": "i3lock-blur",
-    "description": "Fork of i3lock which can use your desktop with the blur effect applied as a background.",
-    "url": "https://github.com/karulont/i3lock-blur",
-    "icon": "generic-dark.svg",
-    "pkgname": ["i3lock-blur"],
-    "aur": true
-  },
-  {
     "name": "i3lock-color",
     "description": "Fork of i3lock with color and positioning configuration support and can use your desktop with the blur effect applied as a background.",
     "url": "https://github.com/Raymo111/i3lock-color",
     "icon": "generic-dark.svg",
     "pkgname": ["i3lock-color"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "IPTraf",
@@ -360,14 +256,6 @@
     "aur": false
   },
   {
-    "name": "justniffer",
-    "description": "Network protocol analyzer that captures network traffic and produces logs in a customized way, can emulate Apache web server log files, track response times and extract all \"intercepted\" files from the HTTP traffic.",
-    "url": "https://justniffer.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["justniffer"],
-    "aur": true
-  },
-  {
     "name": "KDE Wallet Manager",
     "description": "Tool to manage the passwords on your system. By using the KDE wallet subsystem, it not only allows you to keep your own secrets but also to access and manage the passwords of every application that integrates with the wallet. Part of kde-utilities.",
     "url": "https://userbase.kde.org/KDE_Wallet_Manager",
@@ -382,14 +270,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/keepass_keepass.png",
     "pkgname": ["keepass"],
     "aur": false
-  },
-  {
-    "name": "KeePassC",
-    "description": "Curses-based password manager compatible to KeePass v.1.x.",
-    "url": "https://outerhaven.de/keepassc/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["keepassc"],
-    "aur": true
   },
   {
     "name": "KeePassXC",
@@ -422,22 +302,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/key-rack_app.drey.KeyRack.png",
     "pkgname": ["key-rack"],
     "aur": false
-  },
-  {
-    "name": "Keybase",
-    "description": "Key directory mapping social media identities, with cross platform encrypted chat, cloud storage, and git repositories.",
-    "url": "https://keybase.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["keybase"],
-    "aur": true
-  },
-  {
-    "name": "Keyoxide ASPE CLI",
-    "description": "Ariadne Signature Profile Exchange (ASPE) CLI for identity profile platforms like Keyoxide.",
-    "url": "https://codeberg.org/keyoxide/kx-aspe-cli",
-    "icon": "generic-dark.svg",
-    "pkgname": ["kx-aspe-git"],
-    "aur": true
   },
   {
     "name": "Keysign",
@@ -480,14 +344,6 @@
     "aur": false
   },
   {
-    "name": "LastPass",
-    "description": "Hosted password manager.",
-    "url": "https://www.lastpass.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lastpass-cli"],
-    "aur": true
-  },
-  {
     "name": "Light-locker",
     "description": "A simple locker (forked from gnome-screensaver) that aims to have simple, sane, secure defaults and be well integrated with the desktop while not carrying any desktop-specific dependencies. It relies on LightDM for locking and unlocking your session via ConsoleKit/UPower or logind/systemd.",
     "url": "https://github.com/the-cavalry/light-locker",
@@ -504,14 +360,6 @@
     "aur": false
   },
   {
-    "name": "Linux Malware Detect",
-    "description": "Malware scanner designed around the threats faced in shared hosted environments.",
-    "url": "https://www.rfxn.com/projects/linux-malware-detect/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["maldet"],
-    "aur": true
-  },
-  {
     "name": "Logwatch",
     "description": "Customizable log analysis system.",
     "url": "https://sourceforge.net/projects/logwatch/",
@@ -526,14 +374,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["lynis"],
     "aur": false
-  },
-  {
-    "name": "MassHash",
-    "description": "A set of file hashing tools (both CLI and GTK GUI) written in Python. Supported algorithms include MD5, SHA-1, SHA-224, SHA-256, SHA-384, SHA-512.",
-    "url": "https://jdleicher.github.io/MassHash/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["masshash"],
-    "aur": true
   },
   {
     "name": "MATE Screensaver",
@@ -560,30 +400,6 @@
     "aur": false
   },
   {
-    "name": "Nemesis",
-    "description": "Command-line network packet crafting and injection utility.",
-    "url": "https://nemesis.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nemesis"],
-    "aur": true
-  },
-  {
-    "name": "Nessus",
-    "description": "Comprehensive vulnerability scanning program.",
-    "url": "https://www.tenable.com/products/nessus",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nessus"],
-    "aur": true
-  },
-  {
-    "name": "Net Activity Viewer",
-    "description": "Graphical network connections viewer, similar in functionality with Netstat.",
-    "url": "https://netactview.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["netactview"],
-    "aur": true
-  },
-  {
     "name": "netsniff-ng",
     "description": "High performance Linux network sniffer for packet inspection.",
     "url": "http://netsniff-ng.org/",
@@ -608,28 +424,12 @@
     "aur": false
   },
   {
-    "name": "Ntop",
-    "description": "Network probe that shows network usage in a way similar to what top does for processes.",
-    "url": "https://www.ntop.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ntop"],
-    "aur": true
-  },
-  {
     "name": "OpenSSH",
     "description": "De facto SSH implementation that supports message signing.",
     "url": "https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig",
     "icon": "generic-dark.svg",
     "pkgname": ["openssh"],
     "aur": false
-  },
-  {
-    "name": "OpenVAS",
-    "description": "Framework of several services and tools offering a comprehensive and powerful vulnerability scanning and vulnerability management solution. FOSS Nessus fork.",
-    "url": "https://www.openvas.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openvas-scanner"],
-    "aur": true
   },
   {
     "name": "opgpcard",
@@ -640,20 +440,12 @@
     "aur": false
   },
   {
-    "name": "OSSEC",
-    "description": "Open Source Host-based Intrusion Detection System that performs log analysis, file integrity checking, policy monitoring, rootkit detection, real-time alerting and active response.",
-    "url": "https://ossec.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ossec-hids-local"],
-    "aur": true
-  },
-  {
     "name": "OTPClient",
     "description": "Highly secure and easy to use GTK software for two-factor authentication that supports both Time-based One-time Passwords (TOTP) and HMAC-Based One-Time Passwords (HOTP).",
     "url": "https://github.com/paolostivanin/OTPClient",
     "icon": "generic-dark.svg",
     "pkgname": ["otpclient"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "OWASP ZAP",
@@ -680,44 +472,12 @@
     "aur": false
   },
   {
-    "name": "passage",
-    "description": "A fork of password-store that uses age as backend.",
-    "url": "https://github.com/FiloSottile/passage/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["passage-git"],
-    "aur": true
-  },
-  {
     "name": "Passbook",
     "description": "Modern password manager for GNOME.",
     "url": "https://wiki.gnome.org/Apps/Passbook",
     "icon": "generic-dark.svg",
     "pkgname": ["passbook"],
-    "aur": true
-  },
-  {
-    "name": "passphrase2pgp",
-    "description": "Reproducibly generate private key in OpenPGP/OpenSSH formats according to user input passphrase and optionally sign message in one go.",
-    "url": "https://github.com/skeeto/passphrase2pgp",
-    "icon": "generic-dark.svg",
-    "pkgname": ["passphrase2pgp"],
-    "aur": true
-  },
-  {
-    "name": "Password Safe",
-    "description": "Simple and secure password manager.",
-    "url": "https://pwsafe.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["passwordsafe"],
-    "aur": true
-  },
-  {
-    "name": "physlock",
-    "description": "Screen and console locker.",
-    "url": "https://github.com/muennich/physlock",
-    "icon": "generic-dark.svg",
-    "pkgname": ["physlock"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "pkexec",
@@ -728,30 +488,6 @@
     "aur": false
   },
   {
-    "name": "Proton Pass",
-    "description": "European-hosted password manager.",
-    "url": "https://proton.me/pass",
-    "icon": "generic-dark.svg",
-    "pkgname": ["proton-pass"],
-    "aur": true
-  },
-  {
-    "name": "pwsafe",
-    "description": "Unix command-line program that manages encrypted password databases.",
-    "url": "https://github.com/nsd20463/pwsafe",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pwsafe"],
-    "aur": true
-  },
-  {
-    "name": "pyNeighborhood",
-    "description": "GTK-based SMB/CIFS browsing utility.",
-    "url": "https://launchpad.net/pyneighborhood",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pyneighborhood"],
-    "aur": true
-  },
-  {
     "name": "QtPass",
     "description": "GUI for pass, the standard unix password manager.",
     "url": "https://qtpass.org/",
@@ -760,28 +496,12 @@
     "aur": false
   },
   {
-    "name": "Quick Hash GUI",
-    "description": "A GUI to enable the rapid selection and subsequent hashing of files (individually or recursively throughout a folder structure) text and (on Linux) disks.",
-    "url": "https://www.quickhash-gui.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["quickhash-gui-bin"],
-    "aur": true
-  },
-  {
-    "name": "reaction",
-    "description": "A daemon that scans program outputs for repeated patterns, and takes action. A lightweight alternative to fail2ban.",
-    "url": "https://framagit.org/ppom/reaction",
-    "icon": "generic-dark.svg",
-    "pkgname": ["reaction"],
-    "aur": true
-  },
-  {
     "name": "Revelation",
     "description": "Password manager for the GNOME desktop.",
     "url": "https://revelation.olasagasti.info/",
     "icon": "generic-dark.svg",
     "pkgname": ["revelation"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "RHash",
@@ -816,14 +536,6 @@
     "aur": false
   },
   {
-    "name": "Samhain",
-    "description": "Host-based intrusion detection system (HIDS) provides file integrity checking and log file monitoring/analysis, as well as rootkit detection, port monitoring, detection of rogue SUID executables, and hidden processes.",
-    "url": "https://www.la-samhna.de/samhain/index.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["samhain-client"],
-    "aur": true
-  },
-  {
     "name": "scrypt",
     "description": "Command-line encryption utility featuring the memory-hardened scrypt key derivation function.",
     "url": "https://www.tarsnap.com/scrypt.html",
@@ -856,22 +568,6 @@
     "aur": false
   },
   {
-    "name": "sflock",
-    "description": "Simple screen locker utility for X, based on slock. Provides a very basic user feedback.",
-    "url": "https://github.com/benruijl/sflock",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sflock-git"],
-    "aur": true
-  },
-  {
-    "name": "shig",
-    "description": "CLI utility to create and verify signatures in ssh-keygen compatible format.",
-    "url": "https://github.com/SierraSoftworks/shig",
-    "icon": "generic-dark.svg",
-    "pkgname": ["shig-git"],
-    "aur": true
-  },
-  {
     "name": "slock",
     "description": "Very simple and lightweight X screen locker. Offers only a black background when locked, there are no animations or text fields.",
     "url": "https://tools.suckless.org/slock/",
@@ -886,22 +582,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/smb4k_smb4k.png",
     "pkgname": ["smb4k"],
     "aur": false
-  },
-  {
-    "name": "Snort",
-    "description": "Network intrusion prevention and detection system.",
-    "url": "https://www.snort.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["snort"],
-    "aur": true
-  },
-  {
-    "name": "Spectools",
-    "description": "A set of utilities for spectrum analyzer hardware including Wi-Spy devices.",
-    "url": "https://www.kismetwireless.net/static/spectools/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["spectools"],
-    "aur": true
   },
   {
     "name": "sq",
@@ -936,20 +616,12 @@
     "aur": false
   },
   {
-    "name": "stegcloak",
-    "description": "CLI steganography tool to hide encrypted messages in plain text using invisible characters and passwords.",
-    "url": "https://github.com/KuroLabs/stegcloak",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nodejs-stegcloak"],
-    "aur": true
-  },
-  {
     "name": "steghide",
     "description": "A steganography utility that is able to hide data in various kinds of image and audio files.",
     "url": "https://steghide.sourceforge.net",
     "icon": "generic-dark.svg",
     "pkgname": ["steghide"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "su",
@@ -976,14 +648,6 @@
     "aur": false
   },
   {
-    "name": "Suricata",
-    "description": "High performance Network IDS, IPS and Network Security Monitoring engine.",
-    "url": "https://suricata.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["suricata"],
-    "aur": true
-  },
-  {
     "name": "swaylock",
     "description": "Screen locker for Wayland.",
     "url": "https://github.com/swaywm/swaylock",
@@ -992,52 +656,12 @@
     "aur": false
   },
   {
-    "name": "swaylock-effects",
-    "description": "Swaylock, with fancy effects.",
-    "url": "https://github.com/jirutka/swaylock-effects",
-    "icon": "generic-dark.svg",
-    "pkgname": ["swaylock-effects-git"],
-    "aur": true
-  },
-  {
     "name": "Tcpdump",
     "description": "Common console-based packet analyzer that allows the user to intercept and display TCP/IP and other packets being transmitted or received over a network.",
     "url": "https://www.tcpdump.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["tcpdump"],
     "aur": false
-  },
-  {
-    "name": "Tiger",
-    "description": "Security tool that can be used both as a security audit and intrusion detection system.",
-    "url": "https://www.nongnu.org/tiger/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tiger"],
-    "aur": true
-  },
-  {
-    "name": "tpm",
-    "description": "Tiny password manager, inspired by pass, written entirely in POSIX shell.",
-    "url": "https://github.com/nmeum/tpm",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tpm"],
-    "aur": true
-  },
-  {
-    "name": "Tripwire",
-    "description": "Intrusion detection system.",
-    "url": "https://github.com/Tripwire/tripwire-open-source",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tripwire-git"],
-    "aur": true
-  },
-  {
-    "name": "tsscreenlock",
-    "description": "Screen locker used in theShell. Shows music controls, and if used with theShell, also shows desktop notifications.",
-    "url": "https://github.com/vicr123/tsscreenlock",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tsscreenlock"],
-    "aur": true
   },
   {
     "name": "Vault",
@@ -1064,14 +688,6 @@
     "aur": false
   },
   {
-    "name": "What IP",
-    "description": "Small GTK application to get info on your IP.",
-    "url": "https://gabmus.gitlab.io/whatip/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["whatip"],
-    "aur": true
-  },
-  {
     "name": "Wireshark",
     "description": "Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.",
     "url": "https://www.wireshark.org/",
@@ -1096,14 +712,6 @@
     "aur": false
   },
   {
-    "name": "Xplico",
-    "description": "Network forensics analysis tool (NFAT), which is a software that reconstructs the contents of acquisitions performed with a packet sniffer.",
-    "url": "https://www.xplico.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xplico"],
-    "aur": true
-  },
-  {
     "name": "XScreenSaver",
     "description": "Screen saver and locker for the X Window System.",
     "url": "https://www.jwz.org/xscreensaver/",
@@ -1126,14 +734,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["xtrlock"],
     "aur": false
-  },
-  {
-    "name": "Zeek",
-    "description": "Powerful network analysis framework that is much different from the typical IDS you may know.",
-    "url": "https://zeek.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["zeek"],
-    "aur": true
   },
   {
     "name": "zxcvbn",

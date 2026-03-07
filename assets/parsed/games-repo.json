@@ -8,68 +8,12 @@
     "aur": false
   },
   {
-    "name": "20,000 Light Years Into Space",
-    "description": "A Steampunk-themed strategy game where you have to manage a steam supply network on a distant planet.",
-    "url": "https://www.jwhitham.org/20kly/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["20kly"],
-    "aur": true
-  },
-  {
-    "name": "A/B Street",
-    "description": "Transportation planning and traffic simulation software for creating cities friendlier to walking, biking, and public transit.",
-    "url": "https://github.com/a-b-street/abstreet",
-    "icon": "generic-dark.svg",
-    "pkgname": ["abstreet-git"],
-    "aur": true
-  },
-  {
-    "name": "AAAAXY",
-    "description": "A nonlinear 2D puzzle platformer taking place in impossible spaces.",
-    "url": "https://divverent.github.io/aaaaxy/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aaaaxy"],
-    "aur": true
-  },
-  {
-    "name": "Abuse",
-    "description": "Side-scroller action game that pits you against ruthless alien killers.",
-    "url": "http://abuse.zoy.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["abuse"],
-    "aur": true
-  },
-  {
-    "name": "ADOM",
-    "description": "Ancient Domains Of Mystery.",
-    "url": "https://adom.de",
-    "icon": "generic-dark.svg",
-    "pkgname": ["adom"],
-    "aur": true
-  },
-  {
     "name": "Aisleriot",
     "description": "A collection of solitaire card games.",
     "url": "https://wiki.gnome.org/Apps/Aisleriot",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/aisleriot_gnome-aisleriot.png",
     "pkgname": ["aisleriot"],
     "aur": false
-  },
-  {
-    "name": "An Anime Game Laucher",
-    "description": "A launcher for Genshin Impact in Wine, with telemetry blocking and the necessary patches to play the game. Not officially endorsed or supported by the game developers.",
-    "url": "https://github.com/an-anime-team/an-anime-game-launcher",
-    "icon": "generic-dark.svg",
-    "pkgname": ["an-anime-game-launcher"],
-    "aur": true
-  },
-  {
-    "name": "Ancient Beast",
-    "description": "Turn Based Strategy Game. Master your beasts!",
-    "url": "https://ancientbeast.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ancientbeast"],
-    "aur": true
   },
   {
     "name": "Angband",
@@ -80,22 +24,6 @@
     "aur": false
   },
   {
-    "name": "Antichamber",
-    "description": "A mind-bending psychological exploration game where nothing can be taken for granted.",
-    "url": "http://www.antichamber-game.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["antichamber"],
-    "aur": true
-  },
-  {
-    "name": "Aquaria",
-    "description": "2D sidescrolling action-adventure game, heavily focused on exploration and puzzle-solving, with non-linear gameplay. The game engine is open source.",
-    "url": "https://www.bit-blot.com/aquaria",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aquaria-ose"],
-    "aur": true
-  },
-  {
     "name": "Armagetron Advanced",
     "description": "Tron Clone in 3D.",
     "url": "http://armagetronad.org/",
@@ -104,59 +32,12 @@
     "aur": false
   },
   {
-    "name": "Arx Libertatis",
-    "description": "This project is a fully working, open source port of Arx Fatalis, a 2002 first-person role-playing game developed by Arkane Studios. It features some improvements over the original engine like bug fixes and wide screen support.",
-    "url": "https://arx-libertatis.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["arx-libertatis"],
-    "aur": true
-  },
-  {
-    "name": "ASCIIpOrtal",
-    "description": "Sidescrolling game with ANSI text graphics in which you are a person holding a device which creates portals, or links to other parts of the level.",
-    "url": "https://github.com/cymonsgames/ASCIIpOrtal",
-    "icon": "generic-dark.svg",
-    "pkgname": ["asciiportal"],
-    "aur": true
-  },
-  {
-    "name": "Ashes 2063",
-    "description": "Ashes is a Post-apocalypse themed total conversion for the GZDoom engine.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ashes-2063"],
-    "aur": true
-  },
-  {
-    "name": "AssaultCube",
-    "description": "Free multiplayer FPS, based on the cube engine. Realistic environments, fast, arcade gameplay. Much like Counter-Strike.",
-    "url": "https://assault.cubers.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["assaultcube-client"],
-    "aur": true
-  },
-  {
-    "name": "AssaultCube Reloaded",
-    "description": "AssaultCube improved.",
-    "url": "https://acr.victorz.ca",
-    "icon": "generic-dark.svg",
-    "pkgname": ["assaultcube-reloaded"],
-    "aur": true
-  },
-  {
     "name": "Astromenace",
     "description": "Modern 3D scrolling space shooter with ship upgrade possibilities.",
     "url": "https://github.com/viewizard/astromenace",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/astromenace_astromenace.png",
     "pkgname": ["astromenace"],
     "aur": false
-  },
-  {
-    "name": "Atanks",
-    "description": "A multi-platform Scorched Earth clone similar to the Worms series of games.",
-    "url": "https://atanks.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["atanks"],
-    "aur": true
   },
   {
     "name": "Atomix",
@@ -191,14 +72,6 @@
     "aur": false
   },
   {
-    "name": "Beyond All Reason",
-    "description": "An open source RTS game built on top of the Spring RTS Engine.",
-    "url": "https://www.beyondallreason.info/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["beyondallreason-appimage"],
-    "aur": true
-  },
-  {
     "name": "Blinken",
     "description": "Sequence-remembering game for training memory. Part of kde-education.",
     "url": "https://apps.kde.org/blinken/",
@@ -220,7 +93,7 @@
     "url": "http://www.blockout.net/blockout2/",
     "icon": "generic-dark.svg",
     "pkgname": ["blockout2"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Blurble",
@@ -239,14 +112,6 @@
     "aur": false
   },
   {
-    "name": "Bomberclone",
-    "description": "Free Bomberman-like game for Linux and Windows. The rules of the game are simple: run though a level and bomb other players.",
-    "url": "https://www.bomberclone.de/core.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["bomberclone"],
-    "aur": true
-  },
-  {
     "name": "Bovo",
     "description": "Gomoku-like game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/bovo/",
@@ -255,89 +120,11 @@
     "aur": false
   },
   {
-    "name": "Brogue",
-    "description": "A beginner-friendly Rogue-like.",
-    "url": "https://sites.google.com/site/broguegame/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["brogue"],
-    "aur": true
-  },
-  {
-    "name": "Broken Sword 2.5: The Return of the Templars",
-    "description": "Fan-made sequel in the point-and-click adventure series Broken Sword.",
-    "url": "http://www.brokensword25.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sword25"],
-    "aur": true
-  },
-  {
-    "name": "Brutal Doom",
-    "description": "A gore-themed gameplay mod for Doom that was created in 2010 by Marcos Abenante (Sergeant_Mark_IV).",
-    "icon": "generic-dark.svg",
-    "pkgname": ["brutal-doom"],
-    "aur": true
-  },
-  {
-    "name": "bs",
-    "description": "Battleships based shooter for the console.",
-    "url": "http://www.catb.org/~esr/bs/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["bs"],
-    "aur": true
-  },
-  {
     "name": "BSD Games",
     "description": "Collection of classic text games distributed with *BSD",
     "icon": "generic-dark.svg",
     "pkgname": ["bsd-games"],
     "aur": false
-  },
-  {
-    "name": "buildgdx",
-    "description": "A source port that can run multiple Build engine games.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["buildgdx"],
-    "aur": true
-  },
-  {
-    "name": "BuildGDX",
-    "description": "BuildGDX (also sometimes called BloodGDX) is a source port that can run multiple Build engine games.",
-    "url": "http://m210.duke4.net/index.php",
-    "icon": "generic-dark.svg",
-    "pkgname": ["buildgdx"],
-    "aur": true
-  },
-  {
-    "name": "BZFlag",
-    "description": "Multiplayer, first-person tank shooter.",
-    "url": "https://bzflag.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["bzflag"],
-    "aur": true
-  },
-  {
-    "name": "C-Dogs",
-    "description": "Enhanced SDL port of DOS arcade game C-Dogs (aka \"Cyberdogs 2\").",
-    "url": "https://cxong.github.io/cdogs-sdl/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cdogs"],
-    "aur": true
-  },
-  {
-    "name": "C-evo",
-    "description": "A civilization style game, of the Civ II era.",
-    "url": "http://www.c-evo.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["c-evo-dh"],
-    "aur": true
-  },
-  {
-    "name": "Cataclysm: Bright Nights",
-    "description": "A fork/variant of Cataclysm:DDA by CleverRaven.",
-    "url": "https://github.com/cataclysmbnteam/Cataclysm-BN",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cataclysm-bn-tiles"],
-    "aur": true
   },
   {
     "name": "Cataclysm: Dark Days Ahead",
@@ -348,51 +135,11 @@
     "aur": false
   },
   {
-    "name": "Cave Story/Doukutsu",
-    "description": "Addictive 1-man-made metroid-vania-esque platformer. If there happens to be a noticible lag when there are lots of enemies on screen or in larger levels, try running the Windows version through Wine. This should fix the problem.",
-    "url": "https://cavestory.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["doukutsu"],
-    "aur": true
-  },
-  {
-    "name": "CaveExpress",
-    "description": "CaveExpress is a classic 2D platformer with physics-based gameplay and dozens of levels.",
-    "url": "http://www.caveproductions.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["caveexpress"],
-    "aur": true
-  },
-  {
-    "name": "Cgoban3",
-    "description": "Kiseido Go and SGF client.",
-    "url": "http://www.igoweb.org/~wms/comp/cgoban/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cgoban"],
-    "aur": true
-  },
-  {
-    "name": "chessx",
-    "description": "Chess Database and PGN viewer.",
-    "url": "https://chessx.sourceforge.net",
-    "icon": "generic-dark.svg",
-    "pkgname": ["chessx"],
-    "aur": true
-  },
-  {
     "name": "Chocolate Doom",
     "description": "Doom port reproducing the behavior of the original DOS version.",
     "icon": "generic-dark.svg",
     "pkgname": ["chocolate-doom"],
-    "aur": true
-  },
-  {
-    "name": "Chroma",
-    "description": "Puzzle game like Sokoban with ncurses and graphics mode.",
-    "url": "https://www.level7.org.uk/chroma/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["chroma"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Chromium",
@@ -403,78 +150,6 @@
     "aur": false
   },
   {
-    "name": "Cirno Catch Frog",
-    "description": "Touhou fan game made with Godot. Let's help Cirno catch frogs!",
-    "url": "https://yuna0x0.itch.io/cirno-catch-frog",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cirno-catch-frog"],
-    "aur": true
-  },
-  {
-    "name": "ClassiCube",
-    "description": "A from-scratch reimplementation of the Minecraft Classic client with optional gameplay enhancements",
-    "url": "https://classicube.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["classicube"],
-    "aur": true
-  },
-  {
-    "name": "Clone Hero",
-    "description": "A Guitar Hero/Rock Band clone that is accurate to how the series played. Supports the original controllers and community made song imports.",
-    "url": "https://clonehero.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["clonehero"],
-    "aur": true
-  },
-  {
-    "name": "Colobot GOLD",
-    "description": "Colobot GOLD is a real-time strategy game with programmable bots.",
-    "url": "https://colobot.info",
-    "icon": "generic-dark.svg",
-    "pkgname": ["colobot-gold"],
-    "aur": true
-  },
-  {
-    "name": "Commander_Keen",
-    "description": "Side-scrolling platform action video game.",
-    "url": "https://clonekeen.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["clonekeen"],
-    "aur": true
-  },
-  {
-    "name": "CorsixTH",
-    "description": "Open source reimplementation of the Bullfrog hit game Theme Hospital.",
-    "url": "https://corsixth.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["corsix-th"],
-    "aur": true
-  },
-  {
-    "name": "Counter-Strike 2D",
-    "description": "2D clone (+additional features) of the popular Counter-Strike Mod.",
-    "url": "https://cs2d.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["counter-strike-2d"],
-    "aur": true
-  },
-  {
-    "name": "Crack Attack!",
-    "description": "Free OpenGL game based on the Super Nintendo classic Tetris Attack.",
-    "url": "http://www.aluminumangel.org/attack/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["crack-attack"],
-    "aur": true
-  },
-  {
-    "name": "Crack-attack",
-    "description": "Free OpenGL game, based on the Super Nintendo classic Tetris Attack.",
-    "url": "https://www.nongnu.org/crack-attack/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["crack-attack"],
-    "aur": true
-  },
-  {
     "name": "Cube 2: Sauerbraten",
     "description": "Improved version of the Cube engine.",
     "url": "http://sauerbraten.org/",
@@ -483,67 +158,12 @@
     "aur": false
   },
   {
-    "name": "cutechess",
-    "description": "A graphical user interface, command-line interface and a library for playing chess.",
-    "url": "https://github.com/cutechess/cutechess",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cutechess"],
-    "aur": true
-  },
-  {
-    "name": "Cytopia",
-    "description": "A city building simulation game.",
-    "url": "https://www.cytopia.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cytopia-git"],
-    "aur": true
-  },
-  {
-    "name": "Daggerfall Unity",
-    "description": "The Elder Scrolls: Daggerfall rebuilt using the unity engine.",
-    "url": "https://www.dfworkshop.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["daggerfall-unity-bin"],
-    "aur": true
-  },
-  {
-    "name": "Dark Oberon",
-    "description": "Open source real-time strategy game similar to Warcraft II.",
-    "url": "https://dark-oberon.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dark-oberon"],
-    "aur": true
-  },
-  {
     "name": "DDNet",
     "description": "DDraceNetwork, a mod of Teeworlds.",
     "url": "https://ddnet.tw/",
     "icon": "generic-dark.svg",
     "pkgname": ["ddnet"],
-    "aur": true
-  },
-  {
-    "name": "Dealer's Choice",
-    "description": "Online Multiplayer Stud and Draw Poker, where the deal rotates and each new game allows a different player to select the variant.",
-    "url": "https://dealer-s-choice.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dealers-choice"],
-    "aur": true
-  },
-  {
-    "name": "DevilutionX",
-    "description": "Diablo build for modern operating systems.",
-    "url": "https://github.com/diasurgical/devilutionX",
-    "icon": "generic-dark.svg",
-    "pkgname": ["devilutionx"],
-    "aur": true
-  },
-  {
-    "name": "dhemw3",
-    "description": "Fork of iodoom3.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dhewm3"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Dofus",
@@ -551,100 +171,14 @@
     "url": "https://www.dofus.com",
     "icon": "generic-dark.svg",
     "pkgname": ["ankama-launcher"],
-    "aur": true
-  },
-  {
-    "name": "Doom 2D",
-    "description": "Doom-themed platformer by Prikol Software, modern ports of original game (use flatwaifu).",
-    "url": "https://doom2d.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["doom2d-rembo"],
-    "aur": true
-  },
-  {
-    "name": "Doom 2D Classic",
-    "description": "Doom-themed platformer by Prikol Software, original (classic) version. Using DOSBox.",
-    "url": "https://doom2d.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["doom2d-classic"],
-    "aur": true
-  },
-  {
-    "name": "Doom 2D: Forever",
-    "description": "Doom-themed platformer with network play, a modern port of Doom 2D by Prikol Software.",
-    "url": "https://doom2d.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["doom2df-bin"],
-    "aur": true
-  },
-  {
-    "name": "Doom 3 Engine",
-    "description": "Source-based Doom 3 engine.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["doom3"],
-    "aur": true
-  },
-  {
-    "name": "DoomRL",
-    "description": "Simple roguelike game, based on Doom. Perfect for starters.",
-    "url": "https://drl.chaosforge.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["drl"],
-    "aur": true
-  },
-  {
-    "name": "Doomsday",
-    "description": "Advanced port of the Doom game engine, capable also of running Heretic, and Hexen games.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["doomsday"],
-    "aur": true
-  },
-  {
-    "name": "Dráscula: The Vampire Strikes Back",
-    "description": "Comical 2D point-and-click adventure.",
-    "url": "https://www.scummvm.org/games/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["drascula"],
-    "aur": true
-  },
-  {
-    "name": "Dream Web",
-    "description": "Top-down adventure game set in a gritty futuristic dystopian city.",
-    "url": "https://www.scummvm.org/games/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dreamweb"],
-    "aur": true
-  },
-  {
-    "name": "dreamchess",
-    "description": "DreamChess is an OpenGL Chess Game. It comes with its own engine called Dreamer.",
-    "url": "https://www.dreamchess.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dreamchess"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "DSDA-Doom",
     "description": "Enhanced fork of the PrBoom+ Doom engine source port.",
     "icon": "generic-dark.svg",
     "pkgname": ["dsda-doom"],
-    "aur": true
-  },
-  {
-    "name": "Duelyst",
-    "description": "is a digital collectible card game and turn-based strategy hybrid, developed by Counterplay Games.",
-    "url": "https://github.com/open-duelyst/duelyst",
-    "icon": "generic-dark.svg",
-    "pkgname": ["open-duelyst-bin"],
-    "aur": true
-  },
-  {
-    "name": "Dune Legacy",
-    "description": "Updated clone of Westood Studios' Dune2.",
-    "url": "https://dunelegacy.sourceforge.net/website/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dunelegacy"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Dwarf Fortress",
@@ -653,42 +187,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/dwarffortress_dwarffortress.png",
     "pkgname": ["dwarffortress"],
     "aur": false
-  },
-  {
-    "name": "ECWolf",
-    "description": "Advanced source port.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ecwolf"],
-    "aur": true
-  },
-  {
-    "name": "ECWolf",
-    "description": "Advanced source port.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ecwolf"],
-    "aur": true
-  },
-  {
-    "name": "ECWolf",
-    "description": "Advanced source port.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ecwolf"],
-    "aur": true
-  },
-  {
-    "name": "eduke32",
-    "description": "Advanced source port.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["eduke32"],
-    "aur": true
-  },
-  {
-    "name": "Egoboo",
-    "description": "Open-source action RPG/dungeon crawling adventure with OpenGL 3D graphics.",
-    "url": "https://egoboo.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["egoboo"],
-    "aur": true
   },
   {
     "name": "Endgame Singularity",
@@ -705,86 +203,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/endless-sky_endless-sky.png",
     "pkgname": ["endless-sky"],
     "aur": false
-  },
-  {
-    "name": "Enemy Territory: Quake Wars",
-    "description": "Commercial team and class-based multiplayer game. Full version requires retail DVD to play.",
-    "url": "https://www.splashdamage.com/games/enemy-territory-quake-wars/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["etqw"],
-    "aur": true
-  },
-  {
-    "name": "Eternal Lands",
-    "description": "3D fantasy online role playing game.",
-    "url": "http://www.eternal-lands.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["eternallands"],
-    "aur": true
-  },
-  {
-    "name": "Etterna",
-    "description": "An open source rhythm game forked from Stepmania that focuses on keyboard and competitive play (shows different skillsets, online leaderboard etc).",
-    "url": "https://etternaonline.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["etterna"],
-    "aur": true
-  },
-  {
-    "name": "Extreme Tux Racer",
-    "description": "3D game where you guide Tux the penguin down a course of snow and ice collecting herring.",
-    "url": "https://sourceforge.net/projects/extremetuxracer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["extremetuxracer"],
-    "aur": true
-  },
-  {
-    "name": "ezQuake",
-    "description": "Fast paced multiplayer FPS focusing on movement and trick jumps. The popular, modern and maintained Quake/QuakeWorld client. Can be played online for free.",
-    "url": "https://ezquake.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ezquake"],
-    "aur": true
-  },
-  {
-    "name": "Factorio",
-    "description": "A proprietary game about mining resources, planning and building factories, automating production and fighting alien enemies.",
-    "url": "https://www.factorio.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["factorio"],
-    "aur": true
-  },
-  {
-    "name": "fallout1-ce",
-    "description": "Fallout for modern operating systems.",
-    "url": "https://github.com/alexbatalov/fallout1-ce",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fallout1-ce-game"],
-    "aur": true
-  },
-  {
-    "name": "fallout2-ce",
-    "description": "Fallout 2 for modern operating systems.",
-    "url": "https://github.com/alexbatalov/fallout2-ce",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fallout2-ce-game"],
-    "aur": true
-  },
-  {
-    "name": "falltergeist",
-    "description": "Opensource Fallout game engine written in C++ and SDL.",
-    "url": "https://falltergeist.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["falltergeist"],
-    "aur": true
-  },
-  {
-    "name": "fheroes2",
-    "description": "Attempt to reimplement the Heroes of Might and Magic II engine using SDL.",
-    "url": "https://ihhub.github.io/fheroes2/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fheroes2"],
-    "aur": true
   },
   {
     "name": "Fish Fillets",
@@ -808,47 +226,7 @@
     "url": "http://www.flarerpg.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["flare-game"],
-    "aur": true
-  },
-  {
-    "name": "Flight Gear",
-    "description": "Open-source, multi-platform flight simulator.",
-    "url": "https://www.flightgear.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["flightgear"],
-    "aur": true
-  },
-  {
-    "name": "Flight of the Amazon Queen",
-    "description": "Graphical point-and-click adventure game.",
-    "url": "https://www.scummvm.org/games/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fotaq"],
-    "aur": true
-  },
-  {
-    "name": "Flying Robots",
-    "description": "Avoid killer robots. Similar to bsd-robots but with the possibility to move in a third dimension.",
-    "url": "https://github.com/bunburya/flying-robots",
-    "icon": "generic-dark.svg",
-    "pkgname": ["flying-robots"],
-    "aur": true
-  },
-  {
-    "name": "Foobillard++",
-    "description": "Successor to Foobillard, OpenGL billiard game for Linux.",
-    "url": "https://foobillardplus.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["foobillard++"],
-    "aur": true
-  },
-  {
-    "name": "FoundryVTT",
-    "description": "A standalone application built for experiencing multiplayer tabletop RPGs using a feature-rich and modern self-hosted application where your players connect directly through the browser.",
-    "url": "https://foundryvtt.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["foundryvtt"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Four in a Row",
@@ -875,13 +253,6 @@
     "aur": false
   },
   {
-    "name": "Freedoom",
-    "description": "Project aimed at creation of free classic Doom data files.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["freedoom"],
-    "aur": true
-  },
-  {
     "name": "FreedroidRPG",
     "description": "Mature science fiction role playing game set in the future.",
     "url": "https://freedroid.org/",
@@ -890,68 +261,12 @@
     "aur": false
   },
   {
-    "name": "Freeminer",
-    "description": "An open source sandbox game inspired by Minecraft.",
-    "url": "https://freeminer.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["freeminer"],
-    "aur": true
-  },
-  {
     "name": "FreeOrion",
     "description": "Turn-based space empire and galactic conquest computer game. Inspired by the tradition of the Master of Orion games, but does not try to be a clone or remake of that series or any other game.",
     "url": "https://www.freeorion.org/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/freeorion_org.freeorion.FreeOrion.png",
     "pkgname": ["freeorion"],
     "aur": false
-  },
-  {
-    "name": "FreeSpace 2",
-    "description": "Open sourced space emulator.",
-    "url": "https://www.hard-light.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fs2_open"],
-    "aur": true
-  },
-  {
-    "name": "Friday Night Funkin'",
-    "description": "Friday Night Funkin' is an open-source donationware rhythm game first released in 2020 for a game jam.",
-    "url": "https://ninja-muffin24.itch.io/funkin/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["funkin-git"],
-    "aur": true
-  },
-  {
-    "name": "Frogatto",
-    "description": "Platformer with adventure elements.",
-    "url": "https://frogatto.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["frogatto"],
-    "aur": true
-  },
-  {
-    "name": "Frozen Bubble",
-    "description": "Arcade game with colorful animated penguin eyecandy.",
-    "url": "http://frozen-bubble.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["frozen-bubble"],
-    "aur": true
-  },
-  {
-    "name": "FTL: Faster Than Light",
-    "description": "Popular rogue-like space-sim released to positive reception in 2012.",
-    "url": "https://subsetgames.com/ftl.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ftl"],
-    "aur": true
-  },
-  {
-    "name": "GameShell",
-    "description": "Software to learn how to use a terminal emulator.",
-    "url": "https://github.com/phyver/GameShell/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gameshell"],
-    "aur": true
   },
   {
     "name": "gbrainy",
@@ -968,22 +283,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gcompris-qt_gcompris-qt.png",
     "pkgname": ["gcompris-qt"],
     "aur": false
-  },
-  {
-    "name": "GemRB",
-    "description": "Attempt to reimplement the Bioware's Infinity Engine under GNU GPL.",
-    "url": "https://www.gemrb.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gemrb"],
-    "aur": true
-  },
-  {
-    "name": "Gish",
-    "description": "2D physics platformer about adventures of ball of tar.",
-    "url": "https://github.com/freegish/freegish",
-    "icon": "generic-dark.svg",
-    "pkgname": ["freegish-git"],
-    "aur": true
   },
   {
     "name": "glHack",
@@ -1114,14 +413,6 @@
     "aur": false
   },
   {
-    "name": "Gopanda",
-    "description": "Client for the Pandanet-IGS go Server.",
-    "url": "https://pandanet-igs.com/communities/gopanda2",
-    "icon": "generic-dark.svg",
-    "pkgname": ["Gopanda"],
-    "aur": true
-  },
-  {
     "name": "Granatier",
     "description": "A clone of Bomberman. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/granatier/",
@@ -1130,43 +421,11 @@
     "aur": false
   },
   {
-    "name": "Grand Theft Auto III",
-    "description": "An open-source project reverse-engineering Grand Theft Auto III.",
-    "url": "https://github.com/halpz/re3",
-    "icon": "generic-dark.svg",
-    "pkgname": ["re3-git"],
-    "aur": true
-  },
-  {
-    "name": "Grand Theft Auto: Vice City",
-    "description": "An open-source project reverse-engineering Grand Theft Auto: Vice City.",
-    "url": "https://github.com/halpz/re3/tree/miami",
-    "icon": "generic-dark.svg",
-    "pkgname": ["revc-git"],
-    "aur": true
-  },
-  {
-    "name": "gweled",
-    "description": "Eliminating tiles by joining them in groups of three.",
-    "url": "https://launchpad.net/gweled/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gweled"],
-    "aur": true
-  },
-  {
     "name": "GZDoom",
     "description": "Advanced Doom source port based on ZDoom with an OpenGL renderer.",
     "icon": "generic-dark.svg",
     "pkgname": ["gzdoom"],
-    "aur": true
-  },
-  {
-    "name": "Hammerfight",
-    "description": "2-dimensional physics-based combat game.",
-    "url": "http://www.koshutin.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hammerfight"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Hedgewars",
@@ -1177,123 +436,12 @@
     "aur": false
   },
   {
-    "name": "HHeretic",
-    "description": "Linux port of Raven Game's old shooter, Heretic.",
-    "url": "https://hhexen.sourceforge.net/hheretic.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hheretic"],
-    "aur": true
-  },
-  {
-    "name": "HHexen",
-    "description": "Linux port of Raven Game's old shooter, Hexen.",
-    "url": "https://hhexen.sourceforge.net/hhexen.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hhexen"],
-    "aur": true
-  },
-  {
     "name": "Hitori",
     "description": "Small application written to allow one to play the eponymous puzzle game Hitori, which is similar in theme to more popular puzzles such as Sudoku. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Hitori",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/hitori_org.gnome.Hitori.png",
     "pkgname": ["hitori"],
     "aur": false
-  },
-  {
-    "name": "Hollow Knight",
-    "description": "2D metroidvania platform game with deep lore and hard boss battles.",
-    "url": "https://hollowknight.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gog-hollow-knight"],
-    "aur": true
-  },
-  {
-    "name": "HyperRogue",
-    "description": "The non-Euclidean roguelike, is a mind-melting masterpiece.",
-    "url": "https://www.roguetemple.com/z/hyper/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hyperrogue"],
-    "aur": true
-  },
-  {
-    "name": "Hypersomnia",
-    "description": "A hardcore eSports shooter that comes with an in-game Editor.",
-    "url": "https://github.com/TeamHypersomnia/Hypersomnia",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hypersomnia-appimage"],
-    "aur": true
-  },
-  {
-    "name": "Hytale",
-    "description": "Early access sandbox adventure game primarily developed by Hypixel Studios.",
-    "url": "https://hytale.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["hytale-launcher-bin"],
-    "aur": true
-  },
-  {
-    "name": "Ib",
-    "description": "Horror adventure game about a child trapped in an eldritch art museum.",
-    "url": "https://vgperson.com/games/ib.htm",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ib-en"],
-    "aur": true
-  },
-  {
-    "name": "Inform",
-    "description": "Design system for interactive fiction based on natural language.",
-    "url": "http://inform7.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["inform7"],
-    "aur": true
-  },
-  {
-    "name": "Infra-Arcana",
-    "description": "A game inspired by the writings of H.P. Lovecraft.",
-    "url": "https://sites.google.com/site/infraarcana/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["infra-arcana"],
-    "aur": true
-  },
-  {
-    "name": "INSTEAD",
-    "description": "Quest interpreter using Lua macros as game writing language.",
-    "url": "https://instead.hugeping.ru/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["instead"],
-    "aur": true
-  },
-  {
-    "name": "ioquake3",
-    "description": "De-facto FOSS Quake 3 distribution.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ioquake3-git"],
-    "aur": true
-  },
-  {
-    "name": "iQPuzzle",
-    "description": "A diverting and challenging pentomino puzzle.",
-    "url": "https://elth0r0.github.io/iqpuzzle/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["iqpuzzle"],
-    "aur": true
-  },
-  {
-    "name": "irrlamb",
-    "description": "3D ball controlling game that involves a lot of physics and frustrating gameplay.",
-    "url": "https://irrlamb.gitlab.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["irrlamb"],
-    "aur": true
-  },
-  {
-    "name": "Isleward",
-    "description": "The moddable, multiplayer roguelike.",
-    "url": "https://www.isleward.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["isleward"],
-    "aur": true
   },
   {
     "name": "Julius",
@@ -1326,21 +474,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kapman_kapman.png",
     "pkgname": ["kapman"],
     "aur": false
-  },
-  {
-    "name": "Katawa Shoujo",
-    "description": "Bishoujo-style visual novel game that tells a story of a young man and five other girls suffering with varying disabilities. The game is licensed under the Creative Commons CC-BY-NC-ND.",
-    "url": "http://katawa-shoujo.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["katawa-shoujo"],
-    "aur": true
-  },
-  {
-    "name": "Katawa Shoujo:Re-Engineered",
-    "description": "An open-source refactor that aims to provide a revamped version of the beloved visual novel Katawa Shoujo, developed with a strong emphasis on accessibility and user-friendly experience.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["katawa-shoujo-reengineered"],
-    "aur": true
   },
   {
     "name": "KAtomic",
@@ -1397,14 +530,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdiamond_kdiamond.png",
     "pkgname": ["kdiamond"],
     "aur": false
-  },
-  {
-    "name": "KeeperRL",
-    "description": "Ambitious dungeon simulator with roguelike and RPG elements. Take the role of an evil wizard and study the methods of black magic.",
-    "url": "https://keeperrl.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["keeperrl-git"],
-    "aur": true
   },
   {
     "name": "Kernel Panic",
@@ -1503,14 +628,6 @@
     "aur": false
   },
   {
-    "name": "Klooni1010",
-    "description": "A polished and addictive game clone. The player places blocks to create full vertical or horizontal lines.",
-    "url": "https://lonami.dev/klooni/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["klooni1010-git"],
-    "aur": true
-  },
-  {
     "name": "KMahjongg",
     "description": "Mahjongg for one or two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kmahjongg/",
@@ -1551,28 +668,12 @@
     "aur": false
   },
   {
-    "name": "Knyttstories",
-    "description": "Platformer with adventure elements, heavy exploration and downloadable levels.",
-    "url": "https://nifflas.ni2.se/?page=Knytt+Stories",
-    "icon": "generic-dark.svg",
-    "pkgname": ["knyttstories"],
-    "aur": true
-  },
-  {
     "name": "kobodeluxe",
     "description": "An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.",
     "url": "https://www.olofson.net/kobodl/",
     "icon": "generic-dark.svg",
     "pkgname": ["kobodeluxe"],
-    "aur": true
-  },
-  {
-    "name": "Koi Farm",
-    "description": "Koi Farm, the koi breeding game.",
-    "url": "https://jobtalle.itch.io/koifarm",
-    "icon": "generic-dark.svg",
-    "pkgname": ["koifarm-git"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Kolf",
@@ -1695,22 +796,6 @@
     "aur": false
   },
   {
-    "name": "lbreakouthd",
-    "description": "Scalable 16:9 remake of LBreakout2",
-    "url": "https://lgames.sourceforge.net/LBreakoutHD/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lbreakouthd"],
-    "aur": true
-  },
-  {
-    "name": "Libre TrainSim",
-    "description": "Free Train Simulator for everyone",
-    "url": "https://www.libretrainsim.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["libre-trainsim-bin"],
-    "aur": true
-  },
-  {
     "name": "Lights Off",
     "description": "Puzzle game, where the objective is to turn off all of the tiles on the board. Also known as Lights Out. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Lightsoff",
@@ -1727,60 +812,12 @@
     "aur": false
   },
   {
-    "name": "Linley's Dungeon Crawl",
-    "description": "An open source roguelike adventure through dungeons filled with dangerous monsters in a quest to find the mystifyingly fabulous Orb of Zot.",
-    "url": "http://www.dungeoncrawl.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["crawl"],
-    "aur": true
-  },
-  {
-    "name": "Linux Air Combat",
-    "description": "Open source, multi-user 3D combat flight simulator featuring World War 2 aircraft. Supports joystick, gamepad, or mouse flight controls.",
-    "url": "https://sourceforge.net/projects/linuxaircombat//",
-    "icon": "generic-dark.svg",
-    "pkgname": ["linux-air-combat"],
-    "aur": true
-  },
-  {
-    "name": "Liquid War",
-    "description": "2D multiplayer game with a simple and unique game mechanic. It could be classified as a fast-paced strategy.",
-    "url": "https://www.ufoot.org/liquidwar/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["liquidwar"],
-    "aur": true
-  },
-  {
-    "name": "Lix",
-    "description": "Lemmings clone, i.e. assign roles to some of many constantly walking creatures to lead them safely through the exit.",
-    "url": "https://www.lixgame.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lix"],
-    "aur": true
-  },
-  {
-    "name": "LPub3D",
-    "description": "LDraw™ editor for LEGO® style digital building instructions.",
-    "url": "https://trevorsandy.github.io/lpub3d",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lpub3d-appimage"],
-    "aur": true
-  },
-  {
     "name": "LSkat",
     "description": "A variation of Skat card game for two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/lskat/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lskat_lskat.png",
     "pkgname": ["lskat"],
     "aur": false
-  },
-  {
-    "name": "LTris",
-    "description": "Arcade version of Tetris.",
-    "url": "https://lgames.sourceforge.net/LTris/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ltris"],
-    "aur": true
   },
   {
     "name": "Luanti",
@@ -1791,44 +828,12 @@
     "aur": false
   },
   {
-    "name": "Lure of the Temptress",
-    "description": "Fantasy point-and-click adventure game with comedic elements.",
-    "url": "https://www.revolution.co.uk/games/lure/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lure"],
-    "aur": true
-  },
-  {
-    "name": "Mah-Jong",
-    "description": "Chinese Classical mahjong (not solitaire) with network support.",
-    "url": "https://mahjong.julianbradfield.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mahjong"],
-    "aur": true
-  },
-  {
-    "name": "Maniadrive",
-    "description": "Arcade car game on acrobatic tracks with quick and nervous gameplay.",
-    "url": "http://maniadrive.raydium.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["maniadrive"],
-    "aur": true
-  },
-  {
     "name": "Mari0",
     "description": "The Mario game with Portal gun mechanics.",
     "url": "https://stabyourself.net/mari0/",
     "icon": "generic-dark.svg",
     "pkgname": ["mari0"],
     "aur": false
-  },
-  {
-    "name": "Marvellous Inc.",
-    "description": "MarvInc is a zachlike puzzle game with a story told through emails.",
-    "url": "https://github.com/MarvellousSoft/MarvInc",
-    "icon": "generic-dark.svg",
-    "pkgname": ["marvinc-git"],
-    "aur": true
   },
   {
     "name": "MegaGlest",
@@ -1839,20 +844,12 @@
     "aur": false
   },
   {
-    "name": "Micropolis",
-    "description": "Open Source Micropolis, based on the original SimCity Classic from Maxis, by Will Wright.",
-    "url": "https://github.com/simhacker/micropolis",
-    "icon": "generic-dark.svg",
-    "pkgname": ["micropolis-git"],
-    "aur": true
-  },
-  {
     "name": "Mindustry",
     "description": "Open-source sandbox tower defense and factory-building game.",
     "url": "https://mindustrygame.github.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["mindustry"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Minecraft",
@@ -1860,7 +857,7 @@
     "url": "https://minecraft.net/",
     "icon": "generic-dark.svg",
     "pkgname": ["minecraft-launcher"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Minuet",
@@ -1871,36 +868,12 @@
     "aur": false
   },
   {
-    "name": "Moon Buggy",
-    "description": "Simple game for the text mode.",
-    "url": "https://www.seehuhn.de/pages/moon-buggy.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["moon-buggy"],
-    "aur": true
-  },
-  {
     "name": "Naev",
     "description": "Open source, 2D space trading and combat game, taking inspiration from the Escape Velocity series.",
     "url": "https://naev.org/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/naev_org.naev.Naev.png",
     "pkgname": ["naev"],
     "aur": false
-  },
-  {
-    "name": "Naikari",
-    "description": "Freeform 2-D space trading and mercenary game.",
-    "url": "https://naikari.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["naikari"],
-    "aur": true
-  },
-  {
-    "name": "Narcissu",
-    "description": "Visual novel, telling the story of a terminally ill young man and woman.",
-    "url": "http://narcissu.insani.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["narcissu2"],
-    "aur": true
   },
   {
     "name": "Nethack",
@@ -1911,188 +884,12 @@
     "aur": false
   },
   {
-    "name": "NetPanzer",
-    "description": "An online multiplayer tactical warfare game designed for fast action combat.",
-    "url": "https://github.com/netpanzer/netpanzer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["netpanzer-appimage"],
-    "aur": true
-  },
-  {
-    "name": "Neverball",
-    "description": "3D game to guide a ball through a maze.",
-    "url": "https://neverball.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["neverball"],
-    "aur": true
-  },
-  {
-    "name": "Nikki and the Robots",
-    "description": "Cute physics platformer.",
-    "url": "https://github.com/nikki-and-the-robots/nikki",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nikki"],
-    "aur": true
-  },
-  {
-    "name": "nInvaders",
-    "description": "Ncurses based space invaders clone.",
-    "url": "https://ninvaders.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ninvaders"],
-    "aur": true
-  },
-  {
-    "name": "Nootka",
-    "description": "Application to learn classical score notation.",
-    "url": "https://nootka.sourceforge.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nootka"],
-    "aur": true
-  },
-  {
-    "name": "Not Tetris 2",
-    "description": "A Tetris-like game with realistic physics.",
-    "url": "https://stabyourself.net/nottetris2/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nottetris2"],
-    "aur": true
-  },
-  {
-    "name": "nQuake",
-    "description": "Fast paced multiplayer FPS focusing on movement and trick jumps. This is the popular Quake/QuakeWorld package, including ezQuake client, 24bit textures, maps, bots and more. Can be played online for free.",
-    "url": "https://nquake.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nquake"],
-    "aur": true
-  },
-  {
-    "name": "nudoku",
-    "description": "ncurses-based sudoku game.",
-    "url": "https://jubalh.github.io/nudoku/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nudoku"],
-    "aur": true
-  },
-  {
-    "name": "OFF",
-    "description": "A freeware RPG Maker game known for its surreal environments and story. (Fan-made English translation).",
-    "url": "https://zchr.org/off",
-    "icon": "generic-dark.svg",
-    "pkgname": ["off-en"],
-    "aur": true
-  },
-  {
-    "name": "One Hour One Life",
-    "description": "Binary package for One Hour One Life game by Jason Rohrer.",
-    "url": "http://onehouronelife.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["onehouronelife-bin"],
-    "aur": true
-  },
-  {
-    "name": "Oolite",
-    "description": "3D space trading and combat simulator in the spirit of Elite.",
-    "url": "https://oolite.space/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["oolite"],
-    "aur": true
-  },
-  {
-    "name": "Open Hexagon",
-    "description": "Inspired by Terry Cavanagh's Super Hexagon, a very difficult music-based arcade game.",
-    "url": "https://vittorioromeo.info/openhexagon.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["open-hexagon-git"],
-    "aur": true
-  },
-  {
-    "name": "Open Hexagon",
-    "description": "Inspired by Terry Cavanagh's Super Hexagon, a very difficult music-based arcade game.",
-    "url": "https://vittorioromeo.info/openhexagon.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["open-hexagon-git"],
-    "aur": true
-  },
-  {
-    "name": "openage",
-    "description": "A free (as in freedom) clone of the Age of Empires II engine.",
-    "url": "https://openage.sft.mx/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openage-git"],
-    "aur": true
-  },
-  {
-    "name": "OpenArena",
-    "description": "Fast multiplayer shooter based on the quake3-engine.",
-    "url": "http://openarena.ws",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openarena"],
-    "aur": true
-  },
-  {
-    "name": "openblack",
-    "description": "Open source reimplementation of the game Black & White (2001).",
-    "url": "https://github.com/openblack/openblack",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openblack-git"],
-    "aur": true
-  },
-  {
     "name": "openBVE",
     "description": "Free-as-in-freedom train simulator placed in the public domain.",
     "url": "https://openbve-project.net/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openbve_openbve.png",
     "pkgname": ["openbve"],
     "aur": false
-  },
-  {
-    "name": "OpenClonk",
-    "description": "Multiplayer-action-tactic-skill game.",
-    "url": "https://www.openclonk.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openclonk"],
-    "aur": true
-  },
-  {
-    "name": "OpenDUNE",
-    "description": "Open source re-creation of the popular game Dune II.",
-    "url": "http://www.opendune.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["opendune"],
-    "aur": true
-  },
-  {
-    "name": "OpenGothic",
-    "description": "Open source remake of Gothic 2: Night of the raven.",
-    "url": "https://github.com/Try/OpenGothic",
-    "icon": "generic-dark.svg",
-    "pkgname": ["opengothic"],
-    "aur": true
-  },
-  {
-    "name": "OpenHV",
-    "description": "Pixelart Science-Fiction Real-Time-Strategy game based on OpenRA.",
-    "url": "https://www.openhv.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openhv"],
-    "aur": true
-  },
-  {
-    "name": "OpenLieroX",
-    "description": "An extremely addictive real-time worms shoot-em-up backed by an active gamer community.",
-    "url": "https://www.openlierox.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openlierox"],
-    "aur": true
-  },
-  {
-    "name": "OpenLoco",
-    "description": "An open source re-implementation of Chris Sawyer's Locomotion.",
-    "url": "https://github.com/OpenLoco/OpenLoco",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openloco"],
-    "aur": true
   },
   {
     "name": "OpenMW",
@@ -2127,38 +924,6 @@
     "aur": false
   },
   {
-    "name": "OpenXCom",
-    "description": "An open source implementation of the game UFO: Enemy Unknown (X-Com: UFO defence in North America), with a plethora of community created mods.",
-    "url": "https://openxcom.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openxcom"],
-    "aur": true
-  },
-  {
-    "name": "OpenXRay",
-    "description": "Improved version of the X-Ray Engine, the game engine used in the world-famous S.T.A.L.K.E.R. game series by GSC Game World. Game assets must be bought separately.",
-    "url": "https://github.com/OpenXRay",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openxray"],
-    "aur": true
-  },
-  {
-    "name": "osu!",
-    "description": "A free-to-win rhythm game with four game modes: osu!standard, a circle clicking simulator; osu!taiko, a drumming emulator; osu!catch, a fruit salad catcher; and osu!mania, a key smashing synthesizer.",
-    "url": "https://osu.ppy.sh/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["osu"],
-    "aur": true
-  },
-  {
-    "name": "Overte",
-    "description": "Overte open source virtual worlds platform.",
-    "url": "https://overte.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["overte-appimage"],
-    "aur": true
-  },
-  {
     "name": "Palapeli",
     "description": "Jigsaw puzzle game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/palapeli/",
@@ -2167,52 +932,12 @@
     "aur": false
   },
   {
-    "name": "Pasang Emas",
-    "description": "Pasang-emas is a traditional two-player board game of Brunei.",
-    "url": "https://pasang-emas.sourceforge.net/index.xhtml",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pasang-emas"],
-    "aur": true
-  },
-  {
-    "name": "Penguin Command",
-    "description": "Clone of the classic game \"Missile Command\" with improved graphics and sound.",
-    "url": "https://www.linux-games.com/penguin-command/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["penguin-command"],
-    "aur": true
-  },
-  {
-    "name": "Perfect Dark",
-    "description": "Reverse engineered port of Perfect Dark for the Nintendo 64",
-    "url": "https://github.com/fgsfdsfgs/perfect_dark",
-    "icon": "generic-dark.svg",
-    "pkgname": ["perfect-dark-git"],
-    "aur": true
-  },
-  {
-    "name": "Performous",
-    "description": "An open-source karaoke, band and dancing game.",
-    "url": "https://performous.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/performous_performous.png",
-    "pkgname": ["performous-git"],
-    "aur": true
-  },
-  {
     "name": "Picmi",
     "description": "Nonogram puzzle game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/picmi/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/picmi_picmi.png",
     "pkgname": ["picmi"],
     "aur": false
-  },
-  {
-    "name": "Pinball",
-    "description": "Open source pinball simulator for Linux and other Unix systems.",
-    "url": "https://pinball.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pinball"],
-    "aur": true
   },
   {
     "name": "Pingus",
@@ -2231,100 +956,12 @@
     "aur": false
   },
   {
-    "name": "Pioneers",
-    "description": "A clone of the famous Settlers of Catan game with on-line functionality.",
-    "url": "https://pio.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pioneers"],
-    "aur": true
-  },
-  {
-    "name": "Planeshift",
-    "description": "Role Playing Game immersed into a 3D virtual fantasy world which is FULLY FREE to play. Fully free means you will have no surprises of premium content which will limit your gameplay or unbalance the game. There are no limitations in skills, ranks, abilities, items you can gain with your free account.",
-    "url": "https://www.planeshift.it",
-    "icon": "generic-dark.svg",
-    "pkgname": ["planeshift-legacy"],
-    "aur": true
-  },
-  {
-    "name": "PokerTH",
-    "description": "A libre Texas hold em' poker simulator with network and bot support.",
-    "url": "https://www.pokerth.net",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pokerth"],
-    "aur": true
-  },
-  {
-    "name": "Pokete",
-    "description": "A small terminal based game in the style of a very popular and old game by Gamefreak.",
-    "url": "https://lxgr-linux.github.io/pokete/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pokete"],
-    "aur": true
-  },
-  {
-    "name": "PowerManga",
-    "description": "Arcade 2D shoot-em-up game with 41 levels and more than 200 sprites.",
-    "url": "http://linux.tlk.fr/games/Powermanga/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["powermanga"],
-    "aur": true
-  },
-  {
-    "name": "Prey",
-    "description": "First Person Shooter released in 2006 (with a GNU/Linux port in 2008), published by 3D Realms.",
-    "url": "https://www.3drealms.com/prey/index.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["prey"],
-    "aur": true
-  },
-  {
-    "name": "Principia",
-    "description": "Physics-based sandbox building game.",
-    "url": "https://principia-web.se/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["principia-git"],
-    "aur": true
-  },
-  {
-    "name": "Project Outfox",
-    "description": "Generalist rhythm game engine. Started as a Stepmania fork, with the latest patches, classic OpenITG scripting support, and more. Currently supports 17 rhythm games style including dance, guitar, parapara, taiko, bongos, etc.",
-    "url": "https://projectoutfox.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["outfox_bin"],
-    "aur": true
-  },
-  {
-    "name": "Project Sushi",
-    "description": "A short but challenging 2D platformer game.",
-    "url": "https://www.patreon.com/posts/33983587",
-    "icon": "generic-dark.svg",
-    "pkgname": ["project-sushi"],
-    "aur": true
-  },
-  {
     "name": "PyChess",
     "description": "An advanced chess client for linux following the GNOME Human Interface Guidelines.",
     "url": "https://pychess.github.io/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pychess_pychess.png",
     "pkgname": ["pychess"],
     "aur": false
-  },
-  {
-    "name": "Q3Rally",
-    "description": "A car driving and car combat game based on the Quake III Arena engine.",
-    "url": "https://sourceforge.net/projects/q3rallysa/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["quake3-rally"],
-    "aur": true
-  },
-  {
-    "name": "QCheckers",
-    "description": "Qt-based checkers boardgame.",
-    "url": "https://github.com/portnov/qcheckers",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qcheckers"],
-    "aur": true
   },
   {
     "name": "qgo",
@@ -2343,82 +980,12 @@
     "aur": false
   },
   {
-    "name": "Quake 2",
-    "description": "Built by Icculus.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["quake2"],
-    "aur": true
-  },
-  {
     "name": "Raze",
     "description": "Raze is a source port based on GZDoom engine tech and merged features from various other Blood source ports.",
     "url": "https://raze.zdoom.org",
     "icon": "generic-dark.svg",
     "pkgname": ["raze"],
-    "aur": true
-  },
-  {
-    "name": "RBDOOM-3-BFG",
-    "description": "Fork of Doom 3 BFG Edition.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rbdoom-3-bfg"],
-    "aur": true
-  },
-  {
-    "name": "Red Eclipse",
-    "description": "Single-player and multi-player first-person ego-shooter, built as a total conversion of Cube Engine 2.",
-    "url": "https://redeclipse.net",
-    "icon": "generic-dark.svg",
-    "pkgname": ["redeclipse"],
-    "aur": true
-  },
-  {
-    "name": "Repixture",
-    "description": "Simplistic sandbox survival game that plays in mostly lush biomes in a mostly peaceful world and only simple technologies.",
-    "url": "https://content.luanti.org/packages/Wuzzy/repixture/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["minetest-repixture"],
-    "aur": true
-  },
-  {
-    "name": "Ri-li",
-    "description": "Toy wood engine GPL game.",
-    "url": "https://ri-li.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ri-li"],
-    "aur": true
-  },
-  {
-    "name": "Rigs of Rods",
-    "description": "Sandbox-style vehicle simulator, the open-source predecessor to Beam.NG drive. Features a realistic soft-body physics model, and an active modding community as of 2020.",
-    "url": "https://www.rigsofrods.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rigsofrods"],
-    "aur": true
-  },
-  {
-    "name": "Rigs of Rods",
-    "description": "Sandbox-style vehicle simulator, the open-source predecessor to Beam.NG drive. Features a realistic soft-body physics model, and an active modding community as of 2020.",
-    "url": "https://www.rigsofrods.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rigsofrods"],
-    "aur": true
-  },
-  {
-    "name": "Rogue",
-    "description": "Original dungeon crawl game.",
-    "url": "http://rogue.rogueforge.net/rogue-5-4/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rogue"],
-    "aur": true
-  },
-  {
-    "name": "Rune",
-    "description": "3rd person Adventure / Hack'n Slay using Unreal Engine. Runs great from box installation.",
-    "url": "http://www.rune-world.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rune"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "RuneScape",
@@ -2426,95 +993,7 @@
     "url": "https://www.runescape.com",
     "icon": "generic-dark.svg",
     "pkgname": ["bolt-launcher"],
-    "aur": true
-  },
-  {
-    "name": "RVGL",
-    "description": "Rewrite of Re-Volt, popular 3D RC car racing game from 1999 with an active online community.",
-    "url": "https://rvgl.re-volt.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rvgl-bin"],
-    "aur": true
-  },
-  {
-    "name": "Ryzom",
-    "description": "3D Fantasy MMORPG.",
-    "url": "https://www.ryzom.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ryzom-client-git"],
-    "aur": true
-  },
-  {
-    "name": "S.U.A.V.E.",
-    "description": "Fun racing game, where you drive very small, but very brave tank! This tank is equipped by modern heavy weapon, which strikes the rivals in different distances!",
-    "url": "https://archive.org/details/Sport-Utility_Assault_Vehicle_Extreme",
-    "icon": "generic-dark.svg",
-    "pkgname": ["suave"],
-    "aur": true
-  },
-  {
-    "name": "Sabaki",
-    "description": "An elegant Go board and SGF editor for a more civilized age.",
-    "url": "https://github.com/SabakiHQ/Sabaki",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sabaki"],
-    "aur": true
-  },
-  {
-    "name": "Savage 2: A Tortured Soul",
-    "description": "Fantasy themed online multiplayer team-based FPS/RTS/RPG hybrid. Free-to-play as of December 2008. Pay for premium accounts providing crucial game elements such as extra inventory slots, access to clans and removal of the Hellbourne unit restrictions (per-account), as well as access to replays and stats.",
-    "url": "https://savage2.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["savage2"],
-    "aur": true
-  },
-  {
-    "name": "School Days",
-    "description": "The story, a dramatic slice-of-life, follows Makoto Ito, a high school student who becomes the ambivalent love interest of several girls during his second term, and the effects this has on himself and his relationships with other characters.",
-    "url": "https://schooldays.us/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nice-boat"],
-    "aur": true
-  },
-  {
-    "name": "Scidb",
-    "description": "Chess database browser: includes engines for chess, chess960, etc; import from PGN, Scid, Chessbase, etc; CQL++ searching.",
-    "url": "https://sourceforge.net/projects/scidb/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["scidb-svn"],
-    "aur": true
-  },
-  {
-    "name": "Serious Sam: The First Encounter",
-    "description": "Open source game engine version developed by Croteam for Serious Sam Classic with Vulkan support.",
-    "url": "https://github.com/tx00100xt/SeriousSamClassic-VK",
-    "icon": "generic-dark.svg",
-    "pkgname": ["serioussam-vk"],
-    "aur": true
-  },
-  {
-    "name": "Serious Sam: The Second Encounter",
-    "description": "Open source game engine version developed by Croteam for Serious Sam Classic with Vulkan support.",
-    "url": "https://github.com/tx00100xt/SeriousSamClassic-VK",
-    "icon": "generic-dark.svg",
-    "pkgname": ["serioussam-vk"],
-    "aur": true
-  },
-  {
-    "name": "Seven Kingdoms Ancient Adversaries",
-    "description": "Conquer the world and build your empire! Lead one civilization to glory through sophisticated trade, diplomacy, espionage and conquest.",
-    "url": "https://7kfans.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["7kaa"],
-    "aur": true
-  },
-  {
-    "name": "Shadow Of The Wyrm",
-    "description": "A single player, traditional roguelike by Julian Day.",
-    "url": "https://www.shadowofthewyrm.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sotw"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Shattered Pixel Dungeon",
@@ -2523,14 +1002,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/shattered-pixel-dungeon_shattered-pixel-dungeon.png",
     "pkgname": ["shattered-pixel-dungeon"],
     "aur": false
-  },
-  {
-    "name": "Signus",
-    "description": "Signus: The Artefact Wars classic turn-based strategy war game similar to the old Battle Isle series.",
-    "url": "https://github.com/signus-game/signus/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["signus"],
-    "aur": true
   },
   {
     "name": "Simon Tatham's Portable Puzzle Collection",
@@ -2557,30 +1028,6 @@
     "aur": false
   },
   {
-    "name": "Sleepy Launcher",
-    "description": "A launcher for Zenless Zone Zero in Wine, with telemetry blocking and the necessary patches to play the game. Not officially endorsed or supported by the game developers.",
-    "url": "https://github.com/an-anime-team/an-anime-game-launcher",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sleepy-launcher"],
-    "aur": true
-  },
-  {
-    "name": "Space Station 14",
-    "description": "A multiplayer game about paranoia and chaos on a space station. Remake of the cult-classic Space Station 13.",
-    "url": "https://spacestation14.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["spacestation14-launcher-bin"],
-    "aur": true
-  },
-  {
-    "name": "Speed Dreams",
-    "description": "Fork of Torcs, aiming to implement exciting new features as well as improving realism.",
-    "url": "http://speed-dreams.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["speed-dreams-appimage"],
-    "aur": true
-  },
-  {
     "name": "Spring:1944",
     "description": "A WWII themed game with four fully functional sides (US, Germany, USSR, Britain), period-accurate units and strengths. Realism comes second only to creating a game that is fun and accessible to play. The game can be downloaded through SpringLobby, the official lobby client for the spring lobby.",
     "url": "https://spring1944.net/",
@@ -2589,92 +1036,12 @@
     "aur": false
   },
   {
-    "name": "Star Citizen",
-    "description": "A multiplayer, space trading and combat simulation video game.",
-    "url": "https://github.com/starcitizen-lug/lug-helper",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lug-helper"],
-    "aur": true
-  },
-  {
-    "name": "Stendhal",
-    "description": "Stendhal is a fun friendly and free multiplayer online adventure game with an old school feel.",
-    "url": "https://www.stendhalgame.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["stendhal-bin"],
-    "aur": true
-  },
-  {
-    "name": "Stepmania",
-    "description": "Advanced dance simulation game.",
-    "url": "https://www.stepmania.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["stepmania"],
-    "aur": true
-  },
-  {
     "name": "Stone Soup",
     "description": "Dungeon Crawl Stone Soup.",
     "url": "https://crawl.develz.org/wordpress/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/crawl-ncurses_org.develz.Crawl_console.png",
     "pkgname": ["crawl-ncurses"],
     "aur": false
-  },
-  {
-    "name": "Streets of Rage Remake",
-    "description": "A remake of the classic Streets of Rage 1, 2 and 3 by Sega.",
-    "url": "https://sorr.forumotion.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["streetsofrageremake"],
-    "aur": true
-  },
-  {
-    "name": "Stunt Rally",
-    "description": "Racing game with rally style of driving, mostly on gravel.",
-    "url": "https://stuntrally.tuxfamily.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["stuntrally-git"],
-    "aur": true
-  },
-  {
-    "name": "Sulis",
-    "description": "Turn based tactical RPG with several campaigns, written in Rust.",
-    "url": "https://www.sulisgame.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sulis"],
-    "aur": true
-  },
-  {
-    "name": "Summer Days",
-    "description": "Spin-off from the \"Days\" series and remake of Summer Days.",
-    "url": "https://shinydays.us/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nice-boat"],
-    "aur": true
-  },
-  {
-    "name": "Super Mario Bros. Remastered",
-    "description": "Recreation of the original Super Mario Bros.",
-    "url": "https://github.com/JHDev2006/Super-Mario-Bros.-Remastered-Public",
-    "icon": "generic-dark.svg",
-    "pkgname": ["smb1r-bin"],
-    "aur": true
-  },
-  {
-    "name": "Super Mario World",
-    "description": "Reverse engineered implementation of Super Mario World for the Super Nintendo",
-    "url": "https://github.com/snesrev/smw",
-    "icon": "generic-dark.svg",
-    "pkgname": ["smw"],
-    "aur": true
-  },
-  {
-    "name": "Super Metroid",
-    "description": "Reverse engineered implementation of Super Metroid for the Super Nintendo",
-    "url": "https://github.com/snesrev/sm",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sm-git"],
-    "aur": true
   },
   {
     "name": "SuperTux",
@@ -2701,36 +1068,12 @@
     "aur": false
   },
   {
-    "name": "TADS",
-    "description": "Prototype-based domain-specific programming language and set of standard libraries for creating interactive fiction (IF) games.",
-    "url": "https://tads.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["frobtads"],
-    "aur": true
-  },
-  {
-    "name": "Tales of Maj'Eyal (previously Troubles of Middle Earth)",
-    "description": "A dungeon crawler similar to Angband, based on the works of Tolkien.",
-    "url": "https://te4.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tome4"],
-    "aur": true
-  },
-  {
     "name": "Tali",
     "description": "Beat the odds in a poker-style dice game. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Tali",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/tali_org.gnome.Tali.png",
     "pkgname": ["tali"],
     "aur": false
-  },
-  {
-    "name": "Tecnoballz",
-    "description": "An exciting brick breaker game.",
-    "url": "https://linux.tlk.fr/games/TecnoballZ/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tecnoballz"],
-    "aur": true
   },
   {
     "name": "Teeworlds",
@@ -2746,23 +1089,15 @@
     "url": "https://terasology.org",
     "icon": "generic-dark.svg",
     "pkgname": ["terasology"],
-    "aur": true
-  },
-  {
-    "name": "Tesseract",
-    "description": "Smooth FPS with map editing, instagib, DM and CTF.",
-    "url": "http://tesseract.gg/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tesseract-game"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Tetrinet",
     "description": "Multiplayer online Tetris game for up to six people.",
     "url": "https://gtetrinet.sourceforge.net/",
     "icon": "generic-dark.svg",
-    "pkgname": ["gtetrinet"],
-    "aur": true
+    "pkgname": ["tetrinet"],
+    "aur": false
   },
   {
     "name": "The Battle for Wesnoth",
@@ -2773,54 +1108,6 @@
     "aur": false
   },
   {
-    "name": "The Honkers Railway Launcher",
-    "description": "A launcher for Honkai: Star Rail in Wine, with telemetry blocking and the necessary patches to play the game. Not officially endorsed or supported by the game developers.",
-    "url": "https://github.com/an-anime-team/an-anime-game-launcher",
-    "icon": "generic-dark.svg",
-    "pkgname": ["the-honkers-railway-launcher"],
-    "aur": true
-  },
-  {
-    "name": "The Legend of Edgar",
-    "description": "2D platformer: Venture across the world, battle fearsome creatures and solve puzzles to rescue your father.",
-    "url": "https://www.parallelrealities.co.uk/games/edgar/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["legendofedgar"],
-    "aur": true
-  },
-  {
-    "name": "The Legend of Zelda: A Link to the Past",
-    "description": "Reversed engineered PC port of The Legend of Zelda: A Link to the Past for the Super Nintendo",
-    "url": "https://github.com/snesrev/zelda3",
-    "icon": "generic-dark.svg",
-    "pkgname": ["zelda3-git"],
-    "aur": true
-  },
-  {
-    "name": "The Legend of Zelda: Majora's Mask",
-    "description": "Reversed engineered PC port of The Legend of Zelda: Majora's Mask for Nintendo 64",
-    "url": "https://github.com/Zelda64Recomp/Zelda64Recomp",
-    "icon": "generic-dark.svg",
-    "pkgname": ["zelda64recomp"],
-    "aur": true
-  },
-  {
-    "name": "The Mana World",
-    "description": "Serious effort to create an innovative free and open source MMORPG.",
-    "url": "https://www.themanaworld.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["manaplus"],
-    "aur": true
-  },
-  {
-    "name": "The Powder Toy",
-    "description": "Open source physics sandbox game, which simulates air pressure and velocity, heat, gravity and a countless number of interactions between different substances.",
-    "url": "https://powdertoy.co.uk/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["powder-toy"],
-    "aur": true
-  },
-  {
     "name": "The Ur-Quan Masters",
     "description": "A port of Star Control 2.",
     "url": "https://sc2.sourceforge.net/",
@@ -2829,164 +1116,12 @@
     "aur": false
   },
   {
-    "name": "Thrive",
-    "description": "Game about evolution, in which the player guides a species from their origin as a microbe to the space age and beyond.",
-    "url": "https://revolutionarygamesstudio.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["thrive-bin"],
-    "aur": true
-  },
-  {
-    "name": "Toppler",
-    "description": "Reimplementation of the classic jump & run game \"Nebulus\".",
-    "url": "https://gitlab.com/roever/toppler/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["toppler"],
-    "aur": true
-  },
-  {
-    "name": "Torcs",
-    "description": "3D racing cars simulator using OpenGL.",
-    "url": "https://torcs.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["torcs"],
-    "aur": true
-  },
-  {
-    "name": "Trackballs",
-    "description": "A 3D marble game inspired by the classic Marble Madness.",
-    "url": "https://trackballs.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["trackballs"],
-    "aur": true
-  },
-  {
-    "name": "Tremulous",
-    "description": "FPS with elements of real time strategy, featuring humans and aliens.",
-    "url": "https://github.com/grangerhub/tremulous/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tremulous-grangerhub-bin"],
-    "aur": true
-  },
-  {
-    "name": "Trigger Rally",
-    "description": "Free OpenGL rally car racing game.",
-    "url": "https://sourceforge.net/projects/trigger-rally/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["trigger"],
-    "aur": true
-  },
-  {
-    "name": "TripleA",
-    "description": "An online multiplayer turn based strategy game and board game engine.",
-    "url": "https://triplea-game.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["triplea"],
-    "aur": true
-  },
-  {
-    "name": "Tux Math",
-    "description": "Arcade game that helps kids practice their math facts.",
-    "url": "https://github.com/tux4kids/tuxmath",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tuxmath"],
-    "aur": true
-  },
-  {
-    "name": "Tux Paint",
-    "description": "Drawing program designed for young children.",
-    "url": "https://tuxpaint.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tuxpaint"],
-    "aur": true
-  },
-  {
-    "name": "Tux Typing",
-    "description": "Educational typing tutor for kids starring Tux.",
-    "url": "https://github.com/tux4kids/tuxtype",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tuxtype"],
-    "aur": true
-  },
-  {
-    "name": "Ultimate Stunts",
-    "description": "Remake of the famous DOS-game 'stunts'.",
-    "url": "http://www.ultimatestunts.nl/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ultimatestunts"],
-    "aur": true
-  },
-  {
-    "name": "Ultrastar Deluxe",
-    "description": "A SingStar karaoke clone.",
-    "url": "https://usdx.eu/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ultrastardx-git"],
-    "aur": true
-  },
-  {
-    "name": "Unknown Horizons",
-    "description": "2.5D isometric real-time strategy simulation with an emphasis on economy and city building. Expand your small settlement to a strong and wealthy colony, collect taxes and supply your inhabitants with valuable goods. Increase your power with a well balanced economy and with strategic trade and diplomacy.",
-    "url": "http://www.unknown-horizons.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["unknown-horizons"],
-    "aur": true
-  },
-  {
-    "name": "Unreal Tournament (2014)",
-    "description": "Free and open-source remake of the original using Unreal Engine 4.",
-    "url": "https://www.unrealtournament.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["unrealtournament4"],
-    "aur": true
-  },
-  {
-    "name": "Unvanquished",
-    "description": "Team-based fps/rts hybrid game which pits aliens against humans. Monthly release that can be played on official servers.",
-    "url": "https://unvanquished.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["unvanquished"],
-    "aur": true
-  },
-  {
-    "name": "Urban Terror",
-    "description": "Modern multiplayer FPS based on the ioquake3 engine.",
-    "url": "http://urbanterror.info",
-    "icon": "generic-dark.svg",
-    "pkgname": ["urbanterror"],
-    "aur": true
-  },
-  {
-    "name": "Valyria Tear",
-    "description": "An attempt at creating a free (as meant in the Gnu Public License) J-RPG game.",
-    "url": "https://valyriatear.blogspot.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["valyria-tear-git"],
-    "aur": true
-  },
-  {
     "name": "VCMI",
     "description": "Attempt to reimplement Heroes of Might and Magic III.",
     "url": "https://forum.vcmi.eu/portal.php",
     "icon": "generic-dark.svg",
     "pkgname": ["vcmi"],
-    "aur": true
-  },
-  {
-    "name": "VDrift",
-    "description": "Open source driving simulation made with drift racing in mind.",
-    "url": "https://vdrift.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vdrift"],
-    "aur": true
-  },
-  {
-    "name": "Vega Strike",
-    "description": "Realistic space flight simulator with trading and fighting.",
-    "url": "https://www.vega-strike.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vegastrike"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Veloren",
@@ -2994,63 +1129,7 @@
     "url": "http://www.veloren.net/",
     "icon": "generic-dark.svg",
     "pkgname": ["airshipper"],
-    "aur": true
-  },
-  {
-    "name": "Vintage Story",
-    "description": "An in-development indie sandbox game about innovation and exploration.",
-    "url": "https://www.vintagestory.at/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vintagestory"],
-    "aur": true
-  },
-  {
-    "name": "Voxelands",
-    "description": "A fork of Minetest, an Infiniminer/Minecraft inspired game.",
-    "url": "https://gitlab.com/voxelands/voxelands",
-    "icon": "generic-dark.svg",
-    "pkgname": ["voxelands"],
-    "aur": true
-  },
-  {
-    "name": "VoxeLibre",
-    "description": "Minecraft clone game for Luanti.",
-    "url": "https://git.minetest.land/VoxeLibre/VoxeLibre",
-    "icon": "generic-dark.svg",
-    "pkgname": ["luanti-voxelibre"],
-    "aur": true
-  },
-  {
-    "name": "vpinball",
-    "description": "An open source pinball table editor and simulator",
-    "url": "https://github.com/vpinball/vpinball",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vpinball"],
-    "aur": true
-  },
-  {
-    "name": "VVVVVV",
-    "description": "Highly praised 2D puzzle platform indie game with a C64 retro theme, with a great chiptune soundtrack.",
-    "url": "https://thelettervsixtim.es/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vvvvvv-git"],
-    "aur": true
-  },
-  {
-    "name": "wanderer",
-    "description": "Wanderer is a game similar to Boulderdash, Repton, XOR and others.",
-    "url": "https://e271.net/~marina/wanderer.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["wanderer"],
-    "aur": true
-  },
-  {
-    "name": "Warmux (previously Wormux)",
-    "description": "Somewhat similar to Worms 2/Worms Armageddon.",
-    "url": "https://github.com/a-team/wormux/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["warmux"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Warsow",
@@ -3077,130 +1156,11 @@
     "aur": false
   },
   {
-    "name": "WolkenWelten",
-    "description": "Gamemix between Minecraft, Quake ]I[ and Emacs in C99.",
-    "url": "https://wolkenwelten.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["wolkenwelten-git"],
-    "aur": true
-  },
-  {
-    "name": "World of Goo",
-    "description": "Great 2D puzzle game.",
-    "url": "https://www.2dboy.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["worldofgoo"],
-    "aur": true
-  },
-  {
-    "name": "World of Padman",
-    "description": "Stand slone somplex &ndash; cartoon-style multiplayer first-person shooter.",
-    "url": "https://worldofpadman.net/website",
-    "icon": "generic-dark.svg",
-    "pkgname": ["worldofpadman"],
-    "aur": true
-  },
-  {
-    "name": "Wrymsun",
-    "description": "Fantasy game initially based on Stratagus engine.",
-    "url": "https://andrettin.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["Wyrmsun"],
-    "aur": true
-  },
-  {
-    "name": "XBill",
-    "description": "Kill all instances of a virus before it infects all computers with a malware resembling Microsoft Windows.",
-    "url": "http://www.xbill.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xbill"],
-    "aur": true
-  },
-  {
-    "name": "XInvaders3D",
-    "description": "XInvaders3D is a 3D Vector Graphics Space Invaders clone for X11.",
-    "url": "https://github.com/JoesCat/xinvaders3d",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xinvaders3d"],
-    "aur": true
-  },
-  {
-    "name": "XMahjongg",
-    "description": "Mahjongg solitaire for X.",
-    "url": "https://www.lcdf.org/xmahjongg/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xmahjongg"],
-    "aur": true
-  },
-  {
-    "name": "XMoto",
-    "description": "Challenging 2D motocross platform game, where physics play an important role.",
-    "url": "https://xmoto.tuxfamily.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xmoto"],
-    "aur": true
-  },
-  {
     "name": "Xonotic",
     "description": "Free, open-source first person shooter (a fork of Nexuiz but with modified gameplay).",
     "url": "https://xonotic.org",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xonotic_xonotic.png",
     "pkgname": ["xonotic"],
     "aur": false
-  },
-  {
-    "name": "XPilot",
-    "description": "XPilot is a multi-player 2D space game. Some features are borrowed from classics like the Atari coin-ups Asteroids and Gravitar, and the home-computer games Thrust (Commodore 64) and Gravity Force (Commodore Amiga), but XPilot has many new aspects too.",
-    "url": "https://www.xpilot.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xpilot"],
-    "aur": true
-  },
-  {
-    "name": "xroach",
-    "description": "cockroaches hide under your windows.",
-    "url": "https://github.com/sergev/4.4BSD-Lite2/tree/master/usr/src/games/xroach",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xroach"],
-    "aur": true
-  },
-  {
-    "name": "Xscorch",
-    "description": "Clone of the classic DOS game Scorched Earth.",
-    "url": "http://www.xscorch.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xscorch"],
-    "aur": true
-  },
-  {
-    "name": "xu4",
-    "description": "Remake of the computer game Ultima IV.",
-    "url": "https://xu4.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xu4-svn"],
-    "aur": true
-  },
-  {
-    "name": "Yume Nikki",
-    "description": "A 2004 surrealist exploration game where you wander the eerie dream world of a girl named Madotsuki.",
-    "url": "https://www3.nns.ne.jp/~tk-mto/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["yumenikki-en"],
-    "aur": true
-  },
-  {
-    "name": "ZDoom",
-    "description": "A discontinued enhanced Doom port with additional support for Heretic, Hexen and Strife.",
-    "icon": "generic-dark.svg",
-    "pkgname": ["zdoom"],
-    "aur": true
-  },
-  {
-    "name": "Zero-K",
-    "description": "Open source RTS game running on the Spring engine.",
-    "url": "https://zerok.itch.io/zero-k",
-    "icon": "generic-dark.svg",
-    "pkgname": ["zero-k"],
-    "aur": true
   }
 ]

@@ -67,20 +67,29 @@ function getAppStreamIconMap(): Map<string, string> {
     const files: string[] = [];
     for (const dir of xmlSearchPaths) {
       try {
-        if (!existsSync(dir)) continue;
+        if (!existsSync(dir)) {
+          console.log(`Directory does not exist: ${dir}`);
+          continue;
+        }
         const found = execSync(`find "${dir}" -name "*.xml.gz" 2>/dev/null`).toString().split('\n').filter(Boolean);
+        console.log(`Found ${found.length} files in ${dir}`);
         files.push(...found);
-      } catch {
-        // ignore
+      } catch (e) {
+        console.warn(`Error searching ${dir}:`, e.message);
       }
     }
 
-    if (files.length === 0) return iconMap;
+    if (files.length === 0) {
+      console.warn('No AppStream XML files found! Icon map will be empty.');
+      return iconMap;
+    }
 
     for (const file of files) {
       try {
+        console.log(`Processing ${file}...`);
         const output = execSync(`gzip -dc "${file}"`, { maxBuffer: 100 * 1024 * 1024 }).toString();
         const components = output.match(/<component[\s\S]*?<\/component>/g) || [];
+        console.log(`Found ${components.length} components in ${file}`);
 
         for (const comp of components) {
           const pkgMatch = comp.match(/<pkgname>(.*?)<\/pkgname>/);
@@ -115,16 +124,18 @@ function getAppStreamIconMap(): Map<string, string> {
           if (absolutePath && !iconMap.has(pkgname)) {
             iconMap.set(pkgname, absolutePath);
           } else if (iconName && !iconMap.has(pkgname)) {
+            // If we have an icon name but couldn't find the absolute path, still keep the name
             iconMap.set(pkgname, iconName);
           }
         }
-      } catch {
-        // ignore
+      } catch (e) {
+        console.warn(`Error processing ${file}:`, e.message);
       }
     }
   } catch (e) {
     console.warn('Error building AppStream map:', e);
   }
+  console.log(`Final AppStream icon map has ${iconMap.size} entries.`);
   return iconMap;
 }
 
@@ -249,12 +260,76 @@ async function enrichGamingPackageLists(iconMap: Map<string, string>) {
   }
 }
 
+/**
+ * Enrich the setup wizard package lists with AppStream icons
+ */
+async function enrichSetupWizardPackageLists(iconMap: Map<string, string>) {
+  const setupPath = join(process.cwd(), 'packages/renderer/src/app/components/setup-wizard/setup-wizard.data.ts');
+  if (!existsSync(setupPath)) return;
+
+  console.log('Enriching setup wizard package lists with AppStream icons...');
+  const content = readFileSync(setupPath, 'utf8');
+  const lines = content.split('\n');
+  let updatedCount = 0;
+  let currentPkgname: string | undefined;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Track the package name for the current item block
+    const pkgMatch = line.match(/packages:\s*\[\s*['"]([^'"]+)['"]/);
+    if (pkgMatch) {
+      currentPkgname = pkgMatch[1];
+    }
+
+    // Target icon fields
+    if (!line.includes("icon: '") && !line.includes('icon: "')) continue;
+
+    if (currentPkgname) {
+      let betterIcon = iconMap.get(currentPkgname);
+      // Try common variations
+      if (!betterIcon) {
+        for (const suffix of ['-git', '-bin', '-beta', '-launcher', '-desktop']) {
+          if (currentPkgname.endsWith(suffix)) {
+            betterIcon = iconMap.get(currentPkgname.replace(suffix, ''));
+            if (betterIcon) break;
+          }
+        }
+      }
+
+      if (betterIcon) {
+        const currentIconMatch = line.match(/icon:\s*['"]([^'"]+)['"]/);
+        const currentIcon = currentIconMatch ? currentIconMatch[1] : '';
+
+        // Only update if it's currently a generic icon or if the betterIcon is an absolute path (more specific)
+        if (currentIcon.includes('generic') || (betterIcon.startsWith('/') && !currentIcon.startsWith('/'))) {
+          console.log(`Matching icon for ${currentPkgname}: ${betterIcon}`);
+          const isSingleQuote = line.includes("icon: '");
+          const quote = isSingleQuote ? "'" : '"';
+
+          lines[i] = line.replace(/icon:\s*['"][^'"]+['"]/, `icon: ${quote}${betterIcon}${quote}`);
+          updatedCount++;
+        }
+      }
+    }
+  }
+
+  if (updatedCount > 0) {
+    writeFileSync(setupPath, lines.join('\n'));
+    console.log(`Successfully updated ${updatedCount} icons in setup wizard data.`);
+  } else {
+    console.log('No icons were updated in setup wizard data.');
+  }
+}
+
 async function main() {
   const mode = process.argv.includes('--local') ? 'local' : 'fetch';
-  const excludeAur = process.argv.includes('--exclude-aur');
-  const includeAur = !excludeAur;
+  const includeAur = process.argv.includes('--include-aur');
   const updateGaming = process.argv.includes('--gaming');
-  console.log(`Starting ArchWiki sync (mode: ${mode}, includeAur: ${includeAur}, updateGaming: ${updateGaming})...`);
+  const updateSetup = process.argv.includes('--setup');
+  console.log(
+    `Starting ArchWiki sync (mode: ${mode}, includeAur: ${includeAur}, updateGaming: ${updateGaming}, updateSetup: ${updateSetup})...`,
+  );
 
   const sourcesDir = 'assets/sources';
   const parsedDir = 'assets/parsed';
@@ -269,80 +344,101 @@ async function main() {
     await enrichGamingPackageLists(iconMap);
   }
 
-  let inRepo: string[] = [];
-  try {
-    inRepo = execSync('pacman -Ssq')
-      .toString()
-      .split('\n')
-      .map((p) => p.trim())
-      .filter((p) => p);
-  } catch {
-    console.warn('Could not run pacman -Ssq, will not filter by repository availability.');
+  if (updateSetup || updateGaming) {
+    await enrichSetupWizardPackageLists(iconMap);
   }
 
-  const hasPacman = inRepo.length > 0;
-  for (const cat of CATEGORIES) {
-    let text = '';
-    const sourceFile = join(sourcesDir, `${cat.toLowerCase()}.txt`);
-
-    if (mode === 'fetch') {
-      const pageTitle = cat === 'Games' ? 'List_of_games' : `List_of_applications/${cat}`;
-      const url = `${BASE_URL}${pageTitle}${RAW_SUFFIX}`;
-      console.log(`Fetching ${cat} from ${url}...`);
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-        text = await response.text();
-        writeFileSync(sourceFile, text);
-      } catch (error) {
-        console.error(`Failed to fetch ${cat}:`, error);
-        continue;
-      }
-    } else {
-      if (!existsSync(sourceFile)) {
-        console.warn(`Source file missing for ${cat}: ${sourceFile}`);
-        continue;
-      }
-      text = readFileSync(sourceFile, 'utf8');
+  if (!updateGaming && !updateSetup) {
+    let inRepo: string[] = [];
+    try {
+      inRepo = execSync('pacman -Ssq')
+        .toString()
+        .split('\n')
+        .map((p) => p.trim())
+        .filter((p) => p);
+    } catch {
+      console.warn('Could not run pacman -Ssq, will not filter by repository availability.');
     }
 
-    const lines = text.split('\n');
-    const apps: Package[] = [];
+    const hasPacman = inRepo.length > 0;
+    for (const cat of CATEGORIES) {
+      let text: string | NodeJS.ArrayBufferView<ArrayBufferLike>;
+      const sourceFile = join(sourcesDir, `${cat.toLowerCase()}.txt`);
 
-    for (const line of lines) {
-      const app = parseAppEntry(line);
-      if (app) {
-        const pkgname = app.pkgname[0];
-        let appStreamIcon = iconMap.get(pkgname);
+      if (mode === 'fetch') {
+        const pageTitle = cat === 'Games' ? 'List_of_games' : `List_of_applications/${cat}`;
+        const url = `${BASE_URL}${pageTitle}${RAW_SUFFIX}`;
+        console.log(`Fetching ${cat} from ${url}...`);
 
-        if (!appStreamIcon) {
-          for (const suffix of ['-git', '-bin']) {
-            if (pkgname.endsWith(suffix)) {
-              appStreamIcon = iconMap.get(pkgname.replace(suffix, ''));
-              if (appStreamIcon) break;
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+          text = await response.text();
+          writeFileSync(sourceFile, text);
+        } catch (error) {
+          console.error(`Failed to fetch ${cat}:`, error);
+          continue;
+        }
+      } else {
+        if (!existsSync(sourceFile)) {
+          console.warn(`Source file missing for ${cat}: ${sourceFile}`);
+          continue;
+        }
+        text = readFileSync(sourceFile, 'utf8');
+      }
+
+      const lines = text.split('\n');
+      const apps: Package[] = [];
+      let skippedCount = 0;
+
+      for (const line of lines) {
+        const app = parseAppEntry(line);
+        if (app) {
+          const pkgname = app.pkgname[0];
+
+          if (hasPacman) {
+            const foundInRepo = inRepo.includes(pkgname);
+            if (foundInRepo) {
+              app.aur = false;
+            } else {
+              app.aur = true;
+              if (!includeAur) {
+                skippedCount++;
+                continue;
+              }
+            }
+          } else if (!includeAur && app.aur) {
+            skippedCount++;
+            continue;
+          }
+
+          let appStreamIcon = iconMap.get(pkgname);
+
+          if (!appStreamIcon) {
+            for (const suffix of ['-git', '-bin']) {
+              if (pkgname.endsWith(suffix)) {
+                appStreamIcon = iconMap.get(pkgname.replace(suffix, ''));
+                if (appStreamIcon) break;
+              }
             }
           }
-        }
 
-        if (appStreamIcon) app.icon = appStreamIcon;
+          if (appStreamIcon) app.icon = appStreamIcon;
 
-        if (hasPacman) {
-          const foundInRepo = inRepo.includes(pkgname);
-          if (foundInRepo) app.aur = false;
-          else if (!includeAur) continue;
+          apps.push(app);
         }
-        apps.push(app);
       }
+
+      apps.sort((a, b) => a.name.localeCompare(b.name));
+      writeFileSync(join(parsedDir, `${cat.toLowerCase()}-repo.json`), JSON.stringify(apps, null, 2));
+      console.log(
+        `Processed ${cat}: ${apps.length} applications found${skippedCount > 0 ? ` (${skippedCount} non-repo packages skipped)` : ''}.`,
+      );
     }
 
-    apps.sort((a, b) => a.name.localeCompare(b.name));
-    writeFileSync(join(parsedDir, `${cat.toLowerCase()}-repo.json`), JSON.stringify(apps, null, 2));
-    console.log(`Processed ${cat}: ${apps.length} applications found.`);
+    console.log('Sync complete!');
   }
-
-  console.log('Sync complete!');
 }
 
 void main();

@@ -449,7 +449,7 @@ See also [[Wikipedia:List of open source bioinformatics software]].
 * {{App|[[Wikipedia:Biopython|Biopython]]|Python package with tools for computational biology, as well as bioinformatics.|https://biopython.org/wiki/Biopython|{{AUR|python-biopython}}}}
 * {{App|[[Wikipedia:EMBOSS|EMBOSS]] (European Molecular Biology Open Software Suite)|Open source software analysis package specially developed for the needs of the molecular biology and bioinformatics user community.|https://emboss.sourceforge.net/|{{AUR|emboss}}}}
 * {{App|[[Wikipedia:MUMmer|MUMmer]]|Bioinformatics software system for sequence alignment based on suffix trees.|https://mummer.sourceforge.net/|{{AUR|mummer}}}}
-* {{App|Snapgene|Closed source molecular cloning application that offers a fast and easy way to plan, visualize, and document molecular biology procedures. Supports a wide range of cloning and PCR manipulations. The free version allows most common visualizations of a molecular biology workflow.|https://www.snapgene.com/|{{AUR|snapgene-viewer}}}}
+* {{App|Snapgene|Closed source molecular cloning application that offers a fast and easy way to plan, visualize, and document molecular biology procedures. Supports a wide range of cloning and PCR manipulations. The free version allows most common visualizations of a molecular biology workflow.|https://www.snapgene.com/|{{AUR|snapgene-viewer}}{{Broken package link|package not found}}}}
 * {{App|[[Wikipedia:UGENE|UGENE]]|Application that integrates dozens of well-known biological tools and algorithms, providing both graphical user and command-line interfaces.|https://ugene.net/|{{AUR|ugene}}}}
 
 === Genealogy ===

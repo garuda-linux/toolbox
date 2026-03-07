@@ -541,7 +541,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 * {{App|[[Wikipedia:Orange (software)|Orange]]|Visual programming toolkit for data mining, ML and interactive visualization.|https://orange.biolab.si/|{{AUR|python-orange}}}}
 * {{App|[[Wikipedia:Prolog|Prolog]]|Logic-programming language for symbolic AI and computational linguistics.|https://www.swi-prolog.org/|{{Pkg|swi-prolog}}, {{AUR|gprolog}}, {{AUR|scryer-prolog}}}} 
 * {{App|[[Wikipedia:PyTorch|PyTorch]]|Dynamic neural-network framework with strong GPU acceleration.|https://pytorch.org/|{{Pkg|python-pytorch}}, {{Pkg|python-pytorch-cuda}}, {{Pkg|python-pytorch-opt}}, {{Pkg|python-pytorch-opt-cuda}}, {{Pkg|python-pytorch-rocm}}, {{Pkg|python-pytorch-opt-rocm}}}}
-* {{App|libtorch|C++ frontend for PyTorch.|https://pytorch.org|{{AUR|libtorch-cuda}}, {{AUR|libtorch-cxx11abi-cpu}}, {{AUR|libtorch-cxx11abi-cuda}}, {{AUR|libtorch-cxx11abi-rocm}}}}
+* {{App|libtorch|C++ frontend for PyTorch.|https://pytorch.org|{{AUR|libtorch-cuda}}, {{AUR|libtorch-cxx11abi-cpu}}{{Broken package link|package not found}}, {{AUR|libtorch-cxx11abi-cuda}}{{Broken package link|package not found}}, {{AUR|libtorch-cxx11abi-rocm}}{{Broken package link|package not found}}}}
 * {{App|mlpack|Fast, scalable C++ ML library with Python / R / Julia / Go bindings.|https://mlpack.org|{{AUR|mlpack}}}}
 * {{App|SentencePiece|Unsupervised text tokenizer for neural text generation.|https://github.com/google/sentencepiece|{{AUR|sentencepiece}} / {{AUR|sentencepiece-bin}} (C++), {{AUR|python-sentencepiece}} / {{AUR|python-sentencepiece-bin}} (Python)}}
 * {{App|Sentence Transformers|Python framework for state-of-the-art sentence / text / image embeddings.|https://github.com/UKPLab/sentence-transformers|{{AUR|python-sentence-transformers}}}}
@@ -623,7 +623,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 * {{App|Cursor|Write, edit, and chat about your code with GPT.|https://cursor.so|{{AUR|cursor-bin}}}}
 * {{App|opencode|AI coding agent built for the terminal.|https://github.com/sst/opencode|{{Pkg|opencode}}}}
 * {{App|Kiro|An AI-powered IDE for rapid prototyping to production.|https://kiro.dev/ |{{AUR|kiro-ide}}}}
-* {{App|qwen-code|CLI coding agent (fork of gemini-cli) with AI-powered code generation and assistance.|https://github.com/QwenLM/Qwen-Code|{{AUR|qwen-code}}}}
+* {{App|qwen-code|CLI coding agent (fork of gemini-cli) with AI-powered code generation and assistance.|https://github.com/QwenLM/Qwen-Code|{{Pkg|qwen-code}}}}
 
 === Multimedia processing ===
 

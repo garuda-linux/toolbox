@@ -307,6 +307,7 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|vitunes|Curses-based music player and playlist manager with vim-like keybindings.|http://vitunes.org/|{{AUR|vitunes}}}}
 * {{App|whistle|Curses-based commandline audio player.|https://github.com/ap0calypse/whistle/|{{AUR|whistle-git}}}}
 * {{App|XMMS2|Complete rewrite of the popular music player.|https://github.com/xmms2/wiki/wiki|{{Pkg|xmms2}}}}
+* {{App|rmpc|A beautiful and configurable TUI client for MPD.|https://rmpc.mierak.dev|{{Pkg|rmpc}}}}
 
 ==== Graphical ====
 
@@ -367,14 +368,12 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|Cider|An open source and community oriented Apple Music client for Windows, Linux, macOS, and more. Based on the [https://electronjs.org/ Electron] platform.|https://cider.sh/|{{AUR|cider}}}}
 * {{App|Google Play Music Desktop Player|Beautiful cross platform desktop player for Google Play Music. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-/|{{AUR|gpmdp}}}}
 * {{App|Headset|Desktop application that turns YouTube into a world class music streaming service. Based on the [https://electronjs.org/ Electron] platform.|https://headsetapp.co/|{{AUR|headset}}}}
-* {{App|ncspot|Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes.|https://github.com/hrkfdn/ncspot|{{Pkg|ncspot}}}}
 * {{App|Nuclear|Modern music player focused on streaming from free sources. Based on the [https://electronjs.org/ Electron] platform.|https://nuclear.js.org/|{{AUR|nuclear-player-bin}}}}
 * {{App|[[pianobar]]|Console-based frontend for the online radio Pandora.|https://6xq.net/projects/pianobar/|{{Pkg|pianobar}}}}
 * {{App|Pear Desktop|Electron-based wrapper around YouTube Music with built in addons.|https://github.com/pear-devs/pear-desktop|{{AUR|pear-desktop}}}}
 * {{App|Pithos|Python/GTK Pandora Radio desktop client.|https://pithos.github.io/|{{AUR|pithos}}}}
-* {{App|[[Spotify]]|Proprietary music streaming service. It supports local playback and streaming from Spotify's vast library (requires a free account).|https://www.spotify.com/|{{AUR|spotify}}}}
-* {{App|spotify-qt|Lightweight Spotify client using Qt.|https://github.com/kraxarn/spotify-qt|{{AUR|spotify-qt}}}}
-* {{App|spotify-tui|Spotify for the terminal written in Rust. (Project is in hiatus. Does not compile due to several library changes. See [https://github.com/Rigellute/spotify-tui/issues/1000 Rigellute/spotify-tui #1000])|https://github.com/Rigellute/spotify-tui|{{AUR|spotify-tui}}}}
+* {{App|[[Spotify]]|Proprietary music streaming service that supports local playback and streaming.|https://www.spotify.com/|{{AUR|spotify}}}}
+: See [[Spotify#Third-party clients]] for alternatives.
 * {{App|TIDAL Hi-Fi (Max quality)|The web version of [https://listen.tidal.com TIDAL Player] running in electron with Hi-Fi (High & Max) support thanks to widevine|https://github.com/Mastermindzh/tidal-hifi|{{AUR|tidal-hifi-bin}}}}
 
 === Audio tag editors ===
@@ -769,7 +768,7 @@ See also [[Wikipedia:Comparison of subtitle editors]].
 * {{App|Gaupol|Full-featured subtitle editor.|https://otsaloma.io/gaupol/|{{Pkg|gaupol}}}}
 * {{App|[[Wikipedia:Gnome Subtitles|Gnome Subtitles]]|Video subtitle editor for GNOME.|http://www.gnomesubtitles.org/|{{Pkg|gnome-subtitles}}}}
 * {{App|Jubler|Open-source multiplatform subtitle editor written in Java.|https://www.jubler.org/|{{AUR|jubler}}}}
-* {{App|Subtitle Composer|Subtitle editor for KDE supporting various formats, features different player backends, able to display wave form.|https://subtitlecomposer.kde.org/|{{AUR|subtitlecomposer}}}}
+* {{App|Subtitle Composer|Subtitle editor for KDE supporting various formats, features different player backends, able to display wave form.|https://subtitlecomposer.kde.org/|{{Pkg|subtitlecomposer}}}}
 * {{App|[[Wikipedia:Subtitle_Edit|Subtitle Edit]]|Subtitle editing program. Written in C# using mono.|https://github.com/SubtitleEdit/subtitleedit|{{AUR|subtitleedit}}}}
 * {{App|Subtitle Editor|GTK 3 tool to edit subtitles for GNU/Linux/*BSD.|https://kitone.github.io/subtitleeditor/{{Dead link|2025|11|17|status=404}}|{{AUR|subtitleeditor}}}}
 
@@ -834,6 +833,7 @@ See [[Optical disc drive#DVD-Video]].
 * {{App|Griffith|Movie collection manager application.|https://gitlab.com/Strit/griffith|{{Pkg|griffith}}}}
 * {{App|MediaElch|Media manager for Kodi. Information about movies, TV shows, concerts and music are stored as nfo files.|https://www.kvibes.de/mediaelch/|{{Pkg|mediaelch}}}}
 * {{App|[[Wikipedia:Tellico_(software)|Tellico]]|KDE application for organizing various collections (books, video, music, coins, etc.).|https://tellico-project.org/|{{Pkg|tellico}}}}
+* {{App|MusicLib|KDE application for organizing and managing a music library. Integrates with Audacious player, Kid3 Audio Tagger, and kdeconnect for mobile sync|https://github.com/Harpo3/musiclib|{{AUR|musiclib}}}}
 * {{App|tinyMediaManager|Media management tool to provide metadata for Kodi.|https://www.tinymediamanager.org/|{{AUR|tiny-media-manager}}}}
 * {{App|freeLib|Book library manager with support for inpx-based libraries; includes OPDS and Web servers.|https://github.com/petrovvlad/freeLib/|{{AUR|freelib-git}}}}
 

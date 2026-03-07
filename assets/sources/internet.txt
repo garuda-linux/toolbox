@@ -158,6 +158,7 @@ See also [[Wikipedia:Blink (web engine)]].
 * {{App|Helium|A browser in beta based on Ungoogled Chromium with Chrome Web Store proxying and additional features, such as split view and !bangs in the address bar.|https://helium.computer/|{{AUR|helium-browser-bin}}}}
 * {{App|Thorium|Thorium develops a periodically synchronized fork of the Chromium browser, expanded with additional patches to optimize performance, improve usability and enhance security. According to the developers' tests Thorium is 8-40% ahead of the regular Chromium, mainly due to the inclusion of additional optimizations during compilation.|https://thorium.rocks/|{{AUR|thorium-browser-bin}}}}
 * {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]]|Modifications to Google Chromium for removing Google integration and enhancing privacy, control, and transparency|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium}}}}
+* {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]] (Widevine)|A patched version of Ungoogled Chromium for those who want to benefit from its privacy features while also being able to access DRM-protected content.|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium-widevine-bin}}}}
 
 ===== Proprietary chromium spin-offs =====
 
@@ -721,6 +722,7 @@ See also [[Ring]] and [[Tox]].
 * {{App|[[Wikipedia:Briar (software)|Briar]]|Briar is a messaging application designed for activists, journalists, and anyone else who needs a safe, easy and robust way to communicate.|https://briarproject.org/|{{AUR|briar-desktop}}, {{AUR|briar-headless}}}}
 * {{App|Manyverse|Modern decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB).|https://gitlab.com/staltz/manyverse|{{AUR|manyverse-bin}}}}
 * {{App|Patchwork|Decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB). Based on the [https://electronjs.org/ Electron] platform.|https://github.com/ssbc/patchwork|{{AUR|ssb-patchwork}}}}
+* {{App|Poncho Wonky|Decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB). Based on the [https://electronjs.org/ Electron] platform. Maintained, updated Fork of Patchwork|https://github.com/soapdog/patchwork/|{{AUR|poncho-wonky}}}}
 * {{App|RetroShare|Serverless encrypted instant messenger with filesharing, chatgroups, mail.|https://retroshare.cc/|{{AUR|retroshare}}}}
 * {{App|[[Wikipedia:Ricochet (software)|Ricochet]]|Anonymous peer-to-peer instant messaging system built on [[Tor]] hidden services.|https://www.ricochetrefresh.net/|{{AUR|ricochet-refresh}}}}
 
@@ -838,7 +840,7 @@ See also [[Wikipedia:Comparison of feed aggregators]].
 * {{App|[[Wikipedia:Liferea|Liferea]]|GTK news aggregator for online news feeds and weblogs.|https://lzone.de/liferea/|{{Pkg|liferea}}}}
 * {{App|Newsflash|Modern feed reader designed for the GNOME desktop. The spiritual successor to FeedReader.|https://apps.gnome.org/NewsFlash/|{{Pkg|newsflash}}}}
 * {{App|Raven|Simple desktop RSS reader made using VueJS. Based on the [https://electronjs.org/ Electron] platform.|https://ravenreader.app/|{{AUR|raven-reader}}}}
-* {{App|RSS Guard|Very tiny RSS and ATOM news reader developed using Qt framework.|https://github.com/martinrotter/rssguard|{{Pkg|rssguard}} or {{Pkg|rssguard-lite}}}}
+* {{App|RSS Guard|Very tiny RSS and ATOM news reader developed using Qt framework.|https://github.com/martinrotter/rssguard|{{Pkg|rssguard}}}}
 * {{App|Tickr|GTK-based RSS Reader that displays feeds as a smooth scrolling line on your desktop, as known from TV stations.|https://www.open-tickr.net/|{{AUR|tickr}}}}
 
 ==== Graphical, Web-based ====

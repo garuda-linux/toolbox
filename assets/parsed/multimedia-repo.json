@@ -1,13 +1,5 @@
 [
   {
-    "name": "A Photo Tool (Libre)",
-    "description": "Photo editor with easy to use basic image editing tools.",
-    "url": "https://www.ahola.me/aphototoollibre.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aphototoollibre"],
-    "aur": true
-  },
-  {
     "name": "ADLMIDI",
     "description": "OPL3/OPN2 synthesizer using ADLMIDI.",
     "url": "https://github.com/jpcima/adljack",
@@ -32,36 +24,12 @@
     "aur": false
   },
   {
-    "name": "Agordejo",
-    "description": "Music and audio production session manager based on NSM.",
-    "url": "https://www.laborejo.org/agordejo/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["agordejo"],
-    "aur": true
-  },
-  {
-    "name": "Airsonic Advanced",
-    "description": "Web-based media streamer, providing ubiquitous access to your music. (Fork of Subsonic.)",
-    "url": "https://github.com/airsonic-advanced/airsonic-advanced",
-    "icon": "generic-dark.svg",
-    "pkgname": ["airsonic-advanced-bin"],
-    "aur": true
-  },
-  {
     "name": "alsamixer",
     "description": "Soundcard mixer for ALSA soundcard driver, with ncurses interface.",
     "url": "https://alsa-project.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["alsa-utils"],
     "aur": false
-  },
-  {
-    "name": "AlsaVolume",
-    "description": "Tray ALSA volume changer written using gtkmm.",
-    "url": "https://github.com/Vitozz/cppAlsaVolume",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cpp-alsa-volume"],
-    "aur": true
   },
   {
     "name": "Amarok",
@@ -101,7 +69,7 @@
     "url": "https://www.patri9ck.dev/a2ln/",
     "icon": "generic-dark.svg",
     "pkgname": ["a2ln"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Android File Transfer",
@@ -112,36 +80,12 @@
     "aur": false
   },
   {
-    "name": "Aqualung",
-    "description": "Advanced music player, which plays audio CDs, internet radio streams and podcasts as well as soundfiles in just about any audio format and has the feature of inserting no gaps between adjacent tracks.",
-    "url": "https://aqualung.jeremyevans.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aqualung"],
-    "aur": true
-  },
-  {
     "name": "Ardour",
     "description": "Multichannel hard disk recorder and digital audio workstation.",
     "url": "https://ardour.org/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ardour_ardour8.png",
     "pkgname": ["ardour"],
     "aur": false
-  },
-  {
-    "name": "Art of Illusion",
-    "description": "3D modeling and rendering studio written in Java.",
-    "url": "http://www.artofillusion.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aoi"],
-    "aur": true
-  },
-  {
-    "name": "Aseprite",
-    "description": "Open-source software for creating pixel art and animations. Builds can either be purchased from the developers or compiled from source.",
-    "url": "https://www.aseprite.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["aseprite"],
-    "aur": true
   },
   {
     "name": "Audacious",
@@ -166,22 +110,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/audio-sharing_de.haeckerfelix.AudioSharing.png",
     "pkgname": ["audio-sharing"],
     "aur": false
-  },
-  {
-    "name": "Audio Tag Tool",
-    "description": "Tool to edit tags in MP3 and Ogg Vorbis files.",
-    "url": "https://github.com/impegoraro/tagtool",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tagtool"],
-    "aur": true
-  },
-  {
-    "name": "audioprism",
-    "description": "Spectrogram tool for PulseAudio input and WAV files.",
-    "url": "https://github.com/vsergeev/audioprism",
-    "icon": "generic-dark.svg",
-    "pkgname": ["audioprism"],
-    "aur": true
   },
   {
     "name": "AudioTube",
@@ -213,7 +141,7 @@
     "url": "https://gitlab.com/azelpg/azpainter",
     "icon": "generic-dark.svg",
     "pkgname": ["azpainter"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Baka MPlayer",
@@ -222,14 +150,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/baka-mplayer_baka-mplayer.png",
     "pkgname": ["baka-mplayer"],
     "aur": false
-  },
-  {
-    "name": "Barva",
-    "description": "Visualizer for PulseAudio that pulses the background of your terminal.",
-    "url": "https://github.com/Kharacternyk/barva/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["barva-git"],
-    "aur": true
   },
   {
     "name": "Beets",
@@ -253,7 +173,7 @@
     "url": "https://www.bitwig.com/en/home.html",
     "icon": "generic-dark.svg",
     "pkgname": ["bitwig-studio"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Blanket",
@@ -280,76 +200,12 @@
     "aur": false
   },
   {
-    "name": "Blockbench",
-    "description": "A low-poly 3D model editor",
-    "url": "https://www.blockbench.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["blockbench"],
-    "aur": true
-  },
-  {
-    "name": "Blue",
-    "description": "Music composition environment for Csound, written in Java.",
-    "url": "https://blue.kunstmusik.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["csound-blue"],
-    "aur": true
-  },
-  {
-    "name": "Bombono DVD",
-    "description": "DVD authoring program with nice and clean GUI.",
-    "url": "https://bombono.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["bombono-dvd"],
-    "aur": true
-  },
-  {
-    "name": "Booth",
-    "description": "A convergent camera app.",
-    "url": "https://invent.kde.org/maui/maui-booth",
-    "icon": "generic-dark.svg",
-    "pkgname": ["maui-booth-git"],
-    "aur": true
-  },
-  {
-    "name": "BRP-PACU",
-    "description": "Dual channel FFT based acoustic analysis tool to help engineers analyze live professional sound systems using the transfer function.",
-    "url": "https://sourceforge.net/projects/brp-pacu/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["brp-pacu"],
-    "aur": true
-  },
-  {
-    "name": "Buzztrax",
-    "description": "Music studio to compose songs using only a computer with a soundcard.",
-    "url": "https://www.buzztrax.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["buzztrax"],
-    "aur": true
-  },
-  {
-    "name": "Byte",
-    "description": "Music player designed for elementary OS.",
-    "url": "https://github.com/alainm23/byte",
-    "icon": "generic-dark.svg",
-    "pkgname": ["byte"],
-    "aur": true
-  },
-  {
     "name": "C.A.V.A.",
     "description": "Console-based audio visualizer for ALSA, MPD and PulseAudio.",
     "url": "https://github.com/karlstav/cava/",
     "icon": "generic-dark.svg",
     "pkgname": ["cava"],
     "aur": false
-  },
-  {
-    "name": "Cabbage",
-    "description": "Framework for audio software development using simple markup text and the Csound audio synthesis language.",
-    "url": "https://cabbageaudio.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cabbage-bin"],
-    "aur": true
   },
   {
     "name": "CairoSVG",
@@ -376,14 +232,6 @@
     "aur": false
   },
   {
-    "name": "Canorus",
-    "description": "Music score editor. It supports an unlimited number and length of staffs, polyphony, a MIDI playback of notes, chord markings, lyrics, import/export filters to formats like MIDI, MusicXML, ABC Music, MusiXTeX and LilyPond.",
-    "url": "https://sourceforge.net/projects/canorus/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["canorus"],
-    "aur": true
-  },
-  {
     "name": "Cardinal",
     "description": "Virtual modular synthesizer plugin based on the VCV Rack, includes lots of virtualized Eurorack modules.",
     "url": "https://github.com/DISTRHO/Cardinal",
@@ -400,28 +248,12 @@
     "aur": false
   },
   {
-    "name": "Cavalcade",
-    "description": "GTK GUI for C.A.V.A.",
-    "url": "https://github.com/worron/cavalcade/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cavalcade-git"],
-    "aur": true
-  },
-  {
     "name": "Celluloid",
     "description": "Simple GTK frontend for mpv.",
     "url": "https://celluloid-player.github.io/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/celluloid_io.github.celluloid_player.Celluloid.png",
     "pkgname": ["celluloid"],
     "aur": false
-  },
-  {
-    "name": "Cheese",
-    "description": "Take photos and videos with your webcam, with fun graphical effects. Part of gnome-extra.",
-    "url": "https://wiki.gnome.org/Apps/Cheese",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cheese"],
-    "aur": true
   },
   {
     "name": "ChucK",
@@ -440,38 +272,6 @@
     "aur": false
   },
   {
-    "name": "Cider",
-    "description": "An open source and community oriented Apple Music client for Windows, Linux, macOS, and more. Based on the Electron platform.",
-    "url": "https://cider.sh/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cider"],
-    "aur": true
-  },
-  {
-    "name": "Cinelerra (Community Version)",
-    "description": "Advanced video editing and compositing environment.",
-    "url": "http://cinelerra-cv.wikidot.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cinelerra-cv-git"],
-    "aur": true
-  },
-  {
-    "name": "Cinelerra GG Infinity",
-    "description": "Professional video editing and compositing environment.",
-    "url": "https://www.cinelerra-gg.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cinelerra-gg-git"],
-    "aur": true
-  },
-  {
-    "name": "Cinema",
-    "description": "Video player and manager for watching local video files.",
-    "url": "https://anufrij.org/cinema/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["playmyvideos"],
-    "aur": true
-  },
-  {
     "name": "Clapper",
     "description": "Media player built for the GNOME desktop environment using GTK4 toolkit and powered by GStreamer.",
     "url": "https://rafostar.github.io/clapper/",
@@ -480,36 +280,12 @@
     "aur": false
   },
   {
-    "name": "Clementine",
-    "description": "Amarok 1.4 clone, ported to Qt5. See also Strawberry (below).",
-    "url": "https://www.clementine-player.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["clementine"],
-    "aur": true
-  },
-  {
     "name": "Clip",
     "description": "Video player and collection manager utilizing FFmpeg as the backend. Part of maui.",
     "url": "https://mauikit.org/apps/clip/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maui-clip_clip.png",
     "pkgname": ["maui-clip"],
     "aur": false
-  },
-  {
-    "name": "CloudCompare",
-    "description": "3D point cloud and mesh processing software.",
-    "url": "https://cloudcompare.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cloudcompare"],
-    "aur": true
-  },
-  {
-    "name": "clyrics",
-    "description": "Extensible lyrics fetcher, with daemon support for cmus and mocp.",
-    "url": "https://github.com/trizen/clyrics",
-    "icon": "generic-dark.svg",
-    "pkgname": ["clyrics"],
-    "aur": true
   },
   {
     "name": "cmus",
@@ -528,30 +304,6 @@
     "aur": false
   },
   {
-    "name": "Color Picker",
-    "description": "Simplistic color picker for the Pantheon desktop.",
-    "url": "https://github.com/RonnyDo/ColorPicker",
-    "icon": "generic-dark.svg",
-    "pkgname": ["color-picker"],
-    "aur": true
-  },
-  {
-    "name": "ColorGrab",
-    "description": "Cross-platform color picker.",
-    "url": "https://github.com/nielssp/colorgrab",
-    "icon": "generic-dark.svg",
-    "pkgname": ["colorgrab"],
-    "aur": true
-  },
-  {
-    "name": "colorpicker",
-    "description": "Click on a pixel on your screen and print its color value in RGB. Written for X11.",
-    "url": "https://github.com/Jack12816/colorpicker",
-    "icon": "generic-dark.svg",
-    "pkgname": ["colorpicker"],
-    "aur": true
-  },
-  {
     "name": "Contrast",
     "description": "Checks whether the contrast between two colors meet the WCAG requirements.",
     "url": "https://gitlab.gnome.org/World/design/contrast",
@@ -568,28 +320,12 @@
     "aur": false
   },
   {
-    "name": "Coquillo",
-    "description": "Metadata editor for various audio formats.",
-    "url": "https://github.com/sjuvonen/coquillo",
-    "icon": "generic-dark.svg",
-    "pkgname": ["coquillo"],
-    "aur": true
-  },
-  {
     "name": "CoreImage",
     "description": "Simple lightweight easy to use image viewer based on Qt. Part of C-Suite.",
     "url": "https://cubocore.gitlab.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["coreimage"],
-    "aur": true
-  },
-  {
-    "name": "CoreInfo",
-    "description": "Simple media metadata viewer built on mediainfo library. Part of C-Suite.",
-    "url": "https://cubocore.gitlab.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["coreinfo"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "CorePaint",
@@ -597,7 +333,7 @@
     "url": "https://cubocore.gitlab.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["corepaint"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "COSMIC Media Player",
@@ -613,7 +349,7 @@
     "url": "https://github.com/Huluti/Coulr",
     "icon": "generic-dark.svg",
     "pkgname": ["coulr"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Cozy",
@@ -621,23 +357,7 @@
     "url": "https://cozy.sh/",
     "icon": "generic-dark.svg",
     "pkgname": ["cozy-audiobooks"],
-    "aur": true
-  },
-  {
-    "name": "cplay-ng",
-    "description": "Updated fork of cplay.",
-    "url": "https://github.com/xi/cplay-ng",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cplay-ng-git"],
-    "aur": true
-  },
-  {
-    "name": "CropGUI",
-    "description": "GTK utility for lossless cropping and rotation of JPEG files.",
-    "url": "https://github.com/jepler/cropgui",
-    "icon": "generic-dark.svg",
-    "pkgname": ["cropgui"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Csound",
@@ -672,22 +392,6 @@
     "aur": false
   },
   {
-    "name": "DaVinci Resolve",
-    "description": "Proprietary A/V post-production software suite.",
-    "url": "https://www.blackmagicdesign.com/products/davinciresolve/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["davinci-resolve"],
-    "aur": true
-  },
-  {
-    "name": "davis",
-    "description": "A CLI client for mpd, written in Rust.",
-    "url": "https://github.com/SimonPersson/davis",
-    "icon": "generic-dark.svg",
-    "pkgname": ["davis"],
-    "aur": true
-  },
-  {
     "name": "dcraw",
     "description": "Converts many camera RAW formats.",
     "url": "https://dechifro.org/dcraw/",
@@ -701,7 +405,7 @@
     "url": "https://deadbeef.sourceforge.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["deadbeef"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Deepin Camera",
@@ -744,28 +448,12 @@
     "aur": false
   },
   {
-    "name": "delicolour",
-    "description": "Lightweight GTK 3 color finder.",
-    "url": "https://github.com/eepp/delicolour",
-    "icon": "generic-dark.svg",
-    "pkgname": ["delicolour"],
-    "aur": true
-  },
-  {
     "name": "Devede",
     "description": "Program to create VideoDVDs and CDs.",
     "url": "https://rastersoft.com/programas/devede.html",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/devede_devedeng_icon.png",
     "pkgname": ["devede"],
     "aur": false
-  },
-  {
-    "name": "Dia",
-    "description": "GTK-based diagram creation program.",
-    "url": "https://wiki.gnome.org/Apps/Dia",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dia-git"],
-    "aur": true
   },
   {
     "name": "diagrams.net",
@@ -792,30 +480,6 @@
     "aur": false
   },
   {
-    "name": "DJV",
-    "description": "Professional media review software for VFX, animation, and film production",
-    "url": "https://grizzlypeak3d.github.io/DJV/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["djv"],
-    "aur": true
-  },
-  {
-    "name": "DMS",
-    "description": "A UPnP DLNA Digital Media Server that includes basic video transcoding (thus with minimum dependencies).",
-    "url": "https://github.com/anacrolix/dms",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dms"],
-    "aur": true
-  },
-  {
-    "name": "Dot Matrix",
-    "description": "The glyph playground of creativity from simple lines.",
-    "url": "https://github.com/lainsce/dot-matrix/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dot-matrix"],
-    "aur": true
-  },
-  {
     "name": "Dragon Player",
     "description": "Simple video player for KDE. Part of kde-multimedia.",
     "url": "https://apps.kde.org/dragonplayer/",
@@ -837,15 +501,7 @@
     "url": "https://drawpile.net/",
     "icon": "generic-dark.svg",
     "pkgname": ["drawpile"],
-    "aur": true
-  },
-  {
-    "name": "Drumlabooh",
-    "description": "LV2/VSTi drum machine with Hydrogen, SFZ, Drumlabooh kits support.",
-    "url": "https://psemiletov.github.io/drumlabooh/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["drumlabooh"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Drumstick",
@@ -854,30 +510,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/drumstick_drumstick.png",
     "pkgname": ["drumstick"],
     "aur": false
-  },
-  {
-    "name": "Drumstick MIDI File Player",
-    "description": "MIDI file player based on Drumstick.",
-    "url": "https://sourceforge.net/projects/dmidiplayer/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dmidiplayer"],
-    "aur": true
-  },
-  {
-    "name": "Dust3D",
-    "description": "3D modeling software. It helps you create a 3D watertight base model in seconds. Use it to speed up your character modeling in game making, 3D printing, and so on.",
-    "url": "https://dust3d.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dust3d"],
-    "aur": true
-  },
-  {
-    "name": "DV Analyzer",
-    "description": "Technical quality control and reporting tool that examines DV streams in order to report errors.",
-    "url": "https://mediaarea.net/DVAnalyzer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["dvanalyzer"],
-    "aur": true
   },
   {
     "name": "DVDStyler",
@@ -973,15 +605,7 @@
     "url": "https://www.exaile.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["exaile"],
-    "aur": true
-  },
-  {
-    "name": "ExifCleaner",
-    "description": "Desktop app to clean metadata from images, videos, PDFs, and other files.",
-    "url": "https://exifcleaner.com",
-    "icon": "generic-dark.svg",
-    "pkgname": ["exifcleaner-bin"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "ExifTool",
@@ -1032,14 +656,6 @@
     "aur": false
   },
   {
-    "name": "FamiStudio",
-    "description": "Very simple music editor for the Nintendo Entertainment System or Famicom.",
-    "url": "https://famistudio.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["famistudio"],
-    "aur": true
-  },
-  {
     "name": "FastTracker II",
     "description": "A clone of the same tracker name using SDL2 in C.",
     "url": "https://16-bits.org/ft2.php",
@@ -1056,14 +672,6 @@
     "aur": false
   },
   {
-    "name": "fbv",
-    "description": "Very simple graphic file viewer for the framebuffer console.",
-    "url": "https://github.com/jstkdng/fbv/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fbv"],
-    "aur": true
-  },
-  {
     "name": "feh",
     "description": "Fast, lightweight image viewer that uses imlib2.",
     "url": "https://github.com/derf/feh https://feh.finalrewind.org",
@@ -1072,20 +680,12 @@
     "aur": false
   },
   {
-    "name": "FF Multi Converter",
-    "description": "Simple graphical application which enables you to convert audio, video, image and document files between all popular formats, by utilizing other command-line tools.",
-    "url": "https://sites.google.com/site/ffmulticonverter/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ffmulticonverter"],
-    "aur": true
-  },
-  {
     "name": "FFaudioConverter",
     "description": "Batch audio converter and effects processor. It can convert files or whole folders containing music and video files to other audio formats with FFmpeg.",
     "url": "https://github.com/Bleuzen/FFaudioConverter",
     "icon": "generic-dark.svg",
     "pkgname": ["ffaudioconverter"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "ffmpeg",
@@ -1120,44 +720,12 @@
     "aur": false
   },
   {
-    "name": "Figma",
-    "description": "Unofficial desktop application for Figma collaborative design tool. Based on the Electron platform.",
-    "url": "https://github.com/Figma-Linux/figma-linux",
-    "icon": "generic-dark.svg",
-    "pkgname": ["figma-linux"],
-    "aur": true
-  },
-  {
-    "name": "Filmulator",
-    "description": "Simple raw photo editor based on the process of developing film.",
-    "url": "https://filmulator.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["filmulator"],
-    "aur": true
-  },
-  {
-    "name": "fim",
-    "description": "Highly customizable and scriptable framebuffer image viewer based on fbi.",
-    "url": "https://www.nongnu.org/fbi-improved/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fim"],
-    "aur": true
-  },
-  {
     "name": "Flacon",
     "description": "Extracts individual tracks from one big audio file containing the entire album of music and saves them as separate audio files.",
     "url": "https://flacon.github.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["flacon"],
-    "aur": true
-  },
-  {
-    "name": "Floodlight Presenter",
-    "description": "Presentation and lyrics program for churches to display lyrics and media.",
-    "url": "https://floodlight.gitlab.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["floodlight-presenter"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Flowblade",
@@ -1181,7 +749,7 @@
     "url": "https://gillesdegottex.github.io/fmit/",
     "icon": "generic-dark.svg",
     "pkgname": ["fmit"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "FontForge",
@@ -1192,44 +760,12 @@
     "aur": false
   },
   {
-    "name": "fooyin",
-    "description": "A customisable Qt-based music player.",
-    "url": "https://www.fooyin.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fooyin"],
-    "aur": true
-  },
-  {
-    "name": "FOSStriangulator",
-    "description": "Tool for making triangulated illustrations out of photos.",
-    "url": "https://github.com/FOSStriangulator/FOSStriangulator",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fosstriangulator"],
-    "aur": true
-  },
-  {
-    "name": "FoxDot",
-    "description": "Live Coding with Python and SuperCollider.",
-    "url": "https://foxdot.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["foxdot"],
-    "aur": true
-  },
-  {
     "name": "fre:ac",
     "description": "Audio converter and CD ripper with support for various popular formats and encoders.",
     "url": "https://freac.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["freac"],
-    "aur": true
-  },
-  {
-    "name": "freeLib",
-    "description": "Book library manager with support for inpx-based libraries; includes OPDS and Web servers.",
-    "url": "https://github.com/petrovvlad/freeLib/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["freelib-git"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "FreeTube",
@@ -1237,23 +773,7 @@
     "url": "https://freetubeapp.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["freetube"],
-    "aur": true
-  },
-  {
-    "name": "Frinika",
-    "description": "Digital audio workstation, features sequencer, soft-synths, realtime effects and audio recording.",
-    "url": "https://www.frinika.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["frinika"],
-    "aur": true
-  },
-  {
-    "name": "Friture",
-    "description": "Real-time audio analyzer.",
-    "url": "https://friture.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["friture"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Frogr",
@@ -1262,22 +782,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/frogr_org.gnome.frogr.png",
     "pkgname": ["frogr"],
     "aur": false
-  },
-  {
-    "name": "fswebcam",
-    "description": "Small and simple command line webcam software that generates images for a webcam.",
-    "url": "https://www.sanslogic.co.uk/fswebcam/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["fswebcam"],
-    "aur": true
-  },
-  {
-    "name": "Funkwhale",
-    "description": "self-hosted, modern, free and open-source music server, heavily inspired by Grooveshark. Instances can be federated.",
-    "url": "https://funkwhale.audio/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["funkwhale-venv"],
-    "aur": true
   },
   {
     "name": "Furnace",
@@ -1296,14 +800,6 @@
     "aur": false
   },
   {
-    "name": "GabTag",
-    "description": "Audio tagging tool written in GTK.",
-    "url": "https://github.com/lachhebo/gabtag",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gabtag"],
-    "aur": true
-  },
-  {
     "name": "Gaupol",
     "description": "Full-featured subtitle editor.",
     "url": "https://otsaloma.io/gaupol/",
@@ -1318,14 +814,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gcolor3_nl.hjdskes.gcolor3.png",
     "pkgname": ["gcolor3"],
     "aur": false
-  },
-  {
-    "name": "GCstar",
-    "description": "Application for organizing various collections (board games, comic books, movies, stamps, etc.).",
-    "url": "https://gitlab.com/GCstar/GCstar",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gcstar"],
-    "aur": true
   },
   {
     "name": "Geeqie",
@@ -1352,28 +840,12 @@
     "aur": false
   },
   {
-    "name": "Geotagging",
-    "description": "Photography geotagging tool to synchronize photos with gps track log (GPX).",
-    "url": "https://github.com/jmlich/geotagging",
-    "icon": "generic-dark.svg",
-    "pkgname": ["geotagging"],
-    "aur": true
-  },
-  {
     "name": "Gerbera",
     "description": "UPnP Media Server to stream your media to devices on your home network. (Fork of MediaTomb.)",
     "url": "https://gerbera.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["gerbera"],
     "aur": false
-  },
-  {
-    "name": "Giada",
-    "description": "Minimal, hardcore audio tool for DJs, live performers and electronic musicians.",
-    "url": "https://giadamusic.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["giada"],
-    "aur": true
   },
   {
     "name": "Gigedit",
@@ -1392,28 +864,12 @@
     "aur": false
   },
   {
-    "name": "Give Me Lyrics",
-    "description": "See the lyrics of the song that is playing, from any application.",
-    "url": "https://github.com/muriloventuroso/givemelyrics",
-    "icon": "generic-dark.svg",
-    "pkgname": ["givemelyrics"],
-    "aur": true
-  },
-  {
-    "name": "GLava",
-    "description": "OpenGL audio spectrum visualizer. Its primary use case is for desktop windows or backgrounds.",
-    "url": "https://github.com/wacossusca34/glava",
-    "icon": "generic-dark.svg",
-    "pkgname": ["glava"],
-    "aur": true
-  },
-  {
     "name": "Glaxnimate",
     "description": "Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export",
     "url": "https://glaxnimate.mattbas.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["glaxnimate"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Glide",
@@ -1424,28 +880,12 @@
     "aur": false
   },
   {
-    "name": "GLMViz",
-    "description": "Fully configurable OpenGL music visualizer.",
-    "url": "https://github.com/hannesha/GLMViz",
-    "icon": "generic-dark.svg",
-    "pkgname": ["glmviz-git"],
-    "aur": true
-  },
-  {
     "name": "glyrc",
     "description": "Command-line music related metadata searchengine, including support for downloading lyrics.",
     "url": "https://github.com/sahib/glyr",
     "icon": "generic-dark.svg",
     "pkgname": ["glyr"],
     "aur": false
-  },
-  {
-    "name": "GMetronome",
-    "description": "A GTK metronome and tempo measurement tool.",
-    "url": "https://gitlab.gnome.org/dqpb/gmetronome",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gmetronome"],
-    "aur": true
   },
   {
     "name": "gMTP",
@@ -1456,36 +896,12 @@
     "aur": false
   },
   {
-    "name": "gmusicbrowser",
-    "description": "Open-source jukebox for large collections of MP3/OGG/FLAC files.",
-    "url": "https://gmusicbrowser.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gmusicbrowser"],
-    "aur": true
-  },
-  {
     "name": "Gnac",
     "description": "Audio converter for GNOME.",
     "url": "https://gnac.sourceforge.net/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnac_gnac.png",
     "pkgname": ["gnac"],
     "aur": false
-  },
-  {
-    "name": "gnokii",
-    "description": "Tools and user space driver for use with mobile phones.",
-    "url": "https://www.gnokii.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gnokii"],
-    "aur": true
-  },
-  {
-    "name": "Gnome Alsamixer",
-    "description": "ALSA mixer for GNOME.",
-    "url": "https://launchpad.net/gnome-alsamixer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gnome-alsamixer"],
-    "aur": true
   },
   {
     "name": "GNOME Audio Player",
@@ -1533,7 +949,7 @@
     "url": "https://gitlab.gnome.org/GNOME/gnome-network-displays",
     "icon": "generic-dark.svg",
     "pkgname": ["gnome-network-displays"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "GNOME Photos",
@@ -1581,23 +997,7 @@
     "url": "https://gitlab.com/goodvibes/goodvibes",
     "icon": "generic-dark.svg",
     "pkgname": ["goodvibes"],
-    "aur": true
-  },
-  {
-    "name": "Google Play Music Desktop Player",
-    "description": "Beautiful cross platform desktop player for Google Play Music. Based on the Electron platform.",
-    "url": "https://github.com/MarshallOfSound/Google-Play-Music-Desktop-Player-UNOFFICIAL-/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpmdp"],
-    "aur": true
-  },
-  {
-    "name": "GottenGeography",
-    "description": "Easy to use photo geotagging application for the GNOME desktop.",
-    "url": "https://launchpad.net/gottengeography",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gottengeography"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Goxel",
@@ -1608,28 +1008,12 @@
     "aur": false
   },
   {
-    "name": "Gpaint",
-    "description": "Paintbrush clone for GNOME.",
-    "url": "https://www.gnu.org/software/gpaint/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpaint"],
-    "aur": true
-  },
-  {
     "name": "GPick",
     "description": "Advanced color picker tool.",
     "url": "https://www.gpick.org/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpick_gpick.png",
     "pkgname": ["gpick"],
     "aur": false
-  },
-  {
-    "name": "GPicSync",
-    "description": "Inserts location in your pictures metadata from a GPS tracklog.",
-    "url": "https://github.com/FrancoisSchnell/GPicSync",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gpicsync"],
-    "aur": true
   },
   {
     "name": "GPicView",
@@ -1656,14 +1040,6 @@
     "aur": false
   },
   {
-    "name": "GrandOrgue",
-    "description": "Virtual pipe organ sample player application supporting a HW1 compatible file format.",
-    "url": "https://sourceforge.net/projects/ourorgan/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["grandorgue-git"],
-    "aur": true
-  },
-  {
     "name": "GraphicsMagick",
     "description": "Fork of ImageMagick designed to have API and command-line stability. It also supports multi-CPU for enhanced performance and thus is used by some large commercial sites (Flickr, etsy) for its performance.",
     "url": "http://www.graphicsmagick.org/",
@@ -1680,14 +1056,6 @@
     "aur": false
   },
   {
-    "name": "GSequencer",
-    "description": "Provides various tools to play, create, edit and mix your own music. It features a step sequencer, piano roll, automation and wave-form editor.",
-    "url": "https://nongnu.org/gsequencer/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gsequencer"],
-    "aur": true
-  },
-  {
     "name": "gst-play-1.0",
     "description": "Simple command line playback testing tool for GStreamer.",
     "url": "https://gstreamer.freedesktop.org/",
@@ -1702,22 +1070,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gthumb_org.gnome.gThumb.png",
     "pkgname": ["gthumb"],
     "aur": false
-  },
-  {
-    "name": "gtkpod",
-    "description": "GUI for Apple's iPod using GTK. It allows you to import your existing iTunes database, add songs, podcasts, videos and cover art, and to edit ID3 tags.",
-    "url": "https://sourceforge.net/projects/gtkpod/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gtkpod"],
-    "aur": true
-  },
-  {
-    "name": "Guayadeque",
-    "description": "Full featured media player that can easily manage large collections and uses the GStreamer media framework (no longer maintained as of September 2023).",
-    "url": "https://github.com/thothix/guayadeque",
-    "icon": "generic-dark.svg",
-    "pkgname": ["guayadeque"],
-    "aur": true
   },
   {
     "name": "Guetzli",
@@ -1750,22 +1102,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["guvcview"],
     "aur": false
-  },
-  {
-    "name": "GVolWheel",
-    "description": "Audio mixer which lets you control the volume through a tray icon.",
-    "url": "https://github.com/Junker/gvolwheel",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gvolwheel"],
-    "aur": true
-  },
-  {
-    "name": "GWC",
-    "description": "Digital audio editor to denoise, dehiss and amplify audio files.",
-    "url": "https://gwc.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gwc"],
-    "aur": true
   },
   {
     "name": "Gwenview",
@@ -1808,22 +1144,6 @@
     "aur": false
   },
   {
-    "name": "Headset",
-    "description": "Desktop application that turns YouTube into a world class music streaming service. Based on the Electron platform.",
-    "url": "https://headsetapp.co/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["headset"],
-    "aur": true
-  },
-  {
-    "name": "Helm",
-    "description": "Software synthesizer to create electronic music on your computer.",
-    "url": "https://tytel.org/helm/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["helm-synth"],
-    "aur": true
-  },
-  {
     "name": "Hugin",
     "description": "Panorama photo stitcher.",
     "url": "https://hugin.sourceforge.net/",
@@ -1846,22 +1166,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["hyprpicker"],
     "aur": false
-  },
-  {
-    "name": "Icecast",
-    "description": "Streaming media (audio/video) server which currently supports Ogg (Vorbis and Theora), Opus, WebM and MP3 streams.",
-    "url": "https://icecast.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["icecast"],
-    "aur": true
-  },
-  {
-    "name": "id3",
-    "description": "Command-line utility to edit ID3 1.x and 2.x tags.",
-    "url": "https://squell.github.io/id3/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["id3"],
-    "aur": true
   },
   {
     "name": "id3v2",
@@ -1888,28 +1192,12 @@
     "aur": false
   },
   {
-    "name": "IDJC",
-    "description": "Powerful yet easy to use source-client for individuals interested in streaming live radio shows over the Internet using Shoutcast or Icecast servers.",
-    "url": "https://idjc.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["idjc"],
-    "aur": true
-  },
-  {
-    "name": "Image Optimizer",
-    "description": "Simple lossless image optimizer built with Vala and Gtk for Elementary OS.",
-    "url": "https://github.com/GijsGoudzwaard/Image-Optimizer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["image-optimizer"],
-    "aur": true
-  },
-  {
     "name": "image-roll",
     "description": "Simple and fast GTK image viewer with basic image manipulation tools.",
     "url": "https://github.com/weclaw1/image-roll",
     "icon": "generic-dark.svg",
     "pkgname": ["image-roll"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "ImageMagick",
@@ -1918,46 +1206,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["imagemagick"],
     "aur": false
-  },
-  {
-    "name": "ImageViewer",
-    "description": "Simple, cross-platform image viewer.",
-    "url": "https://github.com/AlienCowEatCake/ImageViewer/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["imageviewer"],
-    "aur": true
-  },
-  {
-    "name": "ImEditor",
-    "description": "Simple and versatile image editor.",
-    "url": "https://imeditor.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["imeditor"],
-    "aur": true
-  },
-  {
-    "name": "ImPlay",
-    "description": "Cross-Platform Desktop Media Player, built on top of mpv and ImGui.",
-    "url": "https://github.com/tsl0922/ImPlay",
-    "icon": "generic-dark.svg",
-    "pkgname": ["implay"],
-    "aur": true
-  },
-  {
-    "name": "ImPPG",
-    "description": "performs Lucy-Richardson deconvolution, unsharp masking, brightness normalization and tone curve adjustment",
-    "url": "https://greatattractor.github.io/imppg/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["imppg"],
-    "aur": true
-  },
-  {
-    "name": "Impro-Visor",
-    "description": "Music notation program designed to help jazz musicians compose and hear solos similar to ones that might be improvised.",
-    "url": "https://www.cs.hmc.edu/~keller/jazz/improvisor/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["impro-visor"],
-    "aur": true
   },
   {
     "name": "imv",
@@ -1976,44 +1224,12 @@
     "aur": false
   },
   {
-    "name": "jammr",
-    "description": "Play jam sessions with musicians around the world over the internet.",
-    "url": "https://jammr.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["jammr"],
-    "aur": true
-  },
-  {
-    "name": "Jamulus",
-    "description": "Enables musicians to perform real-time jam sessions over the internet.",
-    "url": "https://jamulus.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["jamulus"],
-    "aur": true
-  },
-  {
     "name": "Jellyfin",
     "description": "Media system that puts you in control of managing and streaming your media.",
     "url": "https://jellyfin.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["jellyfin-server"],
     "aur": false
-  },
-  {
-    "name": "jExifToolGUI",
-    "description": "Java/Swing graphical frontend for ExifTool, which reads and writes all kind of metadata tags from/to image files.",
-    "url": "https://hvdwolf.github.io/jExifToolGUI/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["jexiftoolgui"],
-    "aur": true
-  },
-  {
-    "name": "jfbview",
-    "description": "Framebuffer PDF and image viewer based on Imlib2. Features include Vim-like controls, rotation and zoom, zoom-to-fit, and fast multi-threaded rendering.",
-    "url": "https://github.com/jichu4n/jfbview",
-    "icon": "generic-dark.svg",
-    "pkgname": ["jfbview"],
-    "aur": true
   },
   {
     "name": "jhead",
@@ -2040,14 +1256,6 @@
     "aur": false
   },
   {
-    "name": "Jubler",
-    "description": "Open-source multiplatform subtitle editor written in Java.",
-    "url": "https://www.jubler.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["jubler"],
-    "aur": true
-  },
-  {
     "name": "JuK",
     "description": "JuK is an audio jukebox application, supporting collections of MP3, Ogg Vorbis, and FLAC audio files. Part of kde-multimedia.",
     "url": "https://juk.kde.org/",
@@ -2072,28 +1280,12 @@
     "aur": false
   },
   {
-    "name": "Karaoke Lyrics Editor",
-    "description": "Lyrics editor and CD+G/video exporter for Karaoke.",
-    "url": "https://www.ulduzsoft.com/linux/karaoke-lyrics-editor/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["karlyriceditor"],
-    "aur": true
-  },
-  {
     "name": "Karbon",
     "description": "Vector graphics editor, part of the Calligra Suite. Part of kde-office.",
     "url": "https://calligra.org/components/karbon/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calligra_org.kde.calligra.stage.png",
     "pkgname": ["calligra"],
     "aur": false
-  },
-  {
-    "name": "Kawaii-Player",
-    "description": "Audio/video manager and multimedia player (based on mpv) with PC-to-PC casting feature, along with functionalities of portable media server and torrent streaming server.",
-    "url": "https://github.com/kanishka-linux/kawaii-player",
-    "icon": "generic-dark.svg",
-    "pkgname": ["kawaii-player"],
-    "aur": true
   },
   {
     "name": "KColorChooser",
@@ -2142,14 +1334,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kid3_kid3.png",
     "pkgname": ["kid3"],
     "aur": false
-  },
-  {
-    "name": "klystrack",
-    "description": "Tracker for making C64/NES/Amiga-style chiptunes on a modern platform.",
-    "url": "https://kometbomb.github.io/klystrack/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["klystrack-git"],
-    "aur": true
   },
   {
     "name": "KMix",
@@ -2232,38 +1416,6 @@
     "aur": false
   },
   {
-    "name": "KXStitch",
-    "description": "Cross stitch pattern and chart creation.",
-    "url": "https://apps.kde.org/kxstitch/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["kxstitch"],
-    "aur": true
-  },
-  {
-    "name": "LaternaMagica",
-    "description": "Image viewer and slideshow application for GNUstep.",
-    "url": "https://www.nongnu.org/gap/laternamagica/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["laternamagica.app"],
-    "aur": true
-  },
-  {
-    "name": "LazPaint",
-    "description": "Image editor, like PaintBrush or Paint.Net, written in Lazarus (Free Pascal)",
-    "url": "https://lazpaint.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lazpaint-bin"],
-    "aur": true
-  },
-  {
-    "name": "Le Biniou",
-    "description": "User-friendly, powerful music visualization / VJing tool.",
-    "url": "https://biniou.lenain.info/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lebiniou"],
-    "aur": true
-  },
-  {
     "name": "LibreOffice Draw",
     "description": "Vector graphics editor and diagramming tool included in the LibreOffice suite similar to Microsoft Visio.",
     "url": "https://www.libreoffice.org/discover/draw/",
@@ -2272,44 +1424,12 @@
     "aur": false
   },
   {
-    "name": "Lightworks",
-    "description": "Professional proprietary non-linear editing system for editing and mastering digital video in various formats.",
-    "url": "https://www.lwks.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lightworks"],
-    "aur": true
-  },
-  {
-    "name": "LightZone",
-    "description": "Professional-level digital darkroom and photo editor comparable to Photoshop Lightroom.",
-    "url": "http://lightzoneproject.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lightzone"],
-    "aur": true
-  },
-  {
     "name": "LilyPond",
     "description": "Music engraving program, devoted to producing the highest-quality sheet music possible.",
     "url": "https://lilypond.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["lilypond"],
     "aur": false
-  },
-  {
-    "name": "Linux Show Player",
-    "description": "Powerful and feature-rich software to arrange cue lists. Designed for theater plays and live music shows.",
-    "url": "https://www.linux-show-player.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["linux-show-player"],
-    "aur": true
-  },
-  {
-    "name": "LiVES",
-    "description": "Video editor and VJ (live performance) platform.",
-    "url": "http://lives-video.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lives"],
-    "aur": true
   },
   {
     "name": "LMMS",
@@ -2333,7 +1453,7 @@
     "url": "https://mifi.no/losslesscut/",
     "icon": "generic-dark.svg",
     "pkgname": ["losslesscut-bin"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Luminance HDR",
@@ -2342,14 +1462,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/luminancehdr_luminance-hdr.png",
     "pkgname": ["luminancehdr"],
     "aur": false
-  },
-  {
-    "name": "Lunacy",
-    "description": "Vector graphic design software for UI/UX and web design.",
-    "url": "https://icons8.com/lunacy",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lunacy-bin"],
-    "aur": true
   },
   {
     "name": "Luppp",
@@ -2376,20 +1488,12 @@
     "aur": false
   },
   {
-    "name": "LyricsX",
-    "description": "Lyrics editor.",
-    "url": "https://github.com/timxx/lyricsx",
-    "icon": "generic-dark.svg",
-    "pkgname": ["lyricsx"],
-    "aur": true
-  },
-  {
     "name": "MakeHuman™",
     "description": "Parametrical modeling program for creating human bodies.",
     "url": "http://www.makehumancommunity.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["makehuman"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "mat2",
@@ -2421,15 +1525,7 @@
     "url": "https://mpc-qt.github.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["mpc-qt"],
-    "aur": true
-  },
-  {
-    "name": "MediaConch",
-    "description": "Implementation checker, policy checker, reporter, and fixer.",
-    "url": "https://mediaarea.net/MediaConch",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mediaconch"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "MediaElch",
@@ -2448,44 +1544,12 @@
     "aur": false
   },
   {
-    "name": "meh",
-    "description": "meh is a small, simple, super fast image viewer using raw XLib.",
-    "url": "https://www.johnhawthorn.com/meh/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["meh-git"],
-    "aur": true
-  },
-  {
-    "name": "Melody",
-    "description": "Music player for listening to local music files, online radios and audio CD's.",
-    "url": "https://anufrij.org/melody/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["playmymusic"],
-    "aur": true
-  },
-  {
-    "name": "Memories",
-    "description": "Image viewer and manager designed for elementary OS.",
-    "url": "https://anufrij.org/memories/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["showmypictures"],
-    "aur": true
-  },
-  {
     "name": "MEncoder",
     "description": "Free command line video decoding, encoding and filtering tool.",
     "url": "https://mplayerhq.hu/design7/news.html",
     "icon": "generic-dark.svg",
     "pkgname": ["mencoder"],
     "aur": false
-  },
-  {
-    "name": "MeshLab",
-    "description": "System for processing and editing 3D triangular meshes.",
-    "url": "https://www.meshlab.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["meshlab"],
-    "aur": true
   },
   {
     "name": "Metadata Cleaner",
@@ -2504,14 +1568,6 @@
     "aur": false
   },
   {
-    "name": "mhWaveEdit",
-    "description": "Graphical program for editing, playing and recording sound files.",
-    "url": "https://github.com/magnush/mhwaveedit/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mhwaveedit"],
-    "aur": true
-  },
-  {
     "name": "mid3v2",
     "description": "CLI audio tag editor similar to 'id3v2'",
     "url": "https://github.com/quodlibet/mutagen",
@@ -2528,36 +1584,12 @@
     "aur": false
   },
   {
-    "name": "Milton",
-    "description": "Infinite-canvas paint program.",
-    "url": "https://www.miltonpaint.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["milton"],
-    "aur": true
-  },
-  {
-    "name": "Minitube",
-    "description": "YouTube desktop application written in C++ using mpv and Qt.",
-    "url": "https://flavio.tordini.org/minitube",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/minitube_minitube.png",
-    "pkgname": ["minitube"],
-    "aur": true
-  },
-  {
     "name": "MiracleCast",
     "description": "Command line tools to connect external monitors to your system via Wi-Fi Display specification also known as Miracast.",
     "url": "https://github.com/albfan/miraclecast",
     "icon": "generic-dark.svg",
     "pkgname": ["miraclecast-git"],
-    "aur": true
-  },
-  {
-    "name": "Mirage",
-    "description": "PyGTK image viewer featuring support for crop and resize, custom actions and a thumbnail panel.",
-    "url": "https://sourceforge.net/projects/mirageiv.berlios/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mirage"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Mixxx",
@@ -2568,28 +1600,12 @@
     "aur": false
   },
   {
-    "name": "MJPG-streamer",
-    "description": "Command line application which can be used to stream M-JPEG over an IP-based network from a webcam to various types of viewers.",
-    "url": "https://github.com/jacksonliam/mjpg-streamer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mjpg-streamer-git"],
-    "aur": true
-  },
-  {
     "name": "MOC",
     "description": "Ncurses console audio player with support for the MP3, OGG, and WAV formats.",
     "url": "https://moc.daper.net/",
     "icon": "generic-dark.svg",
     "pkgname": ["moc-pulse"],
-    "aur": true
-  },
-  {
-    "name": "Mockitt",
-    "description": "Proprietary online design, prototyping, and collaboration platform. Based on the Electron platform.",
-    "url": "https://mockitt.wondershare.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mockitt"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Modem Manager GUI",
@@ -2598,14 +1614,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/modem-manager-gui_modem-manager-gui.png",
     "pkgname": ["modem-manager-gui"],
     "aur": false
-  },
-  {
-    "name": "MoonPlayer",
-    "description": "Video player for playing and downloading online videos from YouTube, Youku etc.",
-    "url": "https://github.com/coslyk/moonplayer",
-    "icon": "generic-dark.svg",
-    "pkgname": ["moonplayer"],
-    "aur": true
   },
   {
     "name": "Motion",
@@ -2622,38 +1630,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mousai_io.github.seadve.Mousai.png",
     "pkgname": ["mousai"],
     "aur": false
-  },
-  {
-    "name": "Movie Monad",
-    "description": "Free and simple to use video player made with Haskell using GStreamer and GTK. Precompiled and no Haskell dependency in run-time.",
-    "url": "https://lettier.github.io/movie-monad/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["movie-monad"],
-    "aur": true
-  },
-  {
-    "name": "MP3Info",
-    "description": "MP3 technical info viewer and ID3 1.x tag editor.",
-    "url": "https://ibiblio.org/mp3info/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mp3info"],
-    "aur": true
-  },
-  {
-    "name": "MP3Info GUI",
-    "description": "MP3 technical info viewer and ID3 1.x tag editor. The graphical interface can be launched with the gmp3info command.",
-    "url": "https://ibiblio.org/mp3info/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mp3info"],
-    "aur": true
-  },
-  {
-    "name": "Mp3splt",
-    "description": "Utility to split mp3, ogg vorbis and native FLAC files selecting a begin and an end time position, without decoding.",
-    "url": "https://mp3splt.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mp3splt"],
-    "aur": true
   },
   {
     "name": "MP3Unicode",
@@ -2696,22 +1672,6 @@
     "aur": false
   },
   {
-    "name": "mpv-gallery-view",
-    "description": "Gallery-view scripts for mpv.",
-    "url": "https://github.com/occivink/mpv-gallery-view",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mpv-gallery-view-git"],
-    "aur": true
-  },
-  {
-    "name": "mpvz",
-    "description": "Qt5/QML based GUI for libmpv. Based on the Tethys theme for Bomi.",
-    "url": "https://github.com/Zren/mpvz",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mpvz-git"],
-    "aur": true
-  },
-  {
     "name": "mtPaint",
     "description": "Graphics editing program geared towards creating indexed palette images and pixel art.",
     "url": "https://mtpaint.sourceforge.net/",
@@ -2726,14 +1686,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/muse_muse.png",
     "pkgname": ["muse"],
     "aur": false
-  },
-  {
-    "name": "museeks",
-    "description": "Minimalistic and easy to use music player. Based on the Electron platform.",
-    "url": "https://museeks.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["museeks-bin"],
-    "aur": true
   },
   {
     "name": "MuseScore",
@@ -2757,15 +1709,7 @@
     "url": "https://github.com/clangen/musikcube",
     "icon": "generic-dark.svg",
     "pkgname": ["musikcube"],
-    "aur": true
-  },
-  {
-    "name": "Musique",
-    "description": "Just another music player, only better.",
-    "url": "https://flavio.tordini.org/musique",
-    "icon": "generic-dark.svg",
-    "pkgname": ["musique"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "MyPaint",
@@ -2776,22 +1720,6 @@
     "aur": false
   },
   {
-    "name": "MythTV",
-    "description": "A homebrew PVR project.",
-    "url": "https://www.mythtv.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["mythtv-git"],
-    "aur": true
-  },
-  {
-    "name": "Natron",
-    "description": "Open-source compositing software. Node-graph based. Similar in functionalities to Adobe After Effects and Nuke by The Foundry.",
-    "url": "https://natrongithub.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["natron"],
-    "aur": true
-  },
-  {
     "name": "Navidrome",
     "description": "Open source music server and streamer with a built in Web UI. Compatible with a wide range of third-party Android and iOS apps.",
     "url": "https://github.com/navidrome/navidrome/",
@@ -2800,36 +1728,12 @@
     "aur": false
   },
   {
-    "name": "ncspot",
-    "description": "Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes.",
-    "url": "https://github.com/hrkfdn/ncspot",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ncspot"],
-    "aur": false
-  },
-  {
-    "name": "netaudio",
-    "description": "List, configure, and control Audinate Dante network audio devices.",
-    "url": "https://github.com/chris-ritsen/network-audio-controller",
-    "icon": "generic-dark.svg",
-    "pkgname": ["python-netaudio"],
-    "aur": true
-  },
-  {
-    "name": "NickvisionTagger",
-    "description": "GTK Music file tag editor. Can load tags from MusicBrainz database. Works with mp3, ogg, flac, wma, and wav. Convert filenames to tags and tags to filenames.",
-    "url": "https://github.com/nlogozzo/NickvisionTagger",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tagger"],
-    "aur": true
-  },
-  {
     "name": "nomacs",
     "description": "Qt image viewer. It is feature-rich but starts fast and can be configured to show additional widgets or only the image.",
     "url": "https://nomacs.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["nomacs"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Non",
@@ -2840,52 +1744,12 @@
     "aur": false
   },
   {
-    "name": "Noson",
-    "description": "Fast and smart controller for SONOS devices.",
-    "url": "https://janbar.github.io/noson-app/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["noson-app"],
-    "aur": true
-  },
-  {
     "name": "nsxiv",
     "description": "Simple image viewer based on imlib2 that works well with tiling window managers. Community fork of sxiv.",
     "url": "https://codeberg.org/nsxiv/nsxiv",
     "icon": "generic-dark.svg",
     "pkgname": ["nsxiv"],
     "aur": false
-  },
-  {
-    "name": "NTag",
-    "description": "Graphical tag editor focused on everyday life use cases.",
-    "url": "https://github.com/nrittsti/ntag",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ntag"],
-    "aur": true
-  },
-  {
-    "name": "Nuclear",
-    "description": "Modern music player focused on streaming from free sources. Based on the Electron platform.",
-    "url": "https://nuclear.js.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nuclear-player-bin"],
-    "aur": true
-  },
-  {
-    "name": "nUFRaw",
-    "description": "Utility to read and manipulate raw images from digital cameras using DCRaw.",
-    "url": "https://sourceforge.net/projects/nufraw/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gimp-nufraw"],
-    "aur": true
-  },
-  {
-    "name": "Nulloy",
-    "description": "Music player with a waveform progress bar.",
-    "url": "https://nulloy.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["nulloy"],
-    "aur": true
   },
   {
     "name": "Obfuscate",
@@ -2901,31 +1765,7 @@
     "url": "https://www.ocenaudio.com/en/",
     "icon": "generic-dark.svg",
     "pkgname": ["ocenaudio-bin"],
-    "aur": true
-  },
-  {
-    "name": "OpenMPT",
-    "description": "Tracker software to create and play back some great music on your computer.",
-    "url": "https://openmpt.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openmpt"],
-    "aur": true
-  },
-  {
-    "name": "OpenOffice Draw",
-    "description": "Vector graphics editor and diagramming tool included in the OpenOffice suite.",
-    "url": "https://www.openoffice.org/product/draw.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openoffice-bin"],
-    "aur": true
-  },
-  {
-    "name": "OpenShot",
-    "description": "Non-linear video editor based on MLT framework.",
-    "url": "https://www.openshot.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["openshot"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "OpenToonz",
@@ -2958,22 +1798,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["optipng"],
     "aur": false
-  },
-  {
-    "name": "OSD Lyrics",
-    "description": "Lyric show compatible with various media players.",
-    "url": "https://github.com/osdlyrics/osdlyrics",
-    "icon": "generic-dark.svg",
-    "pkgname": ["osdlyrics"],
-    "aur": true
-  },
-  {
-    "name": "OwnTone",
-    "description": "DAAP (iTunes) and MPD media server with support for AirPlay devices, Apple Remote, Chromecast, Spotify and internet radio.",
-    "url": "https://owntone.github.io/owntone-server/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["owntone-server"],
-    "aur": true
   },
   {
     "name": "oxipng",
@@ -3021,7 +1845,7 @@
     "url": "https://github.com/gkarsay/parlatype/",
     "icon": "generic-dark.svg",
     "pkgname": ["parlatype"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Parole",
@@ -3030,30 +1854,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/parole_org.xfce.parole.png",
     "pkgname": ["parole"],
     "aur": false
-  },
-  {
-    "name": "Patroneo",
-    "description": "Easy to use pattern based midi sequencer.",
-    "url": "https://www.laborejo.org/patroneo/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["patroneo"],
-    "aur": true
-  },
-  {
-    "name": "Pear Desktop",
-    "description": "Electron-based wrapper around YouTube Music with built in addons.",
-    "url": "https://github.com/pear-devs/pear-desktop",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pear-desktop"],
-    "aur": true
-  },
-  {
-    "name": "Pencil Project",
-    "description": "GUI prototyping and mockup tool. Based on the Electron platform.",
-    "url": "https://pencil.evolus.vn/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pencil"],
-    "aur": true
   },
   {
     "name": "Pencil2D",
@@ -3072,14 +1872,6 @@
     "aur": false
   },
   {
-    "name": "Phone Manager",
-    "description": "Control your mobile phone from your GNOME desktop.",
-    "url": "https://wiki.gnome.org/Attic/PhoneManager",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gnome-phone-manager"],
-    "aur": true
-  },
-  {
     "name": "PhotoFlare",
     "description": "Simple but powerful image editor originally inspired by PhotoFiltre.",
     "url": "https://photoflare.io/",
@@ -3088,20 +1880,12 @@
     "aur": false
   },
   {
-    "name": "PhotoPrism",
-    "description": "Personal Photo Management powered by Go and Google TensorFlow.",
-    "url": "https://photoprism.app/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["photoprism-bin"],
-    "aur": true
-  },
-  {
     "name": "PhotoQt",
     "description": "Fast and highly configurable image viewer with a simple and nice interface.",
     "url": "https://photoqt.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["photoqt"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Phototonic",
@@ -3128,28 +1912,12 @@
     "aur": false
   },
   {
-    "name": "Pick",
-    "description": "Simple color picker tool for the Linux desktop.",
-    "url": "https://www.kryogenix.org/code/pick",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pick-colour-picker"],
-    "aur": true
-  },
-  {
     "name": "Pinta",
     "description": "Drawing and editing program modeled after Paint.NET. Its goal is to provide a simplified alternative to GIMP for casual users.",
     "url": "https://pinta-project.com/",
     "icon": "generic-dark.svg",
     "pkgname": ["pinta"],
-    "aur": true
-  },
-  {
-    "name": "Pithos",
-    "description": "Python/GTK Pandora Radio desktop client.",
-    "url": "https://pithos.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pithos"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Pitivi",
@@ -3173,15 +1941,7 @@
     "url": "https://github.com/linuxmint/pix",
     "icon": "generic-dark.svg",
     "pkgname": ["pix"],
-    "aur": true
-  },
-  {
-    "name": "Pixelitor",
-    "description": "Advanced image editor with support for layers, layer masks, text layers, multiple undo, blending modes, cropping, Gaussian blurring, unsharp masking, histograms, etc.",
-    "url": "https://pixelitor.sourceforge.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pixelitor"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Pixelorama",
@@ -3189,7 +1949,7 @@
     "url": "https://orama-interactive.itch.io/pixelorama",
     "icon": "generic-dark.svg",
     "pkgname": ["pixelorama"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Plasma Camera",
@@ -3221,7 +1981,7 @@
     "url": "https://www.plex.tv/",
     "icon": "generic-dark.svg",
     "pkgname": ["plex-media-server"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "pngcrush",
@@ -3238,14 +1998,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["pngquant"],
     "aur": false
-  },
-  {
-    "name": "PNMixer",
-    "description": "A fork of Obmixer. It has many new features such as ALSA channel selection, connect/disconnect detection, shortcuts, etc.",
-    "url": "https://github.com/nicklan/pnmixer/wiki",
-    "icon": "generic-dark.svg",
-    "pkgname": ["pnmixer"],
-    "aur": true
   },
   {
     "name": "Polyphone",
@@ -3293,7 +2045,7 @@
     "url": "https://github.com/PrestoPalette/PrestoPalette",
     "icon": "generic-dark.svg",
     "pkgname": ["prestopalette"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "projectM",
@@ -3312,14 +2064,6 @@
     "aur": false
   },
   {
-    "name": "Puddletag",
-    "description": "Replacement for the famous MP3tag for Windows.",
-    "url": "https://docs.puddletag.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["puddletag"],
-    "aur": true
-  },
-  {
     "name": "Pure Data",
     "description": "Real-time music and multimedia environment.",
     "url": "http://msp.ucsd.edu/software.html",
@@ -3334,14 +2078,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qastools_qashctl.png",
     "pkgname": ["qastools"],
     "aur": false
-  },
-  {
-    "name": "qimgv",
-    "description": "Fast and easy to use Qt5 image viewer. Supports webm/mp4 playback via mpv.",
-    "url": "https://github.com/easymodo/qimgv/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qimgv"],
-    "aur": true
   },
   {
     "name": "QMidiArp",
@@ -3384,14 +2120,6 @@
     "aur": false
   },
   {
-    "name": "QMPlay2",
-    "description": "Qt based video player. It can play and stream all formats supported by FFmpeg and libmodplug. It has on integrated module system, which includes a YouTube browser.",
-    "url": "https://github.com/zaps166/QMPlay2",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qmplay2"],
-    "aur": true
-  },
-  {
     "name": "QNapi",
     "description": "Qt client for downloading movie subtitles from NapiProjekt, OpenSubtitles, Napisy24.",
     "url": "https://qnapi.github.io/",
@@ -3408,14 +2136,6 @@
     "aur": false
   },
   {
-    "name": "qStopMotion",
-    "description": "Application for creating stop-motion animation movies. The users will be able to create stop-motions from pictures imported from a camera or from the harddrive and export the animation to different video formats such as mpeg or avi.",
-    "url": "https://qstopmotion.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qstopmotion"],
-    "aur": true
-  },
-  {
     "name": "Qsynth",
     "description": "Qt GUI for Fluidsynth.",
     "url": "https://qsynth.sourceforge.io/",
@@ -3424,36 +2144,12 @@
     "aur": false
   },
   {
-    "name": "QtAV Player",
-    "description": "Simple media player based on QtAV and FFmpeg. Run with Player or QMLPlayer.",
-    "url": "https://www.qtav.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qtav"],
-    "aur": true
-  },
-  {
-    "name": "QtCAM",
-    "description": "Webcam software with more than 10 image control settings, extension settings and color space switching.",
-    "url": "https://www.e-consystems.com/opensource-linux-webcam-software-application.asp",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qtcam-git"],
-    "aur": true
-  },
-  {
     "name": "Qtractor",
     "description": "Qt-based hard disk recorder and digital audio workstation application that aims to provide digital audio workstation software simple enough for the average home user, and yet powerful enough for the professional user.",
     "url": "https://qtractor.sourceforge.io/qtractor-index.html",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qtractor_org.rncbc.qtractor.png",
     "pkgname": ["qtractor"],
     "aur": false
-  },
-  {
-    "name": "Quick Image Viewer",
-    "description": "Very small and fast image viewer based on GTK and imlib2.",
-    "url": "http://spiegl.de/qiv/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qiv"],
-    "aur": true
   },
   {
     "name": "Quod Libet",
@@ -3469,7 +2165,7 @@
     "url": "https://interversehq.com/qview/",
     "icon": "generic-dark.svg",
     "pkgname": ["qview"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Qwertone",
@@ -3477,15 +2173,7 @@
     "url": "https://gitlab.com/azymohliad/qwertone",
     "icon": "generic-dark.svg",
     "pkgname": ["qwertone-git"],
-    "aur": true
-  },
-  {
-    "name": "QWinFF",
-    "description": "Qt5 GUI for FFmpeg that can read audio and video files in various formats and convert them into other formats.",
-    "url": "https://qwinff.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["qwinff"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "QXGEdit",
@@ -3496,30 +2184,6 @@
     "aur": false
   },
   {
-    "name": "Radio",
-    "description": "Easily find live radio programs based on geographical location of radio broadcasters on the Internet.",
-    "url": "https://www.gtkradio.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["gtk-radio"],
-    "aur": true
-  },
-  {
-    "name": "Radiotray-NG",
-    "description": "Internet radio player systray applet.",
-    "url": "https://github.com/ebruck/radiotray-ng",
-    "icon": "generic-dark.svg",
-    "pkgname": ["radiotray-ng"],
-    "aur": true
-  },
-  {
-    "name": "Radium",
-    "description": "Music editor with a new type of interface.",
-    "url": "https://users.notam02.no/~kjetism/radium/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["radium"],
-    "aur": true
-  },
-  {
     "name": "Rage",
     "description": "Video and audio player written with Enlightenment Foundation Libraries with some extra bells and whistles. Uses GStreamer",
     "url": "https://www.enlightenment.org/about-rage",
@@ -3528,28 +2192,12 @@
     "aur": false
   },
   {
-    "name": "Rakarrack",
-    "description": "Richly featured multi-effects processor emulating a guitar effects pedalboard.",
-    "url": "https://rakarrack.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rakarrack"],
-    "aur": true
-  },
-  {
     "name": "Rapid Photo Downloader",
     "description": "Download photos and videos from cameras, memory cards and portable storage devices.",
     "url": "https://www.damonlynch.net/rapid/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rapid-photo-downloader_rapid-photo-downloader.png",
     "pkgname": ["rapid-photo-downloader"],
     "aur": false
-  },
-  {
-    "name": "Rawstudio",
-    "description": "Raw-image converter written in GTK.",
-    "url": "https://rawstudio.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rawstudio"],
-    "aur": true
   },
   {
     "name": "RawTherapee",
@@ -3576,14 +2224,6 @@
     "aur": false
   },
   {
-    "name": "Retrovol",
-    "description": "Retro-looking volume setting tray applet.",
-    "url": "https://github.com/pizzasgood/retrovol",
-    "icon": "generic-dark.svg",
-    "pkgname": ["retrovol"],
-    "aur": true
-  },
-  {
     "name": "Rhythmbox",
     "description": "GTK clone of iTunes, used by default in GNOME.",
     "url": "https://wiki.gnome.org/Apps/Rhythmbox",
@@ -3600,6 +2240,14 @@
     "aur": false
   },
   {
+    "name": "rmpc",
+    "description": "A beautiful and configurable TUI client for MPD.",
+    "url": "https://rmpc.mierak.dev",
+    "icon": "generic-dark.svg",
+    "pkgname": ["rmpc"],
+    "aur": false
+  },
+  {
     "name": "Rosegarden",
     "description": "Digital audio workstation program developed with ALSA and Qt that acts as an audio and MIDI sequencer, scorewriter and musical composition and editing tool.",
     "url": "https://www.rosegardenmusic.com/",
@@ -3608,28 +2256,12 @@
     "aur": false
   },
   {
-    "name": "rtspeccy",
-    "description": "Real time audio spectrum analyzer.",
-    "url": "https://www.uninformativ.de/git/rtspeccy/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["rtspeccy-git"],
-    "aur": true
-  },
-  {
     "name": "Rygel",
     "description": "UPnP AV MediaServer and MediaRenderer that allows you to easily share audio, video and pictures, and control of media player on your home network. Part of gnome.",
     "url": "https://gnome.pages.gitlab.gnome.org/rygel/",
     "icon": "generic-dark.svg",
     "pkgname": ["rygel"],
     "aur": false
-  },
-  {
-    "name": "Sachesi",
-    "description": "Firmware, extractor, searcher and installer for Blackberry 10.",
-    "url": "https://github.com/xsacha/Sachesi",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sachesi-bin"],
-    "aur": true
   },
   {
     "name": "Satty",
@@ -3645,7 +2277,7 @@
     "url": "https://sayonara-player.com/",
     "icon": "generic-dark.svg",
     "pkgname": ["sayonara-player"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Schism Tracker",
@@ -3654,30 +2286,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/schismtracker_schismtracker.png",
     "pkgname": ["schismtracker"],
     "aur": false
-  },
-  {
-    "name": "Scribl",
-    "description": "Application to create simple video lectures that combine audio with hand-drawn animation.",
-    "url": "https://www.scribl.ink/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["scribl"],
-    "aur": true
-  },
-  {
-    "name": "seq192",
-    "description": "A MIDI sequencer based on seq24 with less features and more swag.",
-    "url": "https://seq192.ammd.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["seq192-git"],
-    "aur": true
-  },
-  {
-    "name": "Serviio",
-    "description": "Proprietary media server, which allows you to stream your media files (music, video or images) to renderer devices (e.g. a TV set, Bluray player, games console or mobile phone) on your connected home network.",
-    "url": "https://serviio.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["serviio"],
-    "aur": true
   },
   {
     "name": "setBfree",
@@ -3720,36 +2328,12 @@
     "aur": false
   },
   {
-    "name": "shufti",
-    "description": "shufti non-destructively saves and restores the zoom level, rotation, window size, desktop location and viewing area on a per-image/file location basis",
-    "url": "https://github.com/danboid/shufti",
-    "icon": "generic-dark.svg",
-    "pkgname": ["shufti"],
-    "aur": true
-  },
-  {
-    "name": "sK1",
-    "description": "Replacement for Adobe Illustrator or CorelDraw, oriented for \"prepress ready\" PostScript & PDF output.",
-    "url": "https://sk1project.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sk1"],
-    "aur": true
-  },
-  {
     "name": "SMPlayer",
     "description": "Qt multimedia player with extra features (CSS themes, YouTube integration, etc.) based on mpv. It can use MPlayer as alternative backend.",
     "url": "https://www.smplayer.info/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/smplayer_smplayer.png",
     "pkgname": ["smplayer"],
     "aur": false
-  },
-  {
-    "name": "Snappy",
-    "description": "Powerful media player with a minimalistic interface that uses GStreamer.",
-    "url": "https://wiki.gnome.org/Apps/Snappy",
-    "icon": "generic-dark.svg",
-    "pkgname": ["snappy-player"],
-    "aur": true
   },
   {
     "name": "Snd",
@@ -3776,14 +2360,6 @@
     "aur": false
   },
   {
-    "name": "Sonic Pi",
-    "description": "Code-based music creation and performance tool.",
-    "url": "https://sonic-pi.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sonic-pi"],
-    "aur": true
-  },
-  {
     "name": "Sonic Visualiser",
     "description": "Viewing, analyzing, and annotating the contents of music audio files.",
     "url": "https://www.sonicvisualiser.org/",
@@ -3797,7 +2373,7 @@
     "url": "https://sonobus.net/",
     "icon": "generic-dark.svg",
     "pkgname": ["sonobus"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "SoundConverter",
@@ -3806,22 +2382,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/soundconverter_soundconverter.png",
     "pkgname": ["soundconverter"],
     "aur": false
-  },
-  {
-    "name": "soundKonverter",
-    "description": "Qt-based GUI front-end to various audio converters.",
-    "url": "https://github.com/dfaust/soundkonverter",
-    "icon": "generic-dark.svg",
-    "pkgname": ["soundkonverter"],
-    "aur": true
-  },
-  {
-    "name": "Soundux",
-    "description": "Soundboard that features a simple user interface.",
-    "url": "https://soundux.rocks/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["soundux"],
-    "aur": true
   },
   {
     "name": "SoX",
@@ -3840,44 +2400,12 @@
     "aur": false
   },
   {
-    "name": "Spek",
-    "description": "A barebones interface for ffmpeg's spectogram png output, helps to analyse your audio files by showing their spectrogram.",
-    "url": "http://spek.cc/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["spek"],
-    "aur": true
-  },
-  {
-    "name": "Spivak",
-    "description": "Karaoke player based on GStreamer and Qt5.",
-    "url": "https://github.com/gyunaev/spivak",
-    "icon": "generic-dark.svg",
-    "pkgname": ["spivak"],
-    "aur": true
-  },
-  {
     "name": "Spotify",
-    "description": "Proprietary music streaming service. It supports local playback and streaming from Spotify's vast library (requires a free account).",
+    "description": "Proprietary music streaming service that supports local playback and streaming.",
     "url": "https://www.spotify.com/",
     "icon": "generic-dark.svg",
     "pkgname": ["spotify"],
-    "aur": true
-  },
-  {
-    "name": "spotify-qt",
-    "description": "Lightweight Spotify client using Qt.",
-    "url": "https://github.com/kraxarn/spotify-qt",
-    "icon": "generic-dark.svg",
-    "pkgname": ["spotify-qt"],
-    "aur": true
-  },
-  {
-    "name": "spotify-tui",
-    "description": "Spotify for the terminal written in Rust. (Project is in hiatus. Does not compile due to several library changes. See Rigellute/spotify-tui #1000)",
-    "url": "https://github.com/Rigellute/spotify-tui",
-    "icon": "generic-dark.svg",
-    "pkgname": ["spotify-tui"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Stopmotion",
@@ -3896,44 +2424,12 @@
     "aur": false
   },
   {
-    "name": "Stremio",
-    "description": "Extensible media center.",
-    "url": "https://www.stremio.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["stremio"],
-    "aur": true
-  },
-  {
-    "name": "subdl",
-    "description": "Command-line tool for downloading subtitles from opensubtitles.org.",
-    "url": "https://github.com/akexakex/subdl",
-    "icon": "generic-dark.svg",
-    "pkgname": ["subdl"],
-    "aur": true
-  },
-  {
-    "name": "subliminal",
-    "description": "Python library and command-line tool to search and download subtitles from different providers (opensubtitles.com, addic7ed.com, ...).",
-    "url": "https://github.com/Diaoul/subliminal",
-    "icon": "generic-dark.svg",
-    "pkgname": ["subliminal"],
-    "aur": true
-  },
-  {
-    "name": "Subsonic",
-    "description": "Proprietary media server to stream from your own computer.",
-    "url": "https://www.subsonic.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["subsonic"],
-    "aur": true
-  },
-  {
     "name": "Subtitle Composer",
     "description": "Subtitle editor for KDE supporting various formats, features different player backends, able to display wave form.",
     "url": "https://subtitlecomposer.kde.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["subtitlecomposer"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Subtitle Edit",
@@ -3941,31 +2437,7 @@
     "url": "https://github.com/SubtitleEdit/subtitleedit",
     "icon": "generic-dark.svg",
     "pkgname": ["subtitleedit"],
-    "aur": true
-  },
-  {
-    "name": "Subtitle Editor",
-    "description": "GTK 3 tool to edit subtitles for GNU/Linux/*BSD.",
-    "url": "https://kitone.github.io/subtitleeditor/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["subtitleeditor"],
-    "aur": true
-  },
-  {
-    "name": "SubtitlesPrinter",
-    "description": "Print subtitles above an X-screen, independently of the video player.",
-    "url": "https://github.com/OlivierMarty/SubtitlesPrinter",
-    "icon": "generic-dark.svg",
-    "pkgname": ["subtitles-printer-git"],
-    "aur": true
-  },
-  {
-    "name": "SunVox",
-    "description": "Small, fast and powerful modular synthesizer with pattern-based sequencer (tracker).",
-    "url": "https://warmplace.ru/soft/sunvox/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sunvox"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "SuperCollider",
@@ -3984,36 +2456,12 @@
     "aur": false
   },
   {
-    "name": "SvgVi",
-    "description": "SVG viewer and editor using XML declarations.",
-    "url": "https://gitlab.com/pwmc/svgvi",
-    "icon": "generic-dark.svg",
-    "pkgname": ["svgvi"],
-    "aur": true
-  },
-  {
-    "name": "Swami",
-    "description": "A SoundFont editor",
-    "url": "http://www.swamiproject.org",
-    "icon": "generic-dark.svg",
-    "pkgname": ["swami"],
-    "aur": true
-  },
-  {
     "name": "Swappy",
     "description": "Wayland native image annotation tool.",
     "url": "https://github.com/jtheoof/swappy",
     "icon": "generic-dark.svg",
     "pkgname": ["swappy"],
     "aur": false
-  },
-  {
-    "name": "Sweep",
-    "description": "Audio editor and live playback tool.",
-    "url": "http://www.metadecks.org/software/sweep/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sweep"],
-    "aur": true
   },
   {
     "name": "Sweet Home 3D",
@@ -4032,28 +2480,12 @@
     "aur": false
   },
   {
-    "name": "sxcs",
-    "description": "Minimal X11 color picker and magnifier",
-    "url": "https://codeberg.org/NRK/sxcs",
-    "icon": "generic-dark.svg",
-    "pkgname": ["sxcs"],
-    "aur": true
-  },
-  {
     "name": "sxiv",
     "description": "Simple image viewer based on imlib2 that works well with tiling window managers.",
     "url": "https://github.com/muennich/sxiv",
     "icon": "generic-dark.svg",
     "pkgname": ["sxiv"],
     "aur": false
-  },
-  {
-    "name": "SymbolEditor",
-    "description": "Application to create libraries of QPainterPath objects with rendering hints.",
-    "url": "https://apps.kde.org/symboleditor/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["symboleditor"],
-    "aur": true
   },
   {
     "name": "Synfig Studio",
@@ -4064,36 +2496,12 @@
     "aur": false
   },
   {
-    "name": "Taffy",
-    "description": "Simple command-line tag editor for many audio formats.",
-    "url": "https://github.com/jangler/taffy",
-    "icon": "generic-dark.svg",
-    "pkgname": ["taffy"],
-    "aur": true
-  },
-  {
-    "name": "Tag Editor",
-    "description": "A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3v1/ID3v2, Vorbis, Opus, FLAC and Matroska.",
-    "url": "https://github.com/Martchus/tageditor",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tageditor"],
-    "aur": true
-  },
-  {
     "name": "Tagutil",
     "description": "CLI tool to edit music file's tag. It aims to provide both an easy-to-script interface and ease of use interactively.",
     "url": "https://github.com/kAworu/tagutil",
     "icon": "generic-dark.svg",
     "pkgname": ["tagutil"],
-    "aur": true
-  },
-  {
-    "name": "Tahoma2D",
-    "description": "Free and powerful software for 2D and stop motion animators. Based on OpenToonz",
-    "url": "https://tahoma2d.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tahoma2d"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Tauon Music Box",
@@ -4128,20 +2536,12 @@
     "aur": false
   },
   {
-    "name": "TIDAL Hi-Fi (Max quality)",
-    "description": "The web version of TIDAL Player running in electron with Hi-Fi (High & Max) support thanks to widevine",
-    "url": "https://github.com/Mastermindzh/tidal-hifi",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tidal-hifi-bin"],
-    "aur": true
-  },
-  {
     "name": "timg",
     "description": "Terminal Image and Video Viewer.",
     "url": "https://github.com/hzeller/timg",
     "icon": "generic-dark.svg",
     "pkgname": ["timg"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "TiMidity++",
@@ -4152,30 +2552,6 @@
     "aur": false
   },
   {
-    "name": "tinyMediaManager",
-    "description": "Media management tool to provide metadata for Kodi.",
-    "url": "https://www.tinymediamanager.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tiny-media-manager"],
-    "aur": true
-  },
-  {
-    "name": "tmuzika",
-    "description": "Terminal music player using ncurses and GStreamer.",
-    "url": "https://github.com/ivanjeka/tmuzika",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tmuzika"],
-    "aur": true
-  },
-  {
-    "name": "ToneLib GFX",
-    "description": "the perfect custom tone with a complete guitar studio in your computer",
-    "url": "https://tonelib.net/gfx-overview.html",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tonelib-gfx-bin"],
-    "aur": true
-  },
-  {
     "name": "Totem",
     "description": "Media player (audio and video) for the GNOME desktop that uses GStreamer.",
     "url": "https://gitlab.gnome.org/GNOME/totem",
@@ -4184,92 +2560,12 @@
     "aur": false
   },
   {
-    "name": "Tracktion Waveform",
-    "description": "Proprietary digital audio workstation, specifically designed for the needs of modern music producers.",
-    "url": "https://www.tracktion.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tracktion-waveform"],
-    "aur": true
-  },
-  {
-    "name": "Transcode",
-    "description": "Command line tool for video stream processing.",
-    "url": "http://www.transcoding.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["transcode"],
-    "aur": true
-  },
-  {
     "name": "Transmageddon",
     "description": "Simple python application for transcoding video into formats supported by GStreamer.",
     "url": "http://www.linuxrising.org/",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/transmageddon_transmageddon.png",
     "pkgname": ["transmageddon"],
     "aur": false
-  },
-  {
-    "name": "Trimage",
-    "description": "Qt-based tool for optimizing PNG and JPG files.",
-    "url": "https://trimage.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["trimage"],
-    "aur": true
-  },
-  {
-    "name": "TruFont",
-    "description": "Font-editing application.",
-    "url": "https://trufont.github.io/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["trufont"],
-    "aur": true
-  },
-  {
-    "name": "Ttwatch",
-    "description": "Linux TomTom GPS Watch Utilities.",
-    "url": "https://github.com/ryanbinns/ttwatch",
-    "icon": "generic-dark.svg",
-    "pkgname": ["ttwatch-git"],
-    "aur": true
-  },
-  {
-    "name": "Tuner",
-    "description": "Minimalist radio station player.",
-    "url": "https://github.com/louis77/tuner",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tuner"],
-    "aur": true
-  },
-  {
-    "name": "TupiTube Desk",
-    "description": "Desktop application to create and share 2D animations, focused on kids and teenagers.",
-    "url": "https://www.maefloresta.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tupitube"],
-    "aur": true
-  },
-  {
-    "name": "TuxGuitar",
-    "description": "Multitrack guitar tablature editor and player.",
-    "url": "https://sourceforge.net/projects/tuxguitar/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tuxguitar"],
-    "aur": true
-  },
-  {
-    "name": "TV-Browser",
-    "description": "Java-based TV guide which is easily extensible using plugins.",
-    "url": "https://tvbrowser.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tvbrowser"],
-    "aur": true
-  },
-  {
-    "name": "Tvheadend",
-    "description": "TV streaming server and recorder supporting DVB-S, DVB-S2, DVB-C, DVB-T, ATSC, ISDB-T, IPTV, SAT>IP and HDHomeRun as input sources.",
-    "url": "https://tvheadend.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["tvheadend"],
-    "aur": true
   },
   {
     "name": "tvtime",
@@ -4285,7 +2581,7 @@
     "url": "https://www.universalmediaserver.com/",
     "icon": "generic-dark.svg",
     "pkgname": ["ums"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "upmpdcli",
@@ -4294,22 +2590,6 @@
     "icon": "generic-dark.svg",
     "pkgname": ["upmpdcli"],
     "aur": false
-  },
-  {
-    "name": "Upplay",
-    "description": "Qt-based UPnP audio control point.",
-    "url": "https://lesbonscomptes.com/upplay/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["upplay"],
-    "aur": true
-  },
-  {
-    "name": "V2Mixer",
-    "description": "free cross-platform movie editor,mixer",
-    "url": "http://v2mixer.livev2.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["v2mixer-bin"],
-    "aur": true
   },
   {
     "name": "v4l-utils",
@@ -4328,76 +2608,12 @@
     "aur": false
   },
   {
-    "name": "v4l2ucp",
-    "description": "Universal control panel for V4L2 devices.",
-    "url": "https://v4l2ucp.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["v4l2ucp"],
-    "aur": true
-  },
-  {
-    "name": "VapourSynth Editor",
-    "description": "Editor for VapourSynth scripts.",
-    "url": "https://bitbucket.org/mystery_keeper/vapoursynth-editor",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vapoursynth-editor"],
-    "aur": true
-  },
-  {
-    "name": "vcsi",
-    "description": "Create video contact sheets. A video contact sheet is an image composed of video capture thumbnails arranged on a grid.",
-    "url": "https://github.com/amietn/vcsi",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vcsi"],
-    "aur": true
-  },
-  {
-    "name": "VCV Rack",
-    "description": "Virtual Eurorack DAW. Use a plugin systems to add more Eurorack emulated modules.",
-    "url": "https://vcvrack.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vcvrack"],
-    "aur": true
-  },
-  {
     "name": "Vee One Suite",
     "description": "Old-school software instruments: synthv1, a polyphonic subtractive synthesizer; samplv1, a polyphonic sampler synthesizer; drumkv1, yet another drum-kit sampler; padthv1, a polyphonic additive synthesizer.",
     "url": "https://www.rncbc.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["synthv1"],
     "aur": false
-  },
-  {
-    "name": "Vencoder",
-    "description": "A graphical tool to transcode videos using FFmpeg.",
-    "url": "https://github.com/lines-of-codes/Vencoder",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vencoder-bin"],
-    "aur": true
-  },
-  {
-    "name": "vibe",
-    "description": "WGPU audio spectrum visualizer. Its primary use case is for desktop windows or backgrounds on wayland.",
-    "url": "https://github.com/TornaxO7/vibe",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vibe-audio-visualizer-git"],
-    "aur": true
-  },
-  {
-    "name": "VidCutter",
-    "description": "Fast lossless media cutter + joiner w/ frame-accurate SmartCut options powered by mpv, FFmpeg via a sleek Qt5 GUI.",
-    "url": "https://vidcutter.ozmartians.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/vidcutter_com.ozmartians.VidCutter.png",
-    "pkgname": ["vidcutter"],
-    "aur": true
-  },
-  {
-    "name": "Video Contact Sheet",
-    "description": "Bash script meant to create video contact sheets (previews) of videos. Any video supported by mplayer and ffmpeg can be used.",
-    "url": "https://p.outlyer.net/vcs",
-    "icon": "generic-dark.svg",
-    "pkgname": ["video-contact-sheet"],
-    "aur": true
   },
   {
     "name": "Video Trimmer",
@@ -4424,22 +2640,6 @@
     "aur": false
   },
   {
-    "name": "Vimiv (Qt port)",
-    "description": "An image viewer with vim-like keybindings. It is written in python3 and PyQt5.",
-    "url": "https://karlch.github.io/vimiv-qt/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vimiv-qt"],
-    "aur": true
-  },
-  {
-    "name": "vitunes",
-    "description": "Curses-based music player and playlist manager with vim-like keybindings.",
-    "url": "http://vitunes.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vitunes"],
-    "aur": true
-  },
-  {
     "name": "VLC media player",
     "description": "Command-line version of the famous video player that can play smoothly high definition videos in the TTY. The rc interface can be launched with vlc -I rc, and the ncurses interface can be launched with vlc -I ncurses.",
     "url": "https://www.videolan.org/vlc/",
@@ -4464,52 +2664,12 @@
     "aur": false
   },
   {
-    "name": "Volctl",
-    "description": "Per-application system tray applet volume control and OSD for PulseAudio.",
-    "url": "https://buzz.github.io/volctl/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["volctl"],
-    "aur": true
-  },
-  {
-    "name": "Volnoti",
-    "description": "A lightweight volume notification daemon for GNU/Linux and other POSIX operating systems.",
-    "url": "https://github.com/davidbrazdil/volnoti",
-    "icon": "generic-dark.svg",
-    "pkgname": ["volnoti"],
-    "aur": true
-  },
-  {
     "name": "Volume Icon",
     "description": "Another volume control for your system tray with channel selection, themes and an external mixer.",
     "url": "https://nullwise.com/pages/volumeicon/volumeicon.html",
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/volumeicon_multimedia-volume-control.png",
     "pkgname": ["volumeicon"],
     "aur": false
-  },
-  {
-    "name": "VoxelShop",
-    "description": "Extremely intuitive and powerful software to modify and create voxel objects.",
-    "url": "https://github.com/simlu/voxelshop",
-    "icon": "generic-dark.svg",
-    "pkgname": ["voxelshop"],
-    "aur": true
-  },
-  {
-    "name": "vpv",
-    "description": "Image viewer designed for scientific image visualization.",
-    "url": "https://github.com/kidanger/vpv",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vpv"],
-    "aur": true
-  },
-  {
-    "name": "VSXu",
-    "description": "OpenGL-based (hardware-accelerated), modular programming environment with its main purpose to visualize music and create graphic effects in real-time.",
-    "url": "https://www.vsxu.com/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["vsxu"],
-    "aur": true
   },
   {
     "name": "Vvave",
@@ -4520,52 +2680,12 @@
     "aur": false
   },
   {
-    "name": "waifu2x",
-    "description": "Image Super-Resolution for Anime-style art using Deep Convolutional Neural Networks.",
-    "url": "https://github.com/nagadomi/waifu2x",
-    "icon": "generic-dark.svg",
-    "pkgname": ["waifu2x-git"],
-    "aur": true
-  },
-  {
-    "name": "Wammu",
-    "description": "Manage data in your cell phone such as contacts, calendar or messages.",
-    "url": "https://wammu.eu/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["wammu"],
-    "aur": true
-  },
-  {
-    "name": "WaveSurfer",
-    "description": "Tool for sound visualization and manipulation. Typical applications are speech/sound analysis and sound annotation/transcription.",
-    "url": "https://web.archive.org/web/20080722195312/http://www.speech.kth.se/wavesurfer/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["wavesurfer"],
-    "aur": true
-  },
-  {
     "name": "Webcamoid",
     "description": "Full featured webcam suite.",
     "url": "https://webcamoid.github.io/",
     "icon": "generic-dark.svg",
     "pkgname": ["webcamoid"],
-    "aur": true
-  },
-  {
-    "name": "whistle",
-    "description": "Curses-based commandline audio player.",
-    "url": "https://github.com/ap0calypse/whistle/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["whistle-git"],
-    "aur": true
-  },
-  {
-    "name": "WinFF",
-    "description": "Graphical video and audio batch converter using FFmpeg.",
-    "url": "https://github.com/WinFF/winff",
-    "icon": "generic-dark.svg",
-    "pkgname": ["winff-gtk3"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "Wings 3D",
@@ -4573,7 +2693,7 @@
     "url": "https://www.wings3d.com/",
     "icon": "generic-dark.svg",
     "pkgname": ["wings3d"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "xcolor",
@@ -4582,22 +2702,6 @@
     "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xcolor_xcolor.png",
     "pkgname": ["xcolor"],
     "aur": false
-  },
-  {
-    "name": "Xfce ALSA Panel Plugin",
-    "description": "Simple ALSA volume control plugin for Xfce4 panel.",
-    "url": "https://github.com/equeim/xfce4-alsa-plugin",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xfce4-alsa-plugin"],
-    "aur": true
-  },
-  {
-    "name": "Xfig",
-    "description": "Interactive drawing tool.",
-    "url": "https://mcj.sourceforge.net/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xfig"],
-    "aur": true
   },
   {
     "name": "xine",
@@ -4624,36 +2728,12 @@
     "aur": false
   },
   {
-    "name": "XMLTV",
-    "description": "Set of utilities to download TV listings and format them in XML.",
-    "url": "https://xmltv.org/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xmltv"],
-    "aur": true
-  },
-  {
     "name": "XMMS2",
     "description": "Complete rewrite of the popular music player.",
     "url": "https://github.com/xmms2/wiki/wiki",
     "icon": "generic-dark.svg",
     "pkgname": ["xmms2"],
     "aur": false
-  },
-  {
-    "name": "XPaint",
-    "description": "Color image editing tool which features most standard paint program options.",
-    "url": "https://sourceforge.net/projects/sf-xpaint/",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xpaint"],
-    "aur": true
-  },
-  {
-    "name": "xt7-player-mpv",
-    "description": "Qt/Gambas GUI to mpv with a rich set of configurable options including filters and drivers, ladspa plugins support as well as library/playlist management, YouTube, online radios, podcasts, DVB-T and more.",
-    "url": "https://github.com/kokoko3k/xt7-player-mpv",
-    "icon": "generic-dark.svg",
-    "pkgname": ["xt7-player-mpv"],
-    "aur": true
   },
   {
     "name": "xwax",
@@ -4664,36 +2744,12 @@
     "aur": false
   },
   {
-    "name": "Yarock",
-    "description": "Modern looking music player, packed with features, that doesn’t depend on any specific desktop environment. Yarock is designed to provide an easy and pretty music browser based on cover art.",
-    "url": "https://github.com/sebaro/Yarock",
-    "icon": "generic-dark.svg",
-    "pkgname": ["yarock"],
-    "aur": true
-  },
-  {
-    "name": "yEd",
-    "description": "General-purpose proprietary diagramming program for flowcharts, network diagrams, UML diagrams, BPMN diagrams, mind maps, organization charts, and Entity Relationship diagrams.",
-    "url": "https://www.yworks.com/products/yed",
-    "icon": "generic-dark.svg",
-    "pkgname": ["yed"],
-    "aur": true
-  },
-  {
     "name": "Yoshimi",
     "description": "Software synthesizer, a fork of ZynAddSubFX.",
     "url": "https://yoshimi.sourceforge.net/",
     "icon": "generic-dark.svg",
     "pkgname": ["yoshimi"],
     "aur": false
-  },
-  {
-    "name": "YUView",
-    "description": "Qt-based YUV player with an advanced analytic toolset.",
-    "url": "https://github.com/IENT/YUView",
-    "icon": "generic-dark.svg",
-    "pkgname": ["yuview"],
-    "aur": true
   },
   {
     "name": "zopflipng",
@@ -4709,7 +2765,7 @@
     "url": "https://www.zrythm.org/",
     "icon": "generic-dark.svg",
     "pkgname": ["zrythm"],
-    "aur": true
+    "aur": false
   },
   {
     "name": "ZynAddSubFX",

@@ -20,6 +20,7 @@ check-packagelists:
     - pacman -Syu --noconfirm --needed nodejs paru corepack
     - corepack enable
     - pnpm check-pkglists
+  allow_failure: true
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

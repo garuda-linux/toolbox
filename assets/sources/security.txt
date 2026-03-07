@@ -134,6 +134,7 @@ See also [[Session lock]].
 * {{App|pwsafe|Unix command-line program that manages encrypted password databases.|https://github.com/nsd20463/pwsafe|{{AUR|pwsafe}}}}
 * {{App|tpm|Tiny password manager, inspired by pass, written entirely in POSIX shell.|https://github.com/nmeum/tpm|{{AUR|tpm}}}}
 * {{App|[[Vault]]|Proprietary tool for managing secrets.|https://vaultproject.io/|{{Pkg|vault}}}}
+* {{App|kyp|Local-first terminal password manager with TOTP support. Encrypted SQLite vault, Argon2id key derivation, AES-256-GCM encryption.|https://github.com/stickpro/kyp|{{AUR|kyp}}}}
 
 === Graphical ===
 

@@ -473,7 +473,7 @@ See also [[Wikipedia:Comparison of notetaking software]].
 * {{App|OutWiker|Store notes in a tree.|https://jenyay.net/Outwiker/English|{{AUR|outwiker}}}}
 * {{App|[[Wikipedia:QOwnNotes|QOwnNotes]]|Notepad and todo list manager with markdown support and optional ownCloud integration built on Qt5.|https://www.qownnotes.org/|{{AUR|qownnotes}}}}
 * {{App|[[Wikipedia:Simplenote|Simplenote]]|The simplest way to keep notes. Based on the [https://electronjs.org/ Electron] platform.|https://simplenote.com/|{{AUR|simplenote-electron-bin}}}}
-* {{App|Standard Notes|Simple and private notes application which focuses on simplicity, and encrypts data locally before it ever touches a cloud. Based on the [https://electronjs.org/ Electron] platform.|https://standardnotes.com/|{{AUR|standardnotes-desktop}}}}
+* {{App|Standard Notes|Simple and private notes application which focuses on simplicity, and encrypts data locally before it ever touches a cloud. Based on the [https://electronjs.org/ Electron] platform.|https://standardnotes.com/|{{AUR|standardnotes}}}}
 * {{App|[[Wikipedia:TagSpaces|TagSpaces]]|Offline personal data manager for managing of your local files. Based on the [https://electronjs.org/ Electron] platform.|https://www.tagspaces.org/|{{AUR|tagspaces}}}}
 * {{App|Tangent|Open-source note-taking app with local Markdown files, linked notes, interactive maps, and sliding panels for navigation.|https://www.tangentnotes.com/|{{AUR|tangent-bin}}}}
 * {{App|[[Wikipedia:TiddlyWiki|TiddlyWiki]]|Unique non-linear notebook for capturing, organizing and sharing complex information.|https://tiddlywiki.com/|{{AUR|tiddlywiki}}}}

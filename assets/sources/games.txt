@@ -92,7 +92,7 @@ For more about running games, related system configuration tips, see [[Gaming]].
 * {{App|Streets of Rage Remake|A remake of the classic Streets of Rage 1, 2 and 3 by Sega.|https://sorr.forumotion.net/|{{AUR|streetsofrageremake}}}}
 * {{App|Tecnoballz|An exciting brick breaker game.|https://linux.tlk.fr/games/TecnoballZ/|{{AUR|tecnoballz}}}}
 * {{App|[[Wikipedia:Teeworlds|Teeworlds]]|Fast-paced 2D multiplayer shooter.|https://www.teeworlds.com/|{{Pkg|teeworlds}}}}
-* {{App|Tetrinet|Multiplayer online Tetris game for up to six people.|https://gtetrinet.sourceforge.net/|{{AUR|gtetrinet}}}}
+* {{App|Tetrinet|Multiplayer online Tetris game for up to six people.|https://gtetrinet.sourceforge.net/|{{AUR|gtetrinet}},{{pkg|tetrinet}}}}
 * {{App|Trackballs|A 3D marble game inspired by the classic Marble Madness.|https://trackballs.github.io/|{{AUR|trackballs}}}}
 * {{App|vpinball|An open source pinball table editor and simulator|https://github.com/vpinball/vpinball|{{AUR|vpinball}}}}
 * {{App|Warmux (previously ''Wormux'')|Somewhat similar to Worms 2/Worms Armageddon.|https://github.com/a-team/wormux/|{{AUR|warmux}}}}
