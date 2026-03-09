@@ -60,15 +60,6 @@ export class ConfigService {
     effect(async () => {
       const settings: AppSettings = this.settings();
 
-      const currentAutoStart: boolean = await this.existsAutoStartFile();
-      if (currentAutoStart && !settings.autoStart) {
-        this.logger.debug('Syncing auto start setting with system: disable');
-        await this.handleAutoStart(false);
-      } else if (!currentAutoStart && settings.autoStart) {
-        this.logger.debug('Syncing auto start setting with system: enable');
-        await this.handleAutoStart(true);
-      }
-
       // if (!this.cliMatches?.args['verbose']) {
       //   Logger.logLevel = settings.logLevel;
       // }
@@ -131,6 +122,10 @@ export class ConfigService {
     const settings = { ...this.settings() };
     (settings as Record<string, unknown>)[key] = value;
     this.settings.set(settings);
+
+    if (key === 'autoStart') {
+      await this.handleAutoStart(value as boolean);
+    }
 
     // Save to store if available
     try {
@@ -425,7 +420,7 @@ export class ConfigService {
       this.logger.debug('Enabling auto start');
       await this.shellService.execute('sh', [
         '-c',
-        'mkdir -p $HOME/.config/autostart && ln -s /usr/share/applications/garuda-toolbox.desktop $HOME/.config/autostart/garuda-toolbox.desktop',
+        'mkdir -p $HOME/.config/autostart && ln -sf /usr/share/applications/garuda-toolbox.desktop $HOME/.config/autostart/garuda-toolbox.desktop',
       ]);
     } else {
       this.logger.debug('Disabling auto start');
