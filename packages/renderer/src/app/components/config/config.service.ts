@@ -62,10 +62,10 @@ export class ConfigService {
 
       const currentAutoStart: boolean = await this.existsAutoStartFile();
       if (currentAutoStart && !settings.autoStart) {
-        this.logger.debug('Syncing auto start setting with system: enable');
+        this.logger.debug('Syncing auto start setting with system: disable');
         await this.handleAutoStart(false);
       } else if (!currentAutoStart && settings.autoStart) {
-        this.logger.debug('Syncing auto start setting with system: disable');
+        this.logger.debug('Syncing auto start setting with system: enable');
         await this.handleAutoStart(true);
       }
 
@@ -272,17 +272,8 @@ export class ConfigService {
    * @private
    */
   private async checkAutoStart(): Promise<PendingConfigUpdate> {
-    try {
-      const result: CommandResult = await new this.shellService.Command('test')
-        .args(['-f', '$HOME/.config/autostart/org.garudalinux.toolbox.desktop'])
-        .execute();
-
-      const has_autostartfile: boolean = result.code === 0;
+      const has_autostartfile: boolean = await this.existsAutoStartFile();
       return { settings: { autoStart: has_autostartfile } };
-    } catch (error) {
-      this.logger.error(`Failed to check autostart file: ${error}`);
-      return { settings: { autoStart: true } }; // Default to true for now
-    }
   }
 
   /**
@@ -434,13 +425,13 @@ export class ConfigService {
       this.logger.debug('Enabling auto start');
       await this.shellService.execute('sh', [
         '-c',
-        'mkdir -p $HOME/.config/autostart && echo "[Desktop Entry]\nType=Application\nExec=garuda-toolbox\nHidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true\nName[en_US]=Toolbox\nName=Toolbox\nIcon=garuda-toolbox" > $HOME/.config/autostart/garuda-toolbox.desktop',
+        'mkdir -p $HOME/.config/autostart && ln -s /usr/share/applications/garuda-toolbox.desktop $HOME/.config/autostart/garuda-toolbox.desktop',
       ]);
     } else {
       this.logger.debug('Disabling auto start');
       await this.shellService.execute('sh', [
         '-c',
-        'rm $HOME/.config/autostart/{org.garudalinux.rani,garuda-rani,toolbox}.desktop || true',
+        'rm $HOME/.config/autostart/{org.garudalinux.rani,garuda-rani,garuda-toolbox}.desktop || true',
       ]);
     }
   }
