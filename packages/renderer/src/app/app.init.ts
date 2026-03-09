@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import { ConfigService } from './components/config/config.service';
 import { LanguageManagerService } from './components/language-manager/language-manager.service';
 import { SplashService } from './components/splash/splash.service';
-import { checkFirstBoot } from './first-boot';
 
 export async function initToolbox() {
   const configService = inject(ConfigService);
@@ -12,10 +11,6 @@ export async function initToolbox() {
   splashService.show();
   splashService.updateStep(50, 'Loading configuration...');
   await configService.init();
-
-  if (!configService.state().isLiveSystem) {
-    if (await checkFirstBoot()) return;
-  }
 
   splashService.updateStep(60, 'Initializing languages..');
   await languageManagerService.init();
