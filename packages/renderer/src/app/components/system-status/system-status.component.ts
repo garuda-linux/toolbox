@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ElectronShellService } from '../../electron-services';
 import { OverlayBadge } from 'primeng/overlaybadge';
 import { Tooltip } from 'primeng/tooltip';
@@ -56,8 +56,8 @@ export class SystemStatusComponent {
         'maintenance.updateSystem',
         'pi pi-refresh',
         `if command -v garuda-update >/dev/null 2>&1; then \
-          GARUDA_UPDATE_RANI=1 garuda-update --skip-mirrorlist --noconfirm -- --noprogressbar; \
-          else pacman -Syu --noconfirm; fi`,
+          GARUDA_UPDATE_RANI=1 garuda-update --skip-mirrorlist; \
+          else pacman -Syu; fi`,
       );
       this.taskManagerService.scheduleTask(task);
     }

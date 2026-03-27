@@ -1,12 +1,15 @@
 import { computed, EventEmitter, inject, Injectable, signal } from '@angular/core';
-import { type ChildProcess, ElectronFsService } from '../../electron-services';
+import {
+  type ChildProcess,
+  ElectronFsService,
+  ElectronPathService,
+  ShellStreamingResult,
+} from '../../electron-services';
 import { ElectronShellSpawnService } from '../../electron-services/electron-shell-spawn.service';
-import { ShellStreamingResult } from '../../electron-services';
 import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { TranslocoService } from '@jsverse/transloco';
-import { ElectronPathService } from '../../electron-services';
 
 export class Task {
   constructor(priority: number, script: string, escalate: boolean, id: string, name: string, icon: string) {
@@ -32,13 +35,21 @@ export class TrackedShell {
   private resolvePromise: (() => void) | null = null;
   private rejectPromise: ((error: Error) => void) | null = null;
   private outputs: EventEmitter<string>;
+
   public running = false; // Initial state
+
+  public muted = true;
+  private stdoutBuffer = '';
+
+  public startMarker = `[G-START-${crypto.randomUUID()}]`;
+  public endMarker = `[G-END-${crypto.randomUUID()}]`;
 
   constructor(
     private command: string,
     private args: string[],
     outputs: EventEmitter<string>,
     private shellSpawnService: ElectronShellSpawnService,
+    private env?: Record<string, string>,
   ) {
     this.outputs = outputs;
   }
@@ -46,6 +57,7 @@ export class TrackedShell {
   async start(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       this.running = true;
+      this.muted = true;
       this.resolvePromise = resolve;
       this.rejectPromise = reject;
 
@@ -54,8 +66,61 @@ export class TrackedShell {
       try {
         // AWAIT the promise to get the actual ShellStreamingResult object
         const result: ShellStreamingResult = await this.shellSpawnService.spawnStreaming(this.command, this.args, {
-          onStdout: (data) => this.outputs.emit(data),
-          onStderr: (data) => this.outputs.emit(data),
+          env: this.env,
+          onStdout: (data) => {
+            if (this.muted) {
+              this.stdoutBuffer += data;
+              const markerIndex = this.stdoutBuffer.indexOf(this.startMarker);
+              if (markerIndex !== -1) {
+                this.muted = false;
+                let afterMarker = this.stdoutBuffer.substring(markerIndex + this.startMarker.length);
+                if (afterMarker.startsWith('\n')) {
+                  afterMarker = afterMarker.substring(1);
+                }
+
+                if (afterMarker) {
+                  const endIndex = afterMarker.indexOf(this.endMarker);
+                  if (endIndex !== -1) {
+                    this.muted = true;
+                    const beforeMarker = afterMarker.substring(0, endIndex);
+                    if (beforeMarker) this.outputs.emit(beforeMarker);
+                  } else {
+                    this.outputs.emit(afterMarker);
+                  }
+                }
+                this.stdoutBuffer = '';
+              } else if (this.stdoutBuffer.length > 1000) {
+                this.stdoutBuffer = this.stdoutBuffer.substring(this.stdoutBuffer.length - 100);
+              }
+              return;
+            }
+
+            this.stdoutBuffer += data;
+            const endIndex = this.stdoutBuffer.indexOf(this.endMarker);
+
+            if (endIndex !== -1) {
+              this.muted = true;
+              const beforeMarker = this.stdoutBuffer.substring(0, endIndex);
+              if (beforeMarker) this.outputs.emit(beforeMarker);
+              this.stdoutBuffer = '';
+              return;
+            }
+
+            const lastBracket = this.stdoutBuffer.lastIndexOf('[');
+            if (lastBracket !== -1 && this.endMarker.startsWith(this.stdoutBuffer.substring(lastBracket))) {
+              if (lastBracket > 0) {
+                this.outputs.emit(this.stdoutBuffer.substring(0, lastBracket));
+                this.stdoutBuffer = this.stdoutBuffer.substring(lastBracket);
+              }
+            } else {
+              this.outputs.emit(this.stdoutBuffer);
+              this.stdoutBuffer = '';
+            }
+          },
+          onStderr: (data) => {
+            if (this.muted) return;
+            this.outputs.emit(data);
+          },
           onClose: (code: number | null, signal: string | null) => {
             this.running = false;
             this.logger.trace(`Persistent shell closed. Code: ${code}, Signal: ${signal}`);
@@ -94,6 +159,13 @@ export class TrackedShell {
     await this.shellSpawnService.writeStdin(this.processId, data + '\n');
   }
 
+  async writeRaw(data: string): Promise<void> {
+    if (!this.processId) {
+      throw new Error('Tracked shell not started. Call start() first');
+    }
+    await this.shellSpawnService.writeStdin(this.processId, data);
+  }
+
   async stop(): Promise<void> {
     if (!this.processId || !this.running) {
       this.logger.debug('Shell not running or already stopped');
@@ -101,6 +173,7 @@ export class TrackedShell {
     }
 
     this.logger.debug(`Stopping persistent shell ${this.processId}`);
+    this.muted = true;
     await this.shellSpawnService.writeStdin(this.processId, 'exit 0\n');
 
     const startTime = Date.now();
@@ -159,7 +232,8 @@ export class TaskManagerService {
   readonly cachedData = signal<string>('');
 
   // progress can be null when currentTask is null.
-  // If currentTask is not in sortedList, currentIndex is 1. In all other cases, currentIndex is the index of currentTask in sortedList.
+  // If currentTask is not in sortedList, currentIndex is 1.
+  // In all other cases, currentIndex is the index of currentTask in sortedList.
   readonly progress = computed(() => {
     const currentTask = this.currentTask();
     if (currentTask === null) {
@@ -177,6 +251,9 @@ export class TaskManagerService {
   readonly dataEvents = new EventEmitter<string>();
   data = '';
 
+  terminalCols = 80;
+  terminalRows = 24;
+
   // Holds the active persistent shell instances
   private activeShells: TrackedShells | null = null;
 
@@ -186,6 +263,43 @@ export class TaskManagerService {
       this.data += data;
       this.cachedData.update((currentData) => (currentData += data));
     });
+  }
+
+  /**
+   * Resizes the underlying active shell, if any.
+   * @param cols Columns count
+   * @param rows Rows count
+   */
+  async resizeActiveShell(cols: number, rows: number): Promise<void> {
+    this.terminalCols = cols;
+    this.terminalRows = rows;
+    if (!this.activeShells) return;
+
+    // Send a silent stty command to update the PTY dimensions of the active shell(s)
+    const resizeCmd = `stty cols ${cols} rows ${rows} 2>/dev/null || true\n`;
+
+    if (this.activeShells.normal && this.activeShells.normal.running) {
+      await this.activeShells.normal.writeRaw(resizeCmd);
+    }
+    if (this.activeShells.escalated && this.activeShells.escalated.running) {
+      await this.activeShells.escalated.writeRaw(resizeCmd);
+    }
+  }
+
+  /**
+   * Writes raw data (e.g. keystrokes) directly to the currently active shell's stdin.
+   * @param data The raw data to write.
+   */
+  async writeRawToActiveShell(data: string): Promise<void> {
+    if (!this.activeShells) return;
+
+    const task = this.currentTask();
+    if (!task) return;
+
+    const shell = task.escalate ? this.activeShells.escalated : this.activeShells.normal;
+    if (shell && shell.running) {
+      await shell.writeRaw(data);
+    }
   }
 
   /**
@@ -368,9 +482,10 @@ export class TaskManagerService {
 
     const appLocalDataDirectory = await this.pathService.appLocalDataDir();
     const path: string = await this.pathService.resolve(appLocalDataDirectory, 'taskscript.tmp');
+    const executorPath: string = await this.pathService.resolve(appLocalDataDirectory, 'executor.tmp');
 
     // Safety check, make sure path does not contain unsafe characters
-    if (path.includes("'")) {
+    if (path.includes("'") || executorPath.includes("'")) {
       this.logger.error('Path contains unsafe character: ' + path);
       throw new Error('Unsafe path character detected');
     }
@@ -384,27 +499,40 @@ export class TaskManagerService {
       .join('');
     const taskFinishedMessage: string = this.translocoService.translate('taskmanager.scriptExecuted');
 
-    // Execute the script with extra safeguards by writing to the persistent shell's stdin
-    await shell.write(`
-      # Read file into variable
-      script=$(<'${path}')
-      # Check if the script is the same as the one we wrote
-      if [ "$(printf '%s' "$script" | sha256sum | cut -d ' ' -f 1)" != "${hash}" ]; then
-        echo "${this.translocoService.translate('taskmanager.scriptMismatch')}"
-        # This is bad enough to end the entire shell
-        exit 1
-      fi
-      # Execute the script, -x for debugging output
-      bash -x /dev/stdin <<< "$script"
-      rm '${path}'
-
-      printf "\n${taskFinishedMessage}\n"
-    `);
+    // Write the executor script
+    const executorScript = `
+#!/bin/bash
+echo "${shell.startMarker}"
+# Read file into variable
+script=$(<'${path}')
+# Check if the script is the same as the one we wrote
+if [ "$(printf '%s' "$script" | sha256sum | cut -d ' ' -f 1)" != "${hash}" ]; then
+  echo "${this.translocoService.translate('taskmanager.scriptMismatch')}"
+  echo "${shell.endMarker}"
+  exit 1
+fi
+# Execute the script, -x for debugging output
+bash -x "${path}"
+rm '${path}'
+printf "\\n${taskFinishedMessage}\\n"
+rm '${executorPath}'
+echo "${shell.endMarker}"
+`;
+    await this.fsService.writeTextFile(executorPath, executorScript);
+    await shell.write(`bash "${executorPath}"`);
 
     while ((await this.fsService.exists(path)) && shell.running) {
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
     this.logger.info(`Task ${task.name} has finished`);
+  }
+
+  private async getPtyWrapper(): Promise<string> {
+    const wrapperPath = '/usr/libexec/garuda-toolbox-pty-wrapper';
+    if (await this.fsService.exists(wrapperPath)) {
+      return wrapperPath;
+    }
+    return '/usr/bin/script';
   }
 
   /**
@@ -419,10 +547,42 @@ export class TaskManagerService {
     this.running.set(true);
     this.clearTerminal();
 
+    const ptyWrapper = await this.getPtyWrapper();
+    const shellCommand = `stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true; env PS1="" PROMPT_COMMAND="" bash --norc`;
+
     // Create shells as needed for this single task execution
+    // Using script wrapper to allocate a PTY, ensuring tools like pacman display progress bars.
     this.activeShells = new TrackedShells(
-      task.escalate ? null : new TrackedShell('bash', ['-l'], this.dataEvents, this.shellStreamingService), // Normal shell
-      task.escalate ? new TrackedShell('pkexec', ['bash', '-l'], this.dataEvents, this.shellStreamingService) : null, // Escalated shell
+      task.escalate
+        ? null
+        : new TrackedShell(
+            ptyWrapper,
+            ['-q', '-e', '/dev/null', '-c', shellCommand],
+            this.dataEvents,
+            this.shellStreamingService,
+            {
+              COLUMNS: this.terminalCols.toString(),
+              LINES: this.terminalRows.toString(),
+              TERM: 'xterm-256color',
+              PS1: '',
+              PROMPT_COMMAND: '',
+            },
+          ), // Normal shell
+      task.escalate
+        ? new TrackedShell(
+            'pkexec',
+            [ptyWrapper, '-q', '-e', '/dev/null', '-c', shellCommand],
+            this.dataEvents,
+            this.shellStreamingService,
+            {
+              COLUMNS: this.terminalCols.toString(),
+              LINES: this.terminalRows.toString(),
+              TERM: 'xterm-256color',
+              PS1: '',
+              PROMPT_COMMAND: '',
+            },
+          )
+        : null, // Escalated shell
     );
 
     try {
@@ -458,10 +618,42 @@ export class TaskManagerService {
     const needsNormal = this.tasks().some((task) => !task.escalate);
     const needsEscalated = this.tasks().some((task) => task.escalate);
 
+    const ptyWrapper = await this.getPtyWrapper();
+    const shellCommand = `stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true; env PS1="" PROMPT_COMMAND="" bash --norc`;
+
     // Create persistent shells at the beginning of the entire task queue execution
+    // Using script wrapper to allocate a PTY, ensuring tools like pacman display progress bars.
     this.activeShells = new TrackedShells(
-      needsNormal ? new TrackedShell('bash', ['-l'], this.dataEvents, this.shellStreamingService) : null,
-      needsEscalated ? new TrackedShell('pkexec', ['bash', '-l'], this.dataEvents, this.shellStreamingService) : null,
+      needsNormal
+        ? new TrackedShell(
+            ptyWrapper,
+            ['-q', '-e', '/dev/null', '-c', shellCommand],
+            this.dataEvents,
+            this.shellStreamingService,
+            {
+              COLUMNS: this.terminalCols.toString(),
+              LINES: this.terminalRows.toString(),
+              TERM: 'xterm-256color',
+              PS1: '',
+              PROMPT_COMMAND: '',
+            },
+          )
+        : null,
+      needsEscalated
+        ? new TrackedShell(
+            'pkexec',
+            [ptyWrapper, '-q', '-e', '/dev/null', '-c', shellCommand],
+            this.dataEvents,
+            this.shellStreamingService,
+            {
+              COLUMNS: this.terminalCols.toString(),
+              LINES: this.terminalRows.toString(),
+              TERM: 'xterm-256color',
+              PS1: '',
+              PROMPT_COMMAND: '',
+            },
+          )
+        : null,
     );
 
     try {

@@ -247,8 +247,8 @@ export class MaintenanceComponent implements OnInit {
       command: (): string => {
         this.logger.info('Updating system');
         return `if command -v garuda-update >/dev/null 2>&1; then \
-          GARUDA_UPDATE_RANI=1 garuda-update --skip-mirrorlist --noconfirm -- --noprogressbar; \
-          else pacman -Syu --noconfirm --noprogressbar; fi`;
+          GARUDA_UPDATE_RANI=1 garuda-update --skip-mirrorlist; \
+          else pacman -Syu; fi`;
       },
     },
     {

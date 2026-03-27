@@ -130,6 +130,19 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
         if (output === 'clear') this.term()?.underlying?.clear();
       }),
     );
+
+    const termInstance = this.term()?.underlying;
+    if (termInstance) {
+      this.taskManagerService.terminalCols = termInstance.cols;
+      this.taskManagerService.terminalRows = termInstance.rows;
+
+      termInstance.onResize((event) => {
+        void this.taskManagerService.resizeActiveShell(event.cols, event.rows);
+      });
+      termInstance.onData((data: string) => {
+        void this.taskManagerService.writeRawToActiveShell(data);
+      });
+    }
   }
 
   ngOnDestroy(): void {

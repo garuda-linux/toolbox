@@ -319,6 +319,10 @@ ipcRenderer.on('appMenu:itemClicked', (_, clickData: any) => {
   emit('appMenu:itemClicked', clickData);
 });
 
+ipcRenderer.on('events:emit', (_, channel: string, ...args: unknown[]) => {
+  emit(channel, ...args);
+});
+
 // Clean up on page unload
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', () => {
