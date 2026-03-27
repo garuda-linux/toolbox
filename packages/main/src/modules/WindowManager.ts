@@ -1,6 +1,6 @@
 import type { AppModule } from '../AppModule.js';
 import type { ModuleContext } from '../ModuleContext.js';
-import { BrowserWindow, Size, screen, shell } from 'electron';
+import { BrowserWindow, screen, shell, Size } from 'electron';
 import type { AppInitConfig } from '../AppInitConfig.js';
 import { Logger } from '../logging/logging.js';
 import ElectronStore from 'electron-store';
@@ -93,20 +93,38 @@ class WindowManager implements AppModule {
     });
 
     const savedBounds = this.store.get('bounds') as Rectangle;
-    if (savedBounds !== undefined) {
+    if (savedBounds !== undefined && savedBounds.width && savedBounds.height) {
       this.logger.debug(`Restoring window bounds: ${JSON.stringify(savedBounds)}`);
-      const screenArea: Rectangle = screen.getDisplayMatching(savedBounds).workArea;
-      if (
-        savedBounds.x > screenArea.x + screenArea.width ||
-        savedBounds.x < screenArea.x ||
-        savedBounds.y < screenArea.y ||
-        savedBounds.y > screenArea.y + screenArea.height
-      ) {
-        // Reset window into existing screenarea
-        browserWindow.setBounds({ x: 0, y: 0, width: size.width, height: size.height });
-      } else {
-        browserWindow.setBounds(savedBounds);
+
+      // Wayland frequently reports 0,0 coordinates. We ignore out-of-bounds checks
+      // for 0,0 to prevent accidentally discarding valid dimensions.
+      try {
+        const screenArea: Rectangle = screen.getDisplayMatching({
+          x: savedBounds.x || 0,
+          y: savedBounds.y || 0,
+          width: savedBounds.width,
+          height: savedBounds.height,
+        }).workArea;
+
+        const isOutOfScreen =
+          savedBounds.x > screenArea.x + screenArea.width ||
+          savedBounds.x + savedBounds.width < screenArea.x ||
+          savedBounds.y < screenArea.y ||
+          savedBounds.y + savedBounds.height < screenArea.y;
+
+        if (isOutOfScreen && (savedBounds.x !== 0 || savedBounds.y !== 0)) {
+          this.logger.debug('Window out of bounds, resetting to center.');
+          browserWindow.setSize(windowWidth, windowHeight);
+          browserWindow.center();
+        } else {
+          browserWindow.setBounds(savedBounds);
+        }
+      } catch (e) {
+        this.logger.error(`Error restoring bounds: ${e}`);
+        browserWindow.setSize(savedBounds.width, savedBounds.height);
       }
+    } else {
+      browserWindow.center();
     }
 
     // Set title explicitly to avoid issues with default title
@@ -155,9 +173,31 @@ class WindowManager implements AppModule {
       // Window cleanup will be handled by the framework
     });
 
+    let saveBoundsTimeout: NodeJS.Timeout | null = null;
+    const saveBounds = () => {
+      if (saveBoundsTimeout) clearTimeout(saveBoundsTimeout);
+      saveBoundsTimeout = setTimeout(() => {
+        if (
+          !browserWindow.isDestroyed() &&
+          !browserWindow.isMaximized() &&
+          !browserWindow.isMinimized() &&
+          !browserWindow.isFullScreen()
+        ) {
+          const bounds = browserWindow.getBounds();
+          this.logger.debug(`Saving bounds: ${JSON.stringify(bounds)}`);
+          this.store.set('bounds', bounds);
+        }
+      }, 500);
+    };
+
+    browserWindow.on('resized', saveBounds);
+    browserWindow.on('moved', saveBounds);
+
     browserWindow.on('close', () => {
       this.logger.debug('Window is closing, saving bounds...');
-      this.store.set('bounds', browserWindow.getBounds());
+      if (!browserWindow.isMaximized() && !browserWindow.isMinimized() && !browserWindow.isFullScreen()) {
+        this.store.set('bounds', browserWindow.getBounds());
+      }
     });
 
     browserWindow.on('page-title-updated', (e) => {
@@ -188,9 +228,17 @@ class WindowManager implements AppModule {
     });
 
     if (this.#renderer instanceof URL) {
-      await browserWindow.loadURL(this.#renderer.href);
+      await browserWindow.loadURL(this.#renderer.href).catch((err) => {
+        if (err.code !== 'ERR_ABORTED') {
+          this.logger.error(`Failed to load renderer URL: ${err}`);
+        }
+      });
     } else {
-      await browserWindow.loadFile(this.#renderer.path);
+      await browserWindow.loadFile(this.#renderer.path).catch((err) => {
+        if (err.code !== 'ERR_ABORTED') {
+          this.logger.error(`Failed to load renderer file: ${err}`);
+        }
+      });
     }
 
     // Only open dev tools in development and handle errors
