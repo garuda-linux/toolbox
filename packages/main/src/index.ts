@@ -21,7 +21,23 @@ import { app, protocol } from 'electron';
 import { Logger } from './logging/logging.js';
 import { migrateConfig } from './modules/MigrationModule.js';
 
-// Register custom schemes as privileged before the app is ready
+// GPU acceleration flags — must be set before app.whenReady()
+// Electron's GPU process spawns as a zygote child that doesn't inherit
+// --ozone-platform=wayland or DRM features (electron/electron#50455).
+// --no-zygote disables the zygote process pool, forcing each child process
+// to be spawned fresh with the full command line including GPU flags.
+// This trades startup speed for correct GPU flag propagation.
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('enable-gpu-rasterization');
+app.commandLine.appendSwitch('enable-zero-copy');
+app.commandLine.appendSwitch('no-zygote');
+app.commandLine.appendSwitch(
+  'enable-features',
+  'AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,' +
+    'VaapiVideoDecoder,VaapiVideoEncoder,VaapiOnNvidiaGPUs,' +
+    'AcceleratedVideoEncoder,CanvasOopRasterization,',
+);
+
 protocol.registerSchemesAsPrivileged([
   {
     scheme: 'app-icon',

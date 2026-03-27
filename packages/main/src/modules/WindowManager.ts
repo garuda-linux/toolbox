@@ -83,7 +83,7 @@ class WindowManager implements AppModule {
         webviewTag: false,
         experimentalFeatures: false,
         plugins: false,
-        webgl: false,
+        webgl: true,
         accessibleTitle: 'Garuda Toolbox',
         navigateOnDragDrop: false,
         autoplayPolicy: 'user-gesture-required',
