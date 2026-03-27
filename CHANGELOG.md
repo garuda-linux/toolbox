@@ -2,11 +2,54 @@
 
 ### 🚀 Features
 
+- _(renderer)_ Add tooltip with descriptions for checkbox/system options
+- _(renderer)_ Hide dead and exited systemd services by default; allow toggling enabled
+- Support real TTY shell output and writing back input
+- Wrap remaining pkexec calls to profit from custom policykit prompt
+
+### 🐛 Bug Fixes
+
+- Properly resolve app icons from custom themes
+- Restore window bounds on Wayland
+- Set window title and desktop name early to correctly report on Wayland
+- Register IPC handlers before creating window to fix missing shell:execute IPC handler
+
+### 💼 Other
+
+- Use maximum compression
+
+### ⚡ Performance
+
+- Enable gpu acceleration and fix issue with vulkan on wayland
+- _(renderer)_ Show less items in paginated areas for less dom nodes, massively improving performance especially on additional packages tab
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix eslint config for newer versions
+- _(flake.lock)_ Update
+- _(renderer)_ Update search keywords with up-to-date keywords
+
+## [4.0.1] - 2026-03-09
+
+### 🐛 Bug Fixes
+
+- Attempt to fix autostart logic
+- Do not apply autostart logic via effect
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove firstboot logic
+
+## [4.0.0] - 2026-03-07
+
+### 🚀 Features
+
 - _(packages)_ Improve arch wiki parsing script; enricht with appstream data; update lists
 - _(packages)_ Add appicon module, to resolve icons from different sources and display them in the app lists
 - _(settings)_ Add home config module and possibility of changing settings/configs with 2 initial configs
 - _(migration)_ Safely migrate user configs
 - _(main)_ Safeguard against running as root
+- _(migration)_ Migrate plasma dock to new desktop entry
 
 ### 🐛 Bug Fixes
 
@@ -15,10 +58,16 @@
 - _(configs)_ Properly determine home dir; show configs conditionally based on desktop environment
 - _(main)_ Allow app-icon protocol via CSP to fix non-rendering icons
 - _(packages)_ Properly reset pagination to 1 in case of tab change
+- Exclude AUR packages from lists by default
 
 ### 🚜 Refactor
 
 - Rebrand to Garuda Toolbox
+- _(renderer)_ Apply angular migrations for modern syntax
+
+### 📚 Documentation
+
+- _(changelog)_ Update
 
 ## [3.5.2] - 2026-01-03
 

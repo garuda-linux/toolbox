@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import {
   type ApplicationConfig,
   isDevMode,
@@ -6,7 +6,6 @@ import {
   provideAppInitializer,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideGarudaNG } from '@garudalinux/core';
 import { TranslocoHttpLoader } from './transloco-loader';
@@ -87,6 +86,7 @@ export const appConfig: ApplicationConfig = {
           'pl',
           'pt',
           'pt-BR',
+          'ro',
           'ru',
           'sl',
           'sv',

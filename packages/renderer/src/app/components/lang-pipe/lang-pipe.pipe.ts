@@ -48,6 +48,8 @@ export class LangPipePipe implements PipeTransform {
         return 'Hindi 🇮🇳';
       case 'gl':
         return 'Galician 🇪🇸';
+      case 'ro':
+        return 'Romanian 🇷🇴';
       case 'sv':
         return 'Swedish 🇸🇪';
       case 'sl':
