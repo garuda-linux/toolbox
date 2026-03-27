@@ -1,5 +1,9 @@
 import { initApp } from '@app/main';
 import { fileURLToPath } from 'node:url';
+import { app } from 'electron';
+
+app.name = 'garuda-toolbox';
+app.setDesktopName('garuda-toolbox.desktop');
 
 if (process.env.NODE_ENV === 'development' || process.env.PLAYWRIGHT_TEST === 'true' || !!process.env.CI) {
   function showAndExit(...args) {
