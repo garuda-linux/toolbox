@@ -212,167 +212,167 @@
       "title": "音频",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA 支持"
+        "title": "ALSA 支持"
       },
       "jack": {
-        "description": "JACK 支持"
+        "title": "JACK 支持"
       },
       "pulseaudio": {
-        "description": "PulseAudio 支持"
+        "title": "PulseAudio 支持"
       },
       "pipewire": {
-        "description": "PipeWire 支持"
+        "title": "PipeWire 支持"
       },
       "userRealtime": {
-        "description": "用户在 realtime 组中"
+        "title": "用户在 realtime 组中"
       },
       "jamesdsp": {
-        "description": "已安装 JamesDSP"
+        "title": "已安装 JamesDSP"
       }
     },
     "virtualization": {
       "title": "虚拟化",
       "icon": "Icon",
       "qemu": {
-        "description": "已安装 QEMU"
+        "title": "已安装 QEMU"
       },
       "kvm": {
-        "description": "KVM 支持"
+        "title": "KVM 支持"
       },
       "virtManager": {
-        "description": "Virt-manager 支持"
+        "title": "Virt-manager 支持"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd 已启用"
+        "title": "Libvirtd 已启用"
       },
       "userVboxUsers": {
-        "description": "用户在 vboxusers 组中"
+        "title": "用户在 vboxusers 组中"
       },
       "virtualbox": {
-        "description": "VirtualBox 支持"
+        "title": "VirtualBox 支持"
       },
       "userLibvirt": {
-        "description": "用户在 libvirt 组中"
+        "title": "用户在 libvirt 组中"
       },
       "userKvm": {
-        "description": "用户在 kvm 组中"
+        "title": "用户在 kvm 组中"
       }
     },
     "containers": {
       "title": "容器",
       "icon": "Icon",
       "docker": {
-        "description": "已安装 Docker"
+        "title": "已安装 Docker"
       },
       "dockerEnabled": {
-        "description": "Docker 已启用"
+        "title": "Docker 已启用"
       },
       "dockerCompose": {
-        "description": "已安装 Docker Compose"
+        "title": "已安装 Docker Compose"
       },
       "userDocker": {
-        "description": "用户在 docker 组中"
+        "title": "用户在 docker 组中"
       },
       "podman": {
-        "description": "已安装 Podman"
+        "title": "已安装 Podman"
       },
       "podmanDocker": {
-        "description": "通过 Podman 模拟 Docker"
+        "title": "通过 Podman 模拟 Docker"
       },
       "podmanDesktop": {
-        "description": "已安装 Podman Desktop"
+        "title": "已安装 Podman Desktop"
       },
       "distrobox": {
-        "description": "已安装 DistroBox"
+        "title": "已安装 DistroBox"
       },
       "boxbuddy": {
-        "description": "已安装 BoxBuddy"
+        "title": "已安装 BoxBuddy"
       }
     },
     "network": {
       "title": "网络",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager 支持"
+        "title": "NetworkManager 支持"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager 已启用"
+        "title": "NetworkManager 已启用"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager 已启用"
+        "title": "ModemManager 已启用"
       }
     },
     "bluetooth": {
       "title": "蓝牙",
       "icon": "Icon",
       "bluetooth": {
-        "description": "蓝牙支持"
+        "title": "蓝牙支持"
       },
       "bluetoothEnabled": {
-        "description": "蓝牙已启用"
+        "title": "蓝牙已启用"
       },
       "userBluetooth": {
-        "description": "用户在 bluetooth 组中"
+        "title": "用户在 bluetooth 组中"
       },
       "autoConnect": {
-        "description": "已安装 Auto connect"
+        "title": "已安装 Auto connect"
       },
       "autoConnectEnabled": {
-        "description": "Auto connect 已启用"
+        "title": "Auto connect 已启用"
       }
     },
     "printing": {
       "title": "打印",
       "icon": "Icon",
       "printingSupport": {
-        "description": "打印支持"
+        "title": "打印支持"
       },
       "cupsEnabled": {
-        "description": "CUPS 已启用"
+        "title": "CUPS 已启用"
       },
       "scanningSupport": {
-        "description": "扫描支持"
+        "title": "扫描支持"
       },
       "sanedEnabled": {
-        "description": "saned 已启用"
+        "title": "saned 已启用"
       },
       "userCups": {
-        "description": "用户在 cups 组中"
+        "title": "用户在 cups 组中"
       },
       "userScanner": {
-        "description": "用户在 scanner 组中"
+        "title": "用户在 scanner 组中"
       },
       "userLp": {
-        "description": "用户在 lp 组中"
+        "title": "用户在 lp 组中"
       }
     },
     "firewall": {
       "title": "防火墙",
       "icon": "Icon",
       "firewalld": {
-        "description": "已安装 Firewalld"
+        "title": "已安装 Firewalld"
       },
       "firewalldEnabled": {
-        "description": "firewalld 已启用"
+        "title": "firewalld 已启用"
       },
       "ufw": {
-        "description": "已安装 UFW"
+        "title": "已安装 UFW"
       },
       "ufwEnabled": {
-        "description": "UFW 已启用"
+        "title": "UFW 已启用"
       },
       "opensnitch": {
-        "description": "已安装 OpenSnitch"
+        "title": "已安装 OpenSnitch"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch 已启用"
+        "title": "OpenSnitch 已启用"
       }
     },
     "misc": {
       "title": "杂项",
       "icon": "Icon",
       "gns": {
-        "description": "已安装 Garuda Nix Subsystem"
+        "title": "已安装 Garuda Nix Subsystem"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "常用",
       "icon": "Icon",
       "psd": {
-        "description": "已安装 Profile-sync-daemon"
+        "title": "已安装 Profile-sync-daemon"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon 已启用"
+        "title": "Profile-sync-daemon 已启用"
       },
       "oomd": {
-        "description": "Systemd-oomd 已启用"
+        "title": "Systemd-oomd 已启用"
       },
       "guestUser": {
-        "description": "启用访客用户"
+        "title": "启用访客用户"
       }
     },
     "performance": {
       "title": "性能",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "性能调整"
+        "title": "性能调整"
       },
       "ananicyCpp": {
-        "description": "已安装 Ananicy C++"
+        "title": "已安装 Ananicy C++"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ 已启用"
+        "title": "Ananicy C++ 已启用"
       },
       "bpftune": {
-        "description": "已安装 Bpftune"
+        "title": "已安装 Bpftune"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune 已启用"
+        "title": "Bpftune 已启用"
       },
       "preload": {
-        "description": "已安装 Preload"
+        "title": "已安装 Preload"
       },
       "preloadEnabled": {
-        "description": "Preload 已启用"
+        "title": "Preload 已启用"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance 已启用"
+        "title": "IRQbalance 已启用"
       }
     },
     "powersave": {
       "title": "节能",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "节能调整"
+        "title": "节能调整"
       },
       "tlp": {
-        "description": "已安装 TLP"
+        "title": "已安装 TLP"
       },
       "tlpEnabled": {
-        "description": "TLP 已启用"
+        "title": "TLP 已启用"
       },
       "autoCpufreq": {
-        "description": "已安装 Auto-cpufreq"
+        "title": "已安装 Auto-cpufreq"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq 已启用"
+        "title": "Auto-cpufreq 已启用"
       },
       "thermald": {
-        "description": "已安装 Thermald"
+        "title": "已安装 Thermald"
       },
       "thermaldEnabled": {
-        "description": "Thermald 已启用"
+        "title": "Thermald 已启用"
       },
       "powerProfilesDaemon": {
-        "description": "已安装 Power profiles daemon"
+        "title": "已安装 Power profiles daemon"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon 已启用"
+        "title": "Power profiles daemon 已启用"
       },
       "intelUndervolt": {
-        "description": "已安装 Intel-undervolt"
+        "title": "已安装 Intel-undervolt"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt 已启用"
+        "title": "Intel-undervolt 已启用"
       }
     },
     "rightclickEmulation": {
       "title": "右键模拟",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev 长按右键模拟"
+        "title": "Evdev 长按右键模拟"
       },
       "evdevRce": {
-        "description": "Evdev RCE 已启用"
+        "title": "Evdev RCE 已启用"
       }
     }
   },

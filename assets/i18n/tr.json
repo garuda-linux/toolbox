@@ -212,167 +212,167 @@
       "title": "Ses",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA desteği"
+        "title": "ALSA desteği"
       },
       "jack": {
-        "description": "JACK desteği"
+        "title": "JACK desteği"
       },
       "pulseaudio": {
-        "description": "PulseAudio desteği"
+        "title": "PulseAudio desteği"
       },
       "pipewire": {
-        "description": "PipeWire desteği"
+        "title": "PipeWire desteği"
       },
       "userRealtime": {
-        "description": "Kullanıcı realtime grubunda"
+        "title": "Kullanıcı realtime grubunda"
       },
       "jamesdsp": {
-        "description": "JamesDSP kurulu"
+        "title": "JamesDSP kurulu"
       }
     },
     "virtualization": {
       "title": "Sanallaştırma",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU kurulu"
+        "title": "QEMU kurulu"
       },
       "kvm": {
-        "description": "KVM desteği"
+        "title": "KVM desteği"
       },
       "virtManager": {
-        "description": "Virt-manager desteği"
+        "title": "Virt-manager desteği"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd etkinleştirildi"
+        "title": "Libvirtd etkinleştirildi"
       },
       "userVboxUsers": {
-        "description": "Kullanıcı vboxusers grubunda"
+        "title": "Kullanıcı vboxusers grubunda"
       },
       "virtualbox": {
-        "description": "VirtualBox desteği"
+        "title": "VirtualBox desteği"
       },
       "userLibvirt": {
-        "description": "Kullanıcı libvirt grubunda"
+        "title": "Kullanıcı libvirt grubunda"
       },
       "userKvm": {
-        "description": "Kullanıcı kvm grubunda"
+        "title": "Kullanıcı kvm grubunda"
       }
     },
     "containers": {
       "title": "Konteynerler",
       "icon": "Icon",
       "docker": {
-        "description": "Docker kurulu"
+        "title": "Docker kurulu"
       },
       "dockerEnabled": {
-        "description": "Docker etkinleştirildi"
+        "title": "Docker etkinleştirildi"
       },
       "dockerCompose": {
-        "description": "Docker Compose kurulu"
+        "title": "Docker Compose kurulu"
       },
       "userDocker": {
-        "description": "Kullanıcı docker grubunda"
+        "title": "Kullanıcı docker grubunda"
       },
       "podman": {
-        "description": "Podman kurulu"
+        "title": "Podman kurulu"
       },
       "podmanDocker": {
-        "description": "Podman ile Docker'ı taklit et"
+        "title": "Podman ile Docker'ı taklit et"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop kurulu"
+        "title": "Podman Desktop kurulu"
       },
       "distrobox": {
-        "description": "DistroBox kurulu"
+        "title": "DistroBox kurulu"
       },
       "boxbuddy": {
-        "description": "BoxBuddy kurulu"
+        "title": "BoxBuddy kurulu"
       }
     },
     "network": {
       "title": "Ağ",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager desteği"
+        "title": "NetworkManager desteği"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager etkinleştirildi"
+        "title": "NetworkManager etkinleştirildi"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager etkinleştirildi"
+        "title": "ModemManager etkinleştirildi"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth desteği"
+        "title": "Bluetooth desteği"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth etkinleştirildi"
+        "title": "Bluetooth etkinleştirildi"
       },
       "userBluetooth": {
-        "description": "Kullanıcı bluetooth grubunda"
+        "title": "Kullanıcı bluetooth grubunda"
       },
       "autoConnect": {
-        "description": "Otomatik bağlanma kurulu"
+        "title": "Otomatik bağlanma kurulu"
       },
       "autoConnectEnabled": {
-        "description": "Otomatik bağlanma etkinleştirildi"
+        "title": "Otomatik bağlanma etkinleştirildi"
       }
     },
     "printing": {
       "title": "Yazdırma",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Yazdırma desteği"
+        "title": "Yazdırma desteği"
       },
       "cupsEnabled": {
-        "description": "CUPS etkinleştirildi"
+        "title": "CUPS etkinleştirildi"
       },
       "scanningSupport": {
-        "description": "Tarama desteği"
+        "title": "Tarama desteği"
       },
       "sanedEnabled": {
-        "description": "saned etkinleştirildi"
+        "title": "saned etkinleştirildi"
       },
       "userCups": {
-        "description": "Kullanıcı cups grubunda"
+        "title": "Kullanıcı cups grubunda"
       },
       "userScanner": {
-        "description": "Kullanıcı scanner grubunda"
+        "title": "Kullanıcı scanner grubunda"
       },
       "userLp": {
-        "description": "Kullanıcı lp grubunda"
+        "title": "Kullanıcı lp grubunda"
       }
     },
     "firewall": {
       "title": "Güvenlik Duvarı",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld kurulu"
+        "title": "Firewalld kurulu"
       },
       "firewalldEnabled": {
-        "description": "firewalld etkinleştirildi"
+        "title": "firewalld etkinleştirildi"
       },
       "ufw": {
-        "description": "UFW kurulu"
+        "title": "UFW kurulu"
       },
       "ufwEnabled": {
-        "description": "UFW etkinleştirildi"
+        "title": "UFW etkinleştirildi"
       },
       "opensnitch": {
-        "description": "OpenSnitch kurulu"
+        "title": "OpenSnitch kurulu"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch etkinleştirildi"
+        "title": "OpenSnitch etkinleştirildi"
       }
     },
     "misc": {
       "title": "Çeşitli",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem kurulu"
+        "title": "Garuda Nix Subsystem kurulu"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Genel",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon kurulu"
+        "title": "Profile-sync-daemon kurulu"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon etkinleştirildi"
+        "title": "Profile-sync-daemon etkinleştirildi"
       },
       "oomd": {
-        "description": "Systemd-oomd etkinleştirildi"
+        "title": "Systemd-oomd etkinleştirildi"
       },
       "guestUser": {
-        "description": "Misafir kullanıcıyı etkinleştir"
+        "title": "Misafir kullanıcıyı etkinleştir"
       }
     },
     "performance": {
       "title": "Performans",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Performans iyileştirmeleri"
+        "title": "Performans iyileştirmeleri"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ kurulu"
+        "title": "Ananicy C++ kurulu"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ etkinleştirildi"
+        "title": "Ananicy C++ etkinleştirildi"
       },
       "bpftune": {
-        "description": "Bpftune kurulu"
+        "title": "Bpftune kurulu"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune etkinleştirildi"
+        "title": "Bpftune etkinleştirildi"
       },
       "preload": {
-        "description": "Preload kurulu"
+        "title": "Preload kurulu"
       },
       "preloadEnabled": {
-        "description": "Preload etkinleştirildi"
+        "title": "Preload etkinleştirildi"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance etkinleştirildi"
+        "title": "IRQbalance etkinleştirildi"
       }
     },
     "powersave": {
       "title": "Güç tasarrufu",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Güç tasarrufu iyileştirmeleri"
+        "title": "Güç tasarrufu iyileştirmeleri"
       },
       "tlp": {
-        "description": "TLP kurulu"
+        "title": "TLP kurulu"
       },
       "tlpEnabled": {
-        "description": "TLP etkinleştirildi"
+        "title": "TLP etkinleştirildi"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq kurulu"
+        "title": "Auto-cpufreq kurulu"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq etkinleştirildi"
+        "title": "Auto-cpufreq etkinleştirildi"
       },
       "thermald": {
-        "description": "Thermald kurulu"
+        "title": "Thermald kurulu"
       },
       "thermaldEnabled": {
-        "description": "Thermald etkinleştirildi"
+        "title": "Thermald etkinleştirildi"
       },
       "powerProfilesDaemon": {
-        "description": "Güç profilleri servisi kurulu"
+        "title": "Güç profilleri servisi kurulu"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Güç profilleri servisi etkinleştirildi"
+        "title": "Güç profilleri servisi etkinleştirildi"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt kurulu"
+        "title": "Intel-undervolt kurulu"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt etkinleştirildi"
+        "title": "Intel-undervolt etkinleştirildi"
       }
     },
     "rightclickEmulation": {
       "title": "Sağ tık emülasyonu",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev uzun basma sağ tık emülasyonu"
+        "title": "Evdev uzun basma sağ tık emülasyonu"
       },
       "evdevRce": {
-        "description": "Evdev RCE etkinleştirildi"
+        "title": "Evdev RCE etkinleştirildi"
       }
     }
   },

@@ -212,167 +212,167 @@
       "title": "Sauti",
       "icon": "Icon",
       "alsa": {
-        "description": "Usaidizi wa ALSA"
+        "title": "Usaidizi wa ALSA"
       },
       "jack": {
-        "description": "Usaidizi wa JACK"
+        "title": "Usaidizi wa JACK"
       },
       "pulseaudio": {
-        "description": "Usaidizi wa PulseAudio"
+        "title": "Usaidizi wa PulseAudio"
       },
       "pipewire": {
-        "description": "Usaidizi wa PipeWire"
+        "title": "Usaidizi wa PipeWire"
       },
       "userRealtime": {
-        "description": "Mtumiaji katika kikundi cha realtime"
+        "title": "Mtumiaji katika kikundi cha realtime"
       },
       "jamesdsp": {
-        "description": "JamesDSP imesakinishwa"
+        "title": "JamesDSP imesakinishwa"
       }
     },
     "virtualization": {
       "title": "Uboreshaji",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU imesakinishwa"
+        "title": "QEMU imesakinishwa"
       },
       "kvm": {
-        "description": "Usaidizi wa KVM"
+        "title": "Usaidizi wa KVM"
       },
       "virtManager": {
-        "description": "Usaidizi wa Virt-manager"
+        "title": "Usaidizi wa Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd imewashwa"
+        "title": "Libvirtd imewashwa"
       },
       "userVboxUsers": {
-        "description": "Mtumiaji katika kikundi cha vboxusers"
+        "title": "Mtumiaji katika kikundi cha vboxusers"
       },
       "virtualbox": {
-        "description": "Usaidizi wa VirtualBox"
+        "title": "Usaidizi wa VirtualBox"
       },
       "userLibvirt": {
-        "description": "Mtumiaji katika kikundi cha libvirt"
+        "title": "Mtumiaji katika kikundi cha libvirt"
       },
       "userKvm": {
-        "description": "Mtumiaji katika kikundi cha kvm"
+        "title": "Mtumiaji katika kikundi cha kvm"
       }
     },
     "containers": {
       "title": "Kontena",
       "icon": "Icon",
       "docker": {
-        "description": "Docker imesakinishwa"
+        "title": "Docker imesakinishwa"
       },
       "dockerEnabled": {
-        "description": "Docker imewashwa"
+        "title": "Docker imewashwa"
       },
       "dockerCompose": {
-        "description": "Docker Compose imesakinishwa"
+        "title": "Docker Compose imesakinishwa"
       },
       "userDocker": {
-        "description": "Mtumiaji katika kikundi cha docker"
+        "title": "Mtumiaji katika kikundi cha docker"
       },
       "podman": {
-        "description": "Podman imesakinishwa"
+        "title": "Podman imesakinishwa"
       },
       "podmanDocker": {
-        "description": "Emulate Docker kupitia Podman"
+        "title": "Emulate Docker kupitia Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop imesakinishwa"
+        "title": "Podman Desktop imesakinishwa"
       },
       "distrobox": {
-        "description": "DistroBox imesakinishwa"
+        "title": "DistroBox imesakinishwa"
       },
       "boxbuddy": {
-        "description": "BoxBuddy imesakinishwa"
+        "title": "BoxBuddy imesakinishwa"
       }
     },
     "network": {
       "title": "Mtandao",
       "icon": "Icon",
       "networkManager": {
-        "description": "Usaidizi wa NetworkManager"
+        "title": "Usaidizi wa NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager imewashwa"
+        "title": "NetworkManager imewashwa"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager imewashwa"
+        "title": "ModemManager imewashwa"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Usaidizi wa Bluetooth"
+        "title": "Usaidizi wa Bluetooth"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth imewashwa"
+        "title": "Bluetooth imewashwa"
       },
       "userBluetooth": {
-        "description": "Mtumiaji katika kikundi cha bluetooth"
+        "title": "Mtumiaji katika kikundi cha bluetooth"
       },
       "autoConnect": {
-        "description": "Muunganisho wa kiotomatiki umesakinishwa"
+        "title": "Muunganisho wa kiotomatiki umesakinishwa"
       },
       "autoConnectEnabled": {
-        "description": "Muunganisho wa kiotomatiki umewashwa"
+        "title": "Muunganisho wa kiotomatiki umewashwa"
       }
     },
     "printing": {
       "title": "Uchapishaji",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Usaidizi wa uchapishaji"
+        "title": "Usaidizi wa uchapishaji"
       },
       "cupsEnabled": {
-        "description": "CUPS imewashwa"
+        "title": "CUPS imewashwa"
       },
       "scanningSupport": {
-        "description": "Usaidizi wa skanning"
+        "title": "Usaidizi wa skanning"
       },
       "sanedEnabled": {
-        "description": "saned imewashwa"
+        "title": "saned imewashwa"
       },
       "userCups": {
-        "description": "Mtumiaji katika kikundi cha cups"
+        "title": "Mtumiaji katika kikundi cha cups"
       },
       "userScanner": {
-        "description": "Mtumiaji katika kikundi cha scanner"
+        "title": "Mtumiaji katika kikundi cha scanner"
       },
       "userLp": {
-        "description": "Mtumiaji katika kikundi cha lp"
+        "title": "Mtumiaji katika kikundi cha lp"
       }
     },
     "firewall": {
       "title": "Kinga moto",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld imesakinishwa"
+        "title": "Firewalld imesakinishwa"
       },
       "firewalldEnabled": {
-        "description": "firewalld imewashwa"
+        "title": "firewalld imewashwa"
       },
       "ufw": {
-        "description": "UFW imesakinishwa"
+        "title": "UFW imesakinishwa"
       },
       "ufwEnabled": {
-        "description": "UFW imewashwa"
+        "title": "UFW imewashwa"
       },
       "opensnitch": {
-        "description": "OpenSnitch imesakinishwa"
+        "title": "OpenSnitch imesakinishwa"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch imewashwa"
+        "title": "OpenSnitch imewashwa"
       }
     },
     "misc": {
       "title": "Mengineyo",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem imesakinishwa"
+        "title": "Garuda Nix Subsystem imesakinishwa"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Kawaida",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon imesakinishwa"
+        "title": "Profile-sync-daemon imesakinishwa"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon imewashwa"
+        "title": "Profile-sync-daemon imewashwa"
       },
       "oomd": {
-        "description": "Systemd-oomd imewashwa"
+        "title": "Systemd-oomd imewashwa"
       },
       "guestUser": {
-        "description": "Washa mtumiaji mgeni"
+        "title": "Washa mtumiaji mgeni"
       }
     },
     "performance": {
       "title": "Utendaji",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Marekebisho ya utendaji"
+        "title": "Marekebisho ya utendaji"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ imesakinishwa"
+        "title": "Ananicy C++ imesakinishwa"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ imewashwa"
+        "title": "Ananicy C++ imewashwa"
       },
       "bpftune": {
-        "description": "Bpftune imesakinishwa"
+        "title": "Bpftune imesakinishwa"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune imewashwa"
+        "title": "Bpftune imewashwa"
       },
       "preload": {
-        "description": "Preload imesakinishwa"
+        "title": "Preload imesakinishwa"
       },
       "preloadEnabled": {
-        "description": "Preload imewashwa"
+        "title": "Preload imewashwa"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance imewashwa"
+        "title": "IRQbalance imewashwa"
       }
     },
     "powersave": {
       "title": "Kuokoa nishati",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Marekebisho ya kuokoa nishati"
+        "title": "Marekebisho ya kuokoa nishati"
       },
       "tlp": {
-        "description": "TLP imesakinishwa"
+        "title": "TLP imesakinishwa"
       },
       "tlpEnabled": {
-        "description": "TLP imewashwa"
+        "title": "TLP imewashwa"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq imesakinishwa"
+        "title": "Auto-cpufreq imesakinishwa"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq imewashwa"
+        "title": "Auto-cpufreq imewashwa"
       },
       "thermald": {
-        "description": "Thermald imesakinishwa"
+        "title": "Thermald imesakinishwa"
       },
       "thermaldEnabled": {
-        "description": "Thermald imewashwa"
+        "title": "Thermald imewashwa"
       },
       "powerProfilesDaemon": {
-        "description": "Daemon ya profaili za nguvu imesakinishwa"
+        "title": "Daemon ya profaili za nguvu imesakinishwa"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Daemon ya profaili za nguvu imewashwa"
+        "title": "Daemon ya profaili za nguvu imewashwa"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt imesakinishwa"
+        "title": "Intel-undervolt imesakinishwa"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt imewashwa"
+        "title": "Intel-undervolt imewashwa"
       }
     },
     "rightclickEmulation": {
       "title": "Uigaji wa kubofya kulia",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Uigaji wa kubofya kulia kwa kubonyeza kwa muda mrefu Evdev"
+        "title": "Uigaji wa kubofya kulia kwa kubonyeza kwa muda mrefu Evdev"
       },
       "evdevRce": {
-        "description": "Evdev RCE imewashwa"
+        "title": "Evdev RCE imewashwa"
       }
     }
   },

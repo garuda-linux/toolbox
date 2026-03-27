@@ -58,7 +58,7 @@ export interface SystemToolsEntry {
 
 export interface SystemToolsSubEntry {
   name: string;
-  fancyTitle: string;
+  title: string;
   description: string;
   checked: boolean;
   disabler?: string | string[];

@@ -212,167 +212,167 @@
       "title": "الصوت",
       "icon": "Icon",
       "alsa": {
-        "description": "دعم ALSA"
+        "title": "دعم ALSA"
       },
       "jack": {
-        "description": "دعم JACK"
+        "title": "دعم JACK"
       },
       "pulseaudio": {
-        "description": "دعم PulseAudio"
+        "title": "دعم PulseAudio"
       },
       "pipewire": {
-        "description": "دعم PipeWire"
+        "title": "دعم PipeWire"
       },
       "userRealtime": {
-        "description": "المستخدم في مجموعة realtime"
+        "title": "المستخدم في مجموعة realtime"
       },
       "jamesdsp": {
-        "description": "تم تثبيت JamesDSP"
+        "title": "تم تثبيت JamesDSP"
       }
     },
     "virtualization": {
       "title": "المحاكاة الافتراضية (Virtualization)",
       "icon": "Icon",
       "qemu": {
-        "description": "تم تثبيت QEMU"
+        "title": "تم تثبيت QEMU"
       },
       "kvm": {
-        "description": "دعم KVM"
+        "title": "دعم KVM"
       },
       "virtManager": {
-        "description": "دعم Virt-manager"
+        "title": "دعم Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "تم تمكين Libvirtd"
+        "title": "تم تمكين Libvirtd"
       },
       "userVboxUsers": {
-        "description": "المستخدم في مجموعة vboxusers"
+        "title": "المستخدم في مجموعة vboxusers"
       },
       "virtualbox": {
-        "description": "دعم VirtualBox"
+        "title": "دعم VirtualBox"
       },
       "userLibvirt": {
-        "description": "المستخدم في مجموعة libvirt"
+        "title": "المستخدم في مجموعة libvirt"
       },
       "userKvm": {
-        "description": "المستخدم في مجموعة kvm"
+        "title": "المستخدم في مجموعة kvm"
       }
     },
     "containers": {
       "title": "الحاويات (Containers)",
       "icon": "Icon",
       "docker": {
-        "description": "تم تثبيت Docker"
+        "title": "تم تثبيت Docker"
       },
       "dockerEnabled": {
-        "description": "تم تمكين Docker"
+        "title": "تم تمكين Docker"
       },
       "dockerCompose": {
-        "description": "تم تثبيت Docker Compose"
+        "title": "تم تثبيت Docker Compose"
       },
       "userDocker": {
-        "description": "المستخدم في مجموعة docker"
+        "title": "المستخدم في مجموعة docker"
       },
       "podman": {
-        "description": "تم تثبيت Podman"
+        "title": "تم تثبيت Podman"
       },
       "podmanDocker": {
-        "description": "محاكاة Docker عبر Podman"
+        "title": "محاكاة Docker عبر Podman"
       },
       "podmanDesktop": {
-        "description": "تم تثبيت Podman Desktop"
+        "title": "تم تثبيت Podman Desktop"
       },
       "distrobox": {
-        "description": "تم تثبيت DistroBox"
+        "title": "تم تثبيت DistroBox"
       },
       "boxbuddy": {
-        "description": "تم تثبيت BoxBuddy"
+        "title": "تم تثبيت BoxBuddy"
       }
     },
     "network": {
       "title": "الشبكة",
       "icon": "Icon",
       "networkManager": {
-        "description": "دعم NetworkManager"
+        "title": "دعم NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "تم تمكين NetworkManager"
+        "title": "تم تمكين NetworkManager"
       },
       "modemManagerEnabled": {
-        "description": "تم تمكين ModemManager"
+        "title": "تم تمكين ModemManager"
       }
     },
     "bluetooth": {
       "title": "بلوتوث",
       "icon": "Icon",
       "bluetooth": {
-        "description": "دعم بلوتوث"
+        "title": "دعم بلوتوث"
       },
       "bluetoothEnabled": {
-        "description": "تم تمكين بلوتوث"
+        "title": "تم تمكين بلوتوث"
       },
       "userBluetooth": {
-        "description": "المستخدم في مجموعة bluetooth"
+        "title": "المستخدم في مجموعة bluetooth"
       },
       "autoConnect": {
-        "description": "تم تثبيت الاتصال التلقائي"
+        "title": "تم تثبيت الاتصال التلقائي"
       },
       "autoConnectEnabled": {
-        "description": "تم تمكين الاتصال التلقائي"
+        "title": "تم تمكين الاتصال التلقائي"
       }
     },
     "printing": {
       "title": "الطباعة",
       "icon": "Icon",
       "printingSupport": {
-        "description": "دعم الطباعة"
+        "title": "دعم الطباعة"
       },
       "cupsEnabled": {
-        "description": "تم تمكين CUPS"
+        "title": "تم تمكين CUPS"
       },
       "scanningSupport": {
-        "description": "دعم المسح الضوئي"
+        "title": "دعم المسح الضوئي"
       },
       "sanedEnabled": {
-        "description": "تم تمكين saned"
+        "title": "تم تمكين saned"
       },
       "userCups": {
-        "description": "المستخدم في مجموعة cups"
+        "title": "المستخدم في مجموعة cups"
       },
       "userScanner": {
-        "description": "المستخدم في مجموعة scanner"
+        "title": "المستخدم في مجموعة scanner"
       },
       "userLp": {
-        "description": "المستخدم في مجموعة lp"
+        "title": "المستخدم في مجموعة lp"
       }
     },
     "firewall": {
       "title": "جدار الحماية",
       "icon": "Icon",
       "firewalld": {
-        "description": "تم تثبيت Firewalld"
+        "title": "تم تثبيت Firewalld"
       },
       "firewalldEnabled": {
-        "description": "تم تمكين firewalld"
+        "title": "تم تمكين firewalld"
       },
       "ufw": {
-        "description": "تم تثبيت UFW"
+        "title": "تم تثبيت UFW"
       },
       "ufwEnabled": {
-        "description": "تم تمكين UFW"
+        "title": "تم تمكين UFW"
       },
       "opensnitch": {
-        "description": "تم تثبيت OpenSnitch"
+        "title": "تم تثبيت OpenSnitch"
       },
       "opensnitchEnabled": {
-        "description": "تم تمكين OpenSnitch"
+        "title": "تم تمكين OpenSnitch"
       }
     },
     "misc": {
       "title": "متنوعات",
       "icon": "Icon",
       "gns": {
-        "description": "تم تثبيت Garuda Nix Subsystem"
+        "title": "تم تثبيت Garuda Nix Subsystem"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "عام",
       "icon": "Icon",
       "psd": {
-        "description": "تم تثبيت Profile-sync-daemon"
+        "title": "تم تثبيت Profile-sync-daemon"
       },
       "psdEnabled": {
-        "description": "تم تمكين Profile-sync-daemon"
+        "title": "تم تمكين Profile-sync-daemon"
       },
       "oomd": {
-        "description": "تم تمكين Systemd-oomd"
+        "title": "تم تمكين Systemd-oomd"
       },
       "guestUser": {
-        "description": "تمكين حساب الضيف"
+        "title": "تمكين حساب الضيف"
       }
     },
     "performance": {
       "title": "الأداء",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "تعديلات الأداء"
+        "title": "تعديلات الأداء"
       },
       "ananicyCpp": {
-        "description": "تم تثبيت Ananicy C++"
+        "title": "تم تثبيت Ananicy C++"
       },
       "ananicyCppEnabled": {
-        "description": "تم تمكين Ananicy C++"
+        "title": "تم تمكين Ananicy C++"
       },
       "bpftune": {
-        "description": "تم تثبيت Bpftune"
+        "title": "تم تثبيت Bpftune"
       },
       "bpftuneEnabled": {
-        "description": "تم تمكين Bpftune"
+        "title": "تم تمكين Bpftune"
       },
       "preload": {
-        "description": "تم تثبيت Preload"
+        "title": "تم تثبيت Preload"
       },
       "preloadEnabled": {
-        "description": "تم تمكين Preload"
+        "title": "تم تمكين Preload"
       },
       "irqbalanceEnabled": {
-        "description": "تم تمكين IRQbalance"
+        "title": "تم تمكين IRQbalance"
       }
     },
     "powersave": {
       "title": "توفير الطاقة",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "تعديلات توفير الطاقة"
+        "title": "تعديلات توفير الطاقة"
       },
       "tlp": {
-        "description": "تم تثبيت TLP"
+        "title": "تم تثبيت TLP"
       },
       "tlpEnabled": {
-        "description": "تم تمكين TLP"
+        "title": "تم تمكين TLP"
       },
       "autoCpufreq": {
-        "description": "تم تثبيت Auto-cpufreq"
+        "title": "تم تثبيت Auto-cpufreq"
       },
       "autoCpufreqEnabled": {
-        "description": "تم تمكين Auto-cpufreq"
+        "title": "تم تمكين Auto-cpufreq"
       },
       "thermald": {
-        "description": "تم تثبيت Thermald"
+        "title": "تم تثبيت Thermald"
       },
       "thermaldEnabled": {
-        "description": "تم تمكين Thermald"
+        "title": "تم تمكين Thermald"
       },
       "powerProfilesDaemon": {
-        "description": "تم تثبيت Power profiles daemon"
+        "title": "تم تثبيت Power profiles daemon"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "تم تمكين Power profiles daemon"
+        "title": "تم تمكين Power profiles daemon"
       },
       "intelUndervolt": {
-        "description": "تم تثبيت Intel-undervolt"
+        "title": "تم تثبيت Intel-undervolt"
       },
       "intelUndervoltEnabled": {
-        "description": "تم تمكين Intel-undervolt"
+        "title": "تم تمكين Intel-undervolt"
       }
     },
     "rightclickEmulation": {
       "title": "محاكاة النقر بالزر الأيمن",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "محاكاة النقر بالزر الأيمن بالضغط المطول في Evdev"
+        "title": "محاكاة النقر بالزر الأيمن بالضغط المطول في Evdev"
       },
       "evdevRce": {
-        "description": "تم تمكين Evdev RCE"
+        "title": "تم تمكين Evdev RCE"
       }
     }
   },

@@ -212,167 +212,167 @@
       "title": "ऑडियो",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA समर्थन"
+        "title": "ALSA समर्थन"
       },
       "jack": {
-        "description": "JACK समर्थन"
+        "title": "JACK समर्थन"
       },
       "pulseaudio": {
-        "description": "PulseAudio समर्थन"
+        "title": "PulseAudio समर्थन"
       },
       "pipewire": {
-        "description": "PipeWire समर्थन"
+        "title": "PipeWire समर्थन"
       },
       "userRealtime": {
-        "description": "realtime समूह में उपयोगकर्ता"
+        "title": "realtime समूह में उपयोगकर्ता"
       },
       "jamesdsp": {
-        "description": "JamesDSP इंस्टॉल किया गया"
+        "title": "JamesDSP इंस्टॉल किया गया"
       }
     },
     "virtualization": {
       "title": "वर्चुअलाइजेशन",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU इंस्टॉल किया गया"
+        "title": "QEMU इंस्टॉल किया गया"
       },
       "kvm": {
-        "description": "KVM समर्थन"
+        "title": "KVM समर्थन"
       },
       "virtManager": {
-        "description": "Virt-manager समर्थन"
+        "title": "Virt-manager समर्थन"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd सक्षम"
+        "title": "Libvirtd सक्षम"
       },
       "userVboxUsers": {
-        "description": "vboxusers समूह में उपयोगकर्ता"
+        "title": "vboxusers समूह में उपयोगकर्ता"
       },
       "virtualbox": {
-        "description": "VirtualBox समर्थन"
+        "title": "VirtualBox समर्थन"
       },
       "userLibvirt": {
-        "description": "libvirt समूह में उपयोगकर्ता"
+        "title": "libvirt समूह में उपयोगकर्ता"
       },
       "userKvm": {
-        "description": "kvm समूह में उपयोगकर्ता"
+        "title": "kvm समूह में उपयोगकर्ता"
       }
     },
     "containers": {
       "title": "कंटेनर",
       "icon": "Icon",
       "docker": {
-        "description": "Docker इंस्टॉल किया गया"
+        "title": "Docker इंस्टॉल किया गया"
       },
       "dockerEnabled": {
-        "description": "Docker सक्षम"
+        "title": "Docker सक्षम"
       },
       "dockerCompose": {
-        "description": "Docker Compose इंस्टॉल किया गया"
+        "title": "Docker Compose इंस्टॉल किया गया"
       },
       "userDocker": {
-        "description": "docker समूह में उपयोगकर्ता"
+        "title": "docker समूह में उपयोगकर्ता"
       },
       "podman": {
-        "description": "Podman इंस्टॉल किया गया"
+        "title": "Podman इंस्टॉल किया गया"
       },
       "podmanDocker": {
-        "description": "Podman के माध्यम से Docker का अनुकरण करें"
+        "title": "Podman के माध्यम से Docker का अनुकरण करें"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop इंस्टॉल किया गया"
+        "title": "Podman Desktop इंस्टॉल किया गया"
       },
       "distrobox": {
-        "description": "DistroBox इंस्टॉल किया गया"
+        "title": "DistroBox इंस्टॉल किया गया"
       },
       "boxbuddy": {
-        "description": "BoxBuddy इंस्टॉल किया गया"
+        "title": "BoxBuddy इंस्टॉल किया गया"
       }
     },
     "network": {
       "title": "नेटवर्क",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager समर्थन"
+        "title": "NetworkManager समर्थन"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager सक्षम"
+        "title": "NetworkManager सक्षम"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager सक्षम"
+        "title": "ModemManager सक्षम"
       }
     },
     "bluetooth": {
       "title": "ब्लूटूथ",
       "icon": "Icon",
       "bluetooth": {
-        "description": "ब्लूटूथ समर्थन"
+        "title": "ब्लूटूथ समर्थन"
       },
       "bluetoothEnabled": {
-        "description": "ब्लूटूथ सक्षम"
+        "title": "ब्लूटूथ सक्षम"
       },
       "userBluetooth": {
-        "description": "bluetooth समूह में उपयोगकर्ता"
+        "title": "bluetooth समूह में उपयोगकर्ता"
       },
       "autoConnect": {
-        "description": "Auto connect इंस्टॉल किया गया"
+        "title": "Auto connect इंस्टॉल किया गया"
       },
       "autoConnectEnabled": {
-        "description": "Auto connect सक्षम"
+        "title": "Auto connect सक्षम"
       }
     },
     "printing": {
       "title": "प्रिंटिंग",
       "icon": "Icon",
       "printingSupport": {
-        "description": "प्रिंटिंग समर्थन"
+        "title": "प्रिंटिंग समर्थन"
       },
       "cupsEnabled": {
-        "description": "CUPS सक्षम"
+        "title": "CUPS सक्षम"
       },
       "scanningSupport": {
-        "description": "स्कैनिंग समर्थन"
+        "title": "स्कैनिंग समर्थन"
       },
       "sanedEnabled": {
-        "description": "saned सक्षम"
+        "title": "saned सक्षम"
       },
       "userCups": {
-        "description": "cups समूह में उपयोगकर्ता"
+        "title": "cups समूह में उपयोगकर्ता"
       },
       "userScanner": {
-        "description": "scanner समूह में उपयोगकर्ता"
+        "title": "scanner समूह में उपयोगकर्ता"
       },
       "userLp": {
-        "description": "lp समूह में उपयोगकर्ता"
+        "title": "lp समूह में उपयोगकर्ता"
       }
     },
     "firewall": {
       "title": "फ़ायरवॉल",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld इंस्टॉल किया गया"
+        "title": "Firewalld इंस्टॉल किया गया"
       },
       "firewalldEnabled": {
-        "description": "firewalld सक्षम"
+        "title": "firewalld सक्षम"
       },
       "ufw": {
-        "description": "UFW इंस्टॉल किया गया"
+        "title": "UFW इंस्टॉल किया गया"
       },
       "ufwEnabled": {
-        "description": "UFW सक्षम"
+        "title": "UFW सक्षम"
       },
       "opensnitch": {
-        "description": "OpenSnitch इंस्टॉल किया गया"
+        "title": "OpenSnitch इंस्टॉल किया गया"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch सक्षम"
+        "title": "OpenSnitch सक्षम"
       }
     },
     "misc": {
       "title": "विविध",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem इंस्टॉल किया गया"
+        "title": "Garuda Nix Subsystem इंस्टॉल किया गया"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "सामान्य",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon इंस्टॉल किया गया"
+        "title": "Profile-sync-daemon इंस्टॉल किया गया"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon सक्षम"
+        "title": "Profile-sync-daemon सक्षम"
       },
       "oomd": {
-        "description": "Systemd-oomd सक्षम"
+        "title": "Systemd-oomd सक्षम"
       },
       "guestUser": {
-        "description": "अतिथि उपयोगकर्ता सक्षम करें"
+        "title": "अतिथि उपयोगकर्ता सक्षम करें"
       }
     },
     "performance": {
       "title": "प्रदर्शन",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "प्रदर्शन सुधार"
+        "title": "प्रदर्शन सुधार"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ इंस्टॉल किया गया"
+        "title": "Ananicy C++ इंस्टॉल किया गया"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ सक्षम"
+        "title": "Ananicy C++ सक्षम"
       },
       "bpftune": {
-        "description": "Bpftune इंस्टॉल किया गया"
+        "title": "Bpftune इंस्टॉल किया गया"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune सक्षम"
+        "title": "Bpftune सक्षम"
       },
       "preload": {
-        "description": "Preload इंस्टॉल किया गया"
+        "title": "Preload इंस्टॉल किया गया"
       },
       "preloadEnabled": {
-        "description": "Preload सक्षम"
+        "title": "Preload सक्षम"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance सक्षम"
+        "title": "IRQbalance सक्षम"
       }
     },
     "powersave": {
       "title": "पावरसेविंग",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "पावरसेविंग सुधार"
+        "title": "पावरसेविंग सुधार"
       },
       "tlp": {
-        "description": "TLP इंस्टॉल किया गया"
+        "title": "TLP इंस्टॉल किया गया"
       },
       "tlpEnabled": {
-        "description": "TLP सक्षम"
+        "title": "TLP सक्षम"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq इंस्टॉल किया गया"
+        "title": "Auto-cpufreq इंस्टॉल किया गया"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq सक्षम"
+        "title": "Auto-cpufreq सक्षम"
       },
       "thermald": {
-        "description": "Thermald इंस्टॉल किया गया"
+        "title": "Thermald इंस्टॉल किया गया"
       },
       "thermaldEnabled": {
-        "description": "Thermald सक्षम"
+        "title": "Thermald सक्षम"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon इंस्टॉल किया गया"
+        "title": "Power profiles daemon इंस्टॉल किया गया"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon सक्षम"
+        "title": "Power profiles daemon सक्षम"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt इंस्टॉल किया गया"
+        "title": "Intel-undervolt इंस्टॉल किया गया"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt सक्षम"
+        "title": "Intel-undervolt सक्षम"
       }
     },
     "rightclickEmulation": {
       "title": "राइट क्लिक इम्यूलेशन",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev लॉन्ग प्रेस राइट क्लिक इम्यूलेशन"
+        "title": "Evdev लॉन्ग प्रेस राइट क्लिक इम्यूलेशन"
       },
       "evdevRce": {
-        "description": "Evdev RCE सक्षम"
+        "title": "Evdev RCE सक्षम"
       }
     }
   },

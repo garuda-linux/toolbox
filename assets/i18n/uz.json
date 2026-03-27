@@ -212,167 +212,167 @@
       "title": "Audio",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA qoʻllab-quvvatlashi"
+        "title": "ALSA qoʻllab-quvvatlashi"
       },
       "jack": {
-        "description": "JACK qoʻllab-quvvatlashi"
+        "title": "JACK qoʻllab-quvvatlashi"
       },
       "pulseaudio": {
-        "description": "PulseAudio qoʻllab-quvvatlashi"
+        "title": "PulseAudio qoʻllab-quvvatlashi"
       },
       "pipewire": {
-        "description": "PipeWire qoʻllab-quvvatlashi"
+        "title": "PipeWire qoʻllab-quvvatlashi"
       },
       "userRealtime": {
-        "description": "Foydalanuvchi realtime guruhida"
+        "title": "Foydalanuvchi realtime guruhida"
       },
       "jamesdsp": {
-        "description": "JamesDSP oʻrnatilgan"
+        "title": "JamesDSP oʻrnatilgan"
       }
     },
     "virtualization": {
       "title": "Virtualizatsiya",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU oʻrnatilgan"
+        "title": "QEMU oʻrnatilgan"
       },
       "kvm": {
-        "description": "KVM qoʻllab-quvvatlashi"
+        "title": "KVM qoʻllab-quvvatlashi"
       },
       "virtManager": {
-        "description": "Virt-manager qoʻllab-quvvatlashi"
+        "title": "Virt-manager qoʻllab-quvvatlashi"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd faollashtirilgan"
+        "title": "Libvirtd faollashtirilgan"
       },
       "userVboxUsers": {
-        "description": "Foydalanuvchi vboxusers guruhida"
+        "title": "Foydalanuvchi vboxusers guruhida"
       },
       "virtualbox": {
-        "description": "VirtualBox qoʻllab-quvvatlashi"
+        "title": "VirtualBox qoʻllab-quvvatlashi"
       },
       "userLibvirt": {
-        "description": "Foydalanuvchi libvirt guruhida"
+        "title": "Foydalanuvchi libvirt guruhida"
       },
       "userKvm": {
-        "description": "Foydalanuvchi kvm guruhida"
+        "title": "Foydalanuvchi kvm guruhida"
       }
     },
     "containers": {
       "title": "Konteynerlar",
       "icon": "Icon",
       "docker": {
-        "description": "Docker oʻrnatilgan"
+        "title": "Docker oʻrnatilgan"
       },
       "dockerEnabled": {
-        "description": "Docker faollashtirilgan"
+        "title": "Docker faollashtirilgan"
       },
       "dockerCompose": {
-        "description": "Docker Compose oʻrnatilgan"
+        "title": "Docker Compose oʻrnatilgan"
       },
       "userDocker": {
-        "description": "Foydalanuvchi docker guruhida"
+        "title": "Foydalanuvchi docker guruhida"
       },
       "podman": {
-        "description": "Podman oʻrnatilgan"
+        "title": "Podman oʻrnatilgan"
       },
       "podmanDocker": {
-        "description": "Podman orqali Docker emulyatsiyasi"
+        "title": "Podman orqali Docker emulyatsiyasi"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop oʻrnatilgan"
+        "title": "Podman Desktop oʻrnatilgan"
       },
       "distrobox": {
-        "description": "DistroBox oʻrnatilgan"
+        "title": "DistroBox oʻrnatilgan"
       },
       "boxbuddy": {
-        "description": "BoxBuddy oʻrnatilgan"
+        "title": "BoxBuddy oʻrnatilgan"
       }
     },
     "network": {
       "title": "Tarmoq",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager qoʻllab-quvvatlashi"
+        "title": "NetworkManager qoʻllab-quvvatlashi"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager faollashtirilgan"
+        "title": "NetworkManager faollashtirilgan"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager faollashtirilgan"
+        "title": "ModemManager faollashtirilgan"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth qoʻllab-quvvatlashi"
+        "title": "Bluetooth qoʻllab-quvvatlashi"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth faollashtirilgan"
+        "title": "Bluetooth faollashtirilgan"
       },
       "userBluetooth": {
-        "description": "Foydalanuvchi bluetooth guruhida"
+        "title": "Foydalanuvchi bluetooth guruhida"
       },
       "autoConnect": {
-        "description": "Avtomatik ulanish oʻrnatilgan"
+        "title": "Avtomatik ulanish oʻrnatilgan"
       },
       "autoConnectEnabled": {
-        "description": "Avtomatik ulanish faollashtirilgan"
+        "title": "Avtomatik ulanish faollashtirilgan"
       }
     },
     "printing": {
       "title": "Chop etish",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Chop etishni qoʻllab-quvvatlash"
+        "title": "Chop etishni qoʻllab-quvvatlash"
       },
       "cupsEnabled": {
-        "description": "CUPS faollashtirilgan"
+        "title": "CUPS faollashtirilgan"
       },
       "scanningSupport": {
-        "description": "Skanerlashni qoʻllab-quvvatlash"
+        "title": "Skanerlashni qoʻllab-quvvatlash"
       },
       "sanedEnabled": {
-        "description": "saned faollashtirilgan"
+        "title": "saned faollashtirilgan"
       },
       "userCups": {
-        "description": "Foydalanuvchi cups guruhida"
+        "title": "Foydalanuvchi cups guruhida"
       },
       "userScanner": {
-        "description": "Foydalanuvchi scanner guruhida"
+        "title": "Foydalanuvchi scanner guruhida"
       },
       "userLp": {
-        "description": "Foydalanuvchi lp guruhida"
+        "title": "Foydalanuvchi lp guruhida"
       }
     },
     "firewall": {
       "title": "Xavfsizlik devori",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld oʻrnatilgan"
+        "title": "Firewalld oʻrnatilgan"
       },
       "firewalldEnabled": {
-        "description": "firewalld faollashtirilgan"
+        "title": "firewalld faollashtirilgan"
       },
       "ufw": {
-        "description": "UFW oʻrnatilgan"
+        "title": "UFW oʻrnatilgan"
       },
       "ufwEnabled": {
-        "description": "UFW faollashtirilgan"
+        "title": "UFW faollashtirilgan"
       },
       "opensnitch": {
-        "description": "OpenSnitch oʻrnatilgan"
+        "title": "OpenSnitch oʻrnatilgan"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch faollashtirilgan"
+        "title": "OpenSnitch faollashtirilgan"
       }
     },
     "misc": {
       "title": "Har xil",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem oʻrnatilgan"
+        "title": "Garuda Nix Subsystem oʻrnatilgan"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Umumiy",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon oʻrnatilgan"
+        "title": "Profile-sync-daemon oʻrnatilgan"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon faollashtirilgan"
+        "title": "Profile-sync-daemon faollashtirilgan"
       },
       "oomd": {
-        "description": "Systemd-oomd faollashtirilgan"
+        "title": "Systemd-oomd faollashtirilgan"
       },
       "guestUser": {
-        "description": "Mehmon foydalanuvchini faollashtirish"
+        "title": "Mehmon foydalanuvchini faollashtirish"
       }
     },
     "performance": {
       "title": "Ishlash samaradorligi",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Ishlash samaradorligini oshirish sozlamalari"
+        "title": "Ishlash samaradorligini oshirish sozlamalari"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ oʻrnatilgan"
+        "title": "Ananicy C++ oʻrnatilgan"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ faollashtirilgan"
+        "title": "Ananicy C++ faollashtirilgan"
       },
       "bpftune": {
-        "description": "Bpftune oʻrnatilgan"
+        "title": "Bpftune oʻrnatilgan"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune faollashtirilgan"
+        "title": "Bpftune faollashtirilgan"
       },
       "preload": {
-        "description": "Preload oʻrnatilgan"
+        "title": "Preload oʻrnatilgan"
       },
       "preloadEnabled": {
-        "description": "Preload faollashtirilgan"
+        "title": "Preload faollashtirilgan"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance faollashtirilgan"
+        "title": "IRQbalance faollashtirilgan"
       }
     },
     "powersave": {
       "title": "Quvvat tejash",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Quvvat tejash sozlamalari"
+        "title": "Quvvat tejash sozlamalari"
       },
       "tlp": {
-        "description": "TLP oʻrnatilgan"
+        "title": "TLP oʻrnatilgan"
       },
       "tlpEnabled": {
-        "description": "TLP faollashtirilgan"
+        "title": "TLP faollashtirilgan"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq oʻrnatilgan"
+        "title": "Auto-cpufreq oʻrnatilgan"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq faollashtirilgan"
+        "title": "Auto-cpufreq faollashtirilgan"
       },
       "thermald": {
-        "description": "Thermald oʻrnatilgan"
+        "title": "Thermald oʻrnatilgan"
       },
       "thermaldEnabled": {
-        "description": "Thermald faollashtirilgan"
+        "title": "Thermald faollashtirilgan"
       },
       "powerProfilesDaemon": {
-        "description": "Quvvat profillari demoni oʻrnatilgan"
+        "title": "Quvvat profillari demoni oʻrnatilgan"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Quvvat profillari demoni faollashtirilgan"
+        "title": "Quvvat profillari demoni faollashtirilgan"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt oʻrnatilgan"
+        "title": "Intel-undervolt oʻrnatilgan"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt faollashtirilgan"
+        "title": "Intel-undervolt faollashtirilgan"
       }
     },
     "rightclickEmulation": {
       "title": "Oʻng tugma emulyatsiyasi",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev uzoq bosish oʻng tugma emulyatsiyasi"
+        "title": "Evdev uzoq bosish oʻng tugma emulyatsiyasi"
       },
       "evdevRce": {
-        "description": "Evdev RCE faollashtirilgan"
+        "title": "Evdev RCE faollashtirilgan"
       }
     }
   },

@@ -319,7 +319,7 @@ export const gamingPackageLists: PackageSections = [
         description: 'Multiuser clone of the famous Microprose game of Civilization.',
         url: 'https://freeciv.wikia.com/wiki/Main_Page',
         icon: 'generic-dark.svg',
-        pkgname: ['freeciv'],
+        pkgname: ['freeciv-gtk3'],
       },
       {
         name: 'FreeCol',

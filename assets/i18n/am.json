@@ -212,167 +212,167 @@
       "title": "ድምጽ",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA ድጋፍ"
+        "title": "ALSA ድጋፍ"
       },
       "jack": {
-        "description": "JACK ድጋፍ"
+        "title": "JACK ድጋፍ"
       },
       "pulseaudio": {
-        "description": "PulseAudio ድጋፍ"
+        "title": "PulseAudio ድጋፍ"
       },
       "pipewire": {
-        "description": "PipeWire ድጋፍ"
+        "title": "PipeWire ድጋፍ"
       },
       "userRealtime": {
-        "description": "ተጠቃሚ በ realtime ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ realtime ቡድን ውስጥ"
       },
       "jamesdsp": {
-        "description": "JamesDSP ተጭኗል"
+        "title": "JamesDSP ተጭኗል"
       }
     },
     "virtualization": {
       "title": "ቨርቹዋልላይዜሽን",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU ተጭኗል"
+        "title": "QEMU ተጭኗል"
       },
       "kvm": {
-        "description": "KVM ድጋፍ"
+        "title": "KVM ድጋፍ"
       },
       "virtManager": {
-        "description": "Virt-manager ድጋፍ"
+        "title": "Virt-manager ድጋፍ"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd ነቅቷል"
+        "title": "Libvirtd ነቅቷል"
       },
       "userVboxUsers": {
-        "description": "ተጠቃሚ በ vboxusers ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ vboxusers ቡድን ውስጥ"
       },
       "virtualbox": {
-        "description": "VirtualBox ድጋፍ"
+        "title": "VirtualBox ድጋፍ"
       },
       "userLibvirt": {
-        "description": "ተጠቃሚ በ libvirt ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ libvirt ቡድን ውስጥ"
       },
       "userKvm": {
-        "description": "ተጠቃሚ በ kvm ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ kvm ቡድን ውስጥ"
       }
     },
     "containers": {
       "title": "ኮንቴይነሮች",
       "icon": "Icon",
       "docker": {
-        "description": "Docker ተጭኗል"
+        "title": "Docker ተጭኗል"
       },
       "dockerEnabled": {
-        "description": "Docker ነቅቷል"
+        "title": "Docker ነቅቷል"
       },
       "dockerCompose": {
-        "description": "Docker Compose ተጭኗል"
+        "title": "Docker Compose ተጭኗል"
       },
       "userDocker": {
-        "description": "ተጠቃሚ በ docker ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ docker ቡድን ውስጥ"
       },
       "podman": {
-        "description": "Podman ተጭኗል"
+        "title": "Podman ተጭኗል"
       },
       "podmanDocker": {
-        "description": "Dockerን በ Podman አስመስሎ አሳይ"
+        "title": "Dockerን በ Podman አስመስሎ አሳይ"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop ተጭኗል"
+        "title": "Podman Desktop ተጭኗል"
       },
       "distrobox": {
-        "description": "DistroBox ተጭኗል"
+        "title": "DistroBox ተጭኗል"
       },
       "boxbuddy": {
-        "description": "BoxBuddy ተጭኗል"
+        "title": "BoxBuddy ተጭኗል"
       }
     },
     "network": {
       "title": "ኔትወርክ",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager ድጋፍ"
+        "title": "NetworkManager ድጋፍ"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager ነቅቷል"
+        "title": "NetworkManager ነቅቷል"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager ነቅቷል"
+        "title": "ModemManager ነቅቷል"
       }
     },
     "bluetooth": {
       "title": "ብሉቱዝ",
       "icon": "Icon",
       "bluetooth": {
-        "description": "ብሉቱዝ ድጋፍ"
+        "title": "ብሉቱዝ ድጋፍ"
       },
       "bluetoothEnabled": {
-        "description": "ብሉቱዝ ነቅቷል"
+        "title": "ብሉቱዝ ነቅቷል"
       },
       "userBluetooth": {
-        "description": "ተጠቃሚ በ bluetooth ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ bluetooth ቡድን ውስጥ"
       },
       "autoConnect": {
-        "description": "ራስ-ግንኙነት ተጭኗል"
+        "title": "ራስ-ግንኙነት ተጭኗል"
       },
       "autoConnectEnabled": {
-        "description": "ራስ-ግንኙነት ነቅቷል"
+        "title": "ራስ-ግንኙነት ነቅቷል"
       }
     },
     "printing": {
       "title": "ማተም",
       "icon": "Icon",
       "printingSupport": {
-        "description": "የማተም ድጋፍ"
+        "title": "የማተም ድጋፍ"
       },
       "cupsEnabled": {
-        "description": "CUPS ነቅቷል"
+        "title": "CUPS ነቅቷል"
       },
       "scanningSupport": {
-        "description": "የመቃኘት ድጋፍ"
+        "title": "የመቃኘት ድጋፍ"
       },
       "sanedEnabled": {
-        "description": "saned ነቅቷል"
+        "title": "saned ነቅቷል"
       },
       "userCups": {
-        "description": "ተጠቃሚ በ cups ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ cups ቡድን ውስጥ"
       },
       "userScanner": {
-        "description": "ተጠቃሚ በ scanner ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ scanner ቡድን ውስጥ"
       },
       "userLp": {
-        "description": "ተጠቃሚ በ lp ቡድን ውስጥ"
+        "title": "ተጠቃሚ በ lp ቡድን ውስጥ"
       }
     },
     "firewall": {
       "title": "ፋየርዎል",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld ተጭኗል"
+        "title": "Firewalld ተጭኗል"
       },
       "firewalldEnabled": {
-        "description": "firewalld ነቅቷል"
+        "title": "firewalld ነቅቷል"
       },
       "ufw": {
-        "description": "UFW ተጭኗል"
+        "title": "UFW ተጭኗል"
       },
       "ufwEnabled": {
-        "description": "UFW ነቅቷል"
+        "title": "UFW ነቅቷል"
       },
       "opensnitch": {
-        "description": "OpenSnitch ተጭኗል"
+        "title": "OpenSnitch ተጭኗል"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch ነቅቷል"
+        "title": "OpenSnitch ነቅቷል"
       }
     },
     "misc": {
       "title": "ልዩ ልዩ",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem ተጭኗል"
+        "title": "Garuda Nix Subsystem ተጭኗል"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "የተለመደ",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon ተጭኗል"
+        "title": "Profile-sync-daemon ተጭኗል"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon ነቅቷል"
+        "title": "Profile-sync-daemon ነቅቷል"
       },
       "oomd": {
-        "description": "Systemd-oomd ነቅቷል"
+        "title": "Systemd-oomd ነቅቷል"
       },
       "guestUser": {
-        "description": "የእንግዳ ተጠቃሚ አንቃ"
+        "title": "የእንግዳ ተጠቃሚ አንቃ"
       }
     },
     "performance": {
       "title": "አፈጻጸም",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "የአፈጻጸም ማሻሻያዎች"
+        "title": "የአፈጻጸም ማሻሻያዎች"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ ተጭኗል"
+        "title": "Ananicy C++ ተጭኗል"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ ነቅቷል"
+        "title": "Ananicy C++ ነቅቷል"
       },
       "bpftune": {
-        "description": "Bpftune ተጭኗል"
+        "title": "Bpftune ተጭኗል"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune ነቅቷል"
+        "title": "Bpftune ነቅቷል"
       },
       "preload": {
-        "description": "Preload ተጭኗል"
+        "title": "Preload ተጭኗል"
       },
       "preloadEnabled": {
-        "description": "Preload ነቅቷል"
+        "title": "Preload ነቅቷል"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance ነቅቷል"
+        "title": "IRQbalance ነቅቷል"
       }
     },
     "powersave": {
       "title": "ኃይል ቁጠባ",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "የኃይል ቁጠባ ማሻሻያዎች"
+        "title": "የኃይል ቁጠባ ማሻሻያዎች"
       },
       "tlp": {
-        "description": "TLP ተጭኗል"
+        "title": "TLP ተጭኗል"
       },
       "tlpEnabled": {
-        "description": "TLP ነቅቷል"
+        "title": "TLP ነቅቷል"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq ተጭኗል"
+        "title": "Auto-cpufreq ተጭኗል"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq ነቅቷል"
+        "title": "Auto-cpufreq ነቅቷል"
       },
       "thermald": {
-        "description": "Thermald ተጭኗል"
+        "title": "Thermald ተጭኗል"
       },
       "thermaldEnabled": {
-        "description": "Thermald ነቅቷል"
+        "title": "Thermald ነቅቷል"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon ተጭኗል"
+        "title": "Power profiles daemon ተጭኗል"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon ነቅቷል"
+        "title": "Power profiles daemon ነቅቷል"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt ተጭኗል"
+        "title": "Intel-undervolt ተጭኗል"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt ነቅቷል"
+        "title": "Intel-undervolt ነቅቷል"
       }
     },
     "rightclickEmulation": {
       "title": "የቀኝ ጠቅታ ማስመሰል",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev ረጅም ፕሬስ የቀኝ ጠቅታ ማስመሰል"
+        "title": "Evdev ረጅም ፕሬስ የቀኝ ጠቅታ ማስመሰል"
       },
       "evdevRce": {
-        "description": "Evdev RCE ነቅቷል"
+        "title": "Evdev RCE ነቅቷል"
       }
     }
   },

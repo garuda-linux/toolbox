@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, effect, inject, model, signal, OnInit, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, model, OnInit, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
 import type { Nullable } from 'primeng/ts-helpers';
 import { Select } from 'primeng/select';
+import { Tooltip } from 'primeng/tooltip';
 import { type DnsProvider, dnsProviders, type Shell, shells } from './types';
 import { Checkbox } from 'primeng/checkbox';
 import type { SystemToolsEntry } from '../../interfaces';
@@ -16,7 +17,7 @@ import { Logger } from '../../logging/logging';
 
 @Component({
   selector: 'toolbox-system-settings',
-  imports: [TranslocoDirective, FormsModule, Select, Checkbox, DynamicCheckboxesComponent],
+  imports: [TranslocoDirective, FormsModule, Select, Checkbox, DynamicCheckboxesComponent, Tooltip],
   templateUrl: './system-settings.component.html',
   styleUrl: './system-settings.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +54,7 @@ export class SystemSettingsComponent implements OnInit {
         icon: 'pi pi-cog',
         sections: filteredConfigs.map((config) => ({
           name: config.key,
-          fancyTitle: `systemSettings.configs.${config.key}.title`,
+          title: `systemSettings.configs.${config.key}.title`,
           description: `systemSettings.configs.${config.key}.description`,
           checked: false,
           check: { type: 'config', name: config.key },
@@ -69,28 +70,28 @@ export class SystemSettingsComponent implements OnInit {
       sections: [
         {
           name: 'profile-sync-daemon',
-          fancyTitle: 'systemSettings.common.psd.title',
+          title: 'systemSettings.common.psd.title',
           description: 'systemSettings.common.psd.description',
           checked: false,
           check: { type: 'pkg', name: 'profile-sync-daemon' },
         },
         {
           name: 'enable-profile-sync-daemon',
-          fancyTitle: 'systemSettings.common.psdEnabled.title',
+          title: 'systemSettings.common.psdEnabled.title',
           description: 'systemSettings.common.psdEnabled.description',
           checked: false,
           check: { type: 'serviceUser', name: 'psd.service' },
         },
         {
           name: 'systemd-oomd',
-          fancyTitle: 'systemSettings.common.oomd.title',
+          title: 'systemSettings.common.oomd.title',
           description: 'systemSettings.common.oomd.description',
           checked: false,
           check: { type: 'service', name: 'systemd-oomd.service' },
         },
         {
           name: 'guest-user',
-          fancyTitle: 'systemSettings.common.guestUser.title',
+          title: 'systemSettings.common.guestUser.title',
           description: 'systemSettings.common.guestUser.description',
           checked: false,
           check: { type: 'pkg', name: 'systemd-guest-user' },
@@ -103,14 +104,14 @@ export class SystemSettingsComponent implements OnInit {
       sections: [
         {
           name: 'performance-tweaks',
-          fancyTitle: 'systemSettings.performance.performanceTweaks.title',
+          title: 'systemSettings.performance.performanceTweaks.title',
           description: 'systemSettings.performance.performanceTweaks.description',
           checked: false,
           check: { type: 'pkg', name: 'performance-tweaks' },
         },
         {
           name: 'ananicy-cpp',
-          fancyTitle: 'systemSettings.performance.ananicyCpp.title',
+          title: 'systemSettings.performance.ananicyCpp.title',
           description: 'systemSettings.performance.ananicyCpp.description',
           checked: false,
           disabler: 'performance-tweaks',
@@ -118,7 +119,7 @@ export class SystemSettingsComponent implements OnInit {
         },
         {
           name: 'enable-ananicy-cpp',
-          fancyTitle: 'systemSettings.performance.ananicyCppEnabled.title',
+          title: 'systemSettings.performance.ananicyCppEnabled.title',
           description: 'systemSettings.performance.ananicyCppEnabled.description',
           checked: false,
           disabler: 'performance-tweaks',
@@ -126,14 +127,14 @@ export class SystemSettingsComponent implements OnInit {
         },
         {
           name: 'bpftune',
-          fancyTitle: 'systemSettings.performance.bpftune.title',
+          title: 'systemSettings.performance.bpftune.title',
           description: 'systemSettings.performance.bpftune.description',
           checked: false,
           check: { type: 'pkg', name: 'bpftune-git' },
         },
         {
           name: 'enable-bpftune',
-          fancyTitle: 'systemSettings.performance.bpftuneEnabled.title',
+          title: 'systemSettings.performance.bpftuneEnabled.title',
           description: 'systemSettings.performance.bpftuneEnabled.description',
           checked: false,
           disabler: 'bpftune',
@@ -141,7 +142,7 @@ export class SystemSettingsComponent implements OnInit {
         },
         {
           name: 'enabled-preload',
-          fancyTitle: 'systemSettings.performance.preloadEnabled.title',
+          title: 'systemSettings.performance.preloadEnabled.title',
           description: 'systemSettings.performance.preloadEnabled.description',
           checked: false,
           disabler: 'performance-tweaks',
@@ -149,7 +150,7 @@ export class SystemSettingsComponent implements OnInit {
         },
         {
           name: 'enabled-irqbalance',
-          fancyTitle: 'systemSettings.performance.irqbalanceEnabled.title',
+          title: 'systemSettings.performance.irqbalanceEnabled.title',
           description: 'systemSettings.performance.irqbalanceEnabled.description',
           checked: false,
           disabler: 'performance-tweaks',
@@ -163,21 +164,21 @@ export class SystemSettingsComponent implements OnInit {
       sections: [
         {
           name: 'powersave-tweaks',
-          fancyTitle: 'systemSettings.powersave.powersaveTweaks.title',
+          title: 'systemSettings.powersave.powersaveTweaks.title',
           description: 'systemSettings.powersave.powersaveTweaks.description',
           checked: false,
           check: { type: 'pkg', name: 'powersave-tweaks' },
         },
         {
           name: 'thermald',
-          fancyTitle: 'systemSettings.powersave.thermald.title',
+          title: 'systemSettings.powersave.thermald.title',
           description: 'systemSettings.powersave.thermald.description',
           checked: false,
           check: { type: 'pkg', name: 'thermald' },
         },
         {
           name: 'enabled-thermald',
-          fancyTitle: 'systemSettings.powersave.thermaldEnabled.title',
+          title: 'systemSettings.powersave.thermaldEnabled.title',
           description: 'systemSettings.powersave.thermaldEnabled.description',
           checked: false,
           disabler: 'thermald',
@@ -185,28 +186,28 @@ export class SystemSettingsComponent implements OnInit {
         },
         {
           name: 'power-profiles-daemon',
-          fancyTitle: 'systemSettings.powersave.powerProfilesDaemon.title',
+          title: 'systemSettings.powersave.powerProfilesDaemon.title',
           description: 'systemSettings.powersave.powerProfilesDaemon.description',
           checked: false,
           check: { type: 'pkg', name: 'power-profiles-daemon' },
         },
         {
           name: 'enabled-power-profiles-daemon',
-          fancyTitle: 'systemSettings.powersave.powerProfilesDaemonEnabled.title',
+          title: 'systemSettings.powersave.powerProfilesDaemonEnabled.title',
           description: 'systemSettings.powersave.powerProfilesDaemonEnabled.description',
           checked: false,
           check: { type: 'service', name: 'power-profiles-daemon.service' },
         },
         {
           name: 'intel-untervolt',
-          fancyTitle: 'systemSettings.powersave.intelUndervolt.title',
+          title: 'systemSettings.powersave.intelUndervolt.title',
           description: 'systemSettings.powersave.intelUndervolt.description',
           checked: false,
           check: { type: 'pkg', name: 'intel-undervolt' },
         },
         {
           name: 'enabled-intel-untervolt',
-          fancyTitle: 'systemSettings.powersave.intelUndervoltEnabled.title',
+          title: 'systemSettings.powersave.intelUndervoltEnabled.title',
           description: 'systemSettings.powersave.intelUndervoltEnabled.description',
           checked: false,
           disabler: 'intel-untervolt',
@@ -220,14 +221,14 @@ export class SystemSettingsComponent implements OnInit {
       sections: [
         {
           name: 'rightclick-emulation',
-          fancyTitle: 'systemSettings.rightclickEmulation.evdevLongPressRightClick.title',
+          title: 'systemSettings.rightclickEmulation.evdevLongPressRightClick.title',
           description: 'systemSettings.rightclickEmulation.evdevLongPressRightClick.description',
           checked: false,
           check: { type: 'pkg', name: 'rightclick-emulation' },
         },
         {
           name: 'evdev-rce',
-          fancyTitle: 'systemSettings.rightclickEmulation.evdevRce.title',
+          title: 'systemSettings.rightclickEmulation.evdevRce.title',
           description: 'systemSettings.rightclickEmulation.evdevRce.description',
           checked: false,
           check: { type: 'pkg', name: 'rightclick-emulation' },

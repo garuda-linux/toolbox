@@ -212,167 +212,167 @@
       "title": "オーディオ",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA サポート"
+        "title": "ALSA サポート"
       },
       "jack": {
-        "description": "JACK サポート"
+        "title": "JACK サポート"
       },
       "pulseaudio": {
-        "description": "PulseAudio サポート"
+        "title": "PulseAudio サポート"
       },
       "pipewire": {
-        "description": "PipeWire サポート"
+        "title": "PipeWire サポート"
       },
       "userRealtime": {
-        "description": "ユーザーが realtime グループに所属"
+        "title": "ユーザーが realtime グループに所属"
       },
       "jamesdsp": {
-        "description": "JamesDSP インストール済み"
+        "title": "JamesDSP インストール済み"
       }
     },
     "virtualization": {
       "title": "仮想化",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU インストール済み"
+        "title": "QEMU インストール済み"
       },
       "kvm": {
-        "description": "KVM サポート"
+        "title": "KVM サポート"
       },
       "virtManager": {
-        "description": "Virt-manager サポート"
+        "title": "Virt-manager サポート"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd 有効"
+        "title": "Libvirtd 有効"
       },
       "userVboxUsers": {
-        "description": "ユーザーが vboxusers グループに所属"
+        "title": "ユーザーが vboxusers グループに所属"
       },
       "virtualbox": {
-        "description": "VirtualBox サポート"
+        "title": "VirtualBox サポート"
       },
       "userLibvirt": {
-        "description": "ユーザーが libvirt グループに所属"
+        "title": "ユーザーが libvirt グループに所属"
       },
       "userKvm": {
-        "description": "ユーザーが kvm グループに所属"
+        "title": "ユーザーが kvm グループに所属"
       }
     },
     "containers": {
       "title": "コンテナ",
       "icon": "Icon",
       "docker": {
-        "description": "Docker インストール済み"
+        "title": "Docker インストール済み"
       },
       "dockerEnabled": {
-        "description": "Docker 有効"
+        "title": "Docker 有効"
       },
       "dockerCompose": {
-        "description": "Docker Compose インストール済み"
+        "title": "Docker Compose インストール済み"
       },
       "userDocker": {
-        "description": "ユーザーが docker グループに所属"
+        "title": "ユーザーが docker グループに所属"
       },
       "podman": {
-        "description": "Podman インストール済み"
+        "title": "Podman インストール済み"
       },
       "podmanDocker": {
-        "description": "Podman 経由で Docker をエミュレート"
+        "title": "Podman 経由で Docker をエミュレート"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop インストール済み"
+        "title": "Podman Desktop インストール済み"
       },
       "distrobox": {
-        "description": "DistroBox インストール済み"
+        "title": "DistroBox インストール済み"
       },
       "boxbuddy": {
-        "description": "BoxBuddy インストール済み"
+        "title": "BoxBuddy インストール済み"
       }
     },
     "network": {
       "title": "ネットワーク",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager サポート"
+        "title": "NetworkManager サポート"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager 有効"
+        "title": "NetworkManager 有効"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager 有効"
+        "title": "ModemManager 有効"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth サポート"
+        "title": "Bluetooth サポート"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth 有効"
+        "title": "Bluetooth 有効"
       },
       "userBluetooth": {
-        "description": "ユーザーが bluetooth グループに所属"
+        "title": "ユーザーが bluetooth グループに所属"
       },
       "autoConnect": {
-        "description": "自動接続 インストール済み"
+        "title": "自動接続 インストール済み"
       },
       "autoConnectEnabled": {
-        "description": "自動接続 有効"
+        "title": "自動接続 有効"
       }
     },
     "printing": {
       "title": "印刷",
       "icon": "Icon",
       "printingSupport": {
-        "description": "印刷サポート"
+        "title": "印刷サポート"
       },
       "cupsEnabled": {
-        "description": "CUPS 有効"
+        "title": "CUPS 有効"
       },
       "scanningSupport": {
-        "description": "スキャンサポート"
+        "title": "スキャンサポート"
       },
       "sanedEnabled": {
-        "description": "saned 有効"
+        "title": "saned 有効"
       },
       "userCups": {
-        "description": "ユーザーが cups グループに所属"
+        "title": "ユーザーが cups グループに所属"
       },
       "userScanner": {
-        "description": "ユーザーが scanner グループに所属"
+        "title": "ユーザーが scanner グループに所属"
       },
       "userLp": {
-        "description": "ユーザーが lp グループに所属"
+        "title": "ユーザーが lp グループに所属"
       }
     },
     "firewall": {
       "title": "ファイアウォール",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld インストール済み"
+        "title": "Firewalld インストール済み"
       },
       "firewalldEnabled": {
-        "description": "firewalld 有効"
+        "title": "firewalld 有効"
       },
       "ufw": {
-        "description": "UFW インストール済み"
+        "title": "UFW インストール済み"
       },
       "ufwEnabled": {
-        "description": "UFW 有効"
+        "title": "UFW 有効"
       },
       "opensnitch": {
-        "description": "OpenSnitch インストール済み"
+        "title": "OpenSnitch インストール済み"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch 有効"
+        "title": "OpenSnitch 有効"
       }
     },
     "misc": {
       "title": "その他",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem インストール済み"
+        "title": "Garuda Nix Subsystem インストール済み"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "共通",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon インストール済み"
+        "title": "Profile-sync-daemon インストール済み"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon 有効"
+        "title": "Profile-sync-daemon 有効"
       },
       "oomd": {
-        "description": "Systemd-oomd 有効"
+        "title": "Systemd-oomd 有効"
       },
       "guestUser": {
-        "description": "ゲストユーザーを有効化"
+        "title": "ゲストユーザーを有効化"
       }
     },
     "performance": {
       "title": "パフォーマンス",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "パフォーマンス調整"
+        "title": "パフォーマンス調整"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ インストール済み"
+        "title": "Ananicy C++ インストール済み"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ 有効"
+        "title": "Ananicy C++ 有効"
       },
       "bpftune": {
-        "description": "Bpftune インストール済み"
+        "title": "Bpftune インストール済み"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune 有効"
+        "title": "Bpftune 有効"
       },
       "preload": {
-        "description": "Preload インストール済み"
+        "title": "Preload インストール済み"
       },
       "preloadEnabled": {
-        "description": "Preload 有効"
+        "title": "Preload 有効"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance 有効"
+        "title": "IRQbalance 有効"
       }
     },
     "powersave": {
       "title": "省電力",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "省電力調整"
+        "title": "省電力調整"
       },
       "tlp": {
-        "description": "TLP インストール済み"
+        "title": "TLP インストール済み"
       },
       "tlpEnabled": {
-        "description": "TLP 有効"
+        "title": "TLP 有効"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq インストール済み"
+        "title": "Auto-cpufreq インストール済み"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq 有効"
+        "title": "Auto-cpufreq 有効"
       },
       "thermald": {
-        "description": "Thermald インストール済み"
+        "title": "Thermald インストール済み"
       },
       "thermaldEnabled": {
-        "description": "Thermald 有効"
+        "title": "Thermald 有効"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon インストール済み"
+        "title": "Power profiles daemon インストール済み"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon 有効"
+        "title": "Power profiles daemon 有効"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt インストール済み"
+        "title": "Intel-undervolt インストール済み"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt 有効"
+        "title": "Intel-undervolt 有効"
       }
     },
     "rightclickEmulation": {
       "title": "右クリックエミュレーション",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev 長押し右クリックエミュレーション"
+        "title": "Evdev 長押し右クリックエミュレーション"
       },
       "evdevRce": {
-        "description": "Evdev RCE 有効"
+        "title": "Evdev RCE 有効"
       }
     }
   },

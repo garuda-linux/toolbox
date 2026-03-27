@@ -334,167 +334,167 @@
       "title": "Аудіо",
       "icon": "Icon",
       "alsa": {
-        "description": "Підтримка ALSA"
+        "title": "Підтримка ALSA"
       },
       "jack": {
-        "description": "Підтримка JACK"
+        "title": "Підтримка JACK"
       },
       "pulseaudio": {
-        "description": "Підтримка PulseAudio"
+        "title": "Підтримка PulseAudio"
       },
       "pipewire": {
-        "description": "Підтримка PipeWire"
+        "title": "Підтримка PipeWire"
       },
       "userRealtime": {
-        "description": "Користувач у групі realtime"
+        "title": "Користувач у групі realtime"
       },
       "jamesdsp": {
-        "description": "JamesDSP встановлено"
+        "title": "JamesDSP встановлено"
       }
     },
     "virtualization": {
       "title": "Віртуалізація",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU встановлено"
+        "title": "QEMU встановлено"
       },
       "kvm": {
-        "description": "Підтримка KVM"
+        "title": "Підтримка KVM"
       },
       "virtManager": {
-        "description": "Підтримка Virt-manager"
+        "title": "Підтримка Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "Служба libvirtd увімкнена"
+        "title": "Служба libvirtd увімкнена"
       },
       "userVboxUsers": {
-        "description": "Користувач у групі vboxusers"
+        "title": "Користувач у групі vboxusers"
       },
       "virtualbox": {
-        "description": "Підтримка VirtualBox"
+        "title": "Підтримка VirtualBox"
       },
       "userLibvirt": {
-        "description": "Користувач у групі libvirt"
+        "title": "Користувач у групі libvirt"
       },
       "userKvm": {
-        "description": "Користувач у групі kvm"
+        "title": "Користувач у групі kvm"
       }
     },
     "containers": {
       "title": "Контейнери",
       "icon": "Icon",
       "docker": {
-        "description": "Docker встановлено"
+        "title": "Docker встановлено"
       },
       "dockerEnabled": {
-        "description": "Docker увімкнено"
+        "title": "Docker увімкнено"
       },
       "dockerCompose": {
-        "description": "Docker Compose встановлено"
+        "title": "Docker Compose встановлено"
       },
       "userDocker": {
-        "description": "Користувач у групі docker"
+        "title": "Користувач у групі docker"
       },
       "podman": {
-        "description": "Podman встановлено"
+        "title": "Podman встановлено"
       },
       "podmanDocker": {
-        "description": "Емуляція Docker через Podman"
+        "title": "Емуляція Docker через Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop встановлено"
+        "title": "Podman Desktop встановлено"
       },
       "distrobox": {
-        "description": "DistroBox встановлено"
+        "title": "DistroBox встановлено"
       },
       "boxbuddy": {
-        "description": "BoxBuddy встановлено"
+        "title": "BoxBuddy встановлено"
       }
     },
     "network": {
       "title": "Мережа",
       "icon": "Icon",
       "networkManager": {
-        "description": "Підтримка NetworkManager"
+        "title": "Підтримка NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager увімкнено"
+        "title": "NetworkManager увімкнено"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager увімкнено"
+        "title": "ModemManager увімкнено"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Підтримка Bluetooth"
+        "title": "Підтримка Bluetooth"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth увімкнено"
+        "title": "Bluetooth увімкнено"
       },
       "userBluetooth": {
-        "description": "Користувач у групі bluetooth"
+        "title": "Користувач у групі bluetooth"
       },
       "autoConnect": {
-        "description": "Auto connect встановлено"
+        "title": "Auto connect встановлено"
       },
       "autoConnectEnabled": {
-        "description": "Auto connect увімкнено"
+        "title": "Auto connect увімкнено"
       }
     },
     "printing": {
       "title": "Друк",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Підтримка друку"
+        "title": "Підтримка друку"
       },
       "cupsEnabled": {
-        "description": "CUPS увімкнено"
+        "title": "CUPS увімкнено"
       },
       "scanningSupport": {
-        "description": "Підтримка сканування"
+        "title": "Підтримка сканування"
       },
       "sanedEnabled": {
-        "description": "saned увімкнено"
+        "title": "saned увімкнено"
       },
       "userCups": {
-        "description": "Користувач у групі cups"
+        "title": "Користувач у групі cups"
       },
       "userScanner": {
-        "description": "Користувач у групі scanner"
+        "title": "Користувач у групі scanner"
       },
       "userLp": {
-        "description": "Користувач у групі lp"
+        "title": "Користувач у групі lp"
       }
     },
     "firewall": {
       "title": "Фаєрвол",
       "icon": "Icon",
       "firewalld": {
-        "description": "firewalld встановлено"
+        "title": "firewalld встановлено"
       },
       "firewalldEnabled": {
-        "description": "firewalld увімкнено"
+        "title": "firewalld увімкнено"
       },
       "ufw": {
-        "description": "UFW встановлено"
+        "title": "UFW встановлено"
       },
       "ufwEnabled": {
-        "description": "UFW увімкнено"
+        "title": "UFW увімкнено"
       },
       "opensnitch": {
-        "description": "OpenSnitch встановлено"
+        "title": "OpenSnitch встановлено"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch увімкнено"
+        "title": "OpenSnitch увімкнено"
       }
     },
     "misc": {
       "title": "Різне",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem встановлено"
+        "title": "Garuda Nix Subsystem встановлено"
       }
     }
   },
@@ -508,91 +508,91 @@
       "title": "Загальне",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon встановлено"
+        "title": "Profile-sync-daemon встановлено"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon увімкнено"
+        "title": "Profile-sync-daemon увімкнено"
       },
       "oomd": {
-        "description": "Systemd-oomd увімкнено"
+        "title": "Systemd-oomd увімкнено"
       },
       "guestUser": {
-        "description": "Увімкнути гостьового користувача"
+        "title": "Увімкнути гостьового користувача"
       }
     },
     "performance": {
       "title": "Продуктивність",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Налаштування продуктивності"
+        "title": "Налаштування продуктивності"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ встановлено"
+        "title": "Ananicy C++ встановлено"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ увімкнено"
+        "title": "Ananicy C++ увімкнено"
       },
       "bpftune": {
-        "description": "Bpftune встановлено"
+        "title": "Bpftune встановлено"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune увімкнено"
+        "title": "Bpftune увімкнено"
       },
       "preload": {
-        "description": "Preload встановлено"
+        "title": "Preload встановлено"
       },
       "preloadEnabled": {
-        "description": "Preload увімкнено"
+        "title": "Preload увімкнено"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance увімкнено"
+        "title": "IRQbalance увімкнено"
       }
     },
     "powersave": {
       "title": "Енергозбереження",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Налаштування енергозбереження"
+        "title": "Налаштування енергозбереження"
       },
       "tlp": {
-        "description": "TLP встановлено"
+        "title": "TLP встановлено"
       },
       "tlpEnabled": {
-        "description": "TLP увімкнено"
+        "title": "TLP увімкнено"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq встановлено"
+        "title": "Auto-cpufreq встановлено"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq увімкнено"
+        "title": "Auto-cpufreq увімкнено"
       },
       "thermald": {
-        "description": "Thermald встановлено"
+        "title": "Thermald встановлено"
       },
       "thermaldEnabled": {
-        "description": "Thermald увімкнено"
+        "title": "Thermald увімкнено"
       },
       "powerProfilesDaemon": {
-        "description": "Служба профілів живлення встановлена"
+        "title": "Служба профілів живлення встановлена"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Служба профілів живлення увімкнена"
+        "title": "Служба профілів живлення увімкнена"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt встановлено"
+        "title": "Intel-undervolt встановлено"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt увімкнено"
+        "title": "Intel-undervolt увімкнено"
       }
     },
     "rightclickEmulation": {
       "title": "Емуляція правої кнопки",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Емуляція правої кнопки за допомогою довгого натискання (evdev)"
+        "title": "Емуляція правої кнопки за допомогою довгого натискання (evdev)"
       },
       "evdevRce": {
-        "description": "Evdev RCE увімкнено"
+        "title": "Evdev RCE увімкнено"
       }
     }
   },

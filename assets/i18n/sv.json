@@ -339,167 +339,167 @@
       "title": "Ljud",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA-stöd"
+        "title": "ALSA-stöd"
       },
       "jack": {
-        "description": "JACK-stöd"
+        "title": "JACK-stöd"
       },
       "pulseaudio": {
-        "description": "PulseAudio-stöd"
+        "title": "PulseAudio-stöd"
       },
       "pipewire": {
-        "description": "PipeWire-stöd"
+        "title": "PipeWire-stöd"
       },
       "userRealtime": {
-        "description": "Användare i realtime-gruppen"
+        "title": "Användare i realtime-gruppen"
       },
       "jamesdsp": {
-        "description": "JamesDSP installerat"
+        "title": "JamesDSP installerat"
       }
     },
     "virtualization": {
       "title": "Virtualisering",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU installerat"
+        "title": "QEMU installerat"
       },
       "kvm": {
-        "description": "KVM-stöd"
+        "title": "KVM-stöd"
       },
       "virtManager": {
-        "description": "Virt-manager-stöd"
+        "title": "Virt-manager-stöd"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd aktiverat"
+        "title": "Libvirtd aktiverat"
       },
       "userVboxUsers": {
-        "description": "Användare i vboxusers-gruppen"
+        "title": "Användare i vboxusers-gruppen"
       },
       "virtualbox": {
-        "description": "VirtualBox-stöd"
+        "title": "VirtualBox-stöd"
       },
       "userLibvirt": {
-        "description": "Användare i libvirt-gruppen"
+        "title": "Användare i libvirt-gruppen"
       },
       "userKvm": {
-        "description": "Användare i kvm-gruppen"
+        "title": "Användare i kvm-gruppen"
       }
     },
     "containers": {
       "title": "Containers",
       "icon": "Icon",
       "docker": {
-        "description": "Docker installerat"
+        "title": "Docker installerat"
       },
       "dockerEnabled": {
-        "description": "Docker aktiverat"
+        "title": "Docker aktiverat"
       },
       "dockerCompose": {
-        "description": "Docker Compose installerat"
+        "title": "Docker Compose installerat"
       },
       "userDocker": {
-        "description": "Användare i docker-gruppen"
+        "title": "Användare i docker-gruppen"
       },
       "podman": {
-        "description": "Podman installerat"
+        "title": "Podman installerat"
       },
       "podmanDocker": {
-        "description": "Emulera Docker via Podman"
+        "title": "Emulera Docker via Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop installerat"
+        "title": "Podman Desktop installerat"
       },
       "distrobox": {
-        "description": "DistroBox installerat"
+        "title": "DistroBox installerat"
       },
       "boxbuddy": {
-        "description": "BoxBuddy installerat"
+        "title": "BoxBuddy installerat"
       }
     },
     "network": {
       "title": "Nätverk",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager-stöd"
+        "title": "NetworkManager-stöd"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager aktiverat"
+        "title": "NetworkManager aktiverat"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager aktiverat"
+        "title": "ModemManager aktiverat"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth-stöd"
+        "title": "Bluetooth-stöd"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth aktiverat"
+        "title": "Bluetooth aktiverat"
       },
       "userBluetooth": {
-        "description": "Användare i bluetooth-gruppen"
+        "title": "Användare i bluetooth-gruppen"
       },
       "autoConnect": {
-        "description": "Automatisk anslutning installerad"
+        "title": "Automatisk anslutning installerad"
       },
       "autoConnectEnabled": {
-        "description": "Automatisk anslutning aktiverad"
+        "title": "Automatisk anslutning aktiverad"
       }
     },
     "printing": {
       "title": "Utskrift",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Utskriftsstöd"
+        "title": "Utskriftsstöd"
       },
       "cupsEnabled": {
-        "description": "CUPS aktiverat"
+        "title": "CUPS aktiverat"
       },
       "scanningSupport": {
-        "description": "Skanningsstöd"
+        "title": "Skanningsstöd"
       },
       "sanedEnabled": {
-        "description": "saned aktiverat"
+        "title": "saned aktiverat"
       },
       "userCups": {
-        "description": "Användare i cups-gruppen"
+        "title": "Användare i cups-gruppen"
       },
       "userScanner": {
-        "description": "Användare i scanner-gruppen"
+        "title": "Användare i scanner-gruppen"
       },
       "userLp": {
-        "description": "Användare i lp-gruppen"
+        "title": "Användare i lp-gruppen"
       }
     },
     "firewall": {
       "title": "Brandvägg",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld installerat"
+        "title": "Firewalld installerat"
       },
       "firewalldEnabled": {
-        "description": "firewalld aktiverat"
+        "title": "firewalld aktiverat"
       },
       "ufw": {
-        "description": "UFW installerat"
+        "title": "UFW installerat"
       },
       "ufwEnabled": {
-        "description": "UFW aktiverat"
+        "title": "UFW aktiverat"
       },
       "opensnitch": {
-        "description": "OpenSnitch installerat"
+        "title": "OpenSnitch installerat"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch aktiverat"
+        "title": "OpenSnitch aktiverat"
       }
     },
     "misc": {
       "title": "Diverse",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem installerat"
+        "title": "Garuda Nix Subsystem installerat"
       }
     }
   },
@@ -513,91 +513,91 @@
       "title": "Allmänt",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon installerat"
+        "title": "Profile-sync-daemon installerat"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon aktiverat"
+        "title": "Profile-sync-daemon aktiverat"
       },
       "oomd": {
-        "description": "Systemd-oomd aktiverat"
+        "title": "Systemd-oomd aktiverat"
       },
       "guestUser": {
-        "description": "Aktivera gästanvändare"
+        "title": "Aktivera gästanvändare"
       }
     },
     "performance": {
       "title": "Prestanda",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Prestandajusteringar"
+        "title": "Prestandajusteringar"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ installerat"
+        "title": "Ananicy C++ installerat"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ aktiverat"
+        "title": "Ananicy C++ aktiverat"
       },
       "bpftune": {
-        "description": "Bpftune installerat"
+        "title": "Bpftune installerat"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune aktiverat"
+        "title": "Bpftune aktiverat"
       },
       "preload": {
-        "description": "Preload installerat"
+        "title": "Preload installerat"
       },
       "preloadEnabled": {
-        "description": "Preload aktiverat"
+        "title": "Preload aktiverat"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance aktiverat"
+        "title": "IRQbalance aktiverat"
       }
     },
     "powersave": {
       "title": "Energisparläge",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Energisparjusteringar"
+        "title": "Energisparjusteringar"
       },
       "tlp": {
-        "description": "TLP installerat"
+        "title": "TLP installerat"
       },
       "tlpEnabled": {
-        "description": "TLP aktiverat"
+        "title": "TLP aktiverat"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq installerat"
+        "title": "Auto-cpufreq installerat"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq aktiverat"
+        "title": "Auto-cpufreq aktiverat"
       },
       "thermald": {
-        "description": "Thermald installerat"
+        "title": "Thermald installerat"
       },
       "thermaldEnabled": {
-        "description": "Thermald aktiverat"
+        "title": "Thermald aktiverat"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon installerat"
+        "title": "Power profiles daemon installerat"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon aktiverat"
+        "title": "Power profiles daemon aktiverat"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt installerat"
+        "title": "Intel-undervolt installerat"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt aktiverat"
+        "title": "Intel-undervolt aktiverat"
       }
     },
     "rightclickEmulation": {
       "title": "Högerklicksemulering",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev långtryck högerklicksemulering"
+        "title": "Evdev långtryck högerklicksemulering"
       },
       "evdevRce": {
-        "description": "Evdev RCE aktiverat"
+        "title": "Evdev RCE aktiverat"
       }
     }
   },

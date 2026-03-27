@@ -267,8 +267,8 @@ export class ConfigService {
    * @private
    */
   private async checkAutoStart(): Promise<PendingConfigUpdate> {
-      const has_autostartfile: boolean = await this.existsAutoStartFile();
-      return { settings: { autoStart: has_autostartfile } };
+    const hasAutostartFile: boolean = await this.existsAutoStartFile();
+    return { settings: { autoStart: hasAutostartFile } };
   }
 
   /**

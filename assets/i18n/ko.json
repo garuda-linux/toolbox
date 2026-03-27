@@ -212,167 +212,167 @@
       "title": "오디오",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA 지원"
+        "title": "ALSA 지원"
       },
       "jack": {
-        "description": "JACK 지원"
+        "title": "JACK 지원"
       },
       "pulseaudio": {
-        "description": "PulseAudio 지원"
+        "title": "PulseAudio 지원"
       },
       "pipewire": {
-        "description": "PipeWire 지원"
+        "title": "PipeWire 지원"
       },
       "userRealtime": {
-        "description": "사용자가 realtime 그룹에 속함"
+        "title": "사용자가 realtime 그룹에 속함"
       },
       "jamesdsp": {
-        "description": "JamesDSP 설치됨"
+        "title": "JamesDSP 설치됨"
       }
     },
     "virtualization": {
       "title": "가상화",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU 설치됨"
+        "title": "QEMU 설치됨"
       },
       "kvm": {
-        "description": "KVM 지원"
+        "title": "KVM 지원"
       },
       "virtManager": {
-        "description": "Virt-manager 지원"
+        "title": "Virt-manager 지원"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd 활성화됨"
+        "title": "Libvirtd 활성화됨"
       },
       "userVboxUsers": {
-        "description": "사용자가 vboxusers 그룹에 속함"
+        "title": "사용자가 vboxusers 그룹에 속함"
       },
       "virtualbox": {
-        "description": "VirtualBox 지원"
+        "title": "VirtualBox 지원"
       },
       "userLibvirt": {
-        "description": "사용자가 libvirt 그룹에 속함"
+        "title": "사용자가 libvirt 그룹에 속함"
       },
       "userKvm": {
-        "description": "사용자가 kvm 그룹에 속함"
+        "title": "사용자가 kvm 그룹에 속함"
       }
     },
     "containers": {
       "title": "컨테이너",
       "icon": "Icon",
       "docker": {
-        "description": "Docker 설치됨"
+        "title": "Docker 설치됨"
       },
       "dockerEnabled": {
-        "description": "Docker 활성화됨"
+        "title": "Docker 활성화됨"
       },
       "dockerCompose": {
-        "description": "Docker Compose 설치됨"
+        "title": "Docker Compose 설치됨"
       },
       "userDocker": {
-        "description": "사용자가 docker 그룹에 속함"
+        "title": "사용자가 docker 그룹에 속함"
       },
       "podman": {
-        "description": "Podman 설치됨"
+        "title": "Podman 설치됨"
       },
       "podmanDocker": {
-        "description": "Podman을 통해 Docker 에뮬레이션"
+        "title": "Podman을 통해 Docker 에뮬레이션"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop 설치됨"
+        "title": "Podman Desktop 설치됨"
       },
       "distrobox": {
-        "description": "DistroBox 설치됨"
+        "title": "DistroBox 설치됨"
       },
       "boxbuddy": {
-        "description": "BoxBuddy 설치됨"
+        "title": "BoxBuddy 설치됨"
       }
     },
     "network": {
       "title": "네트워크",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager 지원"
+        "title": "NetworkManager 지원"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager 활성화됨"
+        "title": "NetworkManager 활성화됨"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager 활성화됨"
+        "title": "ModemManager 활성화됨"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth 지원"
+        "title": "Bluetooth 지원"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth 활성화됨"
+        "title": "Bluetooth 활성화됨"
       },
       "userBluetooth": {
-        "description": "사용자가 bluetooth 그룹에 속함"
+        "title": "사용자가 bluetooth 그룹에 속함"
       },
       "autoConnect": {
-        "description": "자동 연결 설치됨"
+        "title": "자동 연결 설치됨"
       },
       "autoConnectEnabled": {
-        "description": "자동 연결 활성화됨"
+        "title": "자동 연결 활성화됨"
       }
     },
     "printing": {
       "title": "인쇄",
       "icon": "Icon",
       "printingSupport": {
-        "description": "인쇄 지원"
+        "title": "인쇄 지원"
       },
       "cupsEnabled": {
-        "description": "CUPS 활성화됨"
+        "title": "CUPS 활성화됨"
       },
       "scanningSupport": {
-        "description": "스캔 지원"
+        "title": "스캔 지원"
       },
       "sanedEnabled": {
-        "description": "saned 활성화됨"
+        "title": "saned 활성화됨"
       },
       "userCups": {
-        "description": "사용자가 cups 그룹에 속함"
+        "title": "사용자가 cups 그룹에 속함"
       },
       "userScanner": {
-        "description": "사용자가 scanner 그룹에 속함"
+        "title": "사용자가 scanner 그룹에 속함"
       },
       "userLp": {
-        "description": "사용자가 lp 그룹에 속함"
+        "title": "사용자가 lp 그룹에 속함"
       }
     },
     "firewall": {
       "title": "방화벽",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld 설치됨"
+        "title": "Firewalld 설치됨"
       },
       "firewalldEnabled": {
-        "description": "firewalld 활성화됨"
+        "title": "firewalld 활성화됨"
       },
       "ufw": {
-        "description": "UFW 설치됨"
+        "title": "UFW 설치됨"
       },
       "ufwEnabled": {
-        "description": "UFW 활성화됨"
+        "title": "UFW 활성화됨"
       },
       "opensnitch": {
-        "description": "OpenSnitch 설치됨"
+        "title": "OpenSnitch 설치됨"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch 활성화됨"
+        "title": "OpenSnitch 활성화됨"
       }
     },
     "misc": {
       "title": "기타",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem 설치됨"
+        "title": "Garuda Nix Subsystem 설치됨"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "일반",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon 설치됨"
+        "title": "Profile-sync-daemon 설치됨"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon 활성화됨"
+        "title": "Profile-sync-daemon 활성화됨"
       },
       "oomd": {
-        "description": "Systemd-oomd 활성화됨"
+        "title": "Systemd-oomd 활성화됨"
       },
       "guestUser": {
-        "description": "게스트 사용자 활성화"
+        "title": "게스트 사용자 활성화"
       }
     },
     "performance": {
       "title": "성능",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "성능 조정"
+        "title": "성능 조정"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ 설치됨"
+        "title": "Ananicy C++ 설치됨"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ 활성화됨"
+        "title": "Ananicy C++ 활성화됨"
       },
       "bpftune": {
-        "description": "Bpftune 설치됨"
+        "title": "Bpftune 설치됨"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune 활성화됨"
+        "title": "Bpftune 활성화됨"
       },
       "preload": {
-        "description": "Preload 설치됨"
+        "title": "Preload 설치됨"
       },
       "preloadEnabled": {
-        "description": "Preload 활성화됨"
+        "title": "Preload 활성화됨"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance 활성화됨"
+        "title": "IRQbalance 활성화됨"
       }
     },
     "powersave": {
       "title": "절전",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "절전 조정"
+        "title": "절전 조정"
       },
       "tlp": {
-        "description": "TLP 설치됨"
+        "title": "TLP 설치됨"
       },
       "tlpEnabled": {
-        "description": "TLP 활성화됨"
+        "title": "TLP 활성화됨"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq 설치됨"
+        "title": "Auto-cpufreq 설치됨"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq 활성화됨"
+        "title": "Auto-cpufreq 활성화됨"
       },
       "thermald": {
-        "description": "Thermald 설치됨"
+        "title": "Thermald 설치됨"
       },
       "thermaldEnabled": {
-        "description": "Thermald 활성화됨"
+        "title": "Thermald 활성화됨"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon 설치됨"
+        "title": "Power profiles daemon 설치됨"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon 활성화됨"
+        "title": "Power profiles daemon 활성화됨"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt 설치됨"
+        "title": "Intel-undervolt 설치됨"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt 활성화됨"
+        "title": "Intel-undervolt 활성화됨"
       }
     },
     "rightclickEmulation": {
       "title": "오른쪽 클릭 에뮬레이션",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev 길게 누르기 오른쪽 클릭 에뮬레이션"
+        "title": "Evdev 길게 누르기 오른쪽 클릭 에뮬레이션"
       },
       "evdevRce": {
-        "description": "Evdev RCE 활성화됨"
+        "title": "Evdev RCE 활성화됨"
       }
     }
   },

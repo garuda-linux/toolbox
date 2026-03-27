@@ -5,7 +5,7 @@
         <p-overlay-badge
           [value]="systemStatusService.updates().length"
           [pTooltip]="t('systemStatus.updates')"
-          tooltipPosition="bottom"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
         >
           <i class="pi pi-bell" style="font-size: 1rem"></i>
         </p-overlay-badge>
@@ -21,8 +21,8 @@
         <p-overlay-badge
           [value]="systemStatusService.pacFiles().length"
           [pTooltip]="t('systemStatus.pacFiles')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
           severity="warn"
-          tooltipPosition="bottom"
         >
           <i class="pi pi-pen-to-square" style="font-size: 1rem"></i>
         </p-overlay-badge>
@@ -30,14 +30,26 @@
     }
     @if (systemStatusService.warnUpdate()) {
       <div class="cursor-pointer" (click)="scheduleUpdates()" (keyup.enter)="scheduleUpdates()" tabindex="0">
-        <p-overlay-badge [pTooltip]="t('systemStatus.warnUpdate')" value="!" severity="danger" tooltipPosition="bottom">
+        <p-overlay-badge
+          [pTooltip]="t('systemStatus.warnUpdate')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          value="!"
+          severity="danger"
+          tooltipPosition="bottom"
+        >
           <i class="pi pi-exclamation-triangle" style="font-size: 1rem"></i>
         </p-overlay-badge>
       </div>
     }
     @if (configService.state().rebootPending) {
       <div class="cursor-pointer" (click)="rebootNow($event)" (keyup.enter)="rebootNow($event)" tabindex="0">
-        <p-overlay-badge [pTooltip]="t('systemStatus.warnReboot')" value="!" severity="danger" tooltipPosition="bottom">
+        <p-overlay-badge
+          [pTooltip]="t('systemStatus.warnReboot')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          value="!"
+          severity="danger"
+          tooltipPosition="bottom"
+        >
           <i class="pi pi-exclamation-triangle" style="font-size: 1rem"></i>
         </p-overlay-badge>
       </div>
@@ -57,7 +69,7 @@
             <span
               class="ml-1 text-primary-emphasis-alt"
               [pTooltip]="t('systemStatus.aurUpdates')"
-              tooltipPosition="bottom"
+              [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
               >AUR<i class="pi pi-info-circle ml-1"></i>
             </span>
           }

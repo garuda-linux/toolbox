@@ -212,167 +212,167 @@
       "title": "Audio",
       "icon": "Icon",
       "alsa": {
-        "description": "Dukungan ALSA"
+        "title": "Dukungan ALSA"
       },
       "jack": {
-        "description": "Dukungan JACK"
+        "title": "Dukungan JACK"
       },
       "pulseaudio": {
-        "description": "Dukungan PulseAudio"
+        "title": "Dukungan PulseAudio"
       },
       "pipewire": {
-        "description": "Dukungan PipeWire"
+        "title": "Dukungan PipeWire"
       },
       "userRealtime": {
-        "description": "Pengguna dalam grup realtime"
+        "title": "Pengguna dalam grup realtime"
       },
       "jamesdsp": {
-        "description": "JamesDSP terinstal"
+        "title": "JamesDSP terinstal"
       }
     },
     "virtualization": {
       "title": "Virtualisasi",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU terinstal"
+        "title": "QEMU terinstal"
       },
       "kvm": {
-        "description": "Dukungan KVM"
+        "title": "Dukungan KVM"
       },
       "virtManager": {
-        "description": "Dukungan Virt-manager"
+        "title": "Dukungan Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd diaktifkan"
+        "title": "Libvirtd diaktifkan"
       },
       "userVboxUsers": {
-        "description": "Pengguna dalam grup vboxusers"
+        "title": "Pengguna dalam grup vboxusers"
       },
       "virtualbox": {
-        "description": "Dukungan VirtualBox"
+        "title": "Dukungan VirtualBox"
       },
       "userLibvirt": {
-        "description": "Pengguna dalam grup libvirt"
+        "title": "Pengguna dalam grup libvirt"
       },
       "userKvm": {
-        "description": "Pengguna dalam grup kvm"
+        "title": "Pengguna dalam grup kvm"
       }
     },
     "containers": {
       "title": "Kontainer",
       "icon": "Icon",
       "docker": {
-        "description": "Docker terinstal"
+        "title": "Docker terinstal"
       },
       "dockerEnabled": {
-        "description": "Docker diaktifkan"
+        "title": "Docker diaktifkan"
       },
       "dockerCompose": {
-        "description": "Docker Compose terinstal"
+        "title": "Docker Compose terinstal"
       },
       "userDocker": {
-        "description": "Pengguna dalam grup docker"
+        "title": "Pengguna dalam grup docker"
       },
       "podman": {
-        "description": "Podman terinstal"
+        "title": "Podman terinstal"
       },
       "podmanDocker": {
-        "description": "Emulasi Docker via Podman"
+        "title": "Emulasi Docker via Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop terinstal"
+        "title": "Podman Desktop terinstal"
       },
       "distrobox": {
-        "description": "DistroBox terinstal"
+        "title": "DistroBox terinstal"
       },
       "boxbuddy": {
-        "description": "BoxBuddy terinstal"
+        "title": "BoxBuddy terinstal"
       }
     },
     "network": {
       "title": "Jaringan",
       "icon": "Icon",
       "networkManager": {
-        "description": "Dukungan NetworkManager"
+        "title": "Dukungan NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager diaktifkan"
+        "title": "NetworkManager diaktifkan"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager diaktifkan"
+        "title": "ModemManager diaktifkan"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Dukungan Bluetooth"
+        "title": "Dukungan Bluetooth"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth diaktifkan"
+        "title": "Bluetooth diaktifkan"
       },
       "userBluetooth": {
-        "description": "Pengguna dalam grup bluetooth"
+        "title": "Pengguna dalam grup bluetooth"
       },
       "autoConnect": {
-        "description": "Koneksi otomatis terinstal"
+        "title": "Koneksi otomatis terinstal"
       },
       "autoConnectEnabled": {
-        "description": "Koneksi otomatis diaktifkan"
+        "title": "Koneksi otomatis diaktifkan"
       }
     },
     "printing": {
       "title": "Pencetakan",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Dukungan pencetakan"
+        "title": "Dukungan pencetakan"
       },
       "cupsEnabled": {
-        "description": "CUPS diaktifkan"
+        "title": "CUPS diaktifkan"
       },
       "scanningSupport": {
-        "description": "Dukungan pemindaian"
+        "title": "Dukungan pemindaian"
       },
       "sanedEnabled": {
-        "description": "saned diaktifkan"
+        "title": "saned diaktifkan"
       },
       "userCups": {
-        "description": "Pengguna dalam grup cups"
+        "title": "Pengguna dalam grup cups"
       },
       "userScanner": {
-        "description": "Pengguna dalam grup scanner"
+        "title": "Pengguna dalam grup scanner"
       },
       "userLp": {
-        "description": "Pengguna dalam grup lp"
+        "title": "Pengguna dalam grup lp"
       }
     },
     "firewall": {
       "title": "Firewall",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld terinstal"
+        "title": "Firewalld terinstal"
       },
       "firewalldEnabled": {
-        "description": "firewalld diaktifkan"
+        "title": "firewalld diaktifkan"
       },
       "ufw": {
-        "description": "UFW terinstal"
+        "title": "UFW terinstal"
       },
       "ufwEnabled": {
-        "description": "UFW diaktifkan"
+        "title": "UFW diaktifkan"
       },
       "opensnitch": {
-        "description": "OpenSnitch terinstal"
+        "title": "OpenSnitch terinstal"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch diaktifkan"
+        "title": "OpenSnitch diaktifkan"
       }
     },
     "misc": {
       "title": "Lain-lain",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem terinstal"
+        "title": "Garuda Nix Subsystem terinstal"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Umum",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon terinstal"
+        "title": "Profile-sync-daemon terinstal"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon diaktifkan"
+        "title": "Profile-sync-daemon diaktifkan"
       },
       "oomd": {
-        "description": "Systemd-oomd diaktifkan"
+        "title": "Systemd-oomd diaktifkan"
       },
       "guestUser": {
-        "description": "Aktifkan pengguna tamu"
+        "title": "Aktifkan pengguna tamu"
       }
     },
     "performance": {
       "title": "Performa",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Tweak performa"
+        "title": "Tweak performa"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ terinstal"
+        "title": "Ananicy C++ terinstal"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ diaktifkan"
+        "title": "Ananicy C++ diaktifkan"
       },
       "bpftune": {
-        "description": "Bpftune terinstal"
+        "title": "Bpftune terinstal"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune diaktifkan"
+        "title": "Bpftune diaktifkan"
       },
       "preload": {
-        "description": "Preload terinstal"
+        "title": "Preload terinstal"
       },
       "preloadEnabled": {
-        "description": "Preload diaktifkan"
+        "title": "Preload diaktifkan"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance diaktifkan"
+        "title": "IRQbalance diaktifkan"
       }
     },
     "powersave": {
       "title": "Penghematan Daya",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Tweak penghematan daya"
+        "title": "Tweak penghematan daya"
       },
       "tlp": {
-        "description": "TLP terinstal"
+        "title": "TLP terinstal"
       },
       "tlpEnabled": {
-        "description": "TLP diaktifkan"
+        "title": "TLP diaktifkan"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq terinstal"
+        "title": "Auto-cpufreq terinstal"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq diaktifkan"
+        "title": "Auto-cpufreq diaktifkan"
       },
       "thermald": {
-        "description": "Thermald terinstal"
+        "title": "Thermald terinstal"
       },
       "thermaldEnabled": {
-        "description": "Thermald diaktifkan"
+        "title": "Thermald diaktifkan"
       },
       "powerProfilesDaemon": {
-        "description": "Daemon profil daya terinstal"
+        "title": "Daemon profil daya terinstal"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Daemon profil daya diaktifkan"
+        "title": "Daemon profil daya diaktifkan"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt terinstal"
+        "title": "Intel-undervolt terinstal"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt diaktifkan"
+        "title": "Intel-undervolt diaktifkan"
       }
     },
     "rightclickEmulation": {
       "title": "Emulasi klik kanan",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Emulasi klik kanan tekan lama Evdev"
+        "title": "Emulasi klik kanan tekan lama Evdev"
       },
       "evdevRce": {
-        "description": "Evdev RCE diaktifkan"
+        "title": "Evdev RCE diaktifkan"
       }
     }
   },

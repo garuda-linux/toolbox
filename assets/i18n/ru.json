@@ -212,167 +212,167 @@
       "title": "Аудио",
       "icon": "Icon",
       "alsa": {
-        "description": "Поддержка ALSA"
+        "title": "Поддержка ALSA"
       },
       "jack": {
-        "description": "Поддержка JACK"
+        "title": "Поддержка JACK"
       },
       "pulseaudio": {
-        "description": "Поддержка PulseAudio"
+        "title": "Поддержка PulseAudio"
       },
       "pipewire": {
-        "description": "Поддержка PipeWire"
+        "title": "Поддержка PipeWire"
       },
       "userRealtime": {
-        "description": "Пользователь в группе realtime"
+        "title": "Пользователь в группе realtime"
       },
       "jamesdsp": {
-        "description": "JamesDSP установлен"
+        "title": "JamesDSP установлен"
       }
     },
     "virtualization": {
       "title": "Виртуализация",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU установлен"
+        "title": "QEMU установлен"
       },
       "kvm": {
-        "description": "Поддержка KVM"
+        "title": "Поддержка KVM"
       },
       "virtManager": {
-        "description": "Поддержка Virt-manager"
+        "title": "Поддержка Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd включен"
+        "title": "Libvirtd включен"
       },
       "userVboxUsers": {
-        "description": "Пользователь в группе vboxusers"
+        "title": "Пользователь в группе vboxusers"
       },
       "virtualbox": {
-        "description": "Поддержка VirtualBox"
+        "title": "Поддержка VirtualBox"
       },
       "userLibvirt": {
-        "description": "Пользователь в группе libvirt"
+        "title": "Пользователь в группе libvirt"
       },
       "userKvm": {
-        "description": "Пользователь в группе kvm"
+        "title": "Пользователь в группе kvm"
       }
     },
     "containers": {
       "title": "Контейнеры",
       "icon": "Icon",
       "docker": {
-        "description": "Docker установлен"
+        "title": "Docker установлен"
       },
       "dockerEnabled": {
-        "description": "Docker включен"
+        "title": "Docker включен"
       },
       "dockerCompose": {
-        "description": "Docker Compose установлен"
+        "title": "Docker Compose установлен"
       },
       "userDocker": {
-        "description": "Пользователь в группе docker"
+        "title": "Пользователь в группе docker"
       },
       "podman": {
-        "description": "Podman установлен"
+        "title": "Podman установлен"
       },
       "podmanDocker": {
-        "description": "Эмуляция Docker через Podman"
+        "title": "Эмуляция Docker через Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop установлен"
+        "title": "Podman Desktop установлен"
       },
       "distrobox": {
-        "description": "DistroBox установлен"
+        "title": "DistroBox установлен"
       },
       "boxbuddy": {
-        "description": "BoxBuddy установлен"
+        "title": "BoxBuddy установлен"
       }
     },
     "network": {
       "title": "Сеть",
       "icon": "Icon",
       "networkManager": {
-        "description": "Поддержка NetworkManager"
+        "title": "Поддержка NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager включен"
+        "title": "NetworkManager включен"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager включен"
+        "title": "ModemManager включен"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Поддержка Bluetooth"
+        "title": "Поддержка Bluetooth"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth включен"
+        "title": "Bluetooth включен"
       },
       "userBluetooth": {
-        "description": "Пользователь в группе bluetooth"
+        "title": "Пользователь в группе bluetooth"
       },
       "autoConnect": {
-        "description": "Автоподключение установлено"
+        "title": "Автоподключение установлено"
       },
       "autoConnectEnabled": {
-        "description": "Автоподключение включено"
+        "title": "Автоподключение включено"
       }
     },
     "printing": {
       "title": "Печать",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Поддержка печати"
+        "title": "Поддержка печати"
       },
       "cupsEnabled": {
-        "description": "CUPS включен"
+        "title": "CUPS включен"
       },
       "scanningSupport": {
-        "description": "Поддержка сканирования"
+        "title": "Поддержка сканирования"
       },
       "sanedEnabled": {
-        "description": "saned включен"
+        "title": "saned включен"
       },
       "userCups": {
-        "description": "Пользователь в группе cups"
+        "title": "Пользователь в группе cups"
       },
       "userScanner": {
-        "description": "Пользователь в группе scanner"
+        "title": "Пользователь в группе scanner"
       },
       "userLp": {
-        "description": "Пользователь в группе lp"
+        "title": "Пользователь в группе lp"
       }
     },
     "firewall": {
       "title": "Файрвол",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld установлен"
+        "title": "Firewalld установлен"
       },
       "firewalldEnabled": {
-        "description": "firewalld включен"
+        "title": "firewalld включен"
       },
       "ufw": {
-        "description": "UFW установлен"
+        "title": "UFW установлен"
       },
       "ufwEnabled": {
-        "description": "UFW включен"
+        "title": "UFW включен"
       },
       "opensnitch": {
-        "description": "OpenSnitch установлен"
+        "title": "OpenSnitch установлен"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch включен"
+        "title": "OpenSnitch включен"
       }
     },
     "misc": {
       "title": "Разное",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem установлен"
+        "title": "Garuda Nix Subsystem установлен"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Общие",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon установлен"
+        "title": "Profile-sync-daemon установлен"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon включен"
+        "title": "Profile-sync-daemon включен"
       },
       "oomd": {
-        "description": "Systemd-oomd включен"
+        "title": "Systemd-oomd включен"
       },
       "guestUser": {
-        "description": "Включить гостевого пользователя"
+        "title": "Включить гостевого пользователя"
       }
     },
     "performance": {
       "title": "Производительность",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Настройки производительности"
+        "title": "Настройки производительности"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ установлен"
+        "title": "Ananicy C++ установлен"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ включен"
+        "title": "Ananicy C++ включен"
       },
       "bpftune": {
-        "description": "Bpftune установлен"
+        "title": "Bpftune установлен"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune включен"
+        "title": "Bpftune включен"
       },
       "preload": {
-        "description": "Preload установлен"
+        "title": "Preload установлен"
       },
       "preloadEnabled": {
-        "description": "Preload включен"
+        "title": "Preload включен"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance включен"
+        "title": "IRQbalance включен"
       }
     },
     "powersave": {
       "title": "Энергосбережение",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Настройки энергосбережения"
+        "title": "Настройки энергосбережения"
       },
       "tlp": {
-        "description": "TLP установлен"
+        "title": "TLP установлен"
       },
       "tlpEnabled": {
-        "description": "TLP включен"
+        "title": "TLP включен"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq установлен"
+        "title": "Auto-cpufreq установлен"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq включен"
+        "title": "Auto-cpufreq включен"
       },
       "thermald": {
-        "description": "Thermald установлен"
+        "title": "Thermald установлен"
       },
       "thermaldEnabled": {
-        "description": "Thermald включен"
+        "title": "Thermald включен"
       },
       "powerProfilesDaemon": {
-        "description": "Демон профилей питания установлен"
+        "title": "Демон профилей питания установлен"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Демон профилей питания включен"
+        "title": "Демон профилей питания включен"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt установлен"
+        "title": "Intel-undervolt установлен"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt включен"
+        "title": "Intel-undervolt включен"
       }
     },
     "rightclickEmulation": {
       "title": "Эмуляция правого клика",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Эмуляция правого клика долгим нажатием Evdev"
+        "title": "Эмуляция правого клика долгим нажатием Evdev"
       },
       "evdevRce": {
-        "description": "Evdev RCE включен"
+        "title": "Evdev RCE включен"
       }
     }
   },

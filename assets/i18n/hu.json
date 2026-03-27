@@ -212,167 +212,167 @@
       "title": "Hang",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA támogatás"
+        "title": "ALSA támogatás"
       },
       "jack": {
-        "description": "JACK támogatás"
+        "title": "JACK támogatás"
       },
       "pulseaudio": {
-        "description": "PulseAudio támogatás"
+        "title": "PulseAudio támogatás"
       },
       "pipewire": {
-        "description": "PipeWire támogatás"
+        "title": "PipeWire támogatás"
       },
       "userRealtime": {
-        "description": "Felhasználó a realtime csoportban"
+        "title": "Felhasználó a realtime csoportban"
       },
       "jamesdsp": {
-        "description": "JamesDSP telepítve"
+        "title": "JamesDSP telepítve"
       }
     },
     "virtualization": {
       "title": "Virtualizáció",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU telepítve"
+        "title": "QEMU telepítve"
       },
       "kvm": {
-        "description": "KVM támogatás"
+        "title": "KVM támogatás"
       },
       "virtManager": {
-        "description": "Virt-manager támogatás"
+        "title": "Virt-manager támogatás"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd engedélyezve"
+        "title": "Libvirtd engedélyezve"
       },
       "userVboxUsers": {
-        "description": "Felhasználó a vboxusers csoportban"
+        "title": "Felhasználó a vboxusers csoportban"
       },
       "virtualbox": {
-        "description": "VirtualBox támogatás"
+        "title": "VirtualBox támogatás"
       },
       "userLibvirt": {
-        "description": "Felhasználó a libvirt csoportban"
+        "title": "Felhasználó a libvirt csoportban"
       },
       "userKvm": {
-        "description": "Felhasználó a kvm csoportban"
+        "title": "Felhasználó a kvm csoportban"
       }
     },
     "containers": {
       "title": "Konténerek",
       "icon": "Icon",
       "docker": {
-        "description": "Docker telepítve"
+        "title": "Docker telepítve"
       },
       "dockerEnabled": {
-        "description": "Docker engedélyezve"
+        "title": "Docker engedélyezve"
       },
       "dockerCompose": {
-        "description": "Docker Compose telepítve"
+        "title": "Docker Compose telepítve"
       },
       "userDocker": {
-        "description": "Felhasználó a docker csoportban"
+        "title": "Felhasználó a docker csoportban"
       },
       "podman": {
-        "description": "Podman telepítve"
+        "title": "Podman telepítve"
       },
       "podmanDocker": {
-        "description": "Emulate Docker via Podman"
+        "title": "Emulate Docker via Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop telepítve"
+        "title": "Podman Desktop telepítve"
       },
       "distrobox": {
-        "description": "DistroBox telepítve"
+        "title": "DistroBox telepítve"
       },
       "boxbuddy": {
-        "description": "BoxBuddy telepítve"
+        "title": "BoxBuddy telepítve"
       }
     },
     "network": {
       "title": "Hálózat",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager támogatás"
+        "title": "NetworkManager támogatás"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager engedélyezve"
+        "title": "NetworkManager engedélyezve"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager engedélyezve"
+        "title": "ModemManager engedélyezve"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth támogatás"
+        "title": "Bluetooth támogatás"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth engedélyezve"
+        "title": "Bluetooth engedélyezve"
       },
       "userBluetooth": {
-        "description": "Felhasználó a bluetooth csoportban"
+        "title": "Felhasználó a bluetooth csoportban"
       },
       "autoConnect": {
-        "description": "Automatikus csatlakozás telepítve"
+        "title": "Automatikus csatlakozás telepítve"
       },
       "autoConnectEnabled": {
-        "description": "Automatikus csatlakozás engedélyezve"
+        "title": "Automatikus csatlakozás engedélyezve"
       }
     },
     "printing": {
       "title": "Nyomtatás",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Nyomtatási támogatás"
+        "title": "Nyomtatási támogatás"
       },
       "cupsEnabled": {
-        "description": "CUPS engedélyezve"
+        "title": "CUPS engedélyezve"
       },
       "scanningSupport": {
-        "description": "Szkennelési támogatás"
+        "title": "Szkennelési támogatás"
       },
       "sanedEnabled": {
-        "description": "saned engedélyezve"
+        "title": "saned engedélyezve"
       },
       "userCups": {
-        "description": "Felhasználó a cups csoportban"
+        "title": "Felhasználó a cups csoportban"
       },
       "userScanner": {
-        "description": "Felhasználó a scanner csoportban"
+        "title": "Felhasználó a scanner csoportban"
       },
       "userLp": {
-        "description": "Felhasználó az lp csoportban"
+        "title": "Felhasználó az lp csoportban"
       }
     },
     "firewall": {
       "title": "Tűzfal",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld telepítve"
+        "title": "Firewalld telepítve"
       },
       "firewalldEnabled": {
-        "description": "firewalld engedélyezve"
+        "title": "firewalld engedélyezve"
       },
       "ufw": {
-        "description": "UFW telepítve"
+        "title": "UFW telepítve"
       },
       "ufwEnabled": {
-        "description": "UFW engedélyezve"
+        "title": "UFW engedélyezve"
       },
       "opensnitch": {
-        "description": "OpenSnitch telepítve"
+        "title": "OpenSnitch telepítve"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch engedélyezve"
+        "title": "OpenSnitch engedélyezve"
       }
     },
     "misc": {
       "title": "Egyéb",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem telepítve"
+        "title": "Garuda Nix Subsystem telepítve"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Általános",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon telepítve"
+        "title": "Profile-sync-daemon telepítve"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon engedélyezve"
+        "title": "Profile-sync-daemon engedélyezve"
       },
       "oomd": {
-        "description": "Systemd-oomd engedélyezve"
+        "title": "Systemd-oomd engedélyezve"
       },
       "guestUser": {
-        "description": "Vendég felhasználó engedélyezése"
+        "title": "Vendég felhasználó engedélyezése"
       }
     },
     "performance": {
       "title": "Teljesítmény",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Teljesítmény finomhangolások"
+        "title": "Teljesítmény finomhangolások"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ telepítve"
+        "title": "Ananicy C++ telepítve"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ engedélyezve"
+        "title": "Ananicy C++ engedélyezve"
       },
       "bpftune": {
-        "description": "Bpftune telepítve"
+        "title": "Bpftune telepítve"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune engedélyezve"
+        "title": "Bpftune engedélyezve"
       },
       "preload": {
-        "description": "Preload telepítve"
+        "title": "Preload telepítve"
       },
       "preloadEnabled": {
-        "description": "Preload engedélyezve"
+        "title": "Preload engedélyezve"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance engedélyezve"
+        "title": "IRQbalance engedélyezve"
       }
     },
     "powersave": {
       "title": "Energiatakarékosság",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Energiatakarékossági finomhangolások"
+        "title": "Energiatakarékossági finomhangolások"
       },
       "tlp": {
-        "description": "TLP telepítve"
+        "title": "TLP telepítve"
       },
       "tlpEnabled": {
-        "description": "TLP engedélyezve"
+        "title": "TLP engedélyezve"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq telepítve"
+        "title": "Auto-cpufreq telepítve"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq engedélyezve"
+        "title": "Auto-cpufreq engedélyezve"
       },
       "thermald": {
-        "description": "Thermald telepítve"
+        "title": "Thermald telepítve"
       },
       "thermaldEnabled": {
-        "description": "Thermald engedélyezve"
+        "title": "Thermald engedélyezve"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon telepítve"
+        "title": "Power profiles daemon telepítve"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon engedélyezve"
+        "title": "Power profiles daemon engedélyezve"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt telepítve"
+        "title": "Intel-undervolt telepítve"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt engedélyezve"
+        "title": "Intel-undervolt engedélyezve"
       }
     },
     "rightclickEmulation": {
       "title": "Jobb kattintás emuláció",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev hosszú lenyomás jobb kattintás emuláció"
+        "title": "Evdev hosszú lenyomás jobb kattintás emuláció"
       },
       "evdevRce": {
-        "description": "Evdev RCE engedélyezve"
+        "title": "Evdev RCE engedélyezve"
       }
     }
   },

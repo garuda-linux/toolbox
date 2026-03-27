@@ -212,167 +212,167 @@
       "title": "Zvok",
       "icon": "Icon",
       "alsa": {
-        "description": "Podpora za ALSA"
+        "title": "Podpora za ALSA"
       },
       "jack": {
-        "description": "Podpora za JACK"
+        "title": "Podpora za JACK"
       },
       "pulseaudio": {
-        "description": "Podpora za PulseAudio"
+        "title": "Podpora za PulseAudio"
       },
       "pipewire": {
-        "description": "Podpora za PipeWire"
+        "title": "Podpora za PipeWire"
       },
       "userRealtime": {
-        "description": "Uporabnik v skupini realtime"
+        "title": "Uporabnik v skupini realtime"
       },
       "jamesdsp": {
-        "description": "JamesDSP nameščen"
+        "title": "JamesDSP nameščen"
       }
     },
     "virtualization": {
       "title": "Virtualizacija",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU nameščen"
+        "title": "QEMU nameščen"
       },
       "kvm": {
-        "description": "Podpora za KVM"
+        "title": "Podpora za KVM"
       },
       "virtManager": {
-        "description": "Podpora za Virt-manager"
+        "title": "Podpora za Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd omogočen"
+        "title": "Libvirtd omogočen"
       },
       "userVboxUsers": {
-        "description": "Uporabnik v skupini vboxusers"
+        "title": "Uporabnik v skupini vboxusers"
       },
       "virtualbox": {
-        "description": "Podpora za VirtualBox"
+        "title": "Podpora za VirtualBox"
       },
       "userLibvirt": {
-        "description": "Uporabnik v skupini libvirt"
+        "title": "Uporabnik v skupini libvirt"
       },
       "userKvm": {
-        "description": "Uporabnik v skupini kvm"
+        "title": "Uporabnik v skupini kvm"
       }
     },
     "containers": {
       "title": "Vsebniki",
       "icon": "Icon",
       "docker": {
-        "description": "Docker nameščen"
+        "title": "Docker nameščen"
       },
       "dockerEnabled": {
-        "description": "Docker omogočen"
+        "title": "Docker omogočen"
       },
       "dockerCompose": {
-        "description": "Docker Compose nameščen"
+        "title": "Docker Compose nameščen"
       },
       "userDocker": {
-        "description": "Uporabnik v skupini docker"
+        "title": "Uporabnik v skupini docker"
       },
       "podman": {
-        "description": "Podman nameščen"
+        "title": "Podman nameščen"
       },
       "podmanDocker": {
-        "description": "Emuliraj Docker preko Podmana"
+        "title": "Emuliraj Docker preko Podmana"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop nameščen"
+        "title": "Podman Desktop nameščen"
       },
       "distrobox": {
-        "description": "DistroBox nameščen"
+        "title": "DistroBox nameščen"
       },
       "boxbuddy": {
-        "description": "BoxBuddy nameščen"
+        "title": "BoxBuddy nameščen"
       }
     },
     "network": {
       "title": "Omrežje",
       "icon": "Icon",
       "networkManager": {
-        "description": "Podpora za NetworkManager"
+        "title": "Podpora za NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager omogočen"
+        "title": "NetworkManager omogočen"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager omogočen"
+        "title": "ModemManager omogočen"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Podpora za Bluetooth"
+        "title": "Podpora za Bluetooth"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth omogočen"
+        "title": "Bluetooth omogočen"
       },
       "userBluetooth": {
-        "description": "Uporabnik v skupini bluetooth"
+        "title": "Uporabnik v skupini bluetooth"
       },
       "autoConnect": {
-        "description": "Samodejna povezava nameščena"
+        "title": "Samodejna povezava nameščena"
       },
       "autoConnectEnabled": {
-        "description": "Samodejna povezava omogočena"
+        "title": "Samodejna povezava omogočena"
       }
     },
     "printing": {
       "title": "Tiskanje",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Podpora za tiskanje"
+        "title": "Podpora za tiskanje"
       },
       "cupsEnabled": {
-        "description": "CUPS omogočen"
+        "title": "CUPS omogočen"
       },
       "scanningSupport": {
-        "description": "Podpora za skeniranje"
+        "title": "Podpora za skeniranje"
       },
       "sanedEnabled": {
-        "description": "saned omogočen"
+        "title": "saned omogočen"
       },
       "userCups": {
-        "description": "Uporabnik v skupini cups"
+        "title": "Uporabnik v skupini cups"
       },
       "userScanner": {
-        "description": "Uporabnik v skupini scanner"
+        "title": "Uporabnik v skupini scanner"
       },
       "userLp": {
-        "description": "Uporabnik v skupini lp"
+        "title": "Uporabnik v skupini lp"
       }
     },
     "firewall": {
       "title": "Požarni zid",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld nameščen"
+        "title": "Firewalld nameščen"
       },
       "firewalldEnabled": {
-        "description": "firewalld omogočen"
+        "title": "firewalld omogočen"
       },
       "ufw": {
-        "description": "UFW nameščen"
+        "title": "UFW nameščen"
       },
       "ufwEnabled": {
-        "description": "UFW omogočen"
+        "title": "UFW omogočen"
       },
       "opensnitch": {
-        "description": "OpenSnitch nameščen"
+        "title": "OpenSnitch nameščen"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch omogočen"
+        "title": "OpenSnitch omogočen"
       }
     },
     "misc": {
       "title": "Razno",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem nameščen"
+        "title": "Garuda Nix Subsystem nameščen"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Splošno",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon nameščen"
+        "title": "Profile-sync-daemon nameščen"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon omogočen"
+        "title": "Profile-sync-daemon omogočen"
       },
       "oomd": {
-        "description": "Systemd-oomd omogočen"
+        "title": "Systemd-oomd omogočen"
       },
       "guestUser": {
-        "description": "Omogoči gostujočega uporabnika"
+        "title": "Omogoči gostujočega uporabnika"
       }
     },
     "performance": {
       "title": "Zmogljivost",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Prilagoditve zmogljivosti"
+        "title": "Prilagoditve zmogljivosti"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ nameščen"
+        "title": "Ananicy C++ nameščen"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ omogočen"
+        "title": "Ananicy C++ omogočen"
       },
       "bpftune": {
-        "description": "Bpftune nameščen"
+        "title": "Bpftune nameščen"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune omogočen"
+        "title": "Bpftune omogočen"
       },
       "preload": {
-        "description": "Preload nameščen"
+        "title": "Preload nameščen"
       },
       "preloadEnabled": {
-        "description": "Preload omogočen"
+        "title": "Preload omogočen"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance omogočen"
+        "title": "IRQbalance omogočen"
       }
     },
     "powersave": {
       "title": "Varčevanje z energijo",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Prilagoditve varčevanja z energijo"
+        "title": "Prilagoditve varčevanja z energijo"
       },
       "tlp": {
-        "description": "TLP nameščen"
+        "title": "TLP nameščen"
       },
       "tlpEnabled": {
-        "description": "TLP omogočen"
+        "title": "TLP omogočen"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq nameščen"
+        "title": "Auto-cpufreq nameščen"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq omogočen"
+        "title": "Auto-cpufreq omogočen"
       },
       "thermald": {
-        "description": "Thermald nameščen"
+        "title": "Thermald nameščen"
       },
       "thermaldEnabled": {
-        "description": "Thermald omogočen"
+        "title": "Thermald omogočen"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon nameščen"
+        "title": "Power profiles daemon nameščen"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon omogočen"
+        "title": "Power profiles daemon omogočen"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt nameščen"
+        "title": "Intel-undervolt nameščen"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt omogočen"
+        "title": "Intel-undervolt omogočen"
       }
     },
     "rightclickEmulation": {
       "title": "Emulacija desnega klika",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Emulacija desnega klika z dolgim pritiskom Evdev"
+        "title": "Emulacija desnega klika z dolgim pritiskom Evdev"
       },
       "evdevRce": {
-        "description": "Evdev RCE omogočen"
+        "title": "Evdev RCE omogočen"
       }
     }
   },

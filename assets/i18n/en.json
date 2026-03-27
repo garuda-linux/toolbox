@@ -327,265 +327,363 @@
     "audio": {
       "title": "Audio",
       "alsa": {
-        "description": "ALSA support"
+        "title": "ALSA",
+        "description": "The foundational kernel-level sound driver. Provides the core hardware support for sound cards, though you usually interact with it through PipeWire."
       },
       "jack": {
-        "description": "JACK support"
+        "title": "JACK",
+        "description": "A specialized, low-latency sound server designed for professional audio production. Usually handled natively by PipeWire now."
       },
       "pulseaudio": {
-        "description": "PulseAudio support"
+        "title": "PulseAudio",
+        "description": "The older, legacy sound server. Kept primarily for compatibility, but PipeWire has largely replaced it."
       },
       "pipewire": {
-        "description": "PipeWire support"
+        "title": "PipeWire",
+        "description": "The modern standard for handling audio and video streams on Linux. It seamlessly replaces PulseAudio and JACK with much lower latency and better security."
       },
       "userRealtime": {
-        "description": "User in realtime group"
+        "title": "Realtime Group",
+        "description": "Adds your user to the realtime group, giving audio applications CPU priority to prevent stuttering and latency."
       },
       "jamesdsp": {
-        "description": "JamesDSP installed"
+        "title": "JamesDSP",
+        "description": "An audio effect processor for adding bass boost, equalizers, and other effects. It is recommended to try EasyEffects first."
+      },
+      "easyeffects": {
+        "title": "EasyEffects",
+        "description": "A powerful tool to enhance your microphone quality and audio playback. Highly recommended to install 'Calf Plugins' and 'LSP Plugins' alongside this for a complete experience."
+      },
+      "lspPlugins": {
+        "title": "LSP Plugins",
+        "description": "Linux Studio Plugins (LSP). A collection of professional audio tools like equalizers and compressors. Install this to expand EasyEffects' capabilities."
+      },
+      "calf": {
+        "title": "Calf Plugins",
+        "description": "Calf Studio Gear. A high-quality set of audio processing plugins. Install this to give EasyEffects more professional studio effects."
       }
     },
     "virtualization": {
       "title": "Virtualization",
       "qemu": {
-        "description": "QEMU installed"
+        "title": "QEMU",
+        "description": "A generic, open-source machine emulator and virtualizer. Can run operating systems for any machine, on any machine."
       },
       "kvm": {
-        "description": "KVM support"
+        "title": "KVM",
+        "description": "Kernel-based Virtual Machine. Uses CPU hardware acceleration (VT-x/AMD-V) to let virtual machines run at near-native speeds."
       },
       "virtManager": {
-        "description": "Virt-manager support"
+        "title": "Virt Manager",
+        "description": "A powerful desktop application (GUI) for creating and managing KVM/QEMU virtual machines."
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd enabled"
+        "title": "Libvirtd",
+        "description": "The system daemon required to run and manage virtual machines and other virtualization platforms."
       },
       "userVboxUsers": {
-        "description": "User in vboxusers group"
+        "title": "VirtualBox Users",
+        "description": "Adds your user to the vboxusers group, granting permission to use VirtualBox."
       },
       "virtualbox": {
-        "description": "VirtualBox support"
+        "title": "VirtualBox",
+        "description": "Oracle's popular cross-platform virtualization software. Very user-friendly, though generally slower than KVM/Virt-Manager."
       },
       "userLibvirt": {
-        "description": "User in libvirt group"
+        "title": "Libvirt Users",
+        "description": "Adds your user to the libvirt group, granting permission to manage advanced KVM/QEMU virtual machines."
       },
       "userKvm": {
-        "description": "User in kvm group"
+        "title": "KVM Users",
+        "description": "Adds your user to the kvm group, granting permission to use fast, hardware-accelerated KVM virtual machines."
+      },
+      "qemuUserStatic": {
+        "title": "QEMU User Static",
+        "description": "Can be used to Run foreign architecture binaries natively, i.e. via Podman"
+      },
+      "qemuUserStaticBinfmt": {
+        "title": "QEMU Binfmt",
+        "description": "Register foreign arch handlers in kernel, this can be useful when attempting to run aarch64 container images."
       }
     },
     "containers": {
       "title": "Containers",
       "docker": {
-        "description": "Docker installed"
+        "title": "Docker",
+        "description": "The industry-standard container engine for packaging and running isolated applications."
       },
       "dockerEnabled": {
-        "description": "Docker enabled"
+        "title": "Docker Service",
+        "description": "Runs the background daemon required to manage and run Docker containers."
       },
       "dockerCompose": {
-        "description": "Docker Compose installed"
+        "title": "Docker Compose",
+        "description": "A tool for defining and running multi-container Docker applications via configuration files."
       },
       "userDocker": {
-        "description": "User in docker group"
+        "title": "Docker Users",
+        "description": "Adds your user to the docker group, granting permission to run Docker commands without sudo."
       },
       "podman": {
-        "description": "Podman installed"
+        "title": "Podman",
+        "description": "A modern, daemonless alternative to Docker. It runs containers without needing root privileges, offering better security."
       },
       "podmanDocker": {
-        "description": "Emulate Docker via Podman"
+        "title": "Podman Docker",
+        "description": "A compatibility package that aliases the 'docker' command to 'podman', so existing Docker scripts work seamlessly with Podman."
       },
       "podmanDesktop": {
-        "description": "Podman Desktop installed"
+        "title": "Podman Desktop",
+        "description": "A graphical application to easily manage, create, and view your Podman containers."
       },
       "distrobox": {
-        "description": "DistroBox installed"
+        "title": "Distrobox",
+        "description": "Creates tightly integrated containers of other Linux distributions. Lets you install and run apps from Ubuntu, Fedora, or Arch natively inside Garuda."
       },
       "boxbuddy": {
-        "description": "BoxBuddy installed"
+        "title": "BoxBuddy",
+        "description": "A graphical app to easily manage and use your Distrobox environments."
+      },
+      "winboat": {
+        "title": "WinBoat",
+        "description": "Uses containerization to provide seamlessly integrated Windows apps on Linux."
       }
     },
     "network": {
       "title": "Network",
       "networkManager": {
-        "description": "NetworkManager support"
+        "title": "NetworkManager",
+        "description": "The core daemon that configures and manages your Wi-Fi, Ethernet, and VPN connections."
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager enabled"
+        "title": "NetworkManager Service",
+        "description": "Runs the NetworkManager daemon so you can connect to the internet."
       },
       "modemManagerEnabled": {
-        "description": "ModemManager enabled"
+        "title": "ModemManager",
+        "description": "Runs the daemon required to connect to the internet using mobile broadband (4G/5G USB modems)."
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "bluetooth": {
-        "description": "Bluetooth support"
+        "title": "Bluetooth Support",
+        "description": "The BlueZ Linux Bluetooth stack. Provides the core software needed to handle wireless devices."
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth enabled"
+        "title": "Bluetooth Service",
+        "description": "Runs the background service required to pair and connect to Bluetooth devices."
       },
       "userBluetooth": {
-        "description": "User in bluetooth group"
+        "title": "Bluetooth Users",
+        "description": "Adds your user to the bluetooth group, granting permission to manage Bluetooth connections."
       },
       "autoConnect": {
-        "description": "Auto connect installed"
+        "title": "Auto Connect",
+        "description": "Automatically reconnects to your trusted, previously paired Bluetooth devices when they power on."
       },
       "autoConnectEnabled": {
-        "description": "Auto connect enabled"
+        "title": "Auto Connect Service",
+        "description": "Runs the background service that actively handles automatic Bluetooth reconnections."
       }
     },
     "printing": {
       "title": "Printing",
       "printingSupport": {
-        "description": "Printing support"
+        "title": "Printing Support",
+        "description": "CUPS (Common Unix Printing System). The core software needed to connect and print to local or network printers."
       },
       "cupsEnabled": {
-        "description": "CUPS enabled"
+        "title": "CUPS Service",
+        "description": "Runs the CUPS daemon required to handle print jobs and manage printers."
       },
       "scanningSupport": {
-        "description": "Scanning support"
+        "title": "SANE",
+        "description": "SANE (Scanner Access Now Easy). The core software needed to use flatbed and document scanners."
       },
       "sanedEnabled": {
-        "description": "saned enabled"
+        "title": "SANE Network",
+        "description": "Runs the daemon that allows you to share your scanner over the local network."
       },
       "userCups": {
-        "description": "User in cups group"
+        "title": "CUPS Users",
+        "description": "Adds your user to the cups group, granting permission to manage printers and print queues."
       },
       "userScanner": {
-        "description": "User in scanner group"
+        "title": "Scanner Users",
+        "description": "Adds your user to the scanner group, granting permission to use document scanners."
       },
       "userLp": {
-        "description": "User in lp group"
+        "title": "LP Users",
+        "description": "Adds your user to the lp (line printer) group, required by some older printing systems."
       }
     },
     "firewall": {
       "title": "Firewall",
       "firewalld": {
-        "description": "Firewalld installed"
+        "title": "Firewalld",
+        "description": "A dynamic firewall manager that uses zones to dynamically define network trust levels and rules."
       },
       "firewalldEnabled": {
-        "description": "firewalld enabled"
+        "title": "Firewalld Service",
+        "description": "Runs the firewalld daemon to protect your system from incoming network connections."
       },
       "ufw": {
-        "description": "UFW installed"
+        "title": "UFW",
+        "description": "Uncomplicated Firewall. A simpler command-line interface for managing iptables/nftables firewall rules."
       },
       "ufwEnabled": {
-        "description": "UFW enabled"
+        "title": "UFW Service",
+        "description": "Runs the UFW service to enforce your simple firewall rules."
       },
       "opensnitch": {
-        "description": "OpenSnitch installed"
+        "title": "OpenSnitch",
+        "description": "An application-level firewall that alerts you and asks for permission whenever a program tries to connect to the internet."
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch enabled"
+        "title": "OpenSnitch Service",
+        "description": "Runs the OpenSnitch daemon to monitor application network traffic."
       }
     },
     "misc": {
       "title": "Miscellaneous",
       "gns": {
-        "description": "Garuda Nix Subsystem installed"
+        "title": "Garuda Nix Subsystem",
+        "description": "Integrates the Nix package manager, giving you access to thousands of extra software packages. Also provides a NixOS installation sharing settings with Garuda."
       }
     }
   },
   "systemSettings": {
     "defaultShellConfigs": "Install default configurations",
     "defaultDns": "Set default DNS",
+    "defaultDnsTip": "Changes the default Domain Name System (DNS) provider for your internet connection, overriding your ISP's default. Can improve speed, privacy, or bypass censorship.",
     "defaultShell": "Set login shell",
+    "defaultShellTip": "Changes your default terminal login shell. It's recommended to use a POSIX-compliant shell (like Bash or Zsh) and only use non-compliant shells like Fish through your terminal emulator's profile settings.",
     "enableHblock": "Enable Hblock",
+    "enableHblockTip": "Enables Hblock, a script that blocks ads, trackers, and malware domains system-wide by routing their requests to a local sinkhole via your /etc/hosts file.",
     "enableIwd": "Use IWD instead of wpa_supplicant",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). A modern, lightweight alternative to wpa_supplicant for managing Wi-Fi connections. Often connects faster and handles roaming better.",
     "common": {
       "title": "Common",
       "psd": {
-        "description": "Profile-sync-daemon installed"
+        "title": "Profile-sync-daemon",
+        "description": "Moves your web browser's profile (like Firefox or Brave) into fast temporary RAM (tmpfs). This significantly speeds up browser responsiveness and reduces wear on your SSD."
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon enabled"
+        "title": "PSD Service",
+        "description": "Runs the Profile-sync-daemon to automatically manage your browser profiles in RAM."
       },
       "oomd": {
-        "description": "Systemd-oomd enabled"
+        "title": "systemd-oomd",
+        "description": "systemd's Out-Of-Memory daemon. It actively monitors system memory and automatically terminates memory-hogging processes before your entire computer freezes up."
       },
       "guestUser": {
-        "description": "Enable guest user"
+        "title": "Guest User",
+        "description": "Creates a temporary 'guest' user account with no password, isolated from your personal files. Wiped on logout."
       }
     },
     "performance": {
       "title": "Performance",
       "performanceTweaks": {
-        "description": "Performance tweaks"
+        "title": "Performance Tweaks",
+        "description": "Applies a set of system-level sysctl and tuning configurations to optimize Garuda for maximum responsiveness."
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ installed"
+        "title": "Ananicy-C++",
+        "description": "Auto NICe daemon. Dynamically changes the CPU priority (niceness) of running processes, giving the active application you are currently using more CPU time so the system feels faster."
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ enabled"
+        "title": "Ananicy Service",
+        "description": "Runs the Ananicy daemon to continuously manage application CPU priorities."
       },
       "bpftune": {
-        "description": "Bpftune installed"
+        "title": "bpftune",
+        "description": "Uses eBPF to continuously monitor and automatically tune your Linux network parameters in real-time for optimal internet throughput and latency."
       },
       "bpftuneEnabled": {
-        "description": "Bpftune enabled"
+        "title": "bpftune Service",
+        "description": "Runs the bpftune daemon to continuously optimize your network performance."
       },
       "preload": {
-        "description": "Preload installed"
+        "title": "Preload",
+        "description": "A background daemon that monitors which applications you use most and pre-loads them into RAM, drastically reducing their startup time."
       },
       "preloadEnabled": {
-        "description": "Preload enabled"
+        "title": "Preload Service",
+        "description": "Runs the Preload daemon to cache your frequently used applications."
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance enabled"
+        "title": "IRQbalance",
+        "description": "Distributes hardware interrupts evenly across all your CPU cores. This prevents a single core from getting bogged down handling device signals."
       }
     },
     "powersave": {
       "title": "Powersaving",
       "powersaveTweaks": {
-        "description": "Powersave tweaks"
+        "title": "Powersave Tweaks",
+        "description": "Applies sysctl and configuration tweaks designed to minimize power consumption on battery-operated devices."
       },
       "tlp": {
-        "description": "TLP installed"
+        "title": "TLP",
+        "description": "An advanced utility that automatically optimizes battery life on laptops by tweaking settings for Wi-Fi, disks, PCIe, and USB devices when unplugged."
       },
       "tlpEnabled": {
-        "description": "TLP enabled"
+        "title": "TLP Service",
+        "description": "Runs the TLP daemon to dynamically apply power-saving rules when on battery."
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq installed"
+        "title": "Auto-CPUfreq",
+        "description": "An automatic CPU speed and power optimizer. It dynamically lowers your CPU speed when idle to save battery, and boosts it when you need performance."
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq enabled"
+        "title": "Auto-CPUfreq Service",
+        "description": "Runs the auto-cpufreq daemon to continuously manage CPU scaling."
       },
       "thermald": {
-        "description": "Thermald installed"
+        "title": "thermald",
+        "description": "Intel's thermal management daemon. It prevents your system from overheating by proactively using cooling methods before forcing the CPU to throttle down."
       },
       "thermaldEnabled": {
-        "description": "Thermald enabled"
+        "title": "thermald Service",
+        "description": "Runs the thermald daemon to monitor CPU temperatures and prevent overheating."
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon installed"
+        "title": "Power Profiles",
+        "description": "Provides an API for the system to easily switch between 'Power Saver', 'Balanced', and 'Performance' operating modes."
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon enabled"
+        "title": "Power Profiles Service",
+        "description": "Runs the daemon that allows your desktop environment to toggle power profiles."
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt installed"
+        "title": "Intel Undervolt",
+        "description": "Lowers the voltage supplied to Intel processors. This reduces heat and power consumption without sacrificing performance, which extends battery life and prevents thermal throttling."
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt enabled"
+        "title": "Intel Undervolt Service",
+        "description": "Runs the daemon that automatically applies your Intel undervolt settings on boot."
       }
     },
     "rightclickEmulation": {
       "title": "Right click emulation",
       "evdevLongPressRightClick": {
-        "description": "Evdev long press right click emulation"
+        "title": "Touchpad Long Press",
+        "description": "Configures libinput so that holding a single finger on a touchscreen or touchpad registers as a right-click."
       },
       "evdevRce": {
-        "description": "Evdev RCE enabled"
+        "title": "Touchpad Right Click Area",
+        "description": "Designates the bottom-right corner (or a specific area) of your touchpad to always act as a physical right-click."
       }
     },
     "configs": {
       "title": "System Configurations",
       "audioNoSuspend": {
         "title": "Audio No-Suspend",
-        "description": "Prevent audio pop/crack by disabling PipeWire suspend"
+        "description": "Disables PipeWire's node-suspend feature. This keeps audio devices constantly active, preventing the annoying popping or clicking noises that occur when sound cards wake up from sleep."
       },
       "kdeBorderlessMaximize": {
         "title": "KDE Borderless Maximize",
-        "description": "Hide window borders when maximized in KDE"
+        "description": "A KWin tweak that removes the title bar and window borders when an application is maximized in KDE Plasma, giving you more usable vertical screen space."
       }
     }
   },
@@ -736,5 +834,229 @@
   "taskmanager": {
     "scriptMismatch": "Script has been tampered with, refusing to execute!",
     "scriptExecuted": "The current task has finished."
+  },
+  "setupWizard": {
+    "title": "Setup Assistant",
+    "steps": {
+      "nvidia": "Nvidia Drivers",
+      "apply": "Apply Changes"
+    },
+    "nvidia": {
+      "header": "Nvidia GPU Detected",
+      "checkbox": "Install proprietary Nvidia drivers"
+    },
+    "softwareSelection": {
+      "header": "Software Selection",
+      "body": "Select the software you would like to install."
+    },
+    "apply": {
+      "header": "Ready to Apply",
+      "body": "Click 'Apply' to start the installation and configuration process."
+    },
+    "buttons": {
+      "next": "Next",
+      "back": "Back",
+      "apply": "Apply",
+      "finish": "Finish"
+    },
+    "tasks": {
+      "nvidia": "Installing Nvidia drivers",
+      "installSoftware": "Installing selected software"
+    },
+    "autoSoftware": {
+      "strawberryplayer": "Description for Strawberry Player",
+      "lollypop": "Description for Lollypop",
+      "audacious": "Description for Audacious",
+      "elisa": "Description for Elisa",
+      "kwave": "Description for Kwave",
+      "audacity": "Description for Audacity",
+      "ardour": "Description for Ardour",
+      "lmms": "Description for LMMS",
+      "mixxx": "Description for Mixxx",
+      "musescore": "Description for MuseScore",
+      "rosegarden": "Description for Rosegarden",
+      "bitwigstudio": "Description for Bitwig Studio",
+      "firedragon": "Description for Firedragon",
+      "firedragonwcatppuccinmochamauvetheme": "Description for Firedragon w/Catppuccin Mocha Mauve Theme",
+      "librewolf": "Description for Librewolf",
+      "firefox": "Description for Firefox",
+      "firefoxesr": "Description for Firefox ESR",
+      "chromium": "Description for Chromium",
+      "ungoogledchromium": "Description for Ungoogled Chromium",
+      "vivaldi": "Description for Vivaldi",
+      "torbrowser": "Description for Tor Browser",
+      "brave": "Description for Brave",
+      "falkon": "Description for Falkon",
+      "qutebrowser": "Description for Qutebrowser",
+      "telegram": "Description for Telegram",
+      "discord": "Description for Discord",
+      "neochat": "Description for Neochat",
+      "fractal": "Description for Fractal",
+      "element": "Description for Element",
+      "wire": "Description for Wire",
+      "signal": "Description for Signal",
+      "jitsimeet": "Description for Jitsi-Meet",
+      "zoom": "Description for Zoom",
+      "microsoftteams": "Description for Microsoft Teams",
+      "slack": "Description for Slack",
+      "mumble": "Description for Mumble",
+      "twitchgui": "Description for Twitch GUI",
+      "vim": "Description for VIM",
+      "visualstudiocode": "Description for Visual Studio Code",
+      "visualstudiocodeoss": "Description for Visual Studio Code",
+      "zededitor": "Description for Zed Editor",
+      "vscodium": "Description for VSCodium",
+      "gnu": "Description for GNU",
+      "qtcreator": "Description for QtCreator",
+      "gnomebuilder": "Description for Gnome-builder",
+      "kdevelop": "Description for Kdevelop",
+      "netbeans": "Description for Netbeans",
+      "postman": "Description for Postman",
+      "intellijidea": "Description for IntelliJ-IDEA",
+      "pycharm": "Description for PyCharm",
+      "gitkraken": "Description for Gitkraken",
+      "github": "Description for GitHub",
+      "cockpit": "Description for Cockpit",
+      "ansible": "Description for Ansible",
+      "docker": "Description for Docker",
+      "podman": "Description for Podman",
+      "jenkins": "Description for Jenkins",
+      "puppet": "Description for Puppet",
+      "prometheus": "Description for Prometheus",
+      "terraform": "Description for Terraform",
+      "aisleriot": "Description for Aisleriot",
+      "mari0": "Description for Mari0",
+      "kapman": "Description for Kapman",
+      "knights": "Description for Knights",
+      "kmahjongg": "Description for Kmahjongg",
+      "supertuxkart": "Description for Super Tux Kart",
+      "supertux": "Description for Super Tux",
+      "minetest": "Description for Minetest",
+      "0ad": "Description for 0ad",
+      "teeworlds": "Description for Teeworlds",
+      "xonotic": "Description for Xonotic",
+      "hedgewars": "Description for Hedgewars",
+      "krita": "Description for Krita",
+      "gimp": "Description for GIMP",
+      "inkscape": "Description for Inkscape",
+      "blender": "Description for Blender",
+      "digikam": "Description for Digikam",
+      "darktable": "Description for DarkTable",
+      "luminancehdr": "Description for Luminancehdr",
+      "kolourpaint": "Description for Kolourpaint",
+      "mypaint": "Description for MyPaint",
+      "wings3d": "Description for wings3d",
+      "sweethome3d": "Description for sweethome3d",
+      "freecad": "Description for freecad",
+      "librecad": "Description for librecad",
+      "kicad": "Description for kicad",
+      "pencil2d": "Description for Pencil 2D",
+      "synfigstudio": "Description for Synfig Studio",
+      "opentoonz": "Description for opentoonz",
+      "fontforge": "Description for FontForge",
+      "birdfont": "Description for Birdfont",
+      "asian": "Description for Asian",
+      "devanagarikannadatelgutamilmalyalambangalaetcandmanyothers": "Description for Devanagari,Kannada,Telgu,Tamil,Malyalam,Bangala etc and many others",
+      "simplifiedchinese": "Description for Simplified Chinese",
+      "traditionalchinese": "Description for Traditional Chinese",
+      "japanese": "Description for Japanese",
+      "korean": "Description for Korean",
+      "vietnamese": "Description for Vietnamese",
+      "sinhalese": "Description for Sinhalese",
+      "thai": "Description for Thai",
+      "xtreme": "Description for Xtreme",
+      "fdm": "Description for FDM",
+      "deluge": "Description for Deluge",
+      "qbittorrent": "Description for Qbittorrent",
+      "nextcloudclient": "Description for Nextcloud client",
+      "remmina": "Description for Remmina",
+      "filezilla": "Description for Filezilla",
+      "putty": "Description for Putty",
+      "warpinator": "Description for Warpinator",
+      "nitroshare": "Description for Nitroshare",
+      "linuxlts": "Description for Linux LTS",
+      "linuxhardened": "Description for Linux Hardened",
+      "linuxcachyoswithbore": "Description for Linux CachyOS with BORE",
+      "linuxxanmod": "Description for Linux Xanmod",
+      "linuxxanmodlts": "Description for Linux Xanmod LTS",
+      "linuxmainline": "Description for Linux Mainline",
+      "thunderbird": "Description for Thunderbird",
+      "kmail": "Description for Kmail",
+      "evolution": "Description for evolution",
+      "geary": "Description for Geary",
+      "mailspring": "Description for Mailspring",
+      "clawsmail": "Description for Claws-mail",
+      "hypnotix": "Description for Hypnotix",
+      "shortwave": "Description for Shortwave",
+      "converseen": "Description for Converseen",
+      "handbrake": "Description for Handbrake",
+      "mystiq": "Description for Mystiq",
+      "transmageddon": "Description for Transmageddon",
+      "soundconvertor": "Description for Soundconvertor",
+      "kodi": "Description for Kodi",
+      "mediaelch": "Description for Mediaelch",
+      "subtitlecomposer": "Description for Subtitlecomposer",
+      "kid3": "Description for Kid3",
+      "easytag": "Description for Easytag",
+      "k3b": "Description for K3B",
+      "brasero": "Description for BRASERO",
+      "xfburn": "Description for XFBURN",
+      "libreofficefresh": "Description for LibreOffice Fresh",
+      "libreofficestill": "Description for LibreOffice Still",
+      "joplin": "Description for Joplin",
+      "onlyoffice": "Description for OnlyOffice",
+      "wpsoffice": "Description for WPS Office",
+      "free": "Description for Free",
+      "calligra": "Description for Calligra",
+      "obsidian": "Description for Obsidian",
+      "skrooge": "Description for Skrooge",
+      "kmymoney": "Description for Kmymoney",
+      "abiword": "Description for Abiword",
+      "gnumeric": "Description for Gnumeric",
+      "gnucash": "Description for GNUCash",
+      "homebank": "Description for Homebank",
+      "droidcam": "Description for Droidcam",
+      "soundwire": "Description for Soundwire",
+      "variety": "Description for Variety",
+      "conky": "Description for Conky",
+      "keepassxc": "Description for KeePassXC",
+      "yakuake": "Description for Yakuake",
+      "gnomefirmware": "Description for GNOME Firmware",
+      "appimagepool": "Description for Appimage Pool",
+      "octopi": "Description for Octopi",
+      "bauh": "Description for Bauh",
+      "discover": "Description for Discover",
+      "gnomesoftware": "Description for Gnome-software",
+      "bazaar": "Description for Bazaar",
+      "kdenlive": "Description for Kdenlive",
+      "dragon": "Description for Dragon",
+      "shotcut": "Description for Shotcut",
+      "obsstudio": "Description for OBS Studio",
+      "vlc": "Description for VLC",
+      "smplayer": "Description for SMPlayer",
+      "bakamplayer": "Description for Baka-Mplayer",
+      "virtualbox": "Description for Virtualbox",
+      "gnomeboxes": "Description for GNOME Boxes",
+      "virtmanager": "Description for Virt-manager",
+      "genymotion": "Description for Genymotion"
+    },
+    "autoCategories": {
+      "audio": "Audio",
+      "browsers": "Browsers",
+      "communication": "Communication",
+      "development": "Development",
+      "gaming": "Gaming",
+      "graphics": "Graphics",
+      "inputMethod": "Input Methods",
+      "internet": "Internet",
+      "kernels": "Kernels",
+      "mail": "Mail",
+      "multimedia": "Multimedia",
+      "office": "Office",
+      "other": "Other",
+      "pkgmngrs": "Software Centers",
+      "video": "Video",
+      "virtualization": "Virtualization"
+    }
   }
 }

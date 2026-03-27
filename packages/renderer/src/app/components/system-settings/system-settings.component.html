@@ -2,7 +2,12 @@
   <div>
     <div class="mt-10 grid grid-cols-1 gap-5 text-color md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <div class="ml-10">
-        <h2>{{ t('systemSettings.defaultShell') }}</h2>
+        <h2
+          [pTooltip]="t('systemSettings.defaultShellTip')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+        >
+          {{ t('systemSettings.defaultShell') }}
+        </h2>
         <p-select
           class="mt-2.5 w-full md:w-56"
           [(ngModel)]="currentShell"
@@ -13,7 +18,12 @@
         />
       </div>
       <div class="ml-10">
-        <h2>{{ t('systemSettings.defaultDns') }}</h2>
+        <h2
+          [pTooltip]="t('systemSettings.defaultDnsTip')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+        >
+          {{ t('systemSettings.defaultDns') }}
+        </h2>
         <p-select
           class="mt-2.5 w-full md:w-56"
           [(ngModel)]="currentDns"
@@ -34,7 +44,12 @@
           name="enable-hblock"
           value="hblock"
         />
-        <label class="ml-2" for="enable-hblock">
+        <label
+          class="ml-2"
+          [pTooltip]="t('systemSettings.enableHblockTip')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          for="enable-hblock"
+        >
           {{ t('systemSettings.enableHblock') }}
         </label>
       </div>
@@ -47,7 +62,12 @@
           name="iwd-backend"
           value="iwd"
         />
-        <label class="ml-2" for="iwd-backend">
+        <label
+          class="ml-2"
+          [pTooltip]="t('systemSettings.enableIwdTip')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          for="iwd-backend"
+        >
           {{ t('systemSettings.enableIwd') }}
         </label>
       </div>

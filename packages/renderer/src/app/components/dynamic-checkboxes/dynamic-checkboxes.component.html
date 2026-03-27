@@ -13,8 +13,14 @@
               (click)="clickAction(entry)"
               name="group"
             />
-            <label class="mx-2.5" [for]="entry.name" [class.text-surface-300]="entry.disabled">
-              {{ t(entry.description) }}
+            <label
+              class="mx-2.5"
+              [for]="entry.name"
+              [class.text-surface-300]="entry.disabled"
+              [pTooltip]="t(entry.description)"
+              [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+            >
+              {{ t(entry.title) }}
             </label>
           </div>
         }

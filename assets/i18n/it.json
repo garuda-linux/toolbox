@@ -212,167 +212,167 @@
       "title": "Audio",
       "icon": "Icon",
       "alsa": {
-        "description": "Supporto ALSA"
+        "title": "Supporto ALSA"
       },
       "jack": {
-        "description": "Supporto JACK"
+        "title": "Supporto JACK"
       },
       "pulseaudio": {
-        "description": "Supporto PulseAudio"
+        "title": "Supporto PulseAudio"
       },
       "pipewire": {
-        "description": "Supporto PipeWire"
+        "title": "Supporto PipeWire"
       },
       "userRealtime": {
-        "description": "Utente nel gruppo realtime"
+        "title": "Utente nel gruppo realtime"
       },
       "jamesdsp": {
-        "description": "JamesDSP installato"
+        "title": "JamesDSP installato"
       }
     },
     "virtualization": {
       "title": "Virtualizzazione",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU installato"
+        "title": "QEMU installato"
       },
       "kvm": {
-        "description": "Supporto KVM"
+        "title": "Supporto KVM"
       },
       "virtManager": {
-        "description": "Supporto Virt-manager"
+        "title": "Supporto Virt-manager"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd abilitato"
+        "title": "Libvirtd abilitato"
       },
       "userVboxUsers": {
-        "description": "Utente nel gruppo vboxusers"
+        "title": "Utente nel gruppo vboxusers"
       },
       "virtualbox": {
-        "description": "Supporto VirtualBox"
+        "title": "Supporto VirtualBox"
       },
       "userLibvirt": {
-        "description": "Utente nel gruppo libvirt"
+        "title": "Utente nel gruppo libvirt"
       },
       "userKvm": {
-        "description": "Utente nel gruppo kvm"
+        "title": "Utente nel gruppo kvm"
       }
     },
     "containers": {
       "title": "Container",
       "icon": "Icon",
       "docker": {
-        "description": "Docker installato"
+        "title": "Docker installato"
       },
       "dockerEnabled": {
-        "description": "Docker abilitato"
+        "title": "Docker abilitato"
       },
       "dockerCompose": {
-        "description": "Docker Compose installato"
+        "title": "Docker Compose installato"
       },
       "userDocker": {
-        "description": "Utente nel gruppo docker"
+        "title": "Utente nel gruppo docker"
       },
       "podman": {
-        "description": "Podman installato"
+        "title": "Podman installato"
       },
       "podmanDocker": {
-        "description": "Emula Docker tramite Podman"
+        "title": "Emula Docker tramite Podman"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop installato"
+        "title": "Podman Desktop installato"
       },
       "distrobox": {
-        "description": "DistroBox installato"
+        "title": "DistroBox installato"
       },
       "boxbuddy": {
-        "description": "BoxBuddy installato"
+        "title": "BoxBuddy installato"
       }
     },
     "network": {
       "title": "Rete",
       "icon": "Icon",
       "networkManager": {
-        "description": "Supporto NetworkManager"
+        "title": "Supporto NetworkManager"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager abilitato"
+        "title": "NetworkManager abilitato"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager abilitato"
+        "title": "ModemManager abilitato"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Supporto Bluetooth"
+        "title": "Supporto Bluetooth"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth abilitato"
+        "title": "Bluetooth abilitato"
       },
       "userBluetooth": {
-        "description": "Utente nel gruppo bluetooth"
+        "title": "Utente nel gruppo bluetooth"
       },
       "autoConnect": {
-        "description": "Connessione automatica installata"
+        "title": "Connessione automatica installata"
       },
       "autoConnectEnabled": {
-        "description": "Connessione automatica abilitata"
+        "title": "Connessione automatica abilitata"
       }
     },
     "printing": {
       "title": "Stampa",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Supporto stampa"
+        "title": "Supporto stampa"
       },
       "cupsEnabled": {
-        "description": "CUPS abilitato"
+        "title": "CUPS abilitato"
       },
       "scanningSupport": {
-        "description": "Supporto scansione"
+        "title": "Supporto scansione"
       },
       "sanedEnabled": {
-        "description": "saned abilitato"
+        "title": "saned abilitato"
       },
       "userCups": {
-        "description": "Utente nel gruppo cups"
+        "title": "Utente nel gruppo cups"
       },
       "userScanner": {
-        "description": "Utente nel gruppo scanner"
+        "title": "Utente nel gruppo scanner"
       },
       "userLp": {
-        "description": "Utente nel gruppo lp"
+        "title": "Utente nel gruppo lp"
       }
     },
     "firewall": {
       "title": "Firewall",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld installato"
+        "title": "Firewalld installato"
       },
       "firewalldEnabled": {
-        "description": "firewalld abilitato"
+        "title": "firewalld abilitato"
       },
       "ufw": {
-        "description": "UFW installato"
+        "title": "UFW installato"
       },
       "ufwEnabled": {
-        "description": "UFW abilitato"
+        "title": "UFW abilitato"
       },
       "opensnitch": {
-        "description": "OpenSnitch installato"
+        "title": "OpenSnitch installato"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch abilitato"
+        "title": "OpenSnitch abilitato"
       }
     },
     "misc": {
       "title": "Varie",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem installato"
+        "title": "Garuda Nix Subsystem installato"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Comune",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon installato"
+        "title": "Profile-sync-daemon installato"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon abilitato"
+        "title": "Profile-sync-daemon abilitato"
       },
       "oomd": {
-        "description": "Systemd-oomd abilitato"
+        "title": "Systemd-oomd abilitato"
       },
       "guestUser": {
-        "description": "Abilita utente ospite"
+        "title": "Abilita utente ospite"
       }
     },
     "performance": {
       "title": "Prestazioni",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Ottimizzazioni prestazioni"
+        "title": "Ottimizzazioni prestazioni"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ installato"
+        "title": "Ananicy C++ installato"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ abilitato"
+        "title": "Ananicy C++ abilitato"
       },
       "bpftune": {
-        "description": "Bpftune installato"
+        "title": "Bpftune installato"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune abilitato"
+        "title": "Bpftune abilitato"
       },
       "preload": {
-        "description": "Preload installato"
+        "title": "Preload installato"
       },
       "preloadEnabled": {
-        "description": "Preload abilitato"
+        "title": "Preload abilitato"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance abilitato"
+        "title": "IRQbalance abilitato"
       }
     },
     "powersave": {
       "title": "Risparmio energetico",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Ottimizzazioni risparmio energetico"
+        "title": "Ottimizzazioni risparmio energetico"
       },
       "tlp": {
-        "description": "TLP installato"
+        "title": "TLP installato"
       },
       "tlpEnabled": {
-        "description": "TLP abilitato"
+        "title": "TLP abilitato"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq installato"
+        "title": "Auto-cpufreq installato"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq abilitato"
+        "title": "Auto-cpufreq abilitato"
       },
       "thermald": {
-        "description": "Thermald installato"
+        "title": "Thermald installato"
       },
       "thermaldEnabled": {
-        "description": "Thermald abilitato"
+        "title": "Thermald abilitato"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon installato"
+        "title": "Power profiles daemon installato"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon abilitato"
+        "title": "Power profiles daemon abilitato"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt installato"
+        "title": "Intel-undervolt installato"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt abilitato"
+        "title": "Intel-undervolt abilitato"
       }
     },
     "rightclickEmulation": {
       "title": "Emulazione clic destro",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Emulazione clic destro con pressione lunga Evdev"
+        "title": "Emulazione clic destro con pressione lunga Evdev"
       },
       "evdevRce": {
-        "description": "Evdev RCE abilitato"
+        "title": "Evdev RCE abilitato"
       }
     }
   },

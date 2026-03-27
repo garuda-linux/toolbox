@@ -27,6 +27,7 @@
                       [outlined]="true"
                       [disabled]="action.onlyDirect"
                       [pTooltip]="action.onlyDirect ? t('maintenance.onlyDirect') : ''"
+                      [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
                       [label]="
                         taskManager.findTaskById(action.name)
                           ? t('maintenance.removePending')
@@ -64,8 +65,8 @@
                     <i
                       class="pi pi-info-circle"
                       [pTooltip]="t('maintenance.resetTooltip') + ' ' + config.files.join(', ')"
+                      [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
                       style="font-size: 0.75rem"
-                      tooltipPosition="bottom"
                     >
                     </i>
                   </label>
@@ -96,6 +97,7 @@
                       [outlined]="true"
                       [disabled]="action.onlyDirect"
                       [pTooltip]="action.onlyDirect ? t('maintenance.onlyDirect') : ''"
+                      [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
                       [label]="
                         taskManager.findTaskById(action.name)
                           ? t('maintenance.removePending')

@@ -212,167 +212,167 @@
       "title": "Audioa",
       "icon": "Icon",
       "alsa": {
-        "description": "ALSA euskarria"
+        "title": "ALSA euskarria"
       },
       "jack": {
-        "description": "JACK euskarria"
+        "title": "JACK euskarria"
       },
       "pulseaudio": {
-        "description": "PulseAudio euskarria"
+        "title": "PulseAudio euskarria"
       },
       "pipewire": {
-        "description": "PipeWire euskarria"
+        "title": "PipeWire euskarria"
       },
       "userRealtime": {
-        "description": "Erabiltzailea realtime taldean"
+        "title": "Erabiltzailea realtime taldean"
       },
       "jamesdsp": {
-        "description": "JamesDSP instalatuta"
+        "title": "JamesDSP instalatuta"
       }
     },
     "virtualization": {
       "title": "Birtualizazioa",
       "icon": "Icon",
       "qemu": {
-        "description": "QEMU instalatuta"
+        "title": "QEMU instalatuta"
       },
       "kvm": {
-        "description": "KVM euskarria"
+        "title": "KVM euskarria"
       },
       "virtManager": {
-        "description": "Virt-manager euskarria"
+        "title": "Virt-manager euskarria"
       },
       "libvirtdEnabled": {
-        "description": "Libvirtd gaituta"
+        "title": "Libvirtd gaituta"
       },
       "userVboxUsers": {
-        "description": "Erabiltzailea vboxusers taldean"
+        "title": "Erabiltzailea vboxusers taldean"
       },
       "virtualbox": {
-        "description": "VirtualBox euskarria"
+        "title": "VirtualBox euskarria"
       },
       "userLibvirt": {
-        "description": "Erabiltzailea libvirt taldean"
+        "title": "Erabiltzailea libvirt taldean"
       },
       "userKvm": {
-        "description": "Erabiltzailea kvm taldean"
+        "title": "Erabiltzailea kvm taldean"
       }
     },
     "containers": {
       "title": "Edukiontziak",
       "icon": "Icon",
       "docker": {
-        "description": "Docker instalatuta"
+        "title": "Docker instalatuta"
       },
       "dockerEnabled": {
-        "description": "Docker gaituta"
+        "title": "Docker gaituta"
       },
       "dockerCompose": {
-        "description": "Docker Compose instalatuta"
+        "title": "Docker Compose instalatuta"
       },
       "userDocker": {
-        "description": "Erabiltzailea docker taldean"
+        "title": "Erabiltzailea docker taldean"
       },
       "podman": {
-        "description": "Podman instalatuta"
+        "title": "Podman instalatuta"
       },
       "podmanDocker": {
-        "description": "Emulatu Docker Podman bidez"
+        "title": "Emulatu Docker Podman bidez"
       },
       "podmanDesktop": {
-        "description": "Podman Desktop instalatuta"
+        "title": "Podman Desktop instalatuta"
       },
       "distrobox": {
-        "description": "DistroBox instalatuta"
+        "title": "DistroBox instalatuta"
       },
       "boxbuddy": {
-        "description": "BoxBuddy instalatuta"
+        "title": "BoxBuddy instalatuta"
       }
     },
     "network": {
       "title": "Sarea",
       "icon": "Icon",
       "networkManager": {
-        "description": "NetworkManager euskarria"
+        "title": "NetworkManager euskarria"
       },
       "networkManagerEnabled": {
-        "description": "NetworkManager gaituta"
+        "title": "NetworkManager gaituta"
       },
       "modemManagerEnabled": {
-        "description": "ModemManager gaituta"
+        "title": "ModemManager gaituta"
       }
     },
     "bluetooth": {
       "title": "Bluetooth",
       "icon": "Icon",
       "bluetooth": {
-        "description": "Bluetooth euskarria"
+        "title": "Bluetooth euskarria"
       },
       "bluetoothEnabled": {
-        "description": "Bluetooth gaituta"
+        "title": "Bluetooth gaituta"
       },
       "userBluetooth": {
-        "description": "Erabiltzailea bluetooth taldean"
+        "title": "Erabiltzailea bluetooth taldean"
       },
       "autoConnect": {
-        "description": "Auto connect instalatuta"
+        "title": "Auto connect instalatuta"
       },
       "autoConnectEnabled": {
-        "description": "Auto connect gaituta"
+        "title": "Auto connect gaituta"
       }
     },
     "printing": {
       "title": "Inprimaketa",
       "icon": "Icon",
       "printingSupport": {
-        "description": "Inprimaketa euskarria"
+        "title": "Inprimaketa euskarria"
       },
       "cupsEnabled": {
-        "description": "CUPS gaituta"
+        "title": "CUPS gaituta"
       },
       "scanningSupport": {
-        "description": "Eskaneatze euskarria"
+        "title": "Eskaneatze euskarria"
       },
       "sanedEnabled": {
-        "description": "saned gaituta"
+        "title": "saned gaituta"
       },
       "userCups": {
-        "description": "Erabiltzailea cups taldean"
+        "title": "Erabiltzailea cups taldean"
       },
       "userScanner": {
-        "description": "Erabiltzailea scanner taldean"
+        "title": "Erabiltzailea scanner taldean"
       },
       "userLp": {
-        "description": "Erabiltzailea lp taldean"
+        "title": "Erabiltzailea lp taldean"
       }
     },
     "firewall": {
       "title": "Suebakia",
       "icon": "Icon",
       "firewalld": {
-        "description": "Firewalld instalatuta"
+        "title": "Firewalld instalatuta"
       },
       "firewalldEnabled": {
-        "description": "firewalld gaituta"
+        "title": "firewalld gaituta"
       },
       "ufw": {
-        "description": "UFW instalatuta"
+        "title": "UFW instalatuta"
       },
       "ufwEnabled": {
-        "description": "UFW gaituta"
+        "title": "UFW gaituta"
       },
       "opensnitch": {
-        "description": "OpenSnitch instalatuta"
+        "title": "OpenSnitch instalatuta"
       },
       "opensnitchEnabled": {
-        "description": "OpenSnitch gaituta"
+        "title": "OpenSnitch gaituta"
       }
     },
     "misc": {
       "title": "Askotarikoak",
       "icon": "Icon",
       "gns": {
-        "description": "Garuda Nix Subsystem instalatuta"
+        "title": "Garuda Nix Subsystem instalatuta"
       }
     }
   },
@@ -386,91 +386,91 @@
       "title": "Arrunta",
       "icon": "Icon",
       "psd": {
-        "description": "Profile-sync-daemon instalatuta"
+        "title": "Profile-sync-daemon instalatuta"
       },
       "psdEnabled": {
-        "description": "Profile-sync-daemon gaituta"
+        "title": "Profile-sync-daemon gaituta"
       },
       "oomd": {
-        "description": "Systemd-oomd gaituta"
+        "title": "Systemd-oomd gaituta"
       },
       "guestUser": {
-        "description": "Gaitu gonbidatu erabiltzailea"
+        "title": "Gaitu gonbidatu erabiltzailea"
       }
     },
     "performance": {
       "title": "Errendimendua",
       "icon": "Icon",
       "performanceTweaks": {
-        "description": "Errendimendu doikuntzak"
+        "title": "Errendimendu doikuntzak"
       },
       "ananicyCpp": {
-        "description": "Ananicy C++ instalatuta"
+        "title": "Ananicy C++ instalatuta"
       },
       "ananicyCppEnabled": {
-        "description": "Ananicy C++ gaituta"
+        "title": "Ananicy C++ gaituta"
       },
       "bpftune": {
-        "description": "Bpftune instalatuta"
+        "title": "Bpftune instalatuta"
       },
       "bpftuneEnabled": {
-        "description": "Bpftune gaituta"
+        "title": "Bpftune gaituta"
       },
       "preload": {
-        "description": "Preload instalatuta"
+        "title": "Preload instalatuta"
       },
       "preloadEnabled": {
-        "description": "Preload gaituta"
+        "title": "Preload gaituta"
       },
       "irqbalanceEnabled": {
-        "description": "IRQbalance gaituta"
+        "title": "IRQbalance gaituta"
       }
     },
     "powersave": {
       "title": "Energia aurreztea",
       "icon": "Icon",
       "powersaveTweaks": {
-        "description": "Energia aurrezteko doikuntzak"
+        "title": "Energia aurrezteko doikuntzak"
       },
       "tlp": {
-        "description": "TLP instalatuta"
+        "title": "TLP instalatuta"
       },
       "tlpEnabled": {
-        "description": "TLP gaituta"
+        "title": "TLP gaituta"
       },
       "autoCpufreq": {
-        "description": "Auto-cpufreq instalatuta"
+        "title": "Auto-cpufreq instalatuta"
       },
       "autoCpufreqEnabled": {
-        "description": "Auto-cpufreq gaituta"
+        "title": "Auto-cpufreq gaituta"
       },
       "thermald": {
-        "description": "Thermald instalatuta"
+        "title": "Thermald instalatuta"
       },
       "thermaldEnabled": {
-        "description": "Thermald gaituta"
+        "title": "Thermald gaituta"
       },
       "powerProfilesDaemon": {
-        "description": "Power profiles daemon instalatuta"
+        "title": "Power profiles daemon instalatuta"
       },
       "powerProfilesDaemonEnabled": {
-        "description": "Power profiles daemon gaituta"
+        "title": "Power profiles daemon gaituta"
       },
       "intelUndervolt": {
-        "description": "Intel-undervolt instalatuta"
+        "title": "Intel-undervolt instalatuta"
       },
       "intelUndervoltEnabled": {
-        "description": "Intel-undervolt gaituta"
+        "title": "Intel-undervolt gaituta"
       }
     },
     "rightclickEmulation": {
       "title": "Eskuin klik emulazioa",
       "icon": "Icon",
       "evdevLongPressRightClick": {
-        "description": "Evdev eskuin klik emulazioa sakatze luzearekin"
+        "title": "Evdev eskuin klik emulazioa sakatze luzearekin"
       },
       "evdevRce": {
-        "description": "Evdev RCE gaituta"
+        "title": "Evdev RCE gaituta"
       }
     }
   },
