@@ -7,7 +7,6 @@ import {
   inject,
   type OnInit,
   type Signal,
-  OnDestroy,
   viewChild,
 } from '@angular/core';
 import { Button } from 'primeng/button';
@@ -243,7 +242,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
         result.cmd = 'systemd-analyze blame --no-pager && systemd-analyze critical-chain --no-pager';
         break;
       case 'journalctl':
-        result.cmd = 'journalctl -xe --no-pager';
+        result.cmd = 'journalctl -e --no-pager';
         result.sudo = true;
         break;
       case 'pacman':

@@ -303,6 +303,20 @@ export class TaskManagerService {
   }
 
   /**
+   * Modifies the provided command to include a specific wrapper for commands using `pkexec`.
+   * @param command The command string to be validated and potentially modified.
+   * @returns A modified command string that includes the `garuda-toolbox-pty-wrapper`
+   *          if the command contains `pkexec` but does not already include the wrapper component.
+   */
+  private wrapPkexec(command: string): string {
+    let newCommand = command;
+    if (newCommand.includes('pkexec ') && !newCommand.includes('garuda-toolbox-pty-wrapper')) {
+      newCommand = newCommand.replaceAll('pkexec ', 'pkexec /usr/libexec/garuda-toolbox-pty-wrapper ');
+    }
+    return newCommand;
+  }
+
+  /**
    * Execute a bash scriptlet using basic bash and wait for it to finish.
    * This uses the non-streaming `execute` path, likely for one-off commands.
    * @param script The bash scriptlet to execute
@@ -316,7 +330,8 @@ export class TaskManagerService {
     let result: any; // Type 'any' for now, should be specific return of ipcRenderer.invoke('shell:execute')
     try {
       this.logger.debug(`Executing bash code: ${script}`);
-      const command: string = options?.forceLang ? `LANG=C ${script}` : script;
+      let command: string = options?.forceLang ? `LANG=C ${script}` : script;
+      command = this.wrapPkexec(command);
 
       // For now, let's directly call invoke if shellService is not defined yet.
       // If you're only using ElectronShellSpawnService for *all* shell interaction,
@@ -353,7 +368,8 @@ export class TaskManagerService {
     try {
       this.logger.debug(`Executing bash code in terminal: ${script}`);
       this.loadingService.loadingOn();
-      result = await this.shellStreamingService.execute('/usr/lib/garuda/launch-terminal', [script], {
+      const wrappedScript = this.wrapPkexec(script);
+      result = await this.shellStreamingService.execute('/usr/lib/garuda/launch-terminal', [wrappedScript], {
         timeout,
       });
     } catch (error) {
@@ -571,7 +587,7 @@ echo "${shell.endMarker}"
       task.escalate
         ? new TrackedShell(
             'pkexec',
-            [ptyWrapper, '-q', '-e', '/dev/null', '-c', shellCommand],
+            [ptyWrapper, '--pty', '-q', '-e', '/dev/null', '-c', shellCommand],
             this.dataEvents,
             this.shellStreamingService,
             {

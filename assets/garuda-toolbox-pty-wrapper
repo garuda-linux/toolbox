@@ -1,2 +1,7 @@
 #!/bin/bash
-exec /usr/bin/script "$@"
+if [[ "$1" == "--pty" ]]; then
+    shift
+    exec /usr/bin/script "$@"
+else
+    exec "$@"
+fi
