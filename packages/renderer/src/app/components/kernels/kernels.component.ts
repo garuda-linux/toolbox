@@ -133,7 +133,7 @@ export class KernelsComponent {
     return cmd;
   }
 
-  counterArray(number: number): unknown[] {
-    return Array.from({ length: number });
+  counterArray(number: number): number[] {
+    return Array.from({ length: number }, (_, i) => i);
   }
 }

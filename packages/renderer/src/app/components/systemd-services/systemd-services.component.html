@@ -4,9 +4,9 @@
     [globalFilterFields]="['unit', 'active', 'description', 'load', 'sub']"
     [loading]="loading()"
     [paginator]="true"
-    [rowsPerPageOptions]="[30, 50, 75]"
-    [rows]="30"
-    [value]="systemdServices()"
+    [rowsPerPageOptions]="[15, 30, 50]"
+    [rows]="15"
+    [value]="filteredServices()"
     dataKey="unit"
     sortField="unit"
   >

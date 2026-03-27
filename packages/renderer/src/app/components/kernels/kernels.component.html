@@ -37,26 +37,16 @@
     }
   </div>
   @if (kernelsService.loading()) {
-    <p-data-view [value]="kernelsService.kernels()">
-      <ng-template #list let-kernels>
-        <div class="flex flex-col">
-          @for (i of counterArray(10); track i) {
-            <div>
-              <div class="flex flex-1 flex-col items-center justify-between gap-6 sm:flex-row xl:items-start">
-                <div class="my-5 flex flex-col items-center sm:items-start">
-                  <p-skeleton width="8rem" height="2rem" />
-                </div>
-                <div class="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-2">
-                  <p-skeleton width="4rem" height="2rem" />
-                </div>
-              </div>
-            </div>
-          }
+    <div class="flex flex-col gap-4 p-4">
+      @for (i of counterArray(10); track $index) {
+        <div class="flex items-center justify-between gap-4">
+          <p-skeleton width="12rem" height="2.5rem" />
+          <p-skeleton width="6rem" height="2rem" />
         </div>
-      </ng-template>
-    </p-data-view>
+      }
+    </div>
   } @else {
-    <p-data-view [value]="kernelsService.kernels()">
+    <p-data-view [value]="kernelsService.kernels()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 15, 20]">
       <ng-template #list let-kernels>
         <div class="grid-nogutter grid grid-cols-12 gap-4">
           @for (kernel of kernels; track kernel.pkgname[0]) {
@@ -87,6 +77,7 @@
                       <p-tag
                         class="mx-1 cursor-pointer"
                         [pTooltip]="t('kernels.headersMissingTip')"
+                        [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
                         [value]="t('kernels.headers')"
                         (click)="installMissingHeaders(kernel)"
                         icon="pi pi-info-circle"
@@ -98,6 +89,7 @@
                         <p-tag
                           class="mx-1 cursor-pointer"
                           [pTooltip]="t('kernels.dkmsModulesMissingTip')"
+                          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
                           [value]="module"
                           (click)="reinstallDkmsModules(kernel, 'missing')"
                           icon="pi pi-info-circle"

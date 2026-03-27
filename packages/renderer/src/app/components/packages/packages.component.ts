@@ -59,8 +59,7 @@ export class PackagesComponent {
 
   constructor() {
     effect(() => {
-      const _packages: Map<string, boolean> = this.osInteractService.packages();
-      const _tabIndex: number = this.tabIndex();
+      this.osInteractService.packages();
       if (!this.packagesService.loading()) {
         void this.updateUi();
       }
