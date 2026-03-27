@@ -58,7 +58,7 @@ export default {
   appId: 'org.garudalinux.toolbox',
   copyright: 'GPL-3.0',
 
-  compression: 'normal',
+  compression: 'maximum',
   removePackageScripts: true,
 
   directories: {
