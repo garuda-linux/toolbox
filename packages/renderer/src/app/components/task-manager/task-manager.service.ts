@@ -543,12 +543,18 @@ echo "${shell.endMarker}"
     this.logger.info(`Task ${task.name} has finished`);
   }
 
-  private async getPtyWrapper(): Promise<string> {
+  private async getPtyCommandAndArgs(shellCommand: string): Promise<{ command: string; args: string[] }> {
     const wrapperPath = '/usr/libexec/garuda-toolbox-pty-wrapper';
     if (await this.fsService.exists(wrapperPath)) {
-      return wrapperPath;
+      return {
+        command: wrapperPath,
+        args: ['--pty', '-q', '-e', '/dev/null', '-c', shellCommand],
+      };
     }
-    return '/usr/bin/script';
+    return {
+      command: '/usr/bin/script',
+      args: ['-q', '-e', '/dev/null', '-c', shellCommand],
+    };
   }
 
   /**
@@ -563,31 +569,25 @@ echo "${shell.endMarker}"
     this.running.set(true);
     this.clearTerminal();
 
-    const ptyWrapper = await this.getPtyWrapper();
     const shellCommand = `stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true; env PS1="" PROMPT_COMMAND="" bash --norc`;
+    const ptySetup = await this.getPtyCommandAndArgs(shellCommand);
 
     // Create shells as needed for this single task execution
     // Using script wrapper to allocate a PTY, ensuring tools like pacman display progress bars.
     this.activeShells = new TrackedShells(
       task.escalate
         ? null
-        : new TrackedShell(
-            ptyWrapper,
-            ['-q', '-e', '/dev/null', '-c', shellCommand],
-            this.dataEvents,
-            this.shellStreamingService,
-            {
-              COLUMNS: this.terminalCols.toString(),
-              LINES: this.terminalRows.toString(),
-              TERM: 'xterm-256color',
-              PS1: '',
-              PROMPT_COMMAND: '',
-            },
-          ), // Normal shell
+        : new TrackedShell(ptySetup.command, ptySetup.args, this.dataEvents, this.shellStreamingService, {
+            COLUMNS: this.terminalCols.toString(),
+            LINES: this.terminalRows.toString(),
+            TERM: 'xterm-256color',
+            PS1: '',
+            PROMPT_COMMAND: '',
+          }), // Normal shell
       task.escalate
         ? new TrackedShell(
             'pkexec',
-            [ptyWrapper, '--pty', '-q', '-e', '/dev/null', '-c', shellCommand],
+            [ptySetup.command, ...ptySetup.args],
             this.dataEvents,
             this.shellStreamingService,
             {
@@ -634,31 +634,25 @@ echo "${shell.endMarker}"
     const needsNormal = this.tasks().some((task) => !task.escalate);
     const needsEscalated = this.tasks().some((task) => task.escalate);
 
-    const ptyWrapper = await this.getPtyWrapper();
     const shellCommand = `stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true; env PS1="" PROMPT_COMMAND="" bash --norc`;
+    const ptySetup = await this.getPtyCommandAndArgs(shellCommand);
 
     // Create persistent shells at the beginning of the entire task queue execution
     // Using script wrapper to allocate a PTY, ensuring tools like pacman display progress bars.
     this.activeShells = new TrackedShells(
       needsNormal
-        ? new TrackedShell(
-            ptyWrapper,
-            ['-q', '-e', '/dev/null', '-c', shellCommand],
-            this.dataEvents,
-            this.shellStreamingService,
-            {
-              COLUMNS: this.terminalCols.toString(),
-              LINES: this.terminalRows.toString(),
-              TERM: 'xterm-256color',
-              PS1: '',
-              PROMPT_COMMAND: '',
-            },
-          )
+        ? new TrackedShell(ptySetup.command, ptySetup.args, this.dataEvents, this.shellStreamingService, {
+            COLUMNS: this.terminalCols.toString(),
+            LINES: this.terminalRows.toString(),
+            TERM: 'xterm-256color',
+            PS1: '',
+            PROMPT_COMMAND: '',
+          })
         : null,
       needsEscalated
         ? new TrackedShell(
             'pkexec',
-            [ptyWrapper, '-q', '-e', '/dev/null', '-c', shellCommand],
+            [ptySetup.command, ...ptySetup.args],
             this.dataEvents,
             this.shellStreamingService,
             {

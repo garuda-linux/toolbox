@@ -69,18 +69,16 @@ export async function initApp(initConfig: AppInitConfig) {
   process.env.ELECTRON_NO_ATTACH_CONSOLE = '1';
 
   try {
-    // First priority: Show window immediately with minimal setup
+    await registerBackgroundIPCHandlers(app, logger);
+
     const moduleRunner: ModuleRunner = createModuleRunner()
-      // Core modules for window creation
       .init(disallowMultipleAppInstance())
       .init(createEnhancedSecurityModule(isDevelopment))
       .init(createAppIconModule())
 
-      // Security modules
       .init(allowInternalOrigins(new Set(initConfig.renderer instanceof URL ? [initConfig.renderer.origin] : [])))
       .init(allowExternalUrls(new Set(initConfig.renderer instanceof URL ? ['garudalinux.org'] : [])))
 
-      // Window manager — show window ASAP
       .init(
         createWindowManagerModule({
           initConfig,
@@ -90,9 +88,6 @@ export async function initApp(initConfig: AppInitConfig) {
       );
 
     await moduleRunner;
-
-    // Register other IPC handlers in background after window is shown
-    await registerBackgroundIPCHandlers(app, logger);
   } catch (error) {
     logger.error(`Failed to initialize app: ${error instanceof Error ? error.message : String(error)}`);
     throw error;
@@ -101,7 +96,6 @@ export async function initApp(initConfig: AppInitConfig) {
 
 async function registerBackgroundIPCHandlers(app: Electron.App, logger: Logger) {
   try {
-    // Create all IPC modules
     const loggingModule = createLoggingModule();
     const configModule = createConfigModule();
     const osModule = createOSModule();
@@ -115,10 +109,8 @@ async function registerBackgroundIPCHandlers(app: Electron.App, logger: Logger) 
     const homeConfigModule = createHomeConfigModule();
     const shellModule = createShellModule();
 
-    // Create module context
     const moduleContext = { app };
 
-    // Enable IPC modules
     loggingModule.enable(moduleContext);
     configModule.enable(moduleContext);
     osModule.enable(moduleContext);
