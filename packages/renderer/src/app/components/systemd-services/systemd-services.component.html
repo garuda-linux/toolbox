@@ -38,6 +38,15 @@
           (click)="toggleDisabled()"
         />
         <p-button
+          class="mr-2.5"
+          [icon]="hideDead() ? 'pi pi-eye' : 'pi pi-eye-slash'"
+          [label]="hideDead() ? t('systemdServices.showAll') : t('systemdServices.hideDead')"
+          [pTooltip]="t('systemdServices.hideDeadTip')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          [outlined]="true"
+          (click)="toggleHideDead()"
+        />
+        <p-button
           [label]="t('systemdServices.clear')"
           [outlined]="true"
           (click)="clear(serviceTable)"
@@ -89,7 +98,10 @@
     <ng-template #body let-service>
       <tr>
         <td>
-          <p [pTooltip]="service.tooltip ? service.tooltip : undefined">
+          <p
+            [pTooltip]="service.tooltip ? service.tooltip : undefined"
+            [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          >
             {{ service.unit }}
           </p>
         </td>

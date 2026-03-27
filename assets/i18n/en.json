@@ -313,7 +313,10 @@
     "systemContext": "Show system services",
     "userContext": "Show user services",
     "includeDisabled": "Include disabled",
-    "excludeDisabled": "Exclude disabled"
+    "excludeDisabled": "Exclude disabled",
+    "hideDead": "Hide dead",
+    "showAll": "Show all",
+    "hideDeadTip": "Toggle to show/hide services in 'dead', 'failed', or 'exited' state"
   },
   "systemTools": {
     "title": "System ",

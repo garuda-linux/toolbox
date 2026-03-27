@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, type OnInit, signal } from '@angular/core';
 import { Button } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -25,9 +25,17 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 export class SystemdServicesComponent implements OnInit {
   activeService = signal<SystemdService | null>(null);
   includeDisabled = signal<boolean>(false);
+  hideDead = signal<boolean>(true);
   loading = signal<boolean>(true);
   serviceSearch = signal<string>('');
   systemdServices = signal<SystemdService[]>([]);
+
+  filteredServices = computed(() => {
+    if (!this.hideDead()) {
+      return this.systemdServices();
+    }
+    return this.systemdServices().filter((s) => s.sub !== 'dead' && s.sub !== 'failed' && s.sub !== 'exited');
+  });
 
   intervalRef: ReturnType<typeof setInterval> | undefined = undefined;
 
@@ -225,5 +233,9 @@ export class SystemdServicesComponent implements OnInit {
     this.systemdServices.set(await this.getServices());
 
     this.loading.set(false);
+  }
+
+  toggleHideDead(): void {
+    this.hideDead.set(!this.hideDead());
   }
 }
