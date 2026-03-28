@@ -1,3 +1,18 @@
 .p-menubar-submenu-icon {
   color: unset !important;
 }
+
+.background-filter {
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.background {
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}

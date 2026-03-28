@@ -13,6 +13,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/setup-wizard/setup-wizard.component').then((m) => m.SetupWizardComponent),
   },
   {
+    title: 'Setup Wizard Success',
+    path: 'setup-wizard-success',
+    loadComponent: () =>
+      import('./components/setup-wizard-success/setup-wizard-success.component').then(
+        (m) => m.SetupWizardSuccessComponent,
+      ),
+  },
+  {
     title: 'Maintenance',
     path: 'maintenance',
     loadComponent: () => import('./components/maintenance/maintenance.component').then((m) => m.MaintenanceComponent),
@@ -41,6 +49,11 @@ export const routes: Routes = [
     title: 'Settings',
     path: 'settings',
     loadComponent: () => import('./components/settings/settings.component').then((m) => m.SettingsComponent),
+  },
+  {
+    title: 'Config Files',
+    path: 'config-files',
+    loadComponent: () => import('./components/config-files/config-files.component').then((m) => m.ConfigFilesComponent),
   },
 ];
 
