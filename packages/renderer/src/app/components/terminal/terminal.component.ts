@@ -7,9 +7,9 @@ import {
   ElementRef,
   HostListener,
   inject,
+  model,
   type OnDestroy,
   type OnInit,
-  signal,
   type Signal,
   viewChild,
 } from '@angular/core';
@@ -42,7 +42,7 @@ import { FitAddon } from '@xterm/addon-fit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
-  public visible = signal<boolean>(false);
+  public visible = model<boolean>(false);
   private subscriptions: Subscription[] = [];
 
   readonly dialog = viewChild<Dialog>('dialog');

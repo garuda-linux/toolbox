@@ -96,7 +96,8 @@ export const execute =
   >('execute');
 
 // Filesystem operations
-export const exists = createAsyncDeferredFunction<(filePath: string) => Promise<boolean>>('exists');
+export const exists =
+  createAsyncDeferredFunction<(filePath: string, handleAccessDeniedAsExists?: boolean) => Promise<boolean>>('exists');
 export const readTextFile = createAsyncDeferredFunction<(filePath: string) => Promise<string>>('readTextFile');
 export const writeTextFile =
   createAsyncDeferredFunction<(filePath: string, contents: string) => Promise<boolean>>('writeTextFile');

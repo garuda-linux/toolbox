@@ -6,7 +6,6 @@
 
     <p-card class="mt-4 text-left">
       <p-stepper [value]="1">
-        <!-- Software Category Steps -->
         @for (category of softwareCategories; track category.id; let i = $index) {
           <p-step-item [value]="getCategoryStepValue(i)">
             <p-step>{{ t(category.name) }}</p-step>
@@ -91,12 +90,6 @@
                     severity="success"
                   />
                 </div>
-
-                @if (hasApplied() && !taskManagerService.running() && taskManagerService.count() === 0) {
-                  <div class="mt-8">
-                    <div class="text-2xl font-bold text-green-500 mb-4">Setup completed successfully!</div>
-                  </div>
-                }
               </div>
             </ng-template>
           </p-step-panel>

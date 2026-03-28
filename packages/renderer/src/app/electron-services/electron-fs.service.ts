@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Logger } from '../logging/logging';
-import { exists, readTextFile, writeTextFile, createDirectory, removeFile } from './electron-api-utils.js';
+import { createDirectory, exists, readTextFile, removeFile, writeTextFile } from './electron-api-utils.js';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +8,8 @@ import { exists, readTextFile, writeTextFile, createDirectory, removeFile } from
 export class ElectronFsService {
   private readonly logger = Logger.getInstance();
 
-  async exists(filePath: string): Promise<boolean> {
-    return await exists(filePath);
+  async exists(filePath: string, handleAccessDeniedAsExists?: boolean): Promise<boolean> {
+    return await exists(filePath, handleAccessDeniedAsExists);
   }
 
   async readTextFile(filePath: string): Promise<string> {

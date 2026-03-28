@@ -1,0 +1,53 @@
+<ng-container *transloco="let t">
+  <div
+    class="surface-section px-4 py-8 text-center md:px-6 lg:px-8 flex flex-col items-center justify-center min-h-[80vh]"
+  >
+    <p-card class="max-w-2xl w-full">
+      <div class="flex flex-col items-center justify-center py-6">
+        <div class="mb-8 flex justify-center">
+          <img class="w-32 h-32 object-contain" src="/assets/garuda-purple.svg" alt="Garuda Toolbox" />
+        </div>
+
+        <div class="mb-5 text-4xl font-bold" style="color: var(--p-green-500)">
+          {{ t('setupWizard.success.title') }}
+        </div>
+
+        <div class="mb-4 text-xl text-color">
+          {{ t('setupWizard.success.body') }}
+        </div>
+
+        <div class="mb-10 text-xl text-color">
+          <b>{{ t('setupWizard.success.reboot') }}</b>
+        </div>
+
+        <div class="flex gap-4 justify-center mb-10 flex-wrap">
+          <p-button
+            [label]="t('setupWizard.success.forum')"
+            [outlined]="true"
+            (onClick)="shellService.open('https://forum.garudalinux.org')"
+            icon="pi pi-external-link"
+            severity="help"
+          />
+          <p-button
+            [label]="t('setupWizard.success.garudaWiki')"
+            [outlined]="true"
+            (onClick)="shellService.open('https://wiki.garudalinux.org')"
+            icon="pi pi-external-link"
+            severity="help"
+          />
+          <p-button
+            [label]="t('setupWizard.success.archWiki')"
+            [outlined]="true"
+            (onClick)="shellService.open('https://wiki.archlinux.org')"
+            icon="pi pi-external-link"
+            severity="help"
+          />
+        </div>
+
+        <div class="flex justify-center">
+          <p-button [label]="t('setupWizard.success.finish')" (onClick)="finish()" icon="pi pi-check" size="large" />
+        </div>
+      </div>
+    </p-card>
+  </div>
+</ng-container>

@@ -1,4 +1,4 @@
-import { access, readFile, writeFile, stat, mkdir, unlink } from 'node:fs/promises';
+import { access, mkdir, readFile, stat, unlink, writeFile } from 'node:fs/promises';
 import { join, normalize } from 'node:path';
 import { F_OK } from 'node:constants';
 import { error } from './logging.js';
@@ -30,15 +30,15 @@ function validateFilePath(filePath: string): boolean {
   );
 }
 
-export async function exists(filePath: string): Promise<boolean> {
+export async function exists(filePath: string, handleAccessDeniedAsExists = false): Promise<boolean> {
   try {
     if (!validateFilePath(filePath)) {
       throw new Error('Invalid file path');
     }
     await access(filePath);
     return true;
-  } catch {
-    return false;
+  } catch (err: any) {
+    return !!(err && err.code === 'EACCES' && handleAccessDeniedAsExists);
   }
 }
 

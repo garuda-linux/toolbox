@@ -30,6 +30,7 @@
     "diagnostics": "Diagnostics",
     "network": "Network tools",
     "settings": "App settings",
+    "configFiles": "Config files",
     "apply": "Apply pending operations",
     "pending": "Pending operations",
     "clearTasks": "Clear tasks",
@@ -845,6 +846,15 @@
   },
   "setupWizard": {
     "title": "Setup Assistant",
+    "success": {
+      "title": "Success!",
+      "body": "Your system is set up and ready to go!",
+      "reboot": "A reboot is recommended.",
+      "forum": "Garuda Forum",
+      "garudaWiki": "Garuda Linux Wiki",
+      "archWiki": "Arch Linux Wiki",
+      "finish": "Finish setup"
+    },
     "steps": {
       "apply": "Apply Changes"
     },
@@ -1060,5 +1070,52 @@
       "video": "Video",
       "virtualization": "Virtualization"
     }
+  },
+  "configFiles": {
+    "title": "Config",
+    "titleTwo": "Files",
+    "search": "Search configuration files...",
+    "name": "Name",
+    "path": "Path",
+    "description": "Description",
+    "actions": "Actions",
+    "edit": "Edit",
+    "desc": {
+      "pacmanConf": "Main configuration file for the pacman package manager",
+      "makepkgConf": "Configuration options for makepkg",
+      "fstab": "Static information about the filesystems",
+      "environment": "System-wide environment variables",
+      "grub": "Configuration file for the GRUB bootloader",
+      "vconsole": "Configuration of the virtual console",
+      "locale": "System-wide locale configuration",
+      "hostname": "System's host name",
+      "hosts": "Static table lookup for hostnames",
+      "bashrc": "Bash configuration file for the current user",
+      "fish": "Fish shell configuration file",
+      "zsh": "Zsh configuration file for the current user",
+      "starship": "Starship cross-shell prompt configuration",
+      "mkinitcpio": "Configuration for creating an initial ramdisk environment",
+      "logind": "Configuration for the systemd login manager",
+      "journald": "Configuration for the systemd journal service",
+      "networkmanager": "Global configuration for NetworkManager",
+      "resolv": "DNS resolver configuration file",
+      "sshd": "OpenSSH server daemon configuration file",
+      "ssh_user": "User specific SSH client configuration",
+      "profile": "User specific environment and startup programs",
+      "userdirs": "XDG user directories configuration",
+      "gitconfig": "User specific git configuration",
+      "hyprland": "Hyprland Wayland compositor configuration",
+      "sway": "Sway Wayland compositor configuration",
+      "sddm": "Simple Desktop Display Manager configuration",
+      "mirrorlist": "Standard Arch Linux repository mirrors",
+      "chaoticMirrorlist": "Garuda's custom Chaotic-AUR repository mirrors",
+      "wayfire": "3D Wayland compositor configuration",
+      "qtile": "Python-based window manager configuration",
+      "i3": "Classic X11 tiling window manager configuration",
+      "alacritty": "GPU-accelerated terminal emulator configuration",
+      "kitty": "Feature-rich, GPU-accelerated terminal emulator configuration",
+      "fastfetch": "System information fetch tool configuration"
+    },
+    "wiki": "Wiki"
   }
 }

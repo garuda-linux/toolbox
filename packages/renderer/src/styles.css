@@ -89,6 +89,11 @@ p-button {
   @apply w-full md:w-auto;
 }
 
+.p-tab {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .p-menubar-submenu-icon {
   color: unset !important;
 }
