@@ -10,10 +10,9 @@
       <p-tablist>
         <p-tab [value]="0" (click)="navigate('components')">{{ t('systemTools.components') }}</p-tab>
         <p-tab [value]="1" (click)="navigate('settings')">{{ t('systemTools.systemSettings') }}</p-tab>
-        <p-tab [value]="2" (click)="navigate('packages')">{{ t('systemTools.packages') }}</p-tab>
-        <p-tab [value]="3" (click)="navigate('kernels')">{{ t('systemTools.kernels') }}</p-tab>
-        <p-tab [value]="4" (click)="navigate('locales')">{{ t('systemTools.locales') }}</p-tab>
-        <p-tab [value]="5" (click)="navigate('services')">{{ t('systemTools.systemdServices') }}</p-tab>
+        <p-tab [value]="2" (click)="navigate('kernels')">{{ t('systemTools.kernels') }}</p-tab>
+        <p-tab [value]="3" (click)="navigate('locales')">{{ t('systemTools.locales') }}</p-tab>
+        <p-tab [value]="4" (click)="navigate('services')">{{ t('systemTools.systemdServices') }}</p-tab>
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel [value]="0">
@@ -28,16 +27,11 @@
         </p-tabpanel>
         <p-tabpanel [value]="2">
           @if (tabIndex() === 2) {
-            <toolbox-packages />
+            <toolbox-kernels />
           }
         </p-tabpanel>
         <p-tabpanel [value]="3">
           @if (tabIndex() === 3) {
-            <toolbox-kernels />
-          }
-        </p-tabpanel>
-        <p-tabpanel [value]="4">
-          @if (tabIndex() === 4) {
             <div class="mb-10">
               <toolbox-locales />
             </div>
@@ -46,8 +40,8 @@
             </div>
           }
         </p-tabpanel>
-        <p-tabpanel [value]="5">
-          @if (tabIndex() === 5) {
+        <p-tabpanel [value]="4">
+          @if (tabIndex() === 4) {
             <toolbox-systemd-services />
           }
         </p-tabpanel>

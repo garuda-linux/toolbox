@@ -5,7 +5,6 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { SystemSettingsComponent } from '../system-settings/system-settings.component';
 import { SystemComponentsComponent } from '../system-components/system-components.component';
-import { PackagesComponent } from '../packages/packages.component';
 import { KernelsComponent } from '../kernels/kernels.component';
 import { LanguagePacksComponent } from '../language-packs/language-packs.component';
 import { LocalesComponent } from '../locales/locales.component';
@@ -24,7 +23,6 @@ import { Router, type UrlTree } from '@angular/router';
     TranslocoDirective,
     SystemSettingsComponent,
     SystemComponentsComponent,
-    PackagesComponent,
     KernelsComponent,
     LanguagePacksComponent,
     LocalesComponent,
@@ -59,17 +57,14 @@ export class SystemToolsComponent implements OnInit {
       case 'settings':
         this.tabIndex.set(1);
         break;
-      case 'packages':
+      case 'kernels':
         this.tabIndex.set(2);
         break;
-      case 'kernels':
+      case 'locales':
         this.tabIndex.set(3);
         break;
-      case 'locales':
-        this.tabIndex.set(4);
-        break;
       case 'services':
-        this.tabIndex.set(5);
+        this.tabIndex.set(4);
         break;
       default:
         this.tabIndex.set(0);

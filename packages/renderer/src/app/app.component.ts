@@ -156,6 +156,13 @@ export class AppComponent implements OnInit {
       command: () => this.router.navigate(['/gaming']),
     },
     {
+      id: 'packages',
+      icon: 'pi pi-box',
+      label: 'Discover applications',
+      translocoKey: 'menu.packages',
+      command: () => this.router.navigate(['/packages']),
+    },
+    {
       id: 'boot-tools',
       icon: 'pi pi-hammer',
       label: 'Boot options/repair',

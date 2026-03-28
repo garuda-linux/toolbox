@@ -13,6 +13,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/maintenance/maintenance.component').then((m) => m.MaintenanceComponent),
   },
   {
+    title: 'Discover applications',
+    path: 'packages',
+    loadComponent: () => import('./components/packages/packages.component').then((m) => m.PackagesComponent),
+  },
+  {
     title: 'System tools',
     path: 'system-tools',
     loadComponent: () => import('./components/system-tools/system-tools.component').then((m) => m.SystemToolsComponent),
