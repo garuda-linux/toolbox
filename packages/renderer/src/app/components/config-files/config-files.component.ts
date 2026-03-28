@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { ConfigService } from '../config/config.service';
 import { Button } from 'primeng/button';
@@ -8,8 +8,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { ElectronFsService } from '../../electron-services/electron-fs.service';
-import { ElectronShellService } from '../../electron-services/electron-shell.service';
+import { ElectronFsService, ElectronShellService } from '../../electron-services';
 
 interface ConfigFile {
   name: string;
@@ -17,6 +16,7 @@ interface ConfigFile {
   description: string;
   category: string;
   wikiLink?: string;
+  alwaysShow?: boolean;
 }
 
 @Component({
@@ -28,7 +28,6 @@ interface ConfigFile {
 export class ConfigFilesComponent implements OnInit {
   private readonly taskManager = inject(TaskManagerService);
   private readonly configService = inject(ConfigService);
-  private readonly translocoService = inject(TranslocoService);
   private readonly electronFs = inject(ElectronFsService);
   protected readonly shellService = inject(ElectronShellService);
 
@@ -36,77 +35,77 @@ export class ConfigFilesComponent implements OnInit {
 
   private readonly ALL_CONFIG_FILES: ConfigFile[] = [
     {
-      name: 'pacman.conf',
+      name: 'Pacman Config',
       path: '/etc/pacman.conf',
       description: 'configFiles.desc.pacmanConf',
       category: 'Package Management',
       wikiLink: 'https://wiki.archlinux.org/title/Pacman',
     },
     {
-      name: 'makepkg.conf',
+      name: 'Makepkg Config',
       path: '/etc/makepkg.conf',
       description: 'configFiles.desc.makepkgConf',
       category: 'Package Management',
       wikiLink: 'https://wiki.archlinux.org/title/Makepkg',
     },
     {
-      name: 'mirrorlist',
+      name: 'Mirrorlist',
       path: '/etc/pacman.d/mirrorlist',
       description: 'configFiles.desc.mirrorlist',
       category: 'Package Management',
       wikiLink: 'https://wiki.archlinux.org/title/Mirrors',
     },
     {
-      name: 'chaotic-mirrorlist',
+      name: 'Chaotic Mirrorlist',
       path: '/etc/pacman.d/chaotic-mirrorlist',
       description: 'configFiles.desc.chaoticMirrorlist',
       category: 'Package Management',
       wikiLink: 'https://wiki.archlinux.org/title/Unofficial_user_repositories#chaotic-aur',
     },
     {
-      name: 'fstab',
+      name: 'Fstab',
       path: '/etc/fstab',
       description: 'configFiles.desc.fstab',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Fstab',
     },
     {
-      name: 'environment',
+      name: 'Environment',
       path: '/etc/environment',
       description: 'configFiles.desc.environment',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Environment_variables',
     },
     {
-      name: 'grub',
+      name: 'GRUB Default',
       path: '/etc/default/grub',
       description: 'configFiles.desc.grub',
       category: 'Bootloader',
       wikiLink: 'https://wiki.archlinux.org/title/GRUB',
     },
     {
-      name: 'vconsole.conf',
+      name: 'VConsole Config',
       path: '/etc/vconsole.conf',
       description: 'configFiles.desc.vconsole',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Linux_console',
     },
     {
-      name: 'locale.conf',
+      name: 'Locale Config',
       path: '/etc/locale.conf',
       description: 'configFiles.desc.locale',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Locale',
     },
     {
-      name: 'hostname',
+      name: 'Hostname',
       path: '/etc/hostname',
       description: 'configFiles.desc.hostname',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Network_configuration#Set_the_hostname',
     },
     {
-      name: 'hosts',
+      name: 'Hosts',
       path: '/etc/hosts',
       description: 'configFiles.desc.hosts',
       category: 'System',
@@ -163,42 +162,42 @@ export class ConfigFilesComponent implements OnInit {
     },
 
     {
-      name: 'mkinitcpio.conf',
+      name: 'Mkinitcpio Config',
       path: '/etc/mkinitcpio.conf',
       description: 'configFiles.desc.mkinitcpio',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Mkinitcpio',
     },
     {
-      name: 'logind.conf',
+      name: 'Logind Config',
       path: '/etc/systemd/logind.conf',
       description: 'configFiles.desc.logind',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Power_management#ACPI_events',
     },
     {
-      name: 'journald.conf',
+      name: 'Journald Config',
       path: '/etc/systemd/journald.conf',
       description: 'configFiles.desc.journald',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Systemd/Journal',
     },
     {
-      name: 'NetworkManager.conf',
+      name: 'NetworkManager Config',
       path: '/etc/NetworkManager/NetworkManager.conf',
       description: 'configFiles.desc.networkmanager',
       category: 'Network',
       wikiLink: 'https://wiki.archlinux.org/title/NetworkManager',
     },
     {
-      name: 'resolv.conf',
+      name: 'Resolv Config',
       path: '/etc/resolv.conf',
       description: 'configFiles.desc.resolv',
       category: 'Network',
       wikiLink: 'https://wiki.archlinux.org/title/Domain_name_resolution',
     },
     {
-      name: 'sshd_config',
+      name: 'SSHD Config',
       path: '/etc/ssh/sshd_config',
       description: 'configFiles.desc.sshd',
       category: 'Network',
@@ -268,11 +267,214 @@ export class ConfigFilesComponent implements OnInit {
       wikiLink: 'https://wiki.archlinux.org/title/I3',
     },
     {
-      name: 'SDDM',
+      name: 'SDDM Config',
       path: '/etc/sddm.conf',
       description: 'configFiles.desc.sddm',
       category: 'Display & Window Managers',
       wikiLink: 'https://wiki.archlinux.org/title/SDDM',
+    },
+    {
+      name: 'OS Release',
+      path: '/etc/os-release',
+      description: 'configFiles.desc.os_release',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Os-release',
+    },
+    {
+      name: '20-gpu.conf',
+      path: '/etc/X11/xorg.conf.d/20-gpu.conf',
+      description: 'configFiles.desc.xorg_gpu',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/Xorg#Configuration',
+    },
+    {
+      name: 'Nvidia Config',
+      path: '/etc/modprobe.d/nvidia.conf',
+      description: 'configFiles.desc.nvidia_conf',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/NVIDIA',
+    },
+    {
+      name: 'AMDGPU Config',
+      path: '/etc/modprobe.d/amdgpu.conf',
+      description: 'configFiles.desc.amdgpu_conf',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/AMDGPU',
+    },
+    {
+      name: 'Blacklist Nouveau',
+      path: '/etc/modprobe.d/blacklist-nouveau.conf',
+      description: 'configFiles.desc.blacklist_nouveau',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/Nouveau',
+    },
+    {
+      name: 'Monitor Layout',
+      path: '/etc/X11/xorg.conf.d/10-monitor.conf',
+      description: 'configFiles.desc.xorg_monitor',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/Multihead',
+    },
+    {
+      name: 'System ALSA',
+      path: '/etc/asound.conf',
+      description: 'configFiles.desc.asound_conf',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture',
+    },
+    {
+      name: 'User ALSA',
+      path: '~/.asoundrc',
+      description: 'configFiles.desc.asoundrc',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture',
+    },
+    {
+      name: 'PipeWire Config',
+      path: '~/.config/pipewire/pipewire.conf',
+      description: 'configFiles.desc.pipewire_conf',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/PipeWire',
+    },
+    {
+      name: 'client.conf (PipeWire)',
+      path: '~/.config/pipewire/client.conf',
+      description: 'configFiles.desc.pipewire_client',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/PipeWire',
+    },
+    {
+      name: 'WirePlumber',
+      path: '~/.config/wireplumber',
+      description: 'configFiles.desc.wireplumber',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/WirePlumber',
+    },
+    {
+      name: 'daemon.conf (Pulse)',
+      path: '~/.config/pulse/daemon.conf',
+      description: 'configFiles.desc.pulse_daemon',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/PulseAudio',
+    },
+    {
+      name: 'default.pa (Pulse)',
+      path: '~/.config/pulse/default.pa',
+      description: 'configFiles.desc.pulse_default',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/PulseAudio',
+    },
+    {
+      name: 'main.conf (Bluetooth)',
+      path: '/etc/bluetooth/main.conf',
+      description: 'configFiles.desc.bluetooth_main',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/Bluetooth',
+    },
+    {
+      name: 'ALSA Base',
+      path: '/etc/modprobe.d/alsa-base.conf',
+      description: 'configFiles.desc.alsa_base',
+      category: 'Audio',
+      wikiLink: 'https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture',
+    },
+    {
+      name: 'GRUB Config',
+      path: '/boot/grub/grub.cfg',
+      description: 'configFiles.desc.grub_cfg',
+      category: 'Bootloader',
+      wikiLink: 'https://wiki.archlinux.org/title/GRUB',
+    },
+    {
+      name: 'Passwd',
+      path: '/etc/passwd',
+      description: 'configFiles.desc.passwd',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Users_and_groups',
+    },
+    {
+      name: 'Shadow',
+      path: '/etc/shadow',
+      description: 'configFiles.desc.shadow',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Users_and_groups',
+    },
+    {
+      name: 'Group',
+      path: '/etc/group',
+      description: 'configFiles.desc.group',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Users_and_groups',
+    },
+    {
+      name: 'Sudoers',
+      path: '/etc/sudoers',
+      description: 'configFiles.desc.sudoers',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Sudo',
+    },
+    {
+      name: 'Locale Gen',
+      path: '/etc/locale.gen',
+      description: 'configFiles.desc.locale_gen',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Locale',
+    },
+    {
+      name: 'Timezone',
+      path: '/etc/timezone',
+      description: 'configFiles.desc.timezone',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/System_time',
+    },
+    {
+      name: 'Adjtime',
+      path: '/etc/adjtime',
+      description: 'configFiles.desc.adjtime',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/System_time',
+    },
+    {
+      name: 'Rsyslog Config',
+      path: '/etc/rsyslog.conf',
+      description: 'configFiles.desc.rsyslog',
+      category: 'Logging',
+      wikiLink: 'https://wiki.archlinux.org/title/Systemd/Journal',
+    },
+    {
+      name: 'Xorg Config',
+      path: '/etc/X11/xorg.conf',
+      description: 'configFiles.desc.xorg_conf',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/Xorg#Configuration',
+    },
+    {
+      name: 'Bash System Config',
+      path: '/etc/bash.bashrc',
+      description: 'configFiles.desc.bash_bashrc',
+      category: 'User Environment',
+      wikiLink: 'https://wiki.archlinux.org/title/Bash',
+    },
+    {
+      name: 'Hosts Allow',
+      path: '/etc/hosts.allow',
+      description: 'configFiles.desc.hosts_allow',
+      category: 'Network',
+      wikiLink: 'https://wiki.archlinux.org/title/Tcpwrappers',
+    },
+    {
+      name: 'Hosts Deny',
+      path: '/etc/hosts.deny',
+      description: 'configFiles.desc.hosts_deny',
+      category: 'Network',
+      wikiLink: 'https://wiki.archlinux.org/title/Tcpwrappers',
+    },
+    {
+      name: 'Sysctl Config',
+      path: '/etc/sysctl.conf',
+      description: 'configFiles.desc.sysctl',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Sysctl',
     },
   ];
 
@@ -286,7 +488,7 @@ export class ConfigFilesComponent implements OnInit {
         fullPath = fullPath.replace('~', userHome);
       }
 
-      if (await this.electronFs.exists(fullPath, true)) {
+      if (file.alwaysShow || (await this.electronFs.exists(fullPath, true))) {
         availableFiles.push(file);
       }
     }
@@ -303,9 +505,7 @@ export class ConfigFilesComponent implements OnInit {
     }
 
     const needsRoot = !fullPath.startsWith(userHome);
-
     if (needsRoot) {
-      // For root, we ALWAYS use micro with a terminal
       const cmd = `pkexec micro "${fullPath}"`;
       await this.taskManager.executeAndWaitBashTerminal(cmd);
       return;
@@ -314,8 +514,6 @@ export class ConfigFilesComponent implements OnInit {
     let editor = 'micro';
     let isVisual = false;
 
-    // Get VISUAL or EDITOR environment variable from the user's interactive shell
-    // This allows us to read overrides from ~/.bashrc, ~/.zshrc, config.fish
     const envScript = `
       USER_SHELL=$(getent passwd "$USER" | cut -d: -f7)
       if [ -x "$USER_SHELL" ]; then
@@ -338,20 +536,18 @@ export class ConfigFilesComponent implements OnInit {
       }
 
       if (envVars.has('VISUAL') && envVars.get('VISUAL')) {
-        editor = envVars.get('VISUAL')!;
+        editor = envVars.get('VISUAL') as string;
         isVisual = true;
       } else if (envVars.has('EDITOR') && envVars.get('EDITOR')) {
-        editor = envVars.get('EDITOR')!;
+        editor = envVars.get('EDITOR') as string;
       }
     }
 
     const cmd = `${editor} "${fullPath}"`;
 
     if (isVisual) {
-      // VISUAL is set, execute the GUI editor directly (no terminal wrapper)
       await this.taskManager.executeAndWaitBash(cmd);
     } else {
-      // Use the terminal for CLI editors (micro, nano, vim, etc.)
       await this.taskManager.executeAndWaitBashTerminal(cmd);
     }
   }
