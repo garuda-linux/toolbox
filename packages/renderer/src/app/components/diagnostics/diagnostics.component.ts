@@ -103,7 +103,9 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
    * @param fragment The fragment to navigate to.
    */
   navigate(fragment: string) {
-    void this.router.navigate([], { fragment });
+    this.router.navigate([], { fragment, info: { disableViewTransition: true } }).catch(() => {
+      // ignore
+    });
   }
 
   ngAfterViewInit(): void {

@@ -1,12 +1,12 @@
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import {
   type ApplicationConfig,
+  inject,
   isDevMode,
   LOCALE_ID,
   provideAppInitializer,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideGarudaNG } from '@garudalinux/core';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
@@ -27,7 +27,7 @@ import { LocalesService } from './components/locales/locales.service';
 import { GamingService } from './components/gaming/gaming.service';
 import { LoadingService } from './components/loading-indicator/loading-indicator.service';
 import { SplashService } from './components/splash/splash.service';
-import { provideRouter, withHashLocation } from '@angular/router';
+import { provideRouter, Router, withHashLocation, withViewTransitions } from '@angular/router';
 import { routes } from './routes';
 import { CatppuccinAura } from '@garudalinux/themes/catppuccin';
 
@@ -48,7 +48,6 @@ export const appConfig: ApplicationConfig = {
     SystemStatusService,
     TaskManagerService,
     ThemeService,
-    provideAnimationsAsync(),
     provideAppInitializer(initToolbox),
     provideGarudaNG(
       { font: 'InterVariable' },
@@ -64,7 +63,39 @@ export const appConfig: ApplicationConfig = {
       },
     ),
     provideHttpClient(withFetch()),
-    provideRouter(routes, withHashLocation()),
+    provideRouter(
+      routes,
+      withHashLocation(),
+      withViewTransitions({
+        skipInitialTransition: true,
+        onViewTransitionCreated: ({ transition }) => {
+          const router = inject(Router);
+          try {
+            const nav = router.currentNavigation();
+            const info = nav?.extras?.info as any;
+
+            if (info?.disableViewTransition) {
+              const style = document.createElement('style');
+              style.id = 'skip-transition';
+              style.textContent = '* { view-transition-name: none !important; }';
+              document.head.appendChild(style);
+
+              transition.finished.finally(() => {
+                const el = document.getElementById('skip-transition');
+                if (el) el.remove();
+                document.body.classList.remove('is-transitioning');
+              });
+            } else {
+              transition.finished.finally(() => {
+                document.body.classList.remove('is-transitioning');
+              });
+            }
+          } catch {
+            // Ignore parse errors, let transition proceed
+          }
+        },
+      }),
+    ),
     provideTransloco({
       config: {
         availableLangs: [

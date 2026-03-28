@@ -57,7 +57,7 @@ export class GamingComponent implements OnInit {
   ngOnInit(): void {
     const url: UrlTree = this.router.parseUrl(this.router.url);
     if (!url.fragment) {
-      void this.router.navigate([], { fragment: 'launchers' });
+      this.tabIndex.set(0);
       return;
     }
 
@@ -93,7 +93,7 @@ export class GamingComponent implements OnInit {
    * @param fragment The fragment to navigate to.
    */
   navigate(fragment: string) {
-    void this.router.navigate([], { fragment });
+    void this.router.navigate([], { fragment, info: { disableViewTransition: true } }));
   }
   /**
    * Get the source path for an icon.

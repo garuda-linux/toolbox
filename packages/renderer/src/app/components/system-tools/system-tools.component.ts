@@ -76,6 +76,6 @@ export class SystemToolsComponent implements OnInit {
    * @param fragment The fragment to navigate to.
    */
   navigate(fragment: string) {
-    void this.router.navigate([], { fragment });
+    void this.router.navigate([], { fragment, info: { disableViewTransition: true } })
   }
 }

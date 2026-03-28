@@ -378,16 +378,15 @@ export class MaintenanceComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.logger.debug('Initializing maintenance');
-    await this.checkExistingConfigs();
-
     this.checkRoute();
+
+    await this.checkExistingConfigs();
   }
 
   /**
    * Check for existing configuration files for whether they exist.
    */
   async checkExistingConfigs() {
-    this.loadingService.loadingOn();
     const promises: Promise<ResettableConfig>[] = [];
     this.logger.debug('Checking existing configs');
 
@@ -412,7 +411,6 @@ export class MaintenanceComponent implements OnInit {
     }
     this.resettableConfigs.set(await Promise.all(promises));
 
-    this.loadingService.loadingOff();
     this.logger.debug(`Checked existing configs: ${JSON.stringify(this.resettableConfigs())}`);
   }
 
@@ -569,7 +567,7 @@ export class MaintenanceComponent implements OnInit {
     }
 
     if (!url.fragment) {
-      void this.router.navigate([], { fragment: 'common' });
+      this.tabIndex.set(0);
       return;
     }
 
@@ -593,7 +591,9 @@ export class MaintenanceComponent implements OnInit {
    * @param fragment The fragment to navigate to.
    */
   navigate(fragment: string) {
-    void this.router.navigate([], { fragment });
+    this.router.navigate([], { fragment, info: { disableViewTransition: true } }).catch(() => {
+      // Ignore AbortError from ViewTransitions skip
+    });
   }
 
   /**

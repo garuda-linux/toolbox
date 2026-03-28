@@ -10,7 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
 import { ScrollTop } from 'primeng/scrolltop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { eventsOn, windowClose, windowRequestClose } from './electron-services/electron-api-utils.js';
@@ -329,6 +329,14 @@ export class AppComponent implements OnInit {
   moduleSuggestions = signal<ModuleSearchEntry[]>([]);
 
   ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        document.body.classList.add('is-transitioning');
+      } else if (event instanceof NavigationCancel || event instanceof NavigationError) {
+        document.body.classList.remove('is-transitioning');
+      }
+    });
+
     void this.osService.argv().then((args: string[]) => {
       if (args.includes('--setup-assistant')) {
         this.logger.info('Redirecting to setup wizard on startup');
