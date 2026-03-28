@@ -658,6 +658,20 @@ export class OsInteractService {
   }
 
   /**
+   * Set a package state directly.
+   * @param pkg The package to toggle.
+   * @param state The new package state.
+   */
+  setPackage(pkg: string, state: boolean): void {
+    const arrow = (wanted: Map<string, boolean>) => {
+      const newMap = new Map<string, boolean>(wanted);
+      newMap.set(pkg, state);
+      return this.wantedPrune(newMap, this.installedPackages());
+    };
+    this.wantedPackages.update(arrow);
+  }
+
+  /**
    * Toggle a package.
    * @param pkg The package to toggle.
    * @param remove Whether to remove the package.

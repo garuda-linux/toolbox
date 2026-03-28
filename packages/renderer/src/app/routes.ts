@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/home/home.component').then((m) => m.HomeComponent),
   },
   {
+    title: 'Setup Wizard',
+    path: 'setup-wizard',
+    loadComponent: () => import('./components/setup-wizard/setup-wizard.component').then((m) => m.SetupWizardComponent),
+  },
+  {
     title: 'Maintenance',
     path: 'maintenance',
     loadComponent: () => import('./components/maintenance/maintenance.component').then((m) => m.MaintenanceComponent),

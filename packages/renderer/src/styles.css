@@ -197,3 +197,8 @@ p-splitbutton > div > button.garuda-button-shine {
 .non-blurred {
   @apply relative z-10;
 }
+
+/* Overrides */
+.p-tab {
+  @apply mx-auto;
+}

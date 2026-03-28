@@ -2,25 +2,25 @@ import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  ElementRef,
   HostListener,
   inject,
-  signal,
-  ElementRef,
   Renderer2,
-  computed,
+  signal,
   viewChild,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ScrollTop } from 'primeng/scrolltop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { windowClose, windowRequestClose, eventsOn } from './electron-services/electron-api-utils.js';
+import { eventsOn, windowClose, windowRequestClose } from './electron-services/electron-api-utils.js';
 import { DialogModule } from 'primeng/dialog';
 import { DrawerModule } from 'primeng/drawer';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
-import { ConfirmationService } from 'primeng/api';
 import type { MenuItem } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { globalKeyHandler } from './key-handler';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { LoadingService } from './components/loading-indicator/loading-indicator.service';
@@ -32,7 +32,7 @@ import { Logger } from './logging/logging';
 import { TaskManagerService } from './components/task-manager/task-manager.service';
 import { NotificationService } from './components/notification/notification.service';
 import { ThemeService } from './components/theme-service/theme-service';
-import { ElectronShellService, ElectronAppMenuService, type AppMenuItem } from './electron-services';
+import { type AppMenuItem, ElectronAppMenuService, ElectronShellService } from './electron-services';
 import { SplitButton } from 'primeng/splitbutton';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { MODULE_SEARCH, ModuleSearchEntry } from './constants/module-search';
@@ -321,17 +321,19 @@ export class AppComponent implements OnInit {
   moduleSuggestions = signal<ModuleSearchEntry[]>([]);
 
   ngOnInit(): void {
-    // Set up global error handling for JSON parsing and network errors
+    const settings = this.configService.settings();
+    if (!!settings.firstBoot) {
+      this.logger.info('Redirecting to setup wizard on startup');
+      void this.router.navigate(['/setup-wizard'], { replaceUrl: true });
+    }
+
     window.addEventListener('unhandledrejection', (event) => {
       this.logger.error(`Unhandled promise rejection: ${event.reason}`);
 
-      // Handle specific JSON parsing errors
       if (event.reason instanceof SyntaxError && event.reason.message.includes('JSON')) {
         this.logger.error(`JSON parsing error detected: ${event.reason.message}`);
         event.preventDefault();
       }
-
-      // Handle HTTP-related errors
       if (event.reason && typeof event.reason === 'string' && event.reason.includes('HTTP')) {
         this.logger.error(`HTTP error detected: ${event.reason}`);
         event.preventDefault();
@@ -356,10 +358,8 @@ export class AppComponent implements OnInit {
       }
     });
 
-    // Initialize Electron window event listeners
     this.attachElectronListeners();
 
-    // Initialize the application menu
     this.setupAppMenuHandlers();
     void this.updateApplicationMenu(this.menuItems());
 
