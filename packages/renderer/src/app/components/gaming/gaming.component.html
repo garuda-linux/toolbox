@@ -32,7 +32,6 @@
                 <div class="grid-nogutter grid grid-cols-12 gap-4 p-5">
                   @for (item of items; track item.name) {
                     <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-2">
-                      @defer (on viewport) {
                         @if (!item.disabled) {
                           <p-card
                             [style]="{
@@ -71,42 +70,6 @@
                             </div>
                           </p-card>
                         }
-                      } @placeholder {
-                        <p-card
-                          [style]="{
-                            cursor: 'pointer',
-                            background: item.selected ? 'var(--p-primary-bg)' : '',
-                          }"
-                          (click)="togglePackage(item)"
-                          (keyup.enter)="togglePackage(item)"
-                          tabindex="0"
-                        >
-                          <ng-template #title>
-                            <div class="text-bold min-h-10 text-center text-sm">
-                              {{ t('gaming.loading') }}
-                            </div>
-                          </ng-template>
-                          <div class="mt-5 min-h-16">
-                            @if (!configService.settings().darkMode) {
-                              <img
-                                class="mx-auto rounded-border"
-                                alt="Placeholder"
-                                height="50"
-                                ngSrc="/assets/gamer/generic-light.svg"
-                                width="50"
-                              />
-                            } @else {
-                              <img
-                                class="mx-auto rounded-border"
-                                alt="Placeholder"
-                                height="50"
-                                ngSrc="/assets/gamer/generic-dark.svg"
-                                width="50"
-                              />
-                            }
-                          </div>
-                        </p-card>
-                      }
                     </div>
                   }
                 </div>
