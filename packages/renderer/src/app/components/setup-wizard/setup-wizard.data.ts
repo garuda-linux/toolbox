@@ -395,6 +395,7 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         description: 'setupWizard.autoSoftware.cockpit',
         packages: ['cockpit', 'cockpit-machines'],
         selected: false,
+        rootCommands: ['systemctl enable --now cockpit.socket'],
       },
       {
         id: 'ansible',
@@ -409,6 +410,7 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         description: 'setupWizard.autoSoftware.docker',
         packages: ['docker', 'docker-compose'],
         selected: false,
+        rootCommands: ['systemctl enable --now docker.socket'],
       },
       {
         id: 'podman',
@@ -416,6 +418,8 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         description: 'setupWizard.autoSoftware.podman',
         packages: ['podman-docker', 'podman-compose', 'crun'],
         selected: false,
+        rootCommands: ['systemctl enable --now podman.socket'],
+        userCommands: ['systemctl --user enable --now podman.socket'],
       },
       {
         id: 'jenkins',
@@ -1308,6 +1312,7 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         description: 'setupWizard.autoSoftware.gnomeBoxes',
         packages: ['gnome-boxes'],
         selected: false,
+        rootCommands: ['systemctl enable --now libvirtd'],
       },
       {
         id: 'virtManager',
@@ -1316,6 +1321,7 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         packages: ['virt-manager-meta'],
         selected: false,
         icon: 'virt-manager',
+        rootCommands: ['systemctl enable --now libvirtd'],
       },
       {
         id: 'genymotion',

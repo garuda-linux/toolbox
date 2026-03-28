@@ -5,6 +5,8 @@ export interface SetupSoftwareItem {
   packages: string[];
   selected?: boolean;
   icon?: string;
+  rootCommands?: string[];
+  userCommands?: string[];
 }
 
 export interface SetupSoftwareCategory {
