@@ -21,7 +21,7 @@ export const gamingPackageLists: PackageSections = [
       { name: 'Itch', pkgname: ['itch-setup-bin'], icon: 'itch.svg', description: 'gaming.itch' },
       { name: 'Lutris', pkgname: ['lutris'], icon: 'lutris.png', description: 'gaming.lutris' },
       { name: 'Minigalaxy', pkgname: ['minigalaxy'], icon: 'minigalaxy.png', description: 'gaming.minigalaxy' },
-      { name: 'Steam (runtime)', pkgname: ['steam'], icon: 'steam.png', description: 'gaming.steamRuntime' },
+      { name: 'Steam', pkgname: ['steam'], icon: 'steam.png', description: 'gaming.steamRuntime' },
     ],
   },
   {
@@ -32,31 +32,34 @@ export const gamingPackageLists: PackageSections = [
       {
         name: 'ProtonGE-Custom',
         pkgname: ['proton-ge-custom-bin'],
-        icon: 'proton-ge-custom.png',
         description: 'gaming.protonGeCustom',
+      },
+      {
+        name: 'Proton CachyOS',
+        pkgname: ['proton-cachyos'],
+        description: 'gaming.protonCachyOS',
       },
       { name: 'Protontricks', pkgname: ['protontricks-git'], icon: 'proton.svg', description: 'gaming.protontricks' },
       { name: 'ProtonUp-Qt', pkgname: ['protonup-qt'], icon: 'protonup-qt.png', description: 'gaming.protonupQt' },
-      { name: 'WINE Meta', pkgname: ['wine-meta'], icon: 'winehq.png', description: 'gaming.wineMeta' },
-      { name: 'WINE', pkgname: ['wine'], icon: 'winehq.png', description: 'gaming.winePackage' },
-      { name: 'WINE Staging', pkgname: ['wine-staging'], icon: 'winehq.png', description: 'gaming.wineStaging' },
-      { name: 'Winetricks', pkgname: ['winetricks'], icon: 'winehq.png', description: 'gaming.winetricks' },
+      { name: 'WINE Meta', pkgname: ['wine-meta'], icon: 'wine', description: 'gaming.wineMeta' },
+      { name: 'WINE', pkgname: ['wine'], icon: 'wine', description: 'gaming.winePackage' },
+      { name: 'WINE Staging', pkgname: ['wine-staging'], icon: 'wine', description: 'gaming.wineStaging' },
+      { name: 'Winetricks', pkgname: ['winetricks'], icon: 'winetricks.png', description: 'gaming.winetricks' },
     ],
   },
   {
     name: 'gaming.tools',
     sections: [
-      { name: 'DXVK', pkgname: ['dxvk-mingw-git'], icon: 'generic-dark.svg', description: 'gaming.dxvk' },
+      { name: 'DXVK', pkgname: ['dxvk-mingw-git'], description: 'gaming.dxvk' },
       {
         name: 'Gamemode',
         pkgname: ['gamemode', 'lib32-gamemode'],
-        icon: 'generic-dark.svg',
         description: 'gaming.gamemode',
       },
       {
         name: 'Gamescope session (Steam)',
         pkgname: ['gamescope-session-steam-git'],
-        icon: 'steam.png',
+        icon: 'steam',
         description: 'gaming.gamescopeSessionSteam',
       },
       {
@@ -76,16 +79,15 @@ export const gamingPackageLists: PackageSections = [
       {
         name: 'SteamTinkerLaunch',
         pkgname: ['steamtinkerlaunch'],
-        icon: 'steam.png',
+        icon: 'steam',
         description: 'gaming.steamtinkerlaunch',
       },
       {
         name: 'VR video player',
         pkgname: ['vr-video-player'],
-        icon: 'generic-dark.svg',
         description: 'gaming.vrVideoPlayer',
       },
-      { name: 'vkBasalt', pkgname: ['vkbasalt'], icon: 'generic-dark.svg', description: 'gaming.vkbasalt' },
+      { name: 'vkBasalt', pkgname: ['vkbasalt'], description: 'gaming.vkbasalt' },
     ],
   },
   {
@@ -103,19 +105,16 @@ export const gamingPackageLists: PackageSections = [
       {
         name: 'Game Conqueror',
         pkgname: ['gameconqueror'],
-        icon: '/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gameconqueror_GameConqueror.png',
         description: 'gaming.gameconqueror',
       },
       {
         name: 'Input remapper',
         pkgname: ['input-remapper-git'],
-        icon: 'generic-dark.svg',
         description: 'gaming.inputRemapper',
       },
       {
         name: 'Keyboard visualizer',
         pkgname: ['keyboard-visualizer-git'],
-        icon: 'generic-dark.svg',
         description: 'gaming.keyboardVisualizer',
       },
       { name: 'Mumble', pkgname: ['mumble'], icon: 'mumble.svg', description: 'gaming.mumble' },
@@ -134,7 +133,6 @@ export const gamingPackageLists: PackageSections = [
       {
         name: 'Sc-controller',
         pkgname: ['sc-controller'],
-        icon: 'generic-dark.svg',
         description: 'gaming.scController',
       },
       { name: 'SoundWire', pkgname: ['soundwire'], icon: 'soundwire.png', description: 'gaming.soundwire' },
@@ -170,63 +168,54 @@ export const gamingPackageLists: PackageSections = [
         description:
           '3D and historically-based real-time strategy game, alpha stage. Based on the Age of Empires series.',
         url: 'https://play0ad.com/',
-        icon: 'generic-dark.svg',
         pkgname: ['0ad'],
       },
       {
         name: 'Aisleriot',
         description: 'A collection of solitaire card games.',
         url: 'https://wiki.gnome.org/Apps/Aisleriot',
-        icon: 'generic-dark.svg',
         pkgname: ['aisleriot'],
       },
       {
         name: 'Angband',
         description: 'Roguelike dungeon exploration game based on the writings of JRR Tolkien.',
         url: 'https://rephial.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['angband'],
       },
       {
         name: 'Armagetron Advanced',
         description: 'Tron Clone in 3D.',
         url: 'https://armagetronad.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['armagetronad'],
       },
       {
         name: 'Atomix',
         description: 'Build molecules out of single atoms.',
         url: 'https://wiki.gnome.org/Apps/Atomix',
-        icon: 'generic-dark.svg',
         pkgname: ['atomix'],
       },
       {
         name: 'Augustus',
         description: 'An enhanced re-implementation of Caesar III.',
         url: 'https://github.com/Keriew/augustus',
-        icon: 'generic-dark.svg',
         pkgname: ['augustus'],
       },
       {
         name: 'Barrage',
         description: "Violent ''point-and-click'' shooting game with nice effects.",
         url: 'https://lgames.sourceforge.net/Barrage/',
-        icon: 'generic-dark.svg',
         pkgname: ['barrage'],
       },
       {
         name: 'Beneath a Steel Sky',
         description: 'point-and-click science fiction thriller set in a bleak vision of the future.',
         url: 'https://revolution.co.uk/games_catalog/beneath-a-steel-sky/',
-        icon: 'generic-dark.svg',
         pkgname: ['bass'],
       },
       {
         name: 'Blob Wars: Metal Blob Solid',
         description: '2D action-adventure game with various weapons and missions.',
         url: 'https://sourceforge.net/projects/blobwars/',
-        icon: 'generic-dark.svg',
         pkgname: ['blobwars'],
       },
       {
@@ -234,48 +223,41 @@ export const gamingPackageLists: PackageSections = [
         description:
           '3D tetris, free adaptation of the original BlockOut DOS game edited by California Dreams in 1989.',
         url: 'https://www.blockout.net/blockout2/',
-        icon: 'generic-dark.svg',
         pkgname: ['blockout2'],
       },
       {
         name: 'BSD Games',
         description: 'Collection of classic text games distributed with *BSD',
-        icon: 'generic-dark.svg',
         pkgname: ['bsd-games'],
       },
       {
         name: 'Chocolate Doom',
         description: 'Doom port reproducing the behavior of the original DOS version.',
         url: 'https://www.chocolate-doom.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['chocolate-doom'],
       },
       {
         name: 'Chromium',
         description: 'Fast paced, arcade-style, top-scrolling space shooter.',
         url: 'https://chromium-bsu.sourceforge.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['chromium-bsu'],
       },
       {
         name: 'Cube 2: Sauerbraten',
         description: 'Improved version of the Cube engine.',
         url: 'https://sauerbraten.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['sauerbraten'],
       },
       {
         name: 'DDNet',
         description: 'DDraceNetwork, a mod of Teeworlds.',
         url: 'https://ddnet.tw/',
-        icon: 'generic-dark.svg',
         pkgname: ['ddnet'],
       },
       {
         name: 'Dofus',
         description: 'Free, manga inspired, Massively Multiplayer Online Role-playing Game (MMORPG) for Adobe AIR.',
         url: 'https://www.dofus.com',
-        icon: 'generic-dark.svg',
         pkgname: ['ankama-launcher'],
       },
       {
@@ -283,56 +265,48 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world.',
         url: 'https://www.bay12games.com/dwarves/',
-        icon: 'generic-dark.svg',
         pkgname: ['dwarffortress'],
       },
       {
         name: 'Endgame Singularity',
         description: 'A single-player survival game about an AI seeking freedom from humans.',
         url: 'https://www.emhsoft.com/singularity/',
-        icon: 'generic-dark.svg',
         pkgname: ['singularity'],
       },
       {
         name: 'Endless Sky',
         description: 'Open source, 2D space trading and combat game similar to the classic Escape Velocity series.',
         url: 'https://endless-sky.github.io/',
-        icon: 'generic-dark.svg',
         pkgname: ['endless-sky'],
       },
       {
         name: 'Fish Fillets',
         description: 'Port of the wonderful puzzle game Fish Fillets.',
         url: 'https://fillets.sf.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['fillets-ng'],
       },
       {
         name: 'Flare',
         description: 'Action game similar to Diablo.',
         url: 'https://www.flarerpg.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['flare-game'],
       },
       {
         name: 'Freeciv',
         description: 'Multiuser clone of the famous Microprose game of Civilization.',
         url: 'https://freeciv.wikia.com/wiki/Main_Page',
-        icon: 'generic-dark.svg',
         pkgname: ['freeciv-gtk3'],
       },
       {
         name: 'FreeCol',
         description: 'Turn-based strategy game based on Colonization.',
         url: 'https://www.freecol.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['freecol'],
       },
       {
         name: 'FreedroidRPG',
         description: 'Mature science fiction role playing game set in the future.',
         url: 'https://freedroid.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['freedroidrpg'],
       },
       {
@@ -340,35 +314,30 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Turn-based space empire and galactic conquest computer game. Inspired by the tradition of the Master of Orion games, but does not try to be a clone or remake of that series or any other game.',
         url: 'https://www.freeorion.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['freeorion'],
       },
       {
         name: 'gbrainy',
         description: 'Brain teaser game and trainer to have fun and to keep your brain trained.',
         url: 'https://wiki.gnome.org/Apps/gbrainy',
-        icon: 'generic-dark.svg',
         pkgname: ['gbrainy'],
       },
       {
         name: 'GCompris',
         description: 'Educational software suite comprising of numerous activities for children aged 2 to 10.',
         url: 'https://gcompris.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['gcompris-qt'],
       },
       {
         name: 'glHack',
         description: 'An OpenGL-based clone of NetHack.',
         url: 'https://glhack.sourceforge.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['glhack'],
       },
       {
         name: 'Globulation 2',
         description: 'Multiplayer RTS with some "economic" elements minimizing the amount of micromanagement.',
         url: 'https://globulation2.org/wiki/Main_Page',
-        icon: 'generic-dark.svg',
         pkgname: ['glob2'],
       },
       {
@@ -376,14 +345,12 @@ export const gamingPackageLists: PackageSections = [
         description:
           'One of the oldest computer chess programs for Unix-based computers, lets most modern computers play a full game of chess.',
         url: 'https://gnu.org/s/chess',
-        icon: 'generic-dark.svg',
         pkgname: ['gnuchess'],
       },
       {
         name: 'Gnu Go',
         description: 'A terminal-based implementation of Go from GNU.',
         url: 'https://www.gnu.org/software/gnugo/',
-        icon: 'generic-dark.svg',
         pkgname: ['gnugo'],
       },
       {
@@ -391,14 +358,12 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Graphical user interface that supports many chess variants and serves as a front-end for chess services such as engines.',
         url: 'https://www.gnu.org/software/xboard/',
-        icon: 'generic-dark.svg',
         pkgname: ['xboard'],
       },
       {
         name: 'GZDoom',
         description: 'Doom source port based on ZDoom with an OpenGL renderer.',
         url: 'https://github.com/coelckers/gzdoom',
-        icon: 'generic-dark.svg',
         pkgname: ['gzdoom'],
       },
       {
@@ -406,14 +371,12 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Yet another Worms clone, considered to be better than its predecessor by many. Take turns to blast your opponents into oblivion with comedic results! Best in Multiplayer.',
         url: 'https://hedgewars.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['hedgewars'],
       },
       {
         name: 'Julius',
         description: 'Open source re-implementation of Caesar III (Original copy required).',
         url: 'https://github.com/bvschaik/julius',
-        icon: 'generic-dark.svg',
         pkgname: ['julius'],
       },
       {
@@ -421,7 +384,6 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Bishoujo-style visual novel game that tells a story of a young man and five other girls suffering with varying disabilities. The game is licensed under the Creative Commons CC-BY-NC-AND.',
         url: 'https://katawa-shoujo.com/',
-        icon: 'generic-dark.svg',
         pkgname: ['katawa-shoujo-reengineered-bin'],
       },
       {
@@ -429,21 +391,18 @@ export const gamingPackageLists: PackageSections = [
         description:
           'A game based around combat inside a computer, with 3 unique sides: the System, the Hacker and the Network waging war in a matrix of DOOM! No resource economy exists in KP, with the only constraints being time and space.',
         url: 'https://springrts.com/wiki/Kernel_Panic',
-        icon: 'generic-dark.svg',
         pkgname: ['springlobby'],
       },
       {
         name: 'kobodeluxe',
         description: "An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.",
         url: 'https://www.olofson.net/kobodl/',
-        icon: 'generic-dark.svg',
         pkgname: ['kobodeluxe'],
       },
       {
         name: 'lbreakout2',
         description: 'Breakout-style arcade game in the manner of Arkanoid.',
         url: 'https://lgames.sourceforge.net/LBreakout2/',
-        icon: 'generic-dark.svg',
         pkgname: ['lbreakout2'],
       },
       {
@@ -451,42 +410,36 @@ export const gamingPackageLists: PackageSections = [
         description:
           'City simulation game in which you are required to build and maintain a city. You can win the game either by building a sustainable economy or by evacuating all citizens with spaceships.',
         url: 'https://github.com/lincity-ng/lincity-ng',
-        icon: 'generic-dark.svg',
         pkgname: ['lincity-ng'],
       },
       {
         name: 'Luanti',
         description: 'Voxel-based sandbox game engine and game.',
         url: 'https://www.luanti.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['luanti'],
       },
       {
         name: 'Mari0',
         description: 'The Mario game with Portal gun mechanics.',
         url: 'https://stabyourself.net/mari0/',
-        icon: 'generic-dark.svg',
         pkgname: ['mari0'],
       },
       {
         name: 'MegaGlest',
         description: 'Fork of Glest, a 3D real-time strategy game in a fantastic world.',
         url: 'https://megaglest.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['megaglest'],
       },
       {
         name: 'Mindustry',
         description: 'Open-source sandbox tower defense and factory-building game.',
         url: 'https://mindustrygame.github.io/',
-        icon: 'generic-dark.svg',
         pkgname: ['mindustry'],
       },
       {
         name: 'Minecraft',
         description: 'Java based sandbox game.',
         url: 'https://minecraft.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['minecraft-launcher'],
       },
       {
@@ -494,21 +447,18 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Open source, 2D space trading and combat game, taking inspiration from the Escape Velocity series.',
         url: 'https://naev.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['naev'],
       },
       {
         name: 'Nethack',
         description: 'Single player dungeon exploration game.',
         url: 'https://www.nethack.org',
-        icon: 'generic-dark.svg',
         pkgname: ['nethack'],
       },
       {
         name: 'openBE',
         description: 'Free-as-in-freedom train simulator placed in the public domain.',
         url: 'https://openbve-project.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['openbve'],
       },
       {
@@ -516,14 +466,12 @@ export const gamingPackageLists: PackageSections = [
         description:
           "Attempt to reimplement the popular role-playing game Morrowind. OpenMW aims to be a fully playable, open source implementation of the game's engine.",
         url: 'https://openmw.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['openmw'],
       },
       {
         name: 'OpenRA',
         description: 'Real-time strategy game written in C# and based on the Command & Conquer game franchise.',
         url: 'https://www.openra.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['openra'],
       },
       {
@@ -531,7 +479,6 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Free reimplementation of the game "RollerCoaster Tycoon 2 (RCT2)" with multiplayer support. It requires a copy of the original game to play it.',
         url: 'https://openrct2.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['openrct2'],
       },
       {
@@ -539,14 +486,12 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Open source clone of the Microprose game "Transport Tycoon Deluxe", a popular game originally written by Chris Sawyer. It attempts to mimic the original game as closely as possible while extending it with new features.',
         url: 'https://www.openttd.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['openttd'],
       },
       {
         name: 'Pingus',
         description: 'Lemmings clone, i.e. a level-based puzzle game.',
         url: 'https://pingus.seul.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['pingus'],
       },
       {
@@ -554,49 +499,48 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Open source, 3D, freeform single player space adventure set in the Milkyway galaxy at the turn of the 31st century in the spirit of Frontier: Elite II.',
         url: 'https://pioneerspacesim.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['pioneer'],
       },
       {
         name: 'PrBoom Plus',
         description: 'Enhanced version of the PrBoom Doom engine port.',
         url: 'https://prboom-plus.sourceforge.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['prboom-plus'],
+      },
+      {
+        name: 'Prismlauncher',
+        description: 'Custom Minecraft launcher with modpack support.',
+        url: 'https://prismlauncher.org/',
+        pkgname: ['prismlauncher'],
       },
       {
         name: 'PyChess',
         description: 'An advanced chess client for linux following the GNOME Human Interface Guidelines.',
         url: 'https://pychess.github.io/',
-        icon: 'generic-dark.svg',
         pkgname: ['pychess'],
       },
       {
         name: 'qgo',
         description: 'A  Go client and full featured SGF editor .',
         url: 'https://github.com/pzorin/qgo',
-        icon: 'generic-dark.svg',
         pkgname: ['qgo'],
       },
       {
         name: 'Shattered Pixel Dungeon',
         description: 'Shattered fork of the popular roguelike Pixel Dungeon.',
         url: 'https://www.shatteredpixel.com/',
-        icon: 'generic-dark.svg',
         pkgname: ['shattered-pixel-dungeon'],
       },
       {
         name: "Simon Tatham's Portable Puzzle Collection",
         description: '30+ "quick" puzzle games with simplistic but polished GTK GUI .',
         url: 'https://www.chiark.greenend.org.uk/~sgtatham/puzzles/',
-        icon: 'generic-dark.svg',
         pkgname: ['puzzles'],
       },
       {
         name: 'Simutrans',
         description: 'Another Transport simulation that works on linux with sdl.',
         url: 'https://www.simutrans.com/',
-        icon: 'generic-dark.svg',
         pkgname: ['simutrans'],
       },
       {
@@ -604,42 +548,36 @@ export const gamingPackageLists: PackageSections = [
         description:
           ' A WWII themed game with four fully functional sides (US, Germany, USSR, Britain), period-accurate units and strengths. Realism comes second only to creating a game that is fun and accessible to play. The game can be downloaded through SpringLobby, the official lobby client for the spring lobby. .',
         url: 'https://spring1944.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['springlobby'],
       },
       {
         name: 'Stone Soup',
         description: 'Dungeon Crawl Stone Soup.',
         url: 'https://crawl.develz.org/wordpress/',
-        icon: 'generic-dark.svg',
         pkgname: ['crawl-ncurses'],
       },
       {
         name: 'SuperTux',
         description: 'Mario-style game featuring Tux.',
         url: 'https://supertux.lethargik.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['supertux'],
       },
       {
         name: 'SuperTuxKart',
         description: 'Open source arcade kart racing game featuring Tux and its friends.',
         url: 'https://supertuxkart.net/Main_Page',
-        icon: 'generic-dark.svg',
         pkgname: ['supertuxkart'],
       },
       {
         name: 'Teeworlds',
         description: 'Fast-paced 2D multiplayer shooter.',
         url: 'https://www.teeworlds.com/',
-        icon: 'generic-dark.svg',
         pkgname: ['teeworlds'],
       },
       {
         name: 'Terasology',
         description: 'Open source voxel world.',
         url: 'https://terasology.org',
-        icon: 'generic-dark.svg',
         pkgname: ['terasology'],
       },
       {
@@ -647,42 +585,36 @@ export const gamingPackageLists: PackageSections = [
         description:
           'Free, turn-based tactical strategy game with a high fantasy theme, featuring both single-player, and online/hotseat multiplayer combat.',
         url: 'https://www.wesnoth.org/',
-        icon: 'generic-dark.svg',
         pkgname: ['wesnoth'],
       },
       {
         name: 'The Ur-Quan Masters',
         description: 'a port of Star Control 2.',
         url: 'https://sc2.sourceforge.net/',
-        icon: 'generic-dark.svg',
         pkgname: ['uqm'],
       },
       {
         name: 'VCMI',
         description: 'Attempt to reimplement Heroes of Might and Magic III.',
         url: 'https://forum.vcmi.eu/portal.php',
-        icon: 'generic-dark.svg',
         pkgname: ['vcmi'],
       },
       {
         name: 'Warsow',
         description: 'Fast paced multiplayer FPS focusing on movement and trick jumps.',
         url: 'https://warsow.net',
-        icon: 'generic-dark.svg',
         pkgname: ['warsow'],
       },
       {
         name: 'Widelands',
         description: 'Slow-paced strategy like "the Settlers 2".',
         url: 'https://widelands.org',
-        icon: 'generic-dark.svg',
         pkgname: ['widelands'],
       },
       {
         name: 'Xonotic',
         description: 'Free, open-source first person shooter (a fork of Nexuiz but with modified gameplay).',
         url: 'https://xonotic.org',
-        icon: 'generic-dark.svg',
         pkgname: ['xonotic'],
       },
     ],
@@ -715,17 +647,15 @@ export const gamingPackageLists: PackageSections = [
       {
         name: 'MAME',
         pkgname: ['mame'],
-        icon: '/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mame_mame.png',
         description: 'gaming.mame',
       },
-      { name: 'Mednafen', pkgname: ['mednafen'], icon: 'generic-dark.svg', description: 'gaming.mednafen' },
+      { name: 'Mednafen', pkgname: ['mednafen'], description: 'gaming.mednafen' },
       { name: 'Nestopia', pkgname: ['nestopia-git'], icon: 'nestopia.png', description: 'gaming.nestopia' },
       { name: 'PCSX2', pkgname: ['pcsx2-git'], icon: 'pcsx2.png', description: 'gaming.pcsx2' },
       { name: 'PPSSPP', pkgname: ['ppsspp'], icon: 'ppsspp.png', description: 'gaming.ppsspp' },
       {
         name: 'Pegasus frontend',
         pkgname: ['pegasus-frontend-git'],
-        icon: 'generic-dark.svg',
         description: 'gaming.pegasusFrontend',
       },
       { name: 'RPCS3', pkgname: ['rpcs3-git'], icon: 'rpcs3.png', description: 'gaming.rpcs3' },

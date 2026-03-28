@@ -3,7 +3,7 @@
     "name": "Agda",
     "description": "Dependently typed functional programming language and proof assistant. It is an interactive system for writing and checking proofs.",
     "url": "https://wiki.portal.chalmers.se/agda/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["agda"],
     "aur": false
   },
@@ -11,7 +11,7 @@
     "name": "Astropy",
     "description": "The Astropy Project is a community effort to develop a common core package for Astronomy in Python and foster an ecosystem of interoperable astronomy packages.",
     "url": "https://www.astropy.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-astropy"],
     "aur": false
   },
@@ -19,7 +19,7 @@
     "name": "astroterm",
     "description": "Terminal-based star map written in C, which displays a star map in real time. Date, time, location and speed are configurable.",
     "url": "https://github.com/da-luce/astroterm",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["astroterm"],
     "aur": false
   },
@@ -27,7 +27,7 @@
     "name": "AVRDUDE",
     "description": "Download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers.",
     "url": "https://www.nongnu.org/avrdude/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["avrdude"],
     "aur": false
   },
@@ -35,7 +35,7 @@
     "name": "AXIOM",
     "description": "FriCAS: derivative of the powerful AXIOM-CAS.",
     "url": "https://fricas.sourceforge.net",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fricas"],
     "aur": false
   },
@@ -43,7 +43,7 @@
     "name": "BambuStudio",
     "description": "Slicer for printers from BambuLabs. Fork of PrusaSlicer. Open source.",
     "url": "https://github.com/bambulab/BambuStudio",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bambustudio-bin"],
     "aur": false
   },
@@ -51,7 +51,7 @@
     "name": "bc",
     "description": "Arbitrary precision calculator language.",
     "url": "https://www.gnu.org/software/bc/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bc"],
     "aur": false
   },
@@ -59,7 +59,7 @@
     "name": "Binary",
     "description": "Simple app to convert between different hexadecimal and binary numbers.",
     "url": "https://apps.gnome.org/Binary/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/binary_io.github.fizzyizzy05.binary.png",
+
     "pkgname": ["binary"],
     "aur": false
   },
@@ -67,7 +67,7 @@
     "name": "BT747",
     "description": "The swiss army knife for MTK GPS dataloggers.",
     "url": "https://sourceforge.net/projects/bt747/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bt747_bt747.png",
+
     "pkgname": ["bt747"],
     "aur": false
   },
@@ -75,7 +75,7 @@
     "name": "calc",
     "description": "Arbitrary precision console calculator.",
     "url": "http://www.isthe.com/chongo/tech/comp/calc/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["calc"],
     "aur": false
   },
@@ -83,7 +83,7 @@
     "name": "Cantor",
     "description": "Application that lets you use your favorite mathematical applications from within a nice KDE-integrated Worksheet Interface. Part of kde-education.",
     "url": "https://cantor.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cantor_cantor.png",
+
     "pkgname": ["cantor"],
     "aur": false
   },
@@ -91,7 +91,7 @@
     "name": "Cutefish Calculator",
     "description": "Calculator for Cutefish desktop.",
     "url": "https://github.com/cutefishos/calculator",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cutefish-calculator"],
     "aur": false
   },
@@ -99,7 +99,7 @@
     "name": "Deepin Calculator",
     "description": "Easy to use calculator for Deepin desktop.",
     "url": "https://www.deepin.org/en/original/deepin-calculator/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-calculator_deepin-calculator.png",
+
     "pkgname": ["deepin-calculator"],
     "aur": false
   },
@@ -107,7 +107,7 @@
     "name": "dfu-util",
     "description": "Device firmware update (DFU) USB programmer.",
     "url": "https://dfu-util.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dfu-util"],
     "aur": false
   },
@@ -115,7 +115,7 @@
     "name": "Digital",
     "description": "Interactive simulator similar to the discontinued Logisim. Features Karnaugh maps, logic tables, FSM editor, VHDL export and more, written in Java.",
     "url": "https://github.com/hneemann/Digital",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["digital"],
     "aur": false
   },
@@ -123,7 +123,7 @@
     "name": "ERFA",
     "description": "Essential Routines for Fundamental Astronomy",
     "url": "https://github.com/liberfa/erfa",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["erfa"],
     "aur": false
   },
@@ -131,7 +131,7 @@
     "name": "FFTW",
     "description": "A Fast Fourier Transform library for computing discrete Fourier transforms. Used for a wide variety of numerical applications, which includes spectral methods.",
     "url": "https://www.fftw.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fftw"],
     "aur": false
   },
@@ -139,7 +139,7 @@
     "name": "Fiji",
     "description": "ImageJ2 distribution with a lot of plugins organized into a coherent menu structure.",
     "url": "https://fiji.sc",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fiji-bin"],
     "aur": false
   },
@@ -147,7 +147,7 @@
     "name": "Fityk",
     "description": "Curve fitting and data analysis application, predominantly used to fit analytical, bell-shaped functions to experimental data.",
     "url": "https://fityk.nieto.pl/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fityk"],
     "aur": false
   },
@@ -155,7 +155,7 @@
     "name": "FOX Calculator",
     "description": "Simple desktop calculator.",
     "url": "http://fox-toolkit.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fox"],
     "aur": false
   },
@@ -163,7 +163,7 @@
     "name": "FreeCAD",
     "description": "Parametric 3D CAD modeler based on OpenCascade, Coin3D, Qt, and Python with features such as macro recording, workbenches and the ability to run as a server.",
     "url": "https://freecad.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/freecad_org.freecad.FreeCAD.png",
+
     "pkgname": ["freecad"],
     "aur": false
   },
@@ -171,7 +171,7 @@
     "name": "Fritzing",
     "description": "Easy to use program to draw good-looking circuit diagrams, and also create schematics and PCBs.",
     "url": "https://fritzing.org/home/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fritzing"],
     "aur": false
   },
@@ -179,14 +179,14 @@
     "name": "Gaia Sky",
     "description": "An open source 3D universe simulator with support for more than a billion objects",
     "url": "https://zah.uni-heidelberg.de/gaia/outreach/gaiasky",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gaiasky"],
     "aur": false
   },
   {
     "name": "galculator",
     "description": "GTK-based scientific calculator.",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/galculator_galculator.png",
+
     "pkgname": ["galculator"],
     "aur": false
   },
@@ -194,7 +194,7 @@
     "name": "GAP",
     "description": "Computer algebra system for computational discrete algebra with particular emphasis on computational group theory.",
     "url": "https://www.gap-system.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gap"],
     "aur": false
   },
@@ -202,7 +202,7 @@
     "name": "Genius",
     "description": "Advanced calculator including a mathematical programming language.",
     "url": "https://www.jirka.org/genius.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/genius_gnome-genius.png",
+
     "pkgname": ["genius"],
     "aur": false
   },
@@ -210,7 +210,7 @@
     "name": "GeoGebra",
     "description": "Dynamic mathematics software with interactive graphics, algebra and spreadsheet",
     "url": "https://www.geogebra.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/geogebra_geogebra.png",
+
     "pkgname": ["geogebra"],
     "aur": false
   },
@@ -218,7 +218,7 @@
     "name": "gephi",
     "description": "Gephi is an open-source network analysis and visualization software package written in Java.",
     "url": "https://gephi.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gephi"],
     "aur": false
   },
@@ -226,7 +226,7 @@
     "name": "Gis Weather",
     "description": "Customizable weather forecast desktop widget.",
     "url": "https://sourceforge.net/projects/gis-weather/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gis-weather"],
     "aur": false
   },
@@ -234,7 +234,7 @@
     "name": "GNOME Calculator",
     "description": "Scientific calculator included in the GNOME desktop. Part of gnome.",
     "url": "https://apps.gnome.org/Calculator/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-calculator_org.gnome.Calculator.png",
+
     "pkgname": ["gnome-calculator"],
     "aur": false
   },
@@ -242,7 +242,7 @@
     "name": "GNOME Maps",
     "description": "A simple map client for GNOME with navigation and GNSS features (adapted to Linux Mobile). Part of gnome.",
     "url": "https://apps.gnome.org/Maps/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-maps_org.gnome.Maps.png",
+
     "pkgname": ["gnome-maps"],
     "aur": false
   },
@@ -250,7 +250,7 @@
     "name": "GNOME Weather",
     "description": "Small application for GNOME that allows you to monitor the current weather conditions for your city, or anywhere in the world, and to access updated forecasts provided by various internet services. Part of gnome.",
     "url": "https://apps.gnome.org/Weather/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-weather_org.gnome.Weather.png",
+
     "pkgname": ["gnome-weather"],
     "aur": false
   },
@@ -258,7 +258,7 @@
     "name": "GNU Radio",
     "description": "Software development toolkit that provides signal processing blocks to implement software radios.",
     "url": "https://www.gnuradio.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnuradio"],
     "aur": false
   },
@@ -266,7 +266,7 @@
     "name": "Gnuplot",
     "description": "Command-line program that can generate 2D and 3D plots of functions, data, and data fits.",
     "url": "http://www.gnuplot.info/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnuplot"],
     "aur": false
   },
@@ -274,7 +274,7 @@
     "name": "Gpredict",
     "description": "Real-time satellite tracking and orbit prediction application.",
     "url": "https://gpredict.oz9aec.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gpredict"],
     "aur": false
   },
@@ -282,7 +282,7 @@
     "name": "GPSBabel",
     "description": "Reads, writes, and manipulates GPS waypoints, tracks, routes in a variety of formats.",
     "url": "https://www.gpsbabel.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpsbabel_gpsbabel.png",
+
     "pkgname": ["gpsbabel"],
     "aur": false
   },
@@ -290,7 +290,7 @@
     "name": "gpsd",
     "description": "Service daemon that monitors one or more GPSes or AIS receivers attached to a host computer through serial or USB ports, making all data on the location/course/velocity of the sensors available to be queried on TCP port 2947 of the host computer.",
     "url": "http://catb.org/gpsd/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpsd_gpsd-logo.png",
+
     "pkgname": ["gpsd"],
     "aur": false
   },
@@ -298,7 +298,7 @@
     "name": "GpsPrune",
     "description": "View, edit and convert coordinate data from GPS systems.",
     "url": "https://activityworkshop.net/software/gpsprune/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpsprune_gpsprune.png",
+
     "pkgname": ["gpsprune"],
     "aur": false
   },
@@ -306,7 +306,7 @@
     "name": "GPXSee",
     "description": "GPS log file viewer and analyzer.",
     "url": "https://www.gpxsee.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gpxsee_gpxsee.png",
+
     "pkgname": ["gpxsee"],
     "aur": false
   },
@@ -314,7 +314,7 @@
     "name": "Gqrx",
     "description": "Software defined radio receiver implemented using GNU Radio and the Qt GUI toolkit.",
     "url": "https://gqrx.dk/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gqrx_gqrx.png",
+
     "pkgname": ["gqrx"],
     "aur": false
   },
@@ -322,7 +322,7 @@
     "name": "Gramps",
     "description": "Genealogy program, which helps you track your family tree.",
     "url": "https://gramps-project.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gramps_org.gramps_project.Gramps.png",
+
     "pkgname": ["gramps"],
     "aur": false
   },
@@ -330,7 +330,7 @@
     "name": "Graphs",
     "description": "Tool to plot and manipulate data.",
     "url": "https://apps.gnome.org/Graphs/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/graphs_se.sjoerd.Graphs.png",
+
     "pkgname": ["graphs"],
     "aur": false
   },
@@ -338,7 +338,7 @@
     "name": "Graphviz",
     "description": "The established tool for displaying smallish graphs in 2D.",
     "url": "https://www.graphviz.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["graphviz"],
     "aur": false
   },
@@ -346,7 +346,7 @@
     "name": "GRASS GIS",
     "description": "Geospatial data management and analysis, image processing, graphics/maps production, spatial modeling and visualization.",
     "url": "https://grass.osgeo.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["grass"],
     "aur": false
   },
@@ -354,7 +354,7 @@
     "name": "GTKWave",
     "description": "Fully featured GTK-based wave viewer which reads LXT, LXT2, VZT, FST, and GHW files as well as standard Verilog VCD/EVCD files and allows their viewing.",
     "url": "https://gtkwave.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gtkwave_gtkwave.png",
+
     "pkgname": ["gtkwave"],
     "aur": false
   },
@@ -362,7 +362,7 @@
     "name": "iverilog",
     "description": "Icarus Verilog compiler and simulation tool (slower but older than Verilator).",
     "url": "https://steveicarus.github.io/iverilog/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["iverilog"],
     "aur": false
   },
@@ -370,7 +370,7 @@
     "name": "JOSM",
     "description": "Main editor for OpenStreetMap written in Java.",
     "url": "https://josm.openstreetmap.de/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/josm_org.openstreetmap.josm.png",
+
     "pkgname": ["josm"],
     "aur": false
   },
@@ -378,7 +378,7 @@
     "name": "Julia",
     "description": "High-level, high-performance dynamic language for technical computing.",
     "url": "https://julialang.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/julia_julia.png",
+
     "pkgname": ["julia"],
     "aur": false
   },
@@ -386,7 +386,7 @@
     "name": "KAlgebra",
     "description": "Calculator and 3D plotter. Part of kde-education.",
     "url": "https://apps.kde.org/kalgebramobile/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalgebra_kalgebra.png",
+
     "pkgname": ["kalgebra"],
     "aur": false
   },
@@ -394,7 +394,7 @@
     "name": "Kalk",
     "description": "A convergent calculator application built with the Kirigami framework. Part of kde-utilities.",
     "url": "https://apps.kde.org/kalk/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalk_org.kde.kalk.png",
+
     "pkgname": ["kalk"],
     "aur": false
   },
@@ -402,7 +402,7 @@
     "name": "Kalzium",
     "description": "Periodic table of the elements with molecule editor and equation solver. Part of kde-education.",
     "url": "https://apps.kde.org/kalzium/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalzium_kalzium.png",
+
     "pkgname": ["kalzium"],
     "aur": false
   },
@@ -410,7 +410,7 @@
     "name": "KCalc",
     "description": "Scientific calculator included in the KDE desktop. Part of kde-utilities.",
     "url": "https://apps.kde.org/kcalc/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kcalc_accessories-calculator.png",
+
     "pkgname": ["kcalc"],
     "aur": false
   },
@@ -418,7 +418,7 @@
     "name": "KiCad",
     "description": "Software suite for electronic design automation (EDA) that facilitates the design of schematics for electronic circuits and their conversion to PCB (printed circuit board).",
     "url": "https://kicad.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kicad_kicad.png",
+
     "pkgname": ["kicad"],
     "aur": false
   },
@@ -426,7 +426,7 @@
     "name": "Kig",
     "description": "Application for Interactive Geometry. Part of kde-education.",
     "url": "https://apps.kde.org/kig/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kig_kig.png",
+
     "pkgname": ["kig"],
     "aur": false
   },
@@ -434,7 +434,7 @@
     "name": "KmPlot",
     "description": "Program to draw graphs, their integrals or derivatives. Part of kde-education.",
     "url": "https://apps.kde.org/kmplot/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmplot_kmplot.png",
+
     "pkgname": ["kmplot"],
     "aur": false
   },
@@ -442,7 +442,7 @@
     "name": "kosmindoormap",
     "description": "Indoor cartography, levels by levels of buildings, mainly Train station, and Airport buildings. Based on OSM data.",
     "url": "https://www.kde.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kosmindoormap_go-home.png",
+
     "pkgname": ["kosmindoormap"],
     "aur": false
   },
@@ -450,7 +450,7 @@
     "name": "KStars",
     "description": "Planetarium application that provides an accurate graphical simulation of the night sky, from any location on Earth, at any date and time. It is included in KDE Edu.",
     "url": "https://kstars.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kstars_kstars.png",
+
     "pkgname": ["kstars"],
     "aur": false
   },
@@ -458,7 +458,7 @@
     "name": "KTrip",
     "description": "Public transport assistant for mobile devices. Part of kde-utilities.",
     "url": "https://apps.kde.org/ktrip/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktrip_org.kde.ktrip.png",
+
     "pkgname": ["ktrip"],
     "aur": false
   },
@@ -466,7 +466,7 @@
     "name": "KWeather",
     "description": "A convergent weather application for Plasma. Part of kde-utilities.",
     "url": "https://apps.kde.org/kweather/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kweather_org.kde.kweather.png",
+
     "pkgname": ["kweather"],
     "aur": false
   },
@@ -474,7 +474,7 @@
     "name": "LabPlot",
     "description": "Free software data analysis and visualization application, similar to SciDAVis.",
     "url": "https://labplot.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/labplot_org.kde.labplot.png",
+
     "pkgname": ["labplot"],
     "aur": false
   },
@@ -482,7 +482,7 @@
     "name": "LeoCAD",
     "description": "CAD program for creating virtual LEGO models. It has an easy to use interface and currently includes over 10,000 different pieces created by the LDraw community.",
     "url": "https://www.leocad.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/leocad_leocad.png",
+
     "pkgname": ["leocad"],
     "aur": false
   },
@@ -490,7 +490,7 @@
     "name": "LibreCAD",
     "description": "A 2D CAD application based on Qt5. Forked from QCAD Community Edition.",
     "url": "https://www.librecad.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/librecad_librecad.png",
+
     "pkgname": ["librecad"],
     "aur": false
   },
@@ -498,7 +498,7 @@
     "name": "Marble",
     "description": "Virtual Globe and World Atlas that can be used to learn more about the Earth. Part of kde-education.",
     "url": "https://marble.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marble_marble.png",
+
     "pkgname": ["marble"],
     "aur": false
   },
@@ -506,7 +506,7 @@
     "name": "Marble Behaim",
     "description": "Viewer for the oldest existent globe of the Earth made by Martin Behaim and collaborators around 1492.",
     "url": "https://marble.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marble-behaim_org.kde.marble.behaim.png",
+
     "pkgname": ["marble-behaim"],
     "aur": false
   },
@@ -514,7 +514,7 @@
     "name": "Marble Maps",
     "description": "Vector and GNSS navigation system, with Modular turn-by-turn car, foot, and bike navigation system (adapted to Linux Mobile).",
     "url": "https://marble.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marble-maps_org.kde.marble.maps.png",
+
     "pkgname": ["marble-maps"],
     "aur": false
   },
@@ -522,7 +522,7 @@
     "name": "MATE Calc",
     "description": "Calculator for the MATE desktop environment.",
     "url": "https://mate-desktop.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-calc_accessories-calculator.png",
+
     "pkgname": ["mate-calc"],
     "aur": false
   },
@@ -530,7 +530,7 @@
     "name": "Mathics",
     "description": "A free CAS for symbolic mathematical computations which uses Python as its main language. It aims at achieving a Mathematica-compatible syntax and functions. It relies mostly on Sympy for most mathematical tasks and, optionally, Sage for more advanced functionality.",
     "url": "https://mathics.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mathics"],
     "aur": false
   },
@@ -538,7 +538,7 @@
     "name": "matplotlib (PyLab)",
     "description": "Collection of Python modules (pyplot, numpy, etc.) used for scientific calculations.",
     "url": "https://www.scipy.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-matplotlib"],
     "aur": false
   },
@@ -546,7 +546,7 @@
     "name": "Maxima",
     "description": "Maple/Mathematica-like computer algebra system.",
     "url": "https://maxima.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maxima_xmaxima.png",
+
     "pkgname": ["maxima"],
     "aur": false
   },
@@ -554,7 +554,7 @@
     "name": "Merkaartor",
     "description": "OpenStreetMap editor.",
     "url": "https://merkaartor.be/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/merkaartor_merkaartor.png",
+
     "pkgname": ["merkaartor"],
     "aur": false
   },
@@ -562,7 +562,7 @@
     "name": "ngspice",
     "description": "The established Linux circuit simulator. Open source successor of the spice3f5 code. Has the most versatile user interface; supporting scripting within the circuit descriptions, use through an interpreter, as a C library, through tcl or various external wrappers (e.g., Python).",
     "url": "https://ngspice.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ngspice"],
     "aur": false
   },
@@ -570,7 +570,7 @@
     "name": "Octave",
     "description": "MATLAB-like language and interface for numerical computations.",
     "url": "https://www.gnu.org/software/octave/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/octave_octave.png",
+
     "pkgname": ["octave"],
     "aur": false
   },
@@ -578,7 +578,7 @@
     "name": "OffRoad",
     "description": "Offline vector map display ported from OsmAnd.",
     "url": "https://sourceforge.net/projects/offroadosm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/offroad_offroad.png",
+
     "pkgname": ["offroad"],
     "aur": false
   },
@@ -586,7 +586,7 @@
     "name": "Open Babel",
     "description": "A library designed to interconvert between many file formats used in molecular modeling and computational chemistry.",
     "url": "https://openbabel.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["openbabel"],
     "aur": false
   },
@@ -594,7 +594,7 @@
     "name": "OpenFOAM",
     "description": "Software package and toolkit for computational fluid dynamics (CFD).",
     "url": "https://openfoam.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["openfoam-org"],
     "aur": false
   },
@@ -602,7 +602,7 @@
     "name": "OpenFPGAloader",
     "description": "Universal utility for programming FPGA. Try openfpgaloader-git if your board is not managed by the stable version.",
     "url": "https://github.com/trabucayre/openFPGALoader",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["openfpgaloader"],
     "aur": false
   },
@@ -610,7 +610,7 @@
     "name": "OpenSCAD",
     "description": "A 3D CAD modeler that uses a textual, programmatic approach to creating and manipulating objects.",
     "url": "https://www.openscad.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openscad_openscad.png",
+
     "pkgname": ["openscad"],
     "aur": false
   },
@@ -618,7 +618,7 @@
     "name": "ParaView",
     "description": "Interactive data visualization tool built using VTK that can scale across distributed computer hardware.",
     "url": "https://www.paraview.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/paraview_paraview.png",
+
     "pkgname": ["paraview"],
     "aur": false
   },
@@ -626,7 +626,7 @@
     "name": "PARI/GP",
     "description": "Computer algebra system designed for fast computations in number theory.",
     "url": "https://pari.math.u-bordeaux.fr/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["pari"],
     "aur": false
   },
@@ -634,7 +634,7 @@
     "name": "platformio",
     "description": "Collaborative platform for embedded development, embedded development, with debugger, unit testing, code analysis. Default IDE is VSCode, but can be used by Atom, Eclipse, Emacs, Qt Creator, Vim and several other IDE. Core CLI utils.",
     "url": "https://platformio.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["platformio-core"],
     "aur": false
   },
@@ -642,7 +642,7 @@
     "name": "PrusaSlicer",
     "description": "Slicer by Prusa Research. A fork of Slic3r. Aimed at their printers but supports other brands as well. Open source.",
     "url": "https://github.com/prusa3d/PrusaSlicer",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["prusa-slicer"],
     "aur": false
   },
@@ -650,7 +650,7 @@
     "name": "PSPP",
     "description": "Free SPSS implementation.",
     "url": "https://www.gnu.org/software/pspp/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["pspp"],
     "aur": false
   },
@@ -658,7 +658,7 @@
     "name": "PulseView",
     "description": "Logic analyzer, oscilloscope and MSO GUI.",
     "url": "https://sigrok.org/wiki/PulseView",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pulseview_pulseview.png",
+
     "pkgname": ["pulseview"],
     "aur": false
   },
@@ -666,7 +666,7 @@
     "name": "PyMOL",
     "description": "Open-source molecular visualization system that can produce high quality 3D images of small molecules and biological macromolecules, such as proteins.",
     "url": "https://pymol.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pymol_pymol.png",
+
     "pkgname": ["pymol"],
     "aur": false
   },
@@ -674,7 +674,7 @@
     "name": "Python Data Analysis Library (pandas)",
     "description": "Providing high-performance, easy-to-use data structures and data analysis tools with Python programming language.",
     "url": "https://pandas.pydata.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-pandas"],
     "aur": false
   },
@@ -682,7 +682,7 @@
     "name": "qalc",
     "description": "Command-line calculator and equation solver with fault-tolerant parsing, constant recognition and units.",
     "url": "https://qalculate.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libqalculate"],
     "aur": false
   },
@@ -690,7 +690,7 @@
     "name": "Qalculate!",
     "description": "Calculator and equation solver with fault-tolerant parsing, constant recognition and units.",
     "url": "https://qalculate.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qalculate-gtk_qalculate.png",
+
     "pkgname": ["qalculate-gtk"],
     "aur": false
   },
@@ -698,7 +698,7 @@
     "name": "QCAD",
     "description": "A 2D CAD application based on Qt. Supports the DFX and HPGL standard file formats, and optionally the DWG format through a proprietary plugin.",
     "url": "https://www.qcad.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qcad_org.qcad.QCAD.png",
+
     "pkgname": ["qcad"],
     "aur": false
   },
@@ -706,7 +706,7 @@
     "name": "QGIS",
     "description": "Geographic Information System (GIS) that supports vector, raster & database formats.",
     "url": "https://qgis.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qgis_qgis.png",
+
     "pkgname": ["qgis"],
     "aur": false
   },
@@ -714,7 +714,7 @@
     "name": "QMapShack",
     "description": "Plan your next outdoor trip.",
     "url": "https://github.com/Maproom/qmapshack/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qmapshack"],
     "aur": false
   },
@@ -722,7 +722,7 @@
     "name": "qucs-s",
     "description": "Electronics circuit simulator that gives you the ability to set up a circuit with a GUI and simulate it. Fork of qucs that uses external, better, programs to do actual simulation.",
     "url": "https://ra3xdh.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qucs-s"],
     "aur": false
   },
@@ -730,7 +730,7 @@
     "name": "R",
     "description": "Software environment for statistical computing and graphics.",
     "url": "https://cran.r-project.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/r_r.png",
+
     "pkgname": ["r"],
     "aur": false
   },
@@ -738,7 +738,7 @@
     "name": "Railway",
     "description": "Lets you look up travel information for many different railways, all without needing to navigate through different websites.",
     "url": "https://apps.gnome.org/DieBahn/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/railway_de.schmidhuberj.DieBahn.png",
+
     "pkgname": ["railway"],
     "aur": false
   },
@@ -746,7 +746,7 @@
     "name": "RDKit",
     "description": "A collection of cheminformatics and machine-learning software written in C++ and Python.",
     "url": "https://www.rdkit.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rdkit"],
     "aur": false
   },
@@ -754,7 +754,7 @@
     "name": "Rink",
     "description": "A unit conversion tool and library written in rust. It can be used for physics and engineering calculations, as well as dimensionality analysis.",
     "url": "https://rinkcalc.app/about",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rink"],
     "aur": false
   },
@@ -762,7 +762,7 @@
     "name": "RKWard",
     "description": "Frontend for the statistical language R.",
     "url": "https://rkward.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rkward_rkward.png",
+
     "pkgname": ["rkward"],
     "aur": false
   },
@@ -770,7 +770,7 @@
     "name": "Rocq",
     "description": "Formal proof management system. It provides a formal language to write mathematical definitions, executable algorithms and theorems together with an environment for semi-interactive development of machine-checked proofs.",
     "url": "https://coq.inria.fr/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rocq"],
     "aur": false
   },
@@ -778,7 +778,7 @@
     "name": "Rocs",
     "description": "Graph Theory IDE for everybody interested in designing and analyzing graph algorithms (e.g., lecturers, students, researchers). Part of kde-education.",
     "url": "https://apps.kde.org/rocs/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rocs_rocs.png",
+
     "pkgname": ["rocs"],
     "aur": false
   },
@@ -786,7 +786,7 @@
     "name": "ROOT",
     "description": "Data analysis program and library (originally for particle physics) developed by CERN.",
     "url": "https://root.cern.ch/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["root"],
     "aur": false
   },
@@ -794,7 +794,7 @@
     "name": "RStudio",
     "description": "A powerful and productive IDE for R written in Qt.",
     "url": "https://www.rstudio.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rstudio-desktop"],
     "aur": false
   },
@@ -802,7 +802,7 @@
     "name": "SageMath",
     "description": "Mathematics software system, that combines many existing open-source packages into a common Python interface. Alternative to Magma, Maple, Mathematica and Matlab.",
     "url": "https://www.sagemath.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["sagemath"],
     "aur": false
   },
@@ -810,7 +810,7 @@
     "name": "sdcc",
     "description": "Small Device C Compiler, appropriate for various 8-bit microcontrollers and microprocessors including those made by or based on Intel MCS51, Maxim/Dallas, DS80C390, Freescale/Motorola HC08, Zilog Z80, Padauk, ST Microelectronics STM8, MOS 6502, and WDC 65C02. Suite contains compiler, assembler, linker, preprocessor, various simulators, debuggers, etc.",
     "url": "https://sdcc.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["sdcc"],
     "aur": false
   },
@@ -818,7 +818,7 @@
     "name": "Singular",
     "description": "Computer algebra system for polynomial computations, with special emphasis on commutative and non-commutative algebra, algebraic geometry, and singularity theory.",
     "url": "https://www.singular.uni-kl.de/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["singular"],
     "aur": false
   },
@@ -826,7 +826,7 @@
     "name": "SolveSpace",
     "description": "Powerful 3D CAD constraint-based parametric modeler with simple mechanical simulation capabilities.",
     "url": "https://solvespace.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["solvespace"],
     "aur": false
   },
@@ -834,7 +834,7 @@
     "name": "SpeedCrunch",
     "description": "Fast, high precision and powerful cross-platform calculator.",
     "url": "https://speedcrunch.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/speedcrunch_speedcrunch.png",
+
     "pkgname": ["speedcrunch"],
     "aur": false
   },
@@ -842,7 +842,7 @@
     "name": "Stellarium",
     "description": "Beautiful 3D planetarium that uses OpenGL to render a realistic sky in real time.",
     "url": "https://stellarium.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/stellarium_stellarium.png",
+
     "pkgname": ["stellarium"],
     "aur": false
   },
@@ -850,7 +850,7 @@
     "name": "Step",
     "description": "Two-dimensional physics simulation engine. Part of kde-education.",
     "url": "https://apps.kde.org/step/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/step_step.png",
+
     "pkgname": ["step"],
     "aur": false
   },
@@ -858,7 +858,7 @@
     "name": "stlink",
     "description": "Open source STM32 MCU programming toolset for ST microcontrollers.",
     "url": "https://github.com/texane/stlink",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/stlink_stlink-gui.png",
+
     "pkgname": ["stlink"],
     "aur": false
   },
@@ -866,7 +866,7 @@
     "name": "Valuta",
     "description": "Simple application for converting currencies.",
     "url": "https://apps.gnome.org/Valuta/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/valuta_io.github.idevecore.Valuta.png",
+
     "pkgname": ["valuta"],
     "aur": false
   },
@@ -874,7 +874,7 @@
     "name": "Verilator",
     "description": "A Verilog/SystemVerilog simulator, performs lint code-quality checks, compile to threaded C++ code for simulation.",
     "url": "https://verilator.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["verilator"],
     "aur": false
   },
@@ -882,7 +882,7 @@
     "name": "Viking",
     "description": "GTK 2 application to manage GPS data.",
     "url": "https://sourceforge.net/projects/viking/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/viking_viking.png",
+
     "pkgname": ["viking"],
     "aur": false
   },
@@ -890,7 +890,7 @@
     "name": "VTR",
     "description": "Verilog to Routing, Open Source CAD Flow for FPGA ResearchVerilog to Route.",
     "url": "https://verilogtorouting.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vtr"],
     "aur": false
   },
@@ -898,7 +898,7 @@
     "name": "wxMaxima",
     "description": "Graphical user interface for Maxima being a powerful computer algebra system.",
     "url": "https://andrejv.github.io/wxmaxima/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["wxmaxima"],
     "aur": false
   },
@@ -906,7 +906,7 @@
     "name": "xcalc",
     "description": "Scientific calculator for X with algebraic and reverse polish notation modes.",
     "url": "https://www.x.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xorg-xcalc"],
     "aur": false
   },
@@ -914,7 +914,7 @@
     "name": "Xcas",
     "description": "User interface to Giac, a free, basic computer algebra system.",
     "url": "https://www-fourier.ujf-grenoble.fr/~parisse/giac.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/giac_xcas.png",
+
     "pkgname": ["giac"],
     "aur": false
   },
@@ -922,7 +922,7 @@
     "name": "Xfce Weather Panel Plugin",
     "description": "Weather forecast plugin for the Xfce4 panel.",
     "url": "https://goodies.xfce.org/projects/panel-plugins/xfce4-weather-plugin",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xfce4-weather-plugin"],
     "aur": false
   }

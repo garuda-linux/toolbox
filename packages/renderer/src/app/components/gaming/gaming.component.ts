@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TableModule } from 'primeng/table';
-import { NgOptimizedImage } from '@angular/common';
 import { DataViewModule } from 'primeng/dataview';
 import { Card } from 'primeng/card';
 import { TabsModule } from 'primeng/tabs';
@@ -22,7 +21,7 @@ import { Router, type UrlTree } from '@angular/router';
 
 @Component({
   selector: 'toolbox-gaming',
-  imports: [TranslocoDirective, TableModule, DataViewModule, Card, NgOptimizedImage, TabsModule, Tooltip],
+  imports: [TranslocoDirective, TableModule, DataViewModule, Card, TabsModule, Tooltip],
   templateUrl: './gaming.component.html',
   styleUrl: './gaming.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,35 +99,38 @@ export class GamingComponent implements OnInit {
    * Get the source path for an icon.
    * @param item The package entry.
    */
-  getIconSrc(item: StatefulPackage & { icon: string }): string {
-    const pkgname = item.pkgname[0];
+  getIconSrc(item: StatefulPackage & { icon?: string; _iconError?: boolean }): string {
+    const pkgname = item.pkgname[0]?.replace(/-(bin|git)$/, '');
     const icon = item.icon;
 
-    if (!icon || icon === 'generic-dark.svg') {
-      return this.configService.settings().darkMode
-        ? './assets/gamer/generic-dark.svg'
-        : './assets/gamer/generic-light.svg';
-    }
-
-    if (icon?.startsWith('/')) {
-      return `app-icon://${icon}`;
+    if (item._iconError) {
+      if (icon) {
+        if (icon.includes('.')) {
+          if (icon.includes('assets/')) return icon.startsWith('.') ? icon : `./${icon.replace(/^\//, '')}`;
+          if (icon.startsWith('/')) return `app-icon://${icon}`;
+          return `./assets/gamer/${icon}`;
+        }
+        return `./assets/gamer/${icon}.png`;
+      }
+      return 'app-icon://unknown';
     }
 
     if (icon) {
-      if (icon.includes('.')) {
-        if (icon.includes('assets/')) return icon.startsWith('.') ? icon : `./${icon.replace(/^\//, '')}`;
-        return `./assets/gamer/${icon}`;
-      }
-      return `app-icon://${icon}`;
+      return `app-icon://${icon}?fallback=false`;
     }
 
     if (pkgname) {
       return `app-icon://package/${pkgname}`;
     }
 
-    return this.configService.settings().darkMode
-      ? './assets/gamer/generic-dark.svg'
-      : './assets/gamer/generic-light.svg';
+    return 'app-icon://unknown';
+  }
+
+  handleIconError(event: Event, item: StatefulPackage & { _iconError?: boolean }): void {
+    if (!item._iconError) {
+      item._iconError = true;
+      this.cdr.markForCheck();
+    }
   }
 
   /**

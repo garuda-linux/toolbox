@@ -3,7 +3,7 @@
     "name": "abduco",
     "description": "Tool for session attach and detach support which allows a process to run independently from its controlling terminal.",
     "url": "https://www.brain-dump.org/projects/abduco/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["abduco"],
     "aur": false
   },
@@ -11,7 +11,7 @@
     "name": "Accerciser",
     "description": "Interactive Python accessibility explorer. It uses the AT-SPI library to inspect, examine, and interact with widgets, allowing you to check if an application is providing correct information to assistive technologies and automated testing frameworks. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Accerciser",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/accerciser_accerciser.png",
+
     "pkgname": ["accerciser"],
     "aur": false
   },
@@ -19,7 +19,7 @@
     "name": "Accessibility Inspector",
     "description": "Inspector for application accessibility tree. Part of kde-accessibility.",
     "url": "https://apps.kde.org/accessibilityinspector/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/accessibility-inspector_org.kde.accessibilityinspector.png",
+
     "pkgname": ["accessibility-inspector"],
     "aur": false
   },
@@ -27,7 +27,7 @@
     "name": "aconfmgr",
     "description": "Package to track, manage, and restore the configuration of an Arch Linux system.",
     "url": "https://github.com/CyberShadow/aconfmgr",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["aconfmgr-git"],
     "aur": false
   },
@@ -35,7 +35,7 @@
     "name": "Alacritty",
     "description": "A cross-platform, GPU-accelerated terminal emulator.",
     "url": "https://github.com/alacritty/alacritty",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/alacritty_Alacritty.png",
+
     "pkgname": ["alacritty"],
     "aur": false
   },
@@ -43,7 +43,7 @@
     "name": "Allegro",
     "description": "A cross-platform library mainly aimed at video game and multimedia programming.",
     "url": "https://liballeg.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["allegro"],
     "aur": false
   },
@@ -51,7 +51,7 @@
     "name": "alsi",
     "description": "A system information tool for Arch Linux. It can be configured for every other system without even touching the source code of the script.",
     "url": "https://trizenx.blogspot.com/2012/08/alsi.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["alsi"],
     "aur": false
   },
@@ -59,7 +59,7 @@
     "name": "Android Studio",
     "description": "The official Android development environment based on IntelliJ IDEA.",
     "url": "https://developer.android.com/studio/index.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["android-studio"],
     "aur": false
   },
@@ -67,7 +67,7 @@
     "name": "Ansible",
     "description": "IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.",
     "url": "https://www.ansible.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ansible"],
     "aur": false
   },
@@ -75,7 +75,7 @@
     "name": "ANTLR",
     "description": "Parser generator, written in Java, for parsing structured text or binary files.",
     "url": "https://www.antlr.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["antlr4"],
     "aur": false
   },
@@ -83,7 +83,7 @@
     "name": "Apache Ant",
     "description": "Java library and command-line tool whose mission is to drive processes described in build files as targets and extension points dependent upon each other.",
     "url": "https://ant.apache.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ant"],
     "aur": false
   },
@@ -91,7 +91,7 @@
     "name": "Apache Maven",
     "description": "Build automation tool used primarily for Java.",
     "url": "https://maven.apache.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["maven"],
     "aur": false
   },
@@ -99,7 +99,7 @@
     "name": "App Icon Preview",
     "description": "Tool for designing applications icons which target the GNOME desktop.",
     "url": "https://gitlab.gnome.org/World/design/app-icon-preview",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/app-icon-preview_org.gnome.design.AppIconPreview.png",
+
     "pkgname": ["app-icon-preview"],
     "aur": false
   },
@@ -107,7 +107,7 @@
     "name": "Arca",
     "description": "Archiver for compressed files. Part of maui.",
     "url": "https://mauikit.org/apps/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/arca_arca.png",
+
     "pkgname": ["arca"],
     "aur": false
   },
@@ -115,7 +115,7 @@
     "name": "Ark",
     "description": "Archiving tool included in the KDE desktop. Part of kde-utilities.",
     "url": "https://apps.kde.org/ark/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ark_ark.png",
+
     "pkgname": ["ark"],
     "aur": false
   },
@@ -123,7 +123,7 @@
     "name": "Arqiver",
     "description": "Simple Qt archive manager based on libarchive.",
     "url": "https://github.com/tsujan/Arqiver",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["arqiver"],
     "aur": false
   },
@@ -131,7 +131,7 @@
     "name": "atop",
     "description": "System and process monitor for Linux.",
     "url": "https://www.atoptool.nl/index.php",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["atop"],
     "aur": false
   },
@@ -139,7 +139,7 @@
     "name": "Baloo",
     "description": "KDE's file indexing and search solution, has a CLI and is used by KRunner.",
     "url": "https://community.kde.org/Baloo",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["baloo"],
     "aur": false
   },
@@ -147,7 +147,7 @@
     "name": "bashtop",
     "description": "A Linux resource monitor written in bash.",
     "url": "https://github.com/aristocratos/bashtop",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bashtop"],
     "aur": false
   },
@@ -155,7 +155,7 @@
     "name": "Bazel",
     "description": "An open-source tool that allows for the automated building and testing of software.",
     "url": "https://bazel.build/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bazel"],
     "aur": false
   },
@@ -163,7 +163,7 @@
     "name": "Berkeley Yacc",
     "description": "Berkeley reimplementation of the Unix parser generator Yacc.",
     "url": "https://invisible-island.net/byacc/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["byacc"],
     "aur": false
   },
@@ -171,7 +171,7 @@
     "name": "Biblioteca",
     "description": "API documentation viewer for GNOME.",
     "url": "https://apps.gnome.org/Biblioteca/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/biblioteca_app.drey.Biblioteca.png",
+
     "pkgname": ["biblioteca"],
     "aur": false
   },
@@ -179,7 +179,7 @@
     "name": "Black Box",
     "description": "An elegant and customizable terminal for GNOME.",
     "url": "https://gitlab.gnome.org/raggesilver/blackbox",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["blackbox-terminal"],
     "aur": false
   },
@@ -187,7 +187,7 @@
     "name": "BleachBit",
     "description": "Frees disk space and guards your privacy; frees cache, deletes cookies, clears Internet history, shreds temporary files, deletes logs, and discards junk you did not know was there.",
     "url": "https://www.bleachbit.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bleachbit_bleachbit.png",
+
     "pkgname": ["bleachbit"],
     "aur": false
   },
@@ -195,7 +195,7 @@
     "name": "Bluefish",
     "description": "Powerful editor targeted towards programmers and webdevelopers, with many options to write websites, scripts and programming code. It supports many programming and markup languages.",
     "url": "https://bluefish.openoffice.nl/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bluefish_bluefish.png",
+
     "pkgname": ["bluefish"],
     "aur": false
   },
@@ -203,7 +203,7 @@
     "name": "Borg",
     "description": "Deduplicating backup program with compression and authenticated encryption that supports backing up over ssh.",
     "url": "https://www.borgbackup.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["borg"],
     "aur": false
   },
@@ -211,7 +211,7 @@
     "name": "bottom",
     "description": "A customizable graphical process/system monitor for the terminal.",
     "url": "https://github.com/ClementTsang/bottom",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bottom"],
     "aur": false
   },
@@ -219,7 +219,7 @@
     "name": "bpytop",
     "description": "Htop but more lightweight with more features.",
     "url": "https://github.com/aristocratos/bpytop",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bpytop"],
     "aur": false
   },
@@ -227,7 +227,7 @@
     "name": "Breezy",
     "description": "A decentralized revision control system with support for Bazaar and Git file formats.",
     "url": "https://www.breezy-vcs.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["breezy"],
     "aur": false
   },
@@ -235,7 +235,7 @@
     "name": "btop",
     "description": "Rewrite of bpytop in C++",
     "url": "https://github.com/aristocratos/btop",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["btop"],
     "aur": false
   },
@@ -243,7 +243,7 @@
     "name": "Bugzilla",
     "description": "Bug tracker from Mozilla.",
     "url": "https://www.bugzilla.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bugzilla"],
     "aur": false
   },
@@ -251,7 +251,7 @@
     "name": "Builder",
     "description": "Tool to write and contribute to great GNOME-based applications. Part of gnome-extra.",
     "url": "https://apps.gnome.org/Builder/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-builder_org.gnome.Builder.png",
+
     "pkgname": ["gnome-builder"],
     "aur": false
   },
@@ -259,7 +259,7 @@
     "name": "bup",
     "description": "Efficient backup system based on the git packfile format, providing fast incremental saves and global deduplication.",
     "url": "https://bup.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bup"],
     "aur": false
   },
@@ -267,7 +267,7 @@
     "name": "byobu",
     "description": "A GPLv3 licensed addon for tmux or screen. It requires a terminal multiplexer installed.",
     "url": "https://byobu.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/byobu_byobu.png",
+
     "pkgname": ["byobu"],
     "aur": false
   },
@@ -275,7 +275,7 @@
     "name": "Caja",
     "description": "The file manager for the MATE desktop.",
     "url": "https://github.com/mate-desktop/caja",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["caja"],
     "aur": false
   },
@@ -283,7 +283,7 @@
     "name": "Cambalache",
     "description": "A RAD tool for GTK 4 and 3 with a clear MVC design and data model first philosophy. (Work in progress)",
     "url": "https://gitlab.gnome.org/jpu/cambalache",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cambalache"],
     "aur": false
   },
@@ -291,7 +291,7 @@
     "name": "Catfish",
     "description": "Versatile file searching tool by Xfce, can be powered by find, locate and Zeitgeist.",
     "url": "https://launchpad.net/catfish-search",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/catfish_org.xfce.catfish.png",
+
     "pkgname": ["catfish"],
     "aur": false
   },
@@ -299,7 +299,7 @@
     "name": "CMake",
     "description": "Family of tools designed to build, test and package software.",
     "url": "https://cmake.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cmake_CMakeSetup.png",
+
     "pkgname": ["cmake"],
     "aur": false
   },
@@ -307,7 +307,7 @@
     "name": "Code::Blocks",
     "description": "C, C++ and Fortran IDE built to meet the most demanding needs of its users. It is designed to be very extensible and fully configurable.",
     "url": "https://codeblocks.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/codeblocks_codeblocks.png",
+
     "pkgname": ["codeblocks"],
     "aur": false
   },
@@ -315,7 +315,7 @@
     "name": "colordiff",
     "description": "A Perl script wrapper for 'diff' that produces the same output but with pretty 'syntax' highlighting.",
     "url": "https://www.colordiff.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["colordiff"],
     "aur": false
   },
@@ -323,7 +323,7 @@
     "name": "Conky",
     "description": "Lightweight, scriptable system monitor.",
     "url": "https://github.com/brndnmtthws/conky",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["conky"],
     "aur": false
   },
@@ -331,7 +331,7 @@
     "name": "Contour",
     "description": "A modern and fast terminal emulator with truly full Unicode support including ZJW (unlike 99% of TE) and Vi-like input modes and keybindings.",
     "url": "https://github.com/contour-terminal/contour",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/contour_org.contourterminal.Contour.png",
+
     "pkgname": ["contour"],
     "aur": false
   },
@@ -339,7 +339,7 @@
     "name": "cool-retro-term",
     "description": "A good looking terminal emulator which mimics the old cathode display.",
     "url": "https://github.com/Swordfish90/cool-retro-term",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cool-retro-term_cool-retro-term.png",
+
     "pkgname": ["cool-retro-term"],
     "aur": false
   },
@@ -347,7 +347,7 @@
     "name": "CoreKeyboard",
     "description": "Simple X11 based Qt virtual keyboard with word suggestions. Part of C-Suite.",
     "url": "https://cubocore.gitlab.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["corekeyboard"],
     "aur": false
   },
@@ -355,7 +355,7 @@
     "name": "COSMIC Files",
     "description": "File manager for the COSMIC desktop environment.",
     "url": "https://github.com/pop-os/cosmic-files",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cosmic-files_com.system76.CosmicFiles.png",
+
     "pkgname": ["cosmic-files"],
     "aur": false
   },
@@ -363,7 +363,7 @@
     "name": "COSMIC Terminal",
     "description": "Terminal emulator for the COSMIC desktop environment.",
     "url": "https://github.com/pop-os/cosmic-term",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cosmic-terminal_com.system76.CosmicTerm.png",
+
     "pkgname": ["cosmic-terminal"],
     "aur": false
   },
@@ -371,7 +371,7 @@
     "name": "ctop",
     "description": "Top-like interface for Docker and runc container metrics.",
     "url": "https://ctop.sh/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ctop"],
     "aur": false
   },
@@ -379,7 +379,7 @@
     "name": "Cutefish File Manager",
     "description": "File manager for Cutefish desktop.",
     "url": "https://github.com/cutefishos/filemanager",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cutefish-filemanager_system-file-manager.png",
+
     "pkgname": ["cutefish-filemanager"],
     "aur": false
   },
@@ -387,7 +387,7 @@
     "name": "Cutefish Terminal",
     "description": "Terminal emulator for Cutefish desktop.",
     "url": "https://github.com/cutefishos/terminal",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cutefish-terminal"],
     "aur": false
   },
@@ -395,7 +395,7 @@
     "name": "CVS",
     "description": "Concurrent Versions System, a client-server revision control system.",
     "url": "https://cvs.nongnu.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cvs"],
     "aur": false
   },
@@ -403,7 +403,7 @@
     "name": "Czkawka CLI",
     "description": "Simple, fast and free app to remove unnecessary files from your computer.",
     "url": "https://github.com/qarmin/czkawka",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["czkawka-cli"],
     "aur": false
   },
@@ -411,7 +411,7 @@
     "name": "Czkawka GUI",
     "description": "Simple, fast and free app to remove unnecessary files from your computer. Looks similar to FSlint.",
     "url": "https://github.com/qarmin/czkawka",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["czkawka-gui"],
     "aur": false
   },
@@ -419,7 +419,7 @@
     "name": "Darcs",
     "description": "Distributed revision control system that was designed to replace traditional, centralized source control systems such as CVS and Subversion.",
     "url": "https://darcs.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["darcs"],
     "aur": false
   },
@@ -427,7 +427,7 @@
     "name": "Deepin Archive Manager",
     "description": "Fast and lightweight application for creating and extracting archives.",
     "url": "https://github.com/linuxdeepin/deepin-compressor",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-compressor_deepin-compressor.png",
+
     "pkgname": ["deepin-compressor"],
     "aur": false
   },
@@ -435,7 +435,7 @@
     "name": "Deepin Boot Maker",
     "description": "Tool to make boot disk for Deepin OS.",
     "url": "https://www.deepin.org/en/original/deepin-boot-maker/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-boot-maker_deepin-boot-maker.png",
+
     "pkgname": ["deepin-boot-maker"],
     "aur": false
   },
@@ -443,7 +443,7 @@
     "name": "Deepin File Manager",
     "description": "File manager developed for Deepin.",
     "url": "https://www.deepin.org/en/original/dde-file-manager/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["deepin-file-manager"],
     "aur": false
   },
@@ -451,7 +451,7 @@
     "name": "Deepin Font Manager",
     "description": "A font management tool for Deepin desktop.",
     "url": "https://www.deepin.org/en/original/deepin-font-manager/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["deepin-font-manager"],
     "aur": false
   },
@@ -459,7 +459,7 @@
     "name": "Deepin System Monitor",
     "description": "Monitor system process status for Deepin desktop.",
     "url": "https://www.deepin.org/en/original/deepin-system-monitor/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["deepin-system-monitor"],
     "aur": false
   },
@@ -467,7 +467,7 @@
     "name": "Deepin Terminal",
     "description": "Terminal emulation application for Deepin desktop.",
     "url": "https://www.deepin.org/en/original/deepin-terminal/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-terminal_deepin-terminal.png",
+
     "pkgname": ["deepin-terminal"],
     "aur": false
   },
@@ -475,7 +475,7 @@
     "name": "Deepin Terminal (GTK version)",
     "description": "Old terminal emulation application for Deepin desktop.",
     "url": "https://github.com/linuxdeepin/deepin-terminal-gtk",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-terminal-gtk_deepin-terminal-gtk.png",
+
     "pkgname": ["deepin-terminal-gtk"],
     "aur": false
   },
@@ -483,7 +483,7 @@
     "name": "Déjà Dup",
     "description": "Simple GTK backup program. It hides the complexity of doing backups the 'right way' (encrypted, off-site, and regular) and uses Restic as the backend.",
     "url": "https://apps.gnome.org/DejaDup/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deja-dup_org.gnome.DejaDup.png",
+
     "pkgname": ["deja-dup"],
     "aur": false
   },
@@ -491,7 +491,7 @@
     "name": "delta",
     "description": "A diff viewer written in Rust with syntax highlighting.",
     "url": "https://github.com/dandavison/delta",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["git-delta"],
     "aur": false
   },
@@ -499,7 +499,7 @@
     "name": "Devhelp",
     "description": "Developer tool for browsing and searching API documentation.",
     "url": "https://gitlab.gnome.org/Archive/devhelp",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/devhelp_org.gnome.Devhelp.png",
+
     "pkgname": ["devhelp"],
     "aur": false
   },
@@ -507,7 +507,7 @@
     "name": "Dialog",
     "description": "TUI widgets built using ncurses.",
     "url": "https://invisible-island.net/dialog/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dialog"],
     "aur": false
   },
@@ -515,7 +515,7 @@
     "name": "diff-highlight",
     "description": "Perl script to highlight changed parts within pairable lines of diff -u output",
     "url": "https://github.com/git/git/tree/master/contrib/diff-highlight",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["git"],
     "aur": false
   },
@@ -523,7 +523,7 @@
     "name": "diff-so-fancy",
     "description": "A diff output decorator. It does not calculate the diff, it only decorates it.",
     "url": "https://github.com/so-fancy/diff-so-fancy",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["diff-so-fancy"],
     "aur": false
   },
@@ -531,7 +531,7 @@
     "name": "DiffPDF",
     "description": "Compare the text or the visual appearance of each page in two PDF files.",
     "url": "https://gitlab.com/eang/diffpdf",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/diffpdf_diffpdf.png",
+
     "pkgname": ["diffpdf"],
     "aur": false
   },
@@ -539,7 +539,7 @@
     "name": "difftastic",
     "description": "Compares files using their syntax trees",
     "url": "https://difftastic.wilfred.me.uk",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["difftastic"],
     "aur": false
   },
@@ -547,7 +547,7 @@
     "name": "Diffuse",
     "description": "Small and simple text merge tool written in Python.",
     "url": "https://diffuse.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/diffuse_io.github.mightycreak.Diffuse.png",
+
     "pkgname": ["diffuse"],
     "aur": false
   },
@@ -555,7 +555,7 @@
     "name": "Dired (Directory Editor)",
     "description": "The file manager integrated with Emacs.",
     "url": "https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/emacs_emacs.png",
+
     "pkgname": ["emacs"],
     "aur": false
   },
@@ -563,7 +563,7 @@
     "name": "dmidecode",
     "description": "It reports information about your system's hardware as described in your system BIOS according to the SMBIOS/DMI standard.",
     "url": "https://www.nongnu.org/dmidecode/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dmidecode"],
     "aur": false
   },
@@ -571,7 +571,7 @@
     "name": "Dolphin",
     "description": "File manager included in the KDE desktop. Part of kde-system.",
     "url": "https://apps.kde.org/dolphin/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/dolphin_org.kde.dolphin.png",
+
     "pkgname": ["dolphin"],
     "aur": false
   },
@@ -579,7 +579,7 @@
     "name": "dool",
     "description": "Versatile resource statistics tool.",
     "url": "https://github.com/scottchiefbaker/dool",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dool"],
     "aur": false
   },
@@ -587,7 +587,7 @@
     "name": "Double Commander",
     "description": "File manager with two panels side by side. It is inspired by Total Commander and features some new ideas.",
     "url": "https://doublecmd.sourceforge.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/doublecmd-qt5_doublecmd.png",
+
     "pkgname": ["doublecmd-qt5"],
     "aur": false
   },
@@ -595,7 +595,7 @@
     "name": "DrKonqi",
     "description": "Crash handler for KDE software. It also provides a GUI for coredumpctl, called drkonqi-coredump-gui. Part of plasma.",
     "url": "https://invent.kde.org/plasma/drkonqi",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["drkonqi"],
     "aur": false
   },
@@ -603,7 +603,7 @@
     "name": "duplicity",
     "description": "Simple command-line utility which allows encrypted compressed incremental backup to nearly any storage.",
     "url": "https://www.nongnu.org/duplicity/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["duplicity"],
     "aur": false
   },
@@ -611,7 +611,7 @@
     "name": "dust",
     "description": "A more intuitive version of du in rust.",
     "url": "https://github.com/bootandy/dust",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dust"],
     "aur": false
   },
@@ -619,7 +619,7 @@
     "name": "dvtm",
     "description": "dwm-style window manager in the console.",
     "url": "https://www.brain-dump.org/projects/dvtm/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dvtm"],
     "aur": false
   },
@@ -627,7 +627,7 @@
     "name": "Elastic",
     "description": "Design and export spring physics-based animations to use with libadwaita.",
     "url": "https://apps.gnome.org/Elastic/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/elastic_app.drey.Elastic.png",
+
     "pkgname": ["elastic"],
     "aur": false
   },
@@ -635,7 +635,7 @@
     "name": "Emblem",
     "description": "Generate projects avatars for your Matrix rooms and git forges from a symbolic icon.",
     "url": "https://apps.gnome.org/Emblem/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/emblem_org.gnome.design.Emblem.png",
+
     "pkgname": ["emblem"],
     "aur": false
   },
@@ -643,7 +643,7 @@
     "name": "Emote",
     "description": "A modern emoji picker written in GTK3.",
     "url": "https://github.com/tom-james-watson/Emote",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["emote"],
     "aur": false
   },
@@ -651,7 +651,7 @@
     "name": "Engrampa",
     "description": "Archive manager for MATE",
     "url": "https://github.com/mate-desktop/engrampa",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/engrampa_engrampa.png",
+
     "pkgname": ["engrampa"],
     "aur": false
   },
@@ -659,7 +659,7 @@
     "name": "etckeeper",
     "description": "Collection of tools to let /etc be stored in a VCS repository.",
     "url": "https://etckeeper.branchable.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["etckeeper"],
     "aur": false
   },
@@ -667,7 +667,7 @@
     "name": "Evisum",
     "description": "GUI top/htop-like process viewer using EFL.",
     "url": "https://git.enlightenment.org/enlightenment/evisum",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["evisum"],
     "aur": false
   },
@@ -675,7 +675,7 @@
     "name": "fastfetch",
     "description": "Like Neofetch, but much faster because written in C.",
     "url": "https://github.com/fastfetch-cli/fastfetch",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fastfetch"],
     "aur": false
   },
@@ -683,7 +683,7 @@
     "name": "Fbterm",
     "description": "a fast FrameBuffer based TERMinal emulator for linux",
     "url": "https://salsa.debian.org/debian/fbterm",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fbterm"],
     "aur": false
   },
@@ -691,7 +691,7 @@
     "name": "fclones",
     "description": "Very fast duplicate file Finder written in rust.",
     "url": "https://github.com/pkolaczk/fclones",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fclones"],
     "aur": false
   },
@@ -699,7 +699,7 @@
     "name": "fdupes",
     "description": "Program for identifying or deleting duplicate files residing within specified directories.",
     "url": "https://github.com/adrianlopezroche/fdupes",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fdupes"],
     "aur": false
   },
@@ -707,7 +707,7 @@
     "name": "Fedora Media Writer",
     "description": "Tool that helps users put Fedora images on their portable drives such as flash disks.",
     "url": "https://github.com/FedoraQt/MediaWriter",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mediawriter"],
     "aur": false
   },
@@ -715,7 +715,7 @@
     "name": "File Roller",
     "description": "Archive manager for the GNOME desktop. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/FileRoller",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/file-roller_org.gnome.FileRoller.png",
+
     "pkgname": ["file-roller"],
     "aur": false
   },
@@ -723,7 +723,7 @@
     "name": "File Shredder",
     "description": "File deletion program designed to permanently remove sensitive files from your computer, enhancing data privacy.",
     "url": "https://apps.gnome.org/Raider/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/raider_com.github.ADBeveridge.Raider.png",
+
     "pkgname": ["raider"],
     "aur": false
   },
@@ -731,7 +731,7 @@
     "name": "File Size Viewer (part of Konqueror)",
     "description": "KDE based disk usage analyzer that draws a map of rectangles sized according to file or dir sizes. Run with fsview. Part of kde-network.",
     "url": "https://apps.kde.org/konqueror/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/konqueror_konqueror.png",
+
     "pkgname": ["konqueror"],
     "aur": false
   },
@@ -739,7 +739,7 @@
     "name": "Filelight",
     "description": "Disk usage analyzer that creates an interactive map of concentric, segmented rings that help visualise disk usage on your computer. Part of kde-utilities.",
     "url": "https://apps.kde.org/filelight/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/filelight_filelight.png",
+
     "pkgname": ["filelight"],
     "aur": false
   },
@@ -747,7 +747,7 @@
     "name": "flex",
     "description": "A tool for generating text-scanning programs, alternative to Lex.",
     "url": "https://github.com/westes/flex",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["flex"],
     "aur": false
   },
@@ -755,7 +755,7 @@
     "name": "FLUID",
     "description": "FLTK GUI designer.",
     "url": "https://www.fltk.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/fltk_fluid.png",
+
     "pkgname": ["fltk"],
     "aur": false
   },
@@ -763,7 +763,7 @@
     "name": "Font Manager",
     "description": "Simple font management for GTK desktop environments.",
     "url": "https://fontmanager.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/font-manager_com.github.FontManager.FontManager.png",
+
     "pkgname": ["font-manager"],
     "aur": false
   },
@@ -771,7 +771,7 @@
     "name": "foot",
     "description": "Lightweight terminal emulator for Wayland with sixel support.",
     "url": "https://codeberg.org/dnkl/foot",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/foot_foot.png",
+
     "pkgname": ["foot"],
     "aur": false
   },
@@ -779,7 +779,7 @@
     "name": "Forgejo",
     "description": "A lightweight software forge. Community project built on top of Gitea.",
     "url": "https://forgejo.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["forgejo"],
     "aur": false
   },
@@ -787,7 +787,7 @@
     "name": "Fossil",
     "description": "Distributed VCS with bug tracking, wiki, forum, and technotes.",
     "url": "https://www.fossil-scm.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fossil"],
     "aur": false
   },
@@ -795,7 +795,7 @@
     "name": "fsearch",
     "description": "A fast file search utility for Unix-like systems based on GTK 3.",
     "url": "https://github.com/cboxdoerfer/fsearch",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fsearch-git"],
     "aur": false
   },
@@ -803,7 +803,7 @@
     "name": "Gambas",
     "description": "IDE based on a Basic interpreter with object extensions.",
     "url": "https://gambaswiki.org/website/en/main.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gambas3-ide_gambas3.png",
+
     "pkgname": ["gambas3-ide"],
     "aur": false
   },
@@ -811,7 +811,7 @@
     "name": "GammaRay",
     "description": "Qt-application inspection and manipulation tool.",
     "url": "https://www.kdab.com/development-resources/qt-tools/gammaray/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gammaray_GammaRay.png",
+
     "pkgname": ["gammaray"],
     "aur": false
   },
@@ -819,7 +819,7 @@
     "name": "Gaphor",
     "description": "Simple UML and SysML modeling tool.",
     "url": "https://apps.gnome.org/Gaphor/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gaphor_org.gaphor.Gaphor.png",
+
     "pkgname": ["gaphor"],
     "aur": false
   },
@@ -827,7 +827,7 @@
     "name": "GDB",
     "description": "Native code debugger from the GNU Project.",
     "url": "https://www.sourceware.org/gdb/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gdb"],
     "aur": false
   },
@@ -835,7 +835,7 @@
     "name": "gdu",
     "description": "Disk usage analyzer with console interface written in Go.",
     "url": "https://github.com/Dundee/gdu",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gdu"],
     "aur": false
   },
@@ -843,7 +843,7 @@
     "name": "Geany",
     "description": "Small and lightweight IDE with many supported programming and markup languages including C, Java, PHP, HTML, Python, Perl, Pascal.",
     "url": "https://geany.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/geany_geany.png",
+
     "pkgname": ["geany"],
     "aur": false
   },
@@ -851,7 +851,7 @@
     "name": "Gerrit",
     "description": "A web-based code review tool built on top of the Git version control system",
     "url": "https://www.gerritcodereview.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gerrit"],
     "aur": false
   },
@@ -859,7 +859,7 @@
     "name": "GHex",
     "description": "Hex editor for GNOME, which allows the user to load data from any file, view and edit it in either hex or ascii. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Ghex",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ghex_org.gnome.GHex.png",
+
     "pkgname": ["ghex"],
     "aur": false
   },
@@ -867,7 +867,7 @@
     "name": "Ghostty",
     "description": "Fast, native, feature-rich terminal emulator pushing modern features.",
     "url": "https://ghostty.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ghostty_com.mitchellh.ghostty.png",
+
     "pkgname": ["ghostty"],
     "aur": false
   },
@@ -875,7 +875,7 @@
     "name": "Git",
     "description": "Distributed revision control and source code management system with an emphasis on speed.",
     "url": "https://git-scm.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["git"],
     "aur": false
   },
@@ -883,7 +883,7 @@
     "name": "git-annex",
     "description": "Manage files with git, without checking the file contents into git.",
     "url": "https://git-annex.branchable.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/git-annex_git-annex.png",
+
     "pkgname": ["git-annex"],
     "aur": false
   },
@@ -891,7 +891,7 @@
     "name": "Gitea",
     "description": "Painless self-hosted Git service. Fork of Gogs.",
     "url": "https://gitea.io",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gitea"],
     "aur": false
   },
@@ -899,7 +899,7 @@
     "name": "github-cli",
     "description": "GitHub's official command line tool",
     "url": "https://github.com/cli/cli",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["github-cli"],
     "aur": false
   },
@@ -907,7 +907,7 @@
     "name": "GitLab",
     "description": "Project management and code hosting application.",
     "url": "https://gitlab.com/gitlab-org/gitlab-foss",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gitlab"],
     "aur": false
   },
@@ -915,7 +915,7 @@
     "name": "Glade",
     "description": "Create or open user interface designs for GTK applications. Part of gnome-extra. (GTK 3 only)",
     "url": "https://glade.gnome.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/glade_org.gnome.Glade.png",
+
     "pkgname": ["glade"],
     "aur": false
   },
@@ -923,7 +923,7 @@
     "name": "glances",
     "description": "CLI curses-based monitoring tool in Python.",
     "url": "https://nicolargo.github.io/glances/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["glances"],
     "aur": false
   },
@@ -931,7 +931,7 @@
     "name": "GNOME Characters",
     "description": "Character map application for GNOME. Part of gnome.",
     "url": "https://apps.gnome.org/Characters/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-characters_org.gnome.Characters.png",
+
     "pkgname": ["gnome-characters"],
     "aur": false
   },
@@ -939,7 +939,7 @@
     "name": "Gnome Commander",
     "description": "A dual-paned file manager for the GNOME Desktop.",
     "url": "https://gcmd.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-commander_gnome-commander.png",
+
     "pkgname": ["gnome-commander"],
     "aur": false
   },
@@ -947,7 +947,7 @@
     "name": "GNOME Console",
     "description": "Formerly known as King’s Cross, a simple user-friendly terminal emulator for the GNOME desktop. Part of gnome.",
     "url": "https://apps.gnome.org/Console/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-console_org.gnome.Console.png",
+
     "pkgname": ["gnome-console"],
     "aur": false
   },
@@ -955,7 +955,7 @@
     "name": "GNOME Disk Usage Analyzer",
     "description": "Disk usage analyzer for the GNOME desktop to check folder sizes and available disk space. Part of gnome.",
     "url": "https://apps.gnome.org/Baobab/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/baobab_org.gnome.baobab.png",
+
     "pkgname": ["baobab"],
     "aur": false
   },
@@ -963,7 +963,7 @@
     "name": "GNOME Files",
     "description": "Extensible, heavyweight file manager used by default in GNOME with support for custom scripts. Part of gnome.",
     "url": "https://apps.gnome.org/Nautilus/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/nautilus_org.gnome.Nautilus.png",
+
     "pkgname": ["nautilus"],
     "aur": false
   },
@@ -971,7 +971,7 @@
     "name": "GNOME Fonts",
     "description": "Font viewer for GNOME. Part of gnome.",
     "url": "https://apps.gnome.org/FontViewer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-font-viewer_org.gnome.font-viewer.png",
+
     "pkgname": ["gnome-font-viewer"],
     "aur": false
   },
@@ -979,7 +979,7 @@
     "name": "GNOME Logs",
     "description": "Viewer for the systemd journal. Part of gnome.",
     "url": "https://apps.gnome.org/Logs/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-logs_org.gnome.Logs.png",
+
     "pkgname": ["gnome-logs"],
     "aur": false
   },
@@ -987,7 +987,7 @@
     "name": "GNOME System Monitor",
     "description": "System monitor for GNOME to view and manage system resources. Part of gnome.",
     "url": "https://apps.gnome.org/SystemMonitor/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-system-monitor_org.gnome.SystemMonitor.png",
+
     "pkgname": ["gnome-system-monitor"],
     "aur": false
   },
@@ -995,7 +995,7 @@
     "name": "GNOME Terminal",
     "description": "A terminal emulator included in the GNOME desktop with support for Unicode. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Terminal",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-terminal_org.gnome.Terminal.png",
+
     "pkgname": ["gnome-terminal"],
     "aur": false
   },
@@ -1003,7 +1003,7 @@
     "name": "GNU Bison",
     "description": "The GNU general-purpose parser generator, alternative to byacc.",
     "url": "https://www.gnu.org/software/bison/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bison"],
     "aur": false
   },
@@ -1011,7 +1011,7 @@
     "name": "GNU make",
     "description": "GNU make utility to maintain groups of programs.",
     "url": "https://www.gnu.org/software/make/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["make"],
     "aur": false
   },
@@ -1019,7 +1019,7 @@
     "name": "GNU Screen",
     "description": "Full-screen window manager that multiplexes a physical terminal.",
     "url": "https://www.gnu.org/software/screen/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["screen"],
     "aur": false
   },
@@ -1027,7 +1027,7 @@
     "name": "Godot",
     "description": "Advanced, feature-packed, multi-platform 2D and 3D game engine. Create games with ease, using Godot's unique approach to game development.",
     "url": "https://godotengine.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/godot_godot.png",
+
     "pkgname": ["godot"],
     "aur": false
   },
@@ -1035,7 +1035,7 @@
     "name": "GPRename",
     "description": "GTK batch renamer for files and directories.",
     "url": "https://gprename.sourceforge.net",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gprename_gprename.png",
+
     "pkgname": ["gprename"],
     "aur": false
   },
@@ -1043,7 +1043,7 @@
     "name": "gprof",
     "description": "Profile analysis tool for programs instrumented with GCC.",
     "url": "https://sourceware.org/binutils/docs/gprof/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["binutils"],
     "aur": false
   },
@@ -1051,7 +1051,7 @@
     "name": "Gradle",
     "description": "Powerful build system for the JVM.",
     "url": "https://gradle.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gradle"],
     "aur": false
   },
@@ -1059,7 +1059,7 @@
     "name": "Graphical Disk Map",
     "description": "Disk usage analyzer that draws a map of rectangles sized according to file or dir sizes.",
     "url": "https://gdmap.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gdmap"],
     "aur": false
   },
@@ -1067,7 +1067,7 @@
     "name": "gron",
     "description": "gron transforms JSON into discrete assignments to make it easier to grep.",
     "url": "https://github.com/tomnomnom/gron",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gron"],
     "aur": false
   },
@@ -1075,7 +1075,7 @@
     "name": "grsync",
     "description": "GTK GUI for rsync to synchronize folders, files and make backups",
     "url": "https://www.opbyte.it/grsync/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/grsync_grsync.png",
+
     "pkgname": ["grsync"],
     "aur": false
   },
@@ -1083,7 +1083,7 @@
     "name": "gtop",
     "description": "A system monitoring dashboard for the terminal.",
     "url": "https://github.com/aksakalli/gtop",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gtop"],
     "aur": false
   },
@@ -1091,7 +1091,7 @@
     "name": "Guake",
     "description": "Drop-down terminal for the GNOME desktop.",
     "url": "https://guake.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/guake_guake.png",
+
     "pkgname": ["guake"],
     "aur": false
   },
@@ -1099,7 +1099,7 @@
     "name": "gucharmap",
     "description": "GTK 3 character selector for GNOME.",
     "url": "https://wiki.gnome.org/Apps/Gucharmap",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gucharmap_accessories-character-map.png",
+
     "pkgname": ["gucharmap"],
     "aur": false
   },
@@ -1107,7 +1107,7 @@
     "name": "gxkb",
     "description": "X11 keyboard layout indicator and switcher.",
     "url": "https://github.com/zen-tools/gxkb",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gxkb"],
     "aur": false
   },
@@ -1115,7 +1115,7 @@
     "name": "hardinfo2",
     "description": "System Information and Benchmark for Linux Systems.",
     "url": "https://www.hardinfo2.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hardinfo2"],
     "aur": false
   },
@@ -1123,7 +1123,7 @@
     "name": "Heaptrack",
     "description": "A heap memory profiler for Linux.",
     "url": "https://apps.kde.org/heaptrack/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/heaptrack_heaptrack.png",
+
     "pkgname": ["heaptrack"],
     "aur": false
   },
@@ -1131,7 +1131,7 @@
     "name": "heh",
     "description": "Cross-platform terminal hex editor, it aims to replicate some of the look of hexyl while functionally acting like a terminal UI version of GHex.",
     "url": "https://github.com/ndd7xv/heh",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["heh"],
     "aur": false
   },
@@ -1139,7 +1139,7 @@
     "name": "hex",
     "description": "Modern colored hex dump. Binary name is hx.",
     "url": "https://github.com/sitkevij/hex",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hex"],
     "aur": false
   },
@@ -1147,7 +1147,7 @@
     "name": "hexdump",
     "description": "Basic hex dump from the standard package util-linux.",
     "url": "https://github.com/util-linux/util-linux",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["util-linux"],
     "aur": false
   },
@@ -1155,7 +1155,7 @@
     "name": "hexyl",
     "description": "Modern colored hex dump.",
     "url": "https://github.com/sharkdp/hexyl",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hexyl"],
     "aur": false
   },
@@ -1163,7 +1163,7 @@
     "name": "Hieroglyphic",
     "description": "Search through over 1000 different LaTeX symbols by sketching.",
     "url": "https://apps.gnome.org/Hieroglyphic/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/hieroglyphic_io.github.finefindus.Hieroglyphic.png",
+
     "pkgname": ["hieroglyphic"],
     "aur": false
   },
@@ -1171,7 +1171,7 @@
     "name": "Hotspot",
     "description": "GUI for exploring profile data collected with perf.",
     "url": "https://github.com/KDAB/hotspot",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hotspot"],
     "aur": false
   },
@@ -1179,7 +1179,7 @@
     "name": "htop",
     "description": "Simple, ncurses interactive process viewer.",
     "url": "https://htop.dev/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["htop"],
     "aur": false
   },
@@ -1187,7 +1187,7 @@
     "name": "hub",
     "description": "Command line interface for GitHub",
     "url": "https://hub.github.com",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hub"],
     "aur": false
   },
@@ -1195,7 +1195,7 @@
     "name": "hut",
     "description": "Command line interface for Sourcehut",
     "url": "https://sr.ht/~emersion/hut/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hut"],
     "aur": false
   },
@@ -1203,7 +1203,7 @@
     "name": "hw-probe",
     "description": "Tool to probe for hardware, check operability and find drivers with the help of Linux Hardware Database.",
     "url": "https://github.com/linuxhw/hw-probe",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hw-probe"],
     "aur": false
   },
@@ -1211,7 +1211,7 @@
     "name": "hwdetect",
     "description": "Simple script to list modules that are exported in /sys/.",
     "url": "https://gitlab.archlinux.org/archlinux/packaging/packages/hwdetect/-/blob/main/hwdetect",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hwdetect"],
     "aur": false
   },
@@ -1219,7 +1219,7 @@
     "name": "hwinfo",
     "description": "Powerful hardware detection tool from openSUSE.",
     "url": "https://github.com/openSUSE/hwinfo",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hwinfo"],
     "aur": false
   },
@@ -1227,7 +1227,7 @@
     "name": "hyfetch",
     "description": "Neofetch with LGBTQ+ pride flags!",
     "url": "https://github.com/hykilpikonna/hyfetch",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hyfetch"],
     "aur": false
   },
@@ -1235,7 +1235,7 @@
     "name": "Icon Library",
     "description": "Find the right icon to use on your GNOME application.",
     "url": "https://gitlab.gnome.org/World/design/icon-library",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/icon-library_org.gnome.design.IconLibrary.png",
+
     "pkgname": ["icon-library"],
     "aur": false
   },
@@ -1243,7 +1243,7 @@
     "name": "ImHex",
     "description": "A hex editor for reverse engineers, programmers, and people who value their retinas when working at 3 AM.",
     "url": "https://imhex.werwolv.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["imhex"],
     "aur": false
   },
@@ -1251,7 +1251,7 @@
     "name": "Impression",
     "description": "Application to create bootable drives from disk images.",
     "url": "https://apps.gnome.org/Impression/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/impression_io.gitlab.adhami3310.Impression.png",
+
     "pkgname": ["impression"],
     "aur": false
   },
@@ -1259,7 +1259,7 @@
     "name": "Index",
     "description": "File manager that lets you browse your system files and applications and preview your music, text, image and video files and share them with external applications. Part of maui.",
     "url": "https://mauikit.org/apps/index/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/index-fm_index.png",
+
     "pkgname": ["index-fm"],
     "aur": false
   },
@@ -1267,7 +1267,7 @@
     "name": "IntelliJ IDEA",
     "description": "IDE for Java, Kotlin, Scala, Groovy and other programming languages. Has advanced refactoring features.",
     "url": "https://www.jetbrains.com/idea/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/intellij-idea-community-edition_idea.png",
+
     "pkgname": ["intellij-idea-community-edition"],
     "aur": false
   },
@@ -1275,7 +1275,7 @@
     "name": "inxi",
     "description": "A script to get system information.",
     "url": "https://codeberg.org/smxi/inxi",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["inxi"],
     "aur": false
   },
@@ -1283,7 +1283,7 @@
     "name": "ISO Image Writer",
     "description": "KDE tool to write a .iso file to a USB disk. Part of kde-utilities.",
     "url": "https://apps.kde.org/isoimagewriter/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/isoimagewriter_org.kde.isoimagewriter.png",
+
     "pkgname": ["isoimagewriter"],
     "aur": false
   },
@@ -1291,7 +1291,7 @@
     "name": "jdupes",
     "description": "Identify and take actions upon duplicate files.",
     "url": "https://www.jdupes.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["jdupes"],
     "aur": false
   },
@@ -1299,7 +1299,7 @@
     "name": "jless",
     "description": "A command-line pager for JSON data.",
     "url": "https://github.com/PaulJuliusMartinez/jless",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["jless"],
     "aur": false
   },
@@ -1307,7 +1307,7 @@
     "name": "joshuto",
     "description": "ranger-like terminal file manager written in Rust.",
     "url": "https://github.com/kamiyaa/joshuto",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["joshuto"],
     "aur": false
   },
@@ -1315,7 +1315,7 @@
     "name": "jq",
     "description": "jq is a lightweight and flexible command-line JSON processor.",
     "url": "https://jqlang.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["jq"],
     "aur": false
   },
@@ -1323,7 +1323,7 @@
     "name": "jshon",
     "description": "A JSON parser for the shell.",
     "url": "http://kmkeen.com/jshon/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["jshon"],
     "aur": false
   },
@@ -1331,7 +1331,7 @@
     "name": "Jujutsu",
     "description": "Modern VCS designed for ease of use, offering powerful features while maintaining full Git compatibility.",
     "url": "https://jj-vcs.github.io/jj/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["jujutsu"],
     "aur": false
   },
@@ -1339,7 +1339,7 @@
     "name": "KBackup",
     "description": "Backup program with an easy to use user interface based on the KDE Frameworks. Part of kde-utilities.",
     "url": "https://apps.kde.org/kbackup/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kbackup_kbackup.png",
+
     "pkgname": ["kbackup"],
     "aur": false
   },
@@ -1347,7 +1347,7 @@
     "name": "KCachegrind",
     "description": "GUI for exploring profile data collected with Valgrind's cachegrind tool. Part of kde-sdk.",
     "url": "https://apps.kde.org/kcachegrind/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kcachegrind_kcachegrind.png",
+
     "pkgname": ["kcachegrind"],
     "aur": false
   },
@@ -1355,7 +1355,7 @@
     "name": "KCharSelect",
     "description": "Tool to select special characters from all installed fonts and copy them into the clipboard. Part of kde-utilities.",
     "url": "https://apps.kde.org/kcharselect/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kcharselect_accessories-character-map.png",
+
     "pkgname": ["kcharselect"],
     "aur": false
   },
@@ -1363,7 +1363,7 @@
     "name": "KCron",
     "description": "Tool for KDE to run applications in the background at regular intervals. It is a graphical interface to the Cron command. Part of kde-system.",
     "url": "https://apps.kde.org/kcron/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kcron_preferences-system-time.png",
+
     "pkgname": ["kcron"],
     "aur": false
   },
@@ -1371,7 +1371,7 @@
     "name": "KDbg",
     "description": "Graphical user interface to GDB, the GNU debugger. It provides an intuitive interface for setting breakpoints, inspecting variables, and stepping through code.",
     "url": "https://www.kdbg.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdbg_kdbg.png",
+
     "pkgname": ["kdbg"],
     "aur": false
   },
@@ -1379,7 +1379,7 @@
     "name": "KDebugSettings",
     "description": "Application to choose which QLoggingCategory are displayed by editing the user's global qtlogging.ini configuration file. Part of kde-utilities.",
     "url": "https://apps.kde.org/kdebugsettings/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kdebugsettings"],
     "aur": false
   },
@@ -1387,7 +1387,7 @@
     "name": "KDevelop",
     "description": "Feature-full, plugin extensible IDE for C/C++ and other programming languages. Part of kde-applications.",
     "url": "https://kdevelop.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdevelop_kdevelop.png",
+
     "pkgname": ["kdevelop"],
     "aur": false
   },
@@ -1395,7 +1395,7 @@
     "name": "KDialog",
     "description": "Qt-based GUI prompts by KDE. Part of kde-utilities.",
     "url": "https://invent.kde.org/utilities/kdialog",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdialog_dialog-question.png",
+
     "pkgname": ["kdialog"],
     "aur": false
   },
@@ -1403,7 +1403,7 @@
     "name": "KDiff3",
     "description": "File and directory diff and merge tool for the KDE desktop.",
     "url": "https://apps.kde.org/kdiff3/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdiff3_kdiff3.png",
+
     "pkgname": ["kdiff3"],
     "aur": false
   },
@@ -1411,7 +1411,7 @@
     "name": "KDiskFree",
     "description": "Displays information about hard disks and other storage devices. It also allows to mount and unmount drives and view them in a file manager. Part of kde-utilities.",
     "url": "https://apps.kde.org/kdf/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdf_kdf.png",
+
     "pkgname": ["kdf"],
     "aur": false
   },
@@ -1419,7 +1419,7 @@
     "name": "KFind",
     "description": "Search tool for KDE to find files by name, type or content. Has internal search and supports locate. Part of kde-utilities.",
     "url": "https://apps.kde.org/kfind/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kfind_kfind.png",
+
     "pkgname": ["kfind"],
     "aur": false
   },
@@ -1427,7 +1427,7 @@
     "name": "KFontview",
     "description": "KDE application to view and install different types of fonts. Part of plasma.",
     "url": "https://invent.kde.org/plasma/plasma-workspace",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["plasma-workspace"],
     "aur": false
   },
@@ -1435,7 +1435,7 @@
     "name": "KImageMapEditor",
     "description": "Editor of image maps embedded inside HTML files, based on the <map> tag. Part of kde-graphics.",
     "url": "https://apps.kde.org/kimagemapeditor/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kimagemapeditor_kimagemapeditor.png",
+
     "pkgname": ["kimagemapeditor"],
     "aur": false
   },
@@ -1443,7 +1443,7 @@
     "name": "KInfoCenter",
     "description": "Centralized and convenient overview of system information for KDE. Part of plasma.",
     "url": "https://userbase.kde.org/KInfoCenter",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kinfocenter_hwinfo.png",
+
     "pkgname": ["kinfocenter"],
     "aur": false
   },
@@ -1451,7 +1451,7 @@
     "name": "kitty",
     "description": "A modern, hackable, featureful, OpenGL based terminal emulator",
     "url": "https://github.com/kovidgoyal/kitty",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kitty_kitty.png",
+
     "pkgname": ["kitty"],
     "aur": false
   },
@@ -1459,7 +1459,7 @@
     "name": "KJournald Browser",
     "description": "Provides a flexible tool to browse in local, remote and offline systemd-journald databases. Part of kde-system.",
     "url": "https://apps.kde.org/kjournaldbrowser/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kjournald_utilities-log-viewer.png",
+
     "pkgname": ["kjournald"],
     "aur": false
   },
@@ -1467,7 +1467,7 @@
     "name": "kmon",
     "description": "Linux kernel manager and activity monitor.",
     "url": "https://github.com/orhun/kmon",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kmon"],
     "aur": false
   },
@@ -1475,7 +1475,7 @@
     "name": "KMSCON",
     "description": "A KMS/DRM-based system console(getty) with an integrated terminal emulator for Linux operating systems.",
     "url": "https://github.com/dvdhrm/kmscon",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kmscon"],
     "aur": false
   },
@@ -1483,7 +1483,7 @@
     "name": "Kompare",
     "description": "GUI front-end program for viewing and merging differences between source files. It supports a variety of diff formats and provides many options to customize the information level displayed. Part of kde-sdk.",
     "url": "https://apps.kde.org/kompare/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kompare_kompare.png",
+
     "pkgname": ["kompare"],
     "aur": false
   },
@@ -1491,7 +1491,7 @@
     "name": "Konqueror",
     "description": "File manager and web browser for the KDE desktop. Part of kde-network.",
     "url": "https://apps.kde.org/konqueror/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/konqueror_konqueror.png",
+
     "pkgname": ["konqueror"],
     "aur": false
   },
@@ -1499,7 +1499,7 @@
     "name": "Konsole",
     "description": "Terminal emulator included in the KDE desktop. Part of kde-utilities.",
     "url": "https://konsole.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/konsole_utilities-terminal.png",
+
     "pkgname": ["konsole"],
     "aur": false
   },
@@ -1507,7 +1507,7 @@
     "name": "KRename",
     "description": "Very powerful batch file renamer for the KDE desktop.",
     "url": "https://apps.kde.org/krename/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/krename_krename.png",
+
     "pkgname": ["krename"],
     "aur": false
   },
@@ -1515,7 +1515,7 @@
     "name": "Krusader",
     "description": "Advanced twin panel (Midnight Commander style) file manager for the KDE desktop.",
     "url": "https://krusader.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/krusader_krusader_user.png",
+
     "pkgname": ["krusader"],
     "aur": false
   },
@@ -1523,7 +1523,7 @@
     "name": "KShutdown",
     "description": "Graphical shutdown utility, which allows you to turn off or suspend a computer at a specified time. It features various time and delay options, command-line support, and notifications.",
     "url": "https://kshutdown.sourceforge.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kshutdown_kshutdown.png",
+
     "pkgname": ["kshutdown"],
     "aur": false
   },
@@ -1531,7 +1531,7 @@
     "name": "KSystemLog",
     "description": "System log viewer tool for KDE. Part of kde-system.",
     "url": "https://apps.kde.org/ksystemlog/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ksystemlog_utilities-log-viewer.png",
+
     "pkgname": ["ksystemlog"],
     "aur": false
   },
@@ -1539,7 +1539,7 @@
     "name": "KTimer",
     "description": "Little tool for KDE to execute programs after some time. It allows you to enter several tasks and to set a timer for each of them. The timers for each task can be started, stopped, changed, or looped. Part of kde-utilities.",
     "url": "https://apps.kde.org/ktimer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktimer_ktimer.png",
+
     "pkgname": ["ktimer"],
     "aur": false
   },
@@ -1547,7 +1547,7 @@
     "name": "KTurtle",
     "description": "Educational programming environment that aims to make learning how to program as easily as possible. Part of kde-education.",
     "url": "https://apps.kde.org/kturtle/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kturtle_kturtle.png",
+
     "pkgname": ["kturtle"],
     "aur": false
   },
@@ -1555,7 +1555,7 @@
     "name": "KUIViewer",
     "description": "Quick viewer for Qt Designer UI File. Part of kde-sdk.",
     "url": "https://apps.kde.org/kuiviewer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kde-dev-utils_kuiviewer.png",
+
     "pkgname": ["kde-dev-utils"],
     "aur": false
   },
@@ -1563,7 +1563,7 @@
     "name": "Kup",
     "description": "Backup scheduler for the Plasma desktop. It uses bup and rsync as backend.",
     "url": "https://apps.kde.org/kup/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kup_kup.png",
+
     "pkgname": ["kup"],
     "aur": false
   },
@@ -1571,7 +1571,7 @@
     "name": "Lapce",
     "description": "Lightning-fast and Powerful Code Editor written in Rust.",
     "url": "https://lapce.dev/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lapce_dev.lapce.lapce.png",
+
     "pkgname": ["lapce"],
     "aur": false
   },
@@ -1579,7 +1579,7 @@
     "name": "Lazarus",
     "description": "Delphi (Object Pascal) compatible IDE for Rapid Application Development. It has variety of components ready for use and a graphical form designer to easily create complex graphical user interfaces.",
     "url": "https://www.lazarus-ide.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lazarus"],
     "aur": false
   },
@@ -1587,7 +1587,7 @@
     "name": "less",
     "description": "A program similar to more, but with support for both forward and backward scrolling, as well as partial loading of files.",
     "url": "https://www.gnu.org/software/less/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["less"],
     "aur": false
   },
@@ -1595,7 +1595,7 @@
     "name": "lf",
     "description": "Terminal file manager written in Go using server/client architecture.",
     "url": "https://github.com/gokcehan/lf",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lf"],
     "aur": false
   },
@@ -1603,7 +1603,7 @@
     "name": "LibreSprite",
     "description": "Animated sprite editor and pixel art tool lets you create 2D animations for videogames.",
     "url": "https://github.com/LibreSprite/LibreSprite",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/libresprite_libresprite.png",
+
     "pkgname": ["libresprite"],
     "aur": false
   },
@@ -1611,7 +1611,7 @@
     "name": "Lite XL",
     "description": "A lightweight, simple, fast, feature-filled, and extremely extensible text editor written in C, and Lua, adapted from lite.",
     "url": "https://lite-xl.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lite-xl_lite-xl.png",
+
     "pkgname": ["lite-xl"],
     "aur": false
   },
@@ -1619,7 +1619,7 @@
     "name": "LiteIDE",
     "description": "Simple Go IDE.",
     "url": "https://github.com/visualfc/liteide",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/liteide_liteide.png",
+
     "pkgname": ["liteide"],
     "aur": false
   },
@@ -1627,7 +1627,7 @@
     "name": "LLDB",
     "description": "Modern native code debugger from the LLVM project.",
     "url": "https://lldb.llvm.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lldb"],
     "aur": false
   },
@@ -1635,7 +1635,7 @@
     "name": "LocalSearch",
     "description": "LocalSearch is the indexer and search engine that powers desktop search for core GNOME components, replacing Tracker.",
     "url": "https://gnome.pages.gitlab.gnome.org/localsearch/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["localsearch"],
     "aur": false
   },
@@ -1643,7 +1643,7 @@
     "name": "LÖVE",
     "description": "Lua based game development environment.",
     "url": "https://love2d.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["love"],
     "aur": false
   },
@@ -1651,7 +1651,7 @@
     "name": "LPeg",
     "description": "Pattern-matching library, based on PEGs, for Lua.",
     "url": "https://www.inf.puc-rio.br/~roberto/lpeg/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lua-lpeg"],
     "aur": false
   },
@@ -1659,7 +1659,7 @@
     "name": "lshw",
     "description": "A small tool to provide detailed information on the hardware configuration of the machine with CLI and GTK interfaces.",
     "url": "https://ezix.org/project/wiki/HardwareLiSter",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lshw_logo.png",
+
     "pkgname": ["lshw"],
     "aur": false
   },
@@ -1667,7 +1667,7 @@
     "name": "LXQt File Archiver",
     "description": "Simple and lightweight desktop-agnostic Qt file archiver.",
     "url": "https://github.com/lxqt/lxqt-archiver",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lxqt-archiver_lxqt-archiver.png",
+
     "pkgname": ["lxqt-archiver"],
     "aur": false
   },
@@ -1675,7 +1675,7 @@
     "name": "LXTask",
     "description": "Lightweight process manager for LXDE.",
     "url": "https://github.com/lxde/lxtask",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lxtask_utilities-system-monitor.png",
+
     "pkgname": ["lxtask"],
     "aur": false
   },
@@ -1683,7 +1683,7 @@
     "name": "LXTerminal",
     "description": "Desktop independent terminal emulator for LXDE.",
     "url": "https://github.com/lxde/lxterminal",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lxterminal_lxterminal.png",
+
     "pkgname": ["lxterminal"],
     "aur": false
   },
@@ -1691,7 +1691,7 @@
     "name": "Manuals",
     "description": "Developer documentation browser for GNOME. Part of gnome-extra.",
     "url": "https://apps.gnome.org/Manuals/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/manuals_app.devsuite.Manuals.png",
+
     "pkgname": ["manuals"],
     "aur": false
   },
@@ -1699,7 +1699,7 @@
     "name": "Massif-Visualizer",
     "description": "Visualizer for Valgrind Massif data files.",
     "url": "https://apps.kde.org/massif_visualizer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/massif-visualizer_massif-visualizer.png",
+
     "pkgname": ["massif-visualizer"],
     "aur": false
   },
@@ -1707,7 +1707,7 @@
     "name": "MATE Disk Usage Analyzer",
     "description": "Disk usage analyzing tool for MATE Desktop.",
     "url": "https://github.com/mate-desktop/mate-utils",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-utils_applets-screenshooter.png",
+
     "pkgname": ["mate-utils"],
     "aur": false
   },
@@ -1715,7 +1715,7 @@
     "name": "MATE Font Viewer",
     "description": "Font viewer for MATE.",
     "url": "https://github.com/mate-desktop/mate-control-center",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-utils_applets-screenshooter.png",
+
     "pkgname": ["mate-utils"],
     "aur": false
   },
@@ -1723,7 +1723,7 @@
     "name": "MATE Search Tool",
     "description": "MATE utility to search for files.",
     "url": "https://github.com/mate-desktop/mate-utils",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-utils_applets-screenshooter.png",
+
     "pkgname": ["mate-utils"],
     "aur": false
   },
@@ -1731,7 +1731,7 @@
     "name": "MATE System Log",
     "description": "System log viewer for MATE.",
     "url": "https://github.com/mate-desktop/mate-utils",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-utils_applets-screenshooter.png",
+
     "pkgname": ["mate-utils"],
     "aur": false
   },
@@ -1739,7 +1739,7 @@
     "name": "MATE System Monitor",
     "description": "System monitor for MATE.",
     "url": "https://github.com/mate-desktop/mate-system-monitor",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-system-monitor_utilities-system-monitor.png",
+
     "pkgname": ["mate-system-monitor"],
     "aur": false
   },
@@ -1747,7 +1747,7 @@
     "name": "MATE Terminal",
     "description": "A fork of GNOME Terminal for the MATE desktop.",
     "url": "https://github.com/mate-desktop/mate-terminal",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-terminal_utilities-terminal.png",
+
     "pkgname": ["mate-terminal"],
     "aur": false
   },
@@ -1755,7 +1755,7 @@
     "name": "mcview",
     "description": "A pager with mouse and colour support. It is bundled with midnight commander.",
     "url": "https://midnight-commander.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mc"],
     "aur": false
   },
@@ -1763,7 +1763,7 @@
     "name": "MeiliSearch",
     "description": "Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine.",
     "url": "https://www.meilisearch.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["meilisearch"],
     "aur": false
   },
@@ -1771,7 +1771,7 @@
     "name": "Meld",
     "description": "Visual diff and merge tool that can compare files, directories, and version controlled projects.",
     "url": "https://meldmerge.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/meld_org.gnome.Meld.png",
+
     "pkgname": ["meld"],
     "aur": false
   },
@@ -1779,7 +1779,7 @@
     "name": "Mercurial",
     "description": "Distributed version control system written in Python and similar in many ways to Git.",
     "url": "https://www.mercurial-scm.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mercurial"],
     "aur": false
   },
@@ -1787,7 +1787,7 @@
     "name": "Meson",
     "description": "Extremely fast and user friendly build system.",
     "url": "https://mesonbuild.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["meson"],
     "aur": false
   },
@@ -1795,7 +1795,7 @@
     "name": "Midnight Commander",
     "description": "Console-based, dual-paneled file manager.",
     "url": "https://midnight-commander.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mc"],
     "aur": false
   },
@@ -1803,7 +1803,7 @@
     "name": "Mission Center",
     "description": "GTK4 application for monitoring CPU, memory, disk, network and GPU usage.",
     "url": "https://gitlab.com/mission-center-devs/mission-center",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mission-center_io.missioncenter.MissionCenter.png",
+
     "pkgname": ["mission-center"],
     "aur": false
   },
@@ -1811,7 +1811,7 @@
     "name": "moor",
     "description": "Moor is a pager. It's designed to just do the right thing without any configuration.",
     "url": "https://github.com/walles/moor",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["moor"],
     "aur": false
   },
@@ -1819,7 +1819,7 @@
     "name": "more",
     "description": "A simple and feature-light pager. It is a part of util-linux.",
     "url": "https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git/about/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["util-linux"],
     "aur": false
   },
@@ -1827,7 +1827,7 @@
     "name": "most",
     "description": "A pager with support for multiple windows, left and right scrolling, and built-in colour support",
     "url": "http://www.jedsoft.org/most/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["most"],
     "aur": false
   },
@@ -1835,7 +1835,7 @@
     "name": "MultiWriter",
     "description": "Write an ISO file to multiple USB devices at once. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/MultiWriter",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-multi-writer_org.gnome.MultiWriter.png",
+
     "pkgname": ["gnome-multi-writer"],
     "aur": false
   },
@@ -1843,7 +1843,7 @@
     "name": "Namazu",
     "description": "A Full-Text Search Engine",
     "url": "http://www.namazu.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["namazu"],
     "aur": false
   },
@@ -1851,7 +1851,7 @@
     "name": "ncdu",
     "description": "Simple ncurses disk usage analyzer.",
     "url": "https://dev.yorhel.nl/ncdu",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ncdu"],
     "aur": false
   },
@@ -1859,7 +1859,7 @@
     "name": "Nemo",
     "description": "Nemo is the file manager of the Cinnamon desktop. A fork of Nautilus.",
     "url": "https://projects.linuxmint.com/cinnamon/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/nemo_system-file-manager.png",
+
     "pkgname": ["nemo"],
     "aur": false
   },
@@ -1867,7 +1867,7 @@
     "name": "Netbeans",
     "description": "IDE for developing with Java, JavaScript, PHP, Python, Ruby, Groovy, C, C++, Scala, Clojure, and other languages.",
     "url": "https://netbeans.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/netbeans_netbeans.png",
+
     "pkgname": ["netbeans"],
     "aur": false
   },
@@ -1875,7 +1875,7 @@
     "name": "netdata",
     "description": "Web-based real-time performance monitor.",
     "url": "https://github.com/netdata/netdata",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["netdata"],
     "aur": false
   },
@@ -1883,7 +1883,7 @@
     "name": "nmon",
     "description": "Console based application for monitoring various system components.",
     "url": "https://nmon.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nmon"],
     "aur": false
   },
@@ -1891,7 +1891,7 @@
     "name": "nnn",
     "description": "Tiny, lightning fast, feature-packed file manager.",
     "url": "https://github.com/jarun/nnn",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nnn"],
     "aur": false
   },
@@ -1899,7 +1899,7 @@
     "name": "od",
     "description": "Dump files in octal and other formats.",
     "url": "https://www.gnu.org/software/coreutils/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["coreutils"],
     "aur": false
   },
@@ -1907,7 +1907,7 @@
     "name": "Okteta",
     "description": "KDE hex editor for viewing and editing the raw data of files.",
     "url": "https://apps.kde.org/okteta/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/okteta_okteta.png",
+
     "pkgname": ["okteta"],
     "aur": false
   },
@@ -1915,7 +1915,7 @@
     "name": "Onboard",
     "description": "Onscreen keyboard useful for tablet PC users and for mobility impaired users.",
     "url": "https://launchpad.net/onboard",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/onboard_onboard.png",
+
     "pkgname": ["onboard"],
     "aur": false
   },
@@ -1923,7 +1923,7 @@
     "name": "p7zip-gui",
     "description": "The GUI belonging to the p7zip software.",
     "url": "https://github.com/p7zip-project/p7zip",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["p7zip-gui"],
     "aur": false
   },
@@ -1931,7 +1931,7 @@
     "name": "Pacman Log Viewer",
     "description": "Tool used to inspect pacman log file, in particular it lists installed, removed and upgraded packages letting you to filter by package's name and/or date.",
     "url": "https://github.com/gcala/pacmanlogviewer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pacmanlogviewer_plv.png",
+
     "pkgname": ["pacmanlogviewer"],
     "aur": false
   },
@@ -1939,7 +1939,7 @@
     "name": "Pantheon Files",
     "description": "File browser designed for elementary OS.",
     "url": "https://github.com/elementary/files",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pantheon-files_system-file-manager.png",
+
     "pkgname": ["pantheon-files"],
     "aur": false
   },
@@ -1947,7 +1947,7 @@
     "name": "Pantheon Terminal",
     "description": "A super lightweight, beautiful, and simple terminal emulator. It is designed to be set up with sane defaults and little to no configuration.",
     "url": "https://github.com/elementary/terminal",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pantheon-terminal_utilities-terminal.png",
+
     "pkgname": ["pantheon-terminal"],
     "aur": false
   },
@@ -1955,7 +1955,7 @@
     "name": "PathFinder",
     "description": "File browser that comes with the FOX toolkit.",
     "url": "http://fox-toolkit.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fox"],
     "aur": false
   },
@@ -1963,7 +1963,7 @@
     "name": "PCManFM",
     "description": "Very fast and lightweight file manager which can also optionally manage the desktop icons and background.",
     "url": "https://github.com/lxde/pcmanfm",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pcmanfm_system-file-manager.png",
+
     "pkgname": ["pcmanfm"],
     "aur": false
   },
@@ -1971,7 +1971,7 @@
     "name": "PCManFM-Qt",
     "description": "Qt port of PCManFM file manager.",
     "url": "https://github.com/lxqt/pcmanfm-qt",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pcmanfm-qt_pcmanfm-qt.png",
+
     "pkgname": ["pcmanfm-qt"],
     "aur": false
   },
@@ -1979,7 +1979,7 @@
     "name": "peg/leg",
     "description": "Recursive-descent parser generators for C.",
     "url": "https://www.piumarta.com/software/peg/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["peg"],
     "aur": false
   },
@@ -1987,7 +1987,7 @@
     "name": "Peony",
     "description": "File manager for the UKUI desktop.",
     "url": "https://github.com/ukui/peony",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["peony"],
     "aur": false
   },
@@ -1995,7 +1995,7 @@
     "name": "perf",
     "description": "Official CLI for the Linux kernel's perf_events profiling subsystem.",
     "url": "https://perfwiki.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["perf"],
     "aur": false
   },
@@ -2003,7 +2003,7 @@
     "name": "pfetch",
     "description": "A pretty system information tool written in POSIX sh.",
     "url": "https://github.com/dylanaraps/pfetch",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["pfetch"],
     "aur": false
   },
@@ -2011,7 +2011,7 @@
     "name": "phd",
     "description": "Colored hex dump. pwn phd.",
     "url": "https://docs.pwntools.com/en/stable/commandline.html#pwn-phd",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-pwntools"],
     "aur": false
   },
@@ -2019,7 +2019,7 @@
     "name": "Pika Backup",
     "description": "Easy-to-use backup tool to keep your data safe. Uses Borg as backend.",
     "url": "https://apps.gnome.org/PikaBackup/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pika-backup_org.gnome.World.PikaBackup.png",
+
     "pkgname": ["pika-backup"],
     "aur": false
   },
@@ -2027,7 +2027,7 @@
     "name": "Pixelorama",
     "description": "2D sprite editor with animation support, made by Orama Interactive in the Godot Engine using GDScript.",
     "url": "https://orama-interactive.itch.io/pixelorama",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["pixelorama"],
     "aur": false
   },
@@ -2035,7 +2035,7 @@
     "name": "PlantUML",
     "description": "Tool to create UML diagrams from a plain text language.",
     "url": "https://plantuml.com",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["plantuml"],
     "aur": false
   },
@@ -2043,7 +2043,7 @@
     "name": "Plasma Emoji Selector",
     "description": "An emoji picker for Plasma. Run with plasma-emojier. Part of plasma.",
     "url": "https://kde.org/plasma-desktop/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["plasma-desktop"],
     "aur": false
   },
@@ -2051,7 +2051,7 @@
     "name": "Plasma Keyboard",
     "description": "Virtual keyboard useful for KDE Plasma-Wayland.",
     "url": "https://kde.org/plasma-desktop/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["plasma-keyboard"],
     "aur": false
   },
@@ -2059,7 +2059,7 @@
     "name": "Plasma System Monitor",
     "description": "Advanced and customizable system monitor for KDE. Part of plasma.",
     "url": "https://apps.kde.org/plasma-systemmonitor/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/plasma-systemmonitor_utilities-system-monitor.png",
+
     "pkgname": ["plasma-systemmonitor"],
     "aur": false
   },
@@ -2067,7 +2067,7 @@
     "name": "Popsicle",
     "description": "Utility for flashing multiple USB devices in parallel, written in Rust.",
     "url": "https://github.com/pop-os/popsicle",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["popsicle"],
     "aur": false
   },
@@ -2075,7 +2075,7 @@
     "name": "Processing",
     "description": "Playground for teaching non-programmers the fundamentals of computer programming in a visual context.",
     "url": "https://processing.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["processing"],
     "aur": false
   },
@@ -2083,7 +2083,7 @@
     "name": "Ptyxis",
     "description": "Terminal for GNOME with first-class support for containers.",
     "url": "https://gitlab.gnome.org/chergert/ptyxis",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ptyxis_org.gnome.Ptyxis.png",
+
     "pkgname": ["ptyxis"],
     "aur": false
   },
@@ -2091,7 +2091,7 @@
     "name": "Puppet",
     "description": "IT automation software that helps system administrators manage infrastructure throughout its lifecycle, from provisioning and configuration to patch management and compliance.",
     "url": "https://puppet.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["puppet"],
     "aur": false
   },
@@ -2099,7 +2099,7 @@
     "name": "PuTTY",
     "description": "Highly configurable ssh/telnet/serial console program.",
     "url": "https://www.chiark.greenend.org.uk/~sgtatham/putty/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/putty_putty.png",
+
     "pkgname": ["putty"],
     "aur": false
   },
@@ -2107,7 +2107,7 @@
     "name": "PyCharm",
     "description": "Python IDE with support for code analysis, debugging, unit testing, version control and web development with Django.",
     "url": "https://www.jetbrains.com/pycharm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pycharm-community-edition_pycharm.png",
+
     "pkgname": ["pycharm-community-edition"],
     "aur": false
   },
@@ -2115,7 +2115,7 @@
     "name": "qdirstat",
     "description": "Qt-based directory statistics (KDirStat/K4DirStat without any KDE - from the original KDirStat author).",
     "url": "https://github.com/shundhammer/qdirstat",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qdirstat"],
     "aur": false
   },
@@ -2123,7 +2123,7 @@
     "name": "QJournalctl",
     "description": "Qt-based graphical user interface for systemd's journalctl command.",
     "url": "https://github.com/pentix/qjournalctl",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qjournalctl_qjournalctl.png",
+
     "pkgname": ["qjournalctl"],
     "aur": false
   },
@@ -2131,7 +2131,7 @@
     "name": "QMLKonsole",
     "description": "Terminal application for Plasma Mobile.",
     "url": "https://apps.kde.org/qmlkonsole/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qmlkonsole_org.kde.qmlkonsole.png",
+
     "pkgname": ["qmlkonsole"],
     "aur": false
   },
@@ -2139,7 +2139,7 @@
     "name": "Qt Assistant",
     "description": "Tool for viewing on-line documentation in Qt help file format.",
     "url": "https://doc.qt.io/qt-6/qtassistant-index.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qt6-tools_qdbusviewer.png",
+
     "pkgname": ["qt6-tools"],
     "aur": false
   },
@@ -2147,7 +2147,7 @@
     "name": "Qt Creator",
     "description": "Lightweight, cross-platform C++ integrated development environment with a focus on Qt.",
     "url": "https://www.qt.io/ide/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qtcreator_QtProject-qtcreator.png",
+
     "pkgname": ["qtcreator"],
     "aur": false
   },
@@ -2155,7 +2155,7 @@
     "name": "Qt Process Manager",
     "description": "Lightweight process manager for LXQt.",
     "url": "https://github.com/lxqt/qps",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qps_qps.png",
+
     "pkgname": ["qps"],
     "aur": false
   },
@@ -2163,7 +2163,7 @@
     "name": "Qt Widget Designer",
     "description": "Tool for designing and building graphical user interfaces (GUIs) with Qt Widgets.",
     "url": "https://doc.qt.io/qt-6/qtdesigner-manual.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qt6-tools_qdbusviewer.png",
+
     "pkgname": ["qt6-tools"],
     "aur": false
   },
@@ -2171,7 +2171,7 @@
     "name": "qt6-virtualkeyboard",
     "description": "Onscreen keyboard by the Qt project.",
     "url": "https://www.qt.io",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qt6-virtualkeyboard"],
     "aur": false
   },
@@ -2179,7 +2179,7 @@
     "name": "QTerminal",
     "description": "Lightweight Qt-based terminal emulator.",
     "url": "https://github.com/qterminal/qterminal",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qterminal_utilities-terminal.png",
+
     "pkgname": ["qterminal"],
     "aur": false
   },
@@ -2187,7 +2187,7 @@
     "name": "qtFM",
     "description": "Small, lightweight filemanager for Linux desktops based on pure Qt.",
     "url": "https://qtfm.eu/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qtfm"],
     "aur": false
   },
@@ -2195,7 +2195,7 @@
     "name": "quickDocs",
     "description": "Fast developer docs reader for reading Valadoc and DevDocs.",
     "url": "https://github.com/mdh34/quickDocs",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["quickdocs"],
     "aur": false
   },
@@ -2203,7 +2203,7 @@
     "name": "Ragel",
     "description": "Compiles finite state machines from regular languages into executable C, C++, Objective-C, or D code.",
     "url": "https://www.colm.net/open-source/ragel/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ragel"],
     "aur": false
   },
@@ -2211,7 +2211,7 @@
     "name": "Ranger",
     "description": "Console-based file manager with vi bindings, customizability, and lots of features.",
     "url": "https://ranger.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ranger"],
     "aur": false
   },
@@ -2219,7 +2219,7 @@
     "name": "rclone",
     "description": "Command line program to sync files and directories to and from Amazon S3, Dropbox, Google Drive, Microsoft OneDrive, Yandex Disk and many other cloud storage services as well as between local paths.",
     "url": "https://rclone.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rclone"],
     "aur": false
   },
@@ -2227,7 +2227,7 @@
     "name": "rdfind",
     "description": "Command line tool that finds duplicate files. It compares files based on their content.",
     "url": "https://github.com/pauldreik/rdfind",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rdfind"],
     "aur": false
   },
@@ -2235,7 +2235,7 @@
     "name": "Recoll",
     "description": "Full text search tool based on Xapian, has CLI and GUI.",
     "url": "https://www.recoll.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/recoll_recoll.png",
+
     "pkgname": ["recoll"],
     "aur": false
   },
@@ -2243,7 +2243,7 @@
     "name": "Redmine",
     "description": "A flexible project management web application. Written using the Ruby on Rails, it is cross-platform and cross-database.",
     "url": "https://www.redmine.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["redmine"],
     "aur": false
   },
@@ -2251,7 +2251,7 @@
     "name": "rename.pl",
     "description": "Batch renamer based on perl regex.",
     "url": "https://search.cpan.org/~pederst/rename/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["perl-rename"],
     "aur": false
   },
@@ -2259,7 +2259,7 @@
     "name": "Resources",
     "description": "Simple and versatile monitor for graphical applications, processes and system resources (CPUs, memory, GPUs, network interfaces and block devices), written in Rust and GTK4.",
     "url": "https://apps.gnome.org/Resources/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/resources_net.nokyan.Resources.png",
+
     "pkgname": ["resources"],
     "aur": false
   },
@@ -2267,7 +2267,7 @@
     "name": "restic",
     "description": "Fast, secure, efficient backup program that supports backing up to many cloud services.",
     "url": "https://restic.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["restic"],
     "aur": false
   },
@@ -2275,7 +2275,7 @@
     "name": "Rio",
     "description": "A hardware-accelerated GPU terminal emulator focusing to run in desktops and browsers.",
     "url": "https://rioterm.com",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rio_rio.png",
+
     "pkgname": ["rio"],
     "aur": false
   },
@@ -2283,7 +2283,7 @@
     "name": "rofimoji",
     "description": "Emoji, unicode and general character picker for rofi and rofi-likes",
     "url": "https://github.com/fdw/rofimoji",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rofimoji"],
     "aur": false
   },
@@ -2291,7 +2291,7 @@
     "name": "rsync",
     "description": "File transfer program that uses the \"rsync algorithm\" which provides a very fast method for bringing remote files into sync. It does this by sending just the differences in the files across the link, without requiring that both sets of files are present at one of the ends of the link beforehand. Has multiple frontends available.",
     "url": "https://rsync.samba.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rsync"],
     "aur": false
   },
@@ -2299,7 +2299,7 @@
     "name": "rxvt-unicode (urxvt)",
     "description": "Terminal emulator forked from rxvt, customizable with source-code patches, X resources and Perl extensions.",
     "url": "http://software.schmorp.de/pkg/rxvt-unicode.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rxvt-unicode_utilities-terminal.png",
+
     "pkgname": ["rxvt-unicode"],
     "aur": false
   },
@@ -2307,7 +2307,7 @@
     "name": "sakura",
     "description": "Terminal emulator based on GTK and VTE.",
     "url": "https://www.pleyades.net/david/projects/sakura",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/sakura_terminal-tango.png",
+
     "pkgname": ["sakura"],
     "aur": false
   },
@@ -2315,7 +2315,7 @@
     "name": "scanmem",
     "description": "Debugging utility designed to isolate the address of an arbitrary variable in an executing process.",
     "url": "https://github.com/scanmem/scanmem",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["scanmem"],
     "aur": false
   },
@@ -2323,7 +2323,7 @@
     "name": "Scratch",
     "description": "Programming system and content development tool for educational and entertainment purposes, such as creating interactive projects and simple sprite-based games. It is used primarly by unskilled users (such as children) as an entry to event-driven programming.",
     "url": "https://scratch.mit.edu/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/scratch_scratch.png",
+
     "pkgname": ["scratch"],
     "aur": false
   },
@@ -2331,7 +2331,7 @@
     "name": "screenfetch",
     "description": "Similar to archey but has an option to take a screenshot. Written in bash.",
     "url": "https://github.com/KittyKatt/screenFetch",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["screenfetch"],
     "aur": false
   },
@@ -2339,7 +2339,7 @@
     "name": "Share Preview",
     "description": "Preview and debug websites metadata tags for social media share.",
     "url": "https://apps.gnome.org/SharePreview/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/share-preview_com.rafaelmardojai.SharePreview.png",
+
     "pkgname": ["share-preview"],
     "aur": false
   },
@@ -2347,7 +2347,7 @@
     "name": "Spyder",
     "description": "Scientific Python Development Environment providing MATLAB-like features.",
     "url": "https://github.com/spyder-ide/spyder",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/spyder_spyder.png",
+
     "pkgname": ["spyder"],
     "aur": false
   },
@@ -2355,7 +2355,7 @@
     "name": "Squeekboard",
     "description": "GTK 3 virtual keyboard for Wayland, written in Rust/C.",
     "url": "https://gitlab.gnome.org/World/Phosh/squeekboard",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["squeekboard"],
     "aur": false
   },
@@ -2363,7 +2363,7 @@
     "name": "st",
     "description": "Simple terminal implementation for X.",
     "url": "https://st.suckless.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["st"],
     "aur": false
   },
@@ -2371,7 +2371,7 @@
     "name": "Station",
     "description": "Terminal emulation features different view modes such as split vertically and horizontally, a tabbed interface, and copy and paste commands. Part of maui.",
     "url": "https://mauikit.org/apps/station/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maui-station_station.png",
+
     "pkgname": ["maui-station"],
     "aur": false
   },
@@ -2379,7 +2379,7 @@
     "name": "Strike",
     "description": "Simple and covergent IDE that works on desktop and mobile computers. Part of maui.",
     "url": "https://mauikit.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/strike_strike.png",
+
     "pkgname": ["strike"],
     "aur": false
   },
@@ -2387,7 +2387,7 @@
     "name": "Subversion",
     "description": "Full-featured centralized version control system originally designed to be a better CVS.",
     "url": "https://subversion.apache.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["subversion"],
     "aur": false
   },
@@ -2395,7 +2395,7 @@
     "name": "superfile",
     "description": "Pretty fancy and modern terminal file manager",
     "url": "https://superfile.netlify.app/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["superfile"],
     "aur": false
   },
@@ -2403,7 +2403,7 @@
     "name": "Sweeper",
     "description": "System cleaning utility for KDE. Part of kde-utilities.",
     "url": "https://apps.kde.org/sweeper/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/sweeper_sweeper.png",
+
     "pkgname": ["sweeper"],
     "aur": false
   },
@@ -2411,7 +2411,7 @@
     "name": "Symbolic Preview",
     "description": "Utility to create, preview and export symbolic icons which target the GNOME desktop.",
     "url": "https://gitlab.gnome.org/World/design/symbolic-preview",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/symbolic-preview_org.gnome.design.SymbolicPreview.png",
+
     "pkgname": ["symbolic-preview"],
     "aur": false
   },
@@ -2419,7 +2419,7 @@
     "name": "Syncthing",
     "description": "Continuous file synchronization program. It synchronizes files between two or more computers in a simple way without advanced configuration.",
     "url": "https://syncthing.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["syncthing"],
     "aur": false
   },
@@ -2427,7 +2427,7 @@
     "name": "Sysprof",
     "description": "Profiling tool that helps in finding the functions in which a program uses most of its time. Part of gnome-extra.",
     "url": "https://apps.gnome.org/Sysprof/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/sysprof_org.gnome.Sysprof.png",
+
     "pkgname": ["sysprof"],
     "aur": false
   },
@@ -2435,7 +2435,7 @@
     "name": "Sysstat",
     "description": "Collection of resource monitoring tools: iostat, isag, mpstat, pidstat, sadf, sar.",
     "url": "https://sysstat.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["sysstat"],
     "aur": false
   },
@@ -2443,7 +2443,7 @@
     "name": "Tarsnap",
     "description": "Secure, efficient proprietary online backup service.",
     "url": "https://www.tarsnap.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["tarsnap"],
     "aur": false
   },
@@ -2451,7 +2451,7 @@
     "name": "Task Manager",
     "description": "GTK3 based process manager with basic system resource monitor for Xfce.",
     "url": "https://goodies.xfce.org/projects/applications/xfce4-taskmanager",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xfce4-taskmanager_org.xfce.taskmanager.png",
+
     "pkgname": ["xfce4-taskmanager"],
     "aur": false
   },
@@ -2459,7 +2459,7 @@
     "name": "Telegraf",
     "description": "Agent written in Go for collecting, processing, aggregating, and writing metrics.",
     "url": "https://docs.influxdata.com/telegraf/latest/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["telegraf"],
     "aur": false
   },
@@ -2467,7 +2467,7 @@
     "name": "Terminator",
     "description": "Terminal emulator supporting multiple resizable terminal panels.",
     "url": "https://gnome-terminator.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/terminator_terminator.png",
+
     "pkgname": ["terminator"],
     "aur": false
   },
@@ -2475,7 +2475,7 @@
     "name": "Terminology",
     "description": "Terminal emulator by the Enlightenment project team with innovative features: file thumbnails and media play like a media player.",
     "url": "https://www.enlightenment.org/about-terminology",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/terminology_terminology.png",
+
     "pkgname": ["terminology"],
     "aur": false
   },
@@ -2483,7 +2483,7 @@
     "name": "Text-Diff",
     "description": "Perl library that perform diffs on files and record sets.",
     "url": "https://metacpan.org/pod/Text::Diff",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["perl-text-diff"],
     "aur": false
   },
@@ -2491,7 +2491,7 @@
     "name": "Thonny",
     "description": "Python IDE for beginners.",
     "url": "https://thonny.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["thonny"],
     "aur": false
   },
@@ -2499,7 +2499,7 @@
     "name": "Thunar",
     "description": "File manager that can be run as a daemon with excellent start-up and directory load times.",
     "url": "https://docs.xfce.org/xfce/thunar/start",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/thunar_org.xfce.thunar.png",
+
     "pkgname": ["thunar"],
     "aur": false
   },
@@ -2507,7 +2507,7 @@
     "name": "Thunar Bulk Rename",
     "description": "Change the name of multiple files at once using some criterion that applies to at least one of the files. Run with thunar -B.",
     "url": "https://docs.xfce.org/xfce/thunar/bulk-renamer/start",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/thunar_org.xfce.thunar.png",
+
     "pkgname": ["thunar"],
     "aur": false
   },
@@ -2515,7 +2515,7 @@
     "name": "Tilda",
     "description": "Configurable drop down terminal emulator.",
     "url": "https://github.com/lanoxx/tilda/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/tilda_tilda.png",
+
     "pkgname": ["tilda"],
     "aur": false
   },
@@ -2523,7 +2523,7 @@
     "name": "Tiled",
     "description": "General purpose 2D level editor with powerful tile map editing features. It is built to be easy to use and is suitable for many type of games.",
     "url": "https://www.mapeditor.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/tiled_tiled.png",
+
     "pkgname": ["tiled"],
     "aur": false
   },
@@ -2531,7 +2531,7 @@
     "name": "Timeshift",
     "description": "A system restore tool for Linux.",
     "url": "https://github.com/linuxmint/timeshift",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/timeshift_timeshift.png",
+
     "pkgname": ["timeshift"],
     "aur": false
   },
@@ -2539,7 +2539,7 @@
     "name": "tmate",
     "description": "A fork of tmux aiming to help with remote access and pair programming.",
     "url": "https://tmate.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["tmate"],
     "aur": false
   },
@@ -2547,7 +2547,7 @@
     "name": "tmux",
     "description": "BSD licensed terminal multiplexer.",
     "url": "https://tmux.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["tmux"],
     "aur": false
   },
@@ -2555,7 +2555,7 @@
     "name": "Typography",
     "description": "Tool for working with the GNOME typography design guidelines.",
     "url": "https://gitlab.gnome.org/World/design/typography",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/typography_org.gnome.design.Typography.png",
+
     "pkgname": ["typography"],
     "aur": false
   },
@@ -2563,7 +2563,7 @@
     "name": "ugrep",
     "description": "Grep alternative with a hex dump feature. ug --hexdump.",
     "url": "https://github.com/Genivia/ugrep",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ugrep"],
     "aur": false
   },
@@ -2571,7 +2571,7 @@
     "name": "UKUI System Monitor",
     "description": "System monitor for UKUI.",
     "url": "https://github.com/ukui/ukui-system-monitor",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ukui-system-monitor"],
     "aur": false
   },
@@ -2579,7 +2579,7 @@
     "name": "Umbrello",
     "description": "Unified Modelling Language (UML) diagram program based on KDE Technology. Part of kde-sdk.",
     "url": "https://apps.kde.org/umbrello",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/umbrello_umbrello.png",
+
     "pkgname": ["umbrello"],
     "aur": false
   },
@@ -2587,7 +2587,7 @@
     "name": "Unison",
     "description": "File synchronization tool that allows two replicas of a collection of files and directories to be stored on different hosts (or different disks on the same host), modified separately, and then brought up to date by propagating the changes in each replica to the other.",
     "url": "https://github.com/bcpierce00/unison",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/unison_unison.png",
+
     "pkgname": ["unison"],
     "aur": false
   },
@@ -2595,7 +2595,7 @@
     "name": "Unity",
     "description": "Unity is a flexible and powerful development platform for creating multi-platform 3D and 2D games. Proprietary, but a free version is available for certain use-cases (see here for more details).",
     "url": "https://unity3d.com/unity",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["unityhub"],
     "aur": false
   },
@@ -2603,7 +2603,7 @@
     "name": "Usage",
     "description": "View information about use of system resources, like memory and disk space.",
     "url": "https://wiki.gnome.org/Apps/Usage",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-usage_org.gnome.Usage.png",
+
     "pkgname": ["gnome-usage"],
     "aur": false
   },
@@ -2611,7 +2611,7 @@
     "name": "Usbimager",
     "description": "Minimal GUI application to write compressed disk images to USB drives.",
     "url": "https://gitlab.com/bztsrc/usbimager",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["usbimager"],
     "aur": false
   },
@@ -2619,7 +2619,7 @@
     "name": "USBView",
     "description": "Display the topology of devices on the USB bus.",
     "url": "http://www.kroah.com/linux/usb/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/usbview_usbview.png",
+
     "pkgname": ["usbview"],
     "aur": false
   },
@@ -2627,7 +2627,7 @@
     "name": "Valgrind",
     "description": "Tool to help find memory-management problems in programs.",
     "url": "https://valgrind.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["valgrind"],
     "aur": false
   },
@@ -2635,7 +2635,7 @@
     "name": "vidir",
     "description": "Rename and delete files and directories using your editor.",
     "url": "https://man.archlinux.org/man/vidir.1",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["moreutils"],
     "aur": false
   },
@@ -2643,7 +2643,7 @@
     "name": "Vifm",
     "description": "Ncurses-based two-panel file manager with vi-like keybindings.",
     "url": "https://vifm.info",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vifm"],
     "aur": false
   },
@@ -2651,7 +2651,7 @@
     "name": "Visual Studio Code",
     "description": "Visual Studio Code is a cross-platform, free and open-source text editor developed by Microsoft, written in JavaScript and TypeScript. It supports a variety of languages thanks to its extensions.",
     "url": "https://code.visualstudio.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/code_com.visualstudio.code.oss.png",
+
     "pkgname": ["code"],
     "aur": false
   },
@@ -2659,7 +2659,7 @@
     "name": "Vorta",
     "description": "Encrypted, deduplicated and compressed backups using Borg as backend.",
     "url": "https://vorta.borgbase.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/vorta_com.borgbase.Vorta.png",
+
     "pkgname": ["vorta"],
     "aur": false
   },
@@ -2667,7 +2667,7 @@
     "name": "VSCodium",
     "description": "Free/Libre Open Source Software Binaries of VSCode.",
     "url": "https://vscodium.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vscodium"],
     "aur": false
   },
@@ -2675,7 +2675,7 @@
     "name": "Webfont Bundler",
     "description": "Utility to generate WOFF, WOFF2 and the necessary CSS boilerplate from non-web font formats (OTF & TTF).",
     "url": "https://apps.gnome.org/WebfontKitGenerator/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/webfont-kit-generator_com.rafaelmardojai.WebfontKitGenerator.png",
+
     "pkgname": ["webfont-kit-generator"],
     "aur": false
   },
@@ -2683,7 +2683,7 @@
     "name": "WezTerm",
     "description": "GPU-accelerated cross-platform terminal emulator and multiplexer implemented in Rust.",
     "url": "https://wezfurlong.org/wezterm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/wezterm_org.wezfurlong.wezterm.png",
+
     "pkgname": ["wezterm"],
     "aur": false
   },
@@ -2691,7 +2691,7 @@
     "name": "WoeUSB",
     "description": "Simple tool to create USB stick windows installer from an ISO image or a real DVD. (Fork of WinUSB).",
     "url": "https://github.com/WoeUSB/WoeUSB",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["woeusb"],
     "aur": false
   },
@@ -2699,7 +2699,7 @@
     "name": "Xarchiver",
     "description": "Lightweight desktop independent archive manager built with GTK.",
     "url": "https://github.com/ib/xarchiver",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xarchiver_xarchiver.png",
+
     "pkgname": ["xarchiver"],
     "aur": false
   },
@@ -2707,7 +2707,7 @@
     "name": "Xfce Terminal",
     "description": "Terminal emulator included in the Xfce desktop with support for a colorized prompt and a tabbed interface.",
     "url": "https://docs.xfce.org/apps/terminal/start",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xfce4-terminal_org.xfce.terminal.png",
+
     "pkgname": ["xfce4-terminal"],
     "aur": false
   },
@@ -2715,7 +2715,7 @@
     "name": "Xfe",
     "description": "Microsoft Explorer-like file manager for X (X File Explorer).",
     "url": "http://roland65.free.fr/xfe/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xfe"],
     "aur": false
   },
@@ -2723,7 +2723,7 @@
     "name": "Xmake",
     "description": "A cross-platform build utility based on Lua with a built-in package manager.",
     "url": "https://xmake.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xmake"],
     "aur": false
   },
@@ -2731,7 +2731,7 @@
     "name": "xplr",
     "description": "A hackable, minimal, fast TUI file explorer.",
     "url": "https://xplr.dev",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xplr"],
     "aur": false
   },
@@ -2739,7 +2739,7 @@
     "name": "xterm",
     "description": "Simple terminal emulator for the X Window System. It provides DEC VT102 and Tektronix 4014 compatible terminals for programs that cannot use the window system directly.",
     "url": "https://invisible-island.net/xterm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xterm_xterm-color_48x48.png",
+
     "pkgname": ["xterm"],
     "aur": false
   },
@@ -2747,7 +2747,7 @@
     "name": "xvkbd",
     "description": "Virtual keyboard for X window system.",
     "url": "http://t-sato.in.coocan.jp/xvkbd/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xvkbd"],
     "aur": false
   },
@@ -2755,7 +2755,7 @@
     "name": "xxd",
     "description": "Basic hex dump from vim.",
     "url": "https://www.vim.org/download.php",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/vim_gvim.png",
+
     "pkgname": ["vim"],
     "aur": false
   },
@@ -2763,7 +2763,7 @@
     "name": "xxkb",
     "description": "A lightweight keyboard layout indicator and switcher.",
     "url": "https://sourceforge.net/projects/xxkb/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xxkb"],
     "aur": false
   },
@@ -2771,7 +2771,7 @@
     "name": "yad (Yet Another Dialog)",
     "description": "Zenity fork with more dialog types and support for custom buttons.",
     "url": "https://github.com/v1cont/yad",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/yad_yad.png",
+
     "pkgname": ["yad"],
     "aur": false
   },
@@ -2779,7 +2779,7 @@
     "name": "Yakuake",
     "description": "Drop-down terminal (Quake style) emulator based on Konsole. Part of kde-utilities.",
     "url": "https://apps.kde.org/yakuake/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/yakuake_yakuake.png",
+
     "pkgname": ["yakuake"],
     "aur": false
   },
@@ -2787,7 +2787,7 @@
     "name": "yazi",
     "description": "Blazing fast terminal file manager written in Rust, based on async I/O.",
     "url": "https://yazi-rs.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["yazi"],
     "aur": false
   },
@@ -2795,7 +2795,7 @@
     "name": "Zeal",
     "description": "Offline API documentation browser for software developers.",
     "url": "https://zealdocs.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zeal_zeal.png",
+
     "pkgname": ["zeal"],
     "aur": false
   },
@@ -2803,7 +2803,7 @@
     "name": "Zeitgeist",
     "description": "Event aggregation framework for the user's activities and notifications (files opened, websites visited, conversations had, etc.), has several third-party front-ends.",
     "url": "https://launchpad.net/zeitgeist-project",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zeitgeist"],
     "aur": false
   },
@@ -2811,7 +2811,7 @@
     "name": "zellij",
     "description": "Terminal multiplexer on steroids written in Rust",
     "url": "https://zellij.dev/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zellij"],
     "aur": false
   },
@@ -2819,7 +2819,7 @@
     "name": "Zenity",
     "description": "GTK-based GUI prompts by GNOME.",
     "url": "https://gitlab.gnome.org/GNOME/zenity",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zenity"],
     "aur": false
   },
@@ -2827,7 +2827,7 @@
     "name": "zps",
     "description": "A small utility for listing and reaping zombie processes on GNU/Linux.",
     "url": "https://github.com/orhun/zps",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zps"],
     "aur": false
   },
@@ -2835,7 +2835,7 @@
     "name": "zutty",
     "description": "A high-end terminal for low-end systems.",
     "url": "https://tomscii.sig7.se/zutty/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zutty_zutty.png",
+
     "pkgname": ["zutty"],
     "aur": false
   }

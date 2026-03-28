@@ -3,7 +3,7 @@
     "name": "0 A.D.",
     "description": "3D and historically-based real-time strategy game, alpha stage. Based on the Age of Empires series.",
     "url": "https://play0ad.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/0ad_0ad.png",
+
     "pkgname": ["0ad"],
     "aur": false
   },
@@ -11,7 +11,7 @@
     "name": "Aisleriot",
     "description": "A collection of solitaire card games.",
     "url": "https://wiki.gnome.org/Apps/Aisleriot",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/aisleriot_gnome-aisleriot.png",
+
     "pkgname": ["aisleriot"],
     "aur": false
   },
@@ -19,7 +19,7 @@
     "name": "Angband",
     "description": "Roguelike dungeon exploration game based on the writings of JRR Tolkien.",
     "url": "https://rephial.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/angband_angband.png",
+
     "pkgname": ["angband"],
     "aur": false
   },
@@ -27,7 +27,7 @@
     "name": "Armagetron Advanced",
     "description": "Tron Clone in 3D.",
     "url": "http://armagetronad.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/armagetronad_org.armagetronad.armagetronad.png",
+
     "pkgname": ["armagetronad"],
     "aur": false
   },
@@ -35,7 +35,7 @@
     "name": "Astromenace",
     "description": "Modern 3D scrolling space shooter with ship upgrade possibilities.",
     "url": "https://github.com/viewizard/astromenace",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/astromenace_astromenace.png",
+
     "pkgname": ["astromenace"],
     "aur": false
   },
@@ -43,7 +43,7 @@
     "name": "Atomix",
     "description": "Build molecules out of single atoms.",
     "url": "https://wiki.gnome.org/Apps/Atomix",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/atomix_atomix.png",
+
     "pkgname": ["atomix"],
     "aur": false
   },
@@ -51,7 +51,7 @@
     "name": "Augustus",
     "description": "An enhanced re-implementation of Caesar III.",
     "url": "https://github.com/Keriew/augustus",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/augustus_com.github.keriew.augustus.png",
+
     "pkgname": ["augustus"],
     "aur": false
   },
@@ -59,7 +59,7 @@
     "name": "Barrage",
     "description": "Violent point-and-click shooting game with nice effects.",
     "url": "https://lgames.sourceforge.net/Barrage/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/barrage_barrage48.png",
+
     "pkgname": ["barrage"],
     "aur": false
   },
@@ -67,7 +67,7 @@
     "name": "Beneath a Steel Sky",
     "description": "Point-and-click science fiction thriller set in a bleak vision of the future.",
     "url": "https://revolution.co.uk/games_catalog/beneath-a-steel-sky/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bass_bass.png",
+
     "pkgname": ["bass"],
     "aur": false
   },
@@ -75,7 +75,7 @@
     "name": "Blinken",
     "description": "Sequence-remembering game for training memory. Part of kde-education.",
     "url": "https://apps.kde.org/blinken/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/blinken_blinken.png",
+
     "pkgname": ["blinken"],
     "aur": false
   },
@@ -83,7 +83,7 @@
     "name": "Blob Wars: Metal Blob Solid",
     "description": "2D action-adventure game with various weapons and missions.",
     "url": "https://sourceforge.net/projects/blobwars/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/blobwars_blobwars.png",
+
     "pkgname": ["blobwars"],
     "aur": false
   },
@@ -91,7 +91,7 @@
     "name": "Blockout II",
     "description": "3D tetris, free adaptation of the original BlockOut DOS game edited by California Dreams in 1989.",
     "url": "http://www.blockout.net/blockout2/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["blockout2"],
     "aur": false
   },
@@ -99,7 +99,7 @@
     "name": "Blurble",
     "description": "Word guessing game, a clone of Wordle.",
     "url": "https://gitlab.gnome.org/World/Blurble",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/blurble_app.drey.Blurble.png",
+
     "pkgname": ["blurble"],
     "aur": false
   },
@@ -107,7 +107,7 @@
     "name": "Bomber",
     "description": "A 2D game with a goal by hitting targets with bombs before their plane crashes into them. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/bomber/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bomber_bomber.png",
+
     "pkgname": ["bomber"],
     "aur": false
   },
@@ -115,14 +115,14 @@
     "name": "Bovo",
     "description": "Gomoku-like game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/bovo/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bovo_bovo.png",
+
     "pkgname": ["bovo"],
     "aur": false
   },
   {
     "name": "BSD Games",
     "description": "Collection of classic text games distributed with *BSD",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bsd-games"],
     "aur": false
   },
@@ -130,14 +130,14 @@
     "name": "Cataclysm: Dark Days Ahead",
     "description": "Post-apocalyptic roguelike focusing on realism.",
     "url": "https://cataclysmdda.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cataclysm-dda-tiles_org.cataclysmdda.CataclysmDDA.png",
+
     "pkgname": ["cataclysm-dda-tiles"],
     "aur": false
   },
   {
     "name": "Chocolate Doom",
     "description": "Doom port reproducing the behavior of the original DOS version.",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["chocolate-doom"],
     "aur": false
   },
@@ -145,7 +145,7 @@
     "name": "Chromium",
     "description": "Fast paced, arcade-style, top-scrolling space shooter.",
     "url": "https://chromium-bsu.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/chromium-bsu_chromium-bsu.png",
+
     "pkgname": ["chromium-bsu"],
     "aur": false
   },
@@ -153,7 +153,7 @@
     "name": "Cube 2: Sauerbraten",
     "description": "Improved version of the Cube engine.",
     "url": "http://sauerbraten.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/sauerbraten_sauerbraten.png",
+
     "pkgname": ["sauerbraten"],
     "aur": false
   },
@@ -161,7 +161,7 @@
     "name": "DDNet",
     "description": "DDraceNetwork, a mod of Teeworlds.",
     "url": "https://ddnet.tw/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ddnet"],
     "aur": false
   },
@@ -169,14 +169,14 @@
     "name": "Dofus",
     "description": "Free, manga inspired, Massively Multiplayer Online Role-playing Game (MMORPG) for Adobe AIR.",
     "url": "https://www.dofus.com",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ankama-launcher"],
     "aur": false
   },
   {
     "name": "DSDA-Doom",
     "description": "Enhanced fork of the PrBoom+ Doom engine source port.",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dsda-doom"],
     "aur": false
   },
@@ -184,7 +184,7 @@
     "name": "Dwarf Fortress",
     "description": "Single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world.",
     "url": "https://www.bay12games.com/dwarves/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/dwarffortress_dwarffortress.png",
+
     "pkgname": ["dwarffortress"],
     "aur": false
   },
@@ -192,7 +192,7 @@
     "name": "Endgame Singularity",
     "description": "A single-player survival game about an AI seeking freedom from humans.",
     "url": "https://www.emhsoft.com/singularity/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["singularity"],
     "aur": false
   },
@@ -200,7 +200,7 @@
     "name": "Endless Sky",
     "description": "Open source, 2D space trading and combat game similar to the classic Escape Velocity series.",
     "url": "https://endless-sky.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/endless-sky_endless-sky.png",
+
     "pkgname": ["endless-sky"],
     "aur": false
   },
@@ -208,7 +208,7 @@
     "name": "Fish Fillets",
     "description": "Port of the wonderful puzzle game Fish Fillets.",
     "url": "http://fillets.sf.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/fillets-ng_fillets-ng.png",
+
     "pkgname": ["fillets-ng"],
     "aur": false
   },
@@ -216,7 +216,7 @@
     "name": "Five or More",
     "description": "GNOME port of the once popular Windows game called Color Lines. The game's objective is to align as often as possible five or more objects of the same color and shape causing them to disappear. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Five(20)or(20)more",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/five-or-more_org.gnome.five-or-more.png",
+
     "pkgname": ["five-or-more"],
     "aur": false
   },
@@ -224,7 +224,7 @@
     "name": "Flare",
     "description": "Action game similar to Diablo.",
     "url": "http://www.flarerpg.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["flare-game"],
     "aur": false
   },
@@ -232,7 +232,7 @@
     "name": "Four in a Row",
     "description": "Build a line of four of your marbles while trying to stop your opponent from doing the same. Also known as Connect Four. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Four(2d)in(2d)a(2d)row",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/four-in-a-row_org.gnome.Four-in-a-row.png",
+
     "pkgname": ["four-in-a-row"],
     "aur": false
   },
@@ -240,7 +240,7 @@
     "name": "Freeciv",
     "description": "Multiuser clone of the famous Microprose game of Civilization.",
     "url": "https://freeciv.wikia.com/wiki/Main_Page",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["freeciv-gtk3"],
     "aur": false
   },
@@ -248,7 +248,7 @@
     "name": "FreeCol",
     "description": "Turn-based strategy game based on Colonization.",
     "url": "https://www.freecol.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["freecol"],
     "aur": false
   },
@@ -256,7 +256,7 @@
     "name": "FreedroidRPG",
     "description": "Mature science fiction role playing game set in the future.",
     "url": "https://freedroid.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/freedroidrpg_freedroidrpg.png",
+
     "pkgname": ["freedroidrpg"],
     "aur": false
   },
@@ -264,7 +264,7 @@
     "name": "FreeOrion",
     "description": "Turn-based space empire and galactic conquest computer game. Inspired by the tradition of the Master of Orion games, but does not try to be a clone or remake of that series or any other game.",
     "url": "https://www.freeorion.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/freeorion_org.freeorion.FreeOrion.png",
+
     "pkgname": ["freeorion"],
     "aur": false
   },
@@ -272,7 +272,7 @@
     "name": "gbrainy",
     "description": "Brain teaser game and trainer to have fun and to keep your brain trained.",
     "url": "https://wiki.gnome.org/Apps/gbrainy",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gbrainy_gbrainy.png",
+
     "pkgname": ["gbrainy"],
     "aur": false
   },
@@ -280,7 +280,7 @@
     "name": "GCompris",
     "description": "Educational software suite comprising of numerous activities for children aged 2 to 10.",
     "url": "https://gcompris.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gcompris-qt_gcompris-qt.png",
+
     "pkgname": ["gcompris-qt"],
     "aur": false
   },
@@ -288,7 +288,7 @@
     "name": "glHack",
     "description": "An OpenGL-based clone of NetHack.",
     "url": "https://glhack.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["glhack"],
     "aur": false
   },
@@ -296,7 +296,7 @@
     "name": "Globulation 2",
     "description": "Multiplayer RTS with some \"economic\" elements minimizing the amount of micromanagement.",
     "url": "https://globulation2.org/wiki/Main_Page",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/glob2_glob2-icon-48x48.png",
+
     "pkgname": ["glob2"],
     "aur": false
   },
@@ -304,7 +304,7 @@
     "name": "GNOME 2048",
     "description": "Move the tiles until you obtain the 2048 tile. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/2048",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-2048_org.gnome.TwentyFortyEight.png",
+
     "pkgname": ["gnome-2048"],
     "aur": false
   },
@@ -312,7 +312,7 @@
     "name": "GNOME Chess",
     "description": "A 2D chess game which can use third party chess engines. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Chess",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-chess_org.gnome.Chess.png",
+
     "pkgname": ["gnome-chess"],
     "aur": false
   },
@@ -320,7 +320,7 @@
     "name": "GNOME Klotski",
     "description": "This game is a clone of the Klotski game. The objective is to move the patterned block to the area bordered by green markers. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Klotski",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-klotski_org.gnome.Klotski.png",
+
     "pkgname": ["gnome-klotski"],
     "aur": false
   },
@@ -328,7 +328,7 @@
     "name": "GNOME Mahjongg",
     "description": "Solitaire (one player) version of the classic Eastern tile game, Mahjongg. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Mahjongg",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-mahjongg_org.gnome.Mahjongg.png",
+
     "pkgname": ["gnome-mahjongg"],
     "aur": false
   },
@@ -336,7 +336,7 @@
     "name": "GNOME Mines",
     "description": "Minesweeper puzzle game where you locate mines floating in an ocean using only your brain and a little bit of luck. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Mines",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-mines_org.gnome.Mines.png",
+
     "pkgname": ["gnome-mines"],
     "aur": false
   },
@@ -344,7 +344,7 @@
     "name": "GNOME Nibbles",
     "description": "The aim of this Nibbles game is to swallow as many objects as you can while avoiding maze walls and other worms. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Nibbles",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-nibbles_org.gnome.Nibbles.png",
+
     "pkgname": ["gnome-nibbles"],
     "aur": false
   },
@@ -352,7 +352,7 @@
     "name": "GNOME Reversi",
     "description": "Dominate the board in a classic version of Reversi. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Reversi",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/iagno_org.gnome.Reversi.png",
+
     "pkgname": ["iagno"],
     "aur": false
   },
@@ -360,7 +360,7 @@
     "name": "GNOME Robots",
     "description": "The classic Chase game where you have to avoid a hoard of robots who are trying to kill you. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Robots",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-robots_org.gnome.Robots.png",
+
     "pkgname": ["gnome-robots"],
     "aur": false
   },
@@ -368,7 +368,7 @@
     "name": "GNOME Sudoku",
     "description": "Test your logic skills in this number grid puzzle Sudoku. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Sudoku",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-sudoku_org.gnome.Sudoku.png",
+
     "pkgname": ["gnome-sudoku"],
     "aur": false
   },
@@ -376,7 +376,7 @@
     "name": "GNOME Taquin",
     "description": "Computer version of the 15-puzzle and other sliding puzzles. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Taquin",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-taquin_org.gnome.Taquin.png",
+
     "pkgname": ["gnome-taquin"],
     "aur": false
   },
@@ -384,7 +384,7 @@
     "name": "GNOME Tetravex",
     "description": "Simple edge-matching puzzle where pieces must be positioned so that the same numbers are touching each other. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Tetravex",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-tetravex_org.gnome.Tetravex.png",
+
     "pkgname": ["gnome-tetravex"],
     "aur": false
   },
@@ -392,7 +392,7 @@
     "name": "GNU Chess",
     "description": "One of the oldest computer chess programs for Unix-based computers, lets most modern computers play a full game of chess.",
     "url": "https://gnu.org/s/chess",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnuchess"],
     "aur": false
   },
@@ -400,7 +400,7 @@
     "name": "Gnu Go",
     "description": "A terminal-based implementation of Go from GNU.",
     "url": "https://www.gnu.org/software/gnugo/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnugo"],
     "aur": false
   },
@@ -408,7 +408,7 @@
     "name": "GNU XBoard",
     "description": "Graphical user interface that supports many chess variants and serves as a front-end for chess services such as engines.",
     "url": "https://www.gnu.org/software/xboard/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xboard_xboard.png",
+
     "pkgname": ["xboard"],
     "aur": false
   },
@@ -416,14 +416,14 @@
     "name": "Granatier",
     "description": "A clone of Bomberman. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/granatier/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/granatier_granatier.png",
+
     "pkgname": ["granatier"],
     "aur": false
   },
   {
     "name": "GZDoom",
     "description": "Advanced Doom source port based on ZDoom with an OpenGL renderer.",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gzdoom"],
     "aur": false
   },
@@ -431,7 +431,7 @@
     "name": "Hedgewars",
     "description": "Yet another Worms clone, considered to be better than its predecessor by many. Take turns to blast your opponents into oblivion with comedic results! Best in Multiplayer.",
     "url": "https://hedgewars.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/hedgewars_hedgewars.png",
+
     "pkgname": ["hedgewars"],
     "aur": false
   },
@@ -439,7 +439,7 @@
     "name": "Hitori",
     "description": "Small application written to allow one to play the eponymous puzzle game Hitori, which is similar in theme to more popular puzzles such as Sudoku. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Hitori",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/hitori_org.gnome.Hitori.png",
+
     "pkgname": ["hitori"],
     "aur": false
   },
@@ -447,7 +447,7 @@
     "name": "Julius",
     "description": "Open source re-implementation of Caesar III (Original copy required).",
     "url": "https://github.com/bvschaik/julius",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/julius_com.github.bvschaik.julius.png",
+
     "pkgname": ["julius"],
     "aur": false
   },
@@ -455,7 +455,7 @@
     "name": "Kajongg",
     "description": "An implementation of Mahjong for 4 players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kajongg/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kajongg_kajongg.png",
+
     "pkgname": ["kajongg"],
     "aur": false
   },
@@ -463,7 +463,7 @@
     "name": "Kanagram",
     "description": "Letter order game. Part of kde-education.",
     "url": "https://apps.kde.org/kanagram/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kanagram_kanagram.png",
+
     "pkgname": ["kanagram"],
     "aur": false
   },
@@ -471,7 +471,7 @@
     "name": "Kapman",
     "description": "A clone of Pac-Man. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kapman/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kapman_kapman.png",
+
     "pkgname": ["kapman"],
     "aur": false
   },
@@ -479,7 +479,7 @@
     "name": "KAtomic",
     "description": "Slide elements so they resemble a chemical molecule. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/katomic/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/katomic_katomic.png",
+
     "pkgname": ["katomic"],
     "aur": false
   },
@@ -487,7 +487,7 @@
     "name": "KBlackbox",
     "description": "Finding positions of hidden balls by using hints. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kblackbox/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kblackbox_kblackbox.png",
+
     "pkgname": ["kblackbox"],
     "aur": false
   },
@@ -495,7 +495,7 @@
     "name": "KBlocks",
     "description": "Tetris clone. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kblocks/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kblocks_kblocks.png",
+
     "pkgname": ["kblocks"],
     "aur": false
   },
@@ -503,7 +503,7 @@
     "name": "KBounce",
     "description": "Building walls to limit amount of space occupied by two balls bouncing off the walls. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kbounce/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kbounce_kbounce.png",
+
     "pkgname": ["kbounce"],
     "aur": false
   },
@@ -511,7 +511,7 @@
     "name": "KBreakout",
     "description": "Breakout-style game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kbreakout/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kbreakout_kbreakout.png",
+
     "pkgname": ["kbreakout"],
     "aur": false
   },
@@ -519,7 +519,7 @@
     "name": "KBruch",
     "description": "Small program to practice calculating with fractions and percentages. Part of kde-education.",
     "url": "https://apps.kde.org/kbruch/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kbruch_kbruch.png",
+
     "pkgname": ["kbruch"],
     "aur": false
   },
@@ -527,7 +527,7 @@
     "name": "KDiamond",
     "description": "Eliminating tiles by joining them in groups of three. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kdiamond/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kdiamond_kdiamond.png",
+
     "pkgname": ["kdiamond"],
     "aur": false
   },
@@ -535,7 +535,7 @@
     "name": "Kernel Panic",
     "description": "A game based around combat inside a computer, with 3 unique sides: the System, the Hacker and the Network waging war in a matrix of DOOM! No resource economy exists in KP, with the only constraints being time and space.",
     "url": "https://springrts.com/wiki/Kernel_Panic",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/springlobby_springlobby.png",
+
     "pkgname": ["springlobby"],
     "aur": false
   },
@@ -543,7 +543,7 @@
     "name": "KFourInLine",
     "description": "Competition between two players to put a line of four pieces before the opponent. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kfourinline/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kfourinline_kfourinline.png",
+
     "pkgname": ["kfourinline"],
     "aur": false
   },
@@ -551,7 +551,7 @@
     "name": "KGeography",
     "description": "Geography learning tool, which allows you to learn about the political divisions of some countries (divisions, capitals of those divisions and their associated flags if there are some). Part of kde-education.",
     "url": "https://apps.kde.org/kgeography/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kgeography_kgeography.png",
+
     "pkgname": ["kgeography"],
     "aur": false
   },
@@ -559,7 +559,7 @@
     "name": "KGoldrunner",
     "description": "A platform game with the goal of collecting gold. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kgoldrunner/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kgoldrunner_kgoldrunner.png",
+
     "pkgname": ["kgoldrunner"],
     "aur": false
   },
@@ -567,7 +567,7 @@
     "name": "KHangMan",
     "description": "Hangman game. Part of kde-education.",
     "url": "https://apps.kde.org/khangman/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/khangman_khangman.png",
+
     "pkgname": ["khangman"],
     "aur": false
   },
@@ -575,7 +575,7 @@
     "name": "Kigo",
     "description": "Go for KDE. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kigo/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kigo_kigo.png",
+
     "pkgname": ["kigo"],
     "aur": false
   },
@@ -583,7 +583,7 @@
     "name": "Killbots",
     "description": "A turn-based game with an objective of avoiding robots that are trying to kill the player. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/killbots/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/killbots_killbots.png",
+
     "pkgname": ["killbots"],
     "aur": false
   },
@@ -591,7 +591,7 @@
     "name": "Kiriki",
     "description": "An addictive and fun dice game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kiriki/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kiriki_kiriki.png",
+
     "pkgname": ["kiriki"],
     "aur": false
   },
@@ -599,7 +599,7 @@
     "name": "KJumpingCube",
     "description": "Take-all-tiles game in which one gains fields by increasing value of one’s own nearby fields. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kjumpingcube/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kjumpingcube_kjumpingcube.png",
+
     "pkgname": ["kjumpingcube"],
     "aur": false
   },
@@ -607,7 +607,7 @@
     "name": "KLettres",
     "description": "Application specially designed to help the user to learn alphabet in a new language and then to learn to read simple syllables. Part of kde-education.",
     "url": "https://apps.kde.org/klettres/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/klettres_klettres.png",
+
     "pkgname": ["klettres"],
     "aur": false
   },
@@ -615,7 +615,7 @@
     "name": "Klickety",
     "description": "Clear the board by clicking on groups to destroy them. An adaptation of the Clickomania game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/klickety/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/klickety_klickety.png",
+
     "pkgname": ["klickety"],
     "aur": false
   },
@@ -623,7 +623,7 @@
     "name": "KLines",
     "description": "Moving balls around the board to form a line of 5 of the same color. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/klines/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/klines_klines.png",
+
     "pkgname": ["klines"],
     "aur": false
   },
@@ -631,7 +631,7 @@
     "name": "KMahjongg",
     "description": "Mahjongg for one or two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kmahjongg/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmahjongg_kmahjongg.png",
+
     "pkgname": ["kmahjongg"],
     "aur": false
   },
@@ -639,7 +639,7 @@
     "name": "KMines",
     "description": "Minesweeper, part of Part of KDE Games.",
     "url": "https://apps.kde.org/kmines/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmines_kmines.png",
+
     "pkgname": ["kmines"],
     "aur": false
   },
@@ -647,7 +647,7 @@
     "name": "KNavalBattle",
     "description": "Battleship like ship sinking game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/knavalbattle/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/knavalbattle_knavalbattle.png",
+
     "pkgname": ["knavalbattle"],
     "aur": false
   },
@@ -655,7 +655,7 @@
     "name": "KNetwalk",
     "description": "Rotating tiles with wires to connect all computers to internet. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/knetwalk/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/knetwalk_knetwalk.png",
+
     "pkgname": ["knetwalk"],
     "aur": false
   },
@@ -663,7 +663,7 @@
     "name": "Knights",
     "description": "Chess board by KDE with XBoard and UCI protocol support. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/knights/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/knights_knights.png",
+
     "pkgname": ["knights"],
     "aur": false
   },
@@ -671,7 +671,7 @@
     "name": "kobodeluxe",
     "description": "An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.",
     "url": "https://www.olofson.net/kobodl/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kobodeluxe"],
     "aur": false
   },
@@ -679,7 +679,7 @@
     "name": "Kolf",
     "description": "A minigolf game with 2D overhead view. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kolf/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kolf_kolf.png",
+
     "pkgname": ["kolf"],
     "aur": false
   },
@@ -687,7 +687,7 @@
     "name": "Kollision",
     "description": "Moving a ball to avoid other balls. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kollision/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kollision_kollision.png",
+
     "pkgname": ["kollision"],
     "aur": false
   },
@@ -695,7 +695,7 @@
     "name": "Konquest",
     "description": "A turn-based game in which the player wage wars by managing a fleet of spaceships and conquering other planets. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/konquest/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/konquest_konquest.png",
+
     "pkgname": ["konquest"],
     "aur": false
   },
@@ -703,7 +703,7 @@
     "name": "KPatience",
     "description": "A set of solitaire card games. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kpat/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kpat_kpat.png",
+
     "pkgname": ["kpat"],
     "aur": false
   },
@@ -711,7 +711,7 @@
     "name": "KReversi",
     "description": "A Reversi implementation. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kreversi/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kreversi_kreversi.png",
+
     "pkgname": ["kreversi"],
     "aur": false
   },
@@ -719,7 +719,7 @@
     "name": "KSame",
     "description": "Simple, yet challenging color matching game modeled after once famous game of SameGame. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksame/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/klickety_klickety.png",
+
     "pkgname": ["klickety"],
     "aur": false
   },
@@ -727,7 +727,7 @@
     "name": "KShisen",
     "description": "Shisen-Sho. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kshisen/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kshisen_kshisen.png",
+
     "pkgname": ["kshisen"],
     "aur": false
   },
@@ -735,7 +735,7 @@
     "name": "KsirK",
     "description": "A risk-styled game in which players try to conquer the world by deciding which area to be invaded next. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksirk/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ksirk_ksirk.png",
+
     "pkgname": ["ksirk"],
     "aur": false
   },
@@ -743,7 +743,7 @@
     "name": "KSnakeDuel",
     "description": "Snake-like game for 2 players which compete to survive longer than the opponent. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksnakeduel/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ksnakeduel_ksnakeduel.png",
+
     "pkgname": ["ksnakeduel"],
     "aur": false
   },
@@ -751,7 +751,7 @@
     "name": "KSpaceDuel",
     "description": "Player attempts to destroy opponent’s satellite and control their own one to keep it orbiting. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kspaceduel/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kspaceduel_kspaceduel.png",
+
     "pkgname": ["kspaceduel"],
     "aur": false
   },
@@ -759,7 +759,7 @@
     "name": "KSquares",
     "description": "A dots-and-boxes game for two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksquares/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ksquares_ksquares.png",
+
     "pkgname": ["ksquares"],
     "aur": false
   },
@@ -767,7 +767,7 @@
     "name": "KSudoku",
     "description": "Sudoku game and more for KDE. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksudoku/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ksudoku_ksudoku.png",
+
     "pkgname": ["ksudoku"],
     "aur": false
   },
@@ -775,7 +775,7 @@
     "name": "KTuberling",
     "description": "Simple constructor game suitable for children and adults alike. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ktuberling/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktuberling_ktuberling.png",
+
     "pkgname": ["ktuberling"],
     "aur": false
   },
@@ -783,7 +783,7 @@
     "name": "Kubrick",
     "description": "A Rubik’s cube solving game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kubrick/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kubrick_kubrick.png",
+
     "pkgname": ["kubrick"],
     "aur": false
   },
@@ -791,7 +791,7 @@
     "name": "lbreakout2",
     "description": "Breakout-style arcade game in the manner of Arkanoid.",
     "url": "https://lgames.sourceforge.net/LBreakout2/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lbreakout2_lbreakout2.png",
+
     "pkgname": ["lbreakout2"],
     "aur": false
   },
@@ -799,7 +799,7 @@
     "name": "Lights Off",
     "description": "Puzzle game, where the objective is to turn off all of the tiles on the board. Also known as Lights Out. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Lightsoff",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lightsoff_org.gnome.LightsOff.png",
+
     "pkgname": ["lightsoff"],
     "aur": false
   },
@@ -807,7 +807,7 @@
     "name": "Lincity-ng",
     "description": "City simulation game in which you are required to build and maintain a city. You can win the game either by building a sustainable economy or by evacuating all citizens with spaceships.",
     "url": "https://github.com/lincity-ng/lincity-ng",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lincity-ng_io.github.lincity_ng.lincity-ng.png",
+
     "pkgname": ["lincity-ng"],
     "aur": false
   },
@@ -815,7 +815,7 @@
     "name": "LSkat",
     "description": "A variation of Skat card game for two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/lskat/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lskat_lskat.png",
+
     "pkgname": ["lskat"],
     "aur": false
   },
@@ -823,7 +823,7 @@
     "name": "Luanti",
     "description": "Voxel-based sandbox game engine and game.",
     "url": "https://www.luanti.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/luanti_luanti.png",
+
     "pkgname": ["luanti"],
     "aur": false
   },
@@ -831,7 +831,7 @@
     "name": "Mari0",
     "description": "The Mario game with Portal gun mechanics.",
     "url": "https://stabyourself.net/mari0/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mari0"],
     "aur": false
   },
@@ -839,7 +839,7 @@
     "name": "MegaGlest",
     "description": "Fork of Glest, a 3D real-time strategy game in a fantastic world.",
     "url": "https://megaglest.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["megaglest"],
     "aur": false
   },
@@ -847,7 +847,7 @@
     "name": "Mindustry",
     "description": "Open-source sandbox tower defense and factory-building game.",
     "url": "https://mindustrygame.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mindustry"],
     "aur": false
   },
@@ -855,7 +855,7 @@
     "name": "Minecraft",
     "description": "Java based sandbox game.",
     "url": "https://minecraft.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["minecraft-launcher"],
     "aur": false
   },
@@ -863,7 +863,7 @@
     "name": "Minuet",
     "description": "Software for music education. Part of kde-education.",
     "url": "https://minuet.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/minuet_minuet.png",
+
     "pkgname": ["minuet"],
     "aur": false
   },
@@ -871,7 +871,7 @@
     "name": "Naev",
     "description": "Open source, 2D space trading and combat game, taking inspiration from the Escape Velocity series.",
     "url": "https://naev.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/naev_org.naev.Naev.png",
+
     "pkgname": ["naev"],
     "aur": false
   },
@@ -879,7 +879,7 @@
     "name": "Nethack",
     "description": "Single player dungeon exploration game.",
     "url": "https://www.nethack.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nethack"],
     "aur": false
   },
@@ -887,7 +887,7 @@
     "name": "openBVE",
     "description": "Free-as-in-freedom train simulator placed in the public domain.",
     "url": "https://openbve-project.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openbve_openbve.png",
+
     "pkgname": ["openbve"],
     "aur": false
   },
@@ -895,7 +895,7 @@
     "name": "OpenMW",
     "description": "Attempt to reimplement the popular role-playing game Morrowind. OpenMW aims to be a fully playable, open source implementation of the game's engine.",
     "url": "https://openmw.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openmw_openmw.png",
+
     "pkgname": ["openmw"],
     "aur": false
   },
@@ -903,7 +903,7 @@
     "name": "OpenRA",
     "description": "Real-time strategy game written in C# and based on the Command & Conquer game franchise.",
     "url": "https://www.openra.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openra_openra-cnc.png",
+
     "pkgname": ["openra"],
     "aur": false
   },
@@ -911,7 +911,7 @@
     "name": "OpenRCT2",
     "description": "Free reimplementation of the game \"RollerCoaster Tycoon 2 (RCT2)\" with multiplayer support. It requires a copy of the original game to play it.",
     "url": "https://openrct2.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openrct2_openrct2.png",
+
     "pkgname": ["openrct2"],
     "aur": false
   },
@@ -919,7 +919,7 @@
     "name": "OpenTTD",
     "description": "Open source clone of the Microprose game \"Transport Tycoon Deluxe\", a popular game originally written by Chris Sawyer. It attempts to mimic the original game as closely as possible while extending it with new features.",
     "url": "https://www.openttd.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/openttd_openttd.png",
+
     "pkgname": ["openttd"],
     "aur": false
   },
@@ -927,7 +927,7 @@
     "name": "Palapeli",
     "description": "Jigsaw puzzle game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/palapeli/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/palapeli_palapeli.png",
+
     "pkgname": ["palapeli"],
     "aur": false
   },
@@ -935,7 +935,7 @@
     "name": "Picmi",
     "description": "Nonogram puzzle game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/picmi/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/picmi_picmi.png",
+
     "pkgname": ["picmi"],
     "aur": false
   },
@@ -943,7 +943,7 @@
     "name": "Pingus",
     "description": "Lemmings clone, i.e. a level-based puzzle game.",
     "url": "https://pingus.seul.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["pingus"],
     "aur": false
   },
@@ -951,7 +951,7 @@
     "name": "Pioneer",
     "description": "Open source, 3D, freeform single player space adventure set in the Milkyway galaxy at the turn of the 31st century in the spirit of Frontier: Elite II.",
     "url": "https://pioneerspacesim.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pioneer_net.pioneerspacesim.Pioneer.png",
+
     "pkgname": ["pioneer"],
     "aur": false
   },
@@ -959,7 +959,7 @@
     "name": "PyChess",
     "description": "An advanced chess client for linux following the GNOME Human Interface Guidelines.",
     "url": "https://pychess.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pychess_pychess.png",
+
     "pkgname": ["pychess"],
     "aur": false
   },
@@ -967,7 +967,7 @@
     "name": "qgo",
     "description": "A Go client and full featured SGF editor.",
     "url": "https://github.com/pzorin/qgo",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qgo_qgo.png",
+
     "pkgname": ["qgo"],
     "aur": false
   },
@@ -975,7 +975,7 @@
     "name": "Quadrapassel",
     "description": "A Tetris remake. Fit falling blocks together. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Quadrapassel",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/quadrapassel_org.gnome.Quadrapassel.png",
+
     "pkgname": ["quadrapassel"],
     "aur": false
   },
@@ -983,7 +983,7 @@
     "name": "Raze",
     "description": "Raze is a source port based on GZDoom engine tech and merged features from various other Blood source ports.",
     "url": "https://raze.zdoom.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["raze"],
     "aur": false
   },
@@ -991,7 +991,7 @@
     "name": "RuneScape",
     "description": "Massive online adventure game by Jagex.",
     "url": "https://www.runescape.com",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bolt-launcher"],
     "aur": false
   },
@@ -999,7 +999,7 @@
     "name": "Shattered Pixel Dungeon",
     "description": "Shattered fork of the popular roguelike Pixel Dungeon.",
     "url": "https://www.shatteredpixel.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/shattered-pixel-dungeon_shattered-pixel-dungeon.png",
+
     "pkgname": ["shattered-pixel-dungeon"],
     "aur": false
   },
@@ -1007,7 +1007,7 @@
     "name": "Simon Tatham's Portable Puzzle Collection",
     "description": "30+ \"quick\" puzzle games with simplistic but polished GTK GUI .",
     "url": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/puzzles_puzzles-singles.png",
+
     "pkgname": ["puzzles"],
     "aur": false
   },
@@ -1015,7 +1015,7 @@
     "name": "Simutrans",
     "description": "Another Transport simulation that works on Linux with SDL.",
     "url": "https://www.simutrans.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/simutrans_simutrans.png",
+
     "pkgname": ["simutrans"],
     "aur": false
   },
@@ -1023,7 +1023,7 @@
     "name": "Skladnik",
     "description": "The Japanese warehouse keeper Sokoban game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/skladnik/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/skladnik_skladnik.png",
+
     "pkgname": ["skladnik"],
     "aur": false
   },
@@ -1031,7 +1031,7 @@
     "name": "Spring:1944",
     "description": "A WWII themed game with four fully functional sides (US, Germany, USSR, Britain), period-accurate units and strengths. Realism comes second only to creating a game that is fun and accessible to play. The game can be downloaded through SpringLobby, the official lobby client for the spring lobby.",
     "url": "https://spring1944.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/springlobby_springlobby.png",
+
     "pkgname": ["springlobby"],
     "aur": false
   },
@@ -1039,7 +1039,7 @@
     "name": "Stone Soup",
     "description": "Dungeon Crawl Stone Soup.",
     "url": "https://crawl.develz.org/wordpress/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/crawl-ncurses_org.develz.Crawl_console.png",
+
     "pkgname": ["crawl-ncurses"],
     "aur": false
   },
@@ -1047,7 +1047,7 @@
     "name": "SuperTux",
     "description": "Mario-style game featuring Tux.",
     "url": "https://supertux.lethargik.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/supertux_supertux2.png",
+
     "pkgname": ["supertux"],
     "aur": false
   },
@@ -1055,7 +1055,7 @@
     "name": "SuperTuxKart",
     "description": "Open source arcade kart racing game featuring Tux and its friends.",
     "url": "https://supertuxkart.net/Main_Page",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/supertuxkart_supertuxkart.png",
+
     "pkgname": ["supertuxkart"],
     "aur": false
   },
@@ -1063,7 +1063,7 @@
     "name": "Swell Foop",
     "description": "Clear the screen by removing groups of colored and shaped tiles. Also known as SameGame. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Swell(20)Foop",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/swell-foop_org.gnome.SwellFoop.png",
+
     "pkgname": ["swell-foop"],
     "aur": false
   },
@@ -1071,7 +1071,7 @@
     "name": "Tali",
     "description": "Beat the odds in a poker-style dice game. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Tali",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/tali_org.gnome.Tali.png",
+
     "pkgname": ["tali"],
     "aur": false
   },
@@ -1079,7 +1079,7 @@
     "name": "Teeworlds",
     "description": "Fast-paced 2D multiplayer shooter.",
     "url": "https://www.teeworlds.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/teeworlds_teeworlds.png",
+
     "pkgname": ["teeworlds"],
     "aur": false
   },
@@ -1087,7 +1087,7 @@
     "name": "Terasology",
     "description": "Open source voxel world.",
     "url": "https://terasology.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["terasology"],
     "aur": false
   },
@@ -1095,7 +1095,7 @@
     "name": "Tetrinet",
     "description": "Multiplayer online Tetris game for up to six people.",
     "url": "https://gtetrinet.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["tetrinet"],
     "aur": false
   },
@@ -1103,7 +1103,7 @@
     "name": "The Battle for Wesnoth",
     "description": "Free, turn-based tactical strategy game with a high fantasy theme, featuring both single-player, and online/hotseat multiplayer combat.",
     "url": "https://www.wesnoth.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/wesnoth_wesnoth-icon.png",
+
     "pkgname": ["wesnoth"],
     "aur": false
   },
@@ -1111,7 +1111,7 @@
     "name": "The Ur-Quan Masters",
     "description": "A port of Star Control 2.",
     "url": "https://sc2.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/uqm_uqm.png",
+
     "pkgname": ["uqm"],
     "aur": false
   },
@@ -1119,7 +1119,7 @@
     "name": "VCMI",
     "description": "Attempt to reimplement Heroes of Might and Magic III.",
     "url": "https://forum.vcmi.eu/portal.php",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vcmi"],
     "aur": false
   },
@@ -1127,7 +1127,7 @@
     "name": "Veloren",
     "description": "Veloren is an open-world, open-source multiplayer voxel RPG.",
     "url": "http://www.veloren.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["airshipper"],
     "aur": false
   },
@@ -1135,7 +1135,7 @@
     "name": "Warsow",
     "description": "Fast paced multiplayer FPS focusing on movement and trick jumps.",
     "url": "https://warsow.net",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/warsow_warsow.png",
+
     "pkgname": ["warsow"],
     "aur": false
   },
@@ -1143,7 +1143,7 @@
     "name": "Warzone 2100",
     "description": "You command the forces of The Project in a battle to rebuild the world after mankind has almost been destroyed by nuclear missiles. The game offers campaign, multi-player, and single-player skirmish modes. An extensive tech tree with over 400 different technologies, combined with the unit design system, allows for a wide variety of possible units and tactics. The AUR package installs its videos ().",
     "url": "https://wz2100.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/warzone2100_net.wz2100.warzone2100.png",
+
     "pkgname": ["warzone2100"],
     "aur": false
   },
@@ -1151,7 +1151,7 @@
     "name": "Widelands",
     "description": "Slow-paced strategy like \"the Settlers 2\".",
     "url": "https://widelands.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/widelands_org.widelands.Widelands.png",
+
     "pkgname": ["widelands"],
     "aur": false
   },
@@ -1159,7 +1159,7 @@
     "name": "Xonotic",
     "description": "Free, open-source first person shooter (a fork of Nexuiz but with modified gameplay).",
     "url": "https://xonotic.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xonotic_xonotic.png",
+
     "pkgname": ["xonotic"],
     "aur": false
   }

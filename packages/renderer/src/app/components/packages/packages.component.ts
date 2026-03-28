@@ -6,10 +6,9 @@ import {
   inject,
   signal,
   viewChild,
-  ViewChild,
 } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
-import type { PackageSections, StatefulPackage } from '../gaming/interfaces';
+import type { StatefulPackage } from '../gaming/interfaces';
 import { Tab, TabList, Tabs } from 'primeng/tabs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Logger } from '../../logging/logging';
@@ -21,7 +20,6 @@ import { InputText } from 'primeng/inputtext';
 import { type Table, TableModule } from 'primeng/table';
 import { Checkbox } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
-
 import { PackagesService } from './packages.service';
 import { ConfigService } from '../config/config.service';
 
@@ -70,35 +68,12 @@ export class PackagesComponent {
    * Get the source path for an icon.
    * @param item The package entry.
    */
-  getIconSrc(item: StatefulPackage & { icon: string }): string {
-    const pkgname = item.pkgname[0];
-    const icon = item.icon;
-
-    if (!icon || icon === 'generic-dark.svg') {
-      return this.configService.settings().darkMode
-        ? './assets/gamer/generic-dark.svg'
-        : './assets/gamer/generic-light.svg';
-    }
-
-    if (icon?.startsWith('/')) {
-      return `app-icon://${icon}`;
-    }
-
-    if (icon) {
-      if (icon.includes('.')) {
-        if (icon.includes('assets/')) return icon.startsWith('.') ? icon : `./${icon.replace(/^\//, '')}`;
-        return `./assets/icons/${icon}`;
-      }
-      return `app-icon://${icon}`;
-    }
-
+  getIconSrc(item: StatefulPackage): string {
+    const pkgname = item.pkgname[0]?.replace(/-(bin|git)$/, '');
     if (pkgname) {
       return `app-icon://package/${pkgname}`;
     }
-
-    return this.configService.settings().darkMode
-      ? './assets/gamer/generic-dark.svg'
-      : './assets/gamer/generic-light.svg';
+    return 'app-icon://unknown';
   }
 
   /**

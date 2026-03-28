@@ -6,7 +6,7 @@ export interface StatefulPackage {
 
 export interface Package {
   description?: string;
-  icon: string;
+  icon?: string;
   name: string;
   url?: string;
 }

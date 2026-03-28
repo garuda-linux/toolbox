@@ -32,44 +32,45 @@
                 <div class="grid-nogutter grid grid-cols-12 gap-4 p-5">
                   @for (item of items; track item.name) {
                     <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-2">
-                        @if (!item.disabled) {
-                          <p-card
-                            [style]="{
-                              cursor: 'pointer',
-                              background: item.selected ? computedBackground : '',
-                            }"
-                            (click)="togglePackage(item)"
-                            (keyup.enter)="togglePackage(item)"
-                            tabindex="0"
-                          >
-                            <ng-template #title>
-                              <div
-                                class="text-bold min-h-10 text-center text-sm"
-                                [pTooltip]="t(item.description)"
-                                [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
-                              >
-                                {{ item.name }}
-                                @if (item.description) {
-                                  <i class="pi pi-info-circle mr-2"> </i>
-                                }
-                                @if (item.url) {
-                                  <a (click)="open(item.url)" (keyup.enter)="open(item.url)" tabindex="0"
-                                    ><i class="pi pi-external-link"></i
-                                  ></a>
-                                }
-                              </div>
-                            </ng-template>
-                            <div class="mt-5 flex h-16 items-center justify-center">
-                              <img
-                                class="mx-auto rounded-border"
-                                [alt]="item.name"
-                                [src]="getIconSrc(item)"
-                                height="50"
-                                width="50"
-                              />
+                      @if (!item.disabled) {
+                        <p-card
+                          [style]="{
+                            cursor: 'pointer',
+                            background: item.selected ? computedBackground : '',
+                          }"
+                          (click)="togglePackage(item)"
+                          (keyup.enter)="togglePackage(item)"
+                          tabindex="0"
+                        >
+                          <ng-template #title>
+                            <div
+                              class="text-bold min-h-10 text-center text-sm"
+                              [pTooltip]="t(item.description)"
+                              [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+                            >
+                              {{ item.name }}
+                              @if (item.description) {
+                                <i class="pi pi-info-circle mr-2"> </i>
+                              }
+                              @if (item.url) {
+                                <a (click)="open(item.url)" (keyup.enter)="open(item.url)" tabindex="0"
+                                  ><i class="pi pi-external-link"></i
+                                ></a>
+                              }
                             </div>
-                          </p-card>
-                        }
+                          </ng-template>
+                          <div class="mt-5 flex h-16 items-center justify-center">
+                            <img
+                              class="mx-auto rounded-border"
+                              [alt]="item.name"
+                              [src]="getIconSrc(item)"
+                              (error)="handleIconError($event, item)"
+                              height="50"
+                              width="50"
+                            />
+                          </div>
+                        </p-card>
+                      }
                     </div>
                   }
                 </div>

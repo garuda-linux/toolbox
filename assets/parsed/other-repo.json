@@ -3,7 +3,7 @@
     "name": "Abook",
     "description": "Text-based contacts manager designed for use with mutt.",
     "url": "https://abook.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["abook"],
     "aur": false
   },
@@ -11,7 +11,7 @@
     "name": "ActivityWatch",
     "description": "A self/local-hosted, cross-platform, client-server, privacy-focused active window tracker.",
     "url": "https://github.com/ActivityWatch/activitywatch",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["activitywatch-bin"],
     "aur": false
   },
@@ -19,7 +19,7 @@
     "name": "Agenda",
     "description": "Calendar application built with MauiKit. Part of maui.",
     "url": "https://mauikit.org/apps/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maui-agenda_agenda.png",
+
     "pkgname": ["maui-agenda"],
     "aur": false
   },
@@ -27,7 +27,7 @@
     "name": "Agenda",
     "description": "Simple, fast, no-nonsense to-do (task) list for elementary OS.",
     "url": "https://github.com/dahenson/agenda",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["agenda"],
     "aur": false
   },
@@ -35,7 +35,7 @@
     "name": "AIChat",
     "description": "A versatile CLI tool for interacting with AI models, featuring REPL-like functionality, shell assistance, and support for multiple AI providers.",
     "url": "https://github.com/sigoden/aichat",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["aichat"],
     "aur": false
   },
@@ -43,7 +43,7 @@
     "name": "Alacarte",
     "description": "Add or remove applications from the main menu.",
     "url": "https://gitlab.gnome.org/GNOME/alacarte",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/alacarte_alacarte.png",
+
     "pkgname": ["alacarte"],
     "aur": false
   },
@@ -51,7 +51,7 @@
     "name": "Albert",
     "description": "Sophisticated, plugin based standalone keyboard launcher.",
     "url": "https://albertlauncher.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["albert"],
     "aur": false
   },
@@ -59,7 +59,7 @@
     "name": "Anki",
     "description": "Intelligent spaced-repetition memory training program.",
     "url": "https://apps.ankiweb.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["anki"],
     "aur": false
   },
@@ -67,7 +67,7 @@
     "name": "Application Finder",
     "description": "Easy-to-use application launcher from Xfce.",
     "url": "https://docs.xfce.org/xfce/xfce4-appfinder/start",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xfce4-appfinder_org.xfce.appfinder.png",
+
     "pkgname": ["xfce4-appfinder"],
     "aur": false
   },
@@ -75,7 +75,7 @@
     "name": "Artikulate",
     "description": "Pronunciation trainer that helps improving and perfecting a learner's pronunciation skills for a foreign language. Part of kde-education.",
     "url": "https://apps.kde.org/artikulate/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/artikulate_artikulate.png",
+
     "pkgname": ["artikulate"],
     "aur": false
   },
@@ -83,7 +83,7 @@
     "name": "bbpager",
     "description": "Dockable pager for blackbox and other window managers.",
     "url": "https://sourceforge.net/projects/bbtools/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bbpager"],
     "aur": false
   },
@@ -91,7 +91,7 @@
     "name": "bemenu",
     "description": "Lightweight dynamic menu inspired by dmenu. Works natively on Wayland.",
     "url": "https://github.com/Cloudef/bemenu",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["bemenu"],
     "aur": false
   },
@@ -99,7 +99,7 @@
     "name": "Bitcoin Core",
     "description": "Connect to the Bitcoin P2P Network.",
     "url": "https://bitcoincore.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bitcoin-qt_bitcoin-qt.png",
+
     "pkgname": ["bitcoin-qt"],
     "aur": false
   },
@@ -107,7 +107,7 @@
     "name": "Break Timer",
     "description": "Keeps track of how much you are using the computer, and it reminds you to take regular breaks. Works only in GNOME.",
     "url": "https://wiki.gnome.org/Apps/BreakTimer",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-break-timer_org.gnome.BreakTimer.png",
+
     "pkgname": ["gnome-break-timer"],
     "aur": false
   },
@@ -115,7 +115,7 @@
     "name": "Cairo-Dock",
     "description": "Highly customizable dock and launcher application.",
     "url": "https://www.glx-dock.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cairo-dock_cairo-dock.png",
+
     "pkgname": ["cairo-dock"],
     "aur": false
   },
@@ -123,7 +123,7 @@
     "name": "Calcurse",
     "description": "Text-based ncurses calendar and scheduling system (supports CalDAV)",
     "url": "https://calcurse.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["calcurse"],
     "aur": false
   },
@@ -131,7 +131,7 @@
     "name": "Calindori",
     "description": "Calendar application for Plasma Mobile.",
     "url": "https://apps.kde.org/calindori/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calindori_calindori.png",
+
     "pkgname": ["calindori"],
     "aur": false
   },
@@ -139,7 +139,7 @@
     "name": "Calligra Plan",
     "description": "Project management application, which is intended for managing moderately large projects with multiple resources.",
     "url": "https://calligra.org/components/plan/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calligra-plan_calligraplan.png",
+
     "pkgname": ["calligra-plan"],
     "aur": false
   },
@@ -147,7 +147,7 @@
     "name": "Cartridges",
     "description": "Simple game launcher written in Python using GTK4 and Libadwaita.",
     "url": "https://apps.gnome.org/Cartridges/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cartridges_page.kramo.Cartridges.png",
+
     "pkgname": ["cartridges"],
     "aur": false
   },
@@ -155,7 +155,7 @@
     "name": "Chess Clock",
     "description": "Simple application to provide time control for over-the-board chess games.",
     "url": "https://apps.gnome.org/Chessclock/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/chess-clock_eu.fortysixandtwo.chessclock.png",
+
     "pkgname": ["chess-clock"],
     "aur": false
   },
@@ -163,7 +163,7 @@
     "name": "chinese-calendar",
     "description": "Chinese traditional calendar for Ubuntu Kylin.",
     "url": "https://launchpad.net/chinese-calendar/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/chinese-calendar_chinesecalendar-64.png",
+
     "pkgname": ["chinese-calendar"],
     "aur": false
   },
@@ -171,7 +171,7 @@
     "name": "Communicator",
     "description": "Integrated address book and dialer application features the search for and view of contacts, edit contact details, and make new contacts, favorites, and dialer pad. Part of maui.",
     "url": "https://mauikit.org/apps/communicator/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/communicator_communicator.png",
+
     "pkgname": ["communicator"],
     "aur": false
   },
@@ -179,7 +179,7 @@
     "name": "cuDNN",
     "description": "NVIDIA CUDA Deep Neural Network library for high-performance GPU acceleration.",
     "url": "https://developer.nvidia.com/cudnn",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cudnn"],
     "aur": false
   },
@@ -187,7 +187,7 @@
     "name": "Dash to Panel",
     "description": "A fully customizable icon taskbar for gnome-shell. Moves the dash into the GNOME main panel, similar to KDE Plasma and Windows 10.",
     "url": "https://github.com/home-sweet-gnome/dash-to-panel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnome-shell-extension-dash-to-panel"],
     "aur": false
   },
@@ -195,7 +195,7 @@
     "name": "Deepin Calendar",
     "description": "Calendar application for Deepin.",
     "url": "https://www.deepin.org/en/original/dde-calendar/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["deepin-calendar"],
     "aur": false
   },
@@ -203,7 +203,7 @@
     "name": "describeimage",
     "description": "Describe images using Ollama.",
     "url": "https://github.com/ollama/ollama",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["describeimage"],
     "aur": false
   },
@@ -211,7 +211,7 @@
     "name": "dmenu",
     "description": "Fast and lightweight dynamic menu for X which is also useful as an application launcher.",
     "url": "https://tools.suckless.org/dmenu/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dmenu"],
     "aur": false
   },
@@ -219,7 +219,7 @@
     "name": "DockbarX",
     "description": "Standalone, dock-style taskbar for X11 with window grouping.",
     "url": "https://github.com/xuzhen/dockbarx",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dockbarx"],
     "aur": false
   },
@@ -227,7 +227,7 @@
     "name": "Easystroke",
     "description": "Use mouse gestures to initiate commands and hotkeys.",
     "url": "https://github.com/thjaeger/easystroke/wiki",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["easystroke"],
     "aur": false
   },
@@ -235,7 +235,7 @@
     "name": "Electrum",
     "description": "Lightweight Bitcoin client.",
     "url": "https://electrum.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/electrum_electrum.png",
+
     "pkgname": ["electrum"],
     "aur": false
   },
@@ -243,7 +243,7 @@
     "name": "Endeavour",
     "description": "Personal task manager for GNOME. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Todo",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/endeavour_org.gnome.Todo.png",
+
     "pkgname": ["endeavour"],
     "aur": false
   },
@@ -251,7 +251,7 @@
     "name": "Eqonomize!",
     "description": "Cross-platform personal accounting software, with focus on efficiency and ease of use for the small household economy.",
     "url": "https://eqonomize.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["eqonomize"],
     "aur": false
   },
@@ -259,7 +259,7 @@
     "name": "Errands",
     "description": "Todo application for those who prefer simplicity.",
     "url": "https://apps.gnome.org/List/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/errands_io.github.mrvladus.List.png",
+
     "pkgname": ["errands"],
     "aur": false
   },
@@ -267,7 +267,7 @@
     "name": "eSpeak NG",
     "description": "Fork of eSpeak (due to inactivity of original maintainer).",
     "url": "https://github.com/espeak-ng/espeak-ng",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["espeak-ng"],
     "aur": false
   },
@@ -275,7 +275,7 @@
     "name": "Evolution",
     "description": "Personal information management application that provides integrated mail, calendaring and address book functionality. Part of gnome-extra.",
     "url": "https://gitlab.gnome.org/GNOME/evolution/-/wikis/home",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/evolution_evolution.png",
+
     "pkgname": ["evolution"],
     "aur": false
   },
@@ -283,7 +283,7 @@
     "name": "eww",
     "description": "Elkowars Wacky Widgets is a standalone widget system made in Rust that allows you to implement your own, custom widgets in any window manager.",
     "url": "https://github.com/elkowar/eww",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["eww"],
     "aur": false
   },
@@ -291,7 +291,7 @@
     "name": "feh",
     "description": "A lightweight and powerful image viewer that can also be used to manage the desktop wallpaper.",
     "url": "https://feh.finalrewind.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["feh"],
     "aur": false
   },
@@ -299,7 +299,7 @@
     "name": "Festival",
     "description": "General framework for building speech synthesis systems as well as including examples of various modules. As a whole it offers full text to speech.",
     "url": "https://www.cstr.ed.ac.uk/projects/festival/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["festival"],
     "aur": false
   },
@@ -307,7 +307,7 @@
     "name": "Flite",
     "description": "Lightweight speech synthesis engine.",
     "url": "http://festvox.org/flite/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["flite"],
     "aur": false
   },
@@ -315,7 +315,7 @@
     "name": "Fondo",
     "description": "Find a variety of the most beautiful wallpapers from Unsplash.com.",
     "url": "https://github.com/calo001/fondo",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fondo"],
     "aur": false
   },
@@ -323,7 +323,7 @@
     "name": "Francis",
     "description": "App that uses the well-known pomodoro technique to help you get more productive. Part of kde-utilities.",
     "url": "https://apps.kde.org/francis/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/francis_org.kde.francis.png",
+
     "pkgname": ["francis"],
     "aur": false
   },
@@ -331,7 +331,7 @@
     "name": "Fretboard",
     "description": "Look up guitar chords.",
     "url": "https://apps.gnome.org/Fretboard/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/fretboard_dev.bragefuglseth.Fretboard.png",
+
     "pkgname": ["fretboard"],
     "aur": false
   },
@@ -339,7 +339,7 @@
     "name": "fuzzel",
     "description": "Application launcher for wlroots based Wayland compositors, similar to rofi's `drun` mode.",
     "url": "https://codeberg.org/dnkl/fuzzel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fuzzel"],
     "aur": false
   },
@@ -347,7 +347,7 @@
     "name": "Gemini CLI",
     "description": "Open-source AI agent that brings the power of Google Gemini directly into your terminal.",
     "url": "https://github.com/google-gemini/gemini-cli",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gemini-cli"],
     "aur": false
   },
@@ -355,7 +355,7 @@
     "name": "GitHub Copilot CLI",
     "description": "Official CLI interface for GitHub Copilot coding assistant.",
     "url": "https://github.com/github/copilot-cli",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["github-copilot-cli"],
     "aur": false
   },
@@ -363,7 +363,7 @@
     "name": "GNOME Calendar",
     "description": "Calendar application for GNOME. Part of gnome.",
     "url": "https://apps.gnome.org/Calendar/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-calendar_org.gnome.Calendar.png",
+
     "pkgname": ["gnome-calendar"],
     "aur": false
   },
@@ -371,7 +371,7 @@
     "name": "GNOME Clocks",
     "description": "Clocks application for GNOME, including alarm, stopwatch and timer functionality. Part of gnome.",
     "url": "https://apps.gnome.org/Clocks/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-clocks_org.gnome.clocks.png",
+
     "pkgname": ["gnome-clocks"],
     "aur": false
   },
@@ -379,7 +379,7 @@
     "name": "GNOME Contacts",
     "description": "Contacts manager for GNOME. Part of gnome.",
     "url": "https://apps.gnome.org/Contacts/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-contacts_org.gnome.Contacts.png",
+
     "pkgname": ["gnome-contacts"],
     "aur": false
   },
@@ -387,7 +387,7 @@
     "name": "GNOME Games",
     "description": "GNOME application to browse your local video games library and to easily pick and play a game from it. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Games",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-games_org.gnome.Games.png",
+
     "pkgname": ["gnome-games"],
     "aur": false
   },
@@ -395,7 +395,7 @@
     "name": "GNOME Panel",
     "description": "Panel included in the GNOME Flashback desktop.",
     "url": "https://wiki.gnome.org/Projects/GnomePanel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnome-panel"],
     "aur": false
   },
@@ -403,7 +403,7 @@
     "name": "Gnome-Pie",
     "description": "Circular application launcher (pie menu) for Linux. It is made of several pies, each consisting of multiple slices.",
     "url": "https://simmesimme.github.io/gnome-pie.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-pie_gnome-pie.png",
+
     "pkgname": ["gnome-pie"],
     "aur": false
   },
@@ -411,7 +411,7 @@
     "name": "GnuCash",
     "description": "Financial application that implements a double-entry book-keeping system with features for small business accounting.",
     "url": "https://www.gnucash.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnucash_gnucash-icon.png",
+
     "pkgname": ["gnucash"],
     "aur": false
   },
@@ -419,7 +419,7 @@
     "name": "Gromit-MPX",
     "description": "Tool to make annotations on the screen.",
     "url": "https://github.com/bk138/gromit-mpx",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gromit-mpx"],
     "aur": false
   },
@@ -427,7 +427,7 @@
     "name": "GTG",
     "description": "Personal tasks and TODO list items organizer for GNOME inspired by the Getting Things Done (GTD) methodology.",
     "url": "https://github.com/getting-things-gnome/gtg",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gtg"],
     "aur": false
   },
@@ -435,7 +435,7 @@
     "name": "Hamster",
     "description": "Time tracking application that helps you to keep track on how much time you have spent during the day on activities you choose to track.",
     "url": "http://projecthamster.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/hamster-time-tracker_org.gnome.Hamster.GUI.png",
+
     "pkgname": ["hamster-time-tracker"],
     "aur": false
   },
@@ -443,7 +443,7 @@
     "name": "Health",
     "description": "Health tracking app for the GNOME desktop.",
     "url": "https://apps.gnome.org/Health/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/health_dev.Cogitri.Health.png",
+
     "pkgname": ["health"],
     "aur": false
   },
@@ -451,7 +451,7 @@
     "name": "hledger",
     "description": "An accounting program for tracking money, time, or any other commodity, using double-entry accounting and a simple, editable file format. hledger is inspired by and largely compatible with ledger.",
     "url": "https://hledger.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hledger"],
     "aur": false
   },
@@ -459,7 +459,7 @@
     "name": "HomeBank",
     "description": "Easy to use finance manager that can analyse your personal finance in detail using powerful filtering tools and graphs.",
     "url": "http://homebank.free.fr/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/homebank_homebank.png",
+
     "pkgname": ["homebank"],
     "aur": false
   },
@@ -467,7 +467,7 @@
     "name": "hsetroot",
     "description": "A tool to create compose wallpapers.",
     "url": "https://packages.debian.org/sid/hsetroot",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hsetroot"],
     "aur": false
   },
@@ -475,7 +475,7 @@
     "name": "Hyprpaper",
     "description": "Hyprpaper is a blazing fast wayland wallpaper utility with IPC controls.",
     "url": "https://github.com/hyprwm/hyprpaper",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["hyprpaper-git"],
     "aur": false
   },
@@ -483,7 +483,7 @@
     "name": "Ironbar",
     "description": "A customisable and feature-rich GTK4 status bar for Wayland compositors, written in Rust.",
     "url": "https://github.com/JakeStanger/ironbar",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ironbar-git"],
     "aur": false
   },
@@ -491,7 +491,7 @@
     "name": "Itinerary",
     "description": "Digital travel assistant with a priority on protecting your privacy. Part of kde-pim.",
     "url": "https://apps.kde.org/itinerary/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/itinerary_org.kde.itinerary.png",
+
     "pkgname": ["itinerary"],
     "aur": false
   },
@@ -499,7 +499,7 @@
     "name": "j4-dmenu-desktop",
     "description": "Very fast dmenu application launcher.",
     "url": "https://github.com/enkore/j4-dmenu-desktop",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["j4-dmenu-desktop"],
     "aur": false
   },
@@ -507,7 +507,7 @@
     "name": "jgmenu",
     "description": "Simple, independent, contemporary-looking X11 menu, designed for scripting, ricing and tweaking.",
     "url": "https://github.com/johanmalm/jgmenu",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/jgmenu_jgmenu.png",
+
     "pkgname": ["jgmenu"],
     "aur": false
   },
@@ -515,7 +515,7 @@
     "name": "Junction",
     "description": "Application chooser to open files and links.",
     "url": "https://apps.gnome.org/Junction/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/junction_re.sonny.Junction.png",
+
     "pkgname": ["junction"],
     "aur": false
   },
@@ -523,7 +523,7 @@
     "name": "KAddressBook",
     "description": "Address book manager for KDE. Part of kde-pim.",
     "url": "https://kontact.kde.org/components/kaddressbook",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kaddressbook_kaddressbook.png",
+
     "pkgname": ["kaddressbook"],
     "aur": false
   },
@@ -531,7 +531,7 @@
     "name": "KAlarm",
     "description": "Personal alarm message, command and email scheduler, part of kde-pim.",
     "url": "https://apps.kde.org/kalarm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalarm_kalarm.png",
+
     "pkgname": ["kalarm"],
     "aur": false
   },
@@ -539,7 +539,7 @@
     "name": "Kalm",
     "description": "Teach you different breathing techniques. Part of kde-utilities.",
     "url": "https://apps.kde.org/kalm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kalm_org.kde.kalm.png",
+
     "pkgname": ["kalm"],
     "aur": false
   },
@@ -547,7 +547,7 @@
     "name": "KClock",
     "description": "A convergent clock application for Plasma. It contains alarm, timer, stopwatch and timezone functionalities. Part of kde-utilities.",
     "url": "https://apps.kde.org/kclock/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kclock_org.kde.kclock.png",
+
     "pkgname": ["kclock"],
     "aur": false
   },
@@ -555,7 +555,7 @@
     "name": "KDocker",
     "description": "Dock any application in the system tray (notification area).",
     "url": "https://github.com/user-none/KDocker",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kdocker"],
     "aur": false
   },
@@ -563,7 +563,7 @@
     "name": "KEditBookmarks",
     "description": "Bookmark organizer and editor. Part of kde-utilities.",
     "url": "https://invent.kde.org/utilities/keditbookmarks",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["keditbookmarks"],
     "aur": false
   },
@@ -571,7 +571,7 @@
     "name": "khal",
     "description": "Command-line (non-interactive) and ncurses (interactive) calendar system (supports CalDAV)",
     "url": "https://github.com/pimutils/khal",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["khal"],
     "aur": false
   },
@@ -579,7 +579,7 @@
     "name": "Khard",
     "description": "Command-line addressbook that is able to sync with CardDAV-servers.",
     "url": "https://github.com/scheibler/khard",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["khard"],
     "aur": false
   },
@@ -587,7 +587,7 @@
     "name": "Klavaro",
     "description": "Teaching touch typing that intends to be keyboard and language independent.",
     "url": "https://klavaro.sourceforge.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/klavaro_klavaro.png",
+
     "pkgname": ["klavaro"],
     "aur": false
   },
@@ -595,7 +595,7 @@
     "name": "KMag",
     "description": "Small KDE utility to magnify a part of the screen. Part of kde-accessibility.",
     "url": "https://apps.kde.org/kmag/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmag_kmag.png",
+
     "pkgname": ["kmag"],
     "aur": false
   },
@@ -603,7 +603,7 @@
     "name": "KMenuEdit",
     "description": "Edit one of the KDE application launchers. Part of plasma.",
     "url": "https://invent.kde.org/plasma/kmenuedit",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmenuedit_kmenuedit.png",
+
     "pkgname": ["kmenuedit"],
     "aur": false
   },
@@ -611,7 +611,7 @@
     "name": "KMouseTool",
     "description": "Clicks the mouse whenever the mouse cursor pauses briefly. It was designed to help those with repetitive strain injuries, for whom pressing buttons hurts. Part of kde-accessibility.",
     "url": "https://apps.kde.org/kmousetool/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmousetool_kmousetool.png",
+
     "pkgname": ["kmousetool"],
     "aur": false
   },
@@ -619,7 +619,7 @@
     "name": "KMouth",
     "description": "Speech synthesizer frontend which enables persons that cannot speak to let their computer speak. Part of kde-accessibility.",
     "url": "https://apps.kde.org/kmouth/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmouth_kmouth.png",
+
     "pkgname": ["kmouth"],
     "aur": false
   },
@@ -627,7 +627,7 @@
     "name": "KMyMoney",
     "description": "Personal finance manager that operates in a similar way to Microsoft Money. It supports different account types, categorisation of expenses and incomes, reconciliation of bank accounts and import/export to the “QIF” file format.",
     "url": "https://kmymoney.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kmymoney_kmymoney.png",
+
     "pkgname": ["kmymoney"],
     "aur": false
   },
@@ -635,7 +635,7 @@
     "name": "KomoDo",
     "description": "Todo manager that uses todo.txt specification.",
     "url": "https://apps.kde.org/komodo/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/komodo_org.kde.komodo.png",
+
     "pkgname": ["komodo"],
     "aur": false
   },
@@ -643,7 +643,7 @@
     "name": "Kongress",
     "description": "Companion application for conferences made by KDE. Part of kde-utilities.",
     "url": "https://apps.kde.org/kongress/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kongress_org.kde.kongress.png",
+
     "pkgname": ["kongress"],
     "aur": false
   },
@@ -651,7 +651,7 @@
     "name": "Kontact",
     "description": "Integrated solution to your personal information management. Part of kde-pim.",
     "url": "https://kontact.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kontact_kontact.png",
+
     "pkgname": ["kontact"],
     "aur": false
   },
@@ -659,7 +659,7 @@
     "name": "KOrganizer",
     "description": "Calendar and scheduling program, part of kde-pim.",
     "url": "https://kontact.kde.org/components/korganizer",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/korganizer_korganizer.png",
+
     "pkgname": ["korganizer"],
     "aur": false
   },
@@ -667,7 +667,7 @@
     "name": "Kresus",
     "description": "Self-hosted personal finance management software. It automatically retrieves every day all your new bank transactions and lets you categorize them, study them through charts and establish a budget.",
     "url": "https://kresus.org/en/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kresus"],
     "aur": false
   },
@@ -675,7 +675,7 @@
     "name": "Kronometer",
     "description": "Stopwatch application for KDE.",
     "url": "https://apps.kde.org/kronometer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kronometer_kronometer.png",
+
     "pkgname": ["kronometer"],
     "aur": false
   },
@@ -683,7 +683,7 @@
     "name": "KRuler",
     "description": "Displays on screen a ruler measuring pixels. Part of kde-graphics.",
     "url": "https://apps.kde.org/kruler/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kruler_kruler.png",
+
     "pkgname": ["kruler"],
     "aur": false
   },
@@ -691,7 +691,7 @@
     "name": "KTeaTime",
     "description": "Handy timer for steeping tea. Part of kde-utilities.",
     "url": "https://apps.kde.org/kteatime/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kteatime_kteatime.png",
+
     "pkgname": ["kteatime"],
     "aur": false
   },
@@ -699,7 +699,7 @@
     "name": "KTimeTracker",
     "description": "Todo management and time tracking application.",
     "url": "https://apps.kde.org/ktimetracker/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktimetracker_ktimetracker.png",
+
     "pkgname": ["ktimetracker"],
     "aur": false
   },
@@ -707,7 +707,7 @@
     "name": "KTouch",
     "description": "Program to learn and practice touch typing. Part of kde-education.",
     "url": "https://apps.kde.org/ktouch/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktouch_ktouch.png",
+
     "pkgname": ["ktouch"],
     "aur": false
   },
@@ -715,7 +715,7 @@
     "name": "Kupfer",
     "description": "Convenient command and access tool for the GNOME desktop that can launch applications, open documents and access different types of objects and act on them.",
     "url": "https://kupferlauncher.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kupfer_kupfer.png",
+
     "pkgname": ["kupfer"],
     "aur": false
   },
@@ -723,7 +723,7 @@
     "name": "KWordQuiz",
     "description": "Tool that gives you a powerful way to master new vocabularies. Part of kde-education.",
     "url": "https://apps.kde.org/kwordquiz/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kwordquiz_org.kde.kwordquiz.png",
+
     "pkgname": ["kwordquiz"],
     "aur": false
   },
@@ -731,7 +731,7 @@
     "name": "Launchy",
     "description": "Very popular cross-platform application launcher with a plugin-based system used to provide extra functionality.",
     "url": "https://www.launchy.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/launchy_launchy_icon.png",
+
     "pkgname": ["launchy"],
     "aur": false
   },
@@ -739,7 +739,7 @@
     "name": "Ledger",
     "description": "Ledger is a powerful, double-entry accounting system that is accessed from the UNIX command-line.",
     "url": "https://www.ledger-cli.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ledger"],
     "aur": false
   },
@@ -747,7 +747,7 @@
     "name": "liquidshell",
     "description": "Basic desktop shell implemented using QtWidgets. It provides a bottom panel, a desktop wallpaper and desktop widgets.",
     "url": "https://apps.kde.org/liquidshell/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["liquidshell"],
     "aur": false
   },
@@ -755,7 +755,7 @@
     "name": "LXLauncher",
     "description": "Clone of the Asus launcher for EeePC.",
     "url": "https://github.com/lxde/lxlauncher",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lxlauncher"],
     "aur": false
   },
@@ -763,7 +763,7 @@
     "name": "LXPanel",
     "description": "Lightweight X11 desktop panel and part of the LXDE desktop.",
     "url": "https://github.com/lxde/lxpanel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lxpanel"],
     "aur": false
   },
@@ -771,7 +771,7 @@
     "name": "LXQt Panel",
     "description": "Qt-based taskbar, part of the LXQt desktop.",
     "url": "https://github.com/lxqt/lxqt-panel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lxqt-panel"],
     "aur": false
   },
@@ -779,7 +779,7 @@
     "name": "MATE Panel",
     "description": "Panel included in the MATE desktop.",
     "url": "https://github.com/mate-desktop/mate-panel/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mate-panel"],
     "aur": false
   },
@@ -787,7 +787,7 @@
     "name": "MenuLibre",
     "description": "Advanced menu editor that provides modern features in a clean, easy-to-use interface.",
     "url": "https://launchpad.net/menulibre",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["menulibre"],
     "aur": false
   },
@@ -795,7 +795,7 @@
     "name": "MenuMaker",
     "description": "Heuristics-driven menu generator for Blackbox, Fluxbox, IceWM, Openbox, PekWM and WindowMaker.",
     "url": "https://menumaker.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["menumaker"],
     "aur": false
   },
@@ -803,7 +803,7 @@
     "name": "Merkuro",
     "description": "Calendar and contact application that allows you to manage your tasks, events and contacts. Part of kde-pim.",
     "url": "https://apps.kde.org/merkuro/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/merkuro_org.kde.merkuro.calendar.png",
+
     "pkgname": ["merkuro"],
     "aur": false
   },
@@ -811,7 +811,7 @@
     "name": "Merkuro Calendar",
     "description": "Calendar application using Akonadi that supports both local and online calendars: Nextcloud, Google Calendar, Outlook, Caldav and more. Part of kde-pim.",
     "url": "https://apps.kde.org/merkuro.calendar/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/merkuro_org.kde.merkuro.calendar.png",
+
     "pkgname": ["merkuro"],
     "aur": false
   },
@@ -819,7 +819,7 @@
     "name": "Merkuro Contacts",
     "description": "Address book using Akonadi. Part of kde-pim.",
     "url": "https://apps.kde.org/merkuro.contact/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/merkuro_org.kde.merkuro.calendar.png",
+
     "pkgname": ["merkuro"],
     "aur": false
   },
@@ -827,7 +827,7 @@
     "name": "Monero",
     "description": "Monero wallet.",
     "url": "https://getmonero.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/monero-gui_monero-gui.png",
+
     "pkgname": ["monero-gui"],
     "aur": false
   },
@@ -835,7 +835,7 @@
     "name": "Mousetweaks",
     "description": "Accessibility enhancements for pointing devices.",
     "url": "https://wiki.gnome.org/Projects/Mousetweaks",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mousetweaks"],
     "aur": false
   },
@@ -843,7 +843,7 @@
     "name": "Mozo",
     "description": "Change which applications are shown on the main menu.",
     "url": "https://github.com/mate-desktop/mozo",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mozo"],
     "aur": false
   },
@@ -851,7 +851,7 @@
     "name": "mpvpaper",
     "description": "A video wallpaper program for wlroots based wayland compositors.",
     "url": "https://github.com/GhostNaN/mpvpaper",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mpvpaper"],
     "aur": false
   },
@@ -859,7 +859,7 @@
     "name": "Nextcloud Calendar",
     "description": "Calendar app for Nextcloud.",
     "url": "https://github.com/nextcloud/calendar",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nextcloud-app-calendar"],
     "aur": false
   },
@@ -867,7 +867,7 @@
     "name": "Nextcloud Contacts",
     "description": "Contacts app for Nextcloud.",
     "url": "https://github.com/nextcloud/contacts",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nextcloud-app-contacts"],
     "aur": false
   },
@@ -875,7 +875,7 @@
     "name": "Nextcloud Tasks",
     "description": "Tasks app for Nextcloud.",
     "url": "https://github.com/nextcloud/tasks",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nextcloud-app-tasks"],
     "aur": false
   },
@@ -883,7 +883,7 @@
     "name": "nwg-bar",
     "description": "Configurable button bar for wlroots-based compositors.",
     "url": "https://github.com/nwg-piotr/nwg-bar",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nwg-bar"],
     "aur": false
   },
@@ -891,7 +891,7 @@
     "name": "nwg-dock",
     "description": "GTK-based dock for Sway and Hyprland Wayland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-dock",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nwg-dock"],
     "aur": false
   },
@@ -899,7 +899,7 @@
     "name": "nwg-drawer",
     "description": "GTK-based application drawer designed for the Sway compositor.",
     "url": "https://github.com/nwg-piotr/nwg-drawer",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nwg-drawer"],
     "aur": false
   },
@@ -907,7 +907,7 @@
     "name": "nwg-menu",
     "description": "GTK-based application menu designed for the Sway compositor.",
     "url": "https://github.com/nwg-piotr/nwg-menu",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nwg-menu"],
     "aur": false
   },
@@ -915,7 +915,7 @@
     "name": "nwg-panel",
     "description": "GTK3-based panel for Sway and Hyprland Wayland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-panel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nwg-panel"],
     "aur": false
   },
@@ -923,7 +923,7 @@
     "name": "Ollama",
     "description": "A streamlined tool for creating, running, and sharing large language models locally.",
     "url": "https://ollama.com",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ollama"],
     "aur": false
   },
@@ -931,7 +931,7 @@
     "name": "ONNX Runtime",
     "description": "High-performance scoring engine for ML models with cross-platform support.",
     "url": "https://onnxruntime.ai/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["onnxruntime-cpu"],
     "aur": false
   },
@@ -939,7 +939,7 @@
     "name": "OpenBoard",
     "description": "Interactive whiteboard software for schools and universities.",
     "url": "https://openboard.ch/index.en.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["openboard"],
     "aur": false
   },
@@ -947,7 +947,7 @@
     "name": "opencode",
     "description": "AI coding agent built for the terminal.",
     "url": "https://github.com/sst/opencode",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["opencode"],
     "aur": false
   },
@@ -955,7 +955,7 @@
     "name": "Orca",
     "description": "Screen reader for individuals who are blind or visually impaired, using eSpeak (via Speech Dispatcher). Part of gnome.",
     "url": "https://wiki.gnome.org/Projects/Orca",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["orca"],
     "aur": false
   },
@@ -963,7 +963,7 @@
     "name": "Osmo",
     "description": "GTK personal organizer, which includes calendar, tasks manager and address book modules.",
     "url": "https://osmo-pim.sourceforge.net",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/osmo_osmo.png",
+
     "pkgname": ["osmo"],
     "aur": false
   },
@@ -971,7 +971,7 @@
     "name": "Parley",
     "description": "Program to help you memorize things. It uses the spaced repetition learning method, also known as flash cards. Part of kde-education.",
     "url": "https://apps.kde.org/parley/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/parley_parley.png",
+
     "pkgname": ["parley"],
     "aur": false
   },
@@ -979,7 +979,7 @@
     "name": "phpLDAPadmin",
     "description": "LDAP client webapp. Its hierarchical tree-viewer and advanced search functionality make it intuitive to browse and administer your LDAP directory.",
     "url": "https://phpldapadmin.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["phpldapadmin"],
     "aur": false
   },
@@ -987,7 +987,7 @@
     "name": "Plank",
     "description": "Elegant, simple, clean dock from Pantheon desktop environment.",
     "url": "https://launchpad.net/plank",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/plank_plank.png",
+
     "pkgname": ["plank"],
     "aur": false
   },
@@ -995,7 +995,7 @@
     "name": "Planner",
     "description": "Task manager with Todoist support.",
     "url": "https://useplanner.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["planify"],
     "aur": false
   },
@@ -1003,7 +1003,7 @@
     "name": "Planner",
     "description": "Project management application for GNOME.",
     "url": "https://wiki.gnome.org/Apps/Planner",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/planner_gnome-planner.png",
+
     "pkgname": ["planner"],
     "aur": false
   },
@@ -1011,7 +1011,7 @@
     "name": "Polybar",
     "description": "A fast and easy-to-use tool for creating status bars.",
     "url": "https://github.com/jaagr/polybar",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["polybar"],
     "aur": false
   },
@@ -1019,7 +1019,7 @@
     "name": "Pomodoro",
     "description": "Time management utility for GNOME based on the Pomodoro Technique.",
     "url": "https://gnomepomodoro.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gnome-shell-pomodoro"],
     "aur": false
   },
@@ -1027,7 +1027,7 @@
     "name": "Prolog",
     "description": "Logic-programming language for symbolic AI and computational linguistics.",
     "url": "https://www.swi-prolog.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["swi-prolog"],
     "aur": false
   },
@@ -1035,7 +1035,7 @@
     "name": "PyTorch",
     "description": "Dynamic neural-network framework with strong GPU acceleration.",
     "url": "https://pytorch.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-pytorch"],
     "aur": false
   },
@@ -1043,7 +1043,7 @@
     "name": "pywal",
     "description": "Changes the wallpaper and creates matching colorschemes for various applications (rofi, i3, terminals)",
     "url": "https://github.com/dylanaraps/pywal",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-pywal"],
     "aur": false
   },
@@ -1051,7 +1051,7 @@
     "name": "qwen-code",
     "description": "CLI coding agent (fork of gemini-cli) with AI-powered code generation and assistance.",
     "url": "https://github.com/QwenLM/Qwen-Code",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qwen-code"],
     "aur": false
   },
@@ -1059,7 +1059,7 @@
     "name": "Radicale",
     "description": "Free and Open-Source CalDAV and CardDAV Server.",
     "url": "https://radicale.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["radicale"],
     "aur": false
   },
@@ -1067,7 +1067,7 @@
     "name": "Read It Later",
     "description": "Simple Wallabag client.",
     "url": "https://gitlab.gnome.org/World/read-it-later",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/read-it-later_com.belmoussaoui.ReadItLater.png",
+
     "pkgname": ["read-it-later"],
     "aur": false
   },
@@ -1075,7 +1075,7 @@
     "name": "Recipes",
     "description": "Recipe management application for GNOME. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Recipes",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-recipes_org.gnome.Recipes.png",
+
     "pkgname": ["gnome-recipes"],
     "aur": false
   },
@@ -1083,7 +1083,7 @@
     "name": "Remind",
     "description": "Highly sophisticated text-based calendaring and notification system.",
     "url": "https://dianne.skoll.ca/projects/remind/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/remind_tkremind.png",
+
     "pkgname": ["remind"],
     "aur": false
   },
@@ -1091,7 +1091,7 @@
     "name": "RHVoice",
     "description": "Cross-platform (including Android) text-to-speech from a blind Russian-speaking developer, based on HTS (ru, ka, uk, ky, tt, en, pt, eo)",
     "url": "https://github.com/RHVoice/RHVoice",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rhvoice"],
     "aur": false
   },
@@ -1099,7 +1099,7 @@
     "name": "rofi",
     "description": "Popup window switcher roughly based on superswitcher, requiring only xlib and pango.",
     "url": "https://github.com/davatorium/rofi/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rofi"],
     "aur": false
   },
@@ -1107,7 +1107,7 @@
     "name": "RSI Break",
     "description": "Takes care of your health and regularly breaks your work to avoid repetitive strain injury (RSI) on Xorg.",
     "url": "https://apps.kde.org/rsibreak/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rsibreak_rsibreak.png",
+
     "pkgname": ["rsibreak"],
     "aur": false
   },
@@ -1115,7 +1115,7 @@
     "name": "Safe Eyes",
     "description": "Tool to reduce and prevent repetitive strain injury (RSI).",
     "url": "https://slgobinath.github.io/SafeEyes/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["safeeyes"],
     "aur": false
   },
@@ -1123,7 +1123,7 @@
     "name": "Screenkey",
     "description": "Tool to display pressed keys.",
     "url": "https://www.thregr.org/~wavexx/software/screenkey/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/screenkey_preferences-desktop-keyboard-shortcuts.png",
+
     "pkgname": ["screenkey"],
     "aur": false
   },
@@ -1131,7 +1131,7 @@
     "name": "SentencePiece",
     "description": "Unsupervised text tokenizer for neural text generation.",
     "url": "https://github.com/google/sentencepiece",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["sentencepiece"],
     "aur": false
   },
@@ -1139,7 +1139,7 @@
     "name": "Show Me The Key",
     "description": "A screenkey alternative that works under Wayland via libinput",
     "url": "https://showmethekey.alynx.one",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/showmethekey_one.alynx.showmethekey.png",
+
     "pkgname": ["showmethekey"],
     "aur": false
   },
@@ -1147,7 +1147,7 @@
     "name": "Skrooge",
     "description": "Personal finances manager for the KDE desktop.",
     "url": "https://skrooge.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/skrooge_skrooge.png",
+
     "pkgname": ["skrooge"],
     "aur": false
   },
@@ -1155,7 +1155,7 @@
     "name": "Solanum",
     "description": "Pomodoro timer for the GNOME desktop.",
     "url": "https://apps.gnome.org/Solanum/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/solanum_org.gnome.Solanum.png",
+
     "pkgname": ["solanum"],
     "aur": false
   },
@@ -1163,7 +1163,7 @@
     "name": "Speech dispatcher",
     "description": "Common interface to speech synthesis. It has backends for eSpeak, Festival, and a few other speech synthesizers.",
     "url": "https://freebsoft.org/speechd",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["speech-dispatcher"],
     "aur": false
   },
@@ -1171,7 +1171,7 @@
     "name": "Stalonetray",
     "description": "Stand-alone freedesktop.org and KDE system tray (notification area) for Xorg. It has full XEMBED support and minimal dependencies: an X11 lib only. Stalonetray works with virtually any EWMH-compliant window manager.",
     "url": "https://stalonetray.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["stalonetray"],
     "aur": false
   },
@@ -1179,7 +1179,7 @@
     "name": "swaybg",
     "description": "Wallpaper tool for Wayland compositors.",
     "url": "https://github.com/swaywm/swaybg",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["swaybg"],
     "aur": false
   },
@@ -1187,7 +1187,7 @@
     "name": "swww",
     "description": "Efficient animated wallpaper daemon for wayland, controlled at runtime.",
     "url": "https://github.com/Horus645/swww",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["swww"],
     "aur": false
   },
@@ -1195,7 +1195,7 @@
     "name": "Synapse",
     "description": "Semantic launcher written in Vala that you can use to start applications as well as find and access relevant documents and files by making use of the Zeitgeist engine.",
     "url": "https://launchpad.net/synapse-project",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/synapse_synapse.png",
+
     "pkgname": ["synapse"],
     "aur": false
   },
@@ -1203,7 +1203,7 @@
     "name": "Taskwarrior",
     "description": "Command-line To-do list application with support for lua customization and more.",
     "url": "https://taskwarrior.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["task"],
     "aur": false
   },
@@ -1211,7 +1211,7 @@
     "name": "TensorFlow",
     "description": "End-to-end platform for scalable machine learning.",
     "url": "https://www.tensorflow.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-tensorflow"],
     "aur": false
   },
@@ -1219,7 +1219,7 @@
     "name": "termdown",
     "description": "Countdown timer and stopwatch in your terminal.",
     "url": "https://github.com/trehn/termdown",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["termdown"],
     "aur": false
   },
@@ -1227,7 +1227,7 @@
     "name": "Thunderbird",
     "description": "A fully featured E-mail client formerly developed by Mozilla.",
     "url": "https://www.thunderbird.net",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/thunderbird_org.mozilla.Thunderbird.png",
+
     "pkgname": ["thunderbird"],
     "aur": false
   },
@@ -1235,7 +1235,7 @@
     "name": "Thunderbird with CardBook extension",
     "description": "address book based on the CardDAV and vCard standards.",
     "url": "https://gitlab.com/CardBook/CardBook",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/thunderbird_org.mozilla.Thunderbird.png",
+
     "pkgname": ["thunderbird"],
     "aur": false
   },
@@ -1243,7 +1243,7 @@
     "name": "Timetrack",
     "description": "Simple time-tracking app for GNOME.",
     "url": "https://gitlab.gnome.org/danigm/timetrack",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["timetrack"],
     "aur": false
   },
@@ -1251,7 +1251,7 @@
     "name": "Timewarrior",
     "description": "A command-line time-tracking application.",
     "url": "https://timewarrior.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["timew"],
     "aur": false
   },
@@ -1259,7 +1259,7 @@
     "name": "Tint2",
     "description": "Simple panel/taskbar developed specifically for Openbox.",
     "url": "https://gitlab.com/o9000/tint2",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/tint2_tint2.png",
+
     "pkgname": ["tint2"],
     "aur": false
   },
@@ -1267,7 +1267,7 @@
     "name": "TIPP10",
     "description": "Intelligent touch typing tutor.",
     "url": "https://www.tipp10.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/tipp10_com.gitlab.tipp10.tipp10.png",
+
     "pkgname": ["tipp10"],
     "aur": false
   },
@@ -1275,7 +1275,7 @@
     "name": "TkRemind",
     "description": "Sophisticated calendar and alarm program.",
     "url": "https://dianne.skoll.ca/projects/remind/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/remind_tkremind.png",
+
     "pkgname": ["remind"],
     "aur": false
   },
@@ -1283,7 +1283,7 @@
     "name": "todoman",
     "description": "Command-line To-do list manager (supports CalDAV)",
     "url": "https://github.com/pimutils/todoman",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["todoman"],
     "aur": false
   },
@@ -1291,7 +1291,7 @@
     "name": "Ulauncher",
     "description": "Modern and shiny launcher that provides fuzzy search, extensions, and themes.",
     "url": "https://ulauncher.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ulauncher"],
     "aur": false
   },
@@ -1299,7 +1299,7 @@
     "name": "Vala Panel",
     "description": "GTK3 panel for compositing window managers.",
     "url": "https://gitlab.com/vala-panel-project/vala-panel",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vala-panel"],
     "aur": false
   },
@@ -1307,7 +1307,7 @@
     "name": "Variety",
     "description": "Changes the wallpaper on a regular interval using user-specified or automatically downloaded images.",
     "url": "https://peterlevi.com/variety/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/variety_variety.png",
+
     "pkgname": ["variety"],
     "aur": false
   },
@@ -1315,7 +1315,7 @@
     "name": "Wakatime",
     "description": "Open source plugins for metrics about your programming with intuitive web-interface.",
     "url": "https://wakatime.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["wakatime"],
     "aur": false
   },
@@ -1323,7 +1323,7 @@
     "name": "Waybar",
     "description": "A customizable status bar for wlroots-based Wayland compositors.",
     "url": "https://github.com/Alexays/Waybar/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["waybar"],
     "aur": false
   },
@@ -1331,7 +1331,7 @@
     "name": "When",
     "description": "Simple personal calendar program.",
     "url": "http://lightandmatter.com/when/when.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["when"],
     "aur": false
   },
@@ -1339,7 +1339,7 @@
     "name": "Wike",
     "description": "Wikipedia reader for the GNOME desktop.",
     "url": "https://apps.gnome.org/Wike/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/wike_com.github.hugolabe.Wike.png",
+
     "pkgname": ["wike"],
     "aur": false
   },
@@ -1347,7 +1347,7 @@
     "name": "Wildcard",
     "description": "Provides a simple interface to test/practice regular expressions.",
     "url": "https://gitlab.gnome.org/World/Wildcard",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/wildcard_com.felipekinoshita.Wildcard.png",
+
     "pkgname": ["wildcard"],
     "aur": false
   },
@@ -1355,7 +1355,7 @@
     "name": "wlogout",
     "description": "Logout menu for wayland",
     "url": "https://github.com/ArtsyMacaw/wlogout",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["wlogout"],
     "aur": false
   },
@@ -1363,7 +1363,7 @@
     "name": "wmenu",
     "description": "Dynamic menu for Sway and wlroots based Wayland compositors. Provides a Wayland-native dmenu replacement which maintains the look and feel of dmenu.",
     "url": "https://codeberg.org/adnano/wmenu",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["wmenu"],
     "aur": false
   },
@@ -1371,7 +1371,7 @@
     "name": "wofi",
     "description": "GTK-based popup window switcher for Wayland compositors such as sway. Inspired by rofi.",
     "url": "https://hg.sr.ht/~scoopta/wofi",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["wofi"],
     "aur": false
   },
@@ -1379,7 +1379,7 @@
     "name": "Workrave",
     "description": "Program that assists in the recovery and prevention of RSI on Xorg.",
     "url": "https://workrave.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/workrave_workrave.png",
+
     "pkgname": ["workrave"],
     "aur": false
   },
@@ -1387,7 +1387,7 @@
     "name": "xandikos",
     "description": "A lightweight yet complete CardDAV/CalDAV server that backs onto a Git repository.",
     "url": "https://www.xandikos.org",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xandikos"],
     "aur": false
   },
@@ -1395,7 +1395,7 @@
     "name": "xdg-menu",
     "description": "Generate XDG application menus for various window managers.",
     "url": "https://github.com/p5n/archlinux-stuff/tree/master/xdg-menu",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["archlinux-xdg-menu"],
     "aur": false
   },
@@ -1403,7 +1403,7 @@
     "name": "Xfce Panel",
     "description": "Panel included in the Xfce desktop.",
     "url": "https://docs.xfce.org/xfce/xfce4-panel/start",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xfce4-panel"],
     "aur": false
   },
@@ -1411,7 +1411,7 @@
     "name": "xmobar",
     "description": "A lightweight, text-based, status bar written in Haskell.",
     "url": "https://archives.haskell.org/projects.haskell.org/xmobar/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xmobar"],
     "aur": false
   },
@@ -1419,7 +1419,7 @@
     "name": "xwallpaper",
     "description": "Minimalistic wallpaper setting utility for X.",
     "url": "https://github.com/stoeckmann/xwallpaper",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xwallpaper"],
     "aur": false
   },
@@ -1427,7 +1427,7 @@
     "name": "Zanshin",
     "description": "To-do management application for KDE. Part of kde-pim.",
     "url": "https://apps.kde.org/zanshin/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zanshin_zanshin.png",
+
     "pkgname": ["zanshin"],
     "aur": false
   }

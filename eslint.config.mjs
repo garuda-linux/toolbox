@@ -3,6 +3,8 @@ import tseslint from 'typescript-eslint';
 import eslintConfig from '@electron-toolkit/eslint-config';
 import oxlint from 'eslint-plugin-oxlint';
 import angular from 'angular-eslint';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export default tseslint.config(
   {
@@ -24,7 +26,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
     languageOptions: {
-      tsconfigRootDir: '.',
+      parserOptions: { tsconfigRootDir: dirname(fileURLToPath(import.meta.url)), projectService: true },
     },
   },
   {

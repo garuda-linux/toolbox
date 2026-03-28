@@ -3,7 +3,7 @@
     "name": "AbiWord",
     "description": "Full-featured word processor.",
     "url": "https://gitlab.gnome.org/World/AbiWord",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/abiword_abiword.png",
+
     "pkgname": ["abiword"],
     "aur": false
   },
@@ -11,7 +11,7 @@
     "name": "Acme",
     "description": "Minimalist and flexible programming environment developed by Rob Pike for the Plan 9 operating system.",
     "url": "http://acme.cat-v.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/plan9port_acme.png",
+
     "pkgname": ["plan9port"],
     "aur": false
   },
@@ -19,7 +19,7 @@
     "name": "Adie",
     "description": "Fast and convenient programming text editor.",
     "url": "http://fox-toolkit.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["fox"],
     "aur": false
   },
@@ -27,7 +27,7 @@
     "name": "Almanah",
     "description": "Small GTK application to allow you to keep a diary of your life.",
     "url": "https://wiki.gnome.org/Apps/Almanah_Diary",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/almanah_org.gnome.Almanah.png",
+
     "pkgname": ["almanah"],
     "aur": false
   },
@@ -35,7 +35,7 @@
     "name": "Antiword",
     "description": "MS Word to text converter.",
     "url": "https://web.archive.org/web/20221207132720/http://www.winfield.demon.nl",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["antiword"],
     "aur": false
   },
@@ -43,7 +43,7 @@
     "name": "Apostrophe",
     "description": "Distraction free Markdown editor made with GTK.",
     "url": "https://apps.gnome.org/Apostrophe/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/apostrophe_org.gnome.gitlab.somas.Apostrophe.png",
+
     "pkgname": ["apostrophe"],
     "aur": false
   },
@@ -51,7 +51,7 @@
     "name": "Arianna",
     "description": "An ebook reader and library management app supporting EPUB files. Part of kde-graphics.",
     "url": "https://apps.kde.org/arianna/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/arianna_org.kde.arianna.png",
+
     "pkgname": ["arianna"],
     "aur": false
   },
@@ -59,7 +59,7 @@
     "name": "AsciiDoc.py",
     "description": "A legacy implementation written in Python. Used by Arch for generating pacman's man pages.[https://archlinux.org/pacman/pacman.8.html].",
     "url": "https://asciidoc-py.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["asciidoc"],
     "aur": false
   },
@@ -67,7 +67,7 @@
     "name": "Asciidoctor",
     "description": "An implementation written in Ruby, with many extra features.",
     "url": "https://asciidoctor.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["asciidoctor"],
     "aur": false
   },
@@ -75,7 +75,7 @@
     "name": "baca",
     "description": "console epub reader.",
     "url": "https://github.com/wustho/baca",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["baca-ereader-git"],
     "aur": false
   },
@@ -83,7 +83,7 @@
     "name": "barcode",
     "description": "A tool to convert text strings to printed bars.",
     "url": "https://www.gnu.org/software/barcode/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["barcode"],
     "aur": false
   },
@@ -91,7 +91,7 @@
     "name": "Bookworm",
     "description": "Simple, focused e-book reader for Elementary OS with EPUB, PDF, Mobipocket and Comicbook support.",
     "url": "https://babluboy.github.io/bookworm/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/bookworm_com.github.babluboy.bookworm.png",
+
     "pkgname": ["bookworm"],
     "aur": false
   },
@@ -99,7 +99,7 @@
     "name": "Buho",
     "description": "Task and note keeper to save links, write quick notes and organize pages as books. Part of maui.",
     "url": "https://mauikit.org/apps/buho/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/buho_buho.png",
+
     "pkgname": ["buho"],
     "aur": false
   },
@@ -107,7 +107,7 @@
     "name": "BusyBox vi",
     "description": "A small vi clone. Can be invoked with busybox vi.",
     "url": "https://git.busybox.net/busybox/tree/editors/vi.c",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["busybox"],
     "aur": false
   },
@@ -115,7 +115,7 @@
     "name": "Calibre",
     "description": "E-book library management application that can also edit EPUB files, convert between different formats and sync with a variety of e-book readers. Supported formats include CHM, Comicbook, DjVu, DOCX, EPUB, FictionBook, HTML, HTMLZ, Kindle, LIT, LRF, Mobipocket, ODT, PDF, PRC, PDB, PML, RB, RTF, SNB, TCR, TXT and TXTZ.",
     "url": "https://calibre-ebook.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calibre_calibre-viewer.png",
+
     "pkgname": ["calibre"],
     "aur": false
   },
@@ -123,7 +123,7 @@
     "name": "Calligra",
     "description": "Actively developed fork of KOffice, the KDE office suite. It offers most of the features of OpenOffice. Part of kde-office.",
     "url": "https://calligra.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calligra_org.kde.calligra.stage.png",
+
     "pkgname": ["calligra"],
     "aur": false
   },
@@ -131,7 +131,7 @@
     "name": "Calligra Sheets",
     "description": "Powerful spreadsheet application included in the Calligra Suite. Part of kde-office.",
     "url": "https://calligra.org/components/sheets/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calligra_org.kde.calligra.stage.png",
+
     "pkgname": ["calligra"],
     "aur": false
   },
@@ -139,7 +139,7 @@
     "name": "Calligra Stage",
     "description": "Easy to use yet still flexible presentation application included in the Calligra Suite. Part of kde-office.",
     "url": "https://calligra.org/components/stage/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calligra_org.kde.calligra.stage.png",
+
     "pkgname": ["calligra"],
     "aur": false
   },
@@ -147,7 +147,7 @@
     "name": "Calligra Words",
     "description": "Powerful word processor included in the Calligra Suite. Part of kde-office.",
     "url": "https://calligra.org/components/words/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/calligra_org.kde.calligra.stage.png",
+
     "pkgname": ["calligra"],
     "aur": false
   },
@@ -155,7 +155,7 @@
     "name": "catdoc",
     "description": "Converter for Microsoft Word, Excel, PowerPoint and RTF files to text.",
     "url": "https://wagner.pp.ru/~vitus/software/catdoc/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["catdoc"],
     "aur": false
   },
@@ -163,7 +163,7 @@
     "name": "Cherrytree",
     "description": "Hierarchical note taking application, featuring rich text and syntax highlighting, storing data in a single xml or sqlite file.",
     "url": "https://www.giuspen.com/cherrytree/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cherrytree_cherrytree.png",
+
     "pkgname": ["cherrytree"],
     "aur": false
   },
@@ -171,7 +171,7 @@
     "name": "Citations",
     "description": "Manage your bibliographies using the BibTeX format.",
     "url": "https://apps.gnome.org/Citations/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/citations_org.gnome.World.Citations.png",
+
     "pkgname": ["citations"],
     "aur": false
   },
@@ -179,7 +179,7 @@
     "name": "cmark",
     "description": "CommonMark parsing and rendering library and program in C.",
     "url": "https://github.com/commonmark/cmark",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cmark"],
     "aur": false
   },
@@ -187,7 +187,7 @@
     "name": "CoBang",
     "description": "QR code scanner application.",
     "url": "https://github.com/hongquan/CoBang",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["cobang"],
     "aur": false
   },
@@ -195,7 +195,7 @@
     "name": "CommonMark-py",
     "description": "Python parser for the CommonMark Markdown specification.",
     "url": "https://github.com/rtfd/CommonMark-py",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-commonmark"],
     "aur": false
   },
@@ -203,7 +203,7 @@
     "name": "Cool Reader",
     "description": "E-book viewer with many supported formats such as EPUB (non-DRM), FictionBook, TXT, RTF, HTML, CHM and TCR.",
     "url": "https://sourceforge.net/projects/crengine/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/coolreader_cr3.png",
+
     "pkgname": ["coolreader"],
     "aur": false
   },
@@ -211,7 +211,7 @@
     "name": "CorePad",
     "description": "Simple lightweight but powerful text editor with syntax-highlighting support for a dozen or more languages. Part of C-Suite.",
     "url": "https://cubocore.gitlab.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["corepad"],
     "aur": false
   },
@@ -219,7 +219,7 @@
     "name": "COSMIC Text Editor",
     "description": "Text editor for the COSMIC desktop environment.",
     "url": "https://github.com/pop-os/cosmic-edit",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/cosmic-text-editor_com.system76.CosmicEdit.png",
+
     "pkgname": ["cosmic-text-editor"],
     "aur": false
   },
@@ -227,7 +227,7 @@
     "name": "Crow Translate",
     "description": "Simple and lightweight translator that allows to translate and speak text using Google, Yandex and Bing.",
     "url": "https://apps.kde.org/crowtranslate/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["crow-translate"],
     "aur": false
   },
@@ -235,7 +235,7 @@
     "name": "csvkit",
     "description": "CSV/TSV toolkit written in Python",
     "url": "https://csvkit.readthedocs.io",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["csvkit"],
     "aur": false
   },
@@ -243,7 +243,7 @@
     "name": "datamash",
     "description": "GNU utility for basic numeric and statistical operations on plain text data.",
     "url": "https://www.gnu.org/software/datamash",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["datamash"],
     "aur": false
   },
@@ -251,7 +251,7 @@
     "name": "DBeaver",
     "description": "Java-based graphical database editor with support for many database types.",
     "url": "https://dbeaver.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/dbeaver_dbeaver.png",
+
     "pkgname": ["dbeaver"],
     "aur": false
   },
@@ -259,7 +259,7 @@
     "name": "Decoder",
     "description": "QR code scanner and generator.",
     "url": "https://apps.gnome.org/Decoder/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/decoder_com.belmoussaoui.Decoder.png",
+
     "pkgname": ["decoder"],
     "aur": false
   },
@@ -267,7 +267,7 @@
     "name": "Deepin Text Editor",
     "description": "Simple text editor for Deepin desktop.",
     "url": "https://www.deepin.org/en/original/deepin-editor/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-editor_deepin-editor.png",
+
     "pkgname": ["deepin-editor"],
     "aur": false
   },
@@ -275,7 +275,7 @@
     "name": "Deepin Voice Notes",
     "description": "Lightweight memo tool to make text notes and voice recordings.",
     "url": "https://github.com/linuxdeepin/deepin-voice-note",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/deepin-voice-note_deepin-voice-note.png",
+
     "pkgname": ["deepin-voice-note"],
     "aur": false
   },
@@ -283,7 +283,7 @@
     "name": "Dialect",
     "description": "Translation app for GNOME based on Google Translate and other online services.",
     "url": "https://apps.gnome.org/Dialect/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/dialect_app.drey.Dialect.png",
+
     "pkgname": ["dialect"],
     "aur": false
   },
@@ -291,7 +291,7 @@
     "name": "dictd",
     "description": "Client/server software for the DICT protocol.",
     "url": "https://sourceforge.net/projects/dict/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dictd"],
     "aur": false
   },
@@ -299,7 +299,7 @@
     "name": "Discount",
     "description": "A Markdown implementation written in C.",
     "url": "https://www.pell.portland.or.us/~orc/Code/discount/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["discount"],
     "aur": false
   },
@@ -307,7 +307,7 @@
     "name": "Docutils",
     "description": "Set of tools for processing plaintext (reStructuredText) docs into formats such as HTML, XML, or LaTeX.",
     "url": "https://docutils.sourceforge.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-docutils"],
     "aur": false
   },
@@ -315,7 +315,7 @@
     "name": "docx2txt",
     "description": "MS Word Docx to text converter.",
     "url": "https://docx2txt.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["docx2txt"],
     "aur": false
   },
@@ -323,7 +323,7 @@
     "name": "dte",
     "description": "Small, easy to use editor with multi-tabbed interface, syntax highlighting, ctags navigation, etc.",
     "url": "https://craigbarnes.gitlab.io/dte/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["dte"],
     "aur": false
   },
@@ -331,7 +331,7 @@
     "name": "e3",
     "description": "Tiny editor without dependencies, written in assembly.",
     "url": "https://sites.google.com/site/e3editor/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["e3"],
     "aur": false
   },
@@ -339,7 +339,7 @@
     "name": "Ecrire",
     "description": "Simple text editor based on EFL.",
     "url": "https://git.enlightenment.org/enlightenment/ecrire",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ecrire_ecrire.png",
+
     "pkgname": ["ecrire"],
     "aur": false
   },
@@ -347,7 +347,7 @@
     "name": "ed",
     "description": "A POSIX-compliant line-oriented text editor. Useful for shell scripts, less so for manual usage. Original editor for Unix.",
     "url": "https://www.gnu.org/software/ed/ed.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ed"],
     "aur": false
   },
@@ -355,7 +355,7 @@
     "name": "Emacs",
     "description": "The extensible, customizable, self-documenting real-time display editor by GNU.",
     "url": "https://www.gnu.org/software/emacs/emacs.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/emacs_emacs.png",
+
     "pkgname": ["emacs"],
     "aur": false
   },
@@ -363,7 +363,7 @@
     "name": "Enter TeX",
     "description": "LaTeX editor for GNOME, previously known as GNOME LaTeX.",
     "url": "https://gitlab.gnome.org/World/gedit/enter-tex",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/enter-tex_org.gnome.enter_tex.png",
+
     "pkgname": ["enter-tex"],
     "aur": false
   },
@@ -371,7 +371,7 @@
     "name": "FBReader",
     "description": "E-book viewer with many supported formats such as EPUB, FictionBook, HTML, plucker, PalmDoc, zTxt, TCR, CHM, RTF, OEB, Mobipocket (non-DRM) and TXT.",
     "url": "https://fbreader.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/fbreader_FBReader.png",
+
     "pkgname": ["fbreader"],
     "aur": false
   },
@@ -379,7 +379,7 @@
     "name": "FeatherNotes",
     "description": "Lightweight Qt hierarchical notes-manager.",
     "url": "https://github.com/tsujan/feathernotes",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/feathernotes_feathernotes.png",
+
     "pkgname": ["feathernotes"],
     "aur": false
   },
@@ -387,7 +387,7 @@
     "name": "FeatherPad",
     "description": "Minimal Qt5 plain text editor featuring a native dark theme and support for tabs, printing and syntax highlighting.",
     "url": "https://github.com/tsujan/FeatherPad",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/featherpad_featherpad.png",
+
     "pkgname": ["featherpad"],
     "aur": false
   },
@@ -395,7 +395,7 @@
     "name": "FocusWriter",
     "description": "Simple, distraction-free writing environment. It utilizes a hide-away interface that you access by moving your mouse to the edges of the screen, allowing the program to have a familiar look and feel to it while still getting out of the way so that you can immerse yourself in your work.",
     "url": "https://gottcode.org/focuswriter/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/focuswriter_focuswriter.png",
+
     "pkgname": ["focuswriter"],
     "aur": false
   },
@@ -403,7 +403,7 @@
     "name": "Foliate",
     "description": "Simple and modern GTK eBook reader. Supports EPUB, Mobipocket, Kindle, FictionBook, and Comicbook formats.",
     "url": "https://johnfactotum.github.io/foliate/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/foliate_com.github.johnfactotum.Foliate.png",
+
     "pkgname": ["foliate"],
     "aur": false
   },
@@ -411,7 +411,7 @@
     "name": "Freeplane",
     "description": "Fork of FreeMind, supports thinking, sharing information and getting things done at work. The software can be used for mind mapping and analyzing the information contained in mind maps.",
     "url": "https://www.freeplane.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/freeplane_freeplane.png",
+
     "pkgname": ["freeplane"],
     "aur": false
   },
@@ -419,7 +419,7 @@
     "name": "gedit",
     "description": "GTK editor for the GNOME desktop with syntax highlighting, automatic indentation, matching brackets, etc., and a number of add-ons to increase functionality. Part of gnome-extra.",
     "url": "https://gedit-technology.github.io/apps/gedit/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gedit_org.gnome.gedit.png",
+
     "pkgname": ["gedit"],
     "aur": false
   },
@@ -427,7 +427,7 @@
     "name": "ghostwriter",
     "description": "Distraction-free Markdown editor. Part of kde-office.",
     "url": "https://ghostwriter.kde.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ghostwriter_ghostwriter.png",
+
     "pkgname": ["ghostwriter"],
     "aur": false
   },
@@ -435,7 +435,7 @@
     "name": "gImageReader",
     "description": "Graphical GTK/Qt frontend to Tesseract.",
     "url": "https://github.com/manisandro/gImageReader",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gimagereader-gtk_gimagereader.png",
+
     "pkgname": ["gimagereader-gtk"],
     "aur": false
   },
@@ -443,7 +443,7 @@
     "name": "gLabels",
     "description": "Program for creating labels, business cards and media covers.",
     "url": "https://github.com/jimevins/glabels",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/glabels_glabels-3.0.png",
+
     "pkgname": ["glabels"],
     "aur": false
   },
@@ -451,7 +451,7 @@
     "name": "gLabels",
     "description": "Program for creating labels and business cards. It also supports creating barcodes.",
     "url": "https://github.com/jimevins/glabels",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/glabels_glabels-3.0.png",
+
     "pkgname": ["glabels"],
     "aur": false
   },
@@ -459,7 +459,7 @@
     "name": "GNOME Dictionary",
     "description": "GNOME application to check word definitions and spellings in an online dictionary. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Dictionary",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-dictionary_org.gnome.Dictionary.png",
+
     "pkgname": ["gnome-dictionary"],
     "aur": false
   },
@@ -467,7 +467,7 @@
     "name": "GNOME Notes",
     "description": "Note editor for GNOME designed to remain simple to use. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Notes",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-notes_org.gnome.Notes.png",
+
     "pkgname": ["gnome-notes"],
     "aur": false
   },
@@ -475,7 +475,7 @@
     "name": "GNOME Text Editor",
     "description": "Simple text editor for GNOME focused on a pleasing default experience. Part of gnome.",
     "url": "https://apps.gnome.org/TextEditor/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnome-text-editor_org.gnome.TextEditor.png",
+
     "pkgname": ["gnome-text-editor"],
     "aur": false
   },
@@ -483,7 +483,7 @@
     "name": "Gnote",
     "description": "Port of Tomboy to C++. It is the same note taking application, including most of the add-ins.",
     "url": "https://wiki.gnome.org/Apps/Gnote",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnote_org.gnome.Gnote.png",
+
     "pkgname": ["gnote"],
     "aur": false
   },
@@ -491,7 +491,7 @@
     "name": "Gnumeric",
     "description": "Spreadsheet program for the GNOME desktop.",
     "url": "http://www.gnumeric.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gnumeric_org.gnumeric.gnumeric.png",
+
     "pkgname": ["gnumeric"],
     "aur": false
   },
@@ -499,7 +499,7 @@
     "name": "Gobby",
     "description": "Collaborative editor supporting multiple documents in one session and a multi-user chat.",
     "url": "https://gobby.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gobby_gobby-0.5.png",
+
     "pkgname": ["gobby"],
     "aur": false
   },
@@ -507,7 +507,7 @@
     "name": "GOCR",
     "description": "OCR engine which also supports barcode recognition.",
     "url": "https://www-e.uni-magdeburg.de/jschulen/ocr/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["gocr"],
     "aur": false
   },
@@ -515,7 +515,7 @@
     "name": "groff",
     "description": "GNU implementation of troff, a heirloom Unix document processing system and the default formatter for man pages.",
     "url": "https://www.gnu.org/software/groff/groff.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["groff"],
     "aur": false
   },
@@ -523,7 +523,7 @@
     "name": "gscan2pdf",
     "description": "Scans, runs an OCR engine, minor post-processing, creates a document.",
     "url": "https://gscan2pdf.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gscan2pdf_gscan2pdf.png",
+
     "pkgname": ["gscan2pdf"],
     "aur": false
   },
@@ -531,7 +531,7 @@
     "name": "Gtranslator",
     "description": "Enhanced gettext po file editor for the GNOME. It handles all forms of gettext po files and includes very useful features.",
     "url": "https://wiki.gnome.org/Apps/Gtranslator",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gtranslator_org.gnome.Gtranslator.png",
+
     "pkgname": ["gtranslator"],
     "aur": false
   },
@@ -539,7 +539,7 @@
     "name": "Gummi",
     "description": "Lightweight TeX/LaTeX GTK-based editor. It features a continuous preview mode, integrated BibTeX support, extendable snippet interface and multi-document support.",
     "url": "https://github.com/alexandervdm/gummi/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/gummi_gummi.png",
+
     "pkgname": ["gummi"],
     "aur": false
   },
@@ -547,7 +547,7 @@
     "name": "Helix",
     "description": "A post-modern modal text editor.",
     "url": "https://helix-editor.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["helix"],
     "aur": false
   },
@@ -555,7 +555,7 @@
     "name": "HTMLDOC",
     "description": "Reads HTML and Markdown source files or web pages and generates corresponding EPUB, HTML, PostScript, or PDF files with an optional table of contents.",
     "url": "https://www.msweet.org/htmldoc/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/htmldoc_htmldoc.png",
+
     "pkgname": ["htmldoc"],
     "aur": false
   },
@@ -563,7 +563,7 @@
     "name": "iec16022",
     "description": "Produce 2D barcodes often also referenced as DataMatrix.",
     "url": "https://datenfreihafen.org/projects/iec16022.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["iec16022"],
     "aur": false
   },
@@ -571,7 +571,7 @@
     "name": "Iotas",
     "description": "Simple note taking with Markdown support and optional Nextcloud Notes sync.",
     "url": "https://apps.gnome.org/Iotas/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/iotas_org.gnome.World.Iotas.png",
+
     "pkgname": ["iotas"],
     "aur": false
   },
@@ -579,7 +579,7 @@
     "name": "Kakoune",
     "description": "Modal editor. Fewer keystrokes. Selection based, multi-cursor editing. Orthogonal design.",
     "url": "https://github.com/mawww/kakoune",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["kakoune"],
     "aur": false
   },
@@ -587,7 +587,7 @@
     "name": "Kate",
     "description": "Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser. Part of kde-utilities.",
     "url": "https://kate-editor.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kate_kate.png",
+
     "pkgname": ["kate"],
     "aur": false
   },
@@ -595,7 +595,7 @@
     "name": "KBibTeX",
     "description": "BibTeX editor by KDE to edit bibliographies used with LaTeX.",
     "url": "https://apps.kde.org/kbibtex/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kbibtex_kbibtex.png",
+
     "pkgname": ["kbibtex"],
     "aur": false
   },
@@ -603,7 +603,7 @@
     "name": "Kexi",
     "description": "Visual database applications creator tool by KDE, designed to fill the gap between spreadsheets and database solutions requiring more sophisticated development.",
     "url": "https://kexi-project.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kexi_kexi-3.2.png",
+
     "pkgname": ["kexi"],
     "aur": false
   },
@@ -611,7 +611,7 @@
     "name": "Kile",
     "description": "User-friendly TeX/LaTeX editor for the KDE desktop with many features.",
     "url": "https://apps.kde.org/kile/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kile_kile.png",
+
     "pkgname": ["kile"],
     "aur": false
   },
@@ -619,7 +619,7 @@
     "name": "Kiten",
     "description": "Japanese reference and study tool. Part of kde-education.",
     "url": "https://apps.kde.org/kiten/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kiten_kiten.png",
+
     "pkgname": ["kiten"],
     "aur": false
   },
@@ -627,7 +627,7 @@
     "name": "KleverNotes",
     "description": "Note-taking and management application using markdown.",
     "url": "https://apps.kde.org/klevernotes/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["klevernotes"],
     "aur": false
   },
@@ -635,7 +635,7 @@
     "name": "Komikku",
     "description": "Online/offline manga reader for GNOME.",
     "url": "https://apps.gnome.org/Komikku/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/komikku_info.febvre.Komikku.png",
+
     "pkgname": ["komikku"],
     "aur": false
   },
@@ -643,7 +643,7 @@
     "name": "kramdown",
     "description": "Fast, pure Ruby Markdown superset converter, using a strict syntax definition.",
     "url": "https://kramdown.gettalong.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ruby-kramdown"],
     "aur": false
   },
@@ -651,7 +651,7 @@
     "name": "Ktikz",
     "description": "Small application helping you to create PGF/TikZ diagrams for your publications.",
     "url": "https://www.hackenberger.at/blog/ktikz-editor-for-the-tikz-language/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ktikz_ktikz.png",
+
     "pkgname": ["ktikz"],
     "aur": false
   },
@@ -659,7 +659,7 @@
     "name": "KWrite",
     "description": "Lightweight text editor for the KDE desktop that uses the same editor widget as Kate, now provided by the kate package. Part of kde-utilities.",
     "url": "https://apps.kde.org/kwrite/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/kate_kate.png",
+
     "pkgname": ["kate"],
     "aur": false
   },
@@ -667,7 +667,7 @@
     "name": "L3afpad",
     "description": "Simple text editor forked from Leafpad, supports GTK 3.",
     "url": "https://github.com/stevenhoneyman/l3afpad",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/l3afpad_l3afpad.png",
+
     "pkgname": ["l3afpad"],
     "aur": false
   },
@@ -675,7 +675,7 @@
     "name": "Lapce",
     "description": "Lightning-fast and Powerful Code Editor written in Rust.",
     "url": "https://lapce.dev/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lapce_dev.lapce.lapce.png",
+
     "pkgname": ["lapce"],
     "aur": false
   },
@@ -683,7 +683,7 @@
     "name": "LibreOffice",
     "description": "The office productivity suite compatible to the open and standardized ODF document format. Fork of OpenOffice, supported by The Document Foundation.",
     "url": "https://www.libreoffice.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-still"],
     "aur": false
   },
@@ -691,7 +691,7 @@
     "name": "LibreOffice Base",
     "description": "Full-featured desktop database front end included in the LibreOffice suite, designed to meet the needs of a broad array of users.",
     "url": "https://www.libreoffice.org/discover/base/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-still"],
     "aur": false
   },
@@ -699,7 +699,7 @@
     "name": "LibreOffice Calc",
     "description": "Full-featured spreadsheet application included in the LibreOffice suite.",
     "url": "https://www.libreoffice.org/discover/calc/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-still"],
     "aur": false
   },
@@ -707,7 +707,7 @@
     "name": "LibreOffice Impress",
     "description": "Presentation program included in the LibreOffice suite.",
     "url": "https://www.libreoffice.org/discover/writer",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-still"],
     "aur": false
   },
@@ -715,7 +715,7 @@
     "name": "LibreOffice Math",
     "description": "Create and edit scientific formulas and equations. Included in the LibreOffice suite.",
     "url": "https://www.libreoffice.org/discover/math/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-still"],
     "aur": false
   },
@@ -723,7 +723,7 @@
     "name": "LibreOffice TexMaths extension",
     "description": "LaTeX equation editor for LibreOffice.",
     "url": "http://roland65.free.fr/texmaths/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-extension-texmaths"],
     "aur": false
   },
@@ -731,7 +731,7 @@
     "name": "LibreOffice Writer",
     "description": "Full-featured word processor included in the LibreOffice suite.",
     "url": "https://www.libreoffice.org/discover/writer",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["libreoffice-still"],
     "aur": false
   },
@@ -739,7 +739,7 @@
     "name": "Lifeograph",
     "description": "Off-line and private journal and note taking application. It offers a rich feature set presented in a clean and simple user interface.",
     "url": "https://lifeograph.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lifeograph_net.sourceforge.Lifeograph.png",
+
     "pkgname": ["lifeograph"],
     "aur": false
   },
@@ -747,7 +747,7 @@
     "name": "Lite XL",
     "description": "A lightweight, simple, fast, feature-filled, and extremely extensible text editor written in C, and Lua, adapted from lite.",
     "url": "https://lite-xl.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lite-xl_lite-xl.png",
+
     "pkgname": ["lite-xl"],
     "aur": false
   },
@@ -755,7 +755,7 @@
     "name": "Logseq",
     "description": "A local-first, non-linear, outliner notebook for organizing and sharing your personal knowledge base.",
     "url": "https://logseq.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["logseq-desktop"],
     "aur": false
   },
@@ -763,7 +763,7 @@
     "name": "Lokalize",
     "description": "Standard KDE tool for software translation. It includes basic editing of PO files, support for glossary, translation memory, project managing, etc. Part of kde-sdk.",
     "url": "https://apps.kde.org/lokalize/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lokalize_lokalize.png",
+
     "pkgname": ["lokalize"],
     "aur": false
   },
@@ -771,7 +771,7 @@
     "name": "Lorem",
     "description": "Simple app to generate the Lorem Ipsum placeholder text.",
     "url": "https://apps.gnome.org/Lorem/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/lorem_org.gnome.design.Lorem.png",
+
     "pkgname": ["lorem"],
     "aur": false
   },
@@ -779,7 +779,7 @@
     "name": "Lout",
     "description": "A lightware document formatting system. Reads a high-level description of a document similar in style to LaTeX and produces a PostScript.",
     "url": "https://savannah.nongnu.org/projects/lout",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lout"],
     "aur": false
   },
@@ -787,7 +787,7 @@
     "name": "lowdown",
     "description": "Markdown translator producing HTML5 and roff documents in the ms and man formats.",
     "url": "https://kristaps.bsd.lv/lowdown/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lowdown"],
     "aur": false
   },
@@ -795,7 +795,7 @@
     "name": "LyX",
     "description": "Document processor that encourages an approach to writing based on the structure of your documents (WYSIWYM) and not simply their appearance (WYSIWYG).",
     "url": "https://www.lyx.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["lyx"],
     "aur": false
   },
@@ -803,7 +803,7 @@
     "name": "Manuskript",
     "description": "Provides a rich environment to help writers create their first draft and then further refine and edit their masterpiece.",
     "url": "http://www.theologeek.ch/manuskript/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/manuskript_ch.theologeek.Manuskript.png",
+
     "pkgname": ["manuskript"],
     "aur": false
   },
@@ -811,7 +811,7 @@
     "name": "Marked",
     "description": "Markdown parser and compiler built for speed.",
     "url": "https://marked.js.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["marked"],
     "aur": false
   },
@@ -819,7 +819,7 @@
     "name": "Marker",
     "description": "Simple yet robust Markdown editor.",
     "url": "https://fabiocolacio.github.io/Marker/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marker_com.github.fabiocolacio.marker.png",
+
     "pkgname": ["marker"],
     "aur": false
   },
@@ -827,7 +827,7 @@
     "name": "Marknote",
     "description": "A simple markdown note management app for KDE.",
     "url": "https://apps.kde.org/marknote/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/marknote_org.kde.marknote.png",
+
     "pkgname": ["marknote"],
     "aur": false
   },
@@ -835,7 +835,7 @@
     "name": "Maruku",
     "description": "Pure Ruby Markdown-superset interpreter.",
     "url": "https://github.com/bhollis/maruku",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ruby-maruku"],
     "aur": false
   },
@@ -843,7 +843,7 @@
     "name": "MATE Dictionary",
     "description": "MATE application to look up words in dictionary sources.",
     "url": "https://github.com/mate-desktop/mate-utils",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mate-utils_applets-screenshooter.png",
+
     "pkgname": ["mate-utils"],
     "aur": false
   },
@@ -851,7 +851,7 @@
     "name": "mcedit",
     "description": "Useful text editor that comes with Midnight Commander file manager.",
     "url": "https://www.ibiblio.org/mc/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mc"],
     "aur": false
   },
@@ -859,7 +859,7 @@
     "name": "MComix",
     "description": "GTK3 image viewer specifically designed to handle comic book archives (fork of Comix). Also includes library manager.",
     "url": "https://github.com/multiSnow/mcomix3",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mcomix"],
     "aur": false
   },
@@ -867,7 +867,7 @@
     "name": "md2html",
     "description": "C Markdown parser.",
     "url": "https://github.com/mity/md4c",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["md4c"],
     "aur": false
   },
@@ -875,7 +875,7 @@
     "name": "MDP",
     "description": "A command-line based markdown presentation tool.",
     "url": "https://github.com/visit1985/mdp",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mdp"],
     "aur": false
   },
@@ -883,7 +883,7 @@
     "name": "mg",
     "description": "Small, fast, and portable Emacs-like editor.",
     "url": "https://github.com/hboetes/mg",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mg"],
     "aur": false
   },
@@ -891,7 +891,7 @@
     "name": "micro",
     "description": "Modern and intuitive terminal-based text editor, written in go and extensible through plugins.",
     "url": "https://micro-editor.github.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/micro_micro.png",
+
     "pkgname": ["micro"],
     "aur": false
   },
@@ -899,7 +899,7 @@
     "name": "Minder",
     "description": "Mind-mapping application designed for Pantheon.",
     "url": "https://github.com/phase1geo/Minder/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/minder_com.github.phase1geo.minder.png",
+
     "pkgname": ["minder"],
     "aur": false
   },
@@ -907,7 +907,7 @@
     "name": "Mistune",
     "description": "The fastest markdown parser in pure Python with renderer feature.",
     "url": "https://github.com/lepture/mistune",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-mistune"],
     "aur": false
   },
@@ -915,7 +915,7 @@
     "name": "MkDocs",
     "description": "Project documentation with Markdown.",
     "url": "https://www.mkdocs.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mkdocs"],
     "aur": false
   },
@@ -923,7 +923,7 @@
     "name": "MkDocs",
     "description": "Material design theme for MkDocs.",
     "url": "https://squidfunk.github.io/mkdocs-material/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mkdocs-material"],
     "aur": false
   },
@@ -931,7 +931,7 @@
     "name": "Morphosis",
     "description": "Document conversion app using Pandoc and WebKitGTK.",
     "url": "https://gitlab.gnome.org/World/morphosis",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/morphosis_garden.jamie.Morphosis.png",
+
     "pkgname": ["morphosis"],
     "aur": false
   },
@@ -939,7 +939,7 @@
     "name": "Mousepad",
     "description": "Fast text editor for the Xfce Desktop Environment.",
     "url": "https://www.xfce.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/mousepad_org.xfce.mousepad.png",
+
     "pkgname": ["mousepad"],
     "aur": false
   },
@@ -947,7 +947,7 @@
     "name": "mutool",
     "description": "All purpose tool based on MuPDF for dealing with document files in various manners.",
     "url": "https://mupdf.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["mupdf-tools"],
     "aur": false
   },
@@ -955,7 +955,7 @@
     "name": "nano",
     "description": "Console text editor based on pico with on-screen key bindings help.",
     "url": "https://nano-editor.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nano"],
     "aur": false
   },
@@ -963,7 +963,7 @@
     "name": "Neovim",
     "description": "Vim rebirth for the 21st century.",
     "url": "https://neovim.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/neovim_nvim.png",
+
     "pkgname": ["neovim"],
     "aur": false
   },
@@ -971,7 +971,7 @@
     "name": "Neovim-Qt",
     "description": "Qt GUI for Neovim.",
     "url": "https://github.com/equalsraf/neovim-qt",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/neovim-qt_nvim-qt.png",
+
     "pkgname": ["neovim-qt"],
     "aur": false
   },
@@ -979,7 +979,7 @@
     "name": "Nextcloud Notes",
     "description": "Simple notes app for Nextcloud.",
     "url": "https://github.com/nextcloud/notes",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["nextcloud-app-notes"],
     "aur": false
   },
@@ -987,7 +987,7 @@
     "name": "NFO Viewer",
     "description": "Simple viewer for NFO files.",
     "url": "https://otsaloma.io/nfoview/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/nfoview_io.otsaloma.nfoview.png",
+
     "pkgname": ["nfoview"],
     "aur": false
   },
@@ -995,7 +995,7 @@
     "name": "Nota",
     "description": "Easy to use text editor with a simple interface with support for tabbed documents, syntax highlighting for various languages, Focus mode, annotations, configurable fonts, and colors, a side panel with an integrated file browser, and more. Part of maui.",
     "url": "https://mauikit.org/apps/nota/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maui-nota_nota.png",
+
     "pkgname": ["maui-nota"],
     "aur": false
   },
@@ -1003,7 +1003,7 @@
     "name": "Notepad Next",
     "description": "Reimplementation of Notepad++.",
     "url": "https://github.com/dail8859/NotepadNext",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["notepadnext"],
     "aur": false
   },
@@ -1011,7 +1011,7 @@
     "name": "Notes",
     "description": "Note-taking application, write down your thoughts.",
     "url": "https://www.get-notes.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["notes"],
     "aur": false
   },
@@ -1019,7 +1019,7 @@
     "name": "Notes",
     "description": "Provides you a quick way to paste text, to write down a list of things, to leave a note to your friend, or whatever you had do with Post-It's.",
     "url": "https://goodies.xfce.org/projects/panel-plugins/xfce4-notes-plugin",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xfce4-notes-plugin"],
     "aur": false
   },
@@ -1027,7 +1027,7 @@
     "name": "Notes-Up",
     "description": "Markdown notes editor and manager for elementaryOS.",
     "url": "https://github.com/Philip-Scott/Notes-up",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/notes-up_com.github.philip_scott.notes-up.png",
+
     "pkgname": ["notes-up"],
     "aur": false
   },
@@ -1035,7 +1035,7 @@
     "name": "Notorious",
     "description": "Keyboard centric note-taking application with Markdown syntax highlighting support.",
     "url": "https://notorious.gabmus.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["notorious-git"],
     "aur": false
   },
@@ -1043,7 +1043,7 @@
     "name": "Obsidian",
     "description": "Personal knowledge base that uses markdown text files to organize notes in a format that mirrors the human brain.",
     "url": "https://obsidian.md/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/obsidian_obsidian.png",
+
     "pkgname": ["obsidian"],
     "aur": false
   },
@@ -1051,7 +1051,7 @@
     "name": "Ocrad",
     "description": "OCR program based on a feature extraction method.",
     "url": "https://www.gnu.org/software/ocrad/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ocrad"],
     "aur": false
   },
@@ -1059,7 +1059,7 @@
     "name": "OCRFeeder",
     "description": "Python GUI for GNOME which performs document analysis and rendition, and can use either CuneiForm, GOCR, Ocrad or Tesseract as OCR engines. It can import from PDF or image files, and export to HTML or OpenDocument.",
     "url": "https://wiki.gnome.org/Apps/OCRFeeder",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/ocrfeeder_org.gnome.OCRFeeder.png",
+
     "pkgname": ["ocrfeeder"],
     "aur": false
   },
@@ -1067,7 +1067,7 @@
     "name": "OCRmyPDF",
     "description": "Adds an OCR text layer to scanned PDF files, allowing them to be searched.",
     "url": "https://github.com/jbarlow83/OCRmyPDF",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ocrmypdf"],
     "aur": false
   },
@@ -1075,7 +1075,7 @@
     "name": "OnlyOffice",
     "description": "Office suite that combines text, spreadsheet and presentation editors.",
     "url": "https://www.onlyoffice.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["onlyoffice-bin"],
     "aur": false
   },
@@ -1083,7 +1083,7 @@
     "name": "Orbada",
     "description": "Excellent tool for database developers, SQL developers, DBA administrators, as well as for users who wish to broaden their knowledge and skills in SQL. Last release dated 2019-07-03.",
     "url": "https://orbada.sourceforge.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["orbada"],
     "aur": false
   },
@@ -1091,7 +1091,7 @@
     "name": "PageEdit",
     "description": "ePub visual XHTML editor.",
     "url": "https://github.com/Sigil-Ebook/PageEdit",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pageedit_pageedit.png",
+
     "pkgname": ["pageedit"],
     "aur": false
   },
@@ -1099,7 +1099,7 @@
     "name": "Pandoc",
     "description": "Swiss-army knife for converting markup and document formats.",
     "url": "https://pandoc.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["pandoc-cli"],
     "aur": false
   },
@@ -1107,7 +1107,7 @@
     "name": "Pantheon Code",
     "description": "Code editor for elementaryOS. It auto-saves your files, meaning they are always up-to-date. Plus it remembers your tabs so you never lose your spot, even in between sessions.",
     "url": "https://github.com/elementary/code",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pantheon-code_io.elementary.code.png",
+
     "pkgname": ["pantheon-code"],
     "aur": false
   },
@@ -1115,7 +1115,7 @@
     "name": "Paperwork",
     "description": "Personal document manager. It manages scanned documents and PDFs.",
     "url": "https://openpaper.work/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/paperwork_work.openpaper.Paperwork.png",
+
     "pkgname": ["paperwork"],
     "aur": false
   },
@@ -1123,7 +1123,7 @@
     "name": "Paperwork",
     "description": "Personal document manager. It manages scanned documents and PDFs.",
     "url": "https://openpaper.work/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/paperwork_work.openpaper.Paperwork.png",
+
     "pkgname": ["paperwork"],
     "aur": false
   },
@@ -1131,7 +1131,7 @@
     "name": "Pluma",
     "description": "Powerful text editor for MATE.",
     "url": "https://mate-desktop.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/pluma_accessories-text-editor.png",
+
     "pkgname": ["pluma"],
     "aur": false
   },
@@ -1139,7 +1139,7 @@
     "name": "Poedit",
     "description": "Simple translation editor for gettext (PO, POT) and XLIFF.",
     "url": "https://poedit.net",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/poedit_net.poedit.Poedit.png",
+
     "pkgname": ["poedit"],
     "aur": false
   },
@@ -1147,7 +1147,7 @@
     "name": "presenterm",
     "description": "A markdown terminal slideshow tool",
     "url": "https://mfontanini.github.io/presenterm/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["presenterm"],
     "aur": false
   },
@@ -1155,7 +1155,7 @@
     "name": "PyMdown Extensions",
     "description": "Extensions for Python-Markdown.",
     "url": "https://facelessuser.github.io/pymdown-extensions/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-pymdown-extensions"],
     "aur": false
   },
@@ -1163,7 +1163,7 @@
     "name": "Python-Markdown",
     "description": "Extensible Python implementation of John Gruber's Markdown.",
     "url": "https://github.com/Python-Markdown/markdown",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-markdown"],
     "aur": false
   },
@@ -1171,7 +1171,7 @@
     "name": "QOwnNotes",
     "description": "Notepad and todo list manager with markdown support and optional ownCloud integration built on Qt5.",
     "url": "https://www.qownnotes.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qownnotes"],
     "aur": false
   },
@@ -1179,7 +1179,7 @@
     "name": "Qrca",
     "description": "Scan QR-Codes with your camera on phones and laptops, and create your own for easily sharing data between devices.",
     "url": "https://apps.kde.org/qrca/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qrca_org.kde.qrca.png",
+
     "pkgname": ["qrca"],
     "aur": false
   },
@@ -1187,7 +1187,7 @@
     "name": "Qreator",
     "description": "Graphical utility for creating QR codes.",
     "url": "https://davidplanella.org/qreator/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qreator_qreator.png",
+
     "pkgname": ["qreator"],
     "aur": false
   },
@@ -1195,7 +1195,7 @@
     "name": "qrencode",
     "description": "C library and command line tool for encoding data in a QR code symbol.",
     "url": "https://fukuchi.org/works/qrencode/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["qrencode"],
     "aur": false
   },
@@ -1203,7 +1203,7 @@
     "name": "QStarDict",
     "description": "Dictionary program written using Qt. The user interface is similar to StarDict.",
     "url": "https://github.com/FBergeron/qstardict",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qstardict_qstardict.png",
+
     "pkgname": ["qstardict"],
     "aur": false
   },
@@ -1211,7 +1211,7 @@
     "name": "Qt Linguist",
     "description": "Translating Qt C++ and Qt Quick applications into local languages.",
     "url": "https://doc.qt.io/qt-6/qtlinguist-index.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/qt6-tools_qdbusviewer.png",
+
     "pkgname": ["qt6-tools"],
     "aur": false
   },
@@ -1219,7 +1219,7 @@
     "name": "Quick Lookup",
     "description": "Simple GTK dictionary application powered by Wiktionary.",
     "url": "https://github.com/johnfactotum/quick-lookup",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["quick-lookup"],
     "aur": false
   },
@@ -1227,7 +1227,7 @@
     "name": "Readest",
     "description": "Modern, feature-rich ebook reader",
     "url": "https://github.com/readest/readest",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/readest_readest.png",
+
     "pkgname": ["readest"],
     "aur": false
   },
@@ -1235,7 +1235,7 @@
     "name": "RedNotebook",
     "description": "Modern journal, which lets you format, tag and search your entries.",
     "url": "https://rednotebook.sourceforge.io/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rednotebook_rednotebook.png",
+
     "pkgname": ["rednotebook"],
     "aur": false
   },
@@ -1243,7 +1243,7 @@
     "name": "ReText",
     "description": "Simple text editor for Markdown and reStructuredText.",
     "url": "https://github.com/retext-project/retext",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/retext_retext.png",
+
     "pkgname": ["retext"],
     "aur": false
   },
@@ -1251,7 +1251,7 @@
     "name": "Rnote",
     "description": "A simple note taking application written in Rust and GTK4.",
     "url": "https://github.com/flxzt/rnote",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/rnote_com.github.flxzt.rnote.png",
+
     "pkgname": ["rnote"],
     "aur": false
   },
@@ -1259,7 +1259,7 @@
     "name": "rstcheck",
     "description": "Checks syntax of reStructuredText and code blocks nested within it.",
     "url": "https://github.com/rstcheck/rstcheck",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["rstcheck"],
     "aur": false
   },
@@ -1267,7 +1267,7 @@
     "name": "Sam",
     "description": "Minimalist text editor with a graphical user interface, a very powerful command language and remote editing capabilities, developed by Rob Pike.",
     "url": "http://sam.cat-v.org",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/plan9port_acme.png",
+
     "pkgname": ["plan9port"],
     "aur": false
   },
@@ -1275,7 +1275,7 @@
     "name": "ScanTailor Advanced",
     "description": "Interactive post-processing tool for scanned pages. Fork of Scan Tailor with additional features and fixes.",
     "url": "https://github.com/ScanTailor-Advanced/scantailor-advanced",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/scantailor-advanced_ScanTailor.png",
+
     "pkgname": ["scantailor-advanced"],
     "aur": false
   },
@@ -1283,7 +1283,7 @@
     "name": "SciTE",
     "description": "Generally useful editor with facilities for building and running programs.",
     "url": "https://scintilla.org/SciTE.html",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/scite_SciTE.png",
+
     "pkgname": ["scite"],
     "aur": false
   },
@@ -1291,7 +1291,7 @@
     "name": "Scribus",
     "description": "Desktop publishing program. Uses hyphen and its language packs for hyphenation.",
     "url": "https://www.scribus.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/scribus_scribus.png",
+
     "pkgname": ["scribus"],
     "aur": false
   },
@@ -1299,7 +1299,7 @@
     "name": "sdcv",
     "description": "Command line dictionary. It provides access to dictionaries in StarDict's format.",
     "url": "https://dushistov.github.io/sdcv/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["sdcv"],
     "aur": false
   },
@@ -1307,7 +1307,7 @@
     "name": "Setzer",
     "description": "LaTeX editor written in Python with GTK.",
     "url": "https://www.cvfosammmm.org/setzer/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/setzer_org.cvfosammmm.Setzer.png",
+
     "pkgname": ["setzer"],
     "aur": false
   },
@@ -1315,7 +1315,7 @@
     "name": "Shelf",
     "description": "Document collection manager that supports PDF files. Part of maui.",
     "url": "https://mauikit.org/apps/shelf/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/maui-shelf_shelf.png",
+
     "pkgname": ["maui-shelf"],
     "aur": false
   },
@@ -1323,7 +1323,7 @@
     "name": "Sigil",
     "description": "WYSIWYG EPUB e-book editor.",
     "url": "https://sigil-ebook.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/sigil_sigil.png",
+
     "pkgname": ["sigil"],
     "aur": false
   },
@@ -1331,7 +1331,7 @@
     "name": "SILE",
     "description": "Modern typesetting system inspired by TeX.",
     "url": "https://sile-typesetter.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["sile"],
     "aur": false
   },
@@ -1339,7 +1339,7 @@
     "name": "Simplenote",
     "description": "The simplest way to keep notes. Based on the Electron platform.",
     "url": "https://simplenote.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["simplenote-electron-bin"],
     "aur": false
   },
@@ -1347,7 +1347,7 @@
     "name": "SoftMaker FreeOffice",
     "description": "Complete, reliable, lightning-fast and Microsoft Office-compatible proprietary office suite with a word processor, spreadsheet, and presentation graphics software.",
     "url": "https://www.freeoffice.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["freeoffice"],
     "aur": false
   },
@@ -1355,7 +1355,7 @@
     "name": "Sphinx",
     "description": "A documentation generation system using reStructuredText to generate output in multiple formats (primary documentation system for the Python project).",
     "url": "https://www.sphinx-doc.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["python-sphinx"],
     "aur": false
   },
@@ -1363,7 +1363,7 @@
     "name": "Spice-Up",
     "description": "Create simple and beautiful presentations.",
     "url": "https://github.com/Philip-Scott/Spice-up",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/spice-up_com.github.philip_scott.spice-up.png",
+
     "pkgname": ["spice-up"],
     "aur": false
   },
@@ -1371,7 +1371,7 @@
     "name": "StarDict",
     "description": "International dictionary software.",
     "url": "https://stardict-4.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/stardict_stardict.png",
+
     "pkgname": ["stardict"],
     "aur": false
   },
@@ -1379,7 +1379,7 @@
     "name": "Tesseract",
     "description": "Accurate open source OCR engine. Package splitted, you need install some datafiles for each language (tesseract-data-eng for example).",
     "url": "https://github.com/tesseract-ocr",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["tesseract"],
     "aur": false
   },
@@ -1387,7 +1387,7 @@
     "name": "TeX",
     "description": "A high-quality typesetting system popular in academia.",
     "url": "https://tug.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["texlive-basic"],
     "aur": false
   },
@@ -1395,7 +1395,7 @@
     "name": "Texinfo",
     "description": "Typesetting syntax for software manuals used by the GNU Project.",
     "url": "https://www.gnu.org/software/texinfo/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["texinfo"],
     "aur": false
   },
@@ -1403,7 +1403,7 @@
     "name": "TeXmacs",
     "description": "WYSIWYW (what you see is what you want) editing platform with special features for scientists.",
     "url": "https://www.texmacs.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["texmacs"],
     "aur": false
   },
@@ -1411,7 +1411,7 @@
     "name": "Texmaker",
     "description": "Cross-platform, light and easy-to-use LaTeX IDE. It integrates many tools needed to develop documents with LaTeX, in just one application",
     "url": "https://www.xm1math.net/texmaker/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/texmaker_texmaker.png",
+
     "pkgname": ["texmaker"],
     "aur": false
   },
@@ -1419,7 +1419,7 @@
     "name": "TeXstudio",
     "description": "Fork of TeXMaker including support for code completion of bibtex items, grammar check and automatic detection of the need for multiple LaTeX runs.",
     "url": "https://texstudio.sourceforge.net/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/texstudio_texstudio.png",
+
     "pkgname": ["texstudio"],
     "aur": false
   },
@@ -1427,7 +1427,7 @@
     "name": "Text Pieces",
     "description": "Powerful scratchpad with ability to perform a lot of text transformations.",
     "url": "https://apps.gnome.org/TextPieces/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/textpieces_io.gitlab.liferooter.TextPieces.png",
+
     "pkgname": ["textpieces"],
     "aur": false
   },
@@ -1435,7 +1435,7 @@
     "name": "TeXworks",
     "description": "Simple TeX front-end program modeled after TeXShop.",
     "url": "https://tug.org/texworks/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/texworks_TeXworks.png",
+
     "pkgname": ["texworks"],
     "aur": false
   },
@@ -1443,7 +1443,7 @@
     "name": "Translate Shell",
     "description": "Command-line interface and interactive shell for Google Translate.",
     "url": "https://www.soimort.org/translate-shell/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["translate-shell"],
     "aur": false
   },
@@ -1451,7 +1451,7 @@
     "name": "Translate Toolkit",
     "description": "Localization and translation toolkit, which provides a set of tools for working with localization file formats and files that might need localization.",
     "url": "https://toolkit.translatehouse.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["translate-toolkit"],
     "aur": false
   },
@@ -1459,7 +1459,7 @@
     "name": "txt2tags",
     "description": "Dead-simple, KISS-compliant lightweight, human-readable markup language to produce rich format content out of plain text files.",
     "url": "https://txt2tags.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["txt2tags"],
     "aur": false
   },
@@ -1467,7 +1467,7 @@
     "name": "Typst",
     "description": "A markup-based typesetting system for the sciences.",
     "url": "https://github.com/typst/typst",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["typst"],
     "aur": false
   },
@@ -1475,7 +1475,7 @@
     "name": "UKUI Notes",
     "description": "Note-taking application for the UKUI desktop environment.",
     "url": "https://github.com/ukui/ukui-notebook",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["ukui-notebook"],
     "aur": false
   },
@@ -1483,7 +1483,7 @@
     "name": "unoconv",
     "description": "Libreoffice-based document converter.",
     "url": "https://github.com/unoconv/unoconv",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["unoconv"],
     "aur": false
   },
@@ -1491,7 +1491,7 @@
     "name": "UnRTF",
     "description": "Command-line program which converts RTF documents to other formats.",
     "url": "https://www.gnu.org/software/unrtf/unrtf.html",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["unrtf"],
     "aur": false
   },
@@ -1499,7 +1499,7 @@
     "name": "View Your Mind",
     "description": "Tool to generate and manipulate maps which show your thoughts. Such maps can help you to improve your creativity and effectivity. You can use them for time management, to organize tasks, to get an overview over complex contexts, to sort your ideas etc.",
     "url": "https://sourceforge.net/projects/vym/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/vym_vym.png",
+
     "pkgname": ["vym"],
     "aur": false
   },
@@ -1507,7 +1507,7 @@
     "name": "Vim (Vi IMproved)",
     "description": "Is included as vi with most UNIX systems.",
     "url": "https://www.vim.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/vim_gvim.png",
+
     "pkgname": ["vim"],
     "aur": false
   },
@@ -1515,7 +1515,7 @@
     "name": "Vim-LaTeX-suite",
     "description": "Customizable LaTeX environment for Vim.",
     "url": "https://vim-latex.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vim-latexsuite"],
     "aur": false
   },
@@ -1523,7 +1523,7 @@
     "name": "Vimwiki",
     "description": "Personal wiki for Vim – interlinked, plain text files written in a markup language.",
     "url": "https://vimwiki.github.io/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vim-vimwiki"],
     "aur": false
   },
@@ -1531,7 +1531,7 @@
     "name": "Vis",
     "description": "Modern, legacy free, simple yet efficient Vim-like editor.",
     "url": "https://github.com/martanne/vis",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vis"],
     "aur": false
   },
@@ -1539,7 +1539,7 @@
     "name": "visidata",
     "description": "Python multitool for discovering and arranging data.",
     "url": "https://www.visidata.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["visidata"],
     "aur": false
   },
@@ -1547,7 +1547,7 @@
     "name": "Visual Studio Code",
     "description": "Editor for building and debugging modern web and cloud applications.",
     "url": "https://code.visualstudio.com",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/code_com.visualstudio.code.oss.png",
+
     "pkgname": ["code"],
     "aur": false
   },
@@ -1555,7 +1555,7 @@
     "name": "VNote",
     "description": "Vim-inspired note-taking application that knows programmers and Markdown better.",
     "url": "https://vnotex.github.io/vnote",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vnote"],
     "aur": false
   },
@@ -1563,7 +1563,7 @@
     "name": "VSCodium",
     "description": "Visual Studio Code, but compiled without telemetry.",
     "url": "https://vscodium.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["vscodium"],
     "aur": false
   },
@@ -1571,7 +1571,7 @@
     "name": "WPS Office",
     "description": "Proprietary office productivity suite, previously known as Kingsoft Office.",
     "url": "https://www.wps.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["wps-office"],
     "aur": false
   },
@@ -1579,7 +1579,7 @@
     "name": "Write",
     "description": "A proprietary word processor for handwriting.",
     "url": "http://www.styluslabs.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["write_stylus"],
     "aur": false
   },
@@ -1587,7 +1587,7 @@
     "name": "xCHM",
     "description": "Lightweight CHM viewer, based on chmlib.",
     "url": "https://github.com/rzvncj/xCHM",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xchm_xchm.png",
+
     "pkgname": ["xchm"],
     "aur": false
   },
@@ -1595,7 +1595,7 @@
     "name": "xed",
     "description": "Text editor based on Pluma developed for Linux Mint.",
     "url": "https://github.com/linuxmint/xed",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xed_accessories-text-editor.png",
+
     "pkgname": ["xed"],
     "aur": false
   },
@@ -1603,7 +1603,7 @@
     "name": "XEdit",
     "description": "Simple text editor for the X Window System.",
     "url": "https://www.x.org/wiki",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["xorg-xedit"],
     "aur": false
   },
@@ -1611,7 +1611,7 @@
     "name": "Xfce4 Dictionary",
     "description": "Search different kinds of dictionary services for words or phrases.",
     "url": "https://goodies.xfce.org/projects/applications/xfce4-dict",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xfce4-dict_org.xfce.Dictionary.png",
+
     "pkgname": ["xfce4-dict"],
     "aur": false
   },
@@ -1619,7 +1619,7 @@
     "name": "Xournal++",
     "description": "Notetaking software designed around a tablet. C++ rewrite of Xournal with PDF annotation support.",
     "url": "https://github.com/xournalpp/xournalpp",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xournalpp_com.github.xournalpp.xournalpp.png",
+
     "pkgname": ["xournalpp"],
     "aur": false
   },
@@ -1627,7 +1627,7 @@
     "name": "Xpad",
     "description": "Sticky note application for jotting down things to remember.",
     "url": "https://launchpad.net/xpad",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/xpad_xpad.png",
+
     "pkgname": ["xpad"],
     "aur": false
   },
@@ -1635,7 +1635,7 @@
     "name": "YACReader",
     "description": "Comic book viewer written in C++ and Qt5. Comes with YACReaderLibrary for managing comics.",
     "url": "https://yacreader.com/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["yacreader"],
     "aur": false
   },
@@ -1643,7 +1643,7 @@
     "name": "ZBar",
     "description": "Application and library for reading bar codes from various sources.",
     "url": "https://zbar.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zbar"],
     "aur": false
   },
@@ -1651,7 +1651,7 @@
     "name": "ZBarCam GUI",
     "description": "Simple GUI for ZBar to read bar codes from various sources.",
     "url": "https://zbar.sourceforge.net/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zbar"],
     "aur": false
   },
@@ -1659,7 +1659,7 @@
     "name": "Zed",
     "description": "A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter. It's also open source.",
     "url": "https://zed.dev",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zed_zed.png",
+
     "pkgname": ["zed"],
     "aur": false
   },
@@ -1667,7 +1667,7 @@
     "name": "Zettlr",
     "description": "A cross-platform markdown editor, inspired by the Zettelkasten system for note-taking and personal knowledge management. Based on the Electron platform.",
     "url": "https://www.zettlr.com/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zettlr_zettlr.png",
+
     "pkgname": ["zettlr"],
     "aur": false
   },
@@ -1675,7 +1675,7 @@
     "name": "Zim",
     "description": "WYSIWYG text editor that aims at bringing the concept of a wiki to the desktop.",
     "url": "https://zim-wiki.org/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zim_org.zim_wiki.Zim.png",
+
     "pkgname": ["zim"],
     "aur": false
   },
@@ -1683,7 +1683,7 @@
     "name": "Zint",
     "description": "Barcode encoding library and command line tool supporting over 50 symbologies.",
     "url": "http://zint.org.uk/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zint"],
     "aur": false
   },
@@ -1691,7 +1691,7 @@
     "name": "Zint Barcode Studio",
     "description": "Barcode generator GUI.",
     "url": "http://zint.org.uk/",
-    "icon": "/usr/share/swcatalog/icons/archlinux-arch-extra/64x64/zint-qt_zint-qt.png",
+
     "pkgname": ["zint-qt"],
     "aur": false
   },
@@ -1699,7 +1699,7 @@
     "name": "Zotero",
     "description": "An easy-to-use tool to help you collect, organize, cite, and share your research sources. Can import and export BibTeX and has browser extensions.",
     "url": "https://www.zotero.org/",
-    "icon": "generic-dark.svg",
+
     "pkgname": ["zotero"],
     "aur": false
   }

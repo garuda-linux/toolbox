@@ -145,6 +145,7 @@
     "boxtron": "Compatibility tool to run DOS games on Steam through native Linux DOSBox",
     "luxtorpeda": "Steam Play compatibility tool to run games using native Linux engines",
     "protonGeCustom": "A fancy custom distribution of Valves Proton with various patches",
+    "protonCachyOS": "Distribution of Valves Proton with CachyOS patches and other optimizations",
     "protontricks": "A simple wrapper that does winetricks things for Proton enabled games",
     "protonupQt": "Install and manage Proton-GE and Luxtorpeda for Steam and Wine-GE for Lutris",
     "winePackage": "A compatibility layer for running Windows programs",
