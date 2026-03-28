@@ -182,6 +182,13 @@ export class AppComponent implements OnInit {
       visible: false,
     },
     {
+      id: 'config-files',
+      icon: 'pi pi-file-edit',
+      label: 'Config Files',
+      translocoKey: 'menu.configFiles',
+      command: () => this.router.navigate(['/config-files']),
+    },
+    {
       id: 'diagnostics',
       icon: 'pi pi-info-circle',
       label: 'Diagnostics',
@@ -322,7 +329,6 @@ export class AppComponent implements OnInit {
   moduleSuggestions = signal<ModuleSearchEntry[]>([]);
 
   ngOnInit(): void {
-    const settings = this.configService.settings();
     void this.osService.argv().then((args: string[]) => {
       if (args.includes('--setup-assistant')) {
         this.logger.info('Redirecting to setup wizard on startup');

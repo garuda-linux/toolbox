@@ -1,0 +1,82 @@
+<ng-container *transloco="let t">
+  <div class="surface-section px-4 text-center md:px-6 lg:px-8 mt-5">
+    <div class="text-3xl font-bold">
+      <span class="text-color">{{ t('configFiles.title') }} </span>
+      <span class="text-primary">{{ t('configFiles.titleTwo') }}</span>
+    </div>
+  </div>
+
+  <div class="p-10">
+    <p-table
+      #dt
+      [value]="configFiles()"
+      [globalFilterFields]="['name', 'path', 'description']"
+      rowGroupMode="subheader"
+      groupRowsBy="category"
+      dataKey="name"
+    >
+      <ng-template #caption>
+        <div class="flex justify-end">
+          <p-iconfield class="ml-auto" iconPosition="left">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input
+              #filterInput
+              [placeholder]="t('configFiles.search')"
+              (input)="dt.filterGlobal(filterInput.value, 'contains')"
+              pInputText
+              type="text"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
+
+      <ng-template #header>
+        <tr>
+          <th>{{ t('configFiles.name') }}</th>
+          <th>{{ t('configFiles.path') }}</th>
+          <th>{{ t('configFiles.description') }}</th>
+          <th class="w-32">{{ t('configFiles.wiki') }}</th>
+          <th class="w-32">{{ t('configFiles.actions') }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #groupheader let-file>
+        <tr pRowGroupHeader>
+          <td colspan="5">
+            <span class="font-bold ml-2">{{ file.category }}</span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-file>
+        <tr>
+          <td>{{ file.name }}</td>
+          <td class="font-mono text-sm">{{ file.path }}</td>
+          <td>{{ t(file.description) }}</td>
+          <td>
+            @if (file.wikiLink) {
+              <p-button
+                [text]="true"
+                (onClick)="shellService.open(file.wikiLink)"
+                icon="pi pi-external-link"
+                pTooltip="Arch Wiki"
+                tooltipPosition="top"
+              />
+            }
+          </td>
+          <td>
+            <p-button
+              [outlined]="true"
+              [label]="t('configFiles.edit')"
+              (onClick)="editConfig(file)"
+              icon="pi pi-pencil"
+              size="small"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-container>

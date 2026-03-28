@@ -222,6 +222,29 @@ export const MODULE_SEARCH: ModuleSearchEntry[] = [
     routerLink: 'system-tools',
     hash: 'services',
   },
+  {
+    moduleName: 'menu.configFiles',
+    keywords: [
+      'config',
+      'settings',
+      'configuration',
+      'files',
+      'pacman.conf',
+      'makepkg.conf',
+      'fstab',
+      'environment',
+      'grub',
+      'vconsole.conf',
+      'locale.conf',
+      'hostname',
+      'hosts',
+      'bashrc',
+      'zshrc',
+      'fish',
+      'starship',
+    ],
+    routerLink: 'config-files',
+  },
 ];
 
 export interface ModuleSearchEntry {
