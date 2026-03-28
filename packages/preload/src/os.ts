@@ -1,5 +1,6 @@
 import { platform, arch, version, hostname, homedir, tmpdir } from 'node:os';
 import { error } from './logging.js';
+import { ipcRenderer } from 'electron';
 
 export function getPlatform(): string {
   try {
@@ -62,5 +63,14 @@ export function getTmpdir(): string {
   } catch (err) {
     error(`OS tmpdir error: ${err instanceof Error ? err.message : String(err)}`);
     return process.env.TMPDIR || process.env.TEMP || '/tmp';
+  }
+}
+
+export async function getArgv(): Promise<string[]> {
+  try {
+    return await ipcRenderer.invoke('os:argv');
+  } catch (err) {
+    error(`OS argv error: ${err instanceof Error ? err.message : String(err)}`);
+    return [];
   }
 }

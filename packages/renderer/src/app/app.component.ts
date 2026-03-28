@@ -32,7 +32,7 @@ import { Logger } from './logging/logging';
 import { TaskManagerService } from './components/task-manager/task-manager.service';
 import { NotificationService } from './components/notification/notification.service';
 import { ThemeService } from './components/theme-service/theme-service';
-import { type AppMenuItem, ElectronAppMenuService, ElectronShellService } from './electron-services';
+import { type AppMenuItem, ElectronAppMenuService, ElectronOsService, ElectronShellService } from './electron-services';
 import { SplitButton } from 'primeng/splitbutton';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { MODULE_SEARCH, ModuleSearchEntry } from './constants/module-search';
@@ -85,6 +85,7 @@ export class AppComponent implements OnInit {
 
   protected readonly confirmationService = inject(ConfirmationService);
   protected readonly loadingService = inject(LoadingService);
+  protected readonly osService = inject(ElectronOsService);
   protected readonly shellService = inject(ElectronShellService);
   protected readonly taskManager = inject(TaskManagerService);
 
@@ -322,10 +323,12 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const settings = this.configService.settings();
-    if (!!settings.firstBoot) {
-      this.logger.info('Redirecting to setup wizard on startup');
-      void this.router.navigate(['/setup-wizard'], { replaceUrl: true });
-    }
+    void this.osService.argv().then((args: string[]) => {
+      if (args.includes('--setup-assistant')) {
+        this.logger.info('Redirecting to setup wizard on startup');
+        void this.router.navigate(['/setup-wizard'], { replaceUrl: true });
+      }
+    });
 
     window.addEventListener('unhandledrejection', (event) => {
       this.logger.error(`Unhandled promise rejection: ${event.reason}`);
@@ -363,7 +366,6 @@ export class AppComponent implements OnInit {
     this.setupAppMenuHandlers();
     void this.updateApplicationMenu(this.menuItems());
 
-    // Set up the wallpaper service
     this.wallpaperService.initialize(this.renderer, this.elementRef);
   }
 
@@ -379,7 +381,7 @@ export class AppComponent implements OnInit {
 
   /**
    * Updates the application menu with current menu items
-   * @param items The current menu items
+   * @param _items The current menu items
    */
   private async updateApplicationMenu(_items: MenuItem[]): Promise<void> {
     const menubar = this.setupLabels(this.translocoService.getActiveLang(), [

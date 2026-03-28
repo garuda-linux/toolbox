@@ -6,32 +6,6 @@
 
     <p-card class="mt-4 text-left">
       <p-stepper [value]="1">
-        <!-- Nvidia Step (Conditional) -->
-        @if (setupWizardService.nvidiaDetected()) {
-          <p-step-item [value]="nvidiaStepValue">
-            <p-step>{{ t('setupWizard.steps.nvidia') }}</p-step>
-            <p-step-panel>
-              <ng-template #content let-activateCallback="activateCallback">
-                <div class="flex flex-col gap-4 py-8">
-                  <div class="text-2xl font-bold">{{ t('setupWizard.nvidia.header') }}</div>
-                  <div class="flex items-center gap-2">
-                    <p-checkbox [(ngModel)]="setupWizardService.applyNvidia" [binary]="true" inputId="apply-nvidia" />
-                    <label class="text-lg" for="apply-nvidia">{{ t('setupWizard.nvidia.checkbox') }}</label>
-                  </div>
-                  <div class="flex gap-2 pt-4">
-                    <p-button
-                      [label]="t('setupWizard.buttons.next')"
-                      (onClick)="activateCallback(getCategoryStepValue(0))"
-                      icon="pi pi-arrow-right"
-                      iconPos="right"
-                    />
-                  </div>
-                </div>
-              </ng-template>
-            </p-step-panel>
-          </p-step-item>
-        }
-
         <!-- Software Category Steps -->
         @for (category of softwareCategories; track category.id; let i = $index) {
           <p-step-item [value]="getCategoryStepValue(i)">
@@ -49,16 +23,12 @@
                       @for (item of category.items; track item.id) {
                         <div
                           class="flex items-center gap-4 p-4 surface-card border-round cursor-pointer transition-colors duration-200"
-                          tabindex=0
                           (keydown)="toggleSoftware(item)"
                           (click)="toggleSoftware(item)"
+                          tabindex="0"
                         >
                           <div class="shrink-0 w-12 h-12 flex items-center justify-center overflow-hidden">
-                            <img
-                              class="w-10 h-10 object-contain"
-                              [src]="getIconSrc(item)"
-                              [alt]="item.name"
-                            />
+                            <img class="w-10 h-10 object-contain" [src]="getIconSrc(item)" [alt]="item.name" />
                           </div>
                           <div class="grow text-left">
                             <div class="font-bold text-lg">{{ item.name }}</div>
@@ -77,25 +47,15 @@
                   <div class="flex-none flex gap-2 pt-4">
                     <p-button
                       [label]="t('setupWizard.buttons.back')"
-                      [disabled]="i === 0 && !setupWizardService.nvidiaDetected()"
-                      (onClick)="
-                        activateCallback(
-                          i === 0
-                            ? setupWizardService.nvidiaDetected()
-                              ? nvidiaStepValue
-                              : getCategoryStepValue(0)
-                            : getCategoryStepValue(i - 1)
-                        )
-                      "
+                      [disabled]="i === 0"
+                      (onClick)="activateCallback(getCategoryStepValue(i - 1))"
                       icon="pi pi-arrow-left"
                       severity="secondary"
                     />
                     <p-button
                       [label]="t('setupWizard.buttons.next')"
                       (onClick)="
-                        activateCallback(
-                          i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1)
-                        )
+                        activateCallback(i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1))
                       "
                       icon="pi pi-arrow-right"
                       iconPos="right"

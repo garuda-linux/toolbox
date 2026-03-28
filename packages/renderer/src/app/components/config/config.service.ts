@@ -6,9 +6,8 @@ import { Logger } from '../../logging/logging';
 import { LogLevel } from '../../logging/interfaces';
 import { usePreset } from '@primeuix/themes';
 import { AppTheme, themes } from '../../theme';
-import { ElectronOsService, ElectronShellService } from '../../electron-services';
+import { ElectronOsService, ElectronShellService, notifyConfigChange, Store } from '../../electron-services';
 import type { CommandResult } from '../../types/shell';
-import { Store, notifyConfigChange } from '../../electron-services';
 
 class PendingConfigUpdate {
   state?: object;
@@ -44,7 +43,6 @@ export class ConfigService {
     copyDiagnostics: true,
     customDesign: null,
     darkMode: true,
-    firstBoot: undefined,
     language: 'en',
     logLevel: LogLevel.INFO,
     showMainLinks: true,

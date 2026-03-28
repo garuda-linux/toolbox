@@ -811,7 +811,6 @@
   "settings": {
     "title": "App",
     "titleTwo": "settings",
-    "alwaysShowSetupWizard": "Always open setup assistant on launch",
     "leftButtons": "Show window buttons on the left",
     "copyDiagnostics": "Copy diagnostics to clipboard",
     "darkMode": "Enable dark mode",
@@ -847,12 +846,7 @@
   "setupWizard": {
     "title": "Setup Assistant",
     "steps": {
-      "nvidia": "Nvidia Drivers",
       "apply": "Apply Changes"
-    },
-    "nvidia": {
-      "header": "Nvidia GPU Detected",
-      "checkbox": "Install proprietary Nvidia drivers"
     },
     "softwareSelection": {
       "header": "Software Selection",
@@ -869,7 +863,6 @@
       "finish": "Finish"
     },
     "tasks": {
-      "nvidia": "Installing Nvidia drivers",
       "installSoftware": "Installing selected software"
     },
     "autoSoftware": {

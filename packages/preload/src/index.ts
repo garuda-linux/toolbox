@@ -33,6 +33,7 @@ import {
   getHostname as osHostname,
   getHomedir as osHomedir,
   getTmpdir as osTmpdir,
+  getArgv as osArgv,
 } from './os.js';
 
 // Import notification operations
@@ -178,6 +179,7 @@ export {
   osHostname,
   osHomedir,
   osTmpdir,
+  osArgv,
 
   // Notification Operations
   notificationIsPermissionGranted,

@@ -3,7 +3,7 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router } from '@angular/router';
 import { SetupSoftwareItem } from './interfaces';
 import { OsInteractService } from '../task-manager/os-interact.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Step, StepItem, StepPanel, StepperModule } from 'primeng/stepper';
@@ -32,7 +32,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
   styleUrl: './setup-wizard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetupWizardComponent implements OnInit {
+export class SetupWizardComponent {
   protected readonly setupWizardService = inject(SetupWizardService);
   protected readonly taskManagerService = inject(TaskManagerService);
   protected readonly osInteractService = inject(OsInteractService);
@@ -42,30 +42,16 @@ export class SetupWizardComponent implements OnInit {
 
   protected hasApplied = signal<boolean>(false);
 
-  readonly nvidiaStepValue = 1;
-
-  async ngOnInit() {
-    await this.setupWizardService.checkNvidia();
-  }
-
   get softwareCategories() {
     return this.setupWizardService.categories();
   }
 
   get totalSteps() {
-    let steps = this.softwareCategories.length + 1;
-    if (this.setupWizardService.nvidiaDetected()) {
-      steps++;
-    }
-    return steps;
+    return this.softwareCategories.length + 1;
   }
 
   getCategoryStepValue(index: number) {
-    let offset = 1;
-    if (this.setupWizardService.nvidiaDetected()) {
-      offset = 2;
-    }
-    return index + offset;
+    return index + 1;
   }
 
   toggleSoftware(item: SetupSoftwareItem) {

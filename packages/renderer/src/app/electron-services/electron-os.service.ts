@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { osPlatform, osArch, osVersion, osLocale, osHostname, osHomedir, osTmpdir } from './electron-api-utils.js';
+import {
+  osPlatform,
+  osArch,
+  osVersion,
+  osLocale,
+  osHostname,
+  osHomedir,
+  osTmpdir,
+  osArgv,
+} from './electron-api-utils.js';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +41,10 @@ export class ElectronOsService {
   async tmpdir(): Promise<string> {
     return osTmpdir();
   }
+
+  async argv(): Promise<string[]> {
+    return osArgv();
+  }
 }
 
 // Standalone functions for direct use
@@ -61,4 +74,8 @@ export async function homedir(): Promise<string> {
 
 export async function tmpdir(): Promise<string> {
   return osTmpdir();
+}
+
+export async function argv(): Promise<string[]> {
+  return osArgv();
 }

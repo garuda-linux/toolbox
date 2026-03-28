@@ -12,7 +12,6 @@ export interface AppSettings {
   copyDiagnostics: boolean;
   customDesign: string | null;
   darkMode: boolean;
-  firstBoot: boolean | undefined;
   language: string;
   logLevel: LogLevel;
   showMainLinks: boolean;
