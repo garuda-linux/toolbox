@@ -166,9 +166,17 @@ export class AppComponent implements OnInit {
     {
       id: 'boot-tools',
       icon: 'pi pi-hammer',
-      label: 'Boot options/repair',
+      label: 'Boot Options',
       translocoKey: 'menu.boot',
       command: () => this.router.navigate(['/boot-options']),
+      visible: true,
+    },
+    {
+      id: 'boot-repair',
+      icon: 'pi pi-hammer',
+      label: 'Boot Repair',
+      translocoKey: 'menu.bootRepair',
+      command: () => this.router.navigate(['/boot-repair']),
       visible: true,
     },
     {

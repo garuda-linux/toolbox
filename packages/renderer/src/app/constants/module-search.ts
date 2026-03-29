@@ -112,6 +112,22 @@ export const MODULE_SEARCH: ModuleSearchEntry[] = [
     routerLink: 'gaming',
   },
   {
+    moduleName: 'menu.modules.bootRepair',
+    keywords: [
+      'boot repair',
+      'grub repair',
+      'grub reinstall',
+      'bootloader repair',
+      'bootloader reinstall',
+      'mbr',
+      'pbr',
+      'esp',
+      'luks',
+      'cryptsetup',
+    ],
+    routerLink: 'boot-repair',
+  },
+  {
     moduleName: 'menu.modules.components',
     keywords: [
       'audio',

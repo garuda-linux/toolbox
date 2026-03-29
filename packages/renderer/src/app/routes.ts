@@ -56,6 +56,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/config-files/config-files.component').then((m) => m.ConfigFilesComponent),
   },
   {
+    title: 'Boot Repair',
+    path: 'boot-repair',
+    loadComponent: () => import('./components/boot-repair/boot-repair.component').then((m) => m.BootRepairComponent),
+  },
+  {
     title: 'Boot Options',
     path: 'boot-options',
     loadComponent: () => import('./components/boot-options/boot-options.component').then((m) => m.BootOptionsComponent),

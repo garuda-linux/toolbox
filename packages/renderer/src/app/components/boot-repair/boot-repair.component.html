@@ -1,0 +1,132 @@
+<ng-container *transloco="let t">
+  <div class="surface-section px-4 py-6 text-center md:px-6 lg:px-8">
+    <div class="mb-5 text-3xl font-bold">
+      <span class="text-color">{{ t('bootRepair.title') }}</span>
+      <span class="text-primary">{{ t('bootRepair.titleTwo') }}</span>
+    </div>
+
+    @if (loading()) {
+      <div class="flex items-center justify-center p-8">
+        <p-progressSpinner />
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 gap-6 text-left md:grid-cols-2">
+        <p-card [header]="t('bootRepair.selectOperation')">
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <p-radioButton [(ngModel)]="action" name="action" value="reinstall" inputId="act-reinstall" />
+              <label for="act-reinstall">{{ t('bootRepair.reinstallGrub') }}</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <p-radioButton [(ngModel)]="action" name="action" value="repair" inputId="act-repair" />
+              <label for="act-repair">{{ t('bootRepair.repairGrubConfig') }}</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <p-radioButton [(ngModel)]="action" name="action" value="backup" inputId="act-backup" />
+              <label for="act-backup">{{ t('bootRepair.backupMbrPbr') }}</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <p-radioButton [(ngModel)]="action" name="action" value="restore" inputId="act-restore" />
+              <label for="act-restore">{{ t('bootRepair.restoreMbrPbr') }}</label>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card [header]="t('bootRepair.options')">
+          @if (action() === 'reinstall') {
+            <div class="mb-6 flex flex-col gap-4">
+              <div class="font-bold">{{ t('bootRepair.installOn') }}</div>
+              <div class="flex items-center gap-2">
+                <p-radioButton [(ngModel)]="installTarget" name="target" value="mbr" inputId="tgt-mbr" />
+                <label for="tgt-mbr">{{ t('bootRepair.targetMbr') }}</label>
+              </div>
+              <div class="flex items-center gap-2">
+                <p-radioButton [(ngModel)]="installTarget" name="target" value="root" inputId="tgt-root" />
+                <label for="tgt-root">{{ t('bootRepair.targetRoot') }}</label>
+              </div>
+              <div class="flex items-center gap-2">
+                <p-radioButton [(ngModel)]="installTarget" name="target" value="esp" inputId="tgt-esp" />
+                <label for="tgt-esp">{{ t('bootRepair.targetEsp') }}</label>
+              </div>
+            </div>
+          }
+
+          @if (action() === 'backup' || action() === 'restore') {
+            <div class="mb-4 flex flex-col gap-4">
+              <div class="font-bold">{{ t('bootRepair.backupRestoreTarget') }}</div>
+              <div class="flex items-center gap-2">
+                <p-radioButton
+                  [(ngModel)]="backupRestoreTarget"
+                  name="backup-target"
+                  value="mbr"
+                  inputId="backup-mbr"
+                />
+                <label for="backup-mbr">{{ t('bootRepair.targetMbr') }}</label>
+              </div>
+              <div class="flex items-center gap-2">
+                <p-radioButton
+                  [(ngModel)]="backupRestoreTarget"
+                  name="backup-target"
+                  value="pbr"
+                  inputId="backup-pbr"
+                />
+                <label for="backup-pbr">{{ t('bootRepair.targetPbr') }}</label>
+              </div>
+            </div>
+          }
+
+          @if (action() === 'reinstall' || action() === 'repair') {
+            <div class="mb-4 flex flex-col gap-2">
+              <label class="font-bold" for="root-select">{{ t('bootRepair.rootLocation') }}</label>
+              <p-select
+                class="w-full"
+                id="root-select"
+                [(ngModel)]="selectedRoot"
+                [options]="roots()"
+                (ngModelChange)="onRootChange()"
+                optionLabel="label"
+                optionValue="value"
+              />
+            </div>
+
+            @if (shouldShowLuksPrompt()) {
+              <div class="mb-4 flex flex-col gap-2">
+                <label class="font-bold" for="luks-password">{{ t('bootRepair.luksPassword') }}</label>
+                <p-password
+                  [(ngModel)]="luksPassword"
+                  [feedback]="false"
+                  [toggleMask]="true"
+                  [placeholder]="t('bootRepair.luksPasswordPlaceholder')"
+                  inputId="luks-password"
+                  fluid
+                />
+              </div>
+            }
+          }
+
+          <div class="mb-6 flex flex-col gap-2">
+            <label class="font-bold" for="loc-select">
+              @if (action() === 'repair') {
+                {{ t('bootRepair.partitionToMount') }}
+              } @else if (action() === 'backup' || action() === 'restore') {
+                {{ t('bootRepair.deviceOrPartition') }}
+              } @else {
+                {{ t('bootRepair.location') }}
+              }
+            </label>
+            <p-select
+              class="w-full"
+              id="loc-select"
+              [(ngModel)]="selectedLocation"
+              [options]="locations()"
+              optionLabel="label"
+              optionValue="value"
+            />
+          </div>
+
+          <p-button [label]="t('bootRepair.apply')" (onClick)="apply()" icon="pi pi-check" />
+        </p-card>
+      </div>
+    }
+  </div>
+</ng-container>
