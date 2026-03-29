@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
 import { InputNumber } from 'primeng/inputnumber';
@@ -18,11 +18,10 @@ import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { Checkbox } from 'primeng/checkbox';
-import { ProgressSpinner } from 'primeng/progressspinner';
+import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { BootEntry, PartitionInfo } from './types';
-import { MessageToastService } from '@garudalinux/core';
 import { BootOptionsService } from './boot-options.service';
 import { ConfigService } from '../config/config.service';
 import { dialogOpen } from '../../electron-services/electron-api-utils.js';
@@ -42,7 +41,6 @@ import { ActivatedRoute } from '@angular/router';
     Button,
     Message,
     Checkbox,
-    ProgressSpinner,
   ],
   templateUrl: './boot-options.component.html',
   styleUrl: './boot-options.component.css',
@@ -52,12 +50,10 @@ export class BootOptionsComponent implements OnInit {
   protected readonly bootService = inject(BootOptionsService);
   protected readonly osInteract = inject(OsInteractService);
   private readonly taskManager = inject(TaskManagerService);
-  private readonly translocoService = inject(TranslocoService);
-  private readonly toast = inject(MessageToastService);
   private readonly configService = inject(ConfigService);
+  private readonly loadingService = inject(LoadingService);
   private readonly route = inject(ActivatedRoute);
 
-  loading = signal(true);
   error = signal<string | null>(null);
   syncEnabled = false;
 
@@ -116,7 +112,7 @@ export class BootOptionsComponent implements OnInit {
       const plyTheme = this.selectedPlymouthTheme();
 
       untracked(() => {
-        if (!this.syncEnabled || this.loading()) return;
+        if (!this.syncEnabled || this.loadingService.loading()) return;
 
         if (bootsplash && !this.isPlymouthInstalled() && !this.osInteract.check('plymouth', 'pkg')) {
           this.osInteract.setPackage('plymouth', true);
@@ -165,7 +161,7 @@ export class BootOptionsComponent implements OnInit {
   }
 
   async loadPartitions() {
-    this.loading.set(true);
+    this.loadingService.loadingOn();
     try {
       const parts = await this.bootService.getLinuxPartitions();
       this.partitions.set(parts);
@@ -174,7 +170,7 @@ export class BootOptionsComponent implements OnInit {
     } catch (err) {
       this.error.set(String(err));
     } finally {
-      this.loading.set(false);
+      this.loadingService.loadingOff();
     }
   }
 
@@ -189,7 +185,7 @@ export class BootOptionsComponent implements OnInit {
   }
 
   async loadSettings() {
-    this.loading.set(true);
+    this.loadingService.loadingOn();
     this.syncEnabled = false;
     this.error.set(null);
     try {
@@ -242,7 +238,7 @@ export class BootOptionsComponent implements OnInit {
       this.grubTheme.set(grubSettings.get('GRUB_THEME') || '');
       this.selectedPlymouthTheme.set(plymouth.currentTheme || '');
 
-      this.loading.set(false);
+      this.loadingService.loadingOff();
 
       if (this.route.snapshot.queryParams['highlight'] === 'default-entry') {
         this.triggerHighlight();
@@ -251,7 +247,7 @@ export class BootOptionsComponent implements OnInit {
       setTimeout(() => (this.syncEnabled = true), 0);
     } catch (err) {
       this.error.set(String(err));
-      this.loading.set(false);
+      this.loadingService.loadingOff();
     }
   }
 

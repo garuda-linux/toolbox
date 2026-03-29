@@ -7,11 +7,7 @@
   </div>
 
   <div class="p-10">
-    @if (loading()) {
-      <div class="flex justify-center p-8">
-        <p-progressSpinner />
-      </div>
-    } @else if (error()) {
+    @if (error()) {
       <p-message [text]="error()!" severity="error" />
       <div class="mt-4">
         <p-button
