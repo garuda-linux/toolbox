@@ -30,7 +30,7 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window close error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to close window: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to close window: ${error instanceof Error ? error.message : error}`, { cause: error });
       }
     });
 
@@ -47,7 +47,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window request close error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to request window close: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to request window close: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -61,7 +63,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window minimize error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to minimize window: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to minimize window: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -79,7 +83,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window maximize error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to maximize window: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to maximize window: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -93,7 +99,7 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window hide error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to hide window: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to hide window: ${error instanceof Error ? error.message : error}`, { cause: error });
       }
     });
 
@@ -107,7 +113,7 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window show error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to show window: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to show window: ${error instanceof Error ? error.message : error}`, { cause: error });
       }
     });
 
@@ -121,7 +127,7 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window focus error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to focus window: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to focus window: ${error instanceof Error ? error.message : error}`, { cause: error });
       }
     });
 
@@ -134,7 +140,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window isMaximized error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check if window is maximized: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check if window is maximized: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -147,7 +155,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window isMinimized error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check if window is minimized: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check if window is minimized: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -160,7 +170,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window isVisible error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check if window is visible: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check if window is visible: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -174,7 +186,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window setTitle error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to set window title: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to set window title: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -187,7 +201,9 @@ class WindowControlModule implements AppModule {
         return '';
       } catch (error: any) {
         this.logger.error(`Window getTitle error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to get window title: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to get window title: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -201,7 +217,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window setSize error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to set window size: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to set window size: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -214,7 +232,9 @@ class WindowControlModule implements AppModule {
         return [0, 0];
       } catch (error: any) {
         this.logger.error(`Window getSize error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to get window size: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to get window size: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -228,7 +248,9 @@ class WindowControlModule implements AppModule {
         return false;
       } catch (error: any) {
         this.logger.error(`Window setPosition error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to set window position: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to set window position: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -241,20 +263,23 @@ class WindowControlModule implements AppModule {
         return [0, 0];
       } catch (error: any) {
         this.logger.error(`Window getPosition error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to get window position: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to get window position: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
     ipcMain.handle('window:relaunch', async () => {
       try {
         app.on('quit', () => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           execve!(process.execPath, process.argv, process.env);
         });
         app.exit();
         return true;
       } catch (error: any) {
         this.logger.error(`Window relaunch error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to relaunch app: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to relaunch app: ${error instanceof Error ? error.message : error}`, { cause: error });
       }
     });
   }

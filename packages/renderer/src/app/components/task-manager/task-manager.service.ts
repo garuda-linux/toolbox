@@ -55,6 +55,7 @@ export class TrackedShell {
   }
 
   async start(): Promise<void> {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise<void>(async (resolve, reject) => {
       this.running = true;
       this.muted = true;
@@ -261,7 +262,7 @@ export class TaskManagerService {
     this.logger.debug('TaskManagerService constructor initialized');
     this.dataEvents.subscribe((data) => {
       this.data += data;
-      this.cachedData.update((currentData) => (currentData += data));
+      this.cachedData.update((current) => current + data);
     });
   }
 

@@ -4,10 +4,7 @@ import { F_OK } from 'node:constants';
 import { error } from './logging.js';
 
 function validateFilePath(filePath: string): boolean {
-  // Prevent path traversal attacks
   const normalizedPath = normalize(filePath);
-
-  // Get common allowed directories (expanded for preload context)
   const allowedDirs = [
     process.env.HOME || '',
     process.env.TMPDIR || '/tmp',
@@ -21,7 +18,7 @@ function validateFilePath(filePath: string): boolean {
     '/boot',
     '/proc',
     '/sys',
-  ].filter(Boolean); // Remove empty strings
+  ].filter(Boolean);
 
   return (
     allowedDirs.some((dir) => normalizedPath.startsWith(dir)) &&
@@ -67,22 +64,20 @@ export async function readTextFile(filePath: string): Promise<string> {
     return content;
   } catch (err) {
     error(`File read error: ${err instanceof Error ? err.message : String(err)}`);
-
-    // Provide more specific error messages
     if (err instanceof Error) {
       const nodeError = err as NodeJS.ErrnoException;
       if (nodeError.code === 'ENOENT') {
-        throw new Error(`File not found: ${filePath}`);
+        throw new Error(`File not found: ${filePath}`, { cause: err });
       }
       if (nodeError.code === 'EACCES') {
-        throw new Error(`Permission denied: ${filePath}`);
+        throw new Error(`Permission denied: ${filePath}`, { cause: err });
       }
       if (nodeError.code === 'EISDIR') {
-        throw new Error(`Path is a directory, not a file: ${filePath}`);
+        throw new Error(`Path is a directory, not a file: ${filePath}`, { cause: err });
       }
-      throw new Error(`Failed to read file: ${err.message}`);
+      throw new Error(`Failed to read file: ${err.message}`, { cause: err });
     }
-    throw new Error(`Failed to read file: ${err}`);
+    throw new Error(`Failed to read file: ${err}`, { cause: err });
   }
 }
 
@@ -92,14 +87,13 @@ export async function writeTextFile(filePath: string, contents: string): Promise
       throw new Error('Invalid file path');
     }
     if (contents.length > 10 * 1024 * 1024) {
-      // 10MB limit
       throw new Error('Content too large');
     }
     await writeFile(filePath, contents, 'utf-8');
     return true;
   } catch (err) {
     error(`File write error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to write file: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to write file: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
@@ -112,7 +106,7 @@ export async function createDirectory(dirPath: string): Promise<boolean> {
     return true;
   } catch (err) {
     error(`Directory creation error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to create directory: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to create directory: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
@@ -125,6 +119,6 @@ export async function removeFile(filePath: string): Promise<boolean> {
     return true;
   } catch (err) {
     error(`File removal error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to remove file: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to remove file: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }

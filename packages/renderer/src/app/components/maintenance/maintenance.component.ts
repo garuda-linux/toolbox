@@ -387,29 +387,26 @@ export class MaintenanceComponent implements OnInit {
    * Check for existing configuration files for whether they exist.
    */
   async checkExistingConfigs() {
-    const promises: Promise<ResettableConfig>[] = [];
     this.logger.debug('Checking existing configs');
 
-    for (const config of this.resettableConfigs()) {
-      const promise = new Promise<ResettableConfig>(async (resolve) => {
+    const results = await Promise.all(
+      this.resettableConfigs().map(async (config) => {
         for (const file of config.files) {
           this.logger.trace(`Checking ${file}`);
           try {
             if (await this.fsService.exists(file)) {
               this.logger.trace(`${file} exists`);
-              resolve({ ...config, exists: true });
-              return;
+              return { ...config, exists: true };
             }
           } catch (error) {
             this.logger.error(`Error checking ${file}: ${error}`);
-            resolve({ ...config, exists: false });
+            return { ...config, exists: false };
           }
         }
-        return resolve({ ...config, exists: false });
-      });
-      promises.push(promise);
-    }
-    this.resettableConfigs.set(await Promise.all(promises));
+        return { ...config, exists: false };
+      }),
+    );
+    this.resettableConfigs.set(results);
 
     this.logger.debug(`Checked existing configs: ${JSON.stringify(this.resettableConfigs())}`);
   }

@@ -522,7 +522,9 @@ export class OsInteractService {
         const cmd = `pkexec cat "${hostPath}"`;
         const result = await this.taskManagerService.executeAndWaitBash(cmd);
         if (result.code === 0) return result.stdout;
-        throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`);
+        throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`, {
+          cause: error,
+        });
       }
       throw error;
     }

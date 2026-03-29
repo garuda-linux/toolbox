@@ -288,7 +288,7 @@ export class BootRepairService {
     const path = isCurrentRoot ? '/' : '/tmp/grub-install-mnt';
     const effectiveRoot = isLuksPartition ? '/dev/mapper/chrootfs' : rootPartition;
 
-    let installCmd = '';
+    let installCmd: string;
     if (isEsp) {
       installCmd = [
         `test -d "${path}/boot/efi" || mkdir -p "${path}/boot/efi"`,

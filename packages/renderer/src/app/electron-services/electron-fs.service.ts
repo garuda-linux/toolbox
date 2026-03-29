@@ -25,9 +25,9 @@ export class ElectronFsService {
     } catch (error) {
       // Re-throw with more context
       if (error instanceof Error) {
-        throw new Error(`Failed to read file ${filePath}: ${error.message}`);
+        throw new Error(`Failed to read file ${filePath}: ${error.message}`, { cause: error });
       }
-      throw new Error(`Failed to read file ${filePath}: ${error}`);
+      throw new Error(`Failed to read file ${filePath}: ${error}`, { cause: error });
     }
   }
 
@@ -49,7 +49,7 @@ export class ElectronFsService {
       return JSON.parse(content) as T;
     } catch (error) {
       if (error instanceof SyntaxError) {
-        throw new Error(`Invalid JSON in file ${filePath}: ${error.message}`);
+        throw new Error(`Invalid JSON in file ${filePath}: ${error.message}`, { cause: error });
       }
       throw error;
     }

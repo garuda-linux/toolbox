@@ -1,6 +1,6 @@
 import type { AppModule } from '../AppModule.js';
 import type { ModuleContext } from '../ModuleContext.js';
-import { ipcMain, clipboard, nativeImage } from 'electron';
+import { clipboard, ipcMain, nativeImage } from 'electron';
 import { Logger } from '../logging/logging.js';
 
 class ClipboardModule implements AppModule {
@@ -21,7 +21,9 @@ class ClipboardModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Clipboard writeText error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to write text to clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to write text to clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -30,7 +32,9 @@ class ClipboardModule implements AppModule {
         return clipboard.readText();
       } catch (error: any) {
         this.logger.error(`Clipboard readText error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to read text from clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to read text from clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -40,7 +44,9 @@ class ClipboardModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Clipboard clear error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to clear clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to clear clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -54,7 +60,9 @@ class ClipboardModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Clipboard writeHTML error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to write HTML to clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to write HTML to clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -63,7 +71,9 @@ class ClipboardModule implements AppModule {
         return clipboard.readHTML();
       } catch (error: any) {
         this.logger.error(`Clipboard readHTML error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to read HTML from clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to read HTML from clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -77,7 +87,9 @@ class ClipboardModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Clipboard writeRTF error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to write RTF to clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to write RTF to clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -86,7 +98,9 @@ class ClipboardModule implements AppModule {
         return clipboard.readRTF();
       } catch (error: any) {
         this.logger.error(`Clipboard readRTF error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to read RTF from clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to read RTF from clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -106,7 +120,9 @@ class ClipboardModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Clipboard writeImage error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to write image to clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to write image to clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -119,7 +135,9 @@ class ClipboardModule implements AppModule {
         return image.toDataURL();
       } catch (error: any) {
         this.logger.error(`Clipboard readImage error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to read image from clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to read image from clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -139,7 +157,9 @@ class ClipboardModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Clipboard writeBookmark error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to write bookmark to clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to write bookmark to clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -153,7 +173,9 @@ class ClipboardModule implements AppModule {
         return clipboard.readBookmark();
       } catch (error: any) {
         this.logger.error(`Clipboard readBookmark error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to read bookmark from clipboard: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to read bookmark from clipboard: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -165,7 +187,10 @@ class ClipboardModule implements AppModule {
         this.logger.error(
           `Clipboard availableFormats error: ${error instanceof Error ? error.message : String(error)}`,
         );
-        throw new Error(`Failed to get available clipboard formats: ${error instanceof Error ? error.message : error}`);
+        throw new Error(
+          `Failed to get available clipboard formats: ${error instanceof Error ? error.message : error}`,
+          { cause: error },
+        );
       }
     });
 
@@ -177,7 +202,9 @@ class ClipboardModule implements AppModule {
         return clipboard.has(format);
       } catch (error: any) {
         this.logger.error(`Clipboard has error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check clipboard format: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check clipboard format: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -189,7 +216,9 @@ class ClipboardModule implements AppModule {
         return clipboard.read(format);
       } catch (error: any) {
         this.logger.error(`Clipboard read error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to read clipboard format: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to read clipboard format: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -200,7 +229,9 @@ class ClipboardModule implements AppModule {
         return formats.length === 0;
       } catch (error: any) {
         this.logger.error(`Clipboard isEmpty error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check if clipboard is empty: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check if clipboard is empty: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -210,7 +241,9 @@ class ClipboardModule implements AppModule {
         return text.length > 0;
       } catch (error: any) {
         this.logger.error(`Clipboard hasText error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check if clipboard has text: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check if clipboard has text: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -220,7 +253,9 @@ class ClipboardModule implements AppModule {
         return !image.isEmpty();
       } catch (error: any) {
         this.logger.error(`Clipboard hasImage error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to check if clipboard has image: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to check if clipboard has image: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
   }

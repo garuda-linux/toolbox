@@ -45,7 +45,9 @@ export class Api {
         statusText: response.statusText,
       } as R;
     } catch (error) {
-      throw new Error(`GET request failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(`GET request failed: ${error instanceof Error ? error.message : String(error)}`, {
+        cause: error,
+      });
     }
   }
 
@@ -68,7 +70,9 @@ export class Api {
         statusText: response.statusText,
       } as R;
     } catch (error) {
-      throw new Error(`POST request failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(`POST request failed: ${error instanceof Error ? error.message : String(error)}`, {
+        cause: error,
+      });
     }
   }
 
@@ -91,7 +95,9 @@ export class Api {
         statusText: response.statusText,
       } as R;
     } catch (error) {
-      throw new Error(`PUT request failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(`PUT request failed: ${error instanceof Error ? error.message : String(error)}`, {
+        cause: error,
+      });
     }
   }
 
@@ -110,7 +116,9 @@ export class Api {
         statusText: response.statusText,
       } as R;
     } catch (error) {
-      throw new Error(`DELETE request failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(`DELETE request failed: ${error instanceof Error ? error.message : String(error)}`, {
+        cause: error,
+      });
     }
   }
 

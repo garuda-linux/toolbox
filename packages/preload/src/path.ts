@@ -49,7 +49,7 @@ export async function appConfigDir(): Promise<string> {
     return getAppConfigDir();
   } catch (err: any) {
     error(`Path appConfigDir error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to get app config directory: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to get app config directory: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
@@ -58,16 +58,18 @@ export async function appDataDir(): Promise<string> {
     return getAppDataDir();
   } catch (err: any) {
     error(`Path appDataDir error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to get app data directory: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to get app data directory: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
 export async function appLocalDataDir(): Promise<string> {
   try {
-    return getAppDataDir(); // Same as appDataDir for most cases
+    return getAppDataDir();
   } catch (err: any) {
     error(`Path appLocalDataDir error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to get app local data directory: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to get app local data directory: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }
 
@@ -76,7 +78,7 @@ export async function appCacheDir(): Promise<string> {
     return getAppCacheDir();
   } catch (err: any) {
     error(`Path appCacheDir error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to get app cache directory: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to get app cache directory: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
@@ -85,7 +87,7 @@ export async function pathResolve(...paths: string[]): Promise<string> {
     return resolve(...paths);
   } catch (err: any) {
     error(`Path resolve error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to resolve path: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to resolve path: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
@@ -93,8 +95,8 @@ export async function pathJoin(...paths: string[]): Promise<string> {
   try {
     return join(...paths);
   } catch (err: any) {
-    error(`Path join error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to join paths: ${err instanceof Error ? err.message : err}`);
+    error(`Path JOIN error: ${err instanceof Error ? err.message : String(err)}`);
+    throw new Error(`Failed to join paths: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }
 
@@ -106,13 +108,11 @@ export async function resolveResource(resourcePath: string): Promise<string> {
       return join(process.cwd(), 'src', 'assets', resourcePath);
     }
 
-    // In production, try to determine the resource path
-    // This is a best-effort approach since we don't have access to app.getAppPath()
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
     return join(__dirname, '../dist/browser/assets', resourcePath);
   } catch (err: any) {
     error(`Path resolveResource error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to resolve resource path: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Failed to resolve resource path: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 }

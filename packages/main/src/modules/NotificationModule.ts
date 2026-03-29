@@ -70,7 +70,9 @@ class NotificationModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Notification send error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to send notification: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to send notification: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -129,6 +131,7 @@ class NotificationModule implements AppModule {
           );
           throw new Error(
             `Failed to send notification with actions: ${error instanceof Error ? error.message : error}`,
+            { cause: error },
           );
         }
       },

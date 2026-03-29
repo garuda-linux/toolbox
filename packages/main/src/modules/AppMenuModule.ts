@@ -45,7 +45,9 @@ class AppMenuModule implements AppModule {
         return true;
       } catch (error: unknown) {
         this.logger.error(`App menu update error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to update app menu: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`Failed to update app menu: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 

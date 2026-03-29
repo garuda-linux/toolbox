@@ -68,11 +68,12 @@ export class BootRepairComponent implements OnInit {
     return root ? this.luksRootMap()[root] : false;
   });
   isCurrentInstalledRoot = computed(() => {
-    if (this.configService.state().isLiveSystem !== false || !this.selectedRoot()) {
+    const selectedRoot = this.selectedRoot();
+    if (this.configService.state().isLiveSystem !== false || !selectedRoot) {
       return false;
     }
 
-    const selectedRootPath = '/dev/' + this.selectedRoot()!;
+    const selectedRootPath = '/dev/' + selectedRoot;
     const current = this.currentRootPartition();
     const selectedNorm = this.normalizeDevice(selectedRootPath);
     const currentNorm = this.normalizeDevice(current);
@@ -82,7 +83,7 @@ export class BootRepairComponent implements OnInit {
     }
 
     if (current.startsWith('/dev/mapper/luks-')) {
-      const expectedMapperPath = this.luksMapperPathMap()[this.selectedRoot()!] || '';
+      const expectedMapperPath = this.luksMapperPathMap()[selectedRoot] || '';
       return expectedMapperPath.length > 0 && this.normalizeDevice(expectedMapperPath) === currentNorm;
     }
 
@@ -192,7 +193,8 @@ export class BootRepairComponent implements OnInit {
         }
 
         const locationValues = new Set(this.locations().map((option) => option.value));
-        if (!this.selectedLocation() || !locationValues.has(this.selectedLocation()!)) {
+        const selectedLocation = this.selectedLocation();
+        if (!selectedLocation || !locationValues.has(selectedLocation)) {
           this.selectedLocation.set(this.locations()[0]?.value ?? null);
         }
 

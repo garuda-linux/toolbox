@@ -65,7 +65,7 @@ class HttpModule implements AppModule {
         return result;
       } catch (error: any) {
         this.logger.error(`HTTP GET error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`HTTP GET request failed: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`HTTP GET request failed: ${error instanceof Error ? error.message : error}`, { cause: error });
       }
     });
 
@@ -114,7 +114,9 @@ class HttpModule implements AppModule {
           return result;
         } catch (error: any) {
           this.logger.error(`HTTP POST error: ${error instanceof Error ? error.message : String(error)}`);
-          throw new Error(`HTTP POST request failed: ${error instanceof Error ? error.message : error}`);
+          throw new Error(`HTTP POST request failed: ${error instanceof Error ? error.message : error}`, {
+            cause: error,
+          });
         }
       },
     );
@@ -164,7 +166,9 @@ class HttpModule implements AppModule {
           return result;
         } catch (error: any) {
           this.logger.error(`HTTP PUT error: ${error instanceof Error ? error.message : String(error)}`);
-          throw new Error(`HTTP PUT request failed: ${error instanceof Error ? error.message : error}`);
+          throw new Error(`HTTP PUT request failed: ${error instanceof Error ? error.message : error}`, {
+            cause: error,
+          });
         }
       },
     );
@@ -211,7 +215,9 @@ class HttpModule implements AppModule {
         return result;
       } catch (error: any) {
         this.logger.error(`HTTP DELETE error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`HTTP DELETE request failed: ${error instanceof Error ? error.message : error}`);
+        throw new Error(`HTTP DELETE request failed: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
   }

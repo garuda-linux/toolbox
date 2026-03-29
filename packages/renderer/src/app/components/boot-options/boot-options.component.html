@@ -190,17 +190,17 @@
         <p-card>
           <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
-              <label class="font-bold">{{ t('bootOptions.grubBackground') }}</label>
+              <span class="font-bold">{{ t('bootOptions.grubBackground') }}</span>
               <div class="flex gap-2">
-                <input class="w-full" [ngModel]="grubBackground()" pInputText readonly />
+                <input class="w-full" id="grubBackground" [ngModel]="grubBackground()" pInputText readonly />
                 <p-button (onClick)="selectFile('background')" icon="pi pi-folder-open" />
               </div>
             </div>
 
             <div class="flex flex-col gap-2">
-              <label class="font-bold">{{ t('bootOptions.grubTheme') }}</label>
+              <span class="font-bold">{{ t('bootOptions.grubTheme') }}</span>
               <div class="flex gap-2">
-                <input class="w-full" [ngModel]="grubTheme()" pInputText readonly />
+                <input class="w-full" id="grubTheme" [ngModel]="grubTheme()" pInputText readonly />
                 <p-button (onClick)="selectFile('theme')" icon="pi pi-folder-open" />
               </div>
             </div>

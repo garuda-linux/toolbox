@@ -105,15 +105,9 @@ export class DynamicCheckboxesComponent {
           if (disabler) break;
         }
 
-        let disabled = false;
+        const isDisabled = !disabler || !disabler.checked;
 
-        if (!disabler) {
-          disabled = true;
-        } else {
-          disabled = !disabler.checked;
-        }
-
-        if (disabled && !this.checkState(entry, true)) {
+        if (isDisabled && !this.checkState(entry, true)) {
           this.osInteractService.toggle(entry.check.name, entry.check.type, true);
           entry.disabled = true;
         } else entry.disabled = false;
