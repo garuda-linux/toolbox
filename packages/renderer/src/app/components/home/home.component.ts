@@ -146,14 +146,8 @@ export class HomeComponent {
     {
       title: 'welcome.network',
       subTitle: 'welcome.networkSub',
-      // routerLink: '/network',
+      routerLink: '/network-assistant',
       icon: 'pi pi-globe',
-      command: async () => {
-        const installed = await this.osInteractService.ensurePackageArchlinux('garuda-network-assistant');
-        if (installed) {
-          await this.taskManagerService.executeAndWaitBash('/usr/lib/garuda/pkexec-gui garuda-network-assistant');
-        }
-      },
     },
     {
       title: 'welcome.install',

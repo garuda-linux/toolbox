@@ -65,6 +65,12 @@ export const routes: Routes = [
     path: 'boot-options',
     loadComponent: () => import('./components/boot-options/boot-options.component').then((m) => m.BootOptionsComponent),
   },
+  {
+    title: 'Network Assistant',
+    path: 'network-assistant',
+    loadComponent: () =>
+      import('./components/network-assistant/network-assistant.component').then((m) => m.NetworkAssistantComponent),
+  },
 ];
 
 @NgModule({

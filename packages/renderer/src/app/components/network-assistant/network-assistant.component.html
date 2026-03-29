@@ -1,0 +1,480 @@
+<div class="p-4" *transloco="let t; prefix: 'networkAssistant'">
+  <div class="surface-section px-4 text-center md:px-6 lg:px-8 mb-6">
+    <div class="text-3xl font-bold">
+      <span class="text-color">{{ t('title') }}</span>
+      <span class="text-primary">{{ t('titleTwo') }}</span>
+    </div>
+  </div>
+
+  <p-tabs [value]="0">
+    <p-tablist>
+      <p-tab [value]="0"><i class="pi pi-info-circle mr-2"></i>{{ t('tabs.status') }}</p-tab>
+      <p-tab [value]="1"><i class="pi pi-cog mr-2"></i>{{ t('tabs.drivers') }}</p-tab>
+      <p-tab [value]="2"><i class="pi pi-wrench mr-2"></i>{{ t('tabs.hardware') }}</p-tab>
+      <p-tab [value]="3"><i class="pi pi-search mr-2"></i>{{ t('tabs.diagnostics') }}</p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <!-- Status Panel -->
+      <p-tabpanel [value]="0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <p-card [header]="t('connectionInfo')">
+            <div class="flex flex-col gap-3">
+              <div class="flex justify-between items-center">
+                <span class="font-bold">{{ t('routerIp') }}:</span>
+                <span>{{ status()?.routerIp || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-bold">{{ t('externalIp') }}:</span>
+                <span>{{ status()?.externalIp || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-bold">{{ t('interface') }}:</span>
+                <p-tag [value]="status()?.interface || 'N/A'" severity="secondary" />
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="font-bold">{{ t('internet') }}:</span>
+                <p-tag
+                  [severity]="status()?.hasInternet ? 'success' : 'danger'"
+                  [value]="status()?.hasInternet ? t('connected') : t('disconnected')"
+                />
+              </div>
+            </div>
+          </p-card>
+
+          <p-card [header]="t('quickToggles')">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col gap-2">
+                <span class="font-bold">{{ t('wifi') }}</span>
+                <p-toggleButton
+                  class="w-full"
+                  [ngModel]="status()?.wifiEnabled"
+                  [disabled]="!status()?.wifiAvailable"
+                  (onChange)="toggleWifi($event.checked)"
+                  onLabel="{{ t('on') }}"
+                  offLabel="{{ t('off') }}"
+                />
+                @if (!status()?.wifiAvailable) {
+                  <small class="text-color-secondary">{{ t('notAvailable') }}</small>
+                }
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-bold">{{ t('bluetooth') }}</span>
+                <p-toggleButton
+                  class="w-full"
+                  [ngModel]="status()?.btEnabled"
+                  [disabled]="!status()?.btAvailable"
+                  (onChange)="toggleBt($event.checked)"
+                  onLabel="{{ t('on') }}"
+                  offLabel="{{ t('off') }}"
+                />
+                @if (!status()?.btAvailable) {
+                  <small class="text-color-secondary">{{ t('notAvailable') }}</small>
+                }
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-bold">{{ t('airplaneMode') }}</span>
+                <p-toggleButton
+                  class="w-full"
+                  [ngModel]="status()?.airplaneEnabled"
+                  (onChange)="toggleAirplane($event.checked)"
+                  onLabel="{{ t('enabled') }}"
+                  offLabel="{{ t('disabled') }}"
+                />
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-bold">{{ t('gps') }}</span>
+                <p-toggleButton
+                  class="w-full"
+                  [ngModel]="status()?.gpsEnabled"
+                  (onChange)="toggleGps($event.checked)"
+                  onLabel="{{ t('enabled') }}"
+                  offLabel="{{ t('disabled') }}"
+                />
+              </div>
+            </div>
+          </p-card>
+
+          <p-card class="md:col-span-2" [header]="t('services')">
+            <div class="flex flex-wrap gap-6">
+              <div class="flex items-center gap-3">
+                @if (status()?.nmInstalled) {
+                  <span class="font-bold">NetworkManager:</span>
+                  <p-tag
+                    [severity]="status()?.nmActive ? 'success' : 'danger'"
+                    [value]="status()?.nmActive ? t('active') : t('inactive')"
+                  />
+                  @if (!status()?.nmActive) {
+                    <p-button
+                      [label]="t('enable')"
+                      [text]="true"
+                      (onClick)="enableService('NetworkManager')"
+                      size="small"
+                    />
+                  }
+                }
+              </div>
+              <div class="flex items-center gap-3">
+                @if (status()?.connmanInstalled) {
+                  <span class="font-bold">ConnMan:</span>
+                  <p-tag
+                    [severity]="status()?.connmanActive ? 'success' : 'danger'"
+                    [value]="status()?.connmanActive ? t('active') : t('inactive')"
+                  />
+                  @if (!status()?.connmanActive) {
+                    <p-button [label]="t('enable')" [text]="true" (onClick)="enableService('connman')" size="small" />
+                  }
+                }
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="font-bold">Bluetooth:</span>
+                <p-tag
+                  [severity]="status()?.bluetoothActive ? 'success' : 'danger'"
+                  [value]="status()?.bluetoothActive ? t('active') : t('inactive')"
+                />
+                @if (!status()?.bluetoothActive) {
+                  <p-button [label]="t('enable')" [text]="true" (onClick)="enableService('bluetooth')" size="small" />
+                }
+              </div>
+            </div>
+          </p-card>
+
+          <p-card class="md:col-span-2" [header]="t('wifiHotspot')">
+            <div class="flex items-center gap-4">
+              <p>{{ t('wifiHotspotDesc') }}</p>
+              <p-button [label]="t('openHotspot')" (onClick)="openWifiHotspot()" icon="pi pi-globe" />
+            </div>
+          </p-card>
+        </div>
+      </p-tabpanel>
+
+      <!-- Drivers Panel -->
+      <p-tabpanel [value]="1">
+        <div class="mt-4 flex flex-col gap-6">
+          @if (driversForTable().length > 0) {
+            <p-card>
+              <p-table
+                class="p-datatable-sm"
+                #dt
+                [value]="driversForTable()"
+                [style]="{ width: '100%' }"
+                [paginator]="true"
+                [rows]="10"
+                [rowsPerPageOptions]="[10, 20, 30]"
+                [globalFilterFields]="['name', 'category', 'statusFilter']"
+              >
+                <ng-template #header>
+                  <tr>
+                    <th style="width: 30%">
+                      <div class="flex items-center justify-between">
+                        {{ t('driver') }}
+                        <p-columnFilter type="text" field="name" display="menu" />
+                      </div>
+                    </th>
+                    <th style="width: 20%">
+                      <div class="flex items-center justify-between">
+                        {{ t('category') }}
+                        <p-columnFilter [showMenu]="false" field="category" matchMode="equals">
+                          <ng-template #filter let-value let-filterCallback="filterCallback">
+                            <p-select
+                              [ngModel]="value"
+                              [options]="driverCategoryOptions()"
+                              [placeholder]="t('any')"
+                              [showClear]="true"
+                              (onChange)="filterCallback($event.value)"
+                              style="min-width: 12rem"
+                              optionLabel="label"
+                              optionValue="value"
+                            >
+                              <ng-template #item let-option>
+                                <p-tag [value]="option.label" severity="info" />
+                              </ng-template>
+                            </p-select>
+                          </ng-template>
+                        </p-columnFilter>
+                      </div>
+                    </th>
+                    <th style="width: 20%">
+                      <div class="flex items-center justify-between">
+                        {{ t('status') }}
+                        <p-columnFilter [showMenu]="false" field="statusFilter" matchMode="equals">
+                          <ng-template #filter let-value let-filterCallback="filterCallback">
+                            <p-select
+                              [ngModel]="value"
+                              [options]="driverStatusOptions()"
+                              [placeholder]="t('any')"
+                              [showClear]="true"
+                              (onChange)="filterCallback($event.value)"
+                              style="min-width: 12rem"
+                              optionLabel="label"
+                              optionValue="value"
+                            >
+                              <ng-template #item let-option>
+                                <p-tag [value]="option.label" [severity]="option.severity" />
+                              </ng-template>
+                            </p-select>
+                          </ng-template>
+                        </p-columnFilter>
+                      </div>
+                    </th>
+                    <th style="width: 10%;">{{ t('actions') }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template #body let-driver>
+                  <tr>
+                    <td class="font-mono">{{ driver.name }}</td>
+                    <td>
+                      <p-tag [value]="driver.category" severity="info" />
+                    </td>
+                    <td>
+                      @switch (driver.status) {
+                        @case ('loaded') {
+                          <p-tag value="Loaded" severity="success" />
+                        }
+                        @case ('unloaded') {
+                          <p-tag value="Unloaded" severity="warn" />
+                        }
+                        @case ('blacklisted') {
+                          <p-tag value="Blacklisted" severity="danger" />
+                        }
+                        @case ('blacklisted-broadcom') {
+                          <p-tag value="Broadcom" severity="warn" />
+                        }
+                        @case ('blacklisted-r8168') {
+                          <p-tag value="r8168" severity="warn" />
+                        }
+                        @default {
+                          <p-tag [value]="driver.status" severity="secondary" />
+                        }
+                      }
+                    </td>
+                    <td style="text-align: right">
+                      @switch (driver.status) {
+                        @case ('loaded') {
+                          <div class="flex gap-2 justify-content-end">
+                            <p-button
+                              [text]="true"
+                              [severity]="'danger'"
+                              [pTooltip]="t('unloadDriver')"
+                              (onClick)="unloadDriver(driver.name)"
+                              icon="pi pi-stop-circle"
+                            />
+                            <p-button
+                              [text]="true"
+                              [pTooltip]="t('blacklistDriver')"
+                              (onClick)="blacklistDriver(driver.name, true)"
+                              icon="pi pi-lock"
+                              severity="secondary"
+                            />
+                          </div>
+                        }
+                        @case ('unloaded') {
+                          <div class="flex gap-2 justify-content-end">
+                            <p-button
+                              [text]="true"
+                              [pTooltip]="t('loadDriver')"
+                              (onClick)="loadDriver(driver.name)"
+                              icon="pi pi-play-circle"
+                              severity="success"
+                            />
+                            <p-button
+                              [text]="true"
+                              [pTooltip]="t('blacklistDriver')"
+                              (onClick)="blacklistDriver(driver.name, true)"
+                              icon="pi pi-lock"
+                              severity="secondary"
+                            />
+                          </div>
+                        }
+                        @default {
+                          <div class="flex gap-2 justify-content-end">
+                            <p-button
+                              [text]="true"
+                              [pTooltip]="t('loadDriver')"
+                              (onClick)="loadDriver(driver.name)"
+                              icon="pi pi-play-circle"
+                              severity="success"
+                            />
+                            <p-button
+                              [text]="true"
+                              [pTooltip]="t('unblacklistDriver')"
+                              (onClick)="blacklistDriver(driver.name, false)"
+                              icon="pi pi-lock-open"
+                              severity="success"
+                            />
+                          </div>
+                        }
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template #emptymessage>
+                  <tr>
+                    <td colspan="4">{{ t('noDrivers') }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </p-card>
+          } @else {
+            <div class="text-center p-8 text-color-secondary">
+              <i class="pi pi-inbox text-4xl mb-4"></i>
+              <p>{{ t('noDrivers') }}</p>
+            </div>
+          }
+        </div>
+      </p-tabpanel>
+
+      <!-- Hardware Panel -->
+      <p-tabpanel [value]="2">
+        <div class="mt-4 flex flex-col gap-6">
+          @if (ethernetHardware().length > 0) {
+            <p-card [header]="t('ethernetControllers')">
+              <div class="flex flex-col gap-2">
+                @for (hw of ethernetHardware(); track $index) {
+                  <button
+                    class="flex items-center gap-3 p-3 surface-ground border-round cursor-pointer hover:surface-hover text-left w-full border-none bg-transparent"
+                    [pTooltip]="t('clickToCopy')"
+                    [tooltipOptions]="{ tooltipPosition: 'bottom' }"
+                    (click)="copyHwItem(hw.raw)"
+                    type="button"
+                  >
+                    <i [class]="'pi ' + getHwIcon(hw.type) + ' text-primary'"></i>
+                    <span class="font-mono text-sm">{{ hw.description }}</span>
+                  </button>
+                }
+              </div>
+            </p-card>
+          }
+
+          @if (wirelessHardware().length > 0) {
+            <p-card [header]="t('wirelessControllers')">
+              <div class="flex flex-col gap-2">
+                @for (hw of wirelessHardware(); track $index) {
+                  <button
+                    class="flex items-center gap-3 p-3 surface-ground border-round cursor-pointer hover:surface-hover text-left w-full border-none bg-transparent"
+                    [pTooltip]="t('clickToCopy')"
+                    [tooltipOptions]="{ tooltipPosition: 'bottom' }"
+                    (click)="copyHwItem(hw.raw)"
+                    type="button"
+                  >
+                    <i [class]="'pi ' + getHwIcon(hw.type) + ' text-primary'"></i>
+                    <span class="font-mono text-sm">{{ hw.description }}</span>
+                  </button>
+                }
+              </div>
+            </p-card>
+          }
+
+          @if (bluetoothHardware().length > 0) {
+            <p-card [header]="t('bluetoothDevices')">
+              <div class="flex flex-col gap-2">
+                @for (hw of bluetoothHardware(); track $index) {
+                  <button
+                    class="flex items-center gap-3 p-3 surface-ground border-round cursor-pointer hover:surface-hover text-left w-full border-none bg-transparent"
+                    [pTooltip]="t('clickToCopy')"
+                    (click)="copyHwItem(hw.raw)"
+                    type="button"
+                  >
+                    <i [class]="'pi ' + getHwIcon(hw.type) + ' text-primary'"></i>
+                    <span class="font-mono text-sm">{{ hw.description }}</span>
+                  </button>
+                }
+              </div>
+            </p-card>
+          }
+
+          @if (hardware().length > 0) {
+            <p-card>
+              <div class="flex justify-end">
+                <p-button [label]="t('copyAll')" [text]="true" (onClick)="copyAllHwItems()" icon="pi pi-copy" />
+              </div>
+            </p-card>
+          }
+
+          @if (hardware().length === 0) {
+            <div class="text-center p-8 text-color-secondary">
+              <i class="pi pi-microchip text-4xl mb-4"></i>
+              <p>{{ t('noHardware') }}</p>
+            </div>
+          }
+        </div>
+      </p-tabpanel>
+
+      <!-- Diagnostics Panel -->
+      <p-tabpanel [value]="3">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+          <p-card [header]="t('ping')">
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <label for="ping-host">{{ t('targetHost') }}</label>
+                <input
+                  class="w-full"
+                  id="ping-host"
+                  [ngModel]="pingOptions().host"
+                  (ngModelChange)="networkService.pingOptions.set({ ...pingOptions(), host: $event })"
+                  pInputText
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-2">
+                  <label for="ping-count">{{ t('count') }}</label>
+                  <p-inputNumber
+                    id="ping-count"
+                    [ngModel]="pingOptions().count"
+                    [min]="1"
+                    [max]="100"
+                    [showButtons]="true"
+                    (ngModelChange)="networkService.pingOptions.set({ ...pingOptions(), count: $event })"
+                  />
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label for="ping-timeout">{{ t('timeout') }}</label>
+                  <p-inputNumber
+                    id="ping-timeout"
+                    [ngModel]="pingOptions().timeout"
+                    [min]="1"
+                    [max]="60"
+                    [showButtons]="true"
+                    (ngModelChange)="networkService.pingOptions.set({ ...pingOptions(), timeout: $event })"
+                  />
+                </div>
+              </div>
+              <p-button [label]="t('runPing')" (onClick)="runPing()" icon="pi pi-play" />
+            </div>
+          </p-card>
+
+          <p-card [header]="t('traceroute')">
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <label for="trace-host">{{ t('targetHost') }}</label>
+                <input
+                  class="w-full"
+                  id="trace-host"
+                  [ngModel]="tracerouteOptions().host"
+                  (ngModelChange)="networkService.tracerouteOptions.set({ ...tracerouteOptions(), host: $event })"
+                  pInputText
+                />
+              </div>
+              <div class="flex flex-col gap-2">
+                <label for="trace-hops">{{ t('maxHops') }}</label>
+                <p-inputNumber
+                  id="trace-hops"
+                  [ngModel]="tracerouteOptions().maxHops"
+                  [min]="1"
+                  [max]="64"
+                  [showButtons]="true"
+                  (ngModelChange)="networkService.tracerouteOptions.set({ ...tracerouteOptions(), maxHops: $event })"
+                />
+              </div>
+              <p-button [label]="t('runTraceroute')" (onClick)="runTraceroute()" icon="pi pi-directions" />
+            </div>
+          </p-card>
+        </div>
+
+        <div class="mt-6">
+          <ng-terminal class="block w-full h-64" #term [xtermOptions]="xtermOptions()" />
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>

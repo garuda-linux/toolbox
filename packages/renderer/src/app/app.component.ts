@@ -10,7 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { Router, RouterModule, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
+import { NavigationCancel, NavigationError, NavigationStart, Router, RouterModule } from '@angular/router';
 import { ScrollTop } from 'primeng/scrolltop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { eventsOn, windowClose, windowRequestClose } from './electron-services/electron-api-utils.js';
@@ -182,11 +182,10 @@ export class AppComponent implements OnInit {
     {
       id: 'network-tools',
       icon: 'pi pi-globe',
-      label: 'Network tools',
+      label: 'Network Assistant',
       translocoKey: 'menu.network',
-      command: () => this.router.navigate(['/net-tools']),
-      // TODO: implement
-      visible: false,
+      command: () => this.router.navigate(['/network-assistant']),
+      visible: true,
     },
     {
       id: 'config-files',
