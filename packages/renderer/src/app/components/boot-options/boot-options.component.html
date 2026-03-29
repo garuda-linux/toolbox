@@ -1,0 +1,216 @@
+<ng-container *transloco="let t">
+  <div class="surface-section px-4 text-center md:px-6 lg:px-8">
+    <div class="text-3xl font-bold">
+      <span class="text-color">{{ t('bootOptions.title') }}</span>
+      <span class="text-primary">{{ t('bootOptions.titleTwo') }}</span>
+    </div>
+  </div>
+
+  <div class="p-10">
+    @if (loading()) {
+      <div class="flex justify-center p-8">
+        <p-progressSpinner />
+      </div>
+    } @else if (error()) {
+      <p-message [text]="error()!" severity="error" />
+      <div class="mt-4">
+        <p-button
+          [label]="t('bootOptions.retry')"
+          (onClick)="isLive() ? loadPartitions() : loadSettings()"
+          icon="pi pi-refresh"
+        />
+      </div>
+    } @else if (isLive() && !bootService.getChroot()) {
+      <div class="flex flex-col gap-4">
+        <p-message [text]="t('bootOptions.partitionSelectHint')" severity="info" />
+        <p-select
+          class="w-full"
+          [(ngModel)]="selectedPartition"
+          [options]="partitions()"
+          [placeholder]="t('bootOptions.partitionSelect')"
+          optionLabel="name"
+          optionValue="name"
+        >
+          <ng-template #item let-part>
+            <div class="flex flex-col">
+              <span class="font-bold">{{ part.name }} ({{ part.size }})</span>
+              <small>{{ part.label }} - {{ part.fstype }}</small>
+            </div>
+          </ng-template>
+        </p-select>
+        <p-button [label]="t('bootOptions.apply')" [disabled]="!selectedPartition()" (onClick)="onPartitionSelect()" />
+      </div>
+    } @else {
+      <div class="grid gap-6">
+        <p-card [ngClass]="{ 'garuda-button-shine': highlightDefaultEntry() }">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <label class="font-bold" for="default-entry">{{ t('bootOptions.defaultEntry') }}</label>
+                <p-select
+                  class="w-full"
+                  id="default-entry"
+                  [(ngModel)]="selectedDefaultEntry"
+                  [options]="selectableEntries()"
+                  [placeholder]="t('bootOptions.selectEntry')"
+                  [disabled]="saveDefault()"
+                  optionLabel="label"
+                  optionValue="id"
+                >
+                  <ng-template #item let-entry>
+                    <div class="flex flex-col">
+                      <span>{{ entry.label }}</span>
+                      @if (entry.parentLabel) {
+                        <small class="text-surface-400">({{ entry.parentLabel }})</small>
+                      }
+                    </div>
+                  </ng-template>
+                </p-select>
+                <small>{{ t('bootOptions.defaultEntryHint') }}</small>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="font-bold" for="timeout">{{ t('bootOptions.timeout') }}</label>
+                <p-inputNumber
+                  class="w-full"
+                  id="timeout"
+                  [(ngModel)]="timeout"
+                  [showButtons]="true"
+                  [min]="0"
+                  [max]="300"
+                  suffix=" seconds"
+                />
+                <small>{{ t('bootOptions.timeoutHint') }}</small>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-4 pt-6">
+              <div class="flex items-center gap-2">
+                <p-checkbox [(ngModel)]="saveDefault" [binary]="true" inputId="save-default" />
+                <label class="font-bold cursor-pointer" for="save-default">{{ t('bootOptions.saveDefault') }}</label>
+              </div>
+              <small class="-mt-2 ml-8">{{ t('bootOptions.saveDefaultHint') }}</small>
+
+              <div class="flex items-center gap-2">
+                <p-checkbox [(ngModel)]="flatMenus" [binary]="true" inputId="flat-menus" />
+                <label class="font-bold cursor-pointer" for="flat-menus">{{ t('bootOptions.flatMenus') }}</label>
+              </div>
+              <small class="-mt-2 ml-8">{{ t('bootOptions.flatMenusHint') }}</small>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card>
+          <div class="flex flex-col gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-2">
+                <label class="font-bold" for="kernel-params">{{ t('bootOptions.kernelParams') }}</label>
+                <input
+                  class="w-full"
+                  id="kernel-params"
+                  [(ngModel)]="kernelParameters"
+                  [placeholder]="t('bootOptions.kernelParamsPlaceholder')"
+                  pInputText
+                />
+                <small>{{ t('bootOptions.kernelParamsHint') }}</small>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="font-bold" for="msg-level">{{ t('bootOptions.messageLevel') }}</label>
+                <p-select
+                  class="w-full"
+                  id="msg-level"
+                  [(ngModel)]="messageLevel"
+                  [options]="messageLevelOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                >
+                  <ng-template #item let-option>
+                    {{ t(option.label) }}
+                  </ng-template>
+                  <ng-template #selectedItem let-selectedOption>
+                    @if (selectedOption) {
+                      {{ t(selectedOption.label) }}
+                    }
+                  </ng-template>
+                </p-select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <p-checkbox [(ngModel)]="enableBootsplash" [binary]="true" inputId="enable-bootsplash" />
+                  <label class="font-bold cursor-pointer" for="enable-bootsplash">{{
+                    t('bootOptions.enableBootsplash')
+                  }}</label>
+                </div>
+                <small class="ml-8">{{ t('bootOptions.enableBootsplashHint') }}</small>
+
+                <div class="flex items-center gap-2 mt-2">
+                  <p-checkbox [(ngModel)]="mitigationsOff" [binary]="true" inputId="mitigations-off" />
+                  <label class="font-bold cursor-pointer" for="mitigations-off">{{
+                    t('bootOptions.mitigationsOff')
+                  }}</label>
+                </div>
+                <small class="ml-8">{{ t('bootOptions.mitigationsOffHint') }}</small>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <p-checkbox [(ngModel)]="sysrqEnabled" [binary]="true" inputId="sysrq-enabled" />
+                  <label class="font-bold cursor-pointer" for="sysrq-enabled">{{
+                    t('bootOptions.sysrqEnabled')
+                  }}</label>
+                </div>
+                <small class="ml-8">{{ t('bootOptions.sysrqEnabledHint') }}</small>
+              </div>
+            </div>
+          </div>
+        </p-card>
+
+        @if (enableBootsplash()) {
+          <p-card>
+            <div class="flex flex-col gap-2">
+              @if (isPlymouthInstalled()) {
+                <label class="font-bold" for="plymouth-theme">{{ t('bootOptions.plymouthTheme') }}</label>
+                <p-select
+                  class="w-full"
+                  id="plymouth-theme"
+                  [(ngModel)]="selectedPlymouthTheme"
+                  [options]="plymouthThemes()"
+                  [placeholder]="t('bootOptions.selectTheme')"
+                />
+                <small>{{ t('bootOptions.plymouthThemeHint') }}</small>
+              } @else if (osInteract.check('plymouth', 'pkg')) {
+                <p-message [text]="t('bootOptions.plymouthPending')" severity="info" />
+              } @else {
+                <p-message [text]="t('bootOptions.plymouthNotInstalled')" severity="warn" />
+              }
+            </div>
+          </p-card>
+        }
+
+        <p-card>
+          <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-2">
+              <label class="font-bold">{{ t('bootOptions.grubBackground') }}</label>
+              <div class="flex gap-2">
+                <input class="w-full" [ngModel]="grubBackground()" pInputText readonly />
+                <p-button (onClick)="selectFile('background')" icon="pi pi-folder-open" />
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="font-bold">{{ t('bootOptions.grubTheme') }}</label>
+              <div class="flex gap-2">
+                <input class="w-full" [ngModel]="grubTheme()" pInputText readonly />
+                <p-button (onClick)="selectFile('theme')" icon="pi pi-folder-open" />
+              </div>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    }
+  </div>
+</ng-container>

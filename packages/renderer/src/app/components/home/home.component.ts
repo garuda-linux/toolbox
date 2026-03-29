@@ -134,14 +134,8 @@ export class HomeComponent {
     {
       title: 'welcome.bootTools',
       subTitle: 'welcome.bootToolsSub',
-      // routerLink: '/boot-tools',
+      routerLink: '/boot-options',
       icon: 'pi pi-hammer',
-      command: async () => {
-        const installed = await this.osInteractService.ensurePackageArchlinux('garuda-boot-options');
-        if (installed) {
-          await this.taskManagerService.executeAndWaitBash('/usr/lib/garuda/pkexec-gui garuda-boot-options');
-        }
-      },
     },
     {
       title: 'welcome.diagnostics',

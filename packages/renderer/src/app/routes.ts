@@ -55,6 +55,11 @@ export const routes: Routes = [
     path: 'config-files',
     loadComponent: () => import('./components/config-files/config-files.component').then((m) => m.ConfigFilesComponent),
   },
+  {
+    title: 'Boot Options',
+    path: 'boot-options',
+    loadComponent: () => import('./components/boot-options/boot-options.component').then((m) => m.BootOptionsComponent),
+  },
 ];
 
 @NgModule({

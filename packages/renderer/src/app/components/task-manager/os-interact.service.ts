@@ -12,7 +12,13 @@ import {
 import type { ChildProcess } from '../../types/shell';
 import { Logger } from '../../logging/logging';
 import { CONFIGS } from '../config-entries/configs';
-import { exists, homeConfigExists, readHomeConfig, readTextFile } from '../../electron-services/electron-api-utils';
+import {
+  exists,
+  homeConfigExists,
+  pathResolve,
+  readHomeConfig,
+  readTextFile,
+} from '../../electron-services/electron-api-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +27,8 @@ export class OsInteractService {
   private readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();
   private readonly taskManagerService = inject(TaskManagerService);
+
+  private chrootPath = '';
 
   // A list of all currently installed packages
   private readonly installedPackages = signal<Map<string, boolean>>(new Map());
@@ -34,6 +42,9 @@ export class OsInteractService {
   private readonly currentHblock = signal<boolean>(false);
   private readonly currentIwd = signal<boolean>(false);
   private readonly currentConfigs = signal<Map<string, boolean>>(new Map());
+  private readonly currentGrub = signal<Map<string, string>>(new Map());
+  private readonly currentPlymouthTheme = signal<string | null>(null);
+  private readonly isInitialized = signal<boolean>(false);
 
   private readonly wantedPackages = signal<Map<string, boolean>>(new Map());
   private readonly wantedLocales = signal<Map<string, boolean>>(new Map());
@@ -42,6 +53,9 @@ export class OsInteractService {
   private readonly wantedServicesUser = signal<Map<string, boolean>>(new Map());
   private readonly wantedGroups = signal<Map<string, boolean>>(new Map());
   private readonly wantedConfigs = signal<Map<string, boolean>>(new Map());
+  private readonly wantedGrub = signal<Map<string, string>>(new Map());
+  private readonly wantedPlymouthTheme = signal<string | null>(null);
+  private readonly wantedBootScript = signal<string | null>(null);
 
   readonly wantedDns = signal<DnsProvider | null>(null);
   readonly wantedShell = signal<ShellEntry | null>(null);
@@ -321,6 +335,7 @@ export class OsInteractService {
         this.taskManagerService.findTaskById('os-interact-locales'),
         this.taskManagerService.findTaskById('os-interact-configs-user'),
         this.taskManagerService.findTaskById('os-interact-configs-sudo'),
+        this.taskManagerService.findTaskById('os-interact-boot-options'),
       ].forEach((task) => {
         if (task !== null) {
           this.taskManagerService.removeTask(task);
@@ -423,6 +438,45 @@ export class OsInteractService {
       );
     }
 
+    const wGrub = this.wantedGrub();
+    const wPlyTheme = this.wantedPlymouthTheme();
+    const wScript = this.wantedBootScript();
+
+    if (wGrub.size > 0 || wPlyTheme !== null || wScript !== null) {
+      let script = '';
+      if (wScript) {
+        script = wScript;
+      } else {
+        const prefix = this.chrootPath || '';
+        if (prefix) {
+          script += `ROOT_PATH="${prefix}"\nmount /dev/$(lsblk -no NAME -p | grep $(basename $ROOT_PATH)) $ROOT_PATH || true\nmount -o bind /dev $ROOT_PATH/dev\nmount -o bind /sys $ROOT_PATH/sys\nmount -o bind /proc $ROOT_PATH/proc\n`;
+        }
+        const grubFile = prefix ? `${prefix}/etc/default/grub` : '/etc/default/grub';
+        const updateGrubCmd = prefix ? `chroot ${prefix} update-grub` : 'update-grub';
+        const plymouthCmd = (theme: string) =>
+          prefix ? `chroot ${prefix} plymouth-set-default-theme -R ${theme}` : `plymouth-set-default-theme -R ${theme}`;
+
+        script += `GRUB_FILE="${grubFile}"\ntemp_grub=$(mktemp)\ncp "$GRUB_FILE" "$temp_grub"\n`;
+        for (const [key, value] of wGrub) {
+          script += `if grep -q "^${key}=" "$temp_grub"; then\n  sed -i 's|^${key}=.*|${key}="${value}"|' "$temp_grub"\nelse\n  echo '${key}="${value}"' >> "$temp_grub"\nfi\n`;
+        }
+        script += `cp "$temp_grub" "$GRUB_FILE"\nrm "$temp_grub"\n`;
+        if (wPlyTheme) script += `\n${plymouthCmd(wPlyTheme)}`;
+        script += `\n${updateGrubCmd}`;
+        if (prefix) script += `\numount $ROOT_PATH/proc $ROOT_PATH/sys $ROOT_PATH/dev\numount $ROOT_PATH\n`;
+      }
+      tasks.push(
+        this.taskManagerService.createTask(
+          15,
+          'os-interact-boot-options',
+          true,
+          'os-interact.boot-options',
+          'pi pi-hammer',
+          script,
+        ),
+      );
+    }
+
     tasks.forEach((task) => {
       this.taskManagerService.scheduleTask(task);
     });
@@ -446,6 +500,34 @@ export class OsInteractService {
     );
   }
 
+  setChroot(path: string) {
+    this.chrootPath = path;
+  }
+
+  getChroot() {
+    return this.chrootPath;
+  }
+
+  private wrapCommand(command: string): string {
+    if (!this.chrootPath) return command;
+    return `chroot ${this.chrootPath} ${command}`;
+  }
+
+  private async readPrivilegedFile(virtualPath: string): Promise<string> {
+    const hostPath = this.chrootPath ? await pathResolve(this.chrootPath, virtualPath) : virtualPath;
+    try {
+      return await readTextFile(hostPath);
+    } catch (error: any) {
+      if (error.message?.includes('EACCES') || error.message?.includes('Permission denied')) {
+        const cmd = `pkexec cat "${hostPath}"`;
+        const result = await this.taskManagerService.executeAndWaitBash(cmd);
+        if (result.code === 0) return result.stdout;
+        throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`);
+      }
+      throw error;
+    }
+  }
+
   /**
    * Update the current state of the system asynchronously.
    */
@@ -461,7 +543,51 @@ export class OsInteractService {
       this.getLocales().then((res) => this.currentLocales.set(res)),
       this.getIwd().then((res) => this.currentIwd.set(res)),
       this.getConfigs().then((res) => this.currentConfigs.set(res)),
+      this.getGrubSettings().then((res) => this.currentGrub.set(res)),
+      this.getPlymouthInfo().then((res) => this.currentPlymouthTheme.set(res.currentTheme || null)),
     ]);
+    this.isInitialized.set(true);
+  }
+
+  async getGrubSettings(): Promise<Map<string, string>> {
+    try {
+      const content = await this.readPrivilegedFile('/etc/default/grub');
+      const map = new Map<string, string>();
+      content.split('\n').forEach((line) => {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) return;
+        const [k, ...v] = trimmed.split('=');
+        let val = v.join('=').trim();
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'")))
+          val = val.substring(1, val.length - 1);
+        map.set(k.trim(), val);
+      });
+      return map;
+    } catch (e) {
+      this.logger.error(`Failed to fetch GRUB settings: ${e}`);
+      return new Map();
+    }
+  }
+
+  async getPlymouthInfo(): Promise<{ themes: string[]; currentTheme: string; isInstalled: boolean }> {
+    try {
+      const inst = await this.taskManagerService.executeAndWaitBash(this.wrapCommand('pacman -Qq plymouth'));
+      const isInstalled = inst.code === 0;
+      if (!isInstalled) return { themes: [], currentTheme: '', isInstalled: false };
+      const list = await this.taskManagerService.executeAndWaitBash(this.wrapCommand('plymouth-set-default-theme -l'));
+      const curr = await this.taskManagerService.executeAndWaitBash(this.wrapCommand('plymouth-set-default-theme'));
+      return {
+        themes: list.stdout
+          .trim()
+          .split('\n')
+          .filter((t) => t.trim()),
+        currentTheme: curr.stdout.trim(),
+        isInstalled: true,
+      };
+    } catch (e) {
+      this.logger.error(`Failed to fetch Plymouth info: ${e}`);
+      return { themes: [], currentTheme: '', isInstalled: false };
+    }
   }
 
   /**
@@ -655,6 +781,54 @@ export class OsInteractService {
   toggleConfigState(key: string): void {
     const current = this.configs().get(key) ?? false;
     this.setWantedConfig(key, !current);
+  }
+
+  setGrubSetting(key: string, value: string): void {
+    this.wantedGrub.update((m) => {
+      const nm = new Map(m);
+      const current = this.currentGrub().get(key);
+      const defaults: Record<string, string> = {
+        GRUB_DISABLE_SUBMENU: 'n',
+        GRUB_SAVEDEFAULT: 'false',
+        GRUB_TIMEOUT: '5',
+        GRUB_DEFAULT: '0',
+      };
+      if (key === 'GRUB_CMDLINE_LINUX_DEFAULT') {
+        const norm = (s: string) => (s || '').split(/\s+/).filter(Boolean).sort().join(' ');
+        if (norm(current || '') === norm(value)) {
+          nm.delete(key);
+          return nm;
+        }
+      }
+      if (current === undefined && (defaults[key] === value || value === '')) {
+        nm.delete(key);
+        return nm;
+      }
+      if (key === 'GRUB_SAVEDEFAULT' && value === 'false') {
+        const def = nm.get('GRUB_DEFAULT') || this.currentGrub().get('GRUB_DEFAULT');
+        if (def !== 'saved' && current === undefined) {
+          nm.delete(key);
+          return nm;
+        }
+      }
+      if (current === value) {
+        nm.delete(key);
+        return nm;
+      }
+      nm.set(key, value);
+      return nm;
+    });
+  }
+
+  setWantedPlymouthTheme(theme: string | null): void {
+    const current = this.currentPlymouthTheme();
+    const nT = theme === '' ? null : theme;
+    const nC = current === '' ? null : current;
+    this.wantedPlymouthTheme.set(nC === nT ? null : nT);
+  }
+
+  setWantedBootScript(script: string | null): void {
+    this.wantedBootScript.set(script);
   }
 
   /**

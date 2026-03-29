@@ -93,7 +93,7 @@ export class GamingComponent implements OnInit {
    * @param fragment The fragment to navigate to.
    */
   navigate(fragment: string) {
-    void this.router.navigate([], { fragment, info: { disableViewTransition: true } }));
+    void this.router.navigate([], { fragment, info: { disableViewTransition: true } });
   }
   /**
    * Get the source path for an icon.

@@ -770,7 +770,8 @@
     "locales": "Change enabled locales",
     "configs": "Change system configurations",
     "configs-user": "Change user configurations",
-    "configs-system": "Change system configurations"
+    "configs-system": "Change system configurations",
+    "boot-options": "Apply boot settings"
   },
   "packages": {
     "title": "Discover ",
@@ -798,9 +799,10 @@
     "dkmsModulesMissingTip": "Missing DKMS modules",
     "headers": "Headers",
     "headersMissing": "Missing kernel headers",
-    "headersMissingTip": "Click me to schedule the installation of the missing headers",
-    "active": "Active kernel:"
+    "active": "Active kernel:",
+    "setDefault": "Set default kernel"
   },
+
   "languagePacks": {
     "locale": "Locale",
     "selected": "Selected",
@@ -1156,5 +1158,48 @@
       "udev_rules": "udev rules for hardware device behavior"
     },
     "wiki": "Wiki"
+  },
+  "bootOptions": {
+    "title": "Boot ",
+    "titleTwo": "options",
+    "defaultEntry": "Default boot entry",
+    "defaultEntryHint": "The menu entry that will be booted by default.",
+    "selectEntry": "Select a boot entry",
+    "timeout": "Menu timeout",
+    "timeoutHint": "The time in seconds to wait before booting the default entry.",
+    "kernelParams": "Kernel parameters",
+    "kernelParamsPlaceholder": "e.g. quiet splash",
+    "kernelParamsHint": "Additional parameters passed to the Linux kernel at boot.",
+    "messageLevel": "Boot message detail",
+    "messageLevelLimited": "Limited (Quiet + Hush)",
+    "messageLevelDetailed": "Detailed (Quiet)",
+    "messageLevelVeryDetailed": "Very Detailed (All messages)",
+    "enableBootsplash": "Enable bootsplash",
+    "enableBootsplashHint": "Shows a graphical animation (Plymouth) during the boot process instead of text messages.",
+    "plymouthNotInstalled": "Plymouth is not installed. Enable it to install it on apply.",
+    "plymouthPending": "Plymouth is scheduled for installation. You can choose a theme after the installation is complete.",
+    "plymouthTheme": "Plymouth theme (bootsplash)",
+    "plymouthThemeHint": "The theme shown during the system boot process.",
+    "selectTheme": "Select a Plymouth theme",
+    "mitigationsOff": "Disable CPU mitigations",
+    "mitigationsOffHint": "Disables CPU security mitigations for better performance but less security.",
+    "sysrqEnabled": "Always enable SysRq",
+    "sysrqEnabledHint": "Enables the Magic SysRq key for emergency system control.",
+    "flatMenus": "Enable flat menus",
+    "flatMenusHint": "Disables GRUB submenus, showing all entries in the top-level menu.",
+    "saveDefault": "Save default entry",
+    "saveDefaultHint": "Automatically save the last selected boot entry as default.",
+    "grubBackground": "GRUB background image",
+    "selectBackground": "Select background image",
+    "grubTheme": "GRUB theme",
+    "selectGrubTheme": "Select GRUB theme",
+    "partitionSelect": "Select partition",
+    "partitionSelectHint": "Please select the partition containing your Garuda installation.",
+    "apply": "Apply settings",
+    "retry": "Retry",
+    "savedTitle": "Settings saved",
+    "savedMessage": "Boot settings have been applied successfully.",
+    "savedMessageScheduled": "Boot settings have been added to pending operations.",
+    "errorTitle": "Error"
   }
 }

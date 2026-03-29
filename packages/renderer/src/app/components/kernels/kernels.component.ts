@@ -11,10 +11,12 @@ import { ConfigService } from '../config/config.service';
 import { Tooltip } from 'primeng/tooltip';
 import { Skeleton } from 'primeng/skeleton';
 import { KernelsService } from './kernels.service';
+import { Router } from '@angular/router';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-kernels',
-  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton],
+  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, Button],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',
 })
@@ -23,6 +25,7 @@ export class KernelsComponent {
   protected readonly kernelsService = inject(KernelsService);
   private readonly osInteractService = inject(OsInteractService);
   private readonly taskManagerService = inject(TaskManagerService);
+  private readonly router = inject(Router);
 
   /**
    * Toggles the selected state of a package.
@@ -135,5 +138,9 @@ export class KernelsComponent {
 
   counterArray(number: number): number[] {
     return Array.from({ length: number }, (_, i) => i);
+  }
+
+  navigateToDefaultKernel(): void {
+    this.router.navigate(['/boot-options'], { queryParams: { highlight: 'default-entry' } });
   }
 }
