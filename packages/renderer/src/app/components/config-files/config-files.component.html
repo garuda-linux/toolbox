@@ -52,7 +52,14 @@
 
       <ng-template #body let-file>
         <tr>
-          <td>{{ file.name }}</td>
+          <td>
+            <span class="flex items-center gap-2">
+              <span>{{ file.name }}</span>
+              @if (file.directory) {
+                <i class="pi pi-folder text-primary" aria-hidden="true"></i>
+              }
+            </span>
+          </td>
           <td class="font-mono text-sm">{{ file.path }}</td>
           <td>{{ t(file.description) }}</td>
           <td>
@@ -79,4 +86,60 @@
       </ng-template>
     </p-table>
   </div>
+
+  <p-dialog
+    [header]="selectedDirectory()?.name || t('configFiles.title')"
+    [modal]="true"
+    [style]="{ width: '70vw' }"
+    [visible]="directoryDialogVisible()"
+    (visibleChange)="directoryDialogVisible.set($event)"
+    (onHide)="closeDirectoryDialog()"
+  >
+    <p-table [value]="directoryFiles()" dataKey="path">
+      <ng-template #header>
+        <tr>
+          <th>{{ t('configFiles.name') }}</th>
+          <th>{{ t('configFiles.path') }}</th>
+          <th>{{ t('configFiles.description') }}</th>
+          <th class="w-32">{{ t('configFiles.wiki') }}</th>
+          <th class="w-32">{{ t('configFiles.actions') }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-file>
+        <tr>
+          <td>
+            <span class="flex items-center gap-2">
+              @if (file.directory) {
+                <i class="pi pi-folder text-primary" aria-hidden="true"></i>
+              }
+              <span>{{ file.name }}</span>
+            </span>
+          </td>
+          <td class="font-mono text-sm">{{ file.path }}</td>
+          <td>{{ t(file.description) }}</td>
+          <td>
+            @if (file.wikiLink) {
+              <p-button
+                [text]="true"
+                (onClick)="shellService.open(file.wikiLink)"
+                icon="pi pi-external-link"
+                pTooltip="Arch Wiki"
+                tooltipPosition="top"
+              />
+            }
+          </td>
+          <td>
+            <p-button
+              [outlined]="true"
+              [label]="t('configFiles.edit')"
+              (onClick)="editConfig(file)"
+              icon="pi pi-pencil"
+              size="small"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>
 </ng-container>

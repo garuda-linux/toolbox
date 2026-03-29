@@ -8,6 +8,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
 import { ElectronFsService, ElectronShellService } from '../../electron-services';
 
 interface ConfigFile {
@@ -17,11 +18,21 @@ interface ConfigFile {
   category: string;
   wikiLink?: string;
   alwaysShow?: boolean;
+  directory?: boolean;
 }
 
 @Component({
   selector: 'toolbox-config-files',
-  imports: [TableModule, TranslocoDirective, Button, IconFieldModule, InputIconModule, InputTextModule, TooltipModule],
+  imports: [
+    TableModule,
+    TranslocoDirective,
+    Button,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    TooltipModule,
+    DialogModule,
+  ],
   templateUrl: './config-files.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +43,9 @@ export class ConfigFilesComponent implements OnInit {
   protected readonly shellService = inject(ElectronShellService);
 
   readonly configFiles = signal<ConfigFile[]>([]);
+  readonly directoryDialogVisible = signal(false);
+  readonly selectedDirectory = signal<ConfigFile | null>(null);
+  readonly directoryFiles = signal<ConfigFile[]>([]);
 
   private sortConfigFiles(files: ConfigFile[]): ConfigFile[] {
     const categoryOrder = new Map<string, number>();
@@ -51,6 +65,41 @@ export class ConfigFilesComponent implements OnInit {
 
       return a.name.localeCompare(b.name);
     });
+  }
+
+  private resolvePath(path: string): string {
+    const userHome = this.configService.state().userHome;
+    if (path.startsWith('~/')) {
+      return path.replace('~', userHome);
+    }
+    return path;
+  }
+
+  private quoteForShell(value: string): string {
+    return `'${value.replaceAll("'", `'"'"'`)}'`;
+  }
+
+  private async listDirectoryFiles(parent: ConfigFile): Promise<ConfigFile[]> {
+    const fullPath = this.resolvePath(parent.path);
+    const cmd =
+      `if [ -d ${this.quoteForShell(fullPath)} ]; then ` +
+      `find ${this.quoteForShell(fullPath)} -mindepth 1 -maxdepth 1 -type f -printf '%f\\n' | sort; fi`;
+    const res = await this.taskManager.executeAndWaitBash(cmd);
+    if (res.code !== 0) {
+      return [];
+    }
+
+    return res.stdout
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+      .map((name) => ({
+        name,
+        path: `${parent.path.replace(/\/$/, '')}/${name}`,
+        description: parent.description,
+        category: parent.category,
+        wikiLink: parent.wikiLink,
+      }));
   }
 
   private readonly ALL_CONFIG_FILES: ConfigFile[] = [
@@ -281,6 +330,13 @@ export class ConfigFilesComponent implements OnInit {
       wikiLink: 'https://wiki.archlinux.org/title/CPU_frequency_scaling',
     },
     {
+      name: 'Garuda Update Config',
+      path: '/etc/garuda/garuda-update/config',
+      description: 'configFiles.desc.garudaUpdateConfig',
+      category: 'Garuda Tools',
+      wikiLink: 'https://wiki.garudalinux.org/garuda-update',
+    },
+    {
       name: 'Snapper Root Config',
       path: '/etc/snapper/configs/root',
       description: 'configFiles.desc.snapperRoot',
@@ -338,6 +394,14 @@ export class ConfigFilesComponent implements OnInit {
       category: 'Graphics and Display',
       wikiLink: 'https://wiki.archlinux.org/title/Xorg#Configuration',
     },
+    {
+      name: 'Xorg Config',
+      path: '/etc/X11/xorg.conf.d',
+      description: 'configFiles.desc.xorg_conf_d',
+      category: 'Graphics and Display',
+      wikiLink: 'https://wiki.archlinux.org/title/Xorg#Configuration',
+      directory: true,
+    },
 
     /* Logging */
     {
@@ -369,6 +433,14 @@ export class ConfigFilesComponent implements OnInit {
       description: 'configFiles.desc.networkmanager',
       category: 'Network',
       wikiLink: 'https://wiki.archlinux.org/title/NetworkManager',
+    },
+    {
+      name: 'systemd-networkd',
+      path: '/etc/systemd/network',
+      description: 'configFiles.desc.systemd_network',
+      category: 'Network',
+      wikiLink: 'https://wiki.archlinux.org/title/Systemd-networkd',
+      directory: true,
     },
     {
       name: 'nftables Config',
@@ -420,6 +492,14 @@ export class ConfigFilesComponent implements OnInit {
       description: 'configFiles.desc.mirrorlist',
       category: 'Package Management',
       wikiLink: 'https://wiki.archlinux.org/title/Mirrors',
+    },
+    {
+      name: 'Pacman Hooks',
+      path: '/etc/pacman.d/hooks',
+      description: 'configFiles.desc.pacman_hooks',
+      category: 'Package Management',
+      wikiLink: 'https://wiki.archlinux.org/title/Pacman#Hooks',
+      directory: true,
     },
     {
       name: 'Pacman Config',
@@ -529,6 +609,22 @@ export class ConfigFilesComponent implements OnInit {
       wikiLink: 'https://wiki.archlinux.org/title/Systemd/User',
     },
     {
+      name: 'Systemd Services',
+      path: '/etc/systemd/system',
+      description: 'configFiles.desc.systemd_services',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Systemd',
+      directory: true,
+    },
+    {
+      name: 'Systemd User Units',
+      path: '/etc/systemd/user',
+      description: 'configFiles.desc.systemd_services',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Systemd/User',
+      directory: true,
+    },
+    {
       name: 'Timezone',
       path: '/etc/timezone',
       description: 'configFiles.desc.timezone',
@@ -541,6 +637,22 @@ export class ConfigFilesComponent implements OnInit {
       description: 'configFiles.desc.vconsole',
       category: 'System',
       wikiLink: 'https://wiki.archlinux.org/title/Linux_console',
+    },
+    {
+      name: 'modprobe.d',
+      path: '/etc/modprobe.d',
+      description: 'configFiles.desc.modprobe_d',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Kernel_module',
+      directory: true,
+    },
+    {
+      name: 'udev Rules',
+      path: '/etc/udev/rules.d',
+      description: 'configFiles.desc.udev_rules',
+      category: 'System',
+      wikiLink: 'https://wiki.archlinux.org/title/Udev',
+      directory: true,
     },
 
     /* Theming */
@@ -743,6 +855,22 @@ export class ConfigFilesComponent implements OnInit {
       wikiLink: 'https://hg.sr.ht/~scoopta/wofi',
     },
     {
+      name: 'Wayland Config',
+      path: '~/.config/wayland',
+      description: 'configFiles.desc.wayland_conf',
+      category: 'User Environment',
+      wikiLink: 'https://wiki.archlinux.org/title/Wayland',
+      directory: true,
+    },
+    {
+      name: 'User systemd Units',
+      path: '~/.config/systemd/user',
+      description: 'configFiles.desc.systemd_services',
+      category: 'User Environment',
+      wikiLink: 'https://wiki.archlinux.org/title/Systemd/User',
+      directory: true,
+    },
+    {
       name: 'ZSH',
       path: '~/.zshrc',
       description: 'configFiles.desc.zsh',
@@ -779,17 +907,61 @@ export class ConfigFilesComponent implements OnInit {
       category: 'Users and Authentication',
       wikiLink: 'https://wiki.archlinux.org/title/Sudo',
     },
+    {
+      name: 'PAM',
+      path: '/etc/pam.d',
+      description: 'configFiles.desc.pam_d',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/PAM',
+      directory: true,
+    },
+    {
+      name: 'cron.*',
+      path: '/etc/cron.d',
+      description: 'configFiles.desc.cron',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Cron',
+      directory: true,
+    },
+    {
+      name: 'cron.daily',
+      path: '/etc/cron.daily',
+      description: 'configFiles.desc.cron',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Cron',
+      directory: true,
+    },
+    {
+      name: 'cron.hourly',
+      path: '/etc/cron.hourly',
+      description: 'configFiles.desc.cron',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Cron',
+      directory: true,
+    },
+    {
+      name: 'cron.monthly',
+      path: '/etc/cron.monthly',
+      description: 'configFiles.desc.cron',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Cron',
+      directory: true,
+    },
+    {
+      name: 'cron.weekly',
+      path: '/etc/cron.weekly',
+      description: 'configFiles.desc.cron',
+      category: 'Users and Authentication',
+      wikiLink: 'https://wiki.archlinux.org/title/Cron',
+      directory: true,
+    },
   ];
 
   async ngOnInit() {
-    const userHome = this.configService.state().userHome;
     const availableFiles: ConfigFile[] = [];
 
     for (const file of this.ALL_CONFIG_FILES) {
-      let fullPath = file.path;
-      if (fullPath.startsWith('~/')) {
-        fullPath = fullPath.replace('~', userHome);
-      }
+      const fullPath = this.resolvePath(file.path);
 
       if (file.alwaysShow || (await this.electronFs.exists(fullPath, true))) {
         availableFiles.push(file);
@@ -800,12 +972,16 @@ export class ConfigFilesComponent implements OnInit {
   }
 
   async editConfig(file: ConfigFile) {
-    const userHome = this.configService.state().userHome;
-    let fullPath = file.path;
-
-    if (fullPath.startsWith('~/')) {
-      fullPath = fullPath.replace('~', userHome);
+    if (file.directory) {
+      const files = await this.listDirectoryFiles(file);
+      this.selectedDirectory.set(file);
+      this.directoryFiles.set(files);
+      this.directoryDialogVisible.set(true);
+      return;
     }
+
+    const fullPath = this.resolvePath(file.path);
+    const userHome = this.configService.state().userHome;
 
     const needsRoot = !fullPath.startsWith(userHome);
     if (needsRoot) {
@@ -853,5 +1029,11 @@ export class ConfigFilesComponent implements OnInit {
     } else {
       await this.taskManager.executeAndWaitBashTerminal(cmd);
     }
+  }
+
+  closeDirectoryDialog() {
+    this.directoryDialogVisible.set(false);
+    this.selectedDirectory.set(null);
+    this.directoryFiles.set([]);
   }
 }
