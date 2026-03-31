@@ -41,6 +41,7 @@ import { AppDesigner } from './components/designer/app.designer';
 import { DesignerService } from './components/designer/designerservice';
 import { WallpaperService } from './components/wallpaper/wallpaper.service';
 import { ContextMenuModule } from 'primeng/contextmenu';
+import { Menu } from 'primeng/menu';
 import { ShellBarEndDirective, ShellComponent } from '@garudalinux/core';
 
 @Component({
@@ -65,6 +66,7 @@ import { ShellBarEndDirective, ShellComponent } from '@garudalinux/core';
     NgClass,
     ContextMenuModule,
     AppDesigner,
+    Menu,
   ],
   selector: 'toolbox-root',
   templateUrl: './app.component.html',
@@ -333,6 +335,47 @@ export class AppComponent implements OnInit {
    */
   selectedModule = signal<string>('');
   moduleSuggestions = signal<ModuleSearchEntry[]>([]);
+  dropdownModel = signal<MenuItem[]>([]);
+  dropdownVisible = signal<boolean>(false);
+  dropdownTop = signal<number>(0);
+  dropdownLeft = signal<number>(0);
+  activeDropdownId = signal<string | undefined>(undefined);
+
+  readonly menubarModel = computed<MenuItem[]>(() => {
+    return this.menuItems().map((item) => {
+      if (item.items && item.items.length > 0) {
+        return {
+          ...item,
+          items: undefined,
+          command: (event: { originalEvent: Event }) => this.toggleDropdown(event.originalEvent, item),
+        };
+      }
+      return {
+        ...item,
+        items: undefined,
+      };
+    });
+  });
+
+  private toggleDropdown(event: Event, item: MenuItem): void {
+    const isSameItem = this.activeDropdownId() === item.id;
+
+    if (isSameItem && this.dropdownVisible()) {
+      this.dropdownVisible.set(false);
+      this.activeDropdownId.set(undefined);
+      return;
+    }
+
+    const target = (event.currentTarget || event.target) as HTMLElement;
+    const anchor = target.closest('.p-menubar-item') || target;
+    const rect = anchor.getBoundingClientRect();
+
+    this.dropdownModel.set(item.items ?? []);
+    this.dropdownTop.set(rect.bottom + 8);
+    this.dropdownLeft.set(rect.left);
+    this.activeDropdownId.set(item.id);
+    this.dropdownVisible.set(true);
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -385,9 +428,16 @@ export class AppComponent implements OnInit {
 
     this.setupAppMenuHandlers();
     void this.updateApplicationMenu(this.menuItems());
-
     this.wallpaperService.initialize(this.renderer, this.elementRef);
+
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (this.dropdownVisible() && !(e.target as HTMLElement).closest('.p-menubar-item')) {
+        this.dropdownVisible.set(false);
+        this.activeDropdownId.set(undefined);
+      }
+    });
   }
+
 
   /**
    * Handle all relevant keyboard events on the app window. Attaches to the document.

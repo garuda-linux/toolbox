@@ -210,8 +210,40 @@ p-splitbutton > div > button.garuda-button-shine {
   content: '';
 }
 
-.background-filter {
-  @apply relative;
+.garuda-shell__dropdown {
+  position: fixed !important;
+  backdrop-filter: blur(5px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(5px) saturate(130%) !important;
+  background: rgb(from var(--p-menubar-background, var(--p-dialog-background)) r g b / 0.2) !important;
+  z-index: 10000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+
+  --p-menu-item-color: var(--p-primary-color);
+  --p-menu-item-icon-color: var(--p-primary-color);
+  --p-menu-item-focus-background: rgba(255, 255, 255, 0.05);
+
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: block !important;
+}
+
+.garuda-shell__dropdown--visible {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+.garuda-shell__dropdown,
+.garuda-shell__dropdown .p-menu,
+.garuda-shell__dropdown .p-menu-list {
+  border: none !important;
 }
 
 .non-blurred {

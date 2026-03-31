@@ -1,7 +1,7 @@
 <ng-container *transloco="let t">
   <div class="background-filter">
     <div class="background non-blurred">
-      <garuda-shell id="shellBar" [menuItems]="menuItems()">
+      <garuda-shell id="shellBar" [menuItems]="menubarModel()">
         <div garudaShellBarEnd>
           @if (loadingService.loading()) {
             <p-progress-spinner
@@ -56,6 +56,16 @@
         <p-scroll-top />
       </garuda-shell>
     </div>
+
+    <p-menu
+      #dropdownMenu
+      [model]="dropdownModel()"
+      [class.garuda-shell__dropdown--visible]="dropdownVisible()"
+      [style.top.px]="dropdownTop()"
+      [style.left.px]="dropdownLeft()"
+      class="garuda-shell__dropdown"
+      (click)="dropdownVisible.set(false)"
+    />
 
     <p-confirm-dialog />
     <p-context-menu [model]="rightClickMenu()" [global]="true" />
