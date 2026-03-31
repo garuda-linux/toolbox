@@ -6,7 +6,6 @@ import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
 import { Button } from 'primeng/button';
 import { RadioButton } from 'primeng/radiobutton';
-import { ProgressSpinner } from 'primeng/progressspinner';
 import { Password } from 'primeng/password';
 import { ConfirmationService } from 'primeng/api';
 import { BootRepairService, DiskInfo } from './boot-repair.service';
@@ -17,21 +16,12 @@ import { BackupRestoreTarget, BootInstallTarget, BootRepairAction } from './type
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'toolbox-boot-repair',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslocoDirective,
-    Card,
-    Select,
-    Button,
-    RadioButton,
-    ProgressSpinner,
-    Password,
-  ],
+  imports: [CommonModule, FormsModule, TranslocoDirective, Card, Select, Button, RadioButton, Password, Tooltip],
   templateUrl: './boot-repair.component.html',
   styleUrl: './boot-repair.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

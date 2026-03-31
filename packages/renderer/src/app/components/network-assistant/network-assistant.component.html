@@ -1,11 +1,12 @@
 <div class="p-4" *transloco="let t; prefix: 'networkAssistant'">
-  <div class="surface-section px-4 text-center md:px-6 lg:px-8 mb-6">
+  <div class="surface-section px-4 text-center md:px-6 lg:px-8">
     <div class="text-3xl font-bold">
       <span class="text-color">{{ t('title') }}</span>
       <span class="text-primary">{{ t('titleTwo') }}</span>
     </div>
   </div>
 
+  <div class="p-10">
   <p-tabs [value]="0">
     <p-tablist>
       <p-tab [value]="0"><i class="pi pi-info-circle mr-2"></i>{{ t('tabs.status') }}</p-tab>
@@ -477,4 +478,5 @@
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
+  </div>
 </div>

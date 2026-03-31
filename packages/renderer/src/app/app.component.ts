@@ -438,7 +438,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-
   /**
    * Handle all relevant keyboard events on the app window. Attaches to the document.
    * @param event The keyboard event

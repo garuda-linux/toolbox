@@ -1,33 +1,53 @@
 <ng-container *transloco="let t">
-  <div class="surface-section px-4 py-6 text-center md:px-6 lg:px-8">
-    <div class="mb-5 text-3xl font-bold">
+  <div class="surface-section px-4 text-center md:px-6 lg:px-8">
+    <div class="text-3xl font-bold">
       <span class="text-color">{{ t('bootRepair.title') }}</span>
       <span class="text-primary">{{ t('bootRepair.titleTwo') }}</span>
     </div>
 
-    @if (loading()) {
-      <div class="flex items-center justify-center p-8">
-        <p-progressSpinner />
-      </div>
-    } @else {
+    <div class="p-10">
       <div class="grid grid-cols-1 gap-6 text-left md:grid-cols-2">
         <p-card [header]="t('bootRepair.selectOperation')">
           <div class="flex flex-col gap-4">
             <div class="flex items-center gap-2">
               <p-radioButton [(ngModel)]="action" name="action" value="reinstall" inputId="act-reinstall" />
-              <label for="act-reinstall">{{ t('bootRepair.reinstallGrub') }}</label>
+              <label for="act-reinstall"
+                >{{ t('bootRepair.reinstallGrub') }}
+                <i
+                  class="pi pi-info-circle ml-1 text-sm cursor-help"
+                  [pTooltip]="t('bootRepair.reinstallGrubTip')"
+                ></i
+              ></label>
             </div>
             <div class="flex items-center gap-2">
               <p-radioButton [(ngModel)]="action" name="action" value="repair" inputId="act-repair" />
-              <label for="act-repair">{{ t('bootRepair.repairGrubConfig') }}</label>
+              <label for="act-repair"
+                >{{ t('bootRepair.repairGrubConfig') }}
+                <i
+                  class="pi pi-info-circle ml-1 text-sm cursor-help"
+                  [pTooltip]="t('bootRepair.repairGrubConfigTip')"
+                ></i
+              ></label>
             </div>
             <div class="flex items-center gap-2">
               <p-radioButton [(ngModel)]="action" name="action" value="backup" inputId="act-backup" />
-              <label for="act-backup">{{ t('bootRepair.backupMbrPbr') }}</label>
+              <label for="act-backup"
+                >{{ t('bootRepair.backupMbrPbr') }}
+                <i
+                  class="pi pi-info-circle ml-1 text-sm cursor-help"
+                  [pTooltip]="t('bootRepair.backupMbrPbrTip')"
+                ></i
+              ></label>
             </div>
             <div class="flex items-center gap-2">
               <p-radioButton [(ngModel)]="action" name="action" value="restore" inputId="act-restore" />
-              <label for="act-restore">{{ t('bootRepair.restoreMbrPbr') }}</label>
+              <label for="act-restore"
+                >{{ t('bootRepair.restoreMbrPbr') }}
+                <i
+                  class="pi pi-info-circle ml-1 text-sm cursor-help"
+                  [pTooltip]="t('bootRepair.restoreMbrPbrTip')"
+                ></i
+              ></label>
             </div>
           </div>
         </p-card>
@@ -38,7 +58,13 @@
               <div class="font-bold">{{ t('bootRepair.installOn') }}</div>
               <div class="flex items-center gap-2">
                 <p-radioButton [(ngModel)]="installTarget" name="target" value="mbr" inputId="tgt-mbr" />
-                <label for="tgt-mbr">{{ t('bootRepair.targetMbr') }}</label>
+                <label for="tgt-mbr"
+                  >{{ t('bootRepair.targetMbr') }}
+                  <i
+                    class="pi pi-info-circle ml-1 text-sm cursor-help"
+                    [pTooltip]="t('bootRepair.targetMbrTip')"
+                  ></i
+                ></label>
               </div>
               <div class="flex items-center gap-2">
                 <p-radioButton [(ngModel)]="installTarget" name="target" value="root" inputId="tgt-root" />
@@ -46,7 +72,13 @@
               </div>
               <div class="flex items-center gap-2">
                 <p-radioButton [(ngModel)]="installTarget" name="target" value="esp" inputId="tgt-esp" />
-                <label for="tgt-esp">{{ t('bootRepair.targetEsp') }}</label>
+                <label for="tgt-esp"
+                  >{{ t('bootRepair.targetEsp') }}
+                  <i
+                    class="pi pi-info-circle ml-1 text-sm cursor-help"
+                    [pTooltip]="t('bootRepair.targetEspTip')"
+                  ></i
+                ></label>
               </div>
             </div>
           }
@@ -61,7 +93,13 @@
                   value="mbr"
                   inputId="backup-mbr"
                 />
-                <label for="backup-mbr">{{ t('bootRepair.targetMbr') }}</label>
+                <label for="backup-mbr"
+                  >{{ t('bootRepair.targetMbr') }}
+                  <i
+                    class="pi pi-info-circle ml-1 text-sm cursor-help"
+                    [pTooltip]="t('bootRepair.targetMbrTip')"
+                  ></i
+                ></label>
               </div>
               <div class="flex items-center gap-2">
                 <p-radioButton
@@ -70,7 +108,13 @@
                   value="pbr"
                   inputId="backup-pbr"
                 />
-                <label for="backup-pbr">{{ t('bootRepair.targetPbr') }}</label>
+                <label for="backup-pbr"
+                  >{{ t('bootRepair.targetPbr') }}
+                  <i
+                    class="pi pi-info-circle ml-1 text-sm cursor-help"
+                    [pTooltip]="t('bootRepair.targetPbrTip')"
+                  ></i
+                ></label>
               </div>
             </div>
           }
@@ -127,6 +171,6 @@
           <p-button [label]="t('bootRepair.apply')" (onClick)="apply()" icon="pi pi-check" />
         </p-card>
       </div>
-    }
+    </div>
   </div>
 </ng-container>
