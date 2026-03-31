@@ -346,8 +346,10 @@ export class AppComponent implements OnInit {
       if (item.items && item.items.length > 0) {
         return {
           ...item,
+          icon: item.icon,
           items: undefined,
           command: (event: { originalEvent: Event }) => this.toggleDropdown(event.originalEvent, item),
+          styleClass: 'garuda-menubar-item--has-submenu',
         };
       }
       return {

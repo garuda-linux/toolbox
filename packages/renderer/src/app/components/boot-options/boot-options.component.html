@@ -97,20 +97,20 @@
         </p-card>
 
         <p-card>
-          <div class="flex flex-col gap-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="flex flex-col gap-2">
-                <label class="font-bold" for="kernel-params">{{ t('bootOptions.kernelParams') }}</label>
-                <input
-                  class="w-full"
-                  id="kernel-params"
-                  [(ngModel)]="kernelParameters"
-                  [placeholder]="t('bootOptions.kernelParamsPlaceholder')"
-                  pInputText
-                />
-                <small>{{ t('bootOptions.kernelParamsHint') }}</small>
-              </div>
+          <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-2">
+              <label class="font-bold" for="kernel-params">{{ t('bootOptions.kernelParams') }}</label>
+              <input
+                class="w-full"
+                id="kernel-params"
+                [(ngModel)]="kernelParameters"
+                [placeholder]="t('bootOptions.kernelParamsPlaceholder')"
+                pInputText
+              />
+              <small>{{ t('bootOptions.kernelParamsHint') }}</small>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
               <div class="flex flex-col gap-2">
                 <label class="font-bold" for="msg-level">{{ t('bootOptions.messageLevel') }}</label>
                 <p-select
@@ -130,36 +130,41 @@
                     }
                   </ng-template>
                 </p-select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <p-checkbox [(ngModel)]="enableBootsplash" [binary]="true" inputId="enable-bootsplash" />
-                  <label class="font-bold cursor-pointer" for="enable-bootsplash">{{
-                    t('bootOptions.enableBootsplash')
-                  }}</label>
-                </div>
-                <small class="ml-8">{{ t('bootOptions.enableBootsplashHint') }}</small>
-
-                <div class="flex items-center gap-2 mt-2">
-                  <p-checkbox [(ngModel)]="mitigationsOff" [binary]="true" inputId="mitigations-off" />
-                  <label class="font-bold cursor-pointer" for="mitigations-off">{{
-                    t('bootOptions.mitigationsOff')
-                  }}</label>
-                </div>
-                <small class="ml-8">{{ t('bootOptions.mitigationsOffHint') }}</small>
+                <small>{{ t('bootOptions.messageLevelHint') }}</small>
               </div>
 
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <p-checkbox [(ngModel)]="sysrqEnabled" [binary]="true" inputId="sysrq-enabled" />
-                  <label class="font-bold cursor-pointer" for="sysrq-enabled">{{
-                    t('bootOptions.sysrqEnabled')
-                  }}</label>
+              <div class="flex flex-col gap-4 md:pt-6">
+                <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                      <p-checkbox [(ngModel)]="enableBootsplash" [binary]="true" inputId="enable-bootsplash" />
+                      <label class="font-bold cursor-pointer" for="enable-bootsplash">{{
+                        t('bootOptions.enableBootsplash')
+                      }}</label>
+                    </div>
+                    <small class="ml-8 text-xs text-surface-400 max-w-xs">{{ t('bootOptions.enableBootsplashHint') }}</small>
+                  </div>
+
+                  <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                      <p-checkbox [(ngModel)]="mitigationsOff" [binary]="true" inputId="mitigations-off" />
+                      <label class="font-bold cursor-pointer" for="mitigations-off">{{
+                        t('bootOptions.mitigationsOff')
+                      }}</label>
+                    </div>
+                    <small class="ml-8 text-xs text-surface-400 max-w-xs">{{ t('bootOptions.mitigationsOffHint') }}</small>
+                  </div>
+
+                  <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                      <p-checkbox [(ngModel)]="sysrqEnabled" [binary]="true" inputId="sysrq-enabled" />
+                      <label class="font-bold cursor-pointer" for="sysrq-enabled">{{
+                        t('bootOptions.sysrqEnabled')
+                      }}</label>
+                    </div>
+                    <small class="ml-8 text-xs text-surface-400 max-w-xs">{{ t('bootOptions.sysrqEnabledHint') }}</small>
+                  </div>
                 </div>
-                <small class="ml-8">{{ t('bootOptions.sysrqEnabledHint') }}</small>
               </div>
             </div>
           </div>

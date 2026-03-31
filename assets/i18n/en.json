@@ -1228,6 +1228,7 @@
     "kernelParamsPlaceholder": "e.g. quiet splash",
     "kernelParamsHint": "Additional parameters passed to the Linux kernel at boot.",
     "messageLevel": "Boot message detail",
+    "messageLevelHint": "Select how much information is shown during the boot process.",
     "messageLevelLimited": "Limited (Quiet + Hush)",
     "messageLevelDetailed": "Detailed (Quiet)",
     "messageLevelVeryDetailed": "Very Detailed (All messages)",
