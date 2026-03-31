@@ -61,6 +61,7 @@
       #dropdownMenu
       [model]="dropdownModel()"
       [class.garuda-shell__dropdown--visible]="dropdownVisible()"
+      [style.display]="dropdownVisible() ? 'block' : 'none'"
       [style.top.px]="dropdownTop()"
       [style.left.px]="dropdownLeft()"
       class="garuda-shell__dropdown"

@@ -5,19 +5,29 @@
       <span class="text-primary">{{ t('diagnostics.titleTwo') }}</span>
     </div>
   </div>
-  <div class="px-10 pt-10">
-    <div class="flex justify-evenly gap-4">
-      <p-button [label]="t('diagnostics.inxi')" [outlined]="true" (click)="getOutput('inxi')" />
-      <p-button [label]="t('diagnostics.systemctl')" [outlined]="true" (click)="getOutput('systemd-analyze')" />
-      <p-button [label]="t('diagnostics.journalctl')" [outlined]="true" (click)="getOutput('journalctl')" />
-      <p-button [label]="t('diagnostics.pacman')" [outlined]="true" (click)="getOutput('pacman')" />
-      <p-button [label]="t('diagnostics.dmesg')" [outlined]="true" (click)="getOutput('dmesg')" />
-      <p-button [label]="t('diagnostics.full')" [outlined]="true" (click)="getFullLogs()" />
-      <p-button [label]="t('diagnostics.upload')" [outlined]="true" (click)="uploadPrivateBin()" />
-    </div>
 
-    <div class="mt-5 h-[80vh]">
-      <ng-terminal #term [xtermOptions]="xtermOptions()" />
-    </div>
+  <div class="p-10">
+    <p-card>
+      <div class="flex flex-wrap justify-center gap-4 mb-8">
+        @for (tool of diagnosticTools; track tool.id) {
+          <p-button
+            [label]="t(tool.label)"
+            [icon]="tool.icon"
+            [pTooltip]="t(tool.description)"
+            tooltipPosition="bottom"
+            [outlined]="true"
+            (click)="
+              tool.id === 'full' ? getFullLogs() : tool.id === 'upload' ? uploadPrivateBin() : getOutput(tool.id)
+            "
+          />
+        }
+      </div>
+
+      <div class="border-t border-surface-700">
+        <div class="h-[70vh]">
+          <ng-terminal #term [xtermOptions]="xtermOptions()" />
+        </div>
+      </div>
+    </p-card>
   </div>
 </ng-container>

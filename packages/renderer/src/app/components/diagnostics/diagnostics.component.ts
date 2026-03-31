@@ -10,6 +10,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
+import { Tooltip } from 'primeng/tooltip';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { CatppuccinXtermJs } from '../../theme';
 import type { ITerminalOptions, ITheme } from '@xterm/xterm';
@@ -27,7 +29,7 @@ import { DesignerService } from '../designer/designerservice';
 
 @Component({
   selector: 'toolbox-diagnostics',
-  imports: [Button, TranslocoDirective, NgTerminalModule],
+  imports: [Button, Card, Tooltip, TranslocoDirective, NgTerminalModule],
   templateUrl: './diagnostics.component.html',
   styleUrl: './diagnostics.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +48,31 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
   private readonly translocoService = inject(TranslocoService);
   private readonly taskManagerService = inject(TaskManagerService);
   private readonly router = inject(Router);
+
+  diagnosticTools = [
+    { id: 'inxi', label: 'diagnostics.inxi', icon: 'pi pi-info-circle', description: 'diagnostics.inxiDesc' },
+    {
+      id: 'systemd-analyze',
+      label: 'diagnostics.systemctl',
+      icon: 'pi pi-chart-bar',
+      description: 'diagnostics.systemctlDesc',
+    },
+    {
+      id: 'journalctl',
+      label: 'diagnostics.journalctl',
+      icon: 'pi pi-list',
+      description: 'diagnostics.journalctlDesc',
+    },
+    { id: 'pacman', label: 'diagnostics.pacman', icon: 'pi pi-box', description: 'diagnostics.pacmanDesc' },
+    {
+      id: 'dmesg',
+      label: 'diagnostics.dmesg',
+      icon: 'pi pi-exclamation-triangle',
+      description: 'diagnostics.dmesgDesc',
+    },
+    { id: 'full', label: 'diagnostics.full', icon: 'pi pi-file-import', description: 'diagnostics.fullDesc' },
+    { id: 'upload', label: 'diagnostics.upload', icon: 'pi pi-upload', description: 'diagnostics.uploadDesc' },
+  ];
 
   readonly xtermOptions: Signal<ITerminalOptions> = computed(() => {
     let theme: ITheme = this.configService.settings().darkMode ? CatppuccinXtermJs.dark : CatppuccinXtermJs.light;
