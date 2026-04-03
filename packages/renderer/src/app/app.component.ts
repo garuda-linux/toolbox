@@ -10,7 +10,14 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { NavigationCancel, NavigationError, NavigationStart, Router, RouterModule } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { ScrollTop } from 'primeng/scrolltop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { eventsOn, windowClose, windowRequestClose } from './electron-services/electron-api-utils.js';
@@ -37,12 +44,15 @@ import { SplitButton } from 'primeng/splitbutton';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { MODULE_SEARCH, ModuleSearchEntry } from './constants/module-search';
 import { NgClass } from '@angular/common';
+import { registerAppCommandPaletteActions } from './components/command-palette/command-palette';
 import { AppDesigner } from './components/designer/app.designer';
 import { DesignerService } from './components/designer/designerservice';
 import { WallpaperService } from './components/wallpaper/wallpaper.service';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { Menu } from 'primeng/menu';
 import { ShellBarEndDirective, ShellComponent } from '@garudalinux/core';
+import { CommandPaletteComponent } from './components/command-palette/command-palette.component';
+import { CommandPaletteService } from './components/command-palette/command-palette.service';
 
 @Component({
   imports: [
@@ -67,6 +77,7 @@ import { ShellBarEndDirective, ShellComponent } from '@garudalinux/core';
     ContextMenuModule,
     AppDesigner,
     Menu,
+    CommandPaletteComponent,
   ],
   selector: 'toolbox-root',
   templateUrl: './app.component.html',
@@ -84,6 +95,7 @@ export class AppComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly translocoService = inject(TranslocoService);
   private readonly wallpaperService = inject(WallpaperService);
+  private readonly commandPaletteService = inject(CommandPaletteService);
 
   protected readonly confirmationService = inject(ConfirmationService);
   protected readonly loadingService = inject(LoadingService);
@@ -380,11 +392,19 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let firstNavigationComplete = false;
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        document.body.classList.add('is-transitioning');
+        // Only add is-transitioning after the first navigation completes
+        // This prevents view-transition CSS from interfering with initial paint
+        if (firstNavigationComplete) {
+          document.body.classList.add('is-transitioning');
+        }
       } else if (event instanceof NavigationCancel || event instanceof NavigationError) {
         document.body.classList.remove('is-transitioning');
+      } else if (event instanceof NavigationEnd) {
+        firstNavigationComplete = true;
       }
     });
 
@@ -437,6 +457,37 @@ export class AppComponent implements OnInit {
         this.dropdownVisible.set(false);
         this.activeDropdownId.set(undefined);
       }
+    });
+
+    this.registerCommandPaletteActions();
+  }
+
+  private registerCommandPaletteActions(): void {
+    registerAppCommandPaletteActions(
+      this.commandPaletteService.registerActions.bind(this.commandPaletteService),
+      (id: string) => {
+        switch (id) {
+          case 'help-forum':
+            return () => void this.shellService.open('https://forum.garudalinux.org/');
+          case 'help-wiki':
+            return () => void this.shellService.open('https://wiki.garudalinux.org/');
+          case 'help-arch-wiki':
+            return () => void this.shellService.open('https://wiki.archlinux.org/');
+          case 'help-status':
+            return () => void this.shellService.open('https://status.garudalinux.org');
+          default:
+            return undefined;
+        }
+      },
+    );
+
+    this.commandPaletteService.registerActions({
+      id: 'terminal',
+      label: 'menu.terminal',
+      icon: 'pi pi-hashtag',
+      keywords: ['terminal', 'console', 'shell', 'cli'],
+      category: 'app',
+      command: () => this.terminalComponent().visible.set(true),
     });
   }
 

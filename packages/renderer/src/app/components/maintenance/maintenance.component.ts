@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, model, type OnInit, signal } from '@angular/core';
 import { Card } from 'primeng/card';
 import { Button } from 'primeng/button';
-import type { MaintenanceAction, ResettableConfig } from '../../interfaces';
+import type { CommandPaletteAction, MaintenanceAction, ResettableConfig } from '../../interfaces';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Tooltip } from 'primeng/tooltip';
 import { Checkbox } from 'primeng/checkbox';
@@ -16,6 +16,7 @@ import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { Router, type UrlTree } from '@angular/router';
 import { ConfigService } from '../config/config.service';
+import { CommandPaletteService } from '../command-palette/command-palette.service';
 
 @Component({
   selector: 'toolbox-maintenance',
@@ -403,12 +404,28 @@ export class MaintenanceComponent implements OnInit {
   private readonly messageToastService = inject(MessageToastService);
   private readonly router = inject(Router);
   private readonly translocoService = inject(TranslocoService);
+  private readonly commandPaletteService = inject(CommandPaletteService);
 
   async ngOnInit(): Promise<void> {
     this.logger.debug('Initializing maintenance');
     this.checkRoute();
 
     await this.checkExistingConfigs();
+    this.registerCommandPaletteActions();
+  }
+
+  private registerCommandPaletteActions(): void {
+    const allActions = [...this.actions, ...this.actionsGarudaUpdate];
+    const commandPaletteActions: CommandPaletteAction[] = allActions.map((action) => ({
+      id: `maintenance-${action.name}`,
+      label: action.label,
+      description: action.description,
+      icon: action.icon,
+      keywords: [action.name, this.translocoService.translate(action.label).toLowerCase()],
+      category: 'maintenance',
+      command: (): Promise<void> => this.runNow(action),
+    }));
+    this.commandPaletteService.registerActions(...commandPaletteActions);
   }
 
   /**

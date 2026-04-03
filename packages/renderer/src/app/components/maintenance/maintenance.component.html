@@ -8,10 +8,9 @@
   <div class="p-10">
     <p-tabs [(value)]="tabIndex">
       <p-tablist>
-        <p-tab [value]="0" (click)="navigate('common')">{{ t_common }}</p-tab>
-        <p-tab [value]="1" (click)="navigate('reset')">{{ t_resetConfigs }}</p-tab>
-        <p-tab [value]="2" (click)="navigate('garuda-update')">{{ t_garudaUpdate }}</p-tab>
-        <p-tab [value]="3" (click)="navigate('logs')">{{ t_logs }}</p-tab>
+        <p-tab [value]="0" (click)="navigate('common')">{{ t('maintenance.common') }}</p-tab>
+        <p-tab [value]="1" (click)="navigate('reset')">{{ t('maintenance.resetConfigs') }}</p-tab>
+        <p-tab [value]="2" (click)="navigate('garuda-update')">{{ t('maintenance.garudaUpdate') }}</p-tab>
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel [value]="0">

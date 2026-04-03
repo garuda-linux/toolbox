@@ -135,6 +135,17 @@ p-button {
   color: var(--ctp-mocha-maroon) !important;
 }
 
+toolbox-command-palette > p-dialog > div > div > .p-dialog-content {
+  padding: unset;
+  border-radius: 6px;
+  overflow: visible;
+}
+
+.command-palette-dialog .p-autocomplete-panel {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 /* Garuda Button */
 .garuda-button-shine {
   position: relative;

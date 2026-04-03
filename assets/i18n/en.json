@@ -284,13 +284,10 @@
     "garudaHealthFix": "Repair system health",
     "garudaHealthFixSub": "Attempt to fix common system issues automatically"
   },
-  "sudo": {
-    "title": "Authentication required",
-    "subtitle": "Please enter your password to continue",
-    "save": "Cache in this session",
-    "password": "Password",
-    "cancel": "Cancel",
-    "useOnce": "Use once only"
+  "commandPalette": {
+    "placeholder": "Type a command or search for a module...",
+    "hint": "Search modules and actions",
+    "toClose": "to close"
   },
   "terminal": {
     "title": "Terminal",
@@ -726,7 +723,14 @@
     "resetConfigsBody": "Are you sure you want to reset the following configurations?",
     "exitAppHeader": "Exit app?",
     "applyOperations": "Apply operations?",
-    "applyOperationsBody": "Are you sure that you want to apply all pending operations?"
+    "applyOperationsBody": "Are you sure that you want to apply all pending operations?",
+    "createSnapshotBefore": "Create Btrfs snapshot before execution",
+    "title": "Authentication required",
+    "subtitle": "Please enter your password to continue",
+    "save": "Cache in this session",
+    "password": "Password",
+    "cancel": "Cancel",
+    "useOnce": "Use once only"
   },
   "error": {
     "sudoPassword": "This doesn't seem to be the correct password. Please try again."

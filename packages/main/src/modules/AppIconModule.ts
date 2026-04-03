@@ -173,6 +173,7 @@ class AppIconModule implements AppModule {
         return this.serveFallback();
       }
 
+      let resolvedPath = '';
       const originalTarget = target;
       let isPackageRequest = false;
 

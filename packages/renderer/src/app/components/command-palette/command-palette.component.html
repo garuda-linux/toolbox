@@ -1,0 +1,43 @@
+<p-dialog
+  class="command-palette-dialog"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [showHeader]="false"
+  [style]="{ 'width': '50vw', 'max-width': '600px' }"
+>
+  <ng-container *transloco="let t">
+    <div class="p-2.5">
+      <p-auto-complete
+        [(ngModel)]="selectedItem"
+        [suggestions]="suggestions()"
+        [placeholder]="t('commandPalette.placeholder')"
+        [autofocus]="true"
+        [style]="{ width: '100%' }"
+        [inputStyle]="{ width: '100%' }"
+        (completeMethod)="search($event)"
+        (onSelect)="onSelect($event)"
+        optionLabel="moduleName"
+        appendTo="body"
+      >
+        <ng-template #item let-item>
+          <div class="flex items-center gap-2">
+            <i [class]="item.icon || 'pi pi-chevron-right'"></i>
+            <div class="flex flex-col">
+              <span class="font-bold">{{ t(item.moduleName) }}</span>
+              @if (item.description) {
+                <span class="text-xs text-surface-400">{{ t(item.description) }}</span>
+              }
+            </div>
+          </div>
+        </ng-template>
+      </p-auto-complete>
+      <div class="mt-2.5 text-xs flex justify-between px-2">
+        <span>{{ t('commandPalette.hint') }}</span>
+        <span>ESC {{ t('commandPalette.toClose') }}</span>
+      </div>
+    </div>
+  </ng-container>
+</p-dialog>

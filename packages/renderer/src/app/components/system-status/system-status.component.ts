@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { SystemStatusService } from './system-status.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
+import { CommandPaletteService } from '../command-palette/command-palette.service';
 
 @Component({
   selector: 'toolbox-system-status',
@@ -33,6 +34,49 @@ export class SystemStatusComponent {
   private readonly osInteractionService = inject(OsInteractService);
   private readonly taskManagerService = inject(TaskManagerService);
   private readonly translocoService = inject(TranslocoService);
+  private readonly commandPaletteService = inject(CommandPaletteService);
+
+  constructor() {
+    this.registerCommandPaletteActions();
+  }
+
+  private registerCommandPaletteActions(): void {
+    this.commandPaletteService.registerActions(
+      {
+        id: 'system-update',
+        label: 'systemStatus.scheduleUpdates',
+        description: 'systemStatus.updates',
+        icon: 'pi pi-refresh',
+        keywords: ['update', 'system', 'upgrade', 'schedule'],
+        category: 'system',
+        command: (): void => this.scheduleUpdates(true),
+      },
+      {
+        id: 'aur-update',
+        label: 'systemStatus.runAurUpdates',
+        icon: 'pi pi-upload',
+        keywords: ['aur', 'update', 'paru', 'yay'],
+        category: 'system',
+        command: (): void => this.runAurUpdates(),
+      },
+      {
+        id: 'garuda-health-fix',
+        label: 'systemStatus.runHealthFix',
+        icon: 'pi pi-heart-fill',
+        keywords: ['health', 'fix', 'garuda-health', 'check'],
+        category: 'system',
+        command: (): Promise<void> => this.runHealthFix(),
+      },
+      {
+        id: 'refresh-state',
+        label: 'maintenance.refreshMirrors',
+        icon: 'pi pi-sync',
+        keywords: ['refresh', 'reload', 'state', 'sync', 'status'],
+        category: 'system',
+        command: (): Promise<void> => this.refreshState(),
+      },
+    );
+  }
 
   updateButtonDisabled = computed(() => this.taskManagerService.findTaskById('updateSystem') !== null);
   healthFixAvailable = computed(() => this.systemStatusService.healthErrors().some((error) => error.fixAvailable));

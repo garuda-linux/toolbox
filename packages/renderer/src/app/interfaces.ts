@@ -84,3 +84,15 @@ export type HomepageLink = Link & {
   command?: () => void;
   condition?: () => boolean;
 };
+
+export interface CommandPaletteAction {
+  id: string;
+  label: string;
+  description?: string;
+  icon: string;
+  keywords: string[];
+  category?: string;
+  routerLink?: string;
+  hash?: string;
+  command?: () => void | Promise<void>;
+}
