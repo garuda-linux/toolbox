@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="p-10">
-    <p-tabs [(value)]="tabIndex" (valueChange)="tabChange($event)">
+    <p-tabs [(value)]="tabIndex" (valueChange)="tabChange()">
       <p-tablist>
         @for (section of packagesService.packages(); track section.name) {
           <p-tab #tab [value]="$index">{{ t(section.name) }}</p-tab>

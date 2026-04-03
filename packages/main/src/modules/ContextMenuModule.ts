@@ -1,6 +1,6 @@
 import type { AppModule } from '../AppModule.js';
 import type { ModuleContext } from '../ModuleContext.js';
-import { ipcMain, BrowserWindow, Menu } from 'electron';
+import { BrowserWindow, ipcMain, Menu } from 'electron';
 import { Logger } from '../logging/logging.js';
 
 interface ContextMenuItem {
@@ -18,7 +18,7 @@ interface ContextMenuItem {
 class ContextMenuModule implements AppModule {
   private readonly logger = Logger.getInstance();
 
-  enable({ app }: ModuleContext): void {
+  enable({ app: _app }: ModuleContext): void {
     this.setupContextMenuHandlers();
   }
 

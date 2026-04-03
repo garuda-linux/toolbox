@@ -1,7 +1,6 @@
 import type { AppModule } from '../AppModule.js';
 import type { ModuleContext } from '../ModuleContext.js';
 import { ipcMain } from 'electron';
-import { homedir, hostname, release, tmpdir } from 'node:os';
 import { Logger } from '../logging/logging.js';
 
 class OSModule implements AppModule {
@@ -17,7 +16,9 @@ class OSModule implements AppModule {
         return app.getLocale();
       } catch (error: unknown) {
         this.logger.error(`OS locale error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to get locale: ${error instanceof Error ? error.message : error}`, { cause: error });
+        throw new Error(`Failed to get locale: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
 
@@ -26,7 +27,9 @@ class OSModule implements AppModule {
         return process.argv;
       } catch (error: unknown) {
         this.logger.error(`OS argv error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to get argv: ${error instanceof Error ? error.message : error}`, { cause: error });
+        throw new Error(`Failed to get argv: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
   }

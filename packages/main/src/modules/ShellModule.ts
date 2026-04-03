@@ -12,7 +12,7 @@ class ShellModule implements AppModule {
     this.setupShellHandlers(app);
   }
 
-  private setupShellHandlers(app: App): void {
+  private setupShellHandlers(_app: App): void {
     ipcMain.handle('shell:spawnStreaming', (event, { processId, command, args, options }) => {
       this.logger.trace(`Spawning shell process: ${command} ${JSON.stringify(args)}`);
 

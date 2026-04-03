@@ -114,9 +114,8 @@ export class PackagesComponent {
 
   /**
    * Reset page to 0, because this doesn't happen automatically.
-   * @param $event The tab change event
    */
-  tabChange($event: string | number | undefined) {
+  tabChange() {
     this.table().first = 0;
   }
 }

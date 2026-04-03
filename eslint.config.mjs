@@ -3,16 +3,15 @@ import tseslint from 'typescript-eslint';
 import eslintConfig from '@electron-toolkit/eslint-config';
 import oxlint from 'eslint-plugin-oxlint';
 import angular from 'angular-eslint';
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import {dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 export default tseslint.config(
   {
-    // config with just ignores is the replacement for `.eslintignore`
-    ignores: ['**/build/**', '**/dist/**', 'node_modules'],
+    ignores: ["**/build/**", "**/dist/**", "node_modules"],
   },
   {
-    files: ['**/*.ts'],
+    files: ["**/*.ts"],
     extends: [
       eslint.configs.recommended,
       eslintConfig,
@@ -22,17 +21,26 @@ export default tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     },
     languageOptions: {
-      parserOptions: { tsconfigRootDir: dirname(fileURLToPath(import.meta.url)), projectService: true },
+      parserOptions: {
+        tsconfigRootDir: dirname(fileURLToPath(import.meta.url)),
+        projectService: true,
+      },
     },
   },
   {
-    files: ['**/*.html'],
+    files: ["**/*.html"],
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {},
   },
-  ...oxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
+  {
+    files: ["types/**/*.d.ts", "assets/**"],
+    languageOptions: {
+      parserOptions: { projectService: false },
+    },
+  },
+  ...oxlint.buildFromOxlintConfigFile(".oxlintrc.json"),
 );

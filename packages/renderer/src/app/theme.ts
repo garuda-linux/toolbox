@@ -13,7 +13,7 @@ import {
 } from '@garudalinux/themes/catppuccin';
 import { Vo1dedAura, Vo1dedLara, Vo1dedMaterial, Vo1dedNora } from '@garudalinux/themes/vo1ded';
 
-const { latte, mocha, frappe, macchiato } = flavors;
+const { latte, mocha } = flavors;
 
 export const themes: AppThemes = {
   'Catppuccin Mocha/Latte Aura': CatppuccinAura,
