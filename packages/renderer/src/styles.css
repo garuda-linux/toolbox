@@ -101,11 +101,13 @@ p-button {
   margin-right: auto !important;
 }
 
-.p-tablist, .p-datatable-header {
+.p-tablist,
+.p-datatable-header {
   border-radius: 12px 12px 0 0;
 }
 
-.p-tabpanels, toolbox-config-files > div p-table > .p-datatable-table-container {
+.p-tabpanels,
+toolbox-config-files > div p-table > .p-datatable-table-container {
   border-radius: 0 0 12px 12px;
 }
 
@@ -205,15 +207,11 @@ p-splitbutton > div > button.garuda-button-shine {
   }
 }
 
-/* Classes for wallpaper */
-.bg-contain {
-  @apply bg-cover bg-fixed bg-no-repeat;
-}
-
+/* Dropdown */
 .garuda-shell__dropdown,
 .p-contextmenu {
   backdrop-filter: blur(5px) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
+  --webkit-backdrop-filter: blur(5px) !important;
   background: rgb(from var(--p-menubar-background, var(--p-dialog-background)) r g b / 0.2) !important;
   border: 1px solid rgba(255, 255, 255, 0.05) !important;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
@@ -253,8 +251,43 @@ p-splitbutton > div > button.garuda-button-shine {
   border: none !important;
 }
 
+/* Classes for wallpaper */
+.bg-contain {
+  @apply bg-cover bg-fixed bg-no-repeat;
+}
+
 .non-blurred {
   @apply relative z-10;
+}
+
+.background-blurred-1 .background-filter::after {
+  @apply fixed top-0 block h-full w-full backdrop-blur-sm;
+  content: '';
+}
+
+.background-blurred-2 .background-filter::after {
+  @apply fixed top-0 block h-full w-full backdrop-blur-md;
+  content: '';
+}
+
+.background-blurred-3 .background-filter::after {
+  @apply fixed top-0 block h-full w-full backdrop-blur-lg;
+  content: '';
+}
+
+.background-blurred-4 .background-filter::after {
+  @apply fixed top-0 block h-full w-full backdrop-blur-xl;
+  content: '';
+}
+
+.background-blurred-5 .background-filter::after {
+  @apply fixed top-0 block h-full w-full backdrop-blur-2xl;
+  content: '';
+}
+
+.background-blurred-6 .background-filter::after {
+  @apply fixed top-0 block h-full w-full backdrop-blur-3xl;
+  content: '';
 }
 
 /* View transitions - only apply during navigation, not on initial paint */

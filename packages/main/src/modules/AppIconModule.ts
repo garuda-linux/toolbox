@@ -48,16 +48,34 @@ class AppIconModule implements AppModule {
   }
 
   private buildSearchPaths(): void {
-    const sizes = ['scalable', '256x256', '128x128', '96x96', '64x64', '48x48', '32x32', '16x16'];
+    const sizes = [
+      'scalable',
+      '512x512',
+      '256x256',
+      '128x128',
+      '96x96',
+      '64x64',
+      '48x48',
+      '32x32',
+      '24x24',
+      '22x22',
+      '20x20',
+      '16x16',
+      '16',
+    ];
+    const categories = ['apps', 'mimetypes', 'devices', 'categories', 'places', 'status', 'actions', 'preferences'];
 
     for (const theme of this.activeThemes) {
+      const themePath = join('/usr/share/icons/', theme);
       for (const size of sizes) {
-        this.searchPaths.push(join('/usr/share/icons/', theme, size, 'apps/'));
-        this.searchPaths.push(join('/usr/share/icons/', theme, size, 'mimetypes/'));
-        this.searchPaths.push(join('/usr/share/icons/', theme, size, 'devices/'));
-        this.searchPaths.push(join('/usr/share/icons/', theme, size, 'categories/'));
-        this.searchPaths.push(join('/usr/share/icons/', theme, size, 'places/'));
-        this.searchPaths.push(join('/usr/share/icons/', theme, size, 'status/'));
+        for (const category of categories) {
+          this.searchPaths.push(join(themePath, size, category + '/'));
+        }
+      }
+      for (const category of categories) {
+        for (const size of sizes) {
+          this.searchPaths.push(join(themePath, category, size + '/'));
+        }
       }
     }
 
@@ -137,14 +155,9 @@ class AppIconModule implements AppModule {
 
   private async findFallbackIcon(): Promise<void> {
     const fallbacks = [
-      `/usr/share/icons/${this.currentTheme}/48x48/status/image-missing.png`,
-      `/usr/share/icons/${this.currentTheme}/scalable/status/image-missing.svg`,
-      `/usr/share/icons/${this.currentTheme}/status/64/image-missing.svg`,
       `/usr/share/icons/${this.currentTheme}/scalable/apps/system-run.svg`,
-      '/usr/share/icons/Adwaita/scalable/status/image-missing.svg',
+      `/usr/share/icons/${this.currentTheme}/apps/scalable/system-run.svg`,
       '/usr/share/icons/Adwaita/scalable/mimetypes/application-x-executable.svg',
-      '/usr/share/icons/hicolor/48x48/status/image-missing.png',
-      '/usr/share/icons/hicolor/scalable/apps/system-run.svg',
     ];
     for (const p of fallbacks) {
       if (await exists(p)) {
@@ -173,6 +186,7 @@ class AppIconModule implements AppModule {
         return this.serveFallback();
       }
 
+      // eslint-disable-next-line no-useless-assignment
       let resolvedPath = '';
       const originalTarget = target;
       let isPackageRequest = false;

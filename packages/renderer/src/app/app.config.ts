@@ -60,6 +60,9 @@ export const appConfig: ApplicationConfig = {
         },
         ripple: true,
         inputStyle: 'outlined',
+        overlayOptions: {
+          appendTo: 'body',
+        },
       },
     ),
     provideHttpClient(withFetch()),

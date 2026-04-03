@@ -1,4 +1,4 @@
-## [unreleased]
+## [5.0.0] - 2026-04-03
 
 ### 🚀 Features
 
@@ -24,6 +24,7 @@
 - _(renderer)_ Integrate garuda-health in system-status on welcome screen and maintenance
 - _(renderer)_ Add garuda-health to diagnostics
 - _(renderer)_ Add command palette via ctrl + p
+- _(renderer)_ Uniform card based look for settings; network tools; config files
 
 ### 🐛 Bug Fixes
 
@@ -38,6 +39,7 @@
 - _(renderer)_ Add back dropdown hints and restructure fields
 - _(renderer)_ Cards initially not blurred due to page transition; round corners equally in tablist
 - Only send frontend logs via IPC if loglevel matches
+- _(renderer)_ Command palette not closing on ESC; use CSS variables for theming dropdown
 
 ### 💼 Other
 
@@ -63,6 +65,7 @@
 - Fix eslint config for newer versions
 - _(flake.lock)_ Update
 - _(renderer)_ Update search keywords with up-to-date keywords
+- _(changelog)_ Update
 
 ## [4.0.1] - 2026-03-09
 
