@@ -173,7 +173,6 @@ class AppIconModule implements AppModule {
         return this.serveFallback();
       }
 
-      let resolvedPath = '';
       const originalTarget = target;
       let isPackageRequest = false;
 
@@ -198,33 +197,33 @@ class AppIconModule implements AppModule {
         }
       }
 
-      for (const basePath of this.searchPaths) {
-        const files = await this.getDirContents(basePath);
-        if (!files) continue;
+      const searchResults = await Promise.all(
+        this.searchPaths.map(async (basePath) => {
+          const files = await this.getDirContents(basePath);
+          if (!files) return null;
 
-        for (const name of iconNamesToSearch) {
-          if (files.has(name + '.svg')) {
-            resolvedPath = join(basePath, name + '.svg');
-            break;
-          }
-          if (files.has(name + '.png')) {
-            resolvedPath = join(basePath, name + '.png');
-            break;
-          }
-        }
-
-        if (!resolvedPath && isPackageRequest && basePath.includes('swcatalog/icons')) {
-          const prefix = baseName + '_';
-          for (const file of files) {
-            if (file.startsWith(prefix) && (file.endsWith('.png') || file.endsWith('.svg'))) {
-              resolvedPath = join(basePath, file);
-              break;
+          for (const name of iconNamesToSearch) {
+            if (files.has(name + '.svg')) {
+              return join(basePath, name + '.svg');
+            }
+            if (files.has(name + '.png')) {
+              return join(basePath, name + '.png');
             }
           }
-        }
 
-        if (resolvedPath) break;
-      }
+          if (isPackageRequest && basePath.includes('swcatalog/icons')) {
+            const prefix = baseName + '_';
+            for (const file of files) {
+              if (file.startsWith(prefix) && (file.endsWith('.png') || file.endsWith('.svg'))) {
+                return join(basePath, file);
+              }
+            }
+          }
+          return null;
+        }),
+      );
+
+      resolvedPath = searchResults.find((p) => p !== null) || '';
 
       if (!resolvedPath) {
         let absPath = target;

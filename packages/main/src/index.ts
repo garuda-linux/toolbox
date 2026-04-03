@@ -61,7 +61,7 @@ export async function initApp(initConfig: AppInitConfig) {
     return;
   }
 
-  migrateConfig();
+  await migrateConfig();
 
   const isDevelopment = import.meta.env.DEV;
 
@@ -96,33 +96,24 @@ export async function initApp(initConfig: AppInitConfig) {
 
 async function registerBackgroundIPCHandlers(app: Electron.App, logger: Logger) {
   try {
-    const loggingModule = createLoggingModule();
-    const configModule = createConfigModule();
-    const osModule = createOSModule();
-    const notificationModule = createNotificationModule();
-    const windowControlModule = createWindowControlModule();
-    const dialogModule = createDialogModule();
-    const clipboardModule = createClipboardModule();
-    const contextMenuModule = createContextMenuModule();
-    const appMenuModule = createAppMenuModule();
-    const httpModule = createHttpModule();
-    const homeConfigModule = createHomeConfigModule();
-    const shellModule = createShellModule();
+    const modules = [
+      createLoggingModule(),
+      createConfigModule(),
+      createOSModule(),
+      createNotificationModule(),
+      createWindowControlModule(),
+      createDialogModule(),
+      createClipboardModule(),
+      createContextMenuModule(),
+      createAppMenuModule(),
+      createHttpModule(),
+      createHomeConfigModule(),
+      createShellModule(),
+    ];
 
     const moduleContext = { app };
 
-    loggingModule.enable(moduleContext);
-    configModule.enable(moduleContext);
-    osModule.enable(moduleContext);
-    notificationModule.enable(moduleContext);
-    windowControlModule.enable(moduleContext);
-    dialogModule.enable(moduleContext);
-    clipboardModule.enable(moduleContext);
-    contextMenuModule.enable(moduleContext);
-    appMenuModule.enable(moduleContext);
-    httpModule.enable(moduleContext);
-    homeConfigModule.enable(moduleContext);
-    shellModule.enable(moduleContext);
+    await Promise.all(modules.map((m) => Promise.resolve(m.enable(moduleContext))));
 
     logger.debug('Background IPC handlers registered successfully');
   } catch (error) {

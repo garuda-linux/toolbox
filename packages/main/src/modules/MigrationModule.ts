@@ -1,9 +1,18 @@
 import { app } from 'electron';
-import { existsSync, renameSync, readdirSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
+import { rename, readdir, rm, readFile, writeFile, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { Logger } from '../logging/logging.js';
 
-export function migrateConfig() {
+async function exists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function migrateConfig() {
   const logger = Logger.getInstance();
 
   try {
@@ -14,15 +23,15 @@ export function migrateConfig() {
 
     logger.debug(`Checking for migration: oldPath=${oldPath}, currentPath=${currentPath}`);
 
-    if (existsSync(oldPath)) {
-      const isCurrentEmpty = !existsSync(currentPath) || readdirSync(currentPath).length === 0;
+    if (await exists(oldPath)) {
+      const isCurrentEmpty = !(await exists(currentPath)) || (await readdir(currentPath)).length === 0;
       if (isCurrentEmpty) {
         logger.info(`Migrating config from ${oldPath} to ${currentPath}`);
-        if (existsSync(currentPath)) {
-          rmSync(currentPath, { recursive: true, force: true });
+        if (await exists(currentPath)) {
+          await rm(currentPath, { recursive: true, force: true });
         }
 
-        renameSync(oldPath, currentPath);
+        await rename(oldPath, currentPath);
         logger.info('Migration successful');
       } else {
         logger.warn(
@@ -33,15 +42,15 @@ export function migrateConfig() {
 
     // Migrate Plasma applet config
     const plasmaConfigPath = join(app.getPath('home'), '.config', 'plasma-org.kde.plasma.desktop-appletsrc');
-    if (existsSync(plasmaConfigPath)) {
-      const content = readFileSync(plasmaConfigPath, 'utf8');
+    if (await exists(plasmaConfigPath)) {
+      const content = await readFile(plasmaConfigPath, 'utf8');
       if (content.includes('applications:garuda-rani.desktop')) {
         logger.info(`Migrating Plasma applet config to garuda-toolbox.desktop in ${plasmaConfigPath}`);
         const newContent = content.replaceAll(
           'applications:garuda-rani.desktop',
           'applications:garuda-toolbox.desktop',
         );
-        writeFileSync(plasmaConfigPath, newContent, 'utf8');
+        await writeFile(plasmaConfigPath, newContent, 'utf8');
         logger.info('Plasma applet migration successful');
       }
     }

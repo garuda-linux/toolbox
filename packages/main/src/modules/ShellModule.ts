@@ -29,21 +29,59 @@ class ShellModule implements AppModule {
 
         this.activeProcesses.set(processId, handle);
 
+        let stdoutBuffer = '';
+        let stderrBuffer = '';
+        let flushTimeout: NodeJS.Timeout | null = null;
+
+        const flushBuffers = () => {
+          if (stdoutBuffer) {
+            event.sender.send('events:emit', 'shell:stdout', {
+              processId,
+              data: stdoutBuffer,
+            });
+            stdoutBuffer = '';
+          }
+          if (stderrBuffer) {
+            event.sender.send('events:emit', 'shell:stderr', {
+              processId,
+              data: stderrBuffer,
+            });
+            stderrBuffer = '';
+          }
+          flushTimeout = null;
+        };
+
+        const queueFlush = () => {
+          if (!flushTimeout) {
+            flushTimeout = setTimeout(flushBuffers, 50);
+          }
+        };
+
         handle.stdout?.on('data', (data: Buffer) => {
-          event.sender.send('events:emit', 'shell:stdout', {
-            processId,
-            data: data.toString(),
-          });
+          stdoutBuffer += data.toString();
+          if (stdoutBuffer.length > 16384) {
+            flushBuffers();
+            if (flushTimeout) clearTimeout(flushTimeout);
+          } else {
+            queueFlush();
+          }
         });
 
         handle.stderr?.on('data', (data: Buffer) => {
-          event.sender.send('events:emit', 'shell:stderr', {
-            processId,
-            data: data.toString(),
-          });
+          stderrBuffer += data.toString();
+          if (stderrBuffer.length > 16384) {
+            flushBuffers();
+            if (flushTimeout) clearTimeout(flushTimeout);
+          } else {
+            queueFlush();
+          }
         });
 
         handle.on('close', (code: number | null, signal: string | null) => {
+          if (flushTimeout) {
+            clearTimeout(flushTimeout);
+            flushBuffers();
+          }
           event.sender.send('events:emit', 'shell:close', {
             processId,
             code,

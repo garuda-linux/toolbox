@@ -50,7 +50,9 @@ class ContextMenuModule implements AppModule {
         return true;
       } catch (error: any) {
         this.logger.error(`Context menu show error: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error(`Failed to show context menu: ${error instanceof Error ? error.message : error}`, { cause: error });
+        throw new Error(`Failed to show context menu: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
       }
     });
   }
