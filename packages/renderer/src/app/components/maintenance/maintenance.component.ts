@@ -291,7 +291,9 @@ export class MaintenanceComponent implements OnInit {
         this.logger.info('Refreshing mirrors');
         if (await this.osInteractService.ensurePackageArchlinux('reflector-simple')) {
           // Breaks with LANG=C
-          return await this.taskManager.executeAndWaitBash('reflector-simple', { forceLang: false });
+          return await this.taskManager.executeAndWaitBash('reflector-simple', {
+            forceLang: false,
+          });
         } else {
           return this.handleInstallationError('reflector-simple');
         }

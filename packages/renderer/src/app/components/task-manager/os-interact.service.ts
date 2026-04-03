@@ -571,7 +571,11 @@ export class OsInteractService {
     }
   }
 
-  async getPlymouthInfo(): Promise<{ themes: string[]; currentTheme: string; isInstalled: boolean }> {
+  async getPlymouthInfo(): Promise<{
+    themes: string[];
+    currentTheme: string;
+    isInstalled: boolean;
+  }> {
     try {
       const inst = await this.taskManagerService.executeAndWaitBash(this.wrapCommand('pacman -Qq plymouth'));
       const isInstalled = inst.code === 0;

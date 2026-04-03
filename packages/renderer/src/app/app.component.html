@@ -18,7 +18,9 @@
 
           <p-auto-complete
             [(ngModel)]="selectedModule"
-            [ngClass]="{ 'ng-dirty ng-invalid': selectedModule() !== '' && moduleSuggestions().length === 0 }"
+            [ngClass]="{
+              'ng-dirty ng-invalid': selectedModule() !== '' && moduleSuggestions().length === 0,
+            }"
             [placeholder]="t('menu.modules.search')"
             [forceSelection]="true"
             [suggestions]="moduleSuggestions()"

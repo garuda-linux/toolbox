@@ -1,6 +1,6 @@
 import type { AppModule } from '../AppModule.js';
 import type { ModuleContext } from '../ModuleContext.js';
-import { ipcMain, BrowserWindow, App } from 'electron';
+import { App, BrowserWindow, ipcMain } from 'electron';
 import { Logger } from '../logging/logging.js';
 import { execve } from 'node:process';
 
@@ -272,8 +272,7 @@ class WindowControlModule implements AppModule {
     ipcMain.handle('window:relaunch', async () => {
       try {
         app.on('quit', () => {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          execve!(process.execPath, process.argv, process.env);
+          execve?.(process.execPath, process.argv, process.env);
         });
         app.exit();
         return true;

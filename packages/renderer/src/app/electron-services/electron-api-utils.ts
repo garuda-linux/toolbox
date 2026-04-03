@@ -301,12 +301,15 @@ export const writeHomeConfig =
       createDir?: boolean,
     ) => Promise<{ success: boolean; path?: string; error?: string }>
   >('writeHomeConfig');
-export const readHomeConfig =
-  createAsyncDeferredFunction<
-    (
-      relativePath: string,
-    ) => Promise<{ success: boolean; content?: string; path?: string; exists?: boolean; error?: string }>
-  >('readHomeConfig');
+export const readHomeConfig = createAsyncDeferredFunction<
+  (relativePath: string) => Promise<{
+    success: boolean;
+    content?: string;
+    path?: string;
+    exists?: boolean;
+    error?: string;
+  }>
+>('readHomeConfig');
 export const homeConfigExists =
   createAsyncDeferredFunction<(relativePath: string) => Promise<{ exists: boolean; path?: string; error?: string }>>(
     'homeConfigExists',

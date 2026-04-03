@@ -1,15 +1,11 @@
 {
   "name": "@app/preload",
-  "type": "module",
   "files": [
     "assets/**",
     "dist/**",
     "package.json"
   ],
-  "scripts": {
-    "build": "vite build",
-    "typecheck": "tsc --noEmit"
-  },
+  "type": "module",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -19,6 +15,10 @@
       "types": "./src/exposed.d.ts",
       "default": "./dist/exposed.mjs"
     }
+  },
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "electron-store": "^11.0.2"

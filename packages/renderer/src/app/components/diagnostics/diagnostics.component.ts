@@ -50,8 +50,18 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
   private readonly router = inject(Router);
 
   diagnosticTools = [
-    { id: 'inxi', label: 'diagnostics.inxi', icon: 'pi pi-info-circle', description: 'diagnostics.inxiDesc' },
-    { id: 'garuda-health', label: 'diagnostics.health', icon: 'pi pi-heart', description: 'diagnostics.healthDesc' },
+    {
+      id: 'inxi',
+      label: 'diagnostics.inxi',
+      icon: 'pi pi-info-circle',
+      description: 'diagnostics.inxiDesc',
+    },
+    {
+      id: 'garuda-health',
+      label: 'diagnostics.health',
+      icon: 'pi pi-heart',
+      description: 'diagnostics.healthDesc',
+    },
     {
       id: 'systemd-analyze',
       label: 'diagnostics.systemctl',
@@ -64,15 +74,30 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
       icon: 'pi pi-list',
       description: 'diagnostics.journalctlDesc',
     },
-    { id: 'pacman', label: 'diagnostics.pacman', icon: 'pi pi-box', description: 'diagnostics.pacmanDesc' },
+    {
+      id: 'pacman',
+      label: 'diagnostics.pacman',
+      icon: 'pi pi-box',
+      description: 'diagnostics.pacmanDesc',
+    },
     {
       id: 'dmesg',
       label: 'diagnostics.dmesg',
       icon: 'pi pi-exclamation-triangle',
       description: 'diagnostics.dmesgDesc',
     },
-    { id: 'full', label: 'diagnostics.full', icon: 'pi pi-file-import', description: 'diagnostics.fullDesc' },
-    { id: 'upload', label: 'diagnostics.upload', icon: 'pi pi-upload', description: 'diagnostics.uploadDesc' },
+    {
+      id: 'full',
+      label: 'diagnostics.full',
+      icon: 'pi pi-file-import',
+      description: 'diagnostics.fullDesc',
+    },
+    {
+      id: 'upload',
+      label: 'diagnostics.upload',
+      icon: 'pi pi-upload',
+      description: 'diagnostics.uploadDesc',
+    },
   ];
 
   readonly xtermOptions: Signal<ITerminalOptions> = computed(() => {

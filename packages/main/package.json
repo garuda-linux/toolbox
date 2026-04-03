@@ -1,10 +1,10 @@
 {
   "name": "@app/main",
-  "type": "module",
   "files": [
     "dist/**",
     "package.json"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./src/index.ts",

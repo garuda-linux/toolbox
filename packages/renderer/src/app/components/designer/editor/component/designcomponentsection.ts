@@ -8,7 +8,9 @@ import { DesignTokenField } from '../designtokenfield';
   standalone: true,
   imports: [DesignTokenField],
   template: `<section>
-    <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0 capitalize">{{ sectionName() }}</div>
+    <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0 capitalize">
+      {{ sectionName() }}
+    </div>
     <div class="grid grid-cols-4 gap-x-2 gap-y-3">
       @for (entry of objectKeys(tokens()); track entry) {
         @if (!isObject(tokens()[entry])) {

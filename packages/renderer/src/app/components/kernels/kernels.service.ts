@@ -152,7 +152,12 @@ export class KernelsService {
 
       // Filter duplicates and show the one, which will be installed by pacman
       // Prioritize kernel based on the one pacman would pick in a default Garuda Linux installation.
-      const repoPriority: Record<string, number> = { 'garuda': 0, 'core': 1, 'extra': 2, 'chaotic-aur': 3 };
+      const repoPriority: Record<string, number> = {
+        'garuda': 0,
+        'core': 1,
+        'extra': 2,
+        'chaotic-aur': 3,
+      };
       const uniqueKernelMap = new Map<string, Kernel>();
       for (const kernel of kernels) {
         const existing = uniqueKernelMap.get(kernel.pkgname[0]);

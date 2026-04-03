@@ -87,7 +87,9 @@ export async function pathResolve(...paths: string[]): Promise<string> {
     return resolve(...paths);
   } catch (err: any) {
     error(`Path resolve error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to resolve path: ${err instanceof Error ? err.message : err}`, { cause: err });
+    throw new Error(`Failed to resolve path: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }
 
@@ -96,7 +98,9 @@ export async function pathJoin(...paths: string[]): Promise<string> {
     return join(...paths);
   } catch (err: any) {
     error(`Path JOIN error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to join paths: ${err instanceof Error ? err.message : err}`, { cause: err });
+    throw new Error(`Failed to join paths: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }
 

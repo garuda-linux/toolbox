@@ -281,7 +281,11 @@ export class NetworkAssistantService {
         };
       }
       if (line.includes('Network controller')) {
-        return { type: 'wireless', description: line.replace(/Network controller .[\da-f]{4}:/, '').trim(), raw: line };
+        return {
+          type: 'wireless',
+          description: line.replace(/Network controller .[\da-f]{4}:/, '').trim(),
+          raw: line,
+        };
       }
       if (line.includes('Bluetooth')) {
         return { type: 'bluetooth', description: line.trim(), raw: line };
@@ -296,10 +300,18 @@ export class NetworkAssistantService {
 
     const parseUsbLine = (line: string): HardwareInfo | null => {
       if (line.includes('Ethernet') || line.includes('RNDIS')) {
-        return { type: 'ethernet', description: line.replace('Ethernet controller:', '').trim(), raw: line };
+        return {
+          type: 'ethernet',
+          description: line.replace('Ethernet controller:', '').trim(),
+          raw: line,
+        };
       }
       if (line.includes('Wireless') || line.includes('WiFi') || line.includes('WLAN')) {
-        return { type: 'wireless', description: line.replace('Network controller:', '').trim(), raw: line };
+        return {
+          type: 'wireless',
+          description: line.replace('Network controller:', '').trim(),
+          raw: line,
+        };
       }
       if (line.includes('Bluetooth')) {
         return { type: 'bluetooth', description: line.trim(), raw: line };

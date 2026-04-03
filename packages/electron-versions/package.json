@@ -1,7 +1,7 @@
 {
   "name": "@app/electron-versions",
   "description": "A set of helper functions to get the versions of internal components bundled within Electron",
+  "files": [],
   "type": "module",
-  "main": "./index.js",
-  "files": []
+  "main": "./index.js"
 }

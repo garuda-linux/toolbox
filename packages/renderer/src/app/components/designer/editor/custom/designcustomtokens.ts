@@ -12,8 +12,9 @@ import { ExtendedTokens } from '@primeuix/themes/types';
   standalone: true,
   imports: [FormsModule, ToastModule],
   template: ` <div class="leading-6 text-muted-color mb-4">
-      Extend the theming system with your own design tokens e.g. <span class="font-medium">accent.color</span>. Do not
-      use curly braces in the name field, and ensure that the name does not match any built-in tokens.
+      Extend the theming system with your own design tokens e.g.
+      <span class="font-medium">accent.color</span>. Do not use curly braces in the name field, and ensure that the name
+      does not match any built-in tokens.
     </div>
     @if (tokens?.length) {
       <ul class="flex flex-col gap-4 list-none p-0 mx-0 mb-4">

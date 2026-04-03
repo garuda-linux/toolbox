@@ -93,7 +93,9 @@ export async function writeTextFile(filePath: string, contents: string): Promise
     return true;
   } catch (err) {
     error(`File write error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to write file: ${err instanceof Error ? err.message : err}`, { cause: err });
+    throw new Error(`Failed to write file: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }
 
@@ -106,7 +108,9 @@ export async function createDirectory(dirPath: string): Promise<boolean> {
     return true;
   } catch (err) {
     error(`Directory creation error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to create directory: ${err instanceof Error ? err.message : err}`, { cause: err });
+    throw new Error(`Failed to create directory: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }
 
@@ -119,6 +123,8 @@ export async function removeFile(filePath: string): Promise<boolean> {
     return true;
   } catch (err) {
     error(`File removal error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to remove file: ${err instanceof Error ? err.message : err}`, { cause: err });
+    throw new Error(`Failed to remove file: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }

@@ -14,9 +14,13 @@ export async function writeHomeConfig(
   }
 }
 
-export async function readHomeConfig(
-  relativePath: string,
-): Promise<{ success: boolean; content?: string; path?: string; exists?: boolean; error?: string }> {
+export async function readHomeConfig(relativePath: string): Promise<{
+  success: boolean;
+  content?: string;
+  path?: string;
+  exists?: boolean;
+  error?: string;
+}> {
   try {
     return await ipcRenderer.invoke('homeConfig:read', relativePath);
   } catch (err) {

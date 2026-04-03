@@ -49,7 +49,9 @@ export async function open(url: string): Promise<boolean> {
     return true;
   } catch (err: any) {
     error(`Shell open error: ${err instanceof Error ? err.message : String(err)}`);
-    throw new Error(`Failed to open URL: ${err instanceof Error ? err.message : err}`, { cause: err });
+    throw new Error(`Failed to open URL: ${err instanceof Error ? err.message : err}`, {
+      cause: err,
+    });
   }
 }
 

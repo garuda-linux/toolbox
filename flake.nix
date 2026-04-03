@@ -31,27 +31,6 @@
         programs = {
           deadnix.enable = true;
           nixfmt.enable = true;
-          prettier = {
-            settings = {
-              arrowParens = "always";
-              bracketSpacing = true;
-              editorconfig = true;
-              embeddedLanguageFormatting = "auto";
-              endOfLine = "lf";
-              plugins = [
-                "prettier-plugin-tailwindcss"
-                "prettier-plugin-organize-attributes"
-              ];
-              printWidth = 120;
-              quoteProps = "consistent";
-              semi = true;
-              singleQuote = true;
-              tabWidth = 2;
-              trailingComma = "all";
-              useTabs = false;
-            };
-            enable = true;
-          };
           shellcheck.enable = true;
           shfmt.enable = true;
           statix = {
@@ -141,16 +120,31 @@
             detect-private-keys.enable = true;
             eslint = {
               enable = true;
-              settings.extensions = "\\.(ts|js|mjs|html)$";
+              settings = {
+                binPath = "./node_modules/.bin/eslint";
+                extensions = "\\.(ts|js|mjs|html)$";
+              };
+            };
+            oxfmt = {
+              enable = true;
+              settings = {
+                binPath = "./node_modules/.bin/oxfmt";
+              };
             };
             oxlint = {
               enable = true;
-              name = "oxlint";
-              entry = "${pkgs.oxlint}/bin/oxlint";
-              files = "\\.(ts|js)$";
-              language = "system";
-              pass_filenames = false;
-              stages = [ "pre-commit" ];
+              settings = {
+                binPath = "./node_modules/.bin/oxlint";
+                plugins = [
+                  "oxc"
+                  "unicorn"
+                  "typescript"
+                  "node"
+                  "promise"
+                  "import"
+                ];
+                typeAware = true;
+              };
             };
             ripsecrets.enable = true;
             treefmt = {
