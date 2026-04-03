@@ -86,7 +86,7 @@ ul {
 }
 
 .garuda-menubar-item--has-submenu .p-menubar-item-link::after {
-  content: "\e930";
+  content: '\e930';
   font-family: 'primeicons';
   margin-left: 0.1rem;
   font-size: 0.75rem;
@@ -99,6 +99,14 @@ p-button {
 .p-tab {
   margin-left: auto !important;
   margin-right: auto !important;
+}
+
+.p-tablist {
+  border-radius: 12px 12px 0 0;
+}
+
+.p-tabpanels {
+  border-radius: 0 0 12px 12px;
 }
 
 .p-menubar-submenu-icon {
@@ -234,19 +242,11 @@ p-splitbutton > div > button.garuda-button-shine {
   @apply relative z-10;
 }
 
-:root {
-  view-transition-name: none;
-}
-
-.route-container {
-  view-transition-name: none;
-}
-
+/* View transitions - only apply during navigation, not on initial paint */
 body.is-transitioning .route-container {
   view-transition-name: main-content;
 }
 
-/* Transition animation */
 @supports (view-transition-name: main-content) {
   ::view-transition-old(main-content) {
     animation: 150ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
