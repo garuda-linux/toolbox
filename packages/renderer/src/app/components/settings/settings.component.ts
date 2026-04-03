@@ -8,7 +8,7 @@ import { LogLevel } from '../../logging/interfaces';
 import { Logger } from '../../logging/logging';
 import { LangPipePipe } from '../lang-pipe/lang-pipe.pipe';
 import { themes } from '../../theme';
-import { Panel } from 'primeng/panel';
+import { Card } from 'primeng/card';
 import { Button } from 'primeng/button';
 import { FileUpload } from 'primeng/fileupload';
 import { MessageToastService } from '@garudalinux/core';
@@ -17,7 +17,7 @@ import { Slider } from 'primeng/slider';
 
 @Component({
   selector: 'toolbox-settings',
-  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Panel, Button, FileUpload, Slider],
+  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, Button, FileUpload, Slider],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   providers: [LangPipePipe],

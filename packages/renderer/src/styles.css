@@ -101,12 +101,16 @@ p-button {
   margin-right: auto !important;
 }
 
-.p-tablist {
+.p-tablist, .p-datatable-header {
   border-radius: 12px 12px 0 0;
 }
 
-.p-tabpanels {
+.p-tabpanels, toolbox-config-files > div p-table > .p-datatable-table-container {
   border-radius: 0 0 12px 12px;
+}
+
+.p-datatable-tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .p-menubar-submenu-icon {
