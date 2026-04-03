@@ -122,17 +122,17 @@ p-button {
 }
 
 .p-menubar-item-icon {
-  color: var(--ctp-mocha-mauve) !important;
+  color: var(--color-primary-emphasis) !important;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
 
 .p-menu-item-icon {
-  color: var(--ctp-mocha-mauve) !important;
+  color: var(--color-primary-emphasis-alt) !important;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
 
 .p-menubar-item-icon-active-color {
-  color: var(--ctp-mocha-maroon) !important;
+  color: var(--color-primary-emphasis-alt) !important;
 }
 
 toolbox-command-palette > p-dialog > div > div > .p-dialog-content {
