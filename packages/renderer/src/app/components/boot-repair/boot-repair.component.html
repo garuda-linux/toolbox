@@ -4,10 +4,13 @@
       <span class="text-color">{{ t('bootRepair.title') }}</span>
       <span class="text-primary">{{ t('bootRepair.titleTwo') }}</span>
     </div>
+  </div>
 
-    <div class="p-10">
-      <div class="grid grid-cols-1 gap-6 text-left md:grid-cols-2">
-        <p-card [header]="t('bootRepair.selectOperation')">
+  <div class="p-10">
+    <p-card>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div>
+          <div class="mb-4 font-bold text-lg">{{ t('bootRepair.selectOperation') }}</div>
           <div class="flex flex-col gap-4">
             <div class="flex items-center gap-2">
               <p-radioButton [(ngModel)]="action" name="action" value="reinstall" inputId="act-reinstall" />
@@ -50,9 +53,9 @@
               ></label>
             </div>
           </div>
-        </p-card>
+        </div>
 
-        <p-card [header]="t('bootRepair.options')">
+        <div>
           @if (action() === 'reinstall') {
             <div class="mb-6 flex flex-col gap-4">
               <div class="font-bold">{{ t('bootRepair.installOn') }}</div>
@@ -169,8 +172,8 @@
           </div>
 
           <p-button [label]="t('bootRepair.apply')" (onClick)="apply()" icon="pi pi-check" />
-        </p-card>
+        </div>
       </div>
-    </div>
+    </p-card>
   </div>
 </ng-container>

@@ -54,7 +54,7 @@
         </p-overlay-badge>
       </div>
     }
-    @if (systemStatusService.healthErrors().length > 0) {
+    @if (systemStatusService.healthErrors().length > 0 && !systemStatusService.healthErrors().some(e => e.message.includes('reboot') || e.message.includes('Reboot'))) {
       <div
         class="cursor-pointer"
         (click)="healthDialogVisible.set(true)"

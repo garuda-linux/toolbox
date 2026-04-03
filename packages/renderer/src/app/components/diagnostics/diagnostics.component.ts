@@ -51,6 +51,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
 
   diagnosticTools = [
     { id: 'inxi', label: 'diagnostics.inxi', icon: 'pi pi-info-circle', description: 'diagnostics.inxiDesc' },
+    { id: 'garuda-health', label: 'diagnostics.health', icon: 'pi pi-heart', description: 'diagnostics.healthDesc' },
     {
       id: 'systemd-analyze',
       label: 'diagnostics.systemctl',
@@ -145,7 +146,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
     this.loadingService.loadingOn();
 
     let cmd = '';
-    for (const type of ['inxi', 'systemd-analyze', 'journalctl', 'pacman-log', 'dmesg']) {
+    for (const type of ['inxi', 'systemd-analyze', 'journalctl', 'pacman-log', 'dmesg', 'health']) {
       const command = this.getCommand(type);
       if (!command) {
         this.logger.error(`Failed to get command for ${type}`);
@@ -277,6 +278,10 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
         break;
       case 'dmesg':
         result.cmd = 'dmesg';
+        result.sudo = true;
+        break;
+      case 'garuda-health':
+        result.cmd = 'garuda-health';
         result.sudo = true;
         break;
       default:
