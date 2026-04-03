@@ -369,6 +369,34 @@ export class MaintenanceComponent implements OnInit {
       onlyDirect: true,
       command: this.mergePacDiff.bind(this),
     },
+    {
+      name: 'garudaHealth',
+      label: 'maintenance.garudaHealth',
+      description: 'maintenance.garudaHealthSub',
+      icon: 'pi pi-heart',
+      hasOutput: false,
+      sudo: true,
+      onlyDirect: true,
+      priority: 0,
+      command: async (): Promise<undefined | ChildProcess<string>> => {
+        this.logger.info('Running garuda-health');
+        return await this.taskManager.executeAndWaitBashTerminal('garuda-health; read -p "Press Enter to close"');
+      },
+    },
+    {
+      name: 'garudaHealthFix',
+      label: 'maintenance.garudaHealthFix',
+      description: 'maintenance.garudaHealthFixSub',
+      icon: 'pi pi-heart-fill',
+      hasOutput: false,
+      sudo: true,
+      onlyDirect: true,
+      priority: 0,
+      command: async (): Promise<undefined | ChildProcess<string>> => {
+        this.logger.info('Running garuda-health --fix');
+        return await this.taskManager.executeAndWaitBashTerminal('garuda-health --fix; read -p "Press Enter to close"');
+      },
+    },
   ];
 
   private readonly configService = inject(ConfigService);

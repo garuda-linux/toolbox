@@ -71,6 +71,8 @@
     "journalctlDesc": "Examine system logs from the journal daemon.",
     "pacmanDesc": "View the most recent pacman package manager logs.",
     "dmesgDesc": "Examine kernel ring buffer messages.",
+    "health": "System health",
+    "healthDesc": "Run a system health check using garuda-health.",
     "fullDesc": "Gather all available diagnostic information into one output.",
     "uploadDesc": "Upload the current terminal output to PrivateBin for sharing.",
     "copySuccess": "Successfully copied to clipboard",
@@ -276,7 +278,11 @@
     "garudaUpdate": "Garuda update rescue tools",
     "actionFailedHeader": "Failed to run maintenance action",
     "actionFailed": "An error occurred while trying to run {{ action }} with error {{ error }}.",
-    "installationFailedHeader": "{{ program }} is not installed and failed to install, cannot proceed. Check the logs for more information"
+    "installationFailedHeader": "{{ program }} is not installed and failed to install, cannot proceed. Check the logs for more information",
+    "garudaHealth": "System health check",
+    "garudaHealthSub": "Check for common system issues with garuda-health",
+    "garudaHealthFix": "Repair system health",
+    "garudaHealthFixSub": "Attempt to fix common system issues automatically"
   },
   "sudo": {
     "title": "Authentication required",
@@ -745,8 +751,8 @@
   },
   "systemStatus": {
     "pendingUpdates": "Pending updates",
-    "updates": "This system has pending updates (click for info)",
-    "pacFiles": "This system has pending .pacnew files, you should check and merge those! (click for info)",
+    "updates": "This system has pending updates",
+    "pacFiles": "This system has pending .pacnew files, you should check and merge those!",
     "cancel": "Cancel",
     "aurUpdates": "Updating AUR packages is out of scope for this application. Please use an AUR helper like Paru, and review PKGBUILD files before installation.",
     "scheduleUpdates": "Schedule updates",
@@ -765,7 +771,10 @@
     "proceedMerge": "Meld will be opened to apply changes. On the left side is the NEW file, on the right side the OLD. Move any useful changes you want to merge from the left to the right side. Click the save button or CTRL + S when done.",
     "cautionMerge": "Be aware that putting wrong changes into the OLD file can break your system.",
     "askHelp": "If you are unsure close the window without saving and ask for help on the Garuda Linux forum.",
-    "runAurUpdates": "Run AUR updates externally"
+    "runAurUpdates": "Run AUR updates externally",
+    "healthIssues": "System health issues",
+    "healthIssuesFound": "The following health issues were found:",
+    "runHealthFix": "Run health fix"
   },
   "operationManager": {
     "refusing": "Refusing execution",

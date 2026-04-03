@@ -41,7 +41,7 @@
         </p-overlay-badge>
       </div>
     }
-    @if (configService.state().rebootPending) {
+    @if (systemStatusService.healthErrors().some((e) => e.message.includes('reboot') || e.message.includes('Reboot'))) {
       <div class="cursor-pointer" (click)="rebootNow($event)" (keyup.enter)="rebootNow($event)" tabindex="0">
         <p-overlay-badge
           [pTooltip]="t('systemStatus.warnReboot')"
@@ -54,10 +54,47 @@
         </p-overlay-badge>
       </div>
     }
+    @if (systemStatusService.healthErrors().length > 0) {
+      <div
+        class="cursor-pointer"
+        (click)="healthDialogVisible.set(true)"
+        (keyup.enter)="healthDialogVisible.set(true)"
+        tabindex="0"
+      >
+        <p-overlay-badge
+          [value]="systemStatusService.healthErrors().length"
+          [pTooltip]="t('systemStatus.healthIssues')"
+          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
+          severity="danger"
+        >
+          <i class="pi pi-heart" style="font-size: 1rem"></i>
+        </p-overlay-badge>
+      </div>
+    }
     <div class="cursor-pointer" (click)="refreshState()" (keyup.enter)="refreshState()" tabindex="0">
       <i class="pi pi-refresh" style="font-size: 1.2rem"></i>
     </div>
   </div>
+
+  <p-dialog [(visible)]="healthDialogVisible" [header]="t('systemStatus.healthIssues')" [modal]="true">
+    <p class="text-left text-lg font-bold">
+      {{ t('systemStatus.healthIssuesFound') }}
+    </p>
+    <ul>
+      @for (error of systemStatusService.healthErrors(); track error.message) {
+        <li>
+          {{ error.message }}
+        </li>
+      }
+    </ul>
+
+    <div class="flex justify-end gap-2">
+      <p-button [label]="t('systemStatus.cancel')" (click)="healthDialogVisible.set(false)" severity="secondary" />
+      @if (healthFixAvailable()) {
+        <p-button [label]="t('systemStatus.runHealthFix')" (click)="runHealthFix()" severity="success" />
+      }
+    </div>
+  </p-dialog>
 
   <p-dialog [(visible)]="dialogVisible" [header]="t('systemStatus.pendingUpdates')" [modal]="true">
     <ul>

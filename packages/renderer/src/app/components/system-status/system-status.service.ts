@@ -1,6 +1,7 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import type { SystemUpdate, UpdateStatusOption, UpdateType } from './types';
+import type { HealthError, SystemUpdate, UpdateStatusOption, UpdateType } from './types';
 import { type Task, TaskManagerService } from '../task-manager/task-manager.service';
+import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { type ChildProcess, ElectronShellService } from '../../electron-services';
@@ -14,11 +15,13 @@ export class SystemStatusService {
   updates = signal<SystemUpdate[]>([]);
   updatesAur = signal<boolean>(false);
   warnUpdate = signal<boolean>(false);
+  healthErrors = signal<HealthError[]>([]);
 
   private readonly loadingService = inject(LoadingService);
   private readonly logger = Logger.getInstance();
   private readonly taskManagerService = inject(TaskManagerService);
   private readonly shellService = inject(ElectronShellService);
+  private readonly configService = inject(ConfigService);
 
   constructor() {
     effect(async () => {
@@ -51,7 +54,6 @@ export class SystemStatusService {
       this.updatesAur.set(false);
     }
 
-    // Explicitly set the updates signal to trigger change detection
     this.updates.set([...this.updates()]);
   }
 
@@ -62,13 +64,73 @@ export class SystemStatusService {
   private refreshStatuses(): Promise<void>[] {
     this.pacFiles.set([]);
     this.updates.set([]);
+    this.healthErrors.set([]);
 
     return [
       this.getPacFiles(),
       this.checkSystemUpdate('checkupdates --nocolor', 'repo'),
       this.checkSystemUpdate('paru -Qua', 'aur'),
       this.checkLastUpdate(),
+      this.checkGarudaHealth(),
     ];
+  }
+
+  /**
+   * Check for system health issues with garuda-health.
+   */
+  private async checkGarudaHealth(): Promise<void> {
+    if (this.configService.state().isLiveSystem === true) {
+      this.logger.debug('Skipping garuda-health on live system');
+      this.healthErrors.set([]);
+      return;
+    }
+
+    try {
+      this.logger.debug('Running garuda-health --json');
+      const result = await this.taskManagerService.executeAndWaitBash('garuda-health --json || true');
+
+      if (result.stdout.trim()) {
+        const healthData = JSON.parse(result.stdout.trim());
+        const errors: HealthError[] = [];
+
+        if (healthData.INFO && Array.isArray(healthData.INFO)) {
+          for (const item of healthData.INFO) {
+            errors.push({
+              title: 'Health info',
+              message: item.description,
+              fixAvailable: item.fix_available || false,
+            });
+          }
+        }
+
+        if (healthData.WARNING && Array.isArray(healthData.WARNING)) {
+          for (const item of healthData.WARNING) {
+            errors.push({
+              title: 'Health warning',
+              message: item.description,
+              fixAvailable: item.fix_available || false,
+            });
+          }
+        }
+
+        if (healthData.ERROR && Array.isArray(healthData.ERROR)) {
+          for (const item of healthData.ERROR) {
+            errors.push({
+              title: 'Health error',
+              message: item.description,
+              fixAvailable: item.fix_available || false,
+            });
+          }
+        }
+
+        this.healthErrors.set(errors);
+      } else {
+        this.healthErrors.set([]);
+      }
+    } catch (error) {
+      this.logger.error(`Failed to run garuda-health: ${error}`);
+      this.healthErrors.set([]);
+    }
   }
 
   /**

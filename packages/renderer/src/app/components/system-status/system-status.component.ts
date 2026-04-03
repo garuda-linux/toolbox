@@ -23,6 +23,7 @@ import { OsInteractService } from '../task-manager/os-interact.service';
 export class SystemStatusComponent {
   dialogVisible = signal<boolean>(false);
   pacdiffDialogVisible = signal<boolean>(false);
+  healthDialogVisible = signal<boolean>(false);
 
   protected readonly configService = inject(ConfigService);
   protected readonly systemStatusService = inject(SystemStatusService);
@@ -34,6 +35,7 @@ export class SystemStatusComponent {
   private readonly translocoService = inject(TranslocoService);
 
   updateButtonDisabled = computed(() => this.taskManagerService.findTaskById('updateSystem') !== null);
+  healthFixAvailable = computed(() => this.systemStatusService.healthErrors().some((error) => error.fixAvailable));
 
   /**
    * Schedule a system update, confirming with the user first. If confirmed, schedule the update.
@@ -63,6 +65,23 @@ export class SystemStatusComponent {
     }
 
     this.dialogVisible.set(false);
+  }
+
+  /**
+   * Run the garuda-health --fix command in a terminal.
+   */
+  async runHealthFix() {
+    this.healthDialogVisible.set(false);
+    const task = this.taskManagerService.createTask(
+      0,
+      'healthFix',
+      true,
+      this.translocoService.translate('maintenance.garudaHealthFix'),
+      'pi pi-heart-fill',
+      'garuda-health --fix; read -p "Press Enter to close"',
+    );
+    await this.taskManagerService.executeTask(task);
+    this.taskManagerService.toggleTerminal(true);
   }
 
   /**
