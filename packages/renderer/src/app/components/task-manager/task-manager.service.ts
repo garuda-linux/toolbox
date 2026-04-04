@@ -55,7 +55,6 @@ export class TrackedShell {
   }
 
   async start(): Promise<void> {
-    // eslint-disable-next-line no-async-promise-executor
     return new Promise<void>(async (resolve, reject) => {
       this.running = true;
       this.muted = true;
@@ -233,8 +232,8 @@ export class TaskManagerService {
   readonly cachedData = signal<string>('');
 
   // progress can be null when currentTask is null.
-  // If currentTask is not in sortedList, currentIndex is 1.
-  // In all other cases, currentIndex is the index of currentTask in sortedList.
+  // If currentTask is not in sortedList, currentIndex is 0.
+  // In all other cases, currentIndex is the number of completed tasks (current task index).
   readonly progress = computed(() => {
     const currentTask = this.currentTask();
     if (currentTask === null) {
@@ -243,9 +242,9 @@ export class TaskManagerService {
     const sortedList = this.sortedTasks();
     const currentIndex = sortedList.findIndex((task) => task.id === currentTask.id);
     if (currentIndex === -1) {
-      return 1;
+      return 0;
     }
-    return currentIndex + 1;
+    return currentIndex;
   });
 
   readonly events = new EventEmitter<string>();
@@ -549,12 +548,12 @@ echo "${shell.endMarker}"
     if (await this.fsService.exists(wrapperPath)) {
       return {
         command: wrapperPath,
-        args: ['--pty', '-q', '-e', '/dev/null', '-c', shellCommand],
+        args: ['--pty', '-q', '-e', '-c', shellCommand, '/dev/null'],
       };
     }
     return {
       command: '/usr/bin/script',
-      args: ['-q', '-e', '/dev/null', '-c', shellCommand],
+      args: ['-q', '-e', '-c', shellCommand, '/dev/null'],
     };
   }
 
