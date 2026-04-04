@@ -118,7 +118,7 @@
 
     <div class="flex justify-end gap-2">
       <p-button [label]="t('systemStatus.cancel')" (click)="dialogVisible.set(false)" severity="secondary" />
-      @if (systemStatusService.updates().length > 0 && !systemStatusService.updatesAur()) {
+      @if (hasRegularUpdates()) {
         <p-button
           [disabled]="updateButtonDisabled()"
           [label]="t('systemStatus.scheduleUpdates')"
@@ -126,7 +126,7 @@
           severity="success"
         />
       }
-      @if (systemStatusService.updatesAur()) {
+      @if (hasAurUpdates()) {
         <p-button [label]="t('systemStatus.runAurUpdates')" (click)="runAurUpdates()" severity="info" />
       }
     </div>

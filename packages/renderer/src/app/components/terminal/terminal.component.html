@@ -6,7 +6,7 @@
           @for (op of taskManagerService.sortedTasks(); track op.id) {
             <p-card class="mt-2" [style]="{ width: '20rem' }">
               <ng-template #header>
-                <div class="mt-4 text-center">
+                <div class="pt-4 text-center">
                   <span class="mr-2 font-bold">{{ t(op.name) }}</span>
                   <i
                     class="pi mr-2"

@@ -81,6 +81,9 @@ export class SystemStatusComponent {
   updateButtonDisabled = computed(() => this.taskManagerService.findTaskById('updateSystem') !== null);
   healthFixAvailable = computed(() => this.systemStatusService.healthErrors().some((error) => error.fixAvailable));
 
+  hasRegularUpdates = computed(() => this.systemStatusService.updates().some((update: SystemUpdate) => !update.aur));
+  hasAurUpdates = computed(() => this.systemStatusService.updates().some((update: SystemUpdate) => update.aur));
+
   /**
    * Schedule a system update, confirming with the user first. If confirmed, schedule the update.
    * @param confirmed Whether the user has confirmed the update.
