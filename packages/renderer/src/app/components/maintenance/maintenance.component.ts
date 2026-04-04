@@ -33,7 +33,7 @@ export class MaintenanceComponent implements OnInit {
     {
       name: 'Bash',
       description: 'maintenance.resettableConfigs.bash',
-      files: ['/etc/skel/.bashrc_garuda', '/etc/skel/autostart/bashrc-setup.desktop'],
+      files: ['/etc/skel/.bashrc_garuda', '/etc/skel/.config/autostart/bashrc-setup.desktop'],
     },
     {
       name: 'Fish',
@@ -469,7 +469,7 @@ export class MaintenanceComponent implements OnInit {
     for (const config of this.selectedResetConfigs()) {
       this.logger.trace(`Resetting config: ${config.name}`);
       for (const file of config.files) {
-        const cmd = `cp ${file} ${file.replace('/etc/skel', userHome)}`;
+        const cmd = `cp -r ${file} ${file.replace('/etc/skel', userHome)}`;
         this.logger.debug(`Running command: ${cmd}`);
 
         const output = await this.taskManager.executeAndWaitBash(cmd);
