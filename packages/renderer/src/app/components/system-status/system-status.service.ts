@@ -165,14 +165,24 @@ export class SystemStatusService {
         this.logger.trace(`${updateString}: ${update}`);
 
         const [pkg, version, _invalid, newVersion] = update.split(' ');
-        this.updates.update((updates: SystemUpdate[]) => {
-          updates.push({
-            pkg,
-            version,
-            newVersion: newVersion,
-            aur: type === 'aur',
-          });
-          return updates;
+        this.updates.update((updatesList: SystemUpdate[]) => {
+          const existingIndex = updatesList.findIndex((u) => u.pkg === pkg && u.aur === (type === 'aur'));
+          if (existingIndex !== -1) {
+            updatesList[existingIndex] = {
+              pkg,
+              version,
+              newVersion: newVersion,
+              aur: type === 'aur',
+            };
+          } else {
+            updatesList.push({
+              pkg,
+              version,
+              newVersion: newVersion,
+              aur: type === 'aur',
+            });
+          }
+          return updatesList;
         });
       }
     } else if ((type === 'repo' && result.code === 2) || (type === 'aur' && result.code === 1)) {
