@@ -152,6 +152,26 @@ toolbox-command-palette > p-dialog > div > div > .p-dialog-content {
   overflow-y: auto;
 }
 
+.p-dialog-mask {
+  backdrop-filter: blur(10px);
+  --webkit-backdrop-filter: blur(10px);
+}
+
+.p-overlay-mask {
+  background: unset;
+}
+
+ .p-dialog {
+  backdrop-filter: blur(20px);
+  --webkit-backdrop-filter: blur(20px);
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.xterm .xterm-viewport, .xterm, .resize-handle {
+  background-color: unset !important;
+}
+
+
 /* Garuda Button */
 .garuda-button-shine {
   position: relative;
