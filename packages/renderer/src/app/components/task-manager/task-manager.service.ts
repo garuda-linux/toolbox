@@ -273,17 +273,6 @@ export class TaskManagerService {
   async resizeActiveShell(cols: number, rows: number): Promise<void> {
     this.terminalCols = cols;
     this.terminalRows = rows;
-    if (!this.activeShells) return;
-
-    // Send a silent stty command to update the PTY dimensions of the active shell(s)
-    const resizeCmd = `stty cols ${cols} rows ${rows} 2>/dev/null || true\n`;
-
-    if (this.activeShells.normal && this.activeShells.normal.running) {
-      await this.activeShells.normal.writeRaw(resizeCmd);
-    }
-    if (this.activeShells.escalated && this.activeShells.escalated.running) {
-      await this.activeShells.escalated.writeRaw(resizeCmd);
-    }
   }
 
   /**
@@ -518,6 +507,7 @@ export class TaskManagerService {
     // Write the executor script
     const executorScript = `
 #!/bin/bash
+stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true
 echo "${shell.startMarker}"
 # Read file into variable
 script=$(<'${path}')
