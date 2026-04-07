@@ -79,6 +79,10 @@ export class ConfigFilesComponent implements OnInit {
     return `'${value.replaceAll("'", `'"'"'`)}'`;
   }
 
+  private sanitizeEditor(editor: string): string {
+    return editor.replace(/^["']+|["']+$/g, '').trim();
+  }
+
   private async listDirectoryFiles(parent: ConfigFile): Promise<ConfigFile[]> {
     const fullPath = this.resolvePath(parent.path);
     const cmd =
@@ -1015,10 +1019,10 @@ export class ConfigFilesComponent implements OnInit {
       }
 
       if (envVars.has('VISUAL') && envVars.get('VISUAL')) {
-        editor = envVars.get('VISUAL') as string;
+        editor = this.sanitizeEditor(envVars.get('VISUAL') as string);
         isVisual = true;
       } else if (envVars.has('EDITOR') && envVars.get('EDITOR')) {
-        editor = envVars.get('EDITOR') as string;
+        editor = this.sanitizeEditor(envVars.get('EDITOR') as string);
       }
     }
 
