@@ -984,18 +984,12 @@ export class ConfigFilesComponent implements OnInit {
       return;
     }
 
-    const fullPath = this.resolvePath(file.path);
-    const userHome = this.configService.state().userHome;
-
-    const needsRoot = !fullPath.startsWith(userHome);
-    if (needsRoot) {
-      const cmd = `pkexec micro "${fullPath}"`;
-      await this.taskManager.executeAndWaitBashTerminal(cmd);
-      return;
-    }
-
     let editor = 'micro';
     let isVisual = false;
+
+    const fullPath = this.resolvePath(file.path);
+    const userHome = this.configService.state().userHome;
+    const needsRoot = !fullPath.startsWith(userHome);
 
     const envScript = `
       USER_SHELL=$(getent passwd "$USER" | cut -d: -f7)
@@ -1011,14 +1005,13 @@ export class ConfigFilesComponent implements OnInit {
       const lines = envRes.stdout.split('\n');
       const envVars = new Map<string, string>();
       for (const line of lines) {
-        if (line.startsWith('VISUAL=')) {
-          envVars.set('VISUAL', line.substring(7).trim());
-        } else if (line.startsWith('EDITOR=')) {
-          envVars.set('EDITOR', line.substring(7).trim());
+        const [key, value] = line.split('=');
+        if (key && value) {
+          envVars.set(key.trim(), value.trim());
         }
       }
 
-      if (envVars.has('VISUAL') && envVars.get('VISUAL')) {
+      if (!needsRoot && envVars.has('VISUAL') && envVars.get('VISUAL')) {
         editor = this.sanitizeEditor(envVars.get('VISUAL') as string);
         isVisual = true;
       } else if (envVars.has('EDITOR') && envVars.get('EDITOR')) {
@@ -1026,8 +1019,13 @@ export class ConfigFilesComponent implements OnInit {
       }
     }
 
-    const cmd = `${editor} "${fullPath}"`;
+    if (needsRoot) {
+      const cmd = `pkexec ${editor} "${fullPath}"`;
+      await this.taskManager.executeAndWaitBashTerminal(cmd);
+      return;
+    }
 
+    const cmd = `${editor} "${fullPath}"`;
     if (isVisual) {
       await this.taskManager.executeAndWaitBash(cmd);
     } else {
