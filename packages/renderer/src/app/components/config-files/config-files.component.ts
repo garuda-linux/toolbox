@@ -80,7 +80,7 @@ export class ConfigFilesComponent implements OnInit {
   }
 
   private sanitizeEditor(editor: string): string {
-    return editor.replace(/^["']+|["']+$/g, '').trim();
+    return editor.trim().replace(/^["'\u2018\u2019\u201C\u201D`]+|["'\u2018\u2019\u201C\u201D`]+$/g, '');
   }
 
   private async listDirectoryFiles(parent: ConfigFile): Promise<ConfigFile[]> {
