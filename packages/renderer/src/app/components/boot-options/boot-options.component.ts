@@ -146,6 +146,14 @@ export class BootOptionsComponent implements OnInit {
         this.osInteract.setWantedPlymouthTheme(bootsplash ? plyTheme || null : null);
       });
     });
+
+    effect(() => {
+      if (!this.taskManager.running() && this.syncEnabled) {
+        void untracked(async () => {
+          await this.loadSettings();
+        });
+      }
+    });
   }
 
   async ngOnInit() {

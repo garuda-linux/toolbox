@@ -107,6 +107,23 @@ export class OsInteractService {
       this.wantedServicesUser.set(this.wantedPrune(untracked(this.wantedServicesUser), this.currentServicesUser()));
       this.wantedGroups.set(this.wantedPrune(untracked(this.wantedGroups), this.currentGroups()));
       this.wantedLocales.set(this.wantedPrune(untracked(this.wantedLocales), this.currentLocales()));
+
+      const cGrub = this.currentGrub();
+      this.wantedGrub.update((w) => {
+        const pruned = new Map(w);
+        for (const [key, val] of w) {
+          if (cGrub.get(key) === val) {
+            pruned.delete(key);
+          }
+        }
+        return pruned;
+      });
+
+      const cPly = this.currentPlymouthTheme();
+      this.wantedPlymouthTheme.update((w) => {
+        if (w !== null && w === cPly) return null;
+        return w;
+      });
     });
     effect(() => this.generateTasks());
   }

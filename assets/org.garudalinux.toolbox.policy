@@ -17,4 +17,30 @@
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
+  <action id="org.garudalinux.toolbox.read-grub">
+    <description>Read GRUB configuration</description>
+    <message>Reading GRUB configuration is allowed without authentication.</message>
+    <icon_name>garuda-toolbox</icon_name>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">cat</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv2">/etc/default/grub</annotate>
+  </action>
+  <action id="org.garudalinux.toolbox.read-grub-cfg">
+    <description>Read GRUB bootloader configuration</description>
+    <message>Reading GRUB bootloader configuration is allowed without authentication.</message>
+    <icon_name>garuda-toolbox</icon_name>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">cat</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv2">/boot/grub/grub.cfg</annotate>
+  </action>
 </policyconfig>
