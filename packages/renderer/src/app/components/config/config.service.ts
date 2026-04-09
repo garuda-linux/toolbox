@@ -8,6 +8,7 @@ import { usePreset } from '@primeuix/themes';
 import { AppTheme, themes } from '../../theme';
 import { ElectronOsService, ElectronShellService, notifyConfigChange, Store } from '../../electron-services';
 import type { CommandResult } from '../../types/shell';
+import { AVAILABLE_LANGUAGES } from '../../constants/i18n';
 
 class PendingConfigUpdate {
   state?: object;
@@ -75,9 +76,14 @@ export class ConfigService {
     this.loadingService.loadingOn();
 
     try {
+      const localeUpdate = await this.initLocale();
+      if (localeUpdate.state) {
+        this.state.set(Object.assign({}, this.state(), localeUpdate.state));
+      }
+
       const initPromises: Promise<PendingConfigUpdate>[] = [
         this.initInstalledPkgs(),
-        this.initLocale(),
+        this.initLanguage(),
         this.initRebootPending(),
       ];
 
@@ -366,6 +372,46 @@ export class ConfigService {
     } catch (error) {
       this.logger.error(`Failed to get current locale: ${error}`);
       return { state: { locale: 'en' } };
+    }
+  }
+
+  /**
+   * Initialize the app language based on system locale, but only if not explicitly set in store.
+   */
+  private async initLanguage(): Promise<PendingConfigUpdate> {
+    try {
+      const store: Store = await getConfigStore('initLanguage');
+      if (!store) {
+        return {};
+      }
+
+      if (await store.has('language')) {
+        const storedLanguage = await store.get('language');
+        this.logger.debug(`Language already set in store: ${storedLanguage}`);
+        return {};
+      }
+
+      const locale = this.state().locale;
+      if (!locale) {
+        this.logger.debug('No locale available, using default language');
+        return {};
+      }
+
+      let majorLanguage = locale.split('_')[0].split('.')[0];
+      if (locale.startsWith('zh_') || locale.startsWith('zh-')) {
+        majorLanguage = 'zh-CN';
+      }
+
+      if (!AVAILABLE_LANGUAGES.includes(majorLanguage as never)) {
+        this.logger.debug(`Language ${majorLanguage} not available, using default en`);
+        return {};
+      }
+
+      this.logger.debug(`Setting language from system locale: ${locale} -> ${majorLanguage}`);
+      return { settings: { language: majorLanguage } };
+    } catch (error) {
+      this.logger.error(`Failed to initialize language: ${error}`);
+      return {};
     }
   }
 

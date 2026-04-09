@@ -30,6 +30,7 @@ import { SplashService } from './components/splash/splash.service';
 import { provideRouter, Router, withHashLocation, withViewTransitions } from '@angular/router';
 import { routes } from './routes';
 import { CatppuccinAura } from '@garudalinux/themes/catppuccin';
+import { AVAILABLE_LANGUAGES } from './constants/i18n';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -101,35 +102,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideTransloco({
       config: {
-        availableLangs: [
-          'am',
-          'ar',
-          'de',
-          'en',
-          'es',
-          'eu',
-          'et',
-          'fr',
-          'gl',
-          'hi',
-          'hu',
-          'id',
-          'it',
-          'ja',
-          'ko',
-          'pl',
-          'pt',
-          'pt-BR',
-          'ro',
-          'ru',
-          'sl',
-          'sv',
-          'sw',
-          'tr',
-          'uk',
-          'uz',
-          'zh-CN',
-        ],
+        availableLangs: AVAILABLE_LANGUAGES,
         defaultLang: 'en',
         fallbackLang: 'en',
         missingHandler: {
