@@ -256,6 +256,8 @@ export class TaskManagerService {
 
   // Holds the active persistent shell instances
   private activeShells: TrackedShells | null = null;
+  private terminalReadyResolver: ((cols: number, rows: number) => void) | null = null;
+  private waitForTerminalPromise: Promise<{ cols: number; rows: number }> | null = null;
 
   constructor() {
     this.logger.debug('TaskManagerService constructor initialized');
@@ -461,6 +463,38 @@ export class TaskManagerService {
   }
 
   /**
+   * Wait for the terminal to have valid dimensions.
+   * @returns Promise that resolves with cols and rows when terminal is ready.
+   */
+  private waitForTerminalReady(): Promise<{ cols: number; rows: number }> {
+    if (this.waitForTerminalPromise) {
+      return this.waitForTerminalPromise;
+    }
+
+    this.waitForTerminalPromise = new Promise((resolve) => {
+      this.terminalReadyResolver = (cols: number, rows: number) => {
+        this.terminalCols = cols;
+        this.terminalRows = rows;
+        this.terminalReadyResolver = null;
+        this.waitForTerminalPromise = null;
+        resolve({ cols, rows });
+      };
+    });
+
+    return this.waitForTerminalPromise;
+  }
+
+  /**
+   * Notify that terminal has valid dimensions (called by terminal component).
+   * Only notifies if we're currently waiting.
+   */
+  notifyTerminalReady(cols: number, rows: number): void {
+    if (this.terminalReadyResolver) {
+      this.terminalReadyResolver(cols, rows);
+    }
+  }
+
+  /**
    * Abort the current task.
    */
   abort(): void {
@@ -559,11 +593,32 @@ echo "${shell.endMarker}"
     this.running.set(true);
     this.clearTerminal();
 
+    this.waitForTerminalPromise = null;
+    this.terminalReadyResolver = null;
+
+    const readyPromise = this.waitForTerminalReady();
+
+    this.toggleTerminal(true);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const { cols, rows } = await Promise.race([
+      readyPromise,
+      new Promise<{ cols: number; rows: number }>((resolve) =>
+        setTimeout(() => {
+          this.logger.warn(
+            `Terminal ready timeout, using current dimensions: ${this.terminalCols}x${this.terminalRows}`,
+          );
+          resolve({ cols: this.terminalCols, rows: this.terminalRows });
+        }, 2000),
+      ),
+    ]);
+
+    this.terminalCols = cols;
+    this.terminalRows = rows;
+
     const shellCommand = `stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true; env PS1="" PROMPT_COMMAND="" bash --norc`;
     const ptySetup = await this.getPtyCommandAndArgs(shellCommand);
 
-    // Create shells as needed for this single task execution
-    // Using script wrapper to allocate a PTY, ensuring tools like pacman display progress bars.
     this.activeShells = new TrackedShells(
       task.escalate
         ? null
@@ -621,14 +676,35 @@ echo "${shell.endMarker}"
     this.running.set(true);
     this.clearTerminal();
 
+    this.waitForTerminalPromise = null;
+    this.terminalReadyResolver = null;
+
+    const readyPromise = this.waitForTerminalReady();
+
+    this.toggleTerminal(true);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const { cols, rows } = await Promise.race([
+      readyPromise,
+      new Promise<{ cols: number; rows: number }>((resolve) =>
+        setTimeout(() => {
+          this.logger.warn(
+            `Terminal ready timeout, using current dimensions: ${this.terminalCols}x${this.terminalRows}`,
+          );
+          resolve({ cols: this.terminalCols, rows: this.terminalRows });
+        }, 2000),
+      ),
+    ]);
+
+    this.terminalCols = cols;
+    this.terminalRows = rows;
+
     const needsNormal = this.tasks().some((task) => !task.escalate);
     const needsEscalated = this.tasks().some((task) => task.escalate);
 
     const shellCommand = `stty cols ${this.terminalCols} rows ${this.terminalRows} 2>/dev/null || true; env PS1="" PROMPT_COMMAND="" bash --norc`;
     const ptySetup = await this.getPtyCommandAndArgs(shellCommand);
 
-    // Create persistent shells at the beginning of the entire task queue execution
-    // Using script wrapper to allocate a PTY, ensuring tools like pacman display progress bars.
     this.activeShells = new TrackedShells(
       needsNormal
         ? new TrackedShell(ptySetup.command, ptySetup.args, this.dataEvents, this.shellStreamingService, {

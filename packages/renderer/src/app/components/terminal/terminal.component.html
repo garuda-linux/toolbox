@@ -41,7 +41,7 @@
           }
         </p-scroll-panel>
       </div>
-      <div class="w-full">
+      <div class="w-full" (click)="focusTerminal()" (keydown.enter)="focusTerminal()" tabindex="0">
         <ng-terminal #term [xtermOptions]="xtermOptions()" />
       </div>
     </div>

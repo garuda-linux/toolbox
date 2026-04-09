@@ -44,6 +44,7 @@ import { FitAddon } from '@xterm/addon-fit';
 export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
   public visible = model<boolean>(false);
   private subscriptions: Subscription[] = [];
+  private notifiedReady = false;
 
   readonly dialog = viewChild<Dialog>('dialog');
   readonly term = viewChild<NgTerminal>('term');
@@ -101,6 +102,32 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.logger.trace('Terminal theme switched via effect');
     });
+
+    effect(() => {
+      const visible = this.visible();
+      const term = this.term();
+      if (visible && term?.underlying) {
+        this.notifiedReady = false;
+        const doFit = () => {
+          this.fitAddon.fit();
+          if (term.underlying && !this.notifiedReady) {
+            const cols = term.underlying.cols;
+            const rows = term.underlying.rows;
+            void this.taskManagerService.resizeActiveShell(cols, rows);
+            this.notifiedReady = true;
+            this.taskManagerService.notifyTerminalReady(cols, rows);
+            term.underlying.focus();
+          }
+        };
+
+        // Ensure dialog has fully rendered
+        setTimeout(doFit, 300);
+        setTimeout(doFit, 700);
+        setTimeout(doFit, 1200);
+      } else if (!visible) {
+        this.notifiedReady = false;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -139,6 +166,9 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
       termInstance.onResize((event) => {
         void this.taskManagerService.resizeActiveShell(event.cols, event.rows);
       });
+      if (termInstance.cols > 80 && termInstance.rows > 24) {
+        void this.taskManagerService.resizeActiveShell(termInstance.cols, termInstance.rows);
+      }
       termInstance.onData((data: string) => {
         void this.taskManagerService.writeRawToActiveShell(data);
       });
@@ -173,6 +203,13 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
           void this.uploadLog();
       }
     }
+  }
+
+  /**
+   * Focus the terminal element.
+   */
+  focusTerminal(): void {
+    this.term()?.underlying?.focus();
   }
 
   /**
