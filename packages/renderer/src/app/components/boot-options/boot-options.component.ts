@@ -161,7 +161,13 @@ export class BootOptionsComponent implements OnInit {
         if (msgLvl === 'limited') kernelParams += ' quiet hush';
         else if (msgLvl === 'detailed') kernelParams += ' quiet';
 
-        this.osInteract.setGrubSetting('GRUB_DEFAULT', saveDef ? 'saved' : defEntry);
+        const selectedEntry = this.grubEntries().find((e) => e.id === defEntry);
+        let grubDefault = defEntry;
+        if (selectedEntry?.parentLabel) {
+          grubDefault = `${selectedEntry.parentLabel}>${selectedEntry.label}`;
+        }
+
+        this.osInteract.setGrubSetting('GRUB_DEFAULT', saveDef ? 'saved' : grubDefault);
         this.osInteract.setGrubSetting('GRUB_TIMEOUT', time.toString());
         this.osInteract.setGrubSetting('GRUB_CMDLINE_LINUX_DEFAULT', kernelParams.trim());
         this.osInteract.setGrubSetting('GRUB_DISABLE_SUBMENU', flat ? 'y' : 'n');
