@@ -334,7 +334,7 @@ export class AppComponent implements OnInit {
   protected readonly applyMenuItems = [
     {
       label: this.translocoService.translate('menu.apply'),
-      command: () => this.taskManager.toggleTerminal(true),
+      command: () => this.operationManagerComponent().applyOperationsNow(),
     },
     {
       label: this.translocoService.translate('menu.clearTasks'),

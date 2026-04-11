@@ -50,6 +50,15 @@ export class OperationManagerComponent {
   }
 
   /**
+   * Apply all pending operations immediately without confirmation.
+   * Used by the "Apply pending operations" dropdown action.
+   */
+  applyOperationsNow() {
+    this.logger.debug('Applying operations immediately');
+    void this.taskManagerService.executeTasks();
+  }
+
+  /**
    * Clear all pending operations. Shows a confirmation dialog before clearing. If the user cancels, a message is shown.
    */
   clearOperations(): void {
