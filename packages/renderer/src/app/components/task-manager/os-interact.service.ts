@@ -530,21 +530,12 @@ export class OsInteractService {
     return `chroot ${this.chrootPath} ${command}`;
   }
 
-  private async readPrivilegedFile(virtualPath: string): Promise<string> {
+  async readPrivilegedFile(virtualPath: string): Promise<string> {
     const hostPath = this.chrootPath ? await pathResolve(this.chrootPath, virtualPath) : virtualPath;
-    try {
-      return await readTextFile(hostPath);
-    } catch (error: any) {
-      if (error.message?.includes('EACCES') || error.message?.includes('Permission denied')) {
-        const cmd = `pkexec cat "${hostPath}"`;
-        const result = await this.taskManagerService.executeAndWaitBash(cmd);
-        if (result.code === 0) return result.stdout;
-        throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`, {
-          cause: error,
-        });
-      }
-      throw error;
-    }
+    const cmd = `pkexec cat "${hostPath}"`;
+    const result = await this.taskManagerService.executeAndWaitBash(cmd);
+    if (result.code === 0) return result.stdout;
+    throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`);
   }
 
   /**

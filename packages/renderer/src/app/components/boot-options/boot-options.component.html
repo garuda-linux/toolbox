@@ -92,6 +92,12 @@
                 <label class="font-bold cursor-pointer" for="flat-menus">{{ t('bootOptions.flatMenus') }}</label>
               </div>
               <small class="-mt-2 ml-8">{{ t('bootOptions.flatMenusHint') }}</small>
+
+              <div class="flex items-center gap-2">
+                <p-checkbox [(ngModel)]="osProberEnabled" [binary]="true" inputId="os-prober" />
+                <label class="font-bold cursor-pointer" for="os-prober">{{ t('bootOptions.searchOtherOs') }}</label>
+              </div>
+              <small class="-mt-2 ml-8">{{ t('bootOptions.searchOtherOsHint') }}</small>
             </div>
           </div>
         </p-card>
@@ -217,7 +223,102 @@
             </div>
           </div>
         </p-card>
+
+        <p-card [header]="t('bootOptions.bootEntries')">
+          <div class="flex flex-col gap-4">
+            <p-table [value]="grubEntries()" dataKey="id" [paginator]="true" [rows]="10" [showCurrentPageReport]="true">
+              <ng-template #header>
+                <tr>
+                  <th>{{ t('bootOptions.entryName') }}</th>
+                  <th class="w-32">{{ t('bootOptions.actions') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template #body let-entry>
+                <tr>
+                  <td>
+                    <div class="flex flex-col">
+                      <span>{{ entry.label }}</span>
+                      @if (entry.parentLabel) {
+                        <small class="text-surface-400">({{ entry.parentLabel }})</small>
+                      }
+                      @if (entry.isSubmenu) {
+                        <small class="text-primary">{{ t('bootOptions.submenu') }}</small>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    @if (!entry.isSubmenu) {
+                      <p-button
+                        [outlined]="true"
+                        [label]="t('bootOptions.edit')"
+                        (onClick)="openEntryEditor(entry)"
+                        icon="pi pi-pencil"
+                        size="small"
+                      />
+                    }
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-card>
       </div>
     }
   </div>
+
+  <p-dialog
+    [header]="editorEntry() ? t('bootOptions.editEntry') : t('bootOptions.editGrubDefault')"
+    [modal]="true"
+    [style]="{ width: '80vw', height: '80vh' }"
+    [visible]="editorDialogVisible()"
+    (onHide)="closeEditor()"
+  >
+    <div class="flex flex-col gap-4 h-full">
+      @if (editorEntry()) {
+        <div class="flex flex-col gap-2">
+          <small class="text-surface-400">{{ t('bootOptions.editingEntry') }}: {{ editorEntry()?.label }}</small>
+        </div>
+      }
+
+      @if (editorError()) {
+        <p-message [text]="editorError()!" severity="error" />
+      }
+
+      <textarea
+        pTextarea
+        [(ngModel)]="editorContent"
+        [rows]="50"
+        class="font-mono text-sm w-full"
+        [disabled]="editorSaving()"
+      ></textarea>
+
+      @if (editorSaving()) {
+        <p-progressBar mode="indeterminate" [style]="{ height: '4px' }" />
+      }
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-between items-center">
+        <small class="text-surface-400">
+          @if (isEditorModified()) {
+            {{ t('bootOptions.unsavedChanges') }}
+          }
+        </small>
+        <div class="flex gap-2 ml-2">
+          <p-button
+            [label]="t('bootOptions.cancel')"
+            (onClick)="closeEditor()"
+            [disabled]="editorSaving()"
+            [outlined]="true"
+          />
+          <p-button
+            [label]="t('bootOptions.save')"
+            (onClick)="saveEditor()"
+            [disabled]="editorSaving() || !isEditorModified()"
+            [loading]="editorSaving()"
+          />
+        </div>
+      </div>
+    </ng-template>
+  </p-dialog>
 </ng-container>

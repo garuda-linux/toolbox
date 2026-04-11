@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   HostListener,
   inject,
@@ -10,7 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
 import { InputNumber } from 'primeng/inputnumber';
@@ -18,6 +19,12 @@ import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { Checkbox } from 'primeng/checkbox';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { TextareaModule } from 'primeng/textarea';
+import { ProgressBar } from 'primeng/progressbar';
+import { MessageToastService } from '@garudalinux/core';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
@@ -41,6 +48,11 @@ import { ActivatedRoute } from '@angular/router';
     Button,
     Message,
     Checkbox,
+    TableModule,
+    TooltipModule,
+    DialogModule,
+    TextareaModule,
+    ProgressBar,
   ],
   templateUrl: './boot-options.component.html',
   styleUrl: './boot-options.component.css',
@@ -53,6 +65,8 @@ export class BootOptionsComponent implements OnInit {
   private readonly configService = inject(ConfigService);
   private readonly loadingService = inject(LoadingService);
   private readonly route = inject(ActivatedRoute);
+  private readonly messageToastService = inject(MessageToastService);
+  private readonly translocoService = inject(TranslocoService);
 
   error = signal<string | null>(null);
   syncEnabled = false;
@@ -79,9 +93,20 @@ export class BootOptionsComponent implements OnInit {
   sysrqEnabled = signal(false);
   flatMenus = signal(false);
   saveDefault = signal(false);
+  osProberEnabled = signal(false);
 
   grubBackground = signal('');
   grubTheme = signal('');
+
+  editorDialogVisible = signal(false);
+  editorFileType = signal<'grub'>('grub');
+  editorEntry = signal<BootEntry | null>(null);
+  editorContent = signal('');
+  editorOriginalContent = signal('');
+  editorFullGrubCfg = signal('');
+  editorSaving = signal(false);
+  editorError = signal<string | null>(null);
+  isEditorModified = computed(() => this.editorContent() !== this.editorOriginalContent());
 
   messageLevelOptions = [
     { label: 'bootOptions.messageLevelLimited', value: 'limited' },
@@ -107,6 +132,7 @@ export class BootOptionsComponent implements OnInit {
       const sysrq = this.sysrqEnabled();
       const flat = this.flatMenus();
       const saveDef = this.saveDefault();
+      const osProber = this.osProberEnabled();
       const bg = this.grubBackground();
       const theme = this.grubTheme();
       const plyTheme = this.selectedPlymouthTheme();
@@ -140,6 +166,7 @@ export class BootOptionsComponent implements OnInit {
         this.osInteract.setGrubSetting('GRUB_CMDLINE_LINUX_DEFAULT', kernelParams.trim());
         this.osInteract.setGrubSetting('GRUB_DISABLE_SUBMENU', flat ? 'y' : 'n');
         this.osInteract.setGrubSetting('GRUB_SAVEDEFAULT', saveDef ? 'true' : 'false');
+        this.osInteract.setGrubSetting('GRUB_DISABLE_OS_PROBER', osProber ? 'false' : 'true');
         this.osInteract.setGrubSetting('GRUB_BACKGROUND', bg);
         this.osInteract.setGrubSetting('GRUB_THEME', theme);
 
@@ -228,6 +255,7 @@ export class BootOptionsComponent implements OnInit {
 
       this.saveDefault.set(rawDefault === 'saved' || grubSettings.get('GRUB_SAVEDEFAULT') === 'true');
       this.timeout.set(parseInt(grubSettings.get('GRUB_TIMEOUT') || '5'));
+      this.osProberEnabled.set(grubSettings.get('GRUB_DISABLE_OS_PROBER') !== 'true');
 
       const kernelParams = grubSettings.get('GRUB_CMDLINE_LINUX_DEFAULT') || '';
       this.kernelParameters.set(kernelParams);
@@ -270,5 +298,236 @@ export class BootOptionsComponent implements OnInit {
       if (type === 'background') this.grubBackground.set(result[0]);
       else this.grubTheme.set(result[0]);
     }
+  }
+
+  /**
+   * Open the editor dialog for the specified file type.
+   */
+  async openEditor(fileType: 'grub') {
+    const chroot = this.bootService.getChroot();
+    const filePath =
+      fileType === 'grub'
+        ? chroot
+          ? `${chroot}/etc/default/grub`
+          : '/etc/default/grub'
+        : chroot
+          ? `${chroot}/etc/default/grub`
+          : '/etc/default/grub';
+
+    this.editorError.set(null);
+    this.editorSaving.set(false);
+    this.editorEntry.set(null);
+
+    try {
+      const content = await this.osInteract.readPrivilegedFile(filePath);
+      this.editorContent.set(content);
+      this.editorOriginalContent.set(content);
+      this.editorFileType.set(fileType);
+      this.editorDialogVisible.set(true);
+    } catch (err) {
+      this.editorError.set(String(err));
+    }
+  }
+
+  /**
+   * Open the editor dialog for a specific boot entry.
+   */
+  async openEntryEditor(entry: BootEntry) {
+    const chroot = this.bootService.getChroot();
+    const grubCfgPath = chroot ? `${chroot}/boot/grub/grub.cfg` : '/boot/grub/grub.cfg';
+
+    this.editorError.set(null);
+    this.editorSaving.set(false);
+
+    try {
+      const fullCfg = await this.osInteract.readPrivilegedFile(grubCfgPath);
+      this.editorFullGrubCfg.set(fullCfg);
+
+      const entryContent = this.extractEntryFromGrubCfg(fullCfg, entry);
+
+      this.editorContent.set(entryContent);
+      this.editorOriginalContent.set(entryContent);
+      this.editorEntry.set(entry);
+      this.editorFileType.set('grub');
+      this.editorDialogVisible.set(true);
+    } catch (err) {
+      this.editorError.set(String(err));
+      this.editorDialogVisible.set(true);
+    }
+  }
+
+  /**
+   * Extract a specific menuentry block from grub.cfg
+   */
+  private extractEntryFromGrubCfg(grubCfg: string, entry: BootEntry): string {
+    const lines = grubCfg.split('\n');
+    const result: string[] = [];
+    let inEntry = false;
+    let braceCount = 0;
+    let foundEntry = false;
+
+    const idPattern = new RegExp(`--id\\s+['"]?${this.regexEscape(entry.id)}['"]?(?:\\s|$)`);
+    const labelPattern = new RegExp(`menuentry\\s+['"]${this.regexEscape(entry.label)}['"]`);
+
+    for (const line of lines) {
+      if (!inEntry) {
+        if (line.includes('menuentry ')) {
+          if (idPattern.test(line) || labelPattern.test(line)) {
+            inEntry = true;
+            foundEntry = true;
+          }
+        }
+      }
+
+      if (inEntry) {
+        result.push(line);
+        braceCount += (line.match(/{/g) || []).length;
+        braceCount -= (line.match(/}/g) || []).length;
+
+        if (braceCount === 0 && result.length > 1) {
+          break;
+        }
+      }
+    }
+
+    if (!foundEntry) {
+      throw new Error(`Entry "${entry.label}" (id: ${entry.id}) not found in grub.cfg`);
+    }
+
+    return result.join('\n');
+  }
+
+  /**
+   * Escape special regex characters in a string
+   */
+  private regexEscape(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  /**
+   * Close the editor dialog without saving.
+   */
+  closeEditor() {
+    this.editorDialogVisible.set(false);
+    this.editorContent.set('');
+    this.editorOriginalContent.set('');
+    this.editorFullGrubCfg.set('');
+    this.editorEntry.set(null);
+    this.editorError.set(null);
+  }
+
+  /**
+   * Save the editor content to the file.
+   */
+  async saveEditor() {
+    this.editorSaving.set(true);
+    this.editorError.set(null);
+
+    try {
+      if (this.editorEntry()) {
+        await this.saveEntryToGrubCfg();
+      } else {
+        await this.saveGrubDefault();
+      }
+
+      this.editorOriginalContent.set(this.editorContent());
+      this.closeEditor();
+
+      await this.loadSettings();
+
+      this.messageToastService.success(
+        this.translocoService.translate('bootOptions.saveSuccess'),
+        this.editorEntry()
+          ? this.translocoService.translate('bootOptions.entrySaved')
+          : this.translocoService.translate('bootOptions.configSaved'),
+      );
+    } catch (err) {
+      this.editorError.set(String(err));
+    } finally {
+      this.editorSaving.set(false);
+    }
+  }
+
+  /**
+   * Save an individual entry to grub.cfg
+   */
+  private async saveEntryToGrubCfg() {
+    const entry = this.editorEntry() as BootEntry;
+    const newEntryContent = this.editorContent();
+    const fullCfg = this.editorFullGrubCfg();
+    const chroot = this.bootService.getChroot();
+
+    // Build regex patterns to match the entry (same as extractEntryFromGrubCfg)
+    const idPattern = new RegExp(`--id\\s+['"]?${this.regexEscape(entry.id)}['"]?(?:\\s|$)`);
+    const labelPattern = new RegExp(`menuentry\\s+['"]${this.regexEscape(entry.label)}['"]`);
+
+    const lines = fullCfg.split('\n');
+    const result: string[] = [];
+    let inEntry = false;
+    let braceCount = 0;
+    let foundEntry = false;
+    let replaced = false;
+
+    for (const line of lines) {
+      if (!inEntry && !replaced && line.includes('menuentry ')) {
+        // Try to match by ID first, then by label (same as extractEntryFromGrubCfg)
+        if (idPattern.test(line) || labelPattern.test(line)) {
+          inEntry = true;
+          foundEntry = true;
+        }
+      }
+
+      if (inEntry && !replaced) {
+        braceCount += (line.match(/{/g) || []).length;
+        braceCount -= (line.match(/}/g) || []).length;
+
+        if (braceCount === 0 && result.length > 0) {
+          result.push(...newEntryContent.split('\n'));
+          replaced = true;
+          inEntry = false;
+        }
+      } else {
+        result.push(line);
+      }
+    }
+
+    if (!foundEntry) {
+      throw new Error(`Entry "${entry.label}" (id: ${entry.id}) not found in grub.cfg`);
+    }
+
+    const newContent = result.join('\n');
+    const grubCfgPath = chroot ? `${chroot}/boot/grub/grub.cfg` : '/boot/grub/grub.cfg';
+    await this.writeFileWithPkexec(grubCfgPath, newContent);
+  }
+
+  /**
+   * Save /etc/default/grub
+   */
+  private async saveGrubDefault() {
+    const content = this.editorContent();
+    const chroot = this.bootService.getChroot();
+    const grubPath = chroot ? `${chroot}/etc/default/grub` : '/etc/default/grub';
+    await this.writeFileWithPkexec(grubPath, content);
+  }
+
+  /**
+   * Write content to a file using pkexec
+   */
+  private async writeFileWithPkexec(filePath: string, content: string): Promise<void> {
+    const tempFile = `/tmp/garuda-grub-edit-${Date.now()}.tmp`;
+
+    const writeCmd = `cat > "${tempFile}" << 'GRUBEDIT_EOF'\n${content}\nGRUBEDIT_EOF`;
+    const writeResult = await this.taskManager.executeAndWaitBash(writeCmd);
+    if (writeResult.code !== 0) {
+      throw new Error(`Failed to create temp file: ${writeResult.stderr}`);
+    }
+
+    const copyCmd = `pkexec cp "${tempFile}" "${filePath}"`;
+    const copyResult = await this.taskManager.executeAndWaitBash(copyCmd);
+    if (copyResult.code !== 0) {
+      throw new Error(`Failed to write file: ${copyResult.stderr}`);
+    }
+
+    await this.taskManager.executeAndWaitBash(`rm -f "${tempFile}"`);
   }
 }

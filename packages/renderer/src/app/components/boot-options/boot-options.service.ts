@@ -20,28 +20,8 @@ export class BootOptionsService {
     return this.osInteract.getChroot();
   }
 
-  private async readPrivilegedFile(virtualPath: string): Promise<string> {
-    const chrootPath = this.osInteract.getChroot();
-    const hostPath = chrootPath ? `${chrootPath}${virtualPath}` : virtualPath;
-    try {
-      return await this.fsService.readTextFile(hostPath);
-    } catch (error: any) {
-      if (error.message?.includes('EACCES') || error.message?.includes('Permission denied')) {
-        const cmd = `pkexec cat "${hostPath}"`;
-        const result = await this.taskManager.executeAndWaitBash(cmd);
-        if (result.code === 0) {
-          return result.stdout;
-        }
-        throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`, {
-          cause: error,
-        });
-      }
-      throw error;
-    }
-  }
-
   async getGrubEntries(): Promise<BootEntry[]> {
-    const content = await this.readPrivilegedFile('/boot/grub/grub.cfg');
+    const content = await this.osInteract.readPrivilegedFile('/boot/grub/grub.cfg');
     return this.parseGrubCfg(content);
   }
 
