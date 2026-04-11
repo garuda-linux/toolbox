@@ -108,7 +108,7 @@ See [[Wikipedia:Pomodoro Technique]] for an introduction.
 * {{App|Timenaut|Time tracker that tracks active windows and lets you sort them into categories. Based on the [https://electronjs.org/ Electron] platform.|https://timenaut.app/|{{AUR|timenaut-appimage}}}}
 * {{App|Timetrack|Simple time-tracking app for GNOME.|https://gitlab.gnome.org/danigm/timetrack|{{AUR|timetrack}}}}
 * {{App|Timewarrior|A command-line time-tracking application.|https://timewarrior.net/|{{Pkg|timew}}}}
-* {{App|Wakatime|Open source plugins for metrics about your programming with intuitive web-interface.|https://wakatime.com/|{{Pkg|wakatime}}}}
+* {{App|Wakatime|Open source plugins for metrics about your programming with intuitive web-interface.|https://wakatime.com/|{{AUR|wakatime}}}}
 
 === Task management ===
 
@@ -361,22 +361,33 @@ See the main article: [[Wayland#Compositors]].
 * {{App|QuickTile|Lightweight standalone alternative to Compiz Grid plugin.|http://ssokolow.com/quicktile/|{{AUR|quicktile-git}}}}
 * {{App|wumwum|The Window Manager manager. It can turn emwh compliant window managers into a tiling window manager while retaining all initial functionalities.|https://wumwum.sourceforge.net/|{{AUR|wumwum}}}}
 
+=== Desktop shells ===
+
+Desktop shells provide a graphical shell layer on top of a window manager or compositor, including panels, launchers, and other desktop components. They can be used to build a desktop-like experience, but do not constitute full desktop environments.
+
+* {{App|AGS|Aylur's GTK Shell is a framework for building custom desktop shells using GTK.|https://aylur.github.io/ags/|{{AUR|aylurs-gtk-shell}}}}
+* {{App|DankMaterialShell|Desktop shell for Wayland compositors, built with Quickshell and Go.|https://github.com/AvengeMedia/DankMaterialShell|{{Pkg|dms-shell}}}}
+* {{App|eww|ElKowar's Wacky Widgets is a standalone widget system made in Rust that allows you to implement your own, custom widgets in any window manager.|https://github.com/elkowar/eww|{{AUR|eww}}}}
+* {{App|liquidshell|Basic desktop shell for Xorg, an alternative to plasmashell, implemented using QtWidgets. It provides a bottom panel, a desktop wallpaper and desktop widgets.|https://apps.kde.org/liquidshell/|{{Pkg|liquidshell}}}}
+* {{App|Noctalia|Minimal desktop shell for Wayland compositors, built on Quickshell.|https://noctalia.dev/|{{AUR|noctalia-shell}}}}
+* {{App|[[nwg-shell]]|Modular GTK3-based shell for Sway and Hyprland compositors.|https://nwg-piotr.github.io/nwg-shell/|{{Pkg|nwg-shell}}}}
+* {{App|wf-shell|Shell components for the Wayfire compositor.|https://github.com/WayfireWM/wf-shell|{{Pkg|wf-shell}}}}
+
 === Taskbars ===
 
 See also [[Wikipedia:Taskbar]].
 
 ==== For both Wayland and Xorg ====
 * {{App|[[Cairo-Dock]]|Highly customizable dock and launcher application.|https://www.glx-dock.org/|{{Pkg|cairo-dock}}}}
-* {{App|eww|Elkowars Wacky Widgets is a standalone widget system made in Rust that allows you to implement your own, custom widgets in any window manager.|https://github.com/elkowar/eww|{{AUR|eww}}}}
 * {{App|LXQt Panel|Qt-based taskbar, part of the [[LXQt]] desktop.|https://github.com/lxqt/lxqt-panel|{{Pkg|lxqt-panel}}}}
 * {{App|Xfce Panel|Panel included in the [[Xfce]] desktop.|https://docs.xfce.org/xfce/xfce4-panel/start|{{Pkg|xfce4-panel}}}}
 * {{App|yambar|A modular and lightweight status bar for X11 and Wayland that goes to great lengths to be both CPU and battery efficient.|https://codeberg.org/dnkl/yambar|{{AUR|yambar}}}}
 
 ==== For Wayland only ====
 * {{App|Dash to Panel|A fully customizable icon taskbar for {{Pkg|gnome-shell}}. Moves the dash into the GNOME main panel, similar to KDE Plasma and Windows 10.|https://github.com/home-sweet-gnome/dash-to-panel|{{Pkg|gnome-shell-extension-dash-to-panel}}}}
-* {{App|Ironbar|A customisable and feature-rich GTK4 status bar for Wayland compositors, written in Rust.|https://github.com/JakeStanger/ironbar|{{AUR|ironbar-git}}}}
-* {{App|nwg-dock|GTK-based dock for Sway and Hyprland Wayland compositors.|https://github.com/nwg-piotr/nwg-dock|For Sway: {{Pkg|nwg-dock}}, for Hyprland: {{Pkg|nwg-dock-hyprland}}}}
-* {{App|nwg-panel|GTK3-based panel for Sway and Hyprland Wayland compositors.|https://github.com/nwg-piotr/nwg-panel|{{Pkg|nwg-panel}}}}
+* {{App|Ironbar|A customisable and feature-rich GTK4 status bar for Wayland compositors, written in Rust.|https://github.com/JakeStanger/ironbar|{{Pkg|ironbar}}}}
+* {{App|nwg-dock|GTK-based dock for Sway and Hyprland compositors.|https://github.com/nwg-piotr/nwg-dock|For Sway: {{Pkg|nwg-dock}}, for Hyprland: {{Pkg|nwg-dock-hyprland}}}}
+* {{App|nwg-panel|GTK3-based panel for Sway and Hyprland compositors.|https://github.com/nwg-piotr/nwg-panel|{{Pkg|nwg-panel}}}}
 * {{App|SFWBar|Flexible taskbar application for Wayland compositors, designed with a stacking layout in mind.|https://github.com/LBCrion/sfwbar|{{AUR|sfwbar}}}}
 * {{App|Waybar|A customizable status bar for wlroots-based Wayland compositors.|https://github.com/Alexays/Waybar/|{{Pkg|waybar}}}}
 
@@ -386,7 +397,6 @@ See also [[Wikipedia:Taskbar]].
 * {{App|[[fbpanel]]|Lightweight, NETWM compliant desktop panel.|https://aanatoly.github.io/fbpanel/|{{AUR|fbpanel}}}}
 * {{App|[[Wikipedia:GNOME Panel|GNOME Panel]]|Panel included in the [[GNOME Flashback]] desktop.|https://wiki.gnome.org/Projects/GnomePanel|{{Pkg|gnome-panel}}}}
 * {{App|[[Lemonbar]]|A featherweight status bar based on XCB. Provides UTF-8 support, background and foreground colors, text alignment, and not much more.|https://github.com/LemonBoy/bar|{{AUR|lemonbar}}}}
-* {{App|liquidshell|Basic desktop shell implemented using QtWidgets. It provides a bottom panel, a desktop wallpaper and desktop widgets.|https://apps.kde.org/liquidshell/|{{Pkg|liquidshell}}}}
 * {{App|LXPanel|Lightweight X11 desktop panel and part of the [[LXDE]] desktop.|https://github.com/lxde/lxpanel|{{Pkg|lxpanel}}}}
 * {{App|MATE Panel|Panel included in the [[MATE]] desktop.|https://github.com/mate-desktop/mate-panel/|{{Pkg|mate-panel}}}}
 * {{App|plainPanel|A lightweight panel written in Qt. It aims to be a desktop environment, but for now, it includes just a panel and a control center.|https://plainDE.github.io/|{{AUR|plainde-meta}}}}
@@ -429,7 +439,7 @@ See also [[Wikipedia:Comparison of desktop application launchers]].
 * {{App|[[dmenu]]|Fast and lightweight dynamic menu for X which is also useful as an application launcher.|https://tools.suckless.org/dmenu/|{{Pkg|dmenu}}}}
 * {{App|dmenu-extended|Extension to ''dmenu'' for quickly opening files and folders.|https://github.com/markjones112358/dmenu-extended|{{AUR|dmenu-extended-git}}}}
 * {{App|dswitcher|''dmenu''-based window switcher that works regardless of workspace or minimization.|https://github.com/Antithesisx/dswitcher|{{AUR|dswitcher-git}}}}
-* {{App|fuzzel|Application launcher for wlroots based Wayland compositors, similar to rofi's `drun` mode.|https://codeberg.org/dnkl/fuzzel|{{Pkg|fuzzel}}}}
+* {{App|fuzzel|Application launcher for wlroots-based Wayland compositors, similar to rofi's `drun` mode.|https://codeberg.org/dnkl/fuzzel|{{Pkg|fuzzel}}}}
 * {{App|[[Gmrun]]|Lightweight GTK-based application launcher, with the ability to run programs inside a terminal and other handy features.|https://sourceforge.net/projects/gmrun/|{{AUR|gmrun}}}}
 * {{App|GNOME Games|GNOME application to browse your local video games library and to easily pick and play a game from it. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Games|{{Pkg|gnome-games}}}}
 * {{App|Gnome-Pie|Circular application launcher (pie menu) for Linux. It is made of several pies, each consisting of multiple slices.|https://simmesimme.github.io/gnome-pie.html|{{Pkg|gnome-pie}}}}
@@ -442,15 +452,15 @@ See also [[Wikipedia:Comparison of desktop application launchers]].
 * {{App|[[Wikipedia:Launchy|Launchy]]|Very popular cross-platform application launcher with a plugin-based system used to provide extra functionality.|https://www.launchy.net/|{{Pkg|launchy}}}}
 * {{App|Lighthouse|Simple scriptable popup dialog to run on X.|https://github.com/emgram769/lighthouse|{{AUR|lighthouse-git}}}}
 * {{App|LXLauncher|Clone of the Asus launcher for EeePC.|https://github.com/lxde/lxlauncher|{{Pkg|lxlauncher}}}}
-* {{App|nwg-drawer|GTK-based application drawer designed for the Sway compositor.|https://github.com/nwg-piotr/nwg-drawer|{{Pkg|nwg-drawer}}}}
-* {{App|nwg-menu|GTK-based application menu designed for the Sway compositor.|https://github.com/nwg-piotr/nwg-menu|{{Pkg|nwg-menu}}}}
+* {{App|nwg-drawer|GTK-based application drawer designed for Sway and Hyprland compositors.|https://github.com/nwg-piotr/nwg-drawer|{{Pkg|nwg-drawer}}}}
+* {{App|nwg-menu|GTK-based application menu designed for Sway and Hyprland compositors.|https://github.com/nwg-piotr/nwg-menu|{{Pkg|nwg-menu}}}}
 * {{App|rlaunch|An extremely fast and light-weight dmenu-like application launcher written in Rust.|https://github.com/PonasKovas/rlaunch|{{AUR|rlaunch}}}}
 * {{App|[[rofi]]|Popup window switcher roughly based on superswitcher, requiring only xlib and pango.|https://github.com/davatorium/rofi/|{{Pkg|rofi}}}}
 * {{App|Synapse|Semantic launcher written in Vala that you can use to start applications as well as find and access relevant documents and files by making use of the Zeitgeist engine.|https://launchpad.net/synapse-project|{{Pkg|synapse}}}}
 * {{App|tofi|Tiny dynamic menu, fast and simple dmenu/rofi replacement for Wayland compositors such as {{Pkg|sway}}.|https://github.com/philj56/tofi|{{AUR|tofi}}}}
 * {{App|Ulauncher|Modern and shiny launcher that provides fuzzy search, extensions, and themes.|https://ulauncher.io/|{{AUR|ulauncher}}}}
 * {{App|vonal|Modern customizable global menu with unlimiting plugin system written in Rust.|https://github.com/fxdave/vonal-rust|{{AUR|vonal-bin}}}}
-* {{App|wmenu|Dynamic menu for Sway and wlroots based Wayland compositors. Provides a Wayland-native dmenu replacement which maintains the look and feel of dmenu.|https://codeberg.org/adnano/wmenu|{{Pkg|wmenu}}}}
+* {{App|wmenu|Dynamic menu for Sway and wlroots-based Wayland compositors. Provides a Wayland-native dmenu replacement which maintains the look and feel of dmenu.|https://codeberg.org/adnano/wmenu|{{Pkg|wmenu}}}}
 * {{App|wofi|GTK-based popup window switcher for Wayland compositors such as {{Pkg|sway}}. Inspired by {{Pkg|rofi}}.|https://hg.sr.ht/~scoopta/wofi|{{Pkg|wofi}}}}
 * {{App|yofi|Minimalistic menu for Wayland-based compositors.|https://github.com/l4l/yofi|{{AUR|yofi}}}}
 
@@ -476,6 +486,7 @@ See also [[Wikipedia:Comparison of desktop application launchers]].
 
 See also [[Wikipedia:Wallpaper (computing)]].
 
+* {{App|awww|Efficient animated wallpaper daemon for Wayland, controlled at runtime.|https://codeberg.org/LGFae/awww|{{Pkg|awww}}}}
 * {{App|bgs|An extremely fast and small background setter for X based on imlib2.|https://github.com/Gottox/bgs/|{{AUR|bgs-git}}}}
 * {{App|[[feh]]|A lightweight and powerful image viewer that can also be used to manage the desktop wallpaper.|https://feh.finalrewind.org/|{{Pkg|feh}}‎}}
 * {{App|Fondo|Find a variety of the most beautiful wallpapers from Unsplash.com.|https://github.com/calo001/fondo|{{AUR|fondo}}}}
@@ -483,18 +494,17 @@ See also [[Wikipedia:Wallpaper (computing)]].
 * {{App|Hidamari|Video wallpaper for Linux. Written in Python.|https://github.com/jeffshee/hidamari|{{AUR|hidamari}}}}
 * {{App|hsetroot|A tool to create compose wallpapers.|https://packages.debian.org/sid/hsetroot|{{Pkg|hsetroot}}}}
 * {{App|HydraPaper|GTK utility to set two different backgrounds for each monitor on GNOME.|https://gabmus.gitlab.io/HydraPaper/|{{AUR|hydrapaper-git}}}}
-* {{App|Hyprpaper|Hyprpaper is a blazing fast wayland wallpaper utility with IPC controls.|https://github.com/hyprwm/hyprpaper|{{AUR|hyprpaper-git}}}}
+* {{App|Hyprpaper|Hyprpaper is a blazing fast Wayland wallpaper utility with IPC controls.|https://github.com/hyprwm/hyprpaper|{{AUR|hyprpaper-git}}}}
 * {{App|LiveWallpaper|Animated 3D wallpapers.|https://launchpad.net/livewallpaper|{{AUR|livewallpaper}}}}
-* {{App|mpvpaper|A video wallpaper program for wlroots based wayland compositors.|https://github.com/GhostNaN/mpvpaper|{{AUR|mpvpaper}}}}
+* {{App|mpvpaper|A video wallpaper program for wlroots-based Wayland compositors.|https://github.com/GhostNaN/mpvpaper|{{AUR|mpvpaper}}}}
 * {{App|[[Nitrogen]]|A fast and lightweight desktop background browser and setter for X windows.|https://github.com/l3ib/nitrogen|{{AUR|nitrogen}}}}
 * {{App|oguri|An animated wallpaper daemon for Wayland compositors.|https://github.com/vilhalmer/oguri|{{AUR|oguri-git}}}}
 * {{App|pacwall|A live wallpaper that shows the dependency graph and status of installed packages.|https://github.com/Kharacternyk/pacwall|{{AUR|pacwall-git}}}}
-* {{App|pywal|Changes the wallpaper and creates matching colorschemes for various applications (rofi, i3, terminals)|https://github.com/dylanaraps/pywal|{{Pkg|python-pywal}}}}
+* {{App|pywal|Changes the wallpaper and creates matching color schemes for various applications (rofi, i3, terminals)|https://github.com/dylanaraps/pywal|{{Pkg|python-pywal}}}}
 * {{App|swaybg|Wallpaper tool for Wayland compositors.|https://github.com/swaywm/swaybg|{{Pkg|swaybg}}}}
-* {{App|swww|Efficient animated wallpaper daemon for wayland, controlled at runtime.|https://github.com/Horus645/swww|{{Pkg|swww}}}}
 * {{App|Variety|Changes the wallpaper on a regular interval using user-specified or automatically downloaded images.|https://peterlevi.com/variety/|{{Pkg|variety}}}}
 * {{App|[[Xlivebg]]|A live wallpaper framework and collection of live wallpapers for the X window system.|http://nuclear.mutantstargoat.com/sw/xlivebg/|{{AUR|xlivebg}}}}
-* {{App|xwallpaper|Minimalistic wallpaper setting utility for X.|https://github.com/stoeckmann/xwallpaper|{{Pkg|xwallpaper}}}}
+* {{App|xwallpaper|Minimalist wallpaper setting utility for X.|https://github.com/stoeckmann/xwallpaper|{{Pkg|xwallpaper}}}}
 
 {{Tip|In order to avoid installing one more package, you may find convenient to use the {{ic|display}} utility from {{Pkg|imagemagick}} or {{ic|gm display}} from {{Pkg|graphicsmagick}}. E.g.: {{ic|display -backdrop -background '#3f3f3f' -flatten -window root ''image''}}.}}
 
@@ -524,7 +534,7 @@ See [[Clipboard#Managers]].
 === Logout UI ===
 
 * {{App|clearine|Beautiful Logout UI for X11 window manager|https://github.com/okitavera/clearine{{Dead link|2025|11|17|status=404}}|{{AUR|clearine-git}}}}
-* {{App|nwg-bar|Configurable button bar for wlroots-based compositors.|https://github.com/nwg-piotr/nwg-bar|{{Pkg|nwg-bar}}}}
+* {{App|nwg-bar|Configurable button bar for wlroots-based Wayland compositors.|https://github.com/nwg-piotr/nwg-bar|{{Pkg|nwg-bar}}}}
 * {{App|[[oblogout]]|Openbox logout script|https://launchpad.net/oblogout|{{AUR|oblogout-py3-git}}}}
 * {{App|wlogout|Logout menu for wayland|https://github.com/ArtsyMacaw/wlogout|{{AUR|wlogout}}}}
 
@@ -541,7 +551,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 * {{App|[[Wikipedia:Orange (software)|Orange]]|Visual programming toolkit for data mining, ML and interactive visualization.|https://orange.biolab.si/|{{AUR|python-orange}}}}
 * {{App|[[Wikipedia:Prolog|Prolog]]|Logic-programming language for symbolic AI and computational linguistics.|https://www.swi-prolog.org/|{{Pkg|swi-prolog}}, {{AUR|gprolog}}, {{AUR|scryer-prolog}}}} 
 * {{App|[[Wikipedia:PyTorch|PyTorch]]|Dynamic neural-network framework with strong GPU acceleration.|https://pytorch.org/|{{Pkg|python-pytorch}}, {{Pkg|python-pytorch-cuda}}, {{Pkg|python-pytorch-opt}}, {{Pkg|python-pytorch-opt-cuda}}, {{Pkg|python-pytorch-rocm}}, {{Pkg|python-pytorch-opt-rocm}}}}
-* {{App|libtorch|C++ frontend for PyTorch.|https://pytorch.org|{{AUR|libtorch-cuda}}, {{AUR|libtorch-cxx11abi-cpu}}{{Broken package link|package not found}}, {{AUR|libtorch-cxx11abi-cuda}}{{Broken package link|package not found}}, {{AUR|libtorch-cxx11abi-rocm}}{{Broken package link|package not found}}}}
+* {{App|libtorch|C++ frontend for PyTorch.|https://pytorch.org|{{AUR|libtorch-cuda}}, {{AUR|libtorch-cpu}}, {{AUR|libtorch-rocm}}}}
 * {{App|mlpack|Fast, scalable C++ ML library with Python / R / Julia / Go bindings.|https://mlpack.org|{{AUR|mlpack}}}}
 * {{App|SentencePiece|Unsupervised text tokenizer for neural text generation.|https://github.com/google/sentencepiece|{{AUR|sentencepiece}} / {{AUR|sentencepiece-bin}} (C++), {{AUR|python-sentencepiece}} / {{AUR|python-sentencepiece-bin}} (Python)}}
 * {{App|Sentence Transformers|Python framework for state-of-the-art sentence / text / image embeddings.|https://github.com/UKPLab/sentence-transformers|{{AUR|python-sentence-transformers}}}}
@@ -640,6 +650,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 
 * {{App|Coqui TTS|Deep learning toolkit for Text-to-Speech with support for 20+ languages.|https://github.com/coqui-ai/TTS|{{AUR|coqui-tts}}}}
 * {{App|faster-whisper|Faster Whisper transcription implementation using CTranslate2.|https://github.com/guillaumekln/faster-whisper|{{AUR|python-faster-whisper}}}}
+* {{App|Handy|A free, open source, and extensible speech-to-text application that works completely offline.|https://github.com/cjpais/Handy|{{AUR|handy}}}}
 * {{App|MaryTTS|Multilingual TTS synthesis platform written in Java.|https://marytts.github.io/|{{AUR|marytts}}}}
 * {{App|Piper|A fast, local neural text-to-speech system.|https://github.com/rhasspy/piper|{{AUR|piper-tts}}}}
 * {{App|Sherpa-ONNX|Speech-to-text, text-to-speech, speaker diarization, and VAD using next-gen Kaldi with onnxruntime.|https://github.com/k2-fsa/sherpa-onnx|{{AUR|sherpa-onnx}}}}

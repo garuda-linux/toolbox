@@ -3,2536 +3,2808 @@
     "name": "6tunnel",
     "description": "Tunnels IPv6 connections for IPv4-only applications.",
     "url": "https://github.com/wojtekka/6tunnel/",
-
-    "pkgname": ["6tunnel"],
+    "pkgname": [
+      "6tunnel"
+    ],
     "aur": false
   },
   {
     "name": "aerc",
     "description": "Work in progress asynchronous email client.",
     "url": "https://sr.ht/~rjarry/aerc",
-
-    "pkgname": ["aerc"],
+    "pkgname": [
+      "aerc"
+    ],
     "aur": false
   },
   {
     "name": "Akregator",
     "description": "News aggregator for KDE, part of kde-pim.",
     "url": "https://apps.kde.org/akregator/",
-
-    "pkgname": ["akregator"],
+    "pkgname": [
+      "akregator"
+    ],
     "aur": false
   },
   {
     "name": "Alligator",
     "description": "Kirigami-based RSS/Atom feed reader for mobile devices. Part of kde-network.",
     "url": "https://apps.kde.org/alligator/",
-
-    "pkgname": ["alligator"],
+    "pkgname": [
+      "alligator"
+    ],
     "aur": false
   },
   {
     "name": "alot",
     "description": "An experimental terminal MUA based on notmuch mail. It is written in python using the urwid toolkit.",
     "url": "https://github.com/pazz/alot",
-
-    "pkgname": ["alot"],
+    "pkgname": [
+      "alot"
+    ],
     "aur": false
   },
   {
     "name": "Amfora",
     "description": "Terminal browser for the Gemini protocol.",
     "url": "https://github.com/makeworld-the-better-one/amfora",
-
-    "pkgname": ["amfora"],
+    "pkgname": [
+      "amfora"
+    ],
     "aur": false
   },
   {
     "name": "aMule",
     "description": "Well-known eDonkey/Kad client with a daemon version and GTK, web, and CLI front-ends.",
     "url": "https://www.amule.org/",
-
-    "pkgname": ["amule"],
+    "pkgname": [
+      "amule"
+    ],
     "aur": false
   },
   {
     "name": "Angelfish",
     "description": "Web browser for Plasma Mobile. Part of kde-network.",
     "url": "https://apps.kde.org/angelfish/",
-
-    "pkgname": ["angelfish"],
+    "pkgname": [
+      "angelfish"
+    ],
     "aur": false
   },
   {
     "name": "AnyDesk",
     "description": "Proprietary remote desktop software.",
     "url": "https://anydesk.com/",
-
-    "pkgname": ["anydesk-bin"],
+    "pkgname": [
+      "anydesk-bin"
+    ],
     "aur": false
   },
   {
     "name": "Apache HTTP Server",
     "description": "A high performance Unix-based HTTP server.",
     "url": "https://httpd.apache.org/",
-
-    "pkgname": ["apache"],
+    "pkgname": [
+      "apache"
+    ],
     "aur": false
   },
   {
     "name": "aria2",
     "description": "Lightweight download utility that supports HTTP/S, FTP, SFTP, BitTorrent and Metalink. It can run as a daemon controlled via a built-in JSON-RPC or XML-RPC interface.",
     "url": "https://aria2.github.io/",
-
-    "pkgname": ["aria2"],
+    "pkgname": [
+      "aria2"
+    ],
     "aur": false
   },
   {
     "name": "Arti",
     "description": "Rust implementation of the Tor anonymizing overlay network.",
     "url": "https://gitlab.torproject.org/tpo/core/arti",
-
-    "pkgname": ["arti"],
+    "pkgname": [
+      "arti"
+    ],
     "aur": false
   },
   {
     "name": "aws-cli",
     "description": "CLI for Amazon Web Services, including efficient file transfers to and from Amazon S3.",
     "url": "https://aws.amazon.com/cli/",
-
-    "pkgname": ["aws-cli"],
+    "pkgname": [
+      "aws-cli"
+    ],
     "aur": false
   },
   {
     "name": "Axel",
     "description": "Featherweight command line download accelerator sitting at under 250kB on disk. Supports HTTP/S and FTP.",
     "url": "https://github.com/eribertomota/axel",
-
-    "pkgname": ["axel"],
+    "pkgname": [
+      "axel"
+    ],
     "aur": false
   },
   {
     "name": "Badwolf",
     "description": "A minimalist privacy-focused browser.",
     "url": "https://hacktivis.me/projects/badwolf",
-
-    "pkgname": ["badwolf"],
+    "pkgname": [
+      "badwolf"
+    ],
     "aur": false
   },
   {
     "name": "Balsa",
     "description": "Simple and light email client for GNOME.",
     "url": "https://pawsa.fedorapeople.org/balsa/",
-
-    "pkgname": ["balsa"],
+    "pkgname": [
+      "balsa"
+    ],
     "aur": false
   },
   {
     "name": "bandwhich",
     "description": "Terminal bandwidth utilization tool showing usage by process, connection, and remote IP/hostname.",
     "url": "https://github.com/imsnif/bandwhich",
-
-    "pkgname": ["bandwhich"],
+    "pkgname": [
+      "bandwhich"
+    ],
     "aur": false
   },
   {
     "name": "baresip",
     "description": "portable and modular SIP User-Agent with audio and video support.",
     "url": "https://github.com/baresip/baresip",
-
-    "pkgname": ["baresip"],
-    "aur": false
-  },
-  {
-    "name": "BeeBEEP",
-    "description": "Secure LAN Messenger.",
-    "url": "https://www.beebeep.net/",
-
-    "pkgname": ["beebeep"],
+    "pkgname": [
+      "baresip"
+    ],
     "aur": false
   },
   {
     "name": "Betterbird",
     "description": "Fork of thunderbird.",
     "url": "https://www.betterbird.eu/",
-
-    "pkgname": ["betterbird-bin"],
+    "pkgname": [
+      "betterbird-bin"
+    ],
     "aur": false
   },
   {
     "name": "bftpd",
     "description": "Small, easy-to-configure FTP server",
     "url": "https://bftpd.sourceforge.net/",
-
-    "pkgname": ["bftpd"],
+    "pkgname": [
+      "bftpd"
+    ],
     "aur": false
   },
   {
     "name": "Brave",
     "description": "Web browser with builtin ad- and tracker blocking.",
     "url": "https://www.brave.com/",
-
-    "pkgname": ["brave-bin"],
+    "pkgname": [
+      "brave-bin"
+    ],
     "aur": false
   },
   {
     "name": "Briar",
     "description": "Briar is a messaging application designed for activists, journalists, and anyone else who needs a safe, easy and robust way to communicate.",
     "url": "https://briarproject.org/",
-
-    "pkgname": ["briar-desktop"],
+    "pkgname": [
+      "briar-desktop"
+    ],
     "aur": false
   },
   {
     "name": "Brook",
     "description": "Proxy focusing on strong encryption and being undetectable.",
     "url": "https://txthinking.github.io/brook/",
-
-    "pkgname": ["brook"],
+    "pkgname": [
+      "brook"
+    ],
     "aur": false
   },
   {
     "name": "browsh",
     "description": "A fully-modern text-based browser. Runs as a frontend to headless Firefox.",
     "url": "https://www.brow.sh/",
-
-    "pkgname": ["browsh"],
+    "pkgname": [
+      "browsh"
+    ],
     "aur": false
   },
   {
     "name": "Bulletty",
     "description": "Pretty TUI RSS reader that locally stores articles as markdown.",
     "url": "https://bulletty.croci.dev/",
-
-    "pkgname": ["bulletty"],
+    "pkgname": [
+      "bulletty"
+    ],
     "aur": false
   },
   {
     "name": "Caddy",
     "description": "HTTP/3 web server with automatic HTTPS.",
     "url": "https://caddyserver.com/",
-
-    "pkgname": ["caddy"],
+    "pkgname": [
+      "caddy"
+    ],
     "aur": false
   },
   {
     "name": "Calls",
     "description": "Simple, elegant phone dialer and call handler for GNOME. It can be used with a cellular modem for plain old telephone calls as well as VoIP calls using the SIP protocol.",
     "url": "https://gitlab.gnome.org/GNOME/calls",
-
-    "pkgname": ["gnome-calls"],
+    "pkgname": [
+      "gnome-calls"
+    ],
     "aur": false
   },
   {
     "name": "Canto",
     "description": "Ncurses RSS aggregator.",
     "url": "https://github.com/themoken/canto-curses",
-
-    "pkgname": ["canto-curses"],
+    "pkgname": [
+      "canto-curses"
+    ],
     "aur": false
   },
   {
     "name": "castget",
     "description": "Simple, command-line RSS enclosure downloader, primarily intended for automatic, unattended downloading of podcasts.",
     "url": "https://castget.johndal.com/",
-
-    "pkgname": ["castget"],
+    "pkgname": [
+      "castget"
+    ],
     "aur": false
   },
   {
     "name": "Castor",
     "description": "Graphical client for the Gemini, Gopher, and Finger protocols, written in Rust with GTK.",
     "url": "https://git.sr.ht/~julienxx/castor",
-
-    "pkgname": ["castor"],
+    "pkgname": [
+      "castor"
+    ],
     "aur": false
   },
   {
     "name": "Chatty",
     "description": "Simple to use SMS and Matrix messaging application.",
     "url": "https://gitlab.gnome.org/World/Chatty",
-
-    "pkgname": ["chatty"],
+    "pkgname": [
+      "chatty"
+    ],
     "aur": false
   },
   {
     "name": "Chawan",
     "description": "A web browser for your terminal.",
     "url": "https://sr.ht/~bptato/chawan/",
-
-    "pkgname": ["chawan"],
+    "pkgname": [
+      "chawan"
+    ],
     "aur": false
   },
   {
     "name": "chezdav",
     "description": "WebDAV server that allows to share a particular directory.",
     "url": "https://wiki.gnome.org/phodav",
-
-    "pkgname": ["phodav"],
+    "pkgname": [
+      "phodav"
+    ],
     "aur": false
   },
   {
     "name": "Chromium",
     "description": "Web browser developed by Google, the open source project behind Google Chrome.",
     "url": "https://www.chromium.org/",
-
-    "pkgname": ["chromium"],
+    "pkgname": [
+      "chromium"
+    ],
     "aur": false
   },
   {
     "name": "Cinny",
     "description": "Cinny is a matrix client focusing primarily on simple, elegant and secure interface. The desktop app is made with Tauri.",
     "url": "https://github.com/cinnyapp/cinny-desktop",
-
-    "pkgname": ["cinny-desktop"],
-    "aur": false
-  },
-  {
-    "name": "Clash",
-    "description": "A rule-based tunnel in Go.",
-    "url": "https://github.com/Dreamacro/clash",
-
-    "pkgname": ["clash"],
+    "pkgname": [
+      "cinny-desktop"
+    ],
     "aur": false
   },
   {
     "name": "Claws Mail",
     "description": "Lightweight GTK-based email client and news reader.",
     "url": "https://www.claws-mail.org/",
-
-    "pkgname": ["claws-mail"],
+    "pkgname": [
+      "claws-mail"
+    ],
     "aur": false
   },
   {
     "name": "copyparty",
     "description": "Lightweight and portable file server with extensive protocol, media playback and file management support.",
     "url": "https://github.com/9001/copyparty",
-
-    "pkgname": ["copyparty"],
+    "pkgname": [
+      "copyparty"
+    ],
     "aur": false
   },
   {
     "name": "Cozy",
     "description": "A personal cloud you can hack, host and delete.",
     "url": "https://cozy.io/",
-
-    "pkgname": ["cozy-stack"],
+    "pkgname": [
+      "cozy-stack"
+    ],
     "aur": false
   },
   {
     "name": "Cozy Drive",
     "description": "Desktop client for Cozy.",
     "url": "https://cozy-labs.github.io/cozy-desktop/",
-
-    "pkgname": ["cozy-desktop"],
+    "pkgname": [
+      "cozy-desktop"
+    ],
     "aur": false
   },
   {
     "name": "cURL",
     "description": "A URL retrieval utility and library. Supports HTTP, FTP and SFTP.",
     "url": "https://curl.haxx.se/",
-
-    "pkgname": ["curl"],
+    "pkgname": [
+      "curl"
+    ],
     "aur": false
   },
   {
     "name": "CurlFtpFS",
     "description": "is a filesystem for accessing FTP hosts based on FUSE and libcurl.",
     "url": "https://curlftpfs.sourceforge.net/",
-
-    "pkgname": ["curlftpfs"],
+    "pkgname": [
+      "curlftpfs"
+    ],
     "aur": false
   },
   {
     "name": "Dante",
     "description": "SOCKS server and SOCKS client, implementing RFC:1928 and related standards.",
     "url": "https://www.inet.no/dante/",
-
-    "pkgname": ["dante"],
+    "pkgname": [
+      "dante"
+    ],
     "aur": false
   },
   {
     "name": "darkhttpd",
     "description": "A small and secure static web server, written in C, does not support HTTPS or Auth.",
     "url": "https://unix4lyfe.org/darkhttpd/",
-
-    "pkgname": ["darkhttpd"],
+    "pkgname": [
+      "darkhttpd"
+    ],
     "aur": false
   },
   {
     "name": "Delta Chat",
     "description": "A privacy oriented chat application built on e-mail. Based on the Electron platform.",
     "url": "https://delta.chat/",
-
-    "pkgname": ["deltachat-desktop"],
+    "pkgname": [
+      "deltachat-desktop"
+    ],
     "aur": false
   },
   {
     "name": "Deluge",
     "description": "BitTorrent client with multiple user interfaces in a client/server model. This package includes a console client.",
     "url": "https://deluge-torrent.org/",
-
-    "pkgname": ["deluge"],
+    "pkgname": [
+      "deluge"
+    ],
     "aur": false
   },
   {
     "name": "Deluge (GTK interface)",
     "description": "User-friendly BitTorrent client written in Python using GTK.",
     "url": "https://deluge-torrent.org/",
-
-    "pkgname": ["deluge-gtk"],
+    "pkgname": [
+      "deluge-gtk"
+    ],
     "aur": false
   },
   {
     "name": "Dillo",
     "description": "Small, fast graphical web browser built on FLTK. Uses its own layout engine.",
     "url": "https://dillo-browser.org/",
-
-    "pkgname": ["dillo"],
+    "pkgname": [
+      "dillo"
+    ],
     "aur": false
   },
   {
     "name": "Dino",
     "description": "A modern, easy to use XMPP client, with PGP and OMEMO support.",
     "url": "https://dino.im/",
-
-    "pkgname": ["dino"],
+    "pkgname": [
+      "dino"
+    ],
     "aur": false
   },
   {
     "name": "Discord",
     "description": "Proprietary all-in-one voice and text chat application for gamers that’s free and works on both your desktop and phone. Based on the Electron platform.",
     "url": "https://discordapp.com/",
-
-    "pkgname": ["discord"],
+    "pkgname": [
+      "discord"
+    ],
     "aur": false
   },
   {
     "name": "dog",
     "description": "Modern command-line DNS client alternative to dig with colored output and JSON support.",
     "url": "https://dns.lookup.dog/",
-
-    "pkgname": ["dog"],
+    "pkgname": [
+      "dog"
+    ],
     "aur": false
   },
   {
     "name": "Dropbox",
     "description": "Proprietary desktop client for Dropbox.",
     "url": "https://www.dropbox.com/",
-
-    "pkgname": ["dropbox"],
+    "pkgname": [
+      "dropbox"
+    ],
     "aur": false
   },
   {
     "name": "Drupal",
     "description": "A PHP-based content management platform.",
     "url": "https://www.drupal.org/",
-
-    "pkgname": ["drupal"],
+    "pkgname": [
+      "drupal"
+    ],
     "aur": false
   },
   {
     "name": "Ejabberd",
     "description": "Robust, scalable and extensible XMPP Server written in Erlang",
     "url": "https://www.ejabberd.im/",
-
-    "pkgname": ["ejabberd"],
+    "pkgname": [
+      "ejabberd"
+    ],
     "aur": false
   },
   {
     "name": "ElectronMail",
     "description": "Unofficial desktop application for several end-to-end encrypted email providers (like ProtonMail, Tutanota). Based on the Electron platform.",
     "url": "https://github.com/vladimiry/ElectronMail",
-
-    "pkgname": ["electronmail-bin"],
+    "pkgname": [
+      "electronmail-bin"
+    ],
     "aur": false
   },
   {
     "name": "Element",
     "description": "Glossy Matrix client with an emphasis on performance and usability. Web application and desktop application based on the Electron platform.",
     "url": "https://element.io/",
-
-    "pkgname": ["element-web"],
+    "pkgname": [
+      "element-web"
+    ],
     "aur": false
   },
   {
     "name": "ELinks",
     "description": "Advanced and well-established feature-rich text mode web browser with mouse wheel scroll support, frames and tables, extensible with Lua & Guile (links fork).",
     "url": "http://elinks.or.cz/",
-
-    "pkgname": ["elinks"],
+    "pkgname": [
+      "elinks"
+    ],
     "aur": false
   },
   {
     "name": "Eolie",
     "description": "Simple web browser for GNOME.",
     "url": "https://wiki.gnome.org/Apps/Eolie",
-
-    "pkgname": ["eolie"],
+    "pkgname": [
+      "eolie"
+    ],
     "aur": false
   },
   {
     "name": "ERC",
     "description": "Powerful, modular and extensible IRC client for Emacs.",
     "url": "https://savannah.gnu.org/projects/erc/",
-
-    "pkgname": ["emacs"],
+    "pkgname": [
+      "emacs"
+    ],
     "aur": false
   },
   {
     "name": "Evolution",
     "description": "Mature and feature-rich e-mail client that is part of the GNOME project. Part of gnome-extra.",
     "url": "https://gitlab.gnome.org/GNOME/evolution/-/wikis/home",
-
-    "pkgname": ["evolution"],
+    "pkgname": [
+      "evolution"
+    ],
     "aur": false
   },
   {
     "name": "Falkon",
     "description": "Web browser based on QtWebEngine, written in Qt framework. Part of kde-network.",
     "url": "https://falkon.org/",
-
-    "pkgname": ["falkon"],
+    "pkgname": [
+      "falkon"
+    ],
     "aur": false
   },
   {
     "name": "Fb-client",
     "description": "Client for the paste.xinu.at pastebin.",
     "url": "https://paste.xinu.at",
-
-    "pkgname": ["fb-client"],
+    "pkgname": [
+      "fb-client"
+    ],
     "aur": false
   },
   {
     "name": "fdm",
     "description": "Program to fetch and deliver mail.",
     "url": "https://github.com/nicm/fdm",
-
-    "pkgname": ["fdm"],
+    "pkgname": [
+      "fdm"
+    ],
     "aur": false
   },
   {
     "name": "Feeds",
     "description": "An RSS/Atom feed reader for GNOME.",
     "url": "https://gfeeds.gabmus.org/",
-
-    "pkgname": ["gfeeds"],
+    "pkgname": [
+      "gfeeds"
+    ],
     "aur": false
   },
   {
     "name": "Fetchmail",
     "description": "A remote-mail retrieval utility.",
     "url": "https://www.fetchmail.info/",
-
-    "pkgname": ["fetchmail"],
+    "pkgname": [
+      "fetchmail"
+    ],
     "aur": false
   },
   {
     "name": "Fiery",
     "description": "A convergent web browser. Part of maui.",
     "url": "https://mauikit.org/apps/",
-
-    "pkgname": ["fiery"],
+    "pkgname": [
+      "fiery"
+    ],
     "aur": false
   },
   {
     "name": "FileZilla",
     "description": "Fast and reliable FTP, FTPS and SFTP client.",
     "url": "https://filezilla-project.org/",
-
-    "pkgname": ["filezilla"],
-    "aur": false
-  },
-  {
-    "name": "Finch",
-    "description": "Ncurses-based chat client that uses libpurple and supports all its protocols (Bonjour, Gadu-Gadu, Groupwise, IRC, SIMPLE, XMPP, Zephyr).",
-    "url": "https://developer.pidgin.im/wiki/Using%20Finch",
-
-    "pkgname": ["finch"],
+    "pkgname": [
+      "filezilla"
+    ],
     "aur": false
   },
   {
     "name": "Firefox",
     "description": "Extensible browser from Mozilla based on Gecko with fast rendering.",
     "url": "https://mozilla.com/firefox",
-
-    "pkgname": ["firefox"],
+    "pkgname": [
+      "firefox"
+    ],
     "aur": false
   },
   {
     "name": "Floorp",
     "description": "Firefox-based browser developed by a community of students in Japan.",
     "url": "https://floorp.ablaze.one",
-
-    "pkgname": ["floorp"],
+    "pkgname": [
+      "floorp"
+    ],
     "aur": false
   },
   {
     "name": "FluffyChat",
     "description": "Multi-platform Matrix client with a simple and clean UI written in Dart/Flutter.",
     "url": "https://fluffychat.im/",
-
-    "pkgname": ["fluffychat"],
+    "pkgname": [
+      "fluffychat"
+    ],
     "aur": false
   },
   {
     "name": "Fractal",
     "description": "Matrix client for GNOME written in Rust.",
     "url": "https://wiki.gnome.org/Apps/Fractal",
-
-    "pkgname": ["fractal"],
+    "pkgname": [
+      "fractal"
+    ],
     "aur": false
   },
   {
     "name": "Fragments",
     "description": "Easy to use BitTorrent client for the GNOME desktop environment.",
     "url": "https://apps.gnome.org/Fragments/",
-
-    "pkgname": ["fragments"],
+    "pkgname": [
+      "fragments"
+    ],
     "aur": false
   },
   {
-    "name": "freerdp-shadow-cli",
+    "name": "freerdp-shadow-cli3",
     "description": "A utility for sharing an X display via RDP.",
     "url": "https://www.freerdp.com/",
-
-    "pkgname": ["freerdp"],
+    "pkgname": [
+      "freerdp"
+    ],
     "aur": false
   },
   {
     "name": "ftp",
     "description": "Simple ftp client provided by GNU Inetutils",
     "url": "https://www.gnu.org/software/inetutils/manual/inetutils.html#ftp-invocation",
-
-    "pkgname": ["inetutils"],
+    "pkgname": [
+      "inetutils"
+    ],
     "aur": false
   },
   {
     "name": "ftpd",
     "description": "Simple ftp server provided by GNU Inetutils",
     "url": "https://www.gnu.org/software/inetutils/manual/inetutils.html#ftpd-invocation",
-
-    "pkgname": ["inetutils"],
+    "pkgname": [
+      "inetutils"
+    ],
     "aur": false
   },
   {
     "name": "Gajim",
     "description": "XMPP client with audio support written in Python using GTK.",
     "url": "https://gajim.org/",
-
-    "pkgname": ["gajim"],
+    "pkgname": [
+      "gajim"
+    ],
     "aur": false
   },
   {
     "name": "Geary",
     "description": "Simple desktop mail client built in Vala. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Geary",
-
-    "pkgname": ["geary"],
+    "pkgname": [
+      "geary"
+    ],
     "aur": false
   },
   {
     "name": "Geph",
     "description": "A modular Internet censorship circumvention system designed specifically to deal with national filtering.",
     "url": "https://geph.io/en/",
-
-    "pkgname": ["geph4-client"],
+    "pkgname": [
+      "geph4-client"
+    ],
     "aur": false
   },
   {
     "name": "Gist",
     "description": "Command-line interface for the gist.github.com pastebin service.",
     "url": "https://github.com/defunkt/gist",
-
-    "pkgname": ["gist"],
+    "pkgname": [
+      "gist"
+    ],
     "aur": false
   },
   {
     "name": "GlobalProtect-openconnect",
     "description": "A GlobalProtect VPN client (GUI) for Linux, based on OpenConnect and built with Qt5, supports SAML auth mode.",
     "url": "https://github.com/yuezk/GlobalProtect-openconnect/",
-
-    "pkgname": ["globalprotect-openconnect"],
+    "pkgname": [
+      "globalprotect-openconnect"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Connections",
     "description": "Remote desktop client for GNOME. Supports RDP and VNC. Part of gnome.",
     "url": "https://apps.gnome.org/Connections/",
-
-    "pkgname": ["gnome-connections"],
+    "pkgname": [
+      "gnome-connections"
+    ],
+    "aur": false
+  },
+  {
+    "name": "GNOME Remote Desktop",
+    "description": "A remote desktop server for GNOME. Supports RDP and VNC. Part of gnome.",
+    "url": "https://gitlab.gnome.org/GNOME/gnome-remote-desktop",
+    "pkgname": [
+      "gnome-remote-desktop"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Web",
     "description": "Browser which uses the WebKitGTK rendering engine. Part of gnome.",
     "url": "https://apps.gnome.org/Epiphany/",
-
-    "pkgname": ["epiphany"],
+    "pkgname": [
+      "epiphany"
+    ],
     "aur": false
   },
   {
     "name": "GNU IceCat",
     "description": "A customized build of Firefox ESR distributed by the GNU Project, stripped of non-free components and with additional privacy extensions. Release cycle may be delayed compared to Mozilla Firefox.",
     "url": "https://www.gnu.org/software/gnuzilla/",
-
-    "pkgname": ["icecat"],
+    "pkgname": [
+      "icecat"
+    ],
     "aur": false
   },
   {
     "name": "Gnubiff",
     "description": "Mail notification program that checks for mail and displays headers when new mail has arrived.",
     "url": "https://gnubiff.sourceforge.net/",
-
-    "pkgname": ["gnubiff"],
+    "pkgname": [
+      "gnubiff"
+    ],
     "aur": false
   },
   {
     "name": "Gnus",
     "description": "Email, NNTP and RSS client for Emacs.",
     "url": "https://www.gnus.org/",
-
-    "pkgname": ["emacs"],
+    "pkgname": [
+      "emacs"
+    ],
     "aur": false
   },
   {
     "name": "Gomuks",
     "description": "Terminal Matrix client written in Go using mautrix and mauview.",
     "url": "https://maunium.net/go/gomuks",
-
-    "pkgname": ["gomuks"],
+    "pkgname": [
+      "gomuks"
+    ],
     "aur": false
   },
   {
     "name": "Google Chrome",
     "description": "Proprietary web browser developed by Google.",
     "url": "https://www.google.com/chrome/",
-
-    "pkgname": ["google-chrome"],
+    "pkgname": [
+      "google-chrome"
+    ],
     "aur": false
   },
   {
     "name": "gping",
     "description": "Ping with a real-time graph visualization of latency to multiple hosts.",
     "url": "https://github.com/orf/gping",
-
-    "pkgname": ["gping"],
+    "pkgname": [
+      "gping"
+    ],
     "aur": false
   },
   {
     "name": "gpo",
     "description": "Text mode interface of gPodder.",
     "url": "https://gpodder.github.io/",
-
-    "pkgname": ["gpodder"],
+    "pkgname": [
+      "gpodder"
+    ],
     "aur": false
   },
   {
     "name": "gPodder",
     "description": "Podcast client and media aggregator (GTK interface).",
     "url": "https://gpodder.github.io/",
-
-    "pkgname": ["gpodder"],
+    "pkgname": [
+      "gpodder"
+    ],
     "aur": false
   },
   {
     "name": "Gunicorn",
     "description": "A Python WSGI HTTP Server for UNIX.",
     "url": "https://gunicorn.org/",
-
-    "pkgname": ["gunicorn"],
+    "pkgname": [
+      "gunicorn"
+    ],
     "aur": false
   },
   {
     "name": "GVncViewer",
     "description": "Simple VNC Client on Gtk-VNC. Run with gvncviewer.",
     "url": "https://wiki.gnome.org/Projects/gtk(2d)vnc",
-
-    "pkgname": ["gtk-vnc"],
+    "pkgname": [
+      "gtk-vnc"
+    ],
     "aur": false
   },
   {
     "name": "Halloy",
     "description": "An open-source IRC client written in Rust, with the iced GUI library.",
     "url": "https://halloy.squidowl.org/",
-
-    "pkgname": ["halloy"],
+    "pkgname": [
+      "halloy"
+    ],
     "aur": false
   },
   {
     "name": "Helium",
     "description": "A browser in beta based on Ungoogled Chromium with Chrome Web Store proxying and additional features, such as split view and !bangs in the address bar.",
     "url": "https://helium.computer/",
-
-    "pkgname": ["helium-browser-bin"],
+    "pkgname": [
+      "helium-browser-bin"
+    ],
     "aur": false
   },
   {
     "name": "himalaya",
     "description": "Himalaya CLI is written in Rust, based on email-lib.",
     "url": "https://github.com/pimalaya/himalaya",
-
-    "pkgname": ["himalaya"],
+    "pkgname": [
+      "himalaya"
+    ],
+    "aur": false
+  },
+  {
+    "name": "http.server",
+    "description": "Python standard library module, which can be used from the command-line, but due to security considerations not recommended for production.",
+    "url": "https://docs.python.org/library/http.server.html",
+    "pkgname": [
+      "python"
+    ],
     "aur": false
   },
   {
     "name": "HTTPie",
     "description": "Human-friendly command-line HTTP client for the API era.",
     "url": "https://github.com/httpie/httpie",
-
-    "pkgname": ["httpie"],
+    "pkgname": [
+      "httpie"
+    ],
     "aur": false
   },
   {
     "name": "httping",
     "description": "A \"ping\"-like tool for HTTP requests",
     "url": "https://www.vanheusden.com/httping/",
-
-    "pkgname": ["httping"],
+    "pkgname": [
+      "httping"
+    ],
     "aur": false
   },
   {
     "name": "HTTrack",
     "description": "An easy-to-use offline browser utility. It allows you to download a World Wide Web site from the Internet to a local directory, building recursively all directories, getting HTML, images, and other files from the server to your computer.",
     "url": "https://www.httrack.com/",
-
-    "pkgname": ["httrack"],
+    "pkgname": [
+      "httrack"
+    ],
     "aur": false
   },
   {
     "name": "Hugo",
     "description": "Hugo is a static HTML and CSS website generator written in Go. It is optimized for speed, ease of use, and configurability.",
     "url": "https://gohugo.io/",
-
-    "pkgname": ["hugo"],
+    "pkgname": [
+      "hugo"
+    ],
     "aur": false
   },
   {
     "name": "hyperfine",
     "description": "Command-line benchmarking tool, useful for comparing network response times.",
     "url": "https://github.com/sharkdp/hyperfine",
-
-    "pkgname": ["hyperfine"],
+    "pkgname": [
+      "hyperfine"
+    ],
     "aur": false
   },
   {
     "name": "I2P",
     "description": "Distributed anonymous network.",
     "url": "https://geti2p.net/",
-
-    "pkgname": ["i2pd"],
+    "pkgname": [
+      "i2pd"
+    ],
     "aur": false
   },
   {
     "name": "imapsync",
     "description": "IMAP synchronisation, sync, copy or migration tool",
     "url": "https://imapsync.lamiral.info/",
-
-    "pkgname": ["imapsync"],
+    "pkgname": [
+      "imapsync"
+    ],
     "aur": false
   },
   {
     "name": "InspIRCd",
     "description": "A stable, modern and lightweight IRC daemon.",
     "url": "https://www.inspircd.org/",
-
-    "pkgname": ["inspircd"],
+    "pkgname": [
+      "inspircd"
+    ],
     "aur": false
   },
   {
     "name": "Insync",
     "description": "Unofficial proprietary Google Drive desktop client.",
     "url": "https://www.insynchq.com/",
-
-    "pkgname": ["insync"],
+    "pkgname": [
+      "insync"
+    ],
     "aur": false
   },
   {
     "name": "iodine",
     "description": "Tunnel IPv4 data through a DNS server.",
     "url": "https://code.kryo.se/iodine/",
-
-    "pkgname": ["iodine"],
+    "pkgname": [
+      "iodine"
+    ],
     "aur": false
   },
   {
     "name": "IPFS",
     "description": "IPFS is a P2P Network capable of sharing and receiving files.",
     "url": "https://ipfs.io/",
-
-    "pkgname": ["kubo"],
+    "pkgname": [
+      "kubo"
+    ],
     "aur": false
   },
   {
     "name": "iptux",
     "description": "LAN communication software, compatible with IP Messenger.",
     "url": "https://github.com/iptux-src/iptux",
-
-    "pkgname": ["iptux"],
+    "pkgname": [
+      "iptux"
+    ],
     "aur": false
   },
   {
     "name": "Irssi",
     "description": "Highly-configurable ncurses-based IRC client.",
     "url": "https://irssi.org/",
-
-    "pkgname": ["irssi"],
+    "pkgname": [
+      "irssi"
+    ],
     "aur": false
   },
   {
     "name": "isatapd",
     "description": "Creates and maintains an ISATAP tunnel (RFC:5214).",
     "url": "http://www.saschahlusiak.de/linux/isatap.htm",
-
-    "pkgname": ["isatapd"],
+    "pkgname": [
+      "isatapd"
+    ],
     "aur": false
   },
   {
     "name": "isync",
     "description": "IMAP and MailDir mailbox synchronizer",
     "url": "https://isync.sourceforge.net/",
-
-    "pkgname": ["isync"],
+    "pkgname": [
+      "isync"
+    ],
     "aur": false
   },
   {
     "name": "Jami",
     "description": "SIP-compatible softphone and instant messenger for the decentralized Jami network. Formerly known as Ring and SFLphone.",
     "url": "https://jami.net/",
-
-    "pkgname": ["jami-qt"],
+    "pkgname": [
+      "jami-qt"
+    ],
     "aur": false
   },
   {
     "name": "Jekyll",
     "description": "Static blog engine, written in Ruby, which supports Markdown, textile and other formats.",
     "url": "https://jekyllrb.com/",
-
-    "pkgname": ["jekyll"],
+    "pkgname": [
+      "jekyll"
+    ],
     "aur": false
   },
   {
     "name": "Jitsi",
     "description": "Audio/video VoIP phone and instant messenger written in Java that supports protocols such as SIP, XMPP, IRC and many other useful features.",
     "url": "https://jitsi.org/",
-
-    "pkgname": ["jitsi"],
+    "pkgname": [
+      "jitsi"
+    ],
     "aur": false
   },
   {
     "name": "Jitsi Meet",
     "description": "Desktop application for Jitsi Meet. Based on the Electron platform.",
     "url": "https://github.com/jitsi/jitsi-meet-electron",
-
-    "pkgname": ["jitsi-meet-desktop"],
+    "pkgname": [
+      "jitsi-meet-desktop"
+    ],
     "aur": false
   },
   {
     "name": "Kaidan",
     "description": "A simple, user-friendly Jabber/XMPP client providing a modern user interface using Kirigami and QtQuick.",
     "url": "https://www.kaidan.im/",
-
-    "pkgname": ["kaidan"],
+    "pkgname": [
+      "kaidan"
+    ],
     "aur": false
   },
   {
     "name": "Kasts",
     "description": "Convergent podcast application that looks good on desktop and mobile. Part of kde-multimedia.",
     "url": "https://apps.kde.org/kasts/",
-
-    "pkgname": ["kasts"],
+    "pkgname": [
+      "kasts"
+    ],
     "aur": false
   },
   {
     "name": "KGet",
     "description": "Download manager for KDE. Supports HTTP, FTP, BitTorrent and Metalink. Part of kde-network.",
     "url": "https://apps.kde.org/kget/",
-
-    "pkgname": ["kget"],
+    "pkgname": [
+      "kget"
+    ],
     "aur": false
   },
   {
     "name": "Kmail",
     "description": "Mature and feature-rich email client. Part of kde-pim.",
     "url": "https://kontact.kde.org/components/kmail/",
-
-    "pkgname": ["kmail"],
+    "pkgname": [
+      "kmail"
+    ],
     "aur": false
   },
   {
     "name": "Konqueror",
     "description": "Web browser based on Qt toolkit and Qt WebEngine. Part of kde-network.",
     "url": "https://apps.kde.org/konqueror/",
-
-    "pkgname": ["konqueror"],
+    "pkgname": [
+      "konqueror"
+    ],
     "aur": false
   },
   {
     "name": "Konversation",
     "description": "Qt-based IRC client for the KDE desktop. Part of kde-network.",
     "url": "https://konversation.kde.org/",
-
-    "pkgname": ["konversation"],
+    "pkgname": [
+      "konversation"
+    ],
     "aur": false
   },
   {
     "name": "KRDC",
     "description": "Remote Desktop Client for KDE. Supports RDP and VNC. Part of kde-network.",
     "url": "https://apps.kde.org/krdc/",
-
-    "pkgname": ["krdc"],
+    "pkgname": [
+      "krdc"
+    ],
     "aur": false
   },
   {
     "name": "KRdp",
     "description": "A limited RDP server for KDE.",
     "url": "https://invent.kde.org/plasma/krdp",
-
-    "pkgname": ["krdp"],
+    "pkgname": [
+      "krdp"
+    ],
     "aur": false
   },
   {
     "name": "Krfb",
     "description": "VNC server for KDE. Part of kde-network.",
     "url": "https://apps.kde.org/krfb/",
-
-    "pkgname": ["krfb"],
+    "pkgname": [
+      "krfb"
+    ],
     "aur": false
   },
   {
     "name": "Ktorrent",
     "description": "Feature-rich BitTorrent client for KDE. Part of kde-network.",
     "url": "https://apps.kde.org/ktorrent/",
-
-    "pkgname": ["ktorrent"],
+    "pkgname": [
+      "ktorrent"
+    ],
     "aur": false
   },
   {
     "name": "KVIrc",
     "description": "Qt-based IRC client featuring extensive themes support.",
     "url": "https://kvirc.net/",
-
-    "pkgname": ["kvirc"],
+    "pkgname": [
+      "kvirc"
+    ],
     "aur": false
   },
   {
     "name": "Lagrange",
     "description": "Desktop GUI client for browsing Gemini space, offering modern conveniences familiar from web browsers.",
     "url": "https://gmi.skyjake.fi/lagrange",
-
-    "pkgname": ["lagrange"],
+    "pkgname": [
+      "lagrange"
+    ],
     "aur": false
   },
   {
     "name": "LAN Share",
     "description": "Cross-platform local area network file transfer application, built using Qt GUI framework. It can be used to transfer a whole folder, one or more files, large or small immediately without any additional configuration.",
     "url": "https://github.com/abdularis/LAN-Share",
-
-    "pkgname": ["lanshare"],
+    "pkgname": [
+      "lanshare"
+    ],
     "aur": false
   },
   {
     "name": "Lantern",
     "description": "Peer-to-peer internet censorship circumvention software.",
     "url": "https://getlantern.org/",
-
-    "pkgname": ["lantern-bin"],
+    "pkgname": [
+      "lantern-bin"
+    ],
     "aur": false
   },
   {
     "name": "lftp",
     "description": "Sophisticated command line based FTP client",
     "url": "https://lftp.yar.ru/",
-
-    "pkgname": ["lftp"],
+    "pkgname": [
+      "lftp"
+    ],
     "aur": false
   },
   {
     "name": "LFTP",
     "description": "Sophisticated file transfer program. Supports HTTP, FTP, SFTP, FISH, and BitTorrent.",
     "url": "https://lftp.yar.ru/",
-
-    "pkgname": ["lftp"],
+    "pkgname": [
+      "lftp"
+    ],
     "aur": false
   },
   {
     "name": "Libreswan",
     "description": "A free software implementation of the most widely supported and standardized VPN protocol based on (\"IPsec\") and the Internet Key Exchange (\"IKE\").",
     "url": "https://libreswan.org/",
-
-    "pkgname": ["libreswan"],
+    "pkgname": [
+      "libreswan"
+    ],
     "aur": false
   },
   {
     "name": "LibreWolf",
     "description": "A fork of Firefox, focused on privacy, security and freedom.",
     "url": "https://librewolf.net/",
-
-    "pkgname": ["librewolf"],
+    "pkgname": [
+      "librewolf"
+    ],
     "aur": false
   },
   {
     "name": "Liferea",
     "description": "GTK news aggregator for online news feeds and weblogs.",
     "url": "https://lzone.de/liferea/",
-
-    "pkgname": ["liferea"],
+    "pkgname": [
+      "liferea"
+    ],
     "aur": false
   },
   {
     "name": "Lighttpd",
     "description": "A secure, fast, compliant and very flexible web-server.",
     "url": "https://www.lighttpd.net/",
-
-    "pkgname": ["lighttpd"],
+    "pkgname": [
+      "lighttpd"
+    ],
     "aur": false
   },
   {
     "name": "Links",
     "description": "Graphics and text mode web browser. Includes a console version similar to Lynx.",
     "url": "http://links.twibright.com/",
-
-    "pkgname": ["links"],
+    "pkgname": [
+      "links"
+    ],
     "aur": false
   },
   {
     "name": "Links",
     "description": "Graphics and text mode web browser. Includes a graphical X-window/framebuffer version with CSS, image rendering, pull-down menus. It can be launched with the xlinks -g command.",
     "url": "http://links.twibright.com/",
-
-    "pkgname": ["links"],
+    "pkgname": [
+      "links"
+    ],
     "aur": false
   },
   {
     "name": "LocalSend",
     "description": "Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.",
     "url": "https://localsend.org/",
-
-    "pkgname": ["localsend"],
+    "pkgname": [
+      "localsend"
+    ],
     "aur": false
   },
   {
     "name": "Luakit",
     "description": "Fast, small, webkit based browser framework extensible by Lua.",
     "url": "https://luakit.github.io/",
-
-    "pkgname": ["luakit"],
+    "pkgname": [
+      "luakit"
+    ],
     "aur": false
   },
   {
     "name": "Lynx",
     "description": "Text browser for the World Wide Web.",
     "url": "https://lynx.invisible-island.net/",
-
-    "pkgname": ["lynx"],
+    "pkgname": [
+      "lynx"
+    ],
     "aur": false
   },
   {
     "name": "Magic Wormhole",
     "description": "Command-line tool wormhole to securely transfer data between computers.",
     "url": "https://github.com/magic-wormhole/magic-wormhole",
-
-    "pkgname": ["magic-wormhole"],
+    "pkgname": [
+      "magic-wormhole"
+    ],
     "aur": false
   },
   {
     "name": "Mailnag",
     "description": "Extensible mail notification daemon.",
     "url": "https://github.com/pulb/mailnag",
-
-    "pkgname": ["mailnag"],
+    "pkgname": [
+      "mailnag"
+    ],
     "aur": false
   },
   {
     "name": "Mailspring",
     "description": "Fork of Nylas Mail by one of the original authors. The paid \"Pro\" version requires a Mailspring ID and has extra features like snooze, send later. Based on the Electron platform.",
     "url": "https://getmailspring.com/",
-
-    "pkgname": ["mailspring"],
+    "pkgname": [
+      "mailspring"
+    ],
     "aur": false
   },
   {
     "name": "Mattermost",
     "description": "Open source private cloud server, Slack-alternative.",
     "url": "https://github.com/mattermost/mattermost-server",
-
-    "pkgname": ["mattermost"],
+    "pkgname": [
+      "mattermost"
+    ],
     "aur": false
   },
   {
     "name": "Mattermost Desktop",
     "description": "Desktop application for Mattermost. Based on the Electron platform.",
     "url": "https://github.com/mattermost/desktop",
-
-    "pkgname": ["mattermost-desktop"],
+    "pkgname": [
+      "mattermost-desktop"
+    ],
     "aur": false
   },
   {
     "name": "MCabber",
     "description": "Small XMPP console client, includes features: SSL, PGP, MUC, OTR and UTF8.",
     "url": "https://mcabber.com/",
-
-    "pkgname": ["mcabber"],
+    "pkgname": [
+      "mcabber"
+    ],
     "aur": false
   },
   {
     "name": "Microsoft Edge",
     "description": "Proprietary web browser developed by Microsoft.",
     "url": "https://www.microsoft.com/edge/",
-
-    "pkgname": ["microsoft-edge-stable-bin"],
+    "pkgname": [
+      "microsoft-edge-stable-bin"
+    ],
     "aur": false
   },
   {
     "name": "miniserve",
     "description": "Rust alternative to darkhttpd with UTF-8, optional HTTP authentication, file uploading, and more.",
     "url": "https://github.com/svenstaro/miniserve",
-
-    "pkgname": ["miniserve"],
+    "pkgname": [
+      "miniserve"
+    ],
     "aur": false
   },
   {
     "name": "mpop",
     "description": "A small, fast POP3 client suitable as a fetchmail replacement",
     "url": "https://marlam.de/mpop/",
-
-    "pkgname": ["mpop"],
+    "pkgname": [
+      "mpop"
+    ],
     "aur": false
   },
   {
     "name": "Mullvad",
     "description": "A GUI client for the Mullvad VPN service",
     "url": "https://mullvad.net/",
-
-    "pkgname": ["mullvad-vpn"],
+    "pkgname": [
+      "mullvad-vpn"
+    ],
     "aur": false
   },
   {
     "name": "Mullvad Browser",
     "description": "Privacy-focused web browser developed by Mullvad VPN and the Tor Project based on Firefox ESR.",
     "url": "https://mullvad.net/en/browser",
-
-    "pkgname": ["mullvad-browser-bin"],
+    "pkgname": [
+      "mullvad-browser-bin"
+    ],
     "aur": false
   },
   {
     "name": "Mumble",
     "description": "Voice chat application similar to TeamSpeak.",
     "url": "https://www.mumble.info/",
-
-    "pkgname": ["mumble"],
+    "pkgname": [
+      "mumble"
+    ],
     "aur": false
   },
   {
     "name": "Murmur",
     "description": "The voice chat application server for Mumble.",
     "url": "https://www.mumble.info/",
-
-    "pkgname": ["mumble-server"],
+    "pkgname": [
+      "mumble-server"
+    ],
     "aur": false
   },
   {
     "name": "Mutt",
     "description": "Small but very powerful text-based mail client.",
     "url": "http://www.mutt.org/",
-
-    "pkgname": ["mutt"],
+    "pkgname": [
+      "mutt"
+    ],
     "aur": false
   },
   {
     "name": "naiveproxy",
     "description": "A proxy using Chrome's network stack to camouflage traffic as normal HTTPS, making it highly resistant to DPI. Written in C++.",
     "url": "https://github.com/klzgrad/naiveproxy",
-
-    "pkgname": ["naiveproxy"],
+    "pkgname": [
+      "naiveproxy"
+    ],
     "aur": false
   },
   {
     "name": "NaïveProxy",
     "description": "A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility.",
     "url": "https://github.com/klzgrad/naiveproxy",
-
-    "pkgname": ["naiveproxy"],
+    "pkgname": [
+      "naiveproxy"
+    ],
     "aur": false
   },
   {
     "name": "ncftp",
     "description": "A set of free application programs implementing FTP.",
     "url": "https://www.ncftp.com/",
-
-    "pkgname": ["ncftp"],
+    "pkgname": [
+      "ncftp"
+    ],
     "aur": false
   },
   {
     "name": "Nebula",
     "description": "A mesh VPN network",
     "url": "https://nebula.defined.net/docs/",
-
-    "pkgname": ["nebula"],
+    "pkgname": [
+      "nebula"
+    ],
     "aur": false
   },
   {
     "name": "Neochat",
     "description": "KDE client for the Matrix protocol. Part of kde-network.",
     "url": "https://apps.kde.org/neochat/",
-
-    "pkgname": ["neochat"],
+    "pkgname": [
+      "neochat"
+    ],
     "aur": false
   },
   {
     "name": "NeoMutt",
     "description": "Command line mail reader (or MUA). It is a fork of Mutt with added features.",
     "url": "https://neomutt.org/",
-
-    "pkgname": ["neomutt"],
+    "pkgname": [
+      "neomutt"
+    ],
     "aur": false
   },
   {
     "name": "netsniff-ng",
     "description": "High-performance Linux network packet sniffer and analyzer toolkit.",
     "url": "http://netsniff-ng.org/",
-
-    "pkgname": ["netsniff-ng"],
+    "pkgname": [
+      "netsniff-ng"
+    ],
     "aur": false
   },
   {
     "name": "NetSurf",
     "description": "Featherweight browser written in C, notable for its slowly developing JavaScript support and fast rendering through its own layout engine.",
     "url": "https://www.netsurf-browser.org/",
-
-    "pkgname": ["netsurf"],
+    "pkgname": [
+      "netsurf"
+    ],
     "aur": false
   },
   {
     "name": "NetworkManager",
     "description": "Supports a variety of protocols (e.g. MS, Cisco, Fortinet) via a plugin system.",
     "url": "https://wiki.gnome.org/Projects/NetworkManager/VPN",
-
-    "pkgname": ["networkmanager"],
+    "pkgname": [
+      "networkmanager"
+    ],
     "aur": false
   },
   {
     "name": "Newsboat",
     "description": "Ncurses RSS aggregator with layout and keybinding similar to the Mutt email client.",
     "url": "https://newsboat.org/",
-
-    "pkgname": ["newsboat"],
+    "pkgname": [
+      "newsboat"
+    ],
     "aur": false
   },
   {
     "name": "Newsflash",
     "description": "Modern feed reader designed for the GNOME desktop. The spiritual successor to FeedReader.",
     "url": "https://apps.gnome.org/NewsFlash/",
-
-    "pkgname": ["newsflash"],
+    "pkgname": [
+      "newsflash"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud",
     "description": "A cloud server to store your files centrally on a hardware controlled by you.",
     "url": "https://nextcloud.com",
-
-    "pkgname": ["nextcloud"],
+    "pkgname": [
+      "nextcloud"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud Client",
     "description": "Desktop client for Nextcloud.",
     "url": "https://nextcloud.com/",
-
-    "pkgname": ["nextcloud-client"],
+    "pkgname": [
+      "nextcloud-client"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud Mail",
     "description": "An email webapp for NextCloud.",
     "url": "https://github.com/nextcloud/mail",
-
-    "pkgname": ["nextcloud-app-mail"],
+    "pkgname": [
+      "nextcloud-app-mail"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud News",
     "description": "RSS/Atom feed reader for Nextcloud.",
     "url": "https://github.com/nextcloud/news",
-
-    "pkgname": ["nextcloud-app-news"],
+    "pkgname": [
+      "nextcloud-app-news"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud Talk",
     "description": "Video- and audio-conferencing app for Nextcloud.",
     "url": "https://github.com/nextcloud/spreed",
-
-    "pkgname": ["nextcloud-app-spreed"],
+    "pkgname": [
+      "nextcloud-app-spreed"
+    ],
     "aur": false
   },
   {
     "name": "nginx",
     "description": "Lightweight HTTP server and IMAP/POP3 proxy server.",
     "url": "https://nginx.org/",
-
-    "pkgname": ["nginx"],
+    "pkgname": [
+      "nginx"
+    ],
     "aur": false
   },
   {
     "name": "nheko",
     "description": "Desktop client for the Matrix protocol.",
     "url": "https://github.com/Nheko-Reborn/nheko",
-
-    "pkgname": ["nheko"],
+    "pkgname": [
+      "nheko"
+    ],
     "aur": false
   },
   {
     "name": "Nicotine+",
     "description": "A graphical client for the Soulseek P2P network.",
     "url": "https://github.com/Nicotine-Plus/nicotine-plus",
-
-    "pkgname": ["nicotine+"],
+    "pkgname": [
+      "nicotine+"
+    ],
     "aur": false
   },
   {
     "name": "Nikola",
     "description": "Static site generator written in Python, with incremental rebuilds and multiple markup formats.",
     "url": "https://getnikola.com/",
-
-    "pkgname": ["nikola"],
-    "aur": false
-  },
-  {
-    "name": "NitroShare",
-    "description": "Cross-platform network file transfer application, built using Qt GUI framework. It is designed to make transferring files from one device to another on the local network extremely simple.",
-    "url": "https://nitroshare.net/",
-
-    "pkgname": ["nitroshare"],
+    "pkgname": [
+      "nikola"
+    ],
     "aur": false
   },
   {
     "name": "notmuch",
     "description": "A fast mail indexer built on top of xapian.",
     "url": "https://notmuchmail.org/",
-
-    "pkgname": ["notmuch"],
+    "pkgname": [
+      "notmuch"
+    ],
     "aur": false
   },
   {
     "name": "Nyxt",
     "description": "Keyboard-oriented, infinitely extensible browser designed for power users. It has familiar key-bindings (Emacs, VI, CUA) and features fuzzy searching between tabs, multiple selections, history as a tree and more.",
     "url": "https://nyxt.atlas.engineer/",
-
-    "pkgname": ["nyxt"],
+    "pkgname": [
+      "nyxt"
+    ],
     "aur": false
   },
   {
     "name": "NZBGet",
     "description": "Usenet binary downloader for .nzb files with web and CLI interface.",
     "url": "https://nzbget.net/",
-
-    "pkgname": ["nzbget"],
+    "pkgname": [
+      "nzbget"
+    ],
     "aur": false
   },
   {
     "name": "OfflineIMAP",
     "description": "Synchronizes emails between two repositories.",
     "url": "https://www.offlineimap.org/",
-
-    "pkgname": ["offlineimap"],
+    "pkgname": [
+      "offlineimap"
+    ],
     "aur": false
   },
   {
     "name": "oha",
     "description": "HTTP load generator with TUI showing detailed timing breakdown (DNS, TCP, TLS, TTFB).",
     "url": "https://github.com/hatoo/oha",
-
-    "pkgname": ["oha"],
+    "pkgname": [
+      "oha"
+    ],
     "aur": false
   },
   {
     "name": "OneDrive",
     "description": "Fork of the unofficial CLI for OneDrive.",
     "url": "https://github.com/abraunegg/onedrive",
-
-    "pkgname": ["onedrive-abraunegg"],
+    "pkgname": [
+      "onedrive-abraunegg"
+    ],
     "aur": false
   },
   {
     "name": "OnionShare",
     "description": "Lets you securely and anonymously send and receive files. It works by starting a web server, making it accessible as a Tor onion service, and generating an unguessable web address so others can download files from you, or upload files to you.",
     "url": "https://onionshare.org/",
-
-    "pkgname": ["onionshare"],
+    "pkgname": [
+      "onionshare"
+    ],
     "aur": false
   },
   {
     "name": "OpenConnect",
     "description": "Supports Cisco and Juniper VPNs.",
     "url": "https://www.infradead.org/openconnect/",
-
-    "pkgname": ["openconnect"],
+    "pkgname": [
+      "openconnect"
+    ],
     "aur": false
   },
   {
     "name": "Openfire",
     "description": "An XMPP IM multiplatform server written in Java",
     "url": "https://www.igniterealtime.org/projects/openfire/",
-
-    "pkgname": ["openfire"],
+    "pkgname": [
+      "openfire"
+    ],
     "aur": false
   },
   {
     "name": "openSIPS",
     "description": "SIP proxy/server for voice, video, IM, presence and any other SIP extensions.",
     "url": "https://opensips.org/",
-
-    "pkgname": ["opensips"],
+    "pkgname": [
+      "opensips"
+    ],
     "aur": false
   },
   {
     "name": "OpenVPN",
     "description": "To connect to OpenVPN VPNs.",
     "url": "https://openvpn.net/",
-
-    "pkgname": ["openvpn"],
+    "pkgname": [
+      "openvpn"
+    ],
     "aur": false
   },
   {
     "name": "ownCloud Desktop Client",
     "description": "Desktop syncing client for ownCloud.",
     "url": "https://owncloud.com/client/",
-
-    "pkgname": ["owncloud-client"],
+    "pkgname": [
+      "owncloud-client"
+    ],
     "aur": false
   },
   {
     "name": "Pan",
     "description": "GTK Usenet newsreader that's good at both text and binaries.",
     "url": "https://gitlab.gnome.org/GNOME/pan",
-
-    "pkgname": ["pan"],
+    "pkgname": [
+      "pan"
+    ],
     "aur": false
   },
   {
     "name": "Pastebinit",
     "description": "Really small Python script that acts as a Pastebin client (see pastebinit -l for the list of servers).",
     "url": "https://launchpad.net/pastebinit",
-
-    "pkgname": ["pastebinit"],
+    "pkgname": [
+      "pastebinit"
+    ],
     "aur": false
   },
   {
     "name": "Pelican",
     "description": "Static site generator, powered by Python.",
     "url": "https://getpelican.com/",
-
-    "pkgname": ["pelican"],
+    "pkgname": [
+      "pelican"
+    ],
     "aur": false
   },
   {
     "name": "Persepolis",
     "description": "Graphical front-end for aria2 download manager with lots of features. Supports HTTP and FTP.",
     "url": "https://persepolisdm.github.io/",
-
-    "pkgname": ["persepolis"],
+    "pkgname": [
+      "persepolis"
+    ],
     "aur": false
   },
   {
     "name": "Ping Tunnel",
     "description": "A tool for reliably tunneling TCP connections over ICMP echo request and reply packets.",
     "url": "https://www.cs.uit.no/~daniels/PingTunnel/",
-
-    "pkgname": ["ptunnel"],
+    "pkgname": [
+      "ptunnel"
+    ],
     "aur": false
   },
   {
     "name": "Podcasts",
     "description": "Podcast client for the GNOME desktop written in Rust.",
     "url": "https://apps.gnome.org/Podcasts/",
-
-    "pkgname": ["gnome-podcasts"],
+    "pkgname": [
+      "gnome-podcasts"
+    ],
     "aur": false
   },
   {
     "name": "Polari",
     "description": "Simple IRC client by the GNOME project. Part of gnome-extra.",
     "url": "https://apps.gnome.org/Polari/",
-
-    "pkgname": ["polari"],
+    "pkgname": [
+      "polari"
+    ],
     "aur": false
   },
   {
     "name": "pork",
     "description": "Programmable, ncurses-based IRC client that mostly looks and feels like ircII.",
     "url": "http://dev.ojnk.net/",
-
-    "pkgname": ["pork"],
+    "pkgname": [
+      "pork"
+    ],
     "aur": false
   },
   {
     "name": "PPTP Client",
     "description": "To connect to PPTP VPNs, like Microsoft VPNs (MPPE). (insecure)",
     "url": "https://pptpclient.sourceforge.net/",
-
-    "pkgname": ["pptpclient"],
+    "pkgname": [
+      "pptpclient"
+    ],
     "aur": false
   },
   {
     "name": "Privoxy",
     "description": "Non-caching web proxy with advanced filtering capabilities for enhancing privacy, modifying web page data and HTTP headers, controlling access, and removing ads and other obnoxious Internet junk.",
     "url": "https://www.privoxy.org/",
-
-    "pkgname": ["privoxy"],
+    "pkgname": [
+      "privoxy"
+    ],
     "aur": false
   },
   {
     "name": "Profanity",
     "description": "A console based XMPP client inspired by Irssi.",
     "url": "https://profanity-im.github.io/",
-
-    "pkgname": ["profanity"],
+    "pkgname": [
+      "profanity"
+    ],
     "aur": false
   },
   {
     "name": "proFTPd",
     "description": "A secure and configurable FTP server",
     "url": "http://www.proftpd.org/",
-
-    "pkgname": ["proftpd"],
+    "pkgname": [
+      "proftpd"
+    ],
     "aur": false
   },
   {
     "name": "Prosody",
     "description": "An XMPP server written in the Lua programming language. Prosody is designed to be lightweight and highly extensible. It is licensed under a permissive MIT license.",
     "url": "https://prosody.im/",
-
-    "pkgname": ["prosody"],
+    "pkgname": [
+      "prosody"
+    ],
     "aur": false
   },
   {
     "name": "ProtonVPN",
     "description": "VPN provider that uses the OpenVPN and WireGuard protocol.",
     "url": "https://protonvpn.com/",
-
-    "pkgname": ["proton-vpn-gtk-app"],
+    "pkgname": [
+      "proton-vpn-gtk-app"
+    ],
     "aur": false
   },
   {
     "name": "Psi",
     "description": "Qt-based XMPP client.",
     "url": "https://psi-im.org/",
-
-    "pkgname": ["psi"],
+    "pkgname": [
+      "psi"
+    ],
     "aur": false
   },
   {
     "name": "Pure-FTPd",
     "description": "Free (BSD-licensed), secure, production-quality and standard-compliant FTP server.",
     "url": "https://www.pureftpd.org/project/pure-ftpd/",
-
-    "pkgname": ["pure-ftpd"],
+    "pkgname": [
+      "pure-ftpd"
+    ],
     "aur": false
   },
   {
     "name": "qBittorrent",
     "description": "Open source (GPLv2) BitTorrent client with an integrated torrent search engine that strongly resembles µTorrent.",
     "url": "https://www.qbittorrent.org/",
-
-    "pkgname": ["qbittorrent"],
+    "pkgname": [
+      "qbittorrent"
+    ],
     "aur": false
   },
   {
     "name": "Quassel",
     "description": "Modern, cross-platform, distributed IRC client.",
     "url": "https://quassel-irc.org/",
-
-    "pkgname": ["quassel-monolithic"],
+    "pkgname": [
+      "quassel-monolithic"
+    ],
     "aur": false
   },
   {
     "name": "Quaternion",
     "description": "Qt5-based IM client for the Matrix protocol.",
     "url": "https://github.com/QMatrixClient/Quaternion",
-
-    "pkgname": ["quaternion"],
+    "pkgname": [
+      "quaternion"
+    ],
     "aur": false
   },
   {
     "name": "qutebrowser",
     "description": "A keyboard-driven, vim-like browser based on PyQt5 and QtWebEngine.",
     "url": "https://qutebrowser.org/",
-
-    "pkgname": ["qutebrowser"],
+    "pkgname": [
+      "qutebrowser"
+    ],
     "aur": false
   },
   {
     "name": "Rclone",
     "description": "Multi-provider sync, copy, and mount client.",
     "url": "https://rclone.org/",
-
-    "pkgname": ["rclone"],
+    "pkgname": [
+      "rclone"
+    ],
     "aur": false
   },
   {
     "name": "Rclone Browser",
     "description": "GUI client for Rclone.",
     "url": "https://github.com/kapitainsky/RcloneBrowser",
-
-    "pkgname": ["rclone-browser"],
+    "pkgname": [
+      "rclone-browser"
+    ],
     "aur": false
   },
   {
     "name": "Remmina",
     "description": "Remote desktop client written in GTK. Supports RDP, VNC, SPICE, X2Go and SSH.",
     "url": "https://remmina.org/",
-
-    "pkgname": ["remmina"],
+    "pkgname": [
+      "remmina"
+    ],
     "aur": false
   },
   {
     "name": "Remote Viewer",
     "description": "Simple remote display client. Supports SPICE and VNC.",
     "url": "https://virt-manager.org/",
-
-    "pkgname": ["virt-viewer"],
+    "pkgname": [
+      "virt-viewer"
+    ],
     "aur": false
   },
   {
     "name": "RetroShare",
     "description": "Serverless encrypted instant messenger with filesharing, chatgroups, mail.",
     "url": "https://retroshare.cc/",
-
-    "pkgname": ["retroshare"],
+    "pkgname": [
+      "retroshare"
+    ],
     "aur": false
   },
   {
     "name": "RiseupVPN",
     "description": "A GUI client for the Riseup VPN service from riseup.net.",
     "url": "https://riseup.net/en/vpn/",
-
-    "pkgname": ["riseup-vpn"],
+    "pkgname": [
+      "riseup-vpn"
+    ],
     "aur": false
   },
   {
     "name": "Rosenpass",
     "description": "Hybrid security against quantum computers for WireGuard by adding a post-quantum-secure key exchange",
     "url": "https://rosenpass.eu/",
-
-    "pkgname": ["rosenpass"],
+    "pkgname": [
+      "rosenpass"
+    ],
     "aur": false
   },
   {
     "name": "Roundcube",
     "description": "Browser-based multilingual IMAP client webapp with a native application-like user interface.",
     "url": "https://roundcube.net/",
-
-    "pkgname": ["roundcubemail"],
+    "pkgname": [
+      "roundcubemail"
+    ],
     "aur": false
   },
   {
     "name": "RSS Guard",
     "description": "Very tiny RSS and ATOM news reader developed using Qt framework.",
     "url": "https://github.com/martinrotter/rssguard",
-
-    "pkgname": ["rssguard"],
+    "pkgname": [
+      "rssguard"
+    ],
     "aur": false
   },
   {
     "name": "rss2email",
     "description": "Aggregating your RSS/Atom feed into your IMAP/Maildir mailbox as a cronjob.",
     "url": "https://github.com/rss2email/rss2email",
-
-    "pkgname": ["rss2email"],
+    "pkgname": [
+      "rss2email"
+    ],
     "aur": false
   },
   {
     "name": "RTMPDump",
     "description": "Download FLV videos through RTMP (Adobe's proprietary protocol for Flash video players)",
     "url": "http://rtmpdump.mplayerhq.hu/",
-
-    "pkgname": ["rtmpdump"],
+    "pkgname": [
+      "rtmpdump"
+    ],
     "aur": false
   },
   {
     "name": "rTorrent",
     "description": "Simple and lightweight ncurses BitTorrent client.",
     "url": "https://rakshasa.github.io/rtorrent/",
-
-    "pkgname": ["rtorrent"],
+    "pkgname": [
+      "rtorrent"
+    ],
     "aur": false
   },
   {
     "name": "Ruqola",
     "description": "Rocket.Chat client for the KDE desktop.",
     "url": "https://apps.kde.org/ruqola/",
-
-    "pkgname": ["ruqola"],
+    "pkgname": [
+      "ruqola"
+    ],
     "aur": false
   },
   {
     "name": "S-nail",
     "description": "a mail processing system with a command syntax reminiscent of ed with lines replaced by messages. Provides the functionality of mailx.",
     "url": "https://www.sdaoden.eu/code.html#s-mailx",
-
-    "pkgname": ["s-nail"],
+    "pkgname": [
+      "s-nail"
+    ],
     "aur": false
   },
   {
     "name": "S3cmd",
     "description": "Unofficial CLI for Amazon S3.",
     "url": "https://s3tools.org/s3cmd",
-
-    "pkgname": ["s3cmd"],
+    "pkgname": [
+      "s3cmd"
+    ],
     "aur": false
   },
   {
     "name": "SABnzbd",
     "description": "An open-source binary newsreader webapp written in Python.",
     "url": "https://sabnzbd.org/",
-
-    "pkgname": ["sabnzbd"],
+    "pkgname": [
+      "sabnzbd"
+    ],
     "aur": false
   },
   {
     "name": "Seafile Client",
     "description": "GUI client for Seafile.",
     "url": "https://www.seafile.com/",
-
-    "pkgname": ["seafile-client"],
-    "aur": false
-  },
-  {
-    "name": "Shadowsocks",
-    "description": "Secure socks5 proxy, designed to protect your Internet traffic.",
-    "url": "https://shadowsocks.org/",
-
-    "pkgname": ["shadowsocks"],
+    "pkgname": [
+      "seafile-client"
+    ],
     "aur": false
   },
   {
     "name": "siege",
     "description": "An HTTP regression testing and benchmarking utility.",
     "url": "https://www.joedog.org/siege-home/",
-
-    "pkgname": ["siege"],
+    "pkgname": [
+      "siege"
+    ],
     "aur": false
   },
   {
     "name": "Sigal",
     "description": "A simple static gallery generator.",
     "url": "http://sigal.saimon.org/en/latest/",
-
-    "pkgname": ["sigal"],
+    "pkgname": [
+      "sigal"
+    ],
     "aur": false
   },
   {
     "name": "Signal Desktop",
     "description": "Desktop application for Signal private messenger. Based on the Electron platform.",
     "url": "https://github.com/signalapp/Signal-Desktop",
-
-    "pkgname": ["signal-desktop"],
+    "pkgname": [
+      "signal-desktop"
+    ],
     "aur": false
   },
   {
     "name": "Slack",
     "description": "Proprietary Slack client for desktop. Based on the Electron platform.",
     "url": "https://slack.com/",
-
-    "pkgname": ["slack-desktop"],
+    "pkgname": [
+      "slack-desktop"
+    ],
     "aur": false
   },
   {
     "name": "sniffnet",
     "description": "Network traffic monitoring with TUI/GUI, statistics by protocol, and per-host analysis.",
     "url": "https://github.com/GyulyVGC/sniffnet",
-
-    "pkgname": ["sniffnet"],
+    "pkgname": [
+      "sniffnet"
+    ],
     "aur": false
   },
   {
     "name": "speedtest-cli",
     "description": "Command-line interface for testing internet bandwidth using speedtest.net servers.",
     "url": "https://github.com/sivel/speedtest-cli",
-
-    "pkgname": ["speedtest-cli"],
+    "pkgname": [
+      "speedtest-cli"
+    ],
     "aur": false
   },
   {
     "name": "SpeedTest++",
     "description": "Unofficial speedtest.net CLI using raw TCP for better accuracy.",
     "url": "https://github.com/taganaka/SpeedTest",
-
-    "pkgname": ["speedtest++"],
+    "pkgname": [
+      "speedtest++"
+    ],
     "aur": false
   },
   {
     "name": "Squid",
     "description": "Caching proxy for the Web supporting HTTP, HTTPS, FTP, and more.",
     "url": "https://www.squid-cache.org/",
-
-    "pkgname": ["squid"],
+    "pkgname": [
+      "squid"
+    ],
     "aur": false
   },
   {
     "name": "Steadyflow",
     "description": "Simple download manager for GNOME. Supports HTTP and FTP.",
     "url": "https://launchpad.net/steadyflow",
-
-    "pkgname": ["steadyflow"],
+    "pkgname": [
+      "steadyflow"
+    ],
     "aur": false
   },
   {
     "name": "Streamlink",
     "description": "Launch streams from various streaming services in a custom video player or save them to a file.",
     "url": "https://streamlink.github.io/",
-
-    "pkgname": ["streamlink"],
+    "pkgname": [
+      "streamlink"
+    ],
     "aur": false
   },
   {
     "name": "strongSwan",
     "description": "IPsec-based VPN Solution.",
     "url": "https://www.strongswan.org/",
-
-    "pkgname": ["strongswan"],
+    "pkgname": [
+      "strongswan"
+    ],
     "aur": false
   },
   {
     "name": "Stunnel",
     "description": "A server and client to add and remove TLS encryption to TCP data flow.",
     "url": "https://www.stunnel.org/",
-
-    "pkgname": ["stunnel"],
+    "pkgname": [
+      "stunnel"
+    ],
     "aur": false
   },
   {
     "name": "swaks",
     "description": "Swiss Army Knife SMTP; Command line SMTP testing, including TLS and AUTH, can be used to send emails.",
     "url": "https://jetmore.org/john/code/swaks/",
-
-    "pkgname": ["swaks"],
+    "pkgname": [
+      "swaks"
+    ],
     "aur": false
   },
   {
     "name": "Synapse",
     "description": "Reference homeserver for the Matrix protocol.",
     "url": "https://github.com/matrix-org/synapse",
-
-    "pkgname": ["matrix-synapse"],
+    "pkgname": [
+      "matrix-synapse"
+    ],
     "aur": false
   },
   {
     "name": "Synology Drive",
     "description": "Proprietary GUI client to sync and share files between a centralized Synology NAS and multiple client computers.",
     "url": "https://www.synology.com/",
-
-    "pkgname": ["synology-drive"],
-    "aur": false
-  },
-  {
-    "name": "Syphon",
-    "description": "Privacy-centric cross-platform Matrix client with E2EE support, currently in alpha.",
-    "url": "https://github.com/syphon-org/syphon",
-
-    "pkgname": ["syphon-bin"],
+    "pkgname": [
+      "synology-drive"
+    ],
     "aur": false
   },
   {
     "name": "Tangram",
     "description": "Integration of web applications into the desktop, specifically GNOME.",
     "url": "https://apps.gnome.org/Tangram/",
-
-    "pkgname": ["tangram"],
+    "pkgname": [
+      "tangram"
+    ],
     "aur": false
   },
   {
     "name": "teams-for-linux",
     "description": "Unofficial Microsoft Teams for Linux client. Based on the Electron platform.",
     "url": "https://github.com/IsmaelMartinez/teams-for-linux",
-
-    "pkgname": ["teams-for-linux"],
+    "pkgname": [
+      "teams-for-linux"
+    ],
     "aur": false
   },
   {
     "name": "TeamSpeak",
     "description": "Proprietary VoIP application with gamers as its target audience.",
     "url": "https://www.teamspeak.com/",
-
-    "pkgname": ["teamspeak3"],
+    "pkgname": [
+      "teamspeak3"
+    ],
     "aur": false
   },
   {
     "name": "TeamSpeak Server",
     "description": "Proprietary VoIP conference server.",
     "url": "https://teamspeak.com/",
-
-    "pkgname": ["teamspeak3-server"],
+    "pkgname": [
+      "teamspeak3-server"
+    ],
     "aur": false
   },
   {
     "name": "Telegram Desktop",
     "description": "Official Telegram desktop client.",
     "url": "https://desktop.telegram.org/",
-
-    "pkgname": ["telegram-desktop"],
+    "pkgname": [
+      "telegram-desktop"
+    ],
     "aur": false
   },
   {
     "name": "termshark",
     "description": "Terminal UI for tshark, providing a Wireshark-like interface in the terminal.",
     "url": "https://termshark.io/",
-
-    "pkgname": ["termshark"],
+    "pkgname": [
+      "termshark"
+    ],
     "aur": false
   },
   {
     "name": "Thunderbird",
     "description": "Feature-rich email client from Mozilla written in GTK.",
     "url": "https://www.thunderbird.net/",
-
-    "pkgname": ["thunderbird"],
+    "pkgname": [
+      "thunderbird"
+    ],
     "aur": false
   },
   {
     "name": "Thunderbird",
     "description": "Feature-rich email client supports instant messaging and chat using IRC and XMPP.",
     "url": "https://www.thunderbird.net/",
-
-    "pkgname": ["thunderbird"],
+    "pkgname": [
+      "thunderbird"
+    ],
     "aur": false
   },
   {
     "name": "tinc",
     "description": "tinc is a free VPN daemon.",
     "url": "https://www.tinc-vpn.org/",
-
-    "pkgname": ["tinc"],
+    "pkgname": [
+      "tinc"
+    ],
     "aur": false
   },
   {
     "name": "tiny",
     "description": "an IRC client written in Rust with a clutter-free interface",
     "url": "https://github.com/osa1/tiny",
-
-    "pkgname": ["tiny"],
+    "pkgname": [
+      "tiny"
+    ],
     "aur": false
   },
   {
     "name": "Tiny Tiny RSS",
     "description": "Web-based news feed (RSS/Atom) aggregator.",
     "url": "https://tt-rss.org/",
-
-    "pkgname": ["tt-rss"],
+    "pkgname": [
+      "tt-rss"
+    ],
     "aur": false
   },
   {
     "name": "Tinyproxy",
     "description": "Lightweight HTTP/HTTPS proxy daemon.",
     "url": "https://tinyproxy.github.io/",
-
-    "pkgname": ["tinyproxy"],
+    "pkgname": [
+      "tinyproxy"
+    ],
     "aur": false
   },
   {
     "name": "Tixati",
     "description": "Proprietary peer-to-peer file sharing program that uses the popular BitTorrent protocol.",
     "url": "https://tixati.com/",
-
-    "pkgname": ["tixati"],
+    "pkgname": [
+      "tixati"
+    ],
     "aur": false
   },
   {
     "name": "tnftp",
     "description": "FTP client with several advanced features for NetBSD.",
     "url": "https://freshmeat.sourceforge.net/projects/tnftp",
-
-    "pkgname": ["tnftp"],
+    "pkgname": [
+      "tnftp"
+    ],
     "aur": false
   },
   {
     "name": "Tokodon",
     "description": "Mastodon client for KDE. Part of kde-network.",
     "url": "https://apps.kde.org/tokodon/",
-
-    "pkgname": ["tokodon"],
+    "pkgname": [
+      "tokodon"
+    ],
     "aur": false
   },
   {
     "name": "Toot",
     "description": "CLI and TUI tool for interacting with Mastodon instances.",
     "url": "https://github.com/ihabunek/toot",
-
-    "pkgname": ["toot"],
+    "pkgname": [
+      "toot"
+    ],
     "aur": false
   },
   {
     "name": "Tor",
     "description": "Anonymizing overlay network.",
     "url": "https://www.torproject.org/",
-
-    "pkgname": ["tor"],
+    "pkgname": [
+      "tor"
+    ],
     "aur": false
   },
   {
     "name": "Tor Browser Launcher",
     "description": "Securely and easily download, verify, install, and launch Tor Browser, a fork of Firefox ESR.",
     "url": "https://github.com/micahflee/torbrowser-launcher",
-
-    "pkgname": ["torbrowser-launcher"],
+    "pkgname": [
+      "torbrowser-launcher"
+    ],
     "aur": false
   },
   {
     "name": "Toxic",
     "description": "ncurses-based Tox client",
     "url": "https://github.com/Jfreegman/toxic",
-
-    "pkgname": ["toxic"],
+    "pkgname": [
+      "toxic"
+    ],
     "aur": false
   },
   {
     "name": "Traefik",
     "description": "A modern reverse proxy and load balancer that makes deploying microservices easy.",
     "url": "https://traefik.io/traefik/",
-
-    "pkgname": ["traefik"],
+    "pkgname": [
+      "traefik"
+    ],
     "aur": false
   },
   {
     "name": "Transmission",
     "description": "Simple and easy-to-use BitTorrent client with a daemon version and multiple front-ends.",
     "url": "https://transmissionbt.com/",
-
-    "pkgname": ["transmission-gtk"],
+    "pkgname": [
+      "transmission-gtk"
+    ],
     "aur": false
   },
   {
     "name": "Transmission CLI",
     "description": "Simple and easy-to-use BitTorrent client with a daemon version and multiple front-ends. This package includes backend, daemon, command-line interface, and a Web UI interface.",
     "url": "https://transmissionbt.com/",
-
-    "pkgname": ["transmission-cli"],
+    "pkgname": [
+      "transmission-cli"
+    ],
     "aur": false
   },
   {
     "name": "Transmission Remote",
     "description": "GTK client for remote management of the Transmission BitTorrent client, using its HTTP RPC protocol.",
     "url": "https://github.com/transmission-remote-gtk/transmission-remote-gtk",
-
-    "pkgname": ["transmission-remote-gtk"],
+    "pkgname": [
+      "transmission-remote-gtk"
+    ],
     "aur": false
   },
   {
     "name": "trippy",
     "description": "A network diagnostic tool combining traceroute and ping with an interactive TUI.",
     "url": "https://github.com/fujiapple852/trippy",
-
-    "pkgname": ["trippy"],
+    "pkgname": [
+      "trippy"
+    ],
     "aur": false
   },
   {
     "name": "Trojan",
     "description": "An unidentifiable mechanism that helps you bypass GFW.",
     "url": "https://trojan-gfw.github.io/trojan/",
-
-    "pkgname": ["trojan"],
+    "pkgname": [
+      "trojan"
+    ],
     "aur": false
   },
   {
     "name": "Tuba",
     "description": "GTK4 client for Mastodon.",
     "url": "https://apps.gnome.org/Tuba/",
-
-    "pkgname": ["tuba"],
+    "pkgname": [
+      "tuba"
+    ],
     "aur": false
   },
   {
     "name": "Tuntox",
     "description": "Tunnel TCP connections over the Tox protocol.",
     "url": "https://github.com/gjedeer/tuntox/",
-
-    "pkgname": ["tuntox"],
+    "pkgname": [
+      "tuntox"
+    ],
     "aur": false
   },
   {
     "name": "Tutanota",
     "description": "Email client for Tutanota mail service. Based on the Electron platform.",
     "url": "https://tutanota.com/",
-
-    "pkgname": ["tutanota-desktop"],
+    "pkgname": [
+      "tutanota-desktop"
+    ],
     "aur": false
   },
   {
     "name": "uGet",
     "description": "GTK download manager featuring download classification and HTML import. Supports HTTP, FTP, BitTorrent, Metalink, YouTube and Mega.",
     "url": "https://ugetdm.com/",
-
-    "pkgname": ["uget"],
+    "pkgname": [
+      "uget"
+    ],
     "aur": false
   },
   {
     "name": "uMurmur",
     "description": "Minimalistic Mumble server.",
     "url": "https://umurmur.net/",
-
-    "pkgname": ["umurmur"],
+    "pkgname": [
+      "umurmur"
+    ],
     "aur": false
   },
   {
     "name": "UnrealIRCd",
     "description": "Open Source IRC Server.",
     "url": "https://www.unrealircd.org/",
-
-    "pkgname": ["unrealircd"],
+    "pkgname": [
+      "unrealircd"
+    ],
     "aur": false
   },
   {
     "name": "uWSGI",
     "description": "A fast, self-healing and developer/sysadmin-friendly application container server written in C.",
     "url": "https://uwsgi-docs.readthedocs.io/",
-
-    "pkgname": ["uwsgi"],
+    "pkgname": [
+      "uwsgi"
+    ],
     "aur": false
   },
   {
     "name": "V2Ray",
     "description": "V2Ray is the core of Project V, which is a set of tools to help you build your own privacy network over the internet.",
     "url": "https://www.v2fly.org/en_US/",
-
-    "pkgname": ["v2ray"],
+    "pkgname": [
+      "v2ray"
+    ],
     "aur": false
   },
   {
     "name": "Varia",
     "description": "GTK frontend for aria2c and yt-dlp.",
     "url": "https://github.com/giantpinkrobots/varia",
-
-    "pkgname": ["varia"],
+    "pkgname": [
+      "varia"
+    ],
     "aur": false
   },
   {
     "name": "Varnish",
     "description": "High-performance HTTP accelerator.",
     "url": "https://varnish-cache.org/",
-
-    "pkgname": ["varnish"],
+    "pkgname": [
+      "varnish"
+    ],
     "aur": false
   },
   {
     "name": "vegeta",
     "description": "HTTP load testing tool, written in Go.",
     "url": "https://github.com/tsenart/vegeta",
-
-    "pkgname": ["vegeta"],
+    "pkgname": [
+      "vegeta"
+    ],
     "aur": false
   },
   {
     "name": "Video Downloader",
     "description": "GTK application to download videos from websites like YouTube and many others (based on youtube-dl).",
     "url": "https://github.com/Unrud/video-downloader",
-
-    "pkgname": ["video-downloader"],
+    "pkgname": [
+      "video-downloader"
+    ],
     "aur": false
   },
   {
     "name": "Vimb",
     "description": "A Vim-like web browser written in C that is inspired by Pentadactyl and Vimprobable. It includes a manpage and a howto for common configurations. It supports custom JS-scripts, dark mode and handles geolocation requests.",
     "url": "https://fanglingsu.github.io/vimb/",
-
-    "pkgname": ["vimb"],
+    "pkgname": [
+      "vimb"
+    ],
     "aur": false
   },
   {
     "name": "Vivaldi",
     "description": "An advanced proprietary browser made with the power user in mind.",
     "url": "https://vivaldi.com/",
-
-    "pkgname": ["vivaldi"],
+    "pkgname": [
+      "vivaldi"
+    ],
     "aur": false
   },
   {
     "name": "vncviewer (TigerVNC)",
     "description": "VNC viewer for X.",
     "url": "https://tigervnc.org/",
-
-    "pkgname": ["tigervnc"],
+    "pkgname": [
+      "tigervnc"
+    ],
     "aur": false
   },
   {
     "name": "vopono",
     "description": "OpenVPN and WireGuard wrapper to launch applications with VPN tunnels in network namespaces.",
     "url": "https://github.com/jamesmcm/vopono",
-
-    "pkgname": ["vopono"],
+    "pkgname": [
+      "vopono"
+    ],
     "aur": false
   },
   {
     "name": "vpnc",
     "description": "To connect to Cisco 3000 VPN Concentrators.",
     "url": "https://www.unix-ag.uni-kl.de/~massar/vpnc/",
-
-    "pkgname": ["vpnc"],
+    "pkgname": [
+      "vpnc"
+    ],
     "aur": false
   },
   {
     "name": "vsftpd",
     "description": "Lightweight, stable and secure FTP server for UNIX-like systems.",
     "url": "https://security.appspot.com/vsftpd.html",
-
-    "pkgname": ["vsftpd"],
+    "pkgname": [
+      "vsftpd"
+    ],
     "aur": false
   },
   {
     "name": "w3m",
     "description": "Pager/text-based web browser. It has vim-like keybindings, and is able to display images.",
     "url": "https://salsa.debian.org/debian/w3m",
-
-    "pkgname": ["w3m"],
+    "pkgname": [
+      "w3m"
+    ],
     "aur": false
   },
   {
     "name": "Waitress",
     "description": "A WSGI server for Python 3.",
     "url": "https://github.com/Pylons/waitress",
-
-    "pkgname": ["python-waitress"],
+    "pkgname": [
+      "python-waitress"
+    ],
     "aur": false
   },
   {
     "name": "Wanderlust",
     "description": "Email client and news reader for Emacs.",
     "url": "https://github.com/wanderlust/wanderlust/",
-
-    "pkgname": ["wanderlust"],
+    "pkgname": [
+      "wanderlust"
+    ],
     "aur": false
   },
   {
     "name": "Warp",
     "description": "Securely send files to each other via the internet or local network by exchanging a word-based code. It uses the Magic Wormhole protocol.",
     "url": "https://apps.gnome.org/Warp/",
-
-    "pkgname": ["warp"],
+    "pkgname": [
+      "warp"
+    ],
     "aur": false
   },
   {
     "name": "Warpinator",
     "description": "GTK application to share files across the LAN.",
     "url": "https://github.com/linuxmint/warpinator",
-
-    "pkgname": ["warpinator"],
+    "pkgname": [
+      "warpinator"
+    ],
     "aur": false
   },
   {
     "name": "Waterfox",
     "description": "Fork of Mozilla Firefox featuring some privacy, usability, and speed enhancements.",
     "url": "https://www.waterfox.net/",
-
-    "pkgname": ["waterfox"],
+    "pkgname": [
+      "waterfox"
+    ],
     "aur": false
   },
   {
     "name": "wayvnc",
     "description": "VNC server for wlroots based wayland compositors (such as sway).",
     "url": "https://github.com/any1/wayvnc",
-
-    "pkgname": ["wayvnc"],
+    "pkgname": [
+      "wayvnc"
+    ],
     "aur": false
   },
   {
     "name": "webhook",
     "description": "Small server for creating HTTP endpoints (hooks)",
     "url": "https://github.com/adnanh/webhook",
-
-    "pkgname": ["webhook"],
+    "pkgname": [
+      "webhook"
+    ],
     "aur": false
   },
   {
     "name": "WeeChat",
     "description": "Modular, lightweight ncurses-based IRC client. A variety of other protocols are supported through plugins.",
     "url": "https://weechat.org/",
-
-    "pkgname": ["weechat"],
+    "pkgname": [
+      "weechat"
+    ],
     "aur": false
   },
   {
     "name": "Wget",
     "description": "A network utility to retrieve files from the Web. Supports HTTP and FTP.",
     "url": "https://www.gnu.org/software/wget/",
-
-    "pkgname": ["wget"],
+    "pkgname": [
+      "wget"
+    ],
     "aur": false
   },
   {
     "name": "Wgetpaste",
     "description": "Bash script that automates pasting to a number of pastebin services.",
     "url": "http://wgetpaste.zlin.dk/",
-
-    "pkgname": ["wgetpaste"],
+    "pkgname": [
+      "wgetpaste"
+    ],
     "aur": false
   },
   {
     "name": "Whalebird",
     "description": "Mastodon client application. Based on the Electron platform.",
     "url": "https://whalebird.social/",
-
-    "pkgname": ["whalebird"],
-    "aur": false
-  },
-  {
-    "name": "Wire",
-    "description": "Modern, private messenger. Based on the Electron platform.",
-    "url": "https://wire.com/",
-
-    "pkgname": ["wire-desktop"],
+    "pkgname": [
+      "whalebird"
+    ],
     "aur": false
   },
   {
     "name": "WireGuard",
     "description": "Next generation secure network tunnel.",
     "url": "https://www.wireguard.com/",
-
-    "pkgname": ["wireguard-tools"],
+    "pkgname": [
+      "wireguard-tools"
+    ],
     "aur": false
   },
   {
     "name": "Wireproxy",
     "description": "WireGuard client that exposes itself as a SOCKS5 proxy.",
     "url": "https://github.com/pufferffish/wireproxy",
-
-    "pkgname": ["wireproxy"],
+    "pkgname": [
+      "wireproxy"
+    ],
     "aur": false
   },
   {
     "name": "Wordpress",
     "description": "Blog tool and publishing platform.",
     "url": "https://wordpress.org/",
-
-    "pkgname": ["wordpress"],
+    "pkgname": [
+      "wordpress"
+    ],
     "aur": false
   },
   {
     "name": "x0vncserver (TigerVNC)",
     "description": "VNC Server for X displays.",
     "url": "https://tigervnc.org/",
-
-    "pkgname": ["tigervnc"],
+    "pkgname": [
+      "tigervnc"
+    ],
     "aur": false
   },
   {
     "name": "x11vnc",
     "description": "VNC server for real X displays.",
     "url": "http://www.karlrunge.com/x11vnc/",
-
-    "pkgname": ["x11vnc"],
+    "pkgname": [
+      "x11vnc"
+    ],
     "aur": false
   },
   {
     "name": "X2Go Client",
     "description": "A graphical client (Qt5) for the X2Go system that uses the NX technology protocol.",
     "url": "https://wiki.x2go.org/doku.php",
-
-    "pkgname": ["x2goclient"],
+    "pkgname": [
+      "x2goclient"
+    ],
     "aur": false
   },
   {
     "name": "X2Go Server",
     "description": "An open source remote desktop software that uses the NX technology protocol.",
     "url": "https://wiki.x2go.org/doku.php",
-
-    "pkgname": ["x2goserver"],
+    "pkgname": [
+      "x2goserver"
+    ],
     "aur": false
   },
   {
     "name": "xfreerdp",
-    "description": "FreeRDP X11 client. Run with xfreerdp.",
+    "description": "FreeRDP X11 client. Run with xfreerdp3.",
     "url": "https://www.freerdp.com/",
-
-    "pkgname": ["freerdp"],
+    "pkgname": [
+      "freerdp"
+    ],
     "aur": false
   },
   {
     "name": "Xpra",
     "description": "A multi-platform screen and application forwarding system.",
     "url": "https://xpra.org/",
-
-    "pkgname": ["xpra"],
+    "pkgname": [
+      "xpra"
+    ],
     "aur": false
   },
   {
     "name": "Xrdp",
     "description": "A daemon that supports RDP. It uses Xvnc, X11rdp or xorgxrdp as a backend.",
     "url": "https://www.xrdp.org/",
-
-    "pkgname": ["xrdp"],
+    "pkgname": [
+      "xrdp"
+    ],
     "aur": false
   },
   {
     "name": "Yate",
     "description": "Advanced, mature, flexible telephony server that is used for VoIP and fixed networks, and for traditional mobile operators and MVNOs.",
     "url": "https://yate.ro/",
-
-    "pkgname": ["yate"],
+    "pkgname": [
+      "yate"
+    ],
     "aur": false
   },
   {
     "name": "yt-dlp",
     "description": "A youtube-dl fork with additional features and fixes.",
     "url": "https://github.com/yt-dlp/yt-dlp",
-
-    "pkgname": ["yt-dlp"],
+    "pkgname": [
+      "yt-dlp"
+    ],
     "aur": false
   },
   {
     "name": "ytfzf",
     "description": "A POSIX script to find and watch youtube videos from the terminal.",
     "url": "https://github.com/pystardust/ytfzf",
-
-    "pkgname": ["ytfzf"],
+    "pkgname": [
+      "ytfzf"
+    ],
     "aur": false
   },
   {
     "name": "zapret",
     "description": "A Netfilter queue mode or SOCKS5/transparent proxy, written in C and targeted at Russian censorship.",
     "url": "https://github.com/bol-van/zapret",
-
-    "pkgname": ["zapret-git"],
+    "pkgname": [
+      "zapret-git"
+    ],
     "aur": false
   },
   {
     "name": "Zen Browser",
     "description": "An experimental, performance-optimized fork of Firefox focused on customizability and design with additional features.",
     "url": "https://www.zen-browser.app/",
-
-    "pkgname": ["zen-browser-bin"],
+    "pkgname": [
+      "zen-browser-bin"
+    ],
     "aur": false
   },
   {
     "name": "Ziproxy",
     "description": "Forwarding (non-caching) compressing HTTP proxy server.",
     "url": "https://ziproxy.sourceforge.net/",
-
-    "pkgname": ["ziproxy"],
+    "pkgname": [
+      "ziproxy"
+    ],
     "aur": false
   },
   {
     "name": "Zola",
     "description": "An opinionated static site generator, written in Rust.",
     "url": "https://www.getzola.org/",
-
-    "pkgname": ["zola"],
+    "pkgname": [
+      "zola"
+    ],
     "aur": false
   },
   {
     "name": "Zoom",
     "description": "Proprietary video conferencing, online meetings and group messaging application.",
     "url": "https://zoom.us/",
-
-    "pkgname": ["zoom"],
+    "pkgname": [
+      "zoom"
+    ],
     "aur": false
   },
   {
     "name": "µTox",
     "description": "Lightweight Tox client.",
     "url": "https://github.com/uTox/uTox",
-
-    "pkgname": ["utox"],
+    "pkgname": [
+      "utox"
+    ],
     "aur": false
   }
 ]

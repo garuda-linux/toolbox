@@ -179,7 +179,7 @@ See also [[Wikipedia:Comparison of database tools]].
 * {{App|GdaBrowser|Graphical tool to get a quick access to a database's structure and contents.|https://www.gnome-db.org/GdaBrowser|{{AUR|libgda}}}}
 * {{App|Harlequin|The SQL IDE for your terminal.|https://harlequin.sh/|{{AUR|harlequin}}}}
 * {{App|HeidiSQL|The fast SQL IDE with support many for database types.|https://www.heidisql.com/|{{AUR|heidisql}}}}
-* {{App|[[Wikipedia:Kexi|Kexi]]|Visual database applications creator tool by KDE, designed to fill the gap between spreadsheets and database solutions requiring more sophisticated development.|https://kexi-project.org/|{{Pkg|kexi}}}}
+* {{App|[[Wikipedia:Kexi|Kexi]]|Visual database applications creator tool by KDE, designed to fill the gap between spreadsheets and database solutions requiring more sophisticated development.|https://kexi-project.org/|{{Pkg|kexi}}{{Broken package link|package not found}}}}
 * {{App|[[LibreOffice|LibreOffice Base]]|Full-featured desktop database front end included in the LibreOffice suite, designed to meet the needs of a broad array of users.|https://www.libreoffice.org/discover/base/|{{Pkg|libreoffice-still}} or {{Pkg|libreoffice-fresh}}}}
 * {{App|[[OpenOffice|OpenOffice Base]]|Full-featured desktop database front end included in the OpenOffice suite, designed to meet the needs of a broad array of users.|https://www.openoffice.org/product/base.html|{{AUR|openoffice-bin}}}}
 * {{App|[[Wikipedia:Orbada|Orbada]]|Excellent tool for database developers, SQL developers, DBA administrators, as well as for users who wish to broaden their knowledge and skills in SQL. Last release dated 2019-07-03. |https://orbada.sourceforge.io/|{{AUR|orbada}}}}
@@ -358,7 +358,7 @@ See [[PDF, PS and DjVu]].
 * {{App|Beseda|Accessible (for visually impaired) console ebook-reader that can speak TXT, FB2, ABW, [X]HTML, ODT, DOCX books and documents.|https://psemiletov.github.io/beseda/|{{AUR|beseda}}}}
 * {{App|Bookworm|Simple, focused e-book reader for Elementary OS with EPUB, PDF, Mobipocket and Comicbook support.|https://babluboy.github.io/bookworm/|{{Pkg|bookworm}}}}
 * {{App|[[Wikipedia:Calibre (software)|Calibre]]|E-book library management application that can also edit EPUB files, convert between different formats and sync with a variety of e-book readers. Supported formats include CHM, Comicbook, DjVu, DOCX, EPUB, FictionBook, HTML, HTMLZ, Kindle, LIT, LRF, Mobipocket, ODT, PDF, PRC, PDB, PML, RB, RTF, SNB, TCR, TXT and TXTZ.|https://calibre-ebook.com/|{{Pkg|calibre}}}}
-* {{App|Cool Reader|E-book viewer with many supported formats such as EPUB (non-DRM), FictionBook, TXT, RTF, HTML, CHM and TCR.|https://sourceforge.net/projects/crengine/|{{Pkg|coolreader}}}}
+* {{App|Cool Reader|E-book viewer with many supported formats such as EPUB (non-DRM), FictionBook, TXT, RTF, HTML, CHM and TCR.|https://sourceforge.net/projects/crengine/|{{AUR|coolreader}}}}
 * {{App|[[Wikipedia:FBReader|FBReader]]|E-book viewer with many supported formats such as EPUB, FictionBook, HTML, plucker, PalmDoc, zTxt, TCR, CHM, RTF, OEB, Mobipocket (non-DRM) and TXT.|https://fbreader.org/|{{Pkg|fbreader}}}}
 * {{App|Foliate|Simple and modern GTK eBook reader. Supports EPUB, Mobipocket, Kindle, FictionBook, and Comicbook formats.|https://johnfactotum.github.io/foliate/|{{Pkg|foliate}}}}
 * {{App|KOReader|An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats, running on Cervantes, Kindle, Kobo, PocketBook and Android devices|https://github.com/koreader/koreader|{{AUR|koreader-appimage}}}}
@@ -396,6 +396,7 @@ Some [[PDF, PS and DjVu#Viewers|PDF]] and E-book viewers like Cool Reader, [[Wik
 
 * {{App|Paperwork|Personal document manager. It manages scanned documents and PDFs.|https://openpaper.work/|{{Pkg|paperwork}}}}
 * {{App|Shelf|Document collection manager that supports PDF files. Part of {{Grp|maui}}.|https://mauikit.org/apps/shelf/|{{Pkg|maui-shelf}}}}
+* {{App|Thingy|Application to quickly access recent and favorite documents.|https://github.com/linuxmint/thingy|{{Pkg|thingy}}}}
 
 == Scanning software ==
 
@@ -444,6 +445,7 @@ See also [[Wikipedia:Comparison of notetaking software]].
 ==== Graphical ====
 
 * {{App|[[Wikipedia:BasKet Note Pads|BasKet]]|Application for organizing, sharing, and taking notes. It can manage various types of information such as to-do lists, links, pictures, and other types, similar to a scrapbook.|https://basket-notepads.github.io/|{{AUR|basket}}}}
+* {{App|Bijiben|Note editor for GNOME designed to remain simple to use.|https://wiki.gnome.org/Apps/Notes|{{Pkg|gnome-notes}}}}
 * {{App|Boostnote|Note-taking application for programmers that focuses on markdown, snippets, and customizability. Based on the [https://electronjs.org/ Electron] platform.|https://boostnote.io/|{{AUR|boostnote-bin}}}}
 * {{App|Buho|Task and note keeper to save links, write quick notes and organize pages as books. Part of {{Grp|maui}}.|https://mauikit.org/apps/buho/|{{Pkg|buho}}}}
 * {{App|Cherrytree|Hierarchical note taking application, featuring rich text and syntax highlighting, storing data in a single xml or sqlite file.|https://www.giuspen.com/cherrytree/|{{Pkg|cherrytree}}}}
@@ -451,7 +453,6 @@ See also [[Wikipedia:Comparison of notetaking software]].
 * {{App|Encryptic|JavaScript note taking application with Markdown editor and encryption support. Based on the [https://electronjs.org/ Electron] platform.|https://www.encryptic.org/{{Dead link|2025|11|17|status=domain name not resolved}}|{{AUR|encryptic}}}}
 * {{App|FeatherNotes|Lightweight Qt hierarchical notes-manager.|https://github.com/tsujan/feathernotes|{{Pkg|feathernotes}}}}
 * {{App|FromScratch|Simple but smart note-taking application that you can use as a quick note taking or todo app. Based on the [https://electronjs.org/ Electron] platform.|https://fromscratch.rocks/|{{AUR|fromscratch-bin}}}}
-* {{App|GNOME Notes|Note editor for GNOME designed to remain simple to use. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Notes|{{Pkg|gnome-notes}}}}
 * {{App|[[Wikipedia:Gnote|Gnote]]|Port of Tomboy to C++. It is the same note taking application, including most of the add-ins.|https://wiki.gnome.org/Apps/Gnote|{{Pkg|gnote}}}}
 * {{App|Iotas|Simple note taking with Markdown support and optional Nextcloud Notes sync.|https://apps.gnome.org/Iotas/|{{Pkg|iotas}}}}
 * {{App|[[Joplin]]|Note taking and to-do application, which can handle a large number of notes organized into notebooks on desktop or mobile devices. It synchronizes with WebDAV, Dropbox, OneDrive, NextCloud, S3 (beta) and other backends. Based on the [https://electronjs.org/ Electron] platform.|https://joplinapp.org/|CLI app: {{AUR|joplin}}, desktop app: {{AUR|joplin-desktop}}}}
@@ -477,7 +478,7 @@ See also [[Wikipedia:Comparison of notetaking software]].
 * {{App|[[Wikipedia:TagSpaces|TagSpaces]]|Offline personal data manager for managing of your local files. Based on the [https://electronjs.org/ Electron] platform.|https://www.tagspaces.org/|{{AUR|tagspaces}}}}
 * {{App|Tangent|Open-source note-taking app with local Markdown files, linked notes, interactive maps, and sliding panels for navigation.|https://www.tangentnotes.com/|{{AUR|tangent-bin}}}}
 * {{App|[[Wikipedia:TiddlyWiki|TiddlyWiki]]|Unique non-linear notebook for capturing, organizing and sharing complex information.|https://tiddlywiki.com/|{{AUR|tiddlywiki}}}}
-* {{App|UKUI Notes|Note-taking application for the UKUI desktop environment.|https://github.com/ukui/ukui-notebook|{{Pkg|ukui-notebook}}}}
+* {{App|UKUI Notes|Note-taking application for the UKUI desktop environment.|https://github.com/ukui/ukui-notebook|{{Pkg|ukui-notebook}}{{Broken package link|package not found}}}}
 * {{App|VNote|Vim-inspired note-taking application that knows programmers and Markdown better.|https://vnotex.github.io/vnote|{{AUR|vnote}}}}
 * {{App|[[Zim]]|WYSIWYG text editor that aims at bringing the concept of a wiki to the desktop.|https://zim-wiki.org/|{{Pkg|zim}}}}
 * {{App|zNotes|Lightweight application for notes management with simple interface.|https://sourceforge.net/projects/znotes/|{{AUR|znotes}}}}
@@ -518,6 +519,7 @@ See also [[Wikipedia:List of concept- and mind-mapping software]].
 * {{App|GloboNote|An easy to use desktop application for sticky notes, to-do lists, personal journals, reminders and other notes.|https://globonote.info/|{{AUR|globonote}}}}
 * {{App|Notes|Provides you a quick way to paste text, to write down a list of things, to leave a note to your friend, or whatever you had do with Post-It's.|https://goodies.xfce.org/projects/panel-plugins/xfce4-notes-plugin|{{Pkg|xfce4-notes-plugin}}}}
 * {{App|PrimeNote|A polished, cross-platform sticky note application written in PyQt.|https://gitlab.com/william.belanger/primenote|{{AUR|primenote-git}}}}
+* {{App|Sticky|Sticky notes app for the Linux desktop.|https://github.com/linuxmint/sticky|{{Pkg|sticky}}}}
 * {{App|Xpad|Sticky note application for jotting down things to remember.|https://launchpad.net/xpad|{{Pkg|xpad}}}}
 
 == Special writing environments ==
@@ -533,7 +535,7 @@ See also [[#Markdown editors]] and [[Wikipedia:Full-screen writing program]].
 
 === Story writing ===
 
-* {{App|Manuskript|Provides a rich environment to help writers create their first draft and then further refine and edit their masterpiece.|http://www.theologeek.ch/manuskript/|{{Pkg|manuskript}}}}
+* {{App|Manuskript|Provides a rich environment to help writers create their first draft and then further refine and edit their masterpiece.|http://www.theologeek.ch/manuskript/|{{AUR|manuskript}}}}
 * {{App|NovProg|Tool to graph your progress in writing a NaNoWriMo style novel.|https://gottcode.org/novprog/|{{AUR|novprog}}}}
 * {{App|oStorybook|Tool for writers, essayists, authors from the draft to the final work.|https://ostorybook.tuxfamily.org/?lng&#61;en|{{AUR|ostorybook}}}}
 

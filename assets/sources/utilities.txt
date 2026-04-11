@@ -28,7 +28,7 @@ For a comprehensive list, see the [[Wikipedia:List of terminal emulators|List of
 * {{App|CoreTerminal|Terminal emulator based on qtermwidget. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/coreterminal|{{AUR|coreterminal}}}}
 * {{App|COSMIC Terminal|Terminal emulator for the COSMIC desktop environment.|https://github.com/pop-os/cosmic-term|{{Pkg|cosmic-terminal}}}}
 * {{App|CuteCom|A graphical serial terminal.|https://gitlab.com/cutecom/cutecom|{{AUR|cutecom}}}}
-* {{App|Cutefish Terminal|Terminal emulator for Cutefish desktop.|https://github.com/cutefishos/terminal|{{Pkg|cutefish-terminal}}}}
+* {{App|Cutefish Terminal|Terminal emulator for Cutefish desktop.|https://github.com/cutefishos/terminal|{{AUR|cutefish-terminal}}}}
 * {{App|Darktile|GPU rendered terminal emulator designed for tiling window managers.|https://github.com/liamg/darktile|{{AUR|darktile}}}}
 * {{App|Deepin Terminal|Terminal emulation application for Deepin desktop.|https://www.deepin.org/en/original/deepin-terminal/|{{Pkg|deepin-terminal}}}}
 * {{App|Eterm|Terminal emulator intended as a replacement for xterm and designed for the [[Enlightenment]] desktop.|https://github.com/mej/Eterm|{{AUR|eterm}}}}
@@ -116,7 +116,7 @@ See also [[Wikipedia:Terminal pager]].
 See also [[Wikipedia:Terminal multiplexer]].
 
 * {{App|[[abduco]]|Tool for session attach and detach support which allows a process to run independently from its controlling terminal.|https://www.brain-dump.org/projects/abduco/|{{Pkg|abduco}}}}
-* {{App|[[Wikipedia:Byobu (software)|byobu]]|A GPLv3 licensed addon for tmux or screen. It requires a terminal multiplexer installed.|https://byobu.org/|{{Pkg|byobu}}}}
+* {{App|[[Wikipedia:Byobu (software)|byobu]]|A GPLv3 licensed addon for tmux or screen. It requires a terminal multiplexer installed.|https://byobu.org/|{{AUR|byobu}}}}
 * {{App|[[dtach]]|Program that emulates the detach feature of [[GNU Screen]].|https://dtach.sourceforge.net/|{{AUR|dtach}}}}
 * {{App|dvtm|[[dwm]]-style window manager in the console.|https://www.brain-dump.org/projects/dvtm/|{{Pkg|dvtm}}}}
 * {{App|[[GNU Screen]]|Full-screen window manager that multiplexes a physical terminal.|https://www.gnu.org/software/screen/|{{Pkg|screen}}}}
@@ -166,7 +166,7 @@ See also [[Wikipedia:Comparison of file managers]].
 * {{App|Caja|The file manager for the MATE desktop.|https://github.com/mate-desktop/caja|{{Pkg|caja}}}}
 * {{App|CoreFM|Simple lightweight easy to use file manager with many features like image previews, mime-icon support, split view, auto-mounting of removable media, drag-n-drop support etc. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/corefm|{{AUR|corefm}}}}
 * {{App|COSMIC Files|File manager for the COSMIC desktop environment.|https://github.com/pop-os/cosmic-files|{{Pkg|cosmic-files}}}}
-* {{App|Cutefish File Manager|File manager for Cutefish desktop.|https://github.com/cutefishos/filemanager|{{Pkg|cutefish-filemanager}}}}
+* {{App|Cutefish File Manager|File manager for Cutefish desktop.|https://github.com/cutefishos/filemanager|{{AUR|cutefish-filemanager}}}}
 * {{App|Deepin File Manager|File manager developed for [[Deepin]].|https://www.deepin.org/en/original/dde-file-manager/|{{Pkg|deepin-file-manager}}}}
 * {{App|[[Dolphin]]|File manager included in the KDE desktop. Part of {{Grp|kde-system}}.|https://apps.kde.org/dolphin/|{{Pkg|dolphin}}}}
 * {{App|fm|Small, general purpose file manager built using GTK and Relm, written in Rust,|https://github.com/euclio/fm|{{AUR|fm-relm4-git}}}}
@@ -181,7 +181,7 @@ See also [[Wikipedia:Comparison of file managers]].
 * {{App|PathFinder|File browser that comes with the [[Wikipedia:Fox_toolkit|FOX toolkit]].|http://fox-toolkit.org/|{{Pkg|fox}}}}
 * {{App|[[PCManFM]]|Very fast and lightweight file manager which can also optionally manage the desktop icons and background.|https://github.com/lxde/pcmanfm|{{Pkg|pcmanfm}}}}
 * {{App|[[PCManFM]]-Qt|Qt port of PCManFM file manager.|https://github.com/lxqt/pcmanfm-qt|{{Pkg|pcmanfm-qt}}}}
-* {{App|Peony|File manager for the UKUI desktop.|https://github.com/ukui/peony|{{Pkg|peony}}}}
+* {{App|Peony|File manager for the [https://www.ukui.org/index.php?lang=en UKUI] desktop.|https://github.com/ukui/peony|{{Pkg|peony}}{{Broken package link|package not found}}}}
 * {{App|qtFM|Small, lightweight filemanager for Linux desktops based on pure Qt.|https://qtfm.eu/|{{AUR|qtfm}}}}
 * {{App|ROX Filer|Small and fast file manager which can optionally manage the desktop background and panels.|https://rox.sourceforge.net/|{{AUR|rox}}}}
 * {{App|[[Thunar]]|File manager that can be run as a daemon with excellent start-up and directory load times.|https://docs.xfce.org/xfce/thunar/start|{{Pkg|thunar}}}}
@@ -307,6 +307,7 @@ See {{man|1|rename}} from {{Pkg|util-linux}}.
 
 ==== Graphical ====
 
+* {{App|Bulky|Utility to rename files and directories.|https://github.com/linuxmint/bulky|{{Pkg|bulky}}}}
 * {{App|CoreRenamer|Simple lightweight batch file renamer application. Part of C-Suite.|https://gitlab.com/cubocore/coreapps/corerenamer|{{AUR|corerenamer}}}}
 * {{App|[[Wikipedia:GPRename|GPRename]]|GTK batch renamer for files and directories.|https://gprename.sourceforge.net|{{Pkg|gprename}}}}
 * {{App|[[Wikipedia:KRename|KRename]]|Very powerful batch file renamer for the KDE desktop.|https://apps.kde.org/krename/|{{Pkg|krename}}}}
@@ -384,8 +385,10 @@ See also [[Wikipedia:Comparison of revision control software]].
 * {{App|[[Wikipedia:Darcs|Darcs]]|Distributed revision control system that was designed to replace traditional, centralized source control systems such as CVS and Subversion.|https://darcs.net/|{{Pkg|darcs}}}}
 * {{App|[[Wikipedia:Fossil (software)|Fossil]]|Distributed VCS with bug tracking, wiki, forum, and technotes.|https://www.fossil-scm.org/|{{Pkg|fossil}}}}
 * {{App|[[Git]]|Distributed revision control and source code management system with an emphasis on speed.|https://git-scm.com/|{{Pkg|git}}}}
+* {{App|Got|A version control system which prioritizes ease of use and simplicity over flexibility.|https://gameoftrees.org/|{{AUR|gameoftrees}}}}
 * {{App|[[Jujutsu]]|Modern VCS designed for ease of use, offering powerful features while maintaining full Git compatibility.|https://jj-vcs.github.io/jj/|{{Pkg|jujutsu}}}}
 * {{App|[[Mercurial]]|Distributed version control system written in Python and similar in many ways to Git.|https://www.mercurial-scm.org/|{{Pkg|mercurial}}}}
+* {{App|Pijul|Distributed version control system based on a theory of patches.|https://pijul.org/|{{AUR|pijul}}}}
 * {{App|[[Subversion]]|Full-featured centralized version control system originally designed to be a better CVS.|https://subversion.apache.org/|{{Pkg|subversion}}}}
 
 === Build automation ===
@@ -480,7 +483,7 @@ See also language-specific tools (e.g. [[C#Useful tools]], [[Java#Development to
 * {{App|[[Wikipedia:Data Display Debugger|Data Display Debugger]]|Graphical front-end for command-line debuggers such as GDB.|https://www.gnu.org/software/ddd/|{{AUR|ddd}}}}
 * {{App|Desed|TUI-based debugger for sed. Features variable and regex preview, setting breakpoints and stepping back and forth.|https://github.com/SoptikHa2/desed|{{AUR|desed}}}}
 * {{App|DrKonqi|Crash handler for KDE software. It also provides a GUI for {{ic|coredumpctl}}, called {{ic|drkonqi-coredump-gui}}. Part of {{Grp|plasma}}.|https://invent.kde.org/plasma/drkonqi|{{Pkg|drkonqi}}}}
-* {{App|Frida|Toolkit for inspecting and intercepting function calls.|https://frida.re/|{{Aur|python-frida-tools}}}}
+* {{App|Frida|Toolkit for inspecting and intercepting function calls.|https://frida.re/|{{AUR|python-frida-tools}}}}
 * {{App|GammaRay|Qt-application inspection and manipulation tool.|https://www.kdab.com/development-resources/qt-tools/gammaray/|{{Pkg|gammaray}}}}
 * {{App|[[Debugging#GDB|GDB]]|Native code debugger from the [[GNU]] Project.|https://www.sourceware.org/gdb/|{{Pkg|gdb}}}}
 * {{App|GDBFrontend|Easy, flexible and extensible graphical debugger.|https://github.com/rohanrhu/gdb-frontend|{{AUR|gdb-frontend-bin}}}}
@@ -504,6 +507,15 @@ See [[Debugging/Profiling]] for background.
 * {{App|Sysprof|Profiling tool that helps in finding the functions in which a program uses most of its time. Part of {{Grp|gnome-extra}}.|https://apps.gnome.org/Sysprof/|{{Pkg|sysprof}}}}
 
 {{Tip|Some of [[Valgrind]]'s built-in tools, such as [https://valgrind.org/docs/manual/cg-manual.html Cachegrind] and [https://valgrind.org/docs/manual/cl-manual.html Callgrind], provide profiling functionality.}}
+
+=== Language runtime version management ===
+
+These tools are language-agnostic, rather than focusing on one specific language like [https://github.com/pyenv/pyenv pyenv] or [https://github.com/rbenv/rbenv rbenv].
+
+* {{App|Mise|A polyglot version manager manages installations of programming language runtimes and other tools for local development.|https://mise.jdx.dev/|{{Pkg|mise}}}}
+* {{App|asdf|Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more.|https://asdf-vm.com|{{AUR|asdf-vm}}}}
+* {{App|[[Nix]]|A purely functional package manager that aims to make package management reproducible, declarative and reliable.|https://nix.dev/|{{Pkg|nix}}}}
+* {{App|[[Guix]]|A package manager that offers transactional, reproducible, per-user package management.|https://guix.gnu.org/|{{AUR|guix}}}}
 
 === Lexing and parsing ===
 
@@ -671,7 +683,7 @@ See also [[Wikipedia:List of game engines]].
 * {{App|GNOME Characters|Character map application for GNOME. Part of {{Grp|gnome}}.|https://apps.gnome.org/Characters/|{{Pkg|gnome-characters}}}}
 * {{App|[[Wikipedia:GNOME Character Map|gucharmap]]|GTK 3 character selector for GNOME.|https://wiki.gnome.org/Apps/Gucharmap|{{Pkg|gucharmap}}}}
 * {{App|Hieroglyphic|Search through over 1000 different LaTeX symbols by sketching.|https://apps.gnome.org/Hieroglyphic/|{{Pkg|hieroglyphic}}}}
-* {{App|jome|A fast, keyboard-centric emoji picker with user-defined keywords and Emoji 15.1 support.|https://github.com/eepp/jome/|{{AUR|jome}}}}
+* {{App|jome|A fast, keyboard-centric emoji picker with user-defined keywords and Emoji 17.0 support.|https://github.com/eepp/jome/|{{AUR|jome}}}}
 * {{App|KCharSelect|Tool to select special characters from all installed fonts and copy them into the clipboard. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kcharselect/|{{Pkg|kcharselect}}}}
 * {{App|Plasma Emoji Selector|An emoji picker for Plasma. Run with {{ic|plasma-emojier}}. Part of {{Grp|plasma}}.|https://kde.org/plasma-desktop/|{{Pkg|plasma-desktop}}}}
 * {{App|r-clisymbols|Unicode Symbols at the R Prompt.|https://cran.r-project.org/package{{=}}clisymbols|{{AUR|r-clisymbols}}}}
@@ -850,7 +862,7 @@ See also [[:Category:Monitoring]].
 * {{App|Qt Process Manager|Lightweight process manager for [[LXQt]].|https://github.com/lxqt/qps|{{Pkg|qps}}}}
 * {{App|Resources|Simple and versatile monitor for graphical applications, processes and system resources (CPUs, memory, GPUs, network interfaces and block devices), written in Rust and GTK4.|https://apps.gnome.org/Resources/|{{Pkg|resources}}}}
 * {{App|Task Manager|GTK3 based process manager with basic system resource monitor for [[Xfce]].|https://goodies.xfce.org/projects/applications/xfce4-taskmanager|{{Pkg|xfce4-taskmanager}}}}
-* {{App|UKUI System Monitor|System monitor for [[UKUI]].|https://github.com/ukui/ukui-system-monitor|{{Pkg|ukui-system-monitor}}}}
+* {{App|UKUI System Monitor|System monitor for [https://www.ukui.org/index.php?lang=en UKUI].|https://github.com/ukui/ukui-system-monitor|{{Pkg|ukui-system-monitor}}{{Broken package link|package not found}}}}
 * {{App|Usage|View information about use of system resources, like memory and disk space.|https://wiki.gnome.org/Apps/Usage|{{Pkg|gnome-usage}}}}
 * {{App|xosview|System monitor that resembles gr_osview from SGI IRIX.|https://www.pogo.org.uk/~mark/xosview/|{{AUR|xosview}}}}
 
@@ -902,7 +914,7 @@ See [[lm_sensors#Graphical front-ends]].
 * {{App|KSystemLog|System log viewer tool for KDE. Part of {{Grp|kde-system}}.|https://apps.kde.org/ksystemlog/|{{Pkg|ksystemlog}}}}
 * {{App|MATE System Log|System log viewer for MATE.|https://github.com/mate-desktop/mate-utils|{{Pkg|mate-utils}}}}
 * {{App|Pacman Log Viewer|Tool used to inspect pacman log file, in particular it lists installed, removed and upgraded packages letting you to filter by package's name and/or date.|https://github.com/gcala/pacmanlogviewer/|{{Pkg|pacmanlogviewer}}}}
-* {{App|QJournalctl|Qt-based graphical user interface for systemd's ''journalctl'' command.|https://github.com/pentix/qjournalctl|{{Pkg|qjournalctl}}}}
+* {{App|QJournalctl|Qt-based graphical user interface for systemd's ''journalctl'' command.|https://github.com/pentix/qjournalctl|{{AUR|qjournalctl}}}}
 
 === Font viewers ===
 

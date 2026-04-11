@@ -3,1432 +3,1647 @@
     "name": "Abook",
     "description": "Text-based contacts manager designed for use with mutt.",
     "url": "https://abook.sourceforge.net/",
-
-    "pkgname": ["abook"],
+    "pkgname": [
+      "abook"
+    ],
     "aur": false
   },
   {
     "name": "ActivityWatch",
     "description": "A self/local-hosted, cross-platform, client-server, privacy-focused active window tracker.",
     "url": "https://github.com/ActivityWatch/activitywatch",
-
-    "pkgname": ["activitywatch-bin"],
+    "pkgname": [
+      "activitywatch-bin"
+    ],
     "aur": false
   },
   {
     "name": "Agenda",
     "description": "Calendar application built with MauiKit. Part of maui.",
     "url": "https://mauikit.org/apps/",
-
-    "pkgname": ["maui-agenda"],
+    "pkgname": [
+      "maui-agenda"
+    ],
     "aur": false
   },
   {
     "name": "Agenda",
     "description": "Simple, fast, no-nonsense to-do (task) list for elementary OS.",
     "url": "https://github.com/dahenson/agenda",
-
-    "pkgname": ["agenda"],
+    "pkgname": [
+      "agenda"
+    ],
+    "aur": false
+  },
+  {
+    "name": "AGS",
+    "description": "Aylur's GTK Shell is a framework for building custom desktop shells using GTK.",
+    "url": "https://aylur.github.io/ags/",
+    "pkgname": [
+      "aylurs-gtk-shell"
+    ],
     "aur": false
   },
   {
     "name": "AIChat",
     "description": "A versatile CLI tool for interacting with AI models, featuring REPL-like functionality, shell assistance, and support for multiple AI providers.",
     "url": "https://github.com/sigoden/aichat",
-
-    "pkgname": ["aichat"],
+    "pkgname": [
+      "aichat"
+    ],
     "aur": false
   },
   {
     "name": "Alacarte",
     "description": "Add or remove applications from the main menu.",
     "url": "https://gitlab.gnome.org/GNOME/alacarte",
-
-    "pkgname": ["alacarte"],
+    "pkgname": [
+      "alacarte"
+    ],
     "aur": false
   },
   {
     "name": "Albert",
     "description": "Sophisticated, plugin based standalone keyboard launcher.",
     "url": "https://albertlauncher.github.io/",
-
-    "pkgname": ["albert"],
+    "pkgname": [
+      "albert"
+    ],
     "aur": false
   },
   {
     "name": "Anki",
     "description": "Intelligent spaced-repetition memory training program.",
     "url": "https://apps.ankiweb.net/",
-
-    "pkgname": ["anki"],
+    "pkgname": [
+      "anki"
+    ],
     "aur": false
   },
   {
     "name": "Application Finder",
     "description": "Easy-to-use application launcher from Xfce.",
     "url": "https://docs.xfce.org/xfce/xfce4-appfinder/start",
-
-    "pkgname": ["xfce4-appfinder"],
+    "pkgname": [
+      "xfce4-appfinder"
+    ],
     "aur": false
   },
   {
     "name": "Artikulate",
     "description": "Pronunciation trainer that helps improving and perfecting a learner's pronunciation skills for a foreign language. Part of kde-education.",
     "url": "https://apps.kde.org/artikulate/",
-
-    "pkgname": ["artikulate"],
+    "pkgname": [
+      "artikulate"
+    ],
+    "aur": false
+  },
+  {
+    "name": "awww",
+    "description": "Efficient animated wallpaper daemon for Wayland, controlled at runtime.",
+    "url": "https://codeberg.org/LGFae/awww",
+    "pkgname": [
+      "awww"
+    ],
     "aur": false
   },
   {
     "name": "bbpager",
     "description": "Dockable pager for blackbox and other window managers.",
     "url": "https://sourceforge.net/projects/bbtools/",
-
-    "pkgname": ["bbpager"],
+    "pkgname": [
+      "bbpager"
+    ],
     "aur": false
   },
   {
     "name": "bemenu",
     "description": "Lightweight dynamic menu inspired by dmenu. Works natively on Wayland.",
     "url": "https://github.com/Cloudef/bemenu",
-
-    "pkgname": ["bemenu"],
+    "pkgname": [
+      "bemenu"
+    ],
     "aur": false
   },
   {
     "name": "Bitcoin Core",
     "description": "Connect to the Bitcoin P2P Network.",
     "url": "https://bitcoincore.org/",
-
-    "pkgname": ["bitcoin-qt"],
+    "pkgname": [
+      "bitcoin-qt"
+    ],
     "aur": false
   },
   {
     "name": "Break Timer",
     "description": "Keeps track of how much you are using the computer, and it reminds you to take regular breaks. Works only in GNOME.",
     "url": "https://wiki.gnome.org/Apps/BreakTimer",
-
-    "pkgname": ["gnome-break-timer"],
+    "pkgname": [
+      "gnome-break-timer"
+    ],
     "aur": false
   },
   {
     "name": "Cairo-Dock",
     "description": "Highly customizable dock and launcher application.",
     "url": "https://www.glx-dock.org/",
-
-    "pkgname": ["cairo-dock"],
+    "pkgname": [
+      "cairo-dock"
+    ],
     "aur": false
   },
   {
     "name": "Calcurse",
     "description": "Text-based ncurses calendar and scheduling system (supports CalDAV)",
     "url": "https://calcurse.org",
-
-    "pkgname": ["calcurse"],
+    "pkgname": [
+      "calcurse"
+    ],
     "aur": false
   },
   {
     "name": "Calindori",
     "description": "Calendar application for Plasma Mobile.",
     "url": "https://apps.kde.org/calindori/",
-
-    "pkgname": ["calindori"],
+    "pkgname": [
+      "calindori"
+    ],
     "aur": false
   },
   {
     "name": "Calligra Plan",
     "description": "Project management application, which is intended for managing moderately large projects with multiple resources.",
     "url": "https://calligra.org/components/plan/",
-
-    "pkgname": ["calligra-plan"],
+    "pkgname": [
+      "calligra-plan"
+    ],
     "aur": false
   },
   {
     "name": "Cartridges",
     "description": "Simple game launcher written in Python using GTK4 and Libadwaita.",
     "url": "https://apps.gnome.org/Cartridges/",
-
-    "pkgname": ["cartridges"],
+    "pkgname": [
+      "cartridges"
+    ],
     "aur": false
   },
   {
     "name": "Chess Clock",
     "description": "Simple application to provide time control for over-the-board chess games.",
     "url": "https://apps.gnome.org/Chessclock/",
-
-    "pkgname": ["chess-clock"],
+    "pkgname": [
+      "chess-clock"
+    ],
     "aur": false
   },
   {
     "name": "chinese-calendar",
     "description": "Chinese traditional calendar for Ubuntu Kylin.",
     "url": "https://launchpad.net/chinese-calendar/",
-
-    "pkgname": ["chinese-calendar"],
+    "pkgname": [
+      "chinese-calendar"
+    ],
     "aur": false
   },
   {
     "name": "Communicator",
     "description": "Integrated address book and dialer application features the search for and view of contacts, edit contact details, and make new contacts, favorites, and dialer pad. Part of maui.",
     "url": "https://mauikit.org/apps/communicator/",
-
-    "pkgname": ["communicator"],
+    "pkgname": [
+      "communicator"
+    ],
     "aur": false
   },
   {
     "name": "cuDNN",
     "description": "NVIDIA CUDA Deep Neural Network library for high-performance GPU acceleration.",
     "url": "https://developer.nvidia.com/cudnn",
-
-    "pkgname": ["cudnn"],
+    "pkgname": [
+      "cudnn"
+    ],
+    "aur": false
+  },
+  {
+    "name": "DankMaterialShell",
+    "description": "Desktop shell for Wayland compositors, built with Quickshell and Go.",
+    "url": "https://github.com/AvengeMedia/DankMaterialShell",
+    "pkgname": [
+      "dms-shell"
+    ],
     "aur": false
   },
   {
     "name": "Dash to Panel",
     "description": "A fully customizable icon taskbar for gnome-shell. Moves the dash into the GNOME main panel, similar to KDE Plasma and Windows 10.",
     "url": "https://github.com/home-sweet-gnome/dash-to-panel",
-
-    "pkgname": ["gnome-shell-extension-dash-to-panel"],
+    "pkgname": [
+      "gnome-shell-extension-dash-to-panel"
+    ],
     "aur": false
   },
   {
     "name": "Deepin Calendar",
     "description": "Calendar application for Deepin.",
     "url": "https://www.deepin.org/en/original/dde-calendar/",
-
-    "pkgname": ["deepin-calendar"],
+    "pkgname": [
+      "deepin-calendar"
+    ],
     "aur": false
   },
   {
     "name": "describeimage",
     "description": "Describe images using Ollama.",
     "url": "https://github.com/ollama/ollama",
-
-    "pkgname": ["describeimage"],
+    "pkgname": [
+      "describeimage"
+    ],
     "aur": false
   },
   {
     "name": "dmenu",
     "description": "Fast and lightweight dynamic menu for X which is also useful as an application launcher.",
     "url": "https://tools.suckless.org/dmenu/",
-
-    "pkgname": ["dmenu"],
+    "pkgname": [
+      "dmenu"
+    ],
     "aur": false
   },
   {
     "name": "DockbarX",
     "description": "Standalone, dock-style taskbar for X11 with window grouping.",
     "url": "https://github.com/xuzhen/dockbarx",
-
-    "pkgname": ["dockbarx"],
+    "pkgname": [
+      "dockbarx"
+    ],
     "aur": false
   },
   {
     "name": "Easystroke",
     "description": "Use mouse gestures to initiate commands and hotkeys.",
     "url": "https://github.com/thjaeger/easystroke/wiki",
-
-    "pkgname": ["easystroke"],
+    "pkgname": [
+      "easystroke"
+    ],
     "aur": false
   },
   {
     "name": "Electrum",
     "description": "Lightweight Bitcoin client.",
     "url": "https://electrum.org/",
-
-    "pkgname": ["electrum"],
+    "pkgname": [
+      "electrum"
+    ],
     "aur": false
   },
   {
     "name": "Endeavour",
     "description": "Personal task manager for GNOME. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Todo",
-
-    "pkgname": ["endeavour"],
+    "pkgname": [
+      "endeavour"
+    ],
     "aur": false
   },
   {
     "name": "Eqonomize!",
     "description": "Cross-platform personal accounting software, with focus on efficiency and ease of use for the small household economy.",
     "url": "https://eqonomize.github.io/",
-
-    "pkgname": ["eqonomize"],
+    "pkgname": [
+      "eqonomize"
+    ],
     "aur": false
   },
   {
     "name": "Errands",
     "description": "Todo application for those who prefer simplicity.",
     "url": "https://apps.gnome.org/List/",
-
-    "pkgname": ["errands"],
+    "pkgname": [
+      "errands"
+    ],
     "aur": false
   },
   {
     "name": "eSpeak NG",
     "description": "Fork of eSpeak (due to inactivity of original maintainer).",
     "url": "https://github.com/espeak-ng/espeak-ng",
-
-    "pkgname": ["espeak-ng"],
+    "pkgname": [
+      "espeak-ng"
+    ],
     "aur": false
   },
   {
     "name": "Evolution",
     "description": "Personal information management application that provides integrated mail, calendaring and address book functionality. Part of gnome-extra.",
     "url": "https://gitlab.gnome.org/GNOME/evolution/-/wikis/home",
-
-    "pkgname": ["evolution"],
+    "pkgname": [
+      "evolution"
+    ],
     "aur": false
   },
   {
     "name": "eww",
-    "description": "Elkowars Wacky Widgets is a standalone widget system made in Rust that allows you to implement your own, custom widgets in any window manager.",
+    "description": "ElKowar's Wacky Widgets is a standalone widget system made in Rust that allows you to implement your own, custom widgets in any window manager.",
     "url": "https://github.com/elkowar/eww",
-
-    "pkgname": ["eww"],
+    "pkgname": [
+      "eww"
+    ],
     "aur": false
   },
   {
     "name": "feh",
     "description": "A lightweight and powerful image viewer that can also be used to manage the desktop wallpaper.",
     "url": "https://feh.finalrewind.org/",
-
-    "pkgname": ["feh"],
+    "pkgname": [
+      "feh"
+    ],
     "aur": false
   },
   {
     "name": "Festival",
     "description": "General framework for building speech synthesis systems as well as including examples of various modules. As a whole it offers full text to speech.",
     "url": "https://www.cstr.ed.ac.uk/projects/festival/",
-
-    "pkgname": ["festival"],
+    "pkgname": [
+      "festival"
+    ],
     "aur": false
   },
   {
     "name": "Flite",
     "description": "Lightweight speech synthesis engine.",
     "url": "http://festvox.org/flite/",
-
-    "pkgname": ["flite"],
+    "pkgname": [
+      "flite"
+    ],
     "aur": false
   },
   {
     "name": "Fondo",
     "description": "Find a variety of the most beautiful wallpapers from Unsplash.com.",
     "url": "https://github.com/calo001/fondo",
-
-    "pkgname": ["fondo"],
+    "pkgname": [
+      "fondo"
+    ],
     "aur": false
   },
   {
     "name": "Francis",
     "description": "App that uses the well-known pomodoro technique to help you get more productive. Part of kde-utilities.",
     "url": "https://apps.kde.org/francis/",
-
-    "pkgname": ["francis"],
+    "pkgname": [
+      "francis"
+    ],
     "aur": false
   },
   {
     "name": "Fretboard",
     "description": "Look up guitar chords.",
     "url": "https://apps.gnome.org/Fretboard/",
-
-    "pkgname": ["fretboard"],
+    "pkgname": [
+      "fretboard"
+    ],
     "aur": false
   },
   {
     "name": "fuzzel",
-    "description": "Application launcher for wlroots based Wayland compositors, similar to rofi's `drun` mode.",
+    "description": "Application launcher for wlroots-based Wayland compositors, similar to rofi's `drun` mode.",
     "url": "https://codeberg.org/dnkl/fuzzel",
-
-    "pkgname": ["fuzzel"],
+    "pkgname": [
+      "fuzzel"
+    ],
     "aur": false
   },
   {
     "name": "Gemini CLI",
     "description": "Open-source AI agent that brings the power of Google Gemini directly into your terminal.",
     "url": "https://github.com/google-gemini/gemini-cli",
-
-    "pkgname": ["gemini-cli"],
+    "pkgname": [
+      "gemini-cli"
+    ],
     "aur": false
   },
   {
     "name": "GitHub Copilot CLI",
     "description": "Official CLI interface for GitHub Copilot coding assistant.",
     "url": "https://github.com/github/copilot-cli",
-
-    "pkgname": ["github-copilot-cli"],
+    "pkgname": [
+      "github-copilot-cli"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Calendar",
     "description": "Calendar application for GNOME. Part of gnome.",
     "url": "https://apps.gnome.org/Calendar/",
-
-    "pkgname": ["gnome-calendar"],
+    "pkgname": [
+      "gnome-calendar"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Clocks",
     "description": "Clocks application for GNOME, including alarm, stopwatch and timer functionality. Part of gnome.",
     "url": "https://apps.gnome.org/Clocks/",
-
-    "pkgname": ["gnome-clocks"],
+    "pkgname": [
+      "gnome-clocks"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Contacts",
     "description": "Contacts manager for GNOME. Part of gnome.",
     "url": "https://apps.gnome.org/Contacts/",
-
-    "pkgname": ["gnome-contacts"],
+    "pkgname": [
+      "gnome-contacts"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Games",
     "description": "GNOME application to browse your local video games library and to easily pick and play a game from it. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Games",
-
-    "pkgname": ["gnome-games"],
+    "pkgname": [
+      "gnome-games"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Panel",
     "description": "Panel included in the GNOME Flashback desktop.",
     "url": "https://wiki.gnome.org/Projects/GnomePanel",
-
-    "pkgname": ["gnome-panel"],
+    "pkgname": [
+      "gnome-panel"
+    ],
     "aur": false
   },
   {
     "name": "Gnome-Pie",
     "description": "Circular application launcher (pie menu) for Linux. It is made of several pies, each consisting of multiple slices.",
     "url": "https://simmesimme.github.io/gnome-pie.html",
-
-    "pkgname": ["gnome-pie"],
+    "pkgname": [
+      "gnome-pie"
+    ],
     "aur": false
   },
   {
     "name": "GnuCash",
     "description": "Financial application that implements a double-entry book-keeping system with features for small business accounting.",
     "url": "https://www.gnucash.org/",
-
-    "pkgname": ["gnucash"],
+    "pkgname": [
+      "gnucash"
+    ],
     "aur": false
   },
   {
     "name": "Gromit-MPX",
     "description": "Tool to make annotations on the screen.",
     "url": "https://github.com/bk138/gromit-mpx",
-
-    "pkgname": ["gromit-mpx"],
+    "pkgname": [
+      "gromit-mpx"
+    ],
     "aur": false
   },
   {
     "name": "GTG",
     "description": "Personal tasks and TODO list items organizer for GNOME inspired by the Getting Things Done (GTD) methodology.",
     "url": "https://github.com/getting-things-gnome/gtg",
-
-    "pkgname": ["gtg"],
+    "pkgname": [
+      "gtg"
+    ],
     "aur": false
   },
   {
     "name": "Hamster",
     "description": "Time tracking application that helps you to keep track on how much time you have spent during the day on activities you choose to track.",
     "url": "http://projecthamster.org/",
-
-    "pkgname": ["hamster-time-tracker"],
+    "pkgname": [
+      "hamster-time-tracker"
+    ],
     "aur": false
   },
   {
     "name": "Health",
     "description": "Health tracking app for the GNOME desktop.",
     "url": "https://apps.gnome.org/Health/",
-
-    "pkgname": ["health"],
+    "pkgname": [
+      "health"
+    ],
     "aur": false
   },
   {
     "name": "hledger",
     "description": "An accounting program for tracking money, time, or any other commodity, using double-entry accounting and a simple, editable file format. hledger is inspired by and largely compatible with ledger.",
     "url": "https://hledger.org/",
-
-    "pkgname": ["hledger"],
+    "pkgname": [
+      "hledger"
+    ],
     "aur": false
   },
   {
     "name": "HomeBank",
     "description": "Easy to use finance manager that can analyse your personal finance in detail using powerful filtering tools and graphs.",
     "url": "http://homebank.free.fr/",
-
-    "pkgname": ["homebank"],
+    "pkgname": [
+      "homebank"
+    ],
     "aur": false
   },
   {
     "name": "hsetroot",
     "description": "A tool to create compose wallpapers.",
     "url": "https://packages.debian.org/sid/hsetroot",
-
-    "pkgname": ["hsetroot"],
+    "pkgname": [
+      "hsetroot"
+    ],
     "aur": false
   },
   {
     "name": "Hyprpaper",
-    "description": "Hyprpaper is a blazing fast wayland wallpaper utility with IPC controls.",
+    "description": "Hyprpaper is a blazing fast Wayland wallpaper utility with IPC controls.",
     "url": "https://github.com/hyprwm/hyprpaper",
-
-    "pkgname": ["hyprpaper-git"],
+    "pkgname": [
+      "hyprpaper-git"
+    ],
     "aur": false
   },
   {
     "name": "Ironbar",
     "description": "A customisable and feature-rich GTK4 status bar for Wayland compositors, written in Rust.",
     "url": "https://github.com/JakeStanger/ironbar",
-
-    "pkgname": ["ironbar-git"],
+    "pkgname": [
+      "ironbar"
+    ],
     "aur": false
   },
   {
     "name": "Itinerary",
     "description": "Digital travel assistant with a priority on protecting your privacy. Part of kde-pim.",
     "url": "https://apps.kde.org/itinerary/",
-
-    "pkgname": ["itinerary"],
+    "pkgname": [
+      "itinerary"
+    ],
     "aur": false
   },
   {
     "name": "j4-dmenu-desktop",
     "description": "Very fast dmenu application launcher.",
     "url": "https://github.com/enkore/j4-dmenu-desktop",
-
-    "pkgname": ["j4-dmenu-desktop"],
+    "pkgname": [
+      "j4-dmenu-desktop"
+    ],
     "aur": false
   },
   {
     "name": "jgmenu",
     "description": "Simple, independent, contemporary-looking X11 menu, designed for scripting, ricing and tweaking.",
     "url": "https://github.com/johanmalm/jgmenu",
-
-    "pkgname": ["jgmenu"],
+    "pkgname": [
+      "jgmenu"
+    ],
     "aur": false
   },
   {
     "name": "Junction",
     "description": "Application chooser to open files and links.",
     "url": "https://apps.gnome.org/Junction/",
-
-    "pkgname": ["junction"],
+    "pkgname": [
+      "junction"
+    ],
     "aur": false
   },
   {
     "name": "KAddressBook",
     "description": "Address book manager for KDE. Part of kde-pim.",
     "url": "https://kontact.kde.org/components/kaddressbook",
-
-    "pkgname": ["kaddressbook"],
+    "pkgname": [
+      "kaddressbook"
+    ],
     "aur": false
   },
   {
     "name": "KAlarm",
     "description": "Personal alarm message, command and email scheduler, part of kde-pim.",
     "url": "https://apps.kde.org/kalarm/",
-
-    "pkgname": ["kalarm"],
+    "pkgname": [
+      "kalarm"
+    ],
     "aur": false
   },
   {
     "name": "Kalm",
     "description": "Teach you different breathing techniques. Part of kde-utilities.",
     "url": "https://apps.kde.org/kalm/",
-
-    "pkgname": ["kalm"],
+    "pkgname": [
+      "kalm"
+    ],
     "aur": false
   },
   {
     "name": "KClock",
     "description": "A convergent clock application for Plasma. It contains alarm, timer, stopwatch and timezone functionalities. Part of kde-utilities.",
     "url": "https://apps.kde.org/kclock/",
-
-    "pkgname": ["kclock"],
+    "pkgname": [
+      "kclock"
+    ],
     "aur": false
   },
   {
     "name": "KDocker",
     "description": "Dock any application in the system tray (notification area).",
     "url": "https://github.com/user-none/KDocker",
-
-    "pkgname": ["kdocker"],
+    "pkgname": [
+      "kdocker"
+    ],
     "aur": false
   },
   {
     "name": "KEditBookmarks",
     "description": "Bookmark organizer and editor. Part of kde-utilities.",
     "url": "https://invent.kde.org/utilities/keditbookmarks",
-
-    "pkgname": ["keditbookmarks"],
+    "pkgname": [
+      "keditbookmarks"
+    ],
     "aur": false
   },
   {
     "name": "khal",
     "description": "Command-line (non-interactive) and ncurses (interactive) calendar system (supports CalDAV)",
     "url": "https://github.com/pimutils/khal",
-
-    "pkgname": ["khal"],
+    "pkgname": [
+      "khal"
+    ],
     "aur": false
   },
   {
     "name": "Khard",
     "description": "Command-line addressbook that is able to sync with CardDAV-servers.",
     "url": "https://github.com/scheibler/khard",
-
-    "pkgname": ["khard"],
+    "pkgname": [
+      "khard"
+    ],
     "aur": false
   },
   {
     "name": "Klavaro",
     "description": "Teaching touch typing that intends to be keyboard and language independent.",
     "url": "https://klavaro.sourceforge.io/",
-
-    "pkgname": ["klavaro"],
+    "pkgname": [
+      "klavaro"
+    ],
     "aur": false
   },
   {
     "name": "KMag",
     "description": "Small KDE utility to magnify a part of the screen. Part of kde-accessibility.",
     "url": "https://apps.kde.org/kmag/",
-
-    "pkgname": ["kmag"],
+    "pkgname": [
+      "kmag"
+    ],
     "aur": false
   },
   {
     "name": "KMenuEdit",
     "description": "Edit one of the KDE application launchers. Part of plasma.",
     "url": "https://invent.kde.org/plasma/kmenuedit",
-
-    "pkgname": ["kmenuedit"],
+    "pkgname": [
+      "kmenuedit"
+    ],
     "aur": false
   },
   {
     "name": "KMouseTool",
     "description": "Clicks the mouse whenever the mouse cursor pauses briefly. It was designed to help those with repetitive strain injuries, for whom pressing buttons hurts. Part of kde-accessibility.",
     "url": "https://apps.kde.org/kmousetool/",
-
-    "pkgname": ["kmousetool"],
+    "pkgname": [
+      "kmousetool"
+    ],
     "aur": false
   },
   {
     "name": "KMouth",
     "description": "Speech synthesizer frontend which enables persons that cannot speak to let their computer speak. Part of kde-accessibility.",
     "url": "https://apps.kde.org/kmouth/",
-
-    "pkgname": ["kmouth"],
+    "pkgname": [
+      "kmouth"
+    ],
     "aur": false
   },
   {
     "name": "KMyMoney",
     "description": "Personal finance manager that operates in a similar way to Microsoft Money. It supports different account types, categorisation of expenses and incomes, reconciliation of bank accounts and import/export to the “QIF” file format.",
     "url": "https://kmymoney.org/",
-
-    "pkgname": ["kmymoney"],
+    "pkgname": [
+      "kmymoney"
+    ],
     "aur": false
   },
   {
     "name": "KomoDo",
     "description": "Todo manager that uses todo.txt specification.",
     "url": "https://apps.kde.org/komodo/",
-
-    "pkgname": ["komodo"],
+    "pkgname": [
+      "komodo"
+    ],
     "aur": false
   },
   {
     "name": "Kongress",
     "description": "Companion application for conferences made by KDE. Part of kde-utilities.",
     "url": "https://apps.kde.org/kongress/",
-
-    "pkgname": ["kongress"],
+    "pkgname": [
+      "kongress"
+    ],
     "aur": false
   },
   {
     "name": "Kontact",
     "description": "Integrated solution to your personal information management. Part of kde-pim.",
     "url": "https://kontact.kde.org/",
-
-    "pkgname": ["kontact"],
+    "pkgname": [
+      "kontact"
+    ],
     "aur": false
   },
   {
     "name": "KOrganizer",
     "description": "Calendar and scheduling program, part of kde-pim.",
     "url": "https://kontact.kde.org/components/korganizer",
-
-    "pkgname": ["korganizer"],
+    "pkgname": [
+      "korganizer"
+    ],
     "aur": false
   },
   {
     "name": "Kresus",
     "description": "Self-hosted personal finance management software. It automatically retrieves every day all your new bank transactions and lets you categorize them, study them through charts and establish a budget.",
     "url": "https://kresus.org/en/",
-
-    "pkgname": ["kresus"],
+    "pkgname": [
+      "kresus"
+    ],
     "aur": false
   },
   {
     "name": "Kronometer",
     "description": "Stopwatch application for KDE.",
     "url": "https://apps.kde.org/kronometer/",
-
-    "pkgname": ["kronometer"],
+    "pkgname": [
+      "kronometer"
+    ],
     "aur": false
   },
   {
     "name": "KRuler",
     "description": "Displays on screen a ruler measuring pixels. Part of kde-graphics.",
     "url": "https://apps.kde.org/kruler/",
-
-    "pkgname": ["kruler"],
+    "pkgname": [
+      "kruler"
+    ],
     "aur": false
   },
   {
     "name": "KTeaTime",
     "description": "Handy timer for steeping tea. Part of kde-utilities.",
     "url": "https://apps.kde.org/kteatime/",
-
-    "pkgname": ["kteatime"],
+    "pkgname": [
+      "kteatime"
+    ],
     "aur": false
   },
   {
     "name": "KTimeTracker",
     "description": "Todo management and time tracking application.",
     "url": "https://apps.kde.org/ktimetracker/",
-
-    "pkgname": ["ktimetracker"],
+    "pkgname": [
+      "ktimetracker"
+    ],
     "aur": false
   },
   {
     "name": "KTouch",
     "description": "Program to learn and practice touch typing. Part of kde-education.",
     "url": "https://apps.kde.org/ktouch/",
-
-    "pkgname": ["ktouch"],
+    "pkgname": [
+      "ktouch"
+    ],
     "aur": false
   },
   {
     "name": "Kupfer",
     "description": "Convenient command and access tool for the GNOME desktop that can launch applications, open documents and access different types of objects and act on them.",
     "url": "https://kupferlauncher.github.io/",
-
-    "pkgname": ["kupfer"],
+    "pkgname": [
+      "kupfer"
+    ],
     "aur": false
   },
   {
     "name": "KWordQuiz",
     "description": "Tool that gives you a powerful way to master new vocabularies. Part of kde-education.",
     "url": "https://apps.kde.org/kwordquiz/",
-
-    "pkgname": ["kwordquiz"],
+    "pkgname": [
+      "kwordquiz"
+    ],
     "aur": false
   },
   {
     "name": "Launchy",
     "description": "Very popular cross-platform application launcher with a plugin-based system used to provide extra functionality.",
     "url": "https://www.launchy.net/",
-
-    "pkgname": ["launchy"],
+    "pkgname": [
+      "launchy"
+    ],
     "aur": false
   },
   {
     "name": "Ledger",
     "description": "Ledger is a powerful, double-entry accounting system that is accessed from the UNIX command-line.",
     "url": "https://www.ledger-cli.org/",
-
-    "pkgname": ["ledger"],
+    "pkgname": [
+      "ledger"
+    ],
     "aur": false
   },
   {
     "name": "liquidshell",
-    "description": "Basic desktop shell implemented using QtWidgets. It provides a bottom panel, a desktop wallpaper and desktop widgets.",
+    "description": "Basic desktop shell for Xorg, an alternative to plasmashell, implemented using QtWidgets. It provides a bottom panel, a desktop wallpaper and desktop widgets.",
     "url": "https://apps.kde.org/liquidshell/",
-
-    "pkgname": ["liquidshell"],
+    "pkgname": [
+      "liquidshell"
+    ],
     "aur": false
   },
   {
     "name": "LXLauncher",
     "description": "Clone of the Asus launcher for EeePC.",
     "url": "https://github.com/lxde/lxlauncher",
-
-    "pkgname": ["lxlauncher"],
+    "pkgname": [
+      "lxlauncher"
+    ],
     "aur": false
   },
   {
     "name": "LXPanel",
     "description": "Lightweight X11 desktop panel and part of the LXDE desktop.",
     "url": "https://github.com/lxde/lxpanel",
-
-    "pkgname": ["lxpanel"],
+    "pkgname": [
+      "lxpanel"
+    ],
     "aur": false
   },
   {
     "name": "LXQt Panel",
     "description": "Qt-based taskbar, part of the LXQt desktop.",
     "url": "https://github.com/lxqt/lxqt-panel",
-
-    "pkgname": ["lxqt-panel"],
+    "pkgname": [
+      "lxqt-panel"
+    ],
     "aur": false
   },
   {
     "name": "MATE Panel",
     "description": "Panel included in the MATE desktop.",
     "url": "https://github.com/mate-desktop/mate-panel/",
-
-    "pkgname": ["mate-panel"],
+    "pkgname": [
+      "mate-panel"
+    ],
     "aur": false
   },
   {
     "name": "MenuLibre",
     "description": "Advanced menu editor that provides modern features in a clean, easy-to-use interface.",
     "url": "https://launchpad.net/menulibre",
-
-    "pkgname": ["menulibre"],
+    "pkgname": [
+      "menulibre"
+    ],
     "aur": false
   },
   {
     "name": "MenuMaker",
     "description": "Heuristics-driven menu generator for Blackbox, Fluxbox, IceWM, Openbox, PekWM and WindowMaker.",
     "url": "https://menumaker.sourceforge.net/",
-
-    "pkgname": ["menumaker"],
+    "pkgname": [
+      "menumaker"
+    ],
     "aur": false
   },
   {
     "name": "Merkuro",
     "description": "Calendar and contact application that allows you to manage your tasks, events and contacts. Part of kde-pim.",
     "url": "https://apps.kde.org/merkuro/",
-
-    "pkgname": ["merkuro"],
+    "pkgname": [
+      "merkuro"
+    ],
     "aur": false
   },
   {
     "name": "Merkuro Calendar",
     "description": "Calendar application using Akonadi that supports both local and online calendars: Nextcloud, Google Calendar, Outlook, Caldav and more. Part of kde-pim.",
     "url": "https://apps.kde.org/merkuro.calendar/",
-
-    "pkgname": ["merkuro"],
+    "pkgname": [
+      "merkuro"
+    ],
     "aur": false
   },
   {
     "name": "Merkuro Contacts",
     "description": "Address book using Akonadi. Part of kde-pim.",
     "url": "https://apps.kde.org/merkuro.contact/",
-
-    "pkgname": ["merkuro"],
+    "pkgname": [
+      "merkuro"
+    ],
     "aur": false
   },
   {
     "name": "Monero",
     "description": "Monero wallet.",
     "url": "https://getmonero.org/",
-
-    "pkgname": ["monero-gui"],
+    "pkgname": [
+      "monero-gui"
+    ],
     "aur": false
   },
   {
     "name": "Mousetweaks",
     "description": "Accessibility enhancements for pointing devices.",
     "url": "https://wiki.gnome.org/Projects/Mousetweaks",
-
-    "pkgname": ["mousetweaks"],
+    "pkgname": [
+      "mousetweaks"
+    ],
     "aur": false
   },
   {
     "name": "Mozo",
     "description": "Change which applications are shown on the main menu.",
     "url": "https://github.com/mate-desktop/mozo",
-
-    "pkgname": ["mozo"],
+    "pkgname": [
+      "mozo"
+    ],
     "aur": false
   },
   {
     "name": "mpvpaper",
-    "description": "A video wallpaper program for wlroots based wayland compositors.",
+    "description": "A video wallpaper program for wlroots-based Wayland compositors.",
     "url": "https://github.com/GhostNaN/mpvpaper",
-
-    "pkgname": ["mpvpaper"],
+    "pkgname": [
+      "mpvpaper"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud Calendar",
     "description": "Calendar app for Nextcloud.",
     "url": "https://github.com/nextcloud/calendar",
-
-    "pkgname": ["nextcloud-app-calendar"],
+    "pkgname": [
+      "nextcloud-app-calendar"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud Contacts",
     "description": "Contacts app for Nextcloud.",
     "url": "https://github.com/nextcloud/contacts",
-
-    "pkgname": ["nextcloud-app-contacts"],
+    "pkgname": [
+      "nextcloud-app-contacts"
+    ],
     "aur": false
   },
   {
     "name": "Nextcloud Tasks",
     "description": "Tasks app for Nextcloud.",
     "url": "https://github.com/nextcloud/tasks",
-
-    "pkgname": ["nextcloud-app-tasks"],
+    "pkgname": [
+      "nextcloud-app-tasks"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Noctalia",
+    "description": "Minimal desktop shell for Wayland compositors, built on Quickshell.",
+    "url": "https://noctalia.dev/",
+    "pkgname": [
+      "noctalia-shell"
+    ],
     "aur": false
   },
   {
     "name": "nwg-bar",
-    "description": "Configurable button bar for wlroots-based compositors.",
+    "description": "Configurable button bar for wlroots-based Wayland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-bar",
-
-    "pkgname": ["nwg-bar"],
+    "pkgname": [
+      "nwg-bar"
+    ],
     "aur": false
   },
   {
     "name": "nwg-dock",
-    "description": "GTK-based dock for Sway and Hyprland Wayland compositors.",
+    "description": "GTK-based dock for Sway and Hyprland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-dock",
-
-    "pkgname": ["nwg-dock"],
+    "pkgname": [
+      "nwg-dock"
+    ],
     "aur": false
   },
   {
     "name": "nwg-drawer",
-    "description": "GTK-based application drawer designed for the Sway compositor.",
+    "description": "GTK-based application drawer designed for Sway and Hyprland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-drawer",
-
-    "pkgname": ["nwg-drawer"],
+    "pkgname": [
+      "nwg-drawer"
+    ],
     "aur": false
   },
   {
     "name": "nwg-menu",
-    "description": "GTK-based application menu designed for the Sway compositor.",
+    "description": "GTK-based application menu designed for Sway and Hyprland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-menu",
-
-    "pkgname": ["nwg-menu"],
+    "pkgname": [
+      "nwg-menu"
+    ],
     "aur": false
   },
   {
     "name": "nwg-panel",
-    "description": "GTK3-based panel for Sway and Hyprland Wayland compositors.",
+    "description": "GTK3-based panel for Sway and Hyprland compositors.",
     "url": "https://github.com/nwg-piotr/nwg-panel",
-
-    "pkgname": ["nwg-panel"],
+    "pkgname": [
+      "nwg-panel"
+    ],
+    "aur": false
+  },
+  {
+    "name": "nwg-shell",
+    "description": "Modular GTK3-based shell for Sway and Hyprland compositors.",
+    "url": "https://nwg-piotr.github.io/nwg-shell/",
+    "pkgname": [
+      "nwg-shell"
+    ],
     "aur": false
   },
   {
     "name": "Ollama",
     "description": "A streamlined tool for creating, running, and sharing large language models locally.",
     "url": "https://ollama.com",
-
-    "pkgname": ["ollama"],
+    "pkgname": [
+      "ollama"
+    ],
     "aur": false
   },
   {
     "name": "ONNX Runtime",
     "description": "High-performance scoring engine for ML models with cross-platform support.",
     "url": "https://onnxruntime.ai/",
-
-    "pkgname": ["onnxruntime-cpu"],
+    "pkgname": [
+      "onnxruntime-cpu"
+    ],
     "aur": false
   },
   {
     "name": "OpenBoard",
     "description": "Interactive whiteboard software for schools and universities.",
     "url": "https://openboard.ch/index.en.html",
-
-    "pkgname": ["openboard"],
+    "pkgname": [
+      "openboard"
+    ],
     "aur": false
   },
   {
     "name": "opencode",
     "description": "AI coding agent built for the terminal.",
     "url": "https://github.com/sst/opencode",
-
-    "pkgname": ["opencode"],
+    "pkgname": [
+      "opencode"
+    ],
     "aur": false
   },
   {
     "name": "Orca",
     "description": "Screen reader for individuals who are blind or visually impaired, using eSpeak (via Speech Dispatcher). Part of gnome.",
     "url": "https://wiki.gnome.org/Projects/Orca",
-
-    "pkgname": ["orca"],
+    "pkgname": [
+      "orca"
+    ],
     "aur": false
   },
   {
     "name": "Osmo",
     "description": "GTK personal organizer, which includes calendar, tasks manager and address book modules.",
     "url": "https://osmo-pim.sourceforge.net",
-
-    "pkgname": ["osmo"],
+    "pkgname": [
+      "osmo"
+    ],
     "aur": false
   },
   {
     "name": "Parley",
     "description": "Program to help you memorize things. It uses the spaced repetition learning method, also known as flash cards. Part of kde-education.",
     "url": "https://apps.kde.org/parley/",
-
-    "pkgname": ["parley"],
+    "pkgname": [
+      "parley"
+    ],
     "aur": false
   },
   {
     "name": "phpLDAPadmin",
     "description": "LDAP client webapp. Its hierarchical tree-viewer and advanced search functionality make it intuitive to browse and administer your LDAP directory.",
     "url": "https://phpldapadmin.sourceforge.net/",
-
-    "pkgname": ["phpldapadmin"],
+    "pkgname": [
+      "phpldapadmin"
+    ],
     "aur": false
   },
   {
     "name": "Plank",
     "description": "Elegant, simple, clean dock from Pantheon desktop environment.",
     "url": "https://launchpad.net/plank",
-
-    "pkgname": ["plank"],
+    "pkgname": [
+      "plank"
+    ],
     "aur": false
   },
   {
     "name": "Planner",
     "description": "Task manager with Todoist support.",
     "url": "https://useplanner.com/",
-
-    "pkgname": ["planify"],
+    "pkgname": [
+      "planify"
+    ],
     "aur": false
   },
   {
     "name": "Planner",
     "description": "Project management application for GNOME.",
     "url": "https://wiki.gnome.org/Apps/Planner",
-
-    "pkgname": ["planner"],
+    "pkgname": [
+      "planner"
+    ],
     "aur": false
   },
   {
     "name": "Polybar",
     "description": "A fast and easy-to-use tool for creating status bars.",
     "url": "https://github.com/jaagr/polybar",
-
-    "pkgname": ["polybar"],
+    "pkgname": [
+      "polybar"
+    ],
     "aur": false
   },
   {
     "name": "Pomodoro",
     "description": "Time management utility for GNOME based on the Pomodoro Technique.",
     "url": "https://gnomepomodoro.org/",
-
-    "pkgname": ["gnome-shell-pomodoro"],
+    "pkgname": [
+      "gnome-shell-pomodoro"
+    ],
     "aur": false
   },
   {
     "name": "Prolog",
     "description": "Logic-programming language for symbolic AI and computational linguistics.",
     "url": "https://www.swi-prolog.org/",
-
-    "pkgname": ["swi-prolog"],
+    "pkgname": [
+      "swi-prolog"
+    ],
     "aur": false
   },
   {
     "name": "PyTorch",
     "description": "Dynamic neural-network framework with strong GPU acceleration.",
     "url": "https://pytorch.org/",
-
-    "pkgname": ["python-pytorch"],
+    "pkgname": [
+      "python-pytorch"
+    ],
     "aur": false
   },
   {
     "name": "pywal",
-    "description": "Changes the wallpaper and creates matching colorschemes for various applications (rofi, i3, terminals)",
+    "description": "Changes the wallpaper and creates matching color schemes for various applications (rofi, i3, terminals)",
     "url": "https://github.com/dylanaraps/pywal",
-
-    "pkgname": ["python-pywal"],
+    "pkgname": [
+      "python-pywal"
+    ],
     "aur": false
   },
   {
     "name": "qwen-code",
     "description": "CLI coding agent (fork of gemini-cli) with AI-powered code generation and assistance.",
     "url": "https://github.com/QwenLM/Qwen-Code",
-
-    "pkgname": ["qwen-code"],
+    "pkgname": [
+      "qwen-code"
+    ],
     "aur": false
   },
   {
     "name": "Radicale",
     "description": "Free and Open-Source CalDAV and CardDAV Server.",
     "url": "https://radicale.org",
-
-    "pkgname": ["radicale"],
+    "pkgname": [
+      "radicale"
+    ],
     "aur": false
   },
   {
     "name": "Read It Later",
     "description": "Simple Wallabag client.",
     "url": "https://gitlab.gnome.org/World/read-it-later",
-
-    "pkgname": ["read-it-later"],
+    "pkgname": [
+      "read-it-later"
+    ],
     "aur": false
   },
   {
     "name": "Recipes",
     "description": "Recipe management application for GNOME. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Recipes",
-
-    "pkgname": ["gnome-recipes"],
+    "pkgname": [
+      "gnome-recipes"
+    ],
     "aur": false
   },
   {
     "name": "Remind",
     "description": "Highly sophisticated text-based calendaring and notification system.",
     "url": "https://dianne.skoll.ca/projects/remind/",
-
-    "pkgname": ["remind"],
+    "pkgname": [
+      "remind"
+    ],
     "aur": false
   },
   {
     "name": "RHVoice",
     "description": "Cross-platform (including Android) text-to-speech from a blind Russian-speaking developer, based on HTS (ru, ka, uk, ky, tt, en, pt, eo)",
     "url": "https://github.com/RHVoice/RHVoice",
-
-    "pkgname": ["rhvoice"],
+    "pkgname": [
+      "rhvoice"
+    ],
     "aur": false
   },
   {
     "name": "rofi",
     "description": "Popup window switcher roughly based on superswitcher, requiring only xlib and pango.",
     "url": "https://github.com/davatorium/rofi/",
-
-    "pkgname": ["rofi"],
+    "pkgname": [
+      "rofi"
+    ],
     "aur": false
   },
   {
     "name": "RSI Break",
     "description": "Takes care of your health and regularly breaks your work to avoid repetitive strain injury (RSI) on Xorg.",
     "url": "https://apps.kde.org/rsibreak/",
-
-    "pkgname": ["rsibreak"],
+    "pkgname": [
+      "rsibreak"
+    ],
     "aur": false
   },
   {
     "name": "Safe Eyes",
     "description": "Tool to reduce and prevent repetitive strain injury (RSI).",
     "url": "https://slgobinath.github.io/SafeEyes/",
-
-    "pkgname": ["safeeyes"],
+    "pkgname": [
+      "safeeyes"
+    ],
     "aur": false
   },
   {
     "name": "Screenkey",
     "description": "Tool to display pressed keys.",
     "url": "https://www.thregr.org/~wavexx/software/screenkey/",
-
-    "pkgname": ["screenkey"],
+    "pkgname": [
+      "screenkey"
+    ],
     "aur": false
   },
   {
     "name": "SentencePiece",
     "description": "Unsupervised text tokenizer for neural text generation.",
     "url": "https://github.com/google/sentencepiece",
-
-    "pkgname": ["sentencepiece"],
+    "pkgname": [
+      "sentencepiece"
+    ],
     "aur": false
   },
   {
     "name": "Show Me The Key",
     "description": "A screenkey alternative that works under Wayland via libinput",
     "url": "https://showmethekey.alynx.one",
-
-    "pkgname": ["showmethekey"],
+    "pkgname": [
+      "showmethekey"
+    ],
     "aur": false
   },
   {
     "name": "Skrooge",
     "description": "Personal finances manager for the KDE desktop.",
     "url": "https://skrooge.org/",
-
-    "pkgname": ["skrooge"],
+    "pkgname": [
+      "skrooge"
+    ],
     "aur": false
   },
   {
     "name": "Solanum",
     "description": "Pomodoro timer for the GNOME desktop.",
     "url": "https://apps.gnome.org/Solanum/",
-
-    "pkgname": ["solanum"],
+    "pkgname": [
+      "solanum"
+    ],
     "aur": false
   },
   {
     "name": "Speech dispatcher",
     "description": "Common interface to speech synthesis. It has backends for eSpeak, Festival, and a few other speech synthesizers.",
     "url": "https://freebsoft.org/speechd",
-
-    "pkgname": ["speech-dispatcher"],
+    "pkgname": [
+      "speech-dispatcher"
+    ],
     "aur": false
   },
   {
     "name": "Stalonetray",
     "description": "Stand-alone freedesktop.org and KDE system tray (notification area) for Xorg. It has full XEMBED support and minimal dependencies: an X11 lib only. Stalonetray works with virtually any EWMH-compliant window manager.",
     "url": "https://stalonetray.sourceforge.net/",
-
-    "pkgname": ["stalonetray"],
+    "pkgname": [
+      "stalonetray"
+    ],
     "aur": false
   },
   {
     "name": "swaybg",
     "description": "Wallpaper tool for Wayland compositors.",
     "url": "https://github.com/swaywm/swaybg",
-
-    "pkgname": ["swaybg"],
-    "aur": false
-  },
-  {
-    "name": "swww",
-    "description": "Efficient animated wallpaper daemon for wayland, controlled at runtime.",
-    "url": "https://github.com/Horus645/swww",
-
-    "pkgname": ["swww"],
+    "pkgname": [
+      "swaybg"
+    ],
     "aur": false
   },
   {
     "name": "Synapse",
     "description": "Semantic launcher written in Vala that you can use to start applications as well as find and access relevant documents and files by making use of the Zeitgeist engine.",
     "url": "https://launchpad.net/synapse-project",
-
-    "pkgname": ["synapse"],
+    "pkgname": [
+      "synapse"
+    ],
     "aur": false
   },
   {
     "name": "Taskwarrior",
     "description": "Command-line To-do list application with support for lua customization and more.",
     "url": "https://taskwarrior.org/",
-
-    "pkgname": ["task"],
+    "pkgname": [
+      "task"
+    ],
     "aur": false
   },
   {
     "name": "TensorFlow",
     "description": "End-to-end platform for scalable machine learning.",
     "url": "https://www.tensorflow.org/",
-
-    "pkgname": ["python-tensorflow"],
+    "pkgname": [
+      "python-tensorflow"
+    ],
     "aur": false
   },
   {
     "name": "termdown",
     "description": "Countdown timer and stopwatch in your terminal.",
     "url": "https://github.com/trehn/termdown",
-
-    "pkgname": ["termdown"],
+    "pkgname": [
+      "termdown"
+    ],
     "aur": false
   },
   {
     "name": "Thunderbird",
     "description": "A fully featured E-mail client formerly developed by Mozilla.",
     "url": "https://www.thunderbird.net",
-
-    "pkgname": ["thunderbird"],
+    "pkgname": [
+      "thunderbird"
+    ],
     "aur": false
   },
   {
     "name": "Thunderbird with CardBook extension",
     "description": "address book based on the CardDAV and vCard standards.",
     "url": "https://gitlab.com/CardBook/CardBook",
-
-    "pkgname": ["thunderbird"],
+    "pkgname": [
+      "thunderbird"
+    ],
     "aur": false
   },
   {
     "name": "Timetrack",
     "description": "Simple time-tracking app for GNOME.",
     "url": "https://gitlab.gnome.org/danigm/timetrack",
-
-    "pkgname": ["timetrack"],
+    "pkgname": [
+      "timetrack"
+    ],
     "aur": false
   },
   {
     "name": "Timewarrior",
     "description": "A command-line time-tracking application.",
     "url": "https://timewarrior.net/",
-
-    "pkgname": ["timew"],
+    "pkgname": [
+      "timew"
+    ],
     "aur": false
   },
   {
     "name": "Tint2",
     "description": "Simple panel/taskbar developed specifically for Openbox.",
     "url": "https://gitlab.com/o9000/tint2",
-
-    "pkgname": ["tint2"],
+    "pkgname": [
+      "tint2"
+    ],
     "aur": false
   },
   {
     "name": "TIPP10",
     "description": "Intelligent touch typing tutor.",
     "url": "https://www.tipp10.com/",
-
-    "pkgname": ["tipp10"],
+    "pkgname": [
+      "tipp10"
+    ],
     "aur": false
   },
   {
     "name": "TkRemind",
     "description": "Sophisticated calendar and alarm program.",
     "url": "https://dianne.skoll.ca/projects/remind/",
-
-    "pkgname": ["remind"],
+    "pkgname": [
+      "remind"
+    ],
     "aur": false
   },
   {
     "name": "todoman",
     "description": "Command-line To-do list manager (supports CalDAV)",
     "url": "https://github.com/pimutils/todoman",
-
-    "pkgname": ["todoman"],
+    "pkgname": [
+      "todoman"
+    ],
     "aur": false
   },
   {
     "name": "Ulauncher",
     "description": "Modern and shiny launcher that provides fuzzy search, extensions, and themes.",
     "url": "https://ulauncher.io/",
-
-    "pkgname": ["ulauncher"],
+    "pkgname": [
+      "ulauncher"
+    ],
     "aur": false
   },
   {
     "name": "Vala Panel",
     "description": "GTK3 panel for compositing window managers.",
     "url": "https://gitlab.com/vala-panel-project/vala-panel",
-
-    "pkgname": ["vala-panel"],
+    "pkgname": [
+      "vala-panel"
+    ],
     "aur": false
   },
   {
     "name": "Variety",
     "description": "Changes the wallpaper on a regular interval using user-specified or automatically downloaded images.",
     "url": "https://peterlevi.com/variety/",
-
-    "pkgname": ["variety"],
-    "aur": false
-  },
-  {
-    "name": "Wakatime",
-    "description": "Open source plugins for metrics about your programming with intuitive web-interface.",
-    "url": "https://wakatime.com/",
-
-    "pkgname": ["wakatime"],
+    "pkgname": [
+      "variety"
+    ],
     "aur": false
   },
   {
     "name": "Waybar",
     "description": "A customizable status bar for wlroots-based Wayland compositors.",
     "url": "https://github.com/Alexays/Waybar/",
-
-    "pkgname": ["waybar"],
+    "pkgname": [
+      "waybar"
+    ],
+    "aur": false
+  },
+  {
+    "name": "wf-shell",
+    "description": "Shell components for the Wayfire compositor.",
+    "url": "https://github.com/WayfireWM/wf-shell",
+    "pkgname": [
+      "wf-shell"
+    ],
     "aur": false
   },
   {
     "name": "When",
     "description": "Simple personal calendar program.",
     "url": "http://lightandmatter.com/when/when.html",
-
-    "pkgname": ["when"],
+    "pkgname": [
+      "when"
+    ],
     "aur": false
   },
   {
     "name": "Wike",
     "description": "Wikipedia reader for the GNOME desktop.",
     "url": "https://apps.gnome.org/Wike/",
-
-    "pkgname": ["wike"],
+    "pkgname": [
+      "wike"
+    ],
     "aur": false
   },
   {
     "name": "Wildcard",
     "description": "Provides a simple interface to test/practice regular expressions.",
     "url": "https://gitlab.gnome.org/World/Wildcard",
-
-    "pkgname": ["wildcard"],
+    "pkgname": [
+      "wildcard"
+    ],
     "aur": false
   },
   {
     "name": "wlogout",
     "description": "Logout menu for wayland",
     "url": "https://github.com/ArtsyMacaw/wlogout",
-
-    "pkgname": ["wlogout"],
+    "pkgname": [
+      "wlogout"
+    ],
     "aur": false
   },
   {
     "name": "wmenu",
-    "description": "Dynamic menu for Sway and wlroots based Wayland compositors. Provides a Wayland-native dmenu replacement which maintains the look and feel of dmenu.",
+    "description": "Dynamic menu for Sway and wlroots-based Wayland compositors. Provides a Wayland-native dmenu replacement which maintains the look and feel of dmenu.",
     "url": "https://codeberg.org/adnano/wmenu",
-
-    "pkgname": ["wmenu"],
+    "pkgname": [
+      "wmenu"
+    ],
     "aur": false
   },
   {
     "name": "wofi",
     "description": "GTK-based popup window switcher for Wayland compositors such as sway. Inspired by rofi.",
     "url": "https://hg.sr.ht/~scoopta/wofi",
-
-    "pkgname": ["wofi"],
+    "pkgname": [
+      "wofi"
+    ],
     "aur": false
   },
   {
     "name": "Workrave",
     "description": "Program that assists in the recovery and prevention of RSI on Xorg.",
     "url": "https://workrave.org/",
-
-    "pkgname": ["workrave"],
+    "pkgname": [
+      "workrave"
+    ],
     "aur": false
   },
   {
     "name": "xandikos",
     "description": "A lightweight yet complete CardDAV/CalDAV server that backs onto a Git repository.",
     "url": "https://www.xandikos.org",
-
-    "pkgname": ["xandikos"],
+    "pkgname": [
+      "xandikos"
+    ],
     "aur": false
   },
   {
     "name": "xdg-menu",
     "description": "Generate XDG application menus for various window managers.",
     "url": "https://github.com/p5n/archlinux-stuff/tree/master/xdg-menu",
-
-    "pkgname": ["archlinux-xdg-menu"],
+    "pkgname": [
+      "archlinux-xdg-menu"
+    ],
     "aur": false
   },
   {
     "name": "Xfce Panel",
     "description": "Panel included in the Xfce desktop.",
     "url": "https://docs.xfce.org/xfce/xfce4-panel/start",
-
-    "pkgname": ["xfce4-panel"],
+    "pkgname": [
+      "xfce4-panel"
+    ],
     "aur": false
   },
   {
     "name": "xmobar",
     "description": "A lightweight, text-based, status bar written in Haskell.",
     "url": "https://archives.haskell.org/projects.haskell.org/xmobar/",
-
-    "pkgname": ["xmobar"],
+    "pkgname": [
+      "xmobar"
+    ],
     "aur": false
   },
   {
     "name": "xwallpaper",
-    "description": "Minimalistic wallpaper setting utility for X.",
+    "description": "Minimalist wallpaper setting utility for X.",
     "url": "https://github.com/stoeckmann/xwallpaper",
-
-    "pkgname": ["xwallpaper"],
+    "pkgname": [
+      "xwallpaper"
+    ],
     "aur": false
   },
   {
     "name": "Zanshin",
     "description": "To-do management application for KDE. Part of kde-pim.",
     "url": "https://apps.kde.org/zanshin/",
-
-    "pkgname": ["zanshin"],
+    "pkgname": [
+      "zanshin"
+    ],
     "aur": false
   }
 ]

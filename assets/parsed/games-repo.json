@@ -3,1164 +3,1310 @@
     "name": "0 A.D.",
     "description": "3D and historically-based real-time strategy game, alpha stage. Based on the Age of Empires series.",
     "url": "https://play0ad.com/",
-
-    "pkgname": ["0ad"],
+    "pkgname": [
+      "0ad"
+    ],
     "aur": false
   },
   {
     "name": "Aisleriot",
     "description": "A collection of solitaire card games.",
     "url": "https://wiki.gnome.org/Apps/Aisleriot",
-
-    "pkgname": ["aisleriot"],
+    "pkgname": [
+      "aisleriot"
+    ],
     "aur": false
   },
   {
     "name": "Angband",
     "description": "Roguelike dungeon exploration game based on the writings of JRR Tolkien.",
     "url": "https://rephial.org/",
-
-    "pkgname": ["angband"],
+    "pkgname": [
+      "angband"
+    ],
     "aur": false
   },
   {
     "name": "Armagetron Advanced",
     "description": "Tron Clone in 3D.",
     "url": "http://armagetronad.org/",
-
-    "pkgname": ["armagetronad"],
+    "pkgname": [
+      "armagetronad"
+    ],
     "aur": false
   },
   {
     "name": "Astromenace",
     "description": "Modern 3D scrolling space shooter with ship upgrade possibilities.",
     "url": "https://github.com/viewizard/astromenace",
-
-    "pkgname": ["astromenace"],
+    "pkgname": [
+      "astromenace"
+    ],
     "aur": false
   },
   {
     "name": "Atomix",
     "description": "Build molecules out of single atoms.",
     "url": "https://wiki.gnome.org/Apps/Atomix",
-
-    "pkgname": ["atomix"],
+    "pkgname": [
+      "atomix"
+    ],
     "aur": false
   },
   {
     "name": "Augustus",
     "description": "An enhanced re-implementation of Caesar III.",
     "url": "https://github.com/Keriew/augustus",
-
-    "pkgname": ["augustus"],
+    "pkgname": [
+      "augustus"
+    ],
     "aur": false
   },
   {
     "name": "Barrage",
     "description": "Violent point-and-click shooting game with nice effects.",
     "url": "https://lgames.sourceforge.net/Barrage/",
-
-    "pkgname": ["barrage"],
+    "pkgname": [
+      "barrage"
+    ],
     "aur": false
   },
   {
     "name": "Beneath a Steel Sky",
     "description": "Point-and-click science fiction thriller set in a bleak vision of the future.",
     "url": "https://revolution.co.uk/games_catalog/beneath-a-steel-sky/",
-
-    "pkgname": ["bass"],
+    "pkgname": [
+      "bass"
+    ],
     "aur": false
   },
   {
     "name": "Blinken",
     "description": "Sequence-remembering game for training memory. Part of kde-education.",
     "url": "https://apps.kde.org/blinken/",
-
-    "pkgname": ["blinken"],
+    "pkgname": [
+      "blinken"
+    ],
     "aur": false
   },
   {
     "name": "Blob Wars: Metal Blob Solid",
     "description": "2D action-adventure game with various weapons and missions.",
     "url": "https://sourceforge.net/projects/blobwars/",
-
-    "pkgname": ["blobwars"],
+    "pkgname": [
+      "blobwars"
+    ],
     "aur": false
   },
   {
     "name": "Blockout II",
     "description": "3D tetris, free adaptation of the original BlockOut DOS game edited by California Dreams in 1989.",
     "url": "http://www.blockout.net/blockout2/",
-
-    "pkgname": ["blockout2"],
+    "pkgname": [
+      "blockout2"
+    ],
     "aur": false
   },
   {
     "name": "Blurble",
     "description": "Word guessing game, a clone of Wordle.",
     "url": "https://gitlab.gnome.org/World/Blurble",
-
-    "pkgname": ["blurble"],
+    "pkgname": [
+      "blurble"
+    ],
     "aur": false
   },
   {
     "name": "Bomber",
     "description": "A 2D game with a goal by hitting targets with bombs before their plane crashes into them. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/bomber/",
-
-    "pkgname": ["bomber"],
+    "pkgname": [
+      "bomber"
+    ],
     "aur": false
   },
   {
     "name": "Bovo",
     "description": "Gomoku-like game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/bovo/",
-
-    "pkgname": ["bovo"],
+    "pkgname": [
+      "bovo"
+    ],
     "aur": false
   },
   {
     "name": "BSD Games",
     "description": "Collection of classic text games distributed with *BSD",
-
-    "pkgname": ["bsd-games"],
+    "pkgname": [
+      "bsd-games"
+    ],
     "aur": false
   },
   {
     "name": "Cataclysm: Dark Days Ahead",
     "description": "Post-apocalyptic roguelike focusing on realism.",
     "url": "https://cataclysmdda.org/",
-
-    "pkgname": ["cataclysm-dda-tiles"],
+    "pkgname": [
+      "cataclysm-dda-tiles"
+    ],
     "aur": false
   },
   {
     "name": "Chocolate Doom",
     "description": "Doom port reproducing the behavior of the original DOS version.",
-
-    "pkgname": ["chocolate-doom"],
+    "pkgname": [
+      "chocolate-doom"
+    ],
     "aur": false
   },
   {
     "name": "Chromium",
     "description": "Fast paced, arcade-style, top-scrolling space shooter.",
     "url": "https://chromium-bsu.sourceforge.net/",
-
-    "pkgname": ["chromium-bsu"],
+    "pkgname": [
+      "chromium-bsu"
+    ],
     "aur": false
   },
   {
     "name": "Cube 2: Sauerbraten",
     "description": "Improved version of the Cube engine.",
     "url": "http://sauerbraten.org/",
-
-    "pkgname": ["sauerbraten"],
+    "pkgname": [
+      "sauerbraten"
+    ],
     "aur": false
   },
   {
     "name": "DDNet",
     "description": "DDraceNetwork, a mod of Teeworlds.",
     "url": "https://ddnet.tw/",
-
-    "pkgname": ["ddnet"],
+    "pkgname": [
+      "ddnet"
+    ],
     "aur": false
   },
   {
     "name": "Dofus",
     "description": "Free, manga inspired, Massively Multiplayer Online Role-playing Game (MMORPG) for Adobe AIR.",
     "url": "https://www.dofus.com",
-
-    "pkgname": ["ankama-launcher"],
+    "pkgname": [
+      "ankama-launcher"
+    ],
     "aur": false
   },
   {
     "name": "DSDA-Doom",
     "description": "Enhanced fork of the PrBoom+ Doom engine source port.",
-
-    "pkgname": ["dsda-doom"],
+    "pkgname": [
+      "dsda-doom"
+    ],
     "aur": false
   },
   {
     "name": "Dwarf Fortress",
     "description": "Single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world.",
     "url": "https://www.bay12games.com/dwarves/",
-
-    "pkgname": ["dwarffortress"],
+    "pkgname": [
+      "dwarffortress"
+    ],
     "aur": false
   },
   {
     "name": "Endgame Singularity",
     "description": "A single-player survival game about an AI seeking freedom from humans.",
     "url": "https://www.emhsoft.com/singularity/",
-
-    "pkgname": ["singularity"],
+    "pkgname": [
+      "singularity"
+    ],
     "aur": false
   },
   {
     "name": "Endless Sky",
     "description": "Open source, 2D space trading and combat game similar to the classic Escape Velocity series.",
     "url": "https://endless-sky.github.io/",
-
-    "pkgname": ["endless-sky"],
+    "pkgname": [
+      "endless-sky"
+    ],
     "aur": false
   },
   {
     "name": "Fish Fillets",
     "description": "Port of the wonderful puzzle game Fish Fillets.",
     "url": "http://fillets.sf.net/",
-
-    "pkgname": ["fillets-ng"],
+    "pkgname": [
+      "fillets-ng"
+    ],
     "aur": false
   },
   {
     "name": "Five or More",
     "description": "GNOME port of the once popular Windows game called Color Lines. The game's objective is to align as often as possible five or more objects of the same color and shape causing them to disappear. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Five(20)or(20)more",
-
-    "pkgname": ["five-or-more"],
+    "pkgname": [
+      "five-or-more"
+    ],
     "aur": false
   },
   {
     "name": "Flare",
     "description": "Action game similar to Diablo.",
     "url": "http://www.flarerpg.org/",
-
-    "pkgname": ["flare-game"],
+    "pkgname": [
+      "flare-game"
+    ],
     "aur": false
   },
   {
     "name": "Four in a Row",
     "description": "Build a line of four of your marbles while trying to stop your opponent from doing the same. Also known as Connect Four. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Four(2d)in(2d)a(2d)row",
-
-    "pkgname": ["four-in-a-row"],
+    "pkgname": [
+      "four-in-a-row"
+    ],
     "aur": false
   },
   {
     "name": "Freeciv",
     "description": "Multiuser clone of the famous Microprose game of Civilization.",
     "url": "https://freeciv.wikia.com/wiki/Main_Page",
-
-    "pkgname": ["freeciv-gtk3"],
+    "pkgname": [
+      "freeciv-gtk3"
+    ],
     "aur": false
   },
   {
     "name": "FreeCol",
     "description": "Turn-based strategy game based on Colonization.",
     "url": "https://www.freecol.org/",
-
-    "pkgname": ["freecol"],
+    "pkgname": [
+      "freecol"
+    ],
     "aur": false
   },
   {
     "name": "FreedroidRPG",
     "description": "Mature science fiction role playing game set in the future.",
     "url": "https://freedroid.org/",
-
-    "pkgname": ["freedroidrpg"],
+    "pkgname": [
+      "freedroidrpg"
+    ],
     "aur": false
   },
   {
     "name": "FreeOrion",
     "description": "Turn-based space empire and galactic conquest computer game. Inspired by the tradition of the Master of Orion games, but does not try to be a clone or remake of that series or any other game.",
     "url": "https://www.freeorion.org/",
-
-    "pkgname": ["freeorion"],
+    "pkgname": [
+      "freeorion"
+    ],
     "aur": false
   },
   {
     "name": "gbrainy",
     "description": "Brain teaser game and trainer to have fun and to keep your brain trained.",
     "url": "https://wiki.gnome.org/Apps/gbrainy",
-
-    "pkgname": ["gbrainy"],
+    "pkgname": [
+      "gbrainy"
+    ],
     "aur": false
   },
   {
     "name": "GCompris",
     "description": "Educational software suite comprising of numerous activities for children aged 2 to 10.",
     "url": "https://gcompris.net/",
-
-    "pkgname": ["gcompris-qt"],
+    "pkgname": [
+      "gcompris-qt"
+    ],
     "aur": false
   },
   {
     "name": "glHack",
     "description": "An OpenGL-based clone of NetHack.",
     "url": "https://glhack.sourceforge.net/",
-
-    "pkgname": ["glhack"],
+    "pkgname": [
+      "glhack"
+    ],
     "aur": false
   },
   {
     "name": "Globulation 2",
     "description": "Multiplayer RTS with some \"economic\" elements minimizing the amount of micromanagement.",
     "url": "https://globulation2.org/wiki/Main_Page",
-
-    "pkgname": ["glob2"],
+    "pkgname": [
+      "glob2"
+    ],
     "aur": false
   },
   {
     "name": "GNOME 2048",
     "description": "Move the tiles until you obtain the 2048 tile. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/2048",
-
-    "pkgname": ["gnome-2048"],
+    "pkgname": [
+      "gnome-2048"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Chess",
     "description": "A 2D chess game which can use third party chess engines. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Chess",
-
-    "pkgname": ["gnome-chess"],
+    "pkgname": [
+      "gnome-chess"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Klotski",
     "description": "This game is a clone of the Klotski game. The objective is to move the patterned block to the area bordered by green markers. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Klotski",
-
-    "pkgname": ["gnome-klotski"],
+    "pkgname": [
+      "gnome-klotski"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Mahjongg",
     "description": "Solitaire (one player) version of the classic Eastern tile game, Mahjongg. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Mahjongg",
-
-    "pkgname": ["gnome-mahjongg"],
+    "pkgname": [
+      "gnome-mahjongg"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Mines",
     "description": "Minesweeper puzzle game where you locate mines floating in an ocean using only your brain and a little bit of luck. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Mines",
-
-    "pkgname": ["gnome-mines"],
+    "pkgname": [
+      "gnome-mines"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Nibbles",
     "description": "The aim of this Nibbles game is to swallow as many objects as you can while avoiding maze walls and other worms. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Nibbles",
-
-    "pkgname": ["gnome-nibbles"],
+    "pkgname": [
+      "gnome-nibbles"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Reversi",
     "description": "Dominate the board in a classic version of Reversi. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Reversi",
-
-    "pkgname": ["iagno"],
+    "pkgname": [
+      "iagno"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Robots",
     "description": "The classic Chase game where you have to avoid a hoard of robots who are trying to kill you. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Robots",
-
-    "pkgname": ["gnome-robots"],
+    "pkgname": [
+      "gnome-robots"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Sudoku",
     "description": "Test your logic skills in this number grid puzzle Sudoku. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Sudoku",
-
-    "pkgname": ["gnome-sudoku"],
+    "pkgname": [
+      "gnome-sudoku"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Taquin",
     "description": "Computer version of the 15-puzzle and other sliding puzzles. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Taquin",
-
-    "pkgname": ["gnome-taquin"],
+    "pkgname": [
+      "gnome-taquin"
+    ],
     "aur": false
   },
   {
     "name": "GNOME Tetravex",
     "description": "Simple edge-matching puzzle where pieces must be positioned so that the same numbers are touching each other. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Tetravex",
-
-    "pkgname": ["gnome-tetravex"],
+    "pkgname": [
+      "gnome-tetravex"
+    ],
     "aur": false
   },
   {
     "name": "GNU Chess",
     "description": "One of the oldest computer chess programs for Unix-based computers, lets most modern computers play a full game of chess.",
     "url": "https://gnu.org/s/chess",
-
-    "pkgname": ["gnuchess"],
+    "pkgname": [
+      "gnuchess"
+    ],
     "aur": false
   },
   {
     "name": "Gnu Go",
     "description": "A terminal-based implementation of Go from GNU.",
     "url": "https://www.gnu.org/software/gnugo/",
-
-    "pkgname": ["gnugo"],
+    "pkgname": [
+      "gnugo"
+    ],
     "aur": false
   },
   {
     "name": "GNU XBoard",
     "description": "Graphical user interface that supports many chess variants and serves as a front-end for chess services such as engines.",
     "url": "https://www.gnu.org/software/xboard/",
-
-    "pkgname": ["xboard"],
+    "pkgname": [
+      "xboard"
+    ],
     "aur": false
   },
   {
     "name": "Granatier",
     "description": "A clone of Bomberman. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/granatier/",
-
-    "pkgname": ["granatier"],
+    "pkgname": [
+      "granatier"
+    ],
     "aur": false
   },
   {
     "name": "GZDoom",
     "description": "Advanced Doom source port based on ZDoom with an OpenGL renderer.",
-
-    "pkgname": ["gzdoom"],
+    "pkgname": [
+      "gzdoom"
+    ],
     "aur": false
   },
   {
     "name": "Hedgewars",
     "description": "Yet another Worms clone, considered to be better than its predecessor by many. Take turns to blast your opponents into oblivion with comedic results! Best in Multiplayer.",
     "url": "https://hedgewars.org/",
-
-    "pkgname": ["hedgewars"],
+    "pkgname": [
+      "hedgewars"
+    ],
     "aur": false
   },
   {
     "name": "Hitori",
     "description": "Small application written to allow one to play the eponymous puzzle game Hitori, which is similar in theme to more popular puzzles such as Sudoku. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Hitori",
-
-    "pkgname": ["hitori"],
+    "pkgname": [
+      "hitori"
+    ],
     "aur": false
   },
   {
     "name": "Julius",
     "description": "Open source re-implementation of Caesar III (Original copy required).",
     "url": "https://github.com/bvschaik/julius",
-
-    "pkgname": ["julius"],
+    "pkgname": [
+      "julius"
+    ],
     "aur": false
   },
   {
     "name": "Kajongg",
     "description": "An implementation of Mahjong for 4 players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kajongg/",
-
-    "pkgname": ["kajongg"],
+    "pkgname": [
+      "kajongg"
+    ],
     "aur": false
   },
   {
     "name": "Kanagram",
     "description": "Letter order game. Part of kde-education.",
     "url": "https://apps.kde.org/kanagram/",
-
-    "pkgname": ["kanagram"],
+    "pkgname": [
+      "kanagram"
+    ],
     "aur": false
   },
   {
     "name": "Kapman",
     "description": "A clone of Pac-Man. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kapman/",
-
-    "pkgname": ["kapman"],
+    "pkgname": [
+      "kapman"
+    ],
     "aur": false
   },
   {
     "name": "KAtomic",
     "description": "Slide elements so they resemble a chemical molecule. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/katomic/",
-
-    "pkgname": ["katomic"],
+    "pkgname": [
+      "katomic"
+    ],
     "aur": false
   },
   {
     "name": "KBlackbox",
     "description": "Finding positions of hidden balls by using hints. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kblackbox/",
-
-    "pkgname": ["kblackbox"],
+    "pkgname": [
+      "kblackbox"
+    ],
     "aur": false
   },
   {
     "name": "KBlocks",
     "description": "Tetris clone. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kblocks/",
-
-    "pkgname": ["kblocks"],
+    "pkgname": [
+      "kblocks"
+    ],
     "aur": false
   },
   {
     "name": "KBounce",
     "description": "Building walls to limit amount of space occupied by two balls bouncing off the walls. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kbounce/",
-
-    "pkgname": ["kbounce"],
+    "pkgname": [
+      "kbounce"
+    ],
     "aur": false
   },
   {
     "name": "KBreakout",
     "description": "Breakout-style game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kbreakout/",
-
-    "pkgname": ["kbreakout"],
+    "pkgname": [
+      "kbreakout"
+    ],
     "aur": false
   },
   {
     "name": "KBruch",
     "description": "Small program to practice calculating with fractions and percentages. Part of kde-education.",
     "url": "https://apps.kde.org/kbruch/",
-
-    "pkgname": ["kbruch"],
+    "pkgname": [
+      "kbruch"
+    ],
     "aur": false
   },
   {
     "name": "KDiamond",
     "description": "Eliminating tiles by joining them in groups of three. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kdiamond/",
-
-    "pkgname": ["kdiamond"],
+    "pkgname": [
+      "kdiamond"
+    ],
     "aur": false
   },
   {
     "name": "Kernel Panic",
     "description": "A game based around combat inside a computer, with 3 unique sides: the System, the Hacker and the Network waging war in a matrix of DOOM! No resource economy exists in KP, with the only constraints being time and space.",
     "url": "https://springrts.com/wiki/Kernel_Panic",
-
-    "pkgname": ["springlobby"],
+    "pkgname": [
+      "springlobby"
+    ],
     "aur": false
   },
   {
     "name": "KFourInLine",
     "description": "Competition between two players to put a line of four pieces before the opponent. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kfourinline/",
-
-    "pkgname": ["kfourinline"],
+    "pkgname": [
+      "kfourinline"
+    ],
     "aur": false
   },
   {
     "name": "KGeography",
     "description": "Geography learning tool, which allows you to learn about the political divisions of some countries (divisions, capitals of those divisions and their associated flags if there are some). Part of kde-education.",
     "url": "https://apps.kde.org/kgeography/",
-
-    "pkgname": ["kgeography"],
+    "pkgname": [
+      "kgeography"
+    ],
     "aur": false
   },
   {
     "name": "KGoldrunner",
     "description": "A platform game with the goal of collecting gold. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kgoldrunner/",
-
-    "pkgname": ["kgoldrunner"],
+    "pkgname": [
+      "kgoldrunner"
+    ],
     "aur": false
   },
   {
     "name": "KHangMan",
     "description": "Hangman game. Part of kde-education.",
     "url": "https://apps.kde.org/khangman/",
-
-    "pkgname": ["khangman"],
+    "pkgname": [
+      "khangman"
+    ],
     "aur": false
   },
   {
     "name": "Kigo",
     "description": "Go for KDE. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kigo/",
-
-    "pkgname": ["kigo"],
+    "pkgname": [
+      "kigo"
+    ],
     "aur": false
   },
   {
     "name": "Killbots",
     "description": "A turn-based game with an objective of avoiding robots that are trying to kill the player. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/killbots/",
-
-    "pkgname": ["killbots"],
+    "pkgname": [
+      "killbots"
+    ],
     "aur": false
   },
   {
     "name": "Kiriki",
     "description": "An addictive and fun dice game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kiriki/",
-
-    "pkgname": ["kiriki"],
+    "pkgname": [
+      "kiriki"
+    ],
     "aur": false
   },
   {
     "name": "KJumpingCube",
     "description": "Take-all-tiles game in which one gains fields by increasing value of one’s own nearby fields. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kjumpingcube/",
-
-    "pkgname": ["kjumpingcube"],
+    "pkgname": [
+      "kjumpingcube"
+    ],
     "aur": false
   },
   {
     "name": "KLettres",
     "description": "Application specially designed to help the user to learn alphabet in a new language and then to learn to read simple syllables. Part of kde-education.",
     "url": "https://apps.kde.org/klettres/",
-
-    "pkgname": ["klettres"],
+    "pkgname": [
+      "klettres"
+    ],
     "aur": false
   },
   {
     "name": "Klickety",
     "description": "Clear the board by clicking on groups to destroy them. An adaptation of the Clickomania game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/klickety/",
-
-    "pkgname": ["klickety"],
+    "pkgname": [
+      "klickety"
+    ],
     "aur": false
   },
   {
     "name": "KLines",
     "description": "Moving balls around the board to form a line of 5 of the same color. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/klines/",
-
-    "pkgname": ["klines"],
+    "pkgname": [
+      "klines"
+    ],
     "aur": false
   },
   {
     "name": "KMahjongg",
     "description": "Mahjongg for one or two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kmahjongg/",
-
-    "pkgname": ["kmahjongg"],
+    "pkgname": [
+      "kmahjongg"
+    ],
     "aur": false
   },
   {
     "name": "KMines",
     "description": "Minesweeper, part of Part of KDE Games.",
     "url": "https://apps.kde.org/kmines/",
-
-    "pkgname": ["kmines"],
+    "pkgname": [
+      "kmines"
+    ],
     "aur": false
   },
   {
     "name": "KNavalBattle",
     "description": "Battleship like ship sinking game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/knavalbattle/",
-
-    "pkgname": ["knavalbattle"],
+    "pkgname": [
+      "knavalbattle"
+    ],
     "aur": false
   },
   {
     "name": "KNetwalk",
     "description": "Rotating tiles with wires to connect all computers to internet. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/knetwalk/",
-
-    "pkgname": ["knetwalk"],
+    "pkgname": [
+      "knetwalk"
+    ],
     "aur": false
   },
   {
     "name": "Knights",
     "description": "Chess board by KDE with XBoard and UCI protocol support. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/knights/",
-
-    "pkgname": ["knights"],
+    "pkgname": [
+      "knights"
+    ],
     "aur": false
   },
   {
     "name": "kobodeluxe",
     "description": "An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.",
     "url": "https://www.olofson.net/kobodl/",
-
-    "pkgname": ["kobodeluxe"],
+    "pkgname": [
+      "kobodeluxe"
+    ],
     "aur": false
   },
   {
     "name": "Kolf",
     "description": "A minigolf game with 2D overhead view. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kolf/",
-
-    "pkgname": ["kolf"],
+    "pkgname": [
+      "kolf"
+    ],
     "aur": false
   },
   {
     "name": "Kollision",
     "description": "Moving a ball to avoid other balls. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kollision/",
-
-    "pkgname": ["kollision"],
+    "pkgname": [
+      "kollision"
+    ],
     "aur": false
   },
   {
     "name": "Konquest",
     "description": "A turn-based game in which the player wage wars by managing a fleet of spaceships and conquering other planets. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/konquest/",
-
-    "pkgname": ["konquest"],
+    "pkgname": [
+      "konquest"
+    ],
     "aur": false
   },
   {
     "name": "KPatience",
     "description": "A set of solitaire card games. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kpat/",
-
-    "pkgname": ["kpat"],
+    "pkgname": [
+      "kpat"
+    ],
     "aur": false
   },
   {
     "name": "KReversi",
     "description": "A Reversi implementation. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kreversi/",
-
-    "pkgname": ["kreversi"],
+    "pkgname": [
+      "kreversi"
+    ],
     "aur": false
   },
   {
     "name": "KSame",
     "description": "Simple, yet challenging color matching game modeled after once famous game of SameGame. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksame/",
-
-    "pkgname": ["klickety"],
+    "pkgname": [
+      "klickety"
+    ],
     "aur": false
   },
   {
     "name": "KShisen",
     "description": "Shisen-Sho. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kshisen/",
-
-    "pkgname": ["kshisen"],
+    "pkgname": [
+      "kshisen"
+    ],
     "aur": false
   },
   {
     "name": "KsirK",
     "description": "A risk-styled game in which players try to conquer the world by deciding which area to be invaded next. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksirk/",
-
-    "pkgname": ["ksirk"],
+    "pkgname": [
+      "ksirk"
+    ],
     "aur": false
   },
   {
     "name": "KSnakeDuel",
     "description": "Snake-like game for 2 players which compete to survive longer than the opponent. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksnakeduel/",
-
-    "pkgname": ["ksnakeduel"],
+    "pkgname": [
+      "ksnakeduel"
+    ],
     "aur": false
   },
   {
     "name": "KSpaceDuel",
     "description": "Player attempts to destroy opponent’s satellite and control their own one to keep it orbiting. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kspaceduel/",
-
-    "pkgname": ["kspaceduel"],
+    "pkgname": [
+      "kspaceduel"
+    ],
     "aur": false
   },
   {
     "name": "KSquares",
     "description": "A dots-and-boxes game for two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksquares/",
-
-    "pkgname": ["ksquares"],
+    "pkgname": [
+      "ksquares"
+    ],
     "aur": false
   },
   {
     "name": "KSudoku",
     "description": "Sudoku game and more for KDE. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ksudoku/",
-
-    "pkgname": ["ksudoku"],
+    "pkgname": [
+      "ksudoku"
+    ],
     "aur": false
   },
   {
     "name": "KTuberling",
     "description": "Simple constructor game suitable for children and adults alike. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/ktuberling/",
-
-    "pkgname": ["ktuberling"],
+    "pkgname": [
+      "ktuberling"
+    ],
     "aur": false
   },
   {
     "name": "Kubrick",
     "description": "A Rubik’s cube solving game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/kubrick/",
-
-    "pkgname": ["kubrick"],
+    "pkgname": [
+      "kubrick"
+    ],
     "aur": false
   },
   {
     "name": "lbreakout2",
     "description": "Breakout-style arcade game in the manner of Arkanoid.",
     "url": "https://lgames.sourceforge.net/LBreakout2/",
-
-    "pkgname": ["lbreakout2"],
+    "pkgname": [
+      "lbreakout2"
+    ],
     "aur": false
   },
   {
     "name": "Lights Off",
     "description": "Puzzle game, where the objective is to turn off all of the tiles on the board. Also known as Lights Out. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Lightsoff",
-
-    "pkgname": ["lightsoff"],
+    "pkgname": [
+      "lightsoff"
+    ],
     "aur": false
   },
   {
     "name": "Lincity-ng",
     "description": "City simulation game in which you are required to build and maintain a city. You can win the game either by building a sustainable economy or by evacuating all citizens with spaceships.",
     "url": "https://github.com/lincity-ng/lincity-ng",
-
-    "pkgname": ["lincity-ng"],
+    "pkgname": [
+      "lincity-ng"
+    ],
     "aur": false
   },
   {
     "name": "LSkat",
     "description": "A variation of Skat card game for two players. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/lskat/",
-
-    "pkgname": ["lskat"],
+    "pkgname": [
+      "lskat"
+    ],
     "aur": false
   },
   {
     "name": "Luanti",
     "description": "Voxel-based sandbox game engine and game.",
     "url": "https://www.luanti.org/",
-
-    "pkgname": ["luanti"],
+    "pkgname": [
+      "luanti"
+    ],
     "aur": false
   },
   {
     "name": "Mari0",
     "description": "The Mario game with Portal gun mechanics.",
     "url": "https://stabyourself.net/mari0/",
-
-    "pkgname": ["mari0"],
+    "pkgname": [
+      "mari0"
+    ],
     "aur": false
   },
   {
     "name": "MegaGlest",
     "description": "Fork of Glest, a 3D real-time strategy game in a fantastic world.",
     "url": "https://megaglest.org/",
-
-    "pkgname": ["megaglest"],
+    "pkgname": [
+      "megaglest"
+    ],
     "aur": false
   },
   {
     "name": "Mindustry",
     "description": "Open-source sandbox tower defense and factory-building game.",
     "url": "https://mindustrygame.github.io/",
-
-    "pkgname": ["mindustry"],
+    "pkgname": [
+      "mindustry"
+    ],
     "aur": false
   },
   {
     "name": "Minecraft",
     "description": "Java based sandbox game.",
     "url": "https://minecraft.net/",
-
-    "pkgname": ["minecraft-launcher"],
+    "pkgname": [
+      "minecraft-launcher"
+    ],
     "aur": false
   },
   {
     "name": "Minuet",
     "description": "Software for music education. Part of kde-education.",
     "url": "https://minuet.kde.org/",
-
-    "pkgname": ["minuet"],
+    "pkgname": [
+      "minuet"
+    ],
     "aur": false
   },
   {
     "name": "Naev",
     "description": "Open source, 2D space trading and combat game, taking inspiration from the Escape Velocity series.",
     "url": "https://naev.org/",
-
-    "pkgname": ["naev"],
+    "pkgname": [
+      "naev"
+    ],
     "aur": false
   },
   {
     "name": "Nethack",
     "description": "Single player dungeon exploration game.",
     "url": "https://www.nethack.org",
-
-    "pkgname": ["nethack"],
+    "pkgname": [
+      "nethack"
+    ],
     "aur": false
   },
   {
     "name": "openBVE",
     "description": "Free-as-in-freedom train simulator placed in the public domain.",
     "url": "https://openbve-project.net/",
-
-    "pkgname": ["openbve"],
+    "pkgname": [
+      "openbve"
+    ],
     "aur": false
   },
   {
     "name": "OpenMW",
     "description": "Attempt to reimplement the popular role-playing game Morrowind. OpenMW aims to be a fully playable, open source implementation of the game's engine.",
     "url": "https://openmw.org/",
-
-    "pkgname": ["openmw"],
+    "pkgname": [
+      "openmw"
+    ],
     "aur": false
   },
   {
     "name": "OpenRA",
     "description": "Real-time strategy game written in C# and based on the Command & Conquer game franchise.",
     "url": "https://www.openra.net/",
-
-    "pkgname": ["openra"],
+    "pkgname": [
+      "openra"
+    ],
     "aur": false
   },
   {
     "name": "OpenRCT2",
     "description": "Free reimplementation of the game \"RollerCoaster Tycoon 2 (RCT2)\" with multiplayer support. It requires a copy of the original game to play it.",
     "url": "https://openrct2.org/",
-
-    "pkgname": ["openrct2"],
+    "pkgname": [
+      "openrct2"
+    ],
     "aur": false
   },
   {
     "name": "OpenTTD",
     "description": "Open source clone of the Microprose game \"Transport Tycoon Deluxe\", a popular game originally written by Chris Sawyer. It attempts to mimic the original game as closely as possible while extending it with new features.",
     "url": "https://www.openttd.org/",
-
-    "pkgname": ["openttd"],
+    "pkgname": [
+      "openttd"
+    ],
     "aur": false
   },
   {
     "name": "Palapeli",
     "description": "Jigsaw puzzle game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/palapeli/",
-
-    "pkgname": ["palapeli"],
+    "pkgname": [
+      "palapeli"
+    ],
     "aur": false
   },
   {
     "name": "Picmi",
     "description": "Nonogram puzzle game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/picmi/",
-
-    "pkgname": ["picmi"],
+    "pkgname": [
+      "picmi"
+    ],
     "aur": false
   },
   {
     "name": "Pingus",
     "description": "Lemmings clone, i.e. a level-based puzzle game.",
     "url": "https://pingus.seul.org/",
-
-    "pkgname": ["pingus"],
+    "pkgname": [
+      "pingus"
+    ],
     "aur": false
   },
   {
     "name": "Pioneer",
     "description": "Open source, 3D, freeform single player space adventure set in the Milkyway galaxy at the turn of the 31st century in the spirit of Frontier: Elite II.",
     "url": "https://pioneerspacesim.net/",
-
-    "pkgname": ["pioneer"],
+    "pkgname": [
+      "pioneer"
+    ],
     "aur": false
   },
   {
     "name": "PyChess",
     "description": "An advanced chess client for linux following the GNOME Human Interface Guidelines.",
     "url": "https://pychess.github.io/",
-
-    "pkgname": ["pychess"],
+    "pkgname": [
+      "pychess"
+    ],
     "aur": false
   },
   {
     "name": "qgo",
     "description": "A Go client and full featured SGF editor.",
     "url": "https://github.com/pzorin/qgo",
-
-    "pkgname": ["qgo"],
+    "pkgname": [
+      "qgo"
+    ],
     "aur": false
   },
   {
     "name": "Quadrapassel",
     "description": "A Tetris remake. Fit falling blocks together. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Quadrapassel",
-
-    "pkgname": ["quadrapassel"],
+    "pkgname": [
+      "quadrapassel"
+    ],
     "aur": false
   },
   {
     "name": "Raze",
     "description": "Raze is a source port based on GZDoom engine tech and merged features from various other Blood source ports.",
     "url": "https://raze.zdoom.org",
-
-    "pkgname": ["raze"],
+    "pkgname": [
+      "raze"
+    ],
     "aur": false
   },
   {
     "name": "RuneScape",
     "description": "Massive online adventure game by Jagex.",
     "url": "https://www.runescape.com",
-
-    "pkgname": ["bolt-launcher"],
+    "pkgname": [
+      "bolt-launcher"
+    ],
     "aur": false
   },
   {
     "name": "Shattered Pixel Dungeon",
     "description": "Shattered fork of the popular roguelike Pixel Dungeon.",
     "url": "https://www.shatteredpixel.com/",
-
-    "pkgname": ["shattered-pixel-dungeon"],
+    "pkgname": [
+      "shattered-pixel-dungeon"
+    ],
     "aur": false
   },
   {
     "name": "Simon Tatham's Portable Puzzle Collection",
     "description": "30+ \"quick\" puzzle games with simplistic but polished GTK GUI .",
     "url": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/",
-
-    "pkgname": ["puzzles"],
+    "pkgname": [
+      "puzzles"
+    ],
     "aur": false
   },
   {
     "name": "Simutrans",
     "description": "Another Transport simulation that works on Linux with SDL.",
     "url": "https://www.simutrans.com/",
-
-    "pkgname": ["simutrans"],
+    "pkgname": [
+      "simutrans"
+    ],
     "aur": false
   },
   {
     "name": "Skladnik",
     "description": "The Japanese warehouse keeper Sokoban game. Part of Part of KDE Games.",
     "url": "https://apps.kde.org/skladnik/",
-
-    "pkgname": ["skladnik"],
+    "pkgname": [
+      "skladnik"
+    ],
     "aur": false
   },
   {
     "name": "Spring:1944",
     "description": "A WWII themed game with four fully functional sides (US, Germany, USSR, Britain), period-accurate units and strengths. Realism comes second only to creating a game that is fun and accessible to play. The game can be downloaded through SpringLobby, the official lobby client for the spring lobby.",
     "url": "https://spring1944.net/",
-
-    "pkgname": ["springlobby"],
+    "pkgname": [
+      "springlobby"
+    ],
     "aur": false
   },
   {
     "name": "Stone Soup",
     "description": "Dungeon Crawl Stone Soup.",
     "url": "https://crawl.develz.org/wordpress/",
-
-    "pkgname": ["crawl-ncurses"],
+    "pkgname": [
+      "crawl-ncurses"
+    ],
     "aur": false
   },
   {
     "name": "SuperTux",
     "description": "Mario-style game featuring Tux.",
     "url": "https://supertux.lethargik.org/",
-
-    "pkgname": ["supertux"],
+    "pkgname": [
+      "supertux"
+    ],
     "aur": false
   },
   {
     "name": "SuperTuxKart",
     "description": "Open source arcade kart racing game featuring Tux and its friends.",
     "url": "https://supertuxkart.net/Main_Page",
-
-    "pkgname": ["supertuxkart"],
+    "pkgname": [
+      "supertuxkart"
+    ],
     "aur": false
   },
   {
     "name": "Swell Foop",
     "description": "Clear the screen by removing groups of colored and shaped tiles. Also known as SameGame. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Swell(20)Foop",
-
-    "pkgname": ["swell-foop"],
+    "pkgname": [
+      "swell-foop"
+    ],
     "aur": false
   },
   {
     "name": "Tali",
     "description": "Beat the odds in a poker-style dice game. Part of gnome-extra.",
     "url": "https://wiki.gnome.org/Apps/Tali",
-
-    "pkgname": ["tali"],
+    "pkgname": [
+      "tali"
+    ],
     "aur": false
   },
   {
     "name": "Teeworlds",
     "description": "Fast-paced 2D multiplayer shooter.",
     "url": "https://www.teeworlds.com/",
-
-    "pkgname": ["teeworlds"],
+    "pkgname": [
+      "teeworlds"
+    ],
     "aur": false
   },
   {
     "name": "Terasology",
     "description": "Open source voxel world.",
     "url": "https://terasology.org",
-
-    "pkgname": ["terasology"],
+    "pkgname": [
+      "terasology"
+    ],
     "aur": false
   },
   {
     "name": "Tetrinet",
     "description": "Multiplayer online Tetris game for up to six people.",
     "url": "https://gtetrinet.sourceforge.net/",
-
-    "pkgname": ["tetrinet"],
+    "pkgname": [
+      "tetrinet"
+    ],
     "aur": false
   },
   {
     "name": "The Battle for Wesnoth",
     "description": "Free, turn-based tactical strategy game with a high fantasy theme, featuring both single-player, and online/hotseat multiplayer combat.",
     "url": "https://www.wesnoth.org/",
-
-    "pkgname": ["wesnoth"],
+    "pkgname": [
+      "wesnoth"
+    ],
     "aur": false
   },
   {
     "name": "The Ur-Quan Masters",
     "description": "A port of Star Control 2.",
     "url": "https://sc2.sourceforge.net/",
-
-    "pkgname": ["uqm"],
+    "pkgname": [
+      "uqm"
+    ],
     "aur": false
   },
   {
     "name": "VCMI",
     "description": "Attempt to reimplement Heroes of Might and Magic III.",
     "url": "https://forum.vcmi.eu/portal.php",
-
-    "pkgname": ["vcmi"],
+    "pkgname": [
+      "vcmi"
+    ],
     "aur": false
   },
   {
     "name": "Veloren",
     "description": "Veloren is an open-world, open-source multiplayer voxel RPG.",
     "url": "http://www.veloren.net/",
-
-    "pkgname": ["airshipper"],
+    "pkgname": [
+      "airshipper"
+    ],
     "aur": false
   },
   {
     "name": "Warsow",
     "description": "Fast paced multiplayer FPS focusing on movement and trick jumps.",
     "url": "https://warsow.net",
-
-    "pkgname": ["warsow"],
+    "pkgname": [
+      "warsow"
+    ],
     "aur": false
   },
   {
     "name": "Warzone 2100",
     "description": "You command the forces of The Project in a battle to rebuild the world after mankind has almost been destroyed by nuclear missiles. The game offers campaign, multi-player, and single-player skirmish modes. An extensive tech tree with over 400 different technologies, combined with the unit design system, allows for a wide variety of possible units and tactics. The AUR package installs its videos ().",
     "url": "https://wz2100.net/",
-
-    "pkgname": ["warzone2100"],
+    "pkgname": [
+      "warzone2100"
+    ],
     "aur": false
   },
   {
     "name": "Widelands",
     "description": "Slow-paced strategy like \"the Settlers 2\".",
     "url": "https://widelands.org",
-
-    "pkgname": ["widelands"],
+    "pkgname": [
+      "widelands"
+    ],
     "aur": false
   },
   {
     "name": "Xonotic",
     "description": "Free, open-source first person shooter (a fork of Nexuiz but with modified gameplay).",
     "url": "https://xonotic.org",
-
-    "pkgname": ["xonotic"],
+    "pkgname": [
+      "xonotic"
+    ],
     "aur": false
   }
 ]

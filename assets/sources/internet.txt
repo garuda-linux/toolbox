@@ -36,13 +36,13 @@ See [[Network configuration#Network managers]].
 === Proxy servers ===
 
 * {{App|Brook|Proxy focusing on strong encryption and being undetectable.|https://txthinking.github.io/brook/|{{Pkg|brook}}}}
-* {{App|Clash|A rule-based tunnel in Go.|https://github.com/Dreamacro/clash{{Dead link|2024|01|13|status=404}}|{{Pkg|clash}}}}
+* {{App|Clash|A rule-based tunnel in Go.|https://github.com/Dreamacro/clash{{Dead link|2024|01|13|status=404}}|{{Pkg|clash}}{{Broken package link|package not found}}}}
 * {{App|Dante|SOCKS server and SOCKS client, implementing [[RFC:1928]] and related standards.|https://www.inet.no/dante/|{{Pkg|dante}}}}
 * {{App|Geph|A modular Internet censorship circumvention system designed specifically to deal with national filtering.|https://geph.io/en/|{{AUR|geph4-client}}}}
 * {{App|hiddify|Multiplatform chain proxy client based on {{AUR|sing-box}}.|https://github.com/hiddify/hiddify-next|{{AUR|hiddify}}}}
 * {{App|[[NaïveProxy]]|A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility.|https://github.com/klzgrad/naiveproxy|{{AUR|naiveproxy}}}}
 * {{App|[[Privoxy]]|Non-caching web proxy with advanced filtering capabilities for enhancing privacy, modifying web page data and HTTP headers, controlling access, and removing ads and other obnoxious Internet junk.|https://www.privoxy.org/|{{Pkg|privoxy}}}}
-* {{App|[[Shadowsocks]]|Secure socks5 proxy, designed to protect your Internet traffic.|https://shadowsocks.org/|Python: {{Pkg|shadowsocks}}, Rust: {{Pkg|shadowsocks-rust}}}}
+* {{App|[[Shadowsocks]]|Secure socks5 proxy, designed to protect your Internet traffic.|https://shadowsocks.org/|Python: {{Pkg|shadowsocks}}{{Broken package link|package not found}}, Rust: {{Pkg|shadowsocks-rust}}}}
 * {{App|[[Squid]]|Caching proxy for the Web supporting HTTP, HTTPS, FTP, and more.|https://www.squid-cache.org/|{{Pkg|squid}}}}
 * {{App|[[Stunnel]]|A server and client to add and remove TLS encryption to TCP data flow.|https://www.stunnel.org/|{{Pkg|stunnel}}}}
 * {{App|Throne|Cross-platform GUI proxy utility (Empowered by {{AUR|sing-box}}).|https://github.com/throneproj/Throne|{{AUR|throne}}}}
@@ -216,7 +216,7 @@ See also [[Wikipedia:Goanna (software)]].
 
 ==== Servo-based ====
 
-* {{App|[[Wikipedia:Servo (software)|Servo]]|Web browser rendering engine written in Rust, with WebGL and WebGPU support, and adaptable to desktop, mobile, and embedded applications.|https://servo.org/|{{AUR|servo-git}}}}
+* {{App|[[Wikipedia:Servo (software)|Servo]]|Web browser rendering engine written in Rust, with WebGL and WebGPU support, and adaptable to desktop, mobile, and embedded applications.|https://servo.org/|{{AUR|servo}}}}
 * {{App|Verso|Experimental web browser based on Servo experimenting with multi-view and multi-window and building UI elements entirely from Servo.|https://github.com/versotile-org/verso/|{{AUR|verso-git}}}}
 
 ==== Other ====
@@ -258,12 +258,11 @@ See also [[:Category:Web server]] and [[Wikipedia:Comparison of web server softw
 
 * {{App|Apache Traffic Server|Fast, scalable and extensible HTTP/1.1 and HTTP/2 compliant caching proxy server.|https://trafficserver.apache.org/|{{AUR|trafficserver}}}}
 * {{App|darkhttpd|A small and secure static web server, written in C, does not support HTTPS or Auth.|https://unix4lyfe.org/darkhttpd/|{{Pkg|darkhttpd}}}}
-* {{App|miniserve|Rust alternative to darkhttpd with UTF-8, optional HTTP authentication, file uploading, and more.|https://github.com/svenstaro/miniserve|{{Pkg|miniserve}}}}
+* {{App|http.server|[[Python]] standard library module, which can be used from the command-line, but due to security considerations not recommended for production.|https://docs.python.org/library/http.server.html|{{Pkg|python}}}}
+* {{App|[[miniserve]]|Rust alternative to darkhttpd with UTF-8, optional HTTP authentication, file uploading, and more.|https://github.com/svenstaro/miniserve|{{Pkg|miniserve}}}}
 * {{App|quark|An extremely small and simple http get-only web server. It only serves static pages on a single host.|https://tools.suckless.org/quark/|{{AUR|quark-git}}}}
 * {{App|serve|Static file serving and directory listing.|https://github.com/zeit/serve|{{AUR|nodejs-serve}}}}
 * {{App|Webfs|Simple and instant web server for mostly static content.|https://linux.bytesex.org/misc/webfs.html|{{AUR|webfs}}}}
-
-The [[Python]] standard library module [https://docs.python.org/library/http.server.html http.server] can also be used from the command-line.
 
 === Specialized web servers ===
 
@@ -351,7 +350,7 @@ See also [[#LAN messengers]].
 * {{App|LAN Share|Cross-platform local area network file transfer application, built using Qt GUI framework. It can be used to transfer a whole folder, one or more files, large or small immediately without any additional configuration.|https://github.com/abdularis/LAN-Share|{{AUR|lanshare}}}}
 * {{App|LocalSend|Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.|https://localsend.org/|{{AUR|localsend}}}}
 * {{App|Magic Wormhole|Command-line tool {{ic|wormhole}} to securely transfer data between computers.|https://github.com/magic-wormhole/magic-wormhole|{{Pkg|magic-wormhole}}}}
-* {{App|NitroShare|Cross-platform network file transfer application, built using Qt GUI framework. It is designed to make transferring files from one device to another on the local network extremely simple.|https://nitroshare.net/|{{Pkg|nitroshare}}}}
+* {{App|NitroShare|Cross-platform network file transfer application, built using Qt GUI framework. It is designed to make transferring files from one device to another on the local network extremely simple.|https://nitroshare.net/|{{AUR|nitroshare}}}}
 * {{App|Teleport|Native GTK3 application to effortlessly share files on the local network.|https://gitlab.gnome.org/jsparber/teleport|{{AUR|teleport-share-git}}}}
 * {{App|Warp|Securely send files to each other via the internet or local network by exchanging a word-based code. It uses the Magic Wormhole protocol.|https://apps.gnome.org/Warp/|{{Pkg|warp}}}}
 * {{App|Warpinator|GTK application to share files across the LAN.|https://github.com/linuxmint/warpinator|{{Pkg|warpinator}}}}
@@ -368,7 +367,7 @@ See also [[#LAN messengers]].
 
 {{Tip|<nowiki></nowiki>
 * Some [[synchronization and backup programs]] provide direct support for some cloud-storage services.
-* Some [[FUSE#List of FUSE filesystems|FUSE filesystems]] provide a way to mount cloud-storage as a filesystem. Google Drive can be accessed also by {{Pkg|gvfs-google}} for GVFS-based applications (like [[Nautilus]]), and by {{Pkg|kio-gdrive}} for KIO-based applications (like [[Dolphin]]).
+* Some [[FUSE#List of FUSE filesystems|FUSE filesystems]] provide a way to mount cloud-storage as a filesystem. Google Drive can be accessed also by {{Pkg|gvfs-google}}{{Broken package link|package not found}} for GVFS-based applications (like [[Nautilus]]), and by {{Pkg|kio-gdrive}} for KIO-based applications (like [[Dolphin]]).
 * See [[Data-at-rest encryption#Cloud-storage optimized]] to achieve zero-knowledge (client-side transparent encryption) storage on any third-party cloud service.
 }}
 
@@ -496,7 +495,7 @@ Pastebin services are often used to quote text or images while collaborating and
 Some services can be used with more general command line tool, such as [[cURL]]. For extensions, such as line numbers, one can use more command line tools. Such as {{ic|cat -n}}.
 
 * [https://0x0.st/ 0x0.st] is a file hosting service. Usage examples are:
-:{{bc|1=$ ''command'' {{!}} curl -F 'file=@-' 0x0.st}} or upload a file: {{bc|1=$ curl -F 'file=@-' 0x0.st < ''file''}}
+:{{bc|1=$ ''command'' {{!}} curl -F 'file=@-' <nowiki>https://0x0.st</nowiki>}} or upload a file: {{bc|1=$ curl -F 'file=@''path/to/file''' <nowiki>https://0x0.st</nowiki>}}
 :{{Note|Read the instructions on the website for further options such as file removal tokens, expiration, and private URLs.}}
 * [https://paste.c-net.org/ paste.c-net.org] accepts HTTP requests and works with [[nc]].
 * [https://termbin.com termbin.com] works with [[nc]].
@@ -596,7 +595,7 @@ The number of networks supported by these clients is very large but they (like a
 ===== Console =====
 
 * {{App|[[Bitlbee|BitlBee]]|IRC gateway to popular chat networks.|https://bitlbee.org/|{{AUR|bitlbee}}}}
-* {{App|Finch|Ncurses-based chat client that uses libpurple and supports all its protocols (Bonjour, Gadu-Gadu, Groupwise, IRC, SIMPLE, XMPP, Zephyr).|https://developer.pidgin.im/wiki/Using%20Finch|{{Pkg|finch}}}}
+* {{App|Finch|Ncurses-based chat client that uses libpurple and supports all its protocols (Bonjour, Gadu-Gadu, Groupwise, IRC, SIMPLE, XMPP, Zephyr).|https://developer.pidgin.im/wiki/Using%20Finch|{{AUR|finch}}}}
 * {{App|[[WeeChat]]|Modular, lightweight ncurses-based IRC client. A variety of other protocols are supported through plugins.|https://weechat.org/|{{Pkg|weechat}}}}
 
 ===== Graphical =====
@@ -695,7 +694,7 @@ See also [[Matrix]] and [https://matrix.org/clients/ Matrix Clients].
 * {{App|nheko|Desktop client for the Matrix protocol.|https://github.com/Nheko-Reborn/nheko|{{Pkg|nheko}}}}
 * {{App|Quaternion|Qt5-based IM client for the Matrix protocol.|https://github.com/QMatrixClient/Quaternion|{{AUR|quaternion}}}}
 * {{App|QuickMedia|A rofi inspired native client for web services. Supports Matrix and several other sites.|https://git.dec05eba.com/QuickMedia/about/|{{AUR|quickmedia}}}}
-* {{App|SchildiChat|Matrix client based on Element with a more traditional instant messaging experience. Based on the [https://electronjs.org/ Electron] platform.|https://schildi.chat/|{{AUR|schildichat-desktop}}}}
+* {{App|SchildiChat|Matrix client based on Element with a more traditional instant messaging experience. Based on the [https://electronjs.org/ Electron] platform.|https://schildi.chat/|{{AUR|schildichat-desktop-eol}}}}
 * {{App|Spectral|Qt5-based Glossy cross-platform client for Matrix.|https://gitlab.com/spectral-im/spectral|{{AUR|spectral-matrix}}}}
 * {{App|Syphon|Privacy-centric cross-platform Matrix client with E2EE support, currently in alpha.|https://github.com/syphon-org/syphon|{{AUR|syphon-bin}}}}
 
@@ -712,7 +711,7 @@ See also [[Tox]] and [https://wiki.tox.chat/clients comparison clients]
 
 See also [[Avahi#Link-Local (Bonjour/Zeroconf) chat]] and [[Wikipedia:Comparison of LAN messengers]].
 
-* {{App|BeeBEEP|Secure LAN Messenger.|https://www.beebeep.net/|{{Pkg|beebeep}}}}
+* {{App|BeeBEEP|Secure LAN Messenger.|https://www.beebeep.net/|{{AUR|beebeep}}}}
 * {{App|iptux|LAN communication software, compatible with IP Messenger.|https://github.com/iptux-src/iptux|{{Pkg|iptux}}}}
 
 ==== P2P messaging clients ====
@@ -752,7 +751,7 @@ See also [[Ring]] and [[Tox]].
 * {{App|[[Telegram]] Desktop|Official Telegram desktop client.|https://desktop.telegram.org/|{{Pkg|telegram-desktop}}}}
 * {{App|[[Wikipedia:Viber|Viber]]|Proprietary cross-platform IM and VoIP software.|https://www.viber.com/products/linux/|{{AUR|viber}}}}
 * {{App|[[Wikipedia:WeChat|WeChat]]|Tencent WeChat Client.|https://linux.weixin.qq.com/|{{AUR|wechat}}}}
-* {{App|[[Wikipedia:Wire (software)|Wire]]|Modern, private messenger. Based on the [https://electronjs.org/ Electron] platform.|https://wire.com/|{{Pkg|wire-desktop}}}}
+* {{App|[[Wikipedia:Wire (software)|Wire]]|Modern, private messenger. Based on the [https://electronjs.org/ Electron] platform.|https://wire.com/|{{AUR|wire-desktop}}}}
 * {{App|[[Zoom Meetings|Zoom]]|Proprietary video conferencing, online meetings and group messaging application.|https://zoom.us/|{{AUR|zoom}}}}
 * {{App|[[Wikipedia:Zulip|Zulip]]|Desktop client for Zulip group chat. Based on the [https://electronjs.org/ Electron] platform.|https://zulipchat.com/apps/linux|{{AUR|zulip-desktop}}}}
 
@@ -955,11 +954,12 @@ See also [https://remotedesktop.google.com Chrome Remote Desktop] for a web brow
 * {{App|[[Wikipedia:Vinagre|Vinagre]]|Remote desktop viewer for GNOME. Supports RDP, VNC, SPICE and SSH.|https://wiki.gnome.org/Apps/Vinagre|{{AUR|vinagre}}}}
 * {{App|[[TigerVNC|vncviewer (TigerVNC)]]|VNC viewer for X.|https://tigervnc.org/|{{Pkg|tigervnc}}}}
 * {{App|[[X2Go]] Client|A graphical client (Qt5) for the X2Go system that uses the [[w:NX technology|NX technology]] protocol.|https://wiki.x2go.org/doku.php|{{AUR|x2goclient}}}}
-* {{App|xfreerdp|FreeRDP X11 client. Run with {{ic|xfreerdp}}.|https://www.freerdp.com/|{{Pkg|freerdp}}}}
+* {{App|xfreerdp|FreeRDP X11 client. Run with {{ic|xfreerdp3}}.|https://www.freerdp.com/|{{Pkg|freerdp}}}}
 
 === Remote desktop servers ===
 
-* {{App|freerdp-shadow-cli|A utility for sharing an X display via RDP.|https://www.freerdp.com/|{{Pkg|freerdp}}}}
+* {{App|freerdp-shadow-cli3|A utility for sharing an X display via RDP.|https://www.freerdp.com/|{{Pkg|freerdp}}}}
+* {{App|GNOME Remote Desktop|A remote desktop server for GNOME. Supports RDP and VNC. Part of {{Grp|gnome}}.|https://gitlab.gnome.org/GNOME/gnome-remote-desktop|{{Pkg|gnome-remote-desktop}}}}
 * {{App|kmsvnc|A VNC server for DRM/KMS capable GNU/Linux devices.|https://github.com/isjerryxiao/kmsvnc|{{AUR|kmsvnc}}}}
 * {{App|KRdp|A limited RDP server for KDE.|https://invent.kde.org/plasma/krdp|{{Pkg|krdp}}}}
 * {{App|Krfb|VNC server for KDE. Part of {{Grp|kde-network}}.|https://apps.kde.org/krfb/|{{Pkg|krfb}}}}

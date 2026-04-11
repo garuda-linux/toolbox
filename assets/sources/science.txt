@@ -20,13 +20,13 @@ See also [[Wikipedia:Comparison of software calculators]].
 * {{App|calcpy|Terminal calculator and advanced math solver using Python, IPython and SymPy.|https://github.com/idanpa/calcpy|{{AUR|python-calcpy-git}}}}
 * {{App|clac|Command-line, stack-based calculator with postfix notation.|https://github.com/soveran/clac|{{AUR|clac}}}}
 * {{App|kalker|Command-line calculator with math syntax that supports user-defined variables and functions, complex numbers, and estimation of derivatives and integrals.|https://github.com/PaddiM8/kalker|{{AUR|kalker}}}}
+* {{App|Numbat|A statically typed programming language for scientific computations with first class support for physical dimensions and units.|https://numbat.dev|{{Pkg|numbat}}}}
 * {{App|qalc|Command-line calculator and equation solver with fault-tolerant parsing, constant recognition and units.|https://qalculate.github.io/|{{Pkg|libqalculate}}}}
-* {{App|numbat|A statically typed programming language for scientific computations with first class support for physical dimensions and units.|https://numbat.dev/|{{AUR|numbat-bin}}}}
 
 ==== Graphical ====
 
 * {{App|Binary|Simple app to convert between different hexadecimal and binary numbers.|https://apps.gnome.org/Binary/|{{Pkg|binary}}}}
-* {{App|Cutefish Calculator|Calculator for Cutefish desktop.|https://github.com/cutefishos/calculator|{{Pkg|cutefish-calculator}}}}
+* {{App|Cutefish Calculator|Calculator for Cutefish desktop.|https://github.com/cutefishos/calculator|{{AUR|cutefish-calculator}}}}
 * {{App|Deepin Calculator|Easy to use calculator for Deepin desktop.|https://www.deepin.org/en/original/deepin-calculator/|{{Pkg|deepin-calculator}}}}
 * {{App|Extcalc|Qt-based scientific graphical calculator.|https://extcalc-linux.sourceforge.net/|{{AUR|extcalc}}}}
 * {{App|FOX Calculator|Simple desktop calculator.|http://fox-toolkit.org/|{{Pkg|fox}}}}
@@ -127,9 +127,9 @@ See also [[List of applications/Documents#Spreadsheets]].
 See also [[Wikipedia:Proof assistant]].
 
 * {{App|[[Wikipedia:Agda (programming language)|Agda]]|Dependently typed functional programming language and proof assistant. It is an interactive system for writing and checking proofs.|https://wiki.portal.chalmers.se/agda/|{{Pkg|agda}}}}
-* {{App|[[Wikipedia:Rocq|Rocq]]|Formal proof management system. It provides a formal language to write mathematical definitions, executable algorithms and theorems together with an environment for semi-interactive development of machine-checked proofs.|https://coq.inria.fr/|CLI: {{Pkg|rocq}}, GUI: {{Pkg|rocqide}} }}
 * {{App|[[Wikipedia:Isabelle (proof assistant)|Isabelle]]|Generic proof assistant that allows mathematical formulas to be expressed in a formal language and provides tools for proving those formulas in a logical calculus.|https://www.cl.cam.ac.uk/research/hvg/Isabelle/|{{AUR|isabelle}}}}
-* {{App|[[Lean Theorem Prover]]|Proof assistant developed principally by Leonardo de Moura at Microsoft Research, used in conjunction with the Lean mathematical library.|https://leanprover-community.github.io/|{{AUR|lean-community}}}}
+* {{App|[[Lean]]|Proof assistant developed principally by Leonardo de Moura at Microsoft Research, used in conjunction with the Lean mathematical library.|https://leanprover-community.github.io/|{{AUR|lean-community}}}}
+* {{App|[[Wikipedia:Rocq|Rocq]]|Formal proof management system. It provides a formal language to write mathematical definitions, executable algorithms and theorems together with an environment for semi-interactive development of machine-checked proofs.|https://coq.inria.fr/|CLI: {{Pkg|rocq}}, GUI: {{Pkg|rocqide}} }}
 
 == Physics ==
 
@@ -170,7 +170,7 @@ See also [[Wikipedia:Proof assistant]].
 * {{App|ConvertAll|Unit conversion application that allows one to combine units in any way (e.g. inches per decade), even if it does not make sense.|https://convertall.bellz.org/|{{AUR|convertall}}}}
 * {{App|[https://printfn.github.io/fend/ fend]|An arbitrary-precision unit-aware calculator.|https://github.com/printfn/fend|{{AUR|fend}}}}
 * {{App|Gonvert|Conversion utility that allows conversion between many units like CGS, Ancient, Imperial with many categories like length, mass, numbers, etc.|http://www.unihedron.com/projects/gonvert/|{{AUR|gonvert}}}}
-* {{App|[https://numbat.dev/ Numbat]|Statically typed programming language for scientific computations with first class support for physical dimensions and units.|https://github.com/sharkdp/numbat|{{AUR|numbat}}}}
+* {{App|Numbat|A statically typed programming language for scientific computations with first class support for physical dimensions and units.|https://numbat.dev|{{Pkg|numbat}}}}
 * {{App|Rink|A unit conversion tool and library written in rust. It can be used for physics and engineering calculations, as well as dimensionality analysis.|https://rinkcalc.app/about|{{Pkg|rink}}}}
 * {{App|UDUNITS|A tool for calculations of physical quantities.|https://www.unidata.ucar.edu/software/udunits/|{{AUR|udunits}}}}
 * {{App|[[Wikipedia:GNU Units|Units]]|Command-line unit converter and calculator that can handle multiplicative scale changes, nonlinear conversions such as Fahrenheit to Celsius or wire gauge and others.|https://www.gnu.org/software/units/|{{AUR|units}}}}
@@ -319,7 +319,7 @@ See also [[Wikipedia:List of molecular graphics systems]].
 * {{App|KWeather|A convergent weather application for Plasma. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kweather/|{{Pkg|kweather}}}}
 * {{App|meteo-qt|System tray application for weather status information.|https://github.com/dglent/meteo-qt|{{AUR|meteo-qt}}}}
 * {{App|wego|A terminal weather application.|https://tylerwolf35.github.io/wego{{Dead link|2025|08|15|status=404}}|{{AUR|wego}}}}
-* {{App|wttr|A simple console application to check the weather, using data from https://wttr.in|https://github.com/AmirrezaFiroozi/wttr|{{AUR|wttr}}}}
+* {{App|wttr|A simple console application to check the weather, using data from https://wttr.in|https://github.com/AmirrezaFiroozi/wttr|{{AUR|wttr}}{{Broken package link|package not found}}}}
 * {{App|Xfce Weather Panel Plugin|Weather forecast plugin for the Xfce4 panel.|https://goodies.xfce.org/projects/panel-plugins/xfce4-weather-plugin|{{Pkg|xfce4-weather-plugin}}}}
 
 == Astronomy ==
@@ -435,7 +435,6 @@ See also [[Wikipedia:Planetarium software]] and [[Wikipedia:List of observatory 
 * {{App|HNSKY|Hallo Northern Sky is the semi professional free planetarium program|https://sourceforge.net/projects/hnsky/|{{AUR|hnsky-hg}}}}
 * {{App|[[Wikipedia:KStars|KStars]]|Planetarium application that provides an accurate graphical simulation of the night sky, from any location on Earth, at any date and time. It is included in KDE Edu.|https://kstars.kde.org/|{{Pkg|kstars}}}}
 * {{App|[[Wikipedia:Cartes du Ciel|Skychart / Cartes du Ciel]]|Planetarium that maps out and labels most of the constellations, planets, and objects you can see with a telescope. It can also download Digitized Sky Survey Charts and superimpose images over these charts.|https://www.ap-i.net/skychart/|{{AUR|skychart-git}}}}
-* {{App|StarPlot|3-dimensional star chart viewer.|http://starplot.org/|{{AUR|starplot}}}}
 * {{App|[[Wikipedia:Stellarium (computer program)|Stellarium]]|Beautiful 3D planetarium that uses OpenGL to render a realistic sky in real time.|https://stellarium.org/|{{Pkg|stellarium}}}}
 * {{App|Virtual Moon Atlas|Software for Moon observation and survey|https://www.ap-i.net/avl/en/start|{{AUR|virtualmoonatlas}}}}
 * {{App|[[Wikipedia:XEphem|XEphem]]|Motif-based ephemeris and planetarium program.|https://xephem.github.io/XEphem/Site/xephem.html|{{AUR|xephem}}}}
@@ -449,7 +448,7 @@ See also [[Wikipedia:List of open source bioinformatics software]].
 * {{App|[[Wikipedia:Biopython|Biopython]]|Python package with tools for computational biology, as well as bioinformatics.|https://biopython.org/wiki/Biopython|{{AUR|python-biopython}}}}
 * {{App|[[Wikipedia:EMBOSS|EMBOSS]] (European Molecular Biology Open Software Suite)|Open source software analysis package specially developed for the needs of the molecular biology and bioinformatics user community.|https://emboss.sourceforge.net/|{{AUR|emboss}}}}
 * {{App|[[Wikipedia:MUMmer|MUMmer]]|Bioinformatics software system for sequence alignment based on suffix trees.|https://mummer.sourceforge.net/|{{AUR|mummer}}}}
-* {{App|Snapgene|Closed source molecular cloning application that offers a fast and easy way to plan, visualize, and document molecular biology procedures. Supports a wide range of cloning and PCR manipulations. The free version allows most common visualizations of a molecular biology workflow.|https://www.snapgene.com/|{{AUR|snapgene-viewer}}{{Broken package link|package not found}}}}
+* {{App|Snapgene|Closed source molecular cloning application that offers a fast and easy way to plan, visualize, and document molecular biology procedures. Supports a wide range of cloning and PCR manipulations. The free version allows most common visualizations of a molecular biology workflow.|https://www.snapgene.com/|{{AUR|snapgene}}}}
 * {{App|[[Wikipedia:UGENE|UGENE]]|Application that integrates dozens of well-known biological tools and algorithms, providing both graphical user and command-line interfaces.|https://ugene.net/|{{AUR|ugene}}}}
 
 === Genealogy ===
@@ -594,7 +593,7 @@ See also [[Wikipedia:List of software-defined radios]].
 
 * {{App|[[Wikipedia:AnyLogic|AnyLogic]]|AnyLogic is a cross-platform proprietary multimethod simulation modeling tool, which is also available for personal use.|https://www.anylogic.com/|{{AUR|anylogic-ple}}, {{AUR|anylogic-university}}, {{AUR|anylogic-professional}}}}
 * {{App|[[Wikipedia:Flight Gear|Flight Gear]]|Open-source, multi-platform atmospheric and orbital flight simulator with a flight dynamics engine (JSBSim) that is part of a [https://web.archive.org/web/20201115084247/https://nescacademy.nasa.gov/src/flightsim/Reports/aiaa-15-1810-EOM_chkcases-II.pdf 2015 NASA benchmark] to judge new simulation code to space industry standards.|https://www.flightgear.org/|{{AUR|flightgear}}}}
-* {{App|[[Wikipedia:Gephi|gephi]]|Gephi is an open-source network analysis and visualization software package written in Java.|https://gephi.org/|{{Pkg|gephi}}}}
+* {{App|[[Wikipedia:Gephi|gephi]]|Gephi is an open-source network analysis and visualization software package written in Java.|https://gephi.org/|{{AUR|gephi}}}}
 * {{App|golly|Golly is an open source, cross-platform application for exploring Conway's Game of Life and many other types of cellular automata.|https://golly.sourceforge.net/|{{AUR|golly}}}}
 * {{App|Netlogo|NetLogo is a multi-agent programmable modeling environment.|https://ccl.northwestern.edu/netlogo/|{{AUR|netlogo}}}}
 

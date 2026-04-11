@@ -65,6 +65,7 @@ See also [[Wikipedia:Comparison of image viewers]].
 * {{App|Vimiv (Qt port)|An image viewer with vim-like keybindings. It is written in python3 and PyQt5.|https://karlch.github.io/vimiv-qt/|{{AUR|vimiv-qt}}}}
 * {{App|vpv|Image viewer designed for scientific image visualization.|https://github.com/kidanger/vpv|{{AUR|vpv}}}}
 * {{App|Xloadimage|Classic X image viewer.|https://sioseis.ucsd.edu/xloadimage.html{{Dead link|2025|11|17|status=domain name not resolved}}|{{Pkg|xloadimage}}}}
+* {{App|Xviewer|Simple image viewer, fork of Eye of GNOME.|https://github.com/linuxmint/xviewer|{{Pkg|xviewer}}}}
 
 === Image organizers ===
 
@@ -75,6 +76,7 @@ See also [[Wikipedia:Image organizer]].
 * {{App|[[Wikipedia:Geeqie|Geeqie]]|Image browser and viewer (fork of GQview) that adds additional functionality such as support for RAW files.|http://geeqie.org/|{{Pkg|geeqie}}}}
 * {{App|GNOME Photos|Access, organize, and share your photos on GNOME. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Photos|{{Pkg|gnome-photos}}}}
 * {{App|[[Wikipedia:GThumb|gThumb]]|Image viewer and browser for the GNOME desktop.|https://wiki.gnome.org/Apps/Gthumb|{{Pkg|gthumb}}}}
+* {{App|Hydrus|Danbooru-like image tagging and searching system for the desktop|https://github.com/hydrusnetwork/hydrus|{{AUR|hydrus}}}}
 * {{App|[[Wikipedia:KPhotoAlbum|KPhotoAlbum]]|Digital image cataloging software that supports annotation, browsing, searching and viewing of digital images and videos.|https://www.kphotoalbum.org/|{{Pkg|kphotoalbum}}}}
 * {{App|Memories|Image viewer and manager designed for elementary OS.|https://anufrij.org/memories/|{{AUR|showmypictures}}}}
 * {{App|Pantheon Photos|Photo organizer for Pantheon.|https://launchpad.net/pantheon-photos|{{Pkg|pantheon-photos}}}}
@@ -210,7 +212,7 @@ See also [[Wikipedia:Comparison of font editors]].
 === 2D animation ===
 
 * {{App|Aseprite|Open-source software for creating pixel art and animations. Builds can either be [https://www.aseprite.org/#buy purchased from the developers] or compiled from source.|https://www.aseprite.org/|From source: {{AUR|aseprite}}, From binary: {{AUR|aseprite-bin}}}}
-* {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.mattbas.org/|{{AUR|glaxnimate}}}}
+* {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.mattbas.org/|{{Pkg|glaxnimate}}}}
 * {{App|[[Wikipedia:Toonz|OpenToonz]]|2D animation creation software. Gained popularity because it was used by Studio Ghibli in the past.|https://opentoonz.github.io/e/|{{Pkg|opentoonz}}}}
 * {{App|[[Wikipedia:Pencil2D|Pencil2D]]|Easy, intuitive tool to make 2D hand-drawn animations.|https://www.pencil2d.org/|{{Pkg|pencil2d}}}}
 * {{App|Pixelorama|Open-source software for creating pixel art and animations.|https://orama-interactive.itch.io/pixelorama|{{AUR|pixelorama}}}}
@@ -671,6 +673,7 @@ See also [[Wikipedia:Comparison of video player software]].
 * {{App|Celluloid|Simple GTK frontend for [[mpv]].|https://celluloid-player.github.io/|{{Pkg|celluloid}}}}
 * {{App|Deepin Movie|Movie player for Deepin desktop based on [[mpv]].|https://www.deepin.org/en/original/deepin-movie/|{{Pkg|deepin-movie}}}}
 * {{App|Haruna Video Player|Qt/QML video player built on top of [[mpv]].|https://haruna.kde.org/|{{Pkg|haruna}}}}
+* {{App|Hypnotix|IPTV streaming application with support for live TV, movies and series.|https://github.com/linuxmint/hypnotix|{{Pkg|hypnotix}}}}
 * {{App|Kawaii-Player|Audio/video manager and multimedia player (based on [[mpv]]) with PC-to-PC casting feature, along with functionalities of portable media server and torrent streaming server.|https://github.com/kanishka-linux/kawaii-player|{{AUR|kawaii-player}}}}
 * {{App|Media Player Classic Qute Theater|Clone of [[Wikipedia:Media Player Classic|Media Player Classic]] reimplemented in Qt and based on [[mpv]].|https://mpc-qt.github.io/|{{AUR|mpc-qt}}}}
 * {{App|Minitube|YouTube desktop application written in C++ using [[mpv]] and Qt.|https://flavio.tordini.org/minitube|{{AUR|minitube}}}}
@@ -751,12 +754,12 @@ See also [[Wikipedia:Comparison of video editing software]].
 
 ==== Subtitle players ====
 
-* {{App|Penguin Subtitle Player|Standalone subtitle player that provides a translucent window which always stays on the top so subtitles can be shown on top of the video without blocking anything.|https://github.com/carsonip/Penguin-Subtitle-Player|{{Pkg|penguin-subtitle-player}}}}
+* {{App|Penguin Subtitle Player|Standalone subtitle player that provides a translucent window which always stays on the top so subtitles can be shown on top of the video without blocking anything.|https://github.com/carsonip/Penguin-Subtitle-Player|{{AUR|penguin-subtitle-player}}}}
 * {{App|SubtitlesPrinter|Print subtitles above an X-screen, independently of the video player.|https://github.com/OlivierMarty/SubtitlesPrinter|{{AUR|subtitles-printer-git}}}}
 
 ==== Subtitle downloaders ====
 
-* {{App|QNapi|Qt client for downloading movie subtitles from NapiProjekt, OpenSubtitles, Napisy24.|https://qnapi.github.io/|{{Pkg|qnapi}}}}
+* {{App|QNapi|Qt client for downloading movie subtitles from NapiProjekt, OpenSubtitles, Napisy24.|https://qnapi.github.io/|{{AUR|qnapi}}}}
 * {{App|subdl|Command-line tool for downloading subtitles from opensubtitles.org.|https://github.com/akexakex/subdl|{{AUR|subdl}}}}
 * {{App|subliminal|Python library and command-line tool to search and download subtitles from different providers (opensubtitles.com, addic7ed.com, ...).|https://github.com/Diaoul/subliminal|{{AUR|subliminal}}}}
 
@@ -833,7 +836,7 @@ See [[Optical disc drive#DVD-Video]].
 * {{App|Griffith|Movie collection manager application.|https://gitlab.com/Strit/griffith|{{Pkg|griffith}}}}
 * {{App|MediaElch|Media manager for Kodi. Information about movies, TV shows, concerts and music are stored as nfo files.|https://www.kvibes.de/mediaelch/|{{Pkg|mediaelch}}}}
 * {{App|[[Wikipedia:Tellico_(software)|Tellico]]|KDE application for organizing various collections (books, video, music, coins, etc.).|https://tellico-project.org/|{{Pkg|tellico}}}}
-* {{App|MusicLib|KDE application for organizing and managing a music library. Integrates with Audacious player, Kid3 Audio Tagger, and kdeconnect for mobile sync|https://github.com/Harpo3/musiclib|{{AUR|musiclib}}}}
+* {{App|MusicLib|KDE-based music library management. Integration with Audacious player, Kid3 Tagger, K3b CD Ripper, kdeconnect and RSGain|https://github.com/Harpo3/musiclib|{{AUR|musiclib}}}}
 * {{App|tinyMediaManager|Media management tool to provide metadata for Kodi.|https://www.tinymediamanager.org/|{{AUR|tiny-media-manager}}}}
 * {{App|freeLib|Book library manager with support for inpx-based libraries; includes OPDS and Web servers.|https://github.com/petrovvlad/freeLib/|{{AUR|freelib-git}}}}
 
@@ -889,6 +892,7 @@ See [[Optical disc drive#DVD-Video]].
 * {{App|Telly Skout|Convergent TV guide based on Kirigami.|https://apps.kde.org/telly-skout/|{{Pkg|telly-skout}}}}
 * {{App|TV-Browser|Java-based TV guide which is easily extensible using plugins.|https://tvbrowser.org/|{{AUR|tvbrowser}}}}
 * {{App|XMLTV|Set of utilities to download TV listings and format them in XML.|https://xmltv.org/|{{AUR|xmltv}}}}
+* {{App|TV viewer|GUI to view tv program details using TV maze API .|https://github.com/gavinlyonsrepo/tv_viewer/|{{AUR|tv_viewer}}}}
 
 == Optical disc burning ==
 
