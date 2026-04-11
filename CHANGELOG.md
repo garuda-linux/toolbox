@@ -1,3 +1,34 @@
+## [5.2.0] - 2026-04-11
+
+### 🚀 Features
+
+- *(renderer)* Do not hardcode micro for root config management
+- *(boot-tools)* Don't require password for reading GRUB settings; auto-prune GRUB tasks
+- *(renderer)* Set language to system language if available and not overriden
+- *(boot-tools)* Add editor for boot entries; never try to readFile via node as pkexec takes care of rootless read already
+- *(gaming)* Add vesktop
+- *(boot-tools)* Add plymouth preview; dract-rebuild on enable
+- *(maintenance)* Distinguish between Arch/Chaotic-AUR mirrorlist refresh
+
+### 🐛 Bug Fixes
+
+- *(renderer)* Sanitize VISUAL env var from eventual signs causing issues
+- *(renderer)* Sanitize all kind of braces via sanitizeEditor
+- *(renderer)* Ensure terminal has the correct dimensions
+- *(setup-assistant)* Correct linux-cachyos description; tasks to be done before showing success
+- *(renderer)* Apply pending operations instantly starts executing
+- *(terminal)* Another attempt at auto-focusing the terminal
+- *(boot-tools)* Correctly set submenu boot entries as default
+- *(maintenance)* Loop in remove orphans until all of them are gone
+
+### ⚙️ Miscellaneous Tasks
+
+- Sync package lists
+## [5.1.2] - 2026-04-06
+
+### 🐛 Bug Fixes
+
+- Do not block input on cmd execute/resize
 ## [5.1.1] - 2026-04-04
 
 ### 🚀 Features
