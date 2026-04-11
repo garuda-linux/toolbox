@@ -280,15 +280,15 @@ export class MaintenanceComponent implements OnInit {
     },
     {
       name: 'refreshMirrors',
-      label: 'maintenance.refreshMirrors',
-      description: 'maintenance.refreshMirrorsSub',
+      label: 'maintenance.refreshArchMirrors',
+      description: 'maintenance.refreshArchMirrorsSub',
       icon: 'pi pi-refresh',
       sudo: false,
       hasOutput: false,
       priority: 0,
       onlyDirect: true,
       command: async (): Promise<undefined | ChildProcess<string>> => {
-        this.logger.info('Refreshing mirrors');
+        this.logger.info('Refreshing Arch mirrors');
         if (await this.osInteractService.ensurePackageArchlinux('reflector-simple')) {
           // Breaks with LANG=C
           return await this.taskManager.executeAndWaitBash('reflector-simple', {
@@ -296,6 +296,39 @@ export class MaintenanceComponent implements OnInit {
           });
         } else {
           return this.handleInstallationError('reflector-simple');
+        }
+      },
+    },
+    {
+      name: 'refreshChaoticMirrors',
+      label: 'maintenance.refreshChaoticMirrors',
+      description: 'maintenance.refreshChaoticMirrorsSub',
+      icon: 'pi pi-refresh',
+      sudo: false,
+      hasOutput: true,
+      priority: 5,
+      onlyDirect: true,
+      command: async (): Promise<undefined | ChildProcess<string>> => {
+        this.logger.info('Refreshing Chaotic-AUR mirrors');
+        if (await this.osInteractService.ensurePackageArchlinux('rate-mirrors')) {
+          const result = await this.taskManager.executeAndWaitBashTerminal(
+            'rate-mirrors --save /tmp/chaotic-mirrorlist chaotic-aur',
+          );
+          if (result?.code === 0) {
+            const copyResult = await this.taskManager.executeAndWaitBash(
+              'pkexec cp /tmp/chaotic-mirrorlist /etc/pacman.d/chaotic-mirrorlist',
+            );
+            if (copyResult.code === 0) {
+              this.messageToastService.success(
+                this.translocoService.translate('maintenance.refreshChaoticMirrors'),
+                this.translocoService.translate('maintenance.refreshChaoticMirrorsSuccess'),
+              );
+            }
+            return copyResult;
+          }
+          return result;
+        } else {
+          return this.handleInstallationError('rate-mirrors');
         }
       },
     },
