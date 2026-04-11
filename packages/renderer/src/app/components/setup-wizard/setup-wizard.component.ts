@@ -77,12 +77,12 @@ export class SetupWizardComponent {
   async apply() {
     this.hasApplied.set(true);
 
-    if (this.taskManagerService.count() > 0) {
+    const hasTasks = this.taskManagerService.count() > 0;
+    if (hasTasks) {
       this.taskManagerService.toggleTerminal(true);
       await this.setupWizardService.applyChanges();
       this.taskManagerService.toggleTerminal(false);
+      void this.router.navigate(['/setup-wizard-success']);
     }
-
-    void this.router.navigate(['/setup-wizard-success']);
   }
 }

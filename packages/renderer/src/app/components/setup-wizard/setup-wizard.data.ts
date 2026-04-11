@@ -844,9 +844,9 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         selected: false,
       },
       {
-        id: 'linuxCachyosWithBore',
-        name: 'Linux CachyOS with BORE',
-        description: 'setupWizard.autoSoftware.linuxCachyosWithBore',
+        id: 'linuxCachyos',
+        name: 'Linux CachyOS',
+        description: 'setupWizard.autoSoftware.linuxCachyos',
         packages: ['linux-cachyos', 'linux-cachyos-headers'],
         selected: false,
       },
@@ -1220,7 +1220,7 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         id: 'discover',
         name: 'Discover',
         description: 'setupWizard.autoSoftware.discover',
-        packages: ['discover', 'packagekit-qt6'],
+        packages: ['discover'],
         selected: false,
       },
       {

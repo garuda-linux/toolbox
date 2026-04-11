@@ -197,13 +197,6 @@ export class ConfigFilesComponent implements OnInit {
       wikiLink: 'https://wiki.archlinux.org/title/GDM',
     },
     {
-      name: 'GNOME Settings (dconf)',
-      path: '~/.config/dconf/user',
-      description: 'configFiles.desc.dconfUser',
-      category: 'Display & Window Managers',
-      wikiLink: 'https://wiki.archlinux.org/title/GNOME#Configuration',
-    },
-    {
       name: 'Hyprland',
       path: '~/.config/hypr/hyprland.conf',
       description: 'configFiles.desc.hyprland',
