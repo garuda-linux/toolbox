@@ -275,7 +275,7 @@ export class MaintenanceComponent implements OnInit {
       priority: 10,
       command: (): string => {
         this.logger.info('Cleaning orphans');
-        return 'pacman --noconfirm -Rns $(pacman -Qtdq)';
+        return 'while [ -n "$(pacman -Qtdq)" ]; do pacman --noconfirm -Rns $(pacman -Qtdq); done';
       },
     },
     {
