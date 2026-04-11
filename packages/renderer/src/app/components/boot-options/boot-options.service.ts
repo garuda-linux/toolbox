@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { ElectronFsService } from '../../electron-services';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
@@ -12,12 +12,32 @@ export class BootOptionsService {
   private readonly taskManager = inject(TaskManagerService);
   private readonly osInteract = inject(OsInteractService);
 
+  isVirtualMachine = signal<boolean>(false);
+  private vmChecked = false;
+
   setChroot(path: string) {
     this.osInteract.setChroot(path);
   }
 
   getChroot() {
     return this.osInteract.getChroot();
+  }
+
+  async checkIfVirtualMachine(): Promise<boolean> {
+    if (this.vmChecked) {
+      return this.isVirtualMachine();
+    }
+
+    const virtResult = await this.taskManager.executeAndWaitBash('systemd-detect-virt');
+    if (virtResult.code === 0 && virtResult.stdout.trim() !== 'none' && virtResult.stdout.trim() !== 'container') {
+      this.isVirtualMachine.set(true);
+      this.vmChecked = true;
+      return true;
+    }
+
+    this.isVirtualMachine.set(false);
+    this.vmChecked = true;
+    return false;
   }
 
   async getGrubEntries(): Promise<BootEntry[]> {

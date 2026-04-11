@@ -56,6 +56,7 @@ export class OsInteractService {
   private readonly wantedGrub = signal<Map<string, string>>(new Map());
   private readonly wantedPlymouthTheme = signal<string | null>(null);
   private readonly wantedBootScript = signal<string | null>(null);
+  private readonly wantedPostUpdateScript = signal<string | null>(null);
 
   readonly wantedDns = signal<DnsProvider | null>(null);
   readonly wantedShell = signal<ShellEntry | null>(null);
@@ -458,8 +459,9 @@ export class OsInteractService {
     const wGrub = this.wantedGrub();
     const wPlyTheme = this.wantedPlymouthTheme();
     const wScript = this.wantedBootScript();
+    const wPostScript = this.wantedPostUpdateScript();
 
-    if (wGrub.size > 0 || wPlyTheme !== null || wScript !== null) {
+    if (wGrub.size > 0 || wPlyTheme !== null || wScript !== null || wPostScript !== null) {
       let script = '';
       if (wScript) {
         script = wScript;
@@ -480,6 +482,7 @@ export class OsInteractService {
         script += `cp "$temp_grub" "$GRUB_FILE"\nrm "$temp_grub"\n`;
         if (wPlyTheme) script += `\n${plymouthCmd(wPlyTheme)}`;
         script += `\n${updateGrubCmd}`;
+        if (wPostScript) script += `\n${wPostScript}`;
         if (prefix) script += `\numount $ROOT_PATH/proc $ROOT_PATH/sys $ROOT_PATH/dev\numount $ROOT_PATH\n`;
       }
       tasks.push(
@@ -843,6 +846,10 @@ export class OsInteractService {
 
   setWantedBootScript(script: string | null): void {
     this.wantedBootScript.set(script);
+  }
+
+  setWantedPostUpdateScript(script: string | null): void {
+    this.wantedPostUpdateScript.set(script);
   }
 
   /**

@@ -7,6 +7,9 @@
   </div>
 
   <div class="p-10">
+    @if (warning()) {
+      <p-message [text]="warning()!" severity="warn" [closable]="true" />
+    }
     @if (error()) {
       <p-message [text]="error()!" severity="error" />
       <div class="mt-4">
@@ -24,6 +27,7 @@
           [(ngModel)]="selectedPartition"
           [options]="partitions()"
           [placeholder]="t('bootOptions.partitionSelect')"
+          appendTo="body"
           optionLabel="name"
           optionValue="name"
         >
@@ -50,6 +54,7 @@
                   [options]="selectableEntries()"
                   [placeholder]="t('bootOptions.selectEntry')"
                   [disabled]="saveDefault()"
+                  appendTo="body"
                   optionLabel="label"
                   optionValue="id"
                 >
@@ -124,6 +129,7 @@
                   id="msg-level"
                   [(ngModel)]="messageLevel"
                   [options]="messageLevelOptions"
+                  appendTo="body"
                   optionLabel="label"
                   optionValue="value"
                 >
@@ -187,13 +193,23 @@
             <div class="flex flex-col gap-2">
               @if (isPlymouthInstalled()) {
                 <label class="font-bold" for="plymouth-theme">{{ t('bootOptions.plymouthTheme') }}</label>
-                <p-select
-                  class="w-full"
-                  id="plymouth-theme"
-                  [(ngModel)]="selectedPlymouthTheme"
-                  [options]="plymouthThemes()"
-                  [placeholder]="t('bootOptions.selectTheme')"
-                />
+                <div class="flex gap-2">
+                  <p-select
+                    class="w-full"
+                    id="plymouth-theme"
+                    appendTo="body"
+                    [(ngModel)]="selectedPlymouthTheme"
+                    [options]="plymouthThemes()"
+                    [placeholder]="t('bootOptions.selectTheme')"
+                  />
+                  <p-button
+                    [disabled]="!selectedPlymouthTheme() || selectedPlymouthTheme() === 'details' || bootService.isVirtualMachine()"
+                    [icon]="'pi pi-eye'"
+                    [pTooltip]="t('bootOptions.previewTheme')"
+                    [tooltipPosition]="'top'"
+                    (onClick)="previewPlymouthTheme()"
+                  />
+                </div>
                 <small>{{ t('bootOptions.plymouthThemeHint') }}</small>
               } @else if (osInteract.check('plymouth', 'pkg')) {
                 <p-message [text]="t('bootOptions.plymouthPending')" severity="info" />

@@ -69,7 +69,9 @@ export class BootOptionsComponent implements OnInit {
   private readonly translocoService = inject(TranslocoService);
 
   error = signal<string | null>(null);
+  warning = signal<string | null>(null);
   syncEnabled = false;
+  previousFlatMenus = signal(false);
 
   highlightDefaultEntry = signal(false);
 
@@ -177,6 +179,44 @@ export class BootOptionsComponent implements OnInit {
         this.osInteract.setGrubSetting('GRUB_THEME', theme);
 
         this.osInteract.setWantedPlymouthTheme(bootsplash ? plyTheme || null : null);
+
+        let postUpdateScript = '';
+        if (saveDef) {
+          const entryToSave = grubDefault || '0';
+          postUpdateScript += `grub-set-default "${entryToSave}" || true\n`;
+        }
+
+        if (bootsplash && this.osInteract.check('plymouth', 'pkg', true)) {
+          postUpdateScript += 'dracut-rebuild\n';
+        }
+
+        if (postUpdateScript) {
+          const chroot = this.bootService.getChroot();
+          if (chroot) {
+            postUpdateScript =
+              `ROOT_PATH="${chroot}"\n` +
+              `mount /dev/$(lsblk -no NAME -p | grep $(basename $ROOT_PATH)) $ROOT_PATH || true\n` +
+              `mount -o bind /dev $ROOT_PATH/dev\n` +
+              `mount -o bind /sys $ROOT_PATH/sys\n` +
+              `mount -o bind /proc $ROOT_PATH/proc\n` +
+              `chroot $ROOT_PATH bash -c '${postUpdateScript}'\n` +
+              `umount $ROOT_PATH/proc $ROOT_PATH/sys $ROOT_PATH/dev\n` +
+              `umount $ROOT_PATH\n`;
+          }
+          this.osInteract.setWantedPostUpdateScript(postUpdateScript);
+        } else {
+          this.osInteract.setWantedPostUpdateScript(null);
+        }
+
+        if (bootsplash && this.bootService.isVirtualMachine()) {
+          this.warning.set(this.translocoService.translate('bootOptions.plymouthVmWarning'));
+        } else if (!bootsplash) {
+          this.warning.set(null);
+        }
+
+        if (flat !== this.previousFlatMenus()) {
+          this.previousFlatMenus.set(flat);
+        }
       });
     });
 
@@ -191,6 +231,7 @@ export class BootOptionsComponent implements OnInit {
 
   async ngOnInit() {
     this.isLive.set(this.configService.state().isLiveSystem === true);
+    await this.bootService.checkIfVirtualMachine();
     if (this.isLive()) await this.loadPartitions();
     else await this.loadSettings();
   }
@@ -535,5 +576,35 @@ export class BootOptionsComponent implements OnInit {
     }
 
     await this.taskManager.executeAndWaitBash(`rm -f "${tempFile}"`);
+  }
+
+  async previewPlymouthTheme(): Promise<void> {
+    const theme = this.selectedPlymouthTheme();
+    if (!theme || theme === 'details') return;
+
+    const chroot = this.bootService.getChroot();
+    const plymouthSetCmd = chroot ? `chroot ${chroot} plymouth-set-default-theme` : `plymouth-set-default-theme`;
+
+    try {
+      const currentThemeResult = await this.taskManager.executeAndWaitBash(plymouthSetCmd);
+      const currentTheme = currentThemeResult.stdout.trim();
+
+      await this.taskManager.executeAndWaitBash(`${plymouthSetCmd} -R ${theme}`);
+
+      const previewCmd = chroot
+        ? `pkexec chroot ${chroot} bash -c 'plymouthd; plymouth --show-splash; for ((i=0; i<4; i++)); do plymouth --update=test$i; sleep 1; done; plymouth quit'`
+        : `pkexec bash -c 'plymouthd; plymouth --show-splash; for ((i=0; i<4; i++)); do plymouth --update=test$i; sleep 1; done; plymouth quit'`;
+
+      const themeToRestore = currentTheme || 'details';
+      const fullCmd = previewCmd + ' && ' + plymouthSetCmd + ' -R ' + themeToRestore;
+      await this.taskManager.executeAndWaitBash(fullCmd);
+
+      this.messageToastService.info(
+        this.translocoService.translate('bootOptions.previewComplete'),
+        this.translocoService.translate('bootOptions.previewCompleteMessage'),
+      );
+    } catch (err) {
+      this.messageToastService.error(this.translocoService.translate('bootOptions.previewError'), String(err));
+    }
   }
 }
