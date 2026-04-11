@@ -46,7 +46,7 @@ export const gamingPackageLists: PackageSections = [
       },
       {
         name: 'Proton CachyOS',
-        pkgname: ['proton-cachyos'],
+        pkgname: ['proton-cachyos-slr'],
         description: 'gaming.protonCachyOS',
       },
       {
@@ -147,6 +147,7 @@ export const gamingPackageLists: PackageSections = [
         description: 'gaming.corectrl',
       },
       { name: 'Discord', pkgname: ['discord'], icon: 'discord.png', description: 'gaming.discord' },
+      { name: 'Vesktop', pkgname: ['vesktop'], icon: 'vesktop.svg', description: 'gaming.vesktop' },
       {
         name: 'DisplayCAL',
         pkgname: ['displaycal'],
