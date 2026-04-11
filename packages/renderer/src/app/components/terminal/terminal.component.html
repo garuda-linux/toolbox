@@ -41,8 +41,14 @@
           }
         </p-scroll-panel>
       </div>
-      <div class="w-full" (click)="focusTerminal()" (keydown.enter)="focusTerminal()" tabindex="0">
-        <ng-terminal #term [xtermOptions]="xtermOptions()" />
+      <div class="w-full">
+        <ng-terminal
+          #term
+          [xtermOptions]="xtermOptions()"
+          (click)="focusTerminal()"
+          (keydown.enter)="focusTerminal()"
+          tabindex="0"
+        />
       </div>
     </div>
   </ng-template>
@@ -50,8 +56,9 @@
   <p-dialog
     #dialog
     [(visible)]="visible"
-    [focusOnShow]="true"
     [modal]="true"
+    [focusOnShow]="false"
+    [closeOnEscape]="true"
     [style]="{ width: '95vw', height: '95vh' }"
   >
     <ng-template #header>

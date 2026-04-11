@@ -108,6 +108,12 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
       const term = this.term();
       if (visible && term?.underlying) {
         this.notifiedReady = false;
+
+        this.focusTerminal();
+        setTimeout(() => this.focusTerminal(), 50);
+        setTimeout(() => this.focusTerminal(), 150);
+        setTimeout(() => this.focusTerminal(), 300);
+
         const doFit = () => {
           this.fitAddon.fit();
           if (term.underlying && !this.notifiedReady) {
@@ -116,7 +122,7 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
             void this.taskManagerService.resizeActiveShell(cols, rows);
             this.notifiedReady = true;
             this.taskManagerService.notifyTerminalReady(cols, rows);
-            term.underlying.focus();
+            this.focusTerminal();
           }
         };
 
@@ -209,7 +215,10 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
    * Focus the terminal element.
    */
   focusTerminal(): void {
-    this.term()?.underlying?.focus();
+    const term = this.term();
+    if (term?.underlying) {
+      term.underlying.focus();
+    }
   }
 
   /**
