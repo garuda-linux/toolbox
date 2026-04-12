@@ -72,6 +72,8 @@ export class BootOptionsComponent implements OnInit {
   warning = signal<string | null>(null);
   syncEnabled = false;
   previousFlatMenus = signal(false);
+  previousBootsplash = signal(false);
+  previousPlymouthTheme = signal<string>('');
 
   highlightDefaultEntry = signal(false);
 
@@ -164,10 +166,7 @@ export class BootOptionsComponent implements OnInit {
         else if (msgLvl === 'detailed') kernelParams += ' quiet';
 
         const selectedEntry = this.grubEntries().find((e) => e.id === defEntry);
-        let grubDefault = defEntry;
-        if (selectedEntry?.parentLabel) {
-          grubDefault = `${selectedEntry.parentLabel}>${selectedEntry.label}`;
-        }
+        const grubDefault = selectedEntry ? selectedEntry.id : defEntry;
 
         this.osInteract.setGrubSetting('GRUB_DEFAULT', saveDef ? 'saved' : grubDefault);
         this.osInteract.setGrubSetting('GRUB_TIMEOUT', time.toString());
@@ -180,33 +179,21 @@ export class BootOptionsComponent implements OnInit {
 
         this.osInteract.setWantedPlymouthTheme(bootsplash ? plyTheme || null : null);
 
-        let postUpdateScript = '';
         if (saveDef) {
           const entryToSave = grubDefault || '0';
-          postUpdateScript += `grub-set-default "${entryToSave}" || true\n`;
-        }
-
-        if (bootsplash && this.osInteract.check('plymouth', 'pkg', true)) {
-          postUpdateScript += 'dracut-rebuild\n';
-        }
-
-        if (postUpdateScript) {
-          const chroot = this.bootService.getChroot();
-          if (chroot) {
-            postUpdateScript =
-              `ROOT_PATH="${chroot}"\n` +
-              `mount /dev/$(lsblk -no NAME -p | grep $(basename $ROOT_PATH)) $ROOT_PATH || true\n` +
-              `mount -o bind /dev $ROOT_PATH/dev\n` +
-              `mount -o bind /sys $ROOT_PATH/sys\n` +
-              `mount -o bind /proc $ROOT_PATH/proc\n` +
-              `chroot $ROOT_PATH bash -c '${postUpdateScript}'\n` +
-              `umount $ROOT_PATH/proc $ROOT_PATH/sys $ROOT_PATH/dev\n` +
-              `umount $ROOT_PATH\n`;
-          }
-          this.osInteract.setWantedPostUpdateScript(postUpdateScript);
+          this.osInteract.setWantedSaveDefaultEntry(entryToSave);
         } else {
-          this.osInteract.setWantedPostUpdateScript(null);
+          this.osInteract.setWantedSaveDefaultEntry(null);
         }
+
+        const bootsplashEnabled = !this.previousBootsplash() && bootsplash;
+        const themeChanged = this.previousPlymouthTheme() !== plyTheme && bootsplash;
+        const shouldRebuildDracut =
+          (bootsplashEnabled || themeChanged) && this.osInteract.check('plymouth', 'pkg', true);
+        this.osInteract.setWantedDracutRebuild(shouldRebuildDracut);
+
+        this.previousBootsplash.set(bootsplash);
+        this.previousPlymouthTheme.set(plyTheme || '');
 
         if (bootsplash && this.bootService.isVirtualMachine()) {
           this.warning.set(this.translocoService.translate('bootOptions.plymouthVmWarning'));
@@ -348,35 +335,6 @@ export class BootOptionsComponent implements OnInit {
   }
 
   /**
-   * Open the editor dialog for the specified file type.
-   */
-  async openEditor(fileType: 'grub') {
-    const chroot = this.bootService.getChroot();
-    const filePath =
-      fileType === 'grub'
-        ? chroot
-          ? `${chroot}/etc/default/grub`
-          : '/etc/default/grub'
-        : chroot
-          ? `${chroot}/etc/default/grub`
-          : '/etc/default/grub';
-
-    this.editorError.set(null);
-    this.editorSaving.set(false);
-    this.editorEntry.set(null);
-
-    try {
-      const content = await this.osInteract.readPrivilegedFile(filePath);
-      this.editorContent.set(content);
-      this.editorOriginalContent.set(content);
-      this.editorFileType.set(fileType);
-      this.editorDialogVisible.set(true);
-    } catch (err) {
-      this.editorError.set(String(err));
-    }
-  }
-
-  /**
    * Open the editor dialog for a specific boot entry.
    */
   async openEntryEditor(entry: BootEntry) {
@@ -390,7 +348,7 @@ export class BootOptionsComponent implements OnInit {
       const fullCfg = await this.osInteract.readPrivilegedFile(grubCfgPath);
       this.editorFullGrubCfg.set(fullCfg);
 
-      const entryContent = this.extractEntryFromGrubCfg(fullCfg, entry);
+      const entryContent = this.bootService.extractEntryFromGrubCfg(fullCfg, entry);
 
       this.editorContent.set(entryContent);
       this.editorOriginalContent.set(entryContent);
@@ -401,47 +359,6 @@ export class BootOptionsComponent implements OnInit {
       this.editorError.set(String(err));
       this.editorDialogVisible.set(true);
     }
-  }
-
-  /**
-   * Extract a specific menuentry block from grub.cfg
-   */
-  private extractEntryFromGrubCfg(grubCfg: string, entry: BootEntry): string {
-    const lines = grubCfg.split('\n');
-    const result: string[] = [];
-    let inEntry = false;
-    let braceCount = 0;
-    let foundEntry = false;
-
-    const idPattern = new RegExp(`--id\\s+['"]?${this.regexEscape(entry.id)}['"]?(?:\\s|$)`);
-    const labelPattern = new RegExp(`menuentry\\s+['"]${this.regexEscape(entry.label)}['"]`);
-
-    for (const line of lines) {
-      if (!inEntry) {
-        if (line.includes('menuentry ')) {
-          if (idPattern.test(line) || labelPattern.test(line)) {
-            inEntry = true;
-            foundEntry = true;
-          }
-        }
-      }
-
-      if (inEntry) {
-        result.push(line);
-        braceCount += (line.match(/{/g) || []).length;
-        braceCount -= (line.match(/}/g) || []).length;
-
-        if (braceCount === 0 && result.length > 1) {
-          break;
-        }
-      }
-    }
-
-    if (!foundEntry) {
-      throw new Error(`Entry "${entry.label}" (id: ${entry.id}) not found in grub.cfg`);
-    }
-
-    return result.join('\n');
   }
 
   /**
@@ -496,6 +413,39 @@ export class BootOptionsComponent implements OnInit {
   }
 
   /**
+   * Preview the currently selected Plymouth thme.
+   */
+  async previewPlymouthTheme(): Promise<void> {
+    const theme = this.selectedPlymouthTheme();
+    if (!theme || theme === 'details') return;
+
+    const chroot = this.bootService.getChroot();
+    const plymouthSetCmd = chroot ? `chroot ${chroot} plymouth-set-default-theme` : `plymouth-set-default-theme`;
+
+    try {
+      const currentThemeResult = await this.taskManager.executeAndWaitBash(plymouthSetCmd);
+      const currentTheme = currentThemeResult.stdout.trim();
+
+      await this.taskManager.executeAndWaitBash(`${plymouthSetCmd} -R ${theme}`);
+
+      const previewCmd = chroot
+        ? `pkexec chroot ${chroot} bash -c 'plymouthd; plymouth --show-splash; for ((i=0; i<4; i++)); do plymouth --update=test$i; sleep 1; done; plymouth quit'`
+        : `pkexec bash -c 'plymouthd; plymouth --show-splash; for ((i=0; i<4; i++)); do plymouth --update=test$i; sleep 1; done; plymouth quit'`;
+
+      const themeToRestore = currentTheme || 'details';
+      const fullCmd = previewCmd + ' && ' + plymouthSetCmd + ' -R ' + themeToRestore;
+      await this.taskManager.executeAndWaitBash(fullCmd);
+
+      this.messageToastService.info(
+        this.translocoService.translate('bootOptions.previewComplete'),
+        this.translocoService.translate('bootOptions.previewCompleteMessage'),
+      );
+    } catch (err) {
+      this.messageToastService.error(this.translocoService.translate('bootOptions.previewError'), String(err));
+    }
+  }
+
+  /**
    * Save an individual entry to grub.cfg
    */
   private async saveEntryToGrubCfg() {
@@ -504,45 +454,7 @@ export class BootOptionsComponent implements OnInit {
     const fullCfg = this.editorFullGrubCfg();
     const chroot = this.bootService.getChroot();
 
-    // Build regex patterns to match the entry (same as extractEntryFromGrubCfg)
-    const idPattern = new RegExp(`--id\\s+['"]?${this.regexEscape(entry.id)}['"]?(?:\\s|$)`);
-    const labelPattern = new RegExp(`menuentry\\s+['"]${this.regexEscape(entry.label)}['"]`);
-
-    const lines = fullCfg.split('\n');
-    const result: string[] = [];
-    let inEntry = false;
-    let braceCount = 0;
-    let foundEntry = false;
-    let replaced = false;
-
-    for (const line of lines) {
-      if (!inEntry && !replaced && line.includes('menuentry ')) {
-        // Try to match by ID first, then by label (same as extractEntryFromGrubCfg)
-        if (idPattern.test(line) || labelPattern.test(line)) {
-          inEntry = true;
-          foundEntry = true;
-        }
-      }
-
-      if (inEntry && !replaced) {
-        braceCount += (line.match(/{/g) || []).length;
-        braceCount -= (line.match(/}/g) || []).length;
-
-        if (braceCount === 0 && result.length > 0) {
-          result.push(...newEntryContent.split('\n'));
-          replaced = true;
-          inEntry = false;
-        }
-      } else {
-        result.push(line);
-      }
-    }
-
-    if (!foundEntry) {
-      throw new Error(`Entry "${entry.label}" (id: ${entry.id}) not found in grub.cfg`);
-    }
-
-    const newContent = result.join('\n');
+    const newContent = this.bootService.replaceEntryInGrubCfg(fullCfg, entry, newEntryContent);
     const grubCfgPath = chroot ? `${chroot}/boot/grub/grub.cfg` : '/boot/grub/grub.cfg';
     await this.writeFileWithPkexec(grubCfgPath, newContent);
   }
@@ -576,35 +488,5 @@ export class BootOptionsComponent implements OnInit {
     }
 
     await this.taskManager.executeAndWaitBash(`rm -f "${tempFile}"`);
-  }
-
-  async previewPlymouthTheme(): Promise<void> {
-    const theme = this.selectedPlymouthTheme();
-    if (!theme || theme === 'details') return;
-
-    const chroot = this.bootService.getChroot();
-    const plymouthSetCmd = chroot ? `chroot ${chroot} plymouth-set-default-theme` : `plymouth-set-default-theme`;
-
-    try {
-      const currentThemeResult = await this.taskManager.executeAndWaitBash(plymouthSetCmd);
-      const currentTheme = currentThemeResult.stdout.trim();
-
-      await this.taskManager.executeAndWaitBash(`${plymouthSetCmd} -R ${theme}`);
-
-      const previewCmd = chroot
-        ? `pkexec chroot ${chroot} bash -c 'plymouthd; plymouth --show-splash; for ((i=0; i<4; i++)); do plymouth --update=test$i; sleep 1; done; plymouth quit'`
-        : `pkexec bash -c 'plymouthd; plymouth --show-splash; for ((i=0; i<4; i++)); do plymouth --update=test$i; sleep 1; done; plymouth quit'`;
-
-      const themeToRestore = currentTheme || 'details';
-      const fullCmd = previewCmd + ' && ' + plymouthSetCmd + ' -R ' + themeToRestore;
-      await this.taskManager.executeAndWaitBash(fullCmd);
-
-      this.messageToastService.info(
-        this.translocoService.translate('bootOptions.previewComplete'),
-        this.translocoService.translate('bootOptions.previewCompleteMessage'),
-      );
-    } catch (err) {
-      this.messageToastService.error(this.translocoService.translate('bootOptions.previewError'), String(err));
-    }
   }
 }

@@ -5,6 +5,8 @@ catalog:
   '@app/main': workspace:*
   '@app/preload': workspace:*
   '@app/renderer': workspace:*
+  'typescript': ^5.9.3
+  'vite': ^8.0.3
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'

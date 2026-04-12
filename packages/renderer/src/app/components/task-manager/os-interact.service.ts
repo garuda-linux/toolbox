@@ -55,8 +55,10 @@ export class OsInteractService {
   private readonly wantedConfigs = signal<Map<string, boolean>>(new Map());
   private readonly wantedGrub = signal<Map<string, string>>(new Map());
   private readonly wantedPlymouthTheme = signal<string | null>(null);
-  private readonly wantedBootScript = signal<string | null>(null);
-  private readonly wantedPostUpdateScript = signal<string | null>(null);
+  private readonly wantedSaveDefaultEntry = signal<string | null>(null);
+  private readonly wantDracutRebuild = signal<boolean>(false);
+
+  private readonly bootTaskWasRunning = signal(false);
 
   readonly wantedDns = signal<DnsProvider | null>(null);
   readonly wantedShell = signal<ShellEntry | null>(null);
@@ -126,7 +128,24 @@ export class OsInteractService {
         return w;
       });
     });
-    effect(() => this.generateTasks());
+    effect(() => {
+      this.generateTasks();
+    });
+    effect(() => {
+      const bootTask = this.taskManagerService.findTaskById('os-interact-boot-options');
+      const isRunning = this.taskManagerService.running();
+
+      if (bootTask && isRunning) {
+        untracked(() => this.bootTaskWasRunning.set(true));
+      }
+
+      if (this.bootTaskWasRunning() && !bootTask && !isRunning) {
+        void untracked(async () => {
+          await this.refreshGrubSettings();
+          this.bootTaskWasRunning.set(false);
+        });
+      }
+    });
   }
 
   /**
@@ -458,33 +477,40 @@ export class OsInteractService {
 
     const wGrub = this.wantedGrub();
     const wPlyTheme = this.wantedPlymouthTheme();
-    const wScript = this.wantedBootScript();
-    const wPostScript = this.wantedPostUpdateScript();
-
-    if (wGrub.size > 0 || wPlyTheme !== null || wScript !== null || wPostScript !== null) {
+    const wSaveEntry = this.wantedSaveDefaultEntry();
+    const wWantDracut = this.wantDracutRebuild();
+    if (wGrub.size > 0 || wPlyTheme !== null || wSaveEntry !== null || wWantDracut) {
       let script = '';
-      if (wScript) {
-        script = wScript;
-      } else {
-        const prefix = this.chrootPath || '';
-        if (prefix) {
-          script += `ROOT_PATH="${prefix}"\nmount /dev/$(lsblk -no NAME -p | grep $(basename $ROOT_PATH)) $ROOT_PATH || true\nmount -o bind /dev $ROOT_PATH/dev\nmount -o bind /sys $ROOT_PATH/sys\nmount -o bind /proc $ROOT_PATH/proc\n`;
-        }
-        const grubFile = prefix ? `${prefix}/etc/default/grub` : '/etc/default/grub';
-        const updateGrubCmd = prefix ? `chroot ${prefix} update-grub` : 'update-grub';
-        const plymouthCmd = (theme: string) =>
-          prefix ? `chroot ${prefix} plymouth-set-default-theme -R ${theme}` : `plymouth-set-default-theme -R ${theme}`;
-
-        script += `GRUB_FILE="${grubFile}"\ntemp_grub=$(mktemp)\ncp "$GRUB_FILE" "$temp_grub"\n`;
-        for (const [key, value] of wGrub) {
-          script += `if grep -q "^${key}=" "$temp_grub"; then\n  sed -i 's|^${key}=.*|${key}="${value}"|' "$temp_grub"\nelse\n  echo '${key}="${value}"' >> "$temp_grub"\nfi\n`;
-        }
-        script += `cp "$temp_grub" "$GRUB_FILE"\nrm "$temp_grub"\n`;
-        if (wPlyTheme) script += `\n${plymouthCmd(wPlyTheme)}`;
-        script += `\n${updateGrubCmd}`;
-        if (wPostScript) script += `\n${wPostScript}`;
-        if (prefix) script += `\numount $ROOT_PATH/proc $ROOT_PATH/sys $ROOT_PATH/dev\numount $ROOT_PATH\n`;
+      const prefix = this.chrootPath || '';
+      if (prefix) {
+        script += `ROOT_PATH="${prefix}"\nmount /dev/$(lsblk -no NAME -p | grep $(basename $ROOT_PATH)) $ROOT_PATH || true\nmount -o bind /dev $ROOT_PATH/dev\nmount -o bind /sys $ROOT_PATH/sys\nmount -o bind /proc $ROOT_PATH/proc\n`;
       }
+      const grubFile = prefix ? `${prefix}/etc/default/grub` : '/etc/default/grub';
+      const updateGrubCmd = prefix ? `chroot ${prefix} update-grub` : 'update-grub';
+      const plymouthCmd = (theme: string) =>
+        prefix ? `chroot ${prefix} plymouth-set-default-theme -R ${theme}` : `plymouth-set-default-theme -R ${theme}`;
+
+      script += `GRUB_FILE="${grubFile}"\ntemp_grub=$(mktemp)\ncp "$GRUB_FILE" "$temp_grub"\n`;
+      for (const [key, value] of wGrub) {
+        script += `if grep -q "^${key}=" "$temp_grub"; then\n  sed -i 's|^${key}=.*|${key}="${value}"|' "$temp_grub"\nelse\n  echo '${key}="${value}"' >> "$temp_grub"\nfi\n`;
+      }
+      script += `cp "$temp_grub" "$GRUB_FILE"\nrm "$temp_grub"\n`;
+      if (wPlyTheme) script += `\n${plymouthCmd(wPlyTheme)}`;
+      script += `\n${updateGrubCmd}`;
+
+      // Generate post-update script based on desired state
+      if (wSaveEntry !== null) {
+        const saveCmd = prefix
+          ? `chroot ${prefix} grub-set-default "${wSaveEntry}"`
+          : `grub-set-default "${wSaveEntry}"`;
+        script += `\n${saveCmd} || true`;
+      }
+      if (wWantDracut) {
+        const dracutCmd = prefix ? `chroot ${prefix} dracut-rebuild` : 'dracut-rebuild';
+        script += `\n${dracutCmd}`;
+      }
+
+      if (prefix) script += `\numount $ROOT_PATH/proc $ROOT_PATH/sys $ROOT_PATH/dev\numount $ROOT_PATH\n`;
       tasks.push(
         this.taskManagerService.createTask(
           15,
@@ -560,6 +586,29 @@ export class OsInteractService {
       this.getPlymouthInfo().then((res) => this.currentPlymouthTheme.set(res.currentTheme || null)),
     ]);
     this.isInitialized.set(true);
+  }
+
+  /**
+   * Refresh GRUB settings immediately after boot options changes.
+   */
+  async refreshGrubSettings(): Promise<void> {
+    const grubSettings = await this.getGrubSettings();
+    this.currentGrub.set(grubSettings);
+    const plymouth = await this.getPlymouthInfo();
+    this.currentPlymouthTheme.set(plymouth.currentTheme || null);
+
+    this.wantedGrub.update((w) => {
+      const pruned = new Map(w);
+      for (const [key, val] of w) {
+        if (grubSettings.get(key) === val) {
+          pruned.delete(key);
+        }
+      }
+      return pruned;
+    });
+
+    this.wantedSaveDefaultEntry.set(null);
+    this.wantDracutRebuild.set(false);
   }
 
   async getGrubSettings(): Promise<Map<string, string>> {
@@ -844,12 +893,18 @@ export class OsInteractService {
     this.wantedPlymouthTheme.set(nC === nT ? null : nT);
   }
 
-  setWantedBootScript(script: string | null): void {
-    this.wantedBootScript.set(script);
+  /**
+   * Set whether to save the default boot entry and which entry to save.
+   */
+  setWantedSaveDefaultEntry(entryId: string | null): void {
+    this.wantedSaveDefaultEntry.set(entryId);
   }
 
-  setWantedPostUpdateScript(script: string | null): void {
-    this.wantedPostUpdateScript.set(script);
+  /**
+   * Set whether to rebuild dracut initramfs.
+   */
+  setWantedDracutRebuild(wantRebuild: boolean): void {
+    this.wantDracutRebuild.set(wantRebuild);
   }
 
   /**
