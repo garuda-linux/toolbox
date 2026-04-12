@@ -44,6 +44,7 @@ export class OsInteractService {
   private readonly currentConfigs = signal<Map<string, boolean>>(new Map());
   private readonly currentGrub = signal<Map<string, string>>(new Map());
   private readonly currentPlymouthTheme = signal<string | null>(null);
+  private readonly currentGarudaUpdateConfig = signal<Map<string, boolean>>(new Map());
   private readonly isInitialized = signal<boolean>(false);
 
   private readonly wantedPackages = signal<Map<string, boolean>>(new Map());
@@ -57,6 +58,7 @@ export class OsInteractService {
   private readonly wantedPlymouthTheme = signal<string | null>(null);
   private readonly wantedSaveDefaultEntry = signal<string | null>(null);
   private readonly wantDracutRebuild = signal<boolean>(false);
+  private readonly wantedGarudaUpdateConfig = signal<Map<string, boolean>>(new Map());
 
   private readonly bootTaskWasRunning = signal(false);
 
@@ -96,6 +98,9 @@ export class OsInteractService {
   readonly configs = computed(() => {
     return new Map([...this.currentConfigs(), ...this.wantedConfigs()]);
   });
+  readonly garudaUpdateConfig = computed(() => {
+    return new Map([...this.currentGarudaUpdateConfig(), ...this.wantedGarudaUpdateConfig()]);
+  });
 
   constructor() {
     effect(() => {
@@ -110,6 +115,9 @@ export class OsInteractService {
       this.wantedServicesUser.set(this.wantedPrune(untracked(this.wantedServicesUser), this.currentServicesUser()));
       this.wantedGroups.set(this.wantedPrune(untracked(this.wantedGroups), this.currentGroups()));
       this.wantedLocales.set(this.wantedPrune(untracked(this.wantedLocales), this.currentLocales()));
+      this.wantedGarudaUpdateConfig.set(
+        this.wantedPrune(untracked(this.wantedGarudaUpdateConfig), this.currentGarudaUpdateConfig()),
+      );
 
       const cGrub = this.currentGrub();
       this.wantedGrub.update((w) => {
@@ -373,6 +381,7 @@ export class OsInteractService {
         this.taskManagerService.findTaskById('os-interact-configs-user'),
         this.taskManagerService.findTaskById('os-interact-configs-sudo'),
         this.taskManagerService.findTaskById('os-interact-boot-options'),
+        this.taskManagerService.findTaskById('os-interact-garuda-update-config'),
       ].forEach((task) => {
         if (task !== null) {
           this.taskManagerService.removeTask(task);
@@ -523,6 +532,36 @@ export class OsInteractService {
       );
     }
 
+    const wGarudaUpdate = this.wantedGarudaUpdateConfig();
+    if (wGarudaUpdate.size > 0) {
+      let script = '';
+      const configFile = '/etc/garuda/garuda-update/config';
+
+      script += `CONFIG_FILE="${configFile}"\n`;
+      script += `mkdir -p "$(dirname "$CONFIG_FILE")"\n`;
+
+      for (const [key, value] of wGarudaUpdate.entries()) {
+        const boolVal = value ? '1' : '0';
+        script += `sed -i '/^#${key}=/d' "$CONFIG_FILE" 2>/dev/null || true\n`;
+        script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
+        script += `  sed -i 's|^${key}=.*|${key}=${boolVal}|' "$CONFIG_FILE"\n`;
+        script += `else\n`;
+        script += `  echo "${key}=${boolVal}" >> "$CONFIG_FILE"\n`;
+        script += `fi\n`;
+      }
+
+      tasks.push(
+        this.taskManagerService.createTask(
+          16,
+          'os-interact-garuda-update-config',
+          true,
+          'os-interact.garuda-update-config',
+          'pi pi-refresh',
+          script,
+        ),
+      );
+    }
+
     tasks.forEach((task) => {
       this.taskManagerService.scheduleTask(task);
     });
@@ -584,6 +623,7 @@ export class OsInteractService {
       this.getConfigs().then((res) => this.currentConfigs.set(res)),
       this.getGrubSettings().then((res) => this.currentGrub.set(res)),
       this.getPlymouthInfo().then((res) => this.currentPlymouthTheme.set(res.currentTheme || null)),
+      this.getGarudaUpdateConfig().then((res) => this.currentGarudaUpdateConfig.set(res)),
     ]);
     this.isInitialized.set(true);
   }
@@ -849,6 +889,41 @@ export class OsInteractService {
     this.setWantedConfig(key, !current);
   }
 
+  toggleGarudaUpdateConfig(key: string): void {
+    const current = this.garudaUpdateConfig().get(key) ?? false;
+    this.setWantedGarudaUpdateConfig(key, !current);
+  }
+
+  setWantedGarudaUpdateConfig(key: string, value: boolean): void {
+    const newMap = new Map(this.wantedGarudaUpdateConfig());
+    newMap.set(key, value);
+    this.wantedGarudaUpdateConfig.set(newMap);
+  }
+
+  private async getGarudaUpdateConfig(): Promise<Map<string, boolean>> {
+    const config = new Map<string, boolean>();
+    try {
+      const content = await this.readPrivilegedFile('/etc/garuda/garuda-update/config');
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIndex = trimmed.indexOf('=');
+        if (eqIndex === -1) continue;
+        const key = trimmed.slice(0, eqIndex).trim();
+        const value = trimmed.slice(eqIndex + 1).trim();
+        if (value === '1' || value === '0') {
+          config.set(key, value === '1');
+        } else {
+          config.set(key, false);
+        }
+      }
+    } catch (e) {
+      this.logger.debug(`Failed to read garuda-update config: ${e}`);
+    }
+    this.logger.debug(`getGarudaUpdateConfig result: ${JSON.stringify(Object.fromEntries(config))}`);
+    return config;
+  }
+
   setGrubSetting(key: string, value: string): void {
     this.wantedGrub.update((m) => {
       const nm = new Map(m);
@@ -1033,6 +1108,9 @@ export class OsInteractService {
       case 'config':
         this.toggleConfigState(name);
         break;
+      case 'garuda-update':
+        this.toggleGarudaUpdateConfig(name);
+        break;
     }
   }
 
@@ -1058,6 +1136,10 @@ export class OsInteractService {
         return current ? this.currentGroups().get(name) == true : this.groups().get(name) == true;
       case 'config':
         return current ? this.currentConfigs().get(name) == true : this.configs().get(name) == true;
+      case 'garuda-update': {
+        const config = current ? this.currentGarudaUpdateConfig() : this.garudaUpdateConfig();
+        return config.get(name) === true;
+      }
     }
     return false;
   }

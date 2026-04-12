@@ -65,6 +65,40 @@ export class SystemSettingsComponent implements OnInit {
 
   sections: SystemToolsEntry[] = [
     {
+      name: 'systemSettings.garudaUpdate.title',
+      icon: 'pi pi-refresh',
+      sections: [
+        {
+          name: 'skip-mirrorlist',
+          title: 'systemSettings.garudaUpdate.skipMirrorlist.title',
+          description: 'systemSettings.garudaUpdate.skipMirrorlist.description',
+          checked: false,
+          check: { type: 'garuda-update', name: 'SKIP_MIRRORLIST' },
+        },
+        {
+          name: 'update-aur',
+          title: 'systemSettings.garudaUpdate.updateAur.title',
+          description: 'systemSettings.garudaUpdate.updateAur.description',
+          checked: false,
+          check: { type: 'garuda-update', name: 'UPDATE_AUR' },
+        },
+        {
+          name: 'pacman-noconfirm',
+          title: 'systemSettings.garudaUpdate.pacmanNoconfirm.title',
+          description: 'systemSettings.garudaUpdate.pacmanNoconfirm.description',
+          checked: false,
+          check: { type: 'garuda-update', name: 'PACMAN_NOCONFIRM' },
+        },
+        {
+          name: 'no-check-space',
+          title: 'systemSettings.garudaUpdate.noCheckSpace.title',
+          description: 'systemSettings.garudaUpdate.noCheckSpace.description',
+          checked: false,
+          check: { type: 'garuda-update', name: 'NO_CHECK_SPACE' },
+        },
+      ],
+    },
+    {
       name: 'systemSettings.common.title',
       icon: 'pi pi-volume-up',
       sections: [
@@ -250,6 +284,12 @@ export class SystemSettingsComponent implements OnInit {
           selectedBoxes.push(config.key);
         }
       }
+
+      const guConfig = this.osInteractService.garudaUpdateConfig();
+      if (guConfig.get('SKIP_MIRRORLIST')) selectedBoxes.push('skip-mirrorlist');
+      if (guConfig.get('UPDATE_AUR')) selectedBoxes.push('update-aur');
+      if (guConfig.get('PACMAN_NOCONFIRM')) selectedBoxes.push('pacman-noconfirm');
+      if (guConfig.get('NO_CHECK_SPACE')) selectedBoxes.push('no-check-space');
 
       this.selectedBoxes.set(selectedBoxes);
       this.currentDns.set(this.osInteractService.dns());

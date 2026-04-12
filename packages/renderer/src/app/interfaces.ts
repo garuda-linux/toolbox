@@ -64,7 +64,7 @@ export interface SystemToolsSubEntry {
   disabler?: string | string[];
   disabled?: boolean;
   check: {
-    type: 'pkg' | 'group' | 'service' | 'serviceUser' | 'config';
+    type: 'pkg' | 'group' | 'service' | 'serviceUser' | 'config' | 'garuda-update';
     name: string;
   };
 }

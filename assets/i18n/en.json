@@ -589,6 +589,25 @@
     "enableHblockTip": "Enables Hblock, a script that blocks ads, trackers, and malware domains system-wide by routing their requests to a local sinkhole via your /etc/hosts file.",
     "enableIwd": "Use IWD instead of wpa_supplicant",
     "enableIwdTip": "iNet Wireless Daemon (iwd). A modern, lightweight alternative to wpa_supplicant for managing Wi-Fi connections. Often connects faster and handles roaming better.",
+    "garudaUpdate": {
+      "title": "Garuda Update",
+      "skipMirrorlist": {
+        "title": "Skip mirrorlist refresh",
+        "description": "Skip refreshing the Arch mirrorlist before running system updates."
+      },
+      "updateAur": {
+        "title": "Update AUR packages",
+        "description": "Update packages installed from the Arch User Repository (AUR) during system updates."
+      },
+      "pacmanNoconfirm": {
+        "title": "Non-interactive pacman",
+        "description": "Run pacman without confirmation prompts for a faster update experience."
+      },
+      "noCheckSpace": {
+        "title": "Skip disk space check",
+        "description": "Skip checking available disk space before installing packages."
+      }
+    },
     "common": {
       "title": "Common",
       "psd": {
@@ -799,7 +818,8 @@
     "configs": "Change system configurations",
     "configs-user": "Change user configurations",
     "configs-system": "Change system configurations",
-    "boot-options": "Apply boot settings"
+    "boot-options": "Apply boot settings",
+    "garuda-update-config": "Apply Garuda Update settings"
   },
   "packages": {
     "title": "Discover ",
