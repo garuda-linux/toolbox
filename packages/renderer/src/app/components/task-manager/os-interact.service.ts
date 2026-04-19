@@ -542,7 +542,7 @@ export class OsInteractService {
 
       for (const [key, value] of wGarudaUpdate.entries()) {
         const boolVal = value ? '1' : '0';
-        script += `sed -i '/^#${key}=/d' "$CONFIG_FILE" 2>/dev/null || true\n`;
+        script += `sed -i '/^# *${key}=/d' "$CONFIG_FILE" 2>/dev/null || true\n`;
         script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
         script += `  sed -i 's|^${key}=.*|${key}=${boolVal}|' "$CONFIG_FILE"\n`;
         script += `else\n`;
