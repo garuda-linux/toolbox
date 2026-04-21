@@ -20,6 +20,14 @@ export class NetworkAssistantService {
     }
   }
 
+  private async runDirect(script: string): Promise<void> {
+    const command = `bash -lc ${this.quoteForShell(script)}`;
+    const result = await this.taskManager.executeAndWaitBash(command);
+    if (result.code !== 0) {
+      throw new Error((result.stderr || result.stdout || 'Command failed').trim());
+    }
+  }
+
   readonly status = signal<NetworkStatus | null>(null);
   readonly drivers = signal<NetworkDriver[]>([]);
   readonly hardware = signal<HardwareInfo[]>([]);
@@ -329,19 +337,19 @@ export class NetworkAssistantService {
 
   async toggleWifi(enable: boolean): Promise<void> {
     const script = enable ? 'rfkill unblock wifi' : 'rfkill block wifi';
-    await this.runDirectPrivileged(script);
+    await this.runDirect(script);
     await this.refreshStatus();
   }
 
   async toggleBt(enable: boolean): Promise<void> {
     const script = enable ? 'rfkill unblock bluetooth' : 'rfkill block bluetooth';
-    await this.runDirectPrivileged(script);
+    await this.runDirect(script);
     await this.refreshStatus();
   }
 
   async toggleAirplane(enable: boolean): Promise<void> {
     const script = enable ? 'rfkill block all' : 'rfkill unblock all';
-    await this.runDirectPrivileged(script);
+    await this.runDirect(script);
     await this.refreshStatus();
   }
 
@@ -453,10 +461,10 @@ export class NetworkAssistantService {
   }
 
   copyToClipboard(text: string): void {
-    navigator.clipboard.writeText(text);
+    void navigator.clipboard.writeText(text);
   }
 
   copyAllToClipboard(lines: string[]): void {
-    navigator.clipboard.writeText(lines.join('\n'));
+    void navigator.clipboard.writeText(lines.join('\n'));
   }
 }
