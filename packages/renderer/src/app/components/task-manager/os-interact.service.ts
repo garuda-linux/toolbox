@@ -285,7 +285,7 @@ export class OsInteractService {
           set -e
           systemctl stop NetworkManager
           systemctl disable --now wpa_supplicant.service
-          systemctl mask wpa_supplicant
+          systemctl mask wpa_supplicant.service
           echo -e "[device]\\nwifi.backend=iwd" > /etc/NetworkManager/conf.d/20_wifi_backend_toolbox.conf
           systemctl daemon-reload
           systemctl start NetworkManager
@@ -296,8 +296,8 @@ export class OsInteractService {
           set -e
           systemctl stop NetworkManager
           rm /etc/NetworkManager/conf.d/20_wifi_backend_{rani,toolbox}.conf
-          systemctl unmask wpa_supplicant
-          systemctl enable --now wpa_supplicant
+          systemctl unmask wpa_supplicant.service
+          systemctl enable --now wpa_supplicant.service
           systemctl daemon-reload
           systemctl start NetworkManager
           echo "Changed NetworkManager backend to wpa_supplicant."\n
