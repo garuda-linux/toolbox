@@ -295,7 +295,7 @@ export class OsInteractService {
         script_services += `
           set -e
           systemctl stop NetworkManager
-          rm /etc/NetworkManager/conf.d/20_wifi_backend_{rani,toolbox}.conf
+          rm -f /etc/NetworkManager/conf.d/20_wifi_backend_{rani,toolbox}.conf
           systemctl unmask wpa_supplicant.service
           systemctl enable --now wpa_supplicant.service
           systemctl daemon-reload
