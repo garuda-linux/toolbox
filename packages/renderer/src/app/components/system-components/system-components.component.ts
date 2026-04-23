@@ -222,6 +222,14 @@ export class SystemComponentsComponent {
           check: { type: 'pkg', name: 'distrobox' },
         },
         {
+          name: 'kontainer',
+          title: 'systemTools.containers.kontainer.title',
+          description: 'systemTools.containers.kontainer.description',
+          checked: false,
+          disabler: ['podman', 'docker'],
+          check: { type: 'pkg', name: 'kontainer-git' },
+        },
+        {
           name: 'boxbuddy',
           title: 'systemTools.containers.boxbuddy.title',
           description: 'systemTools.containers.boxbuddy.description',

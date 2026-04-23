@@ -466,6 +466,10 @@
         "title": "Distrobox",
         "description": "Creates tightly integrated containers of other Linux distributions. Lets you install and run apps from Ubuntu, Fedora, or Arch natively inside Garuda."
       },
+      "kontainer": {
+        "title": "Kontainer",
+        "description": "A native KDE application for managing Distrobox containers with ease."
+      },
       "boxbuddy": {
         "title": "BoxBuddy",
         "description": "A graphical app to easily manage and use your Distrobox environments."
