@@ -541,13 +541,18 @@ export class OsInteractService {
       script += `mkdir -p "$(dirname "$CONFIG_FILE")"\n`;
 
       for (const [key, value] of wGarudaUpdate.entries()) {
-        const boolVal = value ? '1' : '0';
         script += `sed -i '/^# *${key}=/d' "$CONFIG_FILE" 2>/dev/null || true\n`;
-        script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
-        script += `  sed -i 's|^${key}=.*|${key}=${boolVal}|' "$CONFIG_FILE"\n`;
-        script += `else\n`;
-        script += `  echo "${key}=${boolVal}" >> "$CONFIG_FILE"\n`;
-        script += `fi\n`;
+        if (value) {
+          script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
+          script += `  sed -i 's|^${key}=.*|${key}=1|' "$CONFIG_FILE"\n`;
+          script += `else\n`;
+          script += `  echo "${key}=1" >> "$CONFIG_FILE"\n`;
+          script += `fi\n`;
+        } else {
+          script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
+          script += `  sed -i 's|^${key}=.*|# ${key}=1 |' "$CONFIG_FILE"\n`;
+          script += `fi\n`;
+        }
       }
 
       tasks.push(

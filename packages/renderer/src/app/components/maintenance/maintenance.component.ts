@@ -160,7 +160,7 @@ export class MaintenanceComponent implements OnInit {
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote fix');
-        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_RANI=1 garuda-update remote fix');
+        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_TOOLBOX=1 garuda-update remote fix');
       },
     },
     {
@@ -174,7 +174,9 @@ export class MaintenanceComponent implements OnInit {
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote keyring');
-        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_RANI=1 garuda-update remote keyring');
+        return await this.taskManager.executeAndWaitBashTerminal(
+          'GARUDA_UPDATE_TOOLBOX=1 garuda-update remote keyring',
+        );
       },
     },
     {
@@ -188,7 +190,9 @@ export class MaintenanceComponent implements OnInit {
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote full fix');
-        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_RANI=1 garuda-update remote fullfix');
+        return await this.taskManager.executeAndWaitBashTerminal(
+          'GARUDA_UPDATE_TOOLBOX=1 garuda-update remote fullfix',
+        );
       },
     },
     {
@@ -202,7 +206,7 @@ export class MaintenanceComponent implements OnInit {
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote reset-audio');
-        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_RANI=1 garuda-update remote-audio');
+        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_TOOLBOX=1 garuda-update remote-audio');
       },
     },
     {
@@ -217,7 +221,7 @@ export class MaintenanceComponent implements OnInit {
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote reset-snapper');
         return await this.taskManager.executeAndWaitBashTerminal(
-          'GARUDA_UPDATE_RANI=1 garuda-update remote reset-snapper',
+          'GARUDA_UPDATE_TOOLBOX=1 garuda-update remote reset-snapper',
         );
       },
     },
@@ -232,7 +236,9 @@ export class MaintenanceComponent implements OnInit {
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote reinstall');
-        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_RANI=1 garuda-update remote reinstall');
+        return await this.taskManager.executeAndWaitBashTerminal(
+          'GARUDA_UPDATE_TOOLBOX=1 garuda-update remote reinstall',
+        );
       },
     },
   ];
@@ -248,7 +254,7 @@ export class MaintenanceComponent implements OnInit {
       command: (): string => {
         this.logger.info('Updating system');
         return `if command -v garuda-update >/dev/null 2>&1; then \
-          GARUDA_UPDATE_RANI=1 garuda-update --skip-mirrorlist; \
+          GARUDA_UPDATE_TOOLBOX=1 garuda-update --skip-mirrorlist; \
           else pacman -Syu; fi`;
       },
     },
