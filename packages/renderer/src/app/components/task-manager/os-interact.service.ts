@@ -546,11 +546,12 @@ export class OsInteractService {
           script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
           script += `  sed -i 's|^${key}=.*|${key}=1|' "$CONFIG_FILE"\n`;
           script += `else\n`;
+          script += `  [ -f "$CONFIG_FILE" ] && [ -n "$(tail -c1 "$CONFIG_FILE")" ] && echo >> "$CONFIG_FILE"\n`;
           script += `  echo "${key}=1" >> "$CONFIG_FILE"\n`;
           script += `fi\n`;
         } else {
           script += `if grep -q "^${key}=" "$CONFIG_FILE" 2>/dev/null; then\n`;
-          script += `  sed -i 's|^${key}=.*|# ${key}=1 |' "$CONFIG_FILE"\n`;
+          script += `  sed -i 's|^${key}=.*|# ${key}=1|' "$CONFIG_FILE"\n`;
           script += `fi\n`;
         }
       }
