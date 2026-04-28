@@ -1,6 +1,5 @@
 import type { AppInitConfig } from './AppInitConfig.js';
 import { createModuleRunner, type ModuleRunner } from './ModuleRunner.js';
-import { disallowMultipleAppInstance } from './modules/SingleInstanceApp.js';
 import { createWindowManagerModule } from './modules/WindowManager.js';
 import { allowInternalOrigins } from './modules/BlockNotAllowdOrigins.js';
 import { allowExternalUrls } from './modules/ExternalUrls.js';
@@ -61,6 +60,13 @@ export async function initApp(initConfig: AppInitConfig) {
     return;
   }
 
+  const gotLock = app.requestSingleInstanceLock();
+  if (!gotLock) {
+    logger.debug('Second instance detected, exiting.');
+    app.quit();
+    return;
+  }
+
   await migrateConfig();
 
   const isDevelopment = import.meta.env.DEV;
@@ -72,7 +78,6 @@ export async function initApp(initConfig: AppInitConfig) {
     await registerBackgroundIPCHandlers(app, logger);
 
     const moduleRunner: ModuleRunner = createModuleRunner()
-      .init(disallowMultipleAppInstance())
       .init(createEnhancedSecurityModule(isDevelopment))
       .init(createAppIconModule())
 

@@ -257,6 +257,7 @@ class WindowManager implements AppModule {
 
   async restoreOrCreateWindow(show = false) {
     let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
+    const existingWindow = window !== undefined;
     window ??= await this.createWindow();
 
     if (!show) {
@@ -267,7 +268,10 @@ class WindowManager implements AppModule {
       window.restore();
     }
 
-    window?.show();
+    if (existingWindow) {
+      window.hide();
+      window.show();
+    }
 
     if (this.#openDevTools) {
       window?.webContents.openDevTools();

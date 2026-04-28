@@ -6,7 +6,7 @@ class SingleInstanceApp implements AppModule {
     const isSingleInstance = app.requestSingleInstanceLock();
     if (!isSingleInstance) {
       app.quit();
-      process.exit(0);
+      throw new Error('Second instance detected - exiting');
     }
   }
 }
