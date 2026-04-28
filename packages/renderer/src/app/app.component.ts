@@ -150,6 +150,13 @@ export class AppComponent implements OnInit {
       command: () => this.router.navigate(['/']),
     },
     {
+      id: 'setup-wizard',
+      icon: 'pi pi-cog',
+      label: 'Setup Wizard',
+      translocoKey: 'menu.setupWizard',
+      command: () => this.router.navigate(['/setup-wizard']),
+    },
+    {
       id: 'maintenance',
       icon: 'pi pi-desktop',
       label: 'Maintenance',

@@ -1,5 +1,21 @@
 export const MODULE_SEARCH: ModuleSearchEntry[] = [
   {
+    moduleName: 'menu.modules.setupWizard',
+    keywords: [
+      'setup',
+      'setup wizard',
+      'setup assistant',
+      'garuda-setup',
+      'initial setup',
+      'configure',
+      'configuration',
+      'welcome',
+      'first run',
+      'onboarding',
+    ],
+    routerLink: 'setup-wizard',
+  },
+  {
     moduleName: 'menu.modules.appSettings',
     keywords: ['settings', 'configuration', 'preferences', 'options', 'app settings', 'application settings', 'theme'],
     routerLink: 'settings',

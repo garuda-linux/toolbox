@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Card } from 'primeng/card';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ElectronShellService } from '../../electron-services';
 import type { ExternalLink, HomepageLink } from '../../interfaces';
 import { ConfigService } from '../config/config.service';
@@ -111,6 +111,7 @@ export class HomeComponent {
   private readonly taskManagerService = inject(TaskManagerService);
   private readonly osInteractService = inject(OsInteractService);
   private readonly shellService = inject(ElectronShellService);
+  private readonly router = inject(Router);
 
   mainLinks: HomepageLink[] = [
     {
@@ -178,12 +179,7 @@ export class HomeComponent {
     {
       title: 'welcome.setupAssistant',
       subTitle: 'welcome.setupAssistantSub',
-      command: async () =>
-        this.osInteractService.ensurePackageArchlinux('garuda-setup-assistant').then((installed) => {
-          if (installed) {
-            this.taskManagerService.executeAndWaitBash('setup-assistant', { reinit: true });
-          }
-        }),
+      command: () => void this.router.navigate(['/setup-wizard']),
       icon: 'pi pi-download',
       condition: () => this.configService.state().isLiveSystem === false,
     },
