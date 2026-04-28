@@ -189,7 +189,7 @@ export class MaintenanceComponent implements OnInit {
       onlyDirect: true,
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
-        this.logger.info('Running remote full fix');
+        this.logger.info('Running remote fullfix');
         return await this.taskManager.executeAndWaitBashTerminal(
           'GARUDA_UPDATE_TOOLBOX=1 garuda-update remote fullfix',
         );
@@ -206,7 +206,9 @@ export class MaintenanceComponent implements OnInit {
       priority: 0,
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running remote reset-audio');
-        return await this.taskManager.executeAndWaitBashTerminal('GARUDA_UPDATE_TOOLBOX=1 garuda-update remote-audio');
+        return await this.taskManager.executeAndWaitBashTerminal(
+          'GARUDA_UPDATE_TOOLBOX=1 garuda-update remote reset-audio',
+        );
       },
     },
     {
