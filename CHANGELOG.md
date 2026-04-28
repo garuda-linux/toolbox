@@ -1,3 +1,41 @@
+## [5.2.3] - 2026-04-28
+
+### 🚀 Features
+
+- *(setup-assistant)* Launch directly via home option; add to modules
+
+### 🐛 Bug Fixes
+
+- *(system-settings)* Correctly handle newline for garuda-update settings
+- *(maintenance)* Correct typos
+- Properly exit second instance and focus first
+## [5.2.2] - 2026-04-24
+
+### 🚀 Features
+
+- *(migrations)* Introduce migration versions and migrate autostart file to new toolbox name/delete old
+- *(system-settings)* Add Kontainer to options
+
+### 🐛 Bug Fixes
+
+- *(network-assistant)* Do not require root for toggling bluetooth/wifi
+- *(system-settings)* Be specific about wpa_supplicant being a service
+- *(system-settings)* Don't fail switching back to wpa_supplicant if one of the config fails to delete doesn't exist
+- *(system-settings)* Garuda-update expects value set/not set and doesn't check for bool values; follow garuda-update variable rename
+## [5.2.1] - 2026-04-19
+
+### 🚀 Features
+
+- *(system-settings)* Add garuda-update options
+
+### 🐛 Bug Fixes
+
+- *(boot-tools)* Use uuid-based boot entries, and correctly determine subentries for inclusion
+- *(system-settings)* Correctly replace space separated default configs of garuda-update
+
+### 📚 Documentation
+
+- *(readme)* Update
 ## [5.2.0] - 2026-04-11
 
 ### 🚀 Features
