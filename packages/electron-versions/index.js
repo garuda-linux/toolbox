@@ -1,15 +1,28 @@
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
+import electronPath from 'electron';
+
+function getElectronBinaryPath() {
+  if (typeof electronPath === 'string') {
+    return electronPath;
+  }
+
+  if (electronPath && typeof electronPath.default === 'string') {
+    return electronPath.default;
+  }
+
+  throw new TypeError('Unable to resolve Electron binary path');
+}
 
 function getElectronEnv() {
-  return JSON.parse(
-    execSync(`pnpx electron -p "JSON.stringify(process.versions)"`, {
-      encoding: 'utf-8',
-      env: {
-        ...process.env,
-        ELECTRON_RUN_AS_NODE: 1,
-      },
-    }),
-  );
+  const output = execFileSync(getElectronBinaryPath(), ['-p', 'JSON.stringify(process.versions)'], {
+    encoding: 'utf-8',
+    env: {
+      ...process.env,
+      ELECTRON_RUN_AS_NODE: '1',
+    },
+  });
+
+  return JSON.parse(output.trim());
 }
 
 function createElectronEnvLoader() {
