@@ -507,8 +507,8 @@
         "description": "Runs the background service required to pair and connect to Bluetooth devices."
       },
       "userBluetooth": {
-        "title": "Bluetooth Users",
-        "description": "Adds your user to the bluetooth group, granting permission to manage Bluetooth connections."
+        "title": "Bluetooth Users on PulseAudio",
+        "description": "Adds your user to the lp group, allowing the use of Bluetooth audio streams with system-wide PulseAudio setup. This is not required for PipeWire."
       },
       "autoConnect": {
         "title": "Auto Connect",
