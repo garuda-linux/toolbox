@@ -17,6 +17,14 @@ catalog:
   '@app/renderer': workspace:*
   typescript: ^5.9.3
   vite: ^8.0.14
+minimumReleaseAgeExclude:
+  - app-builder-lib@26.12.1
+  - builder-util-runtime@9.6.2
+  - builder-util@26.12.1
+  - dmg-builder@26.12.1
+  - electron-builder-squirrel-windows@26.12.1
+  - electron-builder@26.12.1
+  - electron-publish@26.12.1
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'
