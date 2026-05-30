@@ -1,10 +1,18 @@
 stages: [auto, test, build, release]
+.pnpm-cache: &pnpm-cache
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
 include:
   - 'https://gitlab.com/garuda-linux/tools/gitlab-ci-commons/-/raw/main/templates/commitizen.gitlab-ci.yml'
   - 'https://gitlab.com/garuda-linux/tools/gitlab-ci-commons/-/raw/main/templates/tag-to-release.gitlab-ci.yml'
   - 'https://gitlab.com/garuda-linux/tools/gitlab-ci-commons/-/raw/main/templates/transifex-automerge.gitlab-ci.yml'
 check-packagelists:
   # Check whether all packages advertised in the package lists are available
+  !!merge <<: *pnpm-cache
   stage: test
   image: archlinux:latest
   script:
@@ -17,20 +25,21 @@ check-packagelists:
     - pacman --noconfirm -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-'{keyring,mirrorlist}'.pkg.tar.zst'
     - echo -e "[garuda]\\nInclude = /etc/pacman.d/chaotic-mirrorlist\\n[chaotic-aur]\\nInclude = /etc/pacman.d/chaotic-mirrorlist" >>/etc/pacman.conf
     - echo "" >>/etc/pacman.conf
-    - pacman -Syu --noconfirm --needed nodejs paru corepack
-    - corepack enable
+    - pacman -Syu --noconfirm --needed nodejs paru pnpm
+    - pnpm config set store-dir .pnpm-store
     - pnpm check-pkglists
   allow_failure: true
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 build-linux:
+  !!merge <<: *pnpm-cache
   image: node:24-slim
   stage: build
   before_script:
     - npm install --global corepack@latest
     - corepack enable
-    - corepack prepare pnpm@latest-10 --activate
+    - corepack prepare pnpm@latest-11 --activate
     - pnpm config set store-dir .pnpm-store
   script:
     - |
@@ -39,14 +48,8 @@ build-linux:
         libnotify-dev libasound2-dev libcap-dev \
         libcups2-dev libxtst-dev libgtk-3-dev \
         libxss1 libnss3-dev libarchive-tools
-    - COREPACK_ENABLE_DOWNLOAD_PROMPT=0 pnpm -r install --frozen-lockfile --shamefully-hoist
+    - COREPACK_ENABLE_DOWNLOAD_PROMPT=0 pnpm -r install --frozen-lockfile
     - pnpm run compile
-  cache:
-    key:
-      files:
-        - pnpm-lock.yaml
-    paths:
-      - .pnpm-store
   artifacts:
     when: on_success
     access: all
