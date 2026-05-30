@@ -735,6 +735,10 @@
       "kdeBorderlessMaximize": {
         "title": "KDE Borderless Maximize",
         "description": "A KWin tweak that removes the title bar and window borders when an application is maximized in KDE Plasma, giving you more usable vertical screen space."
+      },
+      "discordDisableAutoupdate": {
+        "title": "Discord Disable Auto-Update",
+        "description": "Prevents Discord from prompting to download and installing updates, since this is totally useless on Archlinux - Pacman does it for us."
       }
     }
   },

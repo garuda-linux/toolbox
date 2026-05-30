@@ -76,4 +76,14 @@ monitor.bluez.rules = [
       disableReplacement: 'BorderlessMaximizedWindows=false',
     },
   },
+  {
+    key: 'discordDisableAutoupdate',
+    name: 'Disable Discord Autoupdate',
+    type: 'file',
+    path: '.config/discord/settings.json',
+    content: `{
+  "SKIP_HOST_UPDATE": true
+}
+`,
+  },
 ];
