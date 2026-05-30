@@ -8,13 +8,12 @@ import { Button } from 'primeng/button';
 import { RadioButton } from 'primeng/radiobutton';
 import { Password } from 'primeng/password';
 import { ConfirmationService } from 'primeng/api';
-import { BootRepairService, DiskInfo } from './boot-repair.service';
+import { BootRepairService } from './boot-repair.service';
 import { PartitionInfo } from '../boot-options/types';
 import { MessageToastService } from '@garudalinux/core';
 import { dialogOpen, dialogSave } from '../../electron-services/electron-api-utils.js';
-import { BackupRestoreTarget, BootInstallTarget, BootRepairAction } from './types';
+import { BackupRestoreTarget, BootInstallTarget, BootRepairAction, DiskInfo } from './types';
 import { ConfigService } from '../config/config.service';
-import { Logger } from '../../logging/logging';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Tooltip } from 'primeng/tooltip';
 
@@ -32,7 +31,6 @@ export class BootRepairComponent implements OnInit {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly configService = inject(ConfigService);
   private readonly loadingService = inject(LoadingService);
-  private readonly logger = Logger.getInstance();
   protected readonly transloco = inject(TranslocoService);
 
   private luksRootMap = signal<Record<string, boolean>>({});
@@ -89,9 +87,19 @@ export class BootRepairComponent implements OnInit {
       ? ' [' + this.transloco.translate('bootRepair.luksTag') + ']'
       : '';
 
+    const parts: string[] = [partition.name, `(${partition.size})`];
+    if (partition.fstype) {
+      parts.push(`${partition.fstype}`);
+    }
+    if (partition.mountpoint) {
+      parts.push(`@ ${partition.mountpoint}`);
+    }
+    if (partition.label) {
+      parts.push(`- ${partition.label}`);
+    }
+
     return {
-      label:
-        partition.name + ' (' + partition.size + ')' + (partition.label ? ' - ' + partition.label : '') + luksSuffix,
+      label: parts.join(' ') + luksSuffix,
       value: partition.name,
     };
   }
@@ -99,7 +107,7 @@ export class BootRepairComponent implements OnInit {
   private normalizeDevice(device: string): string {
     const normalized = device
       .trim()
-      .replace(/\[.*\]$/, '')
+      .replace(/\[.*]$/, '')
       .replace('/dev/', '')
       .trim();
 
@@ -110,23 +118,21 @@ export class BootRepairComponent implements OnInit {
     return normalized;
   }
 
-  private async refreshCurrentRootPartition(reason: string): Promise<void> {
+  private async refreshCurrentRootPartition(): Promise<void> {
     if (this.configService.state().isLiveSystem !== false) {
       this.currentRootPartition.set('');
-      this.logger.debug(`[boot-repair] skip current-root refresh (${reason}): live system`);
       return;
     }
 
     const currentRootPartition = await this.bootRepairService.getCurrentRootPartition();
     this.currentRootPartition.set(currentRootPartition);
-    this.logger.debug(`[boot-repair] refreshed current root (${reason}): ${currentRootPartition}`);
   }
 
   constructor() {
     effect(() => {
       const isLiveSystem = this.configService.state().isLiveSystem;
       if (isLiveSystem === false && this.currentRootPartition().length === 0) {
-        void this.refreshCurrentRootPartition('config-state-change');
+        void this.refreshCurrentRootPartition();
       }
     });
 
@@ -140,17 +146,15 @@ export class BootRepairComponent implements OnInit {
 
       untracked(() => {
         const rootOptions = linuxParts.map((p) => this.formatRootOption(p));
-        const partOptions = parts.map((p) => ({
-          label: p.name + ' (' + p.size + ')' + (p.label ? ' - ' + p.label : ''),
-          value: p.name,
-        }));
+        const mbrOptions = dsks.filter((d) => !/^zram\d+$/i.test(d.name));
+        const partOptions = this.mapPartitionsToLabelValue(parts);
         this.roots.set(rootOptions);
 
         if (act === 'repair' || act === 'backup' || act === 'restore') {
           if (act === 'backup' || act === 'restore') {
             if (backupTarget === 'mbr') {
               this.locations.set(
-                dsks.map((d) => ({
+                mbrOptions.map((d) => ({
                   label: d.name + ' (' + d.size + ')' + (d.model ? ' - ' + d.model : ''),
                   value: d.name,
                 })),
@@ -166,18 +170,13 @@ export class BootRepairComponent implements OnInit {
 
         if (target === 'mbr') {
           this.locations.set(
-            dsks.map((d) => ({
+            mbrOptions.map((d) => ({
               label: d.name + ' (' + d.size + ')' + (d.model ? ' - ' + d.model : ''),
               value: d.name,
             })),
           );
         } else if (target === 'esp') {
-          this.locations.set(
-            this.espPartitions().map((p) => ({
-              label: p.name + ' (' + p.size + ')' + (p.label ? ' - ' + p.label : ''),
-              value: p.name,
-            })),
-          );
+          this.locations.set(this.mapPartitionsToLabelValue(this.espPartitions()));
         } else {
           this.locations.set(rootOptions);
         }
@@ -251,7 +250,7 @@ export class BootRepairComponent implements OnInit {
 
       this.selectedLocation.set(null);
 
-      await this.refreshCurrentRootPartition('load-devices');
+      await this.refreshCurrentRootPartition();
     } catch (e) {
       this.toast.error(this.transloco.translate('bootRepair.errorTitle'), String(e));
     } finally {
@@ -274,7 +273,6 @@ export class BootRepairComponent implements OnInit {
     }
 
     const isCurrentInstalledRoot = this.isCurrentInstalledRoot();
-
     if (
       (act === 'repair' || act === 'reinstall') &&
       this.selectedRootIsLuks() &&
@@ -380,5 +378,18 @@ export class BootRepairComponent implements OnInit {
     if (!this.selectedRootIsLuks() || this.isCurrentInstalledRoot()) {
       this.luksPassword.set('');
     }
+  }
+
+  private mapPartitionsToLabelValue(parts: PartitionInfo[]) {
+    return parts.map((p) => {
+      const partParts: string[] = [p.name, `(${p.size})`];
+      if (p.fstype) partParts.push(`${p.fstype}`);
+      if (p.mountpoint) partParts.push(`@ ${p.mountpoint}`);
+      if (p.label) partParts.push(`- ${p.label}`);
+      return {
+        label: partParts.join(' '),
+        value: p.name,
+      };
+    });
   }
 }

@@ -10,7 +10,6 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": false,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "isolatedModules": true,
