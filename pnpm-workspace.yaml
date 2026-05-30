@@ -3,6 +3,7 @@ packages:
 allowBuilds:
   '@parcel/watcher': true
   electron: true
+  electron-winstaller: false
   esbuild: true
   lmdb: true
   msgpackr-extract: true
@@ -15,7 +16,7 @@ catalog:
   '@app/preload': workspace:*
   '@app/renderer': workspace:*
   typescript: ^5.9.3
-  vite: ^8.0.12
+  vite: ^8.0.14
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'
