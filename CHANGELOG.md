@@ -1,3 +1,32 @@
+## [unreleased]
+
+### ⚙️ Miscellaneous Tasks
+
+- Optimize; pnpm 11
+- *(packages)* Update from Arch wiki
+- *(flake.nix)* Migrate to prek
+## [5.3.1] - 2026-05-30
+
+### 🐛 Bug Fixes
+
+- *(deps)* A add workaround for electron installation failure
+## [5.3.0] - 2026-05-30
+
+### 🚀 Features
+
+- *(renderer)* Make the bluetooth users group more descriptive to avoid misconception
+- *(system-settings)* Add disable discord autoupdate option
+
+### 🐛 Bug Fixes
+
+- Exotic dependency @electron/node-gyp (resolved via git-repository) is not allowed in subdependencies
+- *(electron-versions)* Do not use pnpx as that causes invalid JSON in CI
+- *(boot-repair)* More robust partition recognizing; working LUKS unlock
+
+### ⚙️ Miscellaneous Tasks
+
+- *(changelog)* Update
+- Allow electron build script
 ## [5.2.3] - 2026-04-28
 
 ### 🚀 Features
