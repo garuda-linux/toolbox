@@ -108,6 +108,7 @@
 
       checks = eachSystem (pkgs: {
         pre-commit-check = inputs.git-hooks.lib.${pkgs.system}.run {
+          package = pkgs.prek;
           hooks = {
             check-json.enable = true;
             check-yaml = {
