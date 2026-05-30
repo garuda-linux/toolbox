@@ -639,6 +639,15 @@
     "aur": false
   },
   {
+    "name": "JOE (Joe's Own Editor)",
+    "description": "Terminal-based text editor designed to be easy to use.",
+    "url": "https://joe-editor.sourceforge.io/",
+    "pkgname": [
+      "joe"
+    ],
+    "aur": false
+  },
+  {
     "name": "Kakoune",
     "description": "Modal editor. Fewer keystrokes. Selection based, multi-cursor editing. Orthogonal design.",
     "url": "https://github.com/mawww/kakoune",
@@ -1202,6 +1211,15 @@
     "url": "https://orbada.sourceforge.io/",
     "pkgname": [
       "orbada"
+    ],
+    "aur": false
+  },
+  {
+    "name": "orbiton",
+    "description": "Configuration-free text editor for quick edit-format-build cycles.",
+    "url": "https://roboticoverlords.org/orbiton/",
+    "pkgname": [
+      "orbiton"
     ],
     "aur": false
   },

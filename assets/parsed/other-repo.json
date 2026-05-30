@@ -207,6 +207,15 @@
     "aur": false
   },
   {
+    "name": "Claude Code",
+    "description": "An agentic coding tool that lives in your terminal.",
+    "url": "https://github.com/anthropics/claude-code",
+    "pkgname": [
+      "claude-code"
+    ],
+    "aur": false
+  },
+  {
     "name": "Communicator",
     "description": "Integrated address book and dialer application features the search for and view of contacts, edit contact details, and make new contacts, favorites, and dialer pad. Part of maui.",
     "url": "https://mauikit.org/apps/communicator/",
@@ -1252,7 +1261,7 @@
   },
   {
     "name": "Recipes",
-    "description": "Recipe management application for GNOME. Part of gnome-extra.",
+    "description": "Recipe management application for GNOME.",
     "url": "https://wiki.gnome.org/Apps/Recipes",
     "pkgname": [
       "gnome-recipes"
@@ -1521,6 +1530,15 @@
     "aur": false
   },
   {
+    "name": "Wayland",
+    "description": "A newer, alternative display server protocol with several compositors to choose from. Its advantages over Xorg are enhanced security features, more efficient handling of modern graphics tasks and active development while retaining compatibility through Xwayland.",
+    "url": "https://wayland.freedesktop.org/",
+    "pkgname": [
+      "wayland"
+    ],
+    "aur": false
+  },
+  {
     "name": "wf-shell",
     "description": "Shell components for the Wayfire compositor.",
     "url": "https://github.com/WayfireWM/wf-shell",
@@ -1607,6 +1625,15 @@
     "url": "https://github.com/p5n/archlinux-stuff/tree/master/xdg-menu",
     "pkgname": [
       "archlinux-xdg-menu"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Xephyr",
+    "description": "A nested X server that runs as an X application.",
+    "url": "https://freedesktop.org/wiki/Software/Xephyr/",
+    "pkgname": [
+      "xorg-server-xephyr"
     ],
     "aur": false
   },

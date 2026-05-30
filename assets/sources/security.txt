@@ -1,6 +1,7 @@
 [[Category:Applications]]
 [[Category:Security]]
 [[Category:Lists of software]]
+[[ar:List of applications (العربية)/Security]]
 [[es:List of applications (Español)/Security]]
 [[hu:List of applications (Magyar)/Security]]
 [[ja:アプリケーション一覧/セキュリティ]]
@@ -21,12 +22,12 @@ See also [[Wikipedia:Comparison of packet analyzers]].
 * {{App|darkstat|Captures network traffic, calculates statistics about usage, and serves reports over HTTP.|https://unix4lyfe.org/darkstat/|{{Pkg|darkstat}}}}
 * {{App|[[Wikipedia:dSniff|dsniff]]|Collection of tools for network auditing and penetration testing.|https://www.monkey.org/~dugsong/dsniff/|{{Pkg|dsniff}}}}
 * {{App|[[Wikipedia:EtherApe|EtherApe]]|Graphical network monitor for Unix modeled after etherman. Featuring link layer, IP and TCP modes, it displays network activity graphically. Hosts and links change in size with traffic. Color coded protocols display.|https://etherape.sourceforge.io/|{{Pkg|etherape}}}}
-* {{App|[[Wikipedia:Ettercap (software)|Ettercap]]|Multipurpose Network sniffer/analyser/interceptor/logger.|https://ettercap.github.io/ettercap/|CLI: {{Pkg|ettercap}}, GUI: {{Pkg|ettercap-gtk}}}}
-* {{App|GNOME Network Tools|GNOME interface for various networking tools.|https://gitlab.gnome.org/GNOME/gnome-nettool|{{Pkg|gnome-nettool}}}}
-* {{App|hping|Command-line oriented TCP/IP packet assembler/analyzer.|http://hping.org/|{{Pkg|hping}}}}
+* {{App|[[Wikipedia:Ettercap (software)|Ettercap]]|Multipurpose Network sniffer/analyser/interceptor/logger.|https://www.ettercap-project.org/|CLI: {{Pkg|ettercap}}, GUI: {{Pkg|ettercap-gtk}}}}
+* {{App|GNOME Network Tools|GNOME interface for various networking tools.|https://gitlab.gnome.org/Archive/gnome-nettool|{{Pkg|gnome-nettool}}}}
+* {{App|hping|Command-line oriented TCP/IP packet assembler/analyzer.|https://www.hping.org/|{{Pkg|hping}}}}
 * {{App|IPTraf|Console-based network monitoring utility.|https://sourceforge.net/projects/iptraf-ng/|{{Pkg|iptraf-ng}}}}
 * {{App|jnettop|top-like console network traffic visualizer.|https://sourceforge.net/projects/jnettop/|{{Pkg|jnettop}}}}
-* {{App|[[Wikipedia:justniffer|justniffer]]|Network protocol analyzer that captures network traffic and produces logs in a customized way, can emulate Apache web server log files, track response times and extract all "intercepted" files from the HTTP traffic.|https://justniffer.sourceforge.net/|{{AUR|justniffer}}}}
+* {{App|[[Wikipedia:justniffer|justniffer]]|Network protocol analyzer that captures network traffic and produces logs in a customized way, can emulate Apache web server log files, track response times and extract all "intercepted" files from the HTTP traffic.|https://sourceforge.net/projects/justniffer/|{{AUR|justniffer}}}}
 * {{App|Kismet|802.11 layer2 wireless network detector, sniffer, and intrusion detection system.|https://www.kismetwireless.net/|{{Pkg|kismet}}}}
 * {{App|LinSSID|Graphical wireless scanner.|https://sourceforge.net/projects/linssid/|{{Pkg|linssid}}}}
 * {{App|Nemesis|Command-line network packet crafting and injection utility.|https://nemesis.sourceforge.net/|{{AUR|nemesis}}}}
@@ -52,7 +53,7 @@ See also [[Wikipedia:Comparison of packet analyzers]].
 
 == Firewall management ==
 
-See [[iptables#Front-ends]] and [[nftables#Front-ends]].
+See [[nftables#Front-ends]] (or [[iptables#Front-ends]] for the legacy framework).
 
 == Threat and vulnerability detection ==
 
@@ -89,7 +90,7 @@ See also [[Session lock]].
 
 {{Warning|Only ''sflock'', ''physlock'', ''Cinnamon Screensaver'' and ''MATE Screensaver'' are able to block tty access. See [[Xorg#Block TTY access]] on how to manually block tty access.}}
 
-* {{App|betterlockscreen|''i3lock-color'' wrapper. Betterlockscreen allows you to cache images with different filters and lockscreen with blazing speed.|https://github.com/pavanjadhaw/betterlockscreen|{{Aur|betterlockscreen}}}}
+* {{App|betterlockscreen|''i3lock-color'' wrapper. Betterlockscreen allows you to cache images with different filters and lockscreen with blazing speed.|https://github.com/betterlockscreen/betterlockscreen|{{Aur|betterlockscreen}}}}
 * {{App|Cinnamon Screensaver|Screen locker for the Cinnamon desktop.|https://github.com/linuxmint/cinnamon-screensaver|{{Pkg|cinnamon-screensaver}}}}
 * {{App|Deepin Screensaver|A lightweight Qt5 based screensaver.|https://github.com/linuxdeepin/deepin-screensaver|{{Pkg|deepin-screensaver}}}}
 * {{App|gtklock|GTK-based lockscreen for Wayland.|https://github.com/jovanlanik/gtklock|{{Pkg|gtklock}}}}
@@ -98,7 +99,7 @@ See also [[Session lock]].
 * {{App|i3lock-color|Fork of ''i3lock'' with color and positioning configuration support and can use your desktop with the blur effect applied as a background.|https://github.com/Raymo111/i3lock-color|{{AUR|i3lock-color}}}}
 * {{App|Light-locker|A simple locker (forked from ''gnome-screensaver'') that aims to have simple, sane, secure defaults and be well integrated with the desktop while not carrying any desktop-specific dependencies. It relies on [[LightDM]] for locking and unlocking your session via ConsoleKit/UPower or ''logind/systemd''.|https://github.com/the-cavalry/light-locker|{{Pkg|light-locker}}}}
 * {{App|MATE Screensaver|Screensaver and locker for MATE Desktop Environment.|https://github.com/mate-desktop/mate-screensaver|{{Pkg|mate-screensaver}}}}
-* {{App|physlock|Screen and console locker.|https://github.com/muennich/physlock|{{AUR|physlock}}}}
+* {{App|physlock|Screen and console locker.|https://github.com/xyb3rt/physlock|{{AUR|physlock}}}}
 * {{App|sflock|Simple screen locker utility for X, based on slock. Provides a very basic user feedback.|https://github.com/benruijl/sflock|{{AUR|sflock-git}}}}
 * {{App|[[slock]]|Very simple and lightweight X screen locker. Offers only a black background when locked, there are no animations or text fields.|https://tools.suckless.org/slock/|{{Pkg|slock}}}}
 * {{App|swaylock|Screen locker for Wayland.|https://github.com/swaywm/swaylock|{{Pkg|swaylock}}}}
@@ -125,15 +126,15 @@ See also [[Session lock]].
 
 * {{App|[[1Password]]|Proprietary tool for 1Password password manager.|https://1password.com/downloads/command-line/|{{AUR|1password}}}}
 * {{App|Bitwarden|Open source password manager with desktop, mobile, browser, and CLI versions. Cloud or self-hosted.|https://bitwarden.com/|{{Pkg|bitwarden-cli}}}}
-* {{App|gopass|Advanced console based password manager, supporting GnuPG and other backends.|https://github.com/justwatchcom/gopass|{{Pkg|gopass}}}}
+* {{App|gopass|Advanced console based password manager, supporting GnuPG and other backends.|https://github.com/gopasspw/gopass|{{Pkg|gopass}}}}
 * {{App|[[Himitsu]]|Secret storage manager.|https://himitsustore.org/|{{AUR|himitsu}}}}
 * {{App|KeePassC|Curses-based password manager compatible to KeePass v.1.x.|https://outerhaven.de/keepassc/|{{AUR|keepassc}}}}
 * {{App|LastPass|Hosted password manager. |https://www.lastpass.com/|{{AUR|lastpass-cli}}}}
-* {{App|[[pass]]|Simple console-based password manager featuring flat text file organization and GnuPG encryption.|https://www.passwordstore.org/|{{Pkg|pass}}}}
+* {{App|[[pass]]|Simple console-based password manager featuring flat text file organization and GnuPG encryption. Support for OTP: {{Pkg|pass-otp}}.|https://www.passwordstore.org/|{{Pkg|pass}}}}
 * {{App|passage|A fork of password-store that uses age as backend.|https://github.com/FiloSottile/passage/|{{AUR|passage-git}}}}
 * {{App|pwsafe|Unix command-line program that manages encrypted password databases.|https://github.com/nsd20463/pwsafe|{{AUR|pwsafe}}}}
 * {{App|tpm|Tiny password manager, inspired by pass, written entirely in POSIX shell.|https://github.com/nmeum/tpm|{{AUR|tpm}}}}
-* {{App|[[Vault]]|Proprietary tool for managing secrets.|https://vaultproject.io/|{{Pkg|vault}}}}
+* {{App|[[Vault]]|Proprietary tool for managing secrets.|https://developer.hashicorp.com/vault|{{Pkg|vault}}}}
 * {{App|kyp|Local-first terminal password manager with TOTP support. Encrypted SQLite vault, Argon2id key derivation, AES-256-GCM encryption.|https://github.com/stickpro/kyp|{{AUR|kyp}}}}
 
 === Graphical ===
@@ -163,7 +164,7 @@ See also [[Session lock]].
 
 * {{App|cfv|Tiny utility to both test and create checksum files, support ''.sfv'', ''.csv'', ''.crc'', ''.md5'', ''md5sum'', ''sha1sum'', ''.torrent'', ''par'', and ''.par2'' files.| https://cfv.sourceforge.net/|{{AUR|cfv}}}}
 * {{App|Collision|GUI tool to generate, compare and verify MD5, SHA-1, SHA-256, SHA-512, Blake3, CRC32 and Adler32 hashes.|https://apps.gnome.org/Collision/|{{Pkg|collision}}}}
-* {{App|GtkHash|A GTK utility for computing message digests or checksums|https://github.com/tristanheaven/gtkhash|{{AUR|gtkhash}}}}
+* {{App|GtkHash|A GTK utility for computing message digests or checksums|https://github.com/gtkhash/gtkhash|{{AUR|gtkhash}}}}
 * {{App|hashdeep|A cross-platform tools to compute hashes, or message digests, for any number of files|https://md5deep.sourceforge.net/|{{AUR|hashdeep}}}}
 * {{App|Hash-o-matic|Simple hash validator allowing to compare two files, generate the checksum of a file and verify if a hash matches a file.|https://apps.kde.org/hashomatic/|{{Pkg|hash-o-matic}}}}
 * {{App|MassHash|A set of file hashing tools (both CLI and GTK GUI) written in Python.  Supported algorithms include MD5, SHA-1, SHA-224, SHA-256, SHA-384, SHA-512.|https://jdleicher.github.io/MassHash/|{{AUR|masshash}}}}

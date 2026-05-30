@@ -17,7 +17,7 @@ See also [[Wikipedia:Comparison of software calculators]].
 
 * {{App|[[Wikipedia:bc programming language|bc]]|Arbitrary precision calculator language.|https://www.gnu.org/software/bc/|{{Pkg|bc}}}}
 * {{App|calc|Arbitrary precision console calculator.|http://www.isthe.com/chongo/tech/comp/calc/|{{Pkg|calc}}}}
-* {{App|calcpy|Terminal calculator and advanced math solver using Python, IPython and SymPy.|https://github.com/idanpa/calcpy|{{AUR|python-calcpy-git}}}}
+* {{App|calcpy|Terminal calculator and advanced math solver using Python, IPython and SymPy.|https://github.com/idanpa/calcpy|{{AUR|calcpy-git}}}}
 * {{App|clac|Command-line, stack-based calculator with postfix notation.|https://github.com/soveran/clac|{{AUR|clac}}}}
 * {{App|kalker|Command-line calculator with math syntax that supports user-defined variables and functions, complex numbers, and estimation of derivatives and integrals.|https://github.com/PaddiM8/kalker|{{AUR|kalker}}}}
 * {{App|Numbat|A statically typed programming language for scientific computations with first class support for physical dimensions and units.|https://numbat.dev|{{Pkg|numbat}}}}
@@ -30,7 +30,7 @@ See also [[Wikipedia:Comparison of software calculators]].
 * {{App|Deepin Calculator|Easy to use calculator for Deepin desktop.|https://www.deepin.org/en/original/deepin-calculator/|{{Pkg|deepin-calculator}}}}
 * {{App|Extcalc|Qt-based scientific graphical calculator.|https://extcalc-linux.sourceforge.net/|{{AUR|extcalc}}}}
 * {{App|FOX Calculator|Simple desktop calculator.|http://fox-toolkit.org/|{{Pkg|fox}}}}
-* {{App|galculator|GTK-based scientific calculator.||{{Pkg|galculator}}}}
+* {{App|galculator|GTK-based scientific calculator.|https://sourceforge.net/projects/galculator/ |{{Pkg|galculator}}}}
 * {{App|[[Wikipedia:Genius (mathematics software)|Genius]]|Advanced calculator including a mathematical programming language.|https://www.jirka.org/genius.html|{{Pkg|genius}}}}
 * {{App|[[Wikipedia:GNOME Calculator|GNOME Calculator]]|Scientific calculator included in the GNOME desktop. Part of {{Grp|gnome}}.|https://apps.gnome.org/Calculator/|{{Pkg|gnome-calculator}}}}
 * {{App|[[Wikipedia:KAlgebra|KAlgebra]]|Calculator and 3D plotter. Part of {{Grp|kde-education}}.|https://apps.kde.org/kalgebramobile/|{{Pkg|kalgebra}}}}
@@ -58,7 +58,7 @@ See also [[Wikipedia:Comparison of computer algebra systems]].
 * {{App|[[Wikipedia:Axiom (computer algebra system)|AXIOM]]|FriCAS: derivative of the powerful AXIOM-CAS.|https://fricas.sourceforge.net|{{Pkg|fricas}}}}
 * {{App|[[Wikipedia:GAP (computer algebra system)|GAP]]|Computer algebra system for computational discrete algebra with particular emphasis on computational group theory.|https://www.gap-system.org/|{{Pkg|gap}}}}
 * {{App|[[Maple]]|Famous commercial CAS. Often used in education.|https://www.maplesoft.com/products/maple/|{{AUR|maple2024}}}}
-* {{App|Mathics|A free CAS for symbolic mathematical computations which uses [[Python]] as its main language. It aims at achieving a Mathematica-compatible syntax and functions. It relies mostly on Sympy for most mathematical tasks and, optionally, Sage for more advanced functionality.|https://mathics.github.io/|{{AUR|mathics}}}}
+* {{App|Mathics3|A free CAS for symbolic mathematical computations which uses [[Python]] as its main language. It aims at achieving a Mathematica-compatible syntax and functions. It relies mostly on Sympy for most mathematical tasks and, optionally, Sage for more advanced functionality.|https://mathics.github.io/|{{AUR|mathics3}}}}
 * {{App|[[Wikipedia:Mathomatic|Mathomatic]]|General purpose Computer Algebra System written in C.|https://github.com/mfillpot/mathomatic|{{AUR|mathomatic}}}}
 * {{App|[[Wikipedia:Maxima (software)|Maxima]]|[[Wikipedia:Maple (software)|Maple]]/[[Wikipedia:Wolfram Mathematica|Mathematica]]-like computer algebra system.|https://maxima.sourceforge.net/|{{Pkg|maxima}}}}
 * {{App|[[Wikipedia:PARI/GP|PARI/GP]]|Computer algebra system designed for fast computations in number theory.|https://pari.math.u-bordeaux.fr/|{{Pkg|pari}}}}
@@ -68,7 +68,7 @@ See also [[Wikipedia:Comparison of computer algebra systems]].
 
 === Visualization of networks/graphs ===
 
-* {{App|Glue|Linked data visualizations across multiple files.|http://glueviz.org/|{{AUR|glueviz}}}}
+* {{App|Glue|Linked data visualizations across multiple files.|https://glueviz.org/|{{AUR|glueviz}}}}
 * {{App|[[Graphviz]]|The established tool for displaying smallish graphs in 2D.|https://www.graphviz.org|{{Pkg|graphviz}}}}
 
 === Scientific or technical computing ===
@@ -93,7 +93,6 @@ See also [[Wikipedia:Comparison of statistical packages]].
 
 * {{App|[[Wikipedia:gretl|gretl]]|A cross-platform software package for econometric analysis, written in the C programming language.|https://gretl.sourceforge.net/|{{AUR|gretl}}}}
 * {{App|[[Wikipedia:Just another Gibbs sampler|JAGS]] (Just another Gibbs sampler)|Cross-platform program for analysis of Bayesian hierarchical models using Markov Chain Monte Carlo (MCMC) simulation.|https://mcmc-jags.sourceforge.net/|{{AUR|jags}}}}
-* {{App|jamovi|Statistics package, which is easy to use, and designed to be familiar to users of SPSS. Based on the [https://electronjs.org/ Electron] platform.|https://www.jamovi.org/|{{AUR|jamovi-git}}}}
 * {{App|[[Wikipedia:PSPP|PSPP]]|Free SPSS implementation.|https://www.gnu.org/software/pspp/|{{AUR|pspp}}}}
 * {{App|[[Wikipedia:Pandas_(software)|Python Data Analysis Library (pandas)]]| Providing high-performance, easy-to-use data structures and data analysis tools with Python programming language.|https://pandas.pydata.org/|{{Pkg|python-pandas}}}}
 * {{App|[[R]]|Software environment for statistical computing and graphics.|https://cran.r-project.org/|{{Pkg|r}}}}
@@ -153,7 +152,7 @@ See also [[Wikipedia:Proof assistant]].
 * {{App|Geant4|A simulation toolkit for particle physics interactions.|https://geant4.web.cern.ch/|{{AUR|geant4}}}}
 * {{App|Herwig|Herwig is a multi-purpose particle physics event generator.|https://herwig.hepforge.org/|{{AUR|herwig}}}}
 * {{App|Netgen/NGSolve|A high performance multiphysics finite element software, with a flexible Python interface to implement new physical equations and solution algorithms easily.|https://ngsolve.org/|{{AUR|netgen-git}}, {{AUR|ngsolve-git}}}}
-* {{App|[[Wikipedia:Gmsh|ONELAB/Gmsh]]|An open-source, lightweight interface to finite element software, by default containing the mesh generator Gmsh, the finite element solver GetDP and the optimization library conveks.|http://onelab.info/ https://getdp.info/ https://gmsh.info/ http://onelab.info/conveks/|{{AUR|gmsh}}, {{AUR|getdp}}}}
+* {{App|[[Wikipedia:Gmsh|ONELAB/Gmsh]]|An open-source, lightweight interface to finite element software, by default containing the mesh generator Gmsh, the finite element solver GetDP and the optimization library conveks.|http://onelab.info/ https://getdp.info/ https://gmsh.info/ https://onelab.info/conveks/|{{AUR|gmsh}}, {{AUR|getdp}}}}
 * {{App|[[Wikipedia:OpenFOAM|OpenFOAM]]|Software package and toolkit for computational fluid dynamics (CFD).|https://openfoam.org/|{{AUR|openfoam-org}}}}
 * {{App|OpenLoops 2|A particle physics package for the fast numerical evaluation of tree and one-loop matrix elements.|https://openloops.hepforge.org/|{{AUR|openloops}}}}
 * {{App|QuTiP|QuTiP is open-source software for simulating the dynamics of open quantum systems|https://qutip.org/|{{AUR|python-qutip}}}}
@@ -169,7 +168,7 @@ See also [[Wikipedia:Proof assistant]].
 
 * {{App|ConvertAll|Unit conversion application that allows one to combine units in any way (e.g. inches per decade), even if it does not make sense.|https://convertall.bellz.org/|{{AUR|convertall}}}}
 * {{App|[https://printfn.github.io/fend/ fend]|An arbitrary-precision unit-aware calculator.|https://github.com/printfn/fend|{{AUR|fend}}}}
-* {{App|Gonvert|Conversion utility that allows conversion between many units like CGS, Ancient, Imperial with many categories like length, mass, numbers, etc.|http://www.unihedron.com/projects/gonvert/|{{AUR|gonvert}}}}
+* {{App|Gonvert|Conversion utility that allows conversion between many units like CGS, Ancient, Imperial with many categories like length, mass, numbers, etc.|https://www.unihedron.com/projects/gonvert/|{{AUR|gonvert}}}}
 * {{App|Numbat|A statically typed programming language for scientific computations with first class support for physical dimensions and units.|https://numbat.dev|{{Pkg|numbat}}}}
 * {{App|Rink|A unit conversion tool and library written in rust. It can be used for physics and engineering calculations, as well as dimensionality analysis.|https://rinkcalc.app/about|{{Pkg|rink}}}}
 * {{App|UDUNITS|A tool for calculations of physical quantities.|https://www.unidata.ucar.edu/software/udunits/|{{AUR|udunits}}}}
@@ -188,7 +187,7 @@ See also [[Wikipedia:Proof assistant]].
 See also [[Wikipedia:List of molecular graphics systems]].
 
 * {{App|[[Wikipedia:Avogadro_(software)|Avogadro]]|Editor, viewer and simulator for 3D molecule structures (also supports downloading files from the [[Wikipedia:Protein Data Bank|Protein Data Bank]]).|https://avogadro.cc/|{{AUR|avogadroapp}}}}
-* {{App|[[Wikipedia:Ghemical|Ghemical]]|Computational chemistry software package used to edit, view and simulate molecular structures.|http://bioinformatics.org/ghemical/ghemical/index.html|{{AUR|ghemical}}}}
+* {{App|[[Wikipedia:Ghemical|Ghemical]]|Computational chemistry software package used to edit, view and simulate molecular structures.|https://bioinformatics.org/ghemical/ghemical/index.html|{{AUR|ghemical}}}}
 * {{App|[[Wikipedia:PyMOL|PyMOL]]|Open-source molecular visualization system that can produce high quality 3D images of small molecules and biological macromolecules, such as proteins.|https://pymol.org/|{{Pkg|pymol}}}}
 * {{App|[[Wikipedia:UCSF Chimera|UCSF Chimera]]|Extensible molecular modeling system.|https://rbvi.ucsf.edu/chimera/|{{AUR|ucsf-chimera}}}}
 * {{App|UCSF ChimeraX|Next-generation molecular visualization program, following UCSF Chimera.|https://rbvi.ucsf.edu/chimerax/|{{AUR|chimerax}}}}
@@ -319,7 +318,7 @@ See also [[Wikipedia:List of molecular graphics systems]].
 * {{App|KWeather|A convergent weather application for Plasma. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kweather/|{{Pkg|kweather}}}}
 * {{App|meteo-qt|System tray application for weather status information.|https://github.com/dglent/meteo-qt|{{AUR|meteo-qt}}}}
 * {{App|wego|A terminal weather application.|https://tylerwolf35.github.io/wego{{Dead link|2025|08|15|status=404}}|{{AUR|wego}}}}
-* {{App|wttr|A simple console application to check the weather, using data from https://wttr.in|https://github.com/AmirrezaFiroozi/wttr|{{AUR|wttr}}{{Broken package link|package not found}}}}
+* {{App|wttr|A simple console application to check the weather, using data from https://wttr.in|https://github.com/AmirrezaFiroozi/wttr|{{AUR|wttr-bin}}}}
 * {{App|Xfce Weather Panel Plugin|Weather forecast plugin for the Xfce4 panel.|https://goodies.xfce.org/projects/panel-plugins/xfce4-weather-plugin|{{Pkg|xfce4-weather-plugin}}}}
 
 == Astronomy ==
@@ -339,7 +338,7 @@ See also [[Wikipedia:List of astrometric solvers]].
 * {{App|GIMP Astronomy Plugins|Set of GIMP plugins for astronomical image processing.|http://hennigbuam.de/georg/gimp.html|{{AUR|gimp-plugin-astronomy}}}}
 * {{App|Ginga|A viewer for astronomical data FITS (Flexible Image Transport System) files|https://ejeschke.github.io/ginga/|{{AUR|python-ginga}}}}
 * {{App|Montage|An astronomical image mosaic engine|http://montage.ipac.caltech.edu/|{{AUR|montage}}}}
-* {{App|Munipack|A general astronomical image processing software|http://munipack.physics.muni.cz/|{{AUR|munipack}}, {{AUR|c-munipack}}}}
+* {{App|Munipack|A general astronomical image processing software|https://munipack.physics.muni.cz/|{{AUR|munipack}}, {{AUR|c-munipack}}}}
 * {{App|oaCapture|A planetary imaging application using Qt5|https://www.openastroproject.org/oacapture/|{{AUR|oacapture}}}}
 * {{App|PlanetarySystemStacker|Produce a sharp image of a planetary system object|https://github.com/Rolf-Hempel/PlanetarySystemStacker|{{AUR|planetarysystemstacker-git}}}}
 * {{App|SCAMP|reads SExtractor catalogs and computes astrometric and photometric solutions for any arbitrary sequence of FITS images in a completely automatic way.|https://www.astromatic.net/software/scamp/|{{AUR|astromatic-scamp}}}}
@@ -368,7 +367,7 @@ See also [[Wikipedia:List of astrometric solvers]].
 * {{App|libTheSky|Fortran library to compute the positions of celestial bodies and events with great accuracy|https://libthesky.sourceforge.net/|{{AUR|libthesky}}, {{AUR|libthesky-data}}}}
 * {{App|Pal|Positional Astronomy Library.|https://github.com/Starlink/pal|{{AUR|starlink-pal}}}}
 * {{App|PyEphem|PyEphem provides scientific-grade astronomical computations|https://rhodesmill.org/pyephem/|{{AUR|python-pyephem}}}}
-* {{App|SOFA|Set of algorithms and procedures used in fundamental astronomy|http://www.iausofa.org/|{{AUR|sofa}}}}
+* {{App|SOFA|Set of algorithms and procedures used in fundamental astronomy|https://www.iausofa.org/|{{AUR|sofa}}}}
 
 === Toolkits ===
 
@@ -428,7 +427,7 @@ See also [[Wikipedia:List of astrometric solvers]].
 
 See also [[Wikipedia:Planetarium software]] and [[Wikipedia:List of observatory software]].
 
-* {{App|Aladin|Interactive software sky atlas|http://aladin.u-strasbg.fr/aladin.gml|{{AUR|aladin}}}}
+* {{App|Aladin|Interactive software sky atlas|https://aladin.cds.unistra.fr/aladin.gml|{{AUR|aladin}}}}
 * {{App|astroterm|Terminal-based star map written in C, which displays a star map in real time. Date, time, location and speed are configurable.|https://github.com/da-luce/astroterm|{{Pkg|astroterm}}}}
 * {{App|[[Wikipedia:Celestia|Celestia]]|3D astronomy simulation program that allows users to travel through an extensive universe, modeled after reality, at any speed, in any direction and at any time in history.|https://celestiaproject.space/|{{AUR|celestia}}}}
 * {{App|Gaia Sky|An open source 3D universe simulator with support for more than a billion objects|https://zah.uni-heidelberg.de/gaia/outreach/gaiasky|{{AUR|gaiasky}}}}
@@ -497,7 +496,7 @@ Slicers convert 3D models into a format supported by the 3D printer, usually thi
 * {{App|FlashPrint|Slicer for the FlashForge 3D printers. Closed source.|http://www.ff3dp.com/|{{AUR|flashprint}}}}
 * {{App|icesl|Modelling software with integrated slicer. Not brand specific. Closed source.|https://icesl.loria.fr/|{{AUR|icesl}}}}
 * {{App|IdeaMaker|Slicer by Raise3D. Aimed at their printers but supports other brands as well. Closed source.|https://www.raise3d.com/pages/ideamaker|{{AUR|ideamaker}}}}
-* {{App|MatterControl|Simple 3D editor, slicer, and 3D printer control software by MatterHackers. Not brand specific. Open source.|http://www.mattercontrol.com|{{AUR|mattercontrol}}}}
+* {{App|MatterControl|Simple 3D editor, slicer, and 3D printer control software by MatterHackers. Not brand specific. Open source.|https://www.matterhackers.com/store/l/mattercontrol/sk/MKZGTDW6|{{AUR|mattercontrol}}}}
 * {{App|orca-slicer|Community maintained fork of BambuStudio (in turn forked from PrusaSlicer). Open Source.|https://github.com/SoftFever/OrcaSlicer|{{AUR|orca-slicer}}}}
 * {{App|[[PrusaSlicer]]|Slicer by Prusa Research. A fork of Slic3r. Aimed at their printers but supports other brands as well. Open source.|https://github.com/prusa3d/PrusaSlicer|{{Pkg|prusa-slicer}}}}
 * {{App|Slic3r|One of the earliest slicers. Not used much any longer. Not brand specific. Open source.|https://slic3r.org/|{{AUR|slic3r}}}}

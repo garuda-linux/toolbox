@@ -181,8 +181,8 @@
   },
   {
     "name": "Brave",
-    "description": "Web browser with builtin ad- and tracker blocking.",
-    "url": "https://www.brave.com/",
+    "description": "A web browser with a built-in advertisement and tracker blocking mechanism.",
+    "url": "https://brave.com/",
     "pkgname": [
       "brave-bin"
     ],
@@ -298,8 +298,8 @@
   },
   {
     "name": "Chromium",
-    "description": "Web browser developed by Google, the open source project behind Google Chrome.",
-    "url": "https://www.chromium.org/",
+    "description": "Web browser developed by Google. Chromium is the open-source project behind Google Chrome.",
+    "url": "https://www.chromium.org/Home/",
     "pkgname": [
       "chromium"
     ],
@@ -388,7 +388,7 @@
   },
   {
     "name": "Delta Chat",
-    "description": "A privacy oriented chat application built on e-mail. Based on the Electron platform.",
+    "description": "A privacy oriented chatmail application. Based on the Electron platform.",
     "url": "https://delta.chat/",
     "pkgname": [
       "deltachat-desktop"
@@ -596,7 +596,7 @@
   {
     "name": "Firefox",
     "description": "Extensible browser from Mozilla based on Gecko with fast rendering.",
-    "url": "https://mozilla.com/firefox",
+    "url": "https://www.firefox.com/en-US/",
     "pkgname": [
       "firefox"
     ],
@@ -605,7 +605,7 @@
   {
     "name": "Floorp",
     "description": "Firefox-based browser developed by a community of students in Japan.",
-    "url": "https://floorp.ablaze.one",
+    "url": "https://floorp.app/",
     "pkgname": [
       "floorp"
     ],
@@ -837,15 +837,6 @@
     "aur": false
   },
   {
-    "name": "Helium",
-    "description": "A browser in beta based on Ungoogled Chromium with Chrome Web Store proxying and additional features, such as split view and !bangs in the address bar.",
-    "url": "https://helium.computer/",
-    "pkgname": [
-      "helium-browser-bin"
-    ],
-    "aur": false
-  },
-  {
     "name": "himalaya",
     "description": "Himalaya CLI is written in Rust, based on email-lib.",
     "url": "https://github.com/pimalaya/himalaya",
@@ -983,7 +974,7 @@
   {
     "name": "isatapd",
     "description": "Creates and maintains an ISATAP tunnel (RFC:5214).",
-    "url": "http://www.saschahlusiak.de/linux/isatap.htm",
+    "url": "https://www.saschahlusiak.de/linux/isatap.htm",
     "pkgname": [
       "isatapd"
     ],
@@ -1217,16 +1208,7 @@
   {
     "name": "Links",
     "description": "Graphics and text mode web browser. Includes a console version similar to Lynx.",
-    "url": "http://links.twibright.com/",
-    "pkgname": [
-      "links"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Links",
-    "description": "Graphics and text mode web browser. Includes a graphical X-window/framebuffer version with CSS, image rendering, pull-down menus. It can be launched with the xlinks -g command.",
-    "url": "http://links.twibright.com/",
+    "url": "https://links.twibright.com/",
     "pkgname": [
       "links"
     ],
@@ -1316,7 +1298,7 @@
   {
     "name": "Microsoft Edge",
     "description": "Proprietary web browser developed by Microsoft.",
-    "url": "https://www.microsoft.com/edge/",
+    "url": "https://www.microsoft.com/en-us/edge/",
     "pkgname": [
       "microsoft-edge-stable-bin"
     ],
@@ -1346,15 +1328,6 @@
     "url": "https://mullvad.net/",
     "pkgname": [
       "mullvad-vpn"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Mullvad Browser",
-    "description": "Privacy-focused web browser developed by Mullvad VPN and the Tor Project based on Firefox ESR.",
-    "url": "https://mullvad.net/en/browser",
-    "pkgname": [
-      "mullvad-browser-bin"
     ],
     "aur": false
   },
@@ -1683,6 +1656,15 @@
     "aur": false
   },
   {
+    "name": "Parla",
+    "description": "A chatmail application for the GNOME desktop. Based on the GTK framework.",
+    "url": "https://github.com/trufae/parla/",
+    "pkgname": [
+      "parla"
+    ],
+    "aur": false
+  },
+  {
     "name": "Pastebinit",
     "description": "Really small Python script that acts as a Pastebin client (see pastebinit -l for the list of servers).",
     "url": "https://launchpad.net/pastebinit",
@@ -1946,7 +1928,7 @@
   {
     "name": "RTMPDump",
     "description": "Download FLV videos through RTMP (Adobe's proprietary protocol for Flash video players)",
-    "url": "http://rtmpdump.mplayerhq.hu/",
+    "url": "https://rtmpdump.mplayerhq.hu/",
     "pkgname": [
       "rtmpdump"
     ],
@@ -2003,6 +1985,15 @@
     "url": "https://www.seafile.com/",
     "pkgname": [
       "seafile-client"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Shadowsocks",
+    "description": "Secure socks5 proxy, designed to protect your Internet traffic.",
+    "url": "https://shadowsocks.org/",
+    "pkgname": [
+      "shadowsocks-rust"
     ],
     "aur": false
   },
@@ -2296,8 +2287,8 @@
   },
   {
     "name": "Tor Browser Launcher",
-    "description": "Securely and easily download, verify, install, and launch Tor Browser, a fork of Firefox ESR.",
-    "url": "https://github.com/micahflee/torbrowser-launcher",
+    "description": "Securely and easily download, verify, install, and launch Tor Browser. Tor Browser is a fork of Firefox ESR with the ability to access Onion domains, plus additional privacy modifications.",
+    "url": "https://gitlab.torproject.org/tpo/applications/torbrowser-launcher",
     "pkgname": [
       "torbrowser-launcher"
     ],
@@ -2448,15 +2439,6 @@
     "aur": false
   },
   {
-    "name": "Varnish",
-    "description": "High-performance HTTP accelerator.",
-    "url": "https://varnish-cache.org/",
-    "pkgname": [
-      "varnish"
-    ],
-    "aur": false
-  },
-  {
     "name": "vegeta",
     "description": "HTTP load testing tool, written in Go.",
     "url": "https://github.com/tsenart/vegeta",
@@ -2576,7 +2558,7 @@
   {
     "name": "Waterfox",
     "description": "Fork of Mozilla Firefox featuring some privacy, usability, and speed enhancements.",
-    "url": "https://www.waterfox.net/",
+    "url": "https://www.waterfox.com/",
     "pkgname": [
       "waterfox"
     ],
@@ -2621,7 +2603,7 @@
   {
     "name": "Wgetpaste",
     "description": "Bash script that automates pasting to a number of pastebin services.",
-    "url": "http://wgetpaste.zlin.dk/",
+    "url": "https://wgetpaste.zlin.dk/",
     "pkgname": [
       "wgetpaste"
     ],
@@ -2759,15 +2741,6 @@
     "url": "https://github.com/bol-van/zapret",
     "pkgname": [
       "zapret-git"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Zen Browser",
-    "description": "An experimental, performance-optimized fork of Firefox focused on customizability and design with additional features.",
-    "url": "https://www.zen-browser.app/",
-    "pkgname": [
-      "zen-browser-bin"
     ],
     "aur": false
   },

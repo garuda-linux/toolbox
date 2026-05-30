@@ -1,6 +1,7 @@
 [[Category:Internet applications]]
 [[Category:Lists of software]]
-[[es:List of applications (Español)/Internet]] 
+[[ar:List of applications (العربية)/Internet]]
+[[es:List of applications (Español)/Internet]]
 [[hu:List of applications (Magyar)/Internet]]
 [[ja:アプリケーション一覧/インターネット]]
 [[pl:List of applications (Polski)/Internet]]
@@ -15,6 +16,7 @@ See [[Network configuration#Network managers]].
 
 === VPN clients ===
 
+* {{App|Forticlient|The Fortinet VPN client ZTNA edition.|https://www.forticlient.com/|{{AUR|forticlient}}}}
 * {{App|GlobalProtect-openconnect|A GlobalProtect VPN client (GUI) for Linux, based on OpenConnect and built with Qt5, supports SAML auth mode.|https://github.com/yuezk/GlobalProtect-openconnect/|{{Pkg|globalprotect-openconnect}}}}
 * {{App|Libreswan|A free software implementation of the most widely supported and standardized VPN protocol based on ("IPsec") and the Internet Key Exchange ("IKE").|https://libreswan.org/|{{AUR|libreswan}}}}
 * {{App|[[Mullvad]]|A GUI client for the Mullvad VPN service |https://mullvad.net/|{{Pkg|mullvad-vpn}}}}
@@ -36,13 +38,12 @@ See [[Network configuration#Network managers]].
 === Proxy servers ===
 
 * {{App|Brook|Proxy focusing on strong encryption and being undetectable.|https://txthinking.github.io/brook/|{{Pkg|brook}}}}
-* {{App|Clash|A rule-based tunnel in Go.|https://github.com/Dreamacro/clash{{Dead link|2024|01|13|status=404}}|{{Pkg|clash}}{{Broken package link|package not found}}}}
 * {{App|Dante|SOCKS server and SOCKS client, implementing [[RFC:1928]] and related standards.|https://www.inet.no/dante/|{{Pkg|dante}}}}
 * {{App|Geph|A modular Internet censorship circumvention system designed specifically to deal with national filtering.|https://geph.io/en/|{{AUR|geph4-client}}}}
 * {{App|hiddify|Multiplatform chain proxy client based on {{AUR|sing-box}}.|https://github.com/hiddify/hiddify-next|{{AUR|hiddify}}}}
 * {{App|[[NaïveProxy]]|A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility.|https://github.com/klzgrad/naiveproxy|{{AUR|naiveproxy}}}}
 * {{App|[[Privoxy]]|Non-caching web proxy with advanced filtering capabilities for enhancing privacy, modifying web page data and HTTP headers, controlling access, and removing ads and other obnoxious Internet junk.|https://www.privoxy.org/|{{Pkg|privoxy}}}}
-* {{App|[[Shadowsocks]]|Secure socks5 proxy, designed to protect your Internet traffic.|https://shadowsocks.org/|Python: {{Pkg|shadowsocks}}{{Broken package link|package not found}}, Rust: {{Pkg|shadowsocks-rust}}}}
+* {{App|[[Shadowsocks]]|Secure socks5 proxy, designed to protect your Internet traffic.|https://shadowsocks.org/|{{Pkg|shadowsocks-rust}}}}
 * {{App|[[Squid]]|Caching proxy for the Web supporting HTTP, HTTPS, FTP, and more.|https://www.squid-cache.org/|{{Pkg|squid}}}}
 * {{App|[[Stunnel]]|A server and client to add and remove TLS encryption to TCP data flow.|https://www.stunnel.org/|{{Pkg|stunnel}}}}
 * {{App|Throne|Cross-platform GUI proxy utility (Empowered by {{AUR|sing-box}}).|https://github.com/throneproj/Throne|{{AUR|throne}}}}
@@ -69,7 +70,7 @@ See [[Network configuration#Network managers]].
 
 * {{App|6tunnel|Tunnels IPv6 connections for IPv4-only applications.|https://github.com/wojtekka/6tunnel/|{{Pkg|6tunnel}}}}
 * {{App|iodine|Tunnel IPv4 data through a DNS server.|https://code.kryo.se/iodine/|{{Pkg|iodine}}}}
-* {{App|isatapd|Creates and maintains an ISATAP tunnel ([[RFC:5214]]).|http://www.saschahlusiak.de/linux/isatap.htm|{{Pkg|isatapd}}}}
+* {{App|isatapd|Creates and maintains an ISATAP tunnel ([[RFC:5214]]).|https://www.saschahlusiak.de/linux/isatap.htm|{{Pkg|isatapd}}}}
 * {{App|Ping Tunnel|A tool for reliably tunneling TCP connections over ICMP echo request and reply packets.|https://www.cs.uit.no/~daniels/PingTunnel/|{{Pkg|ptunnel}}}}
 * {{App|Tuntox|Tunnel TCP connections over the Tox protocol.|https://github.com/gjedeer/tuntox/|{{Pkg|tuntox}}}}
 
@@ -112,7 +113,7 @@ Tools to avoid censorship, bandwidth throttle without anonymization. See [[Wikip
 
 == Web browsers ==
 
-See also [[Wikipedia:Comparison of web browsers]].
+See also: [[Wikipedia:Comparison of web browsers]]
 
 === Console ===
 
@@ -120,51 +121,53 @@ See also [[Wikipedia:Comparison of web browsers]].
 * {{App|Carbonyl|A Chromium based browser built to run in a terminal.|https://fathy.fr/carbonyl|{{AUR|carbonyl}}}}
 * {{App|Chawan|A web browser for your terminal.|https://sr.ht/~bptato/chawan/|{{Pkg|chawan}}}}
 * {{App|[[ELinks]]|Advanced and well-established feature-rich text mode web browser with mouse wheel scroll support, frames and tables, extensible with Lua & Guile (links fork).|http://elinks.or.cz/|{{Pkg|elinks}}}}
-* {{App|[[Wikipedia:Links (web browser)|Links]]|Graphics and text mode web browser. Includes a console version similar to Lynx.|http://links.twibright.com/|{{Pkg|links}}}}
+* {{App|[[Wikipedia:Links (web browser)|Links]]|Graphics and text mode web browser. Includes a console version similar to Lynx.|https://links.twibright.com/|{{Pkg|links}}}}
 * {{App|[[Wikipedia:Lynx (web browser)|Lynx]]|Text browser for the World Wide Web.|https://lynx.invisible-island.net/|{{Pkg|lynx}}}}
 * {{App|[[w3m]]|Pager/text-based web browser. It has vim-like keybindings, and is able to display images.|https://salsa.debian.org/debian/w3m|{{Pkg|w3m}}}}
+* {{App|archwiki-tui|Minimalist terminal browser for the ArchWiki.|https://github.com/Harshil-Anuwadia/archwiki-tui|{{AUR|archwiki-tui-git}}}}
 
 === Graphical ===
 
 ==== Gecko-based ====
 
-See also [[Wikipedia:Gecko (software)]].
+See also: [[Wikipedia:Gecko (software)]]
 
-* {{App|[[Firefox]]|Extensible browser from Mozilla based on Gecko with fast rendering.|https://mozilla.com/firefox|{{Pkg|firefox}}}}
+* {{App|[[Firefox]]|Extensible browser from Mozilla based on Gecko with fast rendering.|https://www.firefox.com/en-US/|{{Pkg|firefox}}}}
 * {{App|[[Wikipedia:SeaMonkey|SeaMonkey]]|Continuation of the Mozilla Internet Suite.|https://www.seamonkey-project.org/|{{AUR|seamonkey}}}}
 
 ===== Firefox spin-offs =====
 
-* {{App|[[Wikipedia:Floorp|Floorp]]|Firefox-based browser developed by a community of students in Japan.| https://floorp.ablaze.one|{{AUR|floorp}}}}
+* {{App|[[Wikipedia:Floorp|Floorp]]|Firefox-based browser developed by a community of students in Japan.|https://floorp.app/|{{AUR|floorp}}}}
 * {{App|[[Wikipedia:GNU IceCat|GNU IceCat]]|A customized build of Firefox ESR distributed by the GNU Project, stripped of non-free components and with additional privacy extensions. Release cycle may be delayed compared to Mozilla Firefox.|https://www.gnu.org/software/gnuzilla/|{{AUR|icecat}}}}
 * {{App|Konform Browser|A customized build of Firefox ESR focused on security, privacy and freedom. Originally based on LibreWolf.|https://codeberg.org/konform-browser|{{AUR|konform-browser}}}}
 * {{App|[[Wikipedia:LibreWolf|LibreWolf]]|A fork of Firefox, focused on privacy, security and freedom.|https://librewolf.net/|{{AUR|librewolf}}}}
-* {{App|[[Wikipedia:Midori (web browser)|Midori]]|Light, fast and secure browser.|https://github.com/goastian/midori-desktop|{{AUR|midori}}}}
-* {{App|[[Wikipedia:Mullvad Browser|Mullvad Browser]]|Privacy-focused web browser developed by Mullvad VPN and the Tor Project based on Firefox ESR.|https://mullvad.net/en/browser|{{AUR|mullvad-browser-bin}}}}
-* {{App|[[Tor]] Browser Launcher|Securely and easily download, verify, install, and launch Tor Browser, a fork of Firefox ESR.|https://github.com/micahflee/torbrowser-launcher|{{Pkg|torbrowser-launcher}}}}
-* {{App|[[Wikipedia:Waterfox|Waterfox]]|Fork of Mozilla Firefox featuring some privacy, usability, and speed enhancements.|https://www.waterfox.net/|{{AUR|waterfox}}}}
-* {{App|[[Wikipedia:Zen Browser|Zen Browser]]|An experimental, performance-optimized fork of Firefox focused on customizability and design with additional features.|https://www.zen-browser.app/|{{AUR|zen-browser-bin}}}}
+* {{App|[[Wikipedia:Midori (web browser)|Midori]]|Light, fast and secure browser.|https://github.com/goastian/midori-desktop|{{AUR|midori-bin}}}}
+* {{App|[[Wikipedia:Mullvad Browser|Mullvad Browser]]|Privacy-focused web browser developed by Mullvad VPN and the Tor Project based on Firefox ESR.|https://mullvad.net/en/browser|{{AUR|mullvad-browser}}}}
+* {{App|[[Tor]] Browser Launcher|Securely and easily download, verify, install, and launch Tor Browser. Tor Browser is a fork of Firefox ESR with the ability to access Onion domains, plus additional privacy modifications.|https://gitlab.torproject.org/tpo/applications/torbrowser-launcher|{{Pkg|torbrowser-launcher}}}}
+* {{App|[[Wikipedia:Waterfox|Waterfox]]|Fork of Mozilla Firefox featuring some privacy, usability, and speed enhancements.|https://www.waterfox.com/|{{AUR|waterfox}}}}
+* {{App|[[Wikipedia:Zen Browser|Zen Browser]]|An experimental, performance-optimized fork of Firefox focused on customizability and design with additional features.|https://zen-browser.app/|{{AUR|zen-browser}}}}
 
 ==== Blink-based ====
 
-See also [[Wikipedia:Blink (web engine)]].
+See also: [[Wikipedia:Blink (web engine)]]
 
-* {{App|[[Chromium]]|Web browser developed by Google, the open source project behind Google Chrome.|https://www.chromium.org/|{{Pkg|chromium}}}}
+* {{App|[[Chromium]]|Web browser developed by Google. Chromium is the open-source project behind Google Chrome.|https://www.chromium.org/Home/|{{Pkg|chromium}}}}
 
-===== Privacy-focused chromium spin-offs =====
+===== Privacy-focused Chromium spin-offs =====
 
-* {{App|[[Wikipedia:Brave (web browser)|Brave]]|Web browser with builtin ad- and tracker blocking.|https://www.brave.com/|{{AUR|brave-bin}}}}
-* {{App|Cromite|Cromite is a Chromium fork based on Bromite (Currently unmaintained) with built-in support for ad blocking and an eye for privacy. See [https://github.com/uazo/cromite/blob/master/docs/FEATURES.md List of features].|https://www.cromite.org/|{{AUR|cromite-bin}}}}
-* {{App|Helium|A browser in beta based on Ungoogled Chromium with Chrome Web Store proxying and additional features, such as split view and !bangs in the address bar.|https://helium.computer/|{{AUR|helium-browser-bin}}}}
+* {{App|[[Wikipedia:Brave (web browser)|Brave]]|A web browser with a built-in advertisement and tracker blocking mechanism.|https://brave.com/|{{AUR|brave-bin}}}}
+* {{App|Cromite|Cromite is a Chromium fork based on Bromite (Currently unmaintained) with built-in support for ad blocking and an eye for privacy. See its [https://github.com/uazo/cromite/blob/master/docs/FEATURES.md list of features].|https://github.com/uazo/cromite|{{AUR|cromite-bin}}}}
+* {{App|Helium|A browser based on Ungoogled Chromium with multiple layouts, !bangs in the address bar and a Chrome Web Store proxy.|https://helium.computer/|{{AUR|helium-browser}}}}
 * {{App|Thorium|Thorium develops a periodically synchronized fork of the Chromium browser, expanded with additional patches to optimize performance, improve usability and enhance security. According to the developers' tests Thorium is 8-40% ahead of the regular Chromium, mainly due to the inclusion of additional optimizations during compilation.|https://thorium.rocks/|{{AUR|thorium-browser-bin}}}}
-* {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]]|Modifications to Google Chromium for removing Google integration and enhancing privacy, control, and transparency|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium}}}}
-* {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]] (Widevine)|A patched version of Ungoogled Chromium for those who want to benefit from its privacy features while also being able to access DRM-protected content.|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium-widevine-bin}}}}
+* {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]]|Modifications to Google Chromium for removing Google integration and enhancing privacy, control, and transparency.|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium}}}}
+* {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]] (Widevine)|The same as the regular version, but with the ability to access DRM-protected content.|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium-widevine-bin}}}}
 
-===== Proprietary chromium spin-offs =====
+===== Proprietary Chromium spin-offs =====
 
 * {{App|[[Wikipedia:Google Chrome|Google Chrome]]|Proprietary web browser developed by Google.|https://www.google.com/chrome/|{{AUR|google-chrome}}}}
-* {{App|[[Wikipedia:Microsoft Edge|Microsoft Edge]]|Proprietary web browser developed by Microsoft.|https://www.microsoft.com/edge/|{{AUR|microsoft-edge-stable-bin}}}}
-* {{App|[[Wikipedia:Opera (web browser)|Opera]]|Proprietary browser developed by Opera Software.|https://opera.com|{{AUR|opera}}}}
+* {{App|[[Wikipedia:Microsoft Edge|Microsoft Edge]]|Proprietary web browser developed by Microsoft.|https://www.microsoft.com/en-us/edge/|{{AUR|microsoft-edge-stable-bin}}}}
+* {{App|[[Wikipedia:Opera (web browser)|Opera]]|Proprietary browser developed by Opera Software.|https://www.opera.com/opera|{{AUR|opera}}}}
+* {{App|[[Wikipedia:Opera (web browser)#Opera GX|Opera GX]]|Proprietary "gaming-oriented" alternative to the regular Opera browser. Also developed by Opera Software.|https://www.opera.com/gx|{{AUR|opera-gx}}}}
 * {{App|[[Wikipedia:SlimBrowser|Slimjet]]|Fast, smart and powerful proprietary browser based on Chromium.|https://www.slimjet.com/|{{AUR|slimjet}}}}
 * {{App|[[Wikipedia:SRWare Iron|SRWare Iron]]|Light-weight proprietary browser based on Chromium.|https://www.srware.net/iron/|{{AUR|srware-iron-bin}}}}
 * {{App|[[Vivaldi]]|An advanced proprietary browser made with the power user in mind.|https://vivaldi.com/|{{Pkg|vivaldi}}}}
@@ -184,19 +187,20 @@ See also [[Wikipedia:Blink (web engine)]].
 
 ===== Browsers based on Electron =====
 
-* {{App|Catalyst|A minimal FOSS web browser with no data collection.|https://getcatalyst.eu.org|{{AUR|catalyst-browser-bin}}}}
+* {{App|Catalyst|A minimal FOSS web browser with no data collection.|https://getcatalyst.eu.org/|{{AUR|catalyst-browser-bin}}}}
 * {{App|Franz|Messaging browser for WhatsApp, Facebook Messenger, Slack, Telegram and many other web services.|https://meetfranz.com/|{{AUR|franz}}}}
 * {{App|Ferdium|A GPL-licensed alternative to Franz, forked from Franz.|https://ferdium.org/|{{AUR|ferdium}}}}
 * {{App|Min|A fast, minimal browser that protects your privacy. It includes an interface designed to minimize distractions.|https://minbrowser.org/|{{AUR|min}}}}
-* {{App|Vieb|Minimalist Electron-based browser with Vim-inspired keybindings and a built-in ad-blocker.|https://vieb.dev|{{AUR|vieb-bin}}}}
+* {{App|Vieb|Minimalist Electron-based browser with Vim-inspired keybindings and a built-in ad-blocker.|https://vieb.dev/|{{AUR|vieb}}}}
 
-==== WebKitGTK-based ====
+==== Browsers based on WebKitGTK ====
 
-See also [[Wikipedia:WebKit]].
+See also: [[Wikipedia:WebKit]]
 
-{{Note|''webkitgtk, webkitgtk2, qt5-webkit'' and ''qtwebkit''–based browsers were removed from the list, because these are today considered insecure and outdated. More info [https://blogs.gnome.org/mcatanzaro/2016/02/01/on-webkit-security-updates/ here] and [https://blogs.gnome.org/mcatanzaro/2022/11/04/stop-using-qtwebkit/ here].}}
+{{Note|''webkitgtk, webkitgtk2, qt5-webkit'' and ''qtwebkit''–based browsers were removed from the list, because these are today considered insecure and outdated. More information is available [https://blogs.gnome.org/mcatanzaro/2016/02/01/on-webkit-security-updates/ here] and [https://blogs.gnome.org/mcatanzaro/2022/11/04/stop-using-qtwebkit/ here].}}
 
 Most of these support ad-blocking via [https://github.com/jun7/wyebadblock wyebadblock].
+
 * {{App|[[Badwolf]]|A minimalist privacy-focused browser.|https://hacktivis.me/projects/badwolf|{{AUR|badwolf}}}}
 * {{App|Eolie|Simple web browser for GNOME.|https://wiki.gnome.org/Apps/Eolie|{{Pkg|eolie}}}}
 * {{App|[[GNOME Web]]|Browser which uses the WebKitGTK rendering engine. Part of {{Grp|gnome}}.|https://apps.gnome.org/Epiphany/|{{Pkg|epiphany}}}}
@@ -209,26 +213,26 @@ Most of these support ad-blocking via [https://github.com/jun7/wyebadblock wyeba
 * {{App|wyeb|A vim-like web browser inspired by dwb and luakit with Adblock.|https://github.com/jun7/wyeb|{{AUR|wyeb-git}}}}
 
 ==== Goanna-based ====
-See also [[Wikipedia:Goanna (software)]].
+
+See also: [[Wikipedia:Goanna (software)]]
 
 * {{App|[[Wikipedia:Basilisk (web browser)|Basilisk]]|A XUL-based web browser, similar in design to Firefox, aimed at providing a fully functional browsing experience with a classic interface.|https://basilisk-browser.org/|{{AUR|basilisk}}}}
-* {{App|[[Wikipedia:Pale Moon (web browser)|Pale Moon]]|A Firefox fork focussing on speed, with a pre-Firefox 29 interface. Uses [[Wikipedia:Goanna (software)|Goanna]] layout engine, a fork of Gecko. Firefox add-ons may not be compatible. Without support for newer Firefox features such as WebExtensions, cache2, e10s, and OTMC. Many of the old [https://github.com/JustOff/ca-archive 93,598 versions of 19,450 Firefox add-ons created by 14,274 developers over the past 15 years using XUL/XPCOM technology in the Classic Add-ons Archive] still work.|https://www.palemoon.org/|{{AUR|palemoon}}}}
+* {{App|[[Wikipedia:Pale Moon (web browser)|Pale Moon]]|A Firefox fork focussing on speed, with a pre-Firefox 29 interface. Uses [[Wikipedia:Goanna (software)|Goanna]] layout engine, a fork of Gecko. Firefox add-ons may not be compatible. Without support for newer Firefox features such as WebExtensions, cache2, e10s, and OTMC. Many of the old 93,598 versions of 19,450 Firefox add-ons created by 14,274 developers over the past 15 years using XUL/XPCOM technology in the [https://github.com/JustOff/ca-archive Classic Add-ons Archive] still work.|https://www.palemoon.org/|{{AUR|palemoon}}}}
 
 ==== Servo-based ====
 
 * {{App|[[Wikipedia:Servo (software)|Servo]]|Web browser rendering engine written in Rust, with WebGL and WebGPU support, and adaptable to desktop, mobile, and embedded applications.|https://servo.org/|{{AUR|servo}}}}
-* {{App|Verso|Experimental web browser based on Servo experimenting with multi-view and multi-window and building UI elements entirely from Servo.|https://github.com/versotile-org/verso/|{{AUR|verso-git}}}}
+* {{App|Verso|Experimental web browser based on Servo experimenting with multi-view and multi-window and building UI elements entirely from Servo.|https://gitlab.com/verso-browser/verso|{{AUR|verso-git}}}}
 
 ==== Other ====
 
 * {{App|[[Dillo]]|Small, fast graphical web browser built on [[Wikipedia:Fltk|FLTK]]. Uses its own layout engine.|https://dillo-browser.org/|{{Pkg|dillo}}}}
 * {{App|[[Wikipedia:Ladybird (web browser)|Ladybird]]|Web browser built from scratch using the [[Wikipedia:SerenityOS|SerenityOS]] LibWeb engine.|https://ladybird.org/|{{AUR|ladybird}}}}
-* {{App|[[Wikipedia:Links (web browser)|Links]]|Graphics and text mode web browser. Includes a graphical X-window/framebuffer version with CSS, image rendering, pull-down menus. It can be launched with the {{ic|xlinks -g}} command.|http://links.twibright.com/|{{Pkg|links}}}}
 * {{App|[[Wikipedia:NetSurf|NetSurf]]|Featherweight browser written in C, notable for its slowly developing JavaScript support and fast rendering through its own layout engine.|https://www.netsurf-browser.org/|{{Pkg|netsurf}}}}
 
 === Gemini browsers ===
 
-See also [[Wikipedia:Gemini (protocol)#Software]].
+See also: [[Wikipedia:Gemini (protocol)#Software]]
 
 * {{App|Amfora|Terminal browser for the Gemini protocol.|https://github.com/makeworld-the-better-one/amfora|{{Pkg|amfora}}}}
 * {{App|Bombabillo|Non-web client for the terminal, supporting Gopher, Gemini and much more.|https://bombadillo.colorfield.space/|{{AUR|bombadillo}}}}
@@ -236,14 +240,14 @@ See also [[Wikipedia:Gemini (protocol)#Software]].
 * {{App|Geopard|A graphical gemini client written in rust, using the gtk4 toolkit.|https://github.com/ranfdev/Geopard|{{AUR|geopard}}}}
 * {{App|Kristall|Qt-based Gemini browser.|https://github.com/MasterQ32/kristall|{{AUR|kristall}}}}
 * {{App|Lagrange|Desktop GUI client for browsing Gemini space, offering modern conveniences familiar from web browsers.|https://gmi.skyjake.fi/lagrange|{{AUR|lagrange}}}}
-* {{App|Telescope|w3m-like browser for Gemini.|https://www.telescope-browser.org/{{Dead link|2025|08|15|status=SSL error}}|{{AUR|telescope}}}}
+* {{App|Telescope|w3m-like browser for Gemini.|https://telescope-browser.org/|{{AUR|telescope}}}}
 
 == Web servers ==
 
 A [[Wikipedia:Web server|web server]] serves HTML web pages and other files via HTTP to clients like [[:Category:Web browser|web browsers]].
 The major web servers can be interfaced with programs to serve dynamic content ([[web applications]]).
 
-See also [[:Category:Web server]] and [[Wikipedia:Comparison of web server software]].
+See also: [[:Category:Web server]], [[Wikipedia:Comparison of web server software]]
 
 * {{App|[[Apache HTTP Server]]|A high performance Unix-based HTTP server.|https://httpd.apache.org/|{{Pkg|apache}}}}
 * {{App|[[Caddy]]|HTTP/3 web server with automatic HTTPS.|https://caddyserver.com/|{{Pkg|caddy}}}}
@@ -273,7 +277,7 @@ See also [[:Category:Web server]] and [[Wikipedia:Comparison of web server softw
 * {{App|Transfer More|A minimalist open-source upload HTTP server to store and share files temporarily, written in Crystal, and based on Kemal.|https://up.sceptique.eu/|{{AUR|transfer-more}}}}
 * {{App|VServer|GTK application, which opens an http server in the selected folder and shares your files.|https://github.com/bcedu/ValaSimpleHTTPServer|{{AUR|vserver-git}}}}
 * {{App|webhook|Small server for creating HTTP endpoints (hooks)|https://github.com/adnanh/webhook|{{Pkg|webhook}}}}
-* {{App|Woof|An ad-hoc single file webserver; Web Offer One File.|http://www.home.unix-ag.org/simon/woof.html|{{AUR|woof}}}}
+* {{App|Woof|An ad-hoc single file webserver; Web Offer One File.|https://www.home.unix-ag.org/simon/woof.html|{{AUR|woof}}}}
 
 === WSGI servers ===
 
@@ -296,7 +300,7 @@ Apache also supports WSGI with [[mod_wsgi]].
 
 === Download managers ===
 
-See also [[Wikipedia:Comparison of download managers]].
+See also: [[Wikipedia:Comparison of download managers]]
 
 ==== Console ====
 
@@ -308,7 +312,7 @@ See also [[Wikipedia:Comparison of download managers]].
 * {{App|[[Wikipedia:HTTrack|HTTrack]]|An easy-to-use offline browser utility. It allows you to download a World Wide Web site from the Internet to a local directory, building recursively all directories, getting HTML, images, and other files from the server to your computer.|https://www.httrack.com/|{{Pkg|httrack}}}}
 * {{App|[[Wikipedia:Lftp|LFTP]]|Sophisticated file transfer program. Supports HTTP, FTP, SFTP, FISH, and BitTorrent.|https://lftp.yar.ru/|{{Pkg|lftp}}}}
 * {{App|Plowshare|A set of command-line tools designed for managing file-sharing websites (aka Hosters).|https://github.com/mcrapet/plowshare|{{AUR|plowshare}}}}
-* {{App|[[Wikipedia:RTMPDump|RTMPDump]]|Download FLV videos through RTMP (Adobe's proprietary protocol for Flash video players)|http://rtmpdump.mplayerhq.hu/|{{Pkg|rtmpdump}}}}
+* {{App|[[Wikipedia:RTMPDump|RTMPDump]]|Download FLV videos through RTMP (Adobe's proprietary protocol for Flash video players)|https://rtmpdump.mplayerhq.hu/|{{Pkg|rtmpdump}}}}
 * {{App|snarf|Command-line URL retrieval tool. Supports HTTP and FTP.|https://www.xach.com/snarf/|{{AUR|snarf}}}}
 * {{App|[[Streamlink]]|Launch streams from various streaming services in a custom video player or save them to a file.|https://streamlink.github.io/|{{Pkg|streamlink}}}}
 * {{App|[[Wikipedia:Streamripper|Streamripper]]|Records and splits streaming mp3 into tracks.|https://streamripper.sourceforge.net/|{{AUR|streamripper}}}}
@@ -345,11 +349,11 @@ See also [[Wikipedia:Comparison of download managers]].
 
 === LAN file transfer ===
 
-See also [[#LAN messengers]].
+See also: [[#LAN messengers]]
 
 * {{App|LAN Share|Cross-platform local area network file transfer application, built using Qt GUI framework. It can be used to transfer a whole folder, one or more files, large or small immediately without any additional configuration.|https://github.com/abdularis/LAN-Share|{{AUR|lanshare}}}}
 * {{App|LocalSend|Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.|https://localsend.org/|{{AUR|localsend}}}}
-* {{App|Magic Wormhole|Command-line tool {{ic|wormhole}} to securely transfer data between computers.|https://github.com/magic-wormhole/magic-wormhole|{{Pkg|magic-wormhole}}}}
+* {{App|[[Magic Wormhole]]|Command-line tool {{ic|wormhole}} to securely transfer data between computers.|https://github.com/magic-wormhole/magic-wormhole|{{Pkg|magic-wormhole}}}}
 * {{App|NitroShare|Cross-platform network file transfer application, built using Qt GUI framework. It is designed to make transferring files from one device to another on the local network extremely simple.|https://nitroshare.net/|{{AUR|nitroshare}}}}
 * {{App|Teleport|Native GTK3 application to effortlessly share files on the local network.|https://gitlab.gnome.org/jsparber/teleport|{{AUR|teleport-share-git}}}}
 * {{App|Warp|Securely send files to each other via the internet or local network by exchanging a word-based code. It uses the Magic Wormhole protocol.|https://apps.gnome.org/Warp/|{{Pkg|warp}}}}
@@ -367,7 +371,7 @@ See also [[#LAN messengers]].
 
 {{Tip|<nowiki></nowiki>
 * Some [[synchronization and backup programs]] provide direct support for some cloud-storage services.
-* Some [[FUSE#List of FUSE filesystems|FUSE filesystems]] provide a way to mount cloud-storage as a filesystem. Google Drive can be accessed also by {{Pkg|gvfs-google}}{{Broken package link|package not found}} for GVFS-based applications (like [[Nautilus]]), and by {{Pkg|kio-gdrive}} for KIO-based applications (like [[Dolphin]]).
+* Some [[FUSE#List of FUSE filesystems|FUSE filesystems]] provide a way to mount cloud-storage as a filesystem. Google Drive can be accessed also by {{Pkg|kio-gdrive}} for KIO-based applications (like [[Dolphin]]).
 * See [[Data-at-rest encryption#Cloud-storage optimized]] to achieve zero-knowledge (client-side transparent encryption) storage on any third-party cloud service.
 }}
 
@@ -412,7 +416,7 @@ See also [[#LAN messengers]].
 
 ==== FTP clients ====
 
-See also [[Wikipedia:Comparison of FTP client software]].
+See also: [[Wikipedia:Comparison of FTP client software]]
 
 * {{App|[[CurlFtpFS]]|is a filesystem for accessing FTP hosts based on FUSE and libcurl.|https://curlftpfs.sourceforge.net/|{{Pkg|curlftpfs}}}}
 * {{App|[[Wikipedia:FileZilla|FileZilla]]|Fast and reliable FTP, FTPS and SFTP client.|https://filezilla-project.org/|{{Pkg|filezilla}}}}
@@ -425,7 +429,7 @@ Some file managers like [[Dolphin]], [[GNOME Files]] and [[Thunar]] also provide
 
 ==== FTP servers ====
 
-See also [[Wikipedia:List of FTP server software]].
+See also: [[Wikipedia:List of FTP server software]]
 
 * {{App|bftpd|Small, easy-to-configure FTP server|https://bftpd.sourceforge.net/|{{Pkg|bftpd}}}}
 * {{App|ftpd|Simple ftp server provided by GNU Inetutils|https://www.gnu.org/software/inetutils/manual/inetutils.html#ftpd-invocation|{{Pkg|inetutils}}}}
@@ -437,7 +441,7 @@ See also [[Wikipedia:List of FTP server software]].
 
 Some [[#Download managers|download managers]] are also able to connect to the BitTorrent network: [[Aria2]], [[Wikipedia:Lftp|LFTP]], FatRat, [[Wikipedia:KGet|KGet]], [[Wikipedia:MLDonkey|MLDonkey]], uGet.
 
-See also [[Wikipedia:Comparison of BitTorrent clients]].
+See also: [[Wikipedia:Comparison of BitTorrent clients]]
 
 ==== Console ====
 
@@ -467,7 +471,7 @@ See also [[Wikipedia:Comparison of BitTorrent clients]].
 
 === Other P2P networks ===
 
-See also [[Wikipedia:Comparison of file-sharing applications]].
+See also: [[Wikipedia:Comparison of file-sharing applications]]
 
 * {{App|[[aMule]]|Well-known eDonkey/Kad client with a daemon version and GTK, web, and CLI front-ends.|https://www.amule.org/|{{Pkg|amule}}}}
 * {{App|EiskaltDC++|Direct Connect and ADC client.|https://github.com/eiskaltdcpp/eiskaltdcpp|GTK: {{AUR|eiskaltdcpp-gtk}}, Qt: {{AUR|eiskaltdcpp-qt}}}}
@@ -483,21 +487,21 @@ See also [[Wikipedia:Comparison of file-sharing applications]].
 
 === Pastebin services ===
 
-See also [[Wikipedia:Pastebin]].
+See also: [[Wikipedia:Pastebin]]
 
 Pastebin services are often used to quote text or images while collaborating and troubleshooting. Pastebin clients provide a convenient way to post from the command line.
-{{Note|An acceptable pastebin service does not require enabling JavaScript for viewing, does not display adverts, manipulate the pasted content or require a login.
 
-[https://pastebin.com/ pastebin.com] is blocked for some people because of malware found on the site and has a history of annoying issues (requires JavaScript, displays adverts, inserts CRLF line-endings and displaying CAPTCHAs at random). Do '''not''' use it.}}
+{{Warning|{{ic|pastebin.com}} has a bad reputation due to its history of hosting malware, plus it requires JavaScript and displays advertisements. It is wise '''not''' to use that service and prefer alternatives listed below.}}
 
 ==== Without a dedicated client ====
 
-Some services can be used with more general command line tool, such as [[cURL]]. For extensions, such as line numbers, one can use more command line tools. Such as {{ic|cat -n}}.
+Some services can be used with more general command line tool such as [[cURL]]. For extensions, such as line numbers, more command line tools can be used such as {{ic|cat -n}}.
 
 * [https://0x0.st/ 0x0.st] is a file hosting service. Usage examples are:
 :{{bc|1=$ ''command'' {{!}} curl -F 'file=@-' <nowiki>https://0x0.st</nowiki>}} or upload a file: {{bc|1=$ curl -F 'file=@''path/to/file''' <nowiki>https://0x0.st</nowiki>}}
 :{{Note|Read the instructions on the website for further options such as file removal tokens, expiration, and private URLs.}}
 * [https://paste.c-net.org/ paste.c-net.org] accepts HTTP requests and works with [[nc]].
+* [https://privatebin.info/ privatebin.info] is a minimalist, open-source online pastebin service where the server has zero knowledge of stored data. It focuses on decentralized hosting and has a [https://privatebin.info/directory/ directory of public instances].
 * [https://termbin.com termbin.com] works with [[nc]].
 
 ==== Dedicated clients ====
@@ -507,13 +511,13 @@ Some services can be used with more general command line tool, such as [[cURL]].
 * {{App|imgur|A CLI client which can upload image to [https://imgur.com imgur.com] image sharing service.|https://github.com/tremby/imgur.sh|{{AUR|imgur.sh}}}}
 * {{App|Pastebinit|Really small Python script that acts as a Pastebin client (see {{ic|pastebinit -l}} for the list of servers).|https://launchpad.net/pastebinit|{{Pkg|pastebinit}}}}
 * {{App|ruby-haste|Client for [https://hastebin.com/ hastebin.com].|https://github.com/seejohnrun/haste-client|{{AUR|ruby-haste}}}}
-* {{App|Wgetpaste|Bash script that automates pasting to a number of pastebin services.|http://wgetpaste.zlin.dk/|{{Pkg|wgetpaste}}}}
+* {{App|Wgetpaste|Bash script that automates pasting to a number of pastebin services.|https://wgetpaste.zlin.dk/|{{Pkg|wgetpaste}}}}
 
 == Communication ==
 
 === Email clients ===
 
-See also [[Wikipedia:Comparison of email clients]]
+See also: [[Wikipedia:Comparison of email clients]]
 
 ==== Console ====
 
@@ -568,11 +572,11 @@ See [[Mail server]].
 
 === Mail retrieval agents ===
 
-See also [[Wikipedia:Mail retrieval agent]].
+See also: [[Wikipedia:Mail retrieval agent]]
 
 * {{App|[[fdm]]|Program to fetch and deliver mail.|https://github.com/nicm/fdm|{{Pkg|fdm}}}}
 * {{App|[[Wikipedia:Fetchmail|Fetchmail]]|A remote-mail retrieval utility.|https://www.fetchmail.info/|{{Pkg|fetchmail}}}}
-* {{App|[[getmail]]|A POP3/IMAP4 mail retriever with reliable Maildir and command delivery.|http://pyropus.ca/software/getmail/|{{AUR|getmail}}}}
+* {{App|[[getmail]]|A POP3/IMAP4 mail retriever with reliable Maildir and command delivery.|https://pyropus.ca/software/getmail/|{{AUR|getmail}}}}
 * {{App|hydroxide|A third-party, open-source ProtonMail CardDAV, IMAP and SMTP bridge|https://github.com/emersion/hydroxide|{{AUR|hydroxide}}}}
 * {{App|imapsync|IMAP synchronisation, sync, copy or migration tool|https://imapsync.lamiral.info/|{{Pkg|imapsync}}}}
 * {{App|[[isync]]|IMAP and MailDir mailbox synchronizer|https://isync.sourceforge.net/|{{Pkg|isync}}}}
@@ -582,7 +586,7 @@ See also [[Wikipedia:Mail retrieval agent]].
 
 === Instant messaging clients ===
 
-See also [[Wikipedia:Comparison of instant messaging clients]] and [[Wikipedia:Comparison of VoIP software]].
+See also: [[Wikipedia:Comparison of instant messaging clients]], [[Wikipedia:Comparison of VoIP software]]
 
 This section lists all client software with [[Wikipedia:Instant messaging|instant messaging]] support.
 
@@ -609,7 +613,7 @@ The number of networks supported by these clients is very large but they (like a
 
 ==== IRC clients ====
 
-See also [[Wikipedia:Comparison of Internet Relay Chat clients]].
+See also: [[Wikipedia:Comparison of Internet Relay Chat clients]]
 
 ===== Console =====
 
@@ -642,7 +646,7 @@ See also [[Wikipedia:Comparison of Internet Relay Chat clients]].
 
 ==== XMPP clients ====
 
-See also [[Wikipedia:XMPP]].
+See also: [[Wikipedia:XMPP]]
 
 ===== Console =====
 
@@ -668,7 +672,7 @@ See also [[Wikipedia:XMPP]].
 
 ==== SIP clients ====
 
-See also [[Wikipedia:List of SIP software#Clients]].
+See also: [[Wikipedia:List of SIP software#Clients]]
 
 * {{App|baresip|portable and modular SIP User-Agent with audio and video support.|https://github.com/baresip/baresip|{{Pkg|baresip}}}}
 * {{App|[[Wikipedia:Blink (SIP client)|Blink]]|State of the art, easy to use SIP client.|https://icanblink.com/|{{AUR|blink}}}}
@@ -680,7 +684,7 @@ See also [[Wikipedia:List of SIP software#Clients]].
 
 ==== Matrix clients ====
 
-See also [[Matrix]] and [https://matrix.org/clients/ Matrix Clients].
+See also: [[Matrix]], [https://matrix.org/clients/ Matrix Clients]
 
 * {{App|Chatty|Simple to use SMS and Matrix messaging application.|https://gitlab.gnome.org/World/Chatty|{{Pkg|chatty}}}}
 * {{App|Cinny|Cinny is a matrix client focusing primarily on simple, elegant and secure interface. The desktop app is made with [https://github.com/tauri-apps/tauri Tauri].|https://github.com/cinnyapp/cinny-desktop|{{AUR|cinny-desktop}}}}
@@ -700,7 +704,7 @@ See also [[Matrix]] and [https://matrix.org/clients/ Matrix Clients].
 
 ==== Tox clients ====
 
-See also [[Tox]] and [https://wiki.tox.chat/clients comparison clients]
+See also: [[Tox]], [https://wiki.tox.chat/clients Comparison of Tox clients]
 
 * {{App|ratox|FIFO based tox client.|https://git.z3bra.org/ratox/file/README.html|{{AUR|ratox-git}}}}
 * {{App|Toxic|ncurses-based Tox client|https://github.com/Jfreegman/toxic|{{Pkg|toxic}}}}
@@ -709,14 +713,14 @@ See also [[Tox]] and [https://wiki.tox.chat/clients comparison clients]
 
 ==== LAN messengers ====
 
-See also [[Avahi#Link-Local (Bonjour/Zeroconf) chat]] and [[Wikipedia:Comparison of LAN messengers]].
+See also: [[Avahi#Link-Local (Bonjour/Zeroconf) chat]], [[Wikipedia:Comparison of LAN messengers]]
 
 * {{App|BeeBEEP|Secure LAN Messenger.|https://www.beebeep.net/|{{AUR|beebeep}}}}
 * {{App|iptux|LAN communication software, compatible with IP Messenger.|https://github.com/iptux-src/iptux|{{Pkg|iptux}}}}
 
 ==== P2P messaging clients ====
 
-See also [[Ring]] and [[Tox]].
+See also: [[Ring]], [[Tox]]
 
 * {{App|[[Wikipedia:Briar (software)|Briar]]|Briar is a messaging application designed for activists, journalists, and anyone else who needs a safe, easy and robust way to communicate.|https://briarproject.org/|{{AUR|briar-desktop}}, {{AUR|briar-headless}}}}
 * {{App|Manyverse|Modern decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB).|https://gitlab.com/staltz/manyverse|{{AUR|manyverse-bin}}}}
@@ -725,11 +729,15 @@ See also [[Ring]] and [[Tox]].
 * {{App|RetroShare|Serverless encrypted instant messenger with filesharing, chatgroups, mail.|https://retroshare.cc/|{{AUR|retroshare}}}}
 * {{App|[[Wikipedia:Ricochet (software)|Ricochet]]|Anonymous peer-to-peer instant messaging system built on [[Tor]] hidden services.|https://www.ricochetrefresh.net/|{{AUR|ricochet-refresh}}}}
 
+==== Chatmail clients ====
+
+* {{App|Delta Chat|A privacy oriented [https://chatmail.at/ chatmail] application. Based on the [https://electronjs.org/ Electron] platform.|https://delta.chat/|{{Pkg|deltachat-desktop}}}}
+* {{App|Parla|A [https://chatmail.at/ chatmail] application for the [[GNOME]] desktop. Based on the [[GTK]] framework.|https://github.com/trufae/parla/|{{Pkg|parla}}}}
+
 ==== Other IM clients ====
 
 * {{App|Caprine|Unofficial Facebook Messenger app. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/sindresorhus/caprine|{{AUR|caprine}}}}
 * {{App|Chatterino|Chat client for Twitch chat.|https://chatterino.com/|{{AUR|chatterino2}}}}
-* {{App|Delta Chat|A privacy oriented chat application built on e-mail. Based on the [https://electronjs.org/ Electron] platform.|https://delta.chat/|{{Pkg|deltachat-desktop}}}}
 * {{App|[[Discord]]|Proprietary all-in-one voice and text chat application for gamers that’s free and works on both your desktop and phone. Based on the [https://electronjs.org/ Electron] platform.|https://discordapp.com/|{{Pkg|discord}}}}
 * {{App|Flare|Unofficial Signal client based on GTK.|https://gitlab.com/schmiddi-on-mobile/flare|{{AUR|flare}}}}
 * {{App|[[Wikipedia:Gitter|Gitter]]|Communication product for communities and teams on GitLab and GitHub.|https://gitter.im/|{{AUR|gitter-bin}}}}
@@ -757,7 +765,7 @@ See also [[Ring]] and [[Tox]].
 
 === Instant messaging servers ===
 
-See also [[Wikipedia:Comparison of instant messaging protocols]].
+See also: [[Wikipedia:Comparison of instant messaging protocols]]
 
 ==== IRC servers ====
 
@@ -778,7 +786,7 @@ See also [[Wikipedia:Comparison of instant messaging protocols]].
 
 ==== SIP servers ====
 
-See also [[Wikipedia:List of SIP software#Servers]].
+See also: [[Wikipedia:List of SIP software#Servers]]
 
 * {{App|[[Asterisk]]|A complete PBX solution.|https://www.asterisk.org/|{{AUR|asterisk}}}}
 * {{App|Kamailio|SIP server for large VoIP and real-time communication platforms.|https://www.kamailio.org/|{{AUR|kamailio}}}}
@@ -798,7 +806,7 @@ See also [[Wikipedia:List of SIP software#Servers]].
 
 === Collaborative software ===
 
-See also [[Wikipedia:Collaborative software]].
+See also: [[Wikipedia:Collaborative software]]
 
 * {{App|[[SOGo]]|Groupware server built around OpenGroupware.org (OGo) and the SOPE application server.|https://sogo.nu/|{{AUR|sogo}}}}
 
@@ -814,9 +822,10 @@ See also [[Wikipedia:Collaborative software]].
 
 [[Web feed]]s aggregators. Some [[#Email clients|email clients]] are also able to act as news aggregator: [[Wikipedia:Claws Mail|Claws Mail]] RSSyl plugin, [[Evolution]], [[Wikipedia:SeaMonkey#Mail|SeaMonkey Mail & Newsgroups]], [[Thunderbird]].
 
-See also [[Wikipedia:Comparison of feed aggregators]].
+See also: [[Wikipedia:Comparison of feed aggregators]]
 
 ==== Console ====
+
 * {{App|Bulletty|Pretty TUI RSS reader that locally stores articles as markdown.|https://bulletty.croci.dev/|{{Pkg|bulletty}}}}
 * {{App|[[Wikipedia:Canto (news aggregator)|Canto]]|Ncurses RSS aggregator.|https://github.com/themoken/canto-curses|{{Pkg|canto-curses}}}}
 * {{App|Ditch The Bell|A highly configurable Linux-based desktop notifier for RSS/Atom feeds.|https://github.com/eschermoore/ditchthebell|{{AUR|dtbell-git}}}}
@@ -843,6 +852,7 @@ See also [[Wikipedia:Comparison of feed aggregators]].
 * {{App|Tickr|GTK-based RSS Reader that displays feeds as a smooth scrolling line on your desktop, as known from TV stations.|https://www.open-tickr.net/|{{AUR|tickr}}}}
 
 ==== Graphical, Web-based ====
+
 * {{App|[[Nextcloud]] News|RSS/Atom feed reader for Nextcloud.|https://github.com/nextcloud/news|{{Pkg|nextcloud-app-news}}}}
 * {{App|selfoss|The new multipurpose RSS reader, live stream, mashup, aggregation web application.|https://selfoss.aditu.de/|{{AUR|selfoss}}}}
 * {{App|[[Tiny Tiny RSS]]|Web-based news feed (RSS/Atom) aggregator.|https://tt-rss.org/|{{Pkg|tt-rss}}}}
@@ -851,7 +861,7 @@ See also [[Wikipedia:Comparison of feed aggregators]].
 
 Some media players are also able to act as podcast client: [[Amarok]], Cantata, [[Wikipedia:Clementine (software)|Clementine]], Goggles Music Manager, [[Wikipedia:Rhythmbox|Rhythmbox]], [[VLC media player]]. [[Wikipedia:git-annex|git-annex]] can also [https://git-annex.branchable.com/tips/downloading_podcasts/ function as podcatcher].
 
-See also [[Wikipedia:List of podcatchers]].
+See also: [[Wikipedia:List of podcatchers]]
 
 ==== Console ====
 
@@ -873,11 +883,11 @@ See also [[Wikipedia:List of podcatchers]].
 
 Some [[#Email clients|email clients]] are also able to act as Usenet newsreader: [[Wikipedia:Claws Mail|Claws Mail]], [[Evolution]], [[Mutt|NeoMutt]], [[Wikipedia:SeaMonkey#Mail|SeaMonkey Mail & Newsgroups]], [[Wikipedia:Sylpheed|Sylpheed]], [[Thunderbird]].
 
-See also: [[Wikipedia:List of Usenet newsreaders]], [[Wikipedia:Comparison of Usenet newsreaders]].
+See also: [[Wikipedia:List of Usenet newsreaders]], [[Wikipedia:Comparison of Usenet newsreaders]]
 
 ==== Console ====
 
-* {{App|nn|Alternative more user-friendly (curses-based) Usenet newsreader for UNIX.|http://www.nndev.org/|{{AUR|nn}}}}
+* {{App|nn|Alternative more user-friendly (curses-based) Usenet newsreader for UNIX.|https://www.nndev.org/|{{AUR|nn}}}}
 * {{App|[[Wikipedia:slrn|slrn]]|Text-based news client.|https://www.slrn.org/|{{AUR|slrn}}}}
 * {{App|[[Wikipedia:Tin (newsreader)|tin]]|A cross-platform threaded NNTP and spool based UseNet newsreader.|http://tin.org/|{{AUR|tin}}}}
 * {{App|trn|A text-based Threaded Usenet newsreader.|https://trn.sourceforge.net/|{{AUR|trn}}}}
@@ -904,8 +914,10 @@ See also: [[Wikipedia:List of Usenet newsreaders]], [[Wikipedia:Comparison of Us
 
 === Blog engines ===
 
-See also [[Wikipedia:Blog software]] and [[Wikipedia:List of content management systems]].
-{{note|Content managers, social networks, and blog publishers overlap in many functions.}}
+See also: [[Wikipedia:Blog software]], [[Wikipedia:List of content management systems]]
+
+{{Note|Content managers, social networks, and blog publishers overlap in many functions.}}
+
 * {{App|[[Diaspora]]|A distributed privacy aware social network.|https://diasporafoundation.org|{{AUR|diaspora-mysql}} or {{AUR|diaspora-postgresql}}}}
 * {{App|[[Drupal]]|A PHP-based content management platform.|https://www.drupal.org/|{{Pkg|drupal}}}}
 * {{App|[[Joomla]]|A php Content Management System (CMS) which enables you to build websites and powerful online applications.|https://www.joomla.org/|{{AUR|joomla}}}}
@@ -935,9 +947,7 @@ See also [[Wikipedia:Blog software]] and [[Wikipedia:List of content management 
 
 == Remote desktop ==
 
-See also [[Wikipedia:Remote desktop software]] and [[Wikipedia:Comparison of remote desktop software]].
-
-See also [https://remotedesktop.google.com Chrome Remote Desktop] for a web browser based solution.
+See also: [[Wikipedia:Remote desktop software]], [[Wikipedia:Comparison of remote desktop software]], [https://remotedesktop.google.com/ Chrome Remote Desktop] (for a web browser-based solution)
 
 === Remote desktop clients ===
 

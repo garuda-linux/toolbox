@@ -1,5 +1,6 @@
 [[Category:Applications]]
 [[Category:Lists of software]]
+[[ar:List of applications (العربية)/Other]]
 [[es:List of applications (Español)/Other]]
 [[hu:List of applications (Magyar)/Other]]
 [[ja:アプリケーション一覧/その他]]
@@ -217,7 +218,8 @@ See also [[Wikipedia:Comparison of project management software]].
 === Recipe management ===
 
 * {{App|Gourmand|Simple but powerful recipe-managing application.|https://github.com/GourmandRecipeManager/gourmand|{{AUR|gourmand}}}}
-* {{App|Recipes|Recipe management application for GNOME. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Recipes|{{Pkg|gnome-recipes}}}}
+* {{App|Kookbook|Simplistic recipe manager that will help you to maintain a collection of your favorite recipes.|https://apps.kde.org/kookbook/|{{AUR|kookbook}}}}
+* {{App|Recipes|Recipe management application for GNOME.|https://wiki.gnome.org/Apps/Recipes|{{Pkg|gnome-recipes}}}}
 
 === Travel management ===
 
@@ -326,6 +328,16 @@ See also [[Wikipedia:Speech recognition software for Linux]].
 * {{App|Easystroke|Use mouse gestures to initiate commands and hotkeys.|https://github.com/thjaeger/easystroke/wiki|{{AUR|easystroke}}}}
 * {{App|KMouseTool|Clicks the mouse whenever the mouse cursor pauses briefly. It was designed to help those with repetitive strain injuries, for whom pressing buttons hurts. Part of {{Grp|kde-accessibility}}.|https://apps.kde.org/kmousetool/|{{Pkg|kmousetool}}}}
 * {{App|Mousetweaks|Accessibility enhancements for pointing devices.|https://wiki.gnome.org/Projects/Mousetweaks|{{Pkg|mousetweaks}}}}
+
+== Display servers ==
+
+A display server or window server is a program whose primary task is to coordinate the input and output of its clients to and from the rest of the operating system, the hardware, and each other.
+
+* {{App|Arcan|A development framework for anything between user interfaces for specialised embedded applications, and a standalone desktop environment.|https://arcan-fe.com/|{{AUR|arcan}}}}
+* {{App|[[Xorg]]|The public, open-source implementation of the [[Wikipedia:X Window System|X Window System]] (commonly X11, or X).|https://www.x.org|{{Grp|xorg}}}}
+* {{App|[[Xephyr]]|A nested X server that runs as an X application.|https://freedesktop.org/wiki/Software/Xephyr/|{{Pkg|xorg-server-xephyr}}}}
+* {{App|XLibre|A fork of Xorg that is [[Intel graphics#With the modesetting driver 2|tear free]] by default, supports client isolation and fixes several upstream bugs.|https://github.com/X11Libre/xserver/ |{{AUR|xlibre-xserver}}}}
+* {{App|[[Wayland]]|A newer, alternative display server protocol with several [[Wayland#Compositors|compositors]] to choose from. Its advantages over Xorg are enhanced security features, more efficient handling of modern graphics tasks and active development while retaining compatibility through [[Xwayland]].|https://wayland.freedesktop.org/|{{Pkg|wayland}}}}
 
 == Display managers ==
 
@@ -571,11 +583,6 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 * {{App|[[Ollama]]|A streamlined tool for creating, running, and sharing large language models locally.|https://ollama.com|{{Pkg|ollama}}, {{Pkg|ollama-cuda}}, {{Pkg|ollama-rocm}}}}
 * {{App|ollama-amd-igpu|A specialized version of Ollama optimized for AMD iGPUs, supporting Llama 3.3, DeepSeek-R1, Phi-4 and other models.|https://github.com/Crandel/ollama-amd-igpu|{{AUR|ollama-amd-igpu}}, {{AUR|ollama-amd-igpu-cuda}}, {{AUR|ollama-amd-igpu-rocm}}}}
 
-==== Translation==== 
-
-* {{App|Argos Translate|Open-source offline translation library with GUI support.|https://www.argosopentech.com/|{{AUR|argos-translate}}, {{AUR|argos-translate-gui}}}}
-* {{App|TranslateLocally|Fast and secure local translation using Bergamot (Mozilla).|https://github.com/XapaJIaMnu/translatelocally|{{AUR|translatelocally-git}}}}
-
 === AI applications ===
 
 ==== Desktop clients ====
@@ -619,7 +626,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 * {{App|koboldcpp|A simple one-file way to run various GGML and GGUF models with a KoboldAI UI.|https://github.com/LostRuins/koboldcpp|{{AUR|koboldcpp}}, {{AUR|koboldcpp-cuda}}, {{AUR|koboldcpp-hipblas}}}}
 * {{App|llamafile|Distribute and run LLMs with a single file.|https://github.com/Mozilla-Ocho/llamafile|{{AUR|llamafile}}}}
 * {{App|LM Studio|A user-friendly interface for discovering, downloading, and running local LLMs.|https://lmstudio.ai/|{{AUR|lmstudio-bin}}}}
-* {{App|Msty|A simple and intuitive interface for accessing both local and online AI models.|https://msty.app|{{AUR|msty-bin}}}}
+* {{App|Msty|A simple and intuitive interface for accessing both local and online AI models.|https://msty.ai/|{{AUR|msty-studio-bin}}}}
 * {{App|netron|Visualizer for neural network, deep learning and machine learning models.|https://netron.app/|{{AUR|netron}}}}
 * {{App|open-webui|Extensible self-hosted AI platform with WebUI and OpenAI API support for LLM runners.|https://github.com/open-webui/open-webui|{{AUR|open-webui-git}}}}
 

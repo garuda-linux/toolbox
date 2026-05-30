@@ -567,6 +567,15 @@
     "aur": false
   },
   {
+    "name": "Drawy",
+    "description": "Infinite whiteboard built for simplicity and high performance.",
+    "url": "https://apps.kde.org/drawy/",
+    "pkgname": [
+      "drawy"
+    ],
+    "aur": false
+  },
+  {
     "name": "Drumstick",
     "description": "Set of MIDI tools: drum grid, MIDI player, virtual piano.",
     "url": "https://drumstick.sourceforge.io/",
@@ -851,6 +860,15 @@
     "url": "https://fontforge.github.io/",
     "pkgname": [
       "fontforge"
+    ],
+    "aur": false
+  },
+  {
+    "name": "fooyin",
+    "description": "A customisable Qt-based music player.",
+    "url": "https://www.fooyin.org/",
+    "pkgname": [
+      "fooyin"
     ],
     "aur": false
   },
@@ -1937,7 +1955,7 @@
   {
     "name": "MyPaint",
     "description": "Free software graphics application for digital painters.",
-    "url": "http://mypaint.org",
+    "url": "https://mypaint.app",
     "pkgname": [
       "mypaint"
     ],

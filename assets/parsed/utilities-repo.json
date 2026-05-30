@@ -451,7 +451,7 @@
   },
   {
     "name": "Czkawka GUI",
-    "description": "Simple, fast and free app to remove unnecessary files from your computer. Looks similar to FSlint.",
+    "description": "Simple, fast and free app to remove unnecessary files from your computer. Looks similar to FSlint. Superseded by Krokiet but still receives bugfix updates.",
     "url": "https://github.com/qarmin/czkawka",
     "pkgname": [
       "czkawka-gui"
@@ -524,7 +524,7 @@
   {
     "name": "Deepin Terminal (GTK version)",
     "description": "Old terminal emulation application for Deepin desktop.",
-    "url": "https://github.com/linuxdeepin/deepin-terminal-gtk",
+    "url": "https://github.com/martyr-deepin/deepin-terminal-gtk",
     "pkgname": [
       "deepin-terminal-gtk"
     ],
@@ -992,7 +992,7 @@
   {
     "name": "Gitea",
     "description": "Painless self-hosted Git service. Fork of Gogs.",
-    "url": "https://gitea.io",
+    "url": "https://about.gitea.com/",
     "pkgname": [
       "gitea"
     ],
@@ -1013,6 +1013,15 @@
     "url": "https://gitlab.com/gitlab-org/gitlab-foss",
     "pkgname": [
       "gitlab"
+    ],
+    "aur": false
+  },
+  {
+    "name": "glab",
+    "description": "GitLab's official command line tool",
+    "url": "https://gitlab.com/gitlab-org/cli",
+    "pkgname": [
+      "glab"
     ],
     "aur": false
   },
@@ -1166,6 +1175,15 @@
     "url": "https://sourceware.org/binutils/docs/gprof/",
     "pkgname": [
       "binutils"
+    ],
+    "aur": false
+  },
+  {
+    "name": "GPU-Viewer",
+    "description": "GUI to glxinfo, vulkaninfo, clinfo and es2_info; written in Python with GTK.",
+    "url": "https://github.com/arunsivaramanneo/GPU-Viewer",
+    "pkgname": [
+      "gpu-viewer"
     ],
     "aur": false
   },
@@ -1487,7 +1505,7 @@
   {
     "name": "Jujutsu",
     "description": "Modern VCS designed for ease of use, offering powerful features while maintaining full Git compatibility.",
-    "url": "https://jj-vcs.github.io/jj/",
+    "url": "https://docs.jj-vcs.dev/",
     "pkgname": [
       "jujutsu"
     ],
@@ -1649,7 +1667,7 @@
   {
     "name": "KMSCON",
     "description": "A KMS/DRM-based system console(getty) with an integrated terminal emulator for Linux operating systems.",
-    "url": "https://github.com/dvdhrm/kmscon",
+    "url": "https://github.com/kmscon/kmscon",
     "pkgname": [
       "kmscon"
     ],
@@ -1688,6 +1706,15 @@
     "url": "https://apps.kde.org/krename/",
     "pkgname": [
       "krename"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Krokiet",
+    "description": "New frontend for Czkawka using Slint.",
+    "url": "https://github.com/qarmin/czkawka",
+    "pkgname": [
+      "krokiet"
     ],
     "aur": false
   },
@@ -1757,7 +1784,7 @@
   {
     "name": "Lapce",
     "description": "Lightning-fast and Powerful Code Editor written in Rust.",
-    "url": "https://lapce.dev/",
+    "url": "https://lap.dev/lapce/",
     "pkgname": [
       "lapce"
     ],
@@ -2054,7 +2081,7 @@
   {
     "name": "most",
     "description": "A pager with support for multiple windows, left and right scrolling, and built-in colour support",
-    "url": "http://www.jedsoft.org/most/",
+    "url": "https://www.jedsoft.org/most/",
     "pkgname": [
       "most"
     ],
@@ -2099,7 +2126,7 @@
   {
     "name": "Netbeans",
     "description": "IDE for developing with Java, JavaScript, PHP, Python, Ruby, Groovy, C, C++, Scala, Clojure, and other languages.",
-    "url": "https://netbeans.org/",
+    "url": "https://netbeans.apache.org/front/main/index.html",
     "pkgname": [
       "netbeans"
     ],
@@ -2126,7 +2153,7 @@
   {
     "name": "nmon",
     "description": "Console based application for monitoring various system components.",
-    "url": "https://nmon.sourceforge.net/",
+    "url": "https://nmon.sourceforge.io/",
     "pkgname": [
       "nmon"
     ],
@@ -2441,7 +2468,7 @@
   {
     "name": "QTerminal",
     "description": "Lightweight Qt-based terminal emulator.",
-    "url": "https://github.com/qterminal/qterminal",
+    "url": "https://github.com/lxqt/qterminal",
     "pkgname": [
       "qterminal"
     ],
@@ -2462,6 +2489,15 @@
     "url": "https://github.com/mdh34/quickDocs",
     "pkgname": [
       "quickdocs"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Radicle",
+    "description": "Open source, peer-to-peer code collaboration stack built on Git.",
+    "url": "https://radicle.xyz/",
+    "pkgname": [
+      "radicle"
     ],
     "aur": false
   },
@@ -2576,7 +2612,7 @@
   {
     "name": "rxvt-unicode (urxvt)",
     "description": "Terminal emulator forked from rxvt, customizable with source-code patches, X resources and Perl extensions.",
-    "url": "http://software.schmorp.de/pkg/rxvt-unicode.html",
+    "url": "https://software.schmorp.de/pkg/rxvt-unicode.html",
     "pkgname": [
       "rxvt-unicode"
     ],
@@ -2684,7 +2720,7 @@
   {
     "name": "superfile",
     "description": "Pretty fancy and modern terminal file manager",
-    "url": "https://superfile.netlify.app/",
+    "url": "https://superfile.dev/",
     "pkgname": [
       "superfile"
     ],
@@ -2900,7 +2936,7 @@
   {
     "name": "Unity",
     "description": "Unity is a flexible and powerful development platform for creating multi-platform 3D and 2D games. Proprietary, but a free version is available for certain use-cases (see here for more details).",
-    "url": "https://unity3d.com/unity",
+    "url": "https://unity.com/",
     "pkgname": [
       "unityhub"
     ],
@@ -3071,7 +3107,7 @@
   {
     "name": "xvkbd",
     "description": "Virtual keyboard for X window system.",
-    "url": "http://t-sato.in.coocan.jp/xvkbd/",
+    "url": "https://t-sato.in.coocan.jp/xvkbd/",
     "pkgname": [
       "xvkbd"
     ],

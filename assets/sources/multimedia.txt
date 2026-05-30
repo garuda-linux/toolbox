@@ -143,7 +143,7 @@ See also [[Wikipedia:Comparison of raster graphics editors]].
 * {{App|KXStitch|Cross stitch pattern and chart creation.|https://apps.kde.org/kxstitch/|{{AUR|kxstitch}}}}
 * {{App|Milton|Infinite-canvas paint program.|https://www.miltonpaint.com/|{{AUR|milton}}}}
 * {{App|mtPaint|Graphics editing program geared towards creating indexed palette images and pixel art.|https://mtpaint.sourceforge.net/|{{Pkg|mtpaint}}}}
-* {{App|[[Wikipedia:MyPaint|MyPaint]]|Free software graphics application for digital painters.|http://mypaint.org|{{Pkg|mypaint}}}}
+* {{App|[[Wikipedia:MyPaint|MyPaint]]|Free software graphics application for digital painters.|https://mypaint.app|{{Pkg|mypaint}}}}
 * {{App|Obfuscate|Censor private information from any image.|https://apps.gnome.org/Obfuscate/|{{Pkg|obfuscate}}}}
 * {{App|PhotoFlare|Simple but powerful image editor originally inspired by PhotoFiltre.|https://photoflare.io/|{{Pkg|photoflare}}}}
 * {{App|[[Wikipedia:Pinta (software)|Pinta]]|Drawing and editing program modeled after [[Wikipedia:Paint.net|Paint.NET]]. Its goal is to provide a simplified alternative to GIMP for casual users.|https://pinta-project.com/|{{AUR|pinta}}}}
@@ -186,6 +186,7 @@ Some of these programs may require using keyboard shortcuts in conjunction with 
 * {{App|[[Wikipedia:Dia (software)|Dia]]|GTK-based diagram creation program.|https://wiki.gnome.org/Apps/Dia|{{AUR|dia-git}}}}
 * {{App|diagrams.net|Diagram drawing application built on web technology. Based on the [https://electronjs.org/ Electron] platform.|https://www.diagrams.net/|{{Pkg|drawio-desktop}}}}
 * {{App|Dot Matrix|The glyph playground of creativity from simple lines.|https://github.com/lainsce/dot-matrix/|{{AUR|dot-matrix}}}}
+* {{App|Drawy|Infinite whiteboard built for simplicity and high performance.|https://apps.kde.org/drawy/|{{Pkg|drawy}}}}
 * {{App|Figma|Unofficial desktop application for Figma collaborative design tool. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/Figma-Linux/figma-linux|{{AUR|figma-linux}}}}
 * {{App|Inkscape|Vector graphics editor, with capabilities similar to [[Wikipedia:Adobe Illustrator|Illustrator]], [[Wikipedia:CorelDRAW|CorelDraw]], or [[Wikipedia:Xara X|Xara X]], using the SVG (Scalable Vector Graphics) file format.|https://inkscape.org/|{{Pkg|inkscape}}}}
 * {{App|[[Wikipedia:Karbon (software)|Karbon]]|Vector graphics editor, part of the Calligra Suite. Part of {{Grp|kde-office}}.|https://calligra.org/components/karbon/|{{Pkg|calligra}}}}
@@ -211,7 +212,7 @@ See also [[Wikipedia:Comparison of font editors]].
 
 === 2D animation ===
 
-* {{App|Aseprite|Open-source software for creating pixel art and animations. Builds can either be [https://www.aseprite.org/#buy purchased from the developers] or compiled from source.|https://www.aseprite.org/|From source: {{AUR|aseprite}}, From binary: {{AUR|aseprite-bin}}}}
+* {{App|Aseprite|Source-available software for creating pixel art and animations. Builds can either be [https://www.aseprite.org/#buy purchased from the developers] or compiled from source.|https://www.aseprite.org/|From source: {{AUR|aseprite}}, From binary: {{AUR|aseprite-bin}}}}
 * {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.mattbas.org/|{{Pkg|glaxnimate}}}}
 * {{App|[[Wikipedia:Toonz|OpenToonz]]|2D animation creation software. Gained popularity because it was used by Studio Ghibli in the past.|https://opentoonz.github.io/e/|{{Pkg|opentoonz}}}}
 * {{App|[[Wikipedia:Pencil2D|Pencil2D]]|Easy, intuitive tool to make 2D hand-drawn animations.|https://www.pencil2d.org/|{{Pkg|pencil2d}}}}
@@ -344,7 +345,7 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|[[Wikipedia:DeaDBeeF|DeaDBeeF]]|Light and fast music player with many features, no GNOME or KDE dependencies, supports console-only, as well as a GTK GUI, comes with many plugins, and has a metadata editor.|https://deadbeef.sourceforge.io/|{{AUR|deadbeef}}}}
 * {{App|Drumstick MIDI File Player|MIDI file player based on Drumstick.|https://sourceforge.net/projects/dmidiplayer/|{{AUR|dmidiplayer}}}}
 * {{App|Elisa|Simple music player by the KDE community aiming to provide a nice experience for its users. Part of {{Grp|kde-multimedia}}.|https://apps.kde.org/elisa/|{{Pkg|elisa}}}}
-* {{App|fooyin|A customisable Qt-based music player.|https://www.fooyin.org/|{{AUR|fooyin}}}}
+* {{App|fooyin|A customisable Qt-based music player.|https://www.fooyin.org/|{{Pkg|fooyin}}}}
 * {{App|gmusicbrowser|Open-source jukebox for large collections of MP3/OGG/FLAC files.|https://gmusicbrowser.org/|{{AUR|gmusicbrowser}}}}
 * {{App|Goggles Music Manager|Music collection manager and player that automatically categorizes your music, supports gapless playback, features easy tag editing, and internet radio support. Uses the [[Wikipedia:Fox toolkit|Fox toolkit]].|https://gogglesmm.github.io/|{{Pkg|gogglesmm}}}}
 * {{App|[[Wikipedia:JuK|JuK]]|JuK is an audio jukebox application, supporting collections of MP3, Ogg Vorbis, and FLAC audio files. Part of {{Grp|kde-multimedia}}.|https://juk.kde.org/|{{Pkg|juk}}}}
@@ -784,6 +785,7 @@ See [[Screen capture#Screencast software]].
 [[Wikipedia:Miracast|Miracast]] is a standard for wireless connections from sending devices to display receivers mainly using [[Wikipedia:Wi-Fi Direct|Wi-Fi Direct]]. Use {{ic|iw dev}} to check your hardware support. Use {{ic|iw reg get}} to make sure the [[regulatory domain]] is not set to "Global", as that might block some functionality.
 
 * {{App|GNOME Network Displays|GTK application to cast your desktop to a remote display. Not specific to the [[GNOME]] environment, depends on [[PipeWire]].|https://gitlab.gnome.org/GNOME/gnome-network-displays|{{AUR|gnome-network-displays}}}}
+* {{App|FluxCast|Lightweight system tray and CLI tool to cast a screen wirelessly via Miracast/WFD, DLNA, or Cast.|https://github.com/IlyaP358/fluxcast|{{AUR|fluxcast-git}}}}
 * {{App|MiracleCast|Command line tools to connect external monitors to your system via Wi-Fi Display specification also known as Miracast.|https://github.com/albfan/miraclecast|{{AUR|miraclecast-git}}}}
 
 === Webcam ===
@@ -836,7 +838,7 @@ See [[Optical disc drive#DVD-Video]].
 * {{App|Griffith|Movie collection manager application.|https://gitlab.com/Strit/griffith|{{Pkg|griffith}}}}
 * {{App|MediaElch|Media manager for Kodi. Information about movies, TV shows, concerts and music are stored as nfo files.|https://www.kvibes.de/mediaelch/|{{Pkg|mediaelch}}}}
 * {{App|[[Wikipedia:Tellico_(software)|Tellico]]|KDE application for organizing various collections (books, video, music, coins, etc.).|https://tellico-project.org/|{{Pkg|tellico}}}}
-* {{App|MusicLib|KDE-based music library management. Integration with Audacious player, Kid3 Tagger, K3b CD Ripper, kdeconnect and RSGain|https://github.com/Harpo3/musiclib|{{AUR|musiclib}}}}
+* {{App|MusicLib|KDE-based music library management. Integration with most MPRIS2-compatible players (Audacious, Strawberry, Clementine, VLC, etc.), Kid3 Tagger, K3b CD Ripper, kdeconnect and RSGain|https://github.com/Harpo3/musiclib/wiki|{{AUR|musiclib}}}}
 * {{App|tinyMediaManager|Media management tool to provide metadata for Kodi.|https://www.tinymediamanager.org/|{{AUR|tiny-media-manager}}}}
 * {{App|freeLib|Book library manager with support for inpx-based libraries; includes OPDS and Web servers.|https://github.com/petrovvlad/freeLib/|{{AUR|freelib-git}}}}
 

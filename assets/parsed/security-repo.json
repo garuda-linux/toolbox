@@ -56,7 +56,7 @@
   {
     "name": "betterlockscreen",
     "description": "i3lock-color wrapper. Betterlockscreen allows you to cache images with different filters and lockscreen with blazing speed.",
-    "url": "https://github.com/pavanjadhaw/betterlockscreen",
+    "url": "https://github.com/betterlockscreen/betterlockscreen",
     "pkgname": [
       "betterlockscreen"
     ],
@@ -164,7 +164,7 @@
   {
     "name": "Ettercap",
     "description": "Multipurpose Network sniffer/analyser/interceptor/logger.",
-    "url": "https://ettercap.github.io/ettercap/",
+    "url": "https://www.ettercap-project.org/",
     "pkgname": [
       "ettercap"
     ],
@@ -173,7 +173,7 @@
   {
     "name": "GNOME Network Tools",
     "description": "GNOME interface for various networking tools.",
-    "url": "https://gitlab.gnome.org/GNOME/gnome-nettool",
+    "url": "https://gitlab.gnome.org/Archive/gnome-nettool",
     "pkgname": [
       "gnome-nettool"
     ],
@@ -191,7 +191,7 @@
   {
     "name": "gopass",
     "description": "Advanced console based password manager, supporting GnuPG and other backends.",
-    "url": "https://github.com/justwatchcom/gopass",
+    "url": "https://github.com/gopasspw/gopass",
     "pkgname": [
       "gopass"
     ],
@@ -200,7 +200,7 @@
   {
     "name": "GtkHash",
     "description": "A GTK utility for computing message digests or checksums",
-    "url": "https://github.com/tristanheaven/gtkhash",
+    "url": "https://github.com/gtkhash/gtkhash",
     "pkgname": [
       "gtkhash"
     ],
@@ -236,7 +236,7 @@
   {
     "name": "hping",
     "description": "Command-line oriented TCP/IP packet assembler/analyzer.",
-    "url": "http://hping.org/",
+    "url": "https://www.hping.org/",
     "pkgname": [
       "hping"
     ],
@@ -523,7 +523,7 @@
   },
   {
     "name": "pass",
-    "description": "Simple console-based password manager featuring flat text file organization and GnuPG encryption.",
+    "description": "Simple console-based password manager featuring flat text file organization and GnuPG encryption. Support for OTP: pass-otp.",
     "url": "https://www.passwordstore.org/",
     "pkgname": [
       "pass"
@@ -749,7 +749,7 @@
   {
     "name": "Vault",
     "description": "Proprietary tool for managing secrets.",
-    "url": "https://vaultproject.io/",
+    "url": "https://developer.hashicorp.com/vault",
     "pkgname": [
       "vault"
     ],

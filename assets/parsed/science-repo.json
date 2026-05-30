@@ -200,6 +200,7 @@
   {
     "name": "galculator",
     "description": "GTK-based scientific calculator.",
+    "url": "https://sourceforge.net/projects/galculator/",
     "pkgname": [
       "galculator"
     ],
@@ -485,6 +486,15 @@
     "aur": false
   },
   {
+    "name": "kst",
+    "description": "Real-time data viewer.",
+    "url": "https://kst-plot.kde.org/",
+    "pkgname": [
+      "kst"
+    ],
+    "aur": false
+  },
+  {
     "name": "KStars",
     "description": "Planetarium application that provides an accurate graphical simulation of the night sky, from any location on Earth, at any date and time. It is included in KDE Edu.",
     "url": "https://kstars.kde.org/",
@@ -575,11 +585,11 @@
     "aur": false
   },
   {
-    "name": "Mathics",
+    "name": "Mathics3",
     "description": "A free CAS for symbolic mathematical computations which uses Python as its main language. It aims at achieving a Mathematica-compatible syntax and functions. It relies mostly on Sympy for most mathematical tasks and, optionally, Sage for more advanced functionality.",
     "url": "https://mathics.github.io/",
     "pkgname": [
-      "mathics"
+      "mathics3"
     ],
     "aur": false
   },
