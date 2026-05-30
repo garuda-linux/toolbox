@@ -3,7 +3,7 @@ packages:
 allowBuilds:
   '@parcel/watcher': true
   electron: true
-  electron-winstaller: false
+  electron-winstaller: true
   esbuild: true
   lmdb: true
   msgpackr-extract: true
@@ -26,3 +26,6 @@ onlyBuiltDependencies:
   - esbuild
   - lmdb
   - msgpackr-extract
+overrides:
+  # https://github.com/electron/electron/issues/51619#issuecomment-4526580507
+  yauzl: '^3.3.1'
