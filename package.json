@@ -60,7 +60,7 @@
     "@types/mime-types": "^3.0.1",
     "@types/node": "^26.0.0",
     "@types/pako": "^2.0.4",
-    "angular-eslint": "^21.4.0",
+    "angular-eslint": "^22.0.0",
     "electron": "42.4.1",
     "electron-builder": "26.15.3",
     "eslint": "^10.5.0",
