@@ -40,11 +40,6 @@ export const gamingPackageLists: PackageSections = [
         description: 'gaming.luxtorpeda',
       },
       {
-        name: 'ProtonGE-Custom',
-        pkgname: ['proton-ge-custom-bin'],
-        description: 'gaming.protonGeCustom',
-      },
-      {
         name: 'Proton CachyOS',
         pkgname: ['proton-cachyos-slr'],
         description: 'gaming.protonCachyOS',
