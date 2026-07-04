@@ -5,7 +5,6 @@ import { DesignTokenField } from '../../designtokenfield';
 
 @Component({
   selector: 'design-cs-navigation',
-  standalone: true,
   imports: [DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="Navigation">
     <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0">Item</div>

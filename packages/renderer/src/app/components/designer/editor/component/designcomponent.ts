@@ -1,7 +1,6 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { FieldsetModule } from 'primeng/fieldset';
-
 import { DesignerService } from '../../designerservice';
 import { DesignComponentSection } from './designcomponentsection';
 import { ConfigService } from '../../../config/config.service';
@@ -10,8 +9,8 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'design-component',
-  standalone: true,
   imports: [FieldsetModule, TabsModule, DesignComponentSection, Select, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<section class="flex flex-col gap-3">
     <p-select class="capitalize mb-2" [(ngModel)]="componentKey" [options]="availableComponents" />
 

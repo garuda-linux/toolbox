@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DataView } from 'primeng/dataview';
 import { FormsModule } from '@angular/forms';
 import type { DkmsModule, DkmsModules, Kernel } from './types';
@@ -12,13 +12,14 @@ import { Tooltip } from 'primeng/tooltip';
 import { Skeleton } from 'primeng/skeleton';
 import { KernelsService } from './kernels.service';
 import { Router } from '@angular/router';
-import { Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-kernels',
-  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, Button],
+  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, ButtonDirective],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KernelsComponent {
   protected readonly configService = inject(ConfigService);

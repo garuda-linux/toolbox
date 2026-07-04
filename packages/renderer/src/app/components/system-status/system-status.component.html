@@ -91,9 +91,9 @@
     </ul>
 
     <div class="flex justify-end gap-2">
-      <p-button [label]="t('systemStatus.cancel')" (click)="healthDialogVisible.set(false)" severity="secondary" />
+      <button pButton severity="secondary" (click)="healthDialogVisible.set(false)" >{{ t('systemStatus.cancel') }}</button>
       @if (healthFixAvailable()) {
-        <p-button [label]="t('systemStatus.runHealthFix')" (click)="runHealthFix()" severity="success" />
+        <button pButton severity="success" (click)="runHealthFix()" >{{ t('systemStatus.runHealthFix') }}</button>
       }
     </div>
   </p-dialog>
@@ -117,17 +117,17 @@
     </ul>
 
     <div class="flex justify-end gap-2">
-      <p-button [label]="t('systemStatus.cancel')" (click)="dialogVisible.set(false)" severity="secondary" />
+      <button pButton severity="secondary" (click)="dialogVisible.set(false)" >{{ t('systemStatus.cancel') }}</button>
       @if (hasRegularUpdates()) {
-        <p-button
+        <button
           [disabled]="updateButtonDisabled()"
-          [label]="t('systemStatus.scheduleUpdates')"
-          (click)="scheduleUpdates(true)"
+          pButton
           severity="success"
-        />
+          (click)="scheduleUpdates(true)"
+        >{{ t('systemStatus.scheduleUpdates') }}</button>
       }
       @if (hasAurUpdates()) {
-        <p-button [label]="t('systemStatus.runAurUpdates')" (click)="runAurUpdates()" severity="info" />
+        <button pButton severity="info" (click)="runAurUpdates()" >{{ t('systemStatus.runAurUpdates') }}</button>
       }
     </div>
   </p-dialog>
@@ -171,14 +171,14 @@
     </div>
 
     <div class="flex justify-end gap-2">
-      <p-button [label]="t('systemStatus.cancel')" (click)="pacdiffDialogVisible.set(false)" severity="secondary" />
-      <p-button
+      <button pButton severity="secondary" (click)="pacdiffDialogVisible.set(false)" >{{ t('systemStatus.cancel') }}</button>
+      <button
         class="cursor-pointer"
-        [label]="t('systemStatus.openMaintenanceButton')"
         [queryParams]="{ action: 'pacdiff' }"
+        pButton
         routerLink="/maintenance"
         severity="success"
-      />
+      >{{ t('systemStatus.openMaintenanceButton') }}</button>
     </div>
   </p-dialog>
 </ng-container>

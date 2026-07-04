@@ -3,7 +3,6 @@ import { EmojiConvertor } from 'emoji-js';
 
 @Pipe({
   name: 'emojiPipe',
-  standalone: true,
 })
 export class EmojiPipe implements PipeTransform {
   transform(value: string | undefined): string {

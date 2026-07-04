@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-
 import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
 import { DesignTokenField } from '../../designtokenfield';
 
 @Component({
   selector: 'design-cs-overlay',
-  standalone: true,
   imports: [DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="Overlay">
     <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0">Select</div>

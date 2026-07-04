@@ -46,21 +46,19 @@
                   </div>
 
                   <div class="flex-none flex gap-2 pt-4">
-                    <p-button
-                      [label]="t('setupWizard.buttons.back')"
+                    <button
                       [disabled]="i === 0"
-                      (onClick)="activateCallback(getCategoryStepValue(i - 1))"
-                      icon="pi pi-arrow-left"
+                      data-p-icon="pi pi-arrow-left"
+                      pButton
                       severity="secondary"
-                    />
-                    <p-button
-                      [label]="t('setupWizard.buttons.next')"
-                      (onClick)="
-                        activateCallback(i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1))
-                      "
-                      icon="pi pi-arrow-right"
+                      (click)="activateCallback(getCategoryStepValue(i - 1))"
+                    >{{ t('setupWizard.buttons.back') }}</button>
+                    <button
+                      data-p-icon="pi pi-arrow-right"
+                      pButton
                       iconPos="right"
-                    />
+                      (click)="activateCallback(i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1))"
+                    >{{ t('setupWizard.buttons.next') }}</button>
                   </div>
                 </div>
               </ng-template>
@@ -78,19 +76,19 @@
                 <p class="text-color text-lg">{{ t('setupWizard.apply.body') }}</p>
 
                 <div class="flex gap-2 pt-4">
-                  <p-button
-                    [label]="t('setupWizard.buttons.back')"
-                    (onClick)="activateCallback(getCategoryStepValue(softwareCategories.length - 1))"
-                    icon="pi pi-arrow-left"
+                  <button
+                    data-p-icon="pi pi-arrow-left"
+                    pButton
                     severity="secondary"
-                  />
-                  <p-button
-                    [label]="t('setupWizard.buttons.apply')"
+                    (click)="activateCallback(getCategoryStepValue(softwareCategories.length - 1))"
+                  >{{ t('setupWizard.buttons.back') }}</button>
+                  <button
                     [disabled]="taskManagerService.running()"
-                    (onClick)="apply()"
-                    icon="pi pi-check"
+                    data-p-icon="pi pi-check"
+                    pButton
                     severity="success"
-                  />
+                    (click)="apply()"
+                  >{{ t('setupWizard.buttons.apply') }}</button>
                 </div>
               </div>
             </ng-template>

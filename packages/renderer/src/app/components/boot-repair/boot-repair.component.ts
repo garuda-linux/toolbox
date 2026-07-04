@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
-import { Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { RadioButton } from 'primeng/radiobutton';
-import { Password } from 'primeng/password';
+import { InputPassword } from 'primeng/inputpassword';
 import { ConfirmationService } from 'primeng/api';
 import { BootRepairService } from './boot-repair.service';
 import { PartitionInfo } from '../boot-options/types';
@@ -19,8 +19,17 @@ import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'toolbox-boot-repair',
-  standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoDirective, Card, Select, Button, RadioButton, Password, Tooltip],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslocoDirective,
+    Card,
+    Select,
+    ButtonDirective,
+    RadioButton,
+    InputPassword,
+    Tooltip,
+  ],
   templateUrl: './boot-repair.component.html',
   styleUrl: './boot-repair.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

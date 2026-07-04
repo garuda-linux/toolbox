@@ -16,7 +16,7 @@ import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
 import { InputNumber } from 'primeng/inputnumber';
 import { InputText } from 'primeng/inputtext';
-import { Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { Checkbox } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
@@ -36,7 +36,6 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'toolbox-boot-options',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -45,7 +44,7 @@ import { ActivatedRoute } from '@angular/router';
     Select,
     InputNumber,
     InputText,
-    Button,
+    ButtonDirective,
     Message,
     Checkbox,
     TableModule,
@@ -53,6 +52,7 @@ import { ActivatedRoute } from '@angular/router';
     DialogModule,
     TextareaModule,
     ProgressBar,
+    ButtonDirective,
   ],
   templateUrl: './boot-options.component.html',
   styleUrl: './boot-options.component.css',

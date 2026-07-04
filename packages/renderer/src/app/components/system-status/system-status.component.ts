@@ -4,7 +4,6 @@ import { OverlayBadge } from 'primeng/overlaybadge';
 import { Tooltip } from 'primeng/tooltip';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Dialog } from 'primeng/dialog';
-import { Button } from 'primeng/button';
 import { type Task, TaskManagerService } from '../task-manager/task-manager.service';
 import type { SystemUpdate } from './types';
 import { ConfigService } from '../config/config.service';
@@ -13,10 +12,11 @@ import { ConfirmationService } from 'primeng/api';
 import { SystemStatusService } from './system-status.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { CommandPaletteService } from '../command-palette/command-palette.service';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-system-status',
-  imports: [OverlayBadge, Tooltip, TranslocoDirective, Dialog, Button, RouterLink],
+  imports: [OverlayBadge, Tooltip, TranslocoDirective, Dialog, ButtonDirective, RouterLink],
   templateUrl: './system-status.component.html',
   styleUrl: './system-status.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

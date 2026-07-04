@@ -60,13 +60,14 @@ export const appConfig: ApplicationConfig = {
           },
         },
         ripple: true,
-        inputStyle: 'outlined',
         overlayOptions: {
           appendTo: 'body',
         },
+        license:
+          'eyJpZCI6IjJhMWI5MWQ1LWI3ODgtNGVmOS1iZDc3LTM4MmRjYWUzYjJmYiIsInByb2R1Y3QiOiJwcmltZXVpIiwidGllciI6ImNvbW11bml0eSIsInR5cGUiOiJkZXYiLCJpYXQiOjE3ODI4MTIyNzEsImV4cCI6MTgxNDM0ODI3MX0.ZUMB8QHSEKEOn_GSWGWtY4E4475J0iCXLkV-4u9hxizlGPw2kRR9on1B4nZCJQWYuPBxfaxvE8HSck3xm1wNAA', // pragma: allowlist secret
       },
     ),
-    provideHttpClient(withFetch()),
+    provideHttpClient(),
     provideRouter(
       routes,
       withHashLocation(),

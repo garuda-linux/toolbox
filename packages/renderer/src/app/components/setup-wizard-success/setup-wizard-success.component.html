@@ -21,31 +21,31 @@
         </div>
 
         <div class="flex gap-4 justify-center mb-10 flex-wrap">
-          <p-button
-            [label]="t('setupWizard.success.forum')"
+          <button
             [outlined]="true"
-            (onClick)="shellService.open('https://forum.garudalinux.org')"
-            icon="pi pi-external-link"
+            data-p-icon="pi pi-external-link"
+            pButton
             severity="help"
-          />
-          <p-button
-            [label]="t('setupWizard.success.garudaWiki')"
+            (click)="shellService.open('https://forum.garudalinux.org')"
+          >{{ t('setupWizard.success.forum') }}</button>
+          <button
             [outlined]="true"
-            (onClick)="shellService.open('https://wiki.garudalinux.org')"
-            icon="pi pi-external-link"
+            data-p-icon="pi pi-external-link"
+            pButton
             severity="help"
-          />
-          <p-button
-            [label]="t('setupWizard.success.archWiki')"
+            (click)="shellService.open('https://wiki.garudalinux.org')"
+          >{{ t('setupWizard.success.garudaWiki') }}</button>
+          <button
             [outlined]="true"
-            (onClick)="shellService.open('https://wiki.archlinux.org')"
-            icon="pi pi-external-link"
+            data-p-icon="pi pi-external-link"
+            pButton
             severity="help"
-          />
+            (click)="shellService.open('https://wiki.archlinux.org')"
+          >{{ t('setupWizard.success.archWiki') }}</button>
         </div>
 
         <div class="flex justify-center">
-          <p-button [label]="t('setupWizard.success.finish')" (onClick)="finish()" icon="pi pi-check" size="large" />
+          <button pButton data-p-icon="pi pi-check" size="large" (click)="finish()" >{{ t('setupWizard.success.finish') }}</button>
         </div>
       </div>
     </p-card>

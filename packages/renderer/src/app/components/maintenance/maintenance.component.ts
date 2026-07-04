@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, model, type OnInit, signal } from '@angular/core';
 import { Card } from 'primeng/card';
-import { Button } from 'primeng/button';
 import type { CommandPaletteAction, MaintenanceAction, ResettableConfig } from '../../interfaces';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Tooltip } from 'primeng/tooltip';
@@ -17,10 +16,23 @@ import { Logger } from '../../logging/logging';
 import { Router, type UrlTree } from '@angular/router';
 import { ConfigService } from '../config/config.service';
 import { CommandPaletteService } from '../command-palette/command-palette.service';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-maintenance',
-  imports: [Card, Button, TranslocoDirective, Tooltip, Checkbox, FormsModule, Tab, TabPanels, Tabs, TabList, TabPanel],
+  imports: [
+    Card,
+    ButtonDirective,
+    TranslocoDirective,
+    Tooltip,
+    Checkbox,
+    FormsModule,
+    Tab,
+    TabPanels,
+    Tabs,
+    TabList,
+    TabPanel,
+  ],
   templateUrl: './maintenance.component.html',
   styleUrl: './maintenance.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

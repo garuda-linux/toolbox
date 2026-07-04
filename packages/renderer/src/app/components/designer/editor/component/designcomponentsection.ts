@@ -1,12 +1,11 @@
-import { Component, computed, inject, input } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DesignerService } from '../../designerservice';
 import { DesignTokenField } from '../designtokenfield';
 
 @Component({
   selector: 'design-component-section',
-  standalone: true,
   imports: [DesignTokenField],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<section>
     <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0 capitalize">
       {{ sectionName() }}

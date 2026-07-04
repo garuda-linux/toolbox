@@ -8,15 +8,15 @@
         </span>
       </div>
     </p-tag>
-    <p-button
+    <button
       class="ml-5"
-      [label]="t('kernels.setDefault')"
       [text]="true"
-      (onClick)="navigateToDefaultKernel()"
-      icon="pi pi-hammer"
+      data-p-icon="pi pi-hammer"
+      pButton
       severity="help"
       size="small"
-    />
+      (click)="navigateToDefaultKernel()"
+    >{{ t('kernels.setDefault') }}</button>
     @if (kernelsService.headersMissing()) {
       <p-tag
         class="ml-5 cursor-pointer"

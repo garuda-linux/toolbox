@@ -18,7 +18,6 @@ import { NgTemplateOutlet } from '@angular/common';
   templateUrl: './loading-indicator.component.html',
   styleUrls: ['./loading-indicator.component.css'],
   imports: [ProgressSpinner, NgTemplateOutlet],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingIndicatorComponent implements OnInit {

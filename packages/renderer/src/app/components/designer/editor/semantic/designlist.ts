@@ -7,26 +7,25 @@ import { DesignerService } from '../../designerservice';
 
 @Component({
   selector: 'design-list',
-  standalone: true,
-  imports: [DesignTokenField, FormsModule, FieldsetModule, DesignTokenField],
+  imports: [DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="List">
     <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0">Container</div>
     <section class="grid grid-cols-4 mb-3 gap-2">
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.padding"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.padding"
           label="Padding"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.gap"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.gap"
           label="Gap"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.header.padding"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.header.padding"
           label="Header Padding"
         />
       </div>
@@ -37,13 +36,13 @@ import { DesignerService } from '../../designerservice';
     <section class="grid grid-cols-4 mb-3 gap-2">
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.option.padding"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.option.padding"
           label="Padding"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.option.borderRadius"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.option.borderRadius"
           label="Border Radius"
         />
       </div>
@@ -53,13 +52,13 @@ import { DesignerService } from '../../designerservice';
     <section class="grid grid-cols-4 gap-2">
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.optionGroup.padding"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.optionGroup.padding"
           label="Padding"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).list.optionGroup.fontWeight"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.list.optionGroup.fontWeight"
           label="Font Weight"
         />
       </div>

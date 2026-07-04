@@ -8,14 +8,13 @@ import { DesignerService } from '../../designerservice';
 
 @Component({
   selector: 'design-general',
-  standalone: true,
   imports: [DesignColorPalette, DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="General">
     <section class="flex justify-between items-center mb-4 gap-8">
       <div class="flex gap-2 items-center">
         <span class="text-sm">Primary</span>
         <input
-          [value]="designerService.resolveColor($any(designerService.designer().theme.preset?.semantic).primary['500'])"
+          [value]="designerService.resolveColor($any(designerService.designer().theme.preset).semantic.primary['500'])"
           (input)="onPrimaryColorChange($event)"
           type="color"
         />
@@ -25,37 +24,37 @@ import { DesignerService } from '../../designerservice';
     <section class="grid grid-cols-4 mb-3 gap-2">
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).transitionDuration"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.transitionDuration"
           label="Transition Duration"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).disabledOpacity"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.disabledOpacity"
           label="Disabled Opacity"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).iconSize"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.iconSize"
           label="Icon Size"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).anchorGutter"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.anchorGutter"
           label="Anchor Gutter"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).content.borderRadius"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.content.borderRadius"
           label="Border Radius"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).mask.transitionDuration"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.mask.transitionDuration"
           label="Mask Transition Dur."
         />
       </div>
@@ -67,26 +66,26 @@ import { DesignerService } from '../../designerservice';
     <section class="grid grid-cols-4 gap-2">
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).focusRing.width"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.focusRing.width"
           label="Width"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).focusRing.style"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.focusRing.style"
           label="Style"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).focusRing.color"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.focusRing.color"
           [type]="'color'"
           label="Color"
         />
       </div>
       <div class="flex flex-col gap-1">
         <design-token-field
-          [(modelValue)]="$any(designerService.designer().theme.preset?.semantic).focusRing.offset"
+          [(modelValue)]="$any(designerService.designer().theme.preset).semantic.focusRing.offset"
           label="Offset"
         />
       </div>

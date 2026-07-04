@@ -6,7 +6,6 @@ import { DesignTokenField } from '../../designtokenfield';
 
 @Component({
   selector: 'design-cs-list',
-  standalone: true,
   imports: [DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="List">
     <div class="text-sm mb-1 font-semibold text-surface-950 dark:text-surface-0">Option</div>

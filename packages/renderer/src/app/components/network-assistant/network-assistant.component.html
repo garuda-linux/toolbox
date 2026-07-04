@@ -47,7 +47,7 @@
               <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-2">
                   <span class="font-bold">{{ t('wifi') }}</span>
-                  <p-toggleButton
+                  <p-toggle-button
                     class="w-full"
                     [ngModel]="status()?.wifiEnabled"
                     [disabled]="!status()?.wifiAvailable"
@@ -61,7 +61,7 @@
                 </div>
                 <div class="flex flex-col gap-2">
                   <span class="font-bold">{{ t('bluetooth') }}</span>
-                  <p-toggleButton
+                  <p-toggle-button
                     class="w-full"
                     [ngModel]="status()?.btEnabled"
                     [disabled]="!status()?.btAvailable"
@@ -75,7 +75,7 @@
                 </div>
                 <div class="flex flex-col gap-2">
                   <span class="font-bold">{{ t('airplaneMode') }}</span>
-                  <p-toggleButton
+                  <p-toggle-button
                     class="w-full"
                     [ngModel]="status()?.airplaneEnabled"
                     (onChange)="toggleAirplane($event.checked)"
@@ -85,7 +85,7 @@
                 </div>
                 <div class="flex flex-col gap-2">
                   <span class="font-bold">{{ t('gps') }}</span>
-                  <p-toggleButton
+                  <p-toggle-button
                     class="w-full"
                     [ngModel]="status()?.gpsEnabled"
                     (onChange)="toggleGps($event.checked)"
@@ -106,12 +106,13 @@
                       [value]="status()?.nmActive ? t('active') : t('inactive')"
                     />
                     @if (!status()?.nmActive) {
-                      <p-button
-                        [label]="t('enable')"
+                      <button
                         [text]="true"
-                        (onClick)="enableService('NetworkManager')"
+                        data-p-icon="pi pi-check"
+                        pButton
+                        (click)="enableService('NetworkManager')"
                         size="small"
-                      />
+                      >{{ t('enable') }}</button>
                     }
                   }
                 </div>
@@ -123,7 +124,7 @@
                       [value]="status()?.connmanActive ? t('active') : t('inactive')"
                     />
                     @if (!status()?.connmanActive) {
-                      <p-button [label]="t('enable')" [text]="true" (onClick)="enableService('connman')" size="small" />
+                      <button [text]="true" data-p-icon="pi pi-check" pButton (click)="enableService('connman')" size="small" >{{ t('enable') }}</button>
                     }
                   }
                 </div>
@@ -134,7 +135,7 @@
                     [value]="status()?.bluetoothActive ? t('active') : t('inactive')"
                   />
                   @if (!status()?.bluetoothActive) {
-                    <p-button [label]="t('enable')" [text]="true" (onClick)="enableService('bluetooth')" size="small" />
+                    <button [text]="true" data-p-icon="pi pi-check" pButton (click)="enableService('bluetooth')" size="small" >{{ t('enable') }}</button>
                   }
                 </div>
               </div>
@@ -143,7 +144,7 @@
             <p-card class="md:col-span-2" [header]="t('wifiHotspot')">
               <div class="flex items-center gap-4">
                 <p>{{ t('wifiHotspotDesc') }}</p>
-                <p-button [label]="t('openHotspot')" (onClick)="openWifiHotspot()" icon="pi pi-globe" />
+                <button pButton data-p-icon="pi pi-globe" (click)="openWifiHotspot()" >{{ t('openHotspot') }}</button>
               </div>
             </p-card>
           </div>
@@ -169,13 +170,13 @@
                       <th style="width: 30%">
                         <div class="flex items-center justify-between">
                           {{ t('driver') }}
-                          <p-columnFilter type="text" field="name" display="menu" />
+                          <p-column-filter type="text" field="name" display="menu" />
                         </div>
                       </th>
                       <th style="width: 20%">
                         <div class="flex items-center justify-between">
                           {{ t('category') }}
-                          <p-columnFilter [showMenu]="false" field="category" matchMode="equals">
+                          <p-column-filter [showMenu]="false" field="category" matchMode="equals">
                             <ng-template #filter let-value let-filterCallback="filterCallback">
                               <p-select
                                 [ngModel]="value"
@@ -192,13 +193,13 @@
                                 </ng-template>
                               </p-select>
                             </ng-template>
-                          </p-columnFilter>
+                          </p-column-filter>
                         </div>
                       </th>
                       <th style="width: 20%">
                         <div class="flex items-center justify-between">
                           {{ t('status') }}
-                          <p-columnFilter [showMenu]="false" field="statusFilter" matchMode="equals">
+                          <p-column-filter [showMenu]="false" field="statusFilter" matchMode="equals">
                             <ng-template #filter let-value let-filterCallback="filterCallback">
                               <p-select
                                 [ngModel]="value"
@@ -215,7 +216,7 @@
                                 </ng-template>
                               </p-select>
                             </ng-template>
-                          </p-columnFilter>
+                          </p-column-filter>
                         </div>
                       </th>
                       <th style="width: 10%">{{ t('actions') }}</th>
@@ -253,56 +254,62 @@
                         @switch (driver.status) {
                           @case ('loaded') {
                             <div class="flex gap-2 justify-content-end">
-                              <p-button
+                              <button
                                 [text]="true"
                                 [severity]="'danger'"
                                 [pTooltip]="t('unloadDriver')"
-                                (onClick)="unloadDriver(driver.name)"
-                                icon="pi pi-stop-circle"
-                              />
-                              <p-button
+                                data-p-icon="pi pi-stop-circle"
+                                pButton
+                                (click)="unloadDriver(driver.name)"
+                              ></button>
+                              <button
                                 [text]="true"
                                 [pTooltip]="t('blacklistDriver')"
-                                (onClick)="blacklistDriver(driver.name, true)"
-                                icon="pi pi-lock"
+                                data-p-icon="pi pi-lock"
+                                pButton
                                 severity="secondary"
-                              />
+                                (click)="blacklistDriver(driver.name, true)"
+                              ></button>
                             </div>
                           }
                           @case ('unloaded') {
                             <div class="flex gap-2 justify-content-end">
-                              <p-button
+                              <button
                                 [text]="true"
                                 [pTooltip]="t('loadDriver')"
-                                (onClick)="loadDriver(driver.name)"
-                                icon="pi pi-play-circle"
+                                data-p-icon="pi pi-play-circle"
+                                pButton
                                 severity="success"
-                              />
-                              <p-button
+                                (click)="loadDriver(driver.name)"
+                              ></button>
+                              <button
                                 [text]="true"
                                 [pTooltip]="t('blacklistDriver')"
-                                (onClick)="blacklistDriver(driver.name, true)"
-                                icon="pi pi-lock"
+                                data-p-icon="pi pi-lock"
+                                pButton
                                 severity="secondary"
-                              />
+                                (click)="blacklistDriver(driver.name, true)"
+                              ></button>
                             </div>
                           }
                           @default {
                             <div class="flex gap-2 justify-content-end">
-                              <p-button
+                              <button
                                 [text]="true"
                                 [pTooltip]="t('loadDriver')"
-                                (onClick)="loadDriver(driver.name)"
-                                icon="pi pi-play-circle"
+                                data-p-icon="pi pi-play-circle"
+                                pButton
                                 severity="success"
-                              />
-                              <p-button
+                                (click)="loadDriver(driver.name)"
+                              ></button>
+                              <button
                                 [text]="true"
                                 [pTooltip]="t('unblacklistDriver')"
-                                (onClick)="blacklistDriver(driver.name, false)"
-                                icon="pi pi-lock-open"
+                                data-p-icon="pi pi-lock-open"
+                                pButton
                                 severity="success"
-                              />
+                                (click)="blacklistDriver(driver.name, false)"
+                              ></button>
                             </div>
                           }
                         }
@@ -387,7 +394,7 @@
             @if (hardware().length > 0) {
               <p-card>
                 <div class="flex justify-end">
-                  <p-button [label]="t('copyAll')" [text]="true" (onClick)="copyAllHwItems()" icon="pi pi-copy" />
+                  <button [text]="true" data-p-icon="pi pi-copy" pButton (click)="copyAllHwItems()" >{{ t('copyAll') }}</button>
                 </div>
               </p-card>
             }
@@ -419,7 +426,7 @@
                 <div class="grid grid-cols-2 gap-4">
                   <div class="flex flex-col gap-2">
                     <label for="ping-count">{{ t('count') }}</label>
-                    <p-inputNumber
+                    <p-input-number
                       id="ping-count"
                       [ngModel]="pingOptions().count"
                       [min]="1"
@@ -430,7 +437,7 @@
                   </div>
                   <div class="flex flex-col gap-2">
                     <label for="ping-timeout">{{ t('timeout') }}</label>
-                    <p-inputNumber
+                    <p-input-number
                       id="ping-timeout"
                       [ngModel]="pingOptions().timeout"
                       [min]="1"
@@ -440,7 +447,7 @@
                     />
                   </div>
                 </div>
-                <p-button [label]="t('runPing')" (onClick)="runPing()" icon="pi pi-play" />
+                <button pButton data-p-icon="pi pi-play" (click)="runPing()" >{{ t('runPing') }}</button>
               </div>
             </p-card>
 
@@ -458,7 +465,7 @@
                 </div>
                 <div class="flex flex-col gap-2">
                   <label for="trace-hops">{{ t('maxHops') }}</label>
-                  <p-inputNumber
+                  <p-input-number
                     id="trace-hops"
                     [ngModel]="tracerouteOptions().maxHops"
                     [min]="1"
@@ -472,7 +479,7 @@
                     "
                   />
                 </div>
-                <p-button [label]="t('runTraceroute')" (onClick)="runTraceroute()" icon="pi pi-directions" />
+                <button pButton data-p-icon="pi pi-directions" (click)="runTraceroute()" >{{ t('runTraceroute') }}</button>
               </div>
             </p-card>
           </div>

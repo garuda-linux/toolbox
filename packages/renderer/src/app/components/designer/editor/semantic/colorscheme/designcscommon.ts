@@ -7,7 +7,6 @@ import { DesignColorPalette } from '../../designcolorpalette';
 
 @Component({
   selector: 'design-cs-common',
-  standalone: true,
   imports: [DesignColorPalette, DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="Common">
     <section class="flex justify-between items-center mb-4 gap-8">

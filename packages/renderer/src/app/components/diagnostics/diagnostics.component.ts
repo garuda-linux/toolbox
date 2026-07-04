@@ -9,7 +9,6 @@ import {
   type Signal,
   viewChild,
 } from '@angular/core';
-import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Tooltip } from 'primeng/tooltip';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -26,10 +25,11 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router, type UrlTree } from '@angular/router';
 import { DesignerService } from '../designer/designerservice';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-diagnostics',
-  imports: [Button, Card, Tooltip, TranslocoDirective, NgTerminalModule],
+  imports: [ButtonDirective, Card, Tooltip, TranslocoDirective, NgTerminalModule],
   templateUrl: './diagnostics.component.html',
   styleUrl: './diagnostics.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

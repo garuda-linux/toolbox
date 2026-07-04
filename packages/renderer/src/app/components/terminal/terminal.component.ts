@@ -21,7 +21,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Dialog } from 'primeng/dialog';
 import { ProgressBar } from 'primeng/progressbar';
 import { Card } from 'primeng/card';
-import { ScrollPanel } from 'primeng/scrollpanel';
+import { ScrollArea } from 'primeng/scrollarea';
 import { Logger } from '../../logging/logging';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ConfigService } from '../config/config.service';
@@ -36,7 +36,7 @@ import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
   selector: 'toolbox-terminal',
-  imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollPanel, NgTemplateOutlet],
+  imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollArea, NgTemplateOutlet],
   templateUrl: './terminal.component.html',
   styleUrl: './terminal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

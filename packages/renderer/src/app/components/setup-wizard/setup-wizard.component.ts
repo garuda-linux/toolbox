@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Step, StepItem, StepPanel, StepperModule } from 'primeng/stepper';
 import { Checkbox } from 'primeng/checkbox';
-import { Button } from 'primeng/button';
 import { AccordionModule } from 'primeng/accordion';
 import { Card } from 'primeng/card';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-setup-wizard',
@@ -23,7 +23,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
     Step,
     StepItem,
     Checkbox,
-    Button,
+    ButtonDirective,
     AccordionModule,
     Card,
     TranslocoDirective,

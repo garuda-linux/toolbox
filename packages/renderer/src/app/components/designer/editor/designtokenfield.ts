@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { $dt } from '@primeuix/themes';
-import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { TooltipModule } from 'primeng/tooltip';
 import { UniqueComponentId } from 'primeng/utils';
 import { DesignerService } from '../designerservice';
 
 @Component({
   selector: 'design-token-field',
-  standalone: true,
-  imports: [AutoCompleteModule, FormsModule, TooltipModule, ReactiveFormsModule],
+  imports: [AutoComplete, FormsModule, TooltipModule, ReactiveFormsModule],
   template: `<div class="group">
     <div class="flex justify-between items-center">
       <label
@@ -29,7 +28,7 @@ import { DesignerService } from '../designerservice';
       }
     </div>
     <div class="relative" [id]="id">
-      <p-auto-complete
+      <p-autocomplete
         [(ngModel)]="modelValue"
         [class.ng-invalid]="isInvalid()"
         [class.ng-dirty]="isInvalid()"
@@ -67,7 +66,7 @@ import { DesignerService } from '../designerservice';
             }
           </div>
         </ng-template>
-      </p-auto-complete>
+      </p-autocomplete>
       @if (type() === 'color') {
         <div
           class="absolute right-[4px] top-1/2 -mt-3 w-6 h-6 rounded-md border border-surface-300 dark:border-surface-600"
@@ -92,8 +91,6 @@ export class DesignTokenField implements OnInit {
   readonly path = input<string>();
 
   readonly componentKey = input<any>();
-
-  readonly modelValueChange = output<any>();
 
   id: string | undefined;
 
@@ -144,14 +141,12 @@ export class DesignTokenField implements OnInit {
 
   onOptionSelect(event: AutoCompleteSelectEvent) {
     this.modelValue.set(event.value.label);
-    this.modelValueChange.emit(this.modelValue());
     event.originalEvent.stopPropagation();
   }
 
   onInput(event: KeyboardEvent) {
     // @ts-expect-error - event.target may not have complete type information
     this.modelValue.set(event.target.value);
-    this.modelValueChange.emit(this.modelValue());
   }
 
   search(event: AutoCompleteCompleteEvent) {

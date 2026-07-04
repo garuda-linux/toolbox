@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
 import { Drawer, DrawerModule } from 'primeng/drawer';
-
 import { ToastModule } from 'primeng/toast';
 import { PrimeNG } from 'primeng/config';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -13,7 +12,6 @@ import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'toolbox-designer',
-  standalone: true,
   imports: [
     DrawerModule,
     ToastModule,

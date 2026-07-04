@@ -8,20 +8,16 @@
 
   <div class="p-10">
     @if (warning()) {
-      <p-message [text]="warning()!" severity="warn" [closable]="true" />
+      <p-message severity="warn" [closable]="true">{{ warning() }}</p-message>
     }
     @if (error()) {
-      <p-message [text]="error()!" severity="error" />
+      <p-message severity="error">{{ error() }}</p-message>
       <div class="mt-4">
-        <p-button
-          [label]="t('bootOptions.retry')"
-          (onClick)="isLive() ? loadPartitions() : loadSettings()"
-          icon="pi pi-refresh"
-        />
+        <button pButton data-p-icon="pi pi-refresh" (click)="isLive() ? loadPartitions() : loadSettings()" >{{ t('bootOptions.retry') }}</button>
       </div>
     } @else if (isLive() && !bootService.getChroot()) {
       <div class="flex flex-col gap-4">
-        <p-message [text]="t('bootOptions.partitionSelectHint')" severity="info" />
+        <p-message severity="info">{{ t('bootOptions.partitionSelectHint') }}</p-message>
         <p-select
           class="w-full"
           [(ngModel)]="selectedPartition"
@@ -38,7 +34,7 @@
             </div>
           </ng-template>
         </p-select>
-        <p-button [label]="t('bootOptions.apply')" [disabled]="!selectedPartition()" (onClick)="onPartitionSelect()" />
+        <button [disabled]="!selectedPartition()" (click)="onPartitionSelect()">{{ t('bootOptions.apply') }}</button>
       </div>
     } @else {
       <div class="grid gap-6">
@@ -72,7 +68,7 @@
 
               <div class="flex flex-col gap-2">
                 <label class="font-bold" for="timeout">{{ t('bootOptions.timeout') }}</label>
-                <p-inputNumber
+                <p-input-number
                   class="w-full"
                   id="timeout"
                   [(ngModel)]="timeout"
@@ -202,19 +198,24 @@
                     [options]="plymouthThemes()"
                     [placeholder]="t('bootOptions.selectTheme')"
                   />
-                  <p-button
-                    [disabled]="!selectedPlymouthTheme() || selectedPlymouthTheme() === 'details' || bootService.isVirtualMachine()"
-                    [icon]="'pi pi-eye'"
+                  <button
+                    [disabled]="
+                      !selectedPlymouthTheme() ||
+                      selectedPlymouthTheme() === 'details' ||
+                      bootService.isVirtualMachine()
+                    "
+                    data-p-icon="pi pi-eye"
+                    pButton
                     [pTooltip]="t('bootOptions.previewTheme')"
                     [tooltipPosition]="'top'"
-                    (onClick)="previewPlymouthTheme()"
-                  />
+                    (click)="previewPlymouthTheme()"
+                  ></button>
                 </div>
                 <small>{{ t('bootOptions.plymouthThemeHint') }}</small>
               } @else if (osInteract.check('plymouth', 'pkg')) {
-                <p-message [text]="t('bootOptions.plymouthPending')" severity="info" />
+                <p-message severity="info">{{ t('bootOptions.plymouthPending') }}</p-message>
               } @else {
-                <p-message [text]="t('bootOptions.plymouthNotInstalled')" severity="warn" />
+                <p-message severity="warn">{{ t('bootOptions.plymouthNotInstalled') }}</p-message>
               }
             </div>
           </p-card>
@@ -226,7 +227,7 @@
               <span class="font-bold">{{ t('bootOptions.grubBackground') }}</span>
               <div class="flex gap-2">
                 <input class="w-full" id="grubBackground" [ngModel]="grubBackground()" pInputText readonly />
-                <p-button (onClick)="selectFile('background')" icon="pi pi-folder-open" />
+                <button pButton data-p-icon="pi pi-folder-open" (click)="selectFile('background')" ></button>
               </div>
             </div>
 
@@ -234,7 +235,7 @@
               <span class="font-bold">{{ t('bootOptions.grubTheme') }}</span>
               <div class="flex gap-2">
                 <input class="w-full" id="grubTheme" [ngModel]="grubTheme()" pInputText readonly />
-                <p-button (onClick)="selectFile('theme')" icon="pi pi-folder-open" />
+                <button pButton data-p-icon="pi pi-folder-open" (click)="selectFile('theme')" ></button>
               </div>
             </div>
           </div>
@@ -264,13 +265,13 @@
                   </td>
                   <td>
                     @if (!entry.isSubmenu) {
-                      <p-button
+                      <button
                         [outlined]="true"
-                        [label]="t('bootOptions.edit')"
-                        (onClick)="openEntryEditor(entry)"
-                        icon="pi pi-pencil"
+                        data-p-icon="pi pi-pencil"
+                        pButton
                         size="small"
-                      />
+                        (click)="openEntryEditor(entry)"
+                      >{{ t('bootOptions.edit') }}</button>
                     }
                   </td>
                 </tr>
@@ -297,7 +298,7 @@
       }
 
       @if (editorError()) {
-        <p-message [text]="editorError()!" severity="error" />
+        <p-message severity="error">{{ editorError() }}</p-message>
       }
 
       <textarea
@@ -309,7 +310,7 @@
       ></textarea>
 
       @if (editorSaving()) {
-        <p-progressBar mode="indeterminate" [style]="{ height: '4px' }" />
+        <p-progress-bar mode="indeterminate" [style]="{ height: '4px' }" />
       }
     </div>
 
@@ -321,18 +322,12 @@
           }
         </small>
         <div class="flex gap-2 ml-2">
-          <p-button
-            [label]="t('bootOptions.cancel')"
-            (onClick)="closeEditor()"
-            [disabled]="editorSaving()"
-            [outlined]="true"
-          />
-          <p-button
-            [label]="t('bootOptions.save')"
-            (onClick)="saveEditor()"
-            [disabled]="editorSaving() || !isEditorModified()"
-            [loading]="editorSaving()"
-          />
+          <button pButton (click)="closeEditor()" [disabled]="editorSaving()" [outlined]="true">
+            {{ t('bootOptions.cancel') }}
+          </button>
+          <button pButton (click)="saveEditor()" [disabled]="editorSaving() || !isEditorModified()">
+            {{ t('bootOptions.save') }}
+          </button>
         </div>
       </div>
     </ng-template>

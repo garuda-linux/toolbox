@@ -4,9 +4,7 @@ import { DesignerService } from '../designerservice';
 import { ConfigService } from '../../config/config.service';
 
 @Component({
-  standalone: true,
   selector: 'design-editor-footer',
-  imports: [],
   template: `<div class="flex justify-end gap-2">
     <button class="btn-design-outlined" (click)="save()" type="button">Save</button>
     <button class="btn-design" (click)="apply()" type="button">Apply</button>

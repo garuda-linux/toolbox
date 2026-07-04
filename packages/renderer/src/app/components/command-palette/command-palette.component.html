@@ -11,7 +11,7 @@
 >
   <ng-container *transloco="let t">
     <div class="p-2.5">
-      <p-auto-complete
+      <p-autocomplete
         [(ngModel)]="selectedItem"
         [suggestions]="suggestions()"
         [placeholder]="t('commandPalette.placeholder')"
@@ -34,7 +34,7 @@
             </div>
           </div>
         </ng-template>
-      </p-auto-complete>
+      </p-autocomplete>
       <div class="mt-2.5 text-xs flex justify-between px-2">
         <span>{{ t('commandPalette.hint') }}</span>
         <span>ESC {{ t('commandPalette.toClose') }}</span>

@@ -1,5 +1,4 @@
 import { DesignerService } from '../../designerservice';
-
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
@@ -7,7 +6,6 @@ import { Fieldset } from 'primeng/fieldset';
 
 @Component({
   selector: 'design-settings',
-  standalone: true,
   imports: [FormsModule, ConfirmPopupModule, Fieldset],
   template: ` <p-fieldset [toggleable]="true" legend="Font">
       <section class="grid grid-cols-4 gap-2">

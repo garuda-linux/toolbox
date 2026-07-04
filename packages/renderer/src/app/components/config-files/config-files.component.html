@@ -64,23 +64,24 @@
           <td>{{ t(file.description) }}</td>
           <td>
             @if (file.wikiLink) {
-              <p-button
+              <button
                 [text]="true"
-                (onClick)="shellService.open(file.wikiLink)"
-                icon="pi pi-external-link"
+                data-p-icon="pi pi-external-link"
+                pButton
                 pTooltip="Arch Wiki"
                 tooltipPosition="top"
-              />
+                (click)="shellService.open(file.wikiLink)"
+              ></button>
             }
           </td>
           <td>
-            <p-button
+            <button
               [outlined]="true"
-              [label]="t('configFiles.edit')"
-              (onClick)="editConfig(file)"
-              icon="pi pi-pencil"
+              data-p-icon="pi pi-pencil"
+              pButton
               size="small"
-            />
+              (click)="editConfig(file)"
+            >{{ t('configFiles.edit') }}</button>
           </td>
         </tr>
       </ng-template>
@@ -120,23 +121,24 @@
           <td>{{ t(file.description) }}</td>
           <td>
             @if (file.wikiLink) {
-              <p-button
+              <button
                 [text]="true"
-                (onClick)="shellService.open(file.wikiLink)"
-                icon="pi pi-external-link"
+                data-p-icon="pi pi-external-link"
+                pButton
                 pTooltip="Arch Wiki"
                 tooltipPosition="top"
-              />
+                (click)="shellService.open(file.wikiLink)"
+              ></button>
             }
           </td>
           <td>
-            <p-button
+            <button
               [outlined]="true"
-              [label]="t('configFiles.edit')"
-              (onClick)="editConfig(file)"
-              icon="pi pi-pencil"
+              data-p-icon="pi pi-pencil"
+              pButton
               size="small"
-            />
+              (click)="editConfig(file)"
+            >{{ t('configFiles.edit') }}</button>
           </td>
         </tr>
       </ng-template>

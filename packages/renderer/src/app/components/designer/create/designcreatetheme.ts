@@ -8,7 +8,7 @@ import Nora from '@primeuix/themes/nora';
 import Material from '@primeuix/themes/material';
 import { MessageService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
-import { FileUploadModule } from 'primeng/fileupload';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { Logger } from '../../../logging/logging';
 import { themes } from '../../../theme';
 import { Select } from 'primeng/select';
@@ -24,7 +24,6 @@ const presets: Record<string, Preset> = {
 
 @Component({
   selector: 'design-create-theme',
-  standalone: true,
   imports: [FormsModule, DividerModule, FileUploadModule, Select, ButtonDirective, NgClass],
   template: `<section class="mb-6">
     <div class="text-lg font-semibold mb-2">Foundation</div>
@@ -145,7 +144,7 @@ export class DesignCreateTheme implements OnInit {
     await this.designerService.createThemeFromPreset();
   }
 
-  onFileSelect(event: { files: File[] }) {
+  onFileSelect(event: FileSelectEvent) {
     const file = event.files[0];
     if (!file) {
       return;

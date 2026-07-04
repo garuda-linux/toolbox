@@ -16,7 +16,7 @@
             />
           }
 
-          <p-auto-complete
+          <p-autocomplete
             [(ngModel)]="selectedModule"
             [ngClass]="{
               'ng-dirty ng-invalid': selectedModule() !== '' && moduleSuggestions().length === 0,
@@ -35,7 +35,7 @@
                 <div>{{ t(module.moduleName) }}</div>
               </div>
             </ng-template>
-          </p-auto-complete>
+          </p-autocomplete>
 
           @if (taskManager.count() > 0) {
             <p-splitbutton

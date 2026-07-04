@@ -1,6 +1,5 @@
 import { DesignColorPalette } from '../designcolorpalette';
 import { DesignerService } from '../../designerservice';
-
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { palette } from '@primeuix/themes';
@@ -8,7 +7,6 @@ import { FieldsetModule } from 'primeng/fieldset';
 
 @Component({
   selector: 'design-colors',
-  standalone: true,
   imports: [FieldsetModule, FormsModule, DesignColorPalette],
   template: ` <p-fieldset [toggleable]="true" legend="Colors">
     @for (key of objectKeys(designerService.designer().theme?.preset?.primitive); track key) {

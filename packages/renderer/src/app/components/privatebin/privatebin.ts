@@ -2,7 +2,6 @@
 import { inject, Injectable } from '@angular/core';
 import BaseConverter from 'bs58';
 import { Logger } from '../../logging/logging';
-import pako from 'pako';
 
 import type {
   PrivatebinAdata,
@@ -14,6 +13,7 @@ import type {
 import { Api, type ApiConfig, type ApiResponse } from './api';
 import { decrypt, encrypt, stringToUint8Array, uint8ArrayToString } from './crypto';
 import { ElectronHttpService } from '../../electron-services';
+import { deflateRaw, inflateRaw } from 'pako';
 
 /**
  * Encrypt a text to a Privatebin paste.
@@ -41,7 +41,7 @@ export async function encryptText(
 
   let buf = stringToUint8Array(JSON.stringify({ paste: text }));
   if (compression === 'zlib') {
-    buf = pako.deflateRaw(buf);
+    buf = deflateRaw(buf);
   }
 
   return encrypt(buf, key, spec);
@@ -56,7 +56,7 @@ export async function encryptText(
 export async function decryptText(ct: string, key: Uint8Array, adata: PrivatebinAdata): Promise<PrivatebinPaste> {
   const buf: Uint8Array = await decrypt(ct, key, adata);
   if (adata[0][7] === 'zlib') {
-    return JSON.parse(pako.inflateRaw(buf, { to: 'string' }));
+    return JSON.parse(inflateRaw(buf, { toText: true }));
   }
 
   return JSON.parse(uint8ArrayToString(buf));

@@ -14,10 +14,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Card } from 'primeng/card';
-import { Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
-import { ToggleButton } from 'primeng/togglebutton';
 import { InputText } from 'primeng/inputtext';
 import { Tag } from 'primeng/tag';
 import { InputNumber } from 'primeng/inputnumber';
@@ -35,19 +34,18 @@ import { DesignerService } from '../designer/designerservice';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Select } from 'primeng/select';
 import { NetworkStatus } from './types';
+import { ToggleButton } from 'primeng/togglebutton';
 
 @Component({
   selector: 'toolbox-network-assistant',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     TranslocoDirective,
     Card,
-    Button,
+    ButtonDirective,
     TableModule,
     TabsModule,
-    ToggleButton,
     InputText,
     Tag,
     InputNumber,
@@ -55,6 +53,7 @@ import { NetworkStatus } from './types';
     MultiSelectModule,
     NgTerminalModule,
     Select,
+    ToggleButton,
   ],
   templateUrl: './network-assistant.component.html',
   styleUrl: './network-assistant.component.css',

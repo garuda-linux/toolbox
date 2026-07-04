@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Checkbox } from 'primeng/checkbox';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -9,18 +9,19 @@ import { Logger } from '../../logging/logging';
 import { LangPipePipe } from '../lang-pipe/lang-pipe.pipe';
 import { themes } from '../../theme';
 import { Card } from 'primeng/card';
-import { Button } from 'primeng/button';
 import { FileUpload } from 'primeng/fileupload';
 import { MessageToastService } from '@garudalinux/core';
 import { WallpaperService } from '../wallpaper/wallpaper.service';
 import { Slider } from 'primeng/slider';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-settings',
-  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, Button, FileUpload, Slider],
+  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, ButtonDirective, FileUpload, Slider],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   providers: [LangPipePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
   protected readonly configService = inject(ConfigService);
@@ -86,7 +87,7 @@ export class SettingsComponent implements OnInit {
     await this.configService.updateConfig('background', null);
   }
 
-  async onFileSelect(event: { files: File[] }) {
+  async onFileSelect(event: any) {
     const file: File = event.files[0];
     if (!file) return;
 

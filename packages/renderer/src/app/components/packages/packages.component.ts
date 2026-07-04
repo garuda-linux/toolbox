@@ -12,7 +12,7 @@ import type { StatefulPackage } from '../gaming/interfaces';
 import { Tab, TabList, Tabs } from 'primeng/tabs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Logger } from '../../logging/logging';
-import { Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { ElectronShellService } from '../../electron-services';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -30,13 +30,14 @@ import { ConfigService } from '../config/config.service';
     TabList,
     Tabs,
     TranslocoDirective,
-    Button,
+    ButtonDirective,
     IconField,
     InputIcon,
     InputText,
     TableModule,
     Checkbox,
     FormsModule,
+    ButtonDirective,
   ],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.css',
@@ -116,6 +117,6 @@ export class PackagesComponent {
    * Reset page to 0, because this doesn't happen automatically.
    */
   tabChange() {
-    this.table().first = 0;
+    this.table().first.set(0);
   }
 }

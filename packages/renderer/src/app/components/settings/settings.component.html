@@ -78,13 +78,13 @@
           <div class="flex justify-between items-center">
             <label class="text-lg" for="customBackgroundInput">{{ t('settings.customBackground') }}</label>
             <div class="flex gap-2">
-              <p-button
+              <button
                 class="p-button-secondary"
-                [label]="t('settings.clearBackground')"
                 [disabled]="!configService.settings().background"
+                data-p-icon="pi pi-times"
+                pButton
                 (click)="clearBackground()"
-                icon="pi pi-times"
-              />
+              >{{ t('settings.clearBackground') }}</button>
               <p-fileupload
                 id="customBackgroundInput"
                 [chooseButtonProps]="{ styleClass: 'btn-design choose-btn' }"

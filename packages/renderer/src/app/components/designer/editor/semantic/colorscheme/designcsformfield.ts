@@ -6,7 +6,6 @@ import { DesignTokenField } from '../../designtokenfield';
 
 @Component({
   selector: 'design-cs-form-field',
-  standalone: true,
   imports: [DesignTokenField, FormsModule, FieldsetModule],
   template: ` <p-fieldset [toggleable]="true" legend="Form Field">
     <section class="grid grid-cols-4 mb-3 gap-2">

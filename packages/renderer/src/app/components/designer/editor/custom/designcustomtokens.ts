@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { DesignerService } from '../../designerservice';
 import { usePreset } from '@primeuix/styled';
 import { ToastModule } from 'primeng/toast';
@@ -9,7 +8,6 @@ import { ExtendedTokens } from '@primeuix/themes/types';
 
 @Component({
   selector: 'design-custom-tokens',
-  standalone: true,
   imports: [FormsModule, ToastModule],
   template: ` <div class="leading-6 text-muted-color mb-4">
       Extend the theming system with your own design tokens e.g.

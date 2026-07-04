@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-
 import { TabsModule } from 'primeng/tabs';
 import { DesignBorderRadius } from './primitive/designborderradius';
 import { DesignGeneral } from './semantic/designgeneral';
@@ -23,7 +22,6 @@ import { Preset } from '@primeuix/themes/types';
 
 @Component({
   selector: 'design-editor',
-  standalone: true,
   imports: [
     TabsModule,
     FormsModule,

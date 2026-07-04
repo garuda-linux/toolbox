@@ -231,12 +231,100 @@ export class DesignerService {
     });
   }
 
+  ensurePresetStructure(preset: any) {
+    if (!preset) return;
+    if (!preset.primitive) preset.primitive = {};
+    if (!preset.primitive.borderRadius) preset.primitive.borderRadius = {};
+
+    if (!preset.semantic) preset.semantic = {};
+
+    const semanticKeys = [
+      'primary',
+      'surface',
+      'focusRing',
+      'content',
+      'mask',
+      'formField',
+      'list',
+      'navigation',
+      'overlay',
+      'colorScheme',
+    ];
+    for (const key of semanticKeys) {
+      if (!preset.semantic[key]) {
+        preset.semantic[key] = {};
+      }
+    }
+
+    if (!preset.semantic.formField.sm) preset.semantic.formField.sm = {};
+    if (!preset.semantic.formField.lg) preset.semantic.formField.lg = {};
+    if (!preset.semantic.formField.focusRing) preset.semantic.formField.focusRing = {};
+
+    if (!preset.semantic.list.header) preset.semantic.list.header = {};
+    if (!preset.semantic.list.option) preset.semantic.list.option = {};
+    if (!preset.semantic.list.optionGroup) preset.semantic.list.optionGroup = {};
+
+    if (!preset.semantic.navigation.list) preset.semantic.navigation.list = {};
+    if (!preset.semantic.navigation.item) preset.semantic.navigation.item = {};
+    if (!preset.semantic.navigation.submenuLabel) preset.semantic.navigation.submenuLabel = {};
+    if (!preset.semantic.navigation.submenuIcon) preset.semantic.navigation.submenuIcon = {};
+
+    if (!preset.semantic.overlay.select) preset.semantic.overlay.select = {};
+    if (!preset.semantic.overlay.popover) preset.semantic.overlay.popover = {};
+    if (!preset.semantic.overlay.modal) preset.semantic.overlay.modal = {};
+    if (!preset.semantic.overlay.navigation) preset.semantic.overlay.navigation = {};
+
+    if (!preset.semantic.colorScheme) preset.semantic.colorScheme = {};
+    if (!preset.semantic.colorScheme.light) preset.semantic.colorScheme.light = {};
+    if (!preset.semantic.colorScheme.dark) preset.semantic.colorScheme.dark = {};
+
+    const csKeys = [
+      'text',
+      'content',
+      'primary',
+      'surface',
+      'formField',
+      'overlay',
+      'list',
+      'navigation',
+      'mask',
+      'highlight',
+    ];
+    for (const cs of [preset.semantic.colorScheme.light, preset.semantic.colorScheme.dark]) {
+      for (const key of csKeys) {
+        if (!cs[key]) {
+          cs[key] = {};
+        }
+      }
+      if (!cs.formField.sm) cs.formField.sm = {};
+      if (!cs.formField.lg) cs.formField.lg = {};
+      if (!cs.formField.focusRing) cs.formField.focusRing = {};
+
+      if (!cs.overlay.select) cs.overlay.select = {};
+      if (!cs.overlay.popover) cs.overlay.popover = {};
+      if (!cs.overlay.modal) cs.overlay.modal = {};
+      if (!cs.overlay.navigation) cs.overlay.navigation = {};
+
+      if (!cs.list.option) cs.list.option = {};
+      if (!cs.list.option.icon) cs.list.option.icon = {};
+      if (!cs.list.optionGroup) cs.list.optionGroup = {};
+
+      if (!cs.navigation.list) cs.navigation.list = {};
+      if (!cs.navigation.item) cs.navigation.item = {};
+      if (!cs.navigation.item.icon) cs.navigation.item.icon = {};
+      if (!cs.navigation.submenu) cs.navigation.submenu = {};
+    }
+
+    if (!preset.components) preset.components = {};
+  }
+
   /**
    * Load the theme editor with the provided theme.
    * This function sets the designer state to the provided theme and applies the font and preset.
    * @param theme The theme object to load into the editor.
    */
   async loadThemeEditor(theme: Theme) {
+    this.ensurePresetStructure(theme.preset);
     this.designer.set({
       ...this.designer(),
       theme: {
@@ -268,6 +356,7 @@ export class DesignerService {
    * @param data The theme data to activate.
    */
   async activateTheme(data: Theme) {
+    this.ensurePresetStructure(data.preset);
     this.designer.update((prev) => ({
       ...prev,
       active: true,

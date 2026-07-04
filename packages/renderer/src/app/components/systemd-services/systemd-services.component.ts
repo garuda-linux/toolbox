@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, type OnInit, signal } from '@angular/core';
-import { Button } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { type Table, TableModule } from 'primeng/table';
 import type { SystemdService, SystemdServiceAction } from '../../interfaces';
-
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { type Popover, PopoverModule } from 'primeng/popover';
 import { MessageToastService } from '@garudalinux/core';
@@ -14,10 +12,11 @@ import { Tooltip } from 'primeng/tooltip';
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'toolbox-systemd-services',
-  imports: [Button, IconField, InputIcon, PopoverModule, InputText, TableModule, TranslocoDirective, Tooltip],
+  imports: [ButtonDirective, IconField, InputIcon, PopoverModule, InputText, TableModule, TranslocoDirective, Tooltip],
   templateUrl: './systemd-services.component.html',
   styleUrl: './systemd-services.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

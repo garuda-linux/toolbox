@@ -3,7 +3,7 @@ import { TableModule } from 'primeng/table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { ConfigService } from '../config/config.service';
-import { Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -26,7 +26,7 @@ interface ConfigFile {
   imports: [
     TableModule,
     TranslocoDirective,
-    Button,
+    ButtonDirective,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
