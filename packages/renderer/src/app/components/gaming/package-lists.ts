@@ -11,7 +11,6 @@ export const gamingPackageLists: PackageSections = [
     name: 'gaming.launchers',
     sections: [
       { name: 'Bottles', pkgname: ['bottles'], icon: 'bottles.svg', description: 'gaming.bottles' },
-      { name: 'GameHub', pkgname: ['gamehub'], icon: 'gamehub.svg', description: 'gaming.gamehub' },
       {
         name: 'Heroic Games Launcher',
         pkgname: ['heroic-games-launcher-bin'],

@@ -131,7 +131,6 @@
     "xboxdrv": "Pilote pour manette Xbox, à utiliser uniquement si le pilote du noyau ne fonctionne pas !",
     "wineMeta": "Méta-paquet pour installer WINE et toutes les dépendances requises",
     "bottles": "Gérez facilement les préfixes wine et proton",
-    "gamehub": "Gestionnaire de jeux, téléchargeur, bibliothèque prenant en charge GOG, Steam et Humble Bundle",
     "heroic": "Un Lanceur Open source pour les jeux Epic, Amazon et GOG",
     "itch": "Installateur de l'application de bureau itch.io",
     "lutris": "Plateforme Open Gaming",

@@ -131,7 +131,6 @@
     "xboxdrv": "Xbox kontrolldrivrutin, använd endast om kärndrivrutinen inte fungerar!",
     "wineMeta": "Metapaket för att installera WINE och alla nödvändiga beroenden",
     "bottles": "Enkel hantering av Wine och Proton prefix",
-    "gamehub": "Spelhanterare, nedladdare och bibliotek som stödjer GOG, Steam och Humble Bundle",
     "heroic": "En spelstartare med öppen källkod för Epic-, Amazon- och GOG-spel",
     "itch": "Installatör för itch.ios desktopapp",
     "lutris": "Öppen spelplattform",

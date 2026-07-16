@@ -143,7 +143,6 @@
     "xboxdrv": "Xbox controller driver, only use if kernel driver doesn't work!",
     "wineMeta": "Meta package for installing WINE and all required dependencies",
     "bottles": "Easily manage wine and proton prefix",
-    "gamehub": "Games manager, downloader, library that supports GOG, Steam and Humble Bundle",
     "heroic": "An Open source Launcher for Epic, Amazon and GOG Games",
     "itch": "Installer for the itch.io desktop app",
     "lutris": "Open Gaming Platform",
