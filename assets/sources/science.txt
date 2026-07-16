@@ -111,7 +111,7 @@ See also [[Wikipedia:List of information graphics software]].
 * {{App|[[Wikipedia:Grace (plotting tool)|Grace]]|WYSIWYG 2D graph plotting tool.|https://plasma-gate.weizmann.ac.il/Grace/|{{AUR|grace}}, {{AUR|qtgrace}}, {{AUR|gracegtk}}}}
 * {{App|Graphs|Tool to plot and manipulate data.|https://apps.gnome.org/Graphs/|{{Pkg|graphs}}}}
 * {{App|[[Wikipedia:KmPlot|KmPlot]]|Program to draw graphs, their integrals or derivatives. Part of {{Grp|kde-education}}.|https://apps.kde.org/kmplot/|{{Pkg|kmplot}}}}
-* {{App|[[Wikipedia:kst (software)|kst]]|Real-time data viewer.|https://kst-plot.kde.org/|{{AUR|kst}}}}
+* {{App|[[Wikipedia:kst (software)|kst]]|Real-time data viewer.|https://kst-plot.kde.org/|{{Pkg|kst}}}}
 * {{App|[[Wikipedia:LabPlot|LabPlot]]|Free software data analysis and visualization application, similar to SciDAVis.|https://labplot.org/|{{Pkg|labplot}}}}
 * {{App|OVITO (Open Visualization Tool)|Scientific data visualization and analysis solution for particle-based simulations.|https://ovito.org/|{{AUR|ovito}}}}
 * {{App|Plots|A graph plotting application for GNOME.|https://github.com/alexhuntley/Plots|{{AUR|plots}}}}
@@ -244,6 +244,7 @@ See also [[Wikipedia:List of molecular graphics systems]].
 
 * {{App|Cruiser|Map and navigation application using offline vector maps|https://wiki.openstreetmap.org/wiki/Cruiser|{{AUR|cruiser}}}}
 * {{App|GNOME Maps|A simple map client for GNOME with navigation and GNSS features (adapted to Linux Mobile). Part of {{Grp|gnome}}.|https://apps.gnome.org/Maps/|{{Pkg|gnome-maps}}}}
+* {{App|[[Google Earth]]|Proprietary 3D planet viewer that allows you to travel the world through a virtual globe and view satellite imagery, maps, terrain, 3D buildings, and much more.|https://www.google.com/earth/about/versions/|{{AUR|google-earth-pro}}}}
 * {{App|kosmindoormap|Indoor cartography, levels by levels of buildings, mainly Train station, and Airport buildings. Based on OSM data.|https://www.kde.org|{{Pkg|kosmindoormap}}}}
 * {{App|MapSCII|Console Map Viewer.|https://github.com/rastapasta/mapscii|{{AUR|nodejs-mapscii}}}}
 * {{App|Mapton|Extensible desktop map and globe application written in Java.|https://mapton.org/|{{AUR|mapton}}}}
@@ -258,6 +259,7 @@ See also [[Wikipedia:List of molecular graphics systems]].
 ==== Navigation and routing ====
 
 * {{App|KTrip|Public transport assistant for mobile devices. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/ktrip/|{{Pkg|ktrip}}}}
+* {{App|OpenCPN|Marine chart plotter and navigation software supporting GPS, AIS, and nautical charts.|https://opencpn.org/|{{AUR|opencpn}}}}
 * {{App|Railway|Lets you look up travel information for many different railways, all without needing to navigate through different websites.|https://apps.gnome.org/DieBahn/|{{Pkg|railway}}}}
 
 ==== Positioning and tracking ====
@@ -317,6 +319,8 @@ See also [[Wikipedia:List of molecular graphics systems]].
 * {{App|GNOME Weather|Small application for GNOME that allows you to monitor the current weather conditions for your city, or anywhere in the world, and to access updated forecasts provided by various internet services. Part of {{Grp|gnome}}.|https://apps.gnome.org/Weather/|{{Pkg|gnome-weather}}}}
 * {{App|KWeather|A convergent weather application for Plasma. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kweather/|{{Pkg|kweather}}}}
 * {{App|meteo-qt|System tray application for weather status information.|https://github.com/dglent/meteo-qt|{{AUR|meteo-qt}}}}
+* {{App|Mousam|Current weather conditions and forecasts. Displays real-time temperature, humidity, wind speed, UV index, pressure and more.|https://amit9838.github.io/mousam/|{{AUR|mousam}}}}
+* {{App|Typhoon|A stylish weather app based on Stormcloud.|https://archisman-panigrahi.github.io/typhoon/|{{AUR|typhoon}}}}
 * {{App|wego|A terminal weather application.|https://tylerwolf35.github.io/wego{{Dead link|2025|08|15|status=404}}|{{AUR|wego}}}}
 * {{App|wttr|A simple console application to check the weather, using data from https://wttr.in|https://github.com/AmirrezaFiroozi/wttr|{{AUR|wttr-bin}}}}
 * {{App|Xfce Weather Panel Plugin|Weather forecast plugin for the Xfce4 panel.|https://goodies.xfce.org/projects/panel-plugins/xfce4-weather-plugin|{{Pkg|xfce4-weather-plugin}}}}
@@ -445,6 +449,7 @@ See also [[Wikipedia:Planetarium software]] and [[Wikipedia:List of observatory 
 See also [[Wikipedia:List of open source bioinformatics software]].
 
 * {{App|[[Wikipedia:Biopython|Biopython]]|Python package with tools for computational biology, as well as bioinformatics.|https://biopython.org/wiki/Biopython|{{AUR|python-biopython}}}}
+* {{App|Coot|Crystallographic Object-Oriented Toolkit is a macromolecular model-building tool for analysing X-ray data and models (i.e. proteins, ligands, RNA and DNA).|https://www2.mrc-lmb.cam.ac.uk/personal/pemsley/coot/|{{AUR|coot}}}}
 * {{App|[[Wikipedia:EMBOSS|EMBOSS]] (European Molecular Biology Open Software Suite)|Open source software analysis package specially developed for the needs of the molecular biology and bioinformatics user community.|https://emboss.sourceforge.net/|{{AUR|emboss}}}}
 * {{App|[[Wikipedia:MUMmer|MUMmer]]|Bioinformatics software system for sequence alignment based on suffix trees.|https://mummer.sourceforge.net/|{{AUR|mummer}}}}
 * {{App|Snapgene|Closed source molecular cloning application that offers a fast and easy way to plan, visualize, and document molecular biology procedures. Supports a wide range of cloning and PCR manipulations. The free version allows most common visualizations of a molecular biology workflow.|https://www.snapgene.com/|{{AUR|snapgene}}}}
@@ -464,10 +469,11 @@ See also [[Wikipedia:List of open source bioinformatics software]].
 === DICOM viewers and volume rendering ===
 
 * {{App|[[Wikipedia:3DSlicer|3DSlicer]]|Comprehensive [[Wikipedia:Magnetic resonance imaging|MRI]], [[Wikipedia:CT scan|CT]], [[Wikipedia:Laser scanning confocal microscopy|LSCM microscopy]] volume processing, segmentation and 3D-reconstruction|https://www.slicer.org/|{{AUR|3dslicer}}}}
-* {{App|aeskulap|Simple DICOM data viewer|https://www.nongnu.org/aeskulap/|{{AUR|aeskulap}}}}
-* {{App|aliza|Open 2D, 3D and 4D images in DICOM, MetaIO, Nifti, Nrrd and other formats, meshes in DICOM, VTK, STL and OBJ formats|https://www.aliza-dicom-viewer.com/|{{AUR|aliza}}}}
+* {{App|Aeskulap|Simple DICOM data viewer|https://www.nongnu.org/aeskulap/|{{AUR|aeskulap}}}}
+* {{App|Aliza|Proprietary medical imaging software. Open 2D, 3D and 4D images in DICOM, MetaIO, Nifti, Nrrd and other formats, meshes in DICOM, VTK, STL and OBJ formats|https://www.aliza-dicom-viewer.com/|{{AUR|aliza}}}}
+* {{App|Aliza MS|Open source standalone medical DICOM viewer.|https://github.com/AlizaMedicalImaging/AlizaMS|{{AUR|alizams}}}}
 * {{App|[[Wikipedia:ParaView|ParaView]]|Interactive data visualization tool built using VTK that can scale across distributed computer hardware.|https://www.paraview.org/|{{Pkg|paraview}}}}
-* {{App|weasis|Multipurpose DICOM viewer with a highly modular architecture|https://nroduit.github.io/en/|{{AUR|weasis-bin}}}}
+* {{App|Weasis|Multipurpose DICOM viewer with a highly modular architecture|https://nroduit.github.io/en/|{{AUR|weasis-bin}}}}
 
 == Engineering ==
 
@@ -476,11 +482,13 @@ See also [[Wikipedia:List of open source bioinformatics software]].
 See also [[Wikipedia:List of computer-aided design editors]].
 
 * {{App|[[Wikipedia:BRL-CAD|BRL-CAD]]|Constructive solid geometry modeling CAD system that includes an interactive geometry editor, ray tracing support for graphics rendering and geometric analysis, computer network distributed framebuffer support, scripting, image-processing and signal-processing tools.|https://brlcad.org/|{{AUR|brlcad}}}}
+* {{App|Dune 3D|Parametric 3D CAD application that supports STEP import/export, fillets and chamfers.|https://dune3d.org/|{{AUR|dune3d}}}}
 * {{App|[[Wikipedia:FreeCAD|FreeCAD]]|Parametric 3D CAD modeler based on OpenCascade, Coin3D, Qt, and Python with features such as macro recording, workbenches and the ability to run as a server.|https://freecad.org/|{{Pkg|freecad}}}}
 * {{App|LeoCAD|CAD program for creating virtual LEGO models. It has an easy to use interface and currently includes over 10,000 different pieces created by the LDraw community.|https://www.leocad.org/|{{Pkg|leocad}}}}
 * {{App|[[Wikipedia:LibreCAD|LibreCAD]]|A 2D CAD application based on Qt5. Forked from QCAD Community Edition.|https://www.librecad.org/|{{Pkg|librecad}}}}
 * {{App|[[Wikipedia:OpenSCAD|OpenSCAD]]|A 3D CAD modeler that uses a textual, programmatic approach to creating and manipulating objects.|https://www.openscad.org|{{Pkg|openscad}}}}
 * {{App|[[Wikipedia:QCad|QCAD]]|A 2D CAD application based on Qt. Supports the DFX and HPGL standard file formats, and optionally the DWG format through a proprietary plugin.|https://www.qcad.org/|{{Pkg|qcad}}}}
+* {{App|Rayforge|Complete creative studio for your laser cutter, combining 2D CAD, CAM, and machine control in one vibrant package.|https://rayforge.org/|{{AUR|rayforge}}}}
 * {{App|[[Wikipedia:SolveSpace|SolveSpace]]|Powerful 3D CAD constraint-based parametric modeler with simple mechanical simulation capabilities.|https://solvespace.com/|{{AUR|solvespace}}}}
 
 === 3D printing ===
@@ -497,7 +505,7 @@ Slicers convert 3D models into a format supported by the 3D printer, usually thi
 * {{App|icesl|Modelling software with integrated slicer. Not brand specific. Closed source.|https://icesl.loria.fr/|{{AUR|icesl}}}}
 * {{App|IdeaMaker|Slicer by Raise3D. Aimed at their printers but supports other brands as well. Closed source.|https://www.raise3d.com/pages/ideamaker|{{AUR|ideamaker}}}}
 * {{App|MatterControl|Simple 3D editor, slicer, and 3D printer control software by MatterHackers. Not brand specific. Open source.|https://www.matterhackers.com/store/l/mattercontrol/sk/MKZGTDW6|{{AUR|mattercontrol}}}}
-* {{App|orca-slicer|Community maintained fork of BambuStudio (in turn forked from PrusaSlicer). Open Source.|https://github.com/SoftFever/OrcaSlicer|{{AUR|orca-slicer}}}}
+* {{App|OrcaSlicer|Community maintained fork of BambuStudio (in turn forked from PrusaSlicer). Open Source.|https://www.orcaslicer.com/|{{AUR|orca-slicer}}}}
 * {{App|[[PrusaSlicer]]|Slicer by Prusa Research. A fork of Slic3r. Aimed at their printers but supports other brands as well. Open source.|https://github.com/prusa3d/PrusaSlicer|{{Pkg|prusa-slicer}}}}
 * {{App|Slic3r|One of the earliest slicers. Not used much any longer. Not brand specific. Open source.|https://slic3r.org/|{{AUR|slic3r}}}}
 * {{App|SuperSlicer|Community maintained improved fork of PrusaSlicer. Not brand specific. Open source.|https://github.com/supermerill/SuperSlicer|{{AUR|superslicer-bin}}}}
@@ -548,8 +556,9 @@ Also see [[Wikipedia:Hardware description language]].
 * {{App|AVRDUDE|Download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers.|https://www.nongnu.org/avrdude/|{{Pkg|avrdude}}}}
 * {{App|dfu-util|Device firmware update (DFU) USB programmer.|https://dfu-util.sourceforge.net/|{{Pkg|dfu-util}}}}
 * {{App|esp-idf|Espressif IoT Development Framework. Official development framework for ESP32.|https://github.com/espressif/esp-idf|{{AUR|esp-idf}}}}
-* {{App|platformio|Collaborative platform for embedded development, embedded development, with debugger, unit testing, code analysis. Default IDE is [[VSCode]], but can be used by Atom, Eclipse, Emacs, Qt Creator, Vim and several other IDE. Core CLI utils.|https://platformio.org/|{{Pkg|platformio-core}}}}
+* {{App|platformio|Collaborative platform for embedded development, with debugger, unit testing, code analysis. Default IDE is [[VSCode]], but can be used by Atom, Eclipse, Emacs, Qt Creator, Vim and several other IDE. Core CLI utils.|https://platformio.org/|{{Pkg|platformio-core}}}}
 * {{App|sdcc|Small Device C Compiler, appropriate for various 8-bit microcontrollers and microprocessors including those made by or based on Intel MCS51, Maxim/Dallas, DS80C390, Freescale/Motorola HC08, Zilog Z80, Padauk, ST Microelectronics STM8, MOS 6502, and WDC 65C02. Suite contains compiler, assembler, linker, preprocessor, various simulators, debuggers, etc. |https://sdcc.sourceforge.net/|{{Pkg|sdcc}}}}
+* {{App|Serial Studio|Visualize real-time data from microcontrollers and connected devices. It's ideal for monitoring sensor output, debugging hardware, and analyzing telemetry from sources like serial ports, Bluetooth Low Energy (BLE), and TCP/UDP.|https://serial-studio.com/|{{AUR|serial-studio}}}}
 * {{App|SPIPGM|Tool for programming serial SPI FlashROM memories attached to PC via parallel port cable.|https://rayer.g6.cz/programm/programe.htm|{{AUR|spipgm-bin}}}}
 * {{App|stlink|Open source [https://www.st.com/en/microcontrollers-microprocessors.html STM32 MCU] programming toolset for ST microcontrollers.|https://github.com/texane/stlink|{{Pkg|stlink}}}}
 
@@ -561,7 +570,8 @@ Also see [[Wikipedia:Hardware description language]].
 * {{App|[[Wikipedia:ngspice|ngspice]]|The established Linux circuit simulator. Open source successor of the [[Wikipedia:SPICE|spice3f5]] code. Has the most versatile user interface; supporting scripting within the circuit descriptions, use through an interpreter, as a C library, through tcl or various external wrappers (e.g., Python).|https://ngspice.sourceforge.net/|{{Pkg|ngspice}}}}
 * {{App|[[Wikipedia:Oregano (software)|Oregano]]|Graphical software application for schematic capture and simulation of electrical circuits. The actual simulation is done by the [[Wikipedia:Ngspice|ngspice]] or [[Wikipedia:GNU Circuit Analysis Package|Gnucap]] engines.|https://github.com/drahnr/oregano|{{AUR|oregano}}}}
 * {{App|[[Wikipedia:Quite Universal Circuit Simulator|Qucs]]|Electronics circuit simulator application that gives you the ability to set up a circuit with a graphical user interface and simulate its large-signal, small-signal and noise behaviour.|https://qucs.sourceforge.net|{{AUR|qucs}}}}
-* {{App|qucs-s|Electronics circuit simulator that gives you the ability to set up a circuit with a GUI and simulate it. Fork of qucs that uses external, better, programs to do actual simulation.|https://ra3xdh.github.io/|{{AUR|qucs-s}}}}
+* {{App|Qucs-S|Electronics circuit simulator that gives you the ability to set up a circuit with a GUI and simulate it. Fork of qucs that uses external, better, programs to do actual simulation.|https://ra3xdh.github.io/|{{AUR|qucs-s}}}}
+* {{App|SimulIDE|Real time electronic circuit simulator (supports PIC, AVR and Arduino microcontrollers).|https://simulide.com/|{{AUR|simulide}}}}
 * {{App|Xyce|SANDIA Xyce is an open source, SPICE-compatible, high-performance analog circuit simulator, capable of solving extremely large circuit problems by supporting large-scale parallel computing platforms.|https://xyce.sandia.gov https://github.com/Xyce/Xyce|{{AUR|xyce-serial}}}}
 
 ==== Electronic design and schematic capture editing ====
@@ -571,7 +581,9 @@ Also see [[Wikipedia:Hardware description language]].
 * {{App|[[gEDA]]|Full suite and toolkit of Electronic Design Automation tools that are used for electrical circuit design, schematic capture, simulation, prototyping, and production.|http://www.geda-project.org/|{{AUR|geda-gaf}}}}
 * {{App|[[gEDA]] PCB|Interactive printed circuit board editor.|http://pcb.geda-project.org/|{{AUR|pcb}}}}
 * {{App|[[Wikipedia:KiCad|KiCad]]|Software suite for electronic design automation (EDA) that facilitates the design of schematics for electronic circuits and their conversion to PCB (printed circuit board).|https://kicad.org/|{{Pkg|kicad}}}}
+* {{App|KLayout|Mask layout viewer and editor with support for GDS and OASIS file formats.|https://www.klayout.de/|{{AUR|klayout-git}}}}
 * {{App|[[Wikipedia:KTechLab|KTechLab]]|IDE for microcontrollers and electronic circuit simulation.|https://apps.kde.org/ktechlab/|{{AUR|ktechlab}}}}
+* {{App|LibrePCB|Electronic design automation (EDA) software for developing printed circuit boards (PCBs).|https://librepcb.org/|{{AUR|librepcb}}}}
 * {{App|QElectroTech|Application used to draw advanced electrical circuits.|https://qelectrotech.org/|{{AUR|qelectrotech}}}}
 
 == Telecommunication ==
@@ -607,7 +619,7 @@ See also [[Wikipedia:List of software-defined radios]].
 
 === Distributed systems ===
 
-* {{App|Shadow|An open-source distributed system/network simulator/emulator hybrid (e.g. for [[Tor]] and [[Bitcoin]]).|https://shadow.github.io/|{{AUR|tor-shadow}}}}
+* {{App|Shadow|An open-source distributed system/network simulator/emulator hybrid (e.g. for [[Tor]] and [[Bitcoin]]).|https://shadow.github.io/|{{AUR|tor-shadow}}{{Broken package link|package not found}}}}
 * {{App|[[Wikipedia:SimGrid|SimGrid]]|A scientific instrument to study large-scale distributed systems.|https://simgrid.org/|{{AUR|simgrid}}}}
 
 === Networking ===

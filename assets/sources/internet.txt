@@ -51,7 +51,7 @@ See [[Network configuration#Network managers]].
 * {{App|[[Trojan]]|An unidentifiable mechanism that helps you bypass GFW.|https://trojan-gfw.github.io/trojan/|{{Pkg|trojan}}}}
 * {{App|[[V2Ray]]|V2Ray is the core of Project V, which is a set of tools to help you build your own privacy network over the internet.|https://www.v2fly.org/en_US/|{{Pkg|v2ray}}}}
 * {{App|V2RayN|A GUI client for Windows, Linux and macOS, support {{AUR|xray}} and {{AUR|sing-box}} cores and others.|https://github.com/2dust/v2rayN|{{AUR|v2rayN}}}}
-* {{App|[[Varnish]]|High-performance HTTP accelerator.|https://varnish-cache.org/|{{Pkg|varnish}}}}
+* {{App|[[Varnish]]|High-performance HTTP accelerator.|https://varnish-cache.org/|{{AUR|varnish}}}}
 * {{App|Wireproxy|[[WireGuard]] client that exposes itself as a SOCKS5 proxy.|https://github.com/pufferffish/wireproxy|{{Pkg|wireproxy}}}}
 * {{App|XX-Net|Easy to use web proxy tool.|https://github.com/XX-net/XX-Net/|{{AUR|xx-net}}}}
 * {{App|Ziproxy|Forwarding (non-caching) compressing HTTP proxy server.|https://ziproxy.sourceforge.net/|{{Pkg|ziproxy}}}}
@@ -91,25 +91,48 @@ Tools to avoid censorship, bandwidth throttle without anonymization. See [[Wikip
 === Speedtest tools ===
 
 * {{App|cloudflarespeedtest|Test Cloudflare CDN latency and speed to find the fastest IP.|https://github.com/XIU2/CloudflareSpeedTest|{{AUR|cloudflarespeedtest-bin}}}}
-* {{App|LibreSpeed|Open source speedtest with graphical GTK client.|https://librespeed.org/|{{AUR|speedtest-librespeed}}}}
 * {{App|nperf|Wide-area network speed test application.|https://www.nperf.com/|{{AUR|nperf-gui-appimage}}}}
+* {{App|Speedtest|Desktop client for [https://librespeed.org/ LibreSpeed] using GTK4+libadwaita.|https://github.com/Ketok4321/speedtest|{{AUR|speedtest-librespeed}}}}
 * {{App|SpeedTest++|Unofficial speedtest.net CLI using raw TCP for better accuracy.|https://github.com/taganaka/SpeedTest|{{AUR|speedtest++}}}}
 * {{App|speedtest-cli|Command-line interface for testing internet bandwidth using speedtest.net servers.|https://github.com/sivel/speedtest-cli|{{Pkg|speedtest-cli}}}}
 
 === Network monitoring and diagnostics tools ===
 
+==== Console ====
+
+* {{App|[[Wikipedia:Arpwatch|Arpwatch]]|Tool that monitors ethernet activity and keeps a database of Ethernet/IP address pairings.|https://ee.lbl.gov/|{{Pkg|arpwatch}}}}
 * {{App|bandwhich|Terminal bandwidth utilization tool showing usage by process, connection, and remote IP/hostname.|https://github.com/imsnif/bandwhich |{{Pkg|bandwhich}}}}
 * {{App|dog|Modern command-line DNS client alternative to dig with colored output and JSON support.|https://dns.lookup.dog/ |{{Pkg|dog}}}}
 * {{App|flent|The Fleet Network Tester for measuring bufferbloat and latency under load.|https://flent.org/ |{{AUR|flent}}}}
 * {{App|gping|Ping with a real-time graph visualization of latency to multiple hosts.|https://github.com/orf/gping |{{Pkg|gping}}}}
 * {{App|hyperfine|Command-line benchmarking tool, useful for comparing network response times.|https://github.com/sharkdp/hyperfine |{{Pkg|hyperfine}}}}
-* {{App|netsniff-ng|High-performance Linux network packet sniffer and analyzer toolkit.|http://netsniff-ng.org/ |{{Pkg|netsniff-ng}}}}
+* {{App|IPTraf|Console-based network monitoring utility.|https://sourceforge.net/projects/iptraf-ng/|{{Pkg|iptraf-ng}}}}
+* {{App|jnettop|top-like console network traffic visualizer.|https://sourceforge.net/projects/jnettop/|{{Pkg|jnettop}}}}
+* {{App|[[Wikipedia:netsniff-ng|netsniff-ng]]|High-performance Linux network packet sniffer and analyzer toolkit.|http://netsniff-ng.org/|{{Pkg|netsniff-ng}}}}
+* {{App|[[Wikipedia:ngrep|ngrep]]|grep-like utility that allows you to search for network packets on an interface.|https://github.com/jpr5/ngrep|{{Pkg|ngrep}}}}
 * {{App|oha|HTTP load generator with TUI showing detailed timing breakdown (DNS, TCP, TLS, TTFB).|https://github.com/hatoo/oha |{{Pkg|oha}}}}
-* {{App|ooniprobe-cli|Official OONI Probe CLI for detecting internet censorship, website blocking, and traffic manipulation.|https://ooni.org/ |{{AUR|ooniprobe-cli}}}}
-* {{App|sniffnet|Network traffic monitoring with TUI/GUI, statistics by protocol, and per-host analysis.|https://github.com/GyulyVGC/sniffnet |{{Pkg|sniffnet}}}}
+* {{App|Spectools|A set of utilities for spectrum analyzer hardware including Wi-Spy devices.|https://www.kismetwireless.net/static/spectools/|{{AUR|spectools}}}}
+* {{App|[[Tcpdump]]|Common console-based packet analyzer that allows the user to intercept and display TCP/IP and other packets being transmitted or received over a network.|https://www.tcpdump.org/|{{Pkg|tcpdump}}}}
 * {{App|tcping|TCP connectivity checker that bypasses ICMP blocks for port-specific diagnostics.|https://github.com/zhengxiaowai/tcping|{{AUR|tcping}}}}
-* {{App|termshark|Terminal UI for tshark, providing a Wireshark-like interface in the terminal.|https://termshark.io/ |{{Pkg|termshark}}}}
-* {{App|trippy|A network diagnostic tool combining traceroute and ping with an interactive TUI.|https://github.com/fujiapple852/trippy |{{Pkg|trippy}}}}
+* {{App|termshark|Terminal UI for tshark, providing a Wireshark-like interface in the terminal.|https://termshark.io/|{{Pkg|termshark}}}}
+* {{App|trippy|A network diagnostic tool combining traceroute and ping with an interactive TUI.|https://github.com/fujiapple852/trippy|{{Pkg|trippy}}}}
+* {{App|[[vnStat]]|Console-based network traffic monitor that keeps a log of network traffic for the selected interfaces.|https://humdi.net/vnstat/|{{Pkg|vnstat}}}}
+* {{App|[[Wireshark]] CLI|Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.|https://www.wireshark.org/|{{Pkg|wireshark-cli}}}}
+
+==== Graphical ====
+
+* {{App|Angry IP Scanner|Network scanner designed to be fast and simple to use. It scans IP addresses and ports, as well as having many other features.|https://angryip.org/|{{AUR|ipscan}}}}
+* {{App|darkstat|Captures network traffic, calculates statistics about usage, and serves reports over HTTP.|https://unix4lyfe.org/darkstat/|{{Pkg|darkstat}}}}
+* {{App|Echo|Simple utility to ping websites using GTK4 and Libadwaita.|https://lo2dev.github.io/portal/echo/|{{AUR|echo}}}}
+* {{App|[[Wikipedia:EtherApe|EtherApe]]|Graphical network monitor for Unix modeled after etherman. Featuring link layer, IP and TCP modes, it displays network activity graphically. Hosts and links change in size with traffic. Color coded protocols display.|https://etherape.sourceforge.io/|{{Pkg|etherape}}}}
+* {{App|GNOME Network Tools|GNOME interface for various networking tools.|https://gitlab.gnome.org/Archive/gnome-nettool|{{Pkg|gnome-nettool}}}}
+* {{App|LinSSID|Graphical wireless scanner.|https://sourceforge.net/projects/linssid/|{{Pkg|linssid}}}}
+* {{App|Net Activity Viewer|Graphical network connections viewer, similar in functionality with Netstat.|https://netactview.sourceforge.net/|{{AUR|netactview}}}}
+* {{App|NetPeek|Simple network scanner that helps you discover active devices on your local network.|https://github.com/zingytomato/netpeek|{{AUR|netpeek}}}}
+* {{App|[[Ntop]]|Network probe that shows network usage in a way similar to what top does for processes.|https://www.ntop.org/|{{AUR|ntop}}}}
+* {{App|Sniffnet|Network traffic monitoring with GUI, statistics by protocol, and per-host analysis.|https://github.com/GyulyVGC/sniffnet|{{Pkg|sniffnet}}}}
+* {{App|What IP|Small GTK application to get info on your IP.|https://gabmus.gitlab.io/whatip/|{{AUR|whatip}}}}
+* {{App|[[Wireshark]]|Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.|https://www.wireshark.org/|{{Pkg|wireshark-qt}}}}
 
 == Web browsers ==
 
@@ -137,6 +160,7 @@ See also: [[Wikipedia:Gecko (software)]]
 
 ===== Firefox spin-offs =====
 
+* {{App|FireDragon|Floorp fork build using custom branding and settings.|https://firedragon.garudalinux.org/|{{AUR|firedragon}}}}
 * {{App|[[Wikipedia:Floorp|Floorp]]|Firefox-based browser developed by a community of students in Japan.|https://floorp.app/|{{AUR|floorp}}}}
 * {{App|[[Wikipedia:GNU IceCat|GNU IceCat]]|A customized build of Firefox ESR distributed by the GNU Project, stripped of non-free components and with additional privacy extensions. Release cycle may be delayed compared to Mozilla Firefox.|https://www.gnu.org/software/gnuzilla/|{{AUR|icecat}}}}
 * {{App|Konform Browser|A customized build of Firefox ESR focused on security, privacy and freedom. Originally based on LibreWolf.|https://codeberg.org/konform-browser|{{AUR|konform-browser}}}}
@@ -155,7 +179,7 @@ See also: [[Wikipedia:Blink (web engine)]]
 
 ===== Privacy-focused Chromium spin-offs =====
 
-* {{App|[[Wikipedia:Brave (web browser)|Brave]]|A web browser with a built-in advertisement and tracker blocking mechanism.|https://brave.com/|{{AUR|brave-bin}}}}
+* {{App|[[Wikipedia:Brave (web browser)|Brave]]|A web browser with a built-in advertisement and tracker blocking mechanism.|https://brave.com/|{{AUR|brave-bin}}, {{AUR|brave-origin-bin}}}}
 * {{App|Cromite|Cromite is a Chromium fork based on Bromite (Currently unmaintained) with built-in support for ad blocking and an eye for privacy. See its [https://github.com/uazo/cromite/blob/master/docs/FEATURES.md list of features].|https://github.com/uazo/cromite|{{AUR|cromite-bin}}}}
 * {{App|Helium|A browser based on Ungoogled Chromium with multiple layouts, !bangs in the address bar and a Chrome Web Store proxy.|https://helium.computer/|{{AUR|helium-browser}}}}
 * {{App|Thorium|Thorium develops a periodically synchronized fork of the Chromium browser, expanded with additional patches to optimize performance, improve usability and enhance security. According to the developers' tests Thorium is 8-40% ahead of the regular Chromium, mainly due to the inclusion of additional optimizations during compilation.|https://thorium.rocks/|{{AUR|thorium-browser-bin}}}}
@@ -206,10 +230,12 @@ Most of these support ad-blocking via [https://github.com/jun7/wyebadblock wyeba
 * {{App|[[GNOME Web]]|Browser which uses the WebKitGTK rendering engine. Part of {{Grp|gnome}}.|https://apps.gnome.org/Epiphany/|{{Pkg|epiphany}}}}
 * {{App|[[Luakit]]|Fast, small, webkit based browser framework extensible by Lua.|https://luakit.github.io/|{{Pkg|luakit}}}}
 * {{App|[[Nyxt]]|Keyboard-oriented, infinitely extensible browser designed for power users. It has familiar key-bindings (Emacs, VI, CUA) and features fuzzy searching between tabs, multiple selections, history as a tree and more.|https://nyxt.atlas.engineer/|{{Pkg|nyxt}}}}
+* {{App|Spider|Program designed to make installing and using web apps simple and powerful while integrating with the GNOME desktop.|https://github.com/Zaedus/spider|{{AUR|spider-git}}}}
 * {{App|[[surf]]|Lightweight WebKit-based browser, which follows the [https://suckless.org/philosophy suckless philosophy] (basically, the browser itself is a single C source file).|https://surf.suckless.org/|{{AUR|surf}}}}
 * {{App|Surfer|Simple keyboard based web browser, written in C. It supports custom JS-scripts.|https://github.com/nihilowy/surfer|{{AUR|surfer-git}}}}
 * {{App|Tangram|Integration of web applications into the desktop, specifically GNOME.|https://apps.gnome.org/Tangram/|{{Pkg|tangram}}}}
 * {{App|Vimb|A Vim-like web browser written in C that is inspired by Pentadactyl and Vimprobable. It includes a manpage and a howto for common configurations. It supports custom JS-scripts, dark mode and handles geolocation requests.|https://fanglingsu.github.io/vimb/|{{Pkg|vimb}}}}
+* {{App|Web Apps|Install websites as desktop apps, so that they appear in their own windows separate from any browsers installed. This is similar to the "Install as App" feature found in popular web browsers.|https://codeberg.org/eyekay/webapps|{{AUR|gnome-webapps-git}}}}
 * {{App|wyeb|A vim-like web browser inspired by dwb and luakit with Adblock.|https://github.com/jun7/wyeb|{{AUR|wyeb-git}}}}
 
 ==== Goanna-based ====
@@ -266,7 +292,7 @@ See also: [[:Category:Web server]], [[Wikipedia:Comparison of web server softwar
 * {{App|[[miniserve]]|Rust alternative to darkhttpd with UTF-8, optional HTTP authentication, file uploading, and more.|https://github.com/svenstaro/miniserve|{{Pkg|miniserve}}}}
 * {{App|quark|An extremely small and simple http get-only web server. It only serves static pages on a single host.|https://tools.suckless.org/quark/|{{AUR|quark-git}}}}
 * {{App|serve|Static file serving and directory listing.|https://github.com/zeit/serve|{{AUR|nodejs-serve}}}}
-* {{App|Webfs|Simple and instant web server for mostly static content.|https://linux.bytesex.org/misc/webfs.html|{{AUR|webfs}}}}
+* {{App|Webfs|Simple and instant web server for mostly static content.|https://linux.bytesex.org/misc/webfs.html|{{AUR|webfs}}{{Broken package link|package not found}}}}
 
 === Specialized web servers ===
 
@@ -329,6 +355,8 @@ See also: [[Wikipedia:Comparison of download managers]]
 * {{App|ClipGrab|Downloader and converter for YouTube, Vimeo and many other online video sites.|https://clipgrab.org/|{{AUR|clipgrab}}}}
 * {{App|FatRat|Qt based download manager with support for HTTP, FTP, SFTP, BitTorrent and Metalink.|https://github.com/LubosD/fatrat|{{AUR|fatrat-git}}}}
 * {{App|Forklift|Simple GUI for youtube-dl using PyGObject.|https://github.com/Johnn3y/Forklift|{{AUR|forklift-git}}}}
+* {{App|Gabut Download Manager|Simple, fast, and powerful download manager built with GTK4.|https://github.com/gabutakut/gabutdm|{{AUR|gabutdm}}{{Broken package link|package not found}}}}
+* {{App|Gopeed|Modern download manager built with Golang and Flutter that supports HTTP, BitTorrent, Magnet protocol.|https://gopeed.com/|{{AUR|gopeed-bin}}}}
 * {{App|gtk-youtube-viewer|GTK utility for viewing YouTube videos. See optional dependencies for the GUI.|https://github.com/trizen/youtube-viewer|{{AUR|youtube-viewer}}}}
 * {{App|[[Wikipedia:Wget#GWget|Gwget]]|Download manager for GNOME. Supports HTTP and FTP.|https://gitlab.gnome.org/Archive/gwget|{{AUR|gwget}}}}
 * {{App|Gydl|GUI wrapper around the already existing youtube-dl program to download content from sites like YouTube.|https://github.com/JannikHv/gydl|{{AUR|gydl-git}}}}
@@ -336,16 +364,21 @@ See also: [[Wikipedia:Comparison of download managers]]
 * {{App|[[JDownloader]]|Java-based downloader for one-click hosting sites.|https://jdownloader.org/|{{AUR|jdownloader2}}}}
 * {{App|[[Wikipedia:KGet|KGet]]|Download manager for KDE. Supports HTTP, FTP, BitTorrent and Metalink. Part of {{Grp|kde-network}}.|https://apps.kde.org/kget/|{{Pkg|kget}}}}
 * {{App|MegaBasterd|Yet another unofficial MEGA downloader/uploader/streaming suite.|https://github.com/tonikelope/megabasterd|{{AUR|megabasterd-bin}}}}
-* {{App|Motrix|Full-featured download manager that supports downloading HTTP, FTP, BitTorrent, Magnet, etc. Based on the [https://electronjs.org/ Electron] platform.|https://motrix.app/|{{AUR|motrix}}}}
+* {{App|Media Downloader|Qt/C++ front end to yt-dlp, youtube-dl, gallery-dl, lux, you-get, svtplay-dl, aria2c, wget and safari books.|https://github.com/mhogomchungu/media-downloader|{{AUR|media-downloader}}}}
+* {{App|MediathekView|Search the online media libraries of German public broadcasting stations and list available shows and movies. It supports filtering this list for specific broadcasts, and allows viewing and downloading videos. It also enables subscriptions and automatically downloads new episodes.|https://mediathekview.de/|{{Pkg|mediathekview}}}}
+* {{App|Motrix|Full-featured download manager that supports downloading HTTP, FTP, BitTorrent, Magnet, etc. Based on the [[Electron]] platform.|https://motrix.app/|{{AUR|motrix}}}}
+* {{App|Parabolic|A powerful yt-dlp frontend to download web video and audio.|https://nickvision.org/parabolic|{{AUR|parabolic}}}}
 * {{App|Persepolis|Graphical front-end for aria2 download manager with lots of features. Supports HTTP and FTP.|https://persepolisdm.github.io/|{{Pkg|persepolis}}}}
 * {{App|[[pyLoad]]|Downloader written in Python and designed to be extremely lightweight, easily extensible and fully manageable via web.|https://pyload.net/|{{AUR|pyload-ng}}}}
 * {{App|Steadyflow|Simple download manager for GNOME. Supports HTTP and FTP.|https://launchpad.net/steadyflow|{{Pkg|steadyflow}}}}
 * {{App|Streamtuner2|Internet radio station and video browser. It simply lists stations in categories from different directories and launches your preferred media apps for playback.|https://sourceforge.net/projects/streamtuner2/|{{AUR|streamtuner2}}}}
+* {{App|Televido|Lets you livestream, search, play and download media from German-language public television services. It is powered by APIs provided by the MediathekView project.|https://github.com/d-k-bo/televido|{{AUR|televido}}}}
 * {{App|uGet|GTK download manager featuring download classification and HTML import. Supports HTTP, FTP, BitTorrent, Metalink, YouTube and Mega.|https://ugetdm.com/|{{Pkg|uget}}}}
-* {{App|Varia|GTK frontend for aria2c and yt-dlp.|https://github.com/giantpinkrobots/varia|{{AUR|varia}}}}
+* {{App|Varia|GTK frontend for aria2c and yt-dlp.|https://giantpinkrobots.github.io/varia/|{{AUR|varia}}}}
 * {{App|Video Downloader|GTK application to download videos from websites like YouTube and many others (based on youtube-dl).|https://github.com/Unrud/video-downloader|{{AUR|video-downloader}}}}
 * {{App|Xtreme Download Manager|Powerful tool to increase download speed up-to 500%. Supports HTTP and FTP. Video grabber works in a general way and is not limited to certain websites.|https://subhra74.github.io/xdm/|{{AUR|xdman}}}}
 * {{App|youtubedl-gui|Simple-to-use graphical interface for youtube-dl.|https://github.com/JaGoLi/ytdl-gui|{{AUR|youtubedl-gui}}}}
+* {{App|ytDownloader|GUI video downloader supporting hundreds of sites. Based on the [[Electron]] platform.|https://aandrew-me.github.io/ytDownloader/|{{AUR|ytdownloader-gui}}}}
 
 === LAN file transfer ===
 
@@ -355,6 +388,9 @@ See also: [[#LAN messengers]]
 * {{App|LocalSend|Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.|https://localsend.org/|{{AUR|localsend}}}}
 * {{App|[[Magic Wormhole]]|Command-line tool {{ic|wormhole}} to securely transfer data between computers.|https://github.com/magic-wormhole/magic-wormhole|{{Pkg|magic-wormhole}}}}
 * {{App|NitroShare|Cross-platform network file transfer application, built using Qt GUI framework. It is designed to make transferring files from one device to another on the local network extremely simple.|https://nitroshare.net/|{{AUR|nitroshare}}}}
+* {{App|Packet|Send and receive files wirelessly with Android devices using Quick Share or another device with Packet installed.|https://github.com/nozwock/packet|{{AUR|packet}}}}
+* {{App|pyNeighborhood|GTK-based SMB/CIFS browsing utility.|https://launchpad.net/pyneighborhood|{{AUR|pyneighborhood}}}}
+* {{App|Smb4K|Advanced network neighborhood browser and Samba share mounting utility for KDE.|https://apps.kde.org/smb4k/|{{Pkg|smb4k}}}}
 * {{App|Teleport|Native GTK3 application to effortlessly share files on the local network.|https://gitlab.gnome.org/jsparber/teleport|{{AUR|teleport-share-git}}}}
 * {{App|Warp|Securely send files to each other via the internet or local network by exchanging a word-based code. It uses the Magic Wormhole protocol.|https://apps.gnome.org/Warp/|{{Pkg|warp}}}}
 * {{App|Warpinator|GTK application to share files across the LAN.|https://github.com/linuxmint/warpinator|{{Pkg|warpinator}}}}
@@ -380,6 +416,9 @@ See also: [[#LAN messengers]]
 * {{App|CloudCross|Synchronize local files and folders with many cloud providers. Mail.ru Cloud, Yandex Disk, Google Drive, OneDrive and Dropbox support is available.|https://github.com/MasterSoft24/CloudCross|{{AUR|cloudcross}}}}
 * {{App|Rclone|Multi-provider sync, copy, and mount client.|https://rclone.org/|{{Pkg|rclone}}}}
 * {{App|Rclone Browser|GUI client for Rclone.|https://github.com/kapitainsky/RcloneBrowser|{{AUR|rclone-browser}}}}
+* {{App|Rclone Manager|GUI application designed to help users manage Rclone remotes efficiently.|https://github.com/Zarestia-Dev/rclone-manager|{{AUR|rclone-manager}}}}
+* {{App|Rclone Shuttle|GTK4 frontend for Rclone to upload files to any supported cloud storage provider or storage protocol.|https://github.com/pieterdd/RcloneShuttle|{{AUR|rclone-shuttle}}}}
+* {{App|Rclone UI|GUI for Rclone.|https://github.com/rclone-ui/rclone-ui|{{AUR|rclone-ui-bin}}}}
 
 ==== Google Drive clients ====
 
@@ -394,7 +433,7 @@ See also: [[#LAN messengers]]
 * {{App|aws-cli|CLI for Amazon Web Services, including efficient file transfers to and from Amazon S3.|https://aws.amazon.com/cli/|{{Pkg|aws-cli}}}}
 * {{App|Backblaze B2|Backblaze B2 open-source command-line client.|https://www.backblaze.com/b2/cloud-storage.html|{{AUR|backblaze-b2}}}}
 * {{App|Baidu Netdisk|Proprietary client for cloud storage service launched by Baidu (formerly Baidu Cloud).|https://pan.baidu.com|{{AUR|baidunetdisk-bin}}}}
-* {{App|[[Cozy]] Drive|Desktop client for Cozy.|https://cozy-labs.github.io/cozy-desktop/|{{Pkg|cozy-desktop}}}}
+* {{App|[[Cozy]] Drive|Desktop client for Cozy.|https://cozy-labs.github.io/cozy-desktop/|{{AUR|cozy-desktop}}}}
 * {{App|[[Dropbox]]|Proprietary desktop client for Dropbox.|https://www.dropbox.com/|{{AUR|dropbox}}}}
 * {{App|[[Wikipedia:Mega (service)|Mega]] Sync Client|Proprietary (though [https://github.com/meganz/MEGAsync/blob/master/LICENCE.md source-available]) desktop client to sync files with Mega.|https://mega.nz/|CLI: {{AUR|megacmd}}, GUI: {{AUR|megasync}}}}
 * {{App|Megatools|Unofficial CLI for Mega.|https://megatools.megous.com/|{{AUR|megatools}}}}
@@ -402,7 +441,7 @@ See also: [[#LAN messengers]]
 * {{App|Nutstore|Proprietary desktop client for Nutstore.|https://www.jianguoyun.com/|{{AUR|nutstore}}}}
 * {{App|OneDrive|Fork of the unofficial CLI for [https://onedrive.live.com/about/ OneDrive].|https://github.com/abraunegg/onedrive|{{AUR|onedrive-abraunegg}}}}
 * {{App|[[Wikipedia:ownCloud|ownCloud]] Desktop Client|Desktop syncing client for ownCloud.|https://owncloud.com/client/|{{Pkg|owncloud-client}}}}
-* {{App|pCloud Drive|Proprietary desktop syncing client for pCloud. Based on the [https://electronjs.org/ Electron] platform.|https://www.pcloud.com/download-free-online-cloud-file-storage.html|{{AUR|pcloud-drive}}}}
+* {{App|pCloud Drive|Proprietary desktop syncing client for pCloud. Based on the [[Electron]] platform.|https://www.pcloud.com/download-free-online-cloud-file-storage.html|{{AUR|pcloud-drive}}}}
 * {{App|[[Pydio]]Sync|Desktop client for Pydio.|https://pydio.com/|{{AUR|pydio-sync}}}}
 * {{App|S3cmd|Unofficial CLI for Amazon S3.|https://s3tools.org/s3cmd|{{Pkg|s3cmd}}}}
 * {{App|Seafile Client|GUI client for Seafile.|https://www.seafile.com/|{{AUR|seafile-client}}}}
@@ -453,13 +492,14 @@ See also: [[Wikipedia:Comparison of BitTorrent clients]]
 
 ==== Graphical ====
 
+* {{App|BiglyBT|Feature-filled BitTorrent client based on the Azureus open source project.|https://www.biglybt.com/|{{AUR|biglybt}}}}
 * {{App|[[Deluge]] (GTK interface)|User-friendly BitTorrent client written in Python using GTK.|https://deluge-torrent.org/|{{Pkg|deluge-gtk}}}}
 * {{App|Fragments|Easy to use BitTorrent client for the GNOME desktop environment.|https://apps.gnome.org/Fragments/|{{Pkg|fragments}}}}
 * {{App|[[Wikipedia:FrostWire|FrostWire]]|Easy to use cloud downloader, BitTorrent client and media player.|https://www.frostwire.com/|{{AUR|frostwire}}}}
-* {{App|Gopeed|Modern download manager built with Golang and Flutter that supports HTTP, BitTorrent, Magnet protocol.|https://gopeed.com/|{{AUR|gopeed-bin}}}}
 * {{App|[[Ktorrent]]|Feature-rich BitTorrent client for KDE. Part of {{Grp|kde-network}}.|https://apps.kde.org/ktorrent/|{{Pkg|ktorrent}}}}
+* {{App|Multiplex|App to watch torrents together, providing an experience similar to Apple's SharePlay and Amazon's Prime Video Watch Party.|https://github.com/pojntfx/multiplex/|{{AUR|multiplex}}}}
 * {{App|PikaTorrent|Pick a Torrent, stream and download on all your devices.|https://www.pikatorrent.com/|{{AUR|pikatorrent-bin}}, {{AUR|pikatorrent-git}}}}
-* {{App|Powder Player|Hybrid between a streaming BitTorrent client and a player. Based on the [https://electronjs.org/ Electron] platform.|https://powder.media/|{{AUR|powder-player-bin}}}}
+* {{App|Powder Player|Hybrid between a streaming BitTorrent client and a player. Based on the [[Electron]] platform.|https://powder.media/|{{AUR|powder-player-bin}}}}
 * {{App|[[qBittorrent]]|Open source (GPLv2) BitTorrent client with an integrated torrent search engine that strongly resembles µTorrent.|https://www.qbittorrent.org/|{{Pkg|qbittorrent}}}}
 * {{App|[[Wikipedia:Tixati|Tixati]]|Proprietary peer-to-peer file sharing program that uses the popular BitTorrent protocol.|https://tixati.com/|{{AUR|tixati}}}}
 * {{App|[[Transmission]]|Simple and easy-to-use BitTorrent client with a daemon version and multiple front-ends.|https://transmissionbt.com/|GTK: {{Pkg|transmission-gtk}}, Qt: {{Pkg|transmission-qt}}}}
@@ -467,7 +507,7 @@ See also: [[Wikipedia:Comparison of BitTorrent clients]]
 * {{App|Tremotesf|Qt client for remote management of the Transmission BitTorrent client, using its HTTP RPC protocol.|https://github.com/equeim/tremotesf2|{{AUR|tremotesf}}}}
 * {{App|[[Wikipedia:Tribler|Tribler]]|4th generation file sharing system BitTorrent client.|https://www.tribler.org|{{AUR|tribler-bin}}}}
 * {{App|[[Wikipedia:Vuze|Vuze]]|Feature-rich BitTorrent client written in Java (formerly Azureus).|https://www.vuze.com/|{{AUR|vuze}}}}
-* {{App|WebTorrent Desktop|Streaming BitTorrent application. Based on the [https://electronjs.org/ Electron] platform.|https://webtorrent.io/desktop/|{{AUR|webtorrent-desktop}}}}
+* {{App|WebTorrent Desktop|Streaming BitTorrent application. Based on the [[Electron]] platform.|https://webtorrent.io/desktop/|{{AUR|webtorrent-desktop}}}}
 
 === Other P2P networks ===
 
@@ -478,12 +518,12 @@ See also: [[Wikipedia:Comparison of file-sharing applications]]
 * {{App|[[Wikipedia:gtk-gnutella|gtk-gnutella]]|GTK server/client for the Gnutella peer-to-peer network.|https://gtk-gnutella.sourceforge.net/|{{AUR|gtk-gnutella}}}}
 * {{App|[[IPFS]]|IPFS is a P2P Network capable of sharing and receiving files.|https://ipfs.io/|{{Pkg|kubo}}}}
 * {{App|KaMule|KDE graphical front-end for aMule.|https://github.com/nihui/kamule/|{{AUR|kamule}}}}
-* {{App|LBRY|Browser and wallet for LBRY, the decentralized, user-controlled content marketplace. Based on the [https://electronjs.org/ Electron] platform.|https://lbry.io/|{{AUR|lbry-desktop}}}}
+* {{App|LBRY|Browser and wallet for LBRY, the decentralized, user-controlled content marketplace. Based on the [[Electron]] platform.|https://lbry.io/|{{AUR|lbry-desktop}}}}
 * {{App|lbt|Small set of command-line tools for LBRY.|https://gitlab.com/gardenappl/lbt|{{AUR|lbt}}}}
 * {{App|[[Wikipedia:MLDonkey|MLDonkey]]|Multi-protocol P2P client that supports HTTP, FTP, BitTorrent, Direct Connect, eDonkey and FastTrack.|https://mldonkey.sourceforge.net/|{{AUR|mldonkey}}}}
 * {{App|ncdc|Modern and lightweight Direct Connect and ADC client with a friendly ncurses interface.|https://dev.yorhel.nl/ncdc|{{AUR|ncdc}}}}
 * {{App|Nicotine+|A graphical client for the Soulseek P2P network.|https://github.com/Nicotine-Plus/nicotine-plus|{{Pkg|nicotine+}}}}
-* {{App|Send Anywhere|Proprietary file sharing service where users can directly share digital content in real time. Based on the [https://electronjs.org/ Electron] platform.|https://send-anywhere.com/|{{AUR|sendanywhere}}}}
+* {{App|Send Anywhere|Proprietary file sharing service where users can directly share digital content in real time. Based on the [[Electron]] platform.|https://send-anywhere.com/|{{AUR|sendanywhere}}}}
 
 === Pastebin services ===
 
@@ -497,12 +537,13 @@ Pastebin services are often used to quote text or images while collaborating and
 
 Some services can be used with more general command line tool such as [[cURL]]. For extensions, such as line numbers, more command line tools can be used such as {{ic|cat -n}}.
 
-* [https://0x0.st/ 0x0.st] is a file hosting service. Usage examples are:
-:{{bc|1=$ ''command'' {{!}} curl -F 'file=@-' <nowiki>https://0x0.st</nowiki>}} or upload a file: {{bc|1=$ curl -F 'file=@''path/to/file''' <nowiki>https://0x0.st</nowiki>}}
-:{{Note|Read the instructions on the website for further options such as file removal tokens, expiration, and private URLs.}}
 * [https://paste.c-net.org/ paste.c-net.org] accepts HTTP requests and works with [[nc]].
 * [https://privatebin.info/ privatebin.info] is a minimalist, open-source online pastebin service where the server has zero knowledge of stored data. It focuses on decentralized hosting and has a [https://privatebin.info/directory/ directory of public instances].
 * [https://termbin.com termbin.com] works with [[nc]].
+* [https://0x0.st/ 0x0.st] is a file hosting service. Usage examples are:
+:{{bc|1=$ ''command'' {{!}} curl -F 'file=@-' <nowiki>https://0x0.st</nowiki>}} or upload a file: {{bc|1=$ curl -F 'file=@''path/to/file''' <nowiki>https://0x0.st</nowiki>}}
+:{{Note|Read the instructions on the website for further options such as file removal tokens, expiration, and private URLs.}}
+:{{Note|0x0 has disabled uploads because of AI slop uploads as of 2026-06-16 with no timeline for restarting}}
 
 ==== Dedicated clients ====
 
@@ -538,17 +579,19 @@ See also: [[Wikipedia:Comparison of email clients]]
 
 ==== Graphical ====
 
+* {{App|Aerion|Modern, lightweight email client inspired by Geary, focused on resource efficiency and a clean user experience.|https://aerion.3df.io/|{{AUR|aerion}}}}
 * {{App|Balsa|Simple and light email client for GNOME.|https://pawsa.fedorapeople.org/balsa/|{{Pkg|balsa}}}}
 * {{App|Betterbird|Fork of thunderbird.|https://www.betterbird.eu/|{{AUR|betterbird-bin}}}}
 * {{App|[[Wikipedia:Claws Mail|Claws Mail]]|Lightweight GTK-based email client and news reader.|https://www.claws-mail.org/|{{Pkg|claws-mail}}}}
-* {{App|ElectronMail|Unofficial desktop application for several end-to-end encrypted email providers (like ProtonMail, Tutanota). Based on the [https://electronjs.org/ Electron] platform.|https://github.com/vladimiry/ElectronMail|{{AUR|electronmail-bin}}}}
+* {{App|ElectronMail|Unofficial desktop application for Proton Mail. Based on the [[Electron]] platform.|https://github.com/vladimiry/ElectronMail|{{AUR|electronmail-bin}}}}
 * {{App|[[Evolution]]|Mature and feature-rich e-mail client that is part of the GNOME project. Part of {{Grp|gnome-extra}}.|https://gitlab.gnome.org/GNOME/evolution/-/wikis/home|{{Pkg|evolution}}}}
 * {{App|Geary|Simple desktop mail client built in [[Wikipedia:Vala (programming language)|Vala]]. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Geary|{{Pkg|geary}}}}
 * {{App|[[Wikipedia:Kmail|Kmail]]|Mature and feature-rich email client. Part of {{Grp|kde-pim}}.|https://kontact.kde.org/components/kmail/|{{Pkg|kmail}}}}
-* {{App|Mailspring|Fork of [[Wikipedia:Nylas Mail|Nylas Mail]] by one of the original authors. The paid "Pro" version requires a Mailspring ID and has extra features like snooze, send later. Based on the [https://electronjs.org/ Electron] platform.|https://getmailspring.com/|{{AUR|mailspring}}}}
+* {{App|Mailspring|Fork of [[Wikipedia:Nylas Mail|Nylas Mail]] by one of the original authors. The paid "Pro" version requires a Mailspring ID and has extra features like snooze, send later. Based on the [[Electron]] platform.|https://getmailspring.com/|{{AUR|mailspring}}}}
+* {{App|Proton Mail|Proton official desktop application for Proton Mail and Proton Calendar. Based on the [[Electron]] platform.|https://proton.me/mail|{{AUR|proton-mail}}}}
 * {{App|[[Wikipedia:SeaMonkey#Mail|SeaMonkey Mail & Newsgroups]]|Email client included in the SeaMonkey suite.|https://www.seamonkey-project.org/|{{AUR|seamonkey}}}}
 * {{App|[[Thunderbird]]|Feature-rich email client from Mozilla written in GTK.|https://www.thunderbird.net/|{{Pkg|thunderbird}}}}
-* {{App|Tutanota|Email client for Tutanota mail service. Based on the [https://electronjs.org/ Electron] platform.|https://tutanota.com/|{{AUR|tutanota-desktop}}}}
+* {{App|Tutanota|Email client for Tutanota mail service. Based on the [[Electron]] platform.|https://tutanota.com/|{{AUR|tutanota-desktop}}}}
 
 ==== Web-based ====
 
@@ -577,7 +620,7 @@ See also: [[Wikipedia:Mail retrieval agent]]
 * {{App|[[fdm]]|Program to fetch and deliver mail.|https://github.com/nicm/fdm|{{Pkg|fdm}}}}
 * {{App|[[Wikipedia:Fetchmail|Fetchmail]]|A remote-mail retrieval utility.|https://www.fetchmail.info/|{{Pkg|fetchmail}}}}
 * {{App|[[getmail]]|A POP3/IMAP4 mail retriever with reliable Maildir and command delivery.|https://pyropus.ca/software/getmail/|{{AUR|getmail}}}}
-* {{App|hydroxide|A third-party, open-source ProtonMail CardDAV, IMAP and SMTP bridge|https://github.com/emersion/hydroxide|{{AUR|hydroxide}}}}
+* {{App|hydroxide|A third-party, open-source Proton Mail CardDAV, IMAP and SMTP bridge|https://github.com/emersion/hydroxide|{{AUR|hydroxide}}}}
 * {{App|imapsync|IMAP synchronisation, sync, copy or migration tool|https://imapsync.lamiral.info/|{{Pkg|imapsync}}}}
 * {{App|[[isync]]|IMAP and MailDir mailbox synchronizer|https://isync.sourceforge.net/|{{Pkg|isync}}}}
 * {{App|mpop|A small, fast POP3 client suitable as a fetchmail replacement|https://marlam.de/mpop/|{{Pkg|mpop}}}}
@@ -687,18 +730,19 @@ See also: [[Wikipedia:List of SIP software#Clients]]
 See also: [[Matrix]], [https://matrix.org/clients/ Matrix Clients]
 
 * {{App|Chatty|Simple to use SMS and Matrix messaging application.|https://gitlab.gnome.org/World/Chatty|{{Pkg|chatty}}}}
-* {{App|Cinny|Cinny is a matrix client focusing primarily on simple, elegant and secure interface. The desktop app is made with [https://github.com/tauri-apps/tauri Tauri].|https://github.com/cinnyapp/cinny-desktop|{{AUR|cinny-desktop}}}}
-* {{App|Element|Glossy Matrix client with an emphasis on performance and usability. Web application and desktop application based on the [https://electronjs.org/ Electron] platform.|https://element.io/|{{Pkg|element-web}}, {{Pkg|element-desktop}}}}
+* {{App|Cinny|Cinny is a matrix client focusing primarily on simple, elegant and secure interface. The desktop app is made with [https://github.com/tauri-apps/tauri Tauri].|https://github.com/cinnyapp/cinny-desktop|{{Pkg|cinny-desktop}}}}
+* {{App|Element|Glossy Matrix client with an emphasis on performance and usability. Web application and desktop application based on the [[Electron]] platform.|https://element.io/|{{Pkg|element-web}}, {{Pkg|element-desktop}}}}
 * {{App|FluffyChat|Multi-platform Matrix client with a simple and clean UI written in Dart/Flutter.|https://fluffychat.im/|{{AUR|fluffychat}}}}
 * {{App|Fractal|Matrix client for GNOME written in Rust.|https://wiki.gnome.org/Apps/Fractal|{{Pkg|fractal}}}}
 * {{App|Gomuks|Terminal Matrix client written in Go using [https://github.com/tulir/mautrix-go mautrix] and [https://github.com/tulir/mauview mauview].|https://maunium.net/go/gomuks|{{Pkg|gomuks}}}}
+:{{Note|The gomuks package is the [https://github.com/gomuks/gomuks/releases/tag/v0.3.1 last release] of the gomuks legacy terminal and is [https://docs.mau.fi/gomuks/faq.html#where-are-the-legacy-gomuks-docs no longer officially supported].}}
 * {{App|iamb|A terminal-based Matrix client with Vim keybindings written in Rust.|https://github.com/ulyssa/iamb|{{Aur|iamb}}}}
 * {{App|Moment|A fancy, customizable, keyboard-operable Matrix chat client for encrypted and decentralized communication. Written in Qt/QML + Python with nio, fork of the now-abandoned Mirage.|https://mx-moment.xyz/|{{AUR|moment}}}}
 * {{App|Neochat|KDE client for the Matrix protocol. Part of {{Grp|kde-network}}.|https://apps.kde.org/neochat/|{{Pkg|neochat}}}}
-* {{App|nheko|Desktop client for the Matrix protocol.|https://github.com/Nheko-Reborn/nheko|{{Pkg|nheko}}}}
+* {{App|nheko|Desktop client for Matrix using Qt and C++20.|https://nheko-reborn.github.io/|{{Pkg|nheko}}}}
 * {{App|Quaternion|Qt5-based IM client for the Matrix protocol.|https://github.com/QMatrixClient/Quaternion|{{AUR|quaternion}}}}
 * {{App|QuickMedia|A rofi inspired native client for web services. Supports Matrix and several other sites.|https://git.dec05eba.com/QuickMedia/about/|{{AUR|quickmedia}}}}
-* {{App|SchildiChat|Matrix client based on Element with a more traditional instant messaging experience. Based on the [https://electronjs.org/ Electron] platform.|https://schildi.chat/|{{AUR|schildichat-desktop-eol}}}}
+* {{App|SchildiChat|Matrix client based on Element with a more traditional instant messaging experience. Based on the [[Electron]] platform.|https://schildi.chat/|{{AUR|schildichat-desktop-eol}}}}
 * {{App|Spectral|Qt5-based Glossy cross-platform client for Matrix.|https://gitlab.com/spectral-im/spectral|{{AUR|spectral-matrix}}}}
 * {{App|Syphon|Privacy-centric cross-platform Matrix client with E2EE support, currently in alpha.|https://github.com/syphon-org/syphon|{{AUR|syphon-bin}}}}
 
@@ -724,44 +768,45 @@ See also: [[Ring]], [[Tox]]
 
 * {{App|[[Wikipedia:Briar (software)|Briar]]|Briar is a messaging application designed for activists, journalists, and anyone else who needs a safe, easy and robust way to communicate.|https://briarproject.org/|{{AUR|briar-desktop}}, {{AUR|briar-headless}}}}
 * {{App|Manyverse|Modern decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB).|https://gitlab.com/staltz/manyverse|{{AUR|manyverse-bin}}}}
-* {{App|Patchwork|Decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB). Based on the [https://electronjs.org/ Electron] platform.|https://github.com/ssbc/patchwork|{{AUR|ssb-patchwork}}}}
-* {{App|Poncho Wonky|Decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB). Based on the [https://electronjs.org/ Electron] platform. Maintained, updated Fork of Patchwork|https://github.com/soapdog/patchwork/|{{AUR|poncho-wonky}}}}
+* {{App|Patchwork|Decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB). Based on the [[Electron]] platform.|https://github.com/ssbc/patchwork|{{AUR|ssb-patchwork}}}}
+* {{App|Poncho Wonky|Decentralized messaging and sharing application built on top of Secure Scuttlebutt (SSB). Based on the [[Electron]] platform. Maintained, updated Fork of Patchwork|https://github.com/soapdog/patchwork/|{{AUR|poncho-wonky}}}}
 * {{App|RetroShare|Serverless encrypted instant messenger with filesharing, chatgroups, mail.|https://retroshare.cc/|{{AUR|retroshare}}}}
 * {{App|[[Wikipedia:Ricochet (software)|Ricochet]]|Anonymous peer-to-peer instant messaging system built on [[Tor]] hidden services.|https://www.ricochetrefresh.net/|{{AUR|ricochet-refresh}}}}
 
 ==== Chatmail clients ====
 
-* {{App|Delta Chat|A privacy oriented [https://chatmail.at/ chatmail] application. Based on the [https://electronjs.org/ Electron] platform.|https://delta.chat/|{{Pkg|deltachat-desktop}}}}
+* {{App|Delta Chat|A privacy oriented [https://chatmail.at/ chatmail] application. Based on the [[Electron]] platform.|https://delta.chat/|{{Pkg|deltachat-desktop}}}}
 * {{App|Parla|A [https://chatmail.at/ chatmail] application for the [[GNOME]] desktop. Based on the [[GTK]] framework.|https://github.com/trufae/parla/|{{Pkg|parla}}}}
 
 ==== Other IM clients ====
 
-* {{App|Caprine|Unofficial Facebook Messenger app. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/sindresorhus/caprine|{{AUR|caprine}}}}
+See also: [[Discord#Installation]], [[Telegram#Installation]], [[WhatsApp#Installation]]
+
+* {{App|Caprine|Unofficial Facebook Messenger app. Based on the [[Electron]] platform.|https://github.com/sindresorhus/caprine|{{AUR|caprine}}}}
 * {{App|Chatterino|Chat client for Twitch chat.|https://chatterino.com/|{{AUR|chatterino2}}}}
-* {{App|[[Discord]]|Proprietary all-in-one voice and text chat application for gamers that’s free and works on both your desktop and phone. Based on the [https://electronjs.org/ Electron] platform.|https://discordapp.com/|{{Pkg|discord}}}}
-* {{App|Flare|Unofficial Signal client based on GTK.|https://gitlab.com/schmiddi-on-mobile/flare|{{AUR|flare}}}}
+* {{App|[[Discord]]|Proprietary all-in-one voice and text chat application for gamers that’s free and works on both your desktop and phone. Based on the [[Electron]] platform.|https://discordapp.com/|{{Pkg|discord}}}}
+* {{App|Flare|Unofficial Signal client based on GTK.|https://mobile.schmidhuberj.de/flare|{{AUR|flare}}}}
 * {{App|[[Wikipedia:Gitter|Gitter]]|Communication product for communities and teams on GitLab and GitHub.|https://gitter.im/|{{AUR|gitter-bin}}}}
-* {{App|[[Wikipedia:Jitsi|Jitsi]] Meet|Desktop application for Jitsi Meet. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/jitsi/jitsi-meet-electron|{{AUR|jitsi-meet-desktop}}}}
-* {{App|Kotatogram Desktop|Experimental fork of Telegram Desktop.|https://kotatogram.github.io/|{{AUR|kotatogram-desktop}}}}
+* {{App|[[Wikipedia:Jitsi|Jitsi]] Meet|Desktop application for Jitsi Meet. Based on the [[Electron]] platform.|https://github.com/jitsi/jitsi-meet-electron|{{AUR|jitsi-meet-desktop}}}}
 * {{App|Matterhorn|Console client for the Mattermost chat system.|https://github.com/matterhorn-chat/matterhorn|{{AUR|matterhorn}}}}
-* {{App|[[Mattermost]] Desktop|Desktop application for Mattermost. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/mattermost/desktop|{{Pkg|mattermost-desktop}}}}
+* {{App|[[Mattermost]] Desktop|Desktop application for Mattermost. Based on the [[Electron]] platform.|https://github.com/mattermost/desktop|{{Pkg|mattermost-desktop}}}}
 * {{App|[[Mumble]]|Voice chat application similar to TeamSpeak.|https://www.mumble.info/|{{Pkg|mumble}}}}
-* {{App|Paper Plane|Chat over Telegram on a modern and elegant client.|https://github.com/paper-plane-developers/paper-plane|{{AUR|paper-plane}}}}
-* {{App|[[QQ]]|Proprietary instant messaging software developed by Tencent (imitating ICQ).|https://im.qq.com/|{{AUR|linuxqq}}}}
-* {{App|Rocket.Chat Desktop|Desktop application for Rocket.Chat. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/RocketChat/Rocket.Chat.Electron|{{AUR|rocketchat-desktop}}}}
+* {{App|[[QQ]]|Proprietary instant messaging software developed by Tencent (imitating ICQ). Based on the [[Electron]] platform.|https://im.qq.com/|{{AUR|linuxqq}}}}
+* {{App|Rocket.Chat Desktop|Desktop application for Rocket.Chat. Based on the [[Electron]] platform.|https://github.com/RocketChat/Rocket.Chat.Electron|{{AUR|rocketchat-desktop}}}}
 * {{App|Ruqola|Rocket.Chat client for the KDE desktop.|https://apps.kde.org/ruqola/|{{AUR|ruqola}}}}
-* {{App|Session Desktop|Onion routing based messenger. Based on the [https://electronjs.org/ Electron] platform.|https://getsession.org/|{{AUR|session-desktop}}}}
-* {{App|[[Wikipedia:Signal (software)|Signal]] Desktop|Desktop application for Signal private messenger. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/signalapp/Signal-Desktop|{{Pkg|signal-desktop}}}}
-* {{App|[[Wikipedia:Slack (software)|Slack]]|Proprietary Slack client for desktop. Based on the [https://electronjs.org/ Electron] platform.|https://slack.com/|{{AUR|slack-desktop}}}}
-* {{App|teams-for-linux|Unofficial Microsoft Teams for Linux client. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/IsmaelMartinez/teams-for-linux|{{AUR|teams-for-linux}}}}
-* {{App|[[TeamSpeak]]|Proprietary VoIP application with gamers as its target audience.|https://www.teamspeak.com/|{{Pkg|teamspeak3}}}}
+* {{App|Session Desktop|Onion routing based messenger. Based on the [[Electron]] platform.|https://getsession.org/|{{AUR|session-desktop}}}}
+* {{App|[[Wikipedia:Signal (software)|Signal]] Desktop|Desktop application for Signal private messenger. Based on the [[Electron]] platform.|https://github.com/signalapp/Signal-Desktop|{{Pkg|signal-desktop}}}}
+* {{App|[[Wikipedia:SimpleX Chat|SimpleX Chat]]|A private & encrypted open-source messenger without any user IDs.|https://simplex.chat/|{{AUR|simplex-desktop-bin}}}}
+* {{App|[[Wikipedia:Slack (software)|Slack]]|Proprietary Slack client for desktop. Based on the [[Electron]] platform.|https://slack.com/|{{AUR|slack-desktop}}}}
+* {{App|teams-for-linux|Unofficial Microsoft Teams for Linux client. Based on the [[Electron]] platform.|https://github.com/IsmaelMartinez/teams-for-linux|{{AUR|teams-for-linux}}}}
+* {{App|[[TeamSpeak]]|Proprietary VoIP application with gamers as its target audience.|https://www.teamspeak.com/|Version 3: {{Pkg|teamspeak3}}, version 6 {{AUR|teamspeak}}}}
 * {{App|[[TeamTalk]]|Proprietary VoIP application with video chat, file and desktop sharing.  Desktop sharing does not appear to be working in Linux though.  AUR package is server only, but client is built in the make process.|https://bearware.dk|{{AUR|teamtalk}}}}
 * {{App|[[Telegram]] Desktop|Official Telegram desktop client.|https://desktop.telegram.org/|{{Pkg|telegram-desktop}}}}
 * {{App|[[Wikipedia:Viber|Viber]]|Proprietary cross-platform IM and VoIP software.|https://www.viber.com/products/linux/|{{AUR|viber}}}}
 * {{App|[[Wikipedia:WeChat|WeChat]]|Tencent WeChat Client.|https://linux.weixin.qq.com/|{{AUR|wechat}}}}
-* {{App|[[Wikipedia:Wire (software)|Wire]]|Modern, private messenger. Based on the [https://electronjs.org/ Electron] platform.|https://wire.com/|{{AUR|wire-desktop}}}}
+* {{App|[[Wikipedia:Wire (software)|Wire]]|Modern, private messenger. Based on the [[Electron]] platform.|https://wire.com/|{{AUR|wire-desktop}}}}
 * {{App|[[Zoom Meetings|Zoom]]|Proprietary video conferencing, online meetings and group messaging application.|https://zoom.us/|{{AUR|zoom}}}}
-* {{App|[[Wikipedia:Zulip|Zulip]]|Desktop client for Zulip group chat. Based on the [https://electronjs.org/ Electron] platform.|https://zulipchat.com/apps/linux|{{AUR|zulip-desktop}}}}
+* {{App|[[Wikipedia:Zulip|Zulip]]|Desktop client for Zulip group chat. Based on the [[Electron]] platform.|https://zulipchat.com/apps/linux|{{AUR|zulip-desktop}}}}
 
 === Instant messaging servers ===
 
@@ -800,7 +845,7 @@ See also: [[Wikipedia:List of SIP software#Servers]]
 * {{App|[[Murmur]]|The voice chat application server for Mumble.|https://www.mumble.info/|{{Pkg|mumble-server}}}}
 * {{App|Nextcloud Talk|Video- and audio-conferencing app for Nextcloud.|https://github.com/nextcloud/spreed|{{Pkg|nextcloud-app-spreed}}}}
 * {{App|Rocket.Chat|Web chat server, developed in JavaScript, using the Meteor fullstack framework.|https://github.com/RocketChat/Rocket.Chat|{{AUR|rocketchat-server}}}}
-* {{App|[[Matrix|Synapse]]|Reference homeserver for the Matrix protocol.|https://github.com/matrix-org/synapse|{{Pkg|matrix-synapse}}}}
+* {{App|[[Matrix|Synapse]]|Reference homeserver for the Matrix protocol.|https://github.com/element-hq/synapse|{{Pkg|matrix-synapse}}}}
 * {{App|[[TeamSpeak]] Server|Proprietary VoIP conference server.|https://teamspeak.com/|{{Pkg|teamspeak3-server}}}}
 * {{App|uMurmur|Minimalistic Mumble server.|https://umurmur.net/|{{Pkg|umurmur}}}}
 
@@ -832,6 +877,7 @@ See also: [[Wikipedia:Comparison of feed aggregators]]
 * {{App|feed2imap-go|[https://github.com/feed2imap/feed2imap feed2imap] reimplemented in Go that aggregating RSS/Atom/jsonfeed into folders of your IMAP mailbox.|https://github.com/Necoro/feed2imap-go|{{AUR|feed2imap-go}}}}
 * {{App|[[Wikipedia:Gnus|Gnus]]|Email, NNTP and RSS client for Emacs.|https://www.gnus.org/|{{Pkg|emacs}}}}
 * {{App|[[Newsboat]]|Ncurses RSS aggregator with layout and keybinding similar to the [[Mutt]] email client.|https://newsboat.org/|{{Pkg|newsboat}}}}
+* {{App|Newsticker|Emacs built-in RSS reader|https://savannah.gnu.org/projects/newsticker/|included with {{Pkg|emacs}}}}
 * {{App|[[Newsraft]]|Feed reader with ncurses user interface.  It is greatly inspired by [[Newsboat]] and tries to be its lightweight counterpart. |https://codeberg.org/newsraft/newsraft/|{{AUR|newsraft}}}}
 * {{App|Rawdog|"RSS Aggregator Without Delusions Of Grandeur" that parses RSS/CDF/Atom feeds into a static HTML page of articles in chronological order.|https://offog.org/code/rawdog/|{{AUR|rawdog}}}}
 * {{App|rss2email|Aggregating your RSS/Atom feed into your IMAP/Maildir mailbox as a cronjob.|https://github.com/rss2email/rss2email|{{Pkg|rss2email}}}}
@@ -843,11 +889,11 @@ See also: [[Wikipedia:Comparison of feed aggregators]]
 * {{App|[[Wikipedia:Kontact#News feed aggregator|Akregator]]|News aggregator for KDE, part of {{Grp|kde-pim}}.|https://apps.kde.org/akregator/|{{Pkg|akregator}}}}
 * {{App|Alligator|Kirigami-based RSS/Atom feed reader for mobile devices. Part of {{Grp|kde-network}}.|https://apps.kde.org/alligator/|{{Pkg|alligator}}}}
 * {{App|Feeds|An RSS/Atom feed reader for GNOME.|https://gfeeds.gabmus.org/|{{Pkg|gfeeds}}}}
-* {{App|Fluent Reader|Modern desktop RSS reader built with React and Fluent UI. Based on the [https://electronjs.org/ Electron] platform.|https://hyliu.me/fluent-reader/|{{AUR|fluent-reader}}}}
+* {{App|Fluent Reader|Modern desktop RSS reader built with React and Fluent UI. Based on the [[Electron]] platform.|https://hyliu.me/fluent-reader/|{{AUR|fluent-reader}}}}
 * {{App|HackUp|Read Hacker News from the desktop.|https://github.com/mdh34/hackup|{{AUR|hackup-git}}}}
 * {{App|[[Wikipedia:Liferea|Liferea]]|GTK news aggregator for online news feeds and weblogs.|https://lzone.de/liferea/|{{Pkg|liferea}}}}
 * {{App|Newsflash|Modern feed reader designed for the GNOME desktop. The spiritual successor to FeedReader.|https://apps.gnome.org/NewsFlash/|{{Pkg|newsflash}}}}
-* {{App|Raven|Simple desktop RSS reader made using VueJS. Based on the [https://electronjs.org/ Electron] platform.|https://ravenreader.app/|{{AUR|raven-reader}}}}
+* {{App|Raven|Simple desktop RSS reader made using VueJS. Based on the [[Electron]] platform.|https://ravenreader.app/|{{AUR|raven-reader}}}}
 * {{App|RSS Guard|Very tiny RSS and ATOM news reader developed using Qt framework.|https://github.com/martinrotter/rssguard|{{Pkg|rssguard}}}}
 * {{App|Tickr|GTK-based RSS Reader that displays feeds as a smooth scrolling line on your desktop, as known from TV stations.|https://www.open-tickr.net/|{{AUR|tickr}}}}
 
@@ -910,7 +956,7 @@ See also: [[Wikipedia:List of Usenet newsreaders]], [[Wikipedia:Comparison of Us
 * {{App|Tokodon|Mastodon client for KDE. Part of {{Grp|kde-network}}.|https://apps.kde.org/tokodon/|{{Pkg|tokodon}}}}
 * {{App|Toot|CLI and TUI tool for interacting with Mastodon instances.|https://github.com/ihabunek/toot|{{Pkg|toot}}}}
 * {{App|Tuba|GTK4 client for Mastodon.|https://apps.gnome.org/Tuba/|{{Pkg|tuba}}}}
-* {{App|Whalebird|Mastodon client application. Based on the [https://electronjs.org/ Electron] platform.|https://whalebird.social/|{{AUR|whalebird}}}}
+* {{App|Whalebird|Mastodon client application. Based on the [[Electron]] platform.|https://whalebird.social/|{{AUR|whalebird}}}}
 
 === Blog engines ===
 
@@ -952,11 +998,15 @@ See also: [[Wikipedia:Remote desktop software]], [[Wikipedia:Comparison of remot
 === Remote desktop clients ===
 
 * {{App|[[Wikipedia:AnyDesk|AnyDesk]]|Proprietary remote desktop software.|https://anydesk.com/|{{AUR|anydesk-bin}}}}
+* {{App|Field Monitor|Remote desktop client designed for the GNOME platform. Access virtual machines and other external screens.|https://github.com/theCapypara/field-monitor|{{AUR|field-monitor}}}}
 * {{App|GNOME Connections|Remote desktop client for GNOME. Supports RDP and VNC. Part of {{Grp|gnome}}.|https://apps.gnome.org/Connections/|{{Pkg|gnome-connections}}}}
 * {{App|GVncViewer|Simple VNC Client on Gtk-VNC. Run with {{ic|gvncviewer}}.|https://wiki.gnome.org/Projects/gtk(2d)vnc|{{Pkg|gtk-vnc}}}}
 * {{App|[[Wikipedia:KRDC|KRDC]]|Remote Desktop Client for KDE. Supports RDP and VNC. Part of {{Grp|kde-network}}.|https://apps.kde.org/krdc/|{{Pkg|krdc}}}}
+* {{App|MultiVNC|SSH-enabled VNC viewer based on LibVNCClient.|https://github.com/bk138/multivnc|{{AUR|multivnc-git}}}}
+* {{App|Rabbit Remote Control|Remote desktop software that supports VNC, RDP, SSH and Telnet protocols.|https://github.com/KangLin/RabbitRemoteControl|{{AUR|rabbitremotecontrol-bin}}}}
 * {{App|[[Remmina]]|Remote desktop client written in GTK. Supports RDP, VNC, SPICE, X2Go and SSH.|https://remmina.org/|{{Pkg|remmina}}}}
 * {{App|Remote Viewer|Simple remote display client. Supports SPICE and VNC.|https://virt-manager.org/|{{Pkg|virt-viewer}}}}
+* {{App|RustConn|Modern connection manager for Linux. Manage SSH, RDP, VNC, SPICE, MOSH, Telnet, Serial, Kubernetes and Zero Trust connections from a single application with embedded protocol support and no external dependencies required.|https://github.com/totoshko88/RustConn|{{AUR|rustconn}}}}
 * {{App|RustDesk|A remote desktop software, open source, written in Rust.|https://rustdesk.com|{{AUR|rustdesk}}}}
 * {{App|Sunlogin Remote Control|Proprietary software that supports remote control of mobile devices, Windows, Mac, Linux and other systems. It uses its own proprietary protocol.|https://sunlogin.oray.com/en/about/about{{Dead link|2025|04|05|status=404}}|{{AUR|sunloginclient}}}}
 * {{App|[[Wikipedia:TeamViewer|TeamViewer]]|Proprietary remote desktop client. It uses its own proprietary protocol.|https://www.teamviewer.com/|{{AUR|teamviewer}}}}
@@ -982,3 +1032,9 @@ technology]].|https://nomachine.com/|{{AUR|nomachine}}}}
 * {{App|[[X2Go]] Server|An open source remote desktop software that uses the [[w:NX technology|NX technology]] protocol.|https://wiki.x2go.org/doku.php|{{AUR|x2goserver}}}}
 * {{App|[[Xpra]]|A multi-platform screen and application forwarding system.|https://xpra.org/|{{Pkg|xpra}}}}
 * {{App|[[Xrdp]]|A daemon that supports RDP. It uses Xvnc, X11rdp or xorgxrdp as a backend.|https://www.xrdp.org/|{{AUR|xrdp}}}}
+
+=== Input sharing ===
+
+* {{App|Barrier|Share mouse and keyboard over the local network.|https://deskflow.org/|{{AUR|barrier}}}}
+* {{App|[[Deskflow]]|Share one mouse and keyboard between multiple computers over the network.|https://deskflow.org/|{{Pkg|deskflow}}}}
+* {{App|InputLeap|Share mouse and keyboard between multiple computers over the network.|https://github.com/input-leap/input-leap|{{Pkg|input-leap}}}}

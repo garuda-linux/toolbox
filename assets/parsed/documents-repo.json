@@ -54,6 +54,15 @@
     "aur": false
   },
   {
+    "name": "AppFlowy",
+    "description": "Collaborative workspace where you achieve more without losing control of your data. Open source Notion alternative.",
+    "url": "https://appflowy.com/",
+    "pkgname": [
+      "appflowy-bin"
+    ],
+    "aur": false
+  },
+  {
     "name": "Arianna",
     "description": "An ebook reader and library management app supporting EPUB files. Part of kde-graphics.",
     "url": "https://apps.kde.org/arianna/",
@@ -225,6 +234,15 @@
     "aur": false
   },
   {
+    "name": "Collabora Office",
+    "description": "Brings the familiar Collabora Online experience to your computer. Built on LibreOffice, it delivers excellent interoperability with ODF and Microsoft Office formats (DOCX/XLSX/PPTX), and exports to PDF with ease.",
+    "url": "https://www.collaboraonline.com/collabora-office/",
+    "pkgname": [
+      "collabora-office"
+    ],
+    "aur": false
+  },
+  {
     "name": "CommonMark-py",
     "description": "Python parser for the CommonMark Markdown specification.",
     "url": "https://github.com/rtfd/CommonMark-py",
@@ -356,6 +374,15 @@
     "url": "https://docx2txt.sourceforge.net/",
     "pkgname": [
       "docx2txt"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Drawy",
+    "description": "Infinite whiteboard built for simplicity and high performance.",
+    "url": "https://apps.kde.org/drawy/",
+    "pkgname": [
+      "drawy"
     ],
     "aur": false
   },
@@ -747,15 +774,6 @@
     "aur": false
   },
   {
-    "name": "Lapce",
-    "description": "Lightning-fast and Powerful Code Editor written in Rust.",
-    "url": "https://lapce.dev/",
-    "pkgname": [
-      "lapce"
-    ],
-    "aur": false
-  },
-  {
     "name": "LibreOffice",
     "description": "The office productivity suite compatible to the open and standardized ODF document format. Fork of OpenOffice, supported by The Document Foundation.",
     "url": "https://www.libreoffice.org/",
@@ -838,7 +856,7 @@
   },
   {
     "name": "Logseq",
-    "description": "A local-first, non-linear, outliner notebook for organizing and sharing your personal knowledge base.",
+    "description": "A local-first, non-linear, outliner notebook for organizing and sharing your personal knowledge base. Based on the Electron platform.",
     "url": "https://logseq.com/",
     "pkgname": [
       "logseq-desktop"
@@ -1107,6 +1125,15 @@
     "aur": false
   },
   {
+    "name": "NormCap",
+    "description": "OCR-powered screen-capture tool to capture information instead of images.",
+    "url": "https://dynobo.github.io/normcap/",
+    "pkgname": [
+      "normcap"
+    ],
+    "aur": false
+  },
+  {
     "name": "Nota",
     "description": "Easy to use text editor with a simple interface with support for tabbed documents, syntax highlighting for various languages, Focus mode, annotations, configurable fonts, and colors, a side panel with an integrated file browser, and more. Part of maui.",
     "url": "https://mauikit.org/apps/nota/",
@@ -1127,7 +1154,7 @@
   {
     "name": "Notes",
     "description": "Note-taking application, write down your thoughts.",
-    "url": "https://www.get-notes.com/",
+    "url": "https://www.notes-foss.com/",
     "pkgname": [
       "notes"
     ],
@@ -1162,7 +1189,7 @@
   },
   {
     "name": "Obsidian",
-    "description": "Personal knowledge base that uses markdown text files to organize notes in a format that mirrors the human brain.",
+    "description": "Proprietary personal knowledge base that uses markdown text files to organize notes in a format that mirrors the human brain. Based on the Electron platform.",
     "url": "https://obsidian.md/",
     "pkgname": [
       "obsidian"
@@ -1202,6 +1229,15 @@
     "url": "https://www.onlyoffice.com/",
     "pkgname": [
       "onlyoffice-bin"
+    ],
+    "aur": false
+  },
+  {
+    "name": "OpenBoard",
+    "description": "Interactive whiteboard software for schools and universities.",
+    "url": "https://openboard.ch/index.en.html",
+    "pkgname": [
+      "openboard"
     ],
     "aur": false
   },
@@ -1315,7 +1351,7 @@
   },
   {
     "name": "QOwnNotes",
-    "description": "Notepad and todo list manager with markdown support and optional ownCloud integration built on Qt5.",
+    "description": "Notepad and todo list manager with markdown support and optional ownCloud integration built on Qt.",
     "url": "https://www.qownnotes.org/",
     "pkgname": [
       "qownnotes"
@@ -1755,15 +1791,6 @@
     "aur": false
   },
   {
-    "name": "VNote",
-    "description": "Vim-inspired note-taking application that knows programmers and Markdown better.",
-    "url": "https://vnotex.github.io/vnote",
-    "pkgname": [
-      "vnote"
-    ],
-    "aur": false
-  },
-  {
     "name": "VSCodium",
     "description": "Visual Studio Code, but compiled without telemetry.",
     "url": "https://vscodium.com/",
@@ -1846,7 +1873,7 @@
   },
   {
     "name": "YACReader",
-    "description": "Comic book viewer written in C++ and Qt5. Comes with YACReaderLibrary for managing comics.",
+    "description": "Comic book viewer written in C++ and Qt6. Comes with YACReaderLibrary for managing comics.",
     "url": "https://yacreader.com/",
     "pkgname": [
       "yacreader"

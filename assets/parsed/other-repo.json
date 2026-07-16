@@ -54,15 +54,6 @@
     "aur": false
   },
   {
-    "name": "Alacarte",
-    "description": "Add or remove applications from the main menu.",
-    "url": "https://gitlab.gnome.org/GNOME/alacarte",
-    "pkgname": [
-      "alacarte"
-    ],
-    "aur": false
-  },
-  {
     "name": "Albert",
     "description": "Sophisticated, plugin based standalone keyboard launcher.",
     "url": "https://albertlauncher.github.io/",
@@ -122,6 +113,15 @@
     "url": "https://github.com/Cloudef/bemenu",
     "pkgname": [
       "bemenu"
+    ],
+    "aur": false
+  },
+  {
+    "name": "BibleTime",
+    "description": "Desktop program for Bible study. BibleTime may be used to study over 200 free Bible texts, commentaries, dictionaries and books, provided by Crosswire Bible Society via the SWORD library.",
+    "url": "https://bibletime.info/",
+    "pkgname": [
+      "bibletime"
     ],
     "aur": false
   },
@@ -693,6 +693,15 @@
     "aur": false
   },
   {
+    "name": "Kiwix",
+    "description": "Application dedicated to providing offline access to educational content stored in Zim format.",
+    "url": "https://kiwix.org/",
+    "pkgname": [
+      "kiwix-desktop"
+    ],
+    "aur": false
+  },
+  {
     "name": "Klavaro",
     "description": "Teaching touch typing that intends to be keyboard and language independent.",
     "url": "https://klavaro.sourceforge.io/",
@@ -707,15 +716,6 @@
     "url": "https://apps.kde.org/kmag/",
     "pkgname": [
       "kmag"
-    ],
-    "aur": false
-  },
-  {
-    "name": "KMenuEdit",
-    "description": "Edit one of the KDE application launchers. Part of plasma.",
-    "url": "https://invent.kde.org/plasma/kmenuedit",
-    "pkgname": [
-      "kmenuedit"
     ],
     "aur": false
   },
@@ -873,15 +873,6 @@
     "aur": false
   },
   {
-    "name": "liquidshell",
-    "description": "Basic desktop shell for Xorg, an alternative to plasmashell, implemented using QtWidgets. It provides a bottom panel, a desktop wallpaper and desktop widgets.",
-    "url": "https://apps.kde.org/liquidshell/",
-    "pkgname": [
-      "liquidshell"
-    ],
-    "aur": false
-  },
-  {
     "name": "LXLauncher",
     "description": "Clone of the Asus launcher for EeePC.",
     "url": "https://github.com/lxde/lxlauncher",
@@ -914,24 +905,6 @@
     "url": "https://github.com/mate-desktop/mate-panel/",
     "pkgname": [
       "mate-panel"
-    ],
-    "aur": false
-  },
-  {
-    "name": "MenuLibre",
-    "description": "Advanced menu editor that provides modern features in a clean, easy-to-use interface.",
-    "url": "https://launchpad.net/menulibre",
-    "pkgname": [
-      "menulibre"
-    ],
-    "aur": false
-  },
-  {
-    "name": "MenuMaker",
-    "description": "Heuristics-driven menu generator for Blackbox, Fluxbox, IceWM, Openbox, PekWM and WindowMaker.",
-    "url": "https://menumaker.sourceforge.net/",
-    "pkgname": [
-      "menumaker"
     ],
     "aur": false
   },
@@ -977,15 +950,6 @@
     "url": "https://wiki.gnome.org/Projects/Mousetweaks",
     "pkgname": [
       "mousetweaks"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Mozo",
-    "description": "Change which applications are shown on the main menu.",
-    "url": "https://github.com/mate-desktop/mozo",
-    "pkgname": [
-      "mozo"
     ],
     "aur": false
   },
@@ -1107,15 +1071,6 @@
     "aur": false
   },
   {
-    "name": "OpenBoard",
-    "description": "Interactive whiteboard software for schools and universities.",
-    "url": "https://openboard.ch/index.en.html",
-    "pkgname": [
-      "openboard"
-    ],
-    "aur": false
-  },
-  {
     "name": "opencode",
     "description": "AI coding agent built for the terminal.",
     "url": "https://github.com/sst/opencode",
@@ -1130,6 +1085,15 @@
     "url": "https://wiki.gnome.org/Projects/Orca",
     "pkgname": [
       "orca"
+    ],
+    "aur": false
+  },
+  {
+    "name": "org mode",
+    "description": "Emacs built-in outlining, note-taking, and personal information management (PIM) mode.",
+    "url": "https://cgit.git.savannah.nongnu.org/cgit/org-mode.git/",
+    "pkgname": [
+      "emacs"
     ],
     "aur": false
   },
@@ -1161,20 +1125,20 @@
     "aur": false
   },
   {
+    "name": "Planify",
+    "description": "Task manager with Todoist support.",
+    "url": "https://useplanify.com/",
+    "pkgname": [
+      "planify"
+    ],
+    "aur": false
+  },
+  {
     "name": "Plank",
     "description": "Elegant, simple, clean dock from Pantheon desktop environment.",
     "url": "https://launchpad.net/plank",
     "pkgname": [
       "plank"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Planner",
-    "description": "Task manager with Todoist support.",
-    "url": "https://useplanner.com/",
-    "pkgname": [
-      "planify"
     ],
     "aur": false
   },
@@ -1315,7 +1279,7 @@
   },
   {
     "name": "Screenkey",
-    "description": "Tool to display pressed keys.",
+    "description": "Tool to display currently pressed keyboards keys.",
     "url": "https://www.thregr.org/~wavexx/software/screenkey/",
     "pkgname": [
       "screenkey"
@@ -1333,7 +1297,7 @@
   },
   {
     "name": "Show Me The Key",
-    "description": "A screenkey alternative that works under Wayland via libinput",
+    "description": "A screenkey alternative that works under Wayland via libinput.",
     "url": "https://showmethekey.alynx.one",
     "pkgname": [
       "showmethekey"
@@ -1616,15 +1580,6 @@
     "url": "https://www.xandikos.org",
     "pkgname": [
       "xandikos"
-    ],
-    "aur": false
-  },
-  {
-    "name": "xdg-menu",
-    "description": "Generate XDG application menus for various window managers.",
-    "url": "https://github.com/p5n/archlinux-stuff/tree/master/xdg-menu",
-    "pkgname": [
-      "archlinux-xdg-menu"
     ],
     "aur": false
   },

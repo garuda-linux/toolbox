@@ -27,15 +27,6 @@
     "aur": false
   },
   {
-    "name": "Arpwatch",
-    "description": "Tool that monitors ethernet activity and keeps a database of Ethernet/IP address pairings.",
-    "url": "https://ee.lbl.gov/",
-    "pkgname": [
-      "arpwatch"
-    ],
-    "aur": false
-  },
-  {
     "name": "Authenticator",
     "description": "Open source, two-factor authentication application built for GNOME.",
     "url": "https://apps.gnome.org/Authenticator/",
@@ -117,15 +108,6 @@
     "aur": false
   },
   {
-    "name": "darkstat",
-    "description": "Captures network traffic, calculates statistics about usage, and serves reports over HTTP.",
-    "url": "https://unix4lyfe.org/darkstat/",
-    "pkgname": [
-      "darkstat"
-    ],
-    "aur": false
-  },
-  {
     "name": "Deepin Screensaver",
     "description": "A lightweight Qt5 based screensaver.",
     "url": "https://github.com/linuxdeepin/deepin-screensaver",
@@ -153,29 +135,11 @@
     "aur": false
   },
   {
-    "name": "EtherApe",
-    "description": "Graphical network monitor for Unix modeled after etherman. Featuring link layer, IP and TCP modes, it displays network activity graphically. Hosts and links change in size with traffic. Color coded protocols display.",
-    "url": "https://etherape.sourceforge.io/",
-    "pkgname": [
-      "etherape"
-    ],
-    "aur": false
-  },
-  {
     "name": "Ettercap",
     "description": "Multipurpose Network sniffer/analyser/interceptor/logger.",
     "url": "https://www.ettercap-project.org/",
     "pkgname": [
       "ettercap"
-    ],
-    "aur": false
-  },
-  {
-    "name": "GNOME Network Tools",
-    "description": "GNOME interface for various networking tools.",
-    "url": "https://gitlab.gnome.org/Archive/gnome-nettool",
-    "pkgname": [
-      "gnome-nettool"
     ],
     "aur": false
   },
@@ -199,8 +163,8 @@
   },
   {
     "name": "GtkHash",
-    "description": "A GTK utility for computing message digests or checksums",
-    "url": "https://github.com/gtkhash/gtkhash",
+    "description": "A GTK utility for computing message digests or checksums.",
+    "url": "https://gtkhash.org/",
     "pkgname": [
       "gtkhash"
     ],
@@ -257,24 +221,6 @@
     "url": "https://github.com/Raymo111/i3lock-color",
     "pkgname": [
       "i3lock-color"
-    ],
-    "aur": false
-  },
-  {
-    "name": "IPTraf",
-    "description": "Console-based network monitoring utility.",
-    "url": "https://sourceforge.net/projects/iptraf-ng/",
-    "pkgname": [
-      "iptraf-ng"
-    ],
-    "aur": false
-  },
-  {
-    "name": "jnettop",
-    "description": "top-like console network traffic visualizer.",
-    "url": "https://sourceforge.net/projects/jnettop/",
-    "pkgname": [
-      "jnettop"
     ],
     "aur": false
   },
@@ -396,15 +342,6 @@
     "aur": false
   },
   {
-    "name": "LinSSID",
-    "description": "Graphical wireless scanner.",
-    "url": "https://sourceforge.net/projects/linssid/",
-    "pkgname": [
-      "linssid"
-    ],
-    "aur": false
-  },
-  {
     "name": "Logwatch",
     "description": "Customizable log analysis system.",
     "url": "https://sourceforge.net/projects/logwatch/",
@@ -446,24 +383,6 @@
     "url": "https://github.com/jedisct1/minisign",
     "pkgname": [
       "minisign"
-    ],
-    "aur": false
-  },
-  {
-    "name": "netsniff-ng",
-    "description": "High performance Linux network sniffer for packet inspection.",
-    "url": "http://netsniff-ng.org/",
-    "pkgname": [
-      "netsniff-ng"
-    ],
-    "aur": false
-  },
-  {
-    "name": "ngrep",
-    "description": "grep-like utility that allows you to search for network packets on an interface.",
-    "url": "https://github.com/jpr5/ngrep",
-    "pkgname": [
-      "ngrep"
     ],
     "aur": false
   },
@@ -527,15 +446,6 @@
     "url": "https://www.passwordstore.org/",
     "pkgname": [
       "pass"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Passbook",
-    "description": "Modern password manager for GNOME.",
-    "url": "https://wiki.gnome.org/Apps/Passbook",
-    "pkgname": [
-      "passbook"
     ],
     "aur": false
   },
@@ -648,15 +558,6 @@
     "aur": false
   },
   {
-    "name": "Smb4K",
-    "description": "Advanced network neighborhood browser and Samba share mounting utility for KDE.",
-    "url": "https://apps.kde.org/smb4k/",
-    "pkgname": [
-      "smb4k"
-    ],
-    "aur": false
-  },
-  {
     "name": "sq",
     "description": "A command-line frontend for Sequoia, an implementation of OpenPGP.",
     "url": "https://sequoia-pgp.org/",
@@ -738,15 +639,6 @@
     "aur": false
   },
   {
-    "name": "Tcpdump",
-    "description": "Common console-based packet analyzer that allows the user to intercept and display TCP/IP and other packets being transmitted or received over a network.",
-    "url": "https://www.tcpdump.org/",
-    "pkgname": [
-      "tcpdump"
-    ],
-    "aur": false
-  },
-  {
     "name": "Vault",
     "description": "Proprietary tool for managing secrets.",
     "url": "https://developer.hashicorp.com/vault",
@@ -761,24 +653,6 @@
     "url": "https://kbd-project.org/",
     "pkgname": [
       "kbd"
-    ],
-    "aur": false
-  },
-  {
-    "name": "vnStat",
-    "description": "Console-based network traffic monitor that keeps a log of network traffic for the selected interfaces.",
-    "url": "https://humdi.net/vnstat/",
-    "pkgname": [
-      "vnstat"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Wireshark",
-    "description": "Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.",
-    "url": "https://www.wireshark.org/",
-    "pkgname": [
-      "wireshark-cli"
     ],
     "aur": false
   },

@@ -270,6 +270,15 @@
     "aur": false
   },
   {
+    "name": "Bruno",
+    "description": "IDE for exploring and testing API's, similar to Postman. Based on the Electron platform.",
+    "url": "https://www.usebruno.com/",
+    "pkgname": [
+      "bruno"
+    ],
+    "aur": false
+  },
+  {
     "name": "btop",
     "description": "Rewrite of bpytop in C++",
     "url": "https://github.com/aristocratos/btop",
@@ -338,6 +347,15 @@
     "url": "https://launchpad.net/catfish-search",
     "pkgname": [
       "catfish"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Clapgrep",
+    "description": "One app to search through all your files.",
+    "url": "https://github.com/luleyleo/clapgrep",
+    "pkgname": [
+      "clapgrep"
     ],
     "aur": false
   },
@@ -419,6 +437,15 @@
     "url": "https://github.com/pop-os/cosmic-term",
     "pkgname": [
       "cosmic-terminal"
+    ],
+    "aur": false
+  },
+  {
+    "name": "CPU-X",
+    "description": "Gather information on CPU, motherboard and more.",
+    "url": "https://thetumultuousunicornofdarkness.github.io/CPU-X/",
+    "pkgname": [
+      "cpu-x"
     ],
     "aur": false
   },
@@ -648,6 +675,15 @@
     "aur": false
   },
   {
+    "name": "Doom Emacs",
+    "description": "Community-driven Emacs distribution with integrated IDE features.",
+    "url": "https://github.com/doomemacs",
+    "pkgname": [
+      "emacs"
+    ],
+    "aur": false
+  },
+  {
     "name": "Double Commander",
     "description": "File manager with two panels side by side. It is inspired by Total Commander and features some new ideas.",
     "url": "https://doublecmd.sourceforge.io/",
@@ -846,6 +882,15 @@
     "aur": false
   },
   {
+    "name": "Font Downloader",
+    "description": "A simple GTK font downloader.",
+    "url": "https://github.com/GustavoPeredo/font-downloader",
+    "pkgname": [
+      "fontdownloader"
+    ],
+    "aur": false
+  },
+  {
     "name": "Font Manager",
     "description": "Simple font management for GTK desktop environments.",
     "url": "https://fontmanager.github.io/",
@@ -882,11 +927,11 @@
     "aur": false
   },
   {
-    "name": "fsearch",
+    "name": "FSearch",
     "description": "A fast file search utility for Unix-like systems based on GTK 3.",
     "url": "https://github.com/cboxdoerfer/fsearch",
     "pkgname": [
-      "fsearch-git"
+      "fsearch"
     ],
     "aur": false
   },
@@ -959,6 +1004,15 @@
     "url": "https://wiki.gnome.org/Apps/Ghex",
     "pkgname": [
       "ghex"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Ghidra",
+    "description": "Software reverse engineering framework. This framework includes a suite of full-featured, high-end software analysis tools that enable users to analyze compiled code.",
+    "url": "https://github.com/NationalSecurityAgency/ghidra",
+    "pkgname": [
+      "ghidra"
     ],
     "aur": false
   },
@@ -1395,6 +1449,15 @@
     "aur": false
   },
   {
+    "name": "Iaito",
+    "description": "Graphical frontend for radare2 featuring disassembly, debugging, binary analysis and reverse-engineering tools.",
+    "url": "https://radare.org/",
+    "pkgname": [
+      "iaito"
+    ],
+    "aur": false
+  },
+  {
     "name": "Icon Library",
     "description": "Find the right icon to use on your GNOME application.",
     "url": "https://gitlab.gnome.org/World/design/icon-library",
@@ -1427,6 +1490,15 @@
     "url": "https://mauikit.org/apps/index/",
     "pkgname": [
       "index-fm"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Insomnia",
+    "description": "API client for GraphQL, REST, WebSockets, Server-sent events (SSE), gRPC and any other HTTP compatible protocol. Based on the Electron platform.",
+    "url": "https://insomnia.rest/",
+    "pkgname": [
+      "insomnia"
     ],
     "aur": false
   },
@@ -1701,6 +1773,15 @@
     "aur": false
   },
   {
+    "name": "Kopia UI",
+    "description": "Electron-based GUI for Kopia.",
+    "url": "https://kopia.io/",
+    "pkgname": [
+      "kopia-ui-bin"
+    ],
+    "aur": false
+  },
+  {
     "name": "KRename",
     "description": "Very powerful batch file renamer for the KDE desktop.",
     "url": "https://apps.kde.org/krename/",
@@ -1886,6 +1967,15 @@
     "url": "https://ezix.org/project/wiki/HardwareLiSter",
     "pkgname": [
       "lshw"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Ludusavi",
+    "description": "Tool for backing up your PC video game save data, written in Rust. It is cross-platform and supports multiple game stores.",
+    "url": "https://github.com/mtkennerly/ludusavi/",
+    "pkgname": [
+      "ludusavi"
     ],
     "aur": false
   },
@@ -2358,6 +2448,15 @@
     "aur": false
   },
   {
+    "name": "Postman",
+    "description": "Proprietary tool to build, test, and document your APIs faster. Based on the Electron platform.",
+    "url": "https://www.postman.com/",
+    "pkgname": [
+      "postman-bin"
+    ],
+    "aur": false
+  },
+  {
     "name": "Processing",
     "description": "Playground for teaching non-programmers the fundamentals of computer programming in a visual context.",
     "url": "https://processing.org/",
@@ -2480,15 +2579,6 @@
     "url": "https://qtfm.eu/",
     "pkgname": [
       "qtfm"
-    ],
-    "aur": false
-  },
-  {
-    "name": "quickDocs",
-    "description": "Fast developer docs reader for reading Valadoc and DevDocs.",
-    "url": "https://github.com/mdh34/quickDocs",
-    "pkgname": [
-      "quickdocs"
     ],
     "aur": false
   },
@@ -2772,6 +2862,15 @@
     "aur": false
   },
   {
+    "name": "System Monitoring Center",
+    "description": "Multi-featured, low-resource system monitor that lets you easily track and manage CPU, RAM, disk, network, and GPU usage.",
+    "url": "https://github.com/hakandundar34coding/system-monitoring-center",
+    "pkgname": [
+      "system-monitoring-center"
+    ],
+    "aur": false
+  },
+  {
     "name": "Tarsnap",
     "description": "Secure, efficient proprietary online backup service.",
     "url": "https://www.tarsnap.com/",
@@ -2795,6 +2894,15 @@
     "url": "https://docs.influxdata.com/telegraf/latest/",
     "pkgname": [
       "telegraf"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Term",
+    "description": "Emacs built-in embedded terminal emulator",
+    "url": "https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/term.el/",
+    "pkgname": [
+      "emacs"
     ],
     "aur": false
   },
@@ -2935,7 +3043,7 @@
   },
   {
     "name": "Unity",
-    "description": "Unity is a flexible and powerful development platform for creating multi-platform 3D and 2D games. Proprietary, but a free version is available for certain use-cases (see here for more details).",
+    "description": "Unity is a flexible and powerful development platform for creating multi-platform 3D and 2D games. Proprietary, but a free version is available for certain use-cases (see here for more details). Based on the Electron platform.",
     "url": "https://unity.com/",
     "pkgname": [
       "unityhub"

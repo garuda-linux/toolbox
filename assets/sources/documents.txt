@@ -60,8 +60,10 @@ Some of the lighter-weight [[List of applications/Utilities#Integrated developme
 * {{App|Beaver|GTK editor designed to be modular, lightweight and stylish.|https://beaver-editor.sourceforge.net/|{{AUR|beaver}}}}
 * {{App|CorePad|Simple lightweight but powerful text editor with syntax-highlighting support for a dozen or more languages. Part of C-Suite.|https://cubocore.gitlab.io/|{{AUR|corepad}}}}
 * {{App|COSMIC Text Editor|Text editor for the COSMIC desktop environment.|https://github.com/pop-os/cosmic-edit|{{Pkg|cosmic-text-editor}}}}
+* {{App|CudaText|Cross-platform text editor, written in Object Pascal.|https://cudatext.github.io/|{{AUR|cudatext-qt6-bin}}}}
 * {{App|Deepin Text Editor|Simple text editor for Deepin desktop.|https://www.deepin.org/en/original/deepin-editor/|{{Pkg|deepin-editor}}}}
 * {{App|Ecrire|Simple text editor based on EFL.|https://git.enlightenment.org/enlightenment/ecrire|{{Pkg|ecrire}}}}
+* {{App|Eloquent|Proofreading software that finds many errors that a simple spell checker cannot detect.|https://github.com/sonnyp/Eloquent|{{AUR|eloquent}}}}
 * {{App|FeatherPad|Minimal Qt5 plain text editor featuring a native dark theme and support for tabs, printing and syntax highlighting.|https://github.com/tsujan/FeatherPad|{{Pkg|featherpad}}}}
 * {{App|FLTK Editor|Simple text editor application for FLTK.|https://www.fltk.org/|{{AUR|fltk-editor}}}}
 * {{App|gCSVedit|Simple text editor for CSV, TSV and other kinds of delimiter-separated values (DSV) files.|https://github.com/goetzc/gCSVedit|{{AUR|gcsvedit-git}}}}
@@ -71,11 +73,11 @@ Some of the lighter-weight [[List of applications/Utilities#Integrated developme
 * {{App|GNOME Text Editor|Simple text editor for GNOME focused on a pleasing default experience. Part of {{Grp|gnome}}.|https://apps.gnome.org/TextEditor/|{{Pkg|gnome-text-editor}}}}
 * {{App|Gobby|Collaborative editor supporting multiple documents in one session and a multi-user chat.|https://gobby.github.io/|{{Pkg|gobby}}}}
 * {{App|Howl|General purpose, fast and lightweight editor with a keyboard-centric minimalistic user interface.|https://howl.io/|{{AUR|howl}}}}
+* {{App|jdTextEdit|Advanced text editor based on PyQt and QScintilla.|https://codeberg.org/JakobDev/jdTextEdit|{{AUR|jdtextedit}}}}
 * {{App|[[Wikipedia:jEdit|jEdit]]|Text editor for programmers, written in Java.|https://www.jedit.org/|{{AUR|jedit}}}}
-* {{App|[[Wikipedia:Kate (text editor)|Kate]]|Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser. Part of {{Grp|kde-utilities}}.|https://kate-editor.org/|{{Pkg|kate}}}}
+* {{App|[[Kate]]|Full-featured programmer's editor for the KDE desktop with MDI and a filesystem browser. Part of {{Grp|kde-utilities}}.|https://kate-editor.org/|{{Pkg|kate}}}}
 * {{App|[[Wikipedia:KWrite|KWrite]]|Lightweight text editor for the KDE desktop that uses the same editor widget as Kate, now provided by the kate package. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kwrite/|{{Pkg|kate}}}}
 * {{App|L3afpad|Simple text editor forked from Leafpad, supports GTK 3.|https://github.com/stevenhoneyman/l3afpad|{{Pkg|l3afpad}}}}
-* {{App|Lapce|Lightning-fast and Powerful Code Editor written in Rust.|https://lapce.dev/|{{Pkg|lapce}}}}
 * {{App|[[Wikipedia:Leafpad|Leafpad]]|Notepad clone for GTK that emphasizes simplicity.|http://tarot.freeshell.org/leafpad/|{{AUR|leafpad}}}}
 * {{App|Liri Text|Text editor for Liri.|https://github.com/lirios/text|{{AUR|liri-text}}}}
 * {{App|Lite XL|A lightweight, simple, fast, feature-filled, and extremely extensible text editor written in C, and Lua, adapted from lite.|https://lite-xl.com/|{{Pkg|lite-xl}}}}
@@ -87,6 +89,7 @@ Some of the lighter-weight [[List of applications/Utilities#Integrated developme
 * {{App|Notepadqq|Qt-based, Notepad++-like text editor with support for syntax highlighting for more than 100 languages.|https://notepadqq.com/s/|{{AUR|notepadqq}}}}
 * {{App|Pantheon Code|Code editor for elementaryOS. It auto-saves your files, meaning they are always up-to-date. Plus it remembers your tabs so you never lose your spot, even in between sessions.|https://github.com/elementary/code|{{Pkg|pantheon-code}}}}
 * {{App|[[MATE|Pluma]]|Powerful text editor for MATE.|https://mate-desktop.org/|{{Pkg|pluma}}}}
+* {{App|Pulsar|A community-led, hyper-hackable text editor. Forked from Atom, built on [[Electron]].|https://pulsar-edit.dev/|{{AUR|pulsar-bin}}}}
 * {{App|QSciTE|Qt clone of the SciTE text and code editor.|https://code.google.com/archive/p/qscite/|{{AUR|qscite}}}}
 * {{App|[[Wikipedia:Sam (text editor)|Sam]]|Minimalist text editor with a graphical user interface, a very powerful command language and remote editing capabilities, developed by Rob Pike.|http://sam.cat-v.org|{{Pkg|plan9port}} or {{Pkg|9base}}}}
 * {{App|[[Wikipedia:SciTE|SciTE]]|Generally useful editor with facilities for building and running programs.|https://scintilla.org/SciTE.html|{{Pkg|scite}}}}
@@ -109,7 +112,7 @@ Some of the lighter-weight [[List of applications/Utilities#Integrated developme
 See also [[Wikipedia:Comparison of office suites]].
 
 * {{App|[[Wikipedia:Calligra Suite|Calligra]]|Actively developed fork of KOffice, the [[KDE]] office suite. It offers most of the features of OpenOffice. Part of {{Grp|kde-office}}.|https://calligra.org/|{{Pkg|calligra}}}}
-* {{App|[[Wikipedia:Google Docs|Google Docs]]|Cloud office solution by Google.|https://docs.google.com|{{AUR|google-docs-bin}}}}
+* {{App|[[Wikipedia:Collabora Online|Collabora Office]]|Brings the familiar Collabora Online experience to your computer. Built on LibreOffice, it delivers excellent interoperability with ODF and Microsoft Office formats (DOCX/XLSX/PPTX), and exports to PDF with ease.|https://www.collaboraonline.com/collabora-office/|{{AUR|collabora-office}}}}
 * {{App|[[LibreOffice]]|The office productivity suite compatible to the open and standardized ODF document format. Fork of OpenOffice, supported by The Document Foundation.|https://www.libreoffice.org/|{{Pkg|libreoffice-still}} or {{Pkg|libreoffice-fresh}}}}
 * {{App|[[Wikipedia:OnlyOffice|OnlyOffice]]|Office suite that combines text, spreadsheet and presentation editors.|https://www.onlyoffice.com/|{{AUR|onlyoffice-bin}}}}
 * {{App|[[OpenOffice]]|Open-source office software suite for word processing, spreadsheets, presentations, graphics, databases and more, under the Apache Licence.|https://www.openoffice.org/|{{AUR|openoffice-bin}}}}
@@ -146,7 +149,7 @@ See also [[Wikipedia:Comparison of word processors]].
 * {{App|[[OpenOffice|OpenOffice Impress]]|Presentation program included in the OpenOffice suite.|https://www.openoffice.org/product/impress.html|{{AUR|openoffice-bin}}}}
 * {{App|presenterm|A markdown terminal slideshow tool|https://mfontanini.github.io/presenterm/|{{Pkg|presenterm}}}}
 * {{App|sent|Simple plaintext presentation tool.|https://git.suckless.org/sent/|{{AUR|sent}}}}
-* {{App|Sozi|Zooming presentation editor and player. Based on the [https://electronjs.org/ Electron] platform.|https://sozi.baierouge.fr/|{{AUR|sozi}}}}
+* {{App|Sozi|Zooming presentation editor and player. Based on the [[Electron]] platform.|https://sozi.baierouge.fr/|{{AUR|sozi}}}}
 * {{App|Spice-Up|Create simple and beautiful presentations.|https://github.com/Philip-Scott/Spice-up|{{Pkg|spice-up}}}}
 
 === Spreadsheets ===
@@ -176,7 +179,7 @@ For DBMS-specific tools, see:
 See also [[Wikipedia:Comparison of database tools]].
 
 * {{App|[[Adminer]]|Full-featured database management webapp  with support for many database types.|https://www.adminer.org/|{{AUR|adminer}}}}
-* {{App|beekeeper-studio|A modern, easy to use, and good looking SQL client for MySQL, Postgres, SQLite, SQL Server, and more.|https://www.beekeeperstudio.io/|{{AUR|beekeeper-studio}}}}
+* {{App|Beekeeper Studio|A modern, easy to use, and good looking SQL client for MySQL, Postgres, SQLite, SQL Server, and more. Based on the [[Electron]] platform.|https://www.beekeeperstudio.io/|{{AUR|beekeeper-studio}}}}
 * {{App|[[Wikipedia:DBeaver|DBeaver]]|Java-based graphical database editor with support for many database types.|https://dbeaver.io/|{{Pkg|dbeaver}}}}
 * {{App|DbVisualizer|The Universal Database Tool|https://www.dbvis.com/|{{AUR|dbvis}}}}
 * {{App|GdaBrowser|Graphical tool to get a quick access to a database's structure and contents.|https://www.gnome-db.org/GdaBrowser|{{AUR|libgda}}}}
@@ -261,12 +264,12 @@ See also the [https://daringfireball.net/projects/markdown/ official website] an
 * {{App|ghostwriter|Distraction-free Markdown editor. Part of {{Grp|kde-office}}.|https://ghostwriter.kde.org/|{{Pkg|ghostwriter}}}}
 * {{App|Marker|Simple yet robust Markdown editor.|https://fabiocolacio.github.io/Marker/|{{Pkg|marker}}}}
 * {{App|Mark My Words|Minimal markdown editor.|https://github.com/voldyman/MarkMyWords|{{AUR|markmywords}}}}
-* {{App|Mark Text|Next generation markdown editor. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/marktext/marktext|{{AUR|marktext}}}}
+* {{App|Mark Text|Next generation markdown editor. Based on the [[Electron]] platform.|https://github.com/marktext/marktext|{{AUR|marktext}}}}
 * {{App|Remarkable|Fully featured Markdown editor.|https://remarkableapp.github.io/|{{AUR|remarkable}}}}
 * {{App|ReText|Simple text editor for Markdown and reStructuredText.|https://github.com/retext-project/retext|{{Pkg|retext}}}}
 * {{App|ThiefMD|Markdown and Fountain editor inspired by Ulysses.|https://thiefmd.com/|{{AUR|thiefmd}}}}
-* {{App|Typora|Proprietary, minimalist Markdown editor.|https://typora.io/|{{AUR|typora}}}}
-* {{App|[[Zettlr]]|A cross-platform markdown editor, inspired by the [[Wikipedia:Zettelkasten|Zettelkasten]] system for note-taking and personal knowledge management. Based on the [https://electronjs.org/ Electron] platform.|https://www.zettlr.com/|{{Pkg|zettlr}}}}
+* {{App|Typora|Proprietary, minimalist Markdown editor. Based on the [[Electron]] platform.|https://typora.io/|{{AUR|typora}}}}
+* {{App|[[Zettlr]]|A cross-platform markdown editor, inspired by the [[Wikipedia:Zettelkasten|Zettelkasten]] system for note-taking and personal knowledge management. Based on the [[Electron]] platform.|https://www.zettlr.com/|{{Pkg|zettlr}}}}
 
 === reStructuredText ===
 
@@ -312,6 +315,11 @@ See also [[Wikipedia:Comparison of TeX editors]] and [[Wikibooks:LaTeX/Installat
 * {{App|EqualX|LaTeX equation editor with real time preview.|https://equalx.sourceforge.net/|{{AUR|equalx}}}}
 * {{App|KLatexFormula|GUI for generating images from LaTeX equations.|https://klatexformula.sourceforge.io/|{{AUR|klatexformula}}}}
 * {{App|[[LibreOffice]] TexMaths extension|LaTeX equation editor for LibreOffice.|http://roland65.free.fr/texmaths/|{{Pkg|libreoffice-extension-texmaths}}}}
+
+=== Typst editors ===
+
+* {{App|Katvan|Editor for Typst files, with a bias for right-to-left languages.|https://katvan.app/|{{AUR|katvan}}}}
+* {{App|Typesetter|Minimalist editor for creating beautiful documents with the Typst markup language.|https://codeberg.org/haydn/typesetter|{{AUR|typesetter}}}}
 
 === XML editors ===
 
@@ -374,14 +382,14 @@ Some [[PDF, PS and DjVu#Viewers|PDF viewers]] like apvlv, Atril, [[MuPDF]], [[Wi
 === Comic book ===
 
 * {{App|Automedia|A very small downloader for manga and anime from various websites. Designed to be a much more lightweight alternative to HakuNeko. Written primarly in C.|https://git.dec05eba.com/AutoMedia/about/|{{AUR|automedia}}}}
-* {{App|HakuNeko|Downloader for manga and anime from various websites. Based on the [https://electronjs.org/ Electron] platform.|https://github.com/manga-download/hakuneko|{{AUR|hakuneko-desktop-bin}}}}
+* {{App|HakuNeko|Downloader for manga and anime from various websites. Based on the [[Electron]] platform.|https://github.com/manga-download/hakuneko|{{AUR|hakuneko-desktop-bin}}}}
 * {{App|Kindle Comic Converter|Allows you to transform your PNG, JPG, GIF, CBZ, CBR and CB7 files into EPUB or MOBI format e-books.|https://github.com/ciromattia/kcc/|{{AUR|kcc}}}}
 * {{App|Komikku|Online/offline manga reader for GNOME.|https://apps.gnome.org/Komikku/|{{Pkg|komikku}}}}
 * {{App|Manga Reader|Manga reader for local files. Supports zip, rar, tar, 7z, cbz, cbr, cbt, cb7 files and also folders.|https://github.com/g-fb/mangareader|{{AUR|mangareader}}}}
 * {{App|MComix|GTK3 image viewer specifically designed to handle comic book archives (fork of Comix). Also includes library manager.|https://github.com/multiSnow/mcomix3|{{AUR|mcomix}}}}
 * {{App|QComicBook| Viewer for comic book archives that aims at convenience and simplicity.|https://github.com/stolowski/QComicBook|{{AUR|qcomicbook}}}}
 * {{App|QuickMedia|Online manga reader. Supports automatically upscaling pages with {{Pkg|waifu2x-ncnn-vulkan}}|https://git.dec05eba.com/QuickMedia/about/|{{AUR|quickmedia}}}}
-* {{App|YACReader|Comic book viewer written in C++ and Qt5. Comes with YACReaderLibrary for managing comics.|https://yacreader.com/|{{AUR|yacreader}}}}
+* {{App|YACReader|Comic book viewer written in C++ and Qt6. Comes with YACReaderLibrary for managing comics.|https://yacreader.com/|{{AUR|yacreader}}}}
 
 Some [[PDF, PS and DjVu#Viewers|PDF]] and E-book viewers like Atril, Bookworm, [[Wikipedia:Calibre (software)|Calibre]], Foliate, [[GNOME/Document viewer|GNOME Document Viewer]], Lector, [[MuPDF]], [[Wikipedia:Okular|Okular]], Papers, Xreader and [[Zathura]] also support the Comicbook format.
 
@@ -421,12 +429,15 @@ See also [[Wikipedia:Comparison of optical character recognition software]].
 
 === Graphical ===
 
+* {{App|Frog|Extract text from images, websites, videos and QR codes by taking a picture of the source.|https://github.com/tenderowl/frog/|{{AUR|frog-ocr}}}}
 * {{App|gImageReader|Graphical GTK/Qt frontend to Tesseract.|https://github.com/manisandro/gImageReader|GTK: {{Pkg|gimagereader-gtk}}, Qt: {{Pkg|gimagereader-qt}}}}
 * {{App|[[Wikipedia:Scanner Access Now Easy#gscan2pdf|gscan2pdf]]|Scans, runs an OCR engine, minor post-processing, creates a document.|https://gscan2pdf.sourceforge.net/|{{Pkg|gscan2pdf}}}}
 * {{App|Linux-Intelligent-Ocr-Solution|Easy-OCR solution and Tesseract trainer for converting print into text using either scanner or a camera.|https://sourceforge.net/projects/lios/|{{AUR|lios-git}}}}
+* {{App|NormCap|OCR-powered screen-capture tool to capture information instead of images.|https://dynobo.github.io/normcap/|{{AUR|normcap}}}}
 * {{App|[[Wikipedia:OCRFeeder|OCRFeeder]]|Python GUI for GNOME which performs document analysis and rendition, and can use either CuneiForm, GOCR, Ocrad or Tesseract as OCR engines. It can import from PDF or image files, and export to HTML or OpenDocument.|https://wiki.gnome.org/Apps/OCRFeeder|{{Pkg|ocrfeeder}}}}
 * {{App|Paperwork|Personal document manager. It manages scanned documents and PDFs.|https://openpaper.work/|{{Pkg|paperwork}}}}
 * {{App|Scans to PDF|Create small, searchable PDFs from scanned documents.|https://github.com/Unrud/djpdf|{{AUR|djpdf}}}}
+* {{App|TextSnatcher|Copy text from images with ease, perform OCR operations in seconds.|https://textsnatcher.rf.gd/|{{AUR|textsnatcher}}}}
 * {{App|YAGF|Graphical interface for the CuneiForm text recognition program on the Linux platform.|https://sourceforge.net/projects/yagf-ocr/|{{AUR|yagf}}}}
 
 == Notes ==
@@ -447,54 +458,66 @@ See also [[Wikipedia:Comparison of notetaking software]].
 
 ==== Graphical ====
 
-* {{App|Anytype|A local-first, privacy-focused personal knowledge app that lets you organize and manage notes, databases and information in a flexible, customizable way.|https://anytype.io/|{{AUR|anytype-bin}}}}
+* {{App|Anytype|Proprietary, local-first, privacy-focused personal knowledge app that lets you organize and manage notes, databases and information in a flexible, customizable way. Based on the [[Electron]] platform.|https://anytype.io/|{{AUR|anytype-bin}}}}
+* {{App|AppFlowy|Collaborative workspace where you achieve more without losing control of your data. Open source [[Notion-app|Notion]] alternative.|https://appflowy.com/|{{AUR|appflowy-bin}}}}
 * {{App|[[Wikipedia:BasKet Note Pads|BasKet]]|Application for organizing, sharing, and taking notes. It can manage various types of information such as to-do lists, links, pictures, and other types, similar to a scrapbook.|https://basket-notepads.github.io/|{{AUR|basket}}}}
 * {{App|Bijiben|Note editor for GNOME designed to remain simple to use.|https://wiki.gnome.org/Apps/Notes|{{Pkg|gnome-notes}}}}
-* {{App|Boostnote|Note-taking application for programmers that focuses on markdown, snippets, and customizability. Based on the [https://electronjs.org/ Electron] platform.|https://boostnote.io/|{{AUR|boostnote-bin}}}}
+* {{App|Boostnote|Note-taking application for programmers that focuses on markdown, snippets, and customizability. Based on the [[Electron]] platform.|https://boostnote.io/|{{AUR|boostnote-bin}}}}
 * {{App|Buho|Task and note keeper to save links, write quick notes and organize pages as books. Part of {{Grp|maui}}.|https://mauikit.org/apps/buho/|{{Pkg|buho}}}}
 * {{App|Cherrytree|Hierarchical note taking application, featuring rich text and syntax highlighting, storing data in a single xml or sqlite file.|https://www.giuspen.com/cherrytree/|{{Pkg|cherrytree}}}}
 * {{App|Deepin Voice Notes|Lightweight memo tool to make text notes and voice recordings.|https://github.com/linuxdeepin/deepin-voice-note|{{Pkg|deepin-voice-note}}}}
-* {{App|Encryptic|JavaScript note taking application with Markdown editor and encryption support. Based on the [https://electronjs.org/ Electron] platform.|https://www.encryptic.org/{{Dead link|2025|11|17|status=domain name not resolved}}|{{AUR|encryptic}}}}
+* {{App|Encryptic|JavaScript note taking application with Markdown editor and encryption support. Based on the [[Electron]] platform.|https://www.encryptic.org/{{Dead link|2025|11|17|status=domain name not resolved}}|{{AUR|encryptic}}}}
 * {{App|FeatherNotes|Lightweight Qt hierarchical notes-manager.|https://github.com/tsujan/feathernotes|{{Pkg|feathernotes}}}}
-* {{App|FromScratch|Simple but smart note-taking application that you can use as a quick note taking or todo app. Based on the [https://electronjs.org/ Electron] platform.|https://fromscratch.rocks/|{{AUR|fromscratch-bin}}}}
+* {{App|Folio|Markdown note-taking app for GNOME (forked from Paper).|https://github.com/toolstack/Folio|{{AUR|folio}}}}
+* {{App|FromScratch|Simple but smart note-taking application that you can use as a quick note taking or todo app. Based on the [[Electron]] platform.|https://fromscratch.rocks/|{{AUR|fromscratch-bin}}}}
 * {{App|[[Wikipedia:Gnote|Gnote]]|Port of Tomboy to C++. It is the same note taking application, including most of the add-ins.|https://wiki.gnome.org/Apps/Gnote|{{Pkg|gnote}}}}
 * {{App|Iotas|Simple note taking with Markdown support and optional Nextcloud Notes sync.|https://apps.gnome.org/Iotas/|{{Pkg|iotas}}}}
-* {{App|[[Joplin]]|Note taking and to-do application, which can handle a large number of notes organized into notebooks on desktop or mobile devices. It synchronizes with WebDAV, Dropbox, OneDrive, NextCloud, S3 (beta) and other backends. Based on the [https://electronjs.org/ Electron] platform.|https://joplinapp.org/|CLI app: {{AUR|joplin}}, desktop app: {{AUR|joplin-desktop}}}}
+* {{App|[[Joplin]]|Note taking and to-do application, which can handle a large number of notes organized into notebooks on desktop or mobile devices. It synchronizes with WebDAV, Dropbox, OneDrive, NextCloud, S3 (beta) and other backends. Based on the [[Electron]] platform.|https://joplinapp.org/|CLI app: {{AUR|joplin}}, desktop app: {{AUR|joplin-desktop}}}}
 * {{App|KeepNote|Cross-platform GTK note-taking application with rich text formatting.|http://keepnote.org|{{AUR|keepnote}}}}
 * {{App|KleverNotes|Note-taking and management application using markdown.|https://apps.kde.org/klevernotes/|{{Pkg|klevernotes}}}}
-* {{App|Logseq|A local-first, non-linear, outliner notebook for organizing and sharing your personal knowledge base.|https://logseq.com/|{{AUR|logseq-desktop}}}}
+* {{App|Logseq|A local-first, non-linear, outliner notebook for organizing and sharing your personal knowledge base. Based on the [[Electron]] platform.|https://logseq.com/|{{AUR|logseq-desktop}}}}
 * {{App|Marknote|A simple markdown note management app for KDE.|https://apps.kde.org/marknote/|{{Pkg|marknote}}}}
 * {{App|[[Wikipedia:MyNotex|MyNotex]]|Note-taking, document file and activity manager.|https://sites.google.com/site/mynotex/|{{AUR|mynotex}}}}
 * {{App|[[Nextcloud]] Notes|Simple notes app for Nextcloud.|https://github.com/nextcloud/notes|{{Pkg|nextcloud-app-notes}}}}
 * {{App|NixNote|Helps you take notes and stay organized. Create text notes, attach files or images, and even synchronize with Evernote. Formerly called Nevernote.|http://nixnote.org/|{{aur|nixnote2}}}}
 * {{App|Norka|Note-taking software with Markdown support designed for Pantheon.|https://tenderowl.com/work/norka/|{{AUR|norka}}}}
 * {{App|Notejot|Stupidly simple sticky notes applet for elementaryOS.|https://github.com/lainsce/notejot|{{AUR|notejot}}}}
-* {{App|Notes|Note-taking application, write down your thoughts.|https://www.get-notes.com/|{{AUR|notes}}}}
+* {{App|Notes|Note-taking application, write down your thoughts.|https://www.notes-foss.com/|{{AUR|notes}}}}
+* {{App|Notesnook|A fully open source & end-to-end encrypted note taking alternative to Evernote. Based on the [[Electron]] platform.|https://notesnook.com/|{{AUR|notesnook}}}}
 * {{App|Notes-Up|Markdown notes editor and manager for elementaryOS.|https://github.com/Philip-Scott/Notes-up|{{Pkg|notes-up}}}}
-* {{App|[[Notion-app|Notion]]|Note-taking, task management, project management, knowledge management software|https://www.notion.so|{{AUR|notion-app-electron}}}}
+* {{App|[[Notion-app|Notion]]|Proprietary note-taking, task management, project management, knowledge management software. Based on the [[Electron]] platform.|https://www.notion.so|{{AUR|notion-app-electron}}}}
 * {{App|Notorious|Keyboard centric note-taking application with Markdown syntax highlighting support.|https://notorious.gabmus.org/|{{AUR|notorious-git}}}}
 * {{App|nvPY|Simplenote syncing note-taking application, inspired by Notational Velocity and ResophNotes, but uglier and cross-platformerer.|https://github.com/cpbotha/nvpy|{{AUR|nvpy}}}}
-* {{App|Obsidian|Personal knowledge base that uses markdown text files to organize notes in a format that mirrors the human brain.|https://obsidian.md/|{{Pkg|obsidian}}}}
+* {{App|Obsidian|Proprietary personal knowledge base that uses markdown text files to organize notes in a format that mirrors the human brain. Based on the [[Electron]] platform.|https://obsidian.md/|{{Pkg|obsidian}}}}
 * {{App|OutWiker|Store notes in a tree.|https://jenyay.net/Outwiker/English|{{AUR|outwiker}}}}
-* {{App|[[Wikipedia:QOwnNotes|QOwnNotes]]|Notepad and todo list manager with markdown support and optional ownCloud integration built on Qt5.|https://www.qownnotes.org/|{{AUR|qownnotes}}}}
-* {{App|[[Wikipedia:Simplenote|Simplenote]]|The simplest way to keep notes. Based on the [https://electronjs.org/ Electron] platform.|https://simplenote.com/|{{AUR|simplenote-electron-bin}}}}
-* {{App|Standard Notes|Simple and private notes application which focuses on simplicity, and encrypts data locally before it ever touches a cloud. Based on the [https://electronjs.org/ Electron] platform.|https://standardnotes.com/|{{AUR|standardnotes}}}}
-* {{App|[[Wikipedia:TagSpaces|TagSpaces]]|Offline personal data manager for managing of your local files. Based on the [https://electronjs.org/ Electron] platform.|https://www.tagspaces.org/|{{AUR|tagspaces}}}}
-* {{App|Tangent|Open-source note-taking app with local Markdown files, linked notes, interactive maps, and sliding panels for navigation.|https://www.tangentnotes.com/|{{AUR|tangent-bin}}}}
+* {{App|[[Wikipedia:QOwnNotes|QOwnNotes]]|Notepad and todo list manager with markdown support and optional ownCloud integration built on Qt.|https://www.qownnotes.org/|{{AUR|qownnotes}}}}
+* {{App|[[Wikipedia:Simplenote|Simplenote]]|The simplest way to keep notes. Based on the [[Electron]] platform.|https://simplenote.com/|{{AUR|simplenote-electron-bin}}}}
+* {{App|Speech Note|Note taking, reading and translating with offline Speech to Text, Text to Speech and Machine Translation.|https://github.com/mkiol/dsnote|{{AUR|dsnote}}}}
+* {{App|Standard Notes|Simple and private notes application which focuses on simplicity, and encrypts data locally before it ever touches a cloud. Based on the [[Electron]] platform.|https://standardnotes.com/|{{AUR|standardnotes}}}}
+* {{App|[[Wikipedia:TagSpaces|TagSpaces]]|Offline personal data manager for managing of your local files. Based on the [[Electron]] platform.|https://www.tagspaces.org/|{{AUR|tagspaces}}}}
+* {{App|Tangent|Note-taking app with local Markdown files, linked notes, interactive maps, and sliding panels for navigation. Based on the [[Electron]] platform.|https://www.tangentnotes.com/|{{AUR|tangent-bin}}}}
 * {{App|[[Wikipedia:TiddlyWiki|TiddlyWiki]]|Unique non-linear notebook for capturing, organizing and sharing complex information.|https://tiddlywiki.com/|{{AUR|tiddlywiki}}}}
+* {{App|TreeSheets|A "hierarchical spreadsheet" that is a great replacement for spreadsheets, mind mappers, outliners, PIMs, text editors and small databases.|https://strlen.com/treesheets/|{{AUR|treesheets-git}}}}
 * {{App|VNote|Vim-inspired note-taking application that knows programmers and Markdown better.|https://vnotex.github.io/vnote|{{AUR|vnote}}}}
 * {{App|[[Zim]]|WYSIWYG text editor that aims at bringing the concept of a wiki to the desktop.|https://zim-wiki.org/|{{Pkg|zim}}}}
 * {{App|zNotes|Lightweight application for notes management with simple interface.|https://sourceforge.net/projects/znotes/|{{AUR|znotes}}}}
-* {{App|μPad|Note-taking app that helps you organise + take notes without restrictions. Based on the [https://electronjs.org/ Electron] platform.|https://getmicropad.com|{{AUR|micropad}}}}
+* {{App|μPad|Note-taking app that helps you organise + take notes without restrictions. Based on the [[Electron]] platform.|https://getmicropad.com|{{AUR|micropad}}}}
 
 ==== Stylus note-taking ====
 
 * {{App|Cournal|Collaborative note taking and journal application using a stylus. It allows multiple users to annotate PDF files in real-time.|https://github.com/flyser/cournal|{{AUR|cournal}}}}
 * {{App|Rnote|A simple note taking application written in Rust and GTK4.|https://github.com/flxzt/rnote|{{Pkg|rnote}}}}
-* {{App|[[Saber]]|Open source libre cross platform note taking app|https://github.com/adil192/saber|{{AUR|saber}}}}
+* {{App|[[Saber]]|Open source libre cross platform note taking app|https://github.com/saber-notes/saber|{{AUR|saber}}}}
 * {{App|Write|A proprietary word processor for handwriting.|http://www.styluslabs.com/|{{AUR|write_stylus}}}}
 * {{App|Xournal|Application for notetaking, sketching and keeping a journal using a stylus. Capable of annotating existing PDF files as well.|https://xournal.sourceforge.net/|{{AUR|xournal}}}}
 * {{App|[[Xournal++]]|Notetaking software designed around a tablet. C++ rewrite of Xournal with PDF annotation support.|https://github.com/xournalpp/xournalpp|{{Pkg|xournalpp}}}}
+
+==== Whiteboards ====
+
+* {{App|Drawy|Infinite whiteboard built for simplicity and high performance.|https://apps.kde.org/drawy/|{{Pkg|drawy}}}}
+* {{App|InfiniPaint|Collaborative, infinite canvas note-taking/drawing app.|https://infinipaint.com/|{{AUR|infinipaint}}}}
+* {{App|Milton|Infinite-canvas paint program.|https://www.miltonpaint.com/|{{AUR|milton}}}}
+* {{App|[[Wikipedia:OpenBoard|OpenBoard]]|Interactive whiteboard software for schools and universities.|https://openboard.ch/index.en.html|{{AUR|openboard}}}}
 
 === Diary ===
 
@@ -512,10 +535,9 @@ See also [[Wikipedia:List of concept- and mind-mapping software]].
 * {{App|Minder|Mind-mapping application designed for Pantheon.|https://github.com/phase1geo/Minder/|{{Pkg|minder}}}}
 * {{App|MindMaster|Proprietary mindmap and brainstorm software with modern UI and beautiful template. It also provides online mindmap service and cross-platform sharing.|https://www.edrawsoft.com/mindmaster/|{{AUR|edrawmind-bin}}}}
 * {{App|Semantik|Mind-mapping application for KDE.|https://waf.io/semantik.html|{{AUR|semantik}}}}
-* {{App|TreeSheets|A "hierarchical spreadsheet" that is a great replacement for spreadsheets, mind mappers, outliners, PIMs, text editors and small databases.|https://strlen.com/treesheets/|{{AUR|treesheets-git}}}}
 * {{App|View Your Mind|Tool to generate and manipulate maps which show your thoughts. Such maps can help you to improve your creativity and effectivity. You can use them for time management, to organize tasks, to get an overview over complex contexts, to sort your ideas etc.|https://sourceforge.net/projects/vym/|{{Pkg|vym}}}}
 * {{App|[[Wikipedia:Visual Understanding Environment|Visual Understanding Environment]]|Flexible tools for managing and integrating digital resources in support of teaching, learning and research.|https://vue.tufts.edu/ |{{AUR|vue}}}}
-* {{App|[[Wikipedia:XMind|XMind]]|Brainstorming and mind mapping application. It provides a rich set of different visualization styles, and allows sharing of created mind maps via their website.|https://www.xmind.net/|{{AUR|xmind}}}}
+* {{App|[[Wikipedia:XMind|XMind]]|Proprietary brainstorming and mind mapping application. It provides a rich set of different visualization styles, and allows sharing of created mind maps via their website. Based on the [[Electron]] platform.|https://www.xmind.net/|{{AUR|xmind}}}}
 
 === Sticky notes ===
 
@@ -523,6 +545,7 @@ See also [[Wikipedia:List of concept- and mind-mapping software]].
 * {{App|Notes|Provides you a quick way to paste text, to write down a list of things, to leave a note to your friend, or whatever you had do with Post-It's.|https://goodies.xfce.org/projects/panel-plugins/xfce4-notes-plugin|{{Pkg|xfce4-notes-plugin}}}}
 * {{App|PrimeNote|A polished, cross-platform sticky note application written in PyQt.|https://gitlab.com/william.belanger/primenote|{{AUR|primenote-git}}}}
 * {{App|Sticky|Sticky notes app for the Linux desktop.|https://github.com/linuxmint/sticky|{{Pkg|sticky}}}}
+* {{App|Sticky Notes|Simple sticky notes app for GNOME.|https://github.com/vixalien/sticky|{{AUR|sticky-notes}}}}
 * {{App|Xpad|Sticky note application for jotting down things to remember.|https://launchpad.net/xpad|{{Pkg|xpad}}}}
 
 == Special writing environments ==
@@ -578,6 +601,7 @@ See also [[Wikipedia:Category:Dictionary software]] and [[Wikipedia:DICT#DICT cl
 * {{App|Quick Lookup|Simple GTK dictionary application powered by Wiktionary.|https://github.com/johnfactotum/quick-lookup|{{AUR|quick-lookup}}}}
 * {{App|SlobDict|Modern, lightweight GTK4 dictionary app for exploring slob-formatted dictionaries and converting when necessary.|https://github.com/MuntashirAkon/SlobDict}}
 * {{App|StarDict|International dictionary software.|https://stardict-4.sourceforge.net/|{{Pkg|stardict}}}}
+* {{App|Wordbook|Offline English-English dictionary application powered by WordNet and eSpeak.|https://apps.gnome.org/Wordbook/|{{AUR|wordbook}}}}
 * {{App|Xfce4 Dictionary|Search different kinds of dictionary services for words or phrases.|https://goodies.xfce.org/projects/applications/xfce4-dict|{{Pkg|xfce4-dict}}}}
 
 === Spell checkers ===
@@ -596,7 +620,7 @@ See also [[Wikipedia:Comparison of computer-assisted translation tools]].
 * {{App|Dialect|Translation app for GNOME based on Google Translate and other online services.|https://apps.gnome.org/Dialect/|{{Pkg|dialect}}}}
 * {{App|[[Wikipedia:Gtranslator|Gtranslator]]|Enhanced gettext po file editor for the GNOME. It handles all forms of gettext po files and includes very useful features.|https://wiki.gnome.org/Apps/Gtranslator|{{Pkg|gtranslator}}}}
 * {{App|Lokalize|Standard [[KDE]] tool for software translation. It includes basic editing of PO files, support for glossary, translation memory, project managing, etc. Part of {{Grp|kde-sdk}}.|https://apps.kde.org/lokalize/|{{Pkg|lokalize}}}}
-* {{App|[[Wikipedia:Moses (machine translation)|Moses]]|Statistical machine translation tool (language data not included).|http://statmt.org/moses/|{{AUR|mosesdecoder}}}}
+* {{App|[[Wikipedia:Moses (machine translation)|Moses]]|Statistical machine translation tool (language data not included).|http://statmt.org/moses/|{{AUR|mosesdecoder}}{{Broken package link|package not found}}}}
 * {{App|[[Wikipedia:OmegaT|OmegaT]]|General translator's tool which contains a lot of translation memory features and can give suggestions from Google Translate. It supports the following formats: HTML, Microsoft Office 2007 XML, OpenDocument, XLIFF/Okapi, MediaWiki, plain text, TMX and others.|https://omegat.org/|{{AUR|omegat}}}}
 * {{App|[[Wikipedia:Poedit|Poedit]]|Simple translation editor for gettext (PO, POT) and XLIFF.|https://poedit.net|{{Pkg|poedit}}}}
 * {{App|Pology|Set of Python tools for dealing with gettext/po-files.|https://techbase.kde.org/Localization/Tools/Pology|{{AUR|pology-git}}}}

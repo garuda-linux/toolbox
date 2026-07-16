@@ -38,7 +38,7 @@ For more about running games, related system configuration tips, see [[Gaming]].
 :* The open-source Unix port of the Haaf's Game Engine is available at [https://icculus.org/hge-unix/ icculus.org].
 * {{App|[[Wikipedia:Hollow Knight|Hollow Knight]]|2D metroidvania platform game with deep lore and hard boss battles.|https://hollowknight.com/|{{AUR|gog-hollow-knight}}}}
 * {{App|[[Wikipedia:Ib (video game)|Ib]]|Horror adventure game about a child trapped in an eldritch art museum.|https://vgperson.com/games/ib.htm|{{AUR|ib-en}}}}
-* {{App|kobodeluxe|An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.|https://www.olofson.net/kobodl/|{{AUR|kobodeluxe}}}}
+* {{App|Kobo Deluxe|An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.|https://www.olofson.net/kobodl/|{{AUR|kobodeluxe}}}}
 * {{App|Kollision|Moving a ball to avoid other balls. Part of {{Grp|kde-games}}.|https://apps.kde.org/kollision/|{{Pkg|kollision}}}}
 * {{App|KSpaceDuel|Player attempts to destroy opponent’s satellite and control their own one to keep it orbiting. Part of {{Grp|kde-games}}.|https://apps.kde.org/kspaceduel/|{{Pkg|kspaceduel}}}}
 * {{App|[[Wikipedia:The Legend of Zelda: A Link to the Past|The Legend of Zelda: A Link to the Past]]|Reversed engineered PC port of ''The Legend of Zelda: A Link to the Past'' for the Super Nintendo|https://github.com/snesrev/zelda3|{{AUR|zelda3-git}}}}
@@ -89,11 +89,13 @@ For more about running games, related system configuration tips, see [[Gaming]].
 * {{App|Pinball|Open source pinball simulator for Linux and other Unix systems.|https://pinball.sourceforge.net/|{{AUR|pinball}}}}
 * {{App|PowerManga|Arcade 2D shoot-em-up game with 41 levels and more than 200 sprites.|http://linux.tlk.fr/games/Powermanga/|{{AUR|powermanga}}}}
 * {{App|Quadrapassel|A [[wikipedia:Tetris|Tetris]] remake. Fit falling blocks together. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Quadrapassel|{{Pkg|quadrapassel}}}}
+* {{App|Space Cadet Pinball|Reverse engineering of "3D Pinball for Windows - Space Cadet", a game bundled with Windows.|https://github.com/k4zmu2a/SpaceCadetPinball|{{AUR|spacecadetpinball-git}}}}
 * {{App|Streets of Rage Remake|A remake of the classic Streets of Rage 1, 2 and 3 by Sega.|https://sorr.forumotion.net/|{{AUR|streetsofrageremake}}}}
 * {{App|Tecnoballz|An exciting brick breaker game.|https://linux.tlk.fr/games/TecnoballZ/|{{AUR|tecnoballz}}}}
 * {{App|[[Wikipedia:Teeworlds|Teeworlds]]|Fast-paced 2D multiplayer shooter.|https://www.teeworlds.com/|{{Pkg|teeworlds}}}}
 * {{App|Tetrinet|Multiplayer online Tetris game for up to six people.|https://gtetrinet.sourceforge.net/|{{AUR|gtetrinet}},{{pkg|tetrinet}}}}
 * {{App|Trackballs|A 3D marble game inspired by the classic Marble Madness.|https://trackballs.github.io/|{{AUR|trackballs}}}}
+* {{App|TuxPuck|Air hockey game, clone of the Amiga/Atari ST game [[Wikipedia:Shufflepuck Café|Shufflepuck Café]].|https://wiki.debian.org/Games/TuxPuck|{{AUR|tuxpuck}}}}
 * {{App|vpinball|An open source pinball table editor and simulator|https://github.com/vpinball/vpinball|{{AUR|vpinball}}}}
 * {{App|Warmux (previously ''Wormux'')|Somewhat similar to Worms 2/Worms Armageddon.|https://github.com/a-team/wormux/|{{AUR|warmux}}}}
 * {{App|XInvaders3D|XInvaders3D is a 3D Vector Graphics Space Invaders clone for X11.|https://github.com/JoesCat/xinvaders3d|{{AUR|xinvaders3d}}}}
@@ -101,7 +103,7 @@ For more about running games, related system configuration tips, see [[Gaming]].
 == Casual games ==
 
 * {{App|Aisleriot|A collection of solitaire card games.|https://wiki.gnome.org/Apps/Aisleriot|{{Pkg|aisleriot}}}}
-* {{App|Atanks|A multi-platform Scorched Earth clone similar to the Worms series of games.|https://atanks.sourceforge.net/|{{AUR|atanks}}}}
+* {{App|Atomic Tanks|A multi-platform Scorched Earth clone similar to the Worms series of games.|https://atanks.sourceforge.net/|{{AUR|atanks}}}}
 * {{App|bs|Battleships based shooter for the console.|http://www.catb.org/~esr/bs/|{{AUR|bs}}}}
 * {{App|BSD Games|Collection of classic text games distributed with *BSD|[[LQWiki:BSD games]]|{{Pkg|bsd-games}}}}
 * {{App|Kajongg|An implementation of [[wikipedia:Mahjong|Mahjong]] for 4 players. Part of {{Grp|kde-games}}.|https://apps.kde.org/kajongg/|{{Pkg|kajongg}}}}
@@ -114,7 +116,9 @@ For more about running games, related system configuration tips, see [[Gaming]].
 * {{App|nInvaders|Ncurses based space invaders clone.|https://ninvaders.sourceforge.net/|{{AUR|ninvaders}}}}
 * {{App|Pasang Emas|Pasang-emas is a traditional two-player board game of Brunei.|https://pasang-emas.sourceforge.net/index.xhtml|{{AUR|pasang-emas}}}}
 * {{App|[[Wikipedia:PokerTH|PokerTH]]|A libre Texas hold em' poker simulator with network and bot support.|https://www.pokerth.net|{{AUR|pokerth}}}}
+* {{App|PySol Fan Club Edition|A collection of more than 1200 Solitaire games, using various deck types including international standard, hex-a-deck, mahjongg, and hanafuda.|https://pysolfc.sourceforge.io/|{{Pkg|pysolfc}}}}
 * {{App|QCheckers|Qt-based checkers boardgame.|https://github.com/portnov/qcheckers|{{AUR|qcheckers}}}}
+* {{App|Solitaire|Features simple interface to play a variety of patience games, also known as solitaire games.|https://gitlab.gnome.org/wwarner/Solitaire|{{AUR|solitaire}}}}
 * {{App|Tali|Beat the odds in a poker-style dice game. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Tali|{{Pkg|tali}}}}
 * {{App|xroach|cockroaches hide under your windows.|https://github.com/sergev/4.4BSD-Lite2/tree/master/usr/src/games/xroach|{{AUR|xroach}}}}
 
@@ -128,10 +132,13 @@ For more about running games, related system configuration tips, see [[Gaming]].
 * {{App|GNU XBoard|Graphical user interface that supports many chess variants and serves as a front-end for chess services such as engines.|https://www.gnu.org/software/xboard/|{{Pkg|xboard}}}}
 * {{App|Knights|Chess board by KDE with XBoard and UCI protocol support. Part of {{Grp|kde-games}}.|https://apps.kde.org/knights/|{{Pkg|knights}}}}
 * {{App|PyChess|An advanced chess client for linux following the GNOME Human Interface Guidelines.|https://pychess.github.io/|{{Pkg|pychess}}}}
+* {{App|SCID|Shane's Chess Information Database is a chess database application that allows users to store, organize, and search through large collections of chess games. It also includes chess engines for playing against the computer and analyzing positions.|https://scid.sourceforge.net/|{{AUR|scid}}}}
+* {{App|scidCommunity|Powerful chess analysis and database program. Originally derived from SCID. It allows you to store, organize, and search through large collections of chess games with support for any compatible UCI chess engine.|https://github.com/whelanh/scidCommunity|{{AUR|scidcommunity}}}}
 * {{App|Scidb|Chess database browser: includes engines for chess, chess960, etc; import from PGN, Scid, Chessbase, etc; CQL++ searching.|https://sourceforge.net/projects/scidb/|{{AUR|scidb-svn}}}}
 
 == Digital collectible card game (DCCG) ==
 
+* {{App|Cockatrice|Virtual tabletop for multiplayer card games.|https://cockatrice.github.io/|{{AUR|cockatrice-client-stable}}}}
 * {{App|Duelyst|is a digital collectible card game and turn-based strategy hybrid, developed by Counterplay Games.|https://github.com/open-duelyst/duelyst|{{AUR|open-duelyst-bin}}}}
 
 == Education ==
@@ -187,7 +194,7 @@ See also [[Minecraft]].
 * {{App|[[Minecraft]]|Java based sandbox game.|https://minecraft.net/|{{AUR|minecraft-launcher}}}}
 * {{App|Repixture|Simplistic sandbox survival game that plays in mostly lush biomes in a mostly peaceful world and only simple technologies.|https://content.luanti.org/packages/Wuzzy/repixture/|{{AUR|minetest-repixture}}}}
 * {{App|Terasology|Open source voxel world.|https://terasology.org|{{AUR|terasology}}}}
-* {{App|Vintage Story|An in-development indie sandbox game about innovation and exploration.|https://www.vintagestory.at/|{{AUR|vintagestory}}}}
+* {{App|Vintage Story|An in-development proprietary indie sandbox game about innovation and exploration.|https://www.vintagestory.at/|{{AUR|vintagestory}}}}
 * {{App|Voxelands|A fork of Minetest, an Infiniminer/Minecraft inspired game.|https://gitlab.com/voxelands/voxelands|{{AUR|voxelands}}}}
 * {{App|VoxeLibre|Minecraft clone game for Luanti.|https://git.minetest.land/VoxeLibre/VoxeLibre|{{AUR|luanti-voxelibre}}}}
 * {{App|WolkenWelten|Gamemix between Minecraft, Quake ]I[ and Emacs in C99.|https://wolkenwelten.net/|{{AUR|wolkenwelten-git}}}}
@@ -200,11 +207,13 @@ See also [[Minecraft]].
 * {{App|KGoldrunner|A platform game with the goal of collecting gold. Part of {{Grp|kde-games}}.|https://apps.kde.org/kgoldrunner/|{{Pkg|kgoldrunner}}}}
 * {{App|Knyttstories|Platformer with adventure elements, heavy exploration and downloadable levels.|https://nifflas.ni2.se/?page{{=}}Knytt+Stories{{Dead link|2025|01|22|status=SSL error}}|{{AUR|knyttstories}}}}
 * {{App|Project Sushi|A short but challenging 2D platformer game.|https://www.patreon.com/posts/33983587|{{AUR|project-sushi}}}}
+* {{App|[[Wikipedia:Sonic Robo Blast 2|Sonic Robo Blast 2]]|A 3D Sonic the Hedgehog fangame based on a modified version of Doom Legacy.|https://www.srb2.org/|{{AUR|srb2}}}}
 * {{App|Super Mario Bros. Remastered|Recreation of the original Super Mario Bros.|https://github.com/JHDev2006/Super-Mario-Bros.-Remastered-Public|{{AUR|smb1r-bin}}}}
 * {{App|[[Wikipedia:Super Mario World|Super Mario World]]|Reverse engineered implementation of ''Super Mario World'' for the Super Nintendo|https://github.com/snesrev/smw|{{AUR|smw}}}}
 * {{App|SuperTux|Mario-style game featuring Tux.|https://supertux.lethargik.org/|{{Pkg|supertux}}}}
 * {{App|The Legend of Edgar|2D platformer: Venture across the world, battle fearsome creatures and solve puzzles to rescue your father.|https://www.parallelrealities.co.uk/games/edgar/|{{AUR|legendofedgar}}}}
 * {{App|Toppler|Reimplementation of the classic jump & run game "Nebulus".|https://gitlab.com/roever/toppler/|{{AUR|toppler}}}}
+* {{App|[[Wikipedia:X-Moto|XMoto]]|Challenging 2D motocross platform game, where physics play an important role.|https://xmoto.tuxfamily.org/|{{AUR|xmoto}}}}
 
 == Puzzle ==
 
@@ -216,6 +225,7 @@ See also [[Minecraft]].
 * {{App|Cgoban3|Kiseido Go and SGF client.|http://www.igoweb.org/~wms/comp/cgoban/|{{AUR|cgoban}}}}
 * {{App|Chroma|Puzzle game like Sokoban with ncurses and graphics mode.|https://www.level7.org.uk/chroma/|{{AUR|chroma}}}}
 * {{App|Crack Attack!|Free OpenGL game based on the Super Nintendo classic Tetris Attack.|http://www.aluminumangel.org/attack/|{{AUR|crack-attack}}}}
+* {{App|Crosswords|[[Wikipedia:Crossword|Crossword]] player and editor for GNOME.|https://gitlab.gnome.org/jrb/crosswords|{{AUR|crosswords}}}}
 * {{App|[[Wikipedia:Fish Fillets|Fish Fillets]]|Port of the wonderful puzzle game Fish Fillets.|http://fillets.sf.net/|{{Pkg|fillets-ng}}}}
 * {{App|Five or More|GNOME port of the once popular Windows game called Color Lines. The game's objective is to align as often as possible five or more objects of the same color and shape causing them to disappear. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Five(20)or(20)more|{{Pkg|five-or-more}}}}
 * {{App|Flying Robots|Avoid killer robots. Similar to bsd-robots but with the possibility to move in a third dimension.|https://github.com/bunburya/flying-robots|{{AUR|flying-robots}}}}
@@ -255,6 +265,7 @@ See also [[Minecraft]].
 * {{App|Lix|Lemmings clone, i.e. assign roles to some of many constantly walking creatures to lead them safely through the exit.|https://www.lixgame.com/|{{AUR|lix}}}}
 * {{App|Marvellous Inc.|MarvInc is a zachlike puzzle game with a story told through emails.|https://github.com/MarvellousSoft/MarvInc|{{AUR|marvinc-git}}}}
 * {{App|nudoku|ncurses-based sudoku game.|https://jubalh.github.io/nudoku/|{{AUR|nudoku}}}}
+* {{App|Numpty Physics|A crayon-drawing based physics puzzle game.|https://gitlab.com/thp/numptyphysics|{{AUR|numptyphysics}}}}
 * {{App|Palapeli|Jigsaw puzzle game. Part of {{Grp|kde-games}}.|https://apps.kde.org/palapeli/|{{Pkg|palapeli}}}}
 * {{App|Picmi|Nonogram puzzle game. Part of {{Grp|kde-games}}.|https://apps.kde.org/picmi/|{{Pkg|picmi}}}}
 * {{App|Pingus|Lemmings clone, i.e. a level-based puzzle game.|https://pingus.seul.org/|{{Pkg|pingus}}}}
@@ -263,6 +274,7 @@ See also [[Minecraft]].
 * {{App|Sabaki|An elegant Go board and SGF editor for a more civilized age.|https://github.com/SabakiHQ/Sabaki|{{AUR|sabaki}}}}
 * {{App|Simon Tatham's Portable Puzzle Collection|30+ "quick" puzzle games with simplistic but polished GTK GUI .|https://www.chiark.greenend.org.uk/~sgtatham/puzzles/|{{Pkg|puzzles}}}}
 * {{App|Skladnik|The Japanese warehouse keeper [[Wikipedia:Sokoban|Sokoban]] game. Part of {{Grp|kde-games}}.|https://apps.kde.org/skladnik/|{{Pkg|skladnik}}}}
+* {{App|Sudoku|A modern [[wikipedia:Sudoku|Sudoku]] app built with Python, GTK4 and libadwaita.|https://apps.gnome.org/Sudoku/|{{AUR|sudoku-gtk4}}}}
 * {{App|Swell Foop|Clear the screen by removing groups of colored and shaped tiles. Also known as [[wikipedia:SameGame|SameGame]]. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Swell(20)Foop|{{Pkg|swell-foop}}}}
 * {{App|[[Wikipedia:VVVVVV|VVVVVV]]|Highly praised 2D puzzle platform indie game with a C64 retro theme, with a great chiptune soundtrack.|https://thelettervsixtim.es/|{{AUR|vvvvvv-git}}}}
 * {{App|[[Wikipedia:World of Goo|World of Goo]]|Great 2D puzzle game.|https://www.2dboy.com|{{AUR|worldofgoo}}}}
@@ -272,12 +284,14 @@ See also [[Minecraft]].
 == Racing ==
 
 * {{App|Armagetron Advanced|Tron Clone in 3D.|http://armagetronad.org/|{{Pkg|armagetronad}}}}
+* {{App|Dr. Robotnik's Ring Racers|Kart racing video game originally based on the 3D Sonic the Hedgehog fangame Sonic Robo Blast 2.|https://www.kartkrew.org/|{{AUR|ringracers}}}}
 * {{App|Extreme Tux Racer|3D game where you guide Tux the penguin down a course of snow and ice collecting herring.|https://sourceforge.net/projects/extremetuxracer|{{AUR|extremetuxracer}}}}
 * {{App|Maniadrive|Arcade car game on acrobatic tracks with quick and nervous gameplay.|http://maniadrive.raydium.org/|{{AUR|maniadrive}}}}
 * {{App|Moon Buggy|Simple game for the text mode.|https://www.seehuhn.de/pages/moon-buggy.html|{{AUR|moon-buggy}}}}
 * {{App|Q3Rally|A car driving and car combat game based on the Quake III Arena engine.|https://sourceforge.net/projects/q3rallysa/|{{AUR|quake3-rally}}}}
 * {{App|Rigs of Rods|Sandbox-style vehicle simulator, the open-source predecessor to [https://www.beamng.com/ Beam.NG drive]. Features a realistic soft-body physics model, and an active modding community as of 2020.|https://www.rigsofrods.org/|{{AUR|rigsofrods}}}}
 * {{App|RVGL|Rewrite of Re-Volt, popular 3D RC car racing game from 1999 with an active online community.|https://rvgl.re-volt.io/|4={{AUR|rvgl-bin}}, [https://aur.archlinux.org/packages/?O=0&K=rvgl- all content packs in AUR]}}
+* {{App|Sonic Robo Blast 2 Kart|Kart racing mod based on the 3D Sonic the Hedgehog fangame Sonic Robo Blast 2.|https://wiki.srb2.org/wiki/SRB2Kart|{{AUR|srb2kart}}}}
 * {{App|Speed Dreams|Fork of Torcs, aiming to implement exciting new features as well as improving realism.|http://speed-dreams.org/|{{AUR|speed-dreams-appimage}}}}
 * {{App|Stunt Rally|Racing game with rally style of driving, mostly on gravel.|https://stuntrally.tuxfamily.org/|{{AUR|stuntrally-git}}}}
 * {{App|SuperTuxKart|Open source arcade kart racing game featuring Tux and its friends.|https://supertuxkart.net/Main_Page|{{Pkg|supertuxkart}}}}
@@ -285,7 +299,6 @@ See also [[Minecraft]].
 * {{App|Trigger Rally|Free OpenGL rally car racing game.|https://sourceforge.net/projects/trigger-rally/|{{AUR|trigger}}}}
 * {{App|Ultimate Stunts|Remake of the famous DOS-game 'stunts'.|http://www.ultimatestunts.nl/|{{AUR|ultimatestunts}}}}
 * {{App|VDrift|Open source driving simulation made with drift racing in mind.|https://vdrift.net/|{{AUR|vdrift}}}}
-* {{App|[[Wikipedia:X-Moto|XMoto]]|Challenging 2D motocross platform game, where physics play an important role.|https://xmoto.tuxfamily.org/|{{AUR|xmoto}}}}
 
 == Rhythm ==
 
@@ -310,7 +323,7 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 * {{App|Cataclysm: Bright Nights|A fork/variant of Cataclysm:DDA by CleverRaven.|https://github.com/cataclysmbnteam/Cataclysm-BN|graphical: {{AUR|cataclysm-bn-tiles}}, curses:{{AUR|cataclysm-bn}}}}
 * {{App|[[Wikipedia:Cataclysm: Dark Days Ahead|Cataclysm: Dark Days Ahead]]|Post-apocalyptic roguelike focusing on realism.|https://cataclysmdda.org/|graphical: {{Pkg|cataclysm-dda-tiles}}, curses: {{Pkg|cataclysm-dda}}}}
 * {{App|[[Wikipedia:DoomRL|DoomRL]]|Simple roguelike game, based on Doom. Perfect for starters.|https://drl.chaosforge.org/|{{AUR|drl}}}}
-* {{App|[[Wikipedia:Dwarf Fortress|Dwarf Fortress]]|Single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world.|https://www.bay12games.com/dwarves/|{{Pkg|dwarffortress}}}}
+* {{App|[[Dwarf Fortress]]|Single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world.|https://www.bay12games.com/dwarves/|{{Pkg|dwarffortress}}}}
 * {{App|glHack|An OpenGL-based clone of NetHack.|https://glhack.sourceforge.net/|{{Pkg|glhack}}}}
 * {{App|HyperRogue|The non-Euclidean roguelike, is a mind-melting masterpiece.|https://www.roguetemple.com/z/hyper/|{{AUR|hyperrogue}}}}
 * {{App|Infra-Arcana|A game inspired by the writings of H.P. Lovecraft.|https://sites.google.com/site/infraarcana/|{{AUR|infra-arcana}}}}
@@ -418,6 +431,7 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 * {{App|[[Wikipedia:Warsow (game)|Warsow]]|Fast paced multiplayer FPS focusing on movement and trick jumps.|https://warsow.net|{{Pkg|warsow}}}}
 * [[Wikipedia:Wolfenstein 3D|Wolfenstein 3D]]
 :* {{App|ECWolf|Advanced source port.|:https://maniacsvault.net/ecwolf/|{{AUR|ecwolf}}}}
+* {{App|Wolfenstein: Blade of Agony|Story-driven FPS inspired by WWII shooters from the 90's and early 2000's.|https://gitlab.com/linuxbombay/wolfboa|{{AUR|wolfboa}}}}
 * [[Wolfenstein: Enemy Territory]]
 :* Completely free, standalone, team-based, multiplayer FPS &ndash; {{AUR|enemy-territory}}
 :* Advanced open source project and fully compatible client and server &ndash; {{AUR|etlegacy32}}
@@ -467,13 +481,14 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 * {{App|[[Wikipedia:Spring_Engine#Kernel_Panic|Kernel Panic]]|A game based around combat inside a computer, with 3 unique sides: the System, the Hacker and the Network waging war in a matrix of DOOM! No resource economy exists in KP, with the only constraints being time and space.|https://springrts.com/wiki/Kernel_Panic|{{Pkg|springlobby}}}}
 * {{App|[[Wikipedia:MegaGlest|MegaGlest]]|Fork of Glest, a 3D real-time strategy game in a fantastic world.|https://megaglest.org/|{{Pkg|megaglest}}}}
 * {{App|Mindustry|Open-source sandbox tower defense and factory-building game.|https://mindustrygame.github.io/|{{AUR|mindustry}}}}
-* {{App|NetPanzer|An online multiplayer tactical warfare game designed for fast action combat.|https://github.com/netpanzer/netpanzer|{{AUR|netpanzer-appimage}}}}
+* {{App|NetPanzer|An online multiplayer tactical warfare game designed for fast action combat.|https://github.com/netpanzer/netpanzer|{{AUR|netpanzer-appimage}}{{Broken package link|package not found}}}}
 * {{App|openage|A free (as in freedom) clone of the Age of Empires II engine.|https://openage.sft.mx/|{{AUR|openage-git}}}}
 * {{App|OpenDUNE|Open source re-creation of the popular game Dune II.|http://www.opendune.org/|{{AUR|opendune}}}}
 * {{App|OpenHV|Pixelart Science-Fiction Real-Time-Strategy game based on OpenRA.|https://www.openhv.net/|{{AUR|openhv}}}}
 * {{App|[[Wikipedia:OpenRA|OpenRA]]|Real-time strategy game written in C# and based on the Command & Conquer game franchise.|https://www.openra.net/|{{Pkg|openra}}}}
 * {{App|Seven Kingdoms Ancient Adversaries|Conquer the world and build your empire! Lead one civilization to glory through sophisticated trade, diplomacy, espionage and conquest.|https://7kfans.com/|{{AUR|7kaa}}}}
 * {{App|[[Wikipedia:Spring_Engine#Spring:1944|Spring:1944]]|A WWII themed game with four fully functional sides (US, Germany, USSR, Britain), period-accurate units and strengths. Realism comes second only to creating a game that is fun and accessible to play. The game can be downloaded through SpringLobby, the official lobby client for the spring lobby.|https://spring1944.net/|{{Pkg|springlobby}}}}
+* {{App|Unciv|Open-source reimplementation of [[Wikipedia:Civilization V|Civilization V]], the most famous civilization-building game ever.|https://github.com/yairm210/Unciv/|{{AUR|unciv}}}}
 * {{App|[[Wikipedia:Unknown Horizons|Unknown Horizons]]|2.5D isometric real-time strategy simulation with an emphasis on economy and city building. Expand your small settlement to a strong and wealthy colony, collect taxes and supply your inhabitants with valuable goods. Increase your power with a well balanced economy and with strategic trade and diplomacy.|http://www.unknown-horizons.org/|{{AUR|unknown-horizons}}}}
 * {{App|Warzone 2100|You command the forces of The Project in a battle to rebuild the world after mankind has almost been destroyed by nuclear missiles. The game offers campaign, multi-player, and single-player skirmish modes. An extensive tech tree with over 400 different technologies, combined with the unit design system, allows for a wide variety of possible units and tactics. The AUR package installs its videos ({{Bug|55310}}).|https://wz2100.net/|{{Pkg|warzone2100}}, {{AUR|warzone2100-sequences}}}}
 * {{App|[[Wikipedia:Widelands|Widelands]]|Slow-paced strategy like "the Settlers 2".|https://widelands.org|{{Pkg|widelands}}}}
@@ -483,6 +498,7 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 === Turn-based ===
 
 * {{App|Ancient Beast|Turn Based Strategy Game. Master your beasts!|https://ancientbeast.com/|{{AUR|ancientbeast}}}}
+* {{App|Atlantik|KDE client for playing [[Wikipedia:Monopoly (game)|Monopoly]]-like network board games using the monopd server.|https://apps.kde.org/atlantik/|{{AUR|atlantik-git}}}}
 * {{App|[[Wikipedia:C-evo|C-evo]]|A civilization style game, of the Civ II era.|http://www.c-evo.org|{{AUR|c-evo-dh}}}}
 * {{App|Dealer's Choice|Online Multiplayer Stud and Draw Poker, where the deal rotates and each new game allows a different player to select the variant.|https://dealer-s-choice.github.io/|{{AUR|dealers-choice}}}}
 * {{App|fheroes2|Attempt to reimplement the [[Wikipedia:Heroes of Might and Magic II|Heroes of Might and Magic II]] engine using SDL.|https://ihhub.github.io/fheroes2/|{{AUR|fheroes2}}}}
@@ -499,9 +515,11 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 :* Mods for Open X-COM and OXCE &ndash; {{AUR|openxcom-mod-40k}}, {{AUR|openxcom-mod-area51}}, {{AUR|openxcom-mod-twots}}, {{AUR|openxcom-mod-xfiles}}, {{AUR|openxcom-mod-xpiratez}}
 * {{App|Pioneers|A clone of the famous Settlers of Catan game with on-line functionality.|https://pio.sourceforge.net/|{{AUR|pioneers}}}}
 * {{App|Signus|''Signus: The Artefact Wars'' classic turn-based strategy war game similar to the old ''Battle Isle'' series.|https://github.com/signus-game/signus/|{{AUR|signus}}}}
+* {{App|Slingshot|Two dimensional, turn based simulation-strategy game set in the gravity fields of several planets.|https://github.com/ryanakca/slingshot|{{AUR|slingshot-python3}}}}
 * {{App|[[Wikipedia:The Battle for Wesnoth|The Battle for Wesnoth]]|Free, turn-based tactical strategy game with a high fantasy theme, featuring both single-player, and online/hotseat multiplayer combat.|https://www.wesnoth.org/|{{Pkg|wesnoth}}}}
 * {{App|TripleA|An online multiplayer turn based strategy game and board game engine.|https://triplea-game.org/|{{AUR|triplea}}}}
-* {{App|VCMI|Attempt to reimplement [[Wikipedia:Heroes of Might and Magic III|Heroes of Might and Magic III]].|https://forum.vcmi.eu/portal.php|{{AUR|vcmi}}}}
+* {{App|Ultimate Tic Tac Toe|Play [[Wikipedia:Ultimate tic-tac-toe|Ultimate tic-tac-toe]] with your friends or against the algorithm.|https://github.com/Nokse22/ultimate-tic-tac-toe|{{AUR|ultimate-tic-tac-toe}}}}
+* {{App|VCMI|Attempt to reimplement [[Wikipedia:Heroes of Might and Magic III|Heroes of Might and Magic III]].|https://vcmi.eu/|{{AUR|vcmi}}}}
 
 == Tycoon/management games ==
 

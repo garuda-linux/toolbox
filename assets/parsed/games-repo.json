@@ -178,6 +178,15 @@
     "aur": false
   },
   {
+    "name": "cutechess",
+    "description": "A graphical user interface, command-line interface and a library for playing chess.",
+    "url": "https://github.com/cutechess/cutechess",
+    "pkgname": [
+      "cutechess"
+    ],
+    "aur": false
+  },
+  {
     "name": "DDNet",
     "description": "DDraceNetwork, a mod of Teeworlds.",
     "url": "https://ddnet.tw/",
@@ -752,7 +761,7 @@
     "aur": false
   },
   {
-    "name": "kobodeluxe",
+    "name": "Kobo Deluxe",
     "description": "An enhanced version of Akira Higuchi's game XKobo, an addictive space shoot'em up.",
     "url": "https://www.olofson.net/kobodl/",
     "pkgname": [
@@ -1085,6 +1094,15 @@
     "aur": false
   },
   {
+    "name": "PySol Fan Club Edition",
+    "description": "A collection of more than 1200 Solitaire games, using various deck types including international standard, hex-a-deck, mahjongg, and hanafuda.",
+    "url": "https://pysolfc.sourceforge.io/",
+    "pkgname": [
+      "pysolfc"
+    ],
+    "aur": false
+  },
+  {
     "name": "qgo",
     "description": "A Go client and full featured SGF editor.",
     "url": "https://github.com/pzorin/qgo",
@@ -1121,6 +1139,15 @@
     "aur": false
   },
   {
+    "name": "SCID",
+    "description": "Shane's Chess Information Database is a chess database application that allows users to store, organize, and search through large collections of chess games. It also includes chess engines for playing against the computer and analyzing positions.",
+    "url": "https://scid.sourceforge.net/",
+    "pkgname": [
+      "scid"
+    ],
+    "aur": false
+  },
+  {
     "name": "Shattered Pixel Dungeon",
     "description": "Shattered fork of the popular roguelike Pixel Dungeon.",
     "url": "https://www.shatteredpixel.com/",
@@ -1153,6 +1180,24 @@
     "url": "https://apps.kde.org/skladnik/",
     "pkgname": [
       "skladnik"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Sonic Robo Blast 2",
+    "description": "A 3D Sonic the Hedgehog fangame based on a modified version of Doom Legacy.",
+    "url": "https://www.srb2.org/",
+    "pkgname": [
+      "srb2"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Sonic Robo Blast 2 Kart",
+    "description": "Kart racing mod based on the 3D Sonic the Hedgehog fangame Sonic Robo Blast 2.",
+    "url": "https://wiki.srb2.org/wiki/SRB2Kart",
+    "pkgname": [
+      "srb2kart"
     ],
     "aur": false
   },
@@ -1258,7 +1303,7 @@
   {
     "name": "VCMI",
     "description": "Attempt to reimplement Heroes of Might and Magic III.",
-    "url": "https://forum.vcmi.eu/portal.php",
+    "url": "https://vcmi.eu/",
     "pkgname": [
       "vcmi"
     ],

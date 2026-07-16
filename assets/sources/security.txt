@@ -17,37 +17,20 @@ For detailed guides, see the main ArchWiki page, [[Security]].
 See also [[Wikipedia:Comparison of packet analyzers]].
 
 * {{App|airgeddon|Multi-use bash script to audit wireless networks|https://github.com/v1s1t0r1sh3r3/airgeddon|{{AUR|airgeddon}}}}
-* {{App|[[Wikipedia:Arpwatch|Arpwatch]]|Tool that monitors ethernet activity and keeps a database of Ethernet/IP address pairings.|https://ee.lbl.gov/|{{Pkg|arpwatch}}}}
 * {{App|bettercap|Swiss army knife for network attacks and monitoring.|https://www.bettercap.org/|{{Pkg|bettercap}}}}
-* {{App|darkstat|Captures network traffic, calculates statistics about usage, and serves reports over HTTP.|https://unix4lyfe.org/darkstat/|{{Pkg|darkstat}}}}
 * {{App|[[Wikipedia:dSniff|dsniff]]|Collection of tools for network auditing and penetration testing.|https://www.monkey.org/~dugsong/dsniff/|{{Pkg|dsniff}}}}
-* {{App|[[Wikipedia:EtherApe|EtherApe]]|Graphical network monitor for Unix modeled after etherman. Featuring link layer, IP and TCP modes, it displays network activity graphically. Hosts and links change in size with traffic. Color coded protocols display.|https://etherape.sourceforge.io/|{{Pkg|etherape}}}}
 * {{App|[[Wikipedia:Ettercap (software)|Ettercap]]|Multipurpose Network sniffer/analyser/interceptor/logger.|https://www.ettercap-project.org/|CLI: {{Pkg|ettercap}}, GUI: {{Pkg|ettercap-gtk}}}}
-* {{App|GNOME Network Tools|GNOME interface for various networking tools.|https://gitlab.gnome.org/Archive/gnome-nettool|{{Pkg|gnome-nettool}}}}
 * {{App|hping|Command-line oriented TCP/IP packet assembler/analyzer.|https://www.hping.org/|{{Pkg|hping}}}}
-* {{App|IPTraf|Console-based network monitoring utility.|https://sourceforge.net/projects/iptraf-ng/|{{Pkg|iptraf-ng}}}}
-* {{App|jnettop|top-like console network traffic visualizer.|https://sourceforge.net/projects/jnettop/|{{Pkg|jnettop}}}}
 * {{App|[[Wikipedia:justniffer|justniffer]]|Network protocol analyzer that captures network traffic and produces logs in a customized way, can emulate Apache web server log files, track response times and extract all "intercepted" files from the HTTP traffic.|https://sourceforge.net/projects/justniffer/|{{AUR|justniffer}}}}
 * {{App|Kismet|802.11 layer2 wireless network detector, sniffer, and intrusion detection system.|https://www.kismetwireless.net/|{{Pkg|kismet}}}}
-* {{App|LinSSID|Graphical wireless scanner.|https://sourceforge.net/projects/linssid/|{{Pkg|linssid}}}}
 * {{App|Nemesis|Command-line network packet crafting and injection utility.|https://nemesis.sourceforge.net/|{{AUR|nemesis}}}}
-* {{App|Net Activity Viewer|Graphical network connections viewer, similar in functionality with Netstat.|https://netactview.sourceforge.net/|{{AUR|netactview}}}}
-* {{App|[[Wikipedia:netsniff-ng|netsniff-ng]]|High performance Linux network sniffer for packet inspection.|http://netsniff-ng.org/|{{Pkg|netsniff-ng}}}}
-* {{App|[[Wikipedia:ngrep|ngrep]]|grep-like utility that allows you to search for network packets on an interface.|https://github.com/jpr5/ngrep|{{Pkg|ngrep}}}}
 * {{App|[[Nmap]]|Security scanner used to discover hosts and services on a computer network, thus creating a "map" of the network.|https://nmap.org/|CLI: {{Pkg|nmap}}, GUI: {{Pkg|zenmap}}}}
-* {{App|[[Ntop]]|Network probe that shows network usage in a way similar to what top does for processes.|https://www.ntop.org/|{{AUR|ntop}}}}
-* {{App|pyNeighborhood|GTK-based SMB/CIFS browsing utility.|https://launchpad.net/pyneighborhood|{{AUR|pyneighborhood}}}}
+* {{App|ooniprobe-cli|Official OONI Probe CLI for detecting internet censorship, website blocking, and traffic manipulation.|https://ooni.org/ |{{AUR|ooniprobe-cli}}}}
 * {{App|reaction|A daemon that scans program outputs for repeated patterns, and takes action. A lightweight alternative to fail2ban.|https://framagit.org/ppom/reaction|{{AUR|reaction}}}}
-* {{App|Smb4K|Advanced network neighborhood browser and Samba share mounting utility for KDE.|https://apps.kde.org/smb4k/|{{Pkg|smb4k}}}}
 * {{App|[[Snort]]|Network intrusion prevention and detection system.|https://www.snort.org/|{{AUR|snort}}}}
-* {{App|Spectools|A set of utilities for spectrum analyzer hardware including Wi-Spy devices.|https://www.kismetwireless.net/static/spectools/|{{AUR|spectools}}}}
 * {{App|ssh-audit|SSH configuration auditing.|https://github.com/jtesta/ssh-audit/|{{Pkg|ssh-audit}}}}
 * {{App|[[Sshguard]]|Daemon that protects SSH and other services against brute-force attacks, similar to Fail2ban.|https://www.sshguard.net/|{{Pkg|sshguard}}}}
 * {{App|[[Suricata]]|High performance Network IDS, IPS and Network Security Monitoring engine.|https://suricata.io/|{{AUR|suricata}}}}
-* {{App|[[Tcpdump]]|Common console-based packet analyzer that allows the user to intercept and display TCP/IP and other packets being transmitted or received over a network.|https://www.tcpdump.org/|{{Pkg|tcpdump}}}}
-* {{App|[[vnStat]]|Console-based network traffic monitor that keeps a log of network traffic for the selected interfaces.|https://humdi.net/vnstat/|{{Pkg|vnstat}}}}
-* {{App|What IP|Small GTK application to get info on your IP.|https://gabmus.gitlab.io/whatip/|{{AUR|whatip}}}}
-* {{App|[[Wireshark]]|Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.|https://www.wireshark.org/|CLI: {{Pkg|wireshark-cli}}, GUI: {{Pkg|wireshark-qt}}}}
 * {{App|[[Wikipedia:Xplico|Xplico]]|Network forensics analysis tool (NFAT), which is a software that reconstructs the contents of acquisitions performed with a packet sniffer.|https://www.xplico.org/|{{AUR|xplico}}}}
 * {{App|Zeek|Powerful network analysis framework that is much different from the typical IDS you may know.|https://zeek.org/|{{AUR|zeek}}}}
 
@@ -79,6 +62,7 @@ See [[nftables#Front-ends]] (or [[iptables#Front-ends]] for the legacy framework
 * {{App|[[ClamAV]]|Open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.|https://www.clamav.net/|{{Pkg|clamav}}}}
 * {{App|ClamTk|Graphical front-end for ClamAV using Perl and Gtk libraries. It is designed to be an easy-to-use, lightweight, on-demand antivirus scanner for Linux systems.|https://gitlab.com/dave_m/clamtk/|{{Pkg|clamtk}}, Nautilus plugin: {{AUR|clamtk-gnome}}, Thunar plugin: {{AUR|thunar-sendto-clamtk}}}}
 * {{App|Hostsblock|A script that downloads, sorts, and compiles multiple ad- and malware-blocking {{ic|hosts}} files.|https://gaenserich.github.io/hostsblock/|{{AUR|hostsblock}}}}
+* {{App|Lenspect|Lightweight security threat scanner powered by VirusTotal.|https://github.com/vmkspv/lenspect|{{AUR|lenspect}}}}
 * {{App|Linux Malware Detect|Malware scanner designed around the threats faced in shared hosted environments.|https://www.rfxn.com/projects/linux-malware-detect/|{{AUR|maldet}}}}
 * {{App|[[Rkhunter|Rootkit Hunter]]|Checks machines for the presence of rootkits and other unwanted tools.|https://rkhunter.sourceforge.net/|{{Pkg|rkhunter}}}}
 
@@ -124,7 +108,7 @@ See also [[Session lock]].
 
 === Console ===
 
-* {{App|[[1Password]]|Proprietary tool for 1Password password manager.|https://1password.com/downloads/command-line/|{{AUR|1password}}}}
+* {{App|[[1Password]] CLI|Proprietary tool for 1Password password manager.|https://1password.com/downloads/command-line/|{{AUR|1password-cli}}}}
 * {{App|Bitwarden|Open source password manager with desktop, mobile, browser, and CLI versions. Cloud or self-hosted.|https://bitwarden.com/|{{Pkg|bitwarden-cli}}}}
 * {{App|gopass|Advanced console based password manager, supporting GnuPG and other backends.|https://github.com/gopasspw/gopass|{{Pkg|gopass}}}}
 * {{App|[[Himitsu]]|Secret storage manager.|https://himitsustore.org/|{{AUR|himitsu}}}}
@@ -139,9 +123,10 @@ See also [[Session lock]].
 
 === Graphical ===
 
-* {{App|1Password|Proprietary graphical user interface for 1Password password manager.|https://support.1password.com/install-linux/#arch-linux|{{AUR|1password}}}}
+* {{App|[[1Password]]|Proprietary graphical user interface for 1Password password manager. Based on the [[Electron]] platform.|https://support.1password.com/install-linux/#arch-linux|{{AUR|1password}}}}
 * {{App|Authenticator|Open source, two-factor authentication application built for GNOME.|https://apps.gnome.org/Authenticator/|{{Pkg|authenticator}}}}
 * {{App|Bitwarden|Open source password manager with desktop, mobile, browser, and CLI versions. Cloud or self-hosted.|https://bitwarden.com/|{{Pkg|bitwarden}}}}
+* {{App|Ente Auth|Open source 2FA authenticator, with end-to-end encrypted backups.|https://ente.com/auth/|{{AUR|ente-auth}}}}
 * {{App|Figaro's Password Manager 2|GTK2 port of [https://fpm.sourceforge.net/ Figaro's Password Manager] with some new enhancements.|https://als.regnet.cz/fpm2/|{{AUR|fpm2}}}}
 * {{App|[[KDE Wallet|KDE Wallet Manager]]|Tool to manage the passwords on your system. By using the KDE wallet subsystem, it not only allows you to keep your own secrets but also to access and manage the passwords of every application that integrates with the wallet. Part of {{Grp|kde-utilities}}.|https://userbase.kde.org/KDE_Wallet_Manager|{{Pkg|kwalletmanager}}}}
 * {{App|[[KeePass|KeePass Password Safe]]|Mono-based password manager, which helps you to manage your passwords in a secure way.|https://keepass.info/|{{Pkg|keepass}}}}
@@ -164,8 +149,8 @@ See also [[Session lock]].
 
 * {{App|cfv|Tiny utility to both test and create checksum files, support ''.sfv'', ''.csv'', ''.crc'', ''.md5'', ''md5sum'', ''sha1sum'', ''.torrent'', ''par'', and ''.par2'' files.| https://cfv.sourceforge.net/|{{AUR|cfv}}}}
 * {{App|Collision|GUI tool to generate, compare and verify MD5, SHA-1, SHA-256, SHA-512, Blake3, CRC32 and Adler32 hashes.|https://apps.gnome.org/Collision/|{{Pkg|collision}}}}
-* {{App|GtkHash|A GTK utility for computing message digests or checksums|https://github.com/gtkhash/gtkhash|{{AUR|gtkhash}}}}
-* {{App|hashdeep|A cross-platform tools to compute hashes, or message digests, for any number of files|https://md5deep.sourceforge.net/|{{AUR|hashdeep}}}}
+* {{App|GtkHash|A GTK utility for computing message digests or checksums.|https://gtkhash.org/|{{AUR|gtkhash}}}}
+* {{App|hashdeep|A cross-platform tools to compute hashes, or message digests, for any number of files.|https://md5deep.sourceforge.net/|{{AUR|hashdeep}}}}
 * {{App|Hash-o-matic|Simple hash validator allowing to compare two files, generate the checksum of a file and verify if a hash matches a file.|https://apps.kde.org/hashomatic/|{{Pkg|hash-o-matic}}}}
 * {{App|MassHash|A set of file hashing tools (both CLI and GTK GUI) written in Python.  Supported algorithms include MD5, SHA-1, SHA-224, SHA-256, SHA-384, SHA-512.|https://jdleicher.github.io/MassHash/|{{AUR|masshash}}}}
 * {{App|Parchive|Utility which creates and uses PAR2 files to detect damage in data files and repair them if necessary.|https://github.com/Parchive/par2cmdline|{{Pkg|par2cmdline}}}}
@@ -178,12 +163,14 @@ See also [[Session lock]].
 * {{App|ccrypt|A command-line utility for encrypting and decrypting files and streams based on [[Wikipedia:Advanced_Encryption_Standard|Rijndael]].|https://ccrypt.sourceforge.net/|{{AUR|ccrypt}}}}
 * {{App|[[GnuPG]]|The GNU project's complete and free implementation of the OpenPGP standard as defined by RFC4880. Free and Open Source replacement of PGP, mostly used for digital signing of packages.|https://gnupg.org/|{{Pkg|gnupg}}}}
 * {{App|GPG-Crypter|Graphical front-end to GnuPG (GPG) using the GTK3 toolkit and GPGME library.|https://sourceforge.net/projects/gpg-crypter/|{{AUR|gpg-crypter}}}}
+* {{App|GpgFrontend|GUI for OpenPGP. It makes encryption, signing, and key management easier and more trustworthy in everyday privacy workflows.|https://gpgfrontend.bktus.com/|{{AUR|gpgfrontend}}}}
 * {{App|[[KeePassXC]]|Mainly used for password management and generation, but also supports attaching arbitrary files to entries in an encrypted database.|https://keepassxc.org|{{Pkg|keepassxc}}}}
 * {{App|[[Keybase]]|Key directory mapping social media identities, with cross platform encrypted chat, cloud storage, and git repositories.|https://keybase.io/|{{AUR|keybase}}}}
 * {{App|Keyoxide ASPE CLI|Ariadne Signature Profile Exchange (ASPE) CLI for identity profile platforms like Keyoxide.|https://codeberg.org/keyoxide/kx-aspe-cli|{{AUR|kx-aspe-git}}}}
 * {{App|Keysign|GTK application to use GnuPG for signing other people's keys. Quickly, easily, and securely.|https://wiki.gnome.org/Apps/Keysign|{{Pkg|gnome-keysign}}}}
 * {{App|[[Wikipedia:KGPG|KGpg]]|Simple interface for GnuPG, for KDE. Part of {{Grp|kde-utilities}}.|https://apps.kde.org/kgpg/|{{Pkg|kgpg}}}}
 * {{App|Kleopatra|Certificate Manager and Unified Crypto GUI for KDE. It supports managing X.509 and OpenPGP certificates in the GpgSM keybox and retrieving certificates from LDAP servers. Part of {{Grp|kde-pim}}.|https://apps.kde.org/kleopatra/|{{Pkg|kleopatra}}}}
+* {{App|Lock|Graphical frontend for GnuPG making use of a beautiful LibAdwaita GUI.|https://konstantintutsch.com/Lock/|{{AUR|lock}}}}
 * {{App|minisign|Simple program that only implements key signing.|https://github.com/jedisct1/minisign|{{Pkg|minisign}}}}
 * {{App|[[OpenSSH]]|De facto SSH implementation that supports message signing.|https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig|{{Pkg|openssh}}}}
 * {{App|[[OpenPGP-card-tools|opgpcard]]|CLI tool to inspect, manage and use OpenPGP cards.| https://codeberg.org/openpgp-card/openpgp-card-tools|{{Pkg|openpgp-card-tools}}}}

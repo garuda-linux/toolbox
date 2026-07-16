@@ -279,6 +279,15 @@
     "aur": false
   },
   {
+    "name": "Cassette",
+    "description": "GTK/Adwaita application that allows to use the Yandex Music service.",
+    "url": "https://altlinux.space/rirusha/Cassette",
+    "pkgname": [
+      "cassette"
+    ],
+    "aur": false
+  },
+  {
     "name": "Celluloid",
     "description": "Simple GTK frontend for mpv.",
     "url": "https://celluloid-player.github.io/",
@@ -302,6 +311,15 @@
     "url": "https://robertsanseries.github.io/ciano/",
     "pkgname": [
       "ciano"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Cine",
+    "description": "mpv-based video player that combines a clean interface with a high-performance engine to deliver a seamless viewing experience.",
+    "url": "https://github.com/diegopvlk/Cine",
+    "pkgname": [
+      "cine"
     ],
     "aur": false
   },
@@ -397,7 +415,7 @@
   },
   {
     "name": "Cozy",
-    "description": "Modern audio book player for Linux using GTK 3.",
+    "description": "Modern audio book player for Linux using GTK4.",
     "url": "https://cozy.sh/",
     "pkgname": [
       "cozy-audiobooks"
@@ -567,15 +585,6 @@
     "aur": false
   },
   {
-    "name": "Drawy",
-    "description": "Infinite whiteboard built for simplicity and high performance.",
-    "url": "https://apps.kde.org/drawy/",
-    "pkgname": [
-      "drawy"
-    ],
-    "aur": false
-  },
-  {
     "name": "Drumstick",
     "description": "Set of MIDI tools: drum grid, MIDI player, virtual piano.",
     "url": "https://drumstick.sourceforge.io/",
@@ -604,7 +613,7 @@
   },
   {
     "name": "EasyEffects",
-    "description": "Apply effects to audio applications and input sources over PipeWire (or PulseAudio with legacy package).",
+    "description": "Apply effects to audio applications and input sources over PipeWire.",
     "url": "https://github.com/wwmm/easyeffects",
     "pkgname": [
       "easyeffects"
@@ -770,6 +779,15 @@
     "url": "https://github.com/derf/feh https://feh.finalrewind.org",
     "pkgname": [
       "feh"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Feishin",
+    "description": "Music streaming client for Jellyfin, Navidrome, and OpenSubsonic servers. Based on the Electron platform.",
+    "url": "https://github.com/jeffvli/feishin",
+    "pkgname": [
+      "feishin"
     ],
     "aur": false
   },
@@ -1179,6 +1197,15 @@
     "aur": false
   },
   {
+    "name": "Gradia",
+    "description": "Helps you get your screenshots ready for sharing by editing and annotating the image.",
+    "url": "https://gradia.alexandervanhee.be/",
+    "pkgname": [
+      "gradia"
+    ],
+    "aur": false
+  },
+  {
     "name": "GrafX2",
     "description": "Bitmap paint program specialized in 256 color drawing.",
     "url": "http://grafx2.chez.com/",
@@ -1279,7 +1306,7 @@
   },
   {
     "name": "HandBrake",
-    "description": "Simple yet powerful video transcoder ideal for batch mkv/x264 ripping. GTK version.",
+    "description": "Simple yet powerful video transcoder ideal for batch mkv/x264 ripping. GTK version. Command name: ghb.",
     "url": "https://handbrake.fr/",
     "pkgname": [
       "handbrake"
@@ -1694,7 +1721,7 @@
   {
     "name": "LXMusic",
     "description": "A minimalist xmms2-based music player.",
-    "url": "https://www.lxde.org/",
+    "url": "https://github.com/lxde/lxmusic",
     "pkgname": [
       "lxmusic"
     ],
@@ -1764,6 +1791,15 @@
     "aur": false
   },
   {
+    "name": "Mégra",
+    "description": "A lisp-like live coding language with Markov chains, written in Rust",
+    "url": "https://codeberg.org/parkellipsen/megra.rs",
+    "pkgname": [
+      "megra"
+    ],
+    "aur": false
+  },
+  {
     "name": "MEncoder",
     "description": "Free command line video decoding, encoding and filtering tool.",
     "url": "https://mplayerhq.hu/design7/news.html",
@@ -1775,7 +1811,7 @@
   {
     "name": "Metadata Cleaner",
     "description": "Python GTK application to view and clean metadata in files, using mat2.",
-    "url": "https://metadatacleaner.romainvigier.fr/",
+    "url": "https://gitlab.com/metadatacleaner/metadatacleaner",
     "pkgname": [
       "metadata-cleaner"
     ],
@@ -1872,6 +1908,15 @@
     "aur": false
   },
   {
+    "name": "mpc",
+    "description": "Emacs built-in music client for MPD.",
+    "url": "https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/mpc.el/",
+    "pkgname": [
+      "emacs"
+    ],
+    "aur": false
+  },
+  {
     "name": "mpg123",
     "description": "Fast free MP3 console audio player for Linux, FreeBSD, Solaris, HP-UX and nearly all other UNIX systems (also decodes MP1 and MP2 files).",
     "url": "https://www.mpg123.org/",
@@ -1964,7 +2009,7 @@
   {
     "name": "Navidrome",
     "description": "Open source music server and streamer with a built in Web UI. Compatible with a wide range of third-party Android and iOS apps.",
-    "url": "https://github.com/navidrome/navidrome/",
+    "url": "https://www.navidrome.org/",
     "pkgname": [
       "navidrome"
     ],
@@ -2201,15 +2246,6 @@
     "url": "https://github.com/linuxmint/pix",
     "pkgname": [
       "pix"
-    ],
-    "aur": false
-  },
-  {
-    "name": "Pixelorama",
-    "description": "Open-source software for creating pixel art and animations.",
-    "url": "https://orama-interactive.itch.io/pixelorama",
-    "pkgname": [
-      "pixelorama"
     ],
     "aur": false
   },
@@ -2480,6 +2516,15 @@
     "url": "https://www.damonlynch.net/rapid/",
     "pkgname": [
       "rapid-photo-downloader"
+    ],
+    "aur": false
+  },
+  {
+    "name": "RapidRAW",
+    "description": "Non-destructive, and GPU-accelerated RAW image editor built with performance in mind.",
+    "url": "https://github.com/CyberTimon/RapidRAW",
+    "pkgname": [
+      "rapidraw"
     ],
     "aur": false
   },
@@ -2763,6 +2808,15 @@
     "aur": false
   },
   {
+    "name": "Supersonic",
+    "description": "Lightweight cross-platform desktop client for Subsonic and Jellyfin music servers.",
+    "url": "https://github.com/dweymouth/supersonic",
+    "pkgname": [
+      "supersonic-desktop"
+    ],
+    "aur": false
+  },
+  {
     "name": "Surge XT",
     "description": "Cross platform, subtractive hybrid synthesizer. Installs the standalone application (surge-xt-standalone), plugins (surge-xt-clap, surge-xt-vst3), and common files (surge-xt-common).",
     "url": "https://surge-synthesizer.github.io/",
@@ -2853,11 +2907,29 @@
     "aur": false
   },
   {
+    "name": "Tenacity",
+    "description": "Easy-to-use multi-track audio editor and recorder, forked from Audacity.",
+    "url": "https://tenacityaudio.org/",
+    "pkgname": [
+      "tenacity"
+    ],
+    "aur": false
+  },
+  {
     "name": "Thunar Media Tags Plugin",
     "description": "Adds special features for media files to the Thunar File Manager, including the ability to edit tags.",
     "url": "https://goodies.xfce.org/projects/thunar-plugins/thunar-media-tags-plugin",
     "pkgname": [
       "thunar-media-tags-plugin"
+    ],
+    "aur": false
+  },
+  {
+    "name": "TidalCycles",
+    "description": "A live coding environment focused on generating and manipulating audiovisual patterns.",
+    "url": "https://codeberg.org/uzu/tidal/",
+    "pkgname": [
+      "haskell-tidal"
     ],
     "aur": false
   },
@@ -2894,6 +2966,15 @@
     "url": "http://www.linuxrising.org/",
     "pkgname": [
       "transmageddon"
+    ],
+    "aur": false
+  },
+  {
+    "name": "TuxGuitar",
+    "description": "Multitrack guitar tablature editor and player.",
+    "url": "https://sourceforge.net/projects/tuxguitar/",
+    "pkgname": [
+      "tuxguitar"
     ],
     "aur": false
   },
@@ -3071,7 +3152,7 @@
   {
     "name": "Xloadimage",
     "description": "Classic X image viewer.",
-    "url": "https://sioseis.ucsd.edu/xloadimage.html",
+    "url": "https://sioseis.com/xloadimage.html",
     "pkgname": [
       "xloadimage"
     ],

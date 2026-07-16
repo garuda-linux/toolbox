@@ -72,6 +72,15 @@
     "aur": false
   },
   {
+    "name": "Angry IP Scanner",
+    "description": "Network scanner designed to be fast and simple to use. It scans IP addresses and ports, as well as having many other features.",
+    "url": "https://angryip.org/",
+    "pkgname": [
+      "ipscan"
+    ],
+    "aur": false
+  },
+  {
     "name": "AnyDesk",
     "description": "Proprietary remote desktop software.",
     "url": "https://anydesk.com/",
@@ -95,6 +104,15 @@
     "url": "https://aria2.github.io/",
     "pkgname": [
       "aria2"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Arpwatch",
+    "description": "Tool that monitors ethernet activity and keeps a database of Ethernet/IP address pairings.",
+    "url": "https://ee.lbl.gov/",
+    "pkgname": [
+      "arpwatch"
     ],
     "aur": false
   },
@@ -176,6 +194,15 @@
     "url": "https://bftpd.sourceforge.net/",
     "pkgname": [
       "bftpd"
+    ],
+    "aur": false
+  },
+  {
+    "name": "BiglyBT",
+    "description": "Feature-filled BitTorrent client based on the Azureus open source project.",
+    "url": "https://www.biglybt.com/",
+    "pkgname": [
+      "biglybt"
     ],
     "aur": false
   },
@@ -342,15 +369,6 @@
     "aur": false
   },
   {
-    "name": "Cozy Drive",
-    "description": "Desktop client for Cozy.",
-    "url": "https://cozy-labs.github.io/cozy-desktop/",
-    "pkgname": [
-      "cozy-desktop"
-    ],
-    "aur": false
-  },
-  {
     "name": "cURL",
     "description": "A URL retrieval utility and library. Supports HTTP, FTP and SFTP.",
     "url": "https://curl.haxx.se/",
@@ -387,6 +405,15 @@
     "aur": false
   },
   {
+    "name": "darkstat",
+    "description": "Captures network traffic, calculates statistics about usage, and serves reports over HTTP.",
+    "url": "https://unix4lyfe.org/darkstat/",
+    "pkgname": [
+      "darkstat"
+    ],
+    "aur": false
+  },
+  {
     "name": "Delta Chat",
     "description": "A privacy oriented chatmail application. Based on the Electron platform.",
     "url": "https://delta.chat/",
@@ -410,6 +437,15 @@
     "url": "https://deluge-torrent.org/",
     "pkgname": [
       "deluge-gtk"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Deskflow",
+    "description": "Share one mouse and keyboard between multiple computers over the network.",
+    "url": "https://deskflow.org/",
+    "pkgname": [
+      "deskflow"
     ],
     "aur": false
   },
@@ -478,7 +514,7 @@
   },
   {
     "name": "ElectronMail",
-    "description": "Unofficial desktop application for several end-to-end encrypted email providers (like ProtonMail, Tutanota). Based on the Electron platform.",
+    "description": "Unofficial desktop application for Proton Mail. Based on the Electron platform.",
     "url": "https://github.com/vladimiry/ElectronMail",
     "pkgname": [
       "electronmail-bin"
@@ -518,6 +554,15 @@
     "url": "https://savannah.gnu.org/projects/erc/",
     "pkgname": [
       "emacs"
+    ],
+    "aur": false
+  },
+  {
+    "name": "EtherApe",
+    "description": "Graphical network monitor for Unix modeled after etherman. Featuring link layer, IP and TCP modes, it displays network activity graphically. Hosts and links change in size with traffic. Color coded protocols display.",
+    "url": "https://etherape.sourceforge.io/",
+    "pkgname": [
+      "etherape"
     ],
     "aur": false
   },
@@ -590,6 +635,15 @@
     "url": "https://filezilla-project.org/",
     "pkgname": [
       "filezilla"
+    ],
+    "aur": false
+  },
+  {
+    "name": "FireDragon",
+    "description": "Floorp fork build using custom branding and settings.",
+    "url": "https://firedragon.garudalinux.org/",
+    "pkgname": [
+      "firedragon"
     ],
     "aur": false
   },
@@ -716,6 +770,15 @@
     "url": "https://apps.gnome.org/Connections/",
     "pkgname": [
       "gnome-connections"
+    ],
+    "aur": false
+  },
+  {
+    "name": "GNOME Network Tools",
+    "description": "GNOME interface for various networking tools.",
+    "url": "https://gitlab.gnome.org/Archive/gnome-nettool",
+    "pkgname": [
+      "gnome-nettool"
     ],
     "aur": false
   },
@@ -918,6 +981,15 @@
     "aur": false
   },
   {
+    "name": "InputLeap",
+    "description": "Share mouse and keyboard between multiple computers over the network.",
+    "url": "https://github.com/input-leap/input-leap",
+    "pkgname": [
+      "input-leap"
+    ],
+    "aur": false
+  },
+  {
     "name": "InspIRCd",
     "description": "A stable, modern and lightweight IRC daemon.",
     "url": "https://www.inspircd.org/",
@@ -950,6 +1022,15 @@
     "url": "https://ipfs.io/",
     "pkgname": [
       "kubo"
+    ],
+    "aur": false
+  },
+  {
+    "name": "IPTraf",
+    "description": "Console-based network monitoring utility.",
+    "url": "https://sourceforge.net/projects/iptraf-ng/",
+    "pkgname": [
+      "iptraf-ng"
     ],
     "aur": false
   },
@@ -1022,6 +1103,15 @@
     "url": "https://github.com/jitsi/jitsi-meet-electron",
     "pkgname": [
       "jitsi-meet-desktop"
+    ],
+    "aur": false
+  },
+  {
+    "name": "jnettop",
+    "description": "top-like console network traffic visualizer.",
+    "url": "https://sourceforge.net/projects/jnettop/",
+    "pkgname": [
+      "jnettop"
     ],
     "aur": false
   },
@@ -1215,6 +1305,15 @@
     "aur": false
   },
   {
+    "name": "LinSSID",
+    "description": "Graphical wireless scanner.",
+    "url": "https://sourceforge.net/projects/linssid/",
+    "pkgname": [
+      "linssid"
+    ],
+    "aur": false
+  },
+  {
     "name": "LocalSend",
     "description": "Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.",
     "url": "https://localsend.org/",
@@ -1292,6 +1391,24 @@
     "url": "https://mcabber.com/",
     "pkgname": [
       "mcabber"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Media Downloader",
+    "description": "Qt/C++ front end to yt-dlp, youtube-dl, gallery-dl, lux, you-get, svtplay-dl, aria2c, wget and safari books.",
+    "url": "https://github.com/mhogomchungu/media-downloader",
+    "pkgname": [
+      "media-downloader"
+    ],
+    "aur": false
+  },
+  {
+    "name": "MediathekView",
+    "description": "Search the online media libraries of German public broadcasting stations and list available shows and movies. It supports filtering this list for specific broadcasts, and allows viewing and downloading videos. It also enables subscriptions and automatically downloads new episodes.",
+    "url": "https://mediathekview.de/",
+    "pkgname": [
+      "mediathekview"
     ],
     "aur": false
   },
@@ -1458,6 +1575,15 @@
     "aur": false
   },
   {
+    "name": "Newsticker",
+    "description": "Emacs built-in RSS reader",
+    "url": "https://savannah.gnu.org/projects/newsticker/",
+    "pkgname": [
+      "emacs"
+    ],
+    "aur": false
+  },
+  {
     "name": "Nextcloud",
     "description": "A cloud server to store your files centrally on a hardware controlled by you.",
     "url": "https://nextcloud.com",
@@ -1512,9 +1638,18 @@
     "aur": false
   },
   {
+    "name": "ngrep",
+    "description": "grep-like utility that allows you to search for network packets on an interface.",
+    "url": "https://github.com/jpr5/ngrep",
+    "pkgname": [
+      "ngrep"
+    ],
+    "aur": false
+  },
+  {
     "name": "nheko",
-    "description": "Desktop client for the Matrix protocol.",
-    "url": "https://github.com/Nheko-Reborn/nheko",
+    "description": "Desktop client for Matrix using Qt and C++20.",
+    "url": "https://nheko-reborn.github.io/",
     "pkgname": [
       "nheko"
     ],
@@ -1643,6 +1778,15 @@
     "url": "https://owncloud.com/client/",
     "pkgname": [
       "owncloud-client"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Packet",
+    "description": "Send and receive files wirelessly with Android devices using Quick Share or another device with Packet installed.",
+    "url": "https://github.com/nozwock/packet",
+    "pkgname": [
+      "packet"
     ],
     "aur": false
   },
@@ -1854,6 +1998,15 @@
     "aur": false
   },
   {
+    "name": "Rclone Shuttle",
+    "description": "GTK4 frontend for Rclone to upload files to any supported cloud storage provider or storage protocol.",
+    "url": "https://github.com/pieterdd/RcloneShuttle",
+    "pkgname": [
+      "rclone-shuttle"
+    ],
+    "aur": false
+  },
+  {
     "name": "Remmina",
     "description": "Remote desktop client written in GTK. Supports RDP, VNC, SPICE, X2Go and SSH.",
     "url": "https://remmina.org/",
@@ -1953,6 +2106,15 @@
     "aur": false
   },
   {
+    "name": "RustConn",
+    "description": "Modern connection manager for Linux. Manage SSH, RDP, VNC, SPICE, MOSH, Telnet, Serial, Kubernetes and Zero Trust connections from a single application with embedded protocol support and no external dependencies required.",
+    "url": "https://github.com/totoshko88/RustConn",
+    "pkgname": [
+      "rustconn"
+    ],
+    "aur": false
+  },
+  {
     "name": "S-nail",
     "description": "a mail processing system with a command syntax reminiscent of ed with lines replaced by messages. Provides the functionality of mailx.",
     "url": "https://www.sdaoden.eu/code.html#s-mailx",
@@ -2034,8 +2196,17 @@
     "aur": false
   },
   {
-    "name": "sniffnet",
-    "description": "Network traffic monitoring with TUI/GUI, statistics by protocol, and per-host analysis.",
+    "name": "Smb4K",
+    "description": "Advanced network neighborhood browser and Samba share mounting utility for KDE.",
+    "url": "https://apps.kde.org/smb4k/",
+    "pkgname": [
+      "smb4k"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Sniffnet",
+    "description": "Network traffic monitoring with GUI, statistics by protocol, and per-host analysis.",
     "url": "https://github.com/GyulyVGC/sniffnet",
     "pkgname": [
       "sniffnet"
@@ -2117,7 +2288,7 @@
   {
     "name": "Synapse",
     "description": "Reference homeserver for the Matrix protocol.",
-    "url": "https://github.com/matrix-org/synapse",
+    "url": "https://github.com/element-hq/synapse",
     "pkgname": [
       "matrix-synapse"
     ],
@@ -2138,6 +2309,15 @@
     "url": "https://apps.gnome.org/Tangram/",
     "pkgname": [
       "tangram"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Tcpdump",
+    "description": "Common console-based packet analyzer that allows the user to intercept and display TCP/IP and other packets being transmitted or received over a network.",
+    "url": "https://www.tcpdump.org/",
+    "pkgname": [
+      "tcpdump"
     ],
     "aur": false
   },
@@ -2432,7 +2612,7 @@
   {
     "name": "Varia",
     "description": "GTK frontend for aria2c and yt-dlp.",
-    "url": "https://github.com/giantpinkrobots/varia",
+    "url": "https://giantpinkrobots.github.io/varia/",
     "pkgname": [
       "varia"
     ],
@@ -2480,6 +2660,15 @@
     "url": "https://tigervnc.org/",
     "pkgname": [
       "tigervnc"
+    ],
+    "aur": false
+  },
+  {
+    "name": "vnStat",
+    "description": "Console-based network traffic monitor that keeps a log of network traffic for the selected interfaces.",
+    "url": "https://humdi.net/vnstat/",
+    "pkgname": [
+      "vnstat"
     ],
     "aur": false
   },
@@ -2633,6 +2822,24 @@
     "url": "https://github.com/pufferffish/wireproxy",
     "pkgname": [
       "wireproxy"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Wireshark",
+    "description": "Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.",
+    "url": "https://www.wireshark.org/",
+    "pkgname": [
+      "wireshark-qt"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Wireshark CLI",
+    "description": "Network protocol analyzer that lets you capture and interactively browse the traffic running on a computer network.",
+    "url": "https://www.wireshark.org/",
+    "pkgname": [
+      "wireshark-cli"
     ],
     "aur": false
   },
