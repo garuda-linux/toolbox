@@ -447,12 +447,7 @@ export class ConfigService {
    */
   private async initTheme(activeTheme: AppTheme): Promise<void> {
     this.logger.debug(`Initializing theme: ${activeTheme}`);
-
-    if (activeTheme === 'Custom Themedesigner') {
-      // Will be handled by the designer service
-    } else {
-      usePreset(themes[activeTheme]);
-    }
+    usePreset(themes[activeTheme]);
   }
 
   /**

@@ -3,10 +3,11 @@ import { rename, readdir, rm, readFile, writeFile, access, unlink } from 'node:f
 import { join } from 'node:path';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
+import ElectronStore from 'electron-store';
 import { Logger } from '../logging/logging.js';
 
 const execAsync = promisify(exec);
-const CURRENT_MIGRATION_VERSION = 2;
+const CURRENT_MIGRATION_VERSION = 3;
 
 async function exists(path: string): Promise<boolean> {
   try {
@@ -109,6 +110,31 @@ export async function migrateConfig() {
       }
 
       await setMigrationVersion(toolboxConfigDir, 2);
+    }
+
+    if (currentVersion < 3) {
+      try {
+        const store = new ElectronStore({
+          encryptionKey: 'non-security-by-obscurity',
+        });
+        const hasCustomDesign = store.has('customDesign');
+        const hasCustomTheme = store.get('activeTheme') === 'Custom Themedesigner';
+
+        if (hasCustomDesign) {
+          store.delete('customDesign');
+          logger.info('Cleaned deprecated customTheme key from store');
+        }
+        if (hasCustomTheme) {
+          store.delete('activeTheme');
+          logger.info('Reset activeTheme to default due to custom theme detection');
+        }
+      } catch (error) {
+        logger.error(
+          `Failed to migrate custom theme/design in store: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+
+      await setMigrationVersion(toolboxConfigDir, 3);
     }
   } catch (error) {
     logger.error(`Failed to migrate config: ${error instanceof Error ? error.message : String(error)}`);

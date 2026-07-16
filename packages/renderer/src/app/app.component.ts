@@ -45,7 +45,6 @@ import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from
 import { MODULE_SEARCH, ModuleSearchEntry } from './constants/module-search';
 import { NgClass } from '@angular/common';
 import { registerAppCommandPaletteActions } from './components/command-palette/command-palette';
-import { AppDesigner } from './components/designer/app.designer';
 import { DesignerService } from './components/designer/designerservice';
 import { WallpaperService } from './components/wallpaper/wallpaper.service';
 import { ContextMenuModule } from 'primeng/contextmenu';
@@ -75,7 +74,6 @@ import { CommandPaletteService } from './components/command-palette/command-pale
     AutoComplete,
     NgClass,
     ContextMenuModule,
-    AppDesigner,
     Menu,
     CommandPaletteComponent,
   ],
@@ -282,13 +280,6 @@ export class AppComponent implements OnInit {
       label: 'Preferences',
       translocoKey: 'menu.file.preferences',
       command: () => this.router.navigate(['/settings']),
-    },
-    {
-      id: 'file-themes',
-      icon: 'pi pi-palette',
-      label: 'Theme Designer',
-      translocoKey: 'menu.file.themeDesigner',
-      command: () => this.configService.updateState('designerActive', true),
     },
     {
       id: 'file-quit',

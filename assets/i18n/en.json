@@ -3,7 +3,6 @@
     "file": {
       "title": "File",
       "preferences": "Preferences",
-      "themeDesigner": "Theme designer",
       "quit": "Quit"
     },
     "modules": {

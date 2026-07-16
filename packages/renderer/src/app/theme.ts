@@ -32,7 +32,6 @@ export const themes: AppThemes = {
   'Vo1ded Nora': Vo1dedNora,
   'Vo1ded Material': Vo1dedMaterial,
   'Vo1ded Lara': Vo1dedLara,
-  'Custom Themedesigner': {},
 };
 
 export type AppTheme =
@@ -51,8 +50,7 @@ export type AppTheme =
   | 'Vo1ded Aura'
   | 'Vo1ded Nora'
   | 'Vo1ded Material'
-  | 'Vo1ded Lara'
-  | 'Custom Themedesigner';
+  | 'Vo1ded Lara';
 
 export type AppThemes = Record<string, Preset>;
 
