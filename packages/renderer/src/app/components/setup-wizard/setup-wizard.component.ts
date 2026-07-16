@@ -41,6 +41,7 @@ export class SetupWizardComponent {
   private readonly cdr = inject(ChangeDetectorRef);
 
   protected hasApplied = signal<boolean>(false);
+  protected executionFailed = signal<boolean>(false);
 
   get softwareCategories() {
     return this.setupWizardService.categories();
@@ -56,6 +57,7 @@ export class SetupWizardComponent {
 
   toggleSoftware(item: SetupSoftwareItem) {
     this.setupWizardService.toggleSoftwareItem(item);
+    this.executionFailed.set(false);
     this.cdr.markForCheck();
   }
 
@@ -76,12 +78,20 @@ export class SetupWizardComponent {
 
   async apply() {
     this.hasApplied.set(true);
+    this.executionFailed.set(false);
 
     const hasTasks = this.taskManagerService.count() > 0;
     if (hasTasks) {
       this.taskManagerService.toggleTerminal(true);
-      await this.setupWizardService.applyChanges();
-      this.taskManagerService.toggleTerminal(false);
+      const success = await this.setupWizardService.applyChanges();
+      if (success) {
+        this.taskManagerService.toggleTerminal(false);
+        void this.router.navigate(['/setup-wizard-success']);
+      } else {
+        this.executionFailed.set(true);
+        this.cdr.markForCheck();
+      }
+    } else {
       void this.router.navigate(['/setup-wizard-success']);
     }
   }

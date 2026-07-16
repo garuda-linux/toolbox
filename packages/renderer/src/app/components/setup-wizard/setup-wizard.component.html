@@ -72,8 +72,13 @@
           <p-step-panel>
             <ng-template #content let-activateCallback="activateCallback">
               <div class="flex flex-col gap-4 py-8">
-                <div class="text-2xl font-bold">{{ t('setupWizard.apply.header') }}</div>
-                <p class="text-color text-lg">{{ t('setupWizard.apply.body') }}</p>
+                @if (executionFailed()) {
+                  <div class="text-2xl font-bold text-red-500">{{ t('setupWizard.apply.failedHeader') }}</div>
+                  <p class="text-color text-lg">{{ t('setupWizard.apply.failedBody') }}</p>
+                } @else {
+                  <div class="text-2xl font-bold">{{ t('setupWizard.apply.header') }}</div>
+                  <p class="text-color text-lg">{{ t('setupWizard.apply.body') }}</p>
+                }
 
                 <div class="flex gap-2 pt-4">
                   <button
@@ -82,13 +87,23 @@
                     severity="secondary"
                     (click)="activateCallback(getCategoryStepValue(softwareCategories.length - 1))"
                   >{{ t('setupWizard.buttons.back') }}</button>
-                  <button
-                    [disabled]="taskManagerService.running()"
-                    data-p-icon="pi pi-check"
-                    pButton
-                    severity="success"
-                    (click)="apply()"
-                  >{{ t('setupWizard.buttons.apply') }}</button>
+                  @if (executionFailed()) {
+                    <button
+                      [disabled]="taskManagerService.running()"
+                      data-p-icon="pi pi-refresh"
+                      pButton
+                      severity="warn"
+                      (click)="apply()"
+                    >{{ t('setupWizard.buttons.retry') }}</button>
+                  } @else {
+                    <button
+                      [disabled]="taskManagerService.running()"
+                      data-p-icon="pi pi-check"
+                      pButton
+                      severity="success"
+                      (click)="apply()"
+                    >{{ t('setupWizard.buttons.apply') }}</button>
+                  }
                 </div>
               </div>
             </ng-template>

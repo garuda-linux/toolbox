@@ -537,6 +537,7 @@ export class TaskManagerService {
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
     const taskFinishedMessage: string = this.translocoService.translate('taskmanager.scriptExecuted');
+    const statusPath = `${path}.status`;
 
     // Write the executor script
     const executorScript = `
@@ -553,6 +554,7 @@ if [ "$(printf '%s' "$script" | sha256sum | cut -d ' ' -f 1)" != "${hash}" ]; th
 fi
 # Execute the script, -x for debugging output
 bash -x "${path}"
+echo $? > "${statusPath}"
 rm '${path}'
 printf "\\n${taskFinishedMessage}\\n"
 rm '${executorPath}'
@@ -564,6 +566,27 @@ echo "${shell.endMarker}"
     while ((await this.fsService.exists(path)) && shell.running) {
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
+
+    let exitCode = 0;
+    if (await this.fsService.exists(statusPath)) {
+      try {
+        const statusContent = await this.fsService.readTextFile(statusPath);
+        exitCode = parseInt(statusContent.trim(), 10);
+        await this.fsService.removeFile(statusPath);
+      } catch (e) {
+        this.logger.error(`Failed to read task status file: ${e}`);
+        exitCode = -1;
+      }
+    } else {
+      if (!shell.running) {
+        exitCode = -1;
+      }
+    }
+
+    if (exitCode !== 0) {
+      throw new Error(`Task script failed with exit code ${exitCode}`);
+    }
+
     this.logger.info(`Task ${task.name} has finished`);
   }
 
@@ -585,10 +608,10 @@ echo "${shell.endMarker}"
    * Execute a given task a single time.
    * @param task The task to execute.
    */
-  async executeTask(task: Task): Promise<void> {
+  async executeTask(task: Task): Promise<boolean> {
     if (this.running()) {
       this.logger.error('Task manager is already running a task');
-      return;
+      return false;
     }
     this.running.set(true);
     this.clearTerminal();
@@ -646,12 +669,14 @@ echo "${shell.endMarker}"
         : null, // Escalated shell
     );
 
+    let success = true;
     try {
       await this.activeShells.startAll();
       this.currentTask.set(task);
       await this.internalExecuteTask(task, this.activeShells);
     } catch (error: unknown) {
       this.logger.error(`Task execution failed: ${error instanceof Error ? error.message : String(error)}`);
+      success = false;
     } finally {
       this.currentTask.set(null);
       this.removeTask(task);
@@ -663,15 +688,16 @@ echo "${shell.endMarker}"
       this.aborting.set(false);
       void this.configService.init(false);
     }
+    return success;
   }
 
   /**
    * Execute all tasks in the task list.
    */
-  async executeTasks(): Promise<void> {
+  async executeTasks(): Promise<boolean> {
     if (this.running()) {
       this.logger.error('Task manager is already running a task');
-      return;
+      return false;
     }
     this.running.set(true);
     this.clearTerminal();
@@ -732,10 +758,12 @@ echo "${shell.endMarker}"
         : null,
     );
 
+    let success = true;
     try {
       await this.activeShells.startAll();
       for (const task of this.sortedTasks()) {
         if (this.aborting()) {
+          success = false;
           break; // Stop if aborting is signaled
         }
         this.currentTask.set(task);
@@ -745,12 +773,15 @@ echo "${shell.endMarker}"
           this.logger.error(
             `Task execution failed for task ${task.name}: ${error instanceof Error ? error.message : String(error)}`,
           );
+          success = false;
+          break;
         }
       }
     } catch (error: unknown) {
       this.logger.error(
         `Error during shell startup or task execution: ${error instanceof Error ? error.message : String(error)}`,
       );
+      success = false;
     } finally {
       this.currentTask.set(null);
       this.tasks.set([]);
@@ -762,6 +793,8 @@ echo "${shell.endMarker}"
       this.aborting.set(false);
       void this.configService.init(false);
     }
+
+    return success;
   }
 
   /**

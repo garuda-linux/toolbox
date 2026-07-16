@@ -923,13 +923,16 @@
     },
     "apply": {
       "header": "Ready to Apply",
-      "body": "Click 'Apply' to start the installation and configuration process."
+      "body": "Click 'Apply' to start the installation and configuration process.",
+      "failedHeader": "Execution Failed",
+      "failedBody": "Something went wrong during the installation. You can retry the execution or go back to modify your selection."
     },
     "buttons": {
       "next": "Next",
       "back": "Back",
       "apply": "Apply",
-      "finish": "Finish"
+      "finish": "Finish",
+      "retry": "Retry"
     },
     "tasks": {
       "installSoftware": "Installing selected software"

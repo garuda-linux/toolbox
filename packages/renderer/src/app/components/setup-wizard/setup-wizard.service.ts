@@ -92,7 +92,7 @@ export class SetupWizardService {
    * Applies all pending changes to the system.
    * This includes installing selected software and executing tasks.
    */
-  async applyChanges(): Promise<void> {
+  async applyChanges(): Promise<boolean> {
     const rootCommands: string[] = [];
     const userCommands: string[] = [];
 
@@ -135,6 +135,6 @@ export class SetupWizardService {
       );
     }
 
-    await this.taskManagerService.executeTasks();
+    return await this.taskManagerService.executeTasks();
   }
 }
