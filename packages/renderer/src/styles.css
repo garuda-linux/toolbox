@@ -16,6 +16,7 @@
 
 :root {
   --p-border-width: 0 0 4px 0;
+  --p-typography-font-size: 1rem;
 }
 
 @layer theme {
@@ -96,6 +97,11 @@ p-button {
   @apply w-full md:w-auto;
 }
 
+.p-scrollarea {
+  background: unset !important;
+  border: unset !important;
+}
+
 .p-tab {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -161,14 +167,34 @@ toolbox-command-palette > p-dialog > div > div > .p-dialog-content {
   background: unset;
 }
 
- .p-dialog {
+.p-dialog {
   backdrop-filter: blur(20px);
   --webkit-backdrop-filter: blur(20px);
   background-color: rgba(0, 0, 0, 0.3) !important;
 }
 
-.xterm .xterm-viewport, .xterm, .resize-handle {
-  background-color: unset !important;
+.xterm .xterm-viewport,
+.xterm-scrollable-element {
+  background-color: transparent !important;
+}
+
+ng-terminal,
+.resize-box,
+.terminal-outer,
+.xterm,
+.xterm-screen,
+.xterm .xterm-helper-textarea {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.resize-handle {
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Garuda Button */
