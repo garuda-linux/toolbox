@@ -66,22 +66,19 @@
             @if (file.wikiLink) {
               <button
                 [text]="true"
-                data-p-icon="pi pi-external-link"
                 pButton
                 pTooltip="Arch Wiki"
                 tooltipPosition="top"
                 (click)="shellService.open(file.wikiLink)"
-              ></button>
+              >
+                <svg data-p-icon="external-link"></svg>
+              </button>
             }
           </td>
           <td>
-            <button
-              [outlined]="true"
-              data-p-icon="pi pi-pencil"
-              pButton
-              size="small"
-              (click)="editConfig(file)"
-            >{{ t('configFiles.edit') }}</button>
+            <button [outlined]="true" pButton size="small" (click)="editConfig(file)">
+              <svg data-p-icon="pencil"></svg> {{ t('configFiles.edit') }}
+            </button>
           </td>
         </tr>
       </ng-template>
@@ -123,22 +120,19 @@
             @if (file.wikiLink) {
               <button
                 [text]="true"
-                data-p-icon="pi pi-external-link"
                 pButton
                 pTooltip="Arch Wiki"
                 tooltipPosition="top"
                 (click)="shellService.open(file.wikiLink)"
-              ></button>
+              >
+                <svg data-p-icon="external-link"></svg>
+              </button>
             }
           </td>
           <td>
-            <button
-              [outlined]="true"
-              data-p-icon="pi pi-pencil"
-              pButton
-              size="small"
-              (click)="editConfig(file)"
-            >{{ t('configFiles.edit') }}</button>
+            <button [outlined]="true" pButton size="small" (click)="editConfig(file)">
+              <svg data-p-icon="pencil"></svg> {{ t('configFiles.edit') }}
+            </button>
           </td>
         </tr>
       </ng-template>

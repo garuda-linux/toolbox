@@ -11,7 +11,11 @@ import { Checkbox } from 'primeng/checkbox';
 import { AccordionModule } from 'primeng/accordion';
 import { Card } from 'primeng/card';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { ButtonDirective } from 'primeng/button';
+import { ButtonDirective, Button } from 'primeng/button';
+import { ArrowLeft } from '@primeicons/angular/arrow-left';
+import { ArrowRight } from '@primeicons/angular/arrow-right';
+import { Refresh } from '@primeicons/angular/refresh';
+import { Check } from '@primeicons/angular/check';
 
 @Component({
   selector: 'toolbox-setup-wizard',
@@ -24,9 +28,14 @@ import { ButtonDirective } from 'primeng/button';
     StepItem,
     Checkbox,
     ButtonDirective,
+    Button,
     AccordionModule,
     Card,
     TranslocoDirective,
+    ArrowLeft,
+    ArrowRight,
+    Refresh,
+    Check,
   ],
   templateUrl: './setup-wizard.component.html',
   styleUrl: './setup-wizard.component.css',

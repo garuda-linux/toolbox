@@ -35,6 +35,15 @@ import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Select } from 'primeng/select';
 import { NetworkStatus } from './types';
 import { ToggleButton } from 'primeng/togglebutton';
+import { Check } from '@primeicons/angular/check';
+import { Globe } from '@primeicons/angular/globe';
+import { StopCircle } from '@primeicons/angular/stop-circle';
+import { Lock } from '@primeicons/angular/lock';
+import { PlayCircle } from '@primeicons/angular/play-circle';
+import { LockOpen } from '@primeicons/angular/lock-open';
+import { Copy } from '@primeicons/angular/copy';
+import { Play } from '@primeicons/angular/play';
+import { Directions } from '@primeicons/angular/directions';
 
 @Component({
   selector: 'toolbox-network-assistant',
@@ -54,6 +63,15 @@ import { ToggleButton } from 'primeng/togglebutton';
     NgTerminalModule,
     Select,
     ToggleButton,
+    Check,
+    Globe,
+    StopCircle,
+    Lock,
+    PlayCircle,
+    LockOpen,
+    Copy,
+    Play,
+    Directions,
   ],
   templateUrl: './network-assistant.component.html',
   styleUrl: './network-assistant.component.css',

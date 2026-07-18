@@ -32,6 +32,7 @@
     "@garudalinux/themes": "1.0.0",
     "@jsverse/transloco": "^8.4.0",
     "@jsverse/transloco-locale": "^8.4.0",
+    "@primeicons/angular": "^8.0.0",
     "@primeuix/styled": "^1.0.0",
     "@primeuix/themes": "3.0.0",
     "@primeuix/utils": "^0.8.0",

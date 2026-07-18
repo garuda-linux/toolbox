@@ -22,6 +22,7 @@ import { Checkbox } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { PackagesService } from './packages.service';
 import { ConfigService } from '../config/config.service';
+import { FilterSlash } from '@primeicons/angular/filter-slash';
 
 @Component({
   selector: 'toolbox-packages',
@@ -38,6 +39,7 @@ import { ConfigService } from '../config/config.service';
     Checkbox,
     FormsModule,
     ButtonDirective,
+    FilterSlash,
   ],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.css',

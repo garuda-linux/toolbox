@@ -106,13 +106,9 @@
                       [value]="status()?.nmActive ? t('active') : t('inactive')"
                     />
                     @if (!status()?.nmActive) {
-                      <button
-                        [text]="true"
-                        data-p-icon="pi pi-check"
-                        pButton
-                        (click)="enableService('NetworkManager')"
-                        size="small"
-                      >{{ t('enable') }}</button>
+                      <button [text]="true" pButton (click)="enableService('NetworkManager')" size="small">
+                        <svg data-p-icon="check"></svg> {{ t('enable') }}
+                      </button>
                     }
                   }
                 </div>
@@ -124,7 +120,9 @@
                       [value]="status()?.connmanActive ? t('active') : t('inactive')"
                     />
                     @if (!status()?.connmanActive) {
-                      <button [text]="true" data-p-icon="pi pi-check" pButton (click)="enableService('connman')" size="small" >{{ t('enable') }}</button>
+                      <button [text]="true" pButton (click)="enableService('connman')" size="small">
+                        <svg data-p-icon="check"></svg> {{ t('enable') }}
+                      </button>
                     }
                   }
                 </div>
@@ -135,7 +133,9 @@
                     [value]="status()?.bluetoothActive ? t('active') : t('inactive')"
                   />
                   @if (!status()?.bluetoothActive) {
-                    <button [text]="true" data-p-icon="pi pi-check" pButton (click)="enableService('bluetooth')" size="small" >{{ t('enable') }}</button>
+                    <button [text]="true" pButton (click)="enableService('bluetooth')" size="small">
+                      <svg data-p-icon="check"></svg> {{ t('enable') }}
+                    </button>
                   }
                 </div>
               </div>
@@ -144,7 +144,9 @@
             <p-card class="md:col-span-2" [header]="t('wifiHotspot')">
               <div class="flex items-center gap-4">
                 <p>{{ t('wifiHotspotDesc') }}</p>
-                <button pButton data-p-icon="pi pi-globe" (click)="openWifiHotspot()" >{{ t('openHotspot') }}</button>
+                <button pButton (click)="openWifiHotspot()">
+                  <svg data-p-icon="globe"></svg> {{ t('openHotspot') }}
+                </button>
               </div>
             </p-card>
           </div>
@@ -258,18 +260,20 @@
                                 [text]="true"
                                 [severity]="'danger'"
                                 [pTooltip]="t('unloadDriver')"
-                                data-p-icon="pi pi-stop-circle"
                                 pButton
                                 (click)="unloadDriver(driver.name)"
-                              ></button>
+                              >
+                                <svg data-p-icon="stop-circle"></svg>
+                              </button>
                               <button
                                 [text]="true"
                                 [pTooltip]="t('blacklistDriver')"
-                                data-p-icon="pi pi-lock"
                                 pButton
                                 severity="secondary"
                                 (click)="blacklistDriver(driver.name, true)"
-                              ></button>
+                              >
+                                <svg data-p-icon="lock"></svg>
+                              </button>
                             </div>
                           }
                           @case ('unloaded') {
@@ -277,19 +281,21 @@
                               <button
                                 [text]="true"
                                 [pTooltip]="t('loadDriver')"
-                                data-p-icon="pi pi-play-circle"
                                 pButton
                                 severity="success"
                                 (click)="loadDriver(driver.name)"
-                              ></button>
+                              >
+                                <svg data-p-icon="play-circle"></svg>
+                              </button>
                               <button
                                 [text]="true"
                                 [pTooltip]="t('blacklistDriver')"
-                                data-p-icon="pi pi-lock"
                                 pButton
                                 severity="secondary"
                                 (click)="blacklistDriver(driver.name, true)"
-                              ></button>
+                              >
+                                <svg data-p-icon="lock"></svg>
+                              </button>
                             </div>
                           }
                           @default {
@@ -297,19 +303,21 @@
                               <button
                                 [text]="true"
                                 [pTooltip]="t('loadDriver')"
-                                data-p-icon="pi pi-play-circle"
                                 pButton
                                 severity="success"
                                 (click)="loadDriver(driver.name)"
-                              ></button>
+                              >
+                                <svg data-p-icon="play-circle"></svg>
+                              </button>
                               <button
                                 [text]="true"
                                 [pTooltip]="t('unblacklistDriver')"
-                                data-p-icon="pi pi-lock-open"
                                 pButton
                                 severity="success"
                                 (click)="blacklistDriver(driver.name, false)"
-                              ></button>
+                              >
+                                <svg data-p-icon="lock-open"></svg>
+                              </button>
                             </div>
                           }
                         }
@@ -394,7 +402,9 @@
             @if (hardware().length > 0) {
               <p-card>
                 <div class="flex justify-end">
-                  <button [text]="true" data-p-icon="pi pi-copy" pButton (click)="copyAllHwItems()" >{{ t('copyAll') }}</button>
+                  <button [text]="true" pButton (click)="copyAllHwItems()">
+                    <svg data-p-icon="copy"></svg> {{ t('copyAll') }}
+                  </button>
                 </div>
               </p-card>
             }
@@ -447,7 +457,7 @@
                     />
                   </div>
                 </div>
-                <button pButton data-p-icon="pi pi-play" (click)="runPing()" >{{ t('runPing') }}</button>
+                <button pButton (click)="runPing()"><svg data-p-icon="play"></svg> {{ t('runPing') }}</button>
               </div>
             </p-card>
 
@@ -479,7 +489,9 @@
                     "
                   />
                 </div>
-                <button pButton data-p-icon="pi pi-directions" (click)="runTraceroute()" >{{ t('runTraceroute') }}</button>
+                <button pButton (click)="runTraceroute()">
+                  <svg data-p-icon="directions"></svg> {{ t('runTraceroute') }}
+                </button>
               </div>
             </p-card>
           </div>

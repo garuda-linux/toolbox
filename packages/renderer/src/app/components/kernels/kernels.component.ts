@@ -13,10 +13,11 @@ import { Skeleton } from 'primeng/skeleton';
 import { KernelsService } from './kernels.service';
 import { Router } from '@angular/router';
 import { ButtonDirective } from 'primeng/button';
+import { Hammer } from '@primeicons/angular/hammer';
 
 @Component({
   selector: 'toolbox-kernels',
-  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, ButtonDirective],
+  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, ButtonDirective, Hammer],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

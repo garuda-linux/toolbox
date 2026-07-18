@@ -26,10 +26,11 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router, type UrlTree } from '@angular/router';
 import { DesignerService } from '../designer/designerservice';
 import { ButtonDirective } from 'primeng/button';
+import { PIcon } from '@primeicons/angular/p-icon';
 
 @Component({
   selector: 'toolbox-diagnostics',
-  imports: [ButtonDirective, Card, Tooltip, TranslocoDirective, NgTerminalModule],
+  imports: [ButtonDirective, Card, Tooltip, TranslocoDirective, NgTerminalModule, PIcon],
   templateUrl: './diagnostics.component.html',
   styleUrl: './diagnostics.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,49 +54,49 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
     {
       id: 'inxi',
       label: 'diagnostics.inxi',
-      icon: 'pi pi-info-circle',
+      icon: 'info-circle',
       description: 'diagnostics.inxiDesc',
     },
     {
       id: 'garuda-health',
       label: 'diagnostics.health',
-      icon: 'pi pi-heart',
+      icon: 'heart',
       description: 'diagnostics.healthDesc',
     },
     {
       id: 'systemd-analyze',
       label: 'diagnostics.systemctl',
-      icon: 'pi pi-chart-bar',
+      icon: 'chart-bar',
       description: 'diagnostics.systemctlDesc',
     },
     {
       id: 'journalctl',
       label: 'diagnostics.journalctl',
-      icon: 'pi pi-list',
+      icon: 'list',
       description: 'diagnostics.journalctlDesc',
     },
     {
       id: 'pacman',
       label: 'diagnostics.pacman',
-      icon: 'pi pi-box',
+      icon: 'box',
       description: 'diagnostics.pacmanDesc',
     },
     {
       id: 'dmesg',
       label: 'diagnostics.dmesg',
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'exclamation-triangle',
       description: 'diagnostics.dmesgDesc',
     },
     {
       id: 'full',
       label: 'diagnostics.full',
-      icon: 'pi pi-file-import',
+      icon: 'file-import',
       description: 'diagnostics.fullDesc',
     },
     {
       id: 'upload',
       label: 'diagnostics.upload',
-      icon: 'pi pi-upload',
+      icon: 'upload',
       description: 'diagnostics.uploadDesc',
     },
   ];

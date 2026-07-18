@@ -25,12 +25,9 @@
       >
         <ng-template #caption>
           <div class="flex">
-            <button
-              [outlined]="true"
-              data-p-icon="pi pi-filter-slash"
-              pButton
-              (click)="clear(packageTable)"
-            >{{ t('packages.clear') }}</button>
+            <button [outlined]="true" [text]="true" pButton (click)="clear(packageTable)">
+              <svg data-p-icon="filter-slash"></svg> {{ t('packages.clear') }}
+            </button>
             <p-iconfield class="ml-auto" iconPosition="left">
               <p-inputicon>
                 <i class="pi pi-search"></i>

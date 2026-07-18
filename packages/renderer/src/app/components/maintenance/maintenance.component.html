@@ -28,17 +28,26 @@
                       [disabled]="action.onlyDirect"
                       [pTooltip]="action.onlyDirect ? t('maintenance.onlyDirect') : ''"
                       [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
-                      [attr.data-p-icon]="taskManager.findTaskById(action.name) ? 'pi pi-minus-circle' : 'pi pi-plus-circle'"
                       pButton
                       (click)="addToPending(action)"
-                    >{{ taskManager.findTaskById(action.name) ? t('maintenance.removePending') : t('maintenance.addPending') }}</button>
+                    >
+                      <svg
+                        [pIcon]="taskManager.findTaskById(action.name) ? 'minus-circle' : 'plus-circle'"
+                      ></svg>
+                      {{
+                        taskManager.findTaskById(action.name)
+                          ? t('maintenance.removePending')
+                          : t('maintenance.addPending')
+                      }}
+                    </button>
                     <button
                       [style]="{ 'margin-top': '0.5rem', 'width': '100%' }"
                       [outlined]="true"
-                      data-p-icon="pi pi-play-circle"
                       pButton
                       (click)="runNow(action)"
-                    >{{ t('maintenance.runNow') }}</button>
+                    >
+                      <svg data-p-icon="play-circle"></svg> {{ t('maintenance.runNow') }}
+                    </button>
                   </div>
                 </p-card>
               </div>
@@ -72,12 +81,9 @@
           </div>
 
           <div class="mt-10 text-center">
-            <button
-              [outlined]="true"
-              data-p-icon="pi pi-refresh"
-              pButton
-              (click)="confirmResetConfigs($event)"
-            >{{ t('maintenance.resetConfigs') }}</button>
+            <button [outlined]="true" pButton (click)="confirmResetConfigs($event)">
+              <svg data-p-icon="refresh"></svg> {{ t('maintenance.resetConfigs') }}
+            </button>
           </div>
         </p-tabpanel>
         <p-tabpanel [value]="2">
@@ -95,17 +101,26 @@
                       [disabled]="action.onlyDirect"
                       [pTooltip]="action.onlyDirect ? t('maintenance.onlyDirect') : ''"
                       [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
-                      [attr.data-p-icon]="taskManager.findTaskById(action.name) ? 'pi pi-minus-circle' : 'pi pi-plus-circle'"
                       pButton
                       (click)="addToPending(action)"
-                    >{{ taskManager.findTaskById(action.name) ? t('maintenance.removePending') : t('maintenance.addPending') }}</button>
+                    >
+                      <svg
+                        [pIcon]="taskManager.findTaskById(action.name) ? 'minus-circle' : 'plus-circle'"
+                      ></svg>
+                      {{
+                        taskManager.findTaskById(action.name)
+                          ? t('maintenance.removePending')
+                          : t('maintenance.addPending')
+                      }}
+                    </button>
                     <button
                       [style]="{ 'margin-top': '0.5rem', 'width': '100%' }"
                       [outlined]="true"
-                      data-p-icon="pi pi-play-circle"
                       pButton
                       (click)="runNow(action)"
-                    >{{ t('maintenance.runNow') }}</button>
+                    >
+                      <svg data-p-icon="play-circle"></svg> {{ t('maintenance.runNow') }}
+                    </button>
                   </div>
                 </p-card>
               </div>

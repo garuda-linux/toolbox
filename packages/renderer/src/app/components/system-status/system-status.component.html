@@ -55,7 +55,8 @@
       </div>
     }
     @if (
-      systemStatusService.healthErrors().length > 0 && !systemStatusService.healthErrors().some(e => e.message.includes('reboot') || e.message.includes('Reboot'))
+      systemStatusService.healthErrors().length > 0 &&
+      !systemStatusService.healthErrors().some((e) => e.message.includes('reboot') || e.message.includes('Reboot'))
     ) {
       <div
         class="cursor-pointer"
@@ -91,9 +92,11 @@
     </ul>
 
     <div class="flex justify-end gap-2">
-      <button pButton severity="secondary" (click)="healthDialogVisible.set(false)" >{{ t('systemStatus.cancel') }}</button>
+      <button pButton severity="secondary" (click)="healthDialogVisible.set(false)">
+        {{ t('systemStatus.cancel') }}
+      </button>
       @if (healthFixAvailable()) {
-        <button pButton severity="success" (click)="runHealthFix()" >{{ t('systemStatus.runHealthFix') }}</button>
+        <button pButton severity="success" (click)="runHealthFix()">{{ t('systemStatus.runHealthFix') }}</button>
       }
     </div>
   </p-dialog>
@@ -117,17 +120,14 @@
     </ul>
 
     <div class="flex justify-end gap-2">
-      <button pButton severity="secondary" (click)="dialogVisible.set(false)" >{{ t('systemStatus.cancel') }}</button>
+      <button pButton severity="secondary" (click)="dialogVisible.set(false)">{{ t('systemStatus.cancel') }}</button>
       @if (hasRegularUpdates()) {
-        <button
-          [disabled]="updateButtonDisabled()"
-          pButton
-          severity="success"
-          (click)="scheduleUpdates(true)"
-        >{{ t('systemStatus.scheduleUpdates') }}</button>
+        <button [disabled]="updateButtonDisabled()" pButton severity="success" (click)="scheduleUpdates(true)">
+          {{ t('systemStatus.scheduleUpdates') }}
+        </button>
       }
       @if (hasAurUpdates()) {
-        <button pButton severity="info" (click)="runAurUpdates()" >{{ t('systemStatus.runAurUpdates') }}</button>
+        <button pButton severity="info" (click)="runAurUpdates()">{{ t('systemStatus.runAurUpdates') }}</button>
       }
     </div>
   </p-dialog>
@@ -171,14 +171,18 @@
     </div>
 
     <div class="flex justify-end gap-2">
-      <button pButton severity="secondary" (click)="pacdiffDialogVisible.set(false)" >{{ t('systemStatus.cancel') }}</button>
+      <button pButton severity="secondary" (click)="pacdiffDialogVisible.set(false)">
+        {{ t('systemStatus.cancel') }}
+      </button>
       <button
         class="cursor-pointer"
         [queryParams]="{ action: 'pacdiff' }"
         pButton
         routerLink="/maintenance"
         severity="success"
-      >{{ t('systemStatus.openMaintenanceButton') }}</button>
+      >
+        {{ t('systemStatus.openMaintenanceButton') }}
+      </button>
     </div>
   </p-dialog>
 </ng-container>

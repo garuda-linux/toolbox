@@ -14,10 +14,11 @@ import { MessageToastService } from '@garudalinux/core';
 import { WallpaperService } from '../wallpaper/wallpaper.service';
 import { Slider } from 'primeng/slider';
 import { ButtonDirective } from 'primeng/button';
+import { Times } from '@primeicons/angular/times';
 
 @Component({
   selector: 'toolbox-settings',
-  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, ButtonDirective, FileUpload, Slider],
+  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, ButtonDirective, FileUpload, Slider, Times],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   providers: [LangPipePipe],

@@ -10,6 +10,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { ElectronFsService, ElectronShellService } from '../../electron-services';
+import { ExternalLink } from '@primeicons/angular/external-link';
+import { Pencil } from '@primeicons/angular/pencil';
 
 interface ConfigFile {
   name: string;
@@ -32,6 +34,8 @@ interface ConfigFile {
     InputTextModule,
     TooltipModule,
     DialogModule,
+    ExternalLink,
+    Pencil,
   ],
   templateUrl: './config-files.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

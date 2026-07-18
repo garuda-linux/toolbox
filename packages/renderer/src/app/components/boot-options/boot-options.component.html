@@ -13,7 +13,9 @@
     @if (error()) {
       <p-message severity="error">{{ error() }}</p-message>
       <div class="mt-4">
-        <button pButton data-p-icon="pi pi-refresh" (click)="isLive() ? loadPartitions() : loadSettings()" >{{ t('bootOptions.retry') }}</button>
+        <button pButton (click)="isLive() ? loadPartitions() : loadSettings()">
+          <svg data-p-icon="refresh"></svg> {{ t('bootOptions.retry') }}
+        </button>
       </div>
     } @else if (isLive() && !bootService.getChroot()) {
       <div class="flex flex-col gap-4">
@@ -204,12 +206,13 @@
                       selectedPlymouthTheme() === 'details' ||
                       bootService.isVirtualMachine()
                     "
-                    data-p-icon="pi pi-eye"
                     pButton
                     [pTooltip]="t('bootOptions.previewTheme')"
                     [tooltipPosition]="'top'"
                     (click)="previewPlymouthTheme()"
-                  ></button>
+                  >
+                    <svg data-p-icon="eye"></svg>
+                  </button>
                 </div>
                 <small>{{ t('bootOptions.plymouthThemeHint') }}</small>
               } @else if (osInteract.check('plymouth', 'pkg')) {
@@ -227,7 +230,7 @@
               <span class="font-bold">{{ t('bootOptions.grubBackground') }}</span>
               <div class="flex gap-2">
                 <input class="w-full" id="grubBackground" [ngModel]="grubBackground()" pInputText readonly />
-                <button pButton data-p-icon="pi pi-folder-open" (click)="selectFile('background')" ></button>
+                <button pButton (click)="selectFile('background')"><svg data-p-icon="folder-open"></svg></button>
               </div>
             </div>
 
@@ -235,7 +238,7 @@
               <span class="font-bold">{{ t('bootOptions.grubTheme') }}</span>
               <div class="flex gap-2">
                 <input class="w-full" id="grubTheme" [ngModel]="grubTheme()" pInputText readonly />
-                <button pButton data-p-icon="pi pi-folder-open" (click)="selectFile('theme')" ></button>
+                <button pButton (click)="selectFile('theme')"><svg data-p-icon="folder-open"></svg></button>
               </div>
             </div>
           </div>
@@ -265,13 +268,9 @@
                   </td>
                   <td>
                     @if (!entry.isSubmenu) {
-                      <button
-                        [outlined]="true"
-                        data-p-icon="pi pi-pencil"
-                        pButton
-                        size="small"
-                        (click)="openEntryEditor(entry)"
-                      >{{ t('bootOptions.edit') }}</button>
+                      <button [outlined]="true" pButton size="small" (click)="openEntryEditor(entry)">
+                        <svg data-p-icon="pencil"></svg> {{ t('bootOptions.edit') }}
+                      </button>
                     }
                   </td>
                 </tr>

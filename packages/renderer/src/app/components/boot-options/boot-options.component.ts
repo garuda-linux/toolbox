@@ -33,6 +33,10 @@ import { BootOptionsService } from './boot-options.service';
 import { ConfigService } from '../config/config.service';
 import { dialogOpen } from '../../electron-services/electron-api-utils.js';
 import { ActivatedRoute } from '@angular/router';
+import { Refresh } from '@primeicons/angular/refresh';
+import { Eye } from '@primeicons/angular/eye';
+import { FolderOpen } from '@primeicons/angular/folder-open';
+import { Pencil } from '@primeicons/angular/pencil';
 
 @Component({
   selector: 'toolbox-boot-options',
@@ -53,6 +57,10 @@ import { ActivatedRoute } from '@angular/router';
     TextareaModule,
     ProgressBar,
     ButtonDirective,
+    Refresh,
+    Eye,
+    FolderOpen,
+    Pencil,
   ],
   templateUrl: './boot-options.component.html',
   styleUrl: './boot-options.component.css',

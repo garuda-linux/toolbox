@@ -17,6 +17,11 @@ import { Router, type UrlTree } from '@angular/router';
 import { ConfigService } from '../config/config.service';
 import { CommandPaletteService } from '../command-palette/command-palette.service';
 import { ButtonDirective } from 'primeng/button';
+import { MinusCircle } from '@primeicons/angular/minus-circle';
+import { PlusCircle } from '@primeicons/angular/plus-circle';
+import { PlayCircle } from '@primeicons/angular/play-circle';
+import { Refresh } from '@primeicons/angular/refresh';
+import { PIcon } from '@primeicons/angular/p-icon';
 
 @Component({
   selector: 'toolbox-maintenance',
@@ -32,6 +37,11 @@ import { ButtonDirective } from 'primeng/button';
     Tabs,
     TabList,
     TabPanel,
+    MinusCircle,
+    PlusCircle,
+    PlayCircle,
+    Refresh,
+    PIcon,
   ],
   templateUrl: './maintenance.component.html',
   styleUrl: './maintenance.component.css',

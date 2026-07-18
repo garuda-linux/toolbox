@@ -13,10 +13,43 @@ import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { ButtonDirective } from 'primeng/button';
+import { Stop } from '@primeicons/angular/stop';
+import { Refresh } from '@primeicons/angular/refresh';
+import { Server } from '@primeicons/angular/server';
+import { User } from '@primeicons/angular/user';
+import { Filter } from '@primeicons/angular/filter';
+import { FilterSlash } from '@primeicons/angular/filter-slash';
+import { Eye } from '@primeicons/angular/eye';
+import { EyeSlash } from '@primeicons/angular/eye-slash';
+import { Play } from '@primeicons/angular/play';
+import { PowerOff } from '@primeicons/angular/power-off';
+import { Ban } from '@primeicons/angular/ban';
+import { PIcon } from '@primeicons/angular/p-icon';
 
 @Component({
   selector: 'toolbox-systemd-services',
-  imports: [ButtonDirective, IconField, InputIcon, PopoverModule, InputText, TableModule, TranslocoDirective, Tooltip],
+  imports: [
+    ButtonDirective,
+    IconField,
+    InputIcon,
+    PopoverModule,
+    InputText,
+    TableModule,
+    TranslocoDirective,
+    Tooltip,
+    Stop,
+    Refresh,
+    Server,
+    User,
+    Filter,
+    FilterSlash,
+    Eye,
+    EyeSlash,
+    Play,
+    PowerOff,
+    Ban,
+    PIcon,
+  ],
   templateUrl: './systemd-services.component.html',
   styleUrl: './systemd-services.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

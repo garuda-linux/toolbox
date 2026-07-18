@@ -23,29 +23,24 @@
         <div class="flex gap-4 justify-center mb-10 flex-wrap">
           <button
             [outlined]="true"
-            data-p-icon="pi pi-external-link"
             pButton
             severity="help"
             (click)="shellService.open('https://forum.garudalinux.org')"
-          >{{ t('setupWizard.success.forum') }}</button>
-          <button
-            [outlined]="true"
-            data-p-icon="pi pi-external-link"
-            pButton
-            severity="help"
-            (click)="shellService.open('https://wiki.garudalinux.org')"
-          >{{ t('setupWizard.success.garudaWiki') }}</button>
-          <button
-            [outlined]="true"
-            data-p-icon="pi pi-external-link"
-            pButton
-            severity="help"
-            (click)="shellService.open('https://wiki.archlinux.org')"
-          >{{ t('setupWizard.success.archWiki') }}</button>
+          >
+            <svg data-p-icon="external-link"></svg> {{ t('setupWizard.success.forum') }}
+          </button>
+          <button [outlined]="true" pButton severity="help" (click)="shellService.open('https://wiki.garudalinux.org')">
+            <svg data-p-icon="external-link"></svg> {{ t('setupWizard.success.garudaWiki') }}
+          </button>
+          <button [outlined]="true" pButton severity="help" (click)="shellService.open('https://wiki.archlinux.org')">
+            <svg data-p-icon="external-link"></svg> {{ t('setupWizard.success.archWiki') }}
+          </button>
         </div>
 
         <div class="flex justify-center">
-          <button pButton data-p-icon="pi pi-check" size="large" (click)="finish()" >{{ t('setupWizard.success.finish') }}</button>
+          <button pButton size="large" (click)="finish()">
+            <svg data-p-icon="check"></svg> {{ t('setupWizard.success.finish') }}
+          </button>
         </div>
       </div>
     </p-card>

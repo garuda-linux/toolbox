@@ -16,6 +16,7 @@ import { BackupRestoreTarget, BootInstallTarget, BootRepairAction, DiskInfo } fr
 import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Tooltip } from 'primeng/tooltip';
+import { Check } from '@primeicons/angular/check';
 
 @Component({
   selector: 'toolbox-boot-repair',
@@ -29,6 +30,7 @@ import { Tooltip } from 'primeng/tooltip';
     RadioButton,
     InputPassword,
     Tooltip,
+    Check,
   ],
   templateUrl: './boot-repair.component.html',
   styleUrl: './boot-repair.component.css',

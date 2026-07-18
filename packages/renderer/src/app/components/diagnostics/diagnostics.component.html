@@ -12,12 +12,15 @@
         @for (tool of diagnosticTools; track tool.id) {
           <button
             [outlined]="true"
-            [attr.data-p-icon]="tool.icon"
             pButton
             [pTooltip]="t(tool.description)"
             tooltipPosition="bottom"
-            (click)="tool.id === 'full' ? getFullLogs() : tool.id === 'upload' ? uploadPrivateBin() : getOutput(tool.id)"
-          >{{ t(tool.label) }}</button>
+            (click)="
+              tool.id === 'full' ? getFullLogs() : tool.id === 'upload' ? uploadPrivateBin() : getOutput(tool.id)
+            "
+          >
+            <svg [pIcon]="tool.icon"></svg> {{ t(tool.label) }}
+          </button>
         }
       </div>
 

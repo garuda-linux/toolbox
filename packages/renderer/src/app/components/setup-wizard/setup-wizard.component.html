@@ -48,17 +48,19 @@
                   <div class="flex-none flex gap-2 pt-4">
                     <button
                       [disabled]="i === 0"
-                      data-p-icon="pi pi-arrow-left"
                       pButton
                       severity="secondary"
                       (click)="activateCallback(getCategoryStepValue(i - 1))"
-                    >{{ t('setupWizard.buttons.back') }}</button>
-                    <button
-                      data-p-icon="pi pi-arrow-right"
-                      pButton
+                    >
+                      <svg data-p-icon="arrow-left"></svg> {{ t('setupWizard.buttons.back') }}
+                    </button>
+                    <p-button
                       iconPos="right"
-                      (click)="activateCallback(i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1))"
-                    >{{ t('setupWizard.buttons.next') }}</button>
+                      (click)="
+                        activateCallback(i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1))
+                      "
+                      ><svg data-p-icon="arrow-right"></svg>{{ t('setupWizard.buttons.next') }}</p-button
+                    >
                   </div>
                 </div>
               </ng-template>
@@ -81,28 +83,19 @@
                 }
 
                 <div class="flex gap-2 pt-4">
-                  <button
-                    data-p-icon="pi pi-arrow-left"
-                    pButton
+                  <p-button
                     severity="secondary"
                     (click)="activateCallback(getCategoryStepValue(softwareCategories.length - 1))"
-                  >{{ t('setupWizard.buttons.back') }}</button>
+                    ><svg data-p-icon="arrow-left"></svg>{{ t('setupWizard.buttons.back') }}</p-button
+                  >
                   @if (executionFailed()) {
-                    <button
-                      [disabled]="taskManagerService.running()"
-                      data-p-icon="pi pi-refresh"
-                      pButton
-                      severity="warn"
-                      (click)="apply()"
-                    >{{ t('setupWizard.buttons.retry') }}</button>
+                    <button [disabled]="taskManagerService.running()" pButton severity="warn" (click)="apply()">
+                      <svg data-p-icon="refresh"></svg> {{ t('setupWizard.buttons.retry') }}
+                    </button>
                   } @else {
-                    <button
-                      [disabled]="taskManagerService.running()"
-                      data-p-icon="pi pi-check"
-                      pButton
-                      severity="success"
-                      (click)="apply()"
-                    >{{ t('setupWizard.buttons.apply') }}</button>
+                    <button [disabled]="taskManagerService.running()" pButton severity="success" (click)="apply()">
+                      <svg data-p-icon="check"></svg> {{ t('setupWizard.buttons.apply') }}
+                    </button>
                   }
                 </div>
               </div>

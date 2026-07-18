@@ -81,10 +81,11 @@
               <button
                 class="p-button-secondary"
                 [disabled]="!configService.settings().background"
-                data-p-icon="pi pi-times"
                 pButton
                 (click)="clearBackground()"
-              >{{ t('settings.clearBackground') }}</button>
+              >
+                <svg data-p-icon="times"></svg> {{ t('settings.clearBackground') }}
+              </button>
               <p-fileupload
                 id="customBackgroundInput"
                 [chooseButtonProps]="{ styleClass: 'btn-design choose-btn' }"

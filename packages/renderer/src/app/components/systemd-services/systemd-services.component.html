@@ -12,42 +12,36 @@
   >
     <ng-template #caption>
       <div class="flex">
+        <button class="mr-2.5" [outlined]="true" pButton (click)="toggleRefresh()">
+          <svg [pIcon]="configService.settings().autoRefresh ? 'stop' : 'refresh'"></svg>
+          {{ t('systemdServices.autoRefresh') }}
+        </button>
+        <button class="mr-2.5" [outlined]="true" pButton (click)="toggleContext()">
+          <svg [pIcon]="configService.settings().systemdUserContext ? 'server' : 'user'"></svg>
+          {{
+            configService.settings().systemdUserContext
+              ? t('systemdServices.systemContext')
+              : t('systemdServices.userContext')
+          }}
+        </button>
+        <button class="mr-2.5" [outlined]="true" pButton (click)="toggleDisabled()">
+          <svg [pIcon]="includeDisabled() ? 'filter' : 'filter-slash'"></svg>
+          {{ includeDisabled() ? t('systemdServices.excludeDisabled') : t('systemdServices.includeDisabled') }}
+        </button>
         <button
           class="mr-2.5"
-          [attr.data-p-icon]="configService.settings().autoRefresh ? 'pi pi-stop' : 'pi pi-refresh'"
-          [outlined]="true"
-          pButton
-          (click)="toggleRefresh()"
-        >{{ t('systemdServices.autoRefresh') }}</button>
-        <button
-          class="mr-2.5"
-          [attr.data-p-icon]="configService.settings().systemdUserContext ? 'pi pi-server' : 'pi pi-user'"
-          [outlined]="true"
-          pButton
-          (click)="toggleContext()"
-        >{{ configService.settings().systemdUserContext ? t('systemdServices.systemContext') : t('systemdServices.userContext') }}</button>
-        <button
-          class="mr-2.5"
-          [attr.data-p-icon]="includeDisabled() ? 'pi pi-filter' : 'pi pi-filter-slash'"
-          [outlined]="true"
-          pButton
-          (click)="toggleDisabled()"
-        >{{ includeDisabled() ? t('systemdServices.excludeDisabled') : t('systemdServices.includeDisabled') }}</button>
-        <button
-          class="mr-2.5"
-          [attr.data-p-icon]="hideDead() ? 'pi pi-eye' : 'pi pi-eye-slash'"
           [pTooltip]="t('systemdServices.hideDeadTip')"
           [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'bottom' }"
           [outlined]="true"
           pButton
           (click)="toggleHideDead()"
-        >{{ hideDead() ? t('systemdServices.showAll') : t('systemdServices.hideDead') }}</button>
-        <button
-          [outlined]="true"
-          data-p-icon="pi pi-filter-slash"
-          pButton
-          (click)="clear(serviceTable)"
-        >{{ t('systemdServices.clear') }}</button>
+        >
+          <svg [pIcon]="hideDead() ? 'eye' : 'eye-slash'"></svg>
+          {{ hideDead() ? t('systemdServices.showAll') : t('systemdServices.hideDead') }}
+        </button>
+        <button [outlined]="true" pButton (click)="clear(serviceTable)">
+          <svg data-p-icon="filter-slash"></svg> {{ t('systemdServices.clear') }}
+        </button>
         <p-iconfield class="ml-auto" iconPosition="left">
           <p-inputicon>
             <i class="pi pi-search"></i>
@@ -120,12 +114,9 @@
           ></i>
         </td>
         <td>
-          <button
-            [outlined]="true"
-            data-p-icon="pi pi-power-off"
-            pButton
-            (click)="openPopover($event, op, service)"
-          >{{ t('systemdServices.show') }}</button>
+          <button [outlined]="true" pButton (click)="openPopover($event, op, service)">
+            <svg data-p-icon="power-off"></svg> {{ t('systemdServices.show') }}
+          </button>
         </td>
       </tr>
     </ng-template>
@@ -142,69 +133,53 @@
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'running'"
         [outlined]="true"
-        data-p-icon="pi pi-play"
         pButton
         (click)="executeAction('start')"
-      >{{ t('systemdServices.start') }}</button>
+      >
+        <svg data-p-icon="play"></svg> {{ t('systemdServices.start') }}
+      </button>
       <button
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'dead'"
         [outlined]="true"
-        data-p-icon="pi pi-stop"
         pButton
         (click)="executeAction('stop')"
-      >{{ t('systemdServices.stop') }}</button>
-      <button
-        class="mx-2.5"
-        [outlined]="true"
-        data-p-icon="pi pi-refresh"
-        pButton
-        (click)="executeAction('restart')"
-      >{{ t('systemdServices.restart') }}</button>
-      <button
-        class="mx-2.5"
-        [outlined]="true"
-        data-p-icon="pi pi-refresh"
-        pButton
-        (click)="executeAction('reload')"
-      >{{ t('systemdServices.reload') }}</button>
+      >
+        <svg data-p-icon="stop"></svg> {{ t('systemdServices.stop') }}
+      </button>
+      <button class="mx-2.5" [outlined]="true" pButton (click)="executeAction('restart')">
+        <svg data-p-icon="refresh"></svg> {{ t('systemdServices.restart') }}
+      </button>
+      <button class="mx-2.5" [outlined]="true" pButton (click)="executeAction('reload')">
+        <svg data-p-icon="refresh"></svg> {{ t('systemdServices.reload') }}
+      </button>
       <button
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'running'"
         [outlined]="true"
-        data-p-icon="pi pi-power-off"
         pButton
         (click)="executeAction('enable')"
-      >{{ t('systemdServices.enable') }}</button>
+      >
+        <svg data-p-icon="power-off"></svg> {{ t('systemdServices.enable') }}
+      </button>
       <button
         class="mx-2.5"
         [disabled]="activeService()?.sub === 'dead'"
         [outlined]="true"
-        data-p-icon="pi pi-power-off"
         pButton
         (click)="executeAction('disable')"
-      >{{ t('systemdServices.disable') }}</button>
-      <button
-        class="mx-2.5"
-        [outlined]="true"
-        data-p-icon="pi pi-ban"
-        pButton
-        (click)="executeAction('mask')"
-      >{{ t('systemdServices.mask') }}</button>
-      <button
-        class="mx-2.5"
-        [outlined]="true"
-        data-p-icon="pi pi-ban"
-        pButton
-        (click)="executeAction('unmask')"
-      >{{ t('systemdServices.unmask') }}</button>
-      <button
-        class="mx-2.5"
-        [outlined]="true"
-        data-p-icon="pi pi-refresh"
-        pButton
-        (click)="executeAction('logs')"
-      >{{ t('systemdServices.logs') }}</button>
+      >
+        <svg data-p-icon="power-off"></svg> {{ t('systemdServices.disable') }}
+      </button>
+      <button class="mx-2.5" [outlined]="true" pButton (click)="executeAction('mask')">
+        <svg data-p-icon="ban"></svg> {{ t('systemdServices.mask') }}
+      </button>
+      <button class="mx-2.5" [outlined]="true" pButton (click)="executeAction('unmask')">
+        <svg data-p-icon="ban"></svg> {{ t('systemdServices.unmask') }}
+      </button>
+      <button class="mx-2.5" [outlined]="true" pButton (click)="executeAction('logs')">
+        <svg data-p-icon="refresh"></svg> {{ t('systemdServices.logs') }}
+      </button>
     </div>
   </p-popover>
 </ng-container>
