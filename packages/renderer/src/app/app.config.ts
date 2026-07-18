@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import {
   type ApplicationConfig,
   inject,
@@ -31,6 +31,7 @@ import { provideRouter, Router, withHashLocation, withViewTransitions } from '@a
 import { routes } from './routes';
 import { CatppuccinAura } from '@garudalinux/themes/catppuccin';
 import { AVAILABLE_LANGUAGES } from './constants/i18n';
+import { definePreset } from '@primeuix/themes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -54,7 +55,13 @@ export const appConfig: ApplicationConfig = {
       { font: 'InterVariable' },
       {
         theme: {
-          preset: CatppuccinAura,
+          preset: definePreset(CatppuccinAura, {
+            semantic: {
+              typography: {
+                fontSize: '1rem',
+              },
+            },
+          }),
           options: {
             darkModeSelector: '.p-dark',
           },
