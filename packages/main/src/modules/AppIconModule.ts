@@ -86,6 +86,7 @@ class AppIconModule implements AppModule {
     }
 
     this.searchPaths.push('/usr/share/pixmaps/');
+    this.logger.debug(`Built ${this.searchPaths.length} icon search paths`);
   }
 
   private async getDirContents(dirPath: string): Promise<Set<string> | null> {
@@ -109,23 +110,31 @@ class AppIconModule implements AppModule {
     const themes = [themeName];
     try {
       const indexPath = join('/usr/share/icons/', themeName, 'index.theme');
+      this.logger.debug(`Checking theme inheritance for ${themeName} at ${indexPath}`);
       if (await exists(indexPath)) {
         const content = await readFile(indexPath, 'utf8');
         const match = content.match(/^Inherits=(.*)$/m);
         if (match) {
           const parents = match[1].split(',').map((s) => s.trim());
+          this.logger.debug(`Theme ${themeName} inherits from: ${parents.join(', ')}`);
           for (const parent of parents) {
             themes.push(...(await this.getThemeInheritance(parent, visited)));
           }
+        } else {
+          this.logger.debug(`No Inherits line found in ${indexPath}`);
         }
+      } else {
+        this.logger.debug(`Theme index file not found: ${indexPath}`);
       }
-    } catch {
-      // ignore
+    } catch (error) {
+      this.logger.debug(`Error reading theme inheritance for ${themeName}: ${error}`);
     }
     return themes;
   }
 
   private async detectCurrentTheme(): Promise<void> {
+    let themeDetected = false;
+
     try {
       const kdeglobals = join(homedir(), '.config/kdeglobals');
       if (await exists(kdeglobals)) {
@@ -133,24 +142,38 @@ class AppIconModule implements AppModule {
         const match = content.match(/\[Icons\][\s\S]*?Theme=(.*?)\n/);
         if (match) {
           this.currentTheme = match[1].trim();
-          this.logger.debug(`Detected system icon theme: ${this.currentTheme}`);
+          this.logger.debug(`Detected KDE icon theme: ${this.currentTheme}`);
+          themeDetected = true;
         }
-      } else {
+      }
+    } catch (error) {
+      this.logger.debug(`Error reading KDE config: ${error}`);
+    }
+
+    if (!themeDetected) {
+      try {
         const { stdout } = await execAsync('gsettings get org.gnome.desktop.interface icon-theme 2>/dev/null');
         const theme = stdout.trim().replace(/'/g, '');
         if (theme) {
           this.currentTheme = theme;
-          this.logger.debug(`Detected system icon theme: ${this.currentTheme}`);
+          this.logger.debug(`Detected GNOME icon theme: ${this.currentTheme}`);
+          themeDetected = true;
         }
+      } catch (error) {
+        this.logger.debug(`Error detecting GNOME theme: ${error}`);
       }
-    } catch {
+    }
+
+    if (!themeDetected) {
       this.currentTheme = 'hicolor';
+      this.logger.debug(`No icon theme detected, using default: hicolor`);
     }
 
     this.activeThemes = await this.getThemeInheritance(this.currentTheme);
     if (!this.activeThemes.includes('hicolor')) {
       this.activeThemes.push('hicolor');
     }
+    this.logger.debug(`Active icon themes: ${this.activeThemes.join(', ')}`);
   }
 
   private async findFallbackIcon(): Promise<void> {
@@ -212,6 +235,8 @@ class AppIconModule implements AppModule {
         }
       }
 
+      this.logger.debug(`Searching for icon: ${originalTarget} (names: ${iconNamesToSearch.join(', ')})`);
+
       const searchResults = await Promise.all(
         this.searchPaths.map(async (basePath) => {
           const files = await this.getDirContents(basePath);
@@ -239,6 +264,12 @@ class AppIconModule implements AppModule {
       );
 
       resolvedPath = searchResults.find((p) => p !== null) || '';
+
+      if (resolvedPath) {
+        this.logger.debug(`Found icon: ${originalTarget} at ${resolvedPath}`);
+      } else {
+        this.logger.debug(`Icon not found: ${originalTarget} (searched ${this.searchPaths.length} paths)`);
+      }
 
       if (!resolvedPath) {
         let absPath = target;
