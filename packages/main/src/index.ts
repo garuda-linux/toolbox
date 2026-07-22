@@ -38,6 +38,9 @@ app.commandLine.appendSwitch(
     'AcceleratedVideoEncoder,CanvasOopRasterization,',
 );
 
+// https://forum.garudalinux.org/t/48396
+app.commandLine.appendSwitch('disable-vulkan');
+
 protocol.registerSchemesAsPrivileged([
   {
     scheme: 'app-icon',
