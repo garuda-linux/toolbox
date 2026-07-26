@@ -1,4 +1,33 @@
-## [unreleased]
+## [6.0.0] - 2026-07-26
+
+### 🚀 Features
+
+- *(maintenance)* Require enter press for closing maintenance cmd terminals
+
+### 🐛 Bug Fixes
+
+- *(setup-assistant)* Catch error and allow retry; allow finishing without tasks
+- *(renderer)* Restore font size; fully transparent terminal
+- *(renderer)* Properly fix font size by using defineTheme to override default font size token
+- *(main)* Fix theme detection and fallbacks in case not found to properly display app icons
+- *(renderer)* Restore icons on buttons
+- *(main)* Disable vulkan by default as this seems to cause crashes on wayland for some people
+
+### 🚜 Refactor
+
+- Angular 22
+- Remove theme designer; unmaintainable and broken in new PrimeNG
+
+### ⚙️ Miscellaneous Tasks
+
+- *(gaming)* Remove proton-ge-custom-bin
+- *(packages)* Update from Arch wiki
+- *(gamer)* Drop gamehub; gone from repo
+## [5.3.2] - 2026-05-30
+
+### 📚 Documentation
+
+- *(changelog)* Update
 
 ### ⚙️ Miscellaneous Tasks
 
