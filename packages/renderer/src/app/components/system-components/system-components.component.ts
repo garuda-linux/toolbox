@@ -24,13 +24,6 @@ export class SystemComponentsComponent {
           check: { type: 'pkg', name: 'pipewire-support' },
         },
         {
-          name: 'alsa-support',
-          title: 'systemTools.audio.alsa.title',
-          description: 'systemTools.audio.alsa.description',
-          checked: false,
-          check: { type: 'pkg', name: 'alsa-support' },
-        },
-        {
           name: 'jack-support',
           title: 'systemTools.audio.jack.title',
           description: 'systemTools.audio.jack.description',
