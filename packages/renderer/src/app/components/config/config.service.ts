@@ -22,7 +22,6 @@ export class ConfigService {
   state = signal<AppState>({
     availablePkgs: new Map<string, boolean>(),
     codeName: '',
-    designerActive: false,
     desktopEnvironment: '' as DesktopEnvironment,
     hostname: '',
     isLiveSystem: undefined,
@@ -42,7 +41,6 @@ export class ConfigService {
     blurBackground: false,
     blurStrength: 4,
     copyDiagnostics: true,
-    customDesign: null,
     darkMode: true,
     language: 'en',
     logLevel: LogLevel.INFO,
@@ -442,7 +440,7 @@ export class ConfigService {
   }
 
   /**
-   * Initialize the theme based on the active theme setting or open the theme designer.
+   * Initialize the theme based on the active theme setting.
    * @private
    */
   private async initTheme(activeTheme: AppTheme): Promise<void> {

@@ -31,7 +31,7 @@ import { clear, writeText } from '../../electron-services';
 import { MessageToastService } from '@garudalinux/core';
 import { GarudaBin } from '../privatebin/privatebin';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
-import { DesignerService } from '../designer/designerservice';
+import { TerminalThemeService } from './terminal-theme.service';
 import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
@@ -51,7 +51,7 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   protected readonly taskManagerService = inject(TaskManagerService);
   private readonly configService = inject(ConfigService);
-  private readonly designerService = inject(DesignerService);
+  private readonly terminalThemeService = inject(TerminalThemeService);
   private readonly garudaBin = inject(GarudaBin);
   private readonly loadingService = inject(LoadingService);
   private readonly logger = Logger.getInstance();
@@ -77,7 +77,7 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
     let theme: ITheme = this.configService.settings().darkMode ? CatppuccinXtermJs.dark : CatppuccinXtermJs.light;
     if (!this.configService.settings().activeTheme.includes('Catppuccin Mocha')) {
       const isDarkMode = this.configService.settings().darkMode;
-      theme = this.designerService.getXtermTheme(isDarkMode);
+      theme = this.terminalThemeService.getXtermTheme(isDarkMode);
     }
 
     return {
@@ -96,7 +96,7 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
       if (term?.underlying) {
         let theme: ITheme = darkMode ? CatppuccinXtermJs.dark : CatppuccinXtermJs.light;
         if (!appTheme.includes('Catppuccin Mocha')) {
-          theme = this.designerService.getXtermTheme(darkMode);
+          theme = this.terminalThemeService.getXtermTheme(darkMode);
         }
         term.underlying.options.theme = theme;
       }

@@ -30,7 +30,7 @@ import { MessageToastService } from '@garudalinux/core';
 import { ElectronShellSpawnService } from '../../electron-services/electron-shell-spawn.service';
 import { ConfigService } from '../config/config.service';
 import { CatppuccinXtermJs } from '../../theme';
-import { DesignerService } from '../designer/designerservice';
+import { TerminalThemeService } from '../terminal/terminal-theme.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Select } from 'primeng/select';
 import { NetworkStatus } from './types';
@@ -83,7 +83,7 @@ export class NetworkAssistantComponent implements OnInit, AfterViewInit, OnDestr
   private readonly transloco = inject(TranslocoService);
   private readonly shellSpawn = inject(ElectronShellSpawnService);
   private readonly configService = inject(ConfigService);
-  private readonly designerService = inject(DesignerService);
+  private readonly terminalThemeService = inject(TerminalThemeService);
   private readonly loadingService = inject(LoadingService);
 
   private activeProcessId: string | null = null;
@@ -122,7 +122,7 @@ export class NetworkAssistantComponent implements OnInit, AfterViewInit, OnDestr
     let theme: ITheme = this.configService.settings().darkMode ? CatppuccinXtermJs.dark : CatppuccinXtermJs.light;
     if (!this.configService.settings().activeTheme.includes('Catppuccin Mocha')) {
       const isDarkMode = this.configService.settings().darkMode;
-      theme = this.designerService.getXtermTheme(isDarkMode);
+      theme = this.terminalThemeService.getXtermTheme(isDarkMode);
     }
     return {
       disableStdin: true,

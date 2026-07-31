@@ -10,7 +10,6 @@ export interface AppSettings {
   blurBackground: boolean;
   blurStrength: number;
   copyDiagnostics: boolean;
-  customDesign: string | null;
   darkMode: boolean;
   language: string;
   logLevel: LogLevel;
@@ -22,7 +21,6 @@ export interface AppSettings {
 export interface AppState {
   availablePkgs: Map<string, boolean>;
   codeName: string;
-  designerActive: boolean;
   desktopEnvironment: DesktopEnvironment;
   hostname: string;
   isLiveSystem: boolean | undefined;

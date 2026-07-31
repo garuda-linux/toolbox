@@ -45,7 +45,6 @@ import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from
 import { MODULE_SEARCH, ModuleSearchEntry } from './constants/module-search';
 import { NgClass } from '@angular/common';
 import { registerAppCommandPaletteActions } from './components/command-palette/command-palette';
-import { DesignerService } from './components/designer/designerservice';
 import { WallpaperService } from './components/wallpaper/wallpaper.service';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { Menu } from 'primeng/menu';
@@ -135,8 +134,6 @@ export class AppComponent implements OnInit {
   protected readonly configService = inject(ConfigService);
   protected readonly logger = Logger.getInstance();
 
-  // Not used, but required for the app component to work properly!
-  private readonly _designerService = inject(DesignerService);
   private readonly _themeService = inject(ThemeService);
 
   readonly moduleItems = [

@@ -3,11 +3,9 @@ import { DOCUMENT } from '@angular/common';
 import { Logger } from '../../logging/logging';
 import { ConfigService } from '../config/config.service';
 import { AppSettings } from '../config/interfaces';
-import { DesignerService } from '../designer/designerservice';
 
 export class ThemeService {
   private readonly configService = inject(ConfigService);
-  private readonly designerService = inject(DesignerService);
   private readonly document = inject(DOCUMENT);
   private readonly logger = Logger.getInstance();
 

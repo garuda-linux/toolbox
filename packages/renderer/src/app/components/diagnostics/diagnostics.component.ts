@@ -24,7 +24,7 @@ import { Logger } from '../../logging/logging';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router, type UrlTree } from '@angular/router';
-import { DesignerService } from '../designer/designerservice';
+import { TerminalThemeService } from '../terminal/terminal-theme.service';
 import { ButtonDirective } from 'primeng/button';
 import { PIcon } from '@primeicons/angular/p-icon';
 
@@ -41,7 +41,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
   readonly term = viewChild<NgTerminal>('term');
 
   private readonly configService = inject(ConfigService);
-  private readonly designerService = inject(DesignerService);
+  private readonly terminalThemeService = inject(TerminalThemeService);
   private readonly garudaBin = inject(GarudaBin);
   private readonly loadingService = inject(LoadingService);
   private readonly logger = Logger.getInstance();
@@ -105,7 +105,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
     let theme: ITheme = this.configService.settings().darkMode ? CatppuccinXtermJs.dark : CatppuccinXtermJs.light;
     if (!this.configService.settings().activeTheme.includes('Catppuccin Mocha')) {
       const isDarkMode = this.configService.settings().darkMode;
-      theme = this.designerService.getXtermTheme(isDarkMode);
+      theme = this.terminalThemeService.getXtermTheme(isDarkMode);
     }
 
     return {
