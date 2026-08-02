@@ -22,10 +22,10 @@
       "callExorcistTitle": "Exorzistari deitu zaio!",
       "callExorcistBody": "Nahiko etsituta egon behar duzu botoi hau sakatzeko! Voodoo berezi bat prestatu dizut, aplikazioarekin arazoak izaten jarraitzen baduzu, mesedez jakinarazi Garuda Linux foroan edo gure arazoen jarraitzailean."
     },
-    "terminal": "Erakutsi terminala",
     "terminalRunning": "Exekutatzen ari diren atazak",
     "terminalTasks": "Exekutatu atazak",
-    "pending": "Zain"
+    "pending": "Zain",
+    "console": "Erakutsi terminala"
   },
   "diagnostics": {
     "title": "Arazketa informazioa ",
@@ -152,23 +152,6 @@
     "password": "Pasahitza",
     "cancel": "Utzi",
     "useOnce": "Erabili behin bakarrik"
-  },
-  "terminal": {
-    "title": "Terminala",
-    "icon": "Icon",
-    "runActions": "Exekutatu ekintzak",
-    "removeAll": "Kendu ekintza guztiak",
-    "abortAll": "Abortatu ekintza guztiak",
-    "noOutput": "Irteerarik ez",
-    "outputExists": "Badirudi dagoeneko ekintza bat exekutatzen ari dela. Mesedez, itxaron amaitu arte erregistroak ikusten saiatu aurretik.",
-    "opRunning": "Eragiketa dagoeneko exekutatzen ari da.",
-    "clearCachedDataTitle": "Irteerako katxea garbitu da",
-    "clearCachedData": "Irteerako katxea garbitu da.",
-    "clearOutputCache": "Garbitu irteerako katxea",
-    "copyOutput": "Kopiatu terminalaren irteera",
-    "copyToClipboardTitle": "Arbelean kopiatu da",
-    "copyToClipboard": "Irteera behar bezala kopiatu da zure arbelean.",
-    "uploadPrivateBin": "Igo PrivateBin-era"
   },
   "systemdServices": {
     "notFound": "Ez da zerbitzurik aurkitu",
@@ -608,5 +591,22 @@
     "selected": "Hautatua",
     "task": "Aldatu sistemaren lokalea",
     "selectLocale": "Hautatu zure sistema osorako hizkuntza hobetsia"
+  },
+  "console": {
+    "title": "Terminala",
+    "icon": "Icon",
+    "runActions": "Exekutatu ekintzak",
+    "removeAll": "Kendu ekintza guztiak",
+    "abortAll": "Abortatu ekintza guztiak",
+    "noOutput": "Irteerarik ez",
+    "outputExists": "Badirudi dagoeneko ekintza bat exekutatzen ari dela. Mesedez, itxaron amaitu arte erregistroak ikusten saiatu aurretik.",
+    "opRunning": "Eragiketa dagoeneko exekutatzen ari da.",
+    "clearCachedDataTitle": "Irteerako katxea garbitu da",
+    "clearCachedData": "Irteerako katxea garbitu da.",
+    "clearOutputCache": "Garbitu irteerako katxea",
+    "copyOutput": "Kopiatu terminalaren irteera",
+    "copyToClipboardTitle": "Arbelean kopiatu da",
+    "copyToClipboard": "Irteera behar bezala kopiatu da zure arbelean.",
+    "uploadPrivateBin": "Igo PrivateBin-era"
   }
 }

@@ -22,10 +22,10 @@
       "callExorcistTitle": "¡Se ha llamado al exorcista!",
       "callExorcistBody": "¡Debes estar bastante desesperado para hacer clic en este botón! He preparado un vudú especial para ti, si sigues teniendo problemas con la aplicación, por favor repórtalos en el foro de Garuda Linux o en nuestro rastreador de incidencias."
     },
-    "terminal": "Mostrar terminal",
     "terminalRunning": "Tareas en ejecución",
     "terminalTasks": "Ejecutar tareas",
-    "pending": "Pendiente"
+    "pending": "Pendiente",
+    "console": "Mostrar terminal"
   },
   "diagnostics": {
     "title": "Información de depuración ",
@@ -152,23 +152,6 @@
     "password": "Contraseña",
     "cancel": "Cancelar",
     "useOnce": "Usar solo una vez"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Ejecutar acciones",
-    "removeAll": "Eliminar todas las acciones",
-    "abortAll": "Abortar todas las acciones",
-    "noOutput": "Sin salida",
-    "outputExists": "Parece que ya hay una acción en ejecución. Por favor, espera a que termine antes de intentar ver los registros.",
-    "opRunning": "La operación ya está en ejecución.",
-    "clearCachedDataTitle": "Caché de salida limpiada",
-    "clearCachedData": "La caché de salida ha sido limpiada.",
-    "clearOutputCache": "Limpiar caché de salida",
-    "copyOutput": "Copiar salida de la terminal",
-    "copyToClipboardTitle": "Copiado al portapapeles",
-    "copyToClipboard": "La salida se ha copiado correctamente a tu portapapeles.",
-    "uploadPrivateBin": "Subir a PrivateBin"
   },
   "systemdServices": {
     "notFound": "No se encontraron servicios",
@@ -611,5 +594,22 @@
     "selected": "Seleccionado",
     "task": "Cambiar local del sistema",
     "selectLocale": "Selecciona tu idioma preferido para todo el sistema"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Ejecutar acciones",
+    "removeAll": "Eliminar todas las acciones",
+    "abortAll": "Abortar todas las acciones",
+    "noOutput": "Sin salida",
+    "outputExists": "Parece que ya hay una acción en ejecución. Por favor, espera a que termine antes de intentar ver los registros.",
+    "opRunning": "La operación ya está en ejecución.",
+    "clearCachedDataTitle": "Caché de salida limpiada",
+    "clearCachedData": "La caché de salida ha sido limpiada.",
+    "clearOutputCache": "Limpiar caché de salida",
+    "copyOutput": "Copiar salida de la terminal",
+    "copyToClipboardTitle": "Copiado al portapapeles",
+    "copyToClipboard": "La salida se ha copiado correctamente a tu portapapeles.",
+    "uploadPrivateBin": "Subir a PrivateBin"
   }
 }

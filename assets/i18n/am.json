@@ -22,10 +22,10 @@
       "callExorcistTitle": "አጋንንት አስወጪው ተጠርቷል!",
       "callExorcistBody": "ይህን ቁልፍ ለመጫን በጣም ተስፋ ቆርጠህ መሆን አለበት! ልዩ መፍትሄ አዘጋጅቼልሃለሁ፤ አሁንም በመተግበሪያው ላይ ችግሮች ካጋጠሙህ እባክህ በ Garuda Linux መድረክ ወይም በችግር መከታተያችን ላይ ሪፖርት አድርግ።"
     },
-    "terminal": "ተርሚናል አሳይ",
     "terminalRunning": "በሂደት ላይ ያሉ ተግባራት",
     "terminalTasks": "ተግባራትን አስፈጽም",
-    "pending": "በመጠባበቅ ላይ"
+    "pending": "በመጠባበቅ ላይ",
+    "console": "ተርሚናል አሳይ"
   },
   "diagnostics": {
     "title": "የማረሚያ መረጃ ",
@@ -152,23 +152,6 @@
     "password": "የይለፍ ቃል",
     "cancel": "ሰርዝ",
     "useOnce": "አንድ ጊዜ ብቻ ተጠቀም"
-  },
-  "terminal": {
-    "title": "ተርሚናል",
-    "icon": "Icon",
-    "runActions": "እርምጃዎችን አሂድ",
-    "removeAll": "ሁሉንም እርምጃዎች አስወግድ",
-    "abortAll": "ሁሉንም እርምጃዎች አቋርጥ",
-    "noOutput": "ምንም ውጤት የለም",
-    "outputExists": "አስቀድሞ እየሰራ ያለ እርምጃ ያለ ይመስላል። እባክዎ ምዝግብ ማስታወሻዎችን ለማየት ከመሞከርዎ በፊት እስኪጨርስ ይጠብቁ።",
-    "opRunning": "ክንውኑ አስቀድሞ እየሰራ ነው።",
-    "clearCachedDataTitle": "የውጤት መሸጎጫ ጸድቷል",
-    "clearCachedData": "የውጤት መሸጎጫ በተሳካ ሁኔታ ጸድቷል።",
-    "clearOutputCache": "የውጤት መሸጎጫ አጽዳ",
-    "copyOutput": "የተርሚናል ውጤት ቅዳ",
-    "copyToClipboardTitle": "ወደ ቅንጥብ ሰሌዳ ተቀድቷል",
-    "copyToClipboard": "ውጤቱ በተሳካ ሁኔታ ወደ ቅንጥብ ሰሌዳዎ ተቀድቷል።",
-    "uploadPrivateBin": "ወደ PrivateBin ስቀል"
   },
   "systemdServices": {
     "notFound": "ምንም አገልግሎቶች አልተገኙም",
@@ -608,5 +591,22 @@
     "selected": "ተመርጧል",
     "task": "የስርዓት ሎካል ቀይር",
     "selectLocale": "የሚመርጡትን የስርዓት-አቀፍ ቋንቋ ይምረጡ"
+  },
+  "console": {
+    "title": "ተርሚናል",
+    "icon": "Icon",
+    "runActions": "እርምጃዎችን አሂድ",
+    "removeAll": "ሁሉንም እርምጃዎች አስወግድ",
+    "abortAll": "ሁሉንም እርምጃዎች አቋርጥ",
+    "noOutput": "ምንም ውጤት የለም",
+    "outputExists": "አስቀድሞ እየሰራ ያለ እርምጃ ያለ ይመስላል። እባክዎ ምዝግብ ማስታወሻዎችን ለማየት ከመሞከርዎ በፊት እስኪጨርስ ይጠብቁ።",
+    "opRunning": "ክንውኑ አስቀድሞ እየሰራ ነው።",
+    "clearCachedDataTitle": "የውጤት መሸጎጫ ጸድቷል",
+    "clearCachedData": "የውጤት መሸጎጫ በተሳካ ሁኔታ ጸድቷል።",
+    "clearOutputCache": "የውጤት መሸጎጫ አጽዳ",
+    "copyOutput": "የተርሚናል ውጤት ቅዳ",
+    "copyToClipboardTitle": "ወደ ቅንጥብ ሰሌዳ ተቀድቷል",
+    "copyToClipboard": "ውጤቱ በተሳካ ሁኔታ ወደ ቅንጥብ ሰሌዳዎ ተቀድቷል።",
+    "uploadPrivateBin": "ወደ PrivateBin ስቀል"
   }
 }

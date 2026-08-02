@@ -22,10 +22,10 @@
       "callExorcistTitle": "Şeytan çıkarıcı çağrıldı!",
       "callExorcistBody": "Bu düğmeye tıklamak için oldukça çaresiz olmalısın! Senin için özel bir vudu ayarladım, eğer hala uygulamayla ilgili sorunlar yaşıyorsan, lütfen bunları Garuda Linux forumunda veya sorun izleyicimizde bildir."
     },
-    "terminal": "Terminali göster",
     "terminalRunning": "Çalışan görevler",
     "terminalTasks": "Görevleri yürüt",
-    "pending": "Beklemede"
+    "pending": "Beklemede",
+    "console": "Terminali göster"
   },
   "diagnostics": {
     "title": "Hata ayıklama bilgileri ",
@@ -152,23 +152,6 @@
     "password": "Şifre",
     "cancel": "İptal",
     "useOnce": "Yalnızca bir kez kullan"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Eylemleri çalıştır",
-    "removeAll": "Tüm eylemleri kaldır",
-    "abortAll": "Tüm eylemleri iptal et",
-    "noOutput": "Çıktı yok",
-    "outputExists": "Görünüşe göre zaten çalışan bir eylem var. Günlükleri görüntülemeye çalışmadan önce lütfen bitmesini bekle.",
-    "opRunning": "İşlem zaten çalışıyor.",
-    "clearCachedDataTitle": "Çıktı önbelleği temizlendi",
-    "clearCachedData": "Çıktı önbelleği temizlendi.",
-    "clearOutputCache": "Çıktı önbelleğini temizle",
-    "copyOutput": "Terminal çıktısını kopyala",
-    "copyToClipboardTitle": "Panoya kopyalandı",
-    "copyToClipboard": "Çıktı başarıyla panona kopyalandı.",
-    "uploadPrivateBin": "PrivateBin'e yükle"
   },
   "systemdServices": {
     "notFound": "Servis bulunamadı",
@@ -611,5 +594,22 @@
     "selected": "Seçili",
     "task": "Sistem yerelini değiştir",
     "selectLocale": "Tercih ettiğin sistem genelindeki dili seç"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Eylemleri çalıştır",
+    "removeAll": "Tüm eylemleri kaldır",
+    "abortAll": "Tüm eylemleri iptal et",
+    "noOutput": "Çıktı yok",
+    "outputExists": "Görünüşe göre zaten çalışan bir eylem var. Günlükleri görüntülemeye çalışmadan önce lütfen bitmesini bekle.",
+    "opRunning": "İşlem zaten çalışıyor.",
+    "clearCachedDataTitle": "Çıktı önbelleği temizlendi",
+    "clearCachedData": "Çıktı önbelleği temizlendi.",
+    "clearOutputCache": "Çıktı önbelleğini temizle",
+    "copyOutput": "Terminal çıktısını kopyala",
+    "copyToClipboardTitle": "Panoya kopyalandı",
+    "copyToClipboard": "Çıktı başarıyla panona kopyalandı.",
+    "uploadPrivateBin": "PrivateBin'e yükle"
   }
 }

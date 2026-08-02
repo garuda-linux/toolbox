@@ -22,10 +22,10 @@
       "callExorcistTitle": "Umemwita mtoa pepo!",
       "callExorcistBody": "Lazima uwe na shida sana kubofya kitufe hiki! Nimekuandalia uchawi maalum, ikiwa bado una matatizo na programu, tafadhali yaripoti kwenye jukwaa la Garuda Linux au kifuatiliaji chetu cha matatizo."
     },
-    "terminal": "Onyesha terminal",
     "terminalRunning": "Majukumu yanayoendelea",
     "terminalTasks": "Tekeleza majukumu",
-    "pending": "Inasubiri"
+    "pending": "Inasubiri",
+    "console": "Onyesha terminal"
   },
   "diagnostics": {
     "title": "Maelezo ya utatuzi ",
@@ -152,23 +152,6 @@
     "password": "Nenosiri",
     "cancel": "Ghairi",
     "useOnce": "Tumia mara moja tu"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Endesha hatua",
-    "removeAll": "Ondoa hatua zote",
-    "abortAll": "Acha hatua zote",
-    "noOutput": "Hakuna matokeo",
-    "outputExists": "Inaonekana tayari kuna hatua inayoendelea. Tafadhali subiri ikamilike kabla ya kujaribu kuona kumbukumbu.",
-    "opRunning": "Operesheni tayari inaendelea.",
-    "clearCachedDataTitle": "Kashe ya matokeo imefutwa",
-    "clearCachedData": "Kashe ya matokeo imefutwa.",
-    "clearOutputCache": "Futa kashe ya matokeo",
-    "copyOutput": "Nakili matokeo ya terminal",
-    "copyToClipboardTitle": "Imenakiliwa kwenye ubao wa kunakili",
-    "copyToClipboard": "Matokeo yamenakiliwa kwenye ubao wako wa kunakili kwa mafanikio.",
-    "uploadPrivateBin": "Pakia kwa PrivateBin"
   },
   "systemdServices": {
     "notFound": "Hakuna huduma zilizopatikana",
@@ -608,5 +591,22 @@
     "selected": "Imechaguliwa",
     "task": "Badilisha lugha ya ndani ya mfumo",
     "selectLocale": "Chagua lugha unayopendelea kwa mfumo mzima"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Endesha hatua",
+    "removeAll": "Ondoa hatua zote",
+    "abortAll": "Acha hatua zote",
+    "noOutput": "Hakuna matokeo",
+    "outputExists": "Inaonekana tayari kuna hatua inayoendelea. Tafadhali subiri ikamilike kabla ya kujaribu kuona kumbukumbu.",
+    "opRunning": "Operesheni tayari inaendelea.",
+    "clearCachedDataTitle": "Kashe ya matokeo imefutwa",
+    "clearCachedData": "Kashe ya matokeo imefutwa.",
+    "clearOutputCache": "Futa kashe ya matokeo",
+    "copyOutput": "Nakili matokeo ya terminal",
+    "copyToClipboardTitle": "Imenakiliwa kwenye ubao wa kunakili",
+    "copyToClipboard": "Matokeo yamenakiliwa kwenye ubao wako wa kunakili kwa mafanikio.",
+    "uploadPrivateBin": "Pakia kwa PrivateBin"
   }
 }

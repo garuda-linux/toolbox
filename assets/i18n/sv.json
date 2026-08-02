@@ -47,9 +47,9 @@
       "callExorcistTitle": "Exorcisten har kallats!",
       "callExorcistBody": "Du måste vara ganska desperat för att klicka på den här knappen! Jag har åkallat lite specialvoodoo åt dig, om du fortfarande har problem med appen, vänligen rapportera dem på Garuda Linux-forumet eller vår ärendehanterare."
     },
-    "terminal": "Visa terminal",
     "terminalRunning": "Körande uppgifter",
-    "terminalTasks": "Utför uppgifter"
+    "terminalTasks": "Utför uppgifter",
+    "console": "Visa terminal"
   },
   "diagnostics": {
     "title": "Felsökningsinfo ",
@@ -276,24 +276,6 @@
     "password": "Lösenord",
     "cancel": "Avbryt",
     "useOnce": "Använd endast en gång"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Kör åtgärder",
-    "removeAll": "Ta bort alla åtgärder",
-    "abortAll": "Avbryt alla åtgärder",
-    "noOutput": "Ingen utdata",
-    "outputExists": "Det verkar som att en åtgärd redan körs. Vänta tills den är klar innan du försöker visa loggar.",
-    "opRunning": "Operationen körs redan.",
-    "clearCachedDataTitle": "Utdatacache rensad",
-    "clearCachedData": "Utdatacachen har rensats.",
-    "clearOutputCache": "Rensa utdatacache",
-    "copyOutput": "Kopiera terminalutdata",
-    "copyToClipboardTitle": "Kopierat till urklipp",
-    "copyToClipboard": "Utdatan har kopierats till ditt urklipp.",
-    "uploadPrivateBin": "Ladda upp till PrivateBin",
-    "printScripts": "Skriv ut script"
   },
   "systemdServices": {
     "notFound": "Inga tjänster hittades",
@@ -747,5 +729,23 @@
   "taskmanager": {
     "scriptMismatch": "Scriptet har modifierats, tillåts ej att exekvera!",
     "scriptExecuted": "Aktuell uppgift slutförd."
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Kör åtgärder",
+    "removeAll": "Ta bort alla åtgärder",
+    "abortAll": "Avbryt alla åtgärder",
+    "noOutput": "Ingen utdata",
+    "outputExists": "Det verkar som att en åtgärd redan körs. Vänta tills den är klar innan du försöker visa loggar.",
+    "opRunning": "Operationen körs redan.",
+    "clearCachedDataTitle": "Utdatacache rensad",
+    "clearCachedData": "Utdatacachen har rensats.",
+    "clearOutputCache": "Rensa utdatacache",
+    "copyOutput": "Kopiera terminalutdata",
+    "copyToClipboardTitle": "Kopierat till urklipp",
+    "copyToClipboard": "Utdatan har kopierats till ditt urklipp.",
+    "uploadPrivateBin": "Ladda upp till PrivateBin",
+    "printScripts": "Skriv ut script"
   }
 }

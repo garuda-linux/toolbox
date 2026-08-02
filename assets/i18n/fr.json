@@ -47,9 +47,9 @@
       "callExorcistTitle": "Exorciste appelé !",
       "callExorcistBody": "Tu dois être bien désespéré pour cliquer sur ce bouton ! J'ai mis en place un vaudou spécial pour toi, si tu as toujours des problèmes avec l'application, merci de les signaler sur le forum Garuda Linux ou notre suivi de problèmes."
     },
-    "terminal": "Afficher le terminal",
     "terminalRunning": "Tâches en cours",
-    "terminalTasks": "Exécuter les tâches"
+    "terminalTasks": "Exécuter les tâches",
+    "console": "Afficher le terminal"
   },
   "diagnostics": {
     "title": "Infos de débogage ",
@@ -276,24 +276,6 @@
     "password": "Mot de passe",
     "cancel": "Annuler",
     "useOnce": "Utiliser une seule fois"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Exécuter les actions",
-    "removeAll": "Supprimer toutes les actions",
-    "abortAll": "Abandonner toutes les actions",
-    "noOutput": "Aucune sortie",
-    "outputExists": "Il semble qu'une action soit déjà en cours. Merci d'attendre qu'elle se termine avant d'essayer de voir les journaux.",
-    "opRunning": "L'opération est déjà en cours.",
-    "clearCachedDataTitle": "Cache de sortie vidé",
-    "clearCachedData": "Le cache de sortie a été vidé.",
-    "clearOutputCache": "Vider le cache de sortie",
-    "copyOutput": "Copier la sortie du terminal",
-    "copyToClipboardTitle": "Copié dans le presse-papiers",
-    "copyToClipboard": "La sortie a été copiée avec succès dans ton presse-papiers.",
-    "uploadPrivateBin": "Envoyer vers PrivateBin",
-    "printScripts": "Scripts d'impression"
   },
   "systemdServices": {
     "notFound": "Aucun service trouvé",
@@ -747,5 +729,23 @@
   "taskmanager": {
     "scriptMismatch": "Le script a été falsifié, refus d'exécution !",
     "scriptExecuted": "La tâche en cours est terminée."
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Exécuter les actions",
+    "removeAll": "Supprimer toutes les actions",
+    "abortAll": "Abandonner toutes les actions",
+    "noOutput": "Aucune sortie",
+    "outputExists": "Il semble qu'une action soit déjà en cours. Merci d'attendre qu'elle se termine avant d'essayer de voir les journaux.",
+    "opRunning": "L'opération est déjà en cours.",
+    "clearCachedDataTitle": "Cache de sortie vidé",
+    "clearCachedData": "Le cache de sortie a été vidé.",
+    "clearOutputCache": "Vider le cache de sortie",
+    "copyOutput": "Copier la sortie du terminal",
+    "copyToClipboardTitle": "Copié dans le presse-papiers",
+    "copyToClipboard": "La sortie a été copiée avec succès dans ton presse-papiers.",
+    "uploadPrivateBin": "Envoyer vers PrivateBin",
+    "printScripts": "Scripts d'impression"
   }
 }

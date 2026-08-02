@@ -24,7 +24,7 @@ import { Logger } from '../../logging/logging';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router, type UrlTree } from '@angular/router';
-import { TerminalThemeService } from '../terminal/terminal-theme.service';
+import { TerminalThemeService } from '../console/terminal-theme.service';
 import { ButtonDirective } from 'primeng/button';
 import { PIcon } from '@primeicons/angular/p-icon';
 

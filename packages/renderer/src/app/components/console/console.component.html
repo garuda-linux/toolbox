@@ -38,6 +38,18 @@
                 }
               </div>
             </p-card>
+          } @empty {
+            <p-card class="mt-2" [style]="{ width: '20rem' }">
+              <ng-template #header>
+                <div class="pt-4 text-center">
+                  <span class="mr-2 font-bold">{{ t('console.noTasksPending') }}</span>
+                  <i class="pi pi-check-circle"></i>
+                </div>
+              </ng-template>
+              <div class="mt-2.5 text-center text-sm text-surface-400">
+                {{ t('console.tasksAppearHere') }}
+              </div>
+            </p-card>
           }
         </p-scroll-area>
       </div>
@@ -69,7 +81,7 @@
           tabindex="0"
         >
           {{
-            t('terminal.title') +
+            t('console.title') +
               (taskManagerService.currentTask() ? ' - ' + t(taskManagerService.currentTask()!.name) : '')
           }}
         </span>
@@ -81,7 +93,7 @@
             (keyup.enter)="taskManagerService.executeTasks()"
             tabindex="0"
           >
-            <i class="pi pi-play-circle mr-1 text-primary"></i>{{ t('terminal.runActions') }}
+            <i class="pi pi-play-circle mr-1 text-primary"></i>{{ t('console.runActions') }}
           </span>
           <span
             class="mr-2.5 cursor-pointer"
@@ -89,7 +101,7 @@
             (keyup.enter)="taskManagerService.clearTasks()"
             tabindex="0"
           >
-            <i class="pi pi-stop-circle mr-1 text-primary-emphasis"></i>{{ t('terminal.removeAll') }}
+            <i class="pi pi-stop-circle mr-1 text-primary-emphasis"></i>{{ t('console.removeAll') }}
           </span>
           <span
             class="mr-2.5 cursor-pointer"
@@ -97,7 +109,7 @@
             (keyup.enter)="taskManagerService.printScripts()"
             tabindex="0"
           >
-            <i class="pi pi-shopping-cart mr-1 text-primary-emphasis-alt"></i>{{ t('terminal.printScripts') }}
+            <i class="pi pi-shopping-cart mr-1 text-primary-emphasis-alt"></i>{{ t('console.printScripts') }}
           </span>
         }
         @if (taskManagerService.count() > 0 && taskManagerService.running()) {
@@ -107,7 +119,7 @@
             (keyup.enter)="taskManagerService.abort()"
             tabindex="0"
           >
-            <i class="pi pi-minus-circle mr-1 text-primary-emphasis"></i>{{ t('terminal.abortAll') }}
+            <i class="pi pi-minus-circle mr-1 text-primary-emphasis"></i>{{ t('console.abortAll') }}
           </span>
         }
         @if (taskManagerService.cachedData() !== '') {
@@ -117,13 +129,13 @@
             (keyup.enter)="copyToClipboard()"
             tabindex="0"
           >
-            <i class="pi pi-copy mr-1 text-primary-emphasis-alt"></i>{{ t('terminal.copyOutput') }}
+            <i class="pi pi-copy mr-1 text-primary-emphasis-alt"></i>{{ t('console.copyOutput') }}
           </span>
           <span class="mr-2.5 cursor-pointer" (click)="uploadLog()" (keyup.enter)="uploadLog()" tabindex="0">
-            <i class="pi pi-upload mr-1 text-primary-emphasis-alt"></i>{{ t('terminal.uploadPrivateBin') }}
+            <i class="pi pi-upload mr-1 text-primary-emphasis-alt"></i>{{ t('console.uploadPrivateBin') }}
           </span>
           <span class="cursor-pointer" (click)="clearCache()" (keyup.enter)="clearCache()" tabindex="0">
-            <i class="pi pi-copy mr-1 text-primary-emphasis-alt"></i>{{ t('terminal.clearOutputCache') }}
+            <i class="pi pi-copy mr-1 text-primary-emphasis-alt"></i>{{ t('console.clearOutputCache') }}
           </span>
         }
       </div>

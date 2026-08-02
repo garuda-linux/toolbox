@@ -22,10 +22,10 @@
       "callExorcistTitle": "Poklical si izganjalca!",
       "callExorcistBody": "Moraš biti precej obupan, da si kliknil ta gumb! Pripravil sem ti nekaj posebne vudu magije, če imaš še vedno težave z aplikacijo, jih prosim prijavi na forumu Garuda Linux ali v našem sledilniku težav."
     },
-    "terminal": "Pokaži terminal",
     "terminalRunning": "Opravila v teku",
     "terminalTasks": "Izvedi opravila",
-    "pending": "V čakanju"
+    "pending": "V čakanju",
+    "console": "Pokaži terminal"
   },
   "diagnostics": {
     "title": "Informacije za razhroščevanje ",
@@ -152,23 +152,6 @@
     "password": "Geslo",
     "cancel": "Prekliči",
     "useOnce": "Uporabi samo enkrat"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Zaženi dejanja",
-    "removeAll": "Odstrani vsa dejanja",
-    "abortAll": "Prekini vsa dejanja",
-    "noOutput": "Ni izpisa",
-    "outputExists": "Zdi se, da dejanje že teče. Počakaj, da se konča, preden poskusiš pogledati dnevnike.",
-    "opRunning": "Operacija že teče.",
-    "clearCachedDataTitle": "Predpomnilnik izpisa počiščen",
-    "clearCachedData": "Predpomnilnik izpisa je bil počiščen.",
-    "clearOutputCache": "Počisti predpomnilnik izpisa",
-    "copyOutput": "Kopiraj izpis terminala",
-    "copyToClipboardTitle": "Kopirano v odložišče",
-    "copyToClipboard": "Izpis je bil uspešno kopiran v odložišče.",
-    "uploadPrivateBin": "Naloži na PrivateBin"
   },
   "systemdServices": {
     "notFound": "Ni najdenih storitev",
@@ -608,5 +591,22 @@
     "selected": "Izbrano",
     "task": "Spremeni sistemsko jezikovno nastavitev",
     "selectLocale": "Izberi želeni sistemski jezik"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Zaženi dejanja",
+    "removeAll": "Odstrani vsa dejanja",
+    "abortAll": "Prekini vsa dejanja",
+    "noOutput": "Ni izpisa",
+    "outputExists": "Zdi se, da dejanje že teče. Počakaj, da se konča, preden poskusiš pogledati dnevnike.",
+    "opRunning": "Operacija že teče.",
+    "clearCachedDataTitle": "Predpomnilnik izpisa počiščen",
+    "clearCachedData": "Predpomnilnik izpisa je bil počiščen.",
+    "clearOutputCache": "Počisti predpomnilnik izpisa",
+    "copyOutput": "Kopiraj izpis terminala",
+    "copyToClipboardTitle": "Kopirano v odložišče",
+    "copyToClipboard": "Izpis je bil uspešno kopiran v odložišče.",
+    "uploadPrivateBin": "Naloži na PrivateBin"
   }
 }

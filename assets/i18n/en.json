@@ -49,10 +49,10 @@
       "callExorcistTitle": "Called the exorcist!",
       "callExorcistBody": "You must be pretty desperate to click this button! I set up some special voodoo for you, if you're still having issues with the app, please report them on the Garuda Linux forum or our issue tracker."
     },
-    "terminal": "Show terminal",
     "terminalRunning": "Running tasks",
     "terminalTasks": "Execute tasks",
-    "packages": "Discover apps"
+    "packages": "Discover apps",
+    "console": "Show console"
   },
   "diagnostics": {
     "title": "Debug info ",
@@ -292,23 +292,6 @@
     "placeholder": "Type a command or search for a module...",
     "hint": "Search modules and actions",
     "toClose": "to close"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "runActions": "Run actions",
-    "removeAll": "Remove all actions",
-    "abortAll": "Abort all actions",
-    "noOutput": "No output",
-    "outputExists": "It seems like there is an action running already. Please wait for it to finish before trying to view logs.",
-    "opRunning": "The operation is already running.",
-    "clearCachedDataTitle": "Output cache cleared",
-    "clearCachedData": "The output cache has been cleared.",
-    "clearOutputCache": "Clear output cache",
-    "copyOutput": "Copy terminal output",
-    "copyToClipboardTitle": "Copied to clipboard",
-    "copyToClipboard": "The output has been successfully copied to your clipboard.",
-    "uploadPrivateBin": "Upload to PrivateBin",
-    "printScripts": "Print scripts"
   },
   "systemdServices": {
     "notFound": "No services found",
@@ -1472,5 +1455,24 @@
     "unloadDriverAction": "Unload Driver {{name}}",
     "blacklistAction": "Blacklist {{name}}",
     "whitelistAction": "Whitelist {{name}}"
+  },
+  "console": {
+    "title": "Console",
+    "runActions": "Run actions",
+    "removeAll": "Remove all actions",
+    "abortAll": "Abort all actions",
+    "noOutput": "No output",
+    "outputExists": "It seems like there is an action running already. Please wait for it to finish before trying to view logs.",
+    "opRunning": "The operation is already running.",
+    "clearCachedDataTitle": "Output cache cleared",
+    "clearCachedData": "The output cache has been cleared.",
+    "clearOutputCache": "Clear output cache",
+    "copyOutput": "Copy console output",
+    "copyToClipboardTitle": "Copied to clipboard",
+    "copyToClipboard": "The output has been successfully copied to your clipboard.",
+    "uploadPrivateBin": "Upload to PrivateBin",
+    "printScripts": "Print scripts",
+    "noTasksPending": "No tasks pending",
+    "tasksAppearHere": "Tasks will appear here when you select items."
   }
 }

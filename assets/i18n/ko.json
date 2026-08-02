@@ -22,10 +22,10 @@
       "callExorcistTitle": "엑소시스트를 불렀습니다!",
       "callExorcistBody": "이 버튼을 클릭하다니 정말 절박하신가 보네요! 당신을 위해 특별한 부두술을 준비했습니다. 앱에 여전히 문제가 있다면 Garuda Linux 포럼이나 이슈 트래커에 보고해 주세요."
     },
-    "terminal": "터미널 표시",
     "terminalRunning": "실행 중인 작업",
     "terminalTasks": "작업 실행",
-    "pending": "대기 중"
+    "pending": "대기 중",
+    "console": "터미널 표시"
   },
   "diagnostics": {
     "title": "디버그 정보 ",
@@ -152,23 +152,6 @@
     "password": "비밀번호",
     "cancel": "취소",
     "useOnce": "한 번만 사용"
-  },
-  "terminal": {
-    "title": "터미널",
-    "icon": "Icon",
-    "runActions": "작업 실행",
-    "removeAll": "모든 작업 제거",
-    "abortAll": "모든 작업 중단",
-    "noOutput": "출력 없음",
-    "outputExists": "이미 실행 중인 작업이 있는 것 같습니다. 로그를 보려면 완료될 때까지 기다리세요.",
-    "opRunning": "작업이 이미 실행 중입니다.",
-    "clearCachedDataTitle": "출력 캐시 지워짐",
-    "clearCachedData": "출력 캐시가 지워졌습니다.",
-    "clearOutputCache": "출력 캐시 지우기",
-    "copyOutput": "터미널 출력 복사",
-    "copyToClipboardTitle": "클립보드에 복사됨",
-    "copyToClipboard": "출력이 클립보드에 성공적으로 복사되었습니다.",
-    "uploadPrivateBin": "PrivateBin에 업로드"
   },
   "systemdServices": {
     "notFound": "서비스를 찾을 수 없음",
@@ -608,5 +591,22 @@
     "selected": "선택됨",
     "task": "시스템 로케일 변경",
     "selectLocale": "선호하는 시스템 전체 언어 선택"
+  },
+  "console": {
+    "title": "터미널",
+    "icon": "Icon",
+    "runActions": "작업 실행",
+    "removeAll": "모든 작업 제거",
+    "abortAll": "모든 작업 중단",
+    "noOutput": "출력 없음",
+    "outputExists": "이미 실행 중인 작업이 있는 것 같습니다. 로그를 보려면 완료될 때까지 기다리세요.",
+    "opRunning": "작업이 이미 실행 중입니다.",
+    "clearCachedDataTitle": "출력 캐시 지워짐",
+    "clearCachedData": "출력 캐시가 지워졌습니다.",
+    "clearOutputCache": "출력 캐시 지우기",
+    "copyOutput": "터미널 출력 복사",
+    "copyToClipboardTitle": "클립보드에 복사됨",
+    "copyToClipboard": "출력이 클립보드에 성공적으로 복사되었습니다.",
+    "uploadPrivateBin": "PrivateBin에 업로드"
   }
 }

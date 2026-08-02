@@ -22,10 +22,10 @@
       "callExorcistTitle": "Ekzorsist chaqirildi!",
       "callExorcistBody": "Bu tugmani bosish uchun juda umidsiz boʻlishing kerak! Men sen uchun maxsus vudu oʻrnatdim, agar ilova bilan hali ham muammolaring boʻlsa, iltimos, ularni Garuda Linux forumida yoki bizning muammo kuzatuvchimizda xabar qiling."
     },
-    "terminal": "Terminalni koʻrsatish",
     "terminalRunning": "Ishlayotgan vazifalar",
     "terminalTasks": "Vazifalarni bajarish",
-    "pending": "Kutilmoqda"
+    "pending": "Kutilmoqda",
+    "console": "Terminalni koʻrsatish"
   },
   "diagnostics": {
     "title": "Nosozliklarni tuzatish ma'lumotlari ",
@@ -152,23 +152,6 @@
     "password": "Parol",
     "cancel": "Bekor qilish",
     "useOnce": "Faqat bir marta foydalanish"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Amallarni bajarish",
-    "removeAll": "Barcha amallarni olib tashlash",
-    "abortAll": "Barcha amallarni bekor qilish",
-    "noOutput": "Chiqish yoʻq",
-    "outputExists": "Koʻrinishidan, allaqachon ishlayotgan amal mavjud. Jurnallarni koʻrishga urinishdan oldin uning tugashini kuting.",
-    "opRunning": "Operatsiya allaqachon ishlamoqda.",
-    "clearCachedDataTitle": "Chiqish keshi tozalandi",
-    "clearCachedData": "Chiqish keshi tozalandi.",
-    "clearOutputCache": "Chiqish keshini tozalash",
-    "copyOutput": "Terminal chiqishini nusxalash",
-    "copyToClipboardTitle": "Vaqtinchalik xotiraga nusxalandi",
-    "copyToClipboard": "Chiqish muvaffaqiyatli vaqtinchalik xotirangizga nusxalandi.",
-    "uploadPrivateBin": "PrivateBin'ga yuklash"
   },
   "systemdServices": {
     "notFound": "Xizmatlar topilmadi",
@@ -608,5 +591,22 @@
     "selected": "Tanlangan",
     "task": "Tizim mahalliylashtirishini oʻzgartirish",
     "selectLocale": "Afzal koʻrgan tizim boʻylab tilingizni tanlang"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Amallarni bajarish",
+    "removeAll": "Barcha amallarni olib tashlash",
+    "abortAll": "Barcha amallarni bekor qilish",
+    "noOutput": "Chiqish yoʻq",
+    "outputExists": "Koʻrinishidan, allaqachon ishlayotgan amal mavjud. Jurnallarni koʻrishga urinishdan oldin uning tugashini kuting.",
+    "opRunning": "Operatsiya allaqachon ishlamoqda.",
+    "clearCachedDataTitle": "Chiqish keshi tozalandi",
+    "clearCachedData": "Chiqish keshi tozalandi.",
+    "clearOutputCache": "Chiqish keshini tozalash",
+    "copyOutput": "Terminal chiqishini nusxalash",
+    "copyToClipboardTitle": "Vaqtinchalik xotiraga nusxalandi",
+    "copyToClipboard": "Chiqish muvaffaqiyatli vaqtinchalik xotirangizga nusxalandi.",
+    "uploadPrivateBin": "PrivateBin'ga yuklash"
   }
 }

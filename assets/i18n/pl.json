@@ -22,10 +22,10 @@
       "callExorcistTitle": "Wezwano egzorcystę!",
       "callExorcistBody": "Musisz być bardzo zdesperowany, żeby kliknąć ten przycisk! Przygotowałem dla Ciebie specjalne voodoo, jeśli nadal masz problemy z aplikacją, zgłoś je na forum Garuda Linux lub w naszym systemie śledzenia problemów."
     },
-    "terminal": "Pokaż terminal",
     "terminalRunning": "Uruchomione zadania",
     "terminalTasks": "Wykonaj zadania",
-    "pending": "Oczekujące"
+    "pending": "Oczekujące",
+    "console": "Pokaż terminal"
   },
   "diagnostics": {
     "title": "Informacje debugowania ",
@@ -152,23 +152,6 @@
     "password": "Hasło",
     "cancel": "Anuluj",
     "useOnce": "Użyj tylko raz"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Uruchom akcje",
-    "removeAll": "Usuń wszystkie akcje",
-    "abortAll": "Przerwij wszystkie akcje",
-    "noOutput": "Brak danych wyjściowych",
-    "outputExists": "Wygląda na to, że jakaś akcja jest już uruchomiona. Poczekaj na jej zakończenie przed próbą wyświetlenia logów.",
-    "opRunning": "Operacja jest już uruchomiona.",
-    "clearCachedDataTitle": "Pamięć podręczna danych wyjściowych wyczyszczona",
-    "clearCachedData": "Pamięć podręczna danych wyjściowych została wyczyszczona.",
-    "clearOutputCache": "Wyczyść pamięć podręczną danych wyjściowych",
-    "copyOutput": "Skopiuj dane wyjściowe terminala",
-    "copyToClipboardTitle": "Skopiowano do schowka",
-    "copyToClipboard": "Dane wyjściowe zostały pomyślnie skopiowane do schowka.",
-    "uploadPrivateBin": "Prześlij do PrivateBin"
   },
   "systemdServices": {
     "notFound": "Nie znaleziono usług",
@@ -611,5 +594,22 @@
     "selected": "Wybrane",
     "task": "Zmień ustawienia regionalne systemu",
     "selectLocale": "Wybierz preferowany język dla całego systemu"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Uruchom akcje",
+    "removeAll": "Usuń wszystkie akcje",
+    "abortAll": "Przerwij wszystkie akcje",
+    "noOutput": "Brak danych wyjściowych",
+    "outputExists": "Wygląda na to, że jakaś akcja jest już uruchomiona. Poczekaj na jej zakończenie przed próbą wyświetlenia logów.",
+    "opRunning": "Operacja jest już uruchomiona.",
+    "clearCachedDataTitle": "Pamięć podręczna danych wyjściowych wyczyszczona",
+    "clearCachedData": "Pamięć podręczna danych wyjściowych została wyczyszczona.",
+    "clearOutputCache": "Wyczyść pamięć podręczną danych wyjściowych",
+    "copyOutput": "Skopiuj dane wyjściowe terminala",
+    "copyToClipboardTitle": "Skopiowano do schowka",
+    "copyToClipboard": "Dane wyjściowe zostały pomyślnie skopiowane do schowka.",
+    "uploadPrivateBin": "Prześlij do PrivateBin"
   }
 }

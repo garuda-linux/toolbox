@@ -30,7 +30,7 @@ import { MessageToastService } from '@garudalinux/core';
 import { ElectronShellSpawnService } from '../../electron-services/electron-shell-spawn.service';
 import { ConfigService } from '../config/config.service';
 import { CatppuccinXtermJs } from '../../theme';
-import { TerminalThemeService } from '../terminal/terminal-theme.service';
+import { TerminalThemeService } from '../console/terminal-theme.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Select } from 'primeng/select';
 import { NetworkStatus } from './types';

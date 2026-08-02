@@ -22,10 +22,10 @@
       "callExorcistTitle": "Chamaches ao exorcista!",
       "callExorcistBody": "Debes estar bastante desesperado/a para premer este botón! Configurei un vudú especial para ti, se aínda tes problemas coa aplicación, por favor, infórmaos no foro de Garuda Linux ou no noso rastreador de incidencias."
     },
-    "terminal": "Mostrar terminal",
     "terminalRunning": "Tarefas en execución",
     "terminalTasks": "Executar tarefas",
-    "pending": "Pendentes"
+    "pending": "Pendentes",
+    "console": "Mostrar terminal"
   },
   "diagnostics": {
     "title": "Información de depuración ",
@@ -152,23 +152,6 @@
     "password": "Contrasinal",
     "cancel": "Cancelar",
     "useOnce": "Usar só unha vez"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Executar accións",
-    "removeAll": "Eliminar todas as accións",
-    "abortAll": "Abortar todas as accións",
-    "noOutput": "Sen saída",
-    "outputExists": "Parece que xa hai unha acción en execución. Agarda a que remate antes de tentar ver os rexistros.",
-    "opRunning": "A operación xa está en execución.",
-    "clearCachedDataTitle": "Caché de saída borrada",
-    "clearCachedData": "A caché de saída borrouse.",
-    "clearOutputCache": "Borrar caché de saída",
-    "copyOutput": "Copiar saída do terminal",
-    "copyToClipboardTitle": "Copiado ao portapapeis",
-    "copyToClipboard": "A saída copiouse correctamente ao teu portapapeis.",
-    "uploadPrivateBin": "Cargar a PrivateBin"
   },
   "systemdServices": {
     "notFound": "Non se atoparon servizos",
@@ -608,5 +591,22 @@
     "selected": "Seleccionadas",
     "task": "Cambiar configuración rexional do sistema",
     "selectLocale": "Selecciona o teu idioma preferido para todo o sistema"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Executar accións",
+    "removeAll": "Eliminar todas as accións",
+    "abortAll": "Abortar todas as accións",
+    "noOutput": "Sen saída",
+    "outputExists": "Parece que xa hai unha acción en execución. Agarda a que remate antes de tentar ver os rexistros.",
+    "opRunning": "A operación xa está en execución.",
+    "clearCachedDataTitle": "Caché de saída borrada",
+    "clearCachedData": "A caché de saída borrouse.",
+    "clearOutputCache": "Borrar caché de saída",
+    "copyOutput": "Copiar saída do terminal",
+    "copyToClipboardTitle": "Copiado ao portapapeis",
+    "copyToClipboard": "A saída copiouse correctamente ao teu portapapeis.",
+    "uploadPrivateBin": "Cargar a PrivateBin"
   }
 }

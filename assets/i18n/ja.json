@@ -22,10 +22,10 @@
       "callExorcistTitle": "悪魔祓いを呼びました！",
       "callExorcistBody": "このボタンをクリックするなんて、よほど必死なんですね！あなたのために特別なブードゥーを設定しました。もしアプリにまだ問題がある場合は、Garuda Linux フォーラムまたは私たちの課題トラッカーに報告してください。"
     },
-    "terminal": "ターミナルを表示",
     "terminalRunning": "実行中のタスク",
     "terminalTasks": "タスクを実行",
-    "pending": "保留中"
+    "pending": "保留中",
+    "console": "ターミナルを表示"
   },
   "diagnostics": {
     "title": "デバッグ情報 ",
@@ -152,23 +152,6 @@
     "password": "パスワード",
     "cancel": "キャンセル",
     "useOnce": "一度だけ使用"
-  },
-  "terminal": {
-    "title": "ターミナル",
-    "icon": "Icon",
-    "runActions": "アクションを実行",
-    "removeAll": "すべてのアクションを削除",
-    "abortAll": "すべてのアクションを中止",
-    "noOutput": "出力なし",
-    "outputExists": "すでにアクションが実行中のようです。ログを表示する前に、それが終了するのを待ってください。",
-    "opRunning": "操作はすでに実行中です。",
-    "clearCachedDataTitle": "出力キャッシュがクリアされました",
-    "clearCachedData": "出力キャッシュはクリアされました。",
-    "clearOutputCache": "出力キャッシュをクリア",
-    "copyOutput": "ターミナル出力をコピー",
-    "copyToClipboardTitle": "クリップボードにコピーされました",
-    "copyToClipboard": "出力は正常にクリップボードにコピーされました。",
-    "uploadPrivateBin": "PrivateBin にアップロード"
   },
   "systemdServices": {
     "notFound": "サービスが見つかりません",
@@ -611,5 +594,22 @@
     "selected": "選択済み",
     "task": "システムロケールを変更",
     "selectLocale": "システム全体の優先言語を選択"
+  },
+  "console": {
+    "title": "ターミナル",
+    "icon": "Icon",
+    "runActions": "アクションを実行",
+    "removeAll": "すべてのアクションを削除",
+    "abortAll": "すべてのアクションを中止",
+    "noOutput": "出力なし",
+    "outputExists": "すでにアクションが実行中のようです。ログを表示する前に、それが終了するのを待ってください。",
+    "opRunning": "操作はすでに実行中です。",
+    "clearCachedDataTitle": "出力キャッシュがクリアされました",
+    "clearCachedData": "出力キャッシュはクリアされました。",
+    "clearOutputCache": "出力キャッシュをクリア",
+    "copyOutput": "ターミナル出力をコピー",
+    "copyToClipboardTitle": "クリップボードにコピーされました",
+    "copyToClipboard": "出力は正常にクリップボードにコピーされました。",
+    "uploadPrivateBin": "PrivateBin にアップロード"
   }
 }

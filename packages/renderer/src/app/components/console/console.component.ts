@@ -35,13 +35,13 @@ import { TerminalThemeService } from './terminal-theme.service';
 import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
-  selector: 'toolbox-terminal',
+  selector: 'toolbox-console',
   imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollArea, NgTemplateOutlet],
-  templateUrl: './terminal.component.html',
-  styleUrl: './terminal.component.css',
+  templateUrl: './console.component.html',
+  styleUrl: './console.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   public visible = model<boolean>(false);
   private subscriptions: Subscription[] = [];
   private notifiedReady = false;
@@ -246,8 +246,8 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
     await writeText(this.taskManagerService.cachedData());
 
     this.messageToastService.success(
-      this.translocoService.translate('terminal.copyToClipboardTitle'),
-      this.translocoService.translate('terminal.copyToClipboard'),
+      this.translocoService.translate('console.copyToClipboardTitle'),
+      this.translocoService.translate('console.copyToClipboard'),
     );
   }
 
@@ -257,8 +257,8 @@ export class TerminalComponent implements OnInit, AfterViewInit, OnDestroy {
   clearCache() {
     this.taskManagerService.cachedData.set('');
     this.messageToastService.success(
-      this.translocoService.translate('terminal.clearCachedDataTitle'),
-      this.translocoService.translate('terminal.clearCachedData'),
+      this.translocoService.translate('console.clearCachedDataTitle'),
+      this.translocoService.translate('console.clearCachedData'),
     );
   }
 

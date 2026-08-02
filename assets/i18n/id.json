@@ -22,10 +22,10 @@
       "callExorcistTitle": "Memanggil pengusir setan!",
       "callExorcistBody": "Kamu pasti sangat putus asa untuk mengklik tombol ini! Saya telah menyiapkan beberapa voodoo khusus untukmu, jika kamu masih mengalami masalah dengan aplikasi ini, laporkan di forum Garuda Linux atau pelacak masalah kami."
     },
-    "terminal": "Tampilkan terminal",
     "terminalRunning": "Tugas berjalan",
     "terminalTasks": "Jalankan tugas",
-    "pending": "Tertunda"
+    "pending": "Tertunda",
+    "console": "Tampilkan terminal"
   },
   "diagnostics": {
     "title": "Info debug ",
@@ -152,23 +152,6 @@
     "password": "Kata Sandi",
     "cancel": "Batal",
     "useOnce": "Gunakan sekali saja"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Jalankan tindakan",
-    "removeAll": "Hapus semua tindakan",
-    "abortAll": "Batalkan semua tindakan",
-    "noOutput": "Tidak ada output",
-    "outputExists": "Sepertinya sudah ada tindakan yang berjalan. Tunggu hingga selesai sebelum mencoba melihat log.",
-    "opRunning": "Operasi sudah berjalan.",
-    "clearCachedDataTitle": "Cache output dibersihkan",
-    "clearCachedData": "Cache output telah dibersihkan.",
-    "clearOutputCache": "Bersihkan cache output",
-    "copyOutput": "Salin output terminal",
-    "copyToClipboardTitle": "Disalin ke clipboard",
-    "copyToClipboard": "Output telah berhasil disalin ke clipboardmu.",
-    "uploadPrivateBin": "Unggah ke PrivateBin"
   },
   "systemdServices": {
     "notFound": "Tidak ada layanan yang ditemukan",
@@ -608,5 +591,22 @@
     "selected": "Dipilih",
     "task": "Ubah lokal sistem",
     "selectLocale": "Pilih bahasa pilihanmu di seluruh sistem"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Jalankan tindakan",
+    "removeAll": "Hapus semua tindakan",
+    "abortAll": "Batalkan semua tindakan",
+    "noOutput": "Tidak ada output",
+    "outputExists": "Sepertinya sudah ada tindakan yang berjalan. Tunggu hingga selesai sebelum mencoba melihat log.",
+    "opRunning": "Operasi sudah berjalan.",
+    "clearCachedDataTitle": "Cache output dibersihkan",
+    "clearCachedData": "Cache output telah dibersihkan.",
+    "clearOutputCache": "Bersihkan cache output",
+    "copyOutput": "Salin output terminal",
+    "copyToClipboardTitle": "Disalin ke clipboard",
+    "copyToClipboard": "Output telah berhasil disalin ke clipboardmu.",
+    "uploadPrivateBin": "Unggah ke PrivateBin"
   }
 }

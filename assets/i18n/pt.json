@@ -22,10 +22,10 @@
       "callExorcistTitle": "Chamou o exorcista!",
       "callExorcistBody": "Deves estar bastante desesperado para clicar neste botão! Preparei um voodoo especial para ti, se ainda tiveres problemas com a aplicação, por favor reporta-os no fórum do Garuda Linux ou no nosso tracker de problemas."
     },
-    "terminal": "Mostrar terminal",
     "terminalRunning": "Tarefas em execução",
     "terminalTasks": "Executar tarefas",
-    "pending": "Pendente"
+    "pending": "Pendente",
+    "console": "Mostrar terminal"
   },
   "diagnostics": {
     "title": "Informação de debug ",
@@ -152,23 +152,6 @@
     "password": "Palavra-passe",
     "cancel": "Cancelar",
     "useOnce": "Usar apenas uma vez"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Executar ações",
-    "removeAll": "Remover todas as ações",
-    "abortAll": "Abortar todas as ações",
-    "noOutput": "Sem saída",
-    "outputExists": "Parece que já existe uma ação em execução. Por favor, espera que termine antes de tentar ver os logs.",
-    "opRunning": "A operação já está em execução.",
-    "clearCachedDataTitle": "Cache de saída limpa",
-    "clearCachedData": "A cache de saída foi limpa.",
-    "clearOutputCache": "Limpar cache de saída",
-    "copyOutput": "Copiar saída do terminal",
-    "copyToClipboardTitle": "Copiado para a área de transferência",
-    "copyToClipboard": "A saída foi copiada com sucesso para a tua área de transferência.",
-    "uploadPrivateBin": "Enviar para o PrivateBin"
   },
   "systemdServices": {
     "notFound": "Nenhum serviço encontrado",
@@ -611,5 +594,22 @@
     "selected": "Selecionado",
     "task": "Alterar local do sistema",
     "selectLocale": "Seleciona o teu idioma preferido para todo o sistema"
+  },
+  "console": {
+    "title": "Terminal",
+    "icon": "Icon",
+    "runActions": "Executar ações",
+    "removeAll": "Remover todas as ações",
+    "abortAll": "Abortar todas as ações",
+    "noOutput": "Sem saída",
+    "outputExists": "Parece que já existe uma ação em execução. Por favor, espera que termine antes de tentar ver os logs.",
+    "opRunning": "A operação já está em execução.",
+    "clearCachedDataTitle": "Cache de saída limpa",
+    "clearCachedData": "A cache de saída foi limpa.",
+    "clearOutputCache": "Limpar cache de saída",
+    "copyOutput": "Copiar saída do terminal",
+    "copyToClipboardTitle": "Copiado para a área de transferência",
+    "copyToClipboard": "A saída foi copiada com sucesso para a tua área de transferência.",
+    "uploadPrivateBin": "Enviar para o PrivateBin"
   }
 }

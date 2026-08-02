@@ -31,7 +31,7 @@ import { ConfirmationService } from 'primeng/api';
 import { globalKeyHandler } from './key-handler';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { LoadingService } from './components/loading-indicator/loading-indicator.service';
-import { TerminalComponent } from './components/terminal/terminal.component';
+import { ConsoleComponent } from './components/console/console.component';
 import { OperationManagerComponent } from './components/operation-manager/operation-manager.component';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfigService } from './components/config/config.service';
@@ -66,7 +66,7 @@ import { CommandPaletteService } from './components/command-palette/command-pale
     ShellComponent,
     ProgressSpinner,
     ShellBarEndDirective,
-    TerminalComponent,
+    ConsoleComponent,
     OperationManagerComponent,
     ConfirmDialog,
     SplitButton,
@@ -82,7 +82,7 @@ import { CommandPaletteService } from './components/command-palette/command-pale
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  readonly terminalComponent = viewChild.required<TerminalComponent>('terminalComponent');
+  readonly consoleComponent = viewChild.required<ConsoleComponent>('consoleComponent');
   readonly operationManagerComponent = viewChild.required<OperationManagerComponent>('operationManagerComponent');
 
   private readonly appMenuService = inject(ElectronAppMenuService);
@@ -106,6 +106,7 @@ export class AppComponent implements OnInit {
     {
       id: 'apply',
       label: 'Apply',
+      translocoKey: 'menu.apply',
       icon: 'pi pi-check',
       visible: this.applyButtonVisible(),
       command: () => this.operationManagerComponent().applyOperations(),
@@ -113,19 +114,22 @@ export class AppComponent implements OnInit {
     {
       id: 'clear',
       label: 'Clear',
+      translocoKey: 'menu.clearTasks',
       icon: 'pi pi-trash',
       visible: this.applyButtonVisible(),
       command: () => this.operationManagerComponent().clearOperations(),
     },
     {
-      id: 'show-terminal',
-      label: 'Show terminal',
+      id: 'show-console',
+      label: 'Show console',
+      translocoKey: 'menu.console',
       icon: 'pi pi-hashtag',
-      command: () => this.terminalComponent().visible.set(true),
+      command: () => this.consoleComponent().visible.set(true),
     },
     {
       id: 'exit',
       label: 'Exit',
+      translocoKey: 'menu.file.quit',
       icon: 'pi pi-times',
       command: () => windowRequestClose(),
     },
@@ -306,11 +310,11 @@ export class AppComponent implements OnInit {
         items: [...this.moduleItems],
       },
       {
-        id: 'terminal',
+        id: 'console',
         icon: 'pi pi-spinner',
-        label: 'Terminal',
-        translocoKey: 'menu.terminal',
-        command: () => this.terminalComponent().visible.set(true),
+        label: 'Console',
+        translocoKey: 'menu.console',
+        command: () => this.consoleComponent().visible.set(true),
       },
       {
         id: 'help',
@@ -438,6 +442,9 @@ export class AppComponent implements OnInit {
         this.menuItems.update((items: MenuItem[]) => {
           return this.setupLabels(this.translocoService.getActiveLang(), items);
         });
+        this.rightClickMenu.update((items: MenuItem[]) => {
+          return this.setupLabels(this.translocoService.getActiveLang(), items);
+        });
       }
     });
 
@@ -477,12 +484,12 @@ export class AppComponent implements OnInit {
     );
 
     this.commandPaletteService.registerActions({
-      id: 'terminal',
-      label: 'menu.terminal',
+      id: 'console',
+      label: 'menu.console',
       icon: 'pi pi-hashtag',
-      keywords: ['terminal', 'console', 'shell', 'cli'],
+      keywords: ['console', 'terminal', 'shell', 'cli'],
       category: 'app',
-      command: () => this.terminalComponent().visible.set(true),
+      command: () => this.consoleComponent().visible.set(true),
     });
   }
 
@@ -539,7 +546,7 @@ export class AppComponent implements OnInit {
    * @returns Converted app menu items
    */
   private convertToAppMenuItems(items: MenuItem[]): AppMenuItem[] {
-    const dontShow = new Set(['terminal']);
+    const dontShow = new Set(['console']);
 
     return items
       .filter((item) => item.visible !== false && !dontShow.has(item.id ?? ''))

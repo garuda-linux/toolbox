@@ -44,9 +44,9 @@
       "callExorcistTitle": "Der Exorzist wurde gerufen!",
       "callExorcistBody": "Du musst ziemlich verzweifelt sein, um auf diesen Knopf zu klicken! Ich habe speziellen Voodoo für dich eingerichtet. Falls du immer noch Probleme mit der App hast, melde sie bitte im Garuda Linux Forum oder in unserem Issue Tracker."
     },
-    "terminal": "Terminal anzeigen",
     "terminalRunning": "Laufende Aufgaben",
-    "terminalTasks": "Aufgaben ausführen"
+    "terminalTasks": "Aufgaben ausführen",
+    "console": "Terminal anzeigen"
   },
   "diagnostics": {
     "title": "Debug-Infos ",
@@ -262,23 +262,6 @@
     "password": "Passwort",
     "cancel": "Abbrechen",
     "useOnce": "Nur einmal verwenden"
-  },
-  "terminal": {
-    "title": "Terminal",
-    "runActions": "Aktionen ausführen",
-    "removeAll": "Alle Aktionen entfernen",
-    "abortAll": "Alle Aktionen abbrechen",
-    "noOutput": "Keine Ausgabe",
-    "outputExists": "Es scheint, als würde bereits eine Aktion ausgeführt. Bitte warte, bis sie abgeschlossen ist, bevor du versuchst, Protokolle anzuzeigen.",
-    "opRunning": "Die Operation wird bereits ausgeführt.",
-    "clearCachedDataTitle": "Ausgabe-Cache geleert",
-    "clearCachedData": "Der Ausgabe-Cache wurde geleert.",
-    "clearOutputCache": "Ausgabe-Cache leeren",
-    "copyOutput": "Terminalausgabe kopieren",
-    "copyToClipboardTitle": "In die Zwischenablage kopiert",
-    "copyToClipboard": "Die Ausgabe wurde erfolgreich in deine Zwischenablage kopiert.",
-    "uploadPrivateBin": "Auf PrivateBin hochladen",
-    "printScripts": "Skripte drucken"
   },
   "systemdServices": {
     "notFound": "Keine Dienste gefunden",
@@ -718,5 +701,22 @@
   "taskmanager": {
     "scriptMismatch": "Die Integrität des Skripts konnte nicht verifiziert werden.",
     "scriptExecuted": "Die aktuelle Aufgabe ist abgeschlossen."
+  },
+  "console": {
+    "title": "Terminal",
+    "runActions": "Aktionen ausführen",
+    "removeAll": "Alle Aktionen entfernen",
+    "abortAll": "Alle Aktionen abbrechen",
+    "noOutput": "Keine Ausgabe",
+    "outputExists": "Es scheint, als würde bereits eine Aktion ausgeführt. Bitte warte, bis sie abgeschlossen ist, bevor du versuchst, Protokolle anzuzeigen.",
+    "opRunning": "Die Operation wird bereits ausgeführt.",
+    "clearCachedDataTitle": "Ausgabe-Cache geleert",
+    "clearCachedData": "Der Ausgabe-Cache wurde geleert.",
+    "clearOutputCache": "Ausgabe-Cache leeren",
+    "copyOutput": "Terminalausgabe kopieren",
+    "copyToClipboardTitle": "In die Zwischenablage kopiert",
+    "copyToClipboard": "Die Ausgabe wurde erfolgreich in deine Zwischenablage kopiert.",
+    "uploadPrivateBin": "Auf PrivateBin hochladen",
+    "printScripts": "Skripte drucken"
   }
 }

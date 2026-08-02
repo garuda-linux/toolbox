@@ -22,10 +22,10 @@
       "callExorcistTitle": "Chiamato l'esorcista!",
       "callExorcistBody": "Devi essere piuttosto disperato per cliccare questo pulsante! Ho preparato un po' di voodoo speciale per te, se hai ancora problemi con l'app, per favore segnalali sul forum di Garuda Linux o sul nostro issue tracker."
     },
-    "terminal": "Mostra terminale",
     "terminalRunning": "Attività in esecuzione",
     "terminalTasks": "Esegui attività",
-    "pending": "In attesa"
+    "pending": "In attesa",
+    "console": "Mostra terminale"
   },
   "diagnostics": {
     "title": "Info di debug ",
@@ -152,23 +152,6 @@
     "password": "Password",
     "cancel": "Annulla",
     "useOnce": "Usa solo una volta"
-  },
-  "terminal": {
-    "title": "Terminale",
-    "icon": "Icon",
-    "runActions": "Esegui azioni",
-    "removeAll": "Rimuovi tutte le azioni",
-    "abortAll": "Interrompi tutte le azioni",
-    "noOutput": "Nessun output",
-    "outputExists": "Sembra che ci sia già un'azione in esecuzione. Attendi che finisca prima di provare a visualizzare i log.",
-    "opRunning": "L'operazione è già in esecuzione.",
-    "clearCachedDataTitle": "Cache dell'output svuotata",
-    "clearCachedData": "La cache dell'output è stata svuotata.",
-    "clearOutputCache": "Svuota cache dell'output",
-    "copyOutput": "Copia output del terminale",
-    "copyToClipboardTitle": "Copiato negli appunti",
-    "copyToClipboard": "L'output è stato copiato con successo negli appunti.",
-    "uploadPrivateBin": "Carica su PrivateBin"
   },
   "systemdServices": {
     "notFound": "Nessun servizio trovato",
@@ -611,5 +594,22 @@
     "selected": "Selezionato",
     "task": "Cambia locale di sistema",
     "selectLocale": "Seleziona la tua lingua preferita a livello di sistema"
+  },
+  "console": {
+    "title": "Terminale",
+    "icon": "Icon",
+    "runActions": "Esegui azioni",
+    "removeAll": "Rimuovi tutte le azioni",
+    "abortAll": "Interrompi tutte le azioni",
+    "noOutput": "Nessun output",
+    "outputExists": "Sembra che ci sia già un'azione in esecuzione. Attendi che finisca prima di provare a visualizzare i log.",
+    "opRunning": "L'operazione è già in esecuzione.",
+    "clearCachedDataTitle": "Cache dell'output svuotata",
+    "clearCachedData": "La cache dell'output è stata svuotata.",
+    "clearOutputCache": "Svuota cache dell'output",
+    "copyOutput": "Copia output del terminale",
+    "copyToClipboardTitle": "Copiato negli appunti",
+    "copyToClipboard": "L'output è stato copiato con successo negli appunti.",
+    "uploadPrivateBin": "Carica su PrivateBin"
   }
 }
