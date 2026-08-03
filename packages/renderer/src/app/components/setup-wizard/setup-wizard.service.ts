@@ -1,6 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { TaskManagerService } from '../task-manager/task-manager.service';
+import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
 import { setupWizardData } from './setup-wizard.data';
 import { SetupSoftwareCategory, SetupSoftwareItem } from './interfaces';
@@ -11,9 +12,20 @@ import { SetupSoftwareCategory, SetupSoftwareItem } from './interfaces';
 export class SetupWizardService {
   private readonly osInteractService = inject(OsInteractService);
   private readonly taskManagerService = inject(TaskManagerService);
+  private readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();
 
-  readonly categories = signal<SetupSoftwareCategory[]>(setupWizardData);
+  readonly categories = computed<SetupSoftwareCategory[]>(() => {
+    const installed = this.osInteractService.packages();
+    const available = this.configService.state().availablePkgs;
+
+    return setupWizardData
+      .map((category) => ({
+        ...category,
+        items: category.items.filter((item) => installed.has(item.packages[0]) || available.has(item.packages[0])),
+      }))
+      .filter((category) => category.items.length > 0);
+  });
 
   constructor() {
     setupWizardData.forEach((category) => {

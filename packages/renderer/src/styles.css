@@ -142,6 +142,10 @@ toolbox-config-files > div p-table > .p-datatable-table-container {
   color: var(--color-primary-emphasis-alt) !important;
 }
 
+div.p-dialog-header-actions > button {
+  @apply text-primary-emphasis-alt! hover:text-primary-emphasis!;
+}
+
 toolbox-command-palette > p-dialog > div > div > .p-dialog-content {
   padding: unset;
   border-radius: 6px;
