@@ -505,10 +505,10 @@ export const setupWizardData: SetupSoftwareCategory[] = [
         selected: false,
       },
       {
-        id: 'minetest',
-        name: 'Minetest',
-        description: 'setupWizard.autoSoftware.minetest',
-        packages: ['minetest-git', 'minetest-server-git'],
+        id: 'luanti',
+        name: 'Luanti',
+        description: 'setupWizard.autoSoftware.luanti',
+        packages: ['luanti-git', 'luanti-server-git'],
         selected: false,
       },
       {
