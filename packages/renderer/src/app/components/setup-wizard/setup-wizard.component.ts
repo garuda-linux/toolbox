@@ -3,15 +3,15 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router } from '@angular/router';
 import { SetupSoftwareItem } from './interfaces';
 import { OsInteractService } from '../task-manager/os-interact.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Step, StepItem, StepPanel, StepperModule } from 'primeng/stepper';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { Checkbox } from 'primeng/checkbox';
 import { AccordionModule } from 'primeng/accordion';
 import { Card } from 'primeng/card';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { ButtonDirective, Button } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { ArrowLeft } from '@primeicons/angular/arrow-left';
 import { ArrowRight } from '@primeicons/angular/arrow-right';
 import { Refresh } from '@primeicons/angular/refresh';
@@ -22,13 +22,13 @@ import { Check } from '@primeicons/angular/check';
   imports: [
     CommonModule,
     FormsModule,
-    StepperModule,
-    StepPanel,
-    Step,
-    StepItem,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
     Checkbox,
     ButtonDirective,
-    Button,
     AccordionModule,
     Card,
     TranslocoDirective,
@@ -48,20 +48,44 @@ export class SetupWizardComponent {
   protected readonly translocoService = inject(TranslocoService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly elementRef = inject(ElementRef);
 
   protected hasApplied = signal<boolean>(false);
   protected executionFailed = signal<boolean>(false);
+  protected activeTab = signal<number>(1);
 
   get softwareCategories() {
     return this.setupWizardService.categories();
   }
 
-  get totalSteps() {
-    return this.softwareCategories.length + 1;
-  }
-
   getCategoryStepValue(index: number) {
     return index + 1;
+  }
+
+  onTabChange(value: string | number | undefined) {
+    this.activeTab.set(Number(value));
+    this.scrollToTop();
+  }
+
+  goToStep(value: number) {
+    this.activeTab.set(value);
+    this.scrollToTop();
+  }
+
+  scrollToTop() {
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      let el: Element | null = this.elementRef.nativeElement;
+      while (el) {
+        if (el instanceof HTMLElement && el.scrollTop > 0) {
+          el.scrollTop = 0;
+        }
+        el = el.parentElement;
+      }
+    });
   }
 
   toggleSoftware(item: SetupSoftwareItem) {

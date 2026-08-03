@@ -1,108 +1,98 @@
 <ng-container *transloco="let t">
-  <div class="surface-section px-4 py-4 text-center md:px-6 lg:px-8">
-    <div class="mb-5 text-3xl font-bold">
+  <div class="setup-wizard-wrap surface-section px-4 py-4 text-center md:px-6 lg:px-8">
+    <div class="setup-wizard-title mb-5 shrink-0 text-3xl font-bold">
       <span class="text-primary">{{ t('setupWizard.title') }} </span>
     </div>
 
     <p-card class="mt-4 text-left">
-      <p-stepper [value]="1">
-        @for (category of softwareCategories; track category.id; let i = $index) {
-          <p-step-item [value]="getCategoryStepValue(i)">
-            <p-step>{{ t(category.name) }}</p-step>
-            <p-step-panel>
-              <ng-template #content let-activateCallback="activateCallback">
-                <div class="flex flex-col gap-4 py-4">
-                  <div class="flex-none">
-                    <div class="text-2xl font-bold">{{ t(category.name) }}</div>
-                    <div class="text-lg text-color-secondary">
-                      {{ t('setupWizard.softwareSelection.body') }}
-                    </div>
-                  </div>
+      <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
+        <p-tablist>
+          @for (category of softwareCategories; track category.id; let i = $index) {
+            <p-tab [value]="getCategoryStepValue(i)">{{ t(category.name) }}</p-tab>
+          }
+        </p-tablist>
 
-                  <div class="software-grid-container grow">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
-                      @for (item of category.items; track item.id) {
-                        <div
-                          class="flex items-center gap-4 p-4 surface-card border-round cursor-pointer transition-colors duration-200"
-                          (keydown)="toggleSoftware(item)"
-                          (click)="toggleSoftware(item)"
-                          tabindex="0"
-                        >
-                          <div class="shrink-0 w-12 h-12 flex items-center justify-center overflow-hidden">
-                            <img class="w-10 h-10 object-contain" [src]="getIconSrc(item)" [alt]="item.name" />
-                          </div>
-                          <div class="grow text-left">
-                            <div class="font-bold text-lg">{{ item.name }}</div>
-                            <div class="text-sm text-color-secondary line-clamp-2" [title]="t(item.description)">
-                              {{ t(item.description) }}
-                            </div>
-                          </div>
-                          <div class="shrink-0 pointer-events-none">
-                            <p-checkbox [binary]="true" [ngModel]="isItemSelected(item)" [readonly]="true" />
-                          </div>
-                        </div>
-                      }
-                    </div>
-                  </div>
-
-                  <div class="flex-none flex gap-2 pt-4">
-                    <button
-                      [disabled]="i === 0"
-                      pButton
-                      severity="secondary"
-                      (click)="activateCallback(getCategoryStepValue(i - 1))"
-                    >
-                      <svg data-p-icon="arrow-left"></svg> {{ t('setupWizard.buttons.back') }}
-                    </button>
-                    <p-button
-                      iconPos="right"
-                      (click)="
-                        activateCallback(i === softwareCategories.length - 1 ? totalSteps : getCategoryStepValue(i + 1))
-                      "
-                      ><svg data-p-icon="arrow-right"></svg>{{ t('setupWizard.buttons.next') }}</p-button
-                    >
+        <p-tabpanels>
+          @for (category of softwareCategories; track category.id; let i = $index) {
+            <p-tabpanel [value]="getCategoryStepValue(i)">
+              <div class="setup-step-content flex flex-col gap-4 py-4">
+                <div class="flex-none">
+                  <div class="text-2xl font-bold">{{ t(category.name) }}</div>
+                  <div class="text-lg text-color-secondary">
+                    {{ t('setupWizard.softwareSelection.body') }}
                   </div>
                 </div>
-              </ng-template>
-            </p-step-panel>
-          </p-step-item>
-        }
 
-        <!-- Apply Step -->
-        <p-step-item [value]="totalSteps">
-          <p-step>{{ t('setupWizard.steps.apply') }}</p-step>
-          <p-step-panel>
-            <ng-template #content let-activateCallback="activateCallback">
-              <div class="flex flex-col gap-4 py-8">
-                @if (executionFailed()) {
-                  <div class="text-2xl font-bold text-red-500">{{ t('setupWizard.apply.failedHeader') }}</div>
-                  <p class="text-color text-lg">{{ t('setupWizard.apply.failedBody') }}</p>
-                } @else {
-                  <div class="text-2xl font-bold">{{ t('setupWizard.apply.header') }}</div>
-                  <p class="text-color text-lg">{{ t('setupWizard.apply.body') }}</p>
-                }
+                <div class="software-grid-container grow">
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
+                    @for (item of category.items; track item.id) {
+                      <div
+                        class="flex items-center gap-4 p-4 surface-card border-round cursor-pointer transition-colors duration-200"
+                        (keydown)="toggleSoftware(item)"
+                        (click)="toggleSoftware(item)"
+                        tabindex="0"
+                      >
+                        <div class="shrink-0 pointer-events-none">
+                          <p-checkbox [binary]="true" [ngModel]="isItemSelected(item)" [readonly]="true" />
+                        </div>
+                        <div class="shrink-0 w-12 h-12 flex items-center justify-center overflow-hidden">
+                          <img class="w-10 h-10 object-contain" [src]="getIconSrc(item)" [alt]="item.name" />
+                        </div>
+                        <div class="grow text-left">
+                          <div class="font-bold text-lg">{{ item.name }}</div>
+                          <div class="text-sm text-color-secondary line-clamp-2" [title]="t(item.description)">
+                            {{ t(item.description) }}
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
 
-                <div class="flex gap-2 pt-4">
-                  <p-button
+                <div class="flex-none flex gap-2 pt-4">
+                  <button
+                    [disabled]="i === 0"
+                    pButton
                     severity="secondary"
-                    (click)="activateCallback(getCategoryStepValue(softwareCategories.length - 1))"
-                    ><svg data-p-icon="arrow-left"></svg>{{ t('setupWizard.buttons.back') }}</p-button
+                    (click)="goToStep(getCategoryStepValue(i - 1))"
                   >
-                  @if (executionFailed()) {
-                    <button [disabled]="taskManagerService.running()" pButton severity="warn" (click)="apply()">
-                      <svg data-p-icon="refresh"></svg> {{ t('setupWizard.buttons.retry') }}
-                    </button>
-                  } @else {
-                    <button [disabled]="taskManagerService.running()" pButton severity="success" (click)="apply()">
-                      <svg data-p-icon="check"></svg> {{ t('setupWizard.buttons.apply') }}
+                    <svg data-p-icon="arrow-left"></svg> {{ t('setupWizard.buttons.back') }}
+                  </button>
+                  @if (i < softwareCategories.length - 1) {
+                    <button pButton (click)="goToStep(getCategoryStepValue(i + 1))">
+                      <svg data-p-icon="arrow-right"></svg>{{ t('setupWizard.buttons.next') }}
                     </button>
                   }
                 </div>
               </div>
-            </ng-template>
-          </p-step-panel>
-        </p-step-item>
-      </p-stepper>
+            </p-tabpanel>
+          }
+        </p-tabpanels>
+      </p-tabs>
+
+      <div class="apply-section mt-4 flex-none flex flex-col gap-2 border-t border-t-primary pt-4">
+        @if (executionFailed()) {
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <div class="font-bold text-red-500">{{ t('setupWizard.apply.failedHeader') }}</div>
+              <p class="text-color-secondary text-sm">{{ t('setupWizard.apply.failedBody') }}</p>
+            </div>
+            <button [disabled]="taskManagerService.running()" pButton severity="warn" (click)="apply()">
+              <svg data-p-icon="refresh"></svg> {{ t('setupWizard.buttons.retry') }}
+            </button>
+          </div>
+        } @else {
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <div class="font-bold">{{ t('setupWizard.apply.header') }}</div>
+              <p class="text-color-secondary text-sm">{{ t('setupWizard.apply.body') }}</p>
+            </div>
+            <button [disabled]="taskManagerService.running()" pButton severity="success" (click)="apply()">
+              <svg data-p-icon="check"></svg> {{ t('setupWizard.buttons.apply') }}
+            </button>
+          </div>
+        }
+      </div>
     </p-card>
   </div>
 </ng-container>

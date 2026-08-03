@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+.setup-wizard-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 6.5rem);
+}
+
+.setup-wizard-wrap > p-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host ::ng-deep .setup-wizard-wrap > p-card .p-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host ::ng-deep .setup-wizard-wrap > p-card .p-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host ::ng-deep .setup-wizard-wrap > p-card .p-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host ::ng-deep .setup-wizard-wrap .p-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host ::ng-deep .setup-wizard-wrap .p-tablist {
+  flex: none;
+  display: flex;
+  min-width: 0;
+  overflow: visible;
+}
+
+:host ::ng-deep .setup-wizard-wrap .p-tablist-content {
+  flex: 1 1 0%;
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow: visible;
+  align-items: center;
+  row-gap: 0.25rem;
+}
+
+:host ::ng-deep .setup-wizard-wrap .p-tablist-nav-button,
+:host ::ng-deep .setup-wizard-wrap .p-tablist-active-bar {
+  display: none;
+}
+
+:host ::ng-deep .setup-wizard-wrap .p-tabpanels {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host ::ng-deep .setup-wizard-wrap .p-tabpanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.setup-step-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.software-grid-container {
+  min-height: 0;
+}

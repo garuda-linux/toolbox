@@ -142,7 +142,8 @@ toolbox-config-files > div p-table > .p-datatable-table-container {
   color: var(--color-primary-emphasis-alt) !important;
 }
 
-div.p-dialog-header-actions > button {
+div.p-dialog-header-actions > button,
+p-tablist > button {
   @apply text-primary-emphasis-alt! hover:text-primary-emphasis!;
 }
 
