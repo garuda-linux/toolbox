@@ -1,4 +1,4 @@
-import type { OnInit } from '@angular/core';
+import type { OnInit } from "@angular/core";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +9,7 @@ import {
   Renderer2,
   signal,
   viewChild,
-} from '@angular/core';
+} from "@angular/core";
 import {
   NavigationCancel,
   NavigationEnd,
@@ -76,9 +76,9 @@ import { CommandPaletteService } from './components/command-palette/command-pale
     Menu,
     CommandPaletteComponent,
   ],
-  selector: 'toolbox-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  selector: "toolbox-root",
+  templateUrl: "./app.component.html",
+  styleUrl: "./app.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
@@ -142,151 +142,151 @@ export class AppComponent implements OnInit {
 
   readonly moduleItems = [
     {
-      id: 'welcome',
-      icon: 'pi pi-home',
-      label: 'Welcome',
-      translocoKey: 'menu.welcome',
-      command: () => this.router.navigate(['/']),
+      id: "welcome",
+      icon: "pi pi-home",
+      label: "Welcome",
+      translocoKey: "menu.welcome",
+      command: () => this.router.navigate(["/"]),
     },
     {
-      id: 'setup-wizard',
-      icon: 'pi pi-cog',
-      label: 'Setup Wizard',
-      translocoKey: 'menu.setupWizard',
-      command: () => this.router.navigate(['/setup-wizard']),
+      id: "setup-wizard",
+      icon: "pi pi-cog",
+      label: "Setup Wizard",
+      translocoKey: "menu.setupWizard",
+      command: () => this.router.navigate(["/setup-wizard"]),
     },
     {
-      id: 'maintenance',
-      icon: 'pi pi-desktop',
-      label: 'Maintenance',
-      translocoKey: 'menu.maintenance',
-      command: () => this.router.navigate(['/maintenance']),
+      id: "maintenance",
+      icon: "pi pi-desktop",
+      label: "Maintenance",
+      translocoKey: "menu.maintenance",
+      command: () => this.router.navigate(["/maintenance"]),
     },
     {
-      id: 'system-tools',
-      icon: 'pi pi-microchip',
-      label: 'System tools',
-      translocoKey: 'menu.systemTools',
-      command: () => this.router.navigate(['/system-tools']),
+      id: "system-tools",
+      icon: "pi pi-microchip",
+      label: "System tools",
+      translocoKey: "menu.systemTools",
+      command: () => this.router.navigate(["/system-tools"]),
     },
     {
-      id: 'gaming',
-      icon: 'pi pi-play-circle',
-      label: 'Gaming apps',
-      translocoKey: 'menu.gaming',
-      command: () => this.router.navigate(['/gaming']),
+      id: "gaming",
+      icon: "pi pi-play-circle",
+      label: "Gaming apps",
+      translocoKey: "menu.gaming",
+      command: () => this.router.navigate(["/gaming"]),
     },
     {
-      id: 'packages',
-      icon: 'pi pi-box',
-      label: 'Discover applications',
-      translocoKey: 'menu.packages',
-      command: () => this.router.navigate(['/packages']),
+      id: "packages",
+      icon: "pi pi-box",
+      label: "Discover applications",
+      translocoKey: "menu.packages",
+      command: () => this.router.navigate(["/packages"]),
     },
     {
-      id: 'boot-tools',
-      icon: 'pi pi-hammer',
-      label: 'Boot Options',
-      translocoKey: 'menu.boot',
-      command: () => this.router.navigate(['/boot-options']),
+      id: "boot-tools",
+      icon: "pi pi-hammer",
+      label: "Boot Options",
+      translocoKey: "menu.boot",
+      command: () => this.router.navigate(["/boot-options"]),
       visible: true,
     },
     {
-      id: 'boot-repair',
-      icon: 'pi pi-hammer',
-      label: 'Boot Repair',
-      translocoKey: 'menu.bootRepair',
-      command: () => this.router.navigate(['/boot-repair']),
+      id: "boot-repair",
+      icon: "pi pi-hammer",
+      label: "Boot Repair",
+      translocoKey: "menu.bootRepair",
+      command: () => this.router.navigate(["/boot-repair"]),
       visible: true,
     },
     {
-      id: 'network-tools',
-      icon: 'pi pi-globe',
-      label: 'Network Assistant',
-      translocoKey: 'menu.network',
-      command: () => this.router.navigate(['/network-assistant']),
+      id: "network-tools",
+      icon: "pi pi-globe",
+      label: "Network Assistant",
+      translocoKey: "menu.network",
+      command: () => this.router.navigate(["/network-assistant"]),
       visible: true,
     },
     {
-      id: 'config-files',
-      icon: 'pi pi-file-edit',
-      label: 'Config Files',
-      translocoKey: 'menu.configFiles',
-      command: () => this.router.navigate(['/config-files']),
+      id: "config-files",
+      icon: "pi pi-file-edit",
+      label: "Config Files",
+      translocoKey: "menu.configFiles",
+      command: () => this.router.navigate(["/config-files"]),
     },
     {
-      id: 'diagnostics',
-      icon: 'pi pi-info-circle',
-      label: 'Diagnostics',
-      translocoKey: 'menu.diagnostics',
-      command: () => this.router.navigate(['/diagnostics']),
+      id: "diagnostics",
+      icon: "pi pi-info-circle",
+      label: "Diagnostics",
+      translocoKey: "menu.diagnostics",
+      command: () => this.router.navigate(["/diagnostics"]),
     },
   ];
   helpItems = [
     {
-      id: 'help-forum',
-      icon: 'pi pi-info-circle',
-      label: 'Get help on the forum',
-      translocoKey: 'menu.help.getHelpForum',
-      command: () => this.shellService.open('https://forum.garudalinux.org/'),
+      id: "help-forum",
+      icon: "pi pi-info-circle",
+      label: "Get help on the forum",
+      translocoKey: "menu.help.getHelpForum",
+      command: () => this.shellService.open("https://forum.garudalinux.org/"),
     },
     {
-      id: 'help-wiki',
-      icon: 'pi pi-info-circle',
-      label: 'Search the wiki',
-      translocoKey: 'menu.help.getHelpWiki',
-      command: () => this.shellService.open('https://wiki.garudalinux.org/'),
+      id: "help-wiki",
+      icon: "pi pi-info-circle",
+      label: "Search the wiki",
+      translocoKey: "menu.help.getHelpWiki",
+      command: () => this.shellService.open("https://wiki.garudalinux.org/"),
     },
     {
-      id: 'help-arch-wiki',
-      icon: 'pi pi-info-circle',
-      label: 'Search the Arch wiki',
-      translocoKey: 'menu.help.getHelpArchWiki',
-      command: () => this.shellService.open('https://wiki.archlinux.org/'),
+      id: "help-arch-wiki",
+      icon: "pi pi-info-circle",
+      label: "Search the Arch wiki",
+      translocoKey: "menu.help.getHelpArchWiki",
+      command: () => this.shellService.open("https://wiki.archlinux.org/"),
     },
     {
-      id: 'help-status',
-      icon: 'pi pi-info-circle',
-      label: 'Garuda Linux infra status',
-      translocoKey: 'menu.help.garudaStatus',
-      command: () => this.shellService.open('https://status.garudalinux.org'),
+      id: "help-status",
+      icon: "pi pi-info-circle",
+      label: "Garuda Linux infra status",
+      translocoKey: "menu.help.garudaStatus",
+      command: () => this.shellService.open("https://status.garudalinux.org"),
     },
     {
-      id: 'help-exorcist',
-      icon: 'pi pi-info-circle',
-      label: 'About',
-      translocoKey: 'menu.help.callExorcist',
+      id: "help-exorcist",
+      icon: "pi pi-info-circle",
+      label: "About",
+      translocoKey: "menu.help.callExorcist",
       command: () =>
         this.notificationService.sendNotification({
-          title: this.translocoService.translate('menu.help.callExorcistTitle'),
-          body: `${this.translocoService.translate('menu.help.callExorcistBody')} 🐛`,
+          title: this.translocoService.translate("menu.help.callExorcistTitle"),
+          body: `${this.translocoService.translate("menu.help.callExorcistBody")} 🐛`,
         }),
     } as MenuItem,
     {
-      id: 'help-about',
-      icon: 'pi pi-info-circle',
-      label: 'About',
-      translocoKey: 'menu.help.about',
+      id: "help-about",
+      icon: "pi pi-info-circle",
+      label: "About",
+      translocoKey: "menu.help.about",
       command: () =>
         this.notificationService.sendNotification({
-          title: this.translocoService.translate('menu.help.about'),
-          body: this.translocoService.translate('menu.help.aboutBody'),
+          title: this.translocoService.translate("menu.help.about"),
+          body: this.translocoService.translate("menu.help.aboutBody"),
         }),
     },
   ];
   private fileItems = [
     {
-      id: 'file-preferences',
-      icon: 'pi pi-cog',
-      label: 'Preferences',
-      translocoKey: 'menu.file.preferences',
-      command: () => this.router.navigate(['/settings']),
+      id: "file-preferences",
+      icon: "pi pi-cog",
+      label: "Preferences",
+      translocoKey: "menu.file.preferences",
+      command: () => this.router.navigate(["/settings"]),
     },
     {
-      id: 'file-quit',
-      icon: 'pi pi-sign-out',
-      label: 'Quit',
-      translocoKey: 'menu.file.quit',
+      id: "file-quit",
+      icon: "pi pi-sign-out",
+      label: "Quit",
+      translocoKey: "menu.file.quit",
       command: () => {
         void this.shutdown();
       },
@@ -296,17 +296,17 @@ export class AppComponent implements OnInit {
   menuItems = signal<MenuItem[]>(
     this.setupLabels(this.translocoService.getActiveLang(), [
       {
-        id: 'file',
-        icon: 'pi pi-file',
-        label: 'File',
-        translocoKey: 'menu.file.title',
+        id: "file",
+        icon: "pi pi-file",
+        label: "File",
+        translocoKey: "menu.file.title",
         items: [...this.fileItems],
       },
       {
-        id: 'modules',
-        icon: 'pi pi-cog',
-        label: 'Modules',
-        translocoKey: 'menu.modules.title',
+        id: "modules",
+        icon: "pi pi-cog",
+        label: "Modules",
+        translocoKey: "menu.modules.title",
         items: [...this.moduleItems],
       },
       {
@@ -317,10 +317,10 @@ export class AppComponent implements OnInit {
         command: () => this.consoleComponent().visible.set(true),
       },
       {
-        id: 'help',
-        icon: 'pi pi-question-circle',
-        label: 'Help',
-        translocoKey: 'menu.help.title',
+        id: "help",
+        icon: "pi pi-question-circle",
+        label: "Help",
+        translocoKey: "menu.help.title",
         items: [...this.helpItems],
       },
     ]),
@@ -332,11 +332,11 @@ export class AppComponent implements OnInit {
    */
   protected readonly applyMenuItems = [
     {
-      label: this.translocoService.translate('menu.apply'),
+      label: this.translocoService.translate("menu.apply"),
       command: () => this.operationManagerComponent().applyOperationsNow(),
     },
     {
-      label: this.translocoService.translate('menu.clearTasks'),
+      label: this.translocoService.translate("menu.clearTasks"),
       command: () => this.taskManager.clearTasks(),
     },
   ];
@@ -344,13 +344,15 @@ export class AppComponent implements OnInit {
   /**
    * App module search stuff.
    */
-  selectedModule = signal<string>('');
+  selectedModule = signal<string>("");
   moduleSuggestions = signal<ModuleSearchEntry[]>([]);
   dropdownModel = signal<MenuItem[]>([]);
   dropdownVisible = signal<boolean>(false);
   dropdownTop = signal<number>(0);
   dropdownLeft = signal<number>(0);
   activeDropdownId = signal<string | undefined>(undefined);
+  mobileMenuVisible = signal<boolean>(false);
+  expandedMobileSection = signal<string | undefined>(undefined);
 
   readonly menubarModel = computed<MenuItem[]>(() => {
     return this.menuItems().map((item) => {
@@ -360,7 +362,7 @@ export class AppComponent implements OnInit {
           icon: item.icon,
           items: undefined,
           command: (event: { originalEvent: Event }) => this.toggleDropdown(event.originalEvent, item),
-          styleClass: 'garuda-menubar-item--has-submenu',
+          styleClass: "garuda-menubar-item--has-submenu",
         };
       }
       return {
@@ -380,7 +382,7 @@ export class AppComponent implements OnInit {
     }
 
     const target = (event.currentTarget || event.target) as HTMLElement;
-    const anchor = target.closest('.p-menubar-item') || target;
+    const anchor = target.closest(".p-menubar-item") || target;
     const rect = anchor.getBoundingClientRect();
 
     this.dropdownModel.set(item.items ?? []);
@@ -388,6 +390,26 @@ export class AppComponent implements OnInit {
     this.dropdownLeft.set(rect.left);
     this.activeDropdownId.set(item.id);
     this.dropdownVisible.set(true);
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuVisible.update((v) => !v);
+    this.expandedMobileSection.set(undefined);
+  }
+
+  toggleMobileSection(id: string): void {
+    this.expandedMobileSection.update((current) => (current === id ? undefined : id));
+  }
+
+  executeMobileItem(item: MenuItem): void {
+    if (item.items && item.items.length > 0) {
+      this.toggleMobileSection(item.id ?? "");
+      return;
+    }
+    // @ts-expect-error
+    item.command?.();
+    this.mobileMenuVisible.set(false);
+    this.expandedMobileSection.set(undefined);
   }
 
   ngOnInit(): void {
@@ -398,37 +420,37 @@ export class AppComponent implements OnInit {
         // Only add is-transitioning after the first navigation completes
         // This prevents view-transition CSS from interfering with initial paint
         if (firstNavigationComplete) {
-          document.body.classList.add('is-transitioning');
+          document.body.classList.add("is-transitioning");
         }
       } else if (event instanceof NavigationCancel || event instanceof NavigationError) {
-        document.body.classList.remove('is-transitioning');
+        document.body.classList.remove("is-transitioning");
       } else if (event instanceof NavigationEnd) {
         firstNavigationComplete = true;
       }
     });
 
     void this.osService.argv().then((args: string[]) => {
-      if (args.includes('--setup-assistant')) {
-        this.logger.info('Redirecting to setup wizard on startup');
-        void this.router.navigate(['/setup-wizard'], { replaceUrl: true });
+      if (args.includes("--setup-assistant")) {
+        this.logger.info("Redirecting to setup wizard on startup");
+        void this.router.navigate(["/setup-wizard"], { replaceUrl: true });
       }
     });
 
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener("unhandledrejection", (event) => {
       this.logger.error(`Unhandled promise rejection: ${event.reason}`);
 
-      if (event.reason instanceof SyntaxError && event.reason.message.includes('JSON')) {
+      if (event.reason instanceof SyntaxError && event.reason.message.includes("JSON")) {
         this.logger.error(`JSON parsing error detected: ${event.reason.message}`);
         event.preventDefault();
       }
-      if (event.reason && typeof event.reason === 'string' && event.reason.includes('HTTP')) {
+      if (event.reason && typeof event.reason === "string" && event.reason.includes("HTTP")) {
         this.logger.error(`HTTP error detected: ${event.reason}`);
         event.preventDefault();
       }
     });
 
     // Handle global errors
-    window.addEventListener('error', (event) => {
+    window.addEventListener("error", (event) => {
       this.logger.error(`Global error: ${event.error}`);
 
       if (event.error instanceof SyntaxError) {
@@ -437,8 +459,8 @@ export class AppComponent implements OnInit {
     });
 
     this.translocoService.events$.subscribe((event) => {
-      if (event.type === 'langChanged') {
-        this.logger.trace('Updating menu labels via event');
+      if (event.type === "langChanged") {
+        this.logger.trace("Updating menu labels via event");
         this.menuItems.update((items: MenuItem[]) => {
           return this.setupLabels(this.translocoService.getActiveLang(), items);
         });
@@ -454,8 +476,8 @@ export class AppComponent implements OnInit {
     void this.updateApplicationMenu(this.menuItems());
     this.wallpaperService.initialize(this.renderer, this.elementRef);
 
-    this.renderer.listen('window', 'click', (e: Event) => {
-      if (this.dropdownVisible() && !(e.target as HTMLElement).closest('.p-menubar-item')) {
+    this.renderer.listen("window", "click", (e: Event) => {
+      if (this.dropdownVisible() && !(e.target as HTMLElement).closest(".p-menubar-item")) {
         this.dropdownVisible.set(false);
         this.activeDropdownId.set(undefined);
       }
@@ -469,14 +491,14 @@ export class AppComponent implements OnInit {
       this.commandPaletteService.registerActions.bind(this.commandPaletteService),
       (id: string) => {
         switch (id) {
-          case 'help-forum':
-            return () => void this.shellService.open('https://forum.garudalinux.org/');
-          case 'help-wiki':
-            return () => void this.shellService.open('https://wiki.garudalinux.org/');
-          case 'help-arch-wiki':
-            return () => void this.shellService.open('https://wiki.archlinux.org/');
-          case 'help-status':
-            return () => void this.shellService.open('https://status.garudalinux.org');
+          case "help-forum":
+            return () => void this.shellService.open("https://forum.garudalinux.org/");
+          case "help-wiki":
+            return () => void this.shellService.open("https://wiki.garudalinux.org/");
+          case "help-arch-wiki":
+            return () => void this.shellService.open("https://wiki.archlinux.org/");
+          case "help-status":
+            return () => void this.shellService.open("https://status.garudalinux.org");
           default:
             return undefined;
         }
@@ -497,7 +519,7 @@ export class AppComponent implements OnInit {
    * Handle all relevant keyboard events on the app window. Attaches to the document.
    * @param event The keyboard event
    */
-  @HostListener('document:keydown', ['$event'])
+  @HostListener("document:keydown", ["$event"])
   async handleKeyboardEvent(event: KeyboardEvent): Promise<void> {
     const thisBoundKeyHandler = globalKeyHandler.bind(this);
     await thisBoundKeyHandler(event);
@@ -510,24 +532,24 @@ export class AppComponent implements OnInit {
   private async updateApplicationMenu(_items: MenuItem[]): Promise<void> {
     const menubar = this.setupLabels(this.translocoService.getActiveLang(), [
       {
-        id: 'file',
-        icon: 'pi pi-file',
-        label: 'File',
-        translocoKey: 'menu.file.title',
+        id: "file",
+        icon: "pi pi-file",
+        label: "File",
+        translocoKey: "menu.file.title",
         items: [...this.fileItems],
       },
       {
-        id: 'modules',
-        icon: 'pi pi-cog',
-        label: 'Modules',
-        translocoKey: 'menu.modules.title',
+        id: "modules",
+        icon: "pi pi-cog",
+        label: "Modules",
+        translocoKey: "menu.modules.title",
         items: [...this.moduleItems],
       },
       {
-        id: 'help',
-        icon: 'pi pi-question-circle',
-        label: 'Help',
-        translocoKey: 'menu.help.title',
+        id: "help",
+        icon: "pi pi-question-circle",
+        label: "Help",
+        translocoKey: "menu.help.title",
         items: [...this.helpItems],
       },
     ]);
@@ -549,7 +571,7 @@ export class AppComponent implements OnInit {
     const dontShow = new Set(['console']);
 
     return items
-      .filter((item) => item.visible !== false && !dontShow.has(item.id ?? ''))
+      .filter((item) => item.visible !== false && !dontShow.has(item.id ?? ""))
       .map((item) => ({
         id: item.id,
         label: item.label,
@@ -568,7 +590,7 @@ export class AppComponent implements OnInit {
    */
   private setupAppMenuHandlers(): void {
     try {
-      eventsOn('appMenu:itemClicked', (...args: unknown[]) => {
+      eventsOn("appMenu:itemClicked", (...args: unknown[]) => {
         const data = args[0] as any;
         this.logger.trace(`App menu item clicked event received: ${JSON.stringify(data)}`);
 
@@ -603,7 +625,7 @@ export class AppComponent implements OnInit {
     this.logger.debug(`Handling menu command: ${command}`);
 
     switch (command) {
-      case 'shutdown':
+      case "shutdown":
         void this.shutdown();
         break;
       default: {
@@ -685,7 +707,7 @@ export class AppComponent implements OnInit {
    * @private
    */
   private async shutdown(): Promise<void> {
-    this.logger.info('Shutting down');
+    this.logger.info("Shutting down");
     windowClose();
   }
 
@@ -694,10 +716,10 @@ export class AppComponent implements OnInit {
    * @private
    */
   private attachElectronListeners() {
-    this.logger.trace('Electron window listeners initialized');
+    this.logger.trace("Electron window listeners initialized");
 
     // Handle close events through beforeunload if needed
-    window.addEventListener('beforeunload', (event) => {
+    window.addEventListener("beforeunload", (event) => {
       if (this.taskManager.running() || this.taskManager.count()) {
         event.preventDefault();
         void this.requestShutdown();
@@ -710,7 +732,7 @@ export class AppComponent implements OnInit {
    * @protected
    */
   protected async requestShutdown() {
-    this.logger.debug(`Close requested, ${this.taskManager.currentTask() ? 'one' : 'no'} action is running`);
+    this.logger.debug(`Close requested, ${this.taskManager.currentTask() ? "one" : "no"} action is running`);
 
     if (!this.taskManager.running() && !this.taskManager.count()) {
       void this.shutdown();
@@ -719,19 +741,19 @@ export class AppComponent implements OnInit {
 
     this.confirmationService.confirm({
       message: this.taskManager.running()
-        ? this.translocoService.translate('confirmation.exitAppRunningAction')
-        : this.translocoService.translate('confirmation.exitApp'),
-      header: this.translocoService.translate('confirmation.exitAppHeader'),
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon: 'pi pi-check',
-      rejectIcon: 'pi pi-times',
+        ? this.translocoService.translate("confirmation.exitAppRunningAction")
+        : this.translocoService.translate("confirmation.exitApp"),
+      header: this.translocoService.translate("confirmation.exitAppHeader"),
+      icon: "pi pi-exclamation-triangle",
+      acceptIcon: "pi pi-check",
+      rejectIcon: "pi pi-times",
       acceptButtonProps: {
-        severity: this.taskManager.running() ? 'danger' : 'success',
-        label: this.translocoService.translate('confirmation.accept'),
+        severity: this.taskManager.running() ? "danger" : "success",
+        label: this.translocoService.translate("confirmation.accept"),
       },
       rejectButtonProps: {
-        severity: 'secondary',
-        label: this.translocoService.translate('confirmation.reject'),
+        severity: "secondary",
+        label: this.translocoService.translate("confirmation.reject"),
       },
       accept: () => {
         void this.shutdown();
@@ -765,7 +787,7 @@ export class AppComponent implements OnInit {
     const module = $event.value as ModuleSearchEntry;
 
     this.logger.debug(`Navigating to module: ${module.moduleName} (${module.routerLink}) with hash ${module.hash}`);
-    this.selectedModule.set('');
+    this.selectedModule.set("");
     void this.router.navigate([module.routerLink], { fragment: module.hash });
   }
 }

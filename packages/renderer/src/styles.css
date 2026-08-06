@@ -369,3 +369,7 @@ body.is-transitioning .route-container {
     }
   }
 }
+
+.garuda-shell__dropdown-toggle {
+  display: none !important;
+}

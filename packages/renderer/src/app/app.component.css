@@ -16,3 +16,75 @@
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
+
+.app-mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 3000;
+  width: 50px;
+  height: 50px;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  color: var(--p-primary-color);
+}
+
+@media only screen and (width <= 960px) {
+  .app-mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.app-mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2999;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.app-mobile-menu-panel {
+  position: fixed;
+  top: 60px;
+  left: 8px;
+  right: 8px;
+  z-index: 3000;
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  border-radius: 8px;
+  background: var(--p-content-background, #1e1e2e);
+  padding: 8px;
+}
+
+.app-mobile-menu-item,
+.app-mobile-menu-subitem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  border-radius: 6px;
+  color: var(--p-primary-color);
+}
+
+.app-mobile-menu-item:hover,
+.app-mobile-menu-subitem:hover {
+  background: var(--p-inputtext-filled-hover-background);
+  color: var(--p-text-hover-color);
+}
+
+.app-mobile-menu-subitem {
+  padding-left: 2rem;
+}
+
+.app-mobile-chevron {
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+
+.app-mobile-chevron.rotated {
+  transform: rotate(180deg);
+}
