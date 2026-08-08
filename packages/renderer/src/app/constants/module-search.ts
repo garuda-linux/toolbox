@@ -277,6 +277,30 @@ export const MODULE_SEARCH: ModuleSearchEntry[] = [
     ],
     routerLink: 'config-files',
   },
+  {
+    moduleName: 'menu.modules.userManager',
+    keywords: [
+      'user',
+      'users',
+      'group',
+      'groups',
+      'account',
+      'accounts',
+      'membership',
+      'member',
+      'useradd',
+      'userdel',
+      'usermod',
+      'gpasswd',
+      'passwd',
+      'password',
+      'lock',
+      'unlock',
+      'administration',
+    ],
+    routerLink: 'system-tools',
+    hash: 'users',
+  },
 ];
 
 export interface ModuleSearchEntry {

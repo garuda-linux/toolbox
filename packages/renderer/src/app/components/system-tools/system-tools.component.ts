@@ -8,6 +8,7 @@ import { SystemComponentsComponent } from '../system-components/system-component
 import { KernelsComponent } from '../kernels/kernels.component';
 import { LanguagePacksComponent } from '../language-packs/language-packs.component';
 import { LocalesComponent } from '../locales/locales.component';
+import { UserManagerComponent } from '../user-manager/user-manager.component';
 import { Router, type UrlTree } from '@angular/router';
 
 @Component({
@@ -26,6 +27,7 @@ import { Router, type UrlTree } from '@angular/router';
     KernelsComponent,
     LanguagePacksComponent,
     LocalesComponent,
+    UserManagerComponent,
   ],
   templateUrl: './system-tools.component.html',
   styleUrl: './system-tools.component.css',
@@ -37,12 +39,22 @@ export class SystemToolsComponent implements OnInit {
   private readonly router = inject(Router);
 
   ngOnInit(): void {
+    this.checkRoute();
+
     this.router.events.subscribe(() => {
       const currentUrl: UrlTree = this.router.parseUrl(this.router.url);
       if (currentUrl.fragment) {
         this.navigateToTab(currentUrl.fragment);
       }
     });
+  }
+
+  /**
+   * Check the current route and set the tab index accordingly on initial load.
+   */
+  private checkRoute(): void {
+    const url: UrlTree = this.router.parseUrl(this.router.url);
+    this.navigateToTab(url.fragment ?? '');
   }
 
   /**
@@ -65,6 +77,10 @@ export class SystemToolsComponent implements OnInit {
         break;
       case 'services':
         this.tabIndex.set(4);
+        break;
+      case 'users':
+      case 'groups':
+        this.tabIndex.set(5);
         break;
       default:
         this.tabIndex.set(0);
