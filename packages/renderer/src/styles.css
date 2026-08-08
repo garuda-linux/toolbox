@@ -277,7 +277,7 @@ p-splitbutton > div > button.garuda-button-shine {
 
 .garuda-shell__dropdown {
   position: fixed !important;
-  z-index: 10000 !important;
+  z-index: 1000 !important;
   overflow: hidden !important;
 
   --p-menu-item-color: var(--p-primary-color);
