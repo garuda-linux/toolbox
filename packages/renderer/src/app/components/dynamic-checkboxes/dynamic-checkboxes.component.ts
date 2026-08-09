@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import type { SystemToolsEntry, SystemToolsSubEntry } from '../../interfaces';
-import { Checkbox } from 'primeng/checkbox';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
-import { Card } from 'primeng/card';
-import { Tooltip } from 'primeng/tooltip';
+import { Card } from '@openng/optimus-ui/card';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';

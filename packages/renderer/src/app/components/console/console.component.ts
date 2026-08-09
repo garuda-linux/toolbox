@@ -18,10 +18,10 @@ import type { ITerminalOptions, ITheme } from '@xterm/xterm';
 import { CatppuccinXtermJs } from '../../theme';
 import { type NgTerminal, NgTerminalModule } from 'ng-terminal';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Dialog } from 'primeng/dialog';
-import { ProgressBar } from 'primeng/progressbar';
-import { Card } from 'primeng/card';
-import { ScrollArea } from 'primeng/scrollarea';
+import { Dialog } from '@openng/optimus-ui/dialog';
+import { ProgressBar } from '@openng/optimus-ui/progressbar';
+import { Card } from '@openng/optimus-ui/card';
+import { ScrollPanel } from '@openng/optimus-ui/scrollpanel';
 import { Logger } from '../../logging/logging';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ConfigService } from '../config/config.service';
@@ -36,7 +36,7 @@ import { FitAddon } from '@xterm/addon-fit';
 
 @Component({
   selector: 'toolbox-console',
-  imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollArea, NgTemplateOutlet],
+  imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollPanel, NgTemplateOutlet],
   templateUrl: './console.component.html',
   styleUrl: './console.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

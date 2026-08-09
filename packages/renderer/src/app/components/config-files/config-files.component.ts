@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { TableModule } from '@openng/optimus-ui/table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { ConfigService } from '../config/config.service';
-import { ButtonDirective } from 'primeng/button';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { TooltipModule } from 'primeng/tooltip';
-import { DialogModule } from 'primeng/dialog';
+import { ButtonDirective } from '@openng/optimus-ui/button';
+import { IconFieldModule } from '@openng/optimus-ui/iconfield';
+import { InputIconModule } from '@openng/optimus-ui/inputicon';
+import { InputTextModule } from '@openng/optimus-ui/inputtext';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
+import { DialogModule } from '@openng/optimus-ui/dialog';
 import { ElectronFsService, ElectronShellService } from '../../electron-services';
-import { ExternalLink } from '@primeicons/angular/external-link';
-import { Pencil } from '@primeicons/angular/pencil';
 
 interface ConfigFile {
   name: string;
@@ -34,8 +32,6 @@ interface ConfigFile {
     InputTextModule,
     TooltipModule,
     DialogModule,
-    ExternalLink,
-    Pencil,
   ],
   templateUrl: './config-files.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

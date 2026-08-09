@@ -1,23 +1,22 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DataView } from 'primeng/dataview';
+import { DataView } from '@openng/optimus-ui/dataview';
 import { FormsModule } from '@angular/forms';
 import type { DkmsModule, DkmsModules, Kernel } from './types';
 import { type Task, TaskManagerService } from '../task-manager/task-manager.service';
-import { Tag } from 'primeng/tag';
+import { Tag } from '@openng/optimus-ui/tag';
 import { OsInteractService } from '../task-manager/os-interact.service';
-import { Checkbox } from 'primeng/checkbox';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ConfigService } from '../config/config.service';
-import { Tooltip } from 'primeng/tooltip';
-import { Skeleton } from 'primeng/skeleton';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { Skeleton } from '@openng/optimus-ui/skeleton';
 import { KernelsService } from './kernels.service';
 import { Router } from '@angular/router';
-import { ButtonDirective } from 'primeng/button';
-import { Hammer } from '@primeicons/angular/hammer';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'toolbox-kernels',
-  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, ButtonDirective, Hammer],
+  imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, ButtonDirective],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

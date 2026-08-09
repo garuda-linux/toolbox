@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 import { MessageToastService } from '@garudalinux/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { Logger } from '../../logging/logging';

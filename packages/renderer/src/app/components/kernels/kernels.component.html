@@ -9,7 +9,7 @@
       </div>
     </p-tag>
     <button class="ml-5" [text]="true" pButton severity="help" size="small" (click)="navigateToDefaultKernel()">
-      <svg data-p-icon="hammer"></svg> {{ t('kernels.setDefault') }}
+      <i class="pi pi-hammer"></i> {{ t('kernels.setDefault') }}
     </button>
     @if (kernelsService.headersMissing()) {
       <p-tag

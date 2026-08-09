@@ -3,24 +3,23 @@ import { FormsModule } from '@angular/forms';
 import { Router, type UrlTree } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { MessageToastService } from '@garudalinux/core';
-import { ConfirmationService } from 'primeng/api';
-import { ButtonDirective } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
-import { DialogModule } from 'primeng/dialog';
-import { IconField } from 'primeng/iconfield';
-import { InputIcon } from 'primeng/inputicon';
-import { InputNumber } from 'primeng/inputnumber';
-import { InputText } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { Password } from 'primeng/password';
-import { type Popover, PopoverModule } from 'primeng/popover';
-import { Select } from 'primeng/select';
-import { TableModule } from 'primeng/table';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Tag } from 'primeng/tag';
-import { ToggleButton } from 'primeng/togglebutton';
-import { Tooltip } from 'primeng/tooltip';
-import { PIcon } from '@primeicons/angular/p-icon';
+import { ConfirmationService } from '@openng/optimus-ui/api';
+import { ButtonDirective } from '@openng/optimus-ui/button';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { DialogModule } from '@openng/optimus-ui/dialog';
+import { IconField } from '@openng/optimus-ui/iconfield';
+import { InputIcon } from '@openng/optimus-ui/inputicon';
+import { InputNumber } from '@openng/optimus-ui/inputnumber';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { MultiSelectModule } from '@openng/optimus-ui/multiselect';
+import { Password } from '@openng/optimus-ui/password';
+import { type Popover, PopoverModule } from '@openng/optimus-ui/popover';
+import { Select } from '@openng/optimus-ui/select';
+import { TableModule } from '@openng/optimus-ui/table';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@openng/optimus-ui/tabs';
+import { Tag } from '@openng/optimus-ui/tag';
+import { ToggleButton } from '@openng/optimus-ui/togglebutton';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import type { CommandPaletteAction } from '../../interfaces';
 import { Logger } from '../../logging/logging';
 import { CommandPaletteService } from '../command-palette/command-palette.service';
@@ -52,7 +51,6 @@ import type { ManagedGroup, ManagedUser } from './types';
     ToggleButton,
     Tooltip,
     TranslocoDirective,
-    PIcon,
   ],
   templateUrl: './user-manager.component.html',
   styleUrl: './user-manager.component.css',

@@ -121,8 +121,7 @@
                 <input
                   [(ngModel)]="luksPassword"
                   [placeholder]="t('bootRepair.luksPasswordPlaceholder')"
-                  pInputPassword
-                  [mask]="true"
+                  pPassword
                   id="luks-password"
                   fluid
                 />
@@ -150,7 +149,7 @@
             />
           </div>
 
-          <button pButton (click)="apply()"><svg data-p-icon="check"></svg> {{ t('bootRepair.apply') }}</button>
+          <button pButton (click)="apply()"><i class="pi pi-check"></i> {{ t('bootRepair.apply') }}</button>
         </div>
       </div>
     </p-card>

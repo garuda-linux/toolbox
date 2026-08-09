@@ -8,11 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { TableModule } from 'primeng/table';
-import { DataViewModule } from 'primeng/dataview';
-import { Card } from 'primeng/card';
-import { TabsModule } from 'primeng/tabs';
-import { Tooltip } from 'primeng/tooltip';
+import { TableModule } from '@openng/optimus-ui/table';
+import { DataViewModule } from '@openng/optimus-ui/dataview';
+import { Card } from '@openng/optimus-ui/card';
+import { TabsModule } from '@openng/optimus-ui/tabs';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { ConfigService } from '../config/config.service';
 import type { StatefulPackage } from './interfaces';
 import { OsInteractService } from '../task-manager/os-interact.service';

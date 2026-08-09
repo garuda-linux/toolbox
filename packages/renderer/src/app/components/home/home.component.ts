@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Card } from 'primeng/card';
+import { Card } from '@openng/optimus-ui/card';
 import { Router, RouterLink } from '@angular/router';
 import { ElectronShellService } from '../../electron-services';
 import type { ExternalLink, HomepageLink } from '../../interfaces';

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, model, OnInit, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
-import type { Nullable } from 'primeng/ts-helpers';
-import { Select } from 'primeng/select';
-import { Tooltip } from 'primeng/tooltip';
+import type { Nullable } from '@openng/optimus-ui/ts-helpers';
+import { Select } from '@openng/optimus-ui/select';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { type DnsProvider, dnsProviders, type Shell, shells } from './types';
-import { Checkbox } from 'primeng/checkbox';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import type { SystemToolsEntry } from '../../interfaces';
 import { DynamicCheckboxesComponent } from '../dynamic-checkboxes/dynamic-checkboxes.component';
 import { OsInteractService } from '../task-manager/os-interact.service';

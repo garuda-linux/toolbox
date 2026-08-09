@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject, model, signal } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { AutoComplete, type AutoCompleteCompleteEvent, type AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { DialogModule } from '@openng/optimus-ui/dialog';
+import {
+  AutoComplete,
+  type AutoCompleteCompleteEvent,
+  type AutoCompleteSelectEvent,
+} from '@openng/optimus-ui/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';

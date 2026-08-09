@@ -4,7 +4,7 @@ import { getConfigStore } from './store';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { LogLevel } from '../../logging/interfaces';
-import { definePreset, usePreset } from '@primeuix/themes';
+import { definePreset, usePreset } from '@openng/optimus-ui-themes';
 import { AppTheme, themes } from '../../theme';
 import { ElectronOsService, ElectronShellService, notifyConfigChange, Store } from '../../electron-services';
 import type { CommandResult } from '../../types/shell';

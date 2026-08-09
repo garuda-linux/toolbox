@@ -31,9 +31,7 @@
                       pButton
                       (click)="addToPending(action)"
                     >
-                      <svg
-                        [pIcon]="taskManager.findTaskById(action.name) ? 'minus-circle' : 'plus-circle'"
-                      ></svg>
+                      <i [class]="'pi pi-' + (taskManager.findTaskById(action.name) ? 'minus-circle' : 'plus-circle')"></i>
                       {{
                         taskManager.findTaskById(action.name)
                           ? t('maintenance.removePending')
@@ -46,7 +44,7 @@
                       pButton
                       (click)="runNow(action)"
                     >
-                      <svg data-p-icon="play-circle"></svg> {{ t('maintenance.runNow') }}
+                      <i class="pi pi-play-circle"></i> {{ t('maintenance.runNow') }}
                     </button>
                   </div>
                 </p-card>
@@ -82,7 +80,7 @@
 
           <div class="mt-10 text-center">
             <button [outlined]="true" pButton (click)="confirmResetConfigs($event)">
-              <svg data-p-icon="refresh"></svg> {{ t('maintenance.resetConfigs') }}
+              <i class="pi pi-refresh"></i> {{ t('maintenance.resetConfigs') }}
             </button>
           </div>
         </p-tabpanel>
@@ -104,9 +102,7 @@
                       pButton
                       (click)="addToPending(action)"
                     >
-                      <svg
-                        [pIcon]="taskManager.findTaskById(action.name) ? 'minus-circle' : 'plus-circle'"
-                      ></svg>
+                      <i [class]="'pi pi-' + (taskManager.findTaskById(action.name) ? 'minus-circle' : 'plus-circle')"></i>
                       {{
                         taskManager.findTaskById(action.name)
                           ? t('maintenance.removePending')
@@ -119,7 +115,7 @@
                       pButton
                       (click)="runNow(action)"
                     >
-                      <svg data-p-icon="play-circle"></svg> {{ t('maintenance.runNow') }}
+                      <i class="pi pi-play-circle"></i> {{ t('maintenance.runNow') }}
                     </button>
                   </div>
                 </p-card>

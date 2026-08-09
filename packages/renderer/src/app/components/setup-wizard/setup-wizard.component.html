@@ -56,11 +56,11 @@
                     severity="secondary"
                     (click)="goToStep(getCategoryStepValue(i - 1))"
                   >
-                    <svg data-p-icon="arrow-left"></svg> {{ t('setupWizard.buttons.back') }}
+                    <i class="pi pi-arrow-left"></i> {{ t('setupWizard.buttons.back') }}
                   </button>
                   @if (i < softwareCategories.length - 1) {
                     <button pButton (click)="goToStep(getCategoryStepValue(i + 1))">
-                      <svg data-p-icon="arrow-right"></svg>{{ t('setupWizard.buttons.next') }}
+                      <i class="pi pi-arrow-right"></i>{{ t('setupWizard.buttons.next') }}
                     </button>
                   }
                 </div>
@@ -78,7 +78,7 @@
               <p class="text-color-secondary text-sm">{{ t('setupWizard.apply.failedBody') }}</p>
             </div>
             <button [disabled]="taskManagerService.running()" pButton severity="warn" (click)="apply()">
-              <svg data-p-icon="refresh"></svg> {{ t('setupWizard.buttons.retry') }}
+              <i class="pi pi-refresh"></i> {{ t('setupWizard.buttons.retry') }}
             </button>
           </div>
         } @else {
@@ -88,7 +88,7 @@
               <p class="text-color-secondary text-sm">{{ t('setupWizard.apply.body') }}</p>
             </div>
             <button [disabled]="taskManagerService.running()" pButton severity="success" (click)="apply()">
-              <svg data-p-icon="check"></svg> {{ t('setupWizard.buttons.apply') }}
+              <i class="pi pi-check"></i> {{ t('setupWizard.buttons.apply') }}
             </button>
           </div>
         }

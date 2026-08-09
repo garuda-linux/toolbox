@@ -10,7 +10,7 @@ import {
 import { tap } from 'rxjs';
 import { LoadingService } from './loading-indicator.service';
 import { RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
-import { ProgressSpinner } from 'primeng/progressspinner';
+import { ProgressSpinner } from '@openng/optimus-ui/progressspinner';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({

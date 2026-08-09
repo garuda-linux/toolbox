@@ -27,5 +27,9 @@
     "electron-devtools-installer": "^4.0.0",
     "typescript": "catalog:",
     "vite": "catalog:"
+  },
+  "engines": {
+    "node": ">=26.0.0",
+    "pnpm": ">=11.0.0"
   }
 }

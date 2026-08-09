@@ -19,7 +19,7 @@
               tool.id === 'full' ? getFullLogs() : tool.id === 'upload' ? uploadPrivateBin() : getOutput(tool.id)
             "
           >
-            <svg [pIcon]="tool.icon"></svg> {{ t(tool.label) }}
+            <i [class]="'pi pi-' + tool.icon"></i> {{ t(tool.label) }}
           </button>
         }
       </div>

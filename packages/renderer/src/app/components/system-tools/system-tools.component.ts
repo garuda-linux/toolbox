@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { TableModule } from '@openng/optimus-ui/table';
 import { SystemdServicesComponent } from '../systemd-services/systemd-services.component';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@openng/optimus-ui/tabs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { SystemSettingsComponent } from '../system-settings/system-settings.component';
 import { SystemComponentsComponent } from '../system-components/system-components.component';

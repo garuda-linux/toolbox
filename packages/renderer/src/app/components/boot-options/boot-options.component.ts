@@ -12,18 +12,18 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Card } from 'primeng/card';
-import { Select } from 'primeng/select';
-import { InputNumber } from 'primeng/inputnumber';
-import { InputText } from 'primeng/inputtext';
-import { ButtonDirective } from 'primeng/button';
-import { Message } from 'primeng/message';
-import { Checkbox } from 'primeng/checkbox';
-import { TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
-import { DialogModule } from 'primeng/dialog';
-import { TextareaModule } from 'primeng/textarea';
-import { ProgressBar } from 'primeng/progressbar';
+import { Card } from '@openng/optimus-ui/card';
+import { Select } from '@openng/optimus-ui/select';
+import { InputNumber } from '@openng/optimus-ui/inputnumber';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { ButtonDirective } from '@openng/optimus-ui/button';
+import { Message } from '@openng/optimus-ui/message';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { TableModule } from '@openng/optimus-ui/table';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
+import { DialogModule } from '@openng/optimus-ui/dialog';
+import { TextareaModule } from '@openng/optimus-ui/textarea';
+import { ProgressBar } from '@openng/optimus-ui/progressbar';
 import { MessageToastService } from '@garudalinux/core';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { TaskManagerService } from '../task-manager/task-manager.service';
@@ -33,10 +33,6 @@ import { BootOptionsService } from './boot-options.service';
 import { ConfigService } from '../config/config.service';
 import { dialogOpen } from '../../electron-services/electron-api-utils.js';
 import { ActivatedRoute } from '@angular/router';
-import { Refresh } from '@primeicons/angular/refresh';
-import { Eye } from '@primeicons/angular/eye';
-import { FolderOpen } from '@primeicons/angular/folder-open';
-import { Pencil } from '@primeicons/angular/pencil';
 
 @Component({
   selector: 'toolbox-boot-options',
@@ -57,10 +53,6 @@ import { Pencil } from '@primeicons/angular/pencil';
     TextareaModule,
     ProgressBar,
     ButtonDirective,
-    Refresh,
-    Eye,
-    FolderOpen,
-    Pencil,
   ],
   templateUrl: './boot-options.component.html',
   styleUrl: './boot-options.component.css',

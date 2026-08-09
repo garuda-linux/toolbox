@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, effect, inject, model } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
-import { TableModule } from 'primeng/table';
+import { TableModule } from '@openng/optimus-ui/table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
 import { StatefulPackage } from '../gaming/interfaces';
 import { LanguagePacks } from './types';
 
-import { Checkbox } from 'primeng/checkbox';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { LanguagePacksService } from './language-packs.service';
 import { LocalePipe } from '../lang-pipe/locale.pipe';
 

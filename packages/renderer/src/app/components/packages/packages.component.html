@@ -26,7 +26,7 @@
         <ng-template #caption>
           <div class="flex">
             <button [outlined]="true" [text]="true" pButton (click)="clear(packageTable)">
-              <svg data-p-icon="filter-slash"></svg> {{ t('packages.clear') }}
+              <i class="pi pi-filter-slash"></i> {{ t('packages.clear') }}
             </button>
             <p-iconfield class="ml-auto" iconPosition="left">
               <p-inputicon>
@@ -49,7 +49,7 @@
             </th>
             <th pSortableColumn="name">
               {{ t('packages.name') }}
-              <p-sort-icon field="name" />
+              <p-sortIcon field="name" />
             </th>
             <th>
               {{ t('packages.description') }}
@@ -59,7 +59,7 @@
             </th>
             <th class="whitespace-nowrap" [style]="{ 'min-width': '3rem' }" pSortableColumn="selected">
               {{ t('packages.selected') }}
-              <p-sort-icon field="selected" />
+              <p-sortIcon field="selected" />
             </th>
           </tr>
         </ng-template>

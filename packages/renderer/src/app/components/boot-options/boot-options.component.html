@@ -14,7 +14,7 @@
       <p-message severity="error">{{ error() }}</p-message>
       <div class="mt-4">
         <button pButton (click)="isLive() ? loadPartitions() : loadSettings()">
-          <svg data-p-icon="refresh"></svg> {{ t('bootOptions.retry') }}
+          <i class="pi pi-refresh"></i> {{ t('bootOptions.retry') }}
         </button>
       </div>
     } @else if (isLive() && !bootService.getChroot()) {
@@ -211,7 +211,7 @@
                     [tooltipPosition]="'top'"
                     (click)="previewPlymouthTheme()"
                   >
-                    <svg data-p-icon="eye"></svg>
+                    <i class="pi pi-eye"></i>
                   </button>
                 </div>
                 <small>{{ t('bootOptions.plymouthThemeHint') }}</small>
@@ -230,7 +230,7 @@
               <span class="font-bold">{{ t('bootOptions.grubBackground') }}</span>
               <div class="flex gap-2">
                 <input class="w-full" id="grubBackground" [ngModel]="grubBackground()" pInputText readonly />
-                <button pButton (click)="selectFile('background')"><svg data-p-icon="folder-open"></svg></button>
+                <button pButton (click)="selectFile('background')"><i class="pi pi-folder-open"></i></button>
               </div>
             </div>
 
@@ -238,7 +238,7 @@
               <span class="font-bold">{{ t('bootOptions.grubTheme') }}</span>
               <div class="flex gap-2">
                 <input class="w-full" id="grubTheme" [ngModel]="grubTheme()" pInputText readonly />
-                <button pButton (click)="selectFile('theme')"><svg data-p-icon="folder-open"></svg></button>
+                <button pButton (click)="selectFile('theme')"><i class="pi pi-folder-open"></i></button>
               </div>
             </div>
           </div>
@@ -269,7 +269,7 @@
                   <td>
                     @if (!entry.isSubmenu) {
                       <button [outlined]="true" pButton size="small" (click)="openEntryEditor(entry)">
-                        <svg data-p-icon="pencil"></svg> {{ t('bootOptions.edit') }}
+                        <i class="pi pi-pencil"></i> {{ t('bootOptions.edit') }}
                       </button>
                     }
                   </td>

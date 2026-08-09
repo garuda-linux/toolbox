@@ -1,24 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ConfigService } from '../config/config.service';
-import { Checkbox } from 'primeng/checkbox';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
-import { Select, SelectChangeEvent } from 'primeng/select';
+import { Select, SelectChangeEvent } from '@openng/optimus-ui/select';
 import { LogLevel } from '../../logging/interfaces';
 import { Logger } from '../../logging/logging';
 import { LangPipePipe } from '../lang-pipe/lang-pipe.pipe';
 import { themes } from '../../theme';
-import { Card } from 'primeng/card';
-import { FileUpload } from 'primeng/fileupload';
+import { Card } from '@openng/optimus-ui/card';
+import { FileUpload } from '@openng/optimus-ui/fileupload';
 import { MessageToastService } from '@garudalinux/core';
 import { WallpaperService } from '../wallpaper/wallpaper.service';
-import { Slider } from 'primeng/slider';
-import { ButtonDirective } from 'primeng/button';
-import { Times } from '@primeicons/angular/times';
+import { Slider } from '@openng/optimus-ui/slider';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'toolbox-settings',
-  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, ButtonDirective, FileUpload, Slider, Times],
+  imports: [Checkbox, TranslocoDirective, FormsModule, Select, Card, ButtonDirective, FileUpload, Slider],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   providers: [LangPipePipe],

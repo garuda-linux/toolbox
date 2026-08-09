@@ -1,293 +1,293 @@
 <ng-container *transloco="let t">
   <p-tabs [(value)]="tabIndex">
-      <p-tablist>
-        <p-tab [value]="0" (click)="navigate('users')">
-          <div class="flex items-center gap-2">
-            <svg [pIcon]="'users'"></svg>
-            <span>{{ t('userManager.users') }}</span>
-          </div>
-        </p-tab>
-        <p-tab [value]="1" (click)="navigate('groups')">
-          <div class="flex items-center gap-2">
-            <svg [pIcon]="'address-book'"></svg>
-            <span>{{ t('userManager.groups') }}</span>
-          </div>
-        </p-tab>
-      </p-tablist>
-      <p-tabpanels>
-        <p-tabpanel [value]="0">
-          @if (tabIndex() === 0) {
-            <p-table
-              #userTable
-              [globalFilterFields]="['username', 'uid', 'fullName', 'home', 'shell', 'groups']"
-              [loading]="loading()"
-              [paginator]="true"
-              [rowsPerPageOptions]="[15, 30, 50]"
-              [rows]="15"
-              [value]="users()"
-              dataKey="username"
-              sortField="username"
-              [sortOrder]="1"
-            >
-              <ng-template #caption>
-                <div class="flex flex-wrap items-center gap-2">
-                  <button [outlined]="true" pButton (click)="openAddUserDialog()">
-                    <svg [pIcon]="'user-plus'"></svg>
-                    <span class="ml-2">{{ t('userManager.addUser') }}</span>
-                  </button>
-                  <p-togglebutton
-                    [ngModel]="showAllUsers()"
-                    [onLabel]="t('userManager.showUsersOnly')"
-                    [offLabel]="t('userManager.showAllUsers')"
-                    (ngModelChange)="showAllUsers.set($event)"
+    <p-tablist>
+      <p-tab [value]="0" (click)="navigate('users')">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-users"></i>
+          <span>{{ t('userManager.users') }}</span>
+        </div>
+      </p-tab>
+      <p-tab [value]="1" (click)="navigate('groups')">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-address-book"></i>
+          <span>{{ t('userManager.groups') }}</span>
+        </div>
+      </p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel [value]="0">
+        @if (tabIndex() === 0) {
+          <p-table
+            #userTable
+            [globalFilterFields]="['username', 'uid', 'fullName', 'home', 'shell', 'groups']"
+            [loading]="loading()"
+            [paginator]="true"
+            [rowsPerPageOptions]="[15, 30, 50]"
+            [rows]="15"
+            [value]="users()"
+            dataKey="username"
+            sortField="username"
+            [sortOrder]="1"
+          >
+            <ng-template #caption>
+              <div class="flex flex-wrap items-center gap-2">
+                <button [outlined]="true" pButton (click)="openAddUserDialog()">
+                  <i class="pi pi-user-plus"></i>
+                  <span class="ml-2">{{ t('userManager.addUser') }}</span>
+                </button>
+                <p-togglebutton
+                  [ngModel]="showAllUsers()"
+                  [onLabel]="t('userManager.showUsersOnly')"
+                  [offLabel]="t('userManager.showAllUsers')"
+                  (ngModelChange)="showAllUsers.set($event)"
+                />
+                <p-iconfield class="ml-auto" iconPosition="left">
+                  <p-inputicon>
+                    <i class="pi pi-search"></i>
+                  </p-inputicon>
+                  <input
+                    #userFilterInput
+                    [placeholder]="t('userManager.searchUsers')"
+                    (input)="userTable.filterGlobal(userFilterInput.value, 'contains')"
+                    pInputText
+                    type="text"
                   />
-                  <p-iconfield class="ml-auto" iconPosition="left">
-                    <p-inputicon>
-                      <i class="pi pi-search"></i>
-                    </p-inputicon>
-                    <input
-                      #userFilterInput
-                      [placeholder]="t('userManager.searchUsers')"
-                      (input)="userTable.filterGlobal(userFilterInput.value, 'contains')"
-                      pInputText
-                      type="text"
-                    />
-                  </p-iconfield>
-                </div>
-              </ng-template>
-              <ng-template #header>
-                <tr>
-                  <th class="whitespace-nowrap" pSortableColumn="username">
-                    {{ t('userManager.username') }}
-                    <p-sort-icon field="username" />
-                  </th>
-                  <th class="whitespace-nowrap" pSortableColumn="uid">
-                    {{ t('userManager.uid') }}
-                    <p-sort-icon field="uid" />
-                  </th>
-                  <th class="whitespace-nowrap" pSortableColumn="fullName">
-                    {{ t('userManager.fullName') }}
-                    <p-sort-icon field="fullName" />
-                  </th>
-                  <th class="whitespace-nowrap" pSortableColumn="home">
-                    {{ t('userManager.home') }}
-                    <p-sort-icon field="home" />
-                  </th>
-                  <th class="whitespace-nowrap" pSortableColumn="shell">
-                    {{ t('userManager.shell') }}
-                    <p-sort-icon field="shell" />
-                  </th>
-                  <th class="whitespace-nowrap">{{ t('userManager.groupsColumn') }}</th>
-                  <th class="whitespace-nowrap">
-                    <div class="flex items-center">
-                      {{ t('userManager.actions') }}
-                    </div>
-                  </th>
-                </tr>
-              </ng-template>
-              <ng-template #body let-user>
-                <tr>
-                  <td>
-                    <div class="flex items-center gap-2">
-                      <span class="font-medium">{{ user.username }}</span>
-                      @if (user.system) {
-                        <p-tag [value]="t('userManager.system')" severity="secondary" />
-                      }
-                      @if (user.locked) {
-                        <p-tag [value]="t('userManager.locked')" severity="danger" />
-                      }
-                      @let pending = pendingUserState(user);
-                      @if (pending) {
-                        <p-tag [value]="t('userManager.pending.' + pending)" severity="warn" />
-                      }
-                    </div>
-                  </td>
-                  <td>{{ user.uid }}</td>
-                  <td>{{ user.fullName || '—' }}</td>
-                  <td class="font-mono text-sm">{{ user.home }}</td>
-                  <td class="font-mono text-sm">{{ user.shell }}</td>
-                  <td>
-                    @if (user.groups.length > 0) {
-                      <span class="text-sm">{{ user.groups.join(', ') }}</span>
-                    } @else {
-                      <span class="text-sm text-surface-400">—</span>
+                </p-iconfield>
+              </div>
+            </ng-template>
+            <ng-template #header>
+              <tr>
+                <th class="whitespace-nowrap" pSortableColumn="username">
+                  {{ t('userManager.username') }}
+                  <p-sortIcon field="username" />
+                </th>
+                <th class="whitespace-nowrap" pSortableColumn="uid">
+                  {{ t('userManager.uid') }}
+                  <p-sortIcon field="uid" />
+                </th>
+                <th class="whitespace-nowrap" pSortableColumn="fullName">
+                  {{ t('userManager.fullName') }}
+                  <p-sortIcon field="fullName" />
+                </th>
+                <th class="whitespace-nowrap" pSortableColumn="home">
+                  {{ t('userManager.home') }}
+                  <p-sortIcon field="home" />
+                </th>
+                <th class="whitespace-nowrap" pSortableColumn="shell">
+                  {{ t('userManager.shell') }}
+                  <p-sortIcon field="shell" />
+                </th>
+                <th class="whitespace-nowrap">{{ t('userManager.groupsColumn') }}</th>
+                <th class="whitespace-nowrap">
+                  <div class="flex items-center">
+                    {{ t('userManager.actions') }}
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-user>
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="font-medium">{{ user.username }}</span>
+                    @if (user.system) {
+                      <p-tag [value]="t('userManager.system')" severity="secondary" />
                     }
-                  </td>
-                  <td>
-                    <div class="flex items-center gap-1">
-                      @if (userPendingCount(user) > 0) {
-                        <button
-                          [attr.aria-label]="t('userManager.clearPending')"
-                          [pTooltip]="t('userManager.clearPending')"
-                          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'top' }"
-                          [text]="true"
-                          pButton
-                          severity="secondary"
-                          (click)="clearUserChanges(user)"
-                        >
-                          <svg [pIcon]="'times'"></svg>
-                        </button>
-                      }
+                    @if (user.locked) {
+                      <p-tag [value]="t('userManager.locked')" severity="danger" />
+                    }
+                    @let pending = pendingUserState(user);
+                    @if (pending) {
+                      <p-tag [value]="t('userManager.pending.' + pending)" severity="warn" />
+                    }
+                  </div>
+                </td>
+                <td>{{ user.uid }}</td>
+                <td>{{ user.fullName || '—' }}</td>
+                <td class="font-mono text-sm">{{ user.home }}</td>
+                <td class="font-mono text-sm">{{ user.shell }}</td>
+                <td>
+                  @if (user.groups.length > 0) {
+                    <span class="text-sm">{{ user.groups.join(', ') }}</span>
+                  } @else {
+                    <span class="text-sm text-surface-400">—</span>
+                  }
+                </td>
+                <td>
+                  <div class="flex items-center gap-1">
+                    @if (userPendingCount(user) > 0) {
                       <button
-                        [attr.aria-label]="t('userManager.actions')"
-                        [outlined]="true"
+                        [attr.aria-label]="t('userManager.clearPending')"
+                        [pTooltip]="t('userManager.clearPending')"
+                        [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'top' }"
+                        [text]="true"
                         pButton
                         severity="secondary"
-                        (click)="openPopover($event, op, user)"
+                        (click)="clearUserChanges(user)"
                       >
-                        <svg [pIcon]="'ellipsis-v'"></svg>
+                        <i class="pi pi-times"></i>
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              </ng-template>
-              <ng-template #emptymessage>
-                <tr>
-                  <td colspan="7">{{ t('userManager.noUsersFound') }}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          }
-        </p-tabpanel>
-        <p-tabpanel [value]="1">
-          @if (tabIndex() === 1) {
-            <p-table
-              #groupTable
-              [globalFilterFields]="['name', 'gid', 'members']"
-              [loading]="loading()"
-              [paginator]="true"
-              [rowsPerPageOptions]="[15, 30, 50]"
-              [rows]="15"
-              [value]="groups()"
-              dataKey="name"
-              sortField="name"
-              [sortOrder]="1"
-            >
-              <ng-template #caption>
-                <div class="flex flex-wrap items-center gap-2">
-                  <button [outlined]="true" pButton (click)="openAddGroupDialog()">
-                    <svg [pIcon]="'user-plus'"></svg>
-                    <span class="ml-2">{{ t('userManager.addGroup') }}</span>
-                  </button>
-                  <p-iconfield class="ml-auto" iconPosition="left">
-                    <p-inputicon>
-                      <i class="pi pi-search"></i>
-                    </p-inputicon>
-                    <input
-                      #groupFilterInput
-                      [placeholder]="t('userManager.searchGroups')"
-                      (input)="groupTable.filterGlobal(groupFilterInput.value, 'contains')"
-                      pInputText
-                      type="text"
-                    />
-                  </p-iconfield>
-                </div>
-              </ng-template>
-              <ng-template #header>
-                <tr>
-                  <th class="whitespace-nowrap" pSortableColumn="name">
-                    {{ t('userManager.groupName') }}
-                    <p-sort-icon field="name" />
-                  </th>
-                  <th class="whitespace-nowrap" pSortableColumn="gid">
-                    {{ t('userManager.gid') }}
-                    <p-sort-icon field="gid" />
-                  </th>
-                  <th class="whitespace-nowrap">{{ t('userManager.members') }}</th>
-                  <th class="whitespace-nowrap">{{ t('userManager.actions') }}</th>
-                </tr>
-              </ng-template>
-              <ng-template #body let-group>
-                <tr>
-                  <td>
-                    <div class="flex items-center gap-2">
-                      <span class="font-medium">{{ group.name }}</span>
-                      @let groupPending = pendingGroupState(group);
-                      @if (groupPending) {
-                        <p-tag [value]="t('userManager.pending.' + groupPending)" severity="warn" />
-                      }
-                    </div>
-                  </td>
-                  <td>{{ group.gid }}</td>
-                  <td>
-                    @if (group.members.length > 0) {
-                      <span class="text-sm">{{ group.members.join(', ') }}</span>
-                    } @else {
-                      <span class="text-sm text-surface-400">—</span>
                     }
-                  </td>
-                  <td>
-                    <div class="flex items-center gap-1">
-                      @if (pendingGroupState(group)) {
-                        <button
-                          [attr.aria-label]="t('userManager.clearPending')"
-                          [pTooltip]="t('userManager.clearPending')"
-                          [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'top' }"
-                          [text]="true"
-                          pButton
-                          severity="secondary"
-                          (click)="clearGroupChanges(group)"
-                        >
-                          <svg [pIcon]="'times'"></svg>
-                        </button>
-                      }
+                    <button
+                      [attr.aria-label]="t('userManager.actions')"
+                      [outlined]="true"
+                      pButton
+                      severity="secondary"
+                      (click)="openPopover($event, op, user)"
+                    >
+                      <i class="pi pi-ellipsis-v"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+              <tr>
+                <td colspan="7">{{ t('userManager.noUsersFound') }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </p-tabpanel>
+      <p-tabpanel [value]="1">
+        @if (tabIndex() === 1) {
+          <p-table
+            #groupTable
+            [globalFilterFields]="['name', 'gid', 'members']"
+            [loading]="loading()"
+            [paginator]="true"
+            [rowsPerPageOptions]="[15, 30, 50]"
+            [rows]="15"
+            [value]="groups()"
+            dataKey="name"
+            sortField="name"
+            [sortOrder]="1"
+          >
+            <ng-template #caption>
+              <div class="flex flex-wrap items-center gap-2">
+                <button [outlined]="true" pButton (click)="openAddGroupDialog()">
+                  <i class="pi pi-user-plus"></i>
+                  <span class="ml-2">{{ t('userManager.addGroup') }}</span>
+                </button>
+                <p-iconfield class="ml-auto" iconPosition="left">
+                  <p-inputicon>
+                    <i class="pi pi-search"></i>
+                  </p-inputicon>
+                  <input
+                    #groupFilterInput
+                    [placeholder]="t('userManager.searchGroups')"
+                    (input)="groupTable.filterGlobal(groupFilterInput.value, 'contains')"
+                    pInputText
+                    type="text"
+                  />
+                </p-iconfield>
+              </div>
+            </ng-template>
+            <ng-template #header>
+              <tr>
+                <th class="whitespace-nowrap" pSortableColumn="name">
+                  {{ t('userManager.groupName') }}
+                  <p-sortIcon field="name" />
+                </th>
+                <th class="whitespace-nowrap" pSortableColumn="gid">
+                  {{ t('userManager.gid') }}
+                  <p-sortIcon field="gid" />
+                </th>
+                <th class="whitespace-nowrap">{{ t('userManager.members') }}</th>
+                <th class="whitespace-nowrap">{{ t('userManager.actions') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-group>
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="font-medium">{{ group.name }}</span>
+                    @let groupPending = pendingGroupState(group);
+                    @if (groupPending) {
+                      <p-tag [value]="t('userManager.pending.' + groupPending)" severity="warn" />
+                    }
+                  </div>
+                </td>
+                <td>{{ group.gid }}</td>
+                <td>
+                  @if (group.members.length > 0) {
+                    <span class="text-sm">{{ group.members.join(', ') }}</span>
+                  } @else {
+                    <span class="text-sm text-surface-400">—</span>
+                  }
+                </td>
+                <td>
+                  <div class="flex items-center gap-1">
+                    @if (pendingGroupState(group)) {
                       <button
-                        [attr.aria-label]="t('userManager.actions')"
-                        [outlined]="true"
+                        [attr.aria-label]="t('userManager.clearPending')"
+                        [pTooltip]="t('userManager.clearPending')"
+                        [tooltipOptions]="{ appendTo: 'body', tooltipPosition: 'top' }"
+                        [text]="true"
                         pButton
                         severity="secondary"
-                        (click)="openGroupPopover($event, op, group)"
+                        (click)="clearGroupChanges(group)"
                       >
-                        <svg [pIcon]="'ellipsis-v'"></svg>
+                        <i class="pi pi-times"></i>
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              </ng-template>
-              <ng-template #emptymessage>
-                <tr>
-                  <td colspan="4">{{ t('userManager.noGroupsFound') }}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          }
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
+                    }
+                    <button
+                      [attr.aria-label]="t('userManager.actions')"
+                      [outlined]="true"
+                      pButton
+                      severity="secondary"
+                      (click)="openGroupPopover($event, op, group)"
+                    >
+                      <i class="pi pi-ellipsis-v"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+              <tr>
+                <td colspan="4">{{ t('userManager.noGroupsFound') }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
 
   <p-popover #op appendTo="body">
     <div class="flex flex-col gap-2 p-2">
       @if (activeUser(); as user) {
         <button [outlined]="true" pButton (click)="openEditUserDialog(user)">
-          <svg [pIcon]="'pencil'"></svg>
+          <i class="pi pi-pencil"></i>
           <span class="ml-2">{{ t('userManager.editUser') }}</span>
         </button>
         <button [outlined]="true" pButton (click)="openGroupMembersDialog(user)">
-          <svg [pIcon]="'users'"></svg>
+          <i class="pi pi-users"></i>
           <span class="ml-2">{{ t('userManager.manageGroups') }}</span>
         </button>
         <button [outlined]="true" pButton (click)="openPasswordDialog(user)">
-          <svg [pIcon]="'key'"></svg>
+          <i class="pi pi-key"></i>
           <span class="ml-2">{{ t('userManager.setPassword') }}</span>
         </button>
         @if (isLockQueued(user) || user.locked) {
           <button [outlined]="true" pButton (click)="unlockUser(user)">
-            <svg [pIcon]="'lock-open'"></svg>
+            <i class="pi pi-lock-open"></i>
             <span class="ml-2">{{ t('userManager.unlock') }}</span>
           </button>
         } @else {
           <button [outlined]="true" pButton (click)="lockUser(user)">
-            <svg [pIcon]="'lock'"></svg>
+            <i class="pi pi-lock"></i>
             <span class="ml-2">{{ t('userManager.lock') }}</span>
           </button>
         }
         <button [outlined]="true" pButton severity="danger" (click)="confirmRemoveUser(user)">
-          <svg [pIcon]="'trash'"></svg>
+          <i class="pi pi-trash"></i>
           <span class="ml-2">{{ t('userManager.removeUser') }}</span>
         </button>
       } @else if (activeGroup(); as group) {
         <button [outlined]="true" pButton severity="danger" (click)="confirmRemoveGroup(group)">
-          <svg [pIcon]="'trash'"></svg>
+          <i class="pi pi-trash"></i>
           <span class="ml-2">{{ t('userManager.removeGroup') }}</span>
         </button>
       }
@@ -389,7 +389,7 @@
         {{ t('userManager.cancel') }}
       </button>
       <button pButton (click)="saveUser()">
-        <svg [pIcon]="'save'"></svg>
+        <i class="pi pi-save"></i>
         <span class="ml-2">{{ t('userManager.save') }}</span>
       </button>
     </div>
@@ -438,7 +438,7 @@
         {{ t('userManager.cancel') }}
       </button>
       <button pButton (click)="saveGroupMembers()">
-        <svg [pIcon]="'save'"></svg>
+        <i class="pi pi-save"></i>
         <span class="ml-2">{{ t('userManager.save') }}</span>
       </button>
     </div>
@@ -479,7 +479,7 @@
         {{ t('userManager.cancel') }}
       </button>
       <button pButton (click)="savePassword()">
-        <svg [pIcon]="'key'"></svg>
+        <i class="pi pi-key"></i>
         <span class="ml-2">{{ t('userManager.save') }}</span>
       </button>
     </div>
@@ -502,7 +502,7 @@
         {{ t('userManager.cancel') }}
       </button>
       <button pButton (click)="saveGroup()">
-        <svg [pIcon]="'save'"></svg>
+        <i class="pi pi-save"></i>
         <span class="ml-2">{{ t('userManager.save') }}</span>
       </button>
     </div>

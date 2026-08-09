@@ -16,24 +16,10 @@ catalog:
   '@app/preload': workspace:*
   '@app/renderer': workspace:*
   typescript: ^6.0.3
-  vite: ^8.1.5
+  vite: ^8.2.1
 minimumReleaseAgeExclude:
-  - app-builder-lib@26.12.1
-  - builder-util-runtime@9.6.2
-  - builder-util@26.12.1
-  - dmg-builder@26.12.1
-  - electron-builder-squirrel-windows@26.12.1
-  - electron-builder@26.12.1
-  - electron-publish@26.12.1
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - core-js
-  - cpu-features
-  - electron
-  - esbuild
-  - lmdb
-  - msgpackr-extract
+  - '@garudalinux/core@2.0.0-rc.1'
+  - '@garudalinux/themes@2.0.0-rc.1'
 overrides:
   # https://github.com/electron/electron/issues/51619#issuecomment-4526580507
   yauzl: '^3.3.1'

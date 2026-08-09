@@ -10,7 +10,7 @@ import {
 import { provideGarudaNG } from '@garudalinux/core';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 import { LoadingInterceptor } from './components/loading-indicator/loading-indicator.interceptor';
 import { ConfigService } from './components/config/config.service';
 import { LanguageManagerService } from './components/language-manager/language-manager.service';
@@ -31,7 +31,7 @@ import { provideRouter, Router, withHashLocation, withViewTransitions } from '@a
 import { routes } from './routes';
 import { CatppuccinAura } from '@garudalinux/themes/catppuccin';
 import { AVAILABLE_LANGUAGES } from './constants/i18n';
-import { definePreset } from '@primeuix/themes';
+import { definePreset } from '@openng/optimus-ui-themes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -70,8 +70,6 @@ export const appConfig: ApplicationConfig = {
         overlayOptions: {
           appendTo: 'body',
         },
-        license:
-          'eyJpZCI6IjJhMWI5MWQ1LWI3ODgtNGVmOS1iZDc3LTM4MmRjYWUzYjJmYiIsInByb2R1Y3QiOiJwcmltZXVpIiwidGllciI6ImNvbW11bml0eSIsInR5cGUiOiJkZXYiLCJpYXQiOjE3ODI4MTIyNzEsImV4cCI6MTgxNDM0ODI3MX0.ZUMB8QHSEKEOn_GSWGWtY4E4475J0iCXLkV-4u9hxizlGPw2kRR9on1B4nZCJQWYuPBxfaxvE8HSck3xm1wNAA', // pragma: allowlist secret
       },
     ),
     provideHttpClient(),

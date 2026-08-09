@@ -9,20 +9,19 @@ import {
 } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import type { StatefulPackage } from '../gaming/interfaces';
-import { Tab, TabList, Tabs } from 'primeng/tabs';
+import { Tab, TabList, Tabs } from '@openng/optimus-ui/tabs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Logger } from '../../logging/logging';
-import { ButtonDirective } from 'primeng/button';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 import { ElectronShellService } from '../../electron-services';
-import { IconField } from 'primeng/iconfield';
-import { InputIcon } from 'primeng/inputicon';
-import { InputText } from 'primeng/inputtext';
-import { type Table, TableModule } from 'primeng/table';
-import { Checkbox } from 'primeng/checkbox';
+import { IconField } from '@openng/optimus-ui/iconfield';
+import { InputIcon } from '@openng/optimus-ui/inputicon';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { type Table, TableModule } from '@openng/optimus-ui/table';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { FormsModule } from '@angular/forms';
 import { PackagesService } from './packages.service';
 import { ConfigService } from '../config/config.service';
-import { FilterSlash } from '@primeicons/angular/filter-slash';
 
 @Component({
   selector: 'toolbox-packages',
@@ -39,7 +38,6 @@ import { FilterSlash } from '@primeicons/angular/filter-slash';
     Checkbox,
     FormsModule,
     ButtonDirective,
-    FilterSlash,
   ],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.css',
@@ -119,6 +117,6 @@ export class PackagesComponent {
    * Reset page to 0, because this doesn't happen automatically.
    */
   tabChange() {
-    this.table().first.set(0);
+    this.table().first = 0;
   }
 }

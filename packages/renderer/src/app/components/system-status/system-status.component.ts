@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ElectronShellService } from '../../electron-services';
-import { OverlayBadge } from 'primeng/overlaybadge';
-import { Tooltip } from 'primeng/tooltip';
+import { OverlayBadge } from '@openng/optimus-ui/overlaybadge';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Dialog } from 'primeng/dialog';
+import { Dialog } from '@openng/optimus-ui/dialog';
 import { type Task, TaskManagerService } from '../task-manager/task-manager.service';
 import type { SystemUpdate } from './types';
 import { ConfigService } from '../config/config.service';
 import { RouterLink } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 import { SystemStatusService } from './system-status.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { CommandPaletteService } from '../command-palette/command-palette.service';
-import { ButtonDirective } from 'primeng/button';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'toolbox-system-status',

@@ -6,16 +6,12 @@ import { OsInteractService } from '../task-manager/os-interact.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Checkbox } from 'primeng/checkbox';
-import { AccordionModule } from 'primeng/accordion';
-import { Card } from 'primeng/card';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@openng/optimus-ui/tabs';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { AccordionModule } from '@openng/optimus-ui/accordion';
+import { Card } from '@openng/optimus-ui/card';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { ButtonDirective } from 'primeng/button';
-import { ArrowLeft } from '@primeicons/angular/arrow-left';
-import { ArrowRight } from '@primeicons/angular/arrow-right';
-import { Refresh } from '@primeicons/angular/refresh';
-import { Check } from '@primeicons/angular/check';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'toolbox-setup-wizard',
@@ -32,10 +28,6 @@ import { Check } from '@primeicons/angular/check';
     AccordionModule,
     Card,
     TranslocoDirective,
-    ArrowLeft,
-    ArrowRight,
-    Refresh,
-    Check,
   ],
   templateUrl: './setup-wizard.component.html',
   styleUrl: './setup-wizard.component.css',

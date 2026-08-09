@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { PickList, PickListMoveToSourceEvent, PickListMoveToTargetEvent } from 'primeng/picklist';
+import { PickList, PickListMoveToSourceEvent, PickListMoveToTargetEvent } from '@openng/optimus-ui/picklist';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LocalesService } from './locales.service';
 import { LocalePipe } from '../lang-pipe/locale.pipe';
 import { Logger } from '../../logging/logging';
-import { Select } from 'primeng/select';
+import { Select } from '@openng/optimus-ui/select';
 import { FormsModule } from '@angular/forms';
 import { ConfigService } from '../config/config.service';
 import { Task, TaskManagerService } from '../task-manager/task-manager.service';

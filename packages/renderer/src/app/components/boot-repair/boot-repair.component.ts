@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, s
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Card } from 'primeng/card';
-import { Select } from 'primeng/select';
-import { ButtonDirective } from 'primeng/button';
-import { RadioButton } from 'primeng/radiobutton';
-import { InputPassword } from 'primeng/inputpassword';
-import { ConfirmationService } from 'primeng/api';
+import { Card } from '@openng/optimus-ui/card';
+import { Select } from '@openng/optimus-ui/select';
+import { ButtonDirective } from '@openng/optimus-ui/button';
+import { RadioButton } from '@openng/optimus-ui/radiobutton';
+import { PasswordDirective } from '@openng/optimus-ui/password';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 import { BootRepairService } from './boot-repair.service';
 import { PartitionInfo } from '../boot-options/types';
 import { MessageToastService } from '@garudalinux/core';
@@ -15,8 +15,7 @@ import { dialogOpen, dialogSave } from '../../electron-services/electron-api-uti
 import { BackupRestoreTarget, BootInstallTarget, BootRepairAction, DiskInfo } from './types';
 import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
-import { Tooltip } from 'primeng/tooltip';
-import { Check } from '@primeicons/angular/check';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 @Component({
   selector: 'toolbox-boot-repair',
@@ -28,9 +27,8 @@ import { Check } from '@primeicons/angular/check';
     Select,
     ButtonDirective,
     RadioButton,
-    InputPassword,
+    PasswordDirective,
     Tooltip,
-    Check,
   ],
   templateUrl: './boot-repair.component.html',
   styleUrl: './boot-repair.component.css',

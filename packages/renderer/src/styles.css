@@ -5,9 +5,9 @@
 @import '@fontsource/jetbrains-mono';
 @import 'inter-ui/inter-variable.css';
 
-/* PrimeNG stuff */
-@import 'primeicons/primeicons.css';
-@plugin 'tailwindcss-primeui';
+/* OptimusUI stuff */
+@import '@openng/icons/openng-icons.css';
+@plugin '@openng/optimus-ui-tailwindcss';
 
 /* Fonts */
 @theme {
@@ -83,7 +83,7 @@ ul {
 
 .garuda-menubar-item--has-submenu .p-menubar-item-link::after {
   content: '\e930';
-  font-family: 'primeicons';
+  font-family: 'openng-icons';
   margin-left: 0.1rem;
   font-size: 0.75rem;
 }
@@ -122,6 +122,18 @@ toolbox-config-files > div p-table > .p-datatable-table-container {
 
 .p-menubar {
   height: 50px !important;
+}
+
+.garuda-shell-menubar {
+  justify-content: flex-start !important;
+}
+
+.garuda-shell-menubar .p-menubar-root-list {
+  margin-left: 0 !important;
+}
+
+.garuda-shell-menubar .p-menubar-end {
+  margin-left: auto !important;
 }
 
 .p-dialog-content {

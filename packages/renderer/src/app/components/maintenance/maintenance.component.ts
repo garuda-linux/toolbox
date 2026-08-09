@@ -1,27 +1,22 @@
 import { ChangeDetectionStrategy, Component, inject, model, type OnInit, signal } from '@angular/core';
-import { Card } from 'primeng/card';
+import { Card } from '@openng/optimus-ui/card';
 import type { CommandPaletteAction, MaintenanceAction, ResettableConfig } from '../../interfaces';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Tooltip } from 'primeng/tooltip';
-import { Checkbox } from 'primeng/checkbox';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { FormsModule } from '@angular/forms';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@openng/optimus-ui/tabs';
 import { MessageToastService } from '@garudalinux/core';
 import { type ChildProcess, ElectronFsService } from '../../electron-services';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { TaskManagerService } from '../task-manager/task-manager.service';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from '@openng/optimus-ui/api';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { Router, type UrlTree } from '@angular/router';
 import { ConfigService } from '../config/config.service';
 import { CommandPaletteService } from '../command-palette/command-palette.service';
-import { ButtonDirective } from 'primeng/button';
-import { MinusCircle } from '@primeicons/angular/minus-circle';
-import { PlusCircle } from '@primeicons/angular/plus-circle';
-import { PlayCircle } from '@primeicons/angular/play-circle';
-import { Refresh } from '@primeicons/angular/refresh';
-import { PIcon } from '@primeicons/angular/p-icon';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'toolbox-maintenance',
@@ -37,11 +32,6 @@ import { PIcon } from '@primeicons/angular/p-icon';
     Tabs,
     TabList,
     TabPanel,
-    MinusCircle,
-    PlusCircle,
-    PlayCircle,
-    Refresh,
-    PIcon,
   ],
   templateUrl: './maintenance.component.html',
   styleUrl: './maintenance.component.css',

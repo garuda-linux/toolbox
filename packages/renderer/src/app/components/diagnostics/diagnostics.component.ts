@@ -9,8 +9,8 @@ import {
   type Signal,
   viewChild,
 } from '@angular/core';
-import { Card } from 'primeng/card';
-import { Tooltip } from 'primeng/tooltip';
+import { Card } from '@openng/optimus-ui/card';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { CatppuccinXtermJs } from '../../theme';
 import type { ITerminalOptions, ITheme } from '@xterm/xterm';
@@ -25,12 +25,11 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router, type UrlTree } from '@angular/router';
 import { TerminalThemeService } from '../console/terminal-theme.service';
-import { ButtonDirective } from 'primeng/button';
-import { PIcon } from '@primeicons/angular/p-icon';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'toolbox-diagnostics',
-  imports: [ButtonDirective, Card, Tooltip, TranslocoDirective, NgTerminalModule, PIcon],
+  imports: [ButtonDirective, Card, Tooltip, TranslocoDirective, NgTerminalModule],
   templateUrl: './diagnostics.component.html',
   styleUrl: './diagnostics.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

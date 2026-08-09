@@ -13,15 +13,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Card } from 'primeng/card';
-import { ButtonDirective } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { TabsModule } from 'primeng/tabs';
-import { InputText } from 'primeng/inputtext';
-import { Tag } from 'primeng/tag';
-import { InputNumber } from 'primeng/inputnumber';
-import { Tooltip } from 'primeng/tooltip';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { Card } from '@openng/optimus-ui/card';
+import { ButtonDirective } from '@openng/optimus-ui/button';
+import { TableModule } from '@openng/optimus-ui/table';
+import { TabsModule } from '@openng/optimus-ui/tabs';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Tag } from '@openng/optimus-ui/tag';
+import { InputNumber } from '@openng/optimus-ui/inputnumber';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { MultiSelectModule } from '@openng/optimus-ui/multiselect';
 import { NgTerminal, NgTerminalModule } from 'ng-terminal';
 import type { ITerminalOptions, ITheme } from '@xterm/xterm';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -32,18 +32,9 @@ import { ConfigService } from '../config/config.service';
 import { CatppuccinXtermJs } from '../../theme';
 import { TerminalThemeService } from '../console/terminal-theme.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
-import { Select } from 'primeng/select';
+import { Select } from '@openng/optimus-ui/select';
 import { NetworkStatus } from './types';
-import { ToggleButton } from 'primeng/togglebutton';
-import { Check } from '@primeicons/angular/check';
-import { Globe } from '@primeicons/angular/globe';
-import { StopCircle } from '@primeicons/angular/stop-circle';
-import { Lock } from '@primeicons/angular/lock';
-import { PlayCircle } from '@primeicons/angular/play-circle';
-import { LockOpen } from '@primeicons/angular/lock-open';
-import { Copy } from '@primeicons/angular/copy';
-import { Play } from '@primeicons/angular/play';
-import { Directions } from '@primeicons/angular/directions';
+import { ToggleButton } from '@openng/optimus-ui/togglebutton';
 
 @Component({
   selector: 'toolbox-network-assistant',
@@ -63,15 +54,6 @@ import { Directions } from '@primeicons/angular/directions';
     NgTerminalModule,
     Select,
     ToggleButton,
-    Check,
-    Globe,
-    StopCircle,
-    Lock,
-    PlayCircle,
-    LockOpen,
-    Copy,
-    Play,
-    Directions,
   ],
   templateUrl: './network-assistant.component.html',
   styleUrl: './network-assistant.component.css',
