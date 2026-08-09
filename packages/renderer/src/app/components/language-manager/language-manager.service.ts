@@ -1,13 +1,11 @@
-import { effect, inject, Injectable } from '@angular/core';
+import { effect, inject, Service } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { locale } from '../../electron-services';
 import { Logger } from '../../logging/logging';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LanguageManagerService {
   private readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();

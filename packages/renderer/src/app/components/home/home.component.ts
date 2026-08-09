@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Card } from '@openng/optimus-ui/card';
 import { Router, RouterLink } from '@angular/router';
@@ -19,7 +19,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
   imports: [TranslocoDirective, Card, RouterLink, NgOptimizedImage, SystemStatusComponent, FaIconComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
   webLinks: ExternalLink[] = [

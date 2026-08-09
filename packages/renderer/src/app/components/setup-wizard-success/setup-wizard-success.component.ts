@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ElectronShellService } from '../../electron-services';
@@ -9,7 +9,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   selector: 'toolbox-setup-wizard-success',
   imports: [ButtonDirective, TranslocoDirective, Card],
   templateUrl: './setup-wizard-success.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetupWizardSuccessComponent {
   private readonly router = inject(Router);

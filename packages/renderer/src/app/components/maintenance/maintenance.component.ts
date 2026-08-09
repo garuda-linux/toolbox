@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, model, type OnInit, signal } from '@angular/core';
+import { Component, inject, model, type OnInit, signal } from '@angular/core';
 import { Card } from '@openng/optimus-ui/card';
 import type { CommandPaletteAction, MaintenanceAction, ResettableConfig } from '../../interfaces';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -35,7 +35,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   ],
   templateUrl: './maintenance.component.html',
   styleUrl: './maintenance.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MaintenanceComponent implements OnInit {
   selectedResetConfigs = model<any[]>([]);

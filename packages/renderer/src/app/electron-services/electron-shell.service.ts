@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import type { Child, ChildProcess, CommandResult } from '../types/shell';
 import type { ShellEvent } from './electron-types';
 import { Logger } from '../logging/logging';
 import {
-  open,
+  eventsOn,
   execute,
+  open,
+  shellKillProcess,
   shellSpawnStreaming,
   shellWriteStdin,
-  shellKillProcess,
-  eventsOn,
 } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronShellService {
   private readonly logger = Logger.getInstance();
 

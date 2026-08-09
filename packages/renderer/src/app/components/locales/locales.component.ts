@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { PickList, PickListMoveToSourceEvent, PickListMoveToTargetEvent } from '@openng/optimus-ui/picklist';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LocalesService } from './locales.service';
@@ -14,7 +14,6 @@ import { Task, TaskManagerService } from '../task-manager/task-manager.service';
   imports: [PickList, TranslocoDirective, LocalePipe, Select, FormsModule],
   templateUrl: './locales.component.html',
   styleUrl: './locales.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocalesComponent implements OnInit {
   selectedLocale = signal<string>('');

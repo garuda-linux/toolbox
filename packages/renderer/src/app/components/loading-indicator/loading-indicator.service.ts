@@ -1,9 +1,7 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { computed, Service, signal } from '@angular/core';
 import { Logger } from '../../logging/logging';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LoadingService {
   private readonly loadingRefCounter = signal<number>(0);
   private readonly logger = Logger.getInstance();

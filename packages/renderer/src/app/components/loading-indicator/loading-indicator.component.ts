@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ContentChild,
-  inject,
-  input,
-  type OnInit,
-  type TemplateRef,
-} from '@angular/core';
+import { Component, ContentChild, inject, input, type OnInit, type TemplateRef } from '@angular/core';
 import { tap } from 'rxjs';
 import { LoadingService } from './loading-indicator.service';
 import { RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
@@ -18,7 +10,6 @@ import { NgTemplateOutlet } from '@angular/common';
   templateUrl: './loading-indicator.component.html',
   styleUrls: ['./loading-indicator.component.css'],
   imports: [ProgressSpinner, NgTemplateOutlet],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingIndicatorComponent implements OnInit {
   detectRouteTransitions = input(false);

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { LanguagePack, LanguagePacks } from './types';
 import { ChildProcess } from '../../types/shell';
 import { Logger } from '../../logging/logging';
@@ -6,9 +6,7 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LanguagePacksService {
   languagePacks = signal<LanguagePacks>([]);
   loading = signal<boolean>(true);

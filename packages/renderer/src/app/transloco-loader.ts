@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import type { Translation, TranslocoLoader } from '@jsverse/transloco';
 import { Logger } from './logging/logging';
 import { ElectronFsService, resolveResource } from './electron-services';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TranslocoHttpLoader implements TranslocoLoader {
   private readonly logger = Logger.getInstance();
   private readonly fsService = new ElectronFsService();

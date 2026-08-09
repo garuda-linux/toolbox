@@ -1,4 +1,4 @@
-import { computed, EventEmitter, inject, Injectable, signal } from '@angular/core';
+import { computed, EventEmitter, inject, Service, signal } from '@angular/core';
 import {
   type ChildProcess,
   ElectronFsService,
@@ -211,9 +211,7 @@ export class TrackedShells {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TaskManagerService {
   private readonly configService = inject(ConfigService);
   private readonly loadingService = inject(LoadingService);

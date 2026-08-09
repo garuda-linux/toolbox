@@ -1,26 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
   windowClose,
-  windowRequestClose,
-  windowMinimize,
-  windowMaximize,
-  windowHide,
-  windowShow,
   windowFocus,
+  windowGetPosition,
+  windowGetSize,
+  windowGetTitle,
+  windowHide,
   windowIsMaximized,
   windowIsMinimized,
   windowIsVisible,
-  windowSetTitle,
-  windowGetTitle,
-  windowSetSize,
-  windowGetSize,
+  windowMaximize,
+  windowMinimize,
+  windowRequestClose,
   windowSetPosition,
-  windowGetPosition,
+  windowSetSize,
+  windowSetTitle,
+  windowShow,
 } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronWindowService {
   async close(): Promise<void> {
     windowClose();

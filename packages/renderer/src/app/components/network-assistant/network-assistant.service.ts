@@ -1,10 +1,8 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { HardwareInfo, NetworkDriver, NetworkStatus, PingOptions, TracerouteOptions } from './types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class NetworkAssistantService {
   private readonly taskManager = inject(TaskManagerService);
 

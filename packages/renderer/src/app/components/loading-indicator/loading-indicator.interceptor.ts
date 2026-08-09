@@ -5,13 +5,13 @@ import {
   type HttpInterceptor,
   type HttpRequest,
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { LoadingService } from './loading-indicator.service';
 import { finalize, type Observable } from 'rxjs';
 
 export const SkipLoading = new HttpContextToken<boolean>(() => false);
 
-@Injectable()
+@Service()
 export class LoadingInterceptor implements HttpInterceptor {
   loadingService = inject(LoadingService);
 

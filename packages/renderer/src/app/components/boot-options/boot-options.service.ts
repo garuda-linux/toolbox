@@ -1,12 +1,10 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { ElectronFsService } from '../../electron-services';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { BootEntry, PartitionInfo } from './types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class BootOptionsService {
   private readonly fsService = inject(ElectronFsService);
   private readonly taskManager = inject(TaskManagerService);

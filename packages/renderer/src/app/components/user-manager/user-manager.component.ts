@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, type OnInit, signal } from '@angular/core';
+import { Component, computed, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, type UrlTree } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -54,7 +54,6 @@ import type { ManagedGroup, ManagedUser } from './types';
   ],
   templateUrl: './user-manager.component.html',
   styleUrl: './user-manager.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManagerComponent implements OnInit {
   private readonly commandPaletteService = inject(CommandPaletteService);

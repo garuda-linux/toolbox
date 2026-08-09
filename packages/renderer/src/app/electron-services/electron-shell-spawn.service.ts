@@ -1,8 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Logger } from '../logging/logging';
 import type { ShellEvent, ShellStreamingResult } from './electron-types';
-import { eventsOn, eventsOff } from './electron-api-utils.js';
-import { shellSpawnStreaming, shellWriteStdin, shellKillProcess, execute } from './electron-api-utils.js';
+import {
+  eventsOff,
+  eventsOn,
+  execute,
+  shellKillProcess,
+  shellSpawnStreaming,
+  shellWriteStdin,
+} from './electron-api-utils.js';
 import type { ChildProcess } from '../types/shell';
 
 // Re-export ShellStreamingResult for backward compatibility
@@ -18,9 +24,7 @@ export interface ShellStreamingOptions {
   env?: Record<string, string>;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronShellSpawnService {
   private readonly logger = Logger.getInstance();
 

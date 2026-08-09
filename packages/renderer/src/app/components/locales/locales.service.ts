@@ -1,13 +1,11 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { ChildProcess } from '../../electron-services';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LocalesService {
   readonly allLocales = signal<string[]>([]);
   readonly availableLocales = computed(() => {

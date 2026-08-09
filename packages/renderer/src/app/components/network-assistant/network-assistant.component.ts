@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -57,7 +56,6 @@ import { ToggleButton } from '@openng/optimus-ui/togglebutton';
   ],
   templateUrl: './network-assistant.component.html',
   styleUrl: './network-assistant.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NetworkAssistantComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly networkService = inject(NetworkAssistantService);

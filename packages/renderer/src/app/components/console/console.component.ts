@@ -1,6 +1,5 @@
 import {
   type AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -39,7 +38,6 @@ import { FitAddon } from '@xterm/addon-fit';
   imports: [NgTerminalModule, TranslocoDirective, Dialog, ProgressBar, Card, ScrollPanel, NgTemplateOutlet],
   templateUrl: './console.component.html',
   styleUrl: './console.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   public visible = model<boolean>(false);

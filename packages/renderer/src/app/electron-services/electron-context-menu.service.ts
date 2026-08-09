@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import type { ContextMenuItem } from './electron-types';
 import { Logger } from '../logging/logging';
 import { contextMenuShow, eventsOn } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronContextMenuService {
   private readonly logger = Logger.getInstance();
   private readonly menuClickHandlers = new Map<string, () => undefined | Promise<void>>();

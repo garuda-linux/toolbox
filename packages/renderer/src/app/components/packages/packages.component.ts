@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  effect,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, signal, viewChild } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import type { StatefulPackage } from '../gaming/interfaces';
 import { Tab, TabList, Tabs } from '@openng/optimus-ui/tabs';
@@ -41,7 +33,6 @@ import { ConfigService } from '../config/config.service';
   ],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PackagesComponent {
   readonly tabIndex = signal<number>(0);

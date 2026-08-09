@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Logger } from '../logging/logging';
 import { createDirectory, exists, readTextFile, removeFile, writeTextFile } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronFsService {
   private readonly logger = Logger.getInstance();
 

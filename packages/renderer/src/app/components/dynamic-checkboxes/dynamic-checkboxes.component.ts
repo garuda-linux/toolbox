@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import type { SystemToolsEntry, SystemToolsSubEntry } from '../../interfaces';
 import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -14,7 +14,6 @@ import { OsInteractService } from '../task-manager/os-interact.service';
   imports: [Checkbox, TranslocoDirective, FormsModule, Card, Tooltip, Checkbox],
   templateUrl: './dynamic-checkboxes.component.html',
   styleUrl: './dynamic-checkboxes.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicCheckboxesComponent {
   data = input.required<SystemToolsEntry[]>();

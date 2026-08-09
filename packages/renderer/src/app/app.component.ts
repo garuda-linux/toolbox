@@ -1,15 +1,5 @@
 import type { OnInit } from '@angular/core';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  HostListener,
-  inject,
-  Renderer2,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, Renderer2, signal, viewChild } from '@angular/core';
 import {
   NavigationCancel,
   NavigationEnd,
@@ -79,7 +69,6 @@ import { CommandPaletteService } from './components/command-palette/command-pale
   selector: 'toolbox-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   readonly consoleComponent = viewChild.required<ConsoleComponent>('consoleComponent');

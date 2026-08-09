@@ -1,15 +1,12 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import type { PackageSections } from '../gaming/interfaces';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
-import { resolveResource } from '../../electron-services';
-import { ElectronFsService } from '../../electron-services';
+import { ElectronFsService, resolveResource } from '../../electron-services';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class PackagesService {
   loading = signal<boolean>(true);
   packages = signal<PackageSections>([

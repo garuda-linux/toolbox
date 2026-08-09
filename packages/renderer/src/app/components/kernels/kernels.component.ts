@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DataView } from '@openng/optimus-ui/dataview';
 import { FormsModule } from '@angular/forms';
 import type { DkmsModule, DkmsModules, Kernel } from './types';
@@ -19,7 +19,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   imports: [DataView, FormsModule, Tag, Checkbox, TranslocoDirective, Tooltip, Skeleton, ButtonDirective],
   templateUrl: './kernels.component.html',
   styleUrl: './kernels.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KernelsComponent {
   protected readonly configService = inject(ConfigService);

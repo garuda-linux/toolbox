@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { get, set, deleteKey, clear, has } from './electron-api-utils.js';
+import { Service } from '@angular/core';
+import { clear, deleteKey, get, has, set } from './electron-api-utils.js';
 import { Logger } from '../logging/logging';
 
 export interface StoreOptions {
@@ -32,9 +32,7 @@ export class Store {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronStoreService {
   async load(options: StoreOptions = {}): Promise<Store> {
     return new Store(options);

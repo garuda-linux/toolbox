@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
   notificationIsPermissionGranted,
   notificationRequestPermission,
@@ -13,9 +13,7 @@ export interface NotificationOptions {
   actions?: { type: string; text: string }[];
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronNotificationService {
   async isPermissionGranted(): Promise<boolean> {
     return notificationIsPermissionGranted();

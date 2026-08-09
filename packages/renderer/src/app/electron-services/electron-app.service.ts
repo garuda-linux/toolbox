@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { windowRelaunch } from './electron-api-utils';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronAppService {
   async relaunch(): Promise<void> {
     windowRelaunch();

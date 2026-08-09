@@ -1,17 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
+  appCacheDir as getAppCacheDir,
   appConfigDir as getAppConfigDir,
   appDataDir as getAppDataDir,
   appLocalDataDir as getAppLocalDataDir,
-  appCacheDir as getAppCacheDir,
-  pathResolve,
   pathJoin,
+  pathResolve,
   resolveResource as getResolveResource,
 } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronPathService {
   async appConfigDir(): Promise<string> {
     return await getAppConfigDir();

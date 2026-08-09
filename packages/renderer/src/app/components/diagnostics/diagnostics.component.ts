@@ -1,6 +1,5 @@
 import {
   type AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -32,7 +31,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   imports: [ButtonDirective, Card, Tooltip, TranslocoDirective, NgTerminalModule],
   templateUrl: './diagnostics.component.html',
   styleUrl: './diagnostics.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiagnosticsComponent implements AfterViewInit, OnInit {
   private outputCache = '';

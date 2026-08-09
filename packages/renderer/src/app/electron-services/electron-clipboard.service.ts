@@ -1,27 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
-  clipboardWriteText,
-  clipboardReadText,
-  clipboardClear,
-  clipboardWriteHTML,
-  clipboardReadHTML,
-  clipboardWriteRTF,
-  clipboardReadRTF,
-  clipboardWriteImage,
-  clipboardReadImage,
-  clipboardWriteBookmark,
-  clipboardReadBookmark,
   clipboardAvailableFormats,
+  clipboardClear,
   clipboardHas,
-  clipboardRead,
-  clipboardIsEmpty,
-  clipboardHasText,
   clipboardHasImage,
+  clipboardHasText,
+  clipboardIsEmpty,
+  clipboardRead,
+  clipboardReadBookmark,
+  clipboardReadHTML,
+  clipboardReadImage,
+  clipboardReadRTF,
+  clipboardReadText,
+  clipboardWriteBookmark,
+  clipboardWriteHTML,
+  clipboardWriteImage,
+  clipboardWriteRTF,
+  clipboardWriteText,
 } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronClipboardService {
   async writeText(text: string): Promise<boolean> {
     return await clipboardWriteText(text);

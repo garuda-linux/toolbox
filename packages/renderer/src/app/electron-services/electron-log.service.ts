@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { get, logDebug, logError, logInfo, logTrace, logWarn } from './electron-api-utils.js';
 
 export enum LogLevel {
@@ -9,9 +9,7 @@ export enum LogLevel {
   Error = 4,
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronLogService {
   private currentLogLevel: LogLevel = LogLevel.Info;
 

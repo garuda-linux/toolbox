@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ConfirmationService } from '@openng/optimus-ui/api';
 import { MessageToastService } from '@garudalinux/core';
 import { TranslocoService } from '@jsverse/transloco';
@@ -10,7 +10,6 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
   imports: [],
   templateUrl: './operation-manager.component.html',
   styleUrl: './operation-manager.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationManagerComponent {
   private readonly confirmationService = inject(ConfirmationService);

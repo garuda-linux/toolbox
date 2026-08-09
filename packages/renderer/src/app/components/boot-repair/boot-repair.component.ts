@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -32,7 +32,6 @@ import { Tooltip } from '@openng/optimus-ui/tooltip';
   ],
   templateUrl: './boot-repair.component.html',
   styleUrl: './boot-repair.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BootRepairComponent implements OnInit {
   private readonly bootRepairService = inject(BootRepairService);

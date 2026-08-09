@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Checkbox } from '@openng/optimus-ui/checkbox';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -21,7 +21,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   providers: [LangPipePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
   protected readonly configService = inject(ConfigService);

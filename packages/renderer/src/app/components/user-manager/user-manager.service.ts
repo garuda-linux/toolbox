@@ -1,11 +1,9 @@
-import { effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { effect, inject, Service, signal, untracked } from '@angular/core';
 import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import type { ManagedGroup, ManagedUser, UserChange } from './types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class UserManagerService {
   private readonly logger = Logger.getInstance();
   private readonly taskManagerService = inject(TaskManagerService);

@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Service, signal } from '@angular/core';
 import type { AppSettings, AppState, DesktopEnvironment } from './interfaces';
 import { getConfigStore } from './store';
 import { LoadingService } from '../loading-indicator/loading-indicator.service';
@@ -15,9 +15,7 @@ class PendingConfigUpdate {
   settings?: object;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ConfigService {
   state = signal<AppState>({
     availablePkgs: new Map<string, boolean>(),

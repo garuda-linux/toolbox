@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { computed, effect, inject, Service, signal, untracked } from '@angular/core';
 import { type Task, TaskManagerService } from './task-manager.service';
 import { ConfigService } from '../config/config.service';
 import {
@@ -20,9 +20,7 @@ import {
   readTextFile,
 } from '../../electron-services/electron-api-utils';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class OsInteractService {
   private readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();

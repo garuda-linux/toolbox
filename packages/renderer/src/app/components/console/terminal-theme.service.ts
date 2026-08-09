@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { $dt } from '@openng/optimus-ui-styled';
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
@@ -6,7 +6,7 @@ import type { ITheme } from '@xterm/xterm';
 import { DOCUMENT } from '@angular/common';
 import { themes } from '../../theme';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TerminalThemeService {
   private readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();

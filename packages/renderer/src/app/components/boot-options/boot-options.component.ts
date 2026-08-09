@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  HostListener,
-  inject,
-  OnInit,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, computed, effect, HostListener, inject, OnInit, signal, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -56,7 +46,6 @@ import { ActivatedRoute } from '@angular/router';
   ],
   templateUrl: './boot-options.component.html',
   styleUrl: './boot-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BootOptionsComponent implements OnInit {
   protected readonly bootService = inject(BootOptionsService);

@@ -1,12 +1,10 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import type { FullPackageDefinition, PackageSections } from './interfaces';
 import { gamingPackageLists } from './package-lists';
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class GamingService {
   packages = signal<PackageSections>(gamingPackageLists);
 

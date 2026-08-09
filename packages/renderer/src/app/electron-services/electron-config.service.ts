@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { configNotifyChange } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronConfigService {
   async notifyConfigChange(key: string, value: unknown): Promise<boolean> {
     try {

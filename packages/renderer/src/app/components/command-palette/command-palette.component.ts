@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, model, signal } from '@angular/core';
+import { Component, HostListener, inject, model, signal } from '@angular/core';
 import { DialogModule } from '@openng/optimus-ui/dialog';
 import {
   AutoComplete,
@@ -16,7 +16,6 @@ import { CommandPaletteService } from './command-palette.service';
   imports: [DialogModule, AutoComplete, FormsModule, TranslocoDirective],
   templateUrl: './command-palette.component.html',
   styleUrl: './command-palette.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommandPaletteComponent {
   visible = model<boolean>(false);

@@ -1,10 +1,8 @@
-import { type ElementRef, effect, inject, Injectable, signal, type Renderer2 } from '@angular/core';
+import { effect, type ElementRef, inject, type Renderer2, Service, signal } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Logger } from '../../logging/logging';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class WallpaperService {
   private prevBlurStrength: null | number = null;
   private readonly configService = inject(ConfigService);

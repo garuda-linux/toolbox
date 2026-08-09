@@ -1,9 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import type { CommandPaletteAction } from '../../interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CommandPaletteService {
   private actions = signal<CommandPaletteAction[]>([]);
 

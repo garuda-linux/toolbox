@@ -8,7 +8,6 @@ import { DynamicCheckboxesComponent } from '../dynamic-checkboxes/dynamic-checkb
   imports: [FormsModule, DynamicCheckboxesComponent],
   templateUrl: './system-components.component.html',
   styleUrl: './system-components.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemComponentsComponent {
   sections: SystemToolsEntry[] = [

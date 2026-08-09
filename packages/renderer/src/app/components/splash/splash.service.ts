@@ -1,9 +1,7 @@
 // oxlint-disable-next-line no-unused-vars
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class SplashService {
   isVisible = signal(false);
 

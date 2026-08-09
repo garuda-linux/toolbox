@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ElectronShellService } from '../../electron-services';
 import { OverlayBadge } from '@openng/optimus-ui/overlaybadge';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
@@ -19,7 +19,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   imports: [OverlayBadge, Tooltip, TranslocoDirective, Dialog, ButtonDirective, RouterLink],
   templateUrl: './system-status.component.html',
   styleUrl: './system-status.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemStatusComponent {
   dialogVisible = signal<boolean>(false);

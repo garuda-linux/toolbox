@@ -3,7 +3,7 @@ import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Router } from '@angular/router';
 import { SetupSoftwareItem } from './interfaces';
 import { OsInteractService } from '../task-manager/os-interact.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@openng/optimus-ui/tabs';
@@ -31,7 +31,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   ],
   templateUrl: './setup-wizard.component.html',
   styleUrl: './setup-wizard.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetupWizardComponent {
   protected readonly setupWizardService = inject(SetupWizardService);

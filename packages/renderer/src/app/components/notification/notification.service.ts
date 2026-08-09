@@ -1,15 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
   isPermissionGranted,
+  type NotificationOptions,
   requestPermission,
   sendNotification,
-  type NotificationOptions,
 } from '../../electron-services';
 import { Logger } from '../../logging/logging';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class NotificationService {
   private permissionGranted = false;
   private readonly logger = Logger.getInstance();

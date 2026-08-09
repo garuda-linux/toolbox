@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { computed, effect, inject, Service, signal, untracked } from '@angular/core';
 import type { ChildProcess } from '../../types/shell';
 import type { DkmsModules, DkmsModuleStatus, Kernel, Kernels } from './types';
 import { ConfigService } from '../config/config.service';
@@ -7,9 +7,7 @@ import { Logger } from '../../logging/logging';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { OsInteractService } from '../task-manager/os-interact.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class KernelsService {
   availableModules = signal<string[]>([]);
   dkmsModules = signal<DkmsModules>([]);

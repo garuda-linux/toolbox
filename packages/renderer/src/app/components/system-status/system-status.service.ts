@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Service, signal } from '@angular/core';
 import type { HealthError, SystemUpdate, UpdateStatusOption, UpdateType } from './types';
 import { type Task, TaskManagerService } from '../task-manager/task-manager.service';
 import { ConfigService } from '../config/config.service';
@@ -6,9 +6,7 @@ import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { type ChildProcess, ElectronShellService } from '../../electron-services';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class SystemStatusService {
   firstRun = true;
   pacFiles = signal<string[]>([]);

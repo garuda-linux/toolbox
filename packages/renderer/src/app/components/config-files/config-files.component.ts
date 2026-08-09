@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { TableModule } from '@openng/optimus-ui/table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TaskManagerService } from '../task-manager/task-manager.service';
@@ -34,7 +34,6 @@ interface ConfigFile {
     DialogModule,
   ],
   templateUrl: './config-files.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfigFilesComponent implements OnInit {
   private readonly taskManager = inject(TaskManagerService);

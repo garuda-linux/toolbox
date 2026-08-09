@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, model, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, model, OnInit, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
 import type { Nullable } from '@openng/optimus-ui/ts-helpers';
@@ -20,7 +20,6 @@ import { Logger } from '../../logging/logging';
   imports: [TranslocoDirective, FormsModule, Select, Checkbox, DynamicCheckboxesComponent, Tooltip],
   templateUrl: './system-settings.component.html',
   styleUrl: './system-settings.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemSettingsComponent implements OnInit {
   currentShell = signal<Nullable<Shell>>(null);

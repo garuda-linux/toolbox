@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Logger } from '../logging/logging';
-import { httpGet, httpPost, httpPut, httpDelete } from './electron-api-utils.js';
+import { httpDelete, httpGet, httpPost, httpPut } from './electron-api-utils.js';
 
 export interface HttpRequestConfig {
   headers?: Record<string, string>;
@@ -14,9 +14,7 @@ export interface HttpResponse<T = unknown> {
   headers: Record<string, string>;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronHttpService {
   private readonly logger = Logger.getInstance();
 

@@ -1,5 +1,5 @@
 // PrivatebinClient parts sourced from: https://github.com/pixelfactoryio/privatebin-cli
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import BaseConverter from 'bs58';
 import { Logger } from '../../logging/logging';
 
@@ -62,9 +62,7 @@ export async function decryptText(ct: string, key: Uint8Array, adata: Privatebin
   return JSON.parse(uint8ArrayToString(buf));
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class PrivatebinClient {
   private api: Api;
   private httpService = inject(ElectronHttpService);
@@ -126,9 +124,7 @@ export class PrivatebinClient {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class GarudaBin {
   private readonly logger = Logger.getInstance();
   private readonly options: PrivatebinOptions = {

@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { ConfigService } from '../config/config.service';
@@ -6,9 +6,7 @@ import { Logger } from '../../logging/logging';
 import { setupWizardData } from './setup-wizard.data';
 import { SetupSoftwareCategory, SetupSoftwareItem } from './interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class SetupWizardService {
   private readonly osInteractService = inject(OsInteractService);
   private readonly taskManagerService = inject(TaskManagerService);

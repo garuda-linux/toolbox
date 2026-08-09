@@ -1,18 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
-  osPlatform,
   osArch,
-  osVersion,
-  osLocale,
-  osHostname,
-  osHomedir,
-  osTmpdir,
   osArgv,
+  osHomedir,
+  osHostname,
+  osLocale,
+  osPlatform,
+  osTmpdir,
+  osVersion,
 } from './electron-api-utils.js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ElectronOsService {
   async platform(): Promise<string> {
     return osPlatform();

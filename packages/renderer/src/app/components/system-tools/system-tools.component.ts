@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { TableModule } from '@openng/optimus-ui/table';
 import { SystemdServicesComponent } from '../systemd-services/systemd-services.component';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@openng/optimus-ui/tabs';
@@ -31,7 +31,6 @@ import { Router, type UrlTree } from '@angular/router';
   ],
   templateUrl: './system-tools.component.html',
   styleUrl: './system-tools.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemToolsComponent implements OnInit {
   tabIndex = signal<number>(0);

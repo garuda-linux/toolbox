@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  effect,
-  inject,
-  type OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, type OnInit, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TableModule } from '@openng/optimus-ui/table';
 import { DataViewModule } from '@openng/optimus-ui/dataview';
@@ -24,7 +16,6 @@ import { Router, type UrlTree } from '@angular/router';
   imports: [TranslocoDirective, TableModule, DataViewModule, Card, TabsModule, Tooltip],
   templateUrl: './gaming.component.html',
   styleUrl: './gaming.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GamingComponent implements OnInit {
   computedBackground = getComputedStyle(document.documentElement).getPropertyValue('--p-card-subtitle-color');

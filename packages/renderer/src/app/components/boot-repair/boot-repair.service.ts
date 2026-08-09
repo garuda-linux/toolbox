@@ -1,11 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TaskManagerService } from '../task-manager/task-manager.service';
 import { Logger } from '../../logging/logging';
 import { DiskInfo, PartitionWithPartType } from './types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class BootRepairService {
   private readonly taskManager = inject(TaskManagerService);
   private readonly logger = Logger.getInstance();

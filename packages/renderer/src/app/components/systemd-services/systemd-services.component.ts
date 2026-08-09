@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, type OnInit, signal } from '@angular/core';
+import { Component, computed, inject, type OnInit, signal } from '@angular/core';
 import { IconField } from '@openng/optimus-ui/iconfield';
 import { InputIcon } from '@openng/optimus-ui/inputicon';
 import { InputText } from '@openng/optimus-ui/inputtext';
@@ -19,7 +19,6 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   imports: [ButtonDirective, IconField, InputIcon, PopoverModule, InputText, TableModule, TranslocoDirective, Tooltip],
   templateUrl: './systemd-services.component.html',
   styleUrl: './systemd-services.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemdServicesComponent implements OnInit {
   activeService = signal<SystemdService | null>(null);

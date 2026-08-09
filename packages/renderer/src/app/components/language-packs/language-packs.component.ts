@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, model } from '@angular/core';
+import { Component, effect, inject, model } from '@angular/core';
 import { OsInteractService } from '../task-manager/os-interact.service';
 import { TableModule } from '@openng/optimus-ui/table';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -15,7 +15,6 @@ import { LocalePipe } from '../lang-pipe/locale.pipe';
   imports: [TableModule, TranslocoDirective, FormsModule, Checkbox, LocalePipe],
   templateUrl: './language-packs.component.html',
   styleUrl: './language-packs.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguagePacksComponent {
   selectedPacks = model<LanguagePacks>([]);
