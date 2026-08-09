@@ -24,17 +24,7 @@
   border: 2px solid var(--p-primary-color);
 }
 
-::ng-deep .p-tab-active {
-  border-width: var(--p-border-width) !important;
-}
-
-::ng-deep .p-tab:not(.p-tab-active):hover {
-  border-color: transparent;
-  border-width: 0 0 0 0 !important;
-}
-
 ::ng-deep .p-tablist-tab-list {
-  border-width: 0 !important;
   justify-content: center;
 }
 
