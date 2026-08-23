@@ -169,7 +169,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
     this.loadingService.loadingOn();
 
     let cmd = '';
-    for (const type of ['inxi', 'systemd-analyze', 'journalctl', 'pacman-log', 'dmesg', 'health']) {
+    for (const type of ['inxi', 'systemd-analyze', 'journalctl', 'pacman', 'dmesg', 'garuda-health']) {
       const command = this.getCommand(type);
       if (!command) {
         this.logger.error(`Failed to get command for ${type}`);
@@ -236,32 +236,47 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
 
   /**
    * Process the result of the command execution.
+   * Output is reported even on non-zero exit codes, since tools like
+   * garuda-health use them to signal findings rather than failures.
    * @param result The result of the command execution
-   * @private
    */
   private async processResult(result: any): Promise<void> {
     const term = this.term();
     if (!term) return;
 
-    if (result.code === 0) {
-      this.logger.trace('Writing to clear terminal and buffer');
-      term.underlying?.clear();
-      term.write(result.stdout);
+    const stdout: string = result.stdout ?? '';
+    const stderr: string = result.stderr ?? '';
 
-      this.outputCache = result.stdout;
+    if (stdout.trim() === '' && result.code !== 0) {
+      const reason =
+        stderr.trim() ||
+        this.translocoService.translate('diagnostics.exitCode', { code: result.code }) ||
+        this.translocoService.translate('diagnostics.failedCmd');
+      this.messageToastService.error(this.translocoService.translate('diagnostics.failedCmdHeader'), reason);
+      this.logger.error(`Error collecting output: ${reason}`);
+      return;
+    }
 
-      if (this.configService.settings().copyDiagnostics) {
-        this.logger.trace('Writing to clipboard');
-        await clear();
-        await writeText(result.stdout);
-        this.messageToastService.info(
-          this.translocoService.translate('diagnostics.copySuccess'),
-          this.translocoService.translate('diagnostics.copySuccess'),
-        );
-      }
-    } else {
-      this.messageToastService.error(this.translocoService.translate('diagnostics.failedCmdHeader'), result.stderr);
-      this.logger.error(`Error collecting output: ${result.stderr}`);
+    let report = stdout;
+    if (result.code !== 0) {
+      const failureNotice = `${stderr ? stderr.trimEnd() + '\n' : ''}${this.translocoService.translate('diagnostics.exitCode', { code: result.code })}\n`;
+      report = `${stdout.trimEnd()}\n\n${failureNotice}`;
+      this.logger.warn(`Command exited with code ${result.code}, reporting collected output`);
+    }
+
+    term.underlying?.clear();
+    term.write(report);
+
+    this.outputCache = report;
+
+    if (this.configService.settings().copyDiagnostics) {
+      this.logger.trace('Writing to clipboard');
+      await clear();
+      await writeText(report);
+      this.messageToastService.info(
+        this.translocoService.translate('diagnostics.copySuccess'),
+        this.translocoService.translate('diagnostics.copySuccess'),
+      );
     }
   }
 
@@ -297,7 +312,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
         result.sudo = true;
         break;
       case 'pacman':
-        result.cmd = "tac /var/log/pacman.log | awk '!flag; /PACMAN.*pacman/{flag = 1};' | tac";
+        result.cmd = 'tac /var/log/pacman.log | awk "!flag; /PACMAN.*pacman/{flag = 1};" | tac';
         break;
       case 'dmesg':
         result.cmd = 'dmesg';
