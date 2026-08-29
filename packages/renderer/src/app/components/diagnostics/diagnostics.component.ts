@@ -312,7 +312,7 @@ export class DiagnosticsComponent implements AfterViewInit, OnInit {
         result.sudo = true;
         break;
       case 'pacman':
-        result.cmd = 'tac /var/log/pacman.log | awk "!flag; /PACMAN.*pacman/{flag = 1};" | tac';
+        result.cmd = 'pkexec cat /var/log/pacman.log | tac | awk "!flag; /PACMAN.*pacman/{flag = 1};" | tac';
         break;
       case 'dmesg':
         result.cmd = 'dmesg';

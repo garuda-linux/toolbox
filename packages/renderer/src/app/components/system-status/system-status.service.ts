@@ -194,11 +194,16 @@ export class SystemStatusService {
    * Check the last update time.
    */
   private async checkLastUpdate(): Promise<void> {
-    const cmd = 'awk \'END{sub(/\\[/,""); print $1}\' /var/log/pacman.log';
-    const result: ChildProcess<string> = await this.shellService.execute('bash', ['--norc', '--noprofile', '-c', cmd]);
+    const result: ChildProcess<string> = await this.taskManagerService.executeAndWaitBash(
+      'pkexec cat /var/log/pacman.log',
+    );
 
     if (result.code === 0) {
-      const date = new Date(result.stdout.trim().replace(']', ''));
+      const lastLine = result.stdout.trim().split('\n').pop() ?? '';
+      if (!lastLine) {
+        return;
+      }
+      const date = new Date(lastLine.split(' ')[0].replace(/[[\]]/g, ''));
       this.logger.info(`Last update: ${date.toISOString()}`);
 
       if (date < new Date(new Date().setDate(new Date().getDate() - 14))) {
