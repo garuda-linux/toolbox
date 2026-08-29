@@ -59,7 +59,7 @@
     "@angular/compiler-cli": "^22.1.0",
     "@catppuccin/palette": "^2.0.0-beta.1",
     "@catppuccin/tailwindcss": "^1.0.0",
-    "@openng/optimus-ui-tailwindcss": "^1.0.1",
+    "@openng/optimus-ui-tailwindcss": "^2.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "jsdom": "^30.0.1",
     "postcss": "^8.5.26",

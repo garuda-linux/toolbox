@@ -270,8 +270,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@openng/optimus-ui-tailwindcss':
-        specifier: ^1.0.1
-        version: 1.0.1(tailwindcss@4.3.3)
+        specifier: ^2.0.0
+        version: 2.0.1(tailwindcss@4.3.3)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.0))
@@ -2322,8 +2322,8 @@ packages:
   '@openng/optimus-ui-styles@2.0.0-rc.0':
     resolution: {integrity: sha512-/LZ9t2+LAMuRbUh/MrNosgUJrofbK1ife/JXSN+Skpx7du6ymzPA3v+kf2TEUHufgrf75oI5y6d7JaLXbExQfw==}
 
-  '@openng/optimus-ui-tailwindcss@1.0.1':
-    resolution: {integrity: sha512-WdCNSzR8opqceQWrnkxqc1IprpLLxktVKAhQdiXrjCj4FuIhPfnvwduPe1IctXBlXkgx4zprvK0aFhiOezh2lg==}
+  '@openng/optimus-ui-tailwindcss@2.0.1':
+    resolution: {integrity: sha512-nLZ0ekTiGtTnJ+aDrHCaW1bCYlJ7ruk5djGy676TO9nBfZDkJEqIbrDWe0nAyAgtWsLc3EPQyZsWzRXudnMWjQ==}
     peerDependencies:
       tailwindcss: '>=3.1.0'
 
@@ -3844,6 +3844,7 @@ packages:
   '@xmldom/xmldom@0.8.13':
     resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xterm/addon-fit@0.11.0':
     resolution: {integrity: sha512-jYcgT6xtVYhnhgxh3QgYDnnNMYTcf8ElbxxFzX0IZo+vabQqSPAjC3c1wJrKB5E19VwQei89QCiZZP86DCPF7g==}
@@ -9910,7 +9911,7 @@ snapshots:
     dependencies:
       '@openng/optimus-ui-styled': 2.0.0-rc.0
 
-  '@openng/optimus-ui-tailwindcss@1.0.1(tailwindcss@4.3.3)':
+  '@openng/optimus-ui-tailwindcss@2.0.1(tailwindcss@4.3.3)':
     dependencies:
       tailwindcss: 4.3.3
 
