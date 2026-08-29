@@ -326,6 +326,15 @@ export class OsInteractService {
           newContent += `sed -i 's/${config.regex.pattern}/${replacement}/g' "${prefix}${config.regex.file}"\n`;
         }
 
+        const commands = config.commands ?? [];
+        if (commands.length > 0) {
+          newContent += 'if (\n  set -e\n';
+          for (const command of commands) {
+            newContent += `  ${command}\n`;
+          }
+          newContent += ');\nthen\n  echo "done"\nelse\n  exit 1\nfi\n';
+        }
+
         if (config.sudo) {
           script_configs_sudo += newContent;
         } else {

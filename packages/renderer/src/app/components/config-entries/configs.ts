@@ -18,6 +18,8 @@ export interface ConfigEntry {
   path?: string;
   content?: string;
   regex?: RegexConfig;
+  /** Commands to run after the config was applied or removed, e.g. restarting services so the change takes effect. */
+  commands?: string[];
   /* This corresponds to output of XDG_CURRENT_DESKTOP, we use it to conditionally show entries in the UI. */
   desktopEnv?: string[];
 }
@@ -63,6 +65,7 @@ monitor.bluez.rules = [
   }
 ]
 `,
+    commands: ['systemctl --user restart pipewire pipewire-pulse wireplumber.service'],
   },
   {
     key: 'kdeBorderlessMaximize',
