@@ -1010,7 +1010,7 @@
   {
     "name": "Glaxnimate",
     "description": "Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export",
-    "url": "https://glaxnimate.mattbas.org/",
+    "url": "https://glaxnimate.org/",
     "pkgname": [
       "glaxnimate"
     ],
@@ -2160,6 +2160,15 @@
     "aur": false
   },
   {
+    "name": "Pear Desktop",
+    "description": "Electron-based wrapper around YouTube Music with built in addons.",
+    "url": "https://github.com/pear-devs/pear-desktop",
+    "pkgname": [
+      "pear-desktop"
+    ],
+    "aur": false
+  },
+  {
     "name": "Pencil2D",
     "description": "Easy, intuitive tool to make 2D hand-drawn animations.",
     "url": "https://www.pencil2d.org/",
@@ -2754,6 +2763,15 @@
     "aur": false
   },
   {
+    "name": "Spek",
+    "description": "A barebones interface for ffmpeg's spectogram png output, helps to analyse your audio files by showing their spectrogram.",
+    "url": "http://spek.cc/",
+    "pkgname": [
+      "spek"
+    ],
+    "aur": false
+  },
+  {
     "name": "Spotify",
     "description": "Proprietary music streaming service that supports local playback and streaming.",
     "url": "https://www.spotify.com/",
@@ -3020,6 +3038,15 @@
     "url": "https://github.com/umlaeute/v4l2loopback",
     "pkgname": [
       "v4l2loopback-dkms"
+    ],
+    "aur": false
+  },
+  {
+    "name": "vcsi",
+    "description": "Create video contact sheets. A video contact sheet is an image composed of video capture thumbnails arranged on a grid.",
+    "url": "https://github.com/amietn/vcsi",
+    "pkgname": [
+      "vcsi"
     ],
     "aur": false
   },

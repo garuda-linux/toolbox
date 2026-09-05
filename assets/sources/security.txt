@@ -128,6 +128,7 @@ See also [[Session lock]].
 * {{App|Bitwarden|Open source password manager with desktop, mobile, browser, and CLI versions. Cloud or self-hosted.|https://bitwarden.com/|{{Pkg|bitwarden}}}}
 * {{App|Ente Auth|Open source 2FA authenticator, with end-to-end encrypted backups.|https://ente.com/auth/|{{AUR|ente-auth}}}}
 * {{App|Figaro's Password Manager 2|GTK2 port of [https://fpm.sourceforge.net/ Figaro's Password Manager] with some new enhancements.|https://als.regnet.cz/fpm2/|{{AUR|fpm2}}}}
+* {{App|Gabbro|Password and passkey manager with YubiKey (FIDO2) support, using Argon2id and AES-256-GCM for quantum resistance. Local only.|https://github.com/gabbro-foss/gabbro|{{AUR|gabbro-bin}}}}
 * {{App|[[KDE Wallet|KDE Wallet Manager]]|Tool to manage the passwords on your system. By using the KDE wallet subsystem, it not only allows you to keep your own secrets but also to access and manage the passwords of every application that integrates with the wallet. Part of {{Grp|kde-utilities}}.|https://userbase.kde.org/KDE_Wallet_Manager|{{Pkg|kwalletmanager}}}}
 * {{App|[[KeePass|KeePass Password Safe]]|Mono-based password manager, which helps you to manage your passwords in a secure way.|https://keepass.info/|{{Pkg|keepass}}}}
 * {{App|KeePassXC|Community fork of KeePassX with more active development. Compatible with KeePass v.1.x (import only) and KeePass v.2.x.|https://keepassxc.org/|{{Pkg|keepassxc}}}}

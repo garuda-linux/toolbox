@@ -252,6 +252,15 @@
     "aur": false
   },
   {
+    "name": "dateutils",
+    "description": "Nifty command line date and time utilities; fast date calculations and conversion in the shell.",
+    "url": "https://www.fresse.org/dateutils/",
+    "pkgname": [
+      "dateutils"
+    ],
+    "aur": false
+  },
+  {
     "name": "Deepin Calendar",
     "description": "Calendar application for Deepin.",
     "url": "https://www.deepin.org/en/original/dde-calendar/",
@@ -428,6 +437,15 @@
     "url": "https://github.com/google-gemini/gemini-cli",
     "pkgname": [
       "gemini-cli"
+    ],
+    "aur": false
+  },
+  {
+    "name": "ggml",
+    "description": "Lightweight tensor library for on-device LLM inference.",
+    "url": "https://github.com/ggml-org/ggml",
+    "pkgname": [
+      "ggml"
     ],
     "aur": false
   },
@@ -873,6 +891,15 @@
     "aur": false
   },
   {
+    "name": "llama.cpp",
+    "description": "A high-performance C/C++ port of Facebook's LLaMA model, optimized for local execution.",
+    "url": "https://github.com/ggml-org/llama.cpp",
+    "pkgname": [
+      "llama-cpp"
+    ],
+    "aur": false
+  },
+  {
     "name": "LXLauncher",
     "description": "Clone of the Asus launcher for EeePC.",
     "url": "https://github.com/lxde/lxlauncher",
@@ -994,7 +1021,7 @@
     "description": "Minimal desktop shell for Wayland compositors, built on Quickshell.",
     "url": "https://noctalia.dev/",
     "pkgname": [
-      "noctalia-shell"
+      "noctalia"
     ],
     "aur": false
   },
@@ -1188,15 +1215,6 @@
     "aur": false
   },
   {
-    "name": "pywal",
-    "description": "Changes the wallpaper and creates matching color schemes for various applications (rofi, i3, terminals)",
-    "url": "https://github.com/dylanaraps/pywal",
-    "pkgname": [
-      "python-pywal"
-    ],
-    "aur": false
-  },
-  {
     "name": "qwen-code",
     "description": "CLI coding agent (fork of gemini-cli) with AI-powered code generation and assistance.",
     "url": "https://github.com/QwenLM/Qwen-Code",
@@ -1271,7 +1289,7 @@
   {
     "name": "Safe Eyes",
     "description": "Tool to reduce and prevent repetitive strain injury (RSI).",
-    "url": "https://slgobinath.github.io/SafeEyes/",
+    "url": "https://slgobinath.github.io/safeeyes/",
     "pkgname": [
       "safeeyes"
     ],
@@ -1337,6 +1355,15 @@
     "url": "https://stalonetray.sourceforge.net/",
     "pkgname": [
       "stalonetray"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Super Productivity",
+    "description": "An advanced todo list app with timeboxing and time tracking capabilities. Based on the Electron platform.",
+    "url": "https://super-productivity.com/",
+    "pkgname": [
+      "super-productivity"
     ],
     "aur": false
   },
@@ -1517,6 +1544,15 @@
     "url": "http://lightandmatter.com/when/when.html",
     "pkgname": [
       "when"
+    ],
+    "aur": false
+  },
+  {
+    "name": "whisper.cpp",
+    "description": "A C/C++ port of OpenAI's Whisper model for efficient speech recognition.",
+    "url": "https://github.com/ggml-org/whisper.cpp",
+    "pkgname": [
+      "whisper-cpp"
     ],
     "aur": false
   },

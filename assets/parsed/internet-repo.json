@@ -742,7 +742,7 @@
     "description": "A modular Internet censorship circumvention system designed specifically to deal with national filtering.",
     "url": "https://geph.io/en/",
     "pkgname": [
-      "geph4-client"
+      "geph5-client"
     ],
     "aur": false
   },
@@ -896,6 +896,15 @@
     "url": "https://halloy.squidowl.org/",
     "pkgname": [
       "halloy"
+    ],
+    "aur": false
+  },
+  {
+    "name": "Helium",
+    "description": "A browser based on Ungoogled Chromium with multiple layouts, !bangs in the address bar and a Chrome Web Store proxy.",
+    "url": "https://helium.computer/",
+    "pkgname": [
+      "helium-browser-bin"
     ],
     "aur": false
   },
@@ -1989,15 +1998,6 @@
     "aur": false
   },
   {
-    "name": "Rclone Browser",
-    "description": "GUI client for Rclone.",
-    "url": "https://github.com/kapitainsky/RcloneBrowser",
-    "pkgname": [
-      "rclone-browser"
-    ],
-    "aur": false
-  },
-  {
     "name": "Rclone Shuttle",
     "description": "GTK4 frontend for Rclone to upload files to any supported cloud storage provider or storage protocol.",
     "url": "https://github.com/pieterdd/RcloneShuttle",
@@ -2377,7 +2377,7 @@
   },
   {
     "name": "Thunderbird",
-    "description": "Feature-rich email client supports instant messaging and chat using IRC and XMPP.",
+    "description": "Feature-rich email client supports instant messaging and chat using IRC, XMPP and Matrix.",
     "url": "https://www.thunderbird.net/",
     "pkgname": [
       "thunderbird"

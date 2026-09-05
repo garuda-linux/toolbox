@@ -324,7 +324,7 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 * {{App|[[Wikipedia:Cataclysm: Dark Days Ahead|Cataclysm: Dark Days Ahead]]|Post-apocalyptic roguelike focusing on realism.|https://cataclysmdda.org/|graphical: {{Pkg|cataclysm-dda-tiles}}, curses: {{Pkg|cataclysm-dda}}}}
 * {{App|[[Wikipedia:DoomRL|DoomRL]]|Simple roguelike game, based on Doom. Perfect for starters.|https://drl.chaosforge.org/|{{AUR|drl}}}}
 * {{App|[[Dwarf Fortress]]|Single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world.|https://www.bay12games.com/dwarves/|{{Pkg|dwarffortress}}}}
-* {{App|glHack|An OpenGL-based clone of NetHack.|https://glhack.sourceforge.net/|{{Pkg|glhack}}}}
+* {{App|glHack|An OpenGL-based clone of NetHack.|https://glhack.sourceforge.net/|{{AUR|glhack}}}}
 * {{App|HyperRogue|The non-Euclidean roguelike, is a mind-melting masterpiece.|https://www.roguetemple.com/z/hyper/|{{AUR|hyperrogue}}}}
 * {{App|Infra-Arcana|A game inspired by the writings of H.P. Lovecraft.|https://sites.google.com/site/infraarcana/|{{AUR|infra-arcana}}}}
 * {{App|KeeperRL|Ambitious dungeon simulator with roguelike and RPG elements. Take the role of an evil wizard and study the methods of black magic.|https://keeperrl.com/|{{AUR|keeperrl-git}}}}
@@ -481,7 +481,7 @@ See also [[Wikipedia:Chronology of roguelike video games]].
 * {{App|[[Wikipedia:Spring_Engine#Kernel_Panic|Kernel Panic]]|A game based around combat inside a computer, with 3 unique sides: the System, the Hacker and the Network waging war in a matrix of DOOM! No resource economy exists in KP, with the only constraints being time and space.|https://springrts.com/wiki/Kernel_Panic|{{Pkg|springlobby}}}}
 * {{App|[[Wikipedia:MegaGlest|MegaGlest]]|Fork of Glest, a 3D real-time strategy game in a fantastic world.|https://megaglest.org/|{{Pkg|megaglest}}}}
 * {{App|Mindustry|Open-source sandbox tower defense and factory-building game.|https://mindustrygame.github.io/|{{AUR|mindustry}}}}
-* {{App|NetPanzer|An online multiplayer tactical warfare game designed for fast action combat.|https://github.com/netpanzer/netpanzer|{{AUR|netpanzer-appimage}}{{Broken package link|package not found}}}}
+* {{App|NetPanzer|An online multiplayer tactical warfare game designed for fast action combat.|https://github.com/netpanzer/netpanzer|{{AUR|netpanzer}}}}
 * {{App|openage|A free (as in freedom) clone of the Age of Empires II engine.|https://openage.sft.mx/|{{AUR|openage-git}}}}
 * {{App|OpenDUNE|Open source re-creation of the popular game Dune II.|http://www.opendune.org/|{{AUR|opendune}}}}
 * {{App|OpenHV|Pixelart Science-Fiction Real-Time-Strategy game based on OpenRA.|https://www.openhv.net/|{{AUR|openhv}}}}

@@ -330,15 +330,6 @@
     "aur": false
   },
   {
-    "name": "glHack",
-    "description": "An OpenGL-based clone of NetHack.",
-    "url": "https://glhack.sourceforge.net/",
-    "pkgname": [
-      "glhack"
-    ],
-    "aur": false
-  },
-  {
     "name": "Globulation 2",
     "description": "Multiplayer RTS with some \"economic\" elements minimizing the amount of micromanagement.",
     "url": "https://globulation2.org/wiki/Main_Page",

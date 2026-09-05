@@ -262,7 +262,7 @@ See also the [https://daringfireball.net/projects/markdown/ official website] an
 * {{App|CuteMarkEd|Qt-based Markdown editor with live HTML preview, math expressions, code and markdown syntax highlighting. Discontinued since 2016.|https://cloose.github.io/CuteMarkEd/|{{AUR|cutemarked-git}}}}
 * {{App|Formiko|reStructuredText and Markdown editor and live previewer written in Python with GTK.|https://github.com/ondratu/formiko|{{AUR|formiko}}}}
 * {{App|ghostwriter|Distraction-free Markdown editor. Part of {{Grp|kde-office}}.|https://ghostwriter.kde.org/|{{Pkg|ghostwriter}}}}
-* {{App|Marker|Simple yet robust Markdown editor.|https://fabiocolacio.github.io/Marker/|{{Pkg|marker}}}}
+* {{App|Marker|Simple yet robust Markdown editor.|https://github.com/fabiocolacio/Marker|{{Pkg|marker}}}}
 * {{App|Mark My Words|Minimal markdown editor.|https://github.com/voldyman/MarkMyWords|{{AUR|markmywords}}}}
 * {{App|Mark Text|Next generation markdown editor. Based on the [[Electron]] platform.|https://github.com/marktext/marktext|{{AUR|marktext}}}}
 * {{App|Remarkable|Fully featured Markdown editor.|https://remarkableapp.github.io/|{{AUR|remarkable}}}}
@@ -341,8 +341,8 @@ See also [[#Markup languages]] and [[PDF, PS and DjVu]].
 * {{App|[[MuPDF|mutool]]|All purpose tool based on MuPDF for dealing with document files in various manners.|https://mupdf.com/|{{Pkg|mupdf-tools}}}}
 * {{App|obsidian2web|Generates static websites from Obsidian Markdown text files.|https://github.com/lun-4/obsidian2web|{{AUR|obsidian2web}}}}
 * {{App|[[Wikipedia:Pandoc|Pandoc]]|Swiss-army knife for converting markup and document formats.|https://pandoc.org/|{{Pkg|pandoc-cli}}}}
-* {{App|unoconv|Libreoffice-based document converter.|https://github.com/unoconv/unoconv|{{Pkg|unoconv}}}}
 * {{App|UnRTF|Command-line program which converts RTF documents to other formats.|https://www.gnu.org/software/unrtf/unrtf.html|{{Pkg|unrtf}}}}
+* {{App|unoserver|Libreoffice-based document converter.|https://github.com/unoconv/unoserver|{{AUR|python-unoserver}}}}
 
 == Bibliographic reference managers ==
 
@@ -422,7 +422,7 @@ See [[SANE#Frontends]]
 See also [[Wikipedia:Comparison of optical character recognition software]].
 
 * {{App|[[Wikipedia:CuneiForm (software)|CuneiForm]]|Command line OCR system originally developed and open sourced by Cognitive technologies. Supported languages: eng, ger, fra, rus, swe, spa, ita, ruseng, ukr, srp, hrv, pol, dan, por, dut, cze, rum, hun, bul, slo, lav, lit, est, tur.|https://launchpad.net/cuneiform-linux|{{AUR|cuneiform}}}}
-* {{App|[[Wikipedia:GOCR|GOCR]]|OCR engine which also supports barcode recognition.|https://www-e.uni-magdeburg.de/jschulen/ocr/|{{Pkg|gocr}}}}
+* {{App|[[Wikipedia:GOCR|GOCR]]|OCR engine which also supports barcode recognition.|https://www-e.uni-magdeburg.de/jschulen/ocr/|{{AUR|gocr}}}}
 * {{App|[[Wikipedia:Ocrad|Ocrad]]|OCR program based on a feature extraction method.|https://www.gnu.org/software/ocrad/|{{Pkg|ocrad}}}}
 * {{App|OCRmyPDF|Adds an OCR text layer to scanned PDF files, allowing them to be searched.|https://github.com/jbarlow83/OCRmyPDF|{{AUR|ocrmypdf}}}}
 * {{App|[[Wikipedia:Tesseract (software)|Tesseract]]|Accurate open source OCR engine. Package splitted, you need install some datafiles for each language ({{Pkg|tesseract-data-eng}} for example).|https://github.com/tesseract-ocr|{{Pkg|tesseract}}}}
@@ -608,26 +608,26 @@ See also [[Wikipedia:Category:Dictionary software]] and [[Wikipedia:DICT#DICT cl
 
 See [[Language checking]].
 
-=== Translation and localization ===
-
-{{Style|Some of these applications were previously in the "AI" section. There must be a clear AI indicator.}}
+=== Translation ===
 
 See also [[Wikipedia:Comparison of computer-assisted translation tools]].
 
 * {{App|[[Wikipedia:Apertium|Apertium]]|Free and open source rule-based machine translation platform with available language data. It supports the following formats: HTML, Microsoft Office 2007 XML, OpenDocument, TMX, MediaWiki and others.|https://www.apertium.org/|{{AUR|apertium}}}}
-* {{App|Argos Translate|Open-source offline translation library with GUI support.|https://www.argosopentech.com/|{{AUR|argos-translate}}, {{AUR|argos-translate-gui}}}}
+* {{App|Argos Translate|Open-source offline translation library with GUI support using the Open ''N''eural ''M''achine ''T''ranslation ecosystem.|https://www.argosopentech.com/|{{AUR|argos-translate}}, {{AUR|argos-translate-gui}}}}
 * {{App|Crow Translate|Simple and lightweight translator that allows to translate and speak text using Google, Yandex and Bing.|https://apps.kde.org/crowtranslate/|{{Pkg|crow-translate}}}}
 * {{App|Dialect|Translation app for GNOME based on Google Translate and other online services.|https://apps.gnome.org/Dialect/|{{Pkg|dialect}}}}
+* {{App|[[Wikipedia:OmegaT|OmegaT]]|General translator's tool which contains a lot of translation memory features and can give suggestions from Google Translate. It supports the following formats: HTML, Microsoft Office 2007 XML, OpenDocument, XLIFF/Okapi, MediaWiki, plain text, TMX and others.|https://omegat.org/|{{AUR|omegat}}}}
+* {{App|Translate Shell|Command-line interface and interactive shell for Google Translate or other web services.|https://www.soimort.org/translate-shell/|{{Pkg|translate-shell}}}}
+* {{App|TranslateLocally|Fast and secure local translation using Mozilla' Bergamot neural machine translation project.|https://github.com/XapaJIaMnu/translatelocally|{{AUR|translatelocally-git}}}}
+
+=== Localization ===
+
 * {{App|[[Wikipedia:Gtranslator|Gtranslator]]|Enhanced gettext po file editor for the GNOME. It handles all forms of gettext po files and includes very useful features.|https://wiki.gnome.org/Apps/Gtranslator|{{Pkg|gtranslator}}}}
 * {{App|Lokalize|Standard [[KDE]] tool for software translation. It includes basic editing of PO files, support for glossary, translation memory, project managing, etc. Part of {{Grp|kde-sdk}}.|https://apps.kde.org/lokalize/|{{Pkg|lokalize}}}}
-* {{App|[[Wikipedia:Moses (machine translation)|Moses]]|Statistical machine translation tool (language data not included).|http://statmt.org/moses/|{{AUR|mosesdecoder}}{{Broken package link|package not found}}}}
-* {{App|[[Wikipedia:OmegaT|OmegaT]]|General translator's tool which contains a lot of translation memory features and can give suggestions from Google Translate. It supports the following formats: HTML, Microsoft Office 2007 XML, OpenDocument, XLIFF/Okapi, MediaWiki, plain text, TMX and others.|https://omegat.org/|{{AUR|omegat}}}}
 * {{App|[[Wikipedia:Poedit|Poedit]]|Simple translation editor for gettext (PO, POT) and XLIFF.|https://poedit.net|{{Pkg|poedit}}}}
 * {{App|Pology|Set of Python tools for dealing with gettext/po-files.|https://techbase.kde.org/Localization/Tools/Pology|{{AUR|pology-git}}}}
 * {{App|[[Qt]] Linguist|Translating Qt C++ and Qt Quick applications into local languages.|https://doc.qt.io/qt-6/qtlinguist-index.html|{{Pkg|qt6-tools}}}}
-* {{App|Translate Shell|Command-line interface and interactive shell for Google Translate.|https://www.soimort.org/translate-shell/|{{Pkg|translate-shell}}}}
 * {{App|[[Wikipedia:Translate Toolkit|Translate Toolkit]]|Localization and translation toolkit, which provides a set of tools for working with localization file formats and files that might need localization.|https://toolkit.translatehouse.org/|{{Pkg|translate-toolkit}}}}
-* {{App|TranslateLocally|Fast and secure local translation using Bergamot (Mozilla).|https://github.com/XapaJIaMnu/translatelocally|{{AUR|translatelocally-git}}}}
 
 == Barcode generators and readers ==
 
@@ -637,7 +637,7 @@ See also [[Wikipedia:Comparison of computer-assisted translation tools]].
 * {{App|iec16022|Produce 2D barcodes often also referenced as DataMatrix.|https://datenfreihafen.org/projects/iec16022.html|{{Pkg|iec16022}}}}
 * {{App|qrencode|C library and command line tool for encoding data in a QR code symbol.|https://fukuchi.org/works/qrencode/|{{Pkg|qrencode}}}}
 * {{App|[[Wikipedia:ZBar|ZBar]]|Application and library for reading bar codes from various sources.|https://zbar.sourceforge.net/|{{Pkg|zbar}}}}
-* {{App|Zint|Barcode encoding library and command line tool supporting over 50 symbologies.|http://zint.org.uk/|{{Pkg|zint}}}}
+* {{App|Zint|Barcode encoding library and command line tool supporting over 50 symbologies.|https://zint.org.uk/|{{Pkg|zint}}}}
 
 === Graphical ===
 
@@ -650,7 +650,7 @@ See also [[Wikipedia:Comparison of computer-assisted translation tools]].
 * {{App|Qreator|Graphical utility for creating QR codes.|https://davidplanella.org/qreator/|{{Pkg|qreator}}}}
 * {{App|QtQR|QR code generator and decoder.|https://launchpad.net/qr-tools|{{AUR|qtqr}}}}
 * {{App|ZBarCam GUI|Simple GUI for ZBar to read bar codes from various sources.|https://zbar.sourceforge.net/|{{Pkg|zbar}}}}
-* {{App|Zint Barcode Studio|Barcode generator GUI.|http://zint.org.uk/|{{Pkg|zint-qt}}}}
+* {{App|Zint Barcode Studio|Barcode generator GUI.|https://zint.org.uk/|{{Pkg|zint-qt}}}}
 
 == Placeholder text generators ==
 

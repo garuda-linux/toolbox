@@ -39,18 +39,18 @@ See [[Network configuration#Network managers]].
 
 * {{App|Brook|Proxy focusing on strong encryption and being undetectable.|https://txthinking.github.io/brook/|{{Pkg|brook}}}}
 * {{App|Dante|SOCKS server and SOCKS client, implementing [[RFC:1928]] and related standards.|https://www.inet.no/dante/|{{Pkg|dante}}}}
-* {{App|Geph|A modular Internet censorship circumvention system designed specifically to deal with national filtering.|https://geph.io/en/|{{AUR|geph4-client}}}}
-* {{App|hiddify|Multiplatform chain proxy client based on {{AUR|sing-box}}.|https://github.com/hiddify/hiddify-next|{{AUR|hiddify}}}}
+* {{App|Geph|A modular Internet censorship circumvention system designed specifically to deal with national filtering.|https://geph.io/en/|{{AUR|geph5-client}}}}
+* {{App|hiddify|Multiplatform chain proxy client based on {{Pkg|sing-box}}.|https://github.com/hiddify/hiddify-next|{{AUR|hiddify}}}}
 * {{App|[[NaïveProxy]]|A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility.|https://github.com/klzgrad/naiveproxy|{{AUR|naiveproxy}}}}
 * {{App|[[Privoxy]]|Non-caching web proxy with advanced filtering capabilities for enhancing privacy, modifying web page data and HTTP headers, controlling access, and removing ads and other obnoxious Internet junk.|https://www.privoxy.org/|{{Pkg|privoxy}}}}
 * {{App|[[Shadowsocks]]|Secure socks5 proxy, designed to protect your Internet traffic.|https://shadowsocks.org/|{{Pkg|shadowsocks-rust}}}}
 * {{App|[[Squid]]|Caching proxy for the Web supporting HTTP, HTTPS, FTP, and more.|https://www.squid-cache.org/|{{Pkg|squid}}}}
 * {{App|[[Stunnel]]|A server and client to add and remove TLS encryption to TCP data flow.|https://www.stunnel.org/|{{Pkg|stunnel}}}}
-* {{App|Throne|Cross-platform GUI proxy utility (Empowered by {{AUR|sing-box}}).|https://github.com/throneproj/Throne|{{AUR|throne}}}}
+* {{App|Throne|Cross-platform GUI proxy utility (Empowered by {{Pkg|sing-box}}).|https://github.com/throneproj/Throne|{{AUR|throne}}}}
 * {{App|Tinyproxy|Lightweight HTTP/HTTPS proxy daemon.|https://tinyproxy.github.io/|{{Pkg|tinyproxy}}}}
 * {{App|[[Trojan]]|An unidentifiable mechanism that helps you bypass GFW.|https://trojan-gfw.github.io/trojan/|{{Pkg|trojan}}}}
 * {{App|[[V2Ray]]|V2Ray is the core of Project V, which is a set of tools to help you build your own privacy network over the internet.|https://www.v2fly.org/en_US/|{{Pkg|v2ray}}}}
-* {{App|V2RayN|A GUI client for Windows, Linux and macOS, support {{AUR|xray}} and {{AUR|sing-box}} cores and others.|https://github.com/2dust/v2rayN|{{AUR|v2rayN}}}}
+* {{App|V2RayN|A GUI client for Windows, Linux and macOS, support {{AUR|xray}} and {{Pkg|sing-box}} cores and others.|https://github.com/2dust/v2rayN|{{AUR|v2rayN}}}}
 * {{App|[[Varnish]]|High-performance HTTP accelerator.|https://varnish-cache.org/|{{AUR|varnish}}}}
 * {{App|Wireproxy|[[WireGuard]] client that exposes itself as a SOCKS5 proxy.|https://github.com/pufferffish/wireproxy|{{Pkg|wireproxy}}}}
 * {{App|XX-Net|Easy to use web proxy tool.|https://github.com/XX-net/XX-Net/|{{AUR|xx-net}}}}
@@ -164,7 +164,7 @@ See also: [[Wikipedia:Gecko (software)]]
 * {{App|[[Wikipedia:Floorp|Floorp]]|Firefox-based browser developed by a community of students in Japan.|https://floorp.app/|{{AUR|floorp}}}}
 * {{App|[[Wikipedia:GNU IceCat|GNU IceCat]]|A customized build of Firefox ESR distributed by the GNU Project, stripped of non-free components and with additional privacy extensions. Release cycle may be delayed compared to Mozilla Firefox.|https://www.gnu.org/software/gnuzilla/|{{AUR|icecat}}}}
 * {{App|Konform Browser|A customized build of Firefox ESR focused on security, privacy and freedom. Originally based on LibreWolf.|https://codeberg.org/konform-browser|{{AUR|konform-browser}}}}
-* {{App|[[Wikipedia:LibreWolf|LibreWolf]]|A fork of Firefox, focused on privacy, security and freedom.|https://librewolf.net/|{{AUR|librewolf}}}}
+* {{App|[[Wikipedia:LibreWolf|LibreWolf]]|A fork of Firefox, focused on privacy, security and freedom.|https://librewolf.net/|{{Pkg|librewolf}}}}
 * {{App|[[Wikipedia:Midori (web browser)|Midori]]|Light, fast and secure browser.|https://github.com/goastian/midori-desktop|{{AUR|midori-bin}}}}
 * {{App|[[Wikipedia:Mullvad Browser|Mullvad Browser]]|Privacy-focused web browser developed by Mullvad VPN and the Tor Project based on Firefox ESR.|https://mullvad.net/en/browser|{{AUR|mullvad-browser}}}}
 * {{App|[[Tor]] Browser Launcher|Securely and easily download, verify, install, and launch Tor Browser. Tor Browser is a fork of Firefox ESR with the ability to access Onion domains, plus additional privacy modifications.|https://gitlab.torproject.org/tpo/applications/torbrowser-launcher|{{Pkg|torbrowser-launcher}}}}
@@ -180,8 +180,8 @@ See also: [[Wikipedia:Blink (web engine)]]
 ===== Privacy-focused Chromium spin-offs =====
 
 * {{App|[[Wikipedia:Brave (web browser)|Brave]]|A web browser with a built-in advertisement and tracker blocking mechanism.|https://brave.com/|{{AUR|brave-bin}}, {{AUR|brave-origin-bin}}}}
-* {{App|Cromite|Cromite is a Chromium fork based on Bromite (Currently unmaintained) with built-in support for ad blocking and an eye for privacy. See its [https://github.com/uazo/cromite/blob/master/docs/FEATURES.md list of features].|https://github.com/uazo/cromite|{{AUR|cromite-bin}}}}
-* {{App|Helium|A browser based on Ungoogled Chromium with multiple layouts, !bangs in the address bar and a Chrome Web Store proxy.|https://helium.computer/|{{AUR|helium-browser}}}}
+* {{App|Cromite|Cromite is a Chromium fork based on the discontinued Bromite with built-in support for ad blocking and an eye for privacy. See its [https://github.com/uazo/cromite/blob/master/docs/FEATURES.md list of features].|https://github.com/uazo/cromite|{{AUR|cromite-bin}}}}
+* {{App|Helium|A browser based on Ungoogled Chromium with multiple layouts, !bangs in the address bar and a Chrome Web Store proxy.|https://helium.computer/|{{AUR|helium-browser-bin}}}}
 * {{App|Thorium|Thorium develops a periodically synchronized fork of the Chromium browser, expanded with additional patches to optimize performance, improve usability and enhance security. According to the developers' tests Thorium is 8-40% ahead of the regular Chromium, mainly due to the inclusion of additional optimizations during compilation.|https://thorium.rocks/|{{AUR|thorium-browser-bin}}}}
 * {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]]|Modifications to Google Chromium for removing Google integration and enhancing privacy, control, and transparency.|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium}}}}
 * {{App|[[Wikipedia:Ungoogled Chromium|Ungoogled Chromium]] (Widevine)|The same as the regular version, but with the ability to access DRM-protected content.|https://github.com/ungoogled-software/ungoogled-chromium|{{AUR|ungoogled-chromium-widevine-bin}}}}
@@ -292,7 +292,6 @@ See also: [[:Category:Web server]], [[Wikipedia:Comparison of web server softwar
 * {{App|[[miniserve]]|Rust alternative to darkhttpd with UTF-8, optional HTTP authentication, file uploading, and more.|https://github.com/svenstaro/miniserve|{{Pkg|miniserve}}}}
 * {{App|quark|An extremely small and simple http get-only web server. It only serves static pages on a single host.|https://tools.suckless.org/quark/|{{AUR|quark-git}}}}
 * {{App|serve|Static file serving and directory listing.|https://github.com/zeit/serve|{{AUR|nodejs-serve}}}}
-* {{App|Webfs|Simple and instant web server for mostly static content.|https://linux.bytesex.org/misc/webfs.html|{{AUR|webfs}}{{Broken package link|package not found}}}}
 
 === Specialized web servers ===
 
@@ -317,7 +316,7 @@ Apache also supports WSGI with [[mod_wsgi]].
 
 * {{App|httperf|Can generate various HTTP workloads, written in C.|https://github.com/httperf/httperf|{{AUR|httperf-git}}}}
 * {{App|httping|A "ping"-like tool for HTTP requests|https://www.vanheusden.com/httping/|{{Pkg|httping}}}}
-* {{App|http_load|A webserver performance testing tool, runs in a single process.|https://www.acme.com/software/http_load/{{Dead link|2025|03|15|status=SSL error}}|{{AUR|http_load}}}}
+* {{App|http_load|A webserver performance testing tool, runs in a single process.|https://www.acme.com/software/http_load/|{{AUR|http_load}}}}
 * {{App|siege|An HTTP regression testing and benchmarking utility.|https://www.joedog.org/siege-home/|{{Pkg|siege}}}}
 * {{App|vegeta|HTTP load testing tool, written in Go.|https://github.com/tsenart/vegeta|{{Pkg|vegeta}}}}
 * {{App|Web Bench|Benchmarking tool, uses fork() for simulating multiple clients.|http://home.tiscali.cz/~cz210552/webbench.html|{{AUR|webbench}}}}
@@ -355,7 +354,7 @@ See also: [[Wikipedia:Comparison of download managers]]
 * {{App|ClipGrab|Downloader and converter for YouTube, Vimeo and many other online video sites.|https://clipgrab.org/|{{AUR|clipgrab}}}}
 * {{App|FatRat|Qt based download manager with support for HTTP, FTP, SFTP, BitTorrent and Metalink.|https://github.com/LubosD/fatrat|{{AUR|fatrat-git}}}}
 * {{App|Forklift|Simple GUI for youtube-dl using PyGObject.|https://github.com/Johnn3y/Forklift|{{AUR|forklift-git}}}}
-* {{App|Gabut Download Manager|Simple, fast, and powerful download manager built with GTK4.|https://github.com/gabutakut/gabutdm|{{AUR|gabutdm}}{{Broken package link|package not found}}}}
+* {{App|Gabut Download Manager|Simple, fast, and powerful download manager built with GTK4.|https://github.com/gabutakut/gabutdm|{{AUR|gabutdm-master}}}}
 * {{App|Gopeed|Modern download manager built with Golang and Flutter that supports HTTP, BitTorrent, Magnet protocol.|https://gopeed.com/|{{AUR|gopeed-bin}}}}
 * {{App|gtk-youtube-viewer|GTK utility for viewing YouTube videos. See optional dependencies for the GUI.|https://github.com/trizen/youtube-viewer|{{AUR|youtube-viewer}}}}
 * {{App|[[Wikipedia:Wget#GWget|Gwget]]|Download manager for GNOME. Supports HTTP and FTP.|https://gitlab.gnome.org/Archive/gwget|{{AUR|gwget}}}}
@@ -375,7 +374,7 @@ See also: [[Wikipedia:Comparison of download managers]]
 * {{App|Televido|Lets you livestream, search, play and download media from German-language public television services. It is powered by APIs provided by the MediathekView project.|https://github.com/d-k-bo/televido|{{AUR|televido}}}}
 * {{App|uGet|GTK download manager featuring download classification and HTML import. Supports HTTP, FTP, BitTorrent, Metalink, YouTube and Mega.|https://ugetdm.com/|{{Pkg|uget}}}}
 * {{App|Varia|GTK frontend for aria2c and yt-dlp.|https://giantpinkrobots.github.io/varia/|{{AUR|varia}}}}
-* {{App|Video Downloader|GTK application to download videos from websites like YouTube and many others (based on youtube-dl).|https://github.com/Unrud/video-downloader|{{AUR|video-downloader}}}}
+* {{App|Video Downloader|GTK application to download videos from websites like YouTube and many others (based on youtube-dl).|https://github.com/Unrud/video-downloader|{{Pkg|video-downloader}}}}
 * {{App|Xtreme Download Manager|Powerful tool to increase download speed up-to 500%. Supports HTTP and FTP. Video grabber works in a general way and is not limited to certain websites.|https://subhra74.github.io/xdm/|{{AUR|xdman}}}}
 * {{App|youtubedl-gui|Simple-to-use graphical interface for youtube-dl.|https://github.com/JaGoLi/ytdl-gui|{{AUR|youtubedl-gui}}}}
 * {{App|ytDownloader|GUI video downloader supporting hundreds of sites. Based on the [[Electron]] platform.|https://aandrew-me.github.io/ytDownloader/|{{AUR|ytdownloader-gui}}}}
@@ -385,7 +384,7 @@ See also: [[Wikipedia:Comparison of download managers]]
 See also: [[#LAN messengers]]
 
 * {{App|LAN Share|Cross-platform local area network file transfer application, built using Qt GUI framework. It can be used to transfer a whole folder, one or more files, large or small immediately without any additional configuration.|https://github.com/abdularis/LAN-Share|{{AUR|lanshare}}}}
-* {{App|LocalSend|Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.|https://localsend.org/|{{AUR|localsend}}}}
+* {{App|[[LocalSend]]|Cross-platform app to securely share files and messages with nearby devices over the local network without needing an internet connection.|https://localsend.org/|{{AUR|localsend}}}}
 * {{App|[[Magic Wormhole]]|Command-line tool {{ic|wormhole}} to securely transfer data between computers.|https://github.com/magic-wormhole/magic-wormhole|{{Pkg|magic-wormhole}}}}
 * {{App|NitroShare|Cross-platform network file transfer application, built using Qt GUI framework. It is designed to make transferring files from one device to another on the local network extremely simple.|https://nitroshare.net/|{{AUR|nitroshare}}}}
 * {{App|Packet|Send and receive files wirelessly with Android devices using Quick Share or another device with Packet installed.|https://github.com/nozwock/packet|{{AUR|packet}}}}
@@ -605,6 +604,7 @@ See also: [[Wikipedia:Comparison of email clients]]
 * {{App|Bubblemail|New and Unread mail notification service for local mailboxes, pop, imap, and gnome online accounts. A fork of Mailnag.|http://bubblemail.free.fr/|{{AUR|bubblemail}}}}
 * {{App|Gnubiff|Mail notification program that checks for mail and displays headers when new mail has arrived.|https://gnubiff.sourceforge.net/|{{Pkg|gnubiff}}}}
 * {{App|Mailnag|Extensible mail notification daemon.|https://github.com/pulb/mailnag|{{Pkg|mailnag}}}}
+* {{App|Mailnagger|Extensible mail notification daemon (forked from Mailnag)|https://github.com/tikank/mailnagger|{{AUR|mailnagger}}}}
 
 === Mail servers ===
 
@@ -651,7 +651,7 @@ The number of networks supported by these clients is very large but they (like a
 * {{App|Lith|WeeChat Relay client, allowing to connect to a running WeeChat instance from anywhere.|https://lith.app/|{{AUR|lith-git}}}}
 * {{App|[[Pidgin]]|Multi-protocol instant messaging client with audio support that uses libpurple and supports all its protocols (Bonjour, Gadu-Gadu, Groupwise, IRC, SIMPLE, XMPP, Zephyr).|https://pidgin.im/|{{AUR|pidgin}}}}
 * {{App|[[Wikipedia:Smuxi|Smuxi]]|Cross-platform IRC client that also supports XMPP.|https://smuxi.im/|{{AUR|smuxi}}}}
-* {{App|[[Thunderbird]]|Feature-rich email client supports instant messaging and chat using IRC and XMPP.|https://www.thunderbird.net/|{{Pkg|thunderbird}}}}
+* {{App|[[Thunderbird]]|Feature-rich email client supports instant messaging and chat using IRC, XMPP and Matrix.|https://www.thunderbird.net/|{{Pkg|thunderbird}}}}
 * {{App|glowing-bear-electron|A web client for WeeChat|https://glowing-bear.org/|{{AUR|glowing-bear-electron}}}}
 
 ==== IRC clients ====

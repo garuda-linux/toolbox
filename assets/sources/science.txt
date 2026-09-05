@@ -341,6 +341,7 @@ See also [[Wikipedia:List of astrometric solvers]].
 * {{App|FITSH|a software package for astronomical image processing|https://fitsh.net/|{{AUR|fitsh}}}}
 * {{App|GIMP Astronomy Plugins|Set of GIMP plugins for astronomical image processing.|http://hennigbuam.de/georg/gimp.html|{{AUR|gimp-plugin-astronomy}}}}
 * {{App|Ginga|A viewer for astronomical data FITS (Flexible Image Transport System) files|https://ejeschke.github.io/ginga/|{{AUR|python-ginga}}}}
+* {{App|Gnuastro|Collection of many command-line programs for the analysis and operations on FITS images. See the [https://www.gnu.org/software/gnuastro/manual/html_node/Gnuastro-programs-list.html full list of programs].|https://www.gnu.org/software/gnuastro/|{{AUR|gnuastro}}}}
 * {{App|Montage|An astronomical image mosaic engine|http://montage.ipac.caltech.edu/|{{AUR|montage}}}}
 * {{App|Munipack|A general astronomical image processing software|https://munipack.physics.muni.cz/|{{AUR|munipack}}, {{AUR|c-munipack}}}}
 * {{App|oaCapture|A planetary imaging application using Qt5|https://www.openastroproject.org/oacapture/|{{AUR|oacapture}}}}
@@ -369,6 +370,7 @@ See also [[Wikipedia:List of astrometric solvers]].
 * {{App|ERFA|Essential Routines for Fundamental Astronomy|https://github.com/liberfa/erfa|{{pkg|erfa}}}}
 * {{App|HEASoft|NASA high energy astrophysics library|https://heasarc.gsfc.nasa.gov/docs/software/lheasoft/|{{AUR|heasoft}}}}
 * {{App|libTheSky|Fortran library to compute the positions of celestial bodies and events with great accuracy|https://libthesky.sourceforge.net/|{{AUR|libthesky}}, {{AUR|libthesky-data}}}}
+* {{App|Gnuastro library|C and C++ library for astronomical data analysis.|https://www.gnu.org/software/gnuastro/manual/html_node/Gnuastro-library.html|{{AUR|gnuastro}}}}
 * {{App|Pal|Positional Astronomy Library.|https://github.com/Starlink/pal|{{AUR|starlink-pal}}}}
 * {{App|PyEphem|PyEphem provides scientific-grade astronomical computations|https://rhodesmill.org/pyephem/|{{AUR|python-pyephem}}}}
 * {{App|SOFA|Set of algorithms and procedures used in fundamental astronomy|https://www.iausofa.org/|{{AUR|sofa}}}}
@@ -398,12 +400,12 @@ See also [[Wikipedia:List of astrometric solvers]].
 
 === Calculators and CLI utilities ===
 
-* {{App|astroTools|Command-line tools for astronomy and astrophysics|https://astrotools.sourceforge.net/|{{AUR|astrotools}}}}
-* {{App|Gnuastro|Various programs and library functions for the manipulation and analysis of astronomical data|https://www.gnu.org/software/gnuastro/|{{AUR|gnuastro}}}}
-* {{App|Kosmorro|A program to calculate the ephemerides|https://kosmorro.space/|{{AUR|kosmorro}}}}
-* {{App|Project Pluto|Project Pluto supplies astronomical software, both commercial and freeware, to amateur and professional astronomers|https://www.projectpluto.com/|{{AUR|pluto-lunar-git}}, {{AUR|pluto-sat-code-git}}, {{AUR|pluto-jpl-eph-git}}, {{AUR|pluto-find-orb-git}}}}
-* {{App|star-charter|A command-line tool for producing vector-graphics charts of the night sky in SVG, PDF and PNG formats|https://github.com/dcf21/star-charter|{{AUR|star-charter-git}}}}
-* {{App|Sunwait|Calculate sunrise/sunset times with civil, nautical, astronomical and custom twilights|https://github.com/risacher/sunwait|{{AUR|sunwait}}}}
+* {{App|astroTools|Command-line tools for astronomy and astrophysics.|https://astrotools.sourceforge.net/|{{AUR|astrotools}}}}
+* {{App|Gnuastro|Various programs for the manipulation and analysis of astronomical data. See the [https://www.gnu.org/software/gnuastro/manual/html_node/Gnuastro-programs-list.html full list of programs].|https://www.gnu.org/software/gnuastro|{{AUR|gnuastro}}}}
+* {{App|Kosmorro|A program to calculate the ephemerides.|https://kosmorro.space/|{{AUR|kosmorro}}}}
+* {{App|Project Pluto|Project Pluto supplies astronomical software, both commercial and freeware, to amateur and professional astronomers.|https://www.projectpluto.com/|{{AUR|pluto-lunar-git}}, {{AUR|pluto-sat-code-git}}, {{AUR|pluto-jpl-eph-git}}, {{AUR|pluto-find-orb-git}}}}
+* {{App|star-charter|A command-line tool for producing vector-graphics charts of the night sky in SVG, PDF and PNG formats.|https://github.com/dcf21/star-charter|{{AUR|star-charter-git}}}}
+* {{App|Sunwait|Calculate sunrise/sunset times with civil, nautical, astronomical and custom twilights.|https://github.com/risacher/sunwait|{{AUR|sunwait}}}}
 
 === Management of telescopes and observatories ===
 
@@ -619,7 +621,6 @@ See also [[Wikipedia:List of software-defined radios]].
 
 === Distributed systems ===
 
-* {{App|Shadow|An open-source distributed system/network simulator/emulator hybrid (e.g. for [[Tor]] and [[Bitcoin]]).|https://shadow.github.io/|{{AUR|tor-shadow}}{{Broken package link|package not found}}}}
 * {{App|[[Wikipedia:SimGrid|SimGrid]]|A scientific instrument to study large-scale distributed systems.|https://simgrid.org/|{{AUR|simgrid}}}}
 
 === Networking ===

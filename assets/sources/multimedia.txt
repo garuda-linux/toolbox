@@ -66,7 +66,7 @@ See also [[Wikipedia:Comparison of image viewers]].
 * {{App|Vimiv (Qt port)|An image viewer with vim-like keybindings. It is written in python3 and PyQt5.|https://karlch.github.io/vimiv-qt/|{{AUR|vimiv-qt}}}}
 * {{App|vpv|Image viewer designed for scientific image visualization.|https://github.com/kidanger/vpv|{{AUR|vpv}}}}
 * {{App|Xloadimage|Classic X image viewer.|https://sioseis.com/xloadimage.html|{{Pkg|xloadimage}}}}
-* {{App|[[Wikipedia:XnView|XnView MP]]|Proprietary image viewer, browser and converter.|http://www.xnview.com/en/xnviewmp/|{{AUR|xnviewmp}}}}
+* {{App|[[Wikipedia:XnView|XnView MP]]|Proprietary image viewer, browser and converter.|https://www.xnview.com/en/xnviewmp/|{{AUR|xnviewmp}}}}
 * {{App|Xviewer|Simple image viewer, fork of Eye of GNOME.|https://github.com/linuxmint/xviewer|{{Pkg|xviewer}}}}
 
 === Image organizers ===
@@ -151,7 +151,7 @@ See also [[Wikipedia:Comparison of raster graphics editors]].
 * {{App|[[Wikipedia:MyPaint|MyPaint]]|Free software graphics application for digital painters.|https://mypaint.app|{{Pkg|mypaint}}}}
 * {{App|Obfuscate|Censor private information from any image.|https://apps.gnome.org/Obfuscate/|{{Pkg|obfuscate}}}}
 * {{App|PhotoFlare|Simple but powerful image editor originally inspired by PhotoFiltre.|https://photoflare.io/|{{Pkg|photoflare}}}}
-* {{App|[[Wikipedia:Pinta (software)|Pinta]]|Drawing and editing program modeled after [[Wikipedia:Paint.net|Paint.NET]]. Its goal is to provide a simplified alternative to GIMP for casual users.|https://pinta-project.com/|{{AUR|pinta}}}}
+* {{App|[[Wikipedia:Pinta (software)|Pinta]]|Drawing and editing program modeled after [[Wikipedia:Paint.net|Paint.NET]]. Its goal is to provide a simplified alternative to GIMP for casual users.|https://pinta-project.com/|{{Pkg|pinta}}}}
 * {{App|Pixelitor|Advanced image editor with support for layers, layer masks, text layers, multiple undo, blending modes, cropping, Gaussian blurring, unsharp masking, histograms, etc.|https://pixelitor.sourceforge.io/|{{AUR|pixelitor}}}}
 * {{App|Satty|Image annotation tool inspired by Swappy and Flameshot.|https://github.com/gabm/Satty|{{Pkg|satty}}}}
 * {{App|Swappy|Wayland native image annotation tool.|https://github.com/jtheoof/swappy|{{Pkg|swappy}}}}
@@ -229,7 +229,7 @@ See also [[Wikipedia:Comparison of font editors]].
 === 2D animation ===
 
 * {{App|Aseprite|Source-available software for creating pixel art and animations. Builds can either be [https://www.aseprite.org/#buy purchased from the developers] or compiled from source.|https://www.aseprite.org/|From source: {{AUR|aseprite}}, From binary: {{AUR|aseprite-bin}}}}
-* {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.mattbas.org/|{{Pkg|glaxnimate}}}}
+* {{App|Glaxnimate|Vector 2D animation software, mainly for Lottie and TGS formats, but have a good standard animated SVG export|https://glaxnimate.org/|{{Pkg|glaxnimate}}}}
 * {{App|[[Wikipedia:Toonz|OpenToonz]]|2D animation creation software. Gained popularity because it was used by Studio Ghibli in the past.|https://opentoonz.github.io/e/|{{Pkg|opentoonz}}}}
 * {{App|[[Wikipedia:Pencil2D|Pencil2D]]|Easy, intuitive tool to make 2D hand-drawn animations.|https://www.pencil2d.org/|{{Pkg|pencil2d}}}}
 * {{App|qStopMotion|Application for creating stop-motion animation movies. The users will be able to create stop-motions from pictures imported from a camera or from the harddrive and export the animation to different video formats such as mpeg or avi.|https://qstopmotion.org/|{{AUR|qstopmotion}}}}
@@ -418,6 +418,7 @@ Many applications in the [[#Video players]] section also support audio playback.
 * {{App|id3|Command-line utility to edit ID3 1.x and 2.x tags.|https://squell.github.io/id3/|{{AUR|id3}}}}
 * {{App|id3v2|Command line editor for id3v2 tags.|https://id3v2.sourceforge.net/|{{Pkg|id3v2}}}}
 * {{App|ffmpeg|the tags of various files (e.g. mp3, flac) can be changed with {{ic|-metadata}} option, latest ID3 2.4 support with option {{ic|-id3v2_version 4}}|https://ffmpeg.org|{{Pkg|ffmpeg}}}}
+* {{App|htagcli|Command line audio tagger and music library organizer.|https://github.com/jecaro/htagcli|{{AUR|htagcli-bin}}}}
 * {{App|mid3v2|CLI audio tag editor similar to 'id3v2'|https://github.com/quodlibet/mutagen|{{Pkg|python-mutagen}}}}
 * {{App|MP3Info|MP3 technical info viewer and ID3 1.x tag editor.|https://ibiblio.org/mp3info/|{{AUR|mp3info}}}}
 * {{App|MP3Unicode|Command line utility to convert ID3 tags in mp3 files between different encodings.|https://mp3unicode.sourceforge.net/|{{Pkg|mp3unicode}}}}
@@ -849,7 +850,7 @@ See also [[FFmpeg#Recording webcam]] and [[Wikipedia:Comparison of webcam softwa
 * {{App|Booth|A convergent camera app.|https://invent.kde.org/maui/maui-booth|{{AUR|maui-booth-git}}}}
 * {{App|cameractrls|Command line and graphical application for configuring v4l2 devices.|https://github.com/soyersoyer/cameractrls|{{Pkg|cameractrls}}}}
 * {{App|[[Wikipedia:Cheese (software)|Cheese]]|Take photos and videos with your webcam, with fun graphical effects. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/Cheese|{{AUR|cheese}}}}
-* {{App|COSMIC Camera|Camera application for the COSMIC desktop environment.|https://github.com/cosmic-utils/camera|{{AUR|cosmic-camera}}}}
+* {{App|COSMIC Camera|Camera application for the COSMIC desktop environment.|https://github.com/cosmic-utils/cosmic-ext-camera|{{AUR|cosmic-ext-camera}}}}
 * {{App|Deepin Camera|Tool to view camera, take photo and video.|https://github.com/linuxdeepin/deepin-camera|{{Pkg|deepin-camera}}}}
 * {{App|fswebcam|Small and simple command line webcam software that generates images for a webcam.|https://www.sanslogic.co.uk/fswebcam/|{{AUR|fswebcam}}}}
 * {{App|GNOME Camera|Take pictures and videos. Part of {{Grp|gnome}}.|https://apps.gnome.org/Snapshot/|{{Pkg|snapshot}}}}
@@ -880,7 +881,7 @@ See [[Optical disc drive#DVD-Video]].
 === Video thumbnails ===
 
 * {{App|Hana|Application to capture thumbnails from video files.|https://apps.kde.org/hana/|{{Pkg|hana}}}}
-* {{App|vcsi|Create video contact sheets. A video contact sheet is an image composed of video capture thumbnails arranged on a grid.|https://github.com/amietn/vcsi|{{AUR|vcsi}}}}
+* {{App|vcsi|Create video contact sheets. A video contact sheet is an image composed of video capture thumbnails arranged on a grid.|https://github.com/amietn/vcsi|{{Pkg|vcsi}}}}
 * {{App|Video Contact Sheet|Bash script meant to create video contact sheets (previews) of videos. Any video supported by mplayer and ffmpeg can be used.|https://p.outlyer.net/vcs{{Dead link|2025|11|17|status=SSL error}}|{{AUR|video-contact-sheet}}}}
 
 === Personal video recorders ===

@@ -585,15 +585,6 @@
     "aur": false
   },
   {
-    "name": "GOCR",
-    "description": "OCR engine which also supports barcode recognition.",
-    "url": "https://www-e.uni-magdeburg.de/jschulen/ocr/",
-    "pkgname": [
-      "gocr"
-    ],
-    "aur": false
-  },
-  {
     "name": "groff",
     "description": "GNU implementation of troff, a heirloom Unix document processing system and the default formatter for man pages.",
     "url": "https://www.gnu.org/software/groff/groff.html",
@@ -920,7 +911,7 @@
   {
     "name": "Marker",
     "description": "Simple yet robust Markdown editor.",
-    "url": "https://fabiocolacio.github.io/Marker/",
+    "url": "https://github.com/fabiocolacio/Marker",
     "pkgname": [
       "marker"
     ],
@@ -1675,7 +1666,7 @@
   },
   {
     "name": "Translate Shell",
-    "description": "Command-line interface and interactive shell for Google Translate.",
+    "description": "Command-line interface and interactive shell for Google Translate or other web services.",
     "url": "https://www.soimort.org/translate-shell/",
     "pkgname": [
       "translate-shell"
@@ -1706,15 +1697,6 @@
     "url": "https://github.com/typst/typst",
     "pkgname": [
       "typst"
-    ],
-    "aur": false
-  },
-  {
-    "name": "unoconv",
-    "description": "Libreoffice-based document converter.",
-    "url": "https://github.com/unoconv/unoconv",
-    "pkgname": [
-      "unoconv"
     ],
     "aur": false
   },
@@ -1928,7 +1910,7 @@
   {
     "name": "Zint",
     "description": "Barcode encoding library and command line tool supporting over 50 symbologies.",
-    "url": "http://zint.org.uk/",
+    "url": "https://zint.org.uk/",
     "pkgname": [
       "zint"
     ],
@@ -1937,7 +1919,7 @@
   {
     "name": "Zint Barcode Studio",
     "description": "Barcode generator GUI.",
-    "url": "http://zint.org.uk/",
+    "url": "https://zint.org.uk/",
     "pkgname": [
       "zint-qt"
     ],

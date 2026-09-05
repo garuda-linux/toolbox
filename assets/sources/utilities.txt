@@ -143,7 +143,7 @@ See also [[Wikipedia:Comparison of file managers]].
 ==== Console ====
 
 * {{App|Clex|File manager with full-screen user interface|https://github.com/xitop/clex|{{AUR|clex}}}}
-* {{App|CliFM|The command line file manager: full-featured, fast, extensible, and lightweight as hell.|https://github.com/leo-arch/clifm|{{AUR|clifm}}}}
+* {{App|Clifm|The command-line file manager: full-featured, fast, extensible, and lightweight as hell.|https://github.com/leo-arch/clifm|{{AUR|clifm}}}}
 * {{App|ded (Directory-Editor)|The enhancement of [https://groups.google.com/g/net.sources/c/_lGkTpsqyPE/m/SwhkKsBuayIJ dired], is similar to ''Emacs Dired''.|https://invisible-island.net/ded/|{{AUR|ded}}}}
 * {{App|[[Wikipedia:Dired|Dired]] (Directory Editor)|The file manager integrated with [[Emacs]].|https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html|{{Pkg|emacs}}}}
 * {{App|fff|A simple file manager written in Bash.|https://github.com/dylanaraps/fff|{{AUR|fff}}}}
@@ -266,7 +266,7 @@ For archiving and compression command-line tools, see [[Archiving and compressio
 * {{App|[[Wikipedia:GNOME Archive Manager|File Roller]]|Archive manager for the GNOME desktop. Part of {{Grp|gnome-extra}}.|https://wiki.gnome.org/Apps/FileRoller|{{Pkg|file-roller}}}}
 * {{App|LXQt File Archiver|Simple and lightweight desktop-agnostic Qt file archiver.|https://github.com/lxqt/lxqt-archiver|{{Pkg|lxqt-archiver}}}}
 * {{App|p7zip-gui|The GUI belonging to the p7zip software.|https://github.com/p7zip-project/p7zip|{{AUR|p7zip-gui}}}}
-* {{App|[[Wikipedia:PeaZip|PeaZip]]|Open source file and archive manager.|https://peazip.github.io/peazip-linux.html|GTK: {{AUR|peazip-gtk2-bin}}, Qt: {{AUR|peazip-qt-bin}}}}
+* {{App|[[Wikipedia:PeaZip|PeaZip]]|Open source file and archive manager.|https://peazip.github.io/peazip-linux.html|{{Pkg|peazip}}}}
 * {{App|[[Wikipedia:Xarchiver|Xarchiver]]|Lightweight desktop independent archive manager built with GTK.|https://github.com/ib/xarchiver|{{Pkg|xarchiver}}}}
 
 === Comparison, diff, merge ===
@@ -693,7 +693,6 @@ See also [[Wikipedia:List of game engines]].
 
 === Repository managers ===
 
-* {{App|Nexus 2|Nexus 2 Repository Manager (OSS)|https://www.sonatype.com/nexus-repository-oss{{Dead link|2025|08|15|status=404}}|{{AUR|nexus}}}}
 * {{App|Nexus 3|Nexus 3 Repository OSS|https://www.sonatype.com/nexus-repository-oss{{Dead link|2025|08|15|status=404}}|{{AUR|nexus-oss}}}}
 * {{App|Artifactory|Artifactory is an advanced Binary Repository Manager for use by build tools, dependency management tools and build servers|https://jfrog.com/artifactory/|{{AUR|artifactory-oss}}}}
 
@@ -728,6 +727,7 @@ See also [[Wikipedia:List of game engines]].
 * {{App|theShell On Screen Keyboard|Touchscreen keyboard for theShell.|https://github.com/vicr123/ts-kbd|{{AUR|ts-kbd}}}}
 * {{App|wvkbd|Virtual keyboard for Wayland and wlroots.|https://github.com/jjsullivan5196/wvkbd/|{{AUR|wvkbd}}}}
 * {{App|xvkbd|Virtual keyboard for X window system.|https://t-sato.in.coocan.jp/xvkbd/|{{AUR|xvkbd}}}}
+* {{App|Fcitx5 Osk|An on-screen keyboard designed to work with Fcitx5, especially on KDE Plasma Wayland.|https://github.com/fortime/fcitx5-osk/|{{AUR|fcitx5-osk-git}}}}
 
 === Keyboard layout switchers ===
 
@@ -808,7 +808,7 @@ See also [[Securely wipe disk]].
 * {{App|duff|A command-line utility for quickly finding duplicates in a given set of files.|https://github.com/elmindreda/duff|{{AUR|duff}}}}
 * {{App|fclones|Very fast duplicate file Finder written in rust.|https://github.com/pkolaczk/fclones|{{Pkg|fclones}}}}
 * {{App|[[Wikipedia:fdupes|fdupes]]|Program for identifying or deleting duplicate files residing within specified directories.|https://github.com/adrianlopezroche/fdupes|{{Pkg|fdupes}}}}
-* {{App|jdupes|Identify and take actions upon duplicate files.|https://www.jdupes.com/{{Dead link|2025|08|15|status=SSL error}}|{{AUR|jdupes}}}}
+* {{App|jdupes|Identify and take actions upon duplicate files.|https://www.jdupes.com/{{Dead link|2025|08|15|status=SSL error}}|{{Pkg|jdupes}}}}
 * {{App|rdfind|Command line tool that finds duplicate files. It compares files based on their content.|https://github.com/pauldreik/rdfind|{{Pkg|rdfind}}}}
 * {{App|rmlint|Tool to quickly find (and optionally remove) duplicate files and other lint.|https://github.com/sahib/rmlint|{{AUR|rmlint-git}}}}
 
@@ -955,7 +955,6 @@ See also [[Wikipedia:Font management software]].
 * {{App|Font Manager|Simple font management for GTK desktop environments.|https://fontmanager.github.io/|{{Pkg|font-manager}}}}
 * {{App|fontpreview|Simple shell script using fzf and sxiv for previewing fonts.|https://github.com/sdushantha/fontpreview|{{AUR|fontpreview}}}}
 * {{App|fontpreview-ueberzug|Shell script inspired by fontpreview that uses ueberzug instead of sxiv.|https://github.com/xlucn/fontpreview-ueberzug|{{AUR|fontpreview-ueberzug-git}}}}
-* {{App|Fonty Python|Manage, view and find your fonts.|https://savannah.nongnu.org/projects/fontypython|{{AUR|fontypython}}}}
 * {{App|GNOME Fonts|Font viewer for GNOME. Part of {{Grp|gnome}}.|https://apps.gnome.org/FontViewer/|{{Pkg|gnome-font-viewer}}}}
 * {{App|gtk2fontsel|Font selection and preview tool.|https://gtk2fontsel.sourceforge.net/|{{AUR|gtk2fontsel}}}}
 * {{App|KFontview|KDE application to view and install different types of fonts. Part of {{Grp|plasma}}.|https://invent.kde.org/plasma/plasma-workspace|{{Pkg|plasma-workspace}}}}

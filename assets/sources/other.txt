@@ -35,11 +35,13 @@ These applications support time, task and contacts management.
 
 * {{App|Calcurse|Text-based ncurses calendar and scheduling system (supports CalDAV)|https://calcurse.org|{{Pkg|calcurse}}}}
 * {{App|ccal|A console program which writes a calendar together with Chinese calendar to standard output.|https://ccal.chinesebay.com/ccal/ccal.htm|{{AUR|ccal}}}}
+* {{App|dateutils|Nifty command line date and time utilities; fast date calculations and conversion in the shell.|https://www.fresse.org/dateutils/|{{Pkg|dateutils}}}}
 * {{App|khal|Command-line (non-interactive) and ncurses (interactive) calendar system (supports CalDAV)|https://github.com/pimutils/khal|{{Pkg|khal}}}}
 * {{App|gcalcli|Command-line (non-interactive) Google Calendar for event management and agendas.|https://github.com/insanum/gcalcli|{{AUR|gcalcli}}}}
 * {{App|mail2rem|Small script for importing ''.ics'' calendars from Maildir to Remind calendar.|https://github.com/esovetkin/mail2rem|{{AUR|mail2rem-git}}}}
 * {{App|Pal|Very lightweight calendar with both interactive and non-interactive interfaces.|https://palcal.sourceforge.net/|{{AUR|pal}}}}
 * {{App|pcal|A tool to create pdf calendars from pcal input which can be exported by some calendar programs.|https://sourceforge.net/projects/pcal/|{{AUR|pcal}}}}
+* {{App|pdd|Tiny datetime diff calculator.|https://github.com/jarun/pdd|{{AUR|pdd}}}}
 * {{App|[[Remind]]|Highly sophisticated text-based calendaring and notification system.|https://dianne.skoll.ca/projects/remind/|{{Pkg|remind}}}}
 * {{App|When|Simple personal calendar program.|http://lightandmatter.com/when/when.html|{{Pkg|when}}}}
 * {{App|Wyrd|Text-based front-end to Remind, a calendar and alarm program used on UNIX and Linux computers.|https://gitlab.com/wyrd-calendar/wyrd|{{AUR|wyrd}}}}
@@ -81,7 +83,7 @@ These applications support time, task and contacts management.
 
 * {{App|Break Timer|Keeps track of how much you are using the computer, and it reminds you to take regular breaks. Works only in GNOME.|https://wiki.gnome.org/Apps/BreakTimer|{{Pkg|gnome-break-timer}}}}
 * {{App|RSI Break|Takes care of your health and regularly breaks your work to avoid repetitive strain injury (RSI) [https://bugs.kde.org/show_bug.cgi?id{{=}}422033 on Xorg].|https://apps.kde.org/rsibreak/|{{Pkg|rsibreak}}}}
-* {{App|Safe Eyes|Tool to reduce and prevent repetitive strain injury (RSI).|https://slgobinath.github.io/SafeEyes/|{{AUR|safeeyes}}}}
+* {{App|Safe Eyes|Tool to reduce and prevent repetitive strain injury (RSI).|https://slgobinath.github.io/safeeyes/|{{AUR|safeeyes}}}}
 * {{App|Work-break|Work and rest time balancer taking into account your current and today strain.|https://github.com/ShadoySV/work-break/|{{AUR|work-break}}}}
 * {{App|[[Wikipedia:Workrave|Workrave]]|Program that assists in the recovery and prevention of RSI [https://bbs.archlinux.org/viewtopic.php?id{{=}}285701 on Xorg].|https://workrave.org/|{{Pkg|workrave}}}}
 
@@ -143,7 +145,7 @@ See [[Wikipedia:Pomodoro Technique]] for an introduction.
 * {{App|Planify|Task manager with Todoist support.|https://useplanify.com/|{{AUR|planify}}}}
 * {{App|ptask|GTK task manager based on [[Wikipedia:Taskwarrior|Taskwarrior]].|https://wpitchoune.net/ptask/|{{AUR|ptask}}}}
 * {{App|sleek|todo.txt app with modern GUI. Based on the [[Electron]] platform.|https://github.com/ransome1/sleek/|{{AUR|sleek}}}}
-* {{App|Super Productivity|An advanced todo list app with timeboxing and time tracking capabilities. Based on the [[Electron]] platform.|https://super-productivity.com/|{{AUR|super-productivity-git}}}}
+* {{App|Super Productivity|An advanced todo list app with timeboxing and time tracking capabilities. Based on the [[Electron]] platform.|https://super-productivity.com/|{{Pkg|super-productivity}}}}
 * {{App|TickTick|Simple and effective proprietary to-do list and task manager app with seamless cloud synchronization across all your devices. Based on the [[Electron]] platform.|https://ticktick.com/|{{AUR|ticktick}}}}
 * {{App|Zanshin|To-do management application for KDE. Part of {{Grp|kde-pim}}.|https://apps.kde.org/zanshin/|{{Pkg|zanshin}}}}
 
@@ -400,7 +402,7 @@ Desktop shells provide a graphical shell layer on top of a window manager or com
 * {{App|AGS|Aylur's GTK Shell is a framework for building custom desktop shells using GTK.|https://aylur.github.io/ags/|{{AUR|aylurs-gtk-shell}}}}
 * {{App|DankMaterialShell|Desktop shell for Wayland compositors, built with Quickshell and Go.|https://github.com/AvengeMedia/DankMaterialShell|{{Pkg|dms-shell}}}}
 * {{App|eww|ElKowar's Wacky Widgets is a standalone widget system made in Rust that allows you to implement your own, custom widgets in any window manager.|https://github.com/elkowar/eww|{{AUR|eww}}}}
-* {{App|Noctalia|Minimal desktop shell for Wayland compositors, built on Quickshell.|https://noctalia.dev/|{{AUR|noctalia-shell}}}}
+* {{App|Noctalia|Minimal desktop shell for Wayland compositors, built on Quickshell.|https://noctalia.dev/|{{Pkg|noctalia}}}}
 * {{App|[[nwg-shell]]|Modular GTK3-based shell for Sway and Hyprland compositors.|https://nwg-piotr.github.io/nwg-shell/|{{Pkg|nwg-shell}}}}
 * {{App|wf-shell|Shell components for the Wayfire compositor.|https://github.com/WayfireWM/wf-shell|{{Pkg|wf-shell}}}}
 
@@ -567,7 +569,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 
 * {{App|cuDNN|NVIDIA CUDA Deep Neural Network library for high-performance GPU acceleration.|https://developer.nvidia.com/cudnn|{{Pkg|cudnn}}}}
 * {{App|[[Wikipedia:Fast Artificial Neural Network|Fast Artificial Neural Network]]|Library for developing feedforward Artificial Neural Networks.|https://leenissen.dk/fann/wp/|{{AUR|fann}}}}
-* {{App|ggml|Lightweight tensor library for on-device LLM inference.|https://github.com/ggml-org/ggml|{{AUR|libggml}}{{Broken package link|package not found}}}}
+* {{App|ggml|Lightweight tensor library for on-device LLM inference.|https://github.com/ggml-org/ggml|{{Pkg|ggml}}}}
 * {{App|[[Wikipedia:Orange (software)|Orange]]|Visual programming toolkit for data mining, ML and interactive visualization.|https://orange.biolab.si/|{{AUR|python-orange}}}}
 * {{App|[[Wikipedia:Prolog|Prolog]]|Logic-programming language for symbolic AI and computational linguistics.|https://www.swi-prolog.org/|{{Pkg|swi-prolog}}, {{AUR|gprolog}}, {{AUR|scryer-prolog}}}} 
 * {{App|[[Wikipedia:PyTorch|PyTorch]]|Dynamic neural-network framework with strong GPU acceleration.|https://pytorch.org/|{{Pkg|python-pytorch}}, {{Pkg|python-pytorch-cuda}}, {{Pkg|python-pytorch-opt}}, {{Pkg|python-pytorch-opt-cuda}}, {{Pkg|python-pytorch-rocm}}, {{Pkg|python-pytorch-opt-rocm}}}}
@@ -585,7 +587,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 
 * {{App|CTranslate2|A C++ and Python library for efficient inference with Transformer models.|https://github.com/OpenNMT/CTranslate2|{{AUR|ctranslate2}}, {{AUR|python-ctranslate2}}}}
 * {{App|describeimage|Describe images using Ollama.|https://github.com/ollama/ollama|{{Pkg|describeimage}}}}
-* {{App|[[llama.cpp]]|A high-performance C/C++ port of Facebook's LLaMA model, optimized for local execution.|https://github.com/ggerganov/llama.cpp|{{Pkg|llama-cpp-vulkan}}, {{Pkg|llama-cpp-rocm}}, {{AUR|llama.cpp-cuda}}}}
+* {{App|[[llama.cpp]]|A high-performance C/C++ port of Facebook's LLaMA model, optimized for local execution.|https://github.com/ggml-org/llama.cpp|{{Pkg|llama-cpp}}, {{AUR|llama.cpp-cuda}}}}
 * {{App|ik-llama.cpp|A fork of llama.cpp with additional state-of-the-art quantized models and improved performance.|https://github.com/ikawrakow/ik_llama.cpp |{{AUR|ik-llama.cpp}}, {{AUR|ik-llama.cpp-cuda}}, {{AUR|ik-llama.cpp-vulkan}}}}
 * {{App|ONNX Runtime|High-performance scoring engine for ML models with cross-platform support.|https://onnxruntime.ai/ |{{Pkg|onnxruntime-cpu}}, {{Pkg|onnxruntime-cuda}}, {{Pkg|onnxruntime-opt-cuda}}, {{Pkg|onnxruntime-rocm}}, {{Pkg|onnxruntime-opt-rocm}}}}
 * {{App|[[Ollama]]|A streamlined tool for creating, running, and sharing large language models locally.|https://ollama.com|{{Pkg|ollama}}, {{Pkg|ollama-cuda}}, {{Pkg|ollama-rocm}}}}
@@ -642,7 +644,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 === Coding assistants ===
 
 * {{App|Crush|A powerful terminal-based AI assistant for developers, providing intelligent coding assistance directly in your terminal.|https://charm.sh/crush|{{AUR|crush}}, {{AUR|crush-bin}}}}
-* {{App|Codename Goose|An extensible AI agent that goes beyond code suggestions - can install, execute, edit, and test with any LLM.|https://github.com/block/goose|{{AUR|codename-goose-bin}}}}
+* {{App|Codename Goose|An extensible AI agent that goes beyond code suggestions - can install, execute, edit, and test with any LLM.|https://github.com/block/goose|{{AUR|codename-goose-bin}}{{Broken package link|package not found}}}}
 * {{App|Claude Code|An agentic coding tool that lives in your terminal.|https://github.com/anthropics/claude-code|{{AUR|claude-code}}}}
 * {{App|codai|AI code assistant with session-based CLI for intelligent suggestions and refactoring.|https://github.com/meysamhadeli/codai|{{AUR|codai}}}}
 * {{App|CodeGPT|A CLI written in Go language that writes git commit messages or does a code review brief for you using ChatGPT AI (gpt-4, gpt-3.5-turbo model) and automatically installs a git prepare-commit-msg hook.|https://github.com/appleboy/CodeGPT|{{AUR|codegpt-bin}}}}
@@ -674,7 +676,7 @@ See also [[Wikipedia:Open-source artificial intelligence]], [[Wikipedia:Lists of
 * {{App|shisper|Script to generate subtitles and transcriptions using whisper.cpp.|https://github.com/M0Rf30/shisper|{{AUR|shisper-git}}}}
 * {{App|vibe|Transcribe audio/video offline using OpenAI Whisper with GUI interface.|https://thewh1teagle.github.io/vibe/|{{AUR|vibe-bin}}}}
 * {{App|VOICEVOX|Japanese TTS engine with anime-style character voices.|https://voicevox.hiroshiba.jp/|{{AUR|voicevox-appimage}}}}
-* {{App|whisper.cpp|A C/C++ port of OpenAI's Whisper model for efficient speech recognition.|https://github.com/ggml-org/whisper.cpp|{{Pkg|whisper-cpp-vulkan}}, {{Pkg|whisper-cpp-rocm}}, {{AUR|whisper.cpp-cuda}}, {{AUR|whisper.cpp-openvino}}}}
+* {{App|whisper.cpp|A C/C++ port of OpenAI's Whisper model for efficient speech recognition.|https://github.com/ggml-org/whisper.cpp|{{Pkg|whisper-cpp}} and {{Pkg|ggml}}-* optional backends}}
 * {{App|whisper.cpp-models|Pre-trained models for whisper.cpp in various sizes.|https://github.com/ggerganov/whisper.cpp|{{AUR|whisper.cpp-model-large-v3}}, {{AUR|whisper.cpp-model-medium}}, {{AUR|whisper.cpp-model-small}}, {{AUR|whisper.cpp-model-tiny}}}}
 * {{App|whispering|Open-source transcription application with global speech-to-text functionality.|https://whispering.bradenwong.com/|{{AUR|whispering-bin}}}}
 * {{App|wiggly-stt|Local speech-to-text with whisper.cpp and clipboard integration.|https://github.com/hansp27/wiggly-stt|{{AUR|wiggly-stt}}}}

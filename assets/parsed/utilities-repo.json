@@ -2349,6 +2349,15 @@
     "aur": false
   },
   {
+    "name": "PeaZip",
+    "description": "Open source file and archive manager.",
+    "url": "https://peazip.github.io/peazip-linux.html",
+    "pkgname": [
+      "peazip"
+    ],
+    "aur": false
+  },
+  {
     "name": "peg/leg",
     "description": "Recursive-descent parser generators for C.",
     "url": "https://www.piumarta.com/software/peg/",
