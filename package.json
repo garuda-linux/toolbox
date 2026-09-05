@@ -52,30 +52,31 @@
     "@app/renderer": "workspace:*"
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^22.2.0",
     "@electron-toolkit/eslint-config": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/emoji-js": "^3.5.2",
     "@types/mime-types": "^3.0.1",
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.4.1",
     "@types/pako": "^3.0.0",
-    "angular-eslint": "^22.1.0",
+    "angular-eslint": "^22.2.0",
     "electron": "43.3.0",
     "electron-builder": "26.15.3",
-    "eslint": "^10.8.0",
-    "eslint-plugin-oxlint": "^1.77.0",
+    "eslint": "^10.9.1",
+    "eslint-plugin-oxlint": "^1.81.0",
     "glob": "^13.0.6",
-    "oxfmt": "^0.62.0",
-    "oxlint": "^1.77.0",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
     "oxlint-tsgolint": "^7.0.2001",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.66.0",
+    "typescript-eslint": "^8.69.0",
     "vite": "catalog:"
   },
   "engines": {
-    "node": ">=24.0.0",
-    "pnpm": ">=11.0.0"
+    "node": ">=26.0.0",
+    "pnpm": ">=12.0.0"
   },
-  "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee"
+  "packageManager": "pnpm@12.3.4+sha512.961aa41fb077da3a04a441d9f8e15ebc0c96da8ef710b2eb67bf9ee7cb0610eabd48f1fd85f51cffe73846785fa0f87c56a3a872a1d893f8446741b5cce45457"
 }
