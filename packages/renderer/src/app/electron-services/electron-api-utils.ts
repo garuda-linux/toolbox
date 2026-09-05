@@ -130,6 +130,7 @@ export const osHostname = createDeferredFunction<() => string>('osHostname');
 export const osHomedir = createDeferredFunction<() => string>('osHomedir');
 export const osTmpdir = createDeferredFunction<() => string>('osTmpdir');
 export const osArgv = createAsyncDeferredFunction<() => Promise<string[]>>('osArgv');
+export const appVersion = createAsyncDeferredFunction<() => Promise<string>>('appVersion');
 
 // Notification operations
 export const notificationIsPermissionGranted = createDeferredFunction<() => boolean>('notificationIsPermissionGranted');

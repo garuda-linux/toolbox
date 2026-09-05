@@ -10,8 +10,14 @@ import {
 } from '@angular/router';
 import { ScrollTop } from '@openng/optimus-ui/scrolltop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { eventsOn, windowClose, windowRequestClose } from './electron-services/electron-api-utils.js';
+import {
+  appVersion as getAppVersion,
+  eventsOn,
+  windowClose,
+  windowRequestClose,
+} from './electron-services/electron-api-utils.js';
 import { DialogModule } from '@openng/optimus-ui/dialog';
+import { ButtonDirective } from '@openng/optimus-ui/button';
 import { DrawerModule } from '@openng/optimus-ui/drawer';
 import { TableModule } from '@openng/optimus-ui/table';
 import { ToastModule } from '@openng/optimus-ui/toast';
@@ -46,6 +52,7 @@ import { CommandPaletteService } from './components/command-palette/command-pale
   imports: [
     RouterModule,
     DialogModule,
+    ButtonDirective,
     ScrollTop,
     ShellComponent,
     DrawerModule,
@@ -88,6 +95,9 @@ export class AppComponent implements OnInit {
   protected readonly osService = inject(ElectronOsService);
   protected readonly shellService = inject(ElectronShellService);
   protected readonly taskManager = inject(TaskManagerService);
+
+  aboutDialogVisible = signal(false);
+  appVersion = signal<string>('5.1.2');
 
   applyButtonVisible = computed(() => this.taskManager.tasks().length > 0);
 
@@ -256,11 +266,7 @@ export class AppComponent implements OnInit {
       icon: 'pi pi-info-circle',
       label: 'About',
       translocoKey: 'menu.help.about',
-      command: () =>
-        this.notificationService.sendNotification({
-          title: this.translocoService.translate('menu.help.about'),
-          body: this.translocoService.translate('menu.help.aboutBody'),
-        }),
+      command: () => this.aboutDialogVisible.set(true),
     },
   ];
   private fileItems = [
@@ -417,6 +423,12 @@ export class AppComponent implements OnInit {
         firstNavigationComplete = true;
       }
     });
+
+    void getAppVersion()
+      .then((v: string) => {
+        if (v && v !== 'unknown') this.appVersion.set(v);
+      })
+      .catch(() => undefined);
 
     void this.osService.argv().then((args: string[]) => {
       if (args.includes('--setup-assistant')) {

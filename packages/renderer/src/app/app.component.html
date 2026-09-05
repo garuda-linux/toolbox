@@ -6,8 +6,8 @@
           @if (loadingService.loading()) {
             <p-progress-spinner
               [style]="{
-                width: '1.5rem',
-                height: '1.5rem',
+                'width': '1.5rem',
+                'height': '1.5rem',
                 'vertical-align': 'middle',
                 'margin-right': '1rem',
               }"
@@ -47,7 +47,7 @@
               size="small"
             >
               <ng-template #content>
-                {{ t("menu.pending") }}
+                {{ t('menu.pending') }}
               </ng-template>
             </p-splitbutton>
           }
@@ -58,17 +58,30 @@
         <p-scroll-top />
       </garuda-shell>
       <button class="app-mobile-menu-toggle" type="button" (click)="toggleMobileMenu()" aria-label="Menu">
-        @if(!mobileMenuVisible()) {
+        @if (!mobileMenuVisible()) {
           <i class="pi pi-bars"></i>
         } @else {
           <i class="pi pi-times"></i>
         }
       </button>
       @if (mobileMenuVisible()) {
-        <div class="app-mobile-menu-backdrop" (click)="mobileMenuVisible.set(false)"></div>
+        <div
+          class="app-mobile-menu-backdrop"
+          (click)="mobileMenuVisible.set(false)"
+          (keyup.enter)="mobileMenuVisible.set(false)"
+          tabindex="0"
+          role="button"
+          aria-label="Close menu"
+        ></div>
         <div class="app-mobile-menu-panel">
           @for (item of menuItems(); track item.id) {
-            <div class="app-mobile-menu-item" (click)="executeMobileItem(item)">
+            <div
+              class="app-mobile-menu-item"
+              (click)="executeMobileItem(item)"
+              (keyup.enter)="executeMobileItem(item)"
+              tabindex="0"
+              role="button"
+            >
               <i [class]="item.icon"></i>
               <span>{{ item.label }}</span>
               @if (item.items && item.items.length > 0) {
@@ -81,7 +94,13 @@
             @if (item.items && item.items.length > 0 && expandedMobileSection() === item.id) {
               <div class="app-mobile-menu-submenu">
                 @for (sub of item.items; track sub.id) {
-                  <div class="app-mobile-menu-subitem" (click)="executeMobileItem(sub)">
+                  <div
+                    class="app-mobile-menu-subitem"
+                    (click)="executeMobileItem(sub)"
+                    (keyup.enter)="executeMobileItem(sub)"
+                    tabindex="0"
+                    role="button"
+                  >
                     <i [class]="sub.icon"></i>
                     <span>{{ sub.label }}</span>
                   </div>
@@ -110,5 +129,44 @@
     <toolbox-console #consoleComponent />
     <toolbox-operation-manager #operationManagerComponent />
     <toolbox-command-palette />
+
+    <p-dialog
+      [header]="t('menu.help.about')"
+      [modal]="true"
+      [style]="{ width: '32rem', maxWidth: '95vw' }"
+      [visible]="aboutDialogVisible()"
+      (visibleChange)="aboutDialogVisible.set($event)"
+      appendTo="body"
+    >
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col items-center gap-3 text-center">
+          <img src="/assets/garuda-purple.svg" alt="Garuda" class="h-20 w-20 shrink-0" height="400" width="400" />
+          <div class="text-sm font-medium">{{ t('menu.help.aboutVersion', { version: appVersion() }) }}</div>
+        </div>
+        <p class="text-sm leading-relaxed">{{ t('menu.help.aboutBody') }}</p>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <a
+            class="text-primary hover:underline"
+            href="https://gitlab.com/garuda-linux/applications/toolbox"
+            target="_blank"
+            rel="noopener"
+            >{{ t('menu.help.aboutSourceCode') }}</a
+          >
+          <span class="text-surface-300">·</span>
+          <a class="text-primary hover:underline" href="https://forum.garudalinux.org" target="_blank" rel="noopener"
+            >{{ t('menu.help.aboutForum') }}</a
+          >
+          <span class="text-surface-300">·</span>
+          <a class="text-primary hover:underline" href="https://wiki.garudalinux.org" target="_blank" rel="noopener"
+            >{{ t('menu.help.aboutWiki') }}</a
+          >
+        </div>
+      </div>
+      <ng-template #footer>
+        <button pButton severity="secondary" (click)="aboutDialogVisible.set(false)">
+          {{ t('confirmation.accept') }}
+        </button>
+      </ng-template>
+    </p-dialog>
   </div>
 </ng-container>

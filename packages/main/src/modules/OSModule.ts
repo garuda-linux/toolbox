@@ -22,6 +22,17 @@ class OSModule implements AppModule {
       }
     });
 
+    ipcMain.handle('app:getVersion', async () => {
+      try {
+        return app.getVersion();
+      } catch (error: unknown) {
+        this.logger.error(`App version error: ${error instanceof Error ? error.message : String(error)}`);
+        throw new Error(`Failed to get app version: ${error instanceof Error ? error.message : error}`, {
+          cause: error,
+        });
+      }
+    });
+
     ipcMain.handle('os:argv', async () => {
       try {
         return process.argv;

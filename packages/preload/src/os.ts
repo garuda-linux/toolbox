@@ -66,6 +66,15 @@ export function getTmpdir(): string {
   }
 }
 
+export async function getAppVersion(): Promise<string> {
+  try {
+    return await ipcRenderer.invoke('app:getVersion');
+  } catch (err) {
+    error(`App version error: ${err instanceof Error ? err.message : String(err)}`);
+    return 'unknown';
+  }
+}
+
 export async function getArgv(): Promise<string[]> {
   try {
     return await ipcRenderer.invoke('os:argv');

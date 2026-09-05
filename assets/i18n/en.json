@@ -46,6 +46,10 @@
       "garudaStatus": "Check uptime status",
       "about": "About Garuda Toolbox",
       "aboutBody": "Garuda Toolbox is a system maintenance and diagnostics tool for Garuda Linux. It is designed to help users maintain their system and diagnose issues. It is built using Electron and Angular.",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutSourceCode": "Source code",
+      "aboutForum": "Forum",
+      "aboutWiki": "Wiki",
       "callExorcist": "Call the exorcist",
       "callExorcistTitle": "Called the exorcist!",
       "callExorcistBody": "You must be pretty desperate to click this button! I set up some special voodoo for you, if you're still having issues with the app, please report them on the Garuda Linux forum or our issue tracker."
