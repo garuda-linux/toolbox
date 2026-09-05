@@ -17,7 +17,7 @@ import { LocalePipe } from '../lang-pipe/locale.pipe';
   styleUrl: './language-packs.component.css',
 })
 export class LanguagePacksComponent {
-  selectedPacks = model<LanguagePacks>([]);
+  readonly selectedPacks = model<LanguagePacks>([]);
 
   protected readonly languagePacksService = inject(LanguagePacksService);
   private readonly osInteractService = inject(OsInteractService);

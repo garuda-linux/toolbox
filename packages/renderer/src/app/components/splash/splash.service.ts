@@ -3,7 +3,7 @@ import { Service, signal } from '@angular/core';
 
 @Service()
 export class SplashService {
-  isVisible = signal(false);
+  readonly isVisible = signal(false);
 
   progressText = document.getElementById('progress-text');
   progressBar = document.getElementById('progress-bar');

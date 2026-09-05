@@ -1,7 +1,7 @@
 @if (loadingService.loading()) {
   <div class="loader">
-    @if (customLoadingIndicator) {
-      <ng-container *ngTemplateOutlet="customLoadingIndicator" />
+    @if (customLoadingIndicator()) {
+      <ng-container *ngTemplateOutlet="customLoadingIndicator()" />
     } @else {
       <p-progress-spinner ariaLabel="loading" />
     }

@@ -41,29 +41,29 @@ export class BootRepairComponent implements OnInit {
   private readonly loadingService = inject(LoadingService);
   protected readonly transloco = inject(TranslocoService);
 
-  private luksRootMap = signal<Record<string, boolean>>({});
-  private luksMapperPathMap = signal<Record<string, string>>({});
+  private readonly luksRootMap = signal<Record<string, boolean>>({});
+  private readonly luksMapperPathMap = signal<Record<string, string>>({});
 
-  loading = signal(true);
-  disks = signal<DiskInfo[]>([]);
-  partitions = signal<PartitionInfo[]>([]);
-  linuxPartitions = signal<PartitionInfo[]>([]);
-  espPartitions = signal<PartitionInfo[]>([]);
-  isUefi = signal(false);
+  readonly loading = signal(true);
+  readonly disks = signal<DiskInfo[]>([]);
+  readonly partitions = signal<PartitionInfo[]>([]);
+  readonly linuxPartitions = signal<PartitionInfo[]>([]);
+  readonly espPartitions = signal<PartitionInfo[]>([]);
+  readonly isUefi = signal(false);
 
-  action = signal<BootRepairAction>('reinstall');
-  installTarget = signal<BootInstallTarget>('root');
-  backupRestoreTarget = signal<BackupRestoreTarget>('mbr');
+  readonly action = signal<BootRepairAction>('reinstall');
+  readonly installTarget = signal<BootInstallTarget>('root');
+  readonly backupRestoreTarget = signal<BackupRestoreTarget>('mbr');
 
-  selectedLocation = signal<string | null>(null);
-  selectedRoot = signal<string | null>(null);
-  currentRootPartition = signal<string>('');
-  luksPassword = signal('');
-  selectedRootIsLuks = computed(() => {
+  readonly selectedLocation = signal<string | null>(null);
+  readonly selectedRoot = signal<string | null>(null);
+  readonly currentRootPartition = signal<string>('');
+  readonly luksPassword = signal('');
+  readonly selectedRootIsLuks = computed(() => {
     const root = this.selectedRoot();
     return root ? this.luksRootMap()[root] : false;
   });
-  isCurrentInstalledRoot = computed(() => {
+  readonly isCurrentInstalledRoot = computed(() => {
     const selectedRoot = this.selectedRoot();
     if (this.configService.state().isLiveSystem !== false || !selectedRoot) {
       return false;
@@ -85,10 +85,10 @@ export class BootRepairComponent implements OnInit {
 
     return false;
   });
-  shouldShowLuksPrompt = computed(() => this.selectedRootIsLuks() && !this.isCurrentInstalledRoot());
+  readonly shouldShowLuksPrompt = computed(() => this.selectedRootIsLuks() && !this.isCurrentInstalledRoot());
 
-  locations = signal<{ label: string; value: string }[]>([]);
-  roots = signal<{ label: string; value: string }[]>([]);
+  readonly locations = signal<{ label: string; value: string }[]>([]);
+  readonly roots = signal<{ label: string; value: string }[]>([]);
 
   private formatRootOption(partition: PartitionInfo): { label: string; value: string } {
     const luksSuffix = this.luksRootMap()[partition.name]

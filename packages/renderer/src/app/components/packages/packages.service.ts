@@ -8,8 +8,8 @@ import { ElectronFsService, resolveResource } from '../../electron-services';
 
 @Service()
 export class PackagesService {
-  loading = signal<boolean>(true);
-  packages = signal<PackageSections>([
+  readonly loading = signal<boolean>(true);
+  readonly packages = signal<PackageSections>([
     {
       name: 'packages.documents',
       sections: [],

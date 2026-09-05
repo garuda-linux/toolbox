@@ -33,7 +33,7 @@ import { Router, type UrlTree } from '@angular/router';
   styleUrl: './system-tools.component.css',
 })
 export class SystemToolsComponent implements OnInit {
-  tabIndex = signal<number>(0);
+  readonly tabIndex = signal<number>(0);
 
   private readonly router = inject(Router);
 

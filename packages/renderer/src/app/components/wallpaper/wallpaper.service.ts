@@ -9,8 +9,8 @@ export class WallpaperService {
   private readonly logger = Logger.getInstance();
 
   // Signals to track renderer and element references
-  private renderer = signal<Renderer2 | null>(null);
-  private elementRef = signal<ElementRef | null>(null);
+  private readonly renderer = signal<Renderer2 | null>(null);
+  private readonly elementRef = signal<ElementRef | null>(null);
 
   constructor() {
     effect(() => {

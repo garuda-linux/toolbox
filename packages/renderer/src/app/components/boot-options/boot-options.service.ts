@@ -10,7 +10,7 @@ export class BootOptionsService {
   private readonly taskManager = inject(TaskManagerService);
   private readonly osInteract = inject(OsInteractService);
 
-  isVirtualMachine = signal<boolean>(false);
+  readonly isVirtualMachine = signal<boolean>(false);
   private vmChecked = false;
 
   setChroot(path: string) {

@@ -22,9 +22,9 @@ import { Logger } from '../../logging/logging';
   styleUrl: './system-settings.component.css',
 })
 export class SystemSettingsComponent implements OnInit {
-  currentShell = signal<Nullable<Shell>>(null);
-  currentDns = signal<Nullable<DnsProvider>>(null);
-  selectedBoxes = model<string[]>([]);
+  readonly currentShell = signal<Nullable<Shell>>(null);
+  readonly currentDns = signal<Nullable<DnsProvider>>(null);
+  readonly selectedBoxes = model<string[]>([]);
 
   protected readonly configService = inject(ConfigService);
   protected readonly osInteractService = inject(OsInteractService);

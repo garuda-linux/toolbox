@@ -9,13 +9,13 @@ import { OsInteractService } from '../task-manager/os-interact.service';
 
 @Service()
 export class KernelsService {
-  availableModules = signal<string[]>([]);
-  dkmsModules = signal<DkmsModules>([]);
-  dkmsModulesBroken = computed(() => this.dkmsModules().some((module) => module.status !== 'installed'));
-  dkmsModulesMissing = signal<boolean>(false);
-  kernels = signal<Kernels>([]);
-  headersMissing = computed(() => this.kernels().some((kernel) => kernel.selected && !kernel.headersSelected));
-  loading = signal<boolean>(true);
+  readonly availableModules = signal<string[]>([]);
+  readonly dkmsModules = signal<DkmsModules>([]);
+  readonly dkmsModulesBroken = computed(() => this.dkmsModules().some((module) => module.status !== 'installed'));
+  readonly dkmsModulesMissing = signal<boolean>(false);
+  readonly kernels = signal<Kernels>([]);
+  readonly headersMissing = computed(() => this.kernels().some((kernel) => kernel.selected && !kernel.headersSelected));
+  readonly loading = signal<boolean>(true);
 
   protected readonly configService = inject(ConfigService);
   private readonly loadingService = inject(LoadingService);

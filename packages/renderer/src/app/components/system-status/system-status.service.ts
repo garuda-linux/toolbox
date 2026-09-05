@@ -9,11 +9,11 @@ import { type ChildProcess, ElectronShellService } from '../../electron-services
 @Service()
 export class SystemStatusService {
   firstRun = true;
-  pacFiles = signal<string[]>([]);
-  updates = signal<SystemUpdate[]>([]);
-  updatesAur = signal<boolean>(false);
-  warnUpdate = signal<boolean>(false);
-  healthErrors = signal<HealthError[]>([]);
+  readonly pacFiles = signal<string[]>([]);
+  readonly updates = signal<SystemUpdate[]>([]);
+  readonly updatesAur = signal<boolean>(false);
+  readonly warnUpdate = signal<boolean>(false);
+  readonly healthErrors = signal<HealthError[]>([]);
 
   private readonly loadingService = inject(LoadingService);
   private readonly logger = Logger.getInstance();

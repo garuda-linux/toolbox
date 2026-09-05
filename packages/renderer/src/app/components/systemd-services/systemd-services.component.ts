@@ -21,14 +21,14 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   styleUrl: './systemd-services.component.css',
 })
 export class SystemdServicesComponent implements OnInit {
-  activeService = signal<SystemdService | null>(null);
-  includeDisabled = signal<boolean>(false);
-  hideDead = signal<boolean>(true);
-  loading = signal<boolean>(true);
-  serviceSearch = signal<string>('');
-  systemdServices = signal<SystemdService[]>([]);
+  readonly activeService = signal<SystemdService | null>(null);
+  readonly includeDisabled = signal<boolean>(false);
+  readonly hideDead = signal<boolean>(true);
+  readonly loading = signal<boolean>(true);
+  readonly serviceSearch = signal<string>('');
+  readonly systemdServices = signal<SystemdService[]>([]);
 
-  filteredServices = computed(() => {
+  readonly filteredServices = computed(() => {
     if (!this.hideDead()) {
       return this.systemdServices();
     }

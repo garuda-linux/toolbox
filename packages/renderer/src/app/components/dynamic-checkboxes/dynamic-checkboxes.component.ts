@@ -16,8 +16,8 @@ import { OsInteractService } from '../task-manager/os-interact.service';
   styleUrl: './dynamic-checkboxes.component.css',
 })
 export class DynamicCheckboxesComponent {
-  data = input.required<SystemToolsEntry[]>();
-  transformed = signal<SystemToolsEntry[]>([]);
+  readonly data = input.required<SystemToolsEntry[]>();
+  readonly transformed = signal<SystemToolsEntry[]>([]);
 
   protected readonly taskManagerService = inject(TaskManagerService);
   private readonly logger = Logger.getInstance();

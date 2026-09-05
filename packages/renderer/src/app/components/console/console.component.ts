@@ -40,7 +40,7 @@ import { FitAddon } from '@xterm/addon-fit';
   styleUrl: './console.component.css',
 })
 export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
-  public visible = model<boolean>(false);
+  public readonly visible = model<boolean>(false);
   private subscriptions: Subscription[] = [];
   private notifiedReady = false;
 

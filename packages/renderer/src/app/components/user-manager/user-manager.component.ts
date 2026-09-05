@@ -90,33 +90,33 @@ export class UserManagerComponent implements OnInit {
   );
   readonly groupNames = computed(() => [...this.userManagerService.currentGroups().keys()].sort());
 
-  activeUser = signal<ManagedUser | null>(null);
-  activeGroup = signal<ManagedGroup | null>(null);
+  readonly activeUser = signal<ManagedUser | null>(null);
+  readonly activeGroup = signal<ManagedGroup | null>(null);
 
-  userDialogVisible = signal<boolean>(false);
-  userDialogMode = signal<'add' | 'edit'>('add');
-  userDialogUsername = signal<string>('');
-  userDialogFullName = signal<string>('');
-  userDialogHome = signal<string>('');
-  userDialogShell = signal<string>('/bin/bash');
-  userDialogUid = signal<number | null>(null);
-  userDialogCreateHome = signal<boolean>(true);
-  userDialogSystem = signal<boolean>(false);
-  userDialogGroups = signal<string[]>([]);
-  userDialogPassword = signal<string>('');
-  userDialogPasswordConfirm = signal<string>('');
+  readonly userDialogVisible = signal<boolean>(false);
+  readonly userDialogMode = signal<'add' | 'edit'>('add');
+  readonly userDialogUsername = signal<string>('');
+  readonly userDialogFullName = signal<string>('');
+  readonly userDialogHome = signal<string>('');
+  readonly userDialogShell = signal<string>('/bin/bash');
+  readonly userDialogUid = signal<number | null>(null);
+  readonly userDialogCreateHome = signal<boolean>(true);
+  readonly userDialogSystem = signal<boolean>(false);
+  readonly userDialogGroups = signal<string[]>([]);
+  readonly userDialogPassword = signal<string>('');
+  readonly userDialogPasswordConfirm = signal<string>('');
 
-  addGroupVisible = signal<boolean>(false);
-  newGroupName = signal<string>('');
+  readonly addGroupVisible = signal<boolean>(false);
+  readonly newGroupName = signal<string>('');
 
-  groupMembersVisible = signal<boolean>(false);
-  groupMembersUser = signal<ManagedUser | null>(null);
-  groupMembersSelected = signal<string[]>([]);
+  readonly groupMembersVisible = signal<boolean>(false);
+  readonly groupMembersUser = signal<ManagedUser | null>(null);
+  readonly groupMembersSelected = signal<string[]>([]);
 
-  passwordVisible = signal<boolean>(false);
-  passwordUser = signal<ManagedUser | null>(null);
-  passwordValue = signal<string>('');
-  passwordConfirm = signal<string>('');
+  readonly passwordVisible = signal<boolean>(false);
+  readonly passwordUser = signal<ManagedUser | null>(null);
+  readonly passwordValue = signal<string>('');
+  readonly passwordConfirm = signal<string>('');
 
   ngOnInit(): void {
     void this.userManagerService.update().finally(() => this.loading.set(false));

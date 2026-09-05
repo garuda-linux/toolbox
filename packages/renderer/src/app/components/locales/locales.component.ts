@@ -16,7 +16,7 @@ import { Task, TaskManagerService } from '../task-manager/task-manager.service';
   styleUrl: './locales.component.css',
 })
 export class LocalesComponent implements OnInit {
-  selectedLocale = signal<string>('');
+  readonly selectedLocale = signal<string>('');
 
   protected readonly localesService = inject(LocalesService);
   private readonly configService = inject(ConfigService);

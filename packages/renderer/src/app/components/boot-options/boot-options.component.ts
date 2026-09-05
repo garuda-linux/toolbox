@@ -57,49 +57,49 @@ export class BootOptionsComponent implements OnInit {
   private readonly messageToastService = inject(MessageToastService);
   private readonly translocoService = inject(TranslocoService);
 
-  error = signal<string | null>(null);
-  warning = signal<string | null>(null);
+  readonly error = signal<string | null>(null);
+  readonly warning = signal<string | null>(null);
   syncEnabled = false;
-  previousFlatMenus = signal(false);
-  previousBootsplash = signal(false);
-  previousPlymouthTheme = signal<string>('');
+  readonly previousFlatMenus = signal(false);
+  readonly previousBootsplash = signal(false);
+  readonly previousPlymouthTheme = signal<string>('');
 
-  highlightDefaultEntry = signal(false);
+  readonly highlightDefaultEntry = signal(false);
 
-  isLive = signal(false);
-  partitions = signal<PartitionInfo[]>([]);
-  selectedPartition = signal<string | null>(null);
+  readonly isLive = signal(false);
+  readonly partitions = signal<PartitionInfo[]>([]);
+  readonly selectedPartition = signal<string | null>(null);
 
-  grubEntries = signal<BootEntry[]>([]);
-  selectableEntries = signal<BootEntry[]>([]);
-  plymouthThemes = signal<string[]>([]);
-  isPlymouthInstalled = signal<boolean>(false);
+  readonly grubEntries = signal<BootEntry[]>([]);
+  readonly selectableEntries = signal<BootEntry[]>([]);
+  readonly plymouthThemes = signal<string[]>([]);
+  readonly isPlymouthInstalled = signal<boolean>(false);
 
-  selectedDefaultEntry = signal<string>('');
-  timeout = signal<number>(5);
-  selectedPlymouthTheme = signal<string>('');
-  kernelParameters = signal<string>('');
-  enableBootsplash = signal<boolean>(false);
-  messageLevel = signal<'limited' | 'detailed' | 'veryDetailed'>('detailed');
+  readonly selectedDefaultEntry = signal<string>('');
+  readonly timeout = signal<number>(5);
+  readonly selectedPlymouthTheme = signal<string>('');
+  readonly kernelParameters = signal<string>('');
+  readonly enableBootsplash = signal<boolean>(false);
+  readonly messageLevel = signal<'limited' | 'detailed' | 'veryDetailed'>('detailed');
 
-  mitigationsOff = signal(false);
-  sysrqEnabled = signal(false);
-  flatMenus = signal(false);
-  saveDefault = signal(false);
-  osProberEnabled = signal(false);
+  readonly mitigationsOff = signal(false);
+  readonly sysrqEnabled = signal(false);
+  readonly flatMenus = signal(false);
+  readonly saveDefault = signal(false);
+  readonly osProberEnabled = signal(false);
 
-  grubBackground = signal('');
-  grubTheme = signal('');
+  readonly grubBackground = signal('');
+  readonly grubTheme = signal('');
 
-  editorDialogVisible = signal(false);
-  editorFileType = signal<'grub'>('grub');
-  editorEntry = signal<BootEntry | null>(null);
-  editorContent = signal('');
-  editorOriginalContent = signal('');
-  editorFullGrubCfg = signal('');
-  editorSaving = signal(false);
-  editorError = signal<string | null>(null);
-  isEditorModified = computed(() => this.editorContent() !== this.editorOriginalContent());
+  readonly editorDialogVisible = signal(false);
+  readonly editorFileType = signal<'grub'>('grub');
+  readonly editorEntry = signal<BootEntry | null>(null);
+  readonly editorContent = signal('');
+  readonly editorOriginalContent = signal('');
+  readonly editorFullGrubCfg = signal('');
+  readonly editorSaving = signal(false);
+  readonly editorError = signal<string | null>(null);
+  readonly isEditorModified = computed(() => this.editorContent() !== this.editorOriginalContent());
 
   messageLevelOptions = [
     { label: 'bootOptions.messageLevelLimited', value: 'limited' },

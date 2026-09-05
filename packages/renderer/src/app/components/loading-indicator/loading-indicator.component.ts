@@ -1,4 +1,4 @@
-import { Component, ContentChild, inject, input, type OnInit, type TemplateRef } from '@angular/core';
+import { Component, contentChild, inject, input, type OnInit, type TemplateRef } from '@angular/core';
 import { tap } from 'rxjs';
 import { LoadingService } from './loading-indicator.service';
 import { RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
@@ -12,10 +12,9 @@ import { NgTemplateOutlet } from '@angular/common';
   imports: [ProgressSpinner, NgTemplateOutlet],
 })
 export class LoadingIndicatorComponent implements OnInit {
-  detectRouteTransitions = input(false);
+  readonly detectRouteTransitions = input(false);
 
-  @ContentChild('loading')
-  customLoadingIndicator: TemplateRef<any> | null = null;
+  readonly customLoadingIndicator = contentChild<TemplateRef<any>>('loading');
 
   private readonly router = inject(Router);
   protected readonly loadingService = inject(LoadingService);

@@ -96,12 +96,12 @@ export class AppComponent implements OnInit {
   protected readonly shellService = inject(ElectronShellService);
   protected readonly taskManager = inject(TaskManagerService);
 
-  aboutDialogVisible = signal(false);
-  appVersion = signal<string>('5.1.2');
+  readonly aboutDialogVisible = signal(false);
+  readonly appVersion = signal<string>('5.1.2');
 
-  applyButtonVisible = computed(() => this.taskManager.tasks().length > 0);
+  readonly applyButtonVisible = computed(() => this.taskManager.tasks().length > 0);
 
-  rightClickMenu = signal<MenuItem[]>([
+  readonly rightClickMenu = signal<MenuItem[]>([
     {
       id: 'apply',
       label: 'Apply',
@@ -288,7 +288,7 @@ export class AppComponent implements OnInit {
     },
   ];
 
-  menuItems = signal<MenuItem[]>(
+  readonly menuItems = signal<MenuItem[]>(
     this.setupLabels(this.translocoService.getActiveLang(), [
       {
         id: 'file',
@@ -339,15 +339,15 @@ export class AppComponent implements OnInit {
   /**
    * App module search stuff.
    */
-  selectedModule = signal<string>('');
-  moduleSuggestions = signal<ModuleSearchEntry[]>([]);
-  dropdownModel = signal<MenuItem[]>([]);
-  dropdownVisible = signal<boolean>(false);
-  dropdownTop = signal<number>(0);
-  dropdownLeft = signal<number>(0);
-  activeDropdownId = signal<string | undefined>(undefined);
-  mobileMenuVisible = signal<boolean>(false);
-  expandedMobileSection = signal<string | undefined>(undefined);
+  readonly selectedModule = signal<string>('');
+  readonly moduleSuggestions = signal<ModuleSearchEntry[]>([]);
+  readonly dropdownModel = signal<MenuItem[]>([]);
+  readonly dropdownVisible = signal<boolean>(false);
+  readonly dropdownTop = signal<number>(0);
+  readonly dropdownLeft = signal<number>(0);
+  readonly activeDropdownId = signal<string | undefined>(undefined);
+  readonly mobileMenuVisible = signal<boolean>(false);
+  readonly expandedMobileSection = signal<string | undefined>(undefined);
 
   readonly menubarModel = computed<MenuItem[]>(() => {
     return this.menuItems().map((item) => {

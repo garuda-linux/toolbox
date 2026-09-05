@@ -1,4 +1,4 @@
-import { AvailableLangs, LangDefinition } from '@jsverse/transloco';
+import { AvailableLangs } from '@jsverse/transloco';
 
 /**
  * Available languages for i18n translations.

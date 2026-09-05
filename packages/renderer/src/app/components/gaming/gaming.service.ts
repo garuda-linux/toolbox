@@ -6,7 +6,7 @@ import { Logger } from '../../logging/logging';
 
 @Service()
 export class GamingService {
-  packages = signal<PackageSections>(gamingPackageLists);
+  readonly packages = signal<PackageSections>(gamingPackageLists);
 
   private readonly configService = inject(ConfigService);
   private readonly logger = Logger.getInstance();

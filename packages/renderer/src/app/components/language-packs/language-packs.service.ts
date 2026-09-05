@@ -8,8 +8,8 @@ import { LoadingService } from '../loading-indicator/loading-indicator.service';
 
 @Service()
 export class LanguagePacksService {
-  languagePacks = signal<LanguagePacks>([]);
-  loading = signal<boolean>(true);
+  readonly languagePacks = signal<LanguagePacks>([]);
+  readonly loading = signal<boolean>(true);
 
   private readonly loadingService = inject(LoadingService);
   private readonly logger = Logger.getInstance();

@@ -3,7 +3,7 @@ import type { CommandPaletteAction } from '../../interfaces';
 
 @Service()
 export class CommandPaletteService {
-  private actions = signal<CommandPaletteAction[]>([]);
+  private readonly actions = signal<CommandPaletteAction[]>([]);
 
   registerActions(...newActions: CommandPaletteAction[]): void {
     this.actions.update((current) => {

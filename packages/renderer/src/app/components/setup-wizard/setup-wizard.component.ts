@@ -41,9 +41,9 @@ export class SetupWizardComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly elementRef = inject(ElementRef);
 
-  protected hasApplied = signal<boolean>(false);
-  protected executionFailed = signal<boolean>(false);
-  protected activeTab = signal<number>(1);
+  protected readonly hasApplied = signal<boolean>(false);
+  protected readonly executionFailed = signal<boolean>(false);
+  protected readonly activeTab = signal<number>(1);
 
   get softwareCategories() {
     return this.setupWizardService.categories();

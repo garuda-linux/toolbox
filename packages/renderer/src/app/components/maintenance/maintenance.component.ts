@@ -37,10 +37,10 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   styleUrl: './maintenance.component.css',
 })
 export class MaintenanceComponent implements OnInit {
-  selectedResetConfigs = model<any[]>([]);
-  tabIndex = signal<number>(0);
+  readonly selectedResetConfigs = model<any[]>([]);
+  readonly tabIndex = signal<number>(0);
 
-  resettableConfigs = signal<ResettableConfig[]>([
+  readonly resettableConfigs = signal<ResettableConfig[]>([
     {
       name: 'Bash',
       description: 'maintenance.resettableConfigs.bash',

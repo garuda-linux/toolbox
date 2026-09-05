@@ -17,7 +17,7 @@ class PendingConfigUpdate {
 
 @Service()
 export class ConfigService {
-  state = signal<AppState>({
+  readonly state = signal<AppState>({
     availablePkgs: new Map<string, boolean>(),
     codeName: '',
     desktopEnvironment: '' as DesktopEnvironment,
@@ -30,7 +30,7 @@ export class ConfigService {
     user: '',
     userHome: '',
   });
-  settings = signal<AppSettings>({
+  readonly settings = signal<AppSettings>({
     activeTheme: 'Catppuccin Mocha/Latte Aura',
     autoRefresh: false,
     autoStart: true,

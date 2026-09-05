@@ -21,9 +21,9 @@ import { ButtonDirective } from '@openng/optimus-ui/button';
   styleUrl: './system-status.component.css',
 })
 export class SystemStatusComponent {
-  dialogVisible = signal<boolean>(false);
-  pacdiffDialogVisible = signal<boolean>(false);
-  healthDialogVisible = signal<boolean>(false);
+  readonly dialogVisible = signal<boolean>(false);
+  readonly pacdiffDialogVisible = signal<boolean>(false);
+  readonly healthDialogVisible = signal<boolean>(false);
 
   protected readonly configService = inject(ConfigService);
   protected readonly systemStatusService = inject(SystemStatusService);
@@ -77,11 +77,17 @@ export class SystemStatusComponent {
     );
   }
 
-  updateButtonDisabled = computed(() => this.taskManagerService.findTaskById('updateSystem') !== null);
-  healthFixAvailable = computed(() => this.systemStatusService.healthErrors().some((error) => error.fixAvailable));
+  readonly updateButtonDisabled = computed(() => this.taskManagerService.findTaskById('updateSystem') !== null);
+  readonly healthFixAvailable = computed(() =>
+    this.systemStatusService.healthErrors().some((error) => error.fixAvailable),
+  );
 
-  hasRegularUpdates = computed(() => this.systemStatusService.updates().some((update: SystemUpdate) => !update.aur));
-  hasAurUpdates = computed(() => this.systemStatusService.updates().some((update: SystemUpdate) => update.aur));
+  readonly hasRegularUpdates = computed(() =>
+    this.systemStatusService.updates().some((update: SystemUpdate) => !update.aur),
+  );
+  readonly hasAurUpdates = computed(() =>
+    this.systemStatusService.updates().some((update: SystemUpdate) => update.aur),
+  );
 
   /**
    * Schedule a system update, confirming with the user first. If confirmed, schedule the update.

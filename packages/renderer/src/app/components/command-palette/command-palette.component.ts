@@ -18,9 +18,9 @@ import { CommandPaletteService } from './command-palette.service';
   styleUrl: './command-palette.component.css',
 })
 export class CommandPaletteComponent {
-  visible = model<boolean>(false);
-  selectedItem = signal<any>(null);
-  suggestions = signal<any[]>([]);
+  readonly visible = model<boolean>(false);
+  readonly selectedItem = signal<any>(null);
+  readonly suggestions = signal<any[]>([]);
 
   private readonly router = inject(Router);
   private readonly translocoService = inject(TranslocoService);

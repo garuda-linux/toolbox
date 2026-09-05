@@ -1,8 +1,10 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "oxc", "promise"],
+  "jsPlugins": ["@angular-eslint/eslint-plugin"],
   "categories": {},
   "rules": {
+    "@angular-eslint/prefer-signals": "error",
     "for-direction": "warn",
     "no-async-promise-executor": "warn",
     "no-caller": "warn",
