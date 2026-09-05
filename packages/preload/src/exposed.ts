@@ -1,3 +1,4 @@
+import './splash-theme.js';
 import * as exports from './index.js';
 import { contextBridge } from 'electron';
 

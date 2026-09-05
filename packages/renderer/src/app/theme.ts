@@ -54,6 +54,11 @@ export type AppTheme =
 
 export type AppThemes = Record<string, Preset>;
 
+export const editionThemeMap: Record<string, AppTheme> = {
+  mokka: 'Catppuccin Mocha/Latte Aura',
+  dr460nized: 'Dr460nized Aura',
+};
+
 export const CatppuccinXtermJs = {
   light: {
     background: latte.colors.base.hex,

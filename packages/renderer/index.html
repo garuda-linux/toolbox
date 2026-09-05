@@ -227,6 +227,31 @@
         }
       }
     </style>
+    <script>
+      // Edition-aware splash before Angular boots, reads preload-exposed __garudaSplash
+      (function () {
+        try {
+          var t = window.__garudaSplash;
+          if (!t) return;
+          var s = document.getElementById('initial-splash');
+          if (s) s.style.background = t.bg;
+          var css =
+            '.splash-container{color:' +
+            t.fg +
+            '!important}' +
+            '.loading-text,.progress-text{color:' +
+            t.fg +
+            '!important}' +
+            '.progress-fill{background:' +
+            t.gradient +
+            '!important}';
+          var el = document.createElement('style');
+          el.id = 'edition-splash';
+          el.textContent = css;
+          document.head.appendChild(el);
+        } catch {}
+      })();
+    </script>
 
     <toolbox-root></toolbox-root>
     <script>

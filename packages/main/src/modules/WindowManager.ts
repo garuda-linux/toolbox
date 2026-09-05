@@ -4,6 +4,7 @@ import { BrowserWindow, screen, shell, Size } from 'electron';
 import type { AppInitConfig } from '../AppInitConfig.js';
 import { Logger } from '../logging/logging.js';
 import ElectronStore from 'electron-store';
+import { readFileSync } from 'fs';
 import Rectangle = Electron.Rectangle;
 
 class WindowManager implements AppModule {
@@ -72,7 +73,7 @@ class WindowManager implements AppModule {
       show: true,
       frame: true,
       title: 'Garuda Toolbox',
-      backgroundColor: '#1e1e2e',
+      backgroundColor: this.getWindowBackgroundColor(),
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -280,6 +281,35 @@ class WindowManager implements AppModule {
     window.focus();
 
     return window;
+  }
+
+  private getWindowBackgroundColor(): string {
+    const bgMap: Record<string, string> = { mokka: '#1e1e2e', dr460nized: '#090a0f' };
+    try {
+      const theme = this.store.get('activeTheme') as string | undefined;
+      if (theme) {
+        if (theme.includes('Dr460nized')) return bgMap.dr460nized;
+        if (theme.includes('Catppuccin')) return bgMap.mokka;
+      }
+    } catch {
+      // ignore
+    }
+
+    try {
+      const raw = readFileSync('/usr/lib/garuda/garuda-release', 'utf8');
+      const line = raw.split('\n').find((l) => l.trim().startsWith('EDITION='));
+      const edition = line
+        ?.split('=')[1]
+        ?.trim()
+        .replace(/^["']|["']$/g, '')
+        .toLowerCase();
+      if (edition === 'dr460nized') return bgMap.dr460nized;
+      if (edition === 'mokka') return bgMap.mokka;
+    } catch {
+      // ignore
+    }
+
+    return '#1e1e2e';
   }
 }
 

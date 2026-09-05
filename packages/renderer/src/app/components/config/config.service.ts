@@ -5,7 +5,7 @@ import { LoadingService } from '../loading-indicator/loading-indicator.service';
 import { Logger } from '../../logging/logging';
 import { LogLevel } from '../../logging/interfaces';
 import { definePreset, usePreset } from '@openng/optimus-ui-themes';
-import { AppTheme, themes } from '../../theme';
+import { AppTheme, editionThemeMap, themes } from '../../theme';
 import { ElectronOsService, ElectronShellService, notifyConfigChange, Store } from '../../electron-services';
 import type { CommandResult } from '../../types/shell';
 import { AVAILABLE_LANGUAGES } from '../../constants/i18n';
@@ -80,6 +80,7 @@ export class ConfigService {
       const initPromises: Promise<PendingConfigUpdate>[] = [
         this.initInstalledPkgs(),
         this.initLanguage(),
+        this.initEditionTheme(),
         this.initRebootPending(),
       ];
 
@@ -407,6 +408,49 @@ export class ConfigService {
       return { settings: { language: majorLanguage } };
     } catch (error) {
       this.logger.error(`Failed to initialize language: ${error}`);
+      return {};
+    }
+  }
+
+  /**
+   * Initialize theme from Garuda edition (via /usr/lib/garuda/garuda-release), only if not already stored.
+   */
+  private async initEditionTheme(): Promise<PendingConfigUpdate> {
+    try {
+      const store: Store = await getConfigStore('initEditionTheme');
+      if (!store) return {};
+      if (await store.has('activeTheme')) {
+        this.logger.debug(`Theme already set in store: ${await store.get('activeTheme')}`);
+        return {};
+      }
+
+      const result: CommandResult = await new this.shellService.Command('cat')
+        .args(['/usr/lib/garuda/garuda-release'])
+        .execute();
+      if (result.code !== 0) {
+        this.logger.debug(`No garuda-release found: ${result.stderr?.trim()}`);
+        return {};
+      }
+      const line = result.stdout.split('\n').find((l) => l.trim().startsWith('EDITION='));
+      if (!line) return {};
+
+      const edition = line
+        .split('=')[1]
+        ?.trim()
+        .replace(/^["']|["']$/g, '')
+        .toLowerCase();
+      if (!edition) return {};
+
+      const theme = editionThemeMap[edition];
+      if (!theme) {
+        this.logger.debug(`No theme mapping for edition: ${edition}`);
+        return {};
+      }
+
+      this.logger.debug(`Setting theme from edition: ${edition} -> ${theme}`);
+      return { settings: { activeTheme: theme } };
+    } catch (error) {
+      this.logger.error(`Failed to initialize edition theme: ${error}`);
       return {};
     }
   }
