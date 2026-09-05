@@ -1,722 +1,1557 @@
 {
-  "menu": {
-    "file": {
-      "title": "Datei",
-      "preferences": "Einstellungen",
-      "quit": "Beenden"
+  "bootOptions": {
+    "actions": "Aktionen",
+    "apply": "Einstellungen anwenden",
+    "bootEntries": "Booteinträge",
+    "cancel": "Abbrechen",
+    "configSaved": "GRUB-Konfiguration erfolgreich gespeichert",
+    "defaultEntry": "Standard-Booteintrag",
+    "defaultEntryHint": "Der Menüeintrag, der standardmäßig gebootet wird.",
+    "edit": "Bearbeiten",
+    "editConfigWarning": "Warnung: Das direkte Bearbeiten von GRUB-Konfigurationen kann gefährlich sein. Mit Vorsicht verwenden.",
+    "editEntry": "Booteintrag bearbeiten",
+    "editGrubDefault": "/etc/default/grub bearbeiten",
+    "editGrubDefaultHint": "Standardeinstellungen für GRUB bearbeiten. Erfordert Root-Rechte.",
+    "editingEntry": "Eintrag bearbeiten",
+    "enableBootsplash": "Bootsplash aktivieren",
+    "enableBootsplashHint": "Zeigt während des Bootvorgangs eine grafische Animation (Plymouth) anstelle von Textmeldungen.",
+    "entryId": "Eintrags-ID",
+    "entryName": "Eintragsname",
+    "entrySaved": "Booteintrag erfolgreich gespeichert",
+    "errorTitle": "Fehler",
+    "flatMenus": "Flache Menüs aktivieren",
+    "flatMenusHint": "Deaktiviert GRUB-Untermenüs und zeigt alle Einträge im Hauptmenü an.",
+    "grubBackground": "GRUB-Hintergrundbild",
+    "grubTheme": "GRUB-Theme",
+    "kernelParams": "Kernel-Parameter",
+    "kernelParamsHint": "Zusätzliche Parameter, die beim Booten an den Linux-Kernel übergeben werden.",
+    "kernelParamsPlaceholder": "z.B. quiet splash",
+    "messageLevel": "Boot-Meldungsdetails",
+    "messageLevelDetailed": "Detailliert (Quiet)",
+    "messageLevelHint": "Wähle aus, wie viele Informationen während des Bootvorgangs angezeigt werden.",
+    "messageLevelLimited": "Eingeschränkt (Quiet + Hush)",
+    "messageLevelVeryDetailed": "Sehr detailliert (Alle Meldungen)",
+    "mitigationsOff": "CPU-Mitigationen deaktivieren",
+    "mitigationsOffHint": "Deaktiviert CPU-Sicherheitsmitigationen für mehr Leistung bei geringerer Sicherheit.",
+    "partitionSelect": "Partition auswählen",
+    "partitionSelectHint": "Bitte wähle die Partition aus, die deine Garuda-Installation enthält.",
+    "plymouthNotInstalled": "Plymouth ist nicht installiert. Aktiviere es, um es beim Anwenden zu installieren.",
+    "plymouthPending": "Plymouth ist zur Installation vorgemerkt. Du kannst ein Theme wählen, sobald die Installation fertig ist.",
+    "plymouthTheme": "Plymouth-Theme (Bootsplash)",
+    "plymouthThemeHint": "Das während des Systemstarts angezeigte Theme.",
+    "plymouthVmWarning": "Du befindest dich in einer virtuellen Maschine. Plymouth Bootsplash funktioniert nur eingeschränkt.",
+    "previewComplete": "Vorschau abgeschlossen",
+    "previewCompleteMessage": "Die Plymouth-Theme-Vorschau ist beendet.",
+    "previewError": "Vorschau fehlgeschlagen",
+    "previewTheme": "Plymouth-Theme Vorschau",
+    "retry": "Wiederholen",
+    "save": "Speichern",
+    "saveDefault": "Standardeintrag speichern",
+    "saveDefaultHint": "Speichert automatisch den zuletzt ausgewählten Booteintrag als Standard.",
+    "savedMessage": "Boot-Einstellungen wurden erfolgreich angewendet.",
+    "savedMessageScheduled": "Boot-Einstellungen wurden zu den ausstehenden Operationen hinzugefügt.",
+    "savedTitle": "Einstellungen gespeichert",
+    "saveSuccess": "Erfolgreich gespeichert",
+    "searchOtherOs": "Nach anderen Betriebssystemen suchen",
+    "searchOtherOsHint": "Erkennt und fügt andere installierte Betriebssysteme automatisch über os-prober zum Bootmenü hinzu.",
+    "selectBackground": "Hintergrundbild auswählen",
+    "selectEntry": "Booteintrag auswählen",
+    "selectGrubTheme": "GRUB-Theme auswählen",
+    "selectTheme": "Plymouth-Theme auswählen",
+    "submenu": "Untermenü",
+    "sysrqEnabled": "SysRq immer aktivieren",
+    "sysrqEnabledHint": "Aktiviert die Magic-SysRq-Taste für Notfall-Systemsteuerung.",
+    "timeout": "Menü-Timeout",
+    "timeoutHint": "Wartezeit in Sekunden vor dem Booten des Standardeintrags.",
+    "title": "Boot-",
+    "titleTwo": "Optionen",
+    "unsavedChanges": "Du hast ungespeicherte Änderungen"
+  },
+  "bootRepair": {
+    "apply": "Anwenden",
+    "backupFile": "Sicherungsdatei",
+    "backupMbrPbr": "MBR oder PBR sichern",
+    "backupMbrPbrTip": "Erstelle ein Backup des Master Boot Record (MBR) oder Partition Boot Record (PBR) Bootcodes.",
+    "backupRestoreTarget": "Ziel für Sicherung oder Wiederherstellung:",
+    "deviceOrPartition": "Gerät oder Partition:",
+    "errorTitle": "Fehler",
+    "installOn": "Installieren auf:",
+    "location": "Speicherort:",
+    "luksPassword": "LUKS-Passwort:",
+    "luksPasswordPlaceholder": "LUKS-Passphrase eingeben",
+    "luksPasswordRequired": "Bitte gib das LUKS-Passwort für diese Root-Partition ein.",
+    "luksTag": "LUKS",
+    "options": "Optionen",
+    "partitionToMount": "Einzuhängende Partition:",
+    "reinstallGrub": "GRUB neu installieren",
+    "reinstallGrubTip": "GRUB-Bootloader auf einem bestimmten Datenträger oder einer Partition neu installieren.",
+    "repairGrubConfig": "GRUB-Konfiguration reparieren",
+    "repairGrubConfigTip": "GRUB-Konfigurationsdatei (grub.cfg) neu generieren, um alle installierten Betriebssysteme zu erkennen.",
+    "restoreMbrPbr": "MBR oder PBR aus Backup wiederherstellen",
+    "restoreMbrPbrTip": "Bootcode aus einer zuvor erstellten Sicherungsdatei wiederherstellen.",
+    "rootLocation": "Root-Speicherort:",
+    "selectLocation": "Bitte wähle einen Speicherort aus.",
+    "selectOperation": "Operation auswählen",
+    "selectRoot": "Bitte wähle eine Root-Partition aus.",
+    "successBackup": "Sicherung erfolgreich abgeschlossen.",
+    "successReinstall": "GRUB-Neuinstallation erfolgreich abgeschlossen.",
+    "successRepair": "GRUB-Reparatur erfolgreich abgeschlossen.",
+    "successRestore": "Wiederherstellung erfolgreich abgeschlossen.",
+    "successTitle": "Erfolg",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI System Partition. Eine UEFI-Partition zum Speichern von Bootloadern und Kernel-Images.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. Der traditionelle Bootsektor am Anfang eines Datenträgers.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record (VBR). Der erste Sektor einer bestimmten Partition.",
+    "targetRoot": "Root",
+    "title": "Boot-",
+    "titleTwo": "Reparatur"
+  },
+  "commandPalette": {
+    "hint": "Module und Aktionen durchsuchen",
+    "placeholder": "Befehl eingeben oder nach einem Modul suchen...",
+    "toClose": "zum Schließen"
+  },
+  "configFiles": {
+    "actions": "Aktionen",
+    "desc": {
+      "adjtime": "Wird von hwclock zur Synchronisierung der Hardwareuhr verwendet",
+      "alacritty": "GPU-beschleunigte Terminal-Konfiguration für Alacritty",
+      "alsa_base": "Optionen für ALSA-Kernel-Module",
+      "amdgpu_conf": "Kernel-Modul-Optionen für AMDGPU-Grafikkarten",
+      "ananicy": "Regeln für den Ananicy Auto-Nice-Daemon",
+      "asound_conf": "Systemweite ALSA-Audiokonfiguration",
+      "asoundrc": "Benutzerspezifische ALSA-Audiokonfiguration",
+      "bash_bashrc": "Systemweite Bash-Einstellungen für interaktive Shells",
+      "bashrc": "Bash-Konfigurationsdatei für den aktuellen Benutzer",
+      "blacklist_nouveau": "Blacklistet den quelloffenen Nouveau-Treiber",
+      "bluetooth_main": "Bluetooth-Daemon-Hauptkonfiguration",
+      "btrfsAssistant": "Konfiguration für den Btrfs Assistant",
+      "chaoticMirrorlist": "Spiegelserverliste für Garudas Chaotic-AUR-Repository",
+      "cinnamon": "Hauptkonfigurationsverzeichnis für den Cinnamon-Desktop",
+      "cpupower": "Konfiguration für das cpupower-Energieverwaltungstool",
+      "cron": "Konfiguration für geplante Cron-Jobs",
+      "cursorThemeSystem": "Systemweite Mauszeiger-Theme-Konfiguration",
+      "cursorThemeUser": "Benutzerspezifische Mauszeiger-Theme-Konfiguration",
+      "dunst": "Konfiguration für den Dunst-Benachrichtigungs-Daemon",
+      "environment": "Systemweite Umgebungsvariablen",
+      "environmentD": "Verzeichnis für systemweite Umgebungsvariablen (environment.d)",
+      "fastfetch": "Konfiguration für das Systeminformations-Tool Fastfetch",
+      "fish": "Konfigurationsdatei für die Fish-Shell",
+      "fontconfigSystem": "Systemweite Fontconfig-Schriftarteneinstellungen",
+      "fontconfigUser": "Benutzerspezifische Fontconfig-Schriftarteneinstellungen",
+      "fstab": "Statische Informationen über Dateisysteme und Einhängepunkte",
+      "gamemode": "Globale Konfiguration für das GameMode-Optimierungstool",
+      "garudaUpdateConfig": "Konfiguration für garuda-update Verhalten und Update-Flags",
+      "gdm": "Konfiguration für den GNOME Display Manager (GDM)",
+      "gitconfig": "Benutzerspezifische Git-Konfiguration",
+      "group": "Definiert System- und Benutzergruppen",
+      "grub": "Konfigurationsdatei für den GRUB-Bootloader",
+      "grub_cfg": "Generierte GRUB-Bootloader-Konfigurationsdatei",
+      "grubTheme": "Konfiguration für das GRUB-Bootloader-Theme",
+      "gtk3Settings": "Einstellungen für GTK 3.0-Anwendungen",
+      "gtk4Css": "Benutzerdefiniertes CSS-Styling für GTK 4.0-Anwendungen",
+      "gtk4Settings": "Einstellungen für GTK 4.0-Anwendungen",
+      "gtkrc2": "Einstellungen für ältere GTK 2.0-Anwendungen",
+      "hostname": "Hostname des Systems",
+      "hosts": "Statische Zuordnung von Hostnamen zu IP-Adressen",
+      "hosts_allow": "TCP-Wrapper zur Zugriffskontrolle von Netzwerkdiensten (erlaubt)",
+      "hosts_deny": "TCP-Wrapper zur Zugriffskontrolle von Netzwerkdiensten (verweigert)",
+      "hyprland": "Konfiguration für den Hyprland Wayland-Compositor",
+      "hyprpaper": "Konfiguration für das Hyprpaper-Hintergrundbild-Tool",
+      "i3": "Klassische X11 Tiling-Fenstermanager-Konfiguration für i3",
+      "iconTheme": "Symbol-Theme-Konfigurationseinstellungen",
+      "journald": "Konfiguration für den systemd-Journal-Protokolldienst",
+      "kcmfonts": "KDE-Schriftartenkonfigurationseinstellungen",
+      "kdeColorScheme": "Benutzerspezifische KDE-Farbschema-Definitionen",
+      "kdeglobals": "Globale KDE Plasma-Konfigurationseinstellungen",
+      "kdeLookandFeel": "KDE Globales Theme (Look and Feel) Einstellungen",
+      "kitty": "Funktionsreiche, GPU-beschleunigte Terminal-Konfiguration für Kitty",
+      "kvantumConfig": "Konfiguration für die Kvantum SVG-Themen-Engine",
+      "kwinrc": "Konfiguration für den KWin-Fenstermanager",
+      "lightdm": "Konfiguration für den LightDM Display Manager",
+      "locale": "Systemweite Locale- und Sprachkonfiguration",
+      "locale_gen": "Liste der auf dem System generierten Locales",
+      "logind": "Konfiguration für den systemd-Anmeldemanager (systemd-logind)",
+      "makepkgConf": "Konfigurationsoptionen für makepkg",
+      "mako": "Konfiguration für den Mako-Benachrichtigungs-Daemon",
+      "mangohud": "Konfiguration für das MangoHud-Leistungs-Overlay",
+      "mirrorlist": "Standard-Spiegelserverliste für Arch Linux-Repositories",
+      "mkinitcpio": "Konfiguration zur Erstellung der initialen Ramdisk-Umgebung (initramfs)",
+      "modprobe_d": "Konfiguration und Optionen für Kernel-Module (modprobe.d)",
+      "networkmanager": "Globale Konfiguration für NetworkManager",
+      "nftables": "Konfiguration für die nftables-Firewall",
+      "nvidia_conf": "Kernel-Modul-Optionen für NVIDIA-Grafikkarten",
+      "os_release": "Informationen über das Betriebssystem",
+      "pacman_hooks": "Pacman-Hooks zur Automatisierung bei Paketoperationen",
+      "pacmanConf": "Hauptkonfigurationsdatei für die Pacman-Paketverwaltung",
+      "pam": "Konfigurationsdateien für Pluggable Authentication Modules (PAM)",
+      "pam_d": "PAM-Konfigurationsdateien für Authentifizierungsdienste",
+      "passwd": "Enthält Benutzerkontoinformationen",
+      "pipewire_client": "PipeWire-Client-Konfiguration",
+      "pipewire_conf": "PipeWire-Daemon-Konfiguration auf Benutzerebene",
+      "plasmaApplets": "Konfiguration für Plasma-Desktop-Miniprogramme (Applets)",
+      "plasmaEnv": "Umgebungsvariablen für den Plasma-Arbeitsbereich",
+      "plasmarc": "Hauptkonfiguration für die Plasma-Shell",
+      "plymouthConf": "Konfiguration für den Plymouth-Bootsplash-Daemon",
+      "profile": "Benutzerspezifische Umgebung und Autostart-Programme",
+      "pulse_daemon": "PulseAudio-Daemon-Einstellungen",
+      "pulse_default": "PulseAudio-Startskript",
+      "qtile": "Python-basierte Fenstermanager-Konfiguration für Qtile",
+      "resolv": "DNS-Resolver-Konfigurationsdatei",
+      "rofi": "Konfiguration für den Rofi-Anwendungsstarter und Fensterschalter",
+      "rsyslog": "Hauptkonfiguration für den rsyslog-Daemon",
+      "sddm": "Konfiguration für den Simple Desktop Display Manager (SDDM)",
+      "shadow": "Enthält gehashte Passwörter und Kontoablaufinformationen",
+      "snapperRoot": "Snapper-Konfiguration für die Root-Partition",
+      "ssh_user": "Benutzerspezifische SSH-Client-Konfiguration",
+      "sshd": "Konfigurationsdatei für den OpenSSH-Server-Daemon",
+      "starship": "Konfiguration für den plattformübergreifenden Starship-Prompt",
+      "sudoers": "Konfiguriert Berechtigungen für sudo",
+      "sway": "Konfiguration für den Sway Wayland-Compositor",
+      "sysctl": "Kernel-Parameter (Netzwerk, Leistung, Sicherheit)",
+      "systemd_network": "Konfigurationsdateien für systemd-networkd",
+      "systemd_services": "Benutzerdefinierte oder überschriebene systemd-Dienstdefinitionen",
+      "systemd_timers": "systemd-Timer für zeitgesteuerte Aufgaben",
+      "systemdSystem": "Globale systemd-Systemkonfiguration",
+      "systemdUser": "Globale systemd-Benutzerkonfiguration",
+      "timezone": "Legt die Systemzeitzone fest",
+      "udev_rules": "udev-Regeln für das Verhalten von Hardwaregeräten",
+      "userdirs": "XDG-Benutzerverzeichnisse-Konfiguration",
+      "vconsole": "Konfiguration der virtuellen Konsole (Tastaturbelegung & Schriftart)",
+      "waybar": "Hauptkonfiguration für die Waybar-Statusleiste",
+      "waybarStyle": "CSS-Stile für die Waybar-Statusleiste",
+      "wayfire": "Konfiguration für den 3D-Wayland-Compositor Wayfire",
+      "wayland_conf": "Benutzerspezifische Wayland-Compositor-Konfigurationsdateien",
+      "wireplumber": "WirePlumber Session-Manager-Konfigurationsverzeichnis",
+      "wofi": "Konfiguration für den Wofi-Anwendungsstarter",
+      "xfce4": "Hauptkonfigurationsverzeichnis für den Xfce4-Desktop",
+      "xorg_conf": "Klassische Hauptkonfigurationsdatei für Xorg",
+      "xorg_conf_d": "Verzeichnis für modulare Xorg-Konfigurationsschnipsel",
+      "xorg_gpu": "GPU-spezifische Xorg-Konfiguration (Treiber, BusID, Bildschirme)",
+      "xorg_monitor": "Monitor-Layout, Auflösung und Bildwiederholrate für Xorg",
+      "zramGenerator": "Konfiguration für den zram-generator",
+      "zsh": "Zsh-Konfigurationsdatei für den aktuellen Benutzer"
     },
-    "modules": {
-      "title": "Module",
-      "search": "Suchoptionen",
-      "diagnostics": "Diagnostik",
-      "maintenance": "Wartung",
-      "systemSettings": "Systemeinstellungen",
-      "components": "Systemkomponenten",
-      "gaming": "Gaming",
-      "locales": "Sprachoptionen",
-      "appSettings": "Programmeinstellungen",
-      "kernels": "Kernel",
-      "welcome": "Willkommen",
-      "systemdServices": "Systemd Dienste",
-      "packages": "Pakete"
-    },
-    "welcome": "Willkommen",
-    "maintenance": "Wartung",
-    "systemTools": "Systemeinstellungen",
-    "components": "Komponenten",
-    "gaming": "Gaming",
-    "boot": "Boot-Werkzeuge",
-    "diagnostics": "Diagnose",
-    "network": "Netzwerkwerkzeuge",
-    "settings": "App-Einstellungen",
-    "apply": "Ausstehende operationen anwenden",
-    "pending": "Ausstehend",
-    "clearTasks": "Aufgaben leeren",
-    "help": {
-      "title": "Hilfe",
-      "getHelpForum": "Hilfe im Forum erhalten",
-      "getHelpWiki": "Inhalte im Wiki suchen",
-      "getHelpArchWiki": "Inhalte im Arch Wiki suchen",
-      "garudaStatus": "Uptime-Status prüfen",
-      "about": "Über Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox ist ein Systemwartungs- und Diagnosewerkzeug für Garuda Linux. Es soll Benutzern helfen, ihr System zu warten und Probleme zu diagnostizieren. Es wurde mit Electron und Angular erstellt.",
-      "callExorcist": "Den Exorzisten rufen",
-      "callExorcistTitle": "Der Exorzist wurde gerufen!",
-      "callExorcistBody": "Du musst ziemlich verzweifelt sein, um auf diesen Knopf zu klicken! Ich habe speziellen Voodoo für dich eingerichtet. Falls du immer noch Probleme mit der App hast, melde sie bitte im Garuda Linux Forum oder in unserem Issue Tracker."
-    },
-    "terminalRunning": "Laufende Aufgaben",
-    "terminalTasks": "Aufgaben ausführen",
-    "console": "Terminal anzeigen"
+    "description": "Beschreibung",
+    "edit": "Bearbeiten",
+    "name": "Name",
+    "path": "Pfad",
+    "search": "Konfigurationsdateien durchsuchen...",
+    "title": "Konfigurations-",
+    "titleTwo": "Dateien",
+    "wiki": "Wiki"
+  },
+  "confirmation": {
+    "accept": "Akzeptieren",
+    "applyOperations": "Operationen anwenden?",
+    "applyOperationsBody": "Bist du sicher, dass du alle ausstehenden Operationen anwenden möchtest?",
+    "cancel": "Abbrechen",
+    "createSnapshotBefore": "Btrfs-Snapshot vor der Ausführung erstellen",
+    "exitApp": "Bist du sicher, dass du die App beenden möchtest?",
+    "exitAppHeader": "App beenden?",
+    "exitAppRunningAction": "Bist du sicher, dass du die App beenden möchtest? Es läuft gerade eine Aktion!",
+    "password": "Passwort",
+    "reject": "Abbrechen",
+    "resetConfigsBody": "Bist du sicher, dass du die folgenden Konfigurationen zurücksetzen möchtest?",
+    "resetConfigsHeader": "Konfigurationen zurücksetzen?",
+    "save": "In dieser Sitzung zwischenspeichern",
+    "subtitle": "Bitte gib dein Passwort ein, um fortzufahren",
+    "title": "Authentifizierung erforderlich",
+    "useOnce": "Nur einmal verwenden"
+  },
+  "console": {
+    "abortAll": "Alle Aktionen abbrechen",
+    "clearCachedData": "Der Ausgabe-Cache wurde geleert.",
+    "clearCachedDataTitle": "Ausgabe-Cache geleert",
+    "clearOutputCache": "Ausgabe-Cache leeren",
+    "copyOutput": "Konsolenausgabe kopieren",
+    "copyToClipboard": "Die Ausgabe wurde erfolgreich in deine Zwischenablage kopiert.",
+    "copyToClipboardTitle": "In Zwischenablage kopiert",
+    "noOutput": "Keine Ausgabe",
+    "noTasksPending": "Keine ausstehenden Aufgaben",
+    "opRunning": "Die Operation läuft bereits.",
+    "outputExists": "Es scheint bereits eine Aktion zu laufen. Bitte warte, bis diese beendet ist, bevor du Protokolle ansiehst.",
+    "printScripts": "Skripte ausgeben",
+    "removeAll": "Alle Aktionen entfernen",
+    "runActions": "Aktionen ausführen",
+    "tasksAppearHere": "Aufgaben erscheinen hier, wenn du Elemente auswählst.",
+    "title": "Konsole",
+    "uploadPrivateBin": "Auf PrivateBin hochladen"
   },
   "diagnostics": {
+    "copySuccess": "Erfolgreich in die Zwischenablage kopiert",
+    "dmesg": "Kernelprotokolle (dmesg)",
+    "dmesgDesc": "Meldungen des Kernel-Ringpuffers untersuchen.",
+    "exitCode": "Befehl wurde mit Code {{code}} beendet",
+    "failedCmd": "Etwas ist schiefgelaufen und es konnten keine Diagnosedaten abgerufen werden",
+    "failedCmdHeader": "Befehl konnte nicht ausgeführt werden",
+    "full": "Vollständige Diagnose",
+    "fullDesc": "Alle verfügbaren Diagnoseinformationen in einer Ausgabe sammeln.",
+    "health": "Systemzustand",
+    "healthDesc": "Systemzustandsprüfung mit garuda-health durchführen.",
+    "inxi": "Allgemeine Infos (inxi)",
+    "inxiDesc": "Detaillierte Hardware- und Systeminformationen sammeln.",
+    "journalctl": "Systemprotokolle (journalctl)",
+    "journalctlDesc": "Systemprotokolle des Journal-Daemons untersuchen.",
+    "pacman": "Neueste Pacman-Protokolle",
+    "pacmanDesc": "Die neuesten Protokolle der Pacman-Paketverwaltung anzeigen.",
+    "subtitle": "Finde die Informationen, die du zum Debuggen deines Systems benötigst",
+    "success": "Erfolg",
+    "systemctl": "Systemdienste (systemctl)",
+    "systemctlDesc": "Systemstartleistung und Dienststatus analysieren.",
     "title": "Debug-Infos ",
     "titleTwo": "und Diagnose",
-    "subtitle": "Finde die Informationen, die du zum Debuggen deines Systems benötigst",
-    "inxi": "Allgemeine Infos (inxi)",
-    "systemctl": "Systemdienste (systemctl)",
-    "journalctl": "Systemprotokolle (journalctl)",
-    "dmesg": "Kernelprotokolle (dmesg)",
-    "full": "Vollständige Diagnose",
     "upload": "Auf PrivateBin hochladen",
-    "failedCmdHeader": "Befehl konnte nicht ausgeführt werden",
-    "failedCmd": "Etwas ist schiefgelaufen und es konnten keine Diagnosedaten abgerufen werden",
-    "pacman": "Neueste Pacman-Protokolle",
-    "copySuccess": "Erfolgreich in die Zwischenablage kopiert",
-    "success": "Erfolg",
+    "uploadDesc": "Aktuelle Terminalausgabe zum Teilen auf PrivateBin hochladen.",
     "uploadSuccess": "Erfolgreich auf PrivateBin hochgeladen, URL in die Zwischenablage kopiert"
   },
-  "lang": {
-    "title": "Sprachauswahl",
-    "tooltip": "Wähle deine bevorzugte Sprache"
-  },
-  "welcome": {
-    "title": "Willkommen bei ",
-    "titleTwo": "Garuda Linux",
-    "subtitle": "Die ultimative Linux-Distribution für Gaming und Multimedia",
-    "maintenance": "Wartung",
-    "maintenanceSub": "Halte dein System in gutem Zustand",
-    "systemTools": "Systemeinstellungen",
-    "systemToolsSub": "Konfiguriere dein System",
-    "gaming": "Gaming-Apps",
-    "gamingSub": "Spiele deine Lieblingsspiele",
-    "bootTools": "Boot-Werkzeuge",
-    "bootToolsSub": "Verwalte deine Boot-Einstellungen",
-    "network": "Netzwerkwerkzeuge",
-    "networkSub": "Verwalte deine Netzwerkeinstellungen",
-    "diagnostics": "Diagnose",
-    "diagnosticsSub": "Überprüfe den Zustand deines Systems",
-    "install": "Garuda Linux installieren",
-    "installSub": "Hol dir Garuda Linux auf dein System",
-    "chroot": "Chroot in Garuda",
-    "chrootSub": "Wechsle per Chroot in deine Garuda-Installation",
-    "startpage": "Startseite",
-    "startpageSub": "Öffne die Garuda Linux Startseite",
-    "setupAssistant": "Einrichtungsassistent",
-    "setupAssistantSub": "Führe den Garuda Einrichtungsassistenten aus",
-    "hello": "Hallo",
-    "error": "Ein Fehler ist aufgetreten.",
-    "gitlab": "",
-    "gitlabSub": "Sehen Sie sich den Quellcode an",
-    "chaotic": "",
-    "chaoticSub": "Paketupdates, etc. durchsuchen",
-    "searxng": "",
-    "searxngSub": "Suchmaschine, die Ihre Privatsphäre respektiert",
-    "whoogle": "",
-    "whoogleSub": "Datenschutz respektierende Suchmaschine",
-    "vaultwarden": "",
-    "vaultwardenSub": "Bitwarden-kompatibler, sicherer Passwort-Manager",
-    "donate": "Spenden",
-    "donateSub": "Unterstützen Sie das Garuda Linux-Projekt"
+  "error": {
+    "sudoPassword": "Das scheint nicht das korrekte Passwort zu sein. Bitte versuche es erneut."
   },
   "gaming": {
-    "title": "Gaming- ",
-    "titleTwo": "Apps",
-    "subtitle": "Lass uns mit einigen Gaming-Apps loslegen!",
-    "launchers": "Spiele-Starter",
-    "wine": "",
-    "loading": "Wird geladen...",
-    "tools": "Gaming-Werkzeuge",
-    "emulators": "Emulatoren",
-    "controllers": "Controller-Unterstützung",
-    "games": "Spiele",
-    "misc": "Sonstiges",
-    "bluez": "Wird generell benötigt, um PS-Controller drahtlos zu erkennen",
-    "xboxdrv": "Xbox-Controller-Treiber, nur verwenden, wenn der Kernel-Treiber nicht funktioniert!",
-    "wineMeta": "Metapaket zur Installation von WINE und allen erforderlichen Abhängigkeiten",
-    "bottles": "Einfache Verwaltung von Wine- und Proton-Präfixen",
-    "heroic": "Ein Open-Source-Launcher für Epic-, Amazon- und GOG-Spiele",
-    "itch": "Installationsprogramm für die itch.io-Desktop-App",
-    "lutris": "Offene Gaming-Plattform",
-    "minigalaxy": "Ein einfacher GOG-Client für Linux",
-    "steamNative": "Nativer Ersatz für die Steam-Laufzeit mithilfe von Systembibliotheken",
-    "steamRuntime": "Valves digitales Software-Liefersystem",
-    "gamemode": "Eine Daemon/Lib-Kombination, die es Spielen ermöglicht, eine Reihe von Optimierungen anzufordern, die vorübergehend auf das Host-Betriebssystem angewendet werden",
-    "gamescope": "SteamOS-Sitzungskompositions-Fenstermanager",
-    "mangohud": "Eine Vulkan-Overlay-Ebene zur Überwachung von FPS, Temperaturen, CPU-/GPU-Auslastung und mehr",
-    "steamtinkerlaunch": "Wrapper-Skript für benutzerdefinierte Steam-Startoptionen",
-    "vkbasalt": "Eine Vulkan-Nachbearbeitungsschicht. Einige der Effekte sind CAS, FXAA, SMAA, Deband",
-    "dxvk": "Eine Vulkan-basierte Kompatibilitätsschicht für Direct3D 9/10/11, die das Ausführen von 3D-Anwendungen unter Linux mit Wine ermöglicht",
-    "lact": "Linux GPU-Konfigurationstool",
-    "gamescopeSession": "Gamescope-Sitzung zur Compositing-Fensterverwaltung",
-    "gamescopeSessionSteam": "Gamescope-Sitzung für Steam-Gaming optimiert",
-    "vrVideoPlayer": "Videoplayer für VR-Inhalte",
-    "boxtron": "Kompatibilitätstool zum Ausführen von DOS-Spielen auf Steam über die native Linux-DOSBox",
-    "luxtorpeda": "Steam Play-Kompatibilitätstool zum Ausführen von Spielen mit nativen Linux-Engines",
-    "protonGeCustom": "Eine schicke benutzerdefinierte Distribution von Valves Proton mit verschiedenen Patches",
-    "protontricks": "Ein einfacher Wrapper, der Winetricks-Aufgaben für Proton-fähige Spiele ausführt",
-    "protonupQt": "Installieren und verwalten Sie Proton-GE und Luxtorpeda für Steam und Wine-GE für Lutris",
-    "winePackage": "Eine Kompatibilitätsebene zum Ausführen von Windows-Programmen",
-    "wineStaging": "Eine Kompatibilitätsebene zum Ausführen von Windows-Programmen – Staging-Zweig",
-    "winetricks": "Skript zum Installieren verschiedener weiterverteilbarer Laufzeitbibliotheken in Wine",
     "antimicrox": "Grafisches Programm zum Zuordnen von Tastaturtasten und Maussteuerungen zu einem Gamepad",
     "anydesk": "Die schnelle Remote-Desktop-Anwendung",
+    "bluez": "Wird generell benötigt, um PS-Controller drahtlos zu erkennen",
+    "bottles": "Einfache Verwaltung von Wine- und Proton-Präfixen",
+    "boxtron": "Kompatibilitätstool zum Ausführen von DOS-Spielen auf Steam über die native Linux-DOSBox",
+    "controllers": "Controller-Unterstützung",
     "corectrl": "Kernsteuerungsanwendung",
+    "desmume": "Nintendo DS-Emulator",
+    "dgenSdl": "Ein Emulator für Sega Genesis/Mega Drive-Systeme, portiert auf SDL",
     "discord": "All-in-One-Sprach- und Textchat für Gamer",
     "displaycal": "Open Source-Displaykalibrierung und -Charakterisierung mit Argyll CMS",
+    "dolphinEmu": "Ein Gamecube- und Wii-Emulator",
+    "dosbox": "Emulator mit integriertem DOS zum Ausführen von DOS-Spielen",
     "droidcam": "Ein Tool, um Ihr Telefon/Tablet in eine drahtlose/USB-Webcam zu verwandeln",
+    "duckstation": "Playstation-Emulator (letzte GPL-Version)",
+    "dxvk": "Eine Vulkan-basierte Kompatibilitätsschicht für Direct3D 9/10/11, die das Ausführen von 3D-Anwendungen unter Linux mit Wine ermöglicht",
     "easyeffects": "Audioeffekte für Pipewire-Anwendungen",
+    "eka2l1": "Experimenteller Symbian OS-Emulator",
+    "emulationstation": "Emulation Station ist ein flexibles Emulator-Frontend, das tastaturlose Navigation und benutzerdefinierte Systemthemen unterstützt",
+    "emulators": "Emulatoren",
+    "fceux": "Schneller und ultrakompatibler NES/Famicom-Emulator",
+    "fsUae": "Ein Amiga-Emulator basierend auf UAE/WinUAE mit Schwerpunkt auf der Emulation von Spielen",
+    "gameconqueror": "Speicherscanner zum Isolieren der Adresse einer beliebigen Variablen in einem ausgeführten Prozess",
+    "gamemode": "Eine Daemon/Lib-Kombination, die es Spielen ermöglicht, eine Reihe von Optimierungen anzufordern, die vorübergehend auf das Host-Betriebssystem angewendet werden",
+    "games": "Spiele",
+    "gamescope": "SteamOS-Sitzungskompositions-Fenstermanager",
+    "gamescopeSession": "Gamescope-Sitzung zur Compositing-Fensterverwaltung",
+    "gamescopeSessionSteam": "Gamescope-Sitzung für Steam-Gaming optimiert",
     "goverlay": "Eine GUI zur Verwaltung von Vulkan/OpenGL-Overlays",
     "gwe": "Ein Systemdienstprogramm zur Steuerung von NVIDIA-GPUs",
-    "gameconqueror": "Speicherscanner zum Isolieren der Adresse einer beliebigen Variablen in einem ausgeführten Prozess",
+    "hatari": "Ein Atari ST- und STE-Emulator",
+    "heroic": "Ein Open-Source-Launcher für Epic-, Amazon- und GOG-Spiele",
     "inputRemapper": "Ein Tool zum Ändern und Programmieren der Zuordnung der Tasten Ihrer Eingabegeräte",
+    "itch": "Installationsprogramm für die itch.io-Desktop-App",
+    "kegaFusion": "Ein Emulator klassischer Sega-Konsolen, einschließlich SMS/GG, Genesis/Megadrive und Add-Ons",
     "keyboardVisualizer": "Verwandeln Sie Ihr OpenRGB-unterstütztes RGB-Setup in eine spektakuläre Lichtshow für Ihre Musik",
+    "lact": "Linux GPU-Konfigurationstool",
+    "launchers": "Spiele-Starter",
+    "libretroMeta": "Metapaket für alle unterstützten Libretro-Emulatoren",
+    "loading": "Wird geladen...",
+    "lutris": "Offene Gaming-Plattform",
+    "luxtorpeda": "Steam Play-Kompatibilitätstool zum Ausführen von Spielen mit nativen Linux-Engines",
+    "mame": "Port des beliebten Multiple Arcade Machine Emulators mit SDL und OpenGL-Unterstützung",
+    "mangohud": "Eine Vulkan-Overlay-Ebene zur Überwachung von FPS, Temperaturen, CPU-/GPU-Auslastung und mehr",
+    "mednafen": "Befehlszeilen-Multisystem-Gaming-Emulator",
+    "mgba": "Ein Nintendo Gameboy Advance-Emulator mit Fokus auf Geschwindigkeit und Genauigkeit",
+    "minigalaxy": "Ein einfacher GOG-Client für Linux",
+    "misc": "Sonstiges",
     "mumble": "Eine Open Source-Voice-Chat-Software mit geringer Latenz und hoher Qualität",
+    "nestopia": "Hochpräziser NES/Famicom-Emulator",
     "noisetorch": "Echtzeit-Mikrofon-Rauschunterdrückung unter Linux",
     "nyrna": "Unterbrechen Sie Spiele und Anwendungen jederzeit und setzen Sie sie fort, wann immer Sie möchten",
     "obsStudio": "Kostenlose Open-Source-Software für Live-Streaming und -Aufzeichnung",
     "openrgb": "Open-Source-RGB-Lichtsteuerung, die nicht von der Herstellersoftware abhängig ist",
     "oversteer": "Grafische Anwendung zum Konfigurieren von Logitech Wheels",
+    "pcsx2": "PlayStation 2-Emulator",
+    "pegasusFrontend": "Ein plattformübergreifendes, anpassbares grafisches Frontend zum Starten von Emulatoren und Verwalten Ihrer Spielesammlung",
     "piper": "GTK-Anwendung zum Konfigurieren von Gaming-Mäusen",
     "polychromatic": "Front-End-Anwendung zur RGB-Beleuchtungsverwaltung für OpenRazer",
-    "scController": "Benutzermodustreiber, Mapper und GTK3-basierte GUI für Steam Controller, DS4 und ähnliche Controller",
-    "soundwire": "Übertragen Sie Audiodaten drahtlos von Ihrem PC auf Ihr Android-Telefon oder andere PCs",
-    "streamlinkTwitchGui": "Ein plattformübergreifender Twitch.tv-Browser für Streamlink",
-    "vlc": "Plattformübergreifender MPEG-, VCD/DVD- und DivX-Player",
-    "xoneDongleFirmware": "Xbox Wireless Controller Adapter-Firmware",
-    "xoneDkms": "Moderner Linux-Treiber für Xbox One- und Xbox Series X|S-Controller",
-    "xpadneo": "Erweiterter Linux-Treiber für das Xbox One Wireless Gamepad",
-    "dgenSdl": "Ein Emulator für Sega Genesis/Mega Drive-Systeme, portiert auf SDL",
-    "dosbox": "Emulator mit integriertem DOS zum Ausführen von DOS-Spielen",
-    "desmume": "Nintendo DS-Emulator",
-    "dolphinEmu": "Ein Gamecube- und Wii-Emulator",
-    "duckstation": "Playstation-Emulator (letzte GPL-Version)",
-    "emulationstation": "Emulation Station ist ein flexibles Emulator-Frontend, das tastaturlose Navigation und benutzerdefinierte Systemthemen unterstützt",
-    "fceux": "Schneller und ultrakompatibler NES/Famicom-Emulator",
-    "fsUae": "Ein Amiga-Emulator basierend auf UAE/WinUAE mit Schwerpunkt auf der Emulation von Spielen",
-    "hatari": "Ein Atari ST- und STE-Emulator",
-    "kegaFusion": "Ein Emulator klassischer Sega-Konsolen, einschließlich SMS/GG, Genesis/Megadrive und Add-Ons",
-    "libretroMeta": "Metapaket für alle unterstützten Libretro-Emulatoren",
-    "retroarch": "Referenz-Frontend für die Libretro-API",
-    "mame": "Port des beliebten Multiple Arcade Machine Emulators mit SDL und OpenGL-Unterstützung",
-    "mednafen": "Befehlszeilen-Multisystem-Gaming-Emulator",
-    "nestopia": "Hochpräziser NES/Famicom-Emulator",
-    "pcsx2": "PlayStation 2-Emulator",
     "ppsspp": "Ein in C++ geschriebener PSP-Emulator",
-    "pegasusFrontend": "Ein plattformübergreifendes, anpassbares grafisches Frontend zum Starten von Emulatoren und Verwalten Ihrer Spielesammlung",
+    "protonCachyOS": "Distribution von Valves Proton mit CachyOS-Patches und Optimierungen",
+    "protonGeCustom": "Eine schicke benutzerdefinierte Distribution von Valves Proton mit verschiedenen Patches",
+    "protontricks": "Ein einfacher Wrapper, der Winetricks-Aufgaben für Proton-fähige Spiele ausführt",
+    "protonupQt": "Installieren und verwalten Sie Proton-GE und Luxtorpeda für Steam und Wine-GE für Lutris",
+    "retroarch": "Referenz-Frontend für die Libretro-API",
     "rpcs3": "PlayStation 3-Emulator",
     "ryujinx": "Experimenteller Nintendo Switch-Emulator, geschrieben in C#",
     "sameboy": "Ein auf Genauigkeit ausgerichteter Game Boy/Game Boy Color-Emulator",
+    "scController": "Benutzermodustreiber, Mapper und GTK3-basierte GUI für Steam Controller, DS4 und ähnliche Controller",
     "scummvm": "Eine „virtuelle Maschine“ für mehrere klassische grafische Point-and-Click-Adventure-Spiele",
     "snes9x": "Tragbarer Super Nintendo Entertainment System (TM)-Emulator",
+    "soundwire": "Übertragen Sie Audiodaten drahtlos von Ihrem PC auf Ihr Android-Telefon oder andere PCs",
+    "steamNative": "Nativer Ersatz für die Steam-Laufzeit mithilfe von Systembibliotheken",
+    "steamRuntime": "Valves digitales Software-Liefersystem",
+    "steamtinkerlaunch": "Wrapper-Skript für benutzerdefinierte Steam-Startoptionen",
     "stella": "Atari 2600 VCS-Emulator",
+    "streamlinkTwitchGui": "Ein plattformübergreifender Twitch.tv-Browser für Streamlink",
+    "subtitle": "Lass uns mit einigen Gaming-Apps loslegen!",
+    "title": "Gaming- ",
+    "titleTwo": "Apps",
+    "tools": "Gaming-Werkzeuge",
     "torzu": "Noch ein Emulator-Fork",
+    "vesktop": "Vesktop ist eine anpassbare und datenschutzfreundliche Discord-Desktop-App",
     "vice": "Vielseitiger Commodore-Emulator",
+    "vkbasalt": "Eine Vulkan-Nachbearbeitungsschicht. Einige der Effekte sind CAS, FXAA, SMAA, Deband",
+    "vlc": "Plattformübergreifender MPEG-, VCD/DVD- und DivX-Player",
+    "vrVideoPlayer": "Videoplayer für VR-Inhalte",
     "waydroid": "Python-Skript zum Hinzufügen von OpenGapps, Magisk, der Übersetzungsbibliothek libhoudini und der Übersetzungsbibliothek libndk zu Waydroid",
+    "wine": "WINE",
+    "wineMeta": "Metapaket zur Installation von WINE und allen erforderlichen Abhängigkeiten",
+    "winePackage": "Eine Kompatibilitätsebene zum Ausführen von Windows-Programmen",
+    "wineStaging": "Eine Kompatibilitätsebene zum Ausführen von Windows-Programmen – Staging-Zweig",
+    "winetricks": "Skript zum Installieren verschiedener weiterverteilbarer Laufzeitbibliotheken in Wine",
+    "xboxdrv": "Xbox-Controller-Treiber, nur verwenden, wenn der Kernel-Treiber nicht funktioniert!",
     "xemu": "Original-Xbox-Emulator",
-    "zsnes": "Super Nintendo-Emulator",
-    "eka2l1": "Experimenteller Symbian OS-Emulator",
-    "mgba": "Ein Nintendo Gameboy Advance-Emulator mit Fokus auf Geschwindigkeit und Genauigkeit"
+    "xoneDkms": "Moderner Linux-Treiber für Xbox One- und Xbox Series X|S-Controller",
+    "xoneDongleFirmware": "Xbox Wireless Controller Adapter-Firmware",
+    "xpadneo": "Erweiterter Linux-Treiber für das Xbox One Wireless Gamepad",
+    "zsnes": "Super Nintendo-Emulator"
+  },
+  "kernels": {
+    "active": "Aktiver Kernel:",
+    "dkmsModulesBroken": "Einige DKMS-Module sind beschädigt",
+    "dkmsModulesBrokenTip": "Klicke hier, um die Installation der beschädigten DKMS-Module zu planen",
+    "dkmsModulesMissing": "Einige DKMS-Module fehlen",
+    "dkmsModulesMissingTip": "Fehlende DKMS-Module",
+    "headers": "Headers",
+    "headersMissing": "Fehlende Kernel-Headers",
+    "setDefault": "Standard-Kernel festlegen"
+  },
+  "lang": {
+    "title": "Sprachauswahl",
+    "tooltip": "Wähle deine bevorzugte Sprache"
+  },
+  "languagePacks": {
+    "base": "Basispaket",
+    "description": "Dies sind die Sprachpakete für deine installierten Pakete, die meist Übersetzungen für die GUI bereitstellen.",
+    "locale": "Locale",
+    "notFound": "Keine Sprachpakete gefunden",
+    "pkgname": "Paketname",
+    "selected": "Ausgewählt"
+  },
+  "locales": {
+    "apply": "Änderungen an installierten Locales planen",
+    "available": "Verfügbar",
+    "description": "Die Locales auf der rechten Seite sind auf deinem System installiert. Du kannst auswählen, welche du behalten und welche du entfernen möchtest.",
+    "selected": "Ausgewählt",
+    "selectLocale": "Wähle deine bevorzugte systemweite Sprache",
+    "task": "Systemsprache ändern"
   },
   "maintenance": {
-    "title": "System",
-    "titleTwo": "Wartung",
-    "subtitle": "Halte dein System in gutem Zustand",
-    "update": "System aktualisieren",
+    "actionFailed": "Beim Versuch, {{ action }} auszuführen, ist ein Fehler aufgetreten: {{ error }}.",
+    "actionFailedHeader": "Fehler beim Ausführen der Wartungsaktion",
     "addPending": "Ausstehend hinzufügen",
-    "removePending": "Ausstehend entfernen",
-    "runNow": "Jetzt ausführen",
-    "failedReset": "Fehler beim Zurücksetzen der Konfigurationsdatei",
-    "failedResetFile": "Fehler beim Zurücksetzen von {{file}} aufgetreten",
-    "editRepos": "Repositories bearbeiten",
-    "onlyDirect": "Diese Aktion kann nicht in die Warteschlange gestellt werden und muss direkt ausgeführt werden.",
-    "cleanCache": "Cache leeren",
-    "cleanCacheSub": "Alle zwischengespeicherten Pakete entfernen",
-    "updateSystem": "System aktualisieren",
-    "taskRunningHeader": "Fehler beim Ausführen der Wartungsaktion",
-    "taskRunning": "Es läuft bereits eine Aufgabe, warte bitte, bis diese abgeschlossen ist.",
-    "updateSystemSub": "Aktualisiere dein System über garuda-update",
-    "editReposSub": "Bearbeite deine Repositories mit Pace",
     "addPendingSub": "Ausstehende Operationen hinzufügen",
-    "clearOrphans": "Verwaiste Pakete entfernen",
-    "clearOrphansSub": "Entferne verwaiste Pakete",
-    "refreshMirrors": "Spiegelserver aktualisieren",
-    "refreshMirrorsSub": "Aktualisiere deine Spiegelserverliste",
-    "removeLock": "Pacman-Sperre entfernen",
-    "removeLockSub": "Entferne die Pacman-Sperrdatei",
-    "reinstallPackages": "Pakete neu installieren",
-    "reinstallPackagesSub": "Installiere alle Pakete auf deinem System neu",
-    "reinstallDkmsModules": "DKMS-Module neu installieren",
     "btrfsAssistant": "Btrfs Assistant",
     "btrfsAssistantSub": "Verwalte deine BTRFS-Snapshots und führe Wartungsaufgaben aus",
+    "cleanCache": "Cache leeren",
+    "cleanCacheSub": "Alle zwischengespeicherten Pakete entfernen",
+    "clearOrphans": "Verwaiste Pakete entfernen",
+    "clearOrphansSub": "Entferne verwaiste Pakete",
+    "common": "Allgemeine Wartung",
+    "editRepos": "Repositories bearbeiten",
+    "editReposSub": "Bearbeite deine Repositories mit Pace",
+    "failedReset": "Fehler beim Zurücksetzen der Konfigurationsdatei",
+    "failedResetFile": "Fehler beim Zurücksetzen von {{file}} aufgetreten",
+    "garudaHealth": "Systemzustandsprüfung",
+    "garudaHealthFix": "Systemzustand reparieren",
+    "garudaHealthFixSub": "Versuchen, häufige Systemprobleme automatisch zu beheben",
+    "garudaHealthSub": "Prüfe auf häufige Systemprobleme mit garuda-health",
+    "garudaUpdate": "Garuda Update Rettungswerkzeuge",
+    "installationFailedHeader": "{{ program }} ist nicht installiert und konnte nicht installiert werden. Überprüfe die Protokolle für weitere Informationen.",
     "mergePacDiff": "Pacdiff-Dateien zusammenführen",
     "mergePacDiffSub": ".pacnew- und .pacsave-Dateien interaktiv zusammenführen",
+    "onlyDirect": "Diese Aktion kann nicht in die Warteschlange gestellt werden und muss direkt ausgeführt werden.",
+    "refreshArchMirrors": "Spiegelserver aktualisieren",
+    "refreshArchMirrorsSub": "Aktualisiere deine Spiegelserverliste",
+    "refreshChaoticMirrors": "Chaotic-AUR-Spiegelserver aktualisieren",
+    "refreshChaoticMirrorsSub": "Aktualisiere deine Chaotic-AUR-Spiegelserverliste",
+    "refreshChaoticMirrorsSuccess": "Chaotic-AUR-Spiegelserverliste wurde erfolgreich aktualisiert",
+    "refreshKeyring": "Schlüsselring aktualisieren",
+    "refreshKeyringSub": "Aktualisiere deinen Pacman-Schlüsselring",
+    "reinstallDkmsModules": "DKMS-Module neu installieren",
+    "reinstallPackages": "Pakete neu installieren",
+    "reinstallPackagesSub": "Installiere alle Pakete auf deinem System neu",
+    "removeLock": "Pacman-Sperre entfernen",
+    "removeLockSub": "Entferne die Pacman-Sperrdatei",
+    "removePending": "Ausstehend entfernen",
+    "resetConfigs": "Konfigurationen auf Standardzustand zurücksetzen",
+    "resetTooltip": "Die folgenden Dateien oder Ordner werden auf ihren Standardzustand zurückgesetzt:",
+    "runNow": "Jetzt ausführen",
+    "subtitle": "Halte dein System in gutem Zustand",
+    "taskRunning": "Es läuft bereits eine Aufgabe, warte bitte, bis diese abgeschlossen ist.",
+    "taskRunningHeader": "Fehler beim Ausführen der Wartungsaktion",
+    "title": "System",
+    "titleTwo": "Wartung",
+    "update": "System aktualisieren",
+    "updateRemoteFix": "Garuda update Fix",
+    "updateRemoteFixSub": "pacman.conf, Spiegellisten und Schlüsselring auf Garuda-Standard zurücksetzen",
     "updateRemoteFullFix": "Garuda update Full Fix",
     "updateRemoteFullFixSub": "Pacman zurücksetzen und alle Pakete in deinem Betriebssystem neu installieren",
     "updateRemoteKeyring": "Garuda update Keyring",
-    "updateRemoteKeyringSub": "Schlüsselring aktualisieren, ohne pacman.conf zurückzusetzen",
-    "updateRemoteFix": "Garuda update Fix",
-    "updateRemoteFixSub": "pacman.conf zurücksetzen und Schlüsselringe aktualisieren",
-    "updateRemoteResetSnapper": "Snapper zurücksetzen",
-    "updateRemoteResetSnapperSub": "Alles von Snapper entfernen und seine Konfigurationen neu erstellen",
+    "updateRemoteKeyringSub": "Schlüsselring auf Garuda-Standard zurücksetzen",
     "updateRemoteResetAudio": "Audio zurücksetzen",
     "updateRemoteResetAudioSub": "Die PipeWire-Audiokonfiguration neu installieren/zurücksetzen",
-    "resetTooltip": "Die folgenden Dateien oder Ordner werden auf ihren Standardzustand zurückgesetzt:",
-    "resetConfigs": "Konfigurationen auf Standardzustand zurücksetzen",
-    "common": "Allgemeine Wartung",
-    "garudaUpdate": "Garuda Update Rettungswerkzeuge"
+    "updateRemoteResetSnapper": "Snapper zurücksetzen",
+    "updateRemoteResetSnapperSub": "Snapper komplett zurücksetzen und Konfigurationen neu erstellen",
+    "updateSystem": "System aktualisieren",
+    "updateSystemSub": "Aktualisiere dein System über garuda-update"
   },
-  "sudo": {
-    "title": "Authentifizierung erforderlich",
-    "subtitle": "Bitte gib dein Passwort ein, um fortzufahren",
-    "save": "In dieser Sitzung zwischenspeichern",
-    "password": "Passwort",
-    "cancel": "Abbrechen",
-    "useOnce": "Nur einmal verwenden"
+  "menu": {
+    "apply": "Ausstehende operationen anwenden",
+    "boot": "Boot-Werkzeuge",
+    "bootRepair": "Boot-Reparatur",
+    "clearTasks": "Aufgaben leeren",
+    "components": "Komponenten",
+    "configFiles": "Konfigurationsdateien",
+    "console": "Terminal anzeigen",
+    "diagnostics": "Diagnose",
+    "file": {
+      "preferences": "Einstellungen",
+      "quit": "Beenden",
+      "title": "Datei"
+    },
+    "gaming": "Gaming",
+    "help": {
+      "about": "Über Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox ist ein Systemwartungs- und Diagnosewerkzeug für Garuda Linux. Es soll Benutzern helfen, ihr System zu warten und Probleme zu diagnostizieren. Es wurde mit Electron und Angular erstellt.",
+      "aboutForum": "Forum",
+      "aboutSourceCode": "Quellcode",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wiki",
+      "callExorcist": "Den Exorzisten rufen",
+      "callExorcistBody": "Du musst ziemlich verzweifelt sein, um auf diesen Knopf zu klicken! Ich habe speziellen Voodoo für dich eingerichtet. Falls du immer noch Probleme mit der App hast, melde sie bitte im Garuda Linux Forum oder in unserem Issue Tracker.",
+      "callExorcistTitle": "Der Exorzist wurde gerufen!",
+      "garudaStatus": "Uptime-Status prüfen",
+      "getHelpArchWiki": "Inhalte im Arch Wiki suchen",
+      "getHelpForum": "Hilfe im Forum erhalten",
+      "getHelpWiki": "Inhalte im Wiki suchen",
+      "title": "Hilfe"
+    },
+    "maintenance": "Wartung",
+    "modules": {
+      "appSettings": "Programmeinstellungen",
+      "bootRepair": "Boot-Reparatur",
+      "components": "Systemkomponenten",
+      "diagnostics": "Diagnostik",
+      "gaming": "Gaming",
+      "kernels": "Kernel",
+      "locales": "Sprachoptionen",
+      "maintenance": "Wartung",
+      "packages": "Pakete",
+      "search": "Suchoptionen",
+      "setupWizard": "Einrichtungsassistent",
+      "systemdServices": "Systemd Dienste",
+      "systemSettings": "Systemeinstellungen",
+      "title": "Module",
+      "userManager": "Benutzerverwaltung",
+      "welcome": "Willkommen"
+    },
+    "network": "Netzwerkwerkzeuge",
+    "packages": "Apps entdecken",
+    "pending": "Ausstehend",
+    "settings": "App-Einstellungen",
+    "setupWizard": "Einrichtungsassistent",
+    "systemTools": "Systemeinstellungen",
+    "terminalRunning": "Laufende Aufgaben",
+    "terminalTasks": "Aufgaben ausführen",
+    "welcome": "Willkommen"
   },
-  "systemdServices": {
-    "notFound": "Keine Dienste gefunden",
-    "description": "Beschreibung",
-    "unit": "Unit-Name",
-    "load": "Laden",
-    "active": "Aktiv",
-    "state": "Status",
-    "searchKey": "Gib einen Suchbegriff ein",
-    "clear": "Leeren",
+  "networkAssistant": {
     "actions": "Aktionen",
-    "show": "Anzeigen",
-    "start": "Starten",
-    "stop": "Stoppen",
-    "mask": "Maskieren",
-    "unmask": "Demaskieren",
-    "logs": "Protokolle",
-    "restart": "Neustarten",
-    "reload": "Neu laden",
+    "active": "Aktiv",
+    "airplaneMode": "Flugmodus",
+    "any": "Alle",
+    "blacklistAction": "{{name}} auf Blacklist setzen",
+    "blacklistDriver": "Auf Blacklist setzen",
+    "blacklistedDrivers": "Auf der Blacklist stehende Treiber",
+    "blacklistFailed": "Blacklist konnte nicht aktualisiert werden",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth-Geräte",
+    "cancel": "Abbrechen",
+    "category": "Kategorie",
+    "clear": "Leeren",
+    "clickToCopy": "Klicken zum Kopieren",
+    "connected": "Verbunden",
+    "connectionInfo": "Verbindungsinformationen",
+    "connman": "ConnMan",
+    "copied": "In die Zwischenablage kopiert",
+    "copyAll": "Alle kopieren",
+    "count": "Anzahl",
+    "disabled": "Deaktiviert",
+    "disconnected": "Getrennt",
+    "driver": "Treiber",
+    "driverBlacklisted": "Treiber auf Blacklist gesetzt",
+    "driverLoaded": "Treiber erfolgreich geladen",
+    "driverUnblacklisted": "Treiber von Blacklist entfernt",
+    "driverUnloaded": "Treiber erfolgreich entladen",
     "enable": "Aktivieren",
-    "disable": "Deaktivieren",
-    "autoRefresh": "Automatisch aktualisieren",
-    "error": "Beim Abrufen der Dienste ist ein Fehler aufgetreten, bitte versuche es erneut.",
-    "errorTitle": "Fehler beim Abrufen der Dienste",
-    "systemContext": "Systemdienste anzeigen",
-    "userContext": "Benutzerdienste anzeigen",
-    "includeDisabled": "Deaktivierte einschließen",
-    "excludeDisabled": "Deaktivierte ausschließen"
+    "enabled": "Aktiviert",
+    "enableService": "Dienst aktivieren",
+    "enableServiceFailed": "Dienst konnte nicht aktiviert werden",
+    "error": "Fehler",
+    "errorFetch": "Netzwerkinformationen konnten nicht abgerufen werden",
+    "ethernetControllers": "Ethernet-Controller",
+    "externalIp": "Externe IP",
+    "gps": "GPS",
+    "hardwareInfo": "Hardware-Informationen",
+    "hotspotFailed": "Hotspot konnte nicht geöffnet werden",
+    "inactive": "Inaktiv",
+    "installDriver": "Treiber installieren",
+    "installTraceroute": "Traceroute installieren",
+    "installWihotspot": "WiFi Hotspot installieren",
+    "interface": "Schnittstelle",
+    "internet": "Internet",
+    "loadDriver": "Treiber laden",
+    "loadDriverAction": "Treiber {{name}} laden",
+    "loadDriverFailed": "Treiber konnte nicht geladen werden",
+    "loadedDrivers": "Geladene Treiber",
+    "maxHops": "Max. Hops",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Keine Netzwerktreiber gefunden",
+    "noHardware": "Keine Netzwerkhardware erkannt",
+    "notAvailable": "Nicht verfügbar",
+    "off": "Aus",
+    "on": "Ein",
+    "openHotspot": "Hotspot öffnen",
+    "outputInTerminal": "Ausgabe im Terminal unten angezeigt",
+    "ping": "Ping",
+    "pingFailed": "Ping konnte nicht ausgeführt werden",
+    "quickToggles": "Schnellumschalter",
+    "routerIp": "Router-IP",
+    "runPing": "Ping ausführen",
+    "runTraceroute": "Traceroute ausführen",
+    "search": "Suchen",
+    "serviceEnabled": "Dienst erfolgreich aktiviert",
+    "services": "Dienste",
+    "status": "Status",
+    "success": "Erfolg",
+    "tabs": {
+      "diagnostics": "Diagnose",
+      "drivers": "Treiber",
+      "hardware": "Hardware",
+      "status": "Status"
+    },
+    "targetHost": "Zielhost",
+    "timeout": "Timeout (s)",
+    "title": "Netzwerk-",
+    "titleTwo": "Assistent",
+    "toggleAirplane": "Flugmodus umschalten",
+    "toggleAirplaneFailed": "Flugmodus konnte nicht umgeschaltet werden",
+    "toggleBt": "Bluetooth umschalten",
+    "toggleBtFailed": "Bluetooth konnte nicht umgeschaltet werden",
+    "toggleGps": "GPS umschalten",
+    "toggleGpsFailed": "GPS konnte nicht umgeschaltet werden",
+    "toggleWifi": "WLAN umschalten",
+    "toggleWifiFailed": "WLAN konnte nicht umgeschaltet werden",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Traceroute konnte nicht ausgeführt werden",
+    "type": "Typ",
+    "unblacklistDriver": "Von Blacklist entfernen",
+    "unloadDriver": "Treiber entladen",
+    "unloadDriverAction": "Treiber {{name}} entladen",
+    "unloadDriverFailed": "Treiber konnte nicht entladen werden",
+    "unloadedDrivers": "Nicht geladene Treiber",
+    "whitelistAction": "{{name}} von Blacklist entfernen",
+    "wifi": "WLAN",
+    "wifiHotspot": "WLAN-Hotspot",
+    "wifiHotspotDesc": "WLAN-Hotspot-Konfiguration öffnen",
+    "wirelessControllers": "WLAN-Controller"
   },
-  "systemTools": {
-    "title": "System",
-    "titleTwo": "Einstellungen",
-    "systemdServices": "Systemd-Dienste",
-    "systemSettings": "Systemeinstellungen",
-    "components": "Systemkomponenten",
-    "locales": "Locales",
-    "kernels": "Kernels",
-    "packages": "Weitere Pakete",
-    "audio": {
-      "title": "Audio",
-      "alsa": {
-        "title": "ALSA-Unterstützung"
-      },
-      "jack": {
-        "title": "JACK-Unterstützung"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio-Unterstützung"
-      },
-      "pipewire": {
-        "title": "PipeWire-Unterstützung"
-      },
-      "userRealtime": {
-        "title": "Benutzer in der Gruppe realtime"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP installiert"
-      }
-    },
-    "virtualization": {
-      "title": "Virtualisierung",
-      "qemu": {
-        "title": "QEMU installiert"
-      },
-      "kvm": {
-        "title": "KVM-Unterstützung"
-      },
-      "virtManager": {
-        "title": "Virt-manager-Unterstützung"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd aktiviert"
-      },
-      "userVboxUsers": {
-        "title": "Benutzer in der Gruppe vboxusers"
-      },
-      "virtualbox": {
-        "title": "VirtualBox-Unterstützung"
-      },
-      "userLibvirt": {
-        "title": "Benutzer in der Gruppe libvirt"
-      },
-      "userKvm": {
-        "title": "Benutzer in der Gruppe kvm"
-      }
-    },
-    "containers": {
-      "title": "Container",
-      "docker": {
-        "title": "Docker installiert"
-      },
-      "dockerEnabled": {
-        "title": "Docker aktiviert"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose installiert"
-      },
-      "userDocker": {
-        "title": "Benutzer in der Gruppe docker"
-      },
-      "podman": {
-        "title": "Podman installiert"
-      },
-      "podmanDocker": {
-        "title": "Docker über Podman emulieren"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop installiert"
-      },
-      "distrobox": {
-        "title": "DistroBox installiert"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy installiert"
-      }
-    },
-    "network": {
-      "title": "Netzwerk",
-      "networkManager": {
-        "title": "NetworkManager-Unterstützung"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager aktiviert"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager aktiviert"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "bluetooth": {
-        "title": "Bluetooth-Unterstützung"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth aktiviert"
-      },
-      "userBluetooth": {
-        "title": "Benutzer in der Gruppe bluetooth"
-      },
-      "autoConnect": {
-        "title": "Auto connect installiert"
-      },
-      "autoConnectEnabled": {
-        "title": "Auto connect aktiviert"
-      }
-    },
-    "printing": {
-      "title": "Drucken",
-      "printingSupport": {
-        "title": "Druckunterstützung"
-      },
-      "cupsEnabled": {
-        "title": "CUPS aktiviert"
-      },
-      "scanningSupport": {
-        "title": "Scanunterstützung"
-      },
-      "sanedEnabled": {
-        "title": "saned aktiviert"
-      },
-      "userCups": {
-        "title": "Benutzer in der Gruppe cups"
-      },
-      "userScanner": {
-        "title": "Benutzer in der Gruppe scanner"
-      },
-      "userLp": {
-        "title": "Benutzer in der Gruppe lp"
-      }
-    },
-    "firewall": {
-      "title": "Firewall",
-      "firewalld": {
-        "title": "Firewalld installiert"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld aktiviert"
-      },
-      "ufw": {
-        "title": "UFW installiert"
-      },
-      "ufwEnabled": {
-        "title": "UFW aktiviert"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch installiert"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch aktiviert"
-      }
-    },
-    "misc": {
-      "title": "Sonstiges",
-      "gns": {
-        "title": "Garuda Nix Subsystem installiert"
-      }
-    }
-  },
-  "systemSettings": {
-    "defaultShellConfigs": "Standardkonfigurationen installieren",
-    "defaultDns": "Standard-DNS setzen",
-    "defaultShell": "Login-Shell festlegen",
+  "operation": {
+    "abort": "Abbrechen",
+    "addGroup": "Benutzer zu Gruppe hinzufügen",
+    "args": "Argumente",
+    "disableHblock": "Hblock deaktivieren",
+    "disableService": "Dienst deaktivieren",
     "enableHblock": "Hblock aktivieren",
-    "enableIwd": "IWD anstelle von wpa_supplicant verwenden",
-    "common": {
-      "title": "Allgemein",
-      "psd": {
-        "title": "Profile-sync-daemon installiert"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon aktiviert"
-      },
-      "oomd": {
-        "title": "Systemd-oomd aktiviert"
-      },
-      "guestUser": {
-        "title": "Gastbenutzer aktivieren"
-      }
+    "enableService": "Dienst aktivieren",
+    "installApps": "Apps installieren",
+    "logs": "Protokolle",
+    "remove": "Entfernen",
+    "removeApps": "Apps entfernen",
+    "removeGroup": "Benutzer aus Gruppe entfernen",
+    "resetDnsServer": "DNS-Server zurücksetzen",
+    "run": "Jetzt ausführen",
+    "setDefaultShell": "Standard-Shell festlegen",
+    "setNewDnsServer": "Neuen DNS-Server festlegen"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Es laufen Operationen, es werden nur die bereits erledigten entfernt.",
+    "refusing": "Ausführung verweigert",
+    "thisOperationRunning": "Bist du verrückt? Diese Operation läuft gerade!"
+  },
+  "os-interact": {
+    "boot-options": "Boot-Einstellungen anwenden",
+    "configs": "Systemkonfigurationen ändern",
+    "configs-system": "Systemkonfigurationen ändern",
+    "configs-user": "Benutzerkonfigurationen ändern",
+    "garuda-update-config": "Garuda Update-Einstellungen anwenden",
+    "groups": "Benutzergruppen ändern",
+    "locales": "Aktivierte Locales ändern",
+    "packages": "Installierte Pakete ändern",
+    "packages-aur": "AUR-Pakete ändern",
+    "services": "Dienste ändern",
+    "services-user": "Benutzerdienste ändern"
+  },
+  "packages": {
+    "any": "Alle",
+    "clear": "Leeren",
+    "description": "Beschreibung",
+    "documents": "Dokumente",
+    "icon": "Symbol",
+    "internet": "Internet",
+    "multimedia": "Multimedia",
+    "name": "Name",
+    "notFound": "Keine Pakete gefunden",
+    "other": "Sonstige",
+    "science": "Wissenschaft",
+    "search": "Suchen",
+    "searchKey": "Suchbegriff eingeben",
+    "security": "Sicherheit",
+    "selected": "Ausgewählt",
+    "status": "Status",
+    "title": "Entdecke ",
+    "titleTwo": "Anwendungen",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "Automatische Dienstaktualisierung aktivieren",
+    "autoStart": "Anwendung automatisch starten",
+    "backgroundFit": "Hintergrund an App anpassen",
+    "backgroundSettings": "Hintergrundeinstellungen",
+    "blurBackground": "Hintergrund weichzeichnen",
+    "blurStrength": "Weichzeichnungsstärke",
+    "clearBackground": "Hintergrund löschen",
+    "copyDiagnostics": "Diagnose in die Zwischenablage kopieren",
+    "customBackground": "Eigener Hintergrund",
+    "darkMode": "Dunkelmodus aktivieren",
+    "language": "Aktive Sprache konfigurieren",
+    "leftButtons": "Fensterknöpfe links anzeigen",
+    "logLevel": "Protokollierungsstufe auswählen",
+    "noBackgroundSelected": "Kein Hintergrund ausgewählt",
+    "selectOptions": "Auswahl",
+    "showMainLinks": "Links auf der Startseite anzeigen",
+    "systemdUserContext": "Benutzer-Systemd-Dienste anzeigen",
+    "themeLabel": "Basis-Design-Theme",
+    "title": "App-",
+    "titleTwo": "Einstellungen",
+    "toggleOptions": "Optionen umschalten"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Klicke auf 'Anwenden', um den Installations- und Konfigurationsprozess zu starten.",
+      "failedBody": "Bei der Installation ist etwas schiefgelaufen. Du kannst es erneut versuchen oder deine Auswahl anpassen.",
+      "failedHeader": "Ausführung fehlgeschlagen",
+      "header": "Bereit zum Anwenden"
     },
-    "performance": {
-      "title": "Leistung",
-      "performanceTweaks": {
-        "title": "Leistungsoptimierungen"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ installiert"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ aktiviert"
-      },
-      "bpftune": {
-        "title": "Bpftune installiert"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune aktiviert"
-      },
-      "preload": {
-        "title": "Preload installiert"
-      },
-      "preloadEnabled": {
-        "title": "Preload aktiviert"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance aktiviert"
-      }
+    "autoCategories": {
+      "audio": "Audio",
+      "browsers": "Browser",
+      "communication": "Kommunikation",
+      "development": "Entwicklung",
+      "gaming": "Gaming",
+      "graphics": "Grafik",
+      "inputMethod": "Eingabemethoden",
+      "internet": "Internet",
+      "kernels": "Kernel",
+      "mail": "E-Mail",
+      "multimedia": "Multimedia",
+      "office": "Büro",
+      "other": "Sonstige",
+      "pkgmngrs": "Software-Center",
+      "video": "Video",
+      "virtualization": "Virtualisierung"
     },
-    "powersave": {
-      "title": "Energiesparen",
-      "powersaveTweaks": {
-        "title": "Energiespar-Optimierungen"
-      },
-      "tlp": {
-        "title": "TLP installiert"
-      },
-      "tlpEnabled": {
-        "title": "TLP aktiviert"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq installiert"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq aktiviert"
-      },
-      "thermald": {
-        "title": "Thermald installiert"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald aktiviert"
-      },
-      "powerProfilesDaemon": {
-        "title": "Power profiles daemon installiert"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Power profiles daemon aktiviert"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt installiert"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt aktiviert"
-      }
+    "autoSoftware": {
+      "0ad": "Historisches 3D-Echtzeit-Strategiespiel",
+      "abiWord": "Vollwertige Textverarbeitung",
+      "aisleriot": "Sammlung von Patience-Kartenspielen",
+      "ansible": "Offizielle Sammlung von Ansible-Kollektionen",
+      "appimagePool": "Moderner AppImageHub-Client",
+      "ardour": "Professionelle digitale Audio-Workstation",
+      "asian": "Metapaket mit gängigen asiatischen Schriftarten",
+      "audacious": "Leichtgewichtiger, fortschrittlicher Audioplayer",
+      "audacity": "Programm zur Bearbeitung digitaler Audiowellenformen",
+      "bakaMplayer": "Plattformübergreifender Mediaplayer auf libmpv-Basis",
+      "bauh": "Grafische Oberfläche zur Verwaltung von Anwendungen",
+      "bazaar": "App-Store mit Fokus auf Flatpaks",
+      "birdfont": "Schriftarten-Editor für Vektorgrafiken",
+      "bitwigStudio": "Digitale Audio-Workstation für Musikproduktion",
+      "blender": "Voll integrierte 3D-Grafikerstellungssuite",
+      "brasero": "CD/DVD-Mastering-Tool",
+      "brave": "Webbrowser mit standardmäßigem Werbe- und Tracker-Blocker",
+      "calligra": "Produktivitäts- und Kreativanwendungen",
+      "chromium": "Auf Geschwindigkeit und Sicherheit ausgelegter Webbrowser",
+      "clawsMail": "GTK+-basierter E-Mail-Client",
+      "cockpit": "Webbasierte Benutzeroberfläche für Linux-Server",
+      "conky": "Leichtgewichtiger Systemmonitor",
+      "converseen": "Stapelverarbeitung für Bildkonvertierung und Größenänderung",
+      "darktable": "Werkzeug zum Organisieren und Entwickeln von Raw-Bildern",
+      "deluge": "Leichtgewichtiger, voll ausgestatteter BitTorrent-Client",
+      "digikam": "Erweiterte Anwendung zur Verwaltung digitaler Fotos",
+      "discord": "All-in-One Sprach- und Textchat",
+      "discover": "KDE App- und Ressourcenverwaltung",
+      "docker": "Anwendungen in Containern packen, verteilen und ausführen",
+      "dragon": "Multimediaplayer mit Fokus auf Einfachheit",
+      "droidcam": "Smartphone/Tablet als Webcam nutzen",
+      "easytag": "Anwendung zum Anzeigen und Bearbeiten von Audio-Tags",
+      "element": "Eleganter Matrix-Kollaborations-Client",
+      "elisa": "Einfacher Musikplayer von KDE",
+      "evolution": "E-Mails, Kontakte und Termine verwalten",
+      "falkon": "Plattformübergreifender QtWebEngine-Browser",
+      "fdm": "Moderner Download-Beschleuniger und -Organisator",
+      "filezilla": "Schneller und zuverlässiger FTP-, FTPS- und SFTP-Client",
+      "firedragon": "Datenschutzorientierter Floorp-Fork mit Garuda-Branding",
+      "firedragonCatppuccin": "Firedragon Browser mit Catppuccin-Theme",
+      "firefox": "Schneller, privater & sicherer Webbrowser",
+      "firefoxEsr": "Firefox Extended Support Release",
+      "fontForge": "Editor für Outline- und Bitmap-Schriftarten",
+      "fractal": "Matrix-Gruppen-Messaging-App für GNOME",
+      "freeCad": "Feature-basierter parametrischer 3D-CAD-Modellierer",
+      "freeOffice": "Microsoft Office-kompatible Office-Suite",
+      "geary": "Leichtgewichtiger E-Mail-Client für GNOME",
+      "genymotion": "Virtuelle Umgebung für Android",
+      "gimp": "GNU Image Manipulation Program",
+      "github": "GUI zur Verwaltung von Git und GitHub",
+      "gitKraken": "Intuitiver, schneller und schöner Git-Client",
+      "gnomeBoxes": "Einfache Anwendung für den Zugriff auf virtuelle Systeme",
+      "gnomeBuilder": "IDE zur Entwicklung GNOME-basierter Software",
+      "gnomeFirmware": "Firmware auf unterstützten Geräten verwalten",
+      "gnomeSoftware": "GNOME App- und Ressourcenverwaltung",
+      "gnu": "Erweiterbarer, anpassbarer Echtzeit-Display-Editor",
+      "gnuCash": "Finanzbuchhaltungsanwendung",
+      "gnumeric": "Tabellenkalkulation für GNOME",
+      "handbrake": "Multithreaded Video-Transkodierer",
+      "hedgewars": "Rundenbasiertes Artillerie-Strategiespiel",
+      "homebank": "Kostenlose, einfache persönliche Buchhaltung",
+      "hypnotix": "IPTV-Streaming-Anwendung",
+      "indic": "Eingabemethoden für indische Sprachen",
+      "inkscape": "Professioneller Vektorgrafik-Editor",
+      "intellijIdea": "IDE für Java und weitere Programmiersprachen",
+      "japanese": "Eingabemethoden für Japanisch",
+      "jenkins": "Erweiterbarer Continuous-Integration-Server",
+      "jitsiMeet": "Jitsi Meet Desktop-Anwendung",
+      "joplin": "Notiz- und Aufgabenverwaltungsanwendung",
+      "k3b": "Funktionsreiches CD/DVD-Brennprogramm",
+      "kapman": "Klon des bekannten Pac-Man-Spiels",
+      "kdenlive": "Nicht-linearer Video-Editor",
+      "kDevelop": "C++ IDE mit KDE-Technologien",
+      "keepassXc": "Plattformübergreifender Passwort-Manager",
+      "kiCad": "Tools für elektronische Schaltpläne und PCB-Design",
+      "kid3": "Audio-Tag-Editor",
+      "kmahjongg": "Mahjongg-Spiel für einen oder zwei Spieler",
+      "kmail": "KDE E-Mail-Client",
+      "kMyMoney": "Persönlicher Finanzmanager",
+      "knights": "Schachbrett von KDE",
+      "kodi": "Mediaplayer und Entertainment-Hub",
+      "kolourpaint": "Einfaches Malprogramm von KDE",
+      "korean": "Eingabemethoden für Koreanisch",
+      "krita": "Professionelles digitales Malprogramm",
+      "kwave": "Sound-Editor für KDE",
+      "libreCad": "2D-CAD-Zeichenwerkzeug",
+      "libreOfficeFresh": "Neueste Version von LibreOffice",
+      "libreOfficeStill": "Stabile Version von LibreOffice",
+      "librewolf": "Datenschutz- und sicherheitsorientierter Webbrowser",
+      "linuxCachyos": "Hochgradig optimierter CachyOS-Kernel",
+      "linuxHardened": "Sicherheitsgehärteter Linux-Kernel",
+      "linuxLts": "Linux-Kernel mit Langzeitunterstützung (LTS)",
+      "linuxMainline": "Neuester Mainline Linux-Kernel",
+      "linuxXanmod": "Benutzerdefinierter Kernel mit XanMod-Leistungspatches",
+      "linuxXanmodLts": "LTS-Kernel mit XanMod-Patches",
+      "lmms": "Digitale Audio-Workstation und Sequenzer",
+      "lollypop": "Moderner Musikplayer für GNOME",
+      "luanti": "Voxel-basierte Game-Engine",
+      "luminanceHdr": "Workflow für HDR-Bildgebung",
+      "mailspring": "Schöner und schneller E-Mail-Client",
+      "mari0": "Mario-Spiel mit Portal-Gun-Mechanik",
+      "mediaElch": "Medienmanager für Kodi",
+      "microsoftTeams": "Inoffizieller Microsoft Teams Client",
+      "mixxx": "Freie Open-Source-DJ-Software",
+      "mumble": "Voice-Chat-Software mit geringer Latenz und hoher Qualität",
+      "museScore": "Notenblätter erstellen, abspielen und drucken",
+      "myPaint": "Schnelles und einfaches Malprogramm für digitale Künstler",
+      "mystiq": "Audio-/Video-Konverter basierend auf FFmpeg",
+      "neochat": "Client für das dezentrale Matrix-Protokoll",
+      "netbeans": "IDE für Java, HTML5, PHP, C und C++",
+      "nextcloudClient": "Nextcloud Desktop-Synchronisationsclient",
+      "nitroshare": "Einfache Anwendung zur Dateiübertragung zwischen Geräten",
+      "obsidian": "Wissensdatenbank auf Basis lokaler Markdown-Dateien",
+      "obsStudio": "Software für Live-Streaming und Bildschirmaufnahmen",
+      "octopi": "Leistungsfähiges Pacman-Frontend auf Qt-Basis",
+      "onlyOffice": "Office-Suite mit Text-, Tabellen- und Präsentationseditoren",
+      "openToonz": "Software zur Produktion von 2D-Animationen",
+      "pencil2d": "Tool zum Erstellen von handgezeichneten 2D-Animationen",
+      "podman": "Daemonlose Container-Engine zur Verwaltung von Containern",
+      "postman": "APIs erstellen, testen und dokumentieren",
+      "prometheus": "Systemüberwachungs- und Alarmierungs-Toolkit",
+      "puppet": "Server-Automatisierungsframework und -anwendung",
+      "putty": "Terminal-integrierter SSH/Telnet-Client",
+      "pyCharm": "Python-IDE für professionelle Entwickler",
+      "qbittorrent": "Fortschrittlicher Qt-basierter BitTorrent-Client",
+      "qtCreator": "Leichtgewichtige, plattformübergreifende IDE",
+      "qutebrowser": "Tastaturgesteuerter, vim-artiger Browser auf Python-Basis",
+      "remmina": "In GTK+ geschriebener Remote-Desktop-Client",
+      "rosegarden": "MIDI/Audio-Sequenzer und Notations-Editor",
+      "shortwave": "Internet-Radio-Player",
+      "shotcut": "Plattformübergreifender Video-Editor",
+      "signal": "Signal Private Messenger für Linux",
+      "simplifiedChinese": "Eingabemethoden für vereinfachtes Chinesisch",
+      "sinhalese": "Eingabemethoden für Singhalesisch",
+      "skrooge": "Persönlicher Finanzmanager für KDE",
+      "slack": "Slack Desktop-Client",
+      "smPlayer": "Mediaplayer mit integrierten Codecs",
+      "soundConverter": "Einfache Anwendung zur Audiokonvertierung",
+      "soundwire": "Audio vom PC auf andere Geräte übertragen",
+      "strawberryPlayer": "Musikplayer für Audio-Enthusiasten",
+      "subtitleComposer": "Video-Untertitel-Editor",
+      "superTux": "Klassisches 2D-Jump'n'Run-Sidescroller-Spiel",
+      "superTuxKart": "Kart-Rennspiel mit Tux",
+      "sweetHome3d": "Innenarchitektur-Anwendung",
+      "synfigStudio": "Professionelles Vektoranstrich- und Animationsprogramm",
+      "teeworlds": "Rasantes 2D-Multiplayer-Shooter-Spiel",
+      "telegram": "Offizieller Telegram Desktop-Client",
+      "terraform": "Tool zum Erstellen und Aktualisieren von Infrastructure as Code",
+      "thai": "Eingabemethoden für Thailändisch",
+      "thunderbird": "Eigenständiges E-Mail- und News-Programm",
+      "torBrowser": "Sicher im Tor-Netzwerk surfen",
+      "traditionalChinese": "Eingabemethoden für traditionelles Chinesisch",
+      "transmageddon": "Anwendung zum Transkodieren von Videoformaten",
+      "twitchGui": "Plattformübergreifender Twitch.tv-Browser",
+      "ungoogledChromium": "Chromium ohne jegliche Google-Integrationen",
+      "variety": "Wechselt das Hintergrundbild in regelmäßigen Abständen",
+      "vietnamese": "Eingabemethoden für Vietnamesisch",
+      "vim": "Hochgradig anpassbarer Terminal-Texteditor",
+      "virtManager": "Desktop-Benutzeroberfläche zur Verwaltung virtueller Maschinen",
+      "virtualBox": "Plattformübergreifende Virtualisierungssoftware",
+      "visualStudioCode": "Code-Editor zum Entwickeln und Debuggen moderner Anwendungen",
+      "visualStudioCodeOss": "Open-Source-Build von Visual Studio Code",
+      "vivaldi": "Fortschrittlicher Browser für Power-User",
+      "vlc": "Plattformübergreifender Multimediaplayer",
+      "vscodium": "Telemetrie-freie Binärdateien von VSCode",
+      "warpinator": "Dateien sicher über das lokale Netzwerk senden und empfangen",
+      "wings3d": "3D-Modellierer basierend auf Winged-Edge-Datenstrukturen",
+      "wire": "Ende-zu-Ende verschlüsselter Messenger und Videokonferenzen",
+      "wpsOffice": "Office-Produktivitätssuite",
+      "xfburn": "Einfaches CD/DVD-Brennprogramm",
+      "xonotic": "Schneller plattformübergreifender Ego-Shooter",
+      "xtreme": "Leistungsstarker Download-Beschleuniger und Video-Downloader",
+      "yakuake": "Aufklappbarer Drop-down-Terminalemulator",
+      "zedEditor": "Hochperformanter Multiplayer-Code-Editor",
+      "zoom": "Video- und Webkonferenzdienst"
     },
-    "rightclickEmulation": {
-      "title": "Rechtsklick-Emulation",
-      "evdevLongPressRightClick": {
-        "title": "Evdev Rechtsklick-Emulation durch langes Drücken"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE aktiviert"
-      }
-    }
+    "buttons": {
+      "apply": "Anwenden",
+      "back": "Zurück",
+      "finish": "Fertigstellen",
+      "next": "Weiter",
+      "retry": "Wiederholen"
+    },
+    "softwareSelection": {
+      "body": "Wähle die Software aus, die du installieren möchtest.",
+      "header": "Softwareauswahl"
+    },
+    "steps": {
+      "apply": "Änderungen anwenden"
+    },
+    "success": {
+      "archWiki": "Arch Linux Wiki",
+      "body": "Dein System ist eingerichtet und startklar!",
+      "finish": "Einrichtung abschließen",
+      "forum": "Garuda Forum",
+      "garudaWiki": "Garuda Linux Wiki",
+      "reboot": "Ein Neustart wird empfohlen.",
+      "title": "Erfolg!"
+    },
+    "tasks": {
+      "installSoftware": "Ausgewählte Software installieren"
+    },
+    "title": "Einrichtungsassistent"
   },
   "shells": {
     "fish": {
       "hint": "Das Festlegen von fish als Standard-Shell kann zu Problemen mit anderen Programmen führen. Es wird empfohlen, es stattdessen über die Terminalkonfiguration als Standard festzulegen."
     }
   },
-  "confirmation": {
-    "accept": "Akzeptieren",
-    "reject": "Abbrechen",
-    "exitApp": "Bist du sicher, dass du die App beenden möchtest?",
-    "exitAppRunningAction": "Bist du sicher, dass du die App beenden möchtest? Es läuft gerade eine Aktion!",
-    "resetConfigsHeader": "Konfigurationen zurücksetzen?",
-    "resetConfigsBody": "Bist du sicher, dass du die folgenden Konfigurationen zurücksetzen möchtest?",
-    "exitAppHeader": "App beenden?",
-    "applyOperations": "Operationen anwenden?",
-    "applyOperationsBody": "Bist du sicher, dass du alle ausstehenden Operationen anwenden möchtest?"
-  },
-  "error": {
-    "sudoPassword": "Das scheint nicht das korrekte Passwort zu sein. Bitte versuche es erneut."
-  },
-  "operation": {
-    "removeApps": "Apps entfernen",
-    "installApps": "Apps installieren",
-    "addGroup": "Benutzer zu Gruppe hinzufügen",
-    "removeGroup": "Benutzer aus Gruppe entfernen",
-    "disableService": "Dienst deaktivieren",
-    "enableService": "Dienst aktivieren",
-    "setDefaultShell": "Standard-Shell festlegen",
-    "enableHblock": "Hblock aktivieren",
-    "disableHblock": "Hblock deaktivieren",
-    "setNewDnsServer": "Neuen DNS-Server festlegen",
-    "resetDnsServer": "DNS-Server zurücksetzen",
-    "args": "Argumente",
+  "systemdServices": {
+    "actions": "Aktionen",
+    "active": "Aktiv",
+    "autoRefresh": "Automatisch aktualisieren",
+    "clear": "Leeren",
+    "description": "Beschreibung",
+    "disable": "Deaktivieren",
+    "enable": "Aktivieren",
+    "error": "Beim Abrufen der Dienste ist ein Fehler aufgetreten, bitte versuche es erneut.",
+    "errorTitle": "Fehler beim Abrufen der Dienste",
+    "excludeDisabled": "Deaktivierte ausschließen",
+    "hideDead": "Inaktive ausblenden",
+    "hideDeadTip": "Umschalten, um Dienste im Zustand 'dead', 'failed' oder 'exited' ein-/auszublenden",
+    "includeDisabled": "Deaktivierte einschließen",
+    "load": "Laden",
     "logs": "Protokolle",
-    "remove": "Entfernen",
-    "abort": "Abbrechen",
-    "run": "Jetzt ausführen"
+    "mask": "Maskieren",
+    "notFound": "Keine Dienste gefunden",
+    "reload": "Neu laden",
+    "restart": "Neustarten",
+    "searchKey": "Gib einen Suchbegriff ein",
+    "show": "Anzeigen",
+    "showAll": "Alle anzeigen",
+    "start": "Starten",
+    "state": "Status",
+    "stop": "Stoppen",
+    "systemContext": "Systemdienste anzeigen",
+    "unit": "Unit-Name",
+    "unmask": "Demaskieren",
+    "userContext": "Benutzerdienste anzeigen"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Erstellt ein temporäres Gastbenutzerkonto ohne Passwort, das beim Abmelden gelöscht wird.",
+        "title": "Gastbenutzer aktivieren"
+      },
+      "oomd": {
+        "description": "systemds Out-Of-Memory Daemon. Beendet speicherhungrige Prozesse vor dem Einfrieren des Systems.",
+        "title": "Systemd-oomd aktiviert"
+      },
+      "psd": {
+        "description": "Verschiebt Browserprofile in den schnellen RAM (tmpfs) für höhere Reaktionsgeschwindigkeit.",
+        "title": "Profile-sync-daemon installiert"
+      },
+      "psdEnabled": {
+        "description": "Führt den Profile-sync-daemon zur automatischen Verwaltung der Browserprofile im RAM aus.",
+        "title": "Profile-sync-daemon aktiviert"
+      },
+      "title": "Allgemein"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "Deaktiviert den node-suspend-Modus von PipeWire, um Knacken beim Aufwachen zu verhindern.",
+        "title": "Audio No-Suspend"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Verhindert nervige Update-Aufforderungen von Discord, da Pacman Updates verwaltet.",
+        "title": "Discord Auto-Update deaktivieren"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "Entfernt Titelleiste und Fensterrahmen bei maximierten Fenstern in KDE Plasma.",
+        "title": "KDE Randloses Maximieren"
+      },
+      "title": "Systemkonfigurationen"
+    },
+    "defaultDns": "Standard-DNS setzen",
+    "defaultDnsTip": "Ändert den Standard-DNS-Anbieter deiner Internetverbindung.",
+    "defaultShell": "Login-Shell festlegen",
+    "defaultShellConfigs": "Standardkonfigurationen installieren",
+    "defaultShellTip": "Ändert deine Standard-Login-Shell im Terminal.",
+    "enableHblock": "Hblock aktivieren",
+    "enableHblockTip": "Aktiviert Hblock, um Werbung, Tracker und Malware-Domains systemweit über /etc/hosts zu blockieren.",
+    "enableIwd": "IWD anstelle von wpa_supplicant verwenden",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). Eine moderne, schlanke Alternative zu wpa_supplicant für WLAN.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Prüfung des verfügbaren Speicherplatzes vor der Installation überspringen.",
+        "title": "Speicherplatzprüfung überspringen"
+      },
+      "pacmanNoconfirm": {
+        "description": "Pacman ohne Bestätigungsabfragen für schnellere Updates ausführen.",
+        "title": "Nicht-interaktiver Pacman"
+      },
+      "skipMirrorlist": {
+        "description": "Aktualisierung der Arch-Spiegelliste vor Systemupdates überspringen.",
+        "title": "Spiegelserver-Aktualisierung überspringen"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "Aus dem AUR installierte Pakete während des Systemupdates aktualisieren.",
+        "title": "AUR-Pakete aktualisieren"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto-NICe Daemon. Passt CPU-Prioritäten laufender Prozesse dynamisch an.",
+        "title": "Ananicy C++ installiert"
+      },
+      "ananicyCppEnabled": {
+        "description": "Führt den Ananicy-Daemon zur kontinuierlichen Verwaltung von Prozessprioritäten aus.",
+        "title": "Ananicy C++ aktiviert"
+      },
+      "bpftune": {
+        "description": "Nutzt eBPF zur kontinuierlichen automatischen Optimierung der Netzwerkparameter.",
+        "title": "Bpftune installiert"
+      },
+      "bpftuneEnabled": {
+        "description": "Führt den bpftune-Daemon zur kontinuierlichen Optimierung der Netzwerkleistung aus.",
+        "title": "Bpftune aktiviert"
+      },
+      "irqbalanceEnabled": {
+        "description": "Verteilt Hardware-Interrupts gleichmäßig auf alle CPU-Kerne.",
+        "title": "IRQbalance aktiviert"
+      },
+      "performanceTweaks": {
+        "description": "Wendet sysctl- und Tuning-Konfigurationen für maximale Systemreaktivität an.",
+        "title": "Leistungsoptimierungen"
+      },
+      "preload": {
+        "description": "Überwacht häufig genutzte Anwendungen und lädt sie für schnellere Starts in den RAM vor.",
+        "title": "Preload installiert"
+      },
+      "preloadEnabled": {
+        "description": "Führt den Preload-Daemon zum Cachen häufig genutzter Anwendungen aus.",
+        "title": "Preload aktiviert"
+      },
+      "title": "Leistung"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "Automatischer CPU-Geschwindigkeits- und Leistungsoptimierer.",
+        "title": "Auto-cpufreq installiert"
+      },
+      "autoCpufreqEnabled": {
+        "description": "Führt den auto-cpufreq-Daemon zur kontinuierlichen Verwaltung der CPU-Skalierung aus.",
+        "title": "Auto-cpufreq aktiviert"
+      },
+      "intelUndervolt": {
+        "description": "Senkt die Spannung von Intel-Prozessoren für weniger Hitze und längere Akkulaufzeit.",
+        "title": "Intel-undervolt installiert"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Wendet Intel-Undervolt-Einstellungen beim Systemstart automatisch an.",
+        "title": "Intel-undervolt aktiviert"
+      },
+      "powerProfilesDaemon": {
+        "description": "Ermöglicht einfaches Umschalten zwischen Energiespar-, Ausbalanciert- und Leistungsmodi.",
+        "title": "Power profiles daemon installiert"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Führt den Daemon aus, der das Wechseln von Energieprofilen im Desktop ermöglicht.",
+        "title": "Power profiles daemon aktiviert"
+      },
+      "powersaveTweaks": {
+        "description": "Wendet sysctl- und Konfigurations-Tweaks zur Minimierung des Stromverbrauchs an.",
+        "title": "Energiespar-Optimierungen"
+      },
+      "thermald": {
+        "description": "Intels Temperaturmanagement-Daemon zur Vermeidung von Überhitzung.",
+        "title": "Thermald installiert"
+      },
+      "thermaldEnabled": {
+        "description": "Führt den thermald-Daemon zur Temperaturüberwachung aus.",
+        "title": "Thermald aktiviert"
+      },
+      "title": "Energiesparen",
+      "tlp": {
+        "description": "Erweitertes Dienstprogramm zur Optimierung der Akkulaufzeit auf Laptops.",
+        "title": "TLP installiert"
+      },
+      "tlpEnabled": {
+        "description": "Führt den TLP-Daemon zur dynamischen Anwendung von Energiesparregeln aus.",
+        "title": "TLP aktiviert"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Langes Drücken auf Touchscreens oder Touchpads als Rechtsklick werten.",
+        "title": "Evdev Rechtsklick-Emulation durch langes Drücken"
+      },
+      "evdevRce": {
+        "description": "Untere rechte Ecke des Touchpads als physischen Rechtsklick definieren.",
+        "title": "Evdev RCE aktiviert"
+      },
+      "title": "Rechtsklick-Emulation"
+    }
   },
   "systemStatus": {
-    "pendingUpdates": "Ausstehende Updates",
-    "updates": "Dieses System hat ausstehende Updates (Klick für Infos)",
-    "pacFiles": "Dieses System hat ausstehende .pacnew-Dateien, du solltest diese prüfen und zusammenführen! (Klick für Infos)",
-    "cancel": "Abbrechen",
-    "aurUpdates": "Das Aktualisieren von AUR-Paketen liegt außerhalb des Zuständigkeitsbereichs dieser Anwendung. Bitte verwende einen AUR-Helfer wie Paru und überprüfe die PKGBUILD-Dateien vor der Installation.",
-    "scheduleUpdates": "Updates planen",
-    "pendingPacdiff": "Ausstehende pacdiff-Dateien",
-    "findMore": "Finde heraus, wie du vorgehen sollst",
-    "warnUpdate": "Dein System wurde seit 2 Wochen nicht aktualisiert. Bitte aktualisiere dein System, um Sicherheit und Stabilität zu gewährleisten.",
     "affectedFiles": "Betroffene Dateien:",
+    "askHelp": "Wenn du unsicher bist, schließe das Fenster ohne zu speichern und frage im Garuda Linux Forum um Hilfe.",
+    "aurUpdates": "Das Aktualisieren von AUR-Paketen liegt außerhalb des Zuständigkeitsbereichs dieser Anwendung. Bitte verwende einen AUR-Helfer wie Paru und überprüfe die PKGBUILD-Dateien vor der Installation.",
+    "cancel": "Abbrechen",
+    "cautionMerge": "Sei dir bewusst, dass das Einfügen falscher Änderungen in die ALTE Datei dein System beschädigen kann.",
+    "findMore": "Finde heraus, wie du vorgehen sollst",
+    "healthIssues": "Systemgesundheitsprobleme",
+    "healthIssuesFound": "Die folgenden Systemprobleme wurden gefunden:",
     "learnPacdiff": "Wenn du mit pacdiff-Dateien nicht vertraut bist, informiere dich kurz darüber.",
     "openMaintenance": "Klicke auf den Button unten, um zu starten.",
     "openMaintenanceButton": "Zusammenführen starten",
+    "pacFiles": "Dieses System hat ausstehende .pacnew-Dateien, du solltest diese prüfen und zusammenführen! (Klick für Infos)",
+    "pendingPacdiff": "Ausstehende pacdiff-Dateien",
+    "pendingUpdates": "Ausstehende Updates",
+    "proceed": "So gehst du vor:",
+    "proceedMerge": "Meld wird geöffnet, um Änderungen anzuwenden. Links ist die NEUE Datei, rechts die ALTE. Verschiebe alle nützlichen Änderungen, die du zusammenführen möchtest, von links nach rechts. Klicke auf den Speichern-Button oder STRG + S, wenn du fertig bist.",
     "rebootNow": "Jetzt neu starten",
     "rebootNowBody": "Bist du sicher, dass du jetzt neu starten möchtest? Stelle sicher, dass du alle deine Arbeiten gespeichert hast, bevor du fortfährst.",
-    "warnReboot": "Es wird dringend empfohlen, das System nach dem Anwenden von Updates neu zu starten, insbesondere bei Aktualisierungen von Kerneln oder Desktop-Umgebungen.",
-    "proceed": "So gehst du vor:",
+    "runAurUpdates": "AUR-Updates extern ausführen",
+    "runHealthFix": "Gesundheitsreparatur ausführen",
+    "scheduleUpdates": "Updates planen",
     "snapshotCreation": "Ein Btrfs-Snapshot wird erstellt, bevor das Zusammenführen beginnt.",
-    "proceedMerge": "Meld wird geöffnet, um Änderungen anzuwenden. Links ist die NEUE Datei, rechts die ALTE. Verschiebe alle nützlichen Änderungen, die du zusammenführen möchtest, von links nach rechts. Klicke auf den Speichern-Button oder STRG + S, wenn du fertig bist.",
-    "cautionMerge": "Sei dir bewusst, dass das Einfügen falscher Änderungen in die ALTE Datei dein System beschädigen kann.",
-    "askHelp": "Wenn du unsicher bist, schließe das Fenster ohne zu speichern und frage im Garuda Linux Forum um Hilfe.",
-    "runAurUpdates": "AUR-Updates extern ausführen"
+    "updates": "Dieses System hat ausstehende Updates (Klick für Infos)",
+    "warnReboot": "Es wird dringend empfohlen, das System nach dem Anwenden von Updates neu zu starten, insbesondere bei Aktualisierungen von Kerneln oder Desktop-Umgebungen.",
+    "warnUpdate": "Dein System wurde seit 2 Wochen nicht aktualisiert. Bitte aktualisiere dein System, um Sicherheit und Stabilität zu gewährleisten."
   },
-  "operationManager": {
-    "refusing": "Ausführung verweigert",
-    "pendingOperationsRunning": "Es laufen Operationen, ich werde nur diejenigen entfernen, die bereits abgeschlossen sind.",
-    "thisOperationRunning": "Bist du verrückt? Diese Operation läuft gerade!"
-  },
-  "os-interact": {
-    "packages": "Installierte Pakete ändern",
-    "packages-aur": "AUR-Pakete ändern",
-    "services": "Dienste ändern",
-    "services-user": "Benutzerdienste ändern",
-    "groups": "Benutzergruppen ändern",
-    "locales": "Aktivierte Locales ändern",
-    "configs": "Systemkonfigurationen ändern",
-    "configs-user": "Benutzerkonfigurationen ändern",
-    "configs-system": "Systemkonfigurationen ändern"
-  },
-  "packages": {
-    "title": "Pakete",
-    "icon": "Icon",
-    "internet": "Internet",
-    "documents": "Dokumente",
-    "multimedia": "Multimedia",
-    "science": "Wissenschaft",
-    "security": "Sicherheit",
-    "other": "Andere",
-    "clear": "Leeren",
-    "search": "Suchen",
-    "url": "",
-    "selected": "Ausgewählt",
-    "description": "Beschreibung",
-    "name": "Name",
-    "searchKey": "Gib einen Suchbegriff ein",
-    "notFound": "Keine Pakete gefunden"
-  },
-  "kernels": {
-    "dkmsModulesBroken": "Einige DKMS-Module sind defekt",
-    "dkmsModulesBrokenTip": "Klick mich, um die Installation der defekten DKMS-Module zu planen",
-    "dkmsModulesMissing": "Einige DKMS-Module fehlen",
-    "dkmsModulesMissingTip": "Fehlende DKMS-Module",
-    "headers": "Headers",
-    "headersMissing": "Fehlende Kernel-Headers",
-    "headersMissingTip": "Klick mich, um die Installation der fehlenden Headers zu planen",
-    "active": "Aktiver Kernel:"
-  },
-  "languagePacks": {
-    "locale": "Locale",
-    "selected": "Ausgewählt",
-    "base": "Basispaket",
-    "notFound": "Keine Sprachpakete gefunden",
-    "pkgname": "Paketname",
-    "description": "Dies sind die Sprachpakete für deine installierten Pakete, die normalerweise Übersetzungen für die GUI bereitstellen."
-  },
-  "settings": {
-    "title": "App-",
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Der grundlegende Soundtreiber auf Kernel-Ebene. Bietet die Kernunterstützung für Soundkarten, auch wenn du normalerweise über PipeWire damit interagierst.",
+        "title": "ALSA-Unterstützung"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. Eine hochwertige Sammlung von Audioverarbeitungs-Plugins für professionelle Studioeffekte.",
+        "title": "Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "Ein mächtiges Werkzeug zur Verbesserung von Mikrofonqualität und Audiowiedergabe. Empfohlen zusammen mit Calf Plugins und LSP Plugins.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "Ein spezialisierter Soundserver mit geringer Latenz für professionelle Audioproduktion. Wird heute meist nativ von PipeWire verwaltet.",
+        "title": "JACK-Unterstützung"
+      },
+      "jamesdsp": {
+        "description": "Ein Audioeffekt-Prozessor für Bass-Boost, Equalizer und weitere Effekte. Es wird empfohlen, zuerst EasyEffects auszuprobieren.",
+        "title": "JamesDSP installiert"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP). Eine Sammlung professioneller Audiowerkzeuge wie Equalizer und Kompressoren.",
+        "title": "LSP Plugins"
+      },
+      "pipewire": {
+        "description": "Der moderne Standard für Audio- und Videostreams unter Linux. Ersetzt PulseAudio und JACK nahtlos mit viel geringerer Latenz und besserer Sicherheit.",
+        "title": "PipeWire-Unterstützung"
+      },
+      "pulseaudio": {
+        "description": "Der ältere Legacy-Soundserver. Hauptsächlich aus Kompatibilitätsgründen beibehalten, aber weitgehend durch PipeWire ersetzt.",
+        "title": "PulseAudio-Unterstützung"
+      },
+      "title": "Audio",
+      "userRealtime": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'realtime' hinzu, um Audioanwendungen CPU-Priorität zu geben und Ruckler zu verhindern.",
+        "title": "Benutzer in der Gruppe realtime"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Verbindet vertrauenswürdige Bluetooth-Geräte automatisch wieder beim Einschalten.",
+        "title": "Auto connect installiert"
+      },
+      "autoConnectEnabled": {
+        "description": "Führt den Dienst für die automatische Bluetooth-Wiederverbindung aus.",
+        "title": "Auto connect aktiviert"
+      },
+      "bluetooth": {
+        "description": "Der BlueZ Linux Bluetooth-Stack für drahtlose Geräte.",
+        "title": "Bluetooth-Unterstützung"
+      },
+      "bluetoothEnabled": {
+        "description": "Führt den Hintergrunddienst zum Koppeln und Verbinden von Bluetooth-Geräten aus.",
+        "title": "Bluetooth aktiviert"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Fügt deinen Benutzer zur lp-Gruppe hinzu für Bluetooth-Audio mit PulseAudio.",
+        "title": "Benutzer in der Gruppe bluetooth"
+      }
+    },
+    "components": "Systemkomponenten",
+    "containers": {
+      "boxbuddy": {
+        "description": "Eine grafische App zum Verwalten und Verwenden deiner Distrobox-Umgebungen.",
+        "title": "BoxBuddy installiert"
+      },
+      "distrobox": {
+        "description": "Erstellt integrierte Container anderer Linux-Distributionen (Ubuntu, Fedora, Arch) in Garuda.",
+        "title": "DistroBox installiert"
+      },
+      "docker": {
+        "description": "Die branchenübliche Container-Engine zum Paketieren und Ausführen isolierter Anwendungen.",
+        "title": "Docker installiert"
+      },
+      "dockerCompose": {
+        "description": "Ein Tool zum Definieren und Ausführen von Multi-Container-Docker-Anwendungen via Konfigurationsdateien.",
+        "title": "Docker Compose installiert"
+      },
+      "dockerEnabled": {
+        "description": "Startet den Hintergrunddienst zur Verwaltung und Ausführung von Docker-Containern.",
+        "title": "Docker aktiviert"
+      },
+      "kontainer": {
+        "description": "Eine native KDE-Anwendung zur einfachen Verwaltung von Distrobox-Containern.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Eine moderne, daemonlose Alternative zu Docker ohne Root-Rechte für verbesserte Sicherheit.",
+        "title": "Podman installiert"
+      },
+      "podmanDesktop": {
+        "description": "Eine grafische Anwendung zum einfachen Verwalten und Erstellen deiner Podman-Container.",
+        "title": "Podman Desktop installiert"
+      },
+      "podmanDocker": {
+        "description": "Ein Kompatibilitätspaket, das den 'docker'-Befehl auf 'podman' umleitet.",
+        "title": "Docker über Podman emulieren"
+      },
+      "title": "Container",
+      "userDocker": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'docker' hinzu, um Docker-Befehle ohne sudo auszuführen.",
+        "title": "Benutzer in der Gruppe docker"
+      },
+      "winboat": {
+        "description": "Nutzt Containerisierung, um nahtlos integrierte Windows-Apps unter Linux bereitzustellen.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "Ein dynamischer Firewall-Manager mit Zonen für Netzwerkvertrauensstufen und Regeln.",
+        "title": "Firewalld installiert"
+      },
+      "firewalldEnabled": {
+        "description": "Führt den firewalld-Daemon aus, um dein System vor eingehenden Verbindungen zu schützen.",
+        "title": "firewalld aktiviert"
+      },
+      "opensnitch": {
+        "description": "Eine anwendungsbasierte Firewall, die benachrichtigt, wenn ein Programm ins Internet verbinden will.",
+        "title": "OpenSnitch installiert"
+      },
+      "opensnitchEnabled": {
+        "description": "Führt den OpenSnitch-Daemon zur Überwachung des Anwendungsdatenverkehrs aus.",
+        "title": "OpenSnitch aktiviert"
+      },
+      "title": "Firewall",
+      "ufw": {
+        "description": "Uncomplicated Firewall. Eine einfache Befehlszeilenschnittstelle für Firewall-Regeln.",
+        "title": "UFW installiert"
+      },
+      "ufwEnabled": {
+        "description": "Führt den UFW-Dienst aus, um einfache Firewall-Regeln durchzusetzen.",
+        "title": "UFW aktiviert"
+      }
+    },
+    "kernels": "Kernels",
+    "locales": "Locales",
+    "misc": {
+      "gns": {
+        "description": "Integriert die Nix-Paketverwaltung für Zugriff auf tausende zusätzliche Softwarepakete.",
+        "title": "Garuda Nix Subsystem installiert"
+      },
+      "title": "Sonstiges"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "Führt den Dienst aus, der für mobiles Breitband (4G/5G USB-Modems) benötigt wird.",
+        "title": "ModemManager aktiviert"
+      },
+      "networkManager": {
+        "description": "Der Kern-Daemon, der WLAN-, Ethernet- und VPN-Verbindungen konfiguriert und verwaltet.",
+        "title": "NetworkManager-Unterstützung"
+      },
+      "networkManagerEnabled": {
+        "description": "Führt den NetworkManager-Daemon aus, um Netzwerkverbindungen herzustellen.",
+        "title": "NetworkManager aktiviert"
+      },
+      "title": "Netzwerk"
+    },
+    "packages": "Weitere Pakete",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Führt den CUPS-Daemon zur Verwaltung von Druckaufträgen und Druckern aus.",
+        "title": "CUPS aktiviert"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System) für lokale Drucker und Netzwerkdrucker.",
+        "title": "Druckunterstützung"
+      },
+      "sanedEnabled": {
+        "description": "Führt den Dienst zur Freigabe deines Scanners im lokalen Netzwerk aus.",
+        "title": "saned aktiviert"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy) zur Nutzung von Flachbett- und Dokumentenscannern.",
+        "title": "Scanunterstützung"
+      },
+      "title": "Drucken",
+      "userCups": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'cups' hinzu, um Drucker und Warteschlangen zu verwalten.",
+        "title": "Benutzer in der Gruppe cups"
+      },
+      "userLp": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'lp' für ältere Drucksysteme hinzu.",
+        "title": "Benutzer in der Gruppe lp"
+      },
+      "userScanner": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'scanner' hinzu, um Dokumentenscanner zu verwenden.",
+        "title": "Benutzer in der Gruppe scanner"
+      }
+    },
+    "systemdServices": "Systemd-Dienste",
+    "systemSettings": "Systemeinstellungen",
+    "title": "System",
     "titleTwo": "Einstellungen",
-    "leftButtons": "Fensterknöpfe links anzeigen",
-    "copyDiagnostics": "Diagnose in die Zwischenablage kopieren",
-    "darkMode": "Dunkelmodus aktivieren",
-    "language": "Aktive Sprache konfigurieren",
-    "autoStart": "Anwendung automatisch starten",
-    "logLevel": "Wähle die Protokollstufe",
-    "systemdUserContext": "Benutzer-Systemd-Dienste anzeigen",
-    "autoRefresh": "Automatisches Aktualisieren der systemd-Dienste aktivieren",
-    "showMainLinks": "Links auf der Startseite anzeigen",
-    "themeLabel": "Basis-Design-Theme",
-    "toggleOptions": "Umschaltoptionen",
-    "selectOptions": "Auswahlen",
-    "noBackgroundSelected": "Kein Hintergrund ausgewählt",
-    "clearBackground": "Durchsichtiger Hintergrund",
-    "backgroundSettings": "Hintergrund einstellungen",
-    "customBackground": "Benutzerdefinierter Hintergrund",
-    "blurBackground": "Unscharfer Hintergrund",
-    "blurStrength": "Unschärfestärke",
-    "backgroundFit": "Hintergrundsgröße an App anpassen"
-  },
-  "locales": {
-    "apply": "Änderungen an installierten Locales planen",
-    "description": "Die Locales auf der rechten Seite sind auf deinem System installiert. Du kannst auswählen, welche du behalten und welche du entfernen möchtest.",
-    "available": "Verfügbar",
-    "selected": "Ausgewählt",
-    "task": "System-Locale ändern",
-    "selectLocale": "Wähle deine bevorzugte systemweite Sprache"
+    "users": "Benutzer & Gruppen",
+    "virtualization": {
+      "kvm": {
+        "description": "Kernel-based Virtual Machine. Nutzt CPU-Hardwarebeschleunigung für nahezu native Geschwindigkeit virtueller Maschinen.",
+        "title": "KVM-Unterstützung"
+      },
+      "libvirtdEnabled": {
+        "description": "Der System-Daemon zur Verwaltung virtueller Maschinen und Virtualisierungsplattformen.",
+        "title": "Libvirtd aktiviert"
+      },
+      "qemu": {
+        "description": "Ein quelloffener Maschinenemulator und Virtualisierer für beliebige Gastbetriebssysteme.",
+        "title": "QEMU installiert"
+      },
+      "qemuUserStatic": {
+        "description": "Ermöglicht das Ausführen von Binärdateien fremder Architekturen (z.B. via Podman).",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Registriert Handler für fremde Architekturen im Kernel, nützlich für aarch64 Container.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "Virtualisierung",
+      "userKvm": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'kvm' hinzu für hardwarebeschleunigte KVM-Virtualisierung.",
+        "title": "Benutzer in der Gruppe kvm"
+      },
+      "userLibvirt": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'libvirt' hinzu für die Verwaltung von KVM/QEMU VMs.",
+        "title": "Benutzer in der Gruppe libvirt"
+      },
+      "userVboxUsers": {
+        "description": "Fügt deinen Benutzer zur Gruppe 'vboxusers' hinzu, um VirtualBox verwenden zu können.",
+        "title": "Benutzer in der Gruppe vboxusers"
+      },
+      "virtManager": {
+        "description": "Eine grafische Anwendung (GUI) zum Erstellen und Verwalten von KVM/QEMU virtuellen Maschinen.",
+        "title": "Virt-manager-Unterstützung"
+      },
+      "virtualbox": {
+        "description": "Oracles beliebte plattformübergreifende Virtualisierungssoftware. Sehr benutzerfreundlich.",
+        "title": "VirtualBox-Unterstützung"
+      }
+    }
   },
   "taskmanager": {
-    "scriptMismatch": "Die Integrität des Skripts konnte nicht verifiziert werden.",
-    "scriptExecuted": "Die aktuelle Aufgabe ist abgeschlossen."
+    "scriptExecuted": "Die aktuelle Aufgabe wurde abgeschlossen.",
+    "scriptMismatch": "Skript wurde manipuliert, Ausführung wird verweigert!"
   },
-  "console": {
-    "title": "Terminal",
-    "runActions": "Aktionen ausführen",
-    "removeAll": "Alle Aktionen entfernen",
-    "abortAll": "Alle Aktionen abbrechen",
-    "noOutput": "Keine Ausgabe",
-    "outputExists": "Es scheint, als würde bereits eine Aktion ausgeführt. Bitte warte, bis sie abgeschlossen ist, bevor du versuchst, Protokolle anzuzeigen.",
-    "opRunning": "Die Operation wird bereits ausgeführt.",
-    "clearCachedDataTitle": "Ausgabe-Cache geleert",
-    "clearCachedData": "Der Ausgabe-Cache wurde geleert.",
-    "clearOutputCache": "Ausgabe-Cache leeren",
-    "copyOutput": "Terminalausgabe kopieren",
-    "copyToClipboardTitle": "In die Zwischenablage kopiert",
-    "copyToClipboard": "Die Ausgabe wurde erfolgreich in deine Zwischenablage kopiert.",
-    "uploadPrivateBin": "Auf PrivateBin hochladen",
-    "printScripts": "Skripte drucken"
+  "userManager": {
+    "actions": "Aktionen",
+    "addGroup": "Gruppe hinzufügen",
+    "addUser": "Benutzer hinzufügen",
+    "cancel": "Abbrechen",
+    "clearPending": "Ausstehende Änderungen verwerfen",
+    "confirmPassword": "Passwort bestätigen",
+    "confirmRemoveGroup": "Bist du sicher, dass du die Gruppe {{group}} entfernen möchtest?",
+    "confirmRemoveUser": "Bist du sicher, dass du den Benutzer {{username}} entfernen möchtest? Das Home-Verzeichnis wird ebenfalls gelöscht.",
+    "createHome": "Home-Verzeichnis erstellen",
+    "editUser": "Benutzer bearbeiten",
+    "enterGroupName": "Bitte gib einen Gruppennamen ein",
+    "enterPassword": "Bitte gib ein Passwort ein",
+    "enterUsername": "Bitte gib einen Benutzernamen ein",
+    "error": "Fehler",
+    "fullName": "Vollständiger Name",
+    "gid": "GID",
+    "groupExists": "Eine Gruppe mit diesem Namen existiert bereits",
+    "groupName": "Gruppenname",
+    "groups": "Gruppen",
+    "groupsColumn": "Gruppen",
+    "home": "Home-Verzeichnis",
+    "lock": "Sperren",
+    "locked": "Gesperrt",
+    "manageGroups": "Gruppen verwalten",
+    "manageGroupsFor": "Gruppen für {{username}} verwalten",
+    "members": "Mitglieder",
+    "newGroupName": "Gruppenname",
+    "newPassword": "Neues Passwort",
+    "noGroupsFound": "Keine Gruppen gefunden",
+    "noUsersFound": "Keine Benutzer gefunden",
+    "passwordDialogTitle": "Passwort für {{username}} festlegen",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
+    "pending": {
+      "add": "Ausstehendes Hinzufügen",
+      "lock": "Ausstehendes Sperren",
+      "membership": "Ausstehende Gruppenänderung",
+      "modify": "Ausstehende Änderung",
+      "password": "Ausstehendes Passwort",
+      "remove": "Ausstehendes Entfernen",
+      "unlock": "Ausstehendes Entsperren"
+    },
+    "removeGroup": "Gruppe entfernen",
+    "removeUser": "Benutzer entfernen",
+    "save": "Speichern",
+    "searchGroups": "Gruppen suchen",
+    "searchUsers": "Benutzer suchen",
+    "selectGroups": "Gruppen auswählen",
+    "setPassword": "Passwort festlegen",
+    "shell": "Shell",
+    "showAllUsers": "Alle Benutzer anzeigen",
+    "showUsersOnly": "Nur reguläre Benutzer anzeigen",
+    "system": "System",
+    "systemAccount": "Systemkonto",
+    "task": {
+      "addGroup": "Gruppe hinzufügen",
+      "addMembership": "Zu Gruppe hinzufügen",
+      "addUser": "Benutzer hinzufügen",
+      "lockUser": "Benutzer sperren",
+      "modifyUser": "Benutzer ändern",
+      "password": "Passwort festlegen",
+      "removeGroup": "Gruppe entfernen",
+      "removeMembership": "Aus Gruppe entfernen",
+      "removeUser": "Benutzer entfernen",
+      "unlockUser": "Benutzer entsperren"
+    },
+    "uid": "UID",
+    "unlock": "Entsperren",
+    "userExists": "Ein Benutzer mit diesem Namen existiert bereits",
+    "username": "Benutzername",
+    "users": "Benutzer"
+  },
+  "welcome": {
+    "bootRepair": "Boot-Reparatur",
+    "bootRepairSub": "Bootloader neu installieren oder reparieren",
+    "bootTools": "Boot-Werkzeuge",
+    "bootToolsSub": "Verwalte deine Boot-Einstellungen",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Paketupdates und mehr durchsuchen",
+    "chroot": "Chroot in Garuda",
+    "chrootSub": "Wechsle per Chroot in deine Garuda-Installation",
+    "diagnostics": "Diagnose",
+    "diagnosticsSub": "Überprüfe den Zustand deines Systems",
+    "donate": "Spenden",
+    "donateSub": "Unterstütze das Garuda Linux-Projekt",
+    "error": "Ein Fehler ist aufgetreten.",
+    "gaming": "Gaming-Apps",
+    "gamingSub": "Spiele deine Lieblingsspiele",
+    "gitlab": "GitLab",
+    "gitlabSub": "Wirf einen Blick auf unseren Quellcode",
+    "hello": "Hallo",
+    "install": "Garuda Linux installieren",
+    "installSub": "Hol dir Garuda Linux auf dein System",
+    "maintenance": "Wartung",
+    "maintenanceSub": "Halte dein System in gutem Zustand",
+    "network": "Netzwerkwerkzeuge",
+    "networkSub": "Verwalte deine Netzwerkeinstellungen",
+    "packages": "Apps entdecken",
+    "packagesSub": "Neue Software finden und installieren",
+    "searxng": "SearxNG",
+    "searxngSub": "Suchmaschine, die deine Privatsphäre respektiert",
+    "setupAssistant": "Einrichtungsassistent",
+    "setupAssistantSub": "Führe den Garuda Einrichtungsassistenten aus",
+    "startpage": "Startseite",
+    "startpageSub": "Öffne die Garuda Linux Startseite",
+    "subtitle": "Die ultimative Linux-Distribution für Gaming und Multimedia",
+    "systemTools": "Systemeinstellungen",
+    "systemToolsSub": "Konfiguriere dein System",
+    "title": "Willkommen bei ",
+    "titleTwo": "Garuda Linux",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Bitwarden-kompatibler, sicherer Passwort-Manager",
+    "whoogle": "Whoogle",
+    "whoogleSub": "Datenschutzfreundliche Suchmaschine"
   }
 }

@@ -1,751 +1,1557 @@
 {
-  "menu": {
-    "file": {
-      "title": "Fil",
-      "icon": "Icon",
-      "preferences": "Inställningar",
-      "quit": "Avsluta"
+  "bootOptions": {
+    "actions": "Åtgärder",
+    "apply": "Tillämpa inställningar",
+    "bootEntries": "Startposter",
+    "cancel": "Avbryt",
+    "configSaved": "GRUB-konfigurationen sparades",
+    "defaultEntry": "Standardstartpost",
+    "defaultEntryHint": "Menyposten som kommer att startas som standard.",
+    "edit": "Redigera",
+    "editConfigWarning": "Varning: Att direkt redigera GRUB-konfigurationsfiler kan vara farligt. Ändringar kan skrivas över när GRUB uppdateras. Använd med försiktighet.",
+    "editEntry": "Redigera startpost",
+    "editGrubDefault": "Redigera /etc/default/grub",
+    "editGrubDefaultHint": "Redigera GRUB-standardinställningsfilen. Kräver root-behörighet.",
+    "editingEntry": "Redigerar post",
+    "enableBootsplash": "Aktivera startskärm (bootsplash)",
+    "enableBootsplashHint": "Visar en grafisk animation (Plymouth) under startprocessen istället för textmeddelanden.",
+    "entryId": "Post-ID",
+    "entryName": "Postnamn",
+    "entrySaved": "Startposten sparades",
+    "errorTitle": "Fel",
+    "flatMenus": "Aktivera platta menyer",
+    "flatMenusHint": "Inaktiverar GRUB-undermenyer och visar alla poster i toppmenyn.",
+    "grubBackground": "GRUB-bakgrundsbild",
+    "grubTheme": "GRUB-tema",
+    "kernelParams": "Kärnparametrar",
+    "kernelParamsHint": "Ytterligare parametrar som skickas till Linux-kärnan vid start.",
+    "kernelParamsPlaceholder": "t.ex. quiet splash",
+    "messageLevel": "Startmeddelandedetalj",
+    "messageLevelDetailed": "Detaljerad (Quiet)",
+    "messageLevelHint": "Välj hur mycket information som ska visas under startprocessen.",
+    "messageLevelLimited": "Begränsad (Quiet + Hush)",
+    "messageLevelVeryDetailed": "Mycket detaljerad (Alla meddelanden)",
+    "mitigationsOff": "Inaktivera CPU-säkerhetsåtgärder (mitigations)",
+    "mitigationsOffHint": "Inaktiverar CPU-säkerhetsåtgärder för bättre prestanda men minskad säkerhet.",
+    "partitionSelect": "Välj partition",
+    "partitionSelectHint": "Välj partitionen som innehåller din Garuda-installation.",
+    "plymouthNotInstalled": "Plymouth är inte installerat. Aktivera det för att installera vid tillämpning.",
+    "plymouthPending": "Plymouth är schemalagt för installation. Du kan välja ett tema när installationen är klar.",
+    "plymouthTheme": "Plymouth-tema (startskärm)",
+    "plymouthThemeHint": "Temat som visas under systemets startprocess.",
+    "plymouthVmWarning": "Du kör i en virtuell maskin. Plymouth-startskärmen fungerar på ett begränsat sätt och förhandsgranskningen kanske inte fungerar korrekt.",
+    "previewComplete": "Förhandsgranskning klar",
+    "previewCompleteMessage": "Förhandsgranskningen av Plymouth-temat har slutförts.",
+    "previewError": "Förhandsgranskningen misslyckades",
+    "previewTheme": "Förhandsgranska Plymouth-tema",
+    "retry": "Försök igen",
+    "save": "Spara",
+    "saveDefault": "Spara standardpost",
+    "saveDefaultHint": "Sparar automatiskt den senast valda startposten som standard.",
+    "savedMessage": "Startinställningarna har tillämpats.",
+    "savedMessageScheduled": "Startinställningarna har lagts till bland väntande operationer.",
+    "savedTitle": "Inställningar sparade",
+    "saveSuccess": "Sparades",
+    "searchOtherOs": "Sök efter andra operativsystem",
+    "searchOtherOsHint": "Upptäck och lägg automatiskt till andra installerade operativsystem i startmenyn med os-prober.",
+    "selectBackground": "Välj bakgrundsbild",
+    "selectEntry": "Välj en startpost",
+    "selectGrubTheme": "Välj GRUB-tema",
+    "selectTheme": "Välj ett Plymouth-tema",
+    "submenu": "Undermeny",
+    "sysrqEnabled": "Aktivera alltid SysRq",
+    "sysrqEnabledHint": "Aktiverar Magic SysRq-tangenten för nödhantering av systemet.",
+    "timeout": "Menytidsgräns",
+    "timeoutHint": "Tiden i sekunder att vänta innan standardposten startas.",
+    "title": "Start-",
+    "titleTwo": "alternativ",
+    "unsavedChanges": "Du har osparade ändringar"
+  },
+  "bootRepair": {
+    "apply": "Tillämpa",
+    "backupFile": "Säkerhetskopieringsfil",
+    "backupMbrPbr": "Säkerhetskopiera MBR eller PBR",
+    "backupMbrPbrTip": "Skapa en säkerhetskopia av startkoden för Master Boot Record (MBR) eller Partition Boot Record (PBR). Detta inkluderar inte partitionstabellen.",
+    "backupRestoreTarget": "Mål för säkerhetskopiering eller återställning:",
+    "deviceOrPartition": "Enhet eller partition:",
+    "errorTitle": "Fel",
+    "installOn": "Installera på:",
+    "location": "Plats:",
+    "luksPassword": "LUKS-lösenord:",
+    "luksPasswordPlaceholder": "Ange LUKS-lösenfras",
+    "luksPasswordRequired": "Ange LUKS-lösenordet för denna root-partition.",
+    "luksTag": "LUKS",
+    "options": "Alternativ",
+    "partitionToMount": "Partition att montera:",
+    "reinstallGrub": "Installera om GRUB",
+    "reinstallGrubTip": "Installera om GRUB-starthanteraren på en specifik disk eller partition.",
+    "repairGrubConfig": "Reparera GRUB-konfiguration",
+    "repairGrubConfigTip": "Återskapa GRUB-konfigurationsfilen (grub.cfg) för att identifiera alla installerade operativsystem.",
+    "restoreMbrPbr": "Återställ MBR eller PBR från säkerhetskopia",
+    "restoreMbrPbrTip": "Återställ startkoden från en tidigare skapad säkerhetskopia.",
+    "rootLocation": "Root-plats:",
+    "selectLocation": "Välj en plats.",
+    "selectOperation": "Välj operation",
+    "selectRoot": "Välj en root-partition.",
+    "successBackup": "Säkerhetskopiering slutfördes.",
+    "successReinstall": "Ominstallation av GRUB slutfördes.",
+    "successRepair": "Reparation av GRUB slutfördes.",
+    "successRestore": "Återställning slutfördes.",
+    "successTitle": "Lyckades",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI System Partition. En partition som används av datorer med UEFI för att lagra starthanterare och kärnavbildningar.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. Den traditionella startsektorn i början av en partitionerad datalagringsenhet.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record. Även känd som Volume Boot Record (VBR). Det är den första sektorn på en specifik partition.",
+    "targetRoot": "Root",
+    "title": "Start-",
+    "titleTwo": "reparation"
+  },
+  "commandPalette": {
+    "hint": "Sök bland moduler och åtgärder",
+    "placeholder": "Skriv ett kommando eller sök efter en modul...",
+    "toClose": "för att stänga"
+  },
+  "configFiles": {
+    "actions": "Åtgärder",
+    "desc": {
+      "adjtime": "Används av hwclock för att hålla reda på hårdvaruklockan",
+      "alacritty": "Konfiguration för den GPU-accelererade terminalemulatorn Alacritty",
+      "alsa_base": "Kärnmodulalternativ för ALSA",
+      "amdgpu_conf": "Kärnmodulalternativ för AMDGPU",
+      "ananicy": "Regler för Ananicy auto-nice-demonen",
+      "asound_conf": "Systemomfattande ALSA-konfiguration",
+      "asoundrc": "Användarspecifik ALSA-konfiguration",
+      "bash_bashrc": "Systemomfattande Bash-inställningar för interaktiva skal",
+      "bashrc": "Bash-konfigurationsfil för den aktuella användaren",
+      "blacklist_nouveau": "Svartlistar den öppna källkodsdrivrutinen Nouveau",
+      "bluetooth_main": "Konfiguration för Bluetooth-demonen",
+      "btrfsAssistant": "Konfiguration för BTRFS Assistant",
+      "chaoticMirrorlist": "Garudas anpassade Chaotic-AUR-spegellista",
+      "cinnamon": "Huvudkonfigurationskatalog för Cinnamon-skrivbordet",
+      "cpupower": "Konfiguration för energihanteringsverktyget cpupower",
+      "cron": "Konfiguration för schemalagda cron-jobb",
+      "cursorThemeSystem": "Systemomfattande muspekartemakonfiguration",
+      "cursorThemeUser": "Användarspecifik muspekartemakonfiguration",
+      "dunst": "Konfiguration för aviseringsdemonen Dunst",
+      "environment": "Systemomfattande miljövariabler",
+      "environmentD": "Katalog för systemomfattande miljövariabler (Wayland)",
+      "fastfetch": "Konfiguration för systeminformationsverktyget Fastfetch",
+      "fish": "Konfigurationsfil för Fish-skalet",
+      "fontconfigSystem": "Systemomfattande teckensnittsinställningar",
+      "fontconfigUser": "Användarspecifika teckensnittsinställningar",
+      "fstab": "Statisk information om filsystem",
+      "gamemode": "Global konfiguration för optimeringsverktyget GameMode",
+      "garudaUpdateConfig": "Konfiguration för garuda-update-beteende och uppdateringsflaggor",
+      "gdm": "Konfiguration för GNOME Display Manager",
+      "gitconfig": "Användarspecifik Git-konfiguration",
+      "group": "Definierar användargrupper",
+      "grub": "Konfigurationsfil för starthanteraren GRUB",
+      "grub_cfg": "Konfigurationsfil för starthanteraren GRUB",
+      "grubTheme": "Konfiguration för GRUB-starthanterartemat",
+      "gtk3Settings": "Inställningar för GTK 3.0-applikationer",
+      "gtk4Css": "Anpassad CSS-stilmall för GTK 4.0-applikationer",
+      "gtk4Settings": "Inställningar för GTK 4.0-applikationer",
+      "gtkrc2": "Inställningar för äldre GTK 2.0-applikationer",
+      "hostname": "Systemets värdnamn",
+      "hosts": "Statisk uppslagstabell för värdnamn",
+      "hosts_allow": "TCP-wrappers för åtkomstkontroll till nätverkstjänster (tillåt)",
+      "hosts_deny": "TCP-wrappers för åtkomstkontroll till nätverkstjänster (neka)",
+      "hyprland": "Konfiguration för Hyprland Wayland-kompositor",
+      "hyprpaper": "Konfiguration för skrivbordsbakgrundsverktyget Hyprpaper",
+      "i3": "Konfiguration för den klassiska X11-fönsterhanteraren i3",
+      "iconTheme": "Ikontemakonfiguration",
+      "journald": "Konfiguration för systemd:s journaltjänst",
+      "kcmfonts": "KDE-teckensnittskonfiguration",
+      "kdeColorScheme": "Användarspecifika färgschemadrifinitioner för KDE",
+      "kdeglobals": "Globala KDE-konfigurationsinställningar",
+      "kdeLookandFeel": "Inställningar för KDE:s globala tema (utseende och känsla)",
+      "kitty": "Konfiguration för den funktionsrika, GPU-accelererade terminalemulatorn Kitty",
+      "kvantumConfig": "Konfiguration för den SVG-baserade temamotorn Kvantum",
+      "kwinrc": "Konfiguration för fönsterhanteraren KWin",
+      "lightdm": "Konfiguration för displayhanteraren LightDM",
+      "locale": "Systemomfattande språkkonfiguration",
+      "locale_gen": "Lista över tillgängliga språkversioner på systemet",
+      "logind": "Konfiguration för systemd:s inloggningshanterare",
+      "makepkgConf": "Konfigurationsalternativ för makepkg",
+      "mako": "Konfiguration för aviseringsdemonen Mako",
+      "mangohud": "Konfiguration för prestandaöverlägget MangoHud",
+      "mirrorlist": "Standard Arch Linux-spegellista",
+      "mkinitcpio": "Konfiguration för att skapa en initial ramdisk-miljö",
+      "modprobe_d": "Konfiguration och alternativ för kärnmoduler",
+      "networkmanager": "Global konfiguration för NetworkManager",
+      "nftables": "Konfiguration för brandväggen nftables",
+      "nvidia_conf": "Kärnmodulalternativ för NVIDIA",
+      "os_release": "Innehåller information om operativsystemet som används av olika program",
+      "pacman_hooks": "Krokar (hooks) för att automatisera åtgärder vid paketoperationer",
+      "pacmanConf": "Huvudkonfigurationsfil för pakethanteraren pacman",
+      "pam": "Konfigurationsfiler för Pluggable Authentication Modules (PAM)",
+      "pam_d": "PAM-konfiguration för autentiseringstjänster",
+      "passwd": "Innehåller användarkontoinformation",
+      "pipewire_client": "Konfiguration för PipeWire-klienter",
+      "pipewire_conf": "Konfiguration för PipeWire-demonen på användarnivå",
+      "plasmaApplets": "Konfiguration för Plasma-skrivbordsminiprogram",
+      "plasmaEnv": "Miljövariabler för Plasma-arbetsytan",
+      "plasmarc": "Huvudkonfiguration för Plasma-skalet",
+      "plymouthConf": "Konfiguration för startskärmsdemonen Plymouth",
+      "profile": "Användarspecifik miljö och startprogram",
+      "pulse_daemon": "Inställningar för PulseAudio-demonen",
+      "pulse_default": "Startskript för PulseAudio",
+      "qtile": "Konfiguration för den Python-baserade fönsterhanteraren Qtile",
+      "resolv": "Konfigurationsfil för DNS-uppslagning",
+      "rofi": "Konfiguration för applikationsstartaren och fönsterväxlaren Rofi",
+      "rsyslog": "Huvudkonfiguration för rsyslog-demonen",
+      "sddm": "Konfiguration för Simple Desktop Display Manager",
+      "shadow": "Innehåller hashad lösenords- och kontoutgångsinformation",
+      "snapperRoot": "Snapper-konfiguration för root-partitionen",
+      "ssh_user": "Användarspecifik SSH-klientkonfiguration",
+      "sshd": "Konfigurationsfil för OpenSSH-serverdemonen",
+      "starship": "Konfiguration för skalprompten Starship",
+      "sudoers": "Konfigurerar vilka användare som har sudo-behörigheter",
+      "sway": "Konfiguration för Sway Wayland-kompositor",
+      "sysctl": "Kärnparametrar (nätverk, prestanda, säkerhet)",
+      "systemd_network": "Konfigurationsfiler för systemd-networkd",
+      "systemd_services": "Anpassade eller åsidosatta systemd-tjänstedefinitioner",
+      "systemd_timers": "systemd-timers för schemalagda uppgifter",
+      "systemdSystem": "Global systemd-systemkonfiguration",
+      "systemdUser": "Global systemd-användarkonfiguration",
+      "timezone": "Ställer in systemets tidszon",
+      "udev_rules": "udev-regler för hårdvaruenhetsbeteende",
+      "userdirs": "XDG-användarmappskonfiguration",
+      "vconsole": "Konfiguration av den virtuella konsolen",
+      "waybar": "Huvudkonfiguration för statusfältet Waybar",
+      "waybarStyle": "CSS-stilmall för statusfältet Waybar",
+      "wayfire": "Konfiguration för 3D Wayland-kompositor",
+      "wayland_conf": "Användarspecifika konfigurationsfiler för Wayland-kompositor",
+      "wireplumber": "Konfigurationskatalog för sessionshanteraren WirePlumber",
+      "wofi": "Konfiguration för applikationsstartaren Wofi",
+      "xfce4": "Huvudkonfigurationskatalog för Xfce4",
+      "xorg_conf": "Äldre huvudkonfigurationsfil för Xorg",
+      "xorg_conf_d": "Katalog för Xorg-konfigurationssnuttar",
+      "xorg_gpu": "GPU-specifik Xorg-konfiguration (drivrutinsval, BusID, skärminställningar)",
+      "xorg_monitor": "Skärmlayout, upplösning och uppdateringsfrekvens för Xorg",
+      "zramGenerator": "Konfiguration för zram-generator",
+      "zsh": "Zsh-konfigurationsfil för den aktuella användaren"
     },
-    "modules": {
-      "title": "Moduler",
-      "icon": "Icon",
-      "search": "Sökalternativ",
-      "diagnostics": "Diagnosticering",
-      "maintenance": "Underhåll",
-      "systemSettings": "Systeminställningar",
-      "components": "Systemkomponenter",
-      "gaming": "Spel",
-      "locales": "Lokaliseringar",
-      "appSettings": "Appinställningar",
-      "kernels": "Kärnor",
-      "welcome": "Välkommen",
-      "systemdServices": "Systemd-tjänster",
-      "packages": "Paket"
-    },
-    "welcome": "Välkommen",
-    "maintenance": "Underhåll",
-    "systemTools": "Systeminställningar",
-    "components": "Komponenter",
-    "gaming": "Spel",
-    "boot": "Startverktyg",
-    "diagnostics": "Diagnostik",
-    "network": "Nätverksverktyg",
-    "settings": "Appinställningar",
-    "apply": "Lägg till väntande operationer",
-    "pending": "Väntande operationer",
-    "clearTasks": "Rensa uppgifter",
-    "help": {
-      "title": "Hjälp",
-      "icon": "Icon",
-      "getHelpForum": "Få hjälp på forumet",
-      "getHelpWiki": "Sök efter innehåll i wikin",
-      "getHelpArchWiki": "Sök efter innehåll i Arch Wiki",
-      "garudaStatus": "Kontrollera upptidsstatus",
-      "about": "Om Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox är ett systemunderhålls- och diagnostikverktyg för Garuda Linux. Det är utformat för att hjälpa användare att underhålla sitt system och diagnostisera problem. Det är byggt med Electron och Angular.",
-      "callExorcist": "Ring exorcisten",
-      "callExorcistTitle": "Exorcisten har kallats!",
-      "callExorcistBody": "Du måste vara ganska desperat för att klicka på den här knappen! Jag har åkallat lite specialvoodoo åt dig, om du fortfarande har problem med appen, vänligen rapportera dem på Garuda Linux-forumet eller vår ärendehanterare."
-    },
-    "terminalRunning": "Körande uppgifter",
-    "terminalTasks": "Utför uppgifter",
-    "console": "Visa terminal"
+    "description": "Beskrivning",
+    "edit": "Redigera",
+    "name": "Namn",
+    "path": "Sökväg",
+    "search": "Sök konfigurationsfiler...",
+    "title": "Konfigurations-",
+    "titleTwo": "filer",
+    "wiki": "Wiki"
+  },
+  "confirmation": {
+    "accept": "Acceptera",
+    "applyOperations": "Tillämpa operationer?",
+    "applyOperationsBody": "Är du säker på att du vill tillämpa alla väntande operationer?",
+    "cancel": "Avbryt",
+    "createSnapshotBefore": "Skapa Btrfs-snapshot före körning",
+    "exitApp": "Är du säker på att du vill avsluta appen?",
+    "exitAppHeader": "Avsluta appen?",
+    "exitAppRunningAction": "Är du säker på att du vill avsluta appen? En åtgärd körs!",
+    "password": "Lösenord",
+    "reject": "Avbryt",
+    "resetConfigsBody": "Är du säker på att du vill återställa följande konfigurationer?",
+    "resetConfigsHeader": "Återställ konfigurationer?",
+    "save": "Cache i denna session",
+    "subtitle": "Ange ditt lösenord för att fortsätta",
+    "title": "Autentisering krävs",
+    "useOnce": "Använd endast en gång"
+  },
+  "console": {
+    "abortAll": "Avbryt alla åtgärder",
+    "clearCachedData": "Utdatacachen har rensats.",
+    "clearCachedDataTitle": "Utdatacache rensad",
+    "clearOutputCache": "Rensa utdatacache",
+    "copyOutput": "Kopiera terminalutdata",
+    "copyToClipboard": "Utdatan har kopierats till ditt urklipp.",
+    "copyToClipboardTitle": "Kopierat till urklipp",
+    "noOutput": "Ingen utdata",
+    "noTasksPending": "Inga väntande uppgifter",
+    "opRunning": "Operationen körs redan.",
+    "outputExists": "Det verkar som att en åtgärd redan körs. Vänta tills den är klar innan du försöker visa loggar.",
+    "printScripts": "Skriv ut script",
+    "removeAll": "Ta bort alla åtgärder",
+    "runActions": "Kör åtgärder",
+    "tasksAppearHere": "Uppgifter visas här när du väljer objekt.",
+    "title": "Terminal",
+    "uploadPrivateBin": "Ladda upp till PrivateBin"
   },
   "diagnostics": {
-    "title": "Felsökningsinfo ",
-    "icon": "Icon",
-    "titleTwo": "och diagnostik",
-    "subtitle": "Hitta informationen du behöver för att felsöka ditt system",
-    "inxi": "Vanlig info (inxi)",
-    "systemctl": "Systemtjänster (systemctl)",
-    "journalctl": "Systemloggar (journalctl)",
-    "dmesg": "Kärnloggar (dmesg)",
-    "full": "Fullständig diagnostik",
-    "upload": "Ladda upp till PrivateBin",
-    "failedCmdHeader": "Misslyckades med att köra kommando",
-    "failedCmd": "Något gick fel och ingen diagnostik kunde hämtas",
-    "pacman": "Senaste Pacman-loggar",
     "copySuccess": "Kopierat till urklipp",
+    "dmesg": "Kärnloggar (dmesg)",
+    "dmesgDesc": "Granska meddelanden från kärnans ringbuffert.",
+    "exitCode": "Kommandot avslutades med kod {{code}}",
+    "failedCmd": "Något gick fel och ingen diagnostik kunde hämtas",
+    "failedCmdHeader": "Misslyckades med att köra kommando",
+    "full": "Fullständig diagnostik",
+    "fullDesc": "Samla all tillgänglig diagnostikinformation i en enda utdata.",
+    "health": "Systemhälsa",
+    "healthDesc": "Kör en kontroll av systemhälsan med garuda-health.",
+    "inxi": "Vanlig info (inxi)",
+    "inxiDesc": "Samla detaljerad hårdvaru- och systeminformation.",
+    "journalctl": "Systemloggar (journalctl)",
+    "journalctlDesc": "Granska systemloggar från journal-demonen.",
+    "pacman": "Senaste Pacman-loggar",
+    "pacmanDesc": "Visa de senaste loggarna från pakethanteraren pacman.",
+    "subtitle": "Hitta informationen du behöver för att felsöka ditt system",
     "success": "Lyckades",
+    "systemctl": "Systemtjänster (systemctl)",
+    "systemctlDesc": "Analysera systemets startprestanda och tjänstestatus.",
+    "title": "Felsökningsinfo ",
+    "titleTwo": "och diagnostik",
+    "upload": "Ladda upp till PrivateBin",
+    "uploadDesc": "Ladda upp aktuell terminalutdata till PrivateBin för delning.",
     "uploadSuccess": "Laddades upp till PrivateBin, URL kopierad till urklipp"
   },
-  "lang": {
-    "title": "Språkval",
-    "icon": "Icon",
-    "tooltip": "Välj önskat språk"
-  },
-  "welcome": {
-    "title": "Välkommen till ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux",
-    "subtitle": "Den ultimata Linux-distributionen för spel och multimedia",
-    "maintenance": "Underhåll",
-    "maintenanceSub": "Håll ditt system i gott skick",
-    "systemTools": "Systeminställningar",
-    "systemToolsSub": "Konfigurera ditt system",
-    "gaming": "Spelappar",
-    "gamingSub": "Spela dina favoritspel",
-    "bootTools": "Startverktyg",
-    "bootToolsSub": "Hantera dina startinställningar",
-    "network": "Nätverksverktyg",
-    "networkSub": "Hantera dina nätverksinställningar",
-    "diagnostics": "Diagnostik",
-    "diagnosticsSub": "Kontrollera systemets hälsa",
-    "install": "Installera Garuda Linux",
-    "installSub": "Skaffa Garuda Linux på ditt system",
-    "chroot": "Chroot till Garuda",
-    "chrootSub": "Chroot till din Garuda-installation",
-    "startpage": "Startsida",
-    "startpageSub": "Öppna Garuda Linux startsida",
-    "setupAssistant": "Installationsassistent",
-    "setupAssistantSub": "Kör Garuda installationsassistent",
-    "hello": "Hej",
-    "error": "Ett fel inträffade.",
-    "gitlab": "",
-    "gitlabSub": "Ta en titt på vår källkod",
-    "chaotic": "",
-    "chaoticSub": "Ta en titt på paket-uppdateringar och mer",
-    "searxng": "",
-    "searxngSub": "Sökmotor som respekterar ditt privatliv",
-    "whoogle": "",
-    "whoogleSub": "Sökmotor som respekterar ditt privatliv",
-    "vaultwarden": "",
-    "vaultwardenSub": "Bitwarden kompatibel lösenordshanterare",
-    "donate": "Donera",
-    "donateSub": "Stöd Garuda Linux projektet"
+  "error": {
+    "sudoPassword": "Detta verkar inte vara rätt lösenord. Försök igen."
   },
   "gaming": {
-    "title": "Spel",
-    "icon": "Icon",
-    "titleTwo": "-appar",
-    "subtitle": "Låt oss komma igång med några spelappar!",
-    "launchers": "Spelstartare",
-    "wine": "",
-    "loading": "Laddar...",
-    "tools": "Spelverktyg",
-    "emulators": "Emulatorer",
-    "controllers": "Kontrollstöd",
-    "games": "Spel",
-    "misc": "Diverse",
-    "bluez": "Krävs generellt för att känna igen trådlösa PS-kontroller",
-    "xboxdrv": "Xbox kontrolldrivrutin, använd endast om kärndrivrutinen inte fungerar!",
-    "wineMeta": "Metapaket för att installera WINE och alla nödvändiga beroenden",
-    "bottles": "Enkel hantering av Wine och Proton prefix",
-    "heroic": "En spelstartare med öppen källkod för Epic-, Amazon- och GOG-spel",
-    "itch": "Installatör för itch.ios desktopapp",
-    "lutris": "Öppen spelplattform",
-    "minigalaxy": "En enkel GOG-klient för Linux",
-    "steamNative": "Linuxbaserat utbytesbibliotek för Steam-runtime",
-    "steamRuntime": "Valves digitala mjukvaruleveranssystem",
-    "gamemode": "En daemon/lib kombination som tillåter spel att begära temporära optimeringar till sitt värd-OS",
-    "gamescope": "SteamOS-sessions för hantering av kompositionsfönster",
-    "mangohud": "Ett Vulkan-overlay för övervakning av FPS, temperatur, CPU/GPU-belastning och mer",
-    "steamtinkerlaunch": "Wrapper-script för anpassade startval i Steam",
-    "vkbasalt": "Ett Vulkan post-processlager. Några av effekterna är CAS, FXAA, SMAA, deband",
-    "dxvk": "Ett Vulkanbaserat kompabilitetslager för Direct3D 9/10/11 som tillåter Linux Wine att köra 3D-applikationer.",
-    "lact": "Linux GPU konfigurationsverktyg",
-    "gamescopeSession": "Gamescope-session för hantering av kompositionsfönster",
-    "gamescopeSessionSteam": "Gamescope-session optimerad för Steamspel",
-    "vrVideoPlayer": "Videospelare för VR-innehåll",
-    "boxtron": "Kompabilitetsverktyg för att köra DOS-spel på Steam via Linux interna DOSBox",
-    "luxtorpeda": "Steam Play-kompabilitetsverktyg för att köra spel med hjälp av Linux interna motorer",
-    "protonGeCustom": "En populär custom-distribution av Valves Proton med diverse patcher",
-    "protontricks": "En enkel wrapper som utför Winetricks uppgifter i spel med Proton",
-    "protonupQt": "Installera och hantera Proton-GE och Luxtorpeda för Steam och WINE-GE för Lutris",
-    "winePackage": "Ett kompabilitetslager för Windows-program",
-    "wineStaging": "Ett kopmabilitetslager för Windows-program - Iscensättningsgren",
-    "winetricks": "Installationsscript för diverse omdistribuerbara runtime-bibliotek i Wine",
     "antimicrox": "GUI för att mappa tangentbord- & muskontroller till en gamepad",
     "anydesk": "Den snabba \"Remote Desktop\"-applikationen",
+    "bluez": "Krävs generellt för att känna igen trådlösa PS-kontroller",
+    "bottles": "Enkel hantering av Wine och Proton prefix",
+    "boxtron": "Kompabilitetsverktyg för att köra DOS-spel på Steam via Linux interna DOSBox",
+    "controllers": "Kontrollstöd",
     "corectrl": "Kärnkontrollapplikation",
+    "desmume": "Nintendo DS-emulator",
+    "dgenSdl": "En emulator för Sega Genesis/Mega Drive-system portad till SDL",
     "discord": "Allt-i-ett tal- och textchatt för gamers",
     "displaycal": "Skärmkalibrering och karakterisering med hjälp av Argyll CMS (Öppen källkod)",
+    "dolphinEmu": "En Gamecube- och Wii-emulator",
+    "dosbox": "Emulator med inbyggd DOS för att köra DOS-spel",
     "droidcam": "Ett verktyg för att omvandla din telefon/padda till en trådlös/usb-kamera",
+    "duckstation": "Playstation-emulator (senaste GPL-versionen)",
+    "dxvk": "Ett Vulkanbaserat kompabilitetslager för Direct3D 9/10/11 som tillåter Linux Wine att köra 3D-applikationer.",
     "easyeffects": "Ljudeffekter för Pipewire-applikationer",
+    "eka2l1": "Experimentiell Symbian OS-emulator",
+    "emulationstation": "Emulation Station är ett flexibelt emulatorgränssnitt som stöder tangentbordslös navigering och anpassade systemteman",
+    "emulators": "Emulatorer",
+    "fceux": "Snabb och ultrakompatibel NES/Famicom-emulator",
+    "fsUae": "En Amiga-emulator baserad på UAE/WinUAE med fokus på att emulera spel",
+    "gameconqueror": "Minnesskanner utformad för att isolera adressen till en godtycklig variabel i en exekverande process",
+    "gamemode": "En daemon/lib kombination som tillåter spel att begära temporära optimeringar till sitt värd-OS",
+    "games": "Spel",
+    "gamescope": "SteamOS-sessions för hantering av kompositionsfönster",
+    "gamescopeSession": "Gamescope-session för hantering av kompositionsfönster",
+    "gamescopeSessionSteam": "Gamescope-session optimerad för Steamspel",
     "goverlay": "Ett GUI för att hantera Vulkan/OpenGL-overlays",
     "gwe": "Ett systemverktyg för NVIDIA GPU-kontroll",
-    "gameconqueror": "Minnesskanner utformad för att isolera adressen till en godtycklig variabel i en exekverande process",
+    "hatari": "En Atari ST och STE-emulator",
+    "heroic": "En spelstartare med öppen källkod för Epic-, Amazon- och GOG-spel",
     "inputRemapper": "Ett verktyg för att ändra och programmera mappningen av dina inmatningsenheters knappar",
+    "itch": "Installatör för itch.ios desktopapp",
+    "kegaFusion": "En emulator av klassiska Sega-konsoler, inklusive SMS/GG, Genesis/Megadrive och tillägg",
     "keyboardVisualizer": "Förvandla din OpenRGB-stödda RGB-installation till en spektakulär ljusshow med din musik",
+    "lact": "Linux GPU konfigurationsverktyg",
+    "launchers": "Spelstartare",
+    "libretroMeta": "Metapaket för alla Libretro-emulatorer som stöds",
+    "loading": "Laddar...",
+    "lutris": "Öppen spelplattform",
+    "luxtorpeda": "Steam Play-kompabilitetsverktyg för att köra spel med hjälp av Linux interna motorer",
+    "mame": "Portering av den populära Multiple Arcade Machine Emulator med SDL och OpenGL-stöd",
+    "mangohud": "Ett Vulkan-overlay för övervakning av FPS, temperatur, CPU/GPU-belastning och mer",
+    "mednafen": "Kommandoradsspelemulator för flera system",
+    "mgba": "En Nintendo Gameboy Advance-emulator med inriktning på hastighet och noggrannhet",
+    "minigalaxy": "En enkel GOG-klient för Linux",
+    "misc": "Diverse",
     "mumble": "Högkvalitativ röstchattprogramvara med öppen källkod, låg latens, ",
+    "nestopia": "NES/Famicom-emulator med hög noggrannhet",
     "noisetorch": "Brusreducering i realtid för mikrofon i Linux",
     "nyrna": "Pausa spel och applikationer när som helst och återuppta när du vill",
     "obsStudio": "Gratis programvara med öppen källkod för livestreaming och inspelning",
     "openrgb": "RGB-belysningskontroll med öppen källkod som inte är beroende av tillverkarens programvara",
     "oversteer": "Grafisk applikation för att konfigurera Logitech Wheels",
+    "pcsx2": "Playstation 2-emulator",
+    "pegasusFrontend": "Ett plattformsoberoende, anpassningsbart grafiskt gränssnitt för att starta emulatorer och hantera din spelsamling",
     "piper": "GTK-app för konfiguration av gamingmus",
     "polychromatic": "RGB-belysningshanteringsapplikation för OpenRazer",
-    "scController": "Användarlägesdrivrutin, mapper och GTK3-baserat grafiskt gränssnitt för Steam Controller, DS4 och liknande handkontroller",
-    "soundwire": "Överför ljud trådlöst från din dator till din Android-telefon eller andra datorer",
-    "streamlinkTwitchGui": "En multiplatforms Twitch.tv-läsare för Streamlink",
-    "vlc": "Multiplattforms MPEG-, VCD/DVD- och DivX-spelare",
-    "xoneDongleFirmware": "Xbox Wireless Controller Adapter-firmware",
-    "xoneDkms": "Modern Linux-drivrutin för Xbox One- och Xbox Series X|S-kontroller",
-    "xpadneo": "Avancerad Linux-drivrutin för trådlös Xbox One-gamepad",
-    "dgenSdl": "En emulator för Sega Genesis/Mega Drive-system portad till SDL",
-    "dosbox": "Emulator med inbyggd DOS för att köra DOS-spel",
-    "desmume": "Nintendo DS-emulator",
-    "dolphinEmu": "En Gamecube- och Wii-emulator",
-    "duckstation": "Playstation-emulator (senaste GPL-versionen)",
-    "emulationstation": "Emulation Station är ett flexibelt emulatorgränssnitt som stöder tangentbordslös navigering och anpassade systemteman",
-    "fceux": "Snabb och ultrakompatibel NES/Famicom-emulator",
-    "fsUae": "En Amiga-emulator baserad på UAE/WinUAE med fokus på att emulera spel",
-    "hatari": "En Atari ST och STE-emulator",
-    "kegaFusion": "En emulator av klassiska Sega-konsoler, inklusive SMS/GG, Genesis/Megadrive och tillägg",
-    "libretroMeta": "Metapaket för alla Libretro-emulatorer som stöds",
-    "retroarch": "Referensgränssnitt för libretro API",
-    "mame": "Portering av den populära Multiple Arcade Machine Emulator med SDL och OpenGL-stöd",
-    "mednafen": "Kommandoradsspelemulator för flera system",
-    "nestopia": "NES/Famicom-emulator med hög noggrannhet",
-    "pcsx2": "Playstation 2-emulator",
     "ppsspp": "En PSP-emulator skriven i C++",
-    "pegasusFrontend": "Ett plattformsoberoende, anpassningsbart grafiskt gränssnitt för att starta emulatorer och hantera din spelsamling",
+    "protonCachyOS": "Distribution av Valves Proton med CachyOS-patchar och andra optimeringar",
+    "protonGeCustom": "En populär custom-distribution av Valves Proton med diverse patcher",
+    "protontricks": "En enkel wrapper som utför Winetricks uppgifter i spel med Proton",
+    "protonupQt": "Installera och hantera Proton-GE och Luxtorpeda för Steam och WINE-GE för Lutris",
+    "retroarch": "Referensgränssnitt för libretro API",
     "rpcs3": "Playstation 3-emulator",
     "ryujinx": "Experimentiell Nintendo Switch-emulator, skriven i C#",
     "sameboy": "En noggrannhetsfokuserad Game Boy/Game Boy Color-emulator",
+    "scController": "Användarlägesdrivrutin, mapper och GTK3-baserat grafiskt gränssnitt för Steam Controller, DS4 och liknande handkontroller",
     "scummvm": "En \"virtuell maskin\" för flera klassiska grafiska peka-och-klicka-äventyrsspel",
     "snes9x": "Bärbar Super Nintendo Entertainment System (TM)-emulator",
+    "soundwire": "Överför ljud trådlöst från din dator till din Android-telefon eller andra datorer",
+    "steamNative": "Linuxbaserat utbytesbibliotek för Steam-runtime",
+    "steamRuntime": "Valves digitala mjukvaruleveranssystem",
+    "steamtinkerlaunch": "Wrapper-script för anpassade startval i Steam",
     "stella": "Atari 2600 VCS-emulator",
+    "streamlinkTwitchGui": "En multiplatforms Twitch.tv-läsare för Streamlink",
+    "subtitle": "Låt oss komma igång med några spelappar!",
+    "title": "Spel",
+    "titleTwo": "-appar",
+    "tools": "Spelverktyg",
     "torzu": "Ytterligare en emulator gren",
+    "vesktop": "Vesktop är en anpassningsbar och integritetsvänlig skrivbordsapp för Discord",
     "vice": "Mångsidig Commodore-emulator",
+    "vkbasalt": "Ett Vulkan post-processlager. Några av effekterna är CAS, FXAA, SMAA, deband",
+    "vlc": "Multiplattforms MPEG-, VCD/DVD- och DivX-spelare",
+    "vrVideoPlayer": "Videospelare för VR-innehåll",
     "waydroid": "Python-script för att lägga till OpenGapps, Magisk, libhoudini translation library och libndk translation library till Wayroid",
+    "wine": "WINE",
+    "wineMeta": "Metapaket för att installera WINE och alla nödvändiga beroenden",
+    "winePackage": "Ett kompabilitetslager för Windows-program",
+    "wineStaging": "Ett kopmabilitetslager för Windows-program - Iscensättningsgren",
+    "winetricks": "Installationsscript för diverse omdistribuerbara runtime-bibliotek i Wine",
+    "xboxdrv": "Xbox kontrolldrivrutin, använd endast om kärndrivrutinen inte fungerar!",
     "xemu": "Orginal Xbox-emulator",
-    "zsnes": "Super Nintendo-emulator",
-    "eka2l1": "Experimentiell Symbian OS-emulator",
-    "mgba": "En Nintendo Gameboy Advance-emulator med inriktning på hastighet och noggrannhet"
-  },
-  "maintenance": {
-    "title": "System",
-    "icon": "Icon",
-    "titleTwo": "-underhåll",
-    "subtitle": "Håll ditt system i gott skick",
-    "update": "Uppdatera ditt system",
-    "addPending": "Lägg till väntande",
-    "removePending": "Ta bort väntande",
-    "runNow": "Kör nu",
-    "failedReset": "Fel vid återställning av konfigurationsfil",
-    "failedResetFile": "Fel inträffade vid återställning av {{file}}",
-    "editRepos": "Redigera förråd",
-    "onlyDirect": "Denna åtgärd kan inte köas och måste köras direkt.",
-    "cleanCache": "Rensa cache",
-    "cleanCacheSub": "Ta bort alla cachade paket",
-    "updateSystem": "Uppdatera system",
-    "taskRunningHeader": "Fel vid körning av underhållsåtgärd",
-    "taskRunning": "Det finns redan en uppgift som körs, vänta tills den är klar först.",
-    "updateSystemSub": "Uppdatera ditt system via garuda-update",
-    "editReposSub": "Redigera dina förråd med Pace",
-    "addPendingSub": "Lägg till väntande operationer",
-    "clearOrphans": "Rensa överblivna paket",
-    "clearOrphansSub": "Ta bort överblivna paket",
-    "refreshMirrors": "Uppdatera speglar",
-    "refreshMirrorsSub": "Uppdatera din spegellista",
-    "refreshKeyring": "Uppdatera nyckelring",
-    "refreshKeyringSub": "Uppdatera din Pacman-nyckelring",
-    "removeLock": "Ta bort Pacman-lås",
-    "removeLockSub": "Ta bort pacman-låsfilen",
-    "reinstallPackages": "Ominstallera paket",
-    "reinstallPackagesSub": "Ominstallera alla paket på ditt system",
-    "reinstallDkmsModules": "Ominstallera DKMS-moduler",
-    "btrfsAssistant": "Btrfs Assistant",
-    "btrfsAssistantSub": "Hantera dina BTRFS-snapshots och kör underhållsuppgifter",
-    "mergePacDiff": "Sammanfoga pacdiff-filer",
-    "mergePacDiffSub": "Sammanfoga .pacnew och .pacsave-filer interaktivt",
-    "updateRemoteFullFix": "Garuda update fullständig fix",
-    "updateRemoteFullFixSub": "Återställ Pacman helt och installera om alla paket",
-    "updateRemoteKeyring": "Garuda update nyckelring",
-    "updateRemoteKeyringSub": "Återställ nyckelring till Garuda-standard",
-    "updateRemoteFix": "Garuda update fix",
-    "updateRemoteFixSub": "Återställ pacman.conf, speglingar och nyckelring till Garuda-standardinställningarna",
-    "updateRemoteResetSnapper": "Återställ snapper",
-    "updateRemoteResetSnapperSub": "Återställ Snapper helt och återskapa dess konfigurationer",
-    "updateRemoteResetAudio": "Återställ ljud",
-    "updateRemoteResetAudioSub": "Ominstallera/återställ PipeWire-ljudkonfigurationen",
-    "resetTooltip": "Följande filer eller mappar kommer att återställas till sitt standardläge:",
-    "resetConfigs": "Återställ konfigurationer till standardläge",
-    "common": "Vanligt underhåll",
-    "garudaUpdate": "Garuda update räddningsverktyg",
-    "actionFailedHeader": "Misslyckades med att köra underhållsåtgärden",
-    "actionFailed": "Ett fel uppstod när {{ action }} skulle köras med felet {{ error }}.",
-    "installationFailedHeader": "{{ program }} är inte installerat och kunde inte installeras, det går inte att fortsätta. Kontrollera loggarna för mer information."
-  },
-  "sudo": {
-    "title": "Autentisering krävs",
-    "icon": "Icon",
-    "subtitle": "Ange ditt lösenord för att fortsätta",
-    "save": "Cache i denna session",
-    "password": "Lösenord",
-    "cancel": "Avbryt",
-    "useOnce": "Använd endast en gång"
-  },
-  "systemdServices": {
-    "notFound": "Inga tjänster hittades",
-    "description": "Beskrivning",
-    "unit": "Enhetsnamn",
-    "load": "Ladda",
-    "active": "Aktiv",
-    "state": "Tillstånd",
-    "searchKey": "Ange ett sökord",
-    "clear": "Rensa",
-    "actions": "Åtgärder",
-    "show": "Visa",
-    "start": "Starta",
-    "stop": "Stoppa",
-    "mask": "Maskera",
-    "unmask": "Avmaskera",
-    "logs": "Loggar",
-    "restart": "Starta om",
-    "reload": "Ladda om",
-    "enable": "Aktivera",
-    "disable": "Inaktivera",
-    "autoRefresh": "Automatisk uppdatering",
-    "error": "Ett fel inträffade vid hämtning av tjänster, försök igen.",
-    "errorTitle": "Fel vid hämtning av tjänster",
-    "systemContext": "Visa systemtjänster",
-    "userContext": "Visa användartjänster",
-    "includeDisabled": "Inkludera inaktiverade",
-    "excludeDisabled": "Exkludera inaktiverade"
-  },
-  "systemTools": {
-    "title": "System",
-    "icon": "Icon",
-    "titleTwo": "-inställningar",
-    "systemdServices": "Systemd-tjänster",
-    "systemSettings": "Systeminställningar",
-    "components": "Systemkomponenter",
-    "locales": "Språkversioner",
-    "kernels": "Kärnor",
-    "packages": "Ytterligare paket",
-    "audio": {
-      "title": "Ljud",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA-stöd"
-      },
-      "jack": {
-        "title": "JACK-stöd"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio-stöd"
-      },
-      "pipewire": {
-        "title": "PipeWire-stöd"
-      },
-      "userRealtime": {
-        "title": "Användare i realtime-gruppen"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP installerat"
-      }
-    },
-    "virtualization": {
-      "title": "Virtualisering",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU installerat"
-      },
-      "kvm": {
-        "title": "KVM-stöd"
-      },
-      "virtManager": {
-        "title": "Virt-manager-stöd"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd aktiverat"
-      },
-      "userVboxUsers": {
-        "title": "Användare i vboxusers-gruppen"
-      },
-      "virtualbox": {
-        "title": "VirtualBox-stöd"
-      },
-      "userLibvirt": {
-        "title": "Användare i libvirt-gruppen"
-      },
-      "userKvm": {
-        "title": "Användare i kvm-gruppen"
-      }
-    },
-    "containers": {
-      "title": "Containers",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker installerat"
-      },
-      "dockerEnabled": {
-        "title": "Docker aktiverat"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose installerat"
-      },
-      "userDocker": {
-        "title": "Användare i docker-gruppen"
-      },
-      "podman": {
-        "title": "Podman installerat"
-      },
-      "podmanDocker": {
-        "title": "Emulera Docker via Podman"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop installerat"
-      },
-      "distrobox": {
-        "title": "DistroBox installerat"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy installerat"
-      }
-    },
-    "network": {
-      "title": "Nätverk",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager-stöd"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager aktiverat"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager aktiverat"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Bluetooth-stöd"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth aktiverat"
-      },
-      "userBluetooth": {
-        "title": "Användare i bluetooth-gruppen"
-      },
-      "autoConnect": {
-        "title": "Automatisk anslutning installerad"
-      },
-      "autoConnectEnabled": {
-        "title": "Automatisk anslutning aktiverad"
-      }
-    },
-    "printing": {
-      "title": "Utskrift",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "Utskriftsstöd"
-      },
-      "cupsEnabled": {
-        "title": "CUPS aktiverat"
-      },
-      "scanningSupport": {
-        "title": "Skanningsstöd"
-      },
-      "sanedEnabled": {
-        "title": "saned aktiverat"
-      },
-      "userCups": {
-        "title": "Användare i cups-gruppen"
-      },
-      "userScanner": {
-        "title": "Användare i scanner-gruppen"
-      },
-      "userLp": {
-        "title": "Användare i lp-gruppen"
-      }
-    },
-    "firewall": {
-      "title": "Brandvägg",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld installerat"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld aktiverat"
-      },
-      "ufw": {
-        "title": "UFW installerat"
-      },
-      "ufwEnabled": {
-        "title": "UFW aktiverat"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch installerat"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch aktiverat"
-      }
-    },
-    "misc": {
-      "title": "Diverse",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem installerat"
-      }
-    }
-  },
-  "systemSettings": {
-    "defaultShellConfigs": "Installera standardkonfigurationer",
-    "defaultDns": "Ställ in standard-DNS",
-    "defaultShell": "Ställ in inloggningsskal",
-    "enableHblock": "Aktivera Hblock",
-    "enableIwd": "Använd IWD istället för wpa_supplicant",
-    "common": {
-      "title": "Allmänt",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon installerat"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon aktiverat"
-      },
-      "oomd": {
-        "title": "Systemd-oomd aktiverat"
-      },
-      "guestUser": {
-        "title": "Aktivera gästanvändare"
-      }
-    },
-    "performance": {
-      "title": "Prestanda",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "Prestandajusteringar"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ installerat"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ aktiverat"
-      },
-      "bpftune": {
-        "title": "Bpftune installerat"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune aktiverat"
-      },
-      "preload": {
-        "title": "Preload installerat"
-      },
-      "preloadEnabled": {
-        "title": "Preload aktiverat"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance aktiverat"
-      }
-    },
-    "powersave": {
-      "title": "Energisparläge",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "Energisparjusteringar"
-      },
-      "tlp": {
-        "title": "TLP installerat"
-      },
-      "tlpEnabled": {
-        "title": "TLP aktiverat"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq installerat"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq aktiverat"
-      },
-      "thermald": {
-        "title": "Thermald installerat"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald aktiverat"
-      },
-      "powerProfilesDaemon": {
-        "title": "Power profiles daemon installerat"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Power profiles daemon aktiverat"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt installerat"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt aktiverat"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "Högerklicksemulering",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev långtryck högerklicksemulering"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE aktiverat"
-      }
-    }
-  },
-  "shells": {
-    "fish": {
-      "hint": "Att ställa in fish som standardskal kan orsaka problem med andra program. Det rekommenderas att ställa in det som standard via terminalkonfigurationer istället."
-    }
-  },
-  "confirmation": {
-    "accept": "Acceptera",
-    "reject": "Avbryt",
-    "exitApp": "Är du säker på att du vill avsluta appen?",
-    "exitAppRunningAction": "Är du säker på att du vill avsluta appen? En åtgärd körs!",
-    "resetConfigsHeader": "Återställ konfigurationer?",
-    "resetConfigsBody": "Är du säker på att du vill återställa följande konfigurationer?",
-    "exitAppHeader": "Avsluta appen?",
-    "applyOperations": "Tillämpa operationer?",
-    "applyOperationsBody": "Är du säker på att du vill tillämpa alla väntande operationer?"
-  },
-  "error": {
-    "sudoPassword": "Detta verkar inte vara rätt lösenord. Försök igen."
-  },
-  "operation": {
-    "removeApps": "Ta bort appar",
-    "installApps": "Installera appar",
-    "addGroup": "Lägg till användare i grupp",
-    "removeGroup": "Ta bort användare från grupp",
-    "disableService": "Inaktivera tjänst",
-    "enableService": "Aktivera tjänst",
-    "setDefaultShell": "Ställ in standardskal",
-    "enableHblock": "Aktivera Hblock",
-    "disableHblock": "Inaktivera Hblock",
-    "setNewDnsServer": "Ställ in ny DNS-server",
-    "resetDnsServer": "Återställ DNS-server",
-    "args": "Argument",
-    "logs": "Loggar",
-    "remove": "Ta bort",
-    "abort": "Avbryt",
-    "run": "Kör nu"
-  },
-  "systemStatus": {
-    "pendingUpdates": "Väntande uppdateringar",
-    "updates": "Detta system har väntande uppdateringar (klicka för info)",
-    "pacFiles": "Detta system har väntande .pacnew-filer, du bör kontrollera och sammanfoga dem! (klicka för info)",
-    "cancel": "Avbryt",
-    "aurUpdates": "Uppdatering av AUR-paket ligger utanför denna applikations räckvidd. Använd en AUR-hjälpare som Paru och granska PKGBUILD-filer före installation.",
-    "scheduleUpdates": "Schemalägg uppdateringar",
-    "pendingPacdiff": "Väntande pacdiff-filer",
-    "findMore": "Ta reda på hur du ska gå vidare",
-    "warnUpdate": "Ditt system har inte uppdaterats på 2 veckor. Uppdatera ditt system för att säkerställa säkerhet och stabilitet.",
-    "affectedFiles": "Påverkade filer:",
-    "learnPacdiff": "Om du inte är bekant med pacdiff-filer, informera dig snabbt om dem.",
-    "openMaintenance": "Klicka på knappen nedan för att komma igång.",
-    "openMaintenanceButton": "Börja sammanfoga",
-    "rebootNow": "Starta om nu",
-    "rebootNowBody": "Är du säker på att du vill starta om nu? Se till att spara allt ditt arbete innan du fortsätter.",
-    "warnReboot": "Det rekommenderas starkt att starta om systemet efter att ha tillämpat uppdateringar, särskilt vid uppdatering av kärnor eller skrivbordsmiljöer.",
-    "proceed": "Så här går du vidare:",
-    "snapshotCreation": "En Btrfs-snapshot kommer att skapas innan sammanfogningen startar.",
-    "proceedMerge": "Meld öppnas för att tillämpa ändringar. På vänster sida finns den NYA filen, på höger sida den GAMLA. Flytta alla användbara ändringar du vill sammanfoga från vänster till höger sida. Klicka på spara-knappen eller CTRL + S när du är klar.",
-    "cautionMerge": "Var medveten om att felaktiga ändringar i den GAMLA filen kan skada ditt system.",
-    "askHelp": "Om du är osäker, stäng fönstret utan att spara och be om hjälp på Garuda Linux-forumet.",
-    "runAurUpdates": "Kör AUR-uppdateringar externt"
-  },
-  "operationManager": {
-    "refusing": "Vägrar körning",
-    "pendingOperationsRunning": "Det finns operationer som körs, jag kommer bara att ta bort de som redan är klara.",
-    "thisOperationRunning": "Är du galen? Denna operation körs just nu!"
-  },
-  "os-interact": {
-    "packages": "Ändra installerade paket",
-    "packages-aur": "Ändra AUR-paket",
-    "services": "Ändra tjänster",
-    "services-user": "Ändra användartjänster",
-    "groups": "Ändra användargrupper",
-    "locales": "Ändra aktiverade språkversioner",
-    "configs": "Ändra systemkonfigurationer",
-    "configs-user": "Ändra användarkonfigurationer",
-    "configs-system": "Ändra systemkonfigurationer"
-  },
-  "packages": {
-    "title": "Paket",
-    "icon": "Icon",
-    "internet": "Internet",
-    "documents": "Dokument",
-    "multimedia": "Multimedia",
-    "science": "Vetenskap",
-    "security": "Säkerhet",
-    "other": "Övrigt",
-    "clear": "Rensa",
-    "search": "Sök",
-    "url": "",
-    "selected": "Vald",
-    "description": "Beskrivning",
-    "name": "Namn",
-    "searchKey": "Ange ett sökord",
-    "notFound": "Inga paket hittades"
+    "xoneDkms": "Modern Linux-drivrutin för Xbox One- och Xbox Series X|S-kontroller",
+    "xoneDongleFirmware": "Xbox Wireless Controller Adapter-firmware",
+    "xpadneo": "Avancerad Linux-drivrutin för trådlös Xbox One-gamepad",
+    "zsnes": "Super Nintendo-emulator"
   },
   "kernels": {
+    "active": "Aktiv kärna:",
     "dkmsModulesBroken": "Några DKMS-moduler är trasiga",
     "dkmsModulesBrokenTip": "Klicka här för att schemalägga installationen av de trasiga DKMS-modulerna",
     "dkmsModulesMissing": "Några DKMS-moduler saknas",
     "dkmsModulesMissingTip": "Saknade DKMS-moduler",
     "headers": "Headers",
     "headersMissing": "Saknade kärn-headers",
-    "headersMissingTip": "Klicka här för att schemalägga installationen av de saknade headers",
-    "active": "Aktiv kärna:"
+    "setDefault": "Ställ in standardkärna"
+  },
+  "lang": {
+    "title": "Språkval",
+    "tooltip": "Välj önskat språk"
   },
   "languagePacks": {
-    "locale": "Språkversion",
-    "selected": "Vald",
     "base": "Grundpaket",
+    "description": "Dessa är språkpaketen för dina installerade paket, de tillhandahåller vanligtvis översättningar för GUI.",
+    "locale": "Språkversion",
     "notFound": "Inga språkpaket hittades",
     "pkgname": "Paketnamn",
-    "description": "Dessa är språkpaketen för dina installerade paket, de tillhandahåller vanligtvis översättningar för GUI."
-  },
-  "settings": {
-    "title": "App",
-    "icon": "Icon",
-    "titleTwo": "-inställningar",
-    "leftButtons": "Visa fönsterknappar till vänster",
-    "copyDiagnostics": "Kopiera diagnostik till urklipp",
-    "darkMode": "Aktivera mörkt läge",
-    "language": "Konfigurera aktivt språk",
-    "autoStart": "Autostarta applikation",
-    "logLevel": "Välj loggnivå",
-    "systemdUserContext": "Visa användarens Systemd-tjänster",
-    "autoRefresh": "Aktivera automatisk uppdatering av systemd-tjänster",
-    "showMainLinks": "Visa länkar på hemsidan",
-    "themeLabel": "Grundläggande designtema",
-    "toggleOptions": "Växlingsalternativ",
-    "selectOptions": "Val",
-    "noBackgroundSelected": "Ingen bakgrund vald",
-    "clearBackground": "Rensa bakgrund",
-    "backgroundSettings": "Bakgrundsinställningar",
-    "customBackground": "Anpassad bakgrund",
-    "blurBackground": "Gör bakgrund suddig",
-    "blurStrength": "Suddighetsstyrka",
-    "backgroundFit": "Anpassa bakgrunden till app"
+    "selected": "Vald"
   },
   "locales": {
     "apply": "Schemalägg ändringar av installerade språkversioner",
-    "description": "Språkversionerna till höger är installerade på ditt system. Du kan välja vilka du vill behålla och vilka du vill ta bort.",
     "available": "Tillgänglig",
+    "description": "Språkversionerna till höger är installerade på ditt system. Du kan välja vilka du vill behålla och vilka du vill ta bort.",
     "selected": "Vald",
-    "task": "Ändra systemspråkversion",
-    "selectLocale": "Välj önskat systemspråk"
+    "selectLocale": "Välj önskat systemspråk",
+    "task": "Ändra systemspråkversion"
+  },
+  "maintenance": {
+    "actionFailed": "Ett fel uppstod när {{ action }} skulle köras med felet {{ error }}.",
+    "actionFailedHeader": "Misslyckades med att köra underhållsåtgärden",
+    "addPending": "Lägg till väntande",
+    "addPendingSub": "Lägg till väntande operationer",
+    "btrfsAssistant": "Btrfs Assistant",
+    "btrfsAssistantSub": "Hantera dina BTRFS-snapshots och kör underhållsuppgifter",
+    "cleanCache": "Rensa cache",
+    "cleanCacheSub": "Ta bort alla cachade paket",
+    "clearOrphans": "Rensa överblivna paket",
+    "clearOrphansSub": "Ta bort överblivna paket",
+    "common": "Vanligt underhåll",
+    "editRepos": "Redigera förråd",
+    "editReposSub": "Redigera dina förråd med Pace",
+    "failedReset": "Fel vid återställning av konfigurationsfil",
+    "failedResetFile": "Fel inträffade vid återställning av {{file}}",
+    "garudaHealth": "Systemhälsokontroll",
+    "garudaHealthFix": "Reparera systemhälsa",
+    "garudaHealthFixSub": "Försök att automatiskt åtgärda vanliga systemproblem",
+    "garudaHealthSub": "Kontrollera vanliga systemproblem med garuda-health",
+    "garudaUpdate": "Garuda update räddningsverktyg",
+    "installationFailedHeader": "{{ program }} är inte installerat och kunde inte installeras, det går inte att fortsätta. Kontrollera loggarna för mer information.",
+    "mergePacDiff": "Sammanfoga pacdiff-filer",
+    "mergePacDiffSub": "Sammanfoga .pacnew och .pacsave-filer interaktivt",
+    "onlyDirect": "Denna åtgärd kan inte köas och måste köras direkt.",
+    "refreshArchMirrors": "Uppdatera speglar",
+    "refreshArchMirrorsSub": "Uppdatera din spegellista",
+    "refreshChaoticMirrors": "Uppdatera Chaotic-AUR-speglar",
+    "refreshChaoticMirrorsSub": "Uppdatera din spegellista för Chaotic-AUR",
+    "refreshChaoticMirrorsSuccess": "Spegellistan för Chaotic-AUR har uppdaterats",
+    "refreshKeyring": "Uppdatera nyckelring",
+    "refreshKeyringSub": "Uppdatera din Pacman-nyckelring",
+    "reinstallDkmsModules": "Ominstallera DKMS-moduler",
+    "reinstallPackages": "Ominstallera paket",
+    "reinstallPackagesSub": "Ominstallera alla paket på ditt system",
+    "removeLock": "Ta bort Pacman-lås",
+    "removeLockSub": "Ta bort pacman-låsfilen",
+    "removePending": "Ta bort väntande",
+    "resetConfigs": "Återställ konfigurationer till standardläge",
+    "resetTooltip": "Följande filer eller mappar kommer att återställas till sitt standardläge:",
+    "runNow": "Kör nu",
+    "subtitle": "Håll ditt system i gott skick",
+    "taskRunning": "Det finns redan en uppgift som körs, vänta tills den är klar först.",
+    "taskRunningHeader": "Fel vid körning av underhållsåtgärd",
+    "title": "System",
+    "titleTwo": "-underhåll",
+    "update": "Uppdatera ditt system",
+    "updateRemoteFix": "Garuda update fix",
+    "updateRemoteFixSub": "Återställ pacman.conf, speglingar och nyckelring till Garuda-standardinställningarna",
+    "updateRemoteFullFix": "Garuda update fullständig fix",
+    "updateRemoteFullFixSub": "Återställ Pacman helt och installera om alla paket",
+    "updateRemoteKeyring": "Garuda update nyckelring",
+    "updateRemoteKeyringSub": "Återställ nyckelring till Garuda-standard",
+    "updateRemoteResetAudio": "Återställ ljud",
+    "updateRemoteResetAudioSub": "Ominstallera/återställ PipeWire-ljudkonfigurationen",
+    "updateRemoteResetSnapper": "Återställ snapper",
+    "updateRemoteResetSnapperSub": "Återställ Snapper helt och återskapa dess konfigurationer",
+    "updateSystem": "Uppdatera system",
+    "updateSystemSub": "Uppdatera ditt system via garuda-update"
+  },
+  "menu": {
+    "apply": "Lägg till väntande operationer",
+    "boot": "Startverktyg",
+    "bootRepair": "Startreparation",
+    "clearTasks": "Rensa uppgifter",
+    "components": "Komponenter",
+    "configFiles": "Konfigurationsfiler",
+    "console": "Visa terminal",
+    "diagnostics": "Diagnostik",
+    "file": {
+      "preferences": "Inställningar",
+      "quit": "Avsluta",
+      "title": "Fil"
+    },
+    "gaming": "Spel",
+    "help": {
+      "about": "Om Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox är ett systemunderhålls- och diagnostikverktyg för Garuda Linux. Det är utformat för att hjälpa användare att underhålla sitt system och diagnostisera problem. Det är byggt med Electron och Angular.",
+      "aboutForum": "Forum",
+      "aboutSourceCode": "Källkod",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wiki",
+      "callExorcist": "Ring exorcisten",
+      "callExorcistBody": "Du måste vara ganska desperat för att klicka på den här knappen! Jag har åkallat lite specialvoodoo åt dig, om du fortfarande har problem med appen, vänligen rapportera dem på Garuda Linux-forumet eller vår ärendehanterare.",
+      "callExorcistTitle": "Exorcisten har kallats!",
+      "garudaStatus": "Kontrollera upptidsstatus",
+      "getHelpArchWiki": "Sök efter innehåll i Arch Wiki",
+      "getHelpForum": "Få hjälp på forumet",
+      "getHelpWiki": "Sök efter innehåll i wikin",
+      "title": "Hjälp"
+    },
+    "maintenance": "Underhåll",
+    "modules": {
+      "appSettings": "Appinställningar",
+      "bootRepair": "Startreparation",
+      "components": "Systemkomponenter",
+      "diagnostics": "Diagnosticering",
+      "gaming": "Spel",
+      "kernels": "Kärnor",
+      "locales": "Lokaliseringar",
+      "maintenance": "Underhåll",
+      "packages": "Paket",
+      "search": "Sökalternativ",
+      "setupWizard": "Installationsassistent",
+      "systemdServices": "Systemd-tjänster",
+      "systemSettings": "Systeminställningar",
+      "title": "Moduler",
+      "userManager": "Användarhanterare",
+      "welcome": "Välkommen"
+    },
+    "network": "Nätverksverktyg",
+    "packages": "Upptäck appar",
+    "pending": "Väntande operationer",
+    "settings": "Appinställningar",
+    "setupWizard": "Installationsassistent",
+    "systemTools": "Systeminställningar",
+    "terminalRunning": "Körande uppgifter",
+    "terminalTasks": "Utför uppgifter",
+    "welcome": "Välkommen"
+  },
+  "networkAssistant": {
+    "actions": "Åtgärder",
+    "active": "Aktiv",
+    "airplaneMode": "Flygplansläge",
+    "any": "Alla",
+    "blacklistAction": "Svartlista {{name}}",
+    "blacklistDriver": "Svartlista drivrutin",
+    "blacklistedDrivers": "Svartlistade drivrutiner",
+    "blacklistFailed": "Misslyckades med att uppdatera svartlistan",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth-enheter",
+    "cancel": "Avbryt",
+    "category": "Kategori",
+    "clear": "Rensa",
+    "clickToCopy": "Klicka för att kopiera",
+    "connected": "Ansluten",
+    "connectionInfo": "Anslutningsinformation",
+    "connman": "ConnMan",
+    "copied": "Kopierades till urklipp",
+    "copyAll": "Kopiera alla",
+    "count": "Antal",
+    "disabled": "Inaktiverad",
+    "disconnected": "Frånkopplad",
+    "driver": "Drivrutin",
+    "driverBlacklisted": "Drivrutinen svartlistades",
+    "driverLoaded": "Drivrutinen laddades",
+    "driverUnblacklisted": "Drivrutinen togs bort från svartlistan",
+    "driverUnloaded": "Drivrutinen laddades ur",
+    "enable": "Aktivera",
+    "enabled": "Aktiverad",
+    "enableService": "Aktivera tjänst",
+    "enableServiceFailed": "Misslyckades med att aktivera tjänst",
+    "error": "Fel",
+    "errorFetch": "Kunde inte hämta nätverksinformation",
+    "ethernetControllers": "Ethernet-kontroller",
+    "externalIp": "Extern IP",
+    "gps": "GPS",
+    "hardwareInfo": "Hårdvaruinformation",
+    "hotspotFailed": "Misslyckades med att öppna surfzon",
+    "inactive": "Inaktiv",
+    "installDriver": "Installera drivrutin",
+    "installTraceroute": "Installera Traceroute",
+    "installWihotspot": "Installera Wi-Fi-surfzon",
+    "interface": "Gränssnitt",
+    "internet": "Internet",
+    "loadDriver": "Ladda drivrutin",
+    "loadDriverAction": "Ladda drivrutin {{name}}",
+    "loadDriverFailed": "Misslyckades med att ladda drivrutin",
+    "loadedDrivers": "Laddade drivrutiner",
+    "maxHops": "Max hopp",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Inga nätverksdrivrutiner hittades",
+    "noHardware": "Ingen nätverkshårdvara upptäcktes",
+    "notAvailable": "Inte tillgänglig",
+    "off": "Av",
+    "on": "På",
+    "openHotspot": "Öppna surfzon",
+    "outputInTerminal": "Utdata visas i terminalen nedan",
+    "ping": "Ping",
+    "pingFailed": "Misslyckades med att köra ping",
+    "quickToggles": "Snabbväxlar",
+    "routerIp": "Router-IP",
+    "runPing": "Kör Ping",
+    "runTraceroute": "Kör Traceroute",
+    "search": "Sök",
+    "serviceEnabled": "Tjänsten aktiverades",
+    "services": "Tjänster",
+    "status": "Status",
+    "success": "Lyckades",
+    "tabs": {
+      "diagnostics": "Diagnostik",
+      "drivers": "Drivrutiner",
+      "hardware": "Hårdvara",
+      "status": "Status"
+    },
+    "targetHost": "Målvärd",
+    "timeout": "Tidsgräns (s)",
+    "title": "Nätverks-",
+    "titleTwo": "assistent",
+    "toggleAirplane": "Växla flygplansläge",
+    "toggleAirplaneFailed": "Misslyckades med att växla flygplansläge",
+    "toggleBt": "Växla Bluetooth",
+    "toggleBtFailed": "Misslyckades med att växla Bluetooth",
+    "toggleGps": "Växla GPS",
+    "toggleGpsFailed": "Misslyckades med att växla GPS",
+    "toggleWifi": "Växla Wi-Fi",
+    "toggleWifiFailed": "Misslyckades med att växla Wi-Fi",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Misslyckades med att köra traceroute",
+    "type": "Typ",
+    "unblacklistDriver": "Ta bort drivrutin från svartlista",
+    "unloadDriver": "Ladda ur drivrutin",
+    "unloadDriverAction": "Ladda ur drivrutin {{name}}",
+    "unloadDriverFailed": "Misslyckades med att ladda ur drivrutin",
+    "unloadedDrivers": "Ej laddade drivrutiner",
+    "whitelistAction": "Vitlista {{name}}",
+    "wifi": "Wi-Fi",
+    "wifiHotspot": "Wi-Fi-surfzon",
+    "wifiHotspotDesc": "Öppna konfiguration för Wi-Fi-surfzon",
+    "wirelessControllers": "Trådlösa kontroller"
+  },
+  "operation": {
+    "abort": "Avbryt",
+    "addGroup": "Lägg till användare i grupp",
+    "args": "Argument",
+    "disableHblock": "Inaktivera Hblock",
+    "disableService": "Inaktivera tjänst",
+    "enableHblock": "Aktivera Hblock",
+    "enableService": "Aktivera tjänst",
+    "installApps": "Installera appar",
+    "logs": "Loggar",
+    "remove": "Ta bort",
+    "removeApps": "Ta bort appar",
+    "removeGroup": "Ta bort användare från grupp",
+    "resetDnsServer": "Återställ DNS-server",
+    "run": "Kör nu",
+    "setDefaultShell": "Ställ in standardskal",
+    "setNewDnsServer": "Ställ in ny DNS-server"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Det finns operationer som körs, jag kommer bara att ta bort de som redan är klara.",
+    "refusing": "Vägrar körning",
+    "thisOperationRunning": "Är du galen? Denna operation körs just nu!"
+  },
+  "os-interact": {
+    "boot-options": "Tillämpa startinställningar",
+    "configs": "Ändra systemkonfigurationer",
+    "configs-system": "Ändra systemkonfigurationer",
+    "configs-user": "Ändra användarkonfigurationer",
+    "garuda-update-config": "Tillämpa inställningar för Garuda Update",
+    "groups": "Ändra användargrupper",
+    "locales": "Ändra aktiverade språkversioner",
+    "packages": "Ändra installerade paket",
+    "packages-aur": "Ändra AUR-paket",
+    "services": "Ändra tjänster",
+    "services-user": "Ändra användartjänster"
+  },
+  "packages": {
+    "any": "Alla",
+    "clear": "Rensa",
+    "description": "Beskrivning",
+    "documents": "Dokument",
+    "icon": "Icon",
+    "internet": "Internet",
+    "multimedia": "Multimedia",
+    "name": "Namn",
+    "notFound": "Inga paket hittades",
+    "other": "Övrigt",
+    "science": "Vetenskap",
+    "search": "Sök",
+    "searchKey": "Ange ett sökord",
+    "security": "Säkerhet",
+    "selected": "Vald",
+    "status": "Status",
+    "title": "Upptäck ",
+    "titleTwo": "applikationer",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "Aktivera automatisk uppdatering av systemd-tjänster",
+    "autoStart": "Autostarta applikation",
+    "backgroundFit": "Anpassa bakgrunden till app",
+    "backgroundSettings": "Bakgrundsinställningar",
+    "blurBackground": "Gör bakgrund suddig",
+    "blurStrength": "Suddighetsstyrka",
+    "clearBackground": "Rensa bakgrund",
+    "copyDiagnostics": "Kopiera diagnostik till urklipp",
+    "customBackground": "Anpassad bakgrund",
+    "darkMode": "Aktivera mörkt läge",
+    "language": "Konfigurera aktivt språk",
+    "leftButtons": "Visa fönsterknappar till vänster",
+    "logLevel": "Välj loggnivå",
+    "noBackgroundSelected": "Ingen bakgrund vald",
+    "selectOptions": "Val",
+    "showMainLinks": "Visa länkar på hemsidan",
+    "systemdUserContext": "Visa användarens Systemd-tjänster",
+    "themeLabel": "Grundläggande designtema",
+    "title": "App",
+    "titleTwo": "-inställningar",
+    "toggleOptions": "Växlingsalternativ"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Klicka på 'Tillämpa' för att påbörja installations- och konfigurationsprocessen.",
+      "failedBody": "Något gick fel under installationen. Du kan försöka köra igen eller gå tillbaka för att ändra ditt val.",
+      "failedHeader": "Körningen misslyckades",
+      "header": "Redo att tillämpa"
+    },
+    "autoCategories": {
+      "audio": "Ljud",
+      "browsers": "Webbläsare",
+      "communication": "Kommunikation",
+      "development": "Utveckling",
+      "gaming": "Spel",
+      "graphics": "Grafik",
+      "inputMethod": "Inmatningsmetoder",
+      "internet": "Internet",
+      "kernels": "Kärnor",
+      "mail": "E-post",
+      "multimedia": "Multimedia",
+      "office": "Kontor",
+      "other": "Övrigt",
+      "pkgmngrs": "Programvarucenter",
+      "video": "Video",
+      "virtualization": "Virtualisering"
+    },
+    "autoSoftware": {
+      "0ad": "Historiskt 3D-realtidsstrategispel",
+      "abiWord": "Fullfjädrad ordbehandlare",
+      "aisleriot": "Samling av patienser",
+      "ansible": "Officiellt urval av Ansible-samlingar",
+      "appimagePool": "Modern AppImageHub-klient",
+      "ardour": "Digital ljudarbetsstation (DAW) av professionell kvalitet",
+      "asian": "Metapaket som innehåller vanliga asiatiska typsnitt",
+      "audacious": "Resurssnål, avancerad ljudspelare",
+      "audacity": "Program för bearbetning av digitala ljudvågformer",
+      "bakaMplayer": "Plattformsoberoende, libmpv-baserad multimediaspelare",
+      "bauh": "Grafiskt gränssnitt för hantering av applikationer",
+      "bazaar": "Appbutik med fokus på Flatpaks",
+      "birdfont": "Typsnittsredigerare för vektorgrafik",
+      "bitwigStudio": "Digital ljudarbetsstation för musikproduktion",
+      "blender": "Fullt integrerad programsvit för 3D-grafikskapande",
+      "brasero": "CD/DVD-mastringsverktyg",
+      "brave": "Webbläsare som blockerar annonser och spårare som standard",
+      "calligra": "Applikationer för produktivitet och kreativt skapande",
+      "chromium": "Webbläsare byggd för snabbhet, enkelhet och säkerhet",
+      "clawsMail": "GTK+-baserad e-postklient",
+      "cockpit": "Webbaserat användargränssnitt för Linux-servrar",
+      "conky": "Resurssnål systemövervakare",
+      "converseen": "Batch-bildkonverterare och storleksändrare",
+      "darktable": "Verktyg för att organisera och framkalla råbilder (RAW)",
+      "deluge": "Resurssnål, fullfjädrad BitTorrent-klient",
+      "digikam": "Avancerat program för hantering av digitala foton",
+      "discord": "Allt-i-ett tal- och textchatt",
+      "discover": "KDE app- och resurshanterare",
+      "docker": "Paketera, distribuera och kör applikationer som containrar",
+      "dragon": "Multimediaspelare med fokus på enkelhet",
+      "droidcam": "Förvandla din telefon/surfplatta till en webbkamera",
+      "easytag": "Applikation för visning och redigering av ljudtaggar",
+      "element": "Stilren samarbetsklient för Matrix",
+      "elisa": "Enkel musikspelare från KDE",
+      "evolution": "Hantera din e-post, kontakter och kalender",
+      "falkon": "Plattformsoberoende QtWebEngine-webbläsare",
+      "fdm": "Kraftfull och modern nedladdningsaccelerator och organisatör",
+      "filezilla": "Snabb och pålitlig FTP-, FTPS- och SFTP-klient",
+      "firedragon": "Integritetsfokuserad Floorp-fork med Garuda-profilering",
+      "firedragonCatppuccin": "Firedragon-webbläsare med Catppuccin-tema",
+      "firefox": "Snabb, privat och säker webbläsare",
+      "firefoxEsr": "Firefox Extended Support Release",
+      "fontForge": "Typsnittsredigerare för kontur- och bitmapptypsnitt",
+      "fractal": "Matrix-gruppchattapp för GNOME",
+      "freeCad": "Funktionsbaserad parametrisk 3D CAD-modellerare",
+      "freeOffice": "Microsoft Office-kompatibel kontorssvit",
+      "geary": "Resurssnål e-postklient för GNOME",
+      "genymotion": "Virtuell miljö för Android",
+      "gimp": "GNU Image Manipulation Program",
+      "github": "GUI för att hantera Git och GitHub",
+      "gitKraken": "Intuitiv, snabb och vacker Git-klient",
+      "gnomeBoxes": "Enkel applikation för att komma åt virtuella system",
+      "gnomeBuilder": "IDE för att skriva GNOME-baserad programvara",
+      "gnomeFirmware": "Hantera firmware på enheter som stöds",
+      "gnomeSoftware": "GNOME app- och resurshanterare",
+      "gnu": "Utökningsbar och anpassningsbar textredigerare i realtid",
+      "gnuCash": "Ekonomi- och bokföringsprogram",
+      "gnumeric": "Kalkylprogram för GNOME",
+      "handbrake": "Flertrådad videotranskodare",
+      "hedgewars": "Turbaserat artilleristrategispel",
+      "homebank": "Gratis, enkel privatekonomi",
+      "hypnotix": "IPTV-strömningsapplikation",
+      "indic": "Inmatningsmetoder för indiska språk",
+      "inkscape": "Professionell vektorgrafikredigerare",
+      "intellijIdea": "IDE för Java och andra programmeringsspråk",
+      "japanese": "Inmatningsmetoder för japanska",
+      "jenkins": "Utbyggbar server för kontinuerlig integration (CI)",
+      "jitsiMeet": "Skrivbordsapplikation för Jitsi Meet",
+      "joplin": "Antecknings- och att-göra-applikation",
+      "k3b": "Funktionsrik CD-bränningsapplikation",
+      "kapman": "Klon av det välkända spelet Pac-Man",
+      "kdenlive": "Icke-linjär videoredigerare",
+      "kDevelop": "C++-utvecklingsmiljö som använder KDE-teknik",
+      "keepassXc": "Plattformsoberoende lösenordshanterare",
+      "kiCad": "Verktyg för elektroniska scheman och kretskortsdesign (PCB)",
+      "kid3": "Redigerare för ljudtaggar",
+      "kmahjongg": "Brickmatchningsspel för en eller två spelare",
+      "kmail": "KDE:s e-postklient",
+      "kMyMoney": "Privatekonomihanterare",
+      "knights": "Schackbräde från KDE",
+      "kodi": "Mediaspelare och underhållningshubb",
+      "kolourpaint": "Enkelt ritprogram från KDE",
+      "korean": "Inmatningsmetoder för koreanska",
+      "krita": "Professionellt digitalt målarprogram",
+      "kwave": "Ljudredigerare för KDE",
+      "libreCad": "2D CAD-ritverktyg",
+      "libreOfficeFresh": "Senaste versionen av LibreOffice",
+      "libreOfficeStill": "Stabil version av LibreOffice",
+      "librewolf": "Integritets-, säkerhets- och frihetsfokuserad webbläsare",
+      "linuxCachyos": "Mycket optimerad CachyOS-kärna",
+      "linuxHardened": "Säkerhetshärdad Linux-kärna",
+      "linuxLts": "Linux-kärna med långtidsstöd (LTS)",
+      "linuxMainline": "Senaste ordinarie Linux-kärnan (mainline)",
+      "linuxXanmod": "Anpassad kärna med XanMod-patchar för prestanda",
+      "linuxXanmodLts": "Anpassad LTS-kärna med XanMod-patchar",
+      "lmms": "Digital ljudarbetsstation och sequencer",
+      "lollypop": "Modern musikspelare för GNOME",
+      "luanti": "Voxel-baserad spelmotor",
+      "luminanceHdr": "Arbetsflöde för HDR-bildbehandling",
+      "mailspring": "Vacker och snabb e-postklient",
+      "mari0": "Mario-spel med portalpistol-mekanik",
+      "mediaElch": "Mediahanterare för Kodi",
+      "microsoftTeams": "Inofficiell Microsoft Teams-klient",
+      "mixxx": "Gratis DJ-programvara med öppen källkod",
+      "mumble": "Röstchattprogram med låg latens och hög kvalitet",
+      "museScore": "Skapa, spela upp och skriv ut vackra notblad",
+      "myPaint": "Snabbt och enkelt ritprogram för digitala konstnärer",
+      "mystiq": "Ljud-/videokonverterare baserad på FFmpeg",
+      "neochat": "Klient för Matrix, det decentraliserade kommunikationsprotokollet",
+      "netbeans": "IDE för Java, HTML5, PHP, C och C++",
+      "nextcloudClient": "Skrivbordssynkroniseringsklient för Nextcloud",
+      "nitroshare": "Enkelt program för filöverföring mellan enheter",
+      "obsidian": "Kunskapsbas baserad på lokala Markdown-textfiler",
+      "obsStudio": "Programvara för livestreaming och inspelning",
+      "octopi": "Kraftfullt Pacman-gränssnitt som använder Qt",
+      "onlyOffice": "Kontorssvit som kombinerar redigerare för text, kalkylblad och presentationer",
+      "openToonz": "Programvara för produktion av 2D-animationer",
+      "pencil2d": "Verktyg för att skapa 2D-handritade animationer",
+      "podman": "Daemonlös containermotor för hantering av containrar",
+      "postman": "Bygg, testa och dokumentera dina API:er",
+      "prometheus": "Verktygspaket för systemövervakning och larm",
+      "puppet": "Ramverk och applikation för serverautomatisering",
+      "putty": "Terminalintegrerad SSH-/Telnet-klient",
+      "pyCharm": "Python-IDE för professionella utvecklare",
+      "qbittorrent": "Avancerad BitTorrent-klient baserad på Qt",
+      "qtCreator": "Resurssnål, plattformsoberoende utvecklingsmiljö (IDE)",
+      "qutebrowser": "Tangentbordsstyrd, vim-liknande webbläsare baserad på Python",
+      "remmina": "Fjärrskrivbordsklient skriven i GTK+",
+      "rosegarden": "MIDI-/ljudsequencer och notredigerare",
+      "shortwave": "Internetradiospelare",
+      "shotcut": "Plattformsoberoende videoredigerare",
+      "signal": "Signal Private Messenger för Linux",
+      "simplifiedChinese": "Inmatningsmetoder för förenklad kinesiska",
+      "sinhalese": "Inmatningsmetoder för singalesiska",
+      "skrooge": "Privatekonomihanterare för KDE",
+      "slack": "Slack Desktop-klient",
+      "smPlayer": "Mediaspelare med inbyggda codecs",
+      "soundConverter": "Enkelt ljudkonverteringsprogram",
+      "soundwire": "Överför ljud från din dator till andra enheter",
+      "strawberryPlayer": "Musikspelare riktad till ljudentusiaster",
+      "subtitleComposer": "Redigerare för videoundertexter",
+      "superTux": "Klassiskt 2D-plattformsspel",
+      "superTuxKart": "Gokart-racingspel med Tux",
+      "sweetHome3d": "Program för inredningsdesign",
+      "synfigStudio": "Professionellt program för vektoranimation",
+      "teeworlds": "Snabbt flerspelar-2D-skjutspel",
+      "telegram": "Officiell Telegram Desktop-klient",
+      "terraform": "Verktyg för att bygga och uppdatera infrastruktur som kod",
+      "thai": "Inmatningsmetoder för thailändska",
+      "thunderbird": "Fristående e-post- och nyhetsläsare",
+      "torBrowser": "Navigera säkert på Tor-nätverket",
+      "traditionalChinese": "Inmatningsmetoder för traditionell kinesiska",
+      "transmageddon": "Applikation för omkodning av videoformat",
+      "twitchGui": "Multiplattformswebbläsare för Twitch.tv",
+      "ungoogledChromium": "Chromium där alla Google-integrationer tagits bort",
+      "variety": "Byter skrivbordsbakgrund med regelbundna intervall",
+      "vietnamese": "Inmatningsmetoder för vietnamesiska",
+      "vim": "Mycket anpassningsbar textredigerare för terminalen",
+      "virtManager": "Skrivbordsgränssnitt för hantering av virtuella maskiner",
+      "virtualBox": "Plattformsoberoende virtualiseringsprogramvara",
+      "visualStudioCode": "Kodredigerare för utveckling och felsökning av moderna applikationer",
+      "visualStudioCodeOss": "Öppen källkodsversion av Visual Studio Code",
+      "vivaldi": "Avancerad webbläsare skapad med avancerade användare i åtanke",
+      "vlc": "Plattformsoberoende multimediaspelare",
+      "vscodium": "Telemetrifria binärer av VSCode",
+      "warpinator": "Skicka och ta emot filer över nätverket",
+      "wings3d": "3D-modellerare som använder bevingade kantdatastrukturer",
+      "wire": "End-to-end-krypterade meddelanden och videokonferenser",
+      "wpsOffice": "Kontorsproduktivitetssvit",
+      "xfburn": "Enkelt CD/DVD-bränningsverktyg",
+      "xonotic": "Snabbt plattformsoberoende förstapersonsskjutspel",
+      "xtreme": "Kraftfull nedladdningsaccelerator och videonedladdare",
+      "yakuake": "Rullgardinsterminalemulator",
+      "zedEditor": "Högpresterande kodredigerare med stöd för samarbete",
+      "zoom": "Tjänst för video- och webbkonferenser"
+    },
+    "buttons": {
+      "apply": "Tillämpa",
+      "back": "Tillbaka",
+      "finish": "Slutför",
+      "next": "Nästa",
+      "retry": "Försök igen"
+    },
+    "softwareSelection": {
+      "body": "Välj den programvara du vill installera.",
+      "header": "Val av programvara"
+    },
+    "steps": {
+      "apply": "Tillämpa ändringar"
+    },
+    "success": {
+      "archWiki": "Arch Linux Wiki",
+      "body": "Ditt system är konfigurerat och redo att användas!",
+      "finish": "Slutför installationen",
+      "forum": "Garuda-forumet",
+      "garudaWiki": "Garuda Linux Wiki",
+      "reboot": "En omstart rekommenderas.",
+      "title": "Klart!"
+    },
+    "tasks": {
+      "installSoftware": "Installerar vald programvara"
+    },
+    "title": "Installationsassistent"
+  },
+  "shells": {
+    "fish": {
+      "hint": "Att ställa in fish som standardskal kan orsaka problem med andra program. Det rekommenderas att ställa in det som standard via terminalkonfigurationer istället."
+    }
+  },
+  "systemdServices": {
+    "actions": "Åtgärder",
+    "active": "Aktiv",
+    "autoRefresh": "Automatisk uppdatering",
+    "clear": "Rensa",
+    "description": "Beskrivning",
+    "disable": "Inaktivera",
+    "enable": "Aktivera",
+    "error": "Ett fel inträffade vid hämtning av tjänster, försök igen.",
+    "errorTitle": "Fel vid hämtning av tjänster",
+    "excludeDisabled": "Exkludera inaktiverade",
+    "hideDead": "Dölj inaktiva",
+    "hideDeadTip": "Växla för att visa/dölja tjänster i tillstånden 'dead', 'failed' eller 'exited'",
+    "includeDisabled": "Inkludera inaktiverade",
+    "load": "Ladda",
+    "logs": "Loggar",
+    "mask": "Maskera",
+    "notFound": "Inga tjänster hittades",
+    "reload": "Ladda om",
+    "restart": "Starta om",
+    "searchKey": "Ange ett sökord",
+    "show": "Visa",
+    "showAll": "Visa alla",
+    "start": "Starta",
+    "state": "Tillstånd",
+    "stop": "Stoppa",
+    "systemContext": "Visa systemtjänster",
+    "unit": "Enhetsnamn",
+    "unmask": "Avmaskera",
+    "userContext": "Visa användartjänster"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Skapar ett tillfälligt gästanvändarkonto utan lösenord, isolerat från dina personliga filer. Raderas vid utloggning.",
+        "title": "Aktivera gästanvändare"
+      },
+      "oomd": {
+        "description": "systemd:s Out-Of-Memory-demon. Den övervakar aktivt systemminnet och avslutar automatiskt minneskrävande processer innan hela datorn låser sig.",
+        "title": "Systemd-oomd aktiverat"
+      },
+      "psd": {
+        "description": "Flyttar webbläsarens profil (som Firefox eller Brave) till snabbt temporärt RAM-minne (tmpfs). Detta snabbar upp webbläsarens responstid avsevärt och minskar slitaget på din SSD.",
+        "title": "Profile-sync-daemon installerat"
+      },
+      "psdEnabled": {
+        "description": "Kör Profile-sync-daemon för att automatiskt hantera dina webbläsarprofiler i RAM-minnet.",
+        "title": "Profile-sync-daemon aktiverat"
+      },
+      "title": "Allmänt"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "Inaktiverar PipeWires node-suspend-funktion. Detta håller ljudenheter ständigt aktiva och förhindrar irriterande knäpp- eller klickljud som uppstår när ljudkort vaknar från viloläge.",
+        "title": "Inaktivera viloläge för ljud"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Förhindrar Discord från att uppmana till nedladdning och installation av uppdateringar, eftersom detta är helt onödigt på Arch Linux – Pacman sköter det åt oss.",
+        "title": "Inaktivera automatisk uppdatering för Discord"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "En KWin-justering som tar bort namnlisten och fönsterramarna när ett program maximeras i KDE Plasma, vilket ger dig mer användbar vertikal skärmyta.",
+        "title": "KDE ramlös maximering"
+      },
+      "title": "Systemkonfigurationer"
+    },
+    "defaultDns": "Ställ in standard-DNS",
+    "defaultDnsTip": "Ändrar standardleverantör för domännamnssystem (DNS) för din internetanslutning och åsidosätter din internetleverantörs standard. Kan förbättra hastighet, integritet eller kringgå censur.",
+    "defaultShell": "Ställ in inloggningsskal",
+    "defaultShellConfigs": "Installera standardkonfigurationer",
+    "defaultShellTip": "Ändrar ditt standardinloggningsskal för terminalen. Det rekommenderas att använda ett POSIX-kompatibelt skal (som Bash eller Zsh) och endast använda icke-kompatibla skal som Fish via terminalemulatorns profilinställningar.",
+    "enableHblock": "Aktivera Hblock",
+    "enableHblockTip": "Aktiverar Hblock, ett skript som blockerar annonser, spårare och skadliga domäner på hela systemet genom att dirigera deras förfrågningar till ett lokalt slukhål via din /etc/hosts-fil.",
+    "enableIwd": "Använd IWD istället för wpa_supplicant",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). Ett modernt, resurssnålt alternativ till wpa_supplicant för att hantera Wi-Fi-anslutningar. Ansluter ofta snabbare och hanterar roaming bättre.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Hoppa över kontroll av tillgängligt diskutrymme innan paket installeras.",
+        "title": "Hoppa över kontroll av diskutrymme"
+      },
+      "pacmanNoconfirm": {
+        "description": "Kör pacman utan bekräftelsefrågor för en snabbare uppdateringsupplevelse.",
+        "title": "Icke-interaktiv pacman"
+      },
+      "skipMirrorlist": {
+        "description": "Hoppa över uppdatering av Arch-spegellistan innan systemuppdateringar körs.",
+        "title": "Hoppa över uppdatering av spegellista"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "Uppdatera paket installerade från Arch User Repository (AUR) vid systemuppdateringar.",
+        "title": "Uppdatera AUR-paket"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto NICe-demon. Ändrar dynamiskt CPU-prioriteten (niceness) för processer som körs, vilket ger det aktiva programmet du använder mer processortid så att systemet känns snabbare.",
+        "title": "Ananicy C++ installerat"
+      },
+      "ananicyCppEnabled": {
+        "description": "Kör Ananicy-demonen för att kontinuerligt hantera applikationers CPU-prioriteringar.",
+        "title": "Ananicy C++ aktiverat"
+      },
+      "bpftune": {
+        "description": "Använder eBPF för att kontinuerligt övervaka och automatiskt justera dina Linux-nätverksparametrar i realtid för optimal datahastighet och latens.",
+        "title": "Bpftune installerat"
+      },
+      "bpftuneEnabled": {
+        "description": "Kör bpftune-demonen för att kontinuerligt optimera din nätverksprestanda.",
+        "title": "Bpftune aktiverat"
+      },
+      "irqbalanceEnabled": {
+        "description": "Fördelar hårdvaruavbrott jämnt över alla dina processorkärnor. Detta förhindrar att en enskild kärna blir överbelastad av enhetssignaler.",
+        "title": "IRQbalance aktiverat"
+      },
+      "performanceTweaks": {
+        "description": "Tillämpar en uppsättning sysctl- och justeringskonfigurationer på systemnivå för att optimera Garuda för maximal responstid.",
+        "title": "Prestandajusteringar"
+      },
+      "preload": {
+        "description": "En bakgrundsdemon som övervakar vilka program du använder mest och förladdar dem i RAM-minnet, vilket drastiskt minskar deras starttid.",
+        "title": "Preload installerat"
+      },
+      "preloadEnabled": {
+        "description": "Kör Preload-demonen för att cachelagra dina ofta använda applikationer.",
+        "title": "Preload aktiverat"
+      },
+      "title": "Prestanda"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "En automatisk optimerare för processorhastighet och strömförbrukning. Den sänker dynamiskt klockfrekvensen vid inaktivitet för att spara batteri och höjer den när du behöver prestanda.",
+        "title": "Auto-cpufreq installerat"
+      },
+      "autoCpufreqEnabled": {
+        "description": "Kör auto-cpufreq-demonen för att kontinuerligt hantera processorskalning.",
+        "title": "Auto-cpufreq aktiverat"
+      },
+      "intelUndervolt": {
+        "description": "Sänker spänningen till Intel-processorer. Detta minskar värmeutveckling och strömförbrukning utan att offra prestanda, vilket förlänger batteritiden och förhindrar termisk strypning.",
+        "title": "Intel-undervolt installerat"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Kör demonen som automatiskt tillämpar dina Intel-undervolt-inställningar vid start.",
+        "title": "Intel-undervolt aktiverat"
+      },
+      "powerProfilesDaemon": {
+        "description": "Tillhandahåller ett API för systemet för att enkelt växla mellan driftslägena 'Energisparläge', 'Balanserat' och 'Prestanda'.",
+        "title": "Power profiles daemon installerat"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Kör demonen som låter din skrivbordsmiljö växla energiprofiler.",
+        "title": "Power profiles daemon aktiverat"
+      },
+      "powersaveTweaks": {
+        "description": "Tillämpar sysctl- och konfigurationsjusteringar utformade för att minimera strömförbrukningen på batteridrivna enheter.",
+        "title": "Energisparjusteringar"
+      },
+      "thermald": {
+        "description": "Intels temperaturhanteringsdemon. Den förhindrar att systemet överhettas genom att proaktivt använda kylmetoder innan processorn tvingas klocka ner.",
+        "title": "Thermald installerat"
+      },
+      "thermaldEnabled": {
+        "description": "Kör thermald-demonen för att övervaka processortemperaturer och förhindra överhettning.",
+        "title": "Thermald aktiverat"
+      },
+      "title": "Energisparläge",
+      "tlp": {
+        "description": "Ett avancerat verktyg som automatiskt optimerar batteritiden på bärbara datorer genom att justera inställningar för Wi-Fi, diskar, PCIe och USB-enheter vid batteridrift.",
+        "title": "TLP installerat"
+      },
+      "tlpEnabled": {
+        "description": "Kör TLP-demonen för att dynamiskt tillämpa energisparregler vid batteridrift.",
+        "title": "TLP aktiverat"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Konfigurerar libinput så att ett långt tryck med ett finger på en pekskärm eller pekplatta registreras som ett högerklick.",
+        "title": "Evdev långtryck högerklicksemulering"
+      },
+      "evdevRce": {
+        "description": "Anger det nedre högra hörnet (eller ett specifikt område) på din pekplatta så att det alltid fungerar som ett fysiskt högerklick.",
+        "title": "Evdev RCE aktiverat"
+      },
+      "title": "Högerklicksemulering"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "Påverkade filer:",
+    "askHelp": "Om du är osäker, stäng fönstret utan att spara och be om hjälp på Garuda Linux-forumet.",
+    "aurUpdates": "Uppdatering av AUR-paket ligger utanför denna applikations räckvidd. Använd en AUR-hjälpare som Paru och granska PKGBUILD-filer före installation.",
+    "cancel": "Avbryt",
+    "cautionMerge": "Var medveten om att felaktiga ändringar i den GAMLA filen kan skada ditt system.",
+    "findMore": "Ta reda på hur du ska gå vidare",
+    "healthIssues": "Problem med systemhälsa",
+    "healthIssuesFound": "Följande hälsoproblem hittades:",
+    "learnPacdiff": "Om du inte är bekant med pacdiff-filer, informera dig snabbt om dem.",
+    "openMaintenance": "Klicka på knappen nedan för att komma igång.",
+    "openMaintenanceButton": "Börja sammanfoga",
+    "pacFiles": "Detta system har väntande .pacnew-filer, du bör kontrollera och sammanfoga dem! (klicka för info)",
+    "pendingPacdiff": "Väntande pacdiff-filer",
+    "pendingUpdates": "Väntande uppdateringar",
+    "proceed": "Så här går du vidare:",
+    "proceedMerge": "Meld öppnas för att tillämpa ändringar. På vänster sida finns den NYA filen, på höger sida den GAMLA. Flytta alla användbara ändringar du vill sammanfoga från vänster till höger sida. Klicka på spara-knappen eller CTRL + S när du är klar.",
+    "rebootNow": "Starta om nu",
+    "rebootNowBody": "Är du säker på att du vill starta om nu? Se till att spara allt ditt arbete innan du fortsätter.",
+    "runAurUpdates": "Kör AUR-uppdateringar externt",
+    "runHealthFix": "Kör hälsoreparation",
+    "scheduleUpdates": "Schemalägg uppdateringar",
+    "snapshotCreation": "En Btrfs-snapshot kommer att skapas innan sammanfogningen startar.",
+    "updates": "Detta system har väntande uppdateringar (klicka för info)",
+    "warnReboot": "Det rekommenderas starkt att starta om systemet efter att ha tillämpat uppdateringar, särskilt vid uppdatering av kärnor eller skrivbordsmiljöer.",
+    "warnUpdate": "Ditt system har inte uppdaterats på 2 veckor. Uppdatera ditt system för att säkerställa säkerhet och stabilitet."
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Den grundläggande ljuddrivrutinen på kärnnivå. Ger det grundläggande hårdvarustödet för ljudkort, även om du vanligtvis interagerar med den via PipeWire.",
+        "title": "ALSA-stöd"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. En uppsättning högkvalitativa plugins för ljudbearbetning. Installera detta för att ge EasyEffects fler professionella studioeffekter.",
+        "title": "Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "Ett kraftfullt verktyg för att förbättra mikrofonkvaliteten och ljuduppspelningen. Rekommenderas starkt att installera 'Calf Plugins' och 'LSP Plugins' tillsammans med detta för en komplett upplevelse.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "En specialiserad ljudserver med låg latens designad för professionell ljudproduktion. Hanteras vanligtvis inbyggt av PipeWire numera.",
+        "title": "JACK-stöd"
+      },
+      "jamesdsp": {
+        "description": "En ljudeffektprocessor för att lägga till basförstärkning, equalizers och andra effekter. Det rekommenderas att prova EasyEffects först.",
+        "title": "JamesDSP installerat"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP). En samling professionella ljudverktyg som equalizers och kompressorer. Installera detta för att utöka funktionerna i EasyEffects.",
+        "title": "LSP Plugins"
+      },
+      "pipewire": {
+        "description": "Den moderna standarden för hantering av ljud- och videoströmmar på Linux. Den ersätter sömlöst PulseAudio och JACK med betydligt lägre latens och bättre säkerhet.",
+        "title": "PipeWire-stöd"
+      },
+      "pulseaudio": {
+        "description": "Den äldre, tidigare standardljudservern. Behålls främst för kompatibilitet, men har till stor del ersatts av PipeWire.",
+        "title": "PulseAudio-stöd"
+      },
+      "title": "Ljud",
+      "userRealtime": {
+        "description": "Lägger till din användare i realtime-gruppen, vilket ger ljudapplikationer CPU-prioritet för att förhindra hackande och latens.",
+        "title": "Användare i realtime-gruppen"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Återansluter automatiskt till dina betrodda, tidigare parkopplade Bluetooth-enheter när de startas.",
+        "title": "Automatisk anslutning installerad"
+      },
+      "autoConnectEnabled": {
+        "description": "Kör bakgrundstjänsten som aktivt hanterar automatiska Bluetooth-återanslutningar.",
+        "title": "Automatisk anslutning aktiverad"
+      },
+      "bluetooth": {
+        "description": "BlueZ Linux Bluetooth-stack. Tillhandahåller den grundläggande programvaran som behövs för att hantera trådlösa enheter.",
+        "title": "Bluetooth-stöd"
+      },
+      "bluetoothEnabled": {
+        "description": "Kör bakgrundstjänsten som krävs för att parkoppla och ansluta till Bluetooth-enheter.",
+        "title": "Bluetooth aktiverat"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Lägger till din användare i lp-gruppen, vilket tillåter användning av Bluetooth-ljudströmmar med systemomfattande PulseAudio-konfiguration. Detta krävs inte för PipeWire.",
+        "title": "Användare i bluetooth-gruppen"
+      }
+    },
+    "components": "Systemkomponenter",
+    "containers": {
+      "boxbuddy": {
+        "description": "Ett grafiskt program för att enkelt hantera och använda dina Distrobox-miljöer.",
+        "title": "BoxBuddy installerat"
+      },
+      "distrobox": {
+        "description": "Skapar tätt integrerade containrar av andra Linux-distributioner. Låter dig installera och köra appar från Ubuntu, Fedora eller Arch inbyggt i Garuda.",
+        "title": "DistroBox installerat"
+      },
+      "docker": {
+        "description": "Branschstandardiserad containermotor för paketering och körning av isolerade applikationer.",
+        "title": "Docker installerat"
+      },
+      "dockerCompose": {
+        "description": "Ett verktyg för att definiera och köra Docker-applikationer med flera containrar via konfigurationsfiler.",
+        "title": "Docker Compose installerat"
+      },
+      "dockerEnabled": {
+        "description": "Kör bakgrundsdemonen som krävs för att hantera och köra Docker-containrar.",
+        "title": "Docker aktiverat"
+      },
+      "kontainer": {
+        "description": "Ett inbyggt KDE-program för att enkelt hantera Distrobox-containrar.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Ett modernt, daemonlöst alternativ till Docker. Det kör containrar utan att behöva root-behörighet, vilket ger bättre säkerhet.",
+        "title": "Podman installerat"
+      },
+      "podmanDesktop": {
+        "description": "Ett grafiskt program för att enkelt hantera, skapa och visa dina Podman-containrar.",
+        "title": "Podman Desktop installerat"
+      },
+      "podmanDocker": {
+        "description": "Ett kompatibilitetspaket som skapar ett alias från 'docker'-kommandot till 'podman', så att befintliga Docker-skript fungerar sömlöst med Podman.",
+        "title": "Emulera Docker via Podman"
+      },
+      "title": "Containers",
+      "userDocker": {
+        "description": "Lägger till din användare i docker-gruppen, vilket ger behörighet att köra Docker-kommandon utan sudo.",
+        "title": "Användare i docker-gruppen"
+      },
+      "winboat": {
+        "description": "Använder containerisering för att tillhandahålla sömlöst integrerade Windows-appar på Linux.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "En dynamisk brandväggshanterare som använder zoner för att dynamiskt definiera nätverkstillitsnivåer och regler.",
+        "title": "Firewalld installerat"
+      },
+      "firewalldEnabled": {
+        "description": "Kör firewalld-demonen för att skydda ditt system från inkommande nätverksanslutningar.",
+        "title": "firewalld aktiverat"
+      },
+      "opensnitch": {
+        "description": "En brandvägg på applikationsnivå som varnar dig och ber om tillåtelse varje gång ett program försöker ansluta till internet.",
+        "title": "OpenSnitch installerat"
+      },
+      "opensnitchEnabled": {
+        "description": "Kör OpenSnitch-demonen för att övervaka applikationers nätverkstrafik.",
+        "title": "OpenSnitch aktiverat"
+      },
+      "title": "Brandvägg",
+      "ufw": {
+        "description": "Uncomplicated Firewall. Ett enklare kommandoradsgränssnitt för att hantera iptables/nftables-brandväggsregler.",
+        "title": "UFW installerat"
+      },
+      "ufwEnabled": {
+        "description": "Kör UFW-tjänsten för att tillämpa dina enkla brandväggsregler.",
+        "title": "UFW aktiverat"
+      }
+    },
+    "kernels": "Kärnor",
+    "locales": "Språkversioner",
+    "misc": {
+      "gns": {
+        "description": "Integrerar pakethanteraren Nix, vilket ger dig tillgång till tusentals extra programpaket. Ger även en NixOS-installation som delar inställningar med Garuda.",
+        "title": "Garuda Nix Subsystem installerat"
+      },
+      "title": "Diverse"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "Kör demonen som krävs för att ansluta till internet via mobilt bredband (4G/5G USB-modem).",
+        "title": "ModemManager aktiverat"
+      },
+      "networkManager": {
+        "description": "Kärndemonen som konfigurerar och hanterar dina Wi-Fi-, Ethernet- och VPN-anslutningar.",
+        "title": "NetworkManager-stöd"
+      },
+      "networkManagerEnabled": {
+        "description": "Kör NetworkManager-demonen så att du kan ansluta till internet.",
+        "title": "NetworkManager aktiverat"
+      },
+      "title": "Nätverk"
+    },
+    "packages": "Ytterligare paket",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Kör CUPS-demonen som krävs för att hantera utskriftsjobb och skrivare.",
+        "title": "CUPS aktiverat"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System). Grundprogramvaran som behövs för att ansluta och skriva ut till lokala skrivare eller nätverksskrivare.",
+        "title": "Utskriftsstöd"
+      },
+      "sanedEnabled": {
+        "description": "Kör demonen som låter dig dela din skanner över det lokala nätverket.",
+        "title": "saned aktiverat"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy). Grundprogramvaran som behövs för att använda flatbädds- och dokumentskannrar.",
+        "title": "Skanningsstöd"
+      },
+      "title": "Utskrift",
+      "userCups": {
+        "description": "Lägger till din användare i cups-gruppen, vilket ger behörighet att hantera skrivare och utskriftsköer.",
+        "title": "Användare i cups-gruppen"
+      },
+      "userLp": {
+        "description": "Lägger till din användare i lp-gruppen (line printer), vilket krävs av vissa äldre utskriftssystem.",
+        "title": "Användare i lp-gruppen"
+      },
+      "userScanner": {
+        "description": "Lägger till din användare i scanner-gruppen, vilket ger behörighet att använda dokumentskannrar.",
+        "title": "Användare i scanner-gruppen"
+      }
+    },
+    "systemdServices": "Systemd-tjänster",
+    "systemSettings": "Systeminställningar",
+    "title": "System",
+    "titleTwo": "-inställningar",
+    "users": "Användare och grupper",
+    "virtualization": {
+      "kvm": {
+        "description": "Kärnbaserad virtuell maskin (KVM). Använder hårdvaruacceleration från processorn (VT-x/AMD-V) för att låta virtuella maskiner köras i nästan ursprunglig hastighet.",
+        "title": "KVM-stöd"
+      },
+      "libvirtdEnabled": {
+        "description": "Systemdemonen som krävs för att köra och hantera virtuella maskiner och andra virtualiseringsplattformar.",
+        "title": "Libvirtd aktiverat"
+      },
+      "qemu": {
+        "description": "En generell maskinemulator och virtualiserare med öppen källkod. Kan köra operativsystem för vilken maskin som helst, på vilken maskin som helst.",
+        "title": "QEMU installerat"
+      },
+      "qemuUserStatic": {
+        "description": "Kan användas för att köra binärer från främmande arkitekturer direkt, t.ex. via Podman",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Registrerar hanterare för främmande arkitekturer i kärnan, vilket är användbart vid körning av t.ex. aarch64-containeravbildningar.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "Virtualisering",
+      "userKvm": {
+        "description": "Lägger till din användare i gruppen kvm, vilket ger behörighet att använda snabba, hårdvaruaccelererade virtuella KVM-maskiner.",
+        "title": "Användare i kvm-gruppen"
+      },
+      "userLibvirt": {
+        "description": "Lägger till din användare i gruppen libvirt, vilket ger behörighet att hantera avancerade virtuella KVM/QEMU-maskiner.",
+        "title": "Användare i libvirt-gruppen"
+      },
+      "userVboxUsers": {
+        "description": "Lägger till din användare i gruppen vboxusers, vilket ger behörighet att använda VirtualBox.",
+        "title": "Användare i vboxusers-gruppen"
+      },
+      "virtManager": {
+        "description": "Ett kraftfullt skrivbordsprogram (GUI) för att skapa och hantera virtuella KVM/QEMU-maskiner.",
+        "title": "Virt-manager-stöd"
+      },
+      "virtualbox": {
+        "description": "Oracles populära virtualiseringsprogram för flera plattformar. Mycket användarvänligt, men i allmänhet långsammare än KVM/Virt-Manager.",
+        "title": "VirtualBox-stöd"
+      }
+    }
   },
   "taskmanager": {
-    "scriptMismatch": "Scriptet har modifierats, tillåts ej att exekvera!",
-    "scriptExecuted": "Aktuell uppgift slutförd."
+    "scriptExecuted": "Aktuell uppgift slutförd.",
+    "scriptMismatch": "Scriptet har modifierats, tillåts ej att exekvera!"
   },
-  "console": {
-    "title": "Terminal",
-    "icon": "Icon",
-    "runActions": "Kör åtgärder",
-    "removeAll": "Ta bort alla åtgärder",
-    "abortAll": "Avbryt alla åtgärder",
-    "noOutput": "Ingen utdata",
-    "outputExists": "Det verkar som att en åtgärd redan körs. Vänta tills den är klar innan du försöker visa loggar.",
-    "opRunning": "Operationen körs redan.",
-    "clearCachedDataTitle": "Utdatacache rensad",
-    "clearCachedData": "Utdatacachen har rensats.",
-    "clearOutputCache": "Rensa utdatacache",
-    "copyOutput": "Kopiera terminalutdata",
-    "copyToClipboardTitle": "Kopierat till urklipp",
-    "copyToClipboard": "Utdatan har kopierats till ditt urklipp.",
-    "uploadPrivateBin": "Ladda upp till PrivateBin",
-    "printScripts": "Skriv ut script"
+  "userManager": {
+    "actions": "Åtgärder",
+    "addGroup": "Lägg till grupp",
+    "addUser": "Lägg till användare",
+    "cancel": "Avbryt",
+    "clearPending": "Rensa väntande ändringar",
+    "confirmPassword": "Bekräfta lösenord",
+    "confirmRemoveGroup": "Är du säker på att du vill ta bort gruppen {{group}}?",
+    "confirmRemoveUser": "Är du säker på att du vill ta bort användaren {{username}}? Hemkatalogen kommer också att raderas.",
+    "createHome": "Skapa hemkatalog",
+    "editUser": "Redigera användare",
+    "enterGroupName": "Ange ett gruppnamn",
+    "enterPassword": "Ange ett lösenord",
+    "enterUsername": "Ange ett användarnamn",
+    "error": "Fel",
+    "fullName": "Fullständigt namn",
+    "gid": "GID",
+    "groupExists": "En grupp med detta namn finns redan",
+    "groupName": "Gruppnamn",
+    "groups": "Grupper",
+    "groupsColumn": "Grupper",
+    "home": "Hemkatalog",
+    "lock": "Lås",
+    "locked": "Låst",
+    "manageGroups": "Hantera grupper",
+    "manageGroupsFor": "Hantera grupper för {{username}}",
+    "members": "Medlemmar",
+    "newGroupName": "Gruppnamn",
+    "newPassword": "Nytt lösenord",
+    "noGroupsFound": "Inga grupper hittades",
+    "noUsersFound": "Inga användare hittades",
+    "passwordDialogTitle": "Ange lösenord för {{username}}",
+    "passwordMismatch": "Lösenorden matchar inte",
+    "pending": {
+      "add": "Väntande tillägg",
+      "lock": "Väntande låsning",
+      "membership": "Väntande gruppändringar",
+      "modify": "Väntande ändring",
+      "password": "Väntande lösenord",
+      "remove": "Väntande borttagning",
+      "unlock": "Väntande upplåsning"
+    },
+    "removeGroup": "Ta bort grupp",
+    "removeUser": "Ta bort användare",
+    "save": "Spara",
+    "searchGroups": "Sök grupper",
+    "searchUsers": "Sök användare",
+    "selectGroups": "Välj grupper",
+    "setPassword": "Ange lösenord",
+    "shell": "Skal",
+    "showAllUsers": "Visa alla användare",
+    "showUsersOnly": "Visa endast användare",
+    "system": "System",
+    "systemAccount": "Systemkonto",
+    "task": {
+      "addGroup": "Lägg till grupp",
+      "addMembership": "Lägg till i grupp",
+      "addUser": "Lägg till användare",
+      "lockUser": "Lås användare",
+      "modifyUser": "Ändra användare",
+      "password": "Ange lösenord",
+      "removeGroup": "Ta bort grupp",
+      "removeMembership": "Ta bort från grupp",
+      "removeUser": "Ta bort användare",
+      "unlockUser": "Lås upp användare"
+    },
+    "uid": "UID",
+    "unlock": "Lås upp",
+    "userExists": "En användare med detta namn finns redan",
+    "username": "Användarnamn",
+    "users": "Användare"
+  },
+  "welcome": {
+    "bootRepair": "Startreparation",
+    "bootRepairSub": "Installera om eller reparera din starthanterare",
+    "bootTools": "Startverktyg",
+    "bootToolsSub": "Hantera dina startinställningar",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Ta en titt på paket-uppdateringar och mer",
+    "chroot": "Chroot till Garuda",
+    "chrootSub": "Chroot till din Garuda-installation",
+    "diagnostics": "Diagnostik",
+    "diagnosticsSub": "Kontrollera systemets hälsa",
+    "donate": "Donera",
+    "donateSub": "Stöd Garuda Linux projektet",
+    "error": "Ett fel inträffade.",
+    "gaming": "Spelappar",
+    "gamingSub": "Spela dina favoritspel",
+    "gitlab": "GitLab",
+    "gitlabSub": "Ta en titt på vår källkod",
+    "hello": "Hej",
+    "install": "Installera Garuda Linux",
+    "installSub": "Skaffa Garuda Linux på ditt system",
+    "maintenance": "Underhåll",
+    "maintenanceSub": "Håll ditt system i gott skick",
+    "network": "Nätverksverktyg",
+    "networkSub": "Hantera dina nätverksinställningar",
+    "packages": "Upptäck appar",
+    "packagesSub": "Hitta och installera ny programvara",
+    "searxng": "SearxNG",
+    "searxngSub": "Sökmotor som respekterar ditt privatliv",
+    "setupAssistant": "Installationsassistent",
+    "setupAssistantSub": "Kör Garuda installationsassistent",
+    "startpage": "Startsida",
+    "startpageSub": "Öppna Garuda Linux startsida",
+    "subtitle": "Den ultimata Linux-distributionen för spel och multimedia",
+    "systemTools": "Systeminställningar",
+    "systemToolsSub": "Konfigurera ditt system",
+    "title": "Välkommen till ",
+    "titleTwo": "Garuda Linux",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Bitwarden kompatibel lösenordshanterare",
+    "whoogle": "Whoogle",
+    "whoogleSub": "Sökmotor som respekterar ditt privatliv"
   }
 }

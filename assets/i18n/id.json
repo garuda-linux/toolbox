@@ -1,612 +1,1557 @@
 {
-  "menu": {
-    "welcome": "Selamat Datang",
-    "maintenance": "Pemeliharaan",
-    "systemTools": "Pengaturan Sistem",
-    "components": "Komponen",
-    "gaming": "Gaming",
-    "boot": "Alat Boot",
-    "diagnostics": "Diagnostik",
-    "network": "Alat Jaringan",
-    "settings": "Pengaturan Aplikasi",
-    "help": {
-      "title": "Bantuan",
-      "icon": "Icon",
-      "getHelpForum": "Dapatkan bantuan di forum",
-      "getHelpWiki": "Cari konten di wiki",
-      "getHelpArchWiki": "Cari konten di Arch Wiki",
-      "garudaStatus": "Periksa status uptime",
-      "about": "Tentang Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox adalah alat pemeliharaan sistem dan diagnostik untuk Garuda Linux. Ini dirancang untuk membantu pengguna memelihara sistem mereka dan mendiagnosis masalah. Dibangun menggunakan Electron dan Angular.",
-      "callExorcist": "Panggil pengusir setan",
-      "callExorcistTitle": "Memanggil pengusir setan!",
-      "callExorcistBody": "Kamu pasti sangat putus asa untuk mengklik tombol ini! Saya telah menyiapkan beberapa voodoo khusus untukmu, jika kamu masih mengalami masalah dengan aplikasi ini, laporkan di forum Garuda Linux atau pelacak masalah kami."
-    },
-    "terminalRunning": "Tugas berjalan",
-    "terminalTasks": "Jalankan tugas",
-    "pending": "Tertunda",
-    "console": "Tampilkan terminal"
-  },
-  "diagnostics": {
-    "title": "Info debug ",
-    "icon": "Icon",
-    "titleTwo": "dan diagnostik",
-    "subtitle": "Temukan informasi yang kamu butuhkan untuk men-debug sistemmu",
-    "inxi": "Info umum (inxi)",
-    "systemctl": "Layanan sistem (systemctl)",
-    "journalctl": "Log sistem (journalctl)",
-    "dmesg": "Log kernel (dmesg)",
-    "full": "Diagnostik penuh",
-    "upload": "Unggah ke PrivateBin",
-    "failedCmdHeader": "Gagal menjalankan perintah",
-    "failedCmd": "Terjadi kesalahan dan tidak ada diagnostik yang bisa diambil",
-    "pacman": "Log Pacman terbaru",
-    "copied": "Berhasil disalin ke clipboard",
-    "success": "Sukses",
-    "uploadSuccess": "Berhasil diunggah ke PrivateBin, URL disalin ke clipboard"
-  },
-  "lang": {
-    "title": "Pilihan Bahasa",
-    "icon": "Icon",
-    "tooltip": "Pilih bahasa pilihanmu"
-  },
-  "welcome": {
-    "title": "Selamat Datang di ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux",
-    "subtitle": "Distro Linux terbaik untuk gaming dan multimedia",
-    "maintenance": "Pemeliharaan",
-    "maintenanceSub": "Jaga sistemmu tetap dalam kondisi baik",
-    "systemTools": "Pengaturan Sistem",
-    "systemToolsSub": "Konfigurasi sistemmu",
-    "gaming": "Aplikasi Gaming",
-    "gamingSub": "Mainkan game favoritmu",
-    "bootTools": "Alat Boot",
-    "bootToolsSub": "Kelola pengaturan bootmu",
-    "network": "Alat Jaringan",
-    "networkSub": "Kelola pengaturan jaringanmu",
-    "diagnostics": "Diagnostik",
-    "diagnosticsSub": "Periksa kesehatan sistemmu",
-    "install": "Instal Garuda Linux",
-    "installSub": "Dapatkan Garuda Linux di sistemmu",
-    "chroot": "Chroot ke Garuda",
-    "chrootSub": "Chroot ke instalasi Garuda kamu",
-    "startpage": "Halaman Awal",
-    "startpageSub": "Buka halaman awal Garuda Linux",
-    "setupAssistant": "Asisten Pengaturan",
-    "setupAssistantSub": "Jalankan asisten pengaturan Garuda",
-    "hello": "Halo",
-    "error": "Terjadi kesalahan."
-  },
-  "gaming": {
-    "title": "Aplikasi ",
-    "icon": "Icon",
-    "titleTwo": "Gaming",
-    "subtitle": "Mari kita mulai dengan beberapa aplikasi gaming!",
-    "launchers": "Peluncur Game",
-    "loading": "Memuat...",
-    "wine": "WINE",
-    "tools": "Alat Gaming",
-    "emulators": "Emulator",
-    "controllers": "Dukungan Kontroler",
-    "games": "Game",
-    "misc": "Lain-lain",
-    "bluez": "Umumnya diperlukan untuk mengenali kontroler PS nirkabel",
-    "xboxdrv": "Driver kontroler Xbox, hanya gunakan jika driver kernel tidak berfungsi!",
-    "wineMeta": "Meta package untuk menginstal WINE dan semua dependensi yang diperlukan"
-  },
-  "maintenance": {
-    "title": "Pemeliharaan ",
-    "icon": "Icon",
-    "titleTwo": "Sistem",
-    "subtitle": "Jaga sistemmu tetap dalam kondisi baik",
-    "update": "Perbarui sistemmu",
-    "addPending": "Tambahkan tertunda",
-    "removePending": "Hapus tertunda",
-    "runNow": "Jalankan sekarang",
-    "failedReset": "Kesalahan mengatur ulang file konfigurasi",
-    "failedResetFile": "Terjadi kesalahan saat mengatur ulang {{file}}",
-    "editRepos": "Edit repositori",
-    "onlyDirect": "Tindakan ini tidak dapat diantrekan dan harus dijalankan secara langsung.",
-    "cleanCache": "Bersihkan cache",
-    "cleanCacheSub": "Hapus semua paket yang di-cache",
-    "updateSystem": "Perbarui sistem",
-    "taskRunningHeader": "Kesalahan menjalankan tindakan pemeliharaan",
-    "taskRunning": "Sudah ada tugas yang berjalan, tunggu hingga selesai terlebih dahulu.",
-    "updateSystemSub": "Perbarui sistemmu melalui garuda-update",
-    "editReposSub": "Edit repositorimu dengan Pace",
-    "addPendingSub": "Tambahkan operasi tertunda",
-    "clearOrphans": "Bersihkan orphan",
-    "clearOrphansSub": "Hapus paket orphan",
-    "refreshMirrors": "Segarkan mirror",
-    "refreshMirrorsSub": "Segarkan daftar mirrormu",
-    "removeLock": "Hapus kunci Pacman",
-    "removeLockSub": "Hapus file kunci pacman",
-    "reinstallPackages": "Instal ulang paket",
-    "reinstallPackagesSub": "Instal ulang semua paket di sistemmu",
-    "reinstallDkmsModules": "Instal ulang modul DKMS",
-    "btrfsAssistant": "Btrfs Assistant",
-    "btrfsAssistantSub": "Kelola snapshot BTRFS kamu dan jalankan tugas pemeliharaan",
-    "mergePacDiff": "Gabungkan file pacdiff",
-    "mergePacDiffSub": "Gabungkan file .pacnew dan .pacsave secara interaktif",
-    "updateRemoteFullFix": "Perbaikan penuh pembaruan Garuda",
-    "updateRemoteFullFixSub": "Setel ulang Pacman dan instal ulang semua paket di OS kamu",
-    "updateRemoteKeyring": "Keyring pembaruan Garuda",
-    "updateRemoteKeyringSub": "Segarkan keyring tanpa mengatur ulang pacman.conf",
-    "updateRemoteFix": "Perbaikan pembaruan Garuda",
-    "updateRemoteFixSub": "Setel ulang pacman.conf dan segarkan keyring",
-    "updateRemoteResetSnapper": "Setel ulang snapper",
-    "updateRemoteResetSnapperSub": "Hapus semua Snapper dan buat ulang konfigurasinya",
-    "updateRemoteResetAudio": "Setel ulang audio",
-    "updateRemoteResetAudioSub": "Instal ulang/setel ulang konfigurasi audio PipeWire",
-    "resetTooltip": "File atau folder berikut akan diatur ulang ke status defaultnya:",
-    "resetConfigs": "Setel ulang konfigurasi ke status default",
-    "common": "Pemeliharaan umum",
-    "garudaUpdate": "Alat penyelamatan pembaruan Garuda"
-  },
-  "sudo": {
-    "title": "Otentikasi diperlukan",
-    "icon": "Icon",
-    "subtitle": "Silakan masukkan kata sandimu untuk melanjutkan",
-    "save": "Cache di sesi ini",
-    "password": "Kata Sandi",
-    "cancel": "Batal",
-    "useOnce": "Gunakan sekali saja"
-  },
-  "systemdServices": {
-    "notFound": "Tidak ada layanan yang ditemukan",
-    "description": "Deskripsi",
-    "unit": "Nama Unit",
-    "load": "Muat",
-    "active": "Aktif",
-    "state": "Status",
-    "searchKey": "Masukkan kata kunci pencarian",
-    "clear": "Bersihkan",
+  "bootOptions": {
     "actions": "Tindakan",
-    "show": "Tampilkan",
-    "start": "Mulai",
-    "stop": "Hentikan",
-    "mask": "Mask",
-    "unmask": "Unmask",
-    "logs": "Log",
-    "restart": "Mulai Ulang",
-    "reload": "Muat Ulang",
-    "enable": "Aktifkan",
-    "disable": "Nonaktifkan",
-    "autoRefresh": "Segarkan otomatis",
-    "error": "Terjadi kesalahan saat mengambil layanan, coba lagi.",
-    "errorTitle": "Kesalahan mengambil layanan",
-    "systemContext": "Tampilkan layanan sistem",
-    "userContext": "Tampilkan layanan pengguna",
-    "includeDisabled": "Sertakan yang dinonaktifkan",
-    "excludeDisabled": "Kecualikan yang dinonaktifkan"
+    "apply": "Terapkan pengaturan",
+    "bootEntries": "Entri Boot",
+    "cancel": "Batal",
+    "configSaved": "Konfigurasi GRUB berhasil disimpan",
+    "defaultEntry": "Entri boot default",
+    "defaultEntryHint": "Entri menu yang akan di-boot secara default.",
+    "edit": "Edit",
+    "editConfigWarning": "Peringatan: Mengedit berkas konfigurasi GRUB secara langsung bisa berbahaya. Perubahan dapat tertimpa saat GRUB diperbarui. Gunakan dengan hati-hati.",
+    "editEntry": "Edit entri boot",
+    "editGrubDefault": "Edit /etc/default/grub",
+    "editGrubDefaultHint": "Edit berkas pengaturan default GRUB. Memerlukan hak akses root.",
+    "editingEntry": "Mengedit entri",
+    "enableBootsplash": "Aktifkan bootsplash",
+    "enableBootsplashHint": "Menampilkan animasi grafis (Plymouth) selama proses boot alih-alih pesan teks.",
+    "entryId": "ID Entri",
+    "entryName": "Nama entri",
+    "entrySaved": "Entri boot berhasil disimpan",
+    "errorTitle": "Kesalahan",
+    "flatMenus": "Aktifkan menu datar",
+    "flatMenusHint": "Menonaktifkan submenu GRUB, menampilkan semua entri di menu tingkat atas.",
+    "grubBackground": "Gambar latar belakang GRUB",
+    "grubTheme": "Tema GRUB",
+    "kernelParams": "Parameter kernel",
+    "kernelParamsHint": "Parameter tambahan yang diteruskan ke kernel Linux saat boot.",
+    "kernelParamsPlaceholder": "mis. quiet splash",
+    "messageLevel": "Detail pesan boot",
+    "messageLevelDetailed": "Terperinci (Quiet)",
+    "messageLevelHint": "Pilih seberapa banyak informasi yang ditampilkan selama proses boot.",
+    "messageLevelLimited": "Terbatas (Quiet + Hush)",
+    "messageLevelVeryDetailed": "Sangat Terperinci (Semua pesan)",
+    "mitigationsOff": "Nonaktifkan mitigasi CPU",
+    "mitigationsOffHint": "Menonaktifkan mitigasi keamanan CPU untuk performa yang lebih baik namun dengan keamanan yang berkurang.",
+    "partitionSelect": "Pilih partisi",
+    "partitionSelectHint": "Harap pilih partisi yang berisi instalasi Garuda kamu.",
+    "plymouthNotInstalled": "Plymouth belum terinstal. Aktifkan untuk menginstalnya saat menerapkan.",
+    "plymouthPending": "Plymouth dijadwalkan untuk instalasi. Kamu dapat memilih tema setelah instalasi selesai.",
+    "plymouthTheme": "Tema Plymouth (bootsplash)",
+    "plymouthThemeHint": "Tema yang ditampilkan selama proses boot sistem.",
+    "plymouthVmWarning": "Kamu berjalan di dalam mesin virtual. Bootsplash Plymouth akan bekerja secara terbatas dan pratinjau mungkin tidak berfungsi dengan baik.",
+    "previewComplete": "Pratinjau selesai",
+    "previewCompleteMessage": "Pratinjau tema Plymouth telah selesai.",
+    "previewError": "Pratinjau gagal",
+    "previewTheme": "Pratinjau tema Plymouth",
+    "retry": "Coba lagi",
+    "save": "Simpan",
+    "saveDefault": "Simpan entri default",
+    "saveDefaultHint": "Secara otomatis menyimpan entri boot yang terakhir dipilih sebagai default.",
+    "savedMessage": "Pengaturan boot telah berhasil diterapkan.",
+    "savedMessageScheduled": "Pengaturan boot telah ditambahkan ke operasi yang tertunda.",
+    "savedTitle": "Pengaturan disimpan",
+    "saveSuccess": "Berhasil disimpan",
+    "searchOtherOs": "Cari sistem operasi lain",
+    "searchOtherOsHint": "Secara otomatis mendeteksi dan menambahkan sistem operasi lain yang terinstal ke menu boot menggunakan os-prober.",
+    "selectBackground": "Pilih gambar latar belakang",
+    "selectEntry": "Pilih entri boot",
+    "selectGrubTheme": "Pilih tema GRUB",
+    "selectTheme": "Pilih tema Plymouth",
+    "submenu": "Submenu",
+    "sysrqEnabled": "Selalu aktifkan SysRq",
+    "sysrqEnabledHint": "Mengaktifkan tombol Magic SysRq untuk kontrol sistem darurat.",
+    "timeout": "Batas waktu menu",
+    "timeoutHint": "Waktu dalam detik untuk menunggu sebelum mem-boot entri default.",
+    "title": "Opsi ",
+    "titleTwo": "Boot",
+    "unsavedChanges": "Kamu memiliki perubahan yang belum disimpan"
   },
-  "systemTools": {
-    "title": "Pengaturan ",
-    "icon": "Icon",
-    "titleTwo": "Sistem",
-    "systemdServices": "Layanan Systemd",
-    "systemSettings": "Pengaturan Sistem",
-    "components": "Komponen Sistem",
-    "locales": "Lokal",
-    "kernels": "Kernel",
-    "packages": "Paket Lebih Lanjut",
-    "audio": {
-      "title": "Audio",
-      "icon": "Icon",
-      "alsa": {
-        "title": "Dukungan ALSA"
-      },
-      "jack": {
-        "title": "Dukungan JACK"
-      },
-      "pulseaudio": {
-        "title": "Dukungan PulseAudio"
-      },
-      "pipewire": {
-        "title": "Dukungan PipeWire"
-      },
-      "userRealtime": {
-        "title": "Pengguna dalam grup realtime"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP terinstal"
-      }
-    },
-    "virtualization": {
-      "title": "Virtualisasi",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU terinstal"
-      },
-      "kvm": {
-        "title": "Dukungan KVM"
-      },
-      "virtManager": {
-        "title": "Dukungan Virt-manager"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd diaktifkan"
-      },
-      "userVboxUsers": {
-        "title": "Pengguna dalam grup vboxusers"
-      },
-      "virtualbox": {
-        "title": "Dukungan VirtualBox"
-      },
-      "userLibvirt": {
-        "title": "Pengguna dalam grup libvirt"
-      },
-      "userKvm": {
-        "title": "Pengguna dalam grup kvm"
-      }
-    },
-    "containers": {
-      "title": "Kontainer",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker terinstal"
-      },
-      "dockerEnabled": {
-        "title": "Docker diaktifkan"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose terinstal"
-      },
-      "userDocker": {
-        "title": "Pengguna dalam grup docker"
-      },
-      "podman": {
-        "title": "Podman terinstal"
-      },
-      "podmanDocker": {
-        "title": "Emulasi Docker via Podman"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop terinstal"
-      },
-      "distrobox": {
-        "title": "DistroBox terinstal"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy terinstal"
-      }
-    },
-    "network": {
-      "title": "Jaringan",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "Dukungan NetworkManager"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager diaktifkan"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager diaktifkan"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Dukungan Bluetooth"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth diaktifkan"
-      },
-      "userBluetooth": {
-        "title": "Pengguna dalam grup bluetooth"
-      },
-      "autoConnect": {
-        "title": "Koneksi otomatis terinstal"
-      },
-      "autoConnectEnabled": {
-        "title": "Koneksi otomatis diaktifkan"
-      }
-    },
-    "printing": {
-      "title": "Pencetakan",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "Dukungan pencetakan"
-      },
-      "cupsEnabled": {
-        "title": "CUPS diaktifkan"
-      },
-      "scanningSupport": {
-        "title": "Dukungan pemindaian"
-      },
-      "sanedEnabled": {
-        "title": "saned diaktifkan"
-      },
-      "userCups": {
-        "title": "Pengguna dalam grup cups"
-      },
-      "userScanner": {
-        "title": "Pengguna dalam grup scanner"
-      },
-      "userLp": {
-        "title": "Pengguna dalam grup lp"
-      }
-    },
-    "firewall": {
-      "title": "Firewall",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld terinstal"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld diaktifkan"
-      },
-      "ufw": {
-        "title": "UFW terinstal"
-      },
-      "ufwEnabled": {
-        "title": "UFW diaktifkan"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch terinstal"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch diaktifkan"
-      }
-    },
-    "misc": {
-      "title": "Lain-lain",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem terinstal"
-      }
-    }
+  "bootRepair": {
+    "apply": "Terapkan",
+    "backupFile": "Berkas cadangan",
+    "backupMbrPbr": "Cadangkan MBR atau PBR",
+    "backupMbrPbrTip": "Buat cadangan kode boot Master Boot Record (MBR) atau Partition Boot Record (PBR). Ini tidak termasuk tabel partisi.",
+    "backupRestoreTarget": "Target pencadangan atau pemulihan:",
+    "deviceOrPartition": "Perangkat atau partisi:",
+    "errorTitle": "Kesalahan",
+    "installOn": "Instal di:",
+    "location": "Lokasi:",
+    "luksPassword": "Kata sandi LUKS:",
+    "luksPasswordPlaceholder": "Masukkan frasa sandi LUKS",
+    "luksPasswordRequired": "Harap masukkan kata sandi LUKS untuk partisi root ini.",
+    "luksTag": "LUKS",
+    "options": "Opsi",
+    "partitionToMount": "Partisi yang akan dimuat:",
+    "reinstallGrub": "Instal ulang GRUB",
+    "reinstallGrubTip": "Instal ulang bootloader GRUB pada disk atau partisi tertentu.",
+    "repairGrubConfig": "Perbaiki konfigurasi GRUB",
+    "repairGrubConfigTip": "Buat ulang berkas konfigurasi GRUB (grub.cfg) untuk mendeteksi semua sistem operasi yang terinstal.",
+    "restoreMbrPbr": "Pulihkan MBR atau PBR dari cadangan",
+    "restoreMbrPbrTip": "Pulihkan kode boot dari berkas cadangan yang dibuat sebelumnya.",
+    "rootLocation": "Lokasi root:",
+    "selectLocation": "Harap pilih lokasi.",
+    "selectOperation": "Pilih operasi",
+    "selectRoot": "Harap pilih partisi root.",
+    "successBackup": "Pencadangan berhasil diselesaikan.",
+    "successReinstall": "Instalasi ulang GRUB berhasil diselesaikan.",
+    "successRepair": "Perbaikan GRUB berhasil diselesaikan.",
+    "successRestore": "Pemulihan berhasil diselesaikan.",
+    "successTitle": "Berhasil",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI System Partition. Partisi yang digunakan oleh komputer berbasis Unified Extensible Firmware Interface (UEFI) untuk menyimpan bootloader dan image kernel.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. Sektor boot tradisional di awal perangkat penyimpanan data yang dipartisi.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record. Juga dikenal sebagai Volume Boot Record (VBR). Ini adalah sektor pertama dari partisi tertentu.",
+    "targetRoot": "Root",
+    "title": "Perbaikan ",
+    "titleTwo": "Boot"
   },
-  "systemSettings": {
-    "defaultShellConfigs": "Instal konfigurasi default",
-    "defaultDns": "Atur DNS default",
-    "defaultShell": "Atur shell login",
-    "enableHblock": "Aktifkan Hblock",
-    "enableIwd": "Gunakan IWD alih-alih wpa_supplicant",
-    "common": {
-      "title": "Umum",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon terinstal"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon diaktifkan"
-      },
-      "oomd": {
-        "title": "Systemd-oomd diaktifkan"
-      },
-      "guestUser": {
-        "title": "Aktifkan pengguna tamu"
-      }
-    },
-    "performance": {
-      "title": "Performa",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "Tweak performa"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ terinstal"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ diaktifkan"
-      },
-      "bpftune": {
-        "title": "Bpftune terinstal"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune diaktifkan"
-      },
-      "preload": {
-        "title": "Preload terinstal"
-      },
-      "preloadEnabled": {
-        "title": "Preload diaktifkan"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance diaktifkan"
-      }
-    },
-    "powersave": {
-      "title": "Penghematan Daya",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "Tweak penghematan daya"
-      },
-      "tlp": {
-        "title": "TLP terinstal"
-      },
-      "tlpEnabled": {
-        "title": "TLP diaktifkan"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq terinstal"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq diaktifkan"
-      },
-      "thermald": {
-        "title": "Thermald terinstal"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald diaktifkan"
-      },
-      "powerProfilesDaemon": {
-        "title": "Daemon profil daya terinstal"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Daemon profil daya diaktifkan"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt terinstal"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt diaktifkan"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "Emulasi klik kanan",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Emulasi klik kanan tekan lama Evdev"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE diaktifkan"
-      }
-    }
+  "commandPalette": {
+    "hint": "Cari modul dan tindakan",
+    "placeholder": "Ketik perintah atau cari modul...",
+    "toClose": "untuk menutup"
   },
-  "shells": {
-    "fish": {
-      "hint": "Mengatur fish sebagai shell default mungkin menyebabkan masalah dengan program lain. Disarankan untuk mengaturnya sebagai default melalui konfigurasi terminal."
-    }
+  "configFiles": {
+    "actions": "Tindakan",
+    "desc": {
+      "adjtime": "Digunakan oleh hwclock untuk melacak jam",
+      "alacritty": "Konfigurasi emulator terminal terakselerasi GPU",
+      "alsa_base": "Opsi modul kernel ALSA",
+      "amdgpu_conf": "Opsi modul kernel AMDGPU",
+      "ananicy": "Aturan untuk daemon auto-nice Ananicy",
+      "asound_conf": "Konfigurasi ALSA seluruh sistem",
+      "asoundrc": "Konfigurasi ALSA khusus pengguna",
+      "bash_bashrc": "Pengaturan shell bash seluruh sistem untuk shell interaktif",
+      "bashrc": "Berkas konfigurasi Bash untuk pengguna saat ini",
+      "blacklist_nouveau": "Memasukkan driver Nouveau sumber terbuka ke daftar hitam",
+      "bluetooth_main": "Konfigurasi daemon Bluetooth",
+      "btrfsAssistant": "Konfigurasi untuk BTRFS Assistant",
+      "chaoticMirrorlist": "Mirror repositori kustom Chaotic-AUR milik Garuda",
+      "cinnamon": "Direktori konfigurasi utama untuk desktop Cinnamon",
+      "cpupower": "Konfigurasi untuk alat manajemen daya cpupower",
+      "cron": "Konfigurasi untuk tugas cron",
+      "cursorThemeSystem": "Konfigurasi tema kursor seluruh sistem",
+      "cursorThemeUser": "Konfigurasi tema kursor khusus pengguna",
+      "dunst": "Konfigurasi untuk daemon notifikasi Dunst",
+      "environment": "Variabel lingkungan seluruh sistem",
+      "environmentD": "Direktori untuk variabel lingkungan seluruh sistem (Wayland)",
+      "fastfetch": "Konfigurasi alat pengambil informasi sistem",
+      "fish": "Berkas konfigurasi shell Fish",
+      "fontconfigSystem": "Pengaturan konfigurasi font seluruh sistem",
+      "fontconfigUser": "Pengaturan konfigurasi font khusus pengguna",
+      "fstab": "Informasi statis tentang sistem berkas",
+      "gamemode": "Konfigurasi global untuk alat optimasi GameMode",
+      "garudaUpdateConfig": "Konfigurasi untuk perilaku dan opsi garuda-update",
+      "gdm": "Konfigurasi untuk GNOME Display Manager",
+      "gitconfig": "Konfigurasi Git khusus pengguna",
+      "group": "Mendefinisikan grup pengguna",
+      "grub": "Berkas konfigurasi untuk bootloader GRUB",
+      "grub_cfg": "Berkas konfigurasi bootloader GRUB",
+      "grubTheme": "Konfigurasi untuk tema bootloader GRUB",
+      "gtk3Settings": "Pengaturan untuk aplikasi GTK 3.0",
+      "gtk4Css": "Gaya CSS kustom untuk aplikasi GTK 4.0",
+      "gtk4Settings": "Pengaturan untuk aplikasi GTK 4.0",
+      "gtkrc2": "Pengaturan untuk aplikasi legacy GTK 2.0",
+      "hostname": "Nama host sistem",
+      "hosts": "Tabel pencarian statis untuk nama host",
+      "hosts_allow": "TCP wrapper untuk kontrol akses layanan jaringan (izinkan)",
+      "hosts_deny": "TCP wrapper untuk kontrol akses layanan jaringan (tolak)",
+      "hyprland": "Konfigurasi kompositor Wayland Hyprland",
+      "hyprpaper": "Konfigurasi untuk utilitas wallpaper Hyprpaper",
+      "i3": "Konfigurasi pengelola jendela tiling X11 klasik",
+      "iconTheme": "Pengaturan konfigurasi tema ikon",
+      "journald": "Konfigurasi untuk layanan journal systemd",
+      "kcmfonts": "Pengaturan konfigurasi font KDE",
+      "kdeColorScheme": "Definisi skema warna KDE khusus pengguna",
+      "kdeglobals": "Pengaturan konfigurasi KDE global",
+      "kdeLookandFeel": "Pengaturan Tema Global KDE (Look and Feel)",
+      "kitty": "Konfigurasi emulator terminal kaya fitur yang terakselerasi GPU",
+      "kvantumConfig": "Konfigurasi untuk mesin tema berbasis SVG Kvantum",
+      "kwinrc": "Konfigurasi untuk pengelola jendela KWin",
+      "lightdm": "Konfigurasi untuk manajer tampilan LightDM",
+      "locale": "Konfigurasi lokal seluruh sistem",
+      "locale_gen": "Daftar lokal yang tersedia di sistem",
+      "logind": "Konfigurasi untuk manajer login systemd",
+      "makepkgConf": "Opsi konfigurasi untuk makepkg",
+      "mako": "Konfigurasi untuk daemon notifikasi Mako",
+      "mangohud": "Konfigurasi untuk overlay performa MangoHud",
+      "mirrorlist": "Mirror repositori standar Arch Linux",
+      "mkinitcpio": "Konfigurasi untuk membuat lingkungan initial ramdisk",
+      "modprobe_d": "Konfigurasi dan opsi modul kernel",
+      "networkmanager": "Konfigurasi global untuk NetworkManager",
+      "nftables": "Konfigurasi untuk firewall nftables",
+      "nvidia_conf": "Opsi modul kernel NVIDIA",
+      "os_release": "Menyediakan informasi tentang OS, digunakan oleh berbagai program",
+      "pacman_hooks": "Hook untuk mengotomatiskan tindakan selama operasi paket",
+      "pacmanConf": "Berkas konfigurasi utama untuk manajer paket pacman",
+      "pam": "Berkas konfigurasi untuk Pluggable Authentication Modules",
+      "pam_d": "Konfigurasi PAM untuk layanan otentikasi",
+      "passwd": "Berisi informasi akun pengguna",
+      "pipewire_client": "Konfigurasi klien PipeWire",
+      "pipewire_conf": "Konfigurasi daemon PipeWire tingkat pengguna",
+      "plasmaApplets": "Konfigurasi untuk applet desktop Plasma",
+      "plasmaEnv": "Variabel lingkungan untuk ruang kerja Plasma",
+      "plasmarc": "Konfigurasi utama untuk shell Plasma",
+      "plymouthConf": "Konfigurasi untuk daemon bootsplash Plymouth",
+      "profile": "Variabel lingkungan dan program startup khusus pengguna",
+      "pulse_daemon": "Pengaturan daemon PulseAudio",
+      "pulse_default": "Skrip startup PulseAudio",
+      "qtile": "Konfigurasi pengelola jendela berbasis Python",
+      "resolv": "Berkas konfigurasi resolver DNS",
+      "rofi": "Konfigurasi untuk peluncur aplikasi dan pengalih jendela Rofi",
+      "rsyslog": "Konfigurasi utama untuk daemon rsyslog",
+      "sddm": "Konfigurasi Simple Desktop Display Manager",
+      "shadow": "Berisi kata sandi ter-hash dan info kedaluwarsa akun",
+      "snapperRoot": "Konfigurasi Snapper untuk partisi root",
+      "ssh_user": "Konfigurasi klien SSH khusus pengguna",
+      "sshd": "Berkas konfigurasi daemon server OpenSSH",
+      "starship": "Konfigurasi prompt lintas-shell Starship",
+      "sudoers": "Mengonfigurasi pengguna mana yang memiliki hak istimewa sudo",
+      "sway": "Konfigurasi kompositor Wayland Sway",
+      "sysctl": "Parameter kernel (jaringan, performa, keamanan)",
+      "systemd_network": "Berkas konfigurasi untuk systemd-networkd",
+      "systemd_services": "Definisi layanan systemd kustom atau yang ditimpa",
+      "systemd_timers": "Timer systemd untuk tugas terjadwal",
+      "systemdSystem": "Konfigurasi sistem systemd global",
+      "systemdUser": "Konfigurasi pengguna systemd global",
+      "timezone": "Menetapkan zona waktu sistem",
+      "udev_rules": "Aturan udev untuk perilaku perangkat keras",
+      "userdirs": "Konfigurasi direktori pengguna XDG",
+      "vconsole": "Konfigurasi konsol virtual",
+      "waybar": "Konfigurasi utama untuk bilah status Waybar",
+      "waybarStyle": "Gaya CSS untuk bilah status Waybar",
+      "wayfire": "Konfigurasi kompositor Wayland 3D",
+      "wayland_conf": "Berkas konfigurasi kompositor Wayland khusus pengguna",
+      "wireplumber": "Direktori konfigurasi manajer sesi WirePlumber",
+      "wofi": "Konfigurasi untuk peluncur aplikasi Wofi",
+      "xfce4": "Direktori konfigurasi utama untuk Xfce4",
+      "xorg_conf": "Berkas konfigurasi Xorg utama yang lama",
+      "xorg_conf_d": "Direktori untuk cuplikan konfigurasi Xorg",
+      "xorg_gpu": "Konfigurasi Xorg khusus GPU (pemilihan driver, BusID, pengaturan layar)",
+      "xorg_monitor": "Tata letak monitor, resolusi, dan refresh rate untuk Xorg",
+      "zramGenerator": "Konfigurasi untuk zram-generator",
+      "zsh": "Berkas konfigurasi Zsh untuk pengguna saat ini"
+    },
+    "description": "Deskripsi",
+    "edit": "Edit",
+    "name": "Nama",
+    "path": "Jalur",
+    "search": "Cari berkas konfigurasi...",
+    "title": "Berkas ",
+    "titleTwo": "Konfigurasi",
+    "wiki": "Wiki"
   },
   "confirmation": {
     "accept": "Terima",
-    "reject": "Batal",
-    "exitApp": "Apakah kamu yakin ingin keluar dari aplikasi?",
-    "exitAppRunningAction": "Apakah kamu yakin ingin keluar dari aplikasi? Ada tindakan yang sedang berjalan!",
-    "resetConfigsHeader": "Atur ulang konfigurasi?",
-    "resetConfigsBody": "Apakah kamu yakin ingin mengatur ulang konfigurasi berikut?",
-    "exitAppHeader": "Keluar dari aplikasi?",
     "applyOperations": "Terapkan operasi?",
-    "applyOperationsBody": "Apakah kamu yakin ingin menerapkan semua operasi yang tertunda?"
+    "applyOperationsBody": "Apakah kamu yakin ingin menerapkan semua operasi yang tertunda?",
+    "cancel": "Batal",
+    "createSnapshotBefore": "Buat snapshot Btrfs sebelum eksekusi",
+    "exitApp": "Apakah kamu yakin ingin keluar dari aplikasi?",
+    "exitAppHeader": "Keluar dari aplikasi?",
+    "exitAppRunningAction": "Apakah kamu yakin ingin keluar dari aplikasi? Ada tindakan yang sedang berjalan!",
+    "password": "Kata Sandi",
+    "reject": "Batal",
+    "resetConfigsBody": "Apakah kamu yakin ingin mengatur ulang konfigurasi berikut?",
+    "resetConfigsHeader": "Atur ulang konfigurasi?",
+    "save": "Cache di sesi ini",
+    "subtitle": "Silakan masukkan kata sandimu untuk melanjutkan",
+    "title": "Otentikasi diperlukan",
+    "useOnce": "Gunakan sekali saja"
+  },
+  "console": {
+    "abortAll": "Batalkan semua tindakan",
+    "clearCachedData": "Cache output telah dibersihkan.",
+    "clearCachedDataTitle": "Cache output dibersihkan",
+    "clearOutputCache": "Bersihkan cache output",
+    "copyOutput": "Salin output terminal",
+    "copyToClipboard": "Output telah berhasil disalin ke clipboardmu.",
+    "copyToClipboardTitle": "Disalin ke clipboard",
+    "noOutput": "Tidak ada output",
+    "noTasksPending": "Tidak ada tugas tertunda",
+    "opRunning": "Operasi sudah berjalan.",
+    "outputExists": "Sepertinya sudah ada tindakan yang berjalan. Tunggu hingga selesai sebelum mencoba melihat log.",
+    "printScripts": "Cetak skrip",
+    "removeAll": "Hapus semua tindakan",
+    "runActions": "Jalankan tindakan",
+    "tasksAppearHere": "Tugas akan muncul di sini saat kamu memilih item.",
+    "title": "Terminal",
+    "uploadPrivateBin": "Unggah ke PrivateBin"
+  },
+  "diagnostics": {
+    "copySuccess": "Berhasil disalin ke clipboard",
+    "dmesg": "Log kernel (dmesg)",
+    "dmesgDesc": "Periksa pesan kernel ring buffer.",
+    "exitCode": "Perintah keluar dengan kode {{code}}",
+    "failedCmd": "Terjadi kesalahan dan tidak ada diagnostik yang bisa diambil",
+    "failedCmdHeader": "Gagal menjalankan perintah",
+    "full": "Diagnostik penuh",
+    "fullDesc": "Kumpulkan semua informasi diagnostik yang tersedia ke dalam satu output.",
+    "health": "Kesehatan sistem",
+    "healthDesc": "Jalankan pemeriksaan kesehatan sistem menggunakan garuda-health.",
+    "inxi": "Info umum (inxi)",
+    "inxiDesc": "Kumpulkan informasi perangkat keras dan sistem yang terperinci.",
+    "journalctl": "Log sistem (journalctl)",
+    "journalctlDesc": "Periksa log sistem dari daemon journal.",
+    "pacman": "Log Pacman terbaru",
+    "pacmanDesc": "Lihat log manajer paket pacman terbaru.",
+    "subtitle": "Temukan informasi yang kamu butuhkan untuk men-debug sistemmu",
+    "success": "Sukses",
+    "systemctl": "Layanan sistem (systemctl)",
+    "systemctlDesc": "Analisis performa boot sistem dan status layanan.",
+    "title": "Info debug ",
+    "titleTwo": "dan diagnostik",
+    "upload": "Unggah ke PrivateBin",
+    "uploadDesc": "Unggah output terminal saat ini ke PrivateBin untuk dibagikan.",
+    "uploadSuccess": "Berhasil diunggah ke PrivateBin, URL disalin ke clipboard"
   },
   "error": {
     "sudoPassword": "Sepertinya ini bukan kata sandi yang benar. Coba lagi."
   },
-  "operation": {
-    "removeApps": "Hapus aplikasi",
-    "installApps": "Instal aplikasi",
-    "addGroup": "Tambahkan pengguna ke grup",
-    "removeGroup": "Hapus pengguna dari grup",
-    "disableService": "Nonaktifkan layanan",
-    "enableService": "Aktifkan layanan",
-    "setDefaultShell": "Atur shell default",
-    "enableHblock": "Aktifkan Hblock",
-    "disableHblock": "Nonaktifkan Hblock",
-    "setNewDnsServer": "Atur server DNS baru",
-    "resetDnsServer": "Setel ulang server DNS",
-    "args": "Argumen",
-    "logs": "Log",
-    "remove": "Hapus",
-    "abort": "Batalkan",
-    "run": "Jalankan sekarang"
-  },
-  "systemStatus": {
-    "pendingUpdates": "Pembaruan tertunda",
-    "updates": "Sistem ini memiliki pembaruan tertunda (klik untuk info)",
-    "pacFiles": "Sistem ini memiliki file .pacnew tertunda, kamu harus memeriksa dan menggabungkannya! (klik untuk info)",
-    "cancel": "Batal",
-    "aurUpdates": "Memperbarui paket AUR di luar cakupan aplikasi ini. Gunakan pembantu AUR seperti Paru, dan tinjau file PKGBUILD sebelum instalasi.",
-    "scheduleUpdates": "Jadwalkan pembaruan",
-    "pendingPacdiff": "File pacdiff tertunda",
-    "findMore": "Cari tahu cara melanjutkan",
-    "warnUpdate": "Sistemmu belum diperbarui dalam 2 minggu. Perbarui sistemmu untuk memastikan keamanan dan stabilitas.",
-    "affectedFiles": "File yang terpengaruh:",
-    "learnPacdiff": "Jika kamu tidak terbiasa dengan file pacdiff, cari tahu tentangnya dengan cepat.",
-    "openMaintenance": "Klik tombol di bawah untuk memulai.",
-    "openMaintenanceButton": "Mulai menggabungkan",
-    "rebootNow": "Mulai ulang sekarang",
-    "rebootNowBody": "Apakah kamu yakin ingin memulai ulang sekarang? Pastikan untuk menyimpan semua pekerjaanmu sebelum melanjutkan.",
-    "warnReboot": "Sangat disarankan untuk memulai ulang sistem setelah menerapkan pembaruan, terutama saat memperbarui kernel atau lingkungan desktop.",
-    "proceed": "Berikut cara melanjutkannya:",
-    "snapshotCreation": "Snapshot Btrfs akan dibuat sebelum memulai penggabungan.",
-    "proceedMerge": "Meld akan dibuka untuk menerapkan perubahan. Di sisi kiri adalah file BARU, di sisi kanan adalah file LAMA. Pindahkan perubahan berguna yang ingin kamu gabungkan dari sisi kiri ke sisi kanan. Klik tombol simpan atau CTRL + S setelah selesai.",
-    "cautionMerge": "Berhati-hatilah bahwa memasukkan perubahan yang salah ke dalam file LAMA dapat merusak sistemmu.",
-    "askHelp": "Jika kamu tidak yakin, tutup jendela tanpa menyimpan dan minta bantuan di forum Garuda Linux.",
-    "runAurUpdates": "Jalankan pembaruan AUR secara eksternal"
-  },
-  "operationManager": {
-    "refusing": "Menolak eksekusi",
-    "pendingOperationsRunning": "Ada operasi yang berjalan, saya hanya akan menghapus yang sudah selesai.",
-    "thisOperationRunning": "Apa kamu sudah gila? Operasi ini sedang berjalan!"
-  },
-  "os-interact": {
-    "packages": "Ubah paket terinstal",
-    "packages-aur": "Ubah paket AUR",
-    "services": "Ubah layanan",
-    "services-user": "Ubah layanan pengguna",
-    "groups": "Ubah grup pengguna",
-    "locales": "Ubah lokal yang diaktifkan"
-  },
-  "packages": {
-    "title": "Paket",
-    "icon": "Icon",
-    "internet": "Internet",
-    "documents": "Dokumen",
-    "multimedia": "Multimedia",
-    "science": "Sains",
-    "security": "Keamanan",
-    "other": "Lainnya",
-    "clear": "Bersihkan",
-    "search": "Cari",
-    "url": "URL",
-    "selected": "Dipilih",
-    "description": "Deskripsi",
-    "name": "Nama",
-    "searchKey": "Masukkan kata kunci pencarian",
-    "notFound": "Tidak ada paket yang ditemukan"
+  "gaming": {
+    "antimicrox": "Program grafis yang digunakan untuk memetakan tombol keyboard & kontrol mouse ke gamepad",
+    "anydesk": "Aplikasi Desktop Jarak Jauh yang Cepat",
+    "bluez": "Umumnya diperlukan untuk mengenali kontroler PS nirkabel",
+    "bottles": "Kelola prefix Wine dan Proton dengan mudah",
+    "boxtron": "Alat kompatibilitas untuk menjalankan game DOS di Steam melalui DOSBox Linux native",
+    "controllers": "Dukungan Kontroler",
+    "corectrl": "Aplikasi kontrol sistem dan perangkat keras",
+    "desmume": "Emulator Nintendo DS",
+    "dgenSdl": "Emulator untuk sistem Sega Genesis/Mega Drive yang di-porting ke SDL",
+    "discord": "Obrolan suara dan teks lengkap untuk para gamer",
+    "displaycal": "Kalibrasi dan Karakterisasi Tampilan Sumber Terbuka didukung oleh Argyll CMS",
+    "dolphinEmu": "Emulator Gamecube dan Wii",
+    "dosbox": "Emulator dengan DOS bawaan untuk menjalankan Game DOS",
+    "droidcam": "Alat untuk mengubah ponsel/tablet kamu menjadi webcam nirkabel/USB",
+    "duckstation": "Emulator Playstation (versi GPL terakhir)",
+    "dxvk": "Lapisan kompatibilitas berbasis Vulkan untuk Direct3D 9/10/11 yang memungkinkan menjalankan aplikasi 3D di Linux menggunakan Wine",
+    "easyeffects": "Efek Audio untuk aplikasi Pipewire",
+    "eka2l1": "Emulator OS Symbian eksperimental",
+    "emulationstation": "EmulationStation adalah front-end emulator fleksibel yang mendukung navigasi tanpa keyboard dan tema sistem kustom",
+    "emulators": "Emulator",
+    "fceux": "Emulator NES/Famicom yang cepat dan sangat kompatibel",
+    "fsUae": "Emulator Amiga berbasis UAE/WinUAE dengan fokus pada emulasi game",
+    "gameconqueror": "Pemindai memori yang dirancang untuk mengisolasi alamat variabel acak dalam proses yang sedang berjalan",
+    "gamemode": "Kombinasi daemon/lib yang memungkinkan game meminta serangkaian optimasi diterapkan sementara ke OS host",
+    "games": "Game",
+    "gamescope": "Pengelola jendela komposisi sesi SteamOS",
+    "gamescopeSession": "Sesi Gamescope untuk manajemen jendela komposisi",
+    "gamescopeSessionSteam": "Sesi Gamescope yang dioptimalkan untuk gaming Steam",
+    "goverlay": "GUI untuk membantu mengelola overlay Vulkan/OpenGL",
+    "gwe": "Utilitas sistem untuk mengontrol GPU NVIDIA",
+    "hatari": "Emulator Atari ST dan STE",
+    "heroic": "Peluncur sumber terbuka untuk game Epic, Amazon, dan GOG",
+    "inputRemapper": "Alat untuk mengubah dan memprogram pemetaan tombol perangkat input kamu",
+    "itch": "Penginstal untuk aplikasi desktop itch.io",
+    "kegaFusion": "Emulator konsol Sega klasik, termasuk SMS/GG, Genesis/Megadrive, dan pengaya lainnya",
+    "keyboardVisualizer": "Ubah pengaturan RGB yang didukung OpenRGB menjadi pertunjukan cahaya spektakuler untuk musik kamu",
+    "lact": "Alat Konfigurasi GPU Linux",
+    "launchers": "Peluncur Game",
+    "libretroMeta": "Meta-paket untuk semua emulator Libretro yang didukung",
+    "loading": "Memuat...",
+    "lutris": "Platform Gaming Terbuka",
+    "luxtorpeda": "Alat kompatibilitas Steam Play untuk menjalankan game menggunakan engine Linux native",
+    "mame": "Porting dari Multiple Arcade Machine Emulator yang populer menggunakan SDL dengan dukungan OpenGL",
+    "mangohud": "Lapisan overlay Vulkan untuk memantau FPS, suhu, beban CPU/GPU, dan lainnya",
+    "mednafen": "Emulator game multi-sistem baris perintah",
+    "mgba": "Emulator Nintendo Gameboy Advance yang berfokus pada kecepatan dan akurasi",
+    "minigalaxy": "Klien GOG sederhana untuk Linux",
+    "misc": "Lain-lain",
+    "mumble": "Perangkat lunak obrolan suara sumber terbuka, latensi rendah, dan berkualitas tinggi",
+    "nestopia": "Emulator NES/Famicom dengan akurasi tinggi",
+    "noisetorch": "Peredam kebisingan mikrofon real-time di Linux",
+    "nyrna": "Tangguhkan game dan aplikasi kapan saja dan lanjutkan kapan pun kamu mau",
+    "obsStudio": "Perangkat lunak gratis dan sumber terbuka untuk streaming langsung dan perekaman",
+    "openrgb": "Kontrol pencahayaan RGB sumber terbuka yang tidak bergantung pada perangkat lunak produsen",
+    "oversteer": "Aplikasi grafis untuk mengonfigurasi roda kemudi Logitech",
+    "pcsx2": "Emulator PlayStation 2",
+    "pegasusFrontend": "Frontend grafis lintas platform yang dapat disesuaikan untuk meluncurkan emulator dan mengelola koleksi game kamu",
+    "piper": "Aplikasi GTK untuk mengonfigurasi mouse gaming",
+    "polychromatic": "Aplikasi front-end manajemen pencahayaan RGB untuk OpenRazer",
+    "ppsspp": "Emulator PSP yang ditulis dalam C++",
+    "protonCachyOS": "Distribusi Proton dari Valve dengan perbaikan CachyOS dan optimasi lainnya",
+    "protonGeCustom": "Distribusi kustom Proton dari Valve dengan berbagai perbaikan dan peningkatan",
+    "protontricks": "Pembungkus sederhana yang menjalankan fungsi Winetricks untuk game berbasis Proton",
+    "protonupQt": "Instal dan kelola Proton-GE dan Luxtorpeda untuk Steam serta Wine-GE untuk Lutris",
+    "retroarch": "Frontend referensi untuk API libretro",
+    "rpcs3": "Emulator PlayStation 3",
+    "ryujinx": "Emulator Nintendo Switch eksperimental yang ditulis dalam C#",
+    "sameboy": "Emulator Game Boy/Game Boy Color yang berfokus pada akurasi",
+    "scController": "Driver mode pengguna, pemeta, dan GUI berbasis GTK3 untuk Steam Controller, DS4, dan pengontrol serupa",
+    "scummvm": "'Mesin virtual' untuk beberapa game petualangan point-and-click grafis klasik",
+    "snes9x": "Emulator portabel Super Nintendo Entertainment System (TM)",
+    "soundwire": "Transmisikan audio apa pun secara nirkabel dari PC kamu ke ponsel Android atau PC lain",
+    "steamNative": "Pengganti native untuk runtime Steam menggunakan pustaka sistem",
+    "steamRuntime": "Sistem pengiriman perangkat lunak digital Valve",
+    "steamtinkerlaunch": "Skrip pembungkus untuk opsi peluncuran kustom Steam",
+    "stella": "Emulator Atari 2600 VCS",
+    "streamlinkTwitchGui": "Peramban Twitch.tv multiplatform untuk Streamlink",
+    "subtitle": "Mari kita mulai dengan beberapa aplikasi gaming!",
+    "title": "Aplikasi ",
+    "titleTwo": "Gaming",
+    "tools": "Alat Gaming",
+    "torzu": "Fork emulator lainnya",
+    "vesktop": "Vesktop adalah aplikasi desktop Discord yang dapat disesuaikan dan ramah privasi",
+    "vice": "Emulator Commodore Serbaguna",
+    "vkbasalt": "Lapisan pasca-pemrosesan Vulkan. Beberapa efeknya adalah CAS, FXAA, SMAA, deband",
+    "vlc": "Pemutar MPEG, VCD/DVD, dan DivX lintas platform",
+    "vrVideoPlayer": "Pemutar video untuk konten VR",
+    "waydroid": "Skrip Python untuk menambahkan OpenGapps, Magisk, pustaka terjemahan libhoudini, dan libndk ke Waydroid",
+    "wine": "WINE",
+    "wineMeta": "Meta package untuk menginstal WINE dan semua dependensi yang diperlukan",
+    "winePackage": "Lapisan kompatibilitas untuk menjalankan program Windows",
+    "wineStaging": "Lapisan kompatibilitas untuk menjalankan program Windows - Cabang Staging",
+    "winetricks": "Skrip untuk menginstal berbagai pustaka runtime yang dapat didistribusikan ulang di Wine",
+    "xboxdrv": "Driver kontroler Xbox, hanya gunakan jika driver kernel tidak berfungsi!",
+    "xemu": "Emulator Xbox Asli",
+    "xoneDkms": "Driver Linux modern untuk pengontrol Xbox One dan Xbox Series X|S",
+    "xoneDongleFirmware": "Firmware Adaptor Pengontrol Nirkabel Xbox",
+    "xpadneo": "Driver Linux Canggih untuk Gamepad Nirkabel Xbox One",
+    "zsnes": "Emulator Super Nintendo"
   },
   "kernels": {
+    "active": "Kernel aktif:",
     "dkmsModulesBroken": "Beberapa modul DKMS rusak",
     "dkmsModulesBrokenTip": "Klik saya untuk menjadwalkan instalasi modul DKMS yang rusak",
     "dkmsModulesMissing": "Beberapa modul DKMS hilang",
     "dkmsModulesMissingTip": "Modul DKMS yang hilang",
     "headers": "Header",
     "headersMissing": "Header kernel hilang",
-    "headersMissingTip": "Klik saya untuk menjadwalkan instalasi header yang hilang",
-    "active": "Kernel aktif:"
+    "setDefault": "Tetapkan kernel default"
+  },
+  "lang": {
+    "title": "Pilihan Bahasa",
+    "tooltip": "Pilih bahasa pilihanmu"
   },
   "languagePacks": {
-    "locale": "Lokal",
-    "selected": "Dipilih",
     "base": "Paket dasar",
+    "description": "Ini adalah paket bahasa untuk paket yang terinstal, biasanya menyediakan terjemahan untuk GUI.",
+    "locale": "Lokal",
     "notFound": "Tidak ada paket bahasa yang ditemukan",
     "pkgname": "Nama paket",
-    "description": "Ini adalah paket bahasa untuk paket yang terinstal, biasanya menyediakan terjemahan untuk GUI."
-  },
-  "settings": {
-    "title": "Pengaturan ",
-    "icon": "Icon",
-    "titleTwo": "Aplikasi",
-    "leftButtons": "Tampilkan tombol jendela di kiri",
-    "copyDiagnostics": "Salin diagnostik ke clipboard",
-    "darkMode": "Aktifkan mode gelap",
-    "language": "Konfigurasi bahasa aktif",
-    "autoStart": "Mulai otomatis aplikasi",
-    "logLevel": "Pilih tingkat log",
-    "systemdUserContext": "Tampilkan layanan Systemd pengguna",
-    "autoRefresh": "Aktifkan penyegaran otomatis layanan systemd",
-    "showMainLinks": "Tampilkan tautan di halaman beranda",
-    "themeLabel": "Tema desain dasar",
-    "toggleOptions": "Opsi sakelar",
-    "selectOptions": "Pilihan"
+    "selected": "Dipilih"
   },
   "locales": {
     "apply": "Jadwalkan perubahan lokal terinstal",
-    "description": "Lokal di sebelah kanan terinstal di sistemmu. Kamu dapat memilih mana yang ingin kamu simpan dan mana yang ingin kamu hapus.",
     "available": "Tersedia",
+    "description": "Lokal di sebelah kanan terinstal di sistemmu. Kamu dapat memilih mana yang ingin kamu simpan dan mana yang ingin kamu hapus.",
     "selected": "Dipilih",
-    "task": "Ubah lokal sistem",
-    "selectLocale": "Pilih bahasa pilihanmu di seluruh sistem"
+    "selectLocale": "Pilih bahasa pilihanmu di seluruh sistem",
+    "task": "Ubah lokal sistem"
   },
-  "console": {
-    "title": "Terminal",
+  "maintenance": {
+    "actionFailed": "Terjadi kesalahan saat mencoba menjalankan {{ action }} dengan pesan kesalahan {{ error }}.",
+    "actionFailedHeader": "Gagal menjalankan tindakan pemeliharaan",
+    "addPending": "Tambahkan tertunda",
+    "addPendingSub": "Tambahkan operasi tertunda",
+    "btrfsAssistant": "Btrfs Assistant",
+    "btrfsAssistantSub": "Kelola snapshot BTRFS kamu dan jalankan tugas pemeliharaan",
+    "cleanCache": "Bersihkan cache",
+    "cleanCacheSub": "Hapus semua paket yang di-cache",
+    "clearOrphans": "Bersihkan orphan",
+    "clearOrphansSub": "Hapus paket orphan",
+    "common": "Pemeliharaan umum",
+    "editRepos": "Edit repositori",
+    "editReposSub": "Edit repositorimu dengan Pace",
+    "failedReset": "Kesalahan mengatur ulang file konfigurasi",
+    "failedResetFile": "Terjadi kesalahan saat mengatur ulang {{file}}",
+    "garudaHealth": "Pemeriksaan kesehatan sistem",
+    "garudaHealthFix": "Perbaiki kesehatan sistem",
+    "garudaHealthFixSub": "Coba perbaiki masalah sistem umum secara otomatis",
+    "garudaHealthSub": "Periksa masalah sistem umum dengan garuda-health",
+    "garudaUpdate": "Alat penyelamatan pembaruan Garuda",
+    "installationFailedHeader": "{{ program }} tidak terinstal dan gagal diinstal, tidak dapat melanjutkan. Periksa log untuk informasi lebih lanjut",
+    "mergePacDiff": "Gabungkan file pacdiff",
+    "mergePacDiffSub": "Gabungkan file .pacnew dan .pacsave secara interaktif",
+    "onlyDirect": "Tindakan ini tidak dapat diantrekan dan harus dijalankan secara langsung.",
+    "refreshArchMirrors": "Segarkan mirror",
+    "refreshArchMirrorsSub": "Segarkan daftar mirrormu",
+    "refreshChaoticMirrors": "Segarkan daftar cermin Chaotic-AUR",
+    "refreshChaoticMirrorsSub": "Segarkan daftar cermin Chaotic-AUR kamu",
+    "refreshChaoticMirrorsSuccess": "Daftar cermin Chaotic-AUR berhasil disegarkan",
+    "refreshKeyring": "Segarkan keyring",
+    "refreshKeyringSub": "Segarkan keyring pacman kamu",
+    "reinstallDkmsModules": "Instal ulang modul DKMS",
+    "reinstallPackages": "Instal ulang paket",
+    "reinstallPackagesSub": "Instal ulang semua paket di sistemmu",
+    "removeLock": "Hapus kunci Pacman",
+    "removeLockSub": "Hapus file kunci pacman",
+    "removePending": "Hapus tertunda",
+    "resetConfigs": "Setel ulang konfigurasi ke status default",
+    "resetTooltip": "File atau folder berikut akan diatur ulang ke status defaultnya:",
+    "runNow": "Jalankan sekarang",
+    "subtitle": "Jaga sistemmu tetap dalam kondisi baik",
+    "taskRunning": "Sudah ada tugas yang berjalan, tunggu hingga selesai terlebih dahulu.",
+    "taskRunningHeader": "Kesalahan menjalankan tindakan pemeliharaan",
+    "title": "Pemeliharaan ",
+    "titleTwo": "Sistem",
+    "update": "Perbarui sistemmu",
+    "updateRemoteFix": "Perbaikan pembaruan Garuda",
+    "updateRemoteFixSub": "Setel ulang pacman.conf dan segarkan keyring",
+    "updateRemoteFullFix": "Perbaikan penuh pembaruan Garuda",
+    "updateRemoteFullFixSub": "Setel ulang Pacman dan instal ulang semua paket di OS kamu",
+    "updateRemoteKeyring": "Keyring pembaruan Garuda",
+    "updateRemoteKeyringSub": "Segarkan keyring tanpa mengatur ulang pacman.conf",
+    "updateRemoteResetAudio": "Setel ulang audio",
+    "updateRemoteResetAudioSub": "Instal ulang/setel ulang konfigurasi audio PipeWire",
+    "updateRemoteResetSnapper": "Setel ulang snapper",
+    "updateRemoteResetSnapperSub": "Hapus semua Snapper dan buat ulang konfigurasinya",
+    "updateSystem": "Perbarui sistem",
+    "updateSystemSub": "Perbarui sistemmu melalui garuda-update"
+  },
+  "menu": {
+    "apply": "Terapkan operasi tertunda",
+    "boot": "Alat Boot",
+    "bootRepair": "Perbaikan Boot",
+    "clearTasks": "Hapus tugas",
+    "components": "Komponen",
+    "configFiles": "Berkas konfigurasi",
+    "console": "Tampilkan terminal",
+    "diagnostics": "Diagnostik",
+    "file": {
+      "preferences": "Preferensi",
+      "quit": "Keluar",
+      "title": "Berkas"
+    },
+    "gaming": "Gaming",
+    "help": {
+      "about": "Tentang Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox adalah alat pemeliharaan sistem dan diagnostik untuk Garuda Linux. Ini dirancang untuk membantu pengguna memelihara sistem mereka dan mendiagnosis masalah. Dibangun menggunakan Electron dan Angular.",
+      "aboutForum": "Forum",
+      "aboutSourceCode": "Kode sumber",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wiki",
+      "callExorcist": "Panggil pengusir setan",
+      "callExorcistBody": "Kamu pasti sangat putus asa untuk mengklik tombol ini! Saya telah menyiapkan beberapa voodoo khusus untukmu, jika kamu masih mengalami masalah dengan aplikasi ini, laporkan di forum Garuda Linux atau pelacak masalah kami.",
+      "callExorcistTitle": "Memanggil pengusir setan!",
+      "garudaStatus": "Periksa status uptime",
+      "getHelpArchWiki": "Cari konten di Arch Wiki",
+      "getHelpForum": "Dapatkan bantuan di forum",
+      "getHelpWiki": "Cari konten di wiki",
+      "title": "Bantuan"
+    },
+    "maintenance": "Pemeliharaan",
+    "modules": {
+      "appSettings": "Pengaturan aplikasi",
+      "bootRepair": "Perbaikan Boot",
+      "components": "Komponen sistem",
+      "diagnostics": "Diagnostik",
+      "gaming": "Gaming",
+      "kernels": "Kernel",
+      "locales": "Lokalisasi",
+      "maintenance": "Pemeliharaan",
+      "packages": "Jelajahi aplikasi",
+      "search": "Opsi pencarian",
+      "setupWizard": "Asisten penyiapan",
+      "systemdServices": "Layanan systemd",
+      "systemSettings": "Pengaturan sistem",
+      "title": "Modul",
+      "userManager": "Manajer pengguna",
+      "welcome": "Selamat Datang"
+    },
+    "network": "Alat Jaringan",
+    "packages": "Jelajahi aplikasi",
+    "pending": "Tertunda",
+    "settings": "Pengaturan Aplikasi",
+    "setupWizard": "Asisten penyiapan",
+    "systemTools": "Pengaturan Sistem",
+    "terminalRunning": "Tugas berjalan",
+    "terminalTasks": "Jalankan tugas",
+    "welcome": "Selamat Datang"
+  },
+  "networkAssistant": {
+    "actions": "Tindakan",
+    "active": "Aktif",
+    "airplaneMode": "Mode Pesawat",
+    "any": "Apa saja",
+    "blacklistAction": "Daftar hitam {{name}}",
+    "blacklistDriver": "Daftar hitam driver",
+    "blacklistedDrivers": "Driver Terdaftar Hitam",
+    "blacklistFailed": "Gagal memperbarui daftar hitam",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Perangkat Bluetooth",
+    "cancel": "Batal",
+    "category": "Kategori",
+    "clear": "Bersihkan",
+    "clickToCopy": "Klik untuk menyalin",
+    "connected": "Terhubung",
+    "connectionInfo": "Info Koneksi",
+    "connman": "ConnMan",
+    "copied": "Disalin ke papan klip",
+    "copyAll": "Salin Semua",
+    "count": "Jumlah",
+    "disabled": "Dinonaktifkan",
+    "disconnected": "Terputus",
+    "driver": "Driver",
+    "driverBlacklisted": "Driver dimasukkan ke daftar hitam",
+    "driverLoaded": "Driver berhasil dimuat",
+    "driverUnblacklisted": "Driver dihapus dari daftar hitam",
+    "driverUnloaded": "Driver berhasil dibongkar",
+    "enable": "Aktifkan",
+    "enabled": "Diaktifkan",
+    "enableService": "Aktifkan Layanan",
+    "enableServiceFailed": "Gagal mengaktifkan layanan",
+    "error": "Kesalahan",
+    "errorFetch": "Gagal mengambil informasi jaringan",
+    "ethernetControllers": "Pengontrol Ethernet",
+    "externalIp": "IP Eksternal",
+    "gps": "GPS",
+    "hardwareInfo": "Informasi Perangkat Keras",
+    "hotspotFailed": "Gagal membuka hotspot",
+    "inactive": "Tidak Aktif",
+    "installDriver": "Instal Driver",
+    "installTraceroute": "Instal Traceroute",
+    "installWihotspot": "Instal WiFi Hotspot",
+    "interface": "Antarmuka",
+    "internet": "Internet",
+    "loadDriver": "Muat driver",
+    "loadDriverAction": "Muat Driver {{name}}",
+    "loadDriverFailed": "Gagal memuat driver",
+    "loadedDrivers": "Driver Termuat",
+    "maxHops": "Maks Hop",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Driver jaringan tidak ditemukan",
+    "noHardware": "Perangkat keras jaringan tidak terdeteksi",
+    "notAvailable": "Tidak Tersedia",
+    "off": "Mati",
+    "on": "Nyala",
+    "openHotspot": "Buka Hotspot",
+    "outputInTerminal": "Output ditampilkan di terminal di bawah",
+    "ping": "Ping",
+    "pingFailed": "Gagal menjalankan ping",
+    "quickToggles": "Pilihan Cepat",
+    "routerIp": "IP Router",
+    "runPing": "Jalankan Ping",
+    "runTraceroute": "Jalankan Traceroute",
+    "search": "Cari",
+    "serviceEnabled": "Layanan berhasil diaktifkan",
+    "services": "Layanan",
+    "status": "Status",
+    "success": "Berhasil",
+    "tabs": {
+      "diagnostics": "Diagnostik",
+      "drivers": "Driver",
+      "hardware": "Perangkat Keras",
+      "status": "Status"
+    },
+    "targetHost": "Host Target",
+    "timeout": "Batas Waktu (dtk)",
+    "title": "Asisten ",
+    "titleTwo": "Jaringan",
+    "toggleAirplane": "Beralih Mode Pesawat",
+    "toggleAirplaneFailed": "Gagal beralih Mode Pesawat",
+    "toggleBt": "Beralih Bluetooth",
+    "toggleBtFailed": "Gagal beralih Bluetooth",
+    "toggleGps": "Beralih GPS",
+    "toggleGpsFailed": "Gagal beralih GPS",
+    "toggleWifi": "Beralih WiFi",
+    "toggleWifiFailed": "Gagal beralih WiFi",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Gagal menjalankan traceroute",
+    "type": "Tipe",
+    "unblacklistDriver": "Hapus dari daftar hitam",
+    "unloadDriver": "Bongkar driver",
+    "unloadDriverAction": "Bongkar Driver {{name}}",
+    "unloadDriverFailed": "Gagal membongkar driver",
+    "unloadedDrivers": "Driver Tidak Termuat",
+    "whitelistAction": "Daftar putih {{name}}",
+    "wifi": "WiFi",
+    "wifiHotspot": "WiFi Hotspot",
+    "wifiHotspotDesc": "Buka konfigurasi hotspot WiFi",
+    "wirelessControllers": "Pengontrol Nirkabel"
+  },
+  "operation": {
+    "abort": "Batalkan",
+    "addGroup": "Tambahkan pengguna ke grup",
+    "args": "Argumen",
+    "disableHblock": "Nonaktifkan Hblock",
+    "disableService": "Nonaktifkan layanan",
+    "enableHblock": "Aktifkan Hblock",
+    "enableService": "Aktifkan layanan",
+    "installApps": "Instal aplikasi",
+    "logs": "Log",
+    "remove": "Hapus",
+    "removeApps": "Hapus aplikasi",
+    "removeGroup": "Hapus pengguna dari grup",
+    "resetDnsServer": "Setel ulang server DNS",
+    "run": "Jalankan sekarang",
+    "setDefaultShell": "Atur shell default",
+    "setNewDnsServer": "Atur server DNS baru"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Ada operasi yang berjalan, saya hanya akan menghapus yang sudah selesai.",
+    "refusing": "Menolak eksekusi",
+    "thisOperationRunning": "Apa kamu sudah gila? Operasi ini sedang berjalan!"
+  },
+  "os-interact": {
+    "boot-options": "Terapkan pengaturan boot",
+    "configs": "Ubah konfigurasi sistem",
+    "configs-system": "Ubah konfigurasi sistem",
+    "configs-user": "Ubah konfigurasi pengguna",
+    "garuda-update-config": "Terapkan pengaturan Garuda Update",
+    "groups": "Ubah grup pengguna",
+    "locales": "Ubah lokal yang diaktifkan",
+    "packages": "Ubah paket terinstal",
+    "packages-aur": "Ubah paket AUR",
+    "services": "Ubah layanan",
+    "services-user": "Ubah layanan pengguna"
+  },
+  "packages": {
+    "any": "Apa saja",
+    "clear": "Bersihkan",
+    "description": "Deskripsi",
+    "documents": "Dokumen",
     "icon": "Icon",
-    "runActions": "Jalankan tindakan",
-    "removeAll": "Hapus semua tindakan",
-    "abortAll": "Batalkan semua tindakan",
-    "noOutput": "Tidak ada output",
-    "outputExists": "Sepertinya sudah ada tindakan yang berjalan. Tunggu hingga selesai sebelum mencoba melihat log.",
-    "opRunning": "Operasi sudah berjalan.",
-    "clearCachedDataTitle": "Cache output dibersihkan",
-    "clearCachedData": "Cache output telah dibersihkan.",
-    "clearOutputCache": "Bersihkan cache output",
-    "copyOutput": "Salin output terminal",
-    "copyToClipboardTitle": "Disalin ke clipboard",
-    "copyToClipboard": "Output telah berhasil disalin ke clipboardmu.",
-    "uploadPrivateBin": "Unggah ke PrivateBin"
+    "internet": "Internet",
+    "multimedia": "Multimedia",
+    "name": "Nama",
+    "notFound": "Tidak ada paket yang ditemukan",
+    "other": "Lainnya",
+    "science": "Sains",
+    "search": "Cari",
+    "searchKey": "Masukkan kata kunci pencarian",
+    "security": "Keamanan",
+    "selected": "Dipilih",
+    "status": "Status",
+    "title": "Paket",
+    "titleTwo": "aplikasi",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "Aktifkan penyegaran otomatis layanan systemd",
+    "autoStart": "Mulai otomatis aplikasi",
+    "backgroundFit": "Sesuaikan latar belakang ke aplikasi",
+    "backgroundSettings": "Pengaturan latar belakang",
+    "blurBackground": "Buramkan latar belakang",
+    "blurStrength": "Kekuatan buram",
+    "clearBackground": "Hapus latar belakang",
+    "copyDiagnostics": "Salin diagnostik ke clipboard",
+    "customBackground": "Latar belakang kustom",
+    "darkMode": "Aktifkan mode gelap",
+    "language": "Konfigurasi bahasa aktif",
+    "leftButtons": "Tampilkan tombol jendela di kiri",
+    "logLevel": "Pilih tingkat log",
+    "noBackgroundSelected": "Tidak ada latar belakang yang dipilih",
+    "selectOptions": "Pilihan",
+    "showMainLinks": "Tampilkan tautan di halaman beranda",
+    "systemdUserContext": "Tampilkan layanan Systemd pengguna",
+    "themeLabel": "Tema desain dasar",
+    "title": "Pengaturan ",
+    "titleTwo": "Aplikasi",
+    "toggleOptions": "Opsi sakelar"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Klik 'Terapkan' untuk memulai proses instalasi dan konfigurasi.",
+      "failedBody": "Terjadi kesalahan selama instalasi. Kamu dapat mencoba lagi eksekusi atau kembali untuk mengubah pilihanmu.",
+      "failedHeader": "Eksekusi Gagal",
+      "header": "Siap untuk Menerapkan"
+    },
+    "autoCategories": {
+      "audio": "Audio",
+      "browsers": "Peramban",
+      "communication": "Komunikasi",
+      "development": "Pengembangan",
+      "gaming": "Gaming",
+      "graphics": "Grafis",
+      "inputMethod": "Metode Input",
+      "internet": "Internet",
+      "kernels": "Kernel",
+      "mail": "Email",
+      "multimedia": "Multimedia",
+      "office": "Perkantoran",
+      "other": "Lainnya",
+      "pkgmngrs": "Pusat Perangkat Lunak",
+      "video": "Video",
+      "virtualization": "Virtualisasi"
+    },
+    "autoSoftware": {
+      "0ad": "Game strategi real-time 3D berbasis sejarah",
+      "abiWord": "Pengolah kata berfitur lengkap",
+      "aisleriot": "Koleksi permainan kartu solitaire",
+      "ansible": "Koleksi resmi Ansible",
+      "appimagePool": "Klien AppImageHub modern",
+      "ardour": "Digital audio workstation kelas profesional",
+      "asian": "Meta-paket yang berisi font umum Asia",
+      "audacious": "Pemutar audio yang ringan dan canggih",
+      "audacity": "Program untuk memanipulasi bentuk gelombang audio digital",
+      "bakaMplayer": "Pemutar multimedia lintas platform berbasis libmpv",
+      "bauh": "Antarmuka grafis untuk mengelola aplikasi",
+      "bazaar": "Toko aplikasi yang berfokus pada flatpak",
+      "birdfont": "Editor font untuk grafik vektor",
+      "bitwigStudio": "Digital audio workstation untuk produksi musik",
+      "blender": "Rangkaian kreasi grafik 3D yang terintegrasi penuh",
+      "brasero": "Alat mastering CD/DVD",
+      "brave": "Peramban web yang memblokir iklan dan pelacak secara default",
+      "calligra": "Aplikasi produktivitas dan penggunaan kreatif",
+      "chromium": "Peramban web yang dibangun untuk kecepatan, kesederhanaan, dan keamanan",
+      "clawsMail": "Klien email berbasis GTK+",
+      "cockpit": "Antarmuka pengguna berbasis web untuk server Linux",
+      "conky": "Monitor sistem yang ringan",
+      "converseen": "Pengonversi dan pengubah ukuran gambar batch",
+      "darktable": "Utilitas untuk mengelola dan memproses foto raw",
+      "deluge": "Klien BitTorrent yang ringan dan berfitur lengkap",
+      "digikam": "Aplikasi manajemen foto digital tingkat lanjut",
+      "discord": "Obrolan suara dan teks serbaguna",
+      "discover": "Manajer aplikasi dan sumber daya KDE",
+      "docker": "Kemas, kirim, dan jalankan aplikasi sebagai kontainer",
+      "dragon": "Pemutar multimedia yang berfokus pada kesederhanaan",
+      "droidcam": "Ubah ponsel/tablet kamu menjadi webcam",
+      "easytag": "Aplikasi untuk melihat dan mengedit tag audio",
+      "element": "Klien kolaborasi Matrix yang elegan",
+      "elisa": "Pemutar musik sederhana oleh KDE",
+      "evolution": "Kelola email, kontak, dan jadwal kamu",
+      "falkon": "Peramban QtWebEngine lintas platform",
+      "fdm": "Akselerator dan pengatur unduhan modern yang andal",
+      "filezilla": "Klien FTP, FTPS, dan SFTP yang cepat dan andal",
+      "firedragon": "Fork Floorp yang berfokus pada privasi dengan branding Garuda",
+      "firedragonCatppuccin": "Peramban Firedragon dengan tema Catppuccin",
+      "firefox": "Peramban web yang cepat, privat, dan aman",
+      "firefoxEsr": "Firefox Extended Support Release",
+      "fontForge": "Editor font outline dan bitmap",
+      "fractal": "Aplikasi perpesanan grup Matrix untuk GNOME",
+      "freeCad": "Pemodel CAD 3D parametrik berbasis fitur",
+      "freeOffice": "Rangkaian perkantoran yang kompatibel dengan Microsoft Office",
+      "geary": "Klien email ringan untuk GNOME",
+      "genymotion": "Lingkungan virtual untuk Android",
+      "gimp": "GNU Image Manipulation Program",
+      "github": "GUI untuk mengelola Git dan GitHub",
+      "gitKraken": "Klien Git yang intuitif, cepat, dan indah",
+      "gnomeBoxes": "Aplikasi sederhana untuk mengakses sistem virtual",
+      "gnomeBuilder": "IDE untuk menulis perangkat lunak berbasis GNOME",
+      "gnomeFirmware": "Kelola firmware pada perangkat yang didukung",
+      "gnomeSoftware": "Manajer aplikasi dan sumber daya GNOME",
+      "gnu": "Editor tampilan real-time yang dapat diperluas dan dikustomisasi",
+      "gnuCash": "Aplikasi akuntansi keuangan",
+      "gnumeric": "Aplikasi spreadsheet untuk GNOME",
+      "handbrake": "Transkoder video multithread",
+      "hedgewars": "Game artileri strategi berbasis giliran",
+      "homebank": "Akuntansi pribadi yang gratis dan mudah",
+      "hypnotix": "Aplikasi streaming IPTV",
+      "indic": "Metode input untuk bahasa Indic",
+      "inkscape": "Editor grafik vektor profesional",
+      "intellijIdea": "IDE untuk Java dan bahasa pemrograman lainnya",
+      "japanese": "Metode input untuk bahasa Jepang",
+      "jenkins": "Server integrasi berkelanjutan yang dapat diperluas",
+      "jitsiMeet": "Aplikasi desktop Jitsi Meet",
+      "joplin": "Aplikasi pencatat dan daftar tugas",
+      "k3b": "Aplikasi pembakar CD yang kaya fitur",
+      "kapman": "Klon dari game terkenal Pac-Man",
+      "kdenlive": "Editor video non-linear",
+      "kDevelop": "IDE C++ menggunakan teknologi KDE",
+      "keepassXc": "Pengelola kata sandi lintas platform",
+      "kiCad": "Alat desain skematik elektronik dan PCB",
+      "kid3": "Editor tag audio",
+      "kmahjongg": "Game mencocokkan ubin untuk satu atau dua pemain",
+      "kmail": "Klien email KDE",
+      "kMyMoney": "Manajer keuangan pribadi",
+      "knights": "Papan catur oleh KDE",
+      "kodi": "Pemutar media dan pusat hiburan",
+      "kolourpaint": "Program menggambar sederhana oleh KDE",
+      "korean": "Metode input untuk bahasa Korea",
+      "krita": "Program lukis digital profesional",
+      "kwave": "Sound editor untuk KDE",
+      "libreCad": "Alat gambar CAD 2D",
+      "libreOfficeFresh": "Versi terbaru dari LibreOffice",
+      "libreOfficeStill": "Versi stabil dari LibreOffice",
+      "librewolf": "Peramban web yang berfokus pada privasi, keamanan, dan kebebasan",
+      "linuxCachyos": "Kernel CachyOS yang sangat teroptimasi",
+      "linuxHardened": "Kernel Linux dengan keamanan yang diperketat (Hardened)",
+      "linuxLts": "Kernel Linux Dukungan Jangka Panjang (LTS)",
+      "linuxMainline": "Kernel Linux mainline terbaru",
+      "linuxXanmod": "Kernel kustom dengan patch XanMod untuk performa",
+      "linuxXanmodLts": "Kernel kustom LTS dengan patch XanMod",
+      "lmms": "Digital audio workstation dan sequencer",
+      "lollypop": "Pemutar musik modern untuk GNOME",
+      "luanti": "Mesin game berbasis voxel",
+      "luminanceHdr": "Alur kerja untuk pencitraan HDR",
+      "mailspring": "Klien email yang indah dan cepat",
+      "mari0": "Game Mario dengan mekanik portal gun",
+      "mediaElch": "Manajer Media untuk Kodi",
+      "microsoftTeams": "Klien tidak resmi Microsoft Teams",
+      "mixxx": "Perangkat lunak DJ sumber terbuka dan gratis",
+      "mumble": "Perangkat lunak obrolan suara berkualitas tinggi dengan latensi rendah",
+      "museScore": "Buat, putar, dan cetak lembaran musik yang indah",
+      "myPaint": "Aplikasi melukis yang cepat dan mudah untuk pelukis digital",
+      "mystiq": "Pengonversi audio/video berbasis FFmpeg",
+      "neochat": "Klien untuk Matrix, protokol komunikasi terdesentralisasi",
+      "netbeans": "IDE untuk Java, HTML5, PHP, C, dan C++",
+      "nextcloudClient": "Klien sinkronisasi desktop Nextcloud",
+      "nitroshare": "Aplikasi sederhana untuk mentransfer berkas antar perangkat",
+      "obsidian": "Basis pengetahuan yang bekerja pada berkas Markdown teks biasa lokal",
+      "obsStudio": "Perangkat lunak untuk siaran langsung dan perekaman",
+      "octopi": "Frontend Pacman yang andal menggunakan Qt",
+      "onlyOffice": "Rangkaian perkantoran yang menggabungkan editor teks, spreadsheet, dan presentasi",
+      "openToonz": "Perangkat lunak untuk memproduksi animasi 2D",
+      "pencil2d": "Alat untuk membuat animasi gambar tangan 2D",
+      "podman": "Mesin kontainer tanpa daemon untuk mengelola kontainer",
+      "postman": "Bangun, uji, dan dokumentasikan API kamu",
+      "prometheus": "Toolkit pemantauan sistem dan peringatan",
+      "puppet": "Kerangka kerja dan aplikasi otomatisasi server",
+      "putty": "Klien SSH/Telnet terintegrasi terminal",
+      "pyCharm": "IDE Python untuk pengembang profesional",
+      "qbittorrent": "Klien BitTorrent tingkat lanjut berbasis Qt",
+      "qtCreator": "IDE lintas platform yang ringan",
+      "qutebrowser": "Peramban berbasis Python yang digerakkan oleh keyboard mirip Vim",
+      "remmina": "Klien desktop jarak jauh yang ditulis dalam GTK+",
+      "rosegarden": "Sequencer MIDI/audio dan editor notasi",
+      "shortwave": "Pemutar radio internet",
+      "shotcut": "Editor video lintas platform",
+      "signal": "Signal Private Messenger untuk Linux",
+      "simplifiedChinese": "Metode input untuk Tionghoa Sederhana",
+      "sinhalese": "Metode input untuk bahasa Sinhala",
+      "skrooge": "Manajer keuangan pribadi untuk KDE",
+      "slack": "Klien Slack Desktop",
+      "smPlayer": "Pemutar media dengan codec bawaan",
+      "soundConverter": "Aplikasi pengonversi suara sederhana",
+      "soundwire": "Transmisikan audio dari PC kamu ke perangkat lain",
+      "strawberryPlayer": "Pemutar musik yang ditujukan untuk penggemar audio",
+      "subtitleComposer": "Editor subtitle video",
+      "superTux": "Game sidescroller lompat dan lari 2D klasik",
+      "superTuxKart": "Game balap kart yang menampilkan Tux",
+      "sweetHome3d": "Aplikasi desain interior",
+      "synfigStudio": "Program animasi vektor profesional",
+      "teeworlds": "Game penembak 2D multipemain yang bertempo cepat",
+      "telegram": "Klien resmi Telegram Desktop",
+      "terraform": "Alat untuk membangun dan memperbarui infrastruktur sebagai kode",
+      "thai": "Metode input untuk bahasa Thai",
+      "thunderbird": "Pembaca email dan berita mandiri",
+      "torBrowser": "Jelajahi jaringan Tor dengan aman",
+      "traditionalChinese": "Metode input untuk Tionghoa Tradisional",
+      "transmageddon": "Aplikasi untuk mentranskode format video",
+      "twitchGui": "Peramban Twitch.tv multiplatform",
+      "ungoogledChromium": "Chromium dengan semua integrasi Google dihapus",
+      "variety": "Mengubah wallpaper secara berkala",
+      "vietnamese": "Metode input untuk bahasa Vietnam",
+      "vim": "Editor teks terminal yang sangat dapat dikonfigurasi",
+      "virtManager": "Antarmuka pengguna desktop untuk mengelola mesin virtual",
+      "virtualBox": "Perangkat lunak virtualisasi lintas platform",
+      "visualStudioCode": "Editor kode untuk membangun dan men-debug aplikasi modern",
+      "visualStudioCodeOss": "Build sumber terbuka dari Visual Studio Code",
+      "vivaldi": "Peramban canggih yang dibuat dengan mempertimbangkan pengguna tingkat lanjut",
+      "vlc": "Pemutar multimedia lintas platform",
+      "vscodium": "Biner VSCode bebas telemetri",
+      "warpinator": "Kirim dan terima berkas melalui jaringan",
+      "wings3d": "Pemodel 3D menggunakan struktur data winged edge",
+      "wire": "Perpesanan dan konferensi video terenkripsi ujung-ke-ujung",
+      "wpsOffice": "Rangkaian produktivitas perkantoran",
+      "xfburn": "Alat pembakar CD/DVD sederhana",
+      "xonotic": "Penembak orang pertama lintas platform bertempo cepat",
+      "xtreme": "Akselerator unduhan dan pengunduh video yang andal",
+      "yakuake": "Emulator terminal drop-down",
+      "zedEditor": "Editor kode berkinerja tinggi dan multipengguna",
+      "zoom": "Layanan konferensi web dan video"
+    },
+    "buttons": {
+      "apply": "Terapkan",
+      "back": "Kembali",
+      "finish": "Selesai",
+      "next": "Berikutnya",
+      "retry": "Coba Lagi"
+    },
+    "softwareSelection": {
+      "body": "Pilih perangkat lunak yang ingin kamu instal.",
+      "header": "Pemilihan Perangkat Lunak"
+    },
+    "steps": {
+      "apply": "Terapkan Perubahan"
+    },
+    "success": {
+      "archWiki": "Wiki Arch Linux",
+      "body": "Sistem kamu telah disiapkan dan siap digunakan!",
+      "finish": "Selesaikan penyiapan",
+      "forum": "Forum Garuda",
+      "garudaWiki": "Wiki Garuda Linux",
+      "reboot": "Disarankan untuk memulai ulang.",
+      "title": "Sukses!"
+    },
+    "tasks": {
+      "installSoftware": "Menginstal perangkat lunak yang dipilih"
+    },
+    "title": "Asisten Penyiapan"
+  },
+  "shells": {
+    "fish": {
+      "hint": "Mengatur fish sebagai shell default mungkin menyebabkan masalah dengan program lain. Disarankan untuk mengaturnya sebagai default melalui konfigurasi terminal."
+    }
+  },
+  "systemdServices": {
+    "actions": "Tindakan",
+    "active": "Aktif",
+    "autoRefresh": "Segarkan otomatis",
+    "clear": "Bersihkan",
+    "description": "Deskripsi",
+    "disable": "Nonaktifkan",
+    "enable": "Aktifkan",
+    "error": "Terjadi kesalahan saat mengambil layanan, coba lagi.",
+    "errorTitle": "Kesalahan mengambil layanan",
+    "excludeDisabled": "Kecualikan yang dinonaktifkan",
+    "hideDead": "Sembunyikan mati",
+    "hideDeadTip": "Beralih untuk menampilkan/menyembunyikan layanan dalam status dead, failed, atau exited",
+    "includeDisabled": "Sertakan yang dinonaktifkan",
+    "load": "Muat",
+    "logs": "Log",
+    "mask": "Mask",
+    "notFound": "Tidak ada layanan yang ditemukan",
+    "reload": "Muat Ulang",
+    "restart": "Mulai Ulang",
+    "searchKey": "Masukkan kata kunci pencarian",
+    "show": "Tampilkan",
+    "showAll": "Tampilkan semua",
+    "start": "Mulai",
+    "state": "Status",
+    "stop": "Hentikan",
+    "systemContext": "Tampilkan layanan sistem",
+    "unit": "Nama Unit",
+    "unmask": "Unmask",
+    "userContext": "Tampilkan layanan pengguna"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Membuat akun pengguna 'tamu' sementara tanpa kata sandi, terisolasi dari berkas pribadi kamu. Dihapus saat logout.",
+        "title": "Aktifkan pengguna tamu"
+      },
+      "oomd": {
+        "description": "Daemon Out-Of-Memory milik systemd. Secara aktif memantau memori sistem dan secara otomatis menghentikan proses yang memakan memori berlebih sebelum seluruh komputer kamu macet/hang.",
+        "title": "Systemd-oomd diaktifkan"
+      },
+      "psd": {
+        "description": "Memindahkan profil peramban web kamu (seperti Firefox atau Brave) ke RAM sementara yang cepat (tmpfs). Ini secara signifikan mempercepat responsivitas peramban dan mengurangi keausan pada SSD kamu.",
+        "title": "Profile-sync-daemon terinstal"
+      },
+      "psdEnabled": {
+        "description": "Menjalankan Profile-sync-daemon untuk mengelola profil peramban kamu di RAM secara otomatis.",
+        "title": "Profile-sync-daemon diaktifkan"
+      },
+      "title": "Umum"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "Menonaktifkan fitur penangguhan node PipeWire. Ini menjaga perangkat audio tetap aktif secara konstan, mencegah bunyi letupan atau klik yang mengganggu saat kartu suara bangun dari mode tidur.",
+        "title": "Audio No-Suspend"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Mencegah Discord meminta untuk mengunduh dan menginstal pembaruan, karena ini sama sekali tidak berguna di Arch Linux - Pacman yang melakukannya untuk kita.",
+        "title": "Nonaktifkan Pembaruan Otomatis Discord"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "Trik KWin yang menghapus bilah judul dan batas jendela saat aplikasi dimaksimalkan di KDE Plasma, memberi kamu lebih banyak ruang layar vertikal yang dapat digunakan.",
+        "title": "KDE Borderless Maximize"
+      },
+      "title": "Konfigurasi Sistem"
+    },
+    "defaultDns": "Atur DNS default",
+    "defaultDnsTip": "Mengubah penyedia Domain Name System (DNS) default untuk koneksi internet kamu, mengesampingkan default ISP kamu. Dapat meningkatkan kecepatan, privasi, atau melewati sensor.",
+    "defaultShell": "Atur shell login",
+    "defaultShellConfigs": "Instal konfigurasi default",
+    "defaultShellTip": "Mengubah shell login terminal default kamu. Disarankan untuk menggunakan shell yang sesuai standar POSIX (seperti Bash atau Zsh) dan hanya menggunakan shell non-standar seperti Fish melalui pengaturan profil emulator terminal kamu.",
+    "enableHblock": "Aktifkan Hblock",
+    "enableHblockTip": "Mengaktifkan Hblock, skrip yang memblokir iklan, pelacak, dan domain berbahaya di seluruh sistem dengan merutekan permintaannya ke sinkhole lokal melalui berkas /etc/hosts kamu.",
+    "enableIwd": "Gunakan IWD alih-alih wpa_supplicant",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). Alternatif modern dan ringan untuk wpa_supplicant untuk mengelola koneksi Wi-Fi. Seringkali terhubung lebih cepat dan menangani roaming lebih baik.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Lewati pemeriksaan ruang disk yang tersedia sebelum menginstal paket.",
+        "title": "Lewati pemeriksaan ruang disk"
+      },
+      "pacmanNoconfirm": {
+        "description": "Jalankan pacman tanpa konfirmasi untuk pengalaman pembaruan yang lebih cepat.",
+        "title": "Pacman non-interaktif"
+      },
+      "skipMirrorlist": {
+        "description": "Lewati penyegaran mirrorlist Arch sebelum menjalankan pembaruan sistem.",
+        "title": "Lewati penyegaran mirrorlist"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "Perbarui paket yang diinstal dari Arch User Repository (AUR) selama pembaruan sistem.",
+        "title": "Perbarui paket AUR"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto NICe daemon. Secara dinamis mengubah prioritas CPU (niceness) dari proses yang berjalan, memberikan lebih banyak waktu CPU ke aplikasi aktif yang sedang kamu gunakan sehingga sistem terasa lebih cepat.",
+        "title": "Ananicy C++ terinstal"
+      },
+      "ananicyCppEnabled": {
+        "description": "Menjalankan daemon Ananicy untuk mengelola prioritas CPU aplikasi secara terus-menerus.",
+        "title": "Ananicy C++ diaktifkan"
+      },
+      "bpftune": {
+        "description": "Menggunakan eBPF untuk terus memantau dan secara otomatis menyesuaikan parameter jaringan Linux kamu secara real-time demi kecepatan transfer internet dan latensi yang optimal.",
+        "title": "Bpftune terinstal"
+      },
+      "bpftuneEnabled": {
+        "description": "Menjalankan daemon bpftune untuk mengoptimalkan performa jaringan kamu secara terus-menerus.",
+        "title": "Bpftune diaktifkan"
+      },
+      "irqbalanceEnabled": {
+        "description": "Mendistribusikan interupsi perangkat keras secara merata ke seluruh core CPU kamu. Ini mencegah satu core kewalahan menangani sinyal perangkat.",
+        "title": "IRQbalance diaktifkan"
+      },
+      "performanceTweaks": {
+        "description": "Menerapkan serangkaian konfigurasi sysctl dan tuning tingkat sistem untuk mengoptimalkan Garuda demi responsivitas maksimal.",
+        "title": "Tweak performa"
+      },
+      "preload": {
+        "description": "Daemon latar belakang yang memantau aplikasi mana yang paling sering kamu gunakan dan memuatnya terlebih dahulu ke dalam RAM, sehingga mengurangi waktu peluncurannya secara drastis.",
+        "title": "Preload terinstal"
+      },
+      "preloadEnabled": {
+        "description": "Menjalankan daemon Preload untuk menyimpan cache aplikasi yang sering kamu gunakan.",
+        "title": "Preload diaktifkan"
+      },
+      "title": "Performa"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "Pengoptimal kecepatan CPU dan daya otomatis. Secara dinamis menurunkan kecepatan CPU saat tidak digunakan untuk menghemat baterai, dan meningkatkannya saat kamu membutuhkan performa.",
+        "title": "Auto-cpufreq terinstal"
+      },
+      "autoCpufreqEnabled": {
+        "description": "Menjalankan daemon auto-cpufreq untuk mengelola penskalaan CPU secara terus-menerus.",
+        "title": "Auto-cpufreq diaktifkan"
+      },
+      "intelUndervolt": {
+        "description": "Menurunkan tegangan yang dipasok ke prosesor Intel. Ini mengurangi panas dan konsumsi daya tanpa mengorbankan performa, yang memperpanjang masa pakai baterai dan mencegah pelambatan termal (thermal throttling).",
+        "title": "Intel-undervolt terinstal"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Menjalankan daemon yang secara otomatis menerapkan pengaturan undervolt Intel kamu saat boot.",
+        "title": "Intel-undervolt diaktifkan"
+      },
+      "powerProfilesDaemon": {
+        "description": "Menyediakan API bagi sistem untuk beralih dengan mudah antara mode operasi 'Hemat Daya', 'Seimbang', dan 'Performa'.",
+        "title": "Daemon profil daya terinstal"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Menjalankan daemon yang memungkinkan lingkungan desktop kamu beralih profil daya.",
+        "title": "Daemon profil daya diaktifkan"
+      },
+      "powersaveTweaks": {
+        "description": "Menerapkan penyesuaian sysctl dan konfigurasi yang dirancang untuk meminimalkan konsumsi daya pada perangkat bertenaga baterai.",
+        "title": "Tweak penghematan daya"
+      },
+      "thermald": {
+        "description": "Daemon manajemen termal Intel. Mencegah sistem kamu dari panas berlebih dengan menerapkan metode pendinginan secara proaktif sebelum memaksa CPU untuk menurunkan performa (throttling).",
+        "title": "Thermald terinstal"
+      },
+      "thermaldEnabled": {
+        "description": "Menjalankan daemon thermald untuk memantau suhu CPU dan mencegah panas berlebih.",
+        "title": "Thermald diaktifkan"
+      },
+      "title": "Penghematan Daya",
+      "tlp": {
+        "description": "Utilitas canggih yang secara otomatis mengoptimalkan masa pakai baterai pada laptop dengan menyesuaikan pengaturan untuk Wi-Fi, disk, PCIe, dan perangkat USB saat tidak terhubung ke listrik.",
+        "title": "TLP terinstal"
+      },
+      "tlpEnabled": {
+        "description": "Menjalankan daemon TLP untuk menerapkan aturan hemat daya secara dinamis saat menggunakan baterai.",
+        "title": "TLP diaktifkan"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Mengonfigurasi libinput sehingga menahan satu jari di layar sentuh atau touchpad terbaca sebagai klik kanan.",
+        "title": "Emulasi klik kanan tekan lama Evdev"
+      },
+      "evdevRce": {
+        "description": "Menetapkan sudut kanan bawah (atau area tertentu) pada touchpad kamu untuk selalu bertindak sebagai klik kanan fisik.",
+        "title": "Evdev RCE diaktifkan"
+      },
+      "title": "Emulasi klik kanan"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "File yang terpengaruh:",
+    "askHelp": "Jika kamu tidak yakin, tutup jendela tanpa menyimpan dan minta bantuan di forum Garuda Linux.",
+    "aurUpdates": "Memperbarui paket AUR di luar cakupan aplikasi ini. Gunakan pembantu AUR seperti Paru, dan tinjau file PKGBUILD sebelum instalasi.",
+    "cancel": "Batal",
+    "cautionMerge": "Berhati-hatilah bahwa memasukkan perubahan yang salah ke dalam file LAMA dapat merusak sistemmu.",
+    "findMore": "Cari tahu cara melanjutkan",
+    "healthIssues": "Masalah kesehatan sistem",
+    "healthIssuesFound": "Masalah kesehatan sistem berikut ditemukan:",
+    "learnPacdiff": "Jika kamu tidak terbiasa dengan file pacdiff, cari tahu tentangnya dengan cepat.",
+    "openMaintenance": "Klik tombol di bawah untuk memulai.",
+    "openMaintenanceButton": "Mulai menggabungkan",
+    "pacFiles": "Sistem ini memiliki file .pacnew tertunda, kamu harus memeriksa dan menggabungkannya! (klik untuk info)",
+    "pendingPacdiff": "File pacdiff tertunda",
+    "pendingUpdates": "Pembaruan tertunda",
+    "proceed": "Berikut cara melanjutkannya:",
+    "proceedMerge": "Meld akan dibuka untuk menerapkan perubahan. Di sisi kiri adalah file BARU, di sisi kanan adalah file LAMA. Pindahkan perubahan berguna yang ingin kamu gabungkan dari sisi kiri ke sisi kanan. Klik tombol simpan atau CTRL + S setelah selesai.",
+    "rebootNow": "Mulai ulang sekarang",
+    "rebootNowBody": "Apakah kamu yakin ingin memulai ulang sekarang? Pastikan untuk menyimpan semua pekerjaanmu sebelum melanjutkan.",
+    "runAurUpdates": "Jalankan pembaruan AUR secara eksternal",
+    "runHealthFix": "Jalankan perbaikan kesehatan",
+    "scheduleUpdates": "Jadwalkan pembaruan",
+    "snapshotCreation": "Snapshot Btrfs akan dibuat sebelum memulai penggabungan.",
+    "updates": "Sistem ini memiliki pembaruan tertunda (klik untuk info)",
+    "warnReboot": "Sangat disarankan untuk memulai ulang sistem setelah menerapkan pembaruan, terutama saat memperbarui kernel atau lingkungan desktop.",
+    "warnUpdate": "Sistemmu belum diperbarui dalam 2 minggu. Perbarui sistemmu untuk memastikan keamanan dan stabilitas."
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Driver suara tingkat kernel yang mendasar. Menyediakan dukungan perangkat keras inti untuk kartu suara, meskipun kamu biasanya berinteraksi dengannya melalui PipeWire.",
+        "title": "Dukungan ALSA"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. Kumpulan plugin pemrosesan audio berkualitas tinggi. Instal ini untuk memberikan lebih banyak efek studio profesional pada EasyEffects.",
+        "title": "Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "Alat canggih untuk meningkatkan kualitas mikrofon dan pemutaran audio kamu. Sangat disarankan untuk menginstal 'Calf Plugins' dan 'LSP Plugins' bersamaan untuk pengalaman lengkap.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "Server suara khusus berlatensi rendah yang dirancang untuk produksi audio profesional. Sekarang biasanya ditangani secara native oleh PipeWire.",
+        "title": "Dukungan JACK"
+      },
+      "jamesdsp": {
+        "description": "Pemroses efek audio untuk menambahkan bass boost, equalizer, dan efek lainnya. Disarankan untuk mencoba EasyEffects terlebih dahulu.",
+        "title": "JamesDSP terinstal"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP). Kumpulan alat audio profesional seperti equalizer dan kompresor. Instal ini untuk memperluas kemampuan EasyEffects.",
+        "title": "LSP Plugins"
+      },
+      "pipewire": {
+        "description": "Standar modern untuk menangani stream audio dan video di Linux. Menggantikan PulseAudio dan JACK dengan latensi jauh lebih rendah dan keamanan yang lebih baik.",
+        "title": "Dukungan PipeWire"
+      },
+      "pulseaudio": {
+        "description": "Server suara lawas yang lebih lama. Dipertahankan terutama untuk kompatibilitas, namun sebagian besar telah digantikan oleh PipeWire.",
+        "title": "Dukungan PulseAudio"
+      },
+      "title": "Audio",
+      "userRealtime": {
+        "description": "Menambahkan pengguna kamu ke grup realtime, memberikan prioritas CPU pada aplikasi audio untuk mencegah gangguan dan latensi.",
+        "title": "Pengguna dalam grup realtime"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Secara otomatis menyambung kembali ke perangkat Bluetooth tepercaya yang telah dipasangkan sebelumnya saat perangkat tersebut dinyalakan.",
+        "title": "Koneksi otomatis terinstal"
+      },
+      "autoConnectEnabled": {
+        "description": "Menjalankan layanan latar belakang yang secara aktif menangani penyambungan ulang Bluetooth otomatis.",
+        "title": "Koneksi otomatis diaktifkan"
+      },
+      "bluetooth": {
+        "description": "Stack Bluetooth Linux BlueZ. Menyediakan perangkat lunak inti yang diperlukan untuk menangani perangkat nirkabel.",
+        "title": "Dukungan Bluetooth"
+      },
+      "bluetoothEnabled": {
+        "description": "Menjalankan layanan latar belakang yang diperlukan untuk memasangkan dan menghubungkan ke perangkat Bluetooth.",
+        "title": "Bluetooth diaktifkan"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Menambahkan pengguna kamu ke grup lp, memungkinkan penggunaan aliran audio Bluetooth dengan penyiapan PulseAudio seluruh sistem. Ini tidak diperlukan untuk PipeWire.",
+        "title": "Pengguna dalam grup bluetooth"
+      }
+    },
+    "components": "Komponen Sistem",
+    "containers": {
+      "boxbuddy": {
+        "description": "Aplikasi grafis untuk mengelola dan menggunakan lingkungan Distrobox kamu dengan mudah.",
+        "title": "BoxBuddy terinstal"
+      },
+      "distrobox": {
+        "description": "Membuat kontainer distribusi Linux lain yang terintegrasi erat. Memungkinkan kamu menginstal dan menjalankan aplikasi dari Ubuntu, Fedora, atau Arch secara native di dalam Garuda.",
+        "title": "DistroBox terinstal"
+      },
+      "docker": {
+        "description": "Mesin kontainer standar industri untuk mengemas dan menjalankan aplikasi yang terisolasi.",
+        "title": "Docker terinstal"
+      },
+      "dockerCompose": {
+        "description": "Alat untuk mendefinisikan dan menjalankan aplikasi Docker multi-kontainer melalui berkas konfigurasi.",
+        "title": "Docker Compose terinstal"
+      },
+      "dockerEnabled": {
+        "description": "Menjalankan daemon latar belakang yang diperlukan untuk mengelola dan menjalankan kontainer Docker.",
+        "title": "Docker diaktifkan"
+      },
+      "kontainer": {
+        "description": "Aplikasi KDE native untuk mengelola kontainer Distrobox dengan mudah.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Alternatif modern tanpa daemon untuk Docker. Menjalankan kontainer tanpa memerlukan hak akses root, menawarkan keamanan yang lebih baik.",
+        "title": "Podman terinstal"
+      },
+      "podmanDesktop": {
+        "description": "Aplikasi grafis untuk mengelola, membuat, dan melihat kontainer Podman kamu dengan mudah.",
+        "title": "Podman Desktop terinstal"
+      },
+      "podmanDocker": {
+        "description": "Paket kompatibilitas yang membuat alias perintah 'docker' ke 'podman', sehingga skrip Docker yang ada dapat bekerja mulus dengan Podman.",
+        "title": "Emulasi Docker via Podman"
+      },
+      "title": "Kontainer",
+      "userDocker": {
+        "description": "Menambahkan pengguna kamu ke grup docker, memberikan izin untuk menjalankan perintah Docker tanpa sudo.",
+        "title": "Pengguna dalam grup docker"
+      },
+      "winboat": {
+        "description": "Menggunakan kontainerisasi untuk menyediakan aplikasi Windows yang terintegrasi mulus di Linux.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "Pengelola firewall dinamis yang menggunakan zona untuk menentukan tingkat kepercayaan jaringan dan aturan secara dinamis.",
+        "title": "Firewalld terinstal"
+      },
+      "firewalldEnabled": {
+        "description": "Menjalankan daemon firewalld untuk melindungi sistem kamu dari koneksi jaringan yang masuk.",
+        "title": "firewalld diaktifkan"
+      },
+      "opensnitch": {
+        "description": "Firewall tingkat aplikasi yang memperingatkan kamu dan meminta izin setiap kali ada program yang mencoba terhubung ke internet.",
+        "title": "OpenSnitch terinstal"
+      },
+      "opensnitchEnabled": {
+        "description": "Menjalankan daemon OpenSnitch untuk memantau lalu lintas jaringan aplikasi.",
+        "title": "OpenSnitch diaktifkan"
+      },
+      "title": "Firewall",
+      "ufw": {
+        "description": "Uncomplicated Firewall. Antarmuka baris perintah yang lebih sederhana untuk mengelola aturan firewall iptables/nftables.",
+        "title": "UFW terinstal"
+      },
+      "ufwEnabled": {
+        "description": "Menjalankan layanan UFW untuk menegakkan aturan firewall sederhana kamu.",
+        "title": "UFW diaktifkan"
+      }
+    },
+    "kernels": "Kernel",
+    "locales": "Lokal",
+    "misc": {
+      "gns": {
+        "description": "Mengintegrasikan manajer paket Nix, memberi kamu akses ke ribuan paket perangkat lunak ekstra. Juga menyediakan instalasi NixOS yang berbagi pengaturan dengan Garuda.",
+        "title": "Garuda Nix Subsystem terinstal"
+      },
+      "title": "Lain-lain"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "Menjalankan daemon yang diperlukan untuk terhubung ke internet menggunakan broadband seluler (modem USB 4G/5G).",
+        "title": "ModemManager diaktifkan"
+      },
+      "networkManager": {
+        "description": "Daemon utama yang mengonfigurasi dan mengelola koneksi Wi-Fi, Ethernet, dan VPN kamu.",
+        "title": "Dukungan NetworkManager"
+      },
+      "networkManagerEnabled": {
+        "description": "Menjalankan daemon NetworkManager agar kamu dapat terhubung ke internet.",
+        "title": "NetworkManager diaktifkan"
+      },
+      "title": "Jaringan"
+    },
+    "packages": "Paket Lebih Lanjut",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Menjalankan daemon CUPS yang diperlukan untuk menangani tugas cetak dan mengelola printer.",
+        "title": "CUPS diaktifkan"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System). Perangkat lunak inti yang diperlukan untuk menghubungkan dan mencetak ke printer lokal atau jaringan.",
+        "title": "Dukungan pencetakan"
+      },
+      "sanedEnabled": {
+        "description": "Menjalankan daemon yang memungkinkan kamu berbagi pemindai melalui jaringan lokal.",
+        "title": "saned diaktifkan"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy). Perangkat lunak inti yang diperlukan untuk menggunakan pemindai flatbed dan dokumen.",
+        "title": "Dukungan pemindaian"
+      },
+      "title": "Pencetakan",
+      "userCups": {
+        "description": "Menambahkan pengguna kamu ke grup cups, memberikan izin untuk mengelola printer dan antrean cetak.",
+        "title": "Pengguna dalam grup cups"
+      },
+      "userLp": {
+        "description": "Menambahkan pengguna kamu ke grup lp (line printer), yang diperlukan oleh beberapa sistem pencetakan lama.",
+        "title": "Pengguna dalam grup lp"
+      },
+      "userScanner": {
+        "description": "Menambahkan pengguna kamu ke grup scanner, memberikan izin untuk menggunakan pemindai dokumen.",
+        "title": "Pengguna dalam grup scanner"
+      }
+    },
+    "systemdServices": "Layanan Systemd",
+    "systemSettings": "Pengaturan Sistem",
+    "title": "Pengaturan ",
+    "titleTwo": "Sistem",
+    "users": "Pengguna & grup",
+    "virtualization": {
+      "kvm": {
+        "description": "Kernel-based Virtual Machine. Menggunakan akselerasi perangkat keras CPU (VT-x/AMD-V) agar mesin virtual dapat berjalan dengan kecepatan mendekati mesin asli.",
+        "title": "Dukungan KVM"
+      },
+      "libvirtdEnabled": {
+        "description": "Daemon sistem yang diperlukan untuk menjalankan dan mengelola mesin virtual serta platform virtualisasi lainnya.",
+        "title": "Libvirtd diaktifkan"
+      },
+      "qemu": {
+        "description": "Emulator dan virtualizer mesin sumber terbuka yang generik. Dapat menjalankan sistem operasi untuk mesin apa pun, di mesin apa pun.",
+        "title": "QEMU terinstal"
+      },
+      "qemuUserStatic": {
+        "description": "Dapat digunakan untuk menjalankan biner arsitektur asing secara native, misalnya melalui Podman.",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Mendaftarkan penangan arsitektur asing di kernel, ini berguna saat mencoba menjalankan image kontainer aarch64.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "Virtualisasi",
+      "userKvm": {
+        "description": "Menambahkan pengguna kamu ke grup kvm, memberikan izin untuk menggunakan mesin virtual KVM yang cepat dengan akselerasi perangkat keras.",
+        "title": "Pengguna dalam grup kvm"
+      },
+      "userLibvirt": {
+        "description": "Menambahkan pengguna kamu ke grup libvirt, memberikan izin untuk mengelola mesin virtual KVM/QEMU tingkat lanjut.",
+        "title": "Pengguna dalam grup libvirt"
+      },
+      "userVboxUsers": {
+        "description": "Menambahkan pengguna kamu ke grup vboxusers, memberikan izin untuk menggunakan VirtualBox.",
+        "title": "Pengguna dalam grup vboxusers"
+      },
+      "virtManager": {
+        "description": "Aplikasi desktop (GUI) yang kuat untuk membuat dan mengelola mesin virtual KVM/QEMU.",
+        "title": "Dukungan Virt-manager"
+      },
+      "virtualbox": {
+        "description": "Perangkat lunak virtualisasi lintas platform populer dari Oracle. Sangat ramah pengguna, meskipun umumnya lebih lambat daripada KVM/Virt-Manager.",
+        "title": "Dukungan VirtualBox"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "Tugas saat ini telah selesai.",
+    "scriptMismatch": "Skrip telah dirusak/dimodifikasi, menolak untuk mengeksekusi!"
+  },
+  "userManager": {
+    "actions": "Tindakan",
+    "addGroup": "Tambah grup",
+    "addUser": "Tambah pengguna",
+    "cancel": "Batal",
+    "clearPending": "Hapus perubahan tertunda",
+    "confirmPassword": "Konfirmasi kata sandi",
+    "confirmRemoveGroup": "Apakah kamu yakin ingin menghapus grup {{group}}?",
+    "confirmRemoveUser": "Apakah kamu yakin ingin menghapus pengguna {{username}}? Direktori home juga akan dihapus.",
+    "createHome": "Buat direktori home",
+    "editUser": "Edit pengguna",
+    "enterGroupName": "Harap masukkan nama grup",
+    "enterPassword": "Harap masukkan kata sandi",
+    "enterUsername": "Harap masukkan nama pengguna",
+    "error": "Kesalahan",
+    "fullName": "Nama lengkap",
+    "gid": "GID",
+    "groupExists": "Grup dengan nama ini sudah ada",
+    "groupName": "Nama grup",
+    "groups": "Grup",
+    "groupsColumn": "Grup",
+    "home": "Direktori home",
+    "lock": "Kunci",
+    "locked": "Terkunci",
+    "manageGroups": "Kelola grup",
+    "manageGroupsFor": "Kelola grup untuk {{username}}",
+    "members": "Anggota",
+    "newGroupName": "Nama grup",
+    "newPassword": "Kata sandi baru",
+    "noGroupsFound": "Grup tidak ditemukan",
+    "noUsersFound": "Pengguna tidak ditemukan",
+    "passwordDialogTitle": "Atur kata sandi untuk {{username}}",
+    "passwordMismatch": "Kata sandi tidak cocok",
+    "pending": {
+      "add": "Penambahan tertunda",
+      "lock": "Penguncian tertunda",
+      "membership": "Perubahan grup tertunda",
+      "modify": "Modifikasi tertunda",
+      "password": "Kata sandi tertunda",
+      "remove": "Penghapusan tertunda",
+      "unlock": "Pembukaan kunci tertunda"
+    },
+    "removeGroup": "Hapus grup",
+    "removeUser": "Hapus pengguna",
+    "save": "Simpan",
+    "searchGroups": "Cari grup",
+    "searchUsers": "Cari pengguna",
+    "selectGroups": "Pilih grup",
+    "setPassword": "Atur kata sandi",
+    "shell": "Shell",
+    "showAllUsers": "Tampilkan semua pengguna",
+    "showUsersOnly": "Tampilkan pengguna saja",
+    "system": "Sistem",
+    "systemAccount": "Akun sistem",
+    "task": {
+      "addGroup": "Tambah grup",
+      "addMembership": "Tambahkan ke grup",
+      "addUser": "Tambah pengguna",
+      "lockUser": "Kunci pengguna",
+      "modifyUser": "Modifikasi pengguna",
+      "password": "Atur kata sandi",
+      "removeGroup": "Hapus grup",
+      "removeMembership": "Hapus dari grup",
+      "removeUser": "Hapus pengguna",
+      "unlockUser": "Buka kunci pengguna"
+    },
+    "uid": "UID",
+    "unlock": "Buka kunci",
+    "userExists": "Pengguna dengan nama ini sudah ada",
+    "username": "Nama pengguna",
+    "users": "Pengguna"
+  },
+  "welcome": {
+    "bootRepair": "Perbaikan Boot",
+    "bootRepairSub": "Instal ulang atau perbaiki bootloader kamu",
+    "bootTools": "Alat Boot",
+    "bootToolsSub": "Kelola pengaturan bootmu",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Lihat pembaruan paket dan lainnya",
+    "chroot": "Chroot ke Garuda",
+    "chrootSub": "Chroot ke instalasi Garuda kamu",
+    "diagnostics": "Diagnostik",
+    "diagnosticsSub": "Periksa kesehatan sistemmu",
+    "donate": "Donasi",
+    "donateSub": "Dukung proyek Garuda Linux",
+    "error": "Terjadi kesalahan.",
+    "gaming": "Aplikasi Gaming",
+    "gamingSub": "Mainkan game favoritmu",
+    "gitlab": "GitLab",
+    "gitlabSub": "Lihat kode sumber kami",
+    "hello": "Halo",
+    "install": "Instal Garuda Linux",
+    "installSub": "Dapatkan Garuda Linux di sistemmu",
+    "maintenance": "Pemeliharaan",
+    "maintenanceSub": "Jaga sistemmu tetap dalam kondisi baik",
+    "network": "Alat Jaringan",
+    "networkSub": "Kelola pengaturan jaringanmu",
+    "packages": "Jelajahi aplikasi",
+    "packagesSub": "Temukan dan instal perangkat lunak baru",
+    "searxng": "SearxNG",
+    "searxngSub": "Mesin pencari yang menghormati privasimu",
+    "setupAssistant": "Asisten Pengaturan",
+    "setupAssistantSub": "Jalankan asisten pengaturan Garuda",
+    "startpage": "Halaman Awal",
+    "startpageSub": "Buka halaman awal Garuda Linux",
+    "subtitle": "Distro Linux terbaik untuk gaming dan multimedia",
+    "systemTools": "Pengaturan Sistem",
+    "systemToolsSub": "Konfigurasi sistemmu",
+    "title": "Selamat Datang di ",
+    "titleTwo": "Garuda Linux",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Pengelola kata sandi aman yang kompatibel dengan Bitwarden",
+    "whoogle": "Whoogle",
+    "whoogleSub": "Mesin pencari yang menjaga privasi"
   }
 }

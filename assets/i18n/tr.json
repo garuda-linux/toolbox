@@ -1,615 +1,1623 @@
 {
-  "menu": {
-    "welcome": "Hoş Geldin",
-    "maintenance": "Bakım",
-    "systemTools": "Sistem ayarları",
-    "components": "Bileşenler",
-    "gaming": "Oyun",
-    "boot": "Önyükleme araçları",
-    "diagnostics": "Tanılama",
-    "network": "Ağ araçları",
-    "settings": "Uygulama ayarları",
-    "help": {
-      "title": "Yardım",
-      "icon": "Icon",
-      "getHelpForum": "Forumdan yardım al",
-      "getHelpWiki": "Wiki'de içerik ara",
-      "getHelpArchWiki": "Arch Wiki'de içerik ara",
-      "garudaStatus": "Çalışma süresi durumunu kontrol et",
-      "about": "Garuda Toolbox Hakkında",
-      "aboutBody": "Garuda Toolbox, Garuda Linux için bir sistem bakım ve tanılama aracıdır. Kullanıcıların sistemlerini korumalarına ve sorunları teşhis etmelerine yardımcı olmak için tasarlanmıştır. Electron ve Angular kullanılarak oluşturulmuştur.",
-      "callExorcist": "Şeytan çıkarıcıyı çağır",
-      "callExorcistTitle": "Şeytan çıkarıcı çağrıldı!",
-      "callExorcistBody": "Bu düğmeye tıklamak için oldukça çaresiz olmalısın! Senin için özel bir vudu ayarladım, eğer hala uygulamayla ilgili sorunlar yaşıyorsan, lütfen bunları Garuda Linux forumunda veya sorun izleyicimizde bildir."
-    },
-    "terminalRunning": "Çalışan görevler",
-    "terminalTasks": "Görevleri yürüt",
-    "pending": "Beklemede",
-    "console": "Terminali göster"
-  },
-  "diagnostics": {
-    "title": "Hata ayıklama bilgileri ",
-    "icon": "Icon",
-    "titleTwo": "ve tanılama",
-    "subtitle": "Sistemindeki hataları ayıklamak için ihtiyacın olan bilgileri bul",
-    "inxi": "Genel bilgi (inxi)",
-    "systemctl": "Sistem servisleri (systemctl)",
-    "journalctl": "Sistem günlükleri (journalctl)",
-    "dmesg": "Çekirdek günlükleri (dmesg)",
-    "full": "Tam tanılama",
-    "upload": "PrivateBin'e yükle",
-    "failedCmdHeader": "Komut çalıştırılamadı",
-    "failedCmd": "Kötü bir şey oldu ve hiçbir tanılama bilgisi alınamadı",
-    "pacman": "Son Pacman günlükleri",
-    "copied": "Başarıyla panoya kopyalandı",
-    "success": "Başarılı",
-    "uploadSuccess": "Başarıyla PrivateBin'e yüklendi, URL panoya kopyalandı"
-  },
-  "lang": {
-    "title": "Dil seçimi",
-    "icon": "Icon",
-    "tooltip": "Tercih ettiğin dili seç"
-  },
-  "welcome": {
-    "title": "Hoş Geldin: ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux",
-    "subtitle": "Oyun ve multimedya için nihai Linux dağıtımı",
-    "maintenance": "Bakım",
-    "maintenanceSub": "Sistemini iyi durumda tut",
-    "systemTools": "Sistem ayarları",
-    "systemToolsSub": "Sistemini yapılandır",
-    "gaming": "Oyun uygulamaları",
-    "gamingSub": "Favori oyunlarını oyna",
-    "bootTools": "Önyükleme araçları",
-    "bootToolsSub": "Önyükleme ayarlarını yönet",
-    "network": "Ağ araçları",
-    "networkSub": "Ağ ayarlarını yönet",
-    "diagnostics": "Tanılama",
-    "diagnosticsSub": "Sistem sağlığını kontrol et",
-    "install": "Garuda Linux'u Kur",
-    "installSub": "Garuda Linux'u sistemine kur",
-    "chroot": "Garuda'ya Chroot yap",
-    "chrootSub": "Garuda kurulumuna chroot yap",
-    "startpage": "Başlangıç Sayfası",
-    "startpageSub": "Garuda Linux başlangıç sayfasını aç",
-    "setupAssistant": "Kurulum yardımcısı",
-    "setupAssistantSub": "Garuda kurulum yardımcısını çalıştır",
-    "hello": "Merhaba",
-    "error": "Bir hata oluştu."
-  },
-  "gaming": {
-    "title": "Oyun ",
-    "icon": "Icon",
-    "titleTwo": "uygulamaları",
-    "subtitle": "Seni bazı oyun uygulamalarıyla başlatalım!",
-    "launchers": "Oyun başlatıcıları",
-    "loading": "Yükleniyor...",
-    "wine": "WINE",
-    "tools": "Oyun araçları",
-    "emulators": "Emülatörler",
-    "controllers": "Kontrolcü desteği",
-    "games": "Oyunlar",
-    "misc": "Çeşitli",
-    "bluez": "Genellikle PS kontrolcülerinin kablosuz olarak tanınması için gereklidir",
-    "xboxdrv": "Xbox kontrolcü sürücüsü, yalnızca çekirdek sürücüsü çalışmazsa kullan!",
-    "wineMeta": "WINE ve tüm gerekli bağımlılıkları kurmak için meta paket"
-  },
-  "maintenance": {
-    "title": "Sistem ",
-    "icon": "Icon",
-    "titleTwo": "bakımı",
-    "subtitle": "Sistemini iyi durumda tut",
-    "update": "Sistemini güncelle",
-    "addPending": "Beklemeye ekle",
-    "removePending": "Beklemeden kaldır",
-    "runNow": "Şimdi çalıştır",
-    "failedReset": "Yapılandırma dosyası sıfırlanırken hata oluştu",
-    "failedResetFile": "{{file}} sıfırlanırken hata oluştu",
-    "editRepos": "Depoları düzenle",
-    "onlyDirect": "Bu eylem sıraya alınamaz ve doğrudan çalıştırılması gerekir.",
-    "cleanCache": "Önbelleği temizle",
-    "cleanCacheSub": "Tüm önbelleğe alınmış paketleri kaldır",
-    "updateSystem": "Sistemi güncelle",
-    "taskRunningHeader": "Bakım eylemi çalıştırılırken hata oluştu",
-    "taskRunning": "Zaten çalışan bir görev var, önce bitmesini bekle.",
-    "updateSystemSub": "Sistemini garuda-update aracılığıyla güncelle",
-    "editReposSub": "Depolarını Pace ile düzenle",
-    "addPendingSub": "Bekleyen işlemleri ekle",
-    "clearOrphans": "Yetimleri temizle",
-    "clearOrphansSub": "Yetim paketleri kaldır",
-    "refreshMirrors": "Yansıları yenile",
-    "refreshMirrorsSub": "Yansı listeni yenile",
-    "removeLock": "Pacman kilidini kaldır",
-    "removeLockSub": "Pacman kilit dosyasını kaldır",
-    "reinstallPackages": "Paketleri yeniden kur",
-    "reinstallPackagesSub": "Sistemindeki tüm paketleri yeniden kur",
-    "reinstallDkmsModules": "DKMS modüllerini yeniden kur",
-    "btrfsAssistant": "Btrfs Assistant",
-    "btrfsAssistantSub": "BTRFS anlık görüntülerini yönet ve bakım görevlerini çalıştır",
-    "mergePacDiff": "Pacdiff dosyalarını birleştir",
-    "mergePacDiffSub": ".pacnew ve .pacsave dosyalarını etkileşimli olarak birleştir",
-    "updateRemoteFullFix": "Garuda güncelleme tam düzeltme",
-    "updateRemoteFullFixSub": "Pacman'i sıfırla ve işletim sistemindeki tüm paketleri yeniden kur",
-    "updateRemoteKeyring": "Garuda güncelleme anahtarlığı",
-    "updateRemoteKeyringSub": "pacman.conf'u sıfırlamadan anahtarlığı yenile",
-    "updateRemoteFix": "Garuda güncelleme düzeltmesi",
-    "updateRemoteFixSub": "pacman.conf'u sıfırla ve anahtarlıkları yenile",
-    "updateRemoteResetSnapper": "Snapper'ı sıfırla",
-    "updateRemoteResetSnapperSub": "Tüm Snapper öğelerini kaldır ve yapılandırmalarını yeniden oluştur",
-    "updateRemoteResetAudio": "Sesi sıfırla",
-    "updateRemoteResetAudioSub": "PipeWire ses yapılandırmasını yeniden kur/sıfırla",
-    "resetTooltip": "Aşağıdaki dosyalar veya klasörler varsayılan durumlarına sıfırlanacak:",
-    "resetConfigs": "Yapılandırmaları varsayılan duruma sıfırla",
-    "common": "Genel bakım",
-    "garudaUpdate": "Garuda güncelleme kurtarma araçları"
-  },
-  "sudo": {
-    "title": "Kimlik doğrulama gerekli",
-    "icon": "Icon",
-    "subtitle": "Devam etmek için lütfen şifreni gir",
-    "save": "Bu oturumda önbelleğe al",
-    "password": "Şifre",
-    "cancel": "İptal",
-    "useOnce": "Yalnızca bir kez kullan"
-  },
-  "systemdServices": {
-    "notFound": "Servis bulunamadı",
-    "description": "Açıklama",
-    "unit": "Birim adı",
-    "load": "Yük",
-    "active": "Aktif",
-    "state": "Durum",
-    "searchKey": "Bir arama anahtar kelimesi gir",
-    "clear": "Temizle",
+  "bootOptions": {
     "actions": "Eylemler",
-    "show": "Göster",
-    "start": "Başlat",
-    "stop": "Durdur",
-    "mask": "Maskele",
-    "unmask": "Maskeyi kaldır",
-    "logs": "Günlükler",
-    "restart": "Yeniden başlat",
-    "reload": "Yeniden yükle",
-    "enable": "Etkinleştir",
-    "disable": "Devre dışı bırak",
-    "autoRefresh": "Otomatik yenile",
-    "error": "Servisler alınırken bir hata oluştu, lütfen tekrar dene.",
-    "errorTitle": "Servisleri alma hatası",
-    "systemContext": "Sistem servislerini göster",
-    "userContext": "Kullanıcı servislerini göster",
-    "includeDisabled": "Devre dışı bırakılanları dahil et",
-    "excludeDisabled": "Devre dışı bırakılanları hariç tut"
+    "apply": "Ayarları uygula",
+    "bootEntries": "Önyükleme Girdileri",
+    "cancel": "İptal",
+    "configSaved": "GRUB yapılandırması başarıyla kaydedildi",
+    "defaultEntry": "Varsayılan önyükleme girdisi",
+    "defaultEntryHint": "Varsayılan olarak başlatılacak menü girdisi.",
+    "edit": "Düzenle",
+    "editConfigWarning": "Uyarı: GRUB yapılandırma dosyalarını doğrudan düzenlemek tehlikeli olabilir. Değişiklikler GRUB güncellendiğinde üzerine yazılabilir. Dikkatli kullanın.",
+    "editEntry": "Önyükleme girdisini düzenle",
+    "editGrubDefault": "/etc/default/grub dosyasını düzenle",
+    "editGrubDefaultHint": "GRUB varsayılan ayarlar dosyasını düzenleyin. Root ayrıcalıkları gerektirir.",
+    "editingEntry": "Girdi düzenleniyor",
+    "enableBootsplash": "Açılış ekranını (bootsplash) etkinleştir",
+    "enableBootsplashHint": "Önyükleme sürecinde metin iletileri yerine grafiksel bir animasyon (Plymouth) gösterir.",
+    "entryId": "Girdi Kimliği",
+    "entryName": "Girdi adı",
+    "entrySaved": "Önyükleme girdisi başarıyla kaydedildi",
+    "errorTitle": "Hata",
+    "flatMenus": "Düz menüleri etkinleştir",
+    "flatMenusHint": "GRUB alt menülerini devre dışı bırakarak tüm girdileri üst düzey menüde gösterir.",
+    "grubBackground": "GRUB arka plan resmi",
+    "grubTheme": "GRUB teması",
+    "kernelParams": "Kernel parametreleri",
+    "kernelParamsHint": "Önyükleme sırasında Linux kernel'ine aktarılan ek parametreler.",
+    "kernelParamsPlaceholder": "ör. quiet splash",
+    "messageLevel": "Önyükleme iletisi ayrıntısı",
+    "messageLevelDetailed": "Ayrıntılı (Quiet)",
+    "messageLevelHint": "Önyükleme sürecinde ne kadar bilgi gösterileceğini seçin.",
+    "messageLevelLimited": "Sınırlı (Quiet + Hush)",
+    "messageLevelVeryDetailed": "Çok Ayrıntılı (Tüm iletiler)",
+    "mitigationsOff": "CPU güvenlik önlemlerini (mitigations) devre dışı bırak",
+    "mitigationsOffHint": "Daha iyi performans ancak daha az güvenlik için CPU güvenlik önlemlerini devre dışı bırakır.",
+    "partitionSelect": "Bölüm seç",
+    "partitionSelectHint": "Lütfen Garuda kurulumunuzu içeren bölümü seçin.",
+    "plymouthNotInstalled": "Plymouth yüklü değil. Uygulandığında yüklenmesi için etkinleştirin.",
+    "plymouthPending": "Plymouth yüklenmek üzere planlandı. Yükleme tamamlandıktan sonra bir tema seçebilirsiniz.",
+    "plymouthTheme": "Plymouth teması (açılış ekranı)",
+    "plymouthThemeHint": "Sistem önyükleme sürecinde gösterilen tema.",
+    "plymouthVmWarning": "Sanal makinede çalışıyorsunuz. Plymouth açılış ekranı kısıtlı çalışacaktır ve önizleme düzgün işlemeyebilir.",
+    "previewComplete": "Önizleme tamamlandı",
+    "previewCompleteMessage": "Plymouth tema önizlemesi tamamlandı.",
+    "previewError": "Önizleme başarısız oldu",
+    "previewTheme": "Plymouth temasını önizle",
+    "retry": "Yeniden Dene",
+    "save": "Kaydet",
+    "saveDefault": "Varsayılan girdiyi kaydet",
+    "saveDefaultHint": "Son seçilen önyükleme girdisini otomatik olarak varsayılan olarak kaydeder.",
+    "savedMessage": "Önyükleme ayarları başarıyla uygulandı.",
+    "savedMessageScheduled": "Önyükleme ayarları bekleyen işlemlere eklendi.",
+    "savedTitle": "Ayarlar kaydedildi",
+    "saveSuccess": "Başarıyla kaydedildi",
+    "searchOtherOs": "Diğer işletim sistemlerini ara",
+    "searchOtherOsHint": "os-prober kullanarak yüklü diğer işletim sistemlerini otomatik olarak algılar ve önyükleme menüsüne ekler.",
+    "selectBackground": "Arka plan resmi seç",
+    "selectEntry": "Bir önyükleme girdisi seçin",
+    "selectGrubTheme": "GRUB teması seç",
+    "selectTheme": "Bir Plymouth teması seçin",
+    "submenu": "Alt menü",
+    "sysrqEnabled": "SysRq'yu her zaman etkinleştir",
+    "sysrqEnabledHint": "Acil durum sistem kontrolü için Magic SysRq tuşunu etkinleştirir.",
+    "timeout": "Menü zaman aşımı",
+    "timeoutHint": "Varsayılan girdi başlatılmadan önce saniye cinsinden beklenecek süre.",
+    "title": "Önyükleme ",
+    "titleTwo": "Seçenekleri",
+    "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var"
   },
-  "systemTools": {
-    "title": "Sistem ",
-    "icon": "Icon",
-    "titleTwo": "ayarları",
-    "systemdServices": "Systemd servisleri",
-    "systemSettings": "Sistem ayarları",
-    "components": "Sistem bileşenleri",
-    "locales": "Yereller",
-    "kernels": "Çekirdekler",
-    "packages": "Diğer paketler",
-    "audio": {
-      "title": "Ses",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA desteği"
-      },
-      "jack": {
-        "title": "JACK desteği"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio desteği"
-      },
-      "pipewire": {
-        "title": "PipeWire desteği"
-      },
-      "userRealtime": {
-        "title": "Kullanıcı realtime grubunda"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP kurulu"
-      }
-    },
-    "virtualization": {
-      "title": "Sanallaştırma",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU kurulu"
-      },
-      "kvm": {
-        "title": "KVM desteği"
-      },
-      "virtManager": {
-        "title": "Virt-manager desteği"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd etkinleştirildi"
-      },
-      "userVboxUsers": {
-        "title": "Kullanıcı vboxusers grubunda"
-      },
-      "virtualbox": {
-        "title": "VirtualBox desteği"
-      },
-      "userLibvirt": {
-        "title": "Kullanıcı libvirt grubunda"
-      },
-      "userKvm": {
-        "title": "Kullanıcı kvm grubunda"
-      }
-    },
-    "containers": {
-      "title": "Konteynerler",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker kurulu"
-      },
-      "dockerEnabled": {
-        "title": "Docker etkinleştirildi"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose kurulu"
-      },
-      "userDocker": {
-        "title": "Kullanıcı docker grubunda"
-      },
-      "podman": {
-        "title": "Podman kurulu"
-      },
-      "podmanDocker": {
-        "title": "Podman ile Docker'ı taklit et"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop kurulu"
-      },
-      "distrobox": {
-        "title": "DistroBox kurulu"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy kurulu"
-      }
-    },
-    "network": {
-      "title": "Ağ",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager desteği"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager etkinleştirildi"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager etkinleştirildi"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Bluetooth desteği"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth etkinleştirildi"
-      },
-      "userBluetooth": {
-        "title": "Kullanıcı bluetooth grubunda"
-      },
-      "autoConnect": {
-        "title": "Otomatik bağlanma kurulu"
-      },
-      "autoConnectEnabled": {
-        "title": "Otomatik bağlanma etkinleştirildi"
-      }
-    },
-    "printing": {
-      "title": "Yazdırma",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "Yazdırma desteği"
-      },
-      "cupsEnabled": {
-        "title": "CUPS etkinleştirildi"
-      },
-      "scanningSupport": {
-        "title": "Tarama desteği"
-      },
-      "sanedEnabled": {
-        "title": "saned etkinleştirildi"
-      },
-      "userCups": {
-        "title": "Kullanıcı cups grubunda"
-      },
-      "userScanner": {
-        "title": "Kullanıcı scanner grubunda"
-      },
-      "userLp": {
-        "title": "Kullanıcı lp grubunda"
-      }
-    },
-    "firewall": {
-      "title": "Güvenlik Duvarı",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld kurulu"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld etkinleştirildi"
-      },
-      "ufw": {
-        "title": "UFW kurulu"
-      },
-      "ufwEnabled": {
-        "title": "UFW etkinleştirildi"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch kurulu"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch etkinleştirildi"
-      }
-    },
-    "misc": {
-      "title": "Çeşitli",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem kurulu"
-      }
-    }
+  "bootRepair": {
+    "apply": "Uygula",
+    "backupFile": "Yedekleme dosyası",
+    "backupMbrPbr": "MBR veya PBR yedekle",
+    "backupMbrPbrTip": "Master Boot Record (MBR) veya Partition Boot Record (PBR) önyükleme kodunun yedeğini alın. Bu işlem bölüm tablosunu içermez.",
+    "backupRestoreTarget": "Yedekleme veya geri yükleme hedefi:",
+    "deviceOrPartition": "Cihaz veya bölüm:",
+    "errorTitle": "Hata",
+    "installOn": "Şuraya yükle:",
+    "location": "Konum:",
+    "luksPassword": "LUKS parolası:",
+    "luksPasswordPlaceholder": "LUKS parolasını girin",
+    "luksPasswordRequired": "Lütfen bu kök (root) bölümü için LUKS parolasını girin.",
+    "luksTag": "LUKS",
+    "options": "Seçenekler",
+    "partitionToMount": "Bağlanacak bölüm:",
+    "reinstallGrub": "GRUB'ı yeniden yükle",
+    "reinstallGrubTip": "GRUB önyükleyicisini belirli bir diske veya bölüme yeniden yükleyin.",
+    "repairGrubConfig": "GRUB yapılandırmasını onar",
+    "repairGrubConfigTip": "Yüklü tüm işletim sistemlerini algılamak için GRUB yapılandırma dosyasını (grub.cfg) yeniden oluşturun.",
+    "restoreMbrPbr": "MBR veya PBR'ı yedekten geri yükle",
+    "restoreMbrPbrTip": "Önyükleme kodunu önceden oluşturulmuş bir yedekleme dosyasından geri yükleyin.",
+    "rootLocation": "Kök (root) konumu:",
+    "selectLocation": "Lütfen bir konum seçin.",
+    "selectOperation": "İşlem seçin",
+    "selectRoot": "Lütfen bir kök (root) bölümü seçin.",
+    "successBackup": "Yedekleme başarıyla tamamlandı.",
+    "successReinstall": "GRUB yeniden yükleme işlemi başarıyla tamamlandı.",
+    "successRepair": "GRUB onarımı başarıyla tamamlandı.",
+    "successRestore": "Geri yükleme başarıyla tamamlandı.",
+    "successTitle": "Başarılı",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI Sistem Bölümü (ESP). UEFI kullanan bilgisayarlar tarafından önyükleyicileri ve kernel imajlarını depolamak için kullanılan bölüm.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. Bölümlenmiş bir veri depolama cihazının başındaki geleneksel önyükleme sektörü.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record. Volume Boot Record (VBR) olarak da bilinir. Belirli bir bölümün ilk sektörüdür.",
+    "targetRoot": "Root",
+    "title": "Önyükleme ",
+    "titleTwo": "Onarımı"
   },
-  "systemSettings": {
-    "defaultShellConfigs": "Varsayılan yapılandırmaları kur",
-    "defaultDns": "Varsayılan DNS'i ayarla",
-    "defaultShell": "Oturum açma kabuğunu ayarla",
-    "enableHblock": "Hblock'u etkinleştir",
-    "enableIwd": "wpa_supplicant yerine IWD kullan",
-    "common": {
-      "title": "Genel",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon kurulu"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon etkinleştirildi"
-      },
-      "oomd": {
-        "title": "Systemd-oomd etkinleştirildi"
-      },
-      "guestUser": {
-        "title": "Misafir kullanıcıyı etkinleştir"
-      }
-    },
-    "performance": {
-      "title": "Performans",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "Performans iyileştirmeleri"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ kurulu"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ etkinleştirildi"
-      },
-      "bpftune": {
-        "title": "Bpftune kurulu"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune etkinleştirildi"
-      },
-      "preload": {
-        "title": "Preload kurulu"
-      },
-      "preloadEnabled": {
-        "title": "Preload etkinleştirildi"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance etkinleştirildi"
-      }
-    },
-    "powersave": {
-      "title": "Güç tasarrufu",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "Güç tasarrufu iyileştirmeleri"
-      },
-      "tlp": {
-        "title": "TLP kurulu"
-      },
-      "tlpEnabled": {
-        "title": "TLP etkinleştirildi"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq kurulu"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq etkinleştirildi"
-      },
-      "thermald": {
-        "title": "Thermald kurulu"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald etkinleştirildi"
-      },
-      "powerProfilesDaemon": {
-        "title": "Güç profilleri servisi kurulu"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Güç profilleri servisi etkinleştirildi"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt kurulu"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt etkinleştirildi"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "Sağ tık emülasyonu",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev uzun basma sağ tık emülasyonu"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE etkinleştirildi"
-      }
-    }
+  "commandPalette": {
+    "hint": "Modülleri ve eylemleri arayın",
+    "noResults": "Sonuç bulunamadı",
+    "placeholder": "Bir komut yazın veya arayın...",
+    "search": "Komut ara...",
+    "toClose": "kapatmak için"
   },
-  "shells": {
-    "fish": {
-      "hint": "Fish'i varsayılan kabuk olarak ayarlamak diğer programlarda sorunlara neden olabilir. Bunun yerine terminal yapılandırmaları aracılığıyla varsayılan olarak ayarlanması önerilir."
-    }
+  "configFiles": {
+    "actions": "Eylemler",
+    "desc": {
+      "adjtime": "hwclock tarafından donanım saatini takip etmek için kullanılır",
+      "alacritty": "GPU hızlandırmalı Alacritty terminal emülatörü yapılandırması",
+      "alsa_base": "ALSA kernel modülü seçenekleri",
+      "amdgpu_conf": "AMDGPU kernel modülü seçenekleri",
+      "ananicy": "Ananicy auto-nice servisi için kurallar",
+      "asound_conf": "Sistem genelinde ALSA yapılandırması",
+      "asoundrc": "Kullanıcıya özel ALSA yapılandırması",
+      "bash_bashrc": "Etkileşimli kabuklar için sistem genelinde Bash kabuk ayarları",
+      "bashrc": "Geçerli kullanıcı için Bash yapılandırma dosyası",
+      "blacklist_nouveau": "Açık kaynaklı Nouveau sürücüsünü kara listeye alır",
+      "bluetooth_main": "Bluetooth servisi yapılandırması",
+      "btrfsAssistant": "Btrfs Assistant için yapılandırma",
+      "chaoticMirrorlist": "Garuda'nın özel Chaotic-AUR depo yansıları",
+      "cinnamon": "Cinnamon masaüstü için ana yapılandırma dizini",
+      "cpupower": "cpupower güç yönetimi aracı için yapılandırma",
+      "cron": "cron görevleri için yapılandırma",
+      "cursorThemeSystem": "Sistem genelinde imleç teması yapılandırması",
+      "cursorThemeUser": "Kullanıcıya özel imleç teması yapılandırması",
+      "dunst": "Dunst bildirim servisi için yapılandırma",
+      "environment": "Sistem genelindeki ortam değişkenleri",
+      "environmentD": "Sistem genelindeki ortam değişkenleri dizini (Wayland)",
+      "fastfetch": "Fastfetch sistem bilgisi alma aracı yapılandırması",
+      "fish": "Fish kabuğu yapılandırma dosyası",
+      "fontconfigSystem": "Sistem genelinde yazı tipi yapılandırma ayarları",
+      "fontconfigUser": "Kullanıcıya özel yazı tipi yapılandırma ayarları",
+      "fstab": "Dosya sistemleri hakkında statik bilgiler",
+      "gamemode": "GameMode optimizasyon aracı için genel yapılandırma",
+      "garudaUpdateConfig": "garuda-update davranışı ve güncelleme bayrakları yapılandırması",
+      "gdm": "GNOME Ekran Yöneticisi (GDM) için yapılandırma",
+      "gitconfig": "Kullanıcıya özel Git yapılandırması",
+      "group": "Kullanıcı gruplarını tanımlar",
+      "grub": "GRUB önyükleyicisi için yapılandırma dosyası",
+      "grub_cfg": "GRUB önyükleyici yapılandırma dosyası",
+      "grubTheme": "GRUB önyükleyici teması için yapılandırma",
+      "gtk3Settings": "GTK 3.0 uygulamaları için ayarlar",
+      "gtk4Css": "GTK 4.0 uygulamaları için özel CSS stilleri",
+      "gtk4Settings": "GTK 4.0 uygulamaları için ayarlar",
+      "gtkrc2": "Eski GTK 2.0 uygulamaları için ayarlar",
+      "hostname": "Sistemin ana bilgisayar adı",
+      "hosts": "Ana bilgisayar adları için statik tablo araması",
+      "hosts_allow": "Ağ servisi erişim denetimi için TCP sarmalayıcıları (izin verme)",
+      "hosts_deny": "Ağ servisi erişim denetimi için TCP sarmalayıcıları (engelleme)",
+      "hyprland": "Hyprland Wayland birleştirici (compositor) yapılandırması",
+      "hyprpaper": "Hyprpaper duvar kağıdı aracı için yapılandırma",
+      "i3": "Klasik X11 döşemeli (tiling) pencere yöneticisi yapılandırması",
+      "iconTheme": "Simge teması yapılandırma ayarları",
+      "journald": "systemd günlük (journal) servisi yapılandırması",
+      "kcmfonts": "KDE yazı tipi yapılandırma ayarları",
+      "kdeColorScheme": "Kullanıcıya özel KDE renk şeması tanımları",
+      "kdeglobals": "Genel KDE yapılandırma ayarları",
+      "kdeLookandFeel": "KDE Genel Tema (Görünüm ve İşleyiş) ayarları",
+      "kitty": "Zengin özellikli, GPU hızlandırmalı Kitty terminal emülatörü yapılandırması",
+      "kvantumConfig": "Kvantum SVG tabanlı tema motoru için yapılandırma",
+      "kwinrc": "KWin pencere yöneticisi için yapılandırma",
+      "lightdm": "LightDM ekran yöneticisi için yapılandırma",
+      "locale": "Sistem genelindeki yerel ayar yapılandırması",
+      "locale_gen": "Sistemde kullanılabilir yerel ayarlar listesi",
+      "logind": "systemd oturum açma yöneticisi yapılandırması",
+      "makepkgConf": "makepkg için yapılandırma seçenekleri",
+      "mako": "Mako bildirim servisi için yapılandırma",
+      "mangohud": "MangoHud performans katmanı için yapılandırma",
+      "mirrorlist": "Standart Arch Linux depo yansıları",
+      "mkinitcpio": "İlk ramdisk ortamı (initramfs) oluşturma yapılandırması",
+      "modprobe_d": "Kernel modülü yapılandırması ve seçenekleri",
+      "networkmanager": "NetworkManager için genel yapılandırma",
+      "nftables": "nftables güvenlik duvarı için yapılandırma",
+      "nvidia_conf": "NVIDIA kernel modülü seçenekleri",
+      "os_release": "Çeşitli programlarca kullanılan işletim sistemi bilgilerini sağlar",
+      "pacman_hooks": "Paket işlemleri sırasında eylemleri otomatikleştiren kancalar (hooks)",
+      "pacmanConf": "pacman paket yöneticisi için ana yapılandırma dosyası",
+      "pam": "Eklenebilir Kimlik Doğrulama Modülleri (PAM) için yapılandırma dosyaları",
+      "pam_d": "Kimlik doğrulama servisleri için PAM yapılandırması",
+      "passwd": "Kullanıcı hesabı bilgilerini içerir",
+      "pipewire_client": "PipeWire istemci yapılandırması",
+      "pipewire_conf": "Kullanıcı düzeyinde PipeWire servisi yapılandırması",
+      "plasmaApplets": "Plasma masaüstü araçları (applets) için yapılandırma",
+      "plasmaEnv": "Plasma çalışma alanı için ortam değişkenleri",
+      "plasmarc": "Plasma kabuğu için ana yapılandırma",
+      "plymouthConf": "Plymouth açılış ekranı servisi için yapılandırma",
+      "profile": "Kullanıcıya özel ortam ve başlangıç programları",
+      "pulse_daemon": "PulseAudio servis ayarları",
+      "pulse_default": "PulseAudio başlangıç betiği",
+      "qtile": "Python tabanlı pencere yöneticisi yapılandırması",
+      "resolv": "DNS çözücü yapılandırma dosyası",
+      "rofi": "Rofi uygulama başlatıcısı ve pencere değiştiricisi için yapılandırma",
+      "rsyslog": "rsyslog servisi için ana yapılandırma",
+      "sddm": "SDDM ekran yöneticisi yapılandırması",
+      "shadow": "Özetlenmiş parolaları ve hesap sona erme bilgilerini içerir",
+      "snapperRoot": "Kök (root) bölümü için Snapper yapılandırması",
+      "ssh_user": "Kullanıcıya özel SSH istemci yapılandırması",
+      "sshd": "OpenSSH sunucu servisi yapılandırma dosyası",
+      "starship": "Starship çoklu kabuk komut istemi yapılandırması",
+      "sudoers": "Hangi kullanıcıların sudo yetkilerine sahip olduğunu yapılandırır",
+      "sway": "Sway Wayland birleştirici yapılandırması",
+      "sysctl": "Kernel parametreleri (ağ, performans, güvenlik)",
+      "systemd_network": "systemd-networkd için yapılandırma dosyaları",
+      "systemd_services": "Özel veya geçersiz kılınmış systemd servis tanımları",
+      "systemd_timers": "Zamanlanmış görevler için systemd zamanlayıcıları",
+      "systemdSystem": "Genel systemd sistem yapılandırması",
+      "systemdUser": "Genel systemd kullanıcı yapılandırması",
+      "timezone": "Sistem saat dilimini ayarlar",
+      "udev_rules": "Donanım cihazı davranışları için udev kuralları",
+      "userdirs": "XDG kullanıcı dizinleri yapılandırması",
+      "vconsole": "Sanal konsol yapılandırması",
+      "waybar": "Waybar durum çubuğu için ana yapılandırma",
+      "waybarStyle": "Waybar durum çubuğu için CSS stilleri",
+      "wayfire": "3D Wayland birleştirici yapılandırması",
+      "wayland_conf": "Kullanıcıya özel Wayland birleştirici yapılandırma dosyaları",
+      "wireplumber": "WirePlumber oturum yöneticisi yapılandırma dizini",
+      "wofi": "Wofi uygulama başlatıcısı için yapılandırma",
+      "xfce4": "Xfce4 için ana yapılandırma dizini",
+      "xorg_conf": "Eski ana Xorg yapılandırma dosyası",
+      "xorg_conf_d": "Xorg yapılandırma parçacıkları dizini",
+      "xorg_gpu": "GPU'ya özel Xorg yapılandırması (sürücü seçimi, BusID, ekran ayarları)",
+      "xorg_monitor": "Xorg için monitör düzeni, çözünürlük ve yenileme hızı",
+      "zramGenerator": "zram-generator için yapılandırma",
+      "zsh": "Geçerli kullanıcı için Zsh yapılandırma dosyası"
+    },
+    "description": "Açıklama",
+    "edit": "Düzenle",
+    "name": "Ad",
+    "path": "Yol",
+    "search": "Yapılandırma dosyalarını ara...",
+    "title": "Yapılandırma",
+    "titleTwo": "Dosyaları",
+    "wiki": "Wiki"
   },
   "confirmation": {
     "accept": "Kabul et",
-    "reject": "İptal",
-    "exitApp": "Uygulamadan çıkmak istediğine emin misin?",
-    "exitAppRunningAction": "Uygulamadan çıkmak istediğine emin misin? Çalışan bir eylem var!",
-    "resetConfigsHeader": "Yapılandırmalar sıfırlansın mı?",
-    "resetConfigsBody": "Aşağıdaki yapılandırmaları sıfırlamak istediğine emin misin?",
-    "exitAppHeader": "Uygulamadan çıkılsın mı?",
     "applyOperations": "İşlemler uygulansın mı?",
-    "applyOperationsBody": "Tüm bekleyen işlemleri uygulamak istediğine emin misin?"
+    "applyOperationsBody": "Tüm bekleyen işlemleri uygulamak istediğine emin misin?",
+    "cancel": "İptal",
+    "createSnapshotBefore": "Yürütmeden önce Btrfs anlık görüntüsü oluştur",
+    "exitApp": "Uygulamadan çıkmak istediğine emin misin?",
+    "exitAppHeader": "Uygulamadan çıkılsın mı?",
+    "exitAppRunningAction": "Uygulamadan çıkmak istediğine emin misin? Çalışan bir eylem var!",
+    "password": "Şifre",
+    "reject": "İptal",
+    "resetConfigsBody": "Aşağıdaki yapılandırmaları sıfırlamak istediğine emin misin?",
+    "resetConfigsHeader": "Yapılandırmalar sıfırlansın mı?",
+    "save": "Bu oturumda önbelleğe al",
+    "subtitle": "Devam etmek için lütfen şifreni gir",
+    "title": "Kimlik doğrulama gerekli",
+    "useOnce": "Yalnızca bir kez kullan"
+  },
+  "console": {
+    "abortAll": "Tüm eylemleri iptal et",
+    "clearCachedData": "Çıktı önbelleği temizlendi.",
+    "clearCachedDataTitle": "Çıktı önbelleği temizlendi",
+    "clearOutputCache": "Çıktı önbelleğini temizle",
+    "copyOutput": "Terminal çıktısını kopyala",
+    "copyToClipboard": "Çıktı başarıyla panona kopyalandı.",
+    "copyToClipboardTitle": "Panoya kopyalandı",
+    "noOutput": "Çıktı yok",
+    "noTasksPending": "Bekleyen görev yok",
+    "opRunning": "İşlem zaten çalışıyor.",
+    "outputExists": "Görünüşe göre zaten çalışan bir eylem var. Günlükleri görüntülemeye çalışmadan önce lütfen bitmesini bekle.",
+    "printScripts": "Betikleri yazdır",
+    "removeAll": "Tüm eylemleri kaldır",
+    "runActions": "Eylemleri çalıştır",
+    "tasksAppearHere": "Öğeleri seçtiğinizde görevler burada görünecektir.",
+    "title": "Terminal",
+    "uploadPrivateBin": "PrivateBin'e yükle"
+  },
+  "diagnostics": {
+    "copyButtonTip": "Tam tanılama raporunu panoya kopyalayın.",
+    "copySuccess": "Başarıyla panoya kopyalandı",
+    "dmesg": "Çekirdek günlükleri (dmesg)",
+    "dmesgDesc": "Kernel halka arabelleği (ring buffer) iletilerini inceleyin.",
+    "exitCode": "Komut {{code}} çıkış kodu ile sonlandı",
+    "failedCmd": "Kötü bir şey oldu ve hiçbir tanılama bilgisi alınamadı",
+    "failedCmdHeader": "Komut çalıştırılamadı",
+    "full": "Tam tanılama",
+    "fullDesc": "Mevcut tüm tanılama bilgilerini tek bir çıktıda toplayın.",
+    "health": "Sistem sağlığı",
+    "healthDesc": "garuda-health kullanarak sistem sağlığı kontrolü çalıştırın.",
+    "infoText": "Kapsamlı bir sistem ve donanım raporu oluşturur.",
+    "inxi": "Genel bilgi (inxi)",
+    "inxiDesc": "Ayrıntılı donanım ve sistem bilgilerini toplayın.",
+    "journalctl": "Sistem günlükleri (journalctl)",
+    "journalctlDesc": "Journal servisinden sistem günlüklerini inceleyin.",
+    "pacman": "Son Pacman günlükleri",
+    "pacmanDesc": "En son pacman paket yöneticisi günlüklerini görüntüleyin.",
+    "refreshButtonTip": "Tanılama bilgilerini yenileyin.",
+    "subtitle": "Sistemindeki hataları ayıklamak için ihtiyacın olan bilgileri bul",
+    "success": "Başarılı",
+    "systemctl": "Sistem servisleri (systemctl)",
+    "systemctlDesc": "Sistem önyükleme performansını ve servis durumunu analiz edin.",
+    "tabBoot": "Önyükleme",
+    "tabFull": "Tam",
+    "tabInxi": "Inxi",
+    "tabJournal": "Journal",
+    "tabQuick": "Hızlı",
+    "title": "Hata ayıklama bilgileri ",
+    "titleTwo": "ve tanılama",
+    "upload": "PrivateBin'e yükle",
+    "uploadButtonTip": "Günlükleri güvenli Garuda yapıştırma servisine yükleyin.",
+    "uploadDesc": "Paylaşmak için geçerli terminal çıktısını PrivateBin'e yükleyin.",
+    "uploadSuccess": "Başarıyla PrivateBin'e yüklendi, URL panoya kopyalandı",
+    "viewOnlyTip": "Yalnızca görüntüleme — herhangi bir sunucuya veri göndermez."
   },
   "error": {
     "sudoPassword": "Bu doğru şifre gibi görünmüyor. Lütfen tekrar dene."
   },
-  "operation": {
-    "removeApps": "Uygulamaları kaldır",
-    "installApps": "Uygulamaları kur",
-    "addGroup": "Kullanıcıyı gruba ekle",
-    "removeGroup": "Kullanıcıyı gruptan çıkar",
-    "disableService": "Servisi devre dışı bırak",
-    "enableService": "Servisi etkinleştir",
-    "setDefaultShell": "Varsayılan kabuğu ayarla",
-    "enableHblock": "Hblock'u etkinleştir",
-    "disableHblock": "Hblock'u devre dışı bırak",
-    "setNewDnsServer": "Yeni DNS sunucusu ayarla",
-    "resetDnsServer": "DNS sunucusunu sıfırla",
-    "args": "Argümanlar",
-    "logs": "Günlükler",
-    "remove": "Kaldır",
-    "abort": "İptal et",
-    "run": "Şimdi çalıştır"
-  },
-  "systemStatus": {
-    "pendingUpdates": "Bekleyen güncellemeler",
-    "updates": "Bu sistemde bekleyen güncellemeler var (bilgi için tıkla)",
-    "pacFiles": "Bu sistemde bekleyen .pacnew dosyaları var, bunları kontrol edip birleştirmelisin! (bilgi için tıkla)",
-    "cancel": "İptal",
-    "aurUpdates": "AUR paketlerini güncellemek bu uygulamanın kapsamı dışındadır. Lütfen Paru gibi bir AUR yardımcısı kullan ve kurulumdan önce PKGBUILD dosyalarını incele.",
-    "scheduleUpdates": "Güncellemeleri zamanla",
-    "pendingPacdiff": "Bekleyen pacdiff dosyaları",
-    "findMore": "Nasıl devam edeceğini öğren",
-    "warnUpdate": "Sistemin 2 haftadır güncellenmedi. Güvenlik ve kararlılığı sağlamak için lütfen sistemini güncelle.",
-    "affectedFiles": "Etkilenen dosyalar:",
-    "learnPacdiff": "Eğer pacdiff dosyalarına aşina değilsen, hızlıca bunlar hakkında bilgi edin.",
-    "openMaintenance": "Başlamak için aşağıdaki düğmeye tıkla.",
-    "openMaintenanceButton": "Birleştirmeye başla",
-    "rebootNow": "Şimdi yeniden başlat",
-    "rebootNowBody": "Şimdi yeniden başlatmak istediğine emin misin? Devam etmeden önce tüm çalışmalarını kaydettiğinden emin ol.",
-    "warnReboot": "Güncellemeleri uyguladıktan sonra, özellikle çekirdekleri veya masaüstü ortamlarını güncellerken sistemini yeniden başlatman şiddetle tavsiye edilir.",
-    "proceed": "İşte nasıl devam edeceksin:",
-    "snapshotCreation": "Birleştirmeye başlamadan önce bir Btrfs anlık görüntüsü oluşturulacak.",
-    "proceedMerge": "Değişiklikleri uygulamak için Meld açılacaktır. Sol tarafta YENİ dosya, sağ tarafta ESKİ dosya bulunur. Birleştirmek istediğin yararlı değişiklikleri soldan sağa taşı. Bittiğinde kaydet düğmesine veya CTRL + S tuşlarına bas.",
-    "cautionMerge": "ESKİ dosyaya yanlış değişiklikler yapmanın sistemini bozabileceğini unutma.",
-    "askHelp": "Emin değilsen pencereyi kaydetmeden kapat ve Garuda Linux forumundan yardım iste.",
-    "runAurUpdates": "AUR güncellemelerini harici olarak çalıştır"
-  },
-  "operationManager": {
-    "refusing": "Yürütme reddediliyor",
-    "pendingOperationsRunning": "Çalışan işlemler var, sadece tamamlanmış olanları kaldıracağım.",
-    "thisOperationRunning": "Aklını mı kaçırdın? Bu işlem şu anda çalışıyor!"
-  },
-  "os-interact": {
-    "packages": "Kurulu paketleri değiştir",
-    "packages-aur": "AUR paketlerini değiştir",
-    "services": "Servisleri değiştir",
-    "services-user": "Kullanıcı servislerini değiştir",
-    "groups": "Kullanıcı gruplarını değiştir",
-    "locales": "Etkin yerelleri değiştir",
-    "configs": "Sistem yapılandırmalarını değiştir",
-    "configs-user": "Kullanıcı yapılandırmalarını değiştir",
-    "configs-system": "Sistem yapılandırmalarını değiştir"
-  },
-  "packages": {
-    "title": "Paketler",
-    "icon": "Icon",
-    "internet": "İnternet",
-    "documents": "Belgeler",
-    "multimedia": "Multimedya",
-    "science": "Bilim",
-    "security": "Güvenlik",
-    "other": "Diğer",
-    "clear": "Temizle",
-    "search": "Ara",
-    "url": "URL",
-    "selected": "Seçili",
-    "description": "Açıklama",
-    "name": "Ad",
-    "searchKey": "Bir arama anahtar kelimesi gir",
-    "notFound": "Paket bulunamadı"
+  "gaming": {
+    "antimicrox": "Klavye ve fare kontrollerini oyun koluna eşleyen grafik arayüzlü program",
+    "anydesk": "Hızlı Uzak Masaüstü Uygulaması",
+    "bluez": "Genellikle PS kontrolcülerinin kablosuz olarak tanınması için gereklidir",
+    "bottles": "Wine ve Proton öneklerini kolayca yönetin",
+    "boxtron": "Steam'de DOS oyunlarını yerel Linux DOSBox ile çalıştırmak için uyumluluk aracı",
+    "controllers": "Kontrolcü desteği",
+    "corectrl": "Donanım kontrol ve profil uygulaması",
+    "desmume": "Nintendo DS emülatörü",
+    "dgenSdl": "SDL'e uyarlanmış Sega Genesis/Mega Drive emülatörü",
+    "discord": "Oyuncular için hepsi bir arada sesli ve yazılı sohbet",
+    "displaycal": "Argyll CMS destekli açık kaynaklı Ekran Kalibrasyonu ve Profilleme",
+    "dolphinEmu": "Gamecube ve Wii emülatörü",
+    "dosbox": "DOS oyunlarını çalıştırmak için dahili DOS içeren emülatör",
+    "droidcam": "Telefonu/tableti kablosuz/USB web kamerasına dönüştürme aracı",
+    "duckstation": "PlayStation emülatörü (son GPL sürümü)",
+    "dxvk": "3D uygulamaları Wine ile Linux'ta çalıştırmayı sağlayan Vulkan tabanlı Direct3D 9/10/11 uyumluluk katmanı",
+    "easyeffects": "PipeWire uygulamaları için Ses Efektleri",
+    "eka2l1": "Deneysel Symbian OS emülatörü",
+    "emulationstation": "Klavyesiz gezinmeyi ve özel sistem temalarını destekleyen esnek emülatör ön ucu",
+    "emulators": "Emülatörler",
+    "fceux": "Hızlı ve yüksek uyumluluğa sahip NES/Famicom emülatörü",
+    "fsUae": "Oyun emülasyonuna odaklanan UAE/WinUAE tabanlı Amiga emülatörü",
+    "gameconqueror": "Çalışan bir süreçteki rastgele bir değişkenin adresini bulmak için bellek tarayıcısı",
+    "gamemode": "Oyunların işletim sistemine geçici optimizasyonlar uygulamasını sağlayan arka plan servisi/kütüphanesi",
+    "games": "Oyunlar",
+    "gamescope": "SteamOS oturum kompozisyon pencere yöneticisi",
+    "gamescopeSession": "Pencere yönetimi için Gamescope oturumu",
+    "gamescopeSessionSteam": "Steam oyunları için optimize edilmiş Gamescope oturumu",
+    "goverlay": "Vulkan/OpenGL katmanlarını yönetmeye yardımcı grafik arayüz",
+    "gwe": "NVIDIA GPU'ları kontrol etmek için sistem yardımcı aracı",
+    "hatari": "Atari ST ve STE emülatörü",
+    "heroic": "Epic Games, Amazon ve GOG Oyunları için açık kaynaklı başlatıcı",
+    "inputRemapper": "Giriş cihazı düğmelerinin eşlemesini değiştirmek ve programlamak için bir araç",
+    "itch": "itch.io masaüstü uygulaması için yükleyici",
+    "kegaFusion": "Klasik Sega konsolları (SMS/GG, Genesis/Megadrive ve eklentiler) emülatörü",
+    "keyboardVisualizer": "OpenRGB destekli RGB aydınlatmanızı müziğiniz için muhteşem bir ışık gösterisine dönüştürün",
+    "lact": "Linux GPU Yapılandırma Aracı",
+    "launchers": "Oyun başlatıcıları",
+    "libretroMeta": "Tüm desteklenen Libretro emülatörleri için meta paket",
+    "loading": "Yükleniyor...",
+    "lutris": "Açık Oyun Platformu",
+    "luxtorpeda": "Oyunları yerel Linux oyun motorlarıyla çalıştırmak için Steam Play uyumluluk aracı",
+    "mame": "OpenGL destekli SDL kullanan popüler Çoklu Arcade Makine Emülatörü uyarlaması",
+    "mangohud": "FPS, sıcaklıklar, CPU/GPU yükü ve daha fazlasını izlemek için Vulkan katmanı",
+    "mednafen": "Komut satırı tabanlı çoklu sistem oyun emülatörü",
+    "mgba": "Hız ve doğruluğa odaklanan bir Nintendo Game Boy Advance emülatörü",
+    "minigalaxy": "Linux için basit bir GOG istemcisi",
+    "misc": "Çeşitli",
+    "mumble": "Açık kaynaklı, düşük gecikmeli, yüksek kaliteli sesli sohbet yazılımı",
+    "nestopia": "Yüksek doğruluklu NES/Famicom emülatörü",
+    "noisetorch": "Linux'ta gerçek zamanlı mikrofon gürültüsü engelleme",
+    "nyrna": "Oyunları ve uygulamaları istediğiniz zaman askıya alın ve dilediğinizde devam ettirin",
+    "obsStudio": "Canlı yayın ve kayıt için ücretsiz, açık kaynaklı yazılım",
+    "openrgb": "Üretici yazılımlarına bağımlı olmayan açık kaynaklı RGB aydınlatma kontrolü",
+    "oversteer": "Logitech direksiyonlarını yapılandırmak için grafik arayüzlü uygulama",
+    "pcsx2": "PlayStation 2 emülatörü",
+    "pegasusFrontend": "Emülatörleri başlatmak ve oyun koleksiyonunuzu yönetmek için çok platformlu özelleştirilebilir grafik arayüz",
+    "piper": "Oyuncu farelerini yapılandırmak için GTK uygulaması",
+    "polychromatic": "OpenRazer için RGB aydınlatma yönetimi ön ucu",
+    "ppsspp": "C++ ile yazılmış PSP emülatörü",
+    "protonCachyOS": "CachyOS yamaları ve diğer optimizasyonları içeren Valve Proton dağıtımı",
+    "protonGeCustom": "Çeşitli yamalar içeren özel Valve Proton dağıtımı",
+    "protontricks": "Proton özellikli oyunlar için winetricks işlemlerini gerçekleştiren basit sarmalayıcı",
+    "protonupQt": "Steam için Proton-GE/Luxtorpeda ve Lutris için Wine-GE yükleyin ve yönetin",
+    "retroarch": "libretro API için referans ön uç",
+    "rpcs3": "PlayStation 3 emülatörü",
+    "ryujinx": "C# ile yazılmış deneysel Nintendo Switch emülatörü",
+    "sameboy": "Doğruluk odaklı Game Boy/Game Boy Color emülatörü",
+    "scController": "Steam Controller, DS4 ve benzeri oyun kolları için kullanıcı alanı sürücüsü ve GTK3 arayüzü",
+    "scummvm": "Birçok klasik grafiksel işaretle ve tıkla macera oyunu için sanal makine",
+    "snes9x": "Taşınabilir Super Nintendo Entertainment System (TM) emülatörü",
+    "soundwire": "Bilgisayarınızdaki herhangi bir sesi kablosuz olarak Android telefonunuza veya diğer bilgisayarlara aktarın",
+    "steamNative": "Sistem kütüphanelerini kullanan yerel Steam çalışma zamanı alternatifi",
+    "steamRuntime": "Valve'ın dijital yazılım dağıtım sistemi",
+    "steamtinkerlaunch": "Steam özel başlatma seçenekleri için sarmalayıcı betik",
+    "stella": "Atari 2600 VCS emülatörü",
+    "streamlinkTwitchGui": "Streamlink için çok platformlu Twitch.tv tarayıcısı",
+    "subtitle": "Seni bazı oyun uygulamalarıyla başlatalım!",
+    "title": "Oyun ",
+    "titleTwo": "uygulamaları",
+    "tools": "Oyun araçları",
+    "torzu": "Başka bir emülatör çatalı",
+    "vesktop": "Özelleştirilebilir ve gizlilik odaklı Discord masaüstü uygulaması",
+    "vice": "Çok yönlü Commodore emülatörü",
+    "vkbasalt": "Vulkan son işleme katmanı (CAS, FXAA, SMAA, deband vb.)",
+    "vlc": "Çok platformlu MPEG, VCD/DVD ve DivX oynatıcı",
+    "vrVideoPlayer": "VR içerikleri için video oynatıcı",
+    "waydroid": "Waydroid'e OpenGApps, Magisk, libhoudini ve libndk çeviri kütüphanelerini ekleyen Python betiği",
+    "wine": "WINE",
+    "wineMeta": "WINE ve tüm gerekli bağımlılıkları kurmak için meta paket",
+    "winePackage": "Windows programlarını çalıştırmak için uyumluluk katmanı",
+    "wineStaging": "Windows programlarını çalıştırmak için uyumluluk katmanı - Staging dalı",
+    "winetricks": "Wine içerisine yeniden dağıtılabilir çalışma zamanı kütüphanelerini yükleyen betik",
+    "xboxdrv": "Xbox kontrolcü sürücüsü, yalnızca çekirdek sürücüsü çalışmazsa kullan!",
+    "xemu": "Orijinal Xbox emülatörü",
+    "xoneDkms": "Xbox One ve Xbox Series X|S kontrolcüleri için modern Linux sürücüsü",
+    "xoneDongleFirmware": "Xbox Kablosuz Oyun Kolu Adaptörü ürün yazılımı",
+    "xpadneo": "Xbox One Kablosuz Oyun Kolu için Gelişmiş Linux Sürücüsü",
+    "zsnes": "Super Nintendo emülatörü"
   },
   "kernels": {
+    "active": "Aktif çekirdek:",
     "dkmsModulesBroken": "Bazı DKMS modülleri bozuk",
     "dkmsModulesBrokenTip": "Bozuk DKMS modüllerinin kurulumunu zamanlamak için bana tıkla",
     "dkmsModulesMissing": "Bazı DKMS modülleri eksik",
     "dkmsModulesMissingTip": "Eksik DKMS modülleri",
     "headers": "Başlıklar",
     "headersMissing": "Eksik çekirdek başlıkları",
-    "headersMissingTip": "Eksik başlıkların kurulumunu zamanlamak için bana tıkla",
-    "active": "Aktif çekirdek:"
+    "setDefault": "Varsayılan kerneli ayarla"
+  },
+  "lang": {
+    "title": "Dil seçimi",
+    "tooltip": "Tercih ettiğin dili seç"
   },
   "languagePacks": {
-    "locale": "Yerel",
-    "selected": "Seçili",
     "base": "Temel paket",
+    "description": "Bunlar kurulu paketlerin için dil paketleridir, genellikle arayüz çevirilerini sağlar.",
+    "locale": "Yerel",
     "notFound": "Dil paketi bulunamadı",
     "pkgname": "Paket adı",
-    "description": "Bunlar kurulu paketlerin için dil paketleridir, genellikle arayüz çevirilerini sağlar."
-  },
-  "settings": {
-    "title": "Uygulama",
-    "icon": "Icon",
-    "titleTwo": "ayarları",
-    "leftButtons": "Pencere düğmelerini solda göster",
-    "copyDiagnostics": "Tanılamayı panoya kopyala",
-    "darkMode": "Karanlık modu etkinleştir",
-    "language": "Aktif dili yapılandır",
-    "autoStart": "Uygulamayı otomatik başlat",
-    "logLevel": "Günlük seviyesini seç",
-    "systemdUserContext": "Kullanıcı Systemd servislerini göster",
-    "autoRefresh": "Systemd servisleri otomatik yenilemeyi etkinleştir",
-    "showMainLinks": "Ana sayfada bağlantıları göster",
-    "themeLabel": "Temel tasarım teması",
-    "toggleOptions": "Seçenekleri aç/kapat",
-    "selectOptions": "Seçimler"
+    "selected": "Seçili"
   },
   "locales": {
     "apply": "Kurulu yerel değişikliklerini zamanla",
-    "description": "Sağdaki yereller sisteminde kurulu. Hangilerini tutmak istediğini ve hangilerini kaldırmak istediğini seçebilirsin.",
     "available": "Mevcut",
+    "description": "Sağdaki yereller sisteminde kurulu. Hangilerini tutmak istediğini ve hangilerini kaldırmak istediğini seçebilirsin.",
     "selected": "Seçili",
-    "task": "Sistem yerelini değiştir",
-    "selectLocale": "Tercih ettiğin sistem genelindeki dili seç"
+    "selectLocale": "Tercih ettiğin sistem genelindeki dili seç",
+    "task": "Sistem yerelini değiştir"
   },
-  "console": {
-    "title": "Terminal",
+  "maintenance": {
+    "actionFailed": "{{ action }} çalıştırılmaya çalışılırken {{ error }} hatası oluştu.",
+    "actionFailedHeader": "Bakım eylemi çalıştırılamadı",
+    "addPending": "Beklemeye ekle",
+    "addPendingSub": "Bekleyen işlemleri ekle",
+    "btrfsAssistant": "Btrfs Assistant",
+    "btrfsAssistantSub": "BTRFS anlık görüntülerini yönet ve bakım görevlerini çalıştır",
+    "cleanCache": "Önbelleği temizle",
+    "cleanCacheSub": "Tüm önbelleğe alınmış paketleri kaldır",
+    "clearOrphans": "Yetimleri temizle",
+    "clearOrphansSub": "Yetim paketleri kaldır",
+    "clearPacmanCache": "Pacman Önbelleğini Temizle",
+    "clearPacmanCacheDesc": "İndirilen paket yükleme dosyalarını temizleyin.",
+    "common": "Genel bakım",
+    "editRepos": "Depoları düzenle",
+    "editReposSub": "Depolarını Pace ile düzenle",
+    "failedReset": "Yapılandırma dosyası sıfırlanırken hata oluştu",
+    "failedResetFile": "{{file}} sıfırlanırken hata oluştu",
+    "garudaHealth": "Sistem sağlığı kontrolü",
+    "garudaHealthFix": "Sistem sağlığını onar",
+    "garudaHealthFixSub": "Yaygın sistem sorunlarını otomatik olarak düzeltmeyi deneyin",
+    "garudaHealthSub": "garuda-health ile yaygın sistem sorunlarını kontrol edin",
+    "garudaUpdate": "Garuda güncelleme kurtarma araçları",
+    "installationFailedHeader": "{{ program }} yüklü değil ve yüklenemedi, devam edilemiyor. Daha fazla bilgi için günlükleri kontrol edin",
+    "mergePacDiff": "Pacdiff dosyalarını birleştir",
+    "mergePacDiffSub": ".pacnew ve .pacsave dosyalarını etkileşimli olarak birleştir",
+    "onlyDirect": "Bu eylem sıraya alınamaz ve doğrudan çalıştırılması gerekir.",
+    "pacdiff": "Pacdiff Yöneticisi",
+    "pacdiffDesc": ".pacnew yapılandırma dosyalarını yönetin ve birleştirin.",
+    "refreshArchMirrors": "Yansıları yenile",
+    "refreshArchMirrorsSub": "Yansı listeni yenile",
+    "refreshChaoticMirrors": "Chaotic-AUR yansı listesini yenile",
+    "refreshChaoticMirrorsSub": "Chaotic-AUR yansı listenizi yenileyin",
+    "refreshChaoticMirrorsSuccess": "Chaotic-AUR yansı listesi başarıyla yenilendi",
+    "refreshKeyring": "Anahtarlığı yenile",
+    "refreshKeyrings": "Anahtarlıkları Yenile",
+    "refreshKeyringsDesc": "Paket doğrulaması için en son PGP anahtarlarını alın.",
+    "refreshKeyringSub": "Pacman anahtarlığınızı yenileyin",
+    "reinstallAll": "Tümünü Yeniden Yükle",
+    "reinstallAllDesc": "Bozuk dosyaları onarmak için paketleri yeniden yükleyin.",
+    "reinstallDkmsModules": "DKMS modüllerini yeniden kur",
+    "reinstallPackages": "Paketleri yeniden kur",
+    "reinstallPackagesSub": "Sistemindeki tüm paketleri yeniden kur",
+    "removeLock": "Pacman kilidini kaldır",
+    "removeLockSub": "Pacman kilit dosyasını kaldır",
+    "removeOrphans": "Artık Paketleri Kaldır",
+    "removeOrphansDesc": "Gereksiz bağımlılık paketlerini temizleyin.",
+    "removePending": "Beklemeden kaldır",
+    "resetConfigs": "Yapılandırmaları varsayılan duruma sıfırla",
+    "resetTooltip": "Aşağıdaki dosyalar veya klasörler varsayılan durumlarına sıfırlanacak:",
+    "runNow": "Şimdi çalıştır",
+    "subtitle": "Sistemini iyi durumda tut",
+    "systemUpdate": "Sistem Güncellemesi",
+    "systemUpdateDesc": "Tüm sistem paketlerini ve veritabanlarını güncelleyin.",
+    "taskRunning": "Zaten çalışan bir görev var, önce bitmesini bekle.",
+    "taskRunningHeader": "Bakım eylemi çalıştırılırken hata oluştu",
+    "title": "Sistem ",
+    "titleTwo": "bakımı",
+    "update": "Sistemini güncelle",
+    "updateRemoteFix": "Garuda güncelleme düzeltmesi",
+    "updateRemoteFixSub": "pacman.conf'u sıfırla ve anahtarlıkları yenile",
+    "updateRemoteFullFix": "Garuda güncelleme tam düzeltme",
+    "updateRemoteFullFixSub": "Pacman'i sıfırla ve işletim sistemindeki tüm paketleri yeniden kur",
+    "updateRemoteKeyring": "Garuda güncelleme anahtarlığı",
+    "updateRemoteKeyringSub": "pacman.conf'u sıfırlamadan anahtarlığı yenile",
+    "updateRemoteResetAudio": "Sesi sıfırla",
+    "updateRemoteResetAudioSub": "PipeWire ses yapılandırmasını yeniden kur/sıfırla",
+    "updateRemoteResetSnapper": "Snapper'ı sıfırla",
+    "updateRemoteResetSnapperSub": "Tüm Snapper öğelerini kaldır ve yapılandırmalarını yeniden oluştur",
+    "updateSystem": "Sistemi güncelle",
+    "updateSystemSub": "Sistemini garuda-update aracılığıyla güncelle"
+  },
+  "menu": {
+    "apply": "Bekleyen işlemleri uygula",
+    "boot": "Önyükleme araçları",
+    "bootOptions": "Önyükleme Seçenekleri",
+    "bootOptionsDesc": "GRUB girdilerini, temalarını ve parametrelerini yapılandırın.",
+    "bootRepair": "Önyükleme Onarımı",
+    "bootRepairDesc": "GRUB önyükleyicisini onarın veya yeniden yükleyin.",
+    "clearTasks": "Görevleri temizle",
+    "components": "Bileşenler",
+    "configFiles": "Yapılandırma Dosyaları",
+    "configFilesDesc": "Önemli sistem yapılandırma dosyalarını görüntüleyin ve düzenleyin.",
+    "console": "Terminali göster",
+    "diagnostics": "Tanılama",
+    "diagnosticsDesc": "Günlükler oluşturun ve donanım bilgilerini kontrol edin.",
+    "file": {
+      "preferences": "Tercihler",
+      "quit": "Çıkış",
+      "title": "Dosya"
+    },
+    "gaming": "Oyun",
+    "gamingDesc": "Oyun başlatıcılarını, emülatörleri ve araçları yükleyin.",
+    "help": {
+      "about": "Garuda Toolbox Hakkında",
+      "aboutBody": "Garuda Toolbox, Garuda Linux için bir sistem bakım ve tanılama aracıdır. Kullanıcıların sistemlerini korumalarına ve sorunları teşhis etmelerine yardımcı olmak için tasarlanmıştır. Electron ve Angular kullanılarak oluşturulmuştur.",
+      "aboutForum": "Forum",
+      "aboutSourceCode": "Kaynak kodu",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wiki",
+      "callExorcist": "Şeytan çıkarıcıyı çağır",
+      "callExorcistBody": "Bu düğmeye tıklamak için oldukça çaresiz olmalısın! Senin için özel bir vudu ayarladım, eğer hala uygulamayla ilgili sorunlar yaşıyorsan, lütfen bunları Garuda Linux forumunda veya sorun izleyicimizde bildir.",
+      "callExorcistTitle": "Şeytan çıkarıcı çağrıldı!",
+      "garudaStatus": "Çalışma süresi durumunu kontrol et",
+      "getHelpArchWiki": "Arch Wiki'de içerik ara",
+      "getHelpForum": "Forumdan yardım al",
+      "getHelpWiki": "Wiki'de içerik ara",
+      "title": "Yardım"
+    },
+    "maintenance": "Bakım",
+    "maintenanceDesc": "Sistemin sorunsuz çalışmasını sağlayın ve önbelleği temizleyin.",
+    "modules": {
+      "appSettings": "Uygulama ayarları",
+      "bootRepair": "Önyükleme Onarımı",
+      "components": "Sistem bileşenleri",
+      "diagnostics": "Tanılama",
+      "gaming": "Oyun",
+      "kernels": "Kerneller",
+      "locales": "Yerelleştirmeler",
+      "maintenance": "Bakım",
+      "packages": "Uygulamaları keşfet",
+      "search": "Arama seçenekleri",
+      "setupWizard": "Kurulum asistanı",
+      "systemdServices": "systemd servisleri",
+      "systemSettings": "Sistem ayarları",
+      "title": "Modüller",
+      "userManager": "Kullanıcı yöneticisi",
+      "welcome": "Karşılama"
+    },
+    "network": "Ağ araçları",
+    "networkAssistant": "Ağ Asistanı",
+    "networkAssistantDesc": "Ağı, sürücüleri ve bağlantıları teşhis edin.",
+    "packages": "Paketler",
+    "packagesDesc": "Popüler uygulamaları keşfedin ve yükleyin.",
+    "partitionManager": "Bölüm Yöneticisi",
+    "partitionManagerDesc": "Diskleri, bölümleri ve dosya sistemlerini yönetin.",
+    "pending": "Beklemede",
+    "settings": "Uygulama ayarları",
+    "setupWizard": "Kurulum Sihirbazı",
+    "setupWizardDesc": "Yeni Garuda sisteminizi adım adım yapılandırın.",
+    "systemdServices": "systemd Servisleri",
+    "systemdServicesDesc": "Arka plan servislerini etkinleştirin, devre dışı bırakın ve izleyin.",
+    "systemSettings": "Sistem Ayarları",
+    "systemSettingsDesc": "Temel sistem davranışını ve yapılandırmasını özelleştirin.",
+    "systemStatus": "Sistem Durumu",
+    "systemStatusDesc": "Sistem durumuna ve sağlığına hızlı bir genel bakış.",
+    "systemTools": "Sistem Araçları",
+    "systemToolsDesc": "Servisleri, sesi, sanallaştırmayı ve yardımcı araçları yönetin.",
+    "taskmanager": "Görev Yöneticisi",
+    "taskmanagerDesc": "Planlanan görevleri görüntüleyin ve çalıştırın.",
+    "terminalRunning": "Çalışan görevler",
+    "terminalTasks": "Görevleri yürüt",
+    "userManager": "Kullanıcı Yöneticisi",
+    "userManagerDesc": "Kullanıcı hesaplarını, grupları ve izinleri yönetin.",
+    "welcome": "Hoş Geldin"
+  },
+  "networkAssistant": {
+    "actions": "Eylemler",
+    "active": "Aktif",
+    "airplaneMode": "Uçak Modu",
+    "any": "Herhangi biri",
+    "blacklistAction": "{{name}} Kara Listeye Al",
+    "blacklistDriver": "Kara listeye al",
+    "blacklistedDrivers": "Kara Listedeki Sürücüler",
+    "blacklistFailed": "Kara liste güncellenemedi",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth Cihazları",
+    "cancel": "İptal",
+    "category": "Kategori",
+    "clear": "Temizle",
+    "clickToCopy": "Kopyalamak için tıklayın",
+    "connected": "Bağlı",
+    "connectionInfo": "Bağlantı Bilgisi",
+    "connman": "ConnMan",
+    "copied": "Panoya kopyalandı",
+    "copyAll": "Tümünü Kopyala",
+    "count": "Paket Sayısı",
+    "disabled": "Devre Dışı",
+    "disconnected": "Bağlantı Kesildi",
+    "driver": "Sürücü",
+    "driverBlacklisted": "Sürücü kara listeye alındı",
+    "driverLoaded": "Sürücü başarıyla yüklendi",
+    "driverUnblacklisted": "Sürücü kara listeden çıkarıldı",
+    "driverUnloaded": "Sürücü başarıyla kaldırıldı",
+    "enable": "Etkinleştir",
+    "enabled": "Etkin",
+    "enableService": "Servisi Etkinleştir",
+    "enableServiceFailed": "Servis etkinleştirilemedi",
+    "error": "Hata",
+    "errorFetch": "Ağ bilgileri alınamadı",
+    "ethernetControllers": "Ethernet Denetleyicileri",
+    "externalIp": "Dış IP",
+    "gps": "GPS",
+    "hardwareInfo": "Donanım Bilgileri",
+    "hotspotFailed": "Erişim noktası açılamadı",
+    "inactive": "Etkin Değil",
+    "installDriver": "Sürücü Yükle",
+    "installTraceroute": "Traceroute Yükle",
+    "installWihotspot": "WiFi Hotspot Yükle",
+    "interface": "Arayüz",
+    "internet": "İnternet",
+    "loadDriver": "Sürücüyü yükle",
+    "loadDriverAction": "{{name}} Sürücüsünü Yükle",
+    "loadDriverFailed": "Sürücü yüklenemedi",
+    "loadedDrivers": "Yüklü Sürücüler",
+    "maxHops": "Maksimum Atlama (Hops)",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Ağ sürücüsü bulunamadı",
+    "noHardware": "Ağ donanımı algılanmadı",
+    "notAvailable": "Mevcut Değil",
+    "off": "Kapalı",
+    "on": "Açık",
+    "openHotspot": "Erişim Noktasını Aç",
+    "outputInTerminal": "Çıktı aşağıdaki terminalde gösterilir",
+    "ping": "Ping",
+    "pingFailed": "Ping çalıştırılamadı",
+    "quickToggles": "Hızlı Anahtarlar",
+    "routerIp": "Yönlendirici IP",
+    "runPing": "Ping Çalıştır",
+    "runTraceroute": "Traceroute Çalıştır",
+    "search": "Ara",
+    "serviceEnabled": "Servis başarıyla etkinleştirildi",
+    "services": "Servisler",
+    "status": "Durum",
+    "success": "Başarılı",
+    "tabs": {
+      "diagnostics": "Tanılama",
+      "drivers": "Sürücüler",
+      "hardware": "Donanım",
+      "status": "Durum"
+    },
+    "targetHost": "Hedef Sunucu",
+    "timeout": "Zaman Aşımı (sn)",
+    "title": "Ağ ",
+    "titleTwo": "Asistanı",
+    "toggleAirplane": "Uçak Modunu Aç/Kapat",
+    "toggleAirplaneFailed": "Uçak Modu değiştirilemedi",
+    "toggleBt": "Bluetooth Aç/Kapat",
+    "toggleBtFailed": "Bluetooth durumu değiştirilemedi",
+    "toggleGps": "GPS Aç/Kapat",
+    "toggleGpsFailed": "GPS durumu değiştirilemedi",
+    "toggleWifi": "WiFi Aç/Kapat",
+    "toggleWifiFailed": "WiFi durumu değiştirilemedi",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Traceroute çalıştırılamadı",
+    "type": "Tür",
+    "unblacklistDriver": "Kara listeden çıkar",
+    "unloadDriver": "Sürücüyü kaldır",
+    "unloadDriverAction": "{{name}} Sürücüsünü Kaldır",
+    "unloadDriverFailed": "Sürücü kaldırılamadı",
+    "unloadedDrivers": "Yüklenmemiş Sürücüler",
+    "whitelistAction": "{{name}} Beyaz Listeye Al",
+    "wifi": "WiFi",
+    "wifiHotspot": "WiFi Erişim Noktası",
+    "wifiHotspotDesc": "WiFi erişim noktası yapılandırmasını aç",
+    "wirelessControllers": "Kablosuz Denetleyiciler"
+  },
+  "operation": {
+    "abort": "İptal et",
+    "addGroup": "Kullanıcıyı gruba ekle",
+    "args": "Argümanlar",
+    "disableHblock": "Hblock'u devre dışı bırak",
+    "disableService": "Servisi devre dışı bırak",
+    "enableHblock": "Hblock'u etkinleştir",
+    "enableService": "Servisi etkinleştir",
+    "installApps": "Uygulamaları kur",
+    "logs": "Günlükler",
+    "remove": "Kaldır",
+    "removeApps": "Uygulamaları kaldır",
+    "removeGroup": "Kullanıcıyı gruptan çıkar",
+    "resetDnsServer": "DNS sunucusunu sıfırla",
+    "run": "Şimdi çalıştır",
+    "setDefaultShell": "Varsayılan kabuğu ayarla",
+    "setNewDnsServer": "Yeni DNS sunucusu ayarla"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Çalışan işlemler var, sadece tamamlanmış olanları kaldıracağım.",
+    "refusing": "Yürütme reddediliyor",
+    "thisOperationRunning": "Aklını mı kaçırdın? Bu işlem şu anda çalışıyor!"
+  },
+  "os-interact": {
+    "boot-options": "Önyükleme ayarlarını uygula",
+    "configs": "Sistem yapılandırmalarını değiştir",
+    "configs-system": "Sistem yapılandırmalarını değiştir",
+    "configs-user": "Kullanıcı yapılandırmalarını değiştir",
+    "garuda-update-config": "Garuda Update ayarlarını uygula",
+    "groups": "Kullanıcı gruplarını değiştir",
+    "locales": "Etkin yerelleri değiştir",
+    "packages": "Kurulu paketleri değiştir",
+    "packages-aur": "AUR paketlerini değiştir",
+    "services": "Servisleri değiştir",
+    "services-user": "Kullanıcı servislerini değiştir"
+  },
+  "packages": {
+    "any": "Herhangi biri",
+    "clear": "Temizle",
+    "description": "Açıklama",
+    "documents": "Belgeler",
     "icon": "Icon",
-    "runActions": "Eylemleri çalıştır",
-    "removeAll": "Tüm eylemleri kaldır",
-    "abortAll": "Tüm eylemleri iptal et",
-    "noOutput": "Çıktı yok",
-    "outputExists": "Görünüşe göre zaten çalışan bir eylem var. Günlükleri görüntülemeye çalışmadan önce lütfen bitmesini bekle.",
-    "opRunning": "İşlem zaten çalışıyor.",
-    "clearCachedDataTitle": "Çıktı önbelleği temizlendi",
-    "clearCachedData": "Çıktı önbelleği temizlendi.",
-    "clearOutputCache": "Çıktı önbelleğini temizle",
-    "copyOutput": "Terminal çıktısını kopyala",
-    "copyToClipboardTitle": "Panoya kopyalandı",
-    "copyToClipboard": "Çıktı başarıyla panona kopyalandı.",
-    "uploadPrivateBin": "PrivateBin'e yükle"
+    "internet": "İnternet",
+    "multimedia": "Multimedya",
+    "name": "Ad",
+    "notFound": "Paket bulunamadı",
+    "other": "Diğer",
+    "science": "Bilim",
+    "search": "Ara",
+    "searchKey": "Bir arama anahtar kelimesi gir",
+    "security": "Güvenlik",
+    "selected": "Seçili",
+    "status": "Durum",
+    "title": "Paketler",
+    "titleTwo": "uygulamalar",
+    "url": "URL"
+  },
+  "passwordDialogTitle": "{{username}} için şifre belirle",
+  "settings": {
+    "autoRefresh": "Systemd servisleri otomatik yenilemeyi etkinleştir",
+    "autoStart": "Uygulamayı otomatik başlat",
+    "backgroundFit": "Arka planı uygulamaya sığdır",
+    "backgroundSettings": "Arka plan ayarları",
+    "blurBackground": "Arka planı bulanıklaştır",
+    "blurStrength": "Bulanıklık gücü",
+    "clearBackground": "Arka planı temizle",
+    "copyDiagnostics": "Tanılamayı panoya kopyala",
+    "customBackground": "Özel arka plan",
+    "darkMode": "Karanlık modu etkinleştir",
+    "language": "Aktif dili yapılandır",
+    "leftButtons": "Pencere düğmelerini solda göster",
+    "logLevel": "Günlük seviyesini seç",
+    "noBackgroundSelected": "Arka plan seçilmedi",
+    "selectOptions": "Seçimler",
+    "showMainLinks": "Ana sayfada bağlantıları göster",
+    "systemdUserContext": "Kullanıcı Systemd servislerini göster",
+    "themeLabel": "Temel tasarım teması",
+    "title": "Uygulama",
+    "titleTwo": "ayarları",
+    "toggleOptions": "Seçenekleri aç/kapat"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Yükleme ve yapılandırma sürecini başlatmak için 'Uygula'ya tıklayın.",
+      "failedBody": "Yükleme sırasında bir şeyler ters gitti. Yürütmeyi yeniden deneyebilir veya seçiminizi değiştirmek için geri dönebilirsiniz.",
+      "failedHeader": "Yürütme Başarısız Oldu",
+      "header": "Uygulamaya Hazır"
+    },
+    "autoCategories": {
+      "audio": "Ses",
+      "browsers": "Tarayıcılar",
+      "communication": "İletişim",
+      "development": "Geliştirme",
+      "gaming": "Oyun",
+      "graphics": "Grafik",
+      "inputMethod": "Giriş Yöntemleri",
+      "internet": "İnternet",
+      "kernels": "Kerneller",
+      "mail": "E-posta",
+      "multimedia": "Multimedya",
+      "office": "Ofis",
+      "other": "Diğer",
+      "pkgmngrs": "Yazılım Merkezleri",
+      "video": "Video",
+      "virtualization": "Sanallaştırma"
+    },
+    "autoSoftware": {
+      "0ad": "3D tarih temalı gerçek zamanlı strateji oyunu",
+      "abiWord": "Tam özellikli kelime işlemci",
+      "aisleriot": "Sabır/Solitaire kart oyunları koleksiyonu",
+      "ansible": "Ansible koleksiyonlarının resmi seti",
+      "appimagePool": "Modern AppImageHub istemcisi",
+      "ardour": "Profesyonel düzeyde dijital ses çalışma istasyonu (DAW)",
+      "asian": "Yaygın Asya yazı tiplerini içeren meta paket",
+      "audacious": "Hafif ve gelişmiş ses oynatıcı",
+      "audacity": "Dijital ses dalga formlarını işlemek için program",
+      "bakaMplayer": "libmpv tabanlı çok platformlu multimedya oynatıcı",
+      "bauh": "Uygulamaları yönetmek için grafik arayüz",
+      "bazaar": "Flatpak paketlerine odaklanan uygulama mağazası",
+      "birdfont": "Vektör grafikleri için yazı tipi editörü",
+      "bitwigStudio": "Müzik prodüksiyonu için dijital ses çalışma istasyonu",
+      "blender": "Tam entegre 3D grafik oluşturma paketi",
+      "brasero": "CD/DVD yazma aracı",
+      "brave": "Reklamları ve izleyicileri varsayılan olarak engelleyen web tarayıcısı",
+      "calligra": "Üretkenlik ve yaratıcı kullanım uygulamaları paketi",
+      "chromium": "Hız, basitlik ve güvenlik için tasarlanmış web tarayıcısı",
+      "clawsMail": "GTK+ tabanlı e-posta istemcisi",
+      "cockpit": "Linux sunucuları için web tabanlı kullanıcı arayüzü",
+      "conky": "Hafif sistem monitörü",
+      "converseen": "Toplu resim dönüştürücü ve yeniden boyutlandırıcı",
+      "darktable": "Ham (RAW) fotoğrafları düzenleme ve işleme aracı",
+      "deluge": "Hafif ve tam özellikli BitTorrent istemcisi",
+      "digikam": "Gelişmiş dijital fotoğraf yönetimi uygulaması",
+      "discord": "Hepsi bir arada sesli ve yazılı sohbet",
+      "discover": "KDE uygulama ve kaynak yöneticisi",
+      "docker": "Uygulamaları konteyner olarak paketleyin, dağıtın ve çalıştırın",
+      "dragon": "Sadelik odaklı multimedya oynatıcı",
+      "droidcam": "Telefonunuzu/tabletinizi web kamerasına dönüştürün",
+      "easytag": "Ses etiketlerini görüntüleme ve düzenleme uygulaması",
+      "element": "Şık Matrix işbirliği istemcisi",
+      "elisa": "KDE tarafından geliştirilen sade müzik çalar",
+      "evolution": "E-postanızı, kişilerinizi ve takviminizi yönetin",
+      "falkon": "Çok platformlu QtWebEngine web tarayıcısı",
+      "fdm": "Güçlü ve modern indirme hızlandırıcısı ve düzenleyicisi",
+      "filezilla": "Hızlı ve güvenilir FTP, FTPS ve SFTP istemcisi",
+      "firedragon": "Garuda markalı, gizlilik odaklı Floorp çatalı",
+      "firedragonCatppuccin": "Catppuccin temalı Firedragon tarayıcısı",
+      "firefox": "Hızlı, özel ve güvenli web tarayıcısı",
+      "firefoxEsr": "Firefox Uzun Süreli Destek Sürümü (ESR)",
+      "fontForge": "Anahat ve bit eşlem yazı tipi editörü",
+      "fractal": "GNOME için Matrix grup mesajlaşma uygulaması",
+      "freeCad": "Özellik tabanlı parametrik 3D CAD modelleyici",
+      "freeOffice": "Microsoft Office uyumlu ofis paketi",
+      "geary": "GNOME için hafif e-posta istemcisi",
+      "genymotion": "Android için sanal ortam",
+      "gimp": "GNU Görüntü İşleme Programı",
+      "github": "Git ve GitHub yönetimi için grafik arayüz",
+      "gitKraken": "Sezgisel, hızlı ve şık Git istemcisi",
+      "gnomeBoxes": "Sanal sistemlere erişmek için basit uygulama",
+      "gnomeBuilder": "GNOME tabanlı yazılımlar geliştirmek için IDE",
+      "gnomeFirmware": "Desteklenen cihazlarda donanım yazılımlarını yönetin",
+      "gnomeSoftware": "GNOME uygulama ve kaynak yöneticisi",
+      "gnu": "Genişletilebilir, özelleştirilebilir gerçek zamanlı ekran editörü",
+      "gnuCash": "Finansal muhasebe uygulaması",
+      "gnumeric": "GNOME için elektronik tablo uygulaması",
+      "handbrake": "Çok iş parçacıklı video dönüştürücü",
+      "hedgewars": "Sıra tabanlı stratejik topçu oyunu",
+      "homebank": "Ücretsiz, kolay kişisel muhasebe",
+      "hypnotix": "IPTV yayın uygulaması",
+      "indic": "Hint dilleri için giriş yöntemleri",
+      "inkscape": "Profesyonel vektör grafik editörü",
+      "intellijIdea": "Java ve diğer programlama dilleri için IDE",
+      "japanese": "Japonca için giriş yöntemleri",
+      "jenkins": "Genişletilebilir sürekli entegrasyon (CI) sunucusu",
+      "jitsiMeet": "Jitsi Meet masaüstü uygulaması",
+      "joplin": "Not alma ve yapılacaklar listesi uygulaması",
+      "k3b": "Zengin özelliklere sahip CD/DVD yazma uygulaması",
+      "kapman": "Tanınmış Pac-Man oyununun klonu",
+      "kdenlive": "Doğrusal olmayan video düzenleyici",
+      "kDevelop": "KDE teknolojilerini kullanan C++ IDE'si",
+      "keepassXc": "Çok platformlu şifre yöneticisi",
+      "kiCad": "Elektronik şematik ve PCB tasarım araçları",
+      "kid3": "Ses etiketi düzenleyicisi",
+      "kmahjongg": "Bir veya iki oyuncu için taş eşleştirme oyunu",
+      "kmail": "KDE e-posta istemcisi",
+      "kMyMoney": "Kişisel finans yöneticisi",
+      "knights": "KDE tarafından geliştirilen satranç tahtası",
+      "kodi": "Medya oynatıcı ve eğlence merkezi",
+      "kolourpaint": "KDE tarafından geliştirilen basit çizim programı",
+      "korean": "Korece için giriş yöntemleri",
+      "krita": "Profesyonel dijital boyama programı",
+      "kwave": "KDE için ses düzenleyici",
+      "libreCad": "2D CAD çizim aracı",
+      "libreOfficeFresh": "LibreOffice'in en son sürümü",
+      "libreOfficeStill": "LibreOffice'in kararlı sürümü",
+      "librewolf": "Gizlilik, güvenlik ve özgürlük odaklı web tarayıcısı",
+      "linuxCachyos": "Yüksek düzeyde optimize edilmiş CachyOS kerneli",
+      "linuxHardened": "Güvenliği Güçlendirilmiş (Hardened) Linux kerneli",
+      "linuxLts": "Uzun Süreli Desteklenen (LTS) Linux kerneli",
+      "linuxMainline": "En son ana hat (mainline) Linux kerneli",
+      "linuxXanmod": "Performans için XanMod yamaları içeren özel kernel",
+      "linuxXanmodLts": "XanMod yamaları içeren LTS özel kernel",
+      "lmms": "Dijital ses çalışma istasyonu ve sıralayıcı",
+      "lollypop": "GNOME için modern müzik çalar",
+      "luanti": "Voksel tabanlı oyun motoru",
+      "luminanceHdr": "HDR görüntüleme için iş akışı aracı",
+      "mailspring": "Şık ve hızlı e-posta istemcisi",
+      "mari0": "Portal silahı mekaniklerine sahip Mario oyunu",
+      "mediaElch": "Kodi için Medya Yöneticisi",
+      "microsoftTeams": "Resmi olmayan Microsoft Teams istemcisi",
+      "mixxx": "Ücretsiz, açık kaynaklı DJ yazılımı",
+      "mumble": "Düşük gecikmeli, yüksek kaliteli sesli sohbet yazılımı",
+      "museScore": "Güzel nota sayfaları oluşturun, çalın ve yazdırın",
+      "myPaint": "Dijital ressamlar için hızlı ve kolay boyama uygulaması",
+      "mystiq": "FFmpeg tabanlı ses/video dönüştürücü",
+      "neochat": "Merkeziyetsiz iletişim protokolü Matrix için istemci",
+      "netbeans": "Java, HTML5, PHP, C ve C++ için IDE",
+      "nextcloudClient": "Nextcloud masaüstü senkronizasyon istemcisi",
+      "nitroshare": "Cihazlar arasında dosya aktarmak için basit bir uygulama",
+      "obsidian": "Yerel düz metin Markdown dosyaları üzerinde çalışan bilgi tabanı",
+      "obsStudio": "Canlı yayın ve kayıt yazılımı",
+      "octopi": "Qt tabanlı güçlü Pacman ön ucu",
+      "onlyOffice": "Metin, elektronik tablo ve sunum düzenleyicilerini birleştiren ofis paketi",
+      "openToonz": "2D animasyon üretimi için yazılım",
+      "pencil2d": "2D el çizimi animasyonlar yapma aracı",
+      "podman": "Konteynerleri yönetmek için servissiz konteyner motoru",
+      "postman": "API'lerinizi oluşturun, test edin ve belgeleyin",
+      "prometheus": "Sistem izleme ve uyarı araç seti",
+      "puppet": "Sunucu otomasyon çatısı ve uygulaması",
+      "putty": "Terminal entegreli SSH/Telnet istemcisi",
+      "pyCharm": "Profesyonel geliştiriciler için Python IDE'si",
+      "qbittorrent": "Qt tabanlı gelişmiş BitTorrent istemcisi",
+      "qtCreator": "Hafif, çok platformlu IDE",
+      "qutebrowser": "Python tabanlı, Vim benzeri klavye odaklı tarayıcı",
+      "remmina": "GTK+ ile yazılmış uzak masaüstü istemcisi",
+      "rosegarden": "MIDI/ses sıralayıcısı ve nota editörü",
+      "shortwave": "İnternet radyo oynatıcısı",
+      "shotcut": "Çok platformlu video düzenleyici",
+      "signal": "Linux için Signal Özel Mesajlaşma",
+      "simplifiedChinese": "Basitleştirilmiş Çince için giriş yöntemleri",
+      "sinhalese": "Seylanca (Sinhala) için giriş yöntemleri",
+      "skrooge": "KDE için kişisel finans yöneticisi",
+      "slack": "Slack Masaüstü istemcisi",
+      "smPlayer": "Dahili kodeklere sahip medya oynatıcı",
+      "soundConverter": "Basit ses dönüştürücü uygulaması",
+      "soundwire": "Bilgisayarınızdan diğer cihazlara ses aktarın",
+      "strawberryPlayer": "Ses tutkunlarına yönelik müzik çalar",
+      "subtitleComposer": "Video altyazı düzenleyicisi",
+      "superTux": "Klasik 2D yandan kaydırmalı platform oyunu",
+      "superTuxKart": "Tux içeren karting yarış oyunu",
+      "sweetHome3d": "İç mekan tasarım uygulaması",
+      "synfigStudio": "Profesyonel vektör animasyon programı",
+      "teeworlds": "Hızlı tempolu çok oyunculu 2D nişancı oyunu",
+      "telegram": "Resmi Telegram Masaüstü istemcisi",
+      "terraform": "Altyapıyı kod olarak oluşturma ve güncelleme aracı",
+      "thai": "Tayca için giriş yöntemleri",
+      "thunderbird": "Bağımsız e-posta ve haber okuyucusu",
+      "torBrowser": "Tor ağında güvenle gezinin",
+      "traditionalChinese": "Geleneksel Çince için giriş yöntemleri",
+      "transmageddon": "Video formatlarını dönüştürme uygulaması",
+      "twitchGui": "Çok platformlu Twitch.tv tarayıcısı",
+      "ungoogledChromium": "Tüm Google entegrasyonları kaldırılmış Chromium",
+      "variety": "Masaüstü duvar kağıdını düzenli aralıklarla değiştirir",
+      "vietnamese": "Vietnamca için giriş yöntemleri",
+      "vim": "Yüksek düzeyde yapılandırılabilir terminal metin editörü",
+      "virtManager": "Sanal makineleri yönetmek için masaüstü kullanıcı arayüzü",
+      "virtualBox": "Çok platformlu sanallaştırma yazılımı",
+      "visualStudioCode": "Modern uygulamalar geliştirmek ve hatalarını ayıklamak için kod editörü",
+      "visualStudioCodeOss": "Visual Studio Code'un açık kaynaklı derlemesi",
+      "vivaldi": "İleri düzey kullanıcılar düşünülerek geliştirilmiş gelişmiş tarayıcı",
+      "vlc": "Çok platformlu multimedya oynatıcı",
+      "vscodium": "VSCode'un telemetri içermeyen ikili sürümleri",
+      "warpinator": "Ağ üzerinden dosya gönderip alın",
+      "wings3d": "Kanatlı kenar veri yapısını kullanan 3D modelleyici",
+      "wire": "Uçtan uca şifreli mesajlaşma ve video konferans",
+      "wpsOffice": "Ofis üretkenlik paketi",
+      "xfburn": "Basit CD/DVD yazma aracı",
+      "xonotic": "Hızlı tempolu çok platformlu birinci şahıs nişancı oyunu (FPS)",
+      "xtreme": "Güçlü indirme hızlandırıcısı ve video indiricisi",
+      "yakuake": "Açılır-kapanır (drop-down) terminal emülatörü",
+      "zedEditor": "Yüksek performanslı, çok oyunculu/işbirlikçi kod editörü",
+      "zoom": "Görüntülü ve web konferans servisi"
+    },
+    "buttons": {
+      "apply": "Uygula",
+      "back": "Geri",
+      "finish": "Bitir",
+      "next": "İleri",
+      "retry": "Yeniden Dene"
+    },
+    "softwareSelection": {
+      "body": "Yüklemek istediğiniz yazılımları seçin.",
+      "header": "Yazılım Seçimi"
+    },
+    "steps": {
+      "apply": "Değişiklikleri Uygula"
+    },
+    "success": {
+      "archWiki": "Arch Linux Wiki",
+      "body": "Sisteminiz yapılandırıldı ve kullanıma hazır!",
+      "finish": "Kurulumu tamamla",
+      "forum": "Garuda Forum",
+      "garudaWiki": "Garuda Linux Wiki",
+      "reboot": "Sistemi yeniden başlatmanız önerilir.",
+      "title": "Başarılı!"
+    },
+    "tasks": {
+      "installSoftware": "Seçilen yazılımlar yükleniyor"
+    },
+    "title": "Kurulum Asistanı"
+  },
+  "shells": {
+    "fish": {
+      "hint": "Fish'i varsayılan kabuk olarak ayarlamak diğer programlarda sorunlara neden olabilir. Bunun yerine terminal yapılandırmaları aracılığıyla varsayılan olarak ayarlanması önerilir."
+    }
+  },
+  "systemdServices": {
+    "actions": "Eylemler",
+    "active": "Aktif",
+    "all": "Tümü",
+    "autoRefresh": "Otomatik yenile",
+    "clear": "Temizle",
+    "description": "Açıklama",
+    "disable": "Devre dışı bırak",
+    "enable": "Etkinleştir",
+    "error": "Servisler alınırken bir hata oluştu, lütfen tekrar dene.",
+    "errorTitle": "Servisleri alma hatası",
+    "excludeDisabled": "Devre dışı bırakılanları hariç tut",
+    "filter": "Servisleri filtrele",
+    "hideDead": "Etkin olmayanları gizle",
+    "hideDeadTip": "'dead', 'failed' veya 'exited' durumundaki servisleri göstermek/gizlemek için geçiş yapın",
+    "includeDisabled": "Devre dışı bırakılanları dahil et",
+    "load": "Yük",
+    "logs": "Günlükler",
+    "mask": "Maskele",
+    "notFound": "Servis bulunamadı",
+    "reload": "Yeniden yükle",
+    "restart": "Yeniden başlat",
+    "searchKey": "Bir arama anahtar kelimesi gir",
+    "show": "Göster",
+    "showAll": "Tümünü göster",
+    "start": "Başlat",
+    "state": "Durum",
+    "stop": "Durdur",
+    "systemContext": "Sistem servislerini göster",
+    "unit": "Birim adı",
+    "unmask": "Maskeyi kaldır",
+    "userContext": "Kullanıcı servislerini göster"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Kişisel dosyalarınızdan yalıtılmış, şifresiz geçici bir 'konuk' kullanıcı hesabı oluşturur. Oturum kapatıldığında silinir.",
+        "title": "Misafir kullanıcıyı etkinleştir"
+      },
+      "oomd": {
+        "description": "systemd'nin Bellek Yetersizliği (Out-Of-Memory) servisi. Sistem belleğini aktif olarak izler ve tüm bilgisayarınız donmadan önce aşırı bellek kullanan süreçleri otomatik olarak sonlandırır.",
+        "title": "Systemd-oomd etkinleştirildi"
+      },
+      "psd": {
+        "description": "Web tarayıcınızın profilini (Firefox veya Brave gibi) hızlı geçici RAM'e (tmpfs) taşır. Bu, tarayıcı yanıt hızını önemli ölçüde artırır ve SSD'nizin yıpranmasını azaltır.",
+        "title": "Profile-sync-daemon kurulu"
+      },
+      "psdEnabled": {
+        "description": "Tarayıcı profillerinizi RAM'de otomatik olarak yönetmek için Profile-sync-daemon servisini çalıştırır.",
+        "title": "Profile-sync-daemon etkinleştirildi"
+      },
+      "title": "Genel"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "PipeWire'ın düğüm askıya alma (node-suspend) özelliğini devre dışı bırakır. Bu, ses cihazlarını sürekli aktif tutarak ses kartları uykudan uyandığında oluşan rahatsız edici patlama veya tıklama seslerini önler.",
+        "title": "Ses Askıya Almayı Kapat"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Discord'un güncelleme indirme ve yükleme isteminde bulunmasını engeller; Arch Linux'ta bu tamamen gereksizdir çünkü güncellemeleri pacman yapar.",
+        "title": "Discord Otomatik Güncellemeyi Kapat"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "KDE Plasma'da bir uygulama ekranı kapladığında başlık çubuğunu ve pencere kenarlıklarını kaldıran ve size daha fazla kullanılabilir dikey ekran alanı sağlayan bir KWin ince ayarı.",
+        "title": "KDE Kenarlıksız Büyütme"
+      },
+      "title": "Sistem Yapılandırmaları"
+    },
+    "defaultDns": "Varsayılan DNS'i ayarla",
+    "defaultDnsTip": "İnternet bağlantınız için varsayılan Alan Adı Sistemi (DNS) sağlayıcısını değiştirir ve servis sağlayıcınızın varsayılanını geçersiz kılar. Hızı, gizliliği artırabilir veya sansürü aşabilir.",
+    "defaultShell": "Oturum açma kabuğunu ayarla",
+    "defaultShellConfigs": "Varsayılan yapılandırmaları kur",
+    "defaultShellTip": "Varsayılan terminal giriş kabuğunuzu değiştirir. POSIX uyumlu bir kabuk (Bash veya Zsh gibi) kullanılması ve Fish gibi uyumlu olmayan kabukların yalnızca terminal emülatörünüzün profil ayarları üzerinden kullanılması önerilir.",
+    "enableHblock": "Hblock'u etkinleştir",
+    "enableHblockTip": "İsteklerini /etc/hosts dosyanız aracılığıyla yerel bir kara deliğe yönlendirerek sistem genelinde reklamları, izleyicileri ve kötü amaçlı alan adlarını engelleyen Hblock betiğini etkinleştirir.",
+    "enableIwd": "wpa_supplicant yerine IWD kullan",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). Wi-Fi bağlantılarını yönetmek için wpa_supplicant'a modern ve hafif bir alternatif. Genellikle daha hızlı bağlanır ve dolaşımı daha iyi yönetir.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Paketleri yüklemeden önce kullanılabilir disk alanını kontrol etmeyi atlayın.",
+        "title": "Disk alanı kontrolünü atla"
+      },
+      "pacmanNoconfirm": {
+        "description": "Daha hızlı bir güncelleme deneyimi için pacman'i onay istemleri olmadan çalıştırın.",
+        "title": "Etkileşimsiz pacman"
+      },
+      "skipMirrorlist": {
+        "description": "Sistem güncellemelerini çalıştırmadan önce Arch yansı listesini yenilemeyi atlayın.",
+        "title": "Yansı listesi yenilemeyi atla"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "Sistem güncellemeleri sırasında Arch Kullanıcı Deposundan (AUR) yüklenen paketleri güncelleyin.",
+        "title": "AUR paketlerini güncelle"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto NICe servisi. Çalışan süreçlerin CPU önceliğini (niceness) dinamik olarak değiştirir ve şu anda kullandığınız aktif uygulamaya daha fazla CPU süresi vererek sistemin daha hızlı hissedilmesini sağlar.",
+        "title": "Ananicy C++ kurulu"
+      },
+      "ananicyCppEnabled": {
+        "description": "Uygulama CPU önceliklerini sürekli olarak yönetmek için Ananicy servisini çalıştırır.",
+        "title": "Ananicy C++ etkinleştirildi"
+      },
+      "bpftune": {
+        "description": "Optimum internet verimi ve gecikme süresi için Linux ağ parametrelerinizi gerçek zamanlı olarak sürekli izlemek ve otomatik olarak ayarlamak üzere eBPF kullanır.",
+        "title": "Bpftune kurulu"
+      },
+      "bpftuneEnabled": {
+        "description": "Ağ performansınızı sürekli olarak optimize etmek için bpftune servisini çalıştırır.",
+        "title": "Bpftune etkinleştirildi"
+      },
+      "irqbalanceEnabled": {
+        "description": "Donanım kesmelerini tüm CPU çekirdeklerinize eşit olarak dağıtır. Bu, tek bir çekirdeğin cihaz sinyallerini işlerken aşırı yüklenmesini önler.",
+        "title": "IRQbalance etkinleştirildi"
+      },
+      "performanceTweaks": {
+        "description": "Garuda'yı maksimum yanıt verebilirlik için optimize etmek amacıyla bir dizi sistem düzeyinde sysctl ve ince ayar yapılandırması uygular.",
+        "title": "Performans iyileştirmeleri"
+      },
+      "preload": {
+        "description": "En sık kullandığınız uygulamaları izleyen ve bunları RAM'e önceden yükleyerek başlangıç sürelerini önemli ölçüde azaltan bir arka plan servisi.",
+        "title": "Preload kurulu"
+      },
+      "preloadEnabled": {
+        "description": "Sık kullanılan uygulamalarınızı önbelleğe almak için Preload servisini çalıştırır.",
+        "title": "Preload etkinleştirildi"
+      },
+      "title": "Performans"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "Otomatik bir CPU hızı ve güç optimize edici. Pilden tasarruf etmek için boştayken CPU hızınızı dinamik olarak düşürür ve performansa ihtiyaç duyduğunuzda artırır.",
+        "title": "Auto-cpufreq kurulu"
+      },
+      "autoCpufreqEnabled": {
+        "description": "CPU ölçeklemesini sürekli olarak yönetmek için auto-cpufreq servisini çalıştırır.",
+        "title": "Auto-cpufreq etkinleştirildi"
+      },
+      "intelUndervolt": {
+        "description": "Intel işlemcilere sağlanan voltajı düşürür. Bu, performanstan ödün vermeden ısıyı ve güç tüketimini azaltır, pil ömrünü uzatır ve termal kısmayı önler.",
+        "title": "Intel-undervolt kurulu"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Önyükleme sırasında Intel voltaj düşürme (undervolt) ayarlarınızı otomatik olarak uygulayan servisi çalıştırır.",
+        "title": "Intel-undervolt etkinleştirildi"
+      },
+      "powerProfilesDaemon": {
+        "description": "Sistemin 'Güç Tasarrufu', 'Dengeli' ve 'Performans' çalışma modları arasında kolayca geçiş yapması için bir API sağlar.",
+        "title": "Güç profilleri servisi kurulu"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Masaüstü ortamınızın güç profilleri arasında geçiş yapmasını sağlayan servisi çalıştırır.",
+        "title": "Güç profilleri servisi etkinleştirildi"
+      },
+      "powersaveTweaks": {
+        "description": "Pille çalışan cihazlarda güç tüketimini en aza indirmek için tasarlanmış sysctl ve yapılandırma ince ayarlarını uygular.",
+        "title": "Güç tasarrufu iyileştirmeleri"
+      },
+      "thermald": {
+        "description": "Intel'in termal yönetim servisi. CPU'yu kısmaya (throttle) zorlamadan önce soğutma yöntemlerini proaktif olarak kullanarak sisteminizin aşırı ısınmasını önler.",
+        "title": "Thermald kurulu"
+      },
+      "thermaldEnabled": {
+        "description": "CPU sıcaklıklarını izlemek ve aşırı ısınmayı önlemek için thermald servisini çalıştırır.",
+        "title": "Thermald etkinleştirildi"
+      },
+      "title": "Güç tasarrufu",
+      "tlp": {
+        "description": "Fişten çekildiğinde Wi-Fi, diskler, PCIe ve USB cihazları için ayarları düzenleyerek dizüstü bilgisayarlarda pil ömrünü otomatik olarak optimize eden gelişmiş bir yardımcı program.",
+        "title": "TLP kurulu"
+      },
+      "tlpEnabled": {
+        "description": "Pildeyken güç tasarrufu kurallarını dinamik olarak uygulamak için TLP servisini çalıştırır.",
+        "title": "TLP etkinleştirildi"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Dokunmatik ekranda veya dokunmatik yüzeyde tek bir parmağı basılı tutmanın sağ tıklama olarak algılanması için libinput'u yapılandırır.",
+        "title": "Evdev uzun basma sağ tık emülasyonu"
+      },
+      "evdevRce": {
+        "description": "Dokunmatik yüzeyinizin sağ alt köşesini (veya belirli bir alanını) her zaman fiziksel bir sağ tıklama olarak davranacak şekilde belirler.",
+        "title": "Evdev RCE etkinleştirildi"
+      },
+      "title": "Sağ tık emülasyonu"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "Etkilenen dosyalar:",
+    "askHelp": "Emin değilsen pencereyi kaydetmeden kapat ve Garuda Linux forumundan yardım iste.",
+    "aurUpdates": "AUR paketlerini güncellemek bu uygulamanın kapsamı dışındadır. Lütfen Paru gibi bir AUR yardımcısı kullan ve kurulumdan önce PKGBUILD dosyalarını incele.",
+    "cancel": "İptal",
+    "cautionMerge": "ESKİ dosyaya yanlış değişiklikler yapmanın sistemini bozabileceğini unutma.",
+    "findMore": "Nasıl devam edeceğini öğren",
+    "healthIssues": "Sistem sağlığı sorunları",
+    "healthIssuesFound": "Aşağıdaki sağlık sorunları tespit edildi:",
+    "learnPacdiff": "Eğer pacdiff dosyalarına aşina değilsen, hızlıca bunlar hakkında bilgi edin.",
+    "openMaintenance": "Başlamak için aşağıdaki düğmeye tıkla.",
+    "openMaintenanceButton": "Birleştirmeye başla",
+    "pacFiles": "Bu sistemde bekleyen .pacnew dosyaları var, bunları kontrol edip birleştirmelisin! (bilgi için tıkla)",
+    "pendingPacdiff": "Bekleyen pacdiff dosyaları",
+    "pendingUpdates": "Bekleyen güncellemeler",
+    "proceed": "İşte nasıl devam edeceksin:",
+    "proceedMerge": "Değişiklikleri uygulamak için Meld açılacaktır. Sol tarafta YENİ dosya, sağ tarafta ESKİ dosya bulunur. Birleştirmek istediğin yararlı değişiklikleri soldan sağa taşı. Bittiğinde kaydet düğmesine veya CTRL + S tuşlarına bas.",
+    "rebootNow": "Şimdi yeniden başlat",
+    "rebootNowBody": "Şimdi yeniden başlatmak istediğine emin misin? Devam etmeden önce tüm çalışmalarını kaydettiğinden emin ol.",
+    "runAurUpdates": "AUR güncellemelerini harici olarak çalıştır",
+    "runHealthFix": "Sağlık düzeltmesini çalıştır",
+    "scheduleUpdates": "Güncellemeleri zamanla",
+    "snapshotCreation": "Birleştirmeye başlamadan önce bir Btrfs anlık görüntüsü oluşturulacak.",
+    "updates": "Bu sistemde bekleyen güncellemeler var (bilgi için tıkla)",
+    "warnReboot": "Güncellemeleri uyguladıktan sonra, özellikle çekirdekleri veya masaüstü ortamlarını güncellerken sistemini yeniden başlatman şiddetle tavsiye edilir.",
+    "warnUpdate": "Sistemin 2 haftadır güncellenmedi. Güvenlik ve kararlılığı sağlamak için lütfen sistemini güncelle."
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Temel kernel düzeyinde ses sürücüsü. Genellikle PipeWire üzerinden etkileşimde bulunulsa da ses kartları için temel donanım desteği sağlar.",
+        "title": "ALSA desteği"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. Yüksek kaliteli ses işleme eklentileri seti. EasyEffects'e daha profesyonel stüdyo efektleri kazandırmak için yükleyin.",
+        "title": "Calf Eklentileri"
+      },
+      "easyeffects": {
+        "description": "Mikrofon kalitesini ve ses oynatımını iyileştirmek için güçlü bir araç. Tam bir deneyim için Calf Plugins ve LSP Plugins ile birlikte yüklenmesi şiddetle tavsiye edilir.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "Profesyonel ses prodüksiyonu için tasarlanmış, düşük gecikmeli özel ses sunucusu. Artık genellikle yerel olarak PipeWire tarafından yönetilir.",
+        "title": "JACK desteği"
+      },
+      "jamesdsp": {
+        "description": "Bas güçlendirme, ekolayzır ve diğer efektleri eklemek için ses efekti işlemcisi. Öncelikle EasyEffects'i denemeniz önerilir.",
+        "title": "JamesDSP kurulu"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP). Ekolayzır ve kompresör gibi profesyonel ses araçları koleksiyonu. EasyEffects yeteneklerini genişletmek için yükleyin.",
+        "title": "LSP Eklentileri"
+      },
+      "pipewire": {
+        "description": "Linux'ta ses ve video akışlarını yönetmek için modern standart. PulseAudio ve JACK'in yerini çok daha düşük gecikme ve daha iyi güvenlik ile sorunsuzca alır.",
+        "title": "PipeWire desteği"
+      },
+      "pulseaudio": {
+        "description": "Eski nesil ses sunucusu. Temelde uyumluluk için tutulur, büyük ölçüde yerini PipeWire almıştır.",
+        "title": "PulseAudio desteği"
+      },
+      "title": "Ses",
+      "userRealtime": {
+        "description": "Kullanıcınızı realtime grubuna ekleyerek takılma ve gecikmeleri önlemek için ses uygulamalarına CPU önceliği verir.",
+        "title": "Kullanıcı realtime grubunda"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Güvenilen ve önceden eşleştirilmiş Bluetooth cihazlarınıza açıldıklarında otomatik olarak yeniden bağlanır.",
+        "title": "Otomatik bağlanma kurulu"
+      },
+      "autoConnectEnabled": {
+        "description": "Otomatik Bluetooth yeniden bağlantılarını yöneten arka plan servisini çalıştırır.",
+        "title": "Otomatik bağlanma etkinleştirildi"
+      },
+      "bluetooth": {
+        "description": "BlueZ Linux Bluetooth yığını. Kablosuz cihazları yönetmek için gereken temel yazılımı sağlar.",
+        "title": "Bluetooth desteği"
+      },
+      "bluetoothEnabled": {
+        "description": "Bluetooth cihazlarıyla eşleşmek ve bağlanmak için gereken arka plan servisini çalıştırır.",
+        "title": "Bluetooth etkinleştirildi"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Kullanıcınızı lp grubuna ekleyerek sistem genelindeki PulseAudio kurulumu ile Bluetooth ses akışlarının kullanımına izin verir. PipeWire için gerekli değildir.",
+        "title": "Kullanıcı bluetooth grubunda"
+      }
+    },
+    "components": "Sistem bileşenleri",
+    "containers": {
+      "boxbuddy": {
+        "description": "Distrobox ortamlarınızı kolayca yönetmek ve kullanmak için grafik arayüzlü bir uygulama.",
+        "title": "BoxBuddy kurulu"
+      },
+      "distrobox": {
+        "description": "Diğer Linux dağıtımlarının sıkı entegre konteynerlerini oluşturur. Ubuntu, Fedora veya Arch uygulamalarını Garuda içinde yerel olarak çalıştırmanızı sağlar.",
+        "title": "DistroBox kurulu"
+      },
+      "docker": {
+        "description": "Yalıtılmış uygulamaları paketlemek ve çalıştırmak için endüstri standardı konteyner motoru.",
+        "title": "Docker kurulu"
+      },
+      "dockerCompose": {
+        "description": "Yapılandırma dosyaları aracılığıyla çok konteynerli Docker uygulamalarını tanımlama ve çalıştırma aracı.",
+        "title": "Docker Compose kurulu"
+      },
+      "dockerEnabled": {
+        "description": "Docker konteynerlerini yönetmek ve çalıştırmak için gereken arka plan servisini çalıştırır.",
+        "title": "Docker etkinleştirildi"
+      },
+      "kontainer": {
+        "description": "Distrobox konteynerlerini kolaylıkla yönetmek için yerel bir KDE uygulaması.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Docker'a modern ve servissiz (daemonless) bir alternatif. Konteynerleri root ayrıcalıklarına ihtiyaç duymadan çalıştırarak daha iyi güvenlik sunar.",
+        "title": "Podman kurulu"
+      },
+      "podmanDesktop": {
+        "description": "Podman konteynerlerinizi kolayca yönetmek, oluşturmak ve görüntülemek için grafik arayüzlü uygulama.",
+        "title": "Podman Desktop kurulu"
+      },
+      "podmanDocker": {
+        "description": "Mevcut Docker betiklerinin Podman ile sorunsuz çalışması için 'docker' komutunu 'podman'e yönlendiren uyumluluk paketi.",
+        "title": "Podman ile Docker'ı taklit et"
+      },
+      "title": "Konteynerler",
+      "userDocker": {
+        "description": "Kullanıcınızı docker grubuna ekleyerek Docker komutlarını sudo olmadan çalıştırma izni verir.",
+        "title": "Kullanıcı docker grubunda"
+      },
+      "winboat": {
+        "description": "Linux üzerinde sorunsuz entegre Windows uygulamaları sağlamak için konteynerleştirmeyi kullanır.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "Ağ güven düzeylerini ve kurallarını dinamik olarak tanımlamak için bölgeleri kullanan dinamik güvenlik duvarı yöneticisi.",
+        "title": "Firewalld kurulu"
+      },
+      "firewalldEnabled": {
+        "description": "Sisteminizi gelen ağ bağlantılarına karşı korumak için firewalld servisini çalıştırır.",
+        "title": "firewalld etkinleştirildi"
+      },
+      "opensnitch": {
+        "description": "Bir program internete bağlanmaya çalıştığında sizi uyaran ve izin isteyen uygulama düzeyinde bir güvenlik duvarı.",
+        "title": "OpenSnitch kurulu"
+      },
+      "opensnitchEnabled": {
+        "description": "Uygulama ağ trafiğini izlemek için OpenSnitch servisini çalıştırır.",
+        "title": "OpenSnitch etkinleştirildi"
+      },
+      "title": "Güvenlik Duvarı",
+      "ufw": {
+        "description": "Uncomplicated Firewall. iptables/nftables güvenlik duvarı kurallarını yönetmek için daha basit bir komut satırı arayüzü.",
+        "title": "UFW kurulu"
+      },
+      "ufwEnabled": {
+        "description": "Basit güvenlik duvarı kurallarınızı uygulamak için UFW servisini çalıştırır.",
+        "title": "UFW etkinleştirildi"
+      }
+    },
+    "kernels": "Çekirdekler",
+    "locales": "Yereller",
+    "misc": {
+      "gns": {
+        "description": "Nix paket yöneticisini entegre ederek binlerce ekstra yazılım paketine erişim sağlar. Ayrıca Garuda ile ayarları paylaşan bir NixOS kurulumu sunar.",
+        "title": "Garuda Nix Subsystem kurulu"
+      },
+      "title": "Çeşitli"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "Mobil geniş bant (4G/5G USB modemler) kullanarak internete bağlanmak için gereken servisi çalıştırır.",
+        "title": "ModemManager etkinleştirildi"
+      },
+      "networkManager": {
+        "description": "Wi-Fi, Ethernet ve VPN bağlantılarınızı yapılandıran ve yöneten temel servis.",
+        "title": "NetworkManager desteği"
+      },
+      "networkManagerEnabled": {
+        "description": "İnternete bağlanabilmeniz için NetworkManager servisini çalıştırır.",
+        "title": "NetworkManager etkinleştirildi"
+      },
+      "title": "Ağ"
+    },
+    "packages": "Diğer paketler",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Yazdırma işlerini yürütmek ve yazıcıları yönetmek için gereken CUPS servisini çalıştırır.",
+        "title": "CUPS etkinleştirildi"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System). Yerel veya ağ yazıcılarına bağlanmak ve yazdırmak için gereken temel yazılım.",
+        "title": "Yazdırma desteği"
+      },
+      "sanedEnabled": {
+        "description": "Tarayıcınızı yerel ağ üzerinden paylaşmanızı sağlayan servisi çalıştırır.",
+        "title": "saned etkinleştirildi"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy). Düz yataklı ve belge tarayıcılarını kullanmak için gereken temel yazılım.",
+        "title": "Tarama desteği"
+      },
+      "title": "Yazdırma",
+      "userCups": {
+        "description": "Kullanıcınızı cups grubuna ekleyerek yazıcıları ve yazdırma kuyruklarını yönetme izni verir.",
+        "title": "Kullanıcı cups grubunda"
+      },
+      "userLp": {
+        "description": "Kullanıcınızı bazı eski yazdırma sistemlerinin gerektirdiği lp (hat yazıcısı) grubuna ekler.",
+        "title": "Kullanıcı lp grubunda"
+      },
+      "userScanner": {
+        "description": "Kullanıcınızı scanner grubuna ekleyerek belge tarayıcılarını kullanma izni verir.",
+        "title": "Kullanıcı scanner grubunda"
+      }
+    },
+    "systemdServices": "Systemd servisleri",
+    "systemSettings": "Sistem ayarları",
+    "title": "Sistem ",
+    "titleTwo": "ayarları",
+    "users": "Kullanıcılar ve gruplar",
+    "virtualization": {
+      "kvm": {
+        "description": "Kernel-based Virtual Machine. Sanal makinelerin neredeyse yerel hızlarda çalışmasını sağlamak için CPU donanım hızlandırmasını (VT-x/AMD-V) kullanır.",
+        "title": "KVM desteği"
+      },
+      "libvirtdEnabled": {
+        "description": "Sanal makineleri ve diğer sanallaştırma platformlarını çalıştırmak ve yönetmek için gereken sistem servisi.",
+        "title": "Libvirtd etkinleştirildi"
+      },
+      "qemu": {
+        "description": "Genel amaçlı, açık kaynaklı makine emülatörü ve sanallaştırıcısı. Herhangi bir makine için herhangi bir işletim sistemini çalıştırabilir.",
+        "title": "QEMU kurulu"
+      },
+      "qemuUserStatic": {
+        "description": "Farklı mimarilere ait ikili dosyaları yerel olarak (ör. Podman aracılığıyla) çalıştırmak için kullanılabilir.",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Kernelde yabancı mimari işleyicilerini kaydeder; bu, aarch64 konteyner imajlarını çalıştırmayı denerken yararlı olabilir.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "Sanallaştırma",
+      "userKvm": {
+        "description": "Kullanıcınızı kvm grubuna ekleyerek hızlı, donanım hızlandırmalı KVM sanal makinelerini kullanma izni verir.",
+        "title": "Kullanıcı kvm grubunda"
+      },
+      "userLibvirt": {
+        "description": "Kullanıcınızı libvirt grubuna ekleyerek gelişmiş KVM/QEMU sanal makinelerini yönetme izni verir.",
+        "title": "Kullanıcı libvirt grubunda"
+      },
+      "userVboxUsers": {
+        "description": "Kullanıcınızı vboxusers grubuna ekleyerek VirtualBox kullanım izinlerini tanımlar.",
+        "title": "Kullanıcı vboxusers grubunda"
+      },
+      "virtManager": {
+        "description": "KVM/QEMU sanal makineleri oluşturmak ve yönetmek için gelişmiş masaüstü uygulaması (GUI).",
+        "title": "Virt-manager desteği"
+      },
+      "virtualbox": {
+        "description": "Oracle'ın popüler çok platformlu sanallaştırma yazılımı. KVM/Virt-Manager'a göre genellikle daha yavaş olsa da oldukça kullanıcı dostudur.",
+        "title": "VirtualBox desteği"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "Mevcut görev tamamlandı.",
+    "scriptMismatch": "Betik üzerinde oynanmış, çalıştırılması reddediliyor!"
+  },
+  "userManager": {
+    "actions": "Eylemler",
+    "addGroup": "Grup ekle",
+    "addUser": "Kullanıcı ekle",
+    "cancel": "İptal",
+    "clearPending": "Bekleyen değişiklikleri temizle",
+    "confirmPassword": "Şifreyi onayla",
+    "confirmRemoveGroup": "{{group}} grubunu kaldırmak istediğinizden emin misiniz?",
+    "confirmRemoveUser": "{{username}} kullanıcısını kaldırmak istediğinizden emin misiniz? Ev dizini de silinecektir.",
+    "createHome": "Ev dizini oluştur",
+    "editUser": "Kullanıcıyı düzenle",
+    "enterGroupName": "Lütfen bir grup adı girin",
+    "enterPassword": "Lütfen bir şifre girin",
+    "enterUsername": "Lütfen bir kullanıcı adı girin",
+    "error": "Hata",
+    "fullName": "Tam ad",
+    "gid": "GID",
+    "groupExists": "Bu ada sahip bir grup zaten var",
+    "groupName": "Grup adı",
+    "groups": "Gruplar",
+    "groupsColumn": "Gruplar",
+    "home": "Ev dizini",
+    "lock": "Kilitle",
+    "locked": "Kilitli",
+    "manageGroups": "Grupları yönet",
+    "manageGroupsFor": "{{username}} için grupları yönet",
+    "members": "Üyeler",
+    "newGroupName": "Grup adı",
+    "newPassword": "Yeni şifre",
+    "noGroupsFound": "Grup bulunamadı",
+    "noUsersFound": "Kullanıcı bulunamadı",
+    "passwordDialogTitle": "{{username}} için şifre belirle",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "pending": {
+      "add": "Bekleyen ekleme",
+      "lock": "Bekleyen kilitleme",
+      "membership": "Bekleyen grup değişiklikleri",
+      "modify": "Bekleyen değişiklik",
+      "password": "Bekleyen şifre",
+      "remove": "Bekleyen kaldırma",
+      "unlock": "Bekleyen kilit açma"
+    },
+    "removeGroup": "Grubu kaldır",
+    "removeUser": "Kullanıcıyı kaldır",
+    "save": "Kaydet",
+    "searchGroups": "Grupları ara",
+    "searchUsers": "Kullanıcıları ara",
+    "selectGroups": "Grupları seç",
+    "setPassword": "Şifre belirle",
+    "shell": "Kabuk",
+    "showAllUsers": "Tüm kullanıcıları göster",
+    "showUsersOnly": "Yalnızca kullanıcıları göster",
+    "system": "Sistem",
+    "systemAccount": "Sistem hesabı",
+    "task": {
+      "addGroup": "Grup ekle",
+      "addMembership": "Gruba ekle",
+      "addUser": "Kullanıcı ekle",
+      "lockUser": "Kullanıcıyı kilitle",
+      "modifyUser": "Kullanıcıyı düzenle",
+      "password": "Şifre belirle",
+      "removeGroup": "Grubu kaldır",
+      "removeMembership": "Gruptan çıkar",
+      "removeUser": "Kullanıcıyı kaldır",
+      "unlockUser": "Kullanıcının kilidini aç"
+    },
+    "uid": "UID",
+    "unlock": "Kilidi aç",
+    "userExists": "Bu ada sahip bir kullanıcı zaten var",
+    "username": "Kullanıcı adı",
+    "users": "Kullanıcılar"
+  },
+  "welcome": {
+    "bootRepair": "Önyükleme Onarımı",
+    "bootRepairSub": "Önyükleyicinizi onarın veya yeniden yükleyin",
+    "bootTools": "Önyükleme araçları",
+    "bootToolsSub": "Önyükleme ayarlarını yönet",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Paket güncellemelerine ve daha fazlasına göz atın",
+    "chroot": "Garuda'ya Chroot yap",
+    "chrootSub": "Garuda kurulumuna chroot yap",
+    "community": "Topluluk",
+    "communityDesc": "Garuda forumlarına ve sohbet kanallarına katılın.",
+    "diagnostics": "Tanılama",
+    "diagnosticsSub": "Sistem sağlığını kontrol et",
+    "documentation": "Belgeler",
+    "documentationDesc": "Resmi Garuda kılavuzlarını ve belgelerini okuyun.",
+    "donate": "Bağış Yap",
+    "donateDesc": "Garuda Linux geliştirmesini destekleyin.",
+    "donateSub": "Garuda Linux projesini destekleyin",
+    "error": "Bir hata oluştu.",
+    "gaming": "Oyun uygulamaları",
+    "gamingSub": "Favori oyunlarını oyna",
+    "gitlab": "GitLab",
+    "gitlabSub": "Kaynak kodumuza göz atın",
+    "hello": "Merhaba",
+    "install": "Garuda Linux'u Kur",
+    "installSub": "Garuda Linux'u sistemine kur",
+    "launchAtStartup": "Başlangıçta Çalıştır",
+    "launchAtStartupDesc": "Giriş yapıldığında Karşılama ekranını açın.",
+    "maintenance": "Bakım",
+    "maintenanceSub": "Sistemini iyi durumda tut",
+    "network": "Ağ araçları",
+    "networkSub": "Ağ ayarlarını yönet",
+    "packages": "Uygulamaları keşfet",
+    "packagesSub": "Yeni yazılımlar bulun ve yükleyin",
+    "quickSetup": "Hızlı Kurulum",
+    "quickSetupDesc": "Temel ayarları ve önerilen yazılımları yapılandırın.",
+    "reportBug": "Hata Bildir",
+    "reportBugDesc": "Sorunları bildirin veya iyileştirmeler önerin.",
+    "searxng": "SearxNG",
+    "searxngSub": "Gizliliğinize saygı duyan arama motoru",
+    "setupAssistant": "Kurulum yardımcısı",
+    "setupAssistantSub": "Garuda kurulum yardımcısını çalıştır",
+    "startpage": "Başlangıç Sayfası",
+    "startpageSub": "Garuda Linux başlangıç sayfasını aç",
+    "subtitle": "Oyun ve multimedya için nihai Linux dağıtımı",
+    "systemInfo": "Sistem Bilgisi",
+    "systemInfoDesc": "Donanım ve işletim sistemi özelliklerini kontrol edin.",
+    "systemTools": "Sistem ayarları",
+    "systemToolsSub": "Sistemini yapılandır",
+    "themeToggle": "Temayı Değiştir",
+    "themeToggleDesc": "Koyu ve açık tema arasında geçiş yapın.",
+    "title": "Hoş Geldin: ",
+    "titleTwo": "Garuda Linux",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Bitwarden uyumlu, güvenli şifre yöneticisi",
+    "whoogle": "Whoogle",
+    "whoogleSub": "Gizlilik odaklı arama motoru"
   }
 }

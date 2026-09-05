@@ -1,615 +1,1557 @@
 {
-  "menu": {
-    "welcome": "Üdvözlünk",
-    "maintenance": "Karbantartás",
-    "systemTools": "Rendszerbeállítások",
-    "components": "Komponensek",
-    "gaming": "Játék",
-    "boot": "Indítási eszközök",
-    "diagnostics": "Diagnosztika",
-    "network": "Hálózati eszközök",
-    "settings": "Alkalmazás beállításai",
-    "help": {
-      "title": "Segítség",
-      "icon": "Icon",
-      "getHelpForum": "Segítségkérés a fórumon",
-      "getHelpWiki": "Keresés a wikiben",
-      "getHelpArchWiki": "Keresés az Arch Wikiben",
-      "garudaStatus": "Üzemidő állapotának ellenőrzése",
-      "about": "A Garuda Toolbox névjegye",
-      "aboutBody": "A Garuda Toolbox egy rendszerkarbantartó és diagnosztikai eszköz a Garuda Linuxhoz. Célja, hogy segítse a felhasználókat a rendszerük karbantartásában és a problémák diagnosztizálásában. Electron és Angular segítségével készült.",
-      "callExorcist": "Hívd az ördögűzőt",
-      "callExorcistTitle": "Hívtad az ördögűzőt!",
-      "callExorcistBody": "Elég kétségbeesettnek kell lenned, hogy erre a gombra kattints! Beállítottam neked néhány különleges voodoo-t, ha továbbra is problémáid vannak az alkalmazással, kérlek, jelentsd őket a Garuda Linux fórumán vagy a hibakövetőnkben."
-    },
-    "terminalRunning": "Futó feladatok",
-    "terminalTasks": "Feladatok végrehajtása",
-    "pending": "Függőben",
-    "console": "Terminál megjelenítése"
-  },
-  "diagnostics": {
-    "title": "Hibakeresési infó ",
-    "icon": "Icon",
-    "titleTwo": "és diagnosztika",
-    "subtitle": "Találd meg a rendszered hibakereséséhez szükséges információkat",
-    "inxi": "Általános infó (inxi)",
-    "systemctl": "Rendszerszolgáltatások (systemctl)",
-    "journalctl": "Rendszernaplók (journalctl)",
-    "dmesg": "Kernelnaplók (dmesg)",
-    "full": "Teljes diagnosztika",
-    "upload": "Feltöltés PrivateBin-re",
-    "failedCmdHeader": "Parancs futtatása sikertelen",
-    "failedCmd": "Valami hiba történt, és nem sikerült lekérni a diagnosztikai adatokat",
-    "pacman": "Legutóbbi Pacman naplók",
-    "copied": "Sikeresen vágólapra másolva",
-    "success": "Siker",
-    "uploadSuccess": "Sikeresen feltöltve PrivateBin-re, URL vágólapra másolva"
-  },
-  "lang": {
-    "title": "Nyelvválasztás",
-    "icon": "Icon",
-    "tooltip": "Válaszd ki a preferált nyelvet"
-  },
-  "welcome": {
-    "title": "Üdvözlünk a ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linuxban",
-    "subtitle": "A tökéletes Linux disztró játékhoz és multimédiához",
-    "maintenance": "Karbantartás",
-    "maintenanceSub": "Tartsd a rendszered jó állapotban",
-    "systemTools": "Rendszerbeállítások",
-    "systemToolsSub": "Konfiguráld a rendszered",
-    "gaming": "Játékalkalmazások",
-    "gamingSub": "Játssz a kedvenc játékaiddal",
-    "bootTools": "Indítási eszközök",
-    "bootToolsSub": "Kezeld az indítási beállításokat",
-    "network": "Hálózati eszközök",
-    "networkSub": "Kezeld a hálózati beállításokat",
-    "diagnostics": "Diagnosztika",
-    "diagnosticsSub": "Ellenőrizd a rendszered állapotát",
-    "install": "Garuda Linux telepítése",
-    "installSub": "Telepítsd a Garuda Linuxot a rendszeredre",
-    "chroot": "Chroot a Garudába",
-    "chrootSub": "Chroot a Garuda telepítésedbe",
-    "startpage": "Kezdőlap",
-    "startpageSub": "Nyisd meg a Garuda Linux kezdőlapját",
-    "setupAssistant": "Telepítő asszisztens",
-    "setupAssistantSub": "Futtasd a Garuda telepítő asszisztenst",
-    "hello": "Helló",
-    "error": "Hiba történt."
-  },
-  "gaming": {
-    "title": "Játék ",
-    "icon": "Icon",
-    "titleTwo": "alkalmazások",
-    "subtitle": "Kezdjünk neki néhány játékalkalmazással!",
-    "launchers": "Játék indítók",
-    "loading": "Betöltés...",
-    "wine": "WINE",
-    "tools": "Játékeszközök",
-    "emulators": "Emulátorok",
-    "controllers": "Kontroller támogatás",
-    "games": "Játékok",
-    "misc": "Egyéb",
-    "bluez": "Általában szükséges a PS kontrollerek vezeték nélküli felismeréséhez",
-    "xboxdrv": "Xbox kontroller illesztőprogram, csak akkor használd, ha a kernel illesztőprogram nem működik!",
-    "wineMeta": "Metacsomag a WINE és az összes szükséges függőség telepítéséhez"
-  },
-  "maintenance": {
-    "title": "Rendszer ",
-    "icon": "Icon",
-    "titleTwo": "karbantartás",
-    "subtitle": "Tartsd a rendszered jó állapotban",
-    "update": "Frissítsd a rendszered",
-    "addPending": "Hozzáadás a függőben lévőkhöz",
-    "removePending": "Eltávolítás a függőben lévőkből",
-    "runNow": "Futtatás most",
-    "failedReset": "Hiba a konfigurációs fájl visszaállításakor",
-    "failedResetFile": "Hiba történt a(z) {{file}} visszaállítása során",
-    "editRepos": "Tárolók szerkesztése",
-    "onlyDirect": "Ez a művelet nem sorolható be, és közvetlenül kell futtatni.",
-    "cleanCache": "Gyorsítótár tisztítása",
-    "cleanCacheSub": "Az összes gyorsítótárazott csomag eltávolítása",
-    "updateSystem": "Rendszerfrissítés",
-    "taskRunningHeader": "Hiba a karbantartási művelet futtatásakor",
-    "taskRunning": "Már fut egy feladat, várj, amíg befejeződik.",
-    "updateSystemSub": "Frissítsd a rendszered a garuda-update segítségével",
-    "editReposSub": "Szerkeszd a tárolóidat a Pace segítségével",
-    "addPendingSub": "Függőben lévő műveletek hozzáadása",
-    "clearOrphans": "Árva csomagok törlése",
-    "clearOrphansSub": "Árva csomagok eltávolítása",
-    "refreshMirrors": "Tükörszerverek frissítése",
-    "refreshMirrorsSub": "Frissítsd a tükörszerver-listádat",
-    "removeLock": "Pacman zárolás eltávolítása",
-    "removeLockSub": "A pacman zárolási fájl eltávolítása",
-    "reinstallPackages": "Csomagok újratelepítése",
-    "reinstallPackagesSub": "Az összes csomag újratelepítése a rendszereden",
-    "reinstallDkmsModules": "DKMS modulok újratelepítése",
-    "btrfsAssistant": "Btrfs Assistant",
-    "btrfsAssistantSub": "Kezeld a BTRFS pillanatképeidet és futtass karbantartási feladatokat",
-    "mergePacDiff": "Pacdiff fájlok egyesítése",
-    "mergePacDiffSub": "Merge .pacnew and .pacsave files interactively",
-    "updateRemoteFullFix": "Garuda update full fix",
-    "updateRemoteFullFixSub": "Reset Pacman and reinstall all packages in your OS",
-    "updateRemoteKeyring": "Garuda update keyring",
-    "updateRemoteKeyringSub": "Refresh keyring without resetting pacman.conf",
-    "updateRemoteFix": "Garuda update fix",
-    "updateRemoteFixSub": "Reset pacman.conf and refresh keyrings",
-    "updateRemoteResetSnapper": "Reset snapper",
-    "updateRemoteResetSnapperSub": "Remove everything Snapper and recreate its configs",
-    "updateRemoteResetAudio": "Reset audio",
-    "updateRemoteResetAudioSub": "Reinstall/reset the PipeWire audio configuration",
-    "resetTooltip": "A következő fájlok vagy mappák vissza lesznek állítva az alapértelmezett állapotukba:",
-    "resetConfigs": "Konfigurációk visszaállítása alapértelmezett állapotba",
-    "common": "Általános karbantartás",
-    "garudaUpdate": "Garuda update rescue tools"
-  },
-  "sudo": {
-    "title": "Hitelesítés szükséges",
-    "icon": "Icon",
-    "subtitle": "Kérlek, add meg a jelszavad a folytatáshoz",
-    "save": "Gyorsítótárazás ebben a munkamenetben",
-    "password": "Jelszó",
-    "cancel": "Mégse",
-    "useOnce": "Csak egyszeri használat"
-  },
-  "systemdServices": {
-    "notFound": "Nem található szolgáltatás",
-    "description": "Leírás",
-    "unit": "Egység neve",
-    "load": "Betöltés",
-    "active": "Aktív",
-    "state": "Állapot",
-    "searchKey": "Írj be egy keresőszót",
-    "clear": "Törlés",
+  "bootOptions": {
     "actions": "Műveletek",
-    "show": "Megjelenítés",
-    "start": "Indítás",
-    "stop": "Leállítás",
-    "mask": "Maszkolás",
-    "unmask": "Maszkolás feloldása",
-    "logs": "Naplók",
-    "restart": "Újraindítás",
-    "reload": "Újratöltés",
-    "enable": "Engedélyezés",
-    "disable": "Letiltás",
-    "autoRefresh": "Automatikus frissítés",
-    "error": "Hiba történt a szolgáltatások lekérése közben, kérlek, próbáld újra.",
-    "errorTitle": "Hiba a szolgáltatások lekérésekor",
-    "systemContext": "Rendszerszolgáltatások megjelenítése",
-    "userContext": "Felhasználói szolgáltatások megjelenítése",
-    "includeDisabled": "Letiltottak belefoglalása",
-    "excludeDisabled": "Letiltottak kihagyása"
-  },
-  "systemTools": {
-    "title": "Rendszer ",
-    "icon": "Icon",
+    "apply": "Beállítások alkalmazása",
+    "bootEntries": "Indítási bejegyzések",
+    "cancel": "Mégse",
+    "configSaved": "A GRUB konfiguráció sikeresen elmentve",
+    "defaultEntry": "Alapértelmezett indítási bejegyzés",
+    "defaultEntryHint": "A menübejegyzés, amely alapértelmezés szerint elindul.",
+    "edit": "Szerkesztés",
+    "editConfigWarning": "Figyelmeztetés: A GRUB konfigurációs fájlok közvetlen szerkesztése veszélyes lehet. A módosítások felülíródhatnak a GRUB frissítésekor. Óvatosan használd.",
+    "editEntry": "Indítási bejegyzés szerkesztése",
+    "editGrubDefault": "A /etc/default/grub szerkesztése",
+    "editGrubDefaultHint": "A GRUB alapértelmezett beállítási fájljának szerkesztése. Root jogosultság szükséges hozzá.",
+    "editingEntry": "Bejegyzés szerkesztése",
+    "enableBootsplash": "Rendszerindítási képernyő engedélyezése",
+    "enableBootsplashHint": "Grafikus animációt (Plymouth) jelenít meg a rendszerindítási folyamat során szöveges üzenetek helyett.",
+    "entryId": "Bejegyzés azonosítója",
+    "entryName": "Bejegyzés neve",
+    "entrySaved": "Az indítási bejegyzés sikeresen elmentve",
+    "errorTitle": "Hiba",
+    "flatMenus": "Egyszintű menük engedélyezése",
+    "flatMenusHint": "Letiltja a GRUB almenüket, és minden bejegyzést a legfelső szintű menüben jelenít meg.",
+    "grubBackground": "GRUB háttérkép",
+    "grubTheme": "GRUB téma",
+    "kernelParams": "Kernel paraméterek",
+    "kernelParamsHint": "A Linux kernelnek rendszerindításkor átadott további paraméterek.",
+    "kernelParamsPlaceholder": "pl. quiet splash",
+    "messageLevel": "Rendszerindítási üzenetek részletessége",
+    "messageLevelDetailed": "Részletes (Csendes)",
+    "messageLevelHint": "Válaszd ki, mennyi információ jelenjen meg a rendszerindítási folyamat során.",
+    "messageLevelLimited": "Korlátozott (Csendes + Hush)",
+    "messageLevelVeryDetailed": "Nagyon részletes (Minden üzenet)",
+    "mitigationsOff": "CPU mérséklések tiltása (Mitigations Off)",
+    "mitigationsOffHint": "Letiltja a CPU biztonsági védelmeit (mérsékléseit) a jobb teljesítmény érdekében, de alacsonyabb biztonság mellett.",
+    "partitionSelect": "Partíció kiválasztása",
+    "partitionSelectHint": "Kérlek, válaszd ki a Garuda telepítésedet tartalmazó partíciót.",
+    "plymouthNotInstalled": "A Plymouth nincs telepítve. Engedélyezd az alkalmazáskor történő telepítéshez.",
+    "plymouthPending": "A Plymouth telepítése ütemezve van. A telepítés befejezése után választhatsz témát.",
+    "plymouthTheme": "Plymouth téma (bootsplash)",
+    "plymouthThemeHint": "A rendszerindítási folyamat során megjelenő téma.",
+    "plymouthVmWarning": "Virtuális gépen futsz. A Plymouth rendszerindítási képernyő korlátozottan fog működni, és előfordulhat, hogy az előnézet nem jelenik meg megfelelően.",
+    "previewComplete": "Előnézet kész",
+    "previewCompleteMessage": "A Plymouth téma előnézete befejeződött.",
+    "previewError": "Az előnézet sikertelen",
+    "previewTheme": "Plymouth téma előnézete",
+    "retry": "Újra",
+    "save": "Mentés",
+    "saveDefault": "Alapértelmezett bejegyzés mentése",
+    "saveDefaultHint": "Automatikusan elmenti a legutóbb kiválasztott indítási bejegyzést alapértelmezettként.",
+    "savedMessage": "A rendszerindítási beállítások sikeresen alkalmazva.",
+    "savedMessageScheduled": "A rendszerindítási beállítások hozzáadva a függőben lévő műveletekhez.",
+    "savedTitle": "Beállítások elmentve",
+    "saveSuccess": "Sikeresen mentve",
+    "searchOtherOs": "Más operációs rendszerek keresése",
+    "searchOtherOsHint": "Automatikusan észleli és hozzáadja a többi telepített operációs rendszert a rendszerindítási menühöz az os-prober segítségével.",
+    "selectBackground": "Válassz háttérképet",
+    "selectEntry": "Válassz ki egy indítási bejegyzést",
+    "selectGrubTheme": "Válassz GRUB témát",
+    "selectTheme": "Válassz egy Plymouth témát",
+    "submenu": "Almenü",
+    "sysrqEnabled": "SysRq billentyű mindig engedélyezve",
+    "sysrqEnabledHint": "Engedélyezi a Magic SysRq billentyűt a rendszer vészhelyzeti vezérléséhez.",
+    "timeout": "Menü időtúllépése",
+    "timeoutHint": "A másodpercekben megadott idő, amelyet a rendszer vár az alapértelmezett bejegyzés elindítása előtt.",
+    "title": "Rendszerindítási ",
     "titleTwo": "beállítások",
-    "systemdServices": "Systemd szolgáltatások",
-    "systemSettings": "Rendszerbeállítások",
-    "components": "Rendszerkomponensek",
-    "locales": "Területi beállítások",
-    "kernels": "Kernelek",
-    "packages": "További csomagok",
-    "audio": {
-      "title": "Hang",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA támogatás"
-      },
-      "jack": {
-        "title": "JACK támogatás"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio támogatás"
-      },
-      "pipewire": {
-        "title": "PipeWire támogatás"
-      },
-      "userRealtime": {
-        "title": "Felhasználó a realtime csoportban"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP telepítve"
-      }
-    },
-    "virtualization": {
-      "title": "Virtualizáció",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU telepítve"
-      },
-      "kvm": {
-        "title": "KVM támogatás"
-      },
-      "virtManager": {
-        "title": "Virt-manager támogatás"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd engedélyezve"
-      },
-      "userVboxUsers": {
-        "title": "Felhasználó a vboxusers csoportban"
-      },
-      "virtualbox": {
-        "title": "VirtualBox támogatás"
-      },
-      "userLibvirt": {
-        "title": "Felhasználó a libvirt csoportban"
-      },
-      "userKvm": {
-        "title": "Felhasználó a kvm csoportban"
-      }
-    },
-    "containers": {
-      "title": "Konténerek",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker telepítve"
-      },
-      "dockerEnabled": {
-        "title": "Docker engedélyezve"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose telepítve"
-      },
-      "userDocker": {
-        "title": "Felhasználó a docker csoportban"
-      },
-      "podman": {
-        "title": "Podman telepítve"
-      },
-      "podmanDocker": {
-        "title": "Emulate Docker via Podman"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop telepítve"
-      },
-      "distrobox": {
-        "title": "DistroBox telepítve"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy telepítve"
-      }
-    },
-    "network": {
-      "title": "Hálózat",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager támogatás"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager engedélyezve"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager engedélyezve"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Bluetooth támogatás"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth engedélyezve"
-      },
-      "userBluetooth": {
-        "title": "Felhasználó a bluetooth csoportban"
-      },
-      "autoConnect": {
-        "title": "Automatikus csatlakozás telepítve"
-      },
-      "autoConnectEnabled": {
-        "title": "Automatikus csatlakozás engedélyezve"
-      }
-    },
-    "printing": {
-      "title": "Nyomtatás",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "Nyomtatási támogatás"
-      },
-      "cupsEnabled": {
-        "title": "CUPS engedélyezve"
-      },
-      "scanningSupport": {
-        "title": "Szkennelési támogatás"
-      },
-      "sanedEnabled": {
-        "title": "saned engedélyezve"
-      },
-      "userCups": {
-        "title": "Felhasználó a cups csoportban"
-      },
-      "userScanner": {
-        "title": "Felhasználó a scanner csoportban"
-      },
-      "userLp": {
-        "title": "Felhasználó az lp csoportban"
-      }
-    },
-    "firewall": {
-      "title": "Tűzfal",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld telepítve"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld engedélyezve"
-      },
-      "ufw": {
-        "title": "UFW telepítve"
-      },
-      "ufwEnabled": {
-        "title": "UFW engedélyezve"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch telepítve"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch engedélyezve"
-      }
-    },
-    "misc": {
-      "title": "Egyéb",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem telepítve"
-      }
-    }
+    "unsavedChanges": "Nem mentett módosításaid vannak"
   },
-  "systemSettings": {
-    "defaultShellConfigs": "Alapértelmezett konfigurációk telepítése",
-    "defaultDns": "Alapértelmezett DNS beállítása",
-    "defaultShell": "Bejelentkezési shell beállítása",
-    "enableHblock": "Hblock engedélyezése",
-    "enableIwd": "IWD használata wpa_supplicant helyett",
-    "common": {
-      "title": "Általános",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon telepítve"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon engedélyezve"
-      },
-      "oomd": {
-        "title": "Systemd-oomd engedélyezve"
-      },
-      "guestUser": {
-        "title": "Vendég felhasználó engedélyezése"
-      }
-    },
-    "performance": {
-      "title": "Teljesítmény",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "Teljesítmény finomhangolások"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ telepítve"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ engedélyezve"
-      },
-      "bpftune": {
-        "title": "Bpftune telepítve"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune engedélyezve"
-      },
-      "preload": {
-        "title": "Preload telepítve"
-      },
-      "preloadEnabled": {
-        "title": "Preload engedélyezve"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance engedélyezve"
-      }
-    },
-    "powersave": {
-      "title": "Energiatakarékosság",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "Energiatakarékossági finomhangolások"
-      },
-      "tlp": {
-        "title": "TLP telepítve"
-      },
-      "tlpEnabled": {
-        "title": "TLP engedélyezve"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq telepítve"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq engedélyezve"
-      },
-      "thermald": {
-        "title": "Thermald telepítve"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald engedélyezve"
-      },
-      "powerProfilesDaemon": {
-        "title": "Power profiles daemon telepítve"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Power profiles daemon engedélyezve"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt telepítve"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt engedélyezve"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "Jobb kattintás emuláció",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev hosszú lenyomás jobb kattintás emuláció"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE engedélyezve"
-      }
-    }
+  "bootRepair": {
+    "apply": "Alkalmaz",
+    "backupFile": "Biztonsági mentés fájl",
+    "backupMbrPbr": "MBR vagy PBR biztonsági mentése",
+    "backupMbrPbrTip": "Biztonsági másolat készítése az MBR (Master Boot Record) vagy PBR (Partition Boot Record) rendszerindító kódjáról. Nem tartalmazza a partíciós táblát.",
+    "backupRestoreTarget": "Biztonsági mentés vagy visszaállítás célja:",
+    "deviceOrPartition": "Eszköz vagy partíció:",
+    "errorTitle": "Hiba",
+    "installOn": "Telepítés helye:",
+    "location": "Hely:",
+    "luksPassword": "LUKS jelszó:",
+    "luksPasswordPlaceholder": "Add meg a LUKS jelmondatot",
+    "luksPasswordRequired": "Kérlek, add meg a LUKS jelszót ehhez a root partícióhoz.",
+    "luksTag": "LUKS",
+    "options": "Beállítások",
+    "partitionToMount": "Csatolandó partíció:",
+    "reinstallGrub": "GRUB újratelepítése",
+    "reinstallGrubTip": "A GRUB rendszertöltő újratelepítése egy adott lemezre vagy partícióra.",
+    "repairGrubConfig": "GRUB konfiguráció javítása",
+    "repairGrubConfigTip": "A GRUB konfigurációs fájl (grub.cfg) újragenerálása az összes telepített operációs rendszer észleléséhez.",
+    "restoreMbrPbr": "MBR vagy PBR visszaállítása mentésből",
+    "restoreMbrPbrTip": "A rendszerindító kód visszaállítása egy korábban létrehozott biztonsági mentési fájlból.",
+    "rootLocation": "Root helye:",
+    "selectLocation": "Kérlek, válassz ki egy helyet.",
+    "selectOperation": "Művelet kiválasztása",
+    "selectRoot": "Kérlek, válassz ki egy root partíciót.",
+    "successBackup": "A biztonsági mentés sikeresen elkészült.",
+    "successReinstall": "A GRUB újratelepítése sikeresen befejeződött.",
+    "successRepair": "A GRUB javítása sikeresen befejeződött.",
+    "successRestore": "A visszaállítás sikeresen befejeződött.",
+    "successTitle": "Siker",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI Rendszerpartíció (ESP). Az UEFI szabványt használó számítógépek által a rendszertöltők és kernelképfájlok tárolására használt partíció.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. A hagyományos rendszerindító szektor egy particionált adattároló eszköz elején.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record. Más néven Volume Boot Record (VBR). Egy adott partíció első szektora.",
+    "targetRoot": "Root",
+    "title": "Rendszertöltő-",
+    "titleTwo": "javítás"
   },
-  "shells": {
-    "fish": {
-      "hint": "A fish alapértelmezett shellként való beállítása problémákat okozhat más programokkal. Javasolt inkább a terminál konfigurációin keresztül beállítani alapértelmezettként."
-    }
+  "commandPalette": {
+    "hint": "Modulok és műveletek keresése",
+    "placeholder": "Írj be egy parancsot vagy keress egy modult...",
+    "toClose": "a bezáráshoz"
+  },
+  "configFiles": {
+    "actions": "Műveletek",
+    "desc": {
+      "adjtime": "A hwclock által használt fájl az órák követésére",
+      "alacritty": "GPU-gyorsított terminálemulátor konfigurációja",
+      "alsa_base": "ALSA kernelmodul beállítások",
+      "amdgpu_conf": "AMDGPU kernelmodul beállítások",
+      "ananicy": "Szabályok az Ananicy auto-nice démonhoz",
+      "asound_conf": "Rendszerszintű ALSA konfiguráció",
+      "asoundrc": "Felhasználóspecifikus ALSA konfiguráció",
+      "bash_bashrc": "Rendszerszintű bash shell beállítások interaktív shellekhez",
+      "bashrc": "Az aktuális felhasználó Bash konfigurációs fájlja",
+      "blacklist_nouveau": "Feketelistára helyezi a nyílt forráskódú Nouveau illesztőprogramot",
+      "bluetooth_main": "Bluetooth démon konfigurációja",
+      "btrfsAssistant": "A BTRFS Assistant konfigurációja",
+      "chaoticMirrorlist": "A Garuda egyéni Chaotic-AUR csomagtároló-tükörszerverei",
+      "cinnamon": "A Cinnamon asztali környezet fő konfigurációs könyvtára",
+      "cpupower": "A cpupower energiagazdálkodási eszköz konfigurációja",
+      "cron": "Konfiguráció az időzített cron feladatokhoz",
+      "cursorThemeSystem": "Rendszerszintű kurzortéma konfiguráció",
+      "cursorThemeUser": "Felhasználóspecifikus kurzortéma konfiguráció",
+      "dunst": "A Dunst értesítési démon konfigurációja",
+      "environment": "Rendszerszintű környezeti változók",
+      "environmentD": "Könyvtár a rendszerszintű környezeti változókhoz (Wayland)",
+      "fastfetch": "Rendszerinformáció-lekérő eszköz konfigurációja",
+      "fish": "A Fish shell konfigurációs fájlja",
+      "fontconfigSystem": "Rendszerszintű betűkészlet-konfigurációs beállítások",
+      "fontconfigUser": "Felhasználóspecifikus betűkészlet-konfigurációs beállítások",
+      "fstab": "Statikus információk a fájlrendszerekről és csatolási pontokról",
+      "gamemode": "A GameMode optimalizáló eszköz globális konfigurációja",
+      "garudaUpdateConfig": "A garuda-update működésének és frissítési jelzőinek konfigurációja",
+      "gdm": "A GNOME Display Manager konfigurációja",
+      "gitconfig": "Felhasználóspecifikus Git konfiguráció",
+      "group": "Felhasználói csoportokat határoz meg",
+      "grub": "A GRUB rendszertöltő konfigurációs fájlja",
+      "grub_cfg": "A GRUB rendszertöltő konfigurációs fájlja",
+      "grubTheme": "A GRUB rendszertöltő témájának konfigurációja",
+      "gtk3Settings": "Beállítások a GTK 3.0 alkalmazásokhoz",
+      "gtk4Css": "Egyéni CSS stíluslap a GTK 4.0 alkalmazásokhoz",
+      "gtk4Settings": "Beállítások a GTK 4.0 alkalmazásokhoz",
+      "gtkrc2": "Beállítások a korábbi GTK 2.0 alkalmazásokhoz",
+      "hostname": "A rendszer gépneve",
+      "hosts": "Statikus táblázat a gépnevek IP-címekhez rendeléséhez",
+      "hosts_allow": "TCP wrapperek hálózati szolgáltatások hozzáférés-vezérléséhez (engedélyezés)",
+      "hosts_deny": "TCP wrapperek hálózati szolgáltatások hozzáférés-vezérléséhez (tiltás)",
+      "hyprland": "Hyprland Wayland kompozitor konfigurációja",
+      "hyprpaper": "A Hyprpaper háttérkép-kezelő konfigurációja",
+      "i3": "Klasszikus X11 csempéző ablakkezelő konfigurációja",
+      "iconTheme": "Ikontéma konfigurációs beállítások",
+      "journald": "A systemd naplózó szolgáltatás konfigurációja",
+      "kcmfonts": "KDE betűkészlet konfigurációs beállítások",
+      "kdeColorScheme": "Felhasználóspecifikus KDE színséma definíciók",
+      "kdeglobals": "Globális KDE konfigurációs beállítások",
+      "kdeLookandFeel": "KDE globális téma (megjelenés és működés) beállítások",
+      "kitty": "Funkciógazdag, GPU-gyorsított terminálemulátor konfigurációja",
+      "kvantumConfig": "A Kvantum SVG-alapú témaszerkesztő motor konfigurációja",
+      "kwinrc": "A KWin ablakkezelő konfigurációja",
+      "lightdm": "A LightDM bejelentkezéskezelő konfigurációja",
+      "locale": "Rendszerszintű területi és nyelvi beállítások",
+      "locale_gen": "A rendszeren elérhető területi beállítások listája",
+      "logind": "A systemd bejelentkezéskezelő konfigurációja",
+      "makepkgConf": "Konfigurációs beállítások a makepkg-hoz",
+      "mako": "A Mako értesítési démon konfigurációja",
+      "mangohud": "A MangoHud teljesítményfigyelő fedvény konfigurációja",
+      "mirrorlist": "Szabványos Arch Linux csomagtároló-tükörszerverek",
+      "mkinitcpio": "Konfiguráció a kezdeti ramdisk környezet létrehozásához",
+      "modprobe_d": "Kernelmodul konfigurációk és beállítások",
+      "networkmanager": "A NetworkManager globális konfigurációja",
+      "nftables": "Az nftables tűzfal konfigurációja",
+      "nvidia_conf": "NVIDIA kernelmodul beállítások",
+      "os_release": "Információkat nyújt az operációs rendszerről különféle programok számára",
+      "pacman_hooks": "Horogszkriptek a csomagműveletek alatti műveletek automatizálására",
+      "pacmanConf": "A pacman csomagkezelő fő konfigurációs fájlja",
+      "pam": "A Pluggable Authentication Modules konfigurációs fájljai",
+      "pam_d": "PAM konfiguráció a hitelesítési szolgáltatásokhoz",
+      "passwd": "Felhasználói fiókok adatait tartalmazza",
+      "pipewire_client": "PipeWire kliens konfiguráció",
+      "pipewire_conf": "Felhasználói szintű PipeWire démon konfiguráció",
+      "plasmaApplets": "A Plasma asztali kisalkalmazások konfigurációja",
+      "plasmaEnv": "Környezeti változók a Plasma munkaterülethez",
+      "plasmarc": "A Plasma felület fő konfigurációja",
+      "plymouthConf": "A Plymouth rendszerindító képernyő démon konfigurációja",
+      "profile": "Felhasználóspecifikus környezeti beállítások és indítóprogramok",
+      "pulse_daemon": "PulseAudio démon beállításai",
+      "pulse_default": "PulseAudio indító parancsfájl",
+      "qtile": "Python-alapú ablakkezelő konfigurációja",
+      "resolv": "DNS feloldó konfigurációs fájl",
+      "rofi": "A Rofi alkalmazásindító és ablakváltó konfigurációja",
+      "rsyslog": "Az rsyslog démon fő konfigurációja",
+      "sddm": "Simple Desktop Display Manager konfigurációja",
+      "shadow": "Kivonatolt jelszavakat és fiók lejárati adatokat tartalmaz",
+      "snapperRoot": "Snapper konfiguráció a root partícióhoz",
+      "ssh_user": "Felhasználóspecifikus SSH kliens konfiguráció",
+      "sshd": "OpenSSH kiszolgáló démon konfigurációs fájlja",
+      "starship": "Starship cross-shell parancssori prompt konfigurációja",
+      "sudoers": "Meghatározza, mely felhasználók rendelkeznek sudo jogosultsággal",
+      "sway": "Sway Wayland kompozitor konfigurációja",
+      "sysctl": "Kernel paraméterek (hálózat, teljesítmény, biztonság)",
+      "systemd_network": "Konfigurációs fájlok a systemd-networkd számára",
+      "systemd_services": "Egyéni vagy felülbírált systemd szolgáltatásdefiníciók",
+      "systemd_timers": "systemd időzítők az ütemezett feladatokhoz",
+      "systemdSystem": "Globális systemd rendszerkonfiguráció",
+      "systemdUser": "Globális systemd felhasználói konfiguráció",
+      "timezone": "Beállítja a rendszer időzónáját",
+      "udev_rules": "udev szabályok a hardvereszközök működésének vezérléséhez",
+      "userdirs": "XDG felhasználói mappák konfigurációja",
+      "vconsole": "A virtuális konzol konfigurációja",
+      "waybar": "A Waybar állapotsor fő konfigurációja",
+      "waybarStyle": "CSS stíluslap a Waybar állapotsorhoz",
+      "wayfire": "3D Wayland kompozitor konfigurációja",
+      "wayland_conf": "Felhasználóspecifikus Wayland kompozitor konfigurációs fájlok",
+      "wireplumber": "WirePlumber munkamenet-kezelő konfigurációs könyvtára",
+      "wofi": "A Wofi alkalmazásindító konfigurációja",
+      "xfce4": "Az Xfce4 fő konfigurációs könyvtára",
+      "xorg_conf": "Hagyományos fő Xorg konfigurációs fájl",
+      "xorg_conf_d": "Könyvtár az Xorg konfigurációs töredékek számára",
+      "xorg_gpu": "GPU-specifikus Xorg konfiguráció (illesztőprogram választás, BusID, képernyőbeállítások)",
+      "xorg_monitor": "Monitor elrendezés, felbontás és frissítési gyakoriság Xorg-hoz",
+      "zramGenerator": "A zram-generator konfigurációja",
+      "zsh": "Az aktuális felhasználó Zsh konfigurációs fájlja"
+    },
+    "description": "Leírás",
+    "edit": "Szerkesztés",
+    "name": "Név",
+    "path": "Útvonal",
+    "search": "Konfigurációs fájlok keresése...",
+    "title": "Konfigurációs ",
+    "titleTwo": "fájlok",
+    "wiki": "Wiki"
   },
   "confirmation": {
     "accept": "Elfogadás",
-    "reject": "Mégse",
-    "exitApp": "Biztosan ki akarsz lépni az alkalmazásból?",
-    "exitAppRunningAction": "Biztosan ki akarsz lépni az alkalmazásból? Egy művelet fut!",
-    "resetConfigsHeader": "Konfigurációk visszaállítása?",
-    "resetConfigsBody": "Biztosan vissza akarod állítani a következő konfigurációkat?",
-    "exitAppHeader": "Kilépés az alkalmazásból?",
     "applyOperations": "Műveletek alkalmazása?",
-    "applyOperationsBody": "Biztosan alkalmazni akarod az összes függőben lévő műveletet?"
+    "applyOperationsBody": "Biztosan alkalmazni akarod az összes függőben lévő műveletet?",
+    "cancel": "Mégse",
+    "createSnapshotBefore": "Btrfs pillanatkép készítése végrehajtás előtt",
+    "exitApp": "Biztosan ki akarsz lépni az alkalmazásból?",
+    "exitAppHeader": "Kilépés az alkalmazásból?",
+    "exitAppRunningAction": "Biztosan ki akarsz lépni az alkalmazásból? Egy művelet fut!",
+    "password": "Jelszó",
+    "reject": "Mégse",
+    "resetConfigsBody": "Biztosan vissza akarod állítani a következő konfigurációkat?",
+    "resetConfigsHeader": "Konfigurációk visszaállítása?",
+    "save": "Gyorsítótárazás ebben a munkamenetben",
+    "subtitle": "Kérlek, add meg a jelszavad a folytatáshoz",
+    "title": "Hitelesítés szükséges",
+    "useOnce": "Csak egyszeri használat"
+  },
+  "console": {
+    "abortAll": "Összes művelet megszakítása",
+    "clearCachedData": "A kimeneti gyorsítótár törölve lett.",
+    "clearCachedDataTitle": "Kimeneti gyorsítótár törölve",
+    "clearOutputCache": "Kimeneti gyorsítótár törlése",
+    "copyOutput": "Terminál kimenet másolása",
+    "copyToClipboard": "A kimenet sikeresen a vágólapra lett másolva.",
+    "copyToClipboardTitle": "Vágólapra másolva",
+    "noOutput": "Nincs kimenet",
+    "noTasksPending": "Nincsenek függőben lévő feladatok",
+    "opRunning": "A művelet már fut.",
+    "outputExists": "Úgy tűnik, már fut egy művelet. Kérlek, várj, amíg befejeződik, mielőtt megpróbálnád megtekinteni a naplókat.",
+    "printScripts": "Parancsfájlok kiírása",
+    "removeAll": "Összes művelet eltávolítása",
+    "runActions": "Műveletek futtatása",
+    "tasksAppearHere": "A feladatok itt jelennek meg, amikor elemeket választasz ki.",
+    "title": "Terminál",
+    "uploadPrivateBin": "Feltöltés PrivateBin-re"
+  },
+  "diagnostics": {
+    "copySuccess": "Sikeresen vágólapra másolva",
+    "dmesg": "Kernelnaplók",
+    "dmesgDesc": "Kernel gyűrűpuffer (ring buffer) üzenetek vizsgálata.",
+    "exitCode": "A parancs {{code}} kilépési kóddal fejeződött be",
+    "failedCmd": "Valami hiba történt, és nem sikerült lekérni a diagnosztikai adatokat",
+    "failedCmdHeader": "Parancs futtatása sikertelen",
+    "full": "Teljes diagnosztika",
+    "fullDesc": "Minden elérhető diagnosztikai információ gyűjtése egyetlen kimenetbe.",
+    "health": "Rendszerállapot",
+    "healthDesc": "Rendszerállapot-ellenőrzés futtatása a garuda-health használatával.",
+    "inxi": "Általános infó",
+    "inxiDesc": "Részletes hardver- és rendszerinformációk gyűjtése.",
+    "journalctl": "Rendszernaplók",
+    "journalctlDesc": "A rendszernaplók vizsgálata a journal démontól.",
+    "pacman": "Legutóbbi Pacman naplók",
+    "pacmanDesc": "A legutóbbi pacman csomagkezelő naplók megtekintése.",
+    "subtitle": "Találd meg a rendszered hibakereséséhez szükséges információkat",
+    "success": "Siker",
+    "systemctl": "Rendszerszolgáltatások",
+    "systemctlDesc": "A rendszerindítási teljesítmény és a szolgáltatások állapotának elemzése.",
+    "title": "Hibakeresési infó ",
+    "titleTwo": "és diagnosztika",
+    "upload": "Feltöltés PrivateBin-re",
+    "uploadDesc": "A terminál aktuális kimenetének feltöltése a PrivateBin-re megosztás céljából.",
+    "uploadSuccess": "Sikeresen feltöltve PrivateBin-re, URL vágólapra másolva"
   },
   "error": {
     "sudoPassword": "Úgy tűnik, ez nem a helyes jelszó. Kérlek, próbáld újra."
   },
-  "operation": {
-    "removeApps": "Alkalmazások eltávolítása",
-    "installApps": "Alkalmazások telepítése",
-    "addGroup": "Felhasználó hozzáadása csoporthoz",
-    "removeGroup": "Felhasználó eltávolítása csoportból",
-    "disableService": "Szolgáltatás letiltása",
-    "enableService": "Szolgáltatás engedélyezése",
-    "setDefaultShell": "Alapértelmezett shell beállítása",
-    "enableHblock": "Hblock engedélyezése",
-    "disableHblock": "Hblock letiltása",
-    "setNewDnsServer": "Új DNS szerver beállítása",
-    "resetDnsServer": "DNS szerver visszaállítása",
-    "args": "Argumentumok",
-    "logs": "Naplók",
-    "remove": "Eltávolítás",
-    "abort": "Megszakítás",
-    "run": "Futtatás most"
-  },
-  "systemStatus": {
-    "pendingUpdates": "Függőben lévő frissítések",
-    "updates": "Ezen a rendszeren függőben lévő frissítések vannak (kattints az infóért)",
-    "pacFiles": "Ezen a rendszeren függőben lévő .pacnew fájlok vannak, ellenőrizned és egyesítened kellene őket! (kattints az infóért)",
-    "cancel": "Mégse",
-    "aurUpdates": "Az AUR csomagok frissítése kívül esik ennek az alkalmazásnak a hatókörén. Kérlek, használj egy AUR segédeszközt, mint a Paru, és ellenőrizd a PKGBUILD fájlokat telepítés előtt.",
-    "scheduleUpdates": "Frissítések ütemezése",
-    "pendingPacdiff": "Függőben lévő pacdiff fájlok",
-    "findMore": "Tudd meg, hogyan tovább",
-    "warnUpdate": "A rendszered 2 hete nem volt frissítve. Kérlek, frissítsd a rendszered a biztonság és stabilitás érdekében.",
-    "affectedFiles": "Érintett fájlok:",
-    "learnPacdiff": "Ha nem ismered a pacdiff fájlokat, gyorsan tájékozódj róluk.",
-    "openMaintenance": "Kattints az alábbi gombra a kezdéshez.",
-    "openMaintenanceButton": "Egyesítés indítása",
-    "rebootNow": "Újraindítás most",
-    "rebootNowBody": "Biztosan újra akarod indítani most? Győződj meg róla, hogy minden munkádat elmentetted, mielőtt folytatnád.",
-    "warnReboot": "Erősen ajánlott újraindítani a rendszert a frissítések alkalmazása után, különösen kernelek vagy asztali környezetek frissítésekor.",
-    "proceed": "Így haladj tovább:",
-    "snapshotCreation": "Egy Btrfs pillanatkép készül az egyesítés megkezdése előtt.",
-    "proceedMerge": "A Meld megnyílik a változtatások alkalmazásához. Bal oldalon az ÚJ fájl, jobb oldalon a RÉGI található. Mozgasd át a bal oldalról a jobb oldalra azokat a hasznos változtatásokat, amelyeket egyesíteni szeretnél. Kattints a mentés gombra vagy a CTRL + S billentyűkombinációra, ha kész vagy.",
-    "cautionMerge": "Légy tisztában vele, hogy helytelen változtatások beillesztése a RÉGI fájlba tönkreteheti a rendszered.",
-    "askHelp": "Ha bizonytalan vagy, zárd be az ablakot mentés nélkül, és kérj segítséget a Garuda Linux fórumán.",
-    "runAurUpdates": "AUR frissítések futtatása külsőleg"
-  },
-  "operationManager": {
-    "refusing": "Végrehajtás megtagadva",
-    "pendingOperationsRunning": "Műveletek futnak, csak a már befejezetteket fogom eltávolítani.",
-    "thisOperationRunning": "Megőrültél? Ez a művelet jelenleg fut!"
-  },
-  "os-interact": {
-    "packages": "Telepített csomagok módosítása",
-    "packages-aur": "AUR csomagok módosítása",
-    "services": "Szolgáltatások módosítása",
-    "services-user": "Felhasználói szolgáltatások módosítása",
-    "groups": "Felhasználói csoportok módosítása",
-    "locales": "Engedélyezett területi beállítások módosítása",
-    "configs": "Rendszerkonfigurációk módosítása",
-    "configs-user": "Felhasználói konfigurációk módosítása",
-    "configs-system": "Rendszerkonfigurációk módosítása"
-  },
-  "packages": {
-    "title": "Csomagok",
-    "icon": "Icon",
-    "internet": "Internet",
-    "documents": "Dokumentumok",
-    "multimedia": "Multimédia",
-    "science": "Tudomány",
-    "security": "Biztonság",
-    "other": "Egyéb",
-    "clear": "Törlés",
-    "search": "Keresés",
-    "url": "URL",
-    "selected": "Kiválasztva",
-    "description": "Leírás",
-    "name": "Név",
-    "searchKey": "Írj be egy keresőszót",
-    "notFound": "Nem található csomag"
+  "gaming": {
+    "antimicrox": "Grafikus program a billentyűzet gombjainak és az egérvezérlésnek játékvezérlőre való leképezéséhez",
+    "anydesk": "A gyors távoli asztali alkalmazás",
+    "bluez": "Általában szükséges a PS kontrollerek vezeték nélküli felismeréséhez",
+    "bottles": "Könnyen kezelheted a Wine és Proton előtagokat",
+    "boxtron": "Kompatibilitási eszköz DOS-játékok futtatásához a Steamen natív Linux DOSBoxon keresztül",
+    "controllers": "Kontroller támogatás",
+    "corectrl": "Rendszer- és hardvervezérlő alkalmazás",
+    "desmume": "Nintendo DS emulátor",
+    "dgenSdl": "Egy Sega Genesis/Mega Drive emulátor SDL-re portolva",
+    "discord": "Minden egyben hang- és szöveges csevegő játékosoknak",
+    "displaycal": "Nyílt forráskódú kijelzőkalibrálás és profilalkotás az Argyll CMS támogatásával",
+    "dolphinEmu": "Egy Gamecube és Wii emulátor",
+    "dosbox": "Emulátor beépített DOS-szal DOS-os játékok futtatásához",
+    "droidcam": "Segédprogram a telefonod/táblagéped vezeték nélküli/USB webkamerává alakításához",
+    "duckstation": "Playstation emulátor (utolsó GPL verzió)",
+    "dxvk": "Vulkan-alapú kompatibilitási réteg Direct3D 9/10/11-hez, amely lehetővé teszi 3D alkalmazások futtatását Linuxon Wine segítségével",
+    "easyeffects": "Hangeffektusok PipeWire alkalmazásokhoz",
+    "eka2l1": "Kísérleti Symbian OS emulátor",
+    "emulationstation": "Az EmulationStation egy rugalmas emulátor előtétprogram, billentyűzet nélküli navigációval és egyéni témákkal",
+    "emulators": "Emulátorok",
+    "fceux": "Gyors és rendkívül kompatibilis NES/Famicom emulátor",
+    "fsUae": "Egy UAE/WinUAE alapú Amiga emulátor a játékok emulálására fókuszálva",
+    "gameconqueror": "Memóriaszkenner tetszőleges változók címének felderítésére egy futó folyamatban",
+    "gamemode": "Egy démon/könyvtár kombináció, amely lehetővé teszi a játékok számára, hogy átmeneti optimalizációkat kérjenek a gazdagépen",
+    "games": "Játékok",
+    "gamescope": "SteamOS munkamenet-kompozitor ablakkezelő",
+    "gamescopeSession": "Gamescope munkamenet kompozitáló ablakkezeléshez",
+    "gamescopeSessionSteam": "Steam játékra optimalizált Gamescope munkamenet",
+    "goverlay": "Grafikus felület a Vulkan/OpenGL fedvények egyszerű kezeléséhez",
+    "gwe": "Rendszereszköz NVIDIA GPU-k vezérléséhez",
+    "hatari": "Egy Atari ST és STE emulátor",
+    "heroic": "Egy nyílt forráskódú indító Epic, Amazon és GOG játékokhoz",
+    "inputRemapper": "Eszköz a beviteli eszközök gombkiosztásának módosítására és programozására",
+    "itch": "Telepítő az itch.io asztali alkalmazáshoz",
+    "kegaFusion": "Klasszikus Sega konzolok emulátora, beleértve az SMS/GG, Genesis/Megadrive rendszereket és kiegészítőket",
+    "keyboardVisualizer": "Alakítsd át az OpenRGB által támogatott RGB beállításodat látványos fényjátékká a zenédhez",
+    "lact": "Linux GPU konfigurációs eszköz",
+    "launchers": "Játékindítók",
+    "libretroMeta": "Metacsomag az összes támogatott Libretro emulátorhoz",
+    "loading": "Betöltés...",
+    "lutris": "Nyílt játékplatform",
+    "luxtorpeda": "Steam Play kompatibilitási eszköz játékok natív Linux motorokkal történő futtatásához",
+    "mame": "A népszerű Multiple Arcade Machine Emulator portja SDL és OpenGL támogatással",
+    "mangohud": "Egy Vulkan fedvényréteg az FPS, hőmérsékletek, CPU/GPU terhelés és egyéb adatok figyelésére",
+    "mednafen": "Parancssori többplatformos játékemulátor",
+    "mgba": "Sebességre és pontosságra fókuszáló Nintendo Gameboy Advance emulátor",
+    "minigalaxy": "Egy egyszerű GOG kliens Linuxra",
+    "misc": "Egyéb",
+    "mumble": "Nyílt forráskódú, alacsony késleltetésű, kiváló minőségű hangcsevegő szoftver",
+    "nestopia": "Nagy pontosságú NES/Famicom emulátor",
+    "noisetorch": "Valós idejű mikrofonzaj-szűrés Linuxon",
+    "nyrna": "Függeszd fel a játékokat és alkalmazásokat bármikor, és folytasd, amikor csak akarod",
+    "obsStudio": "Ingyenes, nyílt forráskódú szoftver élő közvetítéshez és rögzítéshez",
+    "openrgb": "Nyílt forráskódú RGB világításvezérlés, amely független a gyártói szoftverektől",
+    "oversteer": "Grafikus alkalmazás Logitech kormányok konfigurálásához",
+    "pcsx2": "PlayStation 2 emulátor",
+    "pegasusFrontend": "Platformfüggetlen, testreszabható grafikus felület emulátorok indításához és a játékgyűjteményed kezeléséhez",
+    "piper": "GTK alkalmazás gamer egerek konfigurálásához",
+    "polychromatic": "RGB világításkezelő előtétprogram OpenRazerhez",
+    "ppsspp": "C++ nyelven írt PSP emulátor",
+    "protonCachyOS": "A Valve Proton disztribúciója CachyOS javításokkal és egyéb optimalizációkkal",
+    "protonGeCustom": "A Valve Proton fejlett, egyéni disztribúciója különféle javításokkal",
+    "protontricks": "Egy egyszerű wrapper, amely Winetricks műveleteket végez a Proton-kompatibilis játékokhoz",
+    "protonupQt": "A Proton-GE és Luxtorpeda telepítése és kezelése a Steamhez, valamint a Wine-GE a Lutrishoz",
+    "retroarch": "Referencia előtétprogram a libretro API-hoz",
+    "rpcs3": "PlayStation 3 emulátor",
+    "ryujinx": "Kísérleti Nintendo Switch emulátor C# nyelven",
+    "sameboy": "Pontosságra törekvő Game Boy/Game Boy Color emulátor",
+    "scController": "Felhasználói szintű illesztőprogram, billentyűleképező és GTK3 grafikus felület Steam Controllerhez, DS4-hez és hasonló vezérlőkhöz",
+    "scummvm": "Egy 'virtuális gép' számos klasszikus grafikus point-and-click kalandjátékhoz",
+    "snes9x": "Hordozható Super Nintendo Entertainment System (TM) emulátor",
+    "soundwire": "Bármilyen hang vezeték nélküli átvitele a számítógépedről Android telefonodra vagy más PC-kre",
+    "steamNative": "Natív helyettesítő a Steam futtatókörnyezethez rendszerkönyvtárak használatával",
+    "steamRuntime": "A Valve digitális szoftverterjesztési rendszere",
+    "steamtinkerlaunch": "Wrapper parancsfájl a Steam egyéni indítási beállításaihoz",
+    "stella": "Atari 2600 VCS emulátor",
+    "streamlinkTwitchGui": "Többplatformos Twitch.tv böngésző Streamlinkhez",
+    "subtitle": "Kezdjünk neki néhány játékalkalmazással!",
+    "title": "Játék ",
+    "titleTwo": "alkalmazások",
+    "tools": "Játékeszközök",
+    "torzu": "Még egy emulátor fork",
+    "vesktop": "A Vesktop egy testreszabható és magánszférát tiszteletben tartó Discord asztali alkalmazás",
+    "vice": "Sokoldalú Commodore emulátor",
+    "vkbasalt": "Egy Vulkan utófeldolgozó réteg. Néhány effektus: CAS, FXAA, SMAA, deband",
+    "vlc": "Többplatformos MPEG, VCD/DVD és DivX lejátszó",
+    "vrVideoPlayer": "Videolejátszó VR-tartalmakhoz",
+    "waydroid": "Python parancsfájl OpenGapps, Magisk, libhoudini és libndk fordítási könyvtárak hozzáadásához a Waydroidhoz",
+    "wine": "WINE",
+    "wineMeta": "Metacsomag a WINE és az összes szükséges függőség telepítéséhez",
+    "winePackage": "Kompatibilitási réteg Windows-programok futtatásához",
+    "wineStaging": "Kompatibilitási réteg Windows-programok futtatásához – Staging ág",
+    "winetricks": "Parancsfájl különféle újraterjeszthető futtatókörnyezeti könyvtárak telepítéséhez Wine alá",
+    "xboxdrv": "Xbox kontroller illesztőprogram, csak akkor használd, ha a kernel illesztőprogram nem működik!",
+    "xemu": "Eredeti Xbox emulátor",
+    "xoneDkms": "Modern Linux illesztőprogram Xbox One és Xbox Series X|S kontrollerekhez",
+    "xoneDongleFirmware": "Xbox vezeték nélküli adapter firmware",
+    "xpadneo": "Fejlett Linux illesztőprogram Xbox One vezeték nélküli kontrollerhez",
+    "zsnes": "Super Nintendo emulátor"
   },
   "kernels": {
+    "active": "Aktív kernel:",
     "dkmsModulesBroken": "Néhány DKMS modul hibás",
     "dkmsModulesBrokenTip": "Kattints ide a hibás DKMS modulok telepítésének ütemezéséhez",
     "dkmsModulesMissing": "Néhány DKMS modul hiányzik",
     "dkmsModulesMissingTip": "Hiányzó DKMS modulok",
     "headers": "Fejlécek",
     "headersMissing": "Hiányzó kernel fejlécek",
-    "headersMissingTip": "Kattints ide a hiányzó fejlécek telepítésének ütemezéséhez",
-    "active": "Aktív kernel:"
+    "setDefault": "Alapértelmezett kernel beállítása"
+  },
+  "lang": {
+    "title": "Nyelvválasztás",
+    "tooltip": "Válaszd ki a preferált nyelvet"
   },
   "languagePacks": {
-    "locale": "Területi beállítás",
-    "selected": "Kiválasztva",
     "base": "Alapcsomag",
+    "description": "Ezek a telepített csomagjaid nyelvi csomagjai, általában a GUI fordításait biztosítják.",
+    "locale": "Területi beállítás",
     "notFound": "Nem található nyelvi csomag",
     "pkgname": "Csomagnév",
-    "description": "Ezek a telepített csomagjaid nyelvi csomagjai, általában a GUI fordításait biztosítják."
-  },
-  "settings": {
-    "title": "Alkalmazás ",
-    "icon": "Icon",
-    "titleTwo": "beállításai",
-    "leftButtons": "Ablakgombok megjelenítése bal oldalon",
-    "copyDiagnostics": "Diagnosztika másolása vágólapra",
-    "darkMode": "Sötét mód engedélyezése",
-    "language": "Aktív nyelv konfigurálása",
-    "autoStart": "Alkalmazás automatikus indítása",
-    "logLevel": "Válassza ki a naplózási szintet",
-    "systemdUserContext": "Felhasználói Systemd szolgáltatások megjelenítése",
-    "autoRefresh": "Systemd szolgáltatások automatikus frissítésének engedélyezése",
-    "showMainLinks": "Linkek megjelenítése a kezdőlapon",
-    "themeLabel": "Alap dizájntéma",
-    "toggleOptions": "Beállítások váltása",
-    "selectOptions": "Kiválasztások"
+    "selected": "Kiválasztva"
   },
   "locales": {
     "apply": "Telepített területi beállítások változásainak ütemezése",
-    "description": "A jobb oldalon lévő területi beállítások vannak telepítve a rendszereden. Kiválaszthatod, melyeket szeretnéd megtartani és melyeket eltávolítani.",
     "available": "Elérhető",
+    "description": "A jobb oldalon lévő területi beállítások vannak telepítve a rendszereden. Kiválaszthatod, melyeket szeretnéd megtartani és melyeket eltávolítani.",
     "selected": "Kiválasztva",
-    "task": "Rendszer területi beállításának módosítása",
-    "selectLocale": "Válaszd ki a preferált rendszerszintű nyelvet"
+    "selectLocale": "Válaszd ki a preferált rendszerszintű nyelvet",
+    "task": "Rendszer területi beállításának módosítása"
   },
-  "console": {
-    "title": "Terminál",
-    "icon": "Icon",
-    "runActions": "Műveletek futtatása",
-    "removeAll": "Összes művelet eltávolítása",
-    "abortAll": "Összes művelet megszakítása",
-    "noOutput": "Nincs kimenet",
-    "outputExists": "Úgy tűnik, már fut egy művelet. Kérlek, várj, amíg befejeződik, mielőtt megpróbálnád megtekinteni a naplókat.",
-    "opRunning": "A művelet már fut.",
-    "clearCachedDataTitle": "Kimeneti gyorsítótár törölve",
-    "clearCachedData": "A kimeneti gyorsítótár törölve lett.",
-    "clearOutputCache": "Kimeneti gyorsítótár törlése",
-    "copyOutput": "Terminál kimenet másolása",
-    "copyToClipboardTitle": "Vágólapra másolva",
-    "copyToClipboard": "A kimenet sikeresen a vágólapra lett másolva.",
-    "uploadPrivateBin": "Feltöltés PrivateBin-re"
+  "maintenance": {
+    "actionFailed": "Hiba történt a(z) {{ action }} futtatásakor: {{ error }}.",
+    "actionFailedHeader": "A karbantartási művelet futtatása sikertelen",
+    "addPending": "Hozzáadás a függőben lévőkhöz",
+    "addPendingSub": "Függőben lévő műveletek hozzáadása",
+    "btrfsAssistant": "Btrfs Assistant",
+    "btrfsAssistantSub": "Kezeld a BTRFS pillanatképeidet és futtass karbantartási feladatokat",
+    "cleanCache": "Gyorsítótár tisztítása",
+    "cleanCacheSub": "Az összes gyorsítótárazott csomag eltávolítása",
+    "clearOrphans": "Árva csomagok törlése",
+    "clearOrphansSub": "Árva csomagok eltávolítása",
+    "common": "Általános karbantartás",
+    "editRepos": "Tárolók szerkesztése",
+    "editReposSub": "Szerkeszd a tárolóidat a Pace segítségével",
+    "failedReset": "Hiba a konfigurációs fájl visszaállításakor",
+    "failedResetFile": "Hiba történt a(z) {{file}} visszaállítása során",
+    "garudaHealth": "Rendszerállapot-ellenőrzés",
+    "garudaHealthFix": "Rendszerállapot javítása",
+    "garudaHealthFixSub": "Gyakori rendszerproblémák automatikus javítási kísérlete",
+    "garudaHealthSub": "Gyakori rendszerproblémák ellenőrzése a garuda-health használatával",
+    "garudaUpdate": "Garuda frissítésmentő eszközök",
+    "installationFailedHeader": "A(z) {{ program }} nincs telepítve, és a telepítése nem sikerült, a művelet nem folytatható. További információkért ellenőrizd a naplófájlokat",
+    "mergePacDiff": "Pacdiff fájlok egyesítése",
+    "mergePacDiffSub": "A .pacnew és .pacsave fájlok interaktív egyesítése",
+    "onlyDirect": "Ez a művelet nem sorolható be, és közvetlenül kell futtatni.",
+    "refreshArchMirrors": "Tükörszerverek frissítése",
+    "refreshArchMirrorsSub": "Frissítsd az Arch Linux tükörszerver-listádat",
+    "refreshChaoticMirrors": "Chaotic-AUR tükörszerverlista frissítése",
+    "refreshChaoticMirrorsSub": "A Chaotic-AUR tükörszerverek listájának frissítése",
+    "refreshChaoticMirrorsSuccess": "A Chaotic-AUR tükörszerverlista sikeresen frissítve",
+    "refreshKeyring": "Kulcstartó frissítése",
+    "refreshKeyringSub": "A pacman kulcstartó frissítése",
+    "reinstallDkmsModules": "DKMS modulok újratelepítése",
+    "reinstallPackages": "Csomagok újratelepítése",
+    "reinstallPackagesSub": "Az összes csomag újratelepítése a rendszereden",
+    "removeLock": "Pacman zárolás eltávolítása",
+    "removeLockSub": "A pacman zárolási fájl eltávolítása",
+    "removePending": "Eltávolítás a függőben lévőkből",
+    "resetConfigs": "Konfigurációk visszaállítása alapértelmezett állapotba",
+    "resetTooltip": "A következő fájlok vagy mappák vissza lesznek állítva az alapértelmezett állapotukba:",
+    "runNow": "Futtatás most",
+    "subtitle": "Tartsd a rendszered jó állapotban",
+    "taskRunning": "Már fut egy feladat, várj, amíg befejeződik.",
+    "taskRunningHeader": "Hiba a karbantartási művelet futtatásakor",
+    "title": "Rendszer ",
+    "titleTwo": "karbantartás",
+    "update": "Frissítsd a rendszered",
+    "updateRemoteFix": "Garuda frissítés javítása",
+    "updateRemoteFixSub": "A pacman.conf, tükörszerverlisták és a kulcstartó visszaállítása a Garuda alapértelmezett értékeire",
+    "updateRemoteFullFix": "Garuda frissítés teljes javítása",
+    "updateRemoteFullFixSub": "A Pacman teljes visszaállítása és az összes csomag újratelepítése",
+    "updateRemoteKeyring": "Garuda kulcstartó frissítése",
+    "updateRemoteKeyringSub": "A kulcstartó visszaállítása a Garuda alapértelmezett értékeire",
+    "updateRemoteResetAudio": "Hang visszaállítása",
+    "updateRemoteResetAudioSub": "A PipeWire hangkonfiguráció újratelepítése/visszaállítása",
+    "updateRemoteResetSnapper": "Snapper visszaállítása",
+    "updateRemoteResetSnapperSub": "A Snapper teljes visszaállítása és a konfigurációk újralétrehozása",
+    "updateSystem": "Rendszerfrissítés",
+    "updateSystemSub": "Frissítsd a rendszered a garuda-update segítségével"
+  },
+  "menu": {
+    "apply": "Függőben lévő műveletek alkalmazása",
+    "boot": "Indítási eszközök",
+    "bootRepair": "Rendszertöltő-javítás",
+    "clearTasks": "Feladatok törlése",
+    "components": "Komponensek",
+    "configFiles": "Konfigurációs fájlok",
+    "console": "Terminál megjelenítése",
+    "diagnostics": "Diagnosztika",
+    "file": {
+      "preferences": "Beállítások",
+      "quit": "Kilépés",
+      "title": "Fájl"
+    },
+    "gaming": "Játék",
+    "help": {
+      "about": "A Garuda Toolbox névjegye",
+      "aboutBody": "A Garuda Toolbox egy rendszerkarbantartó és diagnosztikai eszköz a Garuda Linuxhoz. Célja, hogy segítse a felhasználókat a rendszerük karbantartásában és a problémák diagnosztizálásában. Electron és Angular segítségével készült.",
+      "aboutForum": "Fórum",
+      "aboutSourceCode": "Forráskód",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wiki",
+      "callExorcist": "Hívd az ördögűzőt",
+      "callExorcistBody": "Elég kétségbeesettnek kell lenned, hogy erre a gombra kattints! Beállítottam neked néhány különleges voodoo-t, ha továbbra is problémáid vannak az alkalmazással, kérlek, jelentsd őket a Garuda Linux fórumán vagy a hibakövetőnkben.",
+      "callExorcistTitle": "Hívtad az ördögűzőt!",
+      "garudaStatus": "Üzemidő állapotának ellenőrzése",
+      "getHelpArchWiki": "Keresés az Arch Wikiben",
+      "getHelpForum": "Segítségkérés a fórumon",
+      "getHelpWiki": "Keresés a wikiben",
+      "title": "Segítség"
+    },
+    "maintenance": "Karbantartás",
+    "modules": {
+      "appSettings": "Alkalmazás beállításai",
+      "bootRepair": "Rendszertöltő-javítás",
+      "components": "Rendszerkomponensek",
+      "diagnostics": "Diagnosztika",
+      "gaming": "Játék",
+      "kernels": "Kernelek",
+      "locales": "Területi beállítások",
+      "maintenance": "Karbantartás",
+      "packages": "Alkalmazások felfedezése",
+      "search": "Keresési beállítások",
+      "setupWizard": "Telepítő varázsló",
+      "systemdServices": "Systemd szolgáltatások",
+      "systemSettings": "Rendszerbeállítások",
+      "title": "Modulok",
+      "userManager": "Felhasználókezelő",
+      "welcome": "Üdvözlünk"
+    },
+    "network": "Hálózati eszközök",
+    "packages": "Alkalmazások felfedezése",
+    "pending": "Függőben",
+    "settings": "Alkalmazás beállításai",
+    "setupWizard": "Telepítő varázsló",
+    "systemTools": "Rendszerbeállítások",
+    "terminalRunning": "Futó feladatok",
+    "terminalTasks": "Feladatok végrehajtása",
+    "welcome": "Üdvözlünk"
+  },
+  "networkAssistant": {
+    "actions": "Műveletek",
+    "active": "Aktív",
+    "airplaneMode": "Repülőgép üzemmód",
+    "any": "Bármelyik",
+    "blacklistAction": "{{name}} feketelistára helyezése",
+    "blacklistDriver": "Hozzáadás a feketelistához",
+    "blacklistedDrivers": "Feketelistás illesztőprogramok",
+    "blacklistFailed": "A feketelista frissítése sikertelen",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth eszközök",
+    "cancel": "Mégse",
+    "category": "Kategória",
+    "clear": "Törlés",
+    "clickToCopy": "Kattints a másoláshoz",
+    "connected": "Csatlakoztatva",
+    "connectionInfo": "Kapcsolati információ",
+    "connman": "ConnMan",
+    "copied": "Vágólapra másolva",
+    "copyAll": "Összes másolása",
+    "count": "Darabszám",
+    "disabled": "Letiltva",
+    "disconnected": "Lecsatlakoztatva",
+    "driver": "Illesztőprogram",
+    "driverBlacklisted": "Illesztőprogram feketelistára helyezve",
+    "driverLoaded": "Illesztőprogram sikeresen betöltve",
+    "driverUnblacklisted": "Illesztőprogram eltávolítva a feketelistáról",
+    "driverUnloaded": "Illesztőprogram sikeresen eltávolítva",
+    "enable": "Engedélyezés",
+    "enabled": "Engedélyezve",
+    "enableService": "Szolgáltatás engedélyezése",
+    "enableServiceFailed": "A szolgáltatás engedélyezése sikertelen",
+    "error": "Hiba",
+    "errorFetch": "A hálózati információk lekérése sikertelen",
+    "ethernetControllers": "Ethernet vezérlők",
+    "externalIp": "Külső IP-cím",
+    "gps": "GPS",
+    "hardwareInfo": "Hardverinformáció",
+    "hotspotFailed": "A hotspot megnyitása sikertelen",
+    "inactive": "Inaktív",
+    "installDriver": "Illesztőprogram telepítése",
+    "installTraceroute": "Traceroute telepítése",
+    "installWihotspot": "Wi-Fi Hotspot telepítése",
+    "interface": "Interfész",
+    "internet": "Internet",
+    "loadDriver": "Illesztőprogram betöltése",
+    "loadDriverAction": "{{name}} illesztőprogram betöltése",
+    "loadDriverFailed": "Az illesztőprogram betöltése sikertelen",
+    "loadedDrivers": "Betöltött illesztőprogramok",
+    "maxHops": "Max ugrás (hops)",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Nem találhatók hálózati illesztőprogramok",
+    "noHardware": "Nem észlelhető hálózati hardver",
+    "notAvailable": "Nem érhető el",
+    "off": "Ki",
+    "on": "Be",
+    "openHotspot": "Hotspot megnyitása",
+    "outputInTerminal": "A kimenet az alábbi terminálban látható",
+    "ping": "Ping",
+    "pingFailed": "A ping futtatása sikertelen",
+    "quickToggles": "Gyorskapcsolók",
+    "routerIp": "Router IP-címe",
+    "runPing": "Ping futtatása",
+    "runTraceroute": "Traceroute futtatása",
+    "search": "Keresés",
+    "serviceEnabled": "A szolgáltatás sikeresen engedélyezve",
+    "services": "Szolgáltatások",
+    "status": "Állapot",
+    "success": "Siker",
+    "tabs": {
+      "diagnostics": "Diagnosztika",
+      "drivers": "Illesztőprogramok",
+      "hardware": "Hardver",
+      "status": "Állapot"
+    },
+    "targetHost": "Célkiszolgáló",
+    "timeout": "Időtúllépés (mp)",
+    "title": "Hálózati ",
+    "titleTwo": "asszisztens",
+    "toggleAirplane": "Repülőgép üzemmód váltása",
+    "toggleAirplaneFailed": "A repülőgép üzemmód váltása sikertelen",
+    "toggleBt": "Bluetooth ki-/bekapcsolása",
+    "toggleBtFailed": "A Bluetooth ki-/bekapcsolása sikertelen",
+    "toggleGps": "GPS ki-/bekapcsolása",
+    "toggleGpsFailed": "A GPS ki-/bekapcsolása sikertelen",
+    "toggleWifi": "Wi-Fi ki-/bekapcsolása",
+    "toggleWifiFailed": "A Wi-Fi ki-/bekapcsolása sikertelen",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "A traceroute futtatása sikertelen",
+    "type": "Típus",
+    "unblacklistDriver": "Eltávolítás a feketelistáról",
+    "unloadDriver": "Illesztőprogram eltávolítása",
+    "unloadDriverAction": "{{name}} illesztőprogram eltávolítása",
+    "unloadDriverFailed": "Az illesztőprogram eltávolítása sikertelen",
+    "unloadedDrivers": "Betöltetlen illesztőprogramok",
+    "whitelistAction": "{{name}} engedélyezése (fehérlista)",
+    "wifi": "Wi-Fi",
+    "wifiHotspot": "Wi-Fi hotspot",
+    "wifiHotspotDesc": "Wi-Fi hotspot konfiguráció megnyitása",
+    "wirelessControllers": "Vezeték nélküli vezérlők"
+  },
+  "operation": {
+    "abort": "Megszakítás",
+    "addGroup": "Felhasználó hozzáadása csoporthoz",
+    "args": "Argumentumok",
+    "disableHblock": "Hblock letiltása",
+    "disableService": "Szolgáltatás letiltása",
+    "enableHblock": "Hblock engedélyezése",
+    "enableService": "Szolgáltatás engedélyezése",
+    "installApps": "Alkalmazások telepítése",
+    "logs": "Naplók",
+    "remove": "Eltávolítás",
+    "removeApps": "Alkalmazások eltávolítása",
+    "removeGroup": "Felhasználó eltávolítása csoportból",
+    "resetDnsServer": "DNS szerver visszaállítása",
+    "run": "Futtatás most",
+    "setDefaultShell": "Alapértelmezett shell beállítása",
+    "setNewDnsServer": "Új DNS szerver beállítása"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Műveletek futnak, csak a már befejezetteket fogom eltávolítani.",
+    "refusing": "Végrehajtás megtagadva",
+    "thisOperationRunning": "Megőrültél? Ez a művelet jelenleg fut!"
+  },
+  "os-interact": {
+    "boot-options": "Rendszerindítási beállítások alkalmazása",
+    "configs": "Rendszerkonfigurációk módosítása",
+    "configs-system": "Rendszerkonfigurációk módosítása",
+    "configs-user": "Felhasználói konfigurációk módosítása",
+    "garuda-update-config": "Garuda Update beállítások alkalmazása",
+    "groups": "Felhasználói csoportok módosítása",
+    "locales": "Engedélyezett területi beállítások módosítása",
+    "packages": "Telepített csomagok módosítása",
+    "packages-aur": "AUR csomagok módosítása",
+    "services": "Szolgáltatások módosítása",
+    "services-user": "Felhasználói szolgáltatások módosítása"
+  },
+  "packages": {
+    "any": "Bármelyik",
+    "clear": "Törlés",
+    "description": "Leírás",
+    "documents": "Dokumentumok",
+    "icon": "Ikon",
+    "internet": "Internet",
+    "multimedia": "Multimédia",
+    "name": "Név",
+    "notFound": "Nem található csomag",
+    "other": "Egyéb",
+    "science": "Tudomány",
+    "search": "Keresés",
+    "searchKey": "Írj be egy keresőszót",
+    "security": "Biztonság",
+    "selected": "Kiválasztva",
+    "status": "Állapot",
+    "title": "Alkalmazások ",
+    "titleTwo": "felfedezése",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "Systemd szolgáltatások automatikus frissítésének engedélyezése",
+    "autoStart": "Alkalmazás automatikus indítása",
+    "backgroundFit": "Háttér illesztése az alkalmazáshoz",
+    "backgroundSettings": "Háttér beállításai",
+    "blurBackground": "Háttér elhomályosítása",
+    "blurStrength": "Homályosítás erőssége",
+    "clearBackground": "Háttér törlése",
+    "copyDiagnostics": "Diagnosztika másolása vágólapra",
+    "customBackground": "Egyéni háttér",
+    "darkMode": "Sötét mód engedélyezése",
+    "language": "Aktív nyelv konfigurálása",
+    "leftButtons": "Ablakgombok megjelenítése bal oldalon",
+    "logLevel": "Válaszd ki a naplózási szintet",
+    "noBackgroundSelected": "Nincs háttérkép kiválasztva",
+    "selectOptions": "Kiválasztások",
+    "showMainLinks": "Linkek megjelenítése a kezdőlapon",
+    "systemdUserContext": "Felhasználói Systemd szolgáltatások megjelenítése",
+    "themeLabel": "Alap dizájntéma",
+    "title": "Alkalmazás ",
+    "titleTwo": "beállításai",
+    "toggleOptions": "Beállítások váltása"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Kattints az 'Alkalmaz' gombra a telepítési és konfigurációs folyamat elindításához.",
+      "failedBody": "Valami hiba történt a telepítés során. Újrapróbálhatod a végrehajtást, vagy visszaléphetsz a kijelölés módosításához.",
+      "failedHeader": "A végrehajtás sikertelen",
+      "header": "Készen áll az alkalmazásra"
+    },
+    "autoCategories": {
+      "audio": "Hang",
+      "browsers": "Böngészők",
+      "communication": "Kommunikáció",
+      "development": "Fejlesztés",
+      "gaming": "Játék",
+      "graphics": "Grafika",
+      "inputMethod": "Beviteli módok",
+      "internet": "Internet",
+      "kernels": "Kernelek",
+      "mail": "Levelezés",
+      "multimedia": "Multimédia",
+      "office": "Iroda",
+      "other": "Egyéb",
+      "pkgmngrs": "Szoftverközpontok",
+      "video": "Videó",
+      "virtualization": "Virtualizáció"
+    },
+    "autoSoftware": {
+      "0ad": "3D történelmi alapú valós idejű stratégiai játék",
+      "abiWord": "Teljes funkcionalitású szövegszerkesztő",
+      "aisleriot": "Paciens kártyajáték-gyűjtemény",
+      "ansible": "Hivatalos Ansible gyűjtemények",
+      "appimagePool": "Modern AppImageHub kliens",
+      "ardour": "Professzionális szintű digitális hangszerkesztő munkaállomás (DAW)",
+      "asian": "Gyakori ázsiai betűkészleteket tartalmazó metacsomag",
+      "audacious": "Könnyűsúlyú, fejlett zenelejátszó",
+      "audacity": "Program digitális hanghullámformák kezelésére és szerkesztésére",
+      "bakaMplayer": "Platformfüggetlen, libmpv alapú multimédia-lejátszó",
+      "bauh": "Grafikus felület alkalmazások kezelésére",
+      "bazaar": "Flatpak-fókuszú alkalmazásbolt",
+      "birdfont": "Betűkészlet-szerkesztő vektorgrafikához",
+      "bitwigStudio": "Digitális hangszerkesztő munkaállomás zenei produkcióhoz",
+      "blender": "Teljesen integrált 3D grafikai alkotói csomag",
+      "brasero": "CD/DVD író eszköz",
+      "brave": "Webböngésző, amely alapértelmezés szerint blokkolja a hirdetéseket és nyomkövetőket",
+      "calligra": "Produktivitási és kreatív alkalmazáscsomag",
+      "chromium": "Sebességre, egyszerűségre és biztonságra épített webböngésző",
+      "clawsMail": "GTK+ alapú e-mail kliens",
+      "cockpit": "Webalapú felhasználói felület Linux kiszolgálókhoz",
+      "conky": "Könnyűsúlyú rendszermonitor",
+      "converseen": "Kötegelt képatméretező és -konvertáló",
+      "darktable": "Eszköz nyers képek rendszerezéséhez és előhívásához",
+      "deluge": "Könnyűsúlyú, teljes funkcionalitású BitTorrent kliens",
+      "digikam": "Fejlett digitális fotókezelő alkalmazás",
+      "discord": "Minden egyben hang- és szöveges csevegő",
+      "discover": "KDE alkalmazás- és erőforráskezelő",
+      "docker": "Alkalmazások csomagolása, szállítása és futtatása konténerekként",
+      "dragon": "Egyszerűségre fókuszáló médialejátszó",
+      "droidcam": "Alakítsd telefonodat/táblagépedet webkamerává",
+      "easytag": "Alkalmazás hangcímkék megtekintésére és szerkesztésére",
+      "element": "Elegáns Matrix együttműködési kliens",
+      "elisa": "Egyszerű zenelejátszó a KDE-től",
+      "evolution": "Kezeld az e-mailjeidet, névjegyeidet és naptáradat",
+      "falkon": "Platformfüggetlen QtWebEngine-alapú böngésző",
+      "fdm": "Hatékony modern letöltésgyorsító és rendszerező",
+      "filezilla": "Gyors és megbízható FTP, FTPS és SFTP kliens",
+      "firedragon": "Adatvédelem-központú Floorp fork Garuda arculattal",
+      "firedragonCatppuccin": "Firedragon böngésző Catppuccin témával",
+      "firefox": "Gyors, privát és biztonságos webböngésző",
+      "firefoxEsr": "Firefox kiterjesztett támogatású kiadás (ESR)",
+      "fontForge": "Körvonalas és bittérképes betűkészlet-szerkesztő",
+      "fractal": "Matrix csoportos üzenetküldő alkalmazás a GNOME-hoz",
+      "freeCad": "Funkcióalapú parametrikus 3D CAD modellező",
+      "freeOffice": "Microsoft Office-kompatibilis irodai csomag",
+      "geary": "Könnyűsúlyú e-mail kliens a GNOME-hoz",
+      "genymotion": "Virtuális környezet Androidhoz",
+      "gimp": "GNU képszerkesztő program",
+      "github": "Grafikus felület a Git és GitHub kezeléséhez",
+      "gitKraken": "Intuitív, gyors és gyönyörű Git-kliens",
+      "gnomeBoxes": "Egyszerű alkalmazás virtuális rendszerek eléréséhez",
+      "gnomeBuilder": "IDE GNOME-alapú szoftverek írásához",
+      "gnomeFirmware": "Firmware kezelése a támogatott eszközökön",
+      "gnomeSoftware": "GNOME alkalmazás- és erőforráskezelő",
+      "gnu": "Bővíthető, testreszabható valós idejű megjelenítésű szerkesztő",
+      "gnuCash": "Pénzügyi és könyvelési alkalmazás",
+      "gnumeric": "Táblázatkezelő alkalmazás a GNOME-hoz",
+      "handbrake": "Többszálú videó átkódoló",
+      "hedgewars": "Körökre osztott tüzérségi stratégiai játék",
+      "homebank": "Ingyenes, egyszerű személyes könyvelés",
+      "hypnotix": "IPTV streamelő alkalmazás",
+      "indic": "Beviteli módok indiai nyelvekhez",
+      "inkscape": "Professzionális vektorgrafikus szerkesztő",
+      "intellijIdea": "IDE Java és egyéb programozási nyelvekhez",
+      "japanese": "Beviteli módok japánhoz",
+      "jenkins": "Bővíthető folyamatos integrációs szerver",
+      "jitsiMeet": "Jitsi Meet asztali alkalmazás",
+      "joplin": "Jegyzetelő és teendőkezelő alkalmazás",
+      "k3b": "Funkciógazdag CD-író alkalmazás",
+      "kapman": "A jól ismert Pac-Man játék klónja",
+      "kdenlive": "Nemlineáris videószerkesztő",
+      "kDevelop": "C++ IDE KDE technológiák használatával",
+      "keepassXc": "Platformfüggetlen jelszókezelő",
+      "kiCad": "Elektronikai kapcsolási rajz és NYÁK tervező eszközök",
+      "kid3": "Hangcímke-szerkesztő",
+      "kmahjongg": "Párkereső játék egy vagy két játékos számára",
+      "kmail": "KDE levelezőkliens",
+      "kMyMoney": "Személyes pénzügykezelő",
+      "knights": "Sakktábla a KDE-től",
+      "kodi": "Médialejátszó és szórakoztató központ",
+      "kolourpaint": "Egyszerű rajzprogram a KDE-től",
+      "korean": "Beviteli módok koreaihoz",
+      "krita": "Professzionális digitális festőprogram",
+      "kwave": "Hangszerkesztő a KDE-hez",
+      "libreCad": "2D CAD rajzolóeszköz",
+      "libreOfficeFresh": "A LibreOffice legújabb verziója",
+      "libreOfficeStill": "A LibreOffice stabil változata",
+      "librewolf": "Adatvédelemre, biztonságra és szabadságra fókuszáló webböngésző",
+      "linuxCachyos": "Erősen optimalizált CachyOS kernel",
+      "linuxHardened": "Biztonságilag megerősített Linux kernel",
+      "linuxLts": "Hosszú távon támogatott (LTS) Linux kernel",
+      "linuxMainline": "Legújabb mainline Linux kernel",
+      "linuxXanmod": "Egyéni kernel XanMod teljesítményjavításokkal",
+      "linuxXanmodLts": "LTS egyéni kernel XanMod javításokkal",
+      "lmms": "Digitális hangszerkesztő munkaállomás és szekvenszer",
+      "lollypop": "Modern zenelejátszó a GNOME-hoz",
+      "luanti": "Voxel-alapú játékmotor",
+      "luminanceHdr": "Munkafolyamat HDR képalkotáshoz",
+      "mailspring": "Gyönyörű és gyors levelezőkliens",
+      "mari0": "Mario játék Portal fegyvermechanikával",
+      "mediaElch": "Médiakezelő a Kodihoz",
+      "microsoftTeams": "Nem hivatalos Microsoft Teams kliens",
+      "mixxx": "Ingyenes, nyílt forráskódú DJ szoftver",
+      "mumble": "Alacsony késleltetésű, kiváló minőségű hangcsevegő szoftver",
+      "museScore": "Gyönyörű kották készítése, lejátszása és nyomtatása",
+      "myPaint": "Gyors és egyszerű festőalkalmazás digitális festőknek",
+      "mystiq": "FFmpeg-alapú audio/video konvertáló",
+      "neochat": "Kliens a Matrixhoz, a decentralizált kommunikációs protokollhoz",
+      "netbeans": "IDE Java, HTML5, PHP, C és C++ nyelvekhez",
+      "nextcloudClient": "Nextcloud asztali szinkronizációs kliens",
+      "nitroshare": "Egyszerű alkalmazás fájlok eszközök közötti átviteléhez",
+      "obsidian": "Helyi egyszerű szöveges Markdown fájlokon alapuló tudásbázis",
+      "obsStudio": "Szoftver élő közvetítéshez és rögzítéshez",
+      "octopi": "Hatékony Pacman előtétprogram Qt használatával",
+      "onlyOffice": "Szöveg-, táblázat- és prezentációszerkesztőt egyesítő irodai csomag",
+      "openToonz": "Szoftver 2D animációk készítéséhez",
+      "pencil2d": "Eszköz 2D kézzel rajzolt animációk készítéséhez",
+      "podman": "Démon nélküli konténermotor konténerek kezeléséhez",
+      "postman": "API-k készítése, tesztelése és dokumentálása",
+      "prometheus": "Rendszerfigyelő és riasztási eszközkészlet",
+      "puppet": "Kiszolgáló-automatizálási keretrendszer és alkalmazás",
+      "putty": "Terminálba integrált SSH/Telnet kliens",
+      "pyCharm": "Python IDE professzionális fejlesztőknek",
+      "qbittorrent": "Fejlett BitTorrent kliens Qt alapokon",
+      "qtCreator": "Könnyűsúlyú, platformfüggetlen IDE",
+      "qutebrowser": "Billentyűzet-vezérelt, vim-szerű böngésző Python alapon",
+      "remmina": "GTK+-ban írt távoli asztali kliens",
+      "rosegarden": "MIDI/hang szekvenszer és kottaszerkesztő",
+      "shortwave": "Internetes rádiólejátszó",
+      "shotcut": "Platformfüggetlen videószerkesztő",
+      "signal": "Signal privát üzenetküldő Linuxra",
+      "simplifiedChinese": "Beviteli módok egyszerűsített kínaihoz",
+      "sinhalese": "Beviteli módok szingalézhez",
+      "skrooge": "Személyes pénzügykezelő a KDE-hez",
+      "slack": "Slack asztali kliens",
+      "smPlayer": "Médialejátszó beépített kodekekkel",
+      "soundConverter": "Egyszerű hangkonvertáló alkalmazás",
+      "soundwire": "Hang átvitele a PC-ről más eszközökre",
+      "strawberryPlayer": "Zenelejátszó a hangzás szerelmeseinek",
+      "subtitleComposer": "Videófelirat-szerkesztő",
+      "superTux": "Klasszikus 2D ugrálós oldalnézetes játék",
+      "superTuxKart": "Gokartverseny játék Tux főszereplésével",
+      "sweetHome3d": "Belsőépítészeti lakástervező alkalmazás",
+      "synfigStudio": "Professzionális vektoros animációs program",
+      "teeworlds": "Pörgős többjátékos 2D lövöldözős játék",
+      "telegram": "Hivatalos Telegram Desktop kliens",
+      "terraform": "Eszköz infrastruktúra kódként történő építéséhez és frissítéséhez",
+      "thai": "Beviteli módok thaihoz",
+      "thunderbird": "Önálló levelező- és hírolvasó",
+      "torBrowser": "Biztonságos böngészés a Tor hálózaton",
+      "traditionalChinese": "Beviteli módok hagyományos kínaihoz",
+      "transmageddon": "Alkalmazás videóformátumok átkódolásához",
+      "twitchGui": "Többplatformos Twitch.tv böngésző",
+      "ungoogledChromium": "Chromium, amelyből minden Google-integráció el lett távolítva",
+      "variety": "Rendszeres időközönként váltja a háttérképet",
+      "vietnamese": "Beviteli módok vietnámihoz",
+      "vim": "Rendkívül jól testreszabható terminálos szövegszerkesztő",
+      "virtManager": "Asztali felhasználói felület virtuális gépek kezeléséhez",
+      "virtualBox": "Platformfüggetlen virtualizációs szoftver",
+      "visualStudioCode": "Kódszerkesztő modern alkalmazások építéséhez és hibakereséséhez",
+      "visualStudioCodeOss": "A Visual Studio Code nyílt forráskódú kiadása",
+      "vivaldi": "Fejlett böngésző a haladó felhasználók igényeihez igazítva",
+      "vlc": "Platformfüggetlen multimédia-lejátszó",
+      "vscodium": "Telemetriamentes VSCode binárisok",
+      "warpinator": "Fájlok küldése és fogadása a helyi hálózaton",
+      "wings3d": "3D modellező a szárnyas él adatstruktúra használatával",
+      "wire": "Végpontok között titkosított üzenetküldő és videokonferencia",
+      "wpsOffice": "Irodai produktivitási csomag",
+      "xfburn": "Egyszerű CD/DVD író eszköz",
+      "xonotic": "Pörgős, platformfüggetlen belső nézetes lövöldözős játék",
+      "xtreme": "Hatékony letöltésgyorsító és videóletöltő",
+      "yakuake": "Legördülő terminálemulátor",
+      "zedEditor": "Nagy teljesítményű, többjátékos kódszerkesztő",
+      "zoom": "Videó- és webkonferencia szolgáltatás"
+    },
+    "buttons": {
+      "apply": "Alkalmaz",
+      "back": "Vissza",
+      "finish": "Befejezés",
+      "next": "Tovább",
+      "retry": "Újra"
+    },
+    "softwareSelection": {
+      "body": "Válaszd ki a telepíteni kívánt szoftvereket.",
+      "header": "Szoftverválasztás"
+    },
+    "steps": {
+      "apply": "Változtatások alkalmazása"
+    },
+    "success": {
+      "archWiki": "Arch Linux Wiki",
+      "body": "A rendszered beállítása kész, használatra kész!",
+      "finish": "Beállítás befejezése",
+      "forum": "Garuda Fórum",
+      "garudaWiki": "Garuda Linux Wiki",
+      "reboot": "Újraindítás javasolt.",
+      "title": "Siker!"
+    },
+    "tasks": {
+      "installSoftware": "Kiválasztott szoftverek telepítése"
+    },
+    "title": "Telepítő asszisztens"
+  },
+  "shells": {
+    "fish": {
+      "hint": "A fish alapértelmezett shellként való beállítása problémákat okozhat más programokkal. Javasolt inkább a terminál konfigurációin keresztül beállítani alapértelmezettként."
+    }
+  },
+  "systemdServices": {
+    "actions": "Műveletek",
+    "active": "Aktív",
+    "autoRefresh": "Automatikus frissítés",
+    "clear": "Törlés",
+    "description": "Leírás",
+    "disable": "Letiltás",
+    "enable": "Engedélyezés",
+    "error": "Hiba történt a szolgáltatások lekérése közben, kérlek, próbáld újra.",
+    "errorTitle": "Hiba a szolgáltatások lekérésekor",
+    "excludeDisabled": "Letiltottak kihagyása",
+    "hideDead": "Inaktívak elrejtése",
+    "hideDeadTip": "Váltás a dead, failed vagy exited állapotú szolgáltatások megjelenítése/elrejtése között",
+    "includeDisabled": "Letiltottak belefoglalása",
+    "load": "Betöltés",
+    "logs": "Naplók",
+    "mask": "Maszkolás",
+    "notFound": "Nem található szolgáltatás",
+    "reload": "Újratöltés",
+    "restart": "Újraindítás",
+    "searchKey": "Írj be egy keresőszót",
+    "show": "Megjelenítés",
+    "showAll": "Összes megjelenítése",
+    "start": "Indítás",
+    "state": "Állapot",
+    "stop": "Leállítás",
+    "systemContext": "Rendszerszolgáltatások megjelenítése",
+    "unit": "Egység neve",
+    "unmask": "Maszkolás feloldása",
+    "userContext": "Felhasználói szolgáltatások megjelenítése"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Létrehoz egy ideiglenes jelszó nélküli 'vendég' felhasználói fiókot, elszigetelve a személyes fájljaidtól. Kijelentkezéskor törlődik.",
+        "title": "Vendég felhasználó"
+      },
+      "oomd": {
+        "description": "A systemd elfogyott memória (Out-Of-Memory) démonja. Aktívan figyeli a rendszermemóriát, és automatikusan leállítja a memóriafaló folyamatokat, mielőtt az egész számítógép lefagyna.",
+        "title": "systemd-oomd"
+      },
+      "psd": {
+        "description": "Áthelyezi a böngészőprofilodat (pl. Firefox vagy Brave) a gyors ideiglenes memóriába (tmpfs/RAM). Ez jelentősen felgyorsítja a böngésző válaszidejét és csökkenti az SSD elhasználódását.",
+        "title": "Profile-sync-daemon"
+      },
+      "psdEnabled": {
+        "description": "Futtatja a Profile-sync-daemon szolgáltatást a böngészőprofilok RAM-ban való automatikus kezeléséhez.",
+        "title": "PSD szolgáltatás"
+      },
+      "title": "Általános"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "Letiltja a PipeWire csomópont-felfüggesztési funkcióját. Ez folyamatosan aktívan tartja az audioeszközöket, megelőzve a hangkártyák alvó állapotból való ébredésekor fellépő zavaró pattanó vagy kattogó zajokat.",
+        "title": "Hang felfüggesztésének tiltása (No-Suspend)"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Megakadályozza, hogy a Discord frissítések letöltését és telepítését kérje, mivel ez teljesen felesleges Arch Linuxon – a Pacman elvégzi helyettünk.",
+        "title": "Discord automatikus frissítés tiltása"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "Egy KWin finomhangolás, amely eltávolítja a címsort és az ablakkereteket, ha egy alkalmazás maximalizálva van a KDE Plasmában, így nagyobb hasznos függőleges képernyőterületet biztosít.",
+        "title": "KDE Keret nélküli maximalizálás"
+      },
+      "title": "Rendszerkonfigurációk"
+    },
+    "defaultDns": "Alapértelmezett DNS beállítása",
+    "defaultDnsTip": "Módosítja az internetkapcsolat alapértelmezett Domain Name System (DNS) kiszolgálóját, felülbírálva az internetszolgáltató alapértelmezését. Javíthatja a sebességet, a magánszférát vagy megkerülheti a cenzúrát.",
+    "defaultShell": "Bejelentkezési shell beállítása",
+    "defaultShellConfigs": "Alapértelmezett konfigurációk telepítése",
+    "defaultShellTip": "Módosítja az alapértelmezett bejelentkezési parancsértelmezőt (shell). Javasolt POSIX-kompatibilis shellt (mint a Bash vagy Zsh) használni, a nem POSIX-kompatibilis shelleket (mint a Fish) pedig csak a terminálemulátor profilbeállításain keresztül futtatni.",
+    "enableHblock": "Hblock engedélyezése",
+    "enableHblockTip": "Engedélyezi a Hblockot, egy olyan parancsfájlt, amely rendszerszinten blokkolja a hirdetéseket, nyomkövetőket és kártékony domaineket azáltal, hogy a kéréseiket egy helyi címre irányítja a /etc/hosts fájlon keresztül.",
+    "enableIwd": "IWD használata wpa_supplicant helyett",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). Egy modern, könnyűsúlyú alternatíva a wpa_supplicant helyett a Wi-Fi kapcsolatok kezelésére. Gyakran gyorsabban csatlakozik és jobban kezeli a roamingot.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Kihagyja a rendelkezésre álló lemezterület ellenőrzését a csomagok telepítése előtt.",
+        "title": "Tárhelyellenőrzés kihagyása"
+      },
+      "pacmanNoconfirm": {
+        "description": "A pacman futtatása megerősítő kérdések nélkül a gyorsabb frissítési folyamat érdekében.",
+        "title": "Nem interaktív pacman"
+      },
+      "skipMirrorlist": {
+        "description": "Kihagyja az Arch tükörszerverlista frissítését a rendszerfrissítések futtatása előtt.",
+        "title": "Tükörszerverlista frissítésének kihagyása"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "Frissíti az Arch User Repository-ból (AUR) telepített csomagokat a rendszerfrissítés során.",
+        "title": "AUR csomagok frissítése"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto NICe démon. Dinamikusan módosítja a futó folyamatok CPU-prioritását (niceness), több CPU-időt adva az éppen használt aktív alkalmazásnak, így a rendszer gyorsabbnak érződik.",
+        "title": "Ananicy-C++"
+      },
+      "ananicyCppEnabled": {
+        "description": "Futtatja az Ananicy démont az alkalmazások CPU-prioritásainak folyamatos kezeléséhez.",
+        "title": "Ananicy szolgáltatás"
+      },
+      "bpftune": {
+        "description": "Az eBPF segítségével folyamatosan figyeli és automatikusan valós időben finomhangolja a Linux hálózati paramétereit az optimális internetes átviteli sebesség és késleltetés érdekében.",
+        "title": "bpftune"
+      },
+      "bpftuneEnabled": {
+        "description": "Futtatja a bpftune démont a hálózati teljesítmény folyamatos optimalizálásához.",
+        "title": "bpftune szolgáltatás"
+      },
+      "irqbalanceEnabled": {
+        "description": "Egyenletesen elosztja a hardveres megszakításokat az összes CPU-mag között. Ez megakadályozza, hogy egyetlen mag túlterhelődjön az eszközjelek kezelésével.",
+        "title": "IRQbalance"
+      },
+      "performanceTweaks": {
+        "description": "Rendszerszintű sysctl és optimalizációs beállításokat alkalmaz a Garuda maximális válaszkészségének biztosítására.",
+        "title": "Teljesítmény finomhangolások"
+      },
+      "preload": {
+        "description": "Egy háttérdémon, amely figyeli a leggyakrabban használt alkalmazásokat, és előre betölti őket a RAM-ba, drasztikusan csökkentve az indítási idejüket.",
+        "title": "Preload"
+      },
+      "preloadEnabled": {
+        "description": "Futtatja a Preload démont a gyakran használt alkalmazások gyorsítótárazásához.",
+        "title": "Preload szolgáltatás"
+      },
+      "title": "Teljesítmény"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "Egy automatikus CPU-sebesség és energiagazdálkodás optimalizáló. Készenléti állapotban dinamikusan csökkenti a CPU sebességét az akkumulátor kímélése érdekében, és növeli azt, ha teljesítményre van szükség.",
+        "title": "Auto-CPUfreq"
+      },
+      "autoCpufreqEnabled": {
+        "description": "Futtatja az auto-cpufreq démont a CPU-órajelskálázás folyamatos kezeléséhez.",
+        "title": "Auto-CPUfreq szolgáltatás"
+      },
+      "intelUndervolt": {
+        "description": "Csökkenti az Intel processzoroknak szállított feszültséget. Ez csökkenti a hőt és az energiafogyasztást a teljesítmény feláldozása nélkül, ami meghosszabbítja az akkumulátor élettartamát és megakadályozza a túlmelegedés miatti órajel-visszaesést.",
+        "title": "Intel feszültségcsökkentés (Undervolt)"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Futtatja a démont, amely automatikusan alkalmazza az Intel feszültségcsökkentési (undervolt) beállításokat a rendszerindításkor.",
+        "title": "Intel Undervolt szolgáltatás"
+      },
+      "powerProfilesDaemon": {
+        "description": "API-t biztosít a rendszer számára az 'Energiatakarékos', 'Kiegyensúlyozott' és 'Teljesítmény' üzemmódok közötti egyszerű váltáshoz.",
+        "title": "Energiagazdálkodási profilok"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Futtatja a démont, amely lehetővé teszi az asztali környezet számára az energiagazdálkodási profilok közötti váltást.",
+        "title": "Energiagazdálkodási profilok szolgáltatás"
+      },
+      "powersaveTweaks": {
+        "description": "Olyan sysctl és konfigurációs finomhangolásokat alkalmaz, amelyek célja az akkumulátorról működő eszközök energiafogyasztásának minimalizálása.",
+        "title": "Energiatakarékossági finomhangolások"
+      },
+      "thermald": {
+        "description": "Az Intel hőkezelési démonja. Megakadályozza a rendszer túlmelegedését azáltal, hogy proaktívan alkalmaz hűtési módszereket, mielőtt a CPU visszaskálázására kényszerülne.",
+        "title": "thermald"
+      },
+      "thermaldEnabled": {
+        "description": "Futtatja a thermald démont a CPU hőmérsékletének figyelésére és a túlmelegedés megelőzésére.",
+        "title": "thermald szolgáltatás"
+      },
+      "title": "Energiatakarékosság",
+      "tlp": {
+        "description": "Egy fejlett segédprogram, amely automatikusan optimalizálja a laptopok akkumulátor-élettartamát a Wi-Fi, lemezek, PCIe és USB eszközök beállításainak finomhangolásával, amikor nincsenek hálózatra csatlakoztatva.",
+        "title": "TLP"
+      },
+      "tlpEnabled": {
+        "description": "Futtatja a TLP démont az energiatakarékossági szabályok dinamikus alkalmazásához akkumulátoros működés esetén.",
+        "title": "TLP szolgáltatás"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Beállítja a libinputot úgy, hogy az érintőképernyőn vagy az érintőpadon tartott egyetlen ujj jobb gombos kattintásként működjön.",
+        "title": "Érintőpad hosszú lenyomás"
+      },
+      "evdevRce": {
+        "description": "Az érintőpad jobb alsó sarkát (vagy egy adott területét) úgy jelöli ki, hogy mindig fizikai jobb kattintásként viselkedjen.",
+        "title": "Érintőpad jobb kattintási terület"
+      },
+      "title": "Jobb kattintás emuláció"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "Érintett fájlok:",
+    "askHelp": "Ha bizonytalan vagy, zárd be az ablakot mentés nélkül, és kérj segítséget a Garuda Linux fórumán.",
+    "aurUpdates": "Az AUR csomagok frissítése kívül esik ennek az alkalmazásnak a hatókörén. Kérlek, használj egy AUR segédeszközt, mint a Paru, és ellenőrizd a PKGBUILD fájlokat telepítés előtt.",
+    "cancel": "Mégse",
+    "cautionMerge": "Légy tisztában vele, hogy helytelen változtatások beillesztése a RÉGI fájlba tönkreteheti a rendszered.",
+    "findMore": "Tudd meg, hogyan tovább",
+    "healthIssues": "Rendszerállapot-problémák",
+    "healthIssuesFound": "A következő rendszerállapot-problémák találhatók:",
+    "learnPacdiff": "Ha nem ismered a pacdiff fájlokat, gyorsan tájékozódj róluk.",
+    "openMaintenance": "Kattints az alábbi gombra a kezdéshez.",
+    "openMaintenanceButton": "Egyesítés indítása",
+    "pacFiles": "Ezen a rendszeren függőben lévő .pacnew fájlok vannak, ellenőrizned és egyesítened kellene őket!",
+    "pendingPacdiff": "Függőben lévő pacdiff fájlok",
+    "pendingUpdates": "Függőben lévő frissítések",
+    "proceed": "Így haladj tovább:",
+    "proceedMerge": "A Meld megnyílik a változtatások alkalmazásához. Bal oldalon az ÚJ fájl, jobb oldalon a RÉGI található. Mozgasd át a bal oldalról a jobb oldalra azokat a hasznos változtatásokat, amelyeket egyesíteni szeretnél. Kattints a mentés gombra vagy a CTRL + S billentyűkombinációra, ha kész vagy.",
+    "rebootNow": "Újraindítás most",
+    "rebootNowBody": "Biztosan újra akarod indítani most? Győződj meg róla, hogy minden munkádat elmentetted, mielőtt folytatnád.",
+    "runAurUpdates": "AUR frissítések futtatása külsőleg",
+    "runHealthFix": "Állapotjavítás futtatása",
+    "scheduleUpdates": "Frissítések ütemezése",
+    "snapshotCreation": "Egy Btrfs pillanatkép készül az egyesítés megkezdése előtt.",
+    "updates": "Ezen a rendszeren függőben lévő frissítések vannak",
+    "warnReboot": "Erősen ajánlott újraindítani a rendszert a frissítések alkalmazása után, különösen kernelek vagy asztali környezetek frissítésekor.",
+    "warnUpdate": "A rendszered 2 hete nem volt frissítve. Kérlek, frissítsd a rendszered a biztonság és stabilitás érdekében."
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Alapvető kernelszintű hangillesztő. Biztosítja az alapvető hardvertámogatást a hangkártyákhoz, bár általában a PipeWire-en keresztül kommunikálsz vele.",
+        "title": "ALSA"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. Kiváló minőségű hangfeldolgozó bővítmények készlete. Telepítsd ezt, hogy professzionális stúdióeffektusokat biztosíts az EasyEffects számára.",
+        "title": "Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "Egy hatékony eszköz a mikrofon minőségének és a hanglejátszásnak a javítására. A teljes élmény érdekében erősen ajánlott a 'Calf Plugins' és az 'LSP Plugins' telepítése is mellé.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "Professzionális audiokészítéshez tervezett, alacsony késleltetésű speciális hangszerver. Ma már általában a PipeWire natívan kezeli.",
+        "title": "JACK"
+      },
+      "jamesdsp": {
+        "description": "Egy hangeffektus-processzor basszuskiemeléshez, hangszínszabályzókhoz és egyéb effektusokhoz. Javasolt először az EasyEffects kipróbálása.",
+        "title": "JamesDSP"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP). Professzionális audioeszközök gyűjteménye, mint például hangszínszabályzók és kompresszorok. Telepítsd ezt az EasyEffects képességeinek bővítéséhez.",
+        "title": "LSP Plugins"
+      },
+      "pipewire": {
+        "description": "A hang- és videofolyamok kezelésének modern szabványa Linuxon. Zökkenőmentesen felváltja a PulseAudio-t és a JACK-et sokkal alacsonyabb késleltetéssel és jobb biztonsággal.",
+        "title": "PipeWire"
+      },
+      "pulseaudio": {
+        "description": "A régebbi, hagyományos hangszerver. Elsősorban a kompatibilitás miatt maradt meg, de a PipeWire nagyrészt felváltotta.",
+        "title": "PulseAudio"
+      },
+      "title": "Hang",
+      "userRealtime": {
+        "description": "Hozzáadja a felhasználódat a realtime csoporthoz, CPU-prioritást adva az audioalkalmazásoknak az akadozás és a késleltetés megelőzése érdekében.",
+        "title": "Realtime csoport"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Automatikusan újracsatlakozik a megbízható, korábban párosított Bluetooth eszközökhöz, amikor azok bekapcsolnak.",
+        "title": "Automatikus csatlakozás"
+      },
+      "autoConnectEnabled": {
+        "description": "Futtatja az automatikus Bluetooth újracsatlakozásokat aktívan kezelő háttérszolgáltatást.",
+        "title": "Automatikus csatlakozás szolgáltatás"
+      },
+      "bluetooth": {
+        "description": "A BlueZ Linux Bluetooth verem. Biztosítja a vezeték nélküli eszközök kezeléséhez szükséges alapvető szoftvert.",
+        "title": "Bluetooth támogatás"
+      },
+      "bluetoothEnabled": {
+        "description": "A Bluetooth eszközök párosításához és csatlakoztatásához szükséges háttérszolgáltatást futtatja.",
+        "title": "Bluetooth szolgáltatás"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Hozzáadja a felhasználódat az lp csoporthoz, engedélyezve a Bluetooth hangfolyamok használatát rendszerszintű PulseAudio beállítással. Ez PipeWire esetén nem szükséges.",
+        "title": "Bluetooth felhasználók PulseAudio-n"
+      }
+    },
+    "components": "Rendszerkomponensek",
+    "containers": {
+      "boxbuddy": {
+        "description": "Egy grafikus alkalmazás a Distrobox környezetek egyszerű kezeléséhez és használatához.",
+        "title": "BoxBuddy"
+      },
+      "distrobox": {
+        "description": "Más Linux disztribúciók szorosan integrált konténereit hozza létre. Lehetővé teszi az Ubuntu, Fedora vagy Arch alkalmazások natív futtatását a Garudán belül.",
+        "title": "Distrobox"
+      },
+      "docker": {
+        "description": "Az iparági szabvány konténermotor izolált alkalmazások csomagolásához és futtatásához.",
+        "title": "Docker"
+      },
+      "dockerCompose": {
+        "description": "Eszköz többkonténeres Docker alkalmazások konfigurációs fájlokon keresztüli definiálásához és futtatásához.",
+        "title": "Docker Compose"
+      },
+      "dockerEnabled": {
+        "description": "A Docker konténerek kezeléséhez és futtatásához szükséges háttérdémont futtatja.",
+        "title": "Docker szolgáltatás"
+      },
+      "kontainer": {
+        "description": "Egy natív KDE alkalmazás a Distrobox konténerek egyszerű kezeléséhez.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Egy modern, démon nélküli alternatíva a Dockerhez. Root jogosultságok nélkül futtat konténereket, jobb biztonságot nyújtva.",
+        "title": "Podman"
+      },
+      "podmanDesktop": {
+        "description": "Egy grafikus alkalmazás a Podman konténerek egyszerű kezeléséhez, létrehozásához és megtekintéséhez.",
+        "title": "Podman Desktop"
+      },
+      "podmanDocker": {
+        "description": "Egy kompatibilitási csomag, amely a 'docker' parancsot a 'podman' parancsra irányítja át, így a meglévő Docker parancsfájlok zökkenőmentesen működnek a Podmannel.",
+        "title": "Podman Docker"
+      },
+      "title": "Konténerek",
+      "userDocker": {
+        "description": "Hozzáadja a felhasználódat a docker csoporthoz, lehetővé téve a Docker parancsok sudo nélküli futtatását.",
+        "title": "Docker felhasználók"
+      },
+      "winboat": {
+        "description": "Konténerizációt használ zökkenőmentesen integrált Windows-alkalmazások biztosítására Linuxon.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "Egy dinamikus tűzfalkezelő, amely zónákat használ a hálózati megbízhatósági szintek és szabályok dinamikus meghatározásához.",
+        "title": "Firewalld"
+      },
+      "firewalldEnabled": {
+        "description": "Futtatja a firewalld démont, hogy megvédje a rendszeredet a bejövő hálózati kapcsolatoktól.",
+        "title": "Firewalld szolgáltatás"
+      },
+      "opensnitch": {
+        "description": "Egy alkalmazásszintű tűzfal, amely figyelmeztet és engedélyt kér, amikor egy program megpróbál csatlakozni az internethez.",
+        "title": "OpenSnitch"
+      },
+      "opensnitchEnabled": {
+        "description": "Futtatja az OpenSnitch démont az alkalmazások hálózati forgalmának figyelésére.",
+        "title": "OpenSnitch szolgáltatás"
+      },
+      "title": "Tűzfal",
+      "ufw": {
+        "description": "Uncomplicated Firewall. Egy egyszerűbb parancssori felület az iptables/nftables tűzfalszabályok kezeléséhez.",
+        "title": "UFW"
+      },
+      "ufwEnabled": {
+        "description": "Futtatja az UFW szolgáltatást az egyszerű tűzfalszabályok érvényesítéséhez.",
+        "title": "UFW szolgáltatás"
+      }
+    },
+    "kernels": "Kernelek",
+    "locales": "Területi beállítások",
+    "misc": {
+      "gns": {
+        "description": "Integrálja a Nix csomagkezelőt, hozzáférést biztosítva több ezer extra szoftvercsomaghoz. Emellett egy olyan NixOS telepítést is nyújt, amely megosztja a beállításokat a Garudával.",
+        "title": "Garuda Nix Subsystem"
+      },
+      "title": "Egyéb"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "A mobil szélessávú (4G/5G USB modemek) internetkapcsolathoz szükséges démont futtatja.",
+        "title": "ModemManager"
+      },
+      "networkManager": {
+        "description": "A fő démon, amely a Wi-Fi, Ethernet és VPN kapcsolatokat konfigurálja és kezeli.",
+        "title": "NetworkManager"
+      },
+      "networkManagerEnabled": {
+        "description": "Futtatja a NetworkManager démont, hogy csatlakozhass az internethez.",
+        "title": "NetworkManager szolgáltatás"
+      },
+      "title": "Hálózat"
+    },
+    "packages": "További csomagok",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Futtatja a nyomtatási feladatok kezeléséhez és a nyomtatók konfigurálásához szükséges CUPS démont.",
+        "title": "CUPS szolgáltatás"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System). A helyi vagy hálózati nyomtatókhoz való csatlakozáshoz és nyomtatáshoz szükséges alapvető szoftver.",
+        "title": "Nyomtatási támogatás"
+      },
+      "sanedEnabled": {
+        "description": "Futtatja a démont, amely lehetővé teszi a szkenner megosztását a helyi hálózaton.",
+        "title": "SANE hálózat"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy). A síkágyas és dokumentumszkennerek használatához szükséges alapvető szoftver.",
+        "title": "SANE"
+      },
+      "title": "Nyomtatás",
+      "userCups": {
+        "description": "Hozzáadja a felhasználódat a cups csoporthoz, engedélyt adva a nyomtatók és a nyomtatási sorok kezelésére.",
+        "title": "CUPS felhasználók"
+      },
+      "userLp": {
+        "description": "Hozzáadja a felhasználódat az lp (line printer) csoporthoz, amelyre néhány régebbi nyomtatórendszernek szüksége van.",
+        "title": "LP felhasználók"
+      },
+      "userScanner": {
+        "description": "Hozzáadja a felhasználódat a scanner csoporthoz, engedélyt adva a dokumentumszkennerek használatára.",
+        "title": "Scanner felhasználók"
+      }
+    },
+    "systemdServices": "Systemd szolgáltatások",
+    "systemSettings": "Rendszerbeállítások",
+    "title": "Rendszer ",
+    "titleTwo": "beállítások",
+    "users": "Felhasználók és csoportok",
+    "virtualization": {
+      "kvm": {
+        "description": "Kernel-based Virtual Machine. CPU hardveres gyorsítást (VT-x/AMD-V) használ, hogy a virtuális gépek közel natív sebességgel fussanak.",
+        "title": "KVM"
+      },
+      "libvirtdEnabled": {
+        "description": "A virtuális gépek és más virtualizációs platformok futtatásához és kezeléséhez szükséges rendszerdémon.",
+        "title": "Libvirtd"
+      },
+      "qemu": {
+        "description": "Egy általános, nyílt forráskódú gépi emulátor és virtualizáló. Bármilyen gép operációs rendszerét képes futtatni bármely gépen.",
+        "title": "QEMU"
+      },
+      "qemuUserStatic": {
+        "description": "Használható idegen architektúrájú binárisok natív futtatására, pl. Podman segítségével.",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Idegen architektúra-kezelők regisztrálása a kernelben, ami hasznos lehet aarch64 konténerképek futtatásakor.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "Virtualizáció",
+      "userKvm": {
+        "description": "Hozzáadja a felhasználódat a kvm csoporthoz, engedélyt adva a gyors, hardveresen gyorsított KVM virtuális gépek használatára.",
+        "title": "KVM felhasználók"
+      },
+      "userLibvirt": {
+        "description": "Hozzáadja a felhasználódat a libvirt csoporthoz, engedélyt adva a fejlett KVM/QEMU virtuális gépek kezelésére.",
+        "title": "Libvirt felhasználók"
+      },
+      "userVboxUsers": {
+        "description": "Hozzáadja a felhasználódat a vboxusers csoporthoz, engedélyt adva a VirtualBox használatára.",
+        "title": "VirtualBox felhasználók"
+      },
+      "virtManager": {
+        "description": "Egy hatékony asztali alkalmazás (GUI) KVM/QEMU virtuális gépek létrehozásához és kezeléséhez.",
+        "title": "Virt Manager"
+      },
+      "virtualbox": {
+        "description": "Az Oracle népszerű platformfüggetlen virtualizációs szoftvere. Nagyon felhasználóbarát, bár általában lassabb, mint a KVM/Virt-Manager.",
+        "title": "VirtualBox"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "Az aktuális feladat befejeződött.",
+    "scriptMismatch": "A parancsfájl módosult, a végrehajtás elutasítva!"
+  },
+  "userManager": {
+    "actions": "Műveletek",
+    "addGroup": "Csoport hozzáadása",
+    "addUser": "Felhasználó hozzáadása",
+    "cancel": "Mégse",
+    "clearPending": "Függőben lévő módosítások törlése",
+    "confirmPassword": "Jelszó megerősítése",
+    "confirmRemoveGroup": "Biztosan el akarod távolítani a(z) {{group}} csoportot?",
+    "confirmRemoveUser": "Biztosan el akarod távolítani {{username}} felhasználót? A saját mappája is törlődik.",
+    "createHome": "Saját mappa létrehozása",
+    "editUser": "Felhasználó szerkesztése",
+    "enterGroupName": "Kérlek, adj meg egy csoportnevet",
+    "enterPassword": "Kérlek, adj meg egy jelszót",
+    "enterUsername": "Kérlek, adj meg egy felhasználónevet",
+    "error": "Hiba",
+    "fullName": "Teljes név",
+    "gid": "GID",
+    "groupExists": "Már létezik ilyen nevű csoport",
+    "groupName": "Csoportnév",
+    "groups": "Csoportok",
+    "groupsColumn": "Csoportok",
+    "home": "Saját mappa",
+    "lock": "Zárolás",
+    "locked": "Zárolva",
+    "manageGroups": "Csoportok kezelése",
+    "manageGroupsFor": "Csoportok kezelése {{username}} számára",
+    "members": "Tagok",
+    "newGroupName": "Csoportnév",
+    "newPassword": "Új jelszó",
+    "noGroupsFound": "Nem találhatók csoportok",
+    "noUsersFound": "Nem találhatók felhasználók",
+    "passwordDialogTitle": "Jelszó beállítása {{username}} számára",
+    "passwordMismatch": "A jelszavak nem egyeznek",
+    "pending": {
+      "add": "Függőben lévő hozzáadás",
+      "lock": "Függőben lévő zárolás",
+      "membership": "Függőben lévő csoportmódosítások",
+      "modify": "Függőben lévő módosítás",
+      "password": "Függőben lévő jelszó",
+      "remove": "Függőben lévő eltávolítás",
+      "unlock": "Függőben lévő feloldás"
+    },
+    "removeGroup": "Csoport eltávolítása",
+    "removeUser": "Felhasználó eltávolítása",
+    "save": "Mentés",
+    "searchGroups": "Csoportok keresése",
+    "searchUsers": "Felhasználók keresése",
+    "selectGroups": "Csoportok kiválasztása",
+    "setPassword": "Jelszó beállítása",
+    "shell": "Parancsértelmező (shell)",
+    "showAllUsers": "Minden felhasználó megjelenítése",
+    "showUsersOnly": "Csak felhasználók megjelenítése",
+    "system": "Rendszer",
+    "systemAccount": "Rendszerfiók",
+    "task": {
+      "addGroup": "Csoport hozzáadása",
+      "addMembership": "Hozzáadás a csoporthoz",
+      "addUser": "Felhasználó hozzáadása",
+      "lockUser": "Felhasználó zárolása",
+      "modifyUser": "Felhasználó módosítása",
+      "password": "Jelszó beállítása",
+      "removeGroup": "Csoport eltávolítása",
+      "removeMembership": "Eltávolítás a csoportból",
+      "removeUser": "Felhasználó eltávolítása",
+      "unlockUser": "Felhasználó feloldása"
+    },
+    "uid": "UID",
+    "unlock": "Feloldás",
+    "userExists": "Már létezik ilyen nevű felhasználó",
+    "username": "Felhasználónév",
+    "users": "Felhasználók"
+  },
+  "welcome": {
+    "bootRepair": "Rendszertöltő-javítás",
+    "bootRepairSub": "A rendszertöltő újratelepítése vagy javítása",
+    "bootTools": "Indítási eszközök",
+    "bootToolsSub": "Kezeld az indítási beállításokat",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Nézd meg a csomagfrissítéseket és egyebeket",
+    "chroot": "Chroot a Garudába",
+    "chrootSub": "Chroot a Garuda telepítésedbe",
+    "diagnostics": "Diagnosztika",
+    "diagnosticsSub": "Ellenőrizd a rendszered állapotát",
+    "donate": "Támogatás",
+    "donateSub": "A Garuda Linux projekt támogatása",
+    "error": "Hiba történt.",
+    "gaming": "Játékalkalmazások",
+    "gamingSub": "Játssz a kedvenc játékaiddal",
+    "gitlab": "GitLab",
+    "gitlabSub": "Tekintsd meg a forráskódunkat",
+    "hello": "Helló",
+    "install": "Garuda Linux telepítése",
+    "installSub": "Telepítsd a Garuda Linuxot a rendszeredre",
+    "maintenance": "Karbantartás",
+    "maintenanceSub": "Tartsd a rendszered jó állapotban",
+    "network": "Hálózati eszközök",
+    "networkSub": "Kezeld a hálózati beállításokat",
+    "packages": "Alkalmazások felfedezése",
+    "packagesSub": "Új szoftverek keresése és telepítése",
+    "searxng": "SearxNG",
+    "searxngSub": "A magánszférádat tiszteletben tartó keresőmotor",
+    "setupAssistant": "Telepítő asszisztens",
+    "setupAssistantSub": "Futtasd a Garuda telepítő asszisztenst",
+    "startpage": "Kezdőlap",
+    "startpageSub": "Nyisd meg a Garuda Linux kezdőlapját",
+    "subtitle": "A tökéletes Linux disztró játékhoz és multimédiához",
+    "systemTools": "Rendszerbeállítások",
+    "systemToolsSub": "Konfiguráld a rendszered",
+    "title": "Üdvözlünk a ",
+    "titleTwo": "Garuda Linuxban",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Bitwarden-kompatibilis, biztonságos jelszókezelő",
+    "whoogle": "Whoogle",
+    "whoogleSub": "A magánszférát tiszteletben tartó keresőmotor"
   }
 }

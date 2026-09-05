@@ -1,612 +1,1557 @@
 {
-  "menu": {
-    "welcome": "እንኳን ደህና መጡ",
-    "maintenance": "ጥገና",
-    "systemTools": "የስርዓት ቅንብሮች",
-    "components": "ክፍሎች",
-    "gaming": "ጨዋታ",
-    "boot": "የማስነሻ መሳሪያዎች",
-    "diagnostics": "ምርመራ",
-    "network": "የኔትወርክ መሳሪያዎች",
-    "settings": "የመተግበሪያ ቅንብሮች",
-    "help": {
-      "title": "እርዳታ",
-      "icon": "Icon",
-      "getHelpForum": "በመድረኩ ላይ እርዳታ ያግኙ",
-      "getHelpWiki": "በዊኪ ውስጥ ይዘት ይፈልጉ",
-      "getHelpArchWiki": "በ Arch Wiki ውስጥ ይዘት ይፈልጉ",
-      "garudaStatus": "የመስራት ሁኔታን ያረጋግጡ",
-      "about": "ስለ Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox ለ Garuda Linux የስርዓት ጥገና እና የምርመራ መሳሪያ ነው። ተጠቃሚዎች ስርዓታቸውን እንዲጠብቁ እና ችግሮችን እንዲመረምሩ ለመርዳት የተነደፈ ነው። የተሰራው Electron እና Angular በመጠቀም ነው።",
-      "callExorcist": "አጋንንት አስወጪውን ጥራ",
-      "callExorcistTitle": "አጋንንት አስወጪው ተጠርቷል!",
-      "callExorcistBody": "ይህን ቁልፍ ለመጫን በጣም ተስፋ ቆርጠህ መሆን አለበት! ልዩ መፍትሄ አዘጋጅቼልሃለሁ፤ አሁንም በመተግበሪያው ላይ ችግሮች ካጋጠሙህ እባክህ በ Garuda Linux መድረክ ወይም በችግር መከታተያችን ላይ ሪፖርት አድርግ።"
-    },
-    "terminalRunning": "በሂደት ላይ ያሉ ተግባራት",
-    "terminalTasks": "ተግባራትን አስፈጽም",
-    "pending": "በመጠባበቅ ላይ",
-    "console": "ተርሚናል አሳይ"
-  },
-  "diagnostics": {
-    "title": "የማረሚያ መረጃ ",
-    "icon": "Icon",
-    "titleTwo": "እና ምርመራዎች",
-    "subtitle": "ስርዓትዎን ለማረም የሚያስፈልግዎትን መረጃ ያግኙ",
-    "inxi": "የተለመደ መረጃ (inxi)",
-    "systemctl": "የስርዓት አገልግሎቶች (systemctl)",
-    "journalctl": "የስርዓት ምዝግብ ማስታወሻዎች (journalctl)",
-    "dmesg": "የከርነል ምዝግብ ማስታወሻዎች (dmesg)",
-    "full": "ሙሉ ምርመራዎች",
-    "upload": "ወደ PrivateBin ስቀል",
-    "failedCmdHeader": "ትዕዛዙን ማስኬድ አልተቻለም",
-    "failedCmd": "መጥፎ ነገር ተከስቷል እና ምንም የምርመራ መረጃ ማግኘት አልተቻለም",
-    "pacman": "የቅርብ ጊዜ የ Pacman ምዝግብ ማስታወሻዎች",
-    "copied": "ወደ ቅንጥብ ሰሌዳ በተሳካ ሁኔታ ተቀድቷል",
-    "success": "ተሳክቷል",
-    "uploadSuccess": "ወደ PrivateBin በተሳካ ሁኔታ ተሰቅሏል፣ URL ወደ ቅንጥብ ሰሌዳ ተቀድቷል"
-  },
-  "lang": {
-    "title": "ቋንቋ ምርጫ",
-    "icon": "Icon",
-    "tooltip": "የሚመርጡትን ቋንቋ ይምረጡ"
-  },
-  "welcome": {
-    "title": "እንኳን ወደ ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux በደህና መጡ",
-    "subtitle": "ለጨዋታ እና መልቲሚዲያ ምርጡ የሊኑክስ ስርጭት",
-    "maintenance": "ጥገና",
-    "maintenanceSub": "ስርዓትዎን በጥሩ ሁኔታ ያቆዩ",
-    "systemTools": "የስርዓት ቅንብሮች",
-    "systemToolsSub": "ስርዓትዎን ያዋቅሩ",
-    "gaming": "የጨዋታ መተግበሪያዎች",
-    "gamingSub": "የሚወዷቸውን ጨዋታዎች ይጫወቱ",
-    "bootTools": "የማስነሻ መሳሪያዎች",
-    "bootToolsSub": "የማስነሻ ቅንብሮችዎን ያስተዳድሩ",
-    "network": "የኔትወርክ መሳሪያዎች",
-    "networkSub": "የኔትወርክ ቅንብሮችዎን ያስተዳድሩ",
-    "diagnostics": "ምርመራ",
-    "diagnosticsSub": "የስርዓትዎን ጤና ያረጋግጡ",
-    "install": "Garuda Linux ጫን",
-    "installSub": "Garuda Linux በስርዓትዎ ላይ ያግኙ",
-    "chroot": "ወደ Garuda በ chroot ግባ",
-    "chrootSub": "ወደ Garuda ጭነትዎ በ chroot ግባ",
-    "startpage": "የመነሻ ገጽ",
-    "startpageSub": "የ Garuda Linux መነሻ ገጽ ክፈት",
-    "setupAssistant": "የማዋቀሪያ ረዳት",
-    "setupAssistantSub": "የ Garuda ማዋቀሪያ ረዳትን አሂድ",
-    "hello": "ሰላም",
-    "error": "ስህተት ተከስቷል።"
-  },
-  "gaming": {
-    "title": "የጨዋታ ",
-    "icon": "Icon",
-    "titleTwo": "መተግበሪያዎች",
-    "subtitle": "በአንዳንድ የጨዋታ መተግበሪያዎች እንጀምር!",
-    "launchers": "የጨዋታ አስጀማሪዎች",
-    "loading": "በመጫን ላይ...",
-    "wine": "WINE",
-    "tools": "የጨዋታ መሳሪያዎች",
-    "emulators": "ኢሙሌተሮች",
-    "controllers": "የመቆጣጠሪያ ድጋፍ",
-    "games": "ጨዋታዎች",
-    "misc": "ልዩ ልዩ",
-    "bluez": "የ PS መቆጣጠሪያዎችን በገመድ አልባ ለመለየት በአጠቃላይ ያስፈልጋል",
-    "xboxdrv": "የ Xbox መቆጣጠሪያ ድራይቨር፣ የከርነል ድራይቨሩ ካልሰራ ብቻ ይጠቀሙ!",
-    "wineMeta": "WINE እና ሁሉንም አስፈላጊ ጥገኞችን ለመጫን የሜታ ፓኬጅ"
-  },
-  "maintenance": {
-    "title": "የስርዓት ",
-    "icon": "Icon",
-    "titleTwo": "ጥገና",
-    "subtitle": "ስርዓትዎን በጥሩ ሁኔታ ያቆዩ",
-    "update": "ስርዓትዎን ያዘምኑ",
-    "addPending": "በመጠባበቅ ላይ ያሉትን ጨምር",
-    "removePending": "በመጠባበቅ ላይ ያሉትን አስወግድ",
-    "runNow": "አሁን አሂድ",
-    "failedReset": "የማዋቀሪያ ፋይልን ዳግም ማስጀመር ላይ ስህተት",
-    "failedResetFile": "{{file}}ን ዳግም በማስጀመር ላይ ስህተት ተከስቷል",
-    "editRepos": "ማከማቻዎችን ያርትዑ",
-    "onlyDirect": "ይህ እርምጃ ወረፋ ሊይዝ አይችልም እና በቀጥታ መከናወን አለበት።",
-    "cleanCache": "መሸጎጫ አጽዳ",
-    "cleanCacheSub": "ሁሉንም የተሸጎጡ ፓኬጆች አስወግድ",
-    "updateSystem": "ስርዓት አዘምን",
-    "taskRunningHeader": "የጥገና እርምጃን በማስኬድ ላይ ስህተት",
-    "taskRunning": "አስቀድሞ እየሰራ ያለ ተግባር አለ፤ እባክዎ መጀመሪያ እስኪጨርስ ይጠብቁ።",
-    "updateSystemSub": "ስርዓትዎን በ garuda-update በኩል ያዘምኑ",
-    "editReposSub": "ማከማቻዎችዎን በ Pace ያርትዑ",
-    "addPendingSub": "በመጠባበቅ ላይ ያሉ ክንዋኔዎችን ጨምር",
-    "clearOrphans": "ወላጅ አልባ የሆኑትን አጽዳ",
-    "clearOrphansSub": "ወላጅ አልባ ፓኬጆችን አስወግድ",
-    "refreshMirrors": "ማከማቻዎችን አድስ",
-    "refreshMirrorsSub": "የማከማቻ ዝርዝርዎን ያድሱ",
-    "removeLock": "የ Pacman መቆለፊያን አስወግድ",
-    "removeLockSub": "የ pacman መቆለፊያ ፋይልን አስወግድ",
-    "reinstallPackages": "ፓኬጆችን እንደገና ጫን",
-    "reinstallPackagesSub": "በስርዓትዎ ላይ ያሉትን ሁሉንም ፓኬጆች እንደገና ጫን",
-    "reinstallDkmsModules": "የ DKMS ሞጁሎችን እንደገና ጫን",
-    "btrfsAssistant": "Btrfs ረዳት",
-    "btrfsAssistantSub": "የ BTRFS ቅጽበታዊ ገጽ እይታዎችዎን ያስተዳድሩ እና የጥገና ተግባራትን ያከናውኑ",
-    "mergePacDiff": "የ pacdiff ፋይሎችን አዋህድ",
-    "mergePacDiffSub": ".pacnew እና .pacsave ፋይሎችን በይነተገናኝ መንገድ አዋህድ",
-    "updateRemoteFullFix": "Garuda update ሙሉ ማስተካከያ",
-    "updateRemoteFullFixSub": "Pacmanን ዳግም አስጀምር እና በ OSዎ ውስጥ ያሉትን ሁሉንም ፓኬጆች እንደገና ጫን",
-    "updateRemoteKeyring": "Garuda update keyring",
-    "updateRemoteKeyringSub": "pacman.confን ዳግም ሳያስጀምሩ keyringን ያድሱ",
-    "updateRemoteFix": "Garuda update ማስተካከያ",
-    "updateRemoteFixSub": "pacman.confን ዳግም አስጀምር እና keyringsን ያድሱ",
-    "updateRemoteResetSnapper": "Snapperን ዳግም አስጀምር",
-    "updateRemoteResetSnapperSub": "ሁሉንም የ Snapper ነገር አስወግድ እና ውቅሮቹን እንደገና ፍጠር",
-    "updateRemoteResetAudio": "ድምጽን ዳግም አስጀምር",
-    "updateRemoteResetAudioSub": "የ PipeWire ድምጽ ውቅረትን እንደገና ጫን/ዳግም አስጀምር",
-    "resetTooltip": "የሚከተሉት ፋይሎች ወይም ማህደሮች ወደ ነባሪ ሁኔታቸው ይመለሳሉ:",
-    "resetConfigs": "ውቅሮችን ወደ ነባሪ ሁኔታ ዳግም አስጀምር",
-    "common": "የተለመደ ጥገና",
-    "garudaUpdate": "Garuda update የማዳኛ መሳሪያዎች"
-  },
-  "sudo": {
-    "title": "ማረጋገጫ ያስፈልጋል",
-    "icon": "Icon",
-    "subtitle": "ለመቀጠል እባክዎ የይለፍ ቃልዎን ያስገቡ",
-    "save": "በዚህ ክፍለ ጊዜ አስቀምጥ",
-    "password": "የይለፍ ቃል",
-    "cancel": "ሰርዝ",
-    "useOnce": "አንድ ጊዜ ብቻ ተጠቀም"
-  },
-  "systemdServices": {
-    "notFound": "ምንም አገልግሎቶች አልተገኙም",
-    "description": "መግለጫ",
-    "unit": "የክፍል ስም",
-    "load": "ጫን",
-    "active": "ንቁ",
-    "state": "ሁኔታ",
-    "searchKey": "የፍለጋ ቁልፍ ቃል ያስገቡ",
-    "clear": "አጽዳ",
+  "bootOptions": {
     "actions": "እርምጃዎች",
-    "show": "አሳይ",
-    "start": "አስጀምር",
-    "stop": "አቁም",
-    "mask": "ጭምብል",
-    "unmask": "ጭምብል አንሳ",
-    "logs": "ምዝግብ ማስታወሻዎች",
-    "restart": "እንደገና አስጀምር",
-    "reload": "እንደገና ጫን",
-    "enable": "አንቃ",
-    "disable": "አሰናክል",
-    "autoRefresh": "በራስ ሰር አድስ",
-    "error": "አገልግሎቶችን በማምጣት ላይ ስህተት ተከስቷል፣ እባክዎ እንደገና ይሞክሩ።",
-    "errorTitle": "አገልግሎቶችን በማምጣት ላይ ስህተት",
-    "systemContext": "የስርዓት አገልግሎቶችን አሳይ",
-    "userContext": "የተጠቃሚ አገልግሎቶችን አሳይ",
-    "includeDisabled": "የተሰናከሉትን አካትት",
-    "excludeDisabled": "የተሰናከሉትን አግልል"
+    "apply": "ቅንብሮችን ተግብር",
+    "bootEntries": "የማስነሻ ምርጫዎች ዝርዝር",
+    "cancel": "ሰርዝ",
+    "configSaved": "የ GRUB ውቅር በተሳካ ሁኔታ ተቀምጧል",
+    "defaultEntry": "ነባሪ የማስነሻ ምርጫ",
+    "defaultEntryHint": "በነባሪነት የሚነሳው የሜኑ ዝርዝር ምርጫ።",
+    "edit": "አርትዕ",
+    "editConfigWarning": "ማስጠንቀቂያ: የ GRUB ማዋቀሪያ ፋይሎችን በቀጥታ ማረም አደገኛ ሊሆን ይችላል። GRUB ሲዘምን ለውጦች ሊተኩ ይችላሉ። በጥንቃቄ ይጠቀሙ።",
+    "editEntry": "የማስነሻ ምርጫን አርትዕ",
+    "editGrubDefault": "/etc/default/grub አርትዕ",
+    "editGrubDefaultHint": "የ GRUB ነባሪ ቅንብሮች ፋይልን ያርትዑ። የ Root ፈቃድ ያስፈልገዋል።",
+    "editingEntry": "ምርጫን በማረም ላይ",
+    "enableBootsplash": "Bootsplash አንቃ",
+    "enableBootsplashHint": "በማስነሳት ሂደት ወቅት ከጽሑፍ መልእክቶች ይልቅ ግራፊክ አኒሜሽን (Plymouth) ያሳያል።",
+    "entryId": "የምርጫ መለያ (ID)",
+    "entryName": "የምርጫ ስም",
+    "entrySaved": "የማስነሻ ምርጫ በተሳካ ሁኔታ ተቀምጧል",
+    "errorTitle": "ስህተት",
+    "flatMenus": "ጠፍጣፋ (Flat) ሜኑዎችን አንቃ",
+    "flatMenusHint": "የ GRUB ንዑስ ሜኑዎችን በማሰናከል ሁሉንም የማስነሻ ምርጫዎች በዋናው ሜኑ ላይ ያሳያል።",
+    "grubBackground": "የ GRUB የበስተጀርባ ምስል",
+    "grubTheme": "የ GRUB ገጽታ",
+    "kernelParams": "የከርነል መለኪያዎች (parameters)",
+    "kernelParamsHint": "ስርዓቱ በሚነሳበት ጊዜ ለሊኑክስ ከርነል የሚተላለፉ ተጨማሪ መለኪያዎች።",
+    "kernelParamsPlaceholder": "ለምሳሌ quiet splash",
+    "messageLevel": "የማስነሻ መልእክቶች ዝርዝር ደረጃ",
+    "messageLevelDetailed": "ዝርዝር (Quiet)",
+    "messageLevelHint": "በማስነሳት ሂደት ወቅት ምን ያህል መረጃ እንደሚታይ ይምረጡ።",
+    "messageLevelLimited": "የተገደበ (Quiet + Hush)",
+    "messageLevelVeryDetailed": "በጣም ዝርዝር (ሁሉም መልእክቶች)",
+    "mitigationsOff": "የሲፒዩ ማስተካከያዎችን (mitigations) አሰናክል",
+    "mitigationsOffHint": "ለተሻለ አፈጻጸም ሲባል የሲፒዩ የደህንነት ማስተካከያዎችን ያሰናክላል (ደህንነት ግን ይቀንሳል)።",
+    "partitionSelect": "ክፍልፍል ይምረጡ",
+    "partitionSelectHint": "እባክዎ የእርስዎን የ Garuda ጭነት የያዘውን ክፍልፍል ይምረጡ።",
+    "plymouthNotInstalled": "Plymouth አልተጫነም። ሲተገብሩ እንዲጫን ያንቁት።",
+    "plymouthPending": "Plymouth እንዲጫን ተይዟል። መጫኑ ከተጠናቀቀ በኋላ ገጽታ መምረጥ ይችላሉ።",
+    "plymouthTheme": "የ Plymouth ገጽታ (bootsplash)",
+    "plymouthThemeHint": "የስርዓት ማስነሳት ሂደት ወቅት የሚታየው ገጽታ።",
+    "plymouthVmWarning": "በቨርቹዋል ማሽን ውስጥ እየሰሩ ነው። የ Plymouth bootsplash በተገደበ መልኩ ይሰራል እና ቅድመ እይታው በትክክል ላይሰራ ይችላል።",
+    "previewComplete": "ቅድመ እይታ ተጠናቋል",
+    "previewCompleteMessage": "የ Plymouth ገጽታ ቅድመ እይታ ተጠናቋል።",
+    "previewError": "ቅድመ እይታ አልተሳካም",
+    "previewTheme": "የ Plymouth ገጽታን በቅድመ እይታ ይመልከቱ",
+    "retry": "እንደገና ሞክር",
+    "save": "አስቀምጥ",
+    "saveDefault": "ነባሪውን ምርጫ በራስ-ሰር አስቀምጥ",
+    "saveDefaultHint": "ለመጨረሻ ጊዜ የተመረጠውን የማስነሻ ምርጫ በራስ-ሰር እንደ ነባሪ ያስቀምጣል።",
+    "savedMessage": "የማስነሻ ቅንብሮች በተሳካ ሁኔታ ተተግብረዋል።",
+    "savedMessageScheduled": "የማስነሻ ቅንብሮች ወደ መጠባበቂያ ክንዋኔዎች ተጨምረዋል።",
+    "savedTitle": "ቅንብሮች ተቀምጠዋል",
+    "saveSuccess": "በተሳካ ሁኔታ ተቀምጧል",
+    "searchOtherOs": "ሌሎች ስርዓተ ክወናዎችን ፈልግ",
+    "searchOtherOsHint": "os-prober በመጠቀም ሌሎች የተጫኑ ስርዓተ ክወናዎችን በራስ-ሰር ፈልጎ ወደ ማስነሻ ሜኑ ያክላል።",
+    "selectBackground": "የበስተጀርባ ምስል ይምረጡ",
+    "selectEntry": "የማስነሻ ምርጫን ይምረጡ",
+    "selectGrubTheme": "የ GRUB ገጽታ ይምረጡ",
+    "selectTheme": "የ Plymouth ገጽታ ይምረጡ",
+    "submenu": "ንዑስ ሜኑ",
+    "sysrqEnabled": "ሁልጊዜ SysRq አንቃ",
+    "sysrqEnabledHint": "ለአደጋ ጊዜ የስርዓት ቁጥጥር የ Magic SysRq ቁልፍን ያነቃል።",
+    "timeout": "የሜኑ የጊዜ ገደብ (ሰከንድ)",
+    "timeoutHint": "ነባሪውን ምርጫ ከማስነሳቱ በፊት በሰከንዶች የሚቆይ የጥበቃ ጊዜ።",
+    "title": "የማስነሻ ",
+    "titleTwo": "አማራጮች",
+    "unsavedChanges": "ያልተቀመጡ ለውጦች አሉዎት"
   },
-  "systemTools": {
-    "title": "የስርዓት ",
-    "icon": "Icon",
-    "titleTwo": "ቅንብሮች",
-    "systemdServices": "Systemd አገልግሎቶች",
-    "systemSettings": "የስርዓት ቅንብሮች",
-    "components": "የስርዓት ክፍሎች",
-    "locales": "ሎካሎች",
-    "kernels": "ከርነሎች",
-    "packages": "ተጨማሪ ፓኬጆች",
-    "audio": {
-      "title": "ድምጽ",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA ድጋፍ"
-      },
-      "jack": {
-        "title": "JACK ድጋፍ"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio ድጋፍ"
-      },
-      "pipewire": {
-        "title": "PipeWire ድጋፍ"
-      },
-      "userRealtime": {
-        "title": "ተጠቃሚ በ realtime ቡድን ውስጥ"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP ተጭኗል"
-      }
-    },
-    "virtualization": {
-      "title": "ቨርቹዋልላይዜሽን",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU ተጭኗል"
-      },
-      "kvm": {
-        "title": "KVM ድጋፍ"
-      },
-      "virtManager": {
-        "title": "Virt-manager ድጋፍ"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd ነቅቷል"
-      },
-      "userVboxUsers": {
-        "title": "ተጠቃሚ በ vboxusers ቡድን ውስጥ"
-      },
-      "virtualbox": {
-        "title": "VirtualBox ድጋፍ"
-      },
-      "userLibvirt": {
-        "title": "ተጠቃሚ በ libvirt ቡድን ውስጥ"
-      },
-      "userKvm": {
-        "title": "ተጠቃሚ በ kvm ቡድን ውስጥ"
-      }
-    },
-    "containers": {
-      "title": "ኮንቴይነሮች",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker ተጭኗል"
-      },
-      "dockerEnabled": {
-        "title": "Docker ነቅቷል"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose ተጭኗል"
-      },
-      "userDocker": {
-        "title": "ተጠቃሚ በ docker ቡድን ውስጥ"
-      },
-      "podman": {
-        "title": "Podman ተጭኗል"
-      },
-      "podmanDocker": {
-        "title": "Dockerን በ Podman አስመስሎ አሳይ"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop ተጭኗል"
-      },
-      "distrobox": {
-        "title": "DistroBox ተጭኗል"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy ተጭኗል"
-      }
-    },
-    "network": {
-      "title": "ኔትወርክ",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager ድጋፍ"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager ነቅቷል"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager ነቅቷል"
-      }
-    },
-    "bluetooth": {
-      "title": "ብሉቱዝ",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "ብሉቱዝ ድጋፍ"
-      },
-      "bluetoothEnabled": {
-        "title": "ብሉቱዝ ነቅቷል"
-      },
-      "userBluetooth": {
-        "title": "ተጠቃሚ በ bluetooth ቡድን ውስጥ"
-      },
-      "autoConnect": {
-        "title": "ራስ-ግንኙነት ተጭኗል"
-      },
-      "autoConnectEnabled": {
-        "title": "ራስ-ግንኙነት ነቅቷል"
-      }
-    },
-    "printing": {
-      "title": "ማተም",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "የማተም ድጋፍ"
-      },
-      "cupsEnabled": {
-        "title": "CUPS ነቅቷል"
-      },
-      "scanningSupport": {
-        "title": "የመቃኘት ድጋፍ"
-      },
-      "sanedEnabled": {
-        "title": "saned ነቅቷል"
-      },
-      "userCups": {
-        "title": "ተጠቃሚ በ cups ቡድን ውስጥ"
-      },
-      "userScanner": {
-        "title": "ተጠቃሚ በ scanner ቡድን ውስጥ"
-      },
-      "userLp": {
-        "title": "ተጠቃሚ በ lp ቡድን ውስጥ"
-      }
-    },
-    "firewall": {
-      "title": "ፋየርዎል",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld ተጭኗል"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld ነቅቷል"
-      },
-      "ufw": {
-        "title": "UFW ተጭኗል"
-      },
-      "ufwEnabled": {
-        "title": "UFW ነቅቷል"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch ተጭኗል"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch ነቅቷል"
-      }
-    },
-    "misc": {
-      "title": "ልዩ ልዩ",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem ተጭኗል"
-      }
-    }
+  "bootRepair": {
+    "apply": "ተግብር",
+    "backupFile": "የመጠባበቂያ ፋይል",
+    "backupMbrPbr": "MBR ወይም PBR ቅጂ (backup) ያዘጋጁ",
+    "backupMbrPbrTip": "የ Master Boot Record (MBR) ወይም Partition Boot Record (PBR) የማስነሻ ኮድ ቅጂ ይፍጠሩ። ይህ የክፍልፍል ሰንጠረዥን አያካትትም።",
+    "backupRestoreTarget": "የመጠባበቂያ ወይም የመመለሻ ዒላማ:",
+    "deviceOrPartition": "መሳሪያ ወይም ክፍልፍል:",
+    "errorTitle": "ስህተት",
+    "installOn": "የሚጫንበት ቦታ:",
+    "location": "መገኛ:",
+    "luksPassword": "የ LUKS ይለፍ ቃል:",
+    "luksPasswordPlaceholder": "የ LUKS የይለፍ ቃል ያስገቡ",
+    "luksPasswordRequired": "እባክዎ ለዚህ የ root ክፍልፍል የ LUKS ይለፍ ቃል ያስገቡ።",
+    "luksTag": "LUKS",
+    "options": "አማራጮች",
+    "partitionToMount": "የሚሰካ (mount የሚሆን) ክፍልፍል:",
+    "reinstallGrub": "GRUB እንደገና ጫን",
+    "reinstallGrubTip": "በተወሰነ ዲስክ ወይም ክፍልፍል ላይ የ GRUB ማስነሻ ጫኝን እንደገና ይጫኑ።",
+    "repairGrubConfig": "የ GRUB ውቅርን ይጠግኑ",
+    "repairGrubConfigTip": "ሁሉንም የተጫኑ ስርዓተ ክወናዎችን ለመለየት የ GRUB ማዋቀሪያ ፋይልን (grub.cfg) እንደገና ያመነጩ።",
+    "restoreMbrPbr": "MBR ወይም PBR ከቅጂ ይመልሱ",
+    "restoreMbrPbrTip": "የማስነሻ ኮዱን ቀደም ሲል ከተፈጠረ የመጠባበቂያ ቅጂ ፋይል ይመልሱ።",
+    "rootLocation": "የ Root መገኛ:",
+    "selectLocation": "እባክዎ መገኛ ይምረጡ።",
+    "selectOperation": "ክንውን ይምረጡ",
+    "selectRoot": "እባክዎ የ root ክፍልፍል ይምረጡ።",
+    "successBackup": "ምትኬ ማስቀመጥ በተሳካ ሁኔታ ተጠናቋል።",
+    "successReinstall": "GRUB እንደገና መጫን በተሳካ ሁኔታ ተጠናቋል።",
+    "successRepair": "የ GRUB ጥገና በተሳካ ሁኔታ ተጠናቋል።",
+    "successRestore": "ከመጠባበቂያ መመለስ በተሳካ ሁኔታ ተጠናቋል።",
+    "successTitle": "ተሳክቷል",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI System Partition። የማስነሻ ጫኞችን እና የከርነል ምስሎችን ለማስቀመጥ በ UEFI ኮምፒውተሮች የሚጠቀምበት ክፍልፍል።",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record። በክፍልፋይ የተከፋፈለ የማከማቻ መሳሪያ መጀመሪያ ላይ የሚገኝ ባህላዊ የማስነሻ ሴክተር።",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record። Volume Boot Record (VBR) በመባልም ይታወቃል። የአንድ የተወሰነ ክፍልፍል የመጀመሪያው ሴክተር ነው።",
+    "targetRoot": "Root",
+    "title": "የማስነሻ ",
+    "titleTwo": "ጥገና"
   },
-  "systemSettings": {
-    "defaultShellConfigs": "ነባሪ ውቅሮችን ጫን",
-    "defaultDns": "ነባሪ DNS አዘጋጅ",
-    "defaultShell": "የመግቢያ ሼል አዘጋጅ",
-    "enableHblock": "Hblock አንቃ",
-    "enableIwd": "ከ wpa_supplicant ይልቅ IWD ተጠቀም",
-    "common": {
-      "title": "የተለመደ",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon ተጭኗል"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon ነቅቷል"
-      },
-      "oomd": {
-        "title": "Systemd-oomd ነቅቷል"
-      },
-      "guestUser": {
-        "title": "የእንግዳ ተጠቃሚ አንቃ"
-      }
-    },
-    "performance": {
-      "title": "አፈጻጸም",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "የአፈጻጸም ማሻሻያዎች"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ ተጭኗል"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ ነቅቷል"
-      },
-      "bpftune": {
-        "title": "Bpftune ተጭኗል"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune ነቅቷል"
-      },
-      "preload": {
-        "title": "Preload ተጭኗል"
-      },
-      "preloadEnabled": {
-        "title": "Preload ነቅቷል"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance ነቅቷል"
-      }
-    },
-    "powersave": {
-      "title": "ኃይል ቁጠባ",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "የኃይል ቁጠባ ማሻሻያዎች"
-      },
-      "tlp": {
-        "title": "TLP ተጭኗል"
-      },
-      "tlpEnabled": {
-        "title": "TLP ነቅቷል"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq ተጭኗል"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq ነቅቷል"
-      },
-      "thermald": {
-        "title": "Thermald ተጭኗል"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald ነቅቷል"
-      },
-      "powerProfilesDaemon": {
-        "title": "Power profiles daemon ተጭኗል"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Power profiles daemon ነቅቷል"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt ተጭኗል"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt ነቅቷል"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "የቀኝ ጠቅታ ማስመሰል",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev ረጅም ፕሬስ የቀኝ ጠቅታ ማስመሰል"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE ነቅቷል"
-      }
-    }
+  "commandPalette": {
+    "hint": "ሞጁሎችን እና እርምጃዎችን ይፈልጉ",
+    "placeholder": "ትዕዛዝ ይተይቡ ወይም ሞጁል ይፈልጉ...",
+    "toClose": "ለመዝጋት"
   },
-  "shells": {
-    "fish": {
-      "hint": "fishን እንደ ነባሪ ሼል ማዘጋጀት ከሌሎች ፕሮግራሞች ጋር ችግር ሊፈጥር ይችላል። ይልቁንስ በተርሚናል ውቅሮች በኩል እንደ ነባሪ እንዲያዘጋጁት ይመከራል።"
-    }
+  "configFiles": {
+    "actions": "እርምጃዎች",
+    "desc": {
+      "adjtime": "ሰዓቶችን ለመከታተል በ hwclock የሚጠቀምበት",
+      "alacritty": "በ GPU የተጣደፈ የተርሚናል ኢሙሌተር (Alacritty) ውቅር",
+      "alsa_base": "የ ALSA ከርነል ሞጁል አማራጮች",
+      "amdgpu_conf": "የ AMDGPU ከርነል ሞጁል አማራጮች",
+      "ananicy": "የ Ananicy auto-nice አገልጋይ ደንቦች",
+      "asound_conf": "የስርዓት አቀፍ የ ALSA ውቅር",
+      "asoundrc": "የተጠቃሚ-ተኮር የ ALSA ውቅር",
+      "bash_bashrc": "ለይነተገናኝ ሼሎች የስርዓት አቀፍ የ bash ሼል ቅንብሮች",
+      "bashrc": "ለአሁኑ ተጠቃሚ የ Bash ማዋቀሪያ ፋይል",
+      "blacklist_nouveau": "ክፍት ምንጭ የሆነውን Nouveau ድራይቨር በጥቁር መዝገብ ይይዛል",
+      "bluetooth_main": "የብሉቱዝ አገልጋይ ውቅር",
+      "btrfsAssistant": "የ BTRFS Assistant ውቅር",
+      "chaoticMirrorlist": "የ Garuda ብጁ Chaotic-AUR ማከማቻ መስታወቶች",
+      "cinnamon": "የ Cinnamon ዴስክቶፕ ዋና የማዋቀሪያ ማውጫ",
+      "cpupower": "የ cpupower የኃይል አስተዳደር መሳሪያ ውቅር",
+      "cron": "የ cron ስራዎች ውቅር",
+      "cursorThemeSystem": "የስርዓት አቀፍ ጠቋሚ (Cursor) ገጽታ ውቅር",
+      "cursorThemeUser": "የተጠቃሚ-ተኮር ጠቋሚ (Cursor) ገጽታ ውቅር",
+      "dunst": "የ Dunst የማሳወቂያ አገልጋይ ውቅር",
+      "environment": "የስርዓት አቀፍ የአካባቢ ተለዋዋጮች",
+      "environmentD": "የስርዓት አቀፍ የአካባቢ ተለዋዋጮች ማውጫ (Wayland)",
+      "fastfetch": "የስርዓት መረጃ ሰርስሮ ማሳያ መሳሪያ ውቅር (Fastfetch)",
+      "fish": "የ Fish ሼል ማዋቀሪያ ፋይል",
+      "fontconfigSystem": "የስርዓት አቀፍ የፊደል ቅርጸ-ቁምፊ ውቅር ቅንብሮች",
+      "fontconfigUser": "የተጠቃሚ-ተኮር የፊደል ቅርጸ-ቁምፊ ውቅር ቅንብሮች",
+      "fstab": "ስለ ፋይል ስርዓቶች ቋሚ መረጃ",
+      "gamemode": "የ GameMode ማመቻቻ መሳሪያ አጠቃላይ ውቅር",
+      "garudaUpdateConfig": "የ garuda-update ባህሪ እና የዝመና ባንዲራዎች ውቅር",
+      "gdm": "የ GNOME ማሳያ አስተዳዳሪ ውቅር (GDM)",
+      "gitconfig": "የተጠቃሚ-ተኮር የ Git ውቅር",
+      "group": "የተጠቃሚ ቡድኖችን ይገልጻል",
+      "grub": "የ GRUB ማስነሻ ጫኝ ማዋቀሪያ ፋይል",
+      "grub_cfg": "የ GRUB ማስነሻ ጫኝ ዋና ማዋቀሪያ ፋይል",
+      "grubTheme": "የ GRUB ማስነሻ ጫኝ ገጽታ ውቅር",
+      "gtk3Settings": "ለ GTK 3.0 መተግበሪያዎች ቅንብሮች",
+      "gtk4Css": "ለ GTK 4.0 መተግበሪያዎች ብጁ የ CSS ቅጥ",
+      "gtk4Settings": "ለ GTK 4.0 መተግበሪያዎች ቅንብሮች",
+      "gtkrc2": "ለቀድሞው GTK 2.0 መተግበሪያዎች ቅንብሮች",
+      "hostname": "የስርዓቱ የአስተናጋጅ ስም (hostname)",
+      "hosts": "ለአስተናጋጅ ስሞች ቋሚ የሰንጠረዥ ፍለጋ",
+      "hosts_allow": "የአውታረ መረብ አገልግሎት መዳረሻን ለመቆጣጠር የ TCP wrappers (ፍቀድ)",
+      "hosts_deny": "የአውታረ መረብ አገልግሎት መዳረሻን ለመቆጣጠር የ TCP wrappers (ከልክል)",
+      "hyprland": "የ Hyprland Wayland ማቀናበሪያ ውቅር",
+      "hyprpaper": "የ Hyprpaper የግድግዳ ወረቀት መሳሪያ ውቅር",
+      "i3": "የጥንታዊው X11 ሰቅ መስኮት አስተዳዳሪ (i3) ውቅር",
+      "iconTheme": "የአዶ (Icon) ገጽታ ውቅር ቅንብሮች",
+      "journald": "የ systemd ጆርናል አገልግሎት ውቅር",
+      "kcmfonts": "የ KDE የፊደል ቅርጸ-ቁምፊ ውቅር ቅንብሮች",
+      "kdeColorScheme": "የተጠቃሚ-ተኮር የ KDE የቀለም ዘዴ ትርጓሜዎች",
+      "kdeglobals": "አጠቃላይ የ KDE ማዋቀሪያ ቅንብሮች",
+      "kdeLookandFeel": "የ KDE አጠቃላይ ገጽታ (Look and Feel) ቅንብሮች",
+      "kitty": "ባለብዙ ገጽታ፣ በ GPU የተጣደፈ የተርሚናል (Kitty) ውቅር",
+      "kvantumConfig": "የ Kvantum SVG-ተኮር ገጽታ ሞተር ውቅር",
+      "kwinrc": "የ KWin የመስኮት አስተዳዳሪ ውቅር",
+      "lightdm": "የ LightDM ማሳያ አስተዳዳሪ ውቅር",
+      "locale": "የስርዓት አቀፍ ቋንቋ/ሎካል ውቅር",
+      "locale_gen": "በስርዓቱ ላይ የሚገኙ የሎካሎች/ቋንቋዎች ዝርዝር",
+      "logind": "የ systemd የመግቢያ አስተዳዳሪ ውቅር",
+      "makepkgConf": "ለ makepkg የማዋቀሪያ አማራጮች",
+      "mako": "የ Mako የማሳወቂያ አገልጋይ ውቅር",
+      "mangohud": "የ MangoHud የአፈጻጸም መከታተያ ሽፋን ውቅር",
+      "mirrorlist": "መደበኛ የ Arch Linux ማከማቻ መስታወቶች",
+      "mkinitcpio": "የመጀመሪያ የ ramdisk አካባቢን ለመፍጠር ውቅር",
+      "modprobe_d": "የከርነል ሞጁል ውቅር እና አማራጮች",
+      "networkmanager": "የ NetworkManager አጠቃላይ ውቅር",
+      "nftables": "የ nftables ፋየርዎል ውቅር",
+      "nvidia_conf": "የ NVIDIA ከርነል ሞጁል አማራጮች",
+      "os_release": "በተለያዩ ፕሮግራሞች የሚጠቀምበት ስለ ስርዓተ ክወናው መረጃ ይሰጣል",
+      "pacman_hooks": "በፓኬጅ ክንዋኔዎች ወቅት እርምጃዎችን በራስ-ሰር ለማስኬድ የሚረዱ መንጠቆዎች (hooks)",
+      "pacmanConf": "የ pacman ፓኬጅ አስተዳዳሪ ዋና ማዋቀሪያ ፋይል",
+      "pam": "የ Pluggable Authentication Modules (PAM) ማዋቀሪያ ፋይሎች",
+      "pam_d": "ለማረጋገጫ አገልግሎቶች የ PAM ውቅር",
+      "passwd": "የተጠቃሚ መለያ መረጃን ይዟል",
+      "pipewire_client": "የ PipeWire ደንበኛ ውቅር",
+      "pipewire_conf": "የተጠቃሚ ደረጃ የ PipeWire አገልጋይ ውቅር",
+      "plasmaApplets": "የ Plasma ዴስክቶፕ አፕሌቶች ውቅር",
+      "plasmaEnv": "ለ Plasma የስራ ቦታ የአካባቢ ተለዋዋጮች",
+      "plasmarc": "የ Plasma shell ዋና ውቅር",
+      "plymouthConf": "የ Plymouth bootsplash አገልጋይ ውቅር",
+      "profile": "የተጠቃሚ-ተኮር አካባቢ እና የመነሻ ፕሮግራሞች",
+      "pulse_daemon": "የ PulseAudio አገልጋይ ቅንብሮች",
+      "pulse_default": "የ PulseAudio ማስጀመሪያ ስክሪፕት",
+      "qtile": "በ Python ላይ የተመሰረተ የመስኮት አስተዳዳሪ ውቅር",
+      "resolv": "የዲ ኤን ኤስ (DNS) ፈቺ ማዋቀሪያ ፋይል",
+      "rofi": "የ Rofi የመተግበሪያ ማስጀመሪያ እና የመስኮት መቀየሪያ ውቅር",
+      "rsyslog": "የ rsyslog አገልጋይ ዋና ውቅር",
+      "sddm": "የ SDDM ማሳያ አስተዳዳሪ ውቅር",
+      "shadow": "የተመሰጠሩ የይለፍ ቃሎችን እና የመለያ ማብቂያ መረጃን ይዟል",
+      "snapperRoot": "ለ root ክፍልፍል የ Snapper ውቅር",
+      "ssh_user": "የተጠቃሚ-ተኮር የ SSH ደንበኛ ውቅር",
+      "sshd": "የ OpenSSH አገልጋይ አገልግሎት ማዋቀሪያ ፋይል",
+      "starship": "የ Starship cross-shell ፈጣን ጥያቄ ውቅር",
+      "sudoers": "የትኞቹ ተጠቃሚዎች የ sudo ፈቃድ እንዳላቸው ያዋቅራል",
+      "sway": "የ Sway Wayland ማቀናበሪያ ውቅር",
+      "sysctl": "የከርነል መለኪያዎች (ኔትወርክ፣ አፈጻጸም፣ ደህንነት)",
+      "systemd_network": "ለ systemd-networkd የማዋቀሪያ ፋይሎች",
+      "systemd_services": "ብጁ ወይም የተተኩ የ systemd አገልግሎት ትርጓሜዎች",
+      "systemd_timers": "ለታቀዱ ተግባራት የ systemd ሰዓት ቆጣሪዎች (timers)",
+      "systemdSystem": "አጠቃላይ የ systemd የስርዓት ውቅር",
+      "systemdUser": "አጠቃላይ የ systemd የተጠቃሚ ውቅር",
+      "timezone": "የስርዓቱን የሰዓት ሰቅ ይወስናል",
+      "udev_rules": "የሃርድዌር መሳሪያ ባህሪን የሚወስኑ የ udev ደንቦች",
+      "userdirs": "የ XDG የተጠቃሚ ማውጫዎች ውቅር",
+      "vconsole": "የቨርቹዋል ኮንሶል ውቅር",
+      "waybar": "የ Waybar የሁኔታ አሞሌ ዋና ውቅር",
+      "waybarStyle": "ለ Waybar የሁኔታ አሞሌ የ CSS ቅጥ ማስተካከያ",
+      "wayfire": "የ 3D Wayland ማቀናበሪያ ውቅር (Wayfire)",
+      "wayland_conf": "የተጠቃሚ-ተኮር የ Wayland ማቀናበሪያ ማዋቀሪያ ፋይሎች",
+      "wireplumber": "የ WirePlumber የክፍለ ጊዜ አስተዳዳሪ የማዋቀሪያ ማውጫ",
+      "wofi": "የ Wofi የመተግበሪያ ማስጀመሪያ ውቅር",
+      "xfce4": "የ Xfce4 ዋና የማዋቀሪያ ማውጫ",
+      "xorg_conf": "የቀድሞው ዋና የ Xorg ማዋቀሪያ ፋይል",
+      "xorg_conf_d": "የ Xorg ማዋቀሪያ ቅንጥቦች ማውጫ",
+      "xorg_gpu": "ለ GPU-ተኮር የ Xorg ውቅር (የድራይቨር ምርጫ፣ BusID፣ የስክሪን ቅንብሮች)",
+      "xorg_monitor": "የሞኒተር አቀማመጥ፣ ጥራት (resolution) እና የእድሳት መጠን ለ Xorg",
+      "zramGenerator": "የ zram-generator ውቅር",
+      "zsh": "ለአሁኑ ተጠቃሚ የ Zsh ማዋቀሪያ ፋይል"
+    },
+    "description": "መግለጫ",
+    "edit": "አርትዕ",
+    "name": "ስም",
+    "path": "ዱካ (Path)",
+    "search": "የማዋቀሪያ ፋይሎችን ፈልግ...",
+    "title": "የማዋቀሪያ ",
+    "titleTwo": "ፋይሎች",
+    "wiki": "ዊኪ"
   },
   "confirmation": {
     "accept": "ተቀበል",
-    "reject": "ሰርዝ",
-    "exitApp": "መተግበሪያውን ለመዝጋት እርግጠኛ ነዎት?",
-    "exitAppRunningAction": "መተግበሪያውን ለመዝጋት እርግጠኛ ነዎት? እየሰራ ያለ እርምጃ አለ!",
-    "resetConfigsHeader": "ውቅሮችን ዳግም አስጀምር?",
-    "resetConfigsBody": "የሚከተሉትን ውቅሮች ዳግም ለማስጀመር እርግጠኛ ነዎት?",
-    "exitAppHeader": "መተግበሪያ ዝጋ?",
     "applyOperations": "ክንውኖችን ተግብር?",
-    "applyOperationsBody": "ሁሉንም በመጠባበቅ ላይ ያሉ ክንውኖችን ለመተግበር እርግጠኛ ነዎት?"
+    "applyOperationsBody": "ሁሉንም በመጠባበቅ ላይ ያሉ ክንውኖችን ለመተግበር እርግጠኛ ነዎት?",
+    "cancel": "ሰርዝ",
+    "createSnapshotBefore": "ከመተግበሩ በፊት የ Btrfs ቅጽበታዊ ገጽ እይታ (snapshot) ፍጠር",
+    "exitApp": "መተግበሪያውን ለመዝጋት እርግጠኛ ነዎት?",
+    "exitAppHeader": "መተግበሪያ ዝጋ?",
+    "exitAppRunningAction": "መተግበሪያውን ለመዝጋት እርግጠኛ ነዎት? እየሰራ ያለ እርምጃ አለ!",
+    "password": "የይለፍ ቃል",
+    "reject": "ሰርዝ",
+    "resetConfigsBody": "የሚከተሉትን ውቅሮች ዳግም ለማስጀመር እርግጠኛ ነዎት?",
+    "resetConfigsHeader": "ውቅሮችን ዳግም አስጀምር?",
+    "save": "በዚህ ክፍለ ጊዜ አስቀምጥ",
+    "subtitle": "ለመቀጠል እባክዎ የይለፍ ቃልዎን ያስገቡ",
+    "title": "ማረጋገጫ ያስፈልጋል",
+    "useOnce": "አንድ ጊዜ ብቻ ተጠቀም"
+  },
+  "console": {
+    "abortAll": "ሁሉንም እርምጃዎች አቋርጥ",
+    "clearCachedData": "የውጤት መሸጎጫ በተሳካ ሁኔታ ጸድቷል።",
+    "clearCachedDataTitle": "የውጤት መሸጎጫ ጸድቷል",
+    "clearOutputCache": "የውጤት መሸጎጫ አጽዳ",
+    "copyOutput": "የተርሚናል ውጤት ቅዳ",
+    "copyToClipboard": "ውጤቱ በተሳካ ሁኔታ ወደ ቅንጥብ ሰሌዳዎ ተቀድቷል።",
+    "copyToClipboardTitle": "ወደ ቅንጥብ ሰሌዳ ተቀድቷል",
+    "noOutput": "ምንም ውጤት የለም",
+    "noTasksPending": "ምንም በመጠባበቅ ላይ ያሉ ተግባራት የሉም",
+    "opRunning": "ክንውኑ አስቀድሞ እየሰራ ነው።",
+    "outputExists": "አስቀድሞ እየሰራ ያለ እርምጃ ያለ ይመስላል። እባክዎ ምዝግብ ማስታወሻዎችን ለማየት ከመሞከርዎ በፊት እስኪጨርስ ይጠብቁ።",
+    "printScripts": "ስክሪፕቶችን አትም",
+    "removeAll": "ሁሉንም እርምጃዎች አስወግድ",
+    "runActions": "እርምጃዎችን አሂድ",
+    "tasksAppearHere": "እቃዎችን ሲመርጡ ተግባራት እዚህ ይታያሉ።",
+    "title": "ተርሚናል",
+    "uploadPrivateBin": "ወደ PrivateBin ስቀል"
+  },
+  "diagnostics": {
+    "copySuccess": "ወደ ቅንጥብ ሰሌዳ በተሳካ ሁኔታ ተቀድቷል",
+    "dmesg": "የከርነል ምዝግብ ማስታወሻዎች (dmesg)",
+    "dmesgDesc": "የከርነል መልእክት ቋት (buffer) ምዝግብ ማስታወሻዎችን ይመልከቱ።",
+    "exitCode": "ትዕዛዙ በኮድ {{code}} ተጠናቋል",
+    "failedCmd": "መጥፎ ነገር ተከስቷል እና ምንም የምርመራ መረጃ ማግኘት አልተቻለም",
+    "failedCmdHeader": "ትዕዛዙን ማስኬድ አልተቻለም",
+    "full": "ሙሉ ምርመራዎች",
+    "fullDesc": "ሁሉንም የምርመራ መረጃዎች ወደ አንድ ሪፖርት ያጠናቅሩ።",
+    "health": "የስርዓት ጤና",
+    "healthDesc": "የስርዓት ውቅር ችግሮችን እና የጤና ስጋቶችን ይመርምሩ።",
+    "inxi": "የተለመደ መረጃ (inxi)",
+    "inxiDesc": "ዝርዝር የሃርድዌር እና የስርዓት መረጃ ይሰብስቡ።",
+    "journalctl": "የስርዓት ምዝግብ ማስታወሻዎች (journalctl)",
+    "journalctlDesc": "የስርዓት ምዝግብ ማስታወሻዎችን ከ journal daemon ይመርምሩ።",
+    "pacman": "የቅርብ ጊዜ የ Pacman ምዝግብ ማስታወሻዎች",
+    "pacmanDesc": "በጣም የቅርብ ጊዜ የ pacman ፓኬጅ አስተዳዳሪ ምዝግብ ማስታወሻዎችን ይመልከቱ።",
+    "subtitle": "ስርዓትዎን ለማረም የሚያስፈልግዎትን መረጃ ያግኙ",
+    "success": "ተሳክቷል",
+    "systemctl": "የስርዓት አገልግሎቶች (systemctl)",
+    "systemctlDesc": "የስርዓት ማስነሳት አፈጻጸም እና የአገልግሎት ሁኔታን ይተንትኑ።",
+    "title": "የማረሚያ መረጃ ",
+    "titleTwo": "እና ምርመራዎች",
+    "upload": "ወደ PrivateBin ስቀል",
+    "uploadDesc": "የምርመራ መረጃን ደህንነቱ በተጠበቀ ሁኔታ ወደ PrivateBin ይስቀሉ።",
+    "uploadSuccess": "ወደ PrivateBin በተሳካ ሁኔታ ተሰቅሏል፣ URL ወደ ቅንጥብ ሰሌዳ ተቀድቷል"
   },
   "error": {
     "sudoPassword": "ይህ ትክክለኛ የይለፍ ቃል አይመስልም። እባክዎ እንደገና ይሞክሩ።"
   },
-  "operation": {
-    "removeApps": "መተግበሪያዎችን አስወግድ",
-    "installApps": "መተግበሪያዎችን ጫን",
-    "addGroup": "ተጠቃሚን ወደ ቡድን ጨምር",
-    "removeGroup": "ተጠቃሚን ከቡድን አስወግድ",
-    "disableService": "አገልግሎት አሰናክል",
-    "enableService": "አገልግሎት አንቃ",
-    "setDefaultShell": "ነባሪ ሼል አዘጋጅ",
-    "enableHblock": "Hblock አንቃ",
-    "disableHblock": "Hblock አሰናክል",
-    "setNewDnsServer": "አዲስ የዲ ኤን ኤስ አገልጋይ አዘጋጅ",
-    "resetDnsServer": "የዲ ኤን ኤስ አገልጋይ ዳግም አስጀምር",
-    "args": "አርጊውመንቶች",
-    "logs": "ምዝግብ ማስታወሻዎች",
-    "remove": "አስወግድ",
-    "abort": "አቋርጥ",
-    "run": "አሁን አሂድ"
-  },
-  "systemStatus": {
-    "pendingUpdates": "በመጠባበቅ ላይ ያሉ ዝመናዎች",
-    "updates": "ይህ ስርዓት በመጠባበቅ ላይ ያሉ ዝመናዎች አሉት (ለመረጃ ጠቅ ያድርጉ)",
-    "pacFiles": "ይህ ስርዓት በመጠባበቅ ላይ ያሉ .pacnew ፋይሎች አሉት፤ እነሱን ማረጋገጥ እና ማዋሃድ አለብዎት! (ለመረጃ ጠቅ ያድርጉ)",
-    "cancel": "ሰርዝ",
-    "aurUpdates": "የ AUR ፓኬጆችን ማዘመን የዚህ መተግበሪያ ወሰን ውጭ ነው። እባክዎ እንደ Paru ያለ የ AUR ረዳት ይጠቀሙ፣ እና ከመጫንዎ በፊት የ PKGBUILD ፋይሎችን ይገምግሙ።",
-    "scheduleUpdates": "ዝመናዎችን ፕሮግራም ያዝ",
-    "pendingPacdiff": "በመጠባበቅ ላይ ያሉ የ pacdiff ፋይሎች",
-    "findMore": "እንዴት መቀጠል እንዳለብዎ ይወቁ",
-    "warnUpdate": "ስርዓትዎ በ2 ሳምንታት ውስጥ አልተዘመነም። እባክዎ ደህንነትን እና መረጋጋትን ለማረጋገጥ ስርዓትዎን ያዘምኑ።",
-    "affectedFiles": "የተጎዱ ፋይሎች:",
-    "learnPacdiff": "የ pacdiff ፋይሎችን የማያውቁ ከሆነ፣ በፍጥነት ስለእነሱ መረጃ ያግኙ።",
-    "openMaintenance": "ለመጀመር ከታች ያለውን ቁልፍ ጠቅ ያድርጉ።",
-    "openMaintenanceButton": "ማዋሃድ ጀምር",
-    "rebootNow": "አሁን እንደገና አስነሳ",
-    "rebootNowBody": "አሁን እንደገና ለማስነሳት እርግጠኛ ነዎት? ከመቀጠልዎ በፊት ሁሉንም ስራዎን ማስቀመጥዎን ያረጋግጡ።",
-    "warnReboot": "ዝማኔዎችን ከተገበሩ በኋላ፣ በተለይም ከርነሎችን ወይም የዴስክቶፕ አካባቢዎችን ሲያዘምኑ ስርዓትዎን እንደገና ማስጀመር በጥብቅ ይመከራል።",
-    "proceed": "እንዴት እንደሚቀጥሉ እነሆ:",
-    "snapshotCreation": "ውህደቱን ከመጀመርዎ በፊት የ Btrfs ቅጽበታዊ ገጽ እይታ ይፈጠራል።",
-    "proceedMerge": "ለውጦችን ለመተግበር Meld ይከፈታል። በግራ በኩል ያለው አዲሱ ፋይል ሲሆን በቀኝ በኩል ያለው ደግሞ የቆየው ነው። ከግራ ወደ ቀኝ ማዋሃድ የሚፈልጉትን ማንኛውንም ጠቃሚ ለውጦች ያንቀሳቅሱ። ሲጨርሱ የማስቀመጫ ቁልፍን ወይም CTRL + Sን ጠቅ ያድርጉ።",
-    "cautionMerge": "የተሳሳቱ ለውጦችን ወደ የቆየው ፋይል ማስገባት ስርዓትዎን ሊያበላሽ እንደሚችል ይገንዘቡ።",
-    "askHelp": "እርግጠኛ ካልሆኑ መስኮቱን ሳያስቀምጡ ይዝጉ እና በ Garuda Linux መድረክ ላይ እርዳታ ይጠይቁ።",
-    "runAurUpdates": "የ AUR ዝመናዎችን ከውጭ ያሂዱ"
-  },
-  "operationManager": {
-    "refusing": "አፈፃፀምን አለመቀበል",
-    "pendingOperationsRunning": "እየሰሩ ያሉ ክንውኖች አሉ፤ አስቀድመው የተጠናቀቁትን ብቻ ነው የማስወግደው።",
-    "thisOperationRunning": "አብደሃል እንዴ? ይህ ክንውን በአሁኑ ጊዜ እየሰራ ነው!"
-  },
-  "os-interact": {
-    "packages": "የተጫኑ ፓኬጆችን ቀይር",
-    "packages-aur": "የ AUR ፓኬጆችን ቀይር",
-    "services": "አገልግሎቶችን ቀይር",
-    "services-user": "የተጠቃሚ አገልግሎቶችን ቀይር",
-    "groups": "የተጠቃሚ ቡድኖችን ቀይር",
-    "locales": "የነቁ ሎካሎችን ቀይር"
-  },
-  "packages": {
-    "title": "ፓኬጆች",
-    "icon": "Icon",
-    "internet": "ኢንተርኔት",
-    "documents": "ሰነዶች",
-    "multimedia": "መልቲሚዲያ",
-    "science": "ሳይንስ",
-    "security": "ደህንነት",
-    "other": "ሌላ",
-    "clear": "አጽዳ",
-    "search": "ፈልግ",
-    "url": "URL",
-    "selected": "ተመርጧል",
-    "description": "መግለጫ",
-    "name": "ስም",
-    "searchKey": "የፍለጋ ቁልፍ ቃል ያስገቡ",
-    "notFound": "ምንም ፓኬጆች አልተገኙም"
+  "gaming": {
+    "antimicrox": "የጨዋታ መቆጣጠሪያ ቁልፎችን ወደ ኪቦርድ እና ማውስ የሚቀይር መተግበሪያ",
+    "anydesk": "የርቀት ዴስክቶፕ መቆጣጠሪያ መተግበሪያ",
+    "bluez": "የ PS መቆጣጠሪያዎችን በገመድ አልባ ለመለየት በአጠቃላይ ያስፈልጋል",
+    "bottles": "የ Wine እና Proton prefixዎችን በቀላሉ ያስተዳድሩ",
+    "boxtron": "ለ Steam Play የ DOSBox ተኳኋኝነት መሳሪያ",
+    "controllers": "የመቆጣጠሪያ ድጋፍ",
+    "corectrl": "የኮምፒውተርዎን ሃርድዌር መቆጣጠሪያ እና መገለጫ ማበጃ መተግበሪያ",
+    "desmume": "የ Nintendo DS ኢሙሌተር",
+    "dgenSdl": "የ Sega Genesis / Mega Drive ኢሙሌተር",
+    "discord": "ሁሉንም በአንድ የሚያካትት የድምጽ እና የጽሁፍ ውይይት መተግበሪያ",
+    "displaycal": "የማሳያ ቀለም ማስተካከያ እና ፕሮፋይሊንግ መሳሪያ",
+    "dolphinEmu": "የ GameCube እና Wii ኢሙሌተር",
+    "dosbox": "የ DOS ጨዋታዎች ኢሙሌተር",
+    "droidcam": "ስልክዎን እንደ ዌብካም (webcam) ይጠቀሙ",
+    "duckstation": "ፈጣን የ Sony PlayStation 1 ኢሙሌተር",
+    "dxvk": "በ Vulkan ላይ የተመሰረተ ለ Direct3D 9/10/11 የትርጉም ንብርብር",
+    "easyeffects": "ለ PipeWire አፕሊኬሽኖች የድምጽ ተፅእኖዎች እና ማመጣጠኛ",
+    "eka2l1": "የ Symbian OS ኢሙሌተር",
+    "emulationstation": "ለተለያዩ ኢሙሌተሮች የሚያገለግል የፊት ለፊት በይነገጽ (frontend)",
+    "emulators": "ኢሙሌተሮች",
+    "fceux": "ሁሉንም በአንድ የያዘ የ NES/Famicom ኢሙሌተር",
+    "fsUae": "የ Amiga ኮምፒውተሮች ኢሙሌተር",
+    "gameconqueror": "ለ Scanmem የግራፊክስ በይነገጽ (የጨዋታ ማጭበርበሪያ መሳሪያ)",
+    "gamemode": "በጨዋታ ጊዜ የሊኑክስ ስርዓት አፈጻጸምን ያመቻቹ",
+    "games": "ጨዋታዎች",
+    "gamescope": "የእንፋሎት OS (SteamOS) ክፍለ ጊዜ ማቀናበሪያ (micro-compositor)",
+    "gamescopeSession": "በ Gamescope ውስጥ ክፍለ ጊዜዎችን ለማስኬድ የሚረዳ መሳሪያ",
+    "gamescopeSessionSteam": "የ Steam Gamescope ክፍለ ጊዜ ውህደት",
+    "goverlay": "የ Vulkan እና OpenGL ተደራቢዎችን ለማስተዳደር የግራፊክስ በይነገጽ",
+    "gwe": "የ NVIDIA ቪዲዮ ካርድ ቅንብሮችን ለመቆጣጠር የሚያስችል ስርዓት",
+    "hatari": "የ Atari ST/STE/TT/Falcon ኢሙሌተር",
+    "heroic": "ለ Epic፣ Amazon እና GOG ጨዋታዎች ክፍት ምንጭ አስጀማሪ",
+    "inputRemapper": "የመግቢያ መሳሪያዎችን (input devices) ቁልፎች ለመቀየር የሚያስችል መተግበሪያ",
+    "itch": "የ itch.io ዴስክቶፕ መተግበሪያ መጫኛ",
+    "kegaFusion": "የ Sega ኮንሶሎች ኢሙሌተር",
+    "keyboardVisualizer": "ለ RGB ኪቦርዶች የድምጽ እይታ አኒሜሽን",
+    "lact": "የ AMD እና Nvidia ጂፒዩ መቆጣጠሪያ መተግበሪያ",
+    "launchers": "የጨዋታ አስጀማሪዎች",
+    "libretroMeta": "የ Libretro cores እና ተጨማሪዎች ሜታ ፓኬጅ",
+    "loading": "በመጫን ላይ...",
+    "lutris": "ክፍት የጨዋታ መድረክ",
+    "luxtorpeda": "ለ Steam Play የቤተኛ ጨዋታ ሞተሮች ተኳኋኝነት መሳሪያ",
+    "mame": "የ Arcade እና የድሮ ጨዋታዎች ኢሙሌተር",
+    "mangohud": "የስርዓት አፈጻጸም እና FPS መከታተያ ሽፋን",
+    "mednafen": "ባለብዙ ሲስተም የትእዛዝ መስመር ኢሙሌተር",
+    "mgba": "ፈጣን እና ትክክለኛ የ Game Boy Advance ኢሙሌተር",
+    "minigalaxy": "ለሊኑክስ ቀላል የ GOG ደንበኛ",
+    "misc": "ልዩ ልዩ",
+    "mumble": "ዝቅተኛ መዘግየት ያለው ክፍት ምንጭ የድምጽ ውይይት መተግበሪያ",
+    "nestopia": "ትክክለኛ የ NES/Famicom ኢሙሌተር",
+    "noisetorch": "በማይክሮፎን ላይ የእውነተኛ ጊዜ የድምጽ ረብሻ ማስወገጃ",
+    "nyrna": "ጨዋታዎችን እና መተግበሪያዎችን ለጊዜው ለአፍታ የሚያቆም መሳሪያ",
+    "obsStudio": "ለቀጥታ ስርጭት እና የስክሪን ቀረጻ ነፃ እና ክፍት ምንጭ ሶፍትዌር",
+    "openrgb": "ክፍት ምንጭ የ RGB መብራት መቆጣጠሪያ ሶፍትዌር",
+    "oversteer": "በሊኑክስ ላይ የመሪ መቆጣጠሪያዎችን (steering wheels) ለማስተዳደር መተግበሪያ",
+    "pcsx2": "የ PlayStation 2 ኮንሶል ኢሙሌተር",
+    "pegasusFrontend": "የጨዋታ ስብስቦችን ለማሰስ የሚያምር በይነገጽ",
+    "piper": "የጨዋታ ማውሶችን ለማዋቀር የ GTK መተግበሪያ",
+    "polychromatic": "ለ Razer መሳሪያዎች የግራፊክስ በይነገጽ",
+    "ppsspp": "የ PlayStation Portable (PSP) ኢሙሌተር",
+    "protonCachyOS": "የ CachyOS ማሻሻያዎች ያሉት የተመቻቸ የ Proton ግንባታ",
+    "protonGeCustom": "የቅርብ ጊዜ ማስተካከያዎችን ያካተተ ብጁ የ Proton ግንባታ",
+    "protontricks": "ለ Proton ጨዋታዎች የ Winetricks መጠቅለያ",
+    "protonupQt": "የ Wine እና Proton-GE ጭነቶችን ለማስተዳደር የ GUI መሳሪያ",
+    "retroarch": "ለኢሙሌተሮች፣ የጨዋታ ሞተሮች እና ሚዲያ አጫዋቾች ማዕከላዊ በይነገጽ",
+    "rpcs3": "የ Sony PlayStation 3 ክፍት ምንጭ ኢሙሌተር",
+    "ryujinx": "የ Nintendo Switch ኢሙሌተር",
+    "sameboy": "እጅግ ትክክለኛ የ Game Boy እና Game Boy Color ኢሙሌተር",
+    "scController": "የ Steam Controller እና ሌሎች ጌምፓዶች ማዋቀሪያ መተግበሪያ",
+    "scummvm": "የጥንታዊ የጀብዱ ጨዋታዎችን ለማስኬድ የሚያስችል ፕሮግራም",
+    "snes9x": "የ Super Nintendo (SNES) ኢሙሌተር",
+    "soundwire": "የድምጽ ዥረት ከኮምፒውተር ወደ አንድሮይድ ስልክ ማስተላለፊያ",
+    "steamNative": "የ Steam ቤተኛ runtime ፓኬጅ",
+    "steamRuntime": "ኦፊሴላዊ የ Steam runtime ፓኬጅ",
+    "steamtinkerlaunch": "ባለብዙ ገጽታ የሊኑክስ ጨዋታ መጠቅለያ መሳሪያ",
+    "stella": "የ Atari 2600 VCS ኢሙሌተር",
+    "streamlinkTwitchGui": "ለ Streamlink ባለ ብዙ ፕላትፎርም የ Twitch በይነገጽ",
+    "subtitle": "በአንዳንድ የጨዋታ መተግበሪያዎች እንጀምር!",
+    "title": "የጨዋታ ",
+    "titleTwo": "መተግበሪያዎች",
+    "tools": "የጨዋታ መሳሪያዎች",
+    "torzu": "የ Nintendo Switch ኢሙሌተር (Torzu)",
+    "vesktop": "የ Vencord ተሰኪዎችን ያካተተ ብጁ የ Discord ደንበኛ",
+    "vice": "ሁለገብ የ Commodore ኮምፒውተሮች ኢሙሌተር",
+    "vkbasalt": "ለ Vulkan ጨዋታዎች የድህረ-ማቀነባበሪያ (post-processing) ንብርብር",
+    "vlc": "ታዋቂ ክፍት ምንጭ መልቲሚዲያ ማጫወቻ",
+    "vrVideoPlayer": "ለሊኑክስ የ VR ቪዲዮ ማጫወቻ",
+    "waydroid": "በሊኑክስ ላይ ሙሉ የአንድሮይድ ሲስተም ለማስኬድ የሚያስችል ኮንቴይነር",
+    "wine": "WINE",
+    "wineMeta": "WINE እና ሁሉንም አስፈላጊ ጥገኞችን ለመጫን የሜታ ፓኬጅ",
+    "winePackage": "የተረጋጋ የ WINE ስሪት",
+    "wineStaging": "የሙከራ ማስተካከያዎችን ያካተተ የ WINE Staging ስሪት",
+    "winetricks": "በ WINE ውስጥ የተለያዩ ዳግም ማሰራጫዎችን ለማስተዳደር የሚረዳ ስክሪፕት",
+    "xboxdrv": "የ Xbox መቆጣጠሪያ ድራይቨር፣ የከርነል ድራይቨሩ ካልሰራ ብቻ ይጠቀሙ!",
+    "xemu": "የመጀመሪያው ትውልድ የ Xbox ኢሙሌተር",
+    "xoneDkms": "ለ Xbox One መቆጣጠሪያዎች የከርነል ድራይቨር (DKMS)",
+    "xoneDongleFirmware": "ለ Xbox One ገመድ አልባ ዶንግል የሚያስፈልግ firmware",
+    "xpadneo": "ለ Xbox One የብሉቱዝ ጌምፓዶች የላቀ የሊኑክስ ድራይቨር",
+    "zsnes": "ቀላል የ Super Nintendo ኢሙሌተር"
   },
   "kernels": {
+    "active": "ንቁ ከርነል:",
     "dkmsModulesBroken": "አንዳንድ የ DKMS ሞጁሎች ተበላሽተዋል",
     "dkmsModulesBrokenTip": "የተበላሹ የ DKMS ሞጁሎችን መጫን ፕሮግራም ለማድረግ እኔን ጠቅ ያድርጉ",
     "dkmsModulesMissing": "አንዳንድ የ DKMS ሞጁሎች ጠፍተዋል",
     "dkmsModulesMissingTip": "የጠፉ የ DKMS ሞጁሎች",
     "headers": "Headers",
     "headersMissing": "የጠፉ የከርነል Headers",
-    "headersMissingTip": "የጠፉትን Headers መጫን ፕሮግራም ለማድረግ እኔን ጠቅ ያድርጉ",
-    "active": "ንቁ ከርነል:"
+    "setDefault": "ነባሪ ከርነል አዘጋጅ"
+  },
+  "lang": {
+    "title": "ቋንቋ ምርጫ",
+    "tooltip": "የሚመርጡትን ቋንቋ ይምረጡ"
   },
   "languagePacks": {
-    "locale": "ሎካል",
-    "selected": "ተመርጧል",
     "base": "መሰረታዊ ፓኬጅ",
+    "description": "እነዚህ ለተጫኑ ፓኬጆችዎ የቋንቋ ፓኬጆች ናቸው፤ ብዙውን ጊዜ ለግራፊካል የተጠቃሚ በይነገጽ (GUI) ትርጉሞችን ይሰጣሉ።",
+    "locale": "ሎካል",
     "notFound": "ምንም የቋንቋ ፓኬጆች አልተገኙም",
     "pkgname": "የፓኬጅ ስም",
-    "description": "እነዚህ ለተጫኑ ፓኬጆችዎ የቋንቋ ፓኬጆች ናቸው፤ ብዙውን ጊዜ ለግራፊካል የተጠቃሚ በይነገጽ (GUI) ትርጉሞችን ይሰጣሉ።"
-  },
-  "settings": {
-    "title": "የመተግበሪያ ",
-    "icon": "Icon",
-    "titleTwo": "ቅንብሮች",
-    "leftButtons": "የመስኮት ቁልፎችን በግራ በኩል አሳይ",
-    "copyDiagnostics": "የምርመራ መረጃ ወደ ቅንጥብ ሰሌዳ ቅዳ",
-    "darkMode": "የጨለማ ሁነታን አንቃ",
-    "language": "ንቁ ቋንቋን አዋቅር",
-    "autoStart": "መተግበሪያን በራስ-ሰር አስጀምር",
-    "logLevel": "የምዝግብ ማስታወሻ ደረጃ ይምረጡ",
-    "systemdUserContext": "የተጠቃሚ Systemd አገልግሎቶችን አሳይ",
-    "autoRefresh": "የ systemd አገልግሎቶች ራስ-ማደስን አንቃ",
-    "showMainLinks": "በመነሻ ገጽ ላይ አገናኞችን አሳይ",
-    "themeLabel": "መሰረታዊ የንድፍ ገጽታ",
-    "toggleOptions": "አማራጮችን ቀያይር",
-    "selectOptions": "ምርጫዎች"
+    "selected": "ተመርጧል"
   },
   "locales": {
     "apply": "የተጫኑ የሎካል ለውጦችን ፕሮግራም ያዝ",
-    "description": "በቀኝ በኩል ያሉት ሎካሎች በስርዓትዎ ላይ ተጭነዋል። የትኞቹን ማቆየት እና የትኞቹን ማስወገድ እንደሚፈልጉ መምረጥ ይችላሉ።",
     "available": "ይገኛል",
+    "description": "በቀኝ በኩል ያሉት ሎካሎች በስርዓትዎ ላይ ተጭነዋል። የትኞቹን ማቆየት እና የትኞቹን ማስወገድ እንደሚፈልጉ መምረጥ ይችላሉ።",
     "selected": "ተመርጧል",
-    "task": "የስርዓት ሎካል ቀይር",
-    "selectLocale": "የሚመርጡትን የስርዓት-አቀፍ ቋንቋ ይምረጡ"
+    "selectLocale": "የሚመርጡትን የስርዓት-አቀፍ ቋንቋ ይምረጡ",
+    "task": "የስርዓት ሎካል ቀይር"
   },
-  "console": {
-    "title": "ተርሚናል",
+  "maintenance": {
+    "actionFailed": "{{ action }}ን በማስኬድ ላይ ሳለ ስህተት ተከስቷል: {{ error }}።",
+    "actionFailedHeader": "እርምጃው አልተሳካም",
+    "addPending": "በመጠባበቅ ላይ ያሉትን ጨምር",
+    "addPendingSub": "በመጠባበቅ ላይ ያሉ ክንዋኔዎችን ጨምር",
+    "btrfsAssistant": "Btrfs ረዳት",
+    "btrfsAssistantSub": "የ BTRFS ቅጽበታዊ ገጽ እይታዎችዎን ያስተዳድሩ እና የጥገና ተግባራትን ያከናውኑ",
+    "cleanCache": "መሸጎጫ አጽዳ",
+    "cleanCacheSub": "ሁሉንም የተሸጎጡ ፓኬጆች አስወግድ",
+    "clearOrphans": "ወላጅ አልባ የሆኑትን አጽዳ",
+    "clearOrphansSub": "ወላጅ አልባ ፓኬጆችን አስወግድ",
+    "common": "የተለመደ ጥገና",
+    "editRepos": "ማከማቻዎችን ያርትዑ",
+    "editReposSub": "ማከማቻዎችዎን በ Pace ያርትዑ",
+    "failedReset": "የማዋቀሪያ ፋይልን ዳግም ማስጀመር ላይ ስህተት",
+    "failedResetFile": "{{file}}ን ዳግም በማስጀመር ላይ ስህተት ተከስቷል",
+    "garudaHealth": "የ Garuda ጤና ፍተሻ",
+    "garudaHealthFix": "የ Garuda ጤና ማስተካከያ",
+    "garudaHealthFixSub": "የተገኙትን የስርዓት ውቅር ችግሮች በራስ-ሰር ያስተካክሉ",
+    "garudaHealthSub": "የስርዓት ውቅር ችግሮችን ይፈትሹ",
+    "garudaUpdate": "Garuda update የማዳኛ መሳሪያዎች",
+    "installationFailedHeader": "{{ program }} አልተጫነም እና መጫን አልተቻለም፤ መቀጠል አይቻልም። ለተጨማሪ መረጃ ምዝግብ ማስታወሻዎችን ይመልከቱ",
+    "mergePacDiff": "የ pacdiff ፋይሎችን አዋህድ",
+    "mergePacDiffSub": ".pacnew እና .pacsave ፋይሎችን በይነተገናኝ መንገድ አዋህድ",
+    "onlyDirect": "ይህ እርምጃ ወረፋ ሊይዝ አይችልም እና በቀጥታ መከናወን አለበት።",
+    "refreshArchMirrors": "ማከማቻዎችን አድስ",
+    "refreshArchMirrorsSub": "የማከማቻ ዝርዝርዎን ያድሱ",
+    "refreshChaoticMirrors": "የ Chaotic-AUR መስታወት ዝርዝርን አድስ",
+    "refreshChaoticMirrorsSub": "የእርስዎን የ Chaotic-AUR መስታወት ዝርዝር ያድሱ",
+    "refreshChaoticMirrorsSuccess": "የ Chaotic-AUR መስታወት ዝርዝር በተሳካ ሁኔታ ታድሷል",
+    "refreshKeyring": "የቁልፍ ሰንሰለት (keyring) አድስ",
+    "refreshKeyringSub": "የእርስዎን የ pacman ቁልፍ ሰንሰለት ያድሱ",
+    "reinstallDkmsModules": "የ DKMS ሞጁሎችን እንደገና ጫን",
+    "reinstallPackages": "ፓኬጆችን እንደገና ጫን",
+    "reinstallPackagesSub": "በስርዓትዎ ላይ ያሉትን ሁሉንም ፓኬጆች እንደገና ጫን",
+    "removeLock": "የ Pacman መቆለፊያን አስወግድ",
+    "removeLockSub": "የ pacman መቆለፊያ ፋይልን አስወግድ",
+    "removePending": "በመጠባበቅ ላይ ያሉትን አስወግድ",
+    "resetConfigs": "ውቅሮችን ወደ ነባሪ ሁኔታ ዳግም አስጀምር",
+    "resetTooltip": "የሚከተሉት ፋይሎች ወይም ማህደሮች ወደ ነባሪ ሁኔታቸው ይመለሳሉ:",
+    "runNow": "አሁን አሂድ",
+    "subtitle": "ስርዓትዎን በጥሩ ሁኔታ ያቆዩ",
+    "taskRunning": "አስቀድሞ እየሰራ ያለ ተግባር አለ፤ እባክዎ መጀመሪያ እስኪጨርስ ይጠብቁ።",
+    "taskRunningHeader": "የጥገና እርምጃን በማስኬድ ላይ ስህተት",
+    "title": "የስርዓት ",
+    "titleTwo": "ጥገና",
+    "update": "ስርዓትዎን ያዘምኑ",
+    "updateRemoteFix": "Garuda update ማስተካከያ",
+    "updateRemoteFixSub": "pacman.confን ዳግም አስጀምር እና keyringsን ያድሱ",
+    "updateRemoteFullFix": "Garuda update ሙሉ ማስተካከያ",
+    "updateRemoteFullFixSub": "Pacmanን ዳግም አስጀምር እና በ OSዎ ውስጥ ያሉትን ሁሉንም ፓኬጆች እንደገና ጫን",
+    "updateRemoteKeyring": "Garuda update keyring",
+    "updateRemoteKeyringSub": "pacman.confን ዳግም ሳያስጀምሩ keyringን ያድሱ",
+    "updateRemoteResetAudio": "ድምጽን ዳግም አስጀምር",
+    "updateRemoteResetAudioSub": "የ PipeWire ድምጽ ውቅረትን እንደገና ጫን/ዳግም አስጀምር",
+    "updateRemoteResetSnapper": "Snapperን ዳግም አስጀምር",
+    "updateRemoteResetSnapperSub": "ሁሉንም የ Snapper ነገር አስወግድ እና ውቅሮቹን እንደገና ፍጠር",
+    "updateSystem": "ስርዓት አዘምን",
+    "updateSystemSub": "ስርዓትዎን በ garuda-update በኩል ያዘምኑ"
+  },
+  "menu": {
+    "apply": "ተግብር",
+    "boot": "የማስነሻ መሳሪያዎች",
+    "bootRepair": "የማስነሻ ጥገና",
+    "clearTasks": "ተግባራትን አጽዳ",
+    "components": "ክፍሎች",
+    "configFiles": "የማዋቀሪያ ፋይሎች",
+    "console": "ተርሚናል አሳይ",
+    "diagnostics": "ምርመራ",
+    "file": {
+      "preferences": "ምርጫዎች",
+      "quit": "ውጣ",
+      "title": "ፋይል"
+    },
+    "gaming": "ጨዋታ",
+    "help": {
+      "about": "ስለ Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox ለ Garuda Linux የስርዓት ጥገና እና የምርመራ መሳሪያ ነው። ተጠቃሚዎች ስርዓታቸውን እንዲጠብቁ እና ችግሮችን እንዲመረምሩ ለመርዳት የተነደፈ ነው። የተሰራው Electron እና Angular በመጠቀም ነው።",
+      "aboutForum": "የ Garuda Linux መድረክን ይጎብኙ",
+      "aboutSourceCode": "የምንጭ ኮድ በ GitLab ላይ ይመልከቱ",
+      "aboutVersion": "ስሪት: {{version}}",
+      "aboutWiki": "Garuda Linux ዊኪን ይጎብኙ",
+      "callExorcist": "አጋንንት አስወጪውን ጥራ",
+      "callExorcistBody": "ይህን ቁልፍ ለመጫን በጣም ተስፋ ቆርጠህ መሆን አለበት! ልዩ መፍትሄ አዘጋጅቼልሃለሁ፤ አሁንም በመተግበሪያው ላይ ችግሮች ካጋጠሙህ እባክህ በ Garuda Linux መድረክ ወይም በችግር መከታተያችን ላይ ሪፖርት አድርግ።",
+      "callExorcistTitle": "አጋንንት አስወጪው ተጠርቷል!",
+      "garudaStatus": "የመስራት ሁኔታን ያረጋግጡ",
+      "getHelpArchWiki": "በ Arch Wiki ውስጥ ይዘት ይፈልጉ",
+      "getHelpForum": "በመድረኩ ላይ እርዳታ ያግኙ",
+      "getHelpWiki": "በዊኪ ውስጥ ይዘት ይፈልጉ",
+      "title": "እርዳታ"
+    },
+    "maintenance": "ጥገና",
+    "modules": {
+      "appSettings": "የመተግበሪያ ቅንብሮች",
+      "bootRepair": "የማስነሻ ጥገና",
+      "components": "ክፍሎች",
+      "diagnostics": "ምርመራ",
+      "gaming": "ጨዋታ",
+      "kernels": "ከርነሎች",
+      "locales": "ሎካሎች",
+      "maintenance": "ጥገና",
+      "packages": "ፓኬጆች",
+      "search": "የፍለጋ አማራጮች",
+      "setupWizard": "የማዋቀሪያ ረዳት",
+      "systemdServices": "Systemd አገልግሎቶች",
+      "systemSettings": "የስርዓት ቅንብሮች",
+      "title": "ሞጁሎች",
+      "userManager": "የተጠቃሚ አስተዳዳሪ",
+      "welcome": "እንኳን ደህና መጡ"
+    },
+    "network": "የኔትወርክ መሳሪያዎች",
+    "packages": "ፓኬጆች",
+    "pending": "በመጠባበቅ ላይ",
+    "settings": "የመተግበሪያ ቅንብሮች",
+    "setupWizard": "የማዋቀሪያ ረዳት",
+    "systemTools": "የስርዓት ቅንብሮች",
+    "terminalRunning": "በሂደት ላይ ያሉ ተግባራት",
+    "terminalTasks": "ተግባራትን አስፈጽም",
+    "welcome": "እንኳን ደህና መጡ"
+  },
+  "networkAssistant": {
+    "actions": "እርምጃዎች",
+    "active": "ንቁ",
+    "airplaneMode": "የበረራ ሁነታ",
+    "any": "ማንኛውም",
+    "blacklistAction": "{{name}}ን ወደ ጥቁር መዝገብ አክል",
+    "blacklistDriver": "ወደ ጥቁር መዝገብ አክል",
+    "blacklistedDrivers": "በጥቁር መዝገብ የተያዙ ድራይቨሮች",
+    "blacklistFailed": "ጥቁር መዝገብን ማዘመን አልተሳካም",
+    "bluetooth": "ብሉቱዝ",
+    "bluetoothDevices": "የብሉቱዝ መሳሪያዎች",
+    "cancel": "ሰርዝ",
+    "category": "ምድብ",
+    "clear": "አጽዳ",
+    "clickToCopy": "ለመቅዳት ጠቅ ያድርጉ",
+    "connected": "ተገናኝቷል",
+    "connectionInfo": "የግንኙነት መረጃ",
+    "connman": "ConnMan",
+    "copied": "ወደ ቅንጥብ ሰሌዳ ተቀድቷል",
+    "copyAll": "ሁሉንም ቅዳ",
+    "count": "ብዛት",
+    "disabled": "ተሰናክሏል",
+    "disconnected": "ተቋርጧል",
+    "driver": "ድራይቨር",
+    "driverBlacklisted": "ድራይቨር በጥቁር መዝገብ ውስጥ ተካትቷል",
+    "driverLoaded": "ድራይቨር በተሳካ ሁኔታ ተጭኗል",
+    "driverUnblacklisted": "ድራይቨር ከጥቁር መዝገብ ተወግዷል",
+    "driverUnloaded": "ድራይቨር በተሳካ ሁኔታ ወርዷል",
+    "enable": "አንቃ",
+    "enabled": "ነቅቷል",
+    "enableService": "አገልግሎት አንቃ",
+    "enableServiceFailed": "አገልግሎቱን ማንቃት አልተሳካም",
+    "error": "ስህተት",
+    "errorFetch": "የኔትወርክ መረጃን ማምጣት አልተቻለም",
+    "ethernetControllers": "የኢተርኔት መቆጣጠሪያዎች",
+    "externalIp": "የውጭ IP",
+    "gps": "GPS",
+    "hardwareInfo": "የሃርድዌር መረጃ",
+    "hotspotFailed": "ሆትስፖት መክፈት አልተሳካም",
+    "inactive": "ቦዝኗል",
+    "installDriver": "ድራይቨር ጫን",
+    "installTraceroute": "Traceroute ጫን",
+    "installWihotspot": "WiFi Hotspot ጫን",
+    "interface": "በይነገጽ (Interface)",
+    "internet": "ኢንተርኔት",
+    "loadDriver": "ድራይቨር ጫን (Load)",
+    "loadDriverAction": "ድራይቨር {{name}}ን ጫን (Load)",
+    "loadDriverFailed": "ድራይቨሩን መጫን አልተሳካም",
+    "loadedDrivers": "የተጫኑ ድራይቨሮች",
+    "maxHops": "ከፍተኛው ዝላይ (Max Hops)",
+    "networkManager": "NetworkManager",
+    "noDrivers": "ምንም የኔትወርክ ድራይቨሮች አልተገኙም",
+    "noHardware": "ምንም የኔትወርክ ሃርድዌር አልተገኘም",
+    "notAvailable": "አይገኝም",
+    "off": "ጠፍቷል",
+    "on": "በርቷል",
+    "openHotspot": "ሆትስፖት ክፈት",
+    "outputInTerminal": "ውጤቱ ከታች ባለው ተርሚናል ይታያል",
+    "ping": "Ping",
+    "pingFailed": "Ping ማስኬድ አልተሳካም",
+    "quickToggles": "ፈጣን መቀየሪያዎች",
+    "routerIp": "የራውተር IP",
+    "runPing": "Ping አሂድ",
+    "runTraceroute": "Traceroute አሂድ",
+    "search": "ፈልግ",
+    "serviceEnabled": "አገልግሎቱ በተሳካ ሁኔታ ነቅቷል",
+    "services": "አገልግሎቶች",
+    "status": "ሁኔታ",
+    "success": "ተሳክቷል",
+    "tabs": {
+      "diagnostics": "ምርመራ",
+      "drivers": "ድራይቨሮች",
+      "hardware": "ሃርድዌር",
+      "status": "ሁኔታ"
+    },
+    "targetHost": "የዒላማ አድራሻ (Target Host)",
+    "timeout": "የጊዜ ገደብ (ሰከንድ)",
+    "title": "የኔትወርክ ",
+    "titleTwo": "ረዳት",
+    "toggleAirplane": "የበረራ ሁነታን ቀይር",
+    "toggleAirplaneFailed": "የበረራ ሁነታን መቀየር አልተሳካም",
+    "toggleBt": "ብሉቱዝ ቀይር",
+    "toggleBtFailed": "ብሉቱዝ መቀየር አልተሳካም",
+    "toggleGps": "GPS ቀይር",
+    "toggleGpsFailed": "GPS መቀየር አልተሳካም",
+    "toggleWifi": "WiFi ቀይር",
+    "toggleWifiFailed": "WiFi መቀየር አልተሳካም",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Traceroute ማስኬድ አልተሳካም",
+    "type": "አይነት",
+    "unblacklistDriver": "ከጥቁር መዝገብ አስወግድ",
+    "unloadDriver": "ድራይቨር አውርድ (Unload)",
+    "unloadDriverAction": "ድራይቨር {{name}}ን አውርድ (Unload)",
+    "unloadDriverFailed": "ድራይቨሩን ማውረድ አልተሳካም",
+    "unloadedDrivers": "ያልተጫኑ ድራይቨሮች",
+    "whitelistAction": "{{name}}ን ከጥቁር መዝገብ አስወግድ",
+    "wifi": "WiFi",
+    "wifiHotspot": "የ WiFi ሆትስፖት (Hotspot)",
+    "wifiHotspotDesc": "የ WiFi ሆትስፖት ውቅረትን ክፈት",
+    "wirelessControllers": "የገመድ አልባ (Wireless) መቆጣጠሪያዎች"
+  },
+  "operation": {
+    "abort": "አቋርጥ",
+    "addGroup": "ተጠቃሚን ወደ ቡድን ጨምር",
+    "args": "አርጊውመንቶች",
+    "disableHblock": "Hblock አሰናክል",
+    "disableService": "አገልግሎት አሰናክል",
+    "enableHblock": "Hblock አንቃ",
+    "enableService": "አገልግሎት አንቃ",
+    "installApps": "መተግበሪያዎችን ጫን",
+    "logs": "ምዝግብ ማስታወሻዎች",
+    "remove": "አስወግድ",
+    "removeApps": "መተግበሪያዎችን አስወግድ",
+    "removeGroup": "ተጠቃሚን ከቡድን አስወግድ",
+    "resetDnsServer": "የዲ ኤን ኤስ አገልጋይ ዳግም አስጀምር",
+    "run": "አሁን አሂድ",
+    "setDefaultShell": "ነባሪ ሼል አዘጋጅ",
+    "setNewDnsServer": "አዲስ የዲ ኤን ኤስ አገልጋይ አዘጋጅ"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "እየሰሩ ያሉ ክንውኖች አሉ፤ አስቀድመው የተጠናቀቁትን ብቻ ነው የማስወግደው።",
+    "refusing": "አፈፃፀምን አለመቀበል",
+    "thisOperationRunning": "አብደሃል እንዴ? ይህ ክንውን በአሁኑ ጊዜ እየሰራ ነው!"
+  },
+  "os-interact": {
+    "boot-options": "የማስነሻ ቅንብሮችን ተግብር",
+    "configs": "የስርዓት ውቅሮችን ቀይር",
+    "configs-system": "የስርዓት ውቅሮችን ቀይር",
+    "configs-user": "የተጠቃሚ ውቅሮችን ቀይር",
+    "garuda-update-config": "የ Garuda Update ቅንብሮችን ተግብር",
+    "groups": "የተጠቃሚ ቡድኖችን ቀይር",
+    "locales": "የነቁ ሎካሎችን ቀይር",
+    "packages": "የተጫኑ ፓኬጆችን ቀይር",
+    "packages-aur": "የ AUR ፓኬጆችን ቀይር",
+    "services": "አገልግሎቶችን ቀይር",
+    "services-user": "የተጠቃሚ አገልግሎቶችን ቀይር"
+  },
+  "packages": {
+    "any": "ማንኛውም",
+    "clear": "አጽዳ",
+    "description": "መግለጫ",
+    "documents": "ሰነዶች",
     "icon": "Icon",
-    "runActions": "እርምጃዎችን አሂድ",
-    "removeAll": "ሁሉንም እርምጃዎች አስወግድ",
-    "abortAll": "ሁሉንም እርምጃዎች አቋርጥ",
-    "noOutput": "ምንም ውጤት የለም",
-    "outputExists": "አስቀድሞ እየሰራ ያለ እርምጃ ያለ ይመስላል። እባክዎ ምዝግብ ማስታወሻዎችን ለማየት ከመሞከርዎ በፊት እስኪጨርስ ይጠብቁ።",
-    "opRunning": "ክንውኑ አስቀድሞ እየሰራ ነው።",
-    "clearCachedDataTitle": "የውጤት መሸጎጫ ጸድቷል",
-    "clearCachedData": "የውጤት መሸጎጫ በተሳካ ሁኔታ ጸድቷል።",
-    "clearOutputCache": "የውጤት መሸጎጫ አጽዳ",
-    "copyOutput": "የተርሚናል ውጤት ቅዳ",
-    "copyToClipboardTitle": "ወደ ቅንጥብ ሰሌዳ ተቀድቷል",
-    "copyToClipboard": "ውጤቱ በተሳካ ሁኔታ ወደ ቅንጥብ ሰሌዳዎ ተቀድቷል።",
-    "uploadPrivateBin": "ወደ PrivateBin ስቀል"
+    "internet": "ኢንተርኔት",
+    "multimedia": "መልቲሚዲያ",
+    "name": "ስም",
+    "notFound": "ምንም ፓኬጆች አልተገኙም",
+    "other": "ሌላ",
+    "science": "ሳይንስ",
+    "search": "ፈልግ",
+    "searchKey": "የፍለጋ ቁልፍ ቃል ያስገቡ",
+    "security": "ደህንነት",
+    "selected": "ተመርጧል",
+    "status": "ሁኔታ",
+    "title": "ፓኬጆች",
+    "titleTwo": "መተግበሪያዎች",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "የ systemd አገልግሎቶች ራስ-ማደስን አንቃ",
+    "autoStart": "መተግበሪያን በራስ-ሰር አስጀምር",
+    "backgroundFit": "የበስተጀርባ ምስል ከመተግበሪያው ጋር አስተካክል",
+    "backgroundSettings": "የበስተጀርባ ቅንብሮች",
+    "blurBackground": "የበስተጀርባ ምስልን አደብዝዝ (Blur)",
+    "blurStrength": "የማደብዘዝ ጥንካሬ",
+    "clearBackground": "የበስተጀርባ ምስልን አጽዳ",
+    "copyDiagnostics": "የምርመራ መረጃ ወደ ቅንጥብ ሰሌዳ ቅዳ",
+    "customBackground": "ብጁ የበስተጀርባ ምስል",
+    "darkMode": "የጨለማ ሁነታን አንቃ",
+    "language": "ንቁ ቋንቋን አዋቅር",
+    "leftButtons": "የመስኮት ቁልፎችን በግራ በኩል አሳይ",
+    "logLevel": "የምዝግብ ማስታወሻ ደረጃ ይምረጡ",
+    "noBackgroundSelected": "ምንም የበስተጀርባ ምስል አልተመረጠም",
+    "selectOptions": "ምርጫዎች",
+    "showMainLinks": "በመነሻ ገጽ ላይ አገናኞችን አሳይ",
+    "systemdUserContext": "የተጠቃሚ Systemd አገልግሎቶችን አሳይ",
+    "themeLabel": "መሰረታዊ የንድፍ ገጽታ",
+    "title": "የመተግበሪያ ",
+    "titleTwo": "ቅንብሮች",
+    "toggleOptions": "አማራጮችን ቀያይር"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "የመጫን እና የማዋቀር ሂደቱን ለመጀመር 'ተግብር'ን ጠቅ ያድርጉ።",
+      "failedBody": "በመጫን ሂደቱ ወቅት ችግር ተከስቷል። እንደገና መሞከር ወይም ምርጫዎን ለማስተካከል ወደ ኋላ መመለስ ይችላሉ።",
+      "failedHeader": "አፈጻጸሙ አልተሳካም",
+      "header": "ለመተግበር ዝግጁ ነው"
+    },
+    "autoCategories": {
+      "audio": "ድምጽ",
+      "browsers": "አሳሾች",
+      "communication": "ግንኙነት",
+      "development": "ልማት",
+      "gaming": "ጨዋታዎች",
+      "graphics": "ግራፊክስ",
+      "inputMethod": "የግብዓት ስልቶች",
+      "internet": "ኢንተርኔት",
+      "kernels": "ከርነሎች",
+      "mail": "ኢሜይል",
+      "multimedia": "መልቲሚዲያ",
+      "office": "ቢሮ",
+      "other": "ሌሎች",
+      "pkgmngrs": "የሶፍትዌር ማዕከላት",
+      "video": "ቪዲዮ",
+      "virtualization": "ቨርቹዋልላይዜሽን"
+    },
+    "autoSoftware": {
+      "0ad": "በታሪክ ላይ የተመሰረተ የ 3D የእውነተኛ ጊዜ ስልት ጨዋታ",
+      "abiWord": "ሙሉ ገጽታ ያለው የቃላት ማቀናበሪያ (Word Processor)",
+      "aisleriot": "የካርታ ጨዋታዎች ስብስብ (Solitaire)",
+      "ansible": "የ Ansible ስብስቦች ኦፊሴላዊ ጥቅል",
+      "appimagePool": "ዘመናዊ የ AppImageHub ደንበኛ",
+      "ardour": "ከፍተኛ ደረጃ ያለው የዲጂታል ድምጽ ስራ ቦታ (DAW)",
+      "asian": "የተለመዱ የእስያ ቅርጸ-ቁምፊዎችን የያዘ ሜታ-ፓኬጅ",
+      "audacious": "ቀላል ክብደት ያለው የላቀ የድምጽ ማጫወቻ",
+      "audacity": "የድምጽ ሞገዶችን ለመቅዳት እና ለማረም የሚያገለግል ፕሮግራም",
+      "bakaMplayer": "በ libmpv ላይ የተመሰረተ ባለብዙ-ፕላትፎርም የሚዲያ ማጫወቻ",
+      "bauh": "መተግበሪያዎችን ለማስተዳደር የግራፊክስ በይነገጽ (Bauh)",
+      "bazaar": "በ Flatpak ላይ ያተኮረ የመተግበሪያ መደብር",
+      "birdfont": "ለቬክተር ግራፊክስ የቅርጸ-ቁምፊ አርታዒ",
+      "bitwigStudio": "ለሙዚቃ ፈጠራ የተዘጋጀ የዲጂታል ድምጽ ስራ ቦታ",
+      "blender": "የተሟላ የ 3D ግራፊክስ እና አኒሜሽን ፈጠራ ጥቅል",
+      "brasero": "የ CD/DVD ማስተሪንግ እና መቅረጫ መሳሪያ",
+      "brave": "ማስታወቂያዎችን እና መከታተያዎችን በነባሪነት የሚያግድ አሳሽ",
+      "calligra": "የምርታማነት እና የፈጠራ አጠቃቀም መተግበሪያዎች ስብስብ",
+      "chromium": "ለፍጥነት፣ ቀላልነት እና ደህንነት የተሰራ ክፍት ምንጭ አሳሽ",
+      "clawsMail": "በ GTK+ ላይ የተመሰረተ ቀላል የኢሜይል ደንበኛ",
+      "cockpit": "ለሊኑክስ አገልጋዮች በድር ላይ የተመሰረተ የተጠቃሚ በይነገጽ",
+      "conky": "ቀላል ክብደት ያለው የስርዓት መከታተያ",
+      "converseen": "የምስሎች የጅምላ መለወጫ እና መጠን ማስተካከያ",
+      "darktable": "ጥሬ (RAW) ምስሎችን ለማደራጀት እና ለማረም የሚያስችል መሳሪያ",
+      "deluge": "ቀላል ክብደት ያለው፣ የተሟላ የ BitTorrent ደንበኛ",
+      "digikam": "የላቀ የዲጂታል ፎቶ አስተዳደር መተግበሪያ",
+      "discord": "ሁሉንም በአንድ ያካተተ የድምጽ እና የጽሑፍ ውይይት መተግበሪያ",
+      "discover": "የ KDE የመተግበሪያ እና የመገልገያዎች አስተዳዳሪ",
+      "docker": "መተግበሪያዎችን በኮንቴይነሮች ውስጥ ያሽጉ፣ ያሰራጩ እና ያስኪዱ",
+      "dragon": "በቀላልነት ላይ ያተኮረ የመልቲሚዲያ ማጫወቻ",
+      "droidcam": "ስልክዎን ወይም ታብሌትዎን ወደ ዌብካም ይቀይሩ",
+      "easytag": "የድምጽ መለያዎችን ለማየት እና ለማረም የሚያገለግል መተግበሪያ",
+      "element": "ዘመናዊ እና ውብ የ Matrix ትብብር ደንበኛ",
+      "elisa": "በ KDE የተሰራ ቀላል የሙዚቃ ማጫወቻ",
+      "evolution": "የእርስዎን ኢሜይል፣ አድራሻዎች እና የጊዜ ሰሌዳ ያስተዳድሩ",
+      "falkon": "ባለብዙ-ፕላትፎርም የሆነ የ QtWebEngine አሳሽ",
+      "fdm": "ኃይለኛ ዘመናዊ የማውረድ አፋጣኝ እና አደራጅ (Free Download Manager)",
+      "filezilla": "ፈጣን እና አስተማማኝ የ FTP፣ FTPS እና SFTP ደንበኛ",
+      "firedragon": "በግላዊነት ላይ ያተኮረ የ Floorp ቅርንጫፍ (በ Garuda ብራንዲንግ)",
+      "firedragonCatppuccin": "የ Firedragon አሳሽ በ Catppuccin ገጽታ",
+      "firefox": "ፈጣን፣ የግል እና አስተማማኝ የድር አሳሽ",
+      "firefoxEsr": "Firefox የተራዘመ የድጋፍ ስሪት (ESR)",
+      "fontForge": "የቅርጸ-ቁምፊ አርታዒ (Outline እና Bitmap)",
+      "fractal": "ለ GNOME የ Matrix የቡድን መልእክት መተግበሪያ",
+      "freeCad": "መለኪያ-ተኮር የ 3D CAD ሞዴሊንግ መሳሪያ",
+      "freeOffice": "ከ Microsoft Office ጋር ተኳሃኝ የሆነ የቢሮ ስብስብ",
+      "geary": "ለ GNOME ቀላል ክብደት ያለው የኢሜይል ደንበኛ",
+      "genymotion": "ለአንድሮይድ የተዘጋጀ ቨርቹዋል አካባቢ",
+      "gimp": "የ GNU የምስል ማቀናበሪያ ፕሮግራም (GIMP)",
+      "github": "Git እና GitHubን ለማስተዳደር የሚያስችል የግራፊክስ በይነገጽ",
+      "gitKraken": "ቀላል፣ ፈጣን እና ውብ የ Git ደንበኛ",
+      "gnomeBoxes": "ቨርቹዋል ስርዓቶችን በቀላሉ ለመድረስ የሚያስችል መተግበሪያ",
+      "gnomeBuilder": "በ GNOME ላይ የተመሰረቱ ሶፍትዌሮችን ለመጻፍ IDE",
+      "gnomeFirmware": "በሚደገፉ መሳሪያዎች ላይ firmwareን ያስተዳድሩ",
+      "gnomeSoftware": "የ GNOME የመተግበሪያ እና የመገልገያዎች አስተዳዳሪ",
+      "gnu": "ተለዋዋጭ እና ሊበጅ የሚችል የእውነተኛ ጊዜ ማሳያ አርታዒ (Emacs)",
+      "gnuCash": "የፋይናንስ እና የሂሳብ አያያዝ መተግበሪያ",
+      "gnumeric": "ለ GNOME የተመን ሉህ (Spreadsheet) መተግበሪያ",
+      "handbrake": "ባለብዙ ክር (Multi-threaded) የቪዲዮ መቀየሪያ",
+      "hedgewars": "ተራ-ተኮር የስትራቴጂ አርቲለሪ ጨዋታ",
+      "homebank": "ነፃ እና ቀላል የግል የሂሳብ አያያዝ",
+      "hypnotix": "የ IPTV የቀጥታ ስርጭት መተግበሪያ",
+      "indic": "የህንድ ቋንቋዎች የግብዓት ስልቶች (Input methods)",
+      "inkscape": "ሙያዊ የቬክተር ግራፊክስ አርታዒ",
+      "intellijIdea": "ለ Java እና ለሌሎች የፕሮግራም ቋንቋዎች IDE",
+      "japanese": "ለጃፓንኛ የግብዓት ስልቶች",
+      "jenkins": "ሊሰፋ የሚችል ቀጣይነት ያለው የውህደት (CI) አገልጋይ",
+      "jitsiMeet": "የ Jitsi Meet የዴስክቶፕ መተግበሪያ",
+      "joplin": "ማስታወሻ መያዣ እና የስራ ዝርዝር (To-do) መተግበሪያ",
+      "k3b": "ባለብዙ ገጽታ የሲዲ/ዲቪዲ መቅረጫ መተግበሪያ",
+      "kapman": "የታዋቂው የ Pac-Man ጨዋታ ክሎን",
+      "kdenlive": "ቀጥተኛ ያልሆነ የቪዲዮ አርታዒ (Kdenlive)",
+      "kDevelop": "የ KDE ቴክኖሎጂዎችን የሚጠቀም የ C++ IDE",
+      "keepassXc": "ባለብዙ-ፕላትፎርም የይለፍ ቃል አስተዳዳሪ",
+      "kiCad": "የኤሌክትሮኒክስ ንድፍ እና PCB ዲዛይን መሳሪያዎች",
+      "kid3": "የድምጽ መለያ (Tag) አርታዒ",
+      "kmahjongg": "ለአንድ ወይም ለሁለት ተጫዋቾች የሰድር ማዛመጃ ጨዋታ (Mahjongg)",
+      "kmail": "የ KDE የኢሜይል ደንበኛ",
+      "kMyMoney": "የግል ፋይናንስ አስተዳዳሪ (KMyMoney)",
+      "knights": "በ KDE የተሰራ የቼዝ ሰሌዳ",
+      "kodi": "የሚዲያ ማጫወቻ እና የመዝናኛ ማዕከል",
+      "kolourpaint": "በ KDE የተሰራ ቀላል የቀለም እና የስዕል ፕሮግራም",
+      "korean": "ለኮሪያኛ የግብዓት ስልቶች",
+      "krita": "ሙያዊ የዲጂታል ስዕል እና ቀለም መቀቢያ ፕሮግራም",
+      "kwave": "ለ KDE የድምጽ ማረሚያ (Sound editor)",
+      "libreCad": "የ 2D CAD ስዕል መሳሪያ",
+      "libreOfficeFresh": "የ LibreOffice የቅርብ ጊዜ ስሪት (Fresh)",
+      "libreOfficeStill": "የ LibreOffice የተረጋጋ ስሪት (Still)",
+      "librewolf": "በግላዊነት፣ ደህንነት እና ነፃነት ላይ ያተኮረ የድር አሳሽ",
+      "linuxCachyos": "በከፍተኛ ሁኔታ የተመቻቸ የ CachyOS ከርነል",
+      "linuxHardened": "ደህንነቱ የተጠናከረ የሊኑክስ ከርነል",
+      "linuxLts": "የረጅም ጊዜ ድጋፍ ያለው (LTS) የሊኑክስ ከርነል",
+      "linuxMainline": "የቅርብ ጊዜው የሊኑክስ Mainline ከርነል",
+      "linuxXanmod": "ለከፍተኛ አፈጻጸም በ XanMod ማስተካከያዎች የተሰራ ብጁ ከርነል",
+      "linuxXanmodLts": "የ XanMod ማስተካከያዎች ያሉት የ LTS ብጁ ከርነል",
+      "lmms": "የዲጂታል ድምጽ ስራ ቦታ እና ሲኩዌንሰር (sequencer)",
+      "lollypop": "ለ GNOME ዘመናዊ የሙዚቃ ማጫወቻ",
+      "luanti": "በ Voxel ላይ የተመሰረተ የጨዋታ ሞተር (የቀድሞው Minetest)",
+      "luminanceHdr": "ለ HDR ምስል ስራ ፍሰት የሚያገለግል ሶፍትዌር",
+      "mailspring": "ውብ እና ፈጣን የኢሜይል ደንበኛ",
+      "mari0": "የ Portal መሣሪያ መካኒክስ ያለው የ Mario ጨዋታ",
+      "mediaElch": "ለ Kodi የሚሆን የሚዲያ አስተዳዳሪ",
+      "microsoftTeams": "መደበኛ ያልሆነ የ Microsoft Teams ደንበኛ",
+      "mixxx": "ነፃ እና ክፍት ምንጭ የ DJ ሶፍትዌር",
+      "mumble": "ዝቅተኛ መዘግየት ያለው ከፍተኛ ጥራት ያለው የድምጽ ውይይት",
+      "museScore": "የሙዚቃ ኖታዎችን ለመጻፍ፣ ለማጫወት እና ለማተም የሚያስችል ሶፍትዌር",
+      "myPaint": "ለዲጂታል ሰዓሊዎች ፈጣን እና ቀላል የስዕል መተግበሪያ",
+      "mystiq": "በ FFmpeg ላይ የተመሰረተ የድምጽ/ቪዲዮ መቀየሪያ",
+      "neochat": "ለ ያልተማከለው Matrix ፕሮቶኮል ደንበኛ",
+      "netbeans": "ለ Java፣ HTML5፣ PHP፣ C እና C++ የሚያገለግል IDE",
+      "nextcloudClient": "የ Nextcloud ዴስክቶፕ ማመሳሰያ ደንበኛ",
+      "nitroshare": "በመሳሪያዎች መካከል ፋይሎችን በቀላሉ ለማስተላለፍ የሚያስችል መተግበሪያ",
+      "obsidian": "በአካባቢያዊ ግልጽ ጽሑፍ ማርክዳውን ፋይሎች ላይ የሚሰራ የእውቀት መሰረት",
+      "obsStudio": "ለቀጥታ ስርጭት እና ቀረጻ የሚያገለግል ሶፍትዌር (OBS Studio)",
+      "octopi": "Qt የሚጠቀም ኃይለኛ የ Pacman በይነገጽ",
+      "onlyOffice": "የጽሑፍ፣ የሰንጠረዥ እና የአቀራረብ አርታዒዎችን ያካተተ የቢሮ ስብስብ",
+      "openToonz": "የ 2D አኒሜሽን ለማምረት የሚያገለግል ሶፍትዌር",
+      "pencil2d": "የ 2D በእጅ የተሳሉ አኒሜሽኖችን ለመስራት የሚረዳ መሳሪያ",
+      "podman": "ኮንቴይነሮችን ለማስተዳደር አገልጋይ አልባ የኮንቴይነር ሞተር",
+      "postman": "የእርስዎን APIs ይገንቡ፣ ይሞክሩ እና ሰነድ ያዘጋጁ",
+      "prometheus": "የስርዓት ቁጥጥር እና የማስጠንቀቂያ መሣሪያ ስብስብ",
+      "puppet": "የአገልጋይ አውቶሜሽን ማዕቀፍ እና መተግበሪያ",
+      "putty": "ከተርሚናል ጋር የተዋሃደ የ SSH/Telnet ደንበኛ",
+      "pyCharm": "ለሙያዊ ገንቢዎች የተዘጋጀ የ Python IDE",
+      "qbittorrent": "በ Qt ላይ የተመሰረተ የላቀ የ BitTorrent ደንበኛ",
+      "qtCreator": "ቀላል ክብደት ያለው፣ ባለብዙ-ፕላትፎርም IDE",
+      "qutebrowser": "በኪቦርድ የሚመራ፣ በ Python የተሰራ vim-ተመስሎ አሳሽ",
+      "remmina": "በ GTK+ የተጻፈ የርቀት ዴስክቶፕ ደንበኛ",
+      "rosegarden": "የ MIDI/ድምጽ ሲኩዌንሰር እና የኖታ አርታዒ",
+      "shortwave": "የበይነመረብ ሬዲዮ ማጫወቻ",
+      "shotcut": "ባለብዙ-ፕላትፎርም የቪዲዮ አርታዒ",
+      "signal": "ለሊኑክስ የ Signal የግል መልእክተኛ",
+      "simplifiedChinese": "ለቀላል ቻይንኛ (Simplified Chinese) የግብዓት ስልቶች",
+      "sinhalese": "ለሲንሃላኛ የግብዓት ስልቶች",
+      "skrooge": "ለ KDE የግል ፋይናንስ አስተዳዳሪ",
+      "slack": "የ Slack ዴስክቶፕ ደንበኛ",
+      "smPlayer": "አብሮ የተሰሩ ኮዴኮች ያሉት የሚዲያ ማጫወቻ",
+      "soundConverter": "ቀላል የድምጽ ፋይል መቀየሪያ መተግበሪያ",
+      "soundwire": "ድምጽን ከፒሲዎ ወደ ሌሎች መሳሪያዎች ያስተላልፉ",
+      "strawberryPlayer": "ለሙዚቃ አፍቃሪዎች የተዘጋጀ የሙዚቃ ማጫወቻ",
+      "subtitleComposer": "የቪዲዮ ንዑስ ርዕስ (Subtitle) አርታዒ",
+      "superTux": "ጥንታዊ የ 2D ዝላይ እና ሩጫ ጨዋታ",
+      "superTuxKart": "Tuxን ያካተተ የካርት ውድድር ጨዋታ",
+      "sweetHome3d": "የቤት ውስጥ ዲዛይን እና የውስጥ ማስዋብ መተግበሪያ",
+      "synfigStudio": "ሙያዊ የ 2D ቬክተር አኒሜሽን ፕሮግራም",
+      "teeworlds": "ፈጣን የባለብዙ ተጫዋች 2D ተኳሽ ጨዋታ",
+      "telegram": "ኦፊሴላዊ የ Telegram ዴስክቶፕ መተግበሪያ",
+      "terraform": "መሰረተ ልማትን በኮድ ለመገንባት እና ለማዘመን የሚረዳ መሳሪያ",
+      "thai": "ለታይኛ የግብዓት ስልቶች",
+      "thunderbird": "ራሱን የቻለ የኢሜይል እና የዜና አንባቢ",
+      "torBrowser": "በ Tor አውታረ መረብ ውስጥ ደህንነቱ በተጠበቀ ሁኔታ ያስሱ",
+      "traditionalChinese": "ለባህላዊ ቻይንኛ (Traditional Chinese) የግብዓት ስልቶች",
+      "transmageddon": "የቪዲዮ ቅርጸቶችን ለመቀየር የሚያገለግል መተግበሪያ",
+      "twitchGui": "ባለብዙ-ፕላትፎርም የሆነ የ Twitch.tv ማሰሻ",
+      "ungoogledChromium": "ሁሉም የ Google ውህደቶች የተወገዱበት Chromium",
+      "variety": "የግድግዳ ወረቀቱን (Wallpaper) በመደበኛ የጊዜ ልዩነት ይለውጣል",
+      "vietnamese": "ለቪየትናምኛ የግብዓት ስልቶች",
+      "vim": "በጣም ሊበጅ የሚችል የተርሚናል ጽሑፍ አርታዒ",
+      "virtManager": "ቨርቹዋል ማሽኖችን ለማስተዳደር የዴስክቶፕ የተጠቃሚ በይነገጽ",
+      "virtualBox": "ባለብዙ-ፕላትፎርም የቨርቹዋልላይዜሽን ሶፍትዌር",
+      "visualStudioCode": "ዘመናዊ መተግበሪያዎችን ለመገንባት እና ለማረም የሚያገለግል የኮድ አርታዒ",
+      "visualStudioCodeOss": "የ Visual Studio Code ክፍት ምንጭ ግንባታ (Code - OSS)",
+      "vivaldi": "ለላቁ ተጠቃሚዎች የተዘጋጀ ባለብዙ ገጽታ አሳሽ",
+      "vlc": "ባለብዙ-ፕላትፎርም የመልቲሚዲያ ማጫወቻ (VLC)",
+      "vscodium": "ከክትትል እና ቴሌሜትሪ የጸዳ የ VSCode ስሪት",
+      "warpinator": "በአውታረ መረብ ውስጥ ፋይሎችን ይላኩ እና ይቀበሉ",
+      "wings3d": "የ Winged Edge መረጃ አወቃቀርን የሚጠቀም የ 3D ሞዴሊንግ መሳሪያ",
+      "wire": "ከጫፍ እስከ ጫፍ የተመሰጠረ መልእክተኛ እና የቪዲዮ ስብሰባ",
+      "wpsOffice": "የቢሮ ምርታማነት ስብስብ (WPS Office)",
+      "xfburn": "ቀላል የ CD/DVD መቅረጫ መሳሪያ",
+      "xonotic": "ፈጣን ባለብዙ-ፕላትፎርም የመጀመሪያ ሰው ተኳሽ (FPS) ጨዋታ",
+      "xtreme": "ኃይለኛ የማውረድ አፋጣኝ እና የቪዲዮ ማውረጃ",
+      "yakuake": "ተዘልቆ የሚወርድ (Drop-down) የተርሚናል ኢሙሌተር",
+      "zedEditor": "ከፍተኛ አፈጻጸም ያለው እና የጋራ ስራ የሚደግፍ የኮድ አርታዒ",
+      "zoom": "የቪዲዮ እና የድር ኮንፈረንስ አገልግሎት"
+    },
+    "buttons": {
+      "apply": "ተግብር",
+      "back": "ወደ ኋላ",
+      "finish": "ጨርስ",
+      "next": "ቀጣይ",
+      "retry": "እንደገና ሞክር"
+    },
+    "softwareSelection": {
+      "body": "ሊጭኗቸው የሚፈልጓቸውን ሶፍትዌሮች ይምረጡ።",
+      "header": "የሶፍትዌር ምርጫ"
+    },
+    "steps": {
+      "apply": "ለውጦችን ተግብር"
+    },
+    "success": {
+      "archWiki": "Arch Linux ዊኪ",
+      "body": "ስርዓትዎ ተዋቅሯል እና ለአገልግሎት ዝግጁ ነው!",
+      "finish": "ማዋቀሩን ጨርስ",
+      "forum": "የ Garuda መድረክ",
+      "garudaWiki": "Garuda Linux ዊኪ",
+      "reboot": "ኮምፒውተርዎን እንደገና ማስነሳት ይመከራል።",
+      "title": "ተሳክቷል!"
+    },
+    "tasks": {
+      "installSoftware": "የተመረጡትን ሶፍትዌሮች በመጫን ላይ"
+    },
+    "title": "የማዋቀሪያ ረዳት"
+  },
+  "shells": {
+    "fish": {
+      "hint": "fishን እንደ ነባሪ ሼል ማዘጋጀት ከሌሎች ፕሮግራሞች ጋር ችግር ሊፈጥር ይችላል። ይልቁንስ በተርሚናል ውቅሮች በኩል እንደ ነባሪ እንዲያዘጋጁት ይመከራል።"
+    }
+  },
+  "systemdServices": {
+    "actions": "እርምጃዎች",
+    "active": "ንቁ",
+    "autoRefresh": "በራስ ሰር አድስ",
+    "clear": "አጽዳ",
+    "description": "መግለጫ",
+    "disable": "አሰናክል",
+    "enable": "አንቃ",
+    "error": "አገልግሎቶችን በማምጣት ላይ ስህተት ተከስቷል፣ እባክዎ እንደገና ይሞክሩ።",
+    "errorTitle": "አገልግሎቶችን በማምጣት ላይ ስህተት",
+    "excludeDisabled": "የተሰናከሉትን አግልል",
+    "hideDead": "የቦዘኑትን ደብቅ",
+    "hideDeadTip": "በ'dead'፣ 'failed' ወይም 'exited' ሁኔታ ውስጥ ያሉትን አገልግሎቶች አሳይ/ደብቅ",
+    "includeDisabled": "የተሰናከሉትን አካትት",
+    "load": "ጫን",
+    "logs": "ምዝግብ ማስታወሻዎች",
+    "mask": "ጭምብል",
+    "notFound": "ምንም አገልግሎቶች አልተገኙም",
+    "reload": "እንደገና ጫን",
+    "restart": "እንደገና አስጀምር",
+    "searchKey": "የፍለጋ ቁልፍ ቃል ያስገቡ",
+    "show": "አሳይ",
+    "showAll": "ሁሉንም አሳይ",
+    "start": "አስጀምር",
+    "state": "ሁኔታ",
+    "stop": "አቁም",
+    "systemContext": "የስርዓት አገልግሎቶችን አሳይ",
+    "unit": "የክፍል ስም",
+    "unmask": "ጭምብል አንሳ",
+    "userContext": "የተጠቃሚ አገልግሎቶችን አሳይ"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "ምንም የይለፍ ቃል የማያስፈልገው እና ከግል ፋይሎችዎ የተነጠለ ጊዜያዊ የ'guest' ተጠቃሚ መለያ ይፈጥራል። ሲወጡ ሁሉም ነገር ይሰረዛል።",
+        "title": "የእንግዳ ተጠቃሚ አንቃ"
+      },
+      "oomd": {
+        "description": "የኮምፒውተር ማህደረ ትውስታ (RAM) ሲያልቅ ስርዓቱ እንዳይቆም ከመጠን በላይ ማህደረ ትውስታ የሚወስዱ ሂደቶችን በራስ-ሰር የሚያቆም የ systemd አገልግሎት።",
+        "title": "Systemd-oomd ነቅቷል"
+      },
+      "psd": {
+        "description": "የድር አሳሾችን ፕሮፋይል ወደ RAM በማዛወር የአሳሽ ፍጥነትን የሚጨምር እና የዲስክ ንባብ/ፅህፈትን የሚቀንስ መተግበሪያ።",
+        "title": "Profile-sync-daemon ተጭኗል"
+      },
+      "psdEnabled": {
+        "description": "የአሳሽ ፕሮፋይሎችን በ RAM ውስጥ ለማመሳሰል የ Profile-sync-daemon አገልግሎትን ያነቃል።",
+        "title": "Profile-sync-daemon ነቅቷል"
+      },
+      "title": "የተለመደ"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "የ PipeWireን መስቀል (node-suspend) ባህሪ ያሰናክላል። ይህ የድምጽ መሳሪያዎችን ንቁ በማድረግ ከእንቅልፍ ሲነሱ የሚፈጠረውን የድምጽ መቆራረጥ ወይም ጩኸት ይከላከላል።",
+        "title": "የድምጽ እገዳን አሰናክል (Audio No-Suspend)"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Discord ዝመናዎችን ለማውረድ እና ለመጫን እንዳይጠይቅ ይከላከላል፤ ምክንያቱም በ Arch Linux ላይ pacman ዝመናዎችን ያከናውናል።",
+        "title": "Discord ራስ-ዝመናን አሰናክል"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "በ KDE Plasma ውስጥ መተግበሪያ ሲጎላ የርዕስ አሞሌን እና የዊንዶው ድንበሮችን በማስወገድ ሰፊ የስክሪን ቦታ የሚሰጥ የ KWin ማስተካከያ።",
+        "title": "KDE ድንበር የሌለው ማጉላት"
+      },
+      "title": "የስርዓት ውቅሮች"
+    },
+    "defaultDns": "ነባሪ DNS አዘጋጅ",
+    "defaultDnsTip": "ለኢንተርኔት ግንኙነትዎ ነባሪውን የዲ ኤን ኤስ (DNS) አቅራቢ ይለውጣል፤ ይህም ፍጥነትን፣ ግላዊነትን ሊያሻሽል ወይም ገደቦችን ሊያልፍ ይችላል።",
+    "defaultShell": "የመግቢያ ሼል አዘጋጅ",
+    "defaultShellConfigs": "ነባሪ ውቅሮችን ጫን",
+    "defaultShellTip": "ነባሪውን የተርሚናል መግቢያ ሼል ይለውጣል። ለስርዓቱ የ POSIX-ተኳሃኝ ሼል (እንደ Bash ወይም Zsh) መጠቀም ይመከራል።",
+    "enableHblock": "Hblock አንቃ",
+    "enableHblockTip": "ማስታወቂያዎችን፣ መከታተያዎችን እና ተንኮል አዘል ድረ-ገጾችን በስርዓት ደረጃ በ /etc/hosts ፋይል አማካኝነት የሚያግደውን Hblock ያነቃል።",
+    "enableIwd": "ከ wpa_supplicant ይልቅ IWD ተጠቀም",
+    "enableIwdTip": "የ Wi-Fi ግንኙነቶችን ለማስተዳደር ከ wpa_supplicant ይልቅ ፈጣን እና ቀላል ክብደት ያለው iNet Wireless Daemon (iwd) ይጠቀማል።",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "ፓኬጆችን ከመጫንዎ በፊት የዲስክ ቦታ መኖሩን ማረጋገጥን ያሰናክላል።",
+        "title": "የዲስክ ቦታ ፍተሻን ዝለል"
+      },
+      "pacmanNoconfirm": {
+        "description": "የ pacman ዝመናዎችን በሚያካሂዱበት ጊዜ በእያንዳንዱ ጥያቄ ላይ ማረጋገጫ እንዳይጠየቅ ያደርጋል።",
+        "title": "Pacman ያለ ማረጋገጫ (--noconfirm)"
+      },
+      "skipMirrorlist": {
+        "description": "ስርዓቱን በሚያዘምኑበት ጊዜ የመስታወት ዝርዝርን በራስ-ሰር ማደስን ይዘላል።",
+        "title": "የመስታወት ዝርዝር (Mirrorlist) ዝመናን ዝለል"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "ስርዓት ሲዘምን የ AUR ፓኬጆችን በራስ-ሰር ያካትታል።",
+        "title": "የ AUR ፓኬጆችን አዘምን"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "በሂደት ላይ ላሉ ፕሮግራሞች የሲፒዩ ቅድሚያን (niceness) በራስ-ሰር በማስተካከል አሁን እየተጠቀሙበት ላለው መተግበሪያ ቅድሚያ የሚሰጥ አገልግሎት።",
+        "title": "Ananicy C++ ተጭኗል"
+      },
+      "ananicyCppEnabled": {
+        "description": "የመተግበሪያዎችን ሲፒዩ ቅድሚያዎች ያለማቋረጥ ለማስተዳደር የ Ananicy አገልግሎትን ያነቃል።",
+        "title": "Ananicy C++ ነቅቷል"
+      },
+      "bpftune": {
+        "description": "ለተሻለ የኢንተርኔት ፍጥነት እና ዝቅተኛ መዘግየት የሊኑክስ አውታረ መረብ መለኪያዎችን በ eBPF በኩል በቅጽበት ይከታተላል እና ያስተካክላል።",
+        "title": "Bpftune ተጭኗል"
+      },
+      "bpftuneEnabled": {
+        "description": "የአውታረ መረብ አፈጻጸምን ለማሻሻል የ bpftune አገልግሎትን ያነቃል።",
+        "title": "Bpftune ነቅቷል"
+      },
+      "irqbalanceEnabled": {
+        "description": "የሃርድዌር ማቋረጦችን (interrupts) በሁሉም የሲፒዩ ኮሮች ላይ በእኩል ያከፋፍላል፤ ይህም አንድ ኮር ብቻ ጫና እንዳይበዛበት ይከላከላል።",
+        "title": "IRQbalance ነቅቷል"
+      },
+      "performanceTweaks": {
+        "description": "ለስርዓቱ ከፍተኛ ምላሽ ሰጪነት Garudaን ለማመቻቸት የስርዓት ደረጃ የ sysctl እና የማስተካከያ ውቅሮችን ይተገብራል።",
+        "title": "የአፈጻጸም ማሻሻያዎች"
+      },
+      "preload": {
+        "description": "ብዙ ጊዜ የሚጠቀሙባቸውን መተግበሪያዎች በመከታተል ወደ RAM አስቀድሞ በመጫን የመክፈቻ ፍጥነታቸውን በእጅጉ የሚያፋጥን አገልግሎት።",
+        "title": "Preload ተጭኗል"
+      },
+      "preloadEnabled": {
+        "description": "ተደጋጋሚ መተግበሪያዎችን ለማስቀመጥ የ Preload አገልግሎትን ያነቃል።",
+        "title": "Preload ነቅቷል"
+      },
+      "title": "አፈጻጸም"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "አውቶማቲክ የሲፒዩ ፍጥነት እና የኃይል ማመቻቻ። ስራ በሌለበት ጊዜ ፍጥነትን ይቀንሳል፣ ስራ ሲኖር ደግሞ አፈጻጸምን ይጨምራል።",
+        "title": "Auto-cpufreq ተጭኗል"
+      },
+      "autoCpufreqEnabled": {
+        "description": "የሲፒዩ ፍጥነትን ለማስተዳደር የ auto-cpufreq አገልግሎትን ያነቃል።",
+        "title": "Auto-cpufreq ነቅቷል"
+      },
+      "intelUndervolt": {
+        "description": "ለ Intel ፕሮሰሰሮች የሚሰጠውን ቮልቴጅ ይቀንሳል። ይህ አፈጻጸምን ሳይቀንስ ሙቀትን እና የኃይል ፍጆታን ይቀንሳል።",
+        "title": "Intel-undervolt ተጭኗል"
+      },
+      "intelUndervoltEnabled": {
+        "description": "በማስነሳት ወቅት የ Intel undervolt ቅንብሮችን በራስ-ሰር የሚተገብረውን አገልግሎት ያነቃል።",
+        "title": "Intel-undervolt ነቅቷል"
+      },
+      "powerProfilesDaemon": {
+        "description": "ስርዓቱ በ 'Power Saver'፣ 'Balanced' እና 'Performance' የአሰራር ዘዴዎች መካከል በቀላሉ እንዲቀያየር የሚያስችል አገልግሎት።",
+        "title": "Power profiles daemon ተጭኗል"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "የዴስክቶፕ አካባቢዎ የኃይል መገለጫዎችን እንዲቀያይር የሚያስችለውን አገልግሎት ያነቃል።",
+        "title": "Power profiles daemon ነቅቷል"
+      },
+      "powersaveTweaks": {
+        "description": "በባትሪ በሚሰሩ መሳሪያዎች ላይ የኃይል ፍጆታን ለመቀነስ የተዘጋጁ የ sysctl እና የማዋቀሪያ ለውጦችን ይተገብራል።",
+        "title": "የኃይል ቁጠባ ማሻሻያዎች"
+      },
+      "thermald": {
+        "description": "የ Intel የሙቀት አስተዳደር አገልግሎት። ሲፒዩ ከመጠን በላይ እንዳይሞቅ የማቀዝቀዝ ዘዴዎችን አስቀድሞ ይጠቀማል።",
+        "title": "Thermald ተጭኗል"
+      },
+      "thermaldEnabled": {
+        "description": "የሲፒዩ ሙቀትን ለመከታተል የ thermald አገልግሎትን ያነቃል።",
+        "title": "Thermald ነቅቷል"
+      },
+      "title": "ኃይል ቁጠባ",
+      "tlp": {
+        "description": "ላፕቶፖች ከኃይል ሲነቀሉ የ Wi-Fi፣ የዲስኮች እና የዩኤስቢ መሳሪያዎችን ፍጆታ በማስተካከል የባትሪ እድሜን የሚያራዝም የላቀ መሳሪያ።",
+        "title": "TLP ተጭኗል"
+      },
+      "tlpEnabled": {
+        "description": "በባትሪ በሚሰሩበት ጊዜ የኃይል ቆጣቢ ደንቦችን ተግባራዊ ለማድረግ የ TLP አገልግሎትን ያነቃል።",
+        "title": "TLP ነቅቷል"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "በንክኪ ማያ ገጽ ወይም በ touchpad ላይ አንድ ጣት ተጭኖ መያዝ እንደ ቀኝ ጠቅታ እንዲቆጠር ያደርጋል።",
+        "title": "Evdev ረጅም ፕሬስ የቀኝ ጠቅታ ማስመሰል"
+      },
+      "evdevRce": {
+        "description": "የ touchpad ታችኛው ቀኝ ጥግ ሁልጊዜ እንደ ቀኝ ጠቅታ እንዲሰራ ይወስናል።",
+        "title": "Evdev RCE ነቅቷል"
+      },
+      "title": "የቀኝ ጠቅታ ማስመሰል"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "የተጎዱ ፋይሎች:",
+    "askHelp": "እርግጠኛ ካልሆኑ መስኮቱን ሳያስቀምጡ ይዝጉ እና በ Garuda Linux መድረክ ላይ እርዳታ ይጠይቁ።",
+    "aurUpdates": "የ AUR ፓኬጆችን ማዘመን የዚህ መተግበሪያ ወሰን ውጭ ነው። እባክዎ እንደ Paru ያለ የ AUR ረዳት ይጠቀሙ፣ እና ከመጫንዎ በፊት የ PKGBUILD ፋይሎችን ይገምግሙ።",
+    "cancel": "ሰርዝ",
+    "cautionMerge": "የተሳሳቱ ለውጦችን ወደ የቆየው ፋይል ማስገባት ስርዓትዎን ሊያበላሽ እንደሚችል ይገንዘቡ።",
+    "findMore": "እንዴት መቀጠል እንዳለብዎ ይወቁ",
+    "healthIssues": "የስርዓት ጤና ችግሮች",
+    "healthIssuesFound": "የሚከተሉት የጤና ችግሮች ተገኝተዋል:",
+    "learnPacdiff": "የ pacdiff ፋይሎችን የማያውቁ ከሆነ፣ በፍጥነት ስለእነሱ መረጃ ያግኙ።",
+    "openMaintenance": "ለመጀመር ከታች ያለውን ቁልፍ ጠቅ ያድርጉ።",
+    "openMaintenanceButton": "ማዋሃድ ጀምር",
+    "pacFiles": "ይህ ስርዓት በመጠባበቅ ላይ ያሉ .pacnew ፋይሎች አሉት፤ እነሱን ማረጋገጥ እና ማዋሃድ አለብዎት! (ለመረጃ ጠቅ ያድርጉ)",
+    "pendingPacdiff": "በመጠባበቅ ላይ ያሉ የ pacdiff ፋይሎች",
+    "pendingUpdates": "በመጠባበቅ ላይ ያሉ ዝመናዎች",
+    "proceed": "እንዴት እንደሚቀጥሉ እነሆ:",
+    "proceedMerge": "ለውጦችን ለመተግበር Meld ይከፈታል። በግራ በኩል ያለው አዲሱ ፋይል ሲሆን በቀኝ በኩል ያለው ደግሞ የቆየው ነው። ከግራ ወደ ቀኝ ማዋሃድ የሚፈልጉትን ማንኛውንም ጠቃሚ ለውጦች ያንቀሳቅሱ። ሲጨርሱ የማስቀመጫ ቁልፍን ወይም CTRL + Sን ጠቅ ያድርጉ።",
+    "rebootNow": "አሁን እንደገና አስነሳ",
+    "rebootNowBody": "አሁን እንደገና ለማስነሳት እርግጠኛ ነዎት? ከመቀጠልዎ በፊት ሁሉንም ስራዎን ማስቀመጥዎን ያረጋግጡ።",
+    "runAurUpdates": "የ AUR ዝመናዎችን ከውጭ ያሂዱ",
+    "runHealthFix": "የጤና ማስተካከያ አሂድ",
+    "scheduleUpdates": "ዝመናዎችን ፕሮግራም ያዝ",
+    "snapshotCreation": "ውህደቱን ከመጀመርዎ በፊት የ Btrfs ቅጽበታዊ ገጽ እይታ ይፈጠራል።",
+    "updates": "ይህ ስርዓት በመጠባበቅ ላይ ያሉ ዝመናዎች አሉት (ለመረጃ ጠቅ ያድርጉ)",
+    "warnReboot": "ዝማኔዎችን ከተገበሩ በኋላ፣ በተለይም ከርነሎችን ወይም የዴስክቶፕ አካባቢዎችን ሲያዘምኑ ስርዓትዎን እንደገና ማስጀመር በጥብቅ ይመከራል።",
+    "warnUpdate": "ስርዓትዎ በ2 ሳምንታት ውስጥ አልተዘመነም። እባክዎ ደህንነትን እና መረጋጋትን ለማረጋገጥ ስርዓትዎን ያዘምኑ።"
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "መሰረታዊ የከርነል ደረጃ የድምጽ ድራይቨር። ለድምጽ ካርዶች መሰረታዊ የሃርድዌር ድጋፍ ይሰጣል፤ አብዛኛውን ጊዜ በ PipeWire በኩል ይገናኙታል።",
+        "title": "ALSA ድጋፍ"
+      },
+      "calf": {
+        "description": "ለሙያዊ የሙዚቃ ቅንብር እና ቀረጻ የሚያገለግሉ ታዋቂ ክፍት ምንጭ የድምጽ ተሰኪዎች ጥቅል (flangers, choruses, reverbs ወዘተ)።",
+        "title": "Calf Studio Plugins ተጭኗል"
+      },
+      "easyeffects": {
+        "description": "ለ PipeWire አጠቃላይ የድምጽ ማቀነባበሪያ መተግበሪያ። ማመጣጠኛዎችን፣ ኮምፕረሰሮችን፣ ሊሚተሮችን እና ማይክሮፎን ድምጽ ማጣሪያዎችን ያካትታል።",
+        "title": "EasyEffects ተጭኗል"
+      },
+      "jack": {
+        "description": "ለሙያዊ የድምጽ ስራዎች የተዘጋጀ ዝቅተኛ መዘግየት ያለው የድምጽ አገልጋይ። አሁን ላይ አብዛኛውን ጊዜ በቀጥታ በ PipeWire ይሰራል በእጅጉ ይተካልታል።",
+        "title": "JACK ድጋፍ"
+      },
+      "jamesdsp": {
+        "description": "ለሊኑክስ የላቀ የድምጽ ውጤቶች ማቀናበሪያ። ድምጽን ለማሻሻል bass boost፣ reverb እና ግራፊክ ማመጣጠኛ (equalizer) ያቀርባል።",
+        "title": "JamesDSP ተጭኗል"
+      },
+      "lspPlugins": {
+        "description": "ለሊኑክስ የድምጽ ፕሮግራሞች ከፍተኛ ጥራት ያላቸው የድምጽ ተሰኪዎች (equalizers, delays, compressors ወዘተ) ስብስብ።",
+        "title": "LSP Plugins ተጭኗል"
+      },
+      "pipewire": {
+        "description": "በሊኑክስ ላይ የድምጽ እና የቪዲዮ ዥረቶችን ለማስተናገድ ዘመናዊ መመዘኛ። PulseAudio እና JACKን በዝቅተኛ መዘግየት እና የተሻለ ደህንነት ይተካል።",
+        "title": "PipeWire ድጋፍ"
+      },
+      "pulseaudio": {
+        "description": "የቆየው የድምጽ አገልጋይ። በዋናነት ለተኳኋኝነት የቀረበ ነው፤ ነገር ግን PipeWire በአብዛኛው ተክቶታል።",
+        "title": "PulseAudio ድጋፍ"
+      },
+      "title": "ድምጽ",
+      "userRealtime": {
+        "description": "ተጠቃሚዎን ወደ 'realtime' ቡድን ይጨምራል። ይህ ለድምጽ ፕሮግራሞች ከፍተኛ ቅድሚያ ይሰጣል ይህም የድምጽ መቆራረጥን እና መዘግየትን ይቀንሳል።",
+        "title": "ተጠቃሚ በ realtime ቡድን ውስጥ"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "የሚታወቁ የብሉቱዝ መሳሪያዎች ክልል ውስጥ ሲገቡ በራስ-ሰር እንደገና እንዲገናኙ የሚያደርግ መሳሪያ።",
+        "title": "ራስ-ግንኙነት ተጭኗል"
+      },
+      "autoConnectEnabled": {
+        "description": "የብሉቱዝ ራስ-አገናኝ አገልግሎት በስርዓት ማስነሳት ወቅት እንዲጀምር ያደርጋል።",
+        "title": "ራስ-ግንኙነት ነቅቷል"
+      },
+      "bluetooth": {
+        "description": "የብሉቱዝ መሳሪያዎችን (የጆሮ ማዳመጫዎችን፣ ኪቦርዶችን፣ አይጦችን) ለማገናኘት መሰረታዊ የሶፍትዌር ድጋፍ።",
+        "title": "ብሉቱዝ ድጋፍ"
+      },
+      "bluetoothEnabled": {
+        "description": "የብሉቱዝ አስማሚዎችን እና ግንኙነቶችን ለማንቃት የጀርባ አገልግሎትን (bluetooth.service) ያስጀምራል።",
+        "title": "ብሉቱዝ ነቅቷል"
+      },
+      "title": "ብሉቱዝ",
+      "userBluetooth": {
+        "description": "የብሉቱዝ መሳሪያዎችን ያለ አስተዳዳሪ ፈቃድ ለማስተዳደር ተጠቃሚዎን ወደ 'bluetooth' ቡድን ያክላል።",
+        "title": "ተጠቃሚ በ bluetooth ቡድን ውስጥ"
+      }
+    },
+    "components": "የስርዓት ክፍሎች",
+    "containers": {
+      "boxbuddy": {
+        "description": "የ Distrobox ኮንቴይነሮችን በቀላሉ ለመፍጠር እና ለማስተዳደር የሚያስችል ቀላል የግራፊክስ በይነገጽ።",
+        "title": "BoxBuddy ተጭኗል"
+      },
+      "distrobox": {
+        "description": "ማንኛውንም የሊኑክስ ስርጭት (ለምሳሌ Ubuntu, Fedora, Arch) በኮንቴይነር ውስጥ ከአስተናጋጅ ስርዓትዎ ጋር ሙሉ በሙሉ በማዋሃድ እንዲያስኬዱ ያስችላል።",
+        "title": "DistroBox ተጭኗል"
+      },
+      "docker": {
+        "description": "መተግበሪያዎችን በኮንቴይነሮች ውስጥ ለማሸግ እና ለማስኬድ የሚያስችል መሪ የመሳሪያ መድረክ።",
+        "title": "Docker ተጭኗል"
+      },
+      "dockerCompose": {
+        "description": "ባለብዙ-ኮንቴይነር የሆኑ የ Docker መተግበሪያዎችን በአንድ YAML ፋይል ለማዋቀር እና ለማስኬድ የሚያስችል መሳሪያ።",
+        "title": "Docker Compose ተጭኗል"
+      },
+      "dockerEnabled": {
+        "description": "ኮንቴይነሮችን ለመፍጠር እና ለማስተዳደር የ Docker የጀርባ አገልጋይ አገልግሎትን ያስጀምራል።",
+        "title": "Docker ነቅቷል"
+      },
+      "kontainer": {
+        "description": "ለ KDE Plasma ዴስክቶፕ የተዘጋጀ የኮንቴይነር አስተዳደር መተግበሪያ።",
+        "title": "Kontainer ተጭኗል"
+      },
+      "podman": {
+        "description": "ስርወ-ተጠቃሚ (root) ፈቃድ የማያስፈልገው እና አገልጋይ አልባ (daemonless) የሆነ ዘመናዊ የ Docker አማራጭ የኮንቴይነር ሞተር።",
+        "title": "Podman ተጭኗል"
+      },
+      "podmanDesktop": {
+        "description": "Podman እና ሌሎች የኮንቴይነር ሞተሮችን በቀላሉ ለማስተዳደር የሚያስችል ዘመናዊ የግራፊክስ በይነገጽ።",
+        "title": "Podman Desktop ተጭኗል"
+      },
+      "podmanDocker": {
+        "description": "የ 'docker' ትዕዛዝን ወደ 'podman' የሚያዞር ምትክ ይፈጥራል፤ ይህም ነባር የ Docker መሳሪያዎችን በቀላሉ ለመጠቀም ያስችላል።",
+        "title": "Dockerን በ Podman አስመስሎ አሳይ"
+      },
+      "title": "ኮንቴይነሮች",
+      "userDocker": {
+        "description": "ተጠቃሚዎን ወደ 'docker' ቡድን ያክላል፤ ይህም የ Docker ትዕዛዞችን ያለ sudo እንዲያስኬዱ ያስችላል።",
+        "title": "ተጠቃሚ በ docker ቡድን ውስጥ"
+      },
+      "winboat": {
+        "description": "በሊኑክስ ላይ የዊንዶውስ መተግበሪያዎችን በኮንቴይነር ውስጥ ያለምንም እንከን ለማስኬድ የሚረዳ መሳሪያ።",
+        "title": "Winboat ተጭኗል"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "ዞኖችን እና ህጎችን በቀላሉ ለማስተዳደር የሚያስችል ተለዋዋጭ የፋየርዎል አስተዳዳሪ።",
+        "title": "Firewalld ተጭኗል"
+      },
+      "firewalldEnabled": {
+        "description": "የስርዓትዎን ደህንነት ለመጠበቅ የ Firewalld አገልግሎት በራስ-ሰር እንዲሰራ ያነቃል።",
+        "title": "firewalld ነቅቷል"
+      },
+      "opensnitch": {
+        "description": "መተግበሪያዎች ወደ ኢንተርኔት የሚያደርጉትን ግንኙነት የሚከታተል እና ፈቃድ የሚጠይቅ መተግበሪያ-ተኮር ፋየርዎል።",
+        "title": "OpenSnitch ተጭኗል"
+      },
+      "opensnitchEnabled": {
+        "description": "የ OpenSnitch መከታተያ የጀርባ አገልግሎትን ያነቃል።",
+        "title": "OpenSnitch ነቅቷል"
+      },
+      "title": "ፋየርዎል",
+      "ufw": {
+        "description": "ቀላል እና ለአጠቃቀም ምቹ የሆነ የፋየርዎል መሳሪያ (Uncomplicated Firewall)።",
+        "title": "UFW ተጭኗል"
+      },
+      "ufwEnabled": {
+        "description": "የማይፈለጉ አውታረ መረብ ግንኙነቶችን ለመከላከል የ UFW ፋየርዎል አገልግሎትን ያነቃል።",
+        "title": "UFW ነቅቷል"
+      }
+    },
+    "kernels": "ከርነሎች",
+    "locales": "ሎካሎች",
+    "misc": {
+      "gns": {
+        "description": "የ Nix ፓኬጅ አስተዳዳሪን በ Garuda Linux ላይ በቀላሉ ለመጠቀም የሚያስችል ንዑስ ስርዓት።",
+        "title": "Garuda Nix Subsystem ተጭኗል"
+      },
+      "title": "ልዩ ልዩ"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "የሞባይል ብሮድባንድ (3G/4G/5G) ሞደሞችን ለመቆጣጠር የሚያስፈልገውን አገልግሎት ያነቃል።",
+        "title": "ModemManager ነቅቷል"
+      },
+      "networkManager": {
+        "description": "በሊኑክስ ላይ የኔትወርክ ግንኙነቶችን (Wi-Fi፣ ባለገመድ እና VPN) ለማስተዳደር ዋናው መደበኛ መሳሪያ።",
+        "title": "NetworkManager ድጋፍ"
+      },
+      "networkManagerEnabled": {
+        "description": "የኔትወርክ ግንኙነቶችን በራስ-ሰር እንዲያገኝ እና እንዲያገናኝ የ NetworkManager አገልግሎትን ያነቃል።",
+        "title": "NetworkManager ነቅቷል"
+      },
+      "title": "ኔትወርክ"
+    },
+    "packages": "ተጨማሪ ፓኬጆች",
+    "printing": {
+      "cupsEnabled": {
+        "description": "ሰነዶችን ወደ አታሚዎች ለመላክ የሚያስችለውን የ CUPS ማተሚያ አገልግሎት ያነቃል።",
+        "title": "CUPS ነቅቷል"
+      },
+      "printingSupport": {
+        "description": "የአታሚ ድጋፍን እና የ CUPS አገልግሎቶችን በስርዓትዎ ላይ ይጭናል።",
+        "title": "የማተም ድጋፍ"
+      },
+      "sanedEnabled": {
+        "description": "ስካነሮችን በአውታረ መረብ በኩል ለማጋራት የ SANE አገልጋይ አገልግሎትን ያነቃል።",
+        "title": "saned ነቅቷል"
+      },
+      "scanningSupport": {
+        "description": "ሰነዶችን ከስካነር ለማንበብ የሚያስፈልጉ የ SANE ድራይቨሮችን እና መሳሪያዎችን ይጭናል።",
+        "title": "የመቃኘት ድጋፍ"
+      },
+      "title": "ማተም",
+      "userCups": {
+        "description": "የህትመት ስራዎችን እና የአታሚ ቅንብሮችን ለማስተዳደር ተጠቃሚዎን ወደ 'cups' ቡድን ያክላል።",
+        "title": "ተጠቃሚ በ cups ቡድን ውስጥ"
+      },
+      "userLp": {
+        "description": "የህትመት ሃርድዌርን በቀጥታ ለመድረስ ተጠቃሚዎን ወደ 'lp' (Line Printer) ቡድን ያክላል።",
+        "title": "ተጠቃሚ በ lp ቡድን ውስጥ"
+      },
+      "userScanner": {
+        "description": "የተገናኙ ስካነሮችን በቀጥታ ለመድረስ ተጠቃሚዎን ወደ 'scanner' ቡድን ያክላል።",
+        "title": "ተጠቃሚ በ scanner ቡድን ውስጥ"
+      }
+    },
+    "systemdServices": "Systemd አገልግሎቶች",
+    "systemSettings": "የስርዓት ቅንብሮች",
+    "title": "የስርዓት ",
+    "titleTwo": "ቅንብሮች",
+    "users": "ተጠቃሚዎች እና ቡድኖች",
+    "virtualization": {
+      "kvm": {
+        "description": "ሊኑክስን ወደ hypervisor የሚቀይር የከርነል ሞጁል። QEMU ቨርቹዋል ማሽኖችን በቅርብ ቤተኛ ፍጥነት እንዲያሄድ ያስችለዋል።",
+        "title": "KVM ድጋፍ"
+      },
+      "libvirtdEnabled": {
+        "description": "ቨርቹዋል ማሽኖችን፣ አውታረ መረቦችን እና ማከማቻዎችን ለመቆጣጠር የሚያስፈልገውን የጀርባ አገልጋይ አገልግሎት (libvirtd) ያስጀምራል።",
+        "title": "Libvirtd ነቅቷል"
+      },
+      "qemu": {
+        "description": "በርካታ የስርዓተ ክወና አይነቶችን በኮምፒውተርዎ ላይ ለማስኬድ የሚያስችል ፈጣን ክፍት ምንጭ የማሽን ኢሙሌተር እና ቨርቹዋል ማድረጊያ።",
+        "title": "QEMU ተጭኗል"
+      },
+      "qemuUserStatic": {
+        "description": "የተለያዩ የሲፒዩ አርክቴክቸር ያላቸውን (ለምሳሌ ARM binaries በ x86_64 ላይ) ፕሮግራሞች ለማስኬድ የሚያስችሉ የማይንቀሳቀሱ የ QEMU ፋይሎችን ያቀርባል።",
+        "title": "QEMU User Static ተጭኗል"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "ስርዓትዎ የሌላ ሲፒዩ አርክቴክቸር ፋይሎችን ሲያገኝ በራስ-ሰር በ QEMU በኩል እንዲያስኬድ የከርነል binfmt_misc ድጋፍን ያነቃል።",
+        "title": "QEMU Binfmt አገልግሎት ነቅቷል"
+      },
+      "title": "ቨርቹዋልላይዜሽን",
+      "userKvm": {
+        "description": "ተጠቃሚዎን ወደ 'kvm' ቡድን ያክላል። ይህ ለፈጣን የሃርድዌር ቨርቹዋልላይዜሽን ቀጥተኛ መዳረሻ ይሰጣል።",
+        "title": "ተጠቃሚ በ kvm ቡድን ውስጥ"
+      },
+      "userLibvirt": {
+        "description": "ተጠቃሚዎን ወደ 'libvirt' ቡድን ያክላል። ይህም የይለፍ ቃል ሳያስገቡ ቨርቹዋል ማሽኖችን በ Virt-Manager በኩል እንዲያስተዳድሩ ያስችላል።",
+        "title": "ተጠቃሚ በ libvirt ቡድን ውስጥ"
+      },
+      "userVboxUsers": {
+        "description": "የእርስዎን ተጠቃሚ ወደ 'vboxusers' ቡድን ይጨምራል። ይህ በ VirtualBox ቨርቹዋል ማሽኖች ውስጥ እንደ ዌብካም እና ዩኤስቢ ድራይቮች ያሉ መሳሪያዎችን ለመጠቀም አስፈላጊ ነው።",
+        "title": "ተጠቃሚ በ vboxusers ቡድን ውስጥ"
+      },
+      "virtManager": {
+        "description": "በ KVM/QEMU የሚሰሩ ቨርቹዋል ማሽኖችን ለመፍጠር፣ ለማስተካከል እና ለመቆጣጠር የሚያስችል ለተጠቃሚ ምቹ የሆነ የዴስክቶፕ በይነገጽ።",
+        "title": "Virt-manager ድጋፍ"
+      },
+      "virtualbox": {
+        "description": "ለዴስክቶፕ ተጠቃሚዎች ምቹ እና ታዋቂ የሆነ የቨርቹዋል ማሽን አስተዳዳሪ ሶፍትዌር።",
+        "title": "VirtualBox ድጋፍ"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "የአሁኑ ተግባር ተጠናቅቋል።",
+    "scriptMismatch": "ስክሪፕቱ ተቀይሯል፤ ለማስኬድ ፈቃደኛ አልሆነም!"
+  },
+  "userManager": {
+    "actions": "እርምጃዎች",
+    "addGroup": "ቡድን አክል",
+    "addUser": "ተጠቃሚ አክል",
+    "cancel": "ሰርዝ",
+    "clearPending": "በመጠባበቅ ላይ ያሉ ለውጦችን አጽዳ",
+    "confirmPassword": "የይለፍ ቃል ያረጋግጡ",
+    "confirmRemoveGroup": "ቡድን {{group}}ን ለማስወገድ እርግጠኛ ነዎት?",
+    "confirmRemoveUser": "ተጠቃሚ {{username}}ን ለማስወገድ እርግጠኛ ነዎት? የመነሻ ማውጫውም ይሰረዛል።",
+    "createHome": "የመነሻ ማውጫ (home directory) ፍጠር",
+    "editUser": "ተጠቃሚ አርትዕ",
+    "enterGroupName": "እባክዎ የቡድን ስም ያስገቡ",
+    "enterPassword": "እባክዎ የይለፍ ቃል ያስገቡ",
+    "enterUsername": "እባክዎ የተጠቃሚ ስም ያስገቡ",
+    "error": "ስህተት",
+    "fullName": "ሙሉ ስም",
+    "gid": "GID",
+    "groupExists": "በዚህ ስም ያለ ቡድን አስቀድሞ አለ",
+    "groupName": "የቡድን ስም",
+    "groups": "ቡድኖች",
+    "groupsColumn": "ቡድኖች",
+    "home": "የመነሻ ማውጫ (Home directory)",
+    "lock": "ቆልፍ",
+    "locked": "ተቆልፏል",
+    "manageGroups": "ቡድኖችን አስተዳድር",
+    "manageGroupsFor": "የ {{username}} ቡድኖችን አስተዳድር",
+    "members": "አባላት",
+    "newGroupName": "የቡድን ስም",
+    "newPassword": "አዲስ የይለፍ ቃል",
+    "noGroupsFound": "ምንም ቡድኖች አልተገኙም",
+    "noUsersFound": "ምንም ተጠቃሚዎች አልተገኙም",
+    "passwordDialogTitle": "ለ {{username}} የይለፍ ቃል አዘጋጅ",
+    "passwordMismatch": "የይለፍ ቃሎቹ አይመሳሰሉም",
+    "pending": {
+      "add": "በመጠባበቅ ላይ ያለ መጨመር",
+      "lock": "በመጠባበቅ ላይ ያለ መቆለፍ",
+      "membership": "በመጠባበቅ ላይ ያሉ የቡድን ለውጦች",
+      "modify": "በመጠባበቅ ላይ ያለ ማሻሻያ",
+      "password": "በመጠባበቅ ላይ ያለ የይለፍ ቃል",
+      "remove": "በመጠባበቅ ላይ ያለ ማስወገድ",
+      "unlock": "በመጠባበቅ ላይ ያለ መክፈት"
+    },
+    "removeGroup": "ቡድን አስወግድ",
+    "removeUser": "ተጠቃሚ አስወግድ",
+    "save": "አስቀምጥ",
+    "searchGroups": "ቡድኖችን ፈልግ",
+    "searchUsers": "ተጠቃሚዎችን ፈልግ",
+    "selectGroups": "ቡድኖችን ይምረጡ",
+    "setPassword": "የይለፍ ቃል አዘጋጅ",
+    "shell": "ሼል",
+    "showAllUsers": "ሁሉንም ተጠቃሚዎች አሳይ",
+    "showUsersOnly": "ተጠቃሚዎችን ብቻ አሳይ",
+    "system": "ስርዓት",
+    "systemAccount": "የስርዓት መለያ",
+    "task": {
+      "addGroup": "ቡድን አክል",
+      "addMembership": "ወደ ቡድን አክል",
+      "addUser": "ተጠቃሚ አክል",
+      "lockUser": "ተጠቃሚን ቆልፍ",
+      "modifyUser": "ተጠቃሚ አሻሽል",
+      "password": "የይለፍ ቃል አዘጋጅ",
+      "removeGroup": "ቡድን አስወግድ",
+      "removeMembership": "ከቡድን አስወግድ",
+      "removeUser": "ተጠቃሚ አስወግድ",
+      "unlockUser": "የተጠቃሚ ቁልፍ ክፈት"
+    },
+    "uid": "UID",
+    "unlock": "ቁልፍ ክፈት",
+    "userExists": "በዚህ ስም ያለ ተጠቃሚ አስቀድሞ አለ",
+    "username": "የተጠቃሚ ስም",
+    "users": "ተጠቃሚዎች"
+  },
+  "welcome": {
+    "bootRepair": "የማስነሻ ጥገና",
+    "bootRepairSub": "የማስነሻ ጫኝዎን (bootloader) እንደገና ይጫኑ ወይም ይጠግኑ",
+    "bootTools": "የማስነሻ መሳሪያዎች",
+    "bootToolsSub": "የማስነሻ ቅንብሮችዎን ያስተዳድሩ",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "አስቀድመው የተገነቡ የ AUR ፓኬጆችን ይድረሱባቸው",
+    "chroot": "ወደ Garuda በ chroot ግባ",
+    "chrootSub": "ወደ Garuda ጭነትዎ በ chroot ግባ",
+    "diagnostics": "ምርመራ",
+    "diagnosticsSub": "የስርዓትዎን ጤና ያረጋግጡ",
+    "donate": "ይለግሱ",
+    "donateSub": "የ Garuda Linux እድገትን ይደግፉ",
+    "error": "ስህተት ተከስቷል።",
+    "gaming": "የጨዋታ መተግበሪያዎች",
+    "gamingSub": "የሚወዷቸውን ጨዋታዎች ይጫወቱ",
+    "gitlab": "GitLab",
+    "gitlabSub": "የእኛን የምንጭ ኮድ ይመልከቱ",
+    "hello": "ሰላም",
+    "install": "Garuda Linux ጫን",
+    "installSub": "Garuda Linux በስርዓትዎ ላይ ያግኙ",
+    "maintenance": "ጥገና",
+    "maintenanceSub": "ስርዓትዎን በጥሩ ሁኔታ ያቆዩ",
+    "network": "የኔትወርክ መሳሪያዎች",
+    "networkSub": "የኔትወርክ ቅንብሮችዎን ያስተዳድሩ",
+    "packages": "ፓኬጆች",
+    "packagesSub": "ታዋቂ መተግበሪያዎችን ይጫኑ እና ያስተዳድሩ",
+    "searxng": "SearXNG",
+    "searxngSub": "የእኛን የግላዊነት ተስማሚ የፍለጋ ፕሮግራም ይጠቀሙ",
+    "setupAssistant": "የማዋቀሪያ ረዳት",
+    "setupAssistantSub": "የ Garuda ማዋቀሪያ ረዳትን አሂድ",
+    "startpage": "የመነሻ ገጽ",
+    "startpageSub": "የ Garuda Linux መነሻ ገጽ ክፈት",
+    "subtitle": "ለጨዋታ እና መልቲሚዲያ ምርጡ የሊኑክስ ስርጭት",
+    "systemTools": "የስርዓት ቅንብሮች",
+    "systemToolsSub": "ስርዓትዎን ያዋቅሩ",
+    "title": "እንኳን ወደ ",
+    "titleTwo": "Garuda Linux በደህና መጡ",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "የይለፍ ቃላትዎን ደህንነቱ በተጠበቀ ሁኔታ ያስተዳድሩ",
+    "whoogle": "Whoogle",
+    "whoogleSub": "የ Google ፍለጋ ውጤቶችን ያለ ክትትል ያግኙ"
   }
 }

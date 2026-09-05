@@ -1,612 +1,1557 @@
 {
-  "menu": {
-    "welcome": "Ongi etorri",
-    "maintenance": "Mantentzea",
-    "systemTools": "Sistemaren ezarpenak",
-    "components": "Osagaiak",
-    "gaming": "Jokoak",
-    "boot": "Abio-tresnak",
-    "diagnostics": "Diagnostikoak",
-    "network": "Sare-tresnak",
-    "settings": "Aplikazioaren ezarpenak",
-    "help": {
-      "title": "Laguntza",
-      "icon": "Icon",
-      "getHelpForum": "Lortu laguntza foroan",
-      "getHelpWiki": "Bilatu edukia wikian",
-      "getHelpArchWiki": "Bilatu edukia Arch Wikian",
-      "garudaStatus": "Egiaztatu aktibitate-egoera",
-      "about": "Garuda Toolbox-ri buruz",
-      "aboutBody": "Garuda Toolbox Garuda Linuxerako sistemaren mantentze- eta diagnostiko-tresna bat da. Erabiltzaileei sistema mantentzen eta arazoak diagnostikatzen laguntzeko diseinatuta dago. Electron eta Angular erabiliz eraikia dago.",
-      "callExorcist": "Deitu exorzistari",
-      "callExorcistTitle": "Exorzistari deitu zaio!",
-      "callExorcistBody": "Nahiko etsituta egon behar duzu botoi hau sakatzeko! Voodoo berezi bat prestatu dizut, aplikazioarekin arazoak izaten jarraitzen baduzu, mesedez jakinarazi Garuda Linux foroan edo gure arazoen jarraitzailean."
-    },
-    "terminalRunning": "Exekutatzen ari diren atazak",
-    "terminalTasks": "Exekutatu atazak",
-    "pending": "Zain",
-    "console": "Erakutsi terminala"
-  },
-  "diagnostics": {
-    "title": "Arazketa informazioa ",
-    "icon": "Icon",
-    "titleTwo": "eta diagnostikoak",
-    "subtitle": "Aurkitu zure sistema arazteko behar duzun informazioa",
-    "inxi": "Informazio arrunta (inxi)",
-    "systemctl": "Sistemaren zerbitzuak (systemctl)",
-    "journalctl": "Sistemaren erregistroak (journalctl)",
-    "dmesg": "Kernelaren erregistroak (dmesg)",
-    "full": "Diagnostiko osoak",
-    "upload": "Igo PrivateBin-era",
-    "failedCmdHeader": "Ezin izan da komandoa exekutatu",
-    "failedCmd": "Zerbait txarto joan da eta ezin izan da diagnostikorik eskuratu",
-    "pacman": "Azken Pacman erregistroak",
-    "copied": "Arbelean kopiatu da",
-    "success": "Arrakasta",
-    "uploadSuccess": "PrivateBin-era behar bezala igota, URLa arbelean kopiatu da"
-  },
-  "lang": {
-    "title": "Hizkuntza hautaketa",
-    "icon": "Icon",
-    "tooltip": "Hautatu zure hizkuntza hobetsia"
-  },
-  "welcome": {
-    "title": "Ongi etorri ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux-era",
-    "subtitle": "Jokoetarako eta multimediarako azken Linux distroa",
-    "maintenance": "Mantentzea",
-    "maintenanceSub": "Mantendu zure sistema egoera onean",
-    "systemTools": "Sistemaren ezarpenak",
-    "systemToolsSub": "Konfiguratu zure sistema",
-    "gaming": "Jokoetarako aplikazioak",
-    "gamingSub": "Jolastu zure joko gogokoenetara",
-    "bootTools": "Abio-tresnak",
-    "bootToolsSub": "Kudeatu zure abio-ezarpenak",
-    "network": "Sare-tresnak",
-    "networkSub": "Kudeatu zure sare-ezarpenak",
-    "diagnostics": "Diagnostikoak",
-    "diagnosticsSub": "Egiaztatu zure sistemaren osasuna",
-    "install": "Instalatu Garuda Linux",
-    "installSub": "Lortu Garuda Linux zure sisteman",
-    "chroot": "Chroot Garuda-n",
-    "chrootSub": "Egin Chroot zure Garuda instalazioan",
-    "startpage": "Hasiera-orria",
-    "startpageSub": "Ireki Garuda Linuxen hasiera-orria",
-    "setupAssistant": "Konfigurazio laguntzailea",
-    "setupAssistantSub": "Exekutatu Garuda konfigurazio laguntzailea",
-    "hello": "Kaixo",
-    "error": "Errore bat gertatu da."
-  },
-  "gaming": {
-    "title": "Jokoetarako ",
-    "icon": "Icon",
-    "titleTwo": "aplikazioak",
-    "subtitle": "Has gaitezen jokoetarako aplikazio batzuekin!",
-    "launchers": "Joko abiarazleak",
-    "loading": "Kargatzen...",
-    "wine": "WINE",
-    "tools": "Jokoetarako tresnak",
-    "emulators": "Emuladoreak",
-    "controllers": "Kontrolagailuen euskarria",
-    "games": "Jokoak",
-    "misc": "Askotarikoak",
-    "bluez": "Orokorrean beharrezkoa da PS kontrolagailuak haririk gabe ezagutzeko",
-    "xboxdrv": "Xbox kontrolagailuaren driverra, erabili soilik kernelaren driverrak funtzionatzen ez badu!",
-    "wineMeta": "Meta paketea WINE eta beharrezko menpekotasun guztiak instalatzeko"
-  },
-  "maintenance": {
-    "title": "Sistemaren ",
-    "icon": "Icon",
-    "titleTwo": "mantentzea",
-    "subtitle": "Mantendu zure sistema egoera onean",
-    "update": "Eguneratu zure sistema",
-    "addPending": "Gehitu zain",
-    "removePending": "Kendu zain",
-    "runNow": "Exekutatu orain",
-    "failedReset": "Errorea konfigurazio fitxategia berrezartzean",
-    "failedResetFile": "Errorea gertatu da {{file}} berrezartzean",
-    "editRepos": "Editatu biltegiak",
-    "onlyDirect": "Ekintza hau ezin da ilaran jarri eta zuzenean exekutatu behar da.",
-    "cleanCache": "Garbitu katxea",
-    "cleanCacheSub": "Kendu katxeatutako pakete guztiak",
-    "updateSystem": "Eguneratu sistema",
-    "taskRunningHeader": "Errorea mantentze-ekintza exekutatzean",
-    "taskRunning": "Dagoeneko ataza bat exekutatzen ari da, itxaron lehenik amaitu arte.",
-    "updateSystemSub": "Eguneratu zure sistema garuda-update bidez",
-    "editReposSub": "Editatu zure biltegiak Pace-rekin",
-    "addPendingSub": "Gehitu zain dauden eragiketak",
-    "clearOrphans": "Garbitu umezurtzak",
-    "clearOrphansSub": "Kendu pakete umezurtzak",
-    "refreshMirrors": "Berritu ispiluak",
-    "refreshMirrorsSub": "Berritu zure ispilu-zerrenda",
-    "removeLock": "Kendu Pacman blokeoa",
-    "removeLockSub": "Kendu pacman blokeo fitxategia",
-    "reinstallPackages": "Berrinstalatu paketeak",
-    "reinstallPackagesSub": "Berrinstalatu pakete guztiak zure sisteman",
-    "reinstallDkmsModules": "Berrinstalatu DKMS moduluak",
-    "btrfsAssistant": "Btrfs Laguntzailea",
-    "btrfsAssistantSub": "Kudeatu zure BTRFS argazkiak eta exekutatu mantentze-atazak",
-    "mergePacDiff": "Bateratu pacdiff fitxategiak",
-    "mergePacDiffSub": "Bateratu .pacnew eta .pacsave fitxategiak interaktiboki",
-    "updateRemoteFullFix": "Garuda update konponketa osoa",
-    "updateRemoteFullFixSub": "Berrezarri Pacman eta berrinstalatu pakete guztiak zure SEan",
-    "updateRemoteKeyring": "Garuda update keyring",
-    "updateRemoteKeyringSub": "Berritu keyring pacman.conf berrezarri gabe",
-    "updateRemoteFix": "Garuda update konponketa",
-    "updateRemoteFixSub": "Berrezarri pacman.conf eta berritu keyring-ak",
-    "updateRemoteResetSnapper": "Berrezarri snapper",
-    "updateRemoteResetSnapperSub": "Kendu Snapper guztia eta birsortu bere konfigurazioak",
-    "updateRemoteResetAudio": "Berrezarri audioa",
-    "updateRemoteResetAudioSub": "Berrinstalatu/berrezarri PipeWire audio konfigurazioa",
-    "resetTooltip": "Hurrengo fitxategiak edo karpetak beren egoera lehenetsira berrezarriko dira:",
-    "resetConfigs": "Berrezarri konfigurazioak egoera lehenetsira",
-    "common": "Mantentze arrunta",
-    "garudaUpdate": "Garuda update erreskate-tresnak"
-  },
-  "sudo": {
-    "title": "Autentifikazioa beharrezkoa da",
-    "icon": "Icon",
-    "subtitle": "Mesedez, sartu zure pasahitza jarraitzeko",
-    "save": "Gorde katxean saio honetan",
-    "password": "Pasahitza",
-    "cancel": "Utzi",
-    "useOnce": "Erabili behin bakarrik"
-  },
-  "systemdServices": {
-    "notFound": "Ez da zerbitzurik aurkitu",
-    "description": "Deskribapena",
-    "unit": "Unitatearen izena",
-    "load": "Kargatu",
-    "active": "Aktibo",
-    "state": "Egoera",
-    "searchKey": "Sartu bilaketa-gako-hitz bat",
-    "clear": "Garbitu",
+  "bootOptions": {
     "actions": "Ekintzak",
-    "show": "Erakutsi",
-    "start": "Hasi",
-    "stop": "Gelditu",
-    "mask": "Estali",
-    "unmask": "Estaldura kendu",
-    "logs": "Erregistroak",
-    "restart": "Berrabiarazi",
-    "reload": "Birkargatu",
-    "enable": "Gaitu",
-    "disable": "Desgaitu",
-    "autoRefresh": "Automatikoki berritu",
-    "error": "Errore bat gertatu da zerbitzuak eskuratzean, mesedez saiatu berriro.",
-    "errorTitle": "Errorea zerbitzuak eskuratzean",
-    "systemContext": "Erakutsi sistemaren zerbitzuak",
-    "userContext": "Erakutsi erabiltzailearen zerbitzuak",
-    "includeDisabled": "Sartu desgaituak",
-    "excludeDisabled": "Baztertu desgaituak"
+    "apply": "Aplikatu ezarpenak",
+    "bootEntries": "Abio-sarrerak",
+    "cancel": "Utzi",
+    "configSaved": "GRUB konfigurazioa behar bezala gorde da",
+    "defaultEntry": "Abio-sarrera lehenetsia",
+    "defaultEntryHint": "Lehenespenez abiaraziko den menuko sarrera.",
+    "edit": "Editatu",
+    "editConfigWarning": "Abisua: GRUB konfigurazio-fitxategiak zuzenean editatzea arriskutsua izan daiteke. GRUB eguneratzean aldaketak gainidatzi daitezke. Erabili kontuz.",
+    "editEntry": "Editatu abio-sarrera",
+    "editGrubDefault": "Editatu /etc/default/grub",
+    "editGrubDefaultHint": "Editatu GRUB ezarpen lehenetsien fitxategia. Root baimenak behar ditu.",
+    "editingEntry": "Sarrera editatzen",
+    "enableBootsplash": "Gaitu abio-pantaila (bootsplash)",
+    "enableBootsplashHint": "Abio-prozesuan zehar animazio grafiko bat (Plymouth) erakusten du testu-mezuen ordez.",
+    "entryId": "Sarreraren IDa",
+    "entryName": "Sarreraren izena",
+    "entrySaved": "Abio-sarrera behar bezala gorde da",
+    "errorTitle": "Errorea",
+    "flatMenus": "Gaitu menu lauak",
+    "flatMenusHint": "GRUB azpimenuak desgaitzen ditu, sarrera guztiak goiko mailako menuan erakutsiz.",
+    "grubBackground": "GRUB atzeko planoko irudia",
+    "grubTheme": "GRUB gaia",
+    "kernelParams": "Kernelaren parametroak",
+    "kernelParamsHint": "Abioan Linux kernelari pasatako parametro gehigarriak.",
+    "kernelParamsPlaceholder": "adib. quiet splash",
+    "messageLevel": "Abio-mezuen xehetasuna",
+    "messageLevelDetailed": "Xehea (Isila)",
+    "messageLevelHint": "Hautatu abio-prozesuan zehar zenbat informazio erakutsiko den.",
+    "messageLevelLimited": "Mugatua (Isila + Ixildu)",
+    "messageLevelVeryDetailed": "Oso xehea (Mezu guztiak)",
+    "mitigationsOff": "Desgaitu CPU arintzeak (mitigations)",
+    "mitigationsOffHint": "CPUaren segurtasun-arintzeak desgaitzen ditu errendimendu hobea lortzeko, baina segurtasun txikiagoarekin.",
+    "partitionSelect": "Hautatu partizioa",
+    "partitionSelectHint": "Mesedez, hautatu zure Garuda instalazioa duen partizioa.",
+    "plymouthNotInstalled": "Plymouth ez dago instalatuta. Gaitu ezazu aplikatzean instalatzeko.",
+    "plymouthPending": "Plymouth instalatzeko programatuta dago. Instalazioa amaitu ondoren gai bat hauta dezakezu.",
+    "plymouthTheme": "Plymouth gaia (abio-pantaila)",
+    "plymouthThemeHint": "Sistemaren abio-prozesuan zehar erakutsitako gaia.",
+    "plymouthVmWarning": "Makina birtual batean zaude. Plymouth abio-pantailak modu mugatuan funtzionatuko du eta baliteke aurrebistak behar bezala ez funtzionatzea.",
+    "previewComplete": "Aurrebista osatuta",
+    "previewCompleteMessage": "Plymouth gaiaren aurrebista amaitu da.",
+    "previewError": "Aurrebistak huts egin du",
+    "previewTheme": "Aurreikusi Plymouth gaia",
+    "retry": "Berriro saiatu",
+    "save": "Gorde",
+    "saveDefault": "Gorde sarrera lehenetsia",
+    "saveDefaultHint": "Automatikoki gorde hautatutako azken abio-sarrera lehenetsi gisa.",
+    "savedMessage": "Abio-ezarpenak behar bezala aplikatu dira.",
+    "savedMessageScheduled": "Abio-ezarpenak zain dauden eragiketetan gehitu dira.",
+    "savedTitle": "Ezarpenak gorde dira",
+    "saveSuccess": "Behar bezala gorde da",
+    "searchOtherOs": "Bilatu beste sistema eragile batzuk",
+    "searchOtherOsHint": "Automatikoki hauteman eta gehitu instalatutako beste sistema eragile batzuk abio-menura os-prober erabiliz.",
+    "selectBackground": "Hautatu atzeko planoko irudia",
+    "selectEntry": "Hautatu abio-sarrera bat",
+    "selectGrubTheme": "Hautatu GRUB gaia",
+    "selectTheme": "Hautatu Plymouth gai bat",
+    "submenu": "Azpimenua",
+    "sysrqEnabled": "Gaitu beti SysRq",
+    "sysrqEnabledHint": "Magic SysRq tekla gaitzen du larrialdietan sistema kontrolatzeko.",
+    "timeout": "Menuaren itxarote-denbora",
+    "timeoutHint": "Sarrera lehenetsia abiarazi aurretik itxaron beharreko denbora segundotan.",
+    "title": "Abio ",
+    "titleTwo": "aukerak",
+    "unsavedChanges": "Gorde gabeko aldaketak dituzu"
   },
-  "systemTools": {
-    "title": "Sistemaren ",
-    "icon": "Icon",
-    "titleTwo": "ezarpenak",
-    "systemdServices": "Systemd zerbitzuak",
-    "systemSettings": "Sistemaren ezarpenak",
-    "components": "Sistemaren osagaiak",
-    "locales": "Lokaleak",
-    "kernels": "Kernelak",
-    "packages": "Pakete gehiago",
-    "audio": {
-      "title": "Audioa",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA euskarria"
-      },
-      "jack": {
-        "title": "JACK euskarria"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio euskarria"
-      },
-      "pipewire": {
-        "title": "PipeWire euskarria"
-      },
-      "userRealtime": {
-        "title": "Erabiltzailea realtime taldean"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP instalatuta"
-      }
-    },
-    "virtualization": {
-      "title": "Birtualizazioa",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU instalatuta"
-      },
-      "kvm": {
-        "title": "KVM euskarria"
-      },
-      "virtManager": {
-        "title": "Virt-manager euskarria"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd gaituta"
-      },
-      "userVboxUsers": {
-        "title": "Erabiltzailea vboxusers taldean"
-      },
-      "virtualbox": {
-        "title": "VirtualBox euskarria"
-      },
-      "userLibvirt": {
-        "title": "Erabiltzailea libvirt taldean"
-      },
-      "userKvm": {
-        "title": "Erabiltzailea kvm taldean"
-      }
-    },
-    "containers": {
-      "title": "Edukiontziak",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker instalatuta"
-      },
-      "dockerEnabled": {
-        "title": "Docker gaituta"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose instalatuta"
-      },
-      "userDocker": {
-        "title": "Erabiltzailea docker taldean"
-      },
-      "podman": {
-        "title": "Podman instalatuta"
-      },
-      "podmanDocker": {
-        "title": "Emulatu Docker Podman bidez"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop instalatuta"
-      },
-      "distrobox": {
-        "title": "DistroBox instalatuta"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy instalatuta"
-      }
-    },
-    "network": {
-      "title": "Sarea",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager euskarria"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager gaituta"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager gaituta"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Bluetooth euskarria"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth gaituta"
-      },
-      "userBluetooth": {
-        "title": "Erabiltzailea bluetooth taldean"
-      },
-      "autoConnect": {
-        "title": "Auto connect instalatuta"
-      },
-      "autoConnectEnabled": {
-        "title": "Auto connect gaituta"
-      }
-    },
-    "printing": {
-      "title": "Inprimaketa",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "Inprimaketa euskarria"
-      },
-      "cupsEnabled": {
-        "title": "CUPS gaituta"
-      },
-      "scanningSupport": {
-        "title": "Eskaneatze euskarria"
-      },
-      "sanedEnabled": {
-        "title": "saned gaituta"
-      },
-      "userCups": {
-        "title": "Erabiltzailea cups taldean"
-      },
-      "userScanner": {
-        "title": "Erabiltzailea scanner taldean"
-      },
-      "userLp": {
-        "title": "Erabiltzailea lp taldean"
-      }
-    },
-    "firewall": {
-      "title": "Suebakia",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld instalatuta"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld gaituta"
-      },
-      "ufw": {
-        "title": "UFW instalatuta"
-      },
-      "ufwEnabled": {
-        "title": "UFW gaituta"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch instalatuta"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch gaituta"
-      }
-    },
-    "misc": {
-      "title": "Askotarikoak",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem instalatuta"
-      }
-    }
+  "bootRepair": {
+    "apply": "Aplikatu",
+    "backupFile": "Babeskopia-fitxategia",
+    "backupMbrPbr": "Egin MBR edo PBRren babeskopia",
+    "backupMbrPbrTip": "Sortu Master Boot Record (MBR) abio-kodearen edo Partition Boot Record (PBR) kodearen babeskopia bat. Honek ez du partizio-taula barne hartzen.",
+    "backupRestoreTarget": "Babeskopiaren edo leheneratzearen helburua:",
+    "deviceOrPartition": "Gailua edo partizioa:",
+    "errorTitle": "Errorea",
+    "installOn": "Instalatu hemen:",
+    "location": "Kokapena:",
+    "luksPassword": "LUKS pasahitza:",
+    "luksPasswordPlaceholder": "Sartu LUKS pasahitza",
+    "luksPasswordRequired": "Mesedez, sartu root partizio honetarako LUKS pasahitza.",
+    "luksTag": "LUKS",
+    "options": "Aukerak",
+    "partitionToMount": "Muntatu beharreko partizioa:",
+    "reinstallGrub": "Berrinstalatu GRUB",
+    "reinstallGrubTip": "Berrinstalatu GRUB abiarazlea disko edo partizio zehatz batean.",
+    "repairGrubConfig": "Konpondu GRUB konfigurazioa",
+    "repairGrubConfigTip": "Birsortu GRUB konfigurazio-fitxategia (grub.cfg) instalatutako sistema eragile guztiak hautemateko.",
+    "restoreMbrPbr": "Berreskuratu MBR edo PBR babeskopiatik",
+    "restoreMbrPbrTip": "Berreskuratu abio-kodea aurretik sortutako babeskopia-fitxategi batetik.",
+    "rootLocation": "Root kokapena:",
+    "selectLocation": "Mesedez, hautatu kokapen bat.",
+    "selectOperation": "Hautatu eragiketa",
+    "selectRoot": "Mesedez, hautatu root partizio bat.",
+    "successBackup": "Babeskopia behar bezala amaitu da.",
+    "successReinstall": "GRUB berrinstalazioa behar bezala amaitu da.",
+    "successRepair": "GRUB konponketa behar bezala amaitu da.",
+    "successRestore": "Leheneratzea behar bezala amaitu da.",
+    "successTitle": "Arrakasta",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI Sistemaren Partizioa. Unified Extensible Firmware Interface (UEFI) betetzen duten ordenagailuek abiarazleak eta kernel-irudiak gordetzeko erabiltzen duten partizioa.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. Partizionatutako datuak biltegiratzeko gailu baten hasierako ohiko abio-sektorea.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record. Volume Boot Record (VBR) izenez ere ezaguna. Partizio jakin baten lehen sektorea da.",
+    "targetRoot": "Root",
+    "title": "Abioaren ",
+    "titleTwo": "konponketa"
   },
-  "systemSettings": {
-    "defaultShellConfigs": "Instalatu konfigurazio lehenetsiak",
-    "defaultDns": "Ezarri DNS lehenetsia",
-    "defaultShell": "Ezarri saio-hasierako shell-a",
-    "enableHblock": "Gaitu Hblock",
-    "enableIwd": "Erabili IWD wpa_supplicant-en ordez",
-    "common": {
-      "title": "Arrunta",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon instalatuta"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon gaituta"
-      },
-      "oomd": {
-        "title": "Systemd-oomd gaituta"
-      },
-      "guestUser": {
-        "title": "Gaitu gonbidatu erabiltzailea"
-      }
-    },
-    "performance": {
-      "title": "Errendimendua",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "Errendimendu doikuntzak"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ instalatuta"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ gaituta"
-      },
-      "bpftune": {
-        "title": "Bpftune instalatuta"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune gaituta"
-      },
-      "preload": {
-        "title": "Preload instalatuta"
-      },
-      "preloadEnabled": {
-        "title": "Preload gaituta"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance gaituta"
-      }
-    },
-    "powersave": {
-      "title": "Energia aurreztea",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "Energia aurrezteko doikuntzak"
-      },
-      "tlp": {
-        "title": "TLP instalatuta"
-      },
-      "tlpEnabled": {
-        "title": "TLP gaituta"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq instalatuta"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq gaituta"
-      },
-      "thermald": {
-        "title": "Thermald instalatuta"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald gaituta"
-      },
-      "powerProfilesDaemon": {
-        "title": "Power profiles daemon instalatuta"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Power profiles daemon gaituta"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt instalatuta"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt gaituta"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "Eskuin klik emulazioa",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev eskuin klik emulazioa sakatze luzearekin"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE gaituta"
-      }
-    }
+  "commandPalette": {
+    "hint": "Bilatu moduluak eta ekintzak",
+    "placeholder": "Idatzi komando bat edo bilatu modulu bat...",
+    "toClose": "ixteko"
   },
-  "shells": {
-    "fish": {
-      "hint": "Fish shell lehenetsi gisa ezartzeak arazoak sor ditzake beste programa batzuekin. Hobe da terminalaren konfigurazioen bidez lehenetsi gisa ezartzea."
-    }
+  "configFiles": {
+    "actions": "Ekintzak",
+    "desc": {
+      "adjtime": "Hwclock-ek erabilia erlojuen jarraipena egiteko",
+      "alacritty": "GPU bidez azeleratutako terminal emuladorearen konfigurazioa",
+      "alsa_base": "ALSA kernel moduluaren aukerak",
+      "amdgpu_conf": "AMDGPU kernel moduluaren aukerak",
+      "ananicy": "Ananicy auto-nice deabruaren arauak",
+      "asound_conf": "Sistema osorako ALSA konfigurazioa",
+      "asoundrc": "Erabiltzailearen ALSA konfigurazio zehatza",
+      "bash_bashrc": "Sistema osorako bash shell ezarpenak shell interaktiboetarako",
+      "bashrc": "Uneko erabiltzailearen Bash konfigurazio-fitxategia",
+      "blacklist_nouveau": "Nouveau kode irekiko kontrolatzailea zerrenda beltzean jartzen du",
+      "bluetooth_main": "Bluetooth deabruaren konfigurazioa",
+      "btrfsAssistant": "BTRFS Assistant-erako konfigurazioa",
+      "chaoticMirrorlist": "Garudaren Chaotic-AUR biltegi-ispilu pertsonalizatuak",
+      "cinnamon": "Cinnamon mahaigainaren konfigurazio-direktorio nagusia",
+      "cpupower": "Cpupower energia-kudeaketarako tresnaren konfigurazioa",
+      "cron": "Cron lanetarako konfigurazioa",
+      "cursorThemeSystem": "Sistema osorako kurtsore-gaiaren konfigurazioa",
+      "cursorThemeUser": "Erabiltzailearen kurtsore-gaiaren konfigurazioa",
+      "dunst": "Dunst jakinarazpen-deabruaren konfigurazioa",
+      "environment": "Sistema osorako ingurune-aldagaiak",
+      "environmentD": "Sistema osorako ingurune-aldagaietarako direktorioa (Wayland)",
+      "fastfetch": "Sistemaren informazioa eskuratzeko tresnaren konfigurazioa",
+      "fish": "Fish shell konfigurazio-fitxategia",
+      "fontconfigSystem": "Sistema osorako letra-tipoen konfigurazio-ezarpenak",
+      "fontconfigUser": "Erabiltzailearen letra-tipoen konfigurazio-ezarpenak",
+      "fstab": "Fitxategi-sistemei buruzko informazio estatikoa",
+      "gamemode": "GameMode optimizazio-tresnaren konfigurazio globala",
+      "garudaUpdateConfig": "Garuda-update portaerarako eta eguneratze-banderetarako konfigurazioa",
+      "gdm": "GNOME Display Manager-en konfigurazioa",
+      "gitconfig": "Erabiltzailearen git konfigurazio zehatza",
+      "group": "Erabiltzaile-taldeak definitzen ditu",
+      "grub": "GRUB abiarazlearen konfigurazio-fitxategia",
+      "grub_cfg": "GRUB abiarazlearen konfigurazio-fitxategia",
+      "grubTheme": "GRUB abiarazlearen gaiaren konfigurazioa",
+      "gtk3Settings": "GTK 3.0 aplikazioetarako ezarpenak",
+      "gtk4Css": "GTK 4.0 aplikazioetarako CSS estilo pertsonalizatua",
+      "gtk4Settings": "GTK 4.0 aplikazioetarako ezarpenak",
+      "gtkrc2": "GTK 2.0 aplikazio zaharragoetarako ezarpenak",
+      "hostname": "Sistemaren ostalari-izena (hostname)",
+      "hosts": "Ostalari-izenen bilaketa-taula estatikoa",
+      "hosts_allow": "Sare-zerbitzuen sarbidea kontrolatzeko TCP bilgarriak (baimendu)",
+      "hosts_deny": "Sare-zerbitzuen sarbidea kontrolatzeko TCP bilgarriak (ukatu)",
+      "hyprland": "Hyprland Wayland konposatzailearen konfigurazioa",
+      "hyprpaper": "Hyprpaper horma-paper tresnaren konfigurazioa",
+      "i3": "X11 leiho-kudeatzaile mosaiko klasikoaren konfigurazioa",
+      "iconTheme": "Ikono-gaiaren konfigurazio-ezarpenak",
+      "journald": "Systemd egunkari-zerbitzuaren konfigurazioa",
+      "kcmfonts": "KDE letra-tipoen konfigurazio-ezarpenak",
+      "kdeColorScheme": "Erabiltzailearen KDE kolore-eskemaren definizioak",
+      "kdeglobals": "KDE konfigurazio-ezarpen globalak",
+      "kdeLookandFeel": "KDE Gai Globalaren (Look and Feel) ezarpenak",
+      "kitty": "Ezaugarri askotako, GPU bidez azeleratutako terminal emuladorearen konfigurazioa",
+      "kvantumConfig": "Kvantum SVGetan oinarritutako gai-motorraren konfigurazioa",
+      "kwinrc": "KWin leiho-kudeatzailearen konfigurazioa",
+      "lightdm": "LightDM bistaratze-kudeatzailearen konfigurazioa",
+      "locale": "Sistema osorako lokalizazio-konfigurazioa",
+      "locale_gen": "Sisteman eskuragarri dauden lokalen zerrenda",
+      "logind": "Systemd saio-hasiera kudeatzailearen konfigurazioa",
+      "makepkgConf": "Makepkg-ren konfigurazio-aukerak",
+      "mako": "Mako jakinarazpen-deabruaren konfigurazioa",
+      "mangohud": "MangoHud errendimendu-gainjartzearen konfigurazioa",
+      "mirrorlist": "Arch Linux biltegi-ispilu estandarrak",
+      "mkinitcpio": "Hasierako ramdisk ingurunea sortzeko konfigurazioa",
+      "modprobe_d": "Kernel moduluaren konfigurazioa eta aukerak",
+      "networkmanager": "NetworkManager-en konfigurazio orokorra",
+      "nftables": "Nftables suebakiaren konfigurazioa",
+      "nvidia_conf": "NVIDIA kernel moduluaren aukerak",
+      "os_release": "SEari buruzko informazioa eskaintzen du, hainbat programak erabilia",
+      "pacman_hooks": "Pakete-eragiketetan ekintzak automatizatzeko kakoak (hooks)",
+      "pacmanConf": "Pacman pakete-kudeatzailearen konfigurazio-fitxategi nagusia",
+      "pam": "Autentifikazio Modulu Txertagarrietarako (PAM) konfigurazio-fitxategiak",
+      "pam_d": "Autentifikazio-zerbitzuetarako PAM konfigurazioa",
+      "passwd": "Erabiltzaile-kontuen informazioa dauka",
+      "pipewire_client": "PipeWire bezeroaren konfigurazioa",
+      "pipewire_conf": "Erabiltzaile-mailako PipeWire deabruaren konfigurazioa",
+      "plasmaApplets": "Plasma mahaigaineko miniaplikazioen konfigurazioa",
+      "plasmaEnv": "Plasma lan-eremurako ingurune-aldagaiak",
+      "plasmarc": "Plasma shell-aren konfigurazio nagusia",
+      "plymouthConf": "Plymouth abio-pantailaren (bootsplash) deabruaren konfigurazioa",
+      "profile": "Erabiltzailearen ingurune zehatza eta abiarazteko programak",
+      "pulse_daemon": "PulseAudio deabruaren ezarpenak",
+      "pulse_default": "PulseAudio abiarazteko scripta",
+      "qtile": "Python-en oinarritutako leiho-kudeatzailearen konfigurazioa",
+      "resolv": "DNS ebazlearen konfigurazio-fitxategia",
+      "rofi": "Rofi aplikazio-abiarazle eta leiho-aldatzailearen konfigurazioa",
+      "rsyslog": "Rsyslog deabruaren konfigurazio nagusia",
+      "sddm": "Simple Desktop Display Manager konfigurazioa",
+      "shadow": "Pasahitz hashak eta kontuaren iraungitze-informazioa dauka",
+      "snapperRoot": "Root partiziorako Snapper konfigurazioa",
+      "ssh_user": "Erabiltzailearen SSH bezeroaren konfigurazio zehatza",
+      "sshd": "OpenSSH zerbitzari-deabruaren konfigurazio-fitxategia",
+      "starship": "Starship shell arteko gonbitaren (prompt) konfigurazioa",
+      "sudoers": "Zein erabiltzailek sudo pribilegioak dituzten konfiguratzen du",
+      "sway": "Sway Wayland konposatzailearen konfigurazioa",
+      "sysctl": "Kernel parametroak (sarea, errendimendua, segurtasuna)",
+      "systemd_network": "Systemd-networkd-rako konfigurazio-fitxategiak",
+      "systemd_services": "Systemd zerbitzuen definizio pertsonalizatuak edo baliogabetuak",
+      "systemd_timers": "Programatutako atazetarako systemd tenporizadoreak",
+      "systemdSystem": "Systemd sistemaren konfigurazio orokorra",
+      "systemdUser": "Systemd erabiltzailearen konfigurazio orokorra",
+      "timezone": "Sistemaren ordu-eremua ezartzen du",
+      "udev_rules": "Hardware gailuen portaerarako udev arauak",
+      "userdirs": "XDG erabiltzaile-direktorioen konfigurazioa",
+      "vconsole": "Kontsola birtualaren konfigurazioa",
+      "waybar": "Waybar egoera-barraren konfigurazio nagusia",
+      "waybarStyle": "Waybar egoera-barrarako CSS estiloko fitxategia",
+      "wayfire": "3D Wayland konposatzailearen konfigurazioa",
+      "wayland_conf": "Erabiltzailearen Wayland konposatzailearen konfigurazio-fitxategiak",
+      "wireplumber": "WirePlumber saio-kudeatzailearen konfigurazio-direktorioa",
+      "wofi": "Wofi aplikazio-abiarazlearen konfigurazioa",
+      "xfce4": "Xfce4-ren konfigurazio-direktorio nagusia",
+      "xorg_conf": "Xorg-eko konfigurazio-fitxategi nagusi zaharra",
+      "xorg_conf_d": "Xorg konfigurazio-zatietarako direktorioa",
+      "xorg_gpu": "GPUari dagokion Xorg konfigurazioa (kontrolatzailearen hautaketa, BusID, pantaila-ezarpenak)",
+      "xorg_monitor": "Xorg-erako monitorearen diseinua, bereizmena, freskatze-tasa",
+      "zramGenerator": "Zram-generator-erako konfigurazioa",
+      "zsh": "Uneko erabiltzailearen Zsh konfigurazio-fitxategia"
+    },
+    "description": "Deskribapena",
+    "edit": "Editatu",
+    "name": "Izena",
+    "path": "Bidea",
+    "search": "Bilatu konfigurazio-fitxategiak...",
+    "title": "Konfigurazio",
+    "titleTwo": "fitxategiak",
+    "wiki": "Wikia"
   },
   "confirmation": {
     "accept": "Onartu",
-    "reject": "Utzi",
-    "exitApp": "Ziur zaude aplikaziotik irten nahi duzula?",
-    "exitAppRunningAction": "Ziur zaude aplikaziotik irten nahi duzula? Ekintza bat exekutatzen ari da!",
-    "resetConfigsHeader": "Berrezarri konfigurazioak?",
-    "resetConfigsBody": "Ziur zaude hurrengo konfigurazioak berrezarri nahi dituzula?",
-    "exitAppHeader": "Irten aplikaziotik?",
     "applyOperations": "Aplikatu eragiketak?",
-    "applyOperationsBody": "Ziur zaude zain dauden eragiketa guztiak aplikatu nahi dituzula?"
+    "applyOperationsBody": "Ziur zaude zain dauden eragiketa guztiak aplikatu nahi dituzula?",
+    "cancel": "Utzi",
+    "createSnapshotBefore": "Sortu Btrfs argazkia exekutatu aurretik",
+    "exitApp": "Ziur zaude aplikaziotik irten nahi duzula?",
+    "exitAppHeader": "Irten aplikaziotik?",
+    "exitAppRunningAction": "Ziur zaude aplikaziotik irten nahi duzula? Ekintza bat exekutatzen ari da!",
+    "password": "Pasahitza",
+    "reject": "Utzi",
+    "resetConfigsBody": "Ziur zaude hurrengo konfigurazioak berrezarri nahi dituzula?",
+    "resetConfigsHeader": "Berrezarri konfigurazioak?",
+    "save": "Gorde katxean saio honetan",
+    "subtitle": "Mesedez, sartu zure pasahitza jarraitzeko",
+    "title": "Autentifikazioa beharrezkoa da",
+    "useOnce": "Erabili behin bakarrik"
+  },
+  "console": {
+    "abortAll": "Abortatu ekintza guztiak",
+    "clearCachedData": "Irteerako katxea garbitu da.",
+    "clearCachedDataTitle": "Irteerako katxea garbitu da",
+    "clearOutputCache": "Garbitu irteerako katxea",
+    "copyOutput": "Kopiatu terminalaren irteera",
+    "copyToClipboard": "Irteera behar bezala kopiatu da zure arbelean.",
+    "copyToClipboardTitle": "Arbelean kopiatu da",
+    "noOutput": "Irteerarik ez",
+    "noTasksPending": "Ez dago zain dagoen atazarik",
+    "opRunning": "Eragiketa dagoeneko exekutatzen ari da.",
+    "outputExists": "Badirudi dagoeneko ekintza bat exekutatzen ari dela. Mesedez, itxaron amaitu arte erregistroak ikusten saiatu aurretik.",
+    "printScripts": "Inprimatu scriptak",
+    "removeAll": "Kendu ekintza guztiak",
+    "runActions": "Exekutatu ekintzak",
+    "tasksAppearHere": "Atazak hemen agertuko dira elementuak hautatzen dituzunean.",
+    "title": "Terminala",
+    "uploadPrivateBin": "Igo PrivateBin-era"
+  },
+  "diagnostics": {
+    "copySuccess": "Arbelean kopiatu da",
+    "dmesg": "Kernelaren erregistroak (dmesg)",
+    "dmesgDesc": "Aztertu kernelaren eraztun-bufferreko mezuak.",
+    "exitCode": "Komandoa {{code}} kodearekin irten da",
+    "failedCmd": "Zerbait txarto joan da eta ezin izan da diagnostikorik eskuratu",
+    "failedCmdHeader": "Ezin izan da komandoa exekutatu",
+    "full": "Diagnostiko osoak",
+    "fullDesc": "Bildu diagnostiko-informazio erabilgarri guztia irteera bakarrean.",
+    "health": "Sistemaren osasuna",
+    "healthDesc": "Exekutatu sistemaren osasun-egiaztapena garuda-health erabiliz.",
+    "inxi": "Informazio arrunta (inxi)",
+    "inxiDesc": "Bildu hardware eta sistemaren informazio xehea.",
+    "journalctl": "Sistemaren erregistroak (journalctl)",
+    "journalctlDesc": "Aztertu egunkari-deabruaren sistemaren erregistroak.",
+    "pacman": "Azken Pacman erregistroak",
+    "pacmanDesc": "Ikusi azken pacman pakete-kudeatzailearen erregistroak.",
+    "subtitle": "Aurkitu zure sistema arazteko behar duzun informazioa",
+    "success": "Arrakasta",
+    "systemctl": "Sistemaren zerbitzuak (systemctl)",
+    "systemctlDesc": "Aztertu sistemaren abio-errendimendua eta zerbitzuen egoera.",
+    "title": "Arazketa informazioa ",
+    "titleTwo": "eta diagnostikoak",
+    "upload": "Igo PrivateBin-era",
+    "uploadDesc": "Igo uneko terminalaren irteera PrivateBin-era partekatzeko.",
+    "uploadSuccess": "PrivateBin-era behar bezala igota, URLa arbelean kopiatu da"
   },
   "error": {
     "sudoPassword": "Ez dirudi hau pasahitz zuzena denik. Mesedez, saiatu berriro."
   },
-  "operation": {
-    "removeApps": "Kendu aplikazioak",
-    "installApps": "Instalatu aplikazioak",
-    "addGroup": "Gehitu erabiltzailea taldera",
-    "removeGroup": "Kendu erabiltzailea taldetik",
-    "disableService": "Desgaitu zerbitzua",
-    "enableService": "Gaitu zerbitzua",
-    "setDefaultShell": "Ezarri shell lehenetsia",
-    "enableHblock": "Gaitu Hblock",
-    "disableHblock": "Desgaitu Hblock",
-    "setNewDnsServer": "Ezarri DNS zerbitzari berria",
-    "resetDnsServer": "Berrezarri DNS zerbitzaria",
-    "args": "Argumentuak",
-    "logs": "Erregistroak",
-    "remove": "Kendu",
-    "abort": "Abortatu",
-    "run": "Exekutatu orain"
-  },
-  "systemStatus": {
-    "pendingUpdates": "Zain dauden eguneraketak",
-    "updates": "Sistema honek zain dauden eguneraketak ditu (egin klik informaziorako)",
-    "pacFiles": "Sistema honek zain dauden .pacnew fitxategiak ditu, egiaztatu eta bateratu beharko zenituzke! (egin klik informaziorako)",
-    "cancel": "Utzi",
-    "aurUpdates": "AUR paketeak eguneratzea aplikazio honen esparrutik kanpo dago. Mesedez, erabili AUR laguntzaile bat Paru bezalakoa, eta berrikusi PKGBUILD fitxategiak instalatu aurretik.",
-    "scheduleUpdates": "Programatu eguneraketak",
-    "pendingPacdiff": "Zain dauden pacdiff fitxategiak",
-    "findMore": "Aurkitu nola jarraitu",
-    "warnUpdate": "Zure sistema ez da eguneratu 2 astetan. Mesedez, eguneratu zure sistema segurtasuna eta egonkortasuna bermatzeko.",
-    "affectedFiles": "Eragindako fitxategiak:",
-    "learnPacdiff": "Pacdiff fitxategiak ezagutzen ez badituzu, informatu zaitez azkar haiei buruz.",
-    "openMaintenance": "Egin klik beheko botoian hasteko.",
-    "openMaintenanceButton": "Hasi bateratzen",
-    "rebootNow": "Berrabiarazi orain",
-    "rebootNowBody": "Ziur zaude orain berrabiarazi nahi duzula? Ziurtatu zure lan guztia gorde duzula jarraitu aurretik.",
-    "warnReboot": "Biziki gomendatzen da sistema berrabiaraztea eguneraketak aplikatu ondoren, batez ere kernelak edo mahaigaineko inguruneak eguneratzean.",
-    "proceed": "Hona hemen nola jarraitu:",
-    "snapshotCreation": "Btrfs argazki bat sortuko da bateratzea hasi aurretik.",
-    "proceedMerge": "Meld irekiko da aldaketak aplikatzeko. Ezkerreko aldean fitxategi BERRIA dago, eskuinekoan ZAHARRA. Mugitu bateratu nahi dituzun aldaketa erabilgarriak ezkerretik eskuinera. Egin klik gordetzeko botoian edo KTRL + S amaitutakoan.",
-    "cautionMerge": "Kontuan izan aldaketa okerrak fitxategi ZAHARREAN jartzeak zure sistema hautsi dezakeela.",
-    "askHelp": "Ziur ez bazaude, itxi leihoa gorde gabe eta eskatu laguntza Garuda Linux foroan.",
-    "runAurUpdates": "Exekutatu AUR eguneraketak kanpotik"
-  },
-  "operationManager": {
-    "refusing": "Exekuzioa ukatzen",
-    "pendingOperationsRunning": "Eragiketak exekutatzen ari dira, dagoeneko egindakoak bakarrik kenduko ditut.",
-    "thisOperationRunning": "Zoro zaude ala? Eragiketa hau exekutatzen ari da!"
-  },
-  "os-interact": {
-    "packages": "Aldatu instalatutako paketeak",
-    "packages-aur": "Aldatu AUR paketeak",
-    "services": "Aldatu zerbitzuak",
-    "services-user": "Aldatu erabiltzailearen zerbitzuak",
-    "groups": "Aldatu erabiltzaile-taldeak",
-    "locales": "Aldatu gaitutako lokaleak"
-  },
-  "packages": {
-    "title": "Paketeak",
-    "icon": "Icon",
-    "internet": "Internet",
-    "documents": "Dokumentuak",
-    "multimedia": "Multimedia",
-    "science": "Zientzia",
-    "security": "Segurtasuna",
-    "other": "Beste batzuk",
-    "clear": "Garbitu",
-    "search": "Bilatu",
-    "url": "URLa",
-    "selected": "Hautatua",
-    "description": "Deskribapena",
-    "name": "Izena",
-    "searchKey": "Sartu bilaketa-gako-hitz bat",
-    "notFound": "Ez da paketerik aurkitu"
+  "gaming": {
+    "antimicrox": "Teklatuko botoiak eta saguaren kontrolak aginte-botoietara esleitzeko programa grafikoa",
+    "anydesk": "Urruneko Mahaigaineko Aplikazio Azkarra",
+    "bluez": "Orokorrean beharrezkoa da PS kontrolagailuak haririk gabe ezagutzeko",
+    "bottles": "Kudeatu erraz wine eta proton aurrizkiak",
+    "boxtron": "DOS jokoak Steam-en Linux DOSBox natiboaren bidez exekutatzeko bateragarritasun-tresna",
+    "controllers": "Kontrolagailuen euskarria",
+    "corectrl": "Nukleoa kontrolatzeko aplikazioa",
+    "desmume": "Nintendo DS emuladorea",
+    "dgenSdl": "Sega Genesis/Mega Drive sistemetarako emuladorea, SDLra ekarria",
+    "discord": "Guztia batean ahots- eta testu-txata jokalarientzat",
+    "displaycal": "Pantaila Kalibratzeko eta Karakterizatzeko Kode Irekiko tresna, Argyll CMS-k bultzatua",
+    "dolphinEmu": "Gamecube eta Wii emuladorea",
+    "dosbox": "DOS integratua duen emuladorea DOS jokoak exekutatzeko",
+    "droidcam": "Zure telefonoa/tableta haririk gabeko/USB web-kamera bihurtzeko tresna",
+    "duckstation": "Playstation emuladorea (azken GPL bertsioa)",
+    "dxvk": "Direct3D 9/10/11-rako Vulkan-en oinarritutako bateragarritasun-geruza, Linuxen 3D aplikazioak Wine bidez exekutatzea ahalbidetzen duena",
+    "easyeffects": "Audio-efektuak Pipewire aplikazioetarako",
+    "eka2l1": "Symbian OS emuladore esperimentala",
+    "emulationstation": "Emulation Station emuladoreen frontend malgua da, teklaturik gabeko nabigazioa eta sistemaren gai pertsonalizatuak onartzen dituena",
+    "emulators": "Emuladoreak",
+    "fceux": "NES/Famicom emuladore azkarra eta oso bateragarria",
+    "fsUae": "UAE/WinUAE-n oinarritutako Amiga emuladorea, jokoak emulatzera bideratua",
+    "gameconqueror": "Exekutatzen ari den prozesu batean ausazko aldagai baten helbidea isolatzeko diseinatutako memoria-eskanerra",
+    "gamemode": "Jokoei ostalari SEan optimizazio multzo bat behin-behinean aplikatzea ahalbidetzen dien deabru/liburu konbinazioa",
+    "games": "Jokoak",
+    "gamescope": "SteamOS saioaren leiho-kudeatzaile konposatzailea",
+    "gamescopeSession": "Gamescope saioa leiho-kudeaketa konposaturako",
+    "gamescopeSessionSteam": "Steam jokoetarako optimizatutako Gamescope saioa",
+    "goverlay": "Vulkan/OpenGL gainjartzeak kudeatzen laguntzeko GUIa",
+    "gwe": "NVIDIA GPUak kontrolatzeko sistemaren utilitatea",
+    "hatari": "Atari ST eta STE emuladorea",
+    "heroic": "Kode irekiko abiarazlea Epic, Amazon eta GOG jokoetarako",
+    "inputRemapper": "Zure sarrera-gailuko botoien esleipena aldatzeko eta programatzeko tresna",
+    "itch": "itch.io mahaigaineko aplikaziorako instalatzailea",
+    "kegaFusion": "Sega kontsola klasikoen emuladorea, SMS/GG, Genesis/Megadrive eta gehigarriak barne",
+    "keyboardVisualizer": "Bihurtu zure OpenRGB-k onartutako RGB konfigurazioa argi-ikuskizun ikusgarri batean zure musikarako",
+    "lact": "Linux GPU konfigurazio-tresna",
+    "launchers": "Joko abiarazleak",
+    "libretroMeta": "Meta-paketea onartutako Libretro emuladore guztientzat",
+    "loading": "Kargatzen...",
+    "lutris": "Jokoen plataforma irekia",
+    "luxtorpeda": "Steam Play bateragarritasun-tresna jokoak Linux motor natiboak erabiliz exekutatzeko",
+    "mame": "Multiple Arcade Machine Emulator ezagunaren moldaketa SDL erabiliz OpenGL euskarriarekin",
+    "mangohud": "Vulkan gainjartze-geruza FPS, tenperaturak, CPU/GPU karga eta gehiago monitorizatzeko",
+    "mednafen": "Komando-lerroko sistema anitzeko joko-emuladorea",
+    "mgba": "Nintendo Gameboy Advance emuladorea, abiaduran eta zehaztasunean zentratua",
+    "minigalaxy": "GOG bezero sinplea Linuxerako",
+    "misc": "Askotarikoak",
+    "mumble": "Kode irekiko, latentzia baxuko eta kalitate handiko ahots-txateko softwarea",
+    "nestopia": "Zehaztasun handiko NES/Famicom emuladorea",
+    "noisetorch": "Denbora errealeko mikrofonoaren zarata ezabatzea Linuxen",
+    "nyrna": "Eseki jokoak eta aplikazioak edozein unetan eta berrekin nahi duzunean",
+    "obsStudio": "Zuzeneko igorpenerako eta grabaziorako doako kode irekiko softwarea",
+    "openrgb": "Kode irekiko RGB argiztapenaren kontrola, fabrikatzailearen softwarearen menpe ez dagoena",
+    "oversteer": "Logitech bolanteak konfiguratzeko aplikazio grafikoa",
+    "pcsx2": "PlayStation 2 emuladorea",
+    "pegasusFrontend": "Plataforma anitzeko frontend grafiko pertsonalizagarria emuladoreak abiarazteko eta zure joko-bilduma kudeatzeko",
+    "piper": "Jokoetarako saguak konfiguratzeko GTK aplikazioa",
+    "polychromatic": "RGB argiztapena kudeatzeko frontend aplikazioa OpenRazer-entzat",
+    "ppsspp": "C++-n idatzitako PSP emuladorea",
+    "protonCachyOS": "Valve Proton-en banaketa CachyOS adabakiekin eta bestelako optimizazioekin",
+    "protonGeCustom": "Valve Proton-en banaketa pertsonalizatua hainbat adabakirekin",
+    "protontricks": "Proton gaitutako jokoetarako winetricks gauzak egiten dituen bilgarri sinplea",
+    "protonupQt": "Instalatu eta kudeatu Proton-GE eta Luxtorpeda Steam-erako eta Wine-GE Lutris-erako",
+    "retroarch": "Erreferentziazko frontend-a libretro APIRako",
+    "rpcs3": "PlayStation 3 emuladorea",
+    "ryujinx": "C#-n idatzitako Nintendo Switch emuladore esperimentala",
+    "sameboy": "Zehaztasunera bideratutako Game Boy/Game Boy Color emuladorea",
+    "scController": "Erabiltzaile-moduko kontrolatzailea, esleitzailea eta GTK3-n oinarritutako GUIa Steam Controller, DS4 eta antzeko kontrolagailuentzat",
+    "scummvm": "Hainbat 'point-and-click' abentura-joko grafiko klasikotarako 'makina birtuala'",
+    "snes9x": "Super Nintendo Entertainment System (TM) emuladore eramangarria",
+    "soundwire": "Igorri haririk gabe zure ordenagailuko edozein audio zure Android telefonora edo beste ordenagailu batzuetara",
+    "steamNative": "Steam runtime-aren ordezko natiboa sistemako liburutegiak erabiliz",
+    "steamRuntime": "Valve-ren software bidezko banaketa digitaleko sistema",
+    "steamtinkerlaunch": "Steam-en abiarazte-aukera pertsonalizatuetarako bilgarri-scripta",
+    "stella": "Atari 2600 VCS emuladorea",
+    "streamlinkTwitchGui": "Plataforma anitzeko Twitch.tv arakatzailea Streamlink-entzat",
+    "subtitle": "Has gaitezen jokoetarako aplikazio batzuekin!",
+    "title": "Jokoetarako ",
+    "titleTwo": "aplikazioak",
+    "tools": "Jokoetarako tresnak",
+    "torzu": "Beste emuladore-birkaketa bat",
+    "vesktop": "Vesktop Discord-eko mahaigaineko aplikazio pertsonalizagarria eta pribatutasunarekin arduratsua da",
+    "vice": "Commodore Emuladore Moldakorra",
+    "vkbasalt": "Vulkan ondorengo prozesatze-geruza. Efektu batzuk: CAS, FXAA, SMAA, deband",
+    "vlc": "Plataforma anitzeko MPEG, VCD/DVD eta DivX erreproduzitzailea",
+    "vrVideoPlayer": "VR edukietarako bideo-erreproduzitzailea",
+    "waydroid": "Python scripta OpenGapps, Magisk, libhoudini itzulpen-liburutegia eta libndk itzulpen-liburutegia waydroid-era gehitzeko",
+    "wine": "WINE",
+    "wineMeta": "Meta paketea WINE eta beharrezko menpekotasun guztiak instalatzeko",
+    "winePackage": "Windows programak exekutatzeko bateragarritasun-geruza",
+    "wineStaging": "Windows programak exekutatzeko bateragarritasun-geruza - Staging adarra",
+    "winetricks": "Wine-n birbanagarriak diren hainbat exekuzio-liburutegi instalatzeko scripta",
+    "xboxdrv": "Xbox kontrolagailuaren driverra, erabili soilik kernelaren driverrak funtzionatzen ez badu!",
+    "xemu": "Jatorrizko Xbox emuladorea",
+    "xoneDkms": "Linux kontrolatzaile modernoa Xbox One eta Xbox Series X|S kontrolagailuentzat",
+    "xoneDongleFirmware": "Xbox Haririk gabeko Kontrolagailuaren Egokigailuaren firmwarea",
+    "xpadneo": "Linux kontrolatzaile aurreratua Xbox One Haririk gabeko Aginterako",
+    "zsnes": "Super Nintendo emuladorea"
   },
   "kernels": {
+    "active": "Kernel aktiboa:",
     "dkmsModulesBroken": "DKMS modulu batzuk hautsita daude",
     "dkmsModulesBrokenTip": "Egin klik nigan hautsitako DKMS moduluen instalazioa programatzeko",
     "dkmsModulesMissing": "DKMS modulu batzuk falta dira",
     "dkmsModulesMissingTip": "Falta diren DKMS moduluak",
     "headers": "Goiburuak",
     "headersMissing": "Kernel goiburuak falta dira",
-    "headersMissingTip": "Egin klik nigan falta diren goiburuen instalazioa programatzeko",
-    "active": "Kernel aktiboa:"
+    "setDefault": "Ezarri kernel lehenetsia"
+  },
+  "lang": {
+    "title": "Hizkuntza hautaketa",
+    "tooltip": "Hautatu zure hizkuntza hobetsia"
   },
   "languagePacks": {
-    "locale": "Lokalea",
-    "selected": "Hautatua",
     "base": "Oinarrizko paketea",
+    "description": "Hauek zure instalatutako paketeetarako hizkuntza-paketeak dira, normalean GUIrako itzulpenak eskaintzen dituzte.",
+    "locale": "Lokalea",
     "notFound": "Ez da hizkuntza-paketerik aurkitu",
     "pkgname": "Paketearen izena",
-    "description": "Hauek zure instalatutako paketeetarako hizkuntza-paketeak dira, normalean GUIrako itzulpenak eskaintzen dituzte."
-  },
-  "settings": {
-    "title": "Aplikazioaren ",
-    "icon": "Icon",
-    "titleTwo": "ezarpenak",
-    "leftButtons": "Erakutsi leiho-botoiak ezkerrean",
-    "copyDiagnostics": "Kopiatu diagnostikoak arbelean",
-    "darkMode": "Gaitu modu iluna",
-    "language": "Konfiguratu hizkuntza aktiboa",
-    "autoStart": "Aplikazioa automatikoki abiarazi",
-    "logLevel": "Hautatu erregistro-maila",
-    "systemdUserContext": "Erakutsi erabiltzailearen Systemd zerbitzuak",
-    "autoRefresh": "Gaitu systemd zerbitzuen berritze automatikoa",
-    "showMainLinks": "Erakutsi estekak hasiera-orrian",
-    "themeLabel": "Oinarrizko diseinu-gaia",
-    "toggleOptions": "Aldatzeko aukerak",
-    "selectOptions": "Hautaketak"
+    "selected": "Hautatua"
   },
   "locales": {
     "apply": "Programatu instalatutako lokaleen aldaketak",
-    "description": "Eskuineko lokaleak zure sisteman instalatuta daude. Hauta dezakezu zeintzuk mantendu eta zeintzuk kendu nahi dituzun.",
     "available": "Erabilgarri",
+    "description": "Eskuineko lokaleak zure sisteman instalatuta daude. Hauta dezakezu zeintzuk mantendu eta zeintzuk kendu nahi dituzun.",
     "selected": "Hautatua",
-    "task": "Aldatu sistemaren lokalea",
-    "selectLocale": "Hautatu zure sistema osorako hizkuntza hobetsia"
+    "selectLocale": "Hautatu zure sistema osorako hizkuntza hobetsia",
+    "task": "Aldatu sistemaren lokalea"
   },
-  "console": {
-    "title": "Terminala",
+  "maintenance": {
+    "actionFailed": "Errore bat gertatu da {{ action }} exekutatzen saiatzean: {{ error }}.",
+    "actionFailedHeader": "Ezin izan da mantentze-ekintza exekutatu",
+    "addPending": "Gehitu zain",
+    "addPendingSub": "Gehitu zain dauden eragiketak",
+    "btrfsAssistant": "Btrfs Laguntzailea",
+    "btrfsAssistantSub": "Kudeatu zure BTRFS argazkiak eta exekutatu mantentze-atazak",
+    "cleanCache": "Garbitu katxea",
+    "cleanCacheSub": "Kendu katxeatutako pakete guztiak",
+    "clearOrphans": "Garbitu umezurtzak",
+    "clearOrphansSub": "Kendu pakete umezurtzak",
+    "common": "Mantentze arrunta",
+    "editRepos": "Editatu biltegiak",
+    "editReposSub": "Editatu zure biltegiak Pace-rekin",
+    "failedReset": "Errorea konfigurazio fitxategia berrezartzean",
+    "failedResetFile": "Errorea gertatu da {{file}} berrezartzean",
+    "garudaHealth": "Sistemaren osasun-egiaztapena",
+    "garudaHealthFix": "Konpondu sistemaren osasuna",
+    "garudaHealthFixSub": "Saiatu sistemaren arazo arruntak automatikoki konpontzen",
+    "garudaHealthSub": "Egiaztatu sistemaren arazo arruntak garuda-health erabiliz",
+    "garudaUpdate": "Garuda update erreskate-tresnak",
+    "installationFailedHeader": "{{ program }} ez dago instalatuta eta ezin izan da instalatu, ezin da aurrera egin. Egiaztatu erregistroak informazio gehiago lortzeko",
+    "mergePacDiff": "Bateratu pacdiff fitxategiak",
+    "mergePacDiffSub": "Bateratu .pacnew eta .pacsave fitxategiak interaktiboki",
+    "onlyDirect": "Ekintza hau ezin da ilaran jarri eta zuzenean exekutatu behar da.",
+    "refreshArchMirrors": "Berritu ispiluak",
+    "refreshArchMirrorsSub": "Berritu zure ispilu-zerrenda",
+    "refreshChaoticMirrors": "Berritu Chaotic-AUR ispilu-zerrenda",
+    "refreshChaoticMirrorsSub": "Berritu zure Chaotic-AUR ispilu-zerrenda",
+    "refreshChaoticMirrorsSuccess": "Chaotic-AUR ispilu-zerrenda behar bezala berritu da",
+    "refreshKeyring": "Berritu giltzatokia",
+    "refreshKeyringSub": "Berritu zure pacman giltzatokia",
+    "reinstallDkmsModules": "Berrinstalatu DKMS moduluak",
+    "reinstallPackages": "Berrinstalatu paketeak",
+    "reinstallPackagesSub": "Berrinstalatu pakete guztiak zure sisteman",
+    "removeLock": "Kendu Pacman blokeoa",
+    "removeLockSub": "Kendu pacman blokeo fitxategia",
+    "removePending": "Kendu zain",
+    "resetConfigs": "Berrezarri konfigurazioak egoera lehenetsira",
+    "resetTooltip": "Hurrengo fitxategiak edo karpetak beren egoera lehenetsira berrezarriko dira:",
+    "runNow": "Exekutatu orain",
+    "subtitle": "Mantendu zure sistema egoera onean",
+    "taskRunning": "Dagoeneko ataza bat exekutatzen ari da, itxaron lehenik amaitu arte.",
+    "taskRunningHeader": "Errorea mantentze-ekintza exekutatzean",
+    "title": "Sistemaren ",
+    "titleTwo": "mantentzea",
+    "update": "Eguneratu zure sistema",
+    "updateRemoteFix": "Garuda update konponketa",
+    "updateRemoteFixSub": "Berrezarri pacman.conf eta berritu keyring-ak",
+    "updateRemoteFullFix": "Garuda update konponketa osoa",
+    "updateRemoteFullFixSub": "Berrezarri Pacman eta berrinstalatu pakete guztiak zure SEan",
+    "updateRemoteKeyring": "Garuda update keyring",
+    "updateRemoteKeyringSub": "Berritu keyring pacman.conf berrezarri gabe",
+    "updateRemoteResetAudio": "Berrezarri audioa",
+    "updateRemoteResetAudioSub": "Berrinstalatu/berrezarri PipeWire audio konfigurazioa",
+    "updateRemoteResetSnapper": "Berrezarri snapper",
+    "updateRemoteResetSnapperSub": "Kendu Snapper guztia eta birsortu bere konfigurazioak",
+    "updateSystem": "Eguneratu sistema",
+    "updateSystemSub": "Eguneratu zure sistema garuda-update bidez"
+  },
+  "menu": {
+    "apply": "Aplikatu zain dauden eragiketak",
+    "boot": "Abio-tresnak",
+    "bootRepair": "Abioaren konponketa",
+    "clearTasks": "Garbitu atazak",
+    "components": "Osagaiak",
+    "configFiles": "Konfigurazio-fitxategiak",
+    "console": "Erakutsi terminala",
+    "diagnostics": "Diagnostikoak",
+    "file": {
+      "preferences": "Hobespenak",
+      "quit": "Irten",
+      "title": "Fitxategia"
+    },
+    "gaming": "Jokoak",
+    "help": {
+      "about": "Garuda Toolbox-ri buruz",
+      "aboutBody": "Garuda Toolbox Garuda Linuxerako sistemaren mantentze- eta diagnostiko-tresna bat da. Erabiltzaileei sistema mantentzen eta arazoak diagnostikatzen laguntzeko diseinatuta dago. Electron eta Angular erabiliz eraikia dago.",
+      "aboutForum": "Foroa",
+      "aboutSourceCode": "Iturburu-kodea",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wikia",
+      "callExorcist": "Deitu exorzistari",
+      "callExorcistBody": "Nahiko etsituta egon behar duzu botoi hau sakatzeko! Voodoo berezi bat prestatu dizut, aplikazioarekin arazoak izaten jarraitzen baduzu, mesedez jakinarazi Garuda Linux foroan edo gure arazoen jarraitzailean.",
+      "callExorcistTitle": "Exorzistari deitu zaio!",
+      "garudaStatus": "Egiaztatu aktibitate-egoera",
+      "getHelpArchWiki": "Bilatu edukia Arch Wikian",
+      "getHelpForum": "Lortu laguntza foroan",
+      "getHelpWiki": "Bilatu edukia wikian",
+      "title": "Laguntza"
+    },
+    "maintenance": "Mantentzea",
+    "modules": {
+      "appSettings": "Aplikazioaren ezarpenak",
+      "bootRepair": "Abioaren konponketa",
+      "components": "Sistemaren osagaiak",
+      "diagnostics": "Diagnostikoak",
+      "gaming": "Jokoak",
+      "kernels": "Kernelak",
+      "locales": "Lokaleak",
+      "maintenance": "Mantentzea",
+      "packages": "Arakatu aplikazioak",
+      "search": "Bilaketa aukerak",
+      "setupWizard": "Konfigurazio laguntzailea",
+      "systemdServices": "Systemd zerbitzuak",
+      "systemSettings": "Sistemaren ezarpenak",
+      "title": "Moduluak",
+      "userManager": "Erabiltzaile-kudeatzailea",
+      "welcome": "Ongi etorri"
+    },
+    "network": "Sare-tresnak",
+    "packages": "Arakatu aplikazioak",
+    "pending": "Zain",
+    "settings": "Aplikazioaren ezarpenak",
+    "setupWizard": "Konfigurazio laguntzailea",
+    "systemTools": "Sistemaren ezarpenak",
+    "terminalRunning": "Exekutatzen ari diren atazak",
+    "terminalTasks": "Exekutatu atazak",
+    "welcome": "Ongi etorri"
+  },
+  "networkAssistant": {
+    "actions": "Ekintzak",
+    "active": "Aktibo",
+    "airplaneMode": "Hegaldi modua",
+    "any": "Edozein",
+    "blacklistAction": "Jarri zerrenda beltzean {{name}}",
+    "blacklistDriver": "Jarri zerrenda beltzean",
+    "blacklistedDrivers": "Zerrenda beltzeko kontrolatzaileak",
+    "blacklistFailed": "Ezin izan da zerrenda beltza eguneratu",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth gailuak",
+    "cancel": "Utzi",
+    "category": "Kategoria",
+    "clear": "Garbitu",
+    "clickToCopy": "Egin klik kopiatzeko",
+    "connected": "Konektatuta",
+    "connectionInfo": "Konexioaren informazioa",
+    "connman": "ConnMan",
+    "copied": "Arbelean kopiatu da",
+    "copyAll": "Kopiatu guztia",
+    "count": "Kopurua",
+    "disabled": "Desgaituta",
+    "disconnected": "Deskonektatuta",
+    "driver": "Kontrolatzailea",
+    "driverBlacklisted": "Kontrolatzailea zerrenda beltzean jarri da",
+    "driverLoaded": "Kontrolatzailea behar bezala kargatu da",
+    "driverUnblacklisted": "Kontrolatzailea zerrenda beltzetik kendu da",
+    "driverUnloaded": "Kontrolatzailea behar bezala deskargatu da",
+    "enable": "Gaitu",
+    "enabled": "Gaituta",
+    "enableService": "Gaitu zerbitzua",
+    "enableServiceFailed": "Ezin izan da zerbitzua gaitu",
+    "error": "Errorea",
+    "errorFetch": "Ezin izan da sarearen informazioa eskuratu",
+    "ethernetControllers": "Ethernet kontrolagailuak",
+    "externalIp": "Kanpoko IPa",
+    "gps": "GPS",
+    "hardwareInfo": "Hardware informazioa",
+    "hotspotFailed": "Ezin izan da sarbide-puntua ireki",
+    "inactive": "Ez-aktibo",
+    "installDriver": "Instalatu kontrolatzailea",
+    "installTraceroute": "Instalatu Traceroute",
+    "installWihotspot": "Instalatu Wi-Fi sarbide-puntua",
+    "interface": "Interfazea",
+    "internet": "Internet",
+    "loadDriver": "Kargatu kontrolatzailea",
+    "loadDriverAction": "Kargatu {{name}} kontrolatzailea",
+    "loadDriverFailed": "Ezin izan da kontrolatzailea kargatu",
+    "loadedDrivers": "Kargatutako kontrolatzaileak",
+    "maxHops": "Gehienezko jauziak",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Ez da sare-kontrolatzailerik aurkitu",
+    "noHardware": "Ez da sare-hardwarerik hauteman",
+    "notAvailable": "Ez dago erabilgarri",
+    "off": "Desaktibatuta",
+    "on": "Aktibatuta",
+    "openHotspot": "Ireki sarbide-puntua",
+    "outputInTerminal": "Irteera beheko terminalean erakusten da",
+    "ping": "Ping",
+    "pingFailed": "Ezin izan da ping exekutatu",
+    "quickToggles": "Etengailu azkarrak",
+    "routerIp": "Bideratzailearen IPa",
+    "runPing": "Exekutatu Ping",
+    "runTraceroute": "Exekutatu Traceroute",
+    "search": "Bilatu",
+    "serviceEnabled": "Zerbitzua behar bezala gaitu da",
+    "services": "Zerbitzuak",
+    "status": "Egoera",
+    "success": "Arrakasta",
+    "tabs": {
+      "diagnostics": "Diagnostikoak",
+      "drivers": "Kontrolatzaileak",
+      "hardware": "Hardwarea",
+      "status": "Egoera"
+    },
+    "targetHost": "Helburuko ostalaria",
+    "timeout": "Itxarote-denbora (s)",
+    "title": "Sarearen ",
+    "titleTwo": "laguntzailea",
+    "toggleAirplane": "Txandakatu hegaldi modua",
+    "toggleAirplaneFailed": "Ezin izan da hegaldi modua txandakatu",
+    "toggleBt": "Txandakatu Bluetooth",
+    "toggleBtFailed": "Ezin izan da Bluetooth txandakatu",
+    "toggleGps": "Txandakatu GPS",
+    "toggleGpsFailed": "Ezin izan da GPS txandakatu",
+    "toggleWifi": "Txandakatu Wi-Fi",
+    "toggleWifiFailed": "Ezin izan da Wi-Fi txandakatu",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Ezin izan da traceroute exekutatu",
+    "type": "Mota",
+    "unblacklistDriver": "Kendu zerrenda beltzetik",
+    "unloadDriver": "Deskargatu kontrolatzailea",
+    "unloadDriverAction": "Deskargatu {{name}} kontrolatzailea",
+    "unloadDriverFailed": "Ezin izan da kontrolatzailea deskargatu",
+    "unloadedDrivers": "Kargatu gabeko kontrolatzaileak",
+    "whitelistAction": "Jarri zerrenda zurian {{name}}",
+    "wifi": "Wi-Fi",
+    "wifiHotspot": "Wi-Fi sarbide-puntua",
+    "wifiHotspotDesc": "Ireki Wi-Fi sarbide-puntuaren konfigurazioa",
+    "wirelessControllers": "Haririk gabeko kontrolagailuak"
+  },
+  "operation": {
+    "abort": "Abortatu",
+    "addGroup": "Gehitu erabiltzailea taldera",
+    "args": "Argumentuak",
+    "disableHblock": "Desgaitu Hblock",
+    "disableService": "Desgaitu zerbitzua",
+    "enableHblock": "Gaitu Hblock",
+    "enableService": "Gaitu zerbitzua",
+    "installApps": "Instalatu aplikazioak",
+    "logs": "Erregistroak",
+    "remove": "Kendu",
+    "removeApps": "Kendu aplikazioak",
+    "removeGroup": "Kendu erabiltzailea taldetik",
+    "resetDnsServer": "Berrezarri DNS zerbitzaria",
+    "run": "Exekutatu orain",
+    "setDefaultShell": "Ezarri shell lehenetsia",
+    "setNewDnsServer": "Ezarri DNS zerbitzari berria"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Eragiketak exekutatzen ari dira, dagoeneko egindakoak bakarrik kenduko ditut.",
+    "refusing": "Exekuzioa ukatzen",
+    "thisOperationRunning": "Zoro zaude ala? Eragiketa hau exekutatzen ari da!"
+  },
+  "os-interact": {
+    "boot-options": "Aplikatu abio-ezarpenak",
+    "configs": "Aldatu sistemaren konfigurazioak",
+    "configs-system": "Aldatu sistemaren konfigurazioak",
+    "configs-user": "Aldatu erabiltzailearen konfigurazioak",
+    "garuda-update-config": "Aplikatu Garuda Update ezarpenak",
+    "groups": "Aldatu erabiltzaile-taldeak",
+    "locales": "Aldatu gaitutako lokaleak",
+    "packages": "Aldatu instalatutako paketeak",
+    "packages-aur": "Aldatu AUR paketeak",
+    "services": "Aldatu zerbitzuak",
+    "services-user": "Aldatu erabiltzailearen zerbitzuak"
+  },
+  "packages": {
+    "any": "Edozein",
+    "clear": "Garbitu",
+    "description": "Deskribapena",
+    "documents": "Dokumentuak",
     "icon": "Icon",
-    "runActions": "Exekutatu ekintzak",
-    "removeAll": "Kendu ekintza guztiak",
-    "abortAll": "Abortatu ekintza guztiak",
-    "noOutput": "Irteerarik ez",
-    "outputExists": "Badirudi dagoeneko ekintza bat exekutatzen ari dela. Mesedez, itxaron amaitu arte erregistroak ikusten saiatu aurretik.",
-    "opRunning": "Eragiketa dagoeneko exekutatzen ari da.",
-    "clearCachedDataTitle": "Irteerako katxea garbitu da",
-    "clearCachedData": "Irteerako katxea garbitu da.",
-    "clearOutputCache": "Garbitu irteerako katxea",
-    "copyOutput": "Kopiatu terminalaren irteera",
-    "copyToClipboardTitle": "Arbelean kopiatu da",
-    "copyToClipboard": "Irteera behar bezala kopiatu da zure arbelean.",
-    "uploadPrivateBin": "Igo PrivateBin-era"
+    "internet": "Internet",
+    "multimedia": "Multimedia",
+    "name": "Izena",
+    "notFound": "Ez da paketerik aurkitu",
+    "other": "Beste batzuk",
+    "science": "Zientzia",
+    "search": "Bilatu",
+    "searchKey": "Sartu bilaketa-gako-hitz bat",
+    "security": "Segurtasuna",
+    "selected": "Hautatua",
+    "status": "Egoera",
+    "title": "Arakatu ",
+    "titleTwo": "aplikazioak",
+    "url": "URLa"
+  },
+  "settings": {
+    "autoRefresh": "Gaitu systemd zerbitzuen berritze automatikoa",
+    "autoStart": "Aplikazioa automatikoki abiarazi",
+    "backgroundFit": "Egokitu atzeko planoa aplikaziora",
+    "backgroundSettings": "Atzeko planoaren ezarpenak",
+    "blurBackground": "Lausotu atzeko planoa",
+    "blurStrength": "Lausotze-indarra",
+    "clearBackground": "Garbitu atzeko planoa",
+    "copyDiagnostics": "Kopiatu diagnostikoak arbelean",
+    "customBackground": "Atzeko plano pertsonalizatua",
+    "darkMode": "Gaitu modu iluna",
+    "language": "Konfiguratu hizkuntza aktiboa",
+    "leftButtons": "Erakutsi leiho-botoiak ezkerrean",
+    "logLevel": "Hautatu erregistro-maila",
+    "noBackgroundSelected": "Ez da atzeko planorik hautatu",
+    "selectOptions": "Hautaketak",
+    "showMainLinks": "Erakutsi estekak hasiera-orrian",
+    "systemdUserContext": "Erakutsi erabiltzailearen Systemd zerbitzuak",
+    "themeLabel": "Oinarrizko diseinu-gaia",
+    "title": "Aplikazioaren ",
+    "titleTwo": "ezarpenak",
+    "toggleOptions": "Aldatzeko aukerak"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Egin klik 'Aplikatu' botoian instalazio- eta konfigurazio-prozesua hasteko.",
+      "failedBody": "Zerbait gaizki joan da instalazioan zehar. Exekuzioa berriro saia zaitezke edo atzera egin zure hautaketa aldatzeko.",
+      "failedHeader": "Exekuzioak huts egin du",
+      "header": "Aplikatzeko prest"
+    },
+    "autoCategories": {
+      "audio": "Audioa",
+      "browsers": "Arakatzaileak",
+      "communication": "Komunikazioa",
+      "development": "Garapena",
+      "gaming": "Jokoak",
+      "graphics": "Grafikoak",
+      "inputMethod": "Sarrera-metodoak",
+      "internet": "Internet",
+      "kernels": "Kernelak",
+      "mail": "Posta",
+      "multimedia": "Multimedia",
+      "office": "Bulegoa",
+      "other": "Beste batzuk",
+      "pkgmngrs": "Software zentroak",
+      "video": "Bideoa",
+      "virtualization": "Birtualizazioa"
+    },
+    "autoSoftware": {
+      "0ad": "3D denbora errealeko estrategia joko historikoa",
+      "abiWord": "Ezaugarri guztietako testu-prozesadorea",
+      "aisleriot": "Pazientzia-karta jokoen bilduma",
+      "ansible": "Ansible bildumen sorta ofiziala",
+      "appimagePool": "AppImageHub bezero modernoa",
+      "ardour": "Maila profesionaleko audio digitaleko lan-estazioa",
+      "asian": "Asiako letra-tipo arruntak dituen meta-paketea",
+      "audacious": "Audio erreproduzitzaile arin eta aurreratua",
+      "audacity": "Audio digitaleko uhin-formak manipulatzeko programa",
+      "bakaMplayer": "Plataforma anitzeko libmpv-n oinarritutako multimedia erreproduzitzailea",
+      "bauh": "Aplikazioak kudeatzeko interfaze grafikoa",
+      "bazaar": "Flatpakei zuzendutako aplikazio-denda",
+      "birdfont": "Bektore-grafikoetarako letra-tipoen editorea",
+      "bitwigStudio": "Musika-ekoizpenerako audio digitaleko lan-estazioa",
+      "blender": "3D grafikoak sortzeko suite guztiz integratua",
+      "brasero": "CD/DVD masterizazio tresna",
+      "brave": "Iragarkiak eta jarraitzaileak lehenespenez blokeatzen dituen web arakatzailea",
+      "calligra": "Produktibitate eta sormenezko erabilera aplikazioak",
+      "chromium": "Abiadura, sinpletasuna eta segurtasunerako eraikitako web arakatzailea",
+      "clawsMail": "GTK+-n oinarritutako posta bezeroa",
+      "cockpit": "Web bidezko erabiltzaile-interfazea Linux zerbitzarientzat",
+      "conky": "Sistemaren monitore arina",
+      "converseen": "Irudiak multzoka bihurtzeko eta tamaina aldatzeko tresna",
+      "darktable": "Raw irudiak antolatzeko eta errebelatzeko utilitatea",
+      "deluge": "BitTorrent bezero arina eta ezaugarri onekoa",
+      "digikam": "Argazki digitalak kudeatzeko aplikazio aurreratua",
+      "discord": "Guztia batean ahots- eta testu-txata",
+      "discover": "KDE aplikazio eta baliabideen kudeatzailea",
+      "docker": "Paketatu, bidali eta exekutatu aplikazioak edukiontzi gisa",
+      "dragon": "Sinpletasunera bideratutako multimedia erreproduzitzailea",
+      "droidcam": "Bihurtu zure telefonoa/tableta web-kamera batean",
+      "easytag": "Audio etiketak ikusi eta editatzeko aplikazioa",
+      "element": "Matrix lankidetza bezero dotorea",
+      "elisa": "KDEren musika erreproduzitzaile sinplea",
+      "evolution": "Kudeatu zure posta elektronikoa, kontaktuak eta egutegia",
+      "falkon": "Plataforma anitzeko QtWebEngine arakatzailea",
+      "fdm": "Deskarga-azeleratzaile eta antolatzaile moderno eta indartsua",
+      "filezilla": "FTP, FTPS eta SFTP bezero azkarra eta fidagarria",
+      "firedragon": "Pribatutasunera bideratutako Floorp-en bertsioa Garuda markarekin",
+      "firedragonCatppuccin": "Firedragon arakatzailea Catppuccin gaiarekin",
+      "firefox": "Web arakatzaile azkarra, pribatua eta segurua",
+      "firefoxEsr": "Firefox Extended Support Release",
+      "fontForge": "Eskema eta bit-mapa letra-tipoen editorea",
+      "fractal": "GNOMErako Matrix talde-mezuetarako aplikazioa",
+      "freeCad": "Ezaugarrietan oinarritutako 3D CAD modelatzaile parametrikoa",
+      "freeOffice": "Microsoft Office-rekin bateragarria den bulego-suitea",
+      "geary": "Posta-bezero arina GNOMErako",
+      "genymotion": "Android-erako ingurune birtuala",
+      "gimp": "GNU Irudiak Manipulatzeko Programa",
+      "github": "Git eta GitHub kudeatzeko GUIa",
+      "gitKraken": "Git bezero intuitiboa, azkarra eta ederra",
+      "gnomeBoxes": "Sistema birtualetara sartzeko aplikazio sinplea",
+      "gnomeBuilder": "GNOMEn oinarritutako softwarea idazteko IDEa",
+      "gnomeFirmware": "Kudeatu firmwarea onartutako gailuetan",
+      "gnomeSoftware": "GNOME aplikazio eta baliabideen kudeatzailea",
+      "gnu": "Denbora errealeko pantaila-editore hedagarria eta pertsonalizagarria",
+      "gnuCash": "Finantza-kontabilitateko aplikazioa",
+      "gnumeric": "Kalkulu-orrien aplikazioa GNOMErako",
+      "handbrake": "Harianitzeko bideo bihurtzailea",
+      "hedgewars": "Txandakako artilleria estrategia-jokoa",
+      "homebank": "Kontabilitate pertsonal doakoa eta erraza",
+      "hypnotix": "IPTV erreproduzitzeko aplikazioa",
+      "indic": "Indiako hizkuntzetarako sarrera-metodoak",
+      "inkscape": "Bektore-grafikoen editore profesionala",
+      "intellijIdea": "Java eta beste programazio-lengoaietarako IDEa",
+      "japanese": "Japonierarako sarrera-metodoak",
+      "jenkins": "Etengabeko integraziorako zerbitzari hedagarria",
+      "jitsiMeet": "Jitsi Meet mahaigaineko aplikazioa",
+      "joplin": "Oharrak hartzeko eta egitekoen zerrendak kudeatzeko aplikazioa",
+      "k3b": "CDak grabatzeko ezaugarri askotako aplikazioa",
+      "kapman": "Pac-Man joko ezagunaren klona",
+      "kdenlive": "Bideo-editore ez-lineala",
+      "kDevelop": "C++ IDEa KDE teknologiak erabiliz",
+      "keepassXc": "Plataforma anitzeko pasahitz kudeatzailea",
+      "kiCad": "Eskema elektronikoak eta PCBak diseinatzeko tresnak",
+      "kid3": "Audio etiketak editatzeko tresna",
+      "kmahjongg": "Fitxak elkartzeko jokoa jokalari bat edo birentzat",
+      "kmail": "KDEren posta bezeroa",
+      "kMyMoney": "Finantza pertsonalen kudeatzailea",
+      "knights": "Xake-taula KDEren eskutik",
+      "kodi": "Multimedia erreproduzitzailea eta aisialdi zentroa",
+      "kolourpaint": "Margo-programa sinplea KDEren eskutik",
+      "korean": "Korearrerako sarrera-metodoak",
+      "krita": "Margo digital profesionalerako programa",
+      "kwave": "Soinu editorea KDErako",
+      "libreCad": "2D CAD marrazketa-tresna",
+      "libreOfficeFresh": "LibreOffice-ren azken bertsioa",
+      "libreOfficeStill": "LibreOffice-ren bertsio egonkorra",
+      "librewolf": "Pribatutasuna, segurtasuna eta askatasuna ardatz dituen web arakatzailea",
+      "linuxCachyos": "Oso optimizatutako CachyOS kernela",
+      "linuxHardened": "Segurtasunez sendotutako Linux kernela",
+      "linuxLts": "Epe Luzeko Euskarria (LTS) duen Linux kernela",
+      "linuxMainline": "Azken linea nagusiko (mainline) Linux kernela",
+      "linuxXanmod": "Errendimendurako XanMod adabakiak dituen kernel pertsonalizatua",
+      "linuxXanmodLts": "XanMod adabakiak dituen LTS kernel pertsonalizatua",
+      "lmms": "Audio digitaleko lan-estazioa eta sekuentziadorea",
+      "lollypop": "Musika erreproduzitzaile modernoa GNOMErako",
+      "luanti": "Voxeletan oinarritutako joko-motorra",
+      "luminanceHdr": "HDR irudietarako lan-fluxua",
+      "mailspring": "Posta bezero ederra eta azkarra",
+      "mari0": "Mario jokoa Portal pistolaren mekanikekin",
+      "mediaElch": "Kodirako multimedia kudeatzailea",
+      "microsoftTeams": "Microsoft Teams bezero ez-ofiziala",
+      "mixxx": "Doako kode irekiko DJ softwarea",
+      "mumble": "Latentzia baxuko eta kalitate handiko ahots-txateko softwarea",
+      "museScore": "Sortu, erreproduzitu eta inprimatu partitura ederrak",
+      "myPaint": "Margo-aplikazio azkar eta erraza margolari digitalentzat",
+      "mystiq": "FFmpeg-en oinarritutako audio/bideo bihurtzailea",
+      "neochat": "Matrix komunikazio-protokolo deszentralizaturako bezeroa",
+      "netbeans": "Java, HTML5, PHP, C eta C++rako IDEa",
+      "nextcloudClient": "Nextcloud mahaigaineko sinkronizazio-bezeroa",
+      "nitroshare": "Gailuen artean fitxategiak transferitzeko aplikazio sinplea",
+      "obsidian": "Tokiko testu arruntetako Markdown fitxategietan lan egiten duen ezagutza-basea",
+      "obsStudio": "Zuzeneko igorpenerako eta grabaziorako softwarea",
+      "octopi": "Qt erabiliz Pacman frontend indartsua",
+      "onlyOffice": "Testu, kalkulu-orri eta aurkezpen editoreak batzen dituen bulegotika suitea",
+      "openToonz": "2D animazioa ekoizteko softwarea",
+      "pencil2d": "Eskuz marraztutako 2D animazioak egiteko tresna",
+      "podman": "Edukiontziak kudeatzeko deabrugabeko edukiontzi-motorra",
+      "postman": "Eraiki, probatu eta dokumentatu zure APIak",
+      "prometheus": "Sistemak monitorizatzeko eta alertak emateko tresna-multzoa",
+      "puppet": "Zerbitzariak automatizatzeko esparrua eta aplikazioa",
+      "putty": "Terminalean integratutako SSH/Telnet bezeroa",
+      "pyCharm": "Garatzaile profesionalentzako Python IDEa",
+      "qbittorrent": "Qt-n oinarritutako BitTorrent bezero aurreratua",
+      "qtCreator": "IDE arina eta plataforma anitzekoa",
+      "qutebrowser": "Teklatu bidez gidatutako vim estiloko arakatzailea Python-en oinarritua",
+      "remmina": "GTK+-n idatzitako urruneko mahaigaineko bezeroa",
+      "rosegarden": "MIDI/audio sekuentziadorea eta partitura-editorea",
+      "shortwave": "Interneteko irrati erreproduzitzailea",
+      "shotcut": "Plataforma anitzeko bideo-editorea",
+      "signal": "Signal Mezularitza Pribatua Linuxerako",
+      "simplifiedChinese": "Txinera Sinplifikaturako sarrera-metodoak",
+      "sinhalese": "Sinhalerako sarrera-metodoak",
+      "skrooge": "Finantza pertsonalen kudeatzailea KDErako",
+      "slack": "Slack mahaigaineko bezeroa",
+      "smPlayer": "Kodek integratuak dituen multimedia erreproduzitzailea",
+      "soundConverter": "Soinu bihurtzeko aplikazio sinplea",
+      "soundwire": "Igorri audioa zure ordenagailutik beste gailu batzuetara",
+      "strawberryPlayer": "Audio zaleei zuzendutako musika erreproduzitzailea",
+      "subtitleComposer": "Bideoen azpititulu editorea",
+      "superTux": "2D jauzi eta korrika estiloko joko klasikoa",
+      "superTuxKart": "Kart lasterketa jokoa Tux protagonista duena",
+      "sweetHome3d": "Barrualdeen diseinurako aplikazioa",
+      "synfigStudio": "Bektore-animazio profesionalerako programa",
+      "teeworlds": "Ritmo biziko 2D jokalari anitzeko tiro-jokoa",
+      "telegram": "Telegram Desktop bezero ofiziala",
+      "terraform": "Azpiegitura kode gisa eraikitzeko eta eguneratzeko tresna",
+      "thai": "Thailandierarako sarrera-metodoak",
+      "thunderbird": "Posta eta albiste irakurgailu autonomoa",
+      "torBrowser": "Nabigatu segurtasunez Tor sarean",
+      "traditionalChinese": "Txinera Tradizionalerako sarrera-metodoak",
+      "transmageddon": "Bideo formatuak bihurtzeko aplikazioa",
+      "twitchGui": "Plataforma anitzeko Twitch.tv arakatzailea",
+      "ungoogledChromium": "Google integrazio guztiak kenduta dituen Chromium",
+      "variety": "Horma-papera aldatzen du aldizka",
+      "vietnamese": "Vietnameraerako sarrera-metodoak",
+      "vim": "Terminaleko testu-editore oso konfiguragarria",
+      "virtManager": "Makina birtualak kudeatzeko mahaigaineko erabiltzaile-interfazea",
+      "virtualBox": "Plataforma anitzeko birtualizazio softwarea",
+      "visualStudioCode": "Aplikazio modernoak eraikitzeko eta arazteko kode-editorea",
+      "visualStudioCodeOss": "Visual Studio Code-ren kode irekiko bertsioa",
+      "vivaldi": "Erabiltzaile aurreratuentzat pentsatutako arakatzaile aurreratua",
+      "vlc": "Plataforma anitzeko multimedia erreproduzitzailea",
+      "vscodium": "Telemetriarik gabeko VSCode bitarrak",
+      "warpinator": "Bidali eta jaso fitxategiak sarean zehar",
+      "wings3d": "3D modelatzailea 'winged edge' datu-egitura erabiliz",
+      "wire": "Muturretik muturrerako zifratutako mezularitza eta bideokonferentziak",
+      "wpsOffice": "Bulegoko produktibitate suitea",
+      "xfburn": "CD/DVDak grabatzeko tresna sinplea",
+      "xonotic": "Ritmo biziko plataforma anitzeko lehen pertsonako tiro-jokoa",
+      "xtreme": "Deskarga-azeleratzaile eta bideo-deskargatzaile indartsua",
+      "yakuake": "Goitibeherako terminal emuladorea",
+      "zedEditor": "Errendimendu handiko jokalari anitzeko kode-editorea",
+      "zoom": "Bideo- eta web-konferentzia zerbitzua"
+    },
+    "buttons": {
+      "apply": "Aplikatu",
+      "back": "Atzera",
+      "finish": "Amaitu",
+      "next": "Hurrengoa",
+      "retry": "Berriro saiatu"
+    },
+    "softwareSelection": {
+      "body": "Hautatu instalatu nahi duzun softwarea.",
+      "header": "Software hautaketa"
+    },
+    "steps": {
+      "apply": "Aplikatu aldaketak"
+    },
+    "success": {
+      "archWiki": "Arch Linux Wikia",
+      "body": "Zure sistema konfiguratuta dago eta erabiltzeko prest!",
+      "finish": "Amaitu konfigurazioa",
+      "forum": "Garuda Foroa",
+      "garudaWiki": "Garuda Linux Wikia",
+      "reboot": "Berrabiaraztea gomendatzen da.",
+      "title": "Arrakasta!"
+    },
+    "tasks": {
+      "installSoftware": "Hautatutako softwarea instalatzen"
+    },
+    "title": "Konfigurazio laguntzailea"
+  },
+  "shells": {
+    "fish": {
+      "hint": "Fish shell lehenetsi gisa ezartzeak arazoak sor ditzake beste programa batzuekin. Hobe da terminalaren konfigurazioen bidez lehenetsi gisa ezartzea."
+    }
+  },
+  "systemdServices": {
+    "actions": "Ekintzak",
+    "active": "Aktibo",
+    "autoRefresh": "Automatikoki berritu",
+    "clear": "Garbitu",
+    "description": "Deskribapena",
+    "disable": "Desgaitu",
+    "enable": "Gaitu",
+    "error": "Errore bat gertatu da zerbitzuak eskuratzean, mesedez saiatu berriro.",
+    "errorTitle": "Errorea zerbitzuak eskuratzean",
+    "excludeDisabled": "Baztertu desgaituak",
+    "hideDead": "Ezkutatu hildakoak",
+    "hideDeadTip": "Txandakatu 'dead', 'failed' edo 'exited' egoeran dauden zerbitzuak erakusteko/ezkutatzeko",
+    "includeDisabled": "Sartu desgaituak",
+    "load": "Kargatu",
+    "logs": "Erregistroak",
+    "mask": "Estali",
+    "notFound": "Ez da zerbitzurik aurkitu",
+    "reload": "Birkargatu",
+    "restart": "Berrabiarazi",
+    "searchKey": "Sartu bilaketa-gako-hitz bat",
+    "show": "Erakutsi",
+    "showAll": "Erakutsi guztiak",
+    "start": "Hasi",
+    "state": "Egoera",
+    "stop": "Gelditu",
+    "systemContext": "Erakutsi sistemaren zerbitzuak",
+    "unit": "Unitatearen izena",
+    "unmask": "Estaldura kendu",
+    "userContext": "Erakutsi erabiltzailearen zerbitzuak"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Behin-behineko 'gonbidatu' erabiltzaile-kontu bat sortzen du pasahitzik gabe, zure fitxategi pertsonaletatik isolatuta. Saioa amaitzean ezabatzen da.",
+        "title": "Gaitu gonbidatu erabiltzailea"
+      },
+      "oomd": {
+        "description": "systemd-ren Out-Of-Memory deabrua. Sistemaren memoria aktiboki kontrolatzen du eta memoria gehiegi erabiltzen duten prozesuak automatikoki amaitzen ditu zure ordenagailu osoa blokeatu aurretik.",
+        "title": "Systemd-oomd gaituta"
+      },
+      "psd": {
+        "description": "Zure web arakatzailearen profila (Firefox edo Brave adibidez) RAM memoria bizkorrera (tmpfs) mugitzen du. Horrek nabarmen bizkortzen du arakatzailearen erantzuna eta zure SSDaren higadura murrizten du.",
+        "title": "Profile-sync-daemon instalatuta"
+      },
+      "psdEnabled": {
+        "description": "Profile-sync-daemon exekutatzen du zure arakatzailearen profilak RAMean automatikoki kudeatzeko.",
+        "title": "Profile-sync-daemon gaituta"
+      },
+      "title": "Arrunta"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "PipeWire-ren nodoak eteteko eginbidea desgaitzen du. Honek audio gailuak etengabe aktibo mantentzen ditu, soinu-txartelak lozorroatik esnatzean gertatzen diren karraska edo klika zarata gogaikarriak saihestuz.",
+        "title": "Audioa ez eten"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Discord-ek eguneraketak deskargatzeko eta instalatzeko eskatzea eragozten du, hau guztiz alferrikakoa baita Arch Linuxen - Pacman-ek egiten du gure ordez.",
+        "title": "Discord desgaitu eguneratze automatikoa"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "KWin doikuntza bat, aplikazio bat KDE Plasman maximizatzen denean izenburu-barra eta leiho-ertzak kentzen dituena, pantaila-espazio bertikal erabilgarriagoa emanez.",
+        "title": "KDE ertzik gabeko maximizazioa"
+      },
+      "title": "Sistemaren konfigurazioak"
+    },
+    "defaultDns": "Ezarri DNS lehenetsia",
+    "defaultDnsTip": "Zure Interneteko konexiorako Domeinu Izenen Sistemaren (DNS) hornitzaile lehenetsia aldatzen du, zure ISPak emandakoa gainidatziz. Abiadura, pribatutasuna hobetu edo zentsura saihestu dezake.",
+    "defaultShell": "Ezarri saio-hasierako shell-a",
+    "defaultShellConfigs": "Instalatu konfigurazio lehenetsiak",
+    "defaultShellTip": "Zure terminaleko saio-hasierako shell lehenetsia aldatzen du. POSIX bateragarria den shell bat erabiltzea gomendatzen da (Bash edo Zsh adibidez) eta bateragarriak ez diren shell-ak (Fish adibidez) zure terminal emuladorearen profilaren ezarpenen bidez soilik erabiltzea.",
+    "enableHblock": "Gaitu Hblock",
+    "enableHblockTip": "Hblock gaitzen du; iragarkiak, jarraitzaileak eta malware domeinuak sistema osoan blokeatzen dituen scripta, haien eskaerak tokiko zulo beltz batera bideratuz zure /etc/hosts fitxategiaren bidez.",
+    "enableIwd": "Erabili IWD wpa_supplicant-en ordez",
+    "enableIwdTip": "iNet Wireless Daemon (iwd). wpa_supplicant-en alternatiba moderno eta arina Wi-Fi konexioak kudeatzeko. Askotan azkarrago konektatzen da eta roaming-a hobeto kudeatzen du.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Saltatu erabilgarri dagoen disko-espazioa egiaztatzea paketeak instalatu aurretik.",
+        "title": "Saltatu disko-espazioaren egiaztapena"
+      },
+      "pacmanNoconfirm": {
+        "description": "Exekutatu pacman berrespen-gonbitik gabe eguneraketa azkarragoa izateko.",
+        "title": "Pacman ez-interaktiboa"
+      },
+      "skipMirrorlist": {
+        "description": "Saltatu Arch ispilu-zerrenda berritzea sistemaren eguneraketak exekutatu aurretik.",
+        "title": "Saltatu ispilu-zerrenda berritzea"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "Eguneratu Arch User Repository (AUR) biltegitik instalatutako paketeak sistemaren eguneraketetan.",
+        "title": "Eguneratu AUR paketeak"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto NICe deabrua. Exekutatzen ari diren prozesuen CPU lehentasuna (niceness) dinamikoki aldatzen du, unean erabiltzen ari zaren aplikazio aktiboari CPU denbora gehiago emanez, sistemak azkarrago funtziona dezan.",
+        "title": "Ananicy C++ instalatuta"
+      },
+      "ananicyCppEnabled": {
+        "description": "Ananicy deabrua exekutatzen du aplikazioen CPU lehentasunak etengabe kudeatzeko.",
+        "title": "Ananicy C++ gaituta"
+      },
+      "bpftune": {
+        "description": "eBPF erabiltzen du zure Linux sareko parametroak denbora errealean etengabe kontrolatzeko eta automatikoki doitzeko, Interneteko transferentzia-abiadura eta latentzia optimoa lortzeko.",
+        "title": "Bpftune instalatuta"
+      },
+      "bpftuneEnabled": {
+        "description": "bpftune deabrua exekutatzen du zure sarearen errendimendua etengabe optimizatzeko.",
+        "title": "Bpftune gaituta"
+      },
+      "irqbalanceEnabled": {
+        "description": "Hardware-etenaldiak zure CPU nukleo guztietan zehar uniformeki banatzen ditu. Horrek nukleo bakar bat gailuen seinaleak kudeatzen gainkargatzea saihesten du.",
+        "title": "IRQbalance gaituta"
+      },
+      "performanceTweaks": {
+        "description": "Sistema-mailako sysctl eta doikuntza-konfigurazio multzo bat aplikatzen du Garuda erantzun-gaitasun handiena lortzeko optimizatzeko.",
+        "title": "Errendimendu doikuntzak"
+      },
+      "preload": {
+        "description": "Gehien erabiltzen dituzun aplikazioak kontrolatzen dituen eta RAMean aldez aurretik kargatzen dituen atzeko planoko deabrua, haien abiarazte-denbora nabarmen murriztuz.",
+        "title": "Preload instalatuta"
+      },
+      "preloadEnabled": {
+        "description": "Preload deabrua exekutatzen du maiz erabiltzen dituzun aplikazioak katxeatzeko.",
+        "title": "Preload gaituta"
+      },
+      "title": "Errendimendua"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "CPU abiadura eta energia optimizatzaile automatikoa. CPU abiadura dinamikoki jaisten du inaktibo dagoenean bateria aurrezteko, eta handitu egiten du errendimendua behar duzunean.",
+        "title": "Auto-cpufreq instalatuta"
+      },
+      "autoCpufreqEnabled": {
+        "description": "auto-cpufreq deabrua exekutatzen du CPUren eskalatzea etengabe kudeatzeko.",
+        "title": "Auto-cpufreq gaituta"
+      },
+      "intelUndervolt": {
+        "description": "Intel prozesadoreei emandako tentsioa jaisten du. Horrek beroa eta energia-kontsumoa murrizten ditu errendimendua galdu gabe, eta horrek bateriaren iraupena luzatzen du eta murrizketa termikoa saihesten du.",
+        "title": "Intel-undervolt instalatuta"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Abioan zure Intel tentsio-jaitsiera ezarpenak automatikoki aplikatzen dituen deabrua exekutatzen du.",
+        "title": "Intel-undervolt gaituta"
+      },
+      "powerProfilesDaemon": {
+        "description": "Sistemari 'Energia aurrezlea', 'Orekatua' eta 'Errendimendua' funtzionamendu-moduen artean erraz aldatzeko API bat eskaintzen dio.",
+        "title": "Power profiles daemon instalatuta"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Zure mahaigaineko inguruneari energia-profilak txandakatzea ahalbidetzen dion deabrua exekutatzen du.",
+        "title": "Power profiles daemon gaituta"
+      },
+      "powersaveTweaks": {
+        "description": "Bateriaz elikatzen diren gailuetan energia-kontsumoa minimizatzeko diseinatutako sysctl eta konfigurazio doikuntzak aplikatzen ditu.",
+        "title": "Energia aurrezteko doikuntzak"
+      },
+      "thermald": {
+        "description": "Intel-en kudeaketa termikorako deabrua. Zure sistema gehiegi berotzea saihesten du hozte-metodoak proaktiboki erabiliz, CPUa moteltzera behartu aurretik.",
+        "title": "Thermald instalatuta"
+      },
+      "thermaldEnabled": {
+        "description": "thermald deabrua exekutatzen du CPUren tenperaturak kontrolatzeko eta gehiegi berotzea saihesteko.",
+        "title": "Thermald gaituta"
+      },
+      "title": "Energia aurreztea",
+      "tlp": {
+        "description": "Eramangarrietan bateriaren iraupena automatikoki optimizatzen duen utilitate aurreratua, deskonektatuta dagoenean Wi-Fi, diskoak, PCIe eta USB gailuen ezarpenak doituz.",
+        "title": "TLP instalatuta"
+      },
+      "tlpEnabled": {
+        "description": "TLP deabrua exekutatzen du bateriarekin dagoenean energia aurrezteko arauak dinamikoki aplikatzeko.",
+        "title": "TLP gaituta"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Libinput konfiguratzen du ukipen-pantaila edo ukipen-panel batean hatz bakar bati eusteak eskuin-klik gisa erregistratu dezan.",
+        "title": "Ukipen-panelaren sakatze luzea"
+      },
+      "evdevRce": {
+        "description": "Zure ukipen-panelaren beheko eskuineko izkina (edo eremu zehatz bat) eskuin-klik fisiko gisa joka dezan zehazten du.",
+        "title": "Ukipen-panelaren eskuin-klik eremua"
+      },
+      "title": "Eskuin klik emulazioa"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "Eragindako fitxategiak:",
+    "askHelp": "Ziur ez bazaude, itxi leihoa gorde gabe eta eskatu laguntza Garuda Linux foroan.",
+    "aurUpdates": "AUR paketeak eguneratzea aplikazio honen esparrutik kanpo dago. Mesedez, erabili AUR laguntzaile bat Paru bezalakoa, eta berrikusi PKGBUILD fitxategiak instalatu aurretik.",
+    "cancel": "Utzi",
+    "cautionMerge": "Kontuan izan aldaketa okerrak fitxategi ZAHARREAN jartzeak zure sistema hautsi dezakeela.",
+    "findMore": "Aurkitu nola jarraitu",
+    "healthIssues": "Sistemaren osasun-arazoak",
+    "healthIssuesFound": "Osasun-arazo hauek aurkitu dira:",
+    "learnPacdiff": "Pacdiff fitxategiak ezagutzen ez badituzu, informatu zaitez azkar haiei buruz.",
+    "openMaintenance": "Egin klik beheko botoian hasteko.",
+    "openMaintenanceButton": "Hasi bateratzen",
+    "pacFiles": "Sistema honek zain dauden .pacnew fitxategiak ditu, egiaztatu eta bateratu beharko zenituzke! (egin klik informaziorako)",
+    "pendingPacdiff": "Zain dauden pacdiff fitxategiak",
+    "pendingUpdates": "Zain dauden eguneraketak",
+    "proceed": "Hona hemen nola jarraitu:",
+    "proceedMerge": "Meld irekiko da aldaketak aplikatzeko. Ezkerreko aldean fitxategi BERRIA dago, eskuinekoan ZAHARRA. Mugitu bateratu nahi dituzun aldaketa erabilgarriak ezkerretik eskuinera. Egin klik gordetzeko botoian edo KTRL + S amaitutakoan.",
+    "rebootNow": "Berrabiarazi orain",
+    "rebootNowBody": "Ziur zaude orain berrabiarazi nahi duzula? Ziurtatu zure lan guztia gorde duzula jarraitu aurretik.",
+    "runAurUpdates": "Exekutatu AUR eguneraketak kanpotik",
+    "runHealthFix": "Exekutatu osasun-konponketa",
+    "scheduleUpdates": "Programatu eguneraketak",
+    "snapshotCreation": "Btrfs argazki bat sortuko da bateratzea hasi aurretik.",
+    "updates": "Sistema honek zain dauden eguneraketak ditu (egin klik informaziorako)",
+    "warnReboot": "Biziki gomendatzen da sistema berrabiaraztea eguneraketak aplikatu ondoren, batez ere kernelak edo mahaigaineko inguruneak eguneratzean.",
+    "warnUpdate": "Zure sistema ez da eguneratu 2 astetan. Mesedez, eguneratu zure sistema segurtasuna eta egonkortasuna bermatzeko."
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Nukleo-mailako oinarrizko soinu-kontrolatzailea. Soinu-txarteletarako oinarrizko hardware-euskarria eskaintzen du, nahiz eta normalean PipeWire bidez erabili.",
+        "title": "ALSA euskarria"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. Kalitate handiko audioa prozesatzeko plugin multzoa. Instalatu hau EasyEffects-i estudioko efektu profesional gehiago emateko.",
+        "title": "Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "Zure mikrofonoaren kalitatea eta audioaren erreprodukzioa hobetzeko tresna indartsua. Oso gomendagarria da honekin batera 'Calf Plugins' eta 'LSP Plugins' instalatzea esperientzia osoa izateko.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "Audio-ekoizpen profesionalerako diseinatutako soinu-zerbitzari espezializatua eta latentzia baxukoa. Gaur egun, PipeWire-k natiboki kudeatzen du gehienetan.",
+        "title": "JACK euskarria"
+      },
+      "jamesdsp": {
+        "description": "Audio-efektuen prozesadorea baxuak indartzeko, berdinkailuak eta bestelako efektuak gehitzeko. Lehenik EasyEffects probatzea gomendatzen da.",
+        "title": "JamesDSP instalatuta"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP). Audio-tresna profesionalen bilduma, berdinkailuak eta konpresoreak adibidez. Instalatu hau EasyEffects-en gaitasunak zabaltzeko.",
+        "title": "LSP Plugins"
+      },
+      "pipewire": {
+        "description": "Linuxen audio eta bideo korronteak kudeatzeko estandar modernoa. PulseAudio eta JACK ezin hobeto ordezkatzen ditu askoz latentzia txikiagoarekin eta segurtasun hobearekin.",
+        "title": "PipeWire euskarria"
+      },
+      "pulseaudio": {
+        "description": "Soinu-zerbitzari zaharragoa eta heredatua. Bateragarritasunerako mantentzen da nagusiki, baina PipeWire-k ordezkatu du neurri handi batean.",
+        "title": "PulseAudio euskarria"
+      },
+      "title": "Audioa",
+      "userRealtime": {
+        "description": "Zure erabiltzailea realtime taldera gehitzen du, audio-aplikazioei CPU lehentasuna emanez trabatzeak eta latentzia saihesteko.",
+        "title": "Erabiltzailea realtime taldean"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Automatikoki berriro konektatzen da fidagarriak diren eta aurretik parekatutako Bluetooth gailuetara pizten direnean.",
+        "title": "Auto connect instalatuta"
+      },
+      "autoConnectEnabled": {
+        "description": "Bluetooth birkonexio automatikoak aktiboki kudeatzen dituen atzeko planoko zerbitzua exekutatzen du.",
+        "title": "Auto connect gaituta"
+      },
+      "bluetooth": {
+        "description": "BlueZ Linux Bluetooth pila. Haririk gabeko gailuak kudeatzeko beharrezkoa den oinarrizko softwarea eskaintzen du.",
+        "title": "Bluetooth euskarria"
+      },
+      "bluetoothEnabled": {
+        "description": "Bluetooth gailuekin parekatzeko eta konektatzeko beharrezkoa den atzeko planoko zerbitzua exekutatzen du.",
+        "title": "Bluetooth gaituta"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Zure erabiltzailea lp taldera gehitzen du, Bluetooth audio korronteak sistema osorako PulseAudio konfigurazioarekin erabiltzeko aukera emanez. Hau ez da beharrezkoa PipeWire-rentzat.",
+        "title": "Erabiltzailea bluetooth taldean"
+      }
+    },
+    "components": "Sistemaren osagaiak",
+    "containers": {
+      "boxbuddy": {
+        "description": "Zure Distrobox inguruneak erraz kudeatzeko eta erabiltzeko aplikazio grafikoa.",
+        "title": "BoxBuddy instalatuta"
+      },
+      "distrobox": {
+        "description": "Beste Linux banaketa batzuen edukiontzi guztiz integratuak sortzen ditu. Ubuntu, Fedora edo Arch-eko aplikazioak Garuda-ren barruan natiboki instalatu eta exekutatzeko aukera ematen dizu.",
+        "title": "DistroBox instalatuta"
+      },
+      "docker": {
+        "description": "Aplikazio isolatuak paketatzeko eta exekutatzeko industriako edukiontzi-motor estandarra.",
+        "title": "Docker instalatuta"
+      },
+      "dockerCompose": {
+        "description": "Konfigurazio-fitxategien bidez edukiontzi anitzeko Docker aplikazioak definitzeko eta exekutatzeko tresna.",
+        "title": "Docker Compose instalatuta"
+      },
+      "dockerEnabled": {
+        "description": "Docker edukiontziak kudeatzeko eta exekutatzeko beharrezkoa den atzeko planoko deabrua exekutatzen du.",
+        "title": "Docker gaituta"
+      },
+      "kontainer": {
+        "description": "Distrobox edukiontziak erraz kudeatzeko KDE aplikazio natiboa.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Docker-en alternatiba moderno eta deabrugabea. Edukiontziak root baimenik gabe exekutatzen ditu, segurtasun hobea eskainiz.",
+        "title": "Podman instalatuta"
+      },
+      "podmanDesktop": {
+        "description": "Zure Podman edukiontziak erraz kudeatzeko, sortzeko eta ikusteko aplikazio grafikoa.",
+        "title": "Podman Desktop instalatuta"
+      },
+      "podmanDocker": {
+        "description": "'docker' komandoa 'podman'-i ezizena ematen dion bateragarritasun-paketea, lehendik dauden Docker script-ak Podman-ekin ezin hobeto funtziona dezaten.",
+        "title": "Emulatu Docker Podman bidez"
+      },
+      "title": "Edukiontziak",
+      "userDocker": {
+        "description": "Zure erabiltzailea docker taldera gehitzen du, Docker komandoak sudo gabe exekutatzeko baimena emanez.",
+        "title": "Erabiltzailea docker taldean"
+      },
+      "winboat": {
+        "description": "Edukiontziak erabiltzen ditu Windows aplikazioak Linuxen integratuta eskaintzeko.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "Suebaki kudeatzaile dinamikoa, zonak erabiltzen dituena sarearen konfiantza-mailak eta arauak dinamikoki definitzeko.",
+        "title": "Firewalld instalatuta"
+      },
+      "firewalldEnabled": {
+        "description": "Firewalld deabrua exekutatzen du zure sistema sarrerako sare-konexioetatik babesteko.",
+        "title": "firewalld gaituta"
+      },
+      "opensnitch": {
+        "description": "Aplikazio-mailako suebakia, programa bat internetera konektatzen saiatzen den bakoitzean abisua ematen dizuna eta baimena eskatzen duena.",
+        "title": "OpenSnitch instalatuta"
+      },
+      "opensnitchEnabled": {
+        "description": "OpenSnitch deabrua exekutatzen du aplikazioen sareko trafikoa kontrolatzeko.",
+        "title": "OpenSnitch gaituta"
+      },
+      "title": "Suebakia",
+      "ufw": {
+        "description": "Uncomplicated Firewall. Komando-lerroko interfaze sinpleagoa iptables/nftables suebaki-arauak kudeatzeko.",
+        "title": "UFW instalatuta"
+      },
+      "ufwEnabled": {
+        "description": "UFW zerbitzua exekutatzen du zure suebaki-arau sinpleak betearazteko.",
+        "title": "UFW gaituta"
+      }
+    },
+    "kernels": "Kernelak",
+    "locales": "Lokaleak",
+    "misc": {
+      "gns": {
+        "description": "Nix pakete-kudeatzailea integratzen du, milaka software-pakete gehigarritarako sarbidea emanez. Garudarekin ezarpenak partekatzen dituen NixOS instalazio bat ere eskaintzen du.",
+        "title": "Garuda Nix Subsystem instalatuta"
+      },
+      "title": "Askotarikoak"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "Banda zabal mugikorra (4G/5G USB modemak) erabiliz internetera konektatzeko beharrezkoa den deabrua exekutatzen du.",
+        "title": "ModemManager gaituta"
+      },
+      "networkManager": {
+        "description": "Zure Wi-Fi, Ethernet eta VPN konexioak konfiguratu eta kudeatzen dituen oinarrizko deabrua.",
+        "title": "NetworkManager euskarria"
+      },
+      "networkManagerEnabled": {
+        "description": "NetworkManager deabrua exekutatzen du internetera konektatu ahal izateko.",
+        "title": "NetworkManager gaituta"
+      },
+      "title": "Sarea"
+    },
+    "packages": "Pakete gehiago",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Inprimatze-lanak kudeatzeko eta inprimagailuak kudeatzeko beharrezkoa den CUPS deabrua exekutatzen du.",
+        "title": "CUPS gaituta"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System). Tokiko edo sareko inprimagailuetara konektatzeko eta inprimatzeko beharrezkoa den oinarrizko softwarea.",
+        "title": "Inprimaketa euskarria"
+      },
+      "sanedEnabled": {
+        "description": "Zure eskanerra tokiko sarean partekatzeko aukera ematen duen deabrua exekutatzen du.",
+        "title": "saned gaituta"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy). Dokumentu- eta mahai-eskanerrak erabiltzeko beharrezkoa den oinarrizko softwarea.",
+        "title": "Eskaneatze euskarria"
+      },
+      "title": "Inprimaketa",
+      "userCups": {
+        "description": "Zure erabiltzailea cups taldera gehitzen du, inprimagailuak eta inprimatze-ilarak kudeatzeko baimena emanez.",
+        "title": "Erabiltzailea cups taldean"
+      },
+      "userLp": {
+        "description": "Zure erabiltzailea lp (line printer) taldera gehitzen du, inprimatze-sistema zahar batzuek behar dutena.",
+        "title": "Erabiltzailea lp taldean"
+      },
+      "userScanner": {
+        "description": "Zure erabiltzailea scanner taldera gehitzen du, dokumentu-eskanerrak erabiltzeko baimena emanez.",
+        "title": "Erabiltzailea scanner taldean"
+      }
+    },
+    "systemdServices": "Systemd zerbitzuak",
+    "systemSettings": "Sistemaren ezarpenak",
+    "title": "Sistemaren ",
+    "titleTwo": "ezarpenak",
+    "users": "Erabiltzaileak eta taldeak",
+    "virtualization": {
+      "kvm": {
+        "description": "Kernel-based Virtual Machine. CPUaren hardware bidezko azelerazioa (VT-x/AMD-V) erabiltzen du makina birtualak ia abiadura natiboan exekutatzeko.",
+        "title": "KVM euskarria"
+      },
+      "libvirtdEnabled": {
+        "description": "Makina birtualak eta beste birtualizazio-plataforma batzuk exekutatzeko eta kudeatzeko beharrezkoa den sistemaren deabrua.",
+        "title": "Libvirtd gaituta"
+      },
+      "qemu": {
+        "description": "Makina-emuladore eta birtualizatzaile orokor eta kode irekikoa. Edozein makinatarako sistema eragileak exekuta ditzake, edozein makinatan.",
+        "title": "QEMU instalatuta"
+      },
+      "qemuUserStatic": {
+        "description": "Beste arkitektura batzuetako bitarrak natiboki exekutatzeko erabil daiteke, adibidez Podman bidez",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Erregistratu atzerriko arkitekturen kudeatzaileak kernelean, hau erabilgarria izan daiteke aarch64 edukiontzi-irudiak exekutatzen saiatzean.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "Birtualizazioa",
+      "userKvm": {
+        "description": "Zure erabiltzailea kvm taldera gehitzen du, hardware bidez azeleratutako KVM makina birtual azkarrak erabiltzeko baimena emanez.",
+        "title": "Erabiltzailea kvm taldean"
+      },
+      "userLibvirt": {
+        "description": "Zure erabiltzailea libvirt taldera gehitzen du, KVM/QEMU makina birtual aurreratuak kudeatzeko baimena emanez.",
+        "title": "Erabiltzailea libvirt taldean"
+      },
+      "userVboxUsers": {
+        "description": "Zure erabiltzailea vboxusers taldera gehitzen du, VirtualBox erabiltzeko baimena emanez.",
+        "title": "Erabiltzailea vboxusers taldean"
+      },
+      "virtManager": {
+        "description": "KVM/QEMU makina birtualak sortzeko eta kudeatzeko mahaigaineko aplikazio indartsua (GUI).",
+        "title": "Virt-manager euskarria"
+      },
+      "virtualbox": {
+        "description": "Oracle-ren plataforma anitzeko birtualizazio-software ezaguna. Oso erabilerraza, nahiz eta orokorrean KVM/Virt-Manager baino motelagoa izan.",
+        "title": "VirtualBox euskarria"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "Uneko ataza amaitu da.",
+    "scriptMismatch": "Scripta manipulatu egin da, exekuzioari uko egiten!"
+  },
+  "userManager": {
+    "actions": "Ekintzak",
+    "addGroup": "Gehitu taldea",
+    "addUser": "Gehitu erabiltzailea",
+    "cancel": "Utzi",
+    "clearPending": "Garbitu zain dauden aldaketak",
+    "confirmPassword": "Berretsi pasahitza",
+    "confirmRemoveGroup": "Ziur zaude {{group}} taldea kendu nahi duzula?",
+    "confirmRemoveUser": "Ziur zaude {{username}} erabiltzailea kendu nahi duzula? Hasierako direktorioa ere ezabatuko da.",
+    "createHome": "Sortu hasierako direktorioa",
+    "editUser": "Editatu erabiltzailea",
+    "enterGroupName": "Mesedez, sartu talde-izen bat",
+    "enterPassword": "Mesedez, sartu pasahitz bat",
+    "enterUsername": "Mesedez, sartu erabiltzaile-izen bat",
+    "error": "Errorea",
+    "fullName": "Izen osoa",
+    "gid": "GID",
+    "groupExists": "Izen hori duen talde bat badago lehendik",
+    "groupName": "Taldearen izena",
+    "groups": "Taldeak",
+    "groupsColumn": "Taldeak",
+    "home": "Hasierako direktorioa",
+    "lock": "Blokeatu",
+    "locked": "Blokeatuta",
+    "manageGroups": "Kudeatu taldeak",
+    "manageGroupsFor": "Kudeatu {{username}} erabiltzailearen taldeak",
+    "members": "Kideak",
+    "newGroupName": "Taldearen izena",
+    "newPassword": "Pasahitz berria",
+    "noGroupsFound": "Ez da talderik aurkitu",
+    "noUsersFound": "Ez da erabiltzailerik aurkitu",
+    "passwordDialogTitle": "Ezarri {{username}} erabiltzailearen pasahitza",
+    "passwordMismatch": "Pasahitzak ez datoz bat",
+    "pending": {
+      "add": "Gehitzea zain",
+      "lock": "Blokeatzea zain",
+      "membership": "Talde aldaketak zain",
+      "modify": "Aldatzea zain",
+      "password": "Pasahitza zain",
+      "remove": "Kentzea zain",
+      "unlock": "Desblokeatzea zain"
+    },
+    "removeGroup": "Kendu taldea",
+    "removeUser": "Kendu erabiltzailea",
+    "save": "Gorde",
+    "searchGroups": "Bilatu taldeak",
+    "searchUsers": "Bilatu erabiltzaileak",
+    "selectGroups": "Hautatu taldeak",
+    "setPassword": "Ezarri pasahitza",
+    "shell": "Shell",
+    "showAllUsers": "Erakutsi erabiltzaile guztiak",
+    "showUsersOnly": "Erakutsi erabiltzaileak soilik",
+    "system": "Sistema",
+    "systemAccount": "Sistemako kontua",
+    "task": {
+      "addGroup": "Gehitu taldea",
+      "addMembership": "Gehitu taldera",
+      "addUser": "Gehitu erabiltzailea",
+      "lockUser": "Blokeatu erabiltzailea",
+      "modifyUser": "Aldatu erabiltzailea",
+      "password": "Ezarri pasahitza",
+      "removeGroup": "Kendu taldea",
+      "removeMembership": "Kendu taldetik",
+      "removeUser": "Kendu erabiltzailea",
+      "unlockUser": "Desblokeatu erabiltzailea"
+    },
+    "uid": "UID",
+    "unlock": "Desblokeatu",
+    "userExists": "Izen hori duen erabiltzaile bat badago lehendik",
+    "username": "Erabiltzaile-izena",
+    "users": "Erabiltzaileak"
+  },
+  "welcome": {
+    "bootRepair": "Abioaren konponketa",
+    "bootRepairSub": "Berrinstalatu edo konpondu zure abiarazlea",
+    "bootTools": "Abio-tresnak",
+    "bootToolsSub": "Kudeatu zure abio-ezarpenak",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Eman begiratu bat paketeen eguneraketei eta gehiagori",
+    "chroot": "Chroot Garuda-n",
+    "chrootSub": "Egin Chroot zure Garuda instalazioan",
+    "diagnostics": "Diagnostikoak",
+    "diagnosticsSub": "Egiaztatu zure sistemaren osasuna",
+    "donate": "Eman dohaintza",
+    "donateSub": "Babestu Garuda Linux proiektua",
+    "error": "Errore bat gertatu da.",
+    "gaming": "Jokoetarako aplikazioak",
+    "gamingSub": "Jolastu zure joko gogokoenetara",
+    "gitlab": "GitLab",
+    "gitlabSub": "Eman begiratu bat gure iturburu-kodeari",
+    "hello": "Kaixo",
+    "install": "Instalatu Garuda Linux",
+    "installSub": "Lortu Garuda Linux zure sisteman",
+    "maintenance": "Mantentzea",
+    "maintenanceSub": "Mantendu zure sistema egoera onean",
+    "network": "Sare-tresnak",
+    "networkSub": "Kudeatu zure sare-ezarpenak",
+    "packages": "Arakatu aplikazioak",
+    "packagesSub": "Bilatu eta instalatu software berria",
+    "searxng": "SearxNG",
+    "searxngSub": "Zure pribatutasuna errespetatzen duen bilatzailea",
+    "setupAssistant": "Konfigurazio laguntzailea",
+    "setupAssistantSub": "Exekutatu Garuda konfigurazio laguntzailea",
+    "startpage": "Hasiera-orria",
+    "startpageSub": "Ireki Garuda Linuxen hasiera-orria",
+    "subtitle": "Jokoetarako eta multimediarako azken Linux distroa",
+    "systemTools": "Sistemaren ezarpenak",
+    "systemToolsSub": "Konfiguratu zure sistema",
+    "title": "Ongi etorri ",
+    "titleTwo": "Garuda Linux-era",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Bitwarden-ekin bateragarria den pasahitz kudeatzaile segurua",
+    "whoogle": "Whoogle",
+    "whoogleSub": "Pribatutasuna errespetatzen duen bilatzailea"
   }
 }

@@ -1,612 +1,1557 @@
 {
-  "menu": {
-    "welcome": "مرحباً",
-    "maintenance": "الصيانة",
-    "systemTools": "إعدادات النظام",
-    "components": "المكونات",
-    "gaming": "الألعاب",
-    "boot": "أدوات الإقلاع",
-    "diagnostics": "التشخيصات",
-    "network": "أدوات الشبكة",
-    "settings": "إعدادات التطبيق",
-    "help": {
-      "title": "المساعدة",
-      "icon": "Icon",
-      "getHelpForum": "احصل على المساعدة في المنتدى",
-      "getHelpWiki": "ابحث عن محتوى في الويكي",
-      "getHelpArchWiki": "ابحث عن محتوى في Arch Wiki",
-      "garudaStatus": "تحقق من حالة وقت التشغيل",
-      "about": "حول Garuda Toolbox",
-      "aboutBody": "Garuda Toolbox هي أداة لصيانة وتشخيص النظام لتوزيعة Garuda Linux. مصممة لمساعدة المستخدمين على صيانة نظامهم وتشخيص المشكلات. تم بناؤها باستخدام Electron و Angular.",
-      "callExorcist": "استدعِ طارد الأرواح",
-      "callExorcistTitle": "تم استدعاء طارد الأرواح!",
-      "callExorcistBody": "لا بد أنك يائس جدًا للنقر على هذا الزر! لقد أعددت لك بعض التعويذات الخاصة، إذا كنت لا تزال تواجه مشكلات مع التطبيق، يرجى الإبلاغ عنها في منتدى Garuda Linux أو متتبع المشكلات الخاص بنا."
+  "bootOptions": {
+    "actions": "الإجراءات",
+    "apply": "تطبيق الإعدادات",
+    "bootEntries": "مداخل الإقلاع",
+    "cancel": "إلغاء",
+    "configSaved": "تم حفظ تكوين GRUB بنجاح",
+    "defaultEntry": "مدخل الإقلاع الافتراضي",
+    "defaultEntryHint": "عنصر القائمة الذي سيتم الإقلاع منه افتراضيًا.",
+    "edit": "تعديل",
+    "editConfigWarning": "تحذير: قد يكون التعديل المباشر لملفات تكوين GRUB خطيرًا. قد يتم الكتابة فوق التغييرات عند تحديث GRUB. استخدم بحذر.",
+    "editEntry": "تعديل مدخل الإقلاع",
+    "editGrubDefault": "تعديل /etc/default/grub",
+    "editGrubDefaultHint": "تعديل ملف إعدادات GRUB الافتراضية. يتطلب صلاحيات الجذر (root).",
+    "editingEntry": "جارٍ تعديل المدخل",
+    "enableBootsplash": "تمكين شاشة الإقلاع الرسومية (Bootsplash)",
+    "enableBootsplashHint": "عرض رسوم متحركة رسومية (Plymouth) أثناء عملية الإقلاع بدلاً من الرسائل النصية.",
+    "entryId": "معرف المدخل (ID)",
+    "entryName": "اسم المدخل",
+    "entrySaved": "تم حفظ مدخل الإقلاع بنجاح",
+    "errorTitle": "خطأ",
+    "flatMenus": "تمكين القوائم المسطحة",
+    "flatMenusHint": "تعطيل القوائم الفرعية في GRUB وإظهار كافة المداخل في القائمة الرئيسية.",
+    "grubBackground": "صورة خلفية GRUB",
+    "grubTheme": "سمة GRUB",
+    "kernelParams": "معلمات النواة (Kernel Parameters)",
+    "kernelParamsHint": "معلمات إضافية يتم تمريرها إلى نواة لينكس عند الإقلاع.",
+    "kernelParamsPlaceholder": "مثال: quiet splash",
+    "messageLevel": "تفاصيل رسائل الإقلاع",
+    "messageLevelDetailed": "مفصلة (هادئ)",
+    "messageLevelHint": "حدد كمية المعلومات المعروضة أثناء عملية الإقلاع.",
+    "messageLevelLimited": "محدودة (هادئ وموجز)",
+    "messageLevelVeryDetailed": "مفصلة جدًا (كافة الرسائل)",
+    "mitigationsOff": "تعطيل تدابير حماية المعالج (Mitigations)",
+    "mitigationsOffHint": "يعطل تدابير الأمان الخاصة بالمعالج للحصول على أداء أفضل ولكن بمستوى أمان أقل.",
+    "partitionSelect": "تحديد القسم",
+    "partitionSelectHint": "يرجى تحديد القسم الذي يحتوي على تثبيت Garuda الخاص بك.",
+    "plymouthNotInstalled": "Plymouth غير مثبت. قم بتمكينه لتثبيته عند التطبيق.",
+    "plymouthPending": "تمت جدولة تثبيت Plymouth. يمكنك اختيار سمة بعد اكتمال التثبيت.",
+    "plymouthTheme": "سمة Plymouth (شاشة الإقلاع)",
+    "plymouthThemeHint": "السمة المعروضة أثناء إقلاع النظام.",
+    "plymouthVmWarning": "أنت تعمل داخل آلة افتراضية. ستعمل شاشة Plymouth بشكل محدود وقد لا تعمل المعاينة بشكل صحيح.",
+    "previewComplete": "اكتملت المعاينة",
+    "previewCompleteMessage": "انتهت معاينة سمة Plymouth.",
+    "previewError": "فشلت المعاينة",
+    "previewTheme": "معاينة سمة Plymouth",
+    "retry": "إعادة المحاولة",
+    "save": "حفظ",
+    "saveDefault": "حفظ المدخل الافتراضي",
+    "saveDefaultHint": "حفظ آخر مدخل تم اختياره تلقائيًا ليكون المدخل الافتراضي.",
+    "savedMessage": "تم تطبيق إعدادات الإقلاع بنجاح.",
+    "savedMessageScheduled": "تمت إضافة إعدادات الإقلاع إلى العمليات المعلقة.",
+    "savedTitle": "تم حفظ الإعدادات",
+    "saveSuccess": "تم الحفظ بنجاح",
+    "searchOtherOs": "البحث عن أنظمة تشغيل أخرى",
+    "searchOtherOsHint": "اكتشاف وإضافة أنظمة التشغيل الأخرى المثبتة تلقائيًا إلى قائمة الإقلاع باستخدام os-prober.",
+    "selectBackground": "حدد صورة الخلفية",
+    "selectEntry": "حدد مدخل الإقلاع",
+    "selectGrubTheme": "حدد سمة GRUB",
+    "selectTheme": "حدد سمة Plymouth",
+    "submenu": "قائمة فرعية",
+    "sysrqEnabled": "تمكين مفتاح SysRq دائمًا",
+    "sysrqEnabledHint": "تمكين مفتاح SysRq السحري للتحكم في النظام في حالات الطوارئ.",
+    "timeout": "مهلة القائمة",
+    "timeoutHint": "الوقت بالثواني للانتظار قبل الإقلاع التلقائي من المدخل الافتراضي.",
+    "title": "خيارات ",
+    "titleTwo": "الإقلاع",
+    "unsavedChanges": "لديك تغييرات غير محفوظة"
+  },
+  "bootRepair": {
+    "apply": "تطبيق",
+    "backupFile": "ملف النسخة الاحتياطية",
+    "backupMbrPbr": "نسخ احتياطي لـ MBR أو PBR",
+    "backupMbrPbrTip": "إنشاء نسخة احتياطية من رمز إقلاع سجل الإقلاع الرئيسي (MBR) أو سجل إقلاع القسم (PBR). هذا لا يشمل جدول الأقسام.",
+    "backupRestoreTarget": "هدف النسخ الاحتياطي أو الاستعادة:",
+    "deviceOrPartition": "الجهاز أو القسم:",
+    "errorTitle": "خطأ",
+    "installOn": "التثبيت على:",
+    "location": "الموقع:",
+    "luksPassword": "كلمة مرور LUKS:",
+    "luksPasswordPlaceholder": "أدخل عبارة مرور LUKS",
+    "luksPasswordRequired": "يرجى إدخال كلمة مرور LUKS لقسم الجذر (root) هذا.",
+    "luksTag": "LUKS",
+    "options": "الخيارات",
+    "partitionToMount": "القسم المراد تركيبه:",
+    "reinstallGrub": "إعادة تثبيت GRUB",
+    "reinstallGrubTip": "إعادة تثبيت محمل الإقلاع GRUB على قرص أو قسم محدد.",
+    "repairGrubConfig": "إصلاح تكوين GRUB",
+    "repairGrubConfigTip": "إعادة إنشاء ملف تكوين GRUB (grub.cfg) لاكتشاف كافة أنظمة التشغيل المثبتة.",
+    "restoreMbrPbr": "استعادة MBR أو PBR من نسخة احتياطية",
+    "restoreMbrPbrTip": "استعادة رمز الإقلاع من ملف نسخة احتياطية تم إنشاؤه مسبقًا.",
+    "rootLocation": "موقع الجذر (Root):",
+    "selectLocation": "يرجى تحديد موقع.",
+    "selectOperation": "حدد العملية",
+    "selectRoot": "يرجى تحديد قسم الجذر.",
+    "successBackup": "اكتمل النسخ الاحتياطي بنجاح.",
+    "successReinstall": "اكتملت إعادة تثبيت GRUB بنجاح.",
+    "successRepair": "اكتمل إصلاح GRUB بنجاح.",
+    "successRestore": "اكتملت الاستعادة بنجاح.",
+    "successTitle": "نجاح",
+    "targetEsp": "ESP",
+    "targetEspTip": "قسم نظام EFI. قسم تستخدمه أجهزة الكمبيوتر التي تتبع معيار UEFI لتخزين محملات الإقلاع وصور النواة.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "سجل الإقلاع الرئيسي. قطاع الإقلاع التقليدي في بداية جهاز تخزين البيانات المقسم.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "سجل إقلاع القسم. يُعرف أيضًا باسم سجل إقلاع وحدة التخزين (VBR)، وهو القطاع الأول من قسم معين.",
+    "targetRoot": "Root",
+    "title": "إصلاح ",
+    "titleTwo": "الإقلاع"
+  },
+  "commandPalette": {
+    "hint": "البحث في الوحدات والإجراءات",
+    "placeholder": "اكتب أمرًا أو ابحث عن وحدة...",
+    "toClose": "للإغلاق"
+  },
+  "configFiles": {
+    "actions": "الإجراءات",
+    "desc": {
+      "adjtime": "يستخدمه hwclock لتتبع ضبط وقت الساعة العتادية",
+      "alacritty": "تكوين محاكي الطرفية المسرع بالعتاد Alacritty",
+      "alsa_base": "خيارات وحدة نواة ALSA للصوت",
+      "amdgpu_conf": "خيارات وحدة نواة بطاقات AMDGPU",
+      "ananicy": "قواعد خدمة تحسين الأولويات التلقائية Ananicy",
+      "asound_conf": "تكوين ALSA على مستوى النظام",
+      "asoundrc": "تكوين ALSA الخاص بالمستخدم",
+      "bash_bashrc": "إعدادات صدفة Bash التفاعلية على مستوى النظام",
+      "bashrc": "ملف تكوين صدفة Bash للمستخدم الحالي",
+      "blacklist_nouveau": "حظر برنامج التشغيل مفتوح المصدر Nouveau",
+      "bluetooth_main": "تكوين خدمة البلوتوث الرئيسية",
+      "btrfsAssistant": "تكوين أداة BTRFS Assistant",
+      "chaoticMirrorlist": "مرايا مستودع Chaotic-AUR المخصص لـ Garuda",
+      "cinnamon": "دليل التكوين الرئيسي لبيئة سطح المكتب Cinnamon",
+      "cpupower": "تكوين أداة إدارة طاقة وترددات المعالج cpupower",
+      "cron": "تكوين المهام المجدولة دوريًا (Cron Jobs)",
+      "cursorThemeSystem": "تكوين سمة المؤشر على مستوى النظام",
+      "cursorThemeUser": "تكوين سمة المؤشر الخاصة بالمستخدم",
+      "dunst": "تكوين خدمة الإشعارات Dunst",
+      "environment": "متغيرات البيئة على مستوى النظام بالكامل",
+      "environmentD": "دليل متغيرات البيئة على مستوى النظام (Wayland)",
+      "fastfetch": "تكوين أداة جلب وعرض معلومات النظام Fastfetch",
+      "fish": "ملف تكوين صدفة Fish",
+      "fontconfigSystem": "إعدادات تكوين الخطوط على مستوى النظام",
+      "fontconfigUser": "إعدادات تكوين الخطوط الخاصة بالمستخدم",
+      "fstab": "معلومات ثابتة حول أنظمة الملفات ونقاط التوصيل",
+      "gamemode": "التكوين العام لأداة تحسين أداء الألعاب GameMode",
+      "garudaUpdateConfig": "تكوين سلوك garuda-update وخيارات التحديث",
+      "gdm": "تكوين مدير تسجيل الدخول والعرض GNOME Display Manager",
+      "gitconfig": "تكوين Git الخاص بالمستخدم",
+      "group": "يعرّف مجموعات المستخدمين في النظام",
+      "grub": "ملف تكوين محمل الإقلاع GRUB",
+      "grub_cfg": "ملف تكوين محمل الإقلاع GRUB المنشأ تلقائيًا",
+      "grubTheme": "تكوين سمة محمل الإقلاع GRUB",
+      "gtk3Settings": "إعدادات تطبيقات مكتبة GTK 3.0",
+      "gtk4Css": "تنسيقات CSS المخصصة لتطبيقات GTK 4.0",
+      "gtk4Settings": "إعدادات تطبيقات مكتبة GTK 4.0",
+      "gtkrc2": "إعدادات تطبيقات مكتبة GTK 2.0 القديمة",
+      "hostname": "اسم مضيف النظام (Host Name)",
+      "hosts": "جدول محلي ثابت للبحث عن أسماء المضيفين وعناوين IP",
+      "hosts_allow": "قواعد TCP للسماح بالوصول إلى خدمات الشبكة",
+      "hosts_deny": "قواعد TCP لحظر ومنع الوصول إلى خدمات الشبكة",
+      "hyprland": "تكوين مدير نوافذ Wayland المسمى Hyprland",
+      "hyprpaper": "تكوين أداة خلفيات الشاشة Hyprpaper",
+      "i3": "تكوين مدير النوافذ المقسمة الكلاسيكي i3 لـ X11",
+      "iconTheme": "إعدادات تكوين سمة الأيقونات",
+      "journald": "تكوين خدمة سجلات systemd journal",
+      "kcmfonts": "إعدادات تكوين خطوط KDE",
+      "kdeColorScheme": "تعريفات مخططات الألوان الخاصة بمستخدم KDE",
+      "kdeglobals": "إعدادات التكوين العامة لبيئة KDE",
+      "kdeLookandFeel": "إعدادات المظهر والسمة العامة لـ KDE",
+      "kitty": "تكوين محاكي الطرفية الغني بالميزات والمسرع بالعتاد Kitty",
+      "kvantumConfig": "تكوين محرك سمات Kvantum المعتمد على SVG",
+      "kwinrc": "تكوين مدير النوافذ KWin",
+      "lightdm": "تكوين مدير تسجيل الدخول والعرض LightDM",
+      "locale": "تكوين اللغة المحلية على مستوى النظام",
+      "locale_gen": "قائمة اللغات المحلية المتاحة للتوليد على النظام",
+      "logind": "تكوين مدير تسجيل الدخول لـ systemd",
+      "makepkgConf": "خيارات تكوين أداة بناء الحزم makepkg",
+      "mako": "تكوين خدمة الإشعارات Mako",
+      "mangohud": "تكوين طبقة مراقبة الأداء MangoHud",
+      "mirrorlist": "مرايا مستودعات Arch Linux الرسمية",
+      "mkinitcpio": "تكوين إنشاء بيئة قرص الذاكرة العشوائية الأولي (initramfs)",
+      "modprobe_d": "تكوين وخيارات وحدات النواة (Kernel Modules)",
+      "networkmanager": "التكوين العام لـ NetworkManager",
+      "nftables": "تكوين جدار الحماية nftables",
+      "nvidia_conf": "خيارات وحدة نواة بطاقات NVIDIA",
+      "os_release": "يحتوي على معلومات حول نظام التشغيل وتستخدمه البرامج المختلفة",
+      "pacman_hooks": "خطافات أتمتة الإجراءات أثناء عمليات تثبيت الحزم",
+      "pacmanConf": "ملف التكوين الرئيسي لمدير الحزم pacman",
+      "pam": "ملفات تكوين وحدات المصادقة القابلة للإدخال (PAM)",
+      "pam_d": "تكوين PAM لخدمات المصادقة والتحقق",
+      "passwd": "يحتوي على معلومات حسابات المستخدمين",
+      "pipewire_client": "تكوين عملاء PipeWire",
+      "pipewire_conf": "تكوين خدمة PipeWire على مستوى المستخدم",
+      "plasmaApplets": "تكوين عناصر وودجات سطح مكتب Plasma",
+      "plasmaEnv": "متغيرات البيئة لمساحة عمل Plasma",
+      "plasmarc": "التكوين الرئيسي لقشرة Plasma",
+      "plymouthConf": "تكوين شاشة الإقلاع الرسومية Plymouth",
+      "profile": "بيئة وبرامج بدء التشغيل الخاصة بالمستخدم",
+      "pulse_daemon": "إعدادات خدمة PulseAudio الخلفية",
+      "pulse_default": "سكربت بدء تشغيل PulseAudio",
+      "qtile": "تكوين مدير النوافذ Qtile المبني على بايثون",
+      "resolv": "ملف تكوين محلل خوادم أسماء النطاقات (DNS Resolver)",
+      "rofi": "تكوين مشغل التطبيقات ومبدل النوافذ Rofi",
+      "rsyslog": "التكوين الرئيسي لخدمة سجلات rsyslog",
+      "sddm": "تكوين مدير العرض وتسجيل الدخول SDDM",
+      "shadow": "يحتوي على كلمات المرور المشفرة ومعلومات انتهاء الحسابات",
+      "snapperRoot": "تكوين Snapper للقسم الرئيسي (Root)",
+      "ssh_user": "تكوين عميل SSH الخاص بالمستخدم",
+      "sshd": "ملف تكوين خادم OpenSSH",
+      "starship": "تكوين سطر أوامر Starship المشترك للصدفات",
+      "sudoers": "يحدد المستخدمين الذين يملكون امتيازات استخدام sudo",
+      "sway": "تكوين مدير نوافذ Wayland المسمى Sway",
+      "sysctl": "معلمات النواة للشبكات والأداء والأمان",
+      "systemd_network": "ملفات تكوين خدمة systemd-networkd",
+      "systemd_services": "تعريفات خدمات systemd المخصصة أو المعدلة",
+      "systemd_timers": "مؤقتات systemd للمهام المجدولة",
+      "systemdSystem": "التكوين العام لنظام systemd",
+      "systemdUser": "تكوين systemd الخاص بالمستخدم",
+      "timezone": "يحدد المنطقة الزمنية للنظام",
+      "udev_rules": "قواعد udev لسلوك وتسمية أجهزة العتاد",
+      "userdirs": "تكوين مجلدات المستخدم القياسية (XDG User Dirs)",
+      "vconsole": "تكوين الطرفية الافتراضية والخطوط ولوحة المفاتيح",
+      "waybar": "التكوين الرئيسي لشريط الحالة Waybar",
+      "waybarStyle": "تنسيقات وتصميم CSS لشريط الحالة Waybar",
+      "wayfire": "تكوين مدير نوافذ Wayfire ثلاثي الأبعاد لـ Wayland",
+      "wayland_conf": "ملفات تكوين مديري نوافذ Wayland الخاصة بالمستخدم",
+      "wireplumber": "دليل تكوين مدير جلسات WirePlumber",
+      "wofi": "تكوين مشغل التطبيقات Wofi",
+      "xfce4": "دليل التكوين الرئيسي لبيئة سطح المكتب Xfce4",
+      "xorg_conf": "ملف تكوين خادم Xorg الرئيسي القديم",
+      "xorg_conf_d": "دليل أجزاء ملفات تكوين خادم Xorg",
+      "xorg_gpu": "تكوين Xorg الخاص ببطاقة الرسوميات (التعريف، BusID، الشاشات)",
+      "xorg_monitor": "تخطيط الشاشة، الدقة، ومعدل التحديث لخادم Xorg",
+      "zramGenerator": "تكوين مولد ذاكرة التبديل zram-generator",
+      "zsh": "ملف تكوين صدفة Zsh للمستخدم الحالي"
     },
-    "terminalRunning": "المهام قيد التشغيل",
-    "terminalTasks": "تنفيذ المهام",
-    "pending": "معلقة",
-    "console": "إظهار الطرفية"
+    "description": "الوصف",
+    "edit": "تعديل",
+    "name": "الاسم",
+    "path": "المسار",
+    "search": "البحث في ملفات التكوين...",
+    "title": "ملفات ",
+    "titleTwo": "التكوين",
+    "wiki": "الويكي"
+  },
+  "confirmation": {
+    "accept": "قبول",
+    "applyOperations": "تطبيق العمليات؟",
+    "applyOperationsBody": "هل أنت متأكد أنك تريد تطبيق جميع العمليات المعلقة؟",
+    "cancel": "إلغاء",
+    "createSnapshotBefore": "إنشاء لقطة Btrfs قبل التنفيذ",
+    "exitApp": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+    "exitAppHeader": "الخروج من التطبيق؟",
+    "exitAppRunningAction": "هل أنت متأكد أنك تريد الخروج من التطبيق؟ هناك إجراء قيد التشغيل!",
+    "password": "كلمة المرور",
+    "reject": "إلغاء",
+    "resetConfigsBody": "هل أنت متأكد أنك تريد إعادة تعيين الإعدادات التالية؟",
+    "resetConfigsHeader": "إعادة تعيين الإعدادات؟",
+    "save": "تخزين مؤقت في هذه الجلسة",
+    "subtitle": "الرجاء إدخال كلمة المرور للمتابعة",
+    "title": "المصادقة مطلوبة",
+    "useOnce": "استخدام مرة واحدة فقط"
+  },
+  "console": {
+    "abortAll": "إلغاء جميع الإجراءات",
+    "clearCachedData": "تم مسح ذاكرة التخزين المؤقت للمخرجات بنجاح.",
+    "clearCachedDataTitle": "تم مسح ذاكرة التخزين المؤقت للمخرجات",
+    "clearOutputCache": "مسح ذاكرة التخزين المؤقت للمخرجات",
+    "copyOutput": "نسخ مخرجات الطرفية",
+    "copyToClipboard": "تم نسخ المخرجات بنجاح إلى الحافظة الخاصة بك.",
+    "copyToClipboardTitle": "تم النسخ إلى الحافظة",
+    "noOutput": "لا توجد مخرجات",
+    "noTasksPending": "لا توجد مهام معلقة",
+    "opRunning": "العملية قيد التشغيل بالفعل.",
+    "outputExists": "يبدو أن هناك إجراء قيد التشغيل بالفعل. يرجى الانتظار حتى ينتهي قبل محاولة عرض السجلات.",
+    "printScripts": "طباعة السكربتات",
+    "removeAll": "إزالة جميع الإجراءات",
+    "runActions": "تشغيل الإجراءات",
+    "tasksAppearHere": "ستظهر المهام هنا عند تحديد العناصر.",
+    "title": "الطرفية",
+    "uploadPrivateBin": "رفع إلى PrivateBin"
   },
   "diagnostics": {
-    "title": "معلومات التصحيح ",
-    "icon": "Icon",
-    "titleTwo": "والتشخيصات",
-    "subtitle": "اعثر على المعلومات التي تحتاجها لتصحيح نظامك",
-    "inxi": "معلومات عامة (inxi)",
-    "systemctl": "خدمات النظام (systemctl)",
-    "journalctl": "سجلات النظام (journalctl)",
+    "copySuccess": "تم النسخ إلى الحافظة بنجاح",
     "dmesg": "سجلات النواة (dmesg)",
-    "full": "تشخيصات كاملة",
-    "upload": "رفع إلى PrivateBin",
-    "failedCmdHeader": "فشل في تشغيل الأمر",
+    "dmesgDesc": "فحص رسائل الذاكرة الدائرية للنواة (ring buffer).",
+    "exitCode": "خرج الأمر بالرمز {{code}}",
     "failedCmd": "حدث خطأ ما ولم يتم استرداد أي تشخيصات",
+    "failedCmdHeader": "فشل في تشغيل الأمر",
+    "full": "تشخيصات كاملة",
+    "fullDesc": "جمع كافة المعلومات التشخيصية المتاحة في مخرج واحد.",
+    "health": "صحة النظام",
+    "healthDesc": "تشغيل فحص صحة النظام باستخدام garuda-health.",
+    "inxi": "معلومات عامة (inxi)",
+    "inxiDesc": "جمع معلومات مفصلة عن العتاد والنظام.",
+    "journalctl": "سجلات النظام (journalctl)",
+    "journalctlDesc": "فحص سجلات النظام من خدمة journal.",
     "pacman": "أحدث سجلات Pacman",
-    "copied": "تم النسخ إلى الحافظة بنجاح",
+    "pacmanDesc": "عرض أحدث سجلات مدير الحزم pacman.",
+    "subtitle": "اعثر على المعلومات التي تحتاجها لتصحيح نظامك",
     "success": "نجاح",
+    "systemctl": "خدمات النظام (systemctl)",
+    "systemctlDesc": "تحليل أداء إقلاع النظام وحالة الخدمات.",
+    "title": "معلومات التصحيح ",
+    "titleTwo": "والتشخيصات",
+    "upload": "رفع إلى PrivateBin",
+    "uploadDesc": "رفع مخرجات الطرفية الحالية إلى PrivateBin للمشاركة.",
     "uploadSuccess": "تم الرفع إلى PrivateBin بنجاح، تم نسخ الرابط إلى الحافظة"
+  },
+  "error": {
+    "sudoPassword": "لا يبدو أن هذه هي كلمة المرور الصحيحة. يرجى المحاولة مرة أخرى."
+  },
+  "gaming": {
+    "antimicrox": "برنامج رسومي لتعيين أزرار لوحة المفاتيح والماوس على يد التحكم",
+    "anydesk": "تطبيق سطح المكتب البعيد السريع",
+    "bluez": "مطلوب بشكل عام للتعرف على وحدات تحكم PS لاسلكيًا",
+    "bottles": "إدارة بادئات Wine و Proton بسهولة",
+    "boxtron": "أداة توافقية لتشغيل ألعاب DOS على Steam عبر DOSBox الأصلي للينكس",
+    "controllers": "دعم وحدات التحكم",
+    "corectrl": "تطبيق للتحكم في مكونات العتاد والمعالج والرسوميات",
+    "desmume": "محاكي جهاز Nintendo DS",
+    "dgenSdl": "محاكي لأنظمة Sega Genesis/Mega Drive منقول إلى SDL",
+    "discord": "تطبيق دردشة صوتية ونصية شامل للاعبين",
+    "displaycal": "أداة مفتوحة المصدر لمعايرة وتوصيف الشاشات مدعومة بـ Argyll CMS",
+    "dolphinEmu": "محاكي جهازي Gamecube و Wii",
+    "dosbox": "محاكي يحتوي على بيئة DOS مدمجة لتشغيل ألعاب DOS القديمة",
+    "droidcam": "أداة لتحويل هاتفك/جهازك اللوحي إلى كاميرا ويب عبر اللاسلكي أو USB",
+    "duckstation": "محاكي PlayStation 1 (آخر إصدار بترخيص GPL)",
+    "dxvk": "طبقة توافقية معتمدة على Vulkan لـ Direct3D 9/10/11 لتشغيل تطبيقات 3D على لينكس عبر Wine",
+    "easyeffects": "مؤثرات صوتية لتطبيقات PipeWire",
+    "eka2l1": "محاكي تجريبي لنظام Symbian OS",
+    "emulationstation": "واجهة مرنة للمحاكيات تدعم التنقل بدون لوحة مفاتيح وقوالب مخصصة",
+    "emulators": "المحاكيات",
+    "fceux": "محاكي NES/Famicom سريع وفائق التوافقية",
+    "fsUae": "محاكي Amiga معتمد على UAE/WinUAE يركز على تشغيل الألعاب",
+    "gameconqueror": "فاحص ذاكرة لعزل وتعديل عناوين المتغيرات أثناء تشغيل العمليات",
+    "gamemode": "مجموعة خفيفة من الأدوات تسمح للألعاب بطلب تحسينات مؤقتة للأداء من نظام التشغيل",
+    "games": "الألعاب",
+    "gamescope": "مدير نوافذ مخصص لجلسات SteamOS",
+    "gamescopeSession": "جلسة Gamescope لإدارة دمج النوافذ",
+    "gamescopeSessionSteam": "جلسة Gamescope محسّنة لألعاب Steam",
+    "goverlay": "واجهة رسومية لإدارة طبقات تراكب Vulkan و OpenGL",
+    "gwe": "أداة نظام للتحكم في بطاقات رسوميات NVIDIA ومراقبتها",
+    "hatari": "محاكي لجهازي Atari ST و STE",
+    "heroic": "مشغل ألعاب مفتوح المصدر لألعاب Epic و Amazon و GOG",
+    "inputRemapper": "أداة لتغيير وبرمجة تعيين أزرار أجهزة الإدخال",
+    "itch": "مثبت تطبيق سطح المكتب لـ itch.io",
+    "kegaFusion": "محاكي لأجهزة Sega الكلاسيكية بما في ذلك SMS/GG و Genesis/Megadrive وملحقاتها",
+    "keyboardVisualizer": "تحويل إضاءة RGB المدعومة بـ OpenRGB إلى عرض ضوئي متزامن مع الموسيقى",
+    "lact": "أداة تكوين بطاقات الرسوميات لنظام لينكس",
+    "launchers": "مشغلات الألعاب",
+    "libretroMeta": "حزمة مجمعة لجميع محاكيات Libretro المدعومة",
+    "loading": "جارٍ التحميل...",
+    "lutris": "منصة ألعاب مفتوحة المصدر",
+    "luxtorpeda": "أداة توافق Steam Play لتشغيل الألعاب باستخدام محركات لينكس الأصلية",
+    "mame": "محاكي أجهزة الآركيد الشهير باستخدام SDL مع دعم OpenGL",
+    "mangohud": "طبقة تراكب Vulkan لمراقبة معدل الإطارات FPS، درجات الحرارة، استخدام المعالج/البطاقة الرسومية والمزيد",
+    "mednafen": "محاكي متعدد الأنظمة يعمل من سطر الأوامر",
+    "mgba": "محاكي Nintendo Gameboy Advance يركز على السرعة والدقة",
+    "minigalaxy": "عميل GOG بسيط لنظام لينكس",
+    "misc": "متنوعات",
+    "mumble": "برنامج محادثة صوتية مفتوح المصدر ومنخفض التأخير وعالي الجودة",
+    "nestopia": "محاكي عالي الدقة لجهاز NES/Famicom",
+    "noisetorch": "كتم وإلغاء الضوضاء للميكروفون في الوقت الفعلي على لينكس",
+    "nyrna": "تعليق وإيقاف الألعاب والتطبيقات مؤقتًا واستئنافها في أي وقت",
+    "obsStudio": "برنامج مجاني ومفتوح المصدر للبث المباشر وتسجيل الشاشة",
+    "openrgb": "التحكم في إضاءة RGB مفتوح المصدر دون الاعتماد على برامج المصنعين",
+    "oversteer": "تطبيق رسومي لتكوين مقاود القيادة من Logitech",
+    "pcsx2": "محاكي جهاز PlayStation 2",
+    "pegasusFrontend": "واجهة رسومية قابلة للتخصيص ومتعددة المنصات لإطلاق المحاكيات وإدارة مجموعة ألعابك",
+    "piper": "تطبيق GTK لتكوين أزرار وإضاءة فئات ماوس الألعاب",
+    "polychromatic": "واجهة رسومية لإدارة إضاءة RGB لأجهزة OpenRazer",
+    "ppsspp": "محاكي جهاز PSP مكتوب بلغة ++C",
+    "protonCachyOS": "توزيعة Proton من Valve مع ترقيعات CachyOS وتحسينات أخرى",
+    "protonGeCustom": "توزيعة مخصصة ومحسنة من Proton التابع لـ Valve مع ترقيعات متنوعة",
+    "protontricks": "أداة وسيطة لتنفيذ مهام winetricks لألعاب Proton",
+    "protonupQt": "تثبيت وإدارة Proton-GE و Luxtorpeda لـ Steam و Wine-GE لـ Lutris",
+    "retroarch": "الواجهة المرجعية الرسمية لمكتبة محاكيات libretro",
+    "rpcs3": "محاكي جهاز PlayStation 3",
+    "ryujinx": "محاكي تجريبي لجهاز Nintendo Switch مكتوب بلغة #C",
+    "sameboy": "محاكي دقيق لأجهزة Game Boy و Game Boy Color",
+    "scController": "مشغل ومحدد أزرار بواجهة GTK3 لوحدة تحكم Steam و DS4 وأجهزة التحكم المماثلة",
+    "scummvm": "محاكي لتشغيل العديد من ألعاب المغامرات الكلاسيكية المصممة بنظام التأشير والنقر",
+    "snes9x": "محاكي محمول لجهاز Super Nintendo Entertainment System (TM)",
+    "soundwire": "نقل الصوت لاسلكيًا من جهاز الكمبيوتر إلى هاتف أندرويد أو أجهزة كمبيوتر أخرى",
+    "steamNative": "بديل أصلي لبيئة تشغيل Steam يعتمد على مكتبات النظام",
+    "steamRuntime": "نظام توزيع البرمجيات الرقمية من Valve",
+    "steamtinkerlaunch": "سكربت وسيط لخيارات الإطلاق المخصصة في Steam",
+    "stella": "محاكي جهاز Atari 2600 VCS",
+    "streamlinkTwitchGui": "متصفح منصة Twitch.tv متعدد المنصات لـ Streamlink",
+    "subtitle": "لنبدأ ببعض تطبيقات الألعاب!",
+    "title": "تطبيقات ",
+    "titleTwo": "الألعاب",
+    "tools": "أدوات الألعاب",
+    "torzu": "تفريعة إضافية لمحاكي Switch",
+    "vesktop": "تطبيق سطح مكتب مخصص وصديق للخصوصية لـ Discord",
+    "vice": "محاكي متعدد الاستخدامات لأجهزة كولودور Commodore",
+    "vkbasalt": "طبقة معالجة رسومية لاحقة لـ Vulkan (تشمل تأثيرات مثل CAS و FXAA و SMAA)",
+    "vlc": "مشغل وسائط متعدد المنصات لملفات MPEG و VCD/DVD و DivX",
+    "vrVideoPlayer": "مشغل فيديو لمحتوى الواقع الافتراضي VR",
+    "waydroid": "سكربت بايثون لإضافة OpenGapps و Magisk ومكتبات الترجمة لـ Waydroid",
+    "wine": "WINE",
+    "wineMeta": "حزمة Meta لتثبيت WINE وجميع التبعيات المطلوبة",
+    "winePackage": "طبقة توافقية لتشغيل برامج Windows على لينكس",
+    "wineStaging": "طبقة توافق لتشغيل برامج Windows - فرع Staging التجريبي",
+    "winetricks": "سكربت لتثبيت مكتبات بيئة التشغيل المتنوعة في Wine",
+    "xboxdrv": "برنامج تشغيل وحدة تحكم Xbox، استخدمه فقط إذا لم يعمل برنامج تشغيل النواة!",
+    "xemu": "محاكي جهاز Xbox الأصلي",
+    "xoneDkms": "برنامج تشغيل حديث لنظام لينكس لوحدات تحكم Xbox One و Xbox Series X|S",
+    "xoneDongleFirmware": "البرنامج الثابت لمحول وحدة تحكم Xbox اللاسلكية",
+    "xpadneo": "برنامج تشغيل لينكس متقدم لوحدة تحكم Xbox One اللاسلكية",
+    "zsnes": "محاكي Super Nintendo كلاسيكي"
+  },
+  "kernels": {
+    "active": "النواة النشطة:",
+    "dkmsModulesBroken": "بعض وحدات DKMS معطلة",
+    "dkmsModulesBrokenTip": "انقر هنا لجدولة تثبيت وحدات DKMS المعطلة",
+    "dkmsModulesMissing": "بعض وحدات DKMS مفقودة",
+    "dkmsModulesMissingTip": "وحدات DKMS مفقودة",
+    "headers": "الترويسات (Headers)",
+    "headersMissing": "ترويسات النواة (Kernel Headers) مفقودة",
+    "setDefault": "تعيين كنواة افتراضية"
   },
   "lang": {
     "title": "اختيار اللغة",
-    "icon": "Icon",
     "tooltip": "اختر لغتك المفضلة"
   },
-  "welcome": {
-    "title": "مرحبًا بك في ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux",
-    "subtitle": "توزيعة لينكس المثالية للألعاب والوسائط المتعددة",
-    "maintenance": "الصيانة",
-    "maintenanceSub": "حافظ على نظامك في حالة جيدة",
-    "systemTools": "إعدادات النظام",
-    "systemToolsSub": "قم بتهيئة نظامك",
-    "gaming": "تطبيقات الألعاب",
-    "gamingSub": "العب ألعابك المفضلة",
-    "bootTools": "أدوات الإقلاع",
-    "bootToolsSub": "إدارة إعدادات الإقلاع الخاصة بك",
-    "network": "أدوات الشبكة",
-    "networkSub": "إدارة إعدادات الشبكة الخاصة بك",
-    "diagnostics": "التشخيصات",
-    "diagnosticsSub": "تحقق من صحة نظامك",
-    "install": "تثبيت Garuda Linux",
-    "installSub": "احصل على Garuda Linux على نظامك",
-    "chroot": "الدخول إلى Garuda باستخدام Chroot",
-    "chrootSub": "ادخل إلى تثبيت Garuda الخاص بك باستخدام Chroot",
-    "startpage": "صفحة البداية",
-    "startpageSub": "افتح صفحة البداية لـ Garuda Linux",
-    "setupAssistant": "مساعد الإعداد",
-    "setupAssistantSub": "شغل مساعد إعداد Garuda",
-    "hello": "مرحباً",
-    "error": "حدث خطأ."
+  "languagePacks": {
+    "base": "الحزمة الأساسية",
+    "description": "هذه هي حزم اللغة للحزم المثبتة لديك، وعادةً ما توفر ترجمات لواجهة المستخدم الرسومية (GUI).",
+    "locale": "اللغة المحلية (Locale)",
+    "notFound": "لم يتم العثور على حزم لغة",
+    "pkgname": "اسم الحزمة",
+    "selected": "محدد"
   },
-  "gaming": {
-    "title": "تطبيقات ",
-    "icon": "Icon",
-    "titleTwo": "الألعاب",
-    "subtitle": "لنبدأ ببعض تطبيقات الألعاب!",
-    "launchers": "مشغلات الألعاب",
-    "loading": "جارٍ التحميل...",
-    "wine": "WINE",
-    "tools": "أدوات الألعاب",
-    "emulators": "المحاكيات",
-    "controllers": "دعم وحدات التحكم",
-    "games": "الألعاب",
-    "misc": "متنوعات",
-    "bluez": "مطلوب بشكل عام للتعرف على وحدات تحكم PS لاسلكيًا",
-    "xboxdrv": "برنامج تشغيل وحدة تحكم Xbox، استخدمه فقط إذا لم يعمل برنامج تشغيل النواة!",
-    "wineMeta": "حزمة Meta لتثبيت WINE وجميع التبعيات المطلوبة"
+  "locales": {
+    "apply": "جدولة تغييرات اللغة المحلية المثبتة",
+    "available": "متاح",
+    "description": "اللغات المحلية (Locales) على اليمين مثبتة على نظامك. يمكنك تحديد أي منها تريد الاحتفاظ به وأي منها تريد إزالته.",
+    "selected": "محدد",
+    "selectLocale": "حدد لغتك المفضلة على مستوى النظام",
+    "task": "تغيير لغة النظام المحلية"
   },
   "maintenance": {
-    "title": "صيانة ",
-    "icon": "Icon",
-    "titleTwo": "النظام",
-    "subtitle": "حافظ على نظامك في حالة جيدة",
-    "update": "حدث نظامك",
+    "actionFailed": "حدث خطأ أثناء محاولة تشغيل {{ action }} بالخطأ {{ error }}.",
+    "actionFailedHeader": "فشل تنفيذ إجراء الصيانة",
     "addPending": "إضافة معلقة",
-    "removePending": "إزالة معلقة",
-    "runNow": "شغل الآن",
-    "failedReset": "خطأ في إعادة تعيين ملف الإعدادات",
-    "failedResetFile": "حدث خطأ أثناء إعادة تعيين {{file}}",
-    "editRepos": "تعديل المستودعات",
-    "onlyDirect": "لا يمكن وضع هذا الإجراء في قائمة الانتظار ويجب تشغيله مباشرة.",
-    "cleanCache": "تنظيف ذاكرة التخزين المؤقت",
-    "cleanCacheSub": "إزالة جميع الحزم المخزنة مؤقتًا",
-    "updateSystem": "تحديث النظام",
-    "taskRunningHeader": "خطأ في تشغيل إجراء الصيانة",
-    "taskRunning": "هناك مهمة قيد التشغيل بالفعل، انتظر حتى تنتهي أولاً.",
-    "updateSystemSub": "حدث نظامك عبر garuda-update",
-    "editReposSub": "عدّل مستودعاتك باستخدام Pace",
     "addPendingSub": "إضافة العمليات المعلقة",
-    "clearOrphans": "تنظيف الحزم اليتيمة",
-    "clearOrphansSub": "إزالة الحزم اليتيمة",
-    "refreshMirrors": "تحديث المرايا",
-    "refreshMirrorsSub": "حدث قائمة المرايا الخاصة بك",
-    "removeLock": "إزالة قفل Pacman",
-    "removeLockSub": "إزالة ملف قفل pacman",
-    "reinstallPackages": "إعادة تثبيت الحزم",
-    "reinstallPackagesSub": "أعد تثبيت جميع الحزم على نظامك",
-    "reinstallDkmsModules": "إعادة تثبيت وحدات DKMS",
     "btrfsAssistant": "مساعد Btrfs",
     "btrfsAssistantSub": "إدارة لقطات BTRFS وتشغيل مهام الصيانة",
+    "cleanCache": "تنظيف ذاكرة التخزين المؤقت",
+    "cleanCacheSub": "إزالة جميع الحزم المخزنة مؤقتًا",
+    "clearOrphans": "تنظيف الحزم اليتيمة",
+    "clearOrphansSub": "إزالة الحزم اليتيمة غير المستخدمة",
+    "common": "صيانة عامة",
+    "editRepos": "تعديل المستودعات",
+    "editReposSub": "عدّل مستودعاتك باستخدام Pace",
+    "failedReset": "خطأ في إعادة تعيين ملف الإعدادات",
+    "failedResetFile": "حدث خطأ أثناء إعادة تعيين {{file}}",
+    "garudaHealth": "فحص صحة النظام",
+    "garudaHealthFix": "إصلاح صحة النظام",
+    "garudaHealthFixSub": "محاولة إصلاح مشكلات النظام الشائعة تلقائيًا",
+    "garudaHealthSub": "فحص مشكلات النظام الشائعة باستخدام garuda-health",
+    "garudaUpdate": "أدوات إنقاذ تحديث Garuda",
+    "installationFailedHeader": "{{ program }} غير مثبت وفشل تثبيته، لا يمكن المتابعة. تحقق من السجلات لمزيد من المعلومات",
     "mergePacDiff": "دمج ملفات pacdiff",
     "mergePacDiffSub": "دمج ملفات .pacnew و .pacsave بشكل تفاعلي",
-    "updateRemoteFullFix": "إصلاح كامل لتحديث Garuda",
-    "updateRemoteFullFixSub": "إعادة تعيين Pacman وإعادة تثبيت جميع الحزم في نظام التشغيل الخاص بك",
-    "updateRemoteKeyring": "تحديث keyring لـ Garuda",
-    "updateRemoteKeyringSub": "تحديث keyring دون إعادة تعيين pacman.conf",
+    "onlyDirect": "لا يمكن وضع هذا الإجراء في قائمة الانتظار ويجب تشغيله مباشرة.",
+    "refreshArchMirrors": "تحديث مرايا Arch",
+    "refreshArchMirrorsSub": "حدث قائمة مرايا Arch Linux الخاصة بك",
+    "refreshChaoticMirrors": "تحديث مرايا Chaotic-AUR",
+    "refreshChaoticMirrorsSub": "تحديث قائمة مرايا Chaotic-AUR الخاصة بك",
+    "refreshChaoticMirrorsSuccess": "تم تحديث قائمة مرايا Chaotic-AUR بنجاح",
+    "refreshKeyring": "تحديث حلقة المفاتيح (Keyring)",
+    "refreshKeyringSub": "تحديث حلقة مفاتيح pacman",
+    "reinstallDkmsModules": "إعادة تثبيت وحدات DKMS",
+    "reinstallPackages": "إعادة تثبيت الحزم",
+    "reinstallPackagesSub": "أعد تثبيت جميع الحزم على نظامك",
+    "removeLock": "إزالة قفل Pacman",
+    "removeLockSub": "إزالة ملف قفل pacman",
+    "removePending": "إزالة معلقة",
+    "resetConfigs": "إعادة تعيين الإعدادات إلى الحالة الافتراضية",
+    "resetTooltip": "سيتم إعادة تعيين الملفات أو المجلدات التالية إلى حالتها الافتراضية:",
+    "runNow": "شغل الآن",
+    "subtitle": "حافظ على نظامك في حالة جيدة",
+    "taskRunning": "هناك مهمة قيد التشغيل بالفعل، انتظر حتى تنتهي أولاً.",
+    "taskRunningHeader": "خطأ في تشغيل إجراء الصيانة",
+    "title": "صيانة ",
+    "titleTwo": "النظام",
+    "update": "حدث نظامك",
     "updateRemoteFix": "إصلاح تحديث Garuda",
-    "updateRemoteFixSub": "إعادة تعيين pacman.conf وتحديث keyrings",
-    "updateRemoteResetSnapper": "إعادة تعيين snapper",
-    "updateRemoteResetSnapperSub": "إزالة كل شيء متعلق بـ Snapper وإعادة إنشاء إعداداته",
+    "updateRemoteFixSub": "إعادة ضبط pacman.conf وقوائم المرايا وحلقة المفاتيح إلى الافتراضي",
+    "updateRemoteFullFix": "إصلاح شامل لتحديث Garuda",
+    "updateRemoteFullFixSub": "إعادة ضبط Pacman بالكامل وإعادة تثبيت جميع الحزم",
+    "updateRemoteKeyring": "تحديث حلقة مفاتيح Garuda",
+    "updateRemoteKeyringSub": "إعادة تعيين حلقة المفاتيح إلى إعدادات Garuda الافتراضية",
     "updateRemoteResetAudio": "إعادة تعيين الصوت",
     "updateRemoteResetAudioSub": "إعادة تثبيت/إعادة تعيين تكوين الصوت PipeWire",
-    "resetTooltip": "سيتم إعادة تعيين الملفات أو المجلدات التالية إلى حالتها الافتراضية:",
-    "resetConfigs": "إعادة تعيين الإعدادات إلى الحالة الافتراضية",
-    "common": "صيانة عامة",
-    "garudaUpdate": "أدوات إنقاذ تحديث Garuda"
+    "updateRemoteResetSnapper": "إعادة تعيين Snapper",
+    "updateRemoteResetSnapperSub": "إعادة ضبط Snapper بالكامل وإعادة إنشاء ملفات تكوينه",
+    "updateSystem": "تحديث النظام",
+    "updateSystemSub": "حدث نظامك عبر garuda-update"
   },
-  "sudo": {
-    "title": "المصادقة مطلوبة",
-    "icon": "Icon",
-    "subtitle": "الرجاء إدخال كلمة المرور للمتابعة",
-    "save": "تخزين مؤقت في هذه الجلسة",
-    "password": "كلمة المرور",
-    "cancel": "إلغاء",
-    "useOnce": "استخدام مرة واحدة فقط"
+  "menu": {
+    "apply": "تطبيق العمليات المعلقة",
+    "boot": "أدوات الإقلاع",
+    "bootRepair": "إصلاح الإقلاع",
+    "clearTasks": "مسح المهام",
+    "components": "المكونات",
+    "configFiles": "ملفات التكوين",
+    "console": "إظهار الطرفية",
+    "diagnostics": "التشخيصات",
+    "file": {
+      "preferences": "التفضيلات",
+      "quit": "إنهاء",
+      "title": "ملف"
+    },
+    "gaming": "الألعاب",
+    "help": {
+      "about": "حول Garuda Toolbox",
+      "aboutBody": "Garuda Toolbox هي أداة لصيانة وتشخيص النظام لتوزيعة Garuda Linux. مصممة لمساعدة المستخدمين على صيانة نظامهم وتشخيص المشكلات. تم بناؤها باستخدام Electron و Angular.",
+      "aboutForum": "المنتدى",
+      "aboutSourceCode": "الرمز المصدري",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "الويكي",
+      "callExorcist": "استدعِ طارد الأرواح",
+      "callExorcistBody": "لا بد أنك يائس جدًا للنقر على هذا الزر! لقد أعددت لك بعض التعويذات الخاصة، إذا كنت لا تزال تواجه مشكلات مع التطبيق، يرجى الإبلاغ عنها في منتدى Garuda Linux أو متتبع المشكلات الخاص بنا.",
+      "callExorcistTitle": "تم استدعاء طارد الأرواح!",
+      "garudaStatus": "تحقق من حالة وقت التشغيل",
+      "getHelpArchWiki": "ابحث عن محتوى في Arch Wiki",
+      "getHelpForum": "احصل على المساعدة في المنتدى",
+      "getHelpWiki": "ابحث عن محتوى في الويكي",
+      "title": "المساعدة"
+    },
+    "maintenance": "الصيانة",
+    "modules": {
+      "appSettings": "إعدادات التطبيق",
+      "bootRepair": "إصلاح الإقلاع",
+      "components": "مكونات النظام",
+      "diagnostics": "التشخيصات",
+      "gaming": "الألعاب",
+      "kernels": "الأنوية (Kernels)",
+      "locales": "اللغات والترجمات",
+      "maintenance": "الصيانة",
+      "packages": "استكشاف التطبيقات",
+      "search": "خيارات البحث",
+      "setupWizard": "مساعد الإعداد",
+      "systemdServices": "خدمات Systemd",
+      "systemSettings": "إعدادات النظام",
+      "title": "الوحدات",
+      "userManager": "إدارة المستخدمين",
+      "welcome": "مرحباً"
+    },
+    "network": "أدوات الشبكة",
+    "packages": "استكشاف التطبيقات",
+    "pending": "معلقة",
+    "settings": "إعدادات التطبيق",
+    "setupWizard": "مساعد الإعداد",
+    "systemTools": "إعدادات النظام",
+    "terminalRunning": "المهام قيد التشغيل",
+    "terminalTasks": "تنفيذ المهام",
+    "welcome": "مرحباً"
   },
-  "systemdServices": {
-    "notFound": "لم يتم العثور على خدمات",
-    "description": "الوصف",
-    "unit": "اسم الوحدة",
-    "load": "تحميل",
-    "active": "نشطة",
-    "state": "الحالة",
-    "searchKey": "أدخل كلمة بحث",
-    "clear": "مسح",
+  "networkAssistant": {
     "actions": "الإجراءات",
-    "show": "إظهار",
-    "start": "بدء",
-    "stop": "إيقاف",
-    "mask": "إخفاء",
-    "unmask": "إظهار",
-    "logs": "السجلات",
-    "restart": "إعادة تشغيل",
-    "reload": "إعادة تحميل",
+    "active": "نشط",
+    "airplaneMode": "وضع الطيران",
+    "any": "أي",
+    "blacklistAction": "حظر {{name}}",
+    "blacklistDriver": "حظر برنامج التشغيل",
+    "blacklistedDrivers": "برامج التشغيل المحظورة (Blacklisted)",
+    "blacklistFailed": "فشل تحديث قائمة الحظر",
+    "bluetooth": "البلوتوث",
+    "bluetoothDevices": "أجهزة البلوتوث",
+    "cancel": "إلغاء",
+    "category": "الفئة",
+    "clear": "مسح",
+    "clickToCopy": "انقر للنسخ",
+    "connected": "متصل",
+    "connectionInfo": "معلومات الاتصال",
+    "connman": "ConnMan",
+    "copied": "تم النسخ إلى الحافظة",
+    "copyAll": "نسخ الكل",
+    "count": "العدد",
+    "disabled": "معطل",
+    "disconnected": "غير متصل",
+    "driver": "برنامج التشغيل",
+    "driverBlacklisted": "تم حظر برنامج التشغيل",
+    "driverLoaded": "تم تحميل برنامج التشغيل بنجاح",
+    "driverUnblacklisted": "تمت إزالة برنامج التشغيل من قائمة الحظر",
+    "driverUnloaded": "تم إلغاء تحميل برنامج التشغيل بنجاح",
     "enable": "تمكين",
-    "disable": "تعطيل",
-    "autoRefresh": "تحديث تلقائي",
-    "error": "حدث خطأ أثناء جلب الخدمات، يرجى المحاولة مرة أخرى.",
-    "errorTitle": "خطأ في جلب الخدمات",
-    "systemContext": "إظهار خدمات النظام",
-    "userContext": "إظهار خدمات المستخدم",
-    "includeDisabled": "تضمين المعطلة",
-    "excludeDisabled": "استبعاد المعطلة"
+    "enabled": "ممكن",
+    "enableService": "تمكين الخدمة",
+    "enableServiceFailed": "فشل تمكين الخدمة",
+    "error": "خطأ",
+    "errorFetch": "فشل جلب معلومات الشبكة",
+    "ethernetControllers": "محولات الإيثرنت",
+    "externalIp": "عنوان IP الخارجي",
+    "gps": "GPS",
+    "hardwareInfo": "معلومات العتاد",
+    "hotspotFailed": "فشل فتح نقطة الاتصال",
+    "inactive": "غير نشط",
+    "installDriver": "تثبيت برنامج التشغيل",
+    "installTraceroute": "تثبيت Traceroute",
+    "installWihotspot": "تثبيت نقطة اتصال Wi-Fi",
+    "interface": "واجهة الشبكة",
+    "internet": "الإنترنت",
+    "loadDriver": "تحميل برنامج التشغيل",
+    "loadDriverAction": "تحميل برنامج التشغيل {{name}}",
+    "loadDriverFailed": "فشل تحميل برنامج التشغيل",
+    "loadedDrivers": "برامج التشغيل المحملة",
+    "maxHops": "أقصى عدد للقفزات",
+    "networkManager": "NetworkManager",
+    "noDrivers": "لم يتم العثور على برامج تشغيل للشبكة",
+    "noHardware": "لم يتم اكتشاف عتاد للشبكة",
+    "notAvailable": "غير متاح",
+    "off": "معطل",
+    "on": "مفعل",
+    "openHotspot": "فتح نقطة الاتصال",
+    "outputInTerminal": "يتم عرض المخرجات في الطرفية أدناه",
+    "ping": "Ping",
+    "pingFailed": "فشل تشغيل أمر ping",
+    "quickToggles": "مفاتيح التبديل السريعة",
+    "routerIp": "عنوان IP لجهاز التوجيه (الراوتر)",
+    "runPing": "تشغيل Ping",
+    "runTraceroute": "تشغيل Traceroute",
+    "search": "بحث",
+    "serviceEnabled": "تم تمكين الخدمة بنجاح",
+    "services": "الخدمات",
+    "status": "الحالة",
+    "success": "نجاح",
+    "tabs": {
+      "diagnostics": "التشخيصات",
+      "drivers": "برامج التشغيل",
+      "hardware": "العتاد",
+      "status": "الحالة"
+    },
+    "targetHost": "المضيف المستهدف",
+    "timeout": "المهلة (بالثواني)",
+    "title": "مساعد ",
+    "titleTwo": "الشبكة",
+    "toggleAirplane": "تبديل وضع الطيران",
+    "toggleAirplaneFailed": "فشل تبديل وضع الطيران",
+    "toggleBt": "تبديل حالة البلوتوث",
+    "toggleBtFailed": "فشل تبديل حالة البلوتوث",
+    "toggleGps": "تبديل حالة GPS",
+    "toggleGpsFailed": "فشل تبديل حالة GPS",
+    "toggleWifi": "تبديل حالة Wi-Fi",
+    "toggleWifiFailed": "فشل تبديل حالة Wi-Fi",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "فشل تشغيل أمر traceroute",
+    "type": "النوع",
+    "unblacklistDriver": "إلغاء حظر برنامج التشغيل",
+    "unloadDriver": "إلغاء تحميل برنامج التشغيل",
+    "unloadDriverAction": "إلغاء تحميل برنامج التشغيل {{name}}",
+    "unloadDriverFailed": "فشل إلغاء تحميل برنامج التشغيل",
+    "unloadedDrivers": "برامج التشغيل غير المحملة",
+    "whitelistAction": "إلغاء حظر {{name}}",
+    "wifi": "الواي فاي (Wi-Fi)",
+    "wifiHotspot": "نقطة اتصال Wi-Fi",
+    "wifiHotspotDesc": "فتح تكوين نقطة اتصال Wi-Fi",
+    "wirelessControllers": "المحولات اللاسلكية"
   },
-  "systemTools": {
-    "title": "إعدادات ",
-    "icon": "Icon",
-    "titleTwo": "النظام",
-    "systemdServices": "خدمات Systemd",
-    "systemSettings": "إعدادات النظام",
-    "components": "مكونات النظام",
-    "locales": "اللغات المحلية (Locales)",
-    "kernels": "الأنوية (Kernels)",
-    "packages": "حزم إضافية",
-    "audio": {
-      "title": "الصوت",
-      "icon": "Icon",
-      "alsa": {
-        "title": "دعم ALSA"
-      },
-      "jack": {
-        "title": "دعم JACK"
-      },
-      "pulseaudio": {
-        "title": "دعم PulseAudio"
-      },
-      "pipewire": {
-        "title": "دعم PipeWire"
-      },
-      "userRealtime": {
-        "title": "المستخدم في مجموعة realtime"
-      },
-      "jamesdsp": {
-        "title": "تم تثبيت JamesDSP"
-      }
-    },
-    "virtualization": {
-      "title": "المحاكاة الافتراضية (Virtualization)",
-      "icon": "Icon",
-      "qemu": {
-        "title": "تم تثبيت QEMU"
-      },
-      "kvm": {
-        "title": "دعم KVM"
-      },
-      "virtManager": {
-        "title": "دعم Virt-manager"
-      },
-      "libvirtdEnabled": {
-        "title": "تم تمكين Libvirtd"
-      },
-      "userVboxUsers": {
-        "title": "المستخدم في مجموعة vboxusers"
-      },
-      "virtualbox": {
-        "title": "دعم VirtualBox"
-      },
-      "userLibvirt": {
-        "title": "المستخدم في مجموعة libvirt"
-      },
-      "userKvm": {
-        "title": "المستخدم في مجموعة kvm"
-      }
-    },
-    "containers": {
-      "title": "الحاويات (Containers)",
-      "icon": "Icon",
-      "docker": {
-        "title": "تم تثبيت Docker"
-      },
-      "dockerEnabled": {
-        "title": "تم تمكين Docker"
-      },
-      "dockerCompose": {
-        "title": "تم تثبيت Docker Compose"
-      },
-      "userDocker": {
-        "title": "المستخدم في مجموعة docker"
-      },
-      "podman": {
-        "title": "تم تثبيت Podman"
-      },
-      "podmanDocker": {
-        "title": "محاكاة Docker عبر Podman"
-      },
-      "podmanDesktop": {
-        "title": "تم تثبيت Podman Desktop"
-      },
-      "distrobox": {
-        "title": "تم تثبيت DistroBox"
-      },
-      "boxbuddy": {
-        "title": "تم تثبيت BoxBuddy"
-      }
-    },
-    "network": {
-      "title": "الشبكة",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "دعم NetworkManager"
-      },
-      "networkManagerEnabled": {
-        "title": "تم تمكين NetworkManager"
-      },
-      "modemManagerEnabled": {
-        "title": "تم تمكين ModemManager"
-      }
-    },
-    "bluetooth": {
-      "title": "بلوتوث",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "دعم بلوتوث"
-      },
-      "bluetoothEnabled": {
-        "title": "تم تمكين بلوتوث"
-      },
-      "userBluetooth": {
-        "title": "المستخدم في مجموعة bluetooth"
-      },
-      "autoConnect": {
-        "title": "تم تثبيت الاتصال التلقائي"
-      },
-      "autoConnectEnabled": {
-        "title": "تم تمكين الاتصال التلقائي"
-      }
-    },
-    "printing": {
-      "title": "الطباعة",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "دعم الطباعة"
-      },
-      "cupsEnabled": {
-        "title": "تم تمكين CUPS"
-      },
-      "scanningSupport": {
-        "title": "دعم المسح الضوئي"
-      },
-      "sanedEnabled": {
-        "title": "تم تمكين saned"
-      },
-      "userCups": {
-        "title": "المستخدم في مجموعة cups"
-      },
-      "userScanner": {
-        "title": "المستخدم في مجموعة scanner"
-      },
-      "userLp": {
-        "title": "المستخدم في مجموعة lp"
-      }
-    },
-    "firewall": {
-      "title": "جدار الحماية",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "تم تثبيت Firewalld"
-      },
-      "firewalldEnabled": {
-        "title": "تم تمكين firewalld"
-      },
-      "ufw": {
-        "title": "تم تثبيت UFW"
-      },
-      "ufwEnabled": {
-        "title": "تم تمكين UFW"
-      },
-      "opensnitch": {
-        "title": "تم تثبيت OpenSnitch"
-      },
-      "opensnitchEnabled": {
-        "title": "تم تمكين OpenSnitch"
-      }
-    },
-    "misc": {
-      "title": "متنوعات",
-      "icon": "Icon",
-      "gns": {
-        "title": "تم تثبيت Garuda Nix Subsystem"
-      }
-    }
-  },
-  "systemSettings": {
-    "defaultShellConfigs": "تثبيت الإعدادات الافتراضية",
-    "defaultDns": "تعيين DNS الافتراضي",
-    "defaultShell": "تعيين صدفة تسجيل الدخول",
+  "operation": {
+    "abort": "إلغاء",
+    "addGroup": "إضافة مستخدم إلى المجموعة",
+    "args": "الوسائط (Arguments)",
+    "disableHblock": "تعطيل Hblock",
+    "disableService": "تعطيل الخدمة",
     "enableHblock": "تمكين Hblock",
-    "enableIwd": "استخدام IWD بدلاً من wpa_supplicant",
-    "common": {
-      "title": "عام",
-      "icon": "Icon",
-      "psd": {
-        "title": "تم تثبيت Profile-sync-daemon"
-      },
-      "psdEnabled": {
-        "title": "تم تمكين Profile-sync-daemon"
-      },
-      "oomd": {
-        "title": "تم تمكين Systemd-oomd"
-      },
-      "guestUser": {
-        "title": "تمكين حساب الضيف"
-      }
+    "enableService": "تمكين الخدمة",
+    "installApps": "تثبيت التطبيقات",
+    "logs": "السجلات",
+    "remove": "إزالة",
+    "removeApps": "إزالة التطبيقات",
+    "removeGroup": "إزالة مستخدم من المجموعة",
+    "resetDnsServer": "إعادة تعيين خادم DNS",
+    "run": "شغل الآن",
+    "setDefaultShell": "تعيين الصدفة الافتراضية",
+    "setNewDnsServer": "تعيين خادم DNS جديد"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "هناك عمليات قيد التشغيل، سأقوم فقط بإزالة تلك التي تم إنجازها بالفعل.",
+    "refusing": "رفض التنفيذ",
+    "thisOperationRunning": "هل فقدت عقلك؟ هذه العملية قيد التشغيل حاليًا!"
+  },
+  "os-interact": {
+    "boot-options": "تطبيق إعدادات الإقلاع",
+    "configs": "تغيير تكوينات النظام",
+    "configs-system": "تغيير تكوينات النظام",
+    "configs-user": "تغيير تكوينات المستخدم",
+    "garuda-update-config": "تطبيق إعدادات Garuda Update",
+    "groups": "تغيير مجموعات المستخدمين",
+    "locales": "تغيير اللغات المحلية الممكنة",
+    "packages": "تغيير الحزم المثبتة",
+    "packages-aur": "تغيير حزم AUR",
+    "services": "تغيير الخدمات",
+    "services-user": "تغيير خدمات المستخدم"
+  },
+  "packages": {
+    "any": "أي",
+    "clear": "مسح",
+    "description": "الوصف",
+    "documents": "المستندات",
+    "icon": "الأيقونة",
+    "internet": "الإنترنت",
+    "multimedia": "الوسائط المتعددة",
+    "name": "الاسم",
+    "notFound": "لم يتم العثور على حزم",
+    "other": "أخرى",
+    "science": "العلوم",
+    "search": "بحث",
+    "searchKey": "أدخل كلمة بحث",
+    "security": "الأمان",
+    "selected": "محدد",
+    "status": "الحالة",
+    "title": "استكشاف ",
+    "titleTwo": "التطبيقات",
+    "url": "الرابط"
+  },
+  "settings": {
+    "autoRefresh": "تمكين التحديث التلقائي لخدمات systemd",
+    "autoStart": "بدء تشغيل التطبيق تلقائيًا",
+    "backgroundFit": "ملاءمة الخلفية مع التطبيق",
+    "backgroundSettings": "إعدادات الخلفية",
+    "blurBackground": "تمويه الخلفية",
+    "blurStrength": "شدة التمويه",
+    "clearBackground": "مسح الخلفية",
+    "copyDiagnostics": "نسخ التشخيصات إلى الحافظة",
+    "customBackground": "خلفية مخصصة",
+    "darkMode": "تمكين الوضع الداكن",
+    "language": "تكوين اللغة النشطة",
+    "leftButtons": "إظهار أزرار النافذة على اليسار",
+    "logLevel": "حدد مستوى السجل",
+    "noBackgroundSelected": "لم يتم تحديد خلفية",
+    "selectOptions": "الاختيارات",
+    "showMainLinks": "إظهار الروابط في الصفحة الرئيسية",
+    "systemdUserContext": "إظهار خدمات Systemd للمستخدم",
+    "themeLabel": "سمة التصميم الأساسية",
+    "title": "إعدادات ",
+    "titleTwo": "التطبيق",
+    "toggleOptions": "خيارات التبديل"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "انقر فوق 'تطبيق' لبدء عملية التثبيت والتكوين.",
+      "failedBody": "حدث خطأ ما أثناء التثبيت. يمكنك إعادة المحاولة أو الرجوع لتعديل اختياراتك.",
+      "failedHeader": "فشل التنفيذ",
+      "header": "جاهز للتطبيق"
     },
-    "performance": {
-      "title": "الأداء",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "تعديلات الأداء"
-      },
-      "ananicyCpp": {
-        "title": "تم تثبيت Ananicy C++"
-      },
-      "ananicyCppEnabled": {
-        "title": "تم تمكين Ananicy C++"
-      },
-      "bpftune": {
-        "title": "تم تثبيت Bpftune"
-      },
-      "bpftuneEnabled": {
-        "title": "تم تمكين Bpftune"
-      },
-      "preload": {
-        "title": "تم تثبيت Preload"
-      },
-      "preloadEnabled": {
-        "title": "تم تمكين Preload"
-      },
-      "irqbalanceEnabled": {
-        "title": "تم تمكين IRQbalance"
-      }
+    "autoCategories": {
+      "audio": "الصوتيات",
+      "browsers": "المتصفحات",
+      "communication": "التواصل والمحادثة",
+      "development": "التطوير والبرمجة",
+      "gaming": "الألعاب",
+      "graphics": "الرسوميات والتصميم",
+      "inputMethod": "طرق الإدخال",
+      "internet": "الإنترنت",
+      "kernels": "الأنوية",
+      "mail": "البريد الإلكتروني",
+      "multimedia": "الوسائط المتعددة",
+      "office": "المكتب والإنتاجية",
+      "other": "أخرى",
+      "pkgmngrs": "مراكز البرمجيات",
+      "video": "الفيديو",
+      "virtualization": "المحاكاة الافتراضية"
     },
-    "powersave": {
-      "title": "توفير الطاقة",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "تعديلات توفير الطاقة"
-      },
-      "tlp": {
-        "title": "تم تثبيت TLP"
-      },
-      "tlpEnabled": {
-        "title": "تم تمكين TLP"
-      },
-      "autoCpufreq": {
-        "title": "تم تثبيت Auto-cpufreq"
-      },
-      "autoCpufreqEnabled": {
-        "title": "تم تمكين Auto-cpufreq"
-      },
-      "thermald": {
-        "title": "تم تثبيت Thermald"
-      },
-      "thermaldEnabled": {
-        "title": "تم تمكين Thermald"
-      },
-      "powerProfilesDaemon": {
-        "title": "تم تثبيت Power profiles daemon"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "تم تمكين Power profiles daemon"
-      },
-      "intelUndervolt": {
-        "title": "تم تثبيت Intel-undervolt"
-      },
-      "intelUndervoltEnabled": {
-        "title": "تم تمكين Intel-undervolt"
-      }
+    "autoSoftware": {
+      "0ad": "لعبة استراتيجية في الوقت الفعلي ثلاثية الأبعاد ذات طابع تاريخي",
+      "abiWord": "معالج نصوص كامل الميزات وخفيف الوزن",
+      "aisleriot": "مجموعة من ألعاب الورق (سوليتير)",
+      "ansible": "المجموعة الرسمية من حزم وتجميعات Ansible",
+      "appimagePool": "عميل حديث لمتجر AppImageHub",
+      "ardour": "محطة عمل صوتية رقمية بمستوى احترافي",
+      "asian": "حزمة مجمعة تحتوي على خطوط آسيوية شائعة",
+      "audacious": "مشغل صوتيات خفيف ومتقدم",
+      "audacity": "برنامج لتحرير ومعالجة الموجات الصوتية الرقمية",
+      "bakaMplayer": "مشغل وسائط متعدد المنصات يعتمد على libmpv",
+      "bauh": "واجهة رسومية شاملة لإدارة التطبيقات والحزم",
+      "bazaar": "متجر تطبيقات يركز على حزم Flatpak",
+      "birdfont": "محرر خطوط للرسومات المتجهية",
+      "bitwigStudio": "محطة عمل صوتية رقمية لإنتاج الموسيقى",
+      "blender": "حزمة متكاملة لإنشاء الرسومات والرسوم المتحركة ثلاثية الأبعاد 3D",
+      "brasero": "أداة لنسخ وحرق أقراص CD/DVD",
+      "brave": "متصفح ويب يحظر الإعلانات وأجهزة التتبع افتراضيًا",
+      "calligra": "مجموعة تطبيقات للإنتاجية والاستخدام الإبداعي",
+      "chromium": "متصفح ويب مصمم للسرعة والبساطة والأمان",
+      "clawsMail": "عميل بريد إلكتروني معتمد على +GTK",
+      "cockpit": "واجهة مستخدم مستندة إلى الويب لخوادم لينكس",
+      "conky": "أداة خفيفة لمراقبة موارد النظام على سطح المكتب",
+      "converseen": "محول ومعدل أحجام صور بالدُفعات",
+      "darktable": "أداة لتنظيم وتظهير الصور الخام (RAW)",
+      "deluge": "عميل BitTorrent خفيف وكامل الميزات",
+      "digikam": "تطبيق متقدم لإدارة وتنظيم الصور الرقمية",
+      "discord": "محادثات صوتية ونصية شاملة",
+      "discover": "مدير التطبيقات والموارد لبيئة KDE",
+      "docker": "حزم وشحن وتشغيل التطبيقات في حاويات",
+      "dragon": "مشغل وسائط متعددة يركز على البساطة",
+      "droidcam": "تحويل هاتفك/جهازك اللوحي إلى كاميرا ويب",
+      "easytag": "تطبيق لعرض وتعديل وسوم الملفات الصوتية",
+      "element": "عميل تعاون وتواصل أنيق لـ Matrix",
+      "elisa": "مشغل موسيقى بسيط من تطوير KDE",
+      "evolution": "إدارة بريدك الإلكتروني وجهات الاتصال والمواعيد",
+      "falkon": "متصفح QtWebEngine متعدد المنصات",
+      "fdm": "مسرع ومنظم تنزيل حديث وقوي (Free Download Manager)",
+      "filezilla": "عميل FTP و FTPS و SFTP سريع وموثوق",
+      "firedragon": "تفريعة من Floorp موجهة للخصوصية مع هوية Garuda",
+      "firedragonCatppuccin": "متصفح Firedragon بسمة Catppuccin",
+      "firefox": "متصفح ويب سريع وخاص وآمن",
+      "firefoxEsr": "نسخة الدعم الممتد من Firefox (ESR)",
+      "fontForge": "محرر خطوط نقطية ومتجهية",
+      "fractal": "تطبيق مراسلة جماعية لـ Matrix مخصص لـ GNOME",
+      "freeCad": "برنامج نمذجة هندسية بارامترية ثلاثية الأبعاد (CAD)",
+      "freeOffice": "حزمة مكتبية متوافقة تمامًا مع Microsoft Office",
+      "geary": "عميل بريد إلكتروني خفيف لـ GNOME",
+      "genymotion": "بيئة افتراضية متقدمة لتشغيل ومحاكاة أندرويد",
+      "gimp": "برنامج جنو لمعالجة وتعديل الصور (GIMP)",
+      "github": "واجهة رسومية لإدارة Git و GitHub",
+      "gitKraken": "عميل Git بديهي وسريع وجميل",
+      "gnomeBoxes": "تطبيق بسيط للوصول إلى الأنظمة الافتراضية وإنشائها",
+      "gnomeBuilder": "بيئة تطوير متكاملة لكتابة برمجيات GNOME",
+      "gnomeFirmware": "إدارة البرامج الثابتة (Firmware) على الأجهزة المدعومة",
+      "gnomeSoftware": "مدير التطبيقات والموارد لبيئة GNOME",
+      "gnu": "محرر نصوص تفاعلي قابل للتوسيع والتخصيص",
+      "gnuCash": "تطبيق إدارة الحسابات المالية والمحاسبة",
+      "gnumeric": "تطبيق جداول بيانات مخصص لـ GNOME",
+      "handbrake": "محول ومرمز فيديو متعدد الخيوط (Multithreaded)",
+      "hedgewars": "لعبة مدفعية واستراتيجية تعتمد على تبادل الأدوار",
+      "homebank": "برنامج مجاني وسهل للمحاسبة الشخصية",
+      "hypnotix": "تطبيق لبث قنوات IPTV",
+      "indic": "طرق إدخال للغات الهندية",
+      "inkscape": "محرر رسومات متجهية (Vector) احترافي",
+      "intellijIdea": "بيئة تطوير متكاملة لـ Java ولغات البرمجة الأخرى",
+      "japanese": "طرق إدخال لليابانية",
+      "jenkins": "خادم تكامل مستمر (CI) قابل للتوسيع",
+      "jitsiMeet": "تطبيق سطح المكتب لاجتماعات Jitsi Meet",
+      "joplin": "تطبيق لتدوين الملاحظات وإدارة المهام",
+      "k3b": "تطبيق غني بالميزات لحرق الأقراص المدمجة",
+      "kapman": "نسخة مطابقة للعبة الشهيرة Pac-Man",
+      "kdenlive": "محرر فيديو لاخطي احترافي",
+      "kDevelop": "بيئة تطوير متكاملة لـ ++C باستخدام تقنيات KDE",
+      "keepassXc": "مدير كلمات مرور آمن ومتعدد المنصات",
+      "kiCad": "مجموعة أدوات لتصميم المخططات الإلكترونية ولوحات الدوائر المطبوعة (PCB)",
+      "kid3": "محرر وسوم وبيانات الصوتيات",
+      "kmahjongg": "لعبة مطابقة البلاط للاعب أو لاعبين",
+      "kmail": "عميل البريد الإلكتروني من KDE",
+      "kMyMoney": "مدير شؤون مالية شخصية متكامل",
+      "knights": "رقعة شطرنج من تطوير KDE",
+      "kodi": "مشغل وسائط ومركز ترفيهي منزلي",
+      "kolourpaint": "برنامج رسم بسيط من تطوير KDE",
+      "korean": "طرق إدخال للكورية",
+      "krita": "برنامج رسم وتلوين رقمي احترافي",
+      "kwave": "محرر صوتيات لبيئة KDE",
+      "libreCad": "أداة رسم وتصميم هندسي ثنائية الأبعاد (2D CAD)",
+      "libreOfficeFresh": "أحدث إصدار من حزمة LibreOffice",
+      "libreOfficeStill": "الإصدار المستقر من حزمة LibreOffice",
+      "librewolf": "متصفح ويب يركز على الخصوصية والأمان والحرية",
+      "linuxCachyos": "نواة CachyOS عالية التحسين والكفاءة",
+      "linuxHardened": "نواة لينكس معززة الأمان (Hardened)",
+      "linuxLts": "نواة لينكس طويلة الدعم (LTS)",
+      "linuxMainline": "أحدث إصدار رئيسي لنواة لينكس (Mainline)",
+      "linuxXanmod": "نواة مخصصة بترقيعات XanMod لتعزيز الأداء",
+      "linuxXanmodLts": "نواة مخصصة طويلة الدعم (LTS) بترقيعات XanMod",
+      "lmms": "محطة عمل رقمية وموزع موسيقي",
+      "lollypop": "مشغل موسيقى حديث لبيئة GNOME",
+      "luanti": "محرك ألعاب فوكسل (Voxel)",
+      "luminanceHdr": "سير عمل لمعالجة صور النطاق الديناميكي العالي HDR",
+      "mailspring": "عميل بريد إلكتروني أنيق وسريع",
+      "mari0": "لعبة ماريو مع آليات سلاح لعبة Portal",
+      "mediaElch": "مدير وسائط ومعلومات لـ Kodi",
+      "microsoftTeams": "عميل غير رسمي لـ Microsoft Teams",
+      "mixxx": "برنامج DJ مجاني ومفتوح المصدر",
+      "mumble": "برنامج محادثة صوتية عالي الجودة ومنخفض التأخير",
+      "museScore": "إنشاء وعزف وطباعة النوتات الموسيقية الرائعة",
+      "myPaint": "تطبيق رسم سريع وسهل للفنانين الرقميين",
+      "mystiq": "محول صوت وفيديو معتمد على FFmpeg",
+      "neochat": "عميل لبروتوكول المحادثات اللامركزي Matrix",
+      "netbeans": "بيئة تطوير متكاملة لـ Java و HTML5 و PHP و C و ++C",
+      "nextcloudClient": "عميل مزامنة سطح المكتب لـ Nextcloud",
+      "nitroshare": "تطبيق بسيط لنقل الملفات عبر الأجهزة",
+      "obsidian": "قاعدة معرفية تعمل على ملفات Markdown النصية المحلية",
+      "obsStudio": "برنامج للبث المباشر وتسجيل الشاشة",
+      "octopi": "واجهة رسومية قوية لـ Pacman باستخدام Qt",
+      "onlyOffice": "حزمة مكتبية تجمع بين محررات النصوص والجداول والعروض التقديمية",
+      "openToonz": "برنامج مخصص لإنتاج الرسوم المتحركة ثنائية الأبعاد 2D",
+      "pencil2d": "أداة لصنع رسوم متحركة مرسومة يدويًا ثنائية الأبعاد",
+      "podman": "محرك حاويات بدون خدمة خلفية لإدارة الحاويات",
+      "postman": "بناء واختبار وتوثيق واجهات برمجة التطبيقات (APIs)",
+      "prometheus": "مجموعة أدوات لمراقبة الأنظمة والتنبيهات",
+      "puppet": "إطار عمل وتطبيق لأتمتة الخوادم",
+      "putty": "عميل SSH/Telnet مدمج للطرفية",
+      "pyCharm": "بيئة تطوير متكاملة لـ Python للمطورين المحترفين",
+      "qbittorrent": "عميل BitTorrent متقدم مبني على مكتبة Qt",
+      "qtCreator": "بيئة تطوير متكاملة (IDE) خفيفة ومتعددة المنصات",
+      "qutebrowser": "متصفح موجه للوحة المفاتيح بطابع Vim ومبني على Python",
+      "remmina": "عميل سطح مكتب بعيد مكتوب بـ +GTK",
+      "rosegarden": "موزع ومحرر نوتات MIDI/صوتي",
+      "shortwave": "مشغل راديو عبر الإنترنت",
+      "shotcut": "محرر فيديو متقدم ومتعدد المنصات",
+      "signal": "تطبيق المراسلة الآمن والخاص Signal للينكس",
+      "simplifiedChinese": "طرق إدخال للصينية المبسطة",
+      "sinhalese": "طرق إدخال للغة السنهالية",
+      "skrooge": "مدير الميزانية والشؤون المالية الشخصية لـ KDE",
+      "slack": "عميل سطح المكتب لـ Slack",
+      "smPlayer": "مشغل وسائط مع مرمزات (Codecs) مدمجة",
+      "soundConverter": "تطبيق بسيط لتحويل صيغ الملفات الصوتية",
+      "soundwire": "بث الصوت من جهاز الكمبيوتر إلى الأجهزة الأخرى",
+      "strawberryPlayer": "مشغل موسيقى موجه لعشاق الصوتيات",
+      "subtitleComposer": "محرر ترجمات ونصوص الفيديو",
+      "superTux": "لعبة منصات ومغامرات ثنائية الأبعاد كلاسيكية",
+      "superTuxKart": "لعبة سباق سيارات كارت تضم Tux",
+      "sweetHome3d": "تطبيق لتصميم الديكور الداخلي والمنازل",
+      "synfigStudio": "برنامج رسوم متحركة متجهية احترافي ثنائي الأبعاد",
+      "teeworlds": "لعبة إطلاق نار ثنائية الأبعاد سريعة الإيقاع ومتعددة اللاعبين",
+      "telegram": "عميل Telegram الرسمي لسطح المكتب",
+      "terraform": "أداة لبناء وتحديث البنية التحتية كشفرة برمجية",
+      "thai": "طرق إدخال للتايلاندية",
+      "thunderbird": "قارئ بريد إلكتروني وأخبار مستقل",
+      "torBrowser": "تصفح شبكة Tor بأمان ومجهولية",
+      "traditionalChinese": "طرق إدخال للصينية التقليدية",
+      "transmageddon": "تطبيق لترميز وتحويل صيغ الفيديو",
+      "twitchGui": "متصفح Twitch.tv متعدد المنصات",
+      "ungoogledChromium": "متصفح Chromium مع إزالة كافة تكاملات Google",
+      "variety": "تغيير خلفية الشاشة تلقائيًا على فترات منتظمة",
+      "vietnamese": "طرق إدخال للفيتنامية",
+      "vim": "محرر نصوص طرفي عالي التخصيص",
+      "virtManager": "واجهة سطح مكتب لإدارة الأجهزة الافتراضية",
+      "virtualBox": "برنامج المحاكاة الافتراضية متعدد المنصات",
+      "visualStudioCode": "محرر شفرات برمجية لبناء وتصحيح التطبيقات الحديثة",
+      "visualStudioCodeOss": "بناء مفتوح المصدر من Visual Studio Code",
+      "vivaldi": "متصفح متقدم مصمم للمستخدمين المحترفين",
+      "vlc": "مشغل وسائط متعدد الاستخدامات والمنصات",
+      "vscodium": "نسخ ثنائية من VSCode خالية من القياس عن بُعد (Telemetry)",
+      "warpinator": "إرسال واستقبال الملفات عبر الشبكة المحلية",
+      "wings3d": "برنامج نمذجة ثلاثية الأبعاد يعتمد بنية بيانات Winged Edge",
+      "wire": "برنامج مراسلة ومكالمات فيديو مشفر من البداية إلى النهاية",
+      "wpsOffice": "حزمة إنتاجية مكتبية متكاملة",
+      "xfburn": "أداة بسيطة لحرق أقراص CD/DVD",
+      "xonotic": "لعبة إطلاق نار من منظور الشخص الأول سريعة الإيقاع ومتعددة المنصات",
+      "xtreme": "مسرع تنزيل قوي وأداة لتنزيل مقاطع الفيديو",
+      "yakuake": "محاكي طرفية منسدل من الأعلى",
+      "zedEditor": "محرر شفرات برمجية عالي الأداء يدعم العمل الجماعي",
+      "zoom": "خدمة مؤتمرات الفيديو والويب"
     },
-    "rightclickEmulation": {
-      "title": "محاكاة النقر بالزر الأيمن",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "محاكاة النقر بالزر الأيمن بالضغط المطول في Evdev"
-      },
-      "evdevRce": {
-        "title": "تم تمكين Evdev RCE"
-      }
-    }
+    "buttons": {
+      "apply": "تطبيق",
+      "back": "السابق",
+      "finish": "إنهاء",
+      "next": "التالي",
+      "retry": "إعادة المحاولة"
+    },
+    "softwareSelection": {
+      "body": "حدد البرامج التي ترغب في تثبيتها.",
+      "header": "اختيار البرمجيات"
+    },
+    "steps": {
+      "apply": "تطبيق التغييرات"
+    },
+    "success": {
+      "archWiki": "ويكي Arch Linux",
+      "body": "نظامك مهيأ وجاهز للاستخدام!",
+      "finish": "إنهاء الإعداد",
+      "forum": "منتدى Garuda",
+      "garudaWiki": "ويكي Garuda Linux",
+      "reboot": "يوصى بإعادة تشغيل الجهاز.",
+      "title": "نجاح!"
+    },
+    "tasks": {
+      "installSoftware": "تثبيت البرمجيات المحددة"
+    },
+    "title": "مساعد الإعداد"
   },
   "shells": {
     "fish": {
       "hint": "تعيين fish كصدفة افتراضية قد يسبب مشاكل مع برامج أخرى. يُنصح بتعيينها كافتراضية عبر إعدادات الطرفية بدلاً من ذلك."
     }
   },
-  "confirmation": {
-    "accept": "قبول",
-    "reject": "إلغاء",
-    "exitApp": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
-    "exitAppRunningAction": "هل أنت متأكد أنك تريد الخروج من التطبيق؟ هناك إجراء قيد التشغيل!",
-    "resetConfigsHeader": "إعادة تعيين الإعدادات؟",
-    "resetConfigsBody": "هل أنت متأكد أنك تريد إعادة تعيين الإعدادات التالية؟",
-    "exitAppHeader": "الخروج من التطبيق؟",
-    "applyOperations": "تطبيق العمليات؟",
-    "applyOperationsBody": "هل أنت متأكد أنك تريد تطبيق جميع العمليات المعلقة؟"
-  },
-  "error": {
-    "sudoPassword": "لا يبدو أن هذه هي كلمة المرور الصحيحة. يرجى المحاولة مرة أخرى."
-  },
-  "operation": {
-    "removeApps": "إزالة التطبيقات",
-    "installApps": "تثبيت التطبيقات",
-    "addGroup": "إضافة مستخدم إلى المجموعة",
-    "removeGroup": "إزالة مستخدم من المجموعة",
-    "disableService": "تعطيل الخدمة",
-    "enableService": "تمكين الخدمة",
-    "setDefaultShell": "تعيين الصدفة الافتراضية",
-    "enableHblock": "تمكين Hblock",
-    "disableHblock": "تعطيل Hblock",
-    "setNewDnsServer": "تعيين خادم DNS جديد",
-    "resetDnsServer": "إعادة تعيين خادم DNS",
-    "args": "الوسائط (Arguments)",
+  "systemdServices": {
+    "actions": "الإجراءات",
+    "active": "نشطة",
+    "autoRefresh": "تحديث تلقائي",
+    "clear": "مسح",
+    "description": "الوصف",
+    "disable": "تعطيل",
+    "enable": "تمكين",
+    "error": "حدث خطأ أثناء جلب الخدمات، يرجى المحاولة مرة أخرى.",
+    "errorTitle": "خطأ في جلب الخدمات",
+    "excludeDisabled": "استبعاد المعطلة",
+    "hideDead": "إخفاء الخدمات المتوقفة (Dead)",
+    "hideDeadTip": "تبديل لإظهار/إخفاء الخدمات في حالات 'dead' أو 'failed' أو 'exited'",
+    "includeDisabled": "تضمين المعطلة",
+    "load": "تحميل",
     "logs": "السجلات",
-    "remove": "إزالة",
-    "abort": "إلغاء",
-    "run": "شغل الآن"
+    "mask": "حجب (Mask)",
+    "notFound": "لم يتم العثور على خدمات",
+    "reload": "إعادة تحميل",
+    "restart": "إعادة تشغيل",
+    "searchKey": "أدخل كلمة بحث",
+    "show": "إظهار",
+    "showAll": "إظهار الكل",
+    "start": "بدء",
+    "state": "الحالة",
+    "stop": "إيقاف",
+    "systemContext": "إظهار خدمات النظام",
+    "unit": "اسم الوحدة",
+    "unmask": "إلغاء الحجب (Unmask)",
+    "userContext": "إظهار خدمات المستخدم"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "إنشاء حساب مستخدم 'ضيف' مؤقت بدون كلمة مرور، ومعزول عن ملفاتك الشخصية، ويتم مسح بياناته عند تسجيل الخروج.",
+        "title": "حساب الضيف"
+      },
+      "oomd": {
+        "description": "خدمة إدارة نفاد الذاكرة من systemd. تراقب ذاكرة النظام وتنهي العمليات المستهلكة للذاكرة تلقائيًا قبل تجمد الجهاز بالكامل.",
+        "title": "systemd-oomd"
+      },
+      "psd": {
+        "description": "نقل ملف تعريف متصفح الويب الخاص بك (مثل Firefox أو Brave) إلى الذاكرة العشوائية RAM المؤقتة (tmpfs) لتسريع التصفح وتقليل استهلاك قرص SSD.",
+        "title": "Profile-sync-daemon"
+      },
+      "psdEnabled": {
+        "description": "تشغيل Profile-sync-daemon لإدارة ملفات تعريف المتصفحات تلقائيًا في الذاكرة العشوائية RAM.",
+        "title": "خدمة PSD"
+      },
+      "title": "عام"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "تعطيل ميزة تعليق العقد في PipeWire لإبقاء أجهزة الصوت نشطة دائمًا، وتفادي أصوات الطقطقة المزعجة عند استيقاظ بطاقات الصوت.",
+        "title": "منع تعليق الصوت"
+      },
+      "discordDisableAutoupdate": {
+        "description": "منع Discord من طلب تنزيل وتثبيت التحديثات، حيث لا حاجة لها في Arch Linux لأن Pacman يتكفل بالتحديثات.",
+        "title": "تعطيل التحديث التلقائي لـ Discord"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "تعديل في KWin يزيل شريط العنوان وحواف النوافذ عند تكبير التطبيق في KDE Plasma لتوفير مساحة رأسية أكبر.",
+        "title": "تكبير النوافذ بدون حواف في KDE"
+      },
+      "title": "تكوينات النظام"
+    },
+    "defaultDns": "تعيين DNS الافتراضي",
+    "defaultDnsTip": "تغيير مزود نظام أسماء النطاقات (DNS) الافتراضي لاتصالك بالإنترنت وتجاوز إعدادات مزود الخدمة، لتحسين السرعة أو الخصوصية أو تجاوز الحجب.",
+    "defaultShell": "تعيين صدفة تسجيل الدخول",
+    "defaultShellConfigs": "تثبيت الإعدادات الافتراضية",
+    "defaultShellTip": "تغيير صدفة تسجيل الدخول الافتراضية للطرفية. يوصى باستخدام صدفة متوافقة مع POSIX (مثل Bash أو Zsh) واستخدام صدفات مثل Fish عبر إعدادات محاكي الطرفية.",
+    "enableHblock": "تمكين Hblock",
+    "enableHblockTip": "تمكين Hblock، وهو سكربت يحظر الإعلانات وأجهزة التتبع ونطاقات البرمجيات الخبيثة على مستوى النظام عبر توجيهها محليًا في ملف /etc/hosts.",
+    "enableIwd": "استخدام IWD بدلاً من wpa_supplicant",
+    "enableIwdTip": "خدمة iNet Wireless Daemon (iwd). بديل حديث وخفيف لـ wpa_supplicant لإدارة اتصالات Wi-Fi، وغالبًا ما يتصل بشكل أسرع ويدير التجوال بشكل أفضل.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "تخطي التحقق من المساحة المتوفرة على القرص قبل تثبيت الحزم.",
+        "title": "تخطي فحص مساحة القرص"
+      },
+      "pacmanNoconfirm": {
+        "description": "تشغيل pacman دون مطالبات التأكيد لتسريع عملية التحديث.",
+        "title": "تشغيل pacman غير تفاعلي"
+      },
+      "skipMirrorlist": {
+        "description": "تخطي تحديث قائمة مرايا Arch قبل تشغيل تحديثات النظام.",
+        "title": "تخطي تحديث قائمة المرايا"
+      },
+      "title": "تحديث Garuda",
+      "updateAur": {
+        "description": "تحديث الحزم المثبتة من مستودع مستخدمي Arch (AUR) أثناء تحديث النظام.",
+        "title": "تحديث حزم AUR"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "خدمة التحسين التلقائي للأولويات (Auto NICe). تغير ديناميكيًا أولوية المعالج (niceness) للعمليات النشطة لتسريع التطبيق المستخدم حاليًا.",
+        "title": "Ananicy-C++"
+      },
+      "ananicyCppEnabled": {
+        "description": "تشغيل خدمة Ananicy لإدارة أولويات المعالج للتطبيقات باستمرار.",
+        "title": "خدمة Ananicy"
+      },
+      "bpftune": {
+        "description": "استخدام eBPF لمراقبة معلمات شبكة لينكس وضبطها تلقائيًا في الوقت الفعلي لتحقيق أقصى سرعة إنترنت وأقل زمن تأخير.",
+        "title": "bpftune"
+      },
+      "bpftuneEnabled": {
+        "description": "تشغيل خدمة bpftune لتحسين أداء الشبكة باستمرار.",
+        "title": "خدمة bpftune"
+      },
+      "irqbalanceEnabled": {
+        "description": "توزيع مقاطعات العتاد بالتساوي عبر جميع أنوية المعالج، مما يمنع إرهاق نواة واحدة بمعالجة إشارات الأجهزة.",
+        "title": "IRQbalance"
+      },
+      "performanceTweaks": {
+        "description": "تطبيق مجموعة من إعدادات sysctl والضبط على مستوى النظام لتحسين استجابة وسرعة Garuda القصوى.",
+        "title": "تحسينات الأداء"
+      },
+      "preload": {
+        "description": "خدمة خلفية تراقب التطبيقات الأكثر استخدامًا وتحملها مسبقًا في الذاكرة العشوائية RAM لتقليل زمن إطلاقها بشكل كبير.",
+        "title": "Preload"
+      },
+      "preloadEnabled": {
+        "description": "تشغيل خدمة Preload لتخزين تطبيقاتك شائعة الاستخدام مؤقتًا في الذاكرة.",
+        "title": "خدمة Preload"
+      },
+      "title": "الأداء"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "محسن تلقائي لسرعة المعالج واستهلاكه للطاقة. يخفض سرعة المعالج عند الخمول لتوفير الطاقة ويرفعها عند الحاجة إلى أداء عالٍ.",
+        "title": "Auto-CPUfreq"
+      },
+      "autoCpufreqEnabled": {
+        "description": "تشغيل خدمة auto-cpufreq للإشراف المستمر على ترددات المعالج.",
+        "title": "خدمة Auto-CPUfreq"
+      },
+      "intelUndervolt": {
+        "description": "خفض الجهد الكهربائي لمعالجات Intel لتقليل الحرارة واستهلاك الطاقة دون التضحية بالأداء، مما يطيل عمر البطارية ويمنع الاختناق الحراري.",
+        "title": "Intel Undervolt"
+      },
+      "intelUndervoltEnabled": {
+        "description": "تشغيل الخدمة التي تطبق إعدادات خفض جهد معالجات Intel تلقائيًا عند الإقلاع.",
+        "title": "خدمة Intel Undervolt"
+      },
+      "powerProfilesDaemon": {
+        "description": "يوفر واجهة برمجية للنظام للتبديل بسهولة بين أوضاع 'توفير الطاقة' و 'المتوازن' و 'الأداء'.",
+        "title": "أنماط الطاقة"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "تشغيل الخدمة التي تتيح لبيئة سطح المكتب التبديل بين ملفات تعريف الطاقة.",
+        "title": "خدمة أنماط الطاقة"
+      },
+      "powersaveTweaks": {
+        "description": "تطبيق تعديلات sysctl وإعدادات مصممة لتقليل استهلاك الطاقة على الأجهزة التي تعمل بالبطارية.",
+        "title": "تحسينات توفير الطاقة"
+      },
+      "thermald": {
+        "description": "خدمة إدارة الحرارة من Intel لمنع ارتفاع حرارة النظام عبر التبريد الاستباقي قبل الاضطرار إلى خفض سرعة المعالج.",
+        "title": "thermald"
+      },
+      "thermaldEnabled": {
+        "description": "تشغيل خدمة thermald لمراقبة درجات حرارة معالجات Intel وتفادي ارتفاعها.",
+        "title": "خدمة thermald"
+      },
+      "title": "توفير الطاقة",
+      "tlp": {
+        "description": "أداة متقدمة تعمل تلقائيًا على تحسين عمر البطارية في الحواسيب المحمولة عبر ضبط إعدادات Wi-Fi والأقراص وأجهزة PCIe و USB عند فصل الشاحن.",
+        "title": "TLP"
+      },
+      "tlpEnabled": {
+        "description": "تشغيل خدمة TLP لتطبيق قواعد توفير الطاقة ديناميكيًا عند الاعتماد على البطارية.",
+        "title": "خدمة TLP"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "تكوين libinput لتسجيل الاستمرار بالضغط بإصبع واحد على شاشة اللمس أو لوحة اللمس كنقرة بالزر الأيمن.",
+        "title": "الضغط المطول على لوحة اللمس"
+      },
+      "evdevRce": {
+        "description": "تخصيص الزاوية اليمنى السفلية (أو منطقة محددة) من لوحة اللمس لتعمل دائمًا كنقرة بالزر الأيمن.",
+        "title": "منطقة النقر الأيمن للوحة اللمس"
+      },
+      "title": "محاكاة النقر بالزر الأيمن"
+    }
   },
   "systemStatus": {
-    "pendingUpdates": "تحديثات معلقة",
-    "updates": "يحتوي هذا النظام على تحديثات معلقة (انقر للحصول على معلومات)",
-    "pacFiles": "يحتوي هذا النظام على ملفات .pacnew معلقة، يجب عليك التحقق منها ودمجها! (انقر للحصول على معلومات)",
-    "cancel": "إلغاء",
-    "aurUpdates": "تحديث حزم AUR خارج نطاق هذا التطبيق. يرجى استخدام مساعد AUR مثل Paru، ومراجعة ملفات PKGBUILD قبل التثبيت.",
-    "scheduleUpdates": "جدولة التحديثات",
-    "pendingPacdiff": "ملفات pacdiff معلقة",
-    "findMore": "اكتشف كيفية المتابعة",
-    "warnUpdate": "لم يتم تحديث نظامك منذ أسبوعين. يرجى تحديث نظامك لضمان الأمان والاستقرار.",
     "affectedFiles": "الملفات المتأثرة:",
+    "askHelp": "إذا لم تكن متأكدًا، أغلق النافذة دون حفظ واطلب المساعدة في منتدى Garuda Linux.",
+    "aurUpdates": "تحديث حزم AUR خارج نطاق هذا التطبيق. يرجى استخدام مساعد AUR مثل Paru، ومراجعة ملفات PKGBUILD قبل التثبيت.",
+    "cancel": "إلغاء",
+    "cautionMerge": "كن على علم بأن وضع تغييرات خاطئة في الملف القديم يمكن أن يعطل نظامك.",
+    "findMore": "اكتشف كيفية المتابعة",
+    "healthIssues": "مشكلات في صحة النظام",
+    "healthIssuesFound": "تم العثور على مشكلات صحة النظام التالية:",
     "learnPacdiff": "إذا لم تكن معتادًا على ملفات pacdiff، فتعرف عليها بسرعة.",
     "openMaintenance": "انقر على الزر أدناه للبدء.",
     "openMaintenanceButton": "بدء الدمج",
+    "pacFiles": "يحتوي هذا النظام على ملفات .pacnew معلقة، يجب عليك التحقق منها ودمجها!",
+    "pendingPacdiff": "ملفات pacdiff معلقة",
+    "pendingUpdates": "تحديثات معلقة",
+    "proceed": "إليك كيفية المتابعة:",
+    "proceedMerge": "سيتم فتح Meld لتطبيق التغييرات. على الجانب الأيسر يوجد الملف الجديد، وعلى الجانب الأيمن الملف القديم. انقل أي تغييرات مفيدة تريد دمجها من الجانب الأيسر إلى الجانب الأيمن. انقر فوق زر الحفظ أو CTRL + S عند الانتهاء.",
     "rebootNow": "أعد التشغيل الآن",
     "rebootNowBody": "هل أنت متأكد أنك تريد إعادة التشغيل الآن؟ تأكد من حفظ كل عملك قبل المتابعة.",
-    "warnReboot": "يوصى بشدة بإعادة تشغيل نظامك بعد تطبيق التحديثات، خاصة عند تحديث الأنوية أو بيئات سطح المكتب.",
-    "proceed": "إليك كيفية المتابعة:",
+    "runAurUpdates": "تشغيل تحديثات AUR خارجيًا",
+    "runHealthFix": "تشغيل إصلاح صحة النظام",
+    "scheduleUpdates": "جدولة التحديثات",
     "snapshotCreation": "سيتم إنشاء لقطة Btrfs قبل بدء الدمج.",
-    "proceedMerge": "سيتم فتح Meld لتطبيق التغييرات. على الجانب الأيسر يوجد الملف الجديد، وعلى الجانب الأيمن الملف القديم. انقل أي تغييرات مفيدة تريد دمجها من الجانب الأيسر إلى الجانب الأيمن. انقر فوق زر الحفظ أو CTRL + S عند الانتهاء.",
-    "cautionMerge": "كن على علم بأن وضع تغييرات خاطئة في الملف القديم يمكن أن يعطل نظامك.",
-    "askHelp": "إذا لم تكن متأكدًا، أغلق النافذة دون حفظ واطلب المساعدة في منتدى Garuda Linux.",
-    "runAurUpdates": "تشغيل تحديثات AUR خارجيًا"
+    "updates": "يحتوي هذا النظام على تحديثات معلقة",
+    "warnReboot": "يوصى بشدة بإعادة تشغيل نظامك بعد تطبيق التحديثات، خاصة عند تحديث الأنوية أو بيئات سطح المكتب.",
+    "warnUpdate": "لم يتم تحديث نظامك منذ أسبوعين. يرجى تحديث نظامك لضمان الأمان والاستقرار."
   },
-  "operationManager": {
-    "refusing": "رفض التنفيذ",
-    "pendingOperationsRunning": "هناك عمليات قيد التشغيل، سأقوم فقط بإزالة تلك التي تم إنجازها بالفعل.",
-    "thisOperationRunning": "هل فقدت عقلك؟ هذه العملية قيد التشغيل حاليًا!"
-  },
-  "os-interact": {
-    "packages": "تغيير الحزم المثبتة",
-    "packages-aur": "تغيير حزم AUR",
-    "services": "تغيير الخدمات",
-    "services-user": "تغيير خدمات المستخدم",
-    "groups": "تغيير مجموعات المستخدمين",
-    "locales": "تغيير اللغات المحلية (Locales) الممكنة"
-  },
-  "packages": {
-    "title": "الحزم",
-    "icon": "Icon",
-    "internet": "الإنترنت",
-    "documents": "المستندات",
-    "multimedia": "الوسائط المتعددة",
-    "science": "العلوم",
-    "security": "الأمن",
-    "other": "أخرى",
-    "clear": "مسح",
-    "search": "بحث",
-    "url": "الرابط (URL)",
-    "selected": "محدد",
-    "description": "الوصف",
-    "name": "الاسم",
-    "searchKey": "أدخل كلمة بحث",
-    "notFound": "لم يتم العثور على حزم"
-  },
-  "kernels": {
-    "dkmsModulesBroken": "بعض وحدات DKMS معطلة",
-    "dkmsModulesBrokenTip": "انقر هنا لجدولة تثبيت وحدات DKMS المعطلة",
-    "dkmsModulesMissing": "بعض وحدات DKMS مفقودة",
-    "dkmsModulesMissingTip": "وحدات DKMS مفقودة",
-    "headers": "Headers",
-    "headersMissing": "Headers النواة مفقودة",
-    "headersMissingTip": "انقر هنا لجدولة تثبيت Headers المفقودة",
-    "active": "النواة النشطة:"
-  },
-  "languagePacks": {
-    "locale": "اللغة المحلية (Locale)",
-    "selected": "محدد",
-    "base": "الحزمة الأساسية",
-    "notFound": "لم يتم العثور على حزم لغة",
-    "pkgname": "اسم الحزمة",
-    "description": "هذه هي حزم اللغة للحزم المثبتة لديك، وعادةً ما توفر ترجمات لواجهة المستخدم الرسومية (GUI)."
-  },
-  "settings": {
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "برنامج تشغيل الصوت الأساسي على مستوى النواة. يوفر الدعم المباشر لبطاقات الصوت، على الرغم من التعامل معه عادةً عبر PipeWire.",
+        "title": "ALSA"
+      },
+      "calf": {
+        "description": "Calf Studio Gear. حزمة عالية الجودة من ملحقات معالجة الصوت لمنح EasyEffects تأثيرات استوديو احترافية.",
+        "title": "ملحقات Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "أداة قوية لتحسين جودة الميكروفون وتشغيل الصوت. يُنصح بشدة بتثبيت 'Calf Plugins' و 'LSP Plugins' معها للحصول على تجربة متكاملة.",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "خادم صوتي مخصص ومنخفض التأخير مصمم للإنتاج الصوتي الاحترافي. تتم معالجته أصليًا بواسطة PipeWire حاليًا.",
+        "title": "JACK"
+      },
+      "jamesdsp": {
+        "description": "معالج مؤثرات صوتية لإضافة تعزيز الجهير والمعادلات والمؤثرات الأخرى. يُنصح بتجربة EasyEffects أولاً.",
+        "title": "JamesDSP"
+      },
+      "lspPlugins": {
+        "description": "ملحقات استوديو لينكس (LSP). مجموعة من الأدوات الصوتية الاحترافية مثل المعادلات والضواغط لتوسيع إمكانيات EasyEffects.",
+        "title": "ملحقات LSP Plugins"
+      },
+      "pipewire": {
+        "description": "المعيار الحديث لمعالجة تدفقات الصوت والفيديو على لينكس. يستبدل PulseAudio و JACK بزمن انتقال أقل وأمان أفضل.",
+        "title": "PipeWire"
+      },
+      "pulseaudio": {
+        "description": "خادم الصوت القديم. يتم الاحتفاظ به أساسًا للتوافق، لكن PipeWire حل محله بشكل كبير.",
+        "title": "PulseAudio"
+      },
+      "title": "الصوت",
+      "userRealtime": {
+        "description": "إضافة المستخدم إلى مجموعة realtime لمنح تطبيقات الصوت أولوية أعلى في المعالج لتجنب التقطيع والتأخير.",
+        "title": "مجموعة Realtime"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "إعادة الاتصال التلقائي بأجهزة البلوتوث الموثوقة والمقترنة مسبقًا عند تشغيلها.",
+        "title": "الاتصال التلقائي"
+      },
+      "autoConnectEnabled": {
+        "description": "تشغيل الخدمة الخلفية التي تتولى تلقائيًا إعادة توصيل البلوتوث.",
+        "title": "خدمة الاتصال التلقائي"
+      },
+      "bluetooth": {
+        "description": "حزمة برمجيات BlueZ لبلوتوث لينكس، وتوفر البرامج الأساسية اللازمة للتعامل مع الأجهزة اللاسلكية.",
+        "title": "دعم البلوتوث"
+      },
+      "bluetoothEnabled": {
+        "description": "تشغيل الخدمة الخلفية المطلوبة لإقران أجهزة البلوتوث والاتصال بها.",
+        "title": "خدمة البلوتوث"
+      },
+      "title": "البلوتوث",
+      "userBluetooth": {
+        "description": "إضافة المستخدم إلى مجموعة lp للسماح بتدفقات صوت البلوتوث مع تكوين PulseAudio العام للنظام. هذا غير مطلوب لـ PipeWire.",
+        "title": "مستخدمو البلوتوث على PulseAudio"
+      }
+    },
+    "components": "مكونات النظام",
+    "containers": {
+      "boxbuddy": {
+        "description": "تطبيق رسومي لإدارة بيئات Distrobox واستخدامها بسهولة.",
+        "title": "BoxBuddy"
+      },
+      "distrobox": {
+        "description": "إنشاء حاويات متكاملة بإحكام لتوزيعات لينكس الأخرى، مما يتيح لك تشغيل تطبيقات Ubuntu أو Fedora أو Arch داخل Garuda.",
+        "title": "Distrobox"
+      },
+      "docker": {
+        "description": "محرك الحاويات القياسي في الصناعة لتحزيم وتشغيل التطبيقات المعزولة.",
+        "title": "Docker"
+      },
+      "dockerCompose": {
+        "description": "أداة لتعريف وتشغيل تطبيقات Docker المتعددة الحاويات عبر ملفات التكوين.",
+        "title": "Docker Compose"
+      },
+      "dockerEnabled": {
+        "description": "تشغيل الخدمة الخلفية المطلوبة لإدارة وتشغيل حاويات Docker.",
+        "title": "خدمة Docker"
+      },
+      "kontainer": {
+        "description": "تطبيق KDE أصلي لإدارة حاويات Distrobox بسهولة.",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "بديل حديث لـ Docker يعمل بدون خدمة خلفية (Daemonless) ولا يتطلب صلاحيات الجذر، مما يوفر أمانًا أفضل.",
+        "title": "Podman"
+      },
+      "podmanDesktop": {
+        "description": "تطبيق رسومي لإنشاء وإدارة واستعراض حاويات Podman بكل سهولة.",
+        "title": "Podman Desktop"
+      },
+      "podmanDocker": {
+        "description": "حزمة توافقية تجعل الأمر 'docker' اسمًا مستعارًا لـ 'podman'، لتعمل سكربتات Docker السابقة بسلاسة مع Podman.",
+        "title": "Podman Docker"
+      },
+      "title": "الحاويات",
+      "userDocker": {
+        "description": "إضافة المستخدم إلى مجموعة docker لمنحه صلاحية تشغيل أوامر Docker دون الحاجة إلى sudo.",
+        "title": "مستخدمو Docker"
+      },
+      "winboat": {
+        "description": "يستخدم تقنية الحاويات لتوفير تطبيقات Windows متكاملة بسلاسة داخل لينكس.",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "مدير جدار حماية ديناميكي يستخدم المناطق (zones) لتحديد مستويات الثقة وقواعد الشبكة ديناميكيًا.",
+        "title": "Firewalld"
+      },
+      "firewalldEnabled": {
+        "description": "تشغيل خدمة firewalld الخلفية لحماية نظامك من الاتصالات الشبكية الواردة.",
+        "title": "خدمة Firewalld"
+      },
+      "opensnitch": {
+        "description": "جدار حماية على مستوى التطبيقات ينبهك ويطلب إذنك عندما يحاول أي برنامج الاتصال بالإنترنت.",
+        "title": "OpenSnitch"
+      },
+      "opensnitchEnabled": {
+        "description": "تشغيل خدمة OpenSnitch الخلفية لمراقبة حركة مرور شبكة التطبيقات.",
+        "title": "خدمة OpenSnitch"
+      },
+      "title": "جدار الحماية",
+      "ufw": {
+        "description": "جدار الحماية غير المعقد (Uncomplicated Firewall). واجهة أوامر بسيطة لإدارة قواعد جدار الحماية iptables/nftables.",
+        "title": "UFW"
+      },
+      "ufwEnabled": {
+        "description": "تشغيل خدمة UFW لتطبيق قواعد جدار الحماية البسيطة الخاصة بك.",
+        "title": "خدمة UFW"
+      }
+    },
+    "kernels": "الأنوية (Kernels)",
+    "locales": "اللغات المحلية (Locales)",
+    "misc": {
+      "gns": {
+        "description": "يدمج مدير الحزم Nix ليمنحك الوصول إلى آلاف الحزم الإضافية، بالإضافة إلى توفير تثبيت NixOS بمشاركة الإعدادات مع Garuda.",
+        "title": "نظام Garuda Nix الفرعي"
+      },
+      "title": "متنوعات"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "تشغيل الخدمة المطلوبة للاتصال بالإنترنت عبر شبكات الهاتف المحمول (مودم USB لـ 4G/5G).",
+        "title": "ModemManager"
+      },
+      "networkManager": {
+        "description": "الخدمة الأساسية التي تقوم بتكوين وإدارة اتصالات Wi-Fi والإيثرنت والشبكات الافتراضية VPN.",
+        "title": "NetworkManager"
+      },
+      "networkManagerEnabled": {
+        "description": "تشغيل خدمة NetworkManager الخلفية لتتمكن من الاتصال بالإنترنت.",
+        "title": "خدمة NetworkManager"
+      },
+      "title": "الشبكة"
+    },
+    "packages": "حزم إضافية",
+    "printing": {
+      "cupsEnabled": {
+        "description": "تشغيل خدمة CUPS الخلفية لمعالجة مهام الطباعة وإدارة الطابعات.",
+        "title": "خدمة CUPS"
+      },
+      "printingSupport": {
+        "description": "نظام الطباعة CUPS (Common Unix Printing System)، وهو البرنامج الأساسي للاتصال بالطابعات المحلية أو الشبكية والطباعة عليها.",
+        "title": "دعم الطباعة"
+      },
+      "sanedEnabled": {
+        "description": "تشغيل الخدمة الخلفية التي تتيح لك مشاركة الماسح الضوئي عبر الشبكة المحلية.",
+        "title": "خدمة SANE الشبكية"
+      },
+      "scanningSupport": {
+        "description": "نظام SANE (Scanner Access Now Easy)، وهو البرنامج الأساسي لاستخدام الماسحات الضوئية المسطحة والمكتبية.",
+        "title": "SANE"
+      },
+      "title": "الطباعة",
+      "userCups": {
+        "description": "إضافة المستخدم إلى مجموعة cups لمنحه الإذن بإدارة الطابعات وقوائم انتظار الطباعة.",
+        "title": "مستخدمو CUPS"
+      },
+      "userLp": {
+        "description": "إضافة المستخدم إلى مجموعة lp (طابعة الخطوط)، والمطلوبة لبعض أنظمة الطباعة القديمة.",
+        "title": "مستخدمو LP"
+      },
+      "userScanner": {
+        "description": "إضافة المستخدم إلى مجموعة scanner لمنحه الإذن باستخدام الماسحات الضوئية.",
+        "title": "مستخدمو الماسح الضوئي"
+      }
+    },
+    "systemdServices": "خدمات Systemd",
+    "systemSettings": "إعدادات النظام",
     "title": "إعدادات ",
-    "icon": "Icon",
-    "titleTwo": "التطبيق",
-    "leftButtons": "إظهار أزرار النافذة على اليسار",
-    "copyDiagnostics": "نسخ التشخيصات إلى الحافظة",
-    "darkMode": "تمكين الوضع الداكن",
-    "language": "تكوين اللغة النشطة",
-    "autoStart": "بدء تشغيل التطبيق تلقائيًا",
-    "logLevel": "حدد مستوى السجل",
-    "systemdUserContext": "إظهار خدمات Systemd للمستخدم",
-    "autoRefresh": "تمكين التحديث التلقائي لخدمات systemd",
-    "showMainLinks": "إظهار الروابط في الصفحة الرئيسية",
-    "themeLabel": "موضوع التصميم الأساسي",
-    "toggleOptions": "تبديل الخيارات",
-    "selectOptions": "الاختيارات"
+    "titleTwo": "النظام",
+    "users": "المستخدمون والمجموعات",
+    "virtualization": {
+      "kvm": {
+        "description": "الآلة الافتراضية المعتمدة على النواة. تستخدم تسريع العتاد (VT-x/AMD-V) لتشغيل الأنظمة الافتراضية بسرعة قريبة من السرعة الأصلية.",
+        "title": "KVM"
+      },
+      "libvirtdEnabled": {
+        "description": "خدمة النظام الخلفية المطلوبة لتشغيل وإدارة الأجهزة الافتراضية ومنصات المحاكاة.",
+        "title": "Libvirtd"
+      },
+      "qemu": {
+        "description": "محاكي أجهزة ومنصة افتراضية عامة ومفتوحة المصدر قادرة على تشغيل أنظمة تشغيل مختلفة.",
+        "title": "QEMU"
+      },
+      "qemuUserStatic": {
+        "description": "يمكن استخدامه لتشغيل ملفات المعماريات الأجنبية التنفيذية بشكل أصلي، مثل استخدامها عبر Podman.",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "تسجيل معالجات المعماريات الأجنبية في النواة، ويفيد ذلك عند محاولة تشغيل صور حاويات aarch64.",
+        "title": "QEMU Binfmt"
+      },
+      "title": "المحاكاة الافتراضية",
+      "userKvm": {
+        "description": "إضافة المستخدم إلى مجموعة kvm لمنحه صلاحية استخدام أجهزة KVM الافتراضية المسرعة بالعتاد.",
+        "title": "مستخدمو KVM"
+      },
+      "userLibvirt": {
+        "description": "إضافة المستخدم إلى مجموعة libvirt لمنحه صلاحية إدارة أجهزة KVM/QEMU الافتراضية المتقدمة.",
+        "title": "مستخدمو Libvirt"
+      },
+      "userVboxUsers": {
+        "description": "إضافة المستخدم إلى مجموعة vboxusers لمنحه صلاحية استخدام VirtualBox.",
+        "title": "مستخدمو VirtualBox"
+      },
+      "virtManager": {
+        "description": "تطبيق سطح مكتب قوي بواجهة رسومية لإنشاء وإدارة أجهزة KVM/QEMU الافتراضية.",
+        "title": "Virt Manager"
+      },
+      "virtualbox": {
+        "description": "برنامج المحاكاة الافتراضية الشهير والمتعدد المنصات من Oracle. سهل الاستخدام ولكنه عمومًا أبطأ من KVM/Virt-Manager.",
+        "title": "VirtualBox"
+      }
+    }
   },
-  "locales": {
-    "apply": "جدولة تغييرات اللغة المحلية المثبتة",
-    "description": "اللغات المحلية (Locales) على اليمين مثبتة على نظامك. يمكنك تحديد أي منها تريد الاحتفاظ به وأي منها تريد إزالته.",
-    "available": "متاح",
-    "selected": "محدد",
-    "task": "تغيير لغة النظام المحلية",
-    "selectLocale": "حدد لغتك المفضلة على مستوى النظام"
+  "taskmanager": {
+    "scriptExecuted": "انتهت المهمة الحالية.",
+    "scriptMismatch": "تم العبث بالسكربت، تم رفض التنفيذ!"
   },
-  "console": {
-    "title": "الطرفية",
-    "icon": "Icon",
-    "runActions": "تشغيل الإجراءات",
-    "removeAll": "إزالة جميع الإجراءات",
-    "abortAll": "إلغاء جميع الإجراءات",
-    "noOutput": "لا يوجد مخرجات",
-    "outputExists": "يبدو أن هناك إجراء قيد التشغيل بالفعل. يرجى الانتظار حتى ينتهي قبل محاولة عرض السجلات.",
-    "opRunning": "العملية قيد التشغيل بالفعل.",
-    "clearCachedDataTitle": "تم مسح ذاكرة التخزين المؤقت للمخرجات",
-    "clearCachedData": "تم مسح ذاكرة التخزين المؤقت للمخرجات بنجاح.",
-    "clearOutputCache": "مسح ذاكرة التخزين المؤقت للمخرجات",
-    "copyOutput": "نسخ مخرجات الطرفية",
-    "copyToClipboardTitle": "تم النسخ إلى الحافظة",
-    "copyToClipboard": "تم نسخ المخرجات بنجاح إلى الحافظة الخاصة بك.",
-    "uploadPrivateBin": "رفع إلى PrivateBin"
+  "userManager": {
+    "actions": "الإجراءات",
+    "addGroup": "إضافة مجموعة",
+    "addUser": "إضافة مستخدم",
+    "cancel": "إلغاء",
+    "clearPending": "مسح التغييرات المعلقة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmRemoveGroup": "هل أنت متأكد من رغبتك في إزالة المجموعة {{group}}؟",
+    "confirmRemoveUser": "هل أنت متأكد من رغبتك في إزالة المستخدم {{username}}؟ سيتم حذف دليل المنزل الخاص به أيضًا.",
+    "createHome": "إنشاء دليل المنزل",
+    "editUser": "تعديل المستخدم",
+    "enterGroupName": "يرجى إدخال اسم مجموعة",
+    "enterPassword": "يرجى إدخال كلمة مرور",
+    "enterUsername": "يرجى إدخال اسم مستخدم",
+    "error": "خطأ",
+    "fullName": "الاسم الكامل",
+    "gid": "GID",
+    "groupExists": "توجد مجموعة بهذا الاسم بالفعل",
+    "groupName": "اسم المجموعة",
+    "groups": "المجموعات",
+    "groupsColumn": "المجموعات",
+    "home": "دليل المنزل",
+    "lock": "قفل",
+    "locked": "مقفل",
+    "manageGroups": "إدارة المجموعات",
+    "manageGroupsFor": "إدارة المجموعات للمستخدم {{username}}",
+    "members": "الأعضاء",
+    "newGroupName": "اسم المجموعة",
+    "newPassword": "كلمة المرور الجديدة",
+    "noGroupsFound": "لم يتم العثور على مجموعات",
+    "noUsersFound": "لم يتم العثور على مستخدمين",
+    "passwordDialogTitle": "تعيين كلمة المرور للمستخدم {{username}}",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين",
+    "pending": {
+      "add": "إضافة معلقة",
+      "lock": "قفل معلق",
+      "membership": "تغييرات عضوية المجموعات المعلقة",
+      "modify": "تعديل معلق",
+      "password": "تعيين كلمة مرور معلق",
+      "remove": "إزالة معلقة",
+      "unlock": "إلغاء قفل معلق"
+    },
+    "removeGroup": "إزالة المجموعة",
+    "removeUser": "إزالة المستخدم",
+    "save": "حفظ",
+    "searchGroups": "البحث عن مجموعات",
+    "searchUsers": "البحث عن مستخدمين",
+    "selectGroups": "تحديد المجموعات",
+    "setPassword": "تعيين كلمة المرور",
+    "shell": "الصدفة",
+    "showAllUsers": "إظهار كافة المستخدمين",
+    "showUsersOnly": "إظهار المستخدمين فقط",
+    "system": "نظام",
+    "systemAccount": "حساب نظام",
+    "task": {
+      "addGroup": "إضافة مجموعة",
+      "addMembership": "إضافة إلى المجموعة",
+      "addUser": "إضافة مستخدم",
+      "lockUser": "قفل المستخدم",
+      "modifyUser": "تعديل مستخدم",
+      "password": "تعيين كلمة المرور",
+      "removeGroup": "إزالة مجموعة",
+      "removeMembership": "إزالة من المجموعة",
+      "removeUser": "إزالة مستخدم",
+      "unlockUser": "إلغاء قفل المستخدم"
+    },
+    "uid": "UID",
+    "unlock": "إلغاء القفل",
+    "userExists": "يوجد مستخدم بهذا الاسم بالفعل",
+    "username": "اسم المستخدم",
+    "users": "المستخدمون"
+  },
+  "welcome": {
+    "bootRepair": "إصلاح الإقلاع",
+    "bootRepairSub": "إعادة تثبيت أو إصلاح محمل الإقلاع",
+    "bootTools": "أدوات الإقلاع",
+    "bootToolsSub": "إدارة إعدادات الإقلاع الخاصة بك",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "ألقِ نظرة على تحديثات الحزم والمزيد",
+    "chroot": "الدخول إلى Garuda باستخدام Chroot",
+    "chrootSub": "ادخل إلى تثبيت Garuda الخاص بك باستخدام Chroot",
+    "diagnostics": "التشخيصات",
+    "diagnosticsSub": "تحقق من صحة نظامك",
+    "donate": "التبرع",
+    "donateSub": "ادعم مشروع Garuda Linux",
+    "error": "حدث خطأ.",
+    "gaming": "تطبيقات الألعاب",
+    "gamingSub": "العب ألعابك المفضلة",
+    "gitlab": "GitLab",
+    "gitlabSub": "ألقِ نظرة على الرمز المصدري الخاص بنا",
+    "hello": "مرحباً",
+    "install": "تثبيت Garuda Linux",
+    "installSub": "احصل على Garuda Linux على نظامك",
+    "maintenance": "الصيانة",
+    "maintenanceSub": "حافظ على نظامك في حالة جيدة",
+    "network": "أدوات الشبكة",
+    "networkSub": "إدارة إعدادات الشبكة الخاصة بك",
+    "packages": "استكشاف التطبيقات",
+    "packagesSub": "البحث عن برمجيات جديدة وتثبيتها",
+    "searxng": "SearxNG",
+    "searxngSub": "محرك بحث يحترم خصوصيتك",
+    "setupAssistant": "مساعد الإعداد",
+    "setupAssistantSub": "شغل مساعد إعداد Garuda",
+    "startpage": "صفحة البداية",
+    "startpageSub": "افتح صفحة البداية لـ Garuda Linux",
+    "subtitle": "توزيعة لينكس المثالية للألعاب والوسائط المتعددة",
+    "systemTools": "إعدادات النظام",
+    "systemToolsSub": "قم بتهيئة نظامك",
+    "title": "مرحبًا بك في ",
+    "titleTwo": "Garuda Linux",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "مدير كلمات مرور آمن ومتوافق مع Bitwarden",
+    "whoogle": "Whoogle",
+    "whoogleSub": "محرك بحث يراعي الخصوصية"
   }
 }

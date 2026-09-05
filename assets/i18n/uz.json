@@ -1,612 +1,1557 @@
 {
-  "menu": {
-    "welcome": "Xush kelibsiz",
-    "maintenance": "Texnik xizmat",
-    "systemTools": "Tizim sozlamalari",
-    "components": "Komponentlar",
-    "gaming": "Oʻyinlar",
-    "boot": "Yuklash vositalari",
-    "diagnostics": "Diagnostika",
-    "network": "Tarmoq vositalari",
-    "settings": "Ilova sozlamalari",
-    "help": {
-      "title": "Yordam",
-      "icon": "Icon",
-      "getHelpForum": "Forumdan yordam oling",
-      "getHelpWiki": "Wikidan kontent qidirish",
-      "getHelpArchWiki": "Arch Wikidan kontent qidirish",
-      "garudaStatus": "Ishlash vaqti holatini tekshiring",
-      "about": "Garuda Toolbox haqida",
-      "aboutBody": "Garuda Toolbox - bu Garuda Linux uchun tizimga texnik xizmat koʻrsatish va diagnostika vositasi. U foydalanuvchilarga tizimini saqlashga va muammolarni tashxislashga yordam berish uchun moʻljallangan. U Electron va Angular yordamida yaratilgan.",
-      "callExorcist": "Ekzorsistni chaqiring",
-      "callExorcistTitle": "Ekzorsist chaqirildi!",
-      "callExorcistBody": "Bu tugmani bosish uchun juda umidsiz boʻlishing kerak! Men sen uchun maxsus vudu oʻrnatdim, agar ilova bilan hali ham muammolaring boʻlsa, iltimos, ularni Garuda Linux forumida yoki bizning muammo kuzatuvchimizda xabar qiling."
-    },
-    "terminalRunning": "Ishlayotgan vazifalar",
-    "terminalTasks": "Vazifalarni bajarish",
-    "pending": "Kutilmoqda",
-    "console": "Terminalni koʻrsatish"
-  },
-  "diagnostics": {
-    "title": "Nosozliklarni tuzatish ma'lumotlari ",
-    "icon": "Icon",
-    "titleTwo": "va diagnostika",
-    "subtitle": "Tizimingizdagi nosozliklarni tuzatish uchun kerakli maʼlumotlarni toping",
-    "inxi": "Umumiy ma'lumot (inxi)",
-    "systemctl": "Tizim xizmatlari (systemctl)",
-    "journalctl": "Tizim jurnallari (journalctl)",
-    "dmesg": "Yadro jurnallari (dmesg)",
-    "full": "Toʻliq diagnostika",
-    "upload": "PrivateBin'ga yuklash",
-    "failedCmdHeader": "Buyruqni bajarib boʻlmadi",
-    "failedCmd": "Yomon narsa yuz berdi va hech qanday diagnostika maʼlumotlari olinmadi",
-    "pacman": "Oxirgi Pacman jurnallari",
-    "copied": "Vaqtinchalik xotiraga muvaffaqiyatli nusxalandi",
-    "success": "Muvaffaqiyatli",
-    "uploadSuccess": "PrivateBin'ga muvaffaqiyatli yuklandi, URL vaqtinchalik xotiraga nusxalandi"
-  },
-  "lang": {
-    "title": "Til tanlash",
-    "icon": "Icon",
-    "tooltip": "Afzal koʻrgan tilingizni tanlang"
-  },
-  "welcome": {
-    "title": "Xush kelibsiz: ",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux",
-    "subtitle": "Oʻyin va multimedia uchun eng zoʻr Linux distributivi",
-    "maintenance": "Texnik xizmat",
-    "maintenanceSub": "Tizimingizni yaxshi holatda saqlang",
-    "systemTools": "Tizim sozlamalari",
-    "systemToolsSub": "Tizimingizni sozlang",
-    "gaming": "Oʻyin ilovalari",
-    "gamingSub": "Sevimli oʻyinlaringizni oʻynang",
-    "bootTools": "Yuklash vositalari",
-    "bootToolsSub": "Yuklash sozlamalaringizni boshqaring",
-    "network": "Tarmoq vositalari",
-    "networkSub": "Tarmoq sozlamalaringizni boshqaring",
-    "diagnostics": "Diagnostika",
-    "diagnosticsSub": "Tizimingiz sogʻligʻini tekshiring",
-    "install": "Garuda Linux oʻrnatish",
-    "installSub": "Garuda Linuxni tizimingizga oling",
-    "chroot": "Garudaga chroot qilish",
-    "chrootSub": "Garuda oʻrnatmanggizga chroot qiling",
-    "startpage": "Bosh sahifa",
-    "startpageSub": "Garuda Linux bosh sahifasini oching",
-    "setupAssistant": "Oʻrnatish yordamchisi",
-    "setupAssistantSub": "Garuda oʻrnatish yordamchisini ishga tushiring",
-    "hello": "Salom",
-    "error": "Xatolik yuz berdi."
-  },
-  "gaming": {
-    "title": "Oʻyin ",
-    "icon": "Icon",
-    "titleTwo": "ilovalari",
-    "subtitle": "Keling, sizni bir nechta oʻyin ilovalari bilan boshlaylik!",
-    "launchers": "Oʻyin ishga tushiruvchilari",
-    "loading": "Yuklanmoqda...",
-    "wine": "WINE",
-    "tools": "Oʻyin vositalari",
-    "emulators": "Emulyatorlar",
-    "controllers": "Kontroller qoʻllab-quvvatlashi",
-    "games": "Oʻyinlar",
-    "misc": "Har xil",
-    "bluez": "Odatda PS kontrollerlarini simsiz tanish uchun talab qilinadi",
-    "xboxdrv": "Xbox kontroller drayveri, faqat yadro drayveri ishlamasa foydalaning!",
-    "wineMeta": "WINE va barcha kerakli bogʻliqliklarni oʻrnatish uchun meta-paket"
-  },
-  "maintenance": {
-    "title": "Tizimga ",
-    "icon": "Icon",
-    "titleTwo": "texnik xizmat koʻrsatish",
-    "subtitle": "Tizimingizni yaxshi holatda saqlang",
-    "update": "Tizimingizni yangilang",
-    "addPending": "Kutishga qoʻshish",
-    "removePending": "Kutishdan olib tashlash",
-    "runNow": "Hozir ishga tushirish",
-    "failedReset": "Konfiguratsiya faylini tiklashda xatolik",
-    "failedResetFile": "{{file}} faylini tiklashda xatolik yuz berdi",
-    "editRepos": "Omborlarni tahrirlash",
-    "onlyDirect": "Bu amalni navbatga qoʻyib boʻlmaydi va toʻgʻridan-toʻgʻri ishga tushirish kerak.",
-    "cleanCache": "Keshni tozalash",
-    "cleanCacheSub": "Barcha keshlangan paketlarni olib tashlang",
-    "updateSystem": "Tizimni yangilash",
-    "taskRunningHeader": "Texnik xizmat amalini bajarishda xatolik",
-    "taskRunning": "Allaachon ishlayotgan vazifa mavjud, avval uning tugashini kuting.",
-    "updateSystemSub": "Tizimingizni garuda-update orqali yangilang",
-    "editReposSub": "Omborlaringizni Pace bilan tahrirlang",
-    "addPendingSub": "Kutilayotgan operatsiyalarni qoʻshing",
-    "clearOrphans": "Yetim paketlarni tozalash",
-    "clearOrphansSub": "Yetim paketlarni olib tashlang",
-    "refreshMirrors": "Koʻzgularni yangilash",
-    "refreshMirrorsSub": "Koʻzgu roʻyxatini yangilang",
-    "removeLock": "Pacman qulfini olib tashlash",
-    "removeLockSub": "Pacman qulf faylini olib tashlang",
-    "reinstallPackages": "Paketlarni qayta oʻrnatish",
-    "reinstallPackagesSub": "Tizimingizdagi barcha paketlarni qayta oʻrnating",
-    "reinstallDkmsModules": "DKMS modullarini qayta oʻrnatish",
-    "btrfsAssistant": "Btrfs Assistant",
-    "btrfsAssistantSub": "BTRFS oniy suratlarini boshqaring va texnik xizmat vazifalarini bajaring",
-    "mergePacDiff": "pacdiff fayllarini birlashtirish",
-    "mergePacDiffSub": ".pacnew va .pacsave fayllarini interaktiv ravishda birlashtiring",
-    "updateRemoteFullFix": "Garuda update toʻliq tuzatish",
-    "updateRemoteFullFixSub": "Pacmanni tiklang va OTdagi barcha paketlarni qayta oʻrnating",
-    "updateRemoteKeyring": "Garuda update kalit zanjiri",
-    "updateRemoteKeyringSub": "pacman.conf faylini tiklamasdan kalit zanjirini yangilang",
-    "updateRemoteFix": "Garuda update tuzatish",
-    "updateRemoteFixSub": "pacman.conf faylini tiklang va kalit zanjirlarini yangilang",
-    "updateRemoteResetSnapper": "Snapperni tiklash",
-    "updateRemoteResetSnapperSub": "Barcha Snapper narsalarini olib tashlang va uning konfiguratsiyalarini qayta yarating",
-    "updateRemoteResetAudio": "Audioni tiklash",
-    "updateRemoteResetAudioSub": "PipeWire audio konfiguratsiyasini qayta oʻrnatish/tiklash",
-    "resetTooltip": "Quyidagi fayllar yoki papkalar standart holatiga tiklanadi:",
-    "resetConfigs": "Konfiguratsiyalarni standart holatiga tiklash",
-    "common": "Umumiy texnik xizmat",
-    "garudaUpdate": "Garuda update qutqaruv vositalari"
-  },
-  "sudo": {
-    "title": "Autentifikatsiya talab qilinadi",
-    "icon": "Icon",
-    "subtitle": "Davom etish uchun parolingizni kiriting",
-    "save": "Bu sessiyada keshlash",
-    "password": "Parol",
-    "cancel": "Bekor qilish",
-    "useOnce": "Faqat bir marta foydalanish"
-  },
-  "systemdServices": {
-    "notFound": "Xizmatlar topilmadi",
-    "description": "Tavsif",
-    "unit": "Birlik nomi",
-    "load": "Yuklash",
-    "active": "Faol",
-    "state": "Holat",
-    "searchKey": "Qidiruv kalit soʻzini kiriting",
-    "clear": "Tozalash",
+  "bootOptions": {
     "actions": "Amallar",
-    "show": "Koʻrsatish",
-    "start": "Boshlash",
-    "stop": "Toʻxtatish",
-    "mask": "Niqoblash",
-    "unmask": "Niqobni olib tashlash",
-    "logs": "Jurnallar",
-    "restart": "Qayta ishga tushirish",
-    "reload": "Qayta yuklash",
-    "enable": "Faollashtirish",
-    "disable": "Oʻchirish",
-    "autoRefresh": "Avtomatik yangilash",
-    "error": "Xizmatlarni olishda xatolik yuz berdi, iltimos qayta urinib koʻring.",
-    "errorTitle": "Xizmatlarni olishda xatolik",
-    "systemContext": "Tizim xizmatlarini koʻrsatish",
-    "userContext": "Foydalanuvchi xizmatlarini koʻrsatish",
-    "includeDisabled": "Oʻchirilganlarni kiritish",
-    "excludeDisabled": "Oʻchirilganlarni chiqarib tashlash"
+    "apply": "Sozlamalarni qoʻllash",
+    "bootEntries": "Yuklash bandlari",
+    "cancel": "Bekor qilish",
+    "configSaved": "GRUB konfiguratsiyasi muvaffaqiyatli saqlandi",
+    "defaultEntry": "Standart yuklash bandi",
+    "defaultEntryHint": "Standart tarzda avtomatik yuklanadigan menyu bandi.",
+    "edit": "Tahrirlash",
+    "editConfigWarning": "Ogohlantirish: GRUB konfiguratsiya fayllarini toʻgʻridan-toʻgʻri tahrirlash xavfli boʻlishi mumkin. GRUB yangilanganda oʻzgarishlar bekor boʻlishi mumkin. Ehtiyotkorlik bilan foydalaning.",
+    "editEntry": "Yuklash bandini tahrirlash",
+    "editGrubDefault": "/etc/default/grub faylini tahrirlash",
+    "editGrubDefaultHint": "GRUB standart sozlamalari faylini tahrirlang. Root huquqlari talab qilinadi.",
+    "editingEntry": "Bandni tahrirlash",
+    "enableBootsplash": "Bootsplash'ni faollashtirish",
+    "enableBootsplashHint": "Yuklash jarayonida matnli xabarlar oʻrniga grafik animatsiyani (Plymouth) koʻrsatadi.",
+    "entryId": "Band identifikatori (ID)",
+    "entryName": "Band nomi",
+    "entrySaved": "Yuklash bandi muvaffaqiyatli saqlandi",
+    "errorTitle": "Xatolik",
+    "flatMenus": "Tekis (Flat) menyularni faollashtirish",
+    "flatMenusHint": "GRUB ichki menyularini oʻchirib, barcha bandlarni asosiy menyuda koʻrsatadi.",
+    "grubBackground": "GRUB fon rasmi",
+    "grubTheme": "GRUB mavzusi",
+    "kernelParams": "Yadro parametrlari",
+    "kernelParamsHint": "Tizim yuklanayotganda Linux yadrosiga uzatiladigan qoʻshimcha parametrlar.",
+    "kernelParamsPlaceholder": "masalan: quiet splash",
+    "messageLevel": "Yuklash xabarlari tafsiloti",
+    "messageLevelDetailed": "Batafsil (Quiet)",
+    "messageLevelHint": "Yuklash jarayonida qancha maʼlumot koʻrsatilishini tanlang.",
+    "messageLevelLimited": "Cheklangan (Quiet + Hush)",
+    "messageLevelVeryDetailed": "Juda batafsil (Barcha xabarlar)",
+    "mitigationsOff": "Protsessor himoyalarini (mitigations) oʻchirish",
+    "mitigationsOffHint": "Yuqori unumdorlik uchun protsessor xavfsizlik cheklovlarini oʻchiradi (xavfsizlik darajasi pasayishi mumkin).",
+    "partitionSelect": "Boʻlimni tanlang",
+    "partitionSelectHint": "Iltimos, Garuda oʻrnatilgan boʻlimni tanlang.",
+    "plymouthNotInstalled": "Plymouth oʻrnatilmagan. Qoʻllash paytida uni oʻrnatish uchun faollashtiring.",
+    "plymouthPending": "Plymouth oʻrnatilishi rejalashtirilgan. Oʻrnatish tugagach mavzuni tanlashingiz mumkin.",
+    "plymouthTheme": "Plymouth mavzusi (bootsplash)",
+    "plymouthThemeHint": "Tizim yuklanishi vaqtida koʻrsatiladigan mavzu.",
+    "plymouthVmWarning": "Siz virtual mashinada ishlayapsiz. Plymouth bootsplash cheklangan tarzda ishlaydi va oldindan koʻrish toʻgʻri ishlamasligi mumkin.",
+    "previewComplete": "Oldindan koʻrish yakunlandi",
+    "previewCompleteMessage": "Plymouth mavzusini oldindan koʻrish yakunlandi.",
+    "previewError": "Oldindan koʻrish amalga oshmadi",
+    "previewTheme": "Plymouth mavzusini oldindan koʻrish",
+    "retry": "Qayta urinish",
+    "save": "Saqlash",
+    "saveDefault": "Standart bandni saqlash",
+    "saveDefaultHint": "Oxirgi tanlangan yuklash bandini avtomatik ravishda standart qilib saqlaydi.",
+    "savedMessage": "Yuklash sozlamalari muvaffaqiyatli qoʻllanildi.",
+    "savedMessageScheduled": "Yuklash sozlamalari kutilayotgan operatsiyalarga qoʻshildi.",
+    "savedTitle": "Sozlamalar saqlandi",
+    "saveSuccess": "Muvaffaqiyatli saqlandi",
+    "searchOtherOs": "Boshqa operatsion tizimlarni qidirish",
+    "searchOtherOsHint": "os-prober yordamida oʻrnatilgan boshqa operatsion tizimlarni avtomatik aniqlaydi va yuklash menyusiga qoʻshadi.",
+    "selectBackground": "Fon rasmini tanlang",
+    "selectEntry": "Yuklash bandini tanlang",
+    "selectGrubTheme": "GRUB mavzusini tanlang",
+    "selectTheme": "Plymouth mavzusini tanlang",
+    "submenu": "Quyi menyu",
+    "sysrqEnabled": "Har doim SysRq'ni yoqish",
+    "sysrqEnabledHint": "Favqulodda tizim nazorati uchun Magic SysRq tugmalarini faollashtiradi.",
+    "timeout": "Menyu kutish vaqti",
+    "timeoutHint": "Standart band yuklanishidan oldin kutiladigan vaqt (soniyalarda).",
+    "title": "Yuklash ",
+    "titleTwo": "parametrlari",
+    "unsavedChanges": "Sizda saqlanmagan oʻzgarishlar mavjud"
   },
-  "systemTools": {
-    "title": "Tizim ",
-    "icon": "Icon",
-    "titleTwo": "sozlamalari",
-    "systemdServices": "Systemd xizmatlari",
-    "systemSettings": "Tizim sozlamalari",
-    "components": "Tizim komponentlari",
-    "locales": "Mahalliylashtirishlar",
-    "kernels": "Yadrolar",
-    "packages": "Qoʻshimcha paketlar",
-    "audio": {
-      "title": "Audio",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA qoʻllab-quvvatlashi"
-      },
-      "jack": {
-        "title": "JACK qoʻllab-quvvatlashi"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio qoʻllab-quvvatlashi"
-      },
-      "pipewire": {
-        "title": "PipeWire qoʻllab-quvvatlashi"
-      },
-      "userRealtime": {
-        "title": "Foydalanuvchi realtime guruhida"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP oʻrnatilgan"
-      }
-    },
-    "virtualization": {
-      "title": "Virtualizatsiya",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU oʻrnatilgan"
-      },
-      "kvm": {
-        "title": "KVM qoʻllab-quvvatlashi"
-      },
-      "virtManager": {
-        "title": "Virt-manager qoʻllab-quvvatlashi"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd faollashtirilgan"
-      },
-      "userVboxUsers": {
-        "title": "Foydalanuvchi vboxusers guruhida"
-      },
-      "virtualbox": {
-        "title": "VirtualBox qoʻllab-quvvatlashi"
-      },
-      "userLibvirt": {
-        "title": "Foydalanuvchi libvirt guruhida"
-      },
-      "userKvm": {
-        "title": "Foydalanuvchi kvm guruhida"
-      }
-    },
-    "containers": {
-      "title": "Konteynerlar",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker oʻrnatilgan"
-      },
-      "dockerEnabled": {
-        "title": "Docker faollashtirilgan"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose oʻrnatilgan"
-      },
-      "userDocker": {
-        "title": "Foydalanuvchi docker guruhida"
-      },
-      "podman": {
-        "title": "Podman oʻrnatilgan"
-      },
-      "podmanDocker": {
-        "title": "Podman orqali Docker emulyatsiyasi"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop oʻrnatilgan"
-      },
-      "distrobox": {
-        "title": "DistroBox oʻrnatilgan"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy oʻrnatilgan"
-      }
-    },
-    "network": {
-      "title": "Tarmoq",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager qoʻllab-quvvatlashi"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager faollashtirilgan"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager faollashtirilgan"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Bluetooth qoʻllab-quvvatlashi"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth faollashtirilgan"
-      },
-      "userBluetooth": {
-        "title": "Foydalanuvchi bluetooth guruhida"
-      },
-      "autoConnect": {
-        "title": "Avtomatik ulanish oʻrnatilgan"
-      },
-      "autoConnectEnabled": {
-        "title": "Avtomatik ulanish faollashtirilgan"
-      }
-    },
-    "printing": {
-      "title": "Chop etish",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "Chop etishni qoʻllab-quvvatlash"
-      },
-      "cupsEnabled": {
-        "title": "CUPS faollashtirilgan"
-      },
-      "scanningSupport": {
-        "title": "Skanerlashni qoʻllab-quvvatlash"
-      },
-      "sanedEnabled": {
-        "title": "saned faollashtirilgan"
-      },
-      "userCups": {
-        "title": "Foydalanuvchi cups guruhida"
-      },
-      "userScanner": {
-        "title": "Foydalanuvchi scanner guruhida"
-      },
-      "userLp": {
-        "title": "Foydalanuvchi lp guruhida"
-      }
-    },
-    "firewall": {
-      "title": "Xavfsizlik devori",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld oʻrnatilgan"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld faollashtirilgan"
-      },
-      "ufw": {
-        "title": "UFW oʻrnatilgan"
-      },
-      "ufwEnabled": {
-        "title": "UFW faollashtirilgan"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch oʻrnatilgan"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch faollashtirilgan"
-      }
-    },
-    "misc": {
-      "title": "Har xil",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem oʻrnatilgan"
-      }
-    }
+  "bootRepair": {
+    "apply": "Qoʻllash",
+    "backupFile": "Zaxira fayli",
+    "backupMbrPbr": "MBR yoki PBR nusxasini yaratish",
+    "backupMbrPbrTip": "Master Boot Record (MBR) yoki Partition Boot Record (PBR) yuklash kodi nusxasini yarating. Bu boʻlimlar jadvalini oʻz ichiga olmaydi.",
+    "backupRestoreTarget": "Nusxalash yoki tiklash nishoni:",
+    "deviceOrPartition": "Qurilma yoki boʻlim:",
+    "errorTitle": "Xatolik",
+    "installOn": "Oʻrnatish joyi:",
+    "location": "Joylashuv:",
+    "luksPassword": "LUKS paroli:",
+    "luksPasswordPlaceholder": "LUKS parolini kiriting",
+    "luksPasswordRequired": "Iltimos, ushbu root boʻlimi uchun LUKS parolini kiriting.",
+    "luksTag": "LUKS",
+    "options": "Parametrlar",
+    "partitionToMount": "Ulanadigan (mount) boʻlim:",
+    "reinstallGrub": "GRUB'ni qayta oʻrnatish",
+    "reinstallGrubTip": "Muayyan disk yoki boʻlimga GRUB yuklagichini qayta oʻrnating.",
+    "repairGrubConfig": "GRUB konfiguratsiyasini tuzatish",
+    "repairGrubConfigTip": "Oʻrnatilgan barcha operatsion tizimlarni aniqlash uchun GRUB sozlamalari faylini (grub.cfg) qayta yarating.",
+    "restoreMbrPbr": "MBR yoki PBR nusxasini tiklash",
+    "restoreMbrPbrTip": "Oldin yaratilgan zaxira nusxasi faylidan yuklash kodini tiklang.",
+    "rootLocation": "Root joylashuvi:",
+    "selectLocation": "Iltimos, joylashuvni tanlang.",
+    "selectOperation": "Amalni tanlang",
+    "selectRoot": "Iltimos, root boʻlimini tanlang.",
+    "successBackup": "Zaxira nusxasi muvaffaqiyatli yaratildi.",
+    "successReinstall": "GRUB'ni qayta oʻrnatish muvaffaqiyatli yakunlandi.",
+    "successRepair": "GRUB tuzatish muvaffaqiyatli yakunlandi.",
+    "successRestore": "Zaxiradan tiklash muvaffaqiyatli yakunlandi.",
+    "successTitle": "Muvaffaqiyatli",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI System Partition. UEFI tizimidagi kompyuterlarda yuklagichlar va yadro tasvirlarini saqlash uchun ishlatiladigan boʻlim.",
+    "targetMbr": "MBR",
+    "targetMbrTip": "Master Boot Record. Boʻlingan maʼlumotlarni saqlash qurilmasining boshida joylashgan anʼanaviy yuklash sektori.",
+    "targetPbr": "PBR",
+    "targetPbrTip": "Partition Boot Record. Shuningdek Volume Boot Record (VBR) sifatida tanilgan. Muayyan boʻlimning birinchi sektori.",
+    "targetRoot": "Root",
+    "title": "Yuklashni ",
+    "titleTwo": "tuzatish"
   },
-  "systemSettings": {
-    "defaultShellConfigs": "Standart konfiguratsiyalarni oʻrnatish",
-    "defaultDns": "Standart DNSni oʻrnatish",
-    "defaultShell": "Kirish qobigʻini oʻrnatish",
-    "enableHblock": "Hblockni faollashtirish",
-    "enableIwd": "wpa_supplicant oʻrniga IWDdan foydalanish",
-    "common": {
-      "title": "Umumiy",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon oʻrnatilgan"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon faollashtirilgan"
-      },
-      "oomd": {
-        "title": "Systemd-oomd faollashtirilgan"
-      },
-      "guestUser": {
-        "title": "Mehmon foydalanuvchini faollashtirish"
-      }
-    },
-    "performance": {
-      "title": "Ishlash samaradorligi",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "Ishlash samaradorligini oshirish sozlamalari"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ oʻrnatilgan"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ faollashtirilgan"
-      },
-      "bpftune": {
-        "title": "Bpftune oʻrnatilgan"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune faollashtirilgan"
-      },
-      "preload": {
-        "title": "Preload oʻrnatilgan"
-      },
-      "preloadEnabled": {
-        "title": "Preload faollashtirilgan"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance faollashtirilgan"
-      }
-    },
-    "powersave": {
-      "title": "Quvvat tejash",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "Quvvat tejash sozlamalari"
-      },
-      "tlp": {
-        "title": "TLP oʻrnatilgan"
-      },
-      "tlpEnabled": {
-        "title": "TLP faollashtirilgan"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq oʻrnatilgan"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq faollashtirilgan"
-      },
-      "thermald": {
-        "title": "Thermald oʻrnatilgan"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald faollashtirilgan"
-      },
-      "powerProfilesDaemon": {
-        "title": "Quvvat profillari demoni oʻrnatilgan"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Quvvat profillari demoni faollashtirilgan"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt oʻrnatilgan"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt faollashtirilgan"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "Oʻng tugma emulyatsiyasi",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev uzoq bosish oʻng tugma emulyatsiyasi"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE faollashtirilgan"
-      }
-    }
+  "commandPalette": {
+    "hint": "Modullar va amallarni qidirish",
+    "placeholder": "Buyruq kiriting yoki modulni qidiring...",
+    "toClose": "yopish uchun"
   },
-  "shells": {
-    "fish": {
-      "hint": "fishni standart qobiq sifatida oʻrnatish boshqa dasturlar bilan muammolarga olib kelishi mumkin. Uni terminal konfiguratsiyalari orqali standart sifatida oʻrnatish tavsiya etiladi."
-    }
+  "configFiles": {
+    "actions": "Amallar",
+    "desc": {
+      "adjtime": "Apparat soatini kuzatish uchun hwclock tomonidan ishlatiladi",
+      "alacritty": "GPU tezlatkichiga ega terminal emulyatori (Alacritty) konfiguratsiyasi",
+      "alsa_base": "ALSA yadro moduli parametrlari",
+      "amdgpu_conf": "AMDGPU yadro moduli parametrlari",
+      "ananicy": "Ananicy auto-nice demoni qoidalari",
+      "asound_conf": "Tizim boʻyicha umumiy ALSA konfiguratsiyasi",
+      "asoundrc": "Foydalanuvchining ALSA konfiguratsiyasi",
+      "bash_bashrc": "Interaktiv qobiqlar uchun umumiy tizim bash sozlamalari",
+      "bashrc": "Joriy foydalanuvchi uchun Bash konfiguratsiya fayli",
+      "blacklist_nouveau": "Ochiq manbali Nouveau drayverini qora roʻyxatga kiritadi",
+      "bluetooth_main": "Bluetooth demoni konfiguratsiyasi",
+      "btrfsAssistant": "BTRFS Assistant konfiguratsiyasi",
+      "chaoticMirrorlist": "Garuda maxsus Chaotic-AUR omborlari koʻzgulari",
+      "cinnamon": "Cinnamon ish stoli asosiy konfiguratsiya jildi",
+      "cpupower": "cpupower quvvat boshqaruvi vositasi konfiguratsiyasi",
+      "cron": "cron rejalashtirilgan vazifalari konfiguratsiyasi",
+      "cursorThemeSystem": "Tizim boʻyicha umumiy kursor mavzusi konfiguratsiyasi",
+      "cursorThemeUser": "Foydalanuvchining kursor mavzusi konfiguratsiyasi",
+      "dunst": "Dunst bildirishnomalar demoni konfiguratsiyasi",
+      "environment": "Tizim boʻyicha muhit oʻzgaruvchilari",
+      "environmentD": "Tizim boʻyicha muhit oʻzgaruvchilari jildi (Wayland)",
+      "fastfetch": "Tizim maʼlumotlarini koʻrsatish vositasi (Fastfetch) konfiguratsiyasi",
+      "fish": "Fish qobigʻi konfiguratsiya fayli",
+      "fontconfigSystem": "Tizim boʻyicha umumiy shriftlar konfiguratsiyasi sozlamalari",
+      "fontconfigUser": "Foydalanuvchining shriftlar konfiguratsiyasi sozlamalari",
+      "fstab": "Fayl tizimlari haqidagi statik maʼlumotlar",
+      "gamemode": "GameMode optimallashtirish vositasining umumiy konfiguratsiyasi",
+      "garudaUpdateConfig": "garuda-update ishlash tartibi va yangilash bayroqlari konfiguratsiyasi",
+      "gdm": "GNOME displey menejeri (GDM) konfiguratsiyasi",
+      "gitconfig": "Foydalanuvchining Git konfiguratsiyasi",
+      "group": "Foydalanuvchi guruhlarini belgilaydi",
+      "grub": "GRUB yuklagichining konfiguratsiya fayli",
+      "grub_cfg": "GRUB yuklagichining asosiy konfiguratsiya fayli",
+      "grubTheme": "GRUB yuklagichi mavzusi konfiguratsiyasi",
+      "gtk3Settings": "GTK 3.0 ilovalari sozlamalari",
+      "gtk4Css": "GTK 4.0 ilovalari uchun maxsus CSS uslublari",
+      "gtk4Settings": "GTK 4.0 ilovalari sozlamalari",
+      "gtkrc2": "Eski GTK 2.0 ilovalari sozlamalari",
+      "hostname": "Tizim xost nomi (hostname)",
+      "hosts": "Xost nomlari uchun statik jadvallar jadvali",
+      "hosts_allow": "Tarmoq xizmatlariga kirishni nazorat qilish uchun TCP oʻramlari (ruxsat)",
+      "hosts_deny": "Tarmoq xizmatlariga kirishni nazorat qilish uchun TCP oʻramlari (taqiq)",
+      "hyprland": "Hyprland Wayland kompozitori konfiguratsiyasi",
+      "hyprpaper": "Hyprpaper fon rasmi vositasi konfiguratsiyasi",
+      "i3": "Klassik X11 kafel oyna menejeri (i3) konfiguratsiyasi",
+      "iconTheme": "Belgilar (Icon) mavzusi konfiguratsiyasi sozlamalari",
+      "journald": "systemd jurnallar xizmati konfiguratsiyasi",
+      "kcmfonts": "KDE shriftlari konfiguratsiyasi sozlamalari",
+      "kdeColorScheme": "Foydalanuvchining KDE ranglar sxemasi taʼriflari",
+      "kdeglobals": "Umumiy KDE konfiguratsiya sozlamalari",
+      "kdeLookandFeel": "KDE umumiy koʻrinishi (Look and Feel) sozlamalari",
+      "kitty": "Koʻp funksiyali GPU terminal emulyatori (Kitty) konfiguratsiyasi",
+      "kvantumConfig": "Kvantum SVG mavzular dvigateli konfiguratsiyasi",
+      "kwinrc": "KWin oyna menejeri konfiguratsiyasi",
+      "lightdm": "LightDM displey menejeri konfiguratsiyasi",
+      "locale": "Tizim boʻyicha til/hududiy sozlamalar",
+      "locale_gen": "Tizimda mavjud tillar va mahalliylashtirishlar roʻyxati",
+      "logind": "systemd kirish menejeri konfiguratsiyasi",
+      "makepkgConf": "Makepkg uchun konfiguratsiya parametrlari",
+      "mako": "Mako bildirishnomalar demoni konfiguratsiyasi",
+      "mangohud": "MangoHud unumdorlik paneli konfiguratsiyasi",
+      "mirrorlist": "Standart Arch Linux omborlari koʻzgulari",
+      "mkinitcpio": "Boshlangʻich ramdisk muhitini yaratish konfiguratsiyasi",
+      "modprobe_d": "Yadro modullari konfiguratsiyasi va parametrlari",
+      "networkmanager": "NetworkManager umumiy konfiguratsiyasi",
+      "nftables": "nftables xavfsizlik devori konfiguratsiyasi",
+      "nvidia_conf": "NVIDIA yadro moduli parametrlari",
+      "os_release": "Operatsion tizim haqidagi maʼlumotlarni taqdim etadi",
+      "pacman_hooks": "Paket amallari vaqtida vazifalarni avtomatlashtirish qoidalari (hooks)",
+      "pacmanConf": "Pacman paket menejerining asosiy konfiguratsiya fayli",
+      "pam": "Pluggable Authentication Modules (PAM) konfiguratsiya fayllari",
+      "pam_d": "Autentifikatsiya xizmatlari uchun PAM konfiguratsiyasi",
+      "passwd": "Foydalanuvchi hisoblari maʼlumotlarini oʻz ichiga oladi",
+      "pipewire_client": "PipeWire mijozi konfiguratsiyasi",
+      "pipewire_conf": "Foydalanuvchi darajasidagi PipeWire demoni konfiguratsiyasi",
+      "plasmaApplets": "Plasma ish stoli apletlari konfiguratsiyasi",
+      "plasmaEnv": "Plasma ish maydoni uchun muhit oʻzgaruvchilari",
+      "plasmarc": "Plasma qobigʻining asosiy konfiguratsiyasi",
+      "plymouthConf": "Plymouth bootsplash demoni konfiguratsiyasi",
+      "profile": "Foydalanuvchi muhiti va boshlangʻich dasturlari",
+      "pulse_daemon": "PulseAudio demoni sozlamalari",
+      "pulse_default": "PulseAudio ishga tushirish skripti",
+      "qtile": "Python asosidagi oyna menejeri konfiguratsiyasi (Qtile)",
+      "resolv": "DNS aniqlagich konfiguratsiya fayli",
+      "rofi": "Rofi ilovalarni ishga tushirgich va oynalar oʻtkazgichi konfiguratsiyasi",
+      "rsyslog": "rsyslog demonining asosiy konfiguratsiyasi",
+      "sddm": "SDDM displey menejeri konfiguratsiyasi",
+      "shadow": "Shifrlangan parollar va hisob muddati maʼlumotlarini saqlaydi",
+      "snapperRoot": "Root boʻlimi uchun Snapper konfiguratsiyasi",
+      "ssh_user": "Foydalanuvchining SSH mijozi konfiguratsiyasi",
+      "sshd": "OpenSSH server demoni konfiguratsiya fayli",
+      "starship": "Starship qobiqlararo buyruq satri konfiguratsiyasi",
+      "sudoers": "Qaysi foydalanuvchilar sudo huquqlariga egaligini sozlaydi",
+      "sway": "Sway Wayland kompozitori konfiguratsiyasi",
+      "sysctl": "Yadro parametrlari (tarmoq, unumdorlik, xavfsizlik)",
+      "systemd_network": "systemd-networkd uchun konfiguratsiya fayllari",
+      "systemd_services": "Maxsus yoki qayta belgilangan systemd xizmat taʼriflari",
+      "systemd_timers": "Rejalashtirilgan vazifalar uchun systemd taymerlari",
+      "systemdSystem": "Umumiy systemd tizim konfiguratsiyasi",
+      "systemdUser": "Umumiy systemd foydalanuvchi konfiguratsiyasi",
+      "timezone": "Tizim vaqt mintaqasini belgilaydi",
+      "udev_rules": "Uskunalar ishlashini belgilovchi udev qoidalari",
+      "userdirs": "XDG foydalanuvchi jildlari konfiguratsiyasi",
+      "vconsole": "Virtual konsol konfiguratsiyasi",
+      "waybar": "Waybar holat paneli asosiy konfiguratsiyasi",
+      "waybarStyle": "Waybar holat paneli uchun CSS uslublari",
+      "wayfire": "3D Wayland kompozitori konfiguratsiyasi (Wayfire)",
+      "wayland_conf": "Foydalanuvchining Wayland kompozitori konfiguratsiya fayllari",
+      "wireplumber": "WirePlumber seanslar menejeri konfiguratsiya jildi",
+      "wofi": "Wofi ilovalarni ishga tushirgich konfiguratsiyasi",
+      "xfce4": "Xfce4 asosiy konfiguratsiya jildi",
+      "xorg_conf": "Eski asosiy Xorg konfiguratsiya fayli",
+      "xorg_conf_d": "Xorg konfiguratsiya qismlari jildi",
+      "xorg_gpu": "Grafik karta uchun Xorg konfiguratsiyasi (drayver tanlash, BusID, ekran sozlamalari)",
+      "xorg_monitor": "Xorg uchun monitor joylashuvi, oʻlchami va yangilanish chastotasi",
+      "zramGenerator": "zram-generator konfiguratsiyasi",
+      "zsh": "Joriy foydalanuvchi uchun Zsh konfiguratsiya fayli"
+    },
+    "description": "Tavsif",
+    "edit": "Tahrirlash",
+    "name": "Nomi",
+    "path": "Yoʻl (Path)",
+    "search": "Konfiguratsiya fayllarini qidirish...",
+    "title": "Konfiguratsiya ",
+    "titleTwo": "fayllari",
+    "wiki": "Viki"
   },
   "confirmation": {
     "accept": "Qabul qilish",
-    "reject": "Bekor qilish",
-    "exitApp": "Ilovadan chiqishni xohlaysizmi?",
-    "exitAppRunningAction": "Ilovadan chiqishni xohlaysizmi? Ishlayotgan amal mavjud!",
-    "resetConfigsHeader": "Konfiguratsiyalar tiklansinmi?",
-    "resetConfigsBody": "Quyidagi konfiguratsiyalarni tiklashni xohlaysizmi?",
-    "exitAppHeader": "Ilovadan chiqilsinmi?",
     "applyOperations": "Operatsiyalar qoʻllanilsinmi?",
-    "applyOperationsBody": "Barcha kutilayotgan operatsiyalarni qoʻllashni xohlaysizmi?"
+    "applyOperationsBody": "Barcha kutilayotgan operatsiyalarni qoʻllashni xohlaysizmi?",
+    "cancel": "Bekor qilish",
+    "createSnapshotBefore": "Bajarishdan oldin Btrfs oniy suratini yaratish",
+    "exitApp": "Ilovadan chiqishni xohlaysizmi?",
+    "exitAppHeader": "Ilovadan chiqilsinmi?",
+    "exitAppRunningAction": "Ilovadan chiqishni xohlaysizmi? Ishlayotgan amal mavjud!",
+    "password": "Parol",
+    "reject": "Bekor qilish",
+    "resetConfigsBody": "Quyidagi konfiguratsiyalarni tiklashni xohlaysizmi?",
+    "resetConfigsHeader": "Konfiguratsiyalar tiklansinmi?",
+    "save": "Bu sessiyada keshlash",
+    "subtitle": "Davom etish uchun parolingizni kiriting",
+    "title": "Autentifikatsiya talab qilinadi",
+    "useOnce": "Faqat bir marta foydalanish"
+  },
+  "console": {
+    "abortAll": "Barcha amallarni bekor qilish",
+    "clearCachedData": "Chiqish keshi tozalandi.",
+    "clearCachedDataTitle": "Chiqish keshi tozalandi",
+    "clearOutputCache": "Chiqish keshini tozalash",
+    "copyOutput": "Terminal chiqishini nusxalash",
+    "copyToClipboard": "Chiqish muvaffaqiyatli vaqtinchalik xotirangizga nusxalandi.",
+    "copyToClipboardTitle": "Vaqtinchalik xotiraga nusxalandi",
+    "noOutput": "Chiqish yoʻq",
+    "noTasksPending": "Kutilayotgan vazifalar yoʻq",
+    "opRunning": "Operatsiya allaqachon ishlamoqda.",
+    "outputExists": "Koʻrinishidan, allaqachon ishlayotgan amal mavjud. Jurnallarni koʻrishga urinishdan oldin uning tugashini kuting.",
+    "printScripts": "Skriptlarni chop etish",
+    "removeAll": "Barcha amallarni olib tashlash",
+    "runActions": "Amallarni bajarish",
+    "tasksAppearHere": "Elementlarni tanlaganingizda vazifalar shu yerda paydo boʻladi.",
+    "title": "Terminal",
+    "uploadPrivateBin": "PrivateBin'ga yuklash"
+  },
+  "diagnostics": {
+    "copySuccess": "Vaqtinchalik xotiraga muvaffaqiyatli nusxalandi",
+    "dmesg": "Yadro jurnallari (dmesg)",
+    "dmesgDesc": "Yadro xabarlari buferi (dmesg) jurnallarini koʻrish.",
+    "exitCode": "Buyruq {{code}} kodi bilan yakunlandi",
+    "failedCmd": "Yomon narsa yuz berdi va hech qanday diagnostika maʼlumotlari olinmadi",
+    "failedCmdHeader": "Buyruqni bajarib boʻlmadi",
+    "full": "Toʻliq diagnostika",
+    "fullDesc": "Barcha diagnostika maʼlumotlarini bitta hisobotga jamlash.",
+    "health": "Tizim holati",
+    "healthDesc": "Tizim konfiguratsiyasi muammolari va xatoliklarni tekshirish.",
+    "inxi": "Umumiy ma'lumot (inxi)",
+    "inxiDesc": "Batafsil apparat va tizim maʼlumotlarini toʻplash.",
+    "journalctl": "Tizim jurnallari (journalctl)",
+    "journalctlDesc": "Journal demonidan tizim jurnallarini koʻrib chiqish.",
+    "pacman": "Oxirgi Pacman jurnallari",
+    "pacmanDesc": "Eng soʻnggi pacman paket menejeri jurnallarini koʻrish.",
+    "subtitle": "Tizimingizdagi nosozliklarni tuzatish uchun kerakli maʼlumotlarni toping",
+    "success": "Muvaffaqiyatli",
+    "systemctl": "Tizim xizmatlari (systemctl)",
+    "systemctlDesc": "Tizimning yuklanish samaradorligi va xizmat holatini tahlil qilish.",
+    "title": "Nosozliklarni tuzatish ma'lumotlari ",
+    "titleTwo": "va diagnostika",
+    "upload": "PrivateBin'ga yuklash",
+    "uploadDesc": "Diagnostika maʼlumotlarini xavfsiz tarzda PrivateBin'ga yuklash.",
+    "uploadSuccess": "PrivateBin'ga muvaffaqiyatli yuklandi, URL vaqtinchalik xotiraga nusxalandi"
   },
   "error": {
     "sudoPassword": "Bu toʻgʻri parolga oʻxshamaydi. Iltimos, qayta urinib koʻring."
   },
-  "operation": {
-    "removeApps": "Ilovalarni olib tashlash",
-    "installApps": "Ilovalarni oʻrnatish",
-    "addGroup": "Foydalanuvchini guruhga qoʻshish",
-    "removeGroup": "Foydalanuvchini guruhdan olib tashlash",
-    "disableService": "Xizmatni oʻchirish",
-    "enableService": "Xizmatni faollashtirish",
-    "setDefaultShell": "Standart qobiqni oʻrnatish",
-    "enableHblock": "Hblockni faollashtirish",
-    "disableHblock": "Hblockni oʻchirish",
-    "setNewDnsServer": "Yangi DNS serverini oʻrnatish",
-    "resetDnsServer": "DNS serverini tiklash",
-    "args": "Argumentlar",
-    "logs": "Jurnallar",
-    "remove": "Olib tashlash",
-    "abort": "Bekor qilish",
-    "run": "Hozir ishga tushirish"
-  },
-  "systemStatus": {
-    "pendingUpdates": "Kutilayotgan yangilanishlar",
-    "updates": "Bu tizimda kutilayotgan yangilanishlar mavjud (ma'lumot uchun bosing)",
-    "pacFiles": "Bu tizimda kutilayotgan .pacnew fayllari mavjud, ularni tekshirib, birlashtirishingiz kerak! (ma'lumot uchun bosing)",
-    "cancel": "Bekor qilish",
-    "aurUpdates": "AUR paketlarini yangilash bu ilovaning doirasiga kirmaydi. Iltimos, Paru kabi AUR yordamchisidan foydalaning va oʻrnatishdan oldin PKGBUILD fayllarini koʻrib chiqing.",
-    "scheduleUpdates": "Yangilanishlarni rejalashtirish",
-    "pendingPacdiff": "Kutilayotgan pacdiff fayllari",
-    "findMore": "Qanday davom etishni bilib oling",
-    "warnUpdate": "Tizimingiz 2 hafta davomida yangilanmagan. Xavfsizlik va barqarorlikni ta'minlash uchun tizimingizni yangilang.",
-    "affectedFiles": "Ta'sirlangan fayllar:",
-    "learnPacdiff": "Agar pacdiff fayllari bilan tanish boʻlmasangiz, ular haqida tezda ma'lumot oling.",
-    "openMaintenance": "Boshlash uchun quyidagi tugmani bosing.",
-    "openMaintenanceButton": "Birlashtirishni boshlash",
-    "rebootNow": "Hozir qayta yuklash",
-    "rebootNowBody": "Hozir qayta yuklashni xohlaysizmi? Davom etishdan oldin barcha ishlaringizni saqlaganingizga ishonch hosil qiling.",
-    "warnReboot": "Yangilanishlarni qoʻllagandan soʻng, ayniqsa yadrolarni yoki ish stoli muhitlarini yangilaganda tizimni qayta yuklash qat'iy tavsiya etiladi.",
-    "proceed": "Mana qanday davom etish kerak:",
-    "snapshotCreation": "Birlashtirishni boshlashdan oldin Btrfs oniy surati yaratiladi.",
-    "proceedMerge": "Oʻzgarishlarni qoʻllash uchun Meld ochiladi. Chap tomonda YANGI fayl, oʻng tomonda ESKI fayl. Birlashtirmoqchi boʻlgan foydali oʻzgarishlarni chapdan oʻng tomonga oʻtkazing. Tugatgach, saqlash tugmasini yoki CTRL + S tugmalarini bosing.",
-    "cautionMerge": "ESKI faylga notoʻgʻri oʻzgarishlar kiritish tizimingizni buzishi mumkinligidan xabardor boʻling.",
-    "askHelp": "Agar ishonchingiz komil boʻlmasa, oynani saqlamasdan yoping va Garuda Linux forumida yordam soʻrang.",
-    "runAurUpdates": "AUR yangilanishlarini tashqaridan ishga tushirish"
-  },
-  "operationManager": {
-    "refusing": "Bajarish rad etilmoqda",
-    "pendingOperationsRunning": "Ishlayotgan operatsiyalar mavjud, men faqat allaqachon bajarilganlarini olib tashlayman.",
-    "thisOperationRunning": "Esing joyidami? Bu operatsiya hozirda ishlamoqda!"
-  },
-  "os-interact": {
-    "packages": "Oʻrnatilgan paketlarni oʻzgartirish",
-    "packages-aur": "AUR paketlarini oʻzgartirish",
-    "services": "Xizmatlarni oʻzgartirish",
-    "services-user": "Foydalanuvchi xizmatlarini oʻzgartirish",
-    "groups": "Foydalanuvchi guruhlarini oʻzgartirish",
-    "locales": "Faollashtirilgan mahalliylashtirishlarni oʻzgartirish"
-  },
-  "packages": {
-    "title": "Paketlar",
-    "icon": "Icon",
-    "internet": "Internet",
-    "documents": "Hujjatlar",
-    "multimedia": "Multimedia",
-    "science": "Fan",
-    "security": "Xavfsizlik",
-    "other": "Boshqa",
-    "clear": "Tozalash",
-    "search": "Qidirish",
-    "url": "URL",
-    "selected": "Tanlangan",
-    "description": "Tavsif",
-    "name": "Nom",
-    "searchKey": "Qidiruv kalit soʻzini kiriting",
-    "notFound": "Paketlar topilmadi"
+  "gaming": {
+    "antimicrox": "Geympad tugmalarini klaviatura va sichqonchaga moslovchi ilova",
+    "anydesk": "Masofaviy ish stoli ilovasi",
+    "bluez": "Odatda PS kontrollerlarini simsiz tanish uchun talab qilinadi",
+    "bottles": "Wine va Proton prefixlarini osonlikcha boshqaring",
+    "boxtron": "Steam Play uchun DOSBox muvofiqlik vositasi",
+    "controllers": "Kontroller qoʻllab-quvvatlashi",
+    "corectrl": "Kompyuter apparatini boshqarish va profillarni sozlash ilovasi",
+    "desmume": "Nintendo DS emulyatori",
+    "dgenSdl": "Sega Genesis / Mega Drive emulyatori",
+    "discord": "Ovozli va matnli muloqot uchun Discord ilovasi",
+    "displaycal": "Ekran ranglarini kalibrlash va profillash vositasi",
+    "dolphinEmu": "GameCube va Wii emulyatori",
+    "dosbox": "DOS oʻyinlari emulyatori",
+    "droidcam": "Telefoningizni veb-kamera sifatida ishlating",
+    "duckstation": "Tezkor Sony PlayStation 1 emulyatori",
+    "dxvk": "Direct3D 9/10/11 uchun Vulkan asosidagi tarjima qatlami",
+    "easyeffects": "PipeWire ilovalari uchun audio effektlar va ekvalayzer",
+    "eka2l1": "Symbian OT emulyatori",
+    "emulationstation": "Turli emulyatorlar uchun grafik qobiq (frontend)",
+    "emulators": "Emulyatorlar",
+    "fceux": "Barchasi birda NES/Famicom emulyatori",
+    "fsUae": "Amiga kompyuterlari emulyatori",
+    "gameconqueror": "Scanmem uchun GUI interfeysi (oʻyin xotirasini tahrirlash vositasi)",
+    "gamemode": "Oʻyin paytida Linux tizimi unumdorligini optimallashtirish",
+    "games": "Oʻyinlar",
+    "gamescope": "SteamOS seans mikromenejeri (micro-compositor)",
+    "gamescopeSession": "Gamescope ichida seanslarni ishga tushirish vositasi",
+    "gamescopeSessionSteam": "Steam Gamescope seans integratsiyasi",
+    "goverlay": "Vulkan va OpenGL qoplamalarini boshqarish uchun grafik interfeys",
+    "gwe": "NVIDIA video kartalari sozlamalarini boshqarish tizimi",
+    "hatari": "Atari ST/STE/TT/Falcon emulyatori",
+    "heroic": "Epic, Amazon va GOG oʻyinlari uchun ochiq manbali ishga tushiruvchi",
+    "inputRemapper": "Kiritish qurilmalari tugmalarini qayta belgilash ilovasi",
+    "itch": "itch.io ish stoli ilovasi uchun oʻrnatuvchi",
+    "kegaFusion": "Sega konsollari emulyatori",
+    "keyboardVisualizer": "RGB klaviaturalar uchun audio vizualizatori",
+    "lact": "AMD va Nvidia grafik kartalarini boshqarish ilovasi",
+    "launchers": "Oʻyin ishga tushiruvchilari",
+    "libretroMeta": "Libretro yadrolari va plaginlari meta-paketi",
+    "loading": "Yuklanmoqda...",
+    "lutris": "Ochiq oʻyin platformasi",
+    "luxtorpeda": "Steam Play uchun mahalliy oʻyin dvigatellari muvofiqlik vositasi",
+    "mame": "Arkada va retro oʻyinlar emulyatori",
+    "mangohud": "Tizim unumdorligi va FPS koʻrsatuvchi qoplama",
+    "mednafen": "Koʻp tizimli buyruqlar satri emulyatori",
+    "mgba": "Tezkor va aniq Game Boy Advance emulyatori",
+    "minigalaxy": "Linux uchun oddiy GOG mijozi",
+    "misc": "Har xil",
+    "mumble": "Kam kechikishli ochiq manbali ovozli chat dasturi",
+    "nestopia": "Aniq NES/Famicom emulyatori",
+    "noisetorch": "Mikrofon uchun real vaqtda shovqinni bostirish vositasi",
+    "nyrna": "Oʻyinlar va ilovalarni vaqtincha toʻxtatib turish vositasi",
+    "obsStudio": "Jonli efir va video yozish uchun bepul ochiq manbali dastur",
+    "openrgb": "Ochiq manbali RGB yoritish boshqaruv dasturi",
+    "oversteer": "Linux'da rul boshqaruvlarini sozlash ilovasi",
+    "pcsx2": "PlayStation 2 konsoli emulyatori",
+    "pegasusFrontend": "Oʻyinlar toʻplamini koʻrish uchun qulay frontend",
+    "piper": "Oʻyin sichqonchalarini sozlash uchun GTK ilovasi",
+    "polychromatic": "Razer qurilmalari uchun grafik interfeys",
+    "ppsspp": "PlayStation Portable (PSP) emulyatori",
+    "protonCachyOS": "CachyOS optimallashtirishlariga ega Proton yigʻmasi",
+    "protonGeCustom": "Eng soʻnggi tuzatishlarga ega maxsus Proton yigʻmasi",
+    "protontricks": "Proton oʻyinlari uchun Winetricks qobigʻi",
+    "protonupQt": "Wine va Proton-GE oʻrnatmalarini boshqarish uchun GUI vositasi",
+    "retroarch": "Emulyatorlar, oʻyin dvigatellari va media uchun markaziy interfeys",
+    "rpcs3": "Ochiq manbali Sony PlayStation 3 emulyatori",
+    "ryujinx": "Nintendo Switch emulyatori",
+    "sameboy": "Yuqori aniqlikdagi Game Boy va Game Boy Color emulyatori",
+    "scController": "Steam Controller va boshqa geympadlarni sozlash ilovasi",
+    "scummvm": "Klassik sarguzasht oʻyinlarini ishga tushirish dasturi",
+    "snes9x": "Super Nintendo (SNES) emulyatori",
+    "soundwire": "Kompyuterdan Android'ga audio uzatish ilovasi",
+    "steamNative": "Steam mahalliy runtime paketi",
+    "steamRuntime": "Rasmiy Steam runtime paketi",
+    "steamtinkerlaunch": "Kengaytirilgan Linux oʻyinlari sozlash vositasi",
+    "stella": "Atari 2600 VCS emulyatori",
+    "streamlinkTwitchGui": "Streamlink uchun platformalararo Twitch grafik interfeysi",
+    "subtitle": "Keling, sizni bir nechta oʻyin ilovalari bilan boshlaylik!",
+    "title": "Oʻyin ",
+    "titleTwo": "ilovalari",
+    "tools": "Oʻyin vositalari",
+    "torzu": "Nintendo Switch emulyatori (Torzu)",
+    "vesktop": "Vencord plaginlari bilan maxsus Discord mijozi",
+    "vice": "Koʻp funksiyali Commodore emulyatori",
+    "vkbasalt": "Vulkan oʻyinlari uchun post-processing qatlami",
+    "vlc": "Ommabop ochiq manbali multimedia pleyeri",
+    "vrVideoPlayer": "Linux uchun VR video pleyeri",
+    "waydroid": "Linux'da toʻliq Android tizimini ishga tushirish konteyneri",
+    "wine": "WINE",
+    "wineMeta": "WINE va barcha kerakli bogʻliqliklarni oʻrnatish uchun meta-paket",
+    "winePackage": "Barqaror WINE versiyasi",
+    "wineStaging": "Eksperimental tuzatishlarga ega WINE Staging versiyasi",
+    "winetricks": "WINE ichida turli kutubxonalarni oʻrnatish uchun skript",
+    "xboxdrv": "Xbox kontroller drayveri, faqat yadro drayveri ishlamasa foydalaning!",
+    "xemu": "Asl Xbox konsoli emulyatori",
+    "xoneDkms": "Xbox One geympadlari uchun yadro drayveri (DKMS)",
+    "xoneDongleFirmware": "Xbox One simsiz adapteri uchun mikrodastur (firmware)",
+    "xpadneo": "Xbox One Bluetooth geympadlari uchun kengaytirilgan Linux drayveri",
+    "zsnes": "Yengil Super Nintendo emulyatori"
   },
   "kernels": {
+    "active": "Faol yadro:",
     "dkmsModulesBroken": "Ba'zi DKMS modullari buzilgan",
     "dkmsModulesBrokenTip": "Buzilgan DKMS modullarini oʻrnatishni rejalashtirish uchun meni bosing",
     "dkmsModulesMissing": "Ba'zi DKMS modullari yetishmayapti",
     "dkmsModulesMissingTip": "Yetishmayotgan DKMS modullari",
     "headers": "Sarlavhalar",
     "headersMissing": "Yetishmayotgan yadro sarlavhalari",
-    "headersMissingTip": "Yetishmayotgan sarlavhalarni oʻrnatishni rejalashtirish uchun meni bosing",
-    "active": "Faol yadro:"
+    "setDefault": "Standart yadroni tanlash"
+  },
+  "lang": {
+    "title": "Til tanlash",
+    "tooltip": "Afzal koʻrgan tilingizni tanlang"
   },
   "languagePacks": {
-    "locale": "Mahalliylashtirish",
-    "selected": "Tanlangan",
     "base": "Asosiy paket",
+    "description": "Bular sizning oʻrnatilgan paketlaringiz uchun til paketlari boʻlib, odatda GUI uchun tarjimalarni taqdim etadi.",
+    "locale": "Mahalliylashtirish",
     "notFound": "Til paketlari topilmadi",
     "pkgname": "Paket nomi",
-    "description": "Bular sizning oʻrnatilgan paketlaringiz uchun til paketlari boʻlib, odatda GUI uchun tarjimalarni taqdim etadi."
-  },
-  "settings": {
-    "title": "Ilova",
-    "icon": "Icon",
-    "titleTwo": "sozlamalari",
-    "leftButtons": "Oyna tugmalarini chapda koʻrsatish",
-    "copyDiagnostics": "Diagnostikani vaqtinchalik xotiraga nusxalash",
-    "darkMode": "Qorongʻi rejimni faollashtirish",
-    "language": "Faol tilni sozlash",
-    "autoStart": "Ilovani avtomatik ishga tushirish",
-    "logLevel": "Jurnal darajasini tanlang",
-    "systemdUserContext": "Foydalanuvchi Systemd xizmatlarini koʻrsatish",
-    "autoRefresh": "Systemd xizmatlarini avtomatik yangilashni faollashtirish",
-    "showMainLinks": "Bosh sahifada havolalarni koʻrsatish",
-    "themeLabel": "Asosiy dizayn mavzusi",
-    "toggleOptions": "Variantlarni almashtirish",
-    "selectOptions": "Tanlovlar"
+    "selected": "Tanlangan"
   },
   "locales": {
     "apply": "Oʻrnatilgan mahalliylashtirish oʻzgarishlarini rejalashtirish",
-    "description": "Oʻngdagi mahalliylashtirishlar tizimingizda oʻrnatilgan. Qaysi birini saqlashni va qaysi birini olib tashlashni tanlashingiz mumkin.",
     "available": "Mavjud",
+    "description": "Oʻngdagi mahalliylashtirishlar tizimingizda oʻrnatilgan. Qaysi birini saqlashni va qaysi birini olib tashlashni tanlashingiz mumkin.",
     "selected": "Tanlangan",
-    "task": "Tizim mahalliylashtirishini oʻzgartirish",
-    "selectLocale": "Afzal koʻrgan tizim boʻylab tilingizni tanlang"
+    "selectLocale": "Afzal koʻrgan tizim boʻylab tilingizni tanlang",
+    "task": "Tizim mahalliylashtirishini oʻzgartirish"
   },
-  "console": {
-    "title": "Terminal",
+  "maintenance": {
+    "actionFailed": "{{ action }} amalini bajarishda xatolik yuz berdi: {{ error }}.",
+    "actionFailedHeader": "Amal bajarilmadi",
+    "addPending": "Kutishga qoʻshish",
+    "addPendingSub": "Kutilayotgan operatsiyalarni qoʻshing",
+    "btrfsAssistant": "Btrfs Assistant",
+    "btrfsAssistantSub": "BTRFS oniy suratlarini boshqaring va texnik xizmat vazifalarini bajaring",
+    "cleanCache": "Keshni tozalash",
+    "cleanCacheSub": "Barcha keshlangan paketlarni olib tashlang",
+    "clearOrphans": "Yetim paketlarni tozalash",
+    "clearOrphansSub": "Yetim paketlarni olib tashlang",
+    "common": "Umumiy texnik xizmat",
+    "editRepos": "Omborlarni tahrirlash",
+    "editReposSub": "Omborlaringizni Pace bilan tahrirlang",
+    "failedReset": "Konfiguratsiya faylini tiklashda xatolik",
+    "failedResetFile": "{{file}} faylini tiklashda xatolik yuz berdi",
+    "garudaHealth": "Garuda salomatlik tekshiruvi",
+    "garudaHealthFix": "Garuda salomatligini tuzatish",
+    "garudaHealthFixSub": "Aniqlangan tizim konfiguratsiyasi muammolarini avtomatik tuzatish",
+    "garudaHealthSub": "Tizim konfiguratsiyasidagi muammolarni tekshiring",
+    "garudaUpdate": "Garuda update qutqaruv vositalari",
+    "installationFailedHeader": "{{ program }} oʻrnatilmagan va uni oʻrnatib boʻlmadi, davom etib boʻlmaydi. Qoʻshimcha maʼlumot uchun jurnallarni tekshiring",
+    "mergePacDiff": "pacdiff fayllarini birlashtirish",
+    "mergePacDiffSub": ".pacnew va .pacsave fayllarini interaktiv ravishda birlashtiring",
+    "onlyDirect": "Bu amalni navbatga qoʻyib boʻlmaydi va toʻgʻridan-toʻgʻri ishga tushirish kerak.",
+    "refreshArchMirrors": "Koʻzgularni yangilash",
+    "refreshArchMirrorsSub": "Koʻzgu roʻyxatini yangilang",
+    "refreshChaoticMirrors": "Chaotic-AUR koʻzgular roʻyxatini yangilash",
+    "refreshChaoticMirrorsSub": "Chaotic-AUR koʻzgular roʻyxatingizni yangilang",
+    "refreshChaoticMirrorsSuccess": "Chaotic-AUR koʻzgular roʻyxati muvaffaqiyatli yangilandi",
+    "refreshKeyring": "Kalitlar zanjirini yangilash",
+    "refreshKeyringSub": "Pacman kalitlar zanjirini yangilang",
+    "reinstallDkmsModules": "DKMS modullarini qayta oʻrnatish",
+    "reinstallPackages": "Paketlarni qayta oʻrnatish",
+    "reinstallPackagesSub": "Tizimingizdagi barcha paketlarni qayta oʻrnating",
+    "removeLock": "Pacman qulfini olib tashlash",
+    "removeLockSub": "Pacman qulf faylini olib tashlang",
+    "removePending": "Kutishdan olib tashlash",
+    "resetConfigs": "Konfiguratsiyalarni standart holatiga tiklash",
+    "resetTooltip": "Quyidagi fayllar yoki papkalar standart holatiga tiklanadi:",
+    "runNow": "Hozir ishga tushirish",
+    "subtitle": "Tizimingizni yaxshi holatda saqlang",
+    "taskRunning": "Allaachon ishlayotgan vazifa mavjud, avval uning tugashini kuting.",
+    "taskRunningHeader": "Texnik xizmat amalini bajarishda xatolik",
+    "title": "Tizimga ",
+    "titleTwo": "texnik xizmat koʻrsatish",
+    "update": "Tizimingizni yangilang",
+    "updateRemoteFix": "Garuda update tuzatish",
+    "updateRemoteFixSub": "pacman.conf faylini tiklang va kalit zanjirlarini yangilang",
+    "updateRemoteFullFix": "Garuda update toʻliq tuzatish",
+    "updateRemoteFullFixSub": "Pacmanni tiklang va OTdagi barcha paketlarni qayta oʻrnating",
+    "updateRemoteKeyring": "Garuda update kalit zanjiri",
+    "updateRemoteKeyringSub": "pacman.conf faylini tiklamasdan kalit zanjirini yangilang",
+    "updateRemoteResetAudio": "Audioni tiklash",
+    "updateRemoteResetAudioSub": "PipeWire audio konfiguratsiyasini qayta oʻrnatish/tiklash",
+    "updateRemoteResetSnapper": "Snapperni tiklash",
+    "updateRemoteResetSnapperSub": "Barcha Snapper narsalarini olib tashlang va uning konfiguratsiyalarini qayta yarating",
+    "updateSystem": "Tizimni yangilash",
+    "updateSystemSub": "Tizimingizni garuda-update orqali yangilang"
+  },
+  "menu": {
+    "apply": "Qoʻllash",
+    "boot": "Yuklash vositalari",
+    "bootRepair": "Yuklashni tuzatish",
+    "clearTasks": "Vazifalarni tozalash",
+    "components": "Komponentlar",
+    "configFiles": "Konfiguratsiya fayllari",
+    "console": "Terminalni koʻrsatish",
+    "diagnostics": "Diagnostika",
+    "file": {
+      "preferences": "Afzalliklar",
+      "quit": "Chiqish",
+      "title": "Fayl"
+    },
+    "gaming": "Oʻyinlar",
+    "help": {
+      "about": "Garuda Toolbox haqida",
+      "aboutBody": "Garuda Toolbox - bu Garuda Linux uchun tizimga texnik xizmat koʻrsatish va diagnostika vositasi. U foydalanuvchilarga tizimini saqlashga va muammolarni tashxislashga yordam berish uchun moʻljallangan. U Electron va Angular yordamida yaratilgan.",
+      "aboutForum": "Garuda Linux forumiga tashrif buyurish",
+      "aboutSourceCode": "GitLab'da manba kodini koʻrish",
+      "aboutVersion": "Versiya: {{version}}",
+      "aboutWiki": "Garuda Linux wikiga tashrif buyurish",
+      "callExorcist": "Ekzorsistni chaqiring",
+      "callExorcistBody": "Bu tugmani bosish uchun juda umidsiz boʻlishing kerak! Men sen uchun maxsus vudu oʻrnatdim, agar ilova bilan hali ham muammolaring boʻlsa, iltimos, ularni Garuda Linux forumida yoki bizning muammo kuzatuvchimizda xabar qiling.",
+      "callExorcistTitle": "Ekzorsist chaqirildi!",
+      "garudaStatus": "Ishlash vaqti holatini tekshiring",
+      "getHelpArchWiki": "Arch Wikidan kontent qidirish",
+      "getHelpForum": "Forumdan yordam oling",
+      "getHelpWiki": "Wikidan kontent qidirish",
+      "title": "Yordam"
+    },
+    "maintenance": "Texnik xizmat",
+    "modules": {
+      "appSettings": "Ilova sozlamalari",
+      "bootRepair": "Yuklashni tuzatish",
+      "components": "Komponentlar",
+      "diagnostics": "Diagnostika",
+      "gaming": "Oʻyinlar",
+      "kernels": "Yadrolar",
+      "locales": "Mahalliylashtirishlar",
+      "maintenance": "Texnik xizmat",
+      "packages": "Paketlar",
+      "search": "Qidiruv parametrlari",
+      "setupWizard": "Oʻrnatish yordamchisi",
+      "systemdServices": "Systemd xizmatlari",
+      "systemSettings": "Tizim sozlamalari",
+      "title": "Modullar",
+      "userManager": "Foydalanuvchilar boshqaruvi",
+      "welcome": "Xush kelibsiz"
+    },
+    "network": "Tarmoq vositalari",
+    "packages": "Paketlar",
+    "pending": "Kutilmoqda",
+    "settings": "Ilova sozlamalari",
+    "setupWizard": "Oʻrnatish yordamchisi",
+    "systemTools": "Tizim sozlamalari",
+    "terminalRunning": "Ishlayotgan vazifalar",
+    "terminalTasks": "Vazifalarni bajarish",
+    "welcome": "Xush kelibsiz"
+  },
+  "networkAssistant": {
+    "actions": "Amallar",
+    "active": "Faol",
+    "airplaneMode": "Samolyot rejimi",
+    "any": "Har qanday",
+    "blacklistAction": "{{name}} drayverini qora roʻyxatga kiritish",
+    "blacklistDriver": "Qora roʻyxatga kiritish",
+    "blacklistedDrivers": "Qora roʻyxatdagi drayverlar",
+    "blacklistFailed": "Qora roʻyxatni yangilab boʻlmadi",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth qurilmalari",
+    "cancel": "Bekor qilish",
+    "category": "Toifa",
+    "clear": "Tozalash",
+    "clickToCopy": "Nusxalash uchun bosing",
+    "connected": "Ulangan",
+    "connectionInfo": "Ulanish maʼlumotlari",
+    "connman": "ConnMan",
+    "copied": "Vaqtinchalik xotiraga nusxalandi",
+    "copyAll": "Barchasini nusxalash",
+    "count": "Soni",
+    "disabled": "Oʻchirilgan",
+    "disconnected": "Uzilgan",
+    "driver": "Drayver",
+    "driverBlacklisted": "Drayver qora roʻyxatga kiritildi",
+    "driverLoaded": "Drayver muvaffaqiyatli yuklandi",
+    "driverUnblacklisted": "Drayver qora roʻyxatdan chiqarildi",
+    "driverUnloaded": "Drayver muvaffaqiyatli tushirildi",
+    "enable": "Yoqish",
+    "enabled": "Yoqilgan",
+    "enableService": "Xizmatni yoqish",
+    "enableServiceFailed": "Xizmatni yoqib boʻlmadi",
+    "error": "Xatolik",
+    "errorFetch": "Tarmoq maʼlumotlarini olishda xatolik",
+    "ethernetControllers": "Ethernet kontrollerlari",
+    "externalIp": "Tashqi IP manzili",
+    "gps": "GPS",
+    "hardwareInfo": "Apparat maʼlumotlari",
+    "hotspotFailed": "Hotspot'ni ochib boʻlmadi",
+    "inactive": "Faol emas",
+    "installDriver": "Drayverni oʻrnatish",
+    "installTraceroute": "Traceroute'ni oʻrnatish",
+    "installWihotspot": "WiFi Hotspot'ni oʻrnatish",
+    "interface": "Interfeys",
+    "internet": "Internet",
+    "loadDriver": "Drayverni yuklash (Load)",
+    "loadDriverAction": "{{name}} drayverini yuklash",
+    "loadDriverFailed": "Drayverni yuklab boʻlmadi",
+    "loadedDrivers": "Yuklangan drayverlar",
+    "maxHops": "Maksimal sakrashlar (Max Hops)",
+    "networkManager": "NetworkManager",
+    "noDrivers": "Tarmoq drayverlari topilmadi",
+    "noHardware": "Tarmoq apparat vositalari aniqlanmadi",
+    "notAvailable": "Mavjud emas",
+    "off": "Oʻchiq",
+    "on": "Yoniq",
+    "openHotspot": "Hotspot'ni ochish",
+    "outputInTerminal": "Natija quyidagi terminalda koʻrsatiladi",
+    "ping": "Ping",
+    "pingFailed": "Ping yuborib boʻlmadi",
+    "quickToggles": "Tezkor oʻtkazgichlar",
+    "routerIp": "Router IP manzili",
+    "runPing": "Ping yuborish",
+    "runTraceroute": "Traceroute ishga tushirish",
+    "search": "Qidirish",
+    "serviceEnabled": "Xizmat muvaffaqiyatli yoqildi",
+    "services": "Xizmatlar",
+    "status": "Holat",
+    "success": "Muvaffaqiyatli",
+    "tabs": {
+      "diagnostics": "Diagnostika",
+      "drivers": "Drayverlar",
+      "hardware": "Apparat taʼminoti",
+      "status": "Holat"
+    },
+    "targetHost": "Nishon manzili (Target Host)",
+    "timeout": "Kutish vaqti (soniya)",
+    "title": "Tarmoq ",
+    "titleTwo": "yordamchisi",
+    "toggleAirplane": "Samolyot rejimini oʻzgartirish",
+    "toggleAirplaneFailed": "Samolyot rejimini oʻzgartirib boʻlmadi",
+    "toggleBt": "Bluetooth holatini oʻzgartirish",
+    "toggleBtFailed": "Bluetooth holatini oʻzgartirib boʻlmadi",
+    "toggleGps": "GPS holatini oʻzgartirish",
+    "toggleGpsFailed": "GPS holatini oʻzgartirib boʻlmadi",
+    "toggleWifi": "WiFi holatini oʻzgartirish",
+    "toggleWifiFailed": "WiFi holatini oʻzgartirib boʻlmadi",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Traceroute ishga tushirib boʻlmadi",
+    "type": "Tur",
+    "unblacklistDriver": "Qora roʻyxatdan chiqarish",
+    "unloadDriver": "Drayverni tushirish (Unload)",
+    "unloadDriverAction": "{{name}} drayverini tushirish",
+    "unloadDriverFailed": "Drayverni tushirib boʻlmadi",
+    "unloadedDrivers": "Yuklanmagan drayverlar",
+    "whitelistAction": "{{name}} drayverini oq roʻyxatga oʻtkazish",
+    "wifi": "WiFi",
+    "wifiHotspot": "WiFi tarqatish nuqtasi (Hotspot)",
+    "wifiHotspotDesc": "WiFi tarqatish nuqtasi sozlamalarini ochish",
+    "wirelessControllers": "Simsiz tarmoq kontrollerlari"
+  },
+  "operation": {
+    "abort": "Bekor qilish",
+    "addGroup": "Foydalanuvchini guruhga qoʻshish",
+    "args": "Argumentlar",
+    "disableHblock": "Hblockni oʻchirish",
+    "disableService": "Xizmatni oʻchirish",
+    "enableHblock": "Hblockni faollashtirish",
+    "enableService": "Xizmatni faollashtirish",
+    "installApps": "Ilovalarni oʻrnatish",
+    "logs": "Jurnallar",
+    "remove": "Olib tashlash",
+    "removeApps": "Ilovalarni olib tashlash",
+    "removeGroup": "Foydalanuvchini guruhdan olib tashlash",
+    "resetDnsServer": "DNS serverini tiklash",
+    "run": "Hozir ishga tushirish",
+    "setDefaultShell": "Standart qobiqni oʻrnatish",
+    "setNewDnsServer": "Yangi DNS serverini oʻrnatish"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "Ishlayotgan operatsiyalar mavjud, men faqat allaqachon bajarilganlarini olib tashlayman.",
+    "refusing": "Bajarish rad etilmoqda",
+    "thisOperationRunning": "Esing joyidami? Bu operatsiya hozirda ishlamoqda!"
+  },
+  "os-interact": {
+    "boot-options": "Yuklash sozlamalarini qoʻllash",
+    "configs": "Tizim konfiguratsiyalarini oʻzgartirish",
+    "configs-system": "Tizim konfiguratsiyalarini oʻzgartirish",
+    "configs-user": "Foydalanuvchi konfiguratsiyalarini oʻzgartirish",
+    "garuda-update-config": "Garuda Update sozlamalarini qoʻllash",
+    "groups": "Foydalanuvchi guruhlarini oʻzgartirish",
+    "locales": "Faollashtirilgan mahalliylashtirishlarni oʻzgartirish",
+    "packages": "Oʻrnatilgan paketlarni oʻzgartirish",
+    "packages-aur": "AUR paketlarini oʻzgartirish",
+    "services": "Xizmatlarni oʻzgartirish",
+    "services-user": "Foydalanuvchi xizmatlarini oʻzgartirish"
+  },
+  "packages": {
+    "any": "Har qanday",
+    "clear": "Tozalash",
+    "description": "Tavsif",
+    "documents": "Hujjatlar",
     "icon": "Icon",
-    "runActions": "Amallarni bajarish",
-    "removeAll": "Barcha amallarni olib tashlash",
-    "abortAll": "Barcha amallarni bekor qilish",
-    "noOutput": "Chiqish yoʻq",
-    "outputExists": "Koʻrinishidan, allaqachon ishlayotgan amal mavjud. Jurnallarni koʻrishga urinishdan oldin uning tugashini kuting.",
-    "opRunning": "Operatsiya allaqachon ishlamoqda.",
-    "clearCachedDataTitle": "Chiqish keshi tozalandi",
-    "clearCachedData": "Chiqish keshi tozalandi.",
-    "clearOutputCache": "Chiqish keshini tozalash",
-    "copyOutput": "Terminal chiqishini nusxalash",
-    "copyToClipboardTitle": "Vaqtinchalik xotiraga nusxalandi",
-    "copyToClipboard": "Chiqish muvaffaqiyatli vaqtinchalik xotirangizga nusxalandi.",
-    "uploadPrivateBin": "PrivateBin'ga yuklash"
+    "internet": "Internet",
+    "multimedia": "Multimedia",
+    "name": "Nom",
+    "notFound": "Paketlar topilmadi",
+    "other": "Boshqa",
+    "science": "Fan",
+    "search": "Qidirish",
+    "searchKey": "Qidiruv kalit soʻzini kiriting",
+    "security": "Xavfsizlik",
+    "selected": "Tanlangan",
+    "status": "Holat",
+    "title": "Paketlar",
+    "titleTwo": "ilovalari",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "Systemd xizmatlarini avtomatik yangilashni faollashtirish",
+    "autoStart": "Ilovani avtomatik ishga tushirish",
+    "backgroundFit": "Fonni ilovaga moslashtirish",
+    "backgroundSettings": "Fon sozlamalari",
+    "blurBackground": "Fonni xiralashtirish",
+    "blurStrength": "Xiralashtirish darajasi",
+    "clearBackground": "Fon rasmini tozalash",
+    "copyDiagnostics": "Diagnostikani vaqtinchalik xotiraga nusxalash",
+    "customBackground": "Maxsus fon rasmi",
+    "darkMode": "Qorongʻi rejimni faollashtirish",
+    "language": "Faol tilni sozlash",
+    "leftButtons": "Oyna tugmalarini chapda koʻrsatish",
+    "logLevel": "Jurnal darajasini tanlang",
+    "noBackgroundSelected": "Fon tanlanmagan",
+    "selectOptions": "Tanlovlar",
+    "showMainLinks": "Bosh sahifada havolalarni koʻrsatish",
+    "systemdUserContext": "Foydalanuvchi Systemd xizmatlarini koʻrsatish",
+    "themeLabel": "Asosiy dizayn mavzusi",
+    "title": "Ilova",
+    "titleTwo": "sozlamalari",
+    "toggleOptions": "Variantlarni almashtirish"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "Oʻrnatish va sozlash jarayonini boshlash uchun 'Qoʻllash' tugmasini bosing.",
+      "failedBody": "Oʻrnatish vaqtida xatolik yuz berdi. Qayta urinib koʻrishingiz yoki tanlovingizni oʻzgartirish uchun orqaga qaytishingiz mumkin.",
+      "failedHeader": "Bajarish amalga oshmadi",
+      "header": "Qoʻllashga tayyor"
+    },
+    "autoCategories": {
+      "audio": "Audio",
+      "browsers": "Brauzerlar",
+      "communication": "Muloqot",
+      "development": "Dasturlash",
+      "gaming": "Oʻyinlar",
+      "graphics": "Grafika",
+      "inputMethod": "Kiritish usullari",
+      "internet": "Internet",
+      "kernels": "Yadrolar",
+      "mail": "Pochta",
+      "multimedia": "Multimedia",
+      "office": "Ofis",
+      "other": "Boshqa",
+      "pkgmngrs": "Dasturlar markazlari",
+      "video": "Video",
+      "virtualization": "Virtualizatsiya"
+    },
+    "autoSoftware": {
+      "0ad": "Tarixiy asosdagi 3D real vaqt strategiya oʻyini (0 A.D.)",
+      "abiWord": "Toʻliq funksiyali matn protsessori (AbiWord)",
+      "aisleriot": "Karta oʻyinlari toʻplami (Pasyans)",
+      "ansible": "Rasmiy Ansible toʻplamlari",
+      "appimagePool": "Zamonaviy AppImageHub mijozi",
+      "ardour": "Professional darajadagi raqamli audio ish stansiyasi (DAW)",
+      "asian": "Umumiy osiyo tillari shriftlarini oʻz ichiga olgan meta-paket",
+      "audacious": "Yengil va kengaytirilgan audio pleyer",
+      "audacity": "Raqamli audio toʻlqinlarini tahrirlash dasturi",
+      "bakaMplayer": "libmpv asosidagi koʻp platformali media pleyer",
+      "bauh": "Ilovalarni boshqarish uchun grafik interfeys (Bauh)",
+      "bazaar": "Flatpak paketlariga yoʻnaltirilgan ilovalar doʻkoni",
+      "birdfont": "Vektorli grafikalar uchun shrift tahrirlagichi",
+      "bitwigStudio": "Musiqa ishlab chiqarish uchun raqamli audio ish stansiyasi",
+      "blender": "3D modellashtirish va animatsiya yaratish toʻplami",
+      "brasero": "CD/DVD disklarini yozish vositasi (Brasero)",
+      "brave": "Reklama va kuzatuvchilarni avtomatik bloklovchi brauzer",
+      "calligra": "Ofis va ijodiy ishlar uchun dasturlar toʻplami (Calligra)",
+      "chromium": "Tezlik, soddalik va xavfsizlik uchun yaratilgan veb-brauzer",
+      "clawsMail": "GTK+ asosidagi yengil elektron pochta mijozi",
+      "cockpit": "Linux serverlarini boshqarish uchun veb-interfeys",
+      "conky": "Yengil tizim monitoringi vositasi (Conky)",
+      "converseen": "Rasmlarni ommaviy oʻzgartirish va oʻlchamini moslash vositasi",
+      "darktable": "RAW fotosuratlarni tahrirlash va tartibga solish vositasi",
+      "deluge": "Yengil va toʻliq funksiyali BitTorrent mijozi",
+      "digikam": "Kengaytirilgan raqamli fotosuratlarni boshqarish ilovasi",
+      "discord": "Barchasi birda ovozli va matnli chat",
+      "discover": "KDE ilovalar va resurslar menejeri",
+      "docker": "Ilovalarni konteynerlarda yaratish, tarqatish va ishga tushirish",
+      "dragon": "Oddiylikka qaratilgan multimedia pleyeri (Dragon Player)",
+      "droidcam": "Telefon yoki planshetingizni veb-kameraga aylantiring",
+      "easytag": "Audio teglarni koʻrish va tahrirlash ilovasi",
+      "element": "Qulay va chiroyli Matrix jamoaviy hamkorlik mijozi",
+      "elisa": "KDE tomonidan yaratilgan oddiy musiqa pleyeri",
+      "evolution": "Elektron pochta, kontaktlar va taqvimni boshqarish ilovasi",
+      "falkon": "Koʻp platformali QtWebEngine brauzeri",
+      "fdm": "Zamonaviy kuchli yuklab olish tezlatgichi va boshqaruvchisi (FDM)",
+      "filezilla": "Tezkor va ishonchli FTP, FTPS va SFTP mijozi",
+      "firedragon": "Maxfiylikka yoʻnaltirilgan Floorp brauzeri (Garuda brendi ostida)",
+      "firedragonCatppuccin": "Catppuccin mavzusidagi Firedragon brauzeri",
+      "firefox": "Tezkor, maxfiy va xavfsiz veb-brauzer",
+      "firefoxEsr": "Firefox uzoq muddatli qoʻllab-quvvatlash versiyasi (ESR)",
+      "fontForge": "Shriftlar tahrirlagichi (vektor va rastr)",
+      "fractal": "GNOME uchun Matrix guruhli xabarlar mijozi",
+      "freeCad": "Parametrik 3D SAPR (CAD) modellashtirish vositasi",
+      "freeOffice": "Microsoft Office bilan mos keluvchi ofis toʻplami",
+      "geary": "GNOME uchun yengil elektron pochta mijozi",
+      "genymotion": "Android uchun virtual muhit (Genymotion)",
+      "gimp": "GNU tasvirlarni tahrirlash dasturi (GIMP)",
+      "github": "Git va GitHub bilan ishlash uchun grafik interfeys",
+      "gitKraken": "Qulay, tezkor va chiroyli Git mijozi",
+      "gnomeBoxes": "Virtual tizimlarga kirish uchun oddiy ilova (GNOME Boxes)",
+      "gnomeBuilder": "GNOME dasturlarini yaratish uchun moʻljallangan IDE",
+      "gnomeFirmware": "Qoʻllab-quvvatlanadigan qurilmalarda mikrodasturlarni boshqarish",
+      "gnomeSoftware": "GNOME ilovalar va resurslar menejeri",
+      "gnu": "Kengaytiriladigan va moslashuvchan matn tahrirlagichi (Emacs)",
+      "gnuCash": "Moliyaviy hisob-kitob ilovasi (GnuCash)",
+      "gnumeric": "GNOME uchun elektron jadval ilovasi (Gnumeric)",
+      "handbrake": "Koʻp oqimli video konvertori",
+      "hedgewars": "Navbatga asoslangan artilleriya strategiya oʻyini",
+      "homebank": "Bepul va oson shaxsiy hisob-kitob dasturi (HomeBank)",
+      "hypnotix": "IPTV oqimlarini koʻrish ilovasi",
+      "indic": "Hind tillari uchun kiritish usullari",
+      "inkscape": "Professional vektor grafikasi tahrirlagichi",
+      "intellijIdea": "Java va boshqa tillar uchun integratsiyalashgan dasturlash muhiti",
+      "japanese": "Yapon tili uchun kiritish usullari",
+      "jenkins": "Kengaytiriladigan uzluksiz integratsiya (CI) serveri",
+      "jitsiMeet": "Jitsi Meet ish stoli ilovasi",
+      "joplin": "Qaydlar va vazifalar roʻyxati ilovasi",
+      "k3b": "Kengaytirilgan CD/DVD yozish ilovasi (K3b)",
+      "kapman": "Mashhur Pac-Man oʻyinining kloni",
+      "kdenlive": "Chiziqli boʻlmagan video tahrirlagich (Kdenlive)",
+      "kDevelop": "KDE texnologiyalariga asoslangan C++ dasturlash muhiti",
+      "keepassXc": "Koʻp platformali parollar menejeri (KeePassXC)",
+      "kiCad": "Elektron sxemalar va bosma platalarni (PCB) loyihalash vositalari",
+      "kid3": "Audio teglar tahrirlagichi",
+      "kmahjongg": "Bir yoki ikki oʻyinchi uchun Mahjongg oʻyini",
+      "kmail": "KDE elektron pochta mijozi",
+      "kMyMoney": "Shaxsiy moliya menejeri (KMyMoney)",
+      "knights": "KDE tomonidan yaratilgan shaxmat oʻyini",
+      "kodi": "Media pleyer va koʻngilochar markaz",
+      "kolourpaint": "KDE tomonidan yaratilgan oddiy rasm chizish dasturi",
+      "korean": "Koreys tili uchun kiritish usullari",
+      "krita": "Professional raqamli chizish va rasm chizish dasturi",
+      "kwave": "KDE uchun audio tahrirlagich",
+      "libreCad": "2D SAPR (CAD) chizish vositasi",
+      "libreOfficeFresh": "LibreOffice eng soʻnggi versiyasi (Fresh)",
+      "libreOfficeStill": "LibreOffice barqaror versiyasi (Still)",
+      "librewolf": "Maxfiylik, xavfsizlik va erkinlikka qaratilgan veb-brauzer",
+      "linuxCachyos": "Yuqori darajada optimallashtirilgan CachyOS yadrosi",
+      "linuxHardened": "Xavfsizligi kuchaytirilgan Linux yadrosi",
+      "linuxLts": "Uzoq muddat qoʻllab-quvvatlanuvchi (LTS) Linux yadrosi",
+      "linuxMainline": "Eng soʻnggi asosiy (mainline) Linux yadrosi",
+      "linuxXanmod": "Unumdorlik uchun XanMod yamoqlariga ega maxsus yadro",
+      "linuxXanmodLts": "XanMod yamoqlariga ega LTS maxsus yadro",
+      "lmms": "Raqamli audio ish stansiyasi va sekvenser",
+      "lollypop": "GNOME uchun zamonaviy musiqa pleyeri",
+      "luanti": "Voxel asosidagi ochiq oʻyin dvigateli (sobiq Minetest)",
+      "luminanceHdr": "HDR tasvirlar bilan ishlash dasturi",
+      "mailspring": "Chiroyli va tezkor elektron pochta mijozi",
+      "mari0": "Portal quroli mexanikasiga ega Mario oʻyini",
+      "mediaElch": "Kodi uchun media menejeri",
+      "microsoftTeams": "Norasmiy Microsoft Teams mijozi",
+      "mixxx": "Bepul, ochiq manbali DJ dasturi",
+      "mumble": "Kam kechikishli yuqori sifatli ovozli chat dasturi",
+      "museScore": "Musiqa notalarini yaratish, tinglash va chop etish dasturi",
+      "myPaint": "Raqamli rassomlar uchun tezkor va oson chizish ilovasi",
+      "mystiq": "FFmpeg asosidagi audio/video konvertori",
+      "neochat": "Markazlashtirilmagan Matrix aloqa protokoli uchun mijoz",
+      "netbeans": "Java, HTML5, PHP, C va C++ uchun IDE",
+      "nextcloudClient": "Nextcloud ish stoli sinxronlash mijozi",
+      "nitroshare": "Qurilmalar oʻrtasida fayllarni tezkor almashish ilovasi",
+      "obsidian": "Lokal Markdown fayllari bilan ishlovchi shaxsiy bilimlar bazasi",
+      "obsStudio": "Jonli efir va yozib olish dasturi (OBS Studio)",
+      "octopi": "Qt asosidagi kuchli Pacman grafik interfeysi",
+      "onlyOffice": "Matn, jadval va taqdimot tahrirlagichlarini birlashtirgan ofis toʻplami",
+      "openToonz": "2D animatsiya ishlab chiqarish dasturi",
+      "pencil2d": "2D qoʻlda chizilgan animatsiyalarni yaratish vositasi",
+      "podman": "Konteynerlarni boshqarish uchun demonsiz konteyner tizimi",
+      "postman": "API interfeyslarini yaratish, sinash va hujjatlashtirish dasturi",
+      "prometheus": "Tizimlarni monitoring qilish va ogohlantirish vositalari",
+      "puppet": "Serverlarni avtomatlashtirish freymvorki va ilovasi",
+      "putty": "SSH/Telnet terminal mijozi (PuTTY)",
+      "pyCharm": "Professional dasturchilar uchun Python IDE",
+      "qbittorrent": "Qt asosidagi ilgʻor BitTorrent mijozi",
+      "qtCreator": "Yengil va koʻp platformali IDE",
+      "qutebrowser": "Python asosidagi klaviatura bilan boshqariladigan vim uslubidagi brauzer",
+      "remmina": "GTK+ asosidagi masofaviy ish stoli mijozi",
+      "rosegarden": "MIDI/audio sekvenser va nota tahrirlagichi",
+      "shortwave": "Internet radio pleyeri",
+      "shotcut": "Koʻp platformali video tahrirlagich (Shotcut)",
+      "signal": "Linux uchun Signal xavfsiz messenjeri",
+      "simplifiedChinese": "Soddalashtirilgan xitoy tili uchun kiritish usullari",
+      "sinhalese": "Singal tili uchun kiritish usullari",
+      "skrooge": "KDE uchun shaxsiy moliya menejeri",
+      "slack": "Slack ish stoli mijozi",
+      "smPlayer": "Oʻrnatilgan kodeklarga ega media pleyer (SMPlayer)",
+      "soundConverter": "Oddiy audio formatlar konvertori",
+      "soundwire": "Kompyuterdan boshqa qurilmalarga audio uzatish",
+      "strawberryPlayer": "Musiqa ixlosmandlari uchun audio pleyer",
+      "subtitleComposer": "Video subtitrlari tahrirlagichi",
+      "superTux": "Klassik 2D arkada oʻyini (SuperTux)",
+      "superTuxKart": "Tux ishtirokidagi poyga oʻyini (SuperTuxKart)",
+      "sweetHome3d": "Interyer dizayni va loyihalash ilovasi",
+      "synfigStudio": "Professional 2D vektorli animatsiya yaratish dasturi",
+      "teeworlds": "Tezkor koʻp oʻyinchili 2D otishma oʻyini",
+      "telegram": "Rasmiy Telegram ish stoli mijozi",
+      "terraform": "Infratuzilmani kod koʻrinishida boshqarish vositasi",
+      "thai": "Tay tili uchun kiritish usullari",
+      "thunderbird": "Mustaqil elektron pochta va yangiliklar mijozi",
+      "torBrowser": "Tor tarmogʻida xavfsiz koʻrish uchun brauzer",
+      "traditionalChinese": "Anʼanaviy xitoy tili uchun kiritish usullari",
+      "transmageddon": "Video formatlarini qayta kodlash ilovasi",
+      "twitchGui": "Koʻp platformali Twitch.tv koʻrish vositasi",
+      "ungoogledChromium": "Barcha Google integratsiyalaridan tozalangan Chromium",
+      "variety": "Fon rasmini muntazam ravishda avtomatik oʻzgartiradi",
+      "vietnamese": "Vyetnam tili uchun kiritish usullari",
+      "vim": "Moslashuvchan terminal matn tahrirlagichi",
+      "virtManager": "Virtual mashinalarni boshqarish uchun ish stoli interfeysi (Virt-Manager)",
+      "virtualBox": "Koʻp platformali virtualizatsiya dasturi (VirtualBox)",
+      "visualStudioCode": "Dasturlash va nosozliklarni tuzatish uchun kod tahrirlagichi",
+      "visualStudioCodeOss": "Visual Studio Code ochiq manbali yigʻmasi",
+      "vivaldi": "Tajribali foydalanuvchilar uchun moslashtirilgan veb-brauzer",
+      "vlc": "Koʻp platformali multimedia pleyeri (VLC)",
+      "vscodium": "Telemetriya va kuzatuvlarsiz VSCode yigʻmasi",
+      "warpinator": "Mahalliy tarmoq orqali fayllarni yuborish va qabul qilish",
+      "wings3d": "3D modellashtirish dasturi (Wings 3D)",
+      "wire": "Toʻliq shifrlangan xabarlar va video konferensiyalar ilovasi",
+      "wpsOffice": "Ofis dasturlari toʻplami (WPS Office)",
+      "xfburn": "Oddiy CD/DVD yozish vositasi (Xfburn)",
+      "xonotic": "Tezkor koʻp platformali birinchi shaxs otishma oʻyini (FPS)",
+      "xtreme": "Kuchli yuklab olish tezlatgichi va video yuklovchi",
+      "yakuake": "Ochilib tushuvchi (Drop-down) terminal emulyatori",
+      "zedEditor": "Yuqori unumdorlikka ega jamoaviy kod tahrirlagichi",
+      "zoom": "Video va veb-konferensiyalar xizmati"
+    },
+    "buttons": {
+      "apply": "Qoʻllash",
+      "back": "Orqaga",
+      "finish": "Yakunlash",
+      "next": "Keyingisi",
+      "retry": "Qayta urinish"
+    },
+    "softwareSelection": {
+      "body": "Oʻrnatmoqchi boʻlgan dasturlaringizni tanlang.",
+      "header": "Dasturlarni tanlash"
+    },
+    "steps": {
+      "apply": "Oʻzgarishlarni qoʻllash"
+    },
+    "success": {
+      "archWiki": "Arch Linux vikisi",
+      "body": "Tizimingiz sozlandi va foydalanishga tayyor!",
+      "finish": "Oʻrnatishni yakunlash",
+      "forum": "Garuda forumi",
+      "garudaWiki": "Garuda Linux vikisi",
+      "reboot": "Tizimni qayta yuklash tavsiya etiladi.",
+      "title": "Muvaffaqiyatli!"
+    },
+    "tasks": {
+      "installSoftware": "Tanlangan dasturlar oʻrnatilmoqda"
+    },
+    "title": "Oʻrnatish yordamchisi"
+  },
+  "shells": {
+    "fish": {
+      "hint": "fishni standart qobiq sifatida oʻrnatish boshqa dasturlar bilan muammolarga olib kelishi mumkin. Uni terminal konfiguratsiyalari orqali standart sifatida oʻrnatish tavsiya etiladi."
+    }
+  },
+  "systemdServices": {
+    "actions": "Amallar",
+    "active": "Faol",
+    "autoRefresh": "Avtomatik yangilash",
+    "clear": "Tozalash",
+    "description": "Tavsif",
+    "disable": "Oʻchirish",
+    "enable": "Faollashtirish",
+    "error": "Xizmatlarni olishda xatolik yuz berdi, iltimos qayta urinib koʻring.",
+    "errorTitle": "Xizmatlarni olishda xatolik",
+    "excludeDisabled": "Oʻchirilganlarni chiqarib tashlash",
+    "hideDead": "Nofaollarni yashirish",
+    "hideDeadTip": "'dead', 'failed' yoki 'exited' holatidagi xizmatlarni koʻrsatish/yashirish",
+    "includeDisabled": "Oʻchirilganlarni kiritish",
+    "load": "Yuklash",
+    "logs": "Jurnallar",
+    "mask": "Niqoblash",
+    "notFound": "Xizmatlar topilmadi",
+    "reload": "Qayta yuklash",
+    "restart": "Qayta ishga tushirish",
+    "searchKey": "Qidiruv kalit soʻzini kiriting",
+    "show": "Koʻrsatish",
+    "showAll": "Barchasini koʻrsatish",
+    "start": "Boshlash",
+    "state": "Holat",
+    "stop": "Toʻxtatish",
+    "systemContext": "Tizim xizmatlarini koʻrsatish",
+    "unit": "Birlik nomi",
+    "unmask": "Niqobni olib tashlash",
+    "userContext": "Foydalanuvchi xizmatlarini koʻrsatish"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "Parolsiz va shaxsiy fayllaringizdan ajratilgan vaqtinchalik 'mehmon' hisobini yaratadi. Tizimdan chiqqanda barcha maʼlumotlar oʻchiriladi.",
+        "title": "Mehmon foydalanuvchini faollashtirish"
+      },
+      "oomd": {
+        "description": "Xotira yetishmovchiligida tizim qotib qolishining oldini olish uchun resurslarni koʻp sarflaydigan jarayonlarni toʻxtatuvchi systemd xizmati.",
+        "title": "Systemd-oomd faollashtirilgan"
+      },
+      "psd": {
+        "description": "Brauzer profillarini tezkor xotiraga (RAM) koʻchirib, ularning tezligini oshiruvchi va disk yuklamasini kamaytiruvchi vosita.",
+        "title": "Profile-sync-daemon oʻrnatilgan"
+      },
+      "psdEnabled": {
+        "description": "Brauzer profillarini xotirada sinxronlashtirish uchun Profile-sync-daemon xizmatini yoqadi.",
+        "title": "Profile-sync-daemon faollashtirilgan"
+      },
+      "title": "Umumiy"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "PipeWire'ning node-suspend funksiyasini oʻchiradi. Bu audio qurilmalarni faol saqlab, uyqu rejimidan chiqishdagi yoqimsiz shovqinlarning oldini oladi.",
+        "title": "Ovoz toʻxtatilishini oʻchirish (Audio No-Suspend)"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Discord ilovasining yangilanishlarni yuklab olish haqidagi soʻrovlarini oʻchiradi, chunki Arch Linux tizimida bu ishni Pacman bajaradi.",
+        "title": "Discord avtomatik yangilanishini oʻchirish"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "KDE Plasma'da ilova toʻliq ekranga ochilganda oyna sarlavhasi va ramkalarini yashirib, koʻproq ekran maydoni beruvchi KWin sozlamasi.",
+        "title": "KDE ramkasiz kattalashtirish"
+      },
+      "title": "Tizim konfiguratsiyalari"
+    },
+    "defaultDns": "Standart DNSni oʻrnatish",
+    "defaultDnsTip": "Internet ulanishingiz uchun standart DNS serverini oʻzgartiradi. Bu tezlikni oshirish, maxfiylikni taʼminlash va cheklovlarni chetlab oʻtishga yordam beradi.",
+    "defaultShell": "Kirish qobigʻini oʻrnatish",
+    "defaultShellConfigs": "Standart konfiguratsiyalarni oʻrnatish",
+    "defaultShellTip": "Standart terminal kirish qobigʻini oʻzgartiradi. Tizim uchun Bash yoki Zsh kabi POSIX standartidagi qobiqlardan foydalanish tavsiya etiladi.",
+    "enableHblock": "Hblockni faollashtirish",
+    "enableHblockTip": "Reklama, kuzatuvchilar va zararli saytlarni /etc/hosts fayli orqali butun tizim boʻylab bloklovchi Hblock skriptini yoqadi.",
+    "enableIwd": "wpa_supplicant oʻrniga IWDdan foydalanish",
+    "enableIwdTip": "Wi-Fi ulanishlarini boshqarish uchun wpa_supplicant oʻrniga zamonaviy va tezkor iwd xizmatidan foydalanadi.",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "Paketlarni oʻrnatishdan oldin diskda boʻsh joy mavjudligini tekshirishni oʻchiradi.",
+        "title": "Disk joyini tekshirishni oʻtkazib yuborish"
+      },
+      "pacmanNoconfirm": {
+        "description": "Pacman orqali yangilanish paytida tasdiqlash soʻrovlarini oʻtkazib yuboradi.",
+        "title": "Pacman tasdiqlashsiz (--noconfirm)"
+      },
+      "skipMirrorlist": {
+        "description": "Tizim yangilanishi vaqtida koʻzgular roʻyxatini yangilashni oʻtkazib yuboradi.",
+        "title": "Koʻzgular roʻyxatini yangilashni oʻtkazib yuborish"
+      },
+      "title": "Garuda yangilash",
+      "updateAur": {
+        "description": "Tizimni yangilashda AUR paketlarini ham avtomatik yangilaydi.",
+        "title": "AUR paketlarini yangilash"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Jarayonlarning protsessor ustuvorligini (niceness) dinamik ravishda oʻzgartirib, faol ilovalarning tezroq ishlashini taʼminlaydigan xizmat.",
+        "title": "Ananicy C++ oʻrnatilgan"
+      },
+      "ananicyCppEnabled": {
+        "description": "Ilovalarning protsessor ustuvorligini boshqarish uchun Ananicy demonini ishga tushiradi.",
+        "title": "Ananicy C++ faollashtirilgan"
+      },
+      "bpftune": {
+        "description": "Optimal tarmoq tezligi va past kechikishni taʼminlash uchun eBPF orqali tarmoq parametrlarini real vaqtda optimallashtiradi.",
+        "title": "Bpftune oʻrnatilgan"
+      },
+      "bpftuneEnabled": {
+        "description": "Tarmoq unumdorligini doimiy ravishda optimallashtirish uchun bpftune xizmatini yoqadi.",
+        "title": "Bpftune faollashtirilgan"
+      },
+      "irqbalanceEnabled": {
+        "description": "Uskuna uzilishlarini (IRQ) barcha protsessor yadrolari boʻylab teng taqsimlaydi, bu alohida yadrolarning haddan tashqari yuklanishini oldini oladi.",
+        "title": "IRQbalance faollashtirilgan"
+      },
+      "performanceTweaks": {
+        "description": "Garuda tizimining tezkorligi va unumdorligini oshirish uchun tizim darajasidagi sysctl sozlamalarini qoʻllaydi.",
+        "title": "Ishlash samaradorligini oshirish sozlamalari"
+      },
+      "preload": {
+        "description": "Koʻp foydalaniladigan ilovalarni kuzatib, ularni oldindan tezkor xotiraga (RAM) yuklaydi va ishga tushish vaqtini qisqartiradi.",
+        "title": "Preload oʻrnatilgan"
+      },
+      "preloadEnabled": {
+        "description": "Koʻp ishlatiladigan ilovalarni keshga olish uchun Preload demonini yoqadi.",
+        "title": "Preload faollashtirilgan"
+      },
+      "title": "Ishlash samaradorligi"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "Protsessor tezligi va quvvatini avtomatik boshqaruvchi vosita. Boʻsh turganda chastotani pasaytiradi va kerak boʻlganda quvvatni oshiradi.",
+        "title": "Auto-cpufreq oʻrnatilgan"
+      },
+      "autoCpufreqEnabled": {
+        "description": "Protsessor chastotasini boshqarish uchun auto-cpufreq xizmatini ishga tushiradi.",
+        "title": "Auto-cpufreq faollashtirilgan"
+      },
+      "intelUndervolt": {
+        "description": "Intel protsessorlarining kuchlanishini kamaytiradi. Bu unumdorlikni yoʻqotmasdan issiqlik va quvvat sarfini kamaytiradi.",
+        "title": "Intel-undervolt oʻrnatilgan"
+      },
+      "intelUndervoltEnabled": {
+        "description": "Tizim yuklanganda Intel undervolt sozlamalarini avtomatik qoʻllovchi xizmatni yoqadi.",
+        "title": "Intel-undervolt faollashtirilgan"
+      },
+      "powerProfilesDaemon": {
+        "description": "Tizimga 'Quvvat tejash', 'Balanslangan' va 'Yuqori unumdorlik' rejimlari oʻrtasida oson oʻtish imkonini beruvchi xizmat.",
+        "title": "Quvvat profillari demoni oʻrnatilgan"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "Ish stoli muhitiga quvvat profillarini boshqarish imkonini beruvchi xizmatni yoqadi.",
+        "title": "Quvvat profillari demoni faollashtirilgan"
+      },
+      "powersaveTweaks": {
+        "description": "Batareyada ishlaydigan qurilmalarda quvvat sarfini kamaytirish uchun maxsus sysctl parametrlarini qoʻllaydi.",
+        "title": "Quvvat tejash sozlamalari"
+      },
+      "thermald": {
+        "description": "Intel protsessorlarining qizib ketishini oldini olish va haroratni boshqarish uchun thermald xizmati.",
+        "title": "Thermald oʻrnatilgan"
+      },
+      "thermaldEnabled": {
+        "description": "Protsessor haroratini nazorat qilish va haddan tashqari qizishni oldini olish uchun thermald xizmatini yoqadi.",
+        "title": "Thermald faollashtirilgan"
+      },
+      "title": "Quvvat tejash",
+      "tlp": {
+        "description": "Noutbuk quvvatdan uzilganda Wi-Fi, disklar va USB qurilmalari sozlamalarini optimallashtirib, batareya quvvatini tejovchi ilgʻor vosita.",
+        "title": "TLP oʻrnatilgan"
+      },
+      "tlpEnabled": {
+        "description": "Batareya rejimida quvvatni tejash qoidalarini qoʻllash uchun TLP xizmatini yoqadi.",
+        "title": "TLP faollashtirilgan"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "Sensorli ekran yoki tachpadda bitta barmoqni bosib turishni oʻng tugma bosilishi sifatida sozlaydi.",
+        "title": "Evdev uzoq bosish oʻng tugma emulyatsiyasi"
+      },
+      "evdevRce": {
+        "description": "Tachpadning pastki oʻng burchagini har doim oʻng tugma sifatida ishlashini taʼminlaydi.",
+        "title": "Evdev RCE faollashtirilgan"
+      },
+      "title": "Oʻng tugma emulyatsiyasi"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "Ta'sirlangan fayllar:",
+    "askHelp": "Agar ishonchingiz komil boʻlmasa, oynani saqlamasdan yoping va Garuda Linux forumida yordam soʻrang.",
+    "aurUpdates": "AUR paketlarini yangilash bu ilovaning doirasiga kirmaydi. Iltimos, Paru kabi AUR yordamchisidan foydalaning va oʻrnatishdan oldin PKGBUILD fayllarini koʻrib chiqing.",
+    "cancel": "Bekor qilish",
+    "cautionMerge": "ESKI faylga notoʻgʻri oʻzgarishlar kiritish tizimingizni buzishi mumkinligidan xabardor boʻling.",
+    "findMore": "Qanday davom etishni bilib oling",
+    "healthIssues": "Tizim salomatligi muammolari",
+    "healthIssuesFound": "Quyidagi tizim muammolari aniqlandi:",
+    "learnPacdiff": "Agar pacdiff fayllari bilan tanish boʻlmasangiz, ular haqida tezda ma'lumot oling.",
+    "openMaintenance": "Boshlash uchun quyidagi tugmani bosing.",
+    "openMaintenanceButton": "Birlashtirishni boshlash",
+    "pacFiles": "Bu tizimda kutilayotgan .pacnew fayllari mavjud, ularni tekshirib, birlashtirishingiz kerak! (ma'lumot uchun bosing)",
+    "pendingPacdiff": "Kutilayotgan pacdiff fayllari",
+    "pendingUpdates": "Kutilayotgan yangilanishlar",
+    "proceed": "Mana qanday davom etish kerak:",
+    "proceedMerge": "Oʻzgarishlarni qoʻllash uchun Meld ochiladi. Chap tomonda YANGI fayl, oʻng tomonda ESKI fayl. Birlashtirmoqchi boʻlgan foydali oʻzgarishlarni chapdan oʻng tomonga oʻtkazing. Tugatgach, saqlash tugmasini yoki CTRL + S tugmalarini bosing.",
+    "rebootNow": "Hozir qayta yuklash",
+    "rebootNowBody": "Hozir qayta yuklashni xohlaysizmi? Davom etishdan oldin barcha ishlaringizni saqlaganingizga ishonch hosil qiling.",
+    "runAurUpdates": "AUR yangilanishlarini tashqaridan ishga tushirish",
+    "runHealthFix": "Tizimni tuzatishni ishga tushirish",
+    "scheduleUpdates": "Yangilanishlarni rejalashtirish",
+    "snapshotCreation": "Birlashtirishni boshlashdan oldin Btrfs oniy surati yaratiladi.",
+    "updates": "Bu tizimda kutilayotgan yangilanishlar mavjud (ma'lumot uchun bosing)",
+    "warnReboot": "Yangilanishlarni qoʻllagandan soʻng, ayniqsa yadrolarni yoki ish stoli muhitlarini yangilaganda tizimni qayta yuklash qat'iy tavsiya etiladi.",
+    "warnUpdate": "Tizimingiz 2 hafta davomida yangilanmagan. Xavfsizlik va barqarorlikni ta'minlash uchun tizimingizni yangilang."
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "Yadro darajasidagi asosiy audio drayver. Ovoz kartalari uchun apparat ta'minotini taqdim etadi, odatda PipeWire orqali ishlatiladi.",
+        "title": "ALSA qoʻllab-quvvatlashi"
+      },
+      "calf": {
+        "description": "Professional musiqa yaratish va qayta ishlash uchun moʻljallangan ochiq manbali audio plaginlar toʻplami.",
+        "title": "Calf Studio Plugins oʻrnatilgan"
+      },
+      "easyeffects": {
+        "description": "PipeWire uchun toʻliq audio boshqaruv ilovasi. Ekvalayzer, kompressor, limiter va shovqinni bekor qilish filtrlarini oʻz ichiga oladi.",
+        "title": "EasyEffects oʻrnatilgan"
+      },
+      "jack": {
+        "description": "Professional audio ishlab chiqarish uchun moʻljallangan kam kechikishli ovoz serveri. Hozirda PipeWire tomonidan toʻliq boshqariladi.",
+        "title": "JACK qoʻllab-quvvatlashi"
+      },
+      "jamesdsp": {
+        "description": "Linux uchun ilgʻor audio effektlar protsessori. Bass kuchaytirish, reverberatsiya va ekvalayzer kabi imkoniyatlarni taqdim etadi.",
+        "title": "JamesDSP oʻrnatilgan"
+      },
+      "lspPlugins": {
+        "description": "Linux audio dasturlari uchun yuqori sifatli plaginlar toʻplami (ekvalayzerlar, kompressorlar, kompozitsiya vositalari va h.k.).",
+        "title": "LSP Plugins oʻrnatilgan"
+      },
+      "pipewire": {
+        "description": "Linux tizimida audio va video oqimlarini boshqarishning zamonaviy standarti. PulseAudio va JACK oʻrnini past kechikish va yuqori xavfsizlik bilan egallaydi.",
+        "title": "PipeWire qoʻllab-quvvatlashi"
+      },
+      "pulseaudio": {
+        "description": "Eski avlod ovoz serveri. Asosan moslik uchun saqlangan, lekin PipeWire uning oʻrnini toʻliq egallagan.",
+        "title": "PulseAudio qoʻllab-quvvatlashi"
+      },
+      "title": "Audio",
+      "userRealtime": {
+        "description": "Foydalanuvchini 'realtime' guruhiga qoʻshadi. Bu audio dasturlarga ustuvorlik berib, ovoz uzilishlari va kechikishlarning oldini oladi.",
+        "title": "Foydalanuvchi realtime guruhida"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "Ma'lum Bluetooth qurilmalari aniqlanganda ularga avtomatik ulanishni ta'minlaydi.",
+        "title": "Avtomatik ulanish oʻrnatilgan"
+      },
+      "autoConnectEnabled": {
+        "description": "Tizim yuklanganda Bluetooth avtomatik ulanish xizmatini ishga tushiradi.",
+        "title": "Avtomatik ulanish faollashtirilgan"
+      },
+      "bluetooth": {
+        "description": "Bluetooth qurilmalarini (naushniklar, sichqoncha va klaviaturalar) ulash uchun asosiy dasturiy ta'minot.",
+        "title": "Bluetooth qoʻllab-quvvatlashi"
+      },
+      "bluetoothEnabled": {
+        "description": "Bluetooth adapterlari va ulanishlarini faollashtirish uchun bluetooth.service xizmatini ishga tushiradi.",
+        "title": "Bluetooth faollashtirilgan"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "Bluetooth sozlamalarini boshqarish uchun foydalanuvchini 'bluetooth' guruhiga qoʻshadi.",
+        "title": "Foydalanuvchi bluetooth guruhida"
+      }
+    },
+    "components": "Tizim komponentlari",
+    "containers": {
+      "boxbuddy": {
+        "description": "Distrobox konteynerlarini oson yaratish va boshqarish uchun qulay grafik interfeys.",
+        "title": "BoxBuddy oʻrnatilgan"
+      },
+      "distrobox": {
+        "description": "Har qanday Linux distributivini (Ubuntu, Fedora va h.k.) asosiy tizimingiz bilan toʻliq integratsiyalashgan konteyner ichida ishga tushirish imkonini beradi.",
+        "title": "DistroBox oʻrnatilgan"
+      },
+      "docker": {
+        "description": "Ilovalarni izolyatsiyalangan konteynerlarda yaratish va ishga tushirish uchun yetakchi platforma.",
+        "title": "Docker oʻrnatilgan"
+      },
+      "dockerCompose": {
+        "description": "Bir nechta konteynerli Docker ilovalarini bitta YAML fayli orqali sozlash va boshqarish vositasi.",
+        "title": "Docker Compose oʻrnatilgan"
+      },
+      "dockerEnabled": {
+        "description": "Konteynerlarni ishga tushirish va boshqarish uchun Docker demonini yoqadi.",
+        "title": "Docker faollashtirilgan"
+      },
+      "kontainer": {
+        "description": "KDE Plasma ish stoli muhiti uchun yaratilgan konteynerlarni boshqarish ilovasi.",
+        "title": "Kontainer oʻrnatilgan"
+      },
+      "podman": {
+        "description": "Root huquqlarisiz ishlaydigan va demonsiz boʻlgan zamonaviy Docker muqobili konteyner tizimi.",
+        "title": "Podman oʻrnatilgan"
+      },
+      "podmanDesktop": {
+        "description": "Podman va boshqa konteynerlarni qulay boshqarish uchun grafik interfeys.",
+        "title": "Podman Desktop oʻrnatilgan"
+      },
+      "podmanDocker": {
+        "description": "'docker' buyrugʻini 'podman' buyrugʻiga yoʻnaltiruvchi qatlam yaratadi, bu Docker buyruqlaridan foydalanishni osonlashtiradi.",
+        "title": "Podman orqali Docker emulyatsiyasi"
+      },
+      "title": "Konteynerlar",
+      "userDocker": {
+        "description": "Foydalanuvchini 'docker' guruhiga qoʻshadi, bu esa sudo buyrugʻisiz Docker buyruqlarini bajarishga imkon beradi.",
+        "title": "Foydalanuvchi docker guruhida"
+      },
+      "winboat": {
+        "description": "Linux tizimida Windows ilovalarini konteyner ichida muammosiz ishlatish vositasi.",
+        "title": "Winboat oʻrnatilgan"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "Xavfsizlik zonalari va qoidalarini boshqarish uchun dinamik xavfsizlik devori (firewalld).",
+        "title": "Firewalld oʻrnatilgan"
+      },
+      "firewalldEnabled": {
+        "description": "Tizimni himoya qilish uchun Firewalld xizmatini avtomatik ishga tushirishni yoqadi.",
+        "title": "firewalld faollashtirilgan"
+      },
+      "opensnitch": {
+        "description": "Ilovalarning internetga ulanishlarini kuzatuvchi va nazorat qiluvchi xavfsizlik dasturi.",
+        "title": "OpenSnitch oʻrnatilgan"
+      },
+      "opensnitchEnabled": {
+        "description": "OpenSnitch monitoring xizmatini ishga tushiradi.",
+        "title": "OpenSnitch faollashtirilgan"
+      },
+      "title": "Xavfsizlik devori",
+      "ufw": {
+        "description": "Oddiy va tushunarli iptables boshqaruv vositasi (UFW xavfsizlik devori).",
+        "title": "UFW oʻrnatilgan"
+      },
+      "ufwEnabled": {
+        "description": "Kiruvchi va chiquvchi aloqalarni boshqarish uchun UFW xizmatini faollashtiradi.",
+        "title": "UFW faollashtirilgan"
+      }
+    },
+    "kernels": "Yadrolar",
+    "locales": "Mahalliylashtirishlar",
+    "misc": {
+      "gns": {
+        "description": "Garuda Linux tizimida Nix paketlaridan oson foydalanish imkonini beruvchi quyi tizim.",
+        "title": "Garuda Nix Subsystem oʻrnatilgan"
+      },
+      "title": "Har xil"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "Mobil aloqa modemlarini (3G/4G/5G) boshqarish uchun ModemManager xizmatini yoqadi.",
+        "title": "ModemManager faollashtirilgan"
+      },
+      "networkManager": {
+        "description": "Linux'da tarmoq ulanishlarini (Wi-Fi, kabel va VPN) boshqarish uchun standart tizim vositasi.",
+        "title": "NetworkManager qoʻllab-quvvatlashi"
+      },
+      "networkManagerEnabled": {
+        "description": "Tarmoqqa avtomatik ulanish va boshqarish uchun NetworkManager xizmatini faollashtiradi.",
+        "title": "NetworkManager faollashtirilgan"
+      },
+      "title": "Tarmoq"
+    },
+    "packages": "Qoʻshimcha paketlar",
+    "printing": {
+      "cupsEnabled": {
+        "description": "Hujjatlarni chop etish uchun CUPS xizmatini faollashtiradi.",
+        "title": "CUPS faollashtirilgan"
+      },
+      "printingSupport": {
+        "description": "Tizimga printerlarni qoʻllab-quvvatlash va CUPS paketlarini oʻrnatadi.",
+        "title": "Chop etishni qoʻllab-quvvatlash"
+      },
+      "sanedEnabled": {
+        "description": "Skanerlarni tarmoq orqali ulash uchun SANE xizmatini faollashtiradi.",
+        "title": "saned faollashtirilgan"
+      },
+      "scanningSupport": {
+        "description": "Skanerlardan foydalanish uchun SANE drayverlari va vositalarini oʻrnatadi.",
+        "title": "Skanerlashni qoʻllab-quvvatlash"
+      },
+      "title": "Chop etish",
+      "userCups": {
+        "description": "Chop etish ishlarini boshqarish uchun foydalanuvchini 'cups' guruhiga qoʻshadi.",
+        "title": "Foydalanuvchi cups guruhida"
+      },
+      "userLp": {
+        "description": "Printer uskunalariga kirish uchun foydalanuvchini 'lp' guruhiga qoʻshadi.",
+        "title": "Foydalanuvchi lp guruhida"
+      },
+      "userScanner": {
+        "description": "Skaner qurilmalaridan foydalanish uchun foydalanuvchini 'scanner' guruhiga qoʻshadi.",
+        "title": "Foydalanuvchi scanner guruhida"
+      }
+    },
+    "systemdServices": "Systemd xizmatlari",
+    "systemSettings": "Tizim sozlamalari",
+    "title": "Tizim ",
+    "titleTwo": "sozlamalari",
+    "users": "Foydalanuvchilar va guruhlar",
+    "virtualization": {
+      "kvm": {
+        "description": "Linux yadrosini gipervizorga aylantiruvchi modul. QEMU virtual mashinalarini deyarli mahalliy tezlikda ishlatishga imkon beradi.",
+        "title": "KVM qoʻllab-quvvatlashi"
+      },
+      "libvirtdEnabled": {
+        "description": "Virtual mashinalar, tarmoqlar va xotirani boshqarish uchun zarur boʻlgan libvirtd xizmatini ishga tushiradi.",
+        "title": "Libvirtd faollashtirilgan"
+      },
+      "qemu": {
+        "description": "Kompyuteringizda boshqa operatsion tizimlarni ishga tushirish imkonini beruvchi tezkor ochiq manbali mashina emulyatori va virtualizatori.",
+        "title": "QEMU oʻrnatilgan"
+      },
+      "qemuUserStatic": {
+        "description": "Boshqa arxitekturalar uchun dasturlarni (masalan, x86_64 tizimida ARM dasturlarini) ishga tushirish imkonini beruvchi statik QEMU binar fayllari.",
+        "title": "QEMU User Static oʻrnatilgan"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "Boshqa protsessor arxitekturasi uchun moʻljallangan fayllarni avtomatik tarzda QEMU orqali ishga tushirish uchun binfmt_misc xizmatini yoqadi.",
+        "title": "QEMU Binfmt xizmati faollashtirilgan"
+      },
+      "title": "Virtualizatsiya",
+      "userKvm": {
+        "description": "Foydalanuvchini 'kvm' guruhiga qoʻshadi. Bu apparat virtualizatsiyasiga toʻgʻridan-toʻgʻri tezkor kirishni taʼminlaydi.",
+        "title": "Foydalanuvchi kvm guruhida"
+      },
+      "userLibvirt": {
+        "description": "Foydalanuvchini 'libvirt' guruhiga qoʻshadi. Bu har safar ildiz parolini kiritmasdan Virt-Manager orqali mashinalarni boshqarishga imkon beradi.",
+        "title": "Foydalanuvchi libvirt guruhida"
+      },
+      "userVboxUsers": {
+        "description": "Foydalanuvchini 'vboxusers' guruhiga qoʻshadi. Bu VirtualBox ichida USB qurilmalari va veb-kameralardan toʻliq foydalanish imkonini beradi.",
+        "title": "Foydalanuvchi vboxusers guruhida"
+      },
+      "virtManager": {
+        "description": "KVM/QEMU virtual mashinalarini yaratish, sozlash va boshqarish uchun qulay ish stoli grafik interfeysi.",
+        "title": "Virt-manager qoʻllab-quvvatlashi"
+      },
+      "virtualbox": {
+        "description": "Ish stoli foydalanuvchilari uchun qulay va ommabop virtualizatsiya dasturi.",
+        "title": "VirtualBox qoʻllab-quvvatlashi"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "Joriy vazifa yakunlandi.",
+    "scriptMismatch": "Skript oʻzgartirilgan, uni ishga tushirish rad etildi!"
+  },
+  "userManager": {
+    "actions": "Amallar",
+    "addGroup": "Guruh qoʻshish",
+    "addUser": "Foydalanuvchi qoʻshish",
+    "cancel": "Bekor qilish",
+    "clearPending": "Kutilayotgan oʻzgarishlarni tozalash",
+    "confirmPassword": "Parolni tasdiqlang",
+    "confirmRemoveGroup": "{{group}} guruhini oʻchirishga ishonchingiz komilmi?",
+    "confirmRemoveUser": "{{username}} foydalanuvchisini oʻchirishga ishonchingiz komilmi? Uy jildi ham oʻchiriladi.",
+    "createHome": "Uy jildini yaratish",
+    "editUser": "Foydalanuvchini tahrirlash",
+    "enterGroupName": "Iltimos, guruh nomini kiriting",
+    "enterPassword": "Iltimos, parol kiriting",
+    "enterUsername": "Iltimos, foydalanuvchi nomini kiriting",
+    "error": "Xatolik",
+    "fullName": "Toʻliq ism",
+    "gid": "GID",
+    "groupExists": "Bunday nomli guruh allaqachon mavjud",
+    "groupName": "Guruh nomi",
+    "groups": "Guruhlar",
+    "groupsColumn": "Guruhlar",
+    "home": "Uy jildi",
+    "lock": "Qulflash",
+    "locked": "Qulflangan",
+    "manageGroups": "Guruhlarni boshqarish",
+    "manageGroupsFor": "{{username}} uchun guruhlarni boshqarish",
+    "members": "Aʼzolar",
+    "newGroupName": "Guruh nomi",
+    "newPassword": "Yangi parol",
+    "noGroupsFound": "Guruhlar topilmadi",
+    "noUsersFound": "Foydalanuvchilar topilmadi",
+    "passwordDialogTitle": "{{username}} uchun parol oʻrnatish",
+    "passwordMismatch": "Parollar mos kelmadi",
+    "pending": {
+      "add": "Kutilayotgan qoʻshish",
+      "lock": "Kutilayotgan qulflash",
+      "membership": "Kutilayotgan guruh aʼzoligi oʻzgarishlari",
+      "modify": "Kutilayotgan oʻzgartirish",
+      "password": "Kutilayotgan parol",
+      "remove": "Kutilayotgan oʻchirish",
+      "unlock": "Kutilayotgan qulfdan chiqarish"
+    },
+    "removeGroup": "Guruhni oʻchirish",
+    "removeUser": "Foydalanuvchini oʻchirish",
+    "save": "Saqlash",
+    "searchGroups": "Guruhlarni qidirish",
+    "searchUsers": "Foydalanuvchilarni qidirish",
+    "selectGroups": "Guruhlarni tanlang",
+    "setPassword": "Parol oʻrnatish",
+    "shell": "Qobiq (Shell)",
+    "showAllUsers": "Barcha foydalanuvchilarni koʻrsatish",
+    "showUsersOnly": "Faqat foydalanuvchilarni koʻrsatish",
+    "system": "Tizim",
+    "systemAccount": "Tizim hisobi",
+    "task": {
+      "addGroup": "Guruh qoʻshish",
+      "addMembership": "Guruhga qoʻshish",
+      "addUser": "Foydalanuvchi qoʻshish",
+      "lockUser": "Foydalanuvchini qulflash",
+      "modifyUser": "Foydalanuvchini oʻzgartirish",
+      "password": "Parol oʻrnatish",
+      "removeGroup": "Guruhni oʻchirish",
+      "removeMembership": "Guruhdan chiqarish",
+      "removeUser": "Foydalanuvchini oʻchirish",
+      "unlockUser": "Foydalanuvchini qulfdan chiqarish"
+    },
+    "uid": "UID",
+    "unlock": "Qulfdan chiqarish",
+    "userExists": "Bunday nomli foydalanuvchi allaqachon mavjud",
+    "username": "Foydalanuvchi nomi",
+    "users": "Foydalanuvchilar"
+  },
+  "welcome": {
+    "bootRepair": "Yuklashni tuzatish",
+    "bootRepairSub": "Yuklagichni (bootloader) qayta oʻrnating yoki tuzating",
+    "bootTools": "Yuklash vositalari",
+    "bootToolsSub": "Yuklash sozlamalaringizni boshqaring",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "Oldindan yigʻilgan AUR paketlariga kiring",
+    "chroot": "Garudaga chroot qilish",
+    "chrootSub": "Garuda oʻrnatmanggizga chroot qiling",
+    "diagnostics": "Diagnostika",
+    "diagnosticsSub": "Tizimingiz sogʻligʻini tekshiring",
+    "donate": "Xayriya qilish",
+    "donateSub": "Garuda Linux rivojlanishini qoʻllab-quvvatlang",
+    "error": "Xatolik yuz berdi.",
+    "gaming": "Oʻyin ilovalari",
+    "gamingSub": "Sevimli oʻyinlaringizni oʻynang",
+    "gitlab": "GitLab",
+    "gitlabSub": "Manba kodimizni koʻrib chiqing",
+    "hello": "Salom",
+    "install": "Garuda Linux oʻrnatish",
+    "installSub": "Garuda Linuxni tizimingizga oling",
+    "maintenance": "Texnik xizmat",
+    "maintenanceSub": "Tizimingizni yaxshi holatda saqlang",
+    "network": "Tarmoq vositalari",
+    "networkSub": "Tarmoq sozlamalaringizni boshqaring",
+    "packages": "Paketlar",
+    "packagesSub": "Ommabop ilovalarni oʻrnating va boshqaring",
+    "searxng": "SearXNG",
+    "searxngSub": "Maxfiylikka asoslangan qidiruv tizimimizdan foydalaning",
+    "setupAssistant": "Oʻrnatish yordamchisi",
+    "setupAssistantSub": "Garuda oʻrnatish yordamchisini ishga tushiring",
+    "startpage": "Bosh sahifa",
+    "startpageSub": "Garuda Linux bosh sahifasini oching",
+    "subtitle": "Oʻyin va multimedia uchun eng zoʻr Linux distributivi",
+    "systemTools": "Tizim sozlamalari",
+    "systemToolsSub": "Tizimingizni sozlang",
+    "title": "Xush kelibsiz: ",
+    "titleTwo": "Garuda Linux",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Parollaringizni xavfsiz boshqaring",
+    "whoogle": "Whoogle",
+    "whoogleSub": "Kuzatuvlarsiz Google qidiruv natijalarini oling"
   }
 }

@@ -1,615 +1,1557 @@
 {
-  "menu": {
-    "welcome": "ようこそ",
-    "maintenance": "メンテナンス",
-    "systemTools": "システム設定",
-    "components": "コンポーネント",
-    "gaming": "ゲーミング",
-    "boot": "ブートツール",
-    "diagnostics": "診断",
-    "network": "ネットワークツール",
-    "settings": "アプリ設定",
-    "help": {
-      "title": "ヘルプ",
-      "icon": "Icon",
-      "getHelpForum": "フォーラムで助けを求める",
-      "getHelpWiki": "Wikiでコンテンツを検索",
-      "getHelpArchWiki": "Arch Wikiでコンテンツを検索",
-      "garudaStatus": "稼働状況を確認",
-      "about": "Garuda Toolbox について",
-      "aboutBody": "Garuda Toolbox は Garuda Linux 用のシステムメンテナンスおよび診断ツールです。ユーザーがシステムを維持し、問題を診断するのを支援するように設計されています。Electron と Angular を使用して構築されています。",
-      "callExorcist": "悪魔祓いを呼ぶ",
-      "callExorcistTitle": "悪魔祓いを呼びました！",
-      "callExorcistBody": "このボタンをクリックするなんて、よほど必死なんですね！あなたのために特別なブードゥーを設定しました。もしアプリにまだ問題がある場合は、Garuda Linux フォーラムまたは私たちの課題トラッカーに報告してください。"
-    },
-    "terminalRunning": "実行中のタスク",
-    "terminalTasks": "タスクを実行",
-    "pending": "保留中",
-    "console": "ターミナルを表示"
-  },
-  "diagnostics": {
-    "title": "デバッグ情報 ",
-    "icon": "Icon",
-    "titleTwo": "と診断",
-    "subtitle": "システムのデバッグに必要な情報を見つけましょう",
-    "inxi": "共通情報 (inxi)",
-    "systemctl": "システムサービス (systemctl)",
-    "journalctl": "システムログ (journalctl)",
-    "dmesg": "カーネルログ (dmesg)",
-    "full": "完全な診断",
-    "upload": "PrivateBin にアップロード",
-    "failedCmdHeader": "コマンドの実行に失敗しました",
-    "failedCmd": "問題が発生し、診断情報を取得できませんでした",
-    "pacman": "最新の Pacman ログ",
-    "copied": "クリップボードに正常にコピーされました",
-    "success": "成功",
-    "uploadSuccess": "PrivateBin に正常にアップロードされました。URL がクリップボードにコピーされました"
-  },
-  "lang": {
-    "title": "言語選択",
-    "icon": "Icon",
-    "tooltip": "優先する言語を選択してください"
-  },
-  "welcome": {
-    "title": "ようこそ、",
-    "icon": "Icon",
-    "titleTwo": "Garuda Linux へ",
-    "subtitle": "ゲーミングとマルチメディアのための究極の Linux ディストリビューション",
-    "maintenance": "メンテナンス",
-    "maintenanceSub": "システムを良好な状態に保ちましょう",
-    "systemTools": "システム設定",
-    "systemToolsSub": "システムを設定しましょう",
-    "gaming": "ゲーミングアプリ",
-    "gamingSub": "お気に入りのゲームをプレイしましょう",
-    "bootTools": "ブートツール",
-    "bootToolsSub": "ブート設定を管理しましょう",
-    "network": "ネットワークツール",
-    "networkSub": "ネットワーク設定を管理しましょう",
-    "diagnostics": "診断",
-    "diagnosticsSub": "システムの健康状態を確認しましょう",
-    "install": "Garuda Linux をインストール",
-    "installSub": "システムに Garuda Linux を導入しましょう",
-    "chroot": "Garuda に Chroot",
-    "chrootSub": "Garuda インストール環境に Chroot しましょう",
-    "startpage": "スタートページ",
-    "startpageSub": "Garuda Linux スタートページを開く",
-    "setupAssistant": "セットアップアシスタント",
-    "setupAssistantSub": "Garuda セットアップアシスタントを実行する",
-    "hello": "こんにちは",
-    "error": "エラーが発生しました。"
-  },
-  "gaming": {
-    "title": "ゲーミング ",
-    "icon": "Icon",
-    "titleTwo": "アプリ",
-    "subtitle": "いくつかのゲーミングアプリから始めましょう！",
-    "launchers": "ゲームランチャー",
-    "loading": "読み込み中...",
-    "wine": "WINE",
-    "tools": "ゲーミングツール",
-    "emulators": "エミュレータ",
-    "controllers": "コントローラーサポート",
-    "games": "ゲーム",
-    "misc": "その他",
-    "bluez": "一般的に、ワイヤレスの PS コントローラーを認識するために必要です",
-    "xboxdrv": "Xbox コントローラードライバー。カーネルドライバーが機能しない場合にのみ使用してください！",
-    "wineMeta": "WINE と必要なすべての依存関係をインストールするためのメタパッケージ"
-  },
-  "maintenance": {
-    "title": "システム ",
-    "icon": "Icon",
-    "titleTwo": "メンテナンス",
-    "subtitle": "システムを良好な状態に保ちましょう",
-    "update": "システムを更新",
-    "addPending": "保留に追加",
-    "removePending": "保留から削除",
-    "runNow": "今すぐ実行",
-    "failedReset": "設定ファイルのリセット中にエラーが発生しました",
-    "failedResetFile": "{{file}} のリセット中にエラーが発生しました",
-    "editRepos": "リポジトリを編集",
-    "onlyDirect": "このアクションはキューに入れることができず、直接実行する必要があります。",
-    "cleanCache": "キャッシュをクリーン",
-    "cleanCacheSub": "キャッシュされたすべてのパッケージを削除",
-    "updateSystem": "システムを更新",
-    "taskRunningHeader": "メンテナンスアクションの実行中にエラーが発生しました",
-    "taskRunning": "すでにタスクが実行中です。まずそれが完了するのを待ってください。",
-    "updateSystemSub": "garuda-update を介してシステムを更新",
-    "editReposSub": "Pace でリポジトリを編集",
-    "addPendingSub": "保留中の操作を追加",
-    "clearOrphans": "孤立したパッケージをクリア",
-    "clearOrphansSub": "孤立したパッケージを削除",
-    "refreshMirrors": "ミラーを更新",
-    "refreshMirrorsSub": "ミラーリストを更新",
-    "removeLock": "Pacman ロックを削除",
-    "removeLockSub": "pacman ロックファイルを削除",
-    "reinstallPackages": "パッケージを再インストール",
-    "reinstallPackagesSub": "システム上のすべてのパッケージを再インストール",
-    "reinstallDkmsModules": "DKMS モジュールを再インストール",
-    "btrfsAssistant": "Btrfs Assistant",
-    "btrfsAssistantSub": "BTRFS スナップショットを管理し、メンテナンスタスクを実行",
-    "mergePacDiff": "pacdiff ファイルをマージ",
-    "mergePacDiffSub": ".pacnew および .pacsave ファイルをインタラクティブにマージ",
-    "updateRemoteFullFix": "Garuda update フルフィックス",
-    "updateRemoteFullFixSub": "Pacman をリセットし、OS 内のすべてのパッケージを再インストール",
-    "updateRemoteKeyring": "Garuda update キーリング",
-    "updateRemoteKeyringSub": "pacman.conf をリセットせずにキーリングを更新",
-    "updateRemoteFix": "Garuda update フィックス",
-    "updateRemoteFixSub": "pacman.conf をリセットし、キーリングを更新",
-    "updateRemoteResetSnapper": "snapper をリセット",
-    "updateRemoteResetSnapperSub": "Snapper のすべてを削除し、その設定を再作成",
-    "updateRemoteResetAudio": "オーディオをリセット",
-    "updateRemoteResetAudioSub": "PipeWire オーディオ設定を再インストール/リセット",
-    "resetTooltip": "以下のファイルまたはフォルダはデフォルトの状態にリセットされます：",
-    "resetConfigs": "設定をデフォルト状態にリセット",
-    "common": "共通のメンテナンス",
-    "garudaUpdate": "Garuda update レスキューツール"
-  },
-  "sudo": {
-    "title": "認証が必要です",
-    "icon": "Icon",
-    "subtitle": "続行するにはパスワードを入力してください",
-    "save": "このセッションでキャッシュ",
-    "password": "パスワード",
+  "bootOptions": {
+    "actions": "操作",
+    "apply": "設定を適用",
+    "bootEntries": "ブートエントリ",
     "cancel": "キャンセル",
-    "useOnce": "一度だけ使用"
+    "configSaved": "GRUB 設定が正常に保存されました",
+    "defaultEntry": "デフォルトブートエントリ",
+    "defaultEntryHint": "デフォルトで起動されるメニューエントリ。",
+    "edit": "編集",
+    "editConfigWarning": "警告: GRUB 設定ファイルの直接編集は危険を伴う場合があります。GRUB 更新時に変更が上書きされる可能性があります。注意して使用してください。",
+    "editEntry": "ブートエントリを編集",
+    "editGrubDefault": "/etc/default/grub を編集",
+    "editGrubDefaultHint": "GRUB デフォルト設定ファイルを編集します。root 権限が必要です。",
+    "editingEntry": "エントリを編集中",
+    "enableBootsplash": "ブートスプラッシュを有効化",
+    "enableBootsplashHint": "起動プロセス中にテキストメッセージの代わりにグラフィカルアニメーション (Plymouth) を表示します。",
+    "entryId": "エントリ ID",
+    "entryName": "エントリ名",
+    "entrySaved": "ブートエントリが正常に保存されました",
+    "errorTitle": "エラー",
+    "flatMenus": "フラットメニューを有効化",
+    "flatMenusHint": "GRUB サブメニューを無効にし、すべてのエントリをトップレベルメニューに表示します。",
+    "grubBackground": "GRUB 背景画像",
+    "grubTheme": "GRUB テーマ",
+    "kernelParams": "カーネルパラメータ",
+    "kernelParamsHint": "起動時に Linux カーネルに渡される追加パラメータ。",
+    "kernelParamsPlaceholder": "例: quiet splash",
+    "messageLevel": "ブートメッセージの詳細度",
+    "messageLevelDetailed": "詳細 (Quiet)",
+    "messageLevelHint": "起動プロセス中に表示する情報量を選択します。",
+    "messageLevelLimited": "制限 (Quiet + Hush)",
+    "messageLevelVeryDetailed": "非常に詳細 (すべてのメッセージ)",
+    "mitigationsOff": "CPU 緩和策を無効化",
+    "mitigationsOffHint": "パフォーマンス向上のために CPU セキュリティ緩和策を無効にします（セキュリティは低下します）。",
+    "partitionSelect": "パーティションを選択",
+    "partitionSelectHint": "Garuda インストールが含まれるパーティションを選択してください。",
+    "plymouthNotInstalled": "Plymouth がインストールされていません。有効にすると適用時にインストールされます。",
+    "plymouthPending": "Plymouth がインストール予定になっています。インストール完了後にテーマを選択できます。",
+    "plymouthTheme": "Plymouth テーマ (ブートスプラッシュ)",
+    "plymouthThemeHint": "システム起動プロセス中に表示されるテーマ。",
+    "plymouthVmWarning": "仮想マシン上で実行されています。Plymouth ブートスプラッシュは限定的に動作し、プレビューが正常に機能しない場合があります。",
+    "previewComplete": "プレビュー完了",
+    "previewCompleteMessage": "Plymouth テーマのプレビューが終了しました。",
+    "previewError": "プレビューに失敗しました",
+    "previewTheme": "Plymouth テーマをプレビュー",
+    "retry": "再試行",
+    "save": "保存",
+    "saveDefault": "デフォルトエントリを保存",
+    "saveDefaultHint": "最後に選択したブートエントリをデフォルトとして自動保存します。",
+    "savedMessage": "ブート設定が正常に適用されました。",
+    "savedMessageScheduled": "ブート設定が保留中の操作に追加されました。",
+    "savedTitle": "設定が保存されました",
+    "saveSuccess": "正常に保存されました",
+    "searchOtherOs": "他の OS を検索",
+    "searchOtherOsHint": "os-prober を使用してインストールされている他の OS を自動検出し、ブートメニューに追加します。",
+    "selectBackground": "背景画像を選択",
+    "selectEntry": "ブートエントリを選択",
+    "selectGrubTheme": "GRUB テーマを選択",
+    "selectTheme": "Plymouth テーマを選択",
+    "submenu": "サブメニュー",
+    "sysrqEnabled": "SysRq を常に有効化",
+    "sysrqEnabledHint": "緊急システム制御用の Magic SysRq キーを有効にします。",
+    "timeout": "メニュータイムアウト",
+    "timeoutHint": "デフォルトエントリを起動するまでの待機時間（秒）。",
+    "title": "ブート",
+    "titleTwo": "オプション",
+    "unsavedChanges": "未保存の変更があります"
   },
-  "systemdServices": {
-    "notFound": "サービスが見つかりません",
+  "bootRepair": {
+    "apply": "適用",
+    "backupFile": "バックアップファイル",
+    "backupMbrPbr": "MBR または PBR をバックアップ",
+    "backupMbrPbrTip": "マスターブートレコード (MBR) ブートコードまたはパーティションブートレコード (PBR) のバックアップを作成します（パーティションテーブルは含まれません）。",
+    "backupRestoreTarget": "バックアップまたは復元対象:",
+    "deviceOrPartition": "デバイスまたはパーティション:",
+    "errorTitle": "エラー",
+    "installOn": "インストール先:",
+    "location": "場所:",
+    "luksPassword": "LUKS パスワード:",
+    "luksPasswordPlaceholder": "LUKS パスフレーズを入力",
+    "luksPasswordRequired": "このルートパーティションの LUKS パスワードを入力してください。",
+    "luksTag": "LUKS",
+    "options": "オプション",
+    "partitionToMount": "マウントするパーティション:",
+    "reinstallGrub": "GRUB を再インストール",
+    "reinstallGrubTip": "特定のディスクまたはパーティションに GRUB ブートローダーを再インストールします。",
+    "repairGrubConfig": "GRUB 設定を修復",
+    "repairGrubConfigTip": "インストールされているすべての OS を検出するために GRUB 設定ファイル (grub.cfg) を再生成します。",
+    "restoreMbrPbr": "バックアップから MBR または PBR を復元",
+    "restoreMbrPbrTip": "以前に作成したバックアップファイルからブートコードを復元します。",
+    "rootLocation": "ルートの場所:",
+    "selectLocation": "場所を選択してください。",
+    "selectOperation": "操作を選択",
+    "selectRoot": "ルートパーティションを選択してください。",
+    "successBackup": "バックアップが正常に完了しました。",
+    "successReinstall": "GRUB の再インストールが正常に完了しました。",
+    "successRepair": "GRUB の修復が正常に完了しました。",
+    "successRestore": "復元が正常に完了しました。",
+    "successTitle": "成功",
+    "targetEsp": "ESP",
+    "targetEspTip": "EFI システムパーティション。UEFI に準拠するコンピューターがブートローダーやカーネルイメージを保存するために使用するパーティション。",
+    "targetMbr": "MBR",
+    "targetMbrTip": "マスターブートレコード。パーティション分割されたデータストレージデバイスの先頭にある従来のブートセクター。",
+    "targetPbr": "PBR",
+    "targetPbrTip": "パーティションブートレコード。ボリュームブートレコード (VBR) とも呼ばれ、特定パーティションの最初のセクターです。",
+    "targetRoot": "Root",
+    "title": "ブート",
+    "titleTwo": "修復"
+  },
+  "commandPalette": {
+    "hint": "モジュールとアクションを検索",
+    "placeholder": "コマンドを入力またはモジュールを検索...",
+    "toClose": "閉じる"
+  },
+  "configFiles": {
+    "actions": "操作",
+    "desc": {
+      "adjtime": "hwclock によるクロック追跡に使用",
+      "alacritty": "GPU アクセラレーション対応ターミナルエミュレーター設定",
+      "alsa_base": "ALSA カーネルモジュールオプション",
+      "amdgpu_conf": "AMDGPU カーネルモジュールオプション",
+      "ananicy": "Ananicy auto-nice デーモンのルール",
+      "asound_conf": "システム全体の ALSA 設定",
+      "asoundrc": "ユーザー固有の ALSA 設定",
+      "bash_bashrc": "対話型シェルのためのシステム全体 Bash 設定",
+      "bashrc": "現在のユーザー用 Bash 設定ファイル",
+      "blacklist_nouveau": "オープンソースの Nouveau ドライバーをブラックリスト化",
+      "bluetooth_main": "Bluetooth デーモン設定",
+      "btrfsAssistant": "BTRFS Assistant の設定",
+      "chaoticMirrorlist": "Garuda カスタム Chaotic-AUR リポジトリミラー",
+      "cinnamon": "Cinnamon デスクトップのメイン設定ディレクトリ",
+      "cpupower": "cpupower 電源管理ツールの設定",
+      "cron": "Cron 定期ジョブ設定",
+      "cursorThemeSystem": "システム全体のカーソルテーマ設定",
+      "cursorThemeUser": "ユーザー固有のカーソルテーマ設定",
+      "dunst": "Dunst 通知デーモンの設定",
+      "environment": "システム全体の環境変数",
+      "environmentD": "システム全体の環境変数用ディレクトリ (Wayland)",
+      "fastfetch": "システム情報取得ツール設定",
+      "fish": "Fish シェル設定ファイル",
+      "fontconfigSystem": "システム全体のフォント設定",
+      "fontconfigUser": "ユーザー固有のフォント設定",
+      "fstab": "ファイルシステムのマウントポイントとオプション",
+      "gamemode": "GameMode 最適化ツールのグローバル設定",
+      "garudaUpdateConfig": "garuda-update の挙動と更新フラグの設定",
+      "gdm": "GNOME ディスプレイマネージャーの設定",
+      "gitconfig": "ユーザー固有の Git 設定",
+      "group": "ユーザーグループを定義",
+      "grub": "GRUB ブートローダーの設定ファイル",
+      "grub_cfg": "GRUB ブートローダー設定ファイル",
+      "grubTheme": "GRUB ブートローダーテーマの設定",
+      "gtk3Settings": "GTK 3.0 アプリケーションの設定",
+      "gtk4Css": "GTK 4.0 アプリケーション用カスタム CSS スタイル",
+      "gtk4Settings": "GTK 4.0 アプリケーションの設定",
+      "gtkrc2": "従来の GTK 2.0 アプリケーションの設定",
+      "hostname": "システムのホスト名",
+      "hosts": "静的なホスト名参照テーブル",
+      "hosts_allow": "ネットワークサービスアクセス制御用 TCP wrappers (許可)",
+      "hosts_deny": "ネットワークサービスアクセス制御用 TCP wrappers (拒否)",
+      "hyprland": "Hyprland Wayland コンポジター設定",
+      "hyprpaper": "Hyprpaper 壁紙ユーティリティの設定",
+      "i3": "クラシックな X11 タイリングウィンドウマネージャー設定",
+      "iconTheme": "アイコンテーマ設定",
+      "journald": "systemd journal サービスの設定",
+      "kcmfonts": "KDE フォント設定",
+      "kdeColorScheme": "ユーザー固有の KDE カラースキーム定義",
+      "kdeglobals": "グローバル KDE 設定",
+      "kdeLookandFeel": "KDE グローバルテーマ (Look and Feel) 設定",
+      "kitty": "多機能な GPU アクセラレーション対応ターミナルエミュレーター設定",
+      "kvantumConfig": "SVG ベースの Kvantum テーマエンジンの設定",
+      "kwinrc": "KWin ウィンドウマネージャーの設定",
+      "lightdm": "LightDM ディスプレイマネージャーの設定",
+      "locale": "システム全体のロケール設定",
+      "locale_gen": "システムで利用可能なロケール一覧",
+      "logind": "systemd ログインマネージャーの設定",
+      "makepkgConf": "ソースからパッケージをビルドするための設定",
+      "mako": "Mako 通知デーモンの設定",
+      "mangohud": "MangoHud パフォーマンスオーバーレイの設定",
+      "mirrorlist": "標準 Arch Linux リポジトリミラー",
+      "mkinitcpio": "初期 ramdisk 環境を作成するための設定",
+      "modprobe_d": "カーネルモジュールの設定とオプション",
+      "networkmanager": "NetworkManager のグローバル設定",
+      "nftables": "nftables ファイアウォールの設定",
+      "nvidia_conf": "NVIDIA カーネルモジュールオプション",
+      "os_release": "OS に関する情報を提供（各種プログラムで使用）",
+      "pacman_hooks": "パッケージ操作時の処理を自動化するフック",
+      "pacmanConf": "Pacman パッケージマネージャーのメイン設定ファイル",
+      "pam": "PAM (Pluggable Authentication Modules) の設定ファイル",
+      "pam_d": "認証サービス用 PAM 設定",
+      "passwd": "ユーザーアカウント情報を保持",
+      "pipewire_client": "PipeWire クライアント設定",
+      "pipewire_conf": "ユーザーレベルの PipeWire デーモン設定",
+      "plasmaApplets": "Plasma デスクトップアプレットの設定",
+      "plasmaEnv": "Plasma ワークスペースの環境変数",
+      "plasmarc": "Plasma シェルのメイン設定",
+      "plymouthConf": "Plymouth ブートスプラッシュデーモンの設定",
+      "profile": "ユーザー固有の環境変数と自動起動プログラム",
+      "pulse_daemon": "PulseAudio デーモン設定",
+      "pulse_default": "PulseAudio 起動スクリプト",
+      "qtile": "Python ベースのウィンドウマネージャー設定",
+      "resolv": "DNS リゾルバー設定ファイル",
+      "rofi": "Rofi アプリケーションランチャーおよび切り替えツールの設定",
+      "rsyslog": "rsyslog デーモンのメイン設定",
+      "sddm": "SDDM ディスプレイマネージャー設定",
+      "shadow": "ハッシュ化されたパスワードとアカウント有効期限情報を保持",
+      "snapperRoot": "ルートパーティションの Snapper 設定",
+      "ssh_user": "ユーザー固有の SSH クライアント設定",
+      "sshd": "OpenSSH サーバーデーモン設定ファイル",
+      "starship": "Starship クロスシェルプロンプト設定",
+      "sudoers": "sudo 権限を持つユーザーを設定",
+      "sway": "Sway Wayland コンポジター設定",
+      "sysctl": "カーネルパラメータ (ネットワーク、パフォーマンス、セキュリティ)",
+      "systemd_network": "systemd-networkd 設定ファイル",
+      "systemd_services": "カスタムまたはオーバーライドされた systemd サービス定義",
+      "systemd_timers": "スケジュールされたタスク用の systemd タイマー",
+      "systemdSystem": "グローバル systemd システム設定",
+      "systemdUser": "グローバル systemd ユーザー設定",
+      "timezone": "システムのタイムゾーンを設定",
+      "udev_rules": "ハードウェアデバイスの挙動に関する udev ルール",
+      "userdirs": "XDG ユーザーディレクトリ設定",
+      "vconsole": "仮想コンソールの設定",
+      "waybar": "Waybar ステータスバーのメイン設定",
+      "waybarStyle": "Waybar ステータスバーの CSS スタイル",
+      "wayfire": "3D Wayland コンポジター設定",
+      "wayland_conf": "ユーザー固有の Wayland コンポジター設定ファイル",
+      "wireplumber": "WirePlumber セッションマネージャー設定ディレクトリ",
+      "wofi": "Wofi アプリケーションランチャーの設定",
+      "xfce4": "Xfce4 のメイン設定ディレクトリ",
+      "xorg_conf": "従来のメイン Xorg 設定ファイル",
+      "xorg_conf_d": "Xorg 設定スニペット用ディレクトリ",
+      "xorg_gpu": "GPU 固有の Xorg 設定 (ドライバー選択、BusID、画面設定)",
+      "xorg_monitor": "Xorg のモニター配置、解像度、リフレッシュレート設定",
+      "zramGenerator": "zram-generator の設定",
+      "zsh": "現在のユーザー用 Zsh 設定ファイル"
+    },
     "description": "説明",
-    "unit": "ユニット名",
-    "load": "ロード",
-    "active": "アクティブ",
-    "state": "状態",
-    "searchKey": "検索キーワードを入力",
-    "clear": "クリア",
-    "actions": "アクション",
-    "show": "表示",
-    "start": "開始",
-    "stop": "停止",
-    "mask": "マスク",
-    "unmask": "マスク解除",
-    "logs": "ログ",
-    "restart": "再起動",
-    "reload": "リロード",
-    "enable": "有効化",
-    "disable": "無効化",
-    "autoRefresh": "自動更新",
-    "error": "サービスの取得中にエラーが発生しました。もう一度試してください。",
-    "errorTitle": "サービスの取得エラー",
-    "systemContext": "システムサービスを表示",
-    "userContext": "ユーザーサービスを表示",
-    "includeDisabled": "無効なものを含める",
-    "excludeDisabled": "無効なものを除外"
-  },
-  "systemTools": {
-    "title": "システム ",
-    "icon": "Icon",
-    "titleTwo": "設定",
-    "systemdServices": "Systemd サービス",
-    "systemSettings": "システム設定",
-    "components": "システムコンポーネント",
-    "locales": "ロケール",
-    "kernels": "カーネル",
-    "packages": "追加パッケージ",
-    "audio": {
-      "title": "オーディオ",
-      "icon": "Icon",
-      "alsa": {
-        "title": "ALSA サポート"
-      },
-      "jack": {
-        "title": "JACK サポート"
-      },
-      "pulseaudio": {
-        "title": "PulseAudio サポート"
-      },
-      "pipewire": {
-        "title": "PipeWire サポート"
-      },
-      "userRealtime": {
-        "title": "ユーザーが realtime グループに所属"
-      },
-      "jamesdsp": {
-        "title": "JamesDSP インストール済み"
-      }
-    },
-    "virtualization": {
-      "title": "仮想化",
-      "icon": "Icon",
-      "qemu": {
-        "title": "QEMU インストール済み"
-      },
-      "kvm": {
-        "title": "KVM サポート"
-      },
-      "virtManager": {
-        "title": "Virt-manager サポート"
-      },
-      "libvirtdEnabled": {
-        "title": "Libvirtd 有効"
-      },
-      "userVboxUsers": {
-        "title": "ユーザーが vboxusers グループに所属"
-      },
-      "virtualbox": {
-        "title": "VirtualBox サポート"
-      },
-      "userLibvirt": {
-        "title": "ユーザーが libvirt グループに所属"
-      },
-      "userKvm": {
-        "title": "ユーザーが kvm グループに所属"
-      }
-    },
-    "containers": {
-      "title": "コンテナ",
-      "icon": "Icon",
-      "docker": {
-        "title": "Docker インストール済み"
-      },
-      "dockerEnabled": {
-        "title": "Docker 有効"
-      },
-      "dockerCompose": {
-        "title": "Docker Compose インストール済み"
-      },
-      "userDocker": {
-        "title": "ユーザーが docker グループに所属"
-      },
-      "podman": {
-        "title": "Podman インストール済み"
-      },
-      "podmanDocker": {
-        "title": "Podman 経由で Docker をエミュレート"
-      },
-      "podmanDesktop": {
-        "title": "Podman Desktop インストール済み"
-      },
-      "distrobox": {
-        "title": "DistroBox インストール済み"
-      },
-      "boxbuddy": {
-        "title": "BoxBuddy インストール済み"
-      }
-    },
-    "network": {
-      "title": "ネットワーク",
-      "icon": "Icon",
-      "networkManager": {
-        "title": "NetworkManager サポート"
-      },
-      "networkManagerEnabled": {
-        "title": "NetworkManager 有効"
-      },
-      "modemManagerEnabled": {
-        "title": "ModemManager 有効"
-      }
-    },
-    "bluetooth": {
-      "title": "Bluetooth",
-      "icon": "Icon",
-      "bluetooth": {
-        "title": "Bluetooth サポート"
-      },
-      "bluetoothEnabled": {
-        "title": "Bluetooth 有効"
-      },
-      "userBluetooth": {
-        "title": "ユーザーが bluetooth グループに所属"
-      },
-      "autoConnect": {
-        "title": "自動接続 インストール済み"
-      },
-      "autoConnectEnabled": {
-        "title": "自動接続 有効"
-      }
-    },
-    "printing": {
-      "title": "印刷",
-      "icon": "Icon",
-      "printingSupport": {
-        "title": "印刷サポート"
-      },
-      "cupsEnabled": {
-        "title": "CUPS 有効"
-      },
-      "scanningSupport": {
-        "title": "スキャンサポート"
-      },
-      "sanedEnabled": {
-        "title": "saned 有効"
-      },
-      "userCups": {
-        "title": "ユーザーが cups グループに所属"
-      },
-      "userScanner": {
-        "title": "ユーザーが scanner グループに所属"
-      },
-      "userLp": {
-        "title": "ユーザーが lp グループに所属"
-      }
-    },
-    "firewall": {
-      "title": "ファイアウォール",
-      "icon": "Icon",
-      "firewalld": {
-        "title": "Firewalld インストール済み"
-      },
-      "firewalldEnabled": {
-        "title": "firewalld 有効"
-      },
-      "ufw": {
-        "title": "UFW インストール済み"
-      },
-      "ufwEnabled": {
-        "title": "UFW 有効"
-      },
-      "opensnitch": {
-        "title": "OpenSnitch インストール済み"
-      },
-      "opensnitchEnabled": {
-        "title": "OpenSnitch 有効"
-      }
-    },
-    "misc": {
-      "title": "その他",
-      "icon": "Icon",
-      "gns": {
-        "title": "Garuda Nix Subsystem インストール済み"
-      }
-    }
-  },
-  "systemSettings": {
-    "defaultShellConfigs": "デフォルト設定をインストール",
-    "defaultDns": "デフォルト DNS を設定",
-    "defaultShell": "ログインシェルを設定",
-    "enableHblock": "Hblock を有効化",
-    "enableIwd": "wpa_supplicant の代わりに IWD を使用",
-    "common": {
-      "title": "共通",
-      "icon": "Icon",
-      "psd": {
-        "title": "Profile-sync-daemon インストール済み"
-      },
-      "psdEnabled": {
-        "title": "Profile-sync-daemon 有効"
-      },
-      "oomd": {
-        "title": "Systemd-oomd 有効"
-      },
-      "guestUser": {
-        "title": "ゲストユーザーを有効化"
-      }
-    },
-    "performance": {
-      "title": "パフォーマンス",
-      "icon": "Icon",
-      "performanceTweaks": {
-        "title": "パフォーマンス調整"
-      },
-      "ananicyCpp": {
-        "title": "Ananicy C++ インストール済み"
-      },
-      "ananicyCppEnabled": {
-        "title": "Ananicy C++ 有効"
-      },
-      "bpftune": {
-        "title": "Bpftune インストール済み"
-      },
-      "bpftuneEnabled": {
-        "title": "Bpftune 有効"
-      },
-      "preload": {
-        "title": "Preload インストール済み"
-      },
-      "preloadEnabled": {
-        "title": "Preload 有効"
-      },
-      "irqbalanceEnabled": {
-        "title": "IRQbalance 有効"
-      }
-    },
-    "powersave": {
-      "title": "省電力",
-      "icon": "Icon",
-      "powersaveTweaks": {
-        "title": "省電力調整"
-      },
-      "tlp": {
-        "title": "TLP インストール済み"
-      },
-      "tlpEnabled": {
-        "title": "TLP 有効"
-      },
-      "autoCpufreq": {
-        "title": "Auto-cpufreq インストール済み"
-      },
-      "autoCpufreqEnabled": {
-        "title": "Auto-cpufreq 有効"
-      },
-      "thermald": {
-        "title": "Thermald インストール済み"
-      },
-      "thermaldEnabled": {
-        "title": "Thermald 有効"
-      },
-      "powerProfilesDaemon": {
-        "title": "Power profiles daemon インストール済み"
-      },
-      "powerProfilesDaemonEnabled": {
-        "title": "Power profiles daemon 有効"
-      },
-      "intelUndervolt": {
-        "title": "Intel-undervolt インストール済み"
-      },
-      "intelUndervoltEnabled": {
-        "title": "Intel-undervolt 有効"
-      }
-    },
-    "rightclickEmulation": {
-      "title": "右クリックエミュレーション",
-      "icon": "Icon",
-      "evdevLongPressRightClick": {
-        "title": "Evdev 長押し右クリックエミュレーション"
-      },
-      "evdevRce": {
-        "title": "Evdev RCE 有効"
-      }
-    }
-  },
-  "shells": {
-    "fish": {
-      "hint": "fish をデフォルトシェルとして設定すると、他のプログラムで問題が発生する可能性があります。代わりにターミナル設定でデフォルトとして設定することをお勧めします。"
-    }
+    "edit": "編集",
+    "name": "名前",
+    "path": "パス",
+    "search": "設定ファイルを検索...",
+    "title": "設定",
+    "titleTwo": "ファイル",
+    "wiki": "Wiki"
   },
   "confirmation": {
     "accept": "承認",
-    "reject": "キャンセル",
-    "exitApp": "アプリを終了してもよろしいですか？",
-    "exitAppRunningAction": "アプリを終了してもよろしいですか？ アクションが実行中です！",
-    "resetConfigsHeader": "設定をリセットしますか？",
-    "resetConfigsBody": "以下の設定をリセットしてもよろしいですか？",
-    "exitAppHeader": "アプリを終了しますか？",
     "applyOperations": "操作を適用しますか？",
-    "applyOperationsBody": "保留中のすべての操作を適用してもよろしいですか？"
+    "applyOperationsBody": "保留中のすべての操作を適用してもよろしいですか？",
+    "cancel": "キャンセル",
+    "createSnapshotBefore": "実行前に Btrfs スナップショットを作成",
+    "exitApp": "アプリを終了してもよろしいですか？",
+    "exitAppHeader": "アプリを終了しますか？",
+    "exitAppRunningAction": "アプリを終了してもよろしいですか？ アクションが実行中です！",
+    "password": "パスワード",
+    "reject": "キャンセル",
+    "resetConfigsBody": "以下の設定をリセットしてもよろしいですか？",
+    "resetConfigsHeader": "設定をリセットしますか？",
+    "save": "このセッションでキャッシュ",
+    "subtitle": "続行するにはパスワードを入力してください",
+    "title": "認証が必要です",
+    "useOnce": "一度だけ使用"
+  },
+  "console": {
+    "abortAll": "すべてのアクションを中止",
+    "clearCachedData": "出力キャッシュはクリアされました。",
+    "clearCachedDataTitle": "出力キャッシュがクリアされました",
+    "clearOutputCache": "出力キャッシュをクリア",
+    "copyOutput": "ターミナル出力をコピー",
+    "copyToClipboard": "出力は正常にクリップボードにコピーされました。",
+    "copyToClipboardTitle": "クリップボードにコピーされました",
+    "noOutput": "出力なし",
+    "noTasksPending": "保留中のタスクはありません",
+    "opRunning": "操作はすでに実行中です。",
+    "outputExists": "すでにアクションが実行中のようです。ログを表示する前に、それが終了するのを待ってください。",
+    "printScripts": "スクリプトを表示",
+    "removeAll": "すべてのアクションを削除",
+    "runActions": "アクションを実行",
+    "tasksAppearHere": "項目を選択するとここにタスクが表示されます。",
+    "title": "ターミナル",
+    "uploadPrivateBin": "PrivateBin にアップロード"
+  },
+  "diagnostics": {
+    "copySuccess": "クリップボードに正常にコピーされました",
+    "dmesg": "カーネルログ (dmesg)",
+    "dmesgDesc": "カーネルリングバッファのメッセージを確認します。",
+    "exitCode": "コマンドがコード {{code}} で終了しました",
+    "failedCmd": "問題が発生し、診断情報を取得できませんでした",
+    "failedCmdHeader": "コマンドの実行に失敗しました",
+    "full": "完全な診断",
+    "fullDesc": "利用可能なすべての診断情報を1つの出力にまとめます。",
+    "health": "システムヘルス",
+    "healthDesc": "garuda-health を使用してシステムの健全性チェックを実行します。",
+    "inxi": "共通情報 (inxi)",
+    "inxiDesc": "詳細なハードウェアおよびシステム情報を収集します。",
+    "journalctl": "システムログ (journalctl)",
+    "journalctlDesc": "journal デーモンのシステムログを確認します。",
+    "pacman": "最新の Pacman ログ",
+    "pacmanDesc": "最新の pacman パッケージマネージャーのログを表示します。",
+    "subtitle": "システムのデバッグに必要な情報を見つけましょう",
+    "success": "成功",
+    "systemctl": "システムサービス (systemctl)",
+    "systemctlDesc": "システムの起動パフォーマンスとサービスステータスを分析します。",
+    "title": "デバッグ情報 ",
+    "titleTwo": "と診断",
+    "upload": "PrivateBin にアップロード",
+    "uploadDesc": "現在のターミナル出力を PrivateBin にアップロードして共有します。",
+    "uploadSuccess": "PrivateBin に正常にアップロードされました。URL がクリップボードにコピーされました"
   },
   "error": {
     "sudoPassword": "これは正しいパスワードではないようです。もう一度お試しください。"
   },
-  "operation": {
-    "removeApps": "アプリを削除",
-    "installApps": "アプリをインストール",
-    "addGroup": "ユーザーをグループに追加",
-    "removeGroup": "ユーザーをグループから削除",
-    "disableService": "サービスを無効化",
-    "enableService": "サービスを有効化",
-    "setDefaultShell": "デフォルトシェルを設定",
-    "enableHblock": "Hblock を有効化",
-    "disableHblock": "Hblock を無効化",
-    "setNewDnsServer": "新しい DNS サーバーを設定",
-    "resetDnsServer": "DNS サーバーをリセット",
-    "args": "引数",
-    "logs": "ログ",
-    "remove": "削除",
-    "abort": "中止",
-    "run": "今すぐ実行"
-  },
-  "systemStatus": {
-    "pendingUpdates": "保留中のアップデート",
-    "updates": "このシステムには保留中のアップデートがあります（クリックして詳細を確認）",
-    "pacFiles": "このシステムには保留中の .pacnew ファイルがあります。確認してマージする必要があります！（クリックして詳細を確認）",
-    "cancel": "キャンセル",
-    "aurUpdates": "AUR パッケージの更新はこのアプリケーションの範囲外です。Paru などの AUR ヘルパーを使用し、インストール前に PKGBUILD ファイルを確認してください。",
-    "scheduleUpdates": "アップデートをスケジュール",
-    "pendingPacdiff": "保留中の pacdiff ファイル",
-    "findMore": "進め方を確認する",
-    "warnUpdate": "システムは 2 週間更新されていません。セキュリティと安定性を確保するためにシステムを更新してください。",
-    "affectedFiles": "影響を受けるファイル：",
-    "learnPacdiff": "pacdiff ファイルに慣れていない場合は、すぐにそれらについて調べてください。",
-    "openMaintenance": "開始するには下のボタンをクリックしてください。",
-    "openMaintenanceButton": "マージを開始",
-    "rebootNow": "今すぐ再起動",
-    "rebootNowBody": "今すぐ再起動してもよろしいですか？ 続行する前に、すべての作業を保存してください。",
-    "warnReboot": "アップデート適用後、特にカーネルやデスクトップ環境を更新した場合は、システムを再起動することを強くお勧めします。",
-    "proceed": "進め方は以下の通りです：",
-    "snapshotCreation": "マージを開始する前に Btrfs スナップショットが作成されます。",
-    "proceedMerge": "変更を適用するために Meld が開かれます。左側が新しいファイル、右側が古いファイルです。マージしたい有用な変更を左側から右側に移動します。完了したら保存ボタンまたは CTRL + S をクリックします。",
-    "cautionMerge": "古いファイルに誤った変更を加えると、システムが破損する可能性があることに注意してください。",
-    "askHelp": "不明な点がある場合は、保存せずにウィンドウを閉じ、Garuda Linux フォーラムで助けを求めてください。",
-    "runAurUpdates": "AUR アップデートを外部で実行"
-  },
-  "operationManager": {
-    "refusing": "実行を拒否",
-    "pendingOperationsRunning": "実行中の操作があります。すでに完了したものだけを削除します。",
-    "thisOperationRunning": "正気ですか？ この操作は現在実行中です！"
-  },
-  "os-interact": {
-    "packages": "インストール済みパッケージを変更",
-    "packages-aur": "AUR パッケージを変更",
-    "services": "サービスを変更",
-    "services-user": "ユーザーサービスを変更",
-    "groups": "ユーザーグループを変更",
-    "locales": "有効なロケールを変更",
-    "configs": "システム設定を変更",
-    "configs-user": "ユーザー設定を変更",
-    "configs-system": "システム設定を変更"
-  },
-  "packages": {
-    "title": "パッケージ",
-    "icon": "Icon",
-    "internet": "インターネット",
-    "documents": "ドキュメント",
-    "multimedia": "マルチメディア",
-    "science": "科学",
-    "security": "セキュリティ",
-    "other": "その他",
-    "clear": "クリア",
-    "search": "検索",
-    "url": "URL",
-    "selected": "選択済み",
-    "description": "説明",
-    "name": "名前",
-    "searchKey": "検索キーワードを入力",
-    "notFound": "パッケージが見つかりません"
+  "gaming": {
+    "antimicrox": "キーボードのキーやマウス操作をゲームパッドにマッピングするグラフィカルプログラム",
+    "anydesk": "高速リモートデスクトップアプリケーション",
+    "bluez": "一般的に、ワイヤレスの PS コントローラーを認識するために必要です",
+    "bottles": "Wine および Proton プレフィックスを簡単に管理",
+    "boxtron": "ネイティブ Linux 版 DOSBox を通じて Steam 上で DOS ゲームを実行する互換性ツール",
+    "controllers": "コントローラーサポート",
+    "corectrl": "コアハードウェア制御アプリケーション",
+    "desmume": "ニンテンドーDS エミュレーター",
+    "dgenSdl": "SDL に移植された Sega Genesis/Mega Drive システムエミュレーター",
+    "discord": "ゲーマー向けのオールインワン音声・テキストチャット",
+    "displaycal": "Argyll CMS をベースにしたオープンソースのディスプレイキャリブレーションおよびプロファイリングツール",
+    "dolphinEmu": "ゲームキューブおよび Wii エミュレーター",
+    "dosbox": "DOS ゲームを実行するための組み込み DOS 搭載エミュレーター",
+    "droidcam": "スマートフォン/タブレットをワイヤレス/USB ウェブカメラにするツール",
+    "duckstation": "PlayStation エミュレーター (最終 GPL バージョン)",
+    "dxvk": "Linux 上で Wine を使って 3D アプリを実行できるようにする Direct3D 9/10/11 向け Vulkan ベースの互換レイヤー",
+    "easyeffects": "PipeWire アプリケーション用オーディオエフェクト",
+    "eka2l1": "実験的な Symbian OS エミュレーター",
+    "emulationstation": "キーボードレスナビゲーションとカスタムテーマに対応した柔軟なエミュレーターフロントエンド",
+    "emulators": "エミュレータ",
+    "fceux": "高速で高い互換性を持つ NES/ファミコンエミュレーター",
+    "fsUae": "ゲームのエミュレーションに重点を置いた UAE/WinUAE ベースの Amiga エミュレーター",
+    "gameconqueror": "実行中プロセス内の任意の変数のメモリアドレスを特定するメモリ微調整スキャナー",
+    "gamemode": "ゲームが一連の最適化をホスト OS に一時的に適用するよう要求できるデーモン/ライブラリ",
+    "games": "ゲーム",
+    "gamescope": "SteamOS セッション合成ウィンドウマネージャー",
+    "gamescopeSession": "合成ウィンドウ管理用 Gamescope セッション",
+    "gamescopeSessionSteam": "Steam ゲーミング向けに最適化された Gamescope セッション",
+    "goverlay": "Vulkan/OpenGL オーバーレイの管理を支援する GUI",
+    "gwe": "NVIDIA GPU を制御するためのシステムユーティリティ",
+    "hatari": "Atari ST および STE エミュレーター",
+    "heroic": "Epic、Amazon、GOG ゲーム向けのオープンソースランチャー",
+    "inputRemapper": "入力デバイスのボタンマッピングを変更およびプログラムするツール",
+    "itch": "itch.io デスクトップアプリ用インストーラー",
+    "kegaFusion": "SMS/GG、Genesis/メガドライブおよび周辺機器を含むクラシック Sega コンソールエミュレーター",
+    "keyboardVisualizer": "OpenRGB 対応の RGB 環境を音楽に合わせた華やかなライトショーに変換",
+    "lact": "Linux GPU 設定ツール",
+    "launchers": "ゲームランチャー",
+    "libretroMeta": "サポートされているすべての Libretro エミュレーター用のメタパッケージ",
+    "loading": "読み込み中...",
+    "lutris": "オープンゲーミングプラットフォーム",
+    "luxtorpeda": "ネイティブ Linux エンジンを使用してゲームを実行する Steam Play 互換性ツール",
+    "mame": "OpenGL サポート付き SDL を使用した人気アーケードマシンエミュレーターの移植版",
+    "mangohud": "FPS、温度、CPU/GPU 負荷などを監視するための Vulkan オーバーレイレイヤー",
+    "mednafen": "コマンドラインマルチシステムゲームエミュレーター",
+    "mgba": "速度と正確性に焦点を当てたゲームボーイアドバンスエミュレーター",
+    "minigalaxy": "Linux 向けのシンプルな GOG クライアント",
+    "misc": "その他",
+    "mumble": "オープンソース、低遅延、高音質のボイスチャットソフトウェア",
+    "nestopia": "高精度 NES/ファミコンエミュレーター",
+    "noisetorch": "Linux 上でのリアルタイムマイクノイズ抑制",
+    "nyrna": "ゲームやアプリケーションをいつでも一時停止し、好きなときに再開",
+    "obsStudio": "ライブ配信および録画用の無料オープンソースソフトウェア",
+    "openrgb": "メーカー専用ソフトに依存しないオープンソースの RGB ライティング制御",
+    "oversteer": "Logitech 製ステアリングホイールを設定するグラフィカルアプリ",
+    "pcsx2": "PlayStation 2 エミュレーター",
+    "pegasusFrontend": "エミュレーターの起動とゲームコレクションの管理を行うクロスプラットフォーム・カスタマイズ可能なグラフィカルフロントエンド",
+    "piper": "ゲーミングマウスを設定する GTK アプリケーション",
+    "polychromatic": "OpenRazer 用の RGB ライティング管理フロントエンドアプリ",
+    "ppsspp": "C++ で書かれた PSP エミュレーター",
+    "protonCachyOS": "CachyOS パッチやその他の最適化が施された Valve Proton ディストリビューション",
+    "protonGeCustom": "さまざまなパッチが適用された Valve Proton のカスタムディストリビューション",
+    "protontricks": "Proton 有効ゲームに対して winetricks の処理を行うシンプルなラッパー",
+    "protonupQt": "Steam 用の Proton-GE と Luxtorpeda、Lutris 用の Wine-GE をインストール・管理",
+    "retroarch": "Libretro API のリファレンスフロントエンド",
+    "rpcs3": "PlayStation 3 エミュレーター",
+    "ryujinx": "C# で書かれた実験的な Nintendo Switch エミュレーター",
+    "sameboy": "正確性に焦点を当てた Game Boy/Game Boy Color エミュレーター",
+    "scController": "Steam Controller、DS4 および類似コントローラー用のユーザーモードドライバー、マッパー、GTK3 ベース GUI",
+    "scummvm": "数々の名作ポイント＆クリックアドベンチャーゲーム用「仮想マシン」",
+    "snes9x": "ポータブル Super Nintendo Entertainment System (TM) エミュレーター",
+    "soundwire": "PC の音声を Android スマートフォンや他の PC にワイヤレス送信",
+    "steamNative": "システムライブラリを使用した Steam ランタイムのネイティブ代替",
+    "steamRuntime": "Valve のデジタルソフトウェア配信システム",
+    "steamtinkerlaunch": "Steam のカスタム起動オプション用ラッパースクリプト",
+    "stella": "Atari 2600 VCS エミュレーター",
+    "streamlinkTwitchGui": "Streamlink 向けのマルチプラットフォーム Twitch.tv ブラウザー",
+    "subtitle": "いくつかのゲーミングアプリから始めましょう！",
+    "title": "ゲーミング ",
+    "titleTwo": "アプリ",
+    "tools": "ゲーミングツール",
+    "torzu": "さらなるエミュレーターフォーク",
+    "vesktop": "カスタマイズ可能でプライバシーに配慮した Discord デスクトップアプリ",
+    "vice": "多機能 Commodore エミュレーター",
+    "vkbasalt": "Vulkan ポストプロセスレイヤー。CAS、FXAA、SMAA、デバンドなどの効果に対応",
+    "vlc": "マルチプラットフォーム対応の MPEG、VCD/DVD、DivX プレーヤー",
+    "vrVideoPlayer": "VR コンテンツ用ビデオプレーヤー",
+    "waydroid": "Waydroid に OpenGapps、Magisk、libhoudini 変換ライブラリおよび libndk 変換ライブラリを追加する Python スクリプト",
+    "wine": "WINE",
+    "wineMeta": "WINE と必要なすべての依存関係をインストールするためのメタパッケージ",
+    "winePackage": "Windows プログラムを実行するための互換レイヤー",
+    "wineStaging": "Windows プログラムを実行するための互换レイヤー — Staging ブランチ",
+    "winetricks": "Wine に各種ランタイムライブラリをインストールするスクリプト",
+    "xboxdrv": "Xbox コントローラードライバー。カーネルドライバーが機能しない場合にのみ使用してください！",
+    "xemu": "初代 Xbox エミュレーター",
+    "xoneDkms": "Xbox One および Xbox Series X|S コントローラー用の最新 Linux ドライバー",
+    "xoneDongleFirmware": "Xbox ワイヤレスコントローラーアダプター用ファームウェア",
+    "xpadneo": "Xbox One ワイヤレスゲームパッド用高度 Linux ドライバー",
+    "zsnes": "Super Nintendo エミュレーター"
   },
   "kernels": {
+    "active": "アクティブなカーネル：",
     "dkmsModulesBroken": "一部の DKMS モジュールが壊れています",
     "dkmsModulesBrokenTip": "ここをクリックして、壊れた DKMS モジュールのインストールをスケジュールします",
     "dkmsModulesMissing": "一部の DKMS モジュールが見つかりません",
     "dkmsModulesMissingTip": "不足している DKMS モジュール",
     "headers": "ヘッダー",
     "headersMissing": "不足しているカーネルヘッダー",
-    "headersMissingTip": "ここをクリックして、不足しているヘッダーのインストールをスケジュールします",
-    "active": "アクティブなカーネル："
+    "setDefault": "デフォルトカーネルに設定"
+  },
+  "lang": {
+    "title": "言語選択",
+    "tooltip": "優先する言語を選択してください"
   },
   "languagePacks": {
-    "locale": "ロケール",
-    "selected": "選択済み",
     "base": "基本パッケージ",
+    "description": "これらはインストールされているパッケージの言語パックで、通常は GUI の翻訳を提供します。",
+    "locale": "ロケール",
     "notFound": "言語パックが見つかりません",
     "pkgname": "パッケージ名",
-    "description": "これらはインストールされているパッケージの言語パックで、通常は GUI の翻訳を提供します。"
-  },
-  "settings": {
-    "title": "アプリ",
-    "icon": "Icon",
-    "titleTwo": "設定",
-    "leftButtons": "ウィンドウボタンを左側に表示",
-    "copyDiagnostics": "診断情報をクリップボードにコピー",
-    "darkMode": "ダークモードを有効化",
-    "language": "アクティブな言語を設定",
-    "autoStart": "アプリケーションを自動起動",
-    "logLevel": "ログレベルを選択",
-    "systemdUserContext": "ユーザー Systemd サービスを表示",
-    "autoRefresh": "systemd サービスの自動更新を有効化",
-    "showMainLinks": "ホームページにリンクを表示",
-    "themeLabel": "基本デザインテーマ",
-    "toggleOptions": "トグルオプション",
-    "selectOptions": "選択"
+    "selected": "選択済み"
   },
   "locales": {
     "apply": "インストール済みロケールの変更をスケジュール",
-    "description": "右側のロケールはシステムにインストールされています。保持したいものと削除したいものを選択できます。",
     "available": "利用可能",
+    "description": "右側のロケールはシステムにインストールされています。保持したいものと削除したいものを選択できます。",
     "selected": "選択済み",
-    "task": "システムロケールを変更",
-    "selectLocale": "システム全体の優先言語を選択"
+    "selectLocale": "システム全体の優先言語を選択",
+    "task": "システムロケールを変更"
   },
-  "console": {
-    "title": "ターミナル",
+  "maintenance": {
+    "actionFailed": "{{ action }} の実行中にエラーが発生しました: {{ error }}。",
+    "actionFailedHeader": "メンテナンスアクションの実行に失敗しました",
+    "addPending": "保留に追加",
+    "addPendingSub": "保留中の操作を追加",
+    "btrfsAssistant": "Btrfs Assistant",
+    "btrfsAssistantSub": "BTRFS スナップショットを管理し、メンテナンスタスクを実行",
+    "cleanCache": "キャッシュをクリーン",
+    "cleanCacheSub": "キャッシュされたすべてのパッケージを削除",
+    "clearOrphans": "孤立したパッケージをクリア",
+    "clearOrphansSub": "孤立したパッケージを削除",
+    "common": "共通のメンテナンス",
+    "editRepos": "リポジトリを編集",
+    "editReposSub": "Pace でリポジトリを編集",
+    "failedReset": "設定ファイルのリセット中にエラーが発生しました",
+    "failedResetFile": "{{file}} のリセット中にエラーが発生しました",
+    "garudaHealth": "システムヘルスチェック",
+    "garudaHealthFix": "システムヘルスを修復",
+    "garudaHealthFixSub": "システムの一般的な問題を自動的に修復します",
+    "garudaHealthSub": "garuda-health でシステムの一般的な問題をチェック",
+    "garudaUpdate": "Garuda update レスキューツール",
+    "installationFailedHeader": "{{ program }} がインストールされておらず、インストールにも失敗したため続行できません。詳細はログを確認してください",
+    "mergePacDiff": "pacdiff ファイルをマージ",
+    "mergePacDiffSub": ".pacnew および .pacsave ファイルをインタラクティブにマージ",
+    "onlyDirect": "このアクションはキューに入れることができず、直接実行する必要があります。",
+    "refreshArchMirrors": "ミラーを更新",
+    "refreshArchMirrorsSub": "ミラーリストを更新",
+    "refreshChaoticMirrors": "Chaotic-AUR ミラーリストを更新",
+    "refreshChaoticMirrorsSub": "Chaotic-AUR のミラーリストを更新します",
+    "refreshChaoticMirrorsSuccess": "Chaotic-AUR ミラーリストが正常に更新されました",
+    "refreshKeyring": "キーリングを更新",
+    "refreshKeyringSub": "pacman キーリングを更新します",
+    "reinstallDkmsModules": "DKMS モジュールを再インストール",
+    "reinstallPackages": "パッケージを再インストール",
+    "reinstallPackagesSub": "システム上のすべてのパッケージを再インストール",
+    "removeLock": "Pacman ロックを削除",
+    "removeLockSub": "pacman ロックファイルを削除",
+    "removePending": "保留から削除",
+    "resetConfigs": "設定をデフォルト状態にリセット",
+    "resetTooltip": "以下のファイルまたはフォルダはデフォルトの状態にリセットされます：",
+    "runNow": "今すぐ実行",
+    "subtitle": "システムを良好な状態に保ちましょう",
+    "taskRunning": "すでにタスクが実行中です。まずそれが完了するのを待ってください。",
+    "taskRunningHeader": "メンテナンスアクションの実行中にエラーが発生しました",
+    "title": "システム ",
+    "titleTwo": "メンテナンス",
+    "update": "システムを更新",
+    "updateRemoteFix": "Garuda update フィックス",
+    "updateRemoteFixSub": "pacman.conf をリセットし、キーリングを更新",
+    "updateRemoteFullFix": "Garuda update フルフィックス",
+    "updateRemoteFullFixSub": "Pacman をリセットし、OS 内のすべてのパッケージを再インストール",
+    "updateRemoteKeyring": "Garuda update キーリング",
+    "updateRemoteKeyringSub": "pacman.conf をリセットせずにキーリングを更新",
+    "updateRemoteResetAudio": "オーディオをリセット",
+    "updateRemoteResetAudioSub": "PipeWire オーディオ設定を再インストール/リセット",
+    "updateRemoteResetSnapper": "snapper をリセット",
+    "updateRemoteResetSnapperSub": "Snapper のすべてを削除し、その設定を再作成",
+    "updateSystem": "システムを更新",
+    "updateSystemSub": "garuda-update を介してシステムを更新"
+  },
+  "menu": {
+    "apply": "保留中の操作を適用",
+    "boot": "ブートツール",
+    "bootRepair": "ブート修復",
+    "clearTasks": "タスクをクリア",
+    "components": "コンポーネント",
+    "configFiles": "設定ファイル",
+    "console": "ターミナルを表示",
+    "diagnostics": "診断",
+    "file": {
+      "preferences": "設定",
+      "quit": "終了",
+      "title": "ファイル"
+    },
+    "gaming": "ゲーミング",
+    "help": {
+      "about": "Garuda Toolbox について",
+      "aboutBody": "Garuda Toolbox は Garuda Linux 用のシステムメンテナンスおよび診断ツールです。ユーザーがシステムを維持し、問題を診断するのを支援するように設計されています。Electron と Angular を使用して構築されています。",
+      "aboutForum": "フォーラム",
+      "aboutSourceCode": "ソースコード",
+      "aboutVersion": "Garuda Toolbox — v{{version}}",
+      "aboutWiki": "Wiki",
+      "callExorcist": "悪魔祓いを呼ぶ",
+      "callExorcistBody": "このボタンをクリックするなんて、よほど必死なんですね！あなたのために特別なブードゥーを設定しました。もしアプリにまだ問題がある場合は、Garuda Linux フォーラムまたは私たちの課題トラッカーに報告してください。",
+      "callExorcistTitle": "悪魔祓いを呼びました！",
+      "garudaStatus": "稼働状況を確認",
+      "getHelpArchWiki": "Arch Wikiでコンテンツを検索",
+      "getHelpForum": "フォーラムで助けを求める",
+      "getHelpWiki": "Wikiでコンテンツを検索",
+      "title": "ヘルプ"
+    },
+    "maintenance": "メンテナンス",
+    "modules": {
+      "appSettings": "アプリ設定",
+      "bootRepair": "ブート修復",
+      "components": "システムコンポーネント",
+      "diagnostics": "診断",
+      "gaming": "ゲーミング",
+      "kernels": "カーネル",
+      "locales": "ロケール設定",
+      "maintenance": "メンテナンス",
+      "packages": "アプリを見つける",
+      "search": "検索オプション",
+      "setupWizard": "セットアップアシスタント",
+      "systemdServices": "Systemd サービス",
+      "systemSettings": "システム設定",
+      "title": "モジュール",
+      "userManager": "ユーザーマネージャー",
+      "welcome": "ようこそ"
+    },
+    "network": "ネットワークツール",
+    "packages": "アプリを見つける",
+    "pending": "保留中",
+    "settings": "アプリ設定",
+    "setupWizard": "セットアップアシスタント",
+    "systemTools": "システム設定",
+    "terminalRunning": "実行中のタスク",
+    "terminalTasks": "タスクを実行",
+    "welcome": "ようこそ"
+  },
+  "networkAssistant": {
+    "actions": "操作",
+    "active": "アクティブ",
+    "airplaneMode": "機内モード",
+    "any": "すべて",
+    "blacklistAction": "{{name}} をブラックリストに追加",
+    "blacklistDriver": "ドライバーをブラックリスト化",
+    "blacklistedDrivers": "ブラックリストのドライバー",
+    "blacklistFailed": "ブラックリストの更新に失敗しました",
+    "bluetooth": "Bluetooth",
+    "bluetoothDevices": "Bluetooth デバイス",
+    "cancel": "キャンセル",
+    "category": "カテゴリ",
+    "clear": "クリア",
+    "clickToCopy": "クリックしてコピー",
+    "connected": "接続済み",
+    "connectionInfo": "接続情報",
+    "connman": "ConnMan",
+    "copied": "クリップボードにコピーしました",
+    "copyAll": "すべてコピー",
+    "count": "回数",
+    "disabled": "無効",
+    "disconnected": "切断",
+    "driver": "ドライバー",
+    "driverBlacklisted": "ドライバーがブラックリストに追加されました",
+    "driverLoaded": "ドライバーが正常にロードされました",
+    "driverUnblacklisted": "ドライバーがブラックリストから削除されました",
+    "driverUnloaded": "ドライバーが正常にアンロードされました",
+    "enable": "有効化",
+    "enabled": "有効",
+    "enableService": "サービスを有効化",
+    "enableServiceFailed": "サービスの有効化に失敗しました",
+    "error": "エラー",
+    "errorFetch": "ネットワーク情報の取得に失敗しました",
+    "ethernetControllers": "イーサネットコントローラー",
+    "externalIp": "外部 IP",
+    "gps": "GPS",
+    "hardwareInfo": "ハードウェア情報",
+    "hotspotFailed": "ホットスポットを開けませんでした",
+    "inactive": "非アクティブ",
+    "installDriver": "ドライバーをインストール",
+    "installTraceroute": "Traceroute をインストール",
+    "installWihotspot": "WiFi ホットスポットをインストール",
+    "interface": "インターフェース",
+    "internet": "インターネット",
+    "loadDriver": "ドライバーをロード",
+    "loadDriverAction": "ドライバー {{name}} をロード",
+    "loadDriverFailed": "ドライバーのロードに失敗しました",
+    "loadedDrivers": "ロード済みドライバー",
+    "maxHops": "最大ホップ数",
+    "networkManager": "NetworkManager",
+    "noDrivers": "ネットワークドライバーが見つかりません",
+    "noHardware": "ネットワークハードウェアが検出されませんでした",
+    "notAvailable": "利用不可",
+    "off": "オフ",
+    "on": "オン",
+    "openHotspot": "ホットスポットを開く",
+    "outputInTerminal": "下のターミナルに出力が表示されます",
+    "ping": "Ping",
+    "pingFailed": "Ping の実行に失敗しました",
+    "quickToggles": "クイック切り替え",
+    "routerIp": "ルーター IP",
+    "runPing": "Ping を実行",
+    "runTraceroute": "Traceroute を実行",
+    "search": "検索",
+    "serviceEnabled": "サービスが正常に有効化されました",
+    "services": "サービス",
+    "status": "ステータス",
+    "success": "成功",
+    "tabs": {
+      "diagnostics": "診断",
+      "drivers": "ドライバー",
+      "hardware": "ハードウェア",
+      "status": "ステータス"
+    },
+    "targetHost": "ターゲットホスト",
+    "timeout": "タイムアウト (秒)",
+    "title": "ネットワーク",
+    "titleTwo": "アシスタント",
+    "toggleAirplane": "機内モード切り替え",
+    "toggleAirplaneFailed": "機内モードの切り替えに失敗しました",
+    "toggleBt": "Bluetooth 切り替え",
+    "toggleBtFailed": "Bluetooth の切り替えに失敗しました",
+    "toggleGps": "GPS 切り替え",
+    "toggleGpsFailed": "GPS の切り替えに失敗しました",
+    "toggleWifi": "WiFi 切り替え",
+    "toggleWifiFailed": "WiFi の切り替えに失敗しました",
+    "traceroute": "Traceroute",
+    "tracerouteFailed": "Traceroute の実行に失敗しました",
+    "type": "タイプ",
+    "unblacklistDriver": "ブラックリストから解除",
+    "unloadDriver": "ドライバーをアンロード",
+    "unloadDriverAction": "ドライバー {{name}} をアンロード",
+    "unloadDriverFailed": "ドライバーのアンロードに失敗しました",
+    "unloadedDrivers": "アンロードされたドライバー",
+    "whitelistAction": "{{name}} をホワイトリストに追加",
+    "wifi": "WiFi",
+    "wifiHotspot": "WiFi ホットスポット",
+    "wifiHotspotDesc": "WiFi ホットスポット設定を開く",
+    "wirelessControllers": "ワイヤレスコントローラー"
+  },
+  "operation": {
+    "abort": "中止",
+    "addGroup": "ユーザーをグループに追加",
+    "args": "引数",
+    "disableHblock": "Hblock を無効化",
+    "disableService": "サービスを無効化",
+    "enableHblock": "Hblock を有効化",
+    "enableService": "サービスを有効化",
+    "installApps": "アプリをインストール",
+    "logs": "ログ",
+    "remove": "削除",
+    "removeApps": "アプリを削除",
+    "removeGroup": "ユーザーをグループから削除",
+    "resetDnsServer": "DNS サーバーをリセット",
+    "run": "今すぐ実行",
+    "setDefaultShell": "デフォルトシェルを設定",
+    "setNewDnsServer": "新しい DNS サーバーを設定"
+  },
+  "operationManager": {
+    "pendingOperationsRunning": "実行中の操作があります。すでに完了したものだけを削除します。",
+    "refusing": "実行を拒否",
+    "thisOperationRunning": "正気ですか？ この操作は現在実行中です！"
+  },
+  "os-interact": {
+    "boot-options": "ブート設定を適用",
+    "configs": "システム設定を変更",
+    "configs-system": "システム設定を変更",
+    "configs-user": "ユーザー設定を変更",
+    "garuda-update-config": "Garuda Update の設定を適用",
+    "groups": "ユーザーグループを変更",
+    "locales": "有効なロケールを変更",
+    "packages": "インストール済みパッケージを変更",
+    "packages-aur": "AUR パッケージを変更",
+    "services": "サービスを変更",
+    "services-user": "ユーザーサービスを変更"
+  },
+  "packages": {
+    "any": "すべて",
+    "clear": "クリア",
+    "description": "説明",
+    "documents": "ドキュメント",
     "icon": "Icon",
-    "runActions": "アクションを実行",
-    "removeAll": "すべてのアクションを削除",
-    "abortAll": "すべてのアクションを中止",
-    "noOutput": "出力なし",
-    "outputExists": "すでにアクションが実行中のようです。ログを表示する前に、それが終了するのを待ってください。",
-    "opRunning": "操作はすでに実行中です。",
-    "clearCachedDataTitle": "出力キャッシュがクリアされました",
-    "clearCachedData": "出力キャッシュはクリアされました。",
-    "clearOutputCache": "出力キャッシュをクリア",
-    "copyOutput": "ターミナル出力をコピー",
-    "copyToClipboardTitle": "クリップボードにコピーされました",
-    "copyToClipboard": "出力は正常にクリップボードにコピーされました。",
-    "uploadPrivateBin": "PrivateBin にアップロード"
+    "internet": "インターネット",
+    "multimedia": "マルチメディア",
+    "name": "名前",
+    "notFound": "パッケージが見つかりません",
+    "other": "その他",
+    "science": "科学",
+    "search": "検索",
+    "searchKey": "検索キーワードを入力",
+    "security": "セキュリティ",
+    "selected": "選択済み",
+    "status": "ステータス",
+    "title": "パッケージ",
+    "titleTwo": "アプリケーション",
+    "url": "URL"
+  },
+  "settings": {
+    "autoRefresh": "systemd サービスの自動更新を有効化",
+    "autoStart": "アプリケーションを自動起動",
+    "backgroundFit": "背景をアプリに合わせる",
+    "backgroundSettings": "背景設定",
+    "blurBackground": "背景をぼかす",
+    "blurStrength": "ぼかし強度",
+    "clearBackground": "背景をクリア",
+    "copyDiagnostics": "診断情報をクリップボードにコピー",
+    "customBackground": "カスタム背景",
+    "darkMode": "ダークモードを有効化",
+    "language": "アクティブな言語を設定",
+    "leftButtons": "ウィンドウボタンを左側に表示",
+    "logLevel": "ログレベルを選択",
+    "noBackgroundSelected": "背景が選択されていません",
+    "selectOptions": "選択",
+    "showMainLinks": "ホームページにリンクを表示",
+    "systemdUserContext": "ユーザー Systemd サービスを表示",
+    "themeLabel": "基本デザインテーマ",
+    "title": "アプリ",
+    "titleTwo": "設定",
+    "toggleOptions": "トグルオプション"
+  },
+  "setupWizard": {
+    "apply": {
+      "body": "「適用」をクリックしてインストールと設定プロセスを開始します。",
+      "failedBody": "インストール中に問題が発生しました。再試行するか、戻って選択内容を変更できます。",
+      "failedHeader": "実行に失敗しました",
+      "header": "適用の準備完了"
+    },
+    "autoCategories": {
+      "audio": "オーディオ",
+      "browsers": "ブラウザー",
+      "communication": "コミュニケーション",
+      "development": "開発",
+      "gaming": "ゲーミング",
+      "graphics": "グラフィックス",
+      "inputMethod": "入力メソッド",
+      "internet": "インターネット",
+      "kernels": "カーネル",
+      "mail": "メール",
+      "multimedia": "マルチメディア",
+      "office": "オフィス",
+      "other": "その他",
+      "pkgmngrs": "ソフトウェアセンター",
+      "video": "ビデオ",
+      "virtualization": "仮想化"
+    },
+    "autoSoftware": {
+      "0ad": "歴史をテーマにした 3D リアルタイムストラテジーゲーム",
+      "abiWord": "フル機能のワードプロセッサ",
+      "aisleriot": "ソリティアカードゲーム集",
+      "ansible": "Ansible collection の公式コレクション",
+      "appimagePool": "モダンな AppImageHub クライアント",
+      "ardour": "プロフェッショナル向けデジタルオーディオワークステーション",
+      "asian": "一般的なアジア系フォントを含むメタパッケージ",
+      "audacious": "軽量で高度なオーディオプレーヤー",
+      "audacity": "デジタルオーディオ波形を操作するプログラム",
+      "bakaMplayer": "libmpv ベースのクロスプラットフォームマルチメディアプレーヤー",
+      "bauh": "アプリケーション管理用グラフィカルインターフェース",
+      "bazaar": "Flatpak に特化したアプリストア",
+      "birdfont": "ベクターグラフィックス用フォントエディター",
+      "bitwigStudio": "音楽制作向けデジタルオーディオワークステーション",
+      "blender": "統合型 3D グラフィックス制作スイート",
+      "brasero": "CD/DVD マスタリングツール",
+      "brave": "デフォルトで広告やトラッカーをブロックするウェブブラウザー",
+      "calligra": "生産性およびクリエイティブ用途向けアプリケーションスイート",
+      "chromium": "スピード、シンプルさ、セキュリティを重視して構築されたウェブブラウザー",
+      "clawsMail": "GTK+ ベースの軽量電子メールクライアント",
+      "cockpit": "Linux サーバー用の Web ベースユーザーインターフェース",
+      "conky": "軽量システムモニター",
+      "converseen": "一括画像変換・リサイズツール",
+      "darktable": "RAW 画像の整理と現像を行うユーティリティ",
+      "deluge": "軽量でフル機能の BitTorrent クライアント",
+      "digikam": "高度なデジタル写真管理アプリケーション",
+      "discord": "オールインワンの音声・テキストチャット",
+      "discover": "KDE アプリおよびリソースマネージャー",
+      "docker": "アプリケーションをコンテナとしてパッケージ化、配布、実行",
+      "dragon": "シンプルさに特化したマルチメディアプレーヤー",
+      "droidcam": "スマートフォン/タブレットをウェブカメラに変換",
+      "easytag": "オーディオタグの表示・編集用アプリケーション",
+      "element": "洗練された Matrix コラボレーションクライアント",
+      "elisa": "KDE によるシンプルな音楽プレーヤー",
+      "evolution": "メール、連絡先、スケジュールを一括管理",
+      "falkon": "クロスプラットフォーム QtWebEngine ブラウザー",
+      "fdm": "強力でモダンなダウンロードアクセラレータ・整理ツール",
+      "filezilla": "高速で信頼性の高い FTP、FTPS、SFTP クライアント",
+      "firedragon": "Garuda ブランドのプライバシー重視 Floorp フォーク",
+      "firedragonCatppuccin": "Catppuccin テーマ付き Firedragon ブラウザー",
+      "firefox": "高速、プライベートで安全なウェブブラウザー",
+      "firefoxEsr": "Firefox 延長サポート版 (ESR)",
+      "fontForge": "アウトラインおよびビットマップフォントエディター",
+      "fractal": "GNOME 向け Matrix グループメッセージアプリ",
+      "freeCad": "フィーチャーベースのパラメトリック 3D CAD モデラー",
+      "freeOffice": "Microsoft Office 互換オフィススイート",
+      "geary": "GNOME 向けの軽量メールクライアント",
+      "genymotion": "Android 向け仮想環境",
+      "gimp": "GNU 画像編集プログラム",
+      "github": "Git および GitHub を管理するための GUI",
+      "gitKraken": "直感的で高速、美しい Git クライアント",
+      "gnomeBoxes": "仮想システムにアクセスするためのシンプルなアプリ",
+      "gnomeBuilder": "GNOME ベースのソフトウェア作成用 IDE",
+      "gnomeFirmware": "対応デバイスのファームウェアを管理",
+      "gnomeSoftware": "GNOME アプリおよびリソースマネージャー",
+      "gnu": "拡張可能でカスタマイズ可能なリアルタイム表示エディター (GNU Emacs)",
+      "gnuCash": "財務会計アプリケーション",
+      "gnumeric": "GNOME 向け表計算アプリケーション",
+      "handbrake": "マルチスレッド対応ビデオトランスコーダー",
+      "hedgewars": "ターン制ストラテジー砲撃ゲーム",
+      "homebank": "無料・簡単・パーソナル家計簿",
+      "hypnotix": "IPTV ストリーミングアプリケーション",
+      "indic": "インド系言語用入力メソッド",
+      "inkscape": "プロ向けベクターグラフィックスエディター",
+      "intellijIdea": "Java およびその他のプログラミング言語向け IDE",
+      "japanese": "日本語入力メソッド",
+      "jenkins": "拡張可能な継続的インテグレーションサーバー",
+      "jitsiMeet": "Jitsi Meet デスクトップアプリケーション",
+      "joplin": "ノート作成・ToDo アプリケーション",
+      "k3b": "多機能な CD/DVD 書き込みアプリケーション",
+      "kapman": "有名なパックマンのクローンゲーム",
+      "kdenlive": "ノンリニアビデオエディター",
+      "kDevelop": "KDE テクノロジーを使用した C++ IDE",
+      "keepassXc": "クロスプラットフォーム対応パスワードマネージャー",
+      "kiCad": "電子回路図および基板設計ツール",
+      "kid3": "オーディオタグエディター",
+      "kmahjongg": "1人または2人用の牌合わせ（麻雀ソリティア）ゲーム",
+      "kmail": "KDE メールクライアント",
+      "kMyMoney": "個人向け家計管理ソフトウェア",
+      "knights": "KDE によるチェスボード",
+      "kodi": "メディアプレーヤーおよびエンターテインメントハブ",
+      "kolourpaint": "KDE によるシンプルなペイントプログラム",
+      "korean": "韓国語入力メソッド",
+      "krita": "プロ向けデジタルペイントプログラム",
+      "kwave": "KDE 向けサウンドエディター",
+      "libreCad": "2D CAD 作図ツール",
+      "libreOfficeFresh": "LibreOffice の最新機能版 (Fresh)",
+      "libreOfficeStill": "LibreOffice の安定版 (Still)",
+      "librewolf": "プライバシー、セキュリティ、自由を重視したウェブブラウザー",
+      "linuxCachyos": "高度に最適化された CachyOS カーネル",
+      "linuxHardened": "セキュリティ強化版 Linux カーネル",
+      "linuxLts": "長期サポート (LTS) Linux カーネル",
+      "linuxMainline": "最新のメインライン Linux カーネル",
+      "linuxXanmod": "パフォーマンス向上のための XanMod パッチ付きカスタムカーネル",
+      "linuxXanmodLts": "XanMod パッチ付き LTS カスタムカーネル",
+      "lmms": "デジタルオーディオワークステーションおよびシーケンサー",
+      "lollypop": "GNOME 向けのモダンな音楽プレーヤー",
+      "luanti": "ボクセルベースのゲームエンジン",
+      "luminanceHdr": "HDR 画像処理ワークフローツール",
+      "mailspring": "美しく高速なメールクライアント",
+      "mari0": "ポータルガンの仕組みを備えたマリオゲーム",
+      "mediaElch": "Kodi 用メディアマネージャー",
+      "microsoftTeams": "非公式 Microsoft Teams クライアント",
+      "mixxx": "無料・オープンソースの DJ ソフトウェア",
+      "mumble": "低遅延・高音質のボイスチャットソフトウェア",
+      "museScore": "美しい楽譜の作成、再生、印刷",
+      "myPaint": "デジタル絵師向けの高速で使いやすいペイントアプリ",
+      "mystiq": "FFmpeg ベースのオーディオ/ビデオコンバーター",
+      "neochat": "分散型通信プロトコル Matrix 用クライアント",
+      "netbeans": "Java、HTML5、PHP、C、C++ 向け IDE",
+      "nextcloudClient": "Nextcloud デスクトップ同期クライアント",
+      "nitroshare": "デバイス間でファイルを転送するシンプルなアプリ",
+      "obsidian": "ローカルのプレーンテキスト Markdown ファイルを活用する知識ベース",
+      "obsStudio": "ライブ配信および録画用ソフトウェア",
+      "octopi": "Qt を使用した強力な Pacman フロントエンド",
+      "onlyOffice": "文書、表計算、プレゼンテーションエディターを統合したオフィススイート",
+      "openToonz": "2D アニメーション制作用ソフトウェア",
+      "pencil2d": "2D 手描きアニメーション作成ツール",
+      "podman": "コンテナ管理用のデーモンレスコンテナエンジン",
+      "postman": "API の構築、テスト、ドキュメント化",
+      "prometheus": "システム監視およびアラートツールキット",
+      "puppet": "サーバー自動化フレームワークおよびアプリケーション",
+      "putty": "ターミナル統合型 SSH/Telnet クライアント",
+      "pyCharm": "プロフェッショナル開発者向け Python IDE",
+      "qbittorrent": "Qt ベースの高度な BitTorrent クライアント",
+      "qtCreator": "軽量なクロスプラットフォーム IDE",
+      "qutebrowser": "Python ベースのキーボード主導・Vim 風ブラウザー",
+      "remmina": "GTK+ で書かれたリモートデスクトップクライアント",
+      "rosegarden": "MIDI/オーディオシーケンサーおよび楽譜エディター",
+      "shortwave": "インターネットラジオプレーヤー",
+      "shotcut": "クロスプラットフォーム対応動画エディター",
+      "signal": "Linux 向け Signal プライベートメッセンジャー",
+      "simplifiedChinese": "簡体字中国語入力メソッド",
+      "sinhalese": "シンハラ語入力メソッド",
+      "skrooge": "KDE 向け個人財務マネージャー",
+      "slack": "Slack デスクトップクライアント",
+      "smPlayer": "コーデック内蔵メディアプレーヤー",
+      "soundConverter": "シンプルな音声コンバーターアプリ",
+      "soundwire": "PC の音声を他のデバイスに送信",
+      "strawberryPlayer": "オーディオ愛好家向けの音楽プレーヤー",
+      "subtitleComposer": "動画字幕エディター",
+      "superTux": "クラシックな 2D 横スクロールアクションゲーム",
+      "superTuxKart": "Tux が登場するカートレースゲーム",
+      "sweetHome3d": "インテリアデザインアプリケーション",
+      "synfigStudio": "プロ向けベクターアニメーションプログラム",
+      "teeworlds": "スピード感あふれるマルチプレイヤー 2D シューティングゲーム",
+      "telegram": "公式 Telegram Desktop クライアント",
+      "terraform": "インフラストラクチャをコードとして構築・更新するツール",
+      "thai": "タイ語入力メソッド",
+      "thunderbird": "スタンドアロンのメールおよびニュースリーダー",
+      "torBrowser": "Tor ネットワークを安全に閲覧",
+      "traditionalChinese": "繁体字中国語入力メソッド",
+      "transmageddon": "動画フォーマット変換用アプリケーション",
+      "twitchGui": "マルチプラットフォーム Twitch.tv ブラウザー",
+      "ungoogledChromium": "Google 統合機能をすべて削除した Chromium",
+      "variety": "壁紙を定期的に自動変更",
+      "vietnamese": "ベトナム語入力メソッド",
+      "vim": "高度にカスタマイズ可能なターミナルテキストエディター",
+      "virtManager": "仮想マシンを管理するためのデスクトップ UI",
+      "virtualBox": "クロスプラットフォーム仮想化ソフトウェア",
+      "visualStudioCode": "最新アプリケーションの構築とデバッグ用コードエディター",
+      "visualStudioCodeOss": "Visual Studio Code のオープンソースビルド",
+      "vivaldi": "パワーユーザーを意識して作られた高度なブラウザー",
+      "vlc": "クロスプラットフォームマルチメディアプレーヤー",
+      "vscodium": "テレメトリのない VSCode バイナリ",
+      "warpinator": "ネットワーク経由でファイルを送受信",
+      "wings3d": "翼状エッジデータ構造を使用した 3D モデラー",
+      "wire": "エンドツーエンド暗号化メッセンジャーおよびビデオ会議",
+      "wpsOffice": "WPS オフィス生産性スイート",
+      "xfburn": "シンプルな CD/DVD 書き込みツール",
+      "xonotic": "高速なクロスプラットフォーム対応ファーストパーソンシューター",
+      "xtreme": "強力なダウンロードアクセラレータおよび動画ダウンローダー",
+      "yakuake": "ドロップダウン式ターミナルエミュレーター",
+      "zedEditor": "高性能・マルチプレイヤー対応コードエディター",
+      "zoom": "ビデオおよびウェブ会議サービス"
+    },
+    "buttons": {
+      "apply": "適用",
+      "back": "戻る",
+      "finish": "完了",
+      "next": "次へ",
+      "retry": "再試行"
+    },
+    "softwareSelection": {
+      "body": "インストールしたいソフトウェアを選択してください。",
+      "header": "ソフトウェアの選択"
+    },
+    "steps": {
+      "apply": "変更を適用"
+    },
+    "success": {
+      "archWiki": "Arch Linux Wiki",
+      "body": "システムのセットアップが完了し、準備が整いました！",
+      "finish": "セットアップを完了",
+      "forum": "Garuda フォーラム",
+      "garudaWiki": "Garuda Linux Wiki",
+      "reboot": "再起動をお勧めします。",
+      "title": "成功！"
+    },
+    "tasks": {
+      "installSoftware": "選択したソフトウェアをインストール中"
+    },
+    "title": "セットアップアシスタント"
+  },
+  "shells": {
+    "fish": {
+      "hint": "fish をデフォルトシェルとして設定すると、他のプログラムで問題が発生する可能性があります。代わりにターミナル設定でデフォルトとして設定することをお勧めします。"
+    }
+  },
+  "systemdServices": {
+    "actions": "アクション",
+    "active": "アクティブ",
+    "autoRefresh": "自動更新",
+    "clear": "クリア",
+    "description": "説明",
+    "disable": "無効化",
+    "enable": "有効化",
+    "error": "サービスの取得中にエラーが発生しました。もう一度試してください。",
+    "errorTitle": "サービスの取得エラー",
+    "excludeDisabled": "無効なものを除外",
+    "hideDead": "停止中を非表示",
+    "hideDeadTip": "'dead'、'failed'、'exited' 状態のサービスの表示/非表示を切り替えます",
+    "includeDisabled": "無効なものを含める",
+    "load": "ロード",
+    "logs": "ログ",
+    "mask": "マスク",
+    "notFound": "サービスが見つかりません",
+    "reload": "リロード",
+    "restart": "再起動",
+    "searchKey": "検索キーワードを入力",
+    "show": "表示",
+    "showAll": "すべて表示",
+    "start": "開始",
+    "state": "状態",
+    "stop": "停止",
+    "systemContext": "システムサービスを表示",
+    "unit": "ユニット名",
+    "unmask": "マスク解除",
+    "userContext": "ユーザーサービスを表示"
+  },
+  "systemSettings": {
+    "common": {
+      "guestUser": {
+        "description": "個人ファイルから隔離された、パスワードなしの一時的な「ゲスト」ユーザーアカウントを作成します。ログアウト時に消去されます。",
+        "title": "ゲストユーザーを有効化"
+      },
+      "oomd": {
+        "description": "systemd の Out-Of-Memory デーモン。システムメモリをアクティブに監視し、PC 全体がフリーズする前にメモリを大量消費しているプロセスを自動終了します。",
+        "title": "Systemd-oomd 有効"
+      },
+      "psd": {
+        "description": "ウェブブラウザー (Firefox や Brave など) のプロファイルを高速な一時 RAM (tmpfs) に移動します。ブラウザーの応答性が大幅に向上し、SSD の摩耗を軽減します。",
+        "title": "Profile-sync-daemon インストール済み"
+      },
+      "psdEnabled": {
+        "description": "RAM 内のブラウザープロファイルを自動管理するために Profile-sync-daemon を実行します。",
+        "title": "Profile-sync-daemon 有効"
+      },
+      "title": "共通"
+    },
+    "configs": {
+      "audioNoSuspend": {
+        "description": "PipeWire のノードサスペンド機能を無効にします。オーディオデバイスを常にアクティブに保ち、サウンドカードがスリープから復帰する際の耳障りなプチプチ音やポップノイズを防ぎます。",
+        "title": "オーディオサスペンド無効化"
+      },
+      "discordDisableAutoupdate": {
+        "description": "Discord がアップデートのダウンロードとインストールを促すのを防ぎます（Arch Linux では Pacman が処理するため不要です）。",
+        "title": "Discord 自動更新の無効化"
+      },
+      "kdeBorderlessMaximize": {
+        "description": "KDE Plasma でアプリケーションが最大化されたときにタイトルバーとウィンドウの枠線を削除し、利用可能な垂直画面スペースを広げる KWin の微調整です。",
+        "title": "KDE 最大化時のボーダーレス化"
+      },
+      "title": "システム設定構成"
+    },
+    "defaultDns": "デフォルト DNS を設定",
+    "defaultDnsTip": "インターネット接続のデフォルト DNS プロバイダーを変更し、ISP のデフォルトを上書きします。速度向上、プライバシー保護、検閲回避に役立ちます。",
+    "defaultShell": "ログインシェルを設定",
+    "defaultShellConfigs": "デフォルト設定をインストール",
+    "defaultShellTip": "デフォルトのターミナルログインシェルを変更します。POSIX 準拠のシェル (Bash や Zsh など) を使用し、Fish などの非準拠シェルはターミナルエミュレーターのプロファイル設定からのみ使用することをお勧めします。",
+    "enableHblock": "Hblock を有効化",
+    "enableHblockTip": "Hblock を有効化します。/etc/hosts ファイルを介して広告、トラッカー、マルウェアドメインへのリクエストをローカルのシンクホールにルーティングし、システム全体でブロックします。",
+    "enableIwd": "wpa_supplicant の代わりに IWD を使用",
+    "enableIwdTip": "iNet Wireless Daemon (iwd)。Wi-Fi 接続を管理するための wpa_supplicant に代わる現代的で軽量な代替ツール。接続が高速でローミング処理が向上します。",
+    "garudaUpdate": {
+      "noCheckSpace": {
+        "description": "パッケージをインストールする前の空きディスク容量チェックをスキップします。",
+        "title": "ディスク容量チェックをスキップ"
+      },
+      "pacmanNoconfirm": {
+        "description": "確認プロンプトを表示せずに pacman を実行し、高速に更新します。",
+        "title": "非対話型 pacman"
+      },
+      "skipMirrorlist": {
+        "description": "システム更新を実行する前に Arch ミラーリストの更新をスキップします。",
+        "title": "ミラーリストの更新をスキップ"
+      },
+      "title": "Garuda Update",
+      "updateAur": {
+        "description": "システム更新時に Arch User Repository (AUR) からインストールされたパッケージも更新します。",
+        "title": "AUR パッケージを更新"
+      }
+    },
+    "performance": {
+      "ananicyCpp": {
+        "description": "Auto NICe デーモン。実行中プロセスの CPU 優先度 (niceness) を動的に変更し、現在使用しているアクティブなアプリにより多くの CPU 時間を割り当てて体感を高速化します。",
+        "title": "Ananicy C++ インストール済み"
+      },
+      "ananicyCppEnabled": {
+        "description": "アプリケーションの CPU 優先度を継続的に管理するために Ananicy デーモンを実行します。",
+        "title": "Ananicy C++ 有効"
+      },
+      "bpftune": {
+        "description": "eBPF を使用して Linux ネットワークパラメータをリアルタイムで継続的に監視・自動チューニングし、最適なスループットと低遅延を実現します。",
+        "title": "Bpftune インストール済み"
+      },
+      "bpftuneEnabled": {
+        "description": "ネットワークパフォーマンスを継続的に最適化するために bpftune デーモンを実行します。",
+        "title": "Bpftune 有効"
+      },
+      "irqbalanceEnabled": {
+        "description": "すべての CPU コアにハードウェア割り込みを均等に分散させます。単一のコアがデバイスの信号処理で過負荷になるのを防ぎます。",
+        "title": "IRQbalance 有効"
+      },
+      "performanceTweaks": {
+        "description": "Garuda の応答性を最大限に高めるために、システムレベルの sysctl およびチューニング設定を適用します。",
+        "title": "パフォーマンス調整"
+      },
+      "preload": {
+        "description": "最も頻繁に使用するアプリケーションを監視して RAM に事前ロードし、起動時間を大幅に短縮するバックグラウンドデーモン。",
+        "title": "Preload インストール済み"
+      },
+      "preloadEnabled": {
+        "description": "よく使うアプリケーションをキャッシュするために Preload デーモンを実行します。",
+        "title": "Preload 有効"
+      },
+      "title": "パフォーマンス"
+    },
+    "powersave": {
+      "autoCpufreq": {
+        "description": "自動 CPU 速度・電力オプティマイザー。アイドル時は CPU 速度を動的に下げてバッテリーを節約し、必要なときにはパフォーマンスを向上させます。",
+        "title": "Auto-cpufreq インストール済み"
+      },
+      "autoCpufreqEnabled": {
+        "description": "CPU スケーリングを継続的に管理するために auto-cpufreq デーモンを実行します。",
+        "title": "Auto-cpufreq 有効"
+      },
+      "intelUndervolt": {
+        "description": "Intel プロセッサに供給される電圧を下げます。パフォーマンスを犠牲にすることなく発熱と消費電力を削減し、バッテリー駆動時間を延ばしサーマルスロットリングを防ぎます。",
+        "title": "Intel-undervolt インストール済み"
+      },
+      "intelUndervoltEnabled": {
+        "description": "起動時に Intel 低電圧設定を自動適用するデーモンを実行します。",
+        "title": "Intel-undervolt 有効"
+      },
+      "powerProfilesDaemon": {
+        "description": "システムが「省電力」「バランス」「パフォーマンス」動作モードを簡単に切り替えられる API を提供します。",
+        "title": "Power profiles daemon インストール済み"
+      },
+      "powerProfilesDaemonEnabled": {
+        "description": "デスクトップ環境が電源プロファイルを切り替えられるようにするデーモンを実行します。",
+        "title": "Power profiles daemon 有効"
+      },
+      "powersaveTweaks": {
+        "description": "バッテリー駆動デバイスでの消費電力を最小限に抑えるよう設計された sysctl および設定チューニングを適用します。",
+        "title": "省電力調整"
+      },
+      "thermald": {
+        "description": "Intel の熱管理デーモン。CPU を強制スロットリングする前にプロアクティブに冷却手法を用いてシステムの過熱を防ぎます。",
+        "title": "Thermald インストール済み"
+      },
+      "thermaldEnabled": {
+        "description": "CPU 温度を監視して過熱を防ぐために thermald デーモンを実行します。",
+        "title": "Thermald 有効"
+      },
+      "title": "省電力",
+      "tlp": {
+        "description": "電源非接続時に Wi-Fi、ディスク、PCIe、USB デバイスの設定を調整してノート PC のバッテリー駆動時間を自動最適化する高度なユーティリティ。",
+        "title": "TLP インストール済み"
+      },
+      "tlpEnabled": {
+        "description": "バッテリー駆動時に省電力ルールを動的に適用するために TLP デーモンを実行します。",
+        "title": "TLP 有効"
+      }
+    },
+    "rightclickEmulation": {
+      "evdevLongPressRightClick": {
+        "description": "タッチスクリーンまたはタッチパッド上で指を長押ししたときに右クリックとして認識されるよう libinput を設定します。",
+        "title": "Evdev 長押し右クリックエミュレーション"
+      },
+      "evdevRce": {
+        "description": "タッチパッドの右下隅（または指定エリア）が常に物理的な右クリックとして動作するように設定します。",
+        "title": "Evdev RCE 有効"
+      },
+      "title": "右クリックエミュレーション"
+    }
+  },
+  "systemStatus": {
+    "affectedFiles": "影響を受けるファイル：",
+    "askHelp": "不明な点がある場合は、保存せずにウィンドウを閉じ、Garuda Linux フォーラムで助けを求めてください。",
+    "aurUpdates": "AUR パッケージの更新はこのアプリケーションの範囲外です。Paru などの AUR ヘルパーを使用し、インストール前に PKGBUILD ファイルを確認してください。",
+    "cancel": "キャンセル",
+    "cautionMerge": "古いファイルに誤った変更を加えると、システムが破損する可能性があることに注意してください。",
+    "findMore": "進め方を確認する",
+    "healthIssues": "システムヘルスの問題",
+    "healthIssuesFound": "以下の問題が見つかりました:",
+    "learnPacdiff": "pacdiff ファイルに慣れていない場合は、すぐにそれらについて調べてください。",
+    "openMaintenance": "開始するには下のボタンをクリックしてください。",
+    "openMaintenanceButton": "マージを開始",
+    "pacFiles": "このシステムには保留中の .pacnew ファイルがあります。確認してマージする必要があります！（クリックして詳細を確認）",
+    "pendingPacdiff": "保留中の pacdiff ファイル",
+    "pendingUpdates": "保留中のアップデート",
+    "proceed": "進め方は以下の通りです：",
+    "proceedMerge": "変更を適用するために Meld が開かれます。左側が新しいファイル、右側が古いファイルです。マージしたい有用な変更を左側から右側に移動します。完了したら保存ボタンまたは CTRL + S をクリックします。",
+    "rebootNow": "今すぐ再起動",
+    "rebootNowBody": "今すぐ再起動してもよろしいですか？ 続行する前に、すべての作業を保存してください。",
+    "runAurUpdates": "AUR アップデートを外部で実行",
+    "runHealthFix": "ヘルス修復を実行",
+    "scheduleUpdates": "アップデートをスケジュール",
+    "snapshotCreation": "マージを開始する前に Btrfs スナップショットが作成されます。",
+    "updates": "このシステムには保留中のアップデートがあります（クリックして詳細を確認）",
+    "warnReboot": "アップデート適用後、特にカーネルやデスクトップ環境を更新した場合は、システムを再起動することを強くお勧めします。",
+    "warnUpdate": "システムは 2 週間更新されていません。セキュリティと安定性を確保するためにシステムを更新してください。"
+  },
+  "systemTools": {
+    "audio": {
+      "alsa": {
+        "description": "基盤となるカーネルレベルのサウンドドライバー。サウンドカードのコアハードウェアサポートを提供します（通常は PipeWire 経由で利用します）。",
+        "title": "ALSA サポート"
+      },
+      "calf": {
+        "description": "Calf Studio Gear。高品質なオーディオ処理プラグインセット。EasyEffects にプロのスタジオエフェクトを追加します。",
+        "title": "Calf Plugins"
+      },
+      "easyeffects": {
+        "description": "マイクの品質向上やオーディオ再生を強化する強力なツール。完全な体験を得るには 'Calf Plugins' と 'LSP Plugins' を一緒にインストールすることを強く推奨します。",
+        "title": "EasyEffects"
+      },
+      "jack": {
+        "description": "プロの音楽制作向けに設計された低遅延サウンドサーバー。現在は通常 PipeWire がネイティブに処理します。",
+        "title": "JACK サポート"
+      },
+      "jamesdsp": {
+        "description": "低音強化、イコライザーなどのエフェクトを追加するオーディオエフェクトプロセッサー。まずは EasyEffects を試すことをお勧めします。",
+        "title": "JamesDSP インストール済み"
+      },
+      "lspPlugins": {
+        "description": "Linux Studio Plugins (LSP)。イコライザーやコンプレッサーなどのプロ向けオーディオツール集。EasyEffects の機能を拡張するためにインストールします。",
+        "title": "LSP Plugins"
+      },
+      "pipewire": {
+        "description": "Linux で音声および映像ストリームを処理する最新標準規格。PulseAudio と JACK をシームレスに置き換え、低遅延と高いセキュリティを実現します。",
+        "title": "PipeWire サポート"
+      },
+      "pulseaudio": {
+        "description": "従来の旧型サウンドサーバー。主に互換性のために残されていますが、大部分は PipeWire に置き換えられました。",
+        "title": "PulseAudio サポート"
+      },
+      "title": "オーディオ",
+      "userRealtime": {
+        "description": "ユーザーを realtime グループに追加し、オーディオアプリに CPU 優先度を与えて音飛びや遅延を防ぎます。",
+        "title": "ユーザーが realtime グループに所属"
+      }
+    },
+    "bluetooth": {
+      "autoConnect": {
+        "description": "信頼済みでペアリング済みの Bluetooth デバイスの電源が入ったときに自動再接続します。",
+        "title": "自動接続 インストール済み"
+      },
+      "autoConnectEnabled": {
+        "description": "Bluetooth の自動再接続をアクティブに処理するバックグラウンドサービスを実行します。",
+        "title": "自動接続 有効"
+      },
+      "bluetooth": {
+        "description": "BlueZ Linux Bluetooth スタック。ワイヤレスデバイスの制御に必要なコアソフトウェアを提供します。",
+        "title": "Bluetooth サポート"
+      },
+      "bluetoothEnabled": {
+        "description": "Bluetooth デバイスのペアリングと接続に必要なバックグラウンドサービスを実行します。",
+        "title": "Bluetooth 有効"
+      },
+      "title": "Bluetooth",
+      "userBluetooth": {
+        "description": "ユーザーを lp グループに追加し、システム全体の PulseAudio 設定で Bluetooth オーディオストリームを利用可能にします。PipeWire では不要です。",
+        "title": "ユーザーが bluetooth グループに所属"
+      }
+    },
+    "components": "システムコンポーネント",
+    "containers": {
+      "boxbuddy": {
+        "description": "Distrobox 環境を簡単に管理・利用できるグラフィカルアプリ。",
+        "title": "BoxBuddy インストール済み"
+      },
+      "distrobox": {
+        "description": "他の Linux ディストリビューションの緊密に統合されたコンテナを作成します。Ubuntu、Fedora、Arch のアプリを Garuda 内でネイティブに実行できます。",
+        "title": "DistroBox インストール済み"
+      },
+      "docker": {
+        "description": "隔離されたアプリケーションをパッケージ化して実行するための業界標準コンテナエンジン。",
+        "title": "Docker インストール済み"
+      },
+      "dockerCompose": {
+        "description": "設定ファイルを使用してマルチコンテナ Docker アプリケーションを定義・実行するツール。",
+        "title": "Docker Compose インストール済み"
+      },
+      "dockerEnabled": {
+        "description": "Docker コンテナの管理と実行に必要なバックグラウンドデーモンを実行します。",
+        "title": "Docker 有効"
+      },
+      "kontainer": {
+        "description": "Distrobox コンテナを簡単に管理するためのネイティブ KDE アプリケーション。",
+        "title": "Kontainer"
+      },
+      "podman": {
+        "description": "Docker の現代的なデーモンレス代替ツール。root 権限なしでコンテナを実行でき、セキュリティが向上します。",
+        "title": "Podman インストール済み"
+      },
+      "podmanDesktop": {
+        "description": "Podman コンテナを簡単に管理、作成、表示できるグラフィカルアプリケーション。",
+        "title": "Podman Desktop インストール済み"
+      },
+      "podmanDocker": {
+        "description": "'docker' コマンドを 'podman' にエイリアスする互換性パッケージ。既存の Docker スクリプトがそのまま動作します。",
+        "title": "Podman 経由で Docker をエミュレート"
+      },
+      "title": "コンテナ",
+      "userDocker": {
+        "description": "ユーザーを docker グループに追加し、sudo なしで Docker コマンドを実行できるようにします。",
+        "title": "ユーザーが docker グループに所属"
+      },
+      "winboat": {
+        "description": "コンテナ化を利用して、Linux 上でシームレスに統合された Windows アプリケーションを提供します。",
+        "title": "WinBoat"
+      }
+    },
+    "firewall": {
+      "firewalld": {
+        "description": "ゾーンを使用してネットワーク信頼レベルとルールを動的に定義する動的ファイアウォールマネージャー。",
+        "title": "Firewalld インストール済み"
+      },
+      "firewalldEnabled": {
+        "description": "受信ネットワーク接続からシステムを保護するために firewalld デーモンを実行します。",
+        "title": "firewalld 有効"
+      },
+      "opensnitch": {
+        "description": "プログラムがインターネットに接続しようとするたびに警告し、許可を求めるアプリケーションレベルのファイアウォール。",
+        "title": "OpenSnitch インストール済み"
+      },
+      "opensnitchEnabled": {
+        "description": "アプリケーションのネットワークトラフィックを監視するために OpenSnitch デーモンを実行します。",
+        "title": "OpenSnitch 有効"
+      },
+      "title": "ファイアウォール",
+      "ufw": {
+        "description": "Uncomplicated Firewall。iptables/nftables ファイアウォールルールを管理するためのシンプルなコマンドラインインターフェース。",
+        "title": "UFW インストール済み"
+      },
+      "ufwEnabled": {
+        "description": "シンプルなファイアウォールルールを適用するために UFW サービスを実行します。",
+        "title": "UFW 有効"
+      }
+    },
+    "kernels": "カーネル",
+    "locales": "ロケール",
+    "misc": {
+      "gns": {
+        "description": "Nix パッケージマネージャーを統合し、膨大な追加ソフトウェアパッケージへのアクセスを提供します。Garuda と設定を共有する NixOS インストールも提供します。",
+        "title": "Garuda Nix Subsystem インストール済み"
+      },
+      "title": "その他"
+    },
+    "network": {
+      "modemManagerEnabled": {
+        "description": "モバイルブロードバンド (4G/5G USB モデム) を使用してインターネットに接続するために必要なデーモンを実行します。",
+        "title": "ModemManager 有効"
+      },
+      "networkManager": {
+        "description": "Wi-Fi、イーサネット、VPN 接続を設定・管理するコアデーモン。",
+        "title": "NetworkManager サポート"
+      },
+      "networkManagerEnabled": {
+        "description": "インターネットに接続できるように NetworkManager デーモンを実行します。",
+        "title": "NetworkManager 有効"
+      },
+      "title": "ネットワーク"
+    },
+    "packages": "追加パッケージ",
+    "printing": {
+      "cupsEnabled": {
+        "description": "印刷ジョブの処理とプリンターの管理に必要な CUPS デーモンを実行します。",
+        "title": "CUPS 有効"
+      },
+      "printingSupport": {
+        "description": "CUPS (Common Unix Printing System)。ローカルまたはネットワークプリンターへの接続・印刷に必要なコアソフトウェア。",
+        "title": "印刷サポート"
+      },
+      "sanedEnabled": {
+        "description": "ローカルネットワーク経由でスキャナーを共有できるようにするデーモンを実行します。",
+        "title": "saned 有効"
+      },
+      "scanningSupport": {
+        "description": "SANE (Scanner Access Now Easy)。フラットベッドスキャナーやドキュメントスキャナーの使用に必要なコアソフトウェア。",
+        "title": "スキャンサポート"
+      },
+      "title": "印刷",
+      "userCups": {
+        "description": "ユーザーを cups グループに追加し、プリンターと印刷キューを管理する権限を付与します。",
+        "title": "ユーザーが cups グループに所属"
+      },
+      "userLp": {
+        "description": "一部の古い印刷システムで必要とされる lp (ラインプリンター) グループにユーザーを追加します。",
+        "title": "ユーザーが lp グループに所属"
+      },
+      "userScanner": {
+        "description": "ユーザーを scanner グループに追加し、ドキュメントスキャナーを使用する権限を付与します。",
+        "title": "ユーザーが scanner グループに所属"
+      }
+    },
+    "systemdServices": "Systemd サービス",
+    "systemSettings": "システム設定",
+    "title": "システム ",
+    "titleTwo": "設定",
+    "users": "ユーザーとグループ",
+    "virtualization": {
+      "kvm": {
+        "description": "カーネルベースの仮想マシン。CPU ハードウェアアクセラレーション (VT-x/AMD-V) を使用して、仮想マシンをネイティブに近い速度で実行します。",
+        "title": "KVM サポート"
+      },
+      "libvirtdEnabled": {
+        "description": "仮想マシンやその他の仮想化プラットフォームの実行および管理に必要なシステムデーモン。",
+        "title": "Libvirtd 有効"
+      },
+      "qemu": {
+        "description": "汎用のオープンソースマシンエミュレーターおよび仮想化ツール。あらゆるマシン向けの OS をあらゆるマシン上で実行可能です。",
+        "title": "QEMU インストール済み"
+      },
+      "qemuUserStatic": {
+        "description": "Podman などを介して異種アーキテクチャのバイナリをネイティブに実行するために使用できます。",
+        "title": "QEMU User Static"
+      },
+      "qemuUserStaticBinfmt": {
+        "description": "カーネルに異種アーキテクチャのハンドラーを登録します。aarch64 コンテナイメージを実行する際に役立ちます。",
+        "title": "QEMU Binfmt"
+      },
+      "title": "仮想化",
+      "userKvm": {
+        "description": "ユーザーを kvm グループに追加し、高速なハードウェアアクセラレーション KVM 仮想マシンを使用する権限を付与します。",
+        "title": "ユーザーが kvm グループに所属"
+      },
+      "userLibvirt": {
+        "description": "ユーザーを libvirt グループに追加し、高度な KVM/QEMU 仮想マシンを管理する権限を付与します。",
+        "title": "ユーザーが libvirt グループに所属"
+      },
+      "userVboxUsers": {
+        "description": "ユーザーを vboxusers グループに追加し、VirtualBox を使用する権限を付与します。",
+        "title": "ユーザーが vboxusers グループに所属"
+      },
+      "virtManager": {
+        "description": "KVM/QEMU 仮想マシンを作成および管理するための強力なデスクトップアプリ (GUI)。",
+        "title": "Virt-manager サポート"
+      },
+      "virtualbox": {
+        "description": "Oracle の人気クロスプラットフォーム仮想化ソフトウェア。非常に使いやすいですが、一般的に KVM/Virt-Manager より低速です。",
+        "title": "VirtualBox サポート"
+      }
+    }
+  },
+  "taskmanager": {
+    "scriptExecuted": "現在のタスクが完了しました。",
+    "scriptMismatch": "スクリプトが改ざんされているため、実行を拒否しました！"
+  },
+  "userManager": {
+    "actions": "操作",
+    "addGroup": "グループを追加",
+    "addUser": "ユーザーを追加",
+    "cancel": "キャンセル",
+    "clearPending": "保留中の変更をクリア",
+    "confirmPassword": "パスワードの確認",
+    "confirmRemoveGroup": "グループ {{group}} を削除してもよろしいですか？",
+    "confirmRemoveUser": "ユーザー {{username}} を削除してもよろしいですか？ホームディレクトリも削除されます。",
+    "createHome": "ホームディレクトリを作成",
+    "editUser": "ユーザーを編集",
+    "enterGroupName": "グループ名を入力してください",
+    "enterPassword": "パスワードを入力してください",
+    "enterUsername": "ユーザー名を入力してください",
+    "error": "エラー",
+    "fullName": "氏名",
+    "gid": "GID",
+    "groupExists": "この名前のグループは既に存在します",
+    "groupName": "グループ名",
+    "groups": "グループ",
+    "groupsColumn": "グループ",
+    "home": "ホームディレクトリ",
+    "lock": "ロック",
+    "locked": "ロック済み",
+    "manageGroups": "グループを管理",
+    "manageGroupsFor": "{{username}} のグループを管理",
+    "members": "メンバー",
+    "newGroupName": "グループ名",
+    "newPassword": "新しいパスワード",
+    "noGroupsFound": "グループが見つかりません",
+    "noUsersFound": "ユーザーが見つかりません",
+    "passwordDialogTitle": "{{username}} のパスワードを設定",
+    "passwordMismatch": "パスワードが一致しません",
+    "pending": {
+      "add": "追加保留中",
+      "lock": "ロック保留中",
+      "membership": "グループ変更保留中",
+      "modify": "変更保留中",
+      "password": "パスワード設定保留中",
+      "remove": "削除保留中",
+      "unlock": "ロック解除保留中"
+    },
+    "removeGroup": "グループを削除",
+    "removeUser": "ユーザーを削除",
+    "save": "保存",
+    "searchGroups": "グループを検索",
+    "searchUsers": "ユーザーを検索",
+    "selectGroups": "グループを選択",
+    "setPassword": "パスワードを設定",
+    "shell": "シェル",
+    "showAllUsers": "すべてのユーザーを表示",
+    "showUsersOnly": "通常ユーザーのみ表示",
+    "system": "システム",
+    "systemAccount": "システムアカウント",
+    "task": {
+      "addGroup": "グループを追加",
+      "addMembership": "グループに追加",
+      "addUser": "ユーザーを追加",
+      "lockUser": "ユーザーをロック",
+      "modifyUser": "ユーザーを変更",
+      "password": "パスワードを設定",
+      "removeGroup": "グループを削除",
+      "removeMembership": "グループから削除",
+      "removeUser": "ユーザーを削除",
+      "unlockUser": "ユーザーのロックを解除"
+    },
+    "uid": "UID",
+    "unlock": "ロック解除",
+    "userExists": "この名前のユーザーは既に存在します",
+    "username": "ユーザー名",
+    "users": "ユーザー"
+  },
+  "welcome": {
+    "bootRepair": "ブート修復",
+    "bootRepairSub": "ブートローダーの再インストールまたは修復",
+    "bootTools": "ブートツール",
+    "bootToolsSub": "ブート設定を管理しましょう",
+    "chaotic": "Chaotic-AUR",
+    "chaoticSub": "パッケージのアップデートなどを確認",
+    "chroot": "Garuda に Chroot",
+    "chrootSub": "Garuda インストール環境に Chroot しましょう",
+    "diagnostics": "診断",
+    "diagnosticsSub": "システムの健康状態を確認しましょう",
+    "donate": "寄付",
+    "donateSub": "Garuda Linux プロジェクトを支援",
+    "error": "エラーが発生しました。",
+    "gaming": "ゲーミングアプリ",
+    "gamingSub": "お気に入りのゲームをプレイしましょう",
+    "gitlab": "GitLab",
+    "gitlabSub": "ソースコードを確認する",
+    "hello": "こんにちは",
+    "install": "Garuda Linux をインストール",
+    "installSub": "システムに Garuda Linux を導入しましょう",
+    "maintenance": "メンテナンス",
+    "maintenanceSub": "システムを良好な状態に保ちましょう",
+    "network": "ネットワークツール",
+    "networkSub": "ネットワーク設定を管理しましょう",
+    "packages": "アプリを見つける",
+    "packagesSub": "新しいソフトウェアを検索してインストール",
+    "searxng": "SearxNG",
+    "searxngSub": "プライバシーを尊重する検索エンジン",
+    "setupAssistant": "セットアップアシスタント",
+    "setupAssistantSub": "Garuda セットアップアシスタントを実行する",
+    "startpage": "スタートページ",
+    "startpageSub": "Garuda Linux スタートページを開く",
+    "subtitle": "ゲーミングとマルチメディアのための究極の Linux ディストリビューション",
+    "systemTools": "システム設定",
+    "systemToolsSub": "システムを設定しましょう",
+    "title": "ようこそ、",
+    "titleTwo": "Garuda Linux へ",
+    "vaultwarden": "Vaultwarden",
+    "vaultwardenSub": "Bitwarden 互換の安全なパスワードマネージャー",
+    "whoogle": "Whoogle",
+    "whoogleSub": "プライバシー配慮型検索エンジン"
   }
 }
