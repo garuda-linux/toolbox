@@ -62,7 +62,7 @@
     "@types/node": "^26.4.1",
     "@types/pako": "^3.0.0",
     "angular-eslint": "^22.2.0",
-    "electron": "43.3.0",
+    "electron": "43.7.3",
     "electron-builder": "26.15.3",
     "eslint": "^10.9.1",
     "eslint-plugin-oxlint": "^1.81.0",
