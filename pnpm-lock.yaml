@@ -135,8 +135,8 @@ importers:
         specifier: ^22.2.0
         version: 22.2.0(@typescript-eslint/utils@8.69.0(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))(typescript@6.0.3)
       '@electron-toolkit/eslint-config':
-        specifier: ^2.1.0
-        version: 2.1.0(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))
+        specifier: ^3.0.0
+        version: 3.0.0(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))
@@ -1341,8 +1341,8 @@ packages:
     resolution: {integrity: sha512-+bqFCP98pLI0Tt0XQo1TmlXtwjWchISndDOxCkEcIuUgXWpBnLyRI+2DU+mesvnMMX6L1XDqYNA0lXNDHd/yiA==}
     engines: {node: '>=22.12.0'}
 
-  '@electron-toolkit/eslint-config@2.1.0':
-    resolution: {integrity: sha512-F/r45x5wDHs8r2RSkXwcrMYo9X4lkc/W+ZTlWzOzjXn7ncirMqVo256BCAogeNBWIxd24ePsSwmJXELiQZUZUg==}
+  '@electron-toolkit/eslint-config@3.0.0':
+    resolution: {integrity: sha512-F4ErjEVqapxojux9rFOZy1MfKV9zAYGaFnFT9sYQsTde2vdZQwCb4ejKfO06+9pgfQfpVMZu64zcfvaQ3u/Kog==}
     peerDependencies:
       eslint: '>=9.0.0'
 
@@ -1908,10 +1908,6 @@ packages:
     peerDependenciesMeta:
       eslint:
         optional: true
-
-  '@eslint/js@9.39.3':
-    resolution: {integrity: sha512-1B1VkCq6FuUNlQvlBYb+1jDu/gV297TIs/OeiaSR9l1H27SVW55ONE1e1Vp16NqP683+xEGzxYtv4XCiDPaQiw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@3.0.5':
     resolution: {integrity: sha512-vqTaUEgxzm+YDSdElad6PiRoX4t8VGDjCtt05zn4nU810UIx/uNEV7/lZJ6KwFThKZOzOxzXy48da+No7HZaMw==}
@@ -5417,8 +5413,8 @@ packages:
     resolution: {integrity: sha512-PT6XReJ+D07JvGoxQMkT6qji/jVNfX/h364XHZOWeRzy64sSFr+xJ5OX7LI3b4MPQzdL4H8Y8M0xzPpsVMwA8Q==}
     engines: {node: '>=10.0'}
 
-  globals@16.4.0:
-    resolution: {integrity: sha512-ob/2LcVVaVGCYN+r14cnwnoDPUufjiYgSqRhiFD0Q1iI4Odora5RE8Iv1D24hAz5oMophRGkGz+yuvQmmUMnMw==}
+  globals@17.12.0:
+    resolution: {integrity: sha512-cezEd/DTyyht9cvSSURyygXPfy04GtWO/5e6ZPvH7fCtjKz9PYOmuawphw1Ctd1f6C+5JypXfGD7ahNMXvevBA==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -9121,11 +9117,11 @@ snapshots:
 
   '@electron-internal/extract-zip@1.0.5': {}
 
-  '@electron-toolkit/eslint-config@2.1.0(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))':
+  '@electron-toolkit/eslint-config@3.0.0(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))':
     dependencies:
-      '@eslint/js': 9.39.3
+      '@eslint/js': 10.0.1(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
-      globals: 16.4.0
+      globals: 17.12.0
 
   '@electron/asar@3.4.1':
     dependencies:
@@ -9516,8 +9512,6 @@ snapshots:
   '@eslint/js@10.0.1(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))':
     optionalDependencies:
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
-
-  '@eslint/js@9.39.3': {}
 
   '@eslint/object-schema@3.0.5': {}
 
@@ -12746,7 +12740,7 @@ snapshots:
       serialize-error: 7.0.1
     optional: true
 
-  globals@16.4.0: {}
+  globals@17.12.0: {}
 
   globalthis@1.0.4:
     dependencies:
