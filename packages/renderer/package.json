@@ -29,7 +29,7 @@
     "@fortawesome/free-brands-svg-icons": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@garudalinux/core": "2.0.0",
-    "@garudalinux/themes": "2.0.0",
+    "@garudalinux/themes": "2.1.0",
     "@jsverse/transloco": "^8.4.0",
     "@jsverse/transloco-locale": "^8.4.0",
     "@openng/icons": "^1.0.0",
