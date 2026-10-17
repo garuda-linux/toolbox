@@ -378,7 +378,7 @@ export class MaintenanceComponent implements OnInit {
       command: async (): Promise<undefined | ChildProcess<string>> => {
         this.logger.info('Running Btrfs assistant');
         if (await this.osInteractService.ensurePackageArchlinux('btrfs-assistant')) {
-          return await this.taskManager.executeAndWaitBash('btrfs-assistant-launcher');
+          return await this.taskManager.executeAndWaitBash('btrfs-assistant');
         } else {
           return this.handleInstallationError('btrfs-assistant');
         }
