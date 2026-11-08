@@ -69,6 +69,62 @@
   `app/helper/tests/arch/`. Account tests use `toolbox-test-user-*` and
   `toolbox-test-grp-*`.
 
+## Lima integration tests
+
+`scripts/lima-it.sh [--keep] [--no-build] [--suite LIST]` covers what the
+container cannot run: systemd units, locales, DKMS and NetworkManager. It
+builds the package with `scripts/arch-package.sh --nocheck`, or with
+`--no-build` takes the package of the `Cargo.toml` version from
+`target/arch-package/`. It starts a Garuda Lima VM
+(`tests/lima/garuda.yaml`), installs the package with dkms,
+v4l2loopback-dkms and networkmanager, and drives the CLI with `--yes`. At
+the end it restarts the VM once and checks that the changes survive the
+boot.
+
+- `GARUDA_LIMA_IMAGE` is the qcow2, a path or a URL (default
+  `target/lima/garuda-lima.qcow2`). `GARUDA_LIMA_IMAGE_DIGEST` takes
+  `sha256:<hex>` for a URL. Lima downloads and caches it.
+- The image boots with systemd-boot and UKIs, ESP at `/efi`. The Boot
+  page, Boot Repair, `kernels default` and Plymouth have no checks here.
+  The first three need GRUB, and on systemd-boot an initramfs rebuild does
+  not reach the UKI.
+- The CLI runs on a terminal through `script(1)`, each call limited to
+  10 minutes. A polkit rule lets the Lima user run the helper without a
+  password: over SSH no agent runs, and pkexec would ask on the terminal
+  for a password the user does not have.
+- Needs KVM, the network and `limactl` and `jq` on the host. Logs per
+  check land in `$TMPDIR/garuda-toolbox-lima-it/<vm>/`.
+- Checks live in `scripts/lima-it/checks.sh`.
+
+### Suites
+
+`--suite basic,upgrade,faults,accounts` picks the suites, `basic` (the
+checks above) by default. One file per suite in `scripts/lima-it/`
+defines `suite_<name>`. After the setup a `limactl snapshot` (tag `base`)
+is taken, and every suite after the first, and every part of a suite that
+breaks the system, starts from it again.
+
+| Suite      | What it checks                                                                                            |
+| ---------- | --------------------------------------------------------------------------------------------------------- |
+| `upgrade`  | `update`, a package in and out, maintenance tasks, `linux-lts` installed and removed, on the real mirrors |
+| `faults`   | Cuts the power while pacman runs, then blocks the network for an install                                  |
+| `accounts` | Adds, changes, locks and removes an account, each proven by `su` on a terminal                            |
+
+- A snapshot of the running VM takes a second, after a `sync` so the
+  setup is on the disk. `restore_base` stops the VM, applies the snapshot
+  and boots it, because memory loaded into a QEMU started after the
+  snapshot lost SSH or name lookups. It waits until `archlinux.org`
+  resolves.
+- Lima's SSH master socket dies with a restore or a forced stop, and every
+  connection through it hangs until it times out, so `wait_ssh` deletes it
+  first.
+- A stopped QEMU holds its disk a moment longer, so `wait_qemu_gone` waits
+  for it before the next start.
+- Never take or apply a snapshot while a check runs in the VM: the
+  restore rolls the check's system back under it.
+- A secret goes in on standard input through `tp`, without `script(1)`,
+  which would echo it into the log.
+
 ## Dev loop
 
 `scripts/dev.sh` (`start-dev` in the dev shell) restarts the app on

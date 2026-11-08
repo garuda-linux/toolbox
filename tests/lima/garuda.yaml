@@ -1,0 +1,11 @@
+# scripts/lima-it.sh sets images.
+vmType: qemu
+arch: x86_64
+cpus: 4
+memory: 4GiB
+disk: 20GiB
+images: []
+mounts: []
+containerd:
+  system: false
+  user: false

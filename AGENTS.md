@@ -58,6 +58,7 @@ cargo xtask cli-docs --check
 scripts/selftest.sh [suite]   # headless weston, helper in dry-run mode
 scripts/arch-it.sh            # helper as root against real pacman in the Arch container
 scripts/arch-package.sh       # makepkg and namcap in the Arch container
+scripts/lima-it.sh [--suite LIST]   # systemd, locales, DKMS, upgrades and faults in a Garuda VM
 ```
 
 ## Done means
