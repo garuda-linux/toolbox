@@ -1,0 +1,108 @@
+{
+  "blockdevices": [
+    {
+      "path": "/dev/loop0",
+      "type": "loop",
+      "size": 3113851290,
+      "fstype": "squashfs",
+      "parttype": null,
+      "label": null,
+      "model": null,
+      "mountpoints": ["/run/archiso/airootfs"]
+    },
+    {
+      "path": "/dev/sda",
+      "type": "disk",
+      "size": 500143838003,
+      "fstype": null,
+      "parttype": null,
+      "label": null,
+      "model": "Samsung SSD 870 EVO 500GB",
+      "mountpoints": [],
+      "children": [
+        {
+          "path": "/dev/sda1",
+          "type": "part",
+          "size": 314572800,
+          "fstype": "vfat",
+          "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+          "label": "EFI",
+          "model": null,
+          "mountpoints": []
+        },
+        {
+          "path": "/dev/sda2",
+          "type": "part",
+          "size": 214748364800,
+          "fstype": "btrfs",
+          "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+          "label": "Garuda",
+          "model": null,
+          "mountpoints": []
+        },
+        {
+          "path": "/dev/sda3",
+          "type": "part",
+          "size": 285078454272,
+          "fstype": "crypto_LUKS",
+          "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+          "label": null,
+          "model": null,
+          "mountpoints": []
+        }
+      ]
+    },
+    {
+      "path": "/dev/sdb",
+      "type": "disk",
+      "size": 31031138714,
+      "fstype": "iso9660",
+      "parttype": null,
+      "label": "GARUDA_DR460NIZED",
+      "model": "Ultra Fit",
+      "mountpoints": [],
+      "children": [
+        {
+          "path": "/dev/sdb1",
+          "type": "part",
+          "size": 3221225472,
+          "fstype": "iso9660",
+          "parttype": "0x0",
+          "label": "GARUDA_DR460NIZED",
+          "model": null,
+          "mountpoints": ["/run/archiso/bootmnt"]
+        },
+        {
+          "path": "/dev/sdb2",
+          "type": "part",
+          "size": 4194304,
+          "fstype": "vfat",
+          "parttype": "0xef",
+          "label": "ARCHISO_EFI",
+          "model": null,
+          "mountpoints": []
+        }
+      ]
+    },
+    {
+      "path": "/dev/sr0",
+      "type": "rom",
+      "size": 1073741824,
+      "fstype": null,
+      "parttype": null,
+      "label": null,
+      "model": "DVD-RW",
+      "mountpoints": []
+    },
+    {
+      "path": "/dev/zram0",
+      "type": "disk",
+      "size": 8267812045,
+      "fstype": "swap",
+      "parttype": null,
+      "label": "zram0",
+      "model": null,
+      "mountpoints": ["[SWAP]"]
+    }
+  ]
+}
