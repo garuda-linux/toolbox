@@ -1,0 +1,31 @@
+[package]
+name = "toolbox-system"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+alpm.workspace = true
+tracing.workspace = true
+parking_lot.workspace = true
+rustix = { workspace = true, features = ["fs", "process"] }
+serde.workspace = true
+serde_json.workspace = true
+strum.workspace = true
+thiserror.workspace = true
+toolbox-exec.workspace = true
+toolbox-catalog.workspace = true
+toolbox-plan.workspace = true
+toolbox-state.workspace = true
+toolbox-log.workspace = true
+toolbox-pty.workspace = true
+zbus.workspace = true
+tokio = { workspace = true, features = ["rt", "sync", "macros", "time"] }
+toolbox-https.workspace = true
+toolbox-privatebin.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true
