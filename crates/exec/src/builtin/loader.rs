@@ -33,14 +33,16 @@ pub fn edit_loader_conf(root: &Path, change: &LoaderChange) -> io::Result<FileCh
     let (dir, name) = secure::open_parent(root, path)?;
     let current = secure::read_text(&dir, name)?;
     let before = current.as_deref().unwrap_or_default();
+    let wanted = change.apply(before);
+
+    if wanted == before {
+        return Ok(FileChange::Unchanged);
+    }
 
     // systemd-boot runs on its defaults without the file, so there is no
     // old one to keep then.
-    super::rewritten(
-        &dir,
-        name,
-        before,
-        &change.apply(before),
-        current.is_some().then_some(BACKUP),
-    )
+    let backup = current.as_deref().map(|old| (BACKUP, old.as_bytes()));
+
+    secure::replace_esp_file(&dir, name, wanted.as_bytes(), backup)?;
+    Ok(FileChange::Written)
 }

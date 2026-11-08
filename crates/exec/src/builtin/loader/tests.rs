@@ -92,3 +92,22 @@ fn without_a_mounted_esp_nothing_is_written() {
         LOADER_CONF
     );
 }
+
+/// FAT, the ESP's file system, has no hard links and refuses `chmod`
+/// under a `fmask`, so the backup is a copy of its own.
+#[test]
+fn the_backup_is_a_copy_and_no_link() {
+    use std::os::unix::fs::MetadataExt as _;
+
+    let dir = tempfile::tempdir().unwrap();
+    image(dir.path());
+
+    let before = fs::metadata(dir.path().join("efi/loader/loader.conf")).unwrap();
+
+    edit_loader_conf(dir.path(), &timeout(5)).unwrap();
+
+    let backup = fs::metadata(dir.path().join("efi/loader/loader.conf.bak")).unwrap();
+
+    assert_eq!(backup.nlink(), 1);
+    assert_ne!(backup.ino(), before.ino());
+}

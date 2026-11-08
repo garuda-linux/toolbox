@@ -40,6 +40,9 @@ const PERMISSION_BITS: u32 = 0o7777;
 /// pacman run as any user can read it.
 const SYSTEM_FILE: Replace<'static> = Replace::new(Permissions::Exactly(0o644));
 
+/// FAT refuses `chmod` under a `fmask`, so its mount decides the mode.
+const ESP_FILE: Replace<'static> = Replace::new(Permissions::Umask(0o644));
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Attributes {
     pub mode: u32,
@@ -242,6 +245,26 @@ pub fn replace_system_file(
     let how = backup.map_or(SYSTEM_FILE, |backup| SYSTEM_FILE.with_backup(backup));
 
     toolbox_fs::replace_at(dir, name, content, &how)?.synced()
+}
+
+/// FAT has no hard links, so `old` becomes the backup as a copy.
+///
+/// # Errors
+///
+/// When a write or the sync of the folder fails.
+pub fn replace_esp_file(
+    dir: &OwnedFd,
+    name: &str,
+    content: &[u8],
+    backup: Option<(&str, &[u8])>,
+) -> io::Result<()> {
+    if let Some((backup, old)) = backup {
+        toolbox_fs::replace_at(dir, backup, old, &ESP_FILE)?.synced()?;
+    }
+
+    toolbox_fs::replace_at(dir, name, content, &ESP_FILE)?
+        .synced()
+        .map(drop)
 }
 
 /// # Errors
