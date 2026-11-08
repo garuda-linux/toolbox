@@ -200,7 +200,7 @@ selftest:
   timeout: 3h
   script:
     - !reference [.nix-user, script]
-    - su selftest -c "export HOME=/home/selftest PATH=/usr/local/bin:/usr/bin:/bin && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/selftest.sh all"
+    - su selftest -c "export HOME=/home/selftest PATH=/usr/local/bin:/usr/bin:/bin && unset __ETC_PROFILE_NIX_SOURCED && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/selftest.sh all"
   after_script:
     - !reference [.selftest-artifacts, after_script]
     # The job ran as selftest, Nix only reads a repository its user owns.
@@ -223,7 +223,7 @@ coverage:
     paths: [.cargo-home/registry, target/coverage]
   script:
     - !reference [.nix-user, script]
-    - su selftest -c "export HOME=/home/selftest PATH=/usr/local/bin:/usr/bin:/bin && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/coverage.sh coverage"
+    - su selftest -c "export HOME=/home/selftest PATH=/usr/local/bin:/usr/bin:/bin && unset __ETC_PROFILE_NIX_SOURCED && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/coverage.sh coverage"
   coverage: '/^Line coverage: \d+\.\d+%/'
   artifacts:
     when: always
