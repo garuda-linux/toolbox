@@ -1,0 +1,7 @@
+---
+filters:
+  - filter_type: file
+    file_format: STRUCTURED_JSON
+    source_file: i18n/garuda-toolbox_en.json
+    source_language: en
+    translation_files_expression: "i18n/garuda-toolbox_<lang>.json"
