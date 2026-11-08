@@ -50,7 +50,8 @@ printf '[packages]\nshow_aur = true\n' >"$XDG_CONFIG_HOME/garuda-toolbox/setting
 # Larger than the window's default size (app/gui/src/main.rs).
 screen_width=1632
 screen_height=1104
-run_timeout=600
+# The runners render on the CPU, where a full run takes most of an hour.
+run_timeout=3600
 
 weston --backend=headless --width="$screen_width" --height="$screen_height" \
   --socket=selftest --idle-time=0 >"$dir/weston.log" 2>&1 &
