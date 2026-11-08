@@ -1,0 +1,74 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-services 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-services \- List, start, stop and enable services, the system\*(Aqs and your own
+.SH SYNOPSIS
+\fBgaruda\-toolbox services\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+List, start, stop and enable services, the system\*(Aqs and your own
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-services\-list(1)
+List the services and their state
+.TP
+garuda\-toolbox\-services\-start(1)
+Start a service now. Refused when it runs already
+.TP
+garuda\-toolbox\-services\-stop(1)
+Stop a service now. Refused when it is not running
+.TP
+garuda\-toolbox\-services\-restart(1)
+Restart a service now
+.TP
+garuda\-toolbox\-services\-reload(1)
+Reload a service\*(Aqs configuration now
+.TP
+garuda\-toolbox\-services\-enable(1)
+Start a service at boot
+.TP
+garuda\-toolbox\-services\-disable(1)
+Stop starting a service at boot
+.TP
+garuda\-toolbox\-services\-mask(1)
+Mask a service, so nothing can start it
+.TP
+garuda\-toolbox\-services\-unmask(1)
+Unmask a masked service
+.SH EXTRA
+Examples:
+  garuda\-toolbox services list \-\-user
+  garuda\-toolbox services restart sshd.service
+.SH "SEE ALSO"
+garuda\-toolbox(1)

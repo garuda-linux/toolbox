@@ -1,0 +1,58 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-status 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-status \- Show what needs attention: updates, files to merge, health, restart
+.SH SYNOPSIS
+\fBgaruda\-toolbox status\fR [\fB\-\-brief\fR] [\fB\-\-watch\fR] [\fB\-\-interval\fR \fIDURATION\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] 
+.SH DESCRIPTION
+Show what needs attention: updates, files to merge, health, restart
+.SH OPTIONS
+.TP
+\fB\-\-brief\fR
+One line, such as "2 updates, restart needed" or "all good"
+.TP
+\fB\-\-watch\fR
+Look again and again, and print the facts each time they changed, under the time. Ctrl+C ends it
+.TP
+\fB\-\-interval\fR \fI<DURATION>\fR [default: 60s]
+How long to wait between two looks, such as 30s, 5m or 1h30m
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH EXTRA
+Examples:
+  garuda\-toolbox status \-\-json
+  garuda\-toolbox status \-\-brief
+.SH "SEE ALSO"
+garuda\-toolbox(1)

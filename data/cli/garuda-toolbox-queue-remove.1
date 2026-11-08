@@ -1,0 +1,49 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-queue-remove 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-queue\-remove \- Take back one queued change, by its number in `queue show` or by its name
+.SH SYNOPSIS
+\fBgaruda\-toolbox queue remove\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fICHANGE\fR> 
+.SH DESCRIPTION
+Take back one queued change, by its number in `queue show` or by its name
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fICHANGE\fR>
+The change\*(Aqs number in `queue show`, or its name there, such as a package or a unit
+.SH EXTRA
+Examples:
+  garuda\-toolbox queue remove 2
+  garuda\-toolbox queue remove firefox
+.SH "SEE ALSO"
+garuda\-toolbox\-queue(1), garuda\-toolbox(1)

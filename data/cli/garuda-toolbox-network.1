@@ -1,0 +1,64 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-network 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-network \- Show the connection and switch radios, drivers and network tests
+.SH SYNOPSIS
+\fBgaruda\-toolbox network\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Show the connection and switch radios, drivers and network tests
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-network\-show(1)
+The connection, the radios and the network services
+.TP
+garuda\-toolbox\-network\-radio(1)
+Switch a radio on or off
+.TP
+garuda\-toolbox\-network\-drivers(1)
+The network drivers and whether each is blacklisted
+.TP
+garuda\-toolbox\-network\-public\-address(1)
+Ask geoip.kde.org for the public address. Only this command contacts it, nothing is kept
+.TP
+garuda\-toolbox\-network\-ping(1)
+Ping a host, in the terminal
+.TP
+garuda\-toolbox\-network\-traceroute(1)
+Trace the route to a host, in the terminal
+.SH EXTRA
+Example:
+  garuda\-toolbox network show
+.SH "SEE ALSO"
+garuda\-toolbox(1)

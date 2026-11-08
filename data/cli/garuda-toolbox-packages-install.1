@@ -1,0 +1,61 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-packages-install 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-packages\-install \- Install packages from the repositories, or build them from the AUR with `\-\-aur`
+.SH SYNOPSIS
+\fBgaruda\-toolbox packages install\fR [\fB\-\-aur\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIPACKAGES\fR> 
+.SH DESCRIPTION
+Install packages from the repositories, or build them from the AUR with `\-\-aur`
+.SH OPTIONS
+.TP
+\fB\-\-aur\fR
+Build the packages from the AUR with paru, as you. paru shows each build script before it builds. Works while the window\*(Aqs AUR setting is off: the flag asks for it
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIPACKAGES\fR>
+The packages\*(Aq names, as `packages search` prints them
+.SH EXTRA
+Examples:
+  garuda\-toolbox packages install gimp
+  garuda\-toolbox packages install \-\-aur paru\-bin
+.SH "SEE ALSO"
+garuda\-toolbox\-packages(1), garuda\-toolbox(1)

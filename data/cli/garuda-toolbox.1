@@ -1,0 +1,195 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox \- Maintain and configure Garuda Linux and other Arch based systems.
+.SH SYNOPSIS
+\fBgaruda\-toolbox\fR [\fB\-\-page\fR \fIPAGE\fR] [\fB\-\-action\fR \fIACTION\fR] [\fB\-\-setup\-assistant\fR] [\fB\-\-boot\-repair\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIsubcommands\fR]
+.SH DESCRIPTION
+Maintain and configure Garuda Linux and other Arch based systems.
+.SH OPTIONS
+.TP
+\fB\-\-page\fR \fI<PAGE>\fR
+Open the window on this page (see `garuda\-toolbox pages`)
+.TP
+\fB\-\-action\fR \fI<ACTION>\fR
+Run this action of the page once it is open (for example a report on the diagnostics page)
+.TP
+\fB\-\-setup\-assistant\fR
+Open the window on the Setup Assistant
+.TP
+\fB\-\-boot\-repair\fR
+Show Boot Repair on an installed system too, for testing it. The helper still refuses to write to a disk the running system uses
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help (see a summary with \*(Aq\-h\*(Aq)
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print version
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-status(1)
+Show what needs attention: updates, files to merge, health, restart
+.TP
+garuda\-toolbox\-pages(1)
+List the pages of the window, for `\-\-page`
+.TP
+garuda\-toolbox\-setup(1)
+List and pick the Setup Assistant\*(Aqs apps
+.TP
+garuda\-toolbox\-toggle(1)
+List and switch Components, Gaming, System Tweaks and the Setup Assistant
+.TP
+garuda\-toolbox\-apps(1)
+List, install and remove the apps of the App Catalog
+.TP
+garuda\-toolbox\-packages(1)
+Search, show, install and remove the packages of the repositories and the AUR
+.TP
+garuda\-toolbox\-services(1)
+List, start, stop and enable services, the system\*(Aqs and your own
+.TP
+garuda\-toolbox\-kernels(1)
+List, install and remove kernels and their headers
+.TP
+garuda\-toolbox\-dkms(1)
+Show and build the DKMS modules of each kernel
+.TP
+garuda\-toolbox\-locales(1)
+Turn locales on or off and set the system language
+.TP
+garuda\-toolbox\-users(1)
+Add, change and remove accounts
+.TP
+garuda\-toolbox\-groups(1)
+Add and remove groups
+.TP
+garuda\-toolbox\-configs(1)
+Show and edit config files, the system\*(Aqs and your own
+.TP
+garuda\-toolbox\-network(1)
+Show the connection and switch radios, drivers and network tests
+.TP
+garuda\-toolbox\-boot(1)
+Set the boot menu: default entry, timeout, kernel parameters, looks
+.TP
+garuda\-toolbox\-update(1)
+Update the system now, and the AUR packages with `\-\-aur`
+.TP
+garuda\-toolbox\-maintenance(1)
+List and run the tasks and repairs of the Maintenance page
+.TP
+garuda\-toolbox\-diagnostics(1)
+Collect a report for a forum post or a bug report
+.TP
+garuda\-toolbox\-bootrepair(1)
+Repair the boot of an installed system, from the live ISO
+.TP
+garuda\-toolbox\-settings(1)
+Show and change the app\*(Aqs own settings
+.TP
+garuda\-toolbox\-doctor(1)
+Check what the toolbox needs and say what is missing or broken
+.TP
+garuda\-toolbox\-guide(1)
+Read the user guide in the terminal
+.TP
+garuda\-toolbox\-queue(1)
+Queue changes as the window does, then apply them as one plan. While the window runs, its own queue
+.TP
+garuda\-toolbox\-completions(1)
+Print the completion hook for a shell, which asks this program for the names at each Tab
+.TP
+garuda\-toolbox\-help(1)
+Explain a command of this program
+.SH EXTRA
+Examples:
+  garuda\-toolbox                          open the window
+  garuda\-toolbox \-\-page maintenance       open the window on a page
+  garuda\-toolbox status                   what needs attention
+  garuda\-toolbox update \-\-yes             update the system without asking
+
+Exit codes:
+  0    success      done
+  1    failure      a change or a read failed
+  2    usage        the arguments were wrong
+  3    declined     you answered no
+  4    needs\-yes    no terminal to ask on, pass \-\-yes
+  5    unavailable  not available on this system
+  6    denied       the password dialog or the helper turned it down
+  8    page\-rule    refused by the page\*(Aqs rules
+  9    attention    status or doctor found something that needs attention
+  129  hung\-up      SIGHUP stopped it, as Ctrl+C does
+  130  interrupted  Ctrl+C stopped it
+  143  terminated   SIGTERM stopped it, as Ctrl+C does
+.SH VERSION
+v0.1.0
+.SH ENVIRONMENT
+.TP
+\fBGARUDA_TOOLBOX_PAGER\fR
+The pager for lists and shows on a terminal, ahead of \fBPAGER\fR. It is split into words without a shell. Empty or \fBcat\fR prints directly.
+.TP
+\fBPAGER\fR
+The pager when \fBGARUDA_TOOLBOX_PAGER\fR is unset. Without either, \fBless \-FRX\fR.
+.TP
+\fBLESS\fR
+Given to the pager as \fBFRX\fR when unset, so less keeps the colours and quits at once when the text fits one screen.
+.TP
+\fBLV\fR
+Given to the pager as \fB\-c\fR when unset, for lv.
+.TP
+\fBNO_COLOR\fR
+Any value but an empty one leaves colour out, unless \fB\-\-color always\fR, \fBCLICOLOR_FORCE\fR or \fBFORCE_COLOR\fR asks for it.
+.TP
+\fBCLICOLOR\fR
+\fB0\fR leaves colour out, as \fBNO_COLOR\fR does.
+.TP
+\fBCLICOLOR_FORCE\fR, \fBFORCE_COLOR\fR
+A value other than \fB0\fR colours a pipe too.
+.TP
+\fBTERM\fR
+\fBdumb\fR leaves colour and the spinner out.
+.TP
+\fBCOLUMNS\fR
+The terminal\*(Aqs width, which long cells are cut to. \fB\-\-width\fR comes first.
+.TP
+\fBVISUAL\fR, \fBEDITOR\fR
+The editor of \fBconfigs edit\fR, when it is one of micro, nano, vim, nvim, vi, hx, emacs, ne, joe or mcedit. Else the first installed of micro, nano and vi.
+.TP
+\fBXDG_CACHE_HOME\fR
+Where completion keeps the names of the system for ten seconds, \fI~/.cache\fR without it.
+.TP
+\fBCOMPLETE\fR
+Set by the completion hooks. The program then answers the completion request of that shell and exits.
+.TP
+\fBGARUDA_TOOLBOX_LOG\fR
+Replaces the log level of the settings, in the filter syntax of tracing, such as \fBdebug\fR.
+.SH "SEE ALSO"
+less(1), pacman(8), paru(8), systemctl(1)

@@ -1,0 +1,57 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-bootrepair 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-bootrepair \- Repair the boot of an installed system, from the live ISO
+.SH SYNOPSIS
+\fBgaruda\-toolbox bootrepair\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Repair the boot of an installed system, from the live ISO
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-bootrepair\-show(1)
+The installed systems and boot targets found, on the live ISO
+.TP
+garuda\-toolbox\-bootrepair\-regenerate(1)
+Generate the boot menu of an installed system again
+.TP
+garuda\-toolbox\-bootrepair\-reinstall(1)
+Install GRUB for an installed system again, then its menu
+.SH EXTRA
+Example:
+  garuda\-toolbox bootrepair show
+.SH ALIASES
+\fBgaruda\-toolbox boot\-repair\fR
+.SH "SEE ALSO"
+garuda\-toolbox(1)

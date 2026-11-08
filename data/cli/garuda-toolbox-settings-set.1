@@ -1,0 +1,76 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-settings-set 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-settings\-set \- Change one setting. The window takes it at its next start
+.SH SYNOPSIS
+\fBgaruda\-toolbox settings set\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIKEY\fR> <\fIVALUE\fR> 
+.SH DESCRIPTION
+Change one setting. The window takes it at its next start
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help (see a summary with \*(Aq\-h\*(Aq)
+.TP
+<\fIKEY\fR>
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+language: A language code such as `de`, or `system`
+.IP \(bu 2
+start\-at\-login: Open the window at login: on or off
+.IP \(bu 2
+update\-check: Minutes between update checks (5 to 1440), or `never`
+.IP \(bu 2
+user\-services: The Services page opens on your own services: on or off
+.IP \(bu 2
+copy\-reports: Copy a finished report and an upload\*(Aqs link: on or off
+.IP \(bu 2
+aur: The Packages page lists the AUR, downloaded once a day: on or off
+.IP \(bu 2
+log\-level: How much the log file holds: error, warn, info, debug, trace
+.IP \(bu 2
+dark\-scheme: The colours of the dark theme: a dark colour scheme such as `nord`, or `system` for the desktop\*(Aqs
+.IP \(bu 2
+light\-scheme: The colours of the light theme: a light colour scheme such as `catppuccin\-latte`, or `system` for the desktop\*(Aqs
+.RE
+.TP
+<\fIVALUE\fR>
+The new value, see `settings set \-\-help`
+.SH EXTRA
+Examples:
+  garuda\-toolbox settings set language de
+  garuda\-toolbox settings set update\-check 60
+  garuda\-toolbox settings set start\-at\-login on
+  garuda\-toolbox settings set dark\-scheme nord
+.SH "SEE ALSO"
+garuda\-toolbox\-settings(1), garuda\-toolbox(1)

@@ -1,0 +1,64 @@
+[Desktop Entry]
+Type=Application
+Name=Garuda Toolbox
+GenericName=System Maintenance and Settings
+Comment=Feature-rich system assistant
+Comment[ar]=مساعد نظام غني بالميزات
+Comment[bg]=Богат на функции системен асистент
+Comment[ca]=Assistant de sistema ric en funcions
+Comment[cs]=Bohatý systémový asistent
+Comment[da]=Funktionsrig systemassistent
+Comment[de]=Umfangreicher Systemassistent
+Comment[el]=Πλούσιος σε χαρακτηριστικά βοηθός συστήματος
+Comment[es]=Asistente de sistema rico en funciones
+Comment[et]=Funktsioonirikas süsteemiabiline
+Comment[eu]=Eginbidez aberatsa den sistema laguntzailea
+Comment[fi]=Monipuolinen järjestelmäavustaja
+Comment[fr]=Assistant système riche en fonctionnalités
+Comment[gl]=Asistente de sistema rico en funcións
+Comment[he]=עוזר מערכת עשיר בתכונות
+Comment[hi]=सुविधा संपन्न सिस्टम सहायक
+Comment[hr]=Bogat značajkama sistemski asistent
+Comment[hu]=Funkciókban gazdag rendszerasszisztens
+Comment[it]=Assistente di sistema ricco di funzionalità
+Comment[ja]=機能豊富なシステムアシスタント
+Comment[ko]=기능이 풍부한 시스템 도우미
+Comment[lt]=Funkcijomis turtingas sistemos asistentas
+Comment[lv]=Funkcijām bagāts sistēmas asistents
+Comment[nl]=Veelzijdige systeemassistent
+Comment[no]=Funksjonsrik systemassistent
+Comment[pl]=Bogaty w funkcje asystent systemowy
+Comment[pt]=Assistente de sistema rico em recursos
+Comment[pt_BR]=Assistente de sistema rico em recursos
+Comment[ro]=Asistent de sistem bogat în funcții
+Comment[ru]=Многофункциональный системный помощник
+Comment[sk]=Bohatý systémový asistent
+Comment[sl]=Bogat sistemski pomočnik
+Comment[sv]=Funktionsrik systemassistent
+Comment[th]=ผู้ช่วยระบบที่มีคุณสมบัติมากมาย
+Comment[tr]=Özellik açısından zengin sistem asistanı
+Comment[uk]=Багатофункціональний системний помічник
+Comment[vi]=Trợ lý hệ thống giàu tính năng
+Comment[zh_CN]=功能丰富的系统助手
+Comment[zh_TW]=功能豐富的系統助手
+Exec=garuda-toolbox
+Icon=garuda-toolbox
+Terminal=false
+StartupNotify=true
+StartupWMClass=garuda-toolbox
+SingleMainWindow=true
+Categories=System;
+Keywords=update;upgrade;package;pacman;aur;maintenance;systemd;services;kernel;locale;users;boot;grub;network;diagnostics;configuration;settings;
+Actions=maintenance;diagnostics;setup-assistant;
+
+[Desktop Action maintenance]
+Name=Maintenance
+Exec=garuda-toolbox --page maintenance
+
+[Desktop Action diagnostics]
+Name=Diagnostics
+Exec=garuda-toolbox --page diagnostics
+
+[Desktop Action setup-assistant]
+Name=Setup Assistant
+Exec=garuda-toolbox --setup-assistant

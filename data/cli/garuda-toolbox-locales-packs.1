@@ -1,0 +1,56 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-locales-packs 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-locales\-packs \- The translations of installed programs for the enabled locales
+.SH SYNOPSIS
+\fBgaruda\-toolbox locales packs\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+The translations of installed programs for the enabled locales
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-locales\-packs\-list(1)
+List the language packs and whether each is installed
+.TP
+garuda\-toolbox\-locales\-packs\-install(1)
+Install a language pack
+.TP
+garuda\-toolbox\-locales\-packs\-remove(1)
+Remove a language pack
+.SH EXTRA
+Examples:
+  garuda\-toolbox locales packs list
+  garuda\-toolbox locales packs install firefox\-i18n\-de
+.SH "SEE ALSO"
+garuda\-toolbox\-locales(1), garuda\-toolbox(1)

@@ -1,0 +1,93 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-boot-set 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-boot\-set \- Change one setting of the boot menu, then regenerate it
+.SH SYNOPSIS
+\fBgaruda\-toolbox boot set\fR [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIKEY\fR> <\fIVALUE\fR> 
+.SH DESCRIPTION
+Change one setting of the boot menu, then regenerate it
+.SH OPTIONS
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help (see a summary with \*(Aq\-h\*(Aq)
+.TP
+<\fIKEY\fR>
+What to change
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+default: The entry that boots by default, as `boot entries` prints it
+.IP \(bu 2
+timeout: Seconds the menu shows, 0 to 300
+.IP \(bu 2
+remember: Boot the entry that booted last (on or off)
+.IP \(bu 2
+submenus: Group older kernels in a submenu (on or off)
+.IP \(bu 2
+os\-prober: List other systems in the menu (on or off)
+.IP \(bu 2
+quiet: Hide the kernel\*(Aqs messages while booting (on or off)
+.IP \(bu 2
+splash: Show a splash screen while booting (on or off)
+.IP \(bu 2
+mitigations\-off: Turn the CPU mitigations off (on or off)
+.IP \(bu 2
+sysrq: Allow the magic `SysRq` keys (on or off)
+.IP \(bu 2
+background: The picture behind the menu: a full path, or `none`
+.IP \(bu 2
+theme: The menu\*(Aqs theme: the full path of a theme.txt, or `none`
+.IP \(bu 2
+plymouth: The Plymouth theme shown while booting
+.RE
+.TP
+<\fIVALUE\fR>
+The new value: an entry id, seconds, on or off, a full path or `none`, or a Plymouth theme
+.SH EXTRA
+Examples:
+  garuda\-toolbox boot set timeout 3
+  garuda\-toolbox boot set quiet off
+  garuda\-toolbox boot set plymouth bgrt
+  garuda\-toolbox boot set background none
+.SH "SEE ALSO"
+garuda\-toolbox\-boot(1), garuda\-toolbox(1)

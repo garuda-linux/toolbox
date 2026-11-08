@@ -1,0 +1,76 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-users-edit 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-users\-edit \- Change an account\*(Aqs full name, login shell or groups
+.SH SYNOPSIS
+\fBgaruda\-toolbox users edit\fR [\fB\-\-full\-name\fR \fINAME\fR] [\fB\-\-shell\fR \fIPATH\fR] [\fB\-\-add\-group\fR \fIGROUP\fR] [\fB\-\-remove\-group\fR \fIGROUP\fR] [\fB\-\-home\fR \fIPATH\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-move\-files\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-\-json\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIUSER\fR> 
+.SH DESCRIPTION
+Change an account\*(Aqs full name, login shell or groups
+.SH OPTIONS
+.TP
+\fB\-\-full\-name\fR \fI<NAME>\fR
+The new full name. An empty one clears it
+.TP
+\fB\-\-shell\fR \fI<PATH>\fR
+The new login shell, one of /etc/shells
+.TP
+\fB\-\-add\-group\fR \fI<GROUP>\fR
+Join a group, as often as needed
+.TP
+\fB\-\-remove\-group\fR \fI<GROUP>\fR
+Leave a group, as often as needed
+.TP
+\fB\-\-home\fR \fI<PATH>\fR
+A new home folder: its full path
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-move\-files\fR
+Move the old home folder\*(Aqs files to the new one
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIUSER\fR>
+The account, as `users list` prints it
+.SH EXTRA
+Examples:
+  garuda\-toolbox users edit ada \-\-shell /usr/bin/fish
+  garuda\-toolbox users edit ada \-\-add\-group docker \-\-remove\-group video
+.SH "SEE ALSO"
+garuda\-toolbox\-users(1), garuda\-toolbox(1)

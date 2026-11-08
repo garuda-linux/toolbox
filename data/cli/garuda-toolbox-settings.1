@@ -1,0 +1,55 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-settings 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-settings \- Show and change the app\*(Aqs own settings
+.SH SYNOPSIS
+\fBgaruda\-toolbox settings\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Show and change the app\*(Aqs own settings
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-settings\-list(1)
+Every setting of the app and its value
+.TP
+garuda\-toolbox\-settings\-get(1)
+One setting\*(Aqs value
+.TP
+garuda\-toolbox\-settings\-set(1)
+Change one setting. The window takes it at its next start
+.SH EXTRA
+Example:
+  garuda\-toolbox settings list
+.SH "SEE ALSO"
+garuda\-toolbox(1)

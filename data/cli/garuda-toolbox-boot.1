@@ -1,0 +1,58 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-boot 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-boot \- Set the boot menu: default entry, timeout, kernel parameters, looks
+.SH SYNOPSIS
+\fBgaruda\-toolbox boot\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Set the boot menu: default entry, timeout, kernel parameters, looks
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-boot\-show(1)
+The boot menu\*(Aqs settings as they are now
+.TP
+garuda\-toolbox\-boot\-entries(1)
+The entries of the boot menu, for `boot set default`
+.TP
+garuda\-toolbox\-boot\-set(1)
+Change one setting of the boot menu, then regenerate it
+.TP
+garuda\-toolbox\-boot\-param(1)
+Add or remove a kernel parameter
+.SH EXTRA
+Example:
+  garuda\-toolbox boot set timeout 3
+.SH "SEE ALSO"
+garuda\-toolbox(1)

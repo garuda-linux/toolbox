@@ -1,0 +1,59 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-packages 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-packages \- Search, show, install and remove the packages of the repositories and the AUR
+.SH SYNOPSIS
+\fBgaruda\-toolbox packages\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Search, show, install and remove the packages of the repositories and the AUR
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-packages\-search(1)
+Search the repository and installed packages by name and description, or the AUR with `\-\-aur`
+.TP
+garuda\-toolbox\-packages\-show(1)
+Show one package: where it comes from, its version, size and dependencies, and its files once installed
+.TP
+garuda\-toolbox\-packages\-install(1)
+Install packages from the repositories, or build them from the AUR with `\-\-aur`
+.TP
+garuda\-toolbox\-packages\-remove(1)
+Remove an installed package with the dependencies nothing else needs
+.SH EXTRA
+Examples:
+  garuda\-toolbox packages search editor
+  garuda\-toolbox packages install gimp
+.SH "SEE ALSO"
+garuda\-toolbox(1)

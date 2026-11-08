@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The launchable is the desktop file's name, which is the Wayland app_id.
+-->
+<component type="desktop-application">
+  <id>org.garudalinux.toolbox</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Garuda Toolbox</name>
+  <summary>Maintain and configure Garuda Linux and other Arch based systems</summary>
+  <description>
+    <p>
+      Garuda Toolbox keeps an Arch based system in shape and changes its
+      settings in one place. Changes are collected first, shown for review and
+      then applied together with one password prompt.
+    </p>
+    <ul>
+      <li>System updates, mirrors, keyrings and other maintenance tasks</li>
+      <li>Packages, apps and gaming software from the repositories and the AUR</li>
+      <li>Services, users, groups, kernels, locales and boot options</li>
+      <li>Config files with a backup of every change</li>
+      <li>Network tools and diagnostics reports to share when asking for help</li>
+      <li>A setup assistant for a fresh installation</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">garuda-toolbox.desktop</launchable>
+  <icon type="stock">garuda-toolbox</icon>
+  <developer id="org.garudalinux">
+    <name>Garuda Linux</name>
+  </developer>
+  <url type="homepage">https://garudalinux.org</url>
+  <url type="bugtracker">https://gitlab.com/garuda-linux/applications/toolbox/-/issues</url>
+  <url type="vcs-browser">https://gitlab.com/garuda-linux/applications/toolbox</url>
+  <categories>
+    <category>System</category>
+  </categories>
+  <keywords>
+    <keyword>update</keyword>
+    <keyword>pacman</keyword>
+    <keyword>maintenance</keyword>
+    <keyword>settings</keyword>
+    <keyword>diagnostics</keyword>
+  </keywords>
+  <provides>
+    <binary>garuda-toolbox</binary>
+  </provides>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <content_rating type="oars-1.1"/>
+</component>

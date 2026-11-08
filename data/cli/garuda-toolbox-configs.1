@@ -1,0 +1,55 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-configs 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-configs \- Show and edit config files, the system\*(Aqs and your own
+.SH SYNOPSIS
+\fBgaruda\-toolbox configs\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Show and edit config files, the system\*(Aqs and your own
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-configs\-list(1)
+List the config files the page offers
+.TP
+garuda\-toolbox\-configs\-show(1)
+Print a config file\*(Aqs text
+.TP
+garuda\-toolbox\-configs\-edit(1)
+Edit a config file in your editor, then review and save it
+.SH EXTRA
+Example:
+  garuda\-toolbox configs edit pacman\-config
+.SH "SEE ALSO"
+garuda\-toolbox(1)

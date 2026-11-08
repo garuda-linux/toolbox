@@ -1,0 +1,56 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-network-drivers 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-network\-drivers \- The network drivers and whether each is blacklisted
+.SH SYNOPSIS
+\fBgaruda\-toolbox network drivers\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+The network drivers and whether each is blacklisted
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-network\-drivers\-list(1)
+List the network drivers
+.TP
+garuda\-toolbox\-network\-drivers\-blacklist(1)
+Keep a driver from loading at the next start
+.TP
+garuda\-toolbox\-network\-drivers\-allow(1)
+Let a blacklisted driver load again
+.SH EXTRA
+Examples:
+  garuda\-toolbox network drivers list
+  garuda\-toolbox network drivers blacklist r8169
+.SH "SEE ALSO"
+garuda\-toolbox\-network(1), garuda\-toolbox(1)

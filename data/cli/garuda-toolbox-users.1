@@ -1,0 +1,67 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-users 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-users \- Add, change and remove accounts
+.SH SYNOPSIS
+\fBgaruda\-toolbox users\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Add, change and remove accounts
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-users\-list(1)
+List the people\*(Aqs accounts and root. `\-\-all` adds the system ones
+.TP
+garuda\-toolbox\-users\-add(1)
+Create an account and set its password, at once
+.TP
+garuda\-toolbox\-users\-edit(1)
+Change an account\*(Aqs full name, login shell or groups
+.TP
+garuda\-toolbox\-users\-password(1)
+Set an account\*(Aqs password, at once
+.TP
+garuda\-toolbox\-users\-lock(1)
+Lock an account\*(Aqs password, so it cannot log in with it
+.TP
+garuda\-toolbox\-users\-unlock(1)
+Unlock a locked account\*(Aqs password
+.TP
+garuda\-toolbox\-users\-remove(1)
+Remove an account. Its home folder stays unless `\-\-delete\-home`
+.SH EXTRA
+Example:
+  garuda\-toolbox users add ada
+.SH "SEE ALSO"
+garuda\-toolbox(1)

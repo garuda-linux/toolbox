@@ -1,0 +1,70 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-network-radio 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-network\-radio \- Switch a radio on or off
+.SH SYNOPSIS
+\fBgaruda\-toolbox network radio\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIRADIO\fR> <\fISTATE\fR> 
+.SH DESCRIPTION
+Switch a radio on or off
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help (see a summary with \*(Aq\-h\*(Aq)
+.TP
+<\fIRADIO\fR>
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+wifi
+.IP \(bu 2
+bluetooth
+.IP \(bu 2
+flight: Flight mode: every radio off
+.RE
+.TP
+<\fISTATE\fR>
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+on
+.IP \(bu 2
+off
+.RE
+.SH EXTRA
+Examples:
+  garuda\-toolbox network radio wifi on
+  garuda\-toolbox network radio flight on
+.SH "SEE ALSO"
+garuda\-toolbox\-network(1), garuda\-toolbox(1)

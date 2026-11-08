@@ -1,0 +1,58 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-maintenance-run 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-maintenance\-run \- Run a task or repair now, as its Run button does
+.SH SYNOPSIS
+\fBgaruda\-toolbox maintenance run\fR [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fITASK\fR> 
+.SH DESCRIPTION
+Run a task or repair now, as its Run button does
+.SH OPTIONS
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fITASK\fR>
+The task, as `maintenance list` prints it. A repair that reinstalls or wipes asks for its name to be typed, or takes `\-\-yes`
+.SH EXTRA
+Examples:
+  garuda\-toolbox maintenance run clean\-package\-cache
+  garuda\-toolbox maintenance run remote\-full\-fix \-\-yes
+.SH "SEE ALSO"
+garuda\-toolbox\-maintenance(1), garuda\-toolbox(1)

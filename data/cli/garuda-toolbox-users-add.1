@@ -1,0 +1,73 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-users-add 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-users\-add \- Create an account and set its password, at once
+.SH SYNOPSIS
+\fBgaruda\-toolbox users add\fR [\fB\-\-full\-name\fR \fINAME\fR] [\fB\-\-shell\fR \fIPATH\fR] [\fB\-\-admin\fR] [\fB\-\-group\fR \fIGROUP\fR] [\fB\-\-password\-stdin\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIUSER\fR> 
+.SH DESCRIPTION
+Create an account and set its password, at once
+.SH OPTIONS
+.TP
+\fB\-\-full\-name\fR \fI<NAME>\fR
+The person\*(Aqs full name
+.TP
+\fB\-\-shell\fR \fI<PATH>\fR
+The login shell, one of /etc/shells. Without it useradd\*(Aqs default
+.TP
+\fB\-\-admin\fR
+May install software and change the system (the group wheel)
+.TP
+\fB\-\-group\fR \fI<GROUP>\fR
+A further group, as often as needed
+.TP
+\fB\-\-password\-stdin\fR
+Read the password from the first line of standard input instead of asking on the terminal
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIUSER\fR>
+The new account\*(Aqs name: small letters, digits, hyphens and underscores, at most 32 characters
+.SH EXTRA
+Examples:
+  garuda\-toolbox users add ada \-\-full\-name "Ada Lovelace" \-\-admin
+  printf \*(Aq%s\\n\*(Aq "$PW" | garuda\-toolbox users add ci \-\-password\-stdin \-\-yes
+.SH "SEE ALSO"
+garuda\-toolbox\-users(1), garuda\-toolbox(1)

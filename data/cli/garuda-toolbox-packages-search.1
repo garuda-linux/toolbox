@@ -1,0 +1,65 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-packages-search 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-packages\-search \- Search the repository and installed packages by name and description, or the AUR with `\-\-aur`
+.SH SYNOPSIS
+\fBgaruda\-toolbox packages search\fR [\fB\-\-installed\fR] [\fB\-\-orphans\fR] [\fB\-\-aur\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fITEXT\fR] 
+.SH DESCRIPTION
+Search the repository and installed packages by name and description, or the AUR with `\-\-aur`
+.SH OPTIONS
+.TP
+\fB\-\-installed\fR
+Only the installed packages
+.TP
+\fB\-\-orphans\fR
+Only the dependencies no installed package needs any more
+.TP
+\fB\-\-aur\fR
+Search the AUR instead, also its keywords, the exact name first. Downloads the AUR\*(Aqs package list when the last try is a day old. Works while the window\*(Aqs AUR setting is off: the flag asks for it
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fITEXT\fR]
+Only the packages whose name or description contains this text, in any case. Without it every package
+.SH EXTRA
+Examples:
+  garuda\-toolbox packages search editor
+  garuda\-toolbox packages list \-\-installed
+  garuda\-toolbox packages search \-\-orphans \-\-json
+  garuda\-toolbox packages search \-\-aur paru
+.SH ALIASES
+\fBgaruda\-toolbox packages list\fR
+.SH "SEE ALSO"
+garuda\-toolbox\-packages(1), garuda\-toolbox(1)

@@ -1,0 +1,63 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-queue 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-queue \- Queue changes as the window does, then apply them as one plan. While the window runs, its own queue
+.SH SYNOPSIS
+\fBgaruda\-toolbox queue\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Queue changes as the window does, then apply them as one plan. While the window runs, its own queue
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-queue\-show(1)
+Show the queued changes, numbered, and the plan that carries them out
+.TP
+garuda\-toolbox\-queue\-add(1)
+Queue a change instead of carrying it out now. Type the change as its own command
+.TP
+garuda\-toolbox\-queue\-remove(1)
+Take back one queued change, by its number in `queue show` or by its name
+.TP
+garuda\-toolbox\-queue\-clear(1)
+Take back every queued change
+.TP
+garuda\-toolbox\-queue\-apply(1)
+Carry out the whole queue as one plan, with one password
+.SH EXTRA
+Examples:
+  garuda\-toolbox queue add apps install firefox
+  garuda\-toolbox queue show
+  garuda\-toolbox queue apply
+.SH "SEE ALSO"
+garuda\-toolbox(1)

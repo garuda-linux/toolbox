@@ -1,0 +1,61 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-locales 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-locales \- Turn locales on or off and set the system language
+.SH SYNOPSIS
+\fBgaruda\-toolbox locales\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Turn locales on or off and set the system language
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-locales\-list(1)
+List the locales: enabled, the system\*(Aqs, and the ones on offer
+.TP
+garuda\-toolbox\-locales\-enable(1)
+Enable a locale, so programs can use it
+.TP
+garuda\-toolbox\-locales\-disable(1)
+Disable a locale. The system\*(Aqs locale stays
+.TP
+garuda\-toolbox\-locales\-system(1)
+Make a locale the system\*(Aqs language. It is enabled too
+.TP
+garuda\-toolbox\-locales\-packs(1)
+The translations of installed programs for the enabled locales
+.SH EXTRA
+Example:
+  garuda\-toolbox locales system de_DE.UTF\-8
+.SH "SEE ALSO"
+garuda\-toolbox(1)

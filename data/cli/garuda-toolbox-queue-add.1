@@ -1,0 +1,50 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-queue-add 1  "garuda-toolbox 0.1.0" 
+.SH NAME
+garuda\-toolbox\-queue\-add \- Queue a change instead of carrying it out now. Type the change as its own command
+.SH SYNOPSIS
+\fBgaruda\-toolbox queue add\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fICHANGE\fR> 
+.SH DESCRIPTION
+Queue a change instead of carrying it out now. Type the change as its own command
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fICHANGE\fR>
+The change as its own command takes it, for example `toggle on pipewire\-support`. Only changes the window queues fit: switches, apps, kernels, services at boot and masks, locales, accounts, groups, boot settings, drivers, DKMS builds and maintenance tasks
+.SH EXTRA
+Examples:
+  garuda\-toolbox queue add toggle on pipewire\-support
+  garuda\-toolbox queue add services enable sshd.service
+  garuda\-toolbox queue add users lock guest
+.SH "SEE ALSO"
+garuda\-toolbox\-queue(1), garuda\-toolbox(1)
