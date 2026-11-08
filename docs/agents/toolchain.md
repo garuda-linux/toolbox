@@ -98,7 +98,7 @@ boot.
 
 ### Suites
 
-`--suite basic,upgrade,faults,accounts` picks the suites, `basic` (the
+`--suite basic,upgrade,faults,accounts,sdboot` picks the suites, `basic` (the
 checks above) by default. One file per suite in `scripts/lima-it/`
 defines `suite_<name>`. After the setup a `limactl snapshot` (tag `base`)
 is taken, and every suite after the first, and every part of a suite that
@@ -109,6 +109,7 @@ breaks the system, starts from it again.
 | `upgrade`  | `update`, a package in and out, maintenance tasks, `linux-lts` installed and removed, on the real mirrors |
 | `faults`   | Cuts the power while pacman runs, then blocks the network for an install                                  |
 | `accounts` | Adds, changes, locks and removes an account, each proven by `su` on a terminal                            |
+| `sdboot`   | `loader.conf` settings, `kernels default` and a new kernel parameter, then a restart into the rebuilt UKI |
 
 - A snapshot of the running VM takes a second, after a `sync` so the
   setup is on the disk. `restore_base` stops the VM, applies the snapshot
