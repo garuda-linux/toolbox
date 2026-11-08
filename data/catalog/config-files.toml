@@ -1,0 +1,873 @@
+# `directory = true` lists a folder's regular files, one level deep.
+# `read_only = true` is for what hands out root or accounts (sudo, PAM, units, udev,
+# pacman hooks). Such a path stays out of both write tables.
+
+[[section]]
+id = "audio"
+title = "Audio"
+icon = "audio-volume-high"
+
+[[section.entry]]
+id = "alsa-base"
+name = "ALSA base"
+path = "/etc/modprobe.d/alsa-base.conf"
+description = "ALSA kernel module options"
+url = "https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture"
+
+[[section.entry]]
+id = "client-conf-pipewire"
+name = "client.conf (PipeWire)"
+path = "~/.config/pipewire/client.conf"
+description = "PipeWire client configuration"
+url = "https://wiki.archlinux.org/title/PipeWire"
+
+[[section.entry]]
+id = "daemon-conf-pulse"
+name = "daemon.conf (Pulse)"
+path = "~/.config/pulse/daemon.conf"
+description = "PulseAudio daemon settings"
+url = "https://wiki.archlinux.org/title/PulseAudio"
+
+[[section.entry]]
+id = "default-pa-pulse"
+name = "default.pa (Pulse)"
+path = "~/.config/pulse/default.pa"
+description = "PulseAudio startup script"
+url = "https://wiki.archlinux.org/title/PulseAudio"
+
+[[section.entry]]
+id = "main-conf-bluetooth"
+name = "main.conf (Bluetooth)"
+path = "/etc/bluetooth/main.conf"
+description = "Bluetooth daemon configuration"
+url = "https://wiki.archlinux.org/title/Bluetooth"
+
+[[section.entry]]
+id = "pipewire-config"
+name = "PipeWire config"
+path = "~/.config/pipewire/pipewire.conf"
+description = "User-level PipeWire daemon configuration"
+url = "https://wiki.archlinux.org/title/PipeWire"
+
+[[section.entry]]
+id = "system-alsa"
+name = "System ALSA"
+path = "/etc/asound.conf"
+description = "System-wide ALSA configuration"
+url = "https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture"
+
+[[section.entry]]
+id = "user-alsa"
+name = "User ALSA"
+path = "~/.asoundrc"
+description = "User-specific ALSA configuration"
+url = "https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture"
+
+[[section.entry]]
+id = "wireplumber"
+name = "WirePlumber"
+path = "~/.config/wireplumber"
+description = "WirePlumber session manager config directory"
+url = "https://wiki.archlinux.org/title/WirePlumber"
+directory = true
+
+[[section]]
+id = "bootloader"
+title = "Bootloader"
+icon = "drive-harddisk-root"
+
+[[section.entry]]
+id = "grub-config"
+name = "GRUB config"
+path = "/boot/grub/grub.cfg"
+description = "GRUB bootloader configuration file"
+url = "https://wiki.archlinux.org/title/GRUB"
+
+[[section.entry]]
+id = "grub-default"
+name = "GRUB default"
+path = "/etc/default/grub"
+description = "Configuration file for the GRUB bootloader"
+url = "https://wiki.archlinux.org/title/GRUB"
+
+[[section]]
+id = "display-and-window-managers"
+title = "Display and window managers"
+icon = "window"
+
+[[section.entry]]
+id = "gdm-config"
+name = "GDM config"
+path = "/etc/gdm/custom.conf"
+description = "Configuration for the GNOME Display Manager"
+url = "https://wiki.archlinux.org/title/GDM"
+
+[[section.entry]]
+id = "hyprland"
+name = "Hyprland"
+path = "~/.config/hypr/hyprland.conf"
+description = "Hyprland Wayland compositor configuration"
+url = "https://wiki.archlinux.org/title/Hyprland"
+
+[[section.entry]]
+id = "hyprpaper"
+name = "Hyprpaper"
+path = "~/.config/hypr/hyprpaper.conf"
+description = "Configuration for the Hyprpaper wallpaper utility"
+url = "https://wiki.hyprland.org/Hypr-Ecosystem/hyprpaper/"
+
+[[section.entry]]
+id = "i3"
+name = "i3"
+path = "~/.config/i3/config"
+description = "Classic X11 tiling window manager configuration"
+url = "https://wiki.archlinux.org/title/I3"
+
+[[section.entry]]
+id = "kde-globals"
+name = "KDE globals"
+path = "~/.config/kdeglobals"
+description = "Global KDE configuration settings"
+url = "https://wiki.archlinux.org/title/KDE"
+
+[[section.entry]]
+id = "kwin-config"
+name = "KWin config"
+path = "~/.config/kwinrc"
+description = "Configuration for the KWin window manager"
+url = "https://wiki.archlinux.org/title/KWin"
+
+[[section.entry]]
+id = "lightdm-config"
+name = "LightDM config"
+path = "/etc/lightdm/lightdm.conf"
+description = "Configuration for the LightDM display manager"
+url = "https://wiki.archlinux.org/title/LightDM"
+
+[[section.entry]]
+id = "plasma-desktop-applets"
+name = "Plasma desktop applets"
+path = "~/.config/plasma-org.kde.plasma.desktop-appletsrc"
+description = "Configuration for Plasma desktop applets"
+url = "https://wiki.archlinux.org/title/KDE"
+
+[[section.entry]]
+id = "plasma-workspace"
+name = "Plasma workspace"
+path = "~/.config/plasmarc"
+description = "Main configuration for the Plasma shell"
+url = "https://wiki.archlinux.org/title/KDE"
+
+[[section.entry]]
+id = "qtile"
+name = "Qtile"
+path = "~/.config/qtile/config.py"
+description = "Python-based window manager configuration"
+url = "https://wiki.archlinux.org/title/Qtile"
+
+[[section.entry]]
+id = "sddm-config"
+name = "SDDM config"
+path = "/etc/sddm.conf.d"
+description = "Simple Desktop Display Manager configuration"
+url = "https://wiki.archlinux.org/title/SDDM"
+directory = true
+
+[[section.entry]]
+id = "sway"
+name = "Sway"
+path = "~/.config/sway/config"
+description = "Sway Wayland compositor configuration"
+url = "https://wiki.archlinux.org/title/Sway"
+
+[[section.entry]]
+id = "waybar-config"
+name = "Waybar config"
+path = "~/.config/waybar/config"
+description = "Main configuration for the Waybar status bar"
+url = "https://wiki.archlinux.org/title/Waybar"
+
+[[section.entry]]
+id = "waybar-style"
+name = "Waybar style"
+path = "~/.config/waybar/style.css"
+description = "CSS styling for the Waybar status bar"
+url = "https://wiki.archlinux.org/title/Waybar"
+
+[[section.entry]]
+id = "wayfire"
+name = "Wayfire"
+path = "~/.config/wayfire.ini"
+description = "3D Wayland compositor configuration"
+url = "https://wiki.archlinux.org/title/Wayfire"
+
+[[section]]
+id = "gaming"
+title = "Gaming"
+icon = "input-gamepad"
+
+[[section.entry]]
+id = "gamemode-config"
+name = "GameMode config"
+path = "/etc/gamemode.ini"
+description = "Global configuration for the GameMode optimization tool"
+url = "https://wiki.archlinux.org/title/Gamemode"
+
+[[section.entry]]
+id = "mangohud-config"
+name = "MangoHud config"
+path = "~/.config/MangoHud/MangoHud.conf"
+description = "Configuration for the MangoHud performance overlay"
+url = "https://wiki.archlinux.org/title/MangoHud"
+
+[[section]]
+id = "garuda-tools"
+title = "Garuda tools"
+icon = "tools"
+
+[[section.entry]]
+id = "btrfs-assistant-config"
+name = "Btrfs Assistant config"
+path = "/etc/btrfs-assistant.conf"
+description = "Configuration for BTRFS Assistant"
+url = "https://gitlab.com/garuda-linux/applications/btrfs-assistant"
+
+[[section.entry]]
+id = "cpupower-config"
+name = "cpupower config"
+path = "/etc/default/cpupower"
+description = "Configuration for the cpupower power management tool"
+url = "https://wiki.archlinux.org/title/CPU_frequency_scaling"
+
+[[section.entry]]
+id = "garuda-update-config"
+name = "Garuda Update config"
+path = "/etc/garuda/garuda-update/config"
+description = "Configuration for garuda-update behavior and update flags"
+url = "https://wiki.garudalinux.org/garuda-update"
+
+[[section.entry]]
+id = "snapper-root-config"
+name = "Snapper root config"
+path = "/etc/snapper/configs/root"
+description = "Snapper configuration for the root partition"
+url = "https://wiki.archlinux.org/title/Snapper"
+
+[[section.entry]]
+id = "zram-generator"
+name = "ZRAM generator"
+path = "/etc/systemd/zram-generator.conf"
+description = "Configuration for zram-generator"
+url = "https://wiki.archlinux.org/title/Zram"
+
+[[section]]
+id = "graphics-and-display"
+title = "Graphics and display"
+icon = "monitor"
+
+[[section.entry]]
+id = "20-gpu-conf"
+name = "20-gpu.conf"
+path = "/etc/X11/xorg.conf.d/20-gpu.conf"
+description = "GPU-specific Xorg configuration (driver selection, BusID, screen settings)"
+url = "https://wiki.archlinux.org/title/Xorg#Configuration"
+
+[[section.entry]]
+id = "amdgpu-config"
+name = "AMDGPU config"
+path = "/etc/modprobe.d/amdgpu.conf"
+description = "AMDGPU kernel module options"
+url = "https://wiki.archlinux.org/title/AMDGPU"
+
+[[section.entry]]
+id = "blacklist-nouveau"
+name = "Blacklist nouveau"
+path = "/etc/modprobe.d/blacklist-nouveau.conf"
+description = "Blacklists the open-source Nouveau driver"
+url = "https://wiki.archlinux.org/title/Nouveau"
+
+[[section.entry]]
+id = "monitor-layout"
+name = "Monitor layout"
+path = "/etc/X11/xorg.conf.d/10-monitor.conf"
+description = "Monitor layout, resolution, refresh rate for Xorg"
+url = "https://wiki.archlinux.org/title/Multihead"
+
+[[section.entry]]
+id = "nvidia-config"
+name = "NVIDIA config"
+path = "/etc/modprobe.d/nvidia.conf"
+description = "NVIDIA kernel module options"
+url = "https://wiki.archlinux.org/title/NVIDIA"
+
+[[section.entry]]
+id = "xorg-config"
+name = "Xorg config"
+path = "/etc/X11/xorg.conf"
+description = "Legacy main Xorg configuration file"
+url = "https://wiki.archlinux.org/title/Xorg#Configuration"
+
+[[section.entry]]
+id = "xorg-config-xorg-conf-d"
+name = "Xorg config"
+path = "/etc/X11/xorg.conf.d"
+description = "Directory for Xorg configuration snippets"
+url = "https://wiki.archlinux.org/title/Xorg#Configuration"
+directory = true
+
+[[section]]
+id = "logging"
+title = "Logging"
+icon = "view-list-text"
+
+[[section.entry]]
+id = "rsyslog-config"
+name = "rsyslog config"
+path = "/etc/rsyslog.conf"
+description = "Main configuration for rsyslog daemon"
+url = "https://wiki.archlinux.org/title/Systemd/Journal"
+
+[[section]]
+id = "network"
+title = "Network"
+icon = "network-wired"
+
+[[section.entry]]
+id = "hosts-allow"
+name = "Hosts allow"
+path = "/etc/hosts.allow"
+description = "TCP wrappers for network service access control (allow)"
+url = "https://wiki.archlinux.org/title/Tcpwrappers"
+
+[[section.entry]]
+id = "hosts-deny"
+name = "Hosts deny"
+path = "/etc/hosts.deny"
+description = "TCP wrappers for network service access control (deny)"
+url = "https://wiki.archlinux.org/title/Tcpwrappers"
+
+[[section.entry]]
+id = "networkmanager-config"
+name = "NetworkManager config"
+path = "/etc/NetworkManager/NetworkManager.conf"
+description = "Global configuration for NetworkManager"
+url = "https://wiki.archlinux.org/title/NetworkManager"
+
+[[section.entry]]
+id = "systemd-networkd"
+name = "systemd-networkd"
+path = "/etc/systemd/network"
+description = "Configuration files for systemd-networkd"
+url = "https://wiki.archlinux.org/title/Systemd-networkd"
+directory = true
+
+[[section.entry]]
+id = "nftables-config"
+name = "nftables config"
+path = "/etc/nftables.conf"
+description = "Configuration for the nftables firewall"
+url = "https://wiki.archlinux.org/title/Nftables"
+
+[[section.entry]]
+id = "resolv-config"
+name = "resolv config"
+path = "/etc/resolv.conf"
+description = "DNS resolver configuration file"
+url = "https://wiki.archlinux.org/title/Domain_name_resolution"
+
+[[section.entry]]
+id = "ssh-config"
+name = "SSH config"
+path = "~/.ssh/config"
+description = "User specific SSH client configuration"
+url = "https://wiki.archlinux.org/title/OpenSSH#Client_usage"
+
+[[section.entry]]
+id = "sshd-config"
+name = "SSHD config"
+path = "/etc/ssh/sshd_config"
+description = "OpenSSH server daemon configuration file"
+url = "https://wiki.archlinux.org/title/OpenSSH"
+
+[[section]]
+id = "package-management"
+title = "Package management"
+icon = "package"
+
+[[section.entry]]
+id = "chaotic-mirrorlist"
+name = "Chaotic mirrorlist"
+path = "/etc/pacman.d/chaotic-mirrorlist"
+description = "Garuda's custom Chaotic-AUR repository mirrors"
+url = "https://wiki.archlinux.org/title/Unofficial_user_repositories#chaotic-aur"
+
+[[section.entry]]
+id = "makepkg-config"
+name = "makepkg config"
+path = "/etc/makepkg.conf"
+description = "Configuration options for makepkg"
+url = "https://wiki.archlinux.org/title/Makepkg"
+
+[[section.entry]]
+id = "mirrorlist"
+name = "Mirrorlist"
+path = "/etc/pacman.d/mirrorlist"
+description = "Standard Arch Linux repository mirrors"
+url = "https://wiki.archlinux.org/title/Mirrors"
+
+[[section.entry]]
+id = "pacman-hooks"
+name = "pacman hooks"
+path = "/etc/pacman.d/hooks"
+read_only = true
+description = "Hooks for automating actions during package operations"
+url = "https://wiki.archlinux.org/title/Pacman#Hooks"
+directory = true
+
+[[section.entry]]
+id = "pacman-config"
+name = "pacman config"
+path = "/etc/pacman.conf"
+description = "Main configuration file for the pacman package manager"
+url = "https://wiki.archlinux.org/title/Pacman"
+
+[[section]]
+id = "system"
+title = "System"
+icon = "computer"
+
+[[section.entry]]
+id = "adjtime"
+name = "Adjtime"
+path = "/etc/adjtime"
+description = "Used by hwclock to keep track of clocks"
+url = "https://wiki.archlinux.org/title/System_time"
+
+[[section.entry]]
+id = "environment"
+name = "Environment"
+path = "/etc/environment"
+description = "System-wide environment variables"
+url = "https://wiki.archlinux.org/title/Environment_variables"
+
+[[section.entry]]
+id = "fstab"
+name = "Fstab"
+path = "/etc/fstab"
+description = "Static information about the filesystems"
+url = "https://wiki.archlinux.org/title/Fstab"
+
+[[section.entry]]
+id = "hostname"
+name = "Hostname"
+path = "/etc/hostname"
+description = "System's host name"
+url = "https://wiki.archlinux.org/title/Network_configuration#Set_the_hostname"
+
+[[section.entry]]
+id = "hosts"
+name = "Hosts"
+path = "/etc/hosts"
+description = "Static table lookup for hostnames"
+url = "https://wiki.archlinux.org/title/Network_configuration#Local_network_hostname_resolution"
+
+[[section.entry]]
+id = "journald-config"
+name = "journald config"
+path = "/etc/systemd/journald.conf"
+description = "Configuration for the systemd journal service"
+url = "https://wiki.archlinux.org/title/Systemd/Journal"
+
+[[section.entry]]
+id = "locale-config"
+name = "Locale config"
+path = "/etc/locale.conf"
+description = "System-wide locale configuration"
+url = "https://wiki.archlinux.org/title/Locale"
+
+[[section.entry]]
+id = "locale-gen"
+name = "Locale gen"
+path = "/etc/locale.gen"
+description = "List of locales available on the system"
+url = "https://wiki.archlinux.org/title/Locale"
+
+[[section.entry]]
+id = "logind-config"
+name = "logind config"
+path = "/etc/systemd/logind.conf"
+description = "Configuration for the systemd login manager"
+url = "https://wiki.archlinux.org/title/Power_management#ACPI_events"
+
+[[section.entry]]
+id = "mkinitcpio-config"
+name = "mkinitcpio config"
+path = "/etc/mkinitcpio.conf"
+description = "Configuration for creating an initial ramdisk environment"
+url = "https://wiki.archlinux.org/title/Mkinitcpio"
+
+[[section.entry]]
+id = "os-release"
+name = "OS release"
+path = "/etc/os-release"
+description = "Provides information about the OS, used by various programs"
+url = "https://wiki.archlinux.org/title/Os-release"
+
+[[section.entry]]
+id = "sysctl-config"
+name = "sysctl config"
+path = "/etc/sysctl.conf"
+description = "Kernel parameters (networking, performance, security)"
+url = "https://wiki.archlinux.org/title/Sysctl"
+
+[[section.entry]]
+id = "systemd-system-config"
+name = "systemd system config"
+path = "/etc/systemd/system.conf"
+description = "Global systemd system configuration"
+url = "https://wiki.archlinux.org/title/Systemd"
+
+[[section.entry]]
+id = "systemd-user-config"
+name = "systemd user config"
+path = "/etc/systemd/user.conf"
+description = "Global systemd user configuration"
+url = "https://wiki.archlinux.org/title/Systemd/User"
+
+[[section.entry]]
+id = "systemd-services"
+name = "systemd services"
+path = "/etc/systemd/system"
+read_only = true
+description = "Custom or overridden systemd service definitions"
+url = "https://wiki.archlinux.org/title/Systemd"
+directory = true
+
+[[section.entry]]
+id = "systemd-user-units"
+name = "systemd user units"
+path = "/etc/systemd/user"
+description = "Custom or overridden systemd service definitions"
+url = "https://wiki.archlinux.org/title/Systemd/User"
+directory = true
+
+[[section.entry]]
+id = "vconsole-config"
+name = "vconsole config"
+path = "/etc/vconsole.conf"
+description = "Configuration of the virtual console"
+url = "https://wiki.archlinux.org/title/Linux_console"
+
+[[section.entry]]
+id = "modprobe-d"
+name = "modprobe.d"
+path = "/etc/modprobe.d"
+description = "Kernel module configuration and options"
+url = "https://wiki.archlinux.org/title/Kernel_module"
+directory = true
+
+[[section.entry]]
+id = "udev-rules"
+name = "udev rules"
+path = "/etc/udev/rules.d"
+read_only = true
+description = "udev rules for hardware device behavior"
+url = "https://wiki.archlinux.org/title/Udev"
+directory = true
+
+[[section]]
+id = "theming"
+title = "Theming"
+icon = "draw-brush"
+
+[[section.entry]]
+id = "cursor-theme-system"
+name = "Cursor theme (system)"
+path = "/usr/share/icons/default/index.theme"
+description = "System-wide cursor theme configuration"
+url = "https://wiki.archlinux.org/title/Cursor_themes"
+
+[[section.entry]]
+id = "cursor-theme-user"
+name = "Cursor theme (user)"
+path = "~/.icons/default/index.theme"
+description = "User-specific cursor theme configuration"
+url = "https://wiki.archlinux.org/title/Cursor_themes"
+
+[[section.entry]]
+id = "fontconfig-system"
+name = "Fontconfig (system)"
+path = "/etc/fonts/local.conf"
+description = "System-wide font configuration settings"
+url = "https://wiki.archlinux.org/title/Font_configuration"
+
+[[section.entry]]
+id = "fontconfig-user"
+name = "Fontconfig (user)"
+path = "~/.config/fontconfig/fonts.conf"
+description = "User-specific font configuration settings"
+url = "https://wiki.archlinux.org/title/Font_configuration"
+
+[[section.entry]]
+id = "grub-theme"
+name = "GRUB theme"
+path = "/usr/share/grub/themes/garuda-dr460nized/theme.txt"
+description = "Configuration for the GRUB bootloader theme"
+url = "https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Visual_configuration"
+
+[[section.entry]]
+id = "gtk-2-config"
+name = "GTK 2 Config"
+path = "~/.gtkrc-2.0"
+description = "Settings for legacy GTK 2.0 applications"
+url = "https://wiki.archlinux.org/title/GTK#GTK_2"
+
+[[section.entry]]
+id = "gtk-3-settings"
+name = "GTK 3 Settings"
+path = "~/.config/gtk-3.0/settings.ini"
+description = "Settings for GTK 3.0 applications"
+url = "https://wiki.archlinux.org/title/GTK#Basic_theme_configuration"
+
+[[section.entry]]
+id = "gtk-4-custom-css"
+name = "GTK 4 Custom CSS"
+path = "~/.config/gtk-4.0/gtk.css"
+description = "Custom CSS styling for GTK 4.0 applications"
+url = "https://wiki.archlinux.org/title/GTK#Basic_theme_configuration"
+
+[[section.entry]]
+id = "gtk-4-settings"
+name = "GTK 4 Settings"
+path = "~/.config/gtk-4.0/settings.ini"
+description = "Settings for GTK 4.0 applications"
+url = "https://wiki.archlinux.org/title/GTK#Basic_theme_configuration"
+
+[[section.entry]]
+id = "kde-font-config"
+name = "KDE font config"
+path = "~/.config/kcmfonts"
+description = "KDE font configuration settings"
+url = "https://wiki.archlinux.org/title/Fonts#Fontconfig"
+
+[[section.entry]]
+id = "kde-look-and-feel"
+name = "KDE look and feel"
+path = "~/.config/kdedefaults/package"
+description = "KDE Global Theme (Look and Feel) settings"
+url = "https://wiki.archlinux.org/title/KDE#Themes"
+
+[[section.entry]]
+id = "kvantum-config"
+name = "Kvantum config"
+path = "~/.config/Kvantum/kvantum.kvconfig"
+description = "Configuration for the Kvantum SVG-based theme engine"
+url = "https://wiki.archlinux.org/title/Kvantum"
+
+[[section.entry]]
+id = "plymouth-config"
+name = "Plymouth config"
+path = "/etc/plymouth/plymouthd.conf"
+description = "Configuration for the Plymouth bootsplash daemon"
+url = "https://wiki.archlinux.org/title/Plymouth"
+
+[[section]]
+id = "user-environment"
+title = "User environment"
+icon = "utilities-terminal"
+
+[[section.entry]]
+id = "alacritty"
+name = "Alacritty"
+path = "~/.config/alacritty/alacritty.toml"
+description = "GPU-accelerated terminal emulator configuration"
+url = "https://wiki.archlinux.org/title/Alacritty"
+
+[[section.entry]]
+id = "bash"
+name = "Bash"
+path = "~/.bashrc"
+description = "Bash configuration file for the current user"
+url = "https://wiki.archlinux.org/title/Bash"
+
+[[section.entry]]
+id = "bash-system-config"
+name = "Bash system config"
+path = "/etc/bash.bashrc"
+description = "System-wide bash shell settings for interactive shells"
+url = "https://wiki.archlinux.org/title/Bash"
+
+[[section.entry]]
+id = "dunst-config"
+name = "Dunst config"
+path = "~/.config/dunst/dunstrc"
+description = "Configuration for the Dunst notification daemon"
+url = "https://wiki.archlinux.org/title/Dunst"
+
+[[section.entry]]
+id = "fastfetch"
+name = "Fastfetch"
+path = "~/.config/fastfetch/config.jsonc"
+description = "System information fetch tool configuration"
+url = "https://wiki.archlinux.org/title/Fastfetch"
+
+[[section.entry]]
+id = "fish"
+name = "Fish"
+path = "~/.config/fish/config.fish"
+description = "Fish shell configuration file"
+url = "https://wiki.archlinux.org/title/Fish"
+
+[[section.entry]]
+id = "git-config"
+name = "Git config"
+path = "~/.gitconfig"
+description = "User specific git configuration"
+url = "https://wiki.archlinux.org/title/Git"
+
+[[section.entry]]
+id = "kitty"
+name = "Kitty"
+path = "~/.config/kitty/kitty.conf"
+description = "Feature-rich, GPU-accelerated terminal emulator configuration"
+url = "https://wiki.archlinux.org/title/Kitty"
+
+[[section.entry]]
+id = "mako-config"
+name = "Mako config"
+path = "~/.config/mako/config"
+description = "Configuration for the Mako notification daemon"
+url = "https://wiki.archlinux.org/title/Mako"
+
+[[section.entry]]
+id = "profile"
+name = "Profile"
+path = "~/.profile"
+description = "User specific environment and startup programs"
+url = "https://wiki.archlinux.org/title/Environment_variables"
+
+[[section.entry]]
+id = "rofi-config"
+name = "Rofi config"
+path = "~/.config/rofi/config.rasi"
+description = "Configuration for the Rofi application launcher and window switcher"
+url = "https://wiki.archlinux.org/title/Rofi"
+
+[[section.entry]]
+id = "starship"
+name = "Starship"
+path = "~/.config/starship.toml"
+description = "Starship cross-shell prompt configuration"
+url = "https://wiki.archlinux.org/title/Bash_prompt#Starship"
+
+[[section.entry]]
+id = "user-dirs"
+name = "User dirs"
+path = "~/.config/user-dirs.dirs"
+description = "XDG user directories configuration"
+url = "https://wiki.archlinux.org/title/XDG_user_directories"
+
+[[section.entry]]
+id = "wofi-config"
+name = "Wofi config"
+path = "~/.config/wofi/config"
+description = "Configuration for the Wofi application launcher"
+url = "https://hg.sr.ht/~scoopta/wofi"
+
+[[section.entry]]
+id = "user-systemd-units"
+name = "User systemd units"
+path = "~/.config/systemd/user"
+description = "Custom or overridden systemd service definitions"
+url = "https://wiki.archlinux.org/title/Systemd/User"
+directory = true
+
+[[section.entry]]
+id = "zsh"
+name = "ZSH"
+path = "~/.zshrc"
+description = "Zsh configuration file for the current user"
+url = "https://wiki.archlinux.org/title/Zsh"
+
+[[section]]
+id = "users-and-authentication"
+title = "Users and authentication"
+icon = "user-others"
+
+[[section.entry]]
+id = "group"
+name = "Group"
+path = "/etc/group"
+read_only = true
+description = "Defines user groups"
+url = "https://wiki.archlinux.org/title/Users_and_groups"
+
+[[section.entry]]
+id = "passwd"
+name = "Passwd"
+path = "/etc/passwd"
+read_only = true
+description = "Contains user account information"
+url = "https://wiki.archlinux.org/title/Users_and_groups"
+
+[[section.entry]]
+id = "sudoers"
+name = "Sudoers"
+path = "/etc/sudoers"
+read_only = true
+description = "Configures which users have sudo privileges"
+url = "https://wiki.archlinux.org/title/Sudo"
+
+[[section.entry]]
+id = "pam"
+name = "PAM"
+path = "/etc/pam.d"
+read_only = true
+description = "PAM configuration for authentication services"
+url = "https://wiki.archlinux.org/title/PAM"
+directory = true
+
+[[section.entry]]
+id = "cron"
+name = "cron.*"
+path = "/etc/cron.d"
+read_only = true
+description = "Configuration for cron jobs"
+url = "https://wiki.archlinux.org/title/Cron"
+directory = true
+
+[[section.entry]]
+id = "cron-daily"
+name = "cron.daily"
+path = "/etc/cron.daily"
+read_only = true
+description = "Configuration for cron jobs"
+url = "https://wiki.archlinux.org/title/Cron"
+directory = true
+
+[[section.entry]]
+id = "cron-hourly"
+name = "cron.hourly"
+path = "/etc/cron.hourly"
+read_only = true
+description = "Configuration for cron jobs"
+url = "https://wiki.archlinux.org/title/Cron"
+directory = true
+
+[[section.entry]]
+id = "cron-monthly"
+name = "cron.monthly"
+path = "/etc/cron.monthly"
+read_only = true
+description = "Configuration for cron jobs"
+url = "https://wiki.archlinux.org/title/Cron"
+directory = true
+
+[[section.entry]]
+id = "cron-weekly"
+name = "cron.weekly"
+path = "/etc/cron.weekly"
+read_only = true
+description = "Configuration for cron jobs"
+url = "https://wiki.archlinux.org/title/Cron"
+directory = true

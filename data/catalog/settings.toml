@@ -1,0 +1,206 @@
+# Every service entry requires its package. Shell, DNS, hblock, the Wi-Fi backend and
+# the garuda-update options are no toggles and live in the app.
+
+[[section]]
+id = "common"
+title = "Common"
+icon = "configure"
+
+[[section.entry]]
+id = "profile-sync-daemon"
+title = "Profile-sync-daemon"
+description = "Moves your web browser's profile (like Firefox or Brave) into fast temporary RAM (tmpfs). This significantly speeds up browser responsiveness and reduces wear on your SSD."
+check = { package = "profile-sync-daemon" }
+
+[[section.entry]]
+id = "enable-profile-sync-daemon"
+title = "PSD service"
+description = "Runs the Profile-sync-daemon to automatically manage your browser profiles in RAM."
+check = { user-service = "psd.service" }
+requires = { all = ["profile-sync-daemon"] }
+
+[[section.entry]]
+id = "systemd-oomd"
+title = "systemd-oomd"
+description = "systemd's Out-Of-Memory daemon. It actively monitors system memory and automatically terminates memory-hogging processes before your entire computer freezes up."
+check = { service = "systemd-oomd.service" }
+
+[[section.entry]]
+id = "guest-user"
+title = "Guest user"
+description = "Creates a temporary 'guest' user account with no password, isolated from your personal files. Wiped on logout."
+check = { package = "systemd-guest-user" }
+
+[[section]]
+id = "performance"
+title = "Performance"
+icon = "speedometer"
+
+[[section.entry]]
+id = "performance-tweaks"
+title = "Performance tweaks"
+description = "Applies a set of system-level sysctl and tuning configurations to optimize Garuda for maximum responsiveness."
+check = { package = "performance-tweaks" }
+
+[[section.entry]]
+id = "ananicy-cpp"
+title = "Ananicy-C++"
+description = "Auto NICe daemon. Dynamically changes the CPU priority (niceness) of running processes, giving the active application you are currently using more CPU time so the system feels faster."
+check = { package = "ananicy-cpp" }
+requires = { all = ["performance-tweaks"] }
+
+[[section.entry]]
+id = "enable-ananicy-cpp"
+title = "Ananicy service"
+description = "Runs the Ananicy daemon to continuously manage application CPU priorities."
+check = { service = "ananicy-cpp.service" }
+requires = { all = ["ananicy-cpp"] }
+
+[[section.entry]]
+id = "bpftune-git"
+title = "bpftune"
+description = "Uses eBPF to continuously monitor and automatically tune your Linux network parameters in real-time for optimal internet throughput and latency."
+check = { package = "bpftune-git" }
+
+[[section.entry]]
+id = "enable-bpftune"
+title = "bpftune service"
+description = "Runs the bpftune daemon to continuously optimize your network performance."
+check = { service = "bpftune.service" }
+requires = { all = ["bpftune-git"] }
+
+[[section.entry]]
+id = "enabled-preload"
+title = "Preload service"
+description = "Runs the Preload daemon to cache your frequently used applications."
+check = { service = "preload.service" }
+requires = { all = ["performance-tweaks"] }
+
+[[section.entry]]
+id = "enabled-irqbalance"
+title = "IRQbalance"
+description = "Distributes hardware interrupts evenly across all your CPU cores. This prevents a single core from getting bogged down handling device signals."
+check = { service = "irqbalance.service" }
+requires = { all = ["performance-tweaks"] }
+
+[[section]]
+id = "powersave"
+title = "Powersaving"
+icon = "battery-good"
+
+[[section.entry]]
+id = "powersave-tweaks"
+title = "Powersave tweaks"
+description = "Applies sysctl and configuration tweaks designed to minimize power consumption on battery-operated devices."
+check = { package = "powersave-tweaks" }
+
+[[section.entry]]
+id = "thermald"
+title = "thermald"
+description = "Intel's thermal management daemon. It prevents your system from overheating by proactively using cooling methods before forcing the CPU to throttle down."
+check = { package = "thermald" }
+
+[[section.entry]]
+id = "enabled-thermald"
+title = "thermald service"
+description = "Runs the thermald daemon to monitor CPU temperatures and prevent overheating."
+check = { service = "thermald.service" }
+requires = { all = ["thermald"] }
+
+[[section.entry]]
+id = "power-profiles-daemon"
+title = "Power profiles"
+description = "Provides an API for the system to easily switch between 'Power Saver', 'Balanced', and 'Performance' operating modes."
+check = { package = "power-profiles-daemon" }
+
+[[section.entry]]
+id = "enabled-power-profiles-daemon"
+title = "Power profiles service"
+description = "Runs the daemon that allows your desktop environment to toggle power profiles."
+check = { service = "power-profiles-daemon.service" }
+requires = { all = ["power-profiles-daemon"] }
+
+[[section.entry]]
+id = "intel-undervolt"
+title = "Intel undervolt"
+description = "Lowers the voltage supplied to Intel processors. This reduces heat and power consumption without sacrificing performance, which extends battery life and prevents thermal throttling."
+check = { package = "intel-undervolt" }
+
+[[section.entry]]
+id = "enabled-intel-undervolt"
+title = "Intel undervolt service"
+description = "Runs the daemon that automatically applies your Intel undervolt settings on boot."
+check = { service = "intel-undervolt.service" }
+requires = { all = ["intel-undervolt"] }
+
+[[section]]
+id = "rightclick-emulation"
+title = "Right click emulation"
+icon = "input-touchpad"
+
+[[section.entry]]
+id = "rightclick-emulation-package"
+title = "Touchpad long press"
+description = "Configures libinput so that holding a single finger on a touchscreen or touchpad registers as a right-click."
+check = { package = "rightclick-emulation" }
+
+[[section]]
+id = "desktop-and-apps"
+title = "Desktop and apps"
+icon = "desktop"
+
+[[section.entry]]
+id = "audio-no-suspend"
+title = "Audio no-suspend"
+description = "Disables PipeWire's node-suspend feature. This keeps audio devices constantly active, preventing the annoying popping or clicking noises that occur when sound cards wake up from sleep."
+check = { user-file = { path = ".config/wireplumber/wireplumber.conf.d/disable-suspension.conf", content = '''
+monitor.alsa.rules = [
+  {
+    matches = [
+      {
+        node.name = "~alsa_input.*"
+      },
+      {
+        node.name = "~alsa_output.*"
+      }
+    ]
+    actions = {
+      update-props = {
+        session.suspend-timeout-seconds = 0
+      }
+    }
+  }
+]
+monitor.bluez.rules = [
+  {
+    matches = [
+      {
+        node.name = "~bluez_input.*"
+      },
+      {
+        node.name = "~bluez_output.*"
+      }
+    ]
+    actions = {
+      update-props = {
+        session.suspend-timeout-seconds = 0
+      }
+    }
+  }
+]
+''' } }
+restart-user-units = ["pipewire.service", "pipewire-pulse.service", "wireplumber.service"]
+
+[[section.entry]]
+id = "kde-borderless-maximize"
+title = "KDE borderless maximize"
+description = "A KWin tweak that removes the title bar and window borders when an application is maximized in KDE Plasma, giving you more usable vertical screen space."
+check = { user-ini = { path = ".config/kwinrc", group = "Windows", key = "BorderlessMaximizedWindows", on = "true", off = "false" } }
+reload = "kwin"
+desktop = ["KDE"]
+
+[[section.entry]]
+id = "discord-disable-autoupdate"
+title = "Disable Discord auto-update"
+description = "Prevents Discord from prompting to download and installing updates, since this is totally useless on Archlinux - Pacman does it for us."
+check = { user-json = { path = ".config/discord/settings.json", key = "SKIP_HOST_UPDATE" } }

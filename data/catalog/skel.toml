@@ -1,0 +1,108 @@
+[[config]]
+id = "bash"
+name = "Bash"
+files = ["/etc/skel/.bashrc_garuda", "/etc/skel/.config/autostart/bashrc-setup.desktop"]
+
+[[config]]
+id = "fish"
+name = "Fish"
+files = ["/etc/skel/.config/fish/config.fish"]
+
+[[config]]
+id = "zsh"
+name = "ZSH"
+files = ["/etc/skel/.zshrc"]
+
+[[config]]
+id = "kvantum"
+name = "Kvantum"
+files = ["/etc/skel/.config/Kvantum/kvantum.kvconfig"]
+
+[[config]]
+id = "libinput"
+name = "Libinput"
+files = ["/etc/skel/.config/libinput-gestures.conf"]
+
+[[config]]
+id = "bleachbit"
+name = "Bleachbit"
+files = ["/etc/skel/.config/bleachbit/bleachbit.ini"]
+
+[[config]]
+id = "libreoffice"
+name = "LibreOffice"
+files = ["/etc/skel/.config/libreoffice/4/user/registrymodifications.xcu"]
+
+[[config]]
+id = "starship"
+name = "Starship"
+files = ["/etc/skel/.config/starship.toml"]
+
+[[config]]
+id = "smplayer"
+name = "SMPlayer"
+files = ["/etc/skel/.config/smplayer/smplayer.ini"]
+
+[[config]]
+id = "vlc"
+name = "VLC"
+files = ["/etc/skel/.config/vlc/vlcrc"]
+
+[[config]]
+id = "deluge"
+name = "Deluge"
+files = ["/etc/skel/.config/deluge/gtk3ui.conf"]
+
+[[config]]
+id = "mpv"
+name = "MPV"
+files = ["/etc/skel/.config/mpv/mpv.conf"]
+
+[[config]]
+id = "micro"
+name = "Micro"
+files = ["/etc/skel/.config/micro/settings.json"]
+
+[[config]]
+id = "bat"
+name = "Bat"
+files = ["/etc/skel/.config/bat/config", "/etc/skel/.config/bat/themes"]
+
+[[config]]
+id = "environment"
+name = "Environment"
+files = ["/etc/skel/.config/environment.d/garuda.conf", "/etc/skel/.config/environment.d/firefox.conf"]
+
+[[config]]
+id = "gtk"
+name = "GTK3/4"
+files = ["/etc/skel/.config/gtk-3.0", "/etc/skel/.config/gtk-4.0"]
+
+[[config]]
+id = "pacseek"
+name = "PacSeek"
+files = ["/etc/skel/.config/pacseek/config.json"]
+
+[[config]]
+id = "psd"
+name = "Profile sync daemon"
+files = ["/etc/skel/.config/psd/psd.conf"]
+
+[[config]]
+id = "kde"
+name = "KDE settings"
+files = [
+  "/etc/skel/.config/auroraerc",
+  "/etc/skel/.config/baloofilerc",
+  "/etc/skel/.config/dolphinrc",
+  "/etc/skel/.config/katerc",
+  "/etc/skel/.config/kcminputrc",
+  "/etc/skel/.config/kdeglobals",
+  "/etc/skel/.config/konsolerc",
+  "/etc/skel/.config/kscreenlockerrc",
+  "/etc/skel/.config/kwinrc",
+  "/etc/skel/.config/touchpadrc",
+  "/etc/skel/.config/yakuakerc",
+  "/etc/skel/.local/share/konsole/Garuda.profile",
+  "/etc/skel/.local/share/kxmlgui5/dolphin/dolphinui.rc",
+]

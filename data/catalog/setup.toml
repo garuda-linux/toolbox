@@ -1,0 +1,1166 @@
+# `also` holds the other packages and the units enabled with them.
+# `conflicts` names the entries turned off when this one is turned on.
+
+[[section]]
+id = "audio"
+title = "Audio"
+icon = "audio-volume-high"
+
+[[section.entry]]
+id = "strawberry-player"
+title = "Strawberry Player"
+description = "Music player aimed at audio enthusiasts"
+check = { package = "strawberry" }
+
+[[section.entry]]
+id = "lollypop"
+title = "Lollypop"
+description = "Modern music player for GNOME"
+check = { package = "lollypop" }
+
+[[section.entry]]
+id = "audacious"
+title = "Audacious"
+description = "Lightweight, advanced audio player"
+check = { package = "audacious" }
+
+[[section.entry]]
+id = "elisa"
+title = "Elisa"
+description = "Simple music player by KDE"
+check = { package = "elisa" }
+
+[[section.entry]]
+id = "kwave"
+title = "Kwave"
+description = "Sound editor for KDE"
+check = { package = "kwave" }
+
+[[section.entry]]
+id = "audacity"
+title = "Audacity"
+description = "Program for manipulating digital audio waveforms"
+check = { package = "audacity" }
+
+[[section.entry]]
+id = "ardour"
+title = "Ardour"
+description = "Professional-grade digital audio workstation"
+check = { package = "ardour" }
+
+[[section.entry]]
+id = "lmms"
+title = "LMMS"
+description = "Digital audio workstation and sequencer"
+check = { package = "lmms" }
+
+[[section.entry]]
+id = "mixxx"
+title = "Mixxx"
+description = "Free, open source DJ software"
+check = { package = "mixxx" }
+
+[[section.entry]]
+id = "muse-score"
+title = "MuseScore"
+description = "Create, play and print beautiful sheet music"
+check = { package = "musescore" }
+
+[[section.entry]]
+id = "rosegarden"
+title = "Rosegarden"
+description = "MIDI/audio sequencer and notation editor"
+check = { package = "rosegarden" }
+
+[[section.entry]]
+id = "bitwig-studio"
+title = "Bitwig Studio"
+description = "Digital audio workstation for music production"
+check = { package = "bitwig-studio" }
+
+[[section]]
+id = "browsers"
+title = "Browsers"
+icon = "internet-web-browser"
+
+[[section.entry]]
+id = "firedragon"
+title = "Firedragon"
+description = "Privacy-focused Floorp fork with Garuda branding"
+check = { package = "firedragon" }
+
+[[section.entry]]
+id = "firedragon-catppuccin"
+title = "Firedragon Catppuccin"
+description = "Firedragon browser with a Catppuccin theme"
+check = { package = "firedragon-catppuccin" }
+
+[[section.entry]]
+id = "librewolf"
+title = "Librewolf"
+description = "Privacy, security, and freedom-focused web browser"
+check = { package = "librewolf" }
+
+[[section.entry]]
+id = "firefox"
+title = "Firefox"
+description = "Fast, private & safe web browser"
+check = { package = "firefox" }
+
+[[section.entry]]
+id = "firefox-esr"
+title = "Firefox ESR"
+description = "Firefox Extended Support Release"
+check = { package = "firefox-esr" }
+
+[[section.entry]]
+id = "chromium"
+title = "Chromium"
+description = "Web browser built for speed, simplicity, and security"
+check = { package = "chromium" }
+
+[[section.entry]]
+id = "ungoogled-chromium"
+title = "Ungoogled Chromium"
+description = "Chromium with all Google integrations removed"
+check = { package = "ungoogled-chromium-bin" }
+
+[[section.entry]]
+id = "vivaldi"
+title = "Vivaldi"
+description = "Advanced browser made with the power user in mind"
+check = { package = "vivaldi" }
+also = [{ package = "vivaldi-ffmpeg-codecs" }]
+
+[[section.entry]]
+id = "tor-browser"
+title = "Tor Browser"
+description = "Securely navigate the Tor network"
+check = { package = "torbrowser-launcher" }
+
+[[section.entry]]
+id = "brave"
+title = "Brave"
+description = "Web browser that blocks ads and trackers by default"
+check = { package = "brave-bin" }
+
+[[section.entry]]
+id = "falkon"
+title = "Falkon"
+description = "Cross-platform QtWebEngine browser"
+check = { package = "falkon" }
+
+[[section.entry]]
+id = "qutebrowser"
+title = "Qutebrowser"
+description = "Keyboard-driven, vim-like browser based on Python"
+check = { package = "qutebrowser" }
+also = [{ package = "python-adblock" }]
+
+[[section]]
+id = "communication"
+title = "Communication"
+icon = "dialog-messages"
+
+[[section.entry]]
+id = "telegram"
+title = "Telegram"
+description = "Official Telegram Desktop client"
+check = { package = "telegram-desktop" }
+
+[[section.entry]]
+id = "discord"
+title = "Discord"
+description = "All-in-one voice and text chat"
+check = { package = "discord" }
+
+[[section.entry]]
+id = "neochat"
+title = "Neochat"
+description = "Client for Matrix, the decentralized communication protocol"
+check = { package = "neochat" }
+
+[[section.entry]]
+id = "fractal"
+title = "Fractal"
+description = "Matrix group messaging app for GNOME"
+check = { package = "fractal" }
+
+[[section.entry]]
+id = "element"
+title = "Element"
+description = "Glossy Matrix collaboration client"
+check = { package = "element-desktop" }
+
+[[section.entry]]
+id = "wire"
+title = "Wire"
+description = "End-to-end encrypted messenger and video conferences"
+check = { package = "wire-desktop" }
+
+[[section.entry]]
+id = "signal"
+title = "Signal"
+description = "Signal Private Messenger for Linux"
+check = { package = "signal-desktop" }
+
+[[section.entry]]
+id = "jitsi-meet"
+title = "Jitsi-Meet"
+description = "Jitsi Meet desktop application"
+check = { package = "jitsi-meet-desktop" }
+
+[[section.entry]]
+id = "zoom"
+title = "Zoom"
+description = "Video and web conferencing service"
+check = { package = "zoom" }
+
+[[section.entry]]
+id = "microsoft-teams"
+title = "Microsoft Teams"
+description = "Unofficial Microsoft Teams client"
+check = { package = "teams-for-linux" }
+
+[[section.entry]]
+id = "slack"
+title = "Slack"
+description = "Slack Desktop client"
+check = { package = "slack-desktop" }
+
+[[section.entry]]
+id = "mumble"
+title = "Mumble"
+description = "Low-latency, high quality voice chat software"
+check = { package = "mumble" }
+
+[[section.entry]]
+id = "twitch-gui"
+title = "Twitch GUI"
+description = "Multi-platform Twitch.tv browser"
+check = { package = "streamlink-twitch-gui-bin" }
+
+[[section]]
+id = "development"
+title = "Development"
+icon = "applications-development"
+
+[[section.entry]]
+id = "vim"
+title = "VIM"
+description = "Highly configurable terminal text editor"
+check = { package = "vim" }
+
+[[section.entry]]
+id = "visual-studio-code"
+title = "Visual Studio Code"
+description = "Code editor for building and debugging modern applications"
+check = { package = "visual-studio-code-bin" }
+
+[[section.entry]]
+id = "visual-studio-code-oss"
+title = "Code - OSS"
+description = "Open source build of Visual Studio Code"
+check = { package = "code" }
+
+[[section.entry]]
+id = "zed-editor"
+title = "Zed Editor"
+description = "High-performance, multiplayer code editor"
+check = { package = "zed" }
+
+[[section.entry]]
+id = "vscodium"
+title = "VSCodium"
+description = "Telemetry-free binaries of VSCode"
+check = { package = "vscodium" }
+
+[[section.entry]]
+id = "gnu"
+title = "GNU Emacs"
+description = "Extensible, customizable real-time display editor"
+check = { package = "emacs" }
+
+[[section.entry]]
+id = "qt-creator"
+title = "QtCreator"
+description = "Lightweight, cross-platform IDE"
+check = { package = "qtcreator" }
+
+[[section.entry]]
+id = "gnome-builder"
+title = "GNOME Builder"
+description = "IDE for writing GNOME-based software"
+check = { package = "gnome-builder" }
+
+[[section.entry]]
+id = "k-develop"
+title = "KDevelop"
+description = "C++ IDE using KDE technologies"
+check = { package = "kdevelop" }
+
+[[section.entry]]
+id = "netbeans"
+title = "Netbeans"
+description = "IDE for Java, HTML5, PHP, C and C++"
+check = { package = "netbeans" }
+
+[[section.entry]]
+id = "postman"
+title = "Postman"
+description = "Build, test, and document your APIs"
+check = { package = "postman-bin" }
+
+[[section.entry]]
+id = "intellij-idea"
+title = "IntelliJ-IDEA"
+description = "IDE for Java and other programming languages"
+check = { package = "intellij-idea-community-edition" }
+
+[[section.entry]]
+id = "py-charm"
+title = "PyCharm"
+description = "Python IDE for professional developers"
+check = { package = "pycharm-community-edition" }
+
+[[section.entry]]
+id = "git-kraken"
+title = "Gitkraken"
+description = "Intuitive, fast, and beautiful Git client"
+check = { package = "gitkraken" }
+
+[[section.entry]]
+id = "github"
+title = "GitHub"
+description = "GUI for managing Git and GitHub"
+check = { package = "github-desktop" }
+
+[[section.entry]]
+id = "cockpit"
+title = "Cockpit"
+description = "Web-based user interface for Linux servers"
+check = { package = "cockpit" }
+also = [{ package = "cockpit-machines" }, { service = "cockpit.socket" }]
+
+[[section.entry]]
+id = "ansible"
+title = "Ansible"
+description = "Official assortment of Ansible collections"
+check = { package = "ansible" }
+
+[[section.entry]]
+id = "docker"
+title = "Docker"
+description = "Pack, ship and run applications as containers"
+check = { package = "docker" }
+also = [{ package = "docker-compose" }, { service = "docker.socket" }]
+
+[[section.entry]]
+id = "podman"
+title = "Podman"
+description = "Daemonless container engine for managing containers"
+check = { package = "podman-docker" }
+also = [{ package = "podman-compose" }, { package = "crun" }, { service = "podman.socket" }, { user-service = "podman.socket" }]
+
+[[section.entry]]
+id = "jenkins"
+title = "Jenkins"
+description = "Extendable continuous integration server"
+check = { package = "jenkins" }
+
+[[section.entry]]
+id = "puppet"
+title = "Puppet"
+description = "Server automation framework and application"
+check = { package = "puppet" }
+
+[[section.entry]]
+id = "prometheus"
+title = "Prometheus"
+description = "Systems monitoring and alerting toolkit"
+check = { package = "prometheus" }
+
+[[section.entry]]
+id = "terraform"
+title = "Terraform"
+description = "Tool for building and updating infrastructure as code"
+check = { package = "terraform" }
+
+[[section]]
+id = "gaming"
+title = "Gaming"
+icon = "applications-games"
+
+[[section.entry]]
+id = "aisleriot"
+title = "Aisleriot"
+description = "Collection of patience card games"
+check = { package = "aisleriot" }
+
+[[section.entry]]
+id = "mari0"
+title = "Mari0"
+description = "Mario game with Portal gun mechanics"
+check = { package = "mari0" }
+
+[[section.entry]]
+id = "kapman"
+title = "Kapman"
+description = "Clone of the well known game Pac-Man"
+check = { package = "kapman" }
+
+[[section.entry]]
+id = "knights"
+title = "Knights"
+description = "Chess board by KDE"
+check = { package = "knights" }
+
+[[section.entry]]
+id = "kmahjongg"
+title = "Kmahjongg"
+description = "Tile matching game for one or two players"
+check = { package = "kmahjongg" }
+
+[[section.entry]]
+id = "super-tux-kart"
+title = "Super Tux Kart"
+description = "Kart racing game featuring Tux"
+check = { package = "supertuxkart" }
+
+[[section.entry]]
+id = "super-tux"
+title = "Super Tux"
+description = "Classic 2D jump'n'run sidescroller game"
+check = { package = "supertux" }
+
+[[section.entry]]
+id = "luanti"
+title = "Luanti"
+description = "Voxel-based game engine"
+check = { package = "luanti" }
+also = [{ package = "luanti-server" }]
+
+[[section.entry]]
+id = "0ad"
+title = "0 A.D."
+description = "3D historically-based real-time strategy game"
+check = { package = "0ad" }
+
+[[section.entry]]
+id = "teeworlds"
+title = "Teeworlds"
+description = "Fast-paced multiplayer 2D shooter game"
+check = { package = "teeworlds" }
+
+[[section.entry]]
+id = "xonotic"
+title = "Xonotic"
+description = "Fast-paced cross-platform first person shooter"
+check = { package = "xonotic" }
+
+[[section.entry]]
+id = "hedgewars"
+title = "Hedgewars"
+description = "Turn-based strategy artillery game"
+check = { package = "hedgewars" }
+
+[[section]]
+id = "graphics"
+title = "Graphics"
+icon = "applications-graphics"
+
+[[section.entry]]
+id = "krita"
+title = "Krita"
+description = "Professional digital painting program"
+check = { package = "krita" }
+also = [{ package = "krita-plugin-gmic" }, { package = "opencolorio" }]
+
+[[section.entry]]
+id = "gimp"
+title = "GIMP"
+description = "GNU Image Manipulation Program"
+check = { package = "gimp" }
+
+[[section.entry]]
+id = "inkscape"
+title = "Inkscape"
+description = "Professional vector graphics editor"
+check = { package = "inkscape" }
+
+[[section.entry]]
+id = "blender"
+title = "Blender"
+description = "Fully integrated 3D graphics creation suite"
+check = { package = "blender" }
+
+[[section.entry]]
+id = "digikam"
+title = "Digikam"
+description = "Advanced digital photo management application"
+check = { package = "digikam" }
+
+[[section.entry]]
+id = "darktable"
+title = "Darktable"
+description = "Utility to organize and develop raw images"
+check = { package = "darktable" }
+
+[[section.entry]]
+id = "luminance-hdr"
+title = "Luminance HDR"
+description = "Workflow for HDR imaging"
+check = { package = "luminancehdr" }
+
+[[section.entry]]
+id = "kolourpaint"
+title = "Kolourpaint"
+description = "Simple paint program by KDE"
+check = { package = "kolourpaint" }
+
+[[section.entry]]
+id = "my-paint"
+title = "MyPaint"
+description = "Fast and easy painting application for digital painters"
+check = { package = "mypaint" }
+
+[[section.entry]]
+id = "wings3d"
+title = "Wings 3D"
+description = "3D modeler using the winged edge data structure"
+check = { package = "wings3d" }
+
+[[section.entry]]
+id = "sweet-home3d"
+title = "Sweet Home 3D"
+description = "Interior design application"
+check = { package = "sweethome3d" }
+
+[[section.entry]]
+id = "free-cad"
+title = "FreeCAD"
+description = "Feature based parametric 3D CAD modeler"
+check = { package = "freecad" }
+
+[[section.entry]]
+id = "libre-cad"
+title = "LibreCAD"
+description = "2D CAD drawing tool"
+check = { package = "librecad" }
+
+[[section.entry]]
+id = "ki-cad"
+title = "KiCad"
+description = "Electronic schematic and PCB design tools"
+check = { package = "kicad" }
+
+[[section.entry]]
+id = "pencil2d"
+title = "Pencil 2D"
+description = "Tool to make 2D hand-drawn animations"
+check = { package = "pencil2d" }
+
+[[section.entry]]
+id = "synfig-studio"
+title = "Synfig Studio"
+description = "Professional vector animation program"
+check = { package = "synfigstudio" }
+
+[[section.entry]]
+id = "open-toonz"
+title = "OpenToonz"
+description = "Software for producing 2D animation"
+check = { package = "opentoonz" }
+
+[[section.entry]]
+id = "font-forge"
+title = "FontForge"
+description = "Outline and bitmap font editor"
+check = { package = "fontforge" }
+
+[[section.entry]]
+id = "birdfont"
+title = "Birdfont"
+description = "Font editor for vector graphics"
+check = { package = "birdfont" }
+
+[[section]]
+id = "input-method"
+title = "Input methods"
+icon = "input-keyboard"
+
+[[section.entry]]
+id = "asian"
+title = "Asian"
+description = "Meta-package containing common Asian fonts"
+check = { package = "asian-fonts" }
+
+[[section.entry]]
+id = "indic"
+title = "Indic (Devanagari, Tamil, etc.)"
+description = "Input methods for Indic languages"
+check = { package = "fcitx5-m17n" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "simplified-chinese"
+title = "Simplified Chinese"
+description = "Input methods for Simplified Chinese"
+check = { package = "fcitx5-chinese-addons" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "traditional-chinese"
+title = "Traditional Chinese"
+description = "Input methods for Traditional Chinese"
+check = { package = "fcitx5-rime" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "japanese"
+title = "Japanese"
+description = "Input methods for Japanese"
+check = { package = "fcitx5-mozc" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "korean"
+title = "Korean"
+description = "Input methods for Korean"
+check = { package = "fcitx5-hangul" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "vietnamese"
+title = "Vietnamese"
+description = "Input methods for Vietnamese"
+check = { package = "fcitx5-unikey" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "sinhalese"
+title = "Sinhalese"
+description = "Input methods for Sinhalese"
+check = { package = "fcitx5-sayura" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section.entry]]
+id = "thai"
+title = "Thai"
+description = "Input methods for Thai"
+check = { package = "fcitx5-libthai" }
+also = [{ package = "fcitx5-configtool" }]
+
+[[section]]
+id = "internet"
+title = "Internet"
+icon = "applications-internet"
+
+[[section.entry]]
+id = "xtreme"
+title = "Xtreme"
+description = "Powerful download accelerator and video downloader"
+check = { package = "xdman-beta-bin" }
+
+[[section.entry]]
+id = "fdm"
+title = "FDM"
+description = "Powerful modern download accelerator and organizer"
+check = { package = "freedownloadmanager" }
+
+[[section.entry]]
+id = "deluge"
+title = "Deluge"
+description = "Lightweight, full-featured BitTorrent client"
+check = { package = "deluge-gtk" }
+
+[[section.entry]]
+id = "qbittorrent"
+title = "Qbittorrent"
+description = "Advanced BitTorrent client based on Qt"
+check = { package = "qbittorrent" }
+
+[[section.entry]]
+id = "nextcloud-client"
+title = "Nextcloud client"
+description = "Nextcloud desktop synchronization client"
+check = { package = "nextcloud-client" }
+
+[[section.entry]]
+id = "remmina"
+title = "Remmina"
+description = "Remote desktop client written in GTK+"
+check = { package = "remmina" }
+
+[[section.entry]]
+id = "filezilla"
+title = "Filezilla"
+description = "Fast and reliable FTP, FTPS and SFTP client"
+check = { package = "filezilla" }
+
+[[section.entry]]
+id = "putty"
+title = "Putty"
+description = "Terminal integrated SSH/Telnet client"
+check = { package = "putty" }
+
+[[section.entry]]
+id = "warpinator"
+title = "Warpinator"
+description = "Send and receive files across the network"
+check = { package = "warpinator" }
+
+[[section.entry]]
+id = "nitroshare"
+title = "Nitroshare"
+description = "Simple application to transfer files across devices"
+check = { package = "nitroshare" }
+
+[[section]]
+id = "kernels"
+title = "Kernels"
+icon = "applications-system"
+
+[[section.entry]]
+id = "linux-lts"
+title = "Linux LTS"
+description = "Long Term Support Linux kernel"
+check = { package = "linux-lts" }
+also = [{ package = "linux-lts-headers" }]
+
+[[section.entry]]
+id = "linux-hardened"
+title = "Linux Hardened"
+description = "Security-Hardened Linux kernel"
+check = { package = "linux-hardened" }
+also = [{ package = "linux-hardened-headers" }]
+
+[[section.entry]]
+id = "linux-cachyos"
+title = "Linux CachyOS"
+description = "Highly optimized CachyOS kernel"
+check = { package = "linux-cachyos" }
+also = [{ package = "linux-cachyos-headers" }]
+
+[[section.entry]]
+id = "linux-xanmod"
+title = "Linux Xanmod"
+description = "Custom kernel with XanMod patches for performance"
+check = { package = "linux-xanmod-edge-x64v3" }
+also = [{ package = "linux-xanmod-edge-x64v3-headers" }]
+
+[[section.entry]]
+id = "linux-xanmod-lts"
+title = "Linux Xanmod LTS"
+description = "LTS custom kernel with XanMod patches"
+check = { package = "linux-xanmod-lts" }
+also = [{ package = "linux-xanmod-lts-headers" }]
+
+[[section.entry]]
+id = "linux-mainline"
+title = "Linux Mainline"
+description = "Latest mainline Linux kernel"
+check = { package = "linux-mainline" }
+also = [{ package = "linux-mainline-headers" }]
+
+[[section]]
+id = "mail"
+title = "Mail"
+icon = "internet-mail"
+
+[[section.entry]]
+id = "thunderbird"
+title = "Thunderbird"
+description = "Standalone mail and news reader"
+check = { package = "thunderbird" }
+
+[[section.entry]]
+id = "kmail"
+title = "Kmail"
+description = "KDE mail client"
+check = { package = "kmail" }
+
+[[section.entry]]
+id = "evolution"
+title = "Evolution"
+description = "Manage your email, contacts and schedule"
+check = { package = "evolution" }
+
+[[section.entry]]
+id = "geary"
+title = "Geary"
+description = "Lightweight email client for GNOME"
+check = { package = "geary" }
+
+[[section.entry]]
+id = "mailspring"
+title = "Mailspring"
+description = "Beautiful and fast mail client"
+check = { package = "mailspring" }
+
+[[section.entry]]
+id = "claws-mail"
+title = "Claws-mail"
+description = "GTK+ based e-mail client"
+check = { package = "claws-mail" }
+
+[[section]]
+id = "multimedia"
+title = "Multimedia"
+icon = "applications-multimedia"
+
+[[section.entry]]
+id = "hypnotix"
+title = "Hypnotix"
+description = "IPTV streaming application"
+check = { package = "hypnotix" }
+
+[[section.entry]]
+id = "shortwave"
+title = "Shortwave"
+description = "Internet radio player"
+check = { package = "shortwave" }
+
+[[section.entry]]
+id = "converseen"
+title = "Converseen"
+description = "Batch image converter and resizer"
+check = { package = "converseen" }
+
+[[section.entry]]
+id = "handbrake"
+title = "Handbrake"
+description = "Multithreaded video transcoder"
+check = { package = "handbrake" }
+
+[[section.entry]]
+id = "mystiq"
+title = "Mystiq"
+description = "Audio/Video converter based on FFmpeg"
+check = { package = "mystiq" }
+
+[[section.entry]]
+id = "transmageddon"
+title = "Transmageddon"
+description = "Application for transcoding video formats"
+check = { package = "transmageddon" }
+
+[[section.entry]]
+id = "sound-converter"
+title = "SoundConverter"
+description = "Simple sound converter application"
+check = { package = "soundconverter" }
+
+[[section.entry]]
+id = "kodi"
+title = "Kodi"
+description = "Media player and entertainment hub"
+check = { package = "kodi" }
+also = [{ package = "kodi-platform" }, { package = "kodi-eventclients" }]
+
+[[section.entry]]
+id = "media-elch"
+title = "MediaElch"
+description = "Media Manager for Kodi"
+check = { package = "mediaelch" }
+
+[[section.entry]]
+id = "subtitle-composer"
+title = "Subtitle Composer"
+description = "Video subtitle editor"
+check = { package = "subtitlecomposer" }
+
+[[section.entry]]
+id = "kid3"
+title = "Kid3"
+description = "Audio tag editor"
+check = { package = "kid3" }
+
+[[section.entry]]
+id = "easytag"
+title = "Easytag"
+description = "Application for viewing and editing audio tags"
+check = { package = "easytag" }
+
+[[section.entry]]
+id = "k3b"
+title = "K3B"
+description = "Feature-rich CD burning application"
+check = { package = "k3b" }
+also = [{ package = "cdparanoia" }, { package = "cdrdao" }, { package = "dvd+rw-tools" }, { package = "emovix" }, { package = "vcdimager" }, { package = "cdrtools" }]
+
+[[section.entry]]
+id = "brasero"
+title = "Brasero"
+description = "CD/DVD mastering tool"
+check = { package = "brasero" }
+
+[[section.entry]]
+id = "xfburn"
+title = "Xfburn"
+description = "Simple CD/DVD burning tool"
+check = { package = "xfburn" }
+
+[[section]]
+id = "office"
+title = "Office"
+icon = "applications-office"
+
+[[section.entry]]
+id = "libre-office-fresh"
+title = "LibreOffice Fresh"
+description = "Latest version of LibreOffice"
+check = { package = "libreoffice-fresh" }
+also = [{ package = "libmythes" }]
+conflicts = ["libre-office-still"]
+
+[[section.entry]]
+id = "libre-office-still"
+title = "LibreOffice Still"
+description = "Stable version of LibreOffice"
+check = { package = "libreoffice-still" }
+also = [{ package = "libmythes" }]
+conflicts = ["libre-office-fresh"]
+
+[[section.entry]]
+id = "joplin"
+title = "Joplin"
+description = "Note taking and to-do application"
+check = { package = "joplin-beta" }
+
+[[section.entry]]
+id = "only-office"
+title = "OnlyOffice"
+description = "Office suite combining text, spreadsheet and presentation editors"
+check = { package = "onlyoffice-bin" }
+
+[[section.entry]]
+id = "wps-office"
+title = "WPS Office"
+description = "Office productivity suite"
+check = { package = "wps-office" }
+also = [{ package = "wps-office-mime" }, { package = "ttf-wps-fonts" }]
+
+[[section.entry]]
+id = "free-office"
+title = "FreeOffice"
+description = "Microsoft Office-compatible office suite"
+check = { package = "freeoffice" }
+
+[[section.entry]]
+id = "calligra"
+title = "Calligra"
+description = "Productivity and creative usage applications"
+check = { package = "calligra" }
+
+[[section.entry]]
+id = "obsidian"
+title = "Obsidian"
+description = "Knowledge base working on local plain text Markdown files"
+check = { package = "obsidian" }
+
+[[section.entry]]
+id = "skrooge"
+title = "Skrooge"
+description = "Personal finances manager for KDE"
+check = { package = "skrooge" }
+
+[[section.entry]]
+id = "k-my-money"
+title = "KMyMoney"
+description = "Personal finance manager"
+check = { package = "kmymoney" }
+
+[[section.entry]]
+id = "abi-word"
+title = "AbiWord"
+description = "Fully-featured word processor"
+check = { package = "abiword" }
+
+[[section.entry]]
+id = "gnumeric"
+title = "Gnumeric"
+description = "Spreadsheet application for GNOME"
+check = { package = "gnumeric" }
+
+[[section.entry]]
+id = "gnu-cash"
+title = "GnuCash"
+description = "Financial-accounting application"
+check = { package = "gnucash" }
+
+[[section.entry]]
+id = "homebank"
+title = "Homebank"
+description = "Free, easy, personal accounting"
+check = { package = "homebank" }
+
+[[section]]
+id = "other"
+title = "Other"
+icon = "applications-other"
+
+[[section.entry]]
+id = "droidcam"
+title = "Droidcam"
+description = "Turn your phone/tablet into a webcam"
+check = { package = "droidcam" }
+
+[[section.entry]]
+id = "soundwire"
+title = "Soundwire"
+description = "Transmit audio from your PC to other devices"
+check = { package = "soundwire" }
+
+[[section.entry]]
+id = "variety"
+title = "Variety"
+description = "Changes the wallpaper on a regular interval"
+check = { package = "variety" }
+
+[[section.entry]]
+id = "conky"
+title = "Conky"
+description = "Light-weight system monitor"
+check = { package = "conky" }
+also = [{ package = "conky-manager2" }]
+
+[[section.entry]]
+id = "keepass-xc"
+title = "KeePassXC"
+description = "Cross-platform password manager"
+check = { package = "keepassxc" }
+
+[[section.entry]]
+id = "yakuake"
+title = "Yakuake"
+description = "Drop-down terminal emulator"
+check = { package = "yakuake" }
+
+[[section]]
+id = "pkgmngrs"
+title = "Software centers"
+icon = "system-software-install"
+
+[[section.entry]]
+id = "gnome-firmware"
+title = "GNOME Firmware"
+description = "Manage firmware on supported devices"
+check = { package = "gnome-firmware" }
+
+[[section.entry]]
+id = "appimage-pool"
+title = "Appimage Pool"
+description = "Modern AppImageHub client"
+check = { package = "appimagepool-appimage" }
+
+[[section.entry]]
+id = "octopi"
+title = "Octopi"
+description = "Powerful Pacman frontend using Qt"
+check = { package = "octopi" }
+
+[[section.entry]]
+id = "bauh"
+title = "Bauh"
+description = "Graphical interface for managing applications"
+check = { package = "bauh" }
+
+[[section.entry]]
+id = "discover"
+title = "Discover"
+description = "KDE app and resource manager"
+check = { package = "discover" }
+
+[[section.entry]]
+id = "gnome-software"
+title = "GNOME Software"
+description = "GNOME app and resource manager"
+check = { package = "gnome-software" }
+
+[[section.entry]]
+id = "bazaar"
+title = "Bazaar"
+description = "App store focusing on flatpaks"
+check = { package = "bazaar-git" }
+
+[[section]]
+id = "video"
+title = "Video"
+icon = "camera-video"
+
+[[section.entry]]
+id = "kdenlive"
+title = "Kdenlive"
+description = "Non-linear video editor"
+check = { package = "kdenlive" }
+also = [{ package = "movit" }, { package = "sox" }, { package = "opus-tools" }, { package = "frei0r-plugins" }, { package = "opentimelineio" }, { package = "dvgrab" }, { package = "opencv" }]
+
+[[section.entry]]
+id = "dragon"
+title = "Dragon"
+description = "Multimedia player focused on simplicity"
+check = { package = "dragon" }
+
+[[section.entry]]
+id = "shotcut"
+title = "Shotcut"
+description = "Cross-platform video editor"
+check = { package = "shotcut" }
+
+[[section.entry]]
+id = "obs-studio"
+title = "OBS Studio"
+description = "Software for live streaming and recording"
+check = { package = "obs-studio" }
+
+[[section.entry]]
+id = "vlc"
+title = "VLC"
+description = "Cross-platform multimedia player"
+check = { package = "vlc" }
+
+[[section.entry]]
+id = "sm-player"
+title = "SMPlayer"
+description = "Media player with built-in codecs"
+check = { package = "smplayer" }
+also = [{ package = "smplayer-skins" }, { package = "smplayer-themes" }]
+
+[[section.entry]]
+id = "baka-mplayer"
+title = "Baka-Mplayer"
+description = "Cross-platform, libmpv based multimedia player"
+check = { package = "baka-mplayer" }
+
+[[section]]
+id = "virtualization"
+title = "Virtualization"
+icon = "preferences-virtualization-container"
+
+[[section.entry]]
+id = "virtual-box"
+title = "VirtualBox"
+description = "Cross-platform virtualization software"
+check = { package = "virtualbox-meta" }
+
+[[section.entry]]
+id = "gnome-boxes"
+title = "GNOME Boxes"
+description = "Simple application to access virtual systems"
+check = { package = "gnome-boxes" }
+also = [{ service = "libvirtd.service" }]
+
+[[section.entry]]
+id = "virt-manager"
+title = "Virtual Machine Manager"
+description = "Desktop user interface for managing virtual machines"
+check = { package = "virt-manager-meta" }
+also = [{ service = "libvirtd.service" }]
+
+[[section.entry]]
+id = "genymotion"
+title = "Genymotion"
+description = "Virtual environment for Android"
+check = { package = "genymotion" }
+also = [{ package = "virtualbox-meta" }]
