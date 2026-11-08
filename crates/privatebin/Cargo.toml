@@ -1,0 +1,27 @@
+[package]
+name = "toolbox-privatebin"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+aes-gcm.workspace = true
+base64.workspace = true
+bs58.workspace = true
+getrandom.workspace = true
+miniz_oxide.workspace = true
+pbkdf2.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+toolbox-https.workspace = true
+toolbox-plan.workspace = true
+
+[dev-dependencies]
+parking_lot.workspace = true
+
+[lints]
+workspace = true

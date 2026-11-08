@@ -1,0 +1,25 @@
+[package]
+name = "toolbox-news"
+description = "Garuda's announcements from the forum's feed: a download at most every six hours, a local copy"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+jiff.workspace = true
+parking_lot.workspace = true
+quick-xml.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+toolbox-fs.workspace = true
+toolbox-plan.workspace = true
+toolbox-https.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

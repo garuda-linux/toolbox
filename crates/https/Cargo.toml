@@ -1,0 +1,16 @@
+[package]
+name = "toolbox-https"
+description = "One blocking HTTPS agent for every outside request: https only, no redirect, a global timeout and a capped body"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+rustls.workspace = true
+thiserror.workspace = true
+ureq.workspace = true
+
+[lints]
+workspace = true
