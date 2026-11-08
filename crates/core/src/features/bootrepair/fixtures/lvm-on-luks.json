@@ -1,0 +1,80 @@
+{
+  "blockdevices": [
+    {
+      "path": "/dev/nvme0n1",
+      "type": "disk",
+      "size": 512062426726,
+      "fstype": null,
+      "parttype": null,
+      "label": null,
+      "model": "SAMSUNG MZVLB512HBJQ",
+      "mountpoints": [],
+      "children": [
+        {
+          "path": "/dev/nvme0n1p1",
+          "type": "part",
+          "size": 1073741824,
+          "fstype": "vfat",
+          "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+          "label": "ESP",
+          "model": null,
+          "mountpoints": []
+        },
+        {
+          "path": "/dev/nvme0n1p2",
+          "type": "part",
+          "size": 510988684902,
+          "fstype": "crypto_LUKS",
+          "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+          "label": null,
+          "model": null,
+          "mountpoints": [],
+          "children": [
+            {
+              "path": "/dev/mapper/cryptlvm",
+              "type": "crypt",
+              "size": 510988684902,
+              "fstype": "LVM2_member",
+              "parttype": null,
+              "label": null,
+              "model": null,
+              "mountpoints": [],
+              "children": [
+                {
+                  "path": "/dev/mapper/vg0-swap",
+                  "type": "lvm",
+                  "size": 17179869184,
+                  "fstype": "swap",
+                  "parttype": null,
+                  "label": null,
+                  "model": null,
+                  "mountpoints": []
+                },
+                {
+                  "path": "/dev/mapper/vg0-root",
+                  "type": "lvm",
+                  "size": 107374182400,
+                  "fstype": "ext4",
+                  "parttype": null,
+                  "label": "root",
+                  "model": null,
+                  "mountpoints": []
+                },
+                {
+                  "path": "/dev/mapper/vg0-home",
+                  "type": "lvm",
+                  "size": 386439643546,
+                  "fstype": "ext4",
+                  "parttype": null,
+                  "label": "home",
+                  "model": null,
+                  "mountpoints": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
