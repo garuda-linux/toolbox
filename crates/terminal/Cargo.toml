@@ -1,0 +1,18 @@
+[package]
+name = "toolbox-terminal"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+alacritty_terminal.workspace = true
+parking_lot.workspace = true
+toolbox-pty.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

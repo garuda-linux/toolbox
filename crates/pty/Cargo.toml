@@ -1,0 +1,19 @@
+[package]
+name = "toolbox-pty"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+tracing.workspace = true
+libc.workspace = true
+rustix = { workspace = true, features = ["event", "fs", "process", "pty", "stdio", "termios"] }
+
+[dev-dependencies]
+libc.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

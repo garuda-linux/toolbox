@@ -1,0 +1,7 @@
+[1;34m::[0;1m Synchronizing package databases...[0m
+ core is up to date
+ extra is up to date
+[1;34m::[0;1m Starting full system upgrade...[0m
+resolving dependencies...
+looking for conflicting packages...
+[1;34m::[0;1m vlc and vlc-git are in conflict. Remove vlc-git? [y/N] [0m

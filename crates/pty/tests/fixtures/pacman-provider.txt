@@ -1,0 +1,5 @@
+:: There are 2 providers available for java-runtime:
+:: Repository extra
+   1) jre-openjdk  2) jre21-openjdk
+
+Enter a number (default=1): 
