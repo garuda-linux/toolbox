@@ -13,8 +13,8 @@ use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserAction};
 
 use crate::builtin::SYSTEM_ROOT;
-use crate::initramfs;
 use crate::report::failure;
+use crate::{initramfs, uki};
 
 pub trait Procedure {
     fn procedure(&self) -> Vec<Invocation>;
@@ -209,6 +209,14 @@ fn run_once(
                 ),
             }
         }
+        Invocation::Builtin(Builtin::RebuildUkis) => match uki::rebuild(Path::new(SYSTEM_ROOT)) {
+            Some(command) => runner.run(step, &command, sink),
+            None => failure(
+                step,
+                sink,
+                "neither kernel-install-uki nor kernel-install is installed, so the UKIs were not built again",
+            ),
+        },
         Invocation::Builtin(builtin) => runner.builtin(step, builtin, sink),
         Invocation::Feed {
             command,

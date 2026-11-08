@@ -71,6 +71,12 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     });
 }
 
+/// systemd-boot has no menu picture or theme.
+pub fn plymouth_card(ui: &mut Ui, context: &PageContext<'_>) {
+    heading(ui, icons::PREFERENCES_DESKTOP_THEME_GLOBAL, "boot-look");
+    card(ui, |ui| plymouth(ui, context));
+}
+
 fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let (snapshot, changes) = (context.snapshot, context.changes);

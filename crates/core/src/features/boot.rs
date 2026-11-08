@@ -5,6 +5,7 @@ pub mod edit;
 mod flags;
 mod picture;
 mod recheck;
+mod sdboot;
 #[cfg(test)]
 mod tests;
 pub mod view;
@@ -14,6 +15,7 @@ use std::sync::LazyLock;
 pub use flags::{Flag, free_parameters, is_flag_parameter};
 pub use picture::PictureSource;
 pub use recheck::{recheck, recheck_grub};
+pub use sdboot::{is_protected, kernel};
 use toolbox_plan::{
     DefaultEntry, GrubKey, GrubSetting, GrubState, KernelParameter, KernelParameters, MenuEntryId,
     PackageName, PlymouthTheme,
@@ -21,7 +23,8 @@ use toolbox_plan::{
 pub use toolbox_state::boot::VirtualMachine;
 
 use crate::domains::{
-    CurrentGrub, GrubDefaults, InstalledPackages, Packages, PlymouthState, PlymouthThemes,
+    CurrentGrub, GrubDefaults, InstalledPackages, KernelSetting, Packages, PlymouthState,
+    PlymouthThemes, SdBootKernelDomain,
 };
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
@@ -38,6 +41,12 @@ pub enum Refusal {
     CustomCommandLine,
     TooManyParameters,
     UnknownTheme,
+    /// systemd-boot without `/etc/kernel/cmdline` or kernel-install.
+    NoKernelCmdline,
+    /// [`Refusal::CustomCommandLine`] of `/etc/kernel/cmdline`.
+    CustomKernelCmdline,
+    /// See [`is_protected`].
+    ProtectedParameter,
 }
 
 impl Refusal {
@@ -156,6 +165,10 @@ pub fn set_remember(
 /// [`Refusal::Unavailable`] without the file,
 /// [`Refusal::CustomCommandLine`] when the page leaves the line alone.
 pub fn parameters(snapshot: &Snapshot, changes: &ChangeSet) -> Result<KernelParameters, Refusal> {
+    if sdboot::is_sdboot(snapshot) {
+        return sdboot::parameters(snapshot, changes);
+    }
+
     let state = grub(snapshot)?;
 
     if let Some(GrubSetting::KernelParameters(queued)) =
@@ -179,20 +192,38 @@ pub fn add_parameter(
         .with(parameter)
         .map_err(|_full| Refusal::TooManyParameters)?;
 
-    set(GrubSetting::KernelParameters(list), changes, snapshot)
+    set_parameters(list, changes, snapshot)
 }
 
 /// # Errors
 ///
-/// As [`parameters`].
+/// As [`parameters`], and [`Refusal::ProtectedParameter`] on systemd-boot
+/// for one [`is_protected`] names.
 pub fn remove_parameter(
     parameter: &str,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
-    let list = parameters(snapshot, changes)?.without(parameter);
+    let list = parameters(snapshot, changes)?;
 
-    set(GrubSetting::KernelParameters(list), changes, snapshot)
+    if sdboot::is_sdboot(snapshot) && is_protected(parameter) {
+        return Err(Refusal::ProtectedParameter);
+    }
+
+    set_parameters(list.without(parameter), changes, snapshot)
+}
+
+fn set_parameters(
+    list: KernelParameters,
+    changes: &mut ChangeSet,
+    snapshot: &Snapshot,
+) -> Result<(), Refusal> {
+    if sdboot::is_sdboot(snapshot) {
+        SdBootKernelDomain::want(changes, KernelSetting::Parameters(list), snapshot);
+        Ok(())
+    } else {
+        set(GrubSetting::KernelParameters(list), changes, snapshot)
+    }
 }
 
 /// The splash also queues the Plymouth package while it is missing, and takes that back when the splash goes off.
@@ -218,7 +249,7 @@ pub fn set_flag(
         flag.stripped(&current)
     };
 
-    set(GrubSetting::KernelParameters(list), changes, snapshot)?;
+    set_parameters(list, changes, snapshot)?;
 
     if flag == Flag::Splash {
         want_plymouth(on, changes, snapshot);
@@ -239,7 +270,12 @@ pub fn set_plymouth_theme(
         return Err(Refusal::UnknownTheme);
     }
 
-    changes.want::<PlymouthThemes>(Single, theme, snapshot);
+    if sdboot::is_sdboot(snapshot) {
+        SdBootKernelDomain::want(changes, KernelSetting::PlymouthTheme(theme), snapshot);
+    } else {
+        changes.want::<PlymouthThemes>(Single, theme, snapshot);
+    }
+
     Ok(())
 }
 

@@ -400,7 +400,11 @@ On systemd-boot, `boot set` writes `loader.conf` instead and takes
 `default` (an id of `boot entries`, `saved` or `none`), `timeout` (seconds,
 `menu-force`, `menu-hidden` or `none`), `remember`, and `editor`,
 `auto-entries` and `auto-firmware` (`on`, `off` or `none`). The GRUB settings
-are refused there, and the systemd-boot ones on GRUB.
+are refused there, and the systemd-boot ones on GRUB. On systemd-boot,
+`quiet`, `splash`, `mitigations-off`, `sysrq` and `boot param` change
+`/etc/kernel/cmdline`, `plymouth` sets the theme, and both build the kernel
+images again. `boot param remove` refuses `root=`, `rootflags=` and `rw`, and
+`boot show` also names the Plymouth theme.
 `kernels default` makes an installed kernel's entry the default.
 `dkms build` builds every module an installed kernel with headers lacks,
 or only those of `--kernel`.

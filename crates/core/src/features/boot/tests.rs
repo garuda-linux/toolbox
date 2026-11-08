@@ -1,6 +1,8 @@
 mod background;
 mod flags;
 mod recheck;
+pub(super) mod sdboot;
+mod sdboot_view;
 
 use toolbox_plan::{
     DefaultEntry, GrubKey, GrubPicture, GrubSetting, GrubState, GrubThemeFile, GrubTimeout,

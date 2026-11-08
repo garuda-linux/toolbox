@@ -10,9 +10,9 @@ mod tests;
 
 use egui::Ui;
 use toolbox_core::domains::BootLoader;
-use toolbox_core::features::boot::Flag;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page, Probed, Readiness};
+use toolbox_core::features::boot::{Flag, kernel};
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, empty_state, pill_button};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_system::{FailedProbes, Host, Menu, Probe};
@@ -56,7 +56,7 @@ impl PageView for BootPage {
         let ctx = ui.ctx().clone();
 
         if sdboot(context) {
-            sdboot::show(ui, context);
+            self.sdboot(ui, context);
             return;
         }
 
@@ -85,16 +85,11 @@ impl PageView for BootPage {
 
 impl BootPage {
     fn ready(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
-        let ctx = ui.ctx().clone();
         plan_running(ui, context);
 
         let page = Page::read(context.snapshot, context.changes);
-        let splash = page.flag(Flag::Splash);
-        if view::virtual_machine(context.snapshot) && splash {
-            banner(ui, Tone::Neutral, &i18n::text(&ctx, "boot-vm"), &[]);
-            ui.add_space(ui.tokens().sizes.card_gap);
-        }
 
+        vm_banner(ui, context, page.flag(Flag::Splash));
         proposal(ui, context, &page);
         ui.add_enabled_ui(!context.busy, |ui| {
             menu::show(ui, context, &page, &mut self.entries);
@@ -102,6 +97,33 @@ impl BootPage {
             self.kernel(ui, context, &page);
             ui.add_space(ui.tokens().sizes.section_gap);
             look::show(ui, context, &page);
+        });
+    }
+
+    fn sdboot(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
+        let gap = ui.tokens().sizes.section_gap;
+
+        refusal(ui, context);
+        plan_running(ui, context);
+
+        let page = Page::read(context.snapshot, context.changes);
+        let splash = page.flag(Flag::Splash);
+
+        vm_banner(ui, context, splash);
+        ui.add_enabled_ui(!context.busy, |ui| {
+            sdboot::menu_card(ui, context);
+            ui.add_space(gap);
+
+            if kernel(context.snapshot).is_some() {
+                self.kernel(ui, context, &page);
+            } else {
+                sdboot::no_cmdline_card(ui);
+            }
+
+            if splash {
+                ui.add_space(gap);
+                look::plymouth_card(ui, context);
+            }
         });
     }
 
@@ -122,6 +144,14 @@ impl BootPage {
             self.sent = Some(added.clone());
             send(context, Edit::AddParameter(added));
         }
+    }
+}
+
+/// The splash works in a limited way in a virtual machine.
+fn vm_banner(ui: &mut Ui, context: &PageContext<'_>, splash: bool) {
+    if view::virtual_machine(context.snapshot) && splash {
+        banner(ui, Tone::Neutral, &i18n::text(ui.ctx(), "boot-vm"), &[]);
+        ui.add_space(ui.tokens().sizes.card_gap);
     }
 }
 

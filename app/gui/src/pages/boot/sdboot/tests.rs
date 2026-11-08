@@ -1,11 +1,13 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Snapshot;
-use toolbox_core::domains::{BootLoader, KernelCmdline};
+use toolbox_core::domains::{BootLoader, KernelCmdline, SdBootKernel};
+use toolbox_core::features::boot::Flag;
+use toolbox_core::features::boot::edit::Edit;
+use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{
     LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
 };
-use toolbox_plan::{KernelParameters, LoaderDefault};
 use toolbox_system::{Host, Menu, MenuRead};
 
 use super::super::tests::{Shown, page};
@@ -17,6 +19,9 @@ const LOADER_CONF: &str =
     include_str!("../../../../../../crates/plan/src/sdboot/fixtures/loader.conf");
 const KERNEL_CMDLINE: &str =
     include_str!("../../../../../../crates/state/src/boot/fixtures/kernel-cmdline");
+/// `/proc/cmdline` of the Garuda live ISO.
+const LIVE_CMDLINE: &str =
+    include_str!("../../../../../../crates/system/src/host/fixtures/live/proc-cmdline");
 const UKI: &[u8] = include_bytes!(
     "../../../../../../crates/plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head"
 );
@@ -55,19 +60,27 @@ fn image_menu(conf: &str) -> Menu {
     }))
 }
 
-fn image() -> Snapshot {
+fn image(cmdline: KernelCmdline) -> Snapshot {
     let mut snapshot = Snapshot::default();
 
     snapshot.insert(Host::default());
     snapshot.insert(BootLoader::SystemdBoot);
-    snapshot.insert(KernelCmdline(
-        KernelParameters::parse(KERNEL_CMDLINE).unwrap(),
-    ));
+    snapshot.insert(SdBootKernel {
+        cmdline,
+        theme: None,
+    });
     snapshot
 }
 
 fn shown(menu: Menu) -> Shown {
-    page(image(), Boot::showing(menu, None, None))
+    page(
+        image(KernelCmdline::read(KERNEL_CMDLINE, false)),
+        Boot::showing(menu, None, None),
+    )
+}
+
+fn edit(change: Edit) -> Command {
+    Command::from(BootCommand::Edit(change))
 }
 
 fn sent(harness: &Shown) -> Vec<Command> {
@@ -156,14 +169,95 @@ fn a_timeout_in_seconds_shows_its_number() {
 }
 
 #[test]
-fn the_images_command_line_is_shown_whole() {
-    let harness = shown(image_menu(LOADER_CONF));
+fn the_root_parameters_stay_and_the_others_can_go() {
+    let mut harness = shown(image_menu(LOADER_CONF));
+
+    for kept in [
+        "root=UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6",
+        "rootflags=subvol=@",
+        "rw",
+    ] {
+        assert!(
+            harness.query_by_label(&format!("Remove {kept}")).is_none(),
+            "{kept}"
+        );
+        assert!(harness.query_by_label(kept).is_some(), "{kept}");
+    }
+
+    harness.get_by_label("Remove loglevel=3").scroll_to_me();
+    harness.run();
+    harness.get_by_label("Remove loglevel=3").click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [edit(Edit::RemoveParameter("loglevel=3".to_owned()))]
+    );
+}
+
+#[test]
+fn the_switches_change_the_kernel_command_line() {
+    let mut harness = shown(image_menu(LOADER_CONF));
+
+    harness
+        .get_by_role_and_label(Role::CheckBox, "Hide most boot messages (quiet)")
+        .click();
+    harness.run();
+
+    assert_eq!(sent(&harness), [edit(Edit::Flag(Flag::Quiet, false))]);
+}
+
+/// The live ISO's `initrd=\…` words cannot be written back word for word.
+#[test]
+fn a_line_the_page_cannot_write_is_shown_with_where_to_edit_it() {
+    let harness = page(
+        image(KernelCmdline::read(LIVE_CMDLINE, false)),
+        Boot::showing(image_menu(LOADER_CONF), None, None),
+    );
 
     assert!(
         harness
-            .query_by_label_contains("rootflags=subvol=@ rw loglevel=3 quiet")
+            .query_by_label_contains("Edit /etc/kernel/cmdline on the Config Files page")
             .is_some()
     );
+    assert!(harness.query_by_label("New kernel parameter").is_none());
+}
+
+#[test]
+fn the_running_command_line_says_the_file_comes_with_the_first_change() {
+    let harness = page(
+        image(KernelCmdline::read(KERNEL_CMDLINE, true)),
+        Boot::showing(image_menu(LOADER_CONF), None, None),
+    );
+
+    assert!(
+        harness
+            .query_by_label_contains("The first change creates the file")
+            .is_some()
+    );
+}
+
+#[test]
+fn the_splash_brings_the_plymouth_theme_and_nothing_of_grub() {
+    let without = shown(image_menu(LOADER_CONF));
+
+    assert!(
+        without
+            .query_by_role_and_label(Role::ComboBox, "Boot splash theme")
+            .is_none()
+    );
+
+    let line = format!("{} splash", KERNEL_CMDLINE.trim_end());
+    let with = page(
+        image(KernelCmdline::read(&line, false)),
+        Boot::showing(image_menu(LOADER_CONF), None, None),
+    );
+
+    assert!(
+        with.query_by_role_and_label(Role::ComboBox, "Boot splash theme")
+            .is_some()
+    );
+    assert!(with.query_by_label_contains("GRUB theme").is_none());
 }
 
 #[test]
@@ -197,8 +291,7 @@ fn a_menu_that_could_not_be_read_says_why_and_keeps_the_command_line() {
     );
 }
 
-/// The image's menu on a system without `/etc/kernel/cmdline`, as NixOS
-/// boots: its entries carry their own options.
+/// As on NixOS, which writes its own entries.
 #[test]
 fn without_kernel_cmdline_the_page_says_so_instead_of_none() {
     let mut snapshot = Snapshot::default();

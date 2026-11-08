@@ -1,9 +1,12 @@
-use super::BootLoader;
+use super::{BootLoader, KernelCmdline};
 
-/// Files of the Garuda Lima image: the raw EFI variable from efivarfs and
-/// `/etc/kernel/install.conf`.
+/// Files of the Garuda Lima image: the raw EFI variable from efivarfs,
+/// `/etc/kernel/install.conf` and `/etc/kernel/cmdline`.
 const LOADER_INFO: &[u8] = include_bytes!("fixtures/LoaderInfo");
 const INSTALL_CONF: &str = include_str!("fixtures/install.conf");
+const KERNEL_CMDLINE: &str = include_str!("fixtures/kernel-cmdline");
+/// `/proc/cmdline` of the Garuda live ISO.
+const LIVE_CMDLINE: &str = include_str!("../../../system/src/host/fixtures/live/proc-cmdline");
 
 #[test]
 fn the_image_is_found_by_its_loader_info() {
@@ -58,4 +61,26 @@ fn a_broken_variable_falls_back_to_the_files() {
         BootLoader::detect(LOADER_INFO.get(..9), false, Some(INSTALL_CONF)),
         BootLoader::SystemdBoot
     );
+}
+
+#[test]
+fn the_images_command_line_is_read_word_by_word() {
+    let cmdline = KernelCmdline::read(KERNEL_CMDLINE, false);
+
+    assert_eq!(
+        cmdline.parameters.as_ref().map(|list| list.iter().count()),
+        Some(7)
+    );
+    assert_eq!(cmdline.line, KERNEL_CMDLINE.trim_end());
+    assert!(!cmdline.running);
+}
+
+/// The backslashes of the `initrd=` paths cannot be written back word for
+/// word, so the page leaves such a line alone and only shows it.
+#[test]
+fn a_line_with_words_the_page_cannot_write_is_kept_as_text_only() {
+    let cmdline = KernelCmdline::read(LIVE_CMDLINE, true);
+
+    assert_eq!(cmdline.parameters, None);
+    assert!(cmdline.line.starts_with("initrd=\\garuda\\amd-ucode.img "));
 }

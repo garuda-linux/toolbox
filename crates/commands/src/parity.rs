@@ -18,6 +18,7 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ),
     ("grub-settings", &["boot", "set", "timeout", "3"]),
     ("loader-settings", &["boot", "set", "editor", "off"]),
+    ("sdboot-kernel", &["boot", "param", "add", "nowatchdog"]),
     ("groups", &["users", "edit", "ada", "--add-group", "wheel"]),
     ("hblock", &["toggle", "on", "hblock"]),
     (

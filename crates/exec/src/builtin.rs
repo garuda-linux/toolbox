@@ -1,4 +1,5 @@
 mod accounts;
+mod cmdline;
 mod grub;
 mod home_file;
 mod loader;
@@ -15,6 +16,7 @@ use std::os::fd::OwnedFd;
 use std::os::unix::fs::MetadataExt as _;
 use std::path::Path;
 
+pub use cmdline::write_kernel_cmdline;
 pub use grub::edit_grub_defaults;
 pub use home_file::write_home_file;
 pub use locale::{SystemLocaleChange, edit_locale_gen, set_system_locale};
@@ -109,16 +111,31 @@ pub fn execute(
             edit_grub_defaults(root, settings),
         ),
         Builtin::EditLoaderConf(change) => loader_conf(root, step, change, sink),
+        Builtin::WriteKernelCmdline(parameters) => kernel_cmdline(root, step, parameters, sink),
         Builtin::PrepareRepairMount => repair::execute_prepare(root, step, sink),
         Builtin::RequireInstalledSystem(need) => repair::execute_require(root, step, *need, sink),
         Builtin::RecheckRepairDevices { system, work } => {
             repair::execute_recheck(root, step, system, work, sink)
         }
         // It runs a program, which only the runner can: `apply` hands it there.
-        Builtin::RebuildInitramfs { root: _ } => {
-            failure(step, sink, "the initramfs rebuild needs a runner")
+        Builtin::RebuildInitramfs { root: _ } | Builtin::RebuildUkis => {
+            failure(step, sink, "a rebuild needs a runner")
         }
     }
+}
+
+fn kernel_cmdline(
+    root: &Path,
+    step: StepId,
+    parameters: &toolbox_plan::KernelParameters,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    changed(
+        step,
+        sink,
+        &format!("/{}", toolbox_plan::sdboot::KERNEL_CMDLINE),
+        write_kernel_cmdline(root, parameters),
+    )
 }
 
 fn loader_conf(

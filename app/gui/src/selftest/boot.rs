@@ -11,6 +11,10 @@ pub fn steps() -> Vec<Step> {
         Step::WaitGone("Reading the system…"),
         Step::tab("Boot Options"),
         Step::WaitEither("Boot menu", "GRUB is not the boot loader of this system"),
+        Step::WaitEither(
+            "Parameters passed to the kernel",
+            "GRUB is not the boot loader of this system",
+        ),
         Step::Shot("boot"),
     ]
 }

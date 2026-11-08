@@ -25,6 +25,10 @@ pub enum Program {
     GrubMkconfig,
     Hblock,
     Journalctl,
+    KernelInstall,
+    /// Garuda's, from garuda-systemd-boot: it hands kernel-install the
+    /// initramfs dracut built.
+    KernelInstallUki,
     LocaleGen,
     Mkinitcpio,
     Modprobe,
@@ -78,6 +82,8 @@ impl Program {
             Self::GrubMkconfig => "/usr/bin/grub-mkconfig",
             Self::Hblock => "/usr/bin/hblock",
             Self::Journalctl => "/usr/bin/journalctl",
+            Self::KernelInstall => "/usr/bin/kernel-install",
+            Self::KernelInstallUki => "/usr/lib/garuda/kernel-install-uki",
             Self::LocaleGen => "/usr/bin/locale-gen",
             Self::Mkinitcpio => "/usr/bin/mkinitcpio",
             Self::Modprobe => "/usr/bin/modprobe",

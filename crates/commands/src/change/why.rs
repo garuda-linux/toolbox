@@ -107,6 +107,17 @@ pub fn boot_edit(problem: EditProblem, value: &str) -> String {
         EditProblem::Refused(BootRefusal::UnknownTheme) => {
             format!("`{value}` is not an installed Plymouth theme")
         }
+        EditProblem::Refused(BootRefusal::NoKernelCmdline) => {
+            "this system has no /etc/kernel/cmdline, its boot entries carry their own parameters"
+                .to_owned()
+        }
+        EditProblem::Refused(BootRefusal::CustomKernelCmdline) => {
+            "the kernel command line is not changed here, edit /etc/kernel/cmdline instead"
+                .to_owned()
+        }
+        EditProblem::Refused(BootRefusal::ProtectedParameter) => {
+            format!("`{value}` stays, without it the system finds no root file system to start")
+        }
         EditProblem::Invalid(invalid) => match invalid.reason() {
             Reason::Empty => "nothing was entered".to_owned(),
             Reason::TooLong { max: _ } => format!("`{value}` is too long"),

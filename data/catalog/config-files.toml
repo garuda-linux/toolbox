@@ -90,6 +90,13 @@ path = "/etc/default/grub"
 description = "Configuration file for the GRUB bootloader"
 url = "https://wiki.archlinux.org/title/GRUB"
 
+[[section.entry]]
+id = "kernel-cmdline"
+name = "Kernel command line"
+path = "/etc/kernel/cmdline"
+description = "Kernel parameters that kernel-install builds into each unified kernel image"
+url = "https://wiki.archlinux.org/title/Unified_kernel_image"
+
 [[section]]
 id = "display-and-window-managers"
 title = "Display and window managers"

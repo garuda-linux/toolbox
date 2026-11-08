@@ -17,6 +17,8 @@ pub use self::settings::{LoaderSettings, LoaderTimeout};
 use crate::protocol::{DecodeError, decode};
 
 pub const LOADER_CONF: &str = "loader/loader.conf";
+/// Relative to `/`. kernel-install builds it into every UKI.
+pub const KERNEL_CMDLINE: &str = "etc/kernel/cmdline";
 pub const UKI_FOLDER: &str = "EFI/Linux";
 pub const ENTRIES_FOLDER: &str = "loader/entries";
 

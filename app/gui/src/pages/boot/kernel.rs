@@ -1,13 +1,13 @@
 use egui::{Key, Label, TextEdit, Ui};
-use toolbox_core::features::boot::Flag;
+use toolbox_core::domains::SdBootKernel;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page};
+use toolbox_core::features::boot::{Flag, kernel};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, card, card_row, pill_button, removable_tag, rich, text_field,
+    ButtonKind, Tone, card, card_row, pill_button, removable_tag, rich, tag, text_field,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_plan::GrubKey;
 
 use super::menu::flipped;
 use super::{heading, queued, send};
@@ -24,10 +24,17 @@ pub fn show(
     typed: &mut String,
 ) -> Option<String> {
     let ctx = ui.ctx().clone();
+    let sdboot = kernel(context.snapshot);
     heading(ui, icons::UTILITIES_TERMINAL, "boot-kernel");
     if !page.parameters_editable() {
         let line = view::parameters_line(context.snapshot);
-        let text = i18n::text_with(&ctx, "boot-parameters-custom", &[("line", &line)]);
+        let id = if sdboot.is_some() {
+            "boot-sdboot-parameters-custom"
+        } else {
+            "boot-parameters-custom"
+        };
+
+        let text = i18n::text_with(&ctx, id, &[("line", &line)]);
         card(ui, |ui| {
             card_row(ui, true, |ui| {
                 let secondary = ui.tokens().secondary;
@@ -39,7 +46,7 @@ pub fn show(
     }
 
     card(ui, |ui| {
-        let added = parameters(ui, context, page, typed);
+        let added = parameters(ui, context, page, sdboot, typed);
         let queued_flags = page.flags_queued();
         for flag in Flag::ALL {
             let on = page.flag(flag);
@@ -59,21 +66,30 @@ fn parameters(
     ui: &mut Ui,
     context: &PageContext<'_>,
     page: &Page,
+    sdboot: Option<&SdBootKernel>,
     typed: &mut String,
 ) -> Option<String> {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "boot-parameters");
-    let description = i18n::text(&ctx, "boot-parameters-detail");
-    let tag_text = queued(
+    let description = i18n::text(
         &ctx,
-        view::is_queued(context.changes, GrubKey::KernelParameters),
+        if sdboot.is_some() {
+            "boot-sdboot-parameters-detail"
+        } else {
+            "boot-parameters-detail"
+        },
     );
 
+    let note = sdboot
+        .filter(|kernel| kernel.cmdline.running)
+        .map(|_| i18n::text(&ctx, "boot-sdboot-cmdline-running"));
+
+    let tag_text = queued(&ctx, view::parameters_queued(context.changes));
     let words = Words {
         current: None,
         title: &title,
         description: &description,
-        note: None,
+        note: note.as_deref(),
         queued: tag_text.as_deref(),
     };
 
@@ -82,20 +98,7 @@ fn parameters(
 
     // The tags belong to the words above, so no line parts them.
     card_row(ui, true, |ui| {
-        let items = page.parameter_items();
-        ui.horizontal_wrapped(|ui| {
-            if items.is_empty() {
-                ui.label(i18n::text(&ctx, "boot-parameters-none"));
-            }
-
-            for item in items {
-                let remove = i18n::text_with(&ctx, "boot-parameter-remove", &[("parameter", item)]);
-                if removable_tag(ui, item, &remove) {
-                    send(context, Edit::RemoveParameter(item.clone()));
-                }
-            }
-        });
-
+        ui.horizontal_wrapped(|ui| chips(ui, context, page));
         ui.add_space(ui.tokens().sizes.card_gap);
 
         ui.horizontal(|ui| {
@@ -121,4 +124,27 @@ fn parameters(
     });
 
     added
+}
+
+fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
+    let ctx = ui.ctx().clone();
+    let items = page.parameter_items();
+
+    if items.is_empty() {
+        ui.label(i18n::text(&ctx, "boot-parameters-none"));
+    }
+
+    for item in items {
+        if !page.removable(item) {
+            let kept = i18n::text_with(&ctx, "boot-parameter-kept", &[("parameter", item)]);
+
+            tag(ui, item, Tone::Neutral).on_hover_text(kept);
+            continue;
+        }
+
+        let remove = i18n::text_with(&ctx, "boot-parameter-remove", &[("parameter", item)]);
+        if removable_tag(ui, item, &remove) {
+            send(context, Edit::RemoveParameter(item.clone()));
+        }
+    }
 }

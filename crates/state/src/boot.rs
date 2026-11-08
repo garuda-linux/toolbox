@@ -42,8 +42,36 @@ impl BootLoader {
     }
 }
 
+/// The command line kernel-install builds into every UKI.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct KernelCmdline(pub KernelParameters);
+pub struct KernelCmdline {
+    /// `None` when a word cannot be written back word for word, such as a
+    /// quoted value: the page leaves the line alone then.
+    pub parameters: Option<KernelParameters>,
+    pub line: String,
+    /// Read from `/proc/cmdline`, because `/etc/kernel/cmdline` is missing
+    /// and kernel-install takes the running one then.
+    pub running: bool,
+}
+
+impl KernelCmdline {
+    pub fn read(text: &str, running: bool) -> Self {
+        Self {
+            parameters: KernelParameters::parse(text),
+            line: text.trim().to_owned(),
+            running,
+        }
+    }
+}
+
+/// One part for both, because one UKI rebuild carries a new command line
+/// and a new Plymouth theme alike. Only on systemd-boot.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SdBootKernel {
+    pub cmdline: KernelCmdline,
+    /// `None` without Plymouth or without a theme named.
+    pub theme: Option<PlymouthTheme>,
+}
 
 /// Only root may read the ESP, so this joins the snapshot once the Boot
 /// page's menu read brings it.

@@ -5,25 +5,27 @@ mod initramfs;
 mod program;
 #[cfg(test)]
 mod tests;
+mod uki;
 
 use std::fmt;
 
 pub use initramfs::{InitramfsRoot, initramfs_rebuilds};
 pub use program::Program;
+pub use uki::uki_rebuilds;
 
 use crate::garuda_update::GARUDA_UPDATE_CONFIG;
 use crate::grub::GRUB_DEFAULTS;
 use crate::locale::{LOCALE_CONF, LOCALE_GEN};
 use crate::network::MODPROBE_BLACKLIST;
 use crate::repair::{ESP_FOLDER, REPAIR_ROOT, RepairNeed};
-use crate::sdboot::{LOADER_CONF, LoaderChange};
+use crate::sdboot::{KERNEL_CMDLINE, LOADER_CONF, LoaderChange};
 use crate::settings::{
     DNS_CONFIG, NETWORKMANAGER_CONF_D, OLD_WIFI_BACKEND_CONFIG, WIFI_BACKEND_CONFIG,
 };
 use crate::{
     ConfigWrite, DnsProvider, GarudaUpdateFlag, GroupName, GrubSettings, HomeDirectory, HomeWrite,
-    InstalledSystem, KernelModule, LocaleEntry, LocaleName, Mirrorlist, RepairWork, SecretInput,
-    ShellPath, UserConfigEdit, UserName, WifiBackend,
+    InstalledSystem, KernelModule, KernelParameters, LocaleEntry, LocaleName, Mirrorlist,
+    RepairWork, SecretInput, ShellPath, UserConfigEdit, UserName, WifiBackend,
 };
 
 /// Where [`Builtin::InstallMirrorlist`] writes, relative to `/`.
@@ -172,6 +174,8 @@ pub enum Builtin {
     /// The ESP comes from the helper's own mount table, never from the
     /// request, so no request can point root at another file.
     EditLoaderConf(LoaderChange),
+    /// The old file stays as `cmdline.bak`. A missing one is created.
+    WriteKernelCmdline(KernelParameters),
     /// Makes the folder a boot repair mounts the installed system at,
     /// for root alone. Fails when something is mounted there already.
     PrepareRepairMount,
@@ -189,6 +193,9 @@ pub enum Builtin {
     /// Runs the first of [`initramfs_rebuilds`] whose program is
     /// installed below `root`. Fails when none is.
     RebuildInitramfs { root: InitramfsRoot },
+    /// Runs the first of [`uki_rebuilds`] that is installed. Fails when
+    /// none is.
+    RebuildUkis,
 }
 
 impl fmt::Display for Builtin {
@@ -240,6 +247,7 @@ impl fmt::Display for Builtin {
             }
             Self::EditGrubDefaults(settings) => write!(f, "set {settings} in /{GRUB_DEFAULTS}"),
             Self::EditLoaderConf(change) => loader_conf(f, change),
+            Self::WriteKernelCmdline(parameters) => kernel_cmdline(f, parameters),
             Self::PrepareRepairMount => write!(
                 f,
                 "mkdir -p /{REPAIR_ROOT}  # for root alone, nothing may be mounted there"
@@ -253,6 +261,7 @@ impl fmt::Display for Builtin {
                 "set LANG={locale} in /{LOCALE_CONF}  # only when /{LOCALE_GEN} has it enabled"
             ),
             Self::RebuildInitramfs { root } => initramfs::describe(f, *root),
+            Self::RebuildUkis => uki::describe(f),
         }
     }
 }
@@ -357,4 +366,8 @@ fn loader_conf(out: &mut fmt::Formatter<'_>, change: &LoaderChange) -> fmt::Resu
         out,
         "set {change} in {LOADER_CONF} on the EFI system partition"
     )
+}
+
+fn kernel_cmdline(out: &mut fmt::Formatter<'_>, parameters: &KernelParameters) -> fmt::Result {
+    write!(out, "write {parameters} to /{KERNEL_CMDLINE}")
 }

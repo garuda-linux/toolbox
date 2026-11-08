@@ -5,6 +5,7 @@
 #[cfg(test)]
 mod tests;
 
+mod kernel;
 mod loader;
 
 use toolbox_plan::{
@@ -12,6 +13,7 @@ use toolbox_plan::{
 };
 pub use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState};
 
+pub use self::kernel::{KernelKey, KernelSetting, SdBootKernel, SdBootKernelDomain};
 pub use self::loader::{CurrentLoader, LoaderSettingsDomain};
 use super::each;
 use crate::domain::{Domain, Single, Stage, Staged, Summary};

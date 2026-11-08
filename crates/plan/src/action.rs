@@ -4,6 +4,7 @@
 mod accounts;
 mod boot;
 mod network;
+mod packages;
 mod repair;
 mod settings;
 mod targets;
@@ -21,13 +22,14 @@ pub use unit::{UnitOperation, UnitScope};
 pub use update::{RemoteAction, Upgrader};
 pub use user::UserAction;
 
+use self::packages::{install, refresh_keyring, remote, remove, remove_orphans, upgrade};
 use crate::procedure::{Builtin, Command, Invocation, Program};
 use crate::sdboot::LoaderChange;
 use crate::{
     ConfigWrite, DkmsBuild, DnsProvider, FullName, GarudaUpdateFlag, GroupName, GrubSettings,
-    HomeChange, HomeFolder, InstalledSystem, KernelModule, LocaleEntry, LocaleName, Mirrorlist,
-    NewUser, PackageName, Password, PlymouthTheme, RepairWork, ShellPath, UnitName, UserName,
-    WifiBackend,
+    HomeChange, HomeFolder, InstalledSystem, KernelModule, KernelParameters, LocaleEntry,
+    LocaleName, Mirrorlist, NewUser, PackageName, Password, PlymouthTheme, RepairWork, ShellPath,
+    UnitName, UserName, WifiBackend,
 };
 
 /// Work that needs root. Runs in `garuda-toolbox-helper`.
@@ -188,6 +190,18 @@ pub enum RootAction {
     SetPlymouthTheme {
         theme: PlymouthTheme,
     },
+    /// One [`RootAction::RebuildUkis`] follows it.
+    SetKernelCmdline {
+        parameters: KernelParameters,
+    },
+    /// Builds nothing: on systemd-boot the initramfs is part of the UKI,
+    /// so [`RootAction::RebuildUkis`] builds both.
+    SelectPlymouthTheme {
+        theme: PlymouthTheme,
+    },
+    RebuildUkis {
+        initramfs: bool,
+    },
     /// Mounts an installed system from the live ISO, installs GRUB or
     /// generates its menu inside it and unmounts everything again. The
     /// passphrase of a locked root is no part of the encoded action, like
@@ -268,9 +282,7 @@ impl RootAction {
             Self::RemoveOrphans => vec![remove_orphans()],
             Self::RefreshKeyring => vec![run(refresh_keyring())],
             Self::RemoveDatabaseLock => vec![Invocation::Builtin(Builtin::RemoveDatabaseLock)],
-            Self::GarudaUpdateRemote { action } => {
-                vec![run(garuda_update().args(["remote", action.as_str()]))]
-            }
+            Self::GarudaUpdateRemote { action } => vec![run(remote(*action))],
             Self::GarudaHealthFix => vec![run(Command::new(Program::GarudaHealth).arg("--fix"))],
             Self::ChrootInstallation => vec![run(Command::new(Program::GarudaChroot).arg("-a"))],
             Self::InstallMirrorlist { mirrorlist } => install_mirrorlist(mirrorlist),
@@ -313,6 +325,9 @@ impl RootAction {
             Self::SetLoaderSettings { settings } => boot::set_loader_settings(settings),
             Self::GenerateGrubConfig => boot::generate_grub_config(),
             Self::SetPlymouthTheme { theme } => boot::set_plymouth_theme(theme),
+            Self::SetKernelCmdline { parameters } => boot::set_kernel_cmdline(parameters),
+            Self::SelectPlymouthTheme { theme } => vec![boot::plymouth_theme(theme)],
+            Self::RebuildUkis { initramfs } => boot::rebuild_ukis(*initramfs),
             Self::RepairBoot {
                 system,
                 work,
@@ -333,33 +348,10 @@ where
     targets.iter().map(|target| target.as_ref().to_owned())
 }
 
-fn install(packages: &TargetList<PackageName>) -> Command {
-    pacman(["-S", "--needed", "--noconfirm", "--"]).args(names(packages))
-}
-
 fn install_mirrorlist(mirrorlist: &Mirrorlist) -> Vec<Invocation> {
     vec![Invocation::Builtin(Builtin::InstallMirrorlist(
         mirrorlist.clone(),
     ))]
-}
-
-fn remove_orphans() -> Invocation {
-    Invocation::RunWithTargetsFrom {
-        query: pacman(["-Qtdq"]),
-        run: remove(),
-    }
-}
-
-fn remove() -> Command {
-    pacman(["-Rns", "--noconfirm", "--"])
-}
-
-fn refresh_keyring() -> Command {
-    Command::new(Program::PacmanKey).arg("--refresh-keys")
-}
-
-fn pacman<const N: usize>(args: [&str; N]) -> Command {
-    Command::new(Program::Pacman).args(args)
 }
 
 fn systemctl<const N: usize>(args: [&str; N]) -> Command {
@@ -373,15 +365,4 @@ fn on_units<const N: usize>(verbs: [&str; N], units: &TargetList<UnitName>) -> V
 
 fn gpasswd(flag: &str, user: &UserName, group: &GroupName) -> Command {
     Command::new(Program::Gpasswd).args([flag, user.as_str(), group.as_str()])
-}
-
-fn garuda_update() -> Command {
-    Command::new(Program::GarudaUpdate).env("GARUDA_UPDATE_TOOLBOX", "1")
-}
-
-fn upgrade(upgrader: Upgrader) -> Command {
-    match upgrader {
-        Upgrader::GarudaUpdate => garuda_update().arg("--skip-mirrorlist"),
-        Upgrader::Pacman => pacman(["-Syu", "--noconfirm"]),
-    }
 }

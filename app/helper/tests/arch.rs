@@ -5,6 +5,8 @@
 
 #[path = "arch/boot.rs"]
 mod boot;
+#[path = "arch/cmdline.rs"]
+mod cmdline;
 mod common;
 #[path = "arch/configs.rs"]
 mod configs;

@@ -2,10 +2,14 @@
 mod tests;
 
 use serde::Serialize;
-use toolbox_plan::{DefaultEntry, GrubKey, GrubMenu, GrubTimeout, MenuEntry, PlymouthTheme};
+use toolbox_plan::{
+    DefaultEntry, GrubKey, GrubMenu, GrubTimeout, KernelParameters, MenuEntry, PlymouthTheme,
+};
 
-use super::{Flag, PictureSource, VirtualMachine, free_parameters, shown};
-use crate::domains::{CurrentGrub, GrubDefaults, PlymouthState, PlymouthThemes};
+use super::{Flag, PictureSource, VirtualMachine, free_parameters, is_protected, shown};
+use crate::domains::{
+    CurrentGrub, GrubDefaults, PlymouthState, PlymouthThemes, SdBootKernel, SdBootKernelDomain,
+};
 use crate::{ChangeSet, Single, Snapshot};
 
 /// The seconds GRUB waits when the file names no timeout.
@@ -54,10 +58,15 @@ pub struct Page {
     background: String,
     background_from_theme: bool,
     theme: String,
+    sdboot: bool,
 }
 
 impl Page {
     pub fn read(snapshot: &Snapshot, changes: &ChangeSet) -> Self {
+        if let Some(kernel) = super::kernel(snapshot) {
+            return Self::sdboot(kernel, changes);
+        }
+
         let Some(queued) = shown(snapshot, changes) else {
             return Self {
                 timeout: clamped(DEFAULT_TIMEOUT),
@@ -65,40 +74,53 @@ impl Page {
             };
         };
 
-        let flags = set_flags(Some(&queued));
+        let flags = set_flags(queued.parameters.as_ref());
         let current = if changes.is_empty() {
             flags.clone()
         } else {
-            set_flags(shown(snapshot, &ChangeSet::default()).as_ref())
+            let before = shown(snapshot, &ChangeSet::default());
+
+            set_flags(before.as_ref().and_then(|shown| shown.parameters.as_ref()))
         };
 
-        let flags_queued = Flag::ALL
-            .into_iter()
-            .filter(|flag| flags.contains(flag) != current.contains(flag))
-            .map(Flag::as_str)
-            .collect();
-
         Self {
+            flags_queued: differing(&flags, &current),
             remember: queued.remember,
             timeout: clamped(queued.timeout.unwrap_or(DEFAULT_TIMEOUT)),
             timeout_known: queued.timeout.is_some(),
             submenus: queued.submenus,
             os_prober: queued.os_prober,
             parameters_editable: queued.parameters.is_some(),
-            parameter_items: queued
-                .parameters
-                .as_ref()
-                .map_or_else(Vec::new, free_parameters)
-                .into_iter()
-                .map(str::to_owned)
-                .collect(),
+            parameter_items: items(queued.parameters.as_ref()),
             flags,
-            flags_queued,
             background_from_theme: queued.background_source == PictureSource::Theme,
             background: queued.background,
             theme: queued.theme,
             default: queued.default,
+            sdboot: false,
         }
+    }
+
+    /// Only the kernel card reads it: systemd-boot has its own menu card.
+    fn sdboot(kernel: &SdBootKernel, changes: &ChangeSet) -> Self {
+        let current = kernel.cmdline.parameters.as_ref();
+        let queued = SdBootKernelDomain::queued_parameters(changes);
+        let list = queued.as_ref().or(current);
+        let flags = set_flags(list);
+
+        Self {
+            timeout: clamped(DEFAULT_TIMEOUT),
+            parameters_editable: list.is_some(),
+            parameter_items: items(list),
+            flags_queued: differing(&flags, &set_flags(current)),
+            flags,
+            sdboot: true,
+            ..Self::default()
+        }
+    }
+
+    pub fn removable(&self, item: &str) -> bool {
+        !(self.sdboot && is_protected(item))
     }
 
     pub fn flag(&self, flag: Flag) -> bool {
@@ -181,12 +203,25 @@ impl Page {
     }
 }
 
-fn set_flags(shown: Option<&super::Shown>) -> Vec<Flag> {
-    let list = shown.and_then(|shown| shown.parameters.as_ref());
-
+fn set_flags(list: Option<&KernelParameters>) -> Vec<Flag> {
     Flag::ALL
         .into_iter()
         .filter(|flag| list.is_some_and(|list| flag.is_set(list)))
+        .collect()
+}
+
+fn items(list: Option<&KernelParameters>) -> Vec<String> {
+    list.map_or_else(Vec::new, free_parameters)
+        .into_iter()
+        .map(str::to_owned)
+        .collect()
+}
+
+fn differing(flags: &[Flag], current: &[Flag]) -> Vec<&'static str> {
+    Flag::ALL
+        .into_iter()
+        .filter(|flag| flags.contains(flag) != current.contains(flag))
+        .map(Flag::as_str)
         .collect()
 }
 
@@ -229,10 +264,19 @@ pub fn entries(menu: Option<&GrubMenu>) -> Vec<EntryRow> {
 }
 
 pub fn parameters_line(snapshot: &Snapshot) -> String {
+    if let Some(kernel) = super::kernel(snapshot) {
+        return kernel.cmdline.line.clone();
+    }
+
     snapshot
         .part::<CurrentGrub>()
         .map_or("", |grub| grub.0.command_line.as_str())
         .to_owned()
+}
+
+pub fn parameters_queued(changes: &ChangeSet) -> bool {
+    is_queued(changes, GrubKey::KernelParameters)
+        || SdBootKernelDomain::queued_parameters(changes).is_some()
 }
 
 pub fn plymouth_installed(snapshot: &Snapshot) -> bool {
@@ -264,6 +308,9 @@ fn plymouth_current(snapshot: &Snapshot) -> String {
 pub fn plymouth_theme_queued(changes: &ChangeSet) -> String {
     changes
         .wish::<PlymouthThemes>(&Single)
+        .cloned()
+        .or_else(|| SdBootKernelDomain::queued_theme(changes))
+        .as_ref()
         .map_or("", PlymouthTheme::as_str)
         .to_owned()
 }

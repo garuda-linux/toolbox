@@ -17,6 +17,7 @@ use crate::{
 /// GRUB install.
 const LOADER_INFO: &[u8] = include_bytes!("../../../../state/src/boot/fixtures/LoaderInfo");
 const KERNEL_CMDLINE: &str = include_str!("../../../../state/src/boot/fixtures/kernel-cmdline");
+const PROC_CMDLINE: &str = include_str!("../../host/fixtures/proc-cmdline");
 const MOUNTINFO: &str = include_str!("../../../../plan/src/sdboot/fixtures/mountinfo");
 const UKI: &[u8] =
     include_bytes!("../../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head");
@@ -60,15 +61,43 @@ fn the_images_command_line_is_read_word_by_word() {
     write(dir.path(), "etc/kernel/cmdline", KERNEL_CMDLINE);
 
     let cmdline = boot(dir.path()).kernel_cmdline().unwrap();
+    let parameters = cmdline.parameters.unwrap();
 
-    assert!(cmdline.0.contains("quiet"));
-    assert!(cmdline.0.contains("rootflags=subvol=@"));
-    assert_eq!(cmdline.0.iter().count(), 7);
+    assert!(parameters.contains("quiet"));
+    assert!(parameters.contains("rootflags=subvol=@"));
+    assert_eq!(parameters.iter().count(), 7);
+    assert!(!cmdline.running);
+}
+
+/// kernel-install takes the running command line without the file.
+#[test]
+fn without_the_file_the_running_command_line_counts() {
+    let dir = tempfile::tempdir().unwrap();
+    write(dir.path(), "proc/cmdline", PROC_CMDLINE);
+    write(dir.path(), "usr/bin/kernel-install", "");
+
+    let cmdline = boot(dir.path()).kernel_cmdline().unwrap();
+
+    assert!(cmdline.running);
+    assert_eq!(cmdline.line, PROC_CMDLINE.trim_end());
+}
+
+/// NixOS writes its own entries: nothing would read a new file.
+#[test]
+fn without_kernel_install_the_running_command_line_is_no_file_to_change() {
+    let dir = tempfile::tempdir().unwrap();
+    write(dir.path(), "proc/cmdline", PROC_CMDLINE);
+
+    assert!(matches!(
+        boot(dir.path()).kernel_cmdline(),
+        Err(ProbeError::Unavailable)
+    ));
 }
 
 #[test]
-fn without_the_file_the_command_line_is_unavailable() {
+fn without_either_the_command_line_is_unavailable() {
     let dir = tempfile::tempdir().unwrap();
+    write(dir.path(), "usr/bin/kernel-install", "");
 
     assert!(matches!(
         boot(dir.path()).kernel_cmdline(),

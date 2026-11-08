@@ -231,6 +231,15 @@
     "boot-refused-unknown-theme": {
       "string": "This is not an installed Plymouth theme: {value}"
     },
+    "boot-refused-no-kernel-cmdline": {
+      "string": "This system has no /etc/kernel/cmdline. Its boot entries carry their own parameters, so there is nothing to change."
+    },
+    "boot-refused-custom-kernel-cmdline": {
+      "string": "The kernel command line is not changed here. Edit /etc/kernel/cmdline on the Config Files page."
+    },
+    "boot-refused-protected-parameter": {
+      "string": "{value} stays: without it the system finds no root file system to start."
+    },
     "boot-refused-empty": {
       "string": "Nothing was entered."
     },
@@ -389,6 +398,9 @@
     "boot-parameter-remove": {
       "string": "Remove {parameter}"
     },
+    "boot-parameter-kept": {
+      "string": "{parameter} stays: without it the system finds no root file system to start."
+    },
     "boot-flag-quiet": {
       "string": "Hide most boot messages (quiet)"
     },
@@ -518,7 +530,13 @@
       "string": "An entry that restarts into the firmware's setup."
     },
     "boot-sdboot-parameters-detail": {
-      "string": "They are in /etc/kernel/cmdline and built into each kernel image."
+      "string": "Each parameter is one word such as nowatchdog or loglevel=3. They are written to /etc/kernel/cmdline and built into each kernel image."
+    },
+    "boot-sdboot-parameters-custom": {
+      "string": "The kernel command line holds quotes or other characters this page does not change: {line} Edit /etc/kernel/cmdline on the Config Files page instead."
+    },
+    "boot-sdboot-cmdline-running": {
+      "string": "/etc/kernel/cmdline does not exist yet, so these are the parameters the system started with. The first change creates the file."
     },
     "boot-sdboot-no-cmdline": {
       "string": "This system has no /etc/kernel/cmdline. Its boot entries carry their own parameters."
@@ -3341,6 +3359,12 @@
     "catalog-config-files-grub-default-description": {
       "string": "Configuration file for the GRUB bootloader"
     },
+    "catalog-config-files-kernel-cmdline": {
+      "string": "Kernel command line"
+    },
+    "catalog-config-files-kernel-cmdline-description": {
+      "string": "Kernel parameters that kernel-install builds into each unified kernel image"
+    },
     "catalog-config-files-display-and-window-managers": {
       "string": "Display and window managers"
     },
@@ -4155,6 +4179,12 @@
     },
     "change-grub-parameters-none": {
       "string": "Start the kernel without extra parameters"
+    },
+    "change-sdboot-parameters": {
+      "string": "Build the kernel images with {name}"
+    },
+    "change-sdboot-parameters-none": {
+      "string": "Build the kernel images without parameters"
     },
     "change-grub-save-default-on": {
       "string": "Remember the entry picked in the boot menu"

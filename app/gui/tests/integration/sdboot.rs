@@ -5,9 +5,8 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Snapshot;
-use toolbox_core::domains::{BootLoader, KernelCmdline};
+use toolbox_core::domains::{BootLoader, KernelCmdline, SdBootKernel};
 use toolbox_gui::App;
-use toolbox_plan::KernelParameters;
 use toolbox_plan::sdboot::{LoaderEntry, LoaderSettings, SdBootMenu, sections};
 use toolbox_system::{BootMenuSource, Host, MenuRead};
 
@@ -55,9 +54,10 @@ fn system() -> Snapshot {
 
     snapshot.insert(Host::default());
     snapshot.insert(BootLoader::SystemdBoot);
-    snapshot.insert(KernelCmdline(
-        KernelParameters::parse(KERNEL_CMDLINE).unwrap(),
-    ));
+    snapshot.insert(SdBootKernel {
+        cmdline: KernelCmdline::read(KERNEL_CMDLINE, false),
+        theme: None,
+    });
     snapshot
 }
 
@@ -84,9 +84,5 @@ fn the_menu_is_read_once_the_page_opens() {
 
     open_boot(harness);
 
-    assert!(
-        harness
-            .query_by_label_contains("console=tty0 console=ttyS0,115200")
-            .is_some()
-    );
+    assert!(harness.query_by_label("console=ttyS0,115200").is_some());
 }

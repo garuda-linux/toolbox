@@ -1,16 +1,18 @@
 use toolbox_cli::args::BootKey;
+use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{
     LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
 };
-use toolbox_plan::{KernelParameters, LoaderDefault};
-use toolbox_state::boot::KernelCmdline;
+use toolbox_state::boot::{KernelCmdline, SdBootKernel};
 
-use super::{loader_setting, rows, view};
+use super::{is_kernel_key, loader_setting, rows, view};
 use crate::change::Refused;
 
 /// Files of the Garuda Lima image.
 const LOADER_CONF: &str = include_str!("../../../../plan/src/sdboot/fixtures/loader.conf");
 const KERNEL_CMDLINE: &str = include_str!("../../../../state/src/boot/fixtures/kernel-cmdline");
+/// `/proc/cmdline` of the Garuda live ISO.
+const LIVE_CMDLINE: &str = include_str!("../../../../system/src/host/fixtures/live/proc-cmdline");
 const UKI: &[u8] =
     include_bytes!("../../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head");
 const FALLBACK: &[u8] =
@@ -47,13 +49,20 @@ fn image_menu(conf: &str) -> SdBootMenu {
     }
 }
 
-fn cmdline() -> KernelCmdline {
-    KernelCmdline(KernelParameters::parse(KERNEL_CMDLINE).unwrap())
+fn kernel(line: &str) -> SdBootKernel {
+    SdBootKernel {
+        cmdline: KernelCmdline::read(line, false),
+        theme: None,
+    }
 }
 
 #[test]
 fn the_images_menu_shows_systemd_boots_defaults_and_its_command_line() {
-    let shown = serde_json::to_value(view(&image_menu(LOADER_CONF), Some(&cmdline()))).unwrap();
+    let shown = serde_json::to_value(view(
+        &image_menu(LOADER_CONF),
+        Some(&kernel(KERNEL_CMDLINE)),
+    ))
+    .unwrap();
 
     assert_eq!(shown["loader"], "systemd-boot");
     assert!(
@@ -61,6 +70,33 @@ fn the_images_menu_shows_systemd_boots_defaults_and_its_command_line() {
         "{shown}"
     );
     assert_eq!(shown["parameters"][5], "console=tty0");
+    assert!(shown["plymouth"].is_null(), "{shown}");
+}
+
+#[test]
+fn the_live_command_line_shows_word_by_word() {
+    let shown = view(&image_menu(LOADER_CONF), Some(&kernel(LIVE_CMDLINE)));
+
+    assert_eq!(
+        shown.parameters.unwrap()[0],
+        "initrd=\\garuda\\amd-ucode.img"
+    );
+}
+
+#[test]
+fn the_switches_and_plymouth_are_no_loader_conf_settings() {
+    for key in [
+        BootKey::Quiet,
+        BootKey::Splash,
+        BootKey::MitigationsOff,
+        BootKey::Sysrq,
+        BootKey::Plymouth,
+    ] {
+        assert!(is_kernel_key(key), "{key:?}");
+        loader_setting(key, "on", &image_menu(LOADER_CONF)).unwrap_err();
+    }
+
+    assert!(!is_kernel_key(BootKey::Editor));
 }
 
 /// The image's `loader.conf` with its commented timeout switched on.

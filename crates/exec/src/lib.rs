@@ -17,6 +17,7 @@ mod sdboot;
 mod secure;
 #[cfg(test)]
 mod testing;
+mod uki;
 
 pub use apply::{EventSink, Procedure, Runner, apply, step_span};
 pub use builtin::FileChange;

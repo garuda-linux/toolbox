@@ -6,7 +6,7 @@ mod tests;
 use super::run;
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::sdboot::LoaderChange;
-use crate::{GRUB_CONFIG, GrubSettings, PlymouthTheme};
+use crate::{GRUB_CONFIG, GrubSettings, KernelParameters, PlymouthTheme};
 
 pub fn set_grub_settings(settings: &GrubSettings) -> Vec<Invocation> {
     vec![Invocation::Builtin(Builtin::EditGrubDefaults(
@@ -26,12 +26,35 @@ pub fn generate_grub_config() -> Vec<Invocation> {
 /// which always runs mkinitcpio. The program knows no `--`: the name's
 /// rule keeps a `-` from its start.
 pub fn set_plymouth_theme(theme: &PlymouthTheme) -> Vec<Invocation> {
-    vec![
-        run(Command::new(Program::PlymouthSetDefaultTheme).args([theme.as_str()])),
-        Invocation::Builtin(Builtin::RebuildInitramfs {
-            root: InitramfsRoot::System,
-        }),
-    ]
+    vec![plymouth_theme(theme), system_initramfs()]
+}
+
+pub fn plymouth_theme(theme: &PlymouthTheme) -> Invocation {
+    run(Command::new(Program::PlymouthSetDefaultTheme).args([theme.as_str()]))
+}
+
+pub fn set_kernel_cmdline(parameters: &KernelParameters) -> Vec<Invocation> {
+    vec![Invocation::Builtin(Builtin::WriteKernelCmdline(
+        parameters.clone(),
+    ))]
+}
+
+/// Garuda's script hands kernel-install `/boot/initramfs-<kernel>.img`,
+/// so a new theme needs that file built first.
+pub fn rebuild_ukis(initramfs: bool) -> Vec<Invocation> {
+    let ukis = Invocation::Builtin(Builtin::RebuildUkis);
+
+    if initramfs {
+        vec![system_initramfs(), ukis]
+    } else {
+        vec![ukis]
+    }
+}
+
+const fn system_initramfs() -> Invocation {
+    Invocation::Builtin(Builtin::RebuildInitramfs {
+        root: InitramfsRoot::System,
+    })
 }
 
 pub fn set_loader_settings(settings: &LoaderChange) -> Vec<Invocation> {

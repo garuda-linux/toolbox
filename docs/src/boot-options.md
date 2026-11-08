@@ -214,14 +214,50 @@ ones garuda-common-settings adds, and the old file stays beside it as
 `loader.conf.bak`. systemd-boot reads the file at each start, so nothing is
 built afterwards.
 
-**Kernel parameters** shows `/etc/kernel/cmdline`, which is built into each
-kernel image. The page does not change it yet.
-
 The EFI system partition is readable by root only, so reading the menu may
 ask for an administrator's password.
 
-On the command line, `boot show`, `boot entries` and `boot set` work on
-systemd-boot too.
+### Change kernel parameters on systemd-boot
+
+**Kernel parameters** works as described in
+[Change kernel parameters](#change-kernel-parameters), with the chips,
+**New parameter** and the four switches. It writes `/etc/kernel/cmdline`
+instead of `/etc/default/grub`.
+
+- `root=`, `rootflags=` and `rw` have no remove button. Without them the
+  system finds no root file system to start.
+- Without `/etc/kernel/cmdline`, kernel-install builds the images with the
+  command line the system started with. The card then shows those
+  parameters from `/proc/cmdline` and says **The first change creates the
+  file**.
+- A system that builds its boot entries without kernel-install, such as
+  NixOS, shows only **This system has no /etc/kernel/cmdline. Its boot
+  entries carry their own parameters.**
+- A command line with quotes or other characters the page does not change
+  is shown as it is. Edit `/etc/kernel/cmdline` on the **Config Files**
+  page instead.
+
+With **Show a boot splash (splash)** on, **Appearance** shows **Boot splash
+theme**. The GRUB picture and theme do not exist on systemd-boot.
+
+When you apply:
+
+1. The app writes the parameters to `/etc/kernel/cmdline`. The file as it
+   was before is kept as `/etc/kernel/cmdline.bak`.
+2. A new theme is set with `plymouth-set-default-theme`.
+3. The kernel images are built once at the end, however many changes you
+   queued. With a new theme, `dracut-rebuild` (or `mkinitcpio -P`) builds
+   the initramfs first. Then Garuda's `/usr/lib/garuda/kernel-install-uki add`
+   builds the images, or `kernel-install add-all` on a system without it.
+   That takes a while.
+
+> **Warning:** A wrong kernel parameter can keep the system from starting.
+> To undo a change afterwards, set the old value and apply once more, or
+> copy `/etc/kernel/cmdline.bak` back with the **Config Files** page and run
+> `/usr/lib/garuda/kernel-install-uki add` as root.
+
+On the command line, `boot show`, `boot entries`, `boot set` and
+`boot param` work on systemd-boot too.
 
 ## On other systems
 

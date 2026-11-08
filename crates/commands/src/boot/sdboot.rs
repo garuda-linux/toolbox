@@ -11,11 +11,11 @@ use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, Read};
 use toolbox_core::Snapshot;
-use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain};
+use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain, SdBootKernel};
+use toolbox_core::features::boot::kernel;
 use toolbox_core::features::boot::view::EntryRow;
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
-use toolbox_state::boot::KernelCmdline;
 use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 
 use super::entry_listing;
@@ -36,9 +36,10 @@ pub struct SdBootView {
     pub auto_entries: Option<bool>,
     pub auto_firmware: Option<bool>,
     pub parameters: Option<Vec<String>>,
+    pub plymouth: Option<String>,
 }
 
-pub fn view(menu: &SdBootMenu, cmdline: Option<&KernelCmdline>) -> SdBootView {
+pub fn view(menu: &SdBootMenu, kernel: Option<&SdBootKernel>) -> SdBootView {
     let settings = &menu.settings;
 
     SdBootView {
@@ -51,7 +52,17 @@ pub fn view(menu: &SdBootMenu, cmdline: Option<&KernelCmdline>) -> SdBootView {
         editor: settings.editor,
         auto_entries: settings.auto_entries,
         auto_firmware: settings.auto_firmware,
-        parameters: cmdline.map(|cmdline| cmdline.0.iter().map(ToString::to_string).collect()),
+        parameters: kernel.map(|kernel| {
+            kernel
+                .cmdline
+                .line
+                .split_whitespace()
+                .map(str::to_owned)
+                .collect()
+        }),
+        plymouth: kernel
+            .and_then(|kernel| kernel.theme.as_ref())
+            .map(ToString::to_string),
     }
 }
 
@@ -72,7 +83,7 @@ pub fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 
-    let view = view(&menu, snapshot.part::<KernelCmdline>());
+    let view = view(&menu, kernel(snapshot));
     let text = if read.json {
         json(&view)
     } else {
@@ -93,6 +104,7 @@ pub fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
                 ("auto-entries", unset(view.auto_entries)),
                 ("auto-firmware", unset(view.auto_firmware)),
                 ("parameters", &parameters),
+                ("plymouth", view.plymouth.as_deref().unwrap_or("")),
             ],
         );
 
@@ -127,6 +139,11 @@ fn read_menu() -> Option<SdBootMenu> {
 }
 
 pub fn set(args: &BootSet, snapshot: &Snapshot, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+    // The page's own edits know where systemd-boot keeps them.
+    if is_kernel_key(args.key) {
+        return run(super::set(args, snapshot), args.confirm, None, runtime, out);
+    }
+
     let Some(menu) = read_menu() else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
@@ -180,10 +197,22 @@ pub fn loader_setting(
         | BootKey::MitigationsOff
         | BootKey::Sysrq
         | BootKey::Plymouth => Err(Refused::Rule(format!(
-            "`{}` is not changed on systemd-boot yet",
+            "`{}` is no setting of loader.conf",
             key_name(key)
         ))),
     }
+}
+
+/// Built into the UKIs, not read from loader.conf.
+pub const fn is_kernel_key(key: BootKey) -> bool {
+    matches!(
+        key,
+        BootKey::Quiet
+            | BootKey::Splash
+            | BootKey::MitigationsOff
+            | BootKey::Sysrq
+            | BootKey::Plymouth
+    )
 }
 
 fn default(value: &str, menu: &SdBootMenu) -> Result<Option<LoaderDefault>, Refused> {

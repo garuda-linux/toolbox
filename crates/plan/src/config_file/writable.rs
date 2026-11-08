@@ -16,7 +16,7 @@ mod tests;
 use super::ConfigFilePath;
 
 /// The root-owned files of the catalog, sorted.
-pub const WRITABLE_CONFIG_FILES: [&str; 50] = [
+pub const WRITABLE_CONFIG_FILES: [&str; 51] = [
     "/boot/grub/grub.cfg",
     "/etc/NetworkManager/NetworkManager.conf",
     "/etc/X11/xorg.conf",
@@ -39,6 +39,7 @@ pub const WRITABLE_CONFIG_FILES: [&str; 50] = [
     "/etc/hosts",
     "/etc/hosts.allow",
     "/etc/hosts.deny",
+    "/etc/kernel/cmdline",
     "/etc/lightdm/lightdm.conf",
     "/etc/locale.conf",
     "/etc/locale.gen",

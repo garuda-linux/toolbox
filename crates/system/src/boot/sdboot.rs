@@ -7,9 +7,10 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
 use toolbox_exec::sdboot_menu;
+use toolbox_plan::GRUB_DEFAULTS;
+use toolbox_plan::procedure::uki_rebuilds;
 use toolbox_plan::protocol::{MAX_LINE_BYTES, ReadKind};
-use toolbox_plan::sdboot::SdBootMenu;
-use toolbox_plan::{GRUB_DEFAULTS, KernelParameters};
+use toolbox_plan::sdboot::{KERNEL_CMDLINE, SdBootMenu};
 use toolbox_state::boot::{BootLoader, KernelCmdline};
 
 use super::{MenuRead, SystemBootMenu};
@@ -20,7 +21,7 @@ use crate::pkexec::{self, HelperRun};
 const LOADER_INFO: &str =
     "sys/firmware/efi/efivars/LoaderInfo-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f";
 const INSTALL_CONF: &str = "etc/kernel/install.conf";
-const KERNEL_CMDLINE: &str = "etc/kernel/cmdline";
+const PROC_CMDLINE: &str = "proc/cmdline";
 
 impl SystemBootMenu {
     /// The ESP is usually root's alone, so this may start the helper. Call
@@ -64,13 +65,19 @@ pub(super) fn loader(root: &Path) -> BootLoader {
 }
 
 pub(super) fn kernel_cmdline(root: &Path) -> Result<KernelCmdline, ProbeError> {
-    let text = files::read(&root.join(KERNEL_CMDLINE))?;
+    if let Some(text) = files::read_optional(&root.join(KERNEL_CMDLINE))? {
+        return Ok(KernelCmdline::read(&text, false));
+    }
 
-    KernelParameters::parse(&text)
-        .map(KernelCmdline)
-        .ok_or_else(|| {
-            ProbeError::Failed(format!(
-                "/{KERNEL_CMDLINE} holds a word that is no kernel parameter"
-            ))
-        })
+    // kernel-install takes the running line, other builders such as
+    // NixOS' write their entries without the file.
+    let builds = uki_rebuilds()
+        .iter()
+        .any(|command| command.program().below(root).is_file());
+
+    if !builds {
+        return Err(ProbeError::Unavailable);
+    }
+
+    files::read(&root.join(PROC_CMDLINE)).map(|text| KernelCmdline::read(&text, true))
 }
