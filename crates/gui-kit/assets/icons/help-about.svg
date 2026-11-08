@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <style type="text/css" id="current-color-scheme">.ColorScheme-Text { color: #fcfcfc; }</style>
+    <circle class="ColorScheme-Text" fill="currentColor" cx="8" cy="3.75" r="1.25"/>
+    <path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" d="M8 7V12.5"/>
+</svg>

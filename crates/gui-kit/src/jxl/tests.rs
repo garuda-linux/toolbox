@@ -1,0 +1,26 @@
+use super::register;
+
+/// A 4×4 lossless picture of one colour, `#e04080`, from `cjxl -d 0`.
+const PINK: [u8; 35] = [
+    0xff, 0x0a, 0x18, 0x10, 0x10, 0x09, 0x08, 0x00, 0x01, 0x00, 0x5c, 0x00, 0x4b, 0x18, 0x8b, 0x15,
+    0xc2, 0x09, 0x32, 0x6f, 0x54, 0xfc, 0x07, 0x50, 0x0f, 0x00, 0x00, 0xd8, 0x47, 0x2a, 0x00, 0x3c,
+    0x10, 0x00, 0x00,
+];
+
+#[test]
+fn a_jpeg_xl_picture_decodes_through_the_image_crate() {
+    register();
+
+    let picture = image::load_from_memory(&PINK).unwrap().to_rgba8();
+
+    assert_eq!(picture.dimensions(), (4, 4));
+    assert_eq!(picture.get_pixel(2, 2).0, [0xe0, 0x40, 0x80, 0xff]);
+}
+
+#[test]
+fn the_file_ending_is_known_to_the_loaders() {
+    register();
+    register();
+
+    assert!(image::hooks::decoding_hook_registered("jxl".as_ref()));
+}

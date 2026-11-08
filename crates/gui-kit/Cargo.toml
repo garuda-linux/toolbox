@@ -1,0 +1,32 @@
+[package]
+name = "toolbox-gui-kit"
+description = "Design system of the Garuda Toolbox egui app: palette, style, icons, widgets"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[features]
+testing = ["dep:egui_kittest"]
+
+[dependencies]
+egui.workspace = true
+# Only for its color_fonts feature, which egui does not pass through.
+epaint-color-fonts.workspace = true
+egui_extras.workspace = true
+egui-wgpu.workspace = true
+parking_lot.workspace = true
+toolbox-terminal.workspace = true
+tracing.workspace = true
+unicode-width.workspace = true
+skrifa.workspace = true
+image.workspace = true
+jxl-oxide.workspace = true
+egui_kittest = { workspace = true, optional = true }
+
+[dev-dependencies]
+egui_kittest.workspace = true
+
+[lints]
+workspace = true

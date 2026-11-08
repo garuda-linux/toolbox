@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" id="svg2" version="1.1"
+        inkscape:version="0.91 r13725" sodipodi:docname="overflow-menu.svg">
+    <defs id="defs3051">
+        <style type="text/css" id="current-color-scheme">.ColorScheme-Text { color: #fcfcfc; }</style>
+    </defs>
+    <path style="fill:currentColor;fill-opacity:1;stroke:none"
+          d="m 10,5 0,2 2,0 0,-2 -2,0 m 0,5 0,2 2,0 0,-2 -2,0 m 0,5 0,2 2,0 0,-2 -2,0" class="ColorScheme-Text"
+          id="path6" inkscape:connector-curvature="0" sodipodi:nodetypes="ccccccccccccccc"/>
+</svg>
