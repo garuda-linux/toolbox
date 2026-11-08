@@ -2,10 +2,11 @@ use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::args::TogglePage;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, Group, InstalledPackages, User};
+use toolbox_core::features::locales::{SupportedLocales, parse_supported};
 use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
 use toolbox_plan::{GroupName, PackageName, UnitName, UserName};
 
-use super::{UserRow, groups, people, services, toggles, users};
+use super::{UserRow, groups, locales, people, services, toggles, users};
 
 const CATALOG: &str = r#"
 [[section]]
@@ -224,4 +225,16 @@ fn a_user_row_as_json_has_its_id_and_name() {
     assert_eq!(row["id"], "ada");
     assert_eq!(row["name"], "Ada Lovelace");
     assert!(row.get("full_name").is_none(), "{row}");
+}
+
+/// The id is what `locales enable` and `locales system` take.
+#[test]
+fn a_locale_row_as_json_has_the_name_the_commands_take() {
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(SupportedLocales(parse_supported("de_DE.UTF-8 UTF-8\n")));
+
+    let row = serde_json::to_value(&locales(&snapshot)[0]).unwrap();
+
+    assert_eq!(row["id"], "de_DE.UTF-8");
+    assert_eq!(row["charset"], "UTF-8");
 }

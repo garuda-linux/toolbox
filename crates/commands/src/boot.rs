@@ -30,7 +30,7 @@ use toolbox_system::{
 
 pub use self::listing::{entry_listing, module_listing};
 use super::act::run;
-use super::change::{Refused, fresh, page_edit};
+use super::change::{Refused, fresh, page_edit, why};
 use super::filter::print_all;
 use super::names::kernel_names;
 use super::out::failure;
@@ -273,16 +273,18 @@ fn boot_edit(change: Edit, snapshot: &Snapshot) -> Result<Plan, Refused> {
 ///
 /// # Errors
 ///
-/// [`Refused::Rule`] with the code of the page's refusal.
+/// [`Refused::Rule`] with the English line of the page's refusal.
 pub fn edit_onto(
     change: Edit,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
+    let value = change.value();
+
     page_edit(
         changes,
         snapshot,
-        |problem: EditProblem| problem.code(),
+        |problem: EditProblem| why::boot_edit(problem, &value),
         |changes, snapshot| edit(change, changes, snapshot),
     )
 }

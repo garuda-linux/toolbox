@@ -6,11 +6,14 @@ mod tests;
 
 use std::io;
 use std::panic::{self, AssertUnwindSafe};
+use std::path::Path;
 
 use toolbox_plan::procedure::{Builtin, Command, Invocation};
 use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserAction};
 
+use crate::builtin::SYSTEM_ROOT;
+use crate::initramfs;
 use crate::report::failure;
 
 pub trait Procedure {
@@ -195,6 +198,16 @@ fn run_once(
         Invocation::Run(command) => runner.run(step, command, sink),
         Invocation::RunWithTargetsFrom { query, run } => {
             with_targets(step, query, run, runner, sink)
+        }
+        Invocation::Builtin(Builtin::RebuildInitramfs { root }) => {
+            match initramfs::rebuild(Path::new(SYSTEM_ROOT), *root) {
+                Some(command) => runner.run(step, &command, sink),
+                None => failure(
+                    step,
+                    sink,
+                    "neither dracut-rebuild nor mkinitcpio is installed, so the initramfs was not built again",
+                ),
+            }
         }
         Invocation::Builtin(builtin) => runner.builtin(step, builtin, sink),
         Invocation::Feed {

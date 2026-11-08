@@ -48,6 +48,7 @@ install -Dm644 "$repo/data/cli/garuda-toolbox.bash" \
 install -Dm644 "$repo/data/cli/garuda-toolbox.fish" \
   "$share/fish/vendor_completions.d/garuda-toolbox.fish"
 install -Dm644 "$repo/data/cli/_garuda-toolbox" "$share/zsh/site-functions/_garuda-toolbox"
+
 for page in "$repo"/data/cli/*.1; do
   install -Dm644 "$page" "$share/man/man1/$(basename "$page")"
 done

@@ -267,3 +267,19 @@ fn a_kernel_finds_the_entry_that_boots_it_and_not_its_fallback() {
     assert_eq!(menu.kernel_entry(&kernel("linux-zen-headers")), None);
     assert_eq!(GrubMenu::default().kernel_entry(&kernel("linux-zen")), None);
 }
+
+/// Two entries without an id and with one title, as the memtest86+ EFI
+/// and BIOS scripts write them. GRUB boots the first for that title.
+#[test]
+fn an_id_twice_is_listed_once_as_grub_boots_the_first() {
+    let config = "\
+menuentry 'Memory Tester (memtest86+)' {\n}\n\
+menuentry 'Memory Tester (memtest86+)' {\n}\n";
+
+    let menu = GrubMenu::from_config(config);
+
+    assert_eq!(
+        brief(&menu),
+        [line("0", "Memory Tester (memtest86+)", false)]
+    );
+}

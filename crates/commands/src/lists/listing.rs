@@ -117,7 +117,7 @@ pub fn locales(rows: &[LocaleRow]) -> Listing<'_> {
                     (false, false) => (Mark::Off, ""),
                 };
 
-                Row::cells(mark, &[&row.locale, state])
+                Row::cells(mark, &[&row.locale, &row.charset, state])
             })
             .collect(),
         hint: Some("garuda-toolbox locales enable <locale>".to_owned()),

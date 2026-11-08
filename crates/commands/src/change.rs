@@ -4,6 +4,7 @@
 mod service;
 #[cfg(test)]
 mod tests;
+pub(crate) mod why;
 
 use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::Exit;
@@ -67,10 +68,8 @@ impl Refused {
         }
     }
 
-    pub(super) fn page_rule(code: &str) -> Self {
-        Self::Rule(format!(
-            "the page refuses this ({code}), see the window for why"
-        ))
+    pub(super) fn page_rule(why: impl Into<String>) -> Self {
+        Self::Rule(why.into())
     }
 
     pub fn message(&self) -> &str {
@@ -122,7 +121,13 @@ pub fn toggle_onto(
             )
         })?;
 
-    toggles::toggle(catalog, id, want, snapshot, changes).map_err(|refusal| match refusal {
+    toggles::toggle(catalog, id, want, snapshot, changes).map_err(toggle_refused)
+}
+
+pub(super) fn toggle_refused(refusal: toggles::Refusal) -> Refused {
+    let name = refusal.name().to_owned();
+
+    match refusal {
         toggles::Refusal::Kernel(kept, kernel) => {
             crate::packages::kept_package(&kernel, kept.into())
         }
@@ -130,10 +135,12 @@ pub fn toggle_onto(
             &package,
             toolbox_core::features::packages::queue::Refusal::Protected(why),
         ),
-        other @ (toggles::Refusal::Unknown
-        | toggles::Refusal::Unmet
-        | toggles::Refusal::Account(..)) => Refused::page_rule(other.as_str()),
-    })
+        toggles::Refusal::Unknown => Refused::page_rule(why::SWITCH_UNKNOWN),
+        toggles::Refusal::Unmet => Refused::page_rule(why::SWITCH_UNMET),
+        toggles::Refusal::Account(refusal, _) => {
+            Refused::page_rule(why::membership(refusal, &name))
+        }
+    }
 }
 
 /// # Errors
@@ -244,14 +251,17 @@ pub fn task(id: &str, upgrader: Upgrader) -> Result<(Plan, Option<String>), Refu
 
 /// # Errors
 ///
-/// [`Refused::Rule`] with the code `edit` refused with.
-pub fn page_edit<E>(
+/// [`Refused::Rule`] with the line `why` gives for what `edit` refused.
+pub fn page_edit<E, W>(
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
-    code: impl FnOnce(E) -> &'static str,
+    why: impl FnOnce(E) -> W,
     edit: impl FnOnce(&mut ChangeSet, &Snapshot) -> Result<(), E>,
-) -> Result<(), Refused> {
-    edit(changes, snapshot).map_err(|refusal| Refused::page_rule(code(refusal)))
+) -> Result<(), Refused>
+where
+    W: Into<String>,
+{
+    edit(changes, snapshot).map_err(|refusal| Refused::page_rule(why(refusal)))
 }
 
 /// The plan of a change built onto an empty queue, for a command that

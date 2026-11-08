@@ -1,12 +1,14 @@
 //! The exact programs an action runs. The helper executes these, and the
 //! Review page shows them, so both always agree.
 
+mod initramfs;
 mod program;
 #[cfg(test)]
 mod tests;
 
 use std::fmt;
 
+pub use initramfs::{InitramfsRoot, initramfs_rebuilds};
 pub use program::Program;
 
 use crate::garuda_update::GARUDA_UPDATE_CONFIG;
@@ -180,6 +182,9 @@ pub enum Builtin {
         system: InstalledSystem,
         work: RepairWork,
     },
+    /// Runs the first of [`initramfs_rebuilds`] whose program is
+    /// installed below `root`. Fails when none is.
+    RebuildInitramfs { root: InitramfsRoot },
 }
 
 impl fmt::Display for Builtin {
@@ -242,6 +247,7 @@ impl fmt::Display for Builtin {
                 f,
                 "set LANG={locale} in /{LOCALE_CONF}  # only when /{LOCALE_GEN} has it enabled"
             ),
+            Self::RebuildInitramfs { root } => initramfs::describe(f, *root),
         }
     }
 }

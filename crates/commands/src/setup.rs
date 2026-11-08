@@ -15,7 +15,7 @@ use toolbox_core::{ChangeSet, Snapshot, Toggle, plan};
 use toolbox_plan::Plan;
 
 use super::act::run;
-use super::change::Refused;
+use super::change::{Refused, toggle_refused};
 use super::{catalogs, snapshot, toggle};
 
 pub fn command(command: SetupCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
@@ -62,10 +62,7 @@ pub fn apply(
         }
 
         toggles::toggle(catalog, id, Toggle::On, snapshot, &mut changes).map_err(|refusal| {
-            Refused::Rule(format!(
-                "the page refuses `{id}` ({}), see the window for why",
-                refusal.as_str()
-            ))
+            Refused::Rule(format!("`{id}`: {}", toggle_refused(refusal).message()))
         })?;
     }
 

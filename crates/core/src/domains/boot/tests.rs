@@ -7,6 +7,7 @@ use crate::testing::{commands, package, plymouth_theme, restored, views};
 use crate::{ChangeSet, Single, Snapshot, domains, plan};
 
 const DEFAULTS: &str = "GRUB_DEFAULT=0\nGRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\n";
+const REBUILD: &str = "dracut-rebuild, or mkinitcpio -P where dracut-rebuild is not installed";
 
 fn snapshot(defaults: &str, current: &str) -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -97,7 +98,8 @@ fn packages_come_first_and_the_plymouth_theme_last() {
             "pacman -S --needed --noconfirm -- plymouth",
             "set GRUB_TIMEOUT=\"3\" in /etc/default/grub",
             "grub-mkconfig -o /boot/grub/grub.cfg",
-            "plymouth-set-default-theme -R spinner",
+            "plymouth-set-default-theme spinner",
+            REBUILD,
         ]
     );
 }
@@ -111,7 +113,7 @@ fn only_a_theme_change_generates_no_menu() {
 
     assert_eq!(
         commands(&plan(&changes)),
-        ["plymouth-set-default-theme -R spinner"]
+        ["plymouth-set-default-theme spinner", REBUILD]
     );
 }
 

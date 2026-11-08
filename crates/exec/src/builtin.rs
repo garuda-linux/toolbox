@@ -112,6 +112,10 @@ pub fn execute(
         Builtin::RecheckRepairDevices { system, work } => {
             repair::execute_recheck(root, step, system, work, sink)
         }
+        // It runs a program, which only the runner can: `apply` hands it there.
+        Builtin::RebuildInitramfs { root: _ } => {
+            failure(step, sink, "the initramfs rebuild needs a runner")
+        }
     }
 }
 

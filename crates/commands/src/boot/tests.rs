@@ -151,3 +151,19 @@ fn a_dkms_row_as_json_names_its_state() {
     assert_eq!(row["state"], "installed");
     assert!(row.get("status").is_none(), "{row}");
 }
+
+/// The value `boot set default` takes, named like every other list's id.
+#[test]
+fn a_boot_entry_as_json_has_its_id() {
+    use toolbox_core::features::boot::view::EntryRow;
+
+    let row = serde_json::to_value(EntryRow {
+        entry: "gnulinux-simple-1".to_owned(),
+        title: "Garuda Linux".to_owned(),
+        parent: String::new(),
+    })
+    .unwrap();
+
+    assert_eq!(row["id"], "gnulinux-simple-1");
+    assert!(row.get("entry").is_none(), "{row}");
+}

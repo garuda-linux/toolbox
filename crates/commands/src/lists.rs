@@ -67,6 +67,7 @@ pub struct KernelRow {
 pub struct LocaleRow {
     #[serde(rename = "id")]
     pub locale: String,
+    pub charset: String,
     pub name: Option<String>,
     pub enabled: bool,
     pub system: bool,
@@ -181,7 +182,8 @@ pub fn locales(snapshot: &Snapshot) -> Vec<LocaleRow> {
     all_rows(snapshot, &ChangeSet::default())
         .into_iter()
         .map(|row| LocaleRow {
-            locale: row.text,
+            locale: row.entry.locale.to_string(),
+            charset: row.entry.charset.to_string(),
             name: row.name.map(|name| {
                 if name.territory.is_empty() {
                     name.language

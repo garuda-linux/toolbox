@@ -154,7 +154,7 @@ fn a_taken_name_is_refused_before_any_password_is_asked() {
 
     let refused = add(&add_args("ada"), &snapshot(), &mut prompt).unwrap_err();
     assert_eq!(refused.exit(), Exit::PageRule);
-    assert!(refused.message().contains("user-exists"));
+    assert_eq!(refused.message(), "a user by this name exists already");
 }
 
 #[test]

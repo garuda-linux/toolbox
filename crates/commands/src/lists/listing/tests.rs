@@ -128,6 +128,7 @@ fn kernels_say_which_runs_and_which_are_installed() {
 fn locales_mark_the_enabled_ones_and_name_the_system_one() {
     let row = |locale: &str, enabled, system| LocaleRow {
         locale: locale.to_owned(),
+        charset: "UTF-8".to_owned(),
         name: None,
         enabled,
         system,
@@ -145,9 +146,9 @@ fn locales_mark_the_enabled_ones_and_name_the_system_one() {
     assert_eq!(
         listing.rows,
         [
-            Row::cells(Mark::On, &["en_US.UTF-8", "system"]),
-            Row::cells(Mark::On, &["de_DE.UTF-8", "enabled"]),
-            Row::cells(Mark::Off, &["fr_FR.UTF-8", ""]),
+            Row::cells(Mark::On, &["en_US.UTF-8", "UTF-8", "system"]),
+            Row::cells(Mark::On, &["de_DE.UTF-8", "UTF-8", "enabled"]),
+            Row::cells(Mark::Off, &["fr_FR.UTF-8", "UTF-8", ""]),
         ]
     );
 }

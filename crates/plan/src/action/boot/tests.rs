@@ -1,5 +1,5 @@
 use crate::action::testing::shown;
-use crate::procedure::{Builtin, Invocation, Program};
+use crate::procedure::{Builtin, InitramfsRoot, Invocation, Program};
 use crate::{
     DefaultEntry, GrubSetting, GrubSettings, GrubTimeout, KernelParameters, PlymouthTheme,
     RootAction,
@@ -58,13 +58,28 @@ fn the_plymouth_theme_is_set_and_the_initramfs_rebuilt() {
 
     assert_eq!(
         shown(&action),
-        ["plymouth-set-default-theme -R garuda-dr460nized"]
+        [
+            "plymouth-set-default-theme garuda-dr460nized",
+            "dracut-rebuild, or mkinitcpio -P where dracut-rebuild is not installed",
+        ]
     );
     assert!(matches!(
         action.procedure().as_slice(),
-        [Invocation::Run(command)]
+        [Invocation::Run(command), Invocation::Builtin(Builtin::RebuildInitramfs { root: InitramfsRoot::System })]
             if command.program().path() == "/usr/bin/plymouth-set-default-theme"
     ));
+}
+
+/// `-R` would run `mkinitcpio` even on a system that builds its initramfs
+/// with dracut, as Garuda does.
+#[test]
+fn the_initramfs_tools_are_tried_dracut_first() {
+    let shown: Vec<String> = crate::procedure::initramfs_rebuilds()
+        .iter()
+        .map(ToString::to_string)
+        .collect();
+
+    assert_eq!(shown, ["dracut-rebuild", "mkinitcpio -P"]);
 }
 
 #[test]

@@ -232,7 +232,10 @@ fn query_targets_are_appended_to_the_command() {
 
     assert_eq!(
         runner.ran,
-        ["query: pacman -Qtdq", "pacman -Rns -- libfoo python-bar"]
+        [
+            "query: pacman -Qtdq",
+            "pacman -Rns --noconfirm -- libfoo python-bar"
+        ]
     );
 }
 

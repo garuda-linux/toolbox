@@ -101,7 +101,9 @@ command. Nothing is added to the queue.
    system partition.
 4. The app checks that the mounted partition holds an installed system with
    GRUB and a kernel. A data partition or a wrong layout stops here.
-5. `grub-install` and `grub-mkconfig` of the installed system run inside it.
+5. The installed system's own programs run inside it: `grub-install` when
+   GRUB is reinstalled, then `dracut-rebuild` (or `mkinitcpio -P` where it
+   is missing) to build every initramfs again, then `grub-mkconfig`.
 6. Everything is unmounted again and the encrypted partition is locked, also
    when a step failed or you cancelled.
 

@@ -1,7 +1,7 @@
 mod secrets;
 
 use crate::action::testing::shown;
-use crate::procedure::{Command, Invocation, Program};
+use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::{
     BootloaderId, DiskDevice, InstalledSystem, PartitionDevice, Password, RepairRoot, RepairWork,
     RootAction, RootLayout, SecretInput, VolumeDevice,
@@ -12,6 +12,7 @@ const ALWAYS: &str = "  # always, even after a failure";
 const FED: &str = "  # the secret arrives on its standard input";
 const ROOT: &str = "/run/garuda-toolbox/boot-repair/root";
 const RECHECK: &str = "check the devices of the repair again";
+const REBUILD: &str = "chroot /run/garuda-toolbox/boot-repair/root /usr/bin/dracut-rebuild, or chroot /run/garuda-toolbox/boot-repair/root /usr/bin/mkinitcpio -P where dracut-rebuild is not installed";
 
 fn open(device: &str, layout: RootLayout) -> InstalledSystem {
     InstalledSystem {
@@ -81,6 +82,7 @@ fn a_uefi_reinstall_on_btrfs_mounts_installs_and_unmounts_in_reverse() {
             format!(
                 "chroot {ROOT} /usr/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Garuda --recheck"
             ),
+            REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
             format!("umount -R {ROOT}/boot/efi{ALWAYS}"),
             format!("umount -R {ROOT}/sys/firmware/efi/efivars{ALWAYS}"),
@@ -111,6 +113,7 @@ fn a_bios_reinstall_writes_to_the_whole_disk_and_mounts_no_efi_parts() {
             format!("mount --bind /run {ROOT}/run"),
             RECHECK.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-install --target=i386-pc --recheck /dev/sda"),
+            REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
             format!("umount -R {ROOT}/run{ALWAYS}"),
             format!("umount -R {ROOT}/sys{ALWAYS}"),
@@ -141,6 +144,7 @@ fn regenerating_the_menu_of_a_locked_system_unlocks_and_closes_it() {
             format!("mount --bind /proc {ROOT}/proc"),
             format!("mount --bind /sys {ROOT}/sys"),
             format!("mount --bind /run {ROOT}/run"),
+            REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
             format!("umount -R {ROOT}/run{ALWAYS}"),
             format!("umount -R {ROOT}/sys{ALWAYS}"),
@@ -300,5 +304,29 @@ fn only_the_listed_programs_run() {
 
             assert!(allowed, "{invocation}");
         }
+    }
+}
+
+/// `grub-mkconfig` writes an initrd line only for an initramfs it finds.
+#[test]
+fn every_repair_builds_the_initramfs_right_before_the_menu() {
+    for action in every_repair() {
+        let procedure = action.procedure();
+        let menu = procedure
+            .iter()
+            .position(|invocation| {
+                run_command(invocation).is_some_and(|command| {
+                    command.arguments().get(1).map(String::as_str) == Some("/usr/bin/grub-mkconfig")
+                })
+            })
+            .unwrap();
+
+        assert_eq!(
+            procedure.get(menu.wrapping_sub(1)),
+            Some(&Invocation::Builtin(Builtin::RebuildInitramfs {
+                root: InitramfsRoot::Repair
+            })),
+            "{action:?}"
+        );
     }
 }

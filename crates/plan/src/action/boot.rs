@@ -4,7 +4,7 @@
 mod tests;
 
 use super::run;
-use crate::procedure::{Builtin, Command, Invocation, Program};
+use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::{GRUB_CONFIG, GrubSettings, PlymouthTheme};
 
 pub fn set_grub_settings(settings: &GrubSettings) -> Vec<Invocation> {
@@ -21,10 +21,14 @@ pub fn generate_grub_config() -> Vec<Invocation> {
     )]
 }
 
-/// `-R` builds the initramfs again, which holds the theme. The program
-/// knows no `--`: the name's rule keeps a `-` from its start.
+/// The initramfs holds the theme, so it is built again. Not with `-R`,
+/// which always runs mkinitcpio. The program knows no `--`: the name's
+/// rule keeps a `-` from its start.
 pub fn set_plymouth_theme(theme: &PlymouthTheme) -> Vec<Invocation> {
-    vec![run(
-        Command::new(Program::PlymouthSetDefaultTheme).args(["-R", theme.as_str()])
-    )]
+    vec![
+        run(Command::new(Program::PlymouthSetDefaultTheme).args([theme.as_str()])),
+        Invocation::Builtin(Builtin::RebuildInitramfs {
+            root: InitramfsRoot::System,
+        }),
+    ]
 }

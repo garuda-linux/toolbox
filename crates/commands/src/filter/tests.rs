@@ -222,6 +222,7 @@ fn switches_filter_by_on_and_off_and_unknown_is_neither() {
 fn a_locale_matches_its_language_name() {
     let row = LocaleRow {
         locale: "de_DE.UTF-8".to_owned(),
+        charset: "UTF-8".to_owned(),
         name: Some("German (Germany)".to_owned()),
         enabled: false,
         system: false,

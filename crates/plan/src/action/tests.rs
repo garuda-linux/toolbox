@@ -149,7 +149,10 @@ fn an_invalid_mirrorlist_rejects_the_action() {
 fn remove_orphans_takes_its_targets_from_a_query() {
     let procedure = RootAction::RemoveOrphans.procedure();
     assert_eq!(procedure.len(), 1);
-    assert_eq!(procedure[0].to_string(), "pacman -Rns -- $(pacman -Qtdq)");
+    assert_eq!(
+        procedure[0].to_string(),
+        "pacman -Rns --noconfirm -- $(pacman -Qtdq)"
+    );
 }
 
 #[test]

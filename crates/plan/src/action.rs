@@ -339,7 +339,7 @@ fn install(packages: &TargetList<PackageName>) -> Command {
 fn remove_orphans() -> Invocation {
     Invocation::RunWithTargetsFrom {
         query: pacman(["-Qtdq"]),
-        run: pacman(["-Rns", "--"]),
+        run: remove(),
     }
 }
 

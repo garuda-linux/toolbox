@@ -13,6 +13,7 @@ const DEFAULT_TIMEOUT: i64 = 5;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct EntryRow {
+    #[serde(rename = "id")]
     pub entry: String,
     pub title: String,
     pub parent: String,

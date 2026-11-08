@@ -144,8 +144,9 @@ installed Plymouth themes:
 1. Pick a theme.
 2. Apply the queue.
 
-The app runs `plymouth-set-default-theme -R` with the theme, which also builds
-the initramfs again. That takes a while.
+The app runs `plymouth-set-default-theme` with the theme, then builds the
+initramfs again with `dracut-rebuild`, or with `mkinitcpio -P` on a system
+without it. That takes a while.
 
 Right after Plymouth was queued the list is empty. Apply first, then choose a
 theme.

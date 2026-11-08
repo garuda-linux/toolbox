@@ -21,7 +21,7 @@ use toolbox_plan::{Password, Plan, VolumeDevice};
 use toolbox_system::{Host, RepairSource as _, SystemRepair};
 
 use super::act::run;
-use super::change::Refused;
+use super::change::{Refused, why};
 use super::out::{Listing, failure};
 use super::terminal::{Terminal, without_line_end};
 use super::{json, system};
@@ -109,7 +109,7 @@ pub fn repair(
         Some(target) => plan_reinstall(facts, wish, target),
         None => plan_regenerate(facts, wish),
     }
-    .map_err(|refusal| Refused::page_rule(refusal.as_str()))
+    .map_err(|refusal| Refused::page_rule(why::repair(refusal)))
 }
 
 /// # Errors

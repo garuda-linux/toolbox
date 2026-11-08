@@ -13,8 +13,7 @@ use toolbox_cli::args::{
 };
 use toolbox_cli::output::{Mark, Row};
 use toolbox_core::features::network::{
-    ModuleFacts, RadioKind, RadioTarget, Refusal, driver_rows, plan_ping, plan_traceroute,
-    set_blacklisted,
+    ModuleFacts, RadioKind, RadioTarget, driver_rows, plan_ping, plan_traceroute, set_blacklisted,
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{Bounded, HostName, Plan};
@@ -24,7 +23,7 @@ use toolbox_system::{
 };
 
 use super::act::run;
-use super::change::{Refused, fresh, page_edit};
+use super::change::{Refused, fresh, page_edit, why};
 use super::out::{Listing, failure};
 use super::{json, system, unavailable};
 
@@ -102,7 +101,7 @@ pub fn blacklist_onto(
         .part::<ModuleFacts>()
         .ok_or_else(|| Refused::Rule("the drivers could not be read".to_owned()))?;
 
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::driver, |changes, snapshot| {
         set_blacklisted(&args.module, on, facts, changes, snapshot)
     })
 }

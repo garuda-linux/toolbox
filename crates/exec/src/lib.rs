@@ -8,6 +8,7 @@ mod builtin;
 mod capture;
 mod config_file;
 mod feed;
+mod initramfs;
 mod located;
 mod pty_runner;
 mod repair;

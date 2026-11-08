@@ -24,7 +24,7 @@ use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{FullName, GroupName, HomeChange, HomeFolder, Password, Plan, UserName};
 
 use super::act::run;
-use super::change::{Refused, fresh, page_edit};
+use super::change::{Refused, fresh, page_edit, why};
 use super::terminal::{Terminal, wipe, without_line_end};
 use super::{groups, system, users};
 
@@ -138,7 +138,7 @@ pub fn edit_onto(
         move_files: args.move_files,
     });
 
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::account, |changes, snapshot| {
         if let Some(full_name) = full_name {
             set_full_name(user, full_name, changes, snapshot)?;
         }
@@ -190,7 +190,7 @@ pub fn lock_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::account, |changes, snapshot| {
         set_locked(&args.user, locked, None, changes, snapshot)
     })
     .map_err(|refused| known_user(refused, &args.user, snapshot))
@@ -217,7 +217,7 @@ pub fn remove_onto(
         HomeFolder::Keep
     };
 
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::account, |changes, snapshot| {
         remove_user(&args.user, home, changes, snapshot)
     })
     .map_err(|refused| known_user(refused, &args.user, snapshot))
@@ -239,7 +239,7 @@ pub fn group_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::account, |changes, snapshot| {
         if wanted == Toggle::On {
             add_group(&args.group, changes, snapshot)
         } else {
@@ -324,7 +324,7 @@ fn full_name(text: &str) -> Result<FullName, Refused> {
 }
 
 fn rule(refusal: Refusal) -> Refused {
-    Refused::page_rule(refusal.as_str())
+    Refused::page_rule(why::account(refusal))
 }
 
 fn known_user(refused: Refused, user: &UserName, snapshot: &Snapshot) -> Refused {
@@ -338,7 +338,7 @@ fn known_group(refused: Refused, group: &GroupName, snapshot: &Snapshot) -> Refu
 }
 
 fn closest(refused: Refused, unknown: Refusal, wanted: &str, known: &[String]) -> Refused {
-    if refused.message().contains(unknown.as_str()) {
+    if refused.message() == why::account(unknown) {
         refused.hinted(wanted, known.iter().map(String::as_str))
     } else {
         refused

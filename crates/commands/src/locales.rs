@@ -10,13 +10,13 @@ use toolbox_cli::args::{LocaleArgs, LocalesCommand, PackArgs, PacksCommand, Read
 use toolbox_cli::output::{Mark, Row};
 use toolbox_core::domains::{InstalledPackages, Packages, SyncPackages};
 use toolbox_core::features::locales::{
-    Refusal, all_rows, choose_system, language_packs, toggle, wanted_enabled,
+    all_rows, choose_system, language_packs, toggle, wanted_enabled,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::Plan;
 
 use super::act::run;
-use super::change::{Refused, fresh, page_edit};
+use super::change::{Refused, fresh, page_edit, why};
 use super::out::Listing;
 use super::{locales, system, unavailable};
 
@@ -111,7 +111,7 @@ pub fn switch_onto(
             )
         })?;
 
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::locale, |changes, snapshot| {
         toggle(&entry, want == Toggle::On, changes, snapshot)
     })
 }
@@ -135,7 +135,7 @@ pub fn system_locale_onto(
 ) -> Result<(), Refused> {
     let locale = args.locale.clone();
 
-    page_edit(changes, snapshot, Refusal::as_str, |changes, snapshot| {
+    page_edit(changes, snapshot, why::locale, |changes, snapshot| {
         choose_system(locale, changes, snapshot)
     })
 }

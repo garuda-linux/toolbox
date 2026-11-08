@@ -5,7 +5,8 @@
 //! Each mount and the unlock have an [`Invocation::Always`] counterpart at
 //! the end, in reverse order, so a failed or cancelled repair leaves
 //! nothing mounted and nothing unlocked. The only programs that write to a
-//! disk are the installed system's own `grub-install` and `grub-mkconfig`.
+//! disk are the installed system's own `grub-install`, initramfs builder
+//! and `grub-mkconfig`.
 //!
 //! No argument needs a `--`: every device starts with `/dev/`, every mount
 //! point with `/run/`, and the boot loader name with a letter or digit.
@@ -14,7 +15,7 @@
 mod tests;
 
 use super::run;
-use crate::procedure::{Builtin, Command, Invocation, Program};
+use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::repair::{
     ESP_FOLDER, REPAIR_MAPPER, REPAIR_VOLUME, ROOT_SUBVOLUME, RepairMount, RepairRoot, RootLayout,
 };
@@ -86,10 +87,7 @@ pub fn repair_boot(
         }
     }
 
-    steps.push(run(
-        inside(Program::GrubMkconfig).args(["-o".to_owned(), format!("/{GRUB_CONFIG}")])
-    ));
-
+    steps.extend(boot_files());
     steps.extend(mounted.into_iter().rev().map(unmount));
 
     if system.is_locked() {
@@ -99,6 +97,17 @@ pub fn repair_boot(
     }
 
     steps
+}
+
+/// grub-mkconfig writes an initrd line only for an initramfs it finds, so
+/// the rebuild comes first.
+fn boot_files() -> [Invocation; 2] {
+    [
+        Invocation::Builtin(Builtin::RebuildInitramfs {
+            root: InitramfsRoot::Repair,
+        }),
+        run(inside(Program::GrubMkconfig).args(["-o".to_owned(), format!("/{GRUB_CONFIG}")])),
+    ]
 }
 
 fn recheck(system: &InstalledSystem, work: &RepairWork) -> Invocation {

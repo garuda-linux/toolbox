@@ -173,8 +173,10 @@ impl Walk {
             .map(|ids| format!("{ids}{}", header.id))
             .and_then(|full| MenuEntryId::new(full).ok());
 
+        // GRUB boots the first entry of an id, a second one cannot be chosen.
         if let Some(id) = &id
             && self.entries.len() < MAX_ENTRIES
+            && !self.entries.iter().any(|entry| entry.id == *id)
         {
             self.entries.push(MenuEntry {
                 id: id.clone(),

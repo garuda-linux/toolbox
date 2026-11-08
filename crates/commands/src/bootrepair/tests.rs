@@ -112,3 +112,24 @@ fn a_refusal_names_the_show_command() {
         refused.message()
     );
 }
+
+#[test]
+fn a_system_the_running_system_uses_says_why_in_english() {
+    let mut facts = facts();
+    let in_use = facts
+        .inventory
+        .systems
+        .iter_mut()
+        .find(|system| system.encryption == Encryption::None)
+        .expect("the sample has an open system");
+
+    in_use.in_use = true;
+    let device = in_use.device().to_owned();
+
+    let refused = repair(&facts, &args(&device), None, &mut NoTerminal).unwrap_err();
+    assert_eq!(refused.exit(), Exit::PageRule);
+    assert_eq!(
+        refused.message(),
+        "the running system uses this disk, so nothing is written to it"
+    );
+}
