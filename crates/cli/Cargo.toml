@@ -1,0 +1,22 @@
+[package]
+name = "toolbox-cli"
+description = "Garuda Toolbox's command line: its arguments, exit codes, output and the question before a change"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+toolbox-plan.workspace = true
+toolbox-state.workspace = true
+anstyle.workspace = true
+clap.workspace = true
+clap_complete.workspace = true
+jiff.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+unicode-width.workspace = true
+
+[lints]
+workspace = true

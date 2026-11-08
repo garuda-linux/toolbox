@@ -1,0 +1,39 @@
+[package]
+name = "toolbox-commands"
+description = "Garuda Toolbox's command line: every subcommand, without a window"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+toolbox-aur.workspace = true
+toolbox-catalog.workspace = true
+toolbox-cli.workspace = true
+toolbox-config.workspace = true
+toolbox-core.workspace = true
+toolbox-guide.workspace = true
+toolbox-instance.workspace = true
+toolbox-plan.workspace = true
+toolbox-privatebin.workspace = true
+toolbox-services.workspace = true
+toolbox-state.workspace = true
+toolbox-system.workspace = true
+clap.workspace = true
+crossbeam-channel.workspace = true
+jiff.workspace = true
+parking_lot.workspace = true
+rustix = { workspace = true, features = ["event", "process", "termios"] }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+toolbox-services = { workspace = true, features = ["testing"] }
+tempfile.workspace = true
+
+[lints]
+workspace = true
