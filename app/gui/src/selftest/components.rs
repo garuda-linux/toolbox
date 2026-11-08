@@ -17,10 +17,11 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("components-no-match"),
         Step::click("Clear search"),
         Step::wait("Audio"),
-        Step::click_checkbox("PipeWire"),
+        // A package of Arch's own repositories, so plain Arch offers it too.
+        Step::click_checkbox("EasyEffects"),
         Step::WaitContaining("change queued"),
         Step::click("Review"),
-        Step::WaitContaining("pipewire-support"),
+        Step::WaitContaining("easyeffects"),
         Step::Shot("components-queued"),
         Step::click("Apply the change"),
         Step::wait("Test mode: nothing was changed"),

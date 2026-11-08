@@ -45,6 +45,7 @@ fn env(pairs: &[(&str, &str)]) -> impl Fn(&str) -> Option<OsString> + Send + Syn
 fn system() -> (TempDir, HostRoots) {
     let root = tempfile::tempdir().unwrap();
     let roots = HostRoots {
+        root: root.path().to_path_buf(),
         proc: root.path().join("proc"),
         garuda_lib: root.path().join("usr/lib/garuda"),
         garuda_state: root.path().join("var/lib/garuda"),
@@ -186,6 +187,26 @@ fn live_iso_reads_the_mount_table() {
 
     fs::write(roots.proc.join("self/mounts"), "").unwrap();
     assert!(matches!(host.is_live_iso(), Err(ProbeError::Failed(_))));
+}
+
+/// Docker, podman and distrobox run on an overlay root too.
+#[test]
+fn a_container_is_no_live_iso() {
+    let (_root, roots) = system();
+    fs::create_dir_all(roots.proc.join("self")).unwrap();
+    fs::write(roots.proc.join("self/mounts"), OVERLAY).unwrap();
+
+    let podman = SystemHost::new(roots.clone(), env(&[("container", "podman")]));
+    assert_eq!(podman.is_live_iso(), Ok(false));
+
+    let host = SystemHost::new(roots.clone(), env(&[]));
+    fs::write(roots.root.join(".dockerenv"), "").unwrap();
+    assert_eq!(host.is_live_iso(), Ok(false));
+
+    fs::remove_file(roots.root.join(".dockerenv")).unwrap();
+    fs::create_dir_all(roots.root.join("run")).unwrap();
+    fs::write(roots.root.join("run/.containerenv"), "").unwrap();
+    assert_eq!(host.is_live_iso(), Ok(false));
 }
 
 #[test]

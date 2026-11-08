@@ -51,6 +51,13 @@ workflow:
     - !reference [.no-schedule, rules]
     - if: "$CI_COMMIT_BRANCH !~ /^translations_.*$/"
 
+# The app refuses to run as root.
+.nix-user:
+  script:
+    - adduser -D selftest
+    - chown -R selftest "$CI_PROJECT_DIR"
+    - install -d -o selftest "$SELFTEST_ROOT"
+
 .arch-job:
   image: archlinux:latest
   interruptible: true
@@ -192,7 +199,8 @@ selftest:
   stage: test
   timeout: 3h
   script:
-    - nix develop -c scripts/selftest.sh all
+    - !reference [.nix-user, script]
+    - su selftest -c "export HOME=/home/selftest && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/selftest.sh all"
   after_script:
     - !reference [.selftest-artifacts, after_script]
     - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -212,7 +220,8 @@ coverage:
       files: [Cargo.lock]
     paths: [.cargo-home/registry, target/coverage]
   script:
-    - nix develop -c scripts/coverage.sh coverage
+    - !reference [.nix-user, script]
+    - su selftest -c "export HOME=/home/selftest && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/coverage.sh coverage"
   coverage: '/^Line coverage: \d+\.\d+%/'
   artifacts:
     when: always

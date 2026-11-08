@@ -51,6 +51,7 @@ let
         export LD_LIBRARY_PATH="${
           lib.makeLibraryPath (pkgs.callPackage ./runtime-libraries.nix { })
         }''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+        export TOOLBOX_TEST_VULKAN="${pkgs.callPackage ./test-vulkan.nix { }}"
         # The desktop's icon themes live in the system's data folders, which the shell drops.
         export XDG_DATA_DIRS="''${XDG_DATA_DIRS:+$XDG_DATA_DIRS:}/run/current-system/sw/share:/usr/local/share:/usr/share"
       '';

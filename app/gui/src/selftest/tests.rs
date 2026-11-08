@@ -111,6 +111,18 @@ fn a_step_that_never_happens_fails_with_its_number() {
 }
 
 #[test]
+fn a_failed_step_leaves_a_shot_of_the_window() {
+    let dir = TempDir::new().unwrap();
+    let suite = vec![Step::wait("Hello"), Step::wait("Never")];
+    let mut harness = playground(suite, dir.path(), Duration::from_secs(1));
+
+    let verdict = verdict(&mut harness, dir.path());
+
+    assert!(verdict.starts_with("FAIL step 2 "), "{verdict}");
+    assert!(dir.path().join("failed.png").exists());
+}
+
+#[test]
 fn the_environment_names_folder_and_suite() {
     let lookup = |pairs: &'static [(&str, &str)]| {
         move |key: &str| {

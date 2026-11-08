@@ -1,6 +1,19 @@
+experimental = ["setup-scripts"]
+
+[scripts.setup.vulkan]
+command = ["bash", "scripts/test-vulkan.sh"]
+
+[[profile.default.scripts]]
+filter = "all()"
+setup = "vulkan"
+
 [profile.ci]
 fail-fast = false
 failure-output = "immediate-final"
+
+[[profile.ci.scripts]]
+filter = "all()"
+setup = "vulkan"
 
 [profile.ci.junit]
 path = "junit.xml"

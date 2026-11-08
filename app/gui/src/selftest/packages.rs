@@ -12,17 +12,21 @@ const UNAVAILABLE: &str = "The packages are not available on this system: the pa
 
 #[must_use = "the steps do nothing until a suite runs them"]
 pub fn steps() -> Vec<Step> {
-    let [field, nothing] = Step::type_into("Search packages", "zz-no-such-package");
+    // On Arch pacman stands far down the installed list, out of the window,
+    // until a search brings it up.
+    let [field, pacman] = Step::type_into("Search packages", "pacman");
 
     vec![
         Step::WaitGone("Reading the system…"),
         Step::shortcut(Key::Num6),
         Step::WaitContaining("The packages of the repositories"),
         Step::WaitGone("Reading the package lists…"),
+        field,
+        pacman,
         Step::WaitEither("pacman", UNAVAILABLE),
         Step::Shot("packages"),
-        field,
-        nothing,
+        Step::shortcut(Key::A),
+        Step::Text("zz-no-such-package"),
         Step::WaitEither("No package matches “zz-no-such-package”", UNAVAILABLE),
         Step::Shot("packages-nothing"),
     ]

@@ -33,6 +33,9 @@ pub struct Runner {
     patience: Duration,
     dir: PathBuf,
     shot: Option<Receiver<Arc<ColorImage>>>,
+    /// The verdict of a failed step, written once the shot of the window
+    /// at the failure is saved.
+    failed: Option<String>,
     finished: bool,
 }
 
@@ -81,11 +84,17 @@ impl Runner {
             patience,
             dir,
             shot: None,
+            failed: None,
             finished: false,
         }
     }
 
     fn advance(&mut self, ctx: &Context) {
+        if let Some(verdict) = self.failed.clone() {
+            self.shoot_failure(ctx, &verdict);
+            return;
+        }
+
         let Some(step) = self.steps.front().cloned() else {
             self.finish(ctx, "PASS");
             return;
@@ -98,14 +107,30 @@ impl Runner {
                 self.started = Instant::now();
             }
             Outcome::Waiting if self.started.elapsed() > self.patience => {
-                let verdict = format!("FAIL step {} ({step:?}): timed out", self.number);
-                self.finish(ctx, &verdict);
+                self.fail(format!("FAIL step {} ({step:?}): timed out", self.number));
             }
             Outcome::Waiting => {}
             Outcome::Failed(reason) => {
-                let verdict = format!("FAIL step {} ({step:?}): {reason}", self.number);
-                self.finish(ctx, &verdict);
+                self.fail(format!("FAIL step {} ({step:?}): {reason}", self.number));
             }
+        }
+    }
+
+    fn fail(&mut self, verdict: String) {
+        self.failed = Some(verdict);
+        self.shot = None;
+        self.started = Instant::now();
+    }
+
+    /// The verdict waits for the shot, but never longer than a step may.
+    fn shoot_failure(&mut self, ctx: &Context, verdict: &str) {
+        match self.shoot(ctx, "failed") {
+            Outcome::Waiting if self.started.elapsed() <= self.patience => {}
+            Outcome::Failed(reason) => {
+                tracing::error!("no shot of the failure: {reason}");
+                self.finish(ctx, verdict);
+            }
+            Outcome::Done | Outcome::Waiting => self.finish(ctx, verdict),
         }
     }
 

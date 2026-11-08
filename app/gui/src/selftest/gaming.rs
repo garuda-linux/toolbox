@@ -7,7 +7,8 @@ use super::step::Step;
 
 #[must_use = "the steps do nothing until a suite runs them"]
 pub fn steps() -> Vec<Step> {
-    let [search_field, steam] = Step::type_into("Search this page", "steam");
+    // Steam is in multilib, which plain Arch leaves off.
+    let [search_field, lutris] = Step::type_into("Search this page", "lutris");
 
     vec![
         Step::WaitGone("Reading the system…"),
@@ -15,8 +16,8 @@ pub fn steps() -> Vec<Step> {
         Step::wait("Game launchers"),
         Step::Shot("gaming"),
         search_field,
-        steam,
-        Step::click_checkbox("Steam"),
+        lutris,
+        Step::click_checkbox("Lutris"),
         Step::wait("Turns on with Apply"),
         Step::Shot("gaming-queued"),
     ]

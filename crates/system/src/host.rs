@@ -16,6 +16,8 @@ use crate::{accounts, files};
 /// read-only image.
 const LIVE_FILESYSTEMS: [&str; 2] = ["overlay", "aufs"];
 
+const CONTAINER_MARKERS: [&str; 2] = ["run/.containerenv", ".dockerenv"];
+
 /// The environment of the running process, for [`SystemHost::from_process`].
 pub type ProcessEnv = fn(&str) -> Option<OsString>;
 
@@ -48,7 +50,8 @@ pub trait HostSource: Send + Sync {
     /// when `/proc/self/status` names no user id, or a file read error.
     fn user(&self) -> Result<UserName, ProbeError>;
 
-    /// Whether `/` is the live ISO's overlay.
+    /// Whether `/` is the live ISO's overlay. A container runs on an overlay too, so
+    /// inside one this is never the live ISO.
     ///
     /// # Errors
     ///
@@ -83,6 +86,8 @@ pub trait HostSource: Send + Sync {
 /// folder.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HostRoots {
+    /// `/`, for the marker files containers leave.
+    pub root: PathBuf,
     /// `/proc`, for the mount table, the boot time and the user id.
     pub proc: PathBuf,
     /// `/usr/lib/garuda`, for `garuda-release`.
@@ -103,6 +108,7 @@ impl HostRoots {
     #[must_use = "the paths are only computed, nothing is read"]
     pub fn system() -> Self {
         Self {
+            root: PathBuf::from("/"),
             proc: PathBuf::from("/proc"),
             garuda_lib: PathBuf::from("/usr/lib/garuda"),
             garuda_state: PathBuf::from("/var/lib/garuda"),
@@ -127,6 +133,22 @@ where
     #[must_use = "the adapter does nothing until asked"]
     pub(crate) const fn new(roots: HostRoots, lookup: F) -> Self {
         Self { roots, lookup }
+    }
+
+    /// The marks `systemd-detect-virt --container` reads that need no root:
+    /// podman and systemd-nspawn set `container`, podman and Docker leave
+    /// a file.
+    fn in_container(&self) -> Result<bool, ProbeError> {
+        if self
+            .variable("container")?
+            .is_some_and(|name| !name.is_empty())
+        {
+            return Ok(true);
+        }
+
+        Ok(CONTAINER_MARKERS
+            .iter()
+            .any(|marker| self.roots.root.join(marker).exists()))
     }
 
     fn variable(&self, key: &str) -> Result<Option<String>, ProbeError> {
@@ -158,8 +180,10 @@ where
         let path = self.roots.proc.join("self/mounts");
         let mounts = files::read(&path)?;
 
-        root_is_live(&mounts)
-            .ok_or_else(|| ProbeError::Failed(format!("{} lists no root", path.display())))
+        let live = root_is_live(&mounts)
+            .ok_or_else(|| ProbeError::Failed(format!("{} lists no root", path.display())))?;
+
+        Ok(live && !self.in_container()?)
     }
 
     fn desktops(&self) -> Result<Vec<String>, ProbeError> {

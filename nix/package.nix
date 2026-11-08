@@ -134,8 +134,14 @@ in
       withClippy = false;
       withTests = true;
     }).overrideAttrs
-      (_old: {
+      (old: {
         name = "garuda-toolbox-test-report";
+
+        # The build sandbox has no GPU.
+        env = old.env // {
+          TOOLBOX_TEST_VULKAN = callPackage ./test-vulkan.nix { };
+          LD_LIBRARY_PATH = lib.makeLibraryPath runtimeLibraries;
+        };
 
         buildPhase = ''
           runHook preBuild

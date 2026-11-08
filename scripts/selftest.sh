@@ -26,11 +26,13 @@ mkdir -p "$dir/shots" "$dir/config" "$dir/cache" "$dir/state" "$dir/data"
 mkdir -m 700 "$dir/runtime"
 
 export XDG_CONFIG_HOME="$dir/config" XDG_CACHE_HOME="$dir/cache" XDG_STATE_HOME="$dir/state"
+
 # eframe keeps the window state there, which must not touch the real one.
 export XDG_DATA_HOME="$dir/data"
 export XDG_RUNTIME_DIR="$dir/runtime" XDG_CURRENT_DESKTOP=
 export GARUDA_TOOLBOX_HELPER=dry-run
 export GARUDA_TOOLBOX_SELFTEST_DIR="$dir/shots" GARUDA_TOOLBOX_SELFTEST_SUITE="$suite"
+
 # Made here, not in git, because many users' ignore files leave these out.
 configs="$dir/configs"
 cp -r "$repo/tests/selftest/configs" "$configs"
@@ -72,7 +74,11 @@ esac
 
 started=$(date +%s)
 status=0
-env -u DISPLAY -u DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY=selftest \
+vulkan=()
+
+[ -z "${TOOLBOX_TEST_VULKAN:-}" ] || vulkan=("VK_DRIVER_FILES=$TOOLBOX_TEST_VULKAN")
+
+env -u DISPLAY -u DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY=selftest "${vulkan[@]}" \
   timeout "$run_timeout" "${CARGO_TARGET_DIR:-$repo/target}/debug/garuda-toolbox" "${flags[@]}" >"$dir/out.log" 2>&1 || status=$?
 
 verdict=$(cat "$dir/shots/result" 2>/dev/null || echo "FAIL: no verdict (exit $status), see $dir/out.log")

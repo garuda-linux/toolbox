@@ -40,12 +40,12 @@ pub fn steps() -> Vec<Step> {
         Step::WaitGone("Remove from queue"),
         Step::click("Apply"),
         Step::wait("Test mode: nothing was changed"),
-        // After the run nothing is queued any more. The Escape that closes
-        // the menu leaves the Console open.
+        // A test run skips every step, so the cleanup stays queued. The
+        // Escape that closes the menu leaves the Console open.
         Step::click(CACHE),
-        Step::wait("Queue cleanup"),
+        Step::wait("Remove from queue"),
         Step::press(Key::Escape),
-        Step::WaitGone("Queue cleanup"),
+        Step::WaitGone("Remove from queue"),
         Step::Shot("maintenance-applied"),
         // A test run prints nothing, so the Console's menu offers only to
         // clear it. Sharing is covered by the integration tests.
