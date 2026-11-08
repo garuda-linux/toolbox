@@ -810,6 +810,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "toolbox-helper"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "parking_lot 0.13.0",
+ "rustix",
+ "signal-hook",
+ "tempfile",
+ "toolbox-exec",
+ "toolbox-plan",
+]
+
+[[package]]
 name = "toolbox-lint"
 version = "0.1.0"
 dependencies = [

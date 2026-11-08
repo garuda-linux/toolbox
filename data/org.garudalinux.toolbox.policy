@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!--
+  pkexec picks the action by the helper's path and first argument, so each command gets its own rule.
+-->
+<policyconfig>
+  <vendor>Garuda Linux</vendor>
+  <vendor_url>https://garudalinux.org</vendor_url>
+  <icon_name>garuda-toolbox</icon_name>
+
+  <action id="org.garudalinux.toolbox.apply">
+    <description>Apply system changes with Garuda Toolbox</description>
+    <message>Authentication is required to apply your changes to the system.</message>
+    <icon_name>garuda-toolbox</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/garuda-toolbox/garuda-toolbox-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">apply</annotate>
+  </action>
+
+  <action id="org.garudalinux.toolbox.read">
+    <description>Read system state for Garuda Toolbox</description>
+    <message>Authentication is required to read this part of the system.</message>
+    <icon_name>garuda-toolbox</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/garuda-toolbox/garuda-toolbox-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">read</annotate>
+  </action>
+
+  <action id="org.garudalinux.toolbox.logs">
+    <description>Read system logs for Garuda Toolbox</description>
+    <message>Authentication is required to read the kernel log and the system journal.</message>
+    <icon_name>garuda-toolbox</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/garuda-toolbox/garuda-toolbox-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">logs</annotate>
+  </action>
+
+  <action id="org.garudalinux.toolbox.fetch">
+    <description>Read a system config file for Garuda Toolbox</description>
+    <message>Authentication is required to read this config file for editing.</message>
+    <icon_name>garuda-toolbox</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/garuda-toolbox/garuda-toolbox-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">fetch</annotate>
+  </action>
+</policyconfig>
