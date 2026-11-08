@@ -71,9 +71,11 @@ fn the_flag_shows_the_page_in_test_mode_and_a_repair_asks_first() {
             .is_some()
     );
 
-    harness.get_by_label("Reinstall GRUB…").scroll_to_me();
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall GRUB…").click();
+    harness.get_by_label("Reinstall the boot loader…").click();
     harness.run();
 
     assert!(

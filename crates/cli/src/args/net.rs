@@ -174,11 +174,13 @@ pub enum BootRepairCommand {
     )]
     Show(Read),
 
-    /// Generate the boot menu of an installed system again.
+    /// Build the boot files of an installed system again: GRUB's menu, or
+    /// systemd-boot's kernel images.
     #[command(after_help = "Example:\n  garuda-toolbox bootrepair regenerate /dev/nvme0n1p2")]
     Regenerate(RepairArgs),
 
-    /// Install GRUB for an installed system again, then its menu.
+    /// Install the boot loader of an installed system again, GRUB or
+    /// systemd-boot, then build its boot files.
     #[command(
         after_help = "Example:\n  garuda-toolbox bootrepair reinstall /dev/nvme0n1p2 \
                             --target /dev/nvme0n1p1"

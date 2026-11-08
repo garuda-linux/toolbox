@@ -1,10 +1,11 @@
-# The Boot Repair page: reinstall GRUB or write the boot menu again for an
-# installed system, from the live system.
+# The Boot Repair page: reinstall the boot loader of an installed system or
+# build its boot files again, from the live system. Which boot loader the
+# system has shows only once it is mounted, so the texts name both.
 
-page-boot-repair-subtitle = Bootloader oder Bootmenü eines Systems reparieren, das nicht mehr startet.
+page-boot-repair-subtitle = Bootloader oder Bootdateien eines Systems reparieren, das nicht mehr startet.
 repair-refresh = Neu einlesen
-repair-intro = Startet ein installiertes System nicht mehr, kannst du hier seinen GRUB-Bootloader neu installieren oder sein Bootmenü neu schreiben.
-repair-asks-first = Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert.
+repair-intro = Startet ein installiertes System nicht mehr, kannst du hier seinen Bootloader neu installieren, GRUB oder systemd-boot, oder seine Bootdateien neu bauen: das Bootmenü von GRUB oder die Kernel-Images von systemd-boot.
+repair-asks-first = Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. GRUB-Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert.
 repair-test-mode = Testmodus: Diese Seite ist für das Live-System gedacht und erscheint hier nur, weil Garuda Toolbox mit --boot-repair gestartet wurde. Datenträger des laufenden Systems bleiben unberührt.
 repair-dismiss = Ausblenden
 
@@ -23,8 +24,8 @@ repair-root-detail = Die Partition des Systems, das nicht startet. Aufgeführt s
 repair-firmware = Gestartet über
 repair-uefi = UEFI
 repair-bios = BIOS (Legacy)
-repair-uefi-detail = Das Live-System wurde über UEFI gestartet, daher wird GRUB für UEFI installiert.
-repair-bios-detail = Das Live-System läuft im Legacy-Modus, deshalb wird GRUB in den Bootsektor eines Datenträgers installiert. Für eine UEFI-Installation starte das Live-System per UEFI.
+repair-uefi-detail = Das Live-System wurde über UEFI gestartet, daher wird der Bootloader für UEFI installiert.
+repair-bios-detail = Das Live-System läuft im Legacy-Modus, deshalb wird GRUB in den Bootsektor eines Datenträgers installiert. systemd-boot und jede UEFI-Installation brauchen ein per UEFI gestartetes Live-System.
 repair-encryption = Verschlüsselung
 repair-encryption-none = Nicht verschlüsselt
 repair-encryption-locked = Verschlüsselt (LUKS), gesperrt
@@ -42,13 +43,13 @@ repair-in-use = Das laufende System nutzt den Datenträger dieser Partition, des
 
 repair-work = Reparatur
 repair-esp = EFI-Systempartition
-repair-esp-detail = GRUB wird auf diese Partition geschrieben.
+repair-esp-detail = Der Bootloader wird auf diese Partition geschrieben. Ein System mit systemd-boot hat dort auch seine Kernel-Images.
 repair-target-disk = Datenträger für den Bootloader
 repair-target-disk-detail = GRUB wird in die ersten Sektoren dieses Datenträgers geschrieben. Wähle den Datenträger, von dem dein Computer startet.
-repair-no-esp = Auf keinem freien Datenträger wurde eine EFI-Systempartition gefunden, daher kann GRUB nicht installiert werden. Das Bootmenü kann trotzdem neu geschrieben werden.
+repair-no-esp = Auf keinem freien Datenträger wurde eine EFI-Systempartition gefunden, daher kann kein Bootloader installiert werden. Das Bootmenü eines GRUB-Systems kann trotzdem neu geschrieben werden.
 repair-no-disk = Es wurde kein freier Datenträger gefunden, daher kann GRUB nicht installiert werden.
-repair-reinstall = GRUB neu installieren…
-repair-regenerate = Bootmenü neu erzeugen…
+repair-reinstall = Bootloader neu installieren…
+repair-regenerate = Bootdateien neu bauen…
 
 repair-running = Die Reparatur läuft. Ihre Ausgabe siehst du in der Konsole.
 repair-succeeded = Die Reparatur wurde fehlerfrei abgeschlossen. Starte den Computer ohne das Live-Medium neu, um das installierte System zu testen.
@@ -58,14 +59,15 @@ repair-show-console = Konsole anzeigen
 
 # The confirm dialog. $system and $target are devices, $disks and $disk
 # the disks they lie on.
-repair-reinstall-title = GRUB neu installieren?
-repair-regenerate-title = Bootmenü neu erzeugen?
-repair-reinstall-confirm = GRUB neu installieren
-repair-regenerate-confirm = Bootmenü neu erzeugen
+repair-reinstall-title = Bootloader neu installieren?
+repair-regenerate-title = Bootdateien neu bauen?
+repair-reinstall-confirm = Bootloader neu installieren
+repair-regenerate-confirm = Bootdateien neu bauen
 repair-cancel = Abbrechen
-repair-does-regenerate = Das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) wird neu geschrieben. Sonst ändert sich nichts auf dem Datenträger.
-repair-does-uefi = GRUB wird auf die EFI-Systempartition { $target } auf dem Datenträger { $disk } geschrieben und als „Garuda“ in das Bootmenü der Firmware eingetragen. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben.
-repair-does-bios = GRUB wird in die ersten Sektoren des Datenträgers { $target } geschrieben, anstelle des bisherigen Bootloaders. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben.
+repair-does-regenerate = Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben. Sonst ändert sich nichts auf dem Datenträger. Ein System mit systemd-boot wird ohne UEFI so nicht repariert.
+repair-does-regenerate-uefi = Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben. Bei einem System mit systemd-boot werden Initramfs und Kernel-Images neu auf die EFI-Systempartition { $esp } gebaut. Sonst ändert sich nichts auf den Datenträgern.
+repair-does-uefi = Der Bootloader wird auf die EFI-Systempartition { $target } auf dem Datenträger { $disk } geschrieben und in das Bootmenü der Firmware eingetragen: GRUB als „Garuda“, systemd-boot als „Linux Boot Manager“. Danach werden die Bootdateien des Systems auf { $system } (Datenträger { $disks }) neu gebaut: das Bootmenü /boot/grub/grub.cfg von GRUB oder die Kernel-Images von systemd-boot.
+repair-does-bios = GRUB wird in die ersten Sektoren des Datenträgers { $target } geschrieben, anstelle des bisherigen Bootloaders. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben. Ein System mit systemd-boot wird so nicht repariert.
 # $layout is one of the layouts above.
 repair-looked-for = Erwarteter Speicherort des Systems: { $layout }
 repair-runs-now = Die Reparatur startet sofort und fragt nach dem Passwort eines Administrators. Jeder Befehl erscheint in der Konsole.

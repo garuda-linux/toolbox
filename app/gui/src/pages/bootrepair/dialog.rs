@@ -4,7 +4,9 @@
 use std::fmt;
 
 use egui::{Context, Id, Label, TextEdit, Ui};
-use toolbox_core::features::bootrepair::{Encryption, RepairFacts, System, Target, page};
+use toolbox_core::features::bootrepair::{
+    Encryption, RepairFacts, System, Target, page, rebuild_esp,
+};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
@@ -130,13 +132,26 @@ impl Dialog {
 
     fn does(&self, ctx: &Context, facts: &RepairFacts, system: &System) -> String {
         let disks = texts::disks(system);
-        let text = match &self.target {
-            None => i18n::text_with(
+        let esp = VolumeDevice::new(self.device.as_str())
+            .ok()
+            .and_then(|device| rebuild_esp(facts, &device));
+
+        let text = match (&self.target, esp) {
+            (None, Some(esp)) => i18n::text_with(
+                ctx,
+                "repair-does-regenerate-uefi",
+                &[
+                    ("system", self.device.as_str()),
+                    ("disks", &disks),
+                    ("esp", esp.as_str()),
+                ],
+            ),
+            (None, None) => i18n::text_with(
                 ctx,
                 "repair-does-regenerate",
                 &[("system", &self.device), ("disks", &disks)],
             ),
-            Some(Target::Esp(esp)) => {
+            (Some(Target::Esp(esp)), _) => {
                 let disk = facts
                     .inventory
                     .esps
@@ -154,7 +169,7 @@ impl Dialog {
 
                 i18n::text_with(ctx, "repair-does-uefi", &words)
             }
-            Some(Target::Disk(disk)) => {
+            (Some(Target::Disk(disk)), _) => {
                 let words = [
                     ("target", disk.as_str()),
                     ("system", &self.device),

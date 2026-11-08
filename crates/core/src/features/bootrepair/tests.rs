@@ -243,10 +243,36 @@ fn a_plan_is_one_root_step() {
         plan.steps().first().map(|step| &step.action),
         Some(PlannedAction::Root(RootAction::RepairBoot {
             system: _,
-            work: RepairWork::RegenerateConfig { esp: None },
+            work: RepairWork::RegenerateConfig { esp: Some(_) },
             passphrase: None
         }))
     ));
+}
+
+/// systemd-boot builds its images onto the ESP, so on UEFI the rebuild
+/// names the one on the system's own disk. GRUB leaves it alone.
+#[test]
+fn a_rebuild_on_uefi_names_the_esp_of_the_systems_disk() {
+    let esp = |firmware| {
+        let plan = plan_regenerate(&facts(BARE_METAL, firmware), wish(OTHER)).unwrap();
+
+        let RootAction::RepairBoot {
+            system: _,
+            work: RepairWork::RegenerateConfig { esp },
+            passphrase: _,
+        } = action(&plan)
+        else {
+            panic!("no rebuild");
+        };
+
+        esp
+    };
+
+    assert_eq!(
+        esp(Firmware::Uefi),
+        Some(PartitionDevice::new(OTHER_ESP).unwrap())
+    );
+    assert_eq!(esp(Firmware::Bios), None);
 }
 
 #[test]

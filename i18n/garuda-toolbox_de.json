@@ -152,6 +152,9 @@
     "account-refusal-system-account": {
       "string": "{name} ist ein Systemkonto. Entfernen lassen sich nur Konten von Personen."
     },
+    "account-refusal-outside-user-range": {
+      "string": "{name} hat eine UID außerhalb von 1000 bis 60000 und bleibt daher, wie es ist."
+    },
     "account-refusal-last-admin": {
       "string": "{name} ist das letzte Mitglied der Gruppen wheel und sudo. Ohne dieses Konto könnte niemand mehr dieses System verwalten."
     },
@@ -190,6 +193,9 @@
     "page-boot-subtitle": {
       "string": "Beim Übernehmen wird /etc/default/grub geschrieben, die alte Datei gesichert und das Bootmenü neu erstellt."
     },
+    "page-boot-subtitle-sdboot": {
+      "string": "Die Einstellungen von systemd-boot und die Kernel-Befehlszeile, die in jedes Kernel-Image eingebaut wird."
+    },
     "boot-refresh": {
       "string": "Neu einlesen"
     },
@@ -225,6 +231,15 @@
     },
     "boot-refused-unknown-theme": {
       "string": "Kein installiertes Plymouth-Theme: {value}"
+    },
+    "boot-refused-no-kernel-cmdline": {
+      "string": "Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit, daher gibt es nichts zu ändern."
+    },
+    "boot-refused-custom-kernel-cmdline": {
+      "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Bearbeite /etc/kernel/cmdline auf der Seite „Konfigurationsdateien“."
+    },
+    "boot-refused-protected-parameter": {
+      "string": "{value} bleibt: Ohne diesen Parameter findet das System kein Root-Dateisystem zum Starten."
     },
     "boot-refused-empty": {
       "string": "Es wurde nichts eingegeben."
@@ -343,6 +358,9 @@
     "boot-proposal-none": {
       "string": "Das Bootmenü hat keinen Eintrag für den Kernel {kernel}. Wähle den Eintrag selbst oder erstelle das Menü neu, indem du eine beliebige Änderung auf dieser Seite übernimmst."
     },
+    "boot-proposal-sdboot-none": {
+      "string": "systemd-boot hat noch kein Image des Kernels {kernel}. Sein Image wird gebaut, wenn der Kernel installiert oder aktualisiert wird. Wähle den Eintrag selbst, sobald er da ist."
+    },
     "boot-proposal-loading": {
       "string": "Der Menüeintrag des Kernels {kernel} wird gesucht…"
     },
@@ -381,6 +399,9 @@
     },
     "boot-parameter-remove": {
       "string": "{parameter} entfernen"
+    },
+    "boot-parameter-kept": {
+      "string": "{parameter} bleibt: Ohne diesen Parameter findet das System kein Root-Dateisystem zum Starten."
     },
     "boot-flag-quiet": {
       "string": "Die meisten Startmeldungen ausblenden (quiet)"
@@ -462,20 +483,77 @@
     },
     "boot-file-clear": {
       "string": "Keines verwenden"
+    },
+    "boot-sdboot-unset": {
+      "string": "Vorgabe von systemd-boot"
+    },
+    "boot-sdboot-on": {
+      "string": "An"
+    },
+    "boot-sdboot-off": {
+      "string": "Aus"
+    },
+    "boot-sdboot-default-first": {
+      "string": "Der erste Eintrag des Menüs"
+    },
+    "boot-sdboot-timeout-seconds": {
+      "string": "Sekunden"
+    },
+    "boot-sdboot-timeout-detail": {
+      "string": "Wie lange das Menü wartet, bevor es den Standardeintrag startet."
+    },
+    "boot-sdboot-timeout-menu-force": {
+      "string": "Das Menü wartet auf eine Taste"
+    },
+    "boot-sdboot-timeout-menu-hidden": {
+      "string": "Verborgen, außer beim Start wird eine Taste gehalten"
+    },
+    "boot-sdboot-timeout-menu-disabled": {
+      "string": "Das Menü wird nie gezeigt"
+    },
+    "boot-sdboot-editor": {
+      "string": "Einträge beim Start bearbeiten"
+    },
+    "boot-sdboot-editor-detail": {
+      "string": "Erlaubt allen am Rechner, die Kernel-Befehlszeile im Menü zu ändern."
+    },
+    "boot-sdboot-auto-entries": {
+      "string": "Einträge, die systemd-boot selbst findet"
+    },
+    "boot-sdboot-auto-entries-detail": {
+      "string": "Andere Systeme auf der Platte, etwa Windows."
+    },
+    "boot-sdboot-auto-firmware": {
+      "string": "Eintrag für die Firmware-Einstellungen"
+    },
+    "boot-sdboot-auto-firmware-detail": {
+      "string": "Ein Eintrag, der in die Einrichtung der Firmware neu startet."
+    },
+    "boot-sdboot-parameters-detail": {
+      "string": "Jeder Parameter ist ein Wort wie nowatchdog oder loglevel=3. Sie werden in /etc/kernel/cmdline geschrieben und in jedes Kernel-Image eingebaut."
+    },
+    "boot-sdboot-parameters-custom": {
+      "string": "Die Kernel-Befehlszeile enthält Anführungszeichen oder andere Zeichen, die diese Seite nicht bearbeiten kann: {line} Bearbeite /etc/kernel/cmdline stattdessen auf der Seite „Konfigurationsdateien“."
+    },
+    "boot-sdboot-cmdline-running": {
+      "string": "/etc/kernel/cmdline gibt es noch nicht, daher sind das die Parameter, mit denen das System gestartet ist. Die erste Änderung legt die Datei an."
+    },
+    "boot-sdboot-no-cmdline": {
+      "string": "Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit."
     }
   },
   "bootrepair": {
     "page-boot-repair-subtitle": {
-      "string": "Bootloader oder Bootmenü eines Systems reparieren, das nicht mehr startet."
+      "string": "Bootloader oder Bootdateien eines Systems reparieren, das nicht mehr startet."
     },
     "repair-refresh": {
       "string": "Neu einlesen"
     },
     "repair-intro": {
-      "string": "Startet ein installiertes System nicht mehr, kannst du hier seinen GRUB-Bootloader neu installieren oder sein Bootmenü neu schreiben."
+      "string": "Startet ein installiertes System nicht mehr, kannst du hier seinen Bootloader neu installieren, GRUB oder systemd-boot, oder seine Bootdateien neu bauen: das Bootmenü von GRUB oder die Kernel-Images von systemd-boot."
     },
     "repair-asks-first": {
-      "string": "Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert."
+      "string": "Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. GRUB-Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert."
     },
     "repair-test-mode": {
       "string": "Testmodus: Diese Seite ist für das Live-System gedacht und erscheint hier nur, weil Garuda Toolbox mit --boot-repair gestartet wurde. Datenträger des laufenden Systems bleiben unberührt."
@@ -526,10 +604,10 @@
       "string": "BIOS (Legacy)"
     },
     "repair-uefi-detail": {
-      "string": "Das Live-System wurde über UEFI gestartet, daher wird GRUB für UEFI installiert."
+      "string": "Das Live-System wurde über UEFI gestartet, daher wird der Bootloader für UEFI installiert."
     },
     "repair-bios-detail": {
-      "string": "Das Live-System läuft im Legacy-Modus, deshalb wird GRUB in den Bootsektor eines Datenträgers installiert. Für eine UEFI-Installation starte das Live-System per UEFI."
+      "string": "Das Live-System läuft im Legacy-Modus, deshalb wird GRUB in den Bootsektor eines Datenträgers installiert. systemd-boot und jede UEFI-Installation brauchen ein per UEFI gestartetes Live-System."
     },
     "repair-encryption": {
       "string": "Verschlüsselung"
@@ -577,7 +655,7 @@
       "string": "EFI-Systempartition"
     },
     "repair-esp-detail": {
-      "string": "GRUB wird auf diese Partition geschrieben."
+      "string": "Der Bootloader wird auf diese Partition geschrieben. Ein System mit systemd-boot hat dort auch seine Kernel-Images."
     },
     "repair-target-disk": {
       "string": "Datenträger für den Bootloader"
@@ -586,16 +664,16 @@
       "string": "GRUB wird in die ersten Sektoren dieses Datenträgers geschrieben. Wähle den Datenträger, von dem dein Computer startet."
     },
     "repair-no-esp": {
-      "string": "Auf keinem freien Datenträger wurde eine EFI-Systempartition gefunden, daher kann GRUB nicht installiert werden. Das Bootmenü kann trotzdem neu geschrieben werden."
+      "string": "Auf keinem freien Datenträger wurde eine EFI-Systempartition gefunden, daher kann kein Bootloader installiert werden. Das Bootmenü eines GRUB-Systems kann trotzdem neu geschrieben werden."
     },
     "repair-no-disk": {
       "string": "Es wurde kein freier Datenträger gefunden, daher kann GRUB nicht installiert werden."
     },
     "repair-reinstall": {
-      "string": "GRUB neu installieren…"
+      "string": "Bootloader neu installieren…"
     },
     "repair-regenerate": {
-      "string": "Bootmenü neu erzeugen…"
+      "string": "Bootdateien neu bauen…"
     },
     "repair-running": {
       "string": "Die Reparatur läuft. Ihre Ausgabe siehst du in der Konsole."
@@ -613,28 +691,31 @@
       "string": "Konsole anzeigen"
     },
     "repair-reinstall-title": {
-      "string": "GRUB neu installieren?"
+      "string": "Bootloader neu installieren?"
     },
     "repair-regenerate-title": {
-      "string": "Bootmenü neu erzeugen?"
+      "string": "Bootdateien neu bauen?"
     },
     "repair-reinstall-confirm": {
-      "string": "GRUB neu installieren"
+      "string": "Bootloader neu installieren"
     },
     "repair-regenerate-confirm": {
-      "string": "Bootmenü neu erzeugen"
+      "string": "Bootdateien neu bauen"
     },
     "repair-cancel": {
       "string": "Abbrechen"
     },
     "repair-does-regenerate": {
-      "string": "Das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) wird neu geschrieben. Sonst ändert sich nichts auf dem Datenträger."
+      "string": "Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben. Sonst ändert sich nichts auf dem Datenträger. Ein System mit systemd-boot wird ohne UEFI so nicht repariert."
+    },
+    "repair-does-regenerate-uefi": {
+      "string": "Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben. Bei einem System mit systemd-boot werden Initramfs und Kernel-Images neu auf die EFI-Systempartition {esp} gebaut. Sonst ändert sich nichts auf den Datenträgern."
     },
     "repair-does-uefi": {
-      "string": "GRUB wird auf die EFI-Systempartition {target} auf dem Datenträger {disk} geschrieben und als „Garuda“ in das Bootmenü der Firmware eingetragen. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben."
+      "string": "Der Bootloader wird auf die EFI-Systempartition {target} auf dem Datenträger {disk} geschrieben und in das Bootmenü der Firmware eingetragen: GRUB als „Garuda“, systemd-boot als „Linux Boot Manager“. Danach werden die Bootdateien des Systems auf {system} (Datenträger {disks}) neu gebaut: das Bootmenü /boot/grub/grub.cfg von GRUB oder die Kernel-Images von systemd-boot."
     },
     "repair-does-bios": {
-      "string": "GRUB wird in die ersten Sektoren des Datenträgers {target} geschrieben, anstelle des bisherigen Bootloaders. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben."
+      "string": "GRUB wird in die ersten Sektoren des Datenträgers {target} geschrieben, anstelle des bisherigen Bootloaders. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben. Ein System mit systemd-boot wird so nicht repariert."
     },
     "repair-looked-for": {
       "string": "Erwarteter Speicherort des Systems: {layout}"
@@ -3278,6 +3359,12 @@
     "catalog-config-files-grub-default-description": {
       "string": "Einstellungen des Bootloaders GRUB"
     },
+    "catalog-config-files-kernel-cmdline": {
+      "string": "Kernel-Befehlszeile"
+    },
+    "catalog-config-files-kernel-cmdline-description": {
+      "string": "Kernel-Parameter, die kernel-install in jedes Unified Kernel Image einbaut"
+    },
     "catalog-config-files-display-and-window-managers": {
       "string": "Anmelde- und Fenstermanager"
     },
@@ -4090,6 +4177,12 @@
     "change-grub-parameters-none": {
       "string": "Kernel ohne zusätzliche Parameter starten"
     },
+    "change-sdboot-parameters": {
+      "string": "Kernel-Images mit {name} bauen"
+    },
+    "change-sdboot-parameters-none": {
+      "string": "Kernel-Images ohne Parameter bauen"
+    },
     "change-grub-save-default-on": {
       "string": "Zuletzt gewählten Eintrag im Bootmenü merken"
     },
@@ -4119,6 +4212,58 @@
     },
     "change-home-folder": {
       "string": "Home-Verzeichnis von {user} nach {folder} verschieben"
+    },
+    "change-loader-timeout": {
+      "string": "{name, plural, one {systemd-boot-Menü {name} Sekunde lang anzeigen} other {systemd-boot-Menü {name} Sekunden lang anzeigen}}"
+    },
+    "change-loader-timeout-menu": {
+      "menu-force": {
+        "string": "systemd-boot-Menü zeigen, bis eine Taste gedrückt wird",
+        "developer_comment": "Used when `name` is `menu-force`."
+      },
+      "other": {
+        "string": "systemd-boot-Menü verbergen, außer beim Start wird eine Taste gehalten",
+        "developer_comment": "Used when `name` is `other`."
+      }
+    },
+    "change-loader-timeout-unset": {
+      "string": "Die eigene Wartezeit von systemd-boot verwenden"
+    },
+    "change-loader-default": {
+      "string": "{name} mit systemd-boot standardmäßig starten"
+    },
+    "change-loader-default-saved": {
+      "string": "Mit systemd-boot standardmäßig den zuletzt gewählten Eintrag starten"
+    },
+    "change-loader-default-unset": {
+      "string": "Standardmäßig den ersten Eintrag des systemd-boot-Menüs starten"
+    },
+    "change-loader-editor-on": {
+      "string": "Bearbeiten von systemd-boot-Einträgen beim Start erlauben"
+    },
+    "change-loader-editor-off": {
+      "string": "Bearbeiten von systemd-boot-Einträgen beim Start verbieten"
+    },
+    "change-loader-editor-unset": {
+      "string": "Die eigene Einstellung von systemd-boot zum Bearbeiten verwenden"
+    },
+    "change-loader-auto-entries-on": {
+      "string": "systemd-boot die gefundenen Einträge hinzufügen lassen"
+    },
+    "change-loader-auto-entries-off": {
+      "string": "systemd-boot keine gefundenen Einträge mehr hinzufügen lassen"
+    },
+    "change-loader-auto-entries-unset": {
+      "string": "Die eigene Einstellung von systemd-boot für gefundene Einträge verwenden"
+    },
+    "change-loader-auto-firmware-on": {
+      "string": "systemd-boot einen Eintrag für die Firmware-Einrichtung hinzufügen"
+    },
+    "change-loader-auto-firmware-off": {
+      "string": "Den Eintrag für die Firmware-Einrichtung aus systemd-boot entfernen"
+    },
+    "change-loader-auto-firmware-unset": {
+      "string": "Die eigene Einstellung von systemd-boot für den Firmware-Eintrag verwenden"
     },
     "change-locale-enable": {
       "string": "Sprache {name} hinzufügen"
@@ -7334,6 +7479,9 @@
     "probe-grub": {
       "string": "Bootmenü (GRUB)"
     },
+    "probe-kernel-cmdline": {
+      "string": "Kernel-Befehlszeile (systemd-boot)"
+    },
     "probe-plymouth": {
       "string": "Splash-Screen (Plymouth)"
     },
@@ -7723,6 +7871,9 @@
     },
     "users-refused-system-account": {
       "string": "{name} ist ein Systemkonto. Entfernen lassen sich nur Konten von Personen."
+    },
+    "users-refused-outside-user-range": {
+      "string": "{name} hat eine UID außerhalb von 1000 bis 60000 und bleibt daher, wie es ist."
     },
     "users-refused-last-admin": {
       "string": "{name} ist das letzte Mitglied der Gruppen wheel und sudo. Ohne dieses Konto könnte niemand mehr dieses System verwalten."

@@ -550,16 +550,16 @@
   },
   "bootrepair": {
     "page-boot-repair-subtitle": {
-      "string": "Install the boot loader of a system that does not start again, or write its boot menu again."
+      "string": "Install the boot loader of a system that does not start again, or build its boot files again."
     },
     "repair-refresh": {
       "string": "Read again"
     },
     "repair-intro": {
-      "string": "Use this page when an installed system does not start anymore. It installs the GRUB boot loader of that system again or writes its boot menu again."
+      "string": "Use this page when an installed system does not start anymore. It installs the boot loader of that system again, GRUB or systemd-boot, or builds its boot files again: GRUB's boot menu, or systemd-boot's kernel images."
     },
     "repair-asks-first": {
-      "string": "Each repair asks first and names the partition and the disk it writes to. A system with /boot on a partition of its own, or with its EFI system partition somewhere else than /boot/efi, is not repaired here."
+      "string": "Each repair asks first and names the partition and the disk it writes to. A GRUB system with /boot on a partition of its own, or with its EFI system partition somewhere else than /boot/efi, is not repaired here."
     },
     "repair-test-mode": {
       "string": "Test mode: this page is meant for the live system and shows here only because Garuda Toolbox was started with --boot-repair. Nothing is written to a disk the running system uses."
@@ -610,10 +610,10 @@
       "string": "BIOS (legacy)"
     },
     "repair-uefi-detail": {
-      "string": "The live system was started through UEFI, so GRUB is installed for UEFI."
+      "string": "The live system was started through UEFI, so the boot loader is installed for UEFI."
     },
     "repair-bios-detail": {
-      "string": "The live system was started the legacy way, so GRUB is installed into the boot sector of a disk. For a UEFI installation start the live system through UEFI."
+      "string": "The live system was started the legacy way, so GRUB is installed into the boot sector of a disk. systemd-boot and any UEFI installation need the live system started through UEFI."
     },
     "repair-encryption": {
       "string": "Encryption"
@@ -662,7 +662,7 @@
       "string": "EFI system partition"
     },
     "repair-esp-detail": {
-      "string": "GRUB is written to this partition."
+      "string": "The boot loader is written to this partition. A system with systemd-boot also keeps its kernel images there."
     },
     "repair-target-disk": {
       "string": "Disk for the boot loader"
@@ -671,16 +671,16 @@
       "string": "GRUB is written to the first sectors of this disk. Choose the disk the computer starts from."
     },
     "repair-no-esp": {
-      "string": "No EFI system partition was found on a disk that is free, so GRUB cannot be installed. The boot menu can still be written again."
+      "string": "No EFI system partition was found on a disk that is free, so no boot loader can be installed. The boot menu of a GRUB system can still be written again."
     },
     "repair-no-disk": {
       "string": "No free disk was found, so GRUB cannot be installed."
     },
     "repair-reinstall": {
-      "string": "Reinstall GRUB…"
+      "string": "Reinstall the boot loader…"
     },
     "repair-regenerate": {
-      "string": "Generate boot menu…"
+      "string": "Build the boot files again…"
     },
     "repair-running": {
       "string": "The repair is running. The Console shows its output."
@@ -698,29 +698,32 @@
       "string": "Show Console"
     },
     "repair-reinstall-title": {
-      "string": "Reinstall GRUB?",
+      "string": "Reinstall the boot loader?",
       "developer_comment": "The confirm dialog. $system and $target are devices, $disks and $disk\nthe disks they lie on."
     },
     "repair-regenerate-title": {
-      "string": "Generate the boot menu again?"
+      "string": "Build the boot files again?"
     },
     "repair-reinstall-confirm": {
-      "string": "Reinstall GRUB"
+      "string": "Reinstall the boot loader"
     },
     "repair-regenerate-confirm": {
-      "string": "Generate boot menu"
+      "string": "Build the boot files again"
     },
     "repair-cancel": {
       "string": "Cancel"
     },
     "repair-does-regenerate": {
-      "string": "The boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. Nothing else on the disk changes."
+      "string": "On a GRUB system the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. Nothing else on the disk changes. A system with systemd-boot is not repaired this way without UEFI."
+    },
+    "repair-does-regenerate-uefi": {
+      "string": "On a GRUB system the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. On a system with systemd-boot its initramfs and kernel images are built again onto the EFI system partition {esp}. Nothing else on the disks changes."
     },
     "repair-does-uefi": {
-      "string": "GRUB is written to the EFI system partition {target} on the disk {disk} and entered into the firmware's boot menu as \"Garuda\". Then the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again."
+      "string": "The boot loader is written to the EFI system partition {target} on the disk {disk} and entered into the firmware's boot menu: GRUB as \"Garuda\", systemd-boot as \"Linux Boot Manager\". Then the boot files of the system on {system} (disk {disks}) are built again: GRUB's boot menu /boot/grub/grub.cfg, or systemd-boot's kernel images."
     },
     "repair-does-bios": {
-      "string": "GRUB is written to the first sectors of the disk {target}, in place of the boot loader that is there now. Then the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again."
+      "string": "GRUB is written to the first sectors of the disk {target}, in place of the boot loader that is there now. Then the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. A system with systemd-boot is not repaired this way."
     },
     "repair-looked-for": {
       "string": "The system is looked for here: {layout}",

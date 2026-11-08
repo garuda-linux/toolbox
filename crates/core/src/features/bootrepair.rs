@@ -79,13 +79,31 @@ impl Target {
 ///
 /// [`Refusal`] when the system is not one of `facts` or cannot be used.
 pub fn plan_regenerate(facts: &RepairFacts, wish: Wish) -> Result<Plan, Refusal> {
+    let esp = rebuild_esp(facts, &wish.system);
     let (system, passphrase) = chosen(facts, wish)?;
 
     Ok(plan(
         system,
-        RepairWork::RegenerateConfig { esp: None },
+        RepairWork::RegenerateConfig { esp },
         passphrase,
     ))
+}
+
+/// The free ESP on a disk of `system`, where systemd-boot builds its
+/// images. Only on UEFI, the only way systemd-boot starts.
+pub fn rebuild_esp(facts: &RepairFacts, system: &VolumeDevice) -> Option<PartitionDevice> {
+    if facts.firmware != Firmware::Uefi {
+        return None;
+    }
+
+    let disks = &facts.inventory.system(system.as_str())?.disks;
+
+    facts
+        .inventory
+        .esps
+        .iter()
+        .find(|esp| !esp.in_use && disks.contains(&esp.disk))
+        .map(|esp| esp.device.clone())
 }
 
 /// # Errors

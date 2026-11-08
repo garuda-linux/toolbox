@@ -1,8 +1,10 @@
 # Boot Repair
 
 **Boot Repair** helps when an installed system no longer starts. From the
-live system it installs the GRUB boot loader of that system again, or writes
-its boot menu again.
+live system it installs the boot loader of that system again, GRUB or
+systemd-boot, or builds its boot files again: GRUB's boot menu, or
+systemd-boot's kernel images. Which of the two the system has, the app sees
+once it has mounted the system, so the page and its dialogs name both.
 
 > **Warning:** A repair writes a boot loader to a disk. It replaces the boot
 > loader that is there now, which cannot be undone from this page. Read the
@@ -27,12 +29,16 @@ its boot menu again.
 - For an encrypted system you need its passphrase.
 
 The page repairs systems that boot with GRUB and keep `/boot` on the root
-partition. Two layouts are not supported and are refused before anything is
-written:
+partition, and systems that boot with systemd-boot. These are refused before
+anything is written:
 
-- `/boot` on a partition of its own,
-- an EFI system partition that the system mounts somewhere else than
-  `/boot/efi`.
+- a GRUB system with `/boot` on a partition of its own,
+- a GRUB system that mounts its EFI system partition somewhere else than
+  `/boot/efi`,
+- a systemd-boot system whose `/etc/fstab` mounts no EFI system partition at
+  `/efi`, `/boot` or `/boot/efi`,
+- a systemd-boot system from a live medium started the legacy way:
+  systemd-boot only starts through UEFI.
 
 ## Choose the system
 
@@ -43,12 +49,12 @@ written:
 
 Below the list the page shows what it found:
 
-| Field                     | Meaning                                                                                      |
-| ------------------------- | -------------------------------------------------------------------------------------------- |
-| **Started through**       | **UEFI** or **BIOS (legacy)**: how the live system was started, and so how GRUB is installed |
-| **Encryption**            | **Not encrypted**, **Encrypted (LUKS), locked** or **Encrypted (LUKS), unlocked**            |
-| **Disk**                  | The disk the partition lies on                                                               |
-| **Where the system lies** | Only for btrfs and for locked partitions, see below                                          |
+| Field                     | Meaning                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Started through**       | **UEFI** or **BIOS (legacy)**: how the live system was started, and so how the boot loader is installed |
+| **Encryption**            | **Not encrypted**, **Encrypted (LUKS), locked** or **Encrypted (LUKS), unlocked**                       |
+| **Disk**                  | The disk the partition lies on                                                                          |
+| **Where the system lies** | Only for btrfs and for locked partitions, see below                                                     |
 
 Garuda installs into the btrfs subvolume `@`, so **Where the system lies** is
 set to **In the subvolume @ (Garuda's layout)**. Choose **At the top of the
@@ -58,7 +64,7 @@ subvolumes, or for an encrypted partition that holds another file system.
 **Read again** (the round arrow at the top, or `F5`) reads the disks again, for
 example after you plugged in a disk or unmounted a partition.
 
-## Reinstall GRUB
+## Reinstall the boot loader
 
 Use this when the computer does not find a boot loader at all, shows a
 `grub rescue>` prompt, or lost its boot entry after a firmware update.
@@ -67,26 +73,32 @@ Use this when the computer does not find a boot loader at all, shows a
    - started through UEFI: the partition under **EFI system partition**,
    - started the legacy way: the disk under **Disk for the boot loader**.
      Choose the disk the computer starts from.
-2. Click **Reinstall GRUB…**.
-3. Read the dialog. It names the partition or disk GRUB is written to and the
-   system it is installed for.
+2. Click **Reinstall the boot loader…**.
+3. Read the dialog. It names the partition or disk the boot loader is written
+   to and the system it is installed for.
 4. For a locked system, enter its passphrase.
-5. Click **Reinstall GRUB** and enter an administrator's password.
+5. Click **Reinstall the boot loader** and enter an administrator's password.
 
-The repair installs GRUB and then writes the boot menu again. On a UEFI system
-the boot entry is called `Garuda` in the firmware's boot menu.
+On a GRUB system the repair installs GRUB and then writes the boot menu
+again. Its boot entry in the firmware's boot menu is called `Garuda`. On a
+systemd-boot system it runs `bootctl install`, which adds the entry
+`Linux Boot Manager`, then builds the initramfs and the kernel images again.
+A legacy start installs GRUB only.
 
-## Generate the boot menu again
+## Build the boot files again
 
-Use this when GRUB starts but its menu is empty, lacks a kernel you installed
-or still lists one you removed.
+Use this when the boot loader starts but its menu is empty, lacks a kernel
+you installed or still lists one you removed.
 
-1. Click **Generate boot menu…**.
+1. Click **Build the boot files again…**.
 2. Read the dialog and, for a locked system, enter its passphrase.
-3. Click **Generate boot menu** and enter an administrator's password.
+3. Click **Build the boot files again** and enter an administrator's
+   password.
 
-Only `/boot/grub/grub.cfg` of the chosen system is written. The boot loader
-itself stays as it is.
+On a GRUB system only `/boot/grub/grub.cfg` of the chosen system is written.
+On a systemd-boot system the initramfs and the kernel images are built again
+onto the EFI system partition on the system's own disk, which the dialog
+names. The boot loader itself stays as it is.
 
 ## What a repair does
 
@@ -97,14 +109,25 @@ command. Nothing is added to the queue.
    kind the repair needs, and none may lie on a disk the live system uses.
 2. An encrypted partition is unlocked with your passphrase.
 3. The system is mounted below `/run/garuda-toolbox/boot-repair/root`,
-   together with `/dev`, `/proc`, `/sys` and `/run` and, for UEFI, the EFI
-   system partition.
-4. The app checks that the mounted partition holds an installed system with
-   GRUB and a kernel. A data partition or a wrong layout stops here.
-5. The installed system's own programs run inside it: `grub-install` when
-   GRUB is reinstalled, then `dracut-rebuild` (or `mkinitcpio -P` where it
-   is missing) to build every initramfs again, then `grub-mkconfig`.
-6. Everything is unmounted again and the encrypted partition is locked, also
+   together with `/dev`, `/proc`, `/sys` and `/run`.
+4. The app checks which boot loader the system has: systemd-boot when its
+   `/etc/kernel/install.conf` says `layout=uki`, GRUB otherwise. It checks
+   that the system has that boot loader's programs, and for GRUB a kernel in
+   `/boot`. A data partition or a wrong layout stops here.
+5. The EFI system partition is mounted for a GRUB reinstall on UEFI, at
+   `/boot/efi`, and for every systemd-boot repair, where the system's own
+   `/etc/fstab` mounts it.
+6. The installed system's own programs run inside it:
+   - GRUB: `grub-install` when it is reinstalled, then `dracut-rebuild` (or
+     `mkinitcpio -P` where it is missing) to build every initramfs again,
+     then `grub-mkconfig`.
+   - systemd-boot: `bootctl install` when it is reinstalled, then
+     `dracut-rebuild` (or `mkinitcpio -P`), then Garuda's
+     `/usr/lib/garuda/kernel-install-uki add` (or `kernel-install add-all`)
+     to build the kernel images again. They run with
+     `SYSTEMD_RELAX_ESP_CHECKS=1`, since the live system cannot always tell
+     them the type of the partition.
+7. Everything is unmounted again and the encrypted partition is locked, also
    when a step failed or you cancelled.
 
 The passphrase goes to `cryptsetup` directly. It is not shown in the Console,
@@ -125,16 +148,17 @@ Afterwards the page says how it went:
   because you opened it in the file manager. Unmount it and click
   **Read again**. The disk the live system itself runs from is never written
   to.
-- **No EFI system partition was found on a disk that is free, so GRUB cannot
-  be installed. The boot menu can still be written again.** The live system
-  was started through UEFI, but no free disk has an EFI system partition.
-  A system that was installed the legacy way needs the live medium started
-  the legacy way.
+- **No EFI system partition was found on a disk that is free, so no boot
+  loader can be installed. The boot menu of a GRUB system can still be
+  written again.** The live system was started through UEFI, but no free
+  disk has an EFI system partition. A system that was installed the legacy
+  way needs the live medium started the legacy way. A systemd-boot system
+  needs its EFI system partition for every repair.
 - **No installed system was found**: no disk holds a partition with a Linux
   file system or an encrypted partition.
-- The Console says the partition has no `/usr/bin/grub-install`: the partition
-  holds no installed system with GRUB, or **Where the system lies** names the
-  wrong place.
+- The Console says the partition has no `/usr/bin/grub-install` or
+  `/usr/bin/bootctl`: the partition holds no installed system with that boot
+  loader, or **Where the system lies** names the wrong place.
 - A volume inside an encrypted partition (LVM on LUKS) only shows once the
   partition is unlocked. Unlock it in the file manager or with
   `cryptsetup open`, then click **Read again**.

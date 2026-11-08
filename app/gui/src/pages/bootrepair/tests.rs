@@ -69,7 +69,7 @@ fn an_installed_system_says_the_page_is_for_the_live_system() {
         &harness,
         "Boot repair is only offered on the live system"
     ));
-    assert!(!shows(&harness, "Reinstall GRUB"));
+    assert!(!shows(&harness, "Reinstall the boot loader"));
 }
 
 #[test]
@@ -103,13 +103,20 @@ fn the_first_free_system_shows_with_what_was_found() {
 fn the_boot_menu_is_written_again_after_asking() {
     let mut harness = page(live(), BootRepairPage::default());
 
-    harness.get_by_label("Generate boot menu…").click();
+    harness.get_by_label("Build the boot files again…").click();
     harness.run();
 
-    assert!(shows(&harness, "Generate the boot menu again?"));
+    assert!(shows(&harness, "Build the boot files again?"));
+
+    // The live ISO started through UEFI: systemd-boot's images go to the
+    // ESP on the system's own disk, which the question names.
+    assert!(shows(
+        &harness,
+        "kernel images are built again onto the EFI system partition /dev/nvme1n1p1"
+    ));
 
     harness
-        .get_by_role_and_label(Role::Button, "Generate boot menu")
+        .get_by_role_and_label(Role::Button, "Build the boot files again")
         .click();
     harness.run();
 
@@ -136,14 +143,16 @@ fn a_locked_system_is_repaired_only_with_its_passphrase() {
     assert!(shows(&harness, "Encrypted (LUKS), locked"));
 
     // The taller rows put the button under the window's foot.
-    harness.get_by_label("Reinstall GRUB…").scroll_to_me();
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall GRUB…").click();
+    harness.get_by_label("Reinstall the boot loader…").click();
     harness.run();
 
     let confirm = |shown: &Shown| {
         shown
-            .get_by_role_and_label(Role::Button, "Reinstall GRUB")
+            .get_by_role_and_label(Role::Button, "Reinstall the boot loader")
             .accesskit_node()
             .is_disabled()
     };
@@ -160,7 +169,7 @@ fn a_locked_system_is_repaired_only_with_its_passphrase() {
         .type_text("secret words");
     harness.run();
     harness
-        .get_by_role_and_label(Role::Button, "Reinstall GRUB")
+        .get_by_role_and_label(Role::Button, "Reinstall the boot loader")
         .click();
     harness.run();
 
@@ -201,7 +210,7 @@ fn missing_programs_are_named_and_nothing_is_offered() {
     let harness = page(repair, BootRepairPage::default());
 
     assert!(shows(&harness, "grub-install, cryptsetup"));
-    assert!(!shows(&harness, "Reinstall GRUB"));
+    assert!(!shows(&harness, "Reinstall the boot loader"));
 }
 
 #[test]
@@ -214,9 +223,11 @@ fn the_passphrase_field_is_named_above_it_and_the_wait_is_explained() {
     let mut harness = page(locked(), start);
 
     // The taller rows put the button under the window's foot.
-    harness.get_by_label("Reinstall GRUB…").scroll_to_me();
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall GRUB…").click();
+    harness.get_by_label("Reinstall the boot loader…").click();
     harness.run();
 
     let field = "Passphrase of the encrypted partition";

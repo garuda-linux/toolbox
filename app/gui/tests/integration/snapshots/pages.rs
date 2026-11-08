@@ -166,9 +166,11 @@ fn boot_repair_page() {
     results.add(harness.try_snapshot("bootrepair/page_dark"));
 
     // The button lies under the window's bottom, where a click misses it.
-    harness.get_by_label("Reinstall GRUB…").scroll_to_me();
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall GRUB…").click();
+    harness.get_by_label("Reinstall the boot loader…").click();
     crate::system::step_until(harness, "the question", |harness| {
         harness
             .query_all_by_label_contains("is written to the EFI system partition /dev/nvme0n1p2")

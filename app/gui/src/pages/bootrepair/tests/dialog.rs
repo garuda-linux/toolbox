@@ -8,9 +8,11 @@ use crate::pages::bootrepair::BootRepairPage;
 #[test]
 fn the_questions_paragraphs_are_evenly_apart() {
     let mut harness = page(live(), BootRepairPage::default());
-    harness.get_by_label("Reinstall GRUB…").scroll_to_me();
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall GRUB…").click();
+    harness.get_by_label("Reinstall the boot loader…").click();
     harness.run();
 
     let looked = harness
@@ -19,7 +21,7 @@ fn the_questions_paragraphs_are_evenly_apart() {
 
     // The page names the repair too, the paragraph above is the question's.
     let does = harness
-        .get_all_by_label_contains("GRUB is written")
+        .get_all_by_label_contains("The boot loader is written")
         .map(|node| node.rect())
         .filter(|rect| rect.bottom() <= looked.top())
         .max_by(|one, other| one.bottom().total_cmp(&other.bottom()))
