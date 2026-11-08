@@ -62,6 +62,15 @@ fn boot_page() {
 }
 
 #[test]
+fn sdboot_page() {
+    let mut results = SnapshotResults::new();
+    let mut fixture = crate::sdboot::app();
+    let harness = fixture.harness();
+    crate::sdboot::open_boot(harness);
+    results.add(harness.try_snapshot("boot/sdboot_dark"));
+}
+
+#[test]
 fn locales_page() {
     let mut results = SnapshotResults::new();
     let mut fixture = crate::locales::languages();

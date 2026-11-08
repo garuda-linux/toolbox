@@ -13,6 +13,7 @@ mod located;
 mod pty_runner;
 mod repair;
 mod report;
+mod sdboot;
 mod secure;
 #[cfg(test)]
 mod testing;
@@ -27,3 +28,4 @@ pub use config_file::{
 pub use located::editor as locate_editor;
 pub use pty_runner::{Environment, PtyRunner};
 pub use repair::{PreflightError, preflight};
+pub use sdboot::sdboot_menu;

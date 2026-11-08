@@ -8,7 +8,7 @@ mod tests;
 use toolbox_plan::{
     DefaultEntry, GrubKey, GrubSetting, GrubSettings, PlannedAction, PlymouthTheme, RootAction,
 };
-pub use toolbox_state::boot::{CurrentGrub, PlymouthState};
+pub use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState};
 
 use super::each;
 use crate::domain::{Domain, Single, Stage, Staged, Summary};

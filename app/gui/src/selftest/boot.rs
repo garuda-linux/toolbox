@@ -1,6 +1,7 @@
-//! The Boot options page on the real system: its settings where GRUB is
-//! the boot loader, a word that it is not on other systems. A dry run
-//! queues nothing here, the kittest tests cover the edits.
+//! The Boot options page on the real system: its settings where GRUB or
+//! systemd-boot is the boot loader, a word that it is not on other
+//! systems. A dry run queues nothing here, the kittest tests cover the
+//! edits.
 
 use super::step::Step;
 

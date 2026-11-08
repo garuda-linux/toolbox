@@ -57,10 +57,8 @@ impl Boot {
         Same::of(&self.menu)
     }
 
-    /// The page shows. The menu's first read starts once `grub`, the
-    /// file, is known to be there.
-    pub fn open(&mut self, grub: bool) {
-        if grub && *self.menu == Menu::NotAsked {
+    pub fn open(&mut self, readable: bool) {
+        if readable && *self.menu == Menu::NotAsked {
             self.read();
         }
     }

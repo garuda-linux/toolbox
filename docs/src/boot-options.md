@@ -2,7 +2,8 @@
 
 **Boot Options** changes how GRUB starts your system: the entry it boots, how
 long the menu waits, the parameters the kernel gets, the boot splash and the
-look of the menu.
+look of the menu. On a system that starts with systemd-boot it shows the
+settings of systemd-boot instead, see [On systemd-boot](#on-systemd-boot).
 
 A changed setting shows **Changes with Apply** beside its name. Changes
 wait in the queue until you apply them, see
@@ -12,8 +13,8 @@ wait in the queue until you apply them, see
 
 ## Before you start
 
-The page works on systems that boot with GRUB. It reads the settings from
-`/etc/default/grub`. On a system without that file (systemd-boot, rEFInd,
+The page works on systems that boot with GRUB or systemd-boot. For GRUB it
+reads the settings from `/etc/default/grub`. On a system with neither (rEFInd,
 Limine) it shows **GRUB is not the boot loader of this system** and offers
 nothing to change.
 
@@ -185,6 +186,31 @@ picture of your own, the theme's picture shows again.
 GRUB reads the file while the computer starts, before your home folder may be
 unlocked. Pick a file on a partition GRUB can read, for example below
 `/usr/share` or `/boot`.
+
+## On systemd-boot
+
+New Garuda installs start with systemd-boot and one unified kernel image
+(UKI) per kernel, built with the kernel command line inside. The page tells
+the two boot loaders apart by what started the system, so a GRUB left on the
+disk does not count.
+
+The page shows:
+
+- **Boot menu**: the default entry, the menu timeout, whether entries can be
+  edited at boot, and whether systemd-boot adds the entries it finds itself
+  and one for the firmware settings, all from `loader/loader.conf` on the
+  EFI system partition. A setting the file does not name shows
+  **systemd-boot's default**.
+- **Kernel parameters**: `/etc/kernel/cmdline`, which is built into each
+  kernel image.
+
+The EFI system partition is readable by root only, so reading the menu may
+ask for an administrator's password. The page does not change these settings
+yet. Snapshot entries of snapper are not offered as the default, because
+they disappear when snapper deletes the snapshot.
+
+On the command line, `boot show` and `boot entries` show the same on a
+systemd-boot system.
 
 ## On other systems
 

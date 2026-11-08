@@ -17,7 +17,7 @@ use std::path::Path;
 use std::process::{Command, ExitCode};
 use std::sync::Arc;
 
-use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture};
+use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture, sdboot_menu};
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind, encode};
 use toolbox_plan::{GRUB_CONFIG, GrubMenu, SHADOW, ShadowLocks};
 
@@ -51,6 +51,7 @@ pub fn answer(root: &Path, kind: ReadKind) -> io::Result<String> {
         ReadKind::GrubMenu => read_text(&root.join(GRUB_CONFIG), |text| {
             encode(&GrubMenu::from_config(text))
         }),
+        ReadKind::SdBootMenu => encode(&sdboot_menu(root)?).map_err(io::Error::other),
         ReadKind::Dmesg | ReadKind::Journal => {
             encode(&run_program(root, kind)?).map_err(io::Error::other)
         }

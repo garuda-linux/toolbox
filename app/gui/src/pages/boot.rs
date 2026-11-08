@@ -4,10 +4,12 @@
 mod kernel;
 mod look;
 mod menu;
+mod sdboot;
 #[cfg(test)]
 mod tests;
 
 use egui::Ui;
+use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::Flag;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page, Probed, Readiness};
@@ -36,7 +38,13 @@ pub struct BootPage {
 
 impl PageView for BootPage {
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
-        if refresh_header(ui, "page-boot", "page-boot-subtitle", "boot-refresh") {
+        let subtitle = if sdboot(context) {
+            "page-boot-subtitle-sdboot"
+        } else {
+            "page-boot-subtitle"
+        };
+
+        if refresh_header(ui, "page-boot", subtitle, "boot-refresh") {
             context.commands.send(BootCommand::Refresh);
         }
 
@@ -46,6 +54,12 @@ impl PageView for BootPage {
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let _ui = tracing::trace_span!("boot ui").entered();
         let ctx = ui.ctx().clone();
+
+        if sdboot(context) {
+            sdboot::show(ui, context);
+            return;
+        }
+
         refusal(ui, context);
 
         let readiness = view::state(context.snapshot, probed(context));
@@ -192,4 +206,8 @@ fn send(context: &PageContext<'_>, change: Edit) {
 
 fn queued(ctx: &egui::Context, queued: bool) -> Option<String> {
     queued.then(|| i18n::text(ctx, "boot-queued").into_owned())
+}
+
+fn sdboot(context: &PageContext<'_>) -> bool {
+    context.snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot)
 }

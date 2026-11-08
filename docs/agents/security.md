@@ -117,6 +117,10 @@ without a password.
   overwritten before the answer.
 - `grub-menu`: titles and ids of at most 1000 entries, never the password
   hash or the kernel command line.
+- `sdboot-menu`: the settings of `loader.conf` and the ids, titles and
+  kernel releases of at most 256 entries on the ESP. The helper finds the ESP
+  in the mount table and reads only a UKI's header and its `.osrel` and
+  `.uname` sections, and runs no program.
 
 `garuda-toolbox-helper logs <kind>` (`dmesg`, `journal`) is a separate
 first argument with a password, so no log is ever reachable through

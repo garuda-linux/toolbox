@@ -6,6 +6,7 @@
 
 mod boot;
 mod disk;
+mod loader;
 mod rules;
 #[cfg(test)]
 mod tests;
@@ -16,6 +17,7 @@ use std::marker::PhantomData;
 
 pub use boot::{GrubPicture, GrubThemeFile, KernelParameter, MenuEntryId, PlymouthTheme};
 pub use disk::{BootloaderId, DiskDevice, PartitionDevice, VolumeDevice};
+pub use loader::{LoaderDefault, LoaderEntryId};
 pub use rules::{
     ADMIN_GROUPS, Charset, DkmsModuleName, DkmsVersion, GroupName, HostName, KernelModule,
     KernelRelease, LocaleName, PackageName, UnitName, UserName,
@@ -47,6 +49,8 @@ pub enum NameKind {
     Volume,
     Mapper,
     BootloaderId,
+    LoaderEntry,
+    LoaderDefault,
 }
 
 impl fmt::Display for NameKind {
@@ -73,6 +77,8 @@ impl fmt::Display for NameKind {
             Self::Volume => "partition or mapped device",
             Self::Mapper => "device-mapper name",
             Self::BootloaderId => "boot loader name",
+            Self::LoaderEntry => "systemd-boot entry",
+            Self::LoaderDefault => "systemd-boot default entry",
         })
     }
 }

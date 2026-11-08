@@ -1,2 +1,4 @@
 app/*/tests/snapshots/**/*.png filter=lfs diff=lfs merge=lfs -text
 crates/*/tests/snapshots/**/*.png filter=lfs diff=lfs merge=lfs -text
+crates/*/src/**/fixtures/*.head filter=lfs diff=lfs merge=lfs -text
+crates/state/src/boot/fixtures/LoaderInfo filter=lfs diff=lfs merge=lfs -text

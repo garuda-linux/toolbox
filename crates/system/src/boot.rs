@@ -9,14 +9,17 @@
 #[cfg(test)]
 mod tests;
 
+mod sdboot;
+
 use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
 use toolbox_plan::protocol::{MAX_LINE_BYTES, ReadKind};
+use toolbox_plan::sdboot::SdBootMenu;
 use toolbox_plan::{GRUB_CONFIG, GRUB_DEFAULTS, GrubMenu, GrubState, PackageName, PlymouthTheme};
-use toolbox_state::boot::{CurrentGrub, PlymouthState, VirtualMachine};
+use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState, VirtualMachine};
 
 use crate::diagnostics::HelperReads;
 use crate::error::{ProbeError, from_io};
@@ -54,11 +57,19 @@ pub trait BootSource: Send + Sync {
     ///
     /// [`ProbeError::Unavailable`] without `systemd-detect-virt`.
     fn virtual_machine(&self) -> Result<VirtualMachine, ProbeError>;
+
+    fn loader(&self) -> BootLoader;
+
+    /// # Errors
+    ///
+    /// [`ProbeError::Unavailable`] without `/etc/kernel/cmdline`.
+    fn kernel_cmdline(&self) -> Result<KernelCmdline, ProbeError>;
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MenuRead {
     Known(GrubMenu),
+    SdBoot(SdBootMenu),
     /// No `grub.cfg`: GRUB never generated a menu here.
     Missing,
     /// pkexec did not run the helper.
@@ -82,7 +93,7 @@ impl Menu {
         match self {
             Self::NotAsked => "not-asked",
             Self::Loading => "loading",
-            Self::Read(MenuRead::Known(_)) => "known",
+            Self::Read(MenuRead::Known(_) | MenuRead::SdBoot(_)) => "known",
             Self::Read(MenuRead::Missing) => "missing",
             Self::Read(MenuRead::Refused(refusal)) => refusal.code(),
             Self::Read(MenuRead::Unknown(_) | MenuRead::Cancelled) => "unknown",
@@ -95,7 +106,23 @@ impl Menu {
             Self::NotAsked
             | Self::Loading
             | Self::Read(
-                MenuRead::Missing
+                MenuRead::SdBoot(_)
+                | MenuRead::Missing
+                | MenuRead::Refused(_)
+                | MenuRead::Unknown(_)
+                | MenuRead::Cancelled,
+            ) => None,
+        }
+    }
+
+    pub const fn sdboot(&self) -> Option<&SdBootMenu> {
+        match self {
+            Self::Read(MenuRead::SdBoot(menu)) => Some(menu),
+            Self::NotAsked
+            | Self::Loading
+            | Self::Read(
+                MenuRead::Known(_)
+                | MenuRead::Missing
                 | MenuRead::Refused(_)
                 | MenuRead::Unknown(_)
                 | MenuRead::Cancelled,
@@ -202,6 +229,14 @@ impl BootSource for SystemBoot {
 
         Ok(VirtualMachine(finished.status.success() && named))
     }
+
+    fn loader(&self) -> BootLoader {
+        sdboot::loader(&self.root)
+    }
+
+    fn kernel_cmdline(&self) -> Result<KernelCmdline, ProbeError> {
+        sdboot::kernel_cmdline(&self.root)
+    }
 }
 
 impl SystemBootMenu {
@@ -239,6 +274,10 @@ impl SystemBootMenu {
 
 impl BootMenuSource for SystemBootMenu {
     fn menu(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
+        if sdboot::loader(&self.root) == BootLoader::SystemdBoot {
+            return self.sdboot_menu(cancel);
+        }
+
         match files::read_lossy(&self.root.join(GRUB_CONFIG)) {
             Ok(config) => MenuRead::Known(GrubMenu::from_config(&config)),
             Err(error) if error.kind() == io::ErrorKind::NotFound => MenuRead::Missing,

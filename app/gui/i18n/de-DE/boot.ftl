@@ -2,6 +2,7 @@
 # Plymouth theme, all queued for Apply.
 
 page-boot-subtitle = Beim Übernehmen wird /etc/default/grub geschrieben, die alte Datei gesichert und das Bootmenü neu erstellt.
+page-boot-subtitle-sdboot = Die Einstellungen von systemd-boot und die Kernel-Befehlszeile, die in jedes Kernel-Image eingebaut wird.
 boot-refresh = Neu einlesen
 boot-queued = Ändert sich beim Übernehmen
 
@@ -102,3 +103,20 @@ boot-file-none = Keines
 boot-file-choose = Wählen…
 boot-file-choose-name = { $name } wählen
 boot-file-clear = Keines verwenden
+
+# systemd-boot, statt der GRUB-Einstellungen gezeigt.
+boot-sdboot-unset = Vorgabe von systemd-boot
+boot-sdboot-on = An
+boot-sdboot-off = Aus
+boot-sdboot-default-first = Der erste Eintrag des Menüs
+boot-sdboot-timeout-menu-force = Das Menü wartet auf eine Taste
+boot-sdboot-timeout-menu-hidden = Verborgen, außer beim Start wird eine Taste gehalten
+boot-sdboot-timeout-menu-disabled = Das Menü wird nie gezeigt
+boot-sdboot-editor = Einträge beim Start bearbeiten
+boot-sdboot-editor-detail = Erlaubt allen am Rechner, die Kernel-Befehlszeile im Menü zu ändern.
+boot-sdboot-auto-entries = Einträge, die systemd-boot selbst findet
+boot-sdboot-auto-entries-detail = Andere Systeme auf der Platte, etwa Windows.
+boot-sdboot-auto-firmware = Eintrag für die Firmware-Einstellungen
+boot-sdboot-auto-firmware-detail = Ein Eintrag, der in die Einrichtung der Firmware neu startet.
+boot-sdboot-parameters-detail = Sie stehen in /etc/kernel/cmdline und werden in jedes Kernel-Image eingebaut.
+boot-sdboot-no-cmdline = Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit.

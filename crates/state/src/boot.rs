@@ -1,6 +1,49 @@
-use toolbox_plan::{GrubState, PlymouthTheme};
+#[cfg(test)]
+mod tests;
 
-/// What `/etc/default/grub` says. Missing from the snapshot on a system
+use toolbox_plan::{GrubState, KernelParameters, PlymouthTheme};
+
+/// efivarfs puts the variable's attributes before its value.
+const ATTRIBUTE_BYTES: usize = 4;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BootLoader {
+    Grub,
+    SystemdBoot,
+    Unknown,
+}
+
+impl BootLoader {
+    /// `LoaderInfo` names the loader that started this boot, so it wins over
+    /// files another loader left behind. GRUB sets no such variable.
+    pub fn detect(
+        loader_info: Option<&[u8]>,
+        grub_defaults: bool,
+        install_conf: Option<&str>,
+    ) -> Self {
+        if loader_info
+            .and_then(loader_name)
+            .is_some_and(|name| name.starts_with("systemd-boot "))
+        {
+            return Self::SystemdBoot;
+        }
+
+        let uki =
+            install_conf.is_some_and(|conf| conf.lines().any(|line| line.trim() == "layout=uki"));
+
+        if uki {
+            Self::SystemdBoot
+        } else if grub_defaults {
+            Self::Grub
+        } else {
+            Self::Unknown
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct KernelCmdline(pub KernelParameters);
+
 /// without the file: GRUB is not its boot loader.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CurrentGrub(pub GrubState);
@@ -18,3 +61,16 @@ pub struct PlymouthState {
 /// works in a limited way.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct VirtualMachine(pub bool);
+
+fn loader_name(variable: &[u8]) -> Option<String> {
+    let units: Vec<u16> = variable
+        .get(ATTRIBUTE_BYTES..)?
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|pair| u16::from_le_bytes(*pair))
+        .take_while(|unit| *unit != 0)
+        .collect();
+
+    String::from_utf16(&units).ok()
+}

@@ -16,6 +16,7 @@ pub enum ReadKind {
     Journal,
     /// Titles and ids only, never the text of `grub.cfg`, which may hold a password hash.
     GrubMenu,
+    SdBootMenu,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -50,11 +51,12 @@ impl ProgramAnswer {
 }
 
 impl ReadKind {
-    pub const ALL: [Self; 4] = [
+    pub const ALL: [Self; 5] = [
         Self::ShadowLocks,
         Self::Dmesg,
         Self::Journal,
         Self::GrubMenu,
+        Self::SdBootMenu,
     ];
 
     pub const fn as_str(self) -> &'static str {
@@ -63,13 +65,14 @@ impl ReadKind {
             Self::Dmesg => "dmesg",
             Self::Journal => "journal",
             Self::GrubMenu => "grub-menu",
+            Self::SdBootMenu => "sdboot-menu",
         }
     }
 
     /// Fixed here, so the app can name a kind and nothing else.
     pub const fn program(self) -> Option<(Program, &'static [&'static str])> {
         match self {
-            Self::ShadowLocks | Self::GrubMenu => None,
+            Self::ShadowLocks | Self::GrubMenu | Self::SdBootMenu => None,
             // Colours are for a terminal, and the helper reads through a
             // pipe. The app shows them and takes them out of the plain report.
             Self::Dmesg => Some((Program::Dmesg, &["--color=always"])),
@@ -82,7 +85,7 @@ impl ReadKind {
     /// Fixed here like the arguments.
     pub const fn environment(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Self::ShadowLocks | Self::Dmesg | Self::GrubMenu => &[],
+            Self::ShadowLocks | Self::Dmesg | Self::GrubMenu | Self::SdBootMenu => &[],
             // journalctl has no option for colours. Sixteen colours, so the
             // app can show them in the desktop's theme.
             Self::Journal => &[("SYSTEMD_COLORS", "16")],
@@ -93,7 +96,7 @@ impl ReadKind {
     /// runs `read` without a password. Whole logs need a command of their own, which that rule cannot match.
     pub const fn command(self) -> &'static str {
         match self {
-            Self::ShadowLocks | Self::GrubMenu => "read",
+            Self::ShadowLocks | Self::GrubMenu | Self::SdBootMenu => "read",
             Self::Dmesg | Self::Journal => "logs",
         }
     }

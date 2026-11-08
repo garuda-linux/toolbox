@@ -3,6 +3,7 @@
 //! [`edit`], so a bad value names the rule the page names.
 
 mod listing;
+mod sdboot;
 #[cfg(test)]
 mod tests;
 
@@ -24,6 +25,7 @@ use toolbox_core::features::kernels::{
 };
 use toolbox_core::{ChangeSet, Queued, Snapshot};
 use toolbox_plan::{DkmsBuild as Build, GrubMenu, PackageName, Plan};
+use toolbox_state::boot::BootLoader;
 use toolbox_system::{
     BootMenuSource as _, Dkms, DkmsSource as _, MenuRead, ProbeError, SystemBootMenu,
 };
@@ -61,7 +63,11 @@ pub struct ModuleRow {
 
 pub fn command(command: BootCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
     let snapshot = system();
+    let sdboot = snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot);
+
     match command {
+        BootCommand::Show(read) if sdboot => sdboot::show(read, &snapshot, out),
+        BootCommand::Entries(read) if sdboot => sdboot::entries(read, out),
         BootCommand::Show(read) => show(read, &snapshot, out),
         BootCommand::Entries(read) => entries(read, out),
         BootCommand::Set(args) => {
@@ -360,7 +366,8 @@ fn read_menu() -> Option<GrubMenu> {
     let source = SystemBootMenu::system(Arc::new(super::root::helper()));
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::Known(menu) => Some(menu),
-        other @ (MenuRead::Missing
+        other @ (MenuRead::SdBoot(_)
+        | MenuRead::Missing
         | MenuRead::Refused(_)
         | MenuRead::Unknown(_)
         | MenuRead::Cancelled) => {

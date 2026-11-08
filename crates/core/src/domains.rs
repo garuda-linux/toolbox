@@ -19,7 +19,9 @@ mod users;
 
 pub use accounts::{AccountLockFlags, Accounts, CurrentUser, Group, User};
 pub use aur::AurPackages;
-pub use boot::{CurrentGrub, GrubDefaults, PlymouthState, PlymouthThemes};
+pub use boot::{
+    BootLoader, CurrentGrub, GrubDefaults, KernelCmdline, PlymouthState, PlymouthThemes,
+};
 pub use dkms::DkmsBuilds;
 pub use garuda_update::{GarudaUpdateConfig, GarudaUpdateFlags};
 pub use groups::{Groups, Membership};

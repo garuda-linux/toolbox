@@ -10,6 +10,7 @@ use std::sync::Arc;
 use toolbox_plan::UserConfigEdit;
 use toolbox_state::Snapshot;
 use toolbox_state::accounts::CurrentUser;
+use toolbox_state::boot::BootLoader;
 use toolbox_state::packages::ProtectedPackages;
 pub use toolbox_state::probes::{FailedProbes, Probe};
 
@@ -289,6 +290,20 @@ fn take<T>(issues: &mut Vec<ProbeIssue>, probe: Probe, result: Result<T, ProbeEr
 fn probe_boot(boot: &dyn BootSource, snapshot: &mut Snapshot, issues: &mut Vec<ProbeIssue>) {
     insert(snapshot, issues, Probe::Grub, boot.grub());
     insert(snapshot, issues, Probe::Plymouth, boot.plymouth());
+    let loader = boot.loader();
+
+    snapshot.insert(loader);
+
+    // GRUB keeps its command line in /etc/default/grub instead.
+    if loader == BootLoader::SystemdBoot {
+        insert(
+            snapshot,
+            issues,
+            Probe::KernelCmdline,
+            boot.kernel_cmdline(),
+        );
+    }
+
     insert(
         snapshot,
         issues,

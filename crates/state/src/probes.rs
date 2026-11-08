@@ -23,6 +23,7 @@ pub enum Probe {
     GarudaUpdate,
     ModuleBlacklist,
     Grub,
+    KernelCmdline,
     Plymouth,
     VirtualMachine,
     UserConfigs,

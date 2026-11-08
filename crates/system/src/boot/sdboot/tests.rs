@@ -1,0 +1,101 @@
+use std::path::Path;
+use std::process::Command;
+use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
+
+use toolbox_plan::protocol::ReadKind;
+use toolbox_state::boot::BootLoader;
+
+use super::loader;
+use crate::testing::write;
+use crate::{
+    BootMenuSource as _, BootSource as _, HelperReads, MenuRead, ProbeError, SystemBoot,
+    SystemBootMenu,
+};
+
+/// Files of the Garuda Lima image, and the `/etc/default/grub` of a Garuda
+/// GRUB install.
+const LOADER_INFO: &[u8] = include_bytes!("../../../../state/src/boot/fixtures/LoaderInfo");
+const KERNEL_CMDLINE: &str = include_str!("../../../../state/src/boot/fixtures/kernel-cmdline");
+const MOUNTINFO: &str = include_str!("../../../../plan/src/sdboot/fixtures/mountinfo");
+const UKI: &[u8] =
+    include_bytes!("../../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head");
+const GRUB_DEFAULTS: &str = include_str!("../../../../plan/src/grub/fixtures/garuda-default-grub");
+
+const LOADER_INFO_PATH: &str =
+    "sys/firmware/efi/efivars/LoaderInfo-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f";
+
+struct NoHelper;
+
+impl HelperReads for NoHelper {
+    fn read_command(&self, kind: ReadKind) -> Command {
+        panic!("asked the helper for {}", kind.as_str());
+    }
+}
+
+fn boot(root: &Path) -> SystemBoot {
+    SystemBoot::new(root, "/nonexistent/systemd-detect-virt")
+}
+
+#[test]
+fn the_image_is_a_systemd_boot_system() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(dir.path().join("sys/firmware/efi/efivars")).unwrap();
+    std::fs::write(dir.path().join(LOADER_INFO_PATH), LOADER_INFO).unwrap();
+
+    assert_eq!(loader(dir.path()), BootLoader::SystemdBoot);
+}
+
+#[test]
+fn a_garuda_grub_install_is_a_grub_system() {
+    let dir = tempfile::tempdir().unwrap();
+    write(dir.path(), "etc/default/grub", GRUB_DEFAULTS);
+
+    assert_eq!(loader(dir.path()), BootLoader::Grub);
+}
+
+#[test]
+fn the_images_command_line_is_read_word_by_word() {
+    let dir = tempfile::tempdir().unwrap();
+    write(dir.path(), "etc/kernel/cmdline", KERNEL_CMDLINE);
+
+    let cmdline = boot(dir.path()).kernel_cmdline().unwrap();
+
+    assert!(cmdline.0.contains("quiet"));
+    assert!(cmdline.0.contains("rootflags=subvol=@"));
+    assert_eq!(cmdline.0.iter().count(), 7);
+}
+
+#[test]
+fn without_the_file_the_command_line_is_unavailable() {
+    let dir = tempfile::tempdir().unwrap();
+
+    assert!(matches!(
+        boot(dir.path()).kernel_cmdline(),
+        Err(ProbeError::Unavailable)
+    ));
+}
+
+/// Where the user may read the ESP, the app reads it itself.
+#[test]
+fn a_readable_esp_is_read_without_the_helper() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(dir.path().join("sys/firmware/efi/efivars")).unwrap();
+    std::fs::write(dir.path().join(LOADER_INFO_PATH), LOADER_INFO).unwrap();
+    write(dir.path(), "proc/self/mountinfo", MOUNTINFO);
+    std::fs::create_dir_all(dir.path().join("efi/EFI/Linux")).unwrap();
+    std::fs::write(
+        dir.path().join("efi/EFI/Linux/garuda-7.3.1-1-garuda.efi"),
+        UKI,
+    )
+    .unwrap();
+
+    let source = SystemBootMenu::new(dir.path(), Arc::new(NoHelper));
+    let read = source.menu(&Arc::new(AtomicBool::new(false)));
+
+    let MenuRead::SdBoot(menu) = read else {
+        panic!("{read:?}");
+    };
+
+    assert_eq!(menu.entries[0].title, "Garuda Linux");
+}

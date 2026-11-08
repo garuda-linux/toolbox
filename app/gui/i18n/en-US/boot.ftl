@@ -1,4 +1,5 @@
 page-boot-subtitle = Applying the changes writes /etc/default/grub, keeps the old file as a backup and builds the boot menu again.
+page-boot-subtitle-sdboot = The settings of systemd-boot and the kernel command line that is built into each kernel image.
 boot-refresh = Read again
 boot-queued = Changes with Apply
 
@@ -100,3 +101,20 @@ boot-file-none = None
 boot-file-choose = Choose…
 boot-file-choose-name = Choose { $name }
 boot-file-clear = Use none
+
+# systemd-boot, shown instead of the GRUB settings.
+boot-sdboot-unset = systemd-boot's default
+boot-sdboot-on = On
+boot-sdboot-off = Off
+boot-sdboot-default-first = The first entry of the menu
+boot-sdboot-timeout-menu-force = The menu waits for a key
+boot-sdboot-timeout-menu-hidden = Hidden unless a key is held at start
+boot-sdboot-timeout-menu-disabled = The menu is never shown
+boot-sdboot-editor = Edit entries at boot
+boot-sdboot-editor-detail = Lets anyone at the machine change the kernel command line in the menu.
+boot-sdboot-auto-entries = Entries systemd-boot finds itself
+boot-sdboot-auto-entries-detail = Other systems on the disk, such as Windows.
+boot-sdboot-auto-firmware = Firmware settings entry
+boot-sdboot-auto-firmware-detail = An entry that restarts into the firmware's setup.
+boot-sdboot-parameters-detail = They are in /etc/kernel/cmdline and built into each kernel image.
+boot-sdboot-no-cmdline = This system has no /etc/kernel/cmdline. Its boot entries carry their own parameters.

@@ -6,7 +6,7 @@ use toolbox_plan::{
     DnsProvider, GrubState, KernelModule, PlymouthTheme, UserConfigEdit, UserName, WifiBackend,
 };
 use toolbox_state::accounts::Accounts;
-use toolbox_state::boot::{CurrentGrub, PlymouthState, VirtualMachine};
+use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState, VirtualMachine};
 use toolbox_state::kernels::{KernelReleases, LinuxPackages, RunningKernel};
 use toolbox_state::locales::{CurrentSystemLocale, EnabledLocales, LocaleNames, SupportedLocales};
 use toolbox_state::network::ModuleFacts;
@@ -208,6 +208,14 @@ impl BootSource for FakeBoot {
 
     fn virtual_machine(&self) -> Result<VirtualMachine, ProbeError> {
         Ok(VirtualMachine(false))
+    }
+
+    fn loader(&self) -> BootLoader {
+        BootLoader::Grub
+    }
+
+    fn kernel_cmdline(&self) -> Result<KernelCmdline, ProbeError> {
+        Err(ProbeError::Unavailable)
     }
 }
 

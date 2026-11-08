@@ -33,6 +33,7 @@ mod packages;
 mod packages_aur;
 mod page_scroll;
 mod schemes;
+mod sdboot;
 mod services;
 mod settings;
 mod setup;

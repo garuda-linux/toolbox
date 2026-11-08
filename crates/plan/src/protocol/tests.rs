@@ -247,6 +247,17 @@ fn the_grub_menu_is_a_read_and_never_a_log() {
     assert_eq!(ReadKind::GrubMenu.program(), None);
 }
 
+/// The boot screen shows the same to anyone at the machine.
+#[test]
+fn the_sdboot_menu_is_a_read_of_files_and_never_a_log() {
+    assert_eq!(
+        ReadKind::from_args("read", "sdboot-menu"),
+        Some(ReadKind::SdBootMenu)
+    );
+    assert_eq!(ReadKind::from_args("logs", "sdboot-menu"), None);
+    assert_eq!(ReadKind::SdBootMenu.program(), None);
+}
+
 #[test]
 fn program_reads_have_a_fixed_command_and_the_file_read_has_none() {
     assert_eq!(ReadKind::ShadowLocks.program(), None);

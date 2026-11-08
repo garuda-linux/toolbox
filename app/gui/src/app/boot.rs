@@ -1,6 +1,7 @@
 //! What the app does with a click on Boot options and with the page's
 //! background results.
 
+use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::{Edit, edit};
 use toolbox_core::features::boot::grub;
 
@@ -35,8 +36,10 @@ impl App {
     /// queued as soon as it comes.
     pub(super) fn take_boot(&mut self) {
         if self.state.page == PageId::Boot {
-            let has_grub = grub(&self.current_snapshot()).is_ok();
-            self.boot.open(has_grub);
+            let snapshot = self.current_snapshot();
+            let sdboot = snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot);
+
+            self.boot.open(sdboot || grub(&snapshot).is_ok());
         }
 
         if let Some(picked) = self.boot.take() {

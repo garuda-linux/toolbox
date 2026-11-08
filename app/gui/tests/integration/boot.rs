@@ -61,9 +61,12 @@ fn system() -> Snapshot {
 }
 
 pub fn app() -> Fixture {
+    app_with(system(), Arc::new(Source))
+}
+
+pub fn app_with(probed: Snapshot, menu: Arc<dyn BootMenuSource>) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
-    let probed = system();
     let mut harness = window(TALL).build_eframe(move |cc| {
         let probe = move || (probed.clone(), Vec::new());
         App::new(
@@ -77,7 +80,7 @@ pub fn app() -> Fixture {
                 )),
                 boot: Some(BootSetup {
                     runtime: handle.clone(),
-                    menu: Arc::new(Source),
+                    menu: Arc::clone(&menu),
                     chooser: Arc::new(Chooser),
                 }),
                 ..Setup::default()

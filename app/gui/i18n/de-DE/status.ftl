@@ -21,6 +21,7 @@ probe-wifi-backend = WLAN-Backend
 probe-garuda-update = Einstellungen von garuda-update
 probe-module-blacklist = Blacklist der Kernelmodule
 probe-grub = Bootmenü (GRUB)
+probe-kernel-cmdline = Kernel-Befehlszeile (systemd-boot)
 probe-plymouth = Splash-Screen (Plymouth)
 probe-virtual-machine = Prüfung auf virtuelle Maschine
 probe-user-configs = deine Konfigurationsdateien

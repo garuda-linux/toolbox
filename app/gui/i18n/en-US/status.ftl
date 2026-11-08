@@ -19,6 +19,7 @@ probe-wifi-backend = Wi-Fi backend
 probe-garuda-update = garuda-update settings
 probe-module-blacklist = blocked kernel modules
 probe-grub = boot menu (GRUB)
+probe-kernel-cmdline = kernel command line (systemd-boot)
 probe-plymouth = boot splash (Plymouth)
 probe-virtual-machine = virtual machine check
 probe-user-configs = your config files
