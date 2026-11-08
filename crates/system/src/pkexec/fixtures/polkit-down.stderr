@@ -1,0 +1,3 @@
+
+** (process:10133): WARNING **: 17:58:55.576: Error enumerating actions: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer 'org.freedesktop.PolicyKit1': activation request failed: unit is masked
+Error checking for authorization org.freedesktop.policykit.exec: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer 'org.freedesktop.PolicyKit1': activation request failed: unit is masked

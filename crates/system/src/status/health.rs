@@ -1,10 +1,11 @@
-//! `garuda-health --json` prints one object with a list per level:
+//! `garuda-health --json` prints one object with a list per level that has
+//! issues, from `CRITICAL` down to `INFO`:
 //!
 //! ```json
-//! {"INFO": [], "WARNING": [{"description": "…", "fix_available": true}], "ERROR": []}
+//! {"LOW": [{"description": "…", "fix_available": false}], "INFO": []}
 //! ```
 //!
-//! Only this shape is known. Unknown keys and fields are ignored, so a newer garuda-health still reads.
+//! Unknown keys and fields are ignored, so a newer garuda-health still reads.
 
 #[cfg(test)]
 mod tests;
@@ -18,17 +19,19 @@ use crate::command;
 use crate::error::ProbeError;
 
 /// The report's keys, most severe first: the order of the issues.
-const LEVELS: [(&str, HealthLevel); 3] = [
-    ("ERROR", HealthLevel::Error),
-    ("WARNING", HealthLevel::Warning),
+const LEVELS: [(&str, HealthLevel); 4] = [
+    ("CRITICAL", HealthLevel::Critical),
+    ("HIGH", HealthLevel::High),
+    ("LOW", HealthLevel::Low),
     ("INFO", HealthLevel::Info),
 ];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum HealthLevel {
     Info,
-    Warning,
-    Error,
+    Low,
+    High,
+    Critical,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -82,8 +85,8 @@ impl Default for GarudaHealth {
 }
 
 impl HealthSource for GarudaHealth {
-    /// The exit code is no verdict (assumed: non-zero when it finds
-    /// issues). A report on stdout counts either way. Without one, a non-zero exit is a failure.
+    /// garuda-health exits with 1 when it finds anything above INFO, so the
+    /// exit code is no verdict. Without a report, a non-zero exit is a failure.
     fn issues(&self) -> Result<Vec<HealthIssue>, ProbeError> {
         let finished = command::run(&self.program, &["--json"])?;
 

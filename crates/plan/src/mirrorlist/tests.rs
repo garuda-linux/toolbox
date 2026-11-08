@@ -2,27 +2,39 @@ use proptest::prelude::*;
 
 use super::{InvalidMirrorlist, MAX_MIRRORLIST_BYTES, Mirrorlist};
 
-const CHAOTIC: &str = "\
-# Chaotic-AUR mirrorlist
-# Global CDN
-Server = https://cdn-mirror.chaotic.cx/$repo/$arch
-
-# Germany
-Server = https://de-mirror.chaotic.cx/$repo/$arch
-";
+/// `/etc/pacman.d/chaotic-mirrorlist` of the Lima image.
+const CHAOTIC: &str = include_str!("fixtures/chaotic-mirrorlist");
+/// What `rate-mirrors --save` writes for chaotic-aur, its log as comments.
+const RATED: &str = include_str!("fixtures/rate-mirrors-chaotic");
 
 #[test]
 fn a_real_mirrorlist_is_accepted() {
     let mirrorlist = Mirrorlist::new(CHAOTIC).unwrap();
 
     assert_eq!(mirrorlist.as_str(), CHAOTIC);
-    assert_eq!(mirrorlist.servers(), 2);
+    assert_eq!(mirrorlist.servers(), 6);
+}
+
+#[test]
+fn rate_mirrors_output_with_its_log_header_is_accepted() {
+    assert!(RATED.starts_with("# STARTED AT: "));
+
+    let mirrorlist = Mirrorlist::new(RATED).unwrap();
+
+    assert_eq!(mirrorlist.as_str(), RATED);
+    assert_eq!(mirrorlist.servers(), 28);
 }
 
 #[test]
 fn a_mirrorlist_needs_a_server() {
+    // Edit: the real list without its `Server` lines.
+    let comments: String = CHAOTIC
+        .split_inclusive('\n')
+        .filter(|line| !line.starts_with("Server"))
+        .collect();
+
     assert_eq!(
-        Mirrorlist::new("# only comments\n\n").unwrap_err(),
+        Mirrorlist::new(comments).unwrap_err(),
         InvalidMirrorlist::NoServer
     );
     assert_eq!(
@@ -93,15 +105,17 @@ fn hostnames_follow_the_dns_rules() {
         );
     }
 
-    Mirrorlist::new("Server = https://Mirror-1.Example.ORG/arch/$repo/os/$arch\n").unwrap();
+    // Edit: the host names of the real list in capitals.
+    Mirrorlist::new(RATED.replace("-mirror.chaotic.cx", "-Mirror.Chaotic.CX")).unwrap();
 }
 
 #[test]
 fn windows_line_endings_and_blank_lines_are_fine() {
-    let mirrorlist =
-        Mirrorlist::new("# a\r\n\r\n   \r\nServer = https://a.example/$repo\r\n").unwrap();
+    // Edit: the real list with CRLF endings and blanks made of spaces.
+    let edited = CHAOTIC.replace("\n\n", "\n   \n").replace('\n', "\r\n");
+    let mirrorlist = Mirrorlist::new(edited).unwrap();
 
-    assert_eq!(mirrorlist.servers(), 1);
+    assert_eq!(mirrorlist.servers(), 6);
 }
 
 #[test]
@@ -180,8 +194,8 @@ proptest! {
 
 #[test]
 fn the_debug_form_names_no_server() {
-    let mirrorlist = Mirrorlist::new("Server = https://a.example/$repo\n").unwrap();
+    let mirrorlist = Mirrorlist::new(RATED).unwrap();
     let debug = format!("{mirrorlist:?}");
 
-    assert_eq!(debug, "Mirrorlist { servers: 1, bytes: 33 }");
+    assert_eq!(debug, "Mirrorlist { servers: 28, bytes: 13750 }");
 }

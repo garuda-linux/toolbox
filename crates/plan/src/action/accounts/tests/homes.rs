@@ -101,7 +101,7 @@ fn the_home_of_an_account_changes_with_or_without_its_files() {
     assert_eq!(
         shown(&moved),
         [
-            "check that ada is not the root account",
+            "check that ada is an ordinary account (id 1000 to 60000)",
             "check that /srv/people/ada does not exist yet",
             "usermod -d /srv/people/ada -m -- ada"
         ]
@@ -109,7 +109,7 @@ fn the_home_of_an_account_changes_with_or_without_its_files() {
     assert_eq!(
         shown(&change("/home/Ada L", false)),
         [
-            "check that ada is not the root account",
+            "check that ada is an ordinary account (id 1000 to 60000)",
             "usermod -d '/home/Ada L' -- ada"
         ]
     );

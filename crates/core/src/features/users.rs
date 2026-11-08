@@ -47,6 +47,10 @@ pub enum Refusal {
     CurrentUser,
     /// Only accounts of people are removed.
     SystemAccount,
+    /// Locks and home folder moves touch only accounts with a user id
+    /// from [`toolbox_plan::procedure::FIRST_USER_ID`] to
+    /// [`toolbox_plan::LAST_USER_ID`], as the helper checks again.
+    OutsideUserRange,
     /// The last member of [`ADMIN_GROUPS`] keeps one of them.
     LastAdmin,
     /// The last member of [`ADMIN_GROUPS`] keeps a password to use them.

@@ -7,12 +7,12 @@ use egui_kittest::kittest::Queryable as _;
 use toolbox_gui::testing::PATIENCE;
 
 use super::settle::{Gate, wait_for};
-use super::{app, succeeding_script};
+use super::{JAVA, app, succeeding_script};
 
 #[test]
 fn a_focused_cancel_hands_the_keyboard_to_close_when_the_run_ends() {
     let gate = Gate::new();
-    let (mut harness, _runtime) = app(gate.hold(&succeeding_script()));
+    let (mut harness, _runtime) = app(gate.hold(&succeeding_script()), JAVA);
 
     harness.get_by_label("Apply").click();
     let start = Instant::now();
@@ -38,7 +38,7 @@ fn a_focused_cancel_hands_the_keyboard_to_close_when_the_run_ends() {
 #[test]
 fn close_keeps_the_focus_while_the_menu_appears_beside_it() {
     let gate = Gate::new();
-    let (mut harness, _runtime) = app(gate.hold(&succeeding_script()));
+    let (mut harness, _runtime) = app(gate.hold(&succeeding_script()), JAVA);
 
     harness.get_by_label("Apply").click();
     wait_for(&mut harness, "Hide the Console");

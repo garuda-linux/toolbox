@@ -4,18 +4,44 @@ use super::super::{PictureSource, set, shown};
 use super::system;
 use crate::ChangeSet;
 
-/// What Garuda's own `/etc/default/grub` says about pictures: only the
-/// variable its theme reads.
-const GARUDA: &str = "GRUB_DEFAULT=0\n#GRUB_BACKGROUND=\"/path/to/wallpaper\"\nexport GRUB_MENU_PICTURE=\"/usr/share/grub/themes/garuda/background.png\"\n";
+/// `/etc/default/grub` of the Lima VM, with Garuda's own GRUB theme.
+const LIMA: &str = include_str!("../../../../../plan/src/grub/fixtures/lima/default-grub");
+/// `/etc/default/grub` of a Garuda Mokka install, with no picture.
+const MOKKA: &str = include_str!("../../../../../plan/src/grub/fixtures/installed/default-grub");
 const THEME_PICTURE: &str = "/usr/share/grub/themes/garuda/background.png";
+const WALLPAPER_LINE: &str = "#GRUB_BACKGROUND=\"/path/to/wallpaper\"";
+
+/// Edit: [`LIMA`] with an `export GRUB_MENU_PICTURE` line appended, the
+/// shape garuda-boot-options writes. No captured file holds one.
+fn with_menu_picture() -> String {
+    format!("{LIMA}export GRUB_MENU_PICTURE=\"{THEME_PICTURE}\"\n")
+}
+
+/// `defaults` with its commented wallpaper line made an own picture.
+fn with_own_picture(defaults: &str) -> String {
+    let edited = defaults.replace(WALLPAPER_LINE, "GRUB_BACKGROUND=\"/boot/own.png\"");
+
+    assert_ne!(edited, defaults);
+    edited
+}
 
 fn picture(path: &str) -> GrubPicture {
     GrubPicture::new(path).unwrap()
 }
 
 #[test]
-fn a_stock_garuda_file_shows_the_picture_of_its_theme_and_not_none() {
-    let state = system(GARUDA, &[]);
+fn the_real_garuda_file_shows_no_picture() {
+    for defaults in [LIMA, MOKKA] {
+        let page = shown(&system(defaults, &[]), &ChangeSet::default()).unwrap();
+
+        assert_eq!(page.background, "");
+        assert_eq!(page.background_source, PictureSource::Own);
+    }
+}
+
+#[test]
+fn a_menu_picture_line_shows_the_picture_of_its_theme_and_not_none() {
+    let state = system(&with_menu_picture(), &[]);
     let page = shown(&state, &ChangeSet::default()).unwrap();
 
     assert_eq!(page.background, THEME_PICTURE);
@@ -24,7 +50,7 @@ fn a_stock_garuda_file_shows_the_picture_of_its_theme_and_not_none() {
 
 #[test]
 fn an_own_picture_queues_and_replaces_the_one_of_the_theme_on_the_page() {
-    let state = system(GARUDA, &[]);
+    let state = system(&with_menu_picture(), &[]);
     let mut changes = ChangeSet::default();
 
     set(
@@ -43,7 +69,7 @@ fn an_own_picture_queues_and_replaces_the_one_of_the_theme_on_the_page() {
 
 #[test]
 fn clearing_queues_nothing_while_only_the_theme_sets_a_picture() {
-    let state = system(GARUDA, &[]);
+    let state = system(&with_menu_picture(), &[]);
     let mut changes = ChangeSet::default();
 
     set(GrubSetting::Background(None), &mut changes, &state).unwrap();
@@ -54,7 +80,7 @@ fn clearing_queues_nothing_while_only_the_theme_sets_a_picture() {
 
 #[test]
 fn clearing_an_own_picture_shows_the_one_of_the_theme_again() {
-    let own = format!("{GARUDA}GRUB_BACKGROUND=\"/boot/own.png\"\n");
+    let own = with_own_picture(&with_menu_picture());
     let state = system(&own, &[]);
     let mut changes = ChangeSet::default();
     let before = shown(&state, &changes).unwrap();
@@ -73,7 +99,7 @@ fn clearing_an_own_picture_shows_the_one_of_the_theme_again() {
 
 #[test]
 fn without_a_theme_picture_clearing_shows_none() {
-    let state = system("GRUB_BACKGROUND=\"/boot/own.png\"\n", &[]);
+    let state = system(&with_own_picture(MOKKA), &[]);
     let mut changes = ChangeSet::default();
 
     set(GrubSetting::Background(None), &mut changes, &state).unwrap();

@@ -55,10 +55,11 @@ one. The rules with a reason the code does not show:
   `\`, `$` or backtick and are escaped by `toolbox_plan::quote`, because
   `grub-mkconfig` sources `/etc/default/grub` as root.
 
-The helper repeats what only the wire shows: `DeleteUser` and locking
-refuse user id 0, `DeleteGroup` a group id below 1000, `CreateUser` and
-`SetShell` a shell not in `/etc/shells`, `SetSystemLocale` a locale not
-enabled in `/etc/locale.gen`, `SetHomeFolder -m` a taken target.
+The helper repeats what only the wire shows: `DeleteUser`, locking and
+`SetHomeFolder` refuse a user id, `DeleteGroup` a group id outside 1000 to
+60000, `CreateUser` and `SetShell` a shell not in `/etc/shells`,
+`SetSystemLocale` a locale not enabled in `/etc/locale.gen`,
+`SetHomeFolder -m` a taken target.
 
 ## Protected packages
 
@@ -116,7 +117,8 @@ without a password.
 - `shadow-locks`: user names and locked flags, never a hash. The buffer is
   overwritten before the answer.
 - `grub-menu`: titles and ids of at most 1000 entries, never the password
-  hash or the kernel command line.
+  hash or the kernel command line. Only the branches of the running
+  firmware count (`/sys/firmware/efi`, as the app's own read).
 - `sdboot-menu`: the settings of `loader.conf` and the ids, titles and
   kernel releases of at most 256 entries on the ESP. The helper finds the ESP
   in the mount table and reads only a UKI's header and its `.osrel` and
@@ -284,8 +286,9 @@ The app contacts the network only for:
 - links the user opens, `ping` and `traceroute` to a host the user typed,
 - NetworkManager's own connectivity check.
 
-No telemetry, no update check of the app. A dry run reaches none of the
-servers.
+No telemetry, no update check of the app. A dry run sends nothing to
+PrivateBin and asks no address service. A self-test build's dry run
+reaches none of the servers.
 
 Every HTTPS request goes through `toolbox_https::Https` (`crates/https`):
 rustls with system certificates, HTTPS only, no redirects, a timeout and

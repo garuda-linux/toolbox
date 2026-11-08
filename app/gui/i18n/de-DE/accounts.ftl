@@ -6,6 +6,7 @@ account-refusal-unknown-group = Eine der Gruppen existiert nicht oder ist zum En
 account-refusal-root = { $name } ist ein Root-Konto. Garuda Toolbox ändert es nicht.
 account-refusal-current-user = Mit { $name } bist du gerade angemeldet. Das eigene Konto kann nicht gesperrt oder entfernt werden.
 account-refusal-system-account = { $name } ist ein Systemkonto. Entfernen lassen sich nur Konten von Personen.
+account-refusal-outside-user-range = { $name } hat eine UID außerhalb von 1000 bis 60000 und bleibt daher, wie es ist.
 account-refusal-last-admin = { $name } ist das letzte Mitglied der Gruppen wheel und sudo. Ohne dieses Konto könnte niemand mehr dieses System verwalten.
 account-refusal-last-admin-lock = { $name } ist das letzte Mitglied der Gruppen wheel und sudo. Mit gesperrtem Passwort könnte niemand mehr dieses System verwalten.
 account-refusal-lock-state-unknown = { $name } kann nicht gesperrt werden, solange unklar ist, welche Administratoren gesperrt sind.

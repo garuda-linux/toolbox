@@ -3,6 +3,11 @@ use std::path::{Path, PathBuf};
 
 use super::{AppIconSource as _, AppStreamIcons, file_path, file_url};
 
+/// The first 300 files of `/usr/share/swcatalog/icons` in the Lima VM,
+/// as `find . -maxdepth 3 -type f` lists them.
+const SWCATALOG: &str = include_str!("fixtures/swcatalog-icons");
+const EXTRA_128: &str = "archlinux-arch-extra/128x128";
+
 fn touch(root: &Path, relative: &str) -> PathBuf {
     let path = root.join(relative);
 
@@ -11,50 +16,101 @@ fn touch(root: &Path, relative: &str) -> PathBuf {
     path
 }
 
+/// The captured files as empty files below `root`.
+fn captured(root: &Path) {
+    for file in SWCATALOG.lines() {
+        touch(root, file.strip_prefix("./").unwrap());
+    }
+}
+
+fn icon(root: &Path, name: &str) -> PathBuf {
+    root.join(EXTRA_128).join(name)
+}
+
 #[test]
-fn a_package_finds_its_cached_icon_in_the_largest_size() {
+fn a_package_finds_its_cached_icon() {
     let dir = tempfile::tempdir().unwrap();
     let root = dir.path().join("swcatalog/icons");
-    let large = touch(&root, "archlinux-arch-extra/128x128/firefox_firefox.png");
 
-    touch(&root, "archlinux-arch-extra/64x64/firefox_firefox.png");
+    captured(&root);
 
-    let small = touch(&root, "archlinux-arch-core/48x48/gimp_gimp.png");
     let icons = AppStreamIcons::scan(&[&root]);
 
-    assert_eq!(icons.len(), 2);
-    assert_eq!(icons.icon_file("firefox"), Some(large));
-    assert_eq!(icons.icon_file("gimp"), Some(small));
+    assert_eq!(icons.len(), 300);
+    assert_eq!(
+        icons.icon_file("firefox"),
+        Some(icon(&root, "firefox_firefox.jxl"))
+    );
+    assert_eq!(
+        icons.icon_file("calibre"),
+        Some(icon(&root, "calibre_calibre-ebook-edit.jxl")),
+        "the first of several icons"
+    );
     assert_eq!(icons.icon_file("fire"), None, "a prefix is no package");
     assert_eq!(icons.icon_file(""), None);
 }
 
+/// The captured cache with a 64x64 copy of firefox's icon and a gimp icon
+/// that only `core` has in 48x48.
+#[test]
+fn the_largest_size_wins() {
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path();
+
+    captured(root);
+    touch(root, "archlinux-arch-extra/64x64/firefox_firefox.png");
+
+    let small = touch(root, "archlinux-arch-core/48x48/gimp_gimp.png");
+    let icons = AppStreamIcons::scan(&[root]);
+
+    assert_eq!(icons.len(), 302);
+    assert_eq!(
+        icons.icon_file("firefox"),
+        Some(icon(root, "firefox_firefox.jxl"))
+    );
+    assert_eq!(icons.icon_file("gimp"), Some(small));
+}
+
+/// The captured cache with a `digikam.svg` added.
 #[test]
 fn an_icon_named_like_the_package_wins() {
     let dir = tempfile::tempdir().unwrap();
     let root = dir.path();
 
-    touch(root, "repo/64x64/kate_org.kde.kate.png");
+    captured(root);
 
-    let plain = touch(root, "repo/64x64/kate.svg");
+    assert_eq!(
+        AppStreamIcons::scan(&[root]).icon_file("digikam"),
+        Some(icon(root, "digikam_digikam.jxl"))
+    );
 
-    assert_eq!(AppStreamIcons::scan(&[root]).icon_file("kate"), Some(plain));
+    let plain = touch(root, &format!("{EXTRA_128}/digikam.svg"));
+
+    assert_eq!(
+        AppStreamIcons::scan(&[root]).icon_file("digikam"),
+        Some(plain)
+    );
 }
 
+/// The captured cache twice, in the current and in the old folder, with
+/// made-up files the scan must skip.
 #[test]
 fn the_newer_root_wins_and_other_files_are_ignored() {
     let dir = tempfile::tempdir().unwrap();
     let current = dir.path().join("swcatalog");
     let old = dir.path().join("app-info");
-    let new_icon = touch(&current, "arch/64x64/vlc_vlc.png");
 
-    touch(&old, "arch/64x64/vlc_vlc.png");
-    touch(&current, "arch/64x64/readme_notes.txt");
-    touch(&current, "arch/32x32/tiny_tiny.png");
+    captured(&current);
+    captured(&old);
+    touch(&current, &format!("{EXTRA_128}/readme_notes.txt"));
+    touch(&current, "archlinux-arch-extra/32x32/tiny_tiny.png");
 
     let icons = AppStreamIcons::scan(&[&current, &old, &dir.path().join("missing")]);
 
-    assert_eq!(icons.icon_file("vlc"), Some(new_icon));
+    assert_eq!(
+        icons.icon_file("amarok"),
+        Some(icon(&current, "amarok_amarok.jxl"))
+    );
     assert_eq!(icons.icon_file("readme"), None);
     assert_eq!(icons.icon_file("tiny"), None, "only the listed sizes");
 }
@@ -67,6 +123,7 @@ fn without_a_cache_nothing_is_found() {
     assert_eq!(icons.icon_file("firefox"), None);
 }
 
+/// The made-up path needs three escapes. A captured one needs none.
 #[test]
 fn file_urls_encode_what_a_url_cannot_hold() {
     assert_eq!(
@@ -74,24 +131,31 @@ fn file_urls_encode_what_a_url_cannot_hold() {
         "file:///usr/share/a%20b/c%23d%25e.png"
     );
     assert_eq!(
-        file_url(Path::new("/usr/share/swcatalog/icons/x_y-1.0~2.png")),
-        "file:///usr/share/swcatalog/icons/x_y-1.0~2.png"
+        file_url(Path::new(
+            "/usr/share/swcatalog/icons/archlinux-arch-extra/128x128/amberol_io.bassi.Amberol.jxl"
+        )),
+        "file:///usr/share/swcatalog/icons/archlinux-arch-extra/128x128/amberol_io.bassi.Amberol.jxl"
     );
 }
 
-/// Arch's cache holds JPEG XL files (`firefox_firefox.jxl`).
+/// Arch's cache holds JPEG XL files only. A text file beside them is
+/// added.
 #[test]
 fn jpeg_xl_icons_are_found() {
     let dir = tempfile::tempdir().unwrap();
     let root = dir.path();
-    let icon = touch(root, "archlinux-arch-extra/128x128/firefox_firefox.jxl");
 
-    touch(root, "archlinux-arch-extra/128x128/notes.txt");
+    captured(root);
+    touch(root, &format!("{EXTRA_128}/notes.txt"));
 
     let icons = AppStreamIcons::scan(&[root]);
 
-    assert_eq!(icons.len(), 1);
-    assert_eq!(icons.icon_file("firefox"), Some(icon));
+    assert_eq!(icons.len(), 300);
+    assert!(SWCATALOG.lines().all(|file| {
+        Path::new(file)
+            .extension()
+            .is_some_and(|extension| extension == "jxl")
+    }));
 }
 
 #[test]
@@ -105,6 +169,7 @@ fn a_file_url_turns_back_into_its_path() {
     );
 }
 
+/// Hostile URLs, made up.
 #[test]
 fn only_local_well_formed_file_urls_have_a_path() {
     assert_eq!(file_path("https://example.org/a.png"), None);

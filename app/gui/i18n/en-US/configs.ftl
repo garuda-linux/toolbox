@@ -33,7 +33,7 @@ configs-not-edited-outside = Not edited here: the link leads out of the system's
 
 # $path names the file.
 configs-problem-dismissed = { $path } was not read: the password dialog was closed.
-configs-problem-denied = { $path } was not read, because that needs the password of an administrator.
+configs-problem-denied = { $path } was not read: the password dialog was closed or the password was not accepted.
 configs-problem-no-agent = { $path } was not read, because no password dialog could appear: this desktop session runs no polkit authentication agent.
 configs-problem-helper-missing = { $path } was not read, because the helper of Garuda Toolbox is not installed. Reinstall Garuda Toolbox.
 configs-problem-missing = { $path } does not exist anymore.

@@ -1,0 +1,1 @@
+root=UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6 rootflags=subvol=@ rw loglevel=3 quiet console=tty0 console=ttyS0,115200

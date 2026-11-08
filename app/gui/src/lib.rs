@@ -16,6 +16,7 @@ pub mod launch;
 pub mod links;
 pub mod maintenance;
 pub mod network;
+#[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub mod news;
 pub mod notifications;
 pub mod packages;

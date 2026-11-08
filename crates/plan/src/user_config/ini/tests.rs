@@ -1,82 +1,106 @@
 use super::{set, value};
 
-const KWINRC: &str = "# kwin\n[Desktops]\nNumber=2\n\n[Windows]\nFocusPolicy=ClickToFocus\nBorderlessMaximizedWindows = false\n\n[Plugins]\nblurEnabled=true\n";
+/// `~/.config/kwinrc` after `kwriteconfig6` set one key in the Lima image.
+const WRITTEN: &str = include_str!("../fixtures/kwinrc");
+/// `~/.config/kwinrc` of a used Plasma session, nested `[Tiling]` groups
+/// and all.
+const USED: &str = include_str!("../fixtures/installed/kwinrc");
+
+const KEY: &str = "BorderlessMaximizedWindows";
 
 #[test]
 fn reads_the_value_of_the_key_in_its_group_only() {
-    let text = "[Other]\nBorderlessMaximizedWindows=true\n[Windows]\nBorderlessMaximizedWindows = false \n";
-
+    assert_eq!(value(USED, "Windows", KEY), Some("true"));
+    assert_eq!(value(USED, "Plugins", "scaleEnabled"), Some("false"));
+    assert_eq!(value(USED, "Xwayland", "Scale"), Some("1"));
     assert_eq!(
-        value(text, "Windows", "BorderlessMaximizedWindows"),
-        Some("false")
+        value(USED, "org.kde.kdecoration2", "ButtonsOnRight"),
+        Some("")
     );
-    assert_eq!(value(text, "Missing", "BorderlessMaximizedWindows"), None);
-    assert_eq!(value(text, "Windows", "Borderless"), None);
+    assert_eq!(value(USED, "Plugins", KEY), None);
+    assert_eq!(value(USED, "Missing", KEY), None);
+    assert_eq!(value(USED, "Windows", "Borderless"), None);
+
+    // Edit: blanks around the `=` of the real line.
+    let spaced = USED.replace(
+        "BorderlessMaximizedWindows=true",
+        "BorderlessMaximizedWindows = false ",
+    );
+
+    assert_eq!(value(&spaced, "Windows", KEY), Some("false"));
 }
 
 #[test]
 fn a_later_entry_wins_and_comments_do_not_count() {
-    let text = "[Windows]\nKey=one\n#Key=commented\n[Plugins]\n[Windows]\nKey=two\n";
+    // Edit: a second `[Windows]` group with the key commented and set.
+    let text = format!("{USED}\n[Windows]\n#{KEY}=commented\n{KEY}=two\n");
 
-    assert_eq!(value(text, "Windows", "Key"), Some("two"));
+    assert_eq!(value(&text, "Windows", KEY), Some("two"));
 }
 
 #[test]
 fn replaces_an_existing_entry_and_keeps_everything_else() {
-    let after = set(KWINRC, "Windows", "BorderlessMaximizedWindows", "true");
+    let after = set(USED, "Windows", KEY, "false");
+
+    assert_eq!(after, USED.replace("Windows=true", "Windows=false"));
+
+    // Edit: blanks around the `=` of the real line.
+    let spaced = WRITTEN.replace("Windows=true", "Windows = true");
 
     assert_eq!(
-        after,
-        KWINRC.replace(
-            "BorderlessMaximizedWindows = false",
-            "BorderlessMaximizedWindows=true"
-        )
+        set(&spaced, "Windows", KEY, "false"),
+        WRITTEN.replace("true", "false")
     );
 }
 
 #[test]
 fn adds_the_key_after_the_last_line_of_its_group() {
-    let text = "[Windows]\nFocusPolicy=ClickToFocus\n\n[Plugins]\nblurEnabled=true\n";
-
     assert_eq!(
-        set(text, "Windows", "BorderlessMaximizedWindows", "true"),
-        "[Windows]\nFocusPolicy=ClickToFocus\nBorderlessMaximizedWindows=true\n\n[Plugins]\nblurEnabled=true\n"
+        set(USED, "Plugins", "zoomEnabled", "true"),
+        USED.replace(
+            "wobblywindowsEnabled=true\n",
+            "wobblywindowsEnabled=true\nzoomEnabled=true\n"
+        )
     );
 }
 
 #[test]
 fn adds_the_group_when_it_is_missing() {
     assert_eq!(
-        set("[Plugins]\nblurEnabled=true", "Windows", "Key", "true"),
-        "[Plugins]\nblurEnabled=true\n\n[Windows]\nKey=true\n"
+        set(WRITTEN, "Plugins", "blurEnabled", "true"),
+        format!("{WRITTEN}\n[Plugins]\nblurEnabled=true\n")
     );
-    assert_eq!(set("", "Windows", "Key", "true"), "[Windows]\nKey=true\n");
+
+    // Edit: the real file without its last line break.
+    assert_eq!(
+        set(WRITTEN.trim_end(), "Plugins", "blurEnabled", "true"),
+        format!("{WRITTEN}\n[Plugins]\nblurEnabled=true\n")
+    );
+    assert_eq!(set("", "Windows", KEY, "true"), WRITTEN);
 }
 
 #[test]
 fn a_last_line_without_newline_gets_one_before_the_new_entry() {
+    // Edit: the real file without its last line break.
     assert_eq!(
-        set("[Windows]\nFocusPolicy=Click", "Windows", "Key", "true"),
-        "[Windows]\nFocusPolicy=Click\nKey=true\n"
+        set(WRITTEN.trim_end(), "Windows", "FocusPolicy", "ClickToFocus"),
+        format!("{WRITTEN}FocusPolicy=ClickToFocus\n")
     );
 }
 
 #[test]
 fn keeps_crlf_line_endings_of_replaced_lines() {
+    // Edit: the real file with CRLF endings.
+    let crlf = WRITTEN.replace('\n', "\r\n");
+
     assert_eq!(
-        set(
-            "[Windows]\r\nKey=false\r\nOther=1\r\n",
-            "Windows",
-            "Key",
-            "true"
-        ),
-        "[Windows]\r\nKey=true\r\nOther=1\r\n"
+        set(&crlf, "Windows", KEY, "false"),
+        crlf.replace("true", "false")
     );
 }
 
 #[test]
 fn setting_the_current_value_changes_nothing() {
-    let text = "[Windows]\nKey=true\n";
-
-    assert_eq!(set(text, "Windows", "Key", "true"), text);
+    assert_eq!(set(USED, "Windows", KEY, "true"), USED);
+    assert_eq!(set(WRITTEN, "Windows", KEY, "true"), WRITTEN);
 }

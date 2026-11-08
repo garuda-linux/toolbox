@@ -12,7 +12,7 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, PreferencesSetup, Setup, apply, share};
 
 use crate::common::{HEIGHT, installing, launch, window};
-use crate::console::{FakeLauncher, silent_script, succeeding_script, wait_for};
+use crate::console::{FakeLauncher, JAVA, silent_script, succeeding_script, wait_for};
 
 /// The output's menu, named for screen readers.
 const MENU: &str = "Console output actions";
@@ -20,25 +20,29 @@ const MENU: &str = "Console output actions";
 /// The line an idle terminal shows in place of output.
 const IDLE_HINT: &str = "The output of the next apply shows here.";
 
-/// Firefox applied with the fake helper, so the Console has output.
+/// java-runtime applied with the fake helper, so the Console has output.
 fn applied() -> (Harness<'static, App>, Runtime) {
     applied_with(succeeding_script(), false)
 }
 
-/// Firefox applied, the fake helper running `script`, an upload's link
+/// java-runtime applied, the fake helper running `script`, an upload's link
 /// copied when `copy`.
 fn applied_with(script: String, copy: bool) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
 
-    let changes = installing(&["firefox"]);
+    let changes = installing(JAVA);
 
     let mut harness = window(HEIGHT).build_eframe(move |cc| {
         let launcher = Arc::new(FakeLauncher(script));
         let mut preferences = PreferencesSetup::default();
         preferences.settings.diagnostics.copy_to_clipboard = copy;
         let setup = Setup {
-            snapshot: Some(crate::console::firefox_after_the_run(&handle, &cc.egui_ctx)),
+            snapshot: Some(crate::console::installed_after_the_run(
+                &handle,
+                &cc.egui_ctx,
+                JAVA,
+            )),
             queue: Queue::in_memory(changes),
             apply: Some(apply::spawn(
                 &handle,
@@ -78,7 +82,7 @@ fn copy_puts_the_output_on_the_clipboard_and_says_so() {
     choose(&mut harness, "Copy output");
 
     let copied = harness.output().platform_output.commands.iter().any(|command| {
-        matches!(command, egui::OutputCommand::CopyText(text) if text.contains("installed firefox"))
+        matches!(command, egui::OutputCommand::CopyText(text) if text.contains("Proceed with installation?"))
     });
 
     assert!(copied, "the output did not reach the clipboard");
@@ -106,7 +110,7 @@ fn share_asks_with_the_output_then_shows_the_link() {
         harness
             .get_by_label("The text that will be uploaded")
             .value()
-            .is_some_and(|text| text.contains("installed firefox")),
+            .is_some_and(|text| text.contains("Proceed with installation?")),
         "the question does not show what goes out"
     );
 

@@ -11,6 +11,10 @@ use crate::testing::harness;
 
 const HINT: &str = "Ctrl+Tab leaves the terminal.";
 
+/// What `script(1)` caught of pacman asking for a `java-runtime` provider
+/// and then whether to install.
+const PACMAN_PROVIDER: &[u8] = include_bytes!("../../../pty/tests/fixtures/pacman-provider.txt");
+
 struct Console {
     terminal: Terminal,
     bytes: Vec<u8>,
@@ -236,14 +240,16 @@ fn a_drag_over_two_rows_copies_both_with_ctrl_shift_c() {
 
 #[test]
 fn a_screen_reader_reads_the_text_on_screen_as_it_comes() {
-    let harness = console(b"Proceed with installation? [Y/n] ");
+    let harness = console(PACMAN_PROVIDER);
     let terminal = harness.get_by_role_and_label(Role::Terminal, "Console");
     let node = terminal.accesskit_node();
+    let value = node.value().unwrap_or_default();
 
-    assert_eq!(
-        node.value().as_deref(),
-        Some("Proceed with installation? [Y/n]")
+    assert!(
+        value.ends_with("\n:: Proceed with installation? [Y/n]"),
+        "{value:?}"
     );
+    assert!(!value.contains('\u{1b}'), "{value:?}");
     assert_eq!(node.live(), Live::Polite);
 }
 

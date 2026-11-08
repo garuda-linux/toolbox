@@ -15,7 +15,10 @@ use toolbox_system::{PackageIndexSource, ProbeError, RecentLogSource};
 use super::{Packages, PackagesSetup, Read};
 use crate::testing::until;
 
-/// gimp installed, and a log that names it once.
+const LIMA_LOG: &str =
+    include_str!("../../../../crates/system/src/status/pacman_log/fixtures/pacman.log");
+
+/// gimp installed as in the Lima VM, whose pacman log names it once.
 #[derive(Default)]
 struct Machine {
     index_reads: AtomicUsize,
@@ -52,11 +55,11 @@ impl PackageIndexSource for Machine {
             entries: vec![IndexEntry {
                 name: name("gimp"),
                 description: "GNU Image Manipulation Program".to_owned(),
-                version: "3.0-1".to_owned(),
+                version: "3.2.6-2".to_owned(),
                 origin: Origin::Repository("extra".to_owned()),
                 size: 1,
                 installed: Some(Installed {
-                    version: "3.0-1".to_owned(),
+                    version: "3.2.6-2".to_owned(),
                     reason: InstallReason::Explicit,
                 }),
             }],
@@ -72,7 +75,7 @@ impl PackageIndexSource for Machine {
         Ok(Some(PackageDetails {
             name: package.clone(),
             description: String::new(),
-            version: "3.0-1".to_owned(),
+            version: "3.2.6-2".to_owned(),
             origin: Origin::Repository("extra".to_owned()),
             size: 1,
             url: None,
@@ -91,7 +94,7 @@ impl PackageIndexSource for Machine {
 
 impl RecentLogSource for Log {
     fn recent(&self) -> Result<String, ProbeError> {
-        Ok("[2025-01-10T09:12:06+0100] [ALPM] installed gimp (3.0-1)\n".to_owned())
+        Ok(LIMA_LOG.to_owned())
     }
 }
 
@@ -173,7 +176,7 @@ fn showing_a_package_reads_its_details_and_its_history() {
     });
 
     let details = packages.details().unwrap();
-    assert!(matches!(&details.info, Read::Known(Some(info)) if info.version == "3.0-1"));
+    assert!(matches!(&details.info, Read::Known(Some(info)) if info.version == "3.2.6-2"));
     assert!(matches!(
         &details.history,
         Read::Known(lines) if lines.len() == 1 && lines[0].action == HistoryAction::Installed

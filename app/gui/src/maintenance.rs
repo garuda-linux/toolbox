@@ -6,13 +6,17 @@
 //! threads and the frame takes their results.
 
 mod jobs;
+#[cfg(any(test, feature = "selftest", feature = "testing"))]
+mod sample;
 #[cfg(test)]
 mod tests;
 
 use std::path::Path;
 
 use jobs::Jobs;
-pub use jobs::{MaintenanceSetup, SampleMirrors};
+pub use jobs::MaintenanceSetup;
+#[cfg(any(test, feature = "selftest", feature = "testing"))]
+pub use sample::SampleMirrors;
 use toolbox_catalog::SkelCatalog;
 use toolbox_core::features::maintenance::opening::{Next, Opening};
 use toolbox_core::features::maintenance::page::{

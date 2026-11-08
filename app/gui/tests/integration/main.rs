@@ -22,6 +22,7 @@ mod gaming;
 mod guide;
 mod home;
 mod home_facts;
+mod home_health;
 mod home_reads;
 mod instance;
 mod kernels;

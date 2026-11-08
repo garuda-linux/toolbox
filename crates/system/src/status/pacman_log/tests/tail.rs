@@ -1,12 +1,11 @@
 use std::cell::Cell;
 use std::io::{self, Cursor, Read, Seek, SeekFrom};
-use std::time::{Duration, SystemTime};
+use std::time::SystemTime;
 
 use super::super::last_in_tail;
+use super::{LAST, LOG, at};
 
 const WINDOW: usize = 1024;
-const COMPLETED: &str = "[2026-10-09T14:03:11+0000] [ALPM] transaction completed\n";
-const NOISE: &str = "[2026-10-09T15:00:00+0000] [PACMAN] Running 'pacman -Sy'\n";
 
 struct Counted<'bytes> {
     log: Cursor<Vec<u8>>,
@@ -28,6 +27,21 @@ impl Seek for Counted<'_> {
     }
 }
 
+/// The last `transaction completed` line of the Lima log.
+fn completed() -> String {
+    let line = LOG
+        .lines()
+        .rfind(|line| line.ends_with("] [ALPM] transaction completed"))
+        .unwrap();
+
+    format!("{line}\n")
+}
+
+/// The first line of the Lima log, `Running 'pacman -Syu --noconfirm'`.
+fn noise() -> String {
+    format!("{}\n", LOG.lines().next().unwrap())
+}
+
 fn scan(log: &str) -> (Option<SystemTime>, usize) {
     let read = Cell::new(0);
     let mut log = Counted {
@@ -41,37 +55,37 @@ fn scan(log: &str) -> (Option<SystemTime>, usize) {
     )
 }
 
-fn stamp() -> Option<SystemTime> {
-    SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(1_791_554_591))
-}
-
 #[test]
 fn only_the_end_of_a_long_log_is_read() {
-    let log = format!("{}{COMPLETED}{NOISE}", NOISE.repeat(10_000));
+    let (completed, noise) = (completed(), noise());
+    let log = format!("{}{completed}{noise}", noise.repeat(10_000));
     let (last, read) = scan(&log);
 
-    assert_eq!(last, stamp());
+    assert_eq!(last, at(LAST));
     assert!(read <= 2 * WINDOW, "{read} bytes read");
 }
 
 #[test]
 fn a_transaction_before_the_end_is_still_found() {
-    let log = format!("{NOISE}{COMPLETED}{}", NOISE.repeat(2_000));
+    let (completed, noise) = (completed(), noise());
+    let log = format!("{noise}{completed}{}", noise.repeat(2_000));
     let (last, read) = scan(&log);
 
-    assert_eq!(last, stamp());
+    assert_eq!(last, at(LAST));
     assert!(read < 3 * log.len(), "{read} bytes read");
 }
 
 #[test]
 fn a_log_without_a_transaction_is_read_to_its_start_and_has_none() {
-    assert_eq!(scan(&NOISE.repeat(500)).0, None);
+    assert_eq!(scan(&noise().repeat(500)).0, None);
     assert_eq!(scan("").0, None);
-    assert_eq!(scan(COMPLETED).0, stamp());
+    assert_eq!(scan(&completed()).0, at(LAST));
+    assert_eq!(scan(LOG).0, at(LAST));
 }
 
 /// A window that starts inside a line must not take its rest for a line:
-/// here the rest reads like a transaction, and the log holds none.
+/// here the rest reads like a transaction, and the log holds none. The
+/// trap line is made up for this.
 #[test]
 fn the_line_the_window_cuts_is_not_read() {
     let trap = "[2026-10-09T14:03:11+0000] [ALPM] upgraded x (1 -> [2030-01-01T00:00:00+0000] [ALPM] transaction completed\n";
@@ -89,9 +103,10 @@ fn the_line_the_window_cuts_is_not_read() {
 
 #[test]
 fn a_window_that_starts_at_a_line_keeps_that_line() {
-    let fill = WINDOW - COMPLETED.len();
-    let log = format!("{NOISE}{COMPLETED}{}\n", "x".repeat(fill - 1));
+    let (completed, noise) = (completed(), noise());
+    let fill = WINDOW - completed.len();
+    let log = format!("{noise}{completed}{}\n", "x".repeat(fill - 1));
 
-    assert_eq!(log.len() - NOISE.len(), WINDOW);
-    assert_eq!(scan(&log).0, stamp());
+    assert_eq!(log.len() - noise.len(), WINDOW);
+    assert_eq!(scan(&log).0, at(LAST));
 }

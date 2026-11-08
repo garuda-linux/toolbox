@@ -5,15 +5,20 @@
 #[cfg(test)]
 mod tests;
 
+use std::ops::RangeInclusive;
 use std::path::Path;
 use std::{fs, io};
 
 use toolbox_plan::procedure::{FIRST_USER_ID, GROUP, PASSWD};
 use toolbox_plan::protocol::Outcome;
-use toolbox_plan::{GroupName, HomeDirectory, StepId, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, LAST_USER_ID, StepId, UserName};
 
 use crate::apply::EventSink;
 use crate::report::{failure, note};
+
+/// Root, system accounts and `nobody` (65534) lie outside, and files on
+/// disk refer to them.
+const ORDINARY_IDS: RangeInclusive<u32> = FIRST_USER_ID..=LAST_USER_ID;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Listed {
@@ -49,10 +54,12 @@ pub fn require_ordinary_user(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     match user_id(root, user) {
-        Ok(Listed::Id(0)) => failure(
+        Ok(Listed::Id(id)) if !ORDINARY_IDS.contains(&id) => failure(
             step,
             sink,
-            &format!("{user} is the root account, which stays as it is"),
+            &format!(
+                "{user} has the user id {id}, outside {FIRST_USER_ID} to {LAST_USER_ID}, so it stays as it is"
+            ),
         ),
         Ok(Listed::Id(id)) => note(
             step,
@@ -95,10 +102,12 @@ pub fn require_user_group(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     match group_id(root, group) {
-        Ok(Listed::Id(id)) if id < FIRST_USER_ID => failure(
+        Ok(Listed::Id(id)) if !ORDINARY_IDS.contains(&id) => failure(
             step,
             sink,
-            &format!("{group} is a system group (group id {id}), which stays"),
+            &format!(
+                "{group} has the group id {id}, outside {FIRST_USER_ID} to {LAST_USER_ID}, so it stays"
+            ),
         ),
         Ok(Listed::Id(id)) => note(
             step,

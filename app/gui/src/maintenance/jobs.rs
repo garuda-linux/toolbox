@@ -14,17 +14,13 @@ use toolbox_system::skel::shelf::{self, Outcome};
 
 use crate::lane::Lane;
 
-/// The self-test's Chaotic-AUR list. It never reaches a mirror.
-const SAMPLE_MIRRORS: &str = "# Chaotic-AUR mirrors of the self-test, never ranked\n\
-    Server = https://cdn-mirror.chaotic.cx/$repo/$arch\n\
-    Server = https://geo-mirror.chaotic.cx/$repo/$arch\n";
-
 type Ranked = Result<Mirrorlist, RankProblem>;
 
 /// What the page's jobs need from outside.
 pub struct MaintenanceSetup {
     pub runtime: Handle,
-    /// Ranks the Chaotic-AUR mirrors. A dry run's stand-in asks no mirror.
+    /// Ranks the Chaotic-AUR mirrors. The self-test's stand-in asks no
+    /// mirror.
     pub mirrors: Arc<dyn MirrorRanking>,
     /// Where reset settings go.
     pub home: PathBuf,
@@ -37,17 +33,6 @@ pub struct Jobs {
     setup: MaintenanceSetup,
     ranked: Lane<Ranked>,
     reset: Lane<Outcome>,
-}
-
-/// Answers a fixed list at once, for the dry run and its self-test:
-/// `rate-mirrors` would run for minutes and ask every mirror.
-#[derive(Clone, Copy, Debug)]
-pub struct SampleMirrors;
-
-impl MirrorRanking for SampleMirrors {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
-        Mirrorlist::new(SAMPLE_MIRRORS).map_err(|error| RankProblem::Invalid(error.to_string()))
-    }
 }
 
 impl fmt::Debug for MaintenanceSetup {

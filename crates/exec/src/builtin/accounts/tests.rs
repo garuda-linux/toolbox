@@ -8,22 +8,18 @@ use toolbox_plan::{GroupName, HomeDirectory, UserName};
 use super::{Listed, group_id, user_id};
 use crate::testing::{assert_failed, run_builtin as run};
 
-const PASSWD: &str = "root:x:0:0::/root:/usr/bin/bash
-toor:x:0:0:second root:/root:/usr/bin/bash
-bin:x:1:1::/:/usr/bin/nologin
-nico:x:1000:1000:Nico:/home/nico:/usr/bin/fish
-odd:x:abc:1000::/home/odd:/usr/bin/bash
-";
-
-const GROUP: &str = "root:x:0:root
-wheel:x:998:nico
-nico:x:1000:
-makers:x:1001:nico
-";
+/// `/etc/passwd` and `/etc/group` of the Lima Garuda image, the user
+/// renamed to `user`.
+const PASSWD: &str = include_str!("../../../../system/src/accounts/fixtures/passwd");
+const GROUP: &str = include_str!("../../../../system/src/accounts/fixtures/group");
 
 fn etc(root: &Path) {
+    etc_with(root, PASSWD);
+}
+
+fn etc_with(root: &Path, passwd: &str) {
     fs::create_dir_all(root.join("etc")).unwrap();
-    fs::write(root.join("etc/passwd"), PASSWD).unwrap();
+    fs::write(root.join("etc/passwd"), passwd).unwrap();
     fs::write(root.join("etc/group"), GROUP).unwrap();
 }
 
@@ -41,11 +37,10 @@ fn ids_come_from_the_third_field() {
     etc(dir.path());
 
     assert_eq!(
-        user_id(dir.path(), &user("nico")).unwrap(),
+        user_id(dir.path(), &user("user")).unwrap(),
         Listed::Id(1000)
     );
     assert_eq!(user_id(dir.path(), &user("root")).unwrap(), Listed::Id(0));
-    assert_eq!(user_id(dir.path(), &user("odd")).unwrap(), Listed::Missing);
     assert_eq!(
         user_id(dir.path(), &user("ghost")).unwrap(),
         Listed::Missing
@@ -55,21 +50,53 @@ fn ids_come_from_the_third_field() {
         Listed::Id(998)
     );
     assert_eq!(
-        group_id(dir.path(), &group("nic")).unwrap(),
+        group_id(dir.path(), &group("use")).unwrap(),
         Listed::Missing
     );
 }
 
+/// Edit: the user id of `user` replaced by `abc`, as a hand-edited file
+/// could have it.
+#[test]
+fn an_id_that_is_no_number_reads_as_missing() {
+    let dir = tempfile::tempdir().unwrap();
+    etc_with(
+        dir.path(),
+        &PASSWD.replace("user:x:1000:1000:", "user:x:abc:1000:"),
+    );
+
+    assert_eq!(user_id(dir.path(), &user("user")).unwrap(), Listed::Missing);
+}
+
+/// Edit: a second account `toor` with user id 0 appended, the BSD habit of
+/// a spare root login.
 #[test]
 fn every_account_with_user_id_zero_is_refused() {
     let dir = tempfile::tempdir().unwrap();
-    etc(dir.path());
+    etc_with(
+        dir.path(),
+        &format!("{PASSWD}toor:x:0:0:second root:/root:/usr/bin/bash\n"),
+    );
 
     for name in ["root", "toor"] {
         let (outcome, text) = run(dir.path(), &Builtin::RequireOrdinaryUser(user(name)));
 
         assert_failed(outcome);
-        assert!(text.contains("root account"), "{text}");
+        assert!(text.contains("user id 0"), "{text}");
+    }
+}
+
+#[test]
+fn system_accounts_and_nobody_are_refused() {
+    let dir = tempfile::tempdir().unwrap();
+    etc(dir.path());
+
+    for (name, id) in [("bin", "1"), ("nobody", "65534")] {
+        let (outcome, text) = run(dir.path(), &Builtin::RequireOrdinaryUser(user(name)));
+
+        assert_failed(outcome);
+        assert!(text.contains(&format!("user id {id},")), "{text}");
+        assert!(text.contains("1000 to 60000"), "{text}");
     }
 }
 
@@ -78,7 +105,7 @@ fn other_listed_users_pass_and_unknown_ones_fail() {
     let dir = tempfile::tempdir().unwrap();
     etc(dir.path());
 
-    for name in ["nico", "bin"] {
+    for name in ["user", "guest"] {
         let (outcome, _) = run(dir.path(), &Builtin::RequireOrdinaryUser(user(name)));
 
         assert_eq!(outcome, Outcome::Succeeded, "{name}");
@@ -95,14 +122,14 @@ fn system_groups_stay_and_user_groups_pass() {
     let dir = tempfile::tempdir().unwrap();
     etc(dir.path());
 
-    for name in ["root", "wheel"] {
+    for name in ["root", "bin", "wheel", "audio", "nobody"] {
         let (outcome, text) = run(dir.path(), &Builtin::RequireUserGroup(group(name)));
 
         assert_failed(outcome);
-        assert!(text.contains("system group"), "{text}");
+        assert!(text.contains("1000 to 60000"), "{text}");
     }
 
-    for name in ["nico", "makers"] {
+    for name in ["user", "guest"] {
         let (outcome, _) = run(dir.path(), &Builtin::RequireUserGroup(group(name)));
 
         assert_eq!(outcome, Outcome::Succeeded, "{name}");
@@ -115,8 +142,8 @@ fn system_groups_stay_and_user_groups_pass() {
 fn missing_account_files_fail_the_guard() {
     let dir = tempfile::tempdir().unwrap();
 
-    assert_failed(run(dir.path(), &Builtin::RequireOrdinaryUser(user("nico"))).0);
-    assert_failed(run(dir.path(), &Builtin::RequireUserGroup(group("makers"))).0);
+    assert_failed(run(dir.path(), &Builtin::RequireOrdinaryUser(user("user"))).0);
+    assert_failed(run(dir.path(), &Builtin::RequireUserGroup(group("guest"))).0);
 }
 
 /// `usermod -d <new> -m` writes the new home into `/etc/passwd` before it

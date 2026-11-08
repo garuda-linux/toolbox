@@ -1,56 +1,62 @@
-use crate::features::network::{DeviceKind, copy_text, pci_devices, usb_devices};
+use crate::features::network::{DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices};
 
-const LSPCI: &str = "\
-00:00.0 Host bridge [0600]: Intel Corporation Device [8086:a706] (rev 01)
-00:14.3 Network controller [0280]: Intel Corporation Raptor Lake PCH CNVi WiFi [8086:7a70] (rev 11)
-02:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller [10ec:8125] (rev 05)
-03:00.0 Wireless controller [0d11]: Some Vendor Bluetooth Module [1234:5678]
-04:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co Ltd NVMe SSD Controller [144d:a80a]
-05:00.0 Audio device [0403]: Ethernet controller fan club [dead:beef]
-";
+/// A file of the laptop's `/sys/bus/usb/devices` capture.
+macro_rules! sysfs {
+    ($file:expr) => {
+        include_str!(concat!(
+            "../../../../../system/src/network/fixtures/bare-metal/sys-bus-usb-devices/",
+            $file
+        ))
+    };
+}
 
-const LSUSB: &str = "\
-Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-Bus 001 Device 004: ID 8087:0033 Intel Corp. AX211 Bluetooth
-Bus 001 Device 005: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
-Bus 001 Device 006: ID 0e8d:7961 MediaTek Inc. Wireless_Device
-Bus 001 Device 007: ID 2357:0138 TP-Link 802.11ac NIC
-Bus 001 Device 008: ID 046d:c52b Logitech, Inc. Unifying Receiver
-Bus 001 Device 009: ID 045e:0745 Microsoft Corp. Nano Transceiver v1.0 for Wireless Mouse
-Bus 001 Device 010: ID 148f:5370 Ralink Technology, Corp. RT5370 Wireless Adapter
-Bus 001 Device 011: ID 18d1:4ee4 Google Inc. Nexus/Pixel Device (RNDIS)
-";
+/// The first interface of the captured USB device `$device`.
+macro_rules! first_interface {
+    ($device:literal) => {
+        UsbInterface::from_sysfs(
+            sysfs!(concat!($device, "/idVendor")),
+            sysfs!(concat!($device, "/idProduct")),
+            [
+                sysfs!(concat!($device, ":1.0/bInterfaceClass")),
+                sysfs!(concat!($device, ":1.0/bInterfaceSubClass")),
+                sysfs!(concat!($device, ":1.0/bInterfaceProtocol")),
+            ],
+        )
+        .unwrap()
+    };
+}
 
-#[test]
-fn pci_devices_are_sorted_by_class_code() {
-    let devices = pci_devices(LSPCI);
-    let found: Vec<(DeviceKind, &str)> = devices
-        .iter()
-        .map(|device| (device.kind, device.description.as_str()))
-        .collect();
+/// A bare-metal laptop: a Realtek Ethernet port and a `MediaTek` MT7922 Wi-Fi
+/// card, the MT7922's Bluetooth on USB as a Foxconn device.
+const LAPTOP_LSPCI: &str =
+    include_str!("../../../../../system/src/network/fixtures/bare-metal/lspci-nn");
+const LAPTOP_LSUSB: &str =
+    include_str!("../../../../../system/src/network/fixtures/bare-metal/lsusb");
+/// The Lima VM, with one virtio network device and no USB device but
+/// the root hubs.
+const LIMA_LSPCI: &str = include_str!("../../../../../system/src/network/fixtures/lspci-nn");
+const LIMA_LSUSB: &str = include_str!("../../../../../system/src/network/fixtures/lsusb.stdout");
 
-    assert_eq!(
-        found,
-        [
-            (
-                DeviceKind::Wireless,
-                "Intel Corporation Raptor Lake PCH CNVi WiFi [8086:7a70] (rev 11)"
-            ),
-            (
-                DeviceKind::Ethernet,
-                "Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller [10ec:8125] (rev 05)"
-            ),
-            (
-                DeviceKind::Bluetooth,
-                "Some Vendor Bluetooth Module [1234:5678]"
-            ),
-        ]
-    );
+/// The first interface of the Foxconn device `3-2`.
+fn laptop_bluetooth() -> UsbInterface {
+    first_interface!("3-2")
+}
+
+/// The first interface of the RTL8153 `2-1.4.4`, vendor specific.
+fn laptop_ethernet() -> UsbInterface {
+    first_interface!("2-1.4.4")
+}
+
+fn line_of<'text>(listing: &'text str, start: &str) -> &'text str {
+    listing
+        .lines()
+        .find(|line| line.starts_with(start))
+        .unwrap_or_else(|| panic!("{start} is listed"))
 }
 
 #[test]
-fn usb_devices_are_sorted_by_the_words_of_their_names() {
-    let found: Vec<(DeviceKind, String)> = usb_devices(LSUSB)
+fn pci_devices_are_kinded_by_class_code() {
+    let found: Vec<(DeviceKind, String)> = pci_devices(LAPTOP_LSPCI)
         .into_iter()
         .map(|device| (device.kind, device.description))
         .collect();
@@ -59,57 +65,132 @@ fn usb_devices_are_sorted_by_the_words_of_their_names() {
         found,
         [
             (
-                DeviceKind::Bluetooth,
-                "Intel Corp. AX211 Bluetooth".to_owned()
+                DeviceKind::Ethernet,
+                "Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit \
+                 Ethernet Controller [10ec:8168] (rev 15)"
+                    .to_owned()
             ),
+            (
+                DeviceKind::Wireless,
+                "MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter [14c3:0616]"
+                    .to_owned()
+            ),
+        ]
+    );
+
+    let lima: Vec<_> = pci_devices(LIMA_LSPCI)
+        .into_iter()
+        .map(|device| (device.kind, device.description))
+        .collect();
+
+    assert_eq!(
+        lima,
+        [(
+            DeviceKind::Ethernet,
+            "Red Hat, Inc. Virtio network device [1af4:1000]".to_owned()
+        )]
+    );
+}
+
+#[test]
+fn a_bluetooth_controller_on_pci_is_bluetooth() {
+    // The MT7922 line edited to the class code of a Bluetooth controller.
+    let bluetooth =
+        line_of(LAPTOP_LSPCI, "04:00.0").replace("Network controller [0280]", "Bluetooth [0d11]");
+
+    let kinds: Vec<_> = pci_devices(&bluetooth)
+        .into_iter()
+        .map(|device| device.kind)
+        .collect();
+
+    assert_eq!(kinds, [DeviceKind::Bluetooth]);
+}
+
+/// The Foxconn device is the MT7922's Bluetooth, which only its
+/// interface class tells.
+#[test]
+fn a_bluetooth_interface_makes_a_usb_device_bluetooth() {
+    let found: Vec<(DeviceKind, String)> =
+        usb_devices(LAPTOP_LSUSB, &[laptop_ethernet(), laptop_bluetooth()])
+            .into_iter()
+            .map(|device| (device.kind, device.description))
+            .collect();
+
+    assert_eq!(
+        found,
+        [
             (
                 DeviceKind::Ethernet,
                 "Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter".to_owned()
             ),
             (
-                DeviceKind::Wireless,
-                "MediaTek Inc. Wireless_Device".to_owned()
-            ),
-            (DeviceKind::Wireless, "TP-Link 802.11ac NIC".to_owned()),
-            (
-                DeviceKind::Wireless,
-                "Ralink Technology, Corp. RT5370 Wireless Adapter".to_owned()
-            ),
-            (
-                DeviceKind::Ethernet,
-                "Google Inc. Nexus/Pixel Device (RNDIS)".to_owned()
+                DeviceKind::Bluetooth,
+                "Foxconn / Hon Hai Wireless_Device".to_owned()
             ),
         ]
     );
+    assert_eq!(usb_devices(LIMA_LSUSB, &[]), []);
+}
+
+/// Without the interfaces of a device only the words of its name count.
+#[test]
+fn without_its_interfaces_a_usb_device_is_kinded_by_its_name() {
+    let kinds: Vec<DeviceKind> = usb_devices(LAPTOP_LSUSB, &[])
+        .into_iter()
+        .map(|device| device.kind)
+        .collect();
+
+    assert_eq!(kinds, [DeviceKind::Ethernet, DeviceKind::Wireless]);
+}
+
+#[test]
+fn sysfs_values_that_are_no_hex_numbers_are_refused() {
+    let vendor = sysfs!("3-2/idVendor");
+    let product = sysfs!("3-2/idProduct");
+    let class = sysfs!("3-2:1.0/bInterfaceClass");
+    let rest = [
+        sysfs!("3-2:1.0/bInterfaceSubClass"),
+        sysfs!("3-2:1.0/bInterfaceProtocol"),
+    ];
+
+    // Edit: the vendor of the capture emptied, then its class made `zz`.
+    assert!(UsbInterface::from_sysfs("", product, [class, rest[0], rest[1]]).is_none());
+    assert!(UsbInterface::from_sysfs(vendor, product, ["zz\n", rest[0], rest[1]]).is_none());
 }
 
 #[test]
 fn a_wireless_mouse_is_no_network_device() {
-    let mouse = "Bus 001 Device 009: ID 045e:0745 Microsoft Corp. Wireless Mouse\n";
+    // The laptop's ROCCAT mouse, edited to call itself wireless.
+    let mouse =
+        line_of(LAPTOP_LSUSB, "Bus 001 Device 006").replace("Kone XP", "Kone XP Wireless Mouse");
 
-    assert_eq!(usb_devices(mouse), []);
+    assert_eq!(usb_devices(&mouse, &[]), []);
 }
 
 #[test]
 fn the_whole_lines_are_what_gets_copied() {
-    let devices = pci_devices(LSPCI);
+    let devices = pci_devices(LAPTOP_LSPCI);
 
     assert_eq!(
-        copy_text(&devices[..2]),
-        "00:14.3 Network controller [0280]: Intel Corporation Raptor Lake PCH CNVi WiFi \
-         [8086:7a70] (rev 11)\n02:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., \
-         Ltd. RTL8125 2.5GbE Controller [10ec:8125] (rev 05)"
+        copy_text(&devices),
+        format!(
+            "{}\n{}",
+            line_of(LAPTOP_LSPCI, "03:00.0"),
+            line_of(LAPTOP_LSPCI, "04:00.0")
+        )
     );
     assert_eq!(copy_text(&[]), "");
 }
 
 #[test]
 fn lines_that_are_no_device_lines_are_left_out() {
-    assert_eq!(pci_devices("pcilib: Cannot open /proc/bus/pci\n\n"), []);
-    assert_eq!(
-        pci_devices("02:00.0 Ethernet controller: no class code"),
-        []
-    );
-    assert_eq!(usb_devices("unable to initialize usb spec\n"), []);
-    assert_eq!(usb_devices("Bus 001 Device 002: ID 0bda:8153 "), []);
+    let ethernet = line_of(LAPTOP_LSPCI, "03:00.0");
+    let adapter = line_of(LAPTOP_LSUSB, "Bus 002 Device 006");
+
+    assert_eq!(pci_devices(""), []);
+
+    // The class code cut from one line, and the name from the other.
+    assert_eq!(pci_devices(&ethernet.replace(" [0200]", "")), []);
+    assert_eq!(usb_devices("", &[]), []);
+    assert_eq!(usb_devices(adapter.get(..33).unwrap(), &[]), []);
 }

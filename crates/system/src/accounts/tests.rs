@@ -7,63 +7,54 @@ use toolbox_state::parts::CurrentShells;
 use super::{AccountSource as _, EtcAccounts, accounts, available_shells, login_shells};
 use crate::ProbeError;
 
-const PASSWD: &str = "# local accounts\n\
-                      root:x:0:0::/root:/bin/bash\n\
-                      \n\
-                      nico:x:1000:1000:Nico:/home/nico:/bin/fish\n\
-                      other:x:1001:984::/home/other:/bin/sh\n\
-                      broken line\n";
-
-const GROUP: &str = "# local groups\n\
-                     root:x:0:root\n\
-                     wheel:x:998:other,nico\n\
-                     \n\
-                     nico:x:1000:\n\
-                     docker:x:984:other\n\
-                     audio:x:995: nico , foo\n\
-                     lp:x:991:nicolas\n\
-                     bad name:x:12:nico\n\
-                     truncated\n";
-
-const SHELLS: &str = "# Pathnames of valid login shells.\n\
-                      /bin/sh\n\
-                      /usr/bin/bash\n\
-                      /usr/bin/fish\n\
-                      /usr/bin/bash\n\
-                      not a path\n";
+/// The Lima VM after `guest` and `nopass` were added. The login name of
+/// the VM's own account was replaced with `user`.
+const PASSWD: &str = include_str!("fixtures/passwd");
+const GROUP: &str = include_str!("fixtures/group");
+/// The same VM before `guest` was added.
+const IMAGE_PASSWD: &str = include_str!("fixtures/image/passwd");
+const SHELLS: &str = include_str!("fixtures/shells");
 
 fn user(name: &str) -> UserName {
     UserName::new(name).unwrap()
 }
 
+fn group(name: &str) -> GroupName {
+    GroupName::new(name).unwrap()
+}
+
 fn groups(names: &[&str]) -> BTreeSet<GroupName> {
-    names
-        .iter()
-        .map(|name| GroupName::new(*name).unwrap())
-        .collect()
+    names.iter().copied().map(group).collect()
+}
+
+fn line<'a>(file: &'a str, name: &str) -> &'a str {
+    file.lines()
+        .find(|line| line.split(':').next() == Some(name))
+        .unwrap()
 }
 
 #[test]
 fn members_and_the_primary_group_are_listed() {
     assert_eq!(
-        accounts(PASSWD, GROUP).groups_of(&user("nico")),
-        groups(&["audio", "nico", "wheel"])
+        accounts(PASSWD, GROUP).groups_of(&user("guest")),
+        groups(&["audio", "guest", "video"])
     );
 }
 
 #[test]
 fn the_primary_group_counts_without_a_member_entry() {
     assert_eq!(
-        accounts(PASSWD, GROUP).groups_of(&user("other")),
-        groups(&["docker", "wheel"])
+        accounts(PASSWD, GROUP).groups_of(&user("user")),
+        groups(&["user"])
     );
 }
 
+/// The group file after `guest` was added, the passwd file from before.
 #[test]
 fn a_user_missing_from_passwd_keeps_the_member_groups() {
     assert_eq!(
-        accounts(PASSWD, GROUP).groups_of(&user("nicolas")),
-        groups(&["lp"])
+        accounts(IMAGE_PASSWD, GROUP).groups_of(&user("guest")),
+        groups(&["audio", "video"])
     );
 }
 
@@ -71,8 +62,8 @@ fn a_user_missing_from_passwd_keeps_the_member_groups() {
 fn a_name_is_not_matched_by_prefix() {
     assert!(
         !accounts(PASSWD, GROUP)
-            .groups_of(&user("nic"))
-            .contains(&GroupName::new("lp").unwrap())
+            .groups_of(&user("gues"))
+            .contains(&group("audio"))
     );
 }
 
@@ -85,8 +76,8 @@ fn the_adapter_reads_both_files_below_its_root() {
     let accounts = EtcAccounts::new(etc.path());
 
     assert_eq!(
-        accounts.accounts().map(|all| all.groups_of(&user("nico"))),
-        Ok(groups(&["audio", "nico", "wheel"]))
+        accounts.accounts().map(|all| all.groups_of(&user("guest"))),
+        Ok(groups(&["audio", "guest", "video"]))
     );
 }
 
@@ -112,36 +103,60 @@ fn an_unreadable_file_is_a_failure() {
 
     assert!(matches!(accounts.accounts(), Err(ProbeError::Failed(_))));
 }
+
 #[test]
 fn login_shells_come_from_the_last_passwd_field() {
     let shells = login_shells(PASSWD);
 
     assert_eq!(
-        shells.get(&user("nico")),
-        Some(&ShellPath::new("/bin/fish").unwrap())
+        shells.get(&user("user")),
+        Some(&ShellPath::new("/bin/bash").unwrap())
     );
     assert_eq!(
         shells.get(&user("root")),
-        Some(&ShellPath::new("/bin/bash").unwrap())
+        Some(&ShellPath::new("/usr/bin/bash").unwrap())
     );
-    assert_eq!(shells.len(), 3);
+    assert_eq!(
+        shells.get(&user("git")),
+        Some(&ShellPath::new("/usr/bin/git-shell").unwrap())
+    );
+    assert_eq!(shells.len(), PASSWD.lines().count());
 }
 
+/// The root line with its shell field emptied and made relative.
 #[test]
 fn an_account_without_a_shell_is_left_out() {
-    let shells = login_shells("svc:x:5:5::/:\nbad:x:6:6::/:relative\n");
+    let root = line(PASSWD, "root");
+    let passwd = format!(
+        "{}\n{}\n",
+        root.replacen(":/usr/bin/bash", ":", 1),
+        root.replacen(":/usr/bin/bash", ":relative", 1)
+    );
 
-    assert_eq!(shells, BTreeMap::new());
+    assert_eq!(login_shells(&passwd), BTreeMap::new());
 }
 
+/// The VM's list with `/usr/bin/bash` repeated and a line that is no path
+/// appended.
 #[test]
 fn available_shells_keep_their_order_without_duplicates() {
-    let shells: Vec<String> = available_shells(SHELLS)
+    let shells: Vec<String> = available_shells(&format!("{SHELLS}/usr/bin/bash\nnot a path\n"))
         .iter()
         .map(ToString::to_string)
         .collect();
 
-    assert_eq!(shells, ["/bin/sh", "/usr/bin/bash", "/usr/bin/fish"]);
+    assert_eq!(
+        shells,
+        [
+            "/bin/sh",
+            "/bin/bash",
+            "/bin/rbash",
+            "/usr/bin/sh",
+            "/usr/bin/bash",
+            "/usr/bin/rbash",
+            "/usr/bin/systemd-home-fallback-shell",
+        ]
+    );
 }
 
 #[test]
@@ -157,7 +172,7 @@ fn the_adapter_reads_passwd_and_shells_below_its_root() {
 
     assert_eq!(
         accounts.available_shells().map(|shells| shells.0.len()),
-        Ok(3)
+        Ok(7)
     );
     assert_eq!(
         accounts.login_shells(),
@@ -181,67 +196,98 @@ fn accounts_hold_every_valid_user_and_group_sorted_by_name() {
                 user.shell.as_str(),
             )
         })
+        .filter(|(name, ..)| ["guest", "nobody", "root", "user"].contains(name))
         .collect();
 
+    assert_eq!(all.users.len(), PASSWD.lines().count());
+    assert_eq!(
+        all.users.first().map(|user| user.name.as_str()),
+        Some("_talkd")
+    );
     assert_eq!(
         users,
         [
-            ("nico", 1000, 1000, "Nico", "/home/nico", "/bin/fish"),
-            ("other", 1001, 984, "", "/home/other", "/bin/sh"),
-            ("root", 0, 0, "", "/root", "/bin/bash"),
+            ("guest", 1001, 1001, "", "/home/guest", "/usr/bin/bash"),
+            (
+                "nobody",
+                0xFFFE,
+                0xFFFE,
+                "Kernel Overflow User",
+                "/",
+                "/usr/bin/nologin"
+            ),
+            ("root", 0, 0, "", "/root", "/usr/bin/bash"),
+            ("user", 1000, 1000, "", "/home/user.guest", "/bin/bash"),
         ]
     );
 
-    let group_names: Vec<(&str, u32)> = all
+    let gids: BTreeMap<&str, u32> = all
         .groups
         .iter()
         .map(|group| (group.name.as_str(), group.gid))
         .collect();
 
+    assert_eq!(all.groups.len(), GROUP.lines().count());
+    assert_eq!(gids.get("audio"), Some(&995));
+    assert_eq!(gids.get("wheel"), Some(&998));
+    assert_eq!(gids.get("nobody"), Some(&0xFFFE));
     assert_eq!(
-        group_names,
-        [
-            ("audio", 995),
-            ("docker", 984),
-            ("lp", 991),
-            ("nico", 1000),
-            ("root", 0),
-            ("wheel", 998)
-        ]
+        all.members_of(&group("video")),
+        BTreeSet::from([user("guest")])
     );
+    assert!(all.members_of(&group("wheel")).is_empty());
+}
+
+/// The audio line with blanks and a second member added around `guest`.
+#[test]
+fn blanks_around_member_names_are_dropped() {
+    let blanks = GROUP.replacen("audio:x:995:guest", "audio:x:995: guest , user", 1);
+
     assert_eq!(
-        all.members_of(&GroupName::new("audio").unwrap()),
-        BTreeSet::from([user("foo"), user("nico")]),
-        "blanks around member names are dropped"
-    );
-    assert_eq!(
-        all.members_of(&GroupName::new("docker").unwrap()),
-        BTreeSet::from([user("other")])
+        accounts(PASSWD, &blanks).members_of(&group("audio")),
+        BTreeSet::from([user("guest"), user("user")])
     );
 }
 
+/// The guest lines of both files, edited: an id that is no number, a name
+/// in capitals, a full name with a room and no shell field, the name
+/// repeated with root's ids, and a member list with an empty and a capital
+/// entry.
 #[test]
 fn entries_with_odd_ids_or_repeated_names_are_left_out() {
-    let all = accounts(
-        "ada:x:abc:1::/home/ada:/bin/sh\n\
-         Ada:x:1002:1::/home/Ada:/bin/sh\n\
-         bob:x:1003:1:Bob,Room 2:/home/bob\n\
-         bob:x:0:0:second bob:/root:/bin/sh\n",
-        "team:x:x:bob\nteam2:x:1005:bob,,Bob\n",
-    );
+    let guest = line(PASSWD, "guest");
+    let passwd = [
+        guest.replacen("guest:x:1001", "nopass:x:abc", 1),
+        guest.replacen("guest:", "Guest:", 1),
+        guest.replacen(
+            "::/home/guest:/usr/bin/bash",
+            ":Guest,Room 2:/home/guest",
+            1,
+        ),
+        guest.replacen(":1001:1001:", ":0:0:", 1),
+    ]
+    .join("\n");
+
+    let group = [
+        line(GROUP, "audio").replacen(":995:", ":x:", 1),
+        line(GROUP, "video").replacen(":guest", ":guest,,Guest", 1),
+    ]
+    .join("\n");
+
+    let all = accounts(&passwd, &group);
 
     assert_eq!(all.users.len(), 1);
-    assert_eq!(all.users.first().map(|user| user.uid), Some(1003));
+    assert_eq!(all.users.first().map(|user| user.uid), Some(1001));
     assert_eq!(
         all.users
             .first()
             .map(toolbox_state::accounts::User::full_name),
-        Some("Bob")
+        Some("Guest")
     );
     assert_eq!(all.users.first().map(|user| user.shell.as_str()), Some(""));
     assert_eq!(all.groups.len(), 1);
     assert_eq!(
-        all.groups.first().map(|group| group.members.clone()),
-        Some(BTreeSet::from([user("bob")]))
+        all.groups.first().map(|entry| entry.members.clone()),
+        Some(BTreeSet::from([user("guest")]))
     );
 }

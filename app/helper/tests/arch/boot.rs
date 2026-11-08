@@ -11,8 +11,8 @@ use std::path::Path;
 
 use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{
-    DefaultEntry, GrubMenu, GrubPicture, GrubSetting, GrubSettings, GrubTimeout, KernelParameters,
-    MenuEntryId, PlymouthTheme, RootAction,
+    DefaultEntry, EFI_FIRMWARE, GrubMenu, GrubPicture, GrubPlatform, GrubSetting, GrubSettings,
+    GrubTimeout, KernelParameters, MenuEntryId, PlymouthTheme, RootAction,
 };
 
 use super::common::TestResult;
@@ -170,9 +170,12 @@ fn generating_the_menu_needs_grub() -> TestResult {
     if tools {
         assert_eq!(outcomes, [Outcome::Succeeded]);
         assert_ne!(
-            GrubMenu::from_config(&fs::read_to_string(MENU)?)
-                .entries
-                .len(),
+            GrubMenu::for_platform(
+                &fs::read_to_string(MENU)?,
+                GrubPlatform::from_efi_firmware(Path::new("/").join(EFI_FIRMWARE).is_dir())
+            )
+            .entries
+            .len(),
             0
         );
     } else {

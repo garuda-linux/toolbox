@@ -10,30 +10,32 @@ use super::edit_grub_defaults;
 use crate::builtin::FileChange;
 use crate::testing::mode;
 
-const BEFORE: &str = "\
-# GRUB boot loader configuration
+/// `/etc/default/grub` of a Garuda Mokka install.
+const BEFORE: &str = include_str!("../../../../plan/src/grub/fixtures/installed/default-grub");
 
-GRUB_DEFAULT=0
-GRUB_TIMEOUT=5
-GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet\"
-GRUB_PRELOAD_MODULES=\"part_gpt part_msdos\"
+/// What `settings` makes of it, line by line.
+fn after() -> String {
+    let mut after = BEFORE.to_owned();
 
-# Uncomment one of them for the gfx desired
-#GRUB_BACKGROUND=\"/path/to/wallpaper\"
-";
+    for (old, new) in [
+        ("\nGRUB_DEFAULT=0\n", "\nGRUB_DEFAULT=saved\n"),
+        ("\nGRUB_TIMEOUT=5\n", "\nGRUB_TIMEOUT=10\n"),
+        (
+            "\nGRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3'\n",
+            "\nGRUB_CMDLINE_LINUX_DEFAULT=\"quiet loglevel=3 splash\"\n",
+        ),
+        (
+            "\n#GRUB_BACKGROUND=\"/path/to/wallpaper\"\n",
+            "\nGRUB_BACKGROUND=\"/usr/share/my-wall.png\"\n",
+        ),
+        ("\n#GRUB_SAVEDEFAULT=true\n", "\nGRUB_SAVEDEFAULT=true\n"),
+    ] {
+        assert!(after.contains(old), "{old}");
+        after = after.replacen(old, new, 1);
+    }
 
-const AFTER: &str = "\
-# GRUB boot loader configuration
-
-GRUB_DEFAULT=saved
-GRUB_TIMEOUT=10
-GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet splash\"
-GRUB_PRELOAD_MODULES=\"part_gpt part_msdos\"
-
-# Uncomment one of them for the gfx desired
-GRUB_BACKGROUND=\"/usr/share/my-wall.png\"
-GRUB_SAVEDEFAULT=true
-";
+    after
+}
 
 fn file(root: &Path) -> PathBuf {
     root.join("etc/default/grub")
@@ -51,7 +53,7 @@ fn settings() -> GrubSettings {
     GrubSettings::new(vec![
         GrubSetting::Default(DefaultEntry::Saved),
         GrubSetting::Timeout(GrubTimeout::new(10).unwrap()),
-        GrubSetting::KernelParameters(KernelParameters::parse("loglevel=3 quiet splash").unwrap()),
+        GrubSetting::KernelParameters(KernelParameters::parse("quiet loglevel=3 splash").unwrap()),
         GrubSetting::SaveDefault(true),
         GrubSetting::Background(Some(GrubPicture::new("/usr/share/my-wall.png").unwrap())),
     ])
@@ -66,7 +68,7 @@ fn several_settings_are_one_write_that_keeps_every_other_byte() {
         edit_grub_defaults(root.path(), &settings()).unwrap(),
         FileChange::Written
     );
-    assert_eq!(fs::read_to_string(file(root.path())).unwrap(), AFTER);
+    assert_eq!(fs::read_to_string(file(root.path())).unwrap(), after());
     assert_eq!(mode(&file(root.path())), 0o644);
 }
 
@@ -91,7 +93,7 @@ fn the_file_as_it_was_stays_beside_it_and_no_temporary_file_is_left() {
 
 #[test]
 fn a_file_that_already_says_it_is_not_written() {
-    let root = system(AFTER.as_bytes());
+    let root = system(after().as_bytes());
 
     assert_eq!(
         edit_grub_defaults(root.path(), &settings()).unwrap(),

@@ -14,8 +14,8 @@ use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::network::{
-    BlacklistEntry, Category, Connectivity, DefaultRoute, Device, DeviceKind, ModuleFacts,
-    NetworkModule, Radio, RadioAccess, RadioKind, RadioTarget,
+    BlacklistEntry, Category, Connectivity, DefaultRoute, ModuleFacts, NetworkModule, Radio,
+    RadioAccess, RadioKind, RadioTarget, pci_devices,
 };
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{HostName, KernelModule, PingCount, PingTimeout};
@@ -25,6 +25,11 @@ use crate::command::{Command, NetworkCommand};
 use crate::network::{Address, Hardware, Network, Read, StatusRead};
 use crate::pages::{NetworkRefusal, Refusals};
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
+
+/// `lspci -nn` of a bare-metal laptop: a Realtek Ethernet port and a `MediaTek`
+/// Wi-Fi card.
+const LAPTOP_LSPCI: &str =
+    include_str!("../../../../../crates/system/src/network/fixtures/bare-metal/lspci-nn");
 
 type Shown = Harness<'static, PageState<NetworkPage>>;
 
@@ -85,11 +90,7 @@ fn network_with(address: Address) -> Network {
     };
 
     let hardware = Hardware {
-        pci: Read::Known(vec![Device {
-            kind: DeviceKind::Ethernet,
-            description: "Intel Ethernet Connection I219-V".to_owned(),
-            raw: "00:1f.6 Ethernet controller [0200]: Intel Ethernet Connection I219-V".to_owned(),
-        }]),
+        pci: Read::Known(pci_devices(LAPTOP_LSPCI)),
         usb: Read::Unavailable,
     };
 
@@ -246,7 +247,9 @@ fn the_hardware_tab_lists_the_devices_and_says_what_is_missing() {
 
     assert!(
         harness
-            .query_by_label("Intel Ethernet Connection I219-V")
+            .query_by_label(
+                "MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter [14c3:0616]"
+            )
             .is_some()
     );
     assert!(

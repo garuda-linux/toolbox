@@ -1,12 +1,11 @@
-//! What `dkms status` prints, and what it means for one kernel. The
-//! output changed over the dkms versions, so one line is any of:
+//! What `dkms status` prints, and what it means for one kernel. Lines of
+//! a real Garuda system, from the captures in `dkms/fixtures`:
 //!
 //! ```text
-//! nvidia/550.90.07, 6.14.0-arch1-1, x86_64: installed
-//! vboxhost/7.1.6_OSE, 6.12.9-1-lts: installed (original_module exists)
-//! acpi_call, 1.2.2, 6.14.0-arch1-1, x86_64: built
-//! zfs/2.3.1: added
-//! nvidia/550.90.07, 6.2.2-zen: broken
+//! broadcom-wl/6.30.223.271, 6.18.60-1-lts, x86_64: installed
+//! v4l2loopback/0.15.4, 7.3.1-1-garuda, x86_64: installed (Original modules exist)
+//! v4l2loopback/0.15.4: added
+//! v4l2loopback/0.15.4: broken
 //! ```
 
 #[cfg(test)]

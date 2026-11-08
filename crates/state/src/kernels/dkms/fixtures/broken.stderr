@@ -1,0 +1,6 @@
+
+Error! v4l2loopback/0.15.4: Missing the module source directory or the symbolic link pointing to it:
+/var/lib/dkms/v4l2loopback/0.15.4/source
+Manual intervention is required!
+If this module version is no longer needed, you can remove the stale directory.
+Otherwise, reinstall the package that provides its source.

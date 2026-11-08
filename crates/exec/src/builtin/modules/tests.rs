@@ -10,6 +10,11 @@ use crate::testing::mode;
 
 const FILE: &str = "etc/modprobe.d/garuda-toolbox-blacklist.conf";
 
+/// `/usr/lib/modprobe.d/systemd.conf` of the Lima Garuda image.
+const SYSTEMD_CONF: &str = include_str!(
+    "../../../../system/src/network/modules/fixtures/root/usr/lib/modprobe.d/systemd.conf"
+);
+
 fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()
 }
@@ -81,33 +86,29 @@ fn removing_what_is_not_listed_writes_and_creates_nothing() {
     assert!(!root.path().join("etc").exists());
 }
 
-/// `/usr/lib/modprobe.d/broadcom-wl.conf` and
-/// `/etc/modprobe.d/blacklist.conf` are not touched, whatever they hold.
+/// The package file of the image and an administrator's file are not
+/// touched, whatever they hold. Edit: the administrator's file is the
+/// package file with `blacklist wl` appended, as the image has no file in
+/// `/etc/modprobe.d`.
 #[test]
 fn other_modprobe_files_stay_as_they_are() {
     let root = tempfile::tempdir().unwrap();
     let etc = root.path().join("etc/modprobe.d");
     let lib = root.path().join("usr/lib/modprobe.d");
+    let own = format!("{SYSTEMD_CONF}blacklist wl\n");
     fs::create_dir_all(&etc).unwrap();
     fs::create_dir_all(&lib).unwrap();
-    fs::write(etc.join("blacklist.conf"), "blacklist wl\n").unwrap();
-    fs::write(
-        lib.join("broadcom-wl.conf"),
-        "blacklist b43\nblacklist wl\n",
-    )
-    .unwrap();
+    fs::write(etc.join("blacklist.conf"), &own).unwrap();
+    fs::write(lib.join("systemd.conf"), SYSTEMD_CONF).unwrap();
 
     edit_modprobe_blacklist(root.path(), &module("wl"), true).unwrap();
     edit_modprobe_blacklist(root.path(), &module("wl"), false).unwrap();
-    edit_modprobe_blacklist(root.path(), &module("b43"), false).unwrap();
+    edit_modprobe_blacklist(root.path(), &module("bonding"), false).unwrap();
 
+    assert_eq!(fs::read_to_string(etc.join("blacklist.conf")).unwrap(), own);
     assert_eq!(
-        fs::read_to_string(etc.join("blacklist.conf")).unwrap(),
-        "blacklist wl\n"
-    );
-    assert_eq!(
-        fs::read_to_string(lib.join("broadcom-wl.conf")).unwrap(),
-        "blacklist b43\nblacklist wl\n"
+        fs::read_to_string(lib.join("systemd.conf")).unwrap(),
+        SYSTEMD_CONF
     );
 }
 
@@ -124,11 +125,11 @@ fn a_symlinked_folder_or_file_is_refused() {
     let other = tempfile::tempdir().unwrap();
     let target = elsewhere.path().join("target.conf");
     fs::create_dir_all(other.path().join("etc/modprobe.d")).unwrap();
-    fs::write(&target, "blacklist b43\n").unwrap();
+    fs::write(&target, SYSTEMD_CONF).unwrap();
     symlink(&target, file(other.path())).unwrap();
 
     edit_modprobe_blacklist(other.path(), &module("wl"), true).unwrap_err();
-    assert_eq!(fs::read_to_string(&target).unwrap(), "blacklist b43\n");
+    assert_eq!(fs::read_to_string(&target).unwrap(), SYSTEMD_CONF);
 }
 
 #[test]

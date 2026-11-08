@@ -21,7 +21,8 @@ const PROC_CMDLINE: &str = include_str!("../../host/fixtures/proc-cmdline");
 const MOUNTINFO: &str = include_str!("../../../../plan/src/sdboot/fixtures/mountinfo");
 const UKI: &[u8] =
     include_bytes!("../../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head");
-const GRUB_DEFAULTS: &str = include_str!("../../../../plan/src/grub/fixtures/garuda-default-grub");
+const GRUB_DEFAULTS: &str =
+    include_str!("../../../../plan/src/grub/fixtures/installed/default-grub");
 
 const LOADER_INFO_PATH: &str =
     "sys/firmware/efi/efivars/LoaderInfo-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f";

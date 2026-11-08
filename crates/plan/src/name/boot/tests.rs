@@ -1,15 +1,64 @@
-use crate::{GrubPicture, GrubThemeFile, KernelParameter, MenuEntryId, PlymouthTheme, Reason};
+use crate::{
+    GrubPicture, GrubState, GrubThemeFile, KernelParameter, MenuEntryId, PlymouthTheme, Reason,
+};
+
+/// `/proc/cmdline` of the Lima image, booted by GRUB.
+const LIMA_CMDLINE: &str = include_str!("../../../../system/src/host/fixtures/proc-cmdline");
+/// `/proc/cmdline` of the Garuda live ISO, booted by systemd-boot.
+const LIVE_CMDLINE: &str = include_str!("../../../../system/src/host/fixtures/live/proc-cmdline");
+/// `/etc/default/grub` of a used Garuda install.
+const INSTALLED_GRUB: &str = include_str!("../../grub/fixtures/installed/default-grub");
+const GRUB_CFG: &str = include_str!("../../grub/fixtures/installed/grub.cfg");
+const GRUB_BTRFS: &str = include_str!("../../grub/fixtures/installed/grub-btrfs.cfg");
+const LIMA_GRUB: &str = include_str!("../../grub/fixtures/lima/default-grub");
+/// `ls -1 /usr/share/plymouth/themes/` of the Lima image.
+const PLYMOUTH_THEMES: &str = include_str!("../../../../system/src/boot/fixtures/plymouth-themes");
 
 #[test]
-fn real_kernel_parameters_pass() {
+fn the_words_of_a_real_grub_command_line_pass() {
+    let installed = INSTALLED_GRUB
+        .lines()
+        .find_map(|line| line.strip_prefix("GRUB_CMDLINE_LINUX=\""))
+        .and_then(|value| value.strip_suffix('"'))
+        .unwrap();
+
+    for parameter in LIMA_CMDLINE.split_whitespace().chain(installed.split(' ')) {
+        assert_eq!(KernelParameter::new(parameter).unwrap().as_str(), parameter);
+    }
+}
+
+/// The live ISO is no GRUB command line: its `initrd=` paths have
+/// backslashes and its verity hashes are longer than any GRUB word.
+#[test]
+fn the_live_command_line_has_words_grub_never_gets() {
+    let refused: Vec<(&str, Reason)> = LIVE_CMDLINE
+        .split_whitespace()
+        .filter_map(|word| {
+            KernelParameter::new(word)
+                .err()
+                .map(|error| (word.split('=').next().unwrap(), error.reason()))
+        })
+        .collect();
+
+    assert_eq!(
+        refused,
+        [
+            ("initrd", Reason::InvalidCharacter('\\')),
+            ("initrd", Reason::InvalidCharacter('\\')),
+            ("initrd", Reason::InvalidCharacter('\\')),
+            ("garuda.verity", Reason::TooLong { max: 255 }),
+        ]
+    );
+}
+
+/// Words a user types from the kernel documentation, for the characters
+/// no captured command line has.
+#[test]
+fn documented_kernel_parameters_pass() {
     for parameter in [
-        "quiet",
         "splash",
         "mitigations=off",
         "sysrq_always_enabled=1",
-        "root=UUID=3f1c9a52-7d0e-4b6a-9c1f-2e8d5a7b4c10",
-        "rootflags=subvol=@",
-        "rd.luks.name=3f1c9a52=cryptroot",
         "video=1920x1080@60",
         "acpi_osi=!",
         "ip=[::1]",
@@ -67,14 +116,8 @@ fn a_kernel_parameter_is_bounded_and_not_empty() {
 
 #[test]
 fn a_plymouth_theme_is_one_folder_name_and_never_an_option() {
-    for theme in [
-        "bgrt",
-        "spinner",
-        "details",
-        "garuda-dr460nized",
-        "tribar_2.0",
-    ] {
-        PlymouthTheme::new(theme).unwrap();
+    for theme in PLYMOUTH_THEMES.lines() {
+        assert_eq!(PlymouthTheme::new(theme).unwrap().as_str(), theme);
     }
 
     assert_eq!(
@@ -107,19 +150,18 @@ fn a_plymouth_theme_is_one_folder_name_and_never_an_option() {
     );
 }
 
+/// Every quoted title and id of the captured menus, as `GRUB_DEFAULT`
+/// may name them, plus the positions and `saved` GRUB itself takes.
 #[test]
 fn menu_entry_ids_take_what_grub_writes() {
-    for id in [
-        "0",
-        "1>2",
-        "saved",
-        "Garuda Linux",
-        "gnulinux-advanced-3f1c9a52>gnulinux-linux-zen-advanced-3f1c9a52",
-        "Garuda Linux, with Linux linux-zen (fallback initramfs)",
-        "  2026-10-09 18:20:11 | @/.snapshots/412/snapshot | pre  | pacman -Syu",
-        "Windows Boot Manager (on /dev/nvme0n1p1)",
-        "It's mine",
-    ] {
+    let quoted = [GRUB_CFG, GRUB_BTRFS]
+        .into_iter()
+        .flat_map(str::lines)
+        .map(str::trim_start)
+        .filter(|line| line.starts_with("menuentry '") || line.starts_with("submenu '"))
+        .flat_map(|line| line.split('\'').skip(1).step_by(2));
+
+    for id in quoted.chain(["0", "1>2", "saved"]) {
         assert_eq!(MenuEntryId::new(id).unwrap().as_str(), id);
     }
 }
@@ -163,7 +205,11 @@ fn pictures_and_themes_are_plain_absolute_paths_of_their_type() {
         GrubPicture::new(picture).unwrap();
     }
 
-    GrubThemeFile::new("/usr/share/grub/themes/garuda-dr460nized/theme.txt").unwrap();
+    for config in [INSTALLED_GRUB, LIMA_GRUB] {
+        let theme = GrubState::read(config).theme;
+
+        assert_eq!(GrubThemeFile::new(&theme).unwrap().as_str(), theme);
+    }
 }
 
 #[test]

@@ -9,6 +9,15 @@ use super::{
 use crate::ProbeError;
 use crate::testing::{fake_program, on_path};
 
+/// The listings of the Lima VM, each from the argv of [`list_args`] with
+/// its `--state`, or from `list-units --state=failed`.
+const LISTED_ENABLED: &str = include_str!("fixtures/enabled");
+const LISTED_ENABLED_RUNTIME: &str = include_str!("fixtures/enabled-runtime");
+const LISTED_MASKED: &str = include_str!("fixtures/masked");
+const LISTED_USER_ENABLED: &str = include_str!("fixtures/user-enabled");
+const LISTED_USER_MASKED: &str = include_str!("fixtures/user-masked");
+const LISTED_FAILED: &str = include_str!("fixtures/failed");
+
 fn units(names: &[&str]) -> BTreeSet<UnitName> {
     names
         .iter()
@@ -16,30 +25,49 @@ fn units(names: &[&str]) -> BTreeSet<UnitName> {
         .collect()
 }
 
-#[test]
-fn the_first_column_names_the_unit() {
-    let output = "sshd.service                 enabled enabled\n\
-                  getty@.service               enabled enabled\n\
-                  fstrim.timer enabled\n";
-
-    assert_eq!(
-        parse_listed(output, ENABLED),
-        units(&["fstrim.timer", "getty@.service", "sshd.service"])
-    );
+fn user_enabled() -> BTreeSet<UnitName> {
+    units(&[
+        "dbus-broker.service",
+        "p11-kit-server.service",
+        "systemd-tmpfiles-setup.service",
+        "gssuserproxy.socket",
+        "p11-kit-server.socket",
+        "ssh-agent.socket",
+        "systemd-storage-fs.socket",
+        "machines.target",
+        "systemd-tmpfiles-clean.timer",
+    ])
 }
 
 #[test]
-fn odd_lines_are_skipped() {
-    let output = "\n\
-                  bluetooth.service enabled-runtime disabled\n\
-                  not a unit\n\
-                  -bad.service enabled enabled\n\
-                  noextension enabled enabled\n\
-                  lonely.service\n\
-                  3 unit files listed.\n\
-                  cups.socket enabled enabled\n";
+fn the_first_column_names_the_unit() {
+    let enabled = parse_listed(LISTED_ENABLED, ENABLED);
 
-    assert_eq!(parse_listed(output, ENABLED), units(&["cups.socket"]));
+    assert_eq!(enabled.len(), 51);
+    assert!(enabled.is_superset(&units(&[
+        "getty@.service",
+        "sshd.service",
+        "systemd-userdbd.socket",
+        "remote-fs.target",
+    ])));
+    assert_eq!(parse_listed(LISTED_USER_ENABLED, ENABLED), user_enabled());
+}
+
+/// The Lima `enabled-runtime` listing and made-up broken lines in front of
+/// the user listing.
+#[test]
+fn odd_lines_are_skipped() {
+    let output = format!(
+        "\n{LISTED_ENABLED_RUNTIME}\
+         not a unit\n\
+         -bad.service enabled enabled\n\
+         noextension enabled enabled\n\
+         lonely.service\n\
+         3 unit files listed.\n\
+         {LISTED_USER_ENABLED}"
+    );
+
+    assert_eq!(parse_listed(&output, ENABLED), user_enabled());
 }
 
 #[test]
@@ -81,13 +109,26 @@ fn real_systemctl_answers_or_is_unavailable() {
     }
 }
 
+/// No `masked-runtime` unit was captured. The Lima `enabled-runtime`
+/// listing stands in with its state renamed.
 #[test]
 fn masked_units_are_read_the_same_way() {
-    let output = "cups.service masked enabled\n\
-                  tracker.service masked-runtime enabled\n\
-                  sshd.service enabled enabled\n";
+    let output = format!(
+        "{LISTED_MASKED}{}{LISTED_ENABLED}",
+        LISTED_ENABLED_RUNTIME.replace("enabled-runtime", "masked-runtime ")
+    );
 
-    assert_eq!(parse_listed(output, MASKED), units(&["cups.service"]));
+    assert_eq!(
+        parse_listed(&output, MASKED),
+        units(&[
+            "systemd-firstboot.service",
+            "toolbox-fixture-masked.service"
+        ])
+    );
+    assert_eq!(
+        parse_listed(LISTED_USER_MASKED, MASKED),
+        units(&["toolbox-fixture-user.service"])
+    );
 }
 
 #[test]
@@ -106,16 +147,17 @@ fn masks_need_a_working_systemctl_too() {
 
 #[test]
 fn a_fake_systemctl_is_asked_for_masked_units() {
-    let (_folder, program) = fake_program("cups.service masked enabled\n", "", 0);
+    let (_folder, program) = fake_program(LISTED_USER_MASKED, "", 0);
     let systemctl = Systemctl::with_program(program);
+    let masked = units(&["toolbox-fixture-user.service"]);
 
     assert_eq!(
-        systemctl.masked_units().map(|masked| masked.0),
-        Ok(units(&["cups.service"]))
+        systemctl.masked_units().map(|listed| listed.0),
+        Ok(masked.clone())
     );
     assert_eq!(
-        systemctl.masked_user_units().map(|masked| masked.0),
-        Ok(units(&["cups.service"]))
+        systemctl.masked_user_units().map(|listed| listed.0),
+        Ok(masked)
     );
 }
 
@@ -140,22 +182,26 @@ fn the_listing_asks_systemctl_for_one_state_only() {
     );
 }
 
+/// The Lima listing with a made-up blank line and summary appended.
 #[test]
 fn a_failed_unit_is_named_by_its_first_column() {
-    let output = "bluetooth.service loaded failed failed Bluetooth service\n\
-                  \n\
-                  2 loaded units listed.\n\
-                  cups.service loaded active running CUPS\n";
+    let output = format!("{LISTED_FAILED}\n2 loaded units listed.\n");
 
-    assert_eq!(parse_failed(output), units(&["bluetooth.service"]));
+    assert_eq!(
+        parse_failed(&output),
+        units(&["cloud-init-main.service", "toolbox-fixture-failed.service"])
+    );
 }
 
 #[test]
 fn the_failed_units_come_from_systemctl() {
-    let (_folder, program) = fake_program("smb.service loaded failed failed Samba\n", "", 0);
+    let (_folder, program) = fake_program(LISTED_FAILED, "", 0);
 
     assert_eq!(
         Systemctl::with_program(program).failed_units(),
-        Ok(vec![UnitName::new("smb.service").unwrap()])
+        Ok(vec![
+            UnitName::new("cloud-init-main.service").unwrap(),
+            UnitName::new("toolbox-fixture-failed.service").unwrap(),
+        ])
     );
 }

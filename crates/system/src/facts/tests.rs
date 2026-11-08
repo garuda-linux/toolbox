@@ -10,6 +10,14 @@ use crate::packages::{OrphanSource, PackageSource, SyncSource};
 use crate::testing::write;
 use crate::units::FailedUnitSource;
 
+/// The Lima VM's running kernel and its `/proc/stat`, whose `btime` is
+/// [`BOOTED`].
+const OSRELEASE: &str = include_str!("../kernels/fixtures/image/osrelease");
+const STAT: &str = include_str!("../host/fixtures/proc-stat");
+const BOOTED: u64 = 1_794_155_377;
+/// `systemctl list-units --state=failed` in the VM.
+const FAILED: &str = include_str!("../units/fixtures/failed");
+
 struct FakeInstalled(Result<InstalledPackages, ProbeError>);
 
 struct FakeOffered(Result<SyncPackages, ProbeError>);
@@ -40,11 +48,11 @@ impl OrphanSource for FakeOrphans {
 
 impl MachineSource for FakeMachine {
     fn kernel(&self) -> Result<String, ProbeError> {
-        Ok("6.17.7-zen1-1-zen".to_owned())
+        Ok(OSRELEASE.trim().to_owned())
     }
 
     fn booted(&self) -> Result<SystemTime, ProbeError> {
-        Ok(SystemTime::UNIX_EPOCH + Duration::from_secs(1_000))
+        Ok(SystemTime::UNIX_EPOCH + Duration::from_secs(BOOTED))
     }
 
     fn disk(&self) -> Result<DiskSpace, ProbeError> {
@@ -69,28 +77,33 @@ fn packages(names: &[&str]) -> std::collections::BTreeSet<PackageName> {
         .collect()
 }
 
+/// The packages of the VM's local database fixture plus `cbonsai`, which
+/// `paru -Qua` there listed from the AUR. The unit is the VM's first
+/// failed one.
 fn sources(offered: Result<SyncPackages, ProbeError>) -> FactSources {
+    let failed = FAILED.split_whitespace().next().unwrap();
+
     FactSources {
         installed: Arc::new(FakeInstalled(Ok(InstalledPackages(packages(&[
-            "bash",
-            "paru",
-            "zen-browser-bin",
+            "cbonsai", "gegl", "gimp", "mpv", "yt-dlp",
         ]))))),
         offered: Arc::new(FakeOffered(offered)),
-        orphans: Arc::new(FakeOrphans(vec![PackageName::new("old-lib").unwrap()])),
+        orphans: Arc::new(FakeOrphans(vec![PackageName::new("gegl").unwrap()])),
         machine: Arc::new(FakeMachine),
-        units: Arc::new(FakeUnits(vec![UnitName::new("smb.service").unwrap()])),
+        units: Arc::new(FakeUnits(vec![UnitName::new(failed).unwrap()])),
     }
 }
 
 #[test]
 fn installed_packages_in_no_repository_count_as_foreign() {
-    let facts = probe_facts(&sources(Ok(SyncPackages(packages(&["bash", "paru"])))));
+    let facts = probe_facts(&sources(Ok(SyncPackages(packages(&[
+        "gegl", "gimp", "mpv", "yt-dlp",
+    ])))));
 
     assert_eq!(
         facts.packages,
         Ok(PackageCount {
-            installed: 3,
+            installed: 5,
             foreign: Some(1),
         })
     );
@@ -103,7 +116,7 @@ fn without_a_synced_database_the_foreign_count_is_unknown() {
     assert_eq!(
         facts.packages,
         Ok(PackageCount {
-            installed: 3,
+            installed: 5,
             foreign: None,
         })
     );
@@ -113,7 +126,7 @@ fn without_a_synced_database_the_foreign_count_is_unknown() {
 fn one_failed_fact_leaves_the_others() {
     let facts = probe_facts(&sources(Err(ProbeError::Unavailable)));
 
-    assert_eq!(facts.kernel.as_deref(), Ok("6.17.7-zen1-1-zen"));
+    assert_eq!(facts.kernel.as_deref(), Ok("7.3.1-1-garuda"));
     facts.disk.unwrap_err();
     assert_eq!(facts.package_cache, Err(ProbeError::Unavailable));
     assert_eq!(facts.orphans.map(|orphans| orphans.len()), Ok(1));
@@ -123,18 +136,14 @@ fn one_failed_fact_leaves_the_others() {
 #[test]
 fn the_machine_reads_kernel_and_boot_time_below_its_root() {
     let root = tempfile::tempdir().unwrap();
-    write(
-        root.path(),
-        "proc/sys/kernel/osrelease",
-        "6.17.7-zen1-1-zen\n",
-    );
-    write(root.path(), "proc/stat", "cpu 1 2 3\nbtime 1700000000\n");
+    write(root.path(), "proc/sys/kernel/osrelease", OSRELEASE);
+    write(root.path(), "proc/stat", STAT);
     let machine = SystemMachine::below(root.path().to_owned());
 
-    assert_eq!(machine.kernel().as_deref(), Ok("6.17.7-zen1-1-zen"));
+    assert_eq!(machine.kernel().as_deref(), Ok("7.3.1-1-garuda"));
     assert_eq!(
         machine.booted(),
-        Ok(SystemTime::UNIX_EPOCH + Duration::from_secs(1_700_000_000))
+        Ok(SystemTime::UNIX_EPOCH + Duration::from_secs(BOOTED))
     );
 }
 
@@ -143,12 +152,12 @@ fn the_package_cache_counts_its_files_only() {
     let root = tempfile::tempdir().unwrap();
     write(
         root.path(),
-        "var/cache/pacman/pkg/bash-5.2-1.pkg.tar.zst",
+        "var/cache/pacman/pkg/gimp-3.2.6-2-x86_64.pkg.tar.zst",
         [0_u8; 300],
     );
     write(
         root.path(),
-        "var/cache/pacman/pkg/bash-5.2-1.pkg.tar.zst.sig",
+        "var/cache/pacman/pkg/gimp-3.2.6-2-x86_64.pkg.tar.zst.sig",
         [0_u8; 20],
     );
     write(

@@ -1,0 +1,192 @@
+# STARTED AT: 2026-11-08 17:36:26.840526966 +01:00
+# VERSION: 0.33.0
+# ARGS: /usr/bin/rate-mirrors --save /tmp/chaotic-mirrorlist chaotic-aur
+# MIRRORS LEFT AFTER FILTERING: 81
+# JUMP #1
+# EXPLORING US
+# VISITED US
+#     + NEIGHBOR UK (by HubsFirst)
+#     + NEIGHBOR BR (by HubsFirst)
+#     + NEIGHBOR ES (by HubsFirst)
+#     + NEIGHBOR MX (by DistanceFirst)
+#     + NEIGHBOR CA (by DistanceFirst)
+#     + NEIGHBOR CO (by DistanceFirst)
+# [ES] FAILED TO CONNECT TO https://es-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [ES] FAILED TO CONNECT TO https://es-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [UK] SpeedTestResult { speed: 2.4 MB/s; elapsed: 1.00s; connection_time: 784ms }
+# [UK] SpeedTestResult { speed: 1.4 MB/s; elapsed: 998ms; connection_time: 789ms }
+# [US] SpeedTestResult { speed: 891.0 KB/s; elapsed: 957ms; connection_time: 945ms }
+# [US] SpeedTestResult { speed: 487.8 KB/s; elapsed: 973ms; connection_time: 1.16s }
+# [CO] SpeedTestResult { speed: 405.8 KB/s; elapsed: 999ms; connection_time: 1.35s }
+# [CO] SpeedTestResult { speed: 426.2 KB/s; elapsed: 960ms; connection_time: 1.35s }
+# [BR] SpeedTestResult { speed: 144.7 KB/s; elapsed: 905ms; connection_time: 1.44s }
+# [BR] SpeedTestResult { speed: 255.7 KB/s; elapsed: 960ms; connection_time: 1.75s }
+# [MX] FAILED TO CONNECT TO https://mx-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [MX] FAILED TO CONNECT TO https://mx-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [CA] FAILED TO CONNECT TO https://ca-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [CA] FAILED TO CONNECT TO https://ca-3-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+#     TOP NEIGHBOR - CONNECTION TIME: UK - 784ms
+#     TOP NEIGHBOR - SPEED: UK - 2.4 MB/s
+# 
+# JUMP #2
+# EXPLORING UK
+#     + NEIGHBOR JP (by HubsFirst)
+#     + NEIGHBOR IN (by HubsFirst)
+#     + NEIGHBOR AU (by HubsFirst)
+#     + NEIGHBOR FR (by DistanceFirst)
+#     + NEIGHBOR SE (by DistanceFirst)
+#     + NEIGHBOR CH (by DistanceFirst)
+# TOO FEW BYTES LOADED https://jp-mirror.chaotic.cx/
+# [SE] SpeedTestResult { speed: 2.8 MB/s; elapsed: 995ms; connection_time: 399ms }
+# [SE] SpeedTestResult { speed: 2.5 MB/s; elapsed: 1.00s; connection_time: 401ms }
+# [IN] SpeedTestResult { speed: 878.4 KB/s; elapsed: 1.00s; connection_time: 1.63s }
+# [JP] FAILED TO CONNECT TO https://jp-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IN] FAILED TO CONNECT TO https://in-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [AU] FAILED TO CONNECT TO https://au-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [FR] FAILED TO CONNECT TO https://fr-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [CH] FAILED TO CONNECT TO https://ch-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [AU] FAILED TO CONNECT TO https://au-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [CH] FAILED TO CONNECT TO https://ch-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [FR] FAILED TO CONNECT TO https://fr-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+#     TOP NEIGHBOR - CONNECTION TIME: SE - 399ms
+#     TOP NEIGHBOR - SPEED: SE - 2.8 MB/s
+# 
+# JUMP #3
+# EXPLORING SE
+#     + NEIGHBOR DE (by DistanceFirst)
+#     + NEIGHBOR NL (by DistanceFirst)
+#     + NEIGHBOR RU (by DistanceFirst)
+# [DE] SpeedTestResult { speed: 4.0 MB/s; elapsed: 989ms; connection_time: 286ms }
+# [DE] SpeedTestResult { speed: 3.2 MB/s; elapsed: 994ms; connection_time: 767ms }
+# [RU] SpeedTestResult { speed: 299.7 KB/s; elapsed: 928ms; connection_time: 891ms }
+# [RU] SpeedTestResult { speed: 906.7 KB/s; elapsed: 975ms; connection_time: 893ms }
+# [NL] FAILED TO CONNECT TO https://nl-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [NL] FAILED TO CONNECT TO https://nl-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+#     TOP NEIGHBOR - CONNECTION TIME: DE - 286ms
+#     TOP NEIGHBOR - SPEED: DE - 4.0 MB/s
+# 
+# JUMP #4
+# EXPLORING DE
+#     + NEIGHBOR IT (by DistanceFirst)
+#     + NEIGHBOR GR (by DistanceFirst)
+#     + NEIGHBOR AE (by DistanceFirst)
+# [GR] FAILED TO CONNECT TO https://gr-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [GR] FAILED TO CONNECT TO https://gr-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IT] FAILED TO CONNECT TO https://it-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [AE] FAILED TO CONNECT TO https://ae-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [AE] FAILED TO CONNECT TO https://ae-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IT] FAILED TO CONNECT TO https://it-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# BLANK ITERATION
+# COUNTRY JUMPING YIELDED TOO FEW MIRRORS (15), ADDING OTHERS TO UNLABELED
+# 
+
+# TESTING UNLABELED MIRRORS
+# [ES] FAILED TO CONNECT TO https://es-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# TOO FEW BYTES LOADED https://us-ut-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://br-2-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://fr-2-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://ca-4-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://vn-1-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://vn-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://br-5-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://sa-1-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://kr-2-mirror.chaotic.cx/
+# TOO FEW BYTES LOADED https://kr-3-mirror.chaotic.cx/
+# SpeedTestResult { speed: 4.7 MB/s; elapsed: 997ms; connection_time: 469ms }
+# SpeedTestResult { speed: 909.6 KB/s; elapsed: 999ms; connection_time: 584ms }
+# [IN] SpeedTestResult { speed: 127.2 KB/s; elapsed: 743ms; connection_time: 1.27s }
+# [CL] SpeedTestResult { speed: 136.7 KB/s; elapsed: 985ms; connection_time: 1.38s }
+# [CL] SpeedTestResult { speed: 210.1 KB/s; elapsed: 779ms; connection_time: 1.67s }
+# [BR] SpeedTestResult { speed: 218.3 KB/s; elapsed: 899ms; connection_time: 1.68s }
+# [CL] SpeedTestResult { speed: 183.1 KB/s; elapsed: 894ms; connection_time: 1.69s }
+# [CL] SpeedTestResult { speed: 163.9 KB/s; elapsed: 898ms; connection_time: 1.71s }
+# [SG] SpeedTestResult { speed: 272.4 KB/s; elapsed: 992ms; connection_time: 1.51s }
+# [SG] SpeedTestResult { speed: 391.8 KB/s; elapsed: 982ms; connection_time: 1.83s }
+# [DE] SpeedTestResult { speed: 3.0 MB/s; elapsed: 993ms; connection_time: 1.89s }
+# [KR] SpeedTestResult { speed: 454.9 KB/s; elapsed: 935ms; connection_time: 2.88s }
+# [KR] SpeedTestResult { speed: 175.1 KB/s; elapsed: 934ms; connection_time: 2.88s }
+# [AU] FAILED TO CONNECT TO https://au-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [ES] FAILED TO CONNECT TO https://es-3-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [MX] FAILED TO CONNECT TO https://mx-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IL] FAILED TO CONNECT TO https://il-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [UK] FAILED TO CONNECT TO https://gb-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IL] FAILED TO CONNECT TO https://il-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IN] FAILED TO CONNECT TO https://in-3-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [UK] FAILED TO CONNECT TO https://gb-3-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [BR] FAILED TO CONNECT TO https://br-3-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [US] FAILED TO CONNECT TO https://us-az-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [AE] FAILED TO CONNECT TO https://ae-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [US] FAILED TO CONNECT TO https://us-ca-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [JP] FAILED TO CONNECT TO https://jp-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [IN] FAILED TO CONNECT TO https://in-5-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [SA] FAILED TO CONNECT TO https://sa-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [DE] FAILED TO CONNECT TO https://de-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [ZA] FAILED TO CONNECT TO https://za-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [SE] FAILED TO CONNECT TO https://se-2-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# [ZA] FAILED TO CONNECT TO https://za-1-mirror.chaotic.cx/chaotic-aur/x86_64/chaotic-aur.files
+# 
+
+# RE-TESTING TOP MIRRORS
+# SpeedTestResult { speed: 4.8 MB/s; elapsed: 994ms; connection_time: 258ms }
+# [DE] SpeedTestResult { speed: 5.5 MB/s; elapsed: 997ms; connection_time: 269ms }
+# [DE] SpeedTestResult { speed: 5.4 MB/s; elapsed: 999ms; connection_time: 274ms }
+# [DE] SpeedTestResult { speed: 1.1 MB/s; elapsed: 996ms; connection_time: 298ms }
+# [SE] SpeedTestResult { speed: 5.3 MB/s; elapsed: 998ms; connection_time: 326ms }
+# ==== RESULTS (top re-tested) ====
+#   1. [DE] SpeedTestResult { speed: 5.5 MB/s; elapsed: 997ms; connection_time: 269ms } -> https://de-2-mirror.chaotic.cx/
+#   2. [DE] SpeedTestResult { speed: 5.4 MB/s; elapsed: 999ms; connection_time: 274ms } -> https://de-4-mirror.chaotic.cx/
+#   3. [SE] SpeedTestResult { speed: 5.3 MB/s; elapsed: 998ms; connection_time: 326ms } -> https://se-1-mirror.chaotic.cx/
+#   4. SpeedTestResult { speed: 4.8 MB/s; elapsed: 994ms; connection_time: 258ms } -> https://geo-mirror.chaotic.cx/
+#   5. [DE] SpeedTestResult { speed: 1.1 MB/s; elapsed: 996ms; connection_time: 298ms } -> https://de-mirror.chaotic.cx/
+#   6. [SE] SpeedTestResult { speed: 2.5 MB/s; elapsed: 1.00s; connection_time: 401ms } -> https://se-mirror.chaotic.cx/
+#   7. [UK] SpeedTestResult { speed: 2.4 MB/s; elapsed: 1.00s; connection_time: 784ms } -> https://gb-1-mirror.chaotic.cx/
+#   8. [UK] SpeedTestResult { speed: 1.4 MB/s; elapsed: 998ms; connection_time: 789ms } -> https://gb-mirror.chaotic.cx/
+#   9. SpeedTestResult { speed: 909.6 KB/s; elapsed: 999ms; connection_time: 584ms } -> https://cdn-mirror.chaotic.cx/
+#  10. [RU] SpeedTestResult { speed: 906.7 KB/s; elapsed: 975ms; connection_time: 893ms } -> https://ru-mirror.chaotic.cx/
+#  11. [US] SpeedTestResult { speed: 891.0 KB/s; elapsed: 957ms; connection_time: 945ms } -> https://us-mi-mirror.chaotic.cx/
+#  12. [IN] SpeedTestResult { speed: 878.4 KB/s; elapsed: 1.00s; connection_time: 1.63s } -> https://in-mirror.chaotic.cx/
+#  13. [US] SpeedTestResult { speed: 487.8 KB/s; elapsed: 973ms; connection_time: 1.16s } -> https://us-mirror.chaotic.cx/
+#  14. [KR] SpeedTestResult { speed: 454.9 KB/s; elapsed: 935ms; connection_time: 2.88s } -> https://kr-1-mirror.chaotic.cx/
+#  15. [CO] SpeedTestResult { speed: 426.2 KB/s; elapsed: 960ms; connection_time: 1.35s } -> https://co-mirror.chaotic.cx/
+#  16. [CO] SpeedTestResult { speed: 405.8 KB/s; elapsed: 999ms; connection_time: 1.35s } -> https://co-1-mirror.chaotic.cx/
+#  17. [SG] SpeedTestResult { speed: 391.8 KB/s; elapsed: 982ms; connection_time: 1.83s } -> https://sg-mirror.chaotic.cx/
+#  18. [RU] SpeedTestResult { speed: 299.7 KB/s; elapsed: 928ms; connection_time: 891ms } -> https://ru-1-mirror.chaotic.cx/
+#  19. [SG] SpeedTestResult { speed: 272.4 KB/s; elapsed: 992ms; connection_time: 1.51s } -> https://sg-1-mirror.chaotic.cx/
+#  20. [BR] SpeedTestResult { speed: 255.7 KB/s; elapsed: 960ms; connection_time: 1.75s } -> https://br-mirror.chaotic.cx/
+#  21. [BR] SpeedTestResult { speed: 218.3 KB/s; elapsed: 899ms; connection_time: 1.68s } -> https://br-4-mirror.chaotic.cx/
+#  22. [CL] SpeedTestResult { speed: 210.1 KB/s; elapsed: 779ms; connection_time: 1.67s } -> https://cl-mirror.chaotic.cx/
+#  23. [CL] SpeedTestResult { speed: 183.1 KB/s; elapsed: 894ms; connection_time: 1.69s } -> https://cl-2-mirror.chaotic.cx/
+#  24. [KR] SpeedTestResult { speed: 175.1 KB/s; elapsed: 934ms; connection_time: 2.88s } -> https://kr-mirror.chaotic.cx/
+#  25. [CL] SpeedTestResult { speed: 163.9 KB/s; elapsed: 898ms; connection_time: 1.71s } -> https://cl-3-mirror.chaotic.cx/
+#  26. [BR] SpeedTestResult { speed: 144.7 KB/s; elapsed: 905ms; connection_time: 1.44s } -> https://br-1-mirror.chaotic.cx/
+#  27. [CL] SpeedTestResult { speed: 136.7 KB/s; elapsed: 985ms; connection_time: 1.38s } -> https://cl-1-mirror.chaotic.cx/
+#  28. [IN] SpeedTestResult { speed: 127.2 KB/s; elapsed: 743ms; connection_time: 1.27s } -> https://in-4-mirror.chaotic.cx/
+# FINISHED AT: 2026-11-08 17:37:13.943568781 +01:00
+Server = https://de-2-mirror.chaotic.cx/$repo/$arch
+Server = https://de-4-mirror.chaotic.cx/$repo/$arch
+Server = https://se-1-mirror.chaotic.cx/$repo/$arch
+Server = https://geo-mirror.chaotic.cx/$repo/$arch
+Server = https://de-mirror.chaotic.cx/$repo/$arch
+Server = https://se-mirror.chaotic.cx/$repo/$arch
+Server = https://gb-1-mirror.chaotic.cx/$repo/$arch
+Server = https://gb-mirror.chaotic.cx/$repo/$arch
+Server = https://cdn-mirror.chaotic.cx/$repo/$arch
+Server = https://ru-mirror.chaotic.cx/$repo/$arch
+Server = https://us-mi-mirror.chaotic.cx/$repo/$arch
+Server = https://in-mirror.chaotic.cx/$repo/$arch
+Server = https://us-mirror.chaotic.cx/$repo/$arch
+Server = https://kr-1-mirror.chaotic.cx/$repo/$arch
+Server = https://co-mirror.chaotic.cx/$repo/$arch
+Server = https://co-1-mirror.chaotic.cx/$repo/$arch
+Server = https://sg-mirror.chaotic.cx/$repo/$arch
+Server = https://ru-1-mirror.chaotic.cx/$repo/$arch
+Server = https://sg-1-mirror.chaotic.cx/$repo/$arch
+Server = https://br-mirror.chaotic.cx/$repo/$arch
+Server = https://br-4-mirror.chaotic.cx/$repo/$arch
+Server = https://cl-mirror.chaotic.cx/$repo/$arch
+Server = https://cl-2-mirror.chaotic.cx/$repo/$arch
+Server = https://kr-mirror.chaotic.cx/$repo/$arch
+Server = https://cl-3-mirror.chaotic.cx/$repo/$arch
+Server = https://br-1-mirror.chaotic.cx/$repo/$arch
+Server = https://cl-1-mirror.chaotic.cx/$repo/$arch
+Server = https://in-4-mirror.chaotic.cx/$repo/$arch

@@ -5,23 +5,16 @@ use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind, dec
 use toolbox_plan::{ShadowLocks, UserName};
 
 use super::answer;
+use crate::testing::SHADOW;
 
-const SHADOW: &str = "root:$6$saltsalt$hashhashhash:19000::::::
-nico:$y$j9T$abcdefgh$0123456789abcdef:19500:0:99999:7:::
-guest:!$y$j9T$abcdefgh$fedcba9876543210:19500:0:99999:7:::
-";
+/// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
+const GRUB_CFG: &str = include_str!("../../../../crates/plan/src/grub/fixtures/installed/grub.cfg");
 
-const GRUB_CFG: &str = "\
+/// A GRUB password as `grub-mkpasswd-pbkdf2` makes one, which the
+/// captured file has not.
+const GRUB_PASSWORD: &str = "\
 set superusers=\"admin\"
 password_pbkdf2 admin grub.pbkdf2.sha512.10000.5A9F0C3E7B1D.99AABBCCDDEE
-menuentry 'Garuda Linux' --class garuda $menuentry_id_option 'gnulinux-simple-1' {
-	linux /@/boot/vmlinuz-linux-zen root=UUID=1 rw cryptkey=secret-key
-}
-submenu 'Advanced options' $menuentry_id_option 'gnulinux-advanced-1' {
-	menuentry 'Garuda Linux, with Linux linux-lts' $menuentry_id_option 'gnulinux-lts-1' {
-		linux /@/boot/vmlinuz-linux-lts root=UUID=1 rw
-	}
-}
 ";
 
 fn shadow(root: &Path, content: &[u8]) {
@@ -36,18 +29,25 @@ fn shadow_locks_answers_names_and_flags_on_one_line() {
 
     let line = answer(dir.path(), ReadKind::ShadowLocks).unwrap();
 
-    assert_eq!(
-        line,
-        "{\"locks\":[{\"user\":\"root\",\"locked\":false},{\"user\":\"nico\",\"locked\":false},{\"user\":\"guest\",\"locked\":true}]}\n"
-    );
+    assert_eq!(line.matches('\n').count(), 1);
 
     let locks: ShadowLocks = decode(line.trim_end()).unwrap();
+    let locked = |name: &str| {
+        let user = UserName::new(name).unwrap();
 
-    assert_eq!(locks.locks.len(), 3);
-    assert_eq!(
-        locks.locks.last().map(|lock| (&lock.user, lock.locked)),
-        Some((&UserName::new("guest").unwrap(), true))
-    );
+        locks
+            .locks
+            .iter()
+            .find(|lock| lock.user == user)
+            .map(|lock| lock.locked)
+    };
+
+    assert_eq!(locks.locks.len(), SHADOW.lines().count());
+    assert_eq!(locked("root"), Some(false));
+    assert_eq!(locked("nopass"), Some(false));
+    assert_eq!(locked("bin"), Some(true));
+    assert_eq!(locked("user"), Some(true));
+    assert_eq!(locked("guest"), Some(true));
 }
 
 #[test]
@@ -57,7 +57,7 @@ fn the_answer_holds_no_hash() {
 
     let line = answer(dir.path(), ReadKind::ShadowLocks).unwrap();
 
-    for part in ["$", "salt", "hash", "abcdefgh", "0123456789", "19500"] {
+    for part in ["$", "j9T", "xxxx", "20765", "14871"] {
         assert!(!line.contains(part), "{part} in {line}");
     }
 }
@@ -243,21 +243,53 @@ fn grub_cfg(root: &Path, content: &[u8]) {
 fn the_grub_menu_answers_titles_and_ids_on_one_line() {
     let dir = tempfile::tempdir().unwrap();
     grub_cfg(dir.path(), GRUB_CFG.as_bytes());
+    fs::create_dir_all(dir.path().join("sys/firmware/efi")).unwrap();
 
     let line = answer(dir.path(), ReadKind::GrubMenu).unwrap();
     let menu = toolbox_plan::GrubMenu::parse(line.trim_end()).unwrap();
     let ids: Vec<&str> = menu.entries.iter().map(|entry| entry.id.as_str()).collect();
 
+    let masked = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+    let advanced = format!("gnulinux-advanced-{masked}");
+
     assert_eq!(line.matches('\n').count(), 1);
     assert_eq!(
         ids,
         [
-            "gnulinux-simple-1",
-            "gnulinux-advanced-1",
-            "gnulinux-advanced-1>gnulinux-lts-1"
+            format!("gnulinux-simple-{masked}"),
+            advanced.clone(),
+            format!("{advanced}>gnulinux-linux-garuda-advanced-{masked}"),
+            format!("{advanced}>gnulinux-linux-garuda-fallback-{masked}"),
+            format!("{advanced}>gnulinux-linux-garuda-recovery-{masked}"),
+            "uefi-firmware".to_owned(),
+            "Garuda Linux snapshots".to_owned(),
+            "Memory Tester (memtest86+)".to_owned(),
+            "Shutdown".to_owned(),
+            "Restart".to_owned(),
         ]
     );
-    assert_eq!(menu.entries[2].title, "Garuda Linux, with Linux linux-lts");
+    assert_eq!(
+        menu.entries[2].title,
+        "Garuda Linux, with Linux linux-garuda"
+    );
+}
+
+/// Without `/sys/firmware/efi` GRUB runs the `pc` branches, so the
+/// firmware entry is missing and Shutdown moves up.
+#[test]
+fn the_grub_menu_of_a_bios_machine_has_no_firmware_entry() {
+    let dir = tempfile::tempdir().unwrap();
+    grub_cfg(dir.path(), GRUB_CFG.as_bytes());
+
+    let line = answer(dir.path(), ReadKind::GrubMenu).unwrap();
+    let menu = toolbox_plan::GrubMenu::parse(line.trim_end()).unwrap();
+
+    assert!(
+        menu.entries
+            .iter()
+            .all(|entry| entry.id.as_str() != "uefi-firmware")
+    );
+    assert_eq!(menu.find("4").unwrap().title, "Shutdown");
 }
 
 /// `grub.cfg` is root's alone because it can hold a password hash and
@@ -265,7 +297,8 @@ fn the_grub_menu_answers_titles_and_ids_on_one_line() {
 #[test]
 fn the_grub_menu_answer_holds_nothing_else_of_the_file() {
     let dir = tempfile::tempdir().unwrap();
-    grub_cfg(dir.path(), GRUB_CFG.as_bytes());
+    let protected = format!("{GRUB_PASSWORD}{GRUB_CFG}");
+    grub_cfg(dir.path(), protected.as_bytes());
 
     let line = answer(dir.path(), ReadKind::GrubMenu).unwrap();
 
@@ -276,9 +309,10 @@ fn the_grub_menu_answer_holds_nothing_else_of_the_file() {
         "superusers",
         "admin",
         "vmlinuz",
-        "cryptkey",
-        "secret-key",
         "root=UUID",
+        "rootflags",
+        "vt.default_red",
+        "initramfs-linux",
     ] {
         assert!(!line.contains(part), "{part} in {line}");
     }

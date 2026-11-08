@@ -7,28 +7,21 @@ use toolbox_core::domains::{CurrentGrub, InstalledPackages};
 use toolbox_core::features::boot::Flag;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{GrubMenu, GrubState, PackageName};
+use toolbox_plan::{GrubMenu, GrubPlatform, GrubState, PackageName};
 use toolbox_system::{Host, Menu, MenuRead};
 
 use super::BootPage;
 use crate::boot::{Boot, BootRefusal, FileKind};
 use crate::command::{BootCommand, Command};
+use crate::testing::captures::GRUB_CFG;
 use crate::testing::{PageFixture, PageState};
 
-const DEFAULTS: &str = "\
-GRUB_DEFAULT=gnulinux-simple-1
-GRUB_TIMEOUT=5
-GRUB_CMDLINE_LINUX_DEFAULT=\"quiet loglevel=3\"
-";
-
-const GRUB_CFG: &str = "\
-menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {
-}
-submenu 'Advanced options' $menuentry_id_option 'gnulinux-advanced-1' {
-	menuentry 'Garuda Linux, with Linux linux-lts' $menuentry_id_option 'gnulinux-linux-lts-advanced-1' {
-	}
-}
-";
+/// `/etc/default/grub` of a Garuda Mokka install, the install of
+/// [`GRUB_CFG`]. The file names the Catppuccin theme.
+const DEFAULTS: &str =
+    include_str!("../../../../../crates/plan/src/grub/fixtures/installed/default-grub");
+const THEME: &str = "/usr/share/grub/themes/catppuccin-mocha/theme.txt";
+const MASKED: &str = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 pub(super) type Shown = Harness<'static, PageState<BootPage>>;
 
@@ -41,7 +34,10 @@ pub(super) fn grub_system() -> Snapshot {
 }
 
 pub(super) fn menu() -> Menu {
-    Menu::Read(MenuRead::Known(GrubMenu::from_config(GRUB_CFG)))
+    Menu::Read(MenuRead::Known(GrubMenu::for_platform(
+        GRUB_CFG,
+        GrubPlatform::Efi,
+    )))
 }
 
 pub(super) fn page(snapshot: Snapshot, boot: Boot) -> Shown {
@@ -90,15 +86,17 @@ fn a_picked_entry_becomes_the_default() {
         .click();
     harness.run();
     harness
-        .get_by_label("Garuda Linux, with Linux linux-lts (in Advanced options)")
+        .get_by_label(
+            "Garuda Linux, with Linux linux-garuda (in Advanced options for Garuda Linux)",
+        )
         .click();
     harness.run();
 
     assert_eq!(
         sent(&harness),
-        [edit(Edit::Default(
-            "gnulinux-advanced-1>gnulinux-linux-lts-advanced-1".to_owned()
-        ))]
+        [edit(Edit::Default(format!(
+            "gnulinux-advanced-{MASKED}>gnulinux-linux-garuda-advanced-{MASKED}"
+        )))]
     );
 }
 
@@ -201,12 +199,12 @@ fn a_refused_value_is_named_until_dismissed() {
 
 #[test]
 fn a_proposed_kernel_is_queued_as_the_default_on_request() {
-    let kernel = PackageName::new("linux-lts").unwrap();
+    let kernel = PackageName::new("linux-garuda").unwrap();
     let mut harness = page(grub_system(), Boot::showing(menu(), None, Some(kernel)));
 
     assert!(
         harness
-            .query_by_label_contains("The menu entry of the kernel linux-lts can become")
+            .query_by_label_contains("The menu entry of the kernel linux-garuda can become")
             .is_some()
     );
 
@@ -216,9 +214,9 @@ fn a_proposed_kernel_is_queued_as_the_default_on_request() {
     assert_eq!(
         sent(&harness),
         [
-            edit(Edit::Default(
-                "gnulinux-advanced-1>gnulinux-linux-lts-advanced-1".to_owned()
-            )),
+            edit(Edit::Default(format!(
+                "gnulinux-advanced-{MASKED}>gnulinux-linux-garuda-advanced-{MASKED}"
+            ))),
             Command::from(BootCommand::DropProposal),
         ]
     );
@@ -266,10 +264,7 @@ fn a_queued_change_is_marked() {
 
 #[test]
 fn use_none_waits_in_the_menu_of_its_row() {
-    let defaults = format!("{DEFAULTS}GRUB_THEME=\"/usr/share/grub/themes/garuda/theme.txt\"\n");
-    let mut snapshot = grub_system();
-    snapshot.insert(CurrentGrub(GrubState::read(&defaults)));
-    let mut harness = page(snapshot, Boot::showing(menu(), None, None));
+    let mut harness = ready();
 
     assert!(harness.query_by_label("Use none").is_none());
     harness
@@ -359,10 +354,7 @@ fn the_new_parameter_hint_is_centred_in_its_field() {
 
 #[test]
 fn a_long_chosen_path_sits_under_the_words_and_leaves_choose_in_line() {
-    let defaults = format!("{DEFAULTS}GRUB_THEME=\"/usr/share/grub/themes/garuda/theme.txt\"\n");
-    let mut snapshot = grub_system();
-    snapshot.insert(CurrentGrub(GrubState::read(&defaults)));
-    let mut harness = page(snapshot, Boot::showing(menu(), None, None));
+    let mut harness = ready();
     harness
         .get_by_label("More actions for GRUB theme")
         .scroll_to_me();
@@ -380,9 +372,7 @@ fn a_long_chosen_path_sits_under_the_words_and_leaves_choose_in_line() {
         "the Choose buttons do not line up: {chooses:?}"
     );
 
-    let path = harness
-        .get_by_label_contains("/usr/share/grub/themes/garuda/theme.txt")
-        .rect();
+    let path = harness.get_by_label_contains(THEME).rect();
 
     assert!(
         path.right() <= chooses[1].left(),

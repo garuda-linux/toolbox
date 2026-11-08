@@ -18,7 +18,7 @@ use toolbox_gui::{App, Setup, apply, snapshot};
 use toolbox_system::{Probe, ProbeError, ProbeIssue};
 
 use crate::common::{HEIGHT, installing, packages, window};
-use crate::console::{FakeLauncher, succeeding_script};
+use crate::console::{FakeLauncher, silent_script};
 
 /// Where a wait that ran out leaves its screenshot, beside the snapshots.
 const FAILURES: &str = "tests/failures";
@@ -57,7 +57,7 @@ pub fn app_with(dry_run: bool) -> Reading {
     let changes = installing(&["firefox", "vlc"]);
 
     let harness = window(HEIGHT).build_eframe(move |cc| {
-        let launcher = Arc::new(FakeLauncher(succeeding_script()));
+        let launcher = Arc::new(FakeLauncher(silent_script()));
         let probe = move || {
             counted.fetch_add(1, Ordering::SeqCst);
             answers.recv_timeout(PATIENCE).unwrap()

@@ -1,0 +1,13 @@
+[General]
+fixed=FiraCode Nerd Font Mono,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+font=Fira Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=Fira Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=Fira Sans,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=Fira Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[KDE]
+LookAndFeelPackage=Dr460nized
+SingleClick=true
+
+[WM]
+activeFont=Fira Sans,10,-1,5,75,0,0,0,0,0,Bold

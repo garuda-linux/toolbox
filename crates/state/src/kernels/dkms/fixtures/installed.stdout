@@ -1,0 +1,4 @@
+broadcom-wl/6.30.223.271, 6.18.60-1-lts, x86_64: installed
+broadcom-wl/6.30.223.271, 7.3.1-1-garuda, x86_64: installed
+v4l2loopback/0.15.4, 6.18.60-1-lts, x86_64: installed
+v4l2loopback/0.15.4, 7.3.1-1-garuda, x86_64: installed (Original modules exist)

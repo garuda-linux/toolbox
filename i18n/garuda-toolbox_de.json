@@ -263,7 +263,7 @@
       "string": "Die Passwortabfrage wurde geschlossen, daher fehlen die Einträge des Bootmenüs. Mit „Neu einlesen“ versuchst du es erneut."
     },
     "boot-default-denied": {
-      "string": "Die Einträge des Bootmenüs fehlen, weil zum Lesen das Passwort eines Administrators nötig ist. Mit „Neu einlesen“ versuchst du es erneut."
+      "string": "Die Einträge des Bootmenüs fehlen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen. Mit „Neu einlesen“ versuchst du es erneut."
     },
     "boot-default-no-agent": {
       "string": "Die Einträge des Bootmenüs fehlen, weil keine Passwortabfrage erscheinen konnte: In dieser Sitzung läuft kein polkit-Agent."
@@ -431,7 +431,7 @@
       "string": "Ein PNG-, JPEG- oder TGA-Bild hinter dem Bootmenü. Ein GRUB-Theme hat seinen eigenen Hintergrund."
     },
     "boot-background-from-theme": {
-      "string": "Vom GRUB-Theme gesetzt (GRUB_MENU_PICTURE). Wähle ein Bild, um es zu ersetzen."
+      "string": "In /etc/default/grub als GRUB_MENU_PICTURE gesetzt, das manche GRUB-Themes lesen. Wähle ein Bild, um es zu ersetzen."
     },
     "boot-background-title": {
       "string": "Hintergrundbild wählen"
@@ -4347,7 +4347,7 @@
       "string": "{path} wurde nicht gelesen: Du hast die Passwortabfrage geschlossen."
     },
     "configs-problem-denied": {
-      "string": "{path} wurde nicht gelesen, weil dafür ein Administratorpasswort nötig ist."
+      "string": "{path} wurde nicht gelesen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen."
     },
     "configs-problem-no-agent": {
       "string": "{path} wurde nicht gelesen, weil keine Passwortabfrage erscheinen konnte: In dieser Sitzung läuft kein polkit-Agent."
@@ -4598,7 +4598,7 @@
       "string": "Die Passwortabfrage wurde geschlossen. Es wurde nichts geändert."
     },
     "refusal-denied": {
-      "string": "Du darfst diese Änderungen nicht vornehmen."
+      "string": "Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen. Es wurde nichts geändert."
     },
     "refusal-no-agent": {
       "string": "Die Passwortabfrage konnte nicht angezeigt werden. Melde dich in einer Desktop-Sitzung mit polkit-Agent an."
@@ -7680,7 +7680,7 @@
       "string": "Es ist nicht bekannt, welche Konten gesperrt sind. Die Passwortabfrage wurde geschlossen."
     },
     "users-locks-denied": {
-      "string": "Es ist nicht bekannt, welche Konten gesperrt sind. Dein Konto darf das nicht abfragen."
+      "string": "Es ist nicht bekannt, welche Konten gesperrt sind: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen."
     },
     "users-locks-no-agent": {
       "string": "Es ist nicht bekannt, welche Konten gesperrt sind. In dieser Sitzung läuft kein polkit-Agent (das Programm, das nach deinem Passwort fragt, wenn eine App mehr Rechte braucht), daher erschien keine Passwortabfrage."

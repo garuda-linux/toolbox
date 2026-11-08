@@ -4,25 +4,29 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::path::PathBuf;
 
 use tempfile::TempDir;
-use toolbox_plan::{DnsProvider, GarudaUpdateFlag, WifiBackend};
+use toolbox_plan::{
+    DNS_CONFIG, DnsProvider, GarudaUpdateFlag, KernelModule, WIFI_BACKEND_CONFIG, WifiBackend,
+    set_blacklisted,
+};
 use toolbox_state::parts::OwnBlacklist;
 use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig, HblockState};
 
 use super::{EtcSettings, SettingsSource as _, blocks_domains, parse_dns};
 use crate::ProbeError;
-use crate::testing::running_as_root;
+use crate::testing::{running_as_root, write};
 
-const HBLOCK_HOSTS: &str = "\
-# <custom>
-127.0.0.1 localhost.localdomain localhost
-# </custom>
-
-# Author:          Héctor Molinero Fernández <hector@molinero.dev>
-# Repository:      https://github.com/hectorm/hblock
-# Last updated:    Tue, 01 Oct 2026 10:00:00 UTC
-# Blocked domains: 284934
-0.0.0.0 ads.example
-";
+/// The Lima VM's `/etc/hosts` before and after `hblock`, the latter cut
+/// to its first 80 lines.
+const HOSTS: &str = include_str!("fixtures/hosts");
+const HBLOCK_HOSTS: &str = include_str!("fixtures/hosts-hblock");
+/// As garuda-update ships it, every variable commented out.
+const GARUDA_UPDATE: &str = include_str!("fixtures/garuda-update-config");
+pub(super) const NETWORKMANAGER_CONF: &str =
+    include_str!("fixtures/networkmanager/etc/NetworkManager/NetworkManager.conf");
+pub(super) const CONNECTIVITY_CONF: &str =
+    include_str!("fixtures/networkmanager/usr/lib/NetworkManager/conf.d/20-connectivity.conf");
+const SYSTEMD_MODPROBE: &str =
+    include_str!("../network/modules/fixtures/root/usr/lib/modprobe.d/systemd.conf");
 
 fn system() -> (TempDir, EtcSettings) {
     let root = tempfile::tempdir().unwrap();
@@ -30,28 +34,53 @@ fn system() -> (TempDir, EtcSettings) {
     (root, settings)
 }
 
-fn conf_d(root: &TempDir) -> PathBuf {
+/// The VM's NetworkManager files and its empty drop-in folder.
+pub(super) fn conf_d(root: &TempDir) -> PathBuf {
     let folder = root.path().join("etc/NetworkManager/conf.d");
+
+    write(
+        root.path(),
+        "etc/NetworkManager/NetworkManager.conf",
+        NETWORKMANAGER_CONF,
+    );
+    write(
+        root.path(),
+        "usr/lib/NetworkManager/conf.d/20-connectivity.conf",
+        CONNECTIVITY_CONF,
+    );
     fs::create_dir_all(&folder).unwrap();
     folder
 }
 
-#[test]
-fn a_known_server_names_its_provider() {
-    assert_eq!(
-        parse_dns("[global-dns-domain-*]\nservers=9.9.9.9\n"),
-        DnsProvider::Quad9
-    );
-    assert_eq!(
-        parse_dns("[global-dns-domain-*]\nservers = 1.1.1.1, 1.0.0.1\n"),
-        DnsProvider::Cloudflare
-    );
+/// The drop-in the helper writes for `provider`.
+fn dns_config(provider: DnsProvider) -> String {
+    provider.config().unwrap()
 }
 
+/// The Cloudflare drop-in edited to blanks around `=` and a second server.
+#[test]
+fn a_known_server_names_its_provider() {
+    let spaced = dns_config(DnsProvider::Cloudflare).replacen(
+        "servers=1.1.1.1",
+        "servers = 1.1.1.1, 1.0.0.1",
+        1,
+    );
+
+    assert_eq!(
+        parse_dns(&dns_config(DnsProvider::Quad9)),
+        DnsProvider::Quad9
+    );
+    assert_eq!(parse_dns(&spaced), DnsProvider::Cloudflare);
+}
+
+/// The Google drop-in edited to the VM's own router, and the VM's main
+/// file, which names no server.
 #[test]
 fn an_unknown_server_or_none_shows_as_the_default() {
-    assert_eq!(parse_dns("servers=192.168.1.1\n"), DnsProvider::Default);
-    assert_eq!(parse_dns("[main]\n"), DnsProvider::Default);
+    let router = dns_config(DnsProvider::Google).replacen("8.8.8.8", "192.168.5.2", 1);
+
+    assert_eq!(parse_dns(&router), DnsProvider::Default);
+    assert_eq!(parse_dns(NETWORKMANAGER_CONF), DnsProvider::Default);
 }
 
 #[test]
@@ -63,19 +92,20 @@ fn dns_comes_from_the_toolbox_drop_in() {
     let folder = conf_d(&root);
     assert_eq!(settings.dns(), Ok(CurrentDns(DnsProvider::Default)));
 
-    fs::write(
-        folder.join("10-garuda-assistant-dns.conf"),
-        "[global-dns-domain-*]\nservers=8.8.8.8\n",
-    )
-    .unwrap();
+    fs::write(folder.join(DNS_CONFIG), dns_config(DnsProvider::Google)).unwrap();
     assert_eq!(settings.dns(), Ok(CurrentDns(DnsProvider::Google)));
 }
 
+/// The hblock file also with its count edited to 0.
 #[test]
 fn hblock_counts_as_on_while_it_blocks_domains() {
     assert!(blocks_domains(HBLOCK_HOSTS));
-    assert!(!blocks_domains(&HBLOCK_HOSTS.replace("284934", "0")));
-    assert!(!blocks_domains("127.0.0.1 localhost\n"));
+    assert!(!blocks_domains(&HBLOCK_HOSTS.replacen(
+        "Blocked domains: 478164",
+        "Blocked domains: 0",
+        1
+    )));
+    assert!(!blocks_domains(HOSTS));
 }
 
 #[test]
@@ -84,8 +114,10 @@ fn hblock_reads_the_hosts_file() {
 
     assert_eq!(settings.hblock(), Ok(HblockState(false)));
 
-    fs::create_dir_all(root.path().join("etc")).unwrap();
-    fs::write(root.path().join("etc/hosts"), HBLOCK_HOSTS).unwrap();
+    write(root.path(), "etc/hosts", HOSTS);
+    assert_eq!(settings.hblock(), Ok(HblockState(false)));
+
+    write(root.path(), "etc/hosts", HBLOCK_HOSTS);
     assert_eq!(settings.hblock(), Ok(HblockState(true)));
 }
 
@@ -96,9 +128,14 @@ fn the_wifi_backend_is_read_from_the_drop_ins() {
     assert_eq!(settings.wifi_backend(), Err(ProbeError::Unavailable));
 
     let folder = conf_d(&root);
+    assert_eq!(
+        settings.wifi_backend(),
+        Ok(CurrentWifiBackend(WifiBackend::WpaSupplicant))
+    );
+
     fs::write(
-        folder.join("20_wifi_backend_rani.conf"),
-        "[device]\nwifi.backend = iwd\n",
+        folder.join(WIFI_BACKEND_CONFIG),
+        WifiBackend::Iwd.config().unwrap(),
     )
     .unwrap();
     assert_eq!(
@@ -107,6 +144,7 @@ fn the_wifi_backend_is_read_from_the_drop_ins() {
     );
 }
 
+/// The shipped config with its `UPDATE_AUR` line uncommented.
 #[test]
 fn garuda_update_without_its_folder_is_unavailable() {
     let (root, settings) = system();
@@ -117,11 +155,37 @@ fn garuda_update_without_its_folder_is_unavailable() {
     fs::create_dir_all(&folder).unwrap();
     assert_eq!(settings.garuda_update(), Ok(GarudaUpdateConfig::default()));
 
-    fs::write(folder.join("config"), "UPDATE_AUR=1\n# NO_CHECK_SPACE=1\n").unwrap();
+    fs::write(folder.join("config"), GARUDA_UPDATE).unwrap();
+    assert_eq!(settings.garuda_update(), Ok(GarudaUpdateConfig::default()));
+
+    fs::write(
+        folder.join("config"),
+        GARUDA_UPDATE.replacen("# UPDATE_AUR=1", "UPDATE_AUR=1", 1),
+    )
+    .unwrap();
     assert_eq!(
         settings.garuda_update(),
         Ok(GarudaUpdateConfig(BTreeSet::from([
             GarudaUpdateFlag::UpdateAur
+        ])))
+    );
+}
+
+/// Edit: the shipped config with `NO_CHECK_SPACE=1` appended, the name
+/// older toolbox versions wrote.
+#[test]
+fn the_old_space_check_name_reads_as_on() {
+    let (root, settings) = system();
+    write(
+        root.path(),
+        "etc/garuda/garuda-update/config",
+        format!("{GARUDA_UPDATE}\nNO_CHECK_SPACE=1\n"),
+    );
+
+    assert_eq!(
+        settings.garuda_update(),
+        Ok(GarudaUpdateConfig(BTreeSet::from([
+            GarudaUpdateFlag::NoCheckSpace
         ])))
     );
 }
@@ -135,30 +199,41 @@ fn an_unreadable_garuda_update_config_is_unavailable() {
     let (root, settings) = system();
     let folder = root.path().join("etc/garuda/garuda-update");
     fs::create_dir_all(&folder).unwrap();
-    fs::write(folder.join("config"), "UPDATE_AUR=1\n").unwrap();
+    fs::write(folder.join("config"), GARUDA_UPDATE).unwrap();
     fs::set_permissions(folder.join("config"), fs::Permissions::from_mode(0o000)).unwrap();
 
     assert_eq!(settings.garuda_update(), Err(ProbeError::Unavailable));
 }
 
+/// The own file as the helper writes it, and the VM's `systemd.conf` with
+/// a blacklist line appended under another name.
 #[test]
 fn the_own_blacklist_file_lists_its_modules() {
     let (root, settings) = system();
-    let folder = root.path().join("etc/modprobe.d");
-    fs::create_dir_all(&folder).unwrap();
-    fs::write(
-        folder.join("garuda-toolbox-blacklist.conf"),
-        "# Written by Garuda Toolbox\nblacklist mt76-usb\nblacklist wl\n",
-    )
-    .unwrap();
-    fs::write(folder.join("blacklist.conf"), "blacklist b43\n").unwrap();
+    let module = |name: &str| KernelModule::new(name).unwrap();
+    let own = set_blacklisted(
+        &set_blacklisted("", &module("mt76-usb"), true),
+        &module("wl"),
+        true,
+    );
+
+    write(
+        root.path(),
+        "etc/modprobe.d/garuda-toolbox-blacklist.conf",
+        own,
+    );
+    write(
+        root.path(),
+        "etc/modprobe.d/blacklist.conf",
+        format!("{SYSTEMD_MODPROBE}blacklist b43\n"),
+    );
 
     let names: Vec<String> = settings
         .module_blacklist()
         .unwrap()
         .0
         .into_iter()
-        .map(|module| module.to_string())
+        .map(|entry| entry.to_string())
         .collect();
 
     assert_eq!(names, ["mt76_usb", "wl"]);

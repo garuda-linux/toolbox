@@ -202,6 +202,8 @@ fn the_home_of_root_of_the_own_account_and_of_a_stranger_stays() {
         ("toor", Refusal::Root),
         ("nico", Refusal::CurrentUser),
         ("ghost", Refusal::UnknownUser),
+        ("http", Refusal::OutsideUserRange),
+        ("nobody", Refusal::OutsideUserRange),
     ] {
         assert_eq!(
             set_home(

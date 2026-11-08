@@ -58,20 +58,24 @@ impl GarudaUpdateFlag {
             Self::SkipMirrorlist => "SKIP_MIRRORLIST",
             Self::UpdateAur => "UPDATE_AUR",
             Self::PacmanNoconfirm => "PACMAN_NOCONFIRM",
-            Self::NoCheckSpace => "NO_CHECK_SPACE",
+            Self::NoCheckSpace => "NO_SPACE_CHECK",
+        }
+    }
+
+    /// The name older toolbox versions wrote. garuda-update reads it only
+    /// when [`Self::key`] is unset.
+    const fn old_key(self) -> Option<&'static str> {
+        match self {
+            Self::NoCheckSpace => Some("NO_CHECK_SPACE"),
+            Self::SkipMirrorlist | Self::UpdateAur | Self::PacmanNoconfirm => None,
         }
     }
 
     /// Whether the switch is on in `config`. The shell keeps the last
     /// assignment, so the last one counts.
     pub fn is_on(self, config: &str) -> bool {
-        config
-            .split_inclusive('\n')
-            .rev()
-            .find_map(|line| match classify(line, self.key()) {
-                Line::Assignment { on } => Some(on),
-                Line::Commented | Line::Unrelated => None,
-            })
+        last_assignment(config, self.key())
+            .or_else(|| last_assignment(config, self.old_key()?))
             .unwrap_or(false)
     }
 
@@ -120,8 +124,31 @@ impl GarudaUpdateFlag {
             push_line(&mut result, &wanted);
         }
 
-        result
+        match self.old_key() {
+            Some(old) if !on => comment_out(&result, old),
+            Some(_) | None => result,
+        }
     }
+}
+
+fn last_assignment(config: &str, key: &str) -> Option<bool> {
+    config
+        .split_inclusive('\n')
+        .rev()
+        .find_map(|line| match classify(line, key) {
+            Line::Assignment { on } => Some(on),
+            Line::Commented | Line::Unrelated => None,
+        })
+}
+
+fn comment_out(config: &str, key: &str) -> String {
+    config
+        .split_inclusive('\n')
+        .map(|line| match classify(line, key) {
+            Line::Assignment { on: _ } => format!("# {key}=1{}", ending(line)),
+            Line::Commented | Line::Unrelated => line.to_owned(),
+        })
+        .collect()
 }
 
 fn classify(line: &str, key: &str) -> Line {

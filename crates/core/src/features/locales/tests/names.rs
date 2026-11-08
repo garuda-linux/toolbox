@@ -7,23 +7,10 @@ use super::super::{
 use super::{all, rows, snapshot};
 use crate::testing::{locale, package};
 use crate::{ChangeSet, Snapshot, Toggle};
-const GERMAN: &str = "comment_char %
-escape_char /
 
-% Locale for German locale in Germany
-
-LC_IDENTIFICATION
-title      \"German locale for Germany\"
-source     \"Free Software Foundation, Inc.\"
-language   \"German\"
-territory  \"Germany\"
-revision   \"1.0\"
-END LC_IDENTIFICATION
-
-LC_ADDRESS
-language   \"not this one\"
-END LC_ADDRESS
-";
+/// `/usr/share/i18n/locales/de_DE` and `eo` of the Lima VM.
+const GERMAN: &str = include_str!("../../../../../system/src/locales/fixtures/locales/de_DE");
+const ESPERANTO: &str = include_str!("../../../../../system/src/locales/fixtures/locales/eo");
 
 fn name(language: &str, territory: &str) -> LanguageName {
     LanguageName {
@@ -65,13 +52,14 @@ fn language_and_territory_come_from_the_identification_part() {
         parse_identification(GERMAN),
         Some(name("German", "Germany"))
     );
+    assert_eq!(parse_identification(ESPERANTO), Some(name("Esperanto", "")));
+
+    // `de_DE` edited to spell a letter as `<U....>`, as older glibc files do.
+    let escaped = GERMAN.replace("\"Germany\"", "\"Germ<U0061>ny\"");
+
     assert_eq!(
-        parse_identification("LC_IDENTIFICATION\nlanguage\t\"Esperanto\"\nterritory \"\"\n"),
-        Some(name("Esperanto", ""))
-    );
-    assert_eq!(
-        parse_identification("language   \"Norwegian Bokm<U00E5>l\"\nterritory \"Norway\""),
-        Some(name("Norwegian Bokmål", "Norway"))
+        parse_identification(&escaped),
+        Some(name("German", "Germany"))
     );
     assert_eq!(
         parse_identification("language \"Norwegian Bokmål\"\nterritory \"Åland <Uzz> <U41\""),
@@ -81,9 +69,15 @@ fn language_and_territory_come_from_the_identification_part() {
 
 #[test]
 fn files_that_name_no_language_have_no_name() {
+    // `de_DE` edited to name neither language nor territory.
+    let unnamed = GERMAN
+        .replace("\"German\"", "\"\"")
+        .replace("\"Germany\"", "\"\"");
+
+    assert_eq!(parse_identification(&unnamed), None);
+
     for text in [
         "",
-        "LC_IDENTIFICATION\nlanguage   \"\"\nterritory  \"\"\nEND LC_IDENTIFICATION\n",
         "LC_IDENTIFICATION\ntitle \"ISO 14651\"\nEND LC_IDENTIFICATION\nlanguage \"late\"\n",
         "languages \"German\"\n",
         "language German\n",
@@ -133,8 +127,11 @@ fn a_locale_is_named_by_the_source_file_of_its_base_and_modifier() {
 fn the_search_finds_a_locale_by_its_language_and_its_territory() {
     assert_eq!(found("german"), ["de_DE.UTF-8", "de_DE", "de_DE@euro"]);
     assert_eq!(found("GERMANY"), ["de_DE.UTF-8", "de_DE", "de_DE@euro"]);
-    assert_eq!(found("kingdom"), ["en_GB.UTF-8"]);
-    assert_eq!(found("english"), ["en_US.UTF-8", "en_GB.UTF-8", "en_US"]);
+    assert_eq!(found("kingdom"), ["en_GB.UTF-8", "en_GB"]);
+    assert_eq!(
+        found("english"),
+        ["en_US.UTF-8", "en_GB.UTF-8", "en_GB", "en_US"]
+    );
     assert_eq!(found("de_de@"), ["de_DE@euro"]);
     assert_eq!(found("serbian"), Vec::<String>::new());
 }

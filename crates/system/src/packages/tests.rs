@@ -4,7 +4,7 @@ mod orphans;
 
 use std::fs;
 
-use fixture::System;
+use fixture::{GEGL, GIMP, MPV, System, YT_DLP};
 use toolbox_plan::PackageName;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
 
@@ -22,15 +22,11 @@ fn names(names: &[&str]) -> std::collections::BTreeSet<PackageName> {
 fn the_local_database_lists_the_installed_packages() {
     let system = System::new(&["core"]);
 
-    system.install(&["bash", "lib32-glibc", "linux-zen"]);
+    system.install_captured(&[GIMP, GEGL, MPV, YT_DLP]);
 
     assert_eq!(
         Libalpm::with_config(system.config()).installed(),
-        Ok(InstalledPackages(names(&[
-            "bash",
-            "lib32-glibc",
-            "linux-zen"
-        ])))
+        Ok(InstalledPackages(names(&["gegl", "gimp", "mpv", "yt-dlp"])))
     );
 }
 
@@ -79,12 +75,13 @@ fn without_pacman_conf_both_are_unavailable() {
 }
 
 /// A local database of another layout version lists nothing, which must
-/// not read as "nothing installed".
+/// not read as "nothing installed". The captured `ALPM_DB_VERSION` 9 is
+/// overwritten with 1.
 #[test]
 fn an_unreadable_local_database_is_a_failure() {
     let system = System::new(&["core"]);
 
-    system.install(&["bash"]);
+    system.install_captured(&[GIMP]);
     fs::write(system.path().join("db/local/ALPM_DB_VERSION"), "1\n").unwrap();
 
     assert!(matches!(

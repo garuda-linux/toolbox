@@ -1,11 +1,11 @@
 use egui_kittest::kittest::Queryable as _;
 
 use super::settle::wait_for;
-use super::{app, succeeding_script};
+use super::{JAVA, app, succeeding_script};
 
 #[test]
 fn the_queued_count_is_centred_on_review_and_apply() {
-    let (mut harness, _runtime) = app(succeeding_script());
+    let (mut harness, _runtime) = app(succeeding_script(), JAVA);
     harness.get_by_label("Apply").click();
     harness.step();
     wait_for(&mut harness, "All changes applied");
@@ -27,7 +27,7 @@ fn the_queued_count_is_centred_on_review_and_apply() {
 /// them, not the title's line.
 #[test]
 fn the_status_word_is_centred_on_review_and_apply() {
-    let (mut harness, _runtime) = app(succeeding_script());
+    let (mut harness, _runtime) = app(succeeding_script(), JAVA);
     harness.get_by_label("Apply").click();
     harness.step();
     wait_for(&mut harness, "All changes applied");

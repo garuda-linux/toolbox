@@ -257,7 +257,7 @@ pub(super) const fn refused(refusal: Refusal) -> (&'static str, &'static str) {
             "run it again and enter your password",
         ),
         Refusal::Denied => (
-            "the password was wrong or you are no administrator",
+            "the password dialog was closed, the password was wrong, or you are no administrator",
             "an administrator is a member of the group wheel",
         ),
         Refusal::NoAgent => (

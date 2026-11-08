@@ -133,12 +133,12 @@ fn health_names_its_worst_level_above_info() {
 
     status.health = Ok(vec![
         issue(HealthLevel::Info, "fine", false),
-        issue(HealthLevel::Warning, "old keyring", false),
-        issue(HealthLevel::Error, "broken boot entry", true),
+        issue(HealthLevel::Low, "old keyring", false),
+        issue(HealthLevel::Critical, "broken boot entry", true),
     ]);
 
     let warned = Overview::of(&status, now());
-    assert_eq!(warned.health, Some(HealthLevel::Error));
+    assert_eq!(warned.health, Some(HealthLevel::Critical));
     assert_eq!(warned.health_messages, ["old keyring", "broken boot entry"]);
     assert!(warned.health_fixable);
 }

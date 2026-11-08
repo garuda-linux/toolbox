@@ -6,7 +6,7 @@ use toolbox_plan::HomeFolder;
 
 use super::super::{Refusal, membership_allowed, recheck, recheck_locks, remove_user, set_locked};
 use super::admins::{with_admins, with_wheel};
-use super::queued;
+use super::{queued, snapshot};
 use crate::domains::{AccountLockFlags, AccountLocks, CurrentUser, RemovedUsers};
 use crate::testing::{lock_flags, membership, restore_saved, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -120,13 +120,15 @@ fn an_unknown_lock_state_refuses_only_a_lock_of_an_admin() {
         ),
         Err(Refusal::LockStateUnknown)
     );
+    let mut only_nico = with_admins("wheel", &["nico"]);
+    only_nico.insert(CurrentUser(user_name("http")));
     assert_eq!(
         set_locked(
-            &user_name("nobody"),
+            &user_name("ada"),
             Toggle::On,
             None,
-            &mut changes,
-            &snapshot
+            &mut ChangeSet::default(),
+            &only_nico
         ),
         Ok(()),
         "an account outside the admin groups needs no flags to be locked"
@@ -156,6 +158,38 @@ fn an_unknown_lock_state_refuses_only_a_lock_of_an_admin() {
         Ok(()),
         "the admins are counted by membership"
     );
+}
+
+/// The helper refuses the same, so the queue never holds what fails.
+#[test]
+fn only_accounts_with_an_id_from_1000_to_60000_are_locked() {
+    let snapshot = snapshot();
+    let mut changes = ChangeSet::default();
+
+    for name in ["nobody", "http"] {
+        assert_eq!(
+            set_locked(
+                &user_name(name),
+                Toggle::On,
+                Some(false),
+                &mut changes,
+                &snapshot
+            ),
+            Err(Refusal::OutsideUserRange),
+            "{name}"
+        );
+        assert_eq!(
+            set_locked(
+                &user_name(name),
+                Toggle::Off,
+                Some(true),
+                &mut changes,
+                &snapshot
+            ),
+            Ok(()),
+            "unlocking {name} is allowed"
+        );
+    }
 }
 
 fn restored_lock(user: &str) -> ChangeSet {

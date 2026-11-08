@@ -58,6 +58,11 @@ only. The app reads only the titles and ids of the entries, after your
 password. When that is refused, the list stays empty and the text
 below it says so. **Read again** at the top right, or `F5`, asks once more.
 
+The list holds the entries GRUB shows on this computer. Some entries are only
+in the menu of a UEFI machine (**UEFI Firmware Settings**) or only in that of a
+BIOS machine, and the app offers only those of the firmware the system started
+with. An entry the file names by its number counts the same way.
+
 An entry the file names but the menu does not have shows as written, with
 `(not in the boot menu)` behind it.
 
@@ -175,13 +180,15 @@ desktop without one, **Choose…** opens nothing.
 **Use none** in the **⋯** menu beside **Choose…** comments the setting out
 in the file, so GRUB uses none.
 
-Garuda's own GRUB theme reads its background from another variable,
-`GRUB_MENU_PICTURE`, and a fresh Garuda system sets only that one. The page
-then shows that picture with the note **Set by the GRUB theme
-(GRUB_MENU_PICTURE). Choose a picture to replace it.** A picture you choose
-is written to `GRUB_BACKGROUND` and the theme's line stays as it is.
-**Use none** is not offered for the theme's picture. After you used it on a
-picture of your own, the theme's picture shows again.
+A fresh Garuda system sets no picture, so the page shows none. The older
+garuda-boot-options wrote the picture to another variable,
+`GRUB_MENU_PICTURE`, which some GRUB themes read. When the file has that
+line, the page shows its picture with the note **Set in /etc/default/grub as
+GRUB_MENU_PICTURE, which some GRUB themes read. Choose a picture to replace
+it.** A picture you choose is written to `GRUB_BACKGROUND` and the
+`GRUB_MENU_PICTURE` line stays as it is. **Use none** is not offered for that
+picture. After you used it on a picture of your own, the `GRUB_MENU_PICTURE`
+picture shows again.
 
 GRUB reads the file while the computer starts, before your home folder may be
 unlocked. Pick a file on a partition GRUB can read, for example below

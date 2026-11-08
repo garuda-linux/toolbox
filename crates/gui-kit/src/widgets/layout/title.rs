@@ -38,9 +38,9 @@ pub fn title_line<R>(ui: &mut Ui, wrap: bool, add: impl FnOnce(&mut Ui) -> R) ->
     // Below other lines the title keeps its line, as raised it would lie
     // over them.
     if ui.cursor().top() - ui.max_rect().top() >= SETTLED {
-        let inner = ui.scope(lines).inner;
-        ui.add_space(-slack);
-        return inner;
+        let drawn = ui.scope(lines);
+        ui.add_space(-last_row_slack(drawn.response.rect, line, slack));
+        return drawn.inner;
     }
 
     let rise = capitals_in_line(ui, title_font(ui), wrap, line) - last_descent(ui);
@@ -59,14 +59,33 @@ pub fn title_line<R>(ui: &mut Ui, wrap: bool, add: impl FnOnce(&mut Ui) -> R) ->
 
     let inner = lines(&mut child);
     let taken = child.min_rect();
+    let single = one_row(taken, line);
+    let slack = last_row_slack(taken, line, slack);
     let below = (taken.bottom() - slack - room.top()).max(0.0);
     let (end, _) = ui.allocate_exact_size(vec2(taken.width(), below), egui::Sense::hover());
 
     // The raised line starts at its capitals. Down to as far below the
-    // line's middle as they start above it, it is centred as before.
-    let tail = below - 2.0_f32.mul_add(-rise, line);
+    // line's middle as they start above it, it is centred as before. A
+    // wrapped title has no tail, as its rows below the first are text.
+    let tail = if single {
+        below - 2.0_f32.mul_add(-rise, line)
+    } else {
+        0.0
+    };
+
     ui.data_mut(|data| data.insert_temp(tail_id(), [end.bottom(), tail]));
     inner
+}
+
+/// egui lays a wrapped title's first row as tall as the line and every
+/// later row as tall as its text, so only a title on one row ends in the
+/// line's slack.
+fn one_row(taken: egui::Rect, line: f32) -> bool {
+    taken.height() <= line + SETTLED
+}
+
+fn last_row_slack(taken: egui::Rect, line: f32, slack: f32) -> f32 {
+    if one_row(taken, line) { slack } else { 0.0 }
 }
 
 pub fn title_line_height(ui: &Ui) -> f32 {

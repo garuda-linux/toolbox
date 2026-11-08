@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Announcements - Maintenance - Garuda Linux Forum</title>
+    <link>https://forum.garudalinux.org/c/announcements/announcements-maintenance/45</link>
+    <description>Topics in the &#39;Announcements - Maintenance&#39; category This category will be used for announcements regarding system maintenance only.</description>
+    <language>en-GB</language>
+    <atom:link href="https://forum.garudalinux.org/c/announcements/announcements-maintenance/45.rss" rel="self" type="application/rss+xml" />
+    <atom:link href="https://forum.garudalinux.org/c/announcements/announcements-maintenance/45.md" rel="alternate" type="text/markdown" />
+      <lastBuildDate>Fri, 08 Aug 2025 03:27:43 +0000</lastBuildDate>
+        <item>
+          <title>Patch for Linux 6.15&#39;s BTRFS regression available</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <p>The Garuda Linux team has issued kernel update <code>linux</code> and <code>linux-zen</code> version <code>6.15.9.arch1-1.1</code> and <code>6.15.9.zen1-1.1</code> to address a regression potentially resulting in an unbootable system/potential data loss.</p>
+<p>These kernel updates will be prioritized over the Arch Linux official packages automatically during the next system update. We highly recommend updating to the latest packages as soon as possible:</p>
+<pre data-code-wrap="t"><code class="lang-t">garuda-update
+# Do not forget to reboot afterwards!
+</code></pre>
+<p>To the extent of my personal knowledge, I do not believe the linux-lts kernel is affected at this time. If you are using a third party kernel on version 6.15 or higher, we strongly recommend using <code>linux</code>, <code>linux-zen</code> or <code>linux-lts</code> for now (until you are sure it is patched).</p>
+
+To see a summary of the issue, please click here <a href="https://forum.garudalinux.org/t/patch-for-linux-6-15s-btrfs-regression-available/45430/1">(click for more details)</a>
+            <p><small>17 posts - 10 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/patch-for-linux-6-15s-btrfs-regression-available/45430">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/patch-for-linux-6-15s-btrfs-regression-available/45430</link>
+          <pubDate>Fri, 08 Aug 2025 03:27:43 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-45430</guid>
+          <source url="https://forum.garudalinux.org/t/patch-for-linux-6-15s-btrfs-regression-available/45430.rss">Patch for Linux 6.15&#39;s BTRFS regression available</source>
+        </item>
+        <item>
+          <title>Modern Garuda Linux hardware profiles to automatically replace legacy profiles, Garuda Settings Manager &amp; MHWD deprecation</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <h2><a name="p-265887-modern-garuda-linux-hardware-profiles-will-be-replacing-legacy-hardware-profiles-1" class="anchor" href="https://forum.garudalinux.org#p-265887-modern-garuda-linux-hardware-profiles-will-be-replacing-legacy-hardware-profiles-1" aria-label="Heading link"></a>Modern Garuda Linux hardware profiles will be replacing legacy hardware profiles</h2>
+<p>The modern Garuda Linux “hardware profiles” (hardware profiles are <a href="https://wiki.archlinux.org/title/Meta_package_and_package_group">metapackages</a> that install packages such as video drivers and apply certain settings related to them) will be replacing the legacy mhwd-powered hardware profiles automatically during the next system update (<a href="https://forum.garudalinux.org/t/testers-needed-the-garuda-hardware-tool-and-the-modern-garuda-hardware-profiles/44659">testing thread</a>). By default, the following replacements will be made on demand:</p>
+<ul>
+<li><code>garuda-video-linux-config</code> → <code>garuda-hardware-profile-standard-x11</code></li>
+<li><code>garuda-nvidia-config</code> → <code>garuda-hardware-profile-nvidia-closed</code></li>
+<li><code>garuda-nvidia-prime-config</code> → <code>garuda-hardware-profile-nvidia-prime-closed</code></li>
+<li><code>garuda-virtualmachine-guest-config</code> → <code>garuda-hardware-profile-vm</code></li>
+</ul>
+<p>If your hardware profile is not listed (including if you are using a legacy NVIDIA driver package such as 470xx), an automatic conversion will not take place. This is because there is no equivalent for those legacy hardware profiles. For example, if you are using <code>garuda-optimus-manager-470xx-config</code>, it will not be replaced or removed automatically.</p>
+<p>Old hardware profiles will continue to function for the foreseeable future, but will not be available in the repositories anymore. They will be an “orphaned” package, meaning a package without an equivalent in any installed repository. <strong>We do not recommend updating any legacy hardware profiles from the AUR in case submissions for these packages are made. They are untested and unapproved by the Garuda Linux team.</strong></p>
+<h3><a name="p-265887-what-this-means-for-you-2" class="anchor" href="https://forum.garudalinux.org#p-265887-what-this-means-for-you-2" aria-label="Heading link"></a>What this means for you</h3>
+<p>In most cases, nothing. In most cases, the modern hardware profile packages are functionally equivalent.</p>
+<p>If the system is converted to an NVIDIA package ending in <code>-closed</code> after this update <strong>AND</strong> your NVIDIA GPU is Turing family or newer, the option to replace the <code>-closed</code> package with the equivalent package name with <code>-closed</code> omitted exists. <a href="https://developer.nvidia.com/blog/nvidia-transitions-fully-towards-open-source-gpu-kernel-modules/">This is the recommended version to use for NVIDIA GPUs Turing family or newer</a>.</p>
+<p><strong>If the system is using legacy NVIDIA drivers such as 470xx/390xx</strong>, these are now officially <em>unsupported</em>. If the system has an NVIDIA GPU Maxwell family or newer, we recommend switching to the modern NVIDIA packages. Unsupported does not mean these drivers will stop working or a conscious effort was made to break them, it just means that these drivers will not be installed automatically by Garuda Linux tooling anymore due to their <a href="https://en.wikipedia.org/wiki/GeForce_700_series">antiquated status</a>.</p>
+<h2><a name="p-265887-garuda-settings-manager-is-deprecated-and-will-be-removed-3" class="anchor" href="https://forum.garudalinux.org#p-265887-garuda-settings-manager-is-deprecated-and-will-be-removed-3" aria-label="Heading link"></a>Garuda Settings Manager is deprecated and will be removed</h2>
+<p>A recent package update of the Arch Linux upstream package <code>hwinfo</code> has put the final nail in the coffin for Garuda Settings Manager. It will be removed automatically during the next system update. We do not support keeping it installed since downgrading <code>hwinfo</code> would be required and <a href="https://wiki.garudalinux.org/en/partial-upgrade">partial upgrades are not supported</a>. Garuda RANI will be installed instead to replace it.</p>
+<h2><a name="p-265887-mhwd-is-deprecated-and-will-be-replaced-4" class="anchor" href="https://forum.garudalinux.org#p-265887-mhwd-is-deprecated-and-will-be-replaced-4" aria-label="Heading link"></a>MHWD is deprecated and will be replaced</h2>
+<p>The <code>garuda-hardware-tool</code> will automatically replace <code>mhwd</code> during the next system update (<a href="https://forum.garudalinux.org/t/testers-needed-the-garuda-hardware-tool-and-the-modern-garuda-hardware-profiles/44659">testing thread</a>). This tool did not meet the requirements of the Garuda Linux team and was presenting a major maintenance burden and was replaced with a much simplified single-purpose tool.</p>
+<pre data-code-wrap="t"><code class="lang-t">Usage: garuda-hardware-tool [OPTIONS]
+Options:
+--help, -h            Show this help message.
+--nonfree             Install non-free drivers.
+--free                Install free drivers only.
+--noconfirm           Do not prompt for confirmation during installation.
+Either --nonfree or --free must be specified.
+</code></pre>
+<h2><a name="p-265887-garuda-rani-and-garuda-rani-git-are-in-conflict-remove-garuda-rani-git-5" class="anchor" href="https://forum.garudalinux.org#p-265887-garuda-rani-and-garuda-rani-git-are-in-conflict-remove-garuda-rani-git-5" aria-label="Heading link"></a>garuda-rani and garuda-rani-git are in conflict. Remove garuda-rani-git?</h2>
+<p>Due to package manager limitations, you’ll have to accept the removal temporarily. After the full system upgrade is finished, you can once again install <code>garuda-rani-git</code>:</p>
+<pre data-code-wrap="t"><code class="lang-t">sudo pacman -S garuda-rani-git
+</code></pre>
+            <p><small>2 posts - 4 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/modern-garuda-linux-hardware-profiles-to-automatically-replace-legacy-profiles-garuda-settings-manager-mhwd-deprecation/45087">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/modern-garuda-linux-hardware-profiles-to-automatically-replace-legacy-profiles-garuda-settings-manager-mhwd-deprecation/45087</link>
+          <pubDate>Sat, 19 Jul 2025 17:40:13 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-45087</guid>
+          <source url="https://forum.garudalinux.org/t/modern-garuda-linux-hardware-profiles-to-automatically-replace-legacy-profiles-garuda-settings-manager-mhwd-deprecation/45087.rss">Modern Garuda Linux hardware profiles to automatically replace legacy profiles, Garuda Settings Manager &amp; MHWD deprecation</source>
+        </item>
+        <item>
+          <title>Linux 5.16&#39;s autodefrag BTRFS regression</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <p>Linux kernel 5.16 currently features a BTRFS regression, which can lead to high CPU usage and unnecessary SSD wear.<br>
+More details can be found in this Reddit post on r/selfhosted:</p><aside class="onebox allowlistedgeneric" data-onebox-src="https://www.reddit.com/r/GarudaLinux/comments/sh0lhm/psa_linux_516_has_major_regression_in_btrfs/">
+  <header class="source">
+      <img src="https://www.redditstatic.com/desktop2x/img/favicon/android-icon-192x192.png" class="site-icon" width="192" height="192">
+
+      <a href="https://www.reddit.com/r/GarudaLinux/comments/sh0lhm/psa_linux_516_has_major_regression_in_btrfs/" target="_blank" rel="noopener">reddit</a>
+  </header>
+
+  <article class="onebox-body">
+    
+
+<h3><a href="https://www.reddit.com/r/GarudaLinux/comments/sh0lhm/psa_linux_516_has_major_regression_in_btrfs/" target="_blank" rel="noopener">r/GarudaLinux - PSA: Linux 5.16 has major regression in btrfs causing extreme...</a></h3>
+
+  <p>5 votes and 3 comments so far on Reddit</p>
+
+
+  </article>
+
+  <div class="onebox-metadata">
+    
+    
+  </div>
+
+  <div style="clear: both"></div>
+</aside>
+
+<p>We have released a hotfix for this issue, which <a href="https://forum.garudalinux.org/t/currently-rolling-out-introducing-garuda-system-maintenance/10443">Garuda System Maintenance</a> will prompt to install. You can also manually apply this hotfix by running the <code>update</code> command in your terminal of choice.</p>
+<p>This fix is distributed as a hotfix instead of a traditional package update (like it would usually be) due to the permanent impact it can have on SSD health, so we want to roll it out as fast as possible.</p>
+<p>Make sure to reboot your system afterwards or run <code>sudo mount -a -o remount</code> to apply the /etc/fstab changes.</p>
+            <p><small>50 posts - 24 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/linux-5-16s-autodefrag-btrfs-regression/16961">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/linux-5-16s-autodefrag-btrfs-regression/16961</link>
+          <pubDate>Mon, 31 Jan 2022 15:52:57 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-16961</guid>
+          <source url="https://forum.garudalinux.org/t/linux-5-16s-autodefrag-btrfs-regression/16961.rss">Linux 5.16&#39;s autodefrag BTRFS regression</source>
+        </item>
+        <item>
+          <title>[Intervention potentially required] Python 3.10 and you</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <p>Whenever python gets a <a href="https://semver.org/">"minor"</a> update, rebuilds in the Arch Linux and Garuda Linux repositories are necessary to allow software depending on python to continue working.</p>
+<p>For Arch Linux packages, this usually works flawlessly, but Garuda Linux packages have a slight delay before they can be rebuilt. These rebuilds have now finished (since yesterday) and can be taken advantage of by updating via the <code>update</code> or <code>garuda-update</code> command. <code>pacman -Syu</code> won't be sufficient in this case.</p>
+<p>For your own local/AUR packages, you will have to use a tool like <a href="https://archlinux.org/packages/community/any/rebuild-detector/">rebuild-detector</a> to detect needed rebuilds. You can then do these rebuilds with <code>makepkg</code> or your AUR helper of choice.</p>
+<p>That should be it! Of course, let us know if you find any packages that have slipped through our rebuilds!</p>
+            <p><small>48 posts - 25 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/intervention-potentially-required-python-3-10-and-you/15342">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/intervention-potentially-required-python-3-10-and-you/15342</link>
+          <pubDate>Tue, 14 Dec 2021 04:57:07 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-15342</guid>
+          <source url="https://forum.garudalinux.org/t/intervention-potentially-required-python-3-10-and-you/15342.rss">[Intervention potentially required] Python 3.10 and you</source>
+        </item>
+        <item>
+          <title>WARNING: community/qtermwidget 0.17.0-2 -&gt; 1.0.0-1 Breaks Octopi</title>
+          <dc:creator><![CDATA[zoeruda]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <p>If you are on Dragonized or any other editions and use Octopi, and found that it broke, you should update again from a terminal:</p>
+<pre><code class="lang-auto">sudo pacman -Syu
+</code></pre>
+<p>Octopi has been rebuilt and will work again.</p>
+
+Original warning <a href="https://forum.garudalinux.org/t/warning-community-qtermwidget-0-17-0-2-1-0-0-1-breaks-octopi/14246/1">(click for more details)</a>
+            <p><small>24 posts - 10 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/warning-community-qtermwidget-0-17-0-2-1-0-0-1-breaks-octopi/14246">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/warning-community-qtermwidget-0-17-0-2-1-0-0-1-breaks-octopi/14246</link>
+          <pubDate>Tue, 09 Nov 2021 17:48:04 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-14246</guid>
+          <source url="https://forum.garudalinux.org/t/warning-community-qtermwidget-0-17-0-2-1-0-0-1-breaks-octopi/14246.rss">WARNING: community/qtermwidget 0.17.0-2 -&gt; 1.0.0-1 Breaks Octopi</source>
+        </item>
+        <item>
+          <title>[Manual intervention required] Package conflict between pipewire-media-session &amp; wireplumber</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <p>Hey guys! <img src="https://forum.garudalinux.org/images/emoji/noto/slight_smile.png?v=12" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+<p>Currently while updating, there is a package conflict going on between <code>pipewire-media-session</code> and <code>wireplumber</code> while updating which prevents finishing the update successfully as Pacman can’t handle this type of conflicts.</p>
+<p><a href="https://gitlab.freedesktop.org/pipewire/wireplumber">Wireplumber</a> is a drop-in replacement for <code>pipewire-media-session</code>, which is going to be featured by Garuda from now on as <a href="https://bugs.archlinux.org/task/72283">Arch made it possible</a> (thus being dependency of our <code>pipewire-support</code> meta package). While the replacement is seemless, this package conflict still needs to be solved prior to updating.</p>
+<p>So, what does this mean for you?</p>
+<p>Update! <img src="https://forum.garudalinux.org/images/emoji/noto/blush.png?v=12" title=":blush:" class="emoji" alt=":blush:" loading="lazy" width="20" height="20"></p>
+<aside class="quote" data-post="22" data-topic="13707">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img loading="lazy" alt="" width="24" height="24" src="https://forum.garudalinux.org/user_avatar/forum.garudalinux.org/dr460nf1r3/60/27974_2.png" class="avatar">
+    <a href="https://forum.garudalinux.org/t/manual-intervention-required-package-conflict-between-pipewire-media-session-wireplumber/13707/22">[Manual intervention required] Package conflict between pipewire-media-session &amp; wireplumber</a> <a class="badge-category__wrapper " href="https://forum.garudalinux.org/c/announcements/announcements-maintenance/45"><span data-category-id="45" style="--category-badge-color: #FFFF00; --category-badge-text-color: #FFFFFF; --parent-category-badge-color: #B3B5B4;" data-parent-category-id="16" data-drop-close="true" class="badge-category --has-parent" title="This category will be used for announcements regarding system maintenance only."><span class="badge-category__name">Announcements - Maintenance</span></span></a>
+  </div>
+  <blockquote>
+    Update: for the first time ever our garuda-hotfixes package is being used! Thanks to <a class="mention" href="https://forum.garudalinux.org/u/tne">@TNE</a> this will prompt everyone to apply the fix automatically, so no more intervention is needed if garuda-system-maintenance is installed (which is pretty much every installation that happened after July). If you don't have it installed yet, I'd suggest to do it anyways as it'll reduce the amount of maintenance needed in situations like this <img width="20" height="20" src="https://forum.garudalinux.org/images/emoji/noto/wink.png?v=12" title="wink" alt="wink" class="emoji">
+  </blockquote>
+</aside>
+
+<ol>
+<li>If you are on one of the newer version of Garuda Update: just run <code>update</code> as usual. The command will take care of everything by itself (namely, removing <code>pipewire-media-session</code> and updating afterwards)</li>
+<li>If you aren’t on one of the newer versions of Garuda Update: <code>sudo pacman -Sy garuda-update &amp;&amp; update</code> (the same as before, just updating the script beforehand)</li>
+<li>If you prefer to do things manually: <code>sudo pacman -Rdd pipewire-media-session &amp;&amp; sudo pacman -Syu</code></li>
+</ol>
+<p>Keep it rolling! <img src="https://forum.garudalinux.org/images/emoji/noto/dragon.png?v=12" title=":dragon:" class="emoji" alt=":dragon:" loading="lazy" width="20" height="20"> <img src="https://forum.garudalinux.org/images/emoji/noto/fire.png?v=12" title=":fire:" class="emoji" alt=":fire:" loading="lazy" width="20" height="20"></p>
+            <p><small>60 posts - 34 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/manual-intervention-required-package-conflict-between-pipewire-media-session-wireplumber/13707">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/manual-intervention-required-package-conflict-between-pipewire-media-session-wireplumber/13707</link>
+          <pubDate>Mon, 25 Oct 2021 14:30:27 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-13707</guid>
+          <source url="https://forum.garudalinux.org/t/manual-intervention-required-package-conflict-between-pipewire-media-session-wireplumber/13707.rss">[Manual intervention required] Package conflict between pipewire-media-session &amp; wireplumber</source>
+        </item>
+        <item>
+          <title>About the Announcements - Maintenance category</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements - Maintenance</category>
+          <description><![CDATA[
+            <p>This category will be used for announcements regarding system maintenance only.</p>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://forum.garudalinux.org/t/about-the-announcements-maintenance-category/10197">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/about-the-announcements-maintenance-category/10197</link>
+          <pubDate>Sun, 04 Jul 2021 15:07:28 +0000</pubDate>
+          <discourse:topicPinned>Yes</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-10197</guid>
+          <source url="https://forum.garudalinux.org/t/about-the-announcements-maintenance-category/10197.rss">About the Announcements - Maintenance category</source>
+        </item>
+  </channel>
+</rss>

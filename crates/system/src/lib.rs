@@ -40,7 +40,9 @@ mod user_configs;
 
 pub use accounts::{AccountSource, EtcAccounts};
 pub use app_icons::{AppIconSource, AppStreamIcons, file_path, file_url};
-pub use boot::{BootMenuSource, BootSource, Menu, MenuRead, SystemBoot, SystemBootMenu};
+pub use boot::{
+    BootMenuSource, BootSource, Menu, MenuRead, SystemBoot, SystemBootMenu, grub_platform,
+};
 pub use bus::{CALL_TIMEOUT, CallError, Method, call, classify, connect};
 pub use config_files::{
     ConfigFileSource, DryRunEditor, EditFolder, Editing, HelperFetch, ReadProblem,
@@ -68,7 +70,9 @@ pub use power::{
     reboot_body,
 };
 pub use probe::{FailedProbes, Probe, ProbeIssue, Sources, failed_probes, probe_snapshot};
-pub use repair::{DryRunRepair, RepairSource, SystemRepair};
+#[cfg(any(test, feature = "selftest"))]
+pub use repair::DryRunRepair;
+pub use repair::{RepairSource, SystemRepair};
 pub use settings::{EtcSettings, SettingsSource};
 pub use status::{
     AurUpdateSource, Checkupdates, GarudaHealth, HealthIssue, HealthLevel, HealthSource,

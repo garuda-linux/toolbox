@@ -1,10 +1,18 @@
-use super::{GrubMenu, MAX_ENTRIES, MenuEntry};
+mod platform;
+
+use super::{GrubMenu, GrubPlatform, MAX_ENTRIES, MenuEntry};
 use crate::protocol::encode;
 
-const GARUDA: &str = include_str!("../fixtures/garuda-grub.cfg");
-const SNAPSHOTS: &str = include_str!("../fixtures/snapshots-grub-btrfs.cfg");
+/// `grub.cfg` of a used Garuda Mokka install, every UUID masked.
+const INSTALLED: &str = include_str!("../fixtures/installed/grub.cfg");
+/// `grub.cfg` of the Lima image with two kernels and a test superuser.
+const LIMA: &str = include_str!("../fixtures/lima/grub.cfg");
+/// `grub-btrfs.cfg` of the same install, ten snapshots.
+const SNAPSHOTS: &str = include_str!("../fixtures/installed/grub-btrfs.cfg");
 
-const UUID: &str = "3f1c9a52-7d0e-4b6a-9c1f-2e8d5a7b4c10";
+const MASKED: &str = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+const LIMA_UUID: &str = "cd2fff21-4bb7-40f3-a158-406f545e11e6";
+const PC_MEMTEST: &str = "if [ \"${grub_platform}\" == \"pc\" ]; then";
 
 fn line(position: &str, title: &str, submenu: bool) -> (String, String, bool) {
     (position.to_owned(), title.to_owned(), submenu)
@@ -24,48 +32,62 @@ fn entry<'menu>(menu: &'menu GrubMenu, title: &str) -> &'menu MenuEntry {
         .unwrap()
 }
 
+fn found(menu: &GrubMenu, default: &str) -> Option<String> {
+    menu.find(default).map(|entry| entry.title.clone())
+}
+
+fn memtests(menu: &GrubMenu) -> usize {
+    menu.entries
+        .iter()
+        .filter(|entry| entry.title == "Memory Tester (memtest86+)")
+        .count()
+}
+
+/// On UEFI the `pc` branch of memtest86+ is skipped, as GRUB does.
 #[test]
 fn a_garuda_menu_lists_entries_and_submenus_in_order() {
-    let menu = GrubMenu::from_config(GARUDA);
+    let menu = GrubMenu::for_platform(INSTALLED, GrubPlatform::Efi);
 
     assert_eq!(
         brief(&menu),
         [
             line("0", "Garuda Linux", false),
             line("1", "Advanced options for Garuda Linux", true),
-            line("1>0", "Garuda Linux, with Linux linux-zen", false),
+            line("1>0", "Garuda Linux, with Linux linux-garuda", false),
             line(
                 "1>1",
-                "Garuda Linux, with Linux linux-zen (fallback initramfs)",
+                "Garuda Linux, with Linux linux-garuda (fallback initramfs)",
                 false
             ),
-            line("1>2", "Garuda Linux, with Linux linux-lts", false),
-            line("2", "Windows Boot Manager (on /dev/nvme0n1p1)", false),
-            line("3", "UEFI Firmware Settings", false),
-            line("4", "Garuda Linux snapshots", true),
-            line("5", "Memory Tester (memtest86+)", false),
+            line(
+                "1>2",
+                "Garuda Linux, with Linux linux-garuda (recovery mode)",
+                false
+            ),
+            line("2", "UEFI Firmware Settings", false),
+            line("3", "Garuda Linux snapshots", true),
+            line("4", "Memory Tester (memtest86+)", false),
+            line("5", "Shutdown", false),
+            line("6", "Restart", false),
         ]
     );
 }
 
 #[test]
 fn ids_are_what_grub_default_takes() {
-    let menu = GrubMenu::from_config(GARUDA);
+    let menu = GrubMenu::for_platform(INSTALLED, GrubPlatform::Efi);
+    let recovery = "Garuda Linux, with Linux linux-garuda (recovery mode)";
 
     assert_eq!(
         entry(&menu, "Garuda Linux").id.as_str(),
-        format!("gnulinux-simple-{UUID}")
+        format!("gnulinux-simple-{MASKED}")
     );
     assert_eq!(
-        entry(&menu, "Garuda Linux, with Linux linux-lts")
-            .id
-            .as_str(),
-        format!("gnulinux-advanced-{UUID}>gnulinux-linux-lts-advanced-{UUID}")
+        entry(&menu, recovery).id.as_str(),
+        format!("gnulinux-advanced-{MASKED}>gnulinux-linux-garuda-recovery-{MASKED}")
     );
     assert_eq!(
-        entry(&menu, "Garuda Linux, with Linux linux-lts")
-            .parent
-            .as_deref(),
+        entry(&menu, recovery).parent.as_deref(),
         Some("Advanced options for Garuda Linux")
     );
     assert_eq!(entry(&menu, "Garuda Linux").parent, None);
@@ -83,29 +105,47 @@ fn ids_are_what_grub_default_takes() {
         entry(&menu, "Garuda Linux snapshots").id.as_str(),
         "Garuda Linux snapshots"
     );
+    assert_eq!(entry(&menu, "Shutdown").id.as_str(), "Shutdown");
 }
 
+/// Documents only how `grub-btrfs.cfg` parses on its own. The app never
+/// reads that file, so snapshot entries are never offered as a default:
+/// GRUB loads it through `configfile`, which does not carry `default` on.
+/// grub-btrfs pads its titles into a table and gives every kernel of a
+/// snapshot one id, so here only the first of the two is listed.
 #[test]
 fn snapshot_submenus_nest_and_keep_their_blanks() {
-    let menu = GrubMenu::from_config(SNAPSHOTS);
-    let first = "  2026-10-09 18:20:11 | @/.snapshots/412/snapshot | pre  | pacman -Syu";
+    let menu = GrubMenu::for_platform(SNAPSHOTS, GrubPlatform::Efi);
+    let first = entry(
+        &menu,
+        "| 2026-11-07 13:48:31 | @/.snapshots/16/snapshot | post | linux-zen                                                                |",
+    );
 
-    assert_eq!(menu.entries.len(), 6);
+    assert_eq!(menu.entries.len(), 31);
     assert_eq!(
-        menu.entries
+        menu.entries[..6]
             .iter()
             .map(|entry| entry.position.as_str())
             .collect::<Vec<_>>(),
-        ["0", "0>0", "0>0>0", "0>0>1", "0>1", "0>1>0"]
+        ["0", "1", "1>0", "1>1", "2", "2>0"]
+    );
+    assert!(first.submenu);
+    assert_eq!(
+        menu.entries[3].title,
+        "  vmlinuz-linux-garuda & initramfs-linux-garuda-fallback.img"
     );
     assert_eq!(
-        menu.entries[2].id.as_str(),
-        format!("Garuda Linux snapshots>{first}>gnulinux-snapshots-3f1c9a52-412-zen")
+        menu.entries[3].id.as_str(),
+        format!("{}>gnulinux-snapshots-{MASKED}", first.title)
     );
-    assert_eq!(menu.entries[2].parent.as_deref(), Some(first));
     assert_eq!(
-        menu.entries[5].id.as_str(),
-        "Garuda Linux snapshots>  2026-10-08 09:02:44 | @/.snapshots/411/snapshot | post | linux-zen>gnulinux-snapshots-3f1c9a52-411-zen"
+        menu.entries[3].parent.as_deref(),
+        Some(first.title.as_str())
+    );
+    assert!(
+        menu.entries
+            .iter()
+            .all(|entry| entry.title != "  vmlinuz-linux-garuda & initramfs-linux-garuda.img")
     );
 }
 
@@ -113,11 +153,13 @@ fn snapshot_submenus_nest_and_keep_their_blanks() {
 /// titles and ids leave the helper.
 #[test]
 fn nothing_but_titles_and_ids_is_in_the_answer() {
-    let line = encode(&GrubMenu::from_config(GARUDA)).unwrap();
+    assert!(LIMA.contains("password_pbkdf2 admin grub.pbkdf2.sha512.10000.D2374BF99A3E"));
+
+    let line = encode(&GrubMenu::for_platform(LIMA, GrubPlatform::Efi)).unwrap();
 
     for secret in [
         "pbkdf2",
-        "5A9F0C3E",
+        "D2374BF99A3E",
         "superusers",
         "admin",
         "vmlinuz",
@@ -125,17 +167,19 @@ fn nothing_but_titles_and_ids_is_in_the_answer() {
         "rootflags",
         "initrd",
         "insmod",
-        "chainloader",
+        "fwsetup",
     ] {
         assert!(!line.contains(secret), "{secret} in {line}");
     }
 
     assert_eq!(
         GrubMenu::parse(line.trim_end()).unwrap(),
-        GrubMenu::from_config(GARUDA)
+        GrubMenu::for_platform(LIMA, GrubPlatform::Efi)
     );
 }
 
+/// No captured `grub.cfg` writes these spellings. GRUB 2.00 configs and
+/// entries written by hand in `40_custom` do.
 #[test]
 fn old_and_odd_header_lines_are_read() {
     let config = "\
@@ -152,7 +196,7 @@ submenu 'Open' {\n\
 }\n\
 menuentry 'After' --id after {\n}\n";
 
-    let menu = GrubMenu::from_config(config);
+    let menu = GrubMenu::for_platform(config, GrubPlatform::Efi);
     let ids: Vec<(&str, &str)> = menu
         .entries
         .iter()
@@ -186,7 +230,7 @@ submenu 'Bad' --id 'x`y' {\n\
 }\n\
 menuentry 'Last' --id last {\n}\n";
 
-    let menu = GrubMenu::from_config(config);
+    let menu = GrubMenu::for_platform(config, GrubPlatform::Efi);
 
     assert_eq!(
         brief(&menu),
@@ -196,7 +240,10 @@ menuentry 'Last' --id last {\n}\n";
 
 #[test]
 fn titles_lose_control_characters_and_overlong_menus_are_cut() {
-    let menu = GrubMenu::from_config("menuentry 'A\u{1b}[31mB\u{7}' --id a {\n}\n");
+    let menu = GrubMenu::for_platform(
+        "menuentry 'A\u{1b}[31mB\u{7}' --id a {\n}\n",
+        GrubPlatform::Efi,
+    );
 
     assert_eq!(menu.entries[0].title, "A[31mB");
 
@@ -205,26 +252,37 @@ fn titles_lose_control_characters_and_overlong_menus_are_cut() {
         .collect::<Vec<_>>()
         .concat();
 
-    assert_eq!(GrubMenu::from_config(&many).entries.len(), MAX_ENTRIES);
-    assert_eq!(GrubMenu::from_config("").entries, []);
-    assert_eq!(GrubMenu::from_config("}\n}\n{\n").entries, []);
+    assert_eq!(
+        GrubMenu::for_platform(&many, GrubPlatform::Efi)
+            .entries
+            .len(),
+        MAX_ENTRIES
+    );
+    assert_eq!(GrubMenu::for_platform("", GrubPlatform::Efi).entries, []);
+    assert_eq!(
+        GrubMenu::for_platform("}\n}\n{\n", GrubPlatform::Efi).entries,
+        []
+    );
 }
 
 #[test]
 fn the_default_is_found_by_id_position_title_or_inner_id() {
-    let menu = GrubMenu::from_config(GARUDA);
+    let menu = GrubMenu::for_platform(INSTALLED, GrubPlatform::Efi);
     let found = |default: &str| menu.find(default).map(|entry| entry.title.as_str());
 
     assert_eq!(
-        found(&format!("gnulinux-simple-{UUID}")),
+        found(&format!("gnulinux-simple-{MASKED}")),
         Some("Garuda Linux")
     );
     assert_eq!(found("0"), Some("Garuda Linux"));
-    assert_eq!(found("1>2"), Some("Garuda Linux, with Linux linux-lts"));
+    assert_eq!(
+        found("1>2"),
+        Some("Garuda Linux, with Linux linux-garuda (recovery mode)")
+    );
     assert_eq!(found("Garuda Linux"), Some("Garuda Linux"));
     assert_eq!(
-        found(&format!("gnulinux-linux-zen-fallback-{UUID}")),
-        Some("Garuda Linux, with Linux linux-zen (fallback initramfs)")
+        found(&format!("gnulinux-linux-garuda-fallback-{MASKED}")),
+        Some("Garuda Linux, with Linux linux-garuda (fallback initramfs)")
     );
     assert_eq!(found("saved"), None);
     assert_eq!(found("9"), None);
@@ -245,14 +303,14 @@ fn an_answer_with_a_bad_id_is_refused_whole() {
 
 #[test]
 fn a_kernel_finds_the_entry_that_boots_it_and_not_its_fallback() {
-    let menu = GrubMenu::from_config(GARUDA);
+    let menu = GrubMenu::for_platform(LIMA, GrubPlatform::Efi);
     let kernel = |name: &str| crate::PackageName::new(name).unwrap();
-    let zen = menu.kernel_entry(&kernel("linux-zen")).unwrap();
+    let garuda = menu.kernel_entry(&kernel("linux-garuda")).unwrap();
 
-    assert_eq!(zen.title, "Garuda Linux, with Linux linux-zen");
+    assert_eq!(garuda.title, "Garuda Linux, with Linux linux-garuda");
     assert_eq!(
-        zen.id.as_str(),
-        format!("gnulinux-advanced-{UUID}>gnulinux-linux-zen-advanced-{UUID}")
+        garuda.id.as_str(),
+        format!("gnulinux-advanced-{LIMA_UUID}>gnulinux-linux-garuda-advanced-{LIMA_UUID}")
     );
     assert_eq!(
         menu.kernel_entry(&kernel("linux-lts"))
@@ -262,24 +320,32 @@ fn a_kernel_finds_the_entry_that_boots_it_and_not_its_fallback() {
     assert_eq!(
         menu.kernel_entry(&kernel("linux")),
         None,
-        "linux is not installed here, and linux-zen is another kernel"
+        "linux is not installed here, and linux-lts is another kernel"
     );
-    assert_eq!(menu.kernel_entry(&kernel("linux-zen-headers")), None);
-    assert_eq!(GrubMenu::default().kernel_entry(&kernel("linux-zen")), None);
+    assert_eq!(menu.kernel_entry(&kernel("linux-garuda-headers")), None);
+    assert_eq!(GrubMenu::default().kernel_entry(&kernel("linux-lts")), None);
 }
 
-/// Two entries without an id and with one title, as the memtest86+ EFI
-/// and BIOS scripts write them. GRUB boots the first for that title.
+/// The memtest86+ BIOS and EFI scripts both write an entry without an id
+/// and with one title. GRUB boots the first for that title. The test
+/// turns the `pc` check into an `efi` one, so both are in the menu.
 #[test]
 fn an_id_twice_is_listed_once_as_grub_boots_the_first() {
-    let config = "\
-menuentry 'Memory Tester (memtest86+)' {\n}\n\
-menuentry 'Memory Tester (memtest86+)' {\n}\n";
-
-    let menu = GrubMenu::from_config(config);
+    let both = INSTALLED.replacen(
+        PC_MEMTEST,
+        "if [ \"${grub_platform}\" == \"efi\" ]; then",
+        1,
+    );
 
     assert_eq!(
-        brief(&menu),
-        [line("0", "Memory Tester (memtest86+)", false)]
+        both.matches("menuentry \"Memory Tester (memtest86+)\"")
+            .count(),
+        2
     );
+    assert_ne!(both, INSTALLED);
+
+    let menu = GrubMenu::for_platform(&both, GrubPlatform::Efi);
+
+    assert_eq!(found(&menu, "6").as_deref(), Some("Shutdown"));
+    assert_eq!(memtests(&menu), 1);
 }

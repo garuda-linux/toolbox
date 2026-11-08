@@ -5,6 +5,12 @@ use super::{
 };
 use crate::{HostName, KernelModule, OutOfRange, Reason};
 
+/// `/usr/lib/modprobe.d/systemd.conf` of the Lima image: comments and
+/// `options` lines, no blacklist.
+const SYSTEMD_CONF: &str = include_str!(
+    "../../../system/src/network/modules/fixtures/root/usr/lib/modprobe.d/systemd.conf"
+);
+
 fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()
 }
@@ -124,12 +130,28 @@ fn the_first_entry_starts_the_file_with_its_origin() {
 }
 
 #[test]
+fn a_real_modprobe_file_without_blacklist_lines_lists_nothing() {
+    assert_eq!(blacklisted_modules(SYSTEMD_CONF), BTreeSet::new());
+    assert!(
+        SYSTEMD_CONF
+            .lines()
+            .all(|line| blacklist_entry(line).is_none())
+    );
+}
+
+#[test]
 fn an_entry_is_appended_and_every_other_line_stays() {
-    let before = "# mine\nblacklist wl\noptions iwlwifi power_save=0";
+    assert_eq!(
+        set_blacklisted(SYSTEMD_CONF, &module("mt76-usb"), true),
+        format!("{SYSTEMD_CONF}blacklist mt76_usb\n")
+    );
+
+    // Edit: the real file with a blacklist line and no last line break.
+    let before = format!("{SYSTEMD_CONF}blacklist wl");
 
     assert_eq!(
-        set_blacklisted(before, &module("mt76-usb"), true),
-        "# mine\nblacklist wl\noptions iwlwifi power_save=0\nblacklist mt76_usb\n"
+        set_blacklisted(&before, &module("mt76-usb"), true),
+        format!("{before}\nblacklist mt76_usb\n")
     );
 }
 

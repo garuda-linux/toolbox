@@ -26,7 +26,7 @@ use toolbox_core::features::boot::view::entries;
 use toolbox_core::features::discover::Apps;
 use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{ConfigFilePath, GRUB_CONFIG, GrubMenu, PackageName, UnitScope};
+use toolbox_plan::{ConfigFilePath, GRUB_CONFIG, GrubMenu, GrubPlatform, PackageName, UnitScope};
 use toolbox_services::catalogs::{Catalogs, catalog_dir};
 use toolbox_services::configs::specs;
 use toolbox_services::page::PageId;
@@ -82,7 +82,7 @@ fn read(names: Names) -> Vec<String> {
         Names::ConfigFiles => config_keys(),
         Names::Tasks => task_ids(),
         Names::BootEntries => std::fs::read_to_string(Path::new("/").join(GRUB_CONFIG))
-            .map(|config| entry_ids(&config))
+            .map(|config| entry_ids(&config, toolbox_system::grub_platform(Path::new("/"))))
             .unwrap_or_default(),
         Names::Drivers => driver_names(&with(SystemModules::system().facts())),
         Names::Pages => page_names(),
@@ -262,8 +262,8 @@ pub fn task_ids() -> Vec<String> {
         .collect()
 }
 
-pub fn entry_ids(config: &str) -> Vec<String> {
-    entries(Some(&GrubMenu::from_config(config)))
+pub fn entry_ids(config: &str, platform: GrubPlatform) -> Vec<String> {
+    entries(Some(&GrubMenu::for_platform(config, platform)))
         .into_iter()
         .map(|row| row.entry)
         .collect()

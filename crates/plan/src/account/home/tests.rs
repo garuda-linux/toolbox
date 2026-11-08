@@ -2,7 +2,30 @@ use super::{
     HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID, MAX_HOME_BYTES,
     NewHome, UserId,
 };
+use crate::account::tests::PASSWD;
 
+/// The `nobody` (65534) of the passwd is above [`LAST_USER_ID`].
+#[test]
+fn real_home_folders_pass_and_user_ids_stop_at_the_last_one() {
+    for line in PASSWD.lines() {
+        let fields: Vec<&str> = line.split(':').collect();
+        let home = fields[5];
+
+        if home != "/" {
+            assert_eq!(HomeDirectory::new(home).unwrap().as_str(), home);
+        }
+
+        let id: u32 = fields[2].parse().unwrap();
+
+        assert_eq!(
+            UserId::new(id).is_ok(),
+            id != 0 && id <= LAST_USER_ID,
+            "{line}"
+        );
+    }
+}
+
+/// Paths a user types for a new home, for what no captured passwd has.
 #[test]
 fn home_folders_are_plain_absolute_paths() {
     for path in [

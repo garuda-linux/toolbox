@@ -23,7 +23,8 @@ const DEFAULT_TIMEOUT: i64 = 5;
 /// Every spelling `grub-mkconfig` takes as "no submenus".
 const SUBMENUS_OFF: [&str; 3] = ["y", "yes", "true"];
 
-/// No variable of GRUB: the Garuda theme reads it for its background.
+/// No variable of GRUB itself: garuda-boot-options writes its background
+/// picture there.
 const MENU_PICTURE: &str = "GRUB_MENU_PICTURE";
 
 /// Seconds the menu waits.
@@ -100,8 +101,8 @@ pub struct GrubState {
     pub os_prober: bool,
     /// `GRUB_BACKGROUND` as written, empty for none.
     pub background: String,
-    /// `GRUB_MENU_PICTURE`, which Garuda's GRUB theme reads and which is
-    /// all its stock file sets. Empty for none.
+    /// `GRUB_MENU_PICTURE`, which garuda-boot-options writes. Empty when
+    /// the file has none, as Garuda ships it.
     pub menu_picture: String,
     pub theme: String,
 }

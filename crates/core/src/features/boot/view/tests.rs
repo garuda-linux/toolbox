@@ -1,7 +1,9 @@
-use toolbox_plan::{DefaultEntry, GrubKey, GrubMenu, GrubSetting, GrubTimeout, MenuEntryId};
+use toolbox_plan::{
+    DefaultEntry, GrubKey, GrubMenu, GrubPlatform, GrubSetting, GrubTimeout, MenuEntryId,
+};
 
 use super::{
-    EntryRow, Page, Probed, Readiness, entries, is_queued, parameters_line, plymouth_current,
+    Page, Probed, Readiness, entries, is_queued, parameters_line, plymouth_current,
     plymouth_installed, plymouth_shown, plymouth_theme_queued, plymouth_themes, state,
     virtual_machine,
 };
@@ -12,24 +14,34 @@ use crate::features::boot::{
 use crate::testing::plymouth_theme;
 use crate::{ChangeSet, Snapshot, Toggle};
 
-const DEFAULTS: &str = "\
-GRUB_DEFAULT=gnulinux-simple-1
-GRUB_TIMEOUT=5
-GRUB_CMDLINE_LINUX_DEFAULT=\"quiet splash loglevel=3\"
-GRUB_THEME=\"/usr/share/grub/themes/garuda/theme.txt\"
-";
+/// `/etc/default/grub` and `grub.cfg` of a Garuda Mokka install, UUIDs
+/// of `grub.cfg` replaced by `x`.
+const DEFAULTS: &str = include_str!("../../../../../plan/src/grub/fixtures/installed/default-grub");
+const GRUB_CFG: &str = include_str!("../../../../../plan/src/grub/fixtures/installed/grub.cfg");
+/// `/etc/default/grub` of the Lima VM, with Garuda's own GRUB theme.
+const LIMA_DEFAULTS: &str = include_str!("../../../../../plan/src/grub/fixtures/lima/default-grub");
 
-const GRUB_CFG: &str = "\
-menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {
-}
-submenu 'Advanced options' $menuentry_id_option 'gnulinux-advanced-1' {
-	menuentry 'Garuda Linux, with Linux linux-lts' $menuentry_id_option 'gnulinux-lts-1' {
-	}
-}
-";
+const MASKED: &str = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+const COMMAND_LINE: &str = "GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3'";
 
 fn menu() -> GrubMenu {
-    GrubMenu::from_config(GRUB_CFG)
+    GrubMenu::for_platform(GRUB_CFG, GrubPlatform::Efi)
+}
+
+fn simple() -> String {
+    format!("gnulinux-simple-{MASKED}")
+}
+
+fn fallback() -> String {
+    format!("gnulinux-advanced-{MASKED}>gnulinux-linux-garuda-fallback-{MASKED}")
+}
+
+/// [`DEFAULTS`] with `from` edited to `to`.
+fn edited(from: &str, to: &str) -> String {
+    let edited = DEFAULTS.replace(from, to);
+
+    assert_ne!(edited, DEFAULTS, "{from} is in the file");
+    edited
 }
 
 #[test]
@@ -63,23 +75,9 @@ fn a_grub_system_shows_its_file_and_menu() {
 
     assert_eq!(state(&snapshot, Probed::default()), Readiness::Ready);
     assert!(!virtual_machine(&snapshot));
-    assert_eq!(
-        entries(Some(&menu)),
-        [
-            EntryRow {
-                entry: "gnulinux-simple-1".to_owned(),
-                title: "Garuda Linux".to_owned(),
-                parent: String::new(),
-            },
-            EntryRow {
-                entry: "gnulinux-advanced-1>gnulinux-lts-1".to_owned(),
-                title: "Garuda Linux, with Linux linux-lts".to_owned(),
-                parent: "Advanced options".to_owned(),
-            },
-        ]
-    );
+
     let page = Page::read(&snapshot, &changes);
-    assert_eq!(page.entry_value(Some(&menu)), "gnulinux-simple-1");
+    assert_eq!(page.entry_value(Some(&menu)), simple());
     assert!(page.entry_listed(Some(&menu)));
     assert!(!is_queued(&changes, GrubKey::Default));
     assert_eq!(page.timeout(), 5_i32);
@@ -89,22 +87,69 @@ fn a_grub_system_shows_its_file_and_menu() {
     assert!(!is_queued(&changes, GrubKey::SaveDefault));
     assert!(page.submenus());
     assert!(!is_queued(&changes, GrubKey::Submenus));
-    assert!(!page.os_prober());
+    assert!(page.os_prober());
     assert!(!is_queued(&changes, GrubKey::OsProber));
     assert!(page.parameters_editable());
-    assert_eq!(parameters_line(&snapshot), "quiet splash loglevel=3");
+    assert_eq!(parameters_line(&snapshot), "quiet loglevel=3");
     assert_eq!(page.parameter_items(), ["loglevel=3"]);
     assert!(page.flag(Flag::Quiet));
-    assert!(page.flag(Flag::Splash));
+    assert!(!page.flag(Flag::Splash));
     assert_eq!(page.flags_queued(), Vec::<&str>::new());
     assert!(!page.flag(Flag::MitigationsOff));
     assert!(!page.flag(Flag::SysRq));
     assert!(!is_queued(&changes, GrubKey::KernelParameters));
-    assert_eq!(page.theme(), "/usr/share/grub/themes/garuda/theme.txt");
+    assert_eq!(
+        page.theme(),
+        "/usr/share/grub/themes/catppuccin-mocha/theme.txt"
+    );
     assert!(!is_queued(&changes, GrubKey::Theme));
     assert_eq!(page.background(), "");
     assert!(!is_queued(&changes, GrubKey::Background));
     assert!(!page.background_from_theme());
+}
+
+#[test]
+fn a_grub_menu_lists_every_entry_under_its_submenu() {
+    let menu = menu();
+    let rows: Vec<(String, String, String)> = entries(Some(&menu))
+        .into_iter()
+        .map(|row| (row.entry, row.title, row.parent))
+        .collect();
+
+    let advanced = "Advanced options for Garuda Linux";
+    let row = |entry: &str, title: &str, parent: &str| {
+        (entry.to_owned(), title.to_owned(), parent.to_owned())
+    };
+
+    assert_eq!(
+        rows,
+        [
+            row(&simple(), "Garuda Linux", ""),
+            row(
+                &format!("gnulinux-advanced-{MASKED}>gnulinux-linux-garuda-advanced-{MASKED}"),
+                "Garuda Linux, with Linux linux-garuda",
+                advanced
+            ),
+            row(
+                &fallback(),
+                "Garuda Linux, with Linux linux-garuda (fallback initramfs)",
+                advanced
+            ),
+            row(
+                &format!("gnulinux-advanced-{MASKED}>gnulinux-linux-garuda-recovery-{MASKED}"),
+                "Garuda Linux, with Linux linux-garuda (recovery mode)",
+                advanced
+            ),
+            row("uefi-firmware", "UEFI Firmware Settings", ""),
+            row(
+                "Memory Tester (memtest86+)",
+                "Memory Tester (memtest86+)",
+                ""
+            ),
+            row("Shutdown", "Shutdown", ""),
+            row("Restart", "Restart", ""),
+        ]
+    );
 }
 
 #[test]
@@ -121,7 +166,7 @@ fn a_grub_system_without_plymouth_has_no_themes() {
 
 #[test]
 fn queued_changes_show_on_top() {
-    let mut state = with_plymouth(system(DEFAULTS, &[]));
+    let mut state = with_plymouth(system(DEFAULTS, &["plymouth"]));
     state.insert(VirtualMachine(true));
 
     let mut changes = ChangeSet::default();
@@ -133,11 +178,9 @@ fn queued_changes_show_on_top() {
     )
     .unwrap();
     set_flag(Flag::MitigationsOff, Toggle::On, &mut changes, &state).unwrap();
-    set_flag(Flag::Splash, Toggle::Off, &mut changes, &state).unwrap();
+    set_flag(Flag::Splash, Toggle::On, &mut changes, &state).unwrap();
     set(
-        GrubSetting::Default(DefaultEntry::Entry(
-            MenuEntryId::new("gnulinux-advanced-1>gnulinux-lts-1").unwrap(),
-        )),
+        GrubSetting::Default(DefaultEntry::Entry(MenuEntryId::new(fallback()).unwrap())),
         &mut changes,
         &state,
     )
@@ -151,7 +194,7 @@ fn queued_changes_show_on_top() {
     assert!(is_queued(&changes, GrubKey::Timeout));
     assert_eq!(
         Page::read(&state, &changes).entry_value(Some(&menu)),
-        "gnulinux-advanced-1>gnulinux-lts-1"
+        fallback()
     );
     assert!(is_queued(&changes, GrubKey::Default));
     assert_eq!(
@@ -159,7 +202,7 @@ fn queued_changes_show_on_top() {
         ["loglevel=3"]
     );
     assert!(is_queued(&changes, GrubKey::KernelParameters));
-    assert!(!Page::read(&state, &changes).flag(Flag::Splash));
+    assert!(Page::read(&state, &changes).flag(Flag::Splash));
     assert!(Page::read(&state, &changes).flag(Flag::MitigationsOff));
     assert_eq!(
         Page::read(&state, &changes).flags_queued(),
@@ -175,7 +218,10 @@ fn queued_changes_show_on_top() {
 #[test]
 fn the_free_list_hides_both_sysrq_spellings_but_keeps_other_mitigations() {
     let snapshot = system(
-        "GRUB_CMDLINE_LINUX_DEFAULT=\"sysrq mitigations=auto,nosmt loglevel=3\"\n",
+        &edited(
+            COMMAND_LINE,
+            "GRUB_CMDLINE_LINUX_DEFAULT=\"sysrq mitigations=auto,nosmt loglevel=3\"",
+        ),
         &[],
     );
 
@@ -193,7 +239,7 @@ fn the_free_list_hides_both_sysrq_spellings_but_keeps_other_mitigations() {
 
 #[test]
 fn remembering_empties_the_default_and_the_splash_queues_plymouth() {
-    let state = system("GRUB_CMDLINE_LINUX_DEFAULT=quiet\n", &[]);
+    let state = system(DEFAULTS, &[]);
     let mut changes = ChangeSet::default();
 
     set_remember(true, MenuEntryId::new("0").unwrap(), &mut changes, &state).unwrap();
@@ -210,39 +256,37 @@ fn remembering_empties_the_default_and_the_splash_queues_plymouth() {
 
 #[test]
 fn the_default_is_matched_by_number_or_title_and_else_shown_as_written() {
-    let value = |defaults: &str, menu: Option<&GrubMenu>| -> String {
-        Page::read(&system(defaults, &[]), &ChangeSet::default()).entry_value(menu)
+    let page = |default: Option<&str>| {
+        let defaults = default.map_or_else(
+            || DEFAULTS.to_owned(),
+            |value| edited("GRUB_DEFAULT=0\n", &format!("GRUB_DEFAULT={value}\n")),
+        );
+
+        Page::read(&system(&defaults, &[]), &ChangeSet::default())
     };
 
-    let listed = |defaults: &str, menu: Option<&GrubMenu>| -> bool {
-        Page::read(&system(defaults, &[]), &ChangeSet::default()).entry_listed(menu)
-    };
+    let menu = menu();
+    let value = |default: Option<&str>| page(default).entry_value(Some(&menu));
 
-    assert_eq!(
-        value("GRUB_DEFAULT=0\n", Some(&menu())),
-        "gnulinux-simple-1"
-    );
-    assert!(listed("GRUB_DEFAULT=0\n", Some(&menu())));
-    assert_eq!(
-        value("GRUB_DEFAULT='1>0'\n", Some(&menu())),
-        "gnulinux-advanced-1>gnulinux-lts-1"
-    );
-    assert_eq!(
-        value("GRUB_DEFAULT='Garuda Linux'\n", Some(&menu())),
-        "gnulinux-simple-1"
-    );
-    assert_eq!(value("GRUB_DEFAULT=1\n", Some(&menu())), "1");
-    assert!(!listed("GRUB_DEFAULT=1\n", Some(&menu())));
-    assert_eq!(value("GRUB_DEFAULT=gone\n", Some(&menu())), "gone");
-    assert_eq!(value("GRUB_DEFAULT=0\n", None), "0");
+    assert_eq!(value(None), simple());
+    assert!(page(None).entry_listed(Some(&menu)));
+    assert_eq!(value(Some("'1>1'")), fallback());
+    assert_eq!(value(Some("'Garuda Linux'")), simple());
+    assert_eq!(value(Some("1")), "1");
+    assert!(!page(Some("1")).entry_listed(Some(&menu)));
+    assert_eq!(value(Some("gone")), "gone");
+    assert_eq!(page(None).entry_value(None), "0");
 }
 
 #[test]
 fn a_command_line_the_page_leaves_alone_is_shown_as_written() {
-    let snapshot = system(
-        "GRUB_CMDLINE_LINUX_DEFAULT='quiet acpi_osi=\"Windows 2015\"'\nGRUB_TIMEOUT=soon\n",
-        &[],
-    );
+    let defaults = edited(
+        COMMAND_LINE,
+        "GRUB_CMDLINE_LINUX_DEFAULT='quiet acpi_osi=\"Windows 2015\"'",
+    )
+    .replace("GRUB_TIMEOUT=5\n", "GRUB_TIMEOUT=soon\n");
+
+    let snapshot = system(&defaults, &[]);
 
     let changes = ChangeSet::default();
 
@@ -261,14 +305,20 @@ fn a_command_line_the_page_leaves_alone_is_shown_as_written() {
 }
 
 #[test]
-fn a_stock_garuda_file_shows_the_picture_of_its_theme() {
+fn a_menu_picture_line_shows_the_picture_of_its_theme() {
+    // Edit: no captured file sets `GRUB_MENU_PICTURE`, so the Lima file gets
+    // the line garuda-boot-options writes.
     let defaults = format!(
-        "{DEFAULTS}export GRUB_MENU_PICTURE=\"/usr/share/grub/themes/garuda/background.png\"\n"
+        "{LIMA_DEFAULTS}export GRUB_MENU_PICTURE=\"/usr/share/grub/themes/garuda/background.png\"\n"
     );
 
     let snapshot = system(&defaults, &[]);
     let changes = ChangeSet::default();
 
+    assert_eq!(
+        Page::read(&snapshot, &changes).theme(),
+        "/usr/share/grub/themes/garuda/theme.txt"
+    );
     assert_eq!(
         Page::read(&snapshot, &changes).background(),
         "/usr/share/grub/themes/garuda/background.png"

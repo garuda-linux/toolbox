@@ -124,6 +124,48 @@ fn the_exit_code_and_pkexecs_words_tell_the_refusals_apart() {
     }
 }
 
+/// pkexec's own answers, captured in a Garuda VM and the Garuda desktop VM.
+/// Plasma's agent answers a Cancel like a wrong password, not with 126.
+#[test]
+fn real_pkexec_refusals_are_told_apart() {
+    for (code, stderr, expected) in [
+        (
+            include_str!("fixtures/no-agent.code"),
+            include_str!("fixtures/no-agent.stderr"),
+            Refusal::NoAgent,
+        ),
+        (
+            include_str!("fixtures/missing-program.code"),
+            include_str!("fixtures/missing-program.stderr"),
+            Refusal::HelperMissing,
+        ),
+        (
+            include_str!("fixtures/not-authorized.code"),
+            include_str!("fixtures/not-authorized.stderr"),
+            Refusal::Denied,
+        ),
+        (
+            include_str!("fixtures/not-setuid.code"),
+            include_str!("fixtures/not-setuid.stderr"),
+            Refusal::Broken,
+        ),
+        (
+            include_str!("fixtures/polkit-down.code"),
+            include_str!("fixtures/polkit-down.stderr"),
+            Refusal::NoAgent,
+        ),
+        (
+            include_str!("fixtures/dismissed.code"),
+            include_str!("fixtures/dismissed.stderr"),
+            Refusal::Denied,
+        ),
+    ] {
+        let code = code.trim().parse().ok();
+
+        assert_eq!(refusal(code, stderr), Some(expected), "{code:?} {stderr}");
+    }
+}
+
 #[test]
 fn every_refusal_has_its_own_code() {
     assert_eq!(

@@ -73,10 +73,13 @@ which `garuda-update` reads on every system update:
 | **Skip mirrorlist refresh** | `SKIP_MIRRORLIST=1`       |
 | **Update AUR packages**     | `UPDATE_AUR=1`            |
 | **Non-interactive pacman**  | `PACMAN_NOCONFIRM=1`      |
-| **Skip disk space check**   | `NO_CHECK_SPACE=1`        |
+| **Skip disk space check**   | `NO_SPACE_CHECK=1`        |
 
 Turning an option off comments its line out. Every other line of the file
-stays as it is. The section shows only where `garuda-update` is installed.
+stays as it is. Older toolbox versions wrote `NO_CHECK_SPACE=1` for the
+space check. `garuda-update` still reads that name while `NO_SPACE_CHECK` is
+unset, so the switch shows it as on, and turning the switch off comments it
+out too. The section shows only where `garuda-update` is installed.
 
 ## Turn system tweaks on or off
 

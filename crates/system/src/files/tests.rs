@@ -1,21 +1,29 @@
 use super::{read, read_optional};
 use crate::ProbeError;
 
+const PASSWD: &str = include_str!("../accounts/fixtures/passwd");
+
+/// The Lima VM's `passwd` with a Latin-1 byte as root's full name.
 #[test]
 fn a_byte_that_is_no_utf8_does_not_fail_the_read() {
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path().join("passwd");
 
+    let (root, rest) = PASSWD.split_once("::/root").unwrap();
+
     std::fs::write(
         &path,
-        b"root:x:0:0:\xFF:/root:/bin/bash\nnico:x:1000:1000::/home/nico:/bin/fish\n",
+        [root.as_bytes(), b":\xFF:/root", rest.as_bytes()].concat(),
     )
     .unwrap();
 
     let text = read(&path).unwrap();
 
-    assert_eq!(text.lines().count(), 2);
-    assert!(text.starts_with("root:x:0:0:\u{fffd}:/root"), "{text}");
+    assert_eq!(text.lines().count(), PASSWD.lines().count());
+    assert!(
+        text.starts_with("root:x:0:0:\u{fffd}:/root:/usr/bin/bash"),
+        "{text}"
+    );
     assert_eq!(read_optional(&path).unwrap(), Some(text));
 }
 

@@ -1,0 +1,30 @@
+{
+  "LOW": [
+    {
+      "description": "Failed systemd services found: cloud-init-main.service, toolbox-fixture-failed.service",
+      "fix_available": false
+    },
+    {
+      "description": "\"Garuda\" is not the current bootloader: https://wiki.garudalinux.org/why-garuda-bootloader",
+      "fix_available": false
+    }
+  ],
+  "INFO": [
+    {
+      "description": "Optional garuda linux utilities are missing: garuda-toolbox, garuda-system-maintenance",
+      "fix_available": true
+    },
+    {
+      "description": "System is not using PipeWire for audio",
+      "fix_available": true
+    },
+    {
+      "description": "A reboot is pending (update applied since last reboot)",
+      "fix_available": false
+    },
+    {
+      "description": "Snapper (automatic btrfs system restore) is not using the official Garuda Linux configuration",
+      "fix_available": true
+    }
+  ]
+}

@@ -214,7 +214,7 @@ fn the_root_account_is_neither_locked_nor_removed() -> TestResult {
             "{}",
             run.stdout
         );
-        assert!(printed(&run)?.contains("root account"));
+        assert!(printed(&run)?.contains("the user id 0, outside 1000 to 60000"));
     }
 
     assert_eq!(passwd_entry("root")?, before);

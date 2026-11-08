@@ -116,7 +116,7 @@ pub(super) fn health(
     level: HealthLevel,
 ) {
     let ctx = ui.ctx().clone();
-    let (title, icon, tone) = if level == HealthLevel::Error {
+    let (title, icon, tone) = if level >= HealthLevel::High {
         ("home-health-errors", icons::DIALOG_ERROR, Tone::Error)
     } else {
         ("home-health-warnings", icons::DIALOG_WARNING, Tone::Warning)

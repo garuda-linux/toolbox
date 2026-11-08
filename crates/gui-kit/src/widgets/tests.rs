@@ -47,6 +47,7 @@ mod switch_rim;
 mod text_box;
 mod text_link;
 mod title_gap;
+mod wrapped_title;
 
 use egui::accesskit::Role;
 use egui::{Theme, Ui};

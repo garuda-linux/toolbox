@@ -2,7 +2,7 @@ use toolbox_catalog::ToggleCatalog;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, AvailableShells, Group, User};
 use toolbox_core::features::locales::{SupportedLocales, parse_supported};
-use toolbox_plan::{GroupName, ShellPath, UserName};
+use toolbox_plan::{GroupName, GrubPlatform, ShellPath, UserName};
 
 use super::{
     app_categories, entry_ids, group_names, guide_pages, locale_names, pack_names, package_names,
@@ -23,14 +23,10 @@ description = "The engine."
 check = { package = "docker" }
 "#;
 
-const GRUB_CFG: &str = "\
-menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {
-}
-submenu 'Advanced options' $menuentry_id_option 'gnulinux-advanced-1' {
-	menuentry 'Garuda Linux, with Linux linux-lts' $menuentry_id_option 'gnulinux-lts-1' {
-	}
-}
-";
+/// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
+const GRUB_CFG: &str = include_str!("../../../plan/src/grub/fixtures/installed/grub.cfg");
+/// `/usr/share/i18n/SUPPORTED` of the Lima VM.
+const SUPPORTED: &str = include_str!("../../../system/src/locales/fixtures/SUPPORTED");
 
 fn user(name: &str, uid: u32) -> User {
     User {
@@ -54,10 +50,20 @@ fn switches_and_tasks_come_by_their_ids() {
 
 #[test]
 fn boot_entries_leave_out_the_submenus() {
-    let ids = entry_ids(GRUB_CFG);
+    let ids = entry_ids(GRUB_CFG, GrubPlatform::Efi);
 
-    assert!(ids.contains(&"gnulinux-simple-1".to_owned()));
-    assert!(!ids.iter().any(|id| id == "gnulinux-advanced-1"));
+    let masked = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+
+    assert!(
+        ids.contains(&format!("gnulinux-simple-{masked}")),
+        "{ids:?}"
+    );
+    assert!(
+        !ids.contains(&format!("gnulinux-advanced-{masked}")),
+        "{ids:?}"
+    );
+    assert!(ids.contains(&"uefi-firmware".to_owned()), "{ids:?}");
+    assert!(!entry_ids(GRUB_CFG, GrubPlatform::Pc).contains(&"uefi-firmware".to_owned()));
 }
 
 #[test]
@@ -79,9 +85,19 @@ fn accounts_name_the_people_and_every_group() {
 #[test]
 fn locales_come_as_the_commands_take_them() {
     let mut snapshot = Snapshot::default();
-    snapshot.insert(SupportedLocales(parse_supported("de_DE.UTF-8 UTF-8\n")));
+    snapshot.insert(SupportedLocales(parse_supported(SUPPORTED)));
 
-    assert_eq!(locale_names(&snapshot), ["de_DE.UTF-8"]);
+    let names = locale_names(&snapshot);
+
+    for name in [
+        "de_DE.UTF-8",
+        "de_DE",
+        "de_DE@euro",
+        "sr_RS@latin",
+        "C.UTF-8",
+    ] {
+        assert!(names.contains(&name.to_owned()), "{name}");
+    }
 }
 
 #[test]
@@ -109,7 +125,7 @@ fn nothing_read_gives_no_names() {
 
     assert_eq!(user_names(&Snapshot::default()), none);
     assert_eq!(locale_names(&Snapshot::default()), none);
-    assert_eq!(entry_ids(""), none);
+    assert_eq!(entry_ids("", GrubPlatform::Efi), none);
 }
 
 #[test]

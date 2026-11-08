@@ -9,8 +9,10 @@ use super::{SystemLocaleChange, edit_locale_gen, set_system_locale};
 use crate::builtin::FileChange;
 use crate::testing::mode;
 
-const LOCALE_GEN: &str =
-    "# Uncomment the ones you need.\n#de_DE.UTF-8 UTF-8  \nen_US.UTF-8 UTF-8  \n";
+/// `/etc/locale.gen` and `/etc/locale.conf` of the Lima Garuda image,
+/// written by cloud-init with only `en_US.UTF-8` enabled.
+const LOCALE_GEN: &str = include_str!("../../../../system/src/locales/fixtures/locale.gen");
+const LOCALE_CONF: &str = include_str!("../../../../system/src/locales/fixtures/locale.conf");
 
 fn system(locale_gen: Option<&str>) -> (TempDir, PathBuf) {
     let root = tempfile::tempdir().unwrap();
@@ -32,8 +34,30 @@ fn locale(name: &str) -> LocaleName {
     LocaleName::new(name).unwrap()
 }
 
+/// Edit: the `en_US.UTF-8` line commented out, as a stock glibc file has
+/// every line.
+fn commented_out() -> String {
+    LOCALE_GEN.replace("\nen_US.UTF-8 UTF-8\n", "\n#en_US.UTF-8 UTF-8\n")
+}
+
 #[test]
 fn enabling_uncomments_the_line_and_keeps_the_rest() {
+    let (root, etc) = system(Some(&commented_out()));
+
+    assert_eq!(
+        edit_locale_gen(root.path(), &entry("en_US.UTF-8 UTF-8"), true).unwrap(),
+        FileChange::Written
+    );
+    assert_eq!(
+        fs::read_to_string(etc.join("locale.gen")).unwrap(),
+        LOCALE_GEN
+    );
+    assert_eq!(mode(&etc.join("locale.gen")), 0o644);
+}
+
+/// The file cloud-init writes has no line for other locales at all.
+#[test]
+fn enabling_a_locale_without_a_line_appends_it() {
     let (root, etc) = system(Some(LOCALE_GEN));
 
     assert_eq!(
@@ -42,9 +66,8 @@ fn enabling_uncomments_the_line_and_keeps_the_rest() {
     );
     assert_eq!(
         fs::read_to_string(etc.join("locale.gen")).unwrap(),
-        "# Uncomment the ones you need.\nde_DE.UTF-8 UTF-8  \nen_US.UTF-8 UTF-8  \n"
+        format!("{LOCALE_GEN}de_DE.UTF-8 UTF-8\n")
     );
-    assert_eq!(mode(&etc.join("locale.gen")), 0o644);
 }
 
 #[test]
@@ -57,7 +80,7 @@ fn disabling_comments_the_line_out() {
     );
     assert_eq!(
         fs::read_to_string(etc.join("locale.gen")).unwrap(),
-        "# Uncomment the ones you need.\n#de_DE.UTF-8 UTF-8  \n#en_US.UTF-8 UTF-8  \n"
+        commented_out()
     );
 }
 
@@ -119,21 +142,27 @@ fn a_symlinked_locale_gen_is_refused() {
     assert_eq!(fs::read_to_string(&elsewhere).unwrap(), "untouched\n");
 }
 
+/// Edits: `de_DE.UTF-8 UTF-8` appended to `locale.gen`, and an
+/// `LC_TIME=de_DE.UTF-8` line appended to `locale.conf`.
 #[test]
 fn the_system_locale_changes_only_the_lang_line() {
-    let (root, etc) = system(Some(LOCALE_GEN));
-    fs::write(etc.join("locale.conf"), "LANG=C\nLC_TIME=de_DE.UTF-8\n").unwrap();
+    let (root, etc) = system(Some(&format!("{LOCALE_GEN}de_DE.UTF-8 UTF-8\n")));
+    fs::write(
+        etc.join("locale.conf"),
+        format!("{LOCALE_CONF}LC_TIME=de_DE.UTF-8\n"),
+    )
+    .unwrap();
 
     assert_eq!(
-        set_system_locale(root.path(), &locale("en_US.UTF-8")).unwrap(),
+        set_system_locale(root.path(), &locale("de_DE.UTF-8")).unwrap(),
         SystemLocaleChange::Changed(FileChange::Written)
     );
     assert_eq!(
         fs::read_to_string(etc.join("locale.conf")).unwrap(),
-        "LANG=en_US.UTF-8\nLC_TIME=de_DE.UTF-8\n"
+        "LANG=de_DE.UTF-8\nLC_TIME=de_DE.UTF-8\n"
     );
     assert_eq!(
-        set_system_locale(root.path(), &locale("en_US.UTF-8")).unwrap(),
+        set_system_locale(root.path(), &locale("de_DE.UTF-8")).unwrap(),
         SystemLocaleChange::Changed(FileChange::Unchanged)
     );
 }
@@ -141,7 +170,7 @@ fn the_system_locale_changes_only_the_lang_line() {
 #[test]
 fn a_locale_that_is_not_enabled_is_refused_and_nothing_is_written() {
     let (root, etc) = system(Some(LOCALE_GEN));
-    fs::write(etc.join("locale.conf"), "LANG=en_US.UTF-8\n").unwrap();
+    fs::write(etc.join("locale.conf"), LOCALE_CONF).unwrap();
 
     assert_eq!(
         set_system_locale(root.path(), &locale("de_DE.UTF-8")).unwrap(),
@@ -149,7 +178,7 @@ fn a_locale_that_is_not_enabled_is_refused_and_nothing_is_written() {
     );
     assert_eq!(
         fs::read_to_string(etc.join("locale.conf")).unwrap(),
-        "LANG=en_US.UTF-8\n"
+        LOCALE_CONF
     );
 }
 

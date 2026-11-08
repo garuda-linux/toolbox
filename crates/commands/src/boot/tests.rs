@@ -2,25 +2,15 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, Confirm, DkmsBuild};
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentGrub, InstalledPackages};
-use toolbox_plan::{GrubMenu, GrubState};
+use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
 use toolbox_system::Host;
 
 use super::{build, default_kernel, set};
 
-const DEFAULTS: &str = "\
-GRUB_DEFAULT=gnulinux-simple-1
-GRUB_TIMEOUT=5
-GRUB_CMDLINE_LINUX_DEFAULT=\"quiet loglevel=3\"
-";
-
-const GRUB_CFG: &str = "\
-menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {
-}
-submenu 'Advanced options' $menuentry_id_option 'gnulinux-advanced-1' {
-\tmenuentry 'Garuda Linux, with Linux linux-lts' $menuentry_id_option 'gnulinux-linux-lts-advanced-1' {
-\t}
-}
-";
+/// `/etc/default/grub` and `grub.cfg` of a Garuda Mokka install, UUIDs
+/// of `grub.cfg` replaced by `x`.
+const DEFAULTS: &str = include_str!("../../../plan/src/grub/fixtures/installed/default-grub");
+const GRUB_CFG: &str = include_str!("../../../plan/src/grub/fixtures/installed/grub.cfg");
 
 fn grub() -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -66,10 +56,10 @@ fn without_grub_every_setting_is_refused() {
 
 #[test]
 fn a_kernel_s_entry_becomes_the_default() {
-    let menu = GrubMenu::from_config(GRUB_CFG);
-    let plan = default_kernel(&"linux-lts".parse().unwrap(), &menu, &grub()).unwrap();
+    let menu = GrubMenu::for_platform(GRUB_CFG, GrubPlatform::Efi);
+    let plan = default_kernel(&"linux-garuda".parse().unwrap(), &menu, &grub()).unwrap();
     let text = format!("{:?}", plan.steps());
-    assert!(text.contains("gnulinux-linux-lts-advanced-1"), "{text}");
+    assert!(text.contains("gnulinux-linux-garuda-advanced-"), "{text}");
 
     let refused = default_kernel(&"linux-zen".parse().unwrap(), &menu, &grub()).unwrap_err();
     assert_eq!(refused.exit(), Exit::Unavailable);
@@ -124,7 +114,7 @@ fn boot_entries_name_the_command_that_takes_them() {
 
     use super::entry_listing;
 
-    let rows = entries(Some(&GrubMenu::from_config(GRUB_CFG)));
+    let rows = entries(Some(&GrubMenu::for_platform(GRUB_CFG, GrubPlatform::Efi)));
     let listing = entry_listing(&rows);
 
     assert_eq!(listing.summary.as_deref(), Some(&*rows.len().to_string()));

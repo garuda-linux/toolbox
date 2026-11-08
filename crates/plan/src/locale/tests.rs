@@ -3,7 +3,12 @@ use std::collections::BTreeSet;
 use super::{LocaleEntry, is_builtin_locale, same_locale, set_system_lang, system_lang};
 use crate::LocaleName;
 
-const SHIPPED: &str = "# Configuration file for locale-gen\n#\n#  Examples:\n#  en_US ISO-8859-1\n#  en_US.UTF-8 UTF-8\n#\n#de_DE.UTF-8 UTF-8  \n#de_DE ISO-8859-1  \n#de_DE@euro ISO-8859-15  \nen_US.UTF-8 UTF-8  \n#en_US ISO-8859-1  \n#sr_RS@latin UTF-8  \n";
+/// `/etc/locale.gen` of the Lima image, written by cloud-init.
+const LOCALE_GEN: &str = include_str!("../../../system/src/locales/fixtures/locale.gen");
+/// `/usr/share/i18n/SUPPORTED` of the Lima image.
+const SUPPORTED: &str = include_str!("../../../system/src/locales/fixtures/SUPPORTED");
+/// `/etc/locale.conf` of the Lima image.
+const LOCALE_CONF: &str = include_str!("../../../system/src/locales/fixtures/locale.conf");
 
 fn entry(line: &str) -> LocaleEntry {
     LocaleEntry::parse(line).unwrap()
@@ -11,6 +16,17 @@ fn entry(line: &str) -> LocaleEntry {
 
 fn locale(name: &str) -> LocaleName {
     LocaleName::new(name).unwrap()
+}
+
+/// Edit: the real file with every line of `SUPPORTED` appended behind a
+/// `#`, the way glibc's stock `locale.gen` lists them.
+fn shipped() -> String {
+    let commented: String = SUPPORTED
+        .lines()
+        .flat_map(|line| ["#", line, "\n"])
+        .collect();
+
+    format!("{LOCALE_GEN}{commented}")
 }
 
 #[test]
@@ -25,6 +41,13 @@ fn a_line_is_a_locale_and_a_character_set() {
         "en_US ISO-8859-1"
     );
     assert_eq!(entry("sr_RS@latin UTF-8").locale.as_str(), "sr_RS@latin");
+}
+
+#[test]
+fn every_supported_line_is_an_entry() {
+    for line in SUPPORTED.lines() {
+        assert_eq!(entry(line).to_string(), line);
+    }
 }
 
 #[test]
@@ -43,20 +66,21 @@ fn anything_else_is_no_entry() {
 
 #[test]
 fn only_uncommented_lines_are_enabled() {
-    assert_eq!(
-        LocaleEntry::enabled_in(SHIPPED),
-        BTreeSet::from([entry("en_US.UTF-8 UTF-8")])
-    );
+    let english = BTreeSet::from([entry("en_US.UTF-8 UTF-8")]);
+
+    assert_eq!(LocaleEntry::enabled_in(LOCALE_GEN), english);
+    assert_eq!(LocaleEntry::enabled_in(&shipped()), english);
     assert_eq!(LocaleEntry::enabled_in(""), BTreeSet::new());
 }
 
 #[test]
 fn enabling_removes_only_the_comment_sign_of_that_line() {
-    let changed = entry("de_DE.UTF-8 UTF-8").set(SHIPPED, true);
+    let shipped = shipped();
+    let changed = entry("de_DE.UTF-8 UTF-8").set(&shipped, true);
 
     assert_eq!(
         changed,
-        SHIPPED.replace("#de_DE.UTF-8 UTF-8  \n", "de_DE.UTF-8 UTF-8  \n")
+        shipped.replace("#de_DE.UTF-8 UTF-8\n", "de_DE.UTF-8 UTF-8\n")
     );
     assert_eq!(
         LocaleEntry::enabled_in(&changed),
@@ -66,63 +90,81 @@ fn enabling_removes_only_the_comment_sign_of_that_line() {
 
 #[test]
 fn the_character_set_tells_two_lines_of_a_locale_apart() {
-    let changed = entry("de_DE ISO-8859-1").set(SHIPPED, true);
+    let shipped = shipped();
+    let changed = entry("de_DE ISO-8859-1").set(&shipped, true);
 
     assert_eq!(
         changed,
-        SHIPPED.replace("#de_DE ISO-8859-1  \n", "de_DE ISO-8859-1  \n")
+        shipped.replace("#de_DE ISO-8859-1\n", "de_DE ISO-8859-1\n")
     );
     assert!(changed.contains("#de_DE.UTF-8 UTF-8"));
     assert!(changed.contains("#de_DE@euro ISO-8859-15"));
 }
 
+/// No captured file has the example lines of the Arch header, so this
+/// edit puts one under the real header.
 #[test]
 fn the_header_examples_are_never_revived() {
-    let changed = entry("en_US ISO-8859-1").set(SHIPPED, true);
+    let edited = LOCALE_GEN.replacen('\n', "\n#  en_US ISO-8859-1\n", 1);
+    let changed = entry("en_US ISO-8859-1").set(&edited, true);
 
     assert!(changed.contains("#  en_US ISO-8859-1\n"));
-    assert!(changed.contains("\nen_US ISO-8859-1  \n"));
+    assert!(changed.ends_with("\nen_US ISO-8859-1\n"));
 }
 
 #[test]
 fn a_locale_missing_from_the_file_is_appended() {
-    let german = entry("de_AT.UTF-8 UTF-8");
+    let austrian = entry("de_AT.UTF-8 UTF-8");
 
     assert_eq!(
-        german.set(SHIPPED, true),
-        format!("{SHIPPED}de_AT.UTF-8 UTF-8\n")
+        austrian.set(LOCALE_GEN, true),
+        format!("{LOCALE_GEN}de_AT.UTF-8 UTF-8\n")
     );
-    assert_eq!(german.set("", true), "de_AT.UTF-8 UTF-8\n");
+    assert_eq!(austrian.set("", true), "de_AT.UTF-8 UTF-8\n");
+
+    // Edit: the real file without its last line break.
     assert_eq!(
-        german.set("en_US.UTF-8 UTF-8", true),
-        "en_US.UTF-8 UTF-8\nde_AT.UTF-8 UTF-8\n"
+        austrian.set(LOCALE_GEN.trim_end(), true),
+        format!("{LOCALE_GEN}de_AT.UTF-8 UTF-8\n")
     );
 }
 
 #[test]
 fn disabling_comments_every_line_of_the_entry_out() {
-    let config = "en_US.UTF-8 UTF-8\r\n  en_US.UTF-8   UTF-8\nen_US ISO-8859-1\n";
+    // Edit: the real file with CRLF endings and its entry repeated
+    // indented and spaced out.
+    let config = format!(
+        "{}  en_US.UTF-8   UTF-8\n",
+        LOCALE_GEN.replace('\n', "\r\n")
+    );
 
     assert_eq!(
-        entry("en_US.UTF-8 UTF-8").set(config, false),
-        "#en_US.UTF-8 UTF-8\r\n  #en_US.UTF-8   UTF-8\nen_US ISO-8859-1\n"
+        entry("en_US.UTF-8 UTF-8").set(&config, false),
+        config
+            .replace("\nen_US.UTF-8 UTF-8\r\n", "\n#en_US.UTF-8 UTF-8\r\n")
+            .replace("  en_US.UTF-8   UTF-8\n", "  #en_US.UTF-8   UTF-8\n")
     );
 }
 
 #[test]
 fn a_file_that_is_already_as_wanted_stays_byte_for_byte() {
-    assert_eq!(entry("en_US.UTF-8 UTF-8").set(SHIPPED, true), SHIPPED);
-    assert_eq!(entry("de_DE.UTF-8 UTF-8").set(SHIPPED, false), SHIPPED);
-    assert_eq!(entry("xx_XX.UTF-8 UTF-8").set(SHIPPED, false), SHIPPED);
+    let shipped = shipped();
+
+    assert_eq!(entry("en_US.UTF-8 UTF-8").set(&shipped, true), shipped);
+    assert_eq!(entry("de_DE.UTF-8 UTF-8").set(&shipped, false), shipped);
+    assert_eq!(
+        entry("de_DE.UTF-8 UTF-8").set(LOCALE_GEN, false),
+        LOCALE_GEN
+    );
 }
 
 #[test]
 fn off_then_on_gives_the_first_file_back() {
     let english = entry("en_US.UTF-8 UTF-8");
-    let off = english.set(SHIPPED, false);
+    let off = english.set(LOCALE_GEN, false);
 
-    assert!(off.contains("\n#en_US.UTF-8 UTF-8  \n"));
-    assert_eq!(english.set(&off, true), SHIPPED);
+    assert!(off.ends_with("\n#en_US.UTF-8 UTF-8\n"));
+    assert_eq!(english.set(&off, true), LOCALE_GEN);
 }
 
 #[test]
@@ -162,26 +204,38 @@ fn c_and_posix_need_no_generation() {
 
 #[test]
 fn the_system_language_is_the_last_lang_assignment() {
+    assert_eq!(system_lang(LOCALE_CONF), Some(locale("en_US.UTF-8")));
+
+    // Edit: a time locale and then a quoted, indented `LANG` appended.
     assert_eq!(
-        system_lang("LANG=en_US.UTF-8\nLC_TIME=de_DE.UTF-8\n"),
-        Some(locale("en_US.UTF-8"))
-    );
-    assert_eq!(
-        system_lang("LANG=en_US.UTF-8\n  LANG=\"de_DE.UTF-8\"  \n"),
+        system_lang(&format!(
+            "{LOCALE_CONF}LC_TIME=de_DE.UTF-8\n  LANG=\"de_DE.UTF-8\"  \n"
+        )),
         Some(locale("de_DE.UTF-8"))
     );
-    assert_eq!(system_lang("#LANG=en_US.UTF-8\nLANGUAGE=de\n"), None);
+
+    // Edit: the real line commented out, a `LANGUAGE` after it.
+    assert_eq!(system_lang(&format!("#{LOCALE_CONF}LANGUAGE=de\n")), None);
     assert_eq!(system_lang(""), None);
     assert_eq!(system_lang("LANG=\n"), None);
 }
 
 #[test]
 fn setting_the_language_keeps_every_other_line() {
-    let config = "# made by the installer\nLANG=en_US.UTF-8\r\nLC_TIME=de_DE.UTF-8\nLANGUAGE=en\n";
+    // Edit: the real file with a comment before it, CRLF and two more
+    // variables after it.
+    let config = format!(
+        "# made by the installer\n{}LC_TIME=de_DE.UTF-8\nLANGUAGE=en\n",
+        LOCALE_CONF.replace('\n', "\r\n")
+    );
 
     assert_eq!(
-        set_system_lang(config, &locale("de_DE.UTF-8")),
+        set_system_lang(&config, &locale("de_DE.UTF-8")),
         "# made by the installer\nLANG=de_DE.UTF-8\r\nLC_TIME=de_DE.UTF-8\nLANGUAGE=en\n"
+    );
+    assert_eq!(
+        set_system_lang(LOCALE_CONF, &locale("de_DE.UTF-8")),
+        "LANG=de_DE.UTF-8\n"
     );
 }
 
@@ -191,9 +245,13 @@ fn a_file_without_lang_gets_the_line_appended() {
         set_system_lang("", &locale("de_DE.UTF-8")),
         "LANG=de_DE.UTF-8\n"
     );
+
+    // Edit: the real file with its variable renamed and no last line break.
+    let time_only = LOCALE_CONF.replace("LANG=", "LC_TIME=");
+
     assert_eq!(
-        set_system_lang("LC_TIME=de_DE.UTF-8", &locale("en_US.UTF-8")),
-        "LC_TIME=de_DE.UTF-8\nLANG=en_US.UTF-8\n"
+        set_system_lang(time_only.trim_end(), &locale("de_DE.UTF-8")),
+        "LC_TIME=en_US.UTF-8\nLANG=de_DE.UTF-8\n"
     );
 }
 
@@ -202,7 +260,7 @@ fn what_is_written_reads_back() {
     let german = locale("de_DE.UTF-8");
 
     assert_eq!(
-        system_lang(&set_system_lang("LANG=C\n", &german)),
+        system_lang(&set_system_lang(LOCALE_CONF, &german)),
         Some(german)
     );
 }

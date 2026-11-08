@@ -7,6 +7,7 @@
 //! copy is read only once its chip shows, and again only on Read again:
 //! a plan changes nothing in it.
 
+#[cfg(any(test, feature = "selftest", feature = "testing"))]
 mod sample;
 #[cfg(test)]
 mod tests;
@@ -23,6 +24,7 @@ use toolbox_core::features::packages::list::Catalog;
 use toolbox_plan::PackageName;
 use toolbox_system::{PackageIndexSource, RecentLogSource};
 
+#[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub use self::sample::SampleAur;
 use crate::lane::Lane;
 pub use crate::network::Read;

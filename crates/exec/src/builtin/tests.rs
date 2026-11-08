@@ -11,6 +11,10 @@ use toolbox_plan::{GarudaUpdateFlag, Mirrorlist, ShellPath, StepId};
 use super::{LockRemoval, execute, install_mirrorlist, lock_holder, remove_database_lock};
 use crate::testing::{assert_failed, run_builtin};
 
+/// `/etc/pacman.d/chaotic-mirrorlist` as the package ships it in Lima.
+const SHIPPED_MIRRORLIST: &str =
+    include_str!("../../../plan/src/mirrorlist/fixtures/chaotic-mirrorlist");
+
 fn outcome_of(root: &Path, builtin: &Builtin) -> Outcome {
     run_builtin(root, builtin).0
 }
@@ -92,8 +96,12 @@ fn entries_that_are_not_processes_are_ignored() {
     );
 }
 
-fn mirrorlist(host: &str) -> Mirrorlist {
-    Mirrorlist::new(format!("# rated\nServer = https://{host}/$repo/$arch\n")).unwrap()
+/// What `rate-mirrors --save` wrote for Chaotic-AUR in Lima.
+fn mirrorlist() -> Mirrorlist {
+    Mirrorlist::new(
+        include_str!("../../../plan/src/mirrorlist/fixtures/rate-mirrors-chaotic").to_owned(),
+    )
+    .unwrap()
 }
 
 #[test]
@@ -101,22 +109,18 @@ fn the_mirrorlist_replaces_the_old_one_and_keeps_it() {
     let root = tempfile::tempdir().unwrap();
     let dir = root.path().join("etc/pacman.d");
     fs::create_dir_all(&dir).unwrap();
-    fs::write(
-        dir.join("chaotic-mirrorlist"),
-        "Server = https://old.example/x\n",
-    )
-    .unwrap();
+    fs::write(dir.join("chaotic-mirrorlist"), SHIPPED_MIRRORLIST).unwrap();
 
-    let kept = install_mirrorlist(root.path(), &mirrorlist("new.example")).unwrap();
+    let kept = install_mirrorlist(root.path(), &mirrorlist()).unwrap();
 
     assert!(kept);
     assert_eq!(
         fs::read_to_string(dir.join("chaotic-mirrorlist")).unwrap(),
-        mirrorlist("new.example").as_str()
+        mirrorlist().as_str()
     );
     assert_eq!(
         fs::read_to_string(dir.join("chaotic-mirrorlist.bak")).unwrap(),
-        "Server = https://old.example/x\n"
+        SHIPPED_MIRRORLIST
     );
 }
 
@@ -126,7 +130,7 @@ fn the_first_mirrorlist_needs_no_backup() {
     let dir = root.path().join("etc/pacman.d");
     fs::create_dir_all(&dir).unwrap();
 
-    let kept = install_mirrorlist(root.path(), &mirrorlist("new.example")).unwrap();
+    let kept = install_mirrorlist(root.path(), &mirrorlist()).unwrap();
 
     assert!(!kept);
     assert!(!dir.join("chaotic-mirrorlist.bak").exists());
@@ -136,14 +140,18 @@ fn the_first_mirrorlist_needs_no_backup() {
 fn the_mirrorlist_folder_must_exist_already() {
     let root = tempfile::tempdir().unwrap();
 
-    install_mirrorlist(root.path(), &mirrorlist("new.example")).unwrap_err();
+    install_mirrorlist(root.path(), &mirrorlist()).unwrap_err();
     assert!(!root.path().join("etc").exists());
 }
 
 fn root_with_shells() -> tempfile::TempDir {
     let root = tempfile::tempdir().unwrap();
     fs::create_dir_all(root.path().join("etc")).unwrap();
-    fs::write(root.path().join("etc/shells"), "/usr/bin/bash\n").unwrap();
+    fs::write(
+        root.path().join("etc/shells"),
+        include_str!("../../../system/src/accounts/fixtures/shells"),
+    )
+    .unwrap();
     root
 }
 

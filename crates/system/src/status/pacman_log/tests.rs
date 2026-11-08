@@ -8,19 +8,15 @@ use std::time::{Duration, SystemTime};
 use super::{PacmanLog, UpdateLogSource as _, last_completed};
 use crate::ProbeError;
 
-const LOG: &str = "\
-[2026-09-01T10:00:00+0200] [PACMAN] Running 'pacman -Syu'
-[2026-09-01T10:00:05+0200] [ALPM] transaction started
-[2026-09-01T10:00:09+0200] [ALPM] upgraded bash (5.2-1 -> 5.3-1)
-[2026-09-01T10:00:10+0200] [ALPM] transaction completed
-[2026-09-01T10:00:11+0200] [ALPM] running '30-systemd-update.hook'...
-[2026-10-09T14:03:00+0200] [PACMAN] Running 'pacman -S vim'
-[2026-10-09T14:03:11+0200] [ALPM] transaction completed
-[2026-10-09T14:03:12+0200] [ALPM] running 'texinfo-install.hook'...
-[2026-10-09T15:00:00+0200] [PACMAN] Running 'pacman -Syu'
-[2026-10-09T15:00:01+0200] [ALPM] transaction started
-[2026-10-09T15:00:02+0200] [ALPM] transaction failed
-";
+/// `/var/log/pacman.log` of a Lima session: an upgrade, installs, a
+/// reinstall, a downgrade and a removal.
+pub(super) const LOG: &str = include_str!("fixtures/pacman.log");
+/// The last 1500 lines of the log of an installed Garuda. They start in
+/// the middle of a transaction.
+const INSTALLED: &str = include_str!("fixtures/installed-pacman.log");
+
+/// `2026-11-08T17:36:00+0100`, the last `transaction completed` in [`LOG`].
+pub(super) const LAST: u64 = 1_794_155_760;
 
 fn at(seconds: u64) -> Option<SystemTime> {
     SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(seconds))
@@ -30,55 +26,80 @@ fn parse(log: &[u8]) -> Option<SystemTime> {
     last_completed(log).unwrap()
 }
 
-#[test]
-fn the_last_completed_transaction_counts() {
-    assert_eq!(parse(LOG.as_bytes()), at(1_791_547_391));
+/// The lines of `log` before its first `transaction completed`.
+fn before_first_completed(log: &str) -> &str {
+    let completed = log.find("] [ALPM] transaction completed").unwrap();
+
+    let last_break = log.get(..completed).unwrap().rfind('\n').unwrap();
+
+    log.get(..=last_break).unwrap()
 }
 
 #[test]
-fn a_log_without_a_completed_transaction_has_none() {
-    let log = "[2026-10-09T15:00:01+0200] [ALPM] transaction started\n\
-               [2026-10-09T15:00:02+0200] [ALPM] transaction failed\n";
+fn the_last_completed_transaction_counts() {
+    assert_eq!(parse(LOG.as_bytes()), at(LAST));
+    assert_eq!(parse(INSTALLED.as_bytes()), at(1_794_055_708));
+}
 
-    assert_eq!(parse(log.as_bytes()), None);
+/// The installed log cut before its first completed transaction, and the
+/// Lima log cut while its first transaction runs.
+#[test]
+fn a_log_without_a_completed_transaction_has_none() {
+    assert_eq!(parse(before_first_completed(INSTALLED).as_bytes()), None);
+    assert_eq!(parse(before_first_completed(LOG).as_bytes()), None);
     assert_eq!(parse(b""), None);
 }
 
+/// The Lima log with its last completed transaction written in the format
+/// of pacman before 5.1.
 #[test]
 fn the_old_timestamp_format_is_read() {
-    let log = "[2017-12-01 09:30] [ALPM] transaction started\n\
-               [2017-12-01 09:31] [ALPM] transaction completed\n";
+    let log = LOG.replacen(
+        "[2026-11-08T17:36:00+0100] [ALPM] transaction completed",
+        "[2026-11-08 17:36] [ALPM] transaction completed",
+        1,
+    );
 
-    assert_eq!(parse(log.as_bytes()), at(1_512_120_660));
+    assert_eq!(parse(log.as_bytes()), at(1_794_159_360));
 }
 
+/// The Lima log with its first completed transaction in the old format.
 #[test]
 fn old_and_new_formats_mix_in_one_log() {
-    let log = "[2017-12-01 09:31] [ALPM] transaction completed\n\
-               [2024-01-02T10:11:00+0000] [ALPM] transaction completed\n";
+    let log = LOG.replacen(
+        "[2026-11-08T17:30:07+0100] [ALPM] transaction completed",
+        "[2026-11-08 17:30] [ALPM] transaction completed",
+        1,
+    );
 
-    assert_eq!(parse(log.as_bytes()), at(1_704_190_260));
+    assert_ne!(log, LOG);
+    assert_eq!(parse(log.as_bytes()), at(LAST));
 }
 
 /// Scriptlets print whatever they like, a broken byte must not hide the
-/// lines after it.
+/// lines after it. The made-up lines go before the Lima log's last
+/// completed transaction.
 #[test]
 fn invalid_utf8_and_odd_lines_are_skipped() {
-    let mut log = b"[2024-01-02T10:11:00+0000] [ALPM] transaction completed\n".to_vec();
-    log.extend_from_slice(b"[2024-01-03T00:00:00+0000] [ALPM-SCRIPTLET] \xff\xfe broken\n");
+    let completed = LOG.rfind("[2026-11-08T17:36:00+0100] [ALPM] transaction completed");
+    let (head, tail) = LOG.split_at(completed.unwrap());
+    let mut log = head.as_bytes().to_vec();
+    log.extend_from_slice(b"[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] \xff\xfe broken\n");
+    log.extend_from_slice(b"\n");
+    log.extend_from_slice(tail.as_bytes());
     log.extend_from_slice(b"no timestamp [ALPM] transaction completed\n");
     log.extend_from_slice(b"[not a date] [ALPM] transaction completed\n");
-    log.extend_from_slice(b"[2024-01-02T10:11:00+0000] [PACMAN] transaction completed\n");
-    log.extend_from_slice(b"\n");
+    log.extend_from_slice(b"[2026-11-09T10:11:00+0000] [PACMAN] transaction completed\n");
 
-    assert_eq!(parse(&log), at(1_704_190_260));
+    assert_eq!(parse(&log), at(LAST));
 }
 
+/// The Lima log cut right after its last completed transaction.
 #[test]
 fn a_last_line_without_newline_counts() {
-    let log = "[2024-01-02T10:11:00+0000] [ALPM] transaction completed";
+    let end = LOG.rfind("transaction completed").unwrap() + "transaction completed".len();
 
-    assert_eq!(parse(log.as_bytes()), at(1_704_190_260));
+    assert_eq!(parse(&LOG.as_bytes()[..end]), at(LAST));
 }
 
 #[test]
@@ -87,7 +108,7 @@ fn the_adapter_reads_the_given_file() {
     let path = folder.path().join("pacman.log");
     fs::write(&path, LOG).unwrap();
 
-    assert_eq!(PacmanLog::new(path).last_update(), Ok(at(1_791_547_391)));
+    assert_eq!(PacmanLog::new(path).last_update(), Ok(at(LAST)));
 }
 
 #[test]

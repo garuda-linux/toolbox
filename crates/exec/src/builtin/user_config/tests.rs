@@ -10,6 +10,18 @@ use super::edit_user_config;
 use crate::builtin::{FileChange, execute};
 use crate::testing::{assert_failed, mode};
 
+/// The `kwinrc` that `kwriteconfig6` wrote with the switch on in Lima.
+const KWRITECONFIG_KWINRC: &str = include_str!("../../../../plan/src/user_config/fixtures/kwinrc");
+
+/// The `kwinrc` of a used Plasma session on a Garuda install, with the
+/// switch on.
+const SESSION_KWINRC: &str =
+    include_str!("../../../../plan/src/user_config/fixtures/installed/kwinrc");
+
+/// Discord's `settings.json` of the same install.
+const DISCORD: &str =
+    include_str!("../../../../plan/src/user_config/fixtures/installed/discord-settings.json");
+
 fn word(value: &str) -> ConfigWord {
     ConfigWord::new(value).unwrap()
 }
@@ -68,42 +80,51 @@ fn a_file_is_created_with_its_folders_and_removed_again() {
     );
 }
 
+fn session_kwinrc_off() -> String {
+    let off = SESSION_KWINRC.replace(
+        "BorderlessMaximizedWindows=true\n",
+        "BorderlessMaximizedWindows=false\n",
+    );
+
+    assert_ne!(off, SESSION_KWINRC);
+    off
+}
+
+fn json(text: &str) -> serde_json::Value {
+    serde_json::from_str(text).unwrap()
+}
+
 #[test]
-fn a_fresh_kwinrc_gets_the_group_and_key() {
+fn a_fresh_kwinrc_is_what_kwriteconfig_writes() {
     let home = tempfile::tempdir().unwrap();
 
     edit_user_config(home.path(), &kwin(), true).unwrap();
 
-    assert_eq!(
-        read(home.path(), ".config/kwinrc"),
-        "[Windows]\nBorderlessMaximizedWindows=true\n"
-    );
+    assert_eq!(read(home.path(), ".config/kwinrc"), KWRITECONFIG_KWINRC);
 }
 
 #[test]
 fn an_existing_kwinrc_keeps_everything_else_and_its_mode() {
     let home = tempfile::tempdir().unwrap();
     let kwinrc = home.path().join(".config/kwinrc");
-    let before = "[Desktops]\nNumber=2\n\n[Windows]\nFocusPolicy=ClickToFocus\n";
 
     fs::create_dir_all(kwinrc.parent().unwrap()).unwrap();
-    fs::write(&kwinrc, before).unwrap();
+    fs::write(&kwinrc, SESSION_KWINRC).unwrap();
     fs::set_permissions(&kwinrc, fs::Permissions::from_mode(0o600)).unwrap();
 
-    edit_user_config(home.path(), &kwin(), true).unwrap();
-
     assert_eq!(
-        read(home.path(), ".config/kwinrc"),
-        "[Desktops]\nNumber=2\n\n[Windows]\nFocusPolicy=ClickToFocus\nBorderlessMaximizedWindows=true\n"
+        edit_user_config(home.path(), &kwin(), true).unwrap(),
+        FileChange::Unchanged
     );
-    assert_eq!(mode(&kwinrc), 0o600);
 
     edit_user_config(home.path(), &kwin(), false).unwrap();
 
-    assert_eq!(
-        read(home.path(), ".config/kwinrc"),
-        "[Desktops]\nNumber=2\n\n[Windows]\nFocusPolicy=ClickToFocus\nBorderlessMaximizedWindows=false\n"
-    );
+    assert_eq!(read(home.path(), ".config/kwinrc"), session_kwinrc_off());
+    assert_eq!(mode(&kwinrc), 0o600);
+
+    edit_user_config(home.path(), &kwin(), true).unwrap();
+
+    assert_eq!(read(home.path(), ".config/kwinrc"), SESSION_KWINRC);
 }
 
 #[test]
@@ -112,45 +133,41 @@ fn discord_keeps_its_other_settings() {
     let settings = home.path().join(".config/discord/settings.json");
 
     fs::create_dir_all(settings.parent().unwrap()).unwrap();
-    fs::write(&settings, "{\"BACKGROUND_COLOR\": \"#202225\"}").unwrap();
+    fs::write(&settings, DISCORD).unwrap();
 
     edit_user_config(home.path(), &discord(), true).unwrap();
 
-    let value: serde_json::Value =
-        serde_json::from_str(&read(home.path(), ".config/discord/settings.json")).unwrap();
+    let mut wanted = json(DISCORD);
+    wanted["SKIP_HOST_UPDATE"] = serde_json::Value::Bool(true);
 
     assert_eq!(
-        value,
-        serde_json::json!({"BACKGROUND_COLOR": "#202225", "SKIP_HOST_UPDATE": true})
+        json(&read(home.path(), ".config/discord/settings.json")),
+        wanted
     );
 
     edit_user_config(home.path(), &discord(), false).unwrap();
 
     assert_eq!(
-        serde_json::from_str::<serde_json::Value>(&read(
-            home.path(),
-            ".config/discord/settings.json"
-        ))
-        .unwrap(),
-        serde_json::json!({"BACKGROUND_COLOR": "#202225"})
+        json(&read(home.path(), ".config/discord/settings.json")),
+        json(DISCORD)
     );
 }
 
+/// Edit: the file cut after its first key, as a crash in the middle of a
+/// write leaves it.
 #[test]
 fn invalid_json_is_left_alone_and_fails() {
     let home = tempfile::tempdir().unwrap();
     let settings = home.path().join(".config/discord/settings.json");
+    let cut = DISCORD.split_once("true").unwrap().0;
 
     fs::create_dir_all(settings.parent().unwrap()).unwrap();
-    fs::write(&settings, "{\"zoom\": ").unwrap();
+    fs::write(&settings, cut).unwrap();
 
     let error = edit_user_config(home.path(), &discord(), true).unwrap_err();
 
     assert!(error.to_string().contains("not valid JSON"), "{error}");
-    assert_eq!(
-        read(home.path(), ".config/discord/settings.json"),
-        "{\"zoom\": "
-    );
+    assert_eq!(read(home.path(), ".config/discord/settings.json"), cut);
 }
 
 #[test]
@@ -161,7 +178,7 @@ fn a_symlinked_file_stays_a_link_and_its_target_changes() {
 
     fs::create_dir_all(&dotfiles).unwrap();
     fs::create_dir_all(kwinrc.parent().unwrap()).unwrap();
-    fs::write(dotfiles.join("kwinrc"), "[Windows]\n").unwrap();
+    fs::write(dotfiles.join("kwinrc"), session_kwinrc_off()).unwrap();
     symlink(dotfiles.join("kwinrc"), &kwinrc).unwrap();
 
     edit_user_config(home.path(), &kwin(), true).unwrap();
@@ -174,7 +191,7 @@ fn a_symlinked_file_stays_a_link_and_its_target_changes() {
     );
     assert_eq!(
         fs::read_to_string(dotfiles.join("kwinrc")).unwrap(),
-        "[Windows]\nBorderlessMaximizedWindows=true\n"
+        SESSION_KWINRC
     );
 }
 
@@ -242,7 +259,7 @@ fn a_write_failure_keeps_no_temporary_file() {
     let home = tempfile::tempdir().unwrap();
 
     fs::create_dir_all(home.path().join(".config")).unwrap();
-    fs::write(home.path().join(".config/kwinrc"), "[Windows]\n").unwrap();
+    fs::write(home.path().join(".config/kwinrc"), session_kwinrc_off()).unwrap();
     fs::set_permissions(
         home.path().join(".config"),
         fs::Permissions::from_mode(0o555),

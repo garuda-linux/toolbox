@@ -6,8 +6,9 @@ use parking_lot::Mutex;
 use super::{Cache, Clock};
 use crate::{NewsError, NewsSource as _, REFRESH_EVERY, RequestError, Source, Transport};
 
-const FEED: &str = "<rss><channel><item><title>Hello</title>\
-                    <link>https://forum.garudalinux.org/t/1</link></item></channel></rss>";
+/// The forum's announcements feed, newest post first.
+const FEED: &str = include_str!("../feed/fixtures/garuda-announcements.rss");
+const NEWEST: &str = "Chaotic-AUR turns 8 years old today! 🎉";
 
 struct FakeClock(AtomicI64);
 
@@ -71,8 +72,8 @@ fn the_first_read_downloads_and_keeps_the_posts() {
 
     let news = cache.news().unwrap();
 
-    assert_eq!(news.posts.len(), 1);
-    assert_eq!(news.posts[0].title, "Hello");
+    assert_eq!(news.posts.len(), crate::feed::MAX_POSTS);
+    assert_eq!(news.posts[0].title, NEWEST);
     assert_eq!(news.downloaded, 1_000_000);
     assert_eq!(transport.asked.load(Ordering::SeqCst), 1);
 }
@@ -85,7 +86,7 @@ fn a_second_read_within_six_hours_asks_nobody() {
     clock.0.fetch_add(hours(5), Ordering::SeqCst);
     let news = cache.news().unwrap();
 
-    assert_eq!(news.posts.len(), 1);
+    assert_eq!(news.posts.len(), crate::feed::MAX_POSTS);
     assert_eq!(transport.asked.load(Ordering::SeqCst), 1);
     assert_eq!(REFRESH_EVERY.as_secs(), 6 * 3_600);
 }
@@ -98,7 +99,7 @@ fn offline_after_six_hours_the_copy_still_answers() {
     clock.0.fetch_add(hours(7), Ordering::SeqCst);
     let news = cache.news().unwrap();
 
-    assert_eq!(news.posts[0].title, "Hello");
+    assert_eq!(news.posts[0].title, NEWEST);
     assert_eq!(news.downloaded, 1_000_000, "the old copy's time");
     assert_eq!(transport.asked.load(Ordering::SeqCst), 2);
 }
@@ -125,7 +126,7 @@ fn a_broken_feed_keeps_the_old_copy() {
 
     clock.0.fetch_add(hours(7), Ordering::SeqCst);
 
-    assert_eq!(cache.news().unwrap().posts[0].title, "Hello");
+    assert_eq!(cache.news().unwrap().posts[0].title, NEWEST);
 }
 
 #[test]

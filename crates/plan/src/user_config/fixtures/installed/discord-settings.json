@@ -1,0 +1,12 @@
+{
+  "openH264Enabled": true,
+  "BACKGROUND_COLOR": "#121214",
+  "IS_MAXIMIZED": false,
+  "IS_MINIMIZED": false,
+  "WINDOW_BOUNDS": {
+    "x": 16,
+    "y": 10,
+    "width": 1278,
+    "height": 720
+  }
+}

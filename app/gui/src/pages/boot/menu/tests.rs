@@ -1,15 +1,12 @@
-use toolbox_plan::GrubMenu;
+use toolbox_plan::{GrubMenu, GrubPlatform};
 use toolbox_system::{Menu, MenuRead};
 
 use super::super::tests::{grub_system, menu, page};
 use crate::boot::Boot;
 
-const OTHER_CFG: &str = "\
-menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {
-}
-menuentry 'Windows' $menuentry_id_option 'osprober-chain-1' {
-}
-";
+/// The `grub.cfg` of the Lima VM, another menu than the one of `menu()`.
+const OTHER_CFG: &str =
+    include_str!("../../../../../../crates/plan/src/grub/fixtures/lima/grub.cfg");
 
 #[test]
 fn the_entry_list_is_built_once_until_the_menu_changes() {
@@ -17,7 +14,11 @@ fn the_entry_list_is_built_once_until_the_menu_changes() {
     harness.run_steps(3);
     assert_eq!(harness.state().page.entries.builds(), 1);
 
-    let other = Menu::Read(MenuRead::Known(GrubMenu::from_config(OTHER_CFG)));
+    let other = Menu::Read(MenuRead::Known(GrubMenu::for_platform(
+        OTHER_CFG,
+        GrubPlatform::Efi,
+    )));
+
     harness.state_mut().fixture.boot = Boot::showing(other, None, None);
     harness.run_steps(3);
     assert_eq!(harness.state().page.entries.builds(), 2);

@@ -1,15 +1,19 @@
 use super::{AccountLock, FullName, HomeFolder, InvalidFullName, MAX_FULL_NAME_BYTES, ShadowLocks};
 use crate::UserName;
 
-const SHADOW: &str = "root:$6$rounds=5000$saltsalt$hashhashhash:19000::::::
-bin:!*:19000::::::
-nico:$y$j9T$abcdefgh$0123456789abcdef:19500:0:99999:7:::
-locked:!$y$j9T$abcdefgh$fedcba9876543210:19500:0:99999:7:::
-fresh:!:19500:0:99999:7:::
-nopass::19500:0:99999:7:::
-Bad Name:!:1::::::
-broken
-";
+/// `/etc/shadow` of the Lima image with every salt and hash replaced by
+/// `x`, the `$` fields and the lock sign kept.
+const SHADOW: &str = include_str!("fixtures/shadow");
+/// `/etc/passwd` of the Lima image, its user renamed to `user`.
+pub(super) const PASSWD: &str = include_str!("../../../system/src/accounts/fixtures/passwd");
+
+/// Edit: the locked `guest` hash unlocked, plus a line with a name no
+/// account has and a line with no fields.
+fn edited() -> String {
+    let unlocked = SHADOW.replace("guest:!$y$", "guest:$y$");
+
+    format!("{unlocked}Bad Name:!:1::::::\nbroken\n")
+}
 
 fn lock(user: &str, locked: bool) -> AccountLock {
     AccountLock {
@@ -18,6 +22,14 @@ fn lock(user: &str, locked: bool) -> AccountLock {
     }
 }
 
+#[test]
+fn every_full_name_of_a_real_passwd_passes() {
+    for gecos in PASSWD.lines().map(|line| line.split(':').nth(4).unwrap()) {
+        assert_eq!(FullName::new(gecos).unwrap().as_str(), gecos);
+    }
+}
+
+/// Names a user types, for the scripts no captured passwd has.
 #[test]
 fn full_names_take_ordinary_names_and_the_empty_one() {
     for name in [
@@ -102,38 +114,43 @@ fn the_home_folder_stays_by_default() {
 
 #[test]
 fn shadow_locks_follow_the_exclamation_mark() {
-    assert_eq!(
-        ShadowLocks::from_shadow(SHADOW).locks,
-        [
-            lock("root", false),
-            lock("bin", true),
-            lock("nico", false),
-            lock("locked", true),
-            lock("fresh", true),
-            lock("nopass", false),
-        ]
-    );
+    let locks = ShadowLocks::from_shadow(SHADOW).locks;
+    let unlocked: Vec<&str> = locks
+        .iter()
+        .filter(|lock| !lock.locked)
+        .map(|lock| lock.user.as_str())
+        .collect();
+
+    assert_eq!(locks.len(), 27);
+    assert_eq!(locks[0], lock("root", false));
+    assert!(locks.contains(&lock("nobody", true)));
+    assert!(locks.contains(&lock("user", true)));
+    assert!(locks.contains(&lock("guest", true)));
+    assert_eq!(locks[26], lock("nopass", false));
+    assert_eq!(unlocked, ["root", "nopass"]);
+}
+
+#[test]
+fn an_unlocked_hash_and_lines_without_an_account_are_read_right() {
+    let locks = ShadowLocks::from_shadow(&edited()).locks;
+
+    assert_eq!(locks.len(), 27);
+    assert!(locks.contains(&lock("guest", false)));
 }
 
 #[test]
 fn no_part_of_a_hash_leaves_the_parser() {
-    let answer = serde_json::to_string(&ShadowLocks::from_shadow(SHADOW)).unwrap();
+    let shadow = edited();
+    let answer = serde_json::to_string(&ShadowLocks::from_shadow(&shadow)).unwrap();
 
-    for secret in [
-        "$6$",
-        "$y$",
-        "saltsalt",
-        "hashhash",
-        "abcdefgh",
-        "0123456789",
-        "19500",
-    ] {
+    for secret in ["$y$", "j9T", "xxxx", "20765", "14871"] {
+        assert!(shadow.contains(secret), "{secret} not in the fixture");
         assert!(!answer.contains(secret), "{secret} in {answer}");
     }
 
     assert_eq!(
         serde_json::from_str::<ShadowLocks>(&answer).unwrap(),
-        ShadowLocks::from_shadow(SHADOW)
+        ShadowLocks::from_shadow(&shadow)
     );
 }
 

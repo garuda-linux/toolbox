@@ -47,6 +47,9 @@ pub const fn account(refusal: AccountRefusal) -> &'static str {
         AccountRefusal::SystemAccount => {
             "this is a system account, only accounts of people can be removed"
         }
+        AccountRefusal::OutsideUserRange => {
+            "this account has a user ID outside 1000 to 60000, so it stays as it is"
+        }
         AccountRefusal::LastAdmin => {
             "this is the last member of the groups wheel and sudo, \
              without one nobody could administer this system"

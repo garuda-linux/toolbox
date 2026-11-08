@@ -1,38 +1,50 @@
 use std::fs;
 
 use tempfile::TempDir;
+use toolbox_plan::{KernelModule, set_blacklisted};
 use toolbox_state::network::{Category, ModuleFacts};
 
 use super::{ModuleSource as _, SystemModules};
 use crate::ProbeError;
 use crate::testing::write;
 
-const RELEASE: &str = "6.17.1-zen1-1-zen";
+const RELEASE: &str = include_str!("fixtures/osrelease");
+const PROC_MODULES: &str = include_str!("fixtures/proc-modules");
+const MODULES_DEP: &str = include_str!("fixtures/modules.dep");
+/// The Lima VM with the Broadcom `wl` driver built by DKMS and loaded, next
+/// to a USB Wi-Fi stick.
+const PROC_MODULES_WIFI: &str = include_str!("fixtures/proc-modules-wifi");
+const MODULES_DEP_DKMS: &str = include_str!("fixtures/modules.dep-dkms");
+/// The only modprobe files of the Lima VM, from its `usr/lib/modprobe.d`.
+const SYSTEMD_CONF: &str = include_str!("fixtures/root/usr/lib/modprobe.d/systemd.conf");
+const README: &str = include_str!("fixtures/root/usr/lib/modprobe.d/README");
 
-fn system() -> (TempDir, SystemModules) {
+fn system_with(proc_modules: &str, modules_dep: &str) -> (TempDir, SystemModules) {
     let root = tempfile::tempdir().unwrap();
 
+    write(root.path(), "proc/sys/kernel/osrelease", RELEASE);
+    write(root.path(), "proc/modules", proc_modules);
     write(
         root.path(),
-        "proc/sys/kernel/osrelease",
-        format!("{RELEASE}\n"),
+        &format!("usr/lib/modules/{}/modules.dep", RELEASE.trim()),
+        modules_dep,
     );
-    write(
-        root.path(),
-        "proc/modules",
-        "iwlwifi 602112 1 iwlmvm, Live 0x0\nkvm 1404928 0 - Live 0x0\n",
-    );
-    write(
-        root.path(),
-        &format!("usr/lib/modules/{RELEASE}/modules.dep"),
-        "kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko.zst:\n\
-         kernel/drivers/net/ethernet/realtek/r8169.ko.zst:\n\
-         kernel/arch/x86/kvm/kvm.ko.zst:\n",
-    );
+    write(root.path(), "usr/lib/modprobe.d/systemd.conf", SYSTEMD_CONF);
+    write(root.path(), "usr/lib/modprobe.d/README", README);
 
     let modules = SystemModules::new(root.path());
 
     (root, modules)
+}
+
+fn system() -> (TempDir, SystemModules) {
+    system_with(PROC_MODULES, MODULES_DEP)
+}
+
+/// The VM's `systemd.conf` with `lines` appended: the VM blacklists
+/// nothing, so every blacklist line of these tests is such an edit.
+fn conf_with(lines: &str) -> String {
+    format!("{SYSTEMD_CONF}{lines}")
 }
 
 fn blacklists(facts: &ModuleFacts) -> Vec<(String, String, bool)> {
@@ -43,57 +55,71 @@ fn blacklists(facts: &ModuleFacts) -> Vec<(String, String, bool)> {
         .collect()
 }
 
+fn category(facts: &ModuleFacts, name: &str) -> Option<Category> {
+    facts
+        .modules
+        .iter()
+        .find(|module| module.name.as_str() == name)
+        .map(|module| module.category)
+}
+
 #[test]
 fn loaded_and_loadable_modules_come_from_proc_and_modules_dep() {
     let (_root, modules) = system();
     let facts = modules.facts().unwrap();
-
     let loaded: Vec<String> = facts.loaded.iter().map(ToString::to_string).collect();
-    let network: Vec<(String, Category)> = facts
-        .modules
-        .iter()
-        .map(|module| (module.name.to_string(), module.category))
-        .collect();
 
-    assert_eq!(loaded, ["iwlwifi", "kvm"]);
-    assert_eq!(
-        network,
-        [
-            ("iwlwifi".to_owned(), Category::Wireless),
-            ("r8169".to_owned(), Category::Ethernet),
-        ]
-    );
+    assert_eq!(loaded.len(), PROC_MODULES.lines().count());
+    assert!(loaded.iter().any(|name| name == "virtio_net"), "{loaded:?}");
+    assert_eq!(category(&facts, "r8169"), Some(Category::Ethernet));
+    assert_eq!(category(&facts, "iwlwifi"), Some(Category::Wireless));
+    assert_eq!(category(&facts, "mt7921e"), Some(Category::Wireless));
+    assert_eq!(category(&facts, "virtio_net"), Some(Category::Other));
+    assert_eq!(category(&facts, "btusb"), None);
     assert_eq!(facts.blacklists, []);
+}
+
+/// DKMS puts `wl` below `updates/`, outside `kernel/drivers/net`.
+#[test]
+fn a_dkms_driver_is_a_loaded_wireless_module() {
+    let (_root, modules) = system_with(PROC_MODULES_WIFI, MODULES_DEP_DKMS);
+    let facts = modules.facts().unwrap();
+
+    assert!(facts.loaded.iter().any(|name| name.as_str() == "wl"));
+    assert!(facts.loaded.iter().any(|name| name.as_str() == "mt76x2u"));
+    assert_eq!(category(&facts, "wl"), Some(Category::Wireless));
+    assert_eq!(category(&facts, "v4l2loopback"), None);
 }
 
 #[test]
 fn every_conf_file_of_the_modprobe_folders_is_read_and_named() {
     let (root, modules) = system();
+    let own = set_blacklisted("", &KernelModule::new("r8169").unwrap(), true);
 
     write(
         root.path(),
         "etc/modprobe.d/garuda-toolbox-blacklist.conf",
-        "# Written by Garuda Toolbox\nblacklist r8169\n",
+        own,
     );
     write(
         root.path(),
         "etc/modprobe.d/blacklist.conf",
-        "blacklist pcspkr\n# blacklist iwlwifi\ninstall b43 /bin/false\n",
+        conf_with("blacklist pcspkr\n# blacklist iwlwifi\ninstall b43 /bin/false\n"),
     );
     write(
         root.path(),
         "usr/lib/modprobe.d/broadcom-wl.conf",
-        "blacklist b43\nblacklist brcm-smac\n",
+        conf_with("blacklist b43\nblacklist brcm-smac\n"),
     );
     write(
         root.path(),
         "run/modprobe.d/live.conf",
-        "blacklist nouveau\n",
+        conf_with("blacklist nouveau\n"),
     );
     write(
         root.path(),
         "etc/modprobe.d/notes.txt",
-        "blacklist iwlwifi\n",
+        conf_with("blacklist iwlwifi\n"),
     );
 
     assert_eq!(
@@ -128,20 +154,32 @@ fn every_conf_file_of_the_modprobe_folders_is_read_and_named() {
     );
 }
 
+/// The VM's `systemd.conf` shadowed in `run` and `etc`, the way an
+/// administrator turns a file of a package off.
 #[test]
 fn a_file_is_read_once_from_the_first_folder_that_has_its_name() {
     let (root, modules) = system();
 
-    for (file, text) in [
-        ("usr/lib/modprobe.d/a.conf", "blacklist from_usr_a\n"),
-        ("run/modprobe.d/a.conf", "blacklist from_run_a\n"),
-        ("etc/modprobe.d/a.conf", ""),
-        ("usr/lib/modprobe.d/b.conf", "blacklist from_usr_b\n"),
-        ("run/modprobe.d/b.conf", "blacklist from_run_b\n"),
-        ("usr/lib/modprobe.d/c.conf", "blacklist from_usr_c\n"),
-    ] {
-        write(root.path(), file, text);
-    }
+    write(
+        root.path(),
+        "usr/lib/modprobe.d/systemd.conf",
+        conf_with("blacklist from_usr\n"),
+    );
+    write(
+        root.path(),
+        "run/modprobe.d/systemd.conf",
+        conf_with("blacklist from_run\n"),
+    );
+    write(
+        root.path(),
+        "usr/lib/modprobe.d/b.conf",
+        conf_with("blacklist from_usr_b\n"),
+    );
+    write(
+        root.path(),
+        "run/modprobe.d/b.conf",
+        conf_with("blacklist from_run_b\n"),
+    );
 
     assert_eq!(
         blacklists(&modules.facts().unwrap()),
@@ -152,24 +190,35 @@ fn a_file_is_read_once_from_the_first_folder_that_has_its_name() {
                 false
             ),
             (
-                "from_usr_c".to_owned(),
-                "/usr/lib/modprobe.d/c.conf".to_owned(),
+                "from_run".to_owned(),
+                "/run/modprobe.d/systemd.conf".to_owned(),
                 false
             ),
         ]
     );
+
+    write(root.path(), "etc/modprobe.d/systemd.conf", "");
+
+    assert_eq!(
+        blacklists(&modules.facts().unwrap()),
+        [(
+            "from_run_b".to_owned(),
+            "/run/modprobe.d/b.conf".to_owned(),
+            false
+        )]
+    );
 }
 
-/// A comment in Latin-1 must not hide the blacklist below it.
+/// A comment in Latin-1 must not hide the blacklist below it. The test
+/// puts one such comment and a blacklist line after the VM's
+/// `systemd.conf`.
 #[test]
 fn a_stray_byte_in_a_conf_file_hides_no_blacklist() {
     let (root, modules) = system();
+    let mut text = SYSTEMD_CONF.as_bytes().to_vec();
 
-    write(
-        root.path(),
-        "etc/modprobe.d/old.conf",
-        b"# caf\xe9\nblacklist pcspkr\n",
-    );
+    text.extend_from_slice(b"# caf\xe9\nblacklist pcspkr\n");
+    write(root.path(), "etc/modprobe.d/old.conf", text);
 
     assert_eq!(
         blacklists(&modules.facts().unwrap()),
@@ -187,12 +236,12 @@ fn a_stray_byte_in_a_conf_file_hides_no_blacklist() {
 fn a_running_kernel_without_its_folder_has_no_loadable_modules() {
     let (root, modules) = system();
 
-    fs::remove_dir_all(root.path().join("usr/lib/modules").join(RELEASE)).unwrap();
+    fs::remove_dir_all(root.path().join("usr/lib/modules").join(RELEASE.trim())).unwrap();
 
     let facts = modules.facts().unwrap();
 
     assert_eq!(facts.modules, []);
-    assert_eq!(facts.loaded.len(), 2);
+    assert_eq!(facts.loaded.len(), PROC_MODULES.lines().count());
 }
 
 #[test]

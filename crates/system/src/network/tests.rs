@@ -13,7 +13,21 @@ use super::{NetworkPrograms, NetworkSource as _, SystemNetwork, parse_default_ro
 use crate::ProbeError;
 use crate::testing::fake_program;
 
-const ROUTES: &str = r#"[{"dst":"default","gateway":"192.168.178.1","dev":"wlan0","proto":"dhcp","prefsrc":"192.168.178.42","metric":600,"flags":[]},{"dst":"default","gateway":"10.0.0.1","dev":"enp5s0","metric":700,"flags":[]}]"#;
+/// The Lima VM with a `wg0` link added after its DHCP route.
+const ROUTES: &str = include_str!("fixtures/ip-route-default-two.json");
+const LAPTOP_ROUTE: &str = include_str!("fixtures/bare-metal/ip-route-default.json");
+const LAPTOP_RFKILL: &str = include_str!("fixtures/bare-metal/rfkill");
+const LAPTOP_LSPCI: &str = include_str!("fixtures/bare-metal/lspci-nn");
+const LAPTOP_LSUSB: &str = include_str!("fixtures/bare-metal/lsusb");
+const VM_LSPCI: &str = include_str!("fixtures/lspci-nn");
+const VM_LSUSB: &str = include_str!("fixtures/lsusb.stdout");
+
+/// What `ip -json route show default dev lo` printed on the laptop: the
+/// answer of a machine without a default route.
+const NO_ROUTE: &str = "[]\n";
+
+/// What `rfkill list` printed in a sandbox without `/dev/rfkill`.
+const RFKILL_REFUSAL: &str = "rfkill: cannot open /dev/rfkill: No such file or directory\n";
 
 fn missing() -> NetworkPrograms {
     NetworkPrograms {
@@ -24,13 +38,21 @@ fn missing() -> NetworkPrograms {
     }
 }
 
-fn switch(root: &Path, name: &str, kind: &str, soft: &str, hard: &str) {
-    let folder = root.join("sys/class/rfkill").join(name);
+/// Writes the switches of a capture with lines like
+/// `rfkill0 type=bluetooth soft=0 hard=0 name=hci0` below `root`, the way
+/// sysfs shows them: one file per value.
+fn switches(root: &Path, capture: &str) {
+    for line in capture.lines() {
+        let mut fields = line.split_whitespace();
+        let folder = root.join("sys/class/rfkill").join(fields.next().unwrap());
 
-    fs::create_dir_all(&folder).unwrap();
-    fs::write(folder.join("type"), format!("{kind}\n")).unwrap();
-    fs::write(folder.join("soft"), format!("{soft}\n")).unwrap();
-    fs::write(folder.join("hard"), format!("{hard}\n")).unwrap();
+        fs::create_dir_all(&folder).unwrap();
+
+        for field in fields {
+            let (file, value) = field.split_once('=').unwrap();
+            fs::write(folder.join(file), format!("{value}\n")).unwrap();
+        }
+    }
 }
 
 fn system() -> (TempDir, SystemNetwork) {
@@ -45,22 +67,25 @@ fn the_first_default_route_names_router_and_interface() {
     assert_eq!(
         parse_default_route(ROUTES),
         Ok(DefaultRoute {
-            gateway: Some("192.168.178.1".parse::<IpAddr>().unwrap()),
-            interface: Some("wlan0".to_owned()),
+            gateway: Some("192.168.5.2".parse::<IpAddr>().unwrap()),
+            interface: Some("eth0".to_owned()),
         })
     );
 }
 
 #[test]
 fn no_default_route_is_an_answer_not_an_error() {
-    assert_eq!(parse_default_route("[]\n"), Ok(DefaultRoute::default()));
+    assert_eq!(parse_default_route(NO_ROUTE), Ok(DefaultRoute::default()));
 }
 
-/// A point-to-point link (a VPN, a mobile modem) has no gateway.
+/// A point-to-point link (a VPN, a mobile modem) has no gateway. The test
+/// drops the DHCP route of the capture, so its `wg0` route comes first.
 #[test]
 fn a_route_without_a_gateway_keeps_its_interface() {
+    let (_dhcp, wireguard) = ROUTES.split_once("},").unwrap();
+
     assert_eq!(
-        parse_default_route(r#"[{"dst":"default","dev":"wg0","scope":"link","flags":[]}]"#),
+        parse_default_route(&format!("[{wireguard}")),
         Ok(DefaultRoute {
             gateway: None,
             interface: Some("wg0".to_owned()),
@@ -68,13 +93,21 @@ fn a_route_without_a_gateway_keeps_its_interface() {
     );
 }
 
+/// The laptop's route with its gateway and interface replaced by text no
+/// router or interface would have.
 #[test]
 fn text_that_is_no_address_or_interface_name_is_left_out() {
-    let odd = r#"[{"gateway":"<b>router</b>","dev":"wlan0 and more words here"}]"#;
+    let odd = LAPTOP_ROUTE
+        .replacen("192.168.178.1", "<b>router</b>", 1)
+        .replacen("wlan0", "wlan0 and more words here", 1);
 
-    assert_eq!(parse_default_route(odd), Ok(DefaultRoute::default()));
+    let link_local = LAPTOP_ROUTE
+        .replacen("192.168.178.1", "fe80::1", 1)
+        .replacen("wlan0", "../x", 1);
+
+    assert_eq!(parse_default_route(&odd), Ok(DefaultRoute::default()));
     assert_eq!(
-        parse_default_route(r#"[{"gateway":"fe80::1","dev":"../x"}]"#),
+        parse_default_route(&link_local),
         Ok(DefaultRoute {
             gateway: Some("fe80::1".parse::<IpAddr>().unwrap()),
             interface: None,
@@ -82,17 +115,18 @@ fn text_that_is_no_address_or_interface_name_is_left_out() {
     );
 }
 
+/// The capture cut in half, as a killed `ip` would leave it.
 #[test]
 fn output_that_is_no_route_list_fails() {
     assert!(matches!(
-        parse_default_route("default via 192.168.1.1 dev wlan0"),
+        parse_default_route(LAPTOP_ROUTE.get(..LAPTOP_ROUTE.len() / 2).unwrap()),
         Err(ProbeError::Failed(_))
     ));
 }
 
 #[test]
 fn the_route_comes_from_the_ip_program() {
-    let (_folder, ip) = fake_program(ROUTES, "", 0);
+    let (_folder, ip) = fake_program(LAPTOP_ROUTE, "", 0);
     let network = SystemNetwork::new(
         "/",
         NetworkPrograms {
@@ -118,9 +152,35 @@ fn without_the_ip_program_the_route_is_unavailable() {
 fn radios_come_from_the_kernels_switches() {
     let (root, network) = system();
 
-    switch(root.path(), "rfkill0", "bluetooth", "0", "0");
-    switch(root.path(), "rfkill1", "wlan", "1", "0");
-    switch(root.path(), "rfkill2", "nfc", "0", "1");
+    switches(root.path(), LAPTOP_RFKILL);
+
+    assert_eq!(
+        network.radios(),
+        Ok(vec![
+            Radio {
+                kind: Some(RadioKind::Bluetooth),
+                soft: false,
+                hard: false,
+            },
+            Radio {
+                kind: Some(RadioKind::Wifi),
+                soft: false,
+                hard: false,
+            },
+        ])
+    );
+}
+
+/// The laptop's switches with Wi-Fi blocked by software, plus an NFC
+/// switch blocked by hardware (the laptop has none) and a switch folder
+/// without files.
+#[test]
+fn blocked_unknown_and_empty_switches_are_read_as_such() {
+    let (root, network) = system();
+    let edited = LAPTOP_RFKILL.replacen("type=wlan soft=0", "type=wlan soft=1", 1)
+        + "rfkill2 type=nfc soft=0 hard=1 name=nfc0\n";
+
+    switches(root.path(), &edited);
     fs::create_dir_all(root.path().join("sys/class/rfkill/rfkill3")).unwrap();
 
     assert_eq!(
@@ -145,10 +205,14 @@ fn radios_come_from_the_kernels_switches() {
     );
 }
 
+/// The Lima VM's `/sys/class/rfkill` is an empty folder.
 #[test]
 fn a_machine_without_switches_has_no_radios() {
-    let (_root, network) = system();
+    let (root, network) = system();
 
+    assert_eq!(network.radios(), Ok(Vec::new()));
+
+    fs::create_dir_all(root.path().join("sys/class/rfkill")).unwrap();
     assert_eq!(network.radios(), Ok(Vec::new()));
 }
 
@@ -166,8 +230,7 @@ fn access_follows_the_rfkill_device() {
 
 #[test]
 fn a_refusing_rfkill_reports_its_complaint() {
-    let (_folder, rfkill) =
-        fake_program("", "rfkill: cannot open /dev/rfkill: Permission denied", 1);
+    let (_folder, rfkill) = fake_program("", RFKILL_REFUSAL, 1);
 
     let network = SystemNetwork::new(
         "/",
@@ -181,7 +244,7 @@ fn a_refusing_rfkill_reports_its_complaint() {
         panic!("a refused switch counts as done");
     };
 
-    assert!(reason.contains("Permission denied"), "{reason}");
+    assert!(reason.contains("cannot open /dev/rfkill"), "{reason}");
 }
 
 #[test]
@@ -204,22 +267,27 @@ fn a_willing_rfkill_switches_and_a_missing_one_is_unavailable() {
     );
 }
 
-#[test]
-fn devices_come_from_lspci_and_lsusb() {
-    let (_pci_folder, lspci) = fake_program(
-        "02:00.0 Ethernet controller [0200]: Realtek RTL8125 [10ec:8125] (rev 05)\n00:1f.3 Audio device [0403]: Intel Audio [8086:7a50]\n",
-        "",
-        0,
-    );
+/// A root whose `/sys/bus/usb/devices` is the laptop's capture, linked
+/// like the entries of the real folder are.
+fn laptop_sysfs() -> TempDir {
+    let root = tempfile::tempdir().unwrap();
+    let bus = root.path().join("sys/bus/usb");
 
-    let (_usb_folder, lsusb) = fake_program(
-        "Bus 001 Device 004: ID 8087:0033 Intel Corp. AX211 Bluetooth\n",
-        "",
-        0,
-    );
+    fs::create_dir_all(&bus).unwrap();
+    std::os::unix::fs::symlink(
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("src/network/fixtures/bare-metal/sys-bus-usb-devices"),
+        bus.join("devices"),
+    )
+    .unwrap();
+    root
+}
 
+fn devices(root: &Path, lspci: &str, lsusb: &str) -> Vec<(DeviceKind, String)> {
+    let (_pci_folder, lspci) = fake_program(lspci, "", 0);
+    let (_usb_folder, lsusb) = fake_program(lsusb, "", 0);
     let network = SystemNetwork::new(
-        "/",
+        root,
         NetworkPrograms {
             lspci: lspci.into(),
             lsusb: lsusb.into(),
@@ -227,13 +295,57 @@ fn devices_come_from_lspci_and_lsusb() {
         },
     );
 
-    let pci = network.pci_devices().unwrap();
-    let usb = network.usb_devices().unwrap();
+    network
+        .pci_devices()
+        .unwrap()
+        .into_iter()
+        .chain(network.usb_devices().unwrap())
+        .map(|device| (device.kind, device.description))
+        .collect()
+}
 
-    assert_eq!(pci.len(), 1);
-    assert_eq!(pci[0].kind, DeviceKind::Ethernet);
-    assert_eq!(usb.len(), 1);
-    assert_eq!(usb[0].kind, DeviceKind::Bluetooth);
+/// Plain `lsusb` prints no class. The interface class in sysfs shows the
+/// Bluetooth half of the MT7922 (`0489:e0f6`, named only
+/// `Wireless_Device`).
+#[test]
+fn devices_come_from_lspci_lsusb_and_the_usb_interfaces() {
+    let root = laptop_sysfs();
+
+    assert_eq!(
+        devices(root.path(), LAPTOP_LSPCI, LAPTOP_LSUSB),
+        [
+            (
+                DeviceKind::Ethernet,
+                "Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 15)".to_owned()
+            ),
+            (
+                DeviceKind::Wireless,
+                "MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter [14c3:0616]".to_owned()
+            ),
+            (
+                DeviceKind::Ethernet,
+                "Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter".to_owned()
+            ),
+            (
+                DeviceKind::Bluetooth,
+                "Foxconn / Hon Hai Wireless_Device".to_owned()
+            ),
+        ]
+    );
+}
+
+/// The VM has no capture of its USB folder, so its root has none.
+#[test]
+fn a_virtual_machine_lists_its_virtio_card_only() {
+    let root = tempfile::tempdir().unwrap();
+
+    assert_eq!(
+        devices(root.path(), VM_LSPCI, VM_LSUSB),
+        [(
+            DeviceKind::Ethernet,
+            "Red Hat, Inc. Virtio network device [1af4:1000]".to_owned()
+        )]
+    );
 }
 
 #[test]

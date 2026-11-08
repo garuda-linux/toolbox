@@ -66,6 +66,15 @@ scripts/lima-it.sh [--suite LIST]   # systemd, locales, DKMS, upgrades and fault
 - Test first: a failing test, the simplest code that passes, then
   refactor. Logic lives in `core`, `plan`, `system` and `catalog`, tested
   without egui. Ports get fakes, not mocks.
+- Code that reads real system state (a file, command output, sysfs, a
+  D-Bus reply) is tested against a real capture, never invented text.
+  Captures come from the Garuda Lima VM, a Garuda install or real hardware
+  and live in the module's `fixtures/` folder with a name for their source
+  (`installed/`, `bare-metal/`, `live/`), loaded with `include_str!`. They
+  are bytes as the program printed them: never edited or formatted
+  (treefmt and `.editorconfig` skip `fixtures/`). An edge case changes the
+  capture inside the test and names the change. Personal data is stripped
+  before a capture lands: user and host names, serials, UUIDs, home paths.
 - A user-visible feature has self-test steps (happy path plus one edge
   case), kittest tests, a page in `docs/src/` and CLI commands. It works
   with the keyboard alone and passes one Orca pass.

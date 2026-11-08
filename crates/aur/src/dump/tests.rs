@@ -1,25 +1,16 @@
-use std::io::Write as _;
+use std::io::{Read as _, Write as _};
 
 use flate2::Compression;
+use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
 
-use super::{DumpError, parse};
+use super::{AurPackage, DumpError, parse};
 
 const LIMIT: u64 = 1 << 20;
 
-const FULL: &str = r#"[{
-  "ID": 1, "Name": "paru", "PackageBaseID": 2, "PackageBase": "paru",
-  "Version": "2.0.4-1", "Description": "Feature packed AUR helper",
-  "URL": "https://github.com/morganamilo/paru", "NumVotes": 1234,
-  "Popularity": 45.67, "OutOfDate": null, "Maintainer": "Morganamilo",
-  "Submitter": "Morganamilo", "FirstSubmitted": 1600000000,
-  "LastModified": 1700000000, "URLPath": "/cgit/aur.git/snapshot/paru.tar.gz",
-  "Depends": ["git", "pacman>=6.1"], "MakeDepends": ["cargo"],
-  "OptDepends": ["bat: colored pkgbuild printing"], "CheckDepends": ["x"],
-  "Provides": ["paru"], "Conflicts": ["paru-bin"], "Replaces": ["y"],
-  "Groups": ["z"], "License": ["GPL-3.0-or-later"], "Keywords": ["helper", "aur"],
-  "CoMaintainers": ["someone"]
-}]"#;
+/// The first five entries of `packages-meta-ext-v1.json.gz` as the AUR
+/// served it, sorted by name.
+pub const DUMP: &[u8] = include_bytes!("fixtures/packages-meta-ext-v1.json.gz");
 
 pub fn gzipped(json: &str) -> Vec<u8> {
     let mut encoder = GzEncoder::new(Vec::new(), Compression::fast());
@@ -27,53 +18,123 @@ pub fn gzipped(json: &str) -> Vec<u8> {
     encoder.finish().unwrap()
 }
 
+pub fn unpacked() -> String {
+    let mut json = String::new();
+
+    GzDecoder::new(DUMP).read_to_string(&mut json).unwrap();
+    json
+}
+
+fn package<'packages>(packages: &'packages [AurPackage], name: &str) -> &'packages AurPackage {
+    packages
+        .iter()
+        .find(|package| package.name.as_str() == name)
+        .unwrap_or_else(|| panic!("{name} is in the dump"))
+}
+
 #[test]
 fn every_kept_field_is_read() {
-    let packages = parse(gzipped(FULL).as_slice(), LIMIT).unwrap();
+    let packages = parse(DUMP, LIMIT).unwrap();
+    let ime = package(&packages, "0c-ime");
 
-    let [paru] = packages.as_slice() else {
-        panic!("one package expected, got {packages:?}");
-    };
-
-    assert_eq!(paru.name.as_str(), "paru");
-    assert_eq!(paru.version, "2.0.4-1");
-    assert_eq!(paru.description, "Feature packed AUR helper");
+    assert_eq!(ime.version, "0.2.9-1");
     assert_eq!(
-        paru.url.as_deref(),
-        Some("https://github.com/morganamilo/paru")
+        ime.description,
+        "Zhuyin (Bopomofo) input method with statistical and neural candidate selection, \
+         for Fcitx5 and IBus"
     );
-    assert_eq!(paru.votes, 1234);
-    assert!((paru.popularity - 45.67).abs() < 1e-9_f64);
-    assert_eq!(paru.out_of_date, None);
-    assert_eq!(paru.maintainer.as_deref(), Some("Morganamilo"));
-    assert_eq!(paru.first_submitted, 1_600_000_000);
-    assert_eq!(paru.last_modified, 1_700_000_000);
-    assert_eq!(paru.depends, ["git", "pacman>=6.1"]);
-    assert_eq!(paru.make_depends, ["cargo"]);
-    assert_eq!(paru.opt_depends, ["bat: colored pkgbuild printing"]);
-    assert_eq!(paru.provides, ["paru"]);
-    assert_eq!(paru.conflicts, ["paru-bin"]);
-    assert_eq!(paru.licenses, ["GPL-3.0-or-later"]);
-    assert_eq!(paru.keywords, ["helper", "aur"]);
+    assert_eq!(
+        ime.url.as_deref(),
+        Some("https://github.com/0c-biggo/0c-ime")
+    );
+    assert_eq!(ime.votes, 0);
+    assert_eq!(ime.out_of_date, Some(1_794_068_437));
+    assert_eq!(ime.maintainer.as_deref(), Some("neo_chen"));
+    assert_eq!(ime.first_submitted, 1_792_590_299);
+    assert_eq!(ime.last_modified, 1_793_978_572);
+    assert_eq!(ime.depends.len(), 11);
+    assert_eq!(ime.depends.first().map(String::as_str), Some("cairo"));
+    assert_eq!(
+        ime.make_depends,
+        ["go", "rust", "pkgconf", "fcitx5", "ibus"]
+    );
+    assert_eq!(
+        ime.opt_depends,
+        [
+            "fcitx5",
+            "ibus",
+            "python",
+            "python-numpy",
+            "python-onnxruntime"
+        ]
+    );
+    assert_eq!(ime.licenses.len(), 7);
+
+    let tools = package(&packages, "0xtools");
+
+    assert_eq!(tools.votes, 1);
+    assert!((tools.popularity - 0.000_604).abs() < 1e-9_f64);
+
+    assert_eq!(
+        package(&packages, "10mb.video-git").provides,
+        ["10mb.video"]
+    );
+    assert_eq!(
+        package(&packages, "10ff-git").keywords,
+        ["typing", "typing-test"]
+    );
 }
 
 #[test]
 fn nulls_and_missing_fields_read_as_empty() {
-    let json = r#"[{"Name": "bare", "Version": "1-1", "Description": null,
-        "URL": null, "Maintainer": null, "OutOfDate": 1710000000,
-        "NumVotes": 0, "Popularity": 0, "FirstSubmitted": 1, "LastModified": 2}]"#;
+    // `0ad-boongui` has no maintainer, no out-of-date mark and no
+    // dependencies. Its description is edited to null.
+    let json = unpacked().replacen(
+        r#""Description":"User interface mod for the RTS game 0 A.D.""#,
+        r#""Description":null"#,
+        1,
+    );
 
-    let packages = parse(gzipped(json).as_slice(), LIMIT).unwrap();
-
-    let [bare] = packages.as_slice() else {
-        panic!("one package expected, got {packages:?}");
-    };
+    let packages = parse(gzipped(&json).as_slice(), LIMIT).unwrap();
+    let bare = package(&packages, "0ad-boongui");
 
     assert_eq!(bare.description, "");
-    assert_eq!(bare.url, None);
     assert_eq!(bare.maintainer, None);
-    assert_eq!(bare.out_of_date, Some(1_710_000_000));
+    assert_eq!(bare.out_of_date, None);
     assert!(bare.depends.is_empty() && bare.keywords.is_empty());
+    assert!(bare.provides.is_empty() && bare.conflicts.is_empty());
+}
+
+#[test]
+fn packages_are_sorted_by_name() {
+    // The dump's entries edited into the reverse order.
+    let mut entries: Vec<serde_json::Value> = serde_json::from_str(&unpacked()).unwrap();
+
+    entries.reverse();
+
+    let reversed = serde_json::to_string(&entries).unwrap();
+    let packages = parse(gzipped(&reversed).as_slice(), LIMIT).unwrap();
+    let names: Vec<&str> = packages
+        .iter()
+        .map(|package| package.name.as_str())
+        .collect();
+
+    assert_eq!(
+        names,
+        [
+            "0ad-boongui",
+            "0c-ime",
+            "0xtools",
+            "10ff-git",
+            "10mb.video-git"
+        ]
+    );
+}
+
+#[test]
+fn a_dump_larger_than_the_limit_is_refused() {
+    assert!(unpacked().len() > 1024);
+    assert_eq!(parse(DUMP, 1024), Err(DumpError::TooLarge(1024)));
 }
 
 #[test]
@@ -114,20 +175,6 @@ fn an_entry_with_an_invalid_name_is_skipped() {
 }
 
 #[test]
-fn packages_are_sorted_by_name() {
-    let json = r#"[{"Name": "zsh-x"}, {"Name": "alpha"}, {"Name": "mid"}]"#;
-
-    let packages = parse(gzipped(json).as_slice(), LIMIT).unwrap();
-
-    let names: Vec<&str> = packages
-        .iter()
-        .map(|package| package.name.as_str())
-        .collect();
-
-    assert_eq!(names, ["alpha", "mid", "zsh-x"]);
-}
-
-#[test]
 fn votes_are_clamped_and_a_bad_popularity_is_zero() {
     let json = r#"[{"Name": "a", "NumVotes": 99999999999, "Popularity": -3}]"#;
 
@@ -135,19 +182,6 @@ fn votes_are_clamped_and_a_bad_popularity_is_zero() {
 
     assert_eq!(packages[0].votes, u32::MAX);
     assert!(packages[0].popularity.abs() < f64::EPSILON);
-}
-
-#[test]
-fn a_dump_larger_than_the_limit_is_refused() {
-    let json = format!(
-        r#"[{{"Name": "a", "Description": "{}"}}]"#,
-        "x".repeat(4096)
-    );
-
-    assert_eq!(
-        parse(gzipped(&json).as_slice(), 1024),
-        Err(DumpError::TooLarge(1024))
-    );
 }
 
 #[test]

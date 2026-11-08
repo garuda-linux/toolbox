@@ -80,7 +80,7 @@ fn changes_panel() {
 #[test]
 fn console_after_apply() {
     let (mut harness, _runtime) =
-        crate::console::installing_app(crate::console::succeeding_script());
+        crate::console::installing_app(crate::console::succeeding_script(), crate::console::JAVA);
 
     harness.get_by_label("Apply").click();
     harness.step();
@@ -89,7 +89,7 @@ fn console_after_apply() {
         harness.query_by_label("Review").is_none()
     });
 
-    // The read after the run finds firefox, so nothing is left to apply.
+    // The read after the run finds java-runtime, so nothing is left to apply.
     assert!(harness.query_by_label("Apply").is_none());
     crate::console::unfocus(&mut harness);
     harness.snapshot("console/applied_dark");
@@ -97,7 +97,7 @@ fn console_after_apply() {
 
 #[test]
 fn console_with_nothing_to_do() {
-    let (mut harness, _runtime) = crate::console::app(crate::console::idle_script());
+    let (mut harness, _runtime) = crate::console::app(crate::console::idle_script(), &["firefox"]);
     harness.get_by_label("Apply").click();
     harness.step();
     crate::console::wait_for(&mut harness, "Nothing needed to change");
@@ -189,7 +189,7 @@ fn home_page() {
     status.aur_updates = Ok(vec![crate::home::update("paru-bin")]);
     status.last_update = Ok(Some(SystemTime::now() - Duration::from_hours(24 * 16)));
     status.health = Ok(vec![HealthIssue {
-        level: HealthLevel::Warning,
+        level: HealthLevel::Low,
         message: "The keyring is older than three months.".to_owned(),
         fix_available: true,
     }]);

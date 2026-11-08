@@ -234,6 +234,7 @@ The page says why above the list or in the dialog. Group cards on the
 | Lock an administrator while the lock state is unknown               | Another administrator may be locked already                      |
 | Lock, remove or take out of `sudo` an administrator without `wheel` | The app cannot tell who else may administer the system           |
 | Remove a system account (shown without the filter)                  | Installed programs and services run as these accounts            |
+| Lock an account outside user IDs 1000 to 60000, or change its home  | System accounts and `nobody` (65534) stay as they are            |
 | Remove a system group (group ID below 1000)                         | Installed programs rely on it                                    |
 | Remove the primary group of a user                                  | The user's files and logins need it. Remove the user instead     |
 | Clear the primary group in the groups dialog                        | An account always has one                                        |
@@ -255,7 +256,9 @@ administrator, the removal is dropped and the lock stays, because a lock is
 easy to undo.
 
 While applying, the app checks the root account, system groups, the home
-folder path, the user ID and the shell again.
+folder path, the user ID and the shell again. Removing a group fails then
+unless its group ID is between 1000 and 60000, which keeps `nobody` (65534)
+too.
 
 ## See also
 

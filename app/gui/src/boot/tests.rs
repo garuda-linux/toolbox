@@ -2,15 +2,14 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use tokio::runtime::Runtime;
-use toolbox_plan::GrubMenu;
+use toolbox_plan::{GrubMenu, GrubPlatform};
 use toolbox_system::{BootMenuSource, Menu, MenuRead};
 
 use super::{Boot, BootSetup, FileChooser, FileKind, Picked};
+use crate::testing::captures::GRUB_CFG;
 use crate::testing::until;
 
-const GRUB_CFG: &str = "menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {\n}\n";
-
-/// Counts its reads and answers a one-entry menu.
+/// Counts its reads and answers the menu of [`GRUB_CFG`].
 #[derive(Default)]
 struct Source(AtomicUsize);
 
@@ -20,7 +19,7 @@ struct Chooser;
 impl BootMenuSource for Source {
     fn menu(&self, _cancel: &Arc<AtomicBool>) -> MenuRead {
         self.0.fetch_add(1, Ordering::SeqCst);
-        MenuRead::Known(GrubMenu::from_config(GRUB_CFG))
+        MenuRead::Known(GrubMenu::for_platform(GRUB_CFG, GrubPlatform::Efi))
     }
 }
 

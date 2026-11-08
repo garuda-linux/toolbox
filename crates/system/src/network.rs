@@ -9,6 +9,7 @@ mod network_manager;
 mod online;
 #[cfg(test)]
 mod tests;
+mod usb;
 
 use std::ffi::OsString;
 use std::fs::OpenOptions;
@@ -183,7 +184,8 @@ impl NetworkSource for SystemNetwork {
     }
 
     fn usb_devices(&self) -> Result<Vec<Device>, ProbeError> {
-        command::output(&self.programs.lsusb, &[]).map(|output| usb_devices(&output))
+        command::output(&self.programs.lsusb, &[])
+            .map(|output| usb_devices(&output, &usb::interfaces(&self.root)))
     }
 }
 

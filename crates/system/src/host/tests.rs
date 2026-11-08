@@ -12,21 +12,18 @@ use super::{
 };
 use crate::ProbeError;
 
-const OVERLAY: &str = "proc /proc proc rw,nosuid 0 0\n\
-                       airootfs / overlay rw,relatime,lowerdir=/run/archiso 0 0\n\
-                       tmpfs /tmp tmpfs rw 0 0\n";
-
-const BTRFS: &str = "/dev/nvme0n1p2 / btrfs rw,noatime,subvol=/@ 0 0\n\
-                     /dev/nvme0n1p2 /home btrfs rw,noatime,subvol=/@home 0 0\n";
-
-const STAT: &str = "cpu  10 20 30 40\n\
-                    intr 12345\n\
-                    btime 1000\n\
-                    processes 77\n";
-
-const PASSWD: &str = "root:x:0:0::/root:/bin/bash\n\
-                      nico:x:1000:1000:Nico:/home/nico:/bin/fish\n\
-                      ada:x:1001:1001::/home/ada:/bin/bash\n";
+/// The live ISO session, whose root is the overlay `garuda-live`.
+const OVERLAY: &str = include_str!("fixtures/live/proc-self-mounts");
+/// The Lima VM, whose root is a btrfs subvolume.
+const BTRFS: &str = include_str!("fixtures/proc-self-mounts");
+const STAT: &str = include_str!("fixtures/proc-stat");
+/// The `btime` of [`STAT`].
+const BOOTED: u64 = 1_794_155_377;
+const STATUS: &str = include_str!("fixtures/proc-self-status");
+const RELEASE: &str = include_str!("fixtures/garuda-release");
+const OS_RELEASE: &str = include_str!("fixtures/os-release");
+/// The Lima VM's accounts: `user` is 1000, `guest` 1001, `nopass` 1002.
+const PASSWD: &str = include_str!("../accounts/fixtures/passwd");
 
 fn env(pairs: &[(&str, &str)]) -> impl Fn(&str) -> Option<OsString> + Send + Sync + use<> {
     let pairs: Vec<(String, String)> = pairs
@@ -71,49 +68,72 @@ fn touch(path: &Path, seconds: u64) {
         .unwrap();
 }
 
+/// No capture has an aufs root, so the live root line is renamed to one.
 #[test]
 fn an_overlay_or_aufs_root_is_a_live_system() {
+    let aufs = OVERLAY.replacen("garuda-live / overlay", "none / aufs", 1);
+
     assert_eq!(root_is_live(OVERLAY), Some(true));
-    assert_eq!(root_is_live("none / aufs rw 0 0\n"), Some(true));
+    assert_eq!(root_is_live(&aufs), Some(true));
     assert_eq!(root_is_live(BTRFS), Some(false));
 }
 
+/// The live root line put before the VM's table, as a root switched later
+/// in the boot leaves it.
 #[test]
 fn the_last_root_mount_wins() {
-    let mounts = "rootfs / rootfs rw 0 0\n/dev/sda2 / ext4 rw 0 0\n";
+    let live_root = OVERLAY.lines().next().unwrap();
 
-    assert_eq!(root_is_live(mounts), Some(false));
+    assert_eq!(root_is_live(&format!("{live_root}\n{BTRFS}")), Some(false));
 }
 
+/// The VM's table without its root line, with an empty and a broken line
+/// appended.
 #[test]
 fn mounts_without_a_root_say_nothing() {
-    assert_eq!(root_is_live("tmpfs /tmp tmpfs rw 0 0\n\ngarbage\n"), None);
+    let (_root_line, rest) = BTRFS.split_once('\n').unwrap();
+
+    assert_eq!(root_is_live(&format!("{rest}\ngarbage\n")), None);
 }
 
+/// The installed release with its edition quoted, indented and in capitals,
+/// as older releases wrote it.
 #[test]
 fn the_edition_is_read_without_quotes_in_lower_case() {
-    let release = "VERSION=\"240101\"\n  EDITION=\"Dr460nized\"\nCODENAME=x\n";
+    let quoted = RELEASE.replacen("EDITION=mokka", "  EDITION=\"Dr460nized\"", 1);
+    let single = RELEASE.replacen("EDITION=mokka", "EDITION='KDE-lite'", 1);
 
-    assert_eq!(parse_edition(release), Some("dr460nized".to_owned()));
-    assert_eq!(parse_edition("EDITION=gnome\n"), Some("gnome".to_owned()));
-    assert_eq!(
-        parse_edition("EDITION='KDE-lite'\n"),
-        Some("kde-lite".to_owned())
-    );
+    assert_eq!(parse_edition(RELEASE), Some("mokka".to_owned()));
+    assert_eq!(parse_edition(&quoted), Some("dr460nized".to_owned()));
+    assert_eq!(parse_edition(&single), Some("kde-lite".to_owned()));
 }
 
+/// `os-release` names no edition. The installed release is edited to an
+/// empty one.
 #[test]
 fn a_release_without_an_edition_has_none() {
-    assert_eq!(parse_edition("VERSION=1\n"), None);
-    assert_eq!(parse_edition("EDITION=\"\"\n"), None);
+    let empty = RELEASE.replacen("EDITION=mokka", "EDITION=\"\"", 1);
+
+    assert_eq!(parse_edition(OS_RELEASE), None);
+    assert_eq!(parse_edition(&empty), None);
     assert_eq!(parse_edition(""), None);
 }
 
+/// The VM's `/proc/stat`, then with its `btime` line dropped and with a
+/// value that is no number.
 #[test]
 fn the_boot_time_comes_from_btime() {
-    assert_eq!(parse_boot_time(STAT), Some(1000));
-    assert_eq!(parse_boot_time("cpu 1 2\n"), None);
-    assert_eq!(parse_boot_time("btime soon\n"), None);
+    let without: String = STAT
+        .lines()
+        .filter(|line| !line.starts_with("btime "))
+        .flat_map(|line| [line, "\n"])
+        .collect();
+
+    let odd = STAT.replacen(&format!("btime {BOOTED}"), "btime soon", 1);
+
+    assert_eq!(parse_boot_time(STAT), Some(BOOTED));
+    assert_eq!(parse_boot_time(&without), None);
+    assert_eq!(parse_boot_time(&odd), None);
 }
 
 #[test]
@@ -126,11 +146,17 @@ fn desktops_are_colon_separated() {
     assert_eq!(parse_desktops(""), Vec::<String>::new());
 }
 
+/// The VM's `/proc/self/status` with its `Uid:` line set to `real` and
+/// `effective`.
 fn running_as(roots: &HostRoots, real: u32, effective: u32) {
     fs::create_dir_all(roots.proc.join("self")).unwrap();
     fs::write(
         roots.proc.join("self/status"),
-        format!("Name:\tgaruda-toolbox\nUid:\t{real}\t{effective}\t{effective}\t{effective}\n"),
+        STATUS.replacen(
+            "Uid:\t1000\t1000\t1000\t1000",
+            &format!("Uid:\t{real}\t{effective}\t{effective}\t{effective}"),
+            1,
+        ),
     )
     .unwrap();
 }
@@ -142,10 +168,23 @@ fn the_user_is_the_effective_user_id_not_the_environment() {
     fs::write(roots.etc.join("passwd"), PASSWD).unwrap();
     running_as(&roots, 1000, 1001);
 
-    // `sudo -u ada` or `su ada` without `-l` keeps `USER` of nico.
-    let host = SystemHost::new(roots, env(&[("USER", "nico"), ("LOGNAME", "nico")]));
+    // `sudo -u guest` or `su guest` without `-l` keeps `USER` of user.
+    let host = SystemHost::new(roots, env(&[("USER", "user"), ("LOGNAME", "user")]));
 
-    assert_eq!(host.user(), Ok(UserName::new("ada").unwrap()));
+    assert_eq!(host.user(), Ok(UserName::new("guest").unwrap()));
+}
+
+#[test]
+fn the_unchanged_status_names_the_vms_user() {
+    let (_root, roots) = system();
+
+    fs::write(roots.etc.join("passwd"), PASSWD).unwrap();
+    fs::create_dir_all(roots.proc.join("self")).unwrap();
+    fs::write(roots.proc.join("self/status"), STATUS).unwrap();
+
+    let host = SystemHost::new(roots, env(&[]));
+
+    assert_eq!(host.user(), Ok(UserName::new("user").unwrap()));
 }
 
 #[test]
@@ -153,9 +192,9 @@ fn a_user_id_missing_from_passwd_names_no_user() {
     let (_root, roots) = system();
 
     fs::write(roots.etc.join("passwd"), PASSWD).unwrap();
-    running_as(&roots, 1002, 1002);
+    running_as(&roots, 1003, 1003);
 
-    let host = SystemHost::new(roots, env(&[("USER", "nico")]));
+    let host = SystemHost::new(roots, env(&[("USER", "user")]));
 
     assert_eq!(host.user(), Err(ProbeError::Unavailable));
 }
@@ -183,6 +222,13 @@ fn live_iso_reads_the_mount_table() {
     assert_eq!(host.is_live_iso(), Ok(true));
 
     fs::write(roots.proc.join("self/mounts"), BTRFS).unwrap();
+    assert_eq!(host.is_live_iso(), Ok(false));
+
+    fs::write(
+        roots.proc.join("self/mounts"),
+        include_str!("fixtures/installed/proc-self-mounts"),
+    )
+    .unwrap();
     assert_eq!(host.is_live_iso(), Ok(false));
 
     fs::write(roots.proc.join("self/mounts"), "").unwrap();
@@ -216,7 +262,14 @@ fn the_edition_is_optional() {
 
     assert_eq!(host.edition(), Ok(None));
 
-    fs::write(roots.garuda_lib.join("garuda-release"), "EDITION=Mokka\n").unwrap();
+    fs::write(roots.garuda_lib.join("garuda-release"), RELEASE).unwrap();
+    assert_eq!(host.edition(), Ok(Some("mokka".to_owned())));
+
+    fs::write(
+        roots.garuda_lib.join("garuda-release"),
+        include_str!("fixtures/live/garuda-release"),
+    )
+    .unwrap();
     assert_eq!(host.edition(), Ok(Some("mokka".to_owned())));
 }
 
@@ -226,10 +279,10 @@ fn an_update_after_boot_needs_a_reboot() {
     let host = SystemHost::new(roots.clone(), env(&[]));
     fs::write(roots.proc.join("stat"), STAT).unwrap();
 
-    touch(&roots.garuda_state.join("last_update"), 2000);
+    touch(&roots.garuda_state.join("last_update"), BOOTED + 1000);
     assert_eq!(host.is_reboot_pending(), Ok(true));
 
-    touch(&roots.garuda_state.join("last_update"), 500);
+    touch(&roots.garuda_state.join("last_update"), BOOTED - 1000);
     assert_eq!(host.is_reboot_pending(), Ok(false));
 }
 
@@ -241,15 +294,17 @@ fn no_update_stamp_means_no_reboot() {
     assert_eq!(host.is_reboot_pending(), Ok(false));
 }
 
+/// The VM's `/proc/stat` cut before its `btime` line.
 #[test]
 fn an_update_stamp_without_boot_time_is_not_judged() {
     let (_root, roots) = system();
     let host = SystemHost::new(roots.clone(), env(&[]));
-    touch(&roots.garuda_state.join("last_update"), 2000);
+    touch(&roots.garuda_state.join("last_update"), BOOTED + 1000);
 
     assert_eq!(host.is_reboot_pending(), Err(ProbeError::Unavailable));
 
-    fs::write(roots.proc.join("stat"), "cpu 1 2 3\n").unwrap();
+    let (before, _btime) = STAT.split_once("btime ").unwrap();
+    fs::write(roots.proc.join("stat"), before).unwrap();
     assert!(matches!(
         host.is_reboot_pending(),
         Err(ProbeError::Failed(_))

@@ -1,12 +1,13 @@
-//! Whose picture shows behind the boot menu. Garuda's stock file sets
-//! none of its own and leaves it to the GRUB theme.
+//! Whose picture shows behind the boot menu. A file without
+//! `GRUB_BACKGROUND` and `GRUB_MENU_PICTURE` has none, as Garuda ships it.
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum PictureSource {
     /// `GRUB_BACKGROUND`, or no picture at all.
     #[default]
     Own,
-    /// `GRUB_MENU_PICTURE`, which the GRUB theme of Garuda reads.
+    /// `GRUB_MENU_PICTURE` in `/etc/default/grub`, for GRUB themes that
+    /// read it.
     Theme,
 }
 

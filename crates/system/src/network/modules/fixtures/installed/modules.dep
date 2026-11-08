@@ -1,0 +1,770 @@
+kernel/drivers/scsi/bnx2fc/bnx2fc.ko.zst: kernel/drivers/net/ethernet/broadcom/cnic.ko.zst kernel/drivers/uio/uio.ko.zst kernel/drivers/scsi/fcoe/libfcoe.ko.zst kernel/drivers/scsi/libfc/libfc.ko.zst kernel/drivers/scsi/scsi_transport_fc.ko.zst
+kernel/drivers/scsi/qedf/qedf.ko.zst: kernel/drivers/net/ethernet/qlogic/qed/qed.ko.zst kernel/drivers/scsi/fcoe/libfcoe.ko.zst kernel/drivers/scsi/libfc/libfc.ko.zst kernel/drivers/scsi/scsi_transport_fc.ko.zst
+kernel/drivers/scsi/cxgbi/libcxgbi.ko.zst: kernel/drivers/net/ethernet/chelsio/libcxgb/libcxgb.ko.zst kernel/drivers/scsi/libiscsi_tcp.ko.zst kernel/drivers/scsi/libiscsi.ko.zst kernel/drivers/scsi/scsi_transport_iscsi.ko.zst
+kernel/drivers/scsi/cxgbi/cxgb3i/cxgb3i.ko.zst: kernel/drivers/net/ethernet/chelsio/cxgb3/cxgb3.ko.zst kernel/drivers/net/mdio.ko.zst kernel/drivers/scsi/cxgbi/libcxgbi.ko.zst kernel/drivers/net/ethernet/chelsio/libcxgb/libcxgb.ko.zst kernel/drivers/scsi/libiscsi_tcp.ko.zst kernel/drivers/scsi/libiscsi.ko.zst kernel/drivers/scsi/scsi_transport_iscsi.ko.zst
+kernel/drivers/scsi/cxgbi/cxgb4i/cxgb4i.ko.zst: kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/scsi/cxgbi/libcxgbi.ko.zst kernel/drivers/net/ethernet/chelsio/libcxgb/libcxgb.ko.zst kernel/drivers/scsi/libiscsi_tcp.ko.zst kernel/drivers/scsi/libiscsi.ko.zst kernel/drivers/scsi/scsi_transport_iscsi.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/scsi/bnx2i/bnx2i.ko.zst: kernel/drivers/scsi/libiscsi.ko.zst kernel/drivers/scsi/scsi_transport_iscsi.ko.zst kernel/drivers/net/ethernet/broadcom/cnic.ko.zst kernel/drivers/uio/uio.ko.zst
+kernel/drivers/scsi/qedi/qedi.ko.zst: kernel/drivers/scsi/iscsi_boot_sysfs.ko.zst kernel/drivers/scsi/libiscsi.ko.zst kernel/drivers/scsi/scsi_transport_iscsi.ko.zst kernel/drivers/net/ethernet/qlogic/qed/qed.ko.zst kernel/drivers/uio/uio.ko.zst
+kernel/drivers/net/phy/mediatek/mtk-ge.ko.zst: kernel/drivers/net/phy/mediatek/mtk-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/mediatek/mtk-phy-lib.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/qcom/qcom-phy-lib.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/qcom/at803x.ko.zst: kernel/drivers/net/phy/qcom/qcom-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/qcom/qca83xx.ko.zst: kernel/drivers/net/phy/qcom/qcom-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/qcom/qca808x.ko.zst: kernel/drivers/net/phy/qcom/qcom-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/mdio_bus.ko.zst:
+kernel/drivers/net/phy/phylink.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/libphy.ko.zst: kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/mdio_devres.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/phy_package.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/sfp.ko.zst: kernel/drivers/net/mdio/mdio-i2c.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/adin.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/adin1100.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/adin1140-phy.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/air_an8801.ko.zst: kernel/drivers/net/phy/air_phy_lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/air_en8811h.ko.zst: kernel/drivers/net/phy/air_phy_lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/air_phy_lib.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/amd.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/aquantia/aquantia.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/lib/crc/crc-itu-t.ko.zst
+kernel/drivers/net/phy/as21xxx.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/ax88796b.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/bcm54140.ko.zst: kernel/drivers/net/phy/phy_package.ko.zst kernel/drivers/net/phy/bcm-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/bcm7xxx.ko.zst: kernel/drivers/net/phy/bcm-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/bcm84881.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/bcm87xx.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/bcm-phy-lib.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/bcm-phy-ptp.ko.zst: kernel/drivers/net/phy/bcm-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/broadcom.ko.zst: kernel/drivers/net/phy/bcm-phy-ptp.ko.zst kernel/drivers/net/phy/bcm-phy-lib.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/cicada.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/cortina.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/davicom.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83640.ko.zst: kernel/drivers/net/phy/phy_package.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/dp83822.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83848.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83867.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83869.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83tc811.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83td510.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/dp83tg720.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/fixed_phy.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/icplus.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/intel-xway.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/et1011c.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/lxt.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/marvell10g.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/marvell.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/marvell-88q2xxx.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/marvell-88x2222.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/mxl-gpy.ko.zst: kernel/lib/math/polynomial.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/mxl-86110.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/micrel.ko.zst: kernel/drivers/net/phy/phy_package.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/microchip.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/microchip_rds_ptp.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/microchip_t1.ko.zst: kernel/drivers/net/phy/microchip_rds_ptp.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/microchip_t1s.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/mscc/mscc.ko.zst: kernel/drivers/net/macsec.ko.zst kernel/drivers/net/phy/phy_package.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/motorcomm.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/national.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/ncn26000.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/nxp-c45-tja.ko.zst: kernel/drivers/net/macsec.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/phy/nxp-cbtx.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/nxp-tja11xx.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/qsemi.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/realtek/realtek.ko.zst: kernel/drivers/net/phy/phy_package.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/uPD60620.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/smsc.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/ste10Xp.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/teranetics.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/vitesse.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/phy/xilinx_gmii2rgmii.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/pse-pd/realtek-pse-mcu-core.ko.zst:
+kernel/drivers/net/pse-pd/realtek-pse-mcu-i2c.ko.zst: kernel/drivers/net/pse-pd/realtek-pse-mcu-core.ko.zst
+kernel/drivers/net/pse-pd/realtek-pse-mcu-uart.ko.zst: kernel/drivers/net/pse-pd/realtek-pse-mcu-core.ko.zst
+kernel/drivers/net/pse-pd/pse_regulator.ko.zst:
+kernel/drivers/net/pse-pd/pd692x0.ko.zst:
+kernel/drivers/net/pse-pd/si3474.ko.zst:
+kernel/drivers/net/pse-pd/tps23881.ko.zst:
+kernel/drivers/net/mdio/acpi_mdio.ko.zst: kernel/drivers/net/mdio/fwnode_mdio.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/fwnode_mdio.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-bcm-unimac.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-bitbang.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-cavium.ko.zst:
+kernel/drivers/net/mdio/mdio-gpio.ko.zst: kernel/drivers/net/mdio/mdio-bitbang.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-i2c.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-mscc-miim.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-mvusb.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-regmap.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/mdio/mdio-thunder.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/pcs/pcs_xpcs.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/pcs/pcs-lynx.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/pcs/pcs-mtk-lynxi.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/b53/b53_common.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/b53/b53_spi.ko.zst: kernel/drivers/net/dsa/b53/b53_common.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/b53/b53_mdio.ko.zst: kernel/drivers/net/dsa/b53/b53_common.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/b53/b53_mmap.ko.zst: kernel/drivers/net/dsa/b53/b53_common.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/b53/b53_srab.ko.zst: kernel/drivers/net/dsa/b53/b53_serdes.ko.zst kernel/drivers/net/dsa/b53/b53_common.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/b53/b53_serdes.ko.zst:
+kernel/drivers/net/dsa/hirschmann/hellcreek_sw.ko.zst: kernel/net/sched/sch_taprio.ko.zst kernel/net/sched/sch_mqprio_lib.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/lantiq/lantiq_gswip_common.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/lantiq/mxl-gsw1xx.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/microchip/ksz_switch.ko.zst: kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/microchip/ksz9477_i2c.ko.zst: kernel/drivers/net/dsa/microchip/ksz_switch.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/microchip/ksz_spi.ko.zst: kernel/drivers/net/dsa/microchip/ksz_switch.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/microchip/ksz8863_smi.ko.zst: kernel/drivers/net/dsa/microchip/ksz_switch.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/mv88e6xxx/mv88e6xxx.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/mxl862xx/mxl862xx_dsa.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/ocelot/mscc_felix_dsa_lib.ko.zst: kernel/drivers/net/ethernet/mscc/mscc_ocelot_switch_lib.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/ocelot/mscc_ocelot_ext.ko.zst: kernel/drivers/net/dsa/ocelot/mscc_felix_dsa_lib.ko.zst kernel/drivers/net/ethernet/mscc/mscc_ocelot_switch_lib.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/ocelot/mscc_seville.ko.zst: kernel/drivers/net/pcs/pcs-lynx.ko.zst kernel/drivers/net/mdio/mdio-mscc-miim.ko.zst kernel/drivers/net/dsa/ocelot/mscc_felix_dsa_lib.ko.zst kernel/drivers/net/ethernet/mscc/mscc_ocelot_switch_lib.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/qca/ar9331.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/qca/qca8k.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/realtek/realtek_dsa.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/sja1105/sja1105.ko.zst: kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/net/sched/sch_taprio.ko.zst kernel/net/sched/sch_mqprio_lib.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/dsa/xrs700x/xrs700x.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/xrs700x/xrs700x_i2c.ko.zst: kernel/drivers/net/dsa/xrs700x/xrs700x.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/xrs700x/xrs700x_mdio.ko.zst: kernel/drivers/net/dsa/xrs700x/xrs700x.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/bcm-sf2.ko.zst: kernel/drivers/net/dsa/b53/b53_common.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/dsa_loop.ko.zst: kernel/drivers/net/phy/fixed_phy.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/ks8995.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/mt7530.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/mt7530-mdio.ko.zst: kernel/drivers/net/dsa/mt7530.ko.zst kernel/drivers/net/pcs/pcs-mtk-lynxi.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/mt7530-mmio.ko.zst: kernel/drivers/net/dsa/mt7530.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/mv88e6060.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/lan9303-core.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/lan9303_i2c.ko.zst: kernel/drivers/net/dsa/lan9303-core.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/lan9303_mdio.ko.zst: kernel/drivers/net/dsa/lan9303-core.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/vitesse-vsc73xx-core.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/vitesse-vsc73xx-platform.ko.zst: kernel/drivers/net/dsa/vitesse-vsc73xx-core.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/vitesse-vsc73xx-spi.ko.zst: kernel/drivers/net/dsa/vitesse-vsc73xx-core.ko.zst kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/dsa/yt921x.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/3com/3c59x.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/3com/typhoon.ko.zst:
+kernel/drivers/net/ethernet/8390/ne2k-pci.ko.zst: kernel/drivers/net/ethernet/8390/8390.ko.zst
+kernel/drivers/net/ethernet/8390/8390.ko.zst:
+kernel/drivers/net/ethernet/8390/pcnet_cs.ko.zst: kernel/drivers/net/ethernet/8390/8390.ko.zst kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst
+kernel/drivers/net/ethernet/adaptec/starfire.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/adi/adin1110.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/lib/crc/crc8.ko.zst
+kernel/drivers/net/ethernet/adi/adin1140.ko.zst: kernel/drivers/net/ethernet/oa_tc6.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/agere/et131x.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/alacritech/slicoss.ko.zst:
+kernel/drivers/net/ethernet/alibaba/eea/eea.ko.zst:
+kernel/drivers/net/ethernet/amazon/ena/ena.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/amd/amd8111e.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/amd/pcnet32.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/amd/xgbe/amd-xgbe.ko.zst: kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/amd/pds_core/pds_core.ko.zst:
+kernel/drivers/net/ethernet/aquantia/atlantic/atlantic.ko.zst: kernel/drivers/net/macsec.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/asix/ax88796c.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/atheros/atlx/atl1.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/atheros/atlx/atl2.ko.zst:
+kernel/drivers/net/ethernet/atheros/atl1e/atl1e.ko.zst:
+kernel/drivers/net/ethernet/atheros/atl1c/atl1c.ko.zst:
+kernel/drivers/net/ethernet/atheros/alx/alx.ko.zst: kernel/drivers/net/mdio.ko.zst
+kernel/drivers/net/ethernet/cadence/macb.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/cadence/macb_pci.ko.zst:
+kernel/drivers/net/ethernet/broadcom/b44.ko.zst: kernel/drivers/ssb/ssb.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/drivers/net/mii.ko.zst kernel/drivers/net/phy/fixed_phy.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst
+kernel/drivers/net/ethernet/broadcom/genet/genet.ko.zst: kernel/drivers/net/phy/fixed_phy.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/broadcom/bnx2.ko.zst:
+kernel/drivers/net/ethernet/broadcom/cnic.ko.zst: kernel/drivers/uio/uio.ko.zst
+kernel/drivers/net/ethernet/broadcom/bnx2x/bnx2x.ko.zst: kernel/drivers/net/mdio.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/broadcom/tg3.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/broadcom/bcmsysport.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/broadcom/bnxt/bnxt_en.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/broadcom/bnge/bng_en.ko.zst:
+kernel/drivers/net/ethernet/brocade/bna/bna.ko.zst:
+kernel/drivers/net/ethernet/cavium/common/cavium_ptp.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/cavium/thunder/thunder_xcv.ko.zst:
+kernel/drivers/net/ethernet/cavium/thunder/thunder_bgx.ko.zst: kernel/drivers/net/ethernet/cavium/thunder/thunder_xcv.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/cavium/thunder/nicpf.ko.zst: kernel/drivers/net/ethernet/cavium/thunder/thunder_bgx.ko.zst kernel/drivers/net/ethernet/cavium/thunder/thunder_xcv.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/cavium/thunder/nicvf.ko.zst: kernel/drivers/net/ethernet/cavium/common/cavium_ptp.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/cavium/liquidio/liquidio-core.ko.zst:
+kernel/drivers/net/ethernet/cavium/liquidio/liquidio.ko.zst: kernel/drivers/net/ethernet/cavium/liquidio/liquidio-core.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/cavium/liquidio/liquidio_vf.ko.zst: kernel/drivers/net/ethernet/cavium/liquidio/liquidio-core.ko.zst
+kernel/drivers/net/ethernet/chelsio/inline_crypto/ch_ipsec/ch_ipsec.ko.zst: kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/chelsio/inline_crypto/ch_ktls/ch_ktls.ko.zst: kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/chelsio/cxgb/cxgb.ko.zst: kernel/drivers/net/mdio.ko.zst
+kernel/drivers/net/ethernet/chelsio/cxgb3/cxgb3.ko.zst: kernel/drivers/net/mdio.ko.zst
+kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst: kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf.ko.zst:
+kernel/drivers/net/ethernet/chelsio/libcxgb/libcxgb.ko.zst:
+kernel/drivers/net/ethernet/cisco/enic/enic.ko.zst:
+kernel/drivers/net/ethernet/dec/tulip/dmfe.ko.zst:
+kernel/drivers/net/ethernet/dec/tulip/winbond-840.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/dec/tulip/de2104x.ko.zst:
+kernel/drivers/net/ethernet/dec/tulip/tulip.ko.zst:
+kernel/drivers/net/ethernet/dec/tulip/uli526x.ko.zst:
+kernel/drivers/net/ethernet/dlink/dl2k.ko.zst:
+kernel/drivers/net/ethernet/dlink/sundance.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/emulex/benet/be2net.ko.zst:
+kernel/drivers/net/ethernet/engleder/tsnep.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/fungible/funcore/funcore.ko.zst:
+kernel/drivers/net/ethernet/fungible/funeth/funeth.ko.zst: kernel/drivers/net/ethernet/fungible/funcore/funcore.ko.zst kernel/net/tls/tls.ko.zst
+kernel/drivers/net/ethernet/google/gve/gve.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/hisilicon/hibmcge/hibmcge.ko.zst: kernel/drivers/net/phy/fixed_phy.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/huawei/hinic/hinic.ko.zst:
+kernel/drivers/net/ethernet/huawei/hinic3/hinic3.ko.zst:
+kernel/drivers/net/ethernet/intel/libie/libie.ko.zst:
+kernel/drivers/net/ethernet/intel/libie/libie_adminq.ko.zst:
+kernel/drivers/net/ethernet/intel/libie/libie_cp.ko.zst: kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst
+kernel/drivers/net/ethernet/intel/libie/libie_fwlog.ko.zst:
+kernel/drivers/net/ethernet/intel/libie/libie_pci.ko.zst:
+kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst:
+kernel/drivers/net/ethernet/intel/libeth/libeth_xdp.ko.zst: kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst
+kernel/drivers/net/ethernet/intel/e100.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/intel/e1000/e1000.ko.zst:
+kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/intel/igb/igb.ko.zst: kernel/drivers/i2c/algos/i2c-algo-bit.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/dca/dca.ko.zst
+kernel/drivers/net/ethernet/intel/igc/igc.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/intel/igbvf/igbvf.ko.zst:
+kernel/drivers/net/ethernet/intel/ixgbe/ixgbe.ko.zst: kernel/drivers/net/ethernet/intel/libie/libie_fwlog.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/net/mdio.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/dca/dca.ko.zst
+kernel/drivers/net/ethernet/intel/ixgbevf/ixgbevf.ko.zst:
+kernel/drivers/net/ethernet/intel/i40e/i40e.ko.zst: kernel/drivers/net/ethernet/intel/libie/libie.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_adminq.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/intel/iavf/iavf.ko.zst: kernel/drivers/net/ethernet/intel/libie/libie.ko.zst kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_adminq.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/intel/fm10k/fm10k.ko.zst:
+kernel/drivers/net/ethernet/intel/ice/ice.ko.zst: kernel/drivers/net/ethernet/intel/libeth/libeth_xdp.ko.zst kernel/drivers/gnss/gnss.ko.zst kernel/drivers/net/ethernet/intel/libie/libie.ko.zst kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_adminq.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_fwlog.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/intel/idpf/idpf.ko.zst: kernel/drivers/net/ethernet/intel/libeth/libeth_xdp.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_cp.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_pci.ko.zst kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/intel/ixd/ixd.ko.zst: kernel/drivers/net/ethernet/intel/libie/libie_cp.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_pci.ko.zst kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst
+kernel/drivers/net/ethernet/microsoft/mana/mana.ko.zst:
+kernel/drivers/net/ethernet/marvell/octeon_ep/octeon_ep.ko.zst:
+kernel/drivers/net/ethernet/marvell/octeon_ep_vf/octeon_ep_vf.ko.zst:
+kernel/drivers/net/ethernet/marvell/prestera/prestera.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/marvell/prestera/prestera_pci.ko.zst: kernel/drivers/net/ethernet/marvell/prestera/prestera.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/marvell/mvmdio.ko.zst: kernel/drivers/net/mdio/acpi_mdio.ko.zst kernel/drivers/net/mdio/fwnode_mdio.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/marvell/skge.ko.zst:
+kernel/drivers/net/ethernet/marvell/sky2.ko.zst:
+kernel/drivers/net/ethernet/mellanox/mlx4/mlx4_core.ko.zst:
+kernel/drivers/net/ethernet/mellanox/mlx4/mlx4_en.ko.zst: kernel/drivers/net/ethernet/mellanox/mlx4/mlx4_core.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.zst: kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/pci/controller/pci-hyperv-intf.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_dpll.ko.zst: kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/pci/controller/pci-hyperv-intf.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_core.ko.zst: kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_pci.ko.zst: kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_i2c.ko.zst: kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko.zst: kernel/lib/objagg.ko.zst kernel/lib/parman.ko.zst kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_pci.ko.zst kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_core.ko.zst kernel/drivers/net/vxlan/vxlan.ko.zst kernel/net/ipv6/ip6_tunnel.ko.zst kernel/net/ipv6/tunnel6.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_minimal.ko.zst: kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_i2c.ko.zst kernel/drivers/net/ethernet/mellanox/mlxsw/mlxsw_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst
+kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst:
+kernel/drivers/net/ethernet/meta/fbnic/fbnic.ko.zst: kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/micrel/ks8842.ko.zst:
+kernel/drivers/net/ethernet/micrel/ks8851_common.ko.zst: kernel/drivers/net/mii.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst
+kernel/drivers/net/ethernet/micrel/ks8851_spi.ko.zst: kernel/drivers/net/ethernet/micrel/ks8851_common.ko.zst kernel/drivers/net/mii.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst
+kernel/drivers/net/ethernet/micrel/ks8851_par.ko.zst: kernel/drivers/net/ethernet/micrel/ks8851_common.ko.zst kernel/drivers/net/mii.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst
+kernel/drivers/net/ethernet/micrel/ksz884x.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/microchip/enc28j60.ko.zst:
+kernel/drivers/net/ethernet/microchip/encx24j600.ko.zst: kernel/drivers/net/ethernet/microchip/encx24j600-regmap.ko.zst
+kernel/drivers/net/ethernet/microchip/encx24j600-regmap.ko.zst:
+kernel/drivers/net/ethernet/microchip/lan743x.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/microchip/lan865x/lan865x.ko.zst: kernel/drivers/net/ethernet/oa_tc6.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/mscc/mscc_ocelot_switch_lib.ko.zst: kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.ko.zst:
+kernel/drivers/net/ethernet/myricom/myri10ge/myri10ge.ko.zst: kernel/drivers/dca/dca.ko.zst
+kernel/drivers/net/ethernet/natsemi/natsemi.ko.zst:
+kernel/drivers/net/ethernet/natsemi/ns83820.ko.zst:
+kernel/drivers/net/ethernet/netronome/nfp/nfp.ko.zst: kernel/net/tls/tls.ko.zst
+kernel/drivers/net/ethernet/ni/nixge.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/nvidia/forcedeth.ko.zst:
+kernel/drivers/net/ethernet/qlogic/qla3xxx.ko.zst:
+kernel/drivers/net/ethernet/qlogic/qlcnic/qlcnic.ko.zst:
+kernel/drivers/net/ethernet/qlogic/netxen/netxen_nic.ko.zst:
+kernel/drivers/net/ethernet/qlogic/qed/qed.ko.zst:
+kernel/drivers/net/ethernet/qlogic/qede/qede.ko.zst: kernel/drivers/net/ethernet/qlogic/qed/qed.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/qualcomm/emac/qcom-emac.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/qualcomm/rmnet/rmnet.ko.zst:
+kernel/drivers/net/ethernet/realtek/8139cp.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/realtek/8139too.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/realtek/r8169.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/realtek/rtase/rtase.ko.zst:
+kernel/drivers/net/ethernet/rdc/r6040.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/rocker/rocker.ko.zst:
+kernel/drivers/net/ethernet/samsung/sxgbe/samsung-sxgbe.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/silan/sc92031.ko.zst:
+kernel/drivers/net/ethernet/sis/sis190.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/sis/sis900.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/sfc/sfc.ko.zst: kernel/drivers/cxl/cxl_mem.ko.zst kernel/drivers/cxl/cxl_port.ko.zst kernel/drivers/cxl/core/cxl_core.ko.zst kernel/drivers/acpi/apei/einj.ko.zst kernel/drivers/fwctl/fwctl.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/mtd/mtd.ko.zst
+kernel/drivers/net/ethernet/sfc/falcon/sfc-falcon.ko.zst: kernel/drivers/net/mdio.ko.zst kernel/drivers/i2c/algos/i2c-algo-bit.ko.zst kernel/drivers/mtd/mtd.ko.zst
+kernel/drivers/net/ethernet/sfc/siena/sfc-siena.ko.zst: kernel/drivers/net/mdio.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/mtd/mtd.ko.zst
+kernel/drivers/net/ethernet/smsc/epic100.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/smsc/smsc9420.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/smsc/smsc911x.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko.zst: kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/stmicro/stmmac/stmmac-platform.ko.zst: kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.ko.zst: kernel/drivers/net/ethernet/stmicro/stmmac/stmmac-platform.ko.zst kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_libpci.ko.zst:
+kernel/drivers/net/ethernet/stmicro/stmmac/stmmac-pci.ko.zst: kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_libpci.ko.zst kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.ko.zst: kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/stmicro/stmmac/dwmac-motorcomm.ko.zst: kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_libpci.ko.zst kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/sun/sunhme.ko.zst:
+kernel/drivers/net/ethernet/sun/sungem.ko.zst: kernel/drivers/net/sungem_phy.ko.zst
+kernel/drivers/net/ethernet/sun/cassini.ko.zst:
+kernel/drivers/net/ethernet/sun/niu.ko.zst:
+kernel/drivers/net/ethernet/tehuti/tehuti.ko.zst:
+kernel/drivers/net/ethernet/tehuti/tn40xx.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/ti/tlan.ko.zst:
+kernel/drivers/net/ethernet/vertexcom/mse102x.ko.zst:
+kernel/drivers/net/ethernet/via/via-rhine.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/via/via-velocity.ko.zst:
+kernel/drivers/net/ethernet/wangxun/libwx/libwx.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/wangxun/txgbe/txgbe.ko.zst: kernel/drivers/net/ethernet/wangxun/libwx/libwx.ko.zst kernel/drivers/net/pcs/pcs_xpcs.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/wangxun/txgbevf/txgbevf.ko.zst: kernel/drivers/net/ethernet/wangxun/libwx/libwx.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/wangxun/ngbe/ngbe.ko.zst: kernel/drivers/net/ethernet/wangxun/libwx/libwx.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/wangxun/ngbevf/ngbevf.ko.zst: kernel/drivers/net/ethernet/wangxun/libwx/libwx.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/wiznet/w5100.ko.zst:
+kernel/drivers/net/ethernet/wiznet/w5100-spi.ko.zst: kernel/drivers/net/ethernet/wiznet/w5100.ko.zst
+kernel/drivers/net/ethernet/xilinx/ll_temac.ko.zst: kernel/drivers/net/phy/mdio_devres.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/xilinx/xilinx_emaclite.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/xilinx/xilinx_emac.ko.zst: kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/xircom/xirc2ps_cs.ko.zst: kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst
+kernel/drivers/net/ethernet/synopsys/dwc-xlgmac.ko.zst:
+kernel/drivers/net/ethernet/pensando/ionic/ionic.ko.zst: kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/ethernet/zte/dinghai/dinghai10e.ko.zst:
+kernel/drivers/net/ethernet/altera/altera_tse.ko.zst: kernel/drivers/net/pcs/pcs-lynx.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/ec_bhf.ko.zst:
+kernel/drivers/net/ethernet/jme.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/fealnx.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/ethernet/ethoc.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/ethernet/oa_tc6.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/wireless/admtek/adm8211.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath5k/ath5k.ko.zst: kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath9k/ath9k.ko.zst: kernel/drivers/net/wireless/ath/ath9k/ath9k_common.ko.zst kernel/drivers/net/wireless/ath/ath9k/ath9k_hw.ko.zst kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath9k/ath9k_hw.ko.zst: kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath9k/ath9k_common.ko.zst: kernel/drivers/net/wireless/ath/ath9k/ath9k_hw.ko.zst kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath9k/ath9k_htc.ko.zst: kernel/drivers/net/wireless/ath/ath9k/ath9k_common.ko.zst kernel/drivers/net/wireless/ath/ath9k/ath9k_hw.ko.zst kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath9k/ath9k_pci_owl_loader.ko.zst:
+kernel/drivers/net/wireless/ath/carl9170/carl9170.ko.zst: kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath6kl/ath6kl_core.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/ath/ath6kl/ath6kl_sdio.ko.zst: kernel/drivers/net/wireless/ath/ath6kl/ath6kl_core.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/ath/ath6kl/ath6kl_usb.ko.zst: kernel/drivers/net/wireless/ath/ath6kl/ath6kl_core.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/ath/ar5523/ar5523.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/wil6210/wil6210.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/ath/ath10k/ath10k_core.ko.zst: kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath10k/ath10k_pci.ko.zst: kernel/drivers/net/wireless/ath/ath10k/ath10k_core.ko.zst kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath10k/ath10k_sdio.ko.zst: kernel/drivers/net/wireless/ath/ath10k/ath10k_core.ko.zst kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath10k/ath10k_usb.ko.zst: kernel/drivers/net/wireless/ath/ath10k/ath10k_core.ko.zst kernel/drivers/net/wireless/ath/ath.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/wcn36xx/wcn36xx.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/rpmsg/rpmsg_core.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath11k/ath11k.ko.zst: kernel/drivers/soc/qcom/qmi_helpers.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath11k/ath11k_ahb.ko.zst: kernel/drivers/net/wireless/ath/ath11k/ath11k.ko.zst kernel/drivers/soc/qcom/qmi_helpers.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath11k/ath11k_pci.ko.zst: kernel/drivers/net/wireless/ath/ath11k/ath11k.ko.zst kernel/drivers/soc/qcom/qmi_helpers.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/bus/mhi/host/mhi.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath12k/ath12k.ko.zst: kernel/drivers/soc/qcom/qmi_helpers.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/firmware/qcom/qcom_pas.ko.zst kernel/drivers/bus/mhi/host/mhi.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath12k/wifi7/ath12k_wifi7.ko.zst: kernel/drivers/net/wireless/ath/ath12k/ath12k.ko.zst kernel/drivers/soc/qcom/qmi_helpers.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/firmware/qcom/qcom_pas.ko.zst kernel/drivers/bus/mhi/host/mhi.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ath/ath.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/atmel/at76c50x-usb.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/broadcom/b43/b43.ko.zst: kernel/drivers/bcma/bcma.ko.zst kernel/lib/math/cordic.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/ssb/ssb.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/broadcom/b43legacy/b43legacy.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/ssb/ssb.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko.zst:
+kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.zst: kernel/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/wcc/brcmfmac-wcc.ko.zst: kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.zst kernel/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cyw/brcmfmac-cyw.ko.zst: kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.zst kernel/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bca/brcmfmac-bca.ko.zst: kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.zst kernel/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcmsmac.ko.zst: kernel/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko.zst kernel/drivers/bcma/bcma.ko.zst kernel/lib/math/cordic.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/ipw2x00/ipw2100.ko.zst: kernel/drivers/net/wireless/intel/ipw2x00/libipw.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/ipw2x00/ipw2200.ko.zst: kernel/drivers/net/wireless/intel/ipw2x00/libipw.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/ipw2x00/libipw.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/iwlegacy/iwlegacy.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/iwlegacy/iwl4965.ko.zst: kernel/drivers/net/wireless/intel/iwlegacy/iwlegacy.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/iwlegacy/iwl3945.ko.zst: kernel/drivers/net/wireless/intel/iwlegacy/iwlegacy.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/intel/iwlwifi/dvm/iwldvm.ko.zst: kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/iwlwifi/mvm/iwlmvm.ko.zst: kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intel/iwlwifi/mld/iwlmld.ko.zst: kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intersil/p54/p54common.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intersil/p54/p54usb.ko.zst: kernel/drivers/net/wireless/intersil/p54/p54common.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intersil/p54/p54pci.ko.zst: kernel/drivers/net/wireless/intersil/p54/p54common.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/intersil/p54/p54spi.ko.zst: kernel/drivers/net/wireless/intersil/p54/p54common.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/marvell/libertas/libertas.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/libertas/usb8xxx.ko.zst: kernel/drivers/net/wireless/marvell/libertas/libertas.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/libertas/libertas_sdio.ko.zst: kernel/drivers/net/wireless/marvell/libertas/libertas.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/libertas/libertas_spi.ko.zst: kernel/drivers/net/wireless/marvell/libertas/libertas.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/libertas_tf/libertas_tf.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/marvell/libertas_tf/libertas_tf_usb.ko.zst: kernel/drivers/net/wireless/marvell/libertas_tf/libertas_tf.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/marvell/mwifiex/mwifiex.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/mwifiex/mwifiex_sdio.ko.zst: kernel/drivers/net/wireless/marvell/mwifiex/mwifiex.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/mwifiex/mwifiex_pcie.ko.zst: kernel/drivers/net/wireless/marvell/mwifiex/mwifiex.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/mwifiex/mwifiex_usb.ko.zst: kernel/drivers/net/wireless/marvell/mwifiex/mwifiex.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/marvell/mwl8k.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76-sdio.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x02-usb.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt792x-usb.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0u.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0-common.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2-common.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2u.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76x02-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7603/mt7603e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7615-common.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7615e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7615-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7663-usb-sdio-common.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7615-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7663u.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7663-usb-sdio-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7615-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7663s.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76-sdio.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7663-usb-sdio-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt7615/mt7615-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7915/mt7915e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921-common.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921s.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-sdio.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921u.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt792x-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt7921/mt7921-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7996/mt7996e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7925/mt7925-common.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7925/mt7925e.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7925/mt7925-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/mediatek/mt76/mt7925/mt7925u.ko.zst: kernel/drivers/net/wireless/mediatek/mt76/mt7925/mt7925-common.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt792x-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt792x-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-connac-lib.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst kernel/drivers/net/wireless/mediatek/mt76/mt76.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/microchip/wilc1000/wilc1000.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/microchip/wilc1000/wilc1000-sdio.ko.zst: kernel/drivers/net/wireless/microchip/wilc1000/wilc1000.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/microchip/wilc1000/wilc1000-spi.ko.zst: kernel/lib/crc/crc7.ko.zst kernel/drivers/net/wireless/microchip/wilc1000/wilc1000.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crc/crc-itu-t.ko.zst
+kernel/drivers/net/wireless/morsemicro/mm81x/mm81x_core.ko.zst: kernel/lib/crc/crc7.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/morsemicro/mm81x/mm81x_usb.ko.zst: kernel/drivers/net/wireless/morsemicro/mm81x/mm81x_core.ko.zst kernel/lib/crc/crc7.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/morsemicro/mm81x/mm81x_sdio.ko.zst: kernel/drivers/net/wireless/morsemicro/mm81x/mm81x_core.ko.zst kernel/lib/crc/crc7.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/nxp/nxpwifi/nxpwifi.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/nxp/nxpwifi/nxpwifi_sdio.ko.zst: kernel/drivers/net/wireless/nxp/nxpwifi/nxpwifi.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/purelifi/plfxlc/plfxlc.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/quantenna/qtnfmac/qtnfmac.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/quantenna/qtnfmac/qtnfmac_pcie.ko.zst: kernel/drivers/net/wireless/quantenna/qtnfmac/qtnfmac.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2x00mmio.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2x00pci.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2x00usb.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2800lib.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2800mmio.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2800lib.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00mmio.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2400pci.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00mmio.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00pci.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2500pci.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00mmio.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00pci.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt61pci.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00mmio.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00pci.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crc/crc-itu-t.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2800pci.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2800mmio.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2800lib.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00mmio.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00pci.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2500usb.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00usb.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt73usb.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00usb.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crc/crc-itu-t.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ralink/rt2x00/rt2800usb.ko.zst: kernel/drivers/net/wireless/ralink/rt2x00/rt2x00usb.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2800lib.ko.zst kernel/drivers/net/wireless/ralink/rt2x00/rt2x00lib.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtl818x/rtl8180/rtl818x_pci.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8187.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/misc/eeprom/eeprom_93cx6.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl_usb.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192c/rtl8192c-common.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/rtl8192ce.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192c/rtl8192c-common.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/rtl8192cu.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtl_usb.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192c/rtl8192c-common.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192se/rtl8192se.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192d/rtl8192d-common.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192de/rtl8192de.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192d/rtl8192d-common.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192du/rtl8192du.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192d/rtl8192d-common.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl_usb.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rtl8723ae.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/btcoexist/btcoexist.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl8723com/rtl8723-common.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8723be/rtl8723be.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/btcoexist/btcoexist.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl8723com/rtl8723-common.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/rtl8188ee.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/btcoexist/btcoexist.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8723com/rtl8723-common.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/rtl8821ae.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/btcoexist/btcoexist.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/rtl8192ee.ko.zst: kernel/drivers/net/wireless/realtek/rtlwifi/btcoexist/btcoexist.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtl_pci.ko.zst kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822b.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822be.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822b.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822bs.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_sdio.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822b.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822bu.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822b.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822c.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822ce.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822c.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822cs.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822c.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_sdio.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822cu.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8822c.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8703b.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723cs.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8703b.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_sdio.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723d.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723de.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723d.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723ds.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723d.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_sdio.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723du.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723d.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_8723x.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821c.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821ce.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821c.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821cs.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821c.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_sdio.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821cu.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821c.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_88xxa.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821a.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_88xxa.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8812a.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_88xxa.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821au.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8821a.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_88xxa.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8812au.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8812a.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_88xxa.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8814a.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8814ae.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8814a.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_8814au.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_8814a.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_pci.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_sdio.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw88/rtw88_usb.ko.zst: kernel/drivers/net/wireless/realtek/rtw88/rtw88_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8851b.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8851be.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8851b.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8851bu.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_8851b.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852a.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852ae.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852a.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852au.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852a.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b_common.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b_common.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852be.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b_common.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852bu.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b_common.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852bt.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b_common.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852bte.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852bt.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852b_common.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852c.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852ce.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852c.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852cu.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8852c.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922a.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922ae.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922a.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922au.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922a.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_usb.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922d.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922de.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_8922d.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_pci.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/realtek/rtw89/rtw89_usb.ko.zst: kernel/drivers/net/wireless/realtek/rtw89/rtw89_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/leds/led-class-multicolor.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/rsi/rsi_91x.ko.zst: kernel/drivers/bluetooth/btrsi.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/rsi/rsi_sdio.ko.zst: kernel/drivers/net/wireless/rsi/rsi_91x.ko.zst kernel/drivers/bluetooth/btrsi.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/rsi/rsi_usb.ko.zst: kernel/drivers/net/wireless/rsi/rsi_91x.ko.zst kernel/drivers/bluetooth/btrsi.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/silabs/wfx/wfx.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/st/cw1200/cw1200_core.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/st/cw1200/cw1200_wlan_sdio.ko.zst: kernel/drivers/net/wireless/st/cw1200/cw1200_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/st/cw1200/cw1200_wlan_spi.ko.zst: kernel/drivers/net/wireless/st/cw1200/cw1200_core.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ti/wlcore/wlcore.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ti/wlcore/wlcore_sdio.ko.zst: kernel/drivers/mmc/core/mmc_core.ko.zst
+kernel/drivers/net/wireless/ti/wl12xx/wl12xx.ko.zst: kernel/drivers/net/wireless/ti/wlcore/wlcore.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ti/wl1251/wl1251.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ti/wl1251/wl1251_spi.ko.zst: kernel/drivers/net/wireless/ti/wl1251/wl1251.ko.zst kernel/lib/crc/crc7.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ti/wl1251/wl1251_sdio.ko.zst: kernel/drivers/net/wireless/ti/wl1251/wl1251.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/ti/wl18xx/wl18xx.ko.zst: kernel/drivers/net/wireless/ti/wlcore/wlcore.ko.zst kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/zydas/zd1211rw/zd1211rw.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/virtual/mac80211_hwsim.ko.zst: kernel/net/mac80211/mac80211.ko.zst kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/wireless/virtual/virt_wifi.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/mctp/mctp-serial.ko.zst:
+kernel/drivers/net/mctp/mctp-i2c.ko.zst: kernel/drivers/i2c/i2c-mux.ko.zst
+kernel/drivers/net/mctp/mctp-usb.ko.zst: kernel/drivers/net/mctp/mctp-usblib.ko.zst
+kernel/drivers/net/mctp/mctp-usblib.ko.zst:
+kernel/drivers/net/bonding/bonding.ko.zst: kernel/net/tls/tls.ko.zst
+kernel/drivers/net/ipvlan/ipvlan.ko.zst:
+kernel/drivers/net/ipvlan/ipvtap.ko.zst: kernel/drivers/net/ipvlan/ipvlan.ko.zst kernel/drivers/net/tap.ko.zst
+kernel/drivers/net/dummy.ko.zst:
+kernel/drivers/net/wireguard/wireguard.ko.zst: kernel/lib/crypto/libcurve25519.ko.zst kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/ovpn/ovpn.ko.zst: kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/eql.ko.zst:
+kernel/drivers/net/ifb.ko.zst:
+kernel/drivers/net/macsec.ko.zst:
+kernel/drivers/net/amt.ko.zst: kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/macvlan.ko.zst:
+kernel/drivers/net/macvtap.ko.zst: kernel/drivers/net/macvlan.ko.zst kernel/drivers/net/tap.ko.zst
+kernel/drivers/net/mii.ko.zst:
+kernel/drivers/net/mdio.ko.zst:
+kernel/drivers/net/netconsole.ko.zst:
+kernel/drivers/net/team/team.ko.zst:
+kernel/drivers/net/team/team_mode_broadcast.ko.zst: kernel/drivers/net/team/team.ko.zst
+kernel/drivers/net/team/team_mode_roundrobin.ko.zst: kernel/drivers/net/team/team.ko.zst
+kernel/drivers/net/team/team_mode_random.ko.zst: kernel/drivers/net/team/team.ko.zst
+kernel/drivers/net/team/team_mode_activebackup.ko.zst: kernel/drivers/net/team/team.ko.zst
+kernel/drivers/net/team/team_mode_loadbalance.ko.zst: kernel/drivers/net/team/team.ko.zst
+kernel/drivers/net/tun.ko.zst:
+kernel/drivers/net/tap.ko.zst:
+kernel/drivers/net/veth.ko.zst:
+kernel/drivers/net/virtio_net.ko.zst: kernel/drivers/net/net_failover.ko.zst kernel/net/core/failover.ko.zst
+kernel/drivers/net/vxlan/vxlan.ko.zst: kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/geneve.ko.zst: kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/bareudp.ko.zst: kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/gtp.ko.zst: kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/nlmon.ko.zst:
+kernel/drivers/net/pfcp.ko.zst: kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/drivers/net/vrf.ko.zst:
+kernel/drivers/net/vsockmon.ko.zst: kernel/net/vmw_vsock/vsock.ko.zst
+kernel/drivers/net/mhi_net.ko.zst: kernel/drivers/bus/mhi/host/mhi.ko.zst
+kernel/drivers/net/can/dev/can-dev.ko.zst:
+kernel/drivers/net/can/esd/esd_402_pci.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/spi/mcp251xfd/mcp251xfd.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/spi/hi311x.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/spi/mcp251x.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/usb_8dev.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/ems_usb.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/esd_usb.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/etas_es58x/etas_es58x.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/f81604.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/gs_usb.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/kvaser_usb/kvaser_usb.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/mcba_usb.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/nct6694_canfd.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst kernel/drivers/mfd/nct6694.ko.zst
+kernel/drivers/net/can/usb/peak_usb/peak_usb.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/usb/ucan.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/softing/softing.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/softing/softing_cs.ko.zst: kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst
+kernel/drivers/net/can/vcan.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/vxcan.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/slcan/slcan.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/can327.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/cc770/cc770.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/cc770/cc770_isa.ko.zst: kernel/drivers/net/can/cc770/cc770.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/cc770/cc770_platform.ko.zst: kernel/drivers/net/can/cc770/cc770.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/c_can/c_can.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/c_can/c_can_platform.ko.zst: kernel/drivers/net/can/c_can/c_can.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/c_can/c_can_pci.ko.zst: kernel/drivers/net/can/c_can/c_can.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/ctucanfd/ctucanfd.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/ctucanfd/ctucanfd_pci.ko.zst: kernel/drivers/net/can/ctucanfd/ctucanfd.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/ifi_canfd/ifi_canfd.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/janz-ican3.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/kvaser_pciefd/kvaser_pciefd.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/m_can/m_can.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/m_can/m_can_pci.ko.zst: kernel/drivers/net/can/m_can/m_can.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/m_can/m_can_platform.ko.zst: kernel/drivers/net/can/m_can/m_can.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/m_can/tcan4x5x.ko.zst: kernel/drivers/net/can/m_can/m_can.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/peak_canfd/peak_pciefd.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/ems_pci.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/f81601.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/kvaser_pci.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/peak_pci.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst kernel/drivers/i2c/algos/i2c-algo-bit.ko.zst
+kernel/drivers/net/can/sja1000/peak_pcmcia.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst kernel/drivers/pcmcia/pcmcia.ko.zst kernel/drivers/pcmcia/pcmcia_core.ko.zst
+kernel/drivers/net/can/sja1000/plx_pci.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/sja1000.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/sja1000_isa.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/sja1000/sja1000_platform.ko.zst: kernel/drivers/net/can/sja1000/sja1000.ko.zst kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/can/virtio_can.ko.zst: kernel/drivers/net/can/dev/can-dev.ko.zst
+kernel/drivers/net/fddi/defxx.ko.zst: kernel/net/802/fddi.ko.zst
+kernel/drivers/net/fddi/skfp/skfp.ko.zst: kernel/net/802/fddi.ko.zst
+kernel/drivers/net/plip/plip.ko.zst: kernel/drivers/parport/parport.ko.zst
+kernel/drivers/net/ppp/ppp_generic.ko.zst: kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/ppp_async.ko.zst: kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/bsd_comp.ko.zst: kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/ppp_deflate.ko.zst: kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/ppp_mppe.ko.zst: kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/net/ppp/ppp_synctty.ko.zst: kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/pppox.ko.zst: kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/pppoe.ko.zst: kernel/drivers/net/ppp/pppox.ko.zst kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/ppp/pptp.ko.zst: kernel/net/ipv4/gre.ko.zst kernel/drivers/net/ppp/pppox.ko.zst kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/slip/slip.ko.zst: kernel/drivers/net/slip/slhc.ko.zst
+kernel/drivers/net/slip/slhc.ko.zst:
+kernel/drivers/net/sungem_phy.ko.zst:
+kernel/drivers/net/ieee802154/fakelb.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/at86rf230.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/mrf24j40.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/cc2520.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/atusb.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/adf7242.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/ca8210.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/mcr20a.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/ieee802154/mac802154_hwsim.ko.zst: kernel/net/mac802154/mac802154.ko.zst kernel/net/ieee802154/ieee802154.ko.zst
+kernel/drivers/net/wwan/wwan.ko.zst: kernel/drivers/gnss/gnss.ko.zst
+kernel/drivers/net/wwan/wwan_hwsim.ko.zst: kernel/drivers/net/wwan/wwan.ko.zst kernel/drivers/gnss/gnss.ko.zst
+kernel/drivers/net/wwan/mhi_wwan_ctrl.ko.zst: kernel/drivers/net/wwan/wwan.ko.zst kernel/drivers/gnss/gnss.ko.zst kernel/drivers/bus/mhi/host/mhi.ko.zst
+kernel/drivers/net/wwan/mhi_wwan_mbim.ko.zst: kernel/drivers/net/wwan/wwan.ko.zst kernel/drivers/gnss/gnss.ko.zst kernel/drivers/bus/mhi/host/mhi.ko.zst
+kernel/drivers/net/wwan/rpmsg_wwan_ctrl.ko.zst: kernel/drivers/net/wwan/wwan.ko.zst kernel/drivers/gnss/gnss.ko.zst kernel/drivers/rpmsg/rpmsg_core.ko.zst
+kernel/drivers/net/wwan/iosm/iosm.ko.zst: kernel/drivers/net/wwan/wwan.ko.zst kernel/drivers/gnss/gnss.ko.zst
+kernel/drivers/net/wwan/t7xx/mtk_t7xx.ko.zst: kernel/drivers/net/wwan/wwan.ko.zst kernel/drivers/gnss/gnss.ko.zst
+kernel/drivers/net/vmxnet3/vmxnet3.ko.zst:
+kernel/drivers/net/xen-netfront.ko.zst:
+kernel/drivers/net/xen-netback/xen-netback.ko.zst:
+kernel/drivers/net/usb/catc.ko.zst:
+kernel/drivers/net/usb/kaweth.ko.zst:
+kernel/drivers/net/usb/pegasus.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/rtl8150.ko.zst:
+kernel/drivers/net/usb/r8152.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/hso.ko.zst: kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/net/usb/lan78xx.ko.zst: kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/usb/asix.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/usb/ax88179_178a.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cdc_ether.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cdc_eem.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/dm9601.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/sr9700.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/sr9800.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/smsc75xx.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/smsc95xx.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/drivers/net/usb/gl620a.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/net1080.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/plusb.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/rndis_host.ko.zst: kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cdc_subset.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/zaurus.ko.zst: kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/mcs7830.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/usbnet.ko.zst: kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/int51x1.ko.zst: kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cdc-phonet.ko.zst: kernel/net/phonet/phonet.ko.zst
+kernel/drivers/net/usb/kalmia.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/ipheth.ko.zst:
+kernel/drivers/net/usb/sierra_net.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cx82310_eth.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cdc_ncm.ko.zst: kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/huawei_cdc_ncm.ko.zst: kernel/drivers/usb/class/cdc-wdm.ko.zst kernel/drivers/net/usb/cdc_ncm.ko.zst kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/lg-vl600.ko.zst: kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/qmi_wwan.ko.zst: kernel/drivers/usb/class/cdc-wdm.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/cdc_mbim.ko.zst: kernel/drivers/usb/class/cdc-wdm.ko.zst kernel/drivers/net/usb/cdc_ncm.ko.zst kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/ch9200.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/aqc111.ko.zst: kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/usb/r8153_ecm.ko.zst: kernel/drivers/net/usb/r8152.ko.zst kernel/drivers/net/usb/cdc_ether.ko.zst kernel/drivers/net/usb/usbnet.ko.zst kernel/drivers/net/mii.ko.zst
+kernel/drivers/net/hyperv/hv_netvsc.ko.zst: kernel/drivers/hv/hv_vmbus.ko.zst
+kernel/drivers/net/ntb_netdev.ko.zst: kernel/drivers/ntb/ntb_transport.ko.zst kernel/drivers/ntb/ntb.ko.zst
+kernel/drivers/net/fjes/fjes.ko.zst:
+kernel/drivers/net/thunderbolt/thunderbolt_net.ko.zst: kernel/drivers/thunderbolt/thunderbolt.ko.zst
+kernel/drivers/net/netdevsim/netdevsim.ko.zst: kernel/drivers/ptp/ptp_mock.ko.zst kernel/net/psample/psample.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/net/net_failover.ko.zst: kernel/net/core/failover.ko.zst
+kernel/drivers/crypto/chelsio/chcr.ko.zst: kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/crypto/authenc.ko.zst kernel/lib/crypto/gf128mul.ko.zst
+kernel/drivers/staging/rtl8723bs/r8723bs.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/drivers/vdpa/mlx5/mlx5_vdpa.ko.zst: kernel/drivers/vhost/vringh.ko.zst kernel/drivers/vhost/vhost_iotlb.ko.zst kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/vdpa/vdpa.ko.zst kernel/drivers/pci/controller/pci-hyperv-intf.ko.zst
+kernel/drivers/vdpa/pds/pds_vdpa.ko.zst: kernel/drivers/net/ethernet/amd/pds_core/pds_core.ko.zst kernel/drivers/vdpa/vdpa.ko.zst
+kernel/drivers/target/iscsi/cxgbit/cxgbit.ko.zst: kernel/drivers/target/iscsi/iscsi_target_mod.ko.zst kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/net/ethernet/chelsio/libcxgb/libcxgb.ko.zst kernel/drivers/target/target_core_mod.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/vfio/pci/mlx5/mlx5-vfio-pci.ko.zst: kernel/drivers/vfio/pci/vfio-pci-core.ko.zst kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/vfio/vfio.ko.zst kernel/drivers/iommu/iommufd/iommufd.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/pci/controller/pci-hyperv-intf.ko.zst kernel/virt/lib/irqbypass.ko.zst
+kernel/drivers/vfio/pci/pds/pds-vfio-pci.ko.zst: kernel/drivers/vfio/pci/vfio-pci-core.ko.zst kernel/drivers/net/ethernet/amd/pds_core/pds_core.ko.zst kernel/drivers/vfio/vfio.ko.zst kernel/drivers/iommu/iommufd/iommufd.ko.zst kernel/virt/lib/irqbypass.ko.zst
+kernel/drivers/bluetooth/hci_vhci.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/hci_uart.ko.zst: kernel/drivers/bluetooth/btqca.ko.zst kernel/drivers/bluetooth/btbcm.ko.zst kernel/drivers/bluetooth/btintel.ko.zst kernel/drivers/bluetooth/btrtl.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/power/sequencing/pwrseq-core.ko.zst
+kernel/drivers/bluetooth/bcm203x.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/hci_bcm4377.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/bpa10x.ko.zst: kernel/drivers/bluetooth/hci_uart.ko.zst kernel/drivers/bluetooth/btqca.ko.zst kernel/drivers/bluetooth/btbcm.ko.zst kernel/drivers/bluetooth/btintel.ko.zst kernel/drivers/bluetooth/btrtl.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/power/sequencing/pwrseq-core.ko.zst
+kernel/drivers/bluetooth/bfusb.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btusb.ko.zst: kernel/drivers/bluetooth/btmtk.ko.zst kernel/drivers/bluetooth/btbcm.ko.zst kernel/drivers/bluetooth/btintel.ko.zst kernel/drivers/bluetooth/btrtl.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btsdio.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btintel.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btintel_pcie.ko.zst: kernel/drivers/bluetooth/btintel.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/ath3k.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btmrvl.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btmrvl_sdio.ko.zst: kernel/drivers/bluetooth/btmrvl.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btmtksdio.ko.zst: kernel/drivers/bluetooth/btmtk.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/drivers/mmc/core/mmc_core.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btmtkuart.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btbcm.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btrtl.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btqca.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btmtk.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/virtio_bt.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/bluetooth/btnxpuart.ko.zst: kernel/drivers/bluetooth/hci_uart.ko.zst kernel/drivers/bluetooth/btqca.ko.zst kernel/drivers/bluetooth/btbcm.ko.zst kernel/drivers/bluetooth/btintel.ko.zst kernel/drivers/bluetooth/btrtl.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/power/sequencing/pwrseq-core.ko.zst kernel/lib/crc/crc8.ko.zst
+kernel/drivers/bluetooth/hci_nokia.ko.zst: kernel/drivers/bluetooth/hci_uart.ko.zst kernel/drivers/bluetooth/btqca.ko.zst kernel/drivers/bluetooth/btbcm.ko.zst kernel/drivers/bluetooth/btintel.ko.zst kernel/drivers/bluetooth/btrtl.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/drivers/power/sequencing/pwrseq-core.ko.zst
+kernel/drivers/bluetooth/btrsi.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/drivers/infiniband/hw/cxgb4/iw_cxgb4.ko.zst: kernel/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/net/ethernet/chelsio/libcxgb/libcxgb.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/infiniband/core/rdma_cm.ko.zst kernel/drivers/infiniband/core/iw_cm.ko.zst kernel/drivers/infiniband/core/ib_cm.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/irdma/irdma.ko.zst: kernel/drivers/net/ethernet/intel/ice/ice.ko.zst kernel/drivers/net/ethernet/intel/idpf/idpf.ko.zst kernel/drivers/net/ethernet/intel/libeth/libeth_xdp.ko.zst kernel/drivers/net/ethernet/intel/i40e/i40e.ko.zst kernel/drivers/gnss/gnss.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_cp.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_pci.ko.zst kernel/drivers/net/ethernet/intel/libie/libie.ko.zst kernel/drivers/net/ethernet/intel/libeth/libeth.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_adminq.ko.zst kernel/drivers/net/ethernet/intel/libie/libie_fwlog.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/mana/mana_ib.ko.zst: kernel/drivers/net/ethernet/microsoft/mana/mana.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/mlx4/mlx4_ib.ko.zst: kernel/drivers/net/ethernet/mellanox/mlx4/mlx4_core.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/mlx5/mlx5_ib.ko.zst: kernel/drivers/infiniband/core/ib_uverbs_support.ko.zst kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/drivers/net/macsec.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/pci/controller/pci-hyperv-intf.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/ocrdma/ocrdma.ko.zst: kernel/drivers/net/ethernet/emulex/benet/be2net.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/usnic/usnic_verbs.ko.zst: kernel/drivers/net/ethernet/cisco/enic/enic.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/qedr/qedr.ko.zst: kernel/drivers/net/ethernet/qlogic/qede/qede.ko.zst kernel/drivers/net/ethernet/qlogic/qed/qed.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/bnxt_re/bnxt_re.ko.zst: kernel/drivers/net/ethernet/broadcom/bnxt/bnxt_en.ko.zst kernel/drivers/infiniband/core/ib_uverbs_support.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/bng_re/bng_re.ko.zst: kernel/drivers/net/ethernet/broadcom/bnge/bng_en.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/infiniband/hw/ionic/ionic_rdma.ko.zst: kernel/drivers/net/ethernet/pensando/ionic/ionic.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/infiniband/core/ib_core.ko.zst
+kernel/drivers/fwctl/bnxt/bnxt_fwctl.ko.zst: kernel/drivers/net/ethernet/broadcom/bnxt/bnxt_en.ko.zst kernel/drivers/fwctl/fwctl.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst
+kernel/drivers/fwctl/mlx5/mlx5_fwctl.ko.zst: kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.zst kernel/drivers/net/ethernet/mellanox/mlxfw/mlxfw.ko.zst kernel/net/psample/psample.ko.zst kernel/net/tls/tls.ko.zst kernel/drivers/fwctl/fwctl.ko.zst kernel/drivers/ptp/ptp.ko.zst kernel/drivers/pps/pps_core.ko.zst kernel/drivers/pci/controller/pci-hyperv-intf.ko.zst
+kernel/drivers/fwctl/pds/pds_fwctl.ko.zst: kernel/drivers/net/ethernet/amd/pds_core/pds_core.ko.zst kernel/drivers/fwctl/fwctl.ko.zst
+kernel/drivers/vhost/vhost_net.ko.zst: kernel/drivers/net/tun.ko.zst kernel/drivers/vhost/vhost.ko.zst kernel/drivers/vhost/vhost_iotlb.ko.zst kernel/drivers/net/tap.ko.zst
+kernel/net/core/selftests.ko.zst: kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/dsa_core.ko.zst: kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_ar9331.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_brcm.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_dsa.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_gswip.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_hellcreek.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_ksz.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_lan9303.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_mt7628.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_mtk.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_mxl862xx.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_mxl-gsw1xx.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_netc.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_none.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_ocelot.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_ocelot_8021q.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_qca.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_rtl4_a.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_rtl8_4.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_rzn1_a5psw.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_sja1105.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_trailer.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_vsc73xx_8021q.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_xrs700x.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/dsa/tag_yt921x.ko.zst: kernel/net/dsa/dsa_core.ko.zst kernel/net/hsr/hsr.ko.zst kernel/net/core/selftests.ko.zst kernel/drivers/net/phy/phylink.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/drivers/net/phy/libphy.ko.zst kernel/drivers/net/phy/mdio_bus.ko.zst
+kernel/net/wireless/cfg80211.ko.zst: kernel/net/rfkill/rfkill.ko.zst
+kernel/net/bluetooth/bluetooth.ko.zst: kernel/net/rfkill/rfkill.ko.zst
+kernel/net/bluetooth/rfcomm/rfcomm.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/net/bluetooth/bnep/bnep.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/net/bluetooth/hidp/hidp.ko.zst: kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/net/bluetooth/bluetooth_6lowpan.ko.zst: kernel/net/6lowpan/6lowpan.ko.zst kernel/net/bluetooth/bluetooth.ko.zst kernel/net/rfkill/rfkill.ko.zst
+kernel/net/atm/pppoatm.ko.zst: kernel/net/atm/atm.ko.zst kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst
+kernel/net/l2tp/l2tp_ppp.ko.zst: kernel/net/l2tp/l2tp_netlink.ko.zst kernel/net/l2tp/l2tp_core.ko.zst kernel/drivers/net/ppp/pppox.ko.zst kernel/drivers/net/ppp/ppp_generic.ko.zst kernel/drivers/net/slip/slhc.ko.zst kernel/net/ipv6/ip6_udp_tunnel.ko.zst kernel/net/ipv4/udp_tunnel.ko.zst
+kernel/net/mac80211/mac80211.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/rfkill/rfkill.ko.zst kernel/lib/crypto/libarc4.ko.zst
+kernel/net/batman-adv/batman-adv.ko.zst: kernel/net/wireless/cfg80211.ko.zst kernel/net/bridge/bridge.ko.zst kernel/net/802/stp.ko.zst kernel/net/llc/llc.ko.zst kernel/net/rfkill/rfkill.ko.zst

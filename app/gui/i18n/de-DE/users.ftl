@@ -60,7 +60,7 @@ users-root = Root-Konten werden hier nicht geändert.
 
 users-locks-loading = Gesperrte Konten werden abgefragt…
 users-locks-dismissed = Es ist nicht bekannt, welche Konten gesperrt sind. Die Passwortabfrage wurde geschlossen.
-users-locks-denied = Es ist nicht bekannt, welche Konten gesperrt sind. Dein Konto darf das nicht abfragen.
+users-locks-denied = Es ist nicht bekannt, welche Konten gesperrt sind: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen.
 users-locks-no-agent = Es ist nicht bekannt, welche Konten gesperrt sind. In dieser Sitzung läuft kein polkit-Agent (das Programm, das nach deinem Passwort fragt, wenn eine App mehr Rechte braucht), daher erschien keine Passwortabfrage.
 users-locks-helper-missing = Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox ist nicht installiert. Installiere Garuda Toolbox neu.
 users-locks-unknown = Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox konnte es nicht auslesen.
@@ -77,6 +77,7 @@ users-show-console = Konsole anzeigen
 users-refused-root = { $name } ist ein Root-Konto. Garuda Toolbox ändert es nicht.
 users-refused-current-user = Mit { $name } bist du gerade angemeldet. Das eigene Konto lässt sich nicht sperren oder entfernen.
 users-refused-system-account = { $name } ist ein Systemkonto. Entfernen lassen sich nur Konten von Personen.
+users-refused-outside-user-range = { $name } hat eine UID außerhalb von 1000 bis 60000 und bleibt daher, wie es ist.
 users-refused-last-admin = { $name } ist das letzte Mitglied der Gruppen wheel und sudo. Ohne dieses Konto könnte niemand mehr dieses System verwalten.
 users-refused-last-admin-lock = { $name } ist das letzte Mitglied der Gruppen wheel und sudo. Mit gesperrtem Passwort könnte niemand mehr dieses System verwalten.
 users-refused-lock-state-unknown = { $name } lässt sich nicht sperren, solange unklar ist, welche Admins gesperrt sind.

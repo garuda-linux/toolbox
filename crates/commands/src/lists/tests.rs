@@ -231,10 +231,17 @@ fn a_user_row_as_json_has_its_id_and_name() {
 #[test]
 fn a_locale_row_as_json_has_the_name_the_commands_take() {
     let mut snapshot = Snapshot::default();
-    snapshot.insert(SupportedLocales(parse_supported("de_DE.UTF-8 UTF-8\n")));
+    snapshot.insert(SupportedLocales(parse_supported(include_str!(
+        "../../../system/src/locales/fixtures/SUPPORTED"
+    ))));
 
-    let row = serde_json::to_value(&locales(&snapshot)[0]).unwrap();
+    let rows: Vec<serde_json::Value> = locales(&snapshot)
+        .iter()
+        .map(|row| serde_json::to_value(row).unwrap())
+        .collect();
 
-    assert_eq!(row["id"], "de_DE.UTF-8");
-    assert_eq!(row["charset"], "UTF-8");
+    let row = |id: &str| rows.iter().find(|row| row["id"] == id).unwrap();
+
+    assert_eq!(row("de_DE.UTF-8")["charset"], "UTF-8");
+    assert_eq!(row("de_DE@euro")["charset"], "ISO-8859-15");
 }

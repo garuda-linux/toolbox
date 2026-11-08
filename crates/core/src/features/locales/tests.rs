@@ -14,7 +14,20 @@ use crate::domains::{CurrentSystemLocale, EnabledLocales, Locales, SystemLocales
 use crate::testing::{locale, locale_entry};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
-const SUPPORTED: &str = "de_DE.UTF-8 UTF-8  \nde_DE ISO-8859-1  \nde_DE@euro ISO-8859-15  \nen_GB.UTF-8 UTF-8  \nen_US.UTF-8 UTF-8  \nen_US ISO-8859-1  \nsr_RS@latin UTF-8  \n";
+/// `/usr/share/i18n/SUPPORTED` of the Lima VM, 502 lines.
+const SUPPORTED: &str = include_str!("../../../../system/src/locales/fixtures/SUPPORTED");
+
+/// The languages the tests keep of [`SUPPORTED`].
+const KEPT: [&str; 4] = ["de_DE", "en_GB", "en_US", "sr_RS"];
+
+/// [`SUPPORTED`] cut to the lines of [`KEPT`].
+pub(super) fn supported() -> String {
+    SUPPORTED
+        .lines()
+        .filter(|line| KEPT.contains(&line.split(['.', '@', ' ']).next().unwrap_or_default()))
+        .flat_map(|line| [line, "\n"])
+        .collect()
+}
 
 fn rows(snapshot: &Snapshot, changes: &ChangeSet, filter: &Filter) -> Vec<LocaleRow> {
     let all = all_rows(snapshot, changes);
@@ -31,7 +44,7 @@ pub(super) fn entries(lines: &[&str]) -> BTreeSet<LocaleEntry> {
 
 fn snapshot(enabled: &[&str], system: Option<&str>) -> Snapshot {
     let mut snapshot = Snapshot::default();
-    snapshot.insert(SupportedLocales(parse_supported(SUPPORTED)));
+    snapshot.insert(SupportedLocales(parse_supported(&supported())));
     snapshot.insert(EnabledLocales(entries(enabled)));
     snapshot.insert(CurrentSystemLocale(system.map(locale)));
     snapshot
@@ -56,10 +69,13 @@ fn names(snapshot: &Snapshot, changes: &ChangeSet, filter: &Filter) -> Vec<Strin
 fn supported_is_read_in_arch_and_glibc_format() {
     let arch = parse_supported(SUPPORTED);
 
-    assert_eq!(arch.len(), 7);
-    assert_eq!(arch[0], locale_entry("de_DE.UTF-8 UTF-8"));
-    assert_eq!(arch[6], locale_entry("sr_RS@latin UTF-8"));
+    assert_eq!(arch.len(), 502);
+    assert_eq!(arch[0], locale_entry("aa_DJ.UTF-8 UTF-8"));
+    assert!(arch.contains(&locale_entry("sr_RS@latin UTF-8")));
+    assert_eq!(arch[501], locale_entry("zu_ZA ISO-8859-1"));
 
+    // No capture has glibc's own format, which Arch rewrites when it
+    // packages the file.
     let glibc = parse_supported(
         "# This file names the currently supported and somewhat tested locales.\nSUPPORTED-LOCALES=\\\nC.UTF-8/UTF-8 \\\naa_DJ.UTF-8/UTF-8 \\\naa_DJ/ISO-8859-1 \\\naa_DJ/ISO-8859-1 \\\n",
     );
@@ -91,7 +107,9 @@ fn enabled_locales_come_first_and_other_charsets_only_when_asked() {
             "de_DE.UTF-8 UTF-8",
             "de_DE@euro ISO-8859-15",
             "en_GB.UTF-8 UTF-8",
+            "en_GB ISO-8859-1",
             "en_US ISO-8859-1",
+            "sr_RS UTF-8",
             "sr_RS@latin UTF-8",
         ]
     );
@@ -104,6 +122,7 @@ fn enabled_locales_come_first_and_other_charsets_only_when_asked() {
             "en_US.UTF-8 UTF-8",
             "de_DE.UTF-8 UTF-8",
             "en_GB.UTF-8 UTF-8",
+            "sr_RS UTF-8",
             "sr_RS@latin UTF-8",
         ]
     );

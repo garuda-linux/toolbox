@@ -13,25 +13,16 @@ use crate::{ChangeSet, Snapshot, Toggle};
 pub(super) const OWN_FILE: &str = "/etc/modprobe.d/garuda-toolbox-blacklist.conf";
 pub(super) const BROADCOM_FILE: &str = "/usr/lib/modprobe.d/broadcom-wl.conf";
 
-const MODULES_DEP: &str = "\
-kernel/arch/x86/kvm/kvm.ko.zst: kernel/virt/lib/irqbypass.ko.zst
-kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko.zst: kernel/net/wireless/cfg80211.ko.zst
-kernel/drivers/net/wireless/mediatek/mt76/mt76-usb.ko.zst: kernel/net/mac80211/mac80211.ko.zst
-kernel/drivers/net/wireless/broadcom/b43/b43.ko.zst:
-kernel/drivers/net/ethernet/realtek/r8169.ko.zst: kernel/drivers/net/phy/realtek/realtek.ko.zst
-kernel/drivers/net/usb/r8152.ko.zst: kernel/drivers/net/mii.ko.zst
-kernel/drivers/net/mii.ko:
-kernel/net/wireless/cfg80211.ko.zst: kernel/net/rfkill/rfkill.ko.zst
-updates/dkms/wl.ko.zst: kernel/net/wireless/cfg80211.ko.zst
-updates/dkms/nvidia.ko.zst:
-";
-
-const PROC_MODULES: &str = "\
-iwlwifi 602112 1 iwlmvm, Live 0x0000000000000000
-mt76_usb 49152 1 mt7921u, Live 0x0000000000000000
-kvm 1404928 1 kvm_intel, Live 0x0000000000000000
-r8169 135168 0 - Live 0x0000000000000000
-";
+/// The network lines of `modules.dep` of a bare-metal laptop.
+const MODULES_DEP: &str =
+    include_str!("../../../../../system/src/network/modules/fixtures/bare-metal/modules.dep");
+/// The Lima VM after DKMS builds, `wl` and `v4l2loopback` below `updates/`.
+const MODULES_DEP_DKMS: &str =
+    include_str!("../../../../../system/src/network/modules/fixtures/modules.dep-dkms");
+/// `/proc/modules` of the laptop: `mt7921e` for its Wi-Fi, `btusb` for
+/// its Bluetooth, `r8169` for its Ethernet port.
+const PROC_MODULES: &str =
+    include_str!("../../../../../system/src/network/modules/fixtures/bare-metal/proc-modules");
 
 pub(super) fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()
@@ -74,33 +65,63 @@ fn names(rows: &[&DriverRow]) -> Vec<String> {
 
 #[test]
 fn network_modules_come_from_the_drivers_folder_and_the_known_few_elsewhere() {
-    let found: Vec<(String, Category)> = network_modules(MODULES_DEP)
-        .into_iter()
-        .map(|module| (module.name.to_string(), module.category))
-        .collect();
+    let modules = network_modules(MODULES_DEP);
+    let category = |name: &str| {
+        modules
+            .iter()
+            .find(|found| found.name.as_str() == name)
+            .map(|found| found.category)
+    };
 
-    assert_eq!(
-        found,
-        [
-            ("b43".to_owned(), Category::Wireless),
-            ("iwlwifi".to_owned(), Category::Wireless),
-            ("mii".to_owned(), Category::Other),
-            ("mt76_usb".to_owned(), Category::Wireless),
-            ("r8152".to_owned(), Category::Other),
-            ("r8169".to_owned(), Category::Ethernet),
-            ("wl".to_owned(), Category::Wireless),
-        ]
+    for (name, expected) in [
+        ("b43", Some(Category::Wireless)),
+        ("iwlwifi", Some(Category::Wireless)),
+        ("mt7921e", Some(Category::Wireless)),
+        ("mt76_usb", Some(Category::Wireless)),
+        ("wl", None),
+        ("r8169", Some(Category::Ethernet)),
+        ("mii", Some(Category::Other)),
+        ("r8152", Some(Category::Other)),
+        ("v4l2loopback", None),
+    ] {
+        assert_eq!(category(name), expected, "{name}");
+    }
+
+    let dkms = network_modules(MODULES_DEP_DKMS);
+
+    assert!(
+        dkms.iter()
+            .any(|found| found.name.as_str() == "wl" && found.category == Category::Wireless)
     );
+    assert!(
+        dkms.iter()
+            .all(|found| found.name.as_str() != "v4l2loopback")
+    );
+
+    let names: Vec<&str> = modules.iter().map(|found| found.name.as_str()).collect();
+    let mut sorted = names.clone();
+
+    sorted.sort_unstable();
+    assert_eq!(names, sorted);
 }
 
 #[test]
 fn loaded_modules_are_the_first_words_of_proc_modules() {
-    let loaded: Vec<String> = loaded_modules(PROC_MODULES)
-        .into_iter()
-        .map(|module| module.to_string())
-        .collect();
+    let loaded = loaded_modules(PROC_MODULES);
 
-    assert_eq!(loaded, ["iwlwifi", "kvm", "mt76_usb", "r8169"]);
+    assert_eq!(loaded.len(), PROC_MODULES.lines().count());
+
+    for name in [
+        "mt7921e",
+        "mt7921_common",
+        "btusb",
+        "r8169",
+        "nvidia",
+        "kvm",
+    ] {
+        assert!(loaded.contains(&module(name)), "{name}");
+    }
+
     assert_eq!(loaded_modules(""), BTreeSet::new());
 }
 
@@ -108,7 +129,8 @@ fn loaded_modules_are_the_first_words_of_proc_modules() {
 fn a_module_with_a_dash_in_its_file_name_shows_as_loaded() {
     let rows = driver_rows(&facts(Vec::new()), &ChangeSet::default());
 
-    assert_eq!(row(&rows, "mt76_usb").state, DriverState::Loaded);
+    assert_eq!(row(&rows, "mt7921_common").state, DriverState::Loaded);
+    assert_eq!(row(&rows, "mt76_usb").state, DriverState::Available);
 }
 
 #[test]
@@ -118,23 +140,28 @@ fn rows_are_loaded_first_then_blacklisted_then_available() {
         &ChangeSet::default(),
     );
 
-    let shown: Vec<(&str, &str)> = rows
-        .iter()
-        .map(|row| (row.name.as_str(), row.state.as_str()))
-        .collect();
+    let rank = |state| match state {
+        DriverState::Loaded => 0,
+        DriverState::Blacklisted => 1,
+        DriverState::Available => 2,
+    };
 
-    assert_eq!(
-        shown,
-        [
-            ("iwlwifi", "loaded"),
-            ("mt76_usb", "loaded"),
-            ("r8169", "loaded"),
-            ("b43", "blacklisted"),
-            ("wl", "blacklisted"),
-            ("mii", "available"),
-            ("r8152", "available"),
-        ]
-    );
+    let ranks: Vec<u8> = rows.iter().map(|row| rank(row.state)).collect();
+
+    assert!(ranks.is_sorted(), "{ranks:?}");
+
+    for (name, state) in [
+        ("r8169", "loaded"),
+        ("mt7921e", "loaded"),
+        ("b43", "blacklisted"),
+        ("wl", "blacklisted"),
+        ("mii", "loaded"),
+        ("8139too", "available"),
+        ("r8152", "loaded"),
+    ] {
+        assert_eq!(row(&rows, name).state.as_str(), state, "{name}");
+    }
+
     assert!(rows.iter().all(|row| row.name.as_str() != "kvm"));
 }
 
@@ -206,16 +233,22 @@ fn the_filter_narrows_by_state_category_and_name() {
     assert_eq!(
         names(&visible(
             &rows,
-            &filter("", Some(DriverState::Loaded), None)
+            &filter("", Some(DriverState::Loaded), Some(Category::Ethernet))
         )),
-        ["iwlwifi", "mt76_usb", "r8169"]
+        ["r8169"]
     );
     assert_eq!(
         names(&visible(
             &rows,
             &filter("", Some(DriverState::Loaded), Some(Category::Wireless))
         )),
-        ["iwlwifi", "mt76_usb"]
+        [
+            "mt76",
+            "mt76_connac_lib",
+            "mt7921_common",
+            "mt7921e",
+            "mt792x_lib"
+        ]
     );
     assert_eq!(
         names(&visible(&rows, &filter(" MT76-usb ", None, None))),

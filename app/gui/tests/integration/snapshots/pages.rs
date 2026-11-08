@@ -171,7 +171,7 @@ fn boot_repair_page() {
     harness.get_by_label("Reinstall GRUB…").click();
     crate::system::step_until(harness, "the question", |harness| {
         harness
-            .query_all_by_label_contains("is written to the EFI system partition /dev/sda1")
+            .query_all_by_label_contains("is written to the EFI system partition /dev/nvme0n1p2")
             .next()
             .is_some()
     });

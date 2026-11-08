@@ -1,0 +1,22 @@
+{
+  "LOW": [
+    {
+      "description": "Failed systemd services found: systemd-loop@sys-devices-pci0000:00-0000:00:1f.2-ata1-host0-target0:0:0-0:0:0:0-block-sr0.service",
+      "fix_available": false
+    },
+    {
+      "description": "\"Garuda\" is not the current bootloader: https://wiki.garudalinux.org/why-garuda-bootloader",
+      "fix_available": false
+    }
+  ],
+  "INFO": [
+    {
+      "description": "A reboot is pending (update applied since last reboot)",
+      "fix_available": false
+    },
+    {
+      "description": "Snapper (automatic btrfs system restore) is not using the official Garuda Linux configuration",
+      "fix_available": true
+    }
+  ]
+}

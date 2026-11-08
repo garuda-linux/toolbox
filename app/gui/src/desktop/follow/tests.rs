@@ -18,8 +18,20 @@ use crate::desktop::files::DesktopFiles;
 
 const WAIT: Duration = Duration::from_secs(10);
 
-fn kdeglobals(window: &str) -> String {
-    format!("[Colors:Window]\nBackgroundNormal={window}\nForegroundNormal=20,20,20\n")
+/// `/usr/share/color-schemes/BreezeDark.colors`, whose window is 32,35,38.
+const BREEZE_DARK: &str =
+    include_str!("../../../../../crates/gui-kit/src/desktop/kde/fixtures/BreezeDark.colors");
+
+/// [`BREEZE_DARK`] with its window colour edited to a light grey.
+fn light() -> String {
+    let window = "[Colors:Window]\nBackgroundAlternate=41,44,48\nBackgroundNormal=32,35,38";
+    let light = BREEZE_DARK.replace(
+        window,
+        "[Colors:Window]\nBackgroundAlternate=41,44,48\nBackgroundNormal=240,240,240",
+    );
+
+    assert_ne!(light, BREEZE_DARK);
+    light
 }
 
 async fn next_look(receiver: &mut watch::Receiver<DesktopLook>) -> DesktopLook {
@@ -35,7 +47,7 @@ async fn the_look_follows_an_edited_kdeglobals() {
     let home = TempDir::new().unwrap();
     let config = home.path().join(".config");
     fs::create_dir_all(&config).unwrap();
-    fs::write(config.join("kdeglobals"), kdeglobals("240,240,240")).unwrap();
+    fs::write(config.join("kdeglobals"), light()).unwrap();
 
     let path = home.path().to_owned();
     let files = DesktopFiles::from_env(move |key| (key == "HOME").then(|| OsString::from(&path)));
@@ -52,10 +64,10 @@ async fn the_look_follows_an_edited_kdeglobals() {
     assert_eq!(first.look.light.window, Color32::from_rgb(240, 240, 240));
 
     // A desktop writes a new file and renames it over the old one.
-    fs::write(config.join("kdeglobals.new"), kdeglobals("30,30,30")).unwrap();
+    fs::write(config.join("kdeglobals.new"), BREEZE_DARK).unwrap();
     fs::rename(config.join("kdeglobals.new"), config.join("kdeglobals")).unwrap();
 
     let second = next_look(&mut receiver).await;
     assert_eq!(second.look.theme, Theme::Dark);
-    assert_eq!(second.look.dark.window, Color32::from_rgb(30, 30, 30));
+    assert_eq!(second.look.dark.window, Color32::from_rgb(32, 35, 38));
 }

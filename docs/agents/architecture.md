@@ -194,9 +194,15 @@ prints the `String` as the usage error.
 
 `GARUDA_TOOLBOX_HELPER=dry-run` makes the helper only check plans. Every
 other effect is a port that `app/gui/src/ports.rs` picks at start
-(`DryRunTransport`, `DryRunAddress`, `DryRunActions`, `DryRunRepair`,
-`DryRunLauncher`, `SampleMirrors`, `SampleAur`). Pages never see the mode.
-The apply service skips user steps.
+(`DryRunTransport`, `DryRunAddress`, `DryRunActions`, `DryRunLauncher`).
+Pages never see the mode. The apply service skips user steps.
+
+Sample data never ships. `DryRunRepair`, `SampleMirrors`, `SampleAur` and
+`SampleNews` exist only under `cfg(any(test, feature = "selftest"))`
+(`toolbox-gui` also under `testing`), picked in `app/gui/src/ports/samples.rs`.
+A release build's dry run reads the real disks, mirrors, AUR and news
+instead. The `selftest` feature of `toolbox-gui` turns on the one of
+`toolbox-system` and `toolbox-state`.
 
 ### The saved queue
 

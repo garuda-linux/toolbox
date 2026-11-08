@@ -1,0 +1,2 @@
+rfkill0 type=bluetooth soft=0 hard=0 name=hci0
+rfkill1 type=wlan soft=0 hard=0 name=phy0

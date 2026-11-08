@@ -153,6 +153,9 @@
     "account-refusal-system-account": {
       "string": "{name} is a system account. Only accounts of people can be removed."
     },
+    "account-refusal-outside-user-range": {
+      "string": "{name} has a user ID outside 1000 to 60000, so it stays as it is."
+    },
     "account-refusal-last-admin": {
       "string": "{name} is the last member of the groups wheel and sudo. Without one nobody could administer this system."
     },
@@ -453,7 +456,7 @@
       "string": "A PNG, JPEG or TGA picture behind the boot menu. A GRUB theme has its own background."
     },
     "boot-background-from-theme": {
-      "string": "Set by the GRUB theme (GRUB_MENU_PICTURE). Choose a picture to replace it."
+      "string": "Set in /etc/default/grub as GRUB_MENU_PICTURE, which some GRUB themes read. Choose a picture to replace it."
     },
     "boot-background-title": {
       "string": "Choose a background picture"
@@ -7964,6 +7967,9 @@
     },
     "users-refused-system-account": {
       "string": "{name} is a system account. Only accounts of people can be removed."
+    },
+    "users-refused-outside-user-range": {
+      "string": "{name} has a user ID outside 1000 to 60000, so it stays as it is."
     },
     "users-refused-last-admin": {
       "string": "{name} is the last member of the groups wheel and sudo. Without one nobody could administer this system."

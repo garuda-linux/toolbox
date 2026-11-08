@@ -1,5 +1,5 @@
-//! The AUR of a dry run: three fixed packages, so the self-test and a
-//! look at the page never reach the AUR.
+//! The AUR of a self-test build's dry run: three fixed packages, so the
+//! self-test never reaches the AUR. Release builds leave them out.
 
 use toolbox_aur::{AurError, AurSource};
 use toolbox_core::features::packages::aur::{AurIndex, AurPackage};

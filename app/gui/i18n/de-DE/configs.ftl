@@ -33,7 +33,7 @@ configs-not-edited-outside = Hier nicht bearbeitbar: Der Symlink führt aus den 
 
 # $path names the file.
 configs-problem-dismissed = { $path } wurde nicht gelesen: Du hast die Passwortabfrage geschlossen.
-configs-problem-denied = { $path } wurde nicht gelesen, weil dafür ein Administratorpasswort nötig ist.
+configs-problem-denied = { $path } wurde nicht gelesen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen.
 configs-problem-no-agent = { $path } wurde nicht gelesen, weil keine Passwortabfrage erscheinen konnte: In dieser Sitzung läuft kein polkit-Agent.
 configs-problem-helper-missing = { $path } wurde nicht gelesen, weil das Hilfsprogramm von Garuda Toolbox fehlt. Installiere Garuda Toolbox neu.
 configs-problem-missing = { $path } existiert nicht mehr.

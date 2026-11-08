@@ -1,7 +1,7 @@
-[1;34m::[0;1m Synchronizing package databases...[0m
- core is up to date
- extra is up to date
-[1;34m::[0;1m Starting full system upgrade...[0m
-resolving dependencies...
+n
+[?25lresolving dependencies...
 looking for conflicting packages...
-[1;34m::[0;1m vlc and vlc-git are in conflict. Remove vlc-git? [y/N] [0m
+[1;34m::[0;1m vlc-git-[38;5;243m4.0.0.r39705.g978212a-1[0m and vlc-[38;5;243m3.0.24-1[0m are in conflict. Remove vlc? [y/N] [0m[?25h[1;31merror: [0munresolvable package conflicts detected
+[1;31merror: [0mfailed to prepare transaction (conflicting dependencies)
+[?25l[1;34m::[0;1m vlc-git-4.0.0.r39705.g978212a-1 and vlc-3.0.24-1 are in conflict
+[0m[?25h

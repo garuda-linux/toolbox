@@ -1,3 +1,4 @@
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -5,6 +6,10 @@ use super::{
     MirrorRanking as _, RANKING_DEADLINE, RankProblem, RateMirrors, rank_within, stderr_tail,
 };
 use crate::testing::runnable_script;
+
+/// The file `rate-mirrors --save <file> chaotic-aur` 0.33.0 saved in the
+/// Lima VM, 28 servers below its log.
+const RATED: &str = include_str!("../../../plan/src/mirrorlist/fixtures/rate-mirrors-chaotic");
 
 /// A stand-in for `rate-mirrors`: `--save <file> chaotic-aur`, so the
 /// file is the second argument.
@@ -15,19 +20,26 @@ fn stand_in(folder: &Path, body: &str) -> PathBuf {
     script
 }
 
+/// A stand-in that saves `ranked` as its result.
+fn saving(folder: &Path, ranked: &str) -> PathBuf {
+    let result = folder.join("ranked");
+
+    fs::write(&result, ranked).unwrap();
+    stand_in(folder, &format!("cp '{}' \"$2\"", result.display()))
+}
+
 #[test]
 fn a_ranked_list_becomes_a_mirrorlist() {
     let folder = tempfile::tempdir().unwrap();
-    let program = stand_in(
-        folder.path(),
-        "printf 'Server = https://cdn-mirror.chaotic.cx/$repo/$arch\\n' > \"$2\"",
-    );
+    let program = saving(folder.path(), RATED);
 
     let mirrorlist = rank(&program).unwrap();
 
-    assert!(mirrorlist.as_str().contains("cdn-mirror.chaotic.cx"));
+    assert_eq!(mirrorlist.as_str(), RATED);
+    assert_eq!(mirrorlist.servers(), 28);
 }
 
+/// No failed ranking was captured, so the complaint is made up.
 #[test]
 fn a_failing_ranking_names_its_status_and_the_end_of_its_complaint() {
     let folder = tempfile::tempdir().unwrap();
@@ -48,10 +60,11 @@ fn a_missing_program_did_not_start() {
     assert!(matches!(problem, RankProblem::NotStarted(_)), "{problem:?}");
 }
 
+/// The Lima result with `Include = /etc/passwd` appended.
 #[test]
 fn a_result_that_is_no_mirrorlist_is_refused() {
     let folder = tempfile::tempdir().unwrap();
-    let program = stand_in(folder.path(), "echo 'Include = /etc/passwd' > \"$2\"");
+    let program = saving(folder.path(), &format!("{RATED}Include = /etc/passwd\n"));
 
     assert!(matches!(
         rank(&program).unwrap_err(),
@@ -86,25 +99,22 @@ fn rank(program: &Path) -> Result<toolbox_plan::Mirrorlist, RankProblem> {
     rank_within(program, RANKING_DEADLINE)
 }
 
+/// The Lima result with its log stands in for a long complaint.
 #[test]
 fn only_the_end_of_a_long_complaint_is_kept() {
-    let long = format!("{}the reason", "x".repeat(10_000));
-    let tail = stderr_tail(long.as_bytes());
+    let tail = stderr_tail(RATED.as_bytes());
 
     assert_eq!(tail.len(), 2048);
-    assert!(tail.ends_with("the reason"));
+    assert!(RATED.ends_with(&tail));
     assert_eq!(stderr_tail(b"short"), "short");
 }
 
 #[test]
 fn the_system_ranking_runs_its_program() {
     let folder = tempfile::tempdir().unwrap();
-    let program = stand_in(
-        folder.path(),
-        "printf 'Server = https://cdn-mirror.chaotic.cx/$repo/$arch\\n' > \"$2\"",
-    );
+    let program = saving(folder.path(), RATED);
 
     let mirrorlist = RateMirrors::new(program).rank().unwrap();
 
-    assert_eq!(mirrorlist.servers(), 1);
+    assert_eq!(mirrorlist.servers(), 28);
 }

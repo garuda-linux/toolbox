@@ -1,9 +1,12 @@
 //! This is all the root helper hands out of `grub.cfg`, which may hold a password
 //! hash: titles and ids, never its text.
 
+mod branch;
 #[cfg(test)]
 mod tests;
 
+use branch::Branches;
+pub use branch::GrubPlatform;
 use serde::{Deserialize, Serialize};
 
 use crate::protocol::{DecodeError, decode};
@@ -59,18 +62,26 @@ struct Open {
     children: usize,
 }
 
-#[derive(Default)]
 struct Walk {
     entries: Vec<MenuEntry>,
     open: Vec<Open>,
+    branches: Branches,
     top: usize,
     depth: usize,
 }
 
 impl GrubMenu {
-    /// Entries whose id is no [`MenuEntryId`] are left out.
-    pub fn from_config(config: &str) -> Self {
-        let mut walk = Walk::default();
+    /// The menu as GRUB shows it on `platform`. Entries of the other
+    /// platform's branches are not in it, and entries whose id is no
+    /// [`MenuEntryId`] are left out.
+    pub fn for_platform(config: &str, platform: GrubPlatform) -> Self {
+        let mut walk = Walk {
+            entries: Vec::new(),
+            open: Vec::new(),
+            branches: Branches::new(platform),
+            top: 0,
+            depth: 0,
+        };
 
         for line in config.lines().map(str::trim) {
             walk.line(line);
@@ -126,9 +137,17 @@ impl GrubMenu {
 
 impl Walk {
     fn line(&mut self, line: &str) {
+        if line.starts_with('#') {
+            return;
+        }
+
         let opens = line.ends_with('{');
 
-        if let Some(header) = header(line) {
+        self.branches.line(line);
+
+        if let Some(header) = header(line)
+            && self.branches.active()
+        {
             self.entry(&header, opens);
         }
 

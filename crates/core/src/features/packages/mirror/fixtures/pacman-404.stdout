@@ -1,0 +1,18 @@
+[?25lresolving dependencies...
+looking for conflicting packages...
+
+[0;1mPackage (1) [0m  [0;1mNew Version[0m  [0;1mNet Change[0m  [0;1mDownload Size[0m
+
+extra/cowsay  3.8.4-1        0.04 MiB       0.02 MiB
+
+[0;1mTotal Download Size: [0m  0.02 MiB
+[0;1mTotal Installed Size:[0m  0.04 MiB
+
+[1;34m::[0;1m Proceed with installation? [Y/n] [0m
+[1;34m::[0;1m Retrieving packages...
+[0m cowsay-3.8.4-1-any
+[1F cowsay-3.8.4-1-any.pkg.tar.zst failed to download[K[1E[1;31merror: [0mfailed retrieving file 'cowsay-3.8.4-1-any.pkg.tar.zst' from 127.0.0.1:8765 : The requested URL returned error: 404
+[1;33mwarning: [0mfailed to retrieve some files
+[1;31merror: [0mfailed to commit transaction (failed to retrieve some files)
+Errors occurred, no packages were upgraded.
+[?25h

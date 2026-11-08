@@ -1,6 +1,5 @@
 use toolbox_plan::UnitName;
 use toolbox_state::services::{ActiveState, FileState, UnitInfo};
-use zbus::OwnedObjectPath;
 use zbus::zvariant::Type as _;
 
 use super::{
@@ -8,27 +7,39 @@ use super::{
     unit_infos,
 };
 
-fn path(text: &str) -> OwnedObjectPath {
-    OwnedObjectPath::try_from(text).unwrap()
+/// `busctl --json=short call ... ListUnits` and `ListUnitFiles` in the
+/// Lima VM: `{"type": <signature>, "data": [<the one array>]}`.
+const LIST_UNITS_JSON: &str = include_str!("fixtures/list-units.json");
+const LIST_UNIT_FILES_JSON: &str = include_str!("fixtures/list-unit-files.json");
+
+fn reply(json: &str) -> serde_json::Value {
+    serde_json::from_str(json).unwrap()
 }
 
-fn row(name: &str, description: &str, load: &str, active: &str, sub: &str) -> ListUnitsRow {
-    (
-        name.to_owned(),
-        description.to_owned(),
-        load.to_owned(),
-        active.to_owned(),
-        sub.to_owned(),
-        String::new(),
-        path("/org/freedesktop/systemd1/unit/sshd_2eservice"),
-        0_u32,
-        String::new(),
-        path("/"),
-    )
+fn captured_units() -> Vec<ListUnitsRow> {
+    serde_json::from_value(reply(LIST_UNITS_JSON)["data"][0].take()).unwrap()
 }
 
-fn file(path: &str, state: &str) -> UnitFileRow {
-    (path.to_owned(), state.to_owned())
+fn captured_files() -> Vec<UnitFileRow> {
+    serde_json::from_value(reply(LIST_UNIT_FILES_JSON)["data"][0].take()).unwrap()
+}
+
+fn captured_infos() -> Vec<UnitInfo> {
+    unit_infos(captured_units(), captured_files())
+}
+
+fn captured_unit(name: &str) -> ListUnitsRow {
+    captured_units()
+        .into_iter()
+        .find(|row| row.0 == name)
+        .unwrap()
+}
+
+fn captured_file(name: &str) -> UnitFileRow {
+    captured_files()
+        .into_iter()
+        .find(|(path, _)| path.ends_with(&format!("/{name}")))
+        .unwrap()
 }
 
 fn info(
@@ -47,6 +58,10 @@ fn info(
     }
 }
 
+fn found<'a>(infos: &'a [UnitInfo], name: &str) -> Option<&'a UnitInfo> {
+    infos.iter().find(|info| info.name.as_str() == name)
+}
+
 fn names(infos: &[UnitInfo]) -> Vec<&str> {
     infos.iter().map(|info| info.name.as_str()).collect()
 }
@@ -55,6 +70,8 @@ fn names(infos: &[UnitInfo]) -> Vec<&str> {
 fn the_rows_match_the_manager_signatures() {
     assert_eq!(Vec::<ListUnitsRow>::SIGNATURE.to_string(), "a(ssssssouso)");
     assert_eq!(Vec::<UnitFileRow>::SIGNATURE.to_string(), "a(ss)");
+    assert_eq!(reply(LIST_UNITS_JSON)["type"], "a(ssssssouso)");
+    assert_eq!(reply(LIST_UNIT_FILES_JSON)["type"], "a(ss)");
 }
 
 #[test]
@@ -68,251 +85,182 @@ fn the_methods_address_the_systemd_manager() {
 
 #[test]
 fn loaded_units_take_their_file_state_by_file_name() {
-    let units = vec![
-        row(
-            "sshd.service",
-            "OpenSSH Daemon",
-            "loaded",
-            "active",
-            "running",
-        ),
-        row(
-            "cups.socket",
-            "CUPS Scheduler",
-            "loaded",
-            "active",
-            "listening",
-        ),
-    ];
-
-    let files = vec![
-        file("/usr/lib/systemd/system/sshd.service", "enabled"),
-        file("/usr/lib/systemd/system/cups.socket", "disabled"),
-    ];
+    let infos = captured_infos();
 
     assert_eq!(
-        unit_infos(units, files),
-        [
-            info(
-                "cups.socket",
-                "CUPS Scheduler",
-                ActiveState::Active,
-                "listening",
-                FileState::Disabled
-            ),
-            info(
-                "sshd.service",
-                "OpenSSH Daemon",
-                ActiveState::Active,
-                "running",
-                FileState::Enabled
-            ),
-        ]
+        found(&infos, "sshd.service"),
+        Some(&info(
+            "sshd.service",
+            "OpenSSH Daemon",
+            ActiveState::Active,
+            "running",
+            FileState::Enabled
+        ))
+    );
+    assert_eq!(
+        found(&infos, "sshd-unix-local.socket"),
+        Some(&info(
+            "sshd-unix-local.socket",
+            "OpenSSH Server Socket (systemd-ssh-generator, AF_UNIX Local)",
+            ActiveState::Active,
+            "listening",
+            FileState::Generated
+        ))
     );
 }
 
 #[test]
 fn unit_files_that_never_loaded_are_listed_as_dead() {
-    let files = vec![file(
-        "/usr/lib/systemd/system/bluetooth.service",
-        "disabled",
-    )];
-
     assert_eq!(
-        unit_infos(Vec::new(), files),
-        [info(
-            "bluetooth.service",
+        found(&captured_infos(), "iptables.service"),
+        Some(&info(
+            "iptables.service",
             "",
             ActiveState::Inactive,
             "dead",
             FileState::Disabled
-        )]
+        ))
     );
 }
 
+/// Only the template `getty@.service` has a file.
 #[test]
 fn a_unit_without_a_listed_file_has_an_unknown_file_state() {
-    let units = vec![row(
-        "getty@tty1.service",
-        "Getty on tty1",
-        "loaded",
-        "active",
-        "running",
-    )];
-
     assert_eq!(
-        unit_infos(units, Vec::new()),
-        [info(
+        found(&captured_infos(), "getty@tty1.service"),
+        Some(&info(
             "getty@tty1.service",
             "Getty on tty1",
             ActiveState::Active,
             "running",
             FileState::Unknown
-        )]
+        ))
     );
 }
 
 #[test]
 fn only_services_and_sockets_are_listed() {
-    let units = vec![
-        row(
-            "fstrim.timer",
-            "Discard unused blocks",
-            "loaded",
-            "active",
-            "waiting",
-        ),
-        row("home.mount", "/home", "loaded", "active", "mounted"),
-        row(
-            "sshd.service",
-            "OpenSSH Daemon",
-            "loaded",
-            "active",
-            "running",
-        ),
-    ];
+    let infos = captured_infos();
 
-    let files = vec![
-        file("/usr/lib/systemd/system/fstrim.timer", "enabled"),
-        file("/usr/lib/systemd/system/dbus.socket", "static"),
-    ];
-
-    assert_eq!(
-        names(&unit_infos(units, files)),
-        ["dbus.socket", "sshd.service"]
+    assert!(
+        names(&infos)
+            .iter()
+            .all(|name| name.ends_with(".service") || name.ends_with(".socket")),
+        "{:?}",
+        names(&infos)
     );
+    assert!(found(&infos, "systemd-storage-fs.socket").is_some());
+    assert!(found(&infos, "user-1000.slice").is_none());
 }
 
 /// A template cannot start without an instance, its instances can.
 #[test]
 fn templates_are_left_out_but_their_instances_stay() {
-    let units = vec![row(
-        "getty@tty1.service",
-        "Getty on tty1",
-        "loaded",
-        "active",
-        "running",
-    )];
+    let infos = captured_infos();
 
-    let files = vec![
-        file("/usr/lib/systemd/system/getty@.service", "enabled"),
-        file("/usr/lib/systemd/system/systemd-fsck@.service", "static"),
-    ];
-
-    assert_eq!(names(&unit_infos(units, files)), ["getty@tty1.service"]);
+    assert!(!names(&infos).iter().any(|name| name.contains("@.")));
+    assert!(found(&infos, "getty@tty1.service").is_some());
+    assert!(found(&infos, "serial-getty@ttyS0.service").is_some());
 }
 
+/// The Lima lists with a made-up `-bad.service` row and a unit file whose
+/// path holds a space.
 #[test]
 fn units_that_were_not_found_or_have_odd_names_are_skipped() {
-    let units = vec![
-        row(
-            "ghost.service",
-            "ghost.service",
-            "not-found",
-            "inactive",
-            "dead",
-        ),
-        row("-bad.service", "", "loaded", "active", "running"),
-        row(
-            "sshd.service",
-            "OpenSSH Daemon",
-            "loaded",
-            "active",
-            "running",
-        ),
-    ];
+    let mut units = captured_units();
+    let mut files = captured_files();
+    let mut bad = captured_unit("sshd.service");
 
-    let files = vec![file("/etc/systemd/system/with space.service", "enabled")];
+    bad.0 = "-bad.service".to_owned();
+    units.push(bad);
+    files.push((
+        "/etc/systemd/system/with space.service".to_owned(),
+        "enabled".to_owned(),
+    ));
 
-    assert_eq!(names(&unit_infos(units, files)), ["sshd.service"]);
+    let infos = unit_infos(units, files);
+
+    assert!(found(&infos, "sshd-keygen.service").is_none());
+    assert!(found(&infos, "rc-local.service").is_none());
+    assert!(found(&infos, "-bad.service").is_none());
+    assert!(!names(&infos).iter().any(|name| name.contains(' ')));
 }
 
 /// An alias names a unit that is listed under its own name already.
 #[test]
 fn aliases_are_not_listed_twice() {
-    let units = vec![row(
-        "systemd-networkd.service",
-        "Network Configuration",
-        "loaded",
-        "active",
-        "running",
-    )];
+    let infos = captured_infos();
 
-    let files = vec![
-        file(
-            "/usr/lib/systemd/system/systemd-networkd.service",
-            "enabled",
-        ),
-        file(
-            "/etc/systemd/system/dbus-org.freedesktop.network1.service",
-            "alias",
-        ),
-    ];
-
+    assert!(found(&infos, "dbus-org.freedesktop.network1.service").is_none());
+    assert!(found(&infos, "dbus-org.freedesktop.home1.service").is_none());
     assert_eq!(
-        names(&unit_infos(units, files)),
-        ["systemd-networkd.service"]
+        found(&infos, "systemd-networkd.service").map(|info| info.file_state),
+        Some(FileState::Enabled)
     );
 }
 
 #[test]
-fn masked_and_failed_units_keep_their_states() {
-    let units = vec![
-        row(
-            "bluetooth.service",
-            "Bluetooth service",
-            "loaded",
-            "failed",
-            "failed",
-        ),
-        row("cups.service", "cups.service", "masked", "inactive", "dead"),
-    ];
-
-    let files = vec![
-        file(
-            "/usr/lib/systemd/system/bluetooth.service",
-            "enabled-runtime",
-        ),
-        file("/etc/systemd/system/cups.service", "masked"),
-    ];
+fn masked_failed_and_transient_units_keep_their_states() {
+    let infos = captured_infos();
 
     assert_eq!(
-        unit_infos(units, files),
         [
-            info(
-                "bluetooth.service",
-                "Bluetooth service",
+            "toolbox-fixture-failed.service",
+            "toolbox-fixture-masked.service",
+            "systemd-firstboot.service",
+            "toolbox-fixture-runtime.service",
+        ]
+        .map(|name| found(&infos, name).cloned()),
+        [
+            Some(info(
+                "toolbox-fixture-failed.service",
+                "[systemd-run] /usr/bin/false",
                 ActiveState::Failed,
                 "failed",
-                FileState::Enabled
-            ),
-            info(
-                "cups.service",
-                "cups.service",
+                FileState::Transient
+            )),
+            Some(info(
+                "toolbox-fixture-masked.service",
+                "",
                 ActiveState::Inactive,
                 "dead",
                 FileState::Masked
-            ),
+            )),
+            Some(info(
+                "systemd-firstboot.service",
+                "systemd-firstboot.service",
+                ActiveState::Inactive,
+                "dead",
+                FileState::Masked
+            )),
+            Some(info(
+                "toolbox-fixture-runtime.service",
+                "toolbox fixture",
+                ActiveState::Inactive,
+                "dead",
+                FileState::Enabled
+            )),
         ]
     );
 }
 
+/// The Lima sshd row twice, the second one changed, and its file once
+/// more as masked in `/etc`.
 #[test]
 fn duplicates_are_listed_once_with_the_first_answer() {
-    let units = vec![
-        row(
-            "sshd.service",
-            "OpenSSH Daemon",
-            "loaded",
-            "active",
-            "running",
-        ),
-        row("sshd.service", "Other", "loaded", "inactive", "dead"),
-    ];
+    let mut other = captured_unit("sshd.service");
 
+    other.1 = "Other".to_owned();
+    other.3 = "inactive".to_owned();
+    other.4 = "dead".to_owned();
+
+    let units = vec![captured_unit("sshd.service"), other];
     let files = vec![
-        file("/etc/systemd/system/sshd.service", "masked"),
-        file("/usr/lib/systemd/system/sshd.service", "enabled"),
+        (
+            "/etc/systemd/system/sshd.service".to_owned(),
+            "masked".to_owned(),
+        ),
+        captured_file("sshd.service"),
     ];
 
     assert_eq!(
@@ -327,39 +275,48 @@ fn duplicates_are_listed_once_with_the_first_answer() {
     );
 }
 
+/// The Lima sshd file with copies of it in `/run` and `/etc`.
 #[test]
 fn the_file_state_follows_the_systemd_precedence() {
-    let files = vec![
-        file("/usr/lib/systemd/system/sshd.service", "enabled"),
-        file("/run/systemd/system/sshd.service", "disabled"),
-        file("/etc/systemd/system/sshd.service", "masked"),
-    ];
+    let (usr, enabled) = captured_file("sshd.service");
+    let copy = |folder: &str, state: &str| {
+        (
+            usr.replace("/usr/lib/systemd/system/", folder),
+            state.to_owned(),
+        )
+    };
 
-    assert_eq!(
-        unit_infos(Vec::new(), files),
+    let dead_sshd = |file| {
         [info(
             "sshd.service",
             "",
             ActiveState::Inactive,
             "dead",
-            FileState::Masked
+            file,
         )]
-    );
+    };
 
-    let run_files = vec![
-        file("/usr/lib/systemd/system/cups.service", "enabled"),
-        file("/run/systemd/system/cups.service", "masked"),
-    ];
-
+    assert_eq!(usr, "/usr/lib/systemd/system/sshd.service");
     assert_eq!(
-        unit_infos(Vec::new(), run_files),
-        [info(
-            "cups.service",
-            "",
-            ActiveState::Inactive,
-            "dead",
-            FileState::Masked
-        )]
+        unit_infos(
+            Vec::new(),
+            vec![
+                (usr.clone(), enabled.clone()),
+                copy("/run/systemd/system/", "disabled"),
+                copy("/etc/systemd/system/", "masked"),
+            ]
+        ),
+        dead_sshd(FileState::Masked)
+    );
+    assert_eq!(
+        unit_infos(
+            Vec::new(),
+            vec![
+                (usr.clone(), enabled),
+                copy("/run/systemd/system/", "masked"),
+            ]
+        ),
+        dead_sshd(FileState::Masked)
     );
 }
 

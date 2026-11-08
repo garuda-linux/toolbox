@@ -21,9 +21,9 @@ path = "tests/integration/main.rs"
 required-features = ["testing"]
 
 [features]
-selftest = ["dep:kittest", "dep:image"]
+selftest = ["dep:kittest", "dep:image", "toolbox-system/selftest"]
 profiling = ["dep:tracing-tracy"]
-testing = ["dep:egui_kittest", "toolbox-gui-kit/testing", "toolbox-services/testing"]
+testing = ["dep:egui_kittest", "toolbox-gui-kit/testing", "toolbox-services/testing", "toolbox-system/testing"]
 
 [dependencies]
 toolbox-aur.workspace = true
@@ -73,6 +73,7 @@ egui_kittest = { workspace = true, optional = true }
 [dev-dependencies]
 toolbox-gui-kit = { workspace = true, features = ["testing"] }
 toolbox-services = { workspace = true, features = ["testing"] }
+toolbox-system = { workspace = true, features = ["selftest"] }
 tempfile.workspace = true
 toolbox-exec.workspace = true
 egui_kittest.workspace = true

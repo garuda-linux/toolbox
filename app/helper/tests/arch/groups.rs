@@ -81,7 +81,7 @@ fn a_system_group_is_not_removed() -> TestResult {
         outcomes(&run)?.as_slice(),
         [Outcome::Failed { cause: _ }]
     ));
-    assert!(printed(&run)?.contains("system group"));
+    assert!(printed(&run)?.contains("outside 1000 to 60000"));
     assert_eq!(group_entry("wheel")?, before);
     Ok(())
 }

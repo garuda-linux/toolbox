@@ -1,0 +1,1173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Announcements - Garuda Linux Forum</title>
+    <link>https://forum.garudalinux.org/c/announcements/16</link>
+    <description>Topics in the &#39;Announcements&#39; category Get the latest news about package updates and what is important about Garuda Linux.</description>
+    <language>en-GB</language>
+    <atom:link href="https://forum.garudalinux.org/c/announcements/16.rss" rel="self" type="application/rss+xml" />
+    <atom:link href="https://forum.garudalinux.org/c/announcements/16.md" rel="alternate" type="text/markdown" />
+      <lastBuildDate>Sun, 18 Oct 2026 12:41:05 +0000</lastBuildDate>
+        <item>
+          <title>Chaotic-AUR turns 8 years old today! 🎉</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Today, we celebrate another year of <a href="https://aur.chaotic.cx">Chaotic-AUR</a>, and it is greater than ever. Today, another iteration of our web presence went live, along with a dedicated birthday event page featuring data that was compiled from a variety of our git repositories and news channel.</p>
+<aside class="onebox allowlistedgeneric" data-onebox-src="https://aur.chaotic.cx/memorial-v3/">
+  <header class="source">
+      <img src="https://aur.chaotic.cx/favicon-32x32.png" class="site-icon" alt="" width="32" height="32">
+
+      <a href="https://aur.chaotic.cx/memorial-v3/" target="_blank" rel="noopener">Chaotic-AUR</a>
+  </header>
+
+  <article class="onebox-body">
+    <div class="aspect-image" style="--aspect-ratio:420/400;"><img src="https://aur.chaotic.cx/assets/logo_400.png" class="thumbnail" alt="" width="420" height="400"></div>
+
+<h3><a href="https://aur.chaotic.cx/memorial-v3/" target="_blank" rel="noopener">Memorial 2026 · Chaotic-AUR</a></h3>
+
+  <p>Eight years of Chaotic-AUR: a timeline from 2018 until today and fun facts from our commit history</p>
+
+
+  </article>
+
+  <div class="onebox-metadata">
+    
+    
+  </div>
+
+  <div style="clear: both"></div>
+</aside>
+
+<p>I’m personally quite happy that we are able to provide AUR packages to everyone securely and in a controlled way, which the most recent AUR malware incidents have proven to be necessary. The times of unsupervised building of packages are gone. Experience has shown that package update reviews are, in fact, very manageable, also due to the fact that our setup makes this really easy and accessible on one single page instead of having to navigate around numerous pull requests.</p>
+<p>The long-standing problem of having to find out about packages that need a rebuild via a bug report is also mostly solved these days: while there are still occasional things to fine-tune, the repository is generally able to automatically find and self-heal a lot of packages without having to explicitly declare a rebuild trigger.</p>
+<p>Thanks to everyone who was part of the journey, and to many more years! <img src="https://forum.garudalinux.org/images/emoji/noto/hugs.png?v=15" title=":hugs:" class="emoji" alt=":hugs:" loading="lazy" width="20" height="20"></p>
+            <p><small>7 posts - 7 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/chaotic-aur-turns-8-years-old-today/49226">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/chaotic-aur-turns-8-years-old-today/49226</link>
+          <pubDate>Sun, 18 Oct 2026 12:41:05 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-49226</guid>
+          <source url="https://forum.garudalinux.org/t/chaotic-aur-turns-8-years-old-today/49226.rss">Chaotic-AUR turns 8 years old today! 🎉</source>
+        </item>
+        <item>
+          <title>Testing backups the hard way</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>This morning at ~05:49h CET, the system disk on our main server, which hosts all our web services, failed unexpectedly, forcing us to initiate emergency recovery.</p>
+<blockquote>
+<p>Device not ready; aborting initialisation, CSTS=0x0</p>
+</blockquote>
+<p>After a phase of trying to recover the disk rather than writing it off immediately, and Hetzner support only being able to tell us that the disk was faulty, the active restore process was initiated around 14:00 CET by TNE and me, also because I was required to attend my main job until this time.</p>
+<blockquote>
+<p>1 backup corruption, 1 ■■■■ed up folder permission, 3 manual database restores later, we’re finally here</p>
+</blockquote>
+<p>All of it sounds easy on paper:</p>
+<ul>
+<li>We do use NixOS as server OS. All of its state is declaratively managed, and all of the data that is not actively kept is being wiped on reboot, because the rootfs is a tmpfs. State not declared does effectively not exist.</li>
+<li>Setting up the system is usually one <code>nixos-install</code> away after creating the partition layout.</li>
+<li>All of the persisted files and directories are backed up via Borgmatic in daily fashion, and we will be alerted by our monitoring if any of the backups is too old (i.e., it didn’t happen for some reason)</li>
+</ul>
+<p>So… boot into Hetzner rescue, partition, restore, install NixOS, reboot, done.</p>
+<p>In reality, it sadly turned out to be an unfortunate chain of events:</p>
+<ul>
+<li>Backups did indeed exist and contained all the data needed for restoration. However, the first restore failed at ~70% completion because of backup corruption.</li>
+<li>Trying to figure out how to deal with this, we settled on a storagebox <a href="https://wiki.garudalinux.org/en/restoring-snapshots">snapshot</a> and performed the potentially destructive borg check --repair command.</li>
+<li>After this, the restoration completed successfully. Everything was double-checked to be complete and working, so the server was rebooted. Job done?</li>
+<li>System comes up. It obviously had the right system config applied, but SSH did not allow logging in. After a few hours of digging into it, the root cause for failing dbus (and thus everything else like containers failing to start, SSH failing to log in, DNS lookups failing) turned out to be a <code>0700</code> permission on the restored <code>/data_1/persist/etc</code> folder. Job done, right?</li>
+<li>Getting all the services up left both the forum, Cloud, and Postgres database in a half-broken state. All of them needed to be restored from the extra backups performed daily. This also meant accepting a bigger data loss because these were from the 15th of October, unlike the Borgmatic backup from today at ~00:00, which was originally restored.</li>
+</ul>
+<p>Around 7 hours after starting the active restore process, and working on it actively, we are finally fully back online.</p>
+<ul>
+<li>The entire process going from down to fully back up, took roughly 15 hours.</li>
+<li>Around 7 of it was spent on actively restoring; the rest was spent messaging Hetzner support staff and figuring out whether the error was recoverable without being forced to restore.</li>
+<li>Most services lost about 6 hours of data (backup to outage time); however, Cloud, Forum, Mastodon, and <a href="https://aur.chaotic.cx">Chaotic-AUR</a> lost one entire day more due to having to restore the previous dumps. Timing matters!</li>
+</ul>
+<p>There are many things we can learn from this, amongst other things:</p>
+<ul>
+<li>Borgmatic timing needs to be better, so backups contain the daily backups of other things. Postgres backups must also be initiated by Borgmatic, not a separate service, and it must also test integrity after being done.</li>
+<li>Steps for disaster recovery need to be well documented, so they can be performed more quickly.</li>
+<li>Confidence in backups needs to be fully established, so we can write off disks instantly after a few sanity checks and enter the restore process.</li>
+<li>Permissions of restored backups must be sanity-checked. While all of them retained their permissions, top folders might not.</li>
+<li>And last but not least, at least the OS drive must absolutely reside on RAID, which was not the case before. We will likely get this done in the near future, which will probably require scheduled maintenance. None of this was foreshadowed by our monitoring. While we do have alerting for drive wear leveling and alerting in case of irregularities, things looked absolutely normal until the drive suddenly failed.</li>
+</ul>
+<p>We are sorry for the inconvenience caused and will take all the necessary steps to prevent this from happening again. While it is inevitable to some degree when not having a highly available system (which of course can be done, but costs a lot more), the time taken to get the system back up can be drastically decreased.</p>
+            <p><small>20 posts - 16 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/testing-backups-the-hard-way/49215">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/testing-backups-the-hard-way/49215</link>
+          <pubDate>Fri, 16 Oct 2026 20:33:08 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-49215</guid>
+          <source url="https://forum.garudalinux.org/t/testing-backups-the-hard-way/49215.rss">Testing backups the hard way</source>
+        </item>
+        <item>
+          <title>Garuda Nix released</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Hey everyone <img src="https://forum.garudalinux.org/images/emoji/noto/waving_hand.png?v=15" title=":waving_hand:" class="emoji" alt=":waving_hand:" loading="lazy" width="20" height="20"></p>
+<p>This time, I have something else to announce. Some of you might know that the <a href="https://nix.garudalinux.org">Garuda Nix Subsystem</a> has existed for quite some time. Originally, this was supposed to be an add-on for Garuda Linux installations, allowing dual-booting with a NixOS installation living in the same partition via a subvolume.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/b/6/b610c7f9d0eb984ee7776903669f771c60895f84.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/b610c7f9d0eb984ee7776903669f771c60895f84" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b610c7f9d0eb984ee7776903669f771c60895f84_2_690x369.jpeg" alt="image" data-base62-sha1="pYCQTfiok06E2ycGwMJSBEUoA84" width="690" height="369" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b610c7f9d0eb984ee7776903669f771c60895f84_2_690x369.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b610c7f9d0eb984ee7776903669f771c60895f84_2_1035x553.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b610c7f9d0eb984ee7776903669f771c60895f84_2_1380x738.jpeg 2x" data-dominant-color="3D2339"></a></div><p></p>
+<p>As a huge fan of NixOS, I wanted to get more people to try it out. It is a very different concept from traditional distributions because of its declarative nature and how it does a lot of things differently than, e.g., Arch Linux. It might not be for everyone, but if it is, there is no going back. Let’s get the Nixfection started <img src="https://forum.garudalinux.org/images/emoji/noto/yum.png?v=15" title=":yum:" class="emoji" alt=":yum:" loading="lazy" width="20" height="20"></p>
+<p>It is time to rebrand the <code>subsystem</code> to a full-blown “Garuda Nix” since, as of today, it supports the installation of NixOS  “Mokka” or “Dr460nized” editions via either the Calamares installer or a <code>install-garuda-nix</code> CLI. These are the exact same dotfiles the Garuda Linux ISOs use, ported to NixOS. The installer then provides the same opinionated settings Garuda also provides, and the Nix counterpart of <a href="https://aur.chaotic.cx">Chaotic-AUR</a> (<a href="https://www.nyx.chaotic.cx/">Chaotic Nyx</a>) out of the box, and a sane flake config to get started in <code>/etc/nixos</code>. It also features some presets that Garuda also provides in the <code>garuda-*</code> module settings.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/a/0/a046e6761ac4a25bdcda75a4960065480bd731a2.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/a046e6761ac4a25bdcda75a4960065480bd731a2" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/a/0/a046e6761ac4a25bdcda75a4960065480bd731a2_2_690x371.jpeg" alt="image" data-base62-sha1="mRSiuNvEc5m9RxhfpprWmZy0Z6W" width="690" height="371" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/a/0/a046e6761ac4a25bdcda75a4960065480bd731a2_2_690x371.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/a/0/a046e6761ac4a25bdcda75a4960065480bd731a2_2_1035x556.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/a/0/a046e6761ac4a25bdcda75a4960065480bd731a2_2_1380x742.jpeg 2x" data-dominant-color="363848"></a></div><p></p>
+<p>While both Dr460nized and Mokka ISO exist, both installers can actually install both editions since NixOS installations are always netinstalls.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/c/8/c8f0ff04a9c1067dbf93f04de8cbc7dbb4108527.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/c8f0ff04a9c1067dbf93f04de8cbc7dbb4108527" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/c/8/c8f0ff04a9c1067dbf93f04de8cbc7dbb4108527_2_690x464.jpeg" alt="image" data-base62-sha1="sFBPd6YE3uHEpczIlB749oQuBZZ" width="690" height="464" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/c/8/c8f0ff04a9c1067dbf93f04de8cbc7dbb4108527_2_690x464.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/c/8/c8f0ff04a9c1067dbf93f04de8cbc7dbb4108527_2_1035x696.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/original/3X/c/8/c8f0ff04a9c1067dbf93f04de8cbc7dbb4108527.jpeg 2x" data-dominant-color="313142"></a></div><p></p>
+<p>Calamares options are simple; meanwhile, the CLI offers a few more options simply because extending this to Calamares would’ve been too much pain <img src="https://forum.garudalinux.org/images/emoji/noto/smiley.png?v=15" title=":smiley:" class="emoji" alt=":smiley:" loading="lazy" width="20" height="20"></p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/c/5/c5d57051f04c0d64010d160f210ad6c14fadff0d.png" data-download-href="https://forum.garudalinux.org/uploads/default/c5d57051f04c0d64010d160f210ad6c14fadff0d" title="image"><img src="https://forum.garudalinux.org/uploads/default/original/3X/c/5/c5d57051f04c0d64010d160f210ad6c14fadff0d.png" alt="image" data-base62-sha1="se7lPrmVaYP3307A9FStbV6bmHz" width="574" height="280"></a></div><br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/7/7/7715fac3014da1221da394d9aee6d89732492fb3.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/7715fac3014da1221da394d9aee6d89732492fb3" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/7/7/7715fac3014da1221da394d9aee6d89732492fb3_2_690x490.jpeg" alt="image" data-base62-sha1="gZtUpKXQHKE0uDrC36SENI18zDB" width="690" height="490" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/7/7/7715fac3014da1221da394d9aee6d89732492fb3_2_690x490.jpeg, https://forum.garudalinux.org/uploads/default/original/3X/7/7/7715fac3014da1221da394d9aee6d89732492fb3.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/original/3X/7/7/7715fac3014da1221da394d9aee6d89732492fb3.jpeg 2x" data-dominant-color="333140"></a></div><p></p>
+<p>The main selling point for the CLI is therefore the easy setup of Impermanence, a NixOS module allowing the deletion of non-persisted data on every reboot. Wiping the data then happens either via BTRFS rollback on BTRFS or by utilizing a tmpfs as <code>/</code> when using ext4. A concept I’m a huge fan of. Garuda infra runs on this too, for example! <img src="https://forum.garudalinux.org/images/emoji/noto/slight_smile.png?v=15" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p><aside class="onebox allowlistedgeneric" data-onebox-src="https://grahamc.com/blog/erase-your-darlings/">
+  <header class="source">
+      <img class="site-icon" alt="">
+
+      <a href="https://grahamc.com/blog/erase-your-darlings/" target="_blank" rel="noopener">grahamc.com</a>
+  </header>
+
+  <article class="onebox-body">
+    
+
+<h3><a href="https://grahamc.com/blog/erase-your-darlings/" target="_blank" rel="noopener">Erase your darlings: immutable infrastructure for mutable systems - Graham...</a></h3>
+
+
+
+  </article>
+
+  <div class="onebox-metadata">
+    
+    
+  </div>
+
+  <div style="clear: both"></div>
+</aside>
+
+<p>A word of caution: if someone is going to try this, it requires opting into persisting the state of non-default data directories. While Garuda NIx persists all the important dirs to run the system (i.e. Wi-Fi passwords or users <code>.config</code>) out of the box, others might require being explicitly declared. See the <a href="https://wiki.nixos.org/wiki/Impermanence">Nix wiki</a> for reference.</p>
+<p>Thanks to <a class="mention" href="https://forum.garudalinux.org/u/elite">@elite</a> for testing and giving feedback on the <a href="https://iso.builds.garudalinux.org/iso/garuda/">ISO builds</a>!</p>
+<p>Daily <a href="https://iso.builds.garudalinux.org/iso/garuda/">ISO builds</a> are built by CI and can be downloaded below:</p>
+<ul>
+<li><a href="https://builds.garudalinux.org/garuda-nix/garuda-nix-dr460nized-26.11-x86_64-linux.iso">Dr460nized</a></li>
+<li><a href="https://builds.garudalinux.org/garuda-nix/garuda-nix-mokka-26.11-x86_64-linux.iso">Mokka</a></li>
+</ul>
+<p>Since configuring NixOS is done entirely by editing config files and then applying the config, I can warmly recommend reading a starter guide and our module options reference to everyone who is new to NixOS. There are also NixOS options and package searches to answer the question of how to enable a service or install a certain package.</p>
+<ul>
+<li><a href="https://nixos-and-flakes.thiscute.world/nixos-with-flakes/get-started-with-nixos" class="inline-onebox">Get Started with NixOS | NixOS &amp; Flakes Book</a></li>
+<li><a href="https://nix.garudalinux.org/nixos-module/options" class="inline-onebox">Module options reference - Garuda Nix ❄️ documentation</a></li>
+<li><a href="https://search.nixos.org/options" class="inline-onebox">NixOS Search</a></li>
+<li><a href="https://search.nixos.org/packages" class="inline-onebox">NixOS Search</a></li>
+</ul>
+<p>Have fun! <img src="https://forum.garudalinux.org/uploads/default/original/2X/4/498485f0a8532fd821bd7b9c95bad051149df7b9.png?v=15" title=":eagle:" class="emoji emoji-custom" alt=":eagle:" loading="lazy" width="20" height="20"></p>
+            <p><small>23 posts - 11 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/garuda-nix-released/48803">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/garuda-nix-released/48803</link>
+          <pubDate>Sun, 20 Sep 2026 18:25:09 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48803</guid>
+          <source url="https://forum.garudalinux.org/t/garuda-nix-released/48803.rss">Garuda Nix released</source>
+        </item>
+        <item>
+          <title>Framework collaborates with Garuda Linux!</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Framework, the company beloved by many in the Linux community for reversing the trend of engineering unrepairable laptops with planned obsolescence by making modular, repairable and upgradable laptops (as well as a desktop now too!), has gotten in touch with us and sent us one of their laptops with one simple request: Use it as your day-to-day computer with Garuda Linux!</p>
+<p>Here’s the trick: By making one of us use their freely provided laptop, we’re going to find any issues there are with the software support in Garuda Linux and fix them, cheeky! Other than that, Framework made no other request and did not make us sign a contract of any kind! It’s hard to say no to kindness like that!</p>
+<h3><a name="p-299914-framework-16-oh-my-1" class="anchor" href="https://forum.garudalinux.org#p-299914-framework-16-oh-my-1" aria-label="Heading link"></a>Framework 16 - oh my!</h3>
+<p>Framework has been an up-and-coming name in the laptop hardware world for a few years now, although they have actually earned quite a good reputation in the Linux community through not only outreach projects like this one, but also through their support of the Right to Repair movement and focus on customizability and repairability instead of devices built to fail.</p>
+<p>They’ve decided to send us (in this case me!) a Laptop from their Framework 16 line, which is the largest and most capable of their Laptops. If you haven’t seen any Framework devices before, the amount of engineering done to make everything as modular and repairable as it is, is quite incredible (at least in my opinion <img src="https://forum.garudalinux.org/images/emoji/noto/wink.png?v=15" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">).</p>
+<h3><a name="p-299914-what-this-means-for-garuda-linux-2" class="anchor" href="https://forum.garudalinux.org#p-299914-what-this-means-for-garuda-linux-2" aria-label="Heading link"></a>What this means for Garuda Linux</h3>
+<p>You can expect better support for Framework devices. The Garuda Linux team is only made of volunteers (<a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Join us! Garuda Linux is a distro from and for the volunteers!</a>), so testing on broad hardware is a challenge. The device itself is also pretty powerful compared to what I used to have access to, and the extra ram has been a huge life changer for testing in virtual machines or having one too many browser tabs open while compiling, which used to lead to an OOM freeze for a minute or so before our OOM killer kicked in.</p>
+<p>Other than that? Not much. Garuda Linux is and will stay a community run project. Neither Garuda Linux as a whole, the Garuda Linux Team nor any individual member has any contractual obligations towards Framework.</p>
+<h3><a name="p-299914-a-personal-thanks-to-framework-3" class="anchor" href="https://forum.garudalinux.org#p-299914-a-personal-thanks-to-framework-3" aria-label="Heading link"></a>A personal thanks to Framework</h3>
+<p>I’ve personally always been a fan of the Framework ideology towards repair and longevity, which keeps otherwise perfectly working hardware out of the electronic waste bin. Not only that, but Framework has consistently shown care for not only the global Right to Repair movement, but also Linux and the free software world. Garuda Linux is not the first project they have worked with directly, either. So, for supporting the Linux world: Thank you!</p>
+<p>(Full disclosure: We were asked if we were willing to post about this collaboration on our Blog, but there was no implication or pressure indicating it was mandatory. Opinions and words are our/my own, but Framework did have a chance to see this post before it was posted. I’ve had the device for a few weeks now, and I am very happy with it <img src="https://forum.garudalinux.org/images/emoji/noto/grin.png?v=15" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20">)</p>
+            <p><small>18 posts - 14 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/framework-collaborates-with-garuda-linux/48777">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/framework-collaborates-with-garuda-linux/48777</link>
+          <pubDate>Sun, 13 Sep 2026 21:11:05 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48777</guid>
+          <source url="https://forum.garudalinux.org/t/framework-collaborates-with-garuda-linux/48777.rss">Framework collaborates with Garuda Linux!</source>
+        </item>
+        <item>
+          <title>Forum reached over 10000 Users :partying_face:</title>
+          <dc:creator><![CDATA[SGS]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <h3><a name="p-298906-a-heartfelt-thank-you-to-everyone-who-made-this-possible-1" class="anchor" href="https://forum.garudalinux.org#p-298906-a-heartfelt-thank-you-to-everyone-who-made-this-possible-1" aria-label="Heading link"></a>A heartfelt thank you to everyone who made this possible.</h3>
+<p>I’m not a man for big words. <img src="https://forum.garudalinux.org/images/emoji/noto/smiling_face.png?v=15" title=":smiling_face:" class="emoji" alt=":smiling_face:" loading="lazy" width="20" height="20"></p>
+<p><a href="https://gitlab.com/SGSm/wallpaper/-/raw/master/Avatar/Banner/10000_Users.png?ref_type=heads"><img src="https://forum.garudalinux.org/uploads/default/original/3X/1/9/19e2b98f7a9d139323e5f66315a988347cb8568d.jpeg" alt="10000 Users" data-base62-sha1="3GZGVYKD2m3GuTpf3rBR4LLrJxz" width="690" height="388"></a></p>
+<p><em><strong>Now let’s pop the champagne corks and get the party started!</strong></em></p>
+<p><img src="https://forum.garudalinux.org/images/emoji/noto/partying_face.png?v=15" title=":partying_face:" class="emoji only-emoji" alt=":partying_face:" loading="lazy" width="20" height="20"></p>
+            <p><small>30 posts - 25 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/forum-reached-over-10000-users/48654">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/forum-reached-over-10000-users/48654</link>
+          <pubDate>Tue, 25 Aug 2026 17:20:28 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48654</guid>
+          <source url="https://forum.garudalinux.org/t/forum-reached-over-10000-users/48654.rss">Forum reached over 10000 Users :partying_face:</source>
+        </item>
+        <item>
+          <title>Garuda Linux &quot;Temeraire&quot; (260819)</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/5/1/5135258b8947fea93b723d05f7b83df8615775c8.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/5135258b8947fea93b723d05f7b83df8615775c8" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/5/1/5135258b8947fea93b723d05f7b83df8615775c8_2_690x388.jpeg" alt="image" data-base62-sha1="bAoxyLdAc6QUEsixBsizavQGY7m" width="690" height="388" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/5/1/5135258b8947fea93b723d05f7b83df8615775c8_2_690x388.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/5/1/5135258b8947fea93b723d05f7b83df8615775c8_2_1035x582.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/5/1/5135258b8947fea93b723d05f7b83df8615775c8_2_1380x776.jpeg 2x" data-dominant-color="012744"></a></div><p></p>
+<h4><a name="p-298459-hello-fellow-garudians-eagle-1" class="anchor" href="https://forum.garudalinux.org#p-298459-hello-fellow-garudians-eagle-1" aria-label="Heading link"></a>Hello, fellow Garudians! <img src="https://forum.garudalinux.org/uploads/default/original/2X/4/498485f0a8532fd821bd7b9c95bad051149df7b9.png?v=15" title=":eagle:" class="emoji emoji-custom" alt=":eagle:" loading="lazy" width="20" height="20"></h4>
+<p>More than a year has passed since our last major release, so a new one has long been overdue. Therefore, we’re excited to announce our latest release: <strong>Garuda Temeraire</strong>! So far we’ve always named our releases after eagles and birds of prey, but for the near future we’re switching things up. We will use established dragon names from mythology, pop culture, movies, anime, gaming, and literature. Temeraire, the hero of a <a href="https://en.wikipedia.org/wiki/His_Majesty's_Dragon">beloved series of novels</a>, was chosen for this release - it’s a personal favorite of mine, and it just felt right.</p>
+<p>Thanks to everyone who participated in testing the pre-release ISO; it helped a lot in making this release as good as it turned out <img src="https://forum.garudalinux.org/images/emoji/noto/slight_smile.png?v=15" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"> As we’re based on the rolling-release Arch, many of the following changes have already made it into our repo and ISO refreshes; others, however, are new and will be released today! Let’s dive right in <img src="https://forum.garudalinux.org/images/emoji/noto/man_detective.png?v=15" title=":man_detective:" class="emoji" alt=":man_detective:" loading="lazy" width="20" height="20"></p>
+<h3><a name="p-298459-the-plasma-editions-get-a-fresh-coat-and-a-new-login-manager-sparkles-2" class="anchor" href="https://forum.garudalinux.org#p-298459-the-plasma-editions-get-a-fresh-coat-and-a-new-login-manager-sparkles-2" aria-label="Heading link"></a>The Plasma editions get a fresh coat (and a new login manager) <img src="https://forum.garudalinux.org/images/emoji/noto/sparkles.png?v=15" title=":sparkles:" class="emoji" alt=":sparkles:" loading="lazy" width="20" height="20"></h3>
+<p>Both KDE Plasma editions received a round of <strong>polish, updated theming files</strong>, and no longer ship the better blur plugin, which has been found to decrease performance in certain situations.</p>
+<p>Both Plasma editions - and the live environments - have also migrated to modern <strong>Plasma Login Manager</strong> as their login manager of choice, replacing SDDM. Our migrations have automatically switched users over a while ago, which was also needed due to dropping obsolete SDDM themes from our settings packages.</p>
+<p>If you want to reproduce the default themes, you can find a short procedure here:</p>
+<ul>
+<li><a href="https://wiki.garudalinux.org/en/Dr460nized/Version-5-0">Dr460nized</a></li>
+<li><a href="https://wiki.garudalinux.org/en/Mokka/Version-2">Mokka</a></li>
+</ul>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/f/1/f12f6c08f7facc6f87eddaea5cdc15021a2e2f58.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/f12f6c08f7facc6f87eddaea5cdc15021a2e2f58" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/f/1/f12f6c08f7facc6f87eddaea5cdc15021a2e2f58_2_517x316.jpeg" alt="image" data-base62-sha1="ypCFDvWsaTnQnl9XN3KcMRCeqne" width="517" height="316" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/f/1/f12f6c08f7facc6f87eddaea5cdc15021a2e2f58_2_517x316.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/f/1/f12f6c08f7facc6f87eddaea5cdc15021a2e2f58_2_775x474.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/f/1/f12f6c08f7facc6f87eddaea5cdc15021a2e2f58_2_1034x632.jpeg 2x" data-dominant-color="3A3948"></a></div><p></p>
+<h3><a name="p-298459-hyprland-goes-fully-lua-dizzy-3" class="anchor" href="https://forum.garudalinux.org#p-298459-hyprland-goes-fully-lua-dizzy-3" aria-label="Heading link"></a>Hyprland goes fully Lua <img src="https://forum.garudalinux.org/images/emoji/noto/dizzy.png?v=15" title=":dizzy:" class="emoji" alt=":dizzy:" loading="lazy" width="20" height="20"></h3>
+<p>The Hyprland edition got its configuration rewritten in <strong>Lua</strong>, with the G-Hyprland (gum) settings now provided as Lua-based presets for easy tuning, plus a set of preset profiles for tuning your Hyprland experience. Existing installations should meanwhile have already been migrated over to the Lua configs thanks to <code>garuda-update</code>!</p>
+<p>It also saw a switch to <strong>hyprlock</strong>, made <strong>Kitty</strong> the default terminal, moved the wallpaper backend from <code>swww</code> over to <code>awww</code>, and added a new Waybar theme, an emoji selector, brightness control shortcuts, a low battery warning, and improved automatic keyboard layout detection.</p>
+<h3><a name="p-298459-sway-adds-support-for-nvidia-hardware-rocket-4" class="anchor" href="https://forum.garudalinux.org#p-298459-sway-adds-support-for-nvidia-hardware-rocket-4" aria-label="Heading link"></a>Sway adds support for Nvidia hardware <img src="https://forum.garudalinux.org/images/emoji/noto/rocket.png?v=15" title=":rocket:" class="emoji" alt=":rocket:" loading="lazy" width="20" height="20"></h3>
+<p>The Sway edition has been configured to work with Nvidia hardware out of the box (including the live environment and installer)! <img src="https://forum.garudalinux.org/images/emoji/noto/partying_face.png?v=15" title=":partying_face:" class="emoji" alt=":partying_face:" loading="lazy" width="20" height="20"> The SwayFX config has been updated as well, including some updates to transparency and shadows, and introducing a new window animations feature. <img src="https://forum.garudalinux.org/images/emoji/noto/smiling_face_with_sunglasses.png?v=15" title=":smiling_face_with_sunglasses:" class="emoji" alt=":smiling_face_with_sunglasses:" loading="lazy" width="20" height="20"> Additionally, the custom output configuration and hidpi script have been dropped in favour of adding <code>nwg-displays</code> so users can configure their display setup with a GUI.</p>
+<h3><a name="p-298459-better-defaults-for-partition-creation-computer_disk-5" class="anchor" href="https://forum.garudalinux.org#p-298459-better-defaults-for-partition-creation-computer_disk-5" aria-label="Heading link"></a>Better defaults for partition creation <img src="https://forum.garudalinux.org/images/emoji/noto/computer_disk.png?v=15" title=":computer_disk:" class="emoji" alt=":computer_disk:" loading="lazy" width="20" height="20"></h3>
+<p>When creating new disk layouts, the installer will pick the biggest sector size a disk supports, and for people wanting to encrypt their disks with LUKS, the installer now uses <a href="https://wiki.archlinux.org/title/Talk:GRUB#grub_2:2.14rc1_added_support_for_LUKS2_+_argon2_encryption">LUKS2 with argon2 encryption</a> and the same sector size as the disk. Previously, this would default to 512 on disks that supported the more optimal size of 4096.</p>
+<h3><a name="p-298459-a-new-default-kernel-laptop-6" class="anchor" href="https://forum.garudalinux.org#p-298459-a-new-default-kernel-laptop-6" aria-label="Heading link"></a>A new default kernel <img src="https://forum.garudalinux.org/images/emoji/noto/laptop.png?v=15" title=":laptop:" class="emoji" alt=":laptop:" loading="lazy" width="20" height="20"></h3>
+<p>Traditionally, Garuda Linux has shipped with linux-zen for many years, mostly due to being more stable than alternatives that were around during the time we chose it as our kernel of choice. This is going to change starting with this release - <strong>linux-garuda</strong> is the excellent Linux CachyOS many of us already used, ensured to <a href="https://gitlab.com/garuda-linux/applications/linux-garuda">always build against the Nvidia drivers via DKMS</a> before updating. This version of the kernel uses the EEVDF scheduler. Of course, all the credits here go to CachyOS; they’re doing a fantastic job in this regard!</p>
+<h3><a name="p-298459-a-more-complete-toolbox-wrench-7" class="anchor" href="https://forum.garudalinux.org#p-298459-a-more-complete-toolbox-wrench-7" aria-label="Heading link"></a>A more complete toolbox <img src="https://forum.garudalinux.org/images/emoji/noto/wrench.png?v=15" title=":wrench:" class="emoji" alt=":wrench:" loading="lazy" width="20" height="20"></h3>
+<p>As the consolidated tool for system administration, <a href="https://forum.garudalinux.org/t/garuda-toolbox-preview-releases-and-testing/42151/430">Garuda Toolbox</a> has now fully replaced all of the legacy tools of Garuda Linux. Today, it features tools for:</p>
+<ul>
+<li>System maintenance</li>
+<li>System settings (including locales, system settings, kernels, locales, systemd services, and user/groups)</li>
+<li>Curated gaming tools</li>
+<li>Software discovery (from <a href="https://wiki.archlinux.org/">Arch wiki</a> software lists)</li>
+<li>Boot tools</li>
+<li>Networking configs</li>
+<li>Tools for obtaining diagnostics</li>
+<li>A list of the most important config files to edit</li>
+</ul>
+<p>It is now truly the one-stop solution for Garuda Linux management!</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/4/c/4c2e38a5d36972c3e481c1bf1fd4013331c76a54.png" data-download-href="https://forum.garudalinux.org/uploads/default/4c2e38a5d36972c3e481c1bf1fd4013331c76a54" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/4/c/4c2e38a5d36972c3e481c1bf1fd4013331c76a54_2_517x334.png" alt="image" data-base62-sha1="aRVjCcHIHYABcptG7qbJga46yag" width="517" height="334" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/4/c/4c2e38a5d36972c3e481c1bf1fd4013331c76a54_2_517x334.png, https://forum.garudalinux.org/uploads/default/optimized/3X/4/c/4c2e38a5d36972c3e481c1bf1fd4013331c76a54_2_775x501.png 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/4/c/4c2e38a5d36972c3e481c1bf1fd4013331c76a54_2_1034x668.png 2x" data-dominant-color="262432"></a></div><p></p>
+<h3><a name="p-298459-firedragon-lots-of-under-the-hood-work-fox_face-8" class="anchor" href="https://forum.garudalinux.org#p-298459-firedragon-lots-of-under-the-hood-work-fox_face-8" aria-label="Heading link"></a>FireDragon: lots of under-the-hood work <img src="https://forum.garudalinux.org/images/emoji/noto/fox_face.png?v=15" title=":fox_face:" class="emoji" alt=":fox_face:" loading="lazy" width="20" height="20"></h3>
+<p>As already outlined in the <a href="https://forum.garudalinux.org/t/firedragon-v13-official-release/48353">dedicated release post for FireDragon 13</a>, it has received a lot of major improvements over the previous version, notably an entirely new implementation which helps it be a lot faster than ever before. Features like the workspaces and notes are now also in-house developments.</p>
+<h3><a name="p-298459-leaner-default-package-lists-scissors-9" class="anchor" href="https://forum.garudalinux.org#p-298459-leaner-default-package-lists-scissors-9" aria-label="Heading link"></a>Leaner default package lists <img src="https://forum.garudalinux.org/images/emoji/noto/scissors.png?v=15" title=":scissors:" class="emoji" alt=":scissors:" loading="lazy" width="20" height="20"></h3>
+<p>Our <a href="https://gitlab.com/garuda-linux/tools/iso-profiles">iso-profiles</a> have seen a major cleanup; besides dropping legacy packages and other no longer required packages, most notably the gaming edition no longer ships potentially unwanted things like the entire <code>kde-games</code> meta package amongst others. Instead, it mostly includes tools and launchers for people used for gaming on Linux, as well as our <code>performance-tweaks</code> package out of the box.</p>
+<h3><a name="p-298459-h-2026-artwork-contest-winner-art-10" class="anchor" href="https://forum.garudalinux.org#p-298459-h-2026-artwork-contest-winner-art-10" aria-label="Heading link"></a>2026 Artwork Contest winner <img src="https://forum.garudalinux.org/images/emoji/noto/art.png?v=15" title=":art:" class="emoji" alt=":art:" loading="lazy" width="20" height="20"></h3>
+<p>Some of you may have already seen <a href="https://forum.garudalinux.org/t/2026-garuda-artwork-contest/47032/196">the announcement</a>, but for those who missed it: the <strong>2026 Garuda Artwork Contest</strong> has been wrapped up. The community voted over the course of the year, with first prize going to the piece with the most likes.</p>
+<p>The honor goes to <strong><a class="mention" href="https://forum.garudalinux.org/u/duke187">@Duke187</a></strong>, whose submission was created with the <strong>Hyprland &amp; Cosmic</strong> editions in mind! Besides being featured in this post, his artwork has already made its way into our wallpaper packages, so everyone can get with the next wallpaper update.</p>
+<p>A big thank-you to everyone who participated and voted!</p>
+<h3><a name="p-298459-new-arch-mirror-arch-11" class="anchor" href="https://forum.garudalinux.org#p-298459-new-arch-mirror-arch-11" aria-label="Heading link"></a>New Arch mirror <img src="https://forum.garudalinux.org/uploads/default/original/2X/4/476de8ebef6fddee7b44b5fe6cd6fd63b3c87118.png?v=15" title=":arch:" class="emoji emoji-custom" alt=":arch:" loading="lazy" width="20" height="20"></h3>
+<p>More recently, we have started hosting an Arch Linux mirror on R2, which is globally distributed via Cloudflare. You can make use of it by supplying the following in <code>/etc/pacman.conf</code>:</p>
+<pre><code class="lang-auto">Server = https://arch.garudalinux.org/$repo/os/$arch
+</code></pre>
+<h3><a name="p-298459-chaotic-aurs-website-got-an-upgrade-rocket-12" class="anchor" href="https://forum.garudalinux.org#p-298459-chaotic-aurs-website-got-an-upgrade-rocket-12" aria-label="Heading link"></a><a href="https://aur.chaotic.cx">Chaotic-AUR</a>’s website got an upgrade <img src="https://forum.garudalinux.org/images/emoji/noto/rocket.png?v=15" title=":rocket:" class="emoji" alt=":rocket:" loading="lazy" width="20" height="20"></h3>
+<p>On another note, for everyone interested in inspecting and searching for packages available in Garuda out of the box, the <a href="https://aur.chaotic.cx">Chaotic-AUR</a> website got a huge upgrade just yesterday. Estimated build start &amp; finish times, more statistics, filters, and live package/pipeline logs are just some things to mention!</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/0/3/0306882eb40c636690acd25a2bba1c171270421e.png" data-download-href="https://forum.garudalinux.org/uploads/default/0306882eb40c636690acd25a2bba1c171270421e" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/0/3/0306882eb40c636690acd25a2bba1c171270421e_2_517x354.png" alt="image" data-base62-sha1="qLqtGlAoWQaGmkAopiT7YqEfEi" width="517" height="354" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/0/3/0306882eb40c636690acd25a2bba1c171270421e_2_517x354.png, https://forum.garudalinux.org/uploads/default/optimized/3X/0/3/0306882eb40c636690acd25a2bba1c171270421e_2_775x531.png 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/0/3/0306882eb40c636690acd25a2bba1c171270421e_2_1034x708.png 2x" data-dominant-color="282735"></a></div><p></p>
+<h3><a name="p-298459-how-to-support-garuda-linux-people_hugging-13" class="anchor" href="https://forum.garudalinux.org#p-298459-how-to-support-garuda-linux-people_hugging-13" aria-label="Heading link"></a>How to support Garuda Linux <img src="https://forum.garudalinux.org/images/emoji/noto/people_hugging.png?v=15" title=":people_hugging:" class="emoji" alt=":people_hugging:" loading="lazy" width="20" height="20"></h3>
+<p>If you want to help our project, the best way to help is to get in contact with us! We have a dedicated thread for this: <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779" class="inline-onebox">Volunteers needed: This is how you can help</a>. Whether it is translations, helping out in the forum, or simply contributing improvements for things you’re unhappy with and want to see improved, just let us know.</p>
+<h3><a name="p-298459-where-to-get-it-downwards_button-14" class="anchor" href="https://forum.garudalinux.org#p-298459-where-to-get-it-downwards_button-14" aria-label="Heading link"></a>Where to get it? <img src="https://forum.garudalinux.org/images/emoji/noto/downwards_button.png?v=15" title=":downwards_button:" class="emoji" alt=":downwards_button:" loading="lazy" width="20" height="20"></h3>
+<p>The ISO can be downloaded via the links below:</p>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/community/cosmic/latest.iso?r2=1">Cosmic</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<p>Thanks for the continued support over the years, everyone. We hope you enjoy the new release! <img src="https://forum.garudalinux.org/images/emoji/noto/partying_face.png?v=15" title=":partying_face:" class="emoji" alt=":partying_face:" loading="lazy" width="20" height="20"></p>
+<h3><a name="p-298459-more-changelogs-bookmark_tabs-15" class="anchor" href="https://forum.garudalinux.org#p-298459-more-changelogs-bookmark_tabs-15" aria-label="Heading link"></a>More changelogs <img src="https://forum.garudalinux.org/images/emoji/noto/bookmark_tabs.png?v=15" title=":bookmark_tabs:" class="emoji" alt=":bookmark_tabs:" loading="lazy" width="20" height="20"></h3>
+<p>The full changelogs live in the <a href="https://gitlab.com/garuda-linux/changelogs">changelogs repository</a> as usual, most notably the <a href="https://gitlab.com/garuda-linux/changelogs/-/blob/master/Upcoming.md">upcoming changes</a>. For the interested, there are also all past changelogs in the same repo.</p>
+            <p><small>58 posts - 29 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/garuda-linux-temeraire-260819/48606">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/garuda-linux-temeraire-260819/48606</link>
+          <pubDate>Wed, 19 Aug 2026 21:38:18 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48606</guid>
+          <source url="https://forum.garudalinux.org/t/garuda-linux-temeraire-260819/48606.rss">Garuda Linux &quot;Temeraire&quot; (260819)</source>
+        </item>
+        <item>
+          <title>FireDragon v13 Official Release</title>
+          <dc:creator><![CDATA[stefanwimmer128]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>FireDragon v13 is a complete re-implementation of FireDragon with a completely new code base.</p>
+<p><strong>Notable features/changes:</strong></p>
+<ul>
+<li>Support for XDG Base Directories</li>
+<li>New Welcome dialog
+<ul>
+<li>Enhanced search engine selection &amp; configuration</li>
+<li>New quick settings for:
+<ul>
+<li>Hide password manager (Hide the default firefox password manager to use your own)</li>
+<li>Enable ResistFingerprinting (Enable RFP for even more privacy, this will break many sites)</li>
+<li>Enable prefetching (Enable prefetching for increased speed when loading pages, see below for details)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Search
+<ul>
+<li>New default search engine: DuckDuckGo</li>
+<li>Extended list of available search engines</li>
+</ul>
+</li>
+<li>Slight increase in browsing speed</li>
+<li>WebGL &amp; DRM are now handled as site permissions</li>
+<li>Dark Reader no longer installed by default</li>
+</ul>
+
+Speed increase details <a href="https://forum.garudalinux.org/t/firedragon-v13-official-release/48353/1">(click for more details)</a>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>Due to incompatible formats Floorp Workspaces can’t be migrated to the new FireDragon Workspaces, so FireDragon will have its own Workspaces</li>
+<li>Due to incompatible formats Floorp Notes can’t be migrated to the new FireDragon Notes, so FireDragon will have its own Notes</li>
+</ul>
+<p><strong>It can be installed using the following methods:</strong></p>
+<ul>
+<li>Garuda Linux repo &amp; (Chaotic) AUR-Packages:<br>
+– <code>firedragon</code><br>
+– <code>firedragon-catppuccin</code><br>
+– <code>firedragon-bin</code><br>
+– <code>firedragon-catppuccin-bin</code></li>
+<li>Flatpak (Dr460nized edition only) available on <a href="https://flathub.org/en/apps/org.garudalinux.firedragon">FlatHub</a></li>
+<li>Flatpak bundles, AppImages, Linux tarballs, Windows installers and MacOS packages are available on the <a href="https://gitlab.com/garuda-linux/firedragon/firedragon13/-/releases">GitLab release</a> page</li>
+</ul>
+<p><strong>Please report issues either directly in this thread or using the <a href="https://gitlab.com/garuda-linux/firedragon/firedragon13/-/work_items">GitLab issue tracker</a>. When reporting please specify the following information:</strong></p>
+<ul>
+<li>Edition (Dr460nized / Catppuccin)</li>
+<li>Version (eg. 13.0.0)</li>
+<li>OS (Linux / Windows / MacOS)</li>
+<li>Installation method (AUR-Package / Tarball / Flatpak / AppImage)</li>
+<li>CPU-Architecture (amd64 / arm64)</li>
+</ul>
+<p><em><strong>WARNING: For safety creating a new, separate profile is recommended, start FireDragon using the <code>firedragon -P</code> command to create and switch profile!</strong></em></p>
+<hr>
+<h1><a name="p-295742-firedragon-is-looking-for-translators-1" class="anchor" href="https://forum.garudalinux.org#p-295742-firedragon-is-looking-for-translators-1" aria-label="Heading link"></a>FireDragon is looking for translators</h1>
+<p>If you’re interested in helping to translate FireDragon please checkout the <a href="https://hosted.weblate.org/engage/firedragon13/">FireDragon project on Weblate</a>.</p>
+<p><a href="https://hosted.weblate.org/engage/firedragon13/"><img src="https://hosted.weblate.org/widget/firedragon13/multi-auto.svg" alt="Translation status" width="400" height="45"></a></p>
+<p>If you want to add another language please get in touch. (<a href="https://mozilla-l10n.github.io/firefox-languages/">List of available languages</a>)</p>
+            <p><small>48 posts - 21 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/firedragon-v13-official-release/48353">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/firedragon-v13-official-release/48353</link>
+          <pubDate>Sun, 26 Jul 2026 20:08:59 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48353</guid>
+          <source url="https://forum.garudalinux.org/t/firedragon-v13-official-release/48353.rss">FireDragon v13 Official Release</source>
+        </item>
+        <item>
+          <title>Garuda Sway + NVIDIA - call for testers!</title>
+          <dc:creator><![CDATA[BluishHumility]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <h2><a name="p-294984-preliminary-support-for-nvidia-drivers-has-been-added-to-garuda-sway-tada-1" class="anchor" href="https://forum.garudalinux.org#p-294984-preliminary-support-for-nvidia-drivers-has-been-added-to-garuda-sway-tada-1" aria-label="Heading link"></a>Preliminary support for NVIDIA drivers has been added to Garuda Sway <img src="https://forum.garudalinux.org/images/emoji/noto/tada.png?v=15" title=":tada:" class="emoji" alt=":tada:" loading="lazy" width="20" height="20"></h2>
+<p>Note that the Sway project itself does not support using the proprietary NVIDIA drivers (<a href="https://github.com/swaywm/sway/wiki#nvidia-users" class="inline-onebox">Home · swaywm/sway Wiki · GitHub</a>), but they can be made to work by passing the <code>--unsupported-gpu</code> flag when launching Sway (<a href="https://wiki.archlinux.org/title/Sway#Installation" class="inline-onebox">Sway - ArchWiki</a>).</p>
+<p>The new Sway ISO includes some accommodations to provide this flag when the NVIDIA driver is in use, including when booting to the live environment. With any luck, installing Garuda Sway should <strong>Just Work<sup>TM</sup></strong> when NVIDIA hardware is in use.</p>
+<h2><a name="p-294984-how-does-it-work-2" class="anchor" href="https://forum.garudalinux.org#p-294984-how-does-it-work-2" aria-label="Heading link"></a>How does it work?</h2>
+<p>For now we are using a <a href="https://gitlab.com/garuda-linux/tools/iso-profiles/-/blob/master/garuda/sway/desktop-overlay/usr/local/bin/sway-compat?ref_type=heads">wrapper script</a> for launching Sway. Essentially the script checks if NVIDIA drivers are loaded, launches Sway with the <code>--unsupported-gpu</code> flag if they are, and launches it normally if not.</p>
+<p>The wrapper script is used by the display manager, and has also been added to a custom session desktop file that the greeter uses for launching the session.</p>
+<p>At some point, we will be able to drop the wrapper script and custom desktop file in favor of implementing the <code>SWAY_UNSUPPORTED_GPU</code> environment variable instead. This was added as an option with the 1.12 release of Sway (<a href="https://github.com/swaywm/sway/releases/tag/1.12" class="inline-onebox">Release 1.12 · swaywm/sway · GitHub</a>). Unfortunately, we are still waiting for SwayFX to rebase off of this new version (see related issue <a href="https://github.com/WillPower3309/swayfx/issues/532" class="inline-onebox">Sway 1.12 based version · Issue #532 · wlrfx/swayfx · GitHub</a>), so for now we will stick with the wrapper script and custom desktop file.</p>
+<h2><a name="p-294984-how-can-i-test-it-out-3" class="anchor" href="https://forum.garudalinux.org#p-294984-how-can-i-test-it-out-3" aria-label="Heading link"></a>How can I test it out?</h2>
+<p>Download the testing build from here: <a href="https://iso.builds.garudalinux.org/iso/garuda/sway/260705/">https://iso.builds.garudalinux.org/iso/garuda/sway/260705/</a></p>
+<p>Any ISO from 260705 onward includes “out of the box” accommodations for installing on NVIDIA hardware with the proprietary drivers. Note the download link from the main webpage is still an older release. To test this new feature, you will need to download a newer release (260705 or later) from <a href="https://iso.builds.garudalinux.org/iso/garuda/">the ISO Builds page</a>.</p>
+<p>Boot the ISO and choose the “Boot allowing proprietary drivers” option to see if it works.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/b/9/b927dc978284fc410a9276e875654802cf0d4fa7.png" data-download-href="https://forum.garudalinux.org/uploads/default/b927dc978284fc410a9276e875654802cf0d4fa7" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/b/9/b927dc978284fc410a9276e875654802cf0d4fa7_2_562x500.png" alt="image" data-base62-sha1="qpXJAvmt72wZ6Kqy1mPob6za5fh" width="562" height="500" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/b/9/b927dc978284fc410a9276e875654802cf0d4fa7_2_562x500.png, https://forum.garudalinux.org/uploads/default/original/3X/b/9/b927dc978284fc410a9276e875654802cf0d4fa7.png 1.5x, https://forum.garudalinux.org/uploads/default/original/3X/b/9/b927dc978284fc410a9276e875654802cf0d4fa7.png 2x" data-dominant-color="0C0719"></a></div><p></p>
+<p>It typically takes a few minutes to reach the desktop with this setting due to installing the drivers on the fly for use in the live environment. If you get to the desktop, great! That means it’s working.</p>
+<p>If you decide to complete the installation, be sure to choose the “Sway + NVIDIA” session at the login screen–that is the custom desktop file we are using for now.</p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/6/e/6e41911fa1fc83a131b8f4be1846c9a8610c0355.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/6e41911fa1fc83a131b8f4be1846c9a8610c0355" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/6/e/6e41911fa1fc83a131b8f4be1846c9a8610c0355_2_690x388.jpeg" alt="image" data-base62-sha1="fJmZSVJ6dYnh43MWq6uGBTx5nUx" width="690" height="388" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/6/e/6e41911fa1fc83a131b8f4be1846c9a8610c0355_2_690x388.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/6/e/6e41911fa1fc83a131b8f4be1846c9a8610c0355_2_1035x582.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/6/e/6e41911fa1fc83a131b8f4be1846c9a8610c0355_2_1380x776.jpeg 2x" data-dominant-color="414048"></a></div><p></p>
+<p>If you <em>don’t</em> have NVIDIA hardware, <strong>it should still work</strong> if you boot the ISO and choose “Boot allowing proprietary drivers”!</p>
+<h2><a name="p-294984-its-not-working-sob-4" class="anchor" href="https://forum.garudalinux.org#p-294984-its-not-working-sob-4" aria-label="Heading link"></a>It’s not working! <img src="https://forum.garudalinux.org/images/emoji/noto/sob.png?v=15" title=":sob:" class="emoji" alt=":sob:" loading="lazy" width="20" height="20"></h2>
+<p>Be sure to post your hardware details to the thread to see if we can surface an issue that needs to be addressed. Please, <strong>unrelated issues should be brought up in a separate topic</strong>.</p>
+<p>Some edge cases with old or unusual hardware configurations may not work on the live ISO correctly, just like with any other desktop environment. If that happens to you, try installing Sway with the open source drivers instead. After the installation is complete, reboot and install the NVIDIA packages using the Setup Assistant. Reboot one more time to relaunch Sway after the drivers are installed. The wrapper script should still work, regardless of when the driver installation occurs.</p>
+<hr>
+<p><strong>Also featured on this ISO</strong> are new wallpapers by <a class="mention" href="https://forum.garudalinux.org/u/elite">@elite</a> and <a class="mention" href="https://forum.garudalinux.org/u/tillidie">@TilliDie</a>! <img src="https://forum.garudalinux.org/images/emoji/noto/partying_face.png?v=15" title=":partying_face:" class="emoji" alt=":partying_face:" loading="lazy" width="20" height="20"></p>
+<aside class="quote quote-modified" data-post="14" data-topic="47032">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" src="https://forum.garudalinux.org/user_avatar/forum.garudalinux.org/elite/60/33633_2.png" class="avatar">
+    <div class="quote-title__text-content">
+      <a href="https://forum.garudalinux.org/t/grand-prize-200-2026-garuda-artwork-contest/47032/14">2026 Garuda Artwork Contest</a> <a class="badge-category__wrapper " href="https://forum.garudalinux.org/c/community/13"><span data-category-id="13" style="--category-badge-color: #F1592A; --category-badge-text-color: #FFFFFF;" data-drop-close="true" class="badge-category --style-square "><span class="badge-category__name">Garuda Community</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    I have a few more with this style to be posted later then back to a more normal style I typically do. 
+                    <a href="https://gitlab.com/eliteamd-garuda/elite-artwork/-/raw/main/Artwork/2026_ISO_Wallpaper_Garuda/GarudaCityA.png?ref_type=heads" target="_blank" rel="noopener" class="onebox">
+            [image]
+          </a>
+
+ 
+(Rustic Garuda) 
+<a href="https://gitlab.com/eliteamd-garuda/elite-artwork/-/raw/main/Artwork/2026_ISO_Wallpaper_Garuda/GarudaCityA-2560.png?ref_type=heads"> 
+2560x1600</a> 
+(Mokka, Hyprland, Dragonized, i3, Cosmic)
+  </blockquote>
+</aside>
+
+<aside class="quote quote-modified" data-post="27" data-topic="47032">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" src="https://forum.garudalinux.org/user_avatar/forum.garudalinux.org/tillidie/60/25013_2.png" class="avatar">
+    <div class="quote-title__text-content">
+      <a href="https://forum.garudalinux.org/t/grand-prize-200-2026-garuda-artwork-contest/47032/27">2026 Garuda Artwork Contest</a> <a class="badge-category__wrapper " href="https://forum.garudalinux.org/c/community/13"><span data-category-id="13" style="--category-badge-color: #F1592A; --category-badge-text-color: #FFFFFF;" data-drop-close="true" class="badge-category --style-square "><span class="badge-category__name">Garuda Community</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    <a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/c/9/c97c00845c9886b754c6203732fc3ae2a6752fc2.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/c97c00845c9886b754c6203732fc3ae2a6752fc2" title="Garuda_landscapemoka12">[Garuda_landscapemoka12]</a> 
+DE Mokka <img width="20" height="20" src="https://forum.garudalinux.org/images/emoji/noto/smiley.png?v=15" title="smiley" alt="smiley" class="emoji">
+  </blockquote>
+</aside>
+
+<p>Both wallpapers are in the 2026 Garuda Artwork Contest thread, be sure to check it out!</p>
+<aside class="quote quote-modified" data-post="1" data-topic="47032">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" src="https://forum.garudalinux.org/user_avatar/forum.garudalinux.org/tbg/60/1472_2.png" class="avatar">
+    <div class="quote-title__text-content">
+      <a href="https://forum.garudalinux.org/t/grand-prize-200-2026-garuda-artwork-contest/47032">2026 Garuda Artwork Contest</a> <a class="badge-category__wrapper " href="https://forum.garudalinux.org/c/community/13"><span data-category-id="13" style="--category-badge-color: #F1592A; --category-badge-text-color: #FFFFFF;" data-drop-close="true" class="badge-category --style-square "><span class="badge-category__name">Garuda Community</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    <a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/5/3/53df13921b81bfc8969816ef2e4f6c989d59dcb6.png" data-download-href="https://forum.garudalinux.org/uploads/default/53df13921b81bfc8969816ef2e4f6c989d59dcb6" title="status-card__image">[status-card__image]</a> 
+
+HI there everybody, and a big shout out to all the great artists in the Garuda community. <img width="20" height="20" src="https://forum.garudalinux.org/images/emoji/noto/waving_hand.png?v=15" title="waving_hand" alt="waving_hand" class="emoji"> <img width="20" height="20" src="https://forum.garudalinux.org/images/emoji/noto/smiley.png?v=15" title="smiley" alt="smiley" class="emoji"> 
+It’s that time of year again fellow Garudians, we’re about to kick off our annual Garuda Artwork Contest. This year the Garuda Artwork Contest should be bigger and better than ever, as we’ve made some changes that will hopefully make it an even greater success. 
+As a further enticement for artists to participate in this years contest, I’ve decided to increase…
+  </blockquote>
+</aside>
+
+            <p><small>27 posts - 9 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/garuda-sway-nvidia-call-for-testers/48296">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/garuda-sway-nvidia-call-for-testers/48296</link>
+          <pubDate>Mon, 06 Jul 2026 23:14:35 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48296</guid>
+          <source url="https://forum.garudalinux.org/t/garuda-sway-nvidia-call-for-testers/48296.rss">Garuda Sway + NVIDIA - call for testers!</source>
+        </item>
+        <item>
+          <title>Attack wave on AUR packages</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Hey everyone,</p>
+<p>Just as a heads-up, we are aware of the wave of <a href="https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/">current injections of malicious content in AUR packages</a>.</p>
+<p>Our security measures in <a href="https://aur.chaotic.cx">chaotic-aur</a> are working perfectly so far and have <a href="https://gitlab.com/chaotic-aur/pkgbuilds/-/merge_requests/?sort=created_date&amp;state=all&amp;label_name%5B%5D=dangerous&amp;first_page_size=20">already prevented a few of them from getting deployed</a>.</p>
+<p>Please be extra careful when updating packages directly from AUR in the coming days! Especially watch out for the addition of an <em>npm</em> or <em>bun</em> dependency and an additional <em>.install</em> script in PKGBUILDs.</p>
+<p>Also see this post for more context:</p>
+<aside class="quote quote-modified" data-post="1238" data-topic="26">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" src="https://forum.garudalinux.org/user_avatar/forum.garudalinux.org/technetium/60/17361_2.png" class="avatar">
+    <div class="quote-title__text-content">
+      <a href="https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238">Chaotic-AUR | Packages | Requests | Recompilation | Reports</a> <a class="badge-category__wrapper " href="https://forum.garudalinux.org/c/feedback/feature-requests/26"><span data-category-id="26" style="--category-badge-color: #ffff00; --category-badge-text-color: #FFFFFF; --parent-category-badge-color: #808281;" data-parent-category-id="2" data-drop-close="true" class="badge-category --style-square --has-parent" title="This category is meant for new feature requests for Garuda Linux."><span class="badge-category__name">Requests</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    <a name="p-293319-probably-dont-update-aur-packages-for-a-couple-of-days-1" class="anchor" href="https://forum.garudalinux.org#p-293319-probably-dont-update-aur-packages-for-a-couple-of-days-1" aria-label="Heading link"></a>Probably don’t update AUR packages for a couple of days!
+Unless you review them closely! 
+exodus-wallet-bin, runescape-launcher, python-pychromecast-git, ttf-material-design-icons-git, cgminer, nextcloud-git, thunar-nextcloud-plugin, screenpipe-bin, lib32-egl-wayland, imageglass, subsync, and many more have been compromised by an infostealer: 
+
+<a href="https://aur.archlinux.org/cgit/aur.git/commit/?h=exodus-wallet-bin&amp;id=d5b08e944f2655f501345812acac89fbbd870421" class="inline-onebox">Making sure you're not a bot!</a>
+<a href="https://aur.archlinux.org/cgit/aur.git/commit/?h=runescape-launcher&amp;id=cf0b627a6c36be967411063e2e2629f80bb6d51f" class="inline-onebox">Making sure you're not a bot!</a>
+<a href="https://aur.archlinux.org/cgit/aur.git/commit/?h=python-pychromecast-git&amp;id=5ad9e5759b4c8606a09eebcd25995f9da67f7e32" class="inline-onebox">Making sure you're not a bot!</a>
+<a href="https://aur.archlinux.org/cgit/aur.git/commit/?h=ttf-material-design-icons-git&amp;id=b4002df5423ce188770a94ddd81927680d2ff675" class="inline-onebox">Making sure you're not a bot!</a>
+<a href="https://aur.archlinux.org/cgit/aur.git/commit/?h=cgminer&amp;id=78b27a3953ee8cef2a3c6d9e4c5845dc9f0acfac" class="inline-onebox">Making sure you're not a bot!</a>
+
+<a href="https://aur.chaotic.cx">Ch…</a>
+  </blockquote>
+</aside>
+
+            <p><small>61 posts - 27 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124</link>
+          <pubDate>Thu, 11 Jun 2026 20:12:24 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-48124</guid>
+          <source url="https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124.rss">Attack wave on AUR packages</source>
+        </item>
+        <item>
+          <title>Chaotic-AUR&#39;s new mirror system</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Here are some news regarding our package repositories, forwarded from the <a href="https://t.me/chaotic_aur">Chaotic-AUR news channe</a>l! <img src="https://forum.garudalinux.org/images/emoji/noto/man_detective.png?v=15" title=":man_detective:" class="emoji" alt=":man_detective:" loading="lazy" width="20" height="20"></p>
+<p>A new mirror system is now active:</p>
+<p>All country mirrors (for example, in-mirror) will redirect:</p>
+<ol>
+<li>All users in the country to the closest mirror in that country</li>
+<li>All users in other countries to a random (persistent) mirror in that country (To prevent the mirrors on country borders getting overwhelmed)<br>
+If all mirrors in a country are unavailable, router will return an applicable error code</li>
+</ol>
+<p>Geo-mirror will keep working like normal.</p>
+<p>All <em>specific</em> mirrors (for example br-1-mirror) will now no longer silently fail over to another mirror if offline (but will instead provide a generic applicable http error code)</p>
+<p>random-mirror will now redirect to a random (but persistent) mirror for each IP address.</p>
+<p>A new mirror list containing the changes has been deployed.</p>
+<p>Besides, some of you may have noticed, there are now many “official” mirrors available: <a href="https://aur.chaotic.cx/mirrors" class="inline-onebox">Chaotic-AUR - automated binary repo 👨🏻‍💻</a></p>
+<p>These 52 new mirrors are operated by the <a href="https://aur.chaotic.cx">chaotic-aur</a> operations team on donated servers, more than doubling <a href="https://aur.chaotic.cx">chaotic-aur</a>’s previous mirror count.</p>
+<p>Getting all of these servers online has been a massive undertaking, but now we have better mirror coverage than ever before: <a href="https://status.chaotic.cx/map" class="inline-onebox">Chaotic-AUR Map</a></p>
+<p>These have been added to the mirrorlist and the geo-mirror. Enjoy!</p>
+            <p><small>7 posts - 7 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/chaotic-aurs-new-mirror-system/47741">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/chaotic-aurs-new-mirror-system/47741</link>
+          <pubDate>Fri, 03 Apr 2026 15:37:41 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47741</guid>
+          <source url="https://forum.garudalinux.org/t/chaotic-aurs-new-mirror-system/47741.rss">Chaotic-AUR&#39;s new mirror system</source>
+        </item>
+        <item>
+          <title>FireDragon v13 RC</title>
+          <dc:creator><![CDATA[stefanwimmer128]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>FireDragon v13 is a complete re-implementation of FireDragon with a completely new code base, and it is officially ready for testing.</p>
+<p><strong>Notable features/changes:</strong></p>
+<ul>
+<li>Support for XDG Base Directories</li>
+<li>Welcome dialog
+<ul>
+<li>Enhanced search engine selection &amp; configuration</li>
+<li>New quick settings for:
+<ul>
+<li>Hide password manager (Hide the default firefox password manager to use your own)</li>
+<li>Enable ResistFingerprinting (Enable RFP for even more privacy, this will break many sites)</li>
+<li>Enable prefetching (Enable prefetching for increased speed when loading pages, see below for details)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Search
+<ul>
+<li>New default search engine: DuckDuckGo</li>
+<li>Extended list of available search engines</li>
+</ul>
+</li>
+<li>Slight increase in browsing speed</li>
+<li>WegGL is now handled as site permission</li>
+<li><em>(v13.0.0-rc.3)</em> Dark Reader no longer installed by default</li>
+</ul>
+
+Speed increase details <a href="https://forum.garudalinux.org/t/firedragon-v13-rc/47646/1">(click for more details)</a>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>Due to incompatible formats Floorp Workspaces can’t be migrated to the new FireDragon Workspaces, so FireDragon will have its own Workspaces</li>
+<li>Due to incompatible formats Floorp Notes can’t be migrated to the new FireDragon Notes, so FireDragon will have its own Notes</li>
+</ul>
+<p><strong>It can be tested using the following methods:</strong></p>
+<ul>
+<li>AUR-Packages (also available in the Garuda Linux repository):<br>
+– <code>firedragon-next</code><br>
+– <code>firedragon-catppuccin-next</code><br>
+– <code>firedragon-next-bin</code><br>
+– <code>firedragon-catppuccin-next-bin</code></li>
+<li>AppImages availabe on the <a href="https://gitlab.com/garuda-linux/firedragon/firedragon13/-/releases">release</a></li>
+<li>No <a href="https://aur.chaotic.cx">CHAOTIC-AUR</a> package yet.</li>
+</ul>
+<p><strong>Please report issues either directly in this thread or using the <a href="https://gitlab.com/garuda-linux/firedragon/firedragon13/-/work_items">GitLab issue tracker</a>. When reporting please specify the following information:</strong></p>
+<ul>
+<li>Edition (Dr460nized / Catppuccin)</li>
+<li>Version (eg. 13.0.0-rc.2)</li>
+<li>Installation method (AUR-Package / Tarball / AppImage)</li>
+<li>CPU-Architecture (amd64 / arm64)</li>
+</ul>
+<p><em><strong>WARNING: For safety creating a new, separate profile is recommended, start FireDragon using the <code>firedragon -P</code> command to create and switch profile!</strong></em></p>
+            <p><small>40 posts - 8 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/firedragon-v13-rc/47646">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/firedragon-v13-rc/47646</link>
+          <pubDate>Sat, 28 Mar 2026 07:26:04 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47646</guid>
+          <source url="https://forum.garudalinux.org/t/firedragon-v13-rc/47646.rss">FireDragon v13 RC</source>
+        </item>
+        <item>
+          <title>A statement on age verification &amp; the state of the community discourse</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <h1><a name="p-288321-will-garuda-linux-implement-age-verification-1" class="anchor" href="https://forum.garudalinux.org#p-288321-will-garuda-linux-implement-age-verification-1" aria-label="Heading link"></a>Will Garuda Linux implement age verification?</h1>
+<p>Garuda Linux will not implement any age verification measures, since Garuda Linux’s legal jurisdictions have no laws mandating age verification:</p>
+
+Summary <a href="https://forum.garudalinux.org/t/a-statement-on-age-verification-the-state-of-the-community-discourse/47652/1">(click for more details)</a>
+<h1><a name="p-288321-a-statement-on-the-state-of-the-community-discourse-regarding-age-verification-2" class="anchor" href="https://forum.garudalinux.org#p-288321-a-statement-on-the-state-of-the-community-discourse-regarding-age-verification-2" aria-label="Heading link"></a>A statement on the state of the community discourse regarding age verification</h1>
+<p><strong>The rest of this section is an opinion piece. I do not speak for the entire Garuda Linux Team, nor the project as a whole.</strong></p>
+<p>Some of us have honestly been quite shocked at the way this conversation has been moving in the Linux Community as a whole.</p>
+<p>Distribution developers are being hounded at every corner for complying with these laws. I understand how enticing it sounds to say distro devs should “stand their ground” and “fulfill their moral duty”, but I think we as the Linux community are barking up the wrong tree when we do this. Let me explain:</p>
+<p>None of the Linux Distribution maintainers <em>WANT</em> to implement age verification. The distro devs are on the same side as the ones criticizing them. We’re all against adding these age verification laws and age verification measures to our distributions. Most distributions are projects of passion, built by volunteers in their free time (and so is Garuda Linux).</p>
+<p>The targets of the Linux community should be politicians and local representatives as well as a boycott of Meta and other organizations involved with pushing these laws, as well as encouraging others to do the same. Support the organizations fighting in the courts for our cause. Linux distribution maintainers have no power over governments, and they have no power over repealing or changing these laws.</p>
+<p>It might be easy for many to “claim the moral high ground” and hound Linux distribution maintainers for “folding” and not willingly breaking the law, but that is easy to say when it is not them being fined and punished. The fines associated with these age verification laws are life changing (in the life ruining way) and failure to comply with a court order could even be punished with jail time.<br>
+These are real laws with very real consequences. I do not think we, the Linux community, should be hounding the volunteer distribution developers that try to make the best of an awful situation.</p>
+<p>This has gotten to the point where specific developers from a certain upstream of ours have been personally attacked for their contributions. Those personal attacks were then deleted by request and the deletions were then seen by many as “censorship” in the community.</p>
+<h3><a name="p-288321-our-appeal-to-the-greater-linux-community-is-therefore-as-follows-3" class="anchor" href="https://forum.garudalinux.org#p-288321-our-appeal-to-the-greater-linux-community-is-therefore-as-follows-3" aria-label="Heading link"></a>Our appeal to the greater Linux community is therefore as follows:</h3>
+<p>Do not attack our own for doing what they are being forced to do. We are fighting the wrong war. Governments, representatives and international conglomerates are pushing for this, not our own.</p>
+<p>Contributors to Linux Distributions are easy targets and in our own community. Governments feel invincible, far away and impossible to convince. Don’t let the (rightful) anger cloud your judgment into targeting the wrong, easier target for something they had no true choice in.</p>
+<p>Be excellent to each other.</p>
+<h1><a name="p-288321-faq-4" class="anchor" href="https://forum.garudalinux.org#p-288321-faq-4" aria-label="Heading link"></a>FAQ</h1>
+<h2><a name="p-288321-will-garuda-linux-switch-away-from-systemduse-a-systemd-fork-because-of-the-userdb-age-pull-request-5" class="anchor" href="https://forum.garudalinux.org#p-288321-will-garuda-linux-switch-away-from-systemduse-a-systemd-fork-because-of-the-userdb-age-pull-request-5" aria-label="Heading link"></a>Will Garuda Linux switch away from systemd/use a systemd fork because of the userdb age pull request?</h2>
+
+Details <a href="https://forum.garudalinux.org/t/a-statement-on-age-verification-the-state-of-the-community-discourse/47652/1">(click for more details)</a>
+<h2><a name="p-288321-will-garuda-linux-implement-age-verification-if-forced-to-by-law-6" class="anchor" href="https://forum.garudalinux.org#p-288321-will-garuda-linux-implement-age-verification-if-forced-to-by-law-6" aria-label="Heading link"></a>Will Garuda Linux implement age verification if forced to by law?</h2>
+
+Details <a href="https://forum.garudalinux.org/t/a-statement-on-age-verification-the-state-of-the-community-discourse/47652/1">(click for more details)</a>
+            <p><small>44 posts - 20 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/a-statement-on-age-verification-the-state-of-the-community-discourse/47652">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/a-statement-on-age-verification-the-state-of-the-community-discourse/47652</link>
+          <pubDate>Mon, 23 Mar 2026 13:17:18 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47652</guid>
+          <source url="https://forum.garudalinux.org/t/a-statement-on-age-verification-the-state-of-the-community-discourse/47652.rss">A statement on age verification &amp; the state of the community discourse</source>
+        </item>
+        <item>
+          <title>ISO Release: 260309</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>A new Garuda Linux ISO release “260309” has been issued.</p>
+<p>This release is a hotfix to release 260308 which had some issues that unfortunately slipped under the radar. If you are currently using 260308, you do not have to reinstall your system. Simply run <code>garuda-update</code> in your terminal application of choice and reboot.</p>
+<h3><a name="p-287418-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-287418-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-260309/47557/1">(click for more details)</a>
+<h3><a name="p-287418-noteworthy-updates-2" class="anchor" href="https://forum.garudalinux.org#p-287418-noteworthy-updates-2" aria-label="Heading link"></a>Noteworthy updates</h3>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Pkgbase</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>firedragon 1:12.9.0-1</td>
+<td>Default search engine was changed to DuckDuckGo<br>for a better OOTB experience</td>
+</tr>
+</tbody>
+</table>
+</div><h3><a name="p-287418-noteworthy-changes-3" class="anchor" href="https://forum.garudalinux.org#p-287418-noteworthy-changes-3" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li>The setup assistant will now successfully autostart on first boot again</li>
+<li>The setup assistant is now independent of Garuda Toolbox instead of being started by Garuda Toolbox</li>
+<li>Dr460nized/Dr460nized Gaming will now have blur enabled again by default</li>
+<li>The Calamares installer will no longer be partially transparent to improve contrast in key areas</li>
+</ul>
+<p>Note: Changes not directly relevant to the ISO files (general changes) are not mentioned.</p>
+<h3><a name="p-287418-downloads-4" class="anchor" href="https://forum.garudalinux.org#p-287418-downloads-4" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-287418-addendum-5" class="anchor" href="https://forum.garudalinux.org#p-287418-addendum-5" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-260309/47557">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-260309/47557</link>
+          <pubDate>Mon, 09 Mar 2026 06:59:44 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47557</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-260309/47557.rss">ISO Release: 260309</source>
+        </item>
+        <item>
+          <title>ISO Release: 260308</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>A new Garuda Linux ISO release “260308” has been issued.</p>
+<h3><a name="p-287380-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-287380-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-260308/47553/1">(click for more details)</a>
+<h3><a name="p-287380-noteworthy-changes-2" class="anchor" href="https://forum.garudalinux.org#p-287380-noteworthy-changes-2" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li>Garuda Rani has been renamed to Garuda Toolbox</li>
+<li>A fix for missing SSL certificates <a href="https://github.com/plougher/squashfs-tools/issues/339">caused by mksquashfs</a> has been applied</li>
+<li><a href="https://wiki.garudalinux.org/en/garuda-update">Garuda-update</a> now has better hotfix support out of the box</li>
+<li>Updated calamares installer to the latest git commit to take advantage of bugfixes</li>
+<li>Garuda Health will no longer display a health check report while booted into the live system</li>
+</ul>
+<p>Note: Changes not directly relevant to the ISO files (general changes) are not mentioned.</p>
+<h3><a name="p-287380-known-issues-3" class="anchor" href="https://forum.garudalinux.org#p-287380-known-issues-3" aria-label="Heading link"></a>Known issues</h3>
+<ul>
+<li>Setup assistant does not launch automatically on first boot</li>
+</ul>
+<h3><a name="p-287380-downloads-4" class="anchor" href="https://forum.garudalinux.org#p-287380-downloads-4" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-287380-addendum-5" class="anchor" href="https://forum.garudalinux.org#p-287380-addendum-5" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>3 posts - 3 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-260308/47553">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-260308/47553</link>
+          <pubDate>Sun, 08 Mar 2026 12:47:12 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47553</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-260308/47553.rss">ISO Release: 260308</source>
+        </item>
+        <item>
+          <title>Emergency maintenance affecting Garuda Linux ISO downloads</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p><strong>UPDATE: Resolved. All services should be operating as expected.</strong></p>
+
+Old text <a href="https://forum.garudalinux.org/t/emergency-maintenance-affecting-garuda-linux-iso-downloads/47544/1">(click for more details)</a>
+            <p><small>6 posts - 3 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/emergency-maintenance-affecting-garuda-linux-iso-downloads/47544">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/emergency-maintenance-affecting-garuda-linux-iso-downloads/47544</link>
+          <pubDate>Sat, 07 Mar 2026 17:21:24 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47544</guid>
+          <source url="https://forum.garudalinux.org/t/emergency-maintenance-affecting-garuda-linux-iso-downloads/47544.rss">Emergency maintenance affecting Garuda Linux ISO downloads</source>
+        </item>
+        <item>
+          <title>Garuda 6th Anniversary announcement</title>
+          <dc:creator><![CDATA[tbg]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Hello to all of our great supporters out there in the worldwide Garuda community. <img src="https://forum.garudalinux.org/images/emoji/noto/waving_hand.png?v=15" title=":waving_hand:" class="emoji" alt=":waving_hand:" loading="lazy" width="20" height="20"> <img src="https://forum.garudalinux.org/images/emoji/noto/smiley.png?v=15" title=":smiley:" class="emoji" alt=":smiley:" loading="lazy" width="20" height="20"></p>
+<p>It’s that time of year again to thank everyone in the Garuda community and the Garuda development team for another successful year as a distro. This March marks the 6th anniversary of the existence of Garuda as a Linux Distro.  <img src="https://forum.garudalinux.org/images/emoji/noto/six.png?v=15" title=":six:" class="emoji" alt=":six:" loading="lazy" width="20" height="20"> <img src="https://forum.garudalinux.org/images/emoji/noto/spiral_calendar.png?v=15" title=":spiral_calendar:" class="emoji" alt=":spiral_calendar:" loading="lazy" width="20" height="20"></p>
+<p>In our short span of existence Garuda has become widely recognized within the Linux community for its innovative features, excellent performance, and its fantastic looks. It’s our great community that has made all of this success possible. Our great supporters and code contributors from within the Garuda community have helped to once again ensure that Garuda is recognized as one of the most outstanding Arch based distros in existence.</p>
+<p>I would like to take this opportunity to thank everyone who has contributed over the past year to help support Garuda in so many different ways, such as:</p>
+<ul>
+<li>The tireless volunteers of the Garuda development team.</li>
+<li>Financial contributors who help support Garuda’s infrastructure costs.</li>
+<li>Garuda forum volunteers, and all our great forum assistants.</li>
+<li>Maintainers of the various Garuda DE’s and Window Managers.</li>
+<li>Translators to languages other than English for Garuda projects.</li>
+<li>Wiki contributors and maintainers.</li>
+<li>Code contributors and those who submit pull requests.</li>
+<li>Garuda website designers and maintainers.</li>
+<li>Chaotic AUR volunteers and maintainers.</li>
+<li>Tutorial, FAQ, and video tutorial contributors.</li>
+<li>Alpha and beta testers who submit bug reports and contribute workarounds and fixes.</li>
+<li>Garuda artwork contributors, who help make Garuda one of the most attractive distros in existence.</li>
+</ul>
+<p>So here’s to you people, cheers everybody. <img src="https://forum.garudalinux.org/images/emoji/noto/beers.png?v=15" title=":beers:" class="emoji" alt=":beers:" loading="lazy" width="20" height="20"></p>
+<p>Happy 6th anniversary, with hopefully many more to come! <img src="https://forum.garudalinux.org/images/emoji/noto/partying_face.png?v=15" title=":partying_face:" class="emoji" alt=":partying_face:" loading="lazy" width="20" height="20"> <img src="https://forum.garudalinux.org/images/emoji/noto/fireworks.png?v=15" title=":fireworks:" class="emoji" alt=":fireworks:" loading="lazy" width="20" height="20"></p>
+            <p><small>17 posts - 18 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/garuda-6th-anniversary-announcement/47536">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/garuda-6th-anniversary-announcement/47536</link>
+          <pubDate>Fri, 06 Mar 2026 15:32:58 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47536</guid>
+          <source url="https://forum.garudalinux.org/t/garuda-6th-anniversary-announcement/47536.rss">Garuda 6th Anniversary announcement</source>
+        </item>
+        <item>
+          <title>ISO Release: 260115</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>Hey everyone! This is the first ISO refresh of the year, I hope everyone had nice holidays and a good start to the year for those that partake.</p>
+<p>Just going to get ahead of the “when release” questions: When it’s ready. Sorry! Hope this ISO refresh will be helpful to those new to the community though!</p>
+<h3><a name="p-282510-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-282510-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-260115/47118/1">(click for more details)</a>
+<h3><a name="p-282510-noteworthy-changes-2" class="anchor" href="https://forum.garudalinux.org#p-282510-noteworthy-changes-2" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li>This ISO release ships with the NVIDIA 590 drivers included, which have lost compatibility with the NVIDIA 1000 series. For the sake of ISO size, the 580 drivers are not included, but the Garuda Linux setup assistant will ask for your consent to install them from the repositories, if necessary.</li>
+<li>Garuda Linux configuration files are now managed through <a href="https://forum.garudalinux.org/t/garuda-config-agent-the-way-garuda-linux-default-configurations-are-handled-is-changing/47103">garuda-config-agent</a>, which will automatically apply <code>.pacnew</code> changes whenever possible.</li>
+</ul>
+<p>Note: Changes not directly relevant to the ISO files (general changes) are not mentioned.</p>
+<h3><a name="p-282510-downloads-3" class="anchor" href="https://forum.garudalinux.org#p-282510-downloads-3" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-282510-addendum-4" class="anchor" href="https://forum.garudalinux.org#p-282510-addendum-4" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>18 posts - 8 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-260115/47118">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-260115/47118</link>
+          <pubDate>Thu, 15 Jan 2026 14:22:42 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47118</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-260115/47118.rss">ISO Release: 260115</source>
+        </item>
+        <item>
+          <title>2026 Garuda Artwork Contest - (Grand Prize $200)</title>
+          <dc:creator><![CDATA[tbg]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <hr>
+<hr>
+<p>HI there everybody, and a big shout out to all the great artists in the Garuda community. <img src="https://forum.garudalinux.org/images/emoji/noto/waving_hand.png?v=15" title=":waving_hand:" class="emoji" alt=":waving_hand:" loading="lazy" width="20" height="20"> <img src="https://forum.garudalinux.org/images/emoji/noto/smiley.png?v=15" title=":smiley:" class="emoji" alt=":smiley:" loading="lazy" width="20" height="20"></p>
+<p>It’s that time of year again fellow Garudians, we’re about to kick off our annual Garuda Artwork Contest. This year the Garuda Artwork Contest should be bigger and better than ever, as we’ve made some changes that will hopefully make it an even greater success.</p>
+<p>As a further enticement for artists to participate in this years contest, I’ve decided to increase this year’s prize money to $200 US. My hope is that the larger purse will help attract new artists to join the Garuda community. Hopefully, this will result in even more outstanding artwork being created this time around for our community to enjoy. So, be sure to let any of your artistically inclined friends know that there’s a good chunk of cash up for grabs in this year’s event.</p>
+<p>Another change in this year’s contest will be that artwork created with the assistance of artificial intelligence (AI) will no longer be eligible to compete for the grand prize. Hopefully, this will encourage more participation from our distro’s traditional artists who felt that allowing AI artwork to compete for prize money was an unfair competitive advantage.</p>
+<p>Even though AI artwork no longer qualifies for the grand prize, I still highly encourage community members to post their AI generated artwork on the contest thread. I’m sure many would love to see your AI artwork, so feel free to make your contribution to this thread as well. Please be sure that any artwork created with the assistance of artificial intelligence is identified as <strong>“AI Art”</strong>.</p>
+<p>Good luck to everyone participating, and keep that great artwork coming.  <img src="https://forum.garudalinux.org/images/emoji/noto/+1.png?v=15" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"></p>
+<hr>
+<hr>
+<p><em>Please see the contest  thread for further information and full contest details:</em></p>
+<p><a href="https://forum.garudalinux.org/t/grand-prize-200-2026-garuda-artwork-contest/47032">2026 Garuda Artwork Contest</a></p>
+<hr>
+<hr>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://forum.garudalinux.org/t/2026-garuda-artwork-contest-grand-prize-200/47040">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/2026-garuda-artwork-contest-grand-prize-200/47040</link>
+          <pubDate>Tue, 06 Jan 2026 18:16:43 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-47040</guid>
+          <source url="https://forum.garudalinux.org/t/2026-garuda-artwork-contest-grand-prize-200/47040.rss">2026 Garuda Artwork Contest - (Grand Prize $200)</source>
+        </item>
+        <item>
+          <title>Happy New Year 2026</title>
+          <dc:creator><![CDATA[TilliDie]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Garuda Linux wishes everyone a happy 2026</p>
+<p><img src="https://forum.garudalinux.org/uploads/default/original/3X/b/0/b0fb843f16000aab0dd5012e3d7bebae366aa464.webp" alt="test6" data-base62-sha1="pfEUcYOPols8IANKqcuPUyaRlk0" width="480" height="240" class="animated"></p>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/b/6/b6de0bd81f861ae090aa531156e9b7aa3dfcab97.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/b6de0bd81f861ae090aa531156e9b7aa3dfcab97" title="new year"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b6de0bd81f861ae090aa531156e9b7aa3dfcab97_2_690x388.jpeg" alt="new year" data-base62-sha1="q5ID9GVPkbVyQkr7RnAjpdSyHPx" width="690" height="388" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b6de0bd81f861ae090aa531156e9b7aa3dfcab97_2_690x388.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b6de0bd81f861ae090aa531156e9b7aa3dfcab97_2_1035x582.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/b/6/b6de0bd81f861ae090aa531156e9b7aa3dfcab97_2_1380x776.jpeg 2x" data-dominant-color="373855"></a></div><p></p>
+            <p><small>21 posts - 21 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/happy-new-year-2026/46983">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/happy-new-year-2026/46983</link>
+          <pubDate>Tue, 30 Dec 2025 22:05:08 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-46983</guid>
+          <source url="https://forum.garudalinux.org/t/happy-new-year-2026/46983.rss">Happy New Year 2026</source>
+        </item>
+        <item>
+          <title>Merry Christmas :christmas_tree: and a Happy New Year</title>
+          <dc:creator><![CDATA[SGS]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <h1><a name="p-280476-garuda-linux-wishes-you-a-merry-christmas-christmas_tree-1" class="anchor" href="https://forum.garudalinux.org#p-280476-garuda-linux-wishes-you-a-merry-christmas-christmas_tree-1" aria-label="Heading link"></a>Garuda Linux wishes you a <em><strong>Merry Christmas</strong></em> <img src="https://forum.garudalinux.org/images/emoji/noto/christmas_tree.png?v=15" title=":christmas_tree:" class="emoji" alt=":christmas_tree:" loading="lazy" width="20" height="20"></h1>
+<p></p><div class="lightbox-wrapper"><a class="lightbox" href="https://forum.garudalinux.org/uploads/default/original/3X/1/e/1e926b2d163c1547668318168f51a53babf005ac.jpeg" data-download-href="https://forum.garudalinux.org/uploads/default/1e926b2d163c1547668318168f51a53babf005ac" title="image"><img src="https://forum.garudalinux.org/uploads/default/optimized/3X/1/e/1e926b2d163c1547668318168f51a53babf005ac_2_690x388.jpeg" alt="image" data-base62-sha1="4ms1wI64xSODf0gPv9QgnKfzfU8" width="690" height="388" srcset="https://forum.garudalinux.org/uploads/default/optimized/3X/1/e/1e926b2d163c1547668318168f51a53babf005ac_2_690x388.jpeg, https://forum.garudalinux.org/uploads/default/optimized/3X/1/e/1e926b2d163c1547668318168f51a53babf005ac_2_1035x582.jpeg 1.5x, https://forum.garudalinux.org/uploads/default/optimized/3X/1/e/1e926b2d163c1547668318168f51a53babf005ac_2_1380x776.jpeg 2x" data-dominant-color="372C1E"></a></div><p></p>
+<p><em><strong>Wallpaper by</strong></em> <a class="mention" href="https://forum.garudalinux.org/u/tillidie">@TilliDie</a></p>
+            <p><small>20 posts - 18 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/merry-christmas-and-a-happy-new-year/46938">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/merry-christmas-and-a-happy-new-year/46938</link>
+          <pubDate>Wed, 24 Dec 2025 18:56:12 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-46938</guid>
+          <source url="https://forum.garudalinux.org/t/merry-christmas-and-a-happy-new-year/46938.rss">Merry Christmas :christmas_tree: and a Happy New Year</source>
+        </item>
+        <item>
+          <title>ISO Release: 251103</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>A new Garuda Linux ISO release “251103” has been issued.</p>
+<h3><a name="p-276088-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-276088-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-251103/46442/1">(click for more details)</a>
+<h3><a name="p-276088-noteworthy-changes-2" class="anchor" href="https://forum.garudalinux.org#p-276088-noteworthy-changes-2" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li><a href="https://forum.garudalinux.org/t/phoning-home-in-garuda-update-shocking/46368">A more robust hotfix system</a> was added to <a href="https://wiki.garudalinux.org/en/garuda-update">garuda-update</a>, replacing <code>garuda-hotfixes</code>.</li>
+<li>Replaced old calamares installer slides with updated slides.</li>
+<li>Fixed an issue where <code>garuda-hardware-tool</code> would not detect GPUs with hexadecimal PCI IDs containing <code>a</code> to <code>f</code>.</li>
+<li>Added support for “inplace” system resets, effectively allowing reinstallation of Garuda Linux from a running system without any additional install media, while keeping home folder files intact.</li>
+<li>Slightly reduced time needed for the Garuda Linux installation process.</li>
+<li>Trimmed back on certain older GTK packages that were dropped from <a href="https://aur.chaotic.cx">chaotic-aur</a>.</li>
+<li>Removed automated keyring/hotfix updates from garuda-system-maintenance. This also prevents the keyring update fail message directly after first boot. Replaced with <a href="https://wiki.garudalinux.org/en/garuda-update">garuda-update</a>.</li>
+</ul>
+<p>Note: Changes not directly relevant to the ISO files (general changes) are not mentioned.<br>
+(The <a href="https://wiki.garudalinux.org/en/garuda-update">garuda-update</a> change is present because the <a href="https://wiki.garudalinux.org/en/garuda-update">garuda-update</a> self-update system is relevant to newly installed system from the ISO images)</p>
+<h3><a name="p-276088-downloads-3" class="anchor" href="https://forum.garudalinux.org#p-276088-downloads-3" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-276088-addendum-4" class="anchor" href="https://forum.garudalinux.org#p-276088-addendum-4" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>13 posts - 3 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-251103/46442">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-251103/46442</link>
+          <pubDate>Mon, 03 Nov 2025 09:59:59 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-46442</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-251103/46442.rss">ISO Release: 251103</source>
+        </item>
+        <item>
+          <title>Chaotic-AUR now has a trusted maintainers system</title>
+          <dc:creator><![CDATA[dr460nf1r3]]></dc:creator>
+          <category>Announcements</category>
+          <description><![CDATA[
+            <p>Relaying from <a href="https://t.me/chaotic_aur/668">Chaotic-AUR news</a>, especially because I’m hoping some trusted forum veterans might be interested in helping review PRs <img src="https://forum.garudalinux.org/images/emoji/noto/zany_face.png?v=15" title=":zany_face:" class="emoji" alt=":zany_face:" loading="lazy" width="20" height="20"></p>
+<hr>
+<p>What’s up, everyone? <img src="https://forum.garudalinux.org/images/emoji/noto/waving_hand/2.png?v=15" title=":waving_hand:t2:" class="emoji" alt=":waving_hand:t2:" loading="lazy" width="20" height="20"></p>
+<p>Some good news for <a href="https://aur.chaotic.cx">Chaotic-AUR</a> users: after the rising count of cases of malware in AUR, we now have a system of a trusted maintainer’s list in place. This list is being checked before updating packages silently like before. There are multiple outcomes:</p>
+<ol>
+<li>All maintainers are trusted → silently update package like before</li>
+<li>At least one maintainer is untrusted (sadly, the AUR API does not seem to expose the last packager, which is, however, being shown in the web interface for some reason):<br>
+a) Only pkgver/hash changes → silently update<br>
+b) Anything else changes → open PR for human review</li>
+<li>State updates are also always allowed (e.g. commit hashes of git packages)</li>
+</ol>
+<p>While we can’t yet tell how sustainable reviewing the untrusted portion of package updates will be, it is certainly a good step to take moving forward. Maybe this also opens the door for people to contribute, e.g., by reviewing the package updates created via PR <img src="https://forum.garudalinux.org/images/emoji/noto/innocent.png?v=15" title=":innocent:" class="emoji" alt=":innocent:" loading="lazy" width="20" height="20"> (if anyone is interested: let the team know!)</p>
+<p>Besides that, the website will also live-update on any deployment, queue and pipeline change for a more interactive experience <img src="https://forum.garudalinux.org/images/emoji/noto/raising_hands/2.png?v=15" title=":raising_hands:t2:" class="emoji" alt=":raising_hands:t2:" loading="lazy" width="20" height="20"></p>
+            <p><small>11 posts - 7 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/chaotic-aur-now-has-a-trusted-maintainers-system/46436">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/chaotic-aur-now-has-a-trusted-maintainers-system/46436</link>
+          <pubDate>Sun, 02 Nov 2025 17:21:49 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>No</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-46436</guid>
+          <source url="https://forum.garudalinux.org/t/chaotic-aur-now-has-a-trusted-maintainers-system/46436.rss">Chaotic-AUR now has a trusted maintainers system</source>
+        </item>
+        <item>
+          <title>ISO Release: 251002</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>A new Garuda Linux ISO release “251002” has been issued.</p>
+<h3><a name="p-273344-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-273344-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-251002/46121/1">(click for more details)</a>
+<h3><a name="p-273344-noteworthy-updates-2" class="anchor" href="https://forum.garudalinux.org#p-273344-noteworthy-updates-2" aria-label="Heading link"></a>Noteworthy updates</h3>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Pkgbase</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>grub 2:2.12.r359.g19c698d12-1.1</td>
+<td>This updated version of the grub package includes a patch fixing a bootloader “black screen” issue on certain older UEFIs.</td>
+</tr>
+</tbody>
+</table>
+</div><h3><a name="p-273344-noteworthy-changes-3" class="anchor" href="https://forum.garudalinux.org#p-273344-noteworthy-changes-3" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li><code>garuda-diag</code> now available on the ISO files. <code>garuda-diag</code> is the new diagnostics tool that will automatically upload system information and recent logs to the Garuda Linux privatebin in an AES256 encrypted fashion with a single command.</li>
+<li>The Hyprland edition now includes a Qt6 version of the SDDM theme, preventing a “boot to black screen” issue.</li>
+</ul>
+<p>Note: Changes not directly relevant to the ISO files (general changes) are not mentioned.</p>
+<h3><a name="p-273344-downloads-4" class="anchor" href="https://forum.garudalinux.org#p-273344-downloads-4" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-273344-addendum-5" class="anchor" href="https://forum.garudalinux.org#p-273344-addendum-5" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>4 posts - 3 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-251002/46121">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-251002/46121</link>
+          <pubDate>Thu, 02 Oct 2025 11:54:59 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-46121</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-251002/46121.rss">ISO Release: 251002</source>
+        </item>
+        <item>
+          <title>ISO Release: 250916</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>A new Garuda Linux ISO release “250916” has been issued.</p>
+<h3><a name="p-271799-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-271799-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-250916/45968/1">(click for more details)</a>
+<h3><a name="p-271799-noteworthy-changes-2" class="anchor" href="https://forum.garudalinux.org#p-271799-noteworthy-changes-2" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li>Fixed an issue where <code>garuda-hardware-tool</code> would fail to detect NVIDIA GPUs with more than one letter at the end of the model number.</li>
+<li>Skipped unnecessary steps in the installation process</li>
+<li>Fixed certain Garuda Linux root launched GUI applications causing a crash on Hyprland</li>
+<li>Fixed an issue where <code>garuda-hardware-tool</code> would install NVIDIA graphics drivers on GPUs older than Maxwell.</li>
+<li>Fixed an issue where <code>garuda-hardware-tool</code> would not detect GPUs with PCI class IDs other than 0300.</li>
+<li>Replaced gnu-netcat with openbsd-netcat</li>
+</ul>
+<p>Note: Changes not directly relevant to the ISO files (general changes) are not mentioned.</p>
+<h3><a name="p-271799-downloads-3" class="anchor" href="https://forum.garudalinux.org#p-271799-downloads-3" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/community/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-271799-addendum-4" class="anchor" href="https://forum.garudalinux.org#p-271799-addendum-4" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>1 post - 2 participants</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-250916/45968">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-250916/45968</link>
+          <pubDate>Tue, 16 Sep 2025 22:02:39 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-45968</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-250916/45968.rss">ISO Release: 250916</source>
+        </item>
+        <item>
+          <title>ISO Release: 250907</title>
+          <dc:creator><![CDATA[TNE]]></dc:creator>
+          <category>ISO Releases</category>
+          <description><![CDATA[
+            <p>A new Garuda Linux ISO release “250907” has been issued.</p>
+<h3><a name="p-270712-disclaimer-1" class="anchor" href="https://forum.garudalinux.org#p-270712-disclaimer-1" aria-label="Heading link"></a>Disclaimer</h3>
+<p>ISO releases like this one are refreshed versions of an existing “major” release, containing the latest versions of all packages, bug fixes and hardware compatibility improvements. It is not necessary to reinstall Garuda Linux to take advantage of any changes made in an updated ISO file. A normal <code>garuda-update</code> system update will suffice.</p>
+
+Disclaimer for Linux news outlets and press <a href="https://forum.garudalinux.org/t/iso-release-250907/45868/1">(click for more details)</a>
+<h3><a name="p-270712-noteworthy-updates-2" class="anchor" href="https://forum.garudalinux.org#p-270712-noteworthy-updates-2" aria-label="Heading link"></a>Noteworthy updates</h3>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Pkgbase</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mesa 1:25.2.2-1</td>
+<td>This updated version of Mesa includes a fix that reportedly prevents the random logouts some users have been experiencing on Plasma Wayland.</td>
+</tr>
+</tbody>
+</table>
+</div><h3><a name="p-270712-noteworthy-changes-3" class="anchor" href="https://forum.garudalinux.org#p-270712-noteworthy-changes-3" aria-label="Heading link"></a>Noteworthy changes</h3>
+<ul>
+<li>Fixed an issue where garuda-hardware-tool would fail to detect GPUs if the PCI ID string is longer than expected.</li>
+<li>Disabled udevadm trigger after updates to systemd/udev files. Fixes crashes during system updates for some users.</li>
+</ul>
+<h3><a name="p-270712-downloads-4" class="anchor" href="https://forum.garudalinux.org#p-270712-downloads-4" aria-label="Heading link"></a>Downloads</h3>
+<ul>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/cinnamon/latest.iso?r2=1">Cinnamon</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized/latest.iso?r2=1">Dr460nized</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/dr460nized-gaming/latest.iso?r2=1">Dr460nized-gaming</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/gnome/latest.iso?r2=1">GNOME</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/community/hyprland/latest.iso?r2=1">Hyprland</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/i3/latest.iso?r2=1">i3</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/kde-lite/latest.iso?r2=1">KDE-lite</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/mokka/latest.iso?r2=1">Mokka</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/sway/latest.iso?r2=1">Sway</a></li>
+<li><a href="https://iso.builds.garudalinux.org/iso/latest/garuda/xfce/latest.iso?r2=1">XFCE</a></li>
+</ul>
+<h3><a name="p-270712-addendum-5" class="anchor" href="https://forum.garudalinux.org#p-270712-addendum-5" aria-label="Heading link"></a>Addendum</h3>
+<p>Like Garuda Linux? Want to help out? <a href="https://forum.garudalinux.org/t/volunteers-needed-this-is-how-you-can-help/45779">Be a volunteer</a>!</p>
+            <p><small>1 post - 1 participant</small></p>
+            <p><a href="https://forum.garudalinux.org/t/iso-release-250907/45868">Read full topic</a></p>
+          ]]></description>
+          <link>https://forum.garudalinux.org/t/iso-release-250907/45868</link>
+          <pubDate>Sun, 07 Sep 2025 16:58:12 +0000</pubDate>
+          <discourse:topicPinned>No</discourse:topicPinned>
+          <discourse:topicClosed>Yes</discourse:topicClosed>
+          <discourse:topicArchived>No</discourse:topicArchived>
+          <guid isPermaLink="false">forum.garudalinux.org-topic-45868</guid>
+          <source url="https://forum.garudalinux.org/t/iso-release-250907/45868.rss">ISO Release: 250907</source>
+        </item>
+  </channel>
+</rss>

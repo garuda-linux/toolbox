@@ -3,7 +3,7 @@
 
 use toolbox_plan::{HomeChange, HomeDirectory, NewHome, NewUser, NewUserParts, UserId, UserName};
 
-use super::guards::is_current;
+use super::guards::{in_user_range, is_current};
 use super::{Refusal, accounts, editable};
 use crate::domains::{Accounts, HomeFolders};
 use crate::{ChangeSet, Snapshot};
@@ -70,9 +70,9 @@ pub fn check_uid(uid: Option<UserId>, system: bool, snapshot: &Snapshot) -> Resu
 ///
 /// # Errors
 ///
-/// [`Refusal`] for root, an unknown user, the app's own user (usermod
-/// refuses an account that runs programs) or the home folder of another
-/// account.
+/// [`Refusal`] for root, an account outside the user ids of people, an
+/// unknown user, the app's own user (usermod refuses an account that
+/// runs programs) or the home folder of another account.
 pub fn set_home(
     user: &UserName,
     change: HomeChange,
@@ -81,7 +81,7 @@ pub fn set_home(
 ) -> Result<(), Refusal> {
     let accounts = accounts(snapshot)?;
 
-    editable(user, accounts)?;
+    in_user_range(editable(user, accounts)?)?;
 
     if is_current(user, snapshot) {
         return Err(Refusal::CurrentUser);

@@ -26,14 +26,17 @@ const NO_AGENT_MARKS: [&str; 6] = [
     "no session",
 ];
 
-const HELPER_MISSING_MARK: &str = "cannot run program";
+/// pkexec says "Error accessing" for a missing absolute path and
+/// "Cannot run program" for a name it could not find.
+const HELPER_MISSING_MARKS: [&str; 2] = ["error accessing", "cannot run program"];
 /// A wrong password or a user who is no administrator.
 const DENIED_MARK: &str = "not authorized";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Refusal {
     Dismissed,
-    /// polkit said no: wrong password, or no administrator.
+    /// polkit said no: wrong password, no administrator, or a Cancel in
+    /// Plasma's dialog, which answers it the same way.
     Denied,
     NoAgent,
     HelperMissing,
@@ -73,7 +76,7 @@ impl fmt::Display for Refusal {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(match self {
             Self::Dismissed => "the password dialog was dismissed",
-            Self::Denied => "the authorization was denied",
+            Self::Denied => "the password dialog was closed or the password was not accepted",
             Self::NoAgent => "no password dialog could appear",
             Self::HelperMissing => "the helper of Garuda Toolbox is not installed",
             Self::Broken => "pkexec cannot run on this system",
@@ -143,7 +146,7 @@ pub fn refusal(code: Option<i32>, stderr: &str) -> Option<Refusal> {
 
             Some(if NO_AGENT_MARKS.iter().any(|mark| words.contains(mark)) {
                 Refusal::NoAgent
-            } else if words.contains(HELPER_MISSING_MARK) {
+            } else if HELPER_MISSING_MARKS.iter().any(|mark| words.contains(mark)) {
                 Refusal::HelperMissing
             } else if words.trim().is_empty() || words.contains(DENIED_MARK) {
                 Refusal::Denied

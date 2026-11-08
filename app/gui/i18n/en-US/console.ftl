@@ -44,7 +44,7 @@ step-failed-unknown = Failed
 
 # pkexec did not start the helper.
 refusal-dismissed = The password dialog was closed. Nothing was changed.
-refusal-denied = You are not allowed to make these changes.
+refusal-denied = The password dialog was closed or the password was not accepted. Nothing was changed.
 refusal-no-agent = No password dialog could be shown. Log in to a desktop session with a polkit agent.
 refusal-helper-missing = The Garuda Toolbox helper is not installed. Reinstall garuda-toolbox.
 refusal-broken = pkexec cannot run on this system. Its message is in the log.

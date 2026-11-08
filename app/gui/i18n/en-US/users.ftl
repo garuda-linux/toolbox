@@ -60,7 +60,7 @@ users-root = Root accounts are not changed here.
 
 users-locks-loading = Asking which accounts are locked…
 users-locks-dismissed = Which accounts are locked is not known: the password dialog was closed.
-users-locks-denied = Which accounts are locked is not known: your account may not ask for it.
+users-locks-denied = Which accounts are locked is not known: the password dialog was closed or the password was not accepted.
 users-locks-no-agent = Which accounts are locked is not known: no password dialog could appear, because this desktop session runs no polkit authentication agent (the program that asks for your password when an app needs more rights).
 users-locks-helper-missing = Which accounts are locked is not known: the helper of Garuda Toolbox is not installed. Reinstall Garuda Toolbox.
 users-locks-unknown = Which accounts are locked is not known: the helper of Garuda Toolbox could not read it.
@@ -77,6 +77,7 @@ users-show-console = Show Console
 users-refused-root = { $name } is a root account. Garuda Toolbox does not change it.
 users-refused-current-user = { $name } is the account you are logged in with. It cannot lock or remove itself.
 users-refused-system-account = { $name } is a system account. Only accounts of people can be removed.
+users-refused-outside-user-range = { $name } has a user ID outside 1000 to 60000, so it stays as it is.
 users-refused-last-admin = { $name } is the last member of the groups wheel and sudo. Without one nobody could administer this system.
 users-refused-last-admin-lock = { $name } is the last member of the groups wheel and sudo. With a locked password nobody could administer this system.
 users-refused-lock-state-unknown = { $name } cannot be locked while it is unknown which admins are locked.

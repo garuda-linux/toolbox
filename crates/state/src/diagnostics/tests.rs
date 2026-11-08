@@ -15,6 +15,12 @@ const CLOSED: Access = Access {
     journal: false,
 };
 
+/// `/var/log/pacman.log` of the Lima VM.
+const PACMAN_LOG: &str = include_str!("../../../system/src/status/pacman_log/fixtures/pacman.log");
+/// The last 1500 lines of it on the installed Garuda system.
+const INSTALLED_PACMAN_LOG: &str =
+    include_str!("../../../system/src/status/pacman_log/fixtures/installed-pacman.log");
+
 fn ran(output: &str, errors: &str, code: i32) -> Attempt {
     Attempt::Ran(Ran {
         output: output.to_owned(),
@@ -266,35 +272,42 @@ fn the_full_report_has_every_part_under_its_heading_in_order() {
 
 #[test]
 fn the_pacman_log_starts_at_the_last_pacman_run() {
-    let log = "[2026-10-01T10:00:00+0200] [PACMAN] Running 'pacman -Syu'\n\
-               [2026-10-01T10:00:05+0200] [ALPM] upgraded linux (6.16-1 -> 6.17-1)\n\
-               [2026-10-09T08:00:00+0200] [PACMAN] Running 'pacman -S --needed htop'\n\
-               [2026-10-09T08:00:01+0200] [PACMAN] synchronizing package lists\n\
-               [2026-10-09T08:00:03+0200] [ALPM] installed htop (3.4.1-1)\n";
+    let (part, cut) = since_last_pacman_run(PACMAN_LOG);
 
-    assert_eq!(
-        since_last_pacman_run(log),
-        (
-            "[2026-10-09T08:00:00+0200] [PACMAN] Running 'pacman -S --needed htop'\n\
-             [2026-10-09T08:00:01+0200] [PACMAN] synchronizing package lists\n\
-             [2026-10-09T08:00:03+0200] [ALPM] installed htop (3.4.1-1)\n",
-            true
-        )
+    assert!(cut);
+    assert!(
+        part.starts_with(
+            "[2026-11-08T17:35:39+0100] [PACMAN] Running 'pacman -S --noconfirm garuda-common-settings'\n"
+        ),
+        "{part}"
+    );
+    assert_eq!(part.lines().count(), 91);
+    assert!(PACMAN_LOG.ends_with(part));
+
+    let (installed_part, installed_cut) = since_last_pacman_run(INSTALLED_PACMAN_LOG);
+
+    assert!(installed_cut);
+    assert!(
+        installed_part
+            .starts_with("[2026-11-07T13:48:27+0100] [PACMAN] Running 'pacman -Rns linux-zen'\n"),
+        "{installed_part}"
     );
 }
 
+/// Edits of the real log: only what follows its last run line, once
+/// without the final line break, and that run line with `PACMAN` and
+/// `pacman` swapped.
 #[test]
 fn a_log_without_a_pacman_run_stays_whole() {
-    let log = "[2026-10-09T08:00:03+0200] [ALPM] installed htop (3.4.1-1)\nno newline";
+    let (part, _cut) = since_last_pacman_run(PACMAN_LOG);
+    let (run, after) = part.split_once('\n').unwrap();
+    let unterminated = after.strip_suffix('\n').unwrap();
+    let swapped = run.replace("[PACMAN] Running 'pacman", "[pacman] Running 'PACMAN");
 
-    assert_eq!(since_last_pacman_run(log), (log, false));
+    assert_eq!(since_last_pacman_run(after), (after, false));
+    assert_eq!(since_last_pacman_run(unterminated), (unterminated, false));
     assert_eq!(since_last_pacman_run(""), ("", false));
-
-    // "pacman" before "PACMAN" is no run line.
-    assert_eq!(
-        since_last_pacman_run("pacman said [PACMAN]\n"),
-        ("pacman said [PACMAN]\n", false)
-    );
+    assert_eq!(since_last_pacman_run(&swapped), (swapped.as_str(), false));
 }
 
 fn environment(source: Source) -> &'static [(&'static str, &'static str)] {

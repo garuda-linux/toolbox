@@ -154,7 +154,9 @@ read, **Read again** reads them again.
 
 The **Hardware** tab lists the Ethernet, wireless and Bluetooth devices
 that `lspci` and `lsusb` report. People who help in the forum ask for this
-information.
+information. A USB device counts as Bluetooth when one of its interfaces
+has the Bluetooth class in `/sys/bus/usb/devices`, even when its name says
+only "Wireless", as with the Bluetooth part of a MediaTek MT7922 card.
 
 - **Copy this line** on a row copies that device's line.
 - **Copy all** copies every line.

@@ -8,7 +8,7 @@ mod menu;
 mod parameters;
 mod setting;
 
-pub use menu::{GrubMenu, MenuEntry};
+pub use menu::{GrubMenu, GrubPlatform, MenuEntry};
 pub use parameters::{InvalidKernelParameters, KernelParameters};
 pub use setting::{
     DefaultEntry, GrubKey, GrubSetting, GrubSettings, GrubState, GrubTimeout, InvalidGrubSettings,
@@ -22,3 +22,7 @@ pub const GRUB_DEFAULTS_BACKUP: &str = "grub.bak";
 
 /// The generated menu, relative to `/`. Usually readable by root alone.
 pub const GRUB_CONFIG: &str = "boot/grub/grub.cfg";
+
+/// Relative to `/`. The kernel makes it only when UEFI started the system,
+/// which decides the branches of `grub.cfg` GRUB runs.
+pub const EFI_FIRMWARE: &str = "sys/firmware/efi";

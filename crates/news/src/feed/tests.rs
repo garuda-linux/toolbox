@@ -1,48 +1,65 @@
 use super::{MAX_POSTS, TITLE_CHARS, parse};
 use crate::Source;
 
-const FEED: &str = r#"<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <channel>
-    <title>Announcements - Garuda Linux Forum</title>
-    <link>https://forum.garudalinux.org/c/announcements/16</link>
-    <item>
-      <title>Chaotic-AUR turns 8 years old today! &#127881;</title>
-      <description><![CDATA[<p>Today we celebrate.</p>]]></description>
-      <link>https://forum.garudalinux.org/t/chaotic-aur-turns-8/48000</link>
-      <pubDate>Sun, 18 Oct 2026 12:41:05 +0000</pubDate>
-    </item>
-    <item>
-      <title><![CDATA[Mesa & KDE updates]]></title>
-      <link>https://forum.garudalinux.org/t/mesa/47000</link>
-      <pubDate>Mon, 05 Oct 2026 08:00:00 +0000</pubDate>
-    </item>
-  </channel>
-</rss>"#;
+/// The forum's announcements feed: 25 posts, titles with emoji, CDATA
+/// descriptions, categories `Announcements` and `ISO Releases`.
+const ANNOUNCEMENTS: &str = include_str!("fixtures/garuda-announcements.rss");
+/// The forum's maintenance feed: 7 posts, all of the category
+/// `Announcements - Maintenance`.
+const MAINTENANCE: &str = include_str!("fixtures/garuda-maintenance.rss");
+/// archlinux.org's news feed: 10 posts, three of them asking for manual
+/// intervention.
+const ARCH: &str = include_str!("fixtures/arch-news.rss");
+
+fn titles(feed: &str, source: Source) -> Vec<String> {
+    parse(feed.as_bytes(), source)
+        .unwrap()
+        .into_iter()
+        .map(|post| post.title)
+        .collect()
+}
 
 #[test]
 fn every_item_gives_its_title_link_and_date() {
-    let posts = parse(FEED.as_bytes(), Source::Garuda).unwrap();
+    let posts = parse(ANNOUNCEMENTS.as_bytes(), Source::Garuda).unwrap();
 
-    assert_eq!(posts.len(), 2);
     assert_eq!(posts[0].title, "Chaotic-AUR turns 8 years old today! 🎉");
     assert_eq!(
         posts[0].link.as_deref(),
-        Some("https://forum.garudalinux.org/t/chaotic-aur-turns-8/48000")
+        Some("https://forum.garudalinux.org/t/chaotic-aur-turns-8-years-old-today/49226")
     );
     assert_eq!(posts[0].published, Some(1_792_327_265));
-    assert_eq!(posts[1].title, "Mesa & KDE updates");
+    assert_eq!(posts[1].title, "Testing backups the hard way");
+
+    let maintenance = titles(MAINTENANCE, Source::Garuda);
+
+    assert_eq!(
+        maintenance[0],
+        "Patch for Linux 6.15's BTRFS regression available"
+    );
+    assert!(
+        maintenance[1].contains("Garuda Settings Manager & MHWD"),
+        "{maintenance:?}"
+    );
 }
 
 #[test]
 fn the_channel_title_is_no_post() {
-    let posts = parse(FEED.as_bytes(), Source::Garuda).unwrap();
+    for (feed, source) in [
+        (ANNOUNCEMENTS, Source::Garuda),
+        (MAINTENANCE, Source::Garuda),
+        (ARCH, Source::Arch),
+    ] {
+        let titles = titles(feed, source);
 
-    assert!(
-        posts
-            .iter()
-            .all(|post| !post.title.contains("Garuda Linux Forum"))
-    );
+        assert!(
+            titles
+                .iter()
+                .all(|title| !title.ends_with("Garuda Linux Forum")
+                    && title != "Arch Linux: Recent news updates"),
+            "{titles:?}"
+        );
+    }
 }
 
 #[test]
@@ -74,25 +91,39 @@ fn hidden_characters_are_dropped_and_long_titles_cut() {
 
 #[test]
 fn an_item_without_a_title_is_left_out_and_a_bad_date_is_none() {
-    let feed = "<rss><channel><item><link>https://forum.garudalinux.org/t/1</link></item>\
-                <item><title>Kept</title><pubDate>yesterday</pubDate></item>\
-                </channel></rss>";
+    // The maintenance feed edited: the first post's title cut, the
+    // second post's date made a word.
+    let feed = MAINTENANCE
+        .replacen(
+            "<title>Patch for Linux 6.15&#39;s BTRFS regression available</title>",
+            "",
+            1,
+        )
+        .replacen(
+            "<pubDate>Sat, 19 Jul 2025 17:40:13 +0000</pubDate>",
+            "<pubDate>yesterday</pubDate>",
+            1,
+        );
+
+    assert_ne!(feed, MAINTENANCE);
 
     let posts = parse(feed.as_bytes(), Source::Garuda).unwrap();
 
-    assert_eq!(posts.len(), 1);
+    assert_eq!(posts.len(), 6);
+    assert!(
+        posts[0]
+            .title
+            .starts_with("Modern Garuda Linux hardware profiles")
+    );
     assert_eq!(posts[0].published, None);
 }
 
 #[test]
 fn only_the_newest_posts_are_kept() {
-    let items = "<item><title>Post</title></item>".repeat(MAX_POSTS + 5);
-    let feed = format!("<rss><channel>{items}</channel></rss>");
+    let posts = parse(ANNOUNCEMENTS.as_bytes(), Source::Garuda).unwrap();
 
-    assert_eq!(
-        parse(feed.as_bytes(), Source::Garuda).unwrap().len(),
-        MAX_POSTS
-    );
+    assert_eq!(posts.len(), MAX_POSTS);
+    assert!(ANNOUNCEMENTS.matches("<item>").count() > MAX_POSTS);
 }
 
 #[test]
@@ -102,35 +133,45 @@ fn broken_xml_is_an_error() {
 
 #[test]
 fn a_garuda_maintenance_post_asks_for_a_step() {
-    let feed = "<rss><channel>\
-                <item><title>Patch available</title>\
-                <category>Announcements - Maintenance</category></item>\
-                <item><title>ISO out</title><category>ISO Releases</category></item>\
-                </channel></rss>";
+    let maintenance = parse(MAINTENANCE.as_bytes(), Source::Garuda).unwrap();
+    let announcements = parse(ANNOUNCEMENTS.as_bytes(), Source::Garuda).unwrap();
 
-    let posts = parse(feed.as_bytes(), Source::Garuda).unwrap();
-
-    assert!(posts[0].manual);
-    assert!(!posts[1].manual);
-    assert_eq!(posts[0].source, Source::Garuda);
+    assert!(maintenance.iter().all(|post| post.manual));
+    assert!(announcements.iter().all(|post| !post.manual));
+    assert_eq!(maintenance[0].source, Source::Garuda);
 }
 
 #[test]
 fn an_arch_post_asks_for_a_step_by_its_title() {
-    let feed = "<rss><channel>\
-                <item><title>glibc 2.41 update requires Manual Intervention</title>\
-                <link>https://archlinux.org/news/glibc-241/</link></item>\
-                <item><title>New Arch Linux mirror policy</title>\
-                <link>https://forum.garudalinux.org/t/1</link></item>\
-                </channel></rss>";
+    let posts = parse(ARCH.as_bytes(), Source::Arch).unwrap();
+    let manual: Vec<&str> = posts
+        .iter()
+        .filter(|post| post.manual)
+        .map(|post| post.title.as_str())
+        .collect();
 
-    let posts = parse(feed.as_bytes(), Source::Arch).unwrap();
-
-    assert!(posts[0].manual);
     assert_eq!(
-        posts[0].link.as_deref(),
-        Some("https://archlinux.org/news/glibc-241/")
+        manual,
+        [
+            "Mkinitcpio >=42 requires manual intervention for TPM2-based unlocking of LUKS devices",
+            "virtualbox-ext-vnc >= 7.2.12-2 requires manual intervention",
+            "kea >= 1:3.0.3-6 update requires manual intervention",
+        ]
     );
-    assert!(!posts[1].manual);
-    assert_eq!(posts[1].link, None, "an Arch post links to Arch only");
+    assert!(posts.iter().all(|post| {
+        post.link
+            .as_deref()
+            .is_some_and(|link| link.starts_with("https://archlinux.org/news/"))
+    }));
+
+    // The first post's link edited to point at the Garuda forum.
+    let elsewhere = ARCH.replacen(
+        "<link>https://archlinux.org/news/update-to-php",
+        "<link>https://forum.garudalinux.org/t/update-to-php",
+        1,
+    );
+
+    let moved = parse(elsewhere.as_bytes(), Source::Arch).unwrap();
+
+    assert_eq!(moved[0].link, None, "an Arch post links to Arch only");
 }

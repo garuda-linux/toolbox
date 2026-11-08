@@ -1,9 +1,11 @@
+mod refusals;
+
 use std::fs;
 use std::os::unix::fs::PermissionsExt as _;
 use std::time::{Duration, Instant};
 
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ReadKind};
-use toolbox_state::diagnostics::{Access, Collector, Outcome, Refusal};
+use toolbox_state::diagnostics::{Access, Collector, Outcome};
 
 use super::testing::{Machine, cancel_after, report};
 use super::{DiagnosticSource as _, access};
@@ -11,6 +13,12 @@ use crate::testing::running_as_root;
 
 /// Room for the notice that says the start of the output was cut.
 const NOTICE_SLACK: usize = 100;
+
+/// `/proc/sys/kernel/dmesg_restrict` of the Lima VM, Arch's 1.
+pub(super) const DMESG_RESTRICT: &str = include_str!("fixtures/dmesg_restrict");
+/// What `dmesg` said there as a user, and its exit code.
+const DMESG_AS_USER: &str = include_str!("fixtures/dmesg-as-user.stderr");
+const DMESG_AS_USER_CODE: &str = include_str!("fixtures/dmesg-as-user.code");
 
 #[test]
 fn a_missing_program_is_unavailable() {
@@ -101,7 +109,10 @@ fn the_second_program_does_not_run_after_a_failed_first() {
 fn an_open_kernel_log_is_read_as_the_user() {
     let machine = Machine::new();
 
-    machine.file("proc/sys/kernel/dmesg_restrict", "0\n");
+    machine.file(
+        "proc/sys/kernel/dmesg_restrict",
+        &DMESG_RESTRICT.replace('1', "0"),
+    );
     machine.program("dmesg", "echo \"[    0.000000] Linux version, $*\"");
 
     assert_eq!(
@@ -111,119 +122,31 @@ fn an_open_kernel_log_is_read_as_the_user() {
     assert_eq!(machine.asked(), Vec::new());
 }
 
+/// The Lima `dmesg_restrict` changed to 0, while `dmesg` still answers
+/// as it did there with 1.
 #[test]
-fn a_restricted_kernel_log_is_read_through_the_helper() {
+fn a_kernel_log_the_kernel_refuses_fails_with_dmesgs_words() {
     let machine = Machine::new();
 
-    machine.file("proc/sys/kernel/dmesg_restrict", "1\n");
-    machine.program("dmesg", "echo 'the user program must not run'");
-    machine.helper(
-        "echo \"{\\\"result\\\":\\\"ran\\\",\\\"output\\\":\\\"kernel \\\\u001b[1mlog\\\\u001b[0m via $1 $2\\\\n\\\",\\\"errors\\\":\\\"\\\",\\\"code\\\":0,\\\"truncated\\\":false}\"",
+    machine.file(
+        "proc/sys/kernel/dmesg_restrict",
+        &DMESG_RESTRICT.replace('1', "0"),
+    );
+    machine.file("dmesg.stderr", DMESG_AS_USER);
+    machine.program(
+        "dmesg",
+        &format!(
+            "cat '{}' >&2; exit {}",
+            machine.root().join("dmesg.stderr").display(),
+            DMESG_AS_USER_CODE.trim()
+        ),
     );
 
     assert_eq!(
         machine.collect(Collector::Dmesg),
-        report("kernel \u{1b}[1mlog\u{1b}[0m via logs dmesg\u{1b}[0m\n")
+        Outcome::Failed("dmesg: read kernel buffer failed: Operation not permitted".to_owned())
     );
-    assert_eq!(machine.asked(), [ReadKind::Dmesg]);
-}
-
-#[test]
-fn the_helpers_answers_and_failures_are_told_apart() {
-    let machine = Machine::new();
-
-    machine.file("proc/sys/kernel/dmesg_restrict", "1\n");
-
-    machine.helper("echo '{\"result\":\"missing\"}'");
-    assert_eq!(machine.collect(Collector::Dmesg), Outcome::Unavailable);
-
-    machine.helper("exit 126");
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Refused(Refusal::Dismissed)
-    );
-    machine.helper("exit 127");
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Refused(Refusal::Denied)
-    );
-
-    machine.helper("echo 'garuda-toolbox-helper: cannot answer dmesg: boom' >&2; exit 1");
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Failed(
-            "The helper of Garuda Toolbox failed: garuda-toolbox-helper: cannot answer dmesg: boom"
-                .to_owned()
-        )
-    );
-
-    machine.helper("echo 'not json'");
-    assert!(matches!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Failed(reason) if reason.contains("was not understood")
-    ));
-
-    machine.helper(
-        "echo '{\"result\":\"ran\",\"output\":\"\",\"errors\":\"dmesg: Operation not permitted\\n\",\"code\":1,\"truncated\":false}'",
-    );
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Failed("dmesg: Operation not permitted".to_owned())
-    );
-}
-
-#[test]
-fn pkexecs_refusals_are_told_apart() {
-    let machine = Machine::new();
-
-    machine.file("proc/sys/kernel/dmesg_restrict", "1\n");
-
-    machine.helper("exit 126");
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Refused(Refusal::Dismissed)
-    );
-
-    machine.helper(
-        "echo 'Error executing command as another user: Not authorized' >&2; echo '' >&2; echo 'This incident has been reported.' >&2; exit 127",
-    );
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Refused(Refusal::Denied)
-    );
-
-    machine.helper(
-        "echo 'Cannot run program /usr/lib/garuda-toolbox/garuda-toolbox-helper: No such file or directory' >&2; exit 127",
-    );
-    assert_eq!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Refused(Refusal::HelperMissing)
-    );
-
-    for no_agent in [
-        "echo 'Error executing command as another user: No authentication agent found.' >&2; exit 127",
-        "echo 'Error creating textual authentication agent: No controlling terminal' >&2; exit 127",
-        "echo 'Error getting authority: Could not connect: No such file or directory' >&2; exit 127",
-    ] {
-        machine.helper(no_agent);
-        assert_eq!(
-            machine.collect(Collector::Dmesg),
-            Outcome::Refused(Refusal::NoAgent),
-            "{no_agent}"
-        );
-    }
-}
-
-#[test]
-fn a_helper_that_cannot_start_fails_with_a_reason() {
-    let machine = Machine::new();
-
-    machine.file("proc/sys/kernel/dmesg_restrict", "1\n");
-
-    assert!(matches!(
-        machine.collect(Collector::Dmesg),
-        Outcome::Failed(reason) if reason.contains("not installed")
-    ));
+    assert_eq!(machine.asked(), Vec::new());
 }
 
 #[test]
@@ -354,25 +277,6 @@ fn an_unstartable_program_fails_with_its_name() {
         }
         shown @ (Outcome::Report(_) | Outcome::Unavailable | Outcome::Refused(_)) => {
             panic!("an unstartable program is no report: {shown:?}")
-        }
-    }
-}
-
-#[test]
-fn an_unstartable_helper_fails_with_its_name() {
-    let machine = Machine::new();
-
-    machine.file("proc/sys/kernel/dmesg_restrict", "1\n");
-    fs::create_dir_all(machine.root().join("helper")).unwrap();
-
-    let outcome = machine.collect(Collector::Dmesg);
-
-    match &outcome {
-        Outcome::Failed(reason) => {
-            assert!(reason.contains("could not be started"), "{outcome:?}");
-        }
-        shown @ (Outcome::Report(_) | Outcome::Unavailable | Outcome::Refused(_)) => {
-            panic!("an unstartable helper is no report: {shown:?}")
         }
     }
 }

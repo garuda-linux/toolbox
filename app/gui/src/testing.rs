@@ -3,6 +3,8 @@
 //! The page reads a [`PageFixture`] instead of the app's services, and
 //! what it sends waits in [`PageFixture::sent`] for the test.
 
+#[cfg(test)]
+pub mod captures;
 mod ink;
 mod rows;
 #[cfg(test)]

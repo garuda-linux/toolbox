@@ -3,13 +3,23 @@
 
 use std::collections::BTreeSet;
 
-use toolbox_plan::{GroupName, UserName};
+use toolbox_plan::procedure::FIRST_USER_ID;
+use toolbox_plan::{GroupName, LAST_USER_ID, UserName};
 
 use super::{ADMIN_GROUPS, Refusal, accounts, editable};
 use crate::domains::{
-    AccountLockFlags, AccountLocks, Accounts, CurrentUser, Groups, Membership, RemovedUsers,
+    AccountLockFlags, AccountLocks, Accounts, CurrentUser, Groups, Membership, RemovedUsers, User,
 };
 use crate::{ChangeSet, Snapshot, Toggle};
+
+/// The range the helper accepts for a lock or a home folder move.
+pub(super) fn in_user_range(user: &User) -> Result<(), Refusal> {
+    if (FIRST_USER_ID..=LAST_USER_ID).contains(&user.uid) {
+        Ok(())
+    } else {
+        Err(Refusal::OutsideUserRange)
+    }
+}
 
 /// Whether `user` may be removed. A removal of `user` that is queued
 /// already must be taken out first, or the user never counts as an admin.
@@ -45,8 +55,9 @@ pub(super) fn removable(
 ///
 /// # Errors
 ///
-/// [`Refusal`] for root, an unknown user, locking the app's own user,
-/// locking a member of [`ADMIN_GROUPS`] while the admins cannot be told,
+/// [`Refusal`] for root, an unknown user, locking an account outside the
+/// user ids of people or the app's own user, locking a member of
+/// [`ADMIN_GROUPS`] while the admins cannot be told,
 /// [`Refusal::LockStateUnknown`] while their lock flags cannot, or
 /// locking the last of them.
 pub(super) fn lockable(
@@ -57,11 +68,13 @@ pub(super) fn lockable(
 ) -> Result<(), Refusal> {
     let accounts = accounts(snapshot)?;
 
-    editable(user, accounts)?;
+    let account = editable(user, accounts)?;
 
     if !wish.is_on() {
         return Ok(());
     }
+
+    in_user_range(account)?;
 
     if is_current(user, snapshot) {
         return Err(Refusal::CurrentUser);

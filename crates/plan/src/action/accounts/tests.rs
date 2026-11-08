@@ -207,12 +207,15 @@ fn removing_a_user_keeps_the_home_unless_asked() {
     assert_eq!(keep.procedure().first(), Some(&guard));
     assert_eq!(
         shown(&keep),
-        ["check that ada is not the root account", "userdel -- ada"]
+        [
+            "check that ada is an ordinary account (id 1000 to 60000)",
+            "userdel -- ada"
+        ]
     );
     assert_eq!(
         shown(&delete),
         [
-            "check that ada is not the root account",
+            "check that ada is an ordinary account (id 1000 to 60000)",
             "userdel -r -- ada"
         ]
     );
@@ -226,7 +229,7 @@ fn locking_is_guarded_and_unlocking_is_not() {
             locked: true
         }),
         [
-            "check that ada is not the root account",
+            "check that ada is an ordinary account (id 1000 to 60000)",
             "usermod -L -- ada"
         ]
     );

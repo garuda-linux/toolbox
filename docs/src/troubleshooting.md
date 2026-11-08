@@ -28,24 +28,28 @@ Some window managers and remote sessions do not.
 On the [command line](cli.md) the app asks through `sudo` instead when no
 password dialog can be shown.
 
-## You are not allowed to make these changes
+## The password dialog was closed or the password was not accepted
 
 **Symptoms**
 
-- After **Apply**, the Console says: "You are not allowed to make these
-  changes."
+- After **Apply**, the Console says: "The password dialog was closed or the
+  password was not accepted. Nothing was changed."
 
 **Cause**
 
-The password dialog was answered with a password that does not belong to
-an administrator, or your account is in neither the `wheel` nor the `sudo`
-group.
+One of:
+
+- **Cancel** was pressed in the password dialog of KDE Plasma, which
+  reports a cancel the same way as a wrong password.
+- The password was wrong or does not belong to an administrator.
+- Your account is in neither the `wheel` nor the `sudo` group.
 
 **Solution**
 
-1. Ask an administrator to enter their password in the dialog, or to add
-   your account to `wheel` on the [Users and Groups](users.md) page.
-2. Apply the changes again.
+1. Apply the changes again and enter the password.
+2. If it is still refused, ask an administrator to enter their password in
+   the dialog, or to add your account to `wheel` on the
+   [Users and Groups](users.md) page.
 
 ## The password dialog was closed
 

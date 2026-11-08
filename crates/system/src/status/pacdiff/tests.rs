@@ -2,6 +2,11 @@ use std::path::PathBuf;
 
 use super::{MergeSource as _, Pacdiff, parse_files};
 use crate::ProbeError;
+use crate::testing::fake_program;
+
+/// `pacdiff -o` as root in the Lima VM.
+const PACDIFF: &str = include_str!("fixtures/pacdiff-o.stdout");
+const PACDIFF_CODE: &str = include_str!("fixtures/pacdiff-o.code");
 
 fn paths(values: &[&str]) -> Vec<PathBuf> {
     values.iter().map(PathBuf::from).collect()
@@ -9,19 +14,9 @@ fn paths(values: &[&str]) -> Vec<PathBuf> {
 
 #[test]
 fn one_file_per_line() {
-    let output = "/etc/pacman.conf.pacnew\n\
-                  /etc/mkinitcpio.conf.pacsave\n\
-                  /etc/locale.gen.pacsave.1\n\
-                  /etc/sudoers.pacorig\n";
-
     assert_eq!(
-        parse_files(output),
-        paths(&[
-            "/etc/pacman.conf.pacnew",
-            "/etc/mkinitcpio.conf.pacsave",
-            "/etc/locale.gen.pacsave.1",
-            "/etc/sudoers.pacorig",
-        ])
+        parse_files(PACDIFF),
+        paths(&["/etc/locale.gen.pacsave", "/etc/pacman.conf.pacnew"])
     );
 }
 
@@ -32,11 +27,32 @@ fn empty_output_is_nothing_to_merge() {
 }
 
 /// Paths may hold spaces. Anything not absolute is a message, not a file.
+/// The Lima output with a space put into a name and a made-up message and
+/// blank line around it.
 #[test]
 fn spaces_are_kept_and_messages_skipped() {
-    let output = "==> some message\n/etc/odd name.conf.pacnew\n  \n";
+    let output = format!(
+        "==> some message\n{}  \n",
+        PACDIFF.replacen("locale.gen", "locale gen", 1)
+    );
 
-    assert_eq!(parse_files(output), paths(&["/etc/odd name.conf.pacnew"]));
+    assert_eq!(
+        parse_files(&output),
+        paths(&["/etc/locale gen.pacsave", "/etc/pacman.conf.pacnew"])
+    );
+}
+
+#[test]
+fn the_adapter_lists_what_pacdiff_prints() {
+    let (_folder, fake) = fake_program(PACDIFF, "", PACDIFF_CODE.trim().parse().unwrap());
+
+    assert_eq!(
+        Pacdiff::with_program(fake).waiting(),
+        Ok(paths(&[
+            "/etc/locale.gen.pacsave",
+            "/etc/pacman.conf.pacnew"
+        ]))
+    );
 }
 
 #[test]

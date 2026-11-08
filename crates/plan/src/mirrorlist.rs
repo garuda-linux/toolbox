@@ -9,7 +9,8 @@ use std::fmt;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-/// The Chaotic-AUR list is about 4 KiB. Anything near this is not one.
+/// The Chaotic-AUR list is about 8 KiB, rate-mirrors writes about 14 KiB
+/// for it. Anything near this is not one.
 pub const MAX_MIRRORLIST_BYTES: usize = 64 * 1024;
 
 const SERVER_PREFIX: &str = "Server = https://";

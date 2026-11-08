@@ -8,8 +8,8 @@ use futures_lite::future::Boxed;
 use tokio::runtime::Runtime;
 use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::network::{
-    BlacklistEntry, Category, Connectivity, DefaultRoute, Device, DeviceKind, ModuleFacts,
-    NetworkModule, Radio, RadioAccess, RadioKind, RadioTarget,
+    BlacklistEntry, Category, Connectivity, DefaultRoute, Device, ModuleFacts, NetworkModule,
+    Radio, RadioAccess, RadioKind, RadioTarget, pci_devices,
 };
 use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
 use toolbox_core::{ChangeSet, Snapshot};
@@ -20,10 +20,14 @@ use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{KernelModule, UnitName, UnitScope};
 use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError};
 
-use crate::common::{Fixture, TALL, open_tab, packages, window};
+use crate::common::{Fixture, SMALLEST, TALL, WIDTH, open_tab, packages, window};
 use crate::system::{first_read, settle, step_until};
 
-/// One Wi-Fi radio, a router, an Intel card and no lsusb.
+const LAPTOP_LSPCI: &str =
+    include_str!("../../../../crates/system/src/network/fixtures/bare-metal/lspci-nn");
+
+/// One Wi-Fi radio, a router, the PCI cards of a bare-metal laptop and no
+/// lsusb.
 struct Machine;
 
 /// The internet is there, and every switch works.
@@ -57,11 +61,7 @@ impl NetworkSource for Machine {
     }
 
     fn pci_devices(&self) -> Result<Vec<Device>, ProbeError> {
-        Ok(vec![Device {
-            kind: DeviceKind::Wireless,
-            description: "Intel Wi-Fi 6 AX201".to_owned(),
-            raw: "00:14.3 Network controller [0280]: Intel Wi-Fi 6 AX201".to_owned(),
-        }])
+        Ok(pci_devices(LAPTOP_LSPCI))
     }
 
     fn usb_devices(&self) -> Result<Vec<Device>, ProbeError> {
@@ -238,4 +238,31 @@ fn a_driver_without_a_note_sits_level_with_its_button() {
         (name.center().y - button.center().y).abs() < 1.5,
         "name at {name:?}, button at {button:?}"
     );
+}
+
+#[test]
+fn a_long_device_name_wraps_above_its_kind_at_every_width() {
+    let mut fixture = network();
+    let harness = fixture.harness();
+    open_tab(harness, "Hardware");
+
+    for width in [SMALLEST.0, 800.0, WIDTH] {
+        harness.set_size(egui::vec2(width, TALL));
+        settle(harness);
+
+        for (name, kind) in [("RTL8111/8168", "Ethernet"), ("MT7922", "Wireless")] {
+            // The row's name, not the row itself, which carries the same label.
+            let name = harness
+                .query_all_by_label_contains(name)
+                .map(|node| node.rect())
+                .min_by(|left, right| left.width().total_cmp(&right.width()))
+                .unwrap();
+
+            let kind = harness.get_by_label(kind).rect();
+            assert!(
+                kind.top() >= name.bottom(),
+                "width {width}: name at {name:?}, kind at {kind:?}"
+            );
+        }
+    }
 }

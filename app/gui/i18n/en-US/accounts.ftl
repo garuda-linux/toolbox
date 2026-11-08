@@ -6,6 +6,7 @@ account-refusal-unknown-group = One of the groups does not exist, or is about to
 account-refusal-root = { $name } is a root account. Garuda Toolbox does not change it.
 account-refusal-current-user = { $name } is the account you are logged in with. It cannot lock or remove itself.
 account-refusal-system-account = { $name } is a system account. Only accounts of people can be removed.
+account-refusal-outside-user-range = { $name } has a user ID outside 1000 to 60000, so it stays as it is.
 account-refusal-last-admin = { $name } is the last member of the groups wheel and sudo. Without one nobody could administer this system.
 account-refusal-last-admin-lock = { $name } is the last member of the groups wheel and sudo. With a locked password nobody could administer this system.
 account-refusal-lock-state-unknown = { $name } cannot be locked while it is unknown which admins are locked.

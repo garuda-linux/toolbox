@@ -77,10 +77,23 @@ impl Libalpm {
         Self::with_config(SYSTEM_CONFIG)
     }
 
+    /// The databases another `pacman.conf` names, such as a captured
+    /// local database in the GUI tests. A release reads only the system's.
+    #[cfg(feature = "testing")]
+    #[must_use = "the adapter does nothing until asked"]
+    pub fn with_config(config: impl Into<PathBuf>) -> Self {
+        Self::reading(config.into())
+    }
+
+    #[cfg(not(feature = "testing"))]
     #[must_use = "the adapter does nothing until asked"]
     pub(crate) fn with_config(config: impl Into<PathBuf>) -> Self {
+        Self::reading(config.into())
+    }
+
+    fn reading(config: PathBuf) -> Self {
         Self {
-            config: config.into(),
+            config,
             sync: SyncCache::default(),
         }
     }

@@ -3,10 +3,26 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 
-/// The local database layout libalpm 16 expects.
-const LOCAL_DB_VERSION: &str = "9\n";
+/// The local database captured in the Lima VM: `ALPM_DB_VERSION` and the
+/// entries of gimp, gegl, mpv and yt-dlp.
+const CAPTURED: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/src/packages/fixtures/alpm/var/lib/pacman/local"
+);
+
+/// The local database layout of the captured database.
+const LOCAL_DB_VERSION: &str =
+    include_str!("../fixtures/alpm/var/lib/pacman/local/ALPM_DB_VERSION");
 
 const VERSION: &str = "1.0-1";
+
+pub const GIMP: &str = "gimp-3.2.6-2";
+/// Installed as a dependency of gimp.
+pub const GEGL: &str = "gegl-0.4.72-3";
+/// Optionally depends on yt-dlp.
+pub const MPV: &str = "mpv-1:0.41.0-7";
+/// Installed explicitly in the Lima VM.
+pub const YT_DLP: &str = "yt-dlp-2026.10.26-1";
 
 pub struct System {
     folder: TempDir,
@@ -41,6 +57,14 @@ impl System {
         self.folder.path().join("db")
     }
 
+    fn local(&self) -> PathBuf {
+        let local = self.db().join("local");
+
+        fs::create_dir_all(&local).unwrap();
+        fs::write(local.join("ALPM_DB_VERSION"), LOCAL_DB_VERSION).unwrap();
+        local
+    }
+
     pub fn install(&self, packages: &[&str]) {
         let versions: Vec<(&str, &str)> = packages.iter().map(|name| (*name, VERSION)).collect();
 
@@ -48,10 +72,7 @@ impl System {
     }
 
     pub fn install_versions(&self, packages: &[(&str, &str)]) {
-        let local = self.db().join("local");
-
-        fs::create_dir_all(&local).unwrap();
-        fs::write(local.join("ALPM_DB_VERSION"), LOCAL_DB_VERSION).unwrap();
+        let local = self.local();
 
         for (package, version) in packages {
             let entry = local.join(format!("{package}-{version}"));
@@ -80,21 +101,30 @@ impl System {
         self.folder.path()
     }
 
-    /// One installed package at 1.0-1 with more of its `desc` (`%KEY%`
-    /// blocks) and its file list, folders ending in `/`.
-    pub fn install_full(&self, package: &str, extra: &str, files: &[&str]) {
-        let local = self.db().join("local");
-        let entry = local.join(format!("{package}-{VERSION}"));
+    /// Copies captured local database entries, named like their folder
+    /// (`mpv-1:0.41.0-7`), with every file in them.
+    pub fn install_captured(&self, entries: &[&str]) {
+        let local = self.local();
 
-        fs::create_dir_all(&entry).unwrap();
-        fs::write(local.join("ALPM_DB_VERSION"), LOCAL_DB_VERSION).unwrap();
-        fs::write(entry.join("desc"), desc(package, VERSION) + extra).unwrap();
+        for entry in entries {
+            let from = Path::new(CAPTURED).join(entry);
 
-        let list = files
-            .iter()
-            .fold("%FILES%\n".to_owned(), |text, file| text + file + "\n");
+            fs::create_dir_all(local.join(entry)).unwrap();
 
-        fs::write(entry.join("files"), list).unwrap();
+            for file in fs::read_dir(&from).unwrap() {
+                let file = file.unwrap();
+
+                fs::copy(file.path(), local.join(entry).join(file.file_name())).unwrap();
+            }
+        }
+    }
+
+    /// Appends `%KEY%` blocks to the copied `desc` of an installed entry.
+    pub fn append_desc(&self, entry: &str, extra: &str) {
+        let path = self.db().join("local").join(entry).join("desc");
+        let desc = fs::read_to_string(&path).unwrap();
+
+        fs::write(path, desc + extra).unwrap();
     }
 
     pub fn sync_full(&self, repo: &str, packages: &[(&str, &str, &str)]) {

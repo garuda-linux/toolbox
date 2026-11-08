@@ -1,11 +1,13 @@
 //! The ports the app gets at start: the real ones, or the stand-ins of a
 //! dry run where a port would change the machine or leave it.
 
+mod samples;
+
 use std::path::PathBuf;
 use std::sync::Arc;
 
 use tokio::runtime::Handle;
-use toolbox_aur::{AurSource, Cache};
+use toolbox_aur::Cache;
 use toolbox_catalog::{ConfigFileCatalog, LoadProblem, SKEL_ROOT};
 use toolbox_config::Paths;
 use toolbox_core::ChangeSet;
@@ -18,10 +20,9 @@ use toolbox_gui::command::CommandSender;
 use toolbox_gui::configs::ConfigsSetup;
 use toolbox_gui::diagnostics::{DiagnosticsLink, DryRunTransport};
 use toolbox_gui::launch::{DryRunLauncher, Launcher, SystemLauncher};
-use toolbox_gui::maintenance::{MaintenanceSetup, SampleMirrors};
+use toolbox_gui::maintenance::MaintenanceSetup;
 use toolbox_gui::network::{DryRunActions, DryRunAddress, NetworkSetup};
-use toolbox_gui::news::SampleNews;
-use toolbox_gui::packages::{PackagesSetup, SampleAur};
+use toolbox_gui::packages::PackagesSetup;
 use toolbox_gui::pictures::{FALLBACK_THEME, Pictures, SystemPictures};
 use toolbox_gui::power::{DryRunPower, Logind, Power};
 use toolbox_gui::queue::Queue;
@@ -31,12 +32,11 @@ use toolbox_gui::users::UsersSetup;
 use toolbox_news::{Feeds, News, NewsSource};
 use toolbox_plan::protocol::Mode;
 use toolbox_privatebin::{Https, Transport};
-use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
+use toolbox_system::mirrors::RateMirrors;
 use toolbox_system::{
-    AddressSource, ConfigFileSource, DryRunEditor, DryRunRepair, EditFolder, Editing, HelperLocks,
-    KdeGeoIp, Libalpm, NetworkActions, NetworkSource, PacmanLog, RepairSource, SystemActions,
-    SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork,
-    SystemRepair,
+    AddressSource, ConfigFileSource, DryRunEditor, EditFolder, Editing, HelperLocks, KdeGeoIp,
+    Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions, SystemBootMenu,
+    SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork, SystemRepair,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";
@@ -70,13 +70,13 @@ pub fn machine(
     )
 }
 
-/// A dry run ranks a fixed list, so its self-test asks no mirror.
+/// A self-test build's dry run ranks a fixed list, so its self-test asks
+/// no mirror. Ranking writes nothing, so a release's dry run ranks too.
 pub fn maintenance(handle: &Handle, dry_run: bool) -> MaintenanceSetup {
-    let mirrors: Arc<dyn MirrorRanking> = if dry_run {
-        Arc::new(SampleMirrors)
-    } else {
-        Arc::new(RateMirrors::system())
-    };
+    let mirrors = dry_run
+        .then(samples::mirrors)
+        .flatten()
+        .unwrap_or_else(|| Arc::new(RateMirrors::system()));
 
     MaintenanceSetup {
         runtime: handle.clone(),
@@ -205,14 +205,15 @@ fn configs(handle: &Handle, launcher: Arc<HelperLauncher>, dry_run: bool) -> Con
     }
 }
 
-/// The disks of the machine, or a made-up machine in a dry run, whose
-/// page must neither depend on the disks it runs on nor show them.
+/// The disks of the machine, or a sample machine in a self-test build's
+/// dry run, whose page must neither depend on the disks it runs on nor
+/// show them. Reading them writes nothing, so a release's dry run reads
+/// them too.
 pub fn repair(handle: &Handle, dry_run: bool, forced: bool) -> BootRepairSetup {
-    let source: Arc<dyn RepairSource> = if dry_run {
-        Arc::new(DryRunRepair)
-    } else {
-        Arc::new(SystemRepair::system())
-    };
+    let source = dry_run
+        .then(samples::repair)
+        .flatten()
+        .unwrap_or_else(|| Arc::new(SystemRepair::system()));
 
     BootRepairSetup {
         runtime: handle.clone(),
@@ -223,13 +224,12 @@ pub fn repair(handle: &Handle, dry_run: bool, forced: bool) -> BootRepairSetup {
 
 /// The page reads libalpm and pacman's log, which change nothing, so a
 /// dry run reads the real machine too. The AUR is a download, which a
-/// dry run answers with a sample.
+/// self-test build's dry run answers with a sample.
 pub fn packages(handle: &Handle, dry_run: bool) -> PackagesSetup {
-    let aur: Arc<dyn AurSource> = if dry_run {
-        Arc::new(SampleAur)
-    } else {
-        Arc::new(Cache::system(Paths::from_process().aur_dir()))
-    };
+    let aur = dry_run
+        .then(samples::aur)
+        .flatten()
+        .unwrap_or_else(|| Arc::new(Cache::system(Paths::from_process().aur_dir())));
 
     PackagesSetup {
         runtime: handle.clone(),
@@ -239,14 +239,13 @@ pub fn packages(handle: &Handle, dry_run: bool) -> PackagesSetup {
     }
 }
 
-/// Garuda's and Arch's news. They are a download, which a dry run
-/// answers with a sample.
+/// Garuda's and Arch's news. They are a download, which a self-test
+/// build's dry run answers with a sample.
 fn news(dry_run: bool) -> Arc<dyn NewsSource> {
-    if dry_run {
-        Arc::new(SampleNews)
-    } else {
-        Arc::new(Feeds::system(&Paths::from_process().news_dir()))
-    }
+    dry_run
+        .then(samples::news)
+        .flatten()
+        .unwrap_or_else(|| Arc::new(Feeds::system(&Paths::from_process().news_dir())))
 }
 
 /// The news, read once at start and on Read again. The cache decides

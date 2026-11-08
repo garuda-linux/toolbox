@@ -1,0 +1,26 @@
+         type: Boot Loader Specification Type #2 (UKI, .efi)
+        title: Garuda Linux (default) (selected)
+           id: garuda-7.3.1-1-garuda.efi
+       source: /efi//EFI/Linux/garuda-7.3.1-1-garuda.efi (on the EFI System Partition)
+     sort-key: garuda
+      version: 20261108
+        uname: 7.3.1-1-garuda
+        linux: /efi//EFI/Linux/garuda-7.3.1-1-garuda.efi
+      profile: 0
+      options: root=UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6 rootflags=subvol=@ rw loglevel=3 quiet console=tty0 console=ttyS0,115200
+
+         type: Boot Loader Specification Type #2 (UKI, .efi)
+        title: Garuda Linux (fallback initramfs)
+           id: garuda-7.3.1-1-garuda-fallback.efi
+       source: /efi//EFI/Linux/garuda-7.3.1-1-garuda-fallback.efi (on the EFI System Partition)
+     sort-key: garuda
+      version: 20261108
+        uname: 7.3.1-1-garuda
+        linux: /efi//EFI/Linux/garuda-7.3.1-1-garuda-fallback.efi
+      profile: 0
+      options: root=UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6 rootflags=subvol=@ rw loglevel=3 quiet console=tty0 console=ttyS0,115200
+
+         type: Automatic
+        title: Reboot Into Firmware Interface
+           id: auto-reboot-to-firmware-setup
+       source: /sys/firmware/efi/efivars/LoaderEntries-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f (on the EFI System Partition)

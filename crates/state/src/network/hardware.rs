@@ -1,6 +1,6 @@
-//! The Hardware tab: the network devices `lspci -nn` and `lsusb` list.
-//! Their output is untrusted text: it is sorted into kinds here and shown
-//! as plain text.
+//! The Hardware tab: the network devices `lspci -nn` and `lsusb` list,
+//! with the interface classes of `/sys/bus/usb/devices`. All of it is
+//! untrusted text: it is sorted into kinds here and shown as plain text.
 
 const PCI_ETHERNET: &str = "0200";
 /// Every other PCI network controller, in practice Wi-Fi cards.
@@ -24,6 +24,8 @@ const USB_NOT_NETWORK: [&str; 9] = [
     "gamepad",
 ];
 const USB_ETHERNET_WORDS: [&str; 3] = ["ethernet", "rndis", "gigabit"];
+/// Wireless controller, RF controller, Bluetooth programming interface.
+const USB_BLUETOOTH: [u8; 3] = [0xe0, 0x01, 0x01];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DeviceKind {
@@ -32,12 +34,49 @@ pub enum DeviceKind {
     Bluetooth,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct UsbId {
+    vendor: u16,
+    product: u16,
+}
+
+/// One interface of a USB device as sysfs lists it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct UsbInterface {
+    device: UsbId,
+    /// Class, subclass and protocol.
+    class: [u8; 3],
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Device {
     pub kind: DeviceKind,
     pub description: String,
     /// The whole line, which is what gets copied.
     pub raw: String,
+}
+
+impl UsbId {
+    fn parse(vendor: &str, product: &str) -> Option<Self> {
+        Some(Self {
+            vendor: u16::from_str_radix(vendor.trim(), 16).ok()?,
+            product: u16::from_str_radix(product.trim(), 16).ok()?,
+        })
+    }
+}
+
+impl UsbInterface {
+    /// From the files `idVendor` and `idProduct` of the device and
+    /// `bInterfaceClass`, `bInterfaceSubClass` and `bInterfaceProtocol` of
+    /// the interface, each a hex number and a line break.
+    pub fn from_sysfs(vendor: &str, product: &str, class: [&str; 3]) -> Option<Self> {
+        let [class, subclass, protocol] = class.map(|value| u8::from_str_radix(value.trim(), 16));
+
+        Some(Self {
+            device: UsbId::parse(vendor, product)?,
+            class: [class.ok()?, subclass.ok()?, protocol.ok()?],
+        })
+    }
 }
 
 /// The network devices in the output of `lspci -nn`, by their class code
@@ -68,18 +107,25 @@ pub fn pci_devices(lspci: &str) -> Vec<Device> {
         .collect()
 }
 
-/// The network devices in the output of `lsusb`, by the words of their
-/// names: plain `lsusb` prints no class.
-pub fn usb_devices(lsusb: &str) -> Vec<Device> {
+/// The network devices in the output of `lsusb`.
+///
+/// Plain `lsusb` prints no class, so a Bluetooth interface among
+/// `interfaces` decides first, and then the words of the name. Wi-Fi and
+/// Ethernet adapters mostly have interfaces of their vendor's own class,
+/// which tells nothing.
+pub fn usb_devices(lsusb: &str, interfaces: &[UsbInterface]) -> Vec<Device> {
     lsusb
         .lines()
         .filter_map(|line| {
             let line = line.trim();
-            let description = usb_description(line)?;
+            let (id, description) = usb_description(line)?;
             let words = description.to_lowercase();
             let has = |list: &[&str]| list.iter().any(|word| words.contains(word));
+            let bluetooth = interfaces
+                .iter()
+                .any(|interface| interface.device == id && interface.class == USB_BLUETOOTH);
 
-            let kind = if words.contains("bluetooth") {
+            let kind = if bluetooth || words.contains("bluetooth") {
                 DeviceKind::Bluetooth
             } else if has(&USB_WIFI_WORDS) || (words.contains("wireless") && !has(&USB_NOT_NETWORK))
             {
@@ -117,12 +163,13 @@ fn pci_class(line: &str) -> Option<(&str, &str)> {
     is_class.then_some((class, description.trim()))
 }
 
-/// `Intel Corp. AX200 Bluetooth` for `Bus 001 Device 004: ID 8087:0029
-/// Intel Corp. AX200 Bluetooth`.
-fn usb_description(line: &str) -> Option<&str> {
+/// `8087:0029` and `Intel Corp. AX200 Bluetooth` for `Bus 001 Device 004:
+/// ID 8087:0029 Intel Corp. AX200 Bluetooth`.
+fn usb_description(line: &str) -> Option<(UsbId, &str)> {
     let (_, rest) = line.split_once(": ID ")?;
-    let (_, description) = rest.split_once(' ')?;
+    let (id, description) = rest.split_once(' ')?;
+    let (vendor, product) = id.split_once(':')?;
     let description = description.trim();
 
-    (!description.is_empty()).then_some(description)
+    (!description.is_empty()).then_some((UsbId::parse(vendor, product)?, description))
 }

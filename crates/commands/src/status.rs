@@ -174,8 +174,9 @@ fn attention(view: &StatusView) -> Vec<String> {
             "file to merge",
             "files to merge",
         ),
-        counted(at("error"), "error", "errors"),
-        counted(at("warning"), "warning", "warnings"),
+        counted(at("critical"), "critical issue", "critical issues"),
+        counted(at("high"), "high issue", "high issues"),
+        counted(at("low"), "low issue", "low issues"),
         restart.then(|| "restart needed".to_owned()),
     ]
     .into_iter()
@@ -323,8 +324,9 @@ fn count(packages: usize) -> String {
 
 const fn level(level: HealthLevel) -> &'static str {
     match level {
-        HealthLevel::Error => "error",
-        HealthLevel::Warning => "warning",
+        HealthLevel::Critical => "critical",
+        HealthLevel::High => "high",
+        HealthLevel::Low => "low",
         HealthLevel::Info => "info",
     }
 }

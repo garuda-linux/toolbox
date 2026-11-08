@@ -18,7 +18,10 @@ use std::sync::atomic::AtomicBool;
 
 use toolbox_plan::protocol::{MAX_LINE_BYTES, ReadKind};
 use toolbox_plan::sdboot::SdBootMenu;
-use toolbox_plan::{GRUB_CONFIG, GRUB_DEFAULTS, GrubMenu, GrubState, PackageName, PlymouthTheme};
+use toolbox_plan::{
+    EFI_FIRMWARE, GRUB_CONFIG, GRUB_DEFAULTS, GrubMenu, GrubPlatform, GrubState, PackageName,
+    PlymouthTheme,
+};
 use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState, VirtualMachine};
 
 use crate::diagnostics::HelperReads;
@@ -279,7 +282,9 @@ impl BootMenuSource for SystemBootMenu {
         }
 
         match files::read_lossy(&self.root.join(GRUB_CONFIG)) {
-            Ok(config) => MenuRead::Known(GrubMenu::from_config(&config)),
+            Ok(config) => {
+                MenuRead::Known(GrubMenu::for_platform(&config, grub_platform(&self.root)))
+            }
             Err(error) if error.kind() == io::ErrorKind::NotFound => MenuRead::Missing,
             Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
                 self.ask_helper(cancel)
@@ -287,6 +292,13 @@ impl BootMenuSource for SystemBootMenu {
             Err(error) => MenuRead::Unknown(error.to_string()),
         }
     }
+}
+
+/// The firmware the system below `root` started on, which picks the
+/// branches of `grub.cfg` GRUB shows.
+#[must_use = "it only reads the firmware folder"]
+pub fn grub_platform(root: &Path) -> GrubPlatform {
+    GrubPlatform::from_efi_firmware(root.join(EFI_FIRMWARE).is_dir())
 }
 
 /// The `Theme=` of a Plymouth config, whatever its section.

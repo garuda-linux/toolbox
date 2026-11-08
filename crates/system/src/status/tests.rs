@@ -102,7 +102,7 @@ fn update(name: &str) -> PendingUpdate {
 
 fn warning() -> HealthIssue {
     HealthIssue {
-        level: HealthLevel::Warning,
+        level: HealthLevel::Low,
         message: "careful".to_owned(),
         fix_available: false,
     }

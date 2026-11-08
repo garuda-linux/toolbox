@@ -1,0 +1,25 @@
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 003: ID 1d5c:5801 Fresco Logic USB2.0 Hub
+Bus 001 Device 004: ID 05e3:0610 Genesys Logic, Inc. Hub
+Bus 001 Device 005: ID 05e3:0f01 Genesys Logic, Inc. Billboard Device
+Bus 001 Device 006: ID 1e7d:2c8b ROCCAT ROCCAT Kone XP
+Bus 001 Device 007: ID 05e3:0f01 Genesys Logic, Inc. Billboard Device
+Bus 001 Device 009: ID 2109:2822 VIA Labs, Inc. USB2.0 Hub             
+Bus 001 Device 010: ID 3188:5335 XFANIC Thunderbolt 4 Docking Station
+Bus 001 Device 011: ID 1e7d:2f4e ROCCAT ROCCAT Vulcan II
+Bus 001 Device 012: ID 1050:0407 Yubico.com Yubikey 4/5 OTP+U2F+CCID
+Bus 001 Device 013: ID 2109:8822 VIA Labs, Inc. USB Billboard Device   
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 002 Device 003: ID 8087:0b40 Intel Corp. USB3.0 Hub
+Bus 002 Device 004: ID 05e3:0626 Genesys Logic, Inc. Hub
+Bus 002 Device 005: ID 2109:0822 VIA Labs, Inc. USB3.1 Hub             
+Bus 002 Device 006: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+Bus 002 Device 007: ID 05e3:0749 Genesys Logic, Inc. SD Card Reader and Writer
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 0b05:19b6 ASUSTek Computer, Inc. N-KEY Device
+Bus 003 Device 003: ID 0489:e0f6 Foxconn / Hon Hai Wireless_Device
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 005 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 006 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 007 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 007 Device 002: ID 3277:0010 Sonix Technology Co., Ltd. USB2.0 FHD UVC WebCam

@@ -4,6 +4,13 @@ use std::os::unix::fs::symlink;
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchAnswer, FetchRefusal, MAX_CONFIG_BYTES};
 
 use super::answer;
+use crate::testing::SHADOW;
+
+/// `/etc/default/grub` of a Garuda install in QEMU.
+const DEFAULT_GRUB: &str =
+    include_str!("../../../../crates/plan/src/grub/fixtures/installed/default-grub");
+/// The Lima VM's `/etc/os-release`.
+const OS_RELEASE: &str = include_str!("../../../../crates/system/src/host/fixtures/os-release");
 
 fn path(text: &str) -> ConfigFilePath {
     ConfigFilePath::new(text).unwrap()
@@ -25,15 +32,22 @@ fn a_config_file_is_answered_as_one_line_of_text() {
     let root = tempfile::tempdir().unwrap();
 
     fs::create_dir_all(root.path().join("etc/default")).unwrap();
-    fs::write(
-        root.path().join("etc/default/grub"),
-        "GRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX=\"quiet\"\n",
-    )
-    .unwrap();
+    fs::write(root.path().join("etc/default/grub"), DEFAULT_GRUB).unwrap();
 
+    let line = answer(root.path(), &path("/etc/default/grub")).unwrap();
+
+    assert!(
+        line.starts_with(
+            "{\"result\":\"text\",\"path\":\"/etc/default/grub\",\"content\":\"# GRUB boot loader"
+        ),
+        "{line}"
+    );
     assert_eq!(
-        answer(root.path(), &path("/etc/default/grub")).unwrap(),
-        "{\"result\":\"text\",\"path\":\"/etc/default/grub\",\"content\":\"GRUB_TIMEOUT=5\\nGRUB_CMDLINE_LINUX=\\\"quiet\\\"\\n\"}\n"
+        fetch(root.path(), "/etc/default/grub"),
+        FetchAnswer::Text {
+            path: path("/etc/default/grub"),
+            content: ConfigText::new(DEFAULT_GRUB.to_owned()).unwrap()
+        }
     );
 }
 
@@ -66,11 +80,11 @@ fn a_link_that_leads_to_no_config_file_is_refused_with_its_reason() {
     }
 
     for (file, content) in [
-        ("usr/lib/os-release", "NAME=x\n"),
+        ("usr/lib/os-release", OS_RELEASE),
         ("run/resolv.conf", "nameserver ::1\n"),
         ("nix/store/abc-fstab", "/ / ext4\n"),
         ("root/secret", "key\n"),
-        ("etc/shadow", "root:hash\n"),
+        ("etc/shadow", SHADOW),
     ] {
         fs::write(root.path().join(file), content).unwrap();
     }

@@ -1,51 +1,24 @@
 use toolbox_plan::KernelRelease;
 
-use super::{DkmsState, ModuleState, builds, modules, parse_status};
+use super::{DkmsEntry, DkmsState, ModuleState, builds, modules, parse_status};
+
+// `dkms status` as root in the Lima VM, dkms 3.x with two kernels. The
+// steps between the four captures are not logged, only their output.
+const INSTALLED: &str = include_str!("fixtures/installed.stdout");
+const ONE_KERNEL_MISSING: &str = include_str!("fixtures/one-kernel-missing.stdout");
+const ADDED: &str = include_str!("fixtures/added.stdout");
+const BROKEN: &str = include_str!("fixtures/broken.stdout");
+const BROKEN_STDERR: &str = include_str!("fixtures/broken.stderr");
+
+const GARUDA: &str = "7.3.1-1-garuda";
+const LTS: &str = "6.18.60-1-lts";
 
 fn release(name: &str) -> KernelRelease {
     KernelRelease::new(name).unwrap()
 }
 
-#[test]
-fn dkms_status_lines_become_modules_per_kernel() {
-    let entries = parse_status(
-        "acpi_call/1.2.2, 6.1.1-a: installed\nvboxhost/7.0, 6.1.1-a: installed (original)",
-    );
-
-    let shown: Vec<(&str, &str, Option<&str>, DkmsState)> = entries
-        .iter()
-        .map(|entry| {
-            (
-                entry.module.as_str(),
-                entry.version.as_str(),
-                entry.kernel.as_ref().map(KernelRelease::as_str),
-                entry.state,
-            )
-        })
-        .collect();
-
-    assert_eq!(
-        shown,
-        [
-            ("acpi_call", "1.2.2", Some("6.1.1-a"), DkmsState::Installed),
-            ("vboxhost", "7.0", Some("6.1.1-a"), DkmsState::Installed),
-        ]
-    );
-}
-
-#[test]
-fn every_dkms_output_format_is_read() {
-    let entries = parse_status(
-        "nvidia/550.90.07, 6.14.0-arch1-1, x86_64: installed\n\
-         nvidia, 470.74, 5.14.8-arch1-1, x86_64: installed\n\
-         vboxhost/7.1.6_OSE, 6.12.9-1-lts, x86_64: installed (original_module exists) (WARNING! Diff between built and installed module!)\n\
-         acpi_call/1.2.2, 6.14.0-arch1-1, x86_64: built\n\
-         zfs/2.3.1: added\n\
-         zfs, 2.2.0: added\n\
-         nvidia/550.1, 6.2.2-z: broken\n",
-    );
-
-    let shown: Vec<String> = entries
+fn shown(entries: &[DkmsEntry]) -> Vec<String> {
+    entries
         .iter()
         .map(|entry| {
             format!(
@@ -61,99 +34,149 @@ fn every_dkms_output_format_is_read() {
                 }
             )
         })
-        .collect();
+        .collect()
+}
+
+fn states(kernel: &str, output: &str) -> Vec<(String, ModuleState)> {
+    modules(&release(kernel), &parse_status(output))
+        .into_iter()
+        .map(|module| (module.module.to_string(), module.state))
+        .collect()
+}
+
+fn missing(kernel: &str, output: &str) -> Vec<String> {
+    builds(&release(kernel), &parse_status(output))
+        .into_iter()
+        .map(|build| format!("{}/{} -k {}", build.module, build.version, build.kernel))
+        .collect()
+}
+
+#[test]
+fn dkms_status_lines_become_modules_per_kernel() {
+    assert_eq!(
+        shown(&parse_status(INSTALLED)),
+        [
+            "broadcom-wl/6.30.223.271 6.18.60-1-lts installed",
+            "broadcom-wl/6.30.223.271 7.3.1-1-garuda installed",
+            "v4l2loopback/0.15.4 6.18.60-1-lts installed",
+            "v4l2loopback/0.15.4 7.3.1-1-garuda installed",
+        ]
+    );
+}
+
+#[test]
+fn added_and_broken_lines_name_no_kernel() {
+    assert_eq!(
+        shown(&parse_status(ADDED))[2..],
+        ["v4l2loopback/0.15.4 - added"]
+    );
+    assert_eq!(
+        shown(&parse_status(BROKEN))[2..],
+        ["v4l2loopback/0.15.4 - broken"]
+    );
+}
+
+/// dkms 2.x wrote `name, version` where 3.x writes `name/version`, and a
+/// built module says `built`. Both are edits of a real line.
+#[test]
+fn the_older_dkms_format_and_built_lines_are_read() {
+    let comma_form = INSTALLED.replace("v4l2loopback/0.15.4", "v4l2loopback, 0.15.4");
+    let built = ONE_KERNEL_MISSING.replace(
+        "7.3.1-1-garuda, x86_64: installed (Original modules exist)",
+        "7.3.1-1-garuda, x86_64: built",
+    );
 
     assert_eq!(
-        shown,
-        [
-            "nvidia/550.90.07 6.14.0-arch1-1 installed",
-            "nvidia/470.74 5.14.8-arch1-1 installed",
-            "vboxhost/7.1.6_OSE 6.12.9-1-lts installed",
-            "acpi_call/1.2.2 6.14.0-arch1-1 built",
-            "zfs/2.3.1 - added",
-            "zfs/2.2.0 - added",
-            "nvidia/550.1 6.2.2-z broken",
-        ]
+        shown(&parse_status(&comma_form)),
+        shown(&parse_status(INSTALLED))
+    );
+    assert_eq!(
+        shown(&parse_status(&built))[2..],
+        ["v4l2loopback/0.15.4 7.3.1-1-garuda built"]
     );
 }
 
 #[test]
 fn empty_output_errors_and_odd_lines_give_no_modules() {
+    let line = INSTALLED.lines().nth(2).unwrap();
+    let unknown_state = line.replace(": installed", ": unknown");
+    let no_version = "v4l2loopback: installed";
+
     assert_eq!(parse_status(""), []);
+    assert_eq!(parse_status(BROKEN_STDERR), []);
+    assert_eq!(parse_status(&unknown_state), []);
+    assert_eq!(parse_status(no_version), []);
     assert_eq!(
-        parse_status(
-            "Error! Could not locate dkms.conf file.\n\
-             dkms: command not found\n\
-             nvidia/550.1, 6.2.2-z: unknown\n\
-             --force/1, 6.2.2-z: installed\n\
-             nvidia/550.1, ../6.2.2: installed\n\
-             nvidia: installed\n"
-        ),
-        []
+        parse_status(&line.replace("v4l2loopback", "--force")),
+        [],
+        "a name that reads as an option"
+    );
+    assert_eq!(
+        parse_status(&line.replace(LTS, &format!("../{LTS}"))),
+        [],
+        "a kernel that leaves the modules folder"
     );
 }
 
 #[test]
 fn a_kernel_shows_each_module_once_with_its_state_there() {
-    let entries = parse_status(
-        "acpi_call/1.2.2, 6.14.0-4-cachyos, x86_64: installed\n\
-         vboxhost/7.1.6_OSE, 6.12.9-1-cachyos, x86_64: broken\n\
-         vboxhost/7.1.6_OSE, 6.14.0-4-cachyos, x86_64: installed\n\
-         zfs/2.3.1, 6.12.9-1-cachyos, x86_64: built\n",
-    );
-
-    let states = |kernel: &str| -> Vec<(String, ModuleState)> {
-        modules(&release(kernel), &entries)
-            .into_iter()
-            .map(|module| (module.module.to_string(), module.state))
-            .collect()
-    };
-
     assert_eq!(
-        states("6.14.0-4-cachyos"),
+        states(LTS, ONE_KERNEL_MISSING),
         [
-            ("acpi_call".to_owned(), ModuleState::Installed),
-            ("vboxhost".to_owned(), ModuleState::Installed),
-            ("zfs".to_owned(), ModuleState::Missing),
+            ("broadcom-wl".to_owned(), ModuleState::Installed),
+            ("v4l2loopback".to_owned(), ModuleState::Missing),
         ]
     );
     assert_eq!(
-        states("6.12.9-1-cachyos"),
+        states(GARUDA, ONE_KERNEL_MISSING),
         [
-            ("acpi_call".to_owned(), ModuleState::Missing),
-            ("vboxhost".to_owned(), ModuleState::Broken),
-            ("zfs".to_owned(), ModuleState::Built),
+            ("broadcom-wl".to_owned(), ModuleState::Installed),
+            ("v4l2loopback".to_owned(), ModuleState::Installed),
         ]
     );
 }
 
-/// `6.14.0-4-arch1-1` is the release of the modules folder, so only
-/// `vboxhost` is missing.
 #[test]
 fn a_module_installed_for_the_kernel_is_not_missing() {
-    let entries = parse_status("nvidia/550, 6.14.0-4-arch1-1: installed\nvboxhost/7.0: added\n");
-    let missing: Vec<String> = builds(&release("6.14.0-4-arch1-1"), &entries)
-        .into_iter()
-        .map(|build| format!("{}/{} -k {}", build.module, build.version, build.kernel))
-        .collect();
-
-    assert_eq!(missing, ["vboxhost/7.0 -k 6.14.0-4-arch1-1"]);
+    assert_eq!(missing(GARUDA, INSTALLED), Vec::<String>::new());
+    assert_eq!(missing(GARUDA, ONE_KERNEL_MISSING), Vec::<String>::new());
+    assert_eq!(
+        missing(LTS, ONE_KERNEL_MISSING),
+        ["v4l2loopback/0.15.4 -k 6.18.60-1-lts"]
+    );
 }
 
+#[test]
+fn an_added_module_is_missing_on_every_kernel() {
+    assert_eq!(
+        missing(GARUDA, ADDED),
+        ["v4l2loopback/0.15.4 -k 7.3.1-1-garuda"]
+    );
+    assert_eq!(
+        missing(LTS, ADDED),
+        ["v4l2loopback/0.15.4 -k 6.18.60-1-lts"]
+    );
+}
+
+#[test]
+fn a_module_without_its_source_is_broken_on_every_kernel() {
+    for kernel in [GARUDA, LTS] {
+        assert_eq!(
+            states(kernel, BROKEN)[1],
+            ("v4l2loopback".to_owned(), ModuleState::Broken)
+        );
+    }
+}
+
+/// Edit of `one-kernel-missing`: an older `v4l2loopback/0.15.3: added`
+/// line before the rest.
 #[test]
 fn an_older_version_left_behind_does_not_count_as_missing() {
-    let entries = parse_status(
-        "nvidia/550.90.07: added\n\
-         nvidia/560.35.03, 6.14.0-arch1-1, x86_64: installed\n\
-         nvidia/560.35.03, 6.12.9-1-lts, x86_64: built\n",
+    let output = format!("v4l2loopback/0.15.3: added\n{ONE_KERNEL_MISSING}");
+
+    assert_eq!(missing(GARUDA, &output), Vec::<String>::new());
+    assert_eq!(
+        missing(LTS, &output),
+        ["v4l2loopback/0.15.4 -k 6.18.60-1-lts"]
     );
-
-    assert_eq!(builds(&release("6.14.0-arch1-1"), &entries), []);
-
-    let lts: Vec<String> = builds(&release("6.12.9-1-lts"), &entries)
-        .into_iter()
-        .map(|build| format!("{}/{}", build.module, build.version))
-        .collect();
-
-    assert_eq!(lts, ["nvidia/560.35.03"]);
 }

@@ -3,99 +3,105 @@ use std::path::{Path, PathBuf};
 
 use super::{parse, read, wildcard_match};
 
-/// The head of Arch's own `pacman.conf`, trailing comments added the way
-/// people write them.
-const ARCH: &str = "\
-#
-# /etc/pacman.conf
-#
-[options]
-#RootDir     = /
-DBPath      = /var/lib/pacman/   # where the databases live
-HoldPkg     = pacman glibc
-Architecture = auto
-CheckSpace
-ParallelDownloads = 5
-SigLevel    = Required DatabaseOptional
-LocalFileSigLevel = Optional
+/// `/etc/pacman.conf` of the Lima VM. Its Garuda and Chaotic-AUR
+/// sections include `/etc/pacman.d/chaotic-mirrorlist`.
+const LIMA: &str = include_str!("fixtures/pacman.conf");
+const MIRRORLIST: &str = include_str!("fixtures/etc/pacman.d/mirrorlist");
+const CHAOTIC_MIRRORLIST: &str = include_str!("fixtures/etc/pacman.d/chaotic-mirrorlist");
 
-#[core-testing]
-#Include = /etc/pacman.d/mirrorlist
+const LIMA_REPOS: [&str; 5] = ["garuda", "core", "extra", "multilib", "chaotic-aur"];
 
-[core] # the base system
-Include = /etc/pacman.d/mirrorlist
-
-[extra]
-Include = /etc/pacman.d/mirrorlist
-";
+/// The Lima conf with each `(from, to)` replaced once. Every `from` must be
+/// in it, so a changed capture cannot pass a test unedited.
+fn lima_with(edits: &[(&str, &str)]) -> String {
+    edits.iter().fold(LIMA.to_owned(), |text, (from, to)| {
+        assert!(text.contains(from), "{from:?} is not in the Lima conf");
+        text.replacen(from, to, 1)
+    })
+}
 
 fn repos(conf: &super::PacmanConf) -> Vec<&str> {
     conf.repos.iter().map(String::as_str).collect()
 }
 
-fn write(folder: &Path, name: &str, text: &str) -> PathBuf {
+fn write(folder: &Path, name: &str, text: impl AsRef<[u8]>) -> PathBuf {
     let path = folder.join(name);
 
     fs::write(&path, text).unwrap();
     path
 }
 
+/// The Lima conf and its mirrorlists in `folder`, its includes pointed
+/// there.
+fn lima_in(folder: &Path, conf: &str) -> PathBuf {
+    let pacman_d = folder.join("pacman.d");
+
+    fs::create_dir_all(&pacman_d).unwrap();
+    write(&pacman_d, "mirrorlist", MIRRORLIST);
+    write(&pacman_d, "chaotic-mirrorlist", CHAOTIC_MIRRORLIST);
+    write(
+        folder,
+        "pacman.conf",
+        conf.replace("/etc/pacman.d/", &format!("{}/", pacman_d.display())),
+    )
+}
+
+#[test]
+fn the_lima_conf_has_its_repositories_in_file_order_and_the_defaults() {
+    let conf = parse(LIMA);
+
+    assert_eq!(repos(&conf), LIMA_REPOS);
+    assert_eq!(conf.db_path, PathBuf::from("/var/lib/pacman"));
+    assert_eq!(conf.root, PathBuf::from("/"));
+}
+
+/// The Lima conf with its `DBPath` line uncommented and comments added
+/// behind it and behind `[core]`.
 #[test]
 fn trailing_comments_are_cut_like_libalpm_cuts_them() {
-    let conf = parse(ARCH);
+    let conf = parse(&lima_with(&[
+        (
+            "#DBPath      = /var/lib/pacman/",
+            "DBPath      = /var/lib/pacman/   # where the databases live",
+        ),
+        ("[core]\n", "[core] # the base system\n"),
+    ]));
 
-    assert_eq!(repos(&conf), ["core", "extra"]);
+    assert_eq!(repos(&conf), LIMA_REPOS);
     assert_eq!(conf.db_path, PathBuf::from("/var/lib/pacman/"));
     assert_eq!(conf.root, PathBuf::from("/"));
 }
 
+/// The Lima conf with `RootDir = /mnt#chroot` and `[garuda]#ours`.
 #[test]
 fn a_value_with_a_comment_keeps_only_what_comes_before_it() {
-    let conf = parse("[options]\nRootDir = /mnt#chroot\n[garuda]#ours\n");
+    let conf = parse(&lima_with(&[
+        ("#RootDir     = /", "RootDir = /mnt#chroot"),
+        ("[garuda]\n", "[garuda]#ours\n"),
+    ]));
 
     assert_eq!(conf.root, PathBuf::from("/mnt"));
-    assert_eq!(repos(&conf), ["garuda"]);
+    assert_eq!(repos(&conf), LIMA_REPOS);
 }
 
-/// Garuda's `pacman.conf` keeps its own repositories in an included file,
-/// which pacman accepts.
+/// Garuda's `pacman.conf` may keep its own repositories in an included
+/// file, which pacman accepts. Here the `[garuda]` section of the Lima
+/// conf is moved into one.
 #[test]
 fn repositories_in_an_included_file_count_in_their_place() {
     let folder = tempfile::tempdir().unwrap();
-    let mirrors = write(
+    let section = "[garuda]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n";
+    let garuda = write(folder.path(), "garuda.conf", section);
+    let main = lima_in(
         folder.path(),
-        "mirrorlist",
-        "Server = https://mirror/$repo\n",
+        &lima_with(&[(section, &format!("Include = {}\n", garuda.display()))]),
     );
 
-    let extra = write(
-        folder.path(),
-        "garuda.conf",
-        &format!(
-            "[garuda]\nInclude = {}\n\n[chaotic-aur] # builds\nInclude = {}\n",
-            mirrors.display(),
-            mirrors.display()
-        ),
-    );
-
-    let main = write(
-        folder.path(),
-        "pacman.conf",
-        &format!(
-            "{ARCH}\n[options]\nInclude = {}\n\n[multilib]\nInclude = {}\n",
-            extra.display(),
-            mirrors.display()
-        ),
-    );
-
-    let conf = read(&main).unwrap();
-
-    assert_eq!(
-        repos(&conf),
-        ["core", "extra", "garuda", "chaotic-aur", "multilib"]
-    );
+    assert_eq!(repos(&read(&main).unwrap()), LIMA_REPOS);
 }
 
+/// The Lima conf with a wildcard include appended. Garuda ships no
+/// drop-in folder, so its files are made up.
 #[test]
 fn wildcard_includes_are_read_in_sorted_order() {
     let folder = tempfile::tempdir().unwrap();
@@ -107,15 +113,19 @@ fn wildcard_includes_are_read_in_sorted_order() {
     write(&drop_in, ".hidden.conf", "[hidden]\n");
     write(&drop_in, "notes.txt", "[notes]\n");
 
-    let main = write(
+    let main = lima_in(
         folder.path(),
-        "pacman.conf",
-        &format!("[options]\nInclude = {}/*.conf\n", drop_in.display()),
+        &format!("{LIMA}Include = {}/*.conf\n", drop_in.display()),
     );
 
-    assert_eq!(repos(&read(&main).unwrap()), ["first", "second"]);
+    assert_eq!(
+        repos(&read(&main).unwrap()),
+        [LIMA_REPOS.as_slice(), &["first", "second"]].concat()
+    );
 }
 
+/// The Lima conf with its mirrorlists gone and an include of itself
+/// appended.
 #[test]
 fn a_missing_include_or_one_that_includes_itself_ends() {
     let folder = tempfile::tempdir().unwrap();
@@ -124,23 +134,37 @@ fn a_missing_include_or_one_that_includes_itself_ends() {
     fs::write(
         &main,
         format!(
-            "[core]\nInclude = /nonexistent/mirrorlist\nInclude = {}\n",
+            "{}Include = {}\n",
+            LIMA.replace("/etc/pacman.d/", "/nonexistent/pacman.d/"),
             main.display()
         ),
     )
     .unwrap();
 
-    assert_eq!(repos(&read(&main).unwrap()), ["core"]);
+    assert_eq!(repos(&read(&main).unwrap()), LIMA_REPOS);
 }
 
+/// The Lima conf with a Latin-1 comment put in front.
 #[test]
 fn a_stray_byte_hides_no_repository() {
     let folder = tempfile::tempdir().unwrap();
-    let main = folder.path().join("pacman.conf");
+    let main = lima_in(folder.path(), LIMA);
+    let mut text = b"# caf\xe9\n".to_vec();
+    text.extend_from_slice(fs::read(&main).unwrap().as_slice());
 
-    fs::write(&main, b"# caf\xe9\n[core]\n[extra]\n").unwrap();
+    fs::write(&main, text).unwrap();
 
-    assert_eq!(repos(&read(&main).unwrap()), ["core", "extra"]);
+    assert_eq!(repos(&read(&main).unwrap()), LIMA_REPOS);
+}
+
+#[test]
+fn the_lima_conf_is_read_with_its_mirrorlists() {
+    let folder = tempfile::tempdir().unwrap();
+
+    assert_eq!(
+        repos(&read(&lima_in(folder.path(), LIMA)).unwrap()),
+        LIMA_REPOS
+    );
 }
 
 #[test]
@@ -173,34 +197,42 @@ fn an_empty_config_has_the_default_databases_and_no_repos() {
     assert_eq!(repos(&conf), Vec::<&str>::new());
 }
 
+/// The Lima conf with `[chaotic-aur]` padded with spaces and `[core]`
+/// appended once more.
 #[test]
 fn repos_are_the_sections_besides_options_in_file_order() {
-    let conf = parse(
-        "# a comment\n[options]\nHoldPkg = pacman glibc\nArchitecture = auto\n\n\
-         [core]\nInclude = /etc/pacman.d/mirrorlist\n\n[extra]\n\
-         Include = /etc/pacman.d/mirrorlist\n\n  [chaotic-aur]  \n\
-         Include = /etc/pacman.d/chaotic-mirrorlist\n[core]\n",
-    );
+    let conf = parse(&format!(
+        "{}[core]\n",
+        lima_with(&[("[chaotic-aur]", "  [chaotic-aur]  ")])
+    ));
 
-    assert_eq!(repos(&conf), ["core", "extra", "chaotic-aur"]);
+    assert_eq!(repos(&conf), LIMA_REPOS);
 }
 
+/// The Lima conf with `RootDir` and `DBPath` set in `[options]` and
+/// another `DBPath` put into `[core]`.
 #[test]
 fn db_path_and_root_dir_come_from_options_only() {
-    let conf = parse("[options]\nRootDir = /mnt\nDBPath=/mnt/db/\n[core]\nDBPath = /elsewhere\n");
+    let conf = parse(&lima_with(&[
+        ("#RootDir     = /", "RootDir = /mnt"),
+        ("#DBPath      = /var/lib/pacman/", "DBPath=/mnt/db/"),
+        ("[core]\n", "[core]\nDBPath = /elsewhere\n"),
+    ]));
 
     assert_eq!(conf.root, PathBuf::from("/mnt"));
     assert_eq!(conf.db_path, PathBuf::from("/mnt/db/"));
 }
 
 /// pacman puts the databases below the root when only `RootDir` is set.
+/// The Lima conf with `RootDir = /mnt`.
 #[test]
 fn a_root_dir_moves_the_default_database() {
-    let conf = parse("[options]\nRootDir = /mnt\n");
+    let conf = parse(&lima_with(&[("#RootDir     = /", "RootDir     = /mnt")]));
 
     assert_eq!(conf.db_path, PathBuf::from("/mnt/var/lib/pacman"));
 }
 
+/// Hostile section names, made up.
 #[test]
 fn sections_that_cannot_name_a_database_file_are_skipped() {
     let conf = parse("[local]\n[../etc]\n[a/b]\n[]\n[.hidden]\n[good_one.x]\n");

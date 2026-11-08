@@ -2,7 +2,10 @@ use toolbox_plan::{PackageName, Plan, PlannedAction, RootAction, StepId, TargetL
 
 use super::MirrorWatch;
 
-const MISSING: &str = "error: failed retrieving file 'gimp-3.0-1-x86_64.pkg.tar.zst' from mirror.example.org : The requested URL returned error: 404\r\n";
+/// pacman 7 in a terminal when the mirror answered 404 for `cowsay`.
+const MISSING: &str = include_str!(
+    "../../../../../crates/core/src/features/packages/mirror/fixtures/pacman-404.stdout"
+);
 
 fn packages(names: &[&str]) -> TargetList<PackageName> {
     TargetList::new(
@@ -13,14 +16,14 @@ fn packages(names: &[&str]) -> TargetList<PackageName> {
     .unwrap_or_else(|error| panic!("{error}"))
 }
 
-/// A system update, then an install of gimp: steps 1 and 2.
+/// A system update, then an install of cowsay: steps 1 and 2.
 fn plan() -> Plan {
     Plan::new([
         PlannedAction::Root(RootAction::UpgradeSystem {
             upgrader: Upgrader::Pacman,
         }),
         PlannedAction::Root(RootAction::InstallPackages {
-            packages: packages(&["gimp"]),
+            packages: packages(&["cowsay"]),
         }),
     ])
 }
@@ -38,7 +41,7 @@ fn a_failed_install_that_met_a_missing_file_offers_the_retry() {
     watch.output(StepId::new(2), MISSING);
     watch.finished(StepId::new(2), false);
 
-    assert_eq!(watch.offer(), Some(&packages(&["gimp"])));
+    assert_eq!(watch.offer(), Some(&packages(&["cowsay"])));
 }
 
 #[test]
@@ -63,7 +66,8 @@ fn an_install_that_worked_or_failed_otherwise_offers_nothing() {
     assert_eq!(watch.offer(), None);
 
     started(&mut watch);
-    watch.output(StepId::new(2), "error: target not found: gimp\n");
+    let forbidden = MISSING.replace("returned error: 404", "returned error: 403");
+    watch.output(StepId::new(2), &forbidden);
     watch.finished(StepId::new(2), false);
     assert_eq!(watch.offer(), None);
 }

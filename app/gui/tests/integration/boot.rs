@@ -15,26 +15,18 @@ use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::boot::{BootSetup, FileChooser, FileKind};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
-use toolbox_plan::{GrubMenu, GrubState};
+use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
 use toolbox_system::{BootMenuSource, Host, MenuRead};
 
 use crate::common::{Fixture, TALL, window};
 use crate::system::{first_read, shows, step_until};
 
-const DEFAULTS: &str = "\
-GRUB_DEFAULT=gnulinux-simple-1
-GRUB_TIMEOUT=5
-GRUB_CMDLINE_LINUX_DEFAULT=\"quiet loglevel=3\"
-";
+/// `/etc/default/grub` of the Lima VM.
+const DEFAULTS: &str = include_str!("../../../../crates/plan/src/grub/fixtures/lima/default-grub");
 
-const GRUB_CFG: &str = "\
-menuentry 'Garuda Linux' $menuentry_id_option 'gnulinux-simple-1' {
-}
-submenu 'Advanced options' $menuentry_id_option 'gnulinux-advanced-1' {
-	menuentry 'Garuda Linux, with Linux linux-lts' $menuentry_id_option 'gnulinux-linux-lts-advanced-1' {
-	}
-}
-";
+/// The menu grub-mkconfig wrote on the Lima VM, with linux-lts and
+/// linux-garuda.
+const GRUB_CFG: &str = include_str!("../../../../crates/plan/src/grub/fixtures/lima/grub.cfg");
 
 struct Source;
 
@@ -42,7 +34,7 @@ struct Chooser;
 
 impl BootMenuSource for Source {
     fn menu(&self, _cancel: &Arc<AtomicBool>) -> MenuRead {
-        MenuRead::Known(GrubMenu::from_config(GRUB_CFG))
+        MenuRead::Known(GrubMenu::for_platform(GRUB_CFG, GrubPlatform::Efi))
     }
 }
 
@@ -56,8 +48,19 @@ impl FileChooser for Chooser {
 fn system() -> Snapshot {
     let mut snapshot = crate::kernels::system(true);
     snapshot.insert(Host::default());
-    snapshot.insert(CurrentGrub(GrubState::read(DEFAULTS)));
+    snapshot.insert(CurrentGrub(GrubState::read(&defaults())));
     snapshot
+}
+
+/// The Lima VM's settings. Edited: without its `GRUB_THEME` line, as the
+/// VM already uses the theme the chooser picks, so choosing it again
+/// would change nothing.
+fn defaults() -> String {
+    DEFAULTS
+        .lines()
+        .filter(|line| !line.starts_with("GRUB_THEME="))
+        .flat_map(|line| [line, "\n"])
+        .collect()
 }
 
 pub fn app() -> Fixture {

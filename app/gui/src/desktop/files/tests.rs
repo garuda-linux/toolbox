@@ -7,6 +7,24 @@ use toolbox_gui_kit::desktop::family::Family;
 
 use super::{DesktopFiles, is_look_file};
 
+/// `~/.config/kdeglobals` of a Garuda Mokka install.
+const MOKKA_KDEGLOBALS: &str =
+    include_str!("../../../../../crates/gui-kit/src/desktop/kde/fixtures/installed/kdeglobals");
+/// Garuda's `/etc/skel/.config/gtk-3.0/settings.ini`, which names
+/// Sweet-Dark.
+const SKEL_GTK3_SETTINGS: &str = include_str!(
+    "../../../../../crates/gui-kit/src/desktop/fixtures/skel/etc/skel/.config/gtk-3.0/settings.ini"
+);
+const SKEL_GTK4_SETTINGS: &str = include_str!(
+    "../../../../../crates/gui-kit/src/desktop/fixtures/skel/etc/skel/.config/gtk-4.0/settings.ini"
+);
+const SKEL_GTK4_CSS: &str = include_str!(
+    "../../../../../crates/gui-kit/src/desktop/fixtures/skel/etc/skel/.config/gtk-4.0/gtk.css"
+);
+/// Sweet-Dark's `gtk-4.0/gtk.css`.
+const SWEET_DARK: &str =
+    include_str!("../../../../../crates/gui-kit/src/desktop/gtk/fixtures/theme-gtk-4.0.css");
+
 fn files_in(home: &Path) -> DesktopFiles {
     let home = home.to_owned();
     DesktopFiles::from_env(move |key| match key {
@@ -24,18 +42,14 @@ fn write(path: &Path, text: &str) {
 #[test]
 fn kde_reads_kdeglobals_from_the_config_folder() {
     let home = TempDir::new().unwrap();
-    write(
-        &home.path().join(".config/kdeglobals"),
-        "[Icons]\nTheme=breeze-dark\n",
-    );
+    write(&home.path().join(".config/kdeglobals"), MOKKA_KDEGLOBALS);
 
-    let read = files_in(home.path()).read(Family::Kde);
+    let desktop = files_in(home.path()).read(Family::Kde).desktop.unwrap();
 
+    assert_eq!(desktop.colors.window.map(|window| window.r()), Some(30));
     assert_eq!(
-        read.desktop
-            .and_then(|desktop| desktop.icon_theme)
-            .as_deref(),
-        Some("breeze-dark")
+        desktop.font.map(|font| font.family).as_deref(),
+        Some("Inter")
     );
 }
 
@@ -44,40 +58,45 @@ fn gtk_reads_the_theme_css_then_the_users_css_over_it() {
     let home = TempDir::new().unwrap();
     write(
         &home.path().join(".config/gtk-3.0/settings.ini"),
-        "[Settings]\ngtk-theme-name=Mocha\ngtk-icon-theme-name=Papirus\n",
+        SKEL_GTK3_SETTINGS,
     );
     write(
-        &home.path().join("system/themes/Mocha/gtk-4.0/gtk.css"),
-        "@define-color window_bg_color #111111;\n@define-color accent_bg_color #222222;\n",
+        &home.path().join("system/themes/Sweet-Dark/gtk-4.0/gtk.css"),
+        SWEET_DARK,
     );
+
+    // Garuda's own `gtk.css` only imports a file of `_breeze` names, so
+    // one definition is added to it.
     write(
         &home.path().join(".config/gtk-4.0/gtk.css"),
-        "@define-color accent_bg_color #333333;\n",
+        &format!("{SKEL_GTK4_CSS}@define-color accent_bg_color #333333;\n"),
     );
 
     let desktop = files_in(home.path()).read(Family::Gtk).desktop.unwrap();
 
-    assert!(desktop.colors.window.is_some());
+    assert_eq!(desktop.colors.window.map(|window| window.r()), Some(0x16));
     assert_eq!(desktop.colors.accent.map(|accent| accent.r()), Some(0x33));
-    assert_eq!(desktop.icon_theme.as_deref(), Some("Papirus"));
+    assert_eq!(desktop.icon_theme.as_deref(), Some("BeautyLine"));
 }
 
 #[test]
 fn gtk_prefers_the_dark_css_of_a_theme_when_asked_for_dark() {
     let home = TempDir::new().unwrap();
+    let theme = home.path().join(".local/share/themes/Sweet-Dark/gtk-4.0");
+
     write(
         &home.path().join(".config/gtk-4.0/settings.ini"),
-        "[Settings]\ngtk-theme-name=Two\ngtk-application-prefer-dark-theme=true\n",
+        SKEL_GTK4_SETTINGS,
     );
+    write(&theme.join("gtk-dark.css"), SWEET_DARK);
+
+    // Sweet-Dark has no light variant, so its CSS is edited into one.
     write(
-        &home.path().join(".local/share/themes/Two/gtk-4.0/gtk.css"),
-        "@define-color window_bg_color #eeeeee;\n",
-    );
-    write(
-        &home
-            .path()
-            .join(".local/share/themes/Two/gtk-4.0/gtk-dark.css"),
-        "@define-color window_bg_color #101010;\n",
+        &theme.join("gtk.css"),
+        &SWEET_DARK.replace(
+            "@define-color theme_bg_color #161925;",
+            "@define-color theme_bg_color #eeeeee;",
+        ),
     );
 
     let read = files_in(home.path()).read(Family::Gtk);
@@ -87,7 +106,7 @@ fn gtk_prefers_the_dark_css_of_a_theme_when_asked_for_dark() {
         read.desktop
             .and_then(|desktop| desktop.colors.window)
             .map(|window| window.r()),
-        Some(0x10)
+        Some(0x16)
     );
 }
 

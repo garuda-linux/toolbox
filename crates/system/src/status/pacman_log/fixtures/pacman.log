@@ -1,0 +1,630 @@
+[2026-11-08T17:30:04+0100] [PACMAN] Running 'pacman -Syu --noconfirm'
+[2026-11-08T17:30:04+0100] [PACMAN] synchronizing package lists
+[2026-11-08T17:30:06+0100] [PACMAN] starting full system upgrade
+[2026-11-08T17:30:07+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:30:07+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-08T17:30:07+0100] [ALPM] transaction started
+[2026-11-08T17:30:07+0100] [ALPM] upgraded fastfetch (2.70.0-1 -> 2.71.0-1)
+[2026-11-08T17:30:07+0100] [ALPM] upgraded garuda-hooks (2.16.0-2 -> 2.16.1-1)
+[2026-11-08T17:30:07+0100] [ALPM] upgraded inxi (3.3.41.1-1 -> 3.3.41.1-2)
+[2026-11-08T17:30:07+0100] [ALPM] upgraded python-referencing (0.37.0-3 -> 0.37.0-4)
+[2026-11-08T17:30:07+0100] [ALPM] transaction completed
+[2026-11-08T17:30:07+0100] [ALPM] running '000-garuda-config-agent-post.hook'...
+[2026-11-08T17:30:08+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:30:08+0100] [ALPM] running '80-check-broken-packages.hook'...
+[2026-11-08T17:30:08+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:30:08+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:30:08+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:30:08+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:30:08+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:30:08+0100] [ALPM] running 'garuda-hooks-runner.hook'...
+[2026-11-08T17:30:09+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:30:09+0100] [PACMAN] Running 'pacman -S --noconfirm --needed base-devel git dkms linux-garuda-headers linux-lts linux-lts-headers v4l2loopback-dkms pacman-contrib cryptsetup lvm2 grub python vlc gimp mpv yt-dlp snapper'
+[2026-11-08T17:32:15+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:32:16+0100] [ALPM] running '10-linux-modules-pre.hook'...
+[2026-11-08T17:32:35+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-08T17:32:36+0100] [ALPM] transaction started
+[2026-11-08T17:32:36+0100] [ALPM] installed perl-error (0.17031-1)
+[2026-11-08T17:32:36+0100] [ALPM] installed perl-timedate (2.35-1)
+[2026-11-08T17:32:36+0100] [ALPM] installed perl-mailtools (2.22-3)
+[2026-11-08T17:32:36+0100] [ALPM] installed zlib-ng (2.3.3-1)
+[2026-11-08T17:32:36+0100] [ALPM] installed git (2.56.0-1)
+[2026-11-08T17:32:37+0100] [ALPM] installed dkms (3.4.4-1)
+[2026-11-08T17:32:40+0100] [ALPM] installed linux-lts (6.18.60-1)
+[2026-11-08T17:32:44+0100] [ALPM] installed linux-lts-headers (6.18.60-1)
+[2026-11-08T17:32:44+0100] [ALPM] installed v4l2loopback-dkms (0.15.4-2)
+[2026-11-08T17:32:45+0100] [ALPM] installed grub (2:2.16-1)
+[2026-11-08T17:32:45+0100] [ALPM-SCRIPTLET] :: Install your bootloader and generate configuration with:
+[2026-11-08T17:32:45+0100] [ALPM-SCRIPTLET]      # grub-install ...
+[2026-11-08T17:32:45+0100] [ALPM-SCRIPTLET]      # grub-mkconfig -o /boot/grub/grub.cfg
+[2026-11-08T17:32:45+0100] [ALPM] installed libvlc (3.0.24-1)
+[2026-11-08T17:32:45+0100] [ALPM] installed xcb-util-keysyms (0.4.1-5)
+[2026-11-08T17:32:46+0100] [ALPM] installed xcb-util-renderutil (0.3.10-2)
+[2026-11-08T17:32:46+0100] [ALPM] installed libpciaccess (0.19-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libdrm (2.4.134-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libxshmfence (1.3.3-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libxxf86vm (1.1.7-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed lm_sensors (1:3.6.2-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed spirv-tools (1:1.4.363.0-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed default-cursors (3-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed wayland (1.26.0-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed mesa (1:26.2.6-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libglvnd (1.7.0-3)
+[2026-11-08T17:32:46+0100] [ALPM] installed xdg-utils (1.2.1-2)
+[2026-11-08T17:32:46+0100] [ALPM] installed xcb-util-wm (0.4.2-2)
+[2026-11-08T17:32:46+0100] [ALPM] installed libxfixes (6.0.2-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libxi (1.8.4-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed xcb-util (0.4.1-2)
+[2026-11-08T17:32:46+0100] [ALPM] installed xcb-util-image (0.4.1-3)
+[2026-11-08T17:32:46+0100] [ALPM] installed tslib (1.24-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libevdev (1.14.0-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libgudev (238-4)
+[2026-11-08T17:32:46+0100] [ALPM] installed libwacom (2.20.0-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed mtdev (1.1.7-1)
+[2026-11-08T17:32:46+0100] [ALPM] installed libinput (1.32.0-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed xkeyboard-config (2.49-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed libxkbcommon (1.13.2-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed libxkbcommon-x11 (1.13.2-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed duktape (2.7.0-7)
+[2026-11-08T17:32:47+0100] [ALPM] installed libproxy (0.5.12-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed libcups (2:2.4.20-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed double-conversion (3.4.0-1)
+[2026-11-08T17:32:47+0100] [ALPM] installed md4c (0.6.0-2)
+[2026-11-08T17:32:47+0100] [ALPM] installed qt5-translations (5.15.19-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed qt5-base (5.15.19+kde+r96-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed qt5-svg (5.15.19+kde+r5-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed qt5-x11extras (5.15.19-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed qt5-declarative (5.15.19+kde+r23-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed libxcomposite (0.4.7-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed qt5-wayland (5.15.19+kde+r55-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed cjson (1.7.19-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed libmicrohttpd (1.0.10-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed mbedtls3 (3.6.7-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed librist (0.2.20-1)
+[2026-11-08T17:32:48+0100] [ALPM] installed alsa-topology-conf (1.2.5.1-4)
+[2026-11-08T17:32:49+0100] [ALPM] installed alsa-ucm-conf (1.2.16.1-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed alsa-lib (1.2.16.1-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-alsa (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed a52dec (0.8.0-3)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-a52dec (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-archive (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-dav1d (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-dbus (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-dbus-screensaver (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed faad2 (2.11.4-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-faad2 (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libogg (1.3.6-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed flac (1.5.0-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-flac (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-gnutls (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-inflate (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-jpeg (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-journal (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libebml (1.4.7-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libmatroska (1.7.2-2)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-matroska (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed mpg123 (1.33.7-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-mpg123 (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libvorbis (1.3.7-4)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-ogg (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed opus (1.6.1-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-opus (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-png (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libtheora (1.2.0-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed speexdsp (1.2.1-3)
+[2026-11-08T17:32:49+0100] [ALPM] installed speex (1.2.1-3)
+[2026-11-08T17:32:49+0100] [ALPM] installed libshout (1:2.4.6-5)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-shout (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-speex (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed taglib (2.3.2-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-tag (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-theora (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed lame (4.0-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libsndfile (1.2.2-4)
+[2026-11-08T17:32:49+0100] [ALPM] installed twolame (0.4.0-4)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-twolame (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-vorbis (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libvpx (1.17.0-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-vpx (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-xml (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugins-base (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-cli (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed lua51 (5.1.5-13)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-lua (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libasyncns (1:0.8+r3+g68cd5af-3)
+[2026-11-08T17:32:49+0100] [ALPM] installed libpulse (17.0+r134+g77d25a1e6-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugin-pulse (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed libva (2.24.1-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-plugins-video-output (3.0.24-1)
+[2026-11-08T17:32:49+0100] [ALPM] installed vlc-gui-qt (3.0.24-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed vlc (3.0.24-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed hwloc (2.15.0-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed onetbb (2023.2.0-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libblake3 (1.8.7-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libfyaml (0.9.6-3)
+[2026-11-08T17:32:50+0100] [ALPM] installed libstemmer (3.1.1-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed cfitsio (1:4.7.0-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed fftw (3.3.11-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libcgif (0.5.4-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libexif (0.6.26-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libimagequant (4.4.1-2)
+[2026-11-08T17:32:50+0100] [ALPM] installed libaec (1.1.7-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed hdf5 (2.2.0-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libmatio (1.5.30-1)
+[2026-11-08T17:32:50+0100] [ALPM] installed libraw (0.22.3-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed imath (3.2.3-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed openjph (0.33.0-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed openexr (3.5.3-3)
+[2026-11-08T17:32:51+0100] [ALPM] installed openjpeg2 (2.5.4-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed libvips (8.18.7-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed libxmlb (0.3.29-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed appstream (1.2.2-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed babl (0.1.128-1)
+[2026-11-08T17:32:51+0100] [ALPM] installed glu (9.0.3-3)
+[2026-11-08T17:32:51+0100] [ALPM] installed libxrandr (1.5.5-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed freeglut (3.8.0-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed jasper (4.2.9-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed json-glib (1.10.8-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed lensfun (1:0.3.4-6)
+[2026-11-08T17:32:52+0100] [ALPM] installed libspiro (1:20240903-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed luajit (2.1.1793383622+ea9eb7e-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed nspr (4.40-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed nss (3.133-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed gpgmepp (2.2.0-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed poppler (26.10.0-2)
+[2026-11-08T17:32:52+0100] [ALPM] installed poppler-glib (26.10.0-2)
+[2026-11-08T17:32:52+0100] [ALPM] installed blas (3.12.1-2)
+[2026-11-08T17:32:52+0100] [ALPM] installed lapack (3.12.1-2)
+[2026-11-08T17:32:52+0100] [ALPM] installed suitesparse (7.14.1-1)
+[2026-11-08T17:32:52+0100] [ALPM] installed gegl (0.4.72-3)
+[2026-11-08T17:32:52+0100] [ALPM] installed adwaita-fonts (51.0-2)
+[2026-11-08T17:32:53+0100] [ALPM] installed adwaita-icon-theme-legacy (46.2-3)
+[2026-11-08T17:32:53+0100] [ALPM] installed adwaita-cursors (51.0-1)
+[2026-11-08T17:32:53+0100] [ALPM] installed adwaita-icon-theme (51.0-1)
+[2026-11-08T17:32:53+0100] [ALPM] installed dconf (51.0-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed gsettings-system-schemas (51.0-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed gsettings-desktop-schemas (51.0-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed libxtst (1.2.6-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed xorg-xprop (1.2.8-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed at-spi2-core (2.62.1-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed desktop-file-utils (0.28-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed iso-codes (4.20.1-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed libcloudproviders (0.4.2-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed libcolord (1.4.8-2)
+[2026-11-08T17:32:54+0100] [ALPM] installed libepoxy (1.5.10-3)
+[2026-11-08T17:32:54+0100] [ALPM] installed libxcursor (1.2.3-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed libxdamage (1.1.7-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed libxinerama (1.1.6-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed glib-networking (1:2.90.1-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed libsoup3 (3.8.1-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed tinysparql (3.12.0-1)
+[2026-11-08T17:32:54+0100] [ALPM] installed gtk-update-icon-cache (1:4.24.1-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed gtk3 (1:3.24.52-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed exiv2 (0.28.9-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed gexiv2-common (0.16.2-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed libgexiv2 (0.14.7-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libgirepository (1.86.0-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed libmypaint (1.6.1-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed mypaint-brushes (2.0.2-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed gobject-introspection-runtime (1.86.0-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed python-gobject (3.58.1-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed python-cairo (1.29.2-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed pcre (8.45-5)
+[2026-11-08T17:32:55+0100] [ALPM] installed slang (2.3.3-4)
+[2026-11-08T17:32:55+0100] [ALPM] installed aalib (1.4rc5-19)
+[2026-11-08T17:32:55+0100] [ALPM] installed aom (3.15.3-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libde265 (1.1.3-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed openh264 (2.7.0-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed l-smash (2.14.5-4)
+[2026-11-08T17:32:55+0100] [ALPM] installed x264 (3:0.165.r3222.b35605a-2)
+[2026-11-08T17:32:55+0100] [ALPM] installed x265 (4.3-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libheif (1.23.7-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libmng (2.0.3-4)
+[2026-11-08T17:32:55+0100] [ALPM] installed libwmf (0.2.17-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libice (1.1.2-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libsm (1.2.6-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libxt (1.3.1-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libxmu (1.3.1-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed libxpm (3.5.20-1)
+[2026-11-08T17:32:55+0100] [ALPM] installed poppler-data (0.4.12-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed gimp (3.2.6-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed gsm (1.0.24-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libsamplerate (0.2.2-3)
+[2026-11-08T17:32:57+0100] [ALPM] installed jack2 (1.9.22-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed libunibreak (7.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libass (0.17.5-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libraw1394 (2.1.2-4)
+[2026-11-08T17:32:57+0100] [ALPM] installed libavc1394 (0.5.4-7)
+[2026-11-08T17:32:57+0100] [ALPM] installed libbluray (1.5.1-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libbs2b (3.1.0-11)
+[2026-11-08T17:32:57+0100] [ALPM] installed libdvdread (7.1.1-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libdvdnav (7.0.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libiec61883 (1.2.0-9)
+[2026-11-08T17:32:57+0100] [ALPM] installed libmodplug (0.8.9.0-7)
+[2026-11-08T17:32:57+0100] [ALPM] installed portaudio (1:19.7.0-4)
+[2026-11-08T17:32:57+0100] [ALPM] installed libopenmpt (0.8.10-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed vulkan-icd-loader (1.4.363.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed glslang (1:1.4.363.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed shaderc (2026.4-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libdovi (3.4.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libplacebo (7.360.1-7)
+[2026-11-08T17:32:57+0100] [ALPM] installed libsoxr (0.1.3-5)
+[2026-11-08T17:32:57+0100] [ALPM] installed libssh (0.12.2-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libvdpau (1.5-4)
+[2026-11-08T17:32:57+0100] [ALPM] installed libxv (1.0.13-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed ocl-icd (2.3.5-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libvpl (2.17.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed opencore-amr (0.1.6-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed rav1e (0.8.1-3)
+[2026-11-08T17:32:57+0100] [ALPM] installed rubberband (4.0.0-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed hidapi (0.15.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed sdl3 (3.4.18-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed sdl2-compat (2.32.74-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed snappy (1.3.1-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed sndio (1.10.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed srt (1.5.7-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed svt-av1 (4.2.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed v4l-utils (1.32.0-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed zimg (3.0.6-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed vapoursynth (81-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed vid.stab (1.1.2-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed vmaf (3.2.1-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed xvidcore (1.3.7-4)
+[2026-11-08T17:32:57+0100] [ALPM] installed libsodium (1.0.22-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libpgm (5.3.128-4)
+[2026-11-08T17:32:57+0100] [ALPM] installed zeromq (4.3.5-3)
+[2026-11-08T17:32:57+0100] [ALPM] installed ffmpeg (2:9.0.2-2)
+[2026-11-08T17:32:57+0100] [ALPM] installed libcdio (2.4.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libcdio-paranoia (10.2+2.0.2-3)
+[2026-11-08T17:32:57+0100] [ALPM] installed libdisplay-info (0.3.0-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libsixel (1.10.5-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libxpresent (1.0.2-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libxss (1.2.5-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed mujs (1.3.11-1)
+[2026-11-08T17:32:57+0100] [ALPM] installed libpipewire (1:1.6.10-1)
+[2026-11-08T17:32:58+0100] [ALPM] installed openal (1.25.2-2)
+[2026-11-08T17:32:58+0100] [ALPM] installed uchardet (0.0.8-4)
+[2026-11-08T17:32:58+0100] [ALPM] installed mpv (1:0.41.0-7)
+[2026-11-08T17:32:58+0100] [ALPM] installed deno (2.9.8-1)
+[2026-11-08T17:32:58+0100] [ALPM] installed yt-dlp-ejs (0.8.0-1)
+[2026-11-08T17:32:59+0100] [ALPM] installed yt-dlp (2026.10.26-1)
+[2026-11-08T17:32:59+0100] [ALPM] installed snapper (0.13.2-1)
+[2026-11-08T17:32:59+0100] [ALPM] transaction completed
+[2026-11-08T17:33:00+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-08T17:33:00+0100] [ALPM] running '10-linux-modules-post.hook'...
+[2026-11-08T17:33:01+0100] [ALPM-SCRIPTLET] ++ uname -r
+[2026-11-08T17:33:01+0100] [ALPM-SCRIPTLET] + KVER=7.3.1-1-garuda
+[2026-11-08T17:33:01+0100] [ALPM-SCRIPTLET] + test -e /usr/lib/modules/backup/7.3.1-1-garuda
+[2026-11-08T17:33:01+0100] [ALPM-SCRIPTLET] + rsync -AHXal --ignore-existing /usr/lib/modules/backup/7.3.1-1-garuda /usr/lib/modules/
+[2026-11-08T17:33:01+0100] [ALPM-SCRIPTLET] + rm -rf /usr/lib/modules/backup
+[2026-11-08T17:33:02+0100] [ALPM] running '20-systemd-sysusers.hook'...
+[2026-11-08T17:33:02+0100] [ALPM-SCRIPTLET] Creating group 'git' with GID 967.
+[2026-11-08T17:33:02+0100] [ALPM-SCRIPTLET] Creating user 'git' (git daemon user) with UID 967 and GID 967.
+[2026-11-08T17:33:03+0100] [ALPM] running '25-systemd-hwdb.hook'...
+[2026-11-08T17:33:03+0100] [ALPM] running '30-systemd-daemon-reload-system.hook'...
+[2026-11-08T17:33:04+0100] [ALPM] running '30-systemd-daemon-reload-user.hook'...
+[2026-11-08T17:33:04+0100] [ALPM] running '30-update-mime-database.hook'...
+[2026-11-08T17:33:04+0100] [ALPM] running '35-systemd-udev-reload.hook'...
+[2026-11-08T17:33:04+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:33:04+0100] [ALPM] running '60-depmod.hook'...
+[2026-11-08T17:33:05+0100] [ALPM] running '70-dkms-install.hook'...
+[2026-11-08T17:33:05+0100] [ALPM-SCRIPTLET] ==> dkms install --no-depmod v4l2loopback/0.15.4 -k 7.3.1-1-garuda
+[2026-11-08T17:33:08+0100] [ALPM-SCRIPTLET] ==> dkms install --no-depmod v4l2loopback/0.15.4 -k 6.18.60-1-lts
+[2026-11-08T17:33:10+0100] [ALPM-SCRIPTLET] ==> depmod 7.3.1-1-garuda
+[2026-11-08T17:33:12+0100] [ALPM-SCRIPTLET] ==> depmod 6.18.60-1-lts
+[2026-11-08T17:33:13+0100] [ALPM] running '90-dracut-install.hook'...
+[2026-11-08T17:33:13+0100] [ALPM-SCRIPTLET] :: Rebuilding all initramfs due to changes in dracut files.
+[2026-11-08T17:33:14+0100] [ALPM-SCRIPTLET] :: Building initramfs for linux-lts (6.18.60-1-lts)
+[2026-11-08T17:33:17+0100] [ALPM-SCRIPTLET] :: Building fallback initramfs for linux-lts (6.18.60-1-lts)
+[2026-11-08T17:33:24+0100] [ALPM-SCRIPTLET] :: Building initramfs for linux-garuda (7.3.1-1-garuda)
+[2026-11-08T17:33:27+0100] [ALPM-SCRIPTLET] :: Building fallback initramfs for linux-garuda (7.3.1-1-garuda)
+[2026-11-08T17:33:33+0100] [ALPM] running '90-mkinitcpio-install.hook'...
+[2026-11-08T17:33:33+0100] [ALPM] running '90-update-appstream-cache.hook'...
+[2026-11-08T17:33:33+0100] [ALPM-SCRIPTLET] ✔ Metadata cache was updated successfully.
+[2026-11-08T17:33:33+0100] [ALPM] running '95-garuda-kernel-install.hook'...
+[2026-11-08T17:33:34+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:33:35+0100] [ALPM-SCRIPTLET] Wrote unsigned /var/tmp/kernel-install.staging.yZfb08/uki.efi
+[2026-11-08T17:33:35+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:33:35+0100] [ALPM-SCRIPTLET] Wrote unsigned /efi/EFI/Linux/garuda-6.18.60-1-lts-fallback.efi
+[2026-11-08T17:33:37+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:33:37+0100] [ALPM-SCRIPTLET] Wrote unsigned /var/tmp/kernel-install.staging.hamSw8/uki.efi
+[2026-11-08T17:33:37+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:33:37+0100] [ALPM-SCRIPTLET] Wrote unsigned /efi/EFI/Linux/garuda-7.3.1-1-garuda-fallback.efi
+[2026-11-08T17:33:37+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:33:37+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:33:37+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:33:37+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:33:37+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running '99-update-grub.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'dbus-reload.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'fontconfig.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'gdk-pixbuf-query-loaders.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'gio-querymodules.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'glib-compile-schemas.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'gtk-query-immodules-3.0.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'gtk-update-icon-cache.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'texinfo-install.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'update-desktop-database.hook'...
+[2026-11-08T17:33:38+0100] [ALPM] running 'update-vlc-plugin-cache.hook'...
+[2026-11-08T17:33:39+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:33:39+0100] [PACMAN] Running 'pacman -S --noconfirm --needed broadcom-wl-dkms'
+[2026-11-08T17:33:40+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:33:40+0100] [ALPM] transaction started
+[2026-11-08T17:33:40+0100] [ALPM] installed broadcom-wl-dkms (6.30.223.271-50)
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET] 
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET] Unload and load kernel modules (wl is provided by broadcom-wl-dkms):
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET] 
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET]   rmmod b43 b43legacy bcm43xx bcma brcm80211 brcmfmac brcmsmac ssb wl
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET]   modprobe wl
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET] 
+[2026-11-08T17:33:40+0100] [ALPM] transaction completed
+[2026-11-08T17:33:40+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:33:40+0100] [ALPM] running '70-dkms-install.hook'...
+[2026-11-08T17:33:40+0100] [ALPM-SCRIPTLET] ==> dkms install --no-depmod broadcom-wl/6.30.223.271 -k 7.3.1-1-garuda
+[2026-11-08T17:33:44+0100] [ALPM-SCRIPTLET] ==> dkms install --no-depmod broadcom-wl/6.30.223.271 -k 6.18.60-1-lts
+[2026-11-08T17:33:47+0100] [ALPM-SCRIPTLET] ==> depmod 7.3.1-1-garuda
+[2026-11-08T17:33:48+0100] [ALPM-SCRIPTLET] ==> depmod 6.18.60-1-lts
+[2026-11-08T17:33:50+0100] [ALPM] running '90-dracut-install.hook'...
+[2026-11-08T17:33:50+0100] [ALPM-SCRIPTLET] :: Rebuilding all initramfs due to changes in dracut files.
+[2026-11-08T17:33:50+0100] [ALPM-SCRIPTLET] :: Building initramfs for linux-lts (6.18.60-1-lts)
+[2026-11-08T17:33:53+0100] [ALPM-SCRIPTLET] :: Building fallback initramfs for linux-lts (6.18.60-1-lts)
+[2026-11-08T17:33:58+0100] [ALPM-SCRIPTLET] :: Building initramfs for linux-garuda (7.3.1-1-garuda)
+[2026-11-08T17:34:01+0100] [ALPM-SCRIPTLET] :: Building fallback initramfs for linux-garuda (7.3.1-1-garuda)
+[2026-11-08T17:34:06+0100] [ALPM] running '90-mkinitcpio-install.hook'...
+[2026-11-08T17:34:06+0100] [ALPM] running '95-garuda-kernel-install.hook'...
+[2026-11-08T17:34:08+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:34:08+0100] [ALPM-SCRIPTLET] Wrote unsigned /var/tmp/kernel-install.staging.tdGL6u/uki.efi
+[2026-11-08T17:34:08+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:34:08+0100] [ALPM-SCRIPTLET] Wrote unsigned /efi/EFI/Linux/garuda-6.18.60-1-lts-fallback.efi
+[2026-11-08T17:34:09+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:34:09+0100] [ALPM-SCRIPTLET] Wrote unsigned /var/tmp/kernel-install.staging.9JDpXx/uki.efi
+[2026-11-08T17:34:09+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-08T17:34:09+0100] [ALPM-SCRIPTLET] Wrote unsigned /efi/EFI/Linux/garuda-7.3.1-1-garuda-fallback.efi
+[2026-11-08T17:34:09+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:34:09+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:34:09+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:34:09+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:34:09+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:34:09+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:34:10+0100] [PACMAN] Running 'pacman -S --noconfirm --needed grub-btrfs'
+[2026-11-08T17:34:10+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] transaction started
+[2026-11-08T17:34:10+0100] [ALPM] installed grub-btrfs (4.14-1)
+[2026-11-08T17:34:10+0100] [ALPM] transaction completed
+[2026-11-08T17:34:10+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] running '20-grub-btrfs-config.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] running '30-systemd-daemon-reload-system.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] running '90-mkinitcpio-install.hook'...
+[2026-11-08T17:34:10+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:34:11+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:34:11+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:34:11+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:34:11+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:34:11+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:34:11+0100] [PACMAN] Running 'pacman -S --noconfirm --needed paru'
+[2026-11-08T17:34:12+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:34:12+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-08T17:34:12+0100] [ALPM] transaction started
+[2026-11-08T17:34:12+0100] [ALPM] installed paru (2.2.0-1)
+[2026-11-08T17:34:12+0100] [ALPM] transaction completed
+[2026-11-08T17:34:12+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-08T17:34:12+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:34:12+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:34:12+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:34:12+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:34:12+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:34:12+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:34:12+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:34:13+0100] [PACMAN] Running 'pacman -S --noconfirm --needed rate-mirrors'
+[2026-11-08T17:34:13+0100] [PACMAN] Running 'pacman -S --noconfirm --needed hblock'
+[2026-11-08T17:34:13+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:34:13+0100] [ALPM] transaction started
+[2026-11-08T17:34:13+0100] [ALPM] installed hblock (3.5.2-1)
+[2026-11-08T17:34:13+0100] [ALPM] transaction completed
+[2026-11-08T17:34:13+0100] [ALPM] running '30-systemd-daemon-reload-system.hook'...
+[2026-11-08T17:34:13+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:34:13+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:34:14+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:34:14+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:34:14+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:34:14+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:34:14+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:34:14+0100] [PACMAN] Running 'pacman -S --noconfirm --needed garuda-health'
+[2026-11-08T17:34:14+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:34:14+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-08T17:34:14+0100] [ALPM] transaction started
+[2026-11-08T17:34:14+0100] [ALPM] installed garuda-update (5.8.3-1)
+[2026-11-08T17:34:14+0100] [ALPM] installed garuda-health (1.11.1-1)
+[2026-11-08T17:34:14+0100] [ALPM] transaction completed
+[2026-11-08T17:34:14+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-08T17:34:14+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:34:15+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:34:15+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:34:15+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:34:15+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:34:15+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:34:15+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:34:15+0100] [PACMAN] Running 'pacman -S --noconfirm --needed snapper-sdboot'
+[2026-11-08T17:35:14+0100] [PACMAN] Running 'pacman -S --noconfirm htop'
+[2026-11-08T17:35:15+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:15+0100] [ALPM] transaction started
+[2026-11-08T17:35:15+0100] [ALPM] installed htop (3.5.3-1)
+[2026-11-08T17:35:15+0100] [ALPM] transaction completed
+[2026-11-08T17:35:15+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:35:15+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:35:16+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:35:16+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:35:16+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:35:16+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:35:16+0100] [ALPM] running 'gtk-update-icon-cache.hook'...
+[2026-11-08T17:35:17+0100] [ALPM] running 'update-desktop-database.hook'...
+[2026-11-08T17:35:17+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:35:17+0100] [PACMAN] Running 'pacman -S --noconfirm htop'
+[2026-11-08T17:35:18+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:18+0100] [ALPM] transaction started
+[2026-11-08T17:35:18+0100] [ALPM] reinstalled htop (3.5.3-1)
+[2026-11-08T17:35:18+0100] [ALPM] transaction completed
+[2026-11-08T17:35:18+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:35:18+0100] [ALPM] running '80-check-broken-packages.hook'...
+[2026-11-08T17:35:19+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:35:19+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:35:19+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:35:19+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:35:19+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:35:19+0100] [ALPM] running 'gtk-update-icon-cache.hook'...
+[2026-11-08T17:35:19+0100] [ALPM] running 'update-desktop-database.hook'...
+[2026-11-08T17:35:19+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:35:20+0100] [PACMAN] Running 'pacman -U --noconfirm https://archive.archlinux.org/packages/h/htop/htop-3.5.2-1-x86_64.pkg.tar.zst'
+[2026-11-08T17:35:20+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:20+0100] [ALPM] transaction started
+[2026-11-08T17:35:20+0100] [ALPM] downgraded htop (3.5.3-1 -> 3.5.2-1)
+[2026-11-08T17:35:20+0100] [ALPM] transaction completed
+[2026-11-08T17:35:20+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:35:20+0100] [ALPM] running '80-check-broken-packages.hook'...
+[2026-11-08T17:35:21+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:35:21+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:35:21+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:35:21+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-08T17:35:21+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:35:21+0100] [ALPM] running 'gtk-update-icon-cache.hook'...
+[2026-11-08T17:35:21+0100] [ALPM] running 'update-desktop-database.hook'...
+[2026-11-08T17:35:21+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:35:25+0100] [PACMAN] Running '/usr/bin/pacman --noconfirm -S --asdeps scdoc'
+[2026-11-08T17:35:25+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:25+0100] [ALPM] transaction started
+[2026-11-08T17:35:25+0100] [ALPM] installed scdoc (1.11.5-1)
+[2026-11-08T17:35:25+0100] [ALPM] transaction completed
+[2026-11-08T17:35:25+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:35:25+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:35:26+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-08T17:35:26+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:35:26+0100] [ALPM-SCRIPTLET] scdoc 1.11.5-1
+[2026-11-08T17:35:26+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:35:26+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:35:28+0100] [PACMAN] Running '/usr/bin/pacman --noconfirm -U /tmp/aur-cbonsai/cbonsai-1.4.0-1-any.pkg.tar.zst /tmp/aur-cbonsai/cbonsai-debug-1.4.0-1-any.pkg.tar.zst'
+[2026-11-08T17:35:28+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:28+0100] [ALPM] transaction started
+[2026-11-08T17:35:28+0100] [ALPM] installed cbonsai (1.4.0-1)
+[2026-11-08T17:35:28+0100] [ALPM] installed cbonsai-debug (1.4.0-1)
+[2026-11-08T17:35:28+0100] [ALPM] transaction completed
+[2026-11-08T17:35:28+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:35:28+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:35:28+0100] [ALPM-SCRIPTLET] cbonsai 1.4.0-1
+[2026-11-08T17:35:28+0100] [ALPM-SCRIPTLET] cbonsai-debug 1.4.0-1
+[2026-11-08T17:35:28+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:35:28+0100] [ALPM-SCRIPTLET] scdoc 1.11.5-1
+[2026-11-08T17:35:28+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:35:28+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:35:30+0100] [PACMAN] Running 'pacman -Rns --noconfirm htop'
+[2026-11-08T17:35:30+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:30+0100] [ALPM] transaction started
+[2026-11-08T17:35:30+0100] [ALPM] removed htop (3.5.2-1)
+[2026-11-08T17:35:30+0100] [ALPM] transaction completed
+[2026-11-08T17:35:30+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:35:30+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:35:30+0100] [ALPM-SCRIPTLET] cbonsai 1.4.0-1
+[2026-11-08T17:35:30+0100] [ALPM-SCRIPTLET] cbonsai-debug 1.4.0-1
+[2026-11-08T17:35:30+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:35:30+0100] [ALPM-SCRIPTLET] scdoc 1.11.5-1
+[2026-11-08T17:35:30+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:35:30+0100] [ALPM] running 'gtk-update-icon-cache.hook'...
+[2026-11-08T17:35:30+0100] [ALPM] running 'update-desktop-database.hook'...
+[2026-11-08T17:35:30+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-08T17:35:30+0100] [PACMAN] Running 'pacman -S --noconfirm cmatrix'
+[2026-11-08T17:35:38+0100] [PACMAN] Running 'pacman --config /tmp/pacman-404.conf --cachedir /tmp/empty-cache -S --needed --noconfirm -- cowsay'
+[2026-11-08T17:35:38+0100] [PACMAN] Running 'pacman -S --noconfirm --needed vlc'
+[2026-11-08T17:35:38+0100] [PACMAN] Running 'pacman -S vlc-git'
+[2026-11-08T17:35:39+0100] [PACMAN] Running 'pacman -S java-runtime'
+[2026-11-08T17:35:39+0100] [PACMAN] Running 'pacman -S --noconfirm garuda-common-settings'
+[2026-11-08T17:35:59+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-08T17:35:59+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-08T17:35:59+0100] [ALPM] transaction started
+[2026-11-08T17:35:59+0100] [ALPM] installed btrfsmaintenance (0.5.2-3)
+[2026-11-08T17:35:59+0100] [ALPM] installed starship (1.27.0-1)
+[2026-11-08T17:35:59+0100] [ALPM] installed garuda-starship-prompt (1.0.4-1)
+[2026-11-08T17:35:59+0100] [ALPM] installed ugrep (7.8.5-1)
+[2026-11-08T17:35:59+0100] [ALPM] installed garuda-bash-config (2.0.0-1)
+[2026-11-08T17:35:59+0100] [ALPM] installed garuda-icons (1.0.0-1)
+[2026-11-08T17:35:59+0100] [ALPM] installed garuda-migrations (4.1.0-1)
+[2026-11-08T17:36:00+0100] [ALPM] installed garuda-wallpapers (1.1.1-1)
+[2026-11-08T17:36:00+0100] [ALPM] installed zram-generator (1.2.1-1)
+[2026-11-08T17:36:00+0100] [ALPM] installed systemd-oomd-defaults (253.5-2)
+[2026-11-08T17:36:00+0100] [ALPM] installed noto-fonts-emoji (1:20260924-1)
+[2026-11-08T17:36:00+0100] [ALPM] installed noto-color-emoji-fontconfig (1.0.0-2)
+[2026-11-08T17:36:00+0100] [ALPM] installed privatebin-cli (2.2.1-4)
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] 
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] You need to configure the privatebin instance to use.
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Read the manual: man privatebin.conf
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] 
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Or create a config for the default instance:
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] mkdir -p ~/.config/privatebin/
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] cat << EOF > ~/.config/privatebin/config.json
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] {
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET]     "bin": [
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET]         {
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET]             "name": "",
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET]             "host": "https://privatebin.net"
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET]         }
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET]     ]
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] }
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] EOF
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] 
+[2026-11-08T17:36:00+0100] [ALPM] installed garuda-common-settings (2.14.0-1)
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Created symlink '/etc/systemd/system/timers.target.wants/btrfs-balance.timer' → '/usr/lib/systemd/system/btrfs-balance.timer'.
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Created symlink '/etc/systemd/system/timers.target.wants/btrfs-defrag.timer' → '/usr/lib/systemd/system/btrfs-defrag.timer'.
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Created symlink '/etc/systemd/system/timers.target.wants/btrfs-scrub.timer' → '/usr/lib/systemd/system/btrfs-scrub.timer'.
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Created symlink '/etc/systemd/system/timers.target.wants/btrfs-trim.timer' → '/usr/lib/systemd/system/btrfs-trim.timer'.
+[2026-11-08T17:36:00+0100] [ALPM-SCRIPTLET] Created symlink '/etc/systemd/system/multi-user.target.wants/garuda-pacman-lock.service' → '/usr/lib/systemd/system/garuda-pacman-lock.service'.
+[2026-11-08T17:36:00+0100] [ALPM] transaction completed
+[2026-11-08T17:36:00+0100] [ALPM] running '00-garuda-migrations.hook'...
+[2026-11-08T17:36:00+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/security/faillock.conf] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [0] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/security/faillock.conf] Pipeline applied successfully.
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/updatedb.conf] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [0] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/updatedb.conf] Pipeline applied successfully.
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/default/grub] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [0] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [1] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [2] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [3] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [4] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [5] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/default/grub] Pipeline applied successfully.
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/locale.gen] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/default/btrfsmaintenance] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [0] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [1] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [2] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [3] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [4] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [5] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [6] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/default/btrfsmaintenance] Pipeline applied successfully.
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/paru.conf] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [0] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/paru.conf] Pipeline applied successfully.
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/nsswitch.conf] Applying full pipeline...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] --> [0] Applying operation...
+[2026-11-08T17:36:01+0100] [ALPM-SCRIPTLET] [/etc/nsswitch.conf] Pipeline applied successfully.
+[2026-11-08T17:36:01+0100] [ALPM] running '21-systemd-tmpfiles.hook'...
+[2026-11-08T17:36:01+0100] [ALPM] running '25-systemd-sysctl.hook'...
+[2026-11-08T17:36:01+0100] [ALPM] running '30-systemd-daemon-reload-system.hook'...
+[2026-11-08T17:36:01+0100] [ALPM] running '30-systemd-daemon-reload-user.hook'...
+[2026-11-08T17:36:02+0100] [ALPM] running '35-systemd-udev-reload.hook'...
+[2026-11-08T17:36:02+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-08T17:36:02+0100] [ALPM] running '40-fontconfig-config.hook'...
+[2026-11-08T17:36:02+0100] [ALPM] running '95-garuda-migrations.hook'...
+[2026-11-08T17:36:02+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-08T17:36:02+0100] [ALPM-SCRIPTLET] cbonsai 1.4.0-1
+[2026-11-08T17:36:02+0100] [ALPM-SCRIPTLET] cbonsai-debug 1.4.0-1
+[2026-11-08T17:36:02+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-08T17:36:03+0100] [ALPM-SCRIPTLET] scdoc 1.11.5-1
+[2026-11-08T17:36:03+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-08T17:36:03+0100] [ALPM] running 'fontconfig.hook'...
+[2026-11-08T17:36:03+0100] [ALPM] running 'gtk-update-icon-cache.hook'...
+[2026-11-08T17:36:03+0100] [ALPM] running 'update-desktop-database.hook'...
+[2026-11-08T17:36:03+0100] [ALPM] running 'zzz_post.hook'...

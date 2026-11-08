@@ -21,6 +21,7 @@ workspace = true
 
 [dev-dependencies]
 criterion.workspace = true
+toolbox-state = { workspace = true, features = ["selftest"] }
 
 [[bench]]
 name = "search"

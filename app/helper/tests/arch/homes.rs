@@ -265,7 +265,7 @@ fn the_home_folder_of_root_stays() -> TestResult {
         "{}",
         run.stdout
     );
-    assert!(printed(&run)?.contains("root account"));
+    assert!(printed(&run)?.contains("the user id 0, outside 1000 to 60000"));
     assert_eq!(passwd_entry("root")?, before);
     assert!(Path::new("/root").is_dir());
     Ok(())

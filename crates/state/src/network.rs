@@ -8,7 +8,7 @@ pub use address::{ADDRESS_SERVICE, public_address};
 pub use drivers::{
     BlacklistEntry, Category, ModuleFacts, NetworkModule, loaded_modules, network_modules,
 };
-pub use hardware::{Device, DeviceKind, copy_text, pci_devices, usb_devices};
+pub use hardware::{Device, DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices};
 
 /// What NetworkManager says about the way to the internet
 /// (`NMConnectivityState`).

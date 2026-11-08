@@ -2,8 +2,10 @@ use proptest::prelude::*;
 
 use super::{grub_value, quote, set_grub_value, unset_grub_value};
 
-const ARCH: &str = include_str!("../fixtures/arch-default-grub");
-const GARUDA: &str = include_str!("../fixtures/garuda-default-grub");
+/// `/etc/default/grub` of the Garuda Lima image, close to GRUB's stock file.
+const LIMA: &str = include_str!("../fixtures/lima/default-grub");
+/// `/etc/default/grub` of a used Garuda Mokka install, with single quotes.
+const INSTALLED: &str = include_str!("../fixtures/installed/default-grub");
 
 fn sourced(value: &str) -> std::process::Output {
     let dir = tempfile::tempdir().unwrap();
@@ -39,33 +41,38 @@ fn changed<'text>(before: &'text str, after: &'text str) -> Vec<(&'text str, &'t
 
 #[test]
 fn values_are_read_as_a_shell_reads_them() {
-    assert_eq!(grub_value(ARCH, "GRUB_DEFAULT").as_deref(), Some("0"));
-    assert_eq!(grub_value(ARCH, "GRUB_TIMEOUT").as_deref(), Some("5"));
+    assert_eq!(grub_value(LIMA, "GRUB_DEFAULT").as_deref(), Some("0"));
+    assert_eq!(grub_value(LIMA, "GRUB_TIMEOUT").as_deref(), Some("5"));
     assert_eq!(
-        grub_value(ARCH, "GRUB_CMDLINE_LINUX_DEFAULT").as_deref(),
+        grub_value(LIMA, "GRUB_CMDLINE_LINUX_DEFAULT").as_deref(),
         Some("loglevel=3 quiet")
     );
-    assert_eq!(grub_value(ARCH, "GRUB_CMDLINE_LINUX").as_deref(), Some(""));
+    assert_eq!(grub_value(LIMA, "GRUB_CMDLINE_LINUX").as_deref(), Some(""));
     assert_eq!(
-        grub_value(GARUDA, "GRUB_DEFAULT").as_deref(),
-        Some("Garuda Linux")
+        grub_value(INSTALLED, "GRUB_DISTRIBUTOR").as_deref(),
+        Some("Garuda")
     );
     assert_eq!(
-        grub_value(GARUDA, "GRUB_EARLY_INITRD_LINUX_STOCK").as_deref(),
-        Some("")
+        grub_value(INSTALLED, "GRUB_CMDLINE_LINUX_DEFAULT").as_deref(),
+        Some("quiet loglevel=3")
+    );
+    assert!(
+        grub_value(INSTALLED, "GRUB_CMDLINE_LINUX")
+            .unwrap()
+            .starts_with("vt.default_red=30,243,")
     );
     assert_eq!(
-        grub_value(GARUDA, "GRUB_MENU_PICTURE").as_deref(),
-        Some("/usr/share/grub/themes/garuda-dr460nized/background.png")
+        grub_value(INSTALLED, "GRUB_DISABLE_BOOTNEXT").as_deref(),
+        Some("true")
     );
 }
 
 #[test]
 fn commented_and_missing_variables_have_no_value() {
-    assert_eq!(grub_value(ARCH, "GRUB_THEME"), None);
-    assert_eq!(grub_value(ARCH, "GRUB_SAVEDEFAULT"), None);
-    assert_eq!(grub_value(ARCH, "GRUB_NO_SUCH"), None);
-    assert_eq!(grub_value(ARCH, "GRUB_CMDLINE"), None);
+    assert_eq!(grub_value(LIMA, "GRUB_BACKGROUND"), None);
+    assert_eq!(grub_value(LIMA, "GRUB_SAVEDEFAULT"), None);
+    assert_eq!(grub_value(LIMA, "GRUB_NO_SUCH"), None);
+    assert_eq!(grub_value(LIMA, "GRUB_CMDLINE"), None);
     assert_eq!(grub_value("", "GRUB_DEFAULT"), None);
 }
 
@@ -129,27 +136,27 @@ fn the_last_assignment_wins() {
 
 #[test]
 fn setting_changes_only_the_value_of_its_line() {
-    let after = set_grub_value(ARCH, "GRUB_TIMEOUT", "10");
+    let after = set_grub_value(LIMA, "GRUB_TIMEOUT", "10");
 
     assert_eq!(
-        changed(ARCH, &after),
+        changed(LIMA, &after),
         [("GRUB_TIMEOUT=5", "GRUB_TIMEOUT=10")]
     );
 
     let with_splash = set_grub_value(
-        ARCH,
+        LIMA,
         "GRUB_CMDLINE_LINUX_DEFAULT",
         "loglevel=3 quiet splash",
     );
 
     assert_eq!(
-        changed(ARCH, &with_splash),
+        changed(LIMA, &with_splash),
         [(
             "GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet\"",
             "GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet splash\""
         )]
     );
-    assert!(with_splash.ends_with("#GRUB_DISABLE_OS_PROBER=false\n"));
+    assert!(with_splash.ends_with("GRUB_DISABLE_BOOTNEXT=true\n"));
 }
 
 #[test]
@@ -165,20 +172,20 @@ fn a_bare_value_stays_bare_only_while_it_is_a_plain_word() {
 
 #[test]
 fn a_commented_out_variable_is_switched_on_in_place() {
-    let after = set_grub_value(ARCH, "GRUB_SAVEDEFAULT", "true");
+    let after = set_grub_value(LIMA, "GRUB_SAVEDEFAULT", "true");
 
     assert_eq!(
-        changed(ARCH, &after),
+        changed(LIMA, &after),
         [("#GRUB_SAVEDEFAULT=true", "GRUB_SAVEDEFAULT=true")]
     );
 
-    let themed = set_grub_value(ARCH, "GRUB_THEME", "/usr/share/grub/themes/x/theme.txt");
+    let pictured = set_grub_value(LIMA, "GRUB_BACKGROUND", "/usr/share/wallpapers/x.png");
 
     assert_eq!(
-        changed(ARCH, &themed),
+        changed(LIMA, &pictured),
         [(
-            "#GRUB_THEME=\"/path/to/gfxtheme\"",
-            "GRUB_THEME=\"/usr/share/grub/themes/x/theme.txt\""
+            "#GRUB_BACKGROUND=\"/path/to/wallpaper\"",
+            "GRUB_BACKGROUND=\"/usr/share/wallpapers/x.png\""
         )]
     );
     assert_eq!(
@@ -220,13 +227,16 @@ fn export_indent_comment_and_line_ending_are_kept() {
         "\texport X=\"b c\"\t# note\r\nY=1\r\n"
     );
 
-    let after = set_grub_value(GARUDA, "GRUB_MENU_PICTURE", "/a.png");
+    // Edit: no captured file exports a variable, so the real theme line of
+    // the install gets an `export` in front.
+    let exported = INSTALLED.replace("\nGRUB_THEME=", "\nexport GRUB_THEME=");
+    let after = set_grub_value(&exported, "GRUB_THEME", "/a/theme.txt");
 
     assert_eq!(
-        changed(GARUDA, &after),
+        changed(&exported, &after),
         [(
-            "export GRUB_MENU_PICTURE=\"/usr/share/grub/themes/garuda-dr460nized/background.png\"",
-            "export GRUB_MENU_PICTURE=\"/a.png\""
+            "export GRUB_THEME=\"/usr/share/grub/themes/catppuccin-mocha/theme.txt\"",
+            "export GRUB_THEME=\"/a/theme.txt\""
         )]
     );
 }
@@ -269,25 +279,25 @@ fn unsetting_comments_every_assignment_out() {
         "#X=1\n  #export X=\"2\" # two\nY=3\n#X=4\n"
     );
     assert_eq!(grub_value(&unset_grub_value(config, "X"), "X"), None);
-    assert_eq!(unset_grub_value(ARCH, "GRUB_THEME"), ARCH);
+    assert_eq!(unset_grub_value(LIMA, "GRUB_BACKGROUND"), LIMA);
 }
 
 #[test]
 fn setting_what_is_set_changes_nothing() {
-    assert_eq!(set_grub_value(ARCH, "GRUB_TIMEOUT", "5"), ARCH);
+    assert_eq!(set_grub_value(LIMA, "GRUB_TIMEOUT", "5"), LIMA);
     assert_eq!(
-        set_grub_value(GARUDA, "GRUB_DISABLE_OS_PROBER", "false"),
-        GARUDA
+        set_grub_value(INSTALLED, "GRUB_DISABLE_OS_PROBER", "false"),
+        INSTALLED
     );
 }
 
 proptest! {
     #[test]
     fn any_value_reads_back_and_leaves_the_rest_alone(value in "[ -~]{0,60}") {
-        let after = set_grub_value(ARCH, "GRUB_CMDLINE_LINUX", &value);
+        let after = set_grub_value(LIMA, "GRUB_CMDLINE_LINUX", &value);
 
         prop_assert_eq!(grub_value(&after, "GRUB_CMDLINE_LINUX"), Some(value));
-        prop_assert_eq!(changed(ARCH, &after).len(), usize::from(after != ARCH));
+        prop_assert_eq!(changed(LIMA, &after).len(), usize::from(after != LIMA));
         prop_assert_eq!(
             grub_value(&after, "GRUB_CMDLINE_LINUX_DEFAULT"),
             Some("loglevel=3 quiet".to_owned())

@@ -229,12 +229,12 @@ button, as it has no **Edit** button elsewhere (see
 
 When the text cannot be shown, the dialog says why instead:
 
-| What the dialog says                                      | Why                                                         |
-| --------------------------------------------------------- | ----------------------------------------------------------- |
-| `… the password dialog was closed`                        | You closed the password dialog. Click **View** again        |
-| `… needs the password of an administrator`                | Your account is no administrator, or the password was wrong |
-| `… is no text file, so it cannot be shown here`           | The file is not UTF-8 text                                  |
-| `… is larger than 1 MiB, which is too large to show here` | Larger files are not handed out                             |
+| What the dialog says                                                | Why                                                                  |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `… the password dialog was closed`                                  | You closed the password dialog. Click **View** again                 |
+| `… the password dialog was closed or the password was not accepted` | Cancel in KDE Plasma's dialog, a wrong password, or no administrator |
+| `… is no text file, so it cannot be shown here`                     | The file is not UTF-8 text                                           |
+| `… is larger than 1 MiB, which is too large to show here`           | Larger files are not handed out                                      |
 
 ## Files that cannot be edited here
 

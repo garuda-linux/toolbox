@@ -14,11 +14,11 @@ use crate::testing::assert_failed;
 fn installing_the_mirrorlist_is_one_step() {
     let root = tempfile::tempdir().unwrap();
     fs::create_dir_all(root.path().join("etc/pacman.d")).unwrap();
-    let builtin = Builtin::InstallMirrorlist(mirrorlist("new.example"));
+    let builtin = Builtin::InstallMirrorlist(mirrorlist());
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Succeeded);
     assert_eq!(
         fs::read_to_string(root.path().join("etc/pacman.d/chaotic-mirrorlist")).unwrap(),
-        mirrorlist("new.example").as_str()
+        mirrorlist().as_str()
     );
 
     // A second install keeps the first one as the backup.
@@ -27,14 +27,14 @@ fn installing_the_mirrorlist_is_one_step() {
     assert_eq!(again, Outcome::Succeeded);
     assert_eq!(
         fs::read_to_string(root.path().join("etc/pacman.d/chaotic-mirrorlist.bak")).unwrap(),
-        mirrorlist("new.example").as_str()
+        mirrorlist().as_str()
     );
 }
 
 #[test]
 fn a_missing_mirrorlist_folder_fails_the_step() {
     let root = tempfile::tempdir().unwrap();
-    let builtin = Builtin::InstallMirrorlist(mirrorlist("new.example"));
+    let builtin = Builtin::InstallMirrorlist(mirrorlist());
 
     assert_failed(outcome_of(root.path(), &builtin));
 }
@@ -45,20 +45,20 @@ fn accounts_and_homes_are_checked_as_steps() {
     fs::create_dir_all(root.path().join("etc")).unwrap();
     fs::write(
         root.path().join("etc/passwd"),
-        "nico:x:1000:1000::/home/nico:/usr/bin/bash\n",
+        include_str!("../../../../system/src/accounts/fixtures/passwd"),
     )
     .unwrap();
     fs::write(
         root.path().join("etc/group"),
-        "nico:x:1000:\nmakers:x:1001:nico\n",
+        include_str!("../../../../system/src/accounts/fixtures/group"),
     )
     .unwrap();
 
-    let ordinary = Builtin::RequireOrdinaryUser(UserName::new("nico").unwrap());
+    let ordinary = Builtin::RequireOrdinaryUser(UserName::new("user").unwrap());
 
     assert_eq!(outcome_of(root.path(), &ordinary), Outcome::Succeeded);
 
-    let member = Builtin::RequireUserGroup(GroupName::new("makers").unwrap());
+    let member = Builtin::RequireUserGroup(GroupName::new("guest").unwrap());
 
     assert_eq!(outcome_of(root.path(), &member), Outcome::Succeeded);
 
@@ -113,7 +113,11 @@ fn blacklisting_a_module_is_one_step() {
 fn grub_settings_are_one_step() {
     let root = tempfile::tempdir().unwrap();
     fs::create_dir_all(root.path().join("etc/default")).unwrap();
-    fs::write(root.path().join("etc/default/grub"), "GRUB_TIMEOUT=5\n").unwrap();
+    fs::write(
+        root.path().join("etc/default/grub"),
+        include_str!("../../../../plan/src/grub/fixtures/installed/default-grub"),
+    )
+    .unwrap();
     let builtin = Builtin::EditGrubDefaults(
         GrubSettings::new(vec![
             GrubSetting::Default(DefaultEntry::Saved),
@@ -126,25 +130,29 @@ fn grub_settings_are_one_step() {
     assert!(
         fs::read_to_string(root.path().join("etc/default/grub"))
             .unwrap()
-            .contains("GRUB_TIMEOUT=10")
+            .contains("\nGRUB_TIMEOUT=10\n")
     );
 }
 
+/// `/etc/hosts` of the Lima image, replaced by the first 80 lines of the
+/// one hblock wrote there.
 #[test]
 fn writing_a_config_file_is_one_step() {
+    let old = include_str!("../../../../system/src/settings/fixtures/hosts");
+    let new = include_str!("../../../../system/src/settings/fixtures/hosts-hblock");
     let root = tempfile::tempdir().unwrap();
     fs::create_dir_all(root.path().join("etc")).unwrap();
-    fs::write(root.path().join("etc/fstab"), "old = 1\n").unwrap();
+    fs::write(root.path().join("etc/hosts"), old).unwrap();
     let builtin = Builtin::WriteConfigFile(ConfigWrite {
-        path: ConfigFilePath::new("/etc/fstab").unwrap(),
-        content: ConfigText::new("new = 2\n").unwrap(),
-        original: Fingerprint::of(b"old = 1\n"),
+        path: ConfigFilePath::new("/etc/hosts").unwrap(),
+        content: ConfigText::new(new).unwrap(),
+        original: Fingerprint::of(old.as_bytes()),
     });
 
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Succeeded);
     assert_eq!(
-        fs::read_to_string(root.path().join("etc/fstab")).unwrap(),
-        "new = 2\n"
+        fs::read_to_string(root.path().join("etc/hosts")).unwrap(),
+        new
     );
 }
 

@@ -21,17 +21,17 @@ Each card has one button at its right. A card with more to offer has a
 **⋯** button beside it that opens the rest. In a narrow window they sit
 under its text.
 
-| Card                                                                 | Shown when                                                  | Buttons                                                         |
-| -------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
-| **2 updates available**                                              | The repositories have newer packages (`checkupdates`)       | **Update now**, in **⋯** **Queue update** and **Show packages** |
-| **One AUR update available**                                         | AUR packages have newer versions (`paru -Qua`)              | **Update in Console**, in **⋯** **Show packages**               |
-| **The last update is overdue**                                       | The last update is more than 14 days old, no updates known  | **Update now**                                                  |
-| **Configuration files to merge**                                     | `.pacnew` or `.pacsave` files wait (`pacdiff -o`)           | none, the merge tool opens from [Maintenance](maintenance.md)   |
-| **Disk space is low**                                                | Less than a tenth of `/` is free, or less than 10 GB        | **Open Maintenance**                                            |
-| **A service failed**                                                 | A system service stopped with an error, named in the card   | **Show in Services**                                            |
-| **Orphans and package cache**                                        | A package is no longer needed, or the cache holds over 5 GB | **Queue clean-up**, then **Don't clean up** to take it back     |
-| **garuda-health found warnings** or **garuda-health found problems** | `garuda-health` reports warnings or problems                | **Fix**, or **Show in Console** when it cannot fix them         |
-| **Restart to finish the update**                                     | The running kernel or system libraries were replaced        | **Restart…** asks first, then restarts                          |
+| Card                                                                 | Shown when                                                                         | Buttons                                                         |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **2 updates available**                                              | The repositories have newer packages (`checkupdates`)                              | **Update now**, in **⋯** **Queue update** and **Show packages** |
+| **One AUR update available**                                         | AUR packages have newer versions (`paru -Qua`)                                     | **Update in Console**, in **⋯** **Show packages**               |
+| **The last update is overdue**                                       | The last update is more than 14 days old, no updates known                         | **Update now**                                                  |
+| **Configuration files to merge**                                     | `.pacnew` or `.pacsave` files wait (`pacdiff -o`)                                  | none, the merge tool opens from [Maintenance](maintenance.md)   |
+| **Disk space is low**                                                | Less than a tenth of `/` is free, or less than 10 GB                               | **Open Maintenance**                                            |
+| **A service failed**                                                 | A system service stopped with an error, named in the card                          | **Show in Services**                                            |
+| **Orphans and package cache**                                        | A package is no longer needed, or the cache holds over 5 GB                        | **Queue clean-up**, then **Don't clean up** to take it back     |
+| **garuda-health found warnings** or **garuda-health found problems** | `garuda-health` reports LOW issues (warnings), or HIGH or CRITICAL ones (problems) | **Fix**, or **Show in Console** when it cannot fix them         |
+| **Restart to finish the update**                                     | The running kernel or system libraries were replaced                               | **Restart…** asks first, then restarts                          |
 
 On a disk of 100 GB or less the limit is a tenth of it, and on a bigger
 disk it is 10 GB. **Queue clean-up** queues removing the orphans and
@@ -96,8 +96,7 @@ posts of the forum's Maintenance announcements.
 Click a title to open the post in your browser. **Garuda forum** and
 **Arch news** beside the heading open all posts of each site. The app asks
 each site at most every six hours and keeps its posts, so they show
-without a network too. In test mode the app shows sample posts instead
-and never asks either site.
+without a network too.
 
 ## Next steps
 

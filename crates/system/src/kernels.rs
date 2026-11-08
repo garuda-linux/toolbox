@@ -128,8 +128,9 @@ impl KernelSource for SystemKernels {
 }
 
 impl DkmsSource for Dkms {
-    /// dkms exits with an error for a broken module and still lists the
-    /// others, so its output counts whenever it holds a module.
+    /// dkms exits with 0 for a broken module and reports it on stderr, so
+    /// the exit code tells nothing about the modules. Its output counts
+    /// whenever it holds a module.
     fn status(&self) -> Result<Vec<DkmsEntry>, ProbeError> {
         let finished = command::run(&self.program, &["status"])?;
         let entries = parse_status(&finished.stdout);

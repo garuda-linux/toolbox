@@ -1,5 +1,5 @@
-//! The news for Home, and the fixed posts a dry run shows instead of
-//! asking Garuda's forum and Arch's website.
+//! The fixed posts the dry run of a self-test build shows instead of
+//! asking Garuda's forum and Arch's website. Release builds leave them out.
 
 use toolbox_news::{News, NewsError, NewsSource, Post, Source};
 

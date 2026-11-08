@@ -9,6 +9,7 @@ use crate::domains::{
     CurrentSystemLocale, EnabledLocales, InstalledPackages, Locales, Packages, SyncPackages,
     SystemLocales,
 };
+use crate::features::locales::tests::supported;
 use crate::features::locales::{
     Filter, LanguageName, LocaleNames, PackOrder, SupportedLocales, pack_order, parse_supported,
     pick, toggle,
@@ -43,9 +44,7 @@ fn packs_missing(snapshot: &Snapshot, changes: &ChangeSet) -> usize {
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
 
-    snapshot.insert(SupportedLocales(parse_supported(
-        "de_DE.UTF-8 UTF-8\nde_DE ISO-8859-1\nen_US.UTF-8 UTF-8\n",
-    )));
+    snapshot.insert(SupportedLocales(parse_supported(&supported())));
     snapshot.insert(EnabledLocales(BTreeSet::from([locale_entry(
         "en_US.UTF-8 UTF-8",
     )])));
@@ -99,8 +98,21 @@ fn rows_show_the_state_and_the_queued_wish() {
     changes.want::<Locales>(locale_entry("de_DE.UTF-8 UTF-8"), Toggle::On, &snapshot);
 
     assert!(locales_known(&snapshot));
+    let rows = locales(&snapshot, &changes, &Filter::default());
+    let codes: Vec<&str> = rows.iter().map(|row| row.locale_code.as_str()).collect();
+
     assert_eq!(
-        locales(&snapshot, &changes, &Filter::default()),
+        codes,
+        [
+            "en_US.UTF-8",
+            "de_DE.UTF-8",
+            "en_GB.UTF-8",
+            "sr_RS",
+            "sr_RS@latin"
+        ]
+    );
+    assert_eq!(
+        rows.get(..2).unwrap(),
         [
             LocaleRow {
                 locale_code: "en_US.UTF-8".to_owned(),

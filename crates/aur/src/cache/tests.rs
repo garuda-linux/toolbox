@@ -9,18 +9,29 @@ use std::time::Duration;
 use parking_lot::Mutex;
 
 use super::{Cache, Clock};
-use crate::dump::tests::gzipped;
+use crate::dump::tests::{DUMP, gzipped, unpacked};
 use crate::transport::{Answer, Transport, Validators};
 use crate::{AurError, AurSource as _, DUMP_URL, RequestError};
 
 const DAY: i64 = 24 * 60 * 60;
 const START: i64 = 1_700_000_000;
-const ONE: &str = r#"[{"Name": "paru", "Version": "1-1"}]"#;
-const TWO: &str = r#"[{"Name": "paru", "Version": "2-1"}, {"Name": "yay"}]"#;
+const ONE_NAMES: [(&str, &str); 5] = [
+    ("0ad-boongui", "2.6.11-2"),
+    ("0c-ime", "0.2.9-1"),
+    ("0xtools", "2.0.3-1"),
+    ("10ff-git", "r56.9be5cf0-1"),
+    ("10mb.video-git", "r5.940b95e-1"),
+];
+const TWO_NAMES: [(&str, &str); 4] = [
+    ("0ad-boongui", "2.6.11-2"),
+    ("0c-ime", "0.3.0-1"),
+    ("0xtools", "2.0.3-1"),
+    ("10ff-git", "r56.9be5cf0-1"),
+];
 
 #[derive(Clone)]
 enum Scripted {
-    Fresh(&'static str, Validators),
+    Fresh(Vec<u8>, Validators),
     NotModified,
     Fails,
 }
@@ -56,8 +67,8 @@ impl Transport for Fake {
 
         let next = self.script.lock().pop();
         match next {
-            Some(Scripted::Fresh(json, answered)) => Ok(Answer::Fresh {
-                body: Box::new(Cursor::new(gzipped(json))),
+            Some(Scripted::Fresh(dump, answered)) => Ok(Answer::Fresh {
+                body: Box::new(Cursor::new(dump)),
                 validators: answered,
             }),
             Some(Scripted::NotModified) => Ok(Answer::NotModified),
@@ -99,6 +110,20 @@ fn cache(folder: &Path, transport: &Arc<Fake>, clock: &Arc<FakeClock>) -> Cache 
     )
 }
 
+fn one() -> Vec<u8> {
+    DUMP.to_vec()
+}
+
+/// The dump of a later day, edited from [`DUMP`]: `0c-ime` at a new
+/// version and `10mb.video-git` gone.
+fn two() -> Vec<u8> {
+    let bumped = unpacked().replacen(r#""Version":"0.2.9-1""#, r#""Version":"0.3.0-1""#, 1);
+    let mut entries: Vec<serde_json::Value> = serde_json::from_str(&bumped).unwrap();
+
+    entries.pop();
+    gzipped(&serde_json::to_string(&entries).unwrap())
+}
+
 fn names(index: &toolbox_state::aur::AurIndex) -> Vec<(&str, &str)> {
     index
         .packages
@@ -110,12 +135,12 @@ fn names(index: &toolbox_state::aur::AurIndex) -> Vec<(&str, &str)> {
 #[test]
 fn the_first_call_downloads_the_dump_without_validators() {
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh(ONE, tagged("\"a\"", "Mon"))]);
+    let transport = Fake::new([Scripted::Fresh(one(), tagged("\"a\"", "Mon"))]);
     let clock = FakeClock::at(START);
 
     let index = cache(folder.path(), &transport, &clock).index().unwrap();
 
-    assert_eq!(names(&index), [("paru", "1-1")]);
+    assert_eq!(names(&index), ONE_NAMES);
     assert_eq!(index.downloaded, START);
     assert_eq!(
         transport.sent(),
@@ -126,7 +151,7 @@ fn the_first_call_downloads_the_dump_without_validators() {
 #[test]
 fn a_second_call_within_a_day_sends_nothing() {
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh(ONE, Validators::default())]);
+    let transport = Fake::new([Scripted::Fresh(one(), Validators::default())]);
     let clock = FakeClock::at(START);
     let cache = cache(folder.path(), &transport, &clock);
     cache.index().unwrap();
@@ -134,14 +159,14 @@ fn a_second_call_within_a_day_sends_nothing() {
     clock.set(START + DAY - 1);
     let index = cache.index().unwrap();
 
-    assert_eq!(names(&index), [("paru", "1-1")]);
+    assert_eq!(names(&index), ONE_NAMES);
     assert_eq!(transport.sent().len(), 1);
 }
 
 #[test]
 fn the_rule_survives_a_new_cache_on_the_same_folder() {
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh(ONE, Validators::default())]);
+    let transport = Fake::new([Scripted::Fresh(one(), Validators::default())]);
     let clock = FakeClock::at(START);
     cache(folder.path(), &transport, &clock).index().unwrap();
 
@@ -153,7 +178,11 @@ fn the_rule_survives_a_new_cache_on_the_same_folder() {
 #[test]
 fn a_failure_also_waits_a_day() {
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fails, Scripted::Fresh(ONE, Validators::default())]);
+    let transport = Fake::new([
+        Scripted::Fails,
+        Scripted::Fresh(one(), Validators::default()),
+    ]);
+
     let clock = FakeClock::at(START);
     let cache = cache(folder.path(), &transport, &clock);
 
@@ -164,7 +193,7 @@ fn a_failure_also_waits_a_day() {
     assert_eq!(transport.sent().len(), 1);
 
     clock.set(START + DAY);
-    assert_eq!(names(&cache.index().unwrap()), [("paru", "1-1")]);
+    assert_eq!(names(&cache.index().unwrap()), ONE_NAMES);
     assert_eq!(transport.sent().len(), 2);
 }
 
@@ -172,8 +201,8 @@ fn a_failure_also_waits_a_day() {
 fn after_a_day_the_request_carries_the_stored_validators() {
     let folder = tempfile::tempdir().unwrap();
     let transport = Fake::new([
-        Scripted::Fresh(ONE, tagged("\"abc\"", "Tue, 01 Oct 2024 00:00:00 GMT")),
-        Scripted::Fresh(TWO, tagged("\"def\"", "Wed, 02 Oct 2024 00:00:00 GMT")),
+        Scripted::Fresh(one(), tagged("\"abc\"", "Tue, 01 Oct 2024 00:00:00 GMT")),
+        Scripted::Fresh(two(), tagged("\"def\"", "Wed, 02 Oct 2024 00:00:00 GMT")),
     ]);
 
     let clock = FakeClock::at(START);
@@ -183,7 +212,7 @@ fn after_a_day_the_request_carries_the_stored_validators() {
     clock.set(START + DAY);
     let index = cache.index().unwrap();
 
-    assert_eq!(names(&index), [("paru", "2-1"), ("yay", "")]);
+    assert_eq!(names(&index), TWO_NAMES);
     assert_eq!(index.downloaded, START + DAY);
     let sent = transport.sent();
     assert_eq!(
@@ -199,7 +228,7 @@ fn after_a_day_the_request_carries_the_stored_validators() {
 fn not_modified_keeps_the_copy_and_counts_as_the_attempt() {
     let folder = tempfile::tempdir().unwrap();
     let transport = Fake::new([
-        Scripted::Fresh(ONE, tagged("\"a\"", "Mon")),
+        Scripted::Fresh(one(), tagged("\"a\"", "Mon")),
         Scripted::NotModified,
     ]);
 
@@ -212,7 +241,7 @@ fn not_modified_keeps_the_copy_and_counts_as_the_attempt() {
     clock.set(START + 2 * DAY - 1);
     cache.index().unwrap();
 
-    assert_eq!(names(&index), [("paru", "1-1")]);
+    assert_eq!(names(&index), ONE_NAMES);
     assert_eq!(index.downloaded, START);
     assert_eq!(transport.sent().len(), 2);
 }
@@ -220,21 +249,28 @@ fn not_modified_keeps_the_copy_and_counts_as_the_attempt() {
 #[test]
 fn an_older_copy_answers_after_a_failed_refresh() {
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh(ONE, Validators::default()), Scripted::Fails]);
+    let transport = Fake::new([
+        Scripted::Fresh(one(), Validators::default()),
+        Scripted::Fails,
+    ]);
+
     let clock = FakeClock::at(START);
     let cache = cache(folder.path(), &transport, &clock);
     cache.index().unwrap();
 
     clock.set(START + DAY);
 
-    assert_eq!(names(&cache.index().unwrap()), [("paru", "1-1")]);
+    assert_eq!(names(&cache.index().unwrap()), ONE_NAMES);
     assert_eq!(transport.sent().len(), 2);
 }
 
 #[test]
 fn an_unreadable_dump_is_a_failed_attempt() {
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh("{", Validators::default())]);
+
+    // The dump cut in half, as a broken download leaves it.
+    let cut = DUMP.get(..DUMP.len() / 2).unwrap().to_vec();
+    let transport = Fake::new([Scripted::Fresh(cut, Validators::default())]);
     let clock = FakeClock::at(START);
     let cache = cache(folder.path(), &transport, &clock);
 
@@ -247,7 +283,7 @@ fn an_unreadable_dump_is_a_failed_attempt() {
 fn a_last_attempt_in_the_future_counts_as_now() {
     let folder = tempfile::tempdir().unwrap();
     let transport = Fake::new([
-        Scripted::Fresh(ONE, Validators::default()),
+        Scripted::Fresh(one(), Validators::default()),
         Scripted::NotModified,
     ]);
 
@@ -299,8 +335,8 @@ fn without_a_copy_a_future_attempt_waits_a_day_from_now() {
 fn without_a_copy_the_request_carries_no_validators() {
     let folder = tempfile::tempdir().unwrap();
     let transport = Fake::new([
-        Scripted::Fresh(ONE, tagged("\"a\"", "Mon")),
-        Scripted::Fresh(ONE, Validators::default()),
+        Scripted::Fresh(one(), tagged("\"a\"", "Mon")),
+        Scripted::Fresh(one(), Validators::default()),
     ]);
 
     let clock = FakeClock::at(START);
@@ -322,7 +358,7 @@ fn two_callers_at_once_make_one_request() {
     let folder = tempfile::tempdir().unwrap();
     let transport = Arc::new(Fake {
         slow: true,
-        ..Arc::into_inner(Fake::new([Scripted::Fresh(ONE, Validators::default())])).unwrap()
+        ..Arc::into_inner(Fake::new([Scripted::Fresh(one(), Validators::default())])).unwrap()
     });
 
     let clock = FakeClock::at(START);
@@ -343,7 +379,7 @@ fn the_files_are_private() {
     use std::os::unix::fs::PermissionsExt as _;
 
     let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh(ONE, Validators::default())]);
+    let transport = Fake::new([Scripted::Fresh(one(), Validators::default())]);
     let clock = FakeClock::at(START);
     cache(folder.path(), &transport, &clock).index().unwrap();
 

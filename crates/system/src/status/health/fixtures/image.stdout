@@ -1,0 +1,26 @@
+{
+  "LOW": [
+    {
+      "description": "System is using PipeWire, but pipewire-support is not installed",
+      "fix_available": true
+    },
+    {
+      "description": "\"Garuda\" is not the current bootloader: https://wiki.garudalinux.org/why-garuda-bootloader",
+      "fix_available": false
+    }
+  ],
+  "INFO": [
+    {
+      "description": "Optional garuda linux utilities are missing: garuda-toolbox, garuda-system-maintenance",
+      "fix_available": true
+    },
+    {
+      "description": "A reboot is pending (update applied since last reboot)",
+      "fix_available": false
+    },
+    {
+      "description": "Snapper (automatic btrfs system restore) is not using the official Garuda Linux configuration",
+      "fix_available": true
+    }
+  ]
+}

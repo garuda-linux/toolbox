@@ -1,0 +1,13 @@
+ # │ Type   │ Pre # │ Date                        │ User │ Cleanup │ Description                                                              │ Userdata
+───┼────────┼───────┼─────────────────────────────┼──────┼─────────┼──────────────────────────────────────────────────────────────────────────┼─────────
+ 0 │ single │       │                             │ root │         │ current                                                                  │
+ 7 │ pre    │       │ Mo 02 Nov 2026 21:35:52 CET │ root │ number  │ pacman -Su                                                               │
+ 8 │ post   │     7 │ Mo 02 Nov 2026 21:36:25 CET │ root │ number  │ amd-ucode aom appstream appstream-qt aurorae bluedevil breeze breeze-cur │
+ 9 │ pre    │       │ Di 03 Nov 2026 21:18:47 CET │ root │ number  │ pacman -Sy qhostty                                                       │
+10 │ post   │     9 │ Di 03 Nov 2026 21:18:50 CET │ root │ number  │ ghostty-shell-integration ghostty-terminfo qhostty                       │
+11 │ pre    │       │ Sa 07 Nov 2026 13:44:39 CET │ root │ number  │ pacman -Syu                                                              │
+12 │ post   │    11 │ Sa 07 Nov 2026 13:45:03 CET │ root │ number  │ ark baloo-widgets ca-certificates-mozilla dolphin dolphin-plugins electr │
+13 │ pre    │       │ Sa 07 Nov 2026 13:46:19 CET │ root │ number  │ pacman -S linux-zen linux-zen-headers                                    │
+14 │ post   │    13 │ Sa 07 Nov 2026 13:46:44 CET │ root │ number  │ linux-zen linux-zen-headers                                              │
+15 │ pre    │       │ Sa 07 Nov 2026 13:48:27 CET │ root │ number  │ pacman -Rns linux-zen                                                    │
+16 │ post   │    15 │ Sa 07 Nov 2026 13:48:31 CET │ root │ number  │ linux-zen                                                                │

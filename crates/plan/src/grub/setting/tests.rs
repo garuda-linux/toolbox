@@ -5,8 +5,12 @@ use crate::{
     GrubPicture, GrubThemeFile, GrubTimeout, KernelParameter, KernelParameters, MenuEntryId,
 };
 
-const ARCH: &str = include_str!("../fixtures/arch-default-grub");
-const GARUDA: &str = include_str!("../fixtures/garuda-default-grub");
+/// `/etc/default/grub` of the Garuda Lima image, close to GRUB's stock file.
+const LIMA: &str = include_str!("../fixtures/lima/default-grub");
+/// `/etc/default/grub` of a used Garuda Mokka install.
+const INSTALLED: &str = include_str!("../fixtures/installed/default-grub");
+const LIMA_THEME: &str = "/usr/share/grub/themes/garuda/theme.txt";
+const INSTALLED_THEME: &str = "/usr/share/grub/themes/catppuccin-mocha/theme.txt";
 
 fn parameters(words: &str) -> KernelParameters {
     KernelParameters::parse(words).unwrap()
@@ -32,9 +36,9 @@ fn changed_lines(before: &str, after: &str) -> Vec<String> {
 }
 
 #[test]
-fn the_stock_arch_file_reads_as_grubs_defaults() {
+fn the_lima_file_reads_with_its_theme_and_os_prober() {
     assert_eq!(
-        GrubState::read(ARCH),
+        GrubState::read(LIMA),
         GrubState {
             default: "0".to_owned(),
             timeout: Some(5),
@@ -42,33 +46,25 @@ fn the_stock_arch_file_reads_as_grubs_defaults() {
             parameters: Some(parameters("loglevel=3 quiet")),
             submenus: true,
             save_default: false,
-            os_prober: false,
+            os_prober: true,
             background: String::new(),
             menu_picture: String::new(),
-            theme: String::new(),
+            theme: LIMA_THEME.to_owned(),
         }
     );
 }
 
 #[test]
-fn the_garuda_file_reads_with_its_theme_and_os_prober() {
-    let state = GrubState::read(GARUDA);
+fn the_installed_file_reads_with_its_single_quoted_command_line() {
+    let state = GrubState::read(INSTALLED);
 
-    assert_eq!(state.default, "Garuda Linux");
-    assert_eq!(
-        state.theme,
-        "/usr/share/grub/themes/garuda-dr460nized/theme.txt"
-    );
+    assert_eq!(state.default, "0");
+    assert_eq!(state.theme, INSTALLED_THEME);
+    assert_eq!(state.command_line, "quiet loglevel=3");
     assert!(state.os_prober);
     assert!(state.submenus);
-    assert!(state.parameters.as_ref().unwrap().contains("splash"));
-    assert!(
-        !state
-            .parameters
-            .as_ref()
-            .unwrap()
-            .contains("mitigations=off")
-    );
+    assert!(state.parameters.as_ref().unwrap().contains("quiet"));
+    assert!(!state.parameters.as_ref().unwrap().contains("splash"));
 }
 
 #[test]
@@ -171,7 +167,7 @@ fn a_setting_changes_its_line_and_is_met_afterwards() {
         GrubSetting::KernelParameters(parameters("quiet splash mitigations=off")),
         GrubSetting::Submenus(false),
         GrubSetting::SaveDefault(true),
-        GrubSetting::OsProber(true),
+        GrubSetting::OsProber(false),
         GrubSetting::Background(Some(GrubPicture::new("/usr/share/my-wall.png").unwrap())),
         GrubSetting::Theme(Some(
             GrubThemeFile::new("/usr/share/grub/themes/x/theme.txt").unwrap(),
@@ -179,11 +175,11 @@ fn a_setting_changes_its_line_and_is_met_afterwards() {
     ];
 
     for setting in settings {
-        assert!(!setting.is_met_by(&GrubState::read(ARCH)), "{setting:?}");
+        assert!(!setting.is_met_by(&GrubState::read(LIMA)), "{setting:?}");
 
-        let after = setting.apply(ARCH);
+        let after = setting.apply(LIMA);
 
-        assert_eq!(changed_lines(ARCH, &after).len(), 1, "{setting:?}");
+        assert_eq!(changed_lines(LIMA, &after).len(), 1, "{setting:?}");
         assert!(setting.is_met_by(&GrubState::read(&after)), "{setting:?}");
         assert_eq!(setting.apply(&after), after);
     }
@@ -191,7 +187,7 @@ fn a_setting_changes_its_line_and_is_met_afterwards() {
 
 #[test]
 fn what_the_file_or_grubs_default_already_says_is_met() {
-    let state = GrubState::read(ARCH);
+    let state = GrubState::read(LIMA);
 
     for setting in [
         entry("0"),
@@ -199,9 +195,9 @@ fn what_the_file_or_grubs_default_already_says_is_met() {
         GrubSetting::KernelParameters(parameters("loglevel=3 quiet")),
         GrubSetting::Submenus(true),
         GrubSetting::SaveDefault(false),
-        GrubSetting::OsProber(false),
+        GrubSetting::OsProber(true),
         GrubSetting::Background(None),
-        GrubSetting::Theme(None),
+        GrubSetting::Theme(Some(GrubThemeFile::new(LIMA_THEME).unwrap())),
     ] {
         assert!(setting.is_met_by(&state), "{setting:?}");
     }
@@ -209,11 +205,11 @@ fn what_the_file_or_grubs_default_already_says_is_met() {
 
 #[test]
 fn clearing_the_theme_comments_it_out() {
-    let after = GrubSetting::Theme(None).apply(GARUDA);
+    let after = GrubSetting::Theme(None).apply(INSTALLED);
 
     assert_eq!(
-        changed_lines(GARUDA, &after),
-        ["#GRUB_THEME=\"/usr/share/grub/themes/garuda-dr460nized/theme.txt\""]
+        changed_lines(INSTALLED, &after),
+        [format!("#GRUB_THEME=\"{INSTALLED_THEME}\"")]
     );
     assert_eq!(GrubState::read(&after).theme, "");
 }
@@ -227,12 +223,12 @@ fn several_settings_are_one_edit_with_the_rest_untouched() {
     ])
     .unwrap();
 
-    let after = settings.apply(GARUDA);
+    let after = settings.apply(INSTALLED);
 
     assert_eq!(
-        changed_lines(GARUDA, &after),
+        changed_lines(INSTALLED, &after),
         [
-            "GRUB_DEFAULT=\"saved\"",
+            "GRUB_DEFAULT=saved",
             "GRUB_TIMEOUT=3",
             "GRUB_SAVEDEFAULT=true"
         ]

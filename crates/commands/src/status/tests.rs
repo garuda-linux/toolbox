@@ -24,7 +24,7 @@ fn status(now: SystemTime) -> Status {
         merges: Ok(vec![PathBuf::from("/etc/pacman.conf.pacnew")]),
         last_update: Ok(Some(now - DAY * 16)),
         health: Ok(vec![HealthIssue {
-            level: HealthLevel::Warning,
+            level: HealthLevel::Low,
             message: "The keyring is older than three months.".to_owned(),
             fix_available: true,
         }]),
@@ -144,12 +144,12 @@ fn each_health_finding_has_a_line_of_its_own() {
     let mut found = status(now);
     found.health = Ok(vec![
         HealthIssue {
-            level: HealthLevel::Warning,
+            level: HealthLevel::Low,
             message: "The keyring is old.".to_owned(),
             fix_available: true,
         },
         HealthIssue {
-            level: HealthLevel::Error,
+            level: HealthLevel::Critical,
             message: "The disk is full.".to_owned(),
             fix_available: false,
         },
@@ -162,11 +162,11 @@ fn each_health_finding_has_a_line_of_its_own() {
     );
 
     assert!(shown.contains("2 findings"), "{shown}");
+    assert!(shown.contains("\n  low: The keyring is old.\n"), "{shown}");
     assert!(
-        shown.contains("\n  warning: The keyring is old.\n"),
+        shown.contains("\n  critical: The disk is full.\n"),
         "{shown}"
     );
-    assert!(shown.contains("\n  error: The disk is full.\n"), "{shown}");
 }
 
 #[test]
@@ -246,7 +246,7 @@ fn the_brief_line_names_each_thing_to_do() {
 
     assert_eq!(
         brief(&shown),
-        "2 updates, 1 file to merge, 1 warning, restart needed"
+        "2 updates, 1 file to merge, 1 low issue, restart needed"
     );
     assert!(needs_attention(&shown));
 }
@@ -268,14 +268,15 @@ fn the_brief_line_counts_one_and_many() {
     found.aur_updates = Ok(vec![update("paru"), update("yay")]);
     found.merges = Ok(vec![PathBuf::from("/a.pacnew"), PathBuf::from("/b.pacnew")]);
     found.health = Ok(vec![
-        finding(HealthLevel::Warning),
-        finding(HealthLevel::Error),
-        finding(HealthLevel::Warning),
+        finding(HealthLevel::Low),
+        finding(HealthLevel::Critical),
+        finding(HealthLevel::High),
+        finding(HealthLevel::Low),
     ]);
 
     assert_eq!(
         brief(&view(&found, &Ok(false), now)),
-        "1 update, 2 AUR updates, 2 files to merge, 1 error, 2 warnings"
+        "1 update, 2 AUR updates, 2 files to merge, 1 critical issue, 1 high issue, 2 low issues"
     );
 }
 
