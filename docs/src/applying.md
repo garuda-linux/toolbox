@@ -1,0 +1,63 @@
+# Review and apply changes
+
+Most changes in the app do not happen right away. They wait in a queue, so
+you can collect several and apply them together with one password.
+
+![The list of queued changes above the pill, with Remove all… and Apply](images/changes-popover.png)
+
+## See what waits
+
+While changes wait, a pill at the bottom right of every page shows their
+number, for example **2 changes queued**, with **Review** and **Apply**.
+It sits in its own band below the page, so it never covers a control.
+
+**Review** opens the list of queued changes above the pill. Each change is
+one line in plain words, for example **Install firefox**. The × at the end
+of a line drops that change. **Hide** closes the list again.
+
+While the [Console](console.md) is open, the same count, **Review** and
+**Apply** sit at the right of the Console's header instead.
+
+## Remove every waiting change
+
+To start over, click **Remove all…** in the list and confirm the question,
+for example **Remove all 3 queued changes?**, with **Remove all**. Nothing
+is applied, and the pages show the system as it is again. **Keep them**
+keeps the queue.
+
+> **Note:** There is no undo for this. To get the changes back, make them
+> again on their pages.
+
+Waiting changes stay when you quit the app. They are there again on the
+next start.
+
+## Apply
+
+1. Click **Apply** on the pill, or **Apply 3 changes** at the end of the
+   list.
+2. Enter your password when your desktop asks for it.
+
+The [Console](console.md) opens over the page. Its step list shows every
+step with its command, and the terminal shows what the programs print.
+When everything ran, the Console's header says **All changes applied** and
+the applied changes leave the queue. A step that found nothing to do, such
+as a file that already is as wanted, shows **Nothing to do**, and the
+header then says how many steps had nothing to do.
+
+> **Note:** If a step fails, the steps after it do not run. The header says
+> **Stopped before all changes were applied** and the failed step
+> shows its exit code. The changes that did not run stay in the queue, so
+> **Apply** runs them again once you fixed the cause.
+
+If you close the password dialog, nothing changes and the Console shows
+**The password dialog was closed. Nothing was changed.**
+
+> **Note:** The app never sees or stores your password. The desktop asks for
+> it and remembers the approval itself for a few minutes, so applying again
+> right away asks no second time.
+
+## See also
+
+- [The Console](console.md)
+- [Maintenance](maintenance.md)
+- [Troubleshooting](troubleshooting.md): when a password or a step fails

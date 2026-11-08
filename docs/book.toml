@@ -1,0 +1,14 @@
+[book]
+authors = ["dr460nf1r3"]
+description = "User guide for Garuda Toolbox, a desktop app to maintain and set up Garuda Linux and other Arch based systems."
+language = "en"
+src = "src"
+title = "Garuda Toolbox"
+
+[output.html]
+additional-css = ["./theme/catppuccin.css"]
+default-theme = "mocha"
+preferred-dark-theme = "mocha"
+git-repository-url = "https://gitlab.com/garuda-linux/applications/toolbox"
+git-repository-icon = "fab-gitlab"
+edit-url-template = "https://gitlab.com/garuda-linux/applications/toolbox/-/edit/main/docs/{path}"
