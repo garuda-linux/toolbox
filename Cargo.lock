@@ -789,6 +789,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "toolbox-exec"
+version = "0.1.0"
+dependencies = [
+ "rustix",
+ "serde_json",
+ "tempfile",
+ "toolbox-fs",
+ "toolbox-plan",
+ "toolbox-pty",
+ "tracing",
+]
+
+[[package]]
 name = "toolbox-fs"
 version = "0.1.0"
 dependencies = [
