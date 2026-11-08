@@ -1,0 +1,54 @@
+# git-cliff writes CHANGELOG.md from the conventional commits, the same way
+# as the other Garuda repositories. `scripts/release.sh` prepends each
+# release, so earlier entries, the hand-written 0.1.0 one too, stay as they
+# are. https://git-cliff.org/docs/configuration
+
+[changelog]
+# `--prepend` swaps this header for the new release and keeps the rest of
+# the file, so the file must start with it exactly.
+header = """
+# Changelog
+
+"""
+body = """
+{% if version %}\
+    ## [{{ version }}](https://gitlab.com/garuda-linux/applications/toolbox/-/releases/{{ version }}) — {{ timestamp | date(format="%Y-%m-%d") }}{% if previous.version %} — [`{{ previous.version }}`…`{{ version }}`](https://gitlab.com/garuda-linux/applications/toolbox/-/compare/{{ previous.version }}...{{ version }}){% endif %}
+{% else %}\
+    ## [unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | striptags | trim | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
+            {% if commit.breaking %}[**breaking**] {% endif %}\
+            {{ commit.message | upper_first }} — [`{{ commit.id | truncate(length=8) }}`](https://gitlab.com/garuda-linux/applications/toolbox/-/commit/{{ commit.id }})\
+    {% endfor %}
+{% endfor %}
+
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+  { message = "^feat", group = "<!-- 0 -->🚀 Features" },
+  { message = "^fix", group = "<!-- 1 -->🐛 Bug Fixes" },
+  { message = "^doc", group = "<!-- 3 -->📚 Documentation" },
+  { message = "^perf", group = "<!-- 4 -->⚡ Performance" },
+  { message = "^refactor", group = "<!-- 2 -->🚜 Refactor" },
+  { message = "^style", group = "<!-- 5 -->🎨 Styling" },
+  { message = "^test", group = "<!-- 6 -->🧪 Testing" },
+  # The release commit of scripts/release.sh. commitizen allows no
+  # `release:` type, so it is a chore with the scope `release`.
+  { message = "^chore\\(release\\)", skip = true },
+  { message = "^chore\\(deps.*\\)", skip = true },
+  { message = "^chore|^ci|^build", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
+  { body = ".*security", group = "<!-- 8 -->🛡️ Security" },
+  { message = "^revert", group = "<!-- 9 -->◀️ Revert" },
+]
+filter_commits = false
+topo_order = false
+sort_commits = "oldest"
+tag_pattern = "^[0-9]+\\.[0-9]+\\.[0-9]+$"

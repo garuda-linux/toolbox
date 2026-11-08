@@ -12,8 +12,8 @@ commitizen:
     - Cargo.toml:^version =
     - packaging/PKGBUILD:^pkgver=
     - nix/package.nix:^  version =
-  # Hand edits of earlier releases stay.
-  changelog_incremental: true
+  # git-cliff writes CHANGELOG.md (`cliff.toml`, `scripts/release.sh`).
+  update_changelog_on_bump: false
   # The lock file's workspace versions and the man pages name the version.
   pre_bump_hooks:
     - cargo update --workspace --offline

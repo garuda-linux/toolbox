@@ -30,9 +30,14 @@
 - Release profile: fat LTO, `overflow-checks` on, so a wrapped size stops
   the root helper. No `panic = "abort"`: a panic in a service ends that
   task alone.
-- `cz bump` (inside `nix develop`, its hooks need `cargo`) writes the
-  version to `Cargo.toml`, `packaging/PKGBUILD` and `nix/package.nix`
-  (`.cz.yaml`). `CHANGELOG.md` is not committed before 0.1.0.
+- `scripts/release.sh` cuts a release, as in the other Garuda repositories.
+  `cz bump --files-only` writes the version to `Cargo.toml`,
+  `packaging/PKGBUILD` and `nix/package.nix` (`.cz.yaml`), git-cliff
+  prepends the release to `CHANGELOG.md` (`cliff.toml`), then one
+  `chore(release): <version>` commit and the tag. Prepending keeps earlier
+  entries, so hand edits stay. The first release (no tag yet) uses the
+  hand-written section as its entry. `CHANGELOG.md` is not committed before
+  0.1.0.
 
 ## Packaging
 

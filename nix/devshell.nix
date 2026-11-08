@@ -35,6 +35,8 @@ let
         pkgs.cargo-llvm-cov
         pkgs.watchexec
         pkgs.git-lfs
+        pkgs.commitizen
+        pkgs.git-cliff
         pkgs.weston
         pkgs.kdePackages.breeze-icons
         devLoop
