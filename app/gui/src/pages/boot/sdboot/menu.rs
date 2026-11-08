@@ -28,7 +28,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, menu: &SdBootMenu) {
     switch(ui, context, LoaderKey::AutoFirmware, settings.auto_firmware);
 }
 
-fn wanted(file: &LoaderSettings, context: &PageContext<'_>) -> LoaderSettings {
+pub(super) fn wanted(file: &LoaderSettings, context: &PageContext<'_>) -> LoaderSettings {
     let mut settings = file.clone();
     let queued = |key| LoaderSettingsDomain::queued(context.changes, key);
 

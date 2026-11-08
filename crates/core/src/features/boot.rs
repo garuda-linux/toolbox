@@ -15,7 +15,7 @@ use std::sync::LazyLock;
 pub use flags::{Flag, free_parameters, is_flag_parameter};
 pub use picture::PictureSource;
 pub use recheck::{recheck, recheck_grub};
-pub use sdboot::{is_protected, kernel};
+pub use sdboot::{is_protected, kernel, kernel_default};
 use toolbox_plan::{
     DefaultEntry, GrubKey, GrubSetting, GrubState, KernelParameter, KernelParameters, MenuEntryId,
     PackageName, PlymouthTheme,

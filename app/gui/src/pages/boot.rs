@@ -15,6 +15,7 @@ use toolbox_core::features::boot::view::{self, Page, Probed, Readiness};
 use toolbox_core::features::boot::{Flag, kernel};
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, empty_state, pill_button};
 use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_plan::PackageName;
 use toolbox_system::{FailedProbes, Host, Menu, Probe};
 
 use super::header::refresh_header;
@@ -110,6 +111,7 @@ impl BootPage {
         let splash = page.flag(Flag::Splash);
 
         vm_banner(ui, context, splash);
+        sdboot::proposal(ui, context);
         ui.add_enabled_ui(!context.busy, |ui| {
             sdboot::menu_card(ui, context);
             ui.add_space(gap);
@@ -174,7 +176,6 @@ fn proposal(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
         return;
     };
 
-    let ctx = ui.ctx().clone();
     let menu = context.boot.menu();
     let entry = menu.kernel_entry(kernel);
     let current = page.entry_value(menu.known());
@@ -190,6 +191,19 @@ fn proposal(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
         "offer"
     };
 
+    note(ui, context, kernel, state, || {
+        send(context, Edit::Default(entry.to_owned()));
+    });
+}
+
+fn note(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    kernel: &PackageName,
+    state: &str,
+    queue: impl FnOnce(),
+) {
+    let ctx = ui.ctx().clone();
     let text = i18n::text_with(
         &ctx,
         &format!("boot-proposal-{state}"),
@@ -199,9 +213,9 @@ fn proposal(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     banner(ui, Tone::Accent, &text, &[]);
     ui.horizontal(|ui| {
         if state == "offer" {
-            let queue = i18n::text(&ctx, "boot-proposal-queue");
-            if pill_button(ui, &queue, ButtonKind::Primary).clicked() {
-                send(context, Edit::Default(entry.to_owned()));
+            let label = i18n::text(&ctx, "boot-proposal-queue");
+            if pill_button(ui, &label, ButtonKind::Primary).clicked() {
+                queue();
                 context.commands.send(BootCommand::DropProposal);
             }
         }

@@ -78,6 +78,15 @@ impl LoaderEntry {
         self.sort_key.as_deref() == Some(SNAPSHOT_SORT_KEY)
     }
 
+    /// Garuda's `95-garuda-fallback.install` names it so. It carries the
+    /// same `.uname` as the kernel's main image.
+    pub fn is_fallback(&self) -> bool {
+        self.id
+            .as_str()
+            .strip_suffix(".efi")
+            .is_some_and(|stem| stem.ends_with("-fallback"))
+    }
+
     /// The kernel's version is part of a UKI's id and changes with every
     /// update, its flavour (`garuda`, `lts`) does not. A glob over the
     /// version keeps the default on the same kernel.

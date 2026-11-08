@@ -88,6 +88,10 @@ pub fn command(command: BootCommand, runtime: &Runtime, out: &mut dyn Write) -> 
 
 pub fn kernel_default(args: &KernelArgs, runtime: &Runtime, out: &mut dyn Write) -> Exit {
     let snapshot = system();
+    if snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot) {
+        return sdboot::kernel_default(args, &snapshot, runtime, out);
+    }
+
     let Some(menu) = read_menu() else {
         return unavailable("the boot menu could not be read", out);
     };

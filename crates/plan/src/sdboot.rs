@@ -14,6 +14,7 @@ pub use self::entry::{EntryKind, LoaderEntry};
 pub use self::esp::esp_place;
 pub use self::pe::{HEADER_BYTES, Section, sections};
 pub use self::settings::{LoaderSettings, LoaderTimeout};
+use crate::KernelRelease;
 use crate::protocol::{DecodeError, decode};
 
 pub const LOADER_CONF: &str = "loader/loader.conf";
@@ -44,5 +45,10 @@ impl SdBootMenu {
 
     pub fn choosable(&self) -> impl Iterator<Item = &LoaderEntry> {
         self.entries.iter().filter(|entry| !entry.is_snapshot())
+    }
+
+    pub fn kernel_entry(&self, release: &KernelRelease) -> Option<&LoaderEntry> {
+        self.choosable()
+            .find(|entry| !entry.is_fallback() && entry.uname.as_ref() == Some(release))
     }
 }

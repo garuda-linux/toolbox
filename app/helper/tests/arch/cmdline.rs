@@ -59,7 +59,7 @@ fn the_kernel_cmdline_is_written_and_the_old_one_kept() -> TestResult {
         "root=UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6 rootflags=subvol=@ rw loglevel=3 console=tty0 console=ttyS0,115200\n"
     );
     assert_eq!(kept?, IMAGE);
-    assert_eq!(again?, [Outcome::Succeeded]);
+    assert_eq!(again?, [Outcome::Skipped]);
     Ok(())
 }
 

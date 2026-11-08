@@ -76,8 +76,10 @@ removal back.
 The button shows on installed kernels that are not queued for removal. When
 the boot menu has no entry for the kernel, Boot Options says so and offers
 nothing. This happens right after you install the kernel in another
-program without generating the boot menu again. On a system without GRUB,
-Boot Options only says that GRUB is not the boot loader.
+program without generating the boot menu again. On systemd-boot the note
+offers the kernel's image, and a kernel without an image yet gets no
+offer. On a system with neither, Boot Options only says that GRUB is not the
+boot loader.
 
 ## Install missing headers
 

@@ -359,6 +359,9 @@
     "boot-proposal-none": {
       "string": "The boot menu has no entry for the kernel {kernel}. Pick the entry yourself, or generate the menu again by applying any change of this page."
     },
+    "boot-proposal-sdboot-none": {
+      "string": "systemd-boot has no image of the kernel {kernel} yet. Its image is built when the kernel is installed or updated. Pick the entry yourself once it is there."
+    },
     "boot-proposal-loading": {
       "string": "Looking for the boot menu entry of the kernel {kernel}…"
     },

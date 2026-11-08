@@ -405,7 +405,9 @@ are refused there, and the systemd-boot ones on GRUB. On systemd-boot,
 `/etc/kernel/cmdline`, `plymouth` sets the theme, and both build the kernel
 images again. `boot param remove` refuses `root=`, `rootflags=` and `rw`, and
 `boot show` also names the Plymouth theme.
-`kernels default` makes an installed kernel's entry the default.
+`kernels default` makes an installed kernel's entry the default. On systemd-boot
+it takes the kernel's image, saved by its kind (`garuda-*-garuda.efi`), and
+refuses a kernel without an image.
 `dkms build` builds every module an installed kernel with headers lacks,
 or only those of `--kernel`.
 

@@ -64,6 +64,7 @@ boot-proposal-offer = Der Menüeintrag des Kernels { $kernel } kann Standard wer
 boot-proposal-same = Der Kernel { $kernel } ist bereits der Standardeintrag.
 boot-proposal-remember = GRUB startet den zuletzt gewählten Eintrag. Schalte „Letzten Eintrag merken“ aus, um den Kernel { $kernel } zum Standard zu machen.
 boot-proposal-none = Das Bootmenü hat keinen Eintrag für den Kernel { $kernel }. Wähle den Eintrag selbst oder erstelle das Menü neu, indem du eine beliebige Änderung auf dieser Seite übernimmst.
+boot-proposal-sdboot-none = systemd-boot hat noch kein Image des Kernels { $kernel }. Sein Image wird gebaut, wenn der Kernel installiert oder aktualisiert wird. Wähle den Eintrag selbst, sobald er da ist.
 boot-proposal-loading = Der Menüeintrag des Kernels { $kernel } wird gesucht…
 boot-proposal-queue = Als Standard vormerken
 boot-proposal-keep = Nicht ändern

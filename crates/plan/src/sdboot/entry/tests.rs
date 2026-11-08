@@ -1,5 +1,5 @@
 use super::{EntryKind, LoaderEntry, entry_id};
-use crate::sdboot::sections;
+use crate::sdboot::{LoaderSettings, SdBootMenu, sections};
 use crate::{KernelRelease, LoaderEntryId};
 
 /// The first bytes of the Garuda Lima image's UKIs, up to the end of
@@ -104,4 +104,36 @@ fn control_characters_leave_the_title() {
     let entry = LoaderEntry::uki("garuda-7.3.1-1-garuda.efi", &os_release, None).unwrap();
 
     assert_eq!(entry.title, "Garuda[31m Linux");
+}
+
+fn image_menu() -> SdBootMenu {
+    SdBootMenu {
+        settings: LoaderSettings::default(),
+        entries: vec![
+            entry("garuda-7.3.1-1-garuda-fallback.efi", FALLBACK),
+            entry("garuda-7.3.1-1-garuda.efi", UKI),
+        ],
+    }
+}
+
+/// Both of the image's UKIs carry the same `.uname`. The fallback comes
+/// first in bootctl's list.
+#[test]
+fn a_kernels_entry_is_its_main_image_and_never_the_fallback() {
+    let menu = image_menu();
+    let release = KernelRelease::new("7.3.1-1-garuda").unwrap();
+
+    assert_eq!(
+        menu.kernel_entry(&release).map(|entry| entry.id.as_str()),
+        Some("garuda-7.3.1-1-garuda.efi")
+    );
+    assert!(menu.entries[0].is_fallback());
+    assert!(!menu.entries[1].is_fallback());
+}
+
+#[test]
+fn a_release_without_an_image_has_no_entry() {
+    let release = KernelRelease::new("6.12.9-1-lts").unwrap();
+
+    assert!(image_menu().kernel_entry(&release).is_none());
 }

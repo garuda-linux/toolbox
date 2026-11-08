@@ -201,6 +201,11 @@ partition:
   kernel is saved by its kind, not its version (`garuda-*-garuda.efi`), so it
   stays the default after kernel updates. Snapshot entries of snapper are not
   offered, because they disappear when snapper deletes the snapshot.
+- **Set as default…** on the [Kernels](kernels.md) page opens the same note
+  as on GRUB, see [Coming from the Kernels page](#coming-from-the-kernels-page).
+  It offers the kernel's image, saved by its kind like the default entry. A
+  kernel without an image yet shows **systemd-boot has no image of the
+  kernel … yet**. The fallback image is never offered.
 - **Remember the last entry**: starts the entry you picked last time
   (`default @saved`). Switching it off goes back to the first entry.
 - **Menu timeout**: systemd-boot's default, a number of seconds, **The menu

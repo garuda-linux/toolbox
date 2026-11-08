@@ -1,11 +1,13 @@
 use toolbox_cli::args::BootKey;
-use toolbox_plan::LoaderDefault;
+use toolbox_core::Snapshot;
 use toolbox_plan::sdboot::{
     LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
 };
+use toolbox_plan::{KernelRelease, LoaderDefault, PackageName};
 use toolbox_state::boot::{KernelCmdline, SdBootKernel};
+use toolbox_state::kernels::KernelReleases;
 
-use super::{is_kernel_key, loader_setting, rows, view};
+use super::{default_kernel, is_kernel_key, loader_setting, rows, view};
 use crate::change::Refused;
 
 /// Files of the Garuda Lima image.
@@ -184,4 +186,57 @@ fn an_entry_the_menu_lacks_and_grubs_own_settings_are_refused() {
             "{key:?} {value}"
         );
     }
+}
+
+/// The releases of the Lima image's kernels, from `pacman -Qo` of their
+/// module folders.
+fn releases() -> Snapshot {
+    let mut snapshot = Snapshot::default();
+
+    snapshot.insert(KernelReleases(
+        [
+            ("linux-garuda", "7.3.1-1-garuda"),
+            ("linux-lts", "6.18.60-1-lts"),
+        ]
+        .into_iter()
+        .map(|(kernel, release)| {
+            (
+                PackageName::new(kernel).unwrap(),
+                KernelRelease::new(release).unwrap(),
+            )
+        })
+        .collect(),
+    ));
+    snapshot
+}
+
+#[test]
+fn a_kernels_default_names_its_flavour_so_updates_keep_it() {
+    let setting = default_kernel(
+        &PackageName::new("linux-garuda").unwrap(),
+        &image_menu(LOADER_CONF),
+        &releases(),
+    )
+    .unwrap();
+
+    assert_eq!(
+        setting,
+        LoaderSetting::Default(Some(LoaderDefault::new("garuda-*-garuda.efi").unwrap()))
+    );
+}
+
+/// linux-lts is installed, but the image has no UKI of it.
+#[test]
+fn a_kernel_without_an_image_is_refused() {
+    let refused = default_kernel(
+        &PackageName::new("linux-lts").unwrap(),
+        &image_menu(LOADER_CONF),
+        &releases(),
+    )
+    .unwrap_err();
+
+    assert!(
+        matches!(&refused, Refused::Unknown(text) if text.starts_with("systemd-boot has no image of `linux-lts`")),
+        "{refused:?}"
+    );
 }

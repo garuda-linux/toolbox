@@ -9,18 +9,19 @@ use clap::ValueEnum as _;
 use serde::Serialize;
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
-use toolbox_cli::args::{BootKey, BootSet, Read};
+use toolbox_cli::args::{BootKey, BootSet, KernelArgs, Read};
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain, SdBootKernel};
-use toolbox_core::features::boot::kernel;
 use toolbox_core::features::boot::view::EntryRow;
-use toolbox_plan::LoaderDefault;
+use toolbox_core::features::boot::{self as boot, kernel};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
+use toolbox_plan::{LoaderDefault, PackageName, Plan};
 use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 
 use super::entry_listing;
 use crate::act::run;
 use crate::change::{Refused, fresh};
+use crate::names::kernel_names;
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
 
@@ -148,17 +149,56 @@ pub fn set(args: &BootSet, snapshot: &Snapshot, runtime: &Runtime, out: &mut dyn
         return unavailable("the systemd-boot menu could not be read", out);
     };
 
-    let planned = loader_setting(args.key, &args.value, &menu).and_then(|setting| {
-        let mut state = snapshot.clone();
-
-        state.insert(CurrentLoader(menu.settings.clone()));
-        fresh(|changes| {
-            LoaderSettingsDomain::want(changes, setting, &state);
-            Ok(())
-        })
-    });
+    let planned = loader_setting(args.key, &args.value, &menu)
+        .and_then(|setting| queue(setting, &menu, snapshot));
 
     run(planned, args.confirm, None, runtime, out)
+}
+
+pub fn kernel_default(
+    args: &KernelArgs,
+    snapshot: &Snapshot,
+    runtime: &Runtime,
+    out: &mut dyn Write,
+) -> Exit {
+    let Some(menu) = read_menu() else {
+        return unavailable("the systemd-boot menu could not be read", out);
+    };
+
+    let planned = default_kernel(&args.kernel, &menu, snapshot)
+        .and_then(|setting| queue(setting, &menu, snapshot));
+
+    run(planned, args.confirm, None, runtime, out)
+}
+
+/// # Errors
+///
+/// [`Refused`] for a kernel that is not installed or has no image yet.
+pub fn default_kernel(
+    kernel: &PackageName,
+    menu: &SdBootMenu,
+    snapshot: &Snapshot,
+) -> Result<LoaderSetting, Refused> {
+    let Some(default) = boot::kernel_default(menu, kernel, snapshot) else {
+        let known = kernel_names(snapshot);
+        let text = format!("systemd-boot has no image of `{kernel}`, see `boot entries`");
+
+        return Err(
+            Refused::Unknown(text).hinted(kernel.as_str(), known.iter().map(String::as_str))
+        );
+    };
+
+    Ok(LoaderSetting::Default(Some(default)))
+}
+
+fn queue(setting: LoaderSetting, menu: &SdBootMenu, snapshot: &Snapshot) -> Result<Plan, Refused> {
+    let mut state = snapshot.clone();
+
+    state.insert(CurrentLoader(menu.settings.clone()));
+    fresh(|changes| {
+        LoaderSettingsDomain::want(changes, setting, &state);
+        Ok(())
+    })
 }
 
 /// # Errors

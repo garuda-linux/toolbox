@@ -61,6 +61,7 @@ boot-proposal-offer = The menu entry of the kernel { $kernel } can become the de
 boot-proposal-same = The kernel { $kernel } already is the default entry.
 boot-proposal-remember = GRUB boots the entry that was booted last. Switch Remember the last entry off to make the kernel { $kernel } the default.
 boot-proposal-none = The boot menu has no entry for the kernel { $kernel }. Pick the entry yourself, or generate the menu again by applying any change of this page.
+boot-proposal-sdboot-none = systemd-boot has no image of the kernel { $kernel } yet. Its image is built when the kernel is installed or updated. Pick the entry yourself once it is there.
 boot-proposal-loading = Looking for the boot menu entry of the kernel { $kernel }…
 boot-proposal-queue = Queue as default
 boot-proposal-keep = Do not change

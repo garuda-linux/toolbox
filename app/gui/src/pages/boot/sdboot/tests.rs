@@ -4,10 +4,11 @@ use toolbox_core::Snapshot;
 use toolbox_core::domains::{BootLoader, KernelCmdline, SdBootKernel};
 use toolbox_core::features::boot::Flag;
 use toolbox_core::features::boot::edit::Edit;
-use toolbox_plan::LoaderDefault;
+use toolbox_core::features::kernels::KernelReleases;
 use toolbox_plan::sdboot::{
     LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
 };
+use toolbox_plan::{KernelRelease, LoaderDefault, PackageName};
 use toolbox_system::{Host, Menu, MenuRead};
 
 use super::super::tests::{Shown, page};
@@ -306,4 +307,73 @@ fn without_kernel_cmdline_the_page_says_so_instead_of_none() {
             .query_by_label_contains("This system has no /etc/kernel/cmdline")
             .is_some()
     );
+}
+
+/// The releases of the Lima image's kernels: linux-lts has no UKI there.
+fn with_kernels(mut snapshot: Snapshot) -> Snapshot {
+    snapshot.insert(KernelReleases(
+        [
+            ("linux-garuda", "7.3.1-1-garuda"),
+            ("linux-lts", "6.18.60-1-lts"),
+        ]
+        .into_iter()
+        .map(|(kernel, release)| {
+            (
+                PackageName::new(kernel).unwrap(),
+                KernelRelease::new(release).unwrap(),
+            )
+        })
+        .collect(),
+    ));
+    snapshot
+}
+
+fn proposed(conf: &str, kernel: &str) -> Shown {
+    page(
+        with_kernels(image(KernelCmdline::read(KERNEL_CMDLINE, false))),
+        Boot::showing(
+            image_menu(conf),
+            None,
+            Some(PackageName::new(kernel).unwrap()),
+        ),
+    )
+}
+
+#[test]
+fn a_proposed_kernel_is_queued_by_its_flavour() {
+    let mut harness = proposed(LOADER_CONF, "linux-garuda");
+
+    harness.get_by_label("Queue as default").click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [
+            loader(LoaderSetting::Default(Some(
+                LoaderDefault::new("garuda-*-garuda.efi").unwrap()
+            ))),
+            Command::from(BootCommand::DropProposal),
+        ]
+    );
+}
+
+#[test]
+fn a_kernel_without_an_image_is_not_offered() {
+    let harness = proposed(LOADER_CONF, "linux-lts");
+
+    assert!(
+        harness
+            .query_by_label_contains("systemd-boot has no image of the kernel linux-lts yet")
+            .is_some()
+    );
+    assert!(harness.query_by_label("Queue as default").is_none());
+}
+
+/// The image's `loader.conf` with the kernel already its default.
+#[test]
+fn the_kernel_that_is_the_default_already_says_so() {
+    let conf = format!("default garuda-*-garuda.efi\n{LOADER_CONF}");
+    let harness = proposed(&conf, "linux-garuda");
+
+    assert!(harness.query_by_label("Queue as default").is_none());
 }
