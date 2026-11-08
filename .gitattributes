@@ -1,0 +1,2 @@
+app/*/tests/snapshots/**/*.png filter=lfs diff=lfs merge=lfs -text
+crates/*/tests/snapshots/**/*.png filter=lfs diff=lfs merge=lfs -text

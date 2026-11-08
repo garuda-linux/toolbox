@@ -1,0 +1,41 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assignees": ["dr460nf1r3"],
+  "extends": [
+    "config:recommended",
+    ":gitSignOff",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    "group:recommended",
+    "replacements:all",
+    "workarounds:all",
+    "schedule:weekly"
+  ],
+  "commitMessageAction": "update",
+  "semanticCommitScope": "deps",
+  "automerge": true,
+  "platformAutomerge": true,
+  "automergeType": "pr",
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
+    },
+    {
+      "groupName": "all major dependencies",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["major"]
+    }
+  ],
+  "reviewersFromCodeOwners": true
+}

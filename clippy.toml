@@ -1,0 +1,31 @@
+allow-expect-in-tests = true
+allow-indexing-slicing-in-tests = true
+allow-panic-in-tests = true
+allow-print-in-tests = true
+allow-unwrap-in-tests = true
+cognitive-complexity-threshold = 15
+doc-valid-idents = ["JSDoc", "NetworkManager", "PipeWire", "PrivateBin", "KWin", "KI18n", "LXQt", "AccessKit", "JetBrains", ".."]
+too-many-arguments-threshold = 5
+too-many-lines-threshold = 60
+source-item-ordering = ["module"]
+module-items-ordered-within-groupings = "none"
+
+disallowed-macros = [
+  # allow-invalid: crates without egui cannot resolve the path.
+  { path = "ecolor::hex_color", reason = "colours come from toolbox_gui_kit::Palette, never from the code", allow-invalid = true },
+]
+disallowed-methods = [
+  { path = "std::thread::spawn", reason = "use std::thread::Builder and name the thread, so a backtrace or top shows whose it is" },
+  { path = "std::env::set_var", reason = "process-wide and unsafe in edition 2024: set the variable on the child command instead" },
+  { path = "std::env::remove_var", reason = "process-wide and unsafe in edition 2024: remove the variable from the child command instead" },
+  { path = "egui::Color32::from_rgb", reason = "colours come from toolbox_gui_kit::Palette, never from the code" },
+  { path = "egui::Color32::from_rgba_unmultiplied", reason = "colours come from toolbox_gui_kit::Palette, never from the code" },
+  { path = "egui::Color32::from_rgba_premultiplied", reason = "colours come from toolbox_gui_kit::Palette, never from the code" },
+  { path = "egui::Color32::from_gray", reason = "colours come from toolbox_gui_kit::Palette, never from the code" },
+  { path = "egui::Button::image", reason = "an image-only button has no accessible name for Orca or a kittest query. Use the gui-kit icon button, which takes the alt text" },
+  { path = "egui::WidgetInfo::new", reason = "use WidgetInfo::labeled, so the widget has an accessible name" },
+]
+disallowed-types = [
+  { path = "std::sync::Mutex", reason = "use parking_lot::Mutex: no poisoning to handle" },
+  { path = "std::sync::RwLock", reason = "use parking_lot::RwLock: no poisoning to handle" },
+]

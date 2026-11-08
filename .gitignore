@@ -1,0 +1,21 @@
+/target/
+.direnv/
+result
+result-*
+.idea
+.vscode/
+.pre-commit-config.yaml
+# Empty mount point a sandbox leaves behind.
+/.gitmodules
+/.wrangler
+.env
+.env.*
+.DS_Store
+
+**/tests/snapshots/**/*.diff.png
+**/tests/snapshots/**/*.new.png
+**/tests/snapshots/**/*.old.png
+
+/reference/
+
+**/tests/failures/

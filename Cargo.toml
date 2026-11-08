@@ -1,0 +1,188 @@
+[workspace]
+members = ["app/*"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+# egui 0.37 needs 1.95.
+rust-version = "1.95"
+publish = false
+
+[workspace.dependencies]
+toolbox-aur = { path = "crates/aur" }
+toolbox-news = { path = "crates/news" }
+toolbox-catalog = { path = "crates/catalog" }
+toolbox-cli = { path = "crates/cli" }
+toolbox-commands = { path = "crates/commands" }
+toolbox-config = { path = "crates/config" }
+toolbox-core = { path = "crates/core" }
+toolbox-exec = { path = "crates/exec" }
+toolbox-fs = { path = "crates/fs" }
+toolbox-gui-kit = { path = "crates/gui-kit" }
+toolbox-guide = { path = "crates/guide" }
+toolbox-https = { path = "crates/https" }
+toolbox-instance = { path = "crates/instance" }
+toolbox-log = { path = "crates/log" }
+toolbox-plan = { path = "crates/plan" }
+toolbox-privatebin = { path = "crates/privatebin" }
+toolbox-pty = { path = "crates/pty" }
+toolbox-services = { path = "crates/services" }
+toolbox-state = { path = "crates/state" }
+toolbox-system = { path = "crates/system" }
+toolbox-terminal = { path = "crates/terminal" }
+
+alacritty_terminal = { version = "0.26", default-features = false }
+# Each alpm major targets one libalpm major (5: libalpm 16).
+alpm = "5.0.2"
+
+aes-gcm = { version = "0.11", default-features = false, features = ["alloc", "aes"] }
+base64 = "0.23"
+bs58 = { version = "0.5", default-features = false, features = ["alloc"] }
+getrandom = "0.4"
+miniz_oxide = "0.9"
+pbkdf2 = { version = "0.13", default-features = false, features = ["hmac"] }
+sha2 = { version = "0.11", default-features = false }
+# System certificates, no bundled list that would age with the package.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+ureq = { version = "3", default-features = false, features = ["rustls-no-provider", "platform-verifier"] }
+flate2 = { version = "1.1", default-features = false, features = ["rust_backend"] }
+
+eframe = { version = "0.37", default-features = false, features = ["accesskit", "clipboard", "links", "persistence", "system_fonts", "wayland", "wgpu", "x11"] }
+egui = "0.37"
+# Without color_fonts the system colour emoji font draws nothing.
+epaint-color-fonts = { package = "epaint", version = "0.37", default-features = false, features = ["color_fonts"] }
+skrifa = "0.49"
+# egui passes the clipboard only on Ctrl+V, the Console reads it itself on Ctrl+Shift+V.
+egui-winit = { version = "0.37", default-features = false, features = ["clipboard"] }
+raw-window-handle = "0.6"
+egui-wgpu = { version = "0.37", default-features = false }
+egui_extras = { version = "0.37", default-features = false, features = ["file", "image", "svg"] }
+clap = { version = "4.6", default-features = false, features = ["std", "color", "derive", "help", "usage", "error-context", "suggestions", "wrap_help"] }
+anstyle = "1"
+clap_complete = { version = "4.6", features = ["unstable-dynamic"] }
+clap_mangen = "0.3"
+crossbeam-channel = "0.5"
+ashpd = { version = "0.14", default-features = false, features = ["file_chooser", "settings", "tokio"] }
+fluent-templates = "0.15"
+fluent-syntax = "0.12"
+freedesktop-icons = "0.4"
+fontdb = "0.24"
+notify = "=9.0.0-rc.7"
+unicode-width = "0.2"
+egui_kittest = { version = "0.37", features = ["eframe", "snapshot", "wgpu"] }
+kittest = "0.5"
+image = { version = "0.25", default-features = false, features = ["gif", "ico", "png"] }
+jxl-oxide = { version = "0.12", default-features = false, features = ["image"] }
+tracing-tracy = { version = "0.12", default-features = false, features = ["enable", "broadcast", "only-localhost"] }
+
+criterion = "0.8"
+futures-lite = { version = "2", default-features = false }
+log = { version = "0.4", features = ["std"] }
+jiff = { version = "0.2", default-features = false, features = ["std", "tz-system", "tzdb-zoneinfo"] }
+# rustix has no stable signal disposition API.
+libc = "0.2"
+# `log`: the root helper has no tracing subscriber, only a `log` logger.
+tracing = { version = "0.1", default-features = false, features = ["std", "log"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["env-filter", "registry", "std"] }
+tracing-log = { version = "0.2", default-features = false, features = ["log-tracer", "std"] }
+# Never in the root helper's crates (helper, exec, pty, fs, plan).
+parking_lot = "0.13"
+quick-xml = { version = "0.42", default-features = false }
+pulldown-cmark = { version = "0.13", default-features = false }
+regex = "1"
+rustix = "1"
+serde = { version = "1", features = ["derive"] }
+# `preserve_order`: a user's JSON file keeps its key order when written back.
+serde_json = { version = "1", features = ["preserve_order"] }
+signal-hook = { version = "0.4", default-features = false }
+strum = { version = "0.28", default-features = false, features = ["derive"] }
+tempfile = "3"
+thiserror = "2"
+proptest = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "process", "fs", "io-util", "signal"] }
+toml = "1"
+tree-sitter = "0.27"
+tree-sitter-rust = "0.24"
+# `system`: shares winit's Wayland connection through the system libwayland-client.
+wayland-client = { version = "0.31", features = ["system"] }
+wayland-protocols = { version = "0.32", features = ["client", "staging"] }
+zbus = { version = "6", default-features = false, features = ["tokio"] }
+
+# Unwinding stays on so a panicking service ends only its own task.
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+# A wrapped size or offset must stop the root helper.
+overflow-checks = true
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+unused_qualifications = "warn"
+# Not `unreachable_pub`: it contradicts clippy's `redundant_pub_crate`.
+
+[workspace.lints.clippy]
+cargo = { level = "deny", priority = -1 }
+complexity = { level = "deny", priority = -1 }
+correctness = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+perf = { level = "deny", priority = -1 }
+style = { level = "deny", priority = -1 }
+suspicious = { level = "deny", priority = -1 }
+# Duplicates come from dependencies we don't control.
+multiple_crate_versions = "allow"
+# Only values whose drop is a bug carry #[must_use].
+must_use_candidate = "allow"
+allow_attributes = "deny"
+allow_attributes_without_reason = "deny"
+arbitrary_source_item_ordering = "deny"
+as_conversions = "deny"
+assertions_on_result_states = "deny"
+clone_on_ref_ptr = "deny"
+create_dir = "deny"
+dbg_macro = "deny"
+decimal_literal_representation = "deny"
+default_numeric_fallback = "deny"
+else_if_without_else = "deny"
+exit = "deny"
+expect_used = "deny"
+filetype_is_file = "deny"
+indexing_slicing = "deny"
+inline_trait_bounds = "deny"
+let_underscore_must_use = "deny"
+let_underscore_untyped = "deny"
+map_err_ignore = "deny"
+map_with_unused_argument_over_ranges = "deny"
+min_ident_chars = "deny"
+missing_asserts_for_indexing = "deny"
+multiple_unsafe_ops_per_block = "deny"
+must_use_without_reason = "deny"
+needless_raw_strings = "deny"
+panic = "deny"
+partial_pub_fields = "deny"
+precedence_bits = "deny"
+print_stderr = "deny"
+print_stdout = "deny"
+redundant_type_annotations = "deny"
+renamed_function_params = "deny"
+rest_pattern_accessible_field = "deny"
+return_and_then = "deny"
+shadow_same = "deny"
+shadow_unrelated = "deny"
+string_slice = "deny"
+todo = "deny"
+undocumented_unsafe_blocks = "deny"
+unimplemented = "deny"
+unseparated_literal_suffix = "deny"
+unused_trait_names = "deny"
+unwrap_used = "deny"
+use_debug = "deny"
+verbose_file_reads = "deny"
+wildcard_enum_match_arm = "deny"

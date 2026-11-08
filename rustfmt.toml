@@ -1,0 +1,7 @@
+# Unstable options need the pinned nightly (nix/rust-toolchain.nix).
+edition = "2024"
+style_edition = "2024"
+format_code_in_doc_comments = true
+group_imports = "StdExternalCrate"
+imports_granularity = "Module"
+normalize_comments = true
