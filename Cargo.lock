@@ -5386,7 +5386,7 @@ checksum = "009dbb7700f11c55ef83aebbe4c0e9cf1f1ac0844bd8d6f00dc38f302026e13a"
 
 [[package]]
 name = "toolbox-aur"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "flate2",
  "parking_lot 0.13.0",
@@ -5402,7 +5402,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-catalog"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "serde",
  "tempfile",
@@ -5414,7 +5414,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-cli"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "anstyle",
  "clap",
@@ -5429,7 +5429,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-commands"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "clap",
  "crossbeam-channel",
@@ -5458,7 +5458,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-config"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "serde",
  "tempfile",
@@ -5471,7 +5471,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-core"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "criterion",
  "serde",
@@ -5486,7 +5486,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-exec"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "rustix 1.1.6",
  "serde_json",
@@ -5499,7 +5499,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-fs"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "rustix 1.1.6",
  "tempfile",
@@ -5507,7 +5507,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-gui"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "ashpd",
  "clap",
@@ -5558,7 +5558,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-gui-kit"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "egui",
  "egui-wgpu",
@@ -5576,14 +5576,14 @@ dependencies = [
 
 [[package]]
 name = "toolbox-guide"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "pulldown-cmark",
 ]
 
 [[package]]
 name = "toolbox-helper"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "log",
  "parking_lot 0.13.0",
@@ -5596,7 +5596,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-https"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "rustls",
  "thiserror 2.0.21",
@@ -5605,7 +5605,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-instance"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "parking_lot 0.13.0",
  "rustix 1.1.6",
@@ -5619,7 +5619,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-lint"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "regex",
  "tree-sitter",
@@ -5628,7 +5628,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-log"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "log",
  "parking_lot 0.13.0",
@@ -5640,7 +5640,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-news"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "jiff",
  "parking_lot 0.13.0",
@@ -5656,7 +5656,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-plan"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "proptest",
  "serde",
@@ -5667,7 +5667,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-privatebin"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "aes-gcm",
  "base64 0.23.1",
@@ -5686,7 +5686,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-pty"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "libc",
  "rustix 1.1.6",
@@ -5696,7 +5696,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-services"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "crossbeam-channel",
  "fluent-templates",
@@ -5723,7 +5723,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-state"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -5734,7 +5734,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-system"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "alpm",
  "parking_lot 0.13.0",
@@ -5759,7 +5759,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-terminal"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "alacritty_terminal",
  "parking_lot 0.13.0",
@@ -5769,7 +5769,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-xtask"
-version = "0.1.0"
+version = "6.3.0"
 dependencies = [
  "clap",
  "clap_complete",

@@ -3,7 +3,7 @@ members = ["app/*", "crates/*"]
 resolver = "3"
 
 [workspace.package]
-version = "0.1.0"
+version = "6.3.0"
 edition = "2024"
 license = "GPL-3.0-or-later"
 # egui 0.37 needs 1.95.

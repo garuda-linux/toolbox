@@ -1,7 +1,7 @@
 # Test package that builds its own checkout. The release PKGBUILD is in garuda-linux/pkgbuilds.
 
 pkgname=garuda-toolbox
-pkgver=0.1.0
+pkgver=6.3.0
 pkgrel=1
 pkgdesc="Maintain and configure Garuda Linux and other Arch based systems"
 arch=(x86_64 aarch64)

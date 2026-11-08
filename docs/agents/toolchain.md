@@ -35,9 +35,9 @@
   `packaging/PKGBUILD` and `nix/package.nix` (`.cz.yaml`), git-cliff
   prepends the release to `CHANGELOG.md` (`cliff.toml`), then one
   `chore(release): <version>` commit and the tag. Prepending keeps earlier
-  entries, so hand edits stay. The first release (no tag yet) uses the
-  hand-written section as its entry. `CHANGELOG.md` is not committed before
-  0.1.0.
+  entries, the Electron app's releases up to 6.3.0 too. A hand-written
+  `## Unreleased` section becomes the release's entry instead, as for the
+  Rust rewrite (7.0.0).
 
 ## Packaging
 

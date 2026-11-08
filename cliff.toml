@@ -1,11 +1,5 @@
-# git-cliff writes CHANGELOG.md from the conventional commits, the same way
-# as the other Garuda repositories. `scripts/release.sh` prepends each
-# release, so earlier entries, the hand-written 0.1.0 one too, stay as they
-# are. https://git-cliff.org/docs/configuration
-
 [changelog]
-# `--prepend` swaps this header for the new release and keeps the rest of
-# the file, so the file must start with it exactly.
+# `--prepend` keeps the rest of the file, so it must start with this header exactly.
 header = """
 # Changelog
 
@@ -40,8 +34,6 @@ commit_parsers = [
   { message = "^refactor", group = "<!-- 2 -->🚜 Refactor" },
   { message = "^style", group = "<!-- 5 -->🎨 Styling" },
   { message = "^test", group = "<!-- 6 -->🧪 Testing" },
-  # The release commit of scripts/release.sh. commitizen allows no
-  # `release:` type, so it is a chore with the scope `release`.
   { message = "^chore\\(release\\)", skip = true },
   { message = "^chore\\(deps.*\\)", skip = true },
   { message = "^chore|^ci|^build", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },

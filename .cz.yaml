@@ -1,20 +1,17 @@
 ---
-# The version lives in the workspace's `Cargo.toml`. commitizen keeps its
-# own copy here and writes every file below on a bump: the cargo provider
-# only knows `[package]`, not `[workspace.package]`.
+# The cargo provider only knows `[package]`, not `[workspace.package]`.
 commitizen:
   name: cz_conventional_commits
   tag_format: $version
-  version: 0.1.0
+  version: 6.3.0
   version_provider: commitizen
   version_scheme: semver
   version_files:
     - Cargo.toml:^version =
     - packaging/PKGBUILD:^pkgver=
     - nix/package.nix:^  version =
-  # git-cliff writes CHANGELOG.md (`cliff.toml`, `scripts/release.sh`).
+  # git-cliff writes CHANGELOG.md.
   update_changelog_on_bump: false
-  # The lock file's workspace versions and the man pages name the version.
   pre_bump_hooks:
     - cargo update --workspace --offline
     - cargo xtask cli-docs
