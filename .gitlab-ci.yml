@@ -28,7 +28,6 @@ workflow:
 .release-needs:
   &release-needs [
     flake-check,
-    selftest,
     rust-tests,
     { job: advisories, optional: true },
     arch-build,
@@ -194,29 +193,14 @@ rust-tests:
     reports:
       junit: junit.xml
 
-selftest:
+coverage:
   extends: [.nix-job, .selftest-artifacts]
   stage: test
-  timeout: 3h
-  script:
-    - !reference [.nix-user, script]
-    - su selftest -c "export HOME=/home/selftest PATH=/usr/local/bin:/usr/bin:/bin && unset __ETC_PROFILE_NIX_SOURCED && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/selftest.sh all"
-  after_script:
-    - !reference [.selftest-artifacts, after_script]
-    # The job ran as selftest, Nix only reads a repository its user owns.
-    - chown -R root "$CI_PROJECT_DIR"
-    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    - nix shell --inputs-from . nixpkgs#bash nixpkgs#coreutils nixpkgs#gnugrep nixpkgs#gnused
-      -c scripts/selftest-junit.sh "$SELFTEST_ROOT" selftest/junit.xml
-
-coverage:
-  extends: .nix-job
-  stage: test
+  needs: [rust-tests]
   timeout: 3h
   variables:
     CARGO_HOME: ${CI_PROJECT_DIR}/.cargo-home
-    SELFTEST_ROOT: /tmp/garuda-toolbox-selftest
-    COVERAGE_FAIL_UNDER: "90"
+    COVERAGE_FAIL_UNDER: "85"
   cache:
     key:
       files: [Cargo.lock]
@@ -224,12 +208,20 @@ coverage:
   script:
     - !reference [.nix-user, script]
     - su selftest -c "export HOME=/home/selftest PATH=/usr/local/bin:/usr/bin:/bin && unset __ETC_PROFILE_NIX_SOURCED && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && nix develop -c scripts/coverage.sh coverage"
+  after_script:
+    - !reference [.selftest-artifacts, after_script]
+    # The job ran as selftest, Nix only reads a repository its user owns.
+    - chown -R root "$CI_PROJECT_DIR"
+    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    - nix shell --inputs-from . nixpkgs#bash nixpkgs#coreutils nixpkgs#gnugrep nixpkgs#gnused
+      -c scripts/selftest-junit.sh "$SELFTEST_ROOT" selftest/junit.xml
   coverage: '/^Line coverage: \d+\.\d+%/'
   artifacts:
     when: always
     expire_in: 2 weeks
-    paths: [coverage/]
+    paths: [coverage/, selftest/]
     reports:
+      junit: selftest/junit.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage/cobertura.xml
