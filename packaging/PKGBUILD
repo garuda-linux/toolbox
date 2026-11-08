@@ -1,0 +1,111 @@
+# Test package that builds its own checkout. The release PKGBUILD is in garuda-linux/pkgbuilds.
+
+pkgname=garuda-toolbox
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Maintain and configure Garuda Linux and other Arch based systems"
+arch=(x86_64 aarch64)
+url="https://gitlab.com/garuda-linux/applications/toolbox"
+license=(GPL-3.0-or-later)
+depends=(
+  gcc-libs
+  glibc
+  # Window, blur and raise (winit, wayland-client).
+  wayland
+  # Keyboard layouts on Wayland.
+  libxkbcommon
+  # wgpu renders through Vulkan.
+  vulkan-icd-loader
+  # winit on X11.
+  libx11
+  libxcursor
+  libxi
+  # libalpm, pacman and pacman-key.
+  pacman
+  # Fallback for the catalog icons.
+  breeze-icons
+  hicolor-icon-theme
+  # pkexec starts the helper.
+  polkit
+  # checkupdates, pacdiff and paccache.
+  pacman-contrib
+  # systemctl, journalctl, systemd-analyze, systemd1 and login1.
+  systemd
+  # dbus-send.
+  dbus
+  # useradd, userdel, usermod, groupadd, groupdel, gpasswd, chpasswd.
+  shadow
+  # chfn, chsh, dmesg, rfkill, lsblk, mount, umount.
+  util-linux
+  # ip.
+  iproute2
+  # ping.
+  iputils
+  kmod
+  # chroot for Boot repair.
+  coreutils
+  procps-ng
+)
+makedepends=(
+  cargo
+  cargo-nextest
+  clang
+  pkgconf
+)
+optdepends=(
+  'paru: AUR packages and their updates'
+  'garuda-update: system updates the Garuda way'
+  'networkmanager: network settings and connection details'
+  'grub: boot options, and boot repair on the live system'
+  'cryptsetup: boot repair of an encrypted system'
+  'plymouth: boot splash themes'
+  'dkms: kernel modules for other kernels'
+  'hblock: the ad blocking hosts file'
+  'pciutils: names of PCI network devices'
+  'usbutils: names of USB network devices'
+  'traceroute: the route to a host on the Network page'
+  'linux-wifi-hotspot: Wi-Fi hotspot'
+  'reflector-simple: Arch mirror list'
+  'rate-mirrors: mirror ranking'
+  'btrfs-assistant: Btrfs snapshots and maintenance'
+  'pace: repository editor'
+  'meld: merging pacdiff files'
+  'archlinux-appstream-data: icons of packages'
+)
+# LTO comes from the Cargo profile. No debug package for a test build.
+options=(!lto !debug)
+
+_repo=$(realpath "$(dirname "${BASH_SOURCE[0]}")/..")
+_app_crates=(--workspace --exclude toolbox-lint --exclude toolbox-xtask)
+
+prepare() {
+  cd "$_repo"
+
+  local cargo_version
+  cargo_version=$(sed -n '/^\[workspace\.package\]/,/^\[/s/^version = "\(.*\)"/\1/p' Cargo.toml)
+  if [ "$cargo_version" != "$pkgver" ]; then
+    echo "pkgver $pkgver differs from Cargo.toml's $cargo_version" >&2
+    return 1
+  fi
+
+  cargo fetch --locked
+}
+
+build() {
+  cd "$_repo"
+  cargo build --frozen --release "${_app_crates[@]}"
+}
+
+check() {
+  cd "$_repo"
+  # The tests that change the system stay off.
+  # nextest runs no doc tests, so cargo runs those after it.
+  env -u TOOLBOX_IT_ARCH cargo nextest run --frozen --no-fail-fast \
+    "${_app_crates[@]}" --features toolbox-gui/testing
+  env -u TOOLBOX_IT_ARCH cargo test --frozen --doc "${_app_crates[@]}" --features toolbox-gui/testing
+}
+
+package() {
+  cd "$_repo"
+  scripts/install.sh "$pkgdir" /usr "${CARGO_TARGET_DIR:-$_repo/target}/release"
+}

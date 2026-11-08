@@ -1,0 +1,14 @@
+FROM docker.io/library/archlinux:latest
+
+# Own layer, so only a change to the package list reinstalls them.
+COPY install-deps.sh /ci/install-deps.sh
+RUN /ci/install-deps.sh
+
+COPY . /ci
+RUN /ci/setup.sh
+
+ENV TOOLBOX_IT_ARCH=1 \
+    CARGO_TARGET_DIR=/build/target \
+    CARGO_HOME=/build/cargo
+
+WORKDIR /src

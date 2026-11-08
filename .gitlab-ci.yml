@@ -1,0 +1,312 @@
+stages: [auto, test, build, release]
+include:
+  - project: garuda-linux/tools/gitlab-ci-commons
+    ref: main
+    file:
+      - templates/commitizen.gitlab-ci.yml
+      - templates/flake-check.gitlab-ci.yml
+      - templates/tag-to-release.gitlab-ci.yml
+      - templates/transifex-automerge.gitlab-ci.yml
+
+variables:
+  CI_IMAGE: alpine:3.24
+
+workflow:
+  rules:
+    - if: "$CI_COMMIT_BRANCH =~ /^translations_.*$/"
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^translations_.*$/'
+    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+      when: never
+    - if: "$CI_COMMIT_BRANCH"
+    - if: "$CI_COMMIT_TAG"
+
+.no-schedule:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+
+.release-needs:
+  &release-needs [
+    flake-check,
+    selftest,
+    rust-tests,
+    { job: advisories, optional: true },
+    arch-build,
+    arch-msrv,
+    arch-selftest,
+    arch-package,
+    arch-helper-it,
+  ]
+
+.nix-job:
+  tags: [nix]
+  image: ${CI_IMAGE}
+  interruptible: true
+  retry:
+    max: 1
+    when: [runner_system_failure]
+  before_script:
+    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  rules:
+    - !reference [.no-schedule, rules]
+    - if: "$CI_COMMIT_BRANCH !~ /^translations_.*$/"
+
+.arch-job:
+  image: archlinux:latest
+  interruptible: true
+  variables:
+    CARGO_HOME: ${CI_PROJECT_DIR}/.cargo-home
+  cache:
+    key:
+      files: [Cargo.lock]
+    paths: [.cargo-home/registry]
+  before_script:
+    - ci/arch/install-deps.sh
+  rules:
+    - !reference [.no-schedule, rules]
+    - if: "$CI_COMMIT_BRANCH !~ /^translations_.*$/"
+
+arch-helper-it:
+  extends: .arch-job
+  stage: test
+  timeout: 1h
+  variables:
+    TOOLBOX_IT_ARCH: "1"
+  script:
+    - ci/arch/setup.sh
+    # One test at a time, they share the container's system. The probes run
+    # first, since the helper's tests change what they read.
+    - cargo test --locked -p toolbox-system --test arch --test arch_packages --test arch_diagnostics -- --test-threads=1
+    - cargo test --locked -p toolbox-helper --test arch -- --test-threads=1
+
+arch-build:
+  extends: .arch-job
+  stage: test
+  timeout: 1h
+  script:
+    - cargo build --release --locked
+
+arch-msrv:
+  extends: .arch-job
+  stage: test
+  timeout: 1h
+  variables:
+    RUSTUP_HOME: ${CI_PROJECT_DIR}/.rustup-home
+  script:
+    - msrv=$(sed -n 's/^rust-version = "\(.*\)"$/\1/p' Cargo.toml)
+    - test -n "$msrv"
+    - pacman -Rdd --noconfirm rust
+    - pacman -S --noconfirm rustup
+    - rustup toolchain install "$msrv" --profile minimal
+    - cargo "+$msrv" check --workspace --locked
+
+# Needs the network, which the flake's cargo-deny check lacks.
+advisories:
+  extends: .arch-job
+  stage: test
+  timeout: 30m
+  cache: []
+  before_script:
+    - pacman -Syu --noconfirm --needed rust cargo-deny
+  script:
+    - cargo deny check advisories
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: "$CI_COMMIT_BRANCH =~ /^translations_.*$/"
+      when: never
+    - changes: [Cargo.lock]
+
+.selftest-artifacts:
+  variables:
+    SELFTEST_ROOT: /tmp/garuda-toolbox-selftest
+  after_script:
+    - |
+      for run in "$SELFTEST_ROOT"/*/; do
+        name=$(basename "$run")
+        mkdir -p "selftest/$name"
+        cp -r "$run/shots" "$run/out.log" "selftest/$name/" || true
+      done
+  artifacts:
+    when: always
+    expire_in: 2 weeks
+    paths: [selftest/]
+    reports:
+      junit: selftest/junit.xml
+
+# The app refuses to run as root, so a dedicated user runs it.
+arch-selftest:
+  extends: [.arch-job, .selftest-artifacts]
+  stage: test
+  timeout: 1h
+  script:
+    - useradd --create-home selftest
+    - install -d -o selftest "$SELFTEST_ROOT"
+    - chown -R selftest "$CI_PROJECT_DIR"
+    - runuser -u selftest -- env HOME=/home/selftest CARGO_HOME="$CARGO_HOME"
+      SELFTEST_ROOT="$SELFTEST_ROOT" scripts/selftest.sh all
+    # The suites that need pacman's databases, which `all` leaves out.
+    - runuser -u selftest -- env HOME=/home/selftest CARGO_HOME="$CARGO_HOME"
+      SELFTEST_ROOT="$SELFTEST_ROOT" scripts/selftest.sh packages-arch
+  after_script:
+    - !reference [.selftest-artifacts, after_script]
+    - scripts/selftest-junit.sh "$SELFTEST_ROOT" selftest/junit.xml
+
+# namcap only reports, its findings are in the log and in package/namcap.log.
+arch-package:
+  extends: .arch-job
+  stage: build
+  timeout: 2h
+  script:
+    - |
+      mapfile -t needed < <(bash -c 'source packaging/PKGBUILD && printf "%s\n" "${depends[@]}" "${makedepends[@]}"')
+      pacman -S --noconfirm --needed "${needed[@]}"
+    - ci/arch/package.sh "$CI_PROJECT_DIR" package
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths: [package/]
+
+rust-tests:
+  extends: .nix-job
+  stage: test
+  timeout: 2h
+  script:
+    - system=$(nix eval --raw --impure --expr builtins.currentSystem)
+    - report=$(nix build --no-link --print-out-paths ".#checks.$system.tests.report")
+    # No report when the tests did not compile: the build log above shows why.
+    - cp "$report/junit.xml" junit.xml || true
+    - status=$(cat "$report/status")
+    - |
+      if [ "$status" != 0 ]; then
+        echo "The tests failed (nextest exit $status)." >&2
+        exit 1
+      fi
+  artifacts:
+    when: always
+    expire_in: 2 weeks
+    reports:
+      junit: junit.xml
+
+selftest:
+  extends: [.nix-job, .selftest-artifacts]
+  stage: test
+  timeout: 3h
+  script:
+    - nix develop -c scripts/selftest.sh all
+  after_script:
+    - !reference [.selftest-artifacts, after_script]
+    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    - nix shell --inputs-from . nixpkgs#bash nixpkgs#coreutils nixpkgs#gnugrep nixpkgs#gnused
+      -c scripts/selftest-junit.sh "$SELFTEST_ROOT" selftest/junit.xml
+
+coverage:
+  extends: .nix-job
+  stage: test
+  timeout: 3h
+  variables:
+    CARGO_HOME: ${CI_PROJECT_DIR}/.cargo-home
+    SELFTEST_ROOT: /tmp/garuda-toolbox-selftest
+    COVERAGE_FAIL_UNDER: "90"
+  cache:
+    key:
+      files: [Cargo.lock]
+    paths: [.cargo-home/registry, target/coverage]
+  script:
+    - nix develop -c scripts/coverage.sh coverage
+  coverage: '/^Line coverage: \d+\.\d+%/'
+  artifacts:
+    when: always
+    expire_in: 2 weeks
+    paths: [coverage/]
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura.xml
+  rules:
+    - !reference [.no-schedule, rules]
+    - if: "$CI_COMMIT_TAG"
+      when: never
+    - if: "$CI_COMMIT_BRANCH !~ /^translations_.*$/"
+
+tag-to-release:
+  needs: *release-needs
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_TAG != "stable"'
+
+tag-stable:
+  extends: .nix-job
+  stage: release
+  timeout: 15m
+  interruptible: false
+  needs: *release-needs
+  resource_group: stable-tag
+  variables:
+    GIT_DEPTH: 0
+  script:
+    - |
+      nix shell nixpkgs#git -c sh -euc '
+        git fetch --force origin "refs/tags/stable:refs/tags/stable" 2>/dev/null || true
+        if git rev-parse -q --verify refs/tags/stable >/dev/null &&
+          ! git merge-base --is-ancestor refs/tags/stable "$CI_COMMIT_SHA"; then
+          echo "stable is already ahead of $CI_COMMIT_SHA, leaving it."
+          exit 0
+        fi
+        # The token comes from a credential helper, never in the URL, so no
+        # git message can print it.
+        git -c credential.helper= \
+          -c credential.helper="!f() { echo username=oauth2; echo \"password=\$STABLE_TAG_TOKEN\"; }; f" \
+          push --force -o ci.skip \
+          "https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" \
+          "${CI_COMMIT_SHA}:refs/tags/stable"
+        echo "stable now points at $CI_COMMIT_SHA."
+      '
+  rules:
+    - !reference [.no-schedule, rules]
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+
+.i18n-push:
+  extends: .nix-job
+  stage: auto
+  before_script:
+    - !reference [.nix-job, before_script]
+    - git config --global user.name "Garuda Linux CI/CD"
+    - git config --global user.email "gitlab@garudalinux.org"
+    - git fetch origin $CI_COMMIT_BRANCH
+    - git checkout -b $CI_COMMIT_BRANCH origin/$CI_COMMIT_BRANCH
+
+# Transifex reads no Fluent, so the English texts go to it as Structured JSON
+# (docs/agents/translations.md).
+i18n-source:
+  extends: .i18n-push
+  script:
+    - nix develop --command cargo xtask i18n-export
+
+    - git add i18n
+    - |
+      if git diff --staged --quiet; then
+        echo "No changes to translations detected."
+        exit 0
+      fi
+    - 'git commit -m "chore(i18n): Update the source texts for Transifex"'
+    - git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git $CI_COMMIT_BRANCH
+  rules:
+    - !reference [.no-schedule, rules]
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+
+# Writes the translations into the Fluent files that the automerge job merges.
+i18n-import:
+  extends: .i18n-push
+  script:
+    - status=0
+    - nix develop --command cargo xtask i18n-import || status=$?
+    - git add app/gui/i18n
+    - |
+      if git diff --staged --quiet; then
+        echo "No changes to the Fluent files."
+      else
+        git commit -m "chore(i18n): Write the Transifex translations into the Fluent files"
+        git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git $CI_COMMIT_BRANCH
+      fi
+    - exit $status
+  rules:
+    - if: "$CI_COMMIT_BRANCH =~ /^translations_.*$/"

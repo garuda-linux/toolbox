@@ -1,0 +1,5 @@
+name = "toolbox"
+pages_build_output_dir = "docs/book"
+compatibility_date = "2026-10-05"
+
+[env.production]
