@@ -1,0 +1,93 @@
+
+changes-title = Vorgemerkte Änderungen
+# The floating pill at the bottom right. $count is how many.
+changes-pill =
+    { $count ->
+        [one] Änderung vorgemerkt
+       *[other] Änderungen vorgemerkt
+    }
+changes-review = Ansehen
+changes-hide = Ausblenden
+changes-together = Eine Passwortabfrage für alle Änderungen
+changes-apply-all =
+    { $count ->
+        [one] Änderung übernehmen
+       *[other] { $count } Änderungen übernehmen
+    }
+# The button that drops one change, named after it for screen readers.
+changes-remove = „{ $change }“ entfernen
+# Asks first, hence the ellipsis.
+changes-remove-all-ask = Alle entfernen…
+changes-remove-all = Alle entfernen
+changes-remove-all-question =
+    { $count ->
+        [one] Vorgemerkte Änderung entfernen?
+       *[other] Alle { $count } vorgemerkten Änderungen entfernen?
+    }
+changes-apply = Übernehmen
+changes-keep = Behalten
+
+# $name is what the change is about.
+
+change-account-lock = Konto { $name } sperren
+change-account-unlock = Konto { $name } entsperren
+change-clean-package-cache = Paket-Cache leeren
+change-dkms-build = Modul { $module } für Kernel { $kernel } bauen
+change-dns = Namen über { $name } auflösen
+change-driver-allow = Treiber { $name } von der Blacklist nehmen
+change-driver-blacklist = Treiber { $name } auf die Blacklist setzen
+change-full-name-clear = Vollen Namen von { $name } entfernen
+change-full-name-set = Vollen Namen von { $user } auf { $name } setzen
+change-garuda-update-flag-on = { $name } in Garuda Update einschalten
+change-garuda-update-flag-off = { $name } in Garuda Update ausschalten
+change-group-add = Gruppe { $name } anlegen
+change-group-join = { $user } zur Gruppe { $group } hinzufügen
+change-group-leave = { $user } aus der Gruppe { $group } entfernen
+change-group-remove = Gruppe { $name } löschen
+change-grub-background = { $name } als Hintergrund des Bootmenüs verwenden
+change-grub-background-none = Hintergrund des Bootmenüs entfernen
+change-grub-default = { $name } standardmäßig starten
+change-grub-default-saved = Standardmäßig den zuletzt gewählten Eintrag starten
+change-grub-os-prober-on = Nach anderen Betriebssystemen für das Bootmenü suchen
+change-grub-os-prober-off = Nicht mehr nach anderen Betriebssystemen für das Bootmenü suchen
+change-grub-parameters = Kernel mit { $name } starten
+change-grub-parameters-none = Kernel ohne zusätzliche Parameter starten
+change-grub-save-default-on = Zuletzt gewählten Eintrag im Bootmenü merken
+change-grub-save-default-off = Zuletzt gewählten Eintrag im Bootmenü nicht mehr merken
+change-grub-submenus-on = Ältere Kernel in einem Untermenü gruppieren
+change-grub-submenus-off = Alle Kernel direkt im Bootmenü auflisten
+change-grub-theme = GRUB-Theme { $name } verwenden
+change-grub-theme-none = GRUB-Theme entfernen
+change-grub-timeout =
+    { $name ->
+        [one] Bootmenü { $name } Sekunde lang anzeigen
+       *[other] Bootmenü { $name } Sekunden lang anzeigen
+    }
+change-hblock-on = Werbe- und Trackerblocker einschalten (hBlock)
+change-hblock-off = Werbe- und Trackerblocker ausschalten (hBlock)
+change-home-folder = Home-Verzeichnis von { $user } nach { $folder } verschieben
+change-locale-enable = Sprache { $name } hinzufügen
+change-locale-disable = Sprache { $name } entfernen
+change-login-shell = Login-Shell von { $user } auf { $shell } ändern
+change-package-install = { $name } installieren
+change-package-remove = { $name } entfernen
+change-aur-install = { $name } aus dem AUR bauen und installieren
+change-plymouth-theme = Splash-Screen-Theme { $name } verwenden
+change-refresh-keyring = Schlüsselbund aktualisieren
+change-remove-database-lock = Sperre der Paketdatenbank entfernen
+change-remove-orphans = Verwaiste Pakete entfernen
+change-system-locale = { $name } als Systemsprache verwenden
+change-unit-enable = { $name } beim Systemstart starten
+change-unit-disable = { $name } nicht mehr beim Systemstart starten
+change-unit-mask = { $name } dauerhaft am Start hindern
+change-unit-unmask = { $name } wieder starten lassen
+change-upgrade-system = System aktualisieren
+change-user-config-on = { $name } einschalten
+change-user-config-off = { $name } ausschalten
+change-user-remove-keep-home = Benutzer { $name } löschen, Home-Verzeichnis behalten
+change-user-remove-with-home = Benutzer { $name } samt Home-Verzeichnis löschen
+change-user-unit-enable = { $name } bei der Anmeldung starten
+change-user-unit-disable = { $name } nicht mehr bei der Anmeldung starten
+change-user-unit-mask = Benutzerdienst { $name } am Start hindern
+change-user-unit-unmask = Benutzerdienst { $name } wieder starten lassen
+change-wifi-backend = { $name } als WLAN-Backend verwenden

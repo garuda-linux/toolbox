@@ -1,0 +1,54 @@
+
+page-settings-subtitle = How Garuda Toolbox looks, starts and keeps you informed.
+settings-appearance = Appearance
+settings-behaviour = Behaviour
+settings-diagnostics = Diagnostics
+settings-appearance-help = The language, colours and motion of this window.
+settings-behaviour-help = When Garuda Toolbox starts and how often it checks the system.
+settings-diagnostics-help = What goes into reports and the log file.
+
+settings-language = Language
+settings-language-description = The texts change at once. A language that is not finished shows the missing texts in English.
+settings-language-system = System language
+settings-theme = Theme
+settings-theme-description = Light or dark, as the desktop says or always the same.
+settings-theme-desktop = As the desktop
+settings-theme-dark = Dark
+settings-theme-light = Light
+settings-dark-scheme = Dark colour scheme
+settings-dark-scheme-description = The colours while the theme is dark. System takes the desktop's colours and accent.
+settings-light-scheme = Light colour scheme
+settings-light-scheme-description = The colours while the theme is light. System takes the desktop's colours and accent.
+settings-scheme-system = System
+settings-motion = Reduced motion
+settings-motion-description = Panels and notes appear at once instead of sliding and fading.
+settings-motion-system = As the system
+settings-motion-reduced = On
+settings-motion-full = Off
+
+settings-autostart = Start at login
+settings-autostart-description = Opens the window each time you log in.
+settings-refresh = Check for updates
+settings-refresh-description = Each check downloads the package lists and asks the AUR (Arch User Repository).
+settings-refresh-ask = Only when I ask
+settings-refresh-ask-description = Then Home checks for updates only when you click Read again.
+settings-refresh-off = Off while Only when I ask is on.
+settings-refresh-minutes = Minutes between checks
+settings-refresh-unit = min
+settings-refresh-clamped = Checks run between every 5 minutes and once a day, so this is { $minutes } minutes.
+settings-user-units = Services page opens on
+settings-user-units-description = Which units the Services page lists when it opens.
+settings-user-units-system = System
+settings-user-units-user = My account
+settings-aur = Show AUR packages
+settings-aur-description = The Packages page lists the Arch User Repository. Its list is downloaded at most once a day. AUR packages are community scripts that are built on your computer.
+
+settings-copy-reports = Copy reports to the clipboard
+settings-copy-reports-description = A finished report is copied right away, and so is the link after any upload, also of the Console output.
+settings-log-level = Log file detail
+settings-log-level-description = How much Garuda Toolbox writes to its log file. Pick Detailed before you report a problem.
+settings-log-error = Errors only
+settings-log-warn = Warnings and errors
+settings-log-info = Normal
+settings-log-debug = Detailed
+settings-log-trace = Everything

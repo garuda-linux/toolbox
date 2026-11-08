@@ -1,0 +1,39 @@
+[package]
+name = "toolbox-services"
+description = "Garuda Toolbox's services without a window: apply, the queue, catalogs, diagnostics, texts, wakes"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[features]
+testing = []
+
+[dependencies]
+toolbox-catalog.workspace = true
+toolbox-config.workspace = true
+toolbox-core.workspace = true
+toolbox-exec.workspace = true
+toolbox-instance.workspace = true
+toolbox-plan.workspace = true
+toolbox-privatebin.workspace = true
+toolbox-pty.workspace = true
+toolbox-system.workspace = true
+crossbeam-channel.workspace = true
+fluent-templates.workspace = true
+futures-lite = { workspace = true, features = ["alloc"] }
+parking_lot.workspace = true
+rustix = { workspace = true, features = ["process"] }
+serde.workspace = true
+serde_json.workspace = true
+strum.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

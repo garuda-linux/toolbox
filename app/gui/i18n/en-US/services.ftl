@@ -1,0 +1,97 @@
+page-services-subtitle = Start, stop and enable the system's services and your own.
+services-system = System
+services-user = User
+services-scope = Services to show
+services-search = Search services
+services-search-hint = Search services…
+services-hide-disabled = Hide disabled
+services-hide-inactive = Hide inactive
+services-refresh = Read again
+services-sort = Sort services
+services-sort-name = Name
+services-sort-state = Problems first
+services-reading = Reading the services…
+services-none = No service matches.
+services-unavailable = systemd is not reachable.
+services-denied = You are not allowed to read the services.
+services-failed = The services could not be read.
+services-retry = Retry
+services-none-detail = Change the search or the filters to see more services.
+# Why an action of a unit's menu cannot be picked, shown on hover.
+services-why-busy = Waits until the changes being applied are done.
+services-why-masked = A masked unit cannot start. Unmask it first.
+services-why-not-running = Only a running unit can reload its configuration.
+services-why-running = The unit runs already.
+services-why-stopped = The unit is not running.
+services-at-boot = At boot
+# $unit is a unit name such as sshd.service.
+services-start-at-boot = Start { $unit } at boot
+
+# $name is the unit's name, such as sshd.service.
+services-actions = Actions for { $name }
+services-now = Now
+services-with-apply = With Apply
+services-start = Start
+services-stop = Stop
+services-restart = Restart
+services-reload = Reload
+services-mask = Mask
+services-unmask = Unmask
+
+services-enables = Enables with Apply
+services-disables = Disables with Apply
+services-masks = Masks with Apply
+services-unmasks = Unmasks with Apply
+
+# The unit's state. A detail in brackets says what it does right now.
+services-active-active = Running
+services-active-failed = Failed
+services-active-activating = Starting
+services-active-deactivating = Stopping
+services-active-reloading = Reloading
+services-active-inactive = Stopped
+services-active-maintenance = Cleaning up
+services-active-refreshing = Refreshing
+services-active-other = Unknown state
+services-finished = Active (finished)
+services-state-detail = { $state } ({ $detail })
+services-sub-running = running
+services-sub-exited = exited
+services-sub-listening = listening
+services-sub-waiting = waiting
+services-sub-active = active
+services-sub-mounted = mounted
+services-sub-plugged = plugged
+services-sub-elapsed = elapsed
+services-sub-abandoned = abandoned
+services-sub-failed = failed
+services-sub-cleaning = cleaning up
+services-sub-dead = not running
+services-sub-starting = starting
+services-sub-stopping = stopping
+services-sub-reloading = reloading
+services-sub-restarting = restarting
+
+services-file-static = Static
+services-file-masked = Masked
+services-file-indirect = Indirect
+services-file-generated = Generated
+services-file-linked = Linked
+services-file-alias = Alias
+services-file-transient = Temporary
+services-file-bad = Unreadable file
+services-file-unknown = File state unknown
+services-file-other = Other file state
+services-file-static-hint = Cannot be enabled. It starts when another service or the system needs it.
+services-file-masked-hint = Blocked: it cannot be started at all, not even by another service.
+services-file-indirect-hint = Starts through another service or a timer, not by itself.
+services-file-generated-hint = Made at boot from another file, for example /etc/fstab.
+services-file-linked-hint = Its file lies outside the service folders and is linked in.
+services-file-alias-hint = Another name of a service listed under its own name.
+services-file-transient-hint = Made by a program while it runs. It is gone after a restart.
+services-file-bad-hint = systemd could not read its file.
+services-file-unknown-hint = No file was listed for this service.
+services-file-other-hint = systemd reports a file state this app does not know yet.
+services-ask-title = { $verb } { $unit }?
+services-ask-why = The session lives on { $unit }: the login screen, the network, the password dialog or the system bus. Stopping it can end your graphical session or cut the connection.
+services-ask-cancel = Cancel

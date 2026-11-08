@@ -1,0 +1,93 @@
+
+changes-title = Queued changes
+# The floating pill at the bottom right. $count is how many.
+changes-pill =
+    { $count ->
+        [one] change queued
+       *[other] changes queued
+    }
+changes-review = Review
+changes-hide = Hide
+changes-together = Applied together, one password
+changes-apply-all =
+    { $count ->
+        [one] Apply the change
+       *[other] Apply { $count } changes
+    }
+# The button that drops one change, named after it for screen readers.
+changes-remove = Remove “{ $change }”
+# Asks first, hence the ellipsis.
+changes-remove-all-ask = Remove all…
+changes-remove-all = Remove all
+changes-remove-all-question =
+    { $count ->
+        [one] Remove the queued change?
+       *[other] Remove all { $count } queued changes?
+    }
+changes-apply = Apply
+changes-keep = Keep them
+
+# $name is what the change is about.
+
+change-account-lock = Lock the account { $name }
+change-account-unlock = Unlock the account { $name }
+change-clean-package-cache = Clean the package cache
+change-dkms-build = Build the { $module } module for kernel { $kernel }
+change-dns = Look up names through { $name }
+change-driver-allow = Let the driver { $name } load
+change-driver-blacklist = Keep the driver { $name } from loading
+change-full-name-clear = Remove the full name of { $name }
+change-full-name-set = Set the full name of { $user } to { $name }
+change-garuda-update-flag-on = Turn on { $name } in Garuda Update
+change-garuda-update-flag-off = Turn off { $name } in Garuda Update
+change-group-add = Create the group { $name }
+change-group-join = Add { $user } to the group { $group }
+change-group-leave = Take { $user } out of the group { $group }
+change-group-remove = Delete the group { $name }
+change-grub-background = Use { $name } as the boot menu background
+change-grub-background-none = Remove the boot menu background
+change-grub-default = Start { $name } by default
+change-grub-default-saved = Start the entry picked last time by default
+change-grub-os-prober-on = Look for other systems for the boot menu
+change-grub-os-prober-off = Stop looking for other systems for the boot menu
+change-grub-parameters = Start the kernel with { $name }
+change-grub-parameters-none = Start the kernel without extra parameters
+change-grub-save-default-on = Remember the entry picked in the boot menu
+change-grub-save-default-off = Stop remembering the entry picked in the boot menu
+change-grub-submenus-on = Put older kernels in a submenu
+change-grub-submenus-off = List every kernel in the main boot menu
+change-grub-theme = Use the boot menu theme { $name }
+change-grub-theme-none = Remove the boot menu theme
+change-grub-timeout =
+    { $name ->
+        [one] Show the boot menu for { $name } second
+       *[other] Show the boot menu for { $name } seconds
+    }
+change-hblock-on = Turn on ad and tracker blocking (hBlock)
+change-hblock-off = Turn off ad and tracker blocking (hBlock)
+change-home-folder = Move the home folder of { $user } to { $folder }
+change-locale-enable = Add the language { $name }
+change-locale-disable = Remove the language { $name }
+change-login-shell = Change the login shell of { $user } to { $shell }
+change-package-install = Install { $name }
+change-package-remove = Remove { $name }
+change-aur-install = Build and install { $name } from the AUR
+change-plymouth-theme = Use the boot splash theme { $name }
+change-refresh-keyring = Refresh the package signing keys
+change-remove-database-lock = Remove the package database lock
+change-remove-orphans = Remove packages nothing needs anymore
+change-system-locale = Use { $name } as the system language
+change-unit-enable = Start { $name } at boot
+change-unit-disable = Stop starting { $name } at boot
+change-unit-mask = Keep { $name } from starting at all
+change-unit-unmask = Let { $name } start again
+change-upgrade-system = Update the system
+change-user-config-on = Turn on { $name }
+change-user-config-off = Turn off { $name }
+change-user-remove-keep-home = Delete the user { $name } and keep the home folder
+change-user-remove-with-home = Delete the user { $name } with the home folder
+change-user-unit-enable = Start { $name } at login
+change-user-unit-disable = Stop starting { $name } at login
+change-user-unit-mask = Keep the user service { $name } from starting
+change-user-unit-unmask = Let the user service { $name } start again
+change-wifi-backend = Run Wi-Fi through { $name }

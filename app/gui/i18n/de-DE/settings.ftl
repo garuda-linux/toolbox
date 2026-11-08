@@ -1,0 +1,54 @@
+
+page-settings-subtitle = Aussehen, Startverhalten und Benachrichtigungen von Garuda Toolbox.
+settings-appearance = Darstellung
+settings-behaviour = Verhalten
+settings-diagnostics = Diagnose
+settings-appearance-help = Sprache, Farben und Animationen dieses Fensters.
+settings-behaviour-help = Wann Garuda Toolbox startet und wie oft es das System prüft.
+settings-diagnostics-help = Inhalt von Berichten und der Logdatei.
+
+settings-language = Sprache
+settings-language-description = Die Änderung wirkt sofort. Fehlende Übersetzungen erscheinen auf Englisch.
+settings-language-system = Systemsprache
+settings-theme = Farbschema
+settings-theme-description = Hell, dunkel oder passend zum Desktop.
+settings-theme-desktop = Wie der Desktop
+settings-theme-dark = Dunkel
+settings-theme-light = Hell
+settings-dark-scheme = Dunkle Farben
+settings-dark-scheme-description = Farben für das dunkle Farbschema. „System“ übernimmt Farben und Akzentfarbe des Desktops.
+settings-light-scheme = Helle Farben
+settings-light-scheme-description = Farben für das helle Farbschema. „System“ übernimmt Farben und Akzentfarbe des Desktops.
+settings-scheme-system = System
+settings-motion = Weniger Animationen
+settings-motion-description = Leisten und Hinweise erscheinen sofort, ohne Animation.
+settings-motion-system = Wie das System
+settings-motion-reduced = An
+settings-motion-full = Aus
+
+settings-autostart = Beim Anmelden starten
+settings-autostart-description = Öffnet das Fenster bei jeder Anmeldung.
+settings-refresh = Nach Updates suchen
+settings-refresh-description = Jede Prüfung lädt die Paketlisten herunter und fragt das AUR (Arch User Repository) ab.
+settings-refresh-ask = Nur manuell
+settings-refresh-ask-description = Die Startseite sucht dann nur nach Updates, wenn du auf „Neu einlesen“ klickst.
+settings-refresh-off = Aus, solange „Nur manuell“ aktiv ist.
+settings-refresh-minutes = Prüfintervall in Minuten
+settings-refresh-unit = Min.
+settings-refresh-clamped = Das Intervall liegt zwischen 5 Minuten und einem Tag. Verwendet werden daher { $minutes } Minuten.
+settings-user-units = Dienste beim Öffnen
+settings-user-units-description = Welche Units die Seite „Dienste“ beim Öffnen anzeigt.
+settings-user-units-system = System
+settings-user-units-user = Mein Konto
+settings-aur = AUR-Pakete anzeigen
+settings-aur-description = Die Seite „Pakete“ zeigt auch Pakete aus dem Arch User Repository. Die Liste wird höchstens einmal am Tag heruntergeladen. AUR-Pakete sind Skripte der Community, die auf deinem Computer gebaut werden.
+
+settings-copy-reports = Berichte in die Zwischenablage kopieren
+settings-copy-reports-description = Fertige Berichte werden sofort kopiert. Nach dem Hochladen wird der Link kopiert, auch bei der Konsolenausgabe.
+settings-log-level = Detailgrad der Logdatei
+settings-log-level-description = Wie viel Garuda Toolbox in seine Logdatei schreibt. Wähle „Ausführlich“, bevor du ein Problem meldest.
+settings-log-error = Nur Fehler
+settings-log-warn = Warnungen und Fehler
+settings-log-info = Normal
+settings-log-debug = Ausführlich
+settings-log-trace = Alles
