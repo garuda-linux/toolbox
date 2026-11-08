@@ -1,0 +1,4 @@
+# <file system>  <mount point>  <type>  <options>  <dump>  <pass>
+UUID=1a2b3c4d-0000-4000-8000-000000000001  /      btrfs  subvol=/@,defaults,noatime,compress=zstd  0 0
+UUID=1a2b3c4d-0000-4000-8000-000000000001  /home  btrfs  subvol=/@home,defaults,noatime,compress=zstd  0 0
+UUID=ABCD-1234                             /boot/efi  vfat  umask=0077  0 2

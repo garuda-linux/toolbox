@@ -1,0 +1,90 @@
+# Paths below `root/` and `home/` stand in for the system's and the user's files.
+# `scripts/selftest.sh` adds what git cannot keep: `os-release`, the root-only
+# `modprobe.d` file, `sudoers` and `home/.bashrc`.
+
+[[section]]
+id = "bootloader"
+title = "Bootloader"
+icon = "system-reboot"
+
+[[section.entry]]
+id = "grub"
+name = "GRUB default"
+path = "/etc/default/grub"
+description = "GRUB configuration variables"
+url = "https://wiki.archlinux.org/title/GRUB"
+
+[[section]]
+id = "system"
+title = "System"
+icon = "computer"
+
+[[section.entry]]
+id = "fstab"
+name = "Fstab"
+path = "/etc/fstab"
+description = "Static information about the filesystems"
+url = "https://wiki.archlinux.org/title/Fstab"
+
+[[section.entry]]
+id = "hostname"
+name = "Hostname"
+path = "/etc/hostname"
+description = "The name of the computer on the network"
+url = "https://wiki.archlinux.org/title/Network_configuration"
+
+[[section.entry]]
+id = "os-release"
+name = "OS release"
+path = "/etc/os-release"
+description = "Provides information about the OS, used by various programs"
+url = "https://wiki.archlinux.org/title/Os-release"
+
+[[section.entry]]
+id = "modprobe-d"
+name = "modprobe.d"
+path = "/etc/modprobe.d"
+description = "Kernel module configuration and options"
+url = "https://wiki.archlinux.org/title/Kernel_module"
+directory = true
+
+[[section]]
+id = "user-environment"
+title = "User environment"
+icon = "utilities-terminal"
+
+[[section.entry]]
+id = "bash"
+name = "Bash"
+path = "~/.bashrc"
+description = "Bash configuration file for the current user"
+url = "https://wiki.archlinux.org/title/Bash"
+
+[[section]]
+id = "users-and-authentication"
+title = "Users and authentication"
+icon = "user-others"
+
+[[section.entry]]
+id = "group"
+name = "Group"
+path = "/etc/group"
+read_only = true
+description = "Defines user groups"
+url = "https://wiki.archlinux.org/title/Users_and_groups"
+
+[[section.entry]]
+id = "passwd"
+name = "Passwd"
+path = "/etc/passwd"
+read_only = true
+description = "Contains user account information"
+url = "https://wiki.archlinux.org/title/Users_and_groups"
+
+[[section.entry]]
+id = "sudoers"
+name = "Sudoers"
+path = "/etc/sudoers"
+read_only = true
+description = "Configures which users have sudo privileges"
+url = "https://wiki.archlinux.org/title/Sudo"
