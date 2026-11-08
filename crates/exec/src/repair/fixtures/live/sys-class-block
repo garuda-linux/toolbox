@@ -1,0 +1,17 @@
+dm-0 dev=253:0 partition= slaves=loop0p2 loop0p3 
+dm-1 dev=253:1 partition= slaves=loop0p4 loop0p5 
+dm-2 dev=253:2 partition= slaves=loop0p6 loop0p7 
+dm-3 dev=253:3 partition= slaves=loop0p8 loop0p9 
+loop0 dev=7:0 partition= slaves=
+loop0p1 dev=259:0 partition=1 slaves=
+loop0p2 dev=259:1 partition=2 slaves=
+loop0p3 dev=259:2 partition=3 slaves=
+loop0p4 dev=259:3 partition=4 slaves=
+loop0p5 dev=259:4 partition=5 slaves=
+loop0p6 dev=259:5 partition=6 slaves=
+loop0p7 dev=259:6 partition=7 slaves=
+loop0p8 dev=259:7 partition=8 slaves=
+loop0p9 dev=259:8 partition=9 slaves=
+sr0 dev=11:0 partition= slaves=
+vda dev=254:0 partition= slaves=
+zram0 dev=252:0 partition= slaves=

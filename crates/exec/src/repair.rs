@@ -1,10 +1,12 @@
 //! What the helper does itself for a boot repair: it looks at the devices
 //! before anything runs, makes the folder the installed system is mounted
-//! at, and checks that what was mounted is a system GRUB can be installed
-//! into. Mounting, unlocking and GRUB's programs are commands of the
-//! procedure in `toolbox-plan`.
+//! at, and checks that what was mounted is a system its boot loader can be
+//! repaired in. Mounting, unlocking and the boot loader's programs are
+//! commands of the procedure in `toolbox-plan`, picked here once the system
+//! is mounted.
 
 mod disks;
+mod loader;
 mod preflight;
 #[cfg(test)]
 mod testing;
@@ -14,6 +16,7 @@ mod tests;
 use std::io;
 use std::path::Path;
 
+pub use loader::boot_loader_steps;
 use preflight::Moment;
 pub use preflight::PreflightError;
 use rustix::fs::Mode;
@@ -21,8 +24,8 @@ use rustix::io::Errno;
 use toolbox_plan::procedure::Program;
 use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{
-    ESP_FOLDER, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed, RepairWork, RootAction,
-    StepId,
+    ESP_FOLDER, EspPlace, InstalledLoader, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed,
+    RepairWork, RootAction, StepId,
 };
 
 use crate::apply::EventSink;
@@ -42,8 +45,13 @@ pub enum Lacking {
     /// No kernel in `/boot`: the system keeps it on a partition of its
     /// own, which this repair does not mount.
     Kernel,
-    /// No `/boot/efi`: the system mounts its EFI partition elsewhere.
+    /// No folder for the EFI system partition where the system mounts it.
     EspFolder,
+    /// systemd-boot, whose `/etc/fstab` mounts no FAT file system at
+    /// `/efi`, `/boot` or `/boot/efi`.
+    EspInFstab,
+    /// systemd-boot, on a machine that did not start through UEFI.
+    Uefi,
     /// A folder the repair binds onto is missing or a symlink.
     /// `mount --bind` follows a link at its target, so the live system's
     /// `/dev` would land wherever the installed system points it.
@@ -105,21 +113,35 @@ pub fn prepare_mount(root: &Path) -> io::Result<()> {
 /// When a folder cannot be read for another reason than being absent.
 pub fn installed_system(root: &Path, need: RepairNeed) -> io::Result<Option<Lacking>> {
     let system = Path::new(REPAIR_ROOT);
+    let lacking = match loader::installed_loader(root)? {
+        InstalledLoader::Grub => grub_lacks(root, need)?,
+        InstalledLoader::SystemdBoot { esp } => sdboot_lacks(root, need, esp)?,
+    };
+
+    if lacking.is_some() {
+        return Ok(lacking);
+    }
+
+    for place in RepairMount::BINDS {
+        if !is_folder(root, &system.join(place.inside()))? {
+            return Ok(Some(Lacking::BindTarget(place)));
+        }
+    }
+
+    Ok(None)
+}
+
+fn grub_lacks(root: &Path, need: RepairNeed) -> io::Result<Option<Lacking>> {
+    let system = Path::new(REPAIR_ROOT);
     let programs: &[Program] = match need {
-        RepairNeed::Menu => &[Program::GrubMkconfig],
+        RepairNeed::Menu | RepairNeed::MenuWithEsp => &[Program::GrubMkconfig],
         RepairNeed::Installer | RepairNeed::InstallerWithEsp => {
             &[Program::GrubInstall, Program::GrubMkconfig]
         }
     };
 
-    let bin = absent_as_none(secure::open_dir(root, &system.join("usr/bin")))?;
-
     for program in programs {
-        let present = bin
-            .as_ref()
-            .is_some_and(|bin| secure::is_regular(bin, program.name()));
-
-        if !present {
+        if !loader::has(root, *program)? {
             return Ok(Some(Lacking::Program(*program)));
         }
     }
@@ -139,10 +161,34 @@ pub fn installed_system(root: &Path, need: RepairNeed) -> io::Result<Option<Lack
         return Ok(Some(Lacking::EspFolder));
     }
 
-    for place in RepairMount::BINDS {
-        if !is_folder(root, &system.join(place.inside()))? {
-            return Ok(Some(Lacking::BindTarget(place)));
-        }
+    Ok(None)
+}
+
+/// The kernels stay in `/usr/lib/modules`, kernel-install takes them from
+/// there, so no `/boot` is looked at.
+fn sdboot_lacks(
+    root: &Path,
+    need: RepairNeed,
+    esp: Option<EspPlace>,
+) -> io::Result<Option<Lacking>> {
+    if matches!(need, RepairNeed::Menu | RepairNeed::Installer) {
+        return Ok(Some(Lacking::Uefi));
+    }
+
+    if need == RepairNeed::InstallerWithEsp && !loader::has(root, Program::Bootctl)? {
+        return Ok(Some(Lacking::Program(Program::Bootctl)));
+    }
+
+    if !loader::has_uki_builder(root)? {
+        return Ok(Some(Lacking::Program(Program::KernelInstall)));
+    }
+
+    let Some(place) = esp else {
+        return Ok(Some(Lacking::EspInFstab));
+    };
+
+    if !is_folder(root, &Path::new(REPAIR_ROOT).join(place.inside()))? {
+        return Ok(Some(Lacking::EspFolder));
     }
 
     Ok(None)
@@ -175,21 +221,27 @@ pub fn execute_require(
             return note(
                 step,
                 sink,
-                "the partition holds an installed system with GRUB",
+                "the partition holds an installed system its boot loader can be repaired in",
                 Outcome::Succeeded,
             );
         }
         Ok(Some(Lacking::Program(program))) => format!(
-            "the partition has no {}: it is no installed system with GRUB, or its system lies in another subvolume",
+            "the partition has no {}: it is no installed system with this boot loader, or its system lies in another subvolume",
             program.path()
         ),
         Ok(Some(Lacking::Kernel)) => {
             "the system has no kernel in /boot: a /boot on a partition of its own is not supported"
                 .to_owned()
         }
-        Ok(Some(Lacking::EspFolder)) => format!(
-            "the system has no /{ESP_FOLDER}: it mounts its EFI system partition elsewhere, which is not supported"
-        ),
+        Ok(Some(Lacking::EspFolder)) => {
+            "the system has no folder where it mounts its EFI system partition".to_owned()
+        }
+        Ok(Some(Lacking::EspInFstab)) => {
+            "the system starts with systemd-boot, but its /etc/fstab mounts no EFI system partition at /efi, /boot or /boot/efi".to_owned()
+        }
+        Ok(Some(Lacking::Uefi)) => {
+            "the system starts with systemd-boot, which only a machine started through UEFI can repair".to_owned()
+        }
         Ok(Some(Lacking::BindTarget(place))) => format!(
             "the system's /{} is missing or a symlink, so nothing can be mounted there",
             place.inside()

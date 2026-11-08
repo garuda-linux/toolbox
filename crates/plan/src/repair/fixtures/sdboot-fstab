@@ -1,0 +1,24 @@
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/         	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@	0 0
+
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/home     	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@home	0 0
+
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/root     	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@root	0 0
+
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/srv      	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@srv	0 0
+
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/var/cache	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@cache	0 0
+
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/var/log  	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@log	0 0
+
+# /dev/loop0p2
+UUID=cd2fff21-4bb7-40f3-a158-406f545e11e6	       	/var/tmp  	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@tmp	0 0
+
+# /dev/loop0p1
+UUID=6438-BB38	       	/efi      	vfat      	rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+

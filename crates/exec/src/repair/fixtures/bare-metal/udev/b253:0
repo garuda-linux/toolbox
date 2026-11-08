@@ -1,0 +1,32 @@
+S:disk/by-label/nix
+S:disk/by-id/dm-name-sn8100_nix
+S:disk/by-diskseq/7
+S:disk/by-id/dm-uuid-CRYPT-LUKS2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-sn8100_nix
+S:disk/by-uuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+S:mapper/sn8100_nix
+I:15544876
+E:PATH=/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/bin:/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/sbin
+E:DM_UDEV_DISABLE_LIBRARY_FALLBACK_FLAG=1
+E:DM_UDEV_PRIMARY_SOURCE_FLAG=1
+E:DM_UDEV_RULES_VSN=3
+E:DM_ACTIVATION=1
+E:DM_NAME=sn8100_nix
+E:DM_UUID=CRYPT-LUKS2-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-sn8100_nix
+E:ID_FS_LABEL=nix
+E:ID_FS_LABEL_ENC=nix
+E:ID_FS_UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_UUID_ENC=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_UUID_SUB=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_UUID_SUB_ENC=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_BLOCKSIZE=4096
+E:ID_FS_LASTBLOCK=225968128
+E:ID_FS_SIZE=925565452288
+E:ID_FS_TYPE=btrfs
+E:ID_FS_USAGE=filesystem
+E:ID_BLOCK_SUBSYSTEM=dm
+E:ID_BTRFS_READY=1
+E:DMI_VENDOR=ASUSTeK COMPUTER INC.
+E:DMI_FAMILY=ROG Strix G16
+G:systemd
+Q:systemd
+V:1

@@ -11,7 +11,7 @@ use std::fmt;
 
 pub use initramfs::{InitramfsRoot, initramfs_rebuilds};
 pub use program::Program;
-pub use uki::uki_rebuilds;
+pub use uki::{in_root, relaxed, uki_rebuilds};
 
 use crate::garuda_update::GARUDA_UPDATE_CONFIG;
 use crate::grub::GRUB_DEFAULTS;
@@ -147,16 +147,18 @@ pub enum Builtin {
     /// has a locale enabled that provides it: a `LANG` without its locale
     /// leaves every program with the C locale and warnings.
     SetSystemLocale(LocaleName),
-    /// Fails for the account with user id 0 (whatever it is called) and
-    /// for an account `/etc/passwd` does not list. The app's own guard is
-    /// no protection once a request is on the wire.
+    /// Fails for an account whose user id is outside [`FIRST_USER_ID`] to
+    /// [`crate::LAST_USER_ID`], root and `nobody` among them, and for an
+    /// account `/etc/passwd` does not list. The app's own guard is no
+    /// protection once a request is on the wire.
     RequireOrdinaryUser(UserName),
     /// Fails when the folder exists. `usermod -d <new> -m` writes the new
     /// home into `/etc/passwd` before it refuses a folder that exists, so a
     /// move onto one would leave the account pointing at a foreign folder.
     RequireFreeHome(HomeDirectory),
-    /// Fails for a group with an id below [`FIRST_USER_ID`]: packages own
-    /// those and files on disk refer to them.
+    /// Fails for a group with an id outside [`FIRST_USER_ID`] to
+    /// [`crate::LAST_USER_ID`]: packages own those and files on disk refer
+    /// to them.
     RequireUserGroup(GroupName),
     /// Replaces a config file with the text the user edited, keeping
     /// owner and mode and the previous version in the backup folder. Fails
@@ -193,9 +195,15 @@ pub enum Builtin {
     /// Runs the first of [`initramfs_rebuilds`] whose program is
     /// installed below `root`. Fails when none is.
     RebuildInitramfs { root: InitramfsRoot },
-    /// Runs the first of [`uki_rebuilds`] that is installed. Fails when
-    /// none is.
-    RebuildUkis,
+    /// Runs the first of [`uki_rebuilds`] that is installed below `root`.
+    /// Fails when none is.
+    RebuildUkis { root: InitramfsRoot },
+    /// The helper looks at the mounted system and runs
+    /// [`crate::boot_loader_steps`] for its boot loader.
+    RepairBootLoader {
+        system: InstalledSystem,
+        work: RepairWork,
+    },
 }
 
 impl fmt::Display for Builtin {
@@ -233,9 +241,7 @@ impl fmt::Display for Builtin {
 
                 write!(f, "{verb} `{entry}` in /{LOCALE_GEN}")
             }
-            Self::RequireOrdinaryUser(user) => {
-                write!(f, "check that {user} is not the root account")
-            }
+            Self::RequireOrdinaryUser(user) => ordinary_user_check(f, user),
             Self::RequireFreeHome(home) => write!(f, "check that {home} does not exist yet"),
             Self::RequireUserGroup(group) => write!(f, "check that {group} is not a system group"),
             Self::WriteConfigFile(write) => write.fmt(f),
@@ -261,7 +267,10 @@ impl fmt::Display for Builtin {
                 "set LANG={locale} in /{LOCALE_CONF}  # only when /{LOCALE_GEN} has it enabled"
             ),
             Self::RebuildInitramfs { root } => initramfs::describe(f, *root),
-            Self::RebuildUkis => uki::describe(f),
+            Self::RebuildUkis { root } => uki::describe(f, *root),
+            Self::RepairBootLoader { system, work } => {
+                crate::action::describe_loader(f, system, work)
+            }
         }
     }
 }
@@ -332,12 +341,17 @@ fn wifi_backend(out: &mut fmt::Formatter<'_>, backend: WifiBackend) -> fmt::Resu
 }
 
 fn installed_system(out: &mut fmt::Formatter<'_>, need: RepairNeed) -> fmt::Result {
+    const SDBOOT_ESP: &str = "its EFI system partition in /etc/fstab";
+
     let programs = match need {
-        RepairNeed::Menu => "grub-mkconfig",
-        RepairNeed::Installer => "grub-install and grub-mkconfig",
-        RepairNeed::InstallerWithEsp => {
-            &format!("grub-install, grub-mkconfig and the folder /{ESP_FOLDER}")
+        RepairNeed::Menu => "grub-mkconfig, or on systemd-boot kernel-install",
+        RepairNeed::MenuWithEsp => {
+            &format!("grub-mkconfig, or on systemd-boot kernel-install and {SDBOOT_ESP}")
         }
+        RepairNeed::Installer => "grub-install and grub-mkconfig",
+        RepairNeed::InstallerWithEsp => &format!(
+            "grub-install, grub-mkconfig and the folder /{ESP_FOLDER}, or on systemd-boot bootctl, kernel-install and {SDBOOT_ESP}"
+        ),
     };
 
     write!(
@@ -370,4 +384,12 @@ fn loader_conf(out: &mut fmt::Formatter<'_>, change: &LoaderChange) -> fmt::Resu
 
 fn kernel_cmdline(out: &mut fmt::Formatter<'_>, parameters: &KernelParameters) -> fmt::Result {
     write!(out, "write {parameters} to /{KERNEL_CMDLINE}")
+}
+
+fn ordinary_user_check(out: &mut fmt::Formatter<'_>, user: &UserName) -> fmt::Result {
+    write!(
+        out,
+        "check that {user} is an ordinary account (id {FIRST_USER_ID} to {})",
+        crate::LAST_USER_ID
+    )
 }

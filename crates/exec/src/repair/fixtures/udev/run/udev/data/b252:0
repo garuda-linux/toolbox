@@ -1,0 +1,6 @@
+S:disk/by-diskseq/5
+I:101120453
+E:ID_BLOCK_SUBSYSTEM=zram
+G:systemd
+Q:systemd
+V:1

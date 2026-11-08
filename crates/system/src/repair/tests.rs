@@ -1,11 +1,18 @@
 use std::fs;
 use std::path::Path;
 
-use toolbox_state::bootrepair::{Firmware, SAMPLE_LISTING, Tool};
+use toolbox_state::bootrepair::sample::laptop_from_the_live_iso;
+use toolbox_state::bootrepair::{Firmware, RepairFacts, System, Tool};
 
 use super::{DryRunRepair, RepairSource as _, SystemRepair};
 use crate::error::ProbeError;
 use crate::testing::fake_program;
+
+const LAPTOP_SYSTEMS: [&str; 3] = ["/dev/nvme0n1p1", "/dev/nvme0n1p3", "/dev/nvme1n1p2"];
+
+fn devices(facts: &RepairFacts) -> Vec<&str> {
+    facts.inventory.systems.iter().map(System::device).collect()
+}
 
 fn install(root: &Path, tools: &[Tool]) {
     for tool in tools {
@@ -26,7 +33,7 @@ fn source(root: &Path, lsblk: &Path) -> SystemRepair {
 #[test]
 fn the_disks_come_from_lsblk_and_the_firmware_from_sys() {
     let root = tempfile::tempdir().unwrap();
-    let (_folder, lsblk) = fake_program(SAMPLE_LISTING, "", 0);
+    let (_folder, lsblk) = fake_program(&laptop_from_the_live_iso(), "", 0);
 
     install(root.path(), &Tool::ALL);
 
@@ -34,7 +41,7 @@ fn the_disks_come_from_lsblk_and_the_firmware_from_sys() {
 
     assert_eq!(bios.firmware, Firmware::Bios);
     assert_eq!(bios.missing, []);
-    assert_eq!(bios.inventory.systems.len(), 2);
+    assert_eq!(devices(&bios), LAPTOP_SYSTEMS);
 
     fs::create_dir_all(root.path().join("sys/firmware/efi")).unwrap();
 
@@ -47,7 +54,7 @@ fn the_disks_come_from_lsblk_and_the_firmware_from_sys() {
 #[test]
 fn missing_programs_are_named_and_no_disk_is_read() {
     let root = tempfile::tempdir().unwrap();
-    let (_folder, lsblk) = fake_program(SAMPLE_LISTING, "", 0);
+    let (_folder, lsblk) = fake_program(&laptop_from_the_live_iso(), "", 0);
 
     install(root.path(), &[Tool::Lsblk]);
 
@@ -77,15 +84,13 @@ fn a_failing_or_babbling_lsblk_is_a_failed_probe() {
     ));
 }
 
+/// A bare-metal laptop from the live ISO: two locked LUKS partitions on
+/// `nvme0n1`, btrfs on `nvme1n1p2`.
 #[test]
-fn the_dry_run_shows_a_made_up_uefi_machine() {
+fn the_dry_run_shows_the_laptop() {
     let facts = DryRunRepair.facts().unwrap();
 
     assert_eq!(facts.firmware, Firmware::Uefi);
     assert_eq!(facts.missing, []);
-    assert_eq!(
-        facts.inventory.systems.len(),
-        2,
-        "an open and a locked system"
-    );
+    assert_eq!(devices(&facts), LAPTOP_SYSTEMS);
 }

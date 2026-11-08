@@ -1,36 +1,33 @@
-use toolbox_plan::RepairWork;
-
-use super::{PreflightError, open, refusal};
+use super::{PreflightError, REGENERATE, open, refusal};
 use crate::repair::testing::Machine;
 
+/// Edit: the unused partition's entry removed from `/sys/dev/block`.
 #[test]
 fn a_device_the_kernel_lost_is_refused_with_its_name() {
-    let mut machine = Machine::live();
+    let machine = Machine::bare_metal();
 
-    machine.disk("sdz", 8, 99);
-    machine.partition("sdz", "sdz1", (8, 100), &[]);
-    std::fs::remove_file(machine.root().join("sys/dev/block/8:100")).unwrap();
+    machine.lose("nvme1n1p2");
 
-    let refused = refusal(&machine, open("/dev/sdz1"), RepairWork::RegenerateConfig);
+    let refused = refusal(&machine, open("/dev/nvme1n1p2"), REGENERATE);
 
     assert!(
-        refused.contains("cannot look up /dev/sdz1 in /sys"),
+        refused.contains("cannot look up /dev/nvme1n1p2 in /sys"),
         "{refused}"
     );
 }
 
+/// Edit: the entry of the partition mounted at `/boot` removed from
+/// `/sys/dev/block`.
 #[test]
 fn a_mounted_device_the_kernel_lost_is_in_the_way() {
-    let mut machine = Machine::live();
+    let machine = Machine::bare_metal();
 
-    machine.disk("sdz", 8, 99);
-    machine.mount("/dev/sdz", "/mnt/usb");
-    std::fs::remove_file(machine.root().join("sys/dev/block/8:99")).unwrap();
+    machine.lose("nvme0n1p2");
 
-    let refused = refusal(&machine, open("/dev/sda2"), RepairWork::RegenerateConfig);
+    let refused = refusal(&machine, open("/dev/nvme1n1p2"), REGENERATE);
 
     assert!(
-        refused.contains("cannot find the disk of /dev/sdz"),
+        refused.contains("cannot find the disk of /dev/nvme0n1p2"),
         "{refused}"
     );
 }
@@ -38,11 +35,14 @@ fn a_mounted_device_the_kernel_lost_is_in_the_way() {
 #[test]
 fn failed_lookups_name_the_device_and_the_system_file() {
     let lookup = PreflightError::Lookup {
-        path: "/dev/sda2".to_owned(),
+        path: "/dev/nvme1n1p2".to_owned(),
         error: std::io::Error::other("gone"),
     };
 
-    assert_eq!(lookup.to_string(), "cannot look up /dev/sda2 in /sys: gone");
+    assert_eq!(
+        lookup.to_string(),
+        "cannot look up /dev/nvme1n1p2 in /sys: gone"
+    );
 
     let targets = PreflightError::TargetDisks(std::io::Error::other("gone"));
 
@@ -52,12 +52,12 @@ fn failed_lookups_name_the_device_and_the_system_file() {
     );
 
     let mounts = PreflightError::MountDisks {
-        source: "/dev/sda2".to_owned(),
+        source: "/dev/nvme0n1p2".to_owned(),
         error: std::io::Error::other("gone"),
     };
 
     assert_eq!(
         mounts.to_string(),
-        "cannot find the disk of /dev/sda2: gone"
+        "cannot find the disk of /dev/nvme0n1p2: gone"
     );
 }

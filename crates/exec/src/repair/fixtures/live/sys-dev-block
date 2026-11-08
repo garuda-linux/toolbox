@@ -1,0 +1,17 @@
+11:0 ../../devices/pci0000:00/0000:00:1f.2/ata1/host0/target0:0:0/0:0:0:0/block/sr0
+252:0 ../../devices/virtual/block/zram0
+253:0 ../../devices/virtual/block/dm-0
+253:1 ../../devices/virtual/block/dm-1
+253:2 ../../devices/virtual/block/dm-2
+253:3 ../../devices/virtual/block/dm-3
+254:0 ../../devices/pci0000:00/0000:00:02.3/0000:04:00.0/virtio3/block/vda
+259:0 ../../devices/virtual/block/loop0/loop0p1
+259:1 ../../devices/virtual/block/loop0/loop0p2
+259:2 ../../devices/virtual/block/loop0/loop0p3
+259:3 ../../devices/virtual/block/loop0/loop0p4
+259:4 ../../devices/virtual/block/loop0/loop0p5
+259:5 ../../devices/virtual/block/loop0/loop0p6
+259:6 ../../devices/virtual/block/loop0/loop0p7
+259:7 ../../devices/virtual/block/loop0/loop0p8
+259:8 ../../devices/virtual/block/loop0/loop0p9
+7:0 ../../devices/virtual/block/loop0

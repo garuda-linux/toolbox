@@ -17,7 +17,7 @@ use toolbox_plan::{
 };
 pub use toolbox_state::bootrepair::{
     Disk, Encryption, Esp, Firmware, InvalidListing, Inventory, LSBLK_ARGUMENTS, RepairFacts,
-    SAMPLE_LISTING, System, Tool, parse_lsblk,
+    System, Tool, parse_lsblk,
 };
 
 /// The boot entry name of Garuda's installer, so a reinstall replaces its
@@ -81,7 +81,11 @@ impl Target {
 pub fn plan_regenerate(facts: &RepairFacts, wish: Wish) -> Result<Plan, Refusal> {
     let (system, passphrase) = chosen(facts, wish)?;
 
-    Ok(plan(system, RepairWork::RegenerateConfig, passphrase))
+    Ok(plan(
+        system,
+        RepairWork::RegenerateConfig { esp: None },
+        passphrase,
+    ))
 }
 
 /// # Errors

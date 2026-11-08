@@ -95,7 +95,7 @@ fn a_locked_partition_that_is_not_there_is_refused_without_showing_the_passphras
                 },
                 layout: RootLayout::Plain,
             },
-            work: RepairWork::RegenerateConfig,
+            work: RepairWork::RegenerateConfig { esp: None },
             passphrase: Some(Password::new(PASSPHRASE.to_owned())?),
         },
         Some(PASSPHRASE),

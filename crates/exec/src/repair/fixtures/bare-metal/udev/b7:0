@@ -1,0 +1,10 @@
+S:disk/by-diskseq/20
+I:10606517665
+E:PATH=/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/bin:/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/sbin
+E:ID_BLOCK_SUBSYSTEM=loop
+E:DMI_VENDOR=ASUSTeK COMPUTER INC.
+E:DMI_FAMILY=ROG Strix G16
+E:SYSTEMD_READY=0
+G:systemd
+Q:systemd
+V:1

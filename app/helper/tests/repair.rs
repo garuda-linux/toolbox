@@ -35,7 +35,7 @@ fn repairs() -> Result<Vec<RootAction>, Box<dyn std::error::Error>> {
     Ok(vec![
         RootAction::RepairBoot {
             system: open.clone(),
-            work: RepairWork::RegenerateConfig,
+            work: RepairWork::RegenerateConfig { esp: None },
             passphrase: None,
         },
         RootAction::RepairBoot {

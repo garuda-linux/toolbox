@@ -1,0 +1,10 @@
+11:0 ../../devices/pci0000:00/0000:00:03.0/virtio1/host6/target6:0:0/6:0:0:0/block/sr0
+252:0 ../../devices/virtual/block/zram0
+253:0 ../../devices/virtual/block/dm-0
+253:1 ../../devices/virtual/block/dm-1
+253:2 ../../devices/virtual/block/dm-2
+253:3 ../../devices/virtual/block/dm-3
+254:0 ../../devices/pci0000:00/0000:00:02.0/virtio0/block/vda
+254:1 ../../devices/pci0000:00/0000:00:02.0/virtio0/block/vda/vda1
+254:16 ../../devices/pci0000:00/0000:00:07.0/virtio5/block/vdb
+254:2 ../../devices/pci0000:00/0000:00:02.0/virtio0/block/vda/vda2

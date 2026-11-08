@@ -1,11 +1,15 @@
+use serde_json::Value;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, RepairArgs};
 use toolbox_cli::confirm::Prompt;
-use toolbox_core::features::bootrepair::{
-    Encryption, Firmware, RepairFacts, SAMPLE_LISTING, parse_lsblk,
-};
+use toolbox_core::features::bootrepair::{Encryption, Firmware, RepairFacts, parse_lsblk};
 
 use super::{pick_target, repair};
+
+/// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free second
+/// Garuda on `nvme1n1p2`.
+const BARE_METAL: &str =
+    include_str!("../../../core/src/features/bootrepair/fixtures/bare-metal.json");
 
 struct NoTerminal;
 
@@ -19,12 +23,30 @@ impl Prompt for NoTerminal {
     }
 }
 
-fn facts() -> RepairFacts {
+fn facts_of(listing: &str) -> RepairFacts {
     RepairFacts {
         firmware: Firmware::Uefi,
         missing: Vec::new(),
-        inventory: parse_lsblk(SAMPLE_LISTING).unwrap(),
+        inventory: parse_lsblk(listing).unwrap(),
     }
+}
+
+fn facts() -> RepairFacts {
+    facts_of(BARE_METAL)
+}
+
+/// [`BARE_METAL`] edited: the mapped child of the LUKS partition
+/// `nvme0n1p1` cut, so it is locked, as on the live ISO.
+fn locked_laptop() -> RepairFacts {
+    let mut listing: Value = serde_json::from_str(BARE_METAL).unwrap();
+
+    listing
+        .pointer_mut("/blockdevices/3/children/0")
+        .and_then(Value::as_object_mut)
+        .unwrap()
+        .remove("children");
+
+    facts_of(&listing.to_string())
 }
 
 fn args(system: &str) -> RepairArgs {
@@ -44,13 +66,10 @@ fn an_unknown_system_is_not_available() {
 
 #[test]
 fn a_locked_system_without_its_passphrase_is_refused() {
-    let facts = facts();
-    let locked = facts
-        .inventory
-        .systems
-        .iter()
-        .find(|system| system.encryption == Encryption::Locked)
-        .expect("the sample has a locked system");
+    let facts = locked_laptop();
+    let locked = facts.inventory.system("/dev/nvme0n1p1").unwrap();
+
+    assert_eq!(locked.encryption, Encryption::Locked);
 
     let refused = repair(&facts, &args(locked.device()), None, &mut NoTerminal).unwrap_err();
     assert!(
@@ -62,21 +81,13 @@ fn a_locked_system_without_its_passphrase_is_refused() {
 
 #[test]
 fn an_open_system_gets_a_regenerate_plan() {
-    let facts = facts();
-    let open = facts
-        .inventory
-        .systems
-        .iter()
-        .find(|system| system.encryption == Encryption::None && !system.in_use)
-        .expect("the sample has an open system");
-
-    let plan = repair(&facts, &args(open.device()), None, &mut NoTerminal).unwrap();
+    let plan = repair(&facts(), &args("/dev/nvme1n1p2"), None, &mut NoTerminal).unwrap();
     assert_ne!(plan.steps().len(), 0);
 }
 
 #[test]
 fn a_target_that_is_not_listed_is_refused() {
-    let refused = pick_target(&facts(), "/dev/sda2", Some("/dev/nope")).unwrap_err();
+    let refused = pick_target(&facts(), "/dev/nvme1n1p2", Some("/dev/nope")).unwrap_err();
     assert_eq!(refused.exit(), Exit::Unavailable);
 }
 
@@ -115,18 +126,7 @@ fn a_refusal_names_the_show_command() {
 
 #[test]
 fn a_system_the_running_system_uses_says_why_in_english() {
-    let mut facts = facts();
-    let in_use = facts
-        .inventory
-        .systems
-        .iter_mut()
-        .find(|system| system.encryption == Encryption::None)
-        .expect("the sample has an open system");
-
-    in_use.in_use = true;
-    let device = in_use.device().to_owned();
-
-    let refused = repair(&facts, &args(&device), None, &mut NoTerminal).unwrap_err();
+    let refused = repair(&facts(), &args("/dev/mapper/garuda"), None, &mut NoTerminal).unwrap_err();
     assert_eq!(refused.exit(), Exit::PageRule);
     assert_eq!(
         refused.message(),

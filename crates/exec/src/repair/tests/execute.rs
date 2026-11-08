@@ -20,11 +20,13 @@ fn preparing_the_mount_is_one_step() {
     assert!(text.contains("is ready"), "{text}");
 }
 
+/// Edit: the captured `/` mount of the Lima VM added again at the
+/// repair's folder.
 #[test]
 fn a_mount_left_from_an_earlier_repair_fails_its_step() {
-    let mut machine = Machine::new();
+    let mut machine = Machine::lima();
 
-    machine.mount("/dev/sda2", &format!("/{REPAIR_ROOT}"));
+    machine.mount_as("/", "/dev/vda2", &format!("/{REPAIR_ROOT}"));
 
     let (outcome, text) = run(machine.root(), &Builtin::PrepareRepairMount);
 

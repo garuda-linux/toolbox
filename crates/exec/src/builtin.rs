@@ -40,6 +40,8 @@ use crate::{config_file, repair, secure};
 pub const PROC: &str = "proc";
 pub const SYSTEM_ROOT: &str = "/";
 
+const NEEDS_RUNNER: &str = "this step runs programs, which needs a runner";
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum LockRemoval {
     Removed,
@@ -117,10 +119,10 @@ pub fn execute(
         Builtin::RecheckRepairDevices { system, work } => {
             repair::execute_recheck(root, step, system, work, sink)
         }
-        // It runs a program, which only the runner can: `apply` hands it there.
-        Builtin::RebuildInitramfs { root: _ } | Builtin::RebuildUkis => {
-            failure(step, sink, "a rebuild needs a runner")
-        }
+        // They run programs, which only the runner can: `apply` hands them there.
+        Builtin::RebuildInitramfs { root: _ }
+        | Builtin::RebuildUkis { root: _ }
+        | Builtin::RepairBootLoader { system: _, work: _ } => failure(step, sink, NEEDS_RUNNER),
     }
 }
 

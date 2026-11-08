@@ -1,3 +1,4 @@
+mod live;
 mod lost;
 
 use std::error::Error as _;
@@ -8,7 +9,9 @@ use toolbox_plan::{
 };
 
 use super::{Moment, PreflightError, check, devices};
-use crate::repair::testing::{ESP, ESP_TYPE, Machine};
+use crate::repair::testing::{ESP_TYPE, Machine};
+
+const REGENERATE: RepairWork = RepairWork::RegenerateConfig { esp: None };
 
 fn open(device: &str) -> InstalledSystem {
     InstalledSystem {
@@ -55,15 +58,38 @@ fn refusal(machine: &Machine, system: InstalledSystem, work: RepairWork) -> Stri
         .to_string()
 }
 
+/// Edit: every mount of the laptop's own disks dropped, as when it runs
+/// a live system and nothing of its disks is mounted.
+fn laptop_from_live() -> Machine {
+    let mut machine = Machine::bare_metal();
+
+    machine.unmount_from("/dev/");
+    machine
+}
+
+/// `nvme1n1` holds an EFI partition and btrfs that the laptop does not
+/// mount.
 #[test]
 fn repairs_of_an_unused_disk_pass() {
-    let machine = Machine::live();
+    let machine = Machine::bare_metal();
 
     for (system, work) in [
-        (open("/dev/sda2"), RepairWork::RegenerateConfig),
-        (open("/dev/sda2"), uefi("/dev/sda1")),
-        (open("/dev/sda2"), bios("/dev/sda")),
-        (locked("/dev/sda3"), uefi("/dev/sda1")),
+        (open("/dev/nvme1n1p2"), REGENERATE),
+        (open("/dev/nvme1n1p2"), uefi("/dev/nvme1n1p1")),
+        (open("/dev/nvme1n1p2"), bios("/dev/nvme1n1")),
+    ] {
+        check(&machine.system(), &repair(system, work)).unwrap();
+    }
+}
+
+#[test]
+fn a_locked_or_mapped_root_of_an_unused_disk_passes() {
+    let machine = laptop_from_live();
+
+    for (system, work) in [
+        (locked("/dev/nvme0n1p3"), uefi("/dev/nvme0n1p2")),
+        (open("/dev/mapper/sn8100_nix"), uefi("/dev/nvme0n1p2")),
+        (open("/dev/mapper/garuda"), bios("/dev/nvme0n1")),
     ] {
         check(&machine.system(), &repair(system, work)).unwrap();
     }
@@ -81,263 +107,230 @@ fn other_actions_are_not_looked_at() {
 
 #[test]
 fn a_name_without_a_block_device_behind_it_is_refused() {
-    let machine = Machine::live();
+    let machine = Machine::bare_metal();
 
     assert_eq!(
-        refusal(&machine, open("/dev/sdc2"), RepairWork::RegenerateConfig),
-        "/dev/sdc2 is no block device"
+        refusal(&machine, open("/dev/nvme2n1p2"), REGENERATE),
+        "/dev/nvme2n1p2 is no block device"
     );
     assert_eq!(
-        refusal(&machine, open("/dev/sda2"), bios("/dev/vda")),
+        refusal(&machine, open("/dev/nvme1n1p2"), bios("/dev/vda")),
         "/dev/vda is no block device"
     );
     assert_eq!(
-        refusal(
-            &machine,
-            open("/dev/mapper/absent"),
-            RepairWork::RegenerateConfig
-        ),
+        refusal(&machine, open("/dev/mapper/absent"), REGENERATE),
         "/dev/mapper/absent is no block device"
     );
 }
 
 /// A name of the right shape is not enough: the kernel decides what the
-/// device is.
+/// device is. Edit: `/sys` of `nvme1n1p2` without its `partition` file
+/// and `/sys` of `nvme1n1` with one, so each name lies about its kind.
 #[test]
 fn a_device_of_another_kind_than_its_role_is_refused() {
-    let mut machine = Machine::live();
+    let machine = Machine::bare_metal();
+    let block = machine.root().join("sys/dev/block");
 
-    // A disk whose name looks like a partition and the other way round.
-    machine.disk("sdc1", 8, 33);
-    machine.partition("sda", "sdd", (8, 48), &[]);
+    std::fs::remove_file(block.join("259:6/partition")).unwrap();
+    std::fs::write(block.join("259:4/partition"), "1\n").unwrap();
 
     assert_eq!(
-        refusal(&machine, open("/dev/sdc1"), RepairWork::RegenerateConfig),
-        "/dev/sdc1 is no partition"
+        refusal(&machine, open("/dev/nvme1n1p2"), REGENERATE),
+        "/dev/nvme1n1p2 is no partition"
     );
     assert_eq!(
-        refusal(&machine, open("/dev/sda2"), bios("/dev/sdd")),
-        "/dev/sdd is no whole disk"
+        refusal(&machine, open("/dev/nvme0n1p2"), bios("/dev/nvme1n1")),
+        "/dev/nvme1n1 is no whole disk"
     );
 }
 
 #[test]
 fn only_an_efi_system_partition_takes_the_boot_loader() {
-    let mut machine = Machine::live();
-
-    machine.partition(
-        "sda",
-        "sda4",
-        (8, 4),
-        &[("ID_FS_TYPE", "ext4"), ("ID_PART_ENTRY_TYPE", ESP_TYPE)],
-    );
+    let machine = Machine::bare_metal();
 
     assert_eq!(
-        refusal(&machine, open("/dev/sda2"), uefi("/dev/sda2")),
-        "/dev/sda2 is no EFI system partition"
+        refusal(&machine, open("/dev/nvme1n1p2"), uefi("/dev/nvme1n1p2")),
+        "/dev/nvme1n1p2 is no EFI system partition"
     );
+
+    // Edit: the EFI partition's record says ext4 instead of vfat.
+    machine.edit_record("nvme1n1p1", "ID_FS_TYPE=vfat", "ID_FS_TYPE=ext4");
+
     assert_eq!(
-        refusal(&machine, open("/dev/sda2"), uefi("/dev/sda4")),
-        "/dev/sda4 is no EFI system partition"
+        refusal(&machine, open("/dev/nvme1n1p2"), uefi("/dev/nvme1n1p1")),
+        "/dev/nvme1n1p1 is no EFI system partition"
     );
 }
 
+/// Edit: the GPT type of the EFI partition replaced with the type udev
+/// writes for an MBR one.
 #[test]
 fn an_esp_of_an_mbr_disk_counts() {
-    let mut machine = Machine::live();
+    let machine = Machine::bare_metal();
 
-    machine.partition(
-        "sda",
-        "sda5",
-        (8, 5),
-        &[("ID_FS_TYPE", "vfat"), ("ID_PART_ENTRY_TYPE", "0xef")],
+    machine.edit_record(
+        "nvme1n1p1",
+        &format!("ID_PART_ENTRY_TYPE={ESP_TYPE}"),
+        "ID_PART_ENTRY_TYPE=0xef",
     );
 
     check(
         &machine.system(),
-        &repair(open("/dev/sda2"), uefi("/dev/sda5")),
+        &repair(open("/dev/nvme1n1p2"), uefi("/dev/nvme1n1p1")),
     )
     .unwrap();
 }
 
+/// Edit: `/sys/firmware/efi` removed, as on a system started through
+/// BIOS.
 #[test]
 fn a_uefi_install_needs_a_live_system_started_through_uefi() {
-    let mut machine = Machine::new();
+    let machine = Machine::bare_metal();
 
-    machine.disk("sda", 8, 0);
-    machine.partition("sda", "sda1", (8, 1), &ESP);
-    machine.partition("sda", "sda2", (8, 2), &[]);
+    std::fs::remove_dir_all(machine.root().join("sys/firmware/efi")).unwrap();
 
     assert!(
-        refusal(&machine, open("/dev/sda2"), uefi("/dev/sda1"))
+        refusal(&machine, open("/dev/nvme1n1p2"), uefi("/dev/nvme1n1p1"))
             .starts_with("the live system was not started through UEFI")
     );
     check(
         &machine.system(),
-        &repair(open("/dev/sda2"), bios("/dev/sda")),
+        &repair(open("/dev/nvme1n1p2"), bios("/dev/nvme1n1")),
     )
     .unwrap();
 }
 
 #[test]
 fn only_a_luks_partition_is_unlocked() {
-    let machine = Machine::live();
+    let machine = Machine::bare_metal();
 
     assert_eq!(
-        refusal(&machine, locked("/dev/sda2"), RepairWork::RegenerateConfig),
-        "/dev/sda2 is no LUKS partition"
-    );
-}
-
-#[test]
-fn the_disk_the_live_system_runs_from_is_never_a_target() {
-    let mut machine = Machine::live();
-
-    machine.partition("sdb", "sdb2", (8, 18), &ESP);
-    machine.partition("sdb", "sdb3", (8, 19), &[("ID_FS_TYPE", "ext4")]);
-
-    let in_use = "/dev/sdb is in use by the running system (/dev/sdb1 is mounted at /run/archiso/bootmnt), so nothing is written to it";
-
-    assert_eq!(
-        refusal(&machine, open("/dev/sda2"), bios("/dev/sdb")),
-        in_use
-    );
-    assert_eq!(
-        refusal(&machine, open("/dev/sda2"), uefi("/dev/sdb2")),
-        in_use
-    );
-    assert_eq!(
-        refusal(&machine, open("/dev/sdb3"), RepairWork::RegenerateConfig),
-        in_use
+        refusal(&machine, locked("/dev/nvme1n1p2"), REGENERATE),
+        "/dev/nvme1n1p2 is no LUKS partition"
     );
 }
 
 /// The test mode on an installed system: its own disk is mounted.
 #[test]
 fn a_system_cannot_repair_the_disk_it_runs_from() {
-    let mut machine = Machine::live();
+    let machine = Machine::lima();
 
-    machine.mount("/dev/sda2", "/");
-
-    assert!(
-        refusal(&machine, open("/dev/sda2"), uefi("/dev/sda1"))
-            .starts_with("/dev/sda is in use by the running system")
+    assert_eq!(
+        refusal(&machine, open("/dev/vda2"), REGENERATE),
+        "/dev/vda is in use by the running system (/dev/vda2 is mounted at /), so nothing is written to it"
     );
 }
 
 #[test]
 fn a_mapped_root_is_traced_to_the_disks_below_it() {
-    let mut machine = Machine::live();
+    let machine = Machine::bare_metal();
 
-    machine.mapped("luks-root", 0, &["sda3"]);
-    machine.mapped("live-rw", 1, &["sdb1"]);
-
-    check(
-        &machine.system(),
-        &repair(open("/dev/mapper/luks-root"), uefi("/dev/sda1")),
-    )
-    .unwrap();
     assert!(
-        refusal(
-            &machine,
-            open("/dev/mapper/live-rw"),
-            RepairWork::RegenerateConfig
-        )
-        .starts_with("/dev/sdb is in use")
+        refusal(&machine, open("/dev/mapper/garuda"), REGENERATE)
+            .starts_with("/dev/nvme0n1 is in use")
     );
 }
 
 #[test]
 fn a_mount_of_a_mapped_device_marks_the_disks_below_it() {
-    let mut machine = Machine::live();
+    let machine = Machine::bare_metal();
 
-    machine.mapped("data", 0, &["sda3"]);
-    machine.mount("/dev/mapper/data", "/mnt");
-
-    assert!(
-        refusal(&machine, open("/dev/sda2"), RepairWork::RegenerateConfig).starts_with(
-            "/dev/sda is in use by the running system (/dev/mapper/data is mounted at /mnt)"
-        )
+    assert_eq!(
+        refusal(&machine, open("/dev/nvme1n1p2"), uefi("/dev/nvme0n1p2")),
+        "/dev/nvme0n1 is in use by the running system (/dev/mapper/sn8100_nix is mounted at /nix), so nothing is written to it"
     );
 }
 
+/// Edit: the captured `/dev` mount added again below the repair's
+/// folder.
 #[test]
 fn a_mount_left_by_an_earlier_repair_stops_the_next_one() {
-    let mut machine = Machine::live();
+    let mut machine = Machine::bare_metal();
 
-    machine.mount("devtmpfs", "/run/garuda-toolbox/boot-repair/root/dev");
+    machine.mount_as(
+        "/dev",
+        "devtmpfs",
+        "/run/garuda-toolbox/boot-repair/root/dev",
+    );
 
     assert_eq!(
-        refusal(&machine, open("/dev/sda2"), RepairWork::RegenerateConfig),
+        refusal(&machine, open("/dev/nvme1n1p2"), REGENERATE),
         "/run/garuda-toolbox/boot-repair/root/dev is still mounted from an earlier repair, unmount it or restart the live system"
     );
 }
 
+/// Edit: the captured `/boot` mount added again from a partition the
+/// machine has no node for.
 #[test]
 fn a_mount_without_a_device_node_stops_the_repair() {
-    let mut machine = Machine::live();
+    let mut machine = Machine::bare_metal();
 
-    machine.mount("/dev/sdc9", "/mnt");
+    machine.mount_as("/boot", "/dev/sdc9", "/mnt");
 
     assert_eq!(
-        refusal(&machine, open("/dev/sda2"), RepairWork::RegenerateConfig),
+        refusal(&machine, open("/dev/nvme1n1p2"), REGENERATE),
         "/dev/sdc9 is mounted at /mnt but has no device node, so no disk is known to be unused"
     );
 }
 
+/// Edit: the unused disk mounted below the repair's folder as the repair
+/// mounts it, written like the captured `/data`, `/dev` and `/boot`
+/// mounts.
+fn mid_repair() -> Machine {
+    let mut machine = Machine::bare_metal();
+    let root = "/run/garuda-toolbox/boot-repair/root";
+
+    machine.mount_as("/data", "/dev/nvme1n1p2", root);
+    machine.mount_as("/dev", "devtmpfs", &format!("{root}/dev"));
+    machine.mount_as("/boot", "/dev/nvme1n1p1", &format!("{root}/boot/efi"));
+    machine
+}
+
+fn second_look(machine: &Machine, work: &RepairWork) -> Result<(), String> {
+    devices(
+        &machine.system(),
+        &open("/dev/nvme1n1p2"),
+        work,
+        Moment::During,
+    )
+    .map_err(|error| error.to_string())
+}
+
 #[test]
 fn the_second_look_passes_over_the_mounts_of_the_repair_itself() {
-    let mut machine = Machine::live();
+    let machine = mid_repair();
 
-    machine.mount("/dev/sda2", "/run/garuda-toolbox/boot-repair/root");
-    machine.mount("devtmpfs", "/run/garuda-toolbox/boot-repair/root/dev");
-    machine.mount("/dev/sda1", "/run/garuda-toolbox/boot-repair/root/boot/efi");
-
-    for work in [uefi("/dev/sda1"), bios("/dev/sda")] {
-        devices(&machine.system(), &open("/dev/sda2"), &work, Moment::During).unwrap();
+    for work in [uefi("/dev/nvme1n1p1"), bios("/dev/nvme1n1")] {
+        second_look(&machine, &work).unwrap();
     }
 }
 
 #[test]
 fn the_second_look_refuses_a_name_that_now_belongs_to_a_used_disk() {
-    let mut machine = Machine::live();
-
-    machine.mount("/dev/sda2", "/run/garuda-toolbox/boot-repair/root");
+    let machine = mid_repair();
 
     assert!(
-        devices(
-            &machine.system(),
-            &open("/dev/sda2"),
-            &bios("/dev/sdb"),
-            Moment::During
-        )
-        .unwrap_err()
-        .to_string()
-        .starts_with("/dev/sdb is in use")
+        second_look(&machine, &bios("/dev/nvme0n1"))
+            .unwrap_err()
+            .starts_with("/dev/nvme0n1 is in use")
     );
     assert_eq!(
-        devices(
-            &machine.system(),
-            &open("/dev/sda2"),
-            &bios("/dev/sdc"),
-            Moment::During
-        )
-        .map_err(|error| error.to_string()),
+        second_look(&machine, &bios("/dev/sdc")),
         Err("/dev/sdc is no block device".to_owned())
     );
 }
 
 #[test]
 fn a_refusal_is_a_typed_error_that_keeps_its_cause() {
-    let machine = Machine::live();
+    let machine = Machine::bare_metal();
     let missing = check(
         &machine.system(),
-        &repair(open("/dev/sdc2"), RepairWork::RegenerateConfig),
+        &repair(open("/dev/nvme2n1p2"), REGENERATE),
     )
     .unwrap_err();
 
     assert!(
-        matches!(&missing, PreflightError::NoBlockDevice(path) if path == "/dev/sdc2"),
+        matches!(&missing, PreflightError::NoBlockDevice(path) if path == "/dev/nvme2n1p2"),
         "{missing:?}"
     );
     assert!(missing.source().is_none());

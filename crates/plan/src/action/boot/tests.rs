@@ -212,7 +212,9 @@ fn the_ukis_are_built_after_the_initramfs_only_when_asked() {
             Invocation::Builtin(Builtin::RebuildInitramfs {
                 root: InitramfsRoot::System
             }),
-            Invocation::Builtin(Builtin::RebuildUkis),
+            Invocation::Builtin(Builtin::RebuildUkis {
+                root: InitramfsRoot::System
+            }),
         ]
     ));
 }

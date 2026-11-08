@@ -1,10 +1,10 @@
+mod sdboot;
 mod secrets;
 
-use crate::action::testing::shown;
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::{
-    BootloaderId, DiskDevice, InstalledSystem, PartitionDevice, Password, RepairRoot, RepairWork,
-    RootAction, RootLayout, SecretInput, VolumeDevice,
+    BootloaderId, DiskDevice, InstalledLoader, InstalledSystem, PartitionDevice, Password,
+    RepairRoot, RepairWork, RootAction, RootLayout, SecretInput, VolumeDevice, boot_loader_steps,
 };
 
 const PASSPHRASE: &str = "correct horse: battery staple";
@@ -45,6 +45,10 @@ fn bios(disk: &str) -> RepairWork {
     }
 }
 
+fn regenerate() -> RepairWork {
+    RepairWork::RegenerateConfig { esp: None }
+}
+
 fn repair(system: InstalledSystem, work: RepairWork) -> RootAction {
     let passphrase = system
         .is_locked()
@@ -65,12 +69,12 @@ fn a_uefi_reinstall_on_btrfs_mounts_installs_and_unmounts_in_reverse() {
     );
 
     assert_eq!(
-        shown(&action),
+        lines(&as_run(&action, InstalledLoader::Grub).unwrap()),
         [
             format!("mkdir -p {ROOT}  # for root alone, nothing may be mounted there"),
             format!("mount -o subvol=@ /dev/nvme0n1p2 {ROOT}"),
             format!(
-                "check that {ROOT} holds an installed system with a kernel, grub-install, grub-mkconfig and the folder /boot/efi"
+                "check that {ROOT} holds an installed system with a kernel, grub-install, grub-mkconfig and the folder /boot/efi, or on systemd-boot bootctl, kernel-install and its EFI system partition in /etc/fstab"
             ),
             format!("mount --bind /dev {ROOT}/dev"),
             format!("mount --bind /proc {ROOT}/proc"),
@@ -84,8 +88,6 @@ fn a_uefi_reinstall_on_btrfs_mounts_installs_and_unmounts_in_reverse() {
             ),
             REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
-            format!("umount -R {ROOT}/boot/efi{ALWAYS}"),
-            format!("umount -R {ROOT}/sys/firmware/efi/efivars{ALWAYS}"),
             format!("umount -R {ROOT}/run{ALWAYS}"),
             format!("umount -R {ROOT}/sys{ALWAYS}"),
             format!("umount -R {ROOT}/proc{ALWAYS}"),
@@ -100,7 +102,7 @@ fn a_bios_reinstall_writes_to_the_whole_disk_and_mounts_no_efi_parts() {
     let action = repair(open("/dev/sda2", RootLayout::Plain), bios("/dev/sda"));
 
     assert_eq!(
-        shown(&action),
+        lines(&as_run(&action, InstalledLoader::Grub).unwrap()),
         [
             format!("mkdir -p {ROOT}  # for root alone, nothing may be mounted there"),
             format!("mount /dev/sda2 {ROOT}"),
@@ -126,20 +128,19 @@ fn a_bios_reinstall_writes_to_the_whole_disk_and_mounts_no_efi_parts() {
 
 #[test]
 fn regenerating_the_menu_of_a_locked_system_unlocks_and_closes_it() {
-    let action = repair(
-        locked("/dev/sda2", RootLayout::Subvolume),
-        RepairWork::RegenerateConfig,
-    );
+    let action = repair(locked("/dev/sda2", RootLayout::Subvolume), regenerate());
 
     assert_eq!(
-        shown(&action),
+        lines(&as_run(&action, InstalledLoader::Grub).unwrap()),
         [
             format!("mkdir -p {ROOT}  # for root alone, nothing may be mounted there"),
             format!(
                 "cryptsetup open --type luks --key-file - /dev/sda2 garuda-toolbox-repair{FED}"
             ),
             format!("mount -o subvol=@ /dev/mapper/garuda-toolbox-repair {ROOT}"),
-            format!("check that {ROOT} holds an installed system with a kernel, grub-mkconfig"),
+            format!(
+                "check that {ROOT} holds an installed system with a kernel, grub-mkconfig, or on systemd-boot kernel-install"
+            ),
             format!("mount --bind /dev {ROOT}/dev"),
             format!("mount --bind /proc {ROOT}/proc"),
             format!("mount --bind /sys {ROOT}/sys"),
@@ -165,11 +166,7 @@ fn every_repair() -> Vec<RootAction> {
             open("/dev/mapper/vg0-root", layout),
             locked("/dev/nvme0n1p3", layout),
         ] {
-            for work in [
-                RepairWork::RegenerateConfig,
-                uefi("/dev/sda1"),
-                bios("/dev/sda"),
-            ] {
+            for work in [regenerate(), uefi("/dev/sda1"), bios("/dev/sda")] {
                 all.push(repair(system.clone(), work));
             }
         }
@@ -217,19 +214,47 @@ fn fed(invocation: &Invocation) -> Option<&SecretInput> {
     }
 }
 
-#[test]
-fn every_mount_is_undone_by_an_always_step_in_reverse_order() {
-    for action in every_repair() {
-        let procedure = action.procedure();
-        let mut expected = places(&procedure, Program::Mount, run_command);
+/// Every repair as the helper runs it on each boot loader, where it fits.
+fn every_run() -> Vec<(RootAction, Vec<Invocation>)> {
+    let loaders = [
+        InstalledLoader::Grub,
+        InstalledLoader::SystemdBoot {
+            esp: Some(crate::EspPlace::Efi),
+        },
+    ];
 
-        expected.reverse();
-        assert_eq!(expected.last().map(String::as_str), Some(ROOT));
-        assert_eq!(
-            places(&procedure, Program::Umount, always_command),
-            expected,
-            "{action:?}"
-        );
+    every_repair()
+        .into_iter()
+        .flat_map(|action| {
+            loaders
+                .into_iter()
+                .filter_map(|loader| as_run(&action, loader).ok())
+                .map(|steps| (action.clone(), steps))
+                .collect::<Vec<_>>()
+        })
+        .collect()
+}
+
+/// The root and the binds are undone in reverse order. The boot loader's
+/// own mounts lie below them, so their `umount -R` takes those along.
+#[test]
+fn every_mount_is_undone_by_an_always_step() {
+    for (action, steps) in every_run() {
+        let unmounted = places(&steps, Program::Umount, always_command);
+        let mut own = places(&action.procedure(), Program::Mount, run_command);
+
+        own.reverse();
+        assert_eq!(unmounted, own, "{action:?}");
+        assert_eq!(unmounted.last().map(String::as_str), Some(ROOT));
+
+        for point in places(&steps, Program::Mount, run_command) {
+            assert!(
+                unmounted
+                    .iter()
+                    .any(|undone| point == *undone || point.starts_with(&format!("{undone}/"))),
+                "{point} in {action:?}"
+            );
+        }
     }
 }
 
@@ -276,11 +301,12 @@ fn nothing_but_cleanup_follows_the_first_always_step() {
 }
 
 /// `mount`, `umount`, `cryptsetup` and `chroot` are the only programs,
-/// and inside the chroot only GRUB's two. No `dd`, no shell.
+/// and inside the chroot only the boot loaders' installers and GRUB's
+/// menu builder. No `dd`, no shell.
 #[test]
 fn only_the_listed_programs_run() {
-    for action in every_repair() {
-        for invocation in action.procedure() {
+    for (_, steps) in every_run() {
+        for invocation in steps {
             let command = match &invocation {
                 Invocation::Run(command)
                 | Invocation::Always(command)
@@ -299,7 +325,7 @@ fn only_the_listed_programs_run() {
             ) || (program == Program::Chroot
                 && matches!(
                     inside,
-                    Some("/usr/bin/grub-install" | "/usr/bin/grub-mkconfig")
+                    Some("/usr/bin/grub-install" | "/usr/bin/grub-mkconfig" | "/usr/bin/bootctl")
                 ));
 
             assert!(allowed, "{invocation}");
@@ -311,7 +337,7 @@ fn only_the_listed_programs_run() {
 #[test]
 fn every_repair_builds_the_initramfs_right_before_the_menu() {
     for action in every_repair() {
-        let procedure = action.procedure();
+        let procedure = as_run(&action, InstalledLoader::Grub).unwrap();
         let menu = procedure
             .iter()
             .position(|invocation| {
@@ -329,4 +355,36 @@ fn every_repair_builds_the_initramfs_right_before_the_menu() {
             "{action:?}"
         );
     }
+}
+
+/// What the helper runs once it has seen `loader`: the
+/// [`Builtin::RepairBootLoader`] step replaced by its steps.
+fn as_run(action: &RootAction, loader: InstalledLoader) -> Result<Vec<Invocation>, &'static str> {
+    let RootAction::RepairBoot {
+        system,
+        work,
+        passphrase: _,
+    } = action
+    else {
+        panic!("no repair: {action:?}");
+    };
+
+    let mut steps = Vec::new();
+
+    for invocation in action.procedure() {
+        if matches!(
+            invocation,
+            Invocation::Builtin(Builtin::RepairBootLoader { system: _, work: _ })
+        ) {
+            steps.extend(boot_loader_steps(system, work, loader)?);
+        } else {
+            steps.push(invocation);
+        }
+    }
+
+    Ok(steps)
+}
+
+fn lines(steps: &[Invocation]) -> Vec<String> {
+    steps.iter().map(ToString::to_string).collect()
 }

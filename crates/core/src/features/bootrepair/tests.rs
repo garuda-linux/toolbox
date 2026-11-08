@@ -1,20 +1,24 @@
+mod inventory;
+pub(super) mod listings;
+
+use listings::{BARE_METAL, INSTALLED, laptop_from_the_live_iso, lvm_with_only_swap};
 use toolbox_plan::{
     DiskDevice, PartitionDevice, Password, PlannedAction, RepairRoot, RepairWork, RootAction,
     RootLayout, Segment, VolumeDevice,
 };
 
 use super::{
-    Encryption, Firmware, Inventory, Refusal, RepairFacts, SAMPLE_LISTING, Target, Tool, Wish,
-    parse_lsblk, plan_regenerate, plan_reinstall,
+    Firmware, Refusal, RepairFacts, Target, Tool, Wish, parse_lsblk, plan_regenerate,
+    plan_reinstall,
 };
-
-const NVME: &str = include_str!("fixtures/nvme-ext4.json");
-const LVM_ON_LUKS: &str = include_str!("fixtures/lvm-on-luks.json");
-const INSTALLED: &str = include_str!("fixtures/installed-btrfs.json");
 
 const PASSPHRASE: &str = "correct horse battery staple";
 
-fn facts(listing: &str, firmware: Firmware) -> RepairFacts {
+/// The free second Garuda of the laptop and the EFI partition on its disk.
+const OTHER: &str = "/dev/nvme1n1p2";
+const OTHER_ESP: &str = "/dev/nvme1n1p1";
+
+pub(super) fn facts(listing: &str, firmware: Firmware) -> RepairFacts {
     RepairFacts {
         firmware,
         missing: Vec::new(),
@@ -38,27 +42,12 @@ fn locked_wish(system: &str, layout: Option<RootLayout>) -> Wish {
     }
 }
 
-fn esp(device: &str) -> Target {
+pub(super) fn esp(device: &str) -> Target {
     Target::Esp(PartitionDevice::new(device).unwrap())
 }
 
 fn disk(device: &str) -> Target {
     Target::Disk(DiskDevice::new(device).unwrap())
-}
-
-fn systems(inventory: &Inventory) -> Vec<(&str, &str, Encryption, bool)> {
-    inventory
-        .systems
-        .iter()
-        .map(|system| {
-            (
-                system.device(),
-                system.file_system.as_str(),
-                system.encryption,
-                system.in_use,
-            )
-        })
-        .collect()
 }
 
 fn action(plan: &toolbox_plan::Plan) -> RootAction {
@@ -77,138 +66,9 @@ fn action(plan: &toolbox_plan::Plan) -> RootAction {
 }
 
 #[test]
-fn the_live_sample_lists_the_installed_disk_and_marks_the_medium() {
-    let inventory = parse_lsblk(SAMPLE_LISTING).unwrap();
-
-    assert_eq!(
-        systems(&inventory),
-        [
-            ("/dev/sda2", "btrfs", Encryption::None, false),
-            ("/dev/sda3", "", Encryption::Locked, false),
-        ]
-    );
-
-    let esps: Vec<_> = inventory
-        .esps
-        .iter()
-        .map(|esp| (esp.device.as_str(), esp.disk.as_str(), esp.in_use))
-        .collect();
-
-    assert_eq!(
-        esps,
-        [
-            ("/dev/sda1", "/dev/sda", false),
-            ("/dev/sdb2", "/dev/sdb", true)
-        ]
-    );
-
-    let disks: Vec<_> = inventory
-        .disks
-        .iter()
-        .map(|disk| (disk.device.as_str(), disk.model.as_str(), disk.in_use))
-        .collect();
-
-    assert_eq!(
-        disks,
-        [
-            ("/dev/sda", "Samsung SSD 870 EVO 500GB", false),
-            ("/dev/sdb", "Ultra Fit", true),
-        ]
-    );
-}
-
-#[test]
-fn nvme_and_card_names_are_read_and_swap_keeps_no_disk_busy() {
-    let inventory = parse_lsblk(NVME).unwrap();
-
-    assert_eq!(
-        systems(&inventory),
-        [("/dev/nvme0n1p2", "ext4", Encryption::None, false)]
-    );
-    assert_eq!(inventory.esps.len(), 1);
-
-    let disks: Vec<_> = inventory
-        .disks
-        .iter()
-        .map(|disk| (disk.device.as_str(), disk.in_use))
-        .collect();
-
-    assert_eq!(disks, [("/dev/nvme0n1", false), ("/dev/mmcblk0", false)]);
-}
-
-#[test]
-fn volumes_on_an_unlocked_luks_partition_are_mapped_systems() {
-    let inventory = parse_lsblk(LVM_ON_LUKS).unwrap();
-
-    assert_eq!(
-        systems(&inventory),
-        [
-            ("/dev/mapper/vg0-root", "ext4", Encryption::Unlocked, false),
-            ("/dev/mapper/vg0-home", "ext4", Encryption::Unlocked, false),
-        ]
-    );
-
-    let root = inventory.system("/dev/mapper/vg0-root").unwrap();
-
-    assert_eq!(root.disks.len(), 1);
-    assert_eq!(root.disks.first().unwrap().as_str(), "/dev/nvme0n1");
-    assert!(!root.asks_layout());
-    assert_eq!(
-        inventory.usual_esp(root).unwrap().device.as_str(),
-        "/dev/nvme0n1p1"
-    );
-}
-
-#[test]
-fn a_running_btrfs_system_with_subvolumes_is_in_use() {
-    let inventory = parse_lsblk(INSTALLED).unwrap();
-
-    assert_eq!(
-        systems(&inventory),
-        [
-            ("/dev/vda2", "btrfs", Encryption::None, true),
-            ("/dev/vdb1", "btrfs", Encryption::None, false),
-        ]
-    );
-    assert!(inventory.esps.first().unwrap().in_use);
-    assert!(inventory.system("/dev/vda2").unwrap().asks_layout());
-
-    let other = inventory.system("/dev/vdb1").unwrap();
-
-    assert_eq!(inventory.usual_esp(other), None);
-    assert_eq!(
-        inventory.usual_disk(other).unwrap().device.as_str(),
-        "/dev/vdb"
-    );
-}
-
-#[test]
-fn text_that_is_no_listing_is_an_error_and_odd_devices_are_skipped() {
-    parse_lsblk("lsblk: not found").unwrap_err();
-    parse_lsblk("{}").unwrap_err();
-
-    let odd = r#"{"blockdevices":[
-        {"path":"/dev/sda","type":"disk","size":1073741824,"children":[
-            {"path":"/dev/sda1; rm -rf /","type":"part","fstype":"ext4"},
-            {"path":"/dev/disk/by-label/x","type":"part","fstype":"ext4"},
-            {"path":null,"type":"part","fstype":"ext4"},
-            {"path":"/dev/mapper/a b","type":"lvm","fstype":"ext4"},
-            {"path":"/dev/sda5","type":"part","fstype":"ntfs"}
-        ]},
-        {"path":"/dev/md0","type":"raid1","size":1073741824,"fstype":"ext4"},
-        {"path":"/etc/passwd","type":"disk","size":1073741824}
-    ]}"#;
-
-    let inventory = parse_lsblk(odd).unwrap();
-
-    assert!(inventory.systems.is_empty(), "{:?}", inventory.systems);
-    assert_eq!(inventory.disks.len(), 1);
-}
-
-#[test]
 fn a_uefi_reinstall_takes_the_system_s_layout_and_the_named_esp() {
-    let facts = facts(SAMPLE_LISTING, Firmware::Uefi);
-    let plan = plan_reinstall(&facts, wish("/dev/sda2"), &esp("/dev/sda1")).unwrap();
+    let facts = facts(BARE_METAL, Firmware::Uefi);
+    let plan = plan_reinstall(&facts, wish(OTHER), &esp(OTHER_ESP)).unwrap();
 
     let RootAction::RepairBoot {
         system,
@@ -220,16 +80,17 @@ fn a_uefi_reinstall_takes_the_system_s_layout_and_the_named_esp() {
     };
 
     assert_eq!(system.layout, RootLayout::Subvolume);
-    assert!(matches!(&system.root, RepairRoot::Open { device } if device.as_str() == "/dev/sda2"));
+    assert!(matches!(&system.root, RepairRoot::Open { device } if device.as_str() == OTHER));
     assert!(matches!(&work, RepairWork::InstallUefi { esp, id }
-        if esp.as_str() == "/dev/sda1" && id.as_str() == "Garuda"));
+        if esp.as_str() == OTHER_ESP && id.as_str() == "Garuda"));
     assert_eq!(passphrase, None);
 }
 
 #[test]
 fn a_bios_reinstall_takes_a_whole_disk_of_the_listing() {
-    let facts = facts(NVME, Firmware::Bios);
-    let plan = plan_reinstall(&facts, wish("/dev/nvme0n1p2"), &disk("/dev/nvme0n1")).unwrap();
+    let facts = facts(&lvm_with_only_swap(), Firmware::Bios);
+    let root = "/dev/mapper/vg0-root";
+    let plan = plan_reinstall(&facts, wish(root), &disk("/dev/vdb")).unwrap();
 
     let RootAction::RepairBoot {
         system,
@@ -241,45 +102,49 @@ fn a_bios_reinstall_takes_a_whole_disk_of_the_listing() {
     };
 
     assert_eq!(system.layout, RootLayout::Plain);
-    assert!(matches!(&work, RepairWork::InstallBios { disk } if disk.as_str() == "/dev/nvme0n1"));
+    assert!(matches!(&work, RepairWork::InstallBios { disk } if disk.as_str() == "/dev/vdb"));
 
     assert_eq!(
-        plan_reinstall(&facts, wish("/dev/nvme0n1p2"), &esp("/dev/nvme0n1p1")).unwrap_err(),
+        plan_reinstall(&facts, wish(root), &esp("/dev/vda1")).unwrap_err(),
         Refusal::UnknownTarget
     );
 }
 
 #[test]
 fn the_target_must_fit_how_the_machine_started() {
-    let uefi = facts(SAMPLE_LISTING, Firmware::Uefi);
-    let bios = facts(SAMPLE_LISTING, Firmware::Bios);
+    let uefi = facts(BARE_METAL, Firmware::Uefi);
+    let bios = facts(BARE_METAL, Firmware::Bios);
 
     assert_eq!(
-        plan_reinstall(&uefi, wish("/dev/sda2"), &disk("/dev/sda")).unwrap_err(),
+        plan_reinstall(&uefi, wish(OTHER), &disk("/dev/nvme1n1")).unwrap_err(),
         Refusal::UnknownTarget
     );
     assert_eq!(
-        plan_reinstall(&uefi, wish("/dev/sda2"), &esp("/dev/sdz1")).unwrap_err(),
+        plan_reinstall(&uefi, wish(OTHER), &esp("/dev/sdz1")).unwrap_err(),
         Refusal::UnknownTarget
     );
     assert_eq!(
-        plan_reinstall(&bios, wish("/dev/sda2"), &esp("/dev/sda1")).unwrap_err(),
+        plan_reinstall(&bios, wish(OTHER), &esp(OTHER_ESP)).unwrap_err(),
         Refusal::UnknownTarget
     );
 }
 
 #[test]
 fn nothing_on_a_disk_in_use_is_repaired_or_written() {
-    let live = facts(SAMPLE_LISTING, Firmware::Uefi);
-    let bios = facts(SAMPLE_LISTING, Firmware::Bios);
+    let uefi = facts(BARE_METAL, Firmware::Uefi);
+    let bios = facts(BARE_METAL, Firmware::Bios);
     let installed = facts(INSTALLED, Firmware::Uefi);
 
     assert_eq!(
-        plan_reinstall(&live, wish("/dev/sda2"), &esp("/dev/sdb2")).unwrap_err(),
+        plan_reinstall(&uefi, wish(OTHER), &esp("/dev/nvme0n1p2")).unwrap_err(),
         Refusal::InUse
     );
     assert_eq!(
-        plan_reinstall(&bios, wish("/dev/sda2"), &disk("/dev/sdb")).unwrap_err(),
+        plan_reinstall(&bios, wish(OTHER), &disk("/dev/nvme0n1")).unwrap_err(),
+        Refusal::InUse
+    );
+    assert_eq!(
+        plan_regenerate(&uefi, wish("/dev/mapper/garuda")).unwrap_err(),
         Refusal::InUse
     );
     assert_eq!(
@@ -290,9 +155,15 @@ fn nothing_on_a_disk_in_use_is_repaired_or_written() {
 
 #[test]
 fn only_a_listed_system_is_repaired() {
-    let facts = facts(SAMPLE_LISTING, Firmware::Uefi);
+    let facts = facts(BARE_METAL, Firmware::Uefi);
 
-    for system in ["/dev/sda1", "/dev/sdb1", "/dev/sdz2", "/dev/mapper/other"] {
+    for system in [
+        OTHER_ESP,
+        "/dev/nvme0n1p3",
+        "/dev/sda1",
+        "/dev/sdz2",
+        "/dev/mapper/other",
+    ] {
         assert_eq!(
             plan_regenerate(&facts, wish(system)).unwrap_err(),
             Refusal::UnknownSystem,
@@ -303,12 +174,11 @@ fn only_a_listed_system_is_repaired() {
 
 #[test]
 fn a_locked_system_needs_a_passphrase_and_takes_the_chosen_layout() {
-    let facts = facts(SAMPLE_LISTING, Firmware::Uefi);
+    let facts = facts(&laptop_from_the_live_iso(), Firmware::Uefi);
+    let locked = "/dev/nvme0n1p1";
 
     assert_eq!(
-        plan_regenerate(&facts, wish("/dev/sda3"))
-            .unwrap_err()
-            .as_str(),
+        plan_regenerate(&facts, wish(locked)).unwrap_err().as_str(),
         "empty"
     );
     for (layout, expected) in [
@@ -316,7 +186,7 @@ fn a_locked_system_needs_a_passphrase_and_takes_the_chosen_layout() {
         (Some(RootLayout::Subvolume), RootLayout::Subvolume),
         (Some(RootLayout::Plain), RootLayout::Plain),
     ] {
-        let plan = plan_regenerate(&facts, locked_wish("/dev/sda3", layout)).unwrap();
+        let plan = plan_regenerate(&facts, locked_wish(locked, layout)).unwrap();
         let repair = action(&plan);
 
         assert!(repair.needs_secret());
@@ -331,10 +201,10 @@ fn a_locked_system_needs_a_passphrase_and_takes_the_chosen_layout() {
 
 #[test]
 fn an_open_system_drops_a_passphrase_and_a_layout_it_cannot_have() {
-    let facts = facts(NVME, Firmware::Uefi);
+    let facts = facts(&lvm_with_only_swap(), Firmware::Uefi);
     let plan = plan_regenerate(
         &facts,
-        locked_wish("/dev/nvme0n1p2", Some(RootLayout::Subvolume)),
+        locked_wish("/dev/mapper/vg0-root", Some(RootLayout::Subvolume)),
     )
     .unwrap();
 
@@ -349,31 +219,31 @@ fn an_open_system_drops_a_passphrase_and_a_layout_it_cannot_have() {
 
 #[test]
 fn a_missing_program_stops_every_repair() {
-    let mut facts = facts(SAMPLE_LISTING, Firmware::Uefi);
+    let mut facts = facts(BARE_METAL, Firmware::Uefi);
 
     facts.missing = vec![Tool::Cryptsetup];
 
     assert_eq!(
-        plan_regenerate(&facts, wish("/dev/sda2")).unwrap_err(),
+        plan_regenerate(&facts, wish(OTHER)).unwrap_err(),
         Refusal::Unavailable
     );
     assert_eq!(
-        plan_reinstall(&facts, wish("/dev/sda2"), &esp("/dev/sda1")).unwrap_err(),
+        plan_reinstall(&facts, wish(OTHER), &esp(OTHER_ESP)).unwrap_err(),
         Refusal::Unavailable
     );
 }
 
 #[test]
 fn a_plan_is_one_root_step() {
-    let facts = facts(SAMPLE_LISTING, Firmware::Uefi);
-    let plan = plan_regenerate(&facts, wish("/dev/sda2")).unwrap();
+    let facts = facts(BARE_METAL, Firmware::Uefi);
+    let plan = plan_regenerate(&facts, wish(OTHER)).unwrap();
 
     assert_eq!(plan.steps().len(), 1);
     assert!(matches!(
         plan.steps().first().map(|step| &step.action),
         Some(PlannedAction::Root(RootAction::RepairBoot {
             system: _,
-            work: RepairWork::RegenerateConfig,
+            work: RepairWork::RegenerateConfig { esp: None },
             passphrase: None
         }))
     ));

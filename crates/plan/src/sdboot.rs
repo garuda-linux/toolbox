@@ -52,3 +52,8 @@ impl SdBootMenu {
             .find(|entry| !entry.is_fallback() && entry.uname.as_ref() == Some(release))
     }
 }
+
+/// Whether `/etc/kernel/install.conf` makes kernel-install build UKIs.
+pub fn is_uki_layout(install_conf: &str) -> bool {
+    install_conf.lines().any(|line| line.trim() == "layout=uki")
+}

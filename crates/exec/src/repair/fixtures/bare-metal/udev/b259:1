@@ -1,0 +1,40 @@
+S:disk/by-id/nvme-WD_BLACK_SN8100_2000GB_xxxxxxxxxxxx_1-part1
+S:disk/by-path/pci-0000:02:00.0-nvme-1-part/by-uuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+S:disk/by-partuuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+S:disk/by-path/pci-0000:02:00.0-nvme-1-part/by-partuuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+S:disk/by-uuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+S:disk/by-id/nvme-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-part1
+S:disk/by-path/pci-0000:02:00.0-nvme-1-part1
+S:disk/by-path/pci-0000:02:00.0-nvme-1-part/by-partnum/1
+S:disk/by-id/nvme-WD_BLACK_SN8100_2000GB_xxxxxxxxxxxx-part1
+S:disk/by-diskseq/1-part1
+I:24519470
+E:PATH=/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/bin:/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/sbin
+E:ID_SERIAL_SHORT=xxxxxxxxxxxx
+E:ID_WWN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+E:ID_MODEL=WD_BLACK SN8100 2000GB
+E:ID_REVISION=830ZRR02
+E:ID_NSID=1
+E:ID_SERIAL=WD_BLACK_SN8100_2000GB_xxxxxxxxxxxx_1
+E:ID_PATH=pci-0000:02:00.0-nvme-1
+E:ID_PATH_TAG=pci-0000_02_00_0-nvme-1
+E:ID_PART_GPT_SECTOR_SIZE=4096
+E:ID_PART_TABLE_UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_PART_TABLE_TYPE=gpt
+E:ID_FS_VERSION=2
+E:ID_FS_UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_UUID_ENC=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_TYPE=crypto_LUKS
+E:ID_FS_USAGE=crypto
+E:ID_PART_ENTRY_SCHEME=gpt
+E:ID_PART_ENTRY_UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_PART_ENTRY_TYPE=ca7d7ccb-63ed-4c53-861c-1742536059cc
+E:ID_PART_ENTRY_NUMBER=1
+E:ID_PART_ENTRY_OFFSET=2048
+E:ID_PART_ENTRY_SIZE=2097152000
+E:ID_PART_ENTRY_DISK=259:0
+E:DMI_VENDOR=ASUSTeK COMPUTER INC.
+E:DMI_FAMILY=ROG Strix G16
+G:systemd
+Q:systemd
+V:1

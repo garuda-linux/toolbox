@@ -1,0 +1,239 @@
+{
+   "blockdevices": [
+      {
+         "path": "/dev/loop0",
+         "type": "loop",
+         "size": 6305830912,
+         "fstype": "iso9660",
+         "parttype": null,
+         "label": "GARUDA_MOKKA_20261108",
+         "model": null,
+         "mountpoints": [],
+         "children": [
+            {
+               "path": "/dev/loop0p1",
+               "type": "part",
+               "size": 120541184,
+               "fstype": "vfat",
+               "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+               "label": "GARUDA_EFI",
+               "model": null,
+               "mountpoints": []
+            },{
+               "path": "/dev/loop0p2",
+               "type": "part",
+               "size": 2062172160,
+               "fstype": "erofs",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-root",
+                     "type": "crypt",
+                     "size": 2062172160,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/root"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p3",
+               "type": "part",
+               "size": 16248832,
+               "fstype": "DM_verity_hash",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-root",
+                     "type": "crypt",
+                     "size": 2062172160,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/root"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p4",
+               "type": "part",
+               "size": 3502096384,
+               "fstype": "erofs",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-desktop",
+                     "type": "crypt",
+                     "size": 3502096384,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/desktop"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p5",
+               "type": "part",
+               "size": 27586560,
+               "fstype": "DM_verity_hash",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-desktop",
+                     "type": "crypt",
+                     "size": 3502096384,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/desktop"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p6",
+               "type": "part",
+               "size": 487002112,
+               "fstype": "erofs",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-mhwd",
+                     "type": "crypt",
+                     "size": 487002112,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/mhwd"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p7",
+               "type": "part",
+               "size": 10485760,
+               "fstype": "DM_verity_hash",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-mhwd",
+                     "type": "crypt",
+                     "size": 487002112,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/mhwd"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p8",
+               "type": "part",
+               "size": 68145152,
+               "fstype": "erofs",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-live",
+                     "type": "crypt",
+                     "size": 68145152,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/live"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/loop0p9",
+               "type": "part",
+               "size": 10485760,
+               "fstype": "DM_verity_hash",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda-live",
+                     "type": "crypt",
+                     "size": 68145152,
+                     "fstype": "erofs",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/run/garuda/layers/live"
+                     ]
+                  }
+               ]
+            }
+         ]
+      },{
+         "path": "/dev/sr0",
+         "type": "rom",
+         "size": 6305830912,
+         "fstype": "iso9660",
+         "parttype": null,
+         "label": "GARUDA_MOKKA_20261108",
+         "model": "QEMU DVD-ROM",
+         "mountpoints": []
+      },{
+         "path": "/dev/zram0",
+         "type": "disk",
+         "size": 6197084160,
+         "fstype": "swap",
+         "parttype": null,
+         "label": "zram0",
+         "model": null,
+         "mountpoints": [
+             "[SWAP]"
+         ]
+      },{
+         "path": "/dev/vda",
+         "type": "disk",
+         "size": 32212254720,
+         "fstype": null,
+         "parttype": null,
+         "label": null,
+         "model": null,
+         "mountpoints": []
+      }
+   ]
+}

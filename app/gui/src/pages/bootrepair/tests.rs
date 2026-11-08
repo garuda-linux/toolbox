@@ -4,26 +4,37 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::bootrepair::page::{Facts, Offer, Progress};
-use toolbox_core::features::bootrepair::{
-    Firmware, RepairFacts, SAMPLE_LISTING, Target, Tool, parse_lsblk,
-};
+use toolbox_core::features::bootrepair::{Firmware, RepairFacts, Target, Tool, parse_lsblk};
 use toolbox_plan::{PartitionDevice, Password, RootLayout, VolumeDevice};
+use toolbox_system::{DryRunRepair, RepairSource as _};
 
 use super::BootRepairPage;
 use crate::bootrepair::BootRepair;
 use crate::command::{BootRepairCommand, Command};
 use crate::testing::{PageFixture, PageState};
 
+/// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free btrfs
+/// Garuda on `/dev/nvme1n1p2` with the EFI system partition
+/// `/dev/nvme1n1p1`.
+const BARE_METAL: &str =
+    include_str!("../../../../../crates/core/src/features/bootrepair/fixtures/bare-metal.json");
+
 type Shown = Harness<'static, PageState<BootRepairPage>>;
 
-/// An open btrfs system on `/dev/sda2`, a locked one on `/dev/sda3`, the
-/// EFI system partition `/dev/sda1`, and the live medium in use.
 fn sample() -> Facts {
     Facts::Known(RepairFacts {
         firmware: Firmware::Uefi,
         missing: Vec::new(),
-        inventory: parse_lsblk(SAMPLE_LISTING).unwrap(),
+        inventory: parse_lsblk(BARE_METAL).unwrap(),
     })
+}
+
+/// [`BARE_METAL`] as the live ISO sees it, both LUKS partitions of
+/// `nvme0n1` locked: the dry run's sample, edited where it is made.
+fn locked() -> BootRepair {
+    let facts = Facts::Known(DryRunRepair.facts().unwrap());
+
+    BootRepair::showing(Offer::Live, facts, Progress::None)
 }
 
 fn page(repair: BootRepair, start: BootRepairPage) -> Shown {
@@ -70,8 +81,8 @@ fn the_first_free_system_shows_with_what_was_found() {
     }
 
     for (select, value) in [
-        ("Root partition", "/dev/sda2"),
-        ("EFI system partition", "/dev/sda1"),
+        ("Root partition", "/dev/nvme1n1p2"),
+        ("EFI system partition", "/dev/nvme1n1p1"),
         (
             "Where the system lies",
             "In the subvolume @ (Garuda's layout)",
@@ -105,7 +116,7 @@ fn the_boot_menu_is_written_again_after_asking() {
     assert_eq!(
         sent(&harness),
         [Command::from(BootRepairCommand::Repair {
-            system: VolumeDevice::new("/dev/sda2").unwrap(),
+            system: VolumeDevice::new("/dev/nvme1n1p2").unwrap(),
             layout: Some(RootLayout::Subvolume),
             passphrase: None,
             target: None,
@@ -116,11 +127,11 @@ fn the_boot_menu_is_written_again_after_asking() {
 #[test]
 fn a_locked_system_is_repaired_only_with_its_passphrase() {
     let start = BootRepairPage {
-        system: Some("/dev/sda3".to_owned()),
+        system: Some("/dev/nvme0n1p1".to_owned()),
         ..BootRepairPage::default()
     };
 
-    let mut harness = page(live(), start);
+    let mut harness = page(locked(), start);
 
     assert!(shows(&harness, "Encrypted (LUKS), locked"));
 
@@ -156,10 +167,10 @@ fn a_locked_system_is_repaired_only_with_its_passphrase() {
     assert_eq!(
         sent(&harness),
         [Command::from(BootRepairCommand::Repair {
-            system: VolumeDevice::new("/dev/sda3").unwrap(),
+            system: VolumeDevice::new("/dev/nvme0n1p1").unwrap(),
             layout: Some(RootLayout::Subvolume),
             passphrase: Some(Password::new("secret words".to_owned()).unwrap()),
-            target: Some(Target::Esp(PartitionDevice::new("/dev/sda1").unwrap())),
+            target: Some(Target::Esp(PartitionDevice::new("/dev/nvme0n1p2").unwrap())),
         })]
     );
 }
@@ -196,11 +207,11 @@ fn missing_programs_are_named_and_nothing_is_offered() {
 #[test]
 fn the_passphrase_field_is_named_above_it_and_the_wait_is_explained() {
     let start = BootRepairPage {
-        system: Some("/dev/sda3".to_owned()),
+        system: Some("/dev/nvme0n1p1".to_owned()),
         ..BootRepairPage::default()
     };
 
-    let mut harness = page(live(), start);
+    let mut harness = page(locked(), start);
 
     // The taller rows put the button under the window's foot.
     harness.get_by_label("Reinstall GRUB…").scroll_to_me();

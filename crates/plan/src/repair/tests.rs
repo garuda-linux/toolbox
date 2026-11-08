@@ -36,6 +36,8 @@ fn the_mount_points_are_the_usual_places_of_a_chroot() {
             "/run/garuda-toolbox/boot-repair/root/sys",
             "/run/garuda-toolbox/boot-repair/root/run",
             "/run/garuda-toolbox/boot-repair/root/sys/firmware/efi/efivars",
+            "/run/garuda-toolbox/boot-repair/root/efi",
+            "/run/garuda-toolbox/boot-repair/root/boot",
             "/run/garuda-toolbox/boot-repair/root/boot/efi",
         ]
     );
@@ -80,7 +82,13 @@ fn each_kind_of_work_names_what_the_system_must_hold() {
         disk: DiskDevice::new("/dev/sda").unwrap(),
     };
 
-    assert_eq!(RepairWork::RegenerateConfig.need(), RepairNeed::Menu);
+    let regenerate = RepairWork::RegenerateConfig { esp: None };
+    let regenerate_uefi = RepairWork::RegenerateConfig {
+        esp: Some(PartitionDevice::new("/dev/sda1").unwrap()),
+    };
+
+    assert_eq!(regenerate.need(), RepairNeed::Menu);
+    assert_eq!(regenerate_uefi.need(), RepairNeed::MenuWithEsp);
     assert_eq!(uefi.need(), RepairNeed::InstallerWithEsp);
     assert_eq!(bios.need(), RepairNeed::Installer);
 }

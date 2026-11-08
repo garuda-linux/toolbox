@@ -8,9 +8,12 @@ mod error;
 mod tests;
 
 use std::collections::BTreeSet;
+use std::io;
 use std::path::Path;
 
-use toolbox_plan::{InstalledSystem, RepairRoot, RepairWork, RootAction};
+use toolbox_plan::{
+    EFI_FIRMWARE, InstalledSystem, PartitionDevice, RepairRoot, RepairWork, RootAction,
+};
 
 pub use self::error::PreflightError;
 use super::below_repair_root;
@@ -27,9 +30,9 @@ const LUKS: &str = "crypto_LUKS";
 const FS_TYPE: &str = "ID_FS_TYPE";
 const PART_TYPE: &str = "ID_PART_ENTRY_TYPE";
 
-/// Where the firmware's variables show when the system started through
-/// UEFI.
-const EFI_FIRMWARE: &str = "sys/firmware/efi";
+/// The udev property of what a loop device reads from. Its sysfs
+/// `backing_file` reads `/sr0` in the live session, not `/dev/sr0`.
+const LOOP_BACKING: &str = "ID_LOOP_BACKING_FILENAME";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Moment {
@@ -83,19 +86,10 @@ pub fn devices(
     let mut targets = vec![root_device(system, installed)?];
 
     match work {
-        RepairWork::RegenerateConfig => {}
-        RepairWork::InstallUefi { esp, id: _ } => {
-            if !system.root.join(EFI_FIRMWARE).is_dir() {
-                return Err(PreflightError::NotUefi);
-            }
-
-            let device = expect(system, esp.as_str(), Kind::Partition)?;
-
-            if !is_esp(system.root, device) {
-                return Err(PreflightError::NoEsp(esp.to_string()));
-            }
-
-            targets.push(device);
+        RepairWork::RegenerateConfig { esp: None } => {}
+        RepairWork::RegenerateConfig { esp: Some(esp) }
+        | RepairWork::InstallUefi { esp, id: _ } => {
+            targets.push(esp_device(system, esp)?);
         }
         RepairWork::InstallBios { disk } => {
             targets.push(expect(system, disk.as_str(), Kind::Disk)?);
@@ -103,6 +97,20 @@ pub fn devices(
     }
 
     unused(system, &targets, moment)
+}
+
+fn esp_device(system: &System<'_>, esp: &PartitionDevice) -> Result<DeviceNumber, PreflightError> {
+    if !system.root.join(EFI_FIRMWARE).is_dir() {
+        return Err(PreflightError::NotUefi);
+    }
+
+    let device = expect(system, esp.as_str(), Kind::Partition)?;
+
+    if is_esp(system.root, device) {
+        Ok(device)
+    } else {
+        Err(PreflightError::NoEsp(esp.to_string()))
+    }
 }
 
 fn root_device(
@@ -196,7 +204,7 @@ fn unused(
 
         // A mounted device the kernel cannot place is treated as in the
         // way: better one refusal too many than a write to a used disk.
-        let used = match disks(system.root, device) {
+        let used = match held(system, device) {
             Ok(used) => used,
             Err(error) => {
                 return Err(PreflightError::MountDisks {
@@ -216,4 +224,34 @@ fn unused(
     }
 
     Ok(())
+}
+
+/// The disks below a mounted device and the media behind the loop
+/// devices among them. The live ISO is a loop device on `sr0` or a USB
+/// stick, which is never a mount source itself.
+fn held(system: &System<'_>, device: DeviceNumber) -> io::Result<BTreeSet<String>> {
+    let mut found = disks(system.root, device)?;
+    let mut open: Vec<String> = found.iter().cloned().collect();
+
+    while let Some(name) = open.pop() {
+        // A backing file instead of a device lies on a file system the
+        // mount table names anyway.
+        let backing = system
+            .nodes
+            .block_device(&Path::new("/dev").join(&name), false)
+            .and_then(|number| property(system.root, number, LOOP_BACKING))
+            .and_then(|file| system.nodes.block_device(Path::new(&file), true));
+
+        let Some(backing) = backing else {
+            continue;
+        };
+
+        for disk in disks(system.root, backing)? {
+            if found.insert(disk.clone()) {
+                open.push(disk);
+            }
+        }
+    }
+
+    Ok(found)
 }

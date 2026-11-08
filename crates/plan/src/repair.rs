@@ -3,6 +3,7 @@
 //! mount points and the name of the unlocked device are constants here, so
 //! no request can choose them.
 
+mod esp;
 #[cfg(test)]
 mod tests;
 
@@ -10,6 +11,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
+pub use self::esp::{EspPlace, InstalledLoader};
 use crate::{BootloaderId, DiskDevice, PartitionDevice, VolumeDevice};
 
 /// Where the helper mounts the installed system, relative to `/`. It lies
@@ -74,8 +76,9 @@ impl InstalledSystem {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum RepairWork {
-    /// Only the boot menu is generated again.
-    RegenerateConfig,
+    /// Only the boot menu is generated again. systemd-boot keeps its images
+    /// on `esp`, which a UEFI machine names. GRUB does not mount it.
+    RegenerateConfig { esp: Option<PartitionDevice> },
     /// GRUB goes to the EFI system partition and into the firmware's boot
     /// entries, then the menu is generated.
     InstallUefi {
@@ -92,6 +95,8 @@ pub enum RepairWork {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RepairNeed {
     Menu,
+    /// systemd-boot builds its images onto the EFI system partition.
+    MenuWithEsp,
     Installer,
     /// The installer and the folder for the EFI system partition.
     InstallerWithEsp,
@@ -100,7 +105,8 @@ pub enum RepairNeed {
 impl RepairWork {
     pub const fn need(&self) -> RepairNeed {
         match self {
-            Self::RegenerateConfig => RepairNeed::Menu,
+            Self::RegenerateConfig { esp: None } => RepairNeed::Menu,
+            Self::RegenerateConfig { esp: Some(_) } => RepairNeed::MenuWithEsp,
             Self::InstallUefi { esp: _, id: _ } => RepairNeed::InstallerWithEsp,
             Self::InstallBios { disk: _ } => RepairNeed::Installer,
         }
@@ -118,18 +124,20 @@ pub enum RepairMount {
     Sys,
     Run,
     EfiVariables,
-    Esp,
+    Esp(EspPlace),
 }
 
 impl RepairMount {
-    pub const ALL: [Self; 7] = [
+    pub const ALL: [Self; 9] = [
         Self::Root,
         Self::Dev,
         Self::Proc,
         Self::Sys,
         Self::Run,
         Self::EfiVariables,
-        Self::Esp,
+        Self::Esp(EspPlace::Efi),
+        Self::Esp(EspPlace::Boot),
+        Self::Esp(EspPlace::BootEfi),
     ];
 
     /// Where the kernel's views of the live system are bound, in mount
@@ -145,7 +153,7 @@ impl RepairMount {
             Self::Sys => "sys",
             Self::Run => "run",
             Self::EfiVariables => "sys/firmware/efi/efivars",
-            Self::Esp => ESP_FOLDER,
+            Self::Esp(place) => place.inside(),
         }
     }
 }

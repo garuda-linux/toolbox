@@ -133,7 +133,7 @@ pub fn parse_lsblk(json: &str) -> Result<Inventory, InvalidListing> {
         let place = Place {
             disk: &disk,
             in_use,
-            encrypted: false,
+            encrypted: node.file_system() == LUKS,
         };
 
         for child in &node.children {

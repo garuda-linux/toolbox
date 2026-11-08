@@ -1,7 +1,7 @@
-//! The Boot Repair page in test mode (`--boot-repair`) on the made-up
-//! machine of a dry run: it never reads or shows the disks it runs on. A
-//! dry run's repair only checks the plan. A locked system is repaired
-//! only with its passphrase.
+//! The Boot Repair page in test mode (`--boot-repair`) on the sample
+//! machine of a dry run, a bare-metal laptop as the live ISO sees it: it never
+//! reads or shows the disks it runs on. A dry run's repair only checks the
+//! plan. A locked system is repaired only with its passphrase.
 
 use egui::Key;
 
@@ -15,13 +15,15 @@ pub fn steps() -> Vec<Step> {
         Step::wait("UEFI"),
         Step::WaitContaining("Test mode"),
         Step::Shot("bootrepair"),
+        Step::combo("Root partition"),
+        Step::click("/dev/nvme1n1p2 · ROOT · 500.0 GiB · btrfs"),
         Step::button("Generate boot menu…"),
         Step::WaitContaining("is written again"),
         Step::button("Generate boot menu"),
         Step::WaitContaining("The repair finished without an error"),
         Step::Shot("bootrepair-done"),
         Step::combo("Root partition"),
-        Step::click("/dev/sda3 · 265.5 GiB"),
+        Step::click("/dev/nvme0n1p1 · 1000.0 GiB"),
         Step::wait("Encrypted (LUKS), locked"),
         Step::button("Reinstall GRUB…"),
         Step::disabled_button("Reinstall GRUB"),

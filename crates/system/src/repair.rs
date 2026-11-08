@@ -8,14 +8,13 @@ mod tests;
 use std::ffi::OsString;
 use std::path::PathBuf;
 
+use toolbox_plan::EFI_FIRMWARE;
 use toolbox_state::bootrepair::{
-    Firmware, Inventory, LSBLK_ARGUMENTS, RepairFacts, SAMPLE_LISTING, Tool, parse_lsblk,
+    Firmware, Inventory, LSBLK_ARGUMENTS, RepairFacts, Tool, parse_lsblk,
 };
 
 use crate::command;
 use crate::error::ProbeError;
-
-const EFI_FIRMWARE: &str = "sys/firmware/efi";
 
 pub trait RepairSource: Send + Sync {
     /// # Errors
@@ -25,8 +24,10 @@ pub trait RepairSource: Send + Sync {
     fn facts(&self) -> Result<RepairFacts, ProbeError>;
 }
 
-/// A made-up UEFI machine for a dry run, whose page must neither depend
-/// on the disks of the machine it runs on nor show them.
+/// A bare-metal laptop as the live ISO sees it, for the dry run of a self-test
+/// build, whose page must neither depend on the disks of the machine it
+/// runs on nor show them.
+#[cfg(any(test, feature = "selftest"))]
 pub struct DryRunRepair;
 
 pub struct SystemRepair {
@@ -83,12 +84,13 @@ impl RepairSource for SystemRepair {
     }
 }
 
+#[cfg(any(test, feature = "selftest"))]
 impl RepairSource for DryRunRepair {
     fn facts(&self) -> Result<RepairFacts, ProbeError> {
         Ok(RepairFacts {
             firmware: Firmware::Uefi,
             missing: Vec::new(),
-            inventory: parsed(SAMPLE_LISTING)?,
+            inventory: parsed(&toolbox_state::bootrepair::sample::laptop_from_the_live_iso())?,
         })
     }
 }

@@ -1,0 +1,133 @@
+{
+   "blockdevices": [
+      {
+         "path": "/dev/sda",
+         "type": "disk",
+         "size": 0,
+         "fstype": null,
+         "parttype": null,
+         "label": null,
+         "model": "MassStorageClass",
+         "mountpoints": []
+      },{
+         "path": "/dev/sdb",
+         "type": "disk",
+         "size": 0,
+         "fstype": null,
+         "parttype": null,
+         "label": null,
+         "model": "MassStorageClass",
+         "mountpoints": []
+      },{
+         "path": "/dev/zram0",
+         "type": "disk",
+         "size": 29486481408,
+         "fstype": "swap",
+         "parttype": null,
+         "label": "zram0",
+         "model": null,
+         "mountpoints": [
+             "[SWAP]"
+         ]
+      },{
+         "path": "/dev/nvme0n1",
+         "type": "disk",
+         "size": 2000398934016,
+         "fstype": null,
+         "parttype": null,
+         "label": null,
+         "model": "WD_BLACK SN8100 2000GB",
+         "mountpoints": [],
+         "children": [
+            {
+               "path": "/dev/nvme0n1p1",
+               "type": "part",
+               "size": 1073741824000,
+               "fstype": "crypto_LUKS",
+               "parttype": "ca7d7ccb-63ed-4c53-861c-1742536059cc",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/garuda",
+                     "type": "crypt",
+                     "size": 1073725046784,
+                     "fstype": "btrfs",
+                     "parttype": null,
+                     "label": "root",
+                     "model": null,
+                     "mountpoints": [
+                         "/persist/var/lib/machines/garuda/var/log", "/var/lib/machines/garuda/var/log", "/persist/var/lib/machines/garuda/var/tmp", "/var/lib/machines/garuda/var/tmp", "/persist/var/lib/machines/garuda/var/cache", "/var/lib/machines/garuda/var/cache", "/persist/var/lib/machines/garuda/root", "/var/lib/machines/garuda/root", "/persist/var/lib/machines/garuda/srv", "/var/lib/machines/garuda/srv", "/persist/var/lib/machines/garuda/home", "/var/lib/machines/garuda/home", "/persist/var/lib/machines/garuda", "/var/lib/machines/garuda", "/mnt/garuda-data", "/data"
+                     ]
+                  }
+               ]
+            },{
+               "path": "/dev/nvme0n1p2",
+               "type": "part",
+               "size": 1073741824,
+               "fstype": "vfat",
+               "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+               "label": "EFI",
+               "model": null,
+               "mountpoints": [
+                   "/persist/var/lib/machines/garuda/boot/efi", "/var/lib/machines/garuda/boot/efi", "/boot"
+               ]
+            },{
+               "path": "/dev/nvme0n1p3",
+               "type": "part",
+               "size": 925582229504,
+               "fstype": "crypto_LUKS",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/sn8100_nix",
+                     "type": "crypt",
+                     "size": 925565452288,
+                     "fstype": "btrfs",
+                     "parttype": null,
+                     "label": "nix",
+                     "model": null,
+                     "mountpoints": [
+                         "/nix/store", "/var/log", "/persist", "/nix"
+                     ]
+                  }
+               ]
+            }
+         ]
+      },{
+         "path": "/dev/nvme1n1",
+         "type": "disk",
+         "size": 1024209543168,
+         "fstype": null,
+         "parttype": null,
+         "label": null,
+         "model": "MTFDKBA1T0QGN-1BN1AABGA",
+         "mountpoints": [],
+         "children": [
+            {
+               "path": "/dev/nvme1n1p1",
+               "type": "part",
+               "size": 536870912,
+               "fstype": "vfat",
+               "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+               "label": "EFI",
+               "model": null,
+               "mountpoints": []
+            },{
+               "path": "/dev/nvme1n1p2",
+               "type": "part",
+               "size": 536870912000,
+               "fstype": "btrfs",
+               "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+               "label": "ROOT",
+               "model": null,
+               "mountpoints": []
+            }
+         ]
+      }
+   ]
+}

@@ -42,7 +42,9 @@ pub fn set_kernel_cmdline(parameters: &KernelParameters) -> Vec<Invocation> {
 /// Garuda's script hands kernel-install `/boot/initramfs-<kernel>.img`,
 /// so a new theme needs that file built first.
 pub fn rebuild_ukis(initramfs: bool) -> Vec<Invocation> {
-    let ukis = Invocation::Builtin(Builtin::RebuildUkis);
+    let ukis = Invocation::Builtin(Builtin::RebuildUkis {
+        root: InitramfsRoot::System,
+    });
 
     if initramfs {
         vec![system_initramfs(), ukis]

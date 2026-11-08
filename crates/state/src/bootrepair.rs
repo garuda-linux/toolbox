@@ -2,12 +2,11 @@
 //! machine started.
 
 pub mod lsblk;
+#[cfg(any(test, feature = "selftest"))]
+pub mod sample;
 
 pub use lsblk::{InvalidListing, LSBLK_ARGUMENTS, parse_lsblk};
 use toolbox_plan::{DiskDevice, PartitionDevice, RepairRoot, RootLayout};
-
-/// The dry run shows it instead of the real disks.
-pub const SAMPLE_LISTING: &str = include_str!("bootrepair/fixtures/live-uefi.json");
 
 const BTRFS: &str = "btrfs";
 

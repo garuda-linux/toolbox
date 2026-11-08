@@ -40,7 +40,7 @@ pub use account::{
 };
 pub use action::{
     EmptyTargetList, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope, Upgrader,
-    UserAction,
+    UserAction, boot_loader_steps,
 };
 pub use bounded::{Bounded, OutOfRange};
 pub use config_file::{
@@ -53,9 +53,9 @@ pub use dkms::DkmsBuild;
 pub use editor::{EDIT_FOLDER, EditCopy, Editor, InvalidEditCopy};
 pub use garuda_update::{GARUDA_UPDATE_CONFIG, GarudaUpdateFlag};
 pub use grub::{
-    DefaultEntry, GRUB_CONFIG, GRUB_DEFAULTS, GRUB_DEFAULTS_BACKUP, GrubKey, GrubMenu, GrubSetting,
-    GrubSettings, GrubState, GrubTimeout, InvalidGrubSettings, InvalidKernelParameters,
-    KernelParameters, MenuEntry,
+    DefaultEntry, EFI_FIRMWARE, GRUB_CONFIG, GRUB_DEFAULTS, GRUB_DEFAULTS_BACKUP, GrubKey,
+    GrubMenu, GrubPlatform, GrubSetting, GrubSettings, GrubState, GrubTimeout, InvalidGrubSettings,
+    InvalidKernelParameters, KernelParameters, MenuEntry,
 };
 pub use locale::{
     LOCALE_CONF, LOCALE_GEN, LocaleEntry, is_builtin_locale, same_locale, set_system_lang,
@@ -76,8 +76,8 @@ pub use network::{
 pub use page_name::{InvalidPageName, MAX_PAGE_NAME_BYTES, PageName};
 pub use plan::{Plan, PlannedAction, Segment, Step, StepId};
 pub use repair::{
-    ESP_FOLDER, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed, RepairRoot, RepairWork,
-    RootLayout,
+    ESP_FOLDER, EspPlace, InstalledLoader, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed,
+    RepairRoot, RepairWork, RootLayout,
 };
 pub use scheme::{InvalidRgb, InvalidSchemeId, MAX_SCHEME_ID_BYTES, Rgb, SchemeId};
 pub use secret::{

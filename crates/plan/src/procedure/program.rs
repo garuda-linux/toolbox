@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 /// The programs actions may run, each at a fixed absolute path.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Program {
+    Bootctl,
     Chfn,
     Chpasswd,
     Chroot,
@@ -63,6 +64,7 @@ pub enum Program {
 impl Program {
     pub const fn path(self) -> &'static str {
         match self {
+            Self::Bootctl => "/usr/bin/bootctl",
             Self::Chfn => "/usr/bin/chfn",
             Self::Chpasswd => "/usr/bin/chpasswd",
             Self::Chroot => "/usr/bin/chroot",

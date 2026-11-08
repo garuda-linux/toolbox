@@ -1,0 +1,103 @@
+{
+   "blockdevices": [
+      {
+         "path": "/dev/sr0",
+         "type": "rom",
+         "size": 21096448,
+         "fstype": "iso9660",
+         "parttype": null,
+         "label": "cidata",
+         "model": "QEMU CD-ROM",
+         "mountpoints": [
+             "/mnt/lima-cidata"
+         ]
+      },{
+         "path": "/dev/vda",
+         "type": "disk",
+         "size": 21474836480,
+         "fstype": null,
+         "parttype": null,
+         "label": null,
+         "model": null,
+         "mountpoints": [],
+         "children": [
+            {
+               "path": "/dev/vda1",
+               "type": "part",
+               "size": 536870912,
+               "fstype": "vfat",
+               "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+               "label": "ESP",
+               "model": null,
+               "mountpoints": [
+                   "/efi"
+               ]
+            },{
+               "path": "/dev/vda2",
+               "type": "part",
+               "size": 20935868416,
+               "fstype": "btrfs",
+               "parttype": "4f68bce3-e8cd-4db1-96e7-fbcaf984b709",
+               "label": "garuda",
+               "model": null,
+               "mountpoints": [
+                   "/var/tmp", "/var/cache", "/var/log", "/srv", "/home", "/root", "/"
+               ]
+            }
+         ]
+      },{
+         "path": "/dev/vdb",
+         "type": "disk",
+         "size": 4294967296,
+         "fstype": "crypto_LUKS",
+         "parttype": null,
+         "label": null,
+         "model": null,
+         "mountpoints": [],
+         "children": [
+            {
+               "path": "/dev/mapper/cryptlvm",
+               "type": "crypt",
+               "size": 4278190080,
+               "fstype": "LVM2_member",
+               "parttype": null,
+               "label": null,
+               "model": null,
+               "mountpoints": [],
+               "children": [
+                  {
+                     "path": "/dev/mapper/vg0-root",
+                     "type": "lvm",
+                     "size": 1073741824,
+                     "fstype": "ext4",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": [
+                         "/mnt/fixture"
+                     ]
+                  },{
+                     "path": "/dev/mapper/vg0-swap",
+                     "type": "lvm",
+                     "size": 536870912,
+                     "fstype": "swap",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": []
+                  },{
+                     "path": "/dev/mapper/vg0-home",
+                     "type": "lvm",
+                     "size": 2663383040,
+                     "fstype": "ext4",
+                     "parttype": null,
+                     "label": null,
+                     "model": null,
+                     "mountpoints": []
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}

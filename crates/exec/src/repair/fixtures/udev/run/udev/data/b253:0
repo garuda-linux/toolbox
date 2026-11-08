@@ -1,0 +1,20 @@
+S:mapper/cryptlvm
+S:disk/by-diskseq/6
+S:disk/by-id/dm-uuid-CRYPT-LUKS2-2a7ad25e88fa4503a3050ef1ae020b54-cryptlvm
+S:disk/by-id/lvm-pv-uuid-E0RTzV-X7fv-lWM0-n1eE-TIZu-Tsi3-O7Hrls
+S:disk/by-id/dm-name-cryptlvm
+I:126181848
+E:DM_UDEV_DISABLE_LIBRARY_FALLBACK_FLAG=1
+E:DM_UDEV_PRIMARY_SOURCE_FLAG=1
+E:DM_UDEV_RULES_VSN=3
+E:DM_NAME=cryptlvm
+E:DM_UUID=CRYPT-LUKS2-2a7ad25e88fa4503a3050ef1ae020b54-cryptlvm
+E:ID_FS_UUID=E0RTzV-X7fv-lWM0-n1eE-TIZu-Tsi3-O7Hrls
+E:ID_FS_UUID_ENC=E0RTzV-X7fv-lWM0-n1eE-TIZu-Tsi3-O7Hrls
+E:ID_FS_VERSION=LVM2 001
+E:ID_FS_TYPE=LVM2_member
+E:ID_FS_USAGE=raid
+E:ID_BLOCK_SUBSYSTEM=dm
+G:systemd
+Q:systemd
+V:1

@@ -14,7 +14,7 @@ use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserActio
 
 use crate::builtin::SYSTEM_ROOT;
 use crate::report::failure;
-use crate::{initramfs, uki};
+use crate::{initramfs, repair, uki};
 
 pub trait Procedure {
     fn procedure(&self) -> Vec<Invocation>;
@@ -209,14 +209,22 @@ fn run_once(
                 ),
             }
         }
-        Invocation::Builtin(Builtin::RebuildUkis) => match uki::rebuild(Path::new(SYSTEM_ROOT)) {
-            Some(command) => runner.run(step, &command, sink),
-            None => failure(
-                step,
-                sink,
-                "neither kernel-install-uki nor kernel-install is installed, so the UKIs were not built again",
-            ),
-        },
+        Invocation::Builtin(Builtin::RebuildUkis { root }) => {
+            match uki::rebuild(Path::new(SYSTEM_ROOT), *root) {
+                Some(command) => runner.run(step, &command, sink),
+                None => failure(
+                    step,
+                    sink,
+                    "neither kernel-install-uki nor kernel-install is installed, so the UKIs were not built again",
+                ),
+            }
+        }
+        Invocation::Builtin(Builtin::RepairBootLoader { system, work }) => {
+            match repair::boot_loader_steps(Path::new(SYSTEM_ROOT), system, work) {
+                Ok(steps) => run_procedure(step, &steps, runner, sink),
+                Err(reason) => failure(step, sink, &reason),
+            }
+        }
         Invocation::Builtin(builtin) => runner.builtin(step, builtin, sink),
         Invocation::Feed {
             command,

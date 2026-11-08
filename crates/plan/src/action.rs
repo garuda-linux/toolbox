@@ -16,6 +16,7 @@ mod unit;
 mod update;
 mod user;
 
+pub use repair::{boot_loader_steps, describe_loader};
 use serde::{Deserialize, Serialize};
 pub use targets::{EmptyTargetList, TargetList};
 pub use unit::{UnitOperation, UnitScope};

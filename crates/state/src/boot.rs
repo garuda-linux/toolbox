@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_plan::sdboot::LoaderSettings;
+use toolbox_plan::sdboot::{LoaderSettings, is_uki_layout};
 use toolbox_plan::{GrubState, KernelParameters, PlymouthTheme};
 
 /// efivarfs puts the variable's attributes before its value.
@@ -29,10 +29,7 @@ impl BootLoader {
             return Self::SystemdBoot;
         }
 
-        let uki =
-            install_conf.is_some_and(|conf| conf.lines().any(|line| line.trim() == "layout=uki"));
-
-        if uki {
+        if install_conf.is_some_and(is_uki_layout) {
             Self::SystemdBoot
         } else if grub_defaults {
             Self::Grub

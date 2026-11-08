@@ -1,4 +1,5 @@
 mod execute;
+mod sdboot;
 
 use std::fs;
 use std::os::unix::fs::{PermissionsExt as _, symlink};

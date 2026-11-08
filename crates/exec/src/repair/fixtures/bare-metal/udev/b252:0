@@ -1,0 +1,22 @@
+S:disk/by-diskseq/8
+S:disk/by-uuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+S:disk/by-label/zram0
+I:24516717
+E:PATH=/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/bin:/nix/store/vgf96s78sq4nk7383gcicl3w519h0jdi-udev-path/sbin
+E:ID_BLOCK_SUBSYSTEM=zram
+E:ID_FS_BLOCKSIZE=4096
+E:ID_FS_SIZE=29486477312
+E:ID_FS_LASTBLOCK=7198848
+E:ID_FS_LABEL=zram0
+E:ID_FS_LABEL_ENC=zram0
+E:ID_FS_UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_UUID_ENC=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+E:ID_FS_VERSION=1
+E:ID_FS_TYPE=swap
+E:ID_FS_USAGE=other
+E:UDISKS_IGNORE=1
+E:DMI_VENDOR=ASUSTeK COMPUTER INC.
+E:DMI_FAMILY=ROG Strix G16
+G:systemd
+Q:systemd
+V:1
