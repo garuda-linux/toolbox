@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+use toolbox_plan::sdboot::LoaderSettings;
 use toolbox_plan::{GrubState, KernelParameters, PlymouthTheme};
 
 /// efivarfs puts the variable's attributes before its value.
@@ -44,6 +45,12 @@ impl BootLoader {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct KernelCmdline(pub KernelParameters);
 
+/// Only root may read the ESP, so this joins the snapshot once the Boot
+/// page's menu read brings it.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct CurrentLoader(pub LoaderSettings);
+
+/// What `/etc/default/grub` says. Missing from the snapshot on a system
 /// without the file: GRUB is not its boot loader.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CurrentGrub(pub GrubState);

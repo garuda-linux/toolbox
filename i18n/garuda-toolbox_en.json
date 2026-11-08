@@ -268,7 +268,7 @@
       "string": "The password dialog was closed, so the boot menu was not read and its entries are not listed. Read again tries once more."
     },
     "boot-default-denied": {
-      "string": "The boot menu was not read, because that needs the password of an administrator. Its entries are not listed. Read again tries once more."
+      "string": "The boot menu was not read: the password dialog was closed or the password was not accepted. Its entries are not listed. Read again tries once more."
     },
     "boot-default-no-agent": {
       "string": "The boot menu was not read, because no password dialog could appear: this desktop session runs no polkit authentication agent. Its entries are not listed."
@@ -483,6 +483,12 @@
     },
     "boot-sdboot-default-first": {
       "string": "The first entry of the menu"
+    },
+    "boot-sdboot-timeout-seconds": {
+      "string": "Seconds"
+    },
+    "boot-sdboot-timeout-detail": {
+      "string": "How long the menu waits before it starts the default entry."
     },
     "boot-sdboot-timeout-menu-force": {
       "string": "The menu waits for a key"
@@ -4180,6 +4186,58 @@
     "change-home-folder": {
       "string": "Move the home folder of {user} to {folder}"
     },
+    "change-loader-timeout": {
+      "string": "{name, plural, one {Show the systemd-boot menu for {name} second} other {Show the systemd-boot menu for {name} seconds}}"
+    },
+    "change-loader-timeout-menu": {
+      "menu-force": {
+        "string": "Show the systemd-boot menu until a key is pressed",
+        "developer_comment": "Used when `name` is `menu-force`."
+      },
+      "other": {
+        "string": "Hide the systemd-boot menu unless a key is held at start",
+        "developer_comment": "Used when `name` is `other`."
+      }
+    },
+    "change-loader-timeout-unset": {
+      "string": "Use systemd-boot's own menu timeout"
+    },
+    "change-loader-default": {
+      "string": "Start {name} by default with systemd-boot"
+    },
+    "change-loader-default-saved": {
+      "string": "Start the entry picked last time by default with systemd-boot"
+    },
+    "change-loader-default-unset": {
+      "string": "Start the first entry of the systemd-boot menu by default"
+    },
+    "change-loader-editor-on": {
+      "string": "Let anyone edit systemd-boot entries at start"
+    },
+    "change-loader-editor-off": {
+      "string": "Stop editing systemd-boot entries at start"
+    },
+    "change-loader-editor-unset": {
+      "string": "Use systemd-boot's own setting for editing entries"
+    },
+    "change-loader-auto-entries-on": {
+      "string": "Let systemd-boot add the entries it finds"
+    },
+    "change-loader-auto-entries-off": {
+      "string": "Stop systemd-boot adding the entries it finds"
+    },
+    "change-loader-auto-entries-unset": {
+      "string": "Use systemd-boot's own setting for the entries it finds"
+    },
+    "change-loader-auto-firmware-on": {
+      "string": "Add an entry for the firmware setup to systemd-boot"
+    },
+    "change-loader-auto-firmware-off": {
+      "string": "Remove the firmware setup entry from systemd-boot"
+    },
+    "change-loader-auto-firmware-unset": {
+      "string": "Use systemd-boot's own setting for the firmware entry"
+    },
     "change-locale-enable": {
       "string": "Add the language {name}"
     },
@@ -4423,7 +4481,7 @@
       "developer_comment": "$path names the file."
     },
     "configs-problem-denied": {
-      "string": "{path} was not read, because that needs the password of an administrator."
+      "string": "{path} was not read: the password dialog was closed or the password was not accepted."
     },
     "configs-problem-no-agent": {
       "string": "{path} was not read, because no password dialog could appear: this desktop session runs no polkit authentication agent."
@@ -4683,7 +4741,7 @@
       "developer_comment": "pkexec did not start the helper."
     },
     "refusal-denied": {
-      "string": "You are not allowed to make these changes."
+      "string": "The password dialog was closed or the password was not accepted. Nothing was changed."
     },
     "refusal-no-agent": {
       "string": "No password dialog could be shown. Log in to a desktop session with a polkit agent."
@@ -7830,7 +7888,7 @@
       "string": "Which accounts are locked is not known: the password dialog was closed."
     },
     "users-locks-denied": {
-      "string": "Which accounts are locked is not known: your account may not ask for it."
+      "string": "Which accounts are locked is not known: the password dialog was closed or the password was not accepted."
     },
     "users-locks-no-agent": {
       "string": "Which accounts are locked is not known: no password dialog could appear, because this desktop session runs no polkit authentication agent (the program that asks for your password when an app needs more rights)."

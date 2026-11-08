@@ -70,6 +70,7 @@ pub fn command(command: BootCommand, runtime: &Runtime, out: &mut dyn Write) -> 
         BootCommand::Entries(read) if sdboot => sdboot::entries(read, out),
         BootCommand::Show(read) => show(read, &snapshot, out),
         BootCommand::Entries(read) => entries(read, out),
+        BootCommand::Set(args) if sdboot => sdboot::set(&args, &snapshot, runtime, out),
         BootCommand::Set(args) => {
             let planned = set(&args, &snapshot);
             run(planned, args.confirm, None, runtime, out)
@@ -154,6 +155,11 @@ pub fn setting(args: &BootSet, snapshot: &Snapshot) -> Result<Edit, Refused> {
         BootKey::Background => Edit::Background(path_or_none(value)),
         BootKey::Theme => Edit::Theme(path_or_none(value)),
         BootKey::Plymouth => Edit::PlymouthTheme(value.to_owned()),
+        BootKey::Editor | BootKey::AutoEntries | BootKey::AutoFirmware => {
+            return Err(Refused::Rule(
+                "this is a systemd-boot setting, this system starts with GRUB".to_owned(),
+            ));
+        }
     };
 
     Ok(change)

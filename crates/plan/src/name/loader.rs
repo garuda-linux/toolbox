@@ -46,3 +46,22 @@ impl Rule for LoaderDefaultRule {
         })
     }
 }
+
+/// Every character an entry id may hold is one a default may hold too.
+impl From<&LoaderEntryId> for LoaderDefault {
+    fn from(id: &LoaderEntryId) -> Self {
+        Self {
+            value: id.as_str().to_owned(),
+            rule: std::marker::PhantomData,
+        }
+    }
+}
+
+impl Name<LoaderDefaultRule> {
+    pub fn saved() -> Self {
+        Self {
+            value: "@saved".to_owned(),
+            rule: std::marker::PhantomData,
+        }
+    }
+}

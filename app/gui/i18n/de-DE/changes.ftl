@@ -66,6 +66,29 @@ change-grub-timeout =
 change-hblock-on = Werbe- und Trackerblocker einschalten (hBlock)
 change-hblock-off = Werbe- und Trackerblocker ausschalten (hBlock)
 change-home-folder = Home-Verzeichnis von { $user } nach { $folder } verschieben
+change-loader-timeout =
+    { $name ->
+        [one] systemd-boot-Menü { $name } Sekunde lang anzeigen
+       *[other] systemd-boot-Menü { $name } Sekunden lang anzeigen
+    }
+change-loader-timeout-menu =
+    { $name ->
+        [menu-force] systemd-boot-Menü zeigen, bis eine Taste gedrückt wird
+       *[other] systemd-boot-Menü verbergen, außer beim Start wird eine Taste gehalten
+    }
+change-loader-timeout-unset = Die eigene Wartezeit von systemd-boot verwenden
+change-loader-default = { $name } mit systemd-boot standardmäßig starten
+change-loader-default-saved = Mit systemd-boot standardmäßig den zuletzt gewählten Eintrag starten
+change-loader-default-unset = Standardmäßig den ersten Eintrag des systemd-boot-Menüs starten
+change-loader-editor-on = Bearbeiten von systemd-boot-Einträgen beim Start erlauben
+change-loader-editor-off = Bearbeiten von systemd-boot-Einträgen beim Start verbieten
+change-loader-editor-unset = Die eigene Einstellung von systemd-boot zum Bearbeiten verwenden
+change-loader-auto-entries-on = systemd-boot die gefundenen Einträge hinzufügen lassen
+change-loader-auto-entries-off = systemd-boot keine gefundenen Einträge mehr hinzufügen lassen
+change-loader-auto-entries-unset = Die eigene Einstellung von systemd-boot für gefundene Einträge verwenden
+change-loader-auto-firmware-on = systemd-boot einen Eintrag für die Firmware-Einrichtung hinzufügen
+change-loader-auto-firmware-off = Den Eintrag für die Firmware-Einrichtung aus systemd-boot entfernen
+change-loader-auto-firmware-unset = Die eigene Einstellung von systemd-boot für den Firmware-Eintrag verwenden
 change-locale-enable = Sprache { $name } hinzufügen
 change-locale-disable = Sprache { $name } entfernen
 change-login-shell = Login-Shell von { $user } auf { $shell } ändern

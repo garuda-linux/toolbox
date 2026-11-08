@@ -66,6 +66,29 @@ change-grub-timeout =
 change-hblock-on = Turn on ad and tracker blocking (hBlock)
 change-hblock-off = Turn off ad and tracker blocking (hBlock)
 change-home-folder = Move the home folder of { $user } to { $folder }
+change-loader-timeout =
+    { $name ->
+        [one] Show the systemd-boot menu for { $name } second
+       *[other] Show the systemd-boot menu for { $name } seconds
+    }
+change-loader-timeout-menu =
+    { $name ->
+        [menu-force] Show the systemd-boot menu until a key is pressed
+       *[other] Hide the systemd-boot menu unless a key is held at start
+    }
+change-loader-timeout-unset = Use systemd-boot's own menu timeout
+change-loader-default = Start { $name } by default with systemd-boot
+change-loader-default-saved = Start the entry picked last time by default with systemd-boot
+change-loader-default-unset = Start the first entry of the systemd-boot menu by default
+change-loader-editor-on = Let anyone edit systemd-boot entries at start
+change-loader-editor-off = Stop editing systemd-boot entries at start
+change-loader-editor-unset = Use systemd-boot's own setting for editing entries
+change-loader-auto-entries-on = Let systemd-boot add the entries it finds
+change-loader-auto-entries-off = Stop systemd-boot adding the entries it finds
+change-loader-auto-entries-unset = Use systemd-boot's own setting for the entries it finds
+change-loader-auto-firmware-on = Add an entry for the firmware setup to systemd-boot
+change-loader-auto-firmware-off = Remove the firmware setup entry from systemd-boot
+change-loader-auto-firmware-unset = Use systemd-boot's own setting for the firmware entry
 change-locale-enable = Add the language { $name }
 change-locale-disable = Remove the language { $name }
 change-login-shell = Change the login shell of { $user } to { $shell }

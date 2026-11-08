@@ -17,6 +17,7 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
         &["toggle", "on", "garuda-update-skip-mirrorlist"],
     ),
     ("grub-settings", &["boot", "set", "timeout", "3"]),
+    ("loader-settings", &["boot", "set", "editor", "off"]),
     ("groups", &["users", "edit", "ada", "--add-group", "wheel"]),
     ("hblock", &["toggle", "on", "hblock"]),
     (

@@ -1,7 +1,7 @@
 //! What the app does with a click on Boot options and with the page's
 //! background results.
 
-use toolbox_core::domains::BootLoader;
+use toolbox_core::domains::{BootLoader, LoaderSettingsDomain};
 use toolbox_core::features::boot::edit::{Edit, edit};
 use toolbox_core::features::boot::grub;
 
@@ -14,6 +14,13 @@ impl App {
     pub(super) fn run_boot(&mut self, command: BootCommand) {
         match command {
             BootCommand::Edit(change) => self.edit_boot(change),
+            BootCommand::Loader(setting) => {
+                let snapshot = self.current_snapshot();
+
+                self.queue.edit(&snapshot, |changes, snapshot| {
+                    LoaderSettingsDomain::want(changes, setting, snapshot);
+                });
+            }
             BootCommand::DismissRefusal => self.boot.set_refusal(None),
             BootCommand::Refresh => {
                 self.boot.refresh();
@@ -42,7 +49,17 @@ impl App {
             self.boot.open(sdboot || grub(&snapshot).is_ok());
         }
 
-        if let Some(picked) = self.boot.take() {
+        let before = self.boot.menu_identity();
+        let picked = self.boot.take();
+
+        // The systemd-boot settings come with the menu, and a wish the file
+        // now meets drops out of the queue.
+        if self.boot.menu_identity() != before {
+            self.combine();
+            self.queue.meet(&self.seen);
+        }
+
+        if let Some(picked) = picked {
             let change = match picked.kind {
                 FileKind::Background => Edit::Background(picked.path),
                 FileKind::Theme => Edit::Theme(picked.path),

@@ -22,13 +22,13 @@ use crate::pages::rows::Look;
 use crate::pages::setting_row::{Words, row, switch_row};
 
 /// The timeout's limits, in seconds.
-const TIMEOUT_MAX: u32 = 300;
+pub(super) const TIMEOUT_MAX: u32 = 300;
 /// The fallback of a remembered default: the first entry.
 const FIRST_ENTRY: &str = "0";
 /// Room for the timeout's two buttons and its number.
 const TIMEOUT_WIDTH: f32 = 176.0;
 /// "300 s" with the field's padding, as wide as the network tools' numbers.
-const TIMEOUT_FIELD_WIDTH: f32 = 72.0;
+pub(super) const TIMEOUT_FIELD_WIDTH: f32 = 72.0;
 
 /// The default entry's choices as entry and name. The shown default keys
 /// it as its text, beside the menu, whether the menu lists the default,
@@ -228,7 +228,7 @@ fn label(ctx: &egui::Context, row: &EntryRow) -> String {
 }
 
 /// A small button showing `symbol`, which a screen reader calls `name`.
-fn step(ui: &mut Ui, symbol: &str, name: &str) -> bool {
+pub(super) fn step(ui: &mut Ui, symbol: &str, name: &str) -> bool {
     let response = pill_button(ui, symbol, ButtonKind::Soft);
     let label = name.to_owned();
     ui.ctx()

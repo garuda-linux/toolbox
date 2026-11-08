@@ -71,7 +71,7 @@ pub fn open_boot(harness: &mut Harness<'static, App>) {
         .click();
     step_until(harness, "the systemd-boot menu", |harness| {
         harness
-            .query_by_label_contains("The first entry of the menu")
+            .query_by_role_and_label(Role::ComboBox, "Default entry")
             .is_some()
     });
     harness.run();

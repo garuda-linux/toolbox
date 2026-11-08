@@ -1,12 +1,16 @@
+use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{BootLoader, KernelCmdline};
-use toolbox_plan::KernelParameters;
-use toolbox_plan::sdboot::{LoaderEntry, LoaderSettings, SdBootMenu, sections};
+use toolbox_plan::sdboot::{
+    LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
+};
+use toolbox_plan::{KernelParameters, LoaderDefault};
 use toolbox_system::{Host, Menu, MenuRead};
 
 use super::super::tests::{Shown, page};
 use crate::boot::Boot;
+use crate::command::{BootCommand, Command};
 
 /// Files of the Garuda Lima image.
 const LOADER_CONF: &str =
@@ -20,29 +24,33 @@ const FALLBACK: &[u8] = include_bytes!(
     "../../../../../../crates/plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda-fallback.efi.head"
 );
 
-fn os_release(image: &[u8]) -> String {
-    let osrel = sections(image)
+fn section(image: &[u8], name: &str) -> String {
+    let found = sections(image)
         .into_iter()
-        .find(|section| section.name == ".osrel")
+        .find(|section| section.name == name)
         .unwrap();
 
-    let start = usize::try_from(osrel.offset).unwrap();
-    let end = start + usize::try_from(osrel.size).unwrap();
+    let start = usize::try_from(found.offset).unwrap();
+    let end = start + usize::try_from(found.size).unwrap();
 
     String::from_utf8(image[start..end].to_vec()).unwrap()
+}
+
+fn uki(file: &str, image: &[u8]) -> LoaderEntry {
+    LoaderEntry::uki(
+        file,
+        &section(image, ".osrel"),
+        Some(&section(image, ".uname")),
+    )
+    .unwrap()
 }
 
 fn image_menu(conf: &str) -> Menu {
     Menu::Read(MenuRead::SdBoot(SdBootMenu {
         settings: LoaderSettings::parse(conf),
         entries: vec![
-            LoaderEntry::uki(
-                "garuda-7.3.1-1-garuda-fallback.efi",
-                &os_release(FALLBACK),
-                None,
-            )
-            .unwrap(),
-            LoaderEntry::uki("garuda-7.3.1-1-garuda.efi", &os_release(UKI), None).unwrap(),
+            uki("garuda-7.3.1-1-garuda-fallback.efi", FALLBACK),
+            uki("garuda-7.3.1-1-garuda.efi", UKI),
         ],
     }))
 }
@@ -62,27 +70,88 @@ fn shown(menu: Menu) -> Shown {
     page(image(), Boot::showing(menu, None, None))
 }
 
+fn sent(harness: &Shown) -> Vec<Command> {
+    harness.state().fixture.sent()
+}
+
+fn loader(setting: LoaderSetting) -> Command {
+    Command::from(BootCommand::Loader(setting))
+}
+
+fn pick(harness: &mut Shown, select: &str, choice: &str) {
+    harness
+        .get_by_role_and_label(Role::ComboBox, select)
+        .click();
+    harness.run();
+    harness.get_by_label(choice).click();
+    harness.run();
+}
+
+/// The image's kernel: the queued default names its flavour, so it still
+/// finds the kernel after the next update.
 #[test]
-fn the_images_settings_are_systemd_boots_defaults() {
-    let harness = shown(image_menu(LOADER_CONF));
+fn picking_the_kernel_queues_a_default_that_survives_updates() {
+    let mut harness = shown(image_menu(LOADER_CONF));
 
-    assert!(
-        harness
-            .query_by_label_contains("The first entry of the menu")
-            .is_some()
-    );
+    pick(&mut harness, "Default entry", "Garuda Linux");
 
-    // Timeout, editor, automatic entries and the firmware entry.
     assert_eq!(
-        harness
-            .query_all_by_label_contains("systemd-boot's default")
-            .count(),
-        4
+        sent(&harness),
+        [loader(LoaderSetting::Default(Some(
+            LoaderDefault::new("garuda-*-garuda.efi").unwrap()
+        )))]
     );
+}
+
+#[test]
+fn remembering_the_last_entry_queues_saved() {
+    let mut harness = shown(image_menu(LOADER_CONF));
+
+    harness
+        .get_by_role_and_label(Role::CheckBox, "Remember the last entry")
+        .click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [loader(LoaderSetting::Default(Some(LoaderDefault::saved())))]
+    );
+}
+
+#[test]
+fn a_switch_takes_on_off_or_systemd_boots_own_default() {
+    let mut harness = shown(image_menu(LOADER_CONF));
+
+    pick(&mut harness, "Edit entries at boot", "Off");
+
+    assert_eq!(sent(&harness), [loader(LoaderSetting::Editor(Some(false)))]);
+}
+
+#[test]
+fn the_timeout_can_wait_for_a_key() {
+    let mut harness = shown(image_menu(LOADER_CONF));
+
+    pick(&mut harness, "Menu timeout", "The menu waits for a key");
+
+    assert_eq!(
+        sent(&harness),
+        [loader(LoaderSetting::Timeout(Some(
+            LoaderTimeout::MenuForce
+        )))]
+    );
+}
+
+/// The image's `loader.conf` with its commented timeout switched on: the
+/// seconds show in their own field beside the mode.
+#[test]
+fn a_timeout_in_seconds_shows_its_number() {
+    let conf = LOADER_CONF.replace("#timeout", "timeout");
+    let harness = shown(image_menu(&conf));
+
     assert!(
         harness
-            .query_by_label("GRUB is not the boot loader of this system")
-            .is_none()
+            .query_by_role_and_label(Role::TextInput, "Menu timeout in seconds")
+            .is_some()
     );
 }
 
@@ -95,21 +164,6 @@ fn the_images_command_line_is_shown_whole() {
             .query_by_label_contains("rootflags=subvol=@ rw loglevel=3 quiet")
             .is_some()
     );
-}
-
-/// The image's `loader.conf` with its commented timeout switched on, and
-/// its UKI as the default.
-#[test]
-fn a_set_timeout_and_default_show_with_the_entrys_title() {
-    let conf = format!(
-        "{}default garuda-7.3.1-1-garuda.efi\n",
-        LOADER_CONF.replace("#timeout", "timeout")
-    );
-
-    let harness = shown(image_menu(&conf));
-
-    assert!(harness.query_by_label_contains("3 s").is_some());
-    assert!(harness.query_by_label_contains("Garuda Linux").is_some());
 }
 
 #[test]

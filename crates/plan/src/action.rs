@@ -22,6 +22,7 @@ pub use update::{RemoteAction, Upgrader};
 pub use user::UserAction;
 
 use crate::procedure::{Builtin, Command, Invocation, Program};
+use crate::sdboot::LoaderChange;
 use crate::{
     ConfigWrite, DkmsBuild, DnsProvider, FullName, GarudaUpdateFlag, GroupName, GrubSettings,
     HomeChange, HomeFolder, InstalledSystem, KernelModule, LocaleEntry, LocaleName, Mirrorlist,
@@ -179,6 +180,9 @@ pub enum RootAction {
     SetGrubSettings {
         settings: GrubSettings,
     },
+    SetLoaderSettings {
+        settings: LoaderChange,
+    },
     GenerateGrubConfig,
     /// Also builds the initramfs again, which holds the theme.
     SetPlymouthTheme {
@@ -269,9 +273,7 @@ impl RootAction {
             }
             Self::GarudaHealthFix => vec![run(Command::new(Program::GarudaHealth).arg("--fix"))],
             Self::ChrootInstallation => vec![run(Command::new(Program::GarudaChroot).arg("-a"))],
-            Self::InstallMirrorlist { mirrorlist } => vec![Invocation::Builtin(
-                Builtin::InstallMirrorlist(mirrorlist.clone()),
-            )],
+            Self::InstallMirrorlist { mirrorlist } => install_mirrorlist(mirrorlist),
             Self::EnableUnits { units } => on_units(["enable", "--now"], units),
             Self::DisableUnits { units } => on_units(["disable", "--now"], units),
             Self::ControlUnits { operation, units } => on_units([operation.as_str()], units),
@@ -308,6 +310,7 @@ impl RootAction {
                 blacklisted,
             } => network::set_module_blacklisted(module, *blacklisted),
             Self::SetGrubSettings { settings } => boot::set_grub_settings(settings),
+            Self::SetLoaderSettings { settings } => boot::set_loader_settings(settings),
             Self::GenerateGrubConfig => boot::generate_grub_config(),
             Self::SetPlymouthTheme { theme } => boot::set_plymouth_theme(theme),
             Self::RepairBoot {
@@ -334,8 +337,12 @@ fn install(packages: &TargetList<PackageName>) -> Command {
     pacman(["-S", "--needed", "--noconfirm", "--"]).args(names(packages))
 }
 
-/// pacman lists the packages and asks in the Console before it removes them,
-/// as the set is never shown before.
+fn install_mirrorlist(mirrorlist: &Mirrorlist) -> Vec<Invocation> {
+    vec![Invocation::Builtin(Builtin::InstallMirrorlist(
+        mirrorlist.clone(),
+    ))]
+}
+
 fn remove_orphans() -> Invocation {
     Invocation::RunWithTargetsFrom {
         query: pacman(["-Qtdq"]),

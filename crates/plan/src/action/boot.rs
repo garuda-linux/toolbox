@@ -5,6 +5,7 @@ mod tests;
 
 use super::run;
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
+use crate::sdboot::LoaderChange;
 use crate::{GRUB_CONFIG, GrubSettings, PlymouthTheme};
 
 pub fn set_grub_settings(settings: &GrubSettings) -> Vec<Invocation> {
@@ -31,4 +32,10 @@ pub fn set_plymouth_theme(theme: &PlymouthTheme) -> Vec<Invocation> {
             root: InitramfsRoot::System,
         }),
     ]
+}
+
+pub fn set_loader_settings(settings: &LoaderChange) -> Vec<Invocation> {
+    vec![Invocation::Builtin(Builtin::EditLoaderConf(
+        settings.clone(),
+    ))]
 }

@@ -131,3 +131,24 @@ fn a_path_sent_with_the_generate_action_is_ignored() {
 
     assert_eq!(shown(&action), ["grub-mkconfig -o /boot/grub/grub.cfg"]);
 }
+
+/// The request names the settings only: the helper finds the ESP itself.
+#[test]
+fn loader_settings_are_one_edit_that_names_no_path() {
+    let action = RootAction::SetLoaderSettings {
+        settings: crate::sdboot::LoaderChange::new(vec![crate::sdboot::LoaderSetting::Timeout(
+            Some(crate::sdboot::LoaderTimeout::Seconds(5)),
+        )])
+        .unwrap(),
+    };
+
+    assert_eq!(
+        shown(&action),
+        ["set timeout 5 in loader/loader.conf on the EFI system partition"]
+    );
+
+    let json = serde_json::to_string(&action).unwrap();
+
+    assert!(!json.contains("efi/"), "{json}");
+    assert_eq!(serde_json::from_str::<RootAction>(&json).unwrap(), action);
+}

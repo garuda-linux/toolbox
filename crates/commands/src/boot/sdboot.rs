@@ -5,18 +5,27 @@ use std::io::Write;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
+use clap::ValueEnum as _;
 use serde::Serialize;
+use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
-use toolbox_cli::args::Read;
+use toolbox_cli::args::{BootKey, BootSet, Read};
 use toolbox_core::Snapshot;
+use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain};
 use toolbox_core::features::boot::view::EntryRow;
-use toolbox_plan::sdboot::SdBootMenu;
+use toolbox_plan::LoaderDefault;
+use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
 use toolbox_state::boot::KernelCmdline;
 use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 
 use super::entry_listing;
+use crate::act::run;
+use crate::change::{Refused, fresh};
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
+
+/// The same limit as GRUB's timeout on the page.
+const MAX_TIMEOUT: u32 = 300;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct SdBootView {
@@ -115,4 +124,101 @@ fn read_menu() -> Option<SdBootMenu> {
             None
         }
     }
+}
+
+pub fn set(args: &BootSet, snapshot: &Snapshot, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+    let Some(menu) = read_menu() else {
+        return unavailable("the systemd-boot menu could not be read", out);
+    };
+
+    let planned = loader_setting(args.key, &args.value, &menu).and_then(|setting| {
+        let mut state = snapshot.clone();
+
+        state.insert(CurrentLoader(menu.settings.clone()));
+        fresh(|changes| {
+            LoaderSettingsDomain::want(changes, setting, &state);
+            Ok(())
+        })
+    });
+
+    run(planned, args.confirm, None, runtime, out)
+}
+
+/// # Errors
+///
+/// [`Refused::Rule`] for a value the setting does not take, an entry the
+/// menu lacks, or a setting systemd-boot does not have.
+pub fn loader_setting(
+    key: BootKey,
+    value: &str,
+    menu: &SdBootMenu,
+) -> Result<LoaderSetting, Refused> {
+    let switch = |word: &str| match word {
+        "none" => Ok(None),
+        other => crate::settings::on_off(other)
+            .map(Some)
+            .map_err(Refused::Rule),
+    };
+
+    match key {
+        BootKey::Default => default(value, menu).map(LoaderSetting::Default),
+        BootKey::Timeout => timeout(value).map(LoaderSetting::Timeout),
+        BootKey::Remember => crate::settings::on_off(value)
+            .map_err(Refused::Rule)
+            .map(|on| LoaderSetting::Default(on.then(LoaderDefault::saved))),
+        BootKey::Editor => switch(value).map(LoaderSetting::Editor),
+        BootKey::AutoEntries => switch(value).map(LoaderSetting::AutoEntries),
+        BootKey::AutoFirmware => switch(value).map(LoaderSetting::AutoFirmware),
+        BootKey::Submenus | BootKey::OsProber | BootKey::Background | BootKey::Theme => {
+            Err(Refused::Rule(format!(
+                "`{}` is a GRUB setting, this system starts with systemd-boot",
+                key_name(key)
+            )))
+        }
+        BootKey::Quiet
+        | BootKey::Splash
+        | BootKey::MitigationsOff
+        | BootKey::Sysrq
+        | BootKey::Plymouth => Err(Refused::Rule(format!(
+            "`{}` is not changed on systemd-boot yet",
+            key_name(key)
+        ))),
+    }
+}
+
+fn default(value: &str, menu: &SdBootMenu) -> Result<Option<LoaderDefault>, Refused> {
+    match value {
+        "none" => Ok(None),
+        "saved" => Ok(Some(LoaderDefault::saved())),
+        id => menu
+            .choosable()
+            .find(|entry| entry.id.as_str() == id)
+            .map(|entry| Some(entry.default_pattern()))
+            .ok_or_else(|| {
+                Refused::Rule(format!("the menu has no entry `{id}`, see `boot entries`"))
+            }),
+    }
+}
+
+fn timeout(value: &str) -> Result<Option<LoaderTimeout>, Refused> {
+    match value {
+        "none" => Ok(None),
+        "menu-force" => Ok(Some(LoaderTimeout::MenuForce)),
+        "menu-hidden" => Ok(Some(LoaderTimeout::MenuHidden)),
+        seconds => seconds
+            .parse()
+            .ok()
+            .filter(|seconds| *seconds <= MAX_TIMEOUT)
+            .map(|seconds| Some(LoaderTimeout::Seconds(seconds)))
+            .ok_or_else(|| {
+                Refused::Rule(format!(
+                    "`{value}` is no number of seconds 0 to {MAX_TIMEOUT}, menu-force, menu-hidden or none"
+                ))
+            }),
+    }
+}
+
+fn key_name(key: BootKey) -> String {
+    key.to_possible_value()
+        .map_or_else(String::new, |value| value.get_name().to_owned())
 }

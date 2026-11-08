@@ -1,8 +1,12 @@
-use toolbox_plan::KernelParameters;
-use toolbox_plan::sdboot::{LoaderEntry, LoaderSettings, SdBootMenu, sections};
+use toolbox_cli::args::BootKey;
+use toolbox_plan::sdboot::{
+    LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
+};
+use toolbox_plan::{KernelParameters, LoaderDefault};
 use toolbox_state::boot::KernelCmdline;
 
-use super::{rows, view};
+use super::{loader_setting, rows, view};
+use crate::change::Refused;
 
 /// Files of the Garuda Lima image.
 const LOADER_CONF: &str = include_str!("../../../../plan/src/sdboot/fixtures/loader.conf");
@@ -12,30 +16,33 @@ const UKI: &[u8] =
 const FALLBACK: &[u8] =
     include_bytes!("../../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda-fallback.efi.head");
 
-fn os_release(image: &[u8]) -> String {
-    let osrel = sections(image)
+fn section(image: &[u8], name: &str) -> String {
+    let found = sections(image)
         .into_iter()
-        .find(|section| section.name == ".osrel")
+        .find(|section| section.name == name)
         .unwrap();
 
-    let start = usize::try_from(osrel.offset).unwrap();
-
-    let end = start + usize::try_from(osrel.size).unwrap();
+    let start = usize::try_from(found.offset).unwrap();
+    let end = start + usize::try_from(found.size).unwrap();
 
     String::from_utf8(image[start..end].to_vec()).unwrap()
+}
+
+fn uki(file: &str, image: &[u8]) -> LoaderEntry {
+    LoaderEntry::uki(
+        file,
+        &section(image, ".osrel"),
+        Some(&section(image, ".uname")),
+    )
+    .unwrap()
 }
 
 fn image_menu(conf: &str) -> SdBootMenu {
     SdBootMenu {
         settings: LoaderSettings::parse(conf),
         entries: vec![
-            LoaderEntry::uki(
-                "garuda-7.3.1-1-garuda-fallback.efi",
-                &os_release(FALLBACK),
-                None,
-            )
-            .unwrap(),
-            LoaderEntry::uki("garuda-7.3.1-1-garuda.efi", &os_release(UKI), None).unwrap(),
+            uki("garuda-7.3.1-1-garuda-fallback.efi", FALLBACK),
+            uki("garuda-7.3.1-1-garuda.efi", UKI),
         ],
     }
 }
@@ -84,4 +91,61 @@ fn both_ukis_of_the_image_can_be_the_default() {
             ),
         ]
     );
+}
+
+/// The image's kernel picked by its id: the default follows the kernel
+/// through updates instead of naming this one version.
+#[test]
+fn a_picked_kernel_becomes_a_default_that_survives_updates() {
+    let setting = loader_setting(
+        BootKey::Default,
+        "garuda-7.3.1-1-garuda.efi",
+        &image_menu(LOADER_CONF),
+    )
+    .unwrap();
+
+    assert_eq!(
+        setting,
+        LoaderSetting::Default(Some(LoaderDefault::new("garuda-*-garuda.efi").unwrap()))
+    );
+}
+
+#[test]
+fn the_words_of_the_menu_settings_are_taken() {
+    let menu = image_menu(LOADER_CONF);
+    let set = |key, value| loader_setting(key, value, &menu).unwrap();
+
+    assert_eq!(
+        set(BootKey::Timeout, "menu-force"),
+        LoaderSetting::Timeout(Some(LoaderTimeout::MenuForce))
+    );
+    assert_eq!(set(BootKey::Timeout, "none"), LoaderSetting::Timeout(None));
+    assert_eq!(
+        set(BootKey::Remember, "on"),
+        LoaderSetting::Default(Some(LoaderDefault::new("@saved").unwrap()))
+    );
+    assert_eq!(
+        set(BootKey::Editor, "off"),
+        LoaderSetting::Editor(Some(false))
+    );
+    assert_eq!(
+        set(BootKey::AutoFirmware, "none"),
+        LoaderSetting::AutoFirmware(None)
+    );
+}
+
+#[test]
+fn an_entry_the_menu_lacks_and_grubs_own_settings_are_refused() {
+    let menu = image_menu(LOADER_CONF);
+
+    for (key, value) in [
+        (BootKey::Default, "garuda-6.1.0-1-lts.efi"),
+        (BootKey::Submenus, "on"),
+        (BootKey::Timeout, "301"),
+    ] {
+        assert!(
+            matches!(loader_setting(key, value, &menu), Err(Refused::Rule(_))),
+            "{key:?} {value}"
+        );
+    }
 }

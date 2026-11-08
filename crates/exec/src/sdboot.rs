@@ -48,7 +48,7 @@ pub fn sdboot_menu(root: &Path) -> io::Result<SdBootMenu> {
     Ok(SdBootMenu { settings, entries })
 }
 
-fn esp(root: &Path) -> io::Result<&'static str> {
+pub fn esp(root: &Path) -> io::Result<&'static str> {
     let place = || text(&root.join(MOUNTINFO)).map(|mountinfo| esp_place(&mountinfo));
 
     if let Some(place) = place()? {

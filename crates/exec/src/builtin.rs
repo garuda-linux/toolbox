@@ -1,6 +1,7 @@
 mod accounts;
 mod grub;
 mod home_file;
+mod loader;
 mod locale;
 mod modules;
 mod settings;
@@ -107,6 +108,7 @@ pub fn execute(
             &format!("/{GRUB_DEFAULTS}"),
             edit_grub_defaults(root, settings),
         ),
+        Builtin::EditLoaderConf(change) => loader_conf(root, step, change, sink),
         Builtin::PrepareRepairMount => repair::execute_prepare(root, step, sink),
         Builtin::RequireInstalledSystem(need) => repair::execute_require(root, step, *need, sink),
         Builtin::RecheckRepairDevices { system, work } => {
@@ -117,6 +119,20 @@ pub fn execute(
             failure(step, sink, "the initramfs rebuild needs a runner")
         }
     }
+}
+
+fn loader_conf(
+    root: &Path,
+    step: StepId,
+    change: &toolbox_plan::sdboot::LoaderChange,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    changed(
+        step,
+        sink,
+        "loader.conf on the EFI system partition",
+        loader::edit_loader_conf(root, change),
+    )
 }
 
 /// # Errors

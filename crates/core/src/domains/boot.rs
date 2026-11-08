@@ -5,11 +5,14 @@
 #[cfg(test)]
 mod tests;
 
+mod loader;
+
 use toolbox_plan::{
     DefaultEntry, GrubKey, GrubSetting, GrubSettings, PlannedAction, PlymouthTheme, RootAction,
 };
 pub use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState};
 
+pub use self::loader::{CurrentLoader, LoaderSettingsDomain};
 use super::each;
 use crate::domain::{Domain, Single, Stage, Staged, Summary};
 use crate::{ChangeSet, Snapshot};

@@ -136,6 +136,12 @@ pub enum BootKey {
     Theme,
     /// The Plymouth theme shown while booting.
     Plymouth,
+    /// systemd-boot: let anyone edit an entry at boot (on, off or none).
+    Editor,
+    /// systemd-boot: add the entries it finds itself (on, off or none).
+    AutoEntries,
+    /// systemd-boot: add an entry for the firmware setup (on, off or none).
+    AutoFirmware,
 }
 
 #[derive(Debug, Subcommand)]

@@ -396,6 +396,11 @@ $ garuda-toolbox dkms build --kernel linux-lts
 `quiet`, `splash`, `mitigations-off` and `sysrq` (`on` or `off`),
 `background` and `theme` (a full path or `none`) and `plymouth` (a theme).
 Each change writes `/etc/default/grub` and generates the boot menu again.
+On systemd-boot, `boot set` writes `loader.conf` instead and takes
+`default` (an id of `boot entries`, `saved` or `none`), `timeout` (seconds,
+`menu-force`, `menu-hidden` or `none`), `remember`, and `editor`,
+`auto-entries` and `auto-firmware` (`on`, `off` or `none`). The GRUB settings
+are refused there, and the systemd-boot ones on GRUB.
 `kernels default` makes an installed kernel's entry the default.
 `dkms build` builds every module an installed kernel with headers lacks,
 or only those of `--kernel`.

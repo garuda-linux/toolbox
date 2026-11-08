@@ -194,23 +194,34 @@ New Garuda installs start with systemd-boot and one unified kernel image
 the two boot loaders apart by what started the system, so a GRUB left on the
 disk does not count.
 
-The page shows:
+The **Boot menu** card changes `loader/loader.conf` on the EFI system
+partition:
 
-- **Boot menu**: the default entry, the menu timeout, whether entries can be
-  edited at boot, and whether systemd-boot adds the entries it finds itself
-  and one for the firmware settings, all from `loader/loader.conf` on the
-  EFI system partition. A setting the file does not name shows
-  **systemd-boot's default**.
-- **Kernel parameters**: `/etc/kernel/cmdline`, which is built into each
-  kernel image.
+- **Default entry**: the entry that starts when you do not pick another. A
+  kernel is saved by its kind, not its version (`garuda-*-garuda.efi`), so it
+  stays the default after kernel updates. Snapshot entries of snapper are not
+  offered, because they disappear when snapper deletes the snapshot.
+- **Remember the last entry**: starts the entry you picked last time
+  (`default @saved`). Switching it off goes back to the first entry.
+- **Menu timeout**: systemd-boot's default, a number of seconds, **The menu
+  waits for a key**, or **Hidden unless a key is held at start**.
+- **Edit entries at boot**, **Entries systemd-boot finds itself** and
+  **Firmware settings entry**: on, off, or **systemd-boot's default**, which
+  removes the line so systemd-boot decides.
+
+Applying changes only the queued lines. Every other line stays, also the
+ones garuda-common-settings adds, and the old file stays beside it as
+`loader.conf.bak`. systemd-boot reads the file at each start, so nothing is
+built afterwards.
+
+**Kernel parameters** shows `/etc/kernel/cmdline`, which is built into each
+kernel image. The page does not change it yet.
 
 The EFI system partition is readable by root only, so reading the menu may
-ask for an administrator's password. The page does not change these settings
-yet. Snapshot entries of snapper are not offered as the default, because
-they disappear when snapper deletes the snapshot.
+ask for an administrator's password.
 
-On the command line, `boot show` and `boot entries` show the same on a
-systemd-boot system.
+On the command line, `boot show`, `boot entries` and `boot set` work on
+systemd-boot too.
 
 ## On other systems
 

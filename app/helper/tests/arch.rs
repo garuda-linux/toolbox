@@ -14,6 +14,8 @@ mod diagnostics;
 mod groups;
 #[path = "arch/homes.rs"]
 mod homes;
+#[path = "arch/loader.rs"]
+mod loader;
 #[path = "arch/locales.rs"]
 mod locales;
 #[path = "arch/network.rs"]

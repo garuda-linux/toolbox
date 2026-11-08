@@ -3,7 +3,7 @@ mod tests;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{KernelRelease, LoaderEntryId};
+use crate::{KernelRelease, LoaderDefault, LoaderEntryId};
 
 const MAX_TEXT_CHARS: usize = 512;
 
@@ -76,6 +76,33 @@ impl LoaderEntry {
 
     pub fn is_snapshot(&self) -> bool {
         self.sort_key.as_deref() == Some(SNAPSHOT_SORT_KEY)
+    }
+
+    /// The kernel's version is part of a UKI's id and changes with every
+    /// update, its flavour (`garuda`, `lts`) does not. A glob over the
+    /// version keeps the default on the same kernel.
+    pub fn default_pattern(&self) -> LoaderDefault {
+        let exact = || LoaderDefault::from(&self.id);
+
+        let Some(release) = &self.uname else {
+            return exact();
+        };
+
+        let flavour = release
+            .as_str()
+            .rsplit_once('-')
+            .map(|(_, last)| last)
+            .filter(|last| last.starts_with(|first: char| first.is_ascii_alphabetic()));
+
+        let around = self.id.as_str().split_once(release.as_str());
+
+        match (flavour, around) {
+            (Some(flavour), Some((before, after))) => {
+                LoaderDefault::new(format!("{before}*-{flavour}{after}"))
+                    .unwrap_or_else(|_| exact())
+            }
+            (None | Some(_), None) | (None, Some(_)) => exact(),
+        }
     }
 }
 

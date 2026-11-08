@@ -20,7 +20,8 @@ mod users;
 pub use accounts::{AccountLockFlags, Accounts, CurrentUser, Group, User};
 pub use aur::AurPackages;
 pub use boot::{
-    BootLoader, CurrentGrub, GrubDefaults, KernelCmdline, PlymouthState, PlymouthThemes,
+    BootLoader, CurrentGrub, CurrentLoader, GrubDefaults, KernelCmdline, LoaderSettingsDomain,
+    PlymouthState, PlymouthThemes,
 };
 pub use dkms::DkmsBuilds;
 pub use garuda_update::{GarudaUpdateConfig, GarudaUpdateFlags};
@@ -74,6 +75,7 @@ pub fn all() -> Result<crate::Domains, crate::DuplicateDomain> {
         .with::<RemovedGroups>()?
         .with::<ModuleBlacklist>()?
         .with::<GrubDefaults>()?
+        .with::<LoaderSettingsDomain>()?
         .with::<PlymouthThemes>()?
         .with::<crate::features::maintenance::Operations>()
 }

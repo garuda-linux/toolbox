@@ -5,6 +5,7 @@
 use std::sync::Arc;
 
 use toolbox_core::Snapshot;
+use toolbox_core::domains::CurrentLoader;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::UnitScope;
 use toolbox_system::Notification;
@@ -178,8 +179,9 @@ impl App {
         Arc::clone(&self.seen)
     }
 
-    /// Joins the probed snapshot, the lock flags and the AUR's names. A
-    /// page keeps the snapshot it was handed, so this makes a new one.
+    /// Joins the probed snapshot, the lock flags, the AUR's names and the
+    /// settings of systemd-boot. A page keeps the snapshot it was handed,
+    /// so this makes a new one.
     pub(super) fn combine(&mut self) {
         let probed = self
             .reading
@@ -188,7 +190,13 @@ impl App {
 
         let flags = self.users.flags();
         let names = self.packages.aur_names();
-        if flags.is_none() && names.is_none() {
+        let loader = self
+            .boot
+            .menu()
+            .sdboot()
+            .map(|menu| CurrentLoader(menu.settings.clone()));
+
+        if flags.is_none() && names.is_none() && loader.is_none() {
             self.seen = probed;
             return;
         }
@@ -200,6 +208,10 @@ impl App {
 
         if let Some(names) = names {
             snapshot.insert(names.clone());
+        }
+
+        if let Some(loader) = loader {
+            snapshot.insert(loader);
         }
 
         self.seen = Arc::new(snapshot);

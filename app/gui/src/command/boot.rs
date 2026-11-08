@@ -1,5 +1,6 @@
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_plan::PackageName;
+use toolbox_plan::sdboot::LoaderSetting;
 
 use super::{AppCommand, Command};
 use crate::boot::FileKind;
@@ -7,6 +8,7 @@ use crate::boot::FileKind;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BootCommand {
     Edit(Edit),
+    Loader(LoaderSetting),
     DismissRefusal,
     Refresh,
     Choose {

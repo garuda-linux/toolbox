@@ -125,9 +125,7 @@ wait_qemu_gone() {
   done
 }
 
-# Only the disk comes back, and the VM boots from it. Memory restored into
-# a QEMU started since the snapshot loses SSH or name lookups. Names must
-# resolve again before a suite downloads anything.
+# A cold restore: memory loaded into a QEMU started after the snapshot loses SSH or name lookups.
 # shellcheck disable=SC2329 # used by the suites
 restore_base() {
   limactl stop "$name" || limactl stop --force "$name" || return 1
@@ -149,9 +147,8 @@ restore_base() {
   return 1
 }
 
-#   stop_during <program> <command...>
-# Cuts the power once <program> runs in the VM, as a power loss would, then
-# starts the VM again. Fails when <program> never ran.
+# stop_during <program> <command...>
+# A power loss while <program> runs.
 # shellcheck disable=SC2329 # used by the suites
 stop_during() {
   local program=$1 pid seen=false _

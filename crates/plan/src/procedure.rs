@@ -16,6 +16,7 @@ use crate::grub::GRUB_DEFAULTS;
 use crate::locale::{LOCALE_CONF, LOCALE_GEN};
 use crate::network::MODPROBE_BLACKLIST;
 use crate::repair::{ESP_FOLDER, REPAIR_ROOT, RepairNeed};
+use crate::sdboot::{LOADER_CONF, LoaderChange};
 use crate::settings::{
     DNS_CONFIG, NETWORKMANAGER_CONF_D, OLD_WIFI_BACKEND_CONFIG, WIFI_BACKEND_CONFIG,
 };
@@ -168,6 +169,9 @@ pub enum Builtin {
     /// Sets variables of `/etc/default/grub` and keeps the old file
     /// beside it. Fails without the file: GRUB is not the boot loader then.
     EditGrubDefaults(GrubSettings),
+    /// The ESP comes from the helper's own mount table, never from the
+    /// request, so no request can point root at another file.
+    EditLoaderConf(LoaderChange),
     /// Makes the folder a boot repair mounts the installed system at,
     /// for root alone. Fails when something is mounted there already.
     PrepareRepairMount,
@@ -235,6 +239,7 @@ impl fmt::Display for Builtin {
                 write!(f, "{verb} `blacklist {module}` in /{MODPROBE_BLACKLIST}")
             }
             Self::EditGrubDefaults(settings) => write!(f, "set {settings} in /{GRUB_DEFAULTS}"),
+            Self::EditLoaderConf(change) => loader_conf(f, change),
             Self::PrepareRepairMount => write!(
                 f,
                 "mkdir -p /{REPAIR_ROOT}  # for root alone, nothing may be mounted there"
@@ -345,4 +350,11 @@ fn quoted(arg: &str) -> String {
     } else {
         format!("'{}'", arg.replace('\'', r"'\''"))
     }
+}
+
+fn loader_conf(out: &mut fmt::Formatter<'_>, change: &LoaderChange) -> fmt::Result {
+    write!(
+        out,
+        "set {change} in {LOADER_CONF} on the EFI system partition"
+    )
 }
