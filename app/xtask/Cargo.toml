@@ -1,0 +1,31 @@
+[package]
+name = "toolbox-xtask"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "xtask"
+path = "src/main.rs"
+
+[dependencies]
+toolbox-catalog.workspace = true
+toolbox-cli.workspace = true
+clap.workspace = true
+clap_complete.workspace = true
+clap_mangen.workspace = true
+toolbox-plan.workspace = true
+toolbox-system.workspace = true
+toolbox-state.workspace = true
+regex.workspace = true
+fluent-syntax.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true
