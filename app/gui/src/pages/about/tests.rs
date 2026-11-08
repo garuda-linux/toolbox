@@ -46,7 +46,7 @@ fn wait_for_open(opened: &Opened) -> Vec<String> {
 fn the_version_and_licence_show() {
     let (harness, _) = page();
 
-    assert!(harness.query_by_label(env!("CARGO_PKG_VERSION")).is_some());
+    assert!(harness.query_by_label(crate::FIXED_VERSION).is_some());
     assert!(harness.query_by_label("GPL 3.0 or later").is_some());
 }
 

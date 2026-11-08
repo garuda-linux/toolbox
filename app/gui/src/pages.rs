@@ -107,6 +107,9 @@ pub struct PageContext<'app> {
     pub plans: Plans,
     /// The session's `XDG_CURRENT_DESKTOP`, for entries of one desktop.
     pub desktops: &'app [String],
+    /// The version About shows. Tests show a fixed one, so a release
+    /// changes no snapshot.
+    pub version: &'static str,
     /// The icon theme's pictures for the catalogs' apps, once read.
     pub app_icons: Option<&'app AppIcons>,
     /// The Discover apps' pictures, looked up as rows show. `None` in tests.

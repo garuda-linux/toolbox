@@ -39,5 +39,5 @@ pub mod units;
 pub mod users;
 pub mod waking;
 
-pub use app::{App, PreferencesSetup, Setup};
+pub use app::{App, FIXED_VERSION, PreferencesSetup, Setup};
 pub use toolbox_services::{apply, diagnostics, log_folder, page, programs, queue};

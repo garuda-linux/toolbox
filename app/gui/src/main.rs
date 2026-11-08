@@ -267,6 +267,7 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         boot: Some(helper.boot),
         catalogs,
         desktops,
+        version: env!("CARGO_PKG_VERSION"),
         dry_run: helper.dry_run,
         preferences: preferences(&paths, settings, &cc.egui_ctx),
     };

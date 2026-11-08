@@ -100,7 +100,8 @@ impl PageView for AboutPage {
         true
     }
 
-    fn ui(&mut self, ui: &mut Ui, _context: &PageContext<'_>) {
+    fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
+        let version = context.version;
         let _ui = tracing::trace_span!("about ui").entered();
         let called = &mut self.exorcist;
         if ui.available_width() >= SIDE_BY_SIDE {
@@ -117,7 +118,11 @@ impl PageView for AboutPage {
                 // shrinks again, after a language change for example.
                 let facts = card(left, |column| {
                     column.set_min_height(tallest);
-                    column.scope(facts).response.rect.height()
+                    column
+                        .scope(|column| facts(column, version))
+                        .response
+                        .rect
+                        .height()
                 });
 
                 let help = card(right, |column| {
@@ -137,7 +142,7 @@ impl PageView for AboutPage {
                 ui.ctx().request_repaint();
             }
         } else {
-            card(ui, facts);
+            card(ui, |ui| facts(ui, version));
             ui.add_space(ui.tokens().sizes.card_gap);
             card(ui, |ui| help(ui, called));
         }
@@ -154,7 +159,7 @@ impl PageView for AboutPage {
 }
 
 /// The version and the addresses can be copied.
-fn facts(ui: &mut Ui) {
+fn facts(ui: &mut Ui, version_value: &str) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id);
     let copy = |label: &str| i18n::text_with(&ctx, "about-copy", &[("label", label)]).into_owned();
@@ -177,7 +182,7 @@ fn facts(ui: &mut Ui) {
     let padding = ui.tokens().sizes.card_padding;
     egui::Frame::new().inner_margin(padding).show(ui, |ui| {
         property_list(ui, texts, |list| {
-            list.row_copied(&version, env!("CARGO_PKG_VERSION"));
+            list.row_copied(&version, version_value);
             list.row(&licence, &licence_value);
             list.row(&made_by, &made_by_value);
             list.row_with(&bugs, Some(BUGS), |row| address(row, &tracker, BUGS));

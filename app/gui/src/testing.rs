@@ -184,6 +184,7 @@ impl PageFixture {
             boot_repair: &self.boot_repair,
             plans: self.plans,
             desktops: &self.desktops,
+            version: crate::FIXED_VERSION,
             app_icons: None,
             pictures: None,
             commands: &self.commands,

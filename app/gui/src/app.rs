@@ -39,7 +39,7 @@ use toolbox_system::{CallError, Facts, Status};
 
 use self::preferences::Preferences;
 pub use self::preferences::PreferencesSetup;
-pub use self::setup::Setup;
+pub use self::setup::{FIXED_VERSION, Setup};
 use crate::apply::ApplyHandle;
 use crate::boot::Boot;
 use crate::bootrepair::BootRepair;
@@ -114,6 +114,7 @@ pub struct App {
     focused: bool,
     catalogs: Catalogs,
     desktops: Vec<String>,
+    version: &'static str,
     dry_run: bool,
     refusals: Refusals,
     dkms: Watched<Dkms>,
@@ -202,6 +203,7 @@ impl App {
             focused: true,
             catalogs: setup.catalogs,
             desktops: setup.desktops,
+            version: setup.version,
             dry_run: setup.dry_run,
             refusals: Refusals::default(),
             dkms: Watched::new(setup.dkms),
@@ -324,6 +326,7 @@ impl eframe::App for App {
             boot_repair: &self.boot_repair,
             plans: self.plans,
             desktops: &self.desktops,
+            version: self.version,
             app_icons: self.catalog_pictures.as_deref(),
             pictures: self.pictures.as_ref(),
             commands: &self.sender,
