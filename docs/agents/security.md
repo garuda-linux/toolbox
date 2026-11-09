@@ -41,6 +41,18 @@ The app refuses to start as root.
   splits pastes and strips control characters but tab and line breaks
   (`toolbox_terminal::encode_paste`). Input and output queues are bounded,
   so a stuck or flooding program never stalls the helper.
+- The helper links no runtime, GUI, D-Bus, HTTP or `parking_lot`
+  (`app/helper/tests/dependencies.rs`, `cargo tree --target all`).
+
+### Rules `scripts/lint.sh` enforces
+
+- `no-shell-command`: no `Command::new` of `sh`, `bash` or `/bin/sh`.
+- `program-path`: `Command::new` takes an absolute path or a
+  `toolbox_plan::procedure::Program`. The exceptions run as the user:
+  `xdg-open` in `app/gui/src/links.rs`, `curl` in the xtask.
+- `sudo-once`: only `crates/services/src/apply/launcher.rs` names `sudo`.
+  The doctor takes `SUDO_NAME` from there.
+- `tests-in-file`: no inline `mod tests {` below `src/`.
 
 ## Value objects
 

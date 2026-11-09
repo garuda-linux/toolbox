@@ -9,7 +9,9 @@ use tokio::runtime::Runtime;
 use toolbox_config::Paths;
 use toolbox_core::features::maintenance::page::GARUDA_UPDATE_PROGRAM;
 use toolbox_plan::UnitScope;
-use toolbox_services::apply::launcher::{PKEXEC, SUDO, helper_path, is_setuid_root, root_tool};
+use toolbox_services::apply::launcher::{
+    PKEXEC, SUDO, SUDO_NAME, helper_path, is_setuid_root, root_tool,
+};
 use toolbox_services::catalogs::{Catalogs, catalog_dir};
 use toolbox_services::log_folder::log_dir;
 use toolbox_system::{CallError, Method, call, connect};
@@ -134,7 +136,7 @@ pub fn gather(runtime: &Runtime) -> Facts {
         development,
         dry_run: std::env::var_os("GARUDA_TOOLBOX_HELPER").is_some_and(|value| value == "dry-run"),
         pkexec: tool("pkexec", PKEXEC, path.as_deref(), development),
-        sudo: tool("sudo", SUDO, path.as_deref(), development),
+        sudo: tool(SUDO_NAME, SUDO, path.as_deref(), development),
         agent: agent(&own_processes()),
         helper_present: executable(&helper),
         helper,

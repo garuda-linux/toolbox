@@ -19,6 +19,10 @@ const INSTALLED_HELPER: &str = "/usr/lib/garuda-toolbox/garuda-toolbox-helper";
 const HELPER_NAME: &str = "garuda-toolbox-helper";
 pub const PKEXEC: &str = "/usr/bin/pkexec";
 pub const SUDO: &str = "/usr/bin/sudo";
+
+/// The name `PATH` is searched for, which the doctor looks up the same way.
+pub const SUDO_NAME: &str = "sudo";
+
 /// The helper's first argument, which the apply polkit action is bound to.
 const APPLY: &str = "apply";
 const FETCH: &str = "fetch";
@@ -92,7 +96,7 @@ impl HelperLauncher {
     pub fn through_sudo(&self) -> Option<Self> {
         let path = std::env::var_os("PATH");
         let sudo = root_tool(
-            "sudo",
+            SUDO_NAME,
             SUDO,
             path.as_deref(),
             cfg!(debug_assertions),

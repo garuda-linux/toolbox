@@ -11,6 +11,7 @@ use super::{Name, NameKind, Reason, Rule};
 /// `wheel` on Arch and Garuda, `sudo` where an admin set the system up that
 /// way. A group named only in a sudoers file is not seen, the app cannot
 /// read that file.
+// toolbox-lint: allow(sudo-once) A group name, no program.
 pub const ADMIN_GROUPS: [&str; 2] = ["wheel", "sudo"];
 
 const UNIT_TYPES: [&str; 11] = [

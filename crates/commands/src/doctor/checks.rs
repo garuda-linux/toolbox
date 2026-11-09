@@ -18,6 +18,8 @@ const START_AGENT: &str =
 const HELPER: Part = Part::named("helper");
 const PKEXEC: Part = Part::named("pkexec");
 const AGENT: Part = Part::new("polkit-agent", "polkit agent");
+
+// toolbox-lint: allow(sudo-once) The name of a doctor line, no program.
 const SUDO: Part = Part::named("sudo");
 const POLICY: Part = Part::new("polkit-policy", "polkit policy");
 const PACMAN: Part = Part::new("pacman-databases", "pacman databases");

@@ -48,7 +48,7 @@ struct NoHelper;
 
 impl HelperFetch for NoHelper {
     fn fetch_command(&self, _path: &ConfigFilePath) -> Command {
-        Command::new("false")
+        Command::new("/usr/bin/false")
     }
 }
 

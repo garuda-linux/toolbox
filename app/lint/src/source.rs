@@ -3,6 +3,8 @@
 
 mod code;
 mod comment;
+mod place;
+mod spawn;
 #[cfg(test)]
 mod tests;
 
@@ -10,6 +12,8 @@ use std::path::Path;
 
 pub use code::looks_like_code;
 pub use comment::{Comment, Kind, Unit};
+pub use place::Place;
+pub use spawn::{spawned_literals, string_literals};
 use tree_sitter::{Language, Node, Parser, Point, Tree};
 
 /// A token of code: what the restating rules compare comment words with.

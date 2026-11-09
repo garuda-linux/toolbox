@@ -22,6 +22,7 @@ pub const PROTECTED: &[(&str, Protection)] = &[
     ("efibootmgr", Protection::Boot),
     ("mkinitcpio", Protection::Boot),
     ("dracut", Protection::Boot),
+    // toolbox-lint: allow(sudo-once) A package name, no program.
     ("sudo", Protection::Root),
     ("polkit", Protection::Root),
     ("shadow", Protection::Login),

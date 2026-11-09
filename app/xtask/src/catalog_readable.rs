@@ -16,6 +16,7 @@ use crate::{Failure, flags, root};
 
 /// The generated file, relative to the repository root.
 pub const TARGET: &str = "crates/plan/src/config_file/readable.rs";
+
 /// rustfmt's `array_width` and `max_width`: the text must stay as rustfmt
 /// leaves it, or `nix fmt` and `--check` would fight over it.
 const ARRAY_WIDTH: usize = 60;

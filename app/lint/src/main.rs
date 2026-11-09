@@ -54,7 +54,7 @@ fn run(roots: &[PathBuf]) -> Result<usize, String> {
         let text = fs::read_to_string(path)
             .map_err(|err| format!("cannot read {}: {err}", path.display()))?;
 
-        for finding in rules::lint_text(&text) {
+        for finding in rules::lint_file(path, &text) {
             writeln!(
                 out,
                 "{}\n",

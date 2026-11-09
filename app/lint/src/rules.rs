@@ -7,22 +7,28 @@ mod comment_style;
 mod commented_code;
 mod doc_restating;
 mod filler;
+mod no_shell_command;
+mod program_path;
 mod restating;
 mod semicolon;
 mod separate;
+mod sudo_once;
 #[cfg(test)]
 mod tests;
+mod tests_in_file;
 mod unparsed;
 mod variant_label;
+
+use std::path::Path;
 
 use tree_sitter::Tree;
 
 use crate::finding::{Finding, apply_allows};
-use crate::source::{Source, parse};
+use crate::source::{Place, Source, parse};
 
 /// Every name an allow directive may give: each rule's own and the two
 /// the directives themselves report under.
-pub const NAMES: [&str; 14] = [
+pub const NAMES: [&str; 18] = [
     artifacts::RULE,
     blank_before::RULE,
     comment_lines::RULE,
@@ -30,9 +36,13 @@ pub const NAMES: [&str; 14] = [
     commented_code::RULE,
     doc_restating::RULE,
     filler::RULE,
+    no_shell_command::RULE,
+    program_path::RULE,
     restating::RULE,
     semicolon::RULE,
     separate::RULE,
+    sudo_once::RULE,
+    tests_in_file::RULE,
     unparsed::RULE,
     variant_label::RULE,
     crate::finding::WITHOUT_REASON,
@@ -43,12 +53,18 @@ pub const NAMES: [&str; 14] = [
 const EXCERPT_CHARS: usize = 50;
 const ELLIPSIS: &str = "...";
 
-/// Every finding in `text`, after allow directives.
-pub fn lint_text(text: &str) -> Vec<Finding> {
-    lint_tree(text, parse(text).as_ref())
+/// Every finding in `text`, the file at `path`, after allow directives.
+pub fn lint_file(path: &Path, text: &str) -> Vec<Finding> {
+    lint_tree(&Place::new(path), text, parse(text).as_ref())
 }
 
-fn lint_tree(text: &str, tree: Option<&Tree>) -> Vec<Finding> {
+/// The findings of a file in no folder the place rules know.
+#[cfg(test)]
+pub fn lint_text(text: &str) -> Vec<Finding> {
+    lint_file(Path::new("lib.rs"), text)
+}
+
+fn lint_tree(place: &Place<'_>, text: &str, tree: Option<&Tree>) -> Vec<Finding> {
     let Some(tree) = tree else {
         return vec![unparsed::missing()];
     };
@@ -63,9 +79,13 @@ fn lint_tree(text: &str, tree: Option<&Tree>) -> Vec<Finding> {
     commented_code::check(&source, &mut findings);
     doc_restating::check(&source, &mut findings);
     filler::check(&source, &mut findings);
+    no_shell_command::check(&source, place, &mut findings);
+    program_path::check(&source, place, &mut findings);
     restating::check(&source, &mut findings);
     semicolon::check(&source, &mut findings);
     separate::check(&source, &mut findings);
+    sudo_once::check(&source, place, &mut findings);
+    tests_in_file::check(&source, place, &mut findings);
     variant_label::check(&source, &mut findings);
 
     apply_allows(&source, findings)
