@@ -23,6 +23,7 @@ use super::files::{DesktopFiles, Read, is_look_file};
 use super::font_files::FontFinder;
 use super::icon_files::{AppIcons, SystemIcons, app_icons, theme_icons};
 use super::{DesktopLook, portal};
+use crate::spawn::spawn_logged;
 
 /// A theme switch writes several files in a row. One read after they
 /// settle is enough.
@@ -61,7 +62,11 @@ pub fn spawn(
     app_names: Arc<[String]>,
 ) -> watch::Receiver<DesktopLook> {
     let (sender, receiver) = watch::channel(DesktopLook::default());
-    drop(runtime.spawn(follow(sender, ctx, family, files, app_names)));
+    spawn_logged(
+        runtime,
+        "desktop look",
+        follow(sender, ctx, family, files, app_names),
+    );
     receiver
 }
 

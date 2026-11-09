@@ -54,6 +54,11 @@ fn asking_discard(ctx: &Context) -> bool {
     ctx.data(|data| data.get_temp::<bool>(discard_id()).unwrap_or(false))
 }
 
+/// Drops an open question, as when the page is left.
+pub fn forget(ctx: &Context) {
+    set_asking_discard(ctx, false);
+}
+
 fn set_asking_discard(ctx: &Context, asking: bool) {
     ctx.data_mut(|data| data.insert_temp(discard_id(), asking));
 }

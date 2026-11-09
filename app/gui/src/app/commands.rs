@@ -71,8 +71,12 @@ impl App {
                 let finished = !self.console.running()
                     && self.console.status() != crate::console::Status::Idle;
 
-                if page != self.state.page && finished {
-                    self.state.console_open = false;
+                if page != self.state.page {
+                    self.pages.view(self.state.page).left(ctx);
+
+                    if finished {
+                        self.state.console_open = false;
+                    }
                 }
 
                 self.state.page = page;

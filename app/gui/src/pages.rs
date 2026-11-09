@@ -186,6 +186,10 @@ pub trait PageView {
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>);
 
+    /// Another page opened. A question still open here would greet the
+    /// user on return with a confirm for what they left behind.
+    fn left(&mut self, _ctx: &egui::Context) {}
+
     /// What stays below the scrolling body, such as a wizard's Back and Next.
     fn footer(&mut self, _ui: &mut Ui, _context: &PageContext<'_>) -> bool {
         false

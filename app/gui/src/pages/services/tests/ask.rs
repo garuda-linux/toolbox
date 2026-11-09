@@ -57,3 +57,34 @@ fn stopping_the_network_asks_first_and_stops_on_the_danger_button() {
         })]
     );
 }
+
+/// Leaving the page drops the question, so returning shows no confirm
+/// for a stop the user walked away from.
+#[test]
+fn leaving_the_page_drops_the_open_question() {
+    use crate::pages::PageView as _;
+
+    let fixture = loaded(vec![network_manager()]);
+    let mut harness = fixture.harness(ServicesPage::default());
+    harness.run();
+
+    harness
+        .get_by_role_and_label(Role::Button, "Actions for NetworkManager.service")
+        .click();
+    harness.run();
+    harness.get_by_label("Stop").click();
+    harness.run();
+    harness.run();
+
+    let ctx = harness.ctx.clone();
+
+    harness.state_mut().page.left(&ctx);
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Dialog, "Stop NetworkManager.service?")
+            .is_none()
+    );
+    assert_eq!(harness.state().fixture.sent(), []);
+}

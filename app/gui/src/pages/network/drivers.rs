@@ -11,6 +11,7 @@ use toolbox_gui_kit::widgets::{
     row_height, split_row, status_dot, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
+pub(super) use unload::forget;
 
 use crate::command::NetworkCommand;
 use crate::i18n;

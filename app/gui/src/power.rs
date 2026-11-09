@@ -2,16 +2,18 @@
 
 use std::fmt::Debug;
 
-use crossbeam_channel::Sender;
 use tokio::runtime::Handle;
 use toolbox_plan::UnitScope;
 use toolbox_system::{CallError, REBOOT, classify, connect, reboot_body};
 
+use crate::spawn::spawn_logged;
+use crate::waking::Waking;
+
 /// Restarts the machine. Tests and dry runs restart nothing.
 pub trait Power: Debug + Send + Sync {
-    /// Asks for the restart. Only a refusal comes back, through `refused`:
-    /// a restart that works ends the app.
-    fn restart(&self, refused: Sender<CallError>);
+    /// Asks for the restart. Only a refusal comes back, through `refused`,
+    /// which wakes the window: a restart that works ends the app.
+    fn restart(&self, refused: Waking<CallError>);
 }
 
 #[derive(Debug)]
@@ -30,20 +32,18 @@ impl Logind {
 }
 
 impl Power for Logind {
-    fn restart(&self, refused: Sender<CallError>) {
-        drop(self.runtime.spawn(async move {
+    fn restart(&self, refused: Waking<CallError>) {
+        spawn_logged(&self.runtime, "restart", async move {
             if let Err(error) = reboot().await {
                 tracing::warn!("no restart: {error}");
-
-                // An error only means the app is shutting down.
-                refused.send(error).ok();
+                refused.send(error);
             }
-        }));
+        });
     }
 }
 
 impl Power for DryRunPower {
-    fn restart(&self, _refused: Sender<CallError>) {
+    fn restart(&self, _refused: Waking<CallError>) {
         tracing::info!("dry run: the computer would restart now");
     }
 }

@@ -3,7 +3,6 @@ use std::path::Path;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use crossbeam_channel::Sender;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
@@ -15,6 +14,7 @@ use toolbox_gui::power::Power;
 use toolbox_gui::programs::Programs;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::reader::ReaderHandle;
+use toolbox_gui::waking::Waking;
 use toolbox_gui::{App, Setup, reader, snapshot};
 use toolbox_news::{News, NewsSource as _};
 use toolbox_plan::{PackageName, UserName};
@@ -37,9 +37,9 @@ pub struct RefusingPower {
 struct BrokenLauncher;
 
 impl Power for RefusingPower {
-    fn restart(&self, refused: Sender<CallError>) {
+    fn restart(&self, refused: Waking<CallError>) {
         self.asked.fetch_add(1, Ordering::SeqCst);
-        refused.send(CallError::Denied).unwrap();
+        refused.send(CallError::Denied);
     }
 }
 

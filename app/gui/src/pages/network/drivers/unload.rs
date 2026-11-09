@@ -14,6 +14,11 @@ fn asking() -> Id {
     Id::unique("toolbox_gui::network::unload")
 }
 
+/// Drops an open question, as when the page is left.
+pub fn forget(ctx: &Context) {
+    ctx.data_mut(|data| data.insert_temp::<Option<KernelModule>>(asking(), None));
+}
+
 pub fn ask(ctx: &Context, module: &KernelModule) {
     ctx.data_mut(|data| data.insert_temp(asking(), Some(module.clone())));
 }

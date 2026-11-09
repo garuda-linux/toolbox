@@ -3,16 +3,17 @@
 
 use std::fmt;
 
-use egui::{Context, Id, Label, TextEdit, Ui};
+use egui::{Context, Id, Label, TextBuffer, TextEdit, Ui};
 use toolbox_core::features::bootrepair::{
     Encryption, RepairFacts, System, Target, page, rebuild_esp,
 };
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, confirm_buttons_why, rich, text_field,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, confirm_buttons_why,
+    forget_text, rich, text_field,
 };
-use toolbox_plan::{Password, RootLayout, VolumeDevice};
+use toolbox_plan::{MAX_PASSWORD_BYTES, Password, RootLayout, VolumeDevice};
 
 use super::texts;
 use crate::command::BootRepairCommand;
@@ -24,7 +25,10 @@ pub struct Dialog {
     /// Where GRUB goes, `None` for a new boot menu only.
     target: Option<Target>,
     layout: Option<RootLayout>,
-    passphrase: String,
+    passphrase: SecretText,
+    /// Checked when the field changes, as each check copies the text.
+    passphrase_ok: bool,
+    field: Option<Id>,
 }
 
 impl fmt::Debug for Dialog {
@@ -42,8 +46,21 @@ impl Dialog {
             device: system.device().to_owned(),
             target,
             layout,
-            passphrase: String::new(),
+            passphrase: SecretText::with_room(MAX_PASSWORD_BYTES),
+            passphrase_ok: false,
+            field: None,
         }
+    }
+
+    /// Runs before the dialog is dropped, so the passphrase does not
+    /// outlive it in egui's memory.
+    pub fn forget(&mut self, ctx: &Context) {
+        if let Some(id) = self.field.take() {
+            forget_text(ctx, id);
+        }
+
+        TextBuffer::clear(&mut self.passphrase);
+        self.passphrase_ok = false;
     }
 
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>, facts: &RepairFacts) -> bool {
@@ -63,11 +80,10 @@ impl Dialog {
         let cancel = i18n::text(ctx, "repair-cancel");
         let close = i18n::text(ctx, "dialog-close");
         let locked = system.encryption == Encryption::Locked;
-        let passphrase = Password::new(self.passphrase.clone()).ok();
-        let ready = !context.busy && (!locked || passphrase.is_some());
+        let ready = !context.busy && (!locked || self.passphrase_ok);
         let why = if context.busy {
             Some(i18n::text(ctx, "repair-why-busy"))
-        } else if locked && passphrase.is_none() {
+        } else if locked && !self.passphrase_ok {
             Some(i18n::text(ctx, "repair-why-passphrase"))
         } else {
             None
@@ -82,7 +98,11 @@ impl Dialog {
             });
 
         if ready && outcome.inner == Some(Confirmation::Confirmed) {
-            self.send(context, system, passphrase.filter(|_| locked));
+            let passphrase = locked
+                .then(|| Password::new(self.passphrase.as_str().to_owned()).ok())
+                .flatten();
+
+            self.send(context, system, passphrase);
         }
 
         outcome.closed || outcome.inner.is_some()
@@ -125,6 +145,11 @@ impl Dialog {
                     .align(egui::Align2::LEFT_CENTER),
             );
 
+            if field.changed() {
+                self.passphrase_ok = Password::new(self.passphrase.as_str().to_owned()).is_ok();
+            }
+
+            self.field = Some(field.id);
             ui.ctx()
                 .accesskit_node_builder(field.id, |node| node.set_label(name));
         }

@@ -20,6 +20,7 @@ use tokio::sync::watch;
 use tokio::time::Instant;
 use toolbox_gui_kit::Loadable;
 
+use crate::spawn::spawn_logged;
 use crate::waking::Wake;
 
 #[derive(Debug)]
@@ -148,7 +149,11 @@ where
     let handle = ReaderHandle { requests, reading };
 
     handle.refresh();
-    drop(runtime.spawn(serve(queue, Arc::new(read), sender, wake, what)));
+    spawn_logged(
+        runtime,
+        what,
+        serve(queue, Arc::new(read), sender, wake, what),
+    );
     handle
 }
 

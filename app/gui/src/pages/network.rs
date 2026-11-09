@@ -51,6 +51,10 @@ pub struct NetworkPage {
 }
 
 impl PageView for NetworkPage {
+    fn left(&mut self, ctx: &egui::Context) {
+        drivers::forget(ctx);
+    }
+
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
         let ids = TabbedIds {
             title: "page-network",

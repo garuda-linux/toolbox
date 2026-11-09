@@ -1,4 +1,6 @@
 use egui::accesskit::Role;
+use egui::text_edit::TextEditState;
+use egui::util::IdTypeMap;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::domains::Accounts;
 use toolbox_core::features::users::input::{self, NewAccount};
@@ -48,6 +50,36 @@ fn a_new_password_runs_once_both_fields_agree() {
             password: Password::new("s3cret".to_owned()).unwrap(),
         })]
     );
+}
+
+#[test]
+fn a_closed_password_dialog_leaves_no_field_state_behind() {
+    let mut harness = page(unlocked(), Refusals::default());
+    let states = |shown: &super::Shown| shown.ctx.data(IdTypeMap::count::<TextEditState>);
+
+    harness.get_by_label("ada, Ada Lovelace").click();
+    harness.run();
+    harness.get_by_label("More actions for ada").click();
+    harness.run();
+    let before = states(&harness);
+    harness.get_by_label("Set password…").click();
+    harness.run();
+    type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
+    type_into(
+        &mut harness,
+        Role::PasswordInput,
+        "Repeat the password",
+        "s3",
+    );
+
+    assert!(states(&harness) > before, "the fields keep a state");
+
+    harness
+        .get_by_role_and_label(Role::Button, "Cancel")
+        .click();
+    harness.run();
+
+    assert_eq!(states(&harness), before);
 }
 
 #[test]

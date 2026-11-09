@@ -12,8 +12,9 @@ use std::sync::Arc;
 use crossbeam_channel::Receiver;
 use parking_lot::Mutex;
 use tokio::runtime::Handle;
-use tokio::task::JoinError;
+use tokio::task::{JoinError, JoinHandle};
 
+use crate::spawn::spawn_logged;
 use crate::waking::{self, Wake, Waking};
 
 struct Ticket {
@@ -64,22 +65,35 @@ impl<T: Send + 'static> Lane<T> {
         W: FnOnce() -> R + Send + 'static,
         A: FnOnce(Result<R, JoinError>) -> T + Send + 'static,
     {
-        self.future(kind, async move {
-            answer(tokio::task::spawn_blocking(work).await)
-        });
+        let task = self.runtime.spawn_blocking(work);
+        self.land(kind, task, answer);
     }
 
-    /// Lands what `future` gives, for reads that wait on the runtime.
-    pub fn future<F>(&self, kind: &'static str, future: F)
+    /// Lands what `answer` makes of the output of `future`. A panic arrives
+    /// as its [`JoinError`] too.
+    pub fn future<F, A>(&self, kind: &'static str, future: F, answer: A)
     where
-        F: Future<Output = T> + Send + 'static,
+        F: Future + Send + 'static,
+        F::Output: Send + 'static,
+        A: FnOnce(Result<F::Output, JoinError>) -> T + Send + 'static,
+    {
+        let task = self.runtime.spawn(future);
+        self.land(kind, task, answer);
+    }
+
+    /// The task runs on its own, so a panic in it ends only it and the
+    /// ticket still lands.
+    fn land<R, A>(&self, kind: &'static str, task: JoinHandle<R>, answer: A)
+    where
+        R: Send + 'static,
+        A: FnOnce(Result<R, JoinError>) -> T + Send + 'static,
     {
         let ticket = self.ticket(kind);
         let sender = self.sender.clone();
 
-        drop(self.runtime.spawn(async move {
-            sender.send((ticket, future.await));
-        }));
+        spawn_logged(&self.runtime, "lane answer", async move {
+            sender.send((ticket, answer(task.await)));
+        });
     }
 
     /// The answers that arrived, without those a newer read of their kind

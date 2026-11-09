@@ -49,6 +49,11 @@ fn pending_id() -> Id {
     Id::unique("toolbox_gui::services::ask")
 }
 
+/// Drops an open question, as when the page is left.
+pub fn forget(ctx: &Context) {
+    ctx.data_mut(|data| data.remove::<Pending>(pending_id()));
+}
+
 /// Holds `pending` until the page asks about it.
 pub fn hold(ctx: &Context, pending: Pending) {
     ctx.data_mut(|data| data.insert_temp(pending_id(), pending));

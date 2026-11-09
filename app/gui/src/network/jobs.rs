@@ -157,8 +157,9 @@ impl Jobs {
     /// rather than a blocking thread.
     pub fn check_connectivity(&self, recheck: bool) {
         let checked = self.setup.actions.connectivity(recheck);
-        self.lane.future("connectivity", async move {
-            Landed::Connectivity(checked.await)
+        self.lane.future("connectivity", checked, |result| {
+            // A check that died did not check.
+            Landed::Connectivity(result.unwrap_or(Connectivity::Unknown))
         });
     }
 }

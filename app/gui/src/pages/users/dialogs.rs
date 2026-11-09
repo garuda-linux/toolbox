@@ -13,8 +13,8 @@ use egui::{Context, Id, Label, Response, TextEdit, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, confirm_buttons_when, confirm_buttons_why,
-    rich, text_field,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, confirm_buttons_when,
+    confirm_buttons_why, rich, text_field,
 };
 
 pub use self::add_group::AddGroup;
@@ -55,6 +55,20 @@ impl Dialog {
             Self::Remove(dialog) => dialog.show(ctx, context),
             Self::AddGroup(dialog) => dialog.show(ctx, context),
             Self::RemoveGroup(dialog) => dialog.show(ctx, context),
+        }
+    }
+
+    /// Runs before the dialog is dropped, so no password outlives it in
+    /// egui's memory.
+    pub fn forget(&mut self, ctx: &Context) {
+        match self {
+            Self::AddUser(dialog) => dialog.password.forget(ctx),
+            Self::Password(dialog) => dialog.pair.forget(ctx),
+            Self::Edit(_)
+            | Self::Groups(_)
+            | Self::Remove(_)
+            | Self::AddGroup(_)
+            | Self::RemoveGroup(_) => {}
         }
     }
 }
@@ -119,7 +133,7 @@ pub fn field(
 pub fn password_field(
     ui: &mut Ui,
     label: &str,
-    text: &mut String,
+    text: &mut SecretText,
     problem: Option<&str>,
 ) -> Response {
     field_with(ui, (label, ""), problem, |ui| {

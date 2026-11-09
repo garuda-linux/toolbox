@@ -7,6 +7,8 @@ use tokio::runtime::Handle;
 use toolbox_system::{CallError, NOTIFY, Notification, call, classify, notify_body};
 use zbus::Connection;
 
+use crate::spawn::spawn_logged;
+
 /// Shows notifications. Tests record them instead.
 pub trait Notifier: Debug + Send + Sync {
     fn show(&self, notification: Notification);
@@ -25,12 +27,12 @@ impl DesktopNotifier {
 
 impl Notifier for DesktopNotifier {
     fn show(&self, notification: Notification) {
-        drop(self.runtime.spawn(async move {
+        spawn_logged(&self.runtime, "notification", async move {
             // Without a notification daemon the bubble is only logged.
             if let Err(error) = send(&notification).await {
                 tracing::info!("no desktop notification: {error}");
             }
-        }));
+        });
     }
 }
 

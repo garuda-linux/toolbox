@@ -80,6 +80,10 @@ impl Default for ServicesPage {
 }
 
 impl PageView for ServicesPage {
+    fn left(&mut self, ctx: &egui::Context) {
+        ask::forget(ctx);
+    }
+
     fn place(&self) -> u64 {
         super::place_of(&self.scope)
     }

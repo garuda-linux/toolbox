@@ -14,10 +14,10 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
     ButtonKind, CHECK_ROW_HEIGHT, Select, check_row, disclosure, text_field,
 };
-use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, Password, ShellPath, UserName};
+use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, ShellPath, UserName};
 
-use super::password::checked;
-use super::{Next, dialog_why, field, note, password_field, title};
+use super::password::PasswordPair;
+use super::{Next, dialog_why, field, note, title};
 use crate::command::UsersCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -36,8 +36,7 @@ pub struct AddUser {
     uid: String,
     no_home: bool,
     system: bool,
-    first: String,
-    second: String,
+    pub(super) password: PasswordPair,
     admin: bool,
     groups: BTreeSet<GroupName>,
     search: String,
@@ -50,7 +49,6 @@ struct Problems {
     full_name: Option<String>,
     home: Option<String>,
     uid: Option<String>,
-    password: (Option<String>, Option<String>),
 }
 
 impl fmt::Debug for AddUser {
@@ -65,9 +63,10 @@ impl AddUser {
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>) -> Next {
         let title = i18n::text(ctx, "users-add-title");
         let confirm = i18n::text(ctx, "users-add-confirm");
-        let (account, password, problems) = self.check(ctx, context);
-        let ready = account.is_ok() && password.is_some() && !context.busy;
-        let why = self.why(ctx, context, &problems, password.is_some());
+        let (account, problems) = self.check(ctx, context);
+        let agreed = self.password.agreed();
+        let ready = account.is_ok() && agreed && !context.busy;
+        let why = self.why(ctx, context, &problems, agreed);
         let (next, confirmed) = dialog_why(
             ctx,
             "add-user",
@@ -96,7 +95,7 @@ impl AddUser {
             },
         );
 
-        if confirmed && let (Ok(user), Some(password)) = (account, password) {
+        if confirmed && let (Ok(user), Some(password)) = (account, self.password.password()) {
             context.commands.send(UsersCommand::AddUser {
                 user: Box::new(user),
                 password,
@@ -106,12 +105,12 @@ impl AddUser {
         next
     }
 
-    /// The account and password the fields make, and each field's problem.
+    /// The account the fields make, and each field's problem.
     fn check(
         &self,
         ctx: &Context,
         context: &PageContext<'_>,
-    ) -> (Result<NewUser, &'static str>, Option<Password>, Problems) {
+    ) -> (Result<NewUser, &'static str>, Problems) {
         let snapshot = context.snapshot;
         let named = |code: &str| texts::problem(ctx, code, &self.name);
         let name = input::name(&self.name)
@@ -120,7 +119,6 @@ impl AddUser {
         let uid = input::user_id(&self.uid)
             .and_then(|uid| check_uid(uid, self.system, snapshot).map_err(Refusal::as_str));
 
-        let (password, password_problems) = checked(ctx, &self.first, &self.second);
         let problems = Problems {
             name: name.err().filter(|_| !self.name.is_empty()).map(named),
             full_name: FullName::new(self.full_name.clone())
@@ -132,7 +130,6 @@ impl AddUser {
                 .flatten()
                 .map(named),
             uid: uid.err().map(named),
-            password: password_problems,
         };
 
         let mut groups = self.groups.clone();
@@ -153,7 +150,7 @@ impl AddUser {
             system: self.system,
         };
 
-        (input::new_account(&form, snapshot), password, problems)
+        (input::new_account(&form, snapshot), problems)
     }
 
     /// Why "Add user now" waits, `None` once it can be clicked.
@@ -164,11 +161,12 @@ impl AddUser {
         problems: &Problems,
         password_ok: bool,
     ) -> Option<String> {
+        let (first, second) = self.password.texts();
         let form = AddForm {
             name: &self.name,
             name_ok: problems.name.is_none(),
-            first: &self.first,
-            second: &self.second,
+            first,
+            second,
             password_ok,
             rest_ok: problems.full_name.is_none()
                 && problems.home.is_none()
@@ -200,18 +198,7 @@ impl AddUser {
             &mut self.name,
             problems.name.as_deref(),
         );
-        password_field(
-            ui,
-            &text("users-field-password"),
-            &mut self.first,
-            problems.password.0.as_deref(),
-        );
-        password_field(
-            ui,
-            &text("users-field-repeat"),
-            &mut self.second,
-            problems.password.1.as_deref(),
-        );
+        self.password.show(ui, ctx);
 
         if let Some(group) = view::admin_group(context.snapshot, context.changes) {
             let label = text("users-admin");

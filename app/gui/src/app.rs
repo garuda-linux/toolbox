@@ -26,7 +26,7 @@ mod users;
 
 use std::sync::Arc;
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::Receiver;
 use eframe::CreationContext;
 use serde::{Deserialize, Serialize};
 use tokio::sync::watch;
@@ -72,6 +72,7 @@ use crate::shell::{ChangesState, Palette};
 use crate::snapshot::{Reading, SnapshotHandle};
 use crate::units::{Units, UnitsHandle};
 use crate::users::Users;
+use crate::waking::{self, Waking};
 use crate::{profiling, shell};
 
 /// What survives a restart. Everything else is rebuilt from the system.
@@ -127,7 +128,7 @@ pub struct App {
     unit_lists: Units,
     launcher: Option<Arc<dyn Launcher>>,
     /// Refusals of a restart, sent from logind's task.
-    restart_refused: (Sender<CallError>, Receiver<CallError>),
+    restart_refused: (Waking<CallError>, Receiver<CallError>),
     home_problem: Option<HomeProblem>,
     maintenance: Maintenance,
     diagnostics: Diagnostics,
@@ -215,7 +216,7 @@ impl App {
             launcher: setup.launcher,
             units: setup.units,
             unit_lists: Units::default(),
-            restart_refused: crossbeam_channel::unbounded(),
+            restart_refused: waking::channel(waking::repaint(cc.egui_ctx.clone())),
             home_problem: (setup.queue_lost > 0)
                 .then_some(HomeProblem::QueueLost(setup.queue_lost)),
             diagnostics: Diagnostics::new(setup.diagnostics),

@@ -34,6 +34,7 @@ pub mod settings;
 pub mod share;
 mod shell;
 pub mod snapshot;
+pub mod spawn;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
 pub mod units;

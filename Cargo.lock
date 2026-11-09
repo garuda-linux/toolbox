@@ -5571,6 +5571,7 @@ dependencies = [
  "toolbox-terminal",
  "tracing",
  "unicode-width",
+ "zeroize",
 ]
 
 [[package]]

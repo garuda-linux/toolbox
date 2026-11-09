@@ -35,6 +35,10 @@ pub struct ConfigsPage {
 }
 
 impl PageView for ConfigsPage {
+    fn left(&mut self, ctx: &egui::Context) {
+        review::forget(ctx);
+    }
+
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
         if refresh_header(
             ui,

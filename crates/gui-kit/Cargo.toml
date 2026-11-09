@@ -12,6 +12,7 @@ testing = ["dep:egui_kittest"]
 
 [dependencies]
 egui.workspace = true
+zeroize.workspace = true
 # Only for its color_fonts feature, which egui does not pass through.
 epaint-color-fonts.workspace = true
 egui_extras.workspace = true

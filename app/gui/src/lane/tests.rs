@@ -44,7 +44,7 @@ fn answers_of_other_kinds_all_land() {
     let lane: Lane<u32> = Lane::new(runtime.handle().clone(), crate::waking::Wake::none());
 
     lane.blocking("status", || 1, Result::unwrap_or_default);
-    lane.future("hardware", async { 2 });
+    lane.future("hardware", async { 2 }, Result::unwrap_or_default);
 
     let mut seen = collect(&lane, 2);
     seen.sort_unstable();
@@ -61,6 +61,22 @@ fn a_panicking_job_lands_as_its_message() {
         || -> u32 { panic!("probe died") },
         |answer| u32::from(answer.is_err()),
     );
+
+    assert_eq!(collect(&lane, 1), vec![1]);
+}
+
+fn died() -> u32 {
+    panic!("read died")
+}
+
+#[test]
+fn a_panicking_future_lands_as_an_error_answer() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let lane: Lane<u32> = Lane::new(runtime.handle().clone(), crate::waking::Wake::none());
+
+    lane.future("connectivity", async { died() }, |answer| {
+        u32::from(answer.is_err_and(|error| error.is_panic()))
+    });
 
     assert_eq!(collect(&lane, 1), vec![1]);
 }

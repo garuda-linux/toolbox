@@ -19,6 +19,7 @@ use toolbox_gui_kit::toasts::ToastKind;
 
 use crate::command::{AppCommand, CommandSender};
 use crate::i18n;
+use crate::spawn::spawn_logged;
 
 /// How many of its last stderr lines a failed program's warning carries.
 const TAIL_LINES: usize = 5;
@@ -87,7 +88,7 @@ impl Launcher for SystemLauncher {
 
         let commands = self.commands.clone();
         let ctx = self.ctx.clone();
-        drop(self.runtime.spawn(async move {
+        spawn_logged(&self.runtime, "program watch", async move {
             let Some(status) = ended(&mut child, &name).await else {
                 return;
             };
@@ -117,7 +118,7 @@ impl Launcher for SystemLauncher {
                 text: text.into_owned(),
             });
             ctx.request_repaint();
-        }));
+        });
 
         Ok(())
     }

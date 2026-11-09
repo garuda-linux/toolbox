@@ -34,6 +34,13 @@ pub struct BootRepairPage {
 }
 
 impl PageView for BootRepairPage {
+    /// The question may hold a passphrase, which must not wait for the return.
+    fn left(&mut self, ctx: &egui::Context) {
+        if let Some(mut dialog) = self.dialog.take() {
+            dialog.forget(ctx);
+        }
+    }
+
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
         let (title, subtitle) = ("page-boot-repair", "page-boot-repair-subtitle");
         if refresh_header(ui, title, subtitle, "repair-refresh") {
@@ -96,6 +103,7 @@ impl PageView for BootRepairPage {
         if let Some(dialog) = &mut self.dialog
             && dialog.show(&ctx, context, facts)
         {
+            dialog.forget(&ctx);
             self.dialog = None;
         }
     }

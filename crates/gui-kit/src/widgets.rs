@@ -34,6 +34,7 @@ mod property;
 mod removable;
 mod row_menu;
 mod search;
+mod secret;
 mod segmented;
 mod select;
 mod skeleton;
@@ -60,7 +61,7 @@ pub use chip::{
 };
 pub use dim::{dim_opacity, dim_picture, dimmed};
 pub use empty::{empty_state, error_row};
-pub use field::{text_field, text_field_with_unit};
+pub use field::{forget_text, text_field, text_field_with_unit};
 pub use focus::focus_ring;
 use heading::mark_heading;
 pub use heading::{
@@ -92,6 +93,7 @@ pub use property::{PropertyList, PropertyTexts, property_list};
 pub use removable::removable_tag;
 pub use row_menu::{row_context_menu, row_menu};
 pub use search::{SearchTexts, request_search_focus, search_field};
+pub use secret::SecretText;
 pub use segmented::{segmented, segmented_width};
 pub use select::Select;
 pub use skeleton::{after_skeleton, hold_content, skeleton_rows};

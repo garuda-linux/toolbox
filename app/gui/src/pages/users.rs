@@ -60,6 +60,13 @@ impl Default for UsersPage {
 }
 
 impl PageView for UsersPage {
+    /// A dialog may hold a password, which must not wait for the return.
+    fn left(&mut self, ctx: &egui::Context) {
+        if let Some(mut dialog) = self.dialog.take() {
+            dialog.forget(ctx);
+        }
+    }
+
     fn place(&self) -> u64 {
         super::place_of(&self.tab)
     }
@@ -102,6 +109,7 @@ impl PageView for UsersPage {
         if let Some(dialog) = &mut self.dialog
             && dialog.show(&ctx, context) == Next::Close
         {
+            dialog.forget(&ctx);
             self.dialog = None;
         }
     }

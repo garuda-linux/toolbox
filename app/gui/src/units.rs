@@ -22,6 +22,7 @@ use toolbox_system::CallError;
 use tracing::Instrument as _;
 
 use crate::reader::fresh;
+use crate::spawn::spawn_logged;
 use crate::waking::Wake;
 
 /// A unit change comes with a burst of signals (job, properties, files).
@@ -120,7 +121,11 @@ pub fn spawn(
 
     handle.refresh(UnitScope::System);
     handle.refresh(UnitScope::User);
-    drop(runtime.spawn(serve(receiver, lister, lists, wake, settle)));
+    spawn_logged(
+        runtime,
+        "unit lists",
+        serve(receiver, lister, lists, wake, settle),
+    );
     handle
 }
 

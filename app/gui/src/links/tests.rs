@@ -8,7 +8,7 @@ use egui_kittest::kittest::Queryable as _;
 use parking_lot::Mutex;
 use toolbox_gui_kit::toasts::{ToastTexts, Toasts};
 
-use super::{Opener, install, open, open_file};
+use super::{Opener, install, logged_errors, open, open_file};
 use crate::testing::PATIENCE;
 
 const FAILED: &str = "The link did not open.";
@@ -122,4 +122,23 @@ fn a_file_opens_as_a_file_link() {
     };
 
     assert_eq!(opened.as_deref(), Some("file:///home/ada/my%20notes.txt"));
+}
+
+#[test]
+fn a_link_with_a_key_keeps_its_errors_out_of_the_log() {
+    let link = "https://bin.garudalinux.org/?abc123#SecretKey";
+    let errors = format!("gio: {link}: Operation not supported\n");
+
+    assert_eq!(logged_errors(link, &errors), None);
+}
+
+#[test]
+fn the_link_in_the_errors_of_a_plain_link_is_named_by_a_mark() {
+    let link = "https://garudalinux.org/about";
+    let errors = format!("gio: {link}: no handler\nretry {link}\n");
+
+    assert_eq!(
+        logged_errors(link, &errors).as_deref(),
+        Some("gio: <url>: no handler\nretry <url>")
+    );
 }

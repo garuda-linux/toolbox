@@ -40,7 +40,9 @@ impl Opener for XdgOpen {
         match capture(&mut command, Environment::Inherited, &[], &policy, &never) {
             Ok(done) if done.code == Some(0) => true,
             Ok(done) => {
-                tracing::warn!(code = ?done.code, errors = %done.errors.trim(), "xdg-open failed");
+                let errors = logged_errors(url, &done.errors);
+                tracing::warn!(code = ?done.code, errors = errors.as_deref(), "xdg-open failed");
+
                 false
             }
             Err(error) => {
@@ -49,6 +51,17 @@ impl Opener for XdgOpen {
             }
         }
     }
+}
+
+/// What of the opener's errors may reach the log. A query or fragment can
+/// carry a key, such as the one of a paste link, and the opener may echo
+/// it in a form that no replacement catches.
+fn logged_errors(url: &str, errors: &str) -> Option<String> {
+    if url.contains(['?', '#']) {
+        return None;
+    }
+
+    Some(errors.trim().replace(url, "<url>"))
 }
 
 pub fn install(ctx: &Context, opener: Arc<dyn Opener>) {

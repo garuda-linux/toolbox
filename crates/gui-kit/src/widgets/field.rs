@@ -2,9 +2,10 @@
 
 use egui::epaint::RectShape;
 use egui::layers::ShapeIdx;
+use egui::text_edit::TextEditState;
 use egui::{
-    Align, Align2, Frame, Galley, Margin, Pos2, Rect, Response, Shape, Stroke, StrokeKind,
-    TextEdit, Ui, pos2, vec2,
+    Align, Align2, Context, Frame, Galley, Id, Margin, Pos2, Rect, Response, Shape, Stroke,
+    StrokeKind, TextEdit, Ui, pos2, vec2,
 };
 
 use super::focus::ring_around;
@@ -28,6 +29,17 @@ pub fn text_field(ui: &mut Ui, edit: TextEdit<'_>) -> Response {
 /// unit is only painted, so the field's accessible name has to say it.
 pub fn text_field_with_unit(ui: &mut Ui, edit: TextEdit<'_>, unit: &str) -> Response {
     field(ui, edit, Some(unit))
+}
+
+/// Drops what egui keeps of the field `id` once it is gone. Its undo
+/// history holds every earlier version of the text, which for a password
+/// would outlive the dialog.
+pub fn forget_text(ctx: &Context, id: Id) {
+    if let Some(mut state) = TextEditState::load(ctx, id) {
+        state.clear_undoer();
+    }
+
+    ctx.data_mut(|data| data.remove::<TextEditState>(id));
 }
 
 fn field(ui: &mut Ui, edit: TextEdit<'_>, unit: Option<&str>) -> Response {

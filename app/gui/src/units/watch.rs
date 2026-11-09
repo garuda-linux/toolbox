@@ -16,6 +16,7 @@ use toolbox_system::{CallError, call, classify, connect};
 use zbus::{MatchRule, MessageStream};
 
 use super::UnitRequests;
+use crate::spawn::spawn_logged;
 
 /// Live updates retry this long between attempts, doubling each time.
 const FIRST_RETRY: Duration = Duration::from_secs(1);
@@ -60,9 +61,9 @@ impl Backoff {
 pub fn spawn(runtime: &Handle, requests: &UnitRequests) {
     for scope in [UnitScope::System, UnitScope::User] {
         let requests = requests.clone();
-        drop(runtime.spawn(async move {
+        spawn_logged(runtime, "unit watch", async move {
             watch_with(scope, &requests, || live(scope, requests.clone())).await;
-        }));
+        });
     }
 }
 

@@ -120,9 +120,12 @@ compiled in, so no missing file can empty it.
 
 Account passwords and LUKS passphrases.
 
-1. The dialog turns the text into a `toolbox_plan::Password` at once and
-   empties its fields on close. The CLI reads it on `/dev/tty` without
-   echo or with `--password-stdin`, never from arguments.
+1. The dialog checks the text when a field changes and builds the
+   `toolbox_plan::Password` it sends on confirm, never once per frame. On
+   close it empties its fields and drops egui's state of them, undo
+   history included (`widgets::forget_text`). The CLI reads it on
+   `/dev/tty` without echo or with `--password-stdin`, never from
+   arguments.
 2. `Password` has no `Display` or `Serialize`, `Debug` redacts it, its
    bytes are overwritten on drop. At most 512 bytes, no control character.
 3. It sits behind `#[serde(skip)]` and never enters the `ChangeSet`, the
@@ -137,8 +140,9 @@ Account passwords and LUKS passphrases.
 6. Logs carry the step count, never argv of a secret step or a secret
    line.
 
-Limits: egui's text field state and the helper's buffered stdin are not
-overwritten. Both live only as long as their process.
+Limits: the dialog's text field, the copies egui makes while it edits
+and the helper's buffered stdin are freed, not overwritten. Each lives
+only as long as its process.
 
 ## Reads
 
