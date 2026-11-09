@@ -41,9 +41,38 @@ fn fetch_takes_only_paths_of_config_files() -> TestResult {
     Ok(())
 }
 
+/// Secrets below the config folders that no deny list names: only the
+/// catalog's allow list keeps them out. The world-readable
+/// `/etc/nsswitch.conf` of Arch and `NixOS` is refused like them, as the
+/// refusal comes before any look at the file.
+#[test]
+fn fetch_takes_no_file_the_catalog_does_not_name() -> TestResult {
+    for path in [
+        "/etc/nsswitch.conf",
+        "/etc/openvpn/client/vpn.conf",
+        "/etc/letsencrypt/live/example.org/privkey.pem",
+        "/etc/netctl/wlan0-home",
+        "/etc/ppp/peers/provider",
+        "/etc/sssd/sssd.conf",
+        "/etc/postfix/sasl_passwd",
+        "/etc/tor/torrc",
+        "/etc/davfs2/secrets",
+        "/etc/systemd/network/wg0.netdev",
+        "/boot/grub/grubenv",
+        "/etc/garuda-toolbox-test/no-such-file.conf",
+    ] {
+        let output = helper(&["fetch", path])?;
+
+        assert_eq!(output.status.code(), Some(2_i32), "{path}");
+        assert!(output.stdout.is_empty(), "{path}");
+    }
+
+    Ok(())
+}
+
 #[test]
 fn a_missing_file_is_answered_on_one_line() -> TestResult {
-    let output = helper(&["fetch", "/etc/garuda-toolbox-test/no-such-file.conf"])?;
+    let output = helper(&["fetch", "/etc/modprobe.d/garuda-toolbox-test-missing.conf"])?;
     let answer = String::from_utf8(output.stdout)?;
 
     assert_eq!(output.status.code(), Some(0_i32));

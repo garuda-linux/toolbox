@@ -41,6 +41,12 @@ pub const WITHHELD_CONFIG_FILES: [&str; 15] = [
     "/etc/ssl/private",
 ];
 
+/// File name endings below [`CONFIG_ROOTS`] that never leave the helper.
+///
+/// A systemd `.netdev` file holds the `PrivateKey=` of a `WireGuard` device,
+/// and it lies in `/etc/systemd/network` beside the files the page edits.
+pub const WITHHELD_CONFIG_SUFFIXES: [&str; 1] = [".netdev"];
+
 /// Where the helper keeps the previous version of a file it replaced,
 /// relative to `/`. The file's own path follows, so `/etc/fstab` is kept
 /// as `/var/lib/garuda-toolbox/backups/etc/fstab`.
@@ -130,6 +136,9 @@ impl ConfigFilePath {
         if WITHHELD_CONFIG_FILES
             .iter()
             .any(|prefix| value.starts_with(prefix))
+            || WITHHELD_CONFIG_SUFFIXES
+                .iter()
+                .any(|suffix| value.ends_with(suffix))
         {
             return Err(InvalidConfigFilePath::Withheld(value));
         }

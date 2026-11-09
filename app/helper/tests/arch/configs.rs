@@ -362,3 +362,34 @@ fn a_read_only_file_is_never_written() -> TestResult {
 
     Ok(())
 }
+
+/// Decoding checks the asked path only, so a link from a writable folder
+/// to a file the page only shows must end at the real path's check.
+#[test]
+fn a_link_to_a_read_only_file_is_never_written() -> TestResult {
+    if !in_test_image() {
+        return Ok(());
+    }
+
+    fresh()?;
+
+    let link = format!("{FOLDER}/toolbox-test-sudoers");
+    let kept = fs::read_to_string("/etc/sudoers")?;
+
+    symlink("/etc/sudoers", &link)?;
+
+    let output = helper(
+        &["apply"],
+        &request(Mode::Run, vec![write(&link, "x\n", &kept)?])?,
+    )?;
+
+    assert!(!output.status.success());
+    assert!(
+        printed(&output)?.contains("the toolbox never writes /etc/sudoers"),
+        "{}",
+        output.stdout
+    );
+    assert_eq!(fs::read_to_string("/etc/sudoers")?, kept);
+    assert!(!Path::new("/var/lib/garuda-toolbox/backups/etc/sudoers").exists());
+    Ok(())
+}

@@ -1,6 +1,8 @@
 use serde_json::json;
 
-use super::{WRITABLE_CONFIG_FILES, WRITABLE_CONFIG_FOLDERS};
+use super::{
+    READABLE_CONFIG_FILES, READABLE_CONFIG_FOLDERS, WRITABLE_CONFIG_FILES, WRITABLE_CONFIG_FOLDERS,
+};
 use crate::{ConfigFilePath, ConfigText, ConfigWrite, Fingerprint};
 
 fn path(text: &str) -> ConfigFilePath {
@@ -66,12 +68,59 @@ fn catalog_files_and_the_files_of_catalog_folders_are_written() {
 
 #[test]
 fn every_table_entry_is_a_valid_path() {
-    for text in WRITABLE_CONFIG_FILES.iter().chain(&WRITABLE_CONFIG_FOLDERS) {
+    for text in WRITABLE_CONFIG_FILES
+        .iter()
+        .chain(&WRITABLE_CONFIG_FOLDERS)
+        .chain(&READABLE_CONFIG_FILES)
+        .chain(&READABLE_CONFIG_FOLDERS)
+    {
         ConfigFilePath::new(*text).unwrap();
     }
 
     assert!(WRITABLE_CONFIG_FILES.is_sorted());
     assert!(WRITABLE_CONFIG_FOLDERS.is_sorted());
+    assert!(READABLE_CONFIG_FILES.is_sorted());
+    assert!(READABLE_CONFIG_FOLDERS.is_sorted());
+}
+
+/// Secrets in `/etc` and `/boot/grub` that no deny list names: only the
+/// allow list keeps them out.
+#[test]
+fn files_the_catalog_does_not_name_are_never_handed_out() {
+    for text in [
+        "/etc/openvpn/client/vpn.conf",
+        "/etc/letsencrypt/live/example.org/privkey.pem",
+        "/etc/netctl/wlan0-home",
+        "/etc/ppp/peers/provider",
+        "/etc/sssd/sssd.conf",
+        "/etc/postfix/sasl_passwd",
+        "/etc/tor/torrc",
+        "/etc/davfs2/secrets",
+        "/boot/grub/grubenv",
+        "/etc/cron.daily/below/x",
+        "/etc/pam.d.conf",
+        "/etc/sudoers.d/x",
+    ] {
+        assert!(!path(text).is_readable(), "{text}");
+    }
+}
+
+#[test]
+fn what_the_page_edits_or_shows_is_handed_out() {
+    for text in [
+        "/etc/fstab",
+        "/etc/modprobe.d/any.conf",
+        "/etc/systemd/network/10-wired.network",
+        "/etc/passwd",
+        "/etc/sudoers",
+        "/etc/pam.d/system-auth",
+        "/etc/cron.daily/man-db",
+        "/etc/systemd/system/backup.service",
+        "/etc/udev/rules.d/99-x.rules",
+        "/etc/pacman.d/hooks/x.hook",
+    ] {
+        assert!(path(text).is_readable(), "{text}");
+    }
 }
 
 /// What hands out root or the accounts is shown on the page but never

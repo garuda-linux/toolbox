@@ -1,4 +1,5 @@
 mod steps;
+mod writable;
 
 use std::error::Error as _;
 use std::fs;
@@ -262,44 +263,4 @@ fn a_write_error_says_why_in_the_words_of_the_console() {
     assert!(WriteError::Changed.source().is_none());
     assert_eq!(failed.to_string(), "read-only");
     assert_eq!(failed.source().unwrap().to_string(), "read-only");
-}
-
-#[test]
-fn only_sudoers_gets_a_syntax_check() {
-    assert!(super::needs_check(&path("/etc/sudoers")));
-    assert!(!super::needs_check(&path("/etc/fstab")));
-    assert!(!super::needs_check(&path("/etc/sudoers.d/toolbox")));
-}
-
-#[test]
-fn a_sudoers_write_without_visudo_is_refused_whole() {
-    let root = tempfile::tempdir().unwrap();
-
-    fs::create_dir_all(root.path().join("etc")).unwrap();
-    fs::write(root.path().join("etc/sudoers"), "old = 1\n").unwrap();
-
-    let error = write_config_file(
-        root.path(),
-        &path("/etc/sudoers"),
-        &text("new = 2\n"),
-        Fingerprint::of(b"old = 1\n"),
-    )
-    .unwrap_err();
-
-    // Without `/usr/bin/visudo` nothing can say the new text is safe.
-    assert!(
-        matches!(&error, WriteError::Invalid(reason) if reason.contains("visudo")),
-        "{error:?}"
-    );
-    assert_eq!(
-        fs::read_to_string(root.path().join("etc/sudoers")).unwrap(),
-        "old = 1\n"
-    );
-
-    let left: Vec<_> = fs::read_dir(root.path().join("etc"))
-        .unwrap()
-        .map(|entry| entry.unwrap().file_name())
-        .collect();
-
-    assert_eq!(left, ["sudoers"], "the candidate stayed behind");
 }

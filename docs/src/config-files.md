@@ -253,6 +253,10 @@ When the text cannot be shown, the dialog says why instead:
 hashes, which never leave the system. Use
 [Users and Groups](users.md) to change passwords and to lock accounts.
 
+The `.netdev` files of `/etc/systemd/network` are not listed either. They can
+hold the private key of a WireGuard connection. Edit them in a terminal with
+`sudo`.
+
 ## Keyboard
 
 | Key                | What it does                                          |

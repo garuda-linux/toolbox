@@ -31,7 +31,8 @@ and `toolbox-state` ([crates](docs/agents/architecture.md#crates)).
 - A toggle, app, game or file: an entry in `data/catalog/`, then
   `cargo xtask catalog-validate` and `cargo xtask catalog-ftl`. A
   root-owned configuration file also needs its line in
-  `crates/plan/src/config_file/writable.rs`.
+  `crates/plan/src/config_file/writable.rs`, a `read_only` one
+  `cargo xtask catalog-readable`.
 - A kind of queued change: a `toolbox_core::Domain`, its probe, its
   line in `domains::all()` and its CLI command
   ([Extending](docs/agents/architecture.md#extending)). Never edit
@@ -53,6 +54,7 @@ scripts/lint.sh        # toolbox-lint: comments and shape
 scripts/check-file-size.sh
 cargo xtask catalog-validate
 cargo xtask catalog-ftl --check
+cargo xtask catalog-readable --check
 cargo xtask i18n-export --check && cargo xtask i18n-import --check
 cargo xtask cli-docs --check
 scripts/selftest.sh [suite]   # headless weston, helper in dry-run mode

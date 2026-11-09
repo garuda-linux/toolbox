@@ -6,6 +6,7 @@ mod answer;
 mod home;
 mod location;
 mod path;
+mod readable;
 #[cfg(test)]
 mod tests;
 mod text;

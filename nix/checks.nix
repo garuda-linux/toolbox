@@ -100,6 +100,7 @@ in
       ''
         cargo xtask catalog-validate
         cargo xtask catalog-ftl --check
+        cargo xtask catalog-readable --check
         cargo xtask i18n-export --check
         cargo xtask i18n-import --check
       '';

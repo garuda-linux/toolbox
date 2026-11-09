@@ -38,3 +38,25 @@ fn vpn_disk_signing_and_tls_secrets_are_never_read() {
     ConfigFilePath::new("/etc/ppp/options").unwrap();
     ConfigFilePath::new("/etc/ssl/certs/ca-certificates.crt").unwrap();
 }
+
+/// `/etc/systemd/network` stays a folder the page edits, so its `.netdev`
+/// files need a rule by name: they hold the `WireGuard` private keys.
+#[test]
+fn a_netdev_file_is_never_read_or_written() {
+    for text in [
+        "/etc/systemd/network/wg0.netdev",
+        "/etc/systemd/network/30-vpn.netdev",
+        "/etc/systemd/network/.netdev",
+    ] {
+        assert_eq!(
+            ConfigFilePath::new(text).unwrap_err(),
+            InvalidConfigFilePath::Withheld(text.to_owned()),
+            "{text}"
+        );
+    }
+
+    let network = ConfigFilePath::new("/etc/systemd/network").unwrap();
+
+    network.join("wg0.netdev").unwrap_err();
+    assert!(network.join("wg0.network").unwrap().is_writable());
+}

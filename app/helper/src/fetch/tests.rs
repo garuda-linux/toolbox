@@ -54,20 +54,64 @@ fn a_config_file_is_answered_as_one_line_of_text() {
 #[test]
 fn a_link_is_answered_with_the_text_and_the_path_of_its_target() {
     let root = tempfile::tempdir().unwrap();
-    let etc = root.path().join("etc");
+    let modprobe = root.path().join("etc/modprobe.d");
 
-    fs::create_dir_all(etc.join("real")).unwrap();
-    fs::write(etc.join("real/app.conf"), "a = 1\n").unwrap();
-    symlink("real/app.conf", etc.join("app.conf")).unwrap();
-    symlink("/etc/app.conf", etc.join("chain.conf")).unwrap();
+    fs::create_dir_all(&modprobe).unwrap();
+    fs::write(modprobe.join("real.conf"), "a = 1\n").unwrap();
+    symlink("real.conf", modprobe.join("app.conf")).unwrap();
+    symlink("/etc/modprobe.d/app.conf", modprobe.join("chain.conf")).unwrap();
 
-    for link in ["/etc/app.conf", "/etc/chain.conf"] {
+    for link in ["/etc/modprobe.d/app.conf", "/etc/modprobe.d/chain.conf"] {
         assert_eq!(
             answer(root.path(), &path(link)).unwrap(),
-            "{\"result\":\"text\",\"path\":\"/etc/real/app.conf\",\"content\":\"a = 1\\n\"}\n",
+            "{\"result\":\"text\",\"path\":\"/etc/modprobe.d/real.conf\",\"content\":\"a = \
+             1\\n\"}\n",
             "{link}"
         );
     }
+}
+
+/// The asked path is a listed one, but where its link leads decides: a
+/// secret beside the listed files must not come out through a link.
+#[test]
+fn a_link_to_a_file_the_catalog_does_not_name_is_refused() {
+    let root = tempfile::tempdir().unwrap();
+    let etc = root.path().join("etc");
+
+    for folder in ["modprobe.d", "openvpn/client", "systemd/network"] {
+        fs::create_dir_all(etc.join(folder)).unwrap();
+    }
+
+    fs::write(etc.join("openvpn/client/vpn.conf"), "<key>\nsecret\n").unwrap();
+    fs::write(etc.join("systemd/network/wg0.netdev"), "PrivateKey=x\n").unwrap();
+    fs::write(etc.join("sudoers"), "root ALL=(ALL) ALL\n").unwrap();
+    symlink(
+        "../openvpn/client/vpn.conf",
+        etc.join("modprobe.d/vpn.conf"),
+    )
+    .unwrap();
+    symlink(
+        "../systemd/network/wg0.netdev",
+        etc.join("modprobe.d/wg.conf"),
+    )
+    .unwrap();
+    symlink("../sudoers", etc.join("modprobe.d/sudo.conf")).unwrap();
+
+    for link in ["/etc/modprobe.d/vpn.conf", "/etc/modprobe.d/wg.conf"] {
+        assert_eq!(
+            fetch(root.path(), link),
+            refusal(FetchRefusal::Outside),
+            "{link}"
+        );
+    }
+
+    assert_eq!(
+        fetch(root.path(), "/etc/modprobe.d/sudo.conf"),
+        FetchAnswer::Text {
+            path: path("/etc/sudoers"),
+            content: ConfigText::new("root ALL=(ALL) ALL\n").unwrap()
+        }
+    );
 }
 
 #[test]
@@ -160,13 +204,13 @@ fn the_largest_file_still_fits_the_answer() {
     let root = tempfile::tempdir().unwrap();
     let content = "\u{1}".repeat(MAX_CONFIG_BYTES);
 
-    fs::create_dir_all(root.path().join("etc")).unwrap();
-    fs::write(root.path().join("etc/full"), &content).unwrap();
+    fs::create_dir_all(root.path().join("etc/modprobe.d")).unwrap();
+    fs::write(root.path().join("etc/modprobe.d/full.conf"), &content).unwrap();
 
     assert_eq!(
-        fetch(root.path(), "/etc/full"),
+        fetch(root.path(), "/etc/modprobe.d/full.conf"),
         FetchAnswer::Text {
-            path: path("/etc/full"),
+            path: path("/etc/modprobe.d/full.conf"),
             content: ConfigText::new(content).unwrap()
         }
     );

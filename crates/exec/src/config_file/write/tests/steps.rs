@@ -61,27 +61,6 @@ fn a_changed_file_is_not_overwritten() {
 }
 
 #[test]
-fn a_bad_sudoers_file_stays_as_it_is() {
-    let root = tempfile::tempdir().unwrap();
-    fs::create_dir_all(root.path().join("etc")).unwrap();
-    fs::write(root.path().join("etc/sudoers"), "root ALL=(ALL) ALL\n").unwrap();
-
-    let (outcome, text) = write(root.path(), "sudoers");
-
-    assert_eq!(
-        outcome,
-        Outcome::Failed {
-            cause: Failure::Unknown
-        }
-    );
-    assert!(text.contains("stays as it is"), "{text}");
-    assert_eq!(
-        fs::read_to_string(root.path().join("etc/sudoers")).unwrap(),
-        "root ALL=(ALL) ALL\n"
-    );
-}
-
-#[test]
 fn refusals_say_why_in_plain_words() {
     assert_eq!(
         refusal_text(FetchRefusal::Missing),

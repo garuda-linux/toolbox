@@ -3,6 +3,7 @@
 
 mod apps;
 mod catalog_ftl;
+mod catalog_readable;
 mod catalogs;
 mod cli_docs;
 mod icons;
@@ -21,8 +22,13 @@ const LOCALES_DIR: &str = "app/gui/i18n";
 const ENGLISH: &str = "en-US";
 
 /// Name, argument synopsis and function of every task.
-const TASKS: [(&str, &str, Task); 7] = [
+const TASKS: [(&str, &str, Task); 8] = [
     ("catalog-ftl", "[--check]", catalog_ftl::catalog_ftl),
+    (
+        "catalog-readable",
+        "[--check]",
+        catalog_readable::catalog_readable,
+    ),
     ("catalog-validate", "[dir]", catalog_validate),
     ("cli-docs", "[--check]", cli_docs::cli_docs),
     (

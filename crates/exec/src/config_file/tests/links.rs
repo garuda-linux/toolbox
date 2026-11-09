@@ -317,19 +317,24 @@ fn the_step_names_the_file_that_was_written() {
         original: Fingerprint::of(OLD.as_bytes()),
     };
 
+    // The step runs only where both ends of the link are writable.
+    fs::create_dir_all(root.path().join("etc/modprobe.d")).unwrap();
+    fs::write(root.path().join("etc/modprobe.d/real.conf"), OLD).unwrap();
+    symlink("real.conf", root.path().join("etc/modprobe.d/app.conf")).unwrap();
+
     assert_eq!(
         execute(
             root.path(),
             StepId::new(1),
-            &write("/etc/app.conf"),
+            &write("/etc/modprobe.d/app.conf"),
             &mut events
         ),
         Outcome::Succeeded
     );
     assert_eq!(
         printed(&events),
-        "wrote /etc/real/app.conf (where the link /etc/app.conf leads), the previous version is \
-         /var/lib/garuda-toolbox/backups/etc/real/app.conf\r\n"
+        "wrote /etc/modprobe.d/real.conf (where the link /etc/modprobe.d/app.conf leads), the \
+         previous version is /var/lib/garuda-toolbox/backups/etc/modprobe.d/real.conf\r\n"
     );
 
     symlink("/usr/lib/os-release", root.path().join("etc/os-release")).unwrap();
