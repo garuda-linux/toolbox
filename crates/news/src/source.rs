@@ -28,6 +28,14 @@ impl Source {
         }
     }
 
+    /// The one server [`Self::feed`] is fetched from.
+    pub const fn host(self) -> &'static str {
+        match self {
+            Self::Garuda => "forum.garudalinux.org",
+            Self::Arch => "archlinux.org",
+        }
+    }
+
     pub const fn page(self) -> &'static str {
         match self {
             Self::Garuda => "https://forum.garudalinux.org/c/announcements/16",

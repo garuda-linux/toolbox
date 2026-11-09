@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use toolbox_https::RequestError;
 
-use super::{AddressProblem, AddressSource, lookup_address};
+use super::{ADDRESS_HOST, ADDRESS_SERVICE, AddressProblem, AddressSource, lookup_address};
 
 struct FakeService {
     answer: Result<&'static str, &'static str>,
@@ -67,4 +67,11 @@ fn an_answer_without_an_address_is_not_shown() {
             "{answer}"
         );
     }
+}
+
+#[test]
+fn the_pinned_host_is_the_services() {
+    let url: toolbox_https::http::Uri = ADDRESS_SERVICE.parse().unwrap();
+
+    assert_eq!(url.host(), Some(ADDRESS_HOST));
 }

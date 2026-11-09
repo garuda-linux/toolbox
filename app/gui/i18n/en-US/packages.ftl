@@ -116,6 +116,8 @@ packages-aur-failed = The AUR's package list could not be downloaded. The next t
 packages-aur-waiting = The AUR's package list is not here yet. The last download failed, the next try is a day after it.
 # $date is the day the list was downloaded, such as 2025-01-10.
 packages-aur-note = List of { $date }. AUR packages are community scripts that are built on your computer.
+# After the note when the last download of a newer list failed.
+packages-aur-stale = The list could not be updated, so it may be out of date.
 packages-tag-aur = AUR
 packages-aur-out-of-date = Out of date
 packages-aur-builds = Builds with Apply

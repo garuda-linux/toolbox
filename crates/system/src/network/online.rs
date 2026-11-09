@@ -25,6 +25,8 @@ const CHECK_TIMEOUT: Duration = Duration::from_secs(15);
 /// A lookup answers a few lines. Whoever clicked waits for it.
 const ADDRESS_TIMEOUT: Duration = Duration::from_secs(20);
 
+const ADDRESS_HOST: &str = "geoip.kde.org";
+
 /// The service's answer is one short JSON object.
 const MAX_ADDRESS_BYTES: u64 = 64 << 10;
 
@@ -50,6 +52,7 @@ impl KdeGeoIp {
     #[must_use = "the lookup does nothing until asked"]
     pub fn new() -> Self {
         Self(Https::new(&Rules {
+            host: ADDRESS_HOST,
             timeout: ADDRESS_TIMEOUT,
             max_body_bytes: MAX_ADDRESS_BYTES,
             // ureq's own: the service was never told the program.

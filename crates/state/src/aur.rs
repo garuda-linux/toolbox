@@ -40,4 +40,8 @@ pub struct AurIndex {
     pub packages: Vec<AurPackage>,
     /// Seconds since the epoch when this copy was downloaded.
     pub downloaded: i64,
+    /// The last attempt to download a newer copy failed. Kept beside the
+    /// copy, never in it.
+    #[serde(skip)]
+    pub stale: bool,
 }

@@ -138,7 +138,17 @@ pub fn note(ui: &mut Ui, context: &PageContext<'_>) {
         &[("date", &day(catalog.downloaded()))],
     );
 
+    let stale = catalog
+        .stale()
+        .then(|| i18n::text(&ctx, "packages-aur-stale"));
+
     under_chips(ui, |ui| {
-        ui.add(Label::new(rich(ui, &text, Weight::Regular, SMALL, tokens.secondary)).wrap());
+        ui.horizontal_wrapped(|ui| {
+            ui.add(Label::new(rich(ui, &text, Weight::Regular, SMALL, tokens.secondary)).wrap());
+
+            if let Some(stale) = stale {
+                ui.add(Label::new(rich(ui, &stale, Weight::Regular, SMALL, tokens.warning)).wrap());
+            }
+        });
     });
 }

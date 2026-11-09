@@ -4,7 +4,7 @@ use flate2::Compression;
 use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
 
-use super::{AurPackage, DumpError, parse};
+use super::{AurPackage, DumpError, parse, parse_capped};
 
 const LIMIT: u64 = 1 << 20;
 
@@ -194,4 +194,33 @@ fn something_else_than_gzipped_json_is_malformed() {
         parse(gzipped(r#"{"Name": "a"}"#).as_slice(), LIMIT),
         Err(DumpError::Malformed(_))
     ));
+}
+
+/// A hostile dump of millions of entries would fill the memory before
+/// any sort. The cap stops the read at the first entry past it.
+#[test]
+fn a_dump_past_the_entry_cap_is_refused() {
+    assert_eq!(parse_capped(DUMP, LIMIT, 4), Err(DumpError::TooMany(4)));
+    assert_eq!(
+        parse_capped(DUMP, LIMIT, 5).map(|packages| packages.len()),
+        Ok(5)
+    );
+}
+
+/// Copies of one name count once against the cap, and the first stays,
+/// as pacman takes the first.
+#[test]
+fn a_repeated_name_is_kept_once_while_reading() {
+    // The dump's first entry repeated 10 times with another version.
+    let mut entries: Vec<serde_json::Value> = serde_json::from_str(&unpacked()).unwrap();
+    let mut copy = entries[0].clone();
+
+    copy["Version"] = serde_json::Value::from("9.9.9-1");
+    entries.extend(std::iter::repeat_n(copy, 10));
+
+    let json = serde_json::to_string(&entries).unwrap();
+    let packages = parse_capped(gzipped(&json).as_slice(), LIMIT, 5).unwrap();
+
+    assert_eq!(packages.len(), 5);
+    assert_eq!(package(&packages, "0ad-boongui").version, "2.6.11-2");
 }

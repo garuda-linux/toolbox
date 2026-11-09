@@ -44,6 +44,7 @@ fn catalog() -> AurCatalog {
             tagged,
         ],
         downloaded: 1_700_000_000,
+        stale: false,
     })
 }
 

@@ -7,6 +7,7 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use egui_kittest::{Harness, SnapshotResults};
 use tokio::runtime::Runtime;
+use toolbox_aur::AurSource;
 use toolbox_core::domains::{InstalledPackages, SyncPackages};
 use toolbox_core::features::packages::PackageGraph;
 use toolbox_core::{ChangeSet, Snapshot};
@@ -36,6 +37,15 @@ fn app(theme: Theme, language: Option<&str>) -> Fixture {
 /// The page on the fake database, with the dry run's sample AUR shown
 /// when `aur`.
 pub fn app_with(theme: Theme, language: Option<&str>, aur: bool) -> Fixture {
+    app_with_aur(theme, language, aur, Arc::new(SampleAur))
+}
+
+pub fn app_with_aur(
+    theme: Theme,
+    language: Option<&str>,
+    aur: bool,
+    source: Arc<dyn AurSource>,
+) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let probed = system();
@@ -58,7 +68,7 @@ pub fn app_with(theme: Theme, language: Option<&str>, aur: bool) -> Fixture {
                         runtime: handle.clone(),
                         source: Arc::new(Database::captured()),
                         log: Arc::new(Log),
-                        aur: Arc::new(SampleAur),
+                        aur: source,
                     }),
                     system_language,
                     preferences: preferences(aur),

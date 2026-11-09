@@ -6533,6 +6533,9 @@
     "packages-aur-note": {
       "string": "Stand: {date}. AUR-Pakete sind Skripte der Community, die auf deinem Computer gebaut werden."
     },
+    "packages-aur-stale": {
+      "string": "Die Liste konnte nicht aktualisiert werden und ist vielleicht veraltet."
+    },
     "packages-tag-aur": {
       "string": "AUR"
     },

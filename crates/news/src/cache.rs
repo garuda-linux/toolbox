@@ -63,7 +63,7 @@ impl Cache {
         Self::new(
             folder,
             source,
-            Arc::new(Https::new()),
+            Arc::new(Https::new(source)),
             Arc::new(SystemClock),
         )
     }
@@ -141,6 +141,10 @@ impl NewsSource for Cache {
         let now = self.clock.now();
         let mut stored = self.read()?;
         let failure = self.refresh(&mut stored, now)?;
+
+        if let Some(why) = &failure {
+            tracing::warn!("the news were not refreshed: {why}");
+        }
 
         stored.news.ok_or_else(|| {
             failure.map_or_else(

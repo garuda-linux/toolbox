@@ -1,5 +1,8 @@
 //! The real [`Transport`]: one HTTPS POST through `toolbox-https`.
 
+#[cfg(test)]
+mod tests;
+
 use std::time::Duration;
 
 use toolbox_https::http::HeaderName;
@@ -11,6 +14,9 @@ use crate::client::Transport;
 /// A report of some megabytes over a slow line still fits. A dead server
 /// does not block the page for longer.
 const TIMEOUT: Duration = Duration::from_mins(2);
+
+/// The host of [`crate::client::SERVER`].
+pub const HOST: &str = "bin.garudalinux.org";
 
 /// A paste answer is one short JSON object.
 const MAX_ANSWER_BYTES: u64 = 64 << 10;
@@ -28,6 +34,7 @@ impl Https {
     pub fn new() -> Self {
         Self {
             https: toolbox_https::Https::new(&Rules {
+                host: HOST,
                 timeout: TIMEOUT,
                 max_body_bytes: MAX_ANSWER_BYTES,
                 // ureq's own: the paste server was never told the program.

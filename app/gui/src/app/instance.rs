@@ -66,8 +66,11 @@ impl App {
         }
 
         // An AUR build from a command waits for the AUR's copy to meet
-        // the queue's guard. Reading it downloads at most once a day.
-        if !self.queue.changes().queued::<AurPackages>().is_empty() {
+        // the queue's guard. Reading it downloads at most once a day, and
+        // never while the user keeps the AUR off.
+        let aur_on = self.prefs.setup.settings.packages.show_aur;
+
+        if aur_on && !self.queue.changes().queued::<AurPackages>().is_empty() {
             self.packages.open_aur();
         }
     }

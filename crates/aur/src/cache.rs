@@ -28,7 +28,7 @@ const INDEX_FILE: &str = "index.json";
 const META_FILE: &str = "meta.json";
 
 /// The dump unpacks to about 80 MB. Far more is no dump of the AUR.
-const MAX_UNPACKED_BYTES: u64 = 512 << 20;
+const MAX_UNPACKED_BYTES: u64 = 256 << 20;
 
 /// Only the user reads the copy, as the rest of the cache folder.
 const PRIVATE: Permissions = Permissions::Exactly(0o600);
@@ -50,6 +50,15 @@ struct Meta {
     validators: Validators,
     /// Seconds since the epoch.
     last_attempt: Option<i64>,
+    /// The last attempt failed, so the copy is older than it should be.
+    failed: bool,
+}
+
+enum Refreshed {
+    Fresh(AurIndex),
+    /// Not due, or the server had nothing newer.
+    Unchanged,
+    Failed(String),
 }
 
 impl Cache {
@@ -83,21 +92,35 @@ impl Cache {
     /// The copy after a refresh when one is due. The caller holds the lock.
     fn refreshed(&self) -> Result<AurIndex, AurError> {
         let now = self.clock.now();
-        let failure = self.refresh(now)?;
+        let kept = self.copy()?;
 
-        self.copy()?.ok_or_else(|| {
-            failure.map_or_else(
-                || AurError::Waiting {
-                    next: self.meta().last_attempt.map_or(now, next_attempt),
-                },
-                AurError::Download,
-            )
-        })
+        match self.refresh(now, kept.is_some())? {
+            Refreshed::Fresh(index) => Ok(index),
+            Refreshed::Unchanged => {
+                let meta = self.meta();
+
+                kept.map(|index| AurIndex {
+                    stale: meta.failed,
+                    ..index
+                })
+                .ok_or_else(|| AurError::Waiting {
+                    next: meta.last_attempt.map_or(now, next_attempt),
+                })
+            }
+            Refreshed::Failed(why) => {
+                tracing::warn!("the AUR's package list was not refreshed: {why}");
+                kept.map(|index| AurIndex {
+                    stale: true,
+                    ..index
+                })
+                .ok_or(AurError::Download(why))
+            }
+        }
     }
 
-    /// Downloads when the last attempt is a day old. Returns why the
-    /// download failed, `None` when none was due or it worked.
-    fn refresh(&self, now: i64) -> Result<Option<String>, AurError> {
+    /// Downloads when the last attempt is a day old. Validators go along
+    /// only `with_copy`, else a "not modified" would leave nothing to show.
+    fn refresh(&self, now: i64, with_copy: bool) -> Result<Refreshed, AurError> {
         let mut meta = self.meta();
 
         // A clock set wrong forward once would block every download until
@@ -106,11 +129,11 @@ impl Cache {
         if meta.last_attempt.is_some_and(|last| last > now) {
             meta.last_attempt = Some(now);
             self.write(META_FILE, &meta)?;
-            return Ok(None);
+            return Ok(Refreshed::Unchanged);
         }
 
         if meta.last_attempt.is_some_and(|last| !is_due(last, now)) {
-            return Ok(None);
+            return Ok(Refreshed::Unchanged);
         }
 
         // Stored first: an attempt that cannot be stored is not made, else
@@ -118,39 +141,43 @@ impl Cache {
         meta.last_attempt = Some(now);
         self.write(META_FILE, &meta)?;
 
-        // Without a copy a "not modified" would leave nothing to show.
-        let has_copy = self.folder.join(INDEX_FILE).is_file();
-        let sent = if has_copy {
+        let sent = if with_copy {
             meta.validators.clone()
         } else {
             Validators::default()
         };
 
-        let answer = match self.transport.get(DUMP_URL, &sent) {
-            Ok(answer) => answer,
-            Err(error) => return Ok(Some(error.to_string())),
+        let fetched = self
+            .transport
+            .get(DUMP_URL, &sent)
+            .map_err(|error| error.to_string())
+            .and_then(|answer| match answer {
+                Answer::Fresh { body, validators } => parse(body, MAX_UNPACKED_BYTES)
+                    .map(|packages| Some((packages, validators)))
+                    .map_err(|error| error.to_string()),
+                Answer::NotModified => Ok(None),
+            });
+
+        meta.failed = fetched.is_err();
+
+        let refreshed = match fetched {
+            Ok(Some((packages, validators))) => {
+                let index = AurIndex {
+                    packages,
+                    downloaded: now,
+                    stale: false,
+                };
+
+                self.write(INDEX_FILE, &index)?;
+                meta.validators = validators;
+                Refreshed::Fresh(index)
+            }
+            Ok(None) => Refreshed::Unchanged,
+            Err(why) => Refreshed::Failed(why),
         };
 
-        let Answer::Fresh { body, validators } = answer else {
-            return Ok(None);
-        };
-
-        let packages = match parse(body, MAX_UNPACKED_BYTES) {
-            Ok(packages) => packages,
-            Err(error) => return Ok(Some(error.to_string())),
-        };
-
-        self.write(
-            INDEX_FILE,
-            &AurIndex {
-                packages,
-                downloaded: now,
-            },
-        )?;
-
-        meta.validators = validators;
         self.write(META_FILE, &meta)?;
-        Ok(None)
+        Ok(refreshed)
     }
 
     /// A missing or broken meta file is no attempt yet. Both files are
@@ -162,14 +189,27 @@ impl Cache {
             .unwrap_or_default()
     }
 
+    /// A copy this version cannot read, such as one an older version
+    /// wrote, is removed with its attempt, so the next read downloads.
     fn copy(&self) -> Result<Option<AurIndex>, AurError> {
         let file = self.folder.join(INDEX_FILE);
-        match std::fs::read(&file) {
-            Ok(bytes) => serde_json::from_slice(&bytes)
-                .map(Some)
-                .map_err(|error| storage(&file, &error)),
-            Err(error) if error.kind() == ErrorKind::NotFound => Ok(None),
-            Err(error) => Err(storage(&file, &error)),
+        let bytes = match std::fs::read(&file) {
+            Ok(bytes) => bytes,
+            Err(error) if error.kind() == ErrorKind::NotFound => return Ok(None),
+            Err(error) => return Err(storage(&file, &error)),
+        };
+
+        match serde_json::from_slice::<AurIndex>(&bytes) {
+            Ok(index) => Ok(Some(AurIndex {
+                stale: self.meta().failed,
+                ..index
+            })),
+            Err(error) => {
+                tracing::warn!("the stored AUR list is unreadable and is read again: {error}");
+                std::fs::remove_file(&file).map_err(|removing| storage(&file, &removing))?;
+                self.write(META_FILE, &Meta::default())?;
+                Ok(None)
+            }
         }
     }
 

@@ -2,15 +2,32 @@
 //! while the setting is off, the list, a detail page and the question
 //! before a build, in dark, light, German and the smallest window.
 
+use std::sync::Arc;
+
 use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use egui_kittest::{Harness, SnapshotResults};
+use toolbox_aur::{AurError, AurSource};
+use toolbox_core::features::packages::aur::AurIndex;
 use toolbox_gui::App;
+use toolbox_gui::packages::SampleAur;
 
 use crate::common::{SMALLEST, TALL, WIDTH};
-use crate::packages::{app_with, listed};
+use crate::packages::{app_with, app_with_aur, listed};
 use crate::system::{settle, step_until};
+
+/// The sample AUR whose last refresh failed.
+struct Stale;
+
+impl AurSource for Stale {
+    fn index(&self) -> Result<AurIndex, AurError> {
+        SampleAur.index().map(|index| AurIndex {
+            stale: true,
+            ..index
+        })
+    }
+}
 
 fn aur_list(harness: &mut Harness<'static, App>) {
     harness.get_by_role_and_label(Role::Button, "AUR").click();
@@ -176,5 +193,32 @@ fn the_line_under_the_chips_sits_at_one_height_in_either_view() {
     assert!(
         (hidden.center().y - noted.center().y).abs() < 1.0,
         "the hidden AUR's line at {hidden:?}, the AUR's note at {noted:?}"
+    );
+}
+
+#[test]
+fn a_list_that_could_not_be_refreshed_says_so_beside_its_date() {
+    let mut fixture = app_with_aur(Theme::Dark, None, true, Arc::new(Stale));
+    let harness = fixture.harness();
+    aur_list(harness);
+
+    assert!(
+        harness
+            .query_by_label_contains("could not be updated")
+            .is_some()
+    );
+    harness.snapshot("packages/aur_stale_dark");
+}
+
+#[test]
+fn a_fresh_list_shows_no_warning() {
+    let mut fixture = app_with(Theme::Dark, None, true);
+    let harness = fixture.harness();
+    aur_list(harness);
+
+    assert!(
+        harness
+            .query_by_label_contains("could not be updated")
+            .is_none()
     );
 }

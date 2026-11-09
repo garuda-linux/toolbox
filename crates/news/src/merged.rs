@@ -48,7 +48,10 @@ impl NewsSource for Feeds {
                     posts.extend(news.posts);
                     downloaded = downloaded.max(Some(news.downloaded));
                 }
+                // The other feed may still answer, so the page shows no
+                // error. The log keeps it.
                 Err(error) => {
+                    tracing::warn!("a news feed is missing: {error}");
                     failure.get_or_insert(error);
                 }
             }

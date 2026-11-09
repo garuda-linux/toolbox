@@ -341,8 +341,20 @@ reaches none of the servers.
 
 Every HTTPS request goes through `toolbox_https::Https` (`crates/https`):
 rustls with system certificates, HTTPS only, no redirects, a timeout and
-a body cap per caller. Addresses are constants, never built from input or
-an answer. A `User-Agent` says `garuda-toolbox/<version>`, nothing of the
+a body cap per caller. Each agent is pinned to one host in its `Rules`
+and port 443 and refuses a URL of another (`RequestError::OtherHost`)
+before connecting. Any status but 2xx is
+`RequestError::Status`, a redirect and `304` too. Addresses are
+constants, never built from input or an answer.
+
+Proxies come from the environment, as ureq 3 reads them by default:
+the first of `ALL_PROXY`, `all_proxy`, `HTTPS_PROXY`, `https_proxy`,
+`HTTP_PROXY`, `http_proxy` that parses, minus the hosts in `NO_PROXY` or
+`no_proxy`. An `http://` or `https://` proxy only sees a `CONNECT` to the
+host. TLS still runs end to end and the certificate is checked against
+the host, so a proxy cannot read or change an answer. A `socks` proxy is
+not built in (no `socks-proxy` feature): ureq logs a warning and
+connects directly. A `User-Agent` says `garuda-toolbox/<version>`, nothing of the
 user. The news and the AUR dump store each attempt, failed or not, and
 wait the full interval after it instead of retrying.
 
@@ -361,11 +373,15 @@ One GET of `toolbox_aur::DUMP_URL`, the only AUR address. No RPC call.
   stored is not made. A stored time in the future counts as now.
 - Conditional with the stored `ETag` and `Last-Modified`. One download at
   a time.
-- At most 64 MiB gzipped and 512 MiB unpacked. Only the kept fields are
+- At most 64 MiB gzipped, 256 MiB unpacked and 400 000 packages, each
+  name once while reading. Only the kept fields are
   read, each cut to a fixed length. A name that is no `PackageName` drops
   its entry.
+- No download while the AUR setting is off, also for an AUR change a
+  command queued.
 - The copy is replaced whole with mode 600. A failed download keeps the
-  older one.
+  older one, which the page then marks as possibly out of date. A copy
+  this version cannot read is removed and downloaded again at once.
 
 ### PrivateBin upload
 

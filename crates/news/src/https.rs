@@ -1,12 +1,15 @@
 //! The real [`Transport`]: one HTTPS GET through `toolbox-https`.
 
+#[cfg(test)]
+mod tests;
+
 use std::io::Read as _;
 use std::time::Duration;
 
 use toolbox_https::http::StatusCode;
 use toolbox_https::{RequestError, Rules};
 
-use crate::Transport;
+use crate::{Source, Transport};
 
 /// The feed is a few dozen KiB. A dead server does not hold Home's read
 /// for longer.
@@ -24,21 +27,17 @@ pub struct Https {
 }
 
 impl Https {
+    /// A transport that reaches only the host of `source`'s feed.
     #[must_use = "the transport does nothing until a request is sent"]
-    pub fn new() -> Self {
+    pub fn new(source: Source) -> Self {
         Self {
             https: toolbox_https::Https::new(&Rules {
+                host: source.host(),
                 timeout: TIMEOUT,
                 max_body_bytes: MAX_BYTES,
                 user_agent: Some(USER_AGENT),
             }),
         }
-    }
-}
-
-impl Default for Https {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

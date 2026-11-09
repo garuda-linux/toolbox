@@ -6613,6 +6613,10 @@
       "string": "List of {date}. AUR packages are community scripts that are built on your computer.",
       "developer_comment": "$date is the day the list was downloaded, such as 2025-01-10."
     },
+    "packages-aur-stale": {
+      "string": "The list could not be updated, so it may be out of date.",
+      "developer_comment": "After the note when the last download of a newer list failed."
+    },
     "packages-tag-aur": {
       "string": "AUR"
     },

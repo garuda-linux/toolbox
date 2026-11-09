@@ -54,6 +54,7 @@ impl AurSource for SampleAur {
         Ok(AurIndex {
             packages,
             downloaded: DAY,
+            stale: false,
         })
     }
 }

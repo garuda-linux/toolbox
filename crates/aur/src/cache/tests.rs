@@ -1,3 +1,4 @@
+mod stale;
 mod stored;
 
 use std::io::Cursor;

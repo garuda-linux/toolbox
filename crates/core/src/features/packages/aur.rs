@@ -106,6 +106,11 @@ impl AurCatalog {
         self.index.downloaded
     }
 
+    /// The last download of a newer copy failed.
+    pub const fn stale(&self) -> bool {
+        self.index.stale
+    }
+
     /// The places in [`AurCatalog::entries`] that `search` matches: the
     /// exact name first, then names that start with it, then the rest,
     /// each part the most popular first.

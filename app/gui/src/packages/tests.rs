@@ -41,6 +41,7 @@ impl AurSource for Aur {
                 Ok(AurIndex {
                     packages: Vec::new(),
                     downloaded: 1_700_000_000,
+                    stale: false,
                 })
             },
             Err,

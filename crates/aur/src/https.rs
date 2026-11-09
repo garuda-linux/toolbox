@@ -1,6 +1,9 @@
 //! The real [`Transport`]: one conditional HTTPS GET through
 //! `toolbox-https`.
 
+#[cfg(test)]
+mod tests;
+
 use std::time::Duration;
 
 use toolbox_https::http::{HeaderMap, StatusCode, header};
@@ -17,6 +20,9 @@ const MAX_GZIPPED_BYTES: u64 = 64 << 20;
 
 /// Plain and generic: the AUR learns the program, nothing of the user.
 const USER_AGENT: &str = concat!("garuda-toolbox/", env!("CARGO_PKG_VERSION"));
+
+/// The host of [`crate::DUMP_URL`].
+pub const HOST: &str = "aur.archlinux.org";
 
 /// A validator longer than this is no `ETag` or date and is not kept.
 const MAX_VALIDATOR_BYTES: usize = 256;
@@ -38,6 +44,7 @@ impl Https {
     pub fn with_timeout(timeout: Duration) -> Self {
         Self {
             https: toolbox_https::Https::new(&Rules {
+                host: HOST,
                 timeout,
                 max_body_bytes: MAX_GZIPPED_BYTES,
                 user_agent: Some(USER_AGENT),
@@ -63,9 +70,13 @@ impl Transport for Https {
             headers.push((header::IF_MODIFIED_SINCE, date.as_str()));
         }
 
-        let response = self.https.get(url, &headers)?;
+        let response = match self.https.get(url, &headers) {
+            Ok(response) => response,
+            Err(RequestError::Status(304)) => return Ok(Answer::NotModified),
+            Err(error) => return Err(error),
+        };
+
         match response.status() {
-            StatusCode::NOT_MODIFIED => Ok(Answer::NotModified),
             StatusCode::OK => {
                 let answered = Validators {
                     etag: validator(response.headers(), header::ETAG),

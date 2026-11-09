@@ -5398,6 +5398,7 @@ dependencies = [
  "toolbox-https",
  "toolbox-plan",
  "toolbox-state",
+ "tracing",
 ]
 
 [[package]]
@@ -5652,6 +5653,7 @@ dependencies = [
  "toolbox-fs",
  "toolbox-https",
  "toolbox-plan",
+ "tracing",
 ]
 
 [[package]]

@@ -95,9 +95,9 @@ fn upload_with(
         .post(&format!("{SERVER}/"), &body)
         .map_err(|error| match error {
             RequestError::Status(status) => UploadError::Refused(format!("status {status}")),
-            other @ (RequestError::NoAnswer(_) | RequestError::Unreadable(_)) => {
-                UploadError::Transport(other)
-            }
+            other @ (RequestError::NoAnswer(_)
+            | RequestError::OtherHost(_)
+            | RequestError::Unreadable(_)) => UploadError::Transport(other),
         })?;
 
     let answer: Answer =

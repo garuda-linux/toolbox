@@ -31,6 +31,7 @@ impl Copy {
         Ok(AurIndex {
             packages: vec![package("paru"), package("yay-bin")],
             downloaded: 1_736_467_200,
+            stale: false,
         })
     }
 }

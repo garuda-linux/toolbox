@@ -113,6 +113,8 @@ packages-aur-failed = Die Paketliste des AUR konnte nicht heruntergeladen werden
 packages-aur-waiting = Die Paketliste des AUR liegt noch nicht vor. Der letzte Download ist fehlgeschlagen, der nächste folgt einen Tag danach.
 # $date is the day the list was downloaded, such as 2025-01-10.
 packages-aur-note = Stand: { $date }. AUR-Pakete sind Skripte der Community, die auf deinem Computer gebaut werden.
+# After the note when the last download of a newer list failed.
+packages-aur-stale = Die Liste konnte nicht aktualisiert werden und ist vielleicht veraltet.
 packages-tag-aur = AUR
 packages-aur-out-of-date = Als veraltet markiert
 packages-aur-builds = Zu bauen

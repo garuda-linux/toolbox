@@ -5,12 +5,13 @@
 #[cfg(test)]
 pub mod tests;
 
+use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{BufReader, Read};
 
 use flate2::read::MultiGzDecoder;
 use serde::Deserialize;
-use serde::de::{Deserializer, SeqAccess, Visitor};
+use serde::de::{Deserializer as _, Error as _, SeqAccess, Visitor};
 use toolbox_plan::PackageName;
 use toolbox_state::aur::AurPackage;
 
@@ -18,10 +19,23 @@ use crate::clean::{
     DESCRIPTION_CHARS, MAINTAINER_CHARS, URL_CHARS, VERSION_CHARS, list, optional, plain,
 };
 
+/// The AUR holds about 100k packages. Far more is no dump of it.
+const MAX_ENTRIES: usize = 400_000;
+
+/// The visitor's words for [`DumpError::TooMany`], told apart after the
+/// JSON reader wrapped them.
+const TOO_MANY: &str = "too many packages";
+
+/// Packages by name, each name once, the first copy kept as pacman
+/// would take it.
+type Packages = BTreeMap<PackageName, AurPackage>;
+
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
 pub enum DumpError {
     #[error("the package list is larger than {0} bytes unpacked")]
     TooLarge(u64),
+    #[error("the package list holds more than {0} packages")]
+    TooMany(usize),
     #[error("the package list is not understood: {0}")]
     Malformed(String),
 }
@@ -51,17 +65,8 @@ struct Raw {
     keywords: Option<Vec<String>>,
 }
 
-struct Packages(Vec<AurPackage>);
-
-struct PackagesVisitor;
-
-impl<'de> Deserialize<'de> for Packages {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        deserializer.deserialize_seq(PackagesVisitor)
-    }
+struct PackagesVisitor {
+    max_entries: usize,
 }
 
 impl<'de> Visitor<'de> for PackagesVisitor {
@@ -75,33 +80,63 @@ impl<'de> Visitor<'de> for PackagesVisitor {
     where
         A: SeqAccess<'de>,
     {
-        let mut packages = Vec::with_capacity(seq.size_hint().unwrap_or_default());
+        let mut packages = Packages::new();
+
         while let Some(raw) = seq.next_element::<Raw>()? {
-            packages.extend(cleaned(raw));
+            let Some(package) = cleaned(raw) else {
+                continue;
+            };
+
+            if packages.contains_key(&package.name) {
+                continue;
+            }
+
+            if packages.len() == self.max_entries {
+                return Err(A::Error::custom(TOO_MANY));
+            }
+
+            packages.insert(package.name.clone(), package);
         }
 
-        Ok(Packages(packages))
+        Ok(packages)
     }
 }
 
 /// # Errors
 ///
-/// [`DumpError`] when the stream is no gzipped JSON array of packages or
-/// unpacks to more than `max_bytes`.
+/// [`DumpError`] when the stream is no gzipped JSON array of packages,
+/// unpacks to more than `max_bytes` or holds too many packages.
 pub fn parse(gzipped: impl Read, max_bytes: u64) -> Result<Vec<AurPackage>, DumpError> {
+    parse_capped(gzipped, max_bytes, MAX_ENTRIES)
+}
+
+/// [`parse`] with a cap of `max_entries` packages.
+///
+/// # Errors
+///
+/// As [`parse`].
+pub fn parse_capped(
+    gzipped: impl Read,
+    max_bytes: u64,
+    max_entries: usize,
+) -> Result<Vec<AurPackage>, DumpError> {
     // One byte over the limit tells a dump of exactly the limit from a
     // larger one.
     let mut unpacked = MultiGzDecoder::new(gzipped).take(max_bytes.saturating_add(1));
-    let read = serde_json::from_reader::<_, Packages>(BufReader::new(&mut unpacked));
+    let mut reader = serde_json::Deserializer::from_reader(BufReader::new(&mut unpacked));
+    let read = reader.deserialize_seq(PackagesVisitor { max_entries });
 
     if unpacked.limit() == 0 {
         return Err(DumpError::TooLarge(max_bytes));
     }
 
-    let Packages(mut packages) = read.map_err(|error| DumpError::Malformed(error.to_string()))?;
-    packages.sort_by(|left, right| left.name.cmp(&right.name));
-    packages.dedup_by(|later, earlier| later.name == earlier.name);
-    Ok(packages)
+    match read {
+        Ok(packages) => Ok(packages.into_values().collect()),
+        Err(error) if error.to_string().starts_with(TOO_MANY) => {
+            Err(DumpError::TooMany(max_entries))
+        }
+        Err(error) => Err(DumpError::Malformed(error.to_string())),
+    }
 }
 
 /// name, which no command line and no list ever sees.

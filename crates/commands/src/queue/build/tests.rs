@@ -26,6 +26,7 @@ impl AurSource for Copy {
         Ok(AurIndex {
             packages: ["paru-bin", "yay-bin"].map(package).to_vec(),
             downloaded: 0,
+            stale: false,
         })
     }
 }

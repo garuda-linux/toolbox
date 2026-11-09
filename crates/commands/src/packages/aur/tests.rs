@@ -25,6 +25,7 @@ impl AurSource for Aur {
                 package("paru-bin", 9.0),
             ],
             downloaded: 1_736_467_200,
+            stale: false,
         })
     }
 }
