@@ -90,7 +90,10 @@ impl Locks {
 
 impl LockSource for HelperLocks {
     fn locks(&self) -> Result<BTreeMap<UserName, bool>, LockProblem> {
+        // The helper names the flags of people and of this account only,
+        // which it learns from the socket.
         let policy = Policy::tail(MAX_ANSWER_BYTES)
+            .identified()
             .capped()
             .within(LOCKS_DEADLINE);
 

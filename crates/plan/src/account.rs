@@ -1,4 +1,6 @@
 mod home;
+mod passwd;
+mod shadow;
 #[cfg(test)]
 mod tests;
 
@@ -7,7 +9,9 @@ use std::collections::BTreeSet;
 pub use home::{
     HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID, NewHome, UserId,
 };
+pub use passwd::{PasswdEntry, passwd_entries};
 use serde::{Deserialize, Serialize};
+pub use shadow::Caller;
 
 use crate::{GroupName, ShellPath, UserName, text};
 
@@ -183,15 +187,15 @@ pub struct ShadowLocks {
 impl ShadowLocks {
     /// The lock flag of every entry of an `/etc/shadow` text whose name is
     /// a valid [`UserName`]. Locked means what `passwd -S` calls `L` after
-    /// `usermod -L`: the password field starts with `!`. Nothing else of
-    /// the field leaves this function.
+    /// `usermod -L`: the password field starts with `!`, or is `*` and so
+    /// holds no password. Nothing else of the field leaves this function.
     pub fn from_shadow(shadow: &str) -> Self {
         let locks = shadow
             .lines()
             .filter_map(|line| {
                 let mut fields = line.split(':');
                 let user = UserName::new(fields.next()?).ok()?;
-                let locked = fields.next()?.starts_with('!');
+                let locked = fields.next()?.starts_with(['!', '*']);
 
                 Some(AccountLock { user, locked })
             })

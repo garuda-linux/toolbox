@@ -27,14 +27,18 @@ impl Paths {
         Self::from_env(|key| std::env::var_os(key))
     }
 
-    /// `lookup` answers environment variables. Without `HOME` the folders
-    /// fall back to `/root`, the only user without one in practice.
+    /// `lookup` answers environment variables. Without an absolute `HOME`
+    /// the folders fall back to `/root`, the only user without one in
+    /// practice.
     #[must_use = "the paths are only computed, nothing is created"]
     pub fn from_env<F>(lookup: F) -> Self
     where
         F: Fn(&str) -> Option<OsString>,
     {
-        let named_home = lookup("HOME").map(PathBuf::from);
+        let named_home = lookup("HOME")
+            .map(PathBuf::from)
+            .filter(|path| path.is_absolute());
+
         let home_named = named_home.is_some();
         let home = named_home.unwrap_or_else(|| PathBuf::from("/root"));
         let named = |variable: &str| {

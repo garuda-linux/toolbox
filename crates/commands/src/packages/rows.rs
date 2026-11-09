@@ -99,7 +99,10 @@ impl PackageInfo {
             optional: details
                 .optional
                 .into_iter()
-                .map(|OptionalDependency { name, reason }| OptionalRow { name, reason })
+                .map(|OptionalDependency { name, reason }| OptionalRow {
+                    name: name.as_str().to_owned(),
+                    reason,
+                })
                 .collect(),
             required_by: details.required_by,
             provides: details.provides,

@@ -38,3 +38,39 @@ fn an_edit_lands_in_the_file_and_its_folder_is_made() {
         .unwrap();
     assert!(!file.path.exists());
 }
+
+/// Two commands at once each read, change and write the file. The lock
+/// makes the second wait, so neither change is lost.
+#[test]
+fn an_edit_waits_for_the_lock_of_another_command() {
+    use std::time::Duration;
+
+    use rustix::fs::{FlockOperation, flock};
+
+    let folder = TempDir::new().unwrap();
+    let path = folder.path().join("changes.json");
+    let held = std::fs::File::create(folder.path().join("changes.json.lock")).unwrap();
+
+    flock(&held, FlockOperation::LockExclusive).unwrap();
+
+    let waiting = std::thread::Builder::new()
+        .name("second command".to_owned())
+        .spawn({
+            let path = path.clone();
+
+            move || {
+                File { path }
+                    .edit(&QueueEdit::between(&ChangeSet::default(), &firefox()))
+                    .unwrap();
+            }
+        })
+        .unwrap();
+
+    std::thread::sleep(Duration::from_millis(200));
+    assert!(!path.exists(), "the edit did not wait for the lock");
+
+    drop(held);
+    waiting.join().unwrap();
+
+    assert_eq!(File { path }.saved().unwrap(), firefox().to_saved());
+}

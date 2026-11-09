@@ -320,9 +320,9 @@ fn the_running_kernel_has_a_release() -> TestResult {
 
     let running = SystemKernels::system().running()?;
 
-    assert_ne!(running.release, "");
+    assert_ne!(running.release.as_str(), "");
     assert_eq!(
-        running.release,
+        running.release.as_str(),
         fs::read_to_string("/proc/sys/kernel/osrelease")?.trim()
     );
     Ok(())

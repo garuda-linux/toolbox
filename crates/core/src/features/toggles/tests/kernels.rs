@@ -42,7 +42,7 @@ fn only_lts() -> Snapshot {
     });
     snapshot.insert(InstalledPackages(packages(&names)));
     snapshot.insert(RunningKernel {
-        release: "6.12.9-1-lts".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.12.9-1-lts").unwrap(),
         package: Some(package("linux-lts")),
     });
     snapshot.insert(PackageGraph::default());

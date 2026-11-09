@@ -14,7 +14,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use crossbeam_channel::Receiver;
 use tokio::runtime::Handle;
 use tokio::sync::watch;
-use toolbox_config::write_atomic;
+use toolbox_config::write_private;
 use toolbox_core::{ChangeSet, RestoreProblem, SavedChanges, Snapshot, domains};
 
 use super::NotKept;
@@ -208,7 +208,7 @@ pub fn store(path: &Path, saved: &SavedChanges) -> std::io::Result<()> {
         }
     } else {
         let bytes = serde_json::to_vec_pretty(saved).map_err(std::io::Error::other)?;
-        write_atomic(path, &bytes)
+        write_private(path, &bytes)
     }
 }
 

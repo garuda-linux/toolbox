@@ -156,6 +156,40 @@ fn a_broken_line_in_the_mount_table_is_skipped() {
     assert_eq!(table.first().unwrap().point, "/");
 }
 
+/// Edit: a mount at `/mnt/Ren\xE9` appended to the captured table of the
+/// Garuda install, the Latin-1 byte a folder made under a Latin-1 locale
+/// keeps. The kernel passes such bytes through unescaped.
+#[test]
+fn a_mount_point_that_is_no_utf8_keeps_the_table() {
+    let dir = tempfile::tempdir().unwrap();
+    let captured = include_str!("../fixtures/installed/mountinfo");
+    let (before, after) = captured
+        .lines()
+        .next()
+        .unwrap()
+        .split_once("/@ / ")
+        .unwrap();
+
+    std::fs::create_dir_all(dir.path().join("proc/self")).unwrap();
+    std::fs::write(
+        dir.path().join("proc/self/mountinfo"),
+        [
+            captured.as_bytes(),
+            before.as_bytes(),
+            b"/@ /mnt/Ren\xE9 ",
+            after.as_bytes(),
+            b"\n",
+        ]
+        .concat(),
+    )
+    .unwrap();
+
+    let table = mounts(dir.path()).unwrap();
+
+    assert_eq!(table.len(), captured.lines().count() + 1);
+    assert_eq!(table.last().unwrap().point, "/mnt/Ren\u{fffd}");
+}
+
 #[test]
 fn a_file_or_a_missing_path_is_no_block_device() {
     let dir = tempfile::tempdir().unwrap();

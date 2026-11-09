@@ -127,7 +127,7 @@ pub fn can_log_in(name: &str, password: &str) -> Result<bool, Box<dyn Error>> {
 }
 
 fn locks() -> Result<ShadowLocks, Box<dyn Error>> {
-    let output = crate::oneshot::output(&["read", "shadow-locks"])?;
+    let output = crate::person::output(&["read", "shadow-locks"])?;
 
     assert!(output.status.success());
     Ok(decode(String::from_utf8(output.stdout)?.trim_end())?)

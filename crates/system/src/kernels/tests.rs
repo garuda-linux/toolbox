@@ -71,7 +71,7 @@ fn the_modules_folder_names_the_package_of_the_running_kernel() {
     assert_eq!(
         SystemKernels::new(root.path()).running(),
         Ok(RunningKernel {
-            release: "7.3.1-1-garuda".to_owned(),
+            release: KernelRelease::new("7.3.1-1-garuda").unwrap(),
             package: Some(package("linux-garuda")),
         })
     );
@@ -92,7 +92,7 @@ fn a_running_kernel_without_its_folder_has_no_package() {
     assert_eq!(
         SystemKernels::new(root.path()).running(),
         Ok(RunningKernel {
-            release: "7.3.1-1-garuda".to_owned(),
+            release: KernelRelease::new("7.3.1-1-garuda").unwrap(),
             package: None,
         })
     );

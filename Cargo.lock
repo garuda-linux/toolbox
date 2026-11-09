@@ -5446,6 +5446,7 @@ dependencies = [
  "toolbox-cli",
  "toolbox-config",
  "toolbox-core",
+ "toolbox-fs",
  "toolbox-guide",
  "toolbox-instance",
  "toolbox-plan",

@@ -14,7 +14,7 @@ mod dkms;
 mod editor;
 mod garuda_update;
 mod grub;
-mod lines;
+pub mod lines;
 mod locale;
 mod mirrorlist;
 mod name;
@@ -35,9 +35,9 @@ pub mod text;
 mod user_config;
 
 pub use account::{
-    AccountLock, FullName, HomeChange, HomeDirectory, HomeFolder, InvalidFullName,
+    AccountLock, Caller, FullName, HomeChange, HomeDirectory, HomeFolder, InvalidFullName,
     InvalidHomeDirectory, InvalidNewUser, InvalidUserId, LAST_USER_ID, NewHome, NewUser,
-    NewUserParts, SHADOW, ShadowLocks, UserId,
+    NewUserParts, PasswdEntry, SHADOW, ShadowLocks, UserId, passwd_entries,
 };
 pub use action::{
     EmptyTargetList, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope, Upgrader,

@@ -13,13 +13,18 @@ mod tests;
 
 use std::fs::File;
 use std::io::{self, Read as _};
+use std::os::fd::AsFd;
 use std::path::Path;
 use std::process::{Command, ExitCode};
 use std::sync::Arc;
 
 use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture, sdboot_menu};
+use toolbox_plan::lines::lossy;
+use toolbox_plan::procedure::PASSWD;
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind, encode};
-use toolbox_plan::{EFI_FIRMWARE, GRUB_CONFIG, GrubMenu, GrubPlatform, SHADOW, ShadowLocks};
+use toolbox_plan::{
+    Caller, EFI_FIRMWARE, GRUB_CONFIG, GrubMenu, GrubPlatform, SHADOW, ShadowLocks,
+};
 
 use crate::io::{print_answer, refuse};
 
@@ -32,22 +37,63 @@ pub fn run(command: &str, kind: &str) -> ExitCode {
         return refuse("it does not know this kind of read");
     };
 
+    // Only the lock flags depend on who asks.
+    let caller = match kind {
+        ReadKind::ShadowLocks => match caller_of(io::stdin()) {
+            Ok(caller) => Some(caller),
+            Err(error) => return refuse(&error.to_string()),
+        },
+        ReadKind::GrubMenu | ReadKind::SdBootMenu | ReadKind::Dmesg | ReadKind::Journal => None,
+    };
+
     print_answer(
-        answer(Path::new("/"), kind),
+        answer(Path::new("/"), kind, caller),
         &format!("cannot answer {}", kind.as_str()),
     )
+}
+
+/// The account on the other end of `stdin`, which the app makes a socket
+/// for this read. The kernel names its uid, so `PKEXEC_UID` or an argument
+/// a caller could set is not trusted.
+///
+/// # Errors
+///
+/// [`io::ErrorKind::PermissionDenied`] when `stdin` is no socket or the
+/// uid is root's or a system account's.
+pub fn caller_of(stdin: impl AsFd) -> io::Result<Caller> {
+    let peer = rustix::net::sockopt::socket_peercred(&stdin).map_err(|_not_a_socket| {
+        io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "it answers only the app, which asks through a socket",
+        )
+    })?;
+
+    Caller::new(peer.uid.as_raw()).ok_or_else(|| {
+        io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "it answers only the account of a person",
+        )
+    })
 }
 
 /// # Errors
 ///
 /// When the file behind the kind cannot be read, is too large or is no
 /// text, or when its program cannot be started. A program that is not
-/// installed or exits with an error is an answer, not an error.
-pub fn answer(root: &Path, kind: ReadKind) -> io::Result<String> {
+/// installed or exits with an error is an answer, not an error. The lock
+/// flags need a `caller`.
+pub fn answer(root: &Path, kind: ReadKind, caller: Option<Caller>) -> io::Result<String> {
     match kind {
-        ReadKind::ShadowLocks => read_text(&root.join(SHADOW), |text| {
-            encode(&ShadowLocks::from_shadow(text))
-        }),
+        ReadKind::ShadowLocks => {
+            let caller = caller
+                .ok_or_else(|| io::Error::new(io::ErrorKind::PermissionDenied, "nobody asked"))?;
+
+            let passwd = lossy(read_capped(&root.join(PASSWD))?);
+
+            read_text(&root.join(SHADOW), |text| {
+                encode(&ShadowLocks::for_caller(text, &passwd, caller))
+            })
+        }
         ReadKind::GrubMenu => {
             let platform = GrubPlatform::from_efi_firmware(root.join(EFI_FIRMWARE).is_dir());
 

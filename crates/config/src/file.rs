@@ -11,13 +11,14 @@ use toolbox_fs::{Permissions, Replace};
 /// Links followed before a path counts as a loop, as `SYMLOOP_MAX` on Linux.
 const MAX_LINKS: usize = 40;
 
-const NEW_FILE: Replace<'static> = Replace::new(Permissions::Exactly(0o644));
+/// The app's files name users, packages and paths of the home folder.
+const OWNER_ONLY: Replace<'static> = Replace::new(Permissions::Exactly(0o600));
 
 /// Replaces the file at `path` with `bytes` and creates missing folders.
 ///
 /// A symlink at `path` stays: its target gets the new file, so settings
 /// kept in a dotfiles repository remain linked. The new file keeps the
-/// destination's mode, or 0644 when there is none yet, and the folder is
+/// destination's mode, or 0600 when there is none yet, and the folder is
 /// synced after the rename, so a crash leaves the old file or the whole
 /// new one.
 ///
@@ -27,8 +28,22 @@ const NEW_FILE: Replace<'static> = Replace::new(Permissions::Exactly(0o644));
 /// or the rename fails. A failed folder sync only logs: the file is in
 /// place by then.
 pub fn write_atomic(path: &Path, bytes: &[u8]) -> io::Result<()> {
+    replace(path, bytes, &OWNER_ONLY.keeping_mode())
+}
+
+/// [`write_atomic`] for state no one else should read: the file is 0600
+/// whatever mode it had.
+///
+/// # Errors
+///
+/// As [`write_atomic`].
+pub fn write_private(path: &Path, bytes: &[u8]) -> io::Result<()> {
+    replace(path, bytes, &OWNER_ONLY)
+}
+
+fn replace(path: &Path, bytes: &[u8], how: &Replace<'_>) -> io::Result<()> {
     let path = resolve_links(path)?;
-    let replaced = toolbox_fs::replace(&path, bytes, &NEW_FILE.keeping_mode())?;
+    let replaced = toolbox_fs::replace(&path, bytes, how)?;
 
     if let Err(error) = replaced.folder_sync {
         tracing::warn!(

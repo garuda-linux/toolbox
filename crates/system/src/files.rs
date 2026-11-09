@@ -35,5 +35,5 @@ pub fn modified_optional(path: &Path) -> Result<Option<SystemTime>, ProbeError> 
 /// The text of `path`, lossy, with the error kind kept for callers that
 /// tell a missing file from an unreadable one.
 pub fn read_lossy(path: &Path) -> io::Result<String> {
-    Ok(String::from_utf8_lossy(&fs::read(path)?).into_owned())
+    Ok(toolbox_plan::lines::lossy(fs::read(path)?))
 }

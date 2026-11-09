@@ -71,6 +71,36 @@ fn an_id_that_is_no_number_reads_as_missing() {
     assert_eq!(user_id(dir.path(), &user("user")).unwrap(), Listed::Missing);
 }
 
+/// Edit: the empty full name of `user` replaced by `Ren\xE9`, the Latin-1
+/// byte an account made under a Latin-1 locale keeps. The app lists the
+/// account, so the helper has to find it as well.
+#[test]
+fn a_full_name_that_is_no_utf8_keeps_the_account() {
+    let dir = tempfile::tempdir().unwrap();
+    let (before, after) = PASSWD.split_once("user:x:1000:1000:").unwrap();
+
+    etc(dir.path());
+    fs::write(
+        dir.path().join("etc/passwd"),
+        [
+            before.as_bytes(),
+            b"user:x:1000:1000:Ren\xE9",
+            after.as_bytes(),
+        ]
+        .concat(),
+    )
+    .unwrap();
+
+    assert_eq!(
+        user_id(dir.path(), &user("user")).unwrap(),
+        Listed::Id(1000)
+    );
+
+    let (outcome, _) = run(dir.path(), &Builtin::RequireOrdinaryUser(user("user")));
+
+    assert_eq!(outcome, Outcome::Succeeded);
+}
+
 /// Edit: a second account `toor` with user id 0 appended, the BSD habit of
 /// a spare root login.
 #[test]

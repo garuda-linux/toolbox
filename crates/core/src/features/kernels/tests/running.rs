@@ -15,7 +15,7 @@ fn the_snapshot_gives_the_kernels_and_the_one_that_runs() {
         local: vec![local("linux", "1-1"), local("linux-headers", "1-1")],
     });
     snapshot.insert(RunningKernel {
-        release: "6.14.0-arch1-1".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.14.0-arch1-1").unwrap(),
         package: None,
     });
     let (listed, booted) = kernels_of(&snapshot).unwrap();
@@ -28,7 +28,7 @@ fn the_snapshot_gives_the_kernels_and_the_one_that_runs() {
 fn the_modules_folder_names_the_running_kernel() {
     let (kernels, _) = sample();
     let booted = RunningKernel {
-        release: "6.12.9-1-lts".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.12.9-1-lts").unwrap(),
         package: Some(package("linux-lts")),
     };
 
@@ -58,7 +58,7 @@ fn without_its_folder_the_release_ending_names_the_running_kernel() {
     let kernels = kernels(&packages, &KernelReleases::default());
     let by_release = |release: &str| {
         let booted = RunningKernel {
-            release: release.to_owned(),
+            release: toolbox_plan::KernelRelease::new(release).unwrap(),
             package: None,
         };
 

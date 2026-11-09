@@ -157,7 +157,12 @@ pub fn running<'kernels>(
         kernels
             .iter()
             .filter(|kernel| kernel.is_installed())
-            .filter_map(|kernel| Some((flavour_match(&running.release, &kernel.name)?, kernel)))
+            .filter_map(|kernel| {
+                Some((
+                    flavour_match(running.release.as_str(), &kernel.name)?,
+                    kernel,
+                ))
+            })
             .max_by_key(|(length, _)| *length)
             .map(|(_, kernel)| kernel)
     })

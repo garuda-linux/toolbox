@@ -16,7 +16,7 @@ fn row<'rows, 'listing>(rows: &'rows [Row<'listing>], name: &str) -> &'rows Row<
 fn without_package_databases_there_is_no_listing() {
     let mut snapshot = Snapshot::default();
     snapshot.insert(RunningKernel {
-        release: "6.12.30".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.12.30").unwrap(),
         package: None,
     });
 

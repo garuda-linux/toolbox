@@ -58,7 +58,7 @@ pub fn system() -> Snapshot {
         package("linux-lts"),
     ])));
     snapshot.insert(RunningKernel {
-        release: "6.14.0-arch3-1".to_owned(),
+        release: KernelRelease::new("6.14.0-arch3-1").unwrap(),
         package: Some(package("linux")),
     });
     snapshot.insert(KernelReleases(BTreeMap::from([

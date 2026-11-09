@@ -3,6 +3,7 @@
 mod common;
 mod handmade;
 mod oneshot;
+mod person;
 
 use std::error::Error;
 
@@ -232,12 +233,24 @@ fn read_without_root_answers_nothing() -> TestResult {
         return Ok(());
     }
 
-    let output = output(&["read", "shadow-locks"])?;
+    let output = person::output(&["read", "shadow-locks"])?;
 
     // NixOS and Arch both keep /etc/shadow from other users.
     assert_eq!(output.status.code(), Some(1_i32));
     assert_eq!(output.stdout, Vec::<u8>::new());
     assert!(String::from_utf8_lossy(&output.stderr).contains("cannot answer shadow-locks"));
+    Ok(())
+}
+
+/// Started from a terminal or a script, stdin is no socket, so the helper
+/// cannot tell who asks and answers nothing.
+#[test]
+fn shadow_locks_without_a_socket_are_refused() -> TestResult {
+    let output = output(&["read", "shadow-locks"])?;
+
+    assert_eq!(output.status.code(), Some(2_i32));
+    assert_eq!(output.stdout, Vec::<u8>::new());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("answers only the app"));
     Ok(())
 }
 

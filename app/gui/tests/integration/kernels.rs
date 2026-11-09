@@ -84,7 +84,7 @@ pub fn system(running: bool) -> Snapshot {
 
     if running {
         snapshot.insert(RunningKernel {
-            release: "6.14.0-arch1-1".to_owned(),
+            release: KernelRelease::new("6.14.0-arch1-1").unwrap(),
             package: Some(package("linux")),
         });
     }

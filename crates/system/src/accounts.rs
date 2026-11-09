@@ -7,7 +7,8 @@ mod tests;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use toolbox_plan::{GroupName, ShellPath, UserName, text};
+use toolbox_plan::lines::entries;
+use toolbox_plan::{GroupName, PasswdEntry, ShellPath, UserName, passwd_entries, text};
 use toolbox_state::accounts::{Accounts, Group, User};
 use toolbox_state::parts::{AvailableShells, CurrentShells};
 
@@ -82,16 +83,10 @@ impl AccountSource for EtcAccounts {
     }
 }
 
-fn entries(file: &str) -> impl Iterator<Item = &str> {
-    file.lines()
-        .map(str::trim)
-        .filter(|line| !line.is_empty() && !line.starts_with('#'))
-}
-
 /// Entries with a name our rules reject or an id that is no number are
 /// logged and left out: the app could not change them anyway.
 fn accounts(passwd: &str, group: &str) -> Accounts {
-    let mut users: Vec<User> = entries(passwd).filter_map(user).collect();
+    let mut users: Vec<User> = passwd_entries(passwd).filter_map(user).collect();
     let mut groups: Vec<Group> = entries(group).filter_map(group_entry).collect();
 
     users.sort_by(|left, right| left.name.cmp(&right.name));
@@ -103,27 +98,21 @@ fn accounts(passwd: &str, group: &str) -> Accounts {
 }
 
 pub fn name_of(passwd: &str, uid: u32) -> Option<UserName> {
-    entries(passwd)
+    passwd_entries(passwd)
         .filter_map(user)
         .find(|user| user.uid == uid)
         .map(|user| user.name)
 }
 
-/// `name:password:uid:gid:comment:home:shell`.
-fn user(entry: &str) -> Option<User> {
-    let mut fields = entry.split(':');
-    let name = names::one(fields.next()?)?;
-    let uid = fields.nth(1)?.trim().parse().ok()?;
-    let gid = fields.next()?.trim().parse().ok()?;
-
+fn user(entry: PasswdEntry<'_>) -> Option<User> {
     Some(User {
-        name,
-        uid,
-        gid,
+        name: names::one(entry.name)?,
+        uid: entry.uid,
+        gid: entry.gid,
         // Any user may set it with chfn, so it is outside text.
-        gecos: text::plain(fields.next().unwrap_or_default()),
-        home: fields.next().unwrap_or_default().to_owned(),
-        shell: fields.next().unwrap_or_default().trim().to_owned(),
+        gecos: text::plain(entry.gecos),
+        home: entry.home.to_owned(),
+        shell: entry.shell.to_owned(),
     })
 }
 
@@ -147,14 +136,12 @@ fn group_entry(entry: &str) -> Option<Group> {
 /// Field 7 of each `passwd` entry. Accounts without a shell (login uses
 /// `/bin/sh` then) or with one our rules reject are left out.
 fn login_shells(passwd: &str) -> BTreeMap<UserName, ShellPath> {
-    entries(passwd)
+    passwd_entries(passwd)
         .filter_map(|entry| {
-            let mut fields = entry.split(':');
-            let name = fields.next()?;
-            let shell = fields.nth(5)?.trim();
+            let name = entry.name;
             let user: UserName = names::one(name)?;
 
-            ShellPath::new(shell)
+            ShellPath::new(entry.shell)
                 .inspect_err(|error| tracing::debug!("skipped the shell of {name}: {error}"))
                 .ok()
                 .map(|shell| (user, shell))

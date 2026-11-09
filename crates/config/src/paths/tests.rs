@@ -141,3 +141,13 @@ fn the_own_state_folder_needs_a_home_or_a_state_home() {
     assert_eq!(relative.own_state_dir(), None);
     assert_eq!(Paths::from_env(env(&[])).own_state_dir(), None);
 }
+
+/// A relative home would put the app's files below whatever folder the
+/// app was started in.
+#[test]
+fn a_relative_home_counts_as_none() {
+    let paths = Paths::from_env(env(&[("HOME", "home/nico")]));
+
+    assert_eq!(paths.home(), PathBuf::from("/root"));
+    assert_eq!(paths.own_state_dir(), None);
+}

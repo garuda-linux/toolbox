@@ -12,6 +12,7 @@ toolbox-aur.workspace = true
 toolbox-catalog.workspace = true
 toolbox-cli.workspace = true
 toolbox-config.workspace = true
+toolbox-fs.workspace = true
 toolbox-core.workspace = true
 toolbox-guide.workspace = true
 toolbox-instance.workspace = true
@@ -24,7 +25,7 @@ clap.workspace = true
 crossbeam-channel.workspace = true
 jiff.workspace = true
 parking_lot.workspace = true
-rustix = { workspace = true, features = ["event", "process", "termios"] }
+rustix = { workspace = true, features = ["event", "fs", "process", "termios"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true

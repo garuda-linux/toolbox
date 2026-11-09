@@ -10,9 +10,10 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 use std::{fs, io};
 
+use toolbox_plan::lines::{entries, lossy};
 use toolbox_plan::procedure::{FIRST_USER_ID, GROUP, PASSWD};
 use toolbox_plan::protocol::Outcome;
-use toolbox_plan::{GroupName, HomeDirectory, LAST_USER_ID, StepId, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, LAST_USER_ID, StepId, UserName, passwd_entries};
 
 use crate::apply::EventSink;
 use crate::report::{failure, note};
@@ -26,7 +27,7 @@ const WORLD_WRITABLE: u32 = 0o002;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Listed {
     Id(u32),
-    /// No entry, or one whose id is no number.
+    /// No entry, or one whose ids are no numbers.
     Missing,
 }
 
@@ -34,20 +35,18 @@ pub enum Listed {
 ///
 /// When the file cannot be read.
 pub fn user_id(root: &Path, user: &UserName) -> io::Result<Listed> {
-    Ok(id_of(
-        &fs::read_to_string(root.join(PASSWD))?,
-        user.as_str(),
-    ))
+    let passwd = lossy(fs::read(root.join(PASSWD))?);
+
+    Ok(passwd_entries(&passwd)
+        .find(|entry| entry.name == user.as_str())
+        .map_or(Listed::Missing, |entry| Listed::Id(entry.uid)))
 }
 
 /// # Errors
 ///
 /// When the file cannot be read.
 pub fn group_id(root: &Path, group: &GroupName) -> io::Result<Listed> {
-    Ok(id_of(
-        &fs::read_to_string(root.join(GROUP))?,
-        group.as_str(),
-    ))
+    Ok(gid_of(&lossy(fs::read(root.join(GROUP))?), group.as_str()))
 }
 
 pub fn require_ordinary_user(
@@ -167,10 +166,9 @@ pub fn require_user_group(
     }
 }
 
-/// Field 3 of the first entry named `name`. Both files share the layout
-/// `name:password:id:…`.
-fn id_of(file: &str, name: &str) -> Listed {
-    file.lines()
+/// Field 3 of the first entry named `name`, `name:password:gid:members`.
+fn gid_of(file: &str, name: &str) -> Listed {
+    entries(file)
         .find_map(|line| {
             let mut fields = line.split(':');
 

@@ -93,12 +93,14 @@ impl Dkms {
 
 impl KernelSource for SystemKernels {
     fn running(&self) -> Result<RunningKernel, ProbeError> {
-        let release = files::read(&self.root.join(OS_RELEASE))?.trim().to_owned();
+        let text = files::read(&self.root.join(OS_RELEASE))?;
 
-        // A release that is no single path component names no folder.
-        let package = KernelRelease::new(release.as_str())
-            .ok()
-            .and_then(|release| self.package_of(release.as_str()));
+        // A release that is no single path component names no folder, and
+        // no kernel prints one.
+        let release = KernelRelease::new(text.trim())
+            .map_err(|error| ProbeError::Failed(format!("the running kernel: {error}")))?;
+
+        let package = self.package_of(release.as_str());
 
         Ok(RunningKernel { release, package })
     }

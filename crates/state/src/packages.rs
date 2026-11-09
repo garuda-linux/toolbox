@@ -62,7 +62,7 @@ pub struct PackageIndex {
 /// A dependency a package works without, and what it adds.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OptionalDependency {
-    pub name: String,
+    pub name: PackageName,
     pub reason: String,
 }
 

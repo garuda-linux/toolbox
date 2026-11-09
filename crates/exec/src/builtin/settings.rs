@@ -28,12 +28,9 @@ pub enum FileChange {
 ///
 /// When the list cannot be read.
 pub fn shell_is_listed(root: &Path, shell: &ShellPath) -> io::Result<bool> {
-    let list = std::fs::read_to_string(root.join(SHELLS))?;
+    let list = toolbox_plan::lines::lossy(std::fs::read(root.join(SHELLS))?);
 
-    Ok(list
-        .lines()
-        .map(str::trim)
-        .any(|line| line == shell.as_str()))
+    Ok(toolbox_plan::lines::entries(&list).any(|line| line == shell.as_str()))
 }
 
 /// The folder must exist: without it NetworkManager is not installed and

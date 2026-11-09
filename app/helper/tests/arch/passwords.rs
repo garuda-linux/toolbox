@@ -97,14 +97,15 @@ fn shadow_locks_answers_flags_and_no_hash() -> TestResult {
         return Ok(());
     }
 
-    let output = crate::oneshot::output(&["read", "shadow-locks"])?;
+    let output = crate::person::output(&["read", "shadow-locks"])?;
 
     let answer = String::from_utf8(output.stdout)?;
     let shadow = std::fs::read_to_string("/etc/shadow")?;
 
     assert!(output.status.success());
     assert_eq!(answer.lines().count(), 1);
-    assert!(locked("root")?.is_some() && locked("tester")?.is_some());
+    assert!(locked("root")?.is_none(), "root is no person");
+    assert!(locked("tester")?.is_some());
 
     for hash in shadow
         .lines()

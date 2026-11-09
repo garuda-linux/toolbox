@@ -25,6 +25,7 @@ mod network;
 mod oneshot;
 #[path = "arch/passwords.rs"]
 mod passwords;
+mod person;
 #[path = "arch/repair.rs"]
 mod repair;
 mod repair_names;

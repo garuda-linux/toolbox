@@ -154,7 +154,7 @@ fn the_details_of_an_installed_package_come_from_the_local_database() {
     assert_eq!(
         details.optional[6],
         OptionalDependency {
-            name: "gvfs".to_owned(),
+            name: PackageName::new("gvfs").unwrap(),
             reason: "for HTTP/S support (and many other schemes)".to_owned(),
         }
     );

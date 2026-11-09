@@ -153,7 +153,10 @@ only as long as its process.
 without a password.
 
 - `shadow-locks`: user names and locked flags, never a hash. The buffer is
-  overwritten before the answer.
+  overwritten before the answer. Only accounts of uid 1000 to 60000 and
+  the caller's own. The caller is the peer uid of stdin, a socket pair the
+  app makes (`Policy::identified`). Any other stdin, root, a system
+  account and `nobody` are refused. `!` and `*` count as locked.
 - `grub-menu`: titles and ids of at most 1000 entries, never the password
   hash or the kernel command line. Only the branches of the running
   firmware count (`/sys/firmware/efi`, as the app's own read).

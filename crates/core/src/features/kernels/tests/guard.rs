@@ -20,7 +20,7 @@ fn two_kernels() -> Snapshot {
     });
     snapshot.insert(InstalledPackages(packages(&names)));
     snapshot.insert(RunningKernel {
-        release: "6.14.0-4-arch".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.14.0-4-arch").unwrap(),
         package: Some(package("linux")),
     });
     snapshot
@@ -54,7 +54,7 @@ fn the_last_kernel_left_may_not_be_removed() {
         .push(repo("extra", "linux-zen-headers", "6.13.8.zen1-1"));
     snapshot.insert(listed);
     snapshot.insert(RunningKernel {
-        release: "6.13.8-zen1-1-zen".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.13.8-zen1-1-zen").unwrap(),
         package: Some(package("linux-zen")),
     });
     let mut changes = ChangeSet::default();
@@ -68,7 +68,11 @@ fn the_last_kernel_left_may_not_be_removed() {
 #[test]
 fn without_the_running_kernel_no_kernel_may_go() {
     let mut snapshot = two_kernels();
-    snapshot.insert(RunningKernel::default());
+    snapshot.insert(RunningKernel {
+        // A release no installed kernel names.
+        release: toolbox_plan::KernelRelease::new("6.12.30").unwrap(),
+        package: None,
+    });
 
     let refused = may_remove(&package("linux-lts"), &ChangeSet::default(), &snapshot);
 

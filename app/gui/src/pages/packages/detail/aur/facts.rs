@@ -111,8 +111,11 @@ pub fn relations(
     );
 
     ui.add_space(space);
-    let wanted: Vec<OptionalDependency> =
-        entry.opt_depends.iter().map(|line| split(line)).collect();
+    let wanted: Vec<OptionalDependency> = entry
+        .opt_depends
+        .iter()
+        .filter_map(|line| split(line))
+        .collect();
 
     let optional = optional(ui, &wanted, lookup, &mut unfolded.optional);
 
@@ -142,11 +145,12 @@ pub fn relations(
     depends.or(make).or(optional)
 }
 
-/// `name: what it adds`, as makepkg writes an optional dependency.
-fn split(line: &str) -> OptionalDependency {
+/// `name: what it adds`, as makepkg writes an optional dependency. A name
+/// no package can have is left out.
+fn split(line: &str) -> Option<OptionalDependency> {
     let (name, reason) = line.split_once(':').unwrap_or((line, ""));
-    OptionalDependency {
-        name: name.trim().to_owned(),
+    Some(OptionalDependency {
+        name: PackageName::new(name.trim()).ok()?,
         reason: reason.trim().to_owned(),
-    }
+    })
 }

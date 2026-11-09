@@ -32,9 +32,9 @@ pub struct LinuxPackages {
 /// The kernel that booted: what `uname -r` prints, and the package that
 /// owns its modules folder while that folder still exists (an updated
 /// kernel removes it until the next boot).
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunningKernel {
-    pub release: String,
+    pub release: KernelRelease,
     pub package: Option<PackageName>,
 }
 

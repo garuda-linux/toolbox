@@ -144,9 +144,12 @@ impl PackageIndexSource for Libalpm {
             optional: shown
                 .optdepends()
                 .iter()
-                .map(|dep| OptionalDependency {
-                    name: dep.name().to_owned(),
-                    reason: toolbox_plan::text::plain(dep.desc().unwrap_or_default()),
+                // A name no package can have links to nothing.
+                .filter_map(|dep| {
+                    Some(OptionalDependency {
+                        name: PackageName::new(dep.name()).ok()?,
+                        reason: toolbox_plan::text::plain(dep.desc().unwrap_or_default()),
+                    })
                 })
                 .collect(),
             required_by: local

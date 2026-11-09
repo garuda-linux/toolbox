@@ -8,6 +8,7 @@ mod tests;
 use std::io::Write as _;
 use std::path::PathBuf;
 
+use rustix::fs::{FlockOperation, flock};
 use tokio::runtime::Handle;
 use toolbox_core::{ChangeSet, RestoreProblem, SAVED_VERSION, SavedChanges, Snapshot, domains};
 use toolbox_instance::bus::queue::{Refusal, Window};
@@ -61,14 +62,16 @@ impl Store for File {
     fn edit(&self, edit: &QueueEdit) -> Result<(), Problem> {
         let file = |error: std::io::Error| Problem::File(error.to_string());
         let domains = domains::all().map_err(|error| Problem::File(error.to_string()))?;
+
+        if let Some(folder) = self.path.parent() {
+            std::fs::create_dir_all(folder).map_err(file)?;
+        }
+
+        let _held = self.lock().map_err(file)?;
         let (mut changes, restored) = self.restored();
 
         for problem in edit.apply(&mut changes, &domains, &Snapshot::default()) {
             tracing::warn!("dropped a change for the queue: {problem}");
-        }
-
-        if let Some(folder) = self.path.parent() {
-            std::fs::create_dir_all(folder).map_err(file)?;
         }
 
         if restored == Restored::Lossy {
@@ -89,6 +92,26 @@ impl File {
         }
 
         (changes, Restored::of(&problems))
+    }
+
+    /// Held from the read to the write of an edit, so two commands at
+    /// once do not lose one's change. The lock file stays, as removing it
+    /// would race.
+    fn lock(&self) -> std::io::Result<std::fs::File> {
+        use std::os::unix::fs::OpenOptionsExt as _;
+
+        let mut name = self.path.as_os_str().to_owned();
+        name.push(".lock");
+
+        let file = std::fs::OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .write(true)
+            .mode(0o600)
+            .open(name)?;
+
+        flock(&file, FlockOperation::LockExclusive)?;
+        Ok(file)
     }
 }
 

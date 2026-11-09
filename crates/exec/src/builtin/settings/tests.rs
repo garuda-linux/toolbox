@@ -74,6 +74,21 @@ fn blanks_around_a_shell_count_and_a_comment_does_not() {
     assert!(!shell_is_listed(root.path(), &shell("/usr/bin/zsh")).unwrap());
 }
 
+/// Edit: the comment `# Ren\xE9` appended, a Latin-1 byte from an editor
+/// under a Latin-1 locale.
+#[test]
+fn a_byte_that_is_no_utf8_hides_no_shell() {
+    let root = root_with_shells(SHELLS);
+
+    fs::write(
+        root.path().join("etc/shells"),
+        [SHELLS.as_bytes(), b"# Ren\xE9\n"].concat(),
+    )
+    .unwrap();
+
+    assert!(shell_is_listed(root.path(), &shell("/usr/bin/bash")).unwrap());
+}
+
 #[test]
 fn a_missing_shell_list_is_an_error_not_a_pass() {
     let root = tempfile::tempdir().unwrap();

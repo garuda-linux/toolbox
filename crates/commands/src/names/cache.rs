@@ -7,6 +7,7 @@ mod tests;
 use std::path::{Path, PathBuf};
 
 use toolbox_cli::complete::Names;
+use toolbox_fs::{Permissions, Replace};
 
 /// The format's version. An older file is ignored, not read.
 const VERSION: &str = "1";
@@ -82,8 +83,9 @@ fn stored(dir: &Path, names: Names) -> Option<(u64, Vec<String>)> {
     Some((written, lines.map(str::to_owned).collect()))
 }
 
-/// Writes the list beside the others, through a temporary file so a
-/// completion reading meanwhile never sees half of one.
+/// Writes the list beside the others, replaced whole so a completion
+/// reading meanwhile never sees half of one. A list that cannot be written
+/// is read again next time.
 pub fn write(dir: &Path, names: Names, now: u64, found: &[String]) {
     if std::fs::create_dir_all(dir).is_err() {
         return;
@@ -95,8 +97,10 @@ pub fn write(dir: &Path, names: Names, now: u64, found: &[String]) {
         text.push('\n');
     }
 
-    let temp = dir.join(format!("{}.tmp", std::process::id()));
-    if std::fs::write(&temp, text).is_ok() {
-        std::fs::rename(&temp, dir.join(file(names))).ok();
+    let path = dir.join(file(names));
+    let private = Replace::new(Permissions::Exactly(0o600));
+
+    if let Err(error) = toolbox_fs::replace(&path, text.as_bytes(), &private) {
+        tracing::debug!("cannot keep the names in {}: {error}", path.display());
     }
 }

@@ -1,7 +1,7 @@
 use std::fs;
 use std::os::unix::fs::{PermissionsExt as _, symlink};
 
-use super::write_atomic;
+use super::{write_atomic, write_private};
 
 #[test]
 fn writes_into_missing_folders_and_replaces_old_content() {
@@ -20,7 +20,7 @@ fn writes_into_missing_folders_and_replaces_old_content() {
 }
 
 #[test]
-fn keeps_the_destination_mode_and_uses_0644_for_new_files() {
+fn keeps_the_destination_mode_and_uses_0600_for_new_files() {
     let dir = tempfile::tempdir().unwrap();
     let kept = dir.path().join("kept.toml");
     fs::write(&kept, b"old").unwrap();
@@ -39,7 +39,7 @@ fn keeps_the_destination_mode_and_uses_0644_for_new_files() {
 
     assert_eq!(
         fs::metadata(&fresh).unwrap().permissions().mode() & 0o777,
-        0o644
+        0o600
     );
 }
 
@@ -113,4 +113,22 @@ fn a_folder_that_cannot_be_synced_still_saves() {
         result.unwrap();
         assert_eq!(fs::read_to_string(&path).unwrap(), "new");
     }
+}
+
+/// The queue names users and packages, so an older file of 0644 is
+/// tightened on the next save.
+#[test]
+fn a_private_file_is_0600_whatever_it_was() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("changes.json");
+    fs::write(&path, b"old").unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o644)).unwrap();
+
+    write_private(&path, b"new").unwrap();
+
+    assert_eq!(fs::read_to_string(&path).unwrap(), "new");
+    assert_eq!(
+        fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+        0o600
+    );
 }

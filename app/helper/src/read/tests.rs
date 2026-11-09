@@ -2,10 +2,10 @@ use std::fs;
 use std::path::Path;
 
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind, decode};
-use toolbox_plan::{ShadowLocks, UserName};
+use toolbox_plan::{Caller, ShadowLocks, UserName};
 
-use super::answer;
-use crate::testing::SHADOW;
+use super::{answer, caller_of};
+use crate::testing::{PASSWD, SHADOW};
 
 /// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
 const GRUB_CFG: &str = include_str!("../../../../crates/plan/src/grub/fixtures/installed/grub.cfg");
@@ -17,9 +17,14 @@ set superusers=\"admin\"
 password_pbkdf2 admin grub.pbkdf2.sha512.10000.5A9F0C3E7B1D.99AABBCCDDEE
 ";
 
+fn person() -> Caller {
+    Caller::new(1000).unwrap()
+}
+
 fn shadow(root: &Path, content: &[u8]) {
     fs::create_dir_all(root.join("etc")).unwrap();
     fs::write(root.join("etc/shadow"), content).unwrap();
+    fs::write(root.join("etc/passwd"), PASSWD).unwrap();
 }
 
 #[test]
@@ -27,7 +32,7 @@ fn shadow_locks_answers_names_and_flags_on_one_line() {
     let dir = tempfile::tempdir().unwrap();
     shadow(dir.path(), SHADOW.as_bytes());
 
-    let line = answer(dir.path(), ReadKind::ShadowLocks).unwrap();
+    let line = answer(dir.path(), ReadKind::ShadowLocks, Some(person())).unwrap();
 
     assert_eq!(line.matches('\n').count(), 1);
 
@@ -42,10 +47,10 @@ fn shadow_locks_answers_names_and_flags_on_one_line() {
             .map(|lock| lock.locked)
     };
 
-    assert_eq!(locks.locks.len(), SHADOW.lines().count());
-    assert_eq!(locked("root"), Some(false));
+    assert_eq!(locks.locks.len(), 3, "the people only");
+    assert_eq!(locked("root"), None);
     assert_eq!(locked("nopass"), Some(false));
-    assert_eq!(locked("bin"), Some(true));
+    assert_eq!(locked("bin"), None);
     assert_eq!(locked("user"), Some(true));
     assert_eq!(locked("guest"), Some(true));
 }
@@ -55,7 +60,7 @@ fn the_answer_holds_no_hash() {
     let dir = tempfile::tempdir().unwrap();
     shadow(dir.path(), SHADOW.as_bytes());
 
-    let line = answer(dir.path(), ReadKind::ShadowLocks).unwrap();
+    let line = answer(dir.path(), ReadKind::ShadowLocks, Some(person())).unwrap();
 
     for part in ["$", "j9T", "xxxx", "20765", "14871"] {
         assert!(!line.contains(part), "{part} in {line}");
@@ -66,9 +71,9 @@ fn the_answer_holds_no_hash() {
 fn a_missing_or_binary_shadow_is_an_error() {
     let dir = tempfile::tempdir().unwrap();
 
-    answer(dir.path(), ReadKind::ShadowLocks).unwrap_err();
+    answer(dir.path(), ReadKind::ShadowLocks, Some(person())).unwrap_err();
     shadow(dir.path(), &[b'a', 0xff, 0xfe, b'\n']);
-    answer(dir.path(), ReadKind::ShadowLocks).unwrap_err();
+    answer(dir.path(), ReadKind::ShadowLocks, Some(person())).unwrap_err();
 }
 
 /// Returns once it can run: a test thread that forks while the script is
@@ -101,7 +106,7 @@ fn program(root: &Path, path: &str, script: &str) {
 }
 
 fn ran(root: &Path, kind: ReadKind) -> ProgramAnswer {
-    ProgramAnswer::parse(answer(root, kind).unwrap().trim_end()).unwrap()
+    ProgramAnswer::parse(answer(root, kind, None).unwrap().trim_end()).unwrap()
 }
 
 /// What the program printed and whether its start was cut.
@@ -199,7 +204,7 @@ fn a_missing_program_is_answered_as_missing() {
     let dir = tempfile::tempdir().unwrap();
 
     assert_eq!(
-        answer(dir.path(), ReadKind::Journal).unwrap(),
+        answer(dir.path(), ReadKind::Journal, None).unwrap(),
         "{\"result\":\"missing\"}\n"
     );
 }
@@ -213,7 +218,7 @@ fn a_long_output_is_cut_to_its_last_two_mebibytes_on_one_line() {
         "i=0; while [ $i -lt 40000 ]; do echo \"$i ................................................................................\"; i=$((i+1)); done",
     );
 
-    let line = answer(dir.path(), ReadKind::Journal).unwrap();
+    let line = answer(dir.path(), ReadKind::Journal, None).unwrap();
 
     assert_eq!(line.matches('\n').count(), 1, "the answer is not one line");
 
@@ -245,7 +250,7 @@ fn the_grub_menu_answers_titles_and_ids_on_one_line() {
     grub_cfg(dir.path(), GRUB_CFG.as_bytes());
     fs::create_dir_all(dir.path().join("sys/firmware/efi")).unwrap();
 
-    let line = answer(dir.path(), ReadKind::GrubMenu).unwrap();
+    let line = answer(dir.path(), ReadKind::GrubMenu, None).unwrap();
     let menu = toolbox_plan::GrubMenu::parse(line.trim_end()).unwrap();
     let ids: Vec<&str> = menu.entries.iter().map(|entry| entry.id.as_str()).collect();
 
@@ -281,7 +286,7 @@ fn the_grub_menu_of_a_bios_machine_has_no_firmware_entry() {
     let dir = tempfile::tempdir().unwrap();
     grub_cfg(dir.path(), GRUB_CFG.as_bytes());
 
-    let line = answer(dir.path(), ReadKind::GrubMenu).unwrap();
+    let line = answer(dir.path(), ReadKind::GrubMenu, None).unwrap();
     let menu = toolbox_plan::GrubMenu::parse(line.trim_end()).unwrap();
 
     assert!(
@@ -300,7 +305,7 @@ fn the_grub_menu_answer_holds_nothing_else_of_the_file() {
     let protected = format!("{GRUB_PASSWORD}{GRUB_CFG}");
     grub_cfg(dir.path(), protected.as_bytes());
 
-    let line = answer(dir.path(), ReadKind::GrubMenu).unwrap();
+    let line = answer(dir.path(), ReadKind::GrubMenu, None).unwrap();
 
     for part in [
         "pbkdf2",
@@ -322,9 +327,9 @@ fn the_grub_menu_answer_holds_nothing_else_of_the_file() {
 fn a_missing_or_binary_grub_config_is_an_error() {
     let dir = tempfile::tempdir().unwrap();
 
-    answer(dir.path(), ReadKind::GrubMenu).unwrap_err();
+    answer(dir.path(), ReadKind::GrubMenu, None).unwrap_err();
     grub_cfg(dir.path(), &[b'm', 0xff, 0xfe, b'\n']);
-    answer(dir.path(), ReadKind::GrubMenu).unwrap_err();
+    answer(dir.path(), ReadKind::GrubMenu, None).unwrap_err();
 }
 
 #[test]
@@ -356,8 +361,39 @@ fn an_oversized_shadow_is_left_alone() {
     let over = usize::try_from(super::MAX_FILE_BYTES).unwrap() + 1;
 
     fs::write(&shadow, vec![b'x'; over]).unwrap();
+    fs::write(dir.path().join("etc/passwd"), PASSWD).unwrap();
 
-    let error = answer(dir.path(), ReadKind::ShadowLocks).unwrap_err();
+    let error = answer(dir.path(), ReadKind::ShadowLocks, Some(person())).unwrap_err();
 
     assert_eq!(error.kind(), std::io::ErrorKind::InvalidData);
+}
+
+#[test]
+fn shadow_locks_without_a_caller_are_refused() {
+    let dir = tempfile::tempdir().unwrap();
+    shadow(dir.path(), SHADOW.as_bytes());
+
+    answer(dir.path(), ReadKind::ShadowLocks, None).unwrap_err();
+}
+
+/// The app's end of a socket pair, as `Policy::identified` makes it.
+#[test]
+fn the_caller_is_the_uid_on_the_other_end_of_the_socket() {
+    let uid = rustix::process::getuid().as_raw();
+    let (app, helper) = std::os::unix::net::UnixStream::pair().unwrap();
+
+    assert_eq!(caller_of(&helper).ok(), Caller::new(uid));
+    drop(app);
+}
+
+/// A plain file or a pipe names no peer, so whoever started the helper
+/// stays unknown.
+#[test]
+fn a_stdin_that_is_no_socket_names_no_caller() {
+    let file = tempfile::tempfile().unwrap();
+
+    assert_eq!(
+        caller_of(&file).unwrap_err().kind(),
+        std::io::ErrorKind::PermissionDenied
+    );
 }

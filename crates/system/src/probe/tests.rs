@@ -92,7 +92,7 @@ fn host() -> FakeHost {
 
 fn booted() -> RunningKernel {
     RunningKernel {
-        release: "6.14.0-arch1-1".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.14.0-arch1-1").unwrap(),
         package: Some(PackageName::new("linux").unwrap()),
     }
 }

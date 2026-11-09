@@ -3,7 +3,7 @@ use crate::UserName;
 
 /// `/etc/shadow` of the Lima image with every salt and hash replaced by
 /// `x`, the `$` fields and the lock sign kept.
-const SHADOW: &str = include_str!("fixtures/shadow");
+pub(super) const SHADOW: &str = include_str!("fixtures/shadow");
 /// `/etc/passwd` of the Lima image, its user renamed to `user`.
 pub(super) const PASSWD: &str = include_str!("../../../system/src/accounts/fixtures/passwd");
 
@@ -135,7 +135,7 @@ fn the_home_folder_stays_by_default() {
 }
 
 #[test]
-fn shadow_locks_follow_the_exclamation_mark() {
+fn shadow_locks_follow_the_exclamation_mark_and_the_star() {
     let locks = ShadowLocks::from_shadow(SHADOW).locks;
     let unlocked: Vec<&str> = locks
         .iter()
@@ -144,12 +144,12 @@ fn shadow_locks_follow_the_exclamation_mark() {
         .collect();
 
     assert_eq!(locks.len(), 27);
-    assert_eq!(locks[0], lock("root", false));
+    assert_eq!(locks[0], lock("root", true));
     assert!(locks.contains(&lock("nobody", true)));
     assert!(locks.contains(&lock("user", true)));
     assert!(locks.contains(&lock("guest", true)));
     assert_eq!(locks[26], lock("nopass", false));
-    assert_eq!(unlocked, ["root", "nopass"]);
+    assert_eq!(unlocked, ["nopass"]);
 }
 
 #[test]

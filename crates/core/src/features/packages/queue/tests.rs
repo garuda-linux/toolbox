@@ -141,7 +141,7 @@ fn the_running_kernel_is_not_queued_for_removal() {
             .collect(),
     });
     snapshot.insert(toolbox_state::kernels::RunningKernel {
-        release: "6.14.0-4-arch".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.14.0-4-arch").unwrap(),
         package: Some(name("linux")),
     });
     let mut installed = snapshot.part::<InstalledPackages>().unwrap().0.clone();

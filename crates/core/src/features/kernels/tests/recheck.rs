@@ -22,7 +22,7 @@ fn system() -> Snapshot {
     });
     snapshot.insert(InstalledPackages(packages(&names)));
     snapshot.insert(RunningKernel {
-        release: "6.14.0-4-arch".to_owned(),
+        release: toolbox_plan::KernelRelease::new("6.14.0-4-arch").unwrap(),
         package: Some(package("linux")),
     });
     snapshot
@@ -52,7 +52,11 @@ fn a_restored_removal_of_the_running_kernel_is_dropped_with_its_headers() {
 fn without_the_running_kernel_every_restored_kernel_removal_is_dropped() {
     let mut snapshot = system();
 
-    snapshot.insert(RunningKernel::default());
+    snapshot.insert(RunningKernel {
+        // A release no installed kernel names.
+        release: toolbox_plan::KernelRelease::new("6.12.30").unwrap(),
+        package: None,
+    });
 
     let mut changes = restored_removals(&["linux-lts", "linux-lts-headers", "vlc"]);
 

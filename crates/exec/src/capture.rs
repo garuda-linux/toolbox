@@ -12,6 +12,8 @@ mod process;
 mod tests;
 
 use std::collections::VecDeque;
+use std::os::fd::OwnedFd;
+use std::os::unix::net::UnixStream;
 use std::os::unix::process::CommandExt as _;
 use std::process::{Command, ExitStatus, Stdio};
 use std::sync::Arc;
@@ -37,6 +39,7 @@ pub struct Policy<'input> {
     error_limit: usize,
     cap_is_error: bool,
     stdin: Option<&'input [u8]>,
+    identified: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -85,6 +88,7 @@ impl<'input> Policy<'input> {
             error_limit: MAX_ERROR_BYTES,
             cap_is_error: false,
             stdin: None,
+            identified: false,
         }
     }
 
@@ -124,6 +128,15 @@ impl<'input> Policy<'input> {
     #[must_use = "a policy is only described, nothing runs"]
     pub const fn fed(mut self, input: &'input [u8]) -> Self {
         self.stdin = Some(input);
+        self
+    }
+
+    /// Stdin is one end of a socket pair, so the program learns this
+    /// process's uid from the kernel, which no caller can fake. Nothing is
+    /// sent on it. Only without input.
+    #[must_use = "a policy is only described, nothing runs"]
+    pub const fn identified(mut self) -> Self {
+        self.identified = true;
         self
     }
 
@@ -255,12 +268,21 @@ pub fn run_captured(
         )));
     }
 
+    // Held until the program ends, so its stdin stays a connected socket.
+    let mut ours = None;
+    let stdin = match (policy.stdin, policy.identified) {
+        (Some(_), _) => Stdio::piped(),
+        (None, true) => {
+            let (kept, theirs) = UnixStream::pair().map_err(CaptureError::Failed)?;
+
+            ours = Some(kept);
+            Stdio::from(OwnedFd::from(theirs))
+        }
+        (None, false) => Stdio::null(),
+    };
+
     command
-        .stdin(if policy.stdin.is_some() {
-            Stdio::piped()
-        } else {
-            Stdio::null()
-        })
+        .stdin(stdin)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         // Its own group, so a stop also reaches what the program started.
@@ -281,5 +303,8 @@ pub fn run_captured(
         }
     })?;
 
-    process::finish(child, policy, started, cancel)
+    let exited = process::finish(child, policy, started, cancel);
+
+    drop(ours);
+    exited
 }

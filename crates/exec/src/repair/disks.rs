@@ -11,6 +11,8 @@ use std::io;
 use std::os::unix::fs::{FileTypeExt as _, MetadataExt as _};
 use std::path::{Path, PathBuf};
 
+use toolbox_plan::lines::lossy;
+
 /// How deep device-mapper devices may be stacked before the look gives
 /// up: LVM on LUKS on RAID on partitions is four.
 const MAX_STACK: usize = 8;
@@ -149,10 +151,10 @@ fn collect_disks(folder: &Path, depth: usize, found: &mut BTreeSet<String>) -> i
 /// One property udev keeps for `device`, such as `ID_FS_TYPE`. `None`
 /// when udev has no record or the record lacks the property.
 pub fn property(root: &Path, device: DeviceNumber, key: &str) -> Option<String> {
-    let record = std::fs::read_to_string(
-        root.join(format!("run/udev/data/b{}:{}", device.major, device.minor)),
-    )
-    .ok()?;
+    let record = lossy(
+        std::fs::read(root.join(format!("run/udev/data/b{}:{}", device.major, device.minor)))
+            .ok()?,
+    );
 
     record.lines().find_map(|line| {
         let (name, value) = line.strip_prefix("E:")?.split_once('=')?;
@@ -167,7 +169,7 @@ pub fn property(root: &Path, device: DeviceNumber, key: &str) -> Option<String> 
 ///
 /// When `/proc/self/mountinfo` below `root` cannot be read.
 pub fn mounts(root: &Path) -> io::Result<Vec<Mount>> {
-    let table = std::fs::read_to_string(root.join("proc/self/mountinfo"))?;
+    let table = lossy(std::fs::read(root.join("proc/self/mountinfo"))?);
 
     Ok(table.lines().filter_map(parse_mount).collect())
 }

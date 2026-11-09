@@ -74,3 +74,26 @@ fn a_stamped_list_comes_back_for_its_stamp_only_whatever_its_age() {
         None
     );
 }
+
+#[test]
+fn a_list_is_for_its_owner_alone() {
+    use std::os::unix::fs::PermissionsExt as _;
+
+    let dir = tempfile::tempdir().unwrap();
+
+    write(dir.path(), Names::Apps, 1, &["gimp".to_owned()]);
+
+    let entries: Vec<_> = std::fs::read_dir(dir.path()).unwrap().collect();
+
+    assert_eq!(entries.len(), 1, "no temporary file left");
+
+    let mode = entries[0]
+        .as_ref()
+        .unwrap()
+        .metadata()
+        .unwrap()
+        .permissions()
+        .mode();
+
+    assert_eq!(mode & 0o777, 0o600);
+}

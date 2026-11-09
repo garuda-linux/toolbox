@@ -109,7 +109,7 @@ pub fn optional(
     for value in part.items {
         text_line(ui, |ui| {
             ui.spacing_mut().item_spacing.x = 0.0;
-            let clicked = name(ui, &value.name, lookup);
+            let clicked = name(ui, value.name.as_str(), lookup);
             if opened.is_none() {
                 opened = clicked;
             }
