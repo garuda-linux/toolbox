@@ -9,7 +9,7 @@ use std::panic::{self, AssertUnwindSafe};
 use std::path::Path;
 
 use toolbox_plan::procedure::{Builtin, Command, Invocation};
-use toolbox_plan::protocol::{Event, Mode, Outcome};
+use toolbox_plan::protocol::{Event, Failure, Leftover, Mode, Outcome};
 use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserAction, protection};
 
 use crate::builtin::SYSTEM_ROOT;
@@ -89,12 +89,14 @@ where
             Mode::Run => run_procedure(step.id, &procedure, runner, sink),
         };
 
+        let ok = matches!(outcome, Outcome::Succeeded | Outcome::Skipped);
+
         sink.send(Event::Finished {
             step: step.id,
             outcome,
         });
 
-        if !matches!(outcome, Outcome::Succeeded | Outcome::Skipped) {
+        if !ok {
             all_ok = false;
             break;
         }
@@ -122,6 +124,10 @@ fn program_name(procedure: &[Invocation]) -> &'static str {
         .first()
         .map_or("nothing", |invocation| match invocation {
             Invocation::Always(command)
+            | Invocation::Cleanup {
+                command,
+                leftover: _,
+            }
             | Invocation::Run(command)
             | Invocation::RunWithTargetsFrom {
                 query: _,
@@ -142,9 +148,19 @@ fn run_procedure(
 ) -> Outcome {
     let mut result = Outcome::Skipped;
     let mut failed = None;
+    let mut left = Vec::new();
 
     for invocation in procedure {
-        if failed.is_some() && !matches!(invocation, Invocation::Always(_)) {
+        let cleanup = matches!(
+            invocation,
+            Invocation::Always(_)
+                | Invocation::Cleanup {
+                    command: _,
+                    leftover: _
+                }
+        );
+
+        if failed.is_some() && !cleanup {
             continue;
         }
 
@@ -153,13 +169,54 @@ fn run_procedure(
         match outcome {
             Outcome::Succeeded => result = Outcome::Succeeded,
             Outcome::Skipped => {}
-            Outcome::Failed { cause: _ } | Outcome::Cancelled => {
+            Outcome::Failed {
+                cause: _,
+                cleanup_failed: _,
+            }
+            | Outcome::Cancelled => {
+                if let Invocation::Cleanup {
+                    command: _,
+                    leftover,
+                } = invocation
+                {
+                    sink.send(Event::Output {
+                        step,
+                        data: format!("The cleanup failed too: {leftover}.\r\n"),
+                    });
+                    left.push(*leftover);
+                }
+
                 failed = failed.or(Some(outcome));
             }
         }
     }
 
-    failed.unwrap_or(result)
+    with_leftovers(failed.unwrap_or(result), left)
+}
+
+/// A step whose cleanup failed reports it as failed with what was left,
+/// also after a cancel: the next repair refuses until it is gone.
+fn with_leftovers(outcome: Outcome, left: Vec<Leftover>) -> Outcome {
+    if left.is_empty() {
+        return outcome;
+    }
+
+    match outcome {
+        Outcome::Failed {
+            cause,
+            mut cleanup_failed,
+        } => {
+            cleanup_failed.extend(left);
+            Outcome::Failed {
+                cause,
+                cleanup_failed,
+            }
+        }
+        Outcome::Succeeded | Outcome::Skipped | Outcome::Cancelled => Outcome::Failed {
+            cause: Failure::Unknown,
+            cleanup_failed: left,
+        },
+    }
 }
 
 /// Runs `invocation` and turns a panic into a failed outcome, so a bug in
@@ -194,7 +251,11 @@ fn run_once(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     match invocation {
-        Invocation::Always(command) => runner.run_always(step, command, sink),
+        Invocation::Always(command)
+        | Invocation::Cleanup {
+            command,
+            leftover: _,
+        } => runner.run_always(step, command, sink),
         Invocation::Run(command) => runner.run(step, command, sink),
         Invocation::RunWithTargetsFrom { query, run } => {
             with_targets(step, query, run, runner, sink)

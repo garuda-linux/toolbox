@@ -135,6 +135,7 @@ async fn a_failed_root_step_fails_the_plan() {
             step,
             outcome: Outcome::Failed {
                 cause: Failure::ExitCode { code: 1_i32 },
+                cleanup_failed: Vec::new(),
             },
         },
         Event::Done,

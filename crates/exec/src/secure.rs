@@ -157,6 +157,19 @@ fn plain(dir: &Path) -> io::Result<()> {
     ))
 }
 
+/// A name with a `/` would reach below `dir` and `..` above it, past what
+/// `open_dir` refused on the way.
+fn plain_name(name: &str) -> io::Result<()> {
+    if !name.is_empty() && !name.contains('/') && name != "." && name != ".." {
+        return Ok(());
+    }
+
+    Err(io::Error::new(
+        io::ErrorKind::InvalidInput,
+        format!("{name:?}: not a plain file name"),
+    ))
+}
+
 /// The content of `name` in `dir`, `None` when it does not exist. A
 /// symlink is refused rather than followed.
 ///
@@ -164,6 +177,8 @@ fn plain(dir: &Path) -> io::Result<()> {
 ///
 /// When `name` is a symlink or cannot be read.
 pub fn read_file(dir: &OwnedFd, name: &str) -> io::Result<Option<Vec<u8>>> {
+    plain_name(name)?;
+
     let fd = match rustix::fs::openat(dir, name, READ_FLAGS, Mode::empty()) {
         Ok(fd) => fd,
         Err(Errno::NOENT) => return Ok(None),
@@ -220,6 +235,8 @@ pub fn open_parent(root: &Path, path: &'static str) -> io::Result<(OwnedFd, &'st
 ///
 /// When `name` exists but cannot be removed.
 pub fn remove_file(dir: &OwnedFd, name: &str) -> io::Result<bool> {
+    plain_name(name)?;
+
     match rustix::fs::unlinkat(dir, name, AtFlags::empty()) {
         Ok(()) => {}
         Err(Errno::NOENT) => return Ok(false),
@@ -242,6 +259,9 @@ pub fn replace_system_file(
     content: &[u8],
     backup: Option<&str>,
 ) -> io::Result<bool> {
+    plain_name(name)?;
+    backup.map_or(Ok(()), plain_name)?;
+
     let how = backup.map_or(SYSTEM_FILE, |backup| SYSTEM_FILE.with_backup(backup));
 
     toolbox_fs::replace_at(dir, name, content, &how)?.synced()
@@ -258,7 +278,10 @@ pub fn replace_esp_file(
     content: &[u8],
     backup: Option<(&str, &[u8])>,
 ) -> io::Result<()> {
+    plain_name(name)?;
+
     if let Some((backup, old)) = backup {
+        plain_name(backup)?;
         toolbox_fs::replace_at(dir, backup, old, &ESP_FILE)?.synced()?;
     }
 
@@ -272,6 +295,8 @@ pub fn replace_esp_file(
 /// [`Unreadable`] for anything but a regular file of at most `limit`
 /// bytes that can be read.
 pub fn read_regular(dir: &OwnedFd, name: &str, limit: usize) -> Result<Regular, Unreadable> {
+    plain_name(name).map_err(Unreadable::Failed)?;
+
     // Looked at before it is opened: opening a device or a FIFO can block
     // or do things to it. The look after the open is the one that counts.
     let seen =
@@ -309,8 +334,9 @@ pub fn read_regular(dir: &OwnedFd, name: &str, limit: usize) -> Result<Regular, 
 
 /// A symlink is not followed, so it is none.
 pub fn is_regular(dir: &OwnedFd, name: &str) -> bool {
-    rustix::fs::statat(dir, name, AtFlags::SYMLINK_NOFOLLOW)
-        .is_ok_and(|stat| FileType::from_raw_mode(stat.st_mode) == FileType::RegularFile)
+    plain_name(name).is_ok()
+        && rustix::fs::statat(dir, name, AtFlags::SYMLINK_NOFOLLOW)
+            .is_ok_and(|stat| FileType::from_raw_mode(stat.st_mode) == FileType::RegularFile)
 }
 
 /// The names of the regular files directly in `dir`, sorted. Symlinks,

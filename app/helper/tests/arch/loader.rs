@@ -30,7 +30,13 @@ fn without_a_mounted_esp_loader_settings_fail_and_write_nothing() -> TestResult 
     let outcomes = apply(vec![RootAction::SetLoaderSettings { settings }])?;
 
     assert!(
-        matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{outcomes:?}"
     );
     assert!(PLACES.iter().all(|place| !Path::new(place).exists()));

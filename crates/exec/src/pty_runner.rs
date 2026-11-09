@@ -17,7 +17,7 @@ use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, PtyCommand, Session, TerminalSize};
 use crate::apply::{EventSink, Runner};
 use crate::builtin::{self, SYSTEM_ROOT};
 use crate::feed::feed;
-use crate::report::{ended, failure};
+use crate::report::{ended, failure, note};
 
 /// pkexec gives a minimal environment. Programs get only this, never
 /// anything the caller could have set.
@@ -27,6 +27,8 @@ pub const SYSTEM_PATH: &str = "/usr/local/sbin:/usr/local/bin:/usr/bin";
 pub const LOCALE: &str = "C.UTF-8";
 
 const POLL_INTERVAL: Duration = Duration::from_millis(50);
+
+const LAST_OUTPUT: Duration = Duration::from_secs(2);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Environment {
@@ -195,7 +197,7 @@ impl PtyRunner {
 
     fn execute(&mut self, step: StepId, command: &Command, sink: &mut dyn EventSink) -> Outcome {
         let mut session = match Session::spawn(&pty_command(
-            &crate::located::program(command.program()),
+            &crate::located::program(command.program(), self.environment),
             command,
             self.size,
             self.environment,
@@ -204,10 +206,10 @@ impl PtyRunner {
             Err(error) => return failure(step, sink, &format!("cannot start {command}: {error}")),
         };
 
+        let cancelled = self.cancelled && self.guard == Guard::Cancellable;
+
         match self.pump(step, &mut session, sink) {
-            Ok(_) if self.cancelled && self.guard == Guard::Cancellable => Outcome::Cancelled,
-            Ok(Exit::Code(0)) => Outcome::Succeeded,
-            Ok(exit) => ended(exit),
+            Ok(exit) => after(step, exit, cancelled, sink),
             Err(error) => failure(step, sink, &format!("lost track of {command}: {error}")),
         }
     }
@@ -239,7 +241,7 @@ impl Runner for PtyRunner {
     fn query(&mut self, command: &Command) -> io::Result<Vec<String>> {
         let cancel = self.stop.clone().unwrap_or_default();
 
-        let program = crate::located::program(command.program());
+        let program = crate::located::program(command.program(), self.environment);
         query::run(program, command, self.environment, &cancel)
     }
 
@@ -297,14 +299,44 @@ fn pty_command(
         .fold(base, |pty, (key, value)| pty.env(key, value))
 }
 
+/// The last lines of a failing program say why. They are read until the
+/// terminal closes, but a program that left a child holding it open does
+/// not hold the step longer than [`LAST_OUTPUT`].
 fn forward_rest(step: StepId, session: &Session, sink: &mut dyn EventSink) {
-    while let Ok(Chunk::Text(data)) = session.output().recv_timeout(POLL_INTERVAL) {
-        sink.send(Event::Output { step, data });
+    let end = Instant::now() + LAST_OUTPUT;
+
+    loop {
+        let left = end.saturating_duration_since(Instant::now());
+
+        match session.output().recv_timeout(left) {
+            Ok(Chunk::Text(data)) => sink.send(Event::Output { step, data }),
+            Ok(Chunk::Closed) | Err(RecvTimeoutError::Disconnected) => return,
+            Err(RecvTimeoutError::Timeout) => {
+                tracing::warn!("the terminal stayed open after the program ended");
+                return;
+            }
+        }
     }
 }
 
 fn report(result: io::Result<()>, what: &str) {
     if let Err(error) = result {
         tracing::warn!("cannot {what} the running program: {error}");
+    }
+}
+
+/// A cancel read in the same pass as a clean exit came too late: the
+/// program finished its work, `pacman -S` may have committed.
+fn after(step: StepId, exit: Exit, cancelled: bool, sink: &mut dyn EventSink) -> Outcome {
+    match (exit, cancelled) {
+        (Exit::Code(0), true) => note(
+            step,
+            sink,
+            "the cancel came after the program had finished",
+            Outcome::Succeeded,
+        ),
+        (_, true) => Outcome::Cancelled,
+        (Exit::Code(0), false) => Outcome::Succeeded,
+        (exit, false) => ended(exit),
     }
 }

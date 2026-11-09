@@ -54,7 +54,8 @@ fn a_changed_file_is_not_overwritten() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert!(text.contains("changed since it was opened"), "{text}");

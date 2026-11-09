@@ -753,6 +753,10 @@
     "repair-runs-now": {
       "string": "It runs right away and asks for an administrator's password. The Console shows every command."
     },
+    "repair-trust-disk": {
+      "string": "This is not the live ISO. The chosen system's own grub-install, mkinitcpio and bootctl run as root. Repair only a disk nobody else could write to.",
+      "developer_comment": "In the question on an installed system, not on the live ISO."
+    },
     "repair-encrypted": {
       "string": "{system} is encrypted. It is unlocked for the repair and locked again afterwards. The passphrase is not kept in any file of Garuda Toolbox."
     },

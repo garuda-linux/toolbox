@@ -741,6 +741,9 @@
     "repair-runs-now": {
       "string": "Die Reparatur startet sofort und fragt nach dem Passwort eines Administrators. Jeder Befehl erscheint in der Konsole."
     },
+    "repair-trust-disk": {
+      "string": "Dies ist nicht die Live-ISO. grub-install, mkinitcpio und bootctl des gewählten Systems laufen als root. Repariere nur eine Festplatte, auf die niemand sonst schreiben konnte."
+    },
     "repair-encrypted": {
       "string": "{system} ist verschlüsselt. Für die Reparatur wird es entsperrt und danach wieder gesperrt. Garuda Toolbox speichert dein Passwort nirgends."
     },

@@ -103,7 +103,7 @@ impl Events {
                 })
             }
             Report::Step(Event::Output { step, data }) => self.output(*step, data),
-            Report::Step(Event::Finished { step, outcome }) => self.finished(*step, *outcome),
+            Report::Step(Event::Finished { step, outcome }) => self.finished(*step, outcome),
             Report::Step(Event::Rejected { reason }) => {
                 error("the helper refused the change", Some(reason))
             }
@@ -151,7 +151,7 @@ impl Events {
             .collect()
     }
 
-    fn finished(&mut self, step: StepId, outcome: Outcome) -> String {
+    fn finished(&mut self, step: StepId, outcome: &Outcome) -> String {
         let number = self.number(step);
         let mut text = String::new();
         let rest = std::mem::take(&mut self.pending);
@@ -169,7 +169,10 @@ impl Events {
 
         let outcome = match outcome {
             Outcome::Succeeded => Ended::Done,
-            Outcome::Failed { cause: _ } => Ended::Failed,
+            Outcome::Failed {
+                cause: _,
+                cleanup_failed: _,
+            } => Ended::Failed,
             Outcome::Cancelled => Ended::Cancelled,
             Outcome::Skipped => Ended::Skipped,
         };

@@ -5,10 +5,10 @@ use std::io;
 use std::path::Path;
 
 use toolbox_plan::procedure::{Invocation, Program, uki_rebuilds};
-use toolbox_plan::{InstalledLoader, InstalledSystem, REPAIR_ROOT, RepairWork};
+use toolbox_plan::{InstalledLoader, InstalledSystem, MAX_CONFIG_BYTES, REPAIR_ROOT, RepairWork};
 
 use super::absent_as_none;
-use crate::secure;
+use crate::secure::{self, Unreadable};
 
 /// # Errors
 ///
@@ -72,7 +72,26 @@ pub fn has_uki_builder(root: &Path) -> io::Result<bool> {
     Ok(false)
 }
 
+/// The chosen disk is not trusted: a FIFO there would block the helper and
+/// a device would be read until memory runs out, before any cleanup.
 fn text(root: &Path, folder: &str, name: &str) -> io::Result<Option<String>> {
-    absent_as_none(secure::open_dir(root, &Path::new(REPAIR_ROOT).join(folder)))?
-        .map_or(Ok(None), |dir| secure::read_text(&dir, name))
+    let Some(dir) = absent_as_none(secure::open_dir(root, &Path::new(REPAIR_ROOT).join(folder)))?
+    else {
+        return Ok(None);
+    };
+
+    let refused = |why: String| io::Error::new(io::ErrorKind::InvalidData, format!("{name} {why}"));
+
+    match secure::read_regular(&dir, name, MAX_CONFIG_BYTES) {
+        Ok(file) => String::from_utf8(file.content)
+            .map(Some)
+            .map_err(|error| refused(format!("is not UTF-8 text: {error}"))),
+        Err(Unreadable::Missing) => Ok(None),
+        Err(Unreadable::Link) => Err(refused("is a symlink".to_owned())),
+        Err(Unreadable::NotRegular) => Err(refused("is not a regular file".to_owned())),
+        Err(Unreadable::TooLarge) => {
+            Err(refused(format!("is larger than {MAX_CONFIG_BYTES} bytes")))
+        }
+        Err(Unreadable::Failed(error)) => Err(error),
+    }
 }

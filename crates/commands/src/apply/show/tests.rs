@@ -80,6 +80,7 @@ fn a_failed_step_is_an_error_and_the_run_did_not_finish() {
             Report::Step(Event::Started { step }),
             finished(Outcome::Failed {
                 cause: Failure::ExitCode { code: 1_i32 },
+                cleanup_failed: Vec::new(),
             }),
             Report::PlanFinished { succeeded: false },
         ],
@@ -140,6 +141,7 @@ fn a_coloured_run_paints_its_sections_and_errors() {
             Report::Step(Event::Started { step }),
             finished(Outcome::Failed {
                 cause: Failure::ExitCode { code: 1_i32 },
+                cleanup_failed: Vec::new(),
             }),
             Report::PlanFinished { succeeded: false },
         ],

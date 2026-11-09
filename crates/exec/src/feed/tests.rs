@@ -63,7 +63,8 @@ fn a_program_that_echoes_its_input_is_scrubbed() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::ExitCode { code: 3_i32 }
+            cause: Failure::ExitCode { code: 3_i32 },
+            cleanup_failed: Vec::new()
         }
     );
     assert_eq!(
@@ -108,7 +109,8 @@ fn a_missing_program_fails_the_step_without_the_secret() {
     assert!(matches!(
         report(StepId::new(1), &chpasswd(), result, &input(), &mut events),
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: _
         }
     ));
     assert!(!format!("{events:?}").contains(SECRET));
@@ -139,7 +141,8 @@ fn a_program_that_never_ends_is_killed_at_the_deadline() {
     assert_eq!(
         report(step, &chpasswd(), result, &input(), &mut events),
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert_eq!(
@@ -163,7 +166,13 @@ fn the_step_itself_runs_the_program_and_scrubs_its_answer() {
     );
 
     assert!(
-        matches!(outcome, Outcome::Failed { cause: _ }),
+        matches!(
+            outcome,
+            Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }
+        ),
         "chpasswd cannot set passwords as this user: {outcome:?}"
     );
     assert!(!format!("{events:?}").contains(SECRET));

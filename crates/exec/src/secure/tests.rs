@@ -1,14 +1,14 @@
 use std::ffi::OsStr;
-use std::fs;
 use std::os::unix::ffi::OsStrExt as _;
 use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
+use std::{fs, io};
 
 use rustix::io::Errno;
 
 use super::{
-    Attributes, Unreadable, create_dirs, open_dir, read_file, regular_files, remove_file,
-    replace_system_file,
+    Attributes, Unreadable, create_dirs, is_regular, open_dir, read_file, read_regular,
+    regular_files, remove_file, replace_system_file,
 };
 
 fn names(dir: &Path) -> Vec<String> {
@@ -229,6 +229,38 @@ fn only_plain_relative_folders_are_made() {
 
     fs::write(root.path().join("file"), "").unwrap();
     create_dirs(root.path(), Path::new("file/below")).unwrap_err();
+}
+
+#[test]
+fn a_name_that_leaves_its_folder_is_refused() {
+    let root = tempfile::tempdir().unwrap();
+    fs::create_dir_all(root.path().join("etc/sub")).unwrap();
+    fs::write(root.path().join("etc/sub/file"), "x").unwrap();
+    fs::write(root.path().join("above"), "x").unwrap();
+    let dir = open_dir(root.path(), Path::new("etc")).unwrap();
+
+    for name in ["sub/file", "../above", "..", ".", ""] {
+        assert_eq!(
+            read_file(&dir, name).unwrap_err().kind(),
+            io::ErrorKind::InvalidInput,
+            "{name}"
+        );
+        assert!(matches!(
+            read_regular(&dir, name, 64),
+            Err(Unreadable::Failed(_))
+        ));
+        assert!(!is_regular(&dir, name), "{name}");
+        remove_file(&dir, name).unwrap_err();
+        replace_system_file(&dir, name, b"y", None).unwrap_err();
+    }
+
+    replace_system_file(&dir, "new", b"y", Some("../above")).unwrap_err();
+
+    assert_eq!(fs::read_to_string(root.path().join("above")).unwrap(), "x");
+    assert_eq!(
+        fs::read_to_string(root.path().join("etc/sub/file")).unwrap(),
+        "x"
+    );
 }
 
 #[test]

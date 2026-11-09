@@ -1,5 +1,7 @@
+mod cleanup;
 mod sdboot;
 mod secrets;
+mod trust;
 
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::{
@@ -72,7 +74,7 @@ fn a_uefi_reinstall_on_btrfs_mounts_installs_and_unmounts_in_reverse() {
         lines(&as_run(&action, InstalledLoader::Grub).unwrap()),
         [
             format!("mkdir -p {ROOT}  # for root alone, nothing may be mounted there"),
-            format!("mount -o subvol=@ /dev/nvme0n1p2 {ROOT}"),
+            format!("mount -o nodev,nosuid,subvol=@ /dev/nvme0n1p2 {ROOT}"),
             format!(
                 "check that {ROOT} holds an installed system with a kernel, grub-install, grub-mkconfig and the folder /boot/efi, or on systemd-boot bootctl, kernel-install and its EFI system partition in /etc/fstab"
             ),
@@ -81,18 +83,18 @@ fn a_uefi_reinstall_on_btrfs_mounts_installs_and_unmounts_in_reverse() {
             format!("mount --bind /sys {ROOT}/sys"),
             format!("mount --bind /run {ROOT}/run"),
             format!("mount -t efivarfs efivarfs {ROOT}/sys/firmware/efi/efivars"),
-            format!("mount /dev/nvme0n1p1 {ROOT}/boot/efi"),
+            format!("mount -o nodev,nosuid /dev/nvme0n1p1 {ROOT}/boot/efi"),
             RECHECK.to_owned(),
             format!(
                 "chroot {ROOT} /usr/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Garuda --recheck"
             ),
             REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
-            format!("umount -R {ROOT}/run{ALWAYS}"),
-            format!("umount -R {ROOT}/sys{ALWAYS}"),
-            format!("umount -R {ROOT}/proc{ALWAYS}"),
-            format!("umount -R {ROOT}/dev{ALWAYS}"),
-            format!("umount -R {ROOT}{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/run{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/sys{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/proc{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/dev{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}{ALWAYS}"),
         ]
     );
 }
@@ -105,7 +107,7 @@ fn a_bios_reinstall_writes_to_the_whole_disk_and_mounts_no_efi_parts() {
         lines(&as_run(&action, InstalledLoader::Grub).unwrap()),
         [
             format!("mkdir -p {ROOT}  # for root alone, nothing may be mounted there"),
-            format!("mount /dev/sda2 {ROOT}"),
+            format!("mount -o nodev,nosuid /dev/sda2 {ROOT}"),
             format!(
                 "check that {ROOT} holds an installed system with a kernel, grub-install and grub-mkconfig"
             ),
@@ -117,11 +119,11 @@ fn a_bios_reinstall_writes_to_the_whole_disk_and_mounts_no_efi_parts() {
             format!("chroot {ROOT} /usr/bin/grub-install --target=i386-pc --recheck /dev/sda"),
             REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
-            format!("umount -R {ROOT}/run{ALWAYS}"),
-            format!("umount -R {ROOT}/sys{ALWAYS}"),
-            format!("umount -R {ROOT}/proc{ALWAYS}"),
-            format!("umount -R {ROOT}/dev{ALWAYS}"),
-            format!("umount -R {ROOT}{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/run{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/sys{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/proc{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/dev{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}{ALWAYS}"),
         ]
     );
 }
@@ -137,7 +139,7 @@ fn regenerating_the_menu_of_a_locked_system_unlocks_and_closes_it() {
             format!(
                 "cryptsetup open --type luks --key-file - /dev/sda2 garuda-toolbox-repair{FED}"
             ),
-            format!("mount -o subvol=@ /dev/mapper/garuda-toolbox-repair {ROOT}"),
+            format!("mount -o nodev,nosuid,subvol=@ /dev/mapper/garuda-toolbox-repair {ROOT}"),
             format!(
                 "check that {ROOT} holds an installed system with a kernel, grub-mkconfig, or on systemd-boot kernel-install"
             ),
@@ -147,11 +149,11 @@ fn regenerating_the_menu_of_a_locked_system_unlocks_and_closes_it() {
             format!("mount --bind /run {ROOT}/run"),
             REBUILD.to_owned(),
             format!("chroot {ROOT} /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg"),
-            format!("umount -R {ROOT}/run{ALWAYS}"),
-            format!("umount -R {ROOT}/sys{ALWAYS}"),
-            format!("umount -R {ROOT}/proc{ALWAYS}"),
-            format!("umount -R {ROOT}/dev{ALWAYS}"),
-            format!("umount -R {ROOT}{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/run{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/sys{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/proc{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}/dev{ALWAYS}"),
+            format!("umount -R --no-canonicalize {ROOT}{ALWAYS}"),
             format!("cryptsetup close garuda-toolbox-repair{ALWAYS}"),
         ]
     );
@@ -199,10 +201,19 @@ fn run_command(invocation: &Invocation) -> Option<&Command> {
 }
 
 fn always_command(invocation: &Invocation) -> Option<&Command> {
-    if let Invocation::Always(command) = invocation {
-        Some(command)
-    } else {
-        None
+    match invocation {
+        Invocation::Always(command)
+        | Invocation::Cleanup {
+            command,
+            leftover: _,
+        } => Some(command),
+        Invocation::Run(_)
+        | Invocation::RunWithTargetsFrom { query: _, run: _ }
+        | Invocation::Builtin(_)
+        | Invocation::Feed {
+            command: _,
+            input: _,
+        } => None,
     }
 }
 
@@ -258,28 +269,6 @@ fn every_mount_is_undone_by_an_always_step() {
     }
 }
 
-#[test]
-fn an_unlock_is_closed_by_the_last_always_step_and_only_then() {
-    for action in every_repair() {
-        let procedure = action.procedure();
-        let opens = procedure
-            .iter()
-            .filter(|invocation| {
-                matches!(invocation, Invocation::Feed { command, input: _ }
-                    if command.program() == Program::Cryptsetup)
-            })
-            .count();
-
-        let closes_last = matches!(procedure.last(), Some(Invocation::Always(command))
-            if command.program() == Program::Cryptsetup
-                && command.arguments() == ["close", "garuda-toolbox-repair"]);
-
-        assert_eq!(opens, usize::from(action.needs_secret()), "{action:?}");
-        assert_eq!(closes_last, action.needs_secret(), "{action:?}");
-    }
-}
-
-/// After the first cleanup step nothing else may follow: a `Run` there
 /// would be skipped after a failure, and the cleanup must be the end.
 #[test]
 fn nothing_but_cleanup_follows_the_first_always_step() {
@@ -287,14 +276,14 @@ fn nothing_but_cleanup_follows_the_first_always_step() {
         let procedure = action.procedure();
         let first = procedure
             .iter()
-            .position(|invocation| matches!(invocation, Invocation::Always(_)))
+            .position(|invocation| always_command(invocation).is_some())
             .unwrap();
 
         assert!(
             procedure
                 .iter()
                 .skip(first)
-                .all(|invocation| matches!(invocation, Invocation::Always(_))),
+                .all(|invocation| always_command(invocation).is_some()),
             "{action:?}"
         );
     }
@@ -310,6 +299,10 @@ fn only_the_listed_programs_run() {
             let command = match &invocation {
                 Invocation::Run(command)
                 | Invocation::Always(command)
+                | Invocation::Cleanup {
+                    command,
+                    leftover: _,
+                }
                 | Invocation::Feed { command, input: _ } => command,
                 Invocation::Builtin(_) => continue,
                 Invocation::RunWithTargetsFrom { query: _, run: _ } => {

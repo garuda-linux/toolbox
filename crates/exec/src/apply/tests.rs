@@ -1,17 +1,19 @@
 mod panics;
 mod secrets;
 
+mod cleanup;
 mod extra;
 mod finish;
 mod orphans;
 mod span;
+mod wifi;
 
 use std::collections::VecDeque;
 use std::io;
 
 use toolbox_plan::procedure::{Builtin, Command};
 use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, Request};
-use toolbox_plan::{RootAction, SecretInput, Step, StepId, WifiBackend};
+use toolbox_plan::{RootAction, SecretInput, Step, StepId};
 
 use super::{EventSink, Runner, apply};
 
@@ -106,7 +108,7 @@ fn finished(events: &[Event]) -> Vec<(StepId, Outcome)> {
     events
         .iter()
         .filter_map(|event| match event {
-            Event::Finished { step, outcome } => Some((*step, *outcome)),
+            Event::Finished { step, outcome } => Some((*step, outcome.clone())),
             Event::Accepted
             | Event::Rejected { reason: _ }
             | Event::Started { step: _ }
@@ -148,6 +150,7 @@ fn a_failed_step_stops_the_rest() {
     let mut runner = FakeRunner {
         outcomes: VecDeque::from([Outcome::Failed {
             cause: Failure::ExitCode { code: 1_i32 },
+            cleanup_failed: Vec::new(),
         }]),
         ..FakeRunner::default()
     };
@@ -293,108 +296,4 @@ fn builtins_go_to_the_runner() {
     );
 
     assert_eq!(runner.ran, ["builtin: RemoveDatabaseLock"]);
-}
-
-fn wifi(runner: &mut FakeRunner) -> (bool, Vec<Event>) {
-    let mut events = Vec::new();
-    let ok = run(
-        &request(
-            Mode::Run,
-            vec![
-                RootAction::SetWifiBackend {
-                    backend: WifiBackend::Iwd,
-                },
-                RootAction::RefreshKeyring,
-            ],
-        ),
-        runner,
-        &mut events,
-    );
-
-    (ok, events)
-}
-
-#[test]
-fn a_failure_inside_a_step_still_runs_its_always_part() {
-    let failed = Outcome::Failed {
-        cause: Failure::ExitCode { code: 5_i32 },
-    };
-
-    let mut runner = FakeRunner {
-        outcomes: VecDeque::from([Outcome::Succeeded, failed]),
-        ..FakeRunner::default()
-    };
-
-    let (ok, events) = wifi(&mut runner);
-
-    assert!(!ok);
-    assert_eq!(
-        runner.ran,
-        [
-            "systemctl stop -- NetworkManager.service",
-            "systemctl disable --now -- wpa_supplicant.service",
-            "always: systemctl start -- NetworkManager.service"
-        ]
-    );
-    assert_eq!(finished(&events), [(StepId::new(1), failed)]);
-}
-
-#[test]
-fn a_cancel_inside_a_step_still_runs_its_always_part() {
-    let mut runner = FakeRunner {
-        outcomes: VecDeque::from([Outcome::Cancelled]),
-        ..FakeRunner::default()
-    };
-
-    let (ok, events) = wifi(&mut runner);
-
-    assert!(!ok);
-    assert_eq!(
-        runner.ran,
-        [
-            "systemctl stop -- NetworkManager.service",
-            "always: systemctl start -- NetworkManager.service"
-        ]
-    );
-    assert_eq!(finished(&events), [(StepId::new(1), Outcome::Cancelled)]);
-}
-
-#[test]
-fn a_failing_always_part_fails_the_step() {
-    let failed = Outcome::Failed {
-        cause: Failure::ExitCode { code: 1_i32 },
-    };
-
-    let mut runner = FakeRunner {
-        outcomes: VecDeque::from([
-            Outcome::Succeeded,
-            Outcome::Succeeded,
-            Outcome::Succeeded,
-            Outcome::Succeeded,
-            failed,
-        ]),
-        ..FakeRunner::default()
-    };
-
-    let (ok, events) = wifi(&mut runner);
-
-    assert!(!ok);
-    assert_eq!(finished(&events), [(StepId::new(1), failed)]);
-}
-
-#[test]
-fn a_step_with_an_always_part_that_succeeds_goes_on() {
-    let mut runner = FakeRunner::default();
-
-    let (ok, events) = wifi(&mut runner);
-
-    assert!(ok);
-    assert_eq!(runner.ran.len(), 7, "{:?}", runner.ran);
-    assert_eq!(
-        finished(&events),
-        [
-            (StepId::new(1), Outcome::Succeeded),
-            (StepId::new(2), Outcome::Succeeded)
-        ]
-    );
 }

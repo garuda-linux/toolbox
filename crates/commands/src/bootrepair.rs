@@ -140,13 +140,17 @@ pub fn pick_target(
 }
 
 fn offered(live: bool, args: &RepairArgs) -> Result<(), Refused> {
-    if live || args.boot_repair {
-        Ok(())
-    } else {
-        Err(Refused::Rule(format!(
+    match (live, args.boot_repair, args.trust_disk) {
+        (true, _, _) | (false, true, true) => Ok(()),
+        (false, false, _) => Err(Refused::Rule(format!(
             "Boot Repair runs on the live ISO, pass --boot-repair to test it ({})",
             Refusal::NotOffered.as_str()
-        )))
+        ))),
+        (false, true, false) => Err(Refused::Rule(
+            "outside the live ISO the chosen system's own programs run as root\n\
+             pass --trust-disk if nobody else could write to that disk"
+                .to_owned(),
+        )),
     }
 }
 

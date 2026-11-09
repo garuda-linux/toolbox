@@ -57,6 +57,7 @@ fn step_events_move_each_step_along() {
         step: StepId::new(2),
         outcome: Outcome::Failed {
             cause: Failure::ExitCode { code: 3_i32 },
+            cleanup_failed: Vec::new(),
         },
     }));
 

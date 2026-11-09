@@ -149,9 +149,16 @@ impl Console {
         let (step, state) = match event {
             protocol::Event::Started { step } => (step, StepState::Running),
             protocol::Event::Finished { step, outcome } => {
-                let failed = matches!(outcome, protocol::Outcome::Failed { cause: _ });
+                let failed = matches!(
+                    outcome,
+                    protocol::Outcome::Failed {
+                        cause: _,
+                        cleanup_failed: _
+                    }
+                );
+
                 self.mirror.finished(step, !failed);
-                (step, finished(outcome))
+                (step, finished(&outcome))
             }
             protocol::Event::Output { step, data } => {
                 self.output |= !data.is_empty();
@@ -280,12 +287,15 @@ impl Default for Console {
     }
 }
 
-const fn finished(outcome: protocol::Outcome) -> StepState {
+const fn finished(outcome: &protocol::Outcome) -> StepState {
     match outcome {
         protocol::Outcome::Succeeded => StepState::Succeeded,
         protocol::Outcome::Skipped => StepState::Skipped,
         protocol::Outcome::Cancelled => StepState::Cancelled,
-        protocol::Outcome::Failed { cause } => StepState::Failed(cause),
+        protocol::Outcome::Failed {
+            cause,
+            cleanup_failed: _,
+        } => StepState::Failed(*cause),
     }
 }
 

@@ -33,7 +33,8 @@ fn a_mount_left_from_an_earlier_repair_fails_its_step() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert!(text.contains("still mounted"), "{text}");
@@ -51,7 +52,8 @@ fn requiring_a_system_names_what_it_lacks() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert!(text.contains("grub-mkconfig"), "{text}");
@@ -85,7 +87,8 @@ fn an_efi_system_elsewhere_is_no_uefi_repair() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert!(text.contains("EFI system partition"), "{text}");
@@ -107,7 +110,8 @@ fn an_unreadable_system_is_no_answer() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert!(text.contains("cannot look into"), "{text}");
@@ -133,7 +137,8 @@ fn rechecking_without_the_devices_fails() {
     assert_eq!(
         rechecked,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
 }

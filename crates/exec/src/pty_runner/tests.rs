@@ -1,3 +1,5 @@
+mod late;
+
 use std::path::Path;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -180,7 +182,13 @@ fn answers_without_a_program_fail_nothing() {
         &mut Vec::<Event>::new(),
     );
 
-    assert!(matches!(outcome, Outcome::Failed { cause: _ }));
+    assert!(matches!(
+        outcome,
+        Outcome::Failed {
+            cause: _,
+            cleanup_failed: _
+        }
+    ));
     assert_eq!(runner.size.columns, 100_u16);
     assert_eq!(runner.size.rows, 30_u16);
 }
@@ -300,7 +308,13 @@ fn run_always_resets_its_guard() {
         &mut Vec::<Event>::new(),
     );
 
-    assert!(matches!(outcome, Outcome::Failed { cause: _ }));
+    assert!(matches!(
+        outcome,
+        Outcome::Failed {
+            cause: _,
+            cleanup_failed: _
+        }
+    ));
     assert_eq!(runner.guard, Guard::Cancellable);
 }
 
@@ -317,7 +331,10 @@ fn builtins_and_feeds_go_through_the_runner() {
 
     assert!(matches!(
         runner.builtin(StepId::new(1), &builtin, &mut Vec::<Event>::new()),
-        Outcome::Failed { cause: _ }
+        Outcome::Failed {
+            cause: _,
+            cleanup_failed: _
+        }
     ));
 
     let (mut stopped, _stopped_app) = runner_with(vec![Answer::Cancel]);

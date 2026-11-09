@@ -28,6 +28,7 @@ fn missing_file_script() -> String {
             step,
             outcome: Outcome::Failed {
                 cause: Failure::ExitCode { code: 1_i32 },
+                cleanup_failed: Vec::new(),
             },
         },
         Event::Done,

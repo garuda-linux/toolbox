@@ -19,6 +19,9 @@ The app refuses to start as root.
   the polkit actions.
 - It refuses to run when it is not root, when stdin is a terminal, or when
   the protocol version differs (read before the rest is decoded).
+- It starts in `/` and marks every inherited descriptor from 3 up
+  close-on-exec (`app/helper/src/fds.rs`), so no program it starts gets a
+  file or socket the caller left open.
 - `apply` reads one `Request` from stdin and validates every step before
   the first runs. One invalid step rejects the request. A refused name is
   quoted with at most 64 characters, control characters spelled out.
@@ -210,8 +213,10 @@ The edit:
    by a drop guard.
 2. The editor is one `toolbox_plan::Editor`, run as the user from its
    fixed path, else from the user's `$PATH`. That lookup is safe only
-   because it runs as the user. `$VISUAL` and `$EDITOR` pick an `Editor`
-   by name and are never run.
+   because it runs as the user. `toolbox_exec` does it only for a user
+   step (`Environment::Inherited`). A root step always gets the fixed
+   path, even for an editor. `$VISUAL` and `$EDITOR` pick an `Editor` by
+   name and are never run.
 3. `WriteConfigFile` resolves again and refuses unless the real path
    passes `is_writable` too (`WriteError::NotWritable`). Decoding checked
    only the asked path, and a link in a writable folder may lead to a
@@ -260,6 +265,27 @@ before the first step and again before `grub-install`. It refuses unless:
 The mount root is made without following a symlink. `grub-install` runs
 without `--force`. Unmounting and `cryptsetup close` are
 `Invocation::Always`.
+
+### Boot repair runs the installed system's own programs as root
+
+`grub-install`, `grub-mkconfig`, the initramfs builder, `bootctl` and
+`kernel-install` run from the chosen disk through `chroot`, with the live
+system's `/dev`, `/proc`, `/sys` and `/run` bound in. Whoever could write
+to that disk runs code as root. The repair trusts the disk the user picks
+and cannot check it. What keeps the rest of the disk out:
+
+- The root and the ESP are mounted `nodev,nosuid`, so a device node or a
+  setuid program on the disk does nothing outside the `chroot`. The binds
+  keep the options of the live system's mounts.
+- A bind target that is missing or a symlink stops the repair before the
+  bind (`Lacking::BindTarget`).
+- Every `umount -R` takes `--no-canonicalize`, so a `dev` that is a
+  symlink to `/dev` never makes the cleanup unmount the live system's
+  `/dev`.
+- The disk's `/etc/fstab` and `/etc/kernel/install.conf` are read with
+  `secure::read_regular`: no symlink, FIFO or device, at most 1 MiB.
+- Every file name the `secure` module takes is a plain name: no `/`, not
+  empty, `.` or `..`.
 
 ## Polkit
 

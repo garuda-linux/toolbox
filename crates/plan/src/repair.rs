@@ -116,7 +116,8 @@ impl RepairWork {
 
 /// The places a repair mounts something at. A closed list of paths below
 /// [`REPAIR_ROOT`]: no request names a mount point.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
 pub enum RepairMount {
     /// The root of the installed system.
     Root,

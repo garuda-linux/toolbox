@@ -175,6 +175,17 @@ meant for the live system and shows here only because Garuda Toolbox was
 started with --boot-repair. Nothing is written to a disk the running system
 uses.** A system on a disk that is in use cannot be repaired there either.
 
+The repair runs the chosen system's own `grub-install`, `mkinitcpio` and
+`bootctl` as root. On the live medium that system is yours. On an installed
+system the question before the repair says so in a warning, and the command
+line needs `--trust-disk`:
+
+```console
+$ garuda-toolbox bootrepair regenerate /dev/sdb2 --boot-repair --trust-disk
+```
+
+Repair only a disk nobody else could write to.
+
 ## See also
 
 - [Boot Options](boot-options.md)

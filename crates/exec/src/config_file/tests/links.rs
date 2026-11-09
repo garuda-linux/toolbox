@@ -350,7 +350,8 @@ fn the_step_names_the_file_that_was_written() {
             &mut outside
         ),
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     let text = printed(&outside);

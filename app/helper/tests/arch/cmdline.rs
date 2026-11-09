@@ -74,7 +74,13 @@ fn without_plymouth_selecting_a_theme_fails() -> TestResult {
     }])?;
 
     assert!(
-        matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{outcomes:?}"
     );
     Ok(())
@@ -89,7 +95,13 @@ fn without_a_uki_tool_the_rebuild_fails() -> TestResult {
     let outcomes = apply(vec![RootAction::RebuildUkis { initramfs: false }])?;
 
     assert!(
-        matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{outcomes:?}"
     );
     Ok(())

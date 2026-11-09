@@ -78,7 +78,7 @@ impl Show {
                 self.step(&command)
             }
             Report::Step(Event::Output { step: _, data }) => self.output(data),
-            Report::Step(Event::Finished { step, outcome }) => self.finished(*step, *outcome),
+            Report::Step(Event::Finished { step, outcome }) => self.finished(*step, outcome),
             Report::Step(Event::Rejected { reason }) => {
                 let text = self
                     .paint
@@ -126,12 +126,15 @@ impl Show {
         text
     }
 
-    fn finished(&mut self, step: StepId, outcome: Outcome) -> String {
+    fn finished(&mut self, step: StepId, outcome: &Outcome) -> String {
         let command = self.command(step).to_owned();
         let (mark, text) = match outcome {
             Outcome::Skipped => return String::new(),
             Outcome::Succeeded => (Mark::On, format!("{command} done")),
-            Outcome::Failed { cause: _ } => (Mark::Problem, format!("{command} failed")),
+            Outcome::Failed {
+                cause: _,
+                cleanup_failed: _,
+            } => (Mark::Problem, format!("{command} failed")),
             Outcome::Cancelled => {
                 self.cancelled = Some(step);
                 (Mark::Off, format!("{command} was cancelled"))

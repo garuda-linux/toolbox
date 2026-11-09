@@ -3,7 +3,8 @@ use toolbox_plan::procedure::{Command, Invocation, Program};
 use toolbox_plan::protocol::{Event, Failure, Outcome};
 
 use super::super::run_procedure;
-use super::{FakeRunner, finished, wifi};
+use super::wifi::wifi;
+use super::{FakeRunner, finished};
 
 /// A cleanup that panics must not keep the cleanups after it from
 /// running: each one puts back a part of the system.
@@ -26,7 +27,8 @@ fn a_panic_in_a_cleanup_fails_it_and_the_later_cleanups_still_run() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert_eq!(
@@ -71,7 +73,8 @@ fn a_panic_inside_a_step_still_runs_its_always_part_and_reports_done() {
         [(
             StepId::new(1),
             Outcome::Failed {
-                cause: Failure::Unknown
+                cause: Failure::Unknown,
+                cleanup_failed: Vec::new()
             }
         )]
     );

@@ -210,7 +210,13 @@ fn the_root_account_is_neither_locked_nor_removed() -> TestResult {
         let run = helper(&["apply"], &request(Mode::Run, vec![action])?)?;
 
         assert!(
-            matches!(outcomes(&run)?.as_slice(), [Outcome::Failed { cause: _ }]),
+            matches!(
+                outcomes(&run)?.as_slice(),
+                [Outcome::Failed {
+                    cause: _,
+                    cleanup_failed: _
+                }]
+            ),
             "{}",
             run.stdout
         );

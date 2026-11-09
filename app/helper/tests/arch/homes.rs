@@ -165,7 +165,13 @@ fn useradd_refuses_a_user_id_that_is_taken() -> TestResult {
     )?;
 
     assert!(
-        matches!(outcomes(&run)?.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes(&run)?.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{}",
         run.stdout
     );
@@ -236,7 +242,13 @@ fn a_move_onto_an_existing_folder_fails_and_changes_nothing() -> TestResult {
     )?;
 
     assert!(
-        matches!(outcomes(&run)?.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes(&run)?.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{}",
         run.stdout
     );
@@ -261,7 +273,13 @@ fn the_home_folder_of_root_stays() -> TestResult {
     )?;
 
     assert!(
-        matches!(outcomes(&run)?.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes(&run)?.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{}",
         run.stdout
     );

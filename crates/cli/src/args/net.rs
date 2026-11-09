@@ -203,6 +203,12 @@ pub struct RepairArgs {
     #[arg(long)]
     pub boot_repair: bool,
 
+    /// Outside the live ISO, run the chosen system's own grub-install,
+    /// mkinitcpio and bootctl as root. Anyone who could write to that
+    /// disk could put code there.
+    #[arg(long)]
+    pub trust_disk: bool,
+
     #[command(flatten)]
     pub confirm: Confirm,
 }

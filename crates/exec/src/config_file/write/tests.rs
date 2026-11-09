@@ -238,7 +238,8 @@ fn the_step_says_what_happened() {
             &mut stale,
         ),
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
     assert!(printed(&stale).contains("changed since it was opened"));

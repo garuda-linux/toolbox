@@ -71,6 +71,8 @@ repair-does-bios = GRUB wird in die ersten Sektoren des Datenträgers { $target 
 # $layout is one of the layouts above.
 repair-looked-for = Erwarteter Speicherort des Systems: { $layout }
 repair-runs-now = Die Reparatur startet sofort und fragt nach dem Passwort eines Administrators. Jeder Befehl erscheint in der Konsole.
+# In the question on an installed system, not on the live ISO.
+repair-trust-disk = Dies ist nicht die Live-ISO. grub-install, mkinitcpio und bootctl des gewählten Systems laufen als root. Repariere nur eine Festplatte, auf die niemand sonst schreiben konnte.
 repair-encrypted = { $system } ist verschlüsselt. Für die Reparatur wird es entsperrt und danach wieder gesperrt. Garuda Toolbox speichert dein Passwort nirgends.
 repair-passphrase = Passwort der verschlüsselten Partition
 

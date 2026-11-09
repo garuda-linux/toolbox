@@ -128,7 +128,7 @@ fn locale_and_dkms_actions_are_accepted_in_a_dry_run() -> TestResult {
     let skipped = outcomes(&output)?;
 
     assert!(output.status.success(), "{}", output.stderr);
-    assert_eq!(skipped, [Outcome::Skipped; 4]);
+    assert_eq!(skipped, vec![Outcome::Skipped; 4]);
     Ok(())
 }
 

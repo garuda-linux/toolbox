@@ -159,6 +159,7 @@ fn a_failed_step_fails_the_command() {
         &mut terminal(&[]),
         Outcome::Failed {
             cause: Failure::ExitCode { code: 1_i32 },
+            cleanup_failed: Vec::new(),
         },
     );
 

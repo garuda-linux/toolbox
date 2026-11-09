@@ -50,13 +50,15 @@ pub fn mode(path: &Path) -> u32 {
 /// Fails the test unless `outcome` is a failure without a known cause.
 #[track_caller]
 pub fn assert_failed(outcome: Outcome) {
-    assert_eq!(
-        outcome,
-        Outcome::Failed {
-            cause: Failure::Unknown
-        },
-        "the step did not fail"
-    );
+    let Outcome::Failed {
+        cause: Failure::Unknown,
+        cleanup_failed,
+    } = outcome
+    else {
+        panic!("the step did not fail: {outcome:?}");
+    };
+
+    assert_eq!(cleanup_failed, Vec::new(), "a cleanup failed too");
 }
 
 /// Whether the process whose id a script wrote to `pid_file` has ended,

@@ -5,6 +5,7 @@ use toolbox_cli::confirm::Prompt;
 use toolbox_core::features::bootrepair::{Encryption, Firmware, RepairFacts, parse_lsblk};
 
 use super::{pick_target, repair};
+use crate::change::Refused;
 
 /// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free second
 /// Garuda on `nvme1n1p2`.
@@ -54,6 +55,7 @@ fn args(system: &str) -> RepairArgs {
         system: system.to_owned(),
         passphrase_stdin: false,
         boot_repair: true,
+        trust_disk: false,
         confirm: Confirm::default(),
     }
 }
@@ -132,4 +134,24 @@ fn a_system_the_running_system_uses_says_why_in_english() {
         refused.message(),
         "the running system uses this disk, so nothing is written to it"
     );
+}
+
+/// Outside the live ISO the chosen disk's own programs run as root, so the
+/// command line asks for the user's word first.
+#[test]
+fn an_installed_system_needs_trust_in_the_disk() {
+    let trusted = RepairArgs {
+        trust_disk: true,
+        ..args("/dev/sda2")
+    };
+
+    assert_eq!(super::offered(true, &args("/dev/sda2")).ok(), Some(()));
+    assert_eq!(super::offered(false, &trusted).ok(), Some(()));
+
+    let refused = super::offered(false, &args("/dev/sda2")).unwrap_err();
+    let Refused::Rule(words) = refused else {
+        panic!("{refused:?}");
+    };
+
+    assert!(words.contains("--trust-disk"), "{words}");
 }

@@ -35,7 +35,8 @@ fn a_link_from_a_writable_folder_to_a_read_only_file_is_refused() {
     assert_eq!(
         execute(root.path(), StepId::new(1), &write, &mut events),
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
 

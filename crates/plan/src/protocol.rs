@@ -1,5 +1,6 @@
 //! One JSON object per line: the app writes a [`Request`] and [`Answer`]s to the helper's stdin, the helper writes [`Event`]s to stdout.
 
+mod leftover;
 mod read;
 #[cfg(test)]
 mod tests;
@@ -9,13 +10,14 @@ use std::collections::HashSet;
 use serde::de::{DeserializeOwned, Error as _};
 use serde::{Deserialize, Deserializer, Serialize};
 
+pub use self::leftover::Leftover;
 pub use self::read::{ProgramAnswer, ReadKind};
 use crate::shown::Shown;
 use crate::{PackageName, Password, RootAction, Step, StepId, protection};
 
 /// Bumped whenever a message changes shape. App and helper ship together,
 /// so a mismatch means a broken install or a stale helper.
-pub const PROTOCOL_VERSION: u32 = 19;
+pub const PROTOCOL_VERSION: u32 = 20;
 
 /// The most text one [`Answer::Input`] carries. The sender splits a longer paste.
 pub const MAX_INPUT_BYTES: usize = 64 << 10;
@@ -192,12 +194,16 @@ pub enum Event {
     Done,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "result", rename_all = "kebab-case")]
 pub enum Outcome {
     Succeeded,
     Failed {
         cause: Failure,
+        /// The cleanup that failed too, so the next repair's refusal has a
+        /// cause. Empty for most steps, and then left off the line.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        cleanup_failed: Vec<Leftover>,
     },
     /// Also for a dry run, or an empty target query.
     Skipped,

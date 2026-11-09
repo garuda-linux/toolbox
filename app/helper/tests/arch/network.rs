@@ -119,7 +119,13 @@ fn unloading_a_module_that_is_not_there_fails() -> TestResult {
     }])?;
 
     assert!(
-        matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "{outcomes:?}"
     );
     Ok(())

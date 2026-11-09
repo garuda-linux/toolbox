@@ -11,6 +11,7 @@ use toolbox_plan::{
     VolumeDevice,
 };
 
+use super::super::loader::installed_loader;
 use super::super::testing::Machine;
 use super::super::{Lacking, boot_loader_steps, installed_system};
 use super::{mounted, run};
@@ -125,6 +126,32 @@ fn the_esp_comes_from_fstab_and_its_folder_must_exist() {
     );
 }
 
+/// The image's `/etc/fstab` swapped for a FIFO, which would block a plain
+/// read for good.
+#[test]
+fn a_fstab_that_is_no_regular_file_is_refused_unread() {
+    let machine = Machine::new();
+    let fstab = mounted(machine.root()).join("etc/fstab");
+
+    image(machine.root());
+    fs::remove_file(&fstab).unwrap();
+    rustix::fs::mknodat(
+        rustix::fs::CWD,
+        &fstab,
+        rustix::fs::FileType::Fifo,
+        rustix::fs::Mode::from_raw_mode(0o644),
+        0,
+    )
+    .unwrap();
+
+    let error = installed_loader(machine.root()).unwrap_err();
+
+    assert!(
+        error.to_string().contains("fstab is not a regular file"),
+        "{error}"
+    );
+}
+
 #[test]
 fn the_steps_mount_the_esp_where_the_images_fstab_does() {
     let machine = Machine::new();
@@ -150,6 +177,6 @@ fn the_steps_mount_the_esp_where_the_images_fstab_does() {
 
     assert_eq!(
         steps.first().map(String::as_str),
-        Some("mount /dev/vda1 /run/garuda-toolbox/boot-repair/root/efi")
+        Some("mount -o nodev,nosuid /dev/vda1 /run/garuda-toolbox/boot-repair/root/efi")
     );
 }

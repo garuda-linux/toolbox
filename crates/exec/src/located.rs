@@ -2,8 +2,8 @@
 //! nothing else. A development build on NixOS, which has no `/usr/bin`,
 //! also looks in the system's profile and its setuid wrappers. Never in
 //! the caller's `PATH`, which a root helper must not trust, except for a
-//! terminal editor: it only ever runs as the user, in the user's Console,
-//! so the user's `PATH` grants it nothing the user lacks.
+//! terminal editor of a user step: it runs as the user, in the user's
+//! Console, so the user's `PATH` grants it nothing the user lacks.
 
 #[cfg(test)]
 mod tests;
@@ -14,16 +14,38 @@ use std::path::{Path, PathBuf};
 use toolbox_plan::Editor;
 use toolbox_plan::procedure::Program;
 
+use crate::Environment;
+
 const NIXOS: [&str; 2] = ["/run/current-system/sw/bin", "/run/wrappers/bin"];
 
-pub fn program(program: Program) -> PathBuf {
-    if Editor::ALL.iter().any(|editor| editor.program() == program)
-        && let Some(found) = editor(program)
+pub fn program(program: Program, environment: Environment) -> PathBuf {
+    let path = std::env::var_os("PATH");
+    lookup(
+        program,
+        environment,
+        path.as_deref(),
+        cfg!(debug_assertions),
+        Path::is_file,
+    )
+}
+
+/// A root step gets the fixed path even for an editor, so the caller's
+/// `PATH` never matters there, whatever `plan` puts in a root action.
+pub fn lookup(
+    program: Program,
+    environment: Environment,
+    path: Option<&OsStr>,
+    development: bool,
+    exists: impl Fn(&Path) -> bool,
+) -> PathBuf {
+    if environment == Environment::Inherited
+        && Editor::ALL.iter().any(|editor| editor.program() == program)
+        && let Some(found) = editor_path(program.path(), path, &exists)
     {
         return found;
     }
 
-    fixed(program.path())
+    self::path(program.path(), development, exists)
 }
 
 pub fn editor(program: Program) -> Option<PathBuf> {
@@ -46,10 +68,6 @@ pub fn editor_path(
         .filter(|folder| folder.is_absolute())
         .map(|folder| folder.join(name))
         .find(|candidate| exists(candidate))
-}
-
-pub fn fixed(path: &str) -> PathBuf {
-    self::path(path, cfg!(debug_assertions), Path::is_file)
 }
 
 pub fn path(fixed: &str, development: bool, exists: impl Fn(&Path) -> bool) -> PathBuf {

@@ -3,10 +3,11 @@
 //! are named `toolbox-test-user-*` or `toolbox-test-grp-*` and removed
 //! again.
 
+use std::error::Error;
 use std::process::Command;
 
 use toolbox_plan::protocol::{Mode, Outcome};
-use toolbox_plan::{FullName, RootAction};
+use toolbox_plan::{FullName, GroupName, RootAction, UserName};
 
 use super::common::{TestResult, helper, outcomes, request};
 use super::users::{forget, group, group_entry, new_user, passwd_entry, user};
@@ -79,7 +80,10 @@ fn a_system_group_is_not_removed() -> TestResult {
 
     assert!(matches!(
         outcomes(&run)?.as_slice(),
-        [Outcome::Failed { cause: _ }]
+        [Outcome::Failed {
+            cause: _,
+            cleanup_failed: _
+        }]
     ));
     assert!(printed(&run)?.contains("outside 1000 to 60000"));
     assert_eq!(group_entry("wheel")?, before);
@@ -116,5 +120,40 @@ fn the_full_name_changes_and_other_gecos_parts_stay() -> TestResult {
     );
 
     forget(&[name], &[]);
+    Ok(())
+}
+
+#[test]
+fn group_membership_changes_both_ways() -> TestResult {
+    if !in_test_image() {
+        return Ok(());
+    }
+
+    let user = UserName::new("tester")?;
+    let group = GroupName::new("toolbox-test-group")?;
+    let members = || -> Result<String, Box<dyn Error>> {
+        Ok(String::from_utf8_lossy(
+            &Command::new("getent")
+                .args(["group", "toolbox-test-group"])
+                .output()?
+                .stdout,
+        )
+        .into_owned())
+    };
+
+    assert_eq!(
+        apply(vec![RootAction::AddToGroup {
+            user: user.clone(),
+            group: group.clone()
+        }])?,
+        [Outcome::Succeeded]
+    );
+    assert!(members()?.trim_end().ends_with("tester"), "{}", members()?);
+
+    assert_eq!(
+        apply(vec![RootAction::RemoveFromGroup { user, group }])?,
+        [Outcome::Succeeded]
+    );
+    assert!(!members()?.contains("tester"), "{}", members()?);
     Ok(())
 }

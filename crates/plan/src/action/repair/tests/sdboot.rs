@@ -47,7 +47,7 @@ fn a_reinstall_puts_systemd_boot_where_fstab_mounts_the_esp() {
         loader_part(&steps),
         [
             format!("mount -t efivarfs efivarfs {ROOT}/sys/firmware/efi/efivars"),
-            format!("mount /dev/nvme0n1p1 {ROOT}/efi"),
+            format!("mount -o nodev,nosuid /dev/nvme0n1p1 {ROOT}/efi"),
             RECHECK.to_owned(),
             format!(
                 "SYSTEMD_RELAX_ESP_CHECKS=1 chroot {ROOT} /usr/bin/bootctl install --esp-path=/efi"
@@ -72,7 +72,7 @@ fn a_rebuild_mounts_the_esp_and_builds_the_images() {
     assert_eq!(
         loader_part(&steps),
         [
-            format!("mount /dev/sda1 {ROOT}/boot/efi"),
+            format!("mount -o nodev,nosuid /dev/sda1 {ROOT}/boot/efi"),
             RECHECK.to_owned(),
             INITRAMFS.to_owned(),
             UKIS.to_owned(),

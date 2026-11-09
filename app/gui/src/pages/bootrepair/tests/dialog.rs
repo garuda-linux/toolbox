@@ -36,3 +36,35 @@ fn the_questions_paragraphs_are_evenly_apart() {
         "{first} px before the layout, {second} px after it"
     );
 }
+
+fn ask_reinstall(harness: &mut super::Shown) {
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
+    harness.run();
+    harness.get_by_label("Reinstall the boot loader…").click();
+    harness.run();
+}
+
+/// On an installed system the disk is not the live ISO's, so the question
+/// says whose programs run as root.
+#[test]
+fn outside_the_live_iso_the_question_names_the_trust_in_the_disk() {
+    use toolbox_core::features::bootrepair::page::{Offer, Progress};
+
+    use crate::bootrepair::BootRepair;
+
+    let mut installed = page(
+        BootRepair::showing(Offer::Test, super::sample(), Progress::None),
+        BootRepairPage::default(),
+    );
+
+    ask_reinstall(&mut installed);
+
+    assert!(installed.query_by_label_contains("run as root").is_some());
+
+    let mut on_the_iso = page(live(), BootRepairPage::default());
+    ask_reinstall(&mut on_the_iso);
+
+    assert!(on_the_iso.query_by_label_contains("run as root").is_none());
+}

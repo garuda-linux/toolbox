@@ -41,9 +41,7 @@ use std::process::Command;
 
 use common::{Reply, Run, TestResult, events, helper, helper_answering, outcomes, request};
 use toolbox_plan::protocol::{Event, Mode, Outcome};
-use toolbox_plan::{
-    GroupName, Mirrorlist, PackageName, RootAction, TargetList, Upgrader, UserName,
-};
+use toolbox_plan::{Mirrorlist, PackageName, RootAction, TargetList, Upgrader};
 
 const TEST_PACKAGES: [&str; 4] = [
     "toolbox-test-a",
@@ -323,41 +321,6 @@ fn the_package_cache_is_cleaned() -> TestResult {
 }
 
 #[test]
-fn group_membership_changes_both_ways() -> TestResult {
-    if !in_test_image() {
-        return Ok(());
-    }
-
-    let user = UserName::new("tester")?;
-    let group = GroupName::new("toolbox-test-group")?;
-    let members = || -> Result<String, Box<dyn Error>> {
-        Ok(String::from_utf8_lossy(
-            &Command::new("getent")
-                .args(["group", "toolbox-test-group"])
-                .output()?
-                .stdout,
-        )
-        .into_owned())
-    };
-
-    assert_eq!(
-        apply(vec![RootAction::AddToGroup {
-            user: user.clone(),
-            group: group.clone()
-        }])?,
-        [Outcome::Succeeded]
-    );
-    assert!(members()?.trim_end().ends_with("tester"), "{}", members()?);
-
-    assert_eq!(
-        apply(vec![RootAction::RemoveFromGroup { user, group }])?,
-        [Outcome::Succeeded]
-    );
-    assert!(!members()?.contains("tester"), "{}", members()?);
-    Ok(())
-}
-
-#[test]
 fn the_chaotic_mirrorlist_is_written_with_a_backup() -> TestResult {
     if !in_test_image() {
         return Ok(());
@@ -393,7 +356,13 @@ fn the_chroot_fails_cleanly_without_garuda_chroot() -> TestResult {
     let outcomes = apply(vec![RootAction::ChrootInstallation])?;
 
     assert!(
-        matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "the missing program must fail the step"
     );
     Ok(())

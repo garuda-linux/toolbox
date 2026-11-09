@@ -71,6 +71,8 @@ repair-does-bios = GRUB is written to the first sectors of the disk { $target },
 # $layout is one of the layouts above.
 repair-looked-for = The system is looked for here: { $layout }
 repair-runs-now = It runs right away and asks for an administrator's password. The Console shows every command.
+# In the question on an installed system, not on the live ISO.
+repair-trust-disk = This is not the live ISO. The chosen system's own grub-install, mkinitcpio and bootctl run as root. Repair only a disk nobody else could write to.
 repair-encrypted = { $system } is encrypted. It is unlocked for the repair and locked again afterwards. The passphrase is not kept in any file of Garuda Toolbox.
 repair-passphrase = Passphrase of the encrypted partition
 

@@ -112,6 +112,7 @@ fn every_outcome_has_its_word() {
         (
             Outcome::Failed {
                 cause: Failure::ExitCode { code: 1_i32 },
+                cleanup_failed: Vec::new(),
             },
             "failed",
         ),

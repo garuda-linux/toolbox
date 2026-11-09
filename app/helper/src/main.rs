@@ -13,6 +13,7 @@
 //! with a clean environment, so nothing the caller sends becomes a shell
 //! command or an option.
 
+mod fds;
 mod fetch;
 mod io;
 mod logger;
@@ -41,7 +42,15 @@ fn main() -> ExitCode {
     // pkexec keeps the caller's umask. Files written as root must not
     // become writable by others.
     rustix::process::umask(rustix::fs::Mode::from_raw_mode(0o022));
+
+    // The sudo fallback starts it in the caller's folder, which the caller
+    // may change under a root process. `/` is always there.
+    if let Err(error) = rustix::process::chdir("/") {
+        return refuse(&format!("cannot leave the caller's folder: {error}"));
+    }
+
     logger::init();
+    fds::keep_from_children();
     keep_memory_private();
 
     // `std::env::args` panics on an argument that is no UTF-8.

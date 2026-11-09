@@ -41,7 +41,7 @@ fn boot_actions_are_accepted_in_a_dry_run() -> TestResult {
     let skipped = outcomes(&output)?;
 
     assert!(output.status.success(), "{}", output.stderr);
-    assert_eq!(skipped, [Outcome::Skipped; 3]);
+    assert_eq!(skipped, vec![Outcome::Skipped; 3]);
     assert_eq!(std::fs::read(GRUB_DEFAULTS).ok(), before);
     Ok(())
 }

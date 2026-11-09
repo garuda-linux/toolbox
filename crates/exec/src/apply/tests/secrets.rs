@@ -11,6 +11,7 @@ const SECRET: &str = "correct horse battery staple";
 
 const FAILED: Outcome = Outcome::Failed {
     cause: Failure::ExitCode { code: 9_i32 },
+    cleanup_failed: Vec::new(),
 };
 
 fn user() -> UserName {

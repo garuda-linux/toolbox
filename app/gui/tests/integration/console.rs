@@ -232,6 +232,7 @@ fn a_failed_step_shows_its_exit_code() {
             step,
             outcome: Outcome::Failed {
                 cause: toolbox_plan::protocol::Failure::ExitCode { code: 1_i32 },
+                cleanup_failed: Vec::new(),
             },
         },
         Event::Done,

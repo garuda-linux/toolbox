@@ -23,6 +23,7 @@ pub fn failure(step: StepId, sink: &mut dyn EventSink, message: &str) -> Outcome
         message,
         Outcome::Failed {
             cause: Failure::Unknown,
+            cleanup_failed: Vec::new(),
         },
     )
 }
@@ -33,5 +34,6 @@ pub const fn ended(exit: Exit) -> Outcome {
             Exit::Code(code) => Failure::ExitCode { code },
             Exit::Signal(signal) => Failure::Signal { signal },
         },
+        cleanup_failed: Vec::new(),
     }
 }

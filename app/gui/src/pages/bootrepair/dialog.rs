@@ -4,14 +4,15 @@
 use std::fmt;
 
 use egui::{Context, Id, Label, TextBuffer, TextEdit, Ui};
+use toolbox_core::features::bootrepair::page::Offer;
 use toolbox_core::features::bootrepair::{
     Encryption, RepairFacts, System, Target, page, rebuild_esp,
 };
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, confirm_buttons_why,
-    forget_text, rich, text_field,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, Tone, banner,
+    confirm_buttons_why, forget_text, rich, text_field,
 };
 use toolbox_plan::{MAX_PASSWORD_BYTES, Password, RootLayout, VolumeDevice};
 
@@ -93,6 +94,17 @@ impl Dialog {
             .title_bar(&close)
             .width(DialogWidth::Medium)
             .show(ctx, |ui| {
+                // Outside the live ISO nobody vouches for the disk.
+                if context.boot_repair.offer() != Offer::Live {
+                    banner(
+                        ui,
+                        Tone::Warning,
+                        &i18n::text(ctx, "repair-trust-disk"),
+                        &[],
+                    );
+                    ui.add_space(ui.tokens().sizes.card_gap);
+                }
+
                 self.body(ui, facts, system);
                 confirm_buttons_why(ui, &cancel, &confirm, ButtonKind::Danger, why.as_deref())
             });

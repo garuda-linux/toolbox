@@ -146,6 +146,7 @@ fn outcomes_and_answers_round_trip() {
         step: StepId::new(2),
         outcome: Outcome::Failed {
             cause: Failure::ExitCode { code: 1_i32 },
+            cleanup_failed: Vec::new(),
         },
     };
 
@@ -165,40 +166,6 @@ fn outcomes_and_answers_round_trip() {
     assert_eq!(
         decode::<Answer>("{\"type\":\"finish\"}").unwrap(),
         Answer::Finish
-    );
-}
-
-#[test]
-fn a_failure_names_exactly_one_cause_on_the_wire() {
-    let outcome = |cause| encode(&Outcome::Failed { cause }).unwrap();
-
-    assert_eq!(
-        outcome(Failure::ExitCode { code: 3_i32 }),
-        "{\"result\":\"failed\",\"cause\":{\"kind\":\"exit-code\",\"code\":3}}\n"
-    );
-    assert_eq!(
-        outcome(Failure::Signal { signal: 9_i32 }),
-        "{\"result\":\"failed\",\"cause\":{\"kind\":\"signal\",\"signal\":9}}\n"
-    );
-    assert_eq!(
-        outcome(Failure::Unknown),
-        "{\"result\":\"failed\",\"cause\":{\"kind\":\"unknown\"}}\n"
-    );
-
-    for cause in [
-        Failure::ExitCode { code: 3_i32 },
-        Failure::Signal { signal: 9_i32 },
-        Failure::Unknown,
-    ] {
-        assert_eq!(
-            decode::<Outcome>(&outcome(cause)).unwrap(),
-            Outcome::Failed { cause }
-        );
-    }
-
-    assert!(
-        decode::<Outcome>(r#"{"result":"failed","code":1,"signal":9}"#).is_err(),
-        "a cause with both a code and a signal"
     );
 }
 

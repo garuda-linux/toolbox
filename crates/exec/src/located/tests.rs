@@ -1,6 +1,9 @@
 use std::path::{Path, PathBuf};
 
-use super::{editor_path, path};
+use toolbox_plan::Editor;
+
+use super::{editor_path, lookup, path};
+use crate::Environment;
 
 fn only(existing: &'static [&'static str]) -> impl Fn(&Path) -> bool {
     move |candidate| existing.iter().any(|path| Path::new(path) == candidate)
@@ -86,4 +89,30 @@ fn an_editor_found_nowhere_is_none() {
         None
     );
     assert_eq!(editor_path("/usr/bin/micro", None, only(&[])), None);
+}
+
+#[test]
+fn a_root_step_never_looks_for_an_editor_in_the_callers_path() {
+    let found = lookup(
+        Editor::Micro.program(),
+        Environment::Clean,
+        Some("/home/me/.local/bin".as_ref()),
+        false,
+        only(&["/home/me/.local/bin/micro"]),
+    );
+
+    assert_eq!(found, PathBuf::from("/usr/bin/micro"));
+}
+
+#[test]
+fn a_user_step_finds_a_missing_editor_in_the_users_path() {
+    let found = lookup(
+        Editor::Micro.program(),
+        Environment::Inherited,
+        Some("/home/me/.local/bin".as_ref()),
+        false,
+        only(&["/home/me/.local/bin/micro"]),
+    );
+
+    assert_eq!(found, PathBuf::from("/home/me/.local/bin/micro"));
 }

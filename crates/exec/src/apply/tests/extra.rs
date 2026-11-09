@@ -104,7 +104,8 @@ fn a_failing_query_fails_its_step() {
     assert_eq!(
         outcome,
         Outcome::Failed {
-            cause: Failure::Unknown
+            cause: Failure::Unknown,
+            cleanup_failed: Vec::new()
         }
     );
 }
@@ -117,6 +118,7 @@ fn a_signal_end_reports_its_number() {
         super::super::super::report::ended(Exit::Signal(9_i32)),
         Outcome::Failed {
             cause: Failure::Signal { signal: 9_i32 },
+            cleanup_failed: Vec::new()
         }
     );
 }

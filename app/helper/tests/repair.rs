@@ -63,7 +63,7 @@ fn repairs_are_accepted_in_a_dry_run_that_touches_nothing() -> TestResult {
     let skipped = outcomes(&output)?;
 
     assert!(output.status.success(), "{}", output.stderr);
-    assert_eq!(skipped, [Outcome::Skipped; 3]);
+    assert_eq!(skipped, vec![Outcome::Skipped; 3]);
     assert_eq!(Path::new(MOUNT_FOLDER).exists(), existed);
     assert!(!Path::new(MAPPER).exists(), "a dry run opened the system");
     Ok(())

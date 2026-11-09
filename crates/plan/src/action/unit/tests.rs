@@ -101,6 +101,10 @@ fn masking_a_user_unit_keeps_user_and_mask_apart() {
                 other @ (Invocation::RunWithTargetsFrom { query: _, run: _ }
                 | Invocation::Builtin(_)
                 | Invocation::Always(_)
+                | Invocation::Cleanup {
+                    command: _,
+                    leftover: _,
+                }
                 | Invocation::Feed {
                     command: _,
                     input: _,

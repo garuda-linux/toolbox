@@ -59,7 +59,7 @@ pub fn feed(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     let result = run(
-        crate::located::program(command.program()),
+        crate::located::program(command.program(), environment),
         command,
         environment,
         input,

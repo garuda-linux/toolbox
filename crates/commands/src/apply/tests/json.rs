@@ -74,6 +74,7 @@ fn a_run_is_json_lines_and_nothing_else() {
 fn a_failed_step_ends_with_done_not_ok() {
     let failed = Outcome::Failed {
         cause: toolbox_plan::protocol::Failure::ExitCode { code: 1_i32 },
+        cleanup_failed: Vec::new(),
     };
 
     let (exit, lines) = carried(plan(), json(true, false), helper(failed));

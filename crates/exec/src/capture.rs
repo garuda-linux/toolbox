@@ -76,6 +76,8 @@ struct Tail {
     limit: usize,
     bytes: VecDeque<u8>,
     truncated: bool,
+    /// The pipe broke before its end, so the bytes are no whole output.
+    failed: Option<io::Error>,
 }
 
 impl<'input> Policy<'input> {
@@ -186,6 +188,7 @@ impl Tail {
             limit,
             bytes: VecDeque::new(),
             truncated: false,
+            failed: None,
         }
     }
 

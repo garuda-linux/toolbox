@@ -18,6 +18,7 @@ use std::fmt;
 
 use super::run;
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program, relaxed};
+use crate::protocol::Leftover;
 use crate::repair::{
     ESP_FOLDER, EspPlace, InstalledLoader, REPAIR_MAPPER, REPAIR_VOLUME, ROOT_SUBVOLUME,
     RepairMount, RepairRoot, RootLayout,
@@ -29,6 +30,10 @@ const EFI_TARGET: &str = "x86_64-efi";
 
 /// GRUB for the boot sector of a disk, on any PC.
 const BIOS_TARGET: &str = "i386-pc";
+
+/// The chosen disk may hold device nodes or setuid programs of anyone's
+/// making. The binds of the live system's `/dev` keep their own options.
+const UNTRUSTED: &str = "nodev,nosuid";
 
 pub fn repair_boot(
     system: &InstalledSystem,
@@ -68,9 +73,10 @@ pub fn repair_boot(
     steps.extend(mounted.into_iter().rev().map(unmount));
 
     if system.is_locked() {
-        steps.push(Invocation::Always(
-            Command::new(Program::Cryptsetup).args(["close", REPAIR_MAPPER]),
-        ));
+        steps.push(Invocation::Cleanup {
+            command: Command::new(Program::Cryptsetup).args(["close", REPAIR_MAPPER]),
+            leftover: Leftover::Open,
+        });
     }
 
     steps
@@ -181,9 +187,12 @@ fn esp_mounts(esp: &PartitionDevice, place: EspPlace, variables: bool) -> Vec<In
         ])));
     }
 
-    steps.push(run(
-        mount().args([esp.as_str(), &RepairMount::Esp(place).to_string()])
-    ));
+    steps.push(run(mount().args([
+        "-o",
+        UNTRUSTED,
+        esp.as_str(),
+        &RepairMount::Esp(place).to_string(),
+    ])));
     steps
 }
 
@@ -251,21 +260,28 @@ fn unlock(partition: &PartitionDevice, passphrase: Option<&Password>) -> Invocat
 }
 
 fn mount_root(device: &str, layout: RootLayout) -> Invocation {
-    let command = match layout {
-        RootLayout::Plain => mount(),
-        RootLayout::Subvolume => {
-            mount().args(["-o".to_owned(), format!("subvol={ROOT_SUBVOLUME}")])
-        }
+    let options = match layout {
+        RootLayout::Plain => UNTRUSTED.to_owned(),
+        RootLayout::Subvolume => format!("{UNTRUSTED},subvol={ROOT_SUBVOLUME}"),
     };
 
-    run(command.args([device, &RepairMount::Root.to_string()]))
+    run(mount().args(["-o", &options, device, &RepairMount::Root.to_string()]))
 }
 
 /// Runs whatever happened before. Unmounting what was never mounted only
 /// prints that it is not mounted. `-R` because a program in the chroot
 /// (os-prober) may mount more below, which would keep the device busy.
+/// `--no-canonicalize` because the disk's own `dev` may be a symlink to
+/// the live system's `/dev`, and its bind was then refused, not made.
 fn unmount(place: RepairMount) -> Invocation {
-    Invocation::Always(Command::new(Program::Umount).args(["-R".to_owned(), place.to_string()]))
+    Invocation::Cleanup {
+        command: Command::new(Program::Umount).args([
+            "-R".to_owned(),
+            "--no-canonicalize".to_owned(),
+            place.to_string(),
+        ]),
+        leftover: Leftover::Mounted { place },
+    }
 }
 
 const fn mount() -> Command {

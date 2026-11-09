@@ -142,7 +142,13 @@ fn grub_settings_fail_without_the_file_and_create_nothing() -> TestResult {
     ])?;
 
     assert!(
-        matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+        matches!(
+            outcomes.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
         "the plan must stop before grub-mkconfig: {outcomes:?}"
     );
     assert!(!Path::new(DEFAULTS).exists());
@@ -180,7 +186,13 @@ fn generating_the_menu_needs_grub() -> TestResult {
         );
     } else {
         assert!(
-            matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+            matches!(
+                outcomes.as_slice(),
+                [Outcome::Failed {
+                    cause: _,
+                    cleanup_failed: _
+                }]
+            ),
             "{outcomes:?}"
         );
         assert!(!Path::new(MENU).exists(), "a menu appeared without GRUB");
@@ -204,7 +216,13 @@ fn the_plymouth_theme_needs_plymouth() -> TestResult {
         }])?;
 
         assert!(
-            matches!(outcomes.as_slice(), [Outcome::Failed { cause: _ }]),
+            matches!(
+                outcomes.as_slice(),
+                [Outcome::Failed {
+                    cause: _,
+                    cleanup_failed: _
+                }]
+            ),
             "{outcomes:?}"
         );
         return Ok(());

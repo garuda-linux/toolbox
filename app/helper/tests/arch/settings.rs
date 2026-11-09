@@ -45,7 +45,13 @@ fn listed(shell: &str) -> Result<bool, Box<dyn Error>> {
 }
 
 const fn failed(outcomes: &[Outcome]) -> bool {
-    matches!(outcomes, [Outcome::Failed { cause: _ }])
+    matches!(
+        outcomes,
+        [Outcome::Failed {
+            cause: _,
+            cleanup_failed: _
+        }]
+    )
 }
 
 #[test]

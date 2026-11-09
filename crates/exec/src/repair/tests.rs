@@ -111,7 +111,13 @@ fn a_partition_without_grub_is_no_system_to_repair() {
         &Builtin::RequireInstalledSystem(RepairNeed::Installer),
     );
 
-    assert!(matches!(outcome, Outcome::Failed { cause: _ }));
+    assert!(matches!(
+        outcome,
+        Outcome::Failed {
+            cause: _,
+            cleanup_failed: _
+        }
+    ));
     assert!(text.contains("no /usr/bin/grub-install"), "{text}");
 }
 

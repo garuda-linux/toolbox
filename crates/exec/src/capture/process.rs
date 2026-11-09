@@ -65,8 +65,10 @@ pub fn finish(
         Ok(()) | Err(_) => {}
     }
 
-    let (output, truncated) = receive(&output, group, cancel, end)?.into_bytes();
-    let (errors, _) = receive(&errors, group, cancel, end)?.into_bytes();
+    let output = whole(receive(&output, group, cancel, end)?)?;
+    let errors = whole(receive(&errors, group, cancel, end)?)?;
+    let (output, truncated) = output.into_bytes();
+    let (errors, _) = errors.into_bytes();
 
     if truncated && policy.cap_is_error {
         return Err(CaptureError::TooLarge);
@@ -107,7 +109,10 @@ where
                     Ok(0) => break,
                     Ok(read) => tail.push(buffer.get(..read).unwrap_or_default()),
                     Err(error) if error.kind() == io::ErrorKind::Interrupted => {}
-                    Err(_) => break,
+                    Err(error) => {
+                        tail.failed = Some(error);
+                        break;
+                    }
                 }
 
                 // Dropping the pipe ends a program that cannot be killed.
@@ -226,4 +231,12 @@ fn signal(group: Pid, signal: Signal) {
 
 fn passed(end: Option<Instant>) -> bool {
     end.is_some_and(|end| Instant::now() >= end)
+}
+
+/// A pipe that broke midway leaves a partial output, which a caller such
+/// as `pacman -Qtdq` would read as the whole list.
+pub(super) fn whole(mut tail: Tail) -> Result<Tail, CaptureError> {
+    let failed = tail.failed.take();
+
+    failed.map_or(Ok(tail), |error| Err(CaptureError::Failed(error)))
 }

@@ -1,3 +1,4 @@
+mod broken;
 mod identified;
 
 use std::process::Command;
