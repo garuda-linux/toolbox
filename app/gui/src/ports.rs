@@ -2,7 +2,10 @@
 //! dry run where a port would change the machine or leave it.
 
 mod samples;
+#[cfg(test)]
+mod tests;
 
+use std::ffi::OsString;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -15,7 +18,7 @@ use toolbox_gui::apply::{self, ApplyHandle, HelperLauncher, Launcher as _};
 use toolbox_gui::boot::BootSetup;
 use toolbox_gui::boot::portal::PortalChooser;
 use toolbox_gui::bootrepair::BootRepairSetup;
-use toolbox_gui::catalogs::catalog_dir;
+use toolbox_gui::catalogs::{DEVELOPMENT, catalog_dir};
 use toolbox_gui::command::CommandSender;
 use toolbox_gui::configs::ConfigsSetup;
 use toolbox_gui::diagnostics::{DiagnosticsLink, DryRunTransport};
@@ -170,7 +173,7 @@ pub fn pictures(ctx: &egui::Context) -> Pictures {
 fn configs(handle: &Handle, launcher: Arc<HelperLauncher>, dry_run: bool) -> ConfigsSetup {
     let variable = |name: &str| std::env::var(name).ok().filter(|value| !value.is_empty());
     let (source, dir): (Arc<dyn ConfigFileSource>, PathBuf) =
-        match std::env::var_os(SELF_TEST_CONFIGS).map(PathBuf::from) {
+        match self_test_configs(|key| std::env::var_os(key), DEVELOPMENT) {
             Some(dir) => {
                 tracing::info!("the config files of the self-test in {}", dir.display());
                 let files = SystemConfigFiles::new(dir.join("root"), dir.join("home"), launcher);
@@ -203,6 +206,17 @@ fn configs(handle: &Handle, launcher: Arc<HelperLauncher>, dry_run: bool) -> Con
         editor: variable("EDITOR"),
         dry_run,
     }
+}
+
+/// The self-test's folder of config files. A release never reads it, so
+/// no variable points the page at other files than the system's.
+fn self_test_configs(
+    lookup: impl Fn(&str) -> Option<OsString>,
+    development: bool,
+) -> Option<PathBuf> {
+    lookup(SELF_TEST_CONFIGS)
+        .filter(|_| development)
+        .map(PathBuf::from)
 }
 
 /// The disks of the machine, or a sample machine in a self-test build's

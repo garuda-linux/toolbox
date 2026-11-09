@@ -47,3 +47,6 @@ protected-refused = { $name } bleibt installiert. { $why }.
 # $name is a dependency the removal would take along, $why one of the
 # reasons above.
 protected-along = Diese Entfernung würde auch { $name } entfernen, das installiert bleibt. { $why }.
+# The whole window of a release whose catalog files are not installed. $dir is the folder.
+missing-catalog = Garuda Toolbox ist nicht vollständig installiert: Der Ordner { $dir } fehlt. Installiere das Paket garuda-toolbox neu und starte die App dann erneut.
+missing-catalog-quit = Beenden

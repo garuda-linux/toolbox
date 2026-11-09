@@ -330,6 +330,10 @@ fn catalogs(facts: &Facts) -> Check {
         REINSTALL
     };
 
+    if !found.present {
+        return problem(CATALOGS, format!("{dir} is missing"), REINSTALL.to_owned());
+    }
+
     found.problems.first().map_or_else(
         || ok(CATALOGS, format!("{} loaded from {dir}", found.loaded)),
         |first| {

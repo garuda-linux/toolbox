@@ -44,7 +44,7 @@ const TASKS: [(&str, &str, Task); 8] = [
     ("icons-check", "[theme dir]", icons::icons_check),
     (
         "wiki-sync",
-        "[--local <dir>] [--sources <dir>] [--out <dir>] [--include-aur] [--unfiltered] [--write]",
+        "[--local <dir>] [--sources <dir>] [--out <dir>] [--include-aur] [--unfiltered] [--write] [--accept-moves]",
         apps::tasks::wiki_sync,
     ),
 ];

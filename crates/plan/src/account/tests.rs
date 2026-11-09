@@ -77,6 +77,28 @@ fn full_names_refuse_what_would_break_passwd_or_gecos() {
 }
 
 #[test]
+fn a_full_name_hides_no_character() {
+    // The `user` of the captured passwd, given a GECOS name.
+    let line = PASSWD
+        .lines()
+        .find(|line| line.starts_with("user:"))
+        .unwrap();
+
+    let named = line.replacen("::", ":Ada Lovelace:", 1);
+    let gecos = named.split(':').nth(4).unwrap();
+    assert_eq!(FullName::new(gecos).unwrap().as_str(), "Ada Lovelace");
+
+    for hidden in ['\u{202e}', '\u{200d}'] {
+        let spoofed = gecos.replacen(' ', &format!(" {hidden}"), 1);
+
+        assert_eq!(
+            FullName::new(spoofed),
+            Err(InvalidFullName::InvalidCharacter(hidden))
+        );
+    }
+}
+
+#[test]
 fn full_names_are_checked_when_decoded() {
     assert_eq!(
         serde_json::from_str::<FullName>("\"Nico Jensch\"").unwrap(),

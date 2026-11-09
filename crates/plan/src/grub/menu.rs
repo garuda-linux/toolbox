@@ -10,7 +10,7 @@ pub use branch::GrubPlatform;
 use serde::{Deserialize, Serialize};
 
 use crate::protocol::{DecodeError, decode};
-use crate::{MenuEntryId, PackageName};
+use crate::{MenuEntryId, PackageName, text};
 
 /// Between a submenu and an entry in it, in ids and positions.
 const INSIDE: char = '>';
@@ -31,7 +31,7 @@ pub struct MenuEntry {
     /// What `GRUB_DEFAULT` takes: the entry's own id, after the ids of the
     /// submenus around it (`gnulinux-advanced-…>gnulinux-linux-zen-…`).
     pub id: MenuEntryId,
-    /// What the menu shows, without control characters.
+    /// What the menu shows, without hidden characters.
     pub title: String,
     /// The numbers `GRUB_DEFAULT` also takes: `0`, or `1>2` in a submenu.
     pub position: String,
@@ -252,13 +252,10 @@ fn header(line: &str) -> Option<Header> {
     })
 }
 
-/// A title as the page shows it: one line of bounded length.
+/// A title as the page shows it: one line of bounded length. os-prober
+/// writes titles of other disks, so they are outside text.
 fn shown(title: &str) -> String {
-    title
-        .chars()
-        .filter(|character| !character.is_control())
-        .take(MAX_TITLE_CHARS)
-        .collect()
+    text::plain(title).chars().take(MAX_TITLE_CHARS).collect()
 }
 
 /// Splits a line the way GRUB's script reader does: blanks part the

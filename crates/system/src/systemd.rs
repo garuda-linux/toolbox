@@ -76,7 +76,7 @@ pub fn unit_infos(units: Vec<ListUnitsRow>, files: Vec<UnitFileRow>) -> Vec<Unit
                     .get(name.as_str())
                     .map_or(FileState::Unknown, |state| FileState::parse(state)),
                 name,
-                description,
+                description: toolbox_plan::text::plain(&description),
                 active: ActiveState::parse(&active),
                 sub_state: sub,
             });

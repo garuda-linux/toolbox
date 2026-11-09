@@ -237,3 +237,21 @@ fn without_a_synced_database_an_installed_package_is_foreign() {
 fn an_installed_package_shows_the_version_of_the_first_repository() {
     assert_eq!(details(&system(), "gimp").version, "3.2.6-2");
 }
+
+/// A package's description comes from whoever built it, so it is outside
+/// text. mpv is offered by no repository, so its index entry keeps the
+/// local description.
+#[test]
+fn a_package_description_loses_a_bidi_override_and_a_zero_width_joiner() {
+    let system = system();
+    let shown = "a free, open source, and cross-platform media player";
+
+    // Changed: the captured mpv's description gains both characters.
+    system.edit_desc(MPV, "a free, open", "a\u{202e} free,\u{200d} open");
+
+    let index = Libalpm::with_config(system.config()).index().unwrap();
+    let mpv = index.entries.iter().find(|entry| entry.name == name("mpv"));
+
+    assert_eq!(mpv.map(|entry| entry.description.as_str()), Some(shown));
+    assert_eq!(details(&system, "mpv").description, shown);
+}

@@ -101,6 +101,10 @@ pub enum Problem {
     EmptyTitle,
     #[error("empty description")]
     EmptyDescription,
+    /// A bidi override or zero-width character would make the page read
+    /// otherwise than the catalog file looks in review.
+    #[error("{0:?} holds a hidden character")]
+    HiddenCharacter(String),
     #[error("empty icon")]
     EmptyIcon,
     /// A section without entries would show an empty group.

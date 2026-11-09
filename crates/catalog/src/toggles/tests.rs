@@ -3,6 +3,7 @@ mod components;
 mod edits;
 mod extras;
 mod gaming;
+mod texts;
 mod user_config;
 
 use std::fs;

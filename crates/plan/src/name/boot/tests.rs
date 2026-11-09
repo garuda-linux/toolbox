@@ -255,6 +255,28 @@ fn a_menu_entry_id_cannot_leave_its_quotes() {
     );
 }
 
+/// os-prober copies titles of other disks, and a title is an id when the
+/// entry names none.
+#[test]
+fn a_menu_entry_id_hides_no_character() {
+    let title = GRUB_CFG
+        .lines()
+        .find_map(|line| line.strip_prefix("menuentry '"))
+        .and_then(|rest| rest.split('\'').next())
+        .unwrap();
+
+    for hidden in ['\u{202e}', '\u{200d}'] {
+        // The captured first title with the character after its first letter.
+        let mut id = title.to_owned();
+        id.insert(1, hidden);
+
+        assert_eq!(
+            MenuEntryId::new(id).unwrap_err().reason(),
+            Reason::InvalidCharacter(hidden)
+        );
+    }
+}
+
 #[test]
 fn pictures_and_themes_are_plain_absolute_paths_of_their_type() {
     for picture in [

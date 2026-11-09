@@ -10,7 +10,7 @@ use toolbox_state::packages::{
     PackageDetails, PackageIndex,
 };
 
-use super::{Libalpm, failed, open_local};
+use super::{Libalpm, description, failed, open_local};
 use crate::error::ProbeError;
 
 pub trait PackageIndexSource: Send + Sync {
@@ -63,7 +63,7 @@ impl PackageIndexSource for Libalpm {
                         version: package.version().to_string(),
                         reason: reason(package.reason()),
                     },
-                    description: package.desc().unwrap_or_default().to_owned(),
+                    description: description(package),
                     size: size(package),
                 },
             );
@@ -133,7 +133,7 @@ impl PackageIndexSource for Libalpm {
 
         Ok(Some(PackageDetails {
             name: package.clone(),
-            description: shown.desc().unwrap_or_default().to_owned(),
+            description: description(shown),
             version,
             origin,
             size: size(shown),
@@ -146,7 +146,7 @@ impl PackageIndexSource for Libalpm {
                 .iter()
                 .map(|dep| OptionalDependency {
                     name: dep.name().to_owned(),
-                    reason: dep.desc().unwrap_or_default().to_owned(),
+                    reason: toolbox_plan::text::plain(dep.desc().unwrap_or_default()),
                 })
                 .collect(),
             required_by: local

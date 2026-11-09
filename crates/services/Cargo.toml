@@ -8,6 +8,8 @@ rust-version.workspace = true
 publish.workspace = true
 
 [features]
+# The test variables and the source-tree catalog, left out of a release.
+selftest = []
 testing = []
 
 [dependencies]

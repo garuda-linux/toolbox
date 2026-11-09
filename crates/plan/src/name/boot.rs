@@ -9,6 +9,7 @@ mod tests;
 use super::rules::{check_characters, check_shape, check_word};
 use super::{Name, NameKind, Reason, Rule};
 use crate::component::has_plain_components;
+use crate::text;
 
 const SHELL_ACTIVE: &str = "\"\\$`";
 
@@ -113,7 +114,7 @@ impl Rule for PlymouthThemeRule {
 }
 
 /// Titles hold blanks (grub-btrfs even starts with them), commas and brackets,
-/// so this is a deny list: no control character and nothing a shell acts on
+/// so this is a deny list: no hidden character and nothing a shell acts on
 /// inside double quotes. No `-` at the start, so an id never reads as an
 /// option.
 impl Rule for MenuEntryRule {
@@ -121,7 +122,8 @@ impl Rule for MenuEntryRule {
 
     fn check(value: &str) -> Result<(), Reason> {
         check_shape(value, MAX_MENU_ENTRY_CHARS, |first| first != '-')?;
-        check_quotable(value)
+        check_quotable(value)?;
+        check_characters(value, |character| !text::is_hidden(character))
     }
 }
 

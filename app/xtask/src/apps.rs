@@ -3,6 +3,7 @@
 //! to write the files.
 
 mod clean;
+mod moves;
 pub mod tasks;
 #[cfg(test)]
 mod tests;

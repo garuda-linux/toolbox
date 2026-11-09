@@ -181,6 +181,24 @@ fn the_adapter_reads_passwd_and_shells_below_its_root() {
 }
 
 #[test]
+fn a_full_name_loses_a_bidi_override_and_a_zero_width_joiner() {
+    // The captured passwd with the GECOS of dbus spoofed.
+    let passwd = PASSWD.replacen(
+        ":System Message Bus:",
+        ":System\u{202e} Message\u{200d} Bus:",
+        1,
+    );
+
+    let all = accounts(&passwd, GROUP);
+    let dbus = all.users.iter().find(|user| user.name.as_str() == "dbus");
+
+    assert_eq!(
+        dbus.map(|user| user.gecos.as_str()),
+        Some("System Message Bus")
+    );
+}
+
+#[test]
 fn accounts_hold_every_valid_user_and_group_sorted_by_name() {
     let all = accounts(PASSWD, GROUP);
     let users: Vec<(&str, u32, u32, &str, &str, &str)> = all

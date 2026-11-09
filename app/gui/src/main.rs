@@ -1,6 +1,7 @@
 //! `garuda-toolbox`: maintain and configure an Arch based system.
 
 mod ports;
+mod start;
 
 use std::io::Write as _;
 use std::path::PathBuf;
@@ -13,7 +14,7 @@ use eframe::CreationContext;
 use tokio::runtime::Handle;
 use toolbox_cli::Cli;
 use toolbox_commands::window::{Opening, opening};
-use toolbox_config::{Autostart, DESKTOP_FILE, Paths, Settings};
+use toolbox_config::{Paths, Settings};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::catalogs::{Catalogs, catalog_dir};
 use toolbox_gui::desktop::files::DesktopFiles;
@@ -25,11 +26,8 @@ use toolbox_gui::pages::kernels::view::{self as kernel_view, dkms_answer};
 use toolbox_gui::programs::Programs;
 use toolbox_gui::queue::Restored;
 use toolbox_gui::reader::ReaderHandle;
-use toolbox_gui::settings::FileStore;
 use toolbox_gui::units::{self, Systemd, UnitsHandle};
-use toolbox_gui::{
-    App, PreferencesSetup, Setup, i18n, log_folder, panics, queue, reader, snapshot,
-};
+use toolbox_gui::{App, Setup, i18n, log_folder, panics, queue, reader, snapshot};
 use toolbox_gui_kit::desktop::family::Family;
 use toolbox_log::subscriber;
 use toolbox_system::{
@@ -42,6 +40,7 @@ use self::ports::{
     helper_services, kept_queue, machine, maintenance, network, news_reader, packages, pictures,
     repair,
 };
+use self::start::{load_settings, preferences};
 
 /// The Wayland `app_id`, the desktop file's name and eframe's storage folder.
 const APP_ID: &str = "garuda-toolbox";
@@ -159,6 +158,13 @@ fn run(
         return Ok(());
     };
 
+    let catalog = catalog_dir(|key| std::env::var_os(key));
+
+    if !catalog.is_dir() {
+        tracing::error!("the catalog folder {} is missing", catalog.display());
+        return Ok(toolbox_gui::missing::run(APP_ID, catalog)?);
+    }
+
     let handle = runtime.handle().clone();
     let current_desktop = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
 
@@ -174,7 +180,7 @@ fn run(
         restored: Restored::of(&problems),
         lost: problems.len(),
         changes_file,
-        catalogs: Catalogs::load(&catalog_dir(|key| std::env::var_os(key))),
+        catalogs: Catalogs::load(&catalog),
         desktops: toolbox_services::desktop::desktops(&current_desktop),
         handle,
         settings,
@@ -326,18 +332,6 @@ fn readers(handle: &Handle, ctx: &egui::Context, settings: &Settings) -> Readers
 
 /// The settings, with the log detail they ask for. A broken file still
 /// gives the defaults, and the log says what was wrong.
-fn load_settings(paths: &Paths) -> Settings {
-    let loaded = Settings::load(&paths.settings_file());
-
-    subscriber::set_level(LevelFilter::from(loaded.settings.general.log_level));
-
-    if let Some(problem) = loaded.problem {
-        tracing::warn!("{problem}");
-    }
-
-    loaded.settings
-}
-
 /// Tracy's layer in a profiling build.
 #[cfg(feature = "profiling")]
 #[expect(
@@ -364,20 +358,6 @@ fn refuse(message: &str) -> ExitCode {
     )
     .ok();
     ExitCode::FAILURE
-}
-
-/// The Settings page's start: the file's settings, the autostart link,
-/// and both written back on a thread of their own.
-fn preferences(paths: &Paths, settings: Settings, ctx: &egui::Context) -> PreferencesSetup {
-    let autostart = Autostart::new(paths.autostart_dir(), PathBuf::from(DESKTOP_FILE));
-    let enabled = autostart.is_enabled();
-    let store = FileStore::with_window(paths.settings_file(), autostart, ctx.clone());
-
-    PreferencesSetup {
-        settings,
-        autostart: enabled,
-        store: Some(Arc::new(store)),
-    }
 }
 
 fn look(

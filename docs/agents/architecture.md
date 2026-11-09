@@ -202,7 +202,13 @@ Sample data never ships. `DryRunRepair`, `SampleMirrors`, `SampleAur` and
 (`toolbox-gui` also under `testing`), picked in `app/gui/src/ports/samples.rs`.
 A release build's dry run reads the real disks, mirrors, AUR and news
 instead. The `selftest` feature of `toolbox-gui` turns on the one of
-`toolbox-system` and `toolbox-state`.
+`toolbox-services`, `toolbox-system` and `toolbox-state`.
+
+`GARUDA_TOOLBOX_CATALOG_DIR` and `GARUDA_TOOLBOX_SELFTEST_CONFIGS` count
+only in a development build, debug or `selftest`
+(`toolbox_services::catalogs::DEVELOPMENT`). Without the catalog variable
+such a build reads `data/catalog` of the source tree. A release reads
+only `/usr/share/garuda-toolbox/catalog` and never the source tree.
 
 ### The saved queue
 

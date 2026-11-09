@@ -155,7 +155,7 @@ impl LinuxPackageSource for Libalpm {
                 Some(LocalPackage {
                     name: PackageName::new(package.name()).ok()?,
                     version: package.version().to_string(),
-                    description: package.desc().unwrap_or_default().to_owned(),
+                    description: description(package),
                 })
             })
             .collect();
@@ -207,4 +207,9 @@ fn c_path(path: &Path) -> Result<Vec<u8>, ProbeError> {
 
 fn failed(what: &str) -> impl Fn(alpm::Error) -> ProbeError + '_ {
     move |error| ProbeError::Failed(format!("{what}: {error}"))
+}
+
+/// Whoever built the package wrote it, so it is outside text.
+fn description(package: &alpm::Pkg) -> String {
+    toolbox_plan::text::plain(package.desc().unwrap_or_default())
 }

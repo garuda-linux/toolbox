@@ -7,12 +7,22 @@ use toolbox_catalog::{Check, ToggleCatalog};
 use toolbox_plan::PackageName;
 use toolbox_system::{Libalpm, SyncSource};
 
-use super::{CATEGORIES, Category, Lists, TARGET_DIR, wiki};
+use super::{CATEGORIES, Category, Lists, TARGET_DIR, moves, wiki};
 use crate::{Failure, root};
 
 /// Where `wiki-sync` saves the fetched pages by default, beside the build
 /// output so they are never committed.
 const SOURCES_DIR: &str = "target/wiki-sources";
+
+/// Whether the run writes, and whether it may move an app to another first
+/// package.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Writing {
+    #[default]
+    DryRun,
+    Write,
+    WriteAcceptingMoves,
+}
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct WikiOptions {
@@ -21,7 +31,7 @@ pub struct WikiOptions {
     pub out: Option<PathBuf>,
     pub include_aur: bool,
     pub unfiltered: bool,
-    pub write: bool,
+    pub writing: Writing,
 }
 
 pub fn wiki_sync(args: &[String]) -> Result<String, Failure> {
@@ -64,6 +74,9 @@ pub fn wiki_sync(args: &[String]) -> Result<String, Failure> {
     let lists = Lists::new(found).without_commands_of();
     let out = options.out.unwrap_or_else(|| root().join(TARGET_DIR));
 
+    let catalogs =
+        shipped(&root().join(TARGET_DIR)).map_err(|error| Failure::Problems(vec![error]))?;
+
     let shipped = shipped_packages(&root().join(TARGET_DIR))
         .map_err(|error| Failure::Problems(vec![error]))?;
 
@@ -71,8 +84,18 @@ pub fn wiki_sync(args: &[String]) -> Result<String, Failure> {
         writeln!(report, "{line}").ok();
     }
 
-    let summary =
-        finish(&lists, &out, options.write).map_err(|error| Failure::Problems(vec![error]))?;
+    let moved = moves::moves(&moves::firsts(&catalogs), &lists);
+
+    let writes = options.writing != Writing::DryRun;
+    let accepted = options.writing == Writing::WriteAcceptingMoves;
+
+    moves::gate(&moved, writes, accepted).map_err(Failure::Problems)?;
+
+    for line in &moved {
+        writeln!(report, "{line}").ok();
+    }
+
+    let summary = finish(&lists, &out, writes).map_err(|error| Failure::Problems(vec![error]))?;
 
     report.push_str(&summary);
 
@@ -102,19 +125,30 @@ pub fn finish(lists: &Lists, out: &Path, write: bool) -> Result<String, String> 
 
 pub fn parse_options(args: &[String]) -> Option<WikiOptions> {
     let mut options = WikiOptions::default();
+    let mut write = false;
+    let mut accept_moves = false;
     let mut rest = args.iter();
 
     while let Some(arg) = rest.next() {
         match arg.as_str() {
             "--include-aur" => options.include_aur = true,
             "--unfiltered" => options.unfiltered = true,
-            "--write" => options.write = true,
+            "--write" => write = true,
+            "--accept-moves" => accept_moves = true,
             "--local" => options.local = Some(PathBuf::from(rest.next()?)),
             "--sources" => options.sources = Some(PathBuf::from(rest.next()?)),
             "--out" => options.out = Some(PathBuf::from(rest.next()?)),
             _ => return None,
         }
     }
+
+    // Accepting moves means nothing for a run that writes nothing.
+    options.writing = match (write, accept_moves) {
+        (true, true) => Writing::WriteAcceptingMoves,
+        (true, false) => Writing::Write,
+        (false, false) => Writing::DryRun,
+        (false, true) => return None,
+    };
 
     Some(options)
 }
@@ -166,18 +200,7 @@ pub fn package_diff(before: &BTreeSet<String>, after: &BTreeSet<String>) -> Vec<
 pub fn shipped_packages(dir: &Path) -> Result<BTreeSet<String>, String> {
     let mut packages = BTreeSet::new();
 
-    for category in CATEGORIES {
-        let path = dir.join(category.file_name());
-
-        let text = match fs::read_to_string(&path) {
-            Ok(text) => text,
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
-            Err(error) => return Err(format!("cannot read {}: {error}", path.display())),
-        };
-
-        let catalog = ToggleCatalog::parse(&text, &category.file_name())
-            .map_err(|error| format!("cannot parse {}: {error}", path.display()))?;
-
+    for (_, catalog) in shipped(dir)? {
         for section in catalog.sections() {
             for entry in section.entries() {
                 if let Check::Package(name) = entry.check() {
@@ -192,6 +215,32 @@ pub fn shipped_packages(dir: &Path) -> Result<BTreeSet<String>, String> {
     }
 
     Ok(packages)
+}
+
+/// The shipped catalog of each category that has one.
+///
+/// # Errors
+///
+/// When an existing catalog cannot be read or parsed.
+pub fn shipped(dir: &Path) -> Result<Vec<(Category, ToggleCatalog)>, String> {
+    let mut catalogs = Vec::new();
+
+    for category in CATEGORIES {
+        let path = dir.join(category.file_name());
+
+        let text = match fs::read_to_string(&path) {
+            Ok(text) => text,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(error) => return Err(format!("cannot read {}: {error}", path.display())),
+        };
+
+        let catalog = ToggleCatalog::parse(&text, &category.file_name())
+            .map_err(|error| format!("cannot parse {}: {error}", path.display()))?;
+
+        catalogs.push((category, catalog));
+    }
+
+    Ok(catalogs)
 }
 
 fn page_text(category: Category, options: &WikiOptions) -> Result<String, String> {

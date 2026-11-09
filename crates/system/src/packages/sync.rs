@@ -16,7 +16,7 @@ use toolbox_state::packages::{IndexEntry, Origin};
 use toolbox_state::parts::SyncPackages;
 
 use super::pacman_conf::PacmanConf;
-use super::{LINUX, failed, open};
+use super::{LINUX, description, failed, open};
 use crate::error::ProbeError;
 
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -115,7 +115,7 @@ fn read(conf: &PacmanConf, synced: &[Database]) -> Result<SyncRead, ProbeError> 
                     repo: repo.to_owned(),
                     name: name.clone(),
                     version: package.version().to_string(),
-                    description: package.desc().unwrap_or_default().to_owned(),
+                    description: description(package),
                 });
             }
 
@@ -123,7 +123,7 @@ fn read(conf: &PacmanConf, synced: &[Database]) -> Result<SyncRead, ProbeError> 
             if offered.insert(name.clone()) {
                 entries.push(IndexEntry {
                     name,
-                    description: package.desc().unwrap_or_default().to_owned(),
+                    description: description(package),
                     version: package.version().to_string(),
                     origin: Origin::Repository(repo.to_owned()),
                     size: u64::try_from(package.isize()).unwrap_or_default(),

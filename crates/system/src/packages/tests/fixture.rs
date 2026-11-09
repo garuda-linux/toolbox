@@ -127,6 +127,14 @@ impl System {
         fs::write(path, desc + extra).unwrap();
     }
 
+    /// Replaces `from` by `to` in the copied `desc` of an installed entry.
+    pub fn edit_desc(&self, entry: &str, from: &str, to: &str) {
+        let path = self.db().join("local").join(entry).join("desc");
+        let desc = fs::read_to_string(&path).unwrap();
+
+        fs::write(path, desc.replacen(from, to, 1)).unwrap();
+    }
+
     pub fn sync_full(&self, repo: &str, packages: &[(&str, &str, &str)]) {
         let sync = self.db().join("sync");
         let files: Vec<(String, String)> = packages

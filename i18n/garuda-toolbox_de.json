@@ -4443,6 +4443,12 @@
     },
     "protected-along": {
       "string": "Diese Entfernung würde auch {name} entfernen, das installiert bleibt. {why}."
+    },
+    "missing-catalog": {
+      "string": "Garuda Toolbox ist nicht vollständig installiert: Der Ordner {dir} fehlt. Installiere das Paket garuda-toolbox neu und starte die App dann erneut."
+    },
+    "missing-catalog-quit": {
+      "string": "Beenden"
     }
   },
   "configs": {

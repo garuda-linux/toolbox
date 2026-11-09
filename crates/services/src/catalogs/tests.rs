@@ -4,26 +4,42 @@ use std::path::{Path, PathBuf};
 use tempfile::TempDir;
 use toolbox_catalog::COMPONENTS;
 
-use super::{AppCatalogs, CatalogId, Toggles, catalog_dir};
+use super::{AppCatalogs, CatalogId, Toggles, catalog_dir_in};
 
 fn source_tree() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog")
 }
 
+fn variable(key: &str) -> Option<OsString> {
+    (key == "GARUDA_TOOLBOX_CATALOG_DIR").then(|| OsString::from("/srv/catalog"))
+}
+
 #[test]
 fn the_variable_names_the_folder() {
-    let dir = catalog_dir(|key| {
-        (key == "GARUDA_TOOLBOX_CATALOG_DIR").then(|| OsString::from("/srv/catalog"))
-    });
+    let dir = catalog_dir_in(variable, true);
 
     assert_eq!(dir, PathBuf::from("/srv/catalog"));
 }
 
 #[test]
 fn a_development_build_reads_the_source_tree() {
-    let dir = catalog_dir(|_| None);
+    let dir = catalog_dir_in(|_| None, true);
 
     assert_eq!(dir, source_tree().canonicalize().unwrap());
+}
+
+#[test]
+fn a_release_ignores_the_variable() {
+    let dir = catalog_dir_in(variable, false);
+
+    assert_eq!(dir, PathBuf::from(toolbox_catalog::INSTALLED_DIR));
+}
+
+#[test]
+fn a_release_never_reads_the_source_tree() {
+    let dir = catalog_dir_in(|_| None, false);
+
+    assert_eq!(dir, PathBuf::from(toolbox_catalog::INSTALLED_DIR));
 }
 
 #[test]

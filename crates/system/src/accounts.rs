@@ -7,7 +7,7 @@ mod tests;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use toolbox_plan::{GroupName, ShellPath, UserName};
+use toolbox_plan::{GroupName, ShellPath, UserName, text};
 use toolbox_state::accounts::{Accounts, Group, User};
 use toolbox_state::parts::{AvailableShells, CurrentShells};
 
@@ -120,7 +120,8 @@ fn user(entry: &str) -> Option<User> {
         name,
         uid,
         gid,
-        gecos: fields.next().unwrap_or_default().to_owned(),
+        // Any user may set it with chfn, so it is outside text.
+        gecos: text::plain(fields.next().unwrap_or_default()),
         home: fields.next().unwrap_or_default().to_owned(),
         shell: fields.next().unwrap_or_default().trim().to_owned(),
     })

@@ -6,7 +6,7 @@ use toolbox_state::parts::SyncPackages;
 use toolbox_system::{ProbeError, SyncSource};
 
 use super::super::App;
-use super::super::tasks::{WikiOptions, offered_packages, parse_options};
+use super::super::tasks::{WikiOptions, Writing, offered_packages, parse_options};
 use super::super::wiki::{WikiApp, keep, parse_app, split_fields};
 use super::args;
 
@@ -255,18 +255,20 @@ fn options_parse_every_flag() {
             out: Some("o".into()),
             include_aur: true,
             unfiltered: false,
-            write: false,
+            writing: Writing::DryRun,
         })
     );
     assert_eq!(
-        parse_options(&args(&["--unfiltered"])),
+        parse_options(&args(&["--unfiltered", "--write", "--accept-moves"])),
         Some(WikiOptions {
             unfiltered: true,
+            writing: Writing::WriteAcceptingMoves,
             ..WikiOptions::default()
         })
     );
     assert_eq!(parse_options(&args(&["--gaming"])), None);
     assert_eq!(parse_options(&args(&["--local"])), None);
+    assert_eq!(parse_options(&args(&["--accept-moves"])), None);
 }
 
 proptest! {

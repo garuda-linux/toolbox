@@ -1,9 +1,10 @@
+mod moves;
 mod wiki;
 
 use toolbox_catalog::{Check, ToggleCatalog};
 use toolbox_plan::PackageName;
 
-use super::tasks::{finish, package_diff, parse_options, shipped_packages};
+use super::tasks::{Writing, finish, package_diff, parse_options, shipped_packages};
 use super::writer::{entry_id, quoted, render};
 use super::{App, CATEGORIES, Lists, https_url, wiki_text};
 
@@ -261,8 +262,8 @@ fn a_sync_writes_nothing_without_write() {
 fn write_is_an_option_of_its_own() {
     let options = parse_options(&["--write".to_owned()]).unwrap();
 
-    assert!(options.write);
-    assert!(!parse_options(&[]).unwrap().write);
+    assert_eq!(options.writing, Writing::Write);
+    assert_eq!(parse_options(&[]).unwrap().writing, Writing::DryRun);
 }
 
 fn pages(dir: &std::path::Path) {

@@ -21,7 +21,7 @@ path = "tests/integration/main.rs"
 required-features = ["testing"]
 
 [features]
-selftest = ["dep:kittest", "dep:image", "toolbox-system/selftest"]
+selftest = ["dep:kittest", "dep:image", "toolbox-services/selftest", "toolbox-system/selftest"]
 profiling = ["dep:tracing-tracy"]
 testing = ["dep:egui_kittest", "toolbox-gui-kit/testing", "toolbox-services/testing", "toolbox-system/testing"]
 

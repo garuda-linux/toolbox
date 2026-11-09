@@ -8,6 +8,7 @@ mod tests;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::component::has_plain_components;
+use crate::text;
 
 /// `PATH_MAX` is far larger, but no home folder lives that deep.
 pub const MAX_HOME_BYTES: usize = 255;
@@ -58,7 +59,7 @@ impl InvalidHomeDirectory {
 /// without `..`.
 ///
 /// It starts with `/`, so it can never be read as an option. It holds no
-/// `:` (the separator of `/etc/passwd`) and no control character, and
+/// `:` (the separator of `/etc/passwd`) and no hidden character, and
 /// every part between two `/` is a plain name, so the path names one
 /// folder and nothing above it.
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -88,7 +89,7 @@ impl HomeDirectory {
 
         if let Some(character) = value
             .chars()
-            .find(|character| character.is_control() || *character == ':')
+            .find(|character| text::is_hidden(*character) || *character == ':')
         {
             return Err(InvalidHomeDirectory::InvalidCharacter(character));
         }

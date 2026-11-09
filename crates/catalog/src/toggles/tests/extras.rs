@@ -3,7 +3,7 @@ use std::path::Path;
 use toolbox_plan::{PackageName, UnitName};
 
 use super::{SECTION, entry, problem_of};
-use crate::{CatalogError, Problem, ToggleCatalog};
+use crate::{CatalogError, Problem, ToggleCatalog, is_web_url};
 
 fn gamemode(extra: &str) -> String {
     format!(
@@ -223,6 +223,25 @@ fn a_url_without_https_or_host_or_with_blanks_is_refused() {
         assert_eq!(source_name, "test.toml");
         assert_eq!(id, "gamemode");
         assert_eq!(problem, Problem::BadUrl(shown), "{url}");
+    }
+}
+
+#[test]
+fn a_host_is_ascii_with_a_port_up_to_65535() {
+    assert!(is_web_url("https://example.org:65535/"));
+
+    for url in [
+        // A Cyrillic а in place of the Latin a.
+        "https://\u{430}pple.com/",
+        // Fullwidth digits.
+        "https://example.org:\u{ff18}\u{ff10}/",
+        "https://\u{ff11}\u{ff12}\u{ff17}.0.0.1/",
+        "https://example.org:65536/",
+        "https://example.org:080808/",
+        "https://example..org/",
+        "https://example.org./",
+    ] {
+        assert!(!is_web_url(url), "{url}");
     }
 }
 

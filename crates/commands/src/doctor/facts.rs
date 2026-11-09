@@ -83,6 +83,8 @@ impl ProgramFacts {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CatalogFacts {
     pub dir: PathBuf,
+    /// A release refuses to open its window without the folder.
+    pub present: bool,
     pub loaded: usize,
     pub problems: Vec<String>,
 }
@@ -250,6 +252,7 @@ fn catalogs() -> CatalogFacts {
     problems.extend(loaded.apps.problem.map(|problem| problem.detail));
 
     CatalogFacts {
+        present: dir.is_dir(),
         dir,
         loaded: good,
         problems,

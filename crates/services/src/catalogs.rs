@@ -18,6 +18,11 @@ use toolbox_plan::UserConfigEdit;
 /// The variable that names the catalog folder, for tests and odd installs.
 const DIR_VARIABLE: &str = "GARUDA_TOOLBOX_CATALOG_DIR";
 
+/// Whether this build may take its catalog and files from the test
+/// variables or the source tree. A release reads only what it installed,
+/// so no variable of the caller swaps what the pages offer.
+pub const DEVELOPMENT: bool = cfg!(debug_assertions) || cfg!(feature = "selftest");
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum CatalogId {
     Components,
@@ -173,19 +178,21 @@ impl AppCatalogs {
     }
 }
 
-/// The folder with the catalogs: the variable when set, the source tree in
-/// development builds or when the installed copy is missing, the installed
-/// copy otherwise.
+/// The folder with the catalogs, as [`catalog_dir_in`] finds it for this
+/// build.
 pub fn catalog_dir(lookup: impl Fn(&str) -> Option<OsString>) -> PathBuf {
-    let installed = Path::new(toolbox_catalog::INSTALLED_DIR);
+    catalog_dir_in(lookup, DEVELOPMENT)
+}
+
+/// The installed copy in a release. A development build takes the
+/// variable when set and the source tree otherwise.
+pub fn catalog_dir_in(lookup: impl Fn(&str) -> Option<OsString>, development: bool) -> PathBuf {
+    if !development {
+        return PathBuf::from(toolbox_catalog::INSTALLED_DIR);
+    }
+
     let dir = lookup(DIR_VARIABLE).map_or_else(
-        || {
-            if cfg!(debug_assertions) || !installed.is_dir() {
-                Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog")
-            } else {
-                installed.to_path_buf()
-            }
-        },
+        || Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog"),
         PathBuf::from,
     );
 

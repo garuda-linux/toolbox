@@ -123,6 +123,26 @@ fn home_folders_refuse_what_climbs_or_breaks_passwd() {
 }
 
 #[test]
+fn a_home_folder_hides_no_character() {
+    let line = PASSWD
+        .lines()
+        .find(|line| line.starts_with("user:"))
+        .unwrap();
+
+    let home = line.split(':').nth(5).unwrap();
+
+    for hidden in ['\u{202e}', '\u{200d}'] {
+        // The captured home with the character after its last /.
+        let spoofed = home.replacen("/user", &format!("/{hidden}user"), 1);
+
+        assert_eq!(
+            HomeDirectory::new(spoofed),
+            Err(InvalidHomeDirectory::InvalidCharacter(hidden))
+        );
+    }
+}
+
+#[test]
 fn every_refusal_of_a_home_folder_has_its_own_code() {
     let codes = [
         InvalidHomeDirectory::Empty,

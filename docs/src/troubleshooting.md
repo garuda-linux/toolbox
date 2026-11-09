@@ -171,6 +171,28 @@ the code to `~/.local/state/garuda-toolbox/crash.log`.
 2. Report the problem in the Garuda Linux forum and attach `crash.log`.
    Only you can read the file, as it may contain paths of your home folder.
 
+## Garuda Toolbox is not installed completely
+
+**Symptoms**
+
+- The window shows only **Garuda Toolbox is not installed completely** and
+  **Quit**.
+- `garuda-toolbox doctor` reports `/usr/share/garuda-toolbox/catalog is
+missing`.
+
+**Cause**
+
+The folder with the catalogs of apps, components and settings is missing.
+Without it every page would be empty.
+
+**Solution**
+
+1. Reinstall the package: `sudo pacman -S garuda-toolbox`.
+2. Start the app again.
+
+Commands that need no catalog, such as `garuda-toolbox status`, keep
+working meanwhile.
+
 ## See also
 
 - [Review and apply changes](applying.md)

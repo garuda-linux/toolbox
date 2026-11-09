@@ -15,6 +15,7 @@ pub mod lane;
 pub mod launch;
 pub mod links;
 pub mod maintenance;
+pub mod missing;
 pub mod network;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub mod news;

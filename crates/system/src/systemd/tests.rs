@@ -324,3 +324,26 @@ fn the_file_state_follows_the_systemd_precedence() {
 fn unknown_folders_rank_after_the_known_ones() {
     assert_eq!(super::precedence("/opt/units/a.service"), 3);
 }
+
+/// A package's unit file sets its description, so it is outside text.
+#[test]
+fn a_unit_description_loses_a_bidi_override_and_a_zero_width_joiner() {
+    let mut units = captured_units();
+    let service = units
+        .iter_mut()
+        .find(|row| row.0.ends_with(".service") && !row.1.is_empty())
+        .unwrap();
+
+    let name = service.0.clone();
+    let description = service.1.clone();
+
+    // Changed: the first service's description gains both characters.
+    service.1 = format!("\u{202e}{description}\u{200d}");
+
+    let infos = unit_infos(units, captured_files());
+
+    assert_eq!(
+        found(&infos, &name).map(|info| info.description.as_str()),
+        Some(description.as_str())
+    );
+}

@@ -37,6 +37,7 @@ fn healthy() -> Facts {
         user_bus: Ok(()),
         catalogs: CatalogFacts {
             dir: PathBuf::from("/usr/share/garuda-toolbox/catalog"),
+            present: true,
             loaded: 5,
             problems: Vec::new(),
         },
@@ -338,4 +339,25 @@ fn a_polkit_agent_is_found_by_its_process_name() {
         Some("lxqt-policykit-")
     );
     assert_eq!(agent(&names(&["polkitd", "polkit-agent-he", "bash"])), None);
+}
+
+#[test]
+fn a_missing_catalog_folder_is_named_with_the_reinstall() {
+    let mut facts = healthy();
+    facts.catalogs.present = false;
+    facts.catalogs.loaded = 0;
+
+    let found = checks(&facts);
+    let catalogs = find(&found, "catalogs");
+
+    assert_eq!(catalogs.state, State::Problem);
+    assert!(catalogs.text.contains("is missing"), "{}", catalogs.text);
+    assert!(
+        catalogs
+            .hint
+            .as_deref()
+            .is_some_and(|hint| hint.contains("pacman -S")),
+        "{:?}",
+        catalogs.hint
+    );
 }

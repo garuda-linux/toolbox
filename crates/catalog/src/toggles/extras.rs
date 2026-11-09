@@ -148,13 +148,24 @@ pub fn is_web_url(link: &str) -> bool {
             .is_some_and(is_host)
 }
 
+/// ASCII only, so a look-alike letter of another script or a fullwidth
+/// digit cannot pass for the host or port it imitates.
 fn is_host(authority: &str) -> bool {
     let (host, port) = authority.split_once(':').unwrap_or((authority, ""));
 
-    let host_ok = host.chars().next().is_some_and(char::is_alphanumeric)
-        && host
-            .chars()
-            .all(|letter| letter.is_alphanumeric() || matches!(letter, '.' | '-'));
+    let labels_ok = host.split('.').all(|label| {
+        label.starts_with(|letter: char| letter.is_ascii_alphanumeric())
+            && label
+                .chars()
+                .all(|letter| letter.is_ascii_alphanumeric() || letter == '-')
+    });
 
-    host_ok && port.chars().all(|digit| digit.is_ascii_digit())
+    labels_ok && is_port(port)
+}
+
+fn is_port(port: &str) -> bool {
+    port.is_empty()
+        || (port.len() <= 5
+            && port.chars().all(|digit| digit.is_ascii_digit())
+            && port.parse::<u16>().is_ok())
 }

@@ -9,7 +9,7 @@ pub use home::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{GroupName, ShellPath, UserName};
+use crate::{GroupName, ShellPath, UserName, text};
 
 /// Far above any real name, far below what `/etc/passwd` lines may hold.
 pub const MAX_FULL_NAME_BYTES: usize = 128;
@@ -44,7 +44,7 @@ impl InvalidFullName {
 ///
 /// It ends up in `/etc/passwd` and in the argv of `useradd` and `chfn`, so it
 /// holds no `:` (the file's separator), no `,` or `=` (GECOS separators), no
-/// `"` (chfn refuses it) and no control character.
+/// `"` (chfn refuses it) and no [hidden](text::is_hidden) character.
 #[derive(Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FullName(String);
 
@@ -66,7 +66,7 @@ impl FullName {
 
         if let Some(character) = value
             .chars()
-            .find(|character| character.is_control() || ":,=\"".contains(*character))
+            .find(|character| text::is_hidden(*character) || ":,=\"".contains(*character))
         {
             return Err(InvalidFullName::InvalidCharacter(character));
         }

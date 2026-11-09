@@ -1,3 +1,4 @@
+mod hidden;
 mod platform;
 
 use super::{GrubMenu, GrubPlatform, MAX_ENTRIES, MenuEntry};
