@@ -63,6 +63,9 @@ scripts/arch-package.sh       # makepkg and namcap in the Arch container
 scripts/lima-it.sh [--suite LIST]   # systemd, locales, DKMS, upgrades and faults in a Garuda VM
 ```
 
+No CI job runs `scripts/lima-it.sh`, it needs KVM. Run it by hand before
+every release. `scripts/release.sh` asks for it.
+
 ## Done means
 
 - Test first: a failing test, the simplest code that passes, then

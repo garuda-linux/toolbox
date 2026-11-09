@@ -70,9 +70,14 @@ images=$(jq -nc --arg l "$location" --arg d "${GARUDA_LIMA_IMAGE_DIGEST:-}" \
   '[{location: $l, arch: "x86_64"} + (if $d == "" then {} else {digest: $d} end)]')
 
 name=garuda-toolbox-it
-dir=${LIMA_IT_ROOT:-${TMPDIR:-/tmp}/garuda-toolbox-lima-it}/$name
-rm -rf "$dir"
-mkdir -p "$dir"
+if [ -n "${LIMA_IT_ROOT:-}" ]; then
+  dir="$LIMA_IT_ROOT/$name"
+  rm -rf "$dir"
+  mkdir -p "$dir"
+else
+  # A fixed name in a shared /tmp lets another user plant the directory.
+  dir=$(mktemp -d -t "$name.XXXXXX")
+fi
 
 vm() {
   limactl shell --workdir / "$name" -- "$@"

@@ -117,7 +117,6 @@ lto = "fat"
 codegen-units = 1
 # A wrapped size or offset must stop the root helper.
 overflow-checks = true
-debug = "line-tables-only"
 
 [profile.dev.package."*"]
 opt-level = 2

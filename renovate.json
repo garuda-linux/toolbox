@@ -35,6 +35,18 @@
       "groupSlug": "all-major",
       "matchPackageNames": ["*"],
       "matchUpdateTypes": ["major"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchManagers": ["nix"],
+      "automerge": false
+    },
+    {
+      "matchDatasources": ["crate"],
+      "minimumReleaseAge": "7 days"
     }
   ],
   "reviewersFromCodeOwners": true

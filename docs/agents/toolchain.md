@@ -3,15 +3,23 @@
 ## Checks
 
 - Nix (`nix/checks.nix`) runs the checks of
-  [AGENTS.md](../../AGENTS.md#checks-all-must-pass) and the self-test.
-  Nothing built by Nix ships. Arch (`ci/arch/`) runs the release build on
-  stable Rust, the MSRV check, the self-test, the helper integration tests
-  and the PKGBUILD.
+  [AGENTS.md](../../AGENTS.md#checks-all-must-pass) up to `cli-docs`, not
+  the self-test or the container and VM tests. Nothing built by Nix ships.
+  Arch (`ci/arch/`) runs the release build on stable Rust, the MSRV check,
+  the self-test, the helper integration tests and the PKGBUILD.
 - prek hooks (`nix/git-hooks.nix`) run clippy, file sizes, `toolbox-lint`,
   treefmt, trufflehog and commitizen on every commit.
 - The `tests` check adds `cargo test --doc`, since nextest runs no doc
   tests. Advisories need the network, so the GitLab job `advisories` runs
-  them on `Cargo.lock` changes and a pipeline schedule.
+  them on every default-branch and tag pipeline and a pipeline schedule.
+  A release needs it to pass. `unmaintained = "all"` in `deny.toml`, so
+  an exception is an `ignore` entry with the date and the reason.
+- `arch-build` and the PKGBUILD build with `cargo auditable`, so the
+  binaries carry their dependency list for `cargo audit bin`.
+- The shared CI include is pinned to a commit and the `alpine` and
+  `archlinux` images to a digest.
+- Renovate merges minor and patch updates by itself, not majors and not
+  the Nix lock. A crate release waits 7 days before Renovate offers it.
 - A new GitLab check job goes into `.release-needs`, unless its rules
   leave it out of tag pipelines.
 
@@ -92,8 +100,11 @@ boot.
   10 minutes. A polkit rule lets the Lima user run the helper without a
   password: over SSH no agent runs, and pkexec would ask on the terminal
   for a password the user does not have.
-- Needs KVM, the network and `limactl` and `jq` on the host. Logs per
-  check land in `$TMPDIR/garuda-toolbox-lima-it/<vm>/`.
+- Needs KVM, the network and `limactl` and `jq` on the host. No CI runner
+  has them, so it runs by hand before every release, and
+  `scripts/release.sh` asks for it.
+- Logs per check land in a new `$TMPDIR/garuda-toolbox-it.XXXXXX/` per
+  run, or in `$LIMA_IT_ROOT/garuda-toolbox-it/` when that is set.
 - Checks live in `scripts/lima-it/checks.sh`.
 
 ### Suites

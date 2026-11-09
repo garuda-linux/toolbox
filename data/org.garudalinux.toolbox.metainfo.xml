@@ -23,6 +23,20 @@
       <li>A setup assistant for a fresh installation</li>
     </ul>
   </description>
+  <screenshots>
+    <screenshot type="default">
+      <caption>The system's state and the next steps</caption>
+      <image>https://gitlab.com/garuda-linux/applications/toolbox/-/raw/main/app/gui/tests/snapshots/home/page_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Packages from the repositories, installed with the other queued changes</caption>
+      <image>https://gitlab.com/garuda-linux/applications/toolbox/-/raw/main/app/gui/tests/snapshots/packages/list_dark.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Maintenance tasks such as mirrors, keyrings and the package cache</caption>
+      <image>https://gitlab.com/garuda-linux/applications/toolbox/-/raw/main/app/gui/tests/snapshots/maintenance/common_dark.png</image>
+    </screenshot>
+  </screenshots>
   <launchable type="desktop-id">garuda-toolbox.desktop</launchable>
   <icon type="stock">garuda-toolbox</icon>
   <developer id="org.garudalinux">

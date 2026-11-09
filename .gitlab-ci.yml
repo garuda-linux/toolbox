@@ -1,7 +1,7 @@
 stages: [auto, test, build, release]
 include:
   - project: garuda-linux/tools/gitlab-ci-commons
-    ref: main
+    ref: f43494a3996ef9ed04880f1e307cfad5af757b35
     file:
       - templates/commitizen.gitlab-ci.yml
       - templates/flake-check.gitlab-ci.yml
@@ -9,7 +9,7 @@ include:
       - templates/transifex-automerge.gitlab-ci.yml
 
 variables:
-  CI_IMAGE: alpine:3.24
+  CI_IMAGE: alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 
 workflow:
   rules:
@@ -29,7 +29,7 @@ workflow:
   &release-needs [
     flake-check,
     rust-tests,
-    { job: advisories, optional: true },
+    advisories,
     arch-build,
     arch-msrv,
     arch-selftest,
@@ -58,7 +58,7 @@ workflow:
     - install -d -o selftest "$SELFTEST_ROOT"
 
 .arch-job:
-  image: archlinux:latest
+  image: archlinux:latest@sha256:b1c2fe6e717bfd5673af8fc217e1e1c3ce0dcbb1d53c3414c8425e7ce79fc6d9
   interruptible: true
   variables:
     CARGO_HOME: ${CI_PROJECT_DIR}/.cargo-home
@@ -90,7 +90,7 @@ arch-build:
   stage: test
   timeout: 1h
   script:
-    - cargo build --release --locked
+    - cargo auditable build --release --locked
 
 arch-msrv:
   extends: .arch-job
@@ -118,9 +118,8 @@ advisories:
     - cargo deny check advisories
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
-    - if: "$CI_COMMIT_BRANCH =~ /^translations_.*$/"
-      when: never
-    - changes: [Cargo.lock]
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - if: "$CI_COMMIT_TAG"
 
 .selftest-artifacts:
   variables:
@@ -274,6 +273,9 @@ tag-stable:
     - !reference [.nix-job, before_script]
     - git config --global user.name "Garuda Linux CI/CD"
     - git config --global user.email "gitlab@garudalinux.org"
+    # The token comes from a credential helper, never in the URL, so no
+    # git message can print it.
+    - git config --global credential.helper '!f() { echo username=gitlab-ci-token; echo "password=$CI_JOB_TOKEN"; }; f'
     - git fetch origin $CI_COMMIT_BRANCH
     - git checkout -b $CI_COMMIT_BRANCH origin/$CI_COMMIT_BRANCH
 
@@ -291,7 +293,7 @@ i18n-source:
         exit 0
       fi
     - 'git commit -m "chore(i18n): Update the source texts for Transifex"'
-    - git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git $CI_COMMIT_BRANCH
+    - git push "https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "$CI_COMMIT_BRANCH"
   rules:
     - !reference [.no-schedule, rules]
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
@@ -308,7 +310,7 @@ i18n-import:
         echo "No changes to the Fluent files."
       else
         git commit -m "chore(i18n): Write the Transifex translations into the Fluent files"
-        git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git $CI_COMMIT_BRANCH
+        git push "https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "$CI_COMMIT_BRANCH"
       fi
     - exit $status
   rules:

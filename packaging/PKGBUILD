@@ -48,6 +48,7 @@ depends=(
 )
 makedepends=(
   cargo
+  cargo-auditable
   cargo-nextest
   clang
   pkgconf
@@ -93,7 +94,7 @@ prepare() {
 
 build() {
   cd "$_repo"
-  cargo build --frozen --release "${_app_crates[@]}"
+  cargo auditable build --frozen --release "${_app_crates[@]}"
 }
 
 check() {

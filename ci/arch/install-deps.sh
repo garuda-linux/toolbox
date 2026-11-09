@@ -15,6 +15,7 @@ pacman -Syu --noconfirm --needed \
   base-devel \
   pacman \
   rust \
+  cargo-auditable \
   cargo-nextest \
   clang \
   pkgconf \

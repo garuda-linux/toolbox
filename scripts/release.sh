@@ -9,6 +9,16 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 
+# No CI runner has KVM, so the VM tests are a promise made here.
+read -r -p "Did scripts/lima-it.sh pass on $(git rev-parse --short HEAD)? [y/N] " answer
+case $answer in
+y | Y) ;;
+*)
+  echo "run scripts/lima-it.sh first" >&2
+  exit 1
+  ;;
+esac
+
 version=$(cz bump --get-next)
 cz bump --files-only --yes
 

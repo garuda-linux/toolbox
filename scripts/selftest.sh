@@ -19,9 +19,13 @@ command -v weston >/dev/null || {
 cargo build --quiet --manifest-path "$repo/Cargo.toml" \
   -p toolbox-helper -p toolbox-gui --features toolbox-gui/selftest
 
-root=${SELFTEST_ROOT:-${TMPDIR:-/tmp}/garuda-toolbox-selftest}
-dir="$root/$suite"
-rm -rf "$dir"
+if [ -n "${SELFTEST_ROOT:-}" ]; then
+  dir="$SELFTEST_ROOT/$suite"
+  rm -rf "$dir"
+else
+  # A fixed name in a shared /tmp lets another user plant the directory.
+  dir=$(mktemp -d -t "garuda-toolbox-selftest-$suite.XXXXXX")
+fi
 mkdir -p "$dir/shots" "$dir/config" "$dir/cache" "$dir/state" "$dir/data"
 mkdir -m 700 "$dir/runtime"
 
