@@ -2,7 +2,7 @@ use toolbox_plan::{KernelParameters, PlymouthTheme};
 use toolbox_state::boot::KernelCmdline;
 
 use super::{KernelSetting, SdBootKernel, SdBootKernelDomain};
-use crate::testing::commands;
+use crate::testing::{commands, failed_at, outcomes, stopped_at};
 use crate::{ChangeSet, Snapshot, plan};
 
 /// `/etc/kernel/cmdline` of the Garuda Lima image.
@@ -100,4 +100,28 @@ fn queued_values_are_read_back_by_their_key() {
 
     assert_eq!(SdBootKernelDomain::queued_theme(&changes), Some(theme()));
     assert_eq!(SdBootKernelDomain::queued_parameters(&changes), None);
+}
+
+/// The theme is selected, but the UKIs that show it were never built.
+#[test]
+fn a_failed_uki_rebuild_keeps_the_theme_queued() {
+    let mut changes = ChangeSet::default();
+    SdBootKernelDomain::want(
+        &mut changes,
+        KernelSetting::PlymouthTheme(theme()),
+        &image(),
+    );
+
+    stopped_at(&mut changes, 2);
+    let mut themed = image();
+    themed.insert(SdBootKernel {
+        cmdline: KernelCmdline::read(CMDLINE, false),
+        theme: Some(theme()),
+    });
+    changes.reconcile(&themed);
+
+    assert_eq!(
+        outcomes(&changes),
+        [("plymouth-theme".to_owned(), failed_at(2))]
+    );
 }

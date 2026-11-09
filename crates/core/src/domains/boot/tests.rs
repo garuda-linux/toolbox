@@ -3,7 +3,9 @@ use toolbox_plan::{DefaultEntry, GrubKey, GrubSetting, GrubState, GrubTimeout, K
 use super::{CurrentGrub, GrubDefaults, PlymouthState, PlymouthThemes};
 use crate::domain::{Domain as _, Summary, Toggle};
 use crate::domains::Packages;
-use crate::testing::{commands, package, plymouth_theme, restored, views};
+use crate::testing::{
+    commands, failed_at, outcomes, package, plymouth_theme, restored, stopped_at, views,
+};
 use crate::{ChangeSet, Single, Snapshot, domains, plan};
 
 const DEFAULTS: &str = "GRUB_DEFAULT=0\nGRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\n";
@@ -317,5 +319,37 @@ fn a_cleared_value_and_the_last_booted_entry_have_sentences_of_their_own() {
     assert_eq!(
         summary(GrubSetting::SaveDefault(true)),
         Summary::plain("grub-save-default-on")
+    );
+}
+
+/// The file shows the new timeout, but the menu was never generated.
+#[test]
+fn a_failed_grub_mkconfig_keeps_the_setting_queued() {
+    let mut changes = ChangeSet::default();
+    GrubDefaults::want(&mut changes, timeout(3), &snapshot(DEFAULTS, "bgrt"));
+
+    stopped_at(&mut changes, 2);
+    changes.reconcile(&snapshot("GRUB_TIMEOUT=3\n", "bgrt"));
+
+    assert_eq!(outcomes(&changes), [("timeout".to_owned(), failed_at(2))]);
+}
+
+/// One step sets the theme and rebuilds the initramfs: the theme shows
+/// while the rebuild failed.
+#[test]
+fn a_failed_initramfs_rebuild_keeps_the_theme_queued() {
+    let mut changes = ChangeSet::default();
+    changes.want::<PlymouthThemes>(
+        Single,
+        plymouth_theme("spinner"),
+        &snapshot(DEFAULTS, "bgrt"),
+    );
+
+    stopped_at(&mut changes, 1);
+    changes.reconcile(&snapshot(DEFAULTS, "spinner"));
+
+    assert_eq!(
+        outcomes(&changes),
+        [("plymouth-theme".to_owned(), failed_at(1))]
     );
 }

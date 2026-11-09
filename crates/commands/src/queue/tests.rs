@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use toolbox_cli::Exit;
 use toolbox_core::domains::{InstalledPackages, Packages, all};
-use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Summary, Toggle};
+use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Summary, Toggle, planned};
 use toolbox_instance::bus::queue::Refusal;
 use toolbox_services::queue::edit::QueueEdit;
 
@@ -177,7 +177,30 @@ fn after_an_apply_the_queue_keeps_only_what_the_system_lacks() {
     let mut after = Snapshot::default();
     after.insert(InstalledPackages(["firefox".parse().unwrap()].into()));
 
-    settle(&kept, &after, &[]).unwrap();
+    let (_, owners) = planned(&restored(&kept.saved().unwrap(), &Snapshot::default()));
+    settle(&kept, &after, &owners, |_| true, &[]).unwrap();
 
+    assert_eq!(kept.keys(), ["vlc"]);
+}
+
+/// The install stopped, yet firefox is there: the change stays, marked,
+/// until an apply finishes its plan.
+#[test]
+fn after_a_failed_apply_the_queue_keeps_what_the_system_shows() {
+    let kept = Kept::new(&["firefox", "vlc"]);
+    let mut after = Snapshot::default();
+    after.insert(InstalledPackages(["firefox".parse().unwrap()].into()));
+    let (_, owners) = planned(&restored(&kept.saved().unwrap(), &Snapshot::default()));
+
+    settle(&kept, &after, &owners, |_| false, &[]).unwrap();
+    let failed: Vec<bool> = restored(&kept.saved().unwrap(), &after)
+        .views()
+        .iter()
+        .map(|change| change.outcome.is_failed())
+        .collect();
+
+    assert_eq!(failed, [true, true]);
+
+    settle(&kept, &after, &owners, |_| true, &[]).unwrap();
     assert_eq!(kept.keys(), ["vlc"]);
 }

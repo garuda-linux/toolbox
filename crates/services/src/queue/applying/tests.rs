@@ -1,4 +1,5 @@
-use toolbox_plan::{Plan, PlannedAction, RootAction, StepId};
+use toolbox_core::Owners;
+use toolbox_plan::{Plan, PlannedAction, RootAction};
 
 use super::Applying;
 
@@ -9,16 +10,15 @@ fn plan() -> Plan {
     ])
 }
 
+fn sent() -> Applying {
+    Applying::Sent(plan(), Owners::default())
+}
+
 #[test]
-fn the_end_of_the_queues_plan_names_the_actions_that_succeeded() {
-    let mut applying = Applying::Sent(plan()).started();
+fn the_end_of_the_queues_plan_hands_back_the_plan() {
+    let mut applying = sent().started();
 
-    let done = applying.finished(|step| step == StepId::new(1));
-
-    assert_eq!(
-        done,
-        Some(vec![PlannedAction::Root(RootAction::RefreshKeyring)])
-    );
+    assert_eq!(applying.finished(), Some((plan(), Owners::default())));
     assert_eq!(applying, Applying::None);
 }
 
@@ -26,17 +26,14 @@ fn the_end_of_the_queues_plan_names_the_actions_that_succeeded() {
 /// queue's end.
 #[test]
 fn the_end_of_another_plan_settles_nothing() {
-    let mut applying = Applying::Sent(plan());
+    let mut applying = sent();
 
-    assert_eq!(applying.finished(|_| true), None);
-    assert_eq!(applying, Applying::Sent(plan()));
+    assert_eq!(applying.finished(), None);
+    assert_eq!(applying, sent());
 }
 
 #[test]
 fn a_refused_plan_is_forgotten() {
-    assert_eq!(Applying::Sent(plan()).refused(), Applying::None);
-    assert_eq!(
-        Applying::Running(plan()).refused(),
-        Applying::Running(plan())
-    );
+    assert_eq!(sent().refused(), Applying::None);
+    assert_eq!(sent().started().refused(), sent().started());
 }

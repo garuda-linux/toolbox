@@ -26,6 +26,8 @@ changes-remove-all-question =
     }
 changes-apply = Apply
 changes-keep = Keep them
+# Tag of a change whose last apply stopped before all its steps ended well.
+change-unfinished = Did not finish
 
 # $name is what the change is about.
 

@@ -15,8 +15,8 @@ use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::motion::{self, Timing};
 use toolbox_gui_kit::theme::POPOVER_RADIUS;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, Question, icon_button, pill_button, pill_button_at_least, pill_width,
-    question, rich, split_row,
+    ButtonKind, DialogWidth, Question, Tone, icon_button, pill_button, pill_button_at_least,
+    pill_width, question, rich, split_row, tag,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
@@ -320,7 +320,12 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
                 let (dot, _) = ui.allocate_exact_size(DOT_CELL, egui::Sense::hover());
                 ui.painter()
                     .circle_filled(dot.center(), DOT_CELL.x / 2.0, tokens.accent);
-                ui.add(Label::new(rich(ui, &words, Weight::Regular, BODY, tokens.text)).wrap());
+                ui.vertical(|ui| {
+                    ui.add(Label::new(rich(ui, &words, Weight::Regular, BODY, tokens.text)).wrap());
+                    if change.outcome.is_failed() {
+                        tag(ui, &i18n::text(&ctx, "change-unfinished"), Tone::Warning);
+                    }
+                });
             });
         },
         |ui| {

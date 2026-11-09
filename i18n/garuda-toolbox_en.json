@@ -4120,6 +4120,10 @@
     "changes-keep": {
       "string": "Keep them"
     },
+    "change-unfinished": {
+      "string": "Did not finish",
+      "developer_comment": "Tag of a change whose last apply stopped before all its steps ended well."
+    },
     "change-account-lock": {
       "string": "Lock the account {name}"
     },

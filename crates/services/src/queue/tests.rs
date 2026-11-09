@@ -181,7 +181,7 @@ fn one_offs_are_dropped_and_desired_state_stays() {
 
     queue.sent(&queue.plan());
     queue.plan_started();
-    queue.plan_finished(|_| true);
+    queue.plan_finished(|_| true, Some(&|_| true));
 
     let domains: Vec<&str> = queue.views().into_iter().map(|view| view.domain).collect();
     assert_eq!(domains, [Packages::ID, Packages::ID]);
@@ -201,7 +201,7 @@ fn the_end_of_another_plan_keeps_the_one_offs() {
     let mut queue = Queue::in_memory(changes);
 
     queue.plan_started();
-    queue.plan_finished(|_| true);
+    queue.plan_finished(|_| true, Some(&|_| true));
 
     assert_eq!(queue.views().len(), 1);
 }
@@ -302,4 +302,37 @@ fn a_queue_written_by_a_command_reads_back() {
 
     super::store(&path, &ChangeSet::default().to_saved()).unwrap();
     assert!(!path.exists());
+}
+
+/// The install failed, yet another program put firefox in place: the
+/// plan did not finish, so the change waits for the next apply.
+#[test]
+fn a_change_whose_plan_failed_stays_when_the_system_shows_it() {
+    let mut queue = Queue::in_memory(two_packages());
+
+    queue.sent(&queue.plan());
+    queue.plan_started();
+    queue.plan_finished(|_| false, Some(&|_| false));
+    queue.meet(&installed(&["firefox", "vlc"]));
+
+    let failed: Vec<bool> = queue
+        .views()
+        .iter()
+        .map(|change| change.outcome.is_failed())
+        .collect();
+
+    assert_eq!(failed, [true, true]);
+}
+
+/// A dry run skips every step, so it tells no change that it failed.
+#[test]
+fn a_dry_run_marks_no_change() {
+    let mut queue = Queue::in_memory(two_packages());
+
+    queue.sent(&queue.plan());
+    queue.plan_started();
+    queue.plan_finished(|_| false, None);
+    queue.meet(&installed(&["firefox", "vlc"]));
+
+    assert_eq!(queue.views(), []);
 }

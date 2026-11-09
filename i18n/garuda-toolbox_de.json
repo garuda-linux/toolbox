@@ -4108,6 +4108,9 @@
     "changes-keep": {
       "string": "Behalten"
     },
+    "change-unfinished": {
+      "string": "Nicht abgeschlossen"
+    },
     "change-account-lock": {
       "string": "Konto {name} sperren"
     },

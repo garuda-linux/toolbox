@@ -248,6 +248,18 @@ instead. The `selftest` feature of `toolbox-gui` turns on the one of
    password per apply. A protocol change bumps `PROTOCOL_VERSION`.
 3. A failed step stops the plan. Steps that did not run stay queued. The
    snapshot is read again.
+4. Every step a domain planned belongs to all of that domain's queued
+   changes. When one of them failed or never ran, each of those changes
+   stays queued as `Outcome::Failed` with the first such step, even when
+   the snapshot already shows its wish: a first step that changes the
+   probed state (a `locale.gen` edit) can succeed while a later one
+   (`locale-gen`) fails. A step that found nothing to do ended well. A
+   dry run records no outcome. The Changes popover tags a failed change
+   (`change-unfinished`). It leaves after an apply that finished its
+   domain's steps and a snapshot that shows it, or when the user takes
+   it back. A new wish for the item makes it untried again. The outcome
+   is saved in `changes.json` and the CLI's `queue apply` keeps it the
+   same way.
 
 Operations that are no desired state (update, clean cache, refresh
 mirrors) run at once or join the queue, never both.

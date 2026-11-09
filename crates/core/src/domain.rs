@@ -15,6 +15,7 @@ use toolbox_plan::PlannedAction;
 pub use toolbox_state::Toggle;
 
 use crate::Snapshot;
+use crate::outcome::Outcome;
 
 /// The wish of a domain whose changes are work to do, not a state to
 /// reach: being queued says it all, so no "off" can be filed.
@@ -121,6 +122,7 @@ pub struct ChangeView {
     pub domain: &'static str,
     pub key: String,
     pub summary: Summary,
+    pub outcome: Outcome,
 }
 
 impl ChangeView {
@@ -172,6 +174,11 @@ pub trait Domain: 'static {
 
     /// The actions for all queued changes of this domain, each with its
     /// stage. Batching (one pacman call for many packages) happens here.
+    ///
+    /// Every action belongs to all the domain's changes. One that does not
+    /// end well keeps each with [`Outcome::Failed`], even when
+    /// [`Domain::is_satisfied`] sees the wish: a `locale.gen` edit can
+    /// succeed while `locale-gen` fails, and the change must be tried again.
     fn plan(changes: &[(&Self::Item, &Self::Wish)]) -> Vec<Staged>;
 
     /// Never taken apart again: what a sentence names comes from

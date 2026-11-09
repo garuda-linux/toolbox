@@ -83,6 +83,8 @@ pub struct Ended {
     pub exit: Exit,
     pub asked_not: bool,
     pub succeeded: Vec<StepId>,
+    /// Steps that found nothing to do, which ended well too.
+    pub skipped: Vec<StepId>,
 }
 
 impl Ended {
@@ -91,7 +93,12 @@ impl Ended {
             exit,
             asked_not: false,
             succeeded: Vec::new(),
+            skipped: Vec::new(),
         }
+    }
+
+    pub fn ended_well(&self, step: StepId) -> bool {
+        self.succeeded.contains(&step) || self.skipped.contains(&step)
     }
 }
 
@@ -179,6 +186,7 @@ pub fn carry_out_steps(
             // Steps of the first try ran too, before pkexec could not ask.
             let mut second_run = run_once(plan, sudo, out);
             second_run.succeeded.extend(first_run.succeeded);
+            second_run.skipped.extend(first_run.skipped);
             second_run
         }
         Some(_) | None => first_run,
@@ -266,10 +274,8 @@ fn follow(
     quiet: bool,
     out: &mut dyn Write,
 ) -> Ended {
-    let mut exit = Exit::Failure;
-    let mut asked_not = false;
+    let mut ended = Ended::early(Exit::Failure);
     let mut cancelled = false;
-    let mut succeeded_steps = Vec::new();
 
     loop {
         for press in stopper.take() {
@@ -287,13 +293,13 @@ fn follow(
         if let Report::Problem(problem) = &report
             && could_not_ask(problem)
         {
-            asked_not = true;
+            ended.asked_not = true;
             if quiet {
                 continue;
             }
         }
 
-        if quiet && asked_not && matches!(report, Report::PlanFinished { succeeded: _ }) {
+        if quiet && ended.asked_not && matches!(report, Report::PlanFinished { succeeded: _ }) {
             break;
         }
 
@@ -301,7 +307,7 @@ fn follow(
         out.flush().ok();
 
         match report {
-            Report::Problem(Problem::Refused(_)) => exit = Exit::Refused,
+            Report::Problem(Problem::Refused(_)) => ended.exit = Exit::Refused,
             Report::Step(Event::Finished {
                 step: _,
                 outcome: Outcome::Cancelled,
@@ -309,10 +315,14 @@ fn follow(
             Report::Step(Event::Finished {
                 step,
                 outcome: Outcome::Succeeded,
-            }) => succeeded_steps.push(step),
+            }) => ended.succeeded.push(step),
+            Report::Step(Event::Finished {
+                step,
+                outcome: Outcome::Skipped,
+            }) => ended.skipped.push(step),
             Report::PlanFinished { succeeded } => {
-                if exit != Exit::Refused {
-                    exit = ended(succeeded, cancelled.then(|| stopper.exit()));
+                if ended.exit != Exit::Refused {
+                    ended.exit = exit_of(succeeded, cancelled.then(|| stopper.exit()));
                 }
 
                 break;
@@ -325,11 +335,7 @@ fn follow(
         }
     }
 
-    Ended {
-        exit,
-        asked_not,
-        succeeded: succeeded_steps,
-    }
+    ended
 }
 
 fn stop(run: &Running, press: u8, look: &mut Look, out: &mut dyn Write) {
@@ -343,7 +349,7 @@ fn stop(run: &Running, press: u8, look: &mut Look, out: &mut dyn Write) {
     }
 }
 
-const fn ended(succeeded: bool, stopped: Option<Exit>) -> Exit {
+const fn exit_of(succeeded: bool, stopped: Option<Exit>) -> Exit {
     match (succeeded, stopped) {
         (true, _) => Exit::Success,
         (false, Some(signal)) => signal,

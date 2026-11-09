@@ -13,6 +13,7 @@ mod changes;
 pub mod domain;
 pub mod domains;
 pub mod features;
+mod outcome;
 mod planner;
 mod saved;
 #[cfg(test)]
@@ -20,7 +21,8 @@ mod testing;
 
 pub use changes::ChangeSet;
 pub use domain::{ChangeView, Domain, Queued, Single, Stage, Staged, Summary, Toggle};
-pub use planner::plan;
+pub use outcome::{Outcome, Owners};
+pub use planner::{plan, planned};
 pub use saved::{
     Domains, DuplicateDomain, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges,
 };

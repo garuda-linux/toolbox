@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::domain::Domain;
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Outcome, Snapshot};
 
 /// Bumped when the file's shape changes. Older files are then dropped
 /// instead of misread.
@@ -29,6 +29,9 @@ pub struct SavedChange {
     pub domain: String,
     pub item: Value,
     pub wish: Value,
+    /// Left out while untried, so a file without it reads as before.
+    #[serde(default, skip_serializing_if = "Outcome::is_untried")]
+    pub outcome: Outcome,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
@@ -77,7 +80,8 @@ impl Domains {
     }
 
     /// Queues every saved change again, compared with `snapshot` like a new
-    /// wish. Problems skip the change and are returned, never fatal.
+    /// wish, apart from a failed one, which stays. Problems skip the
+    /// change and are returned, never fatal.
     pub fn restore(
         &self,
         changes: &mut ChangeSet,
@@ -124,6 +128,6 @@ where
         });
     }
 
-    changes.want::<D>(item, wish, snapshot);
+    changes.restore::<D>(item, wish, saved.outcome, snapshot);
     Ok(())
 }

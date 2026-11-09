@@ -21,8 +21,8 @@ use toolbox_cli::confirm::consent;
 use toolbox_cli::output::json;
 use toolbox_config::Paths;
 use toolbox_core::features::Unchecked;
-use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Summary, domains, plan};
-use toolbox_plan::PlannedAction;
+use toolbox_core::{ChangeSet, Owners, SavedChanges, Snapshot, Summary, domains, plan, planned};
+use toolbox_plan::{PlannedAction, StepId};
 use toolbox_services::catalogs::Catalogs;
 use toolbox_services::queue::edit::QueueEdit;
 
@@ -166,17 +166,25 @@ pub fn clear_all(store: &dyn Store) -> Result<usize, Failed> {
     Ok(changes.len())
 }
 
-/// After a run: what `after` shows done leaves the queue, and the one-off
-/// work whose actions are in `done`, the succeeded steps, as the window
-/// does.
+/// After a run, as the window does: each change the plan of `owners`
+/// carried out learns how it went from `ended_well`. What `after` shows
+/// done and its plan finished leaves the queue, and the one-off work
+/// whose actions are in `done`, the succeeded steps.
 ///
 /// # Errors
 ///
 /// [`Failed::Store`] when the queue could not be written.
-pub fn settle(store: &dyn Store, after: &Snapshot, done: &[PlannedAction]) -> Result<(), Failed> {
+pub fn settle(
+    store: &dyn Store,
+    after: &Snapshot,
+    owners: &Owners,
+    ended_well: impl Fn(StepId) -> bool,
+    done: &[PlannedAction],
+) -> Result<(), Failed> {
     let saved = store.saved().map_err(Failed::Store)?;
     let before = restored(&saved, &Snapshot::default());
     let mut left = restored(&saved, &Snapshot::default());
+    left.finished(owners, ended_well);
     left.reconcile(after);
     left.drop_done_one_offs(done);
 
@@ -311,7 +319,7 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> 
     };
 
     let changes = restored(&saved, system);
-    let planned = plan(&changes);
+    let (planned, owners) = planned(&changes);
     let ended = apply::carry_out_steps(
         planned.clone(),
         confirm,
@@ -331,7 +339,15 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> 
         .collect();
 
     let ran = !confirm.dry_run && !matches!(exit, Exit::Declined | Exit::NeedsYes | Exit::Usage);
-    if ran && let Err(failed) = settle(store, &snapshot(catalogs), &succeeded) {
+    if ran
+        && let Err(failed) = settle(
+            store,
+            &snapshot(catalogs),
+            &owners,
+            |step| ended.ended_well(step),
+            &succeeded,
+        )
+    {
         failed.say(out);
     }
 

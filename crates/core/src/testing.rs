@@ -5,14 +5,14 @@ use std::collections::BTreeSet;
 use serde_json::Value;
 use toolbox_plan::procedure::Invocation;
 use toolbox_plan::{
-    GroupName, LocaleEntry, LocaleName, PackageName, Plan, PlannedAction, PlymouthTheme, UnitName,
-    UserName,
+    GroupName, LocaleEntry, LocaleName, PackageName, Plan, PlannedAction, PlymouthTheme, StepId,
+    UnitName, UserName,
 };
 
 use crate::domains::{AccountLockFlags, Accounts, Group, Membership, User};
 use crate::{
-    ChangeSet, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges, Snapshot, Summary,
-    domains, plan,
+    ChangeSet, Outcome, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges, Snapshot,
+    Summary, domains, plan, planned,
 };
 
 /// The user id of `nobody`, above the ids of people.
@@ -176,6 +176,7 @@ pub fn restore_saved(saved: &[(&str, Value, Value)]) -> ChangeSet {
                 domain: (*domain).to_owned(),
                 item: item.clone(),
                 wish: wish.clone(),
+                outcome: Outcome::Untried,
             })
             .collect(),
     };
@@ -198,4 +199,26 @@ pub fn all_steps_succeeded(changes: &mut ChangeSet) {
         .collect();
 
     changes.drop_done_one_offs(&done);
+}
+
+/// The queue after an apply that stopped at step `failed`: every step
+/// before it ended well, it and the rest did not.
+pub fn stopped_at(changes: &mut ChangeSet, failed: u32) {
+    let (_, owners) = planned(changes);
+    changes.finished(&owners, |step| step < StepId::new(failed));
+}
+
+/// The outcome of each queued change, by key.
+pub fn outcomes(changes: &ChangeSet) -> Vec<(String, Outcome)> {
+    changes
+        .views()
+        .into_iter()
+        .map(|change| (change.key, change.outcome))
+        .collect()
+}
+
+pub const fn failed_at(step: u32) -> Outcome {
+    Outcome::Failed {
+        step: StepId::new(step),
+    }
 }

@@ -9,10 +9,11 @@ use std::any::{Any, TypeId};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 
-use toolbox_plan::PlannedAction;
+use toolbox_plan::{PlannedAction, StepId};
 
 use crate::Snapshot;
 use crate::domain::{ChangeView, Domain, Stage, Staged};
+use crate::outcome::{Outcome, Owners};
 use crate::saved::{SAVED_VERSION, SavedChange, SavedChanges};
 
 #[derive(Default)]
@@ -21,10 +22,9 @@ pub struct ChangeSet {
 }
 
 impl ChangeSet {
-    /// Records the wish for `item`, replacing an earlier one. A wish the
-    /// system already fulfils removes the item instead, so toggling twice
-    /// leaves nothing queued. A wish that does not [`Domain::fits`] the
-    /// item changes nothing.
+    /// Records the wish for `item`, replacing an earlier one and its outcome.
+    /// A wish the system fulfils removes the item, so toggling twice leaves
+    /// nothing queued. One that does not [`Domain::fits`] changes nothing.
     pub fn want<D>(&mut self, item: D::Item, wish: D::Wish, snapshot: &Snapshot)
     where
         D: Domain,
@@ -37,7 +37,31 @@ impl ChangeSet {
         if is_satisfied::<D>(&item, &wish, snapshot) {
             self.remove::<D>(&item);
         } else {
-            self.queue_mut::<D>().changes.insert(item, wish);
+            self.queue_mut::<D>().changes.insert(item, Entry::new(wish));
+        }
+    }
+
+    /// A saved change. A failed one comes back even when the system shows
+    /// its wish, as its plan did not finish.
+    pub(crate) fn restore<D>(
+        &mut self,
+        item: D::Item,
+        wish: D::Wish,
+        outcome: Outcome,
+        snapshot: &Snapshot,
+    ) where
+        D: Domain,
+    {
+        if outcome.is_failed() {
+            self.queue_mut::<D>()
+                .changes
+                .insert(item, Entry { wish, outcome });
+            return;
+        }
+
+        self.want::<D>(item.clone(), wish, snapshot);
+        if let Some(entry) = self.queue_mut::<D>().changes.get_mut(&item) {
+            entry.outcome = outcome;
         }
     }
 
@@ -45,7 +69,10 @@ impl ChangeSet {
     where
         D: Domain,
     {
-        self.queue::<D>()?.changes.get(item)
+        self.queue::<D>()?
+            .changes
+            .get(item)
+            .map(|entry| &entry.wish)
     }
 
     pub fn queued<D>(&self) -> Vec<(D::Item, D::Wish)>
@@ -56,7 +83,7 @@ impl ChangeSet {
             queue
                 .changes
                 .iter()
-                .map(|(item, wish)| (item.clone(), wish.clone()))
+                .map(|(item, entry)| (item.clone(), entry.wish.clone()))
                 .collect()
         })
     }
@@ -70,14 +97,14 @@ impl ChangeSet {
 
     /// Returns whether one was queued.
     pub fn remove_key(&mut self, domain: &str, key: &str) -> bool {
-        self.queues
-            .values_mut()
-            .find(|queue| queue.domain() == domain)
+        self.queue_of_mut(domain)
             .is_some_and(|queue| queue.remove_key(key))
     }
 
     /// Drops every change the system now fulfils, after an apply or when
-    /// something outside the app changed the system.
+    /// something outside the app changed the system. A change whose last
+    /// apply failed stays: its first step may show the wish while a later
+    /// one never ran.
     pub fn reconcile(&mut self, snapshot: &Snapshot) {
         for queue in self.queues.values_mut() {
             queue.reconcile(snapshot);
@@ -90,6 +117,19 @@ impl ChangeSet {
     pub fn drop_done_one_offs(&mut self, done: &[PlannedAction]) {
         for queue in self.queues.values_mut().filter(|queue| queue.one_off()) {
             queue.drop_done(done);
+        }
+    }
+
+    /// Records how the plan `owners` came with ended for each change it
+    /// carried out. `ended_well` names the steps that succeeded or found
+    /// nothing to do.
+    pub fn finished(&mut self, owners: &Owners, ended_well: impl Fn(StepId) -> bool) {
+        for (domain, keys, outcome) in owners.outcomes(ended_well) {
+            if let Some(queue) = self.queue_of_mut(domain) {
+                for key in keys {
+                    queue.set_outcome(key, outcome);
+                }
+            }
         }
     }
 
@@ -116,13 +156,32 @@ impl ChangeSet {
         self.len() == 0
     }
 
-    /// The actions of every domain, sorted by their own stage. Ties keep
-    /// the order of the domains (stage, then id) and of each domain's plan.
-    pub(crate) fn actions(&self) -> Vec<PlannedAction> {
-        let mut staged: Vec<Staged> = self.in_plan_order().flat_map(Queue::plan).collect();
+    /// The actions of every domain with the domain's id, sorted by their
+    /// own stage. Ties keep the order of the domains (stage, then id) and
+    /// of each domain's plan.
+    pub(crate) fn actions(&self) -> Vec<(&'static str, PlannedAction)> {
+        let mut staged: Vec<(&'static str, Staged)> = self
+            .in_plan_order()
+            .flat_map(|queue| {
+                let domain = queue.domain();
+                queue.plan().into_iter().map(move |step| (domain, step))
+            })
+            .collect();
 
-        staged.sort_by_key(|step| step.stage);
-        staged.into_iter().map(|step| step.action).collect()
+        staged.sort_by_key(|(_, step)| step.stage);
+        staged
+            .into_iter()
+            .map(|(domain, step)| (domain, step.action))
+            .collect()
+    }
+
+    pub(crate) fn keys(&self, domain: &str) -> Vec<String> {
+        self.queues
+            .values()
+            .filter(|queue| queue.domain() == domain)
+            .flat_map(|queue| queue.views())
+            .map(|change| change.key)
+            .collect()
     }
 
     fn in_plan_order(&self) -> impl Iterator<Item = &dyn Queue> {
@@ -130,6 +189,12 @@ impl ChangeSet {
 
         queues.sort_by_key(|queue| (queue.stage(), queue.domain()));
         queues.into_iter()
+    }
+
+    fn queue_of_mut(&mut self, domain: &str) -> Option<&mut Box<dyn Queue>> {
+        self.queues
+            .values_mut()
+            .find(|queue| queue.domain() == domain)
     }
 
     fn queue<D>(&self) -> Option<&DomainQueue<D>>
@@ -173,6 +238,7 @@ trait Queue: Send + Sync {
     fn views(&self) -> Vec<ChangeView>;
     fn save(&self) -> Vec<SavedChange>;
     fn remove_key(&mut self, key: &str) -> bool;
+    fn set_outcome(&mut self, key: &str, outcome: Outcome);
     fn as_any(&self) -> &dyn Any;
     fn as_any_mut(&mut self) -> &mut dyn Any;
 }
@@ -181,7 +247,21 @@ struct DomainQueue<D>
 where
     D: Domain,
 {
-    changes: BTreeMap<D::Item, D::Wish>,
+    changes: BTreeMap<D::Item, Entry<D::Wish>>,
+}
+
+struct Entry<W> {
+    wish: W,
+    outcome: Outcome,
+}
+
+impl<W> Entry<W> {
+    const fn new(wish: W) -> Self {
+        Self {
+            wish,
+            outcome: Outcome::Untried,
+        }
+    }
 }
 
 impl<D> Default for DomainQueue<D>
@@ -216,14 +296,15 @@ where
     }
 
     fn reconcile(&mut self, snapshot: &Snapshot) {
-        self.changes
-            .retain(|item, wish| !is_satisfied::<D>(item, wish, snapshot));
+        self.changes.retain(|item, entry| {
+            entry.outcome.is_failed() || !is_satisfied::<D>(item, &entry.wish, snapshot)
+        });
     }
 
     /// Planned alone, each change names its own actions.
     fn drop_done(&mut self, done: &[PlannedAction]) {
-        self.changes.retain(|item, wish| {
-            !D::plan(&[(item, wish)])
+        self.changes.retain(|item, entry| {
+            !D::plan(&[(item, &entry.wish)])
                 .iter()
                 .all(|staged| done.contains(&staged.action))
         });
@@ -234,7 +315,11 @@ where
             return Vec::new();
         }
 
-        let changes: Vec<(&D::Item, &D::Wish)> = self.changes.iter().collect();
+        let changes: Vec<(&D::Item, &D::Wish)> = self
+            .changes
+            .iter()
+            .map(|(item, entry)| (item, &entry.wish))
+            .collect();
 
         D::plan(&changes)
     }
@@ -242,10 +327,11 @@ where
     fn views(&self) -> Vec<ChangeView> {
         self.changes
             .iter()
-            .map(|(item, wish)| ChangeView {
+            .map(|(item, entry)| ChangeView {
                 domain: D::ID,
                 key: D::key(item),
-                summary: D::summary(item, wish),
+                summary: D::summary(item, &entry.wish),
+                outcome: entry.outcome,
             })
             .collect()
     }
@@ -253,7 +339,7 @@ where
     fn save(&self) -> Vec<SavedChange> {
         self.changes
             .iter()
-            .filter_map(|(item, wish)| {
+            .filter_map(|(item, entry)| {
                 let key = D::key(item);
                 let saved = |value: serde_json::Result<serde_json::Value>| {
                     value
@@ -264,12 +350,13 @@ where
                 };
 
                 let item = saved(serde_json::to_value(item))?;
-                let wish = saved(serde_json::to_value(wish))?;
+                let wish = saved(serde_json::to_value(&entry.wish))?;
 
                 Some(SavedChange {
                     domain: D::ID.to_owned(),
                     item,
                     wish,
+                    outcome: entry.outcome,
                 })
             })
             .collect()
@@ -283,6 +370,16 @@ where
             .cloned();
 
         found.is_some_and(|item| self.changes.remove(&item).is_some())
+    }
+
+    fn set_outcome(&mut self, key: &str, outcome: Outcome) {
+        if let Some(entry) = self
+            .changes
+            .iter_mut()
+            .find_map(|(item, entry)| (D::key(item) == key).then_some(entry))
+        {
+            entry.outcome = outcome;
+        }
     }
 
     fn as_any(&self) -> &dyn Any {

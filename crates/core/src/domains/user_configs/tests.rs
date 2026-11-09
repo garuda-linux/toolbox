@@ -7,7 +7,7 @@ use toolbox_plan::{
 
 use super::{UserConfigStates, UserConfigWish, UserConfigs};
 use crate::domain::{Summary, Toggle};
-use crate::testing::{actions, restored, unit, views};
+use crate::testing::{actions, failed_at, outcomes, restored, stopped_at, unit, views};
 use crate::{ChangeSet, Snapshot, plan};
 
 fn audio() -> UserConfigEdit {
@@ -196,5 +196,28 @@ fn an_edit_is_one_item_whatever_units_come_with_it() {
         changes.wish::<UserConfigs>(&audio()),
         Some(&second),
         "the units of the later wish count"
+    );
+}
+
+/// The file is written, but the units that read it were never restarted.
+#[test]
+fn a_failed_restart_keeps_the_edit_queued() {
+    let mut changes = ChangeSet::default();
+    want(&mut changes, audio(), Toggle::On, &snapshot());
+
+    stopped_at(&mut changes, 2);
+    let mut written = Snapshot::default();
+    written.insert(UserConfigStates(BTreeMap::from([
+        (audio(), true),
+        (discord(), true),
+    ])));
+    changes.reconcile(&written);
+
+    assert_eq!(
+        outcomes(&changes)
+            .into_iter()
+            .map(|(_, outcome)| outcome)
+            .collect::<Vec<_>>(),
+        [failed_at(2)]
     );
 }

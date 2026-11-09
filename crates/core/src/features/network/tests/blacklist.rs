@@ -65,6 +65,7 @@ fn a_restored_dash_spelling_is_one_item_with_the_underscore_one_and_is_dropped()
             domain: "module-blacklist".to_owned(),
             item: serde_json::json!("iwl-wifi"),
             wish: serde_json::json!("on"),
+            outcome: crate::Outcome::Untried,
         }],
     };
 

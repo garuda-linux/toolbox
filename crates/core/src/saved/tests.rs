@@ -6,7 +6,7 @@ use super::{Domains, DuplicateDomain, RestoreProblem, SAVED_VERSION, SavedChange
 use crate::domain::Toggle;
 use crate::domains::{Groups, InstalledPackages, NewGroups, Packages};
 use crate::testing::{membership, package};
-use crate::{ChangeSet, Queued, Snapshot};
+use crate::{ChangeSet, Outcome, Queued, Snapshot, planned};
 
 fn domains() -> Domains {
     Domains::default()
@@ -71,16 +71,19 @@ fn unknown_domains_and_invalid_items_are_skipped_and_reported() {
                 domain: "kernels".to_owned(),
                 item: json!("linux"),
                 wish: json!("on"),
+                outcome: Outcome::Untried,
             },
             SavedChange {
                 domain: "packages".to_owned(),
                 item: json!("-Syu"),
                 wish: json!("on"),
+                outcome: Outcome::Untried,
             },
             SavedChange {
                 domain: "packages".to_owned(),
                 item: json!("vlc"),
                 wish: json!("on"),
+                outcome: Outcome::Untried,
             },
         ],
     };
@@ -138,4 +141,40 @@ fn work_to_do_is_saved_without_a_wish() {
             "changes": [{ "domain": "new-groups", "item": "crafts", "wish": null }],
         })
     );
+}
+
+#[test]
+fn a_failed_change_comes_back_failed_although_the_system_shows_it() {
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(package("mpv"), Toggle::On, &Snapshot::default());
+    let (_, owners) = planned(&changes);
+    changes.finished(&owners, |_| false);
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(InstalledPackages(BTreeSet::from([package("mpv")])));
+
+    let json = serde_json::to_string(&changes.to_saved()).unwrap();
+    let mut restored = ChangeSet::default();
+    domains().restore(
+        &mut restored,
+        &serde_json::from_str(&json).unwrap(),
+        &snapshot,
+    );
+
+    assert_eq!(restored.views(), changes.views());
+    assert_eq!(
+        serde_json::to_value(changes.to_saved()).unwrap()["changes"][0]["outcome"],
+        json!({ "failed": { "step": 1_u32 } })
+    );
+}
+
+/// A file from before outcomes were kept.
+#[test]
+fn a_change_saved_without_an_outcome_is_untried() {
+    let saved: SavedChanges = serde_json::from_value(json!({
+        "version": SAVED_VERSION,
+        "changes": [{ "domain": "packages", "item": "mpv", "wish": "on" }],
+    }))
+    .unwrap();
+
+    assert_eq!(saved.changes[0].outcome, Outcome::Untried);
 }

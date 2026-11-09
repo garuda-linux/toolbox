@@ -2,6 +2,7 @@ use toolbox_plan::{DnsProvider, PlannedAction, WifiBackend};
 
 use super::{CurrentDns, CurrentWifiBackend, Dns, WifiBackends};
 use crate::domain::Summary;
+use crate::testing::{failed_at, outcomes, stopped_at};
 use crate::{ChangeSet, Single, Snapshot, plan};
 
 fn snapshot() -> Snapshot {
@@ -89,5 +90,36 @@ fn the_wifi_switch_runs_after_dns_and_the_services() {
     assert_eq!(
         shown.last().map(String::as_str),
         Some("SetWifiBackend { backend: Iwd }")
+    );
+}
+
+/// One step writes the setting and restarts NetworkManager: the setting
+/// shows while the restart failed.
+#[test]
+fn a_failed_dns_step_keeps_the_provider_queued() {
+    let mut changes = ChangeSet::default();
+    changes.want::<Dns>(Single, DnsProvider::Quad9, &snapshot());
+
+    stopped_at(&mut changes, 1);
+    let mut written = snapshot();
+    written.insert(CurrentDns(DnsProvider::Quad9));
+    changes.reconcile(&written);
+
+    assert_eq!(outcomes(&changes), [("dns".to_owned(), failed_at(1))]);
+}
+
+#[test]
+fn a_failed_switch_to_wpa_supplicant_keeps_the_backend_queued() {
+    let mut iwd = snapshot();
+    iwd.insert(CurrentWifiBackend(WifiBackend::Iwd));
+    let mut changes = ChangeSet::default();
+    changes.want::<WifiBackends>(Single, WifiBackend::WpaSupplicant, &iwd);
+
+    stopped_at(&mut changes, 1);
+    changes.reconcile(&snapshot());
+
+    assert_eq!(
+        outcomes(&changes),
+        [("wifi-backend".to_owned(), failed_at(1))]
     );
 }

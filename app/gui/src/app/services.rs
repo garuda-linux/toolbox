@@ -7,7 +7,7 @@ use std::sync::Arc;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::CurrentLoader;
 use toolbox_gui_kit::toasts::ToastKind;
-use toolbox_plan::UnitScope;
+use toolbox_plan::{StepId, UnitScope};
 use toolbox_system::Notification;
 
 use super::App;
@@ -90,13 +90,25 @@ impl App {
 
     /// Every part learns that a plan ended, and the system is read again.
     fn plan_finished(&mut self, ctx: &egui::Context, succeeded: bool) {
-        // A dry run skips every step, so nothing it planned counts as done.
+        // A dry run skips every step, so nothing it planned counts as done
+        // and no change learns that it failed.
         let steps = self.console.steps();
-        self.queue.plan_finished(|id| {
-            steps
-                .iter()
-                .any(|step| step.id == id && step.state == StepState::Succeeded)
-        });
+        let ended = |id: StepId, well: fn(&StepState) -> bool| {
+            steps.iter().any(|step| step.id == id && well(&step.state))
+        };
+
+        let ended_well = |id: StepId| {
+            ended(id, |state| {
+                matches!(state, StepState::Succeeded | StepState::Skipped)
+            })
+        };
+
+        let well: &dyn Fn(StepId) -> bool = &ended_well;
+
+        self.queue.plan_finished(
+            |id| ended(id, |state| *state == StepState::Succeeded),
+            (!self.dry_run).then_some(well),
+        );
 
         self.maintenance_finished(succeeded);
         self.boot.plan_finished();

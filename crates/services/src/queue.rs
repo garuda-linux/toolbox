@@ -15,8 +15,8 @@ use tokio::runtime::Handle;
 use tokio::sync::watch;
 use toolbox_config::write_atomic;
 use toolbox_core::features::Unchecked;
-use toolbox_core::{ChangeSet, ChangeView, Domains, SavedChanges, Snapshot, domains};
-use toolbox_plan::{Plan, StepId};
+use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, SavedChanges, Snapshot, domains};
+use toolbox_plan::{Plan, PlannedAction, StepId};
 
 use self::applying::Applying;
 use self::edit::QueueEdit;
@@ -176,9 +176,18 @@ impl Queue {
         toolbox_core::plan(&self.changes)
     }
 
-    /// Apply sent `plan`, made of this queue.
+    /// Apply sent `plan`, made of this queue. A plan that is not this
+    /// queue's tells none of its changes how it went.
     pub fn sent(&mut self, plan: &Plan) {
-        self.applying = Applying::Sent(plan.clone());
+        let (own, owners) = toolbox_core::planned(&self.changes);
+        let owners = if own == *plan {
+            owners
+        } else {
+            tracing::warn!("the sent plan is not the queue's, its end marks no change");
+            Owners::default()
+        };
+
+        self.applying = Applying::Sent(plan.clone(), owners);
     }
 
     pub fn plan_started(&mut self) {
@@ -189,15 +198,33 @@ impl Queue {
         self.applying = std::mem::take(&mut self.applying).refused();
     }
 
-    /// After the queue's plan: one-off changes (DKMS builds, account
-    /// changes, maintenance) whose steps `succeeded` names are done and
-    /// leave the queue. The end of another plan changes nothing. Desired
-    /// state stays until a new snapshot shows the system fulfils it.
-    pub fn plan_finished(&mut self, succeeded: impl Fn(StepId) -> bool) {
-        if let Some(done) = self.applying.finished(succeeded) {
-            self.changes.drop_done_one_offs(&done);
-            self.save();
+    /// After the queue's plan: each change learns from `ended_well` (`None`
+    /// in a dry run) how its steps went. One-off changes (DKMS builds,
+    /// accounts, maintenance) whose steps `succeeded` names leave the queue.
+    /// The end of another plan changes nothing. Desired state stays until a
+    /// snapshot shows the system fulfils it and its plan finished.
+    pub fn plan_finished(
+        &mut self,
+        succeeded: impl Fn(StepId) -> bool,
+        ended_well: Option<&dyn Fn(StepId) -> bool>,
+    ) {
+        let Some((plan, owners)) = self.applying.finished() else {
+            return;
+        };
+
+        if let Some(ended_well) = ended_well {
+            self.changes.finished(&owners, ended_well);
         }
+
+        let done: Vec<PlannedAction> = plan
+            .steps()
+            .iter()
+            .filter(|step| succeeded(step.id))
+            .map(|step| step.action.clone())
+            .collect();
+
+        self.changes.drop_done_one_offs(&done);
+        self.save();
     }
 
     /// Changes with every change to the queue.

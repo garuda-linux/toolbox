@@ -26,6 +26,8 @@ changes-remove-all-question =
     }
 changes-apply = Übernehmen
 changes-keep = Behalten
+# Tag of a change whose last apply stopped before all its steps ended well.
+change-unfinished = Nicht abgeschlossen
 
 # $name is what the change is about.
 

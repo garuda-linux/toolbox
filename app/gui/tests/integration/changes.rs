@@ -349,3 +349,25 @@ fn with_the_list_open_one_apply_button_is_left() {
 
     assert_eq!(applies, 1);
 }
+
+#[test]
+fn a_change_whose_last_apply_failed_is_tagged_in_the_popover() {
+    let mut changes = installing(&["firefox", "vlc"]);
+    let (_, owners) = toolbox_core::planned(&changes);
+    changes.finished(&owners, |_| false);
+    let mut harness = launch(queued(changes));
+
+    review(&mut harness);
+
+    assert!(harness.query_by_label("Install firefox").is_some());
+    assert_eq!(harness.query_all_by_label("Did not finish").count(), 2);
+}
+
+#[test]
+fn an_untried_change_has_no_tag() {
+    let mut harness = app_with(&["firefox"]);
+
+    review(&mut harness);
+
+    assert!(harness.query_by_label("Did not finish").is_none());
+}

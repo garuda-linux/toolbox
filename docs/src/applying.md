@@ -49,6 +49,13 @@ header then says how many steps had nothing to do.
 > shows its exit code. The changes that did not run stay in the queue, so
 > **Apply** runs them again once you fixed the cause.
 
+A change whose steps did not all finish stays in the queue with the tag
+**Did not finish**, even when part of it already shows on its page. For
+example, a locale whose line in `/etc/locale.gen` was switched on while
+`locale-gen` failed. The tag goes away once an apply runs all of the
+change's steps. `garuda-toolbox queue apply` keeps such changes the same
+way.
+
 If you close the password dialog, nothing changes and the Console shows
 **The password dialog was closed. Nothing was changed.**
 

@@ -7,9 +7,23 @@ mod tests;
 
 use toolbox_plan::Plan;
 
-use crate::ChangeSet;
+use crate::{ChangeSet, Owners};
 
 #[must_use = "a plan does nothing until it is run"]
 pub fn plan(changes: &ChangeSet) -> Plan {
-    Plan::new(changes.actions())
+    planned(changes).0
+}
+
+/// The plan and the changes each of its steps carries out, so the end of
+/// the plan tells each change how it went.
+#[must_use = "a plan does nothing until it is run"]
+pub fn planned(changes: &ChangeSet) -> (Plan, Owners) {
+    let (domains, actions): (Vec<&'static str>, Vec<_>) = changes.actions().into_iter().unzip();
+    let plan = Plan::new(actions);
+    let owners = Owners::new(
+        plan.steps().iter().map(|step| step.id).zip(domains),
+        |domain| changes.keys(domain),
+    );
+
+    (plan, owners)
 }
