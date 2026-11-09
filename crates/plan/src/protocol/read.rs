@@ -20,7 +20,7 @@ pub enum ReadKind {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "result", rename_all = "kebab-case")]
+#[serde(tag = "result", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum ProgramAnswer {
     /// The program ran to its end, whatever its exit code.
     Ran {

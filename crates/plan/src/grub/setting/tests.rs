@@ -318,6 +318,21 @@ fn the_parameter_list_adds_once_removes_all_and_is_bounded() {
 }
 
 #[test]
+fn the_parameter_list_holds_at_most_1024_bytes_joined() {
+    let fits = [255, 255, 255, 254]
+        .map(|length| "a".repeat(length))
+        .join(" ")
+        + " b";
+
+    assert_eq!(fits.len(), 1024);
+    assert_eq!(parameters(&fits).to_string(), fits);
+    assert_eq!(KernelParameters::parse(&format!("{fits}c")), None);
+    parameters(&fits)
+        .with(KernelParameter::new("d").unwrap())
+        .unwrap_err();
+}
+
+#[test]
 fn keys_have_stable_ids() {
     let all = [
         GrubKey::Default,

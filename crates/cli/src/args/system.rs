@@ -160,6 +160,11 @@ pub struct ParamArgs {
     /// The parameter, for example `nowatchdog` or `loglevel=3`.
     pub parameter: KernelParameter,
 
+    /// Add one that opens a root shell at boot or switches a security
+    /// layer off, such as `init=` or `selinux=0`. Removing needs none.
+    #[arg(long)]
+    pub force: bool,
+
     #[command(flatten)]
     pub confirm: Confirm,
 }

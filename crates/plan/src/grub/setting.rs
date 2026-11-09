@@ -53,7 +53,12 @@ pub enum DefaultEntry {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "key", content = "value", rename_all = "kebab-case")]
+#[serde(
+    tag = "key",
+    content = "value",
+    rename_all = "kebab-case",
+    deny_unknown_fields
+)]
 pub enum GrubSetting {
     Default(DefaultEntry),
     Timeout(GrubTimeout),

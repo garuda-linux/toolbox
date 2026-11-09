@@ -13,13 +13,27 @@ use crate::component::has_plain_components;
 const SHELL_ACTIVE: &str = "\"\\$`";
 
 /// `/etc/grub.d/00_header` expands the theme and the background unquoted,
-/// so one of these in a path would split it or add a command to
-/// `grub.cfg`.
-const PATH_UNQUOTED: &str = " \t;|&()*";
+/// so a path holds letters, digits and only these marks: anything else
+/// could split it or add a command to `grub.cfg`.
+const PATH_MARKS: &str = "_.-/+@,=:";
 
 /// The other characters real kernel parameters use beside letters and
 /// digits (`root=UUID=…`, `video=1920x1080@60`, `acpi_osi=!`, `ip=[::1]`).
 const PARAMETER_MARKS: &str = "_-.,:=/@+%!~^[]";
+
+/// Parameters that open a root shell at boot or switch a security layer
+/// off. One ending in `=` matches every value, one with a value only that
+/// value, a bare one itself with or without a value.
+pub const RISKY_PARAMETERS: [&str; 8] = [
+    "init=",
+    "rd.break",
+    "systemd.unit=",
+    "systemd.debug-shell",
+    "lockdown=",
+    "module.sig_enforce",
+    "selinux=0",
+    "apparmor=0",
+];
 
 const PICTURE_TYPES: [&str; 4] = [".png", ".jpg", ".jpeg", ".tga"];
 
@@ -48,6 +62,28 @@ pub struct MenuEntryRule;
 pub struct GrubPictureRule;
 pub struct GrubThemeRule;
 
+impl KernelParameter {
+    /// One of [`RISKY_PARAMETERS`], which the page adds only after a
+    /// confirm.
+    pub fn is_risky(&self) -> bool {
+        let value = self.as_str();
+
+        RISKY_PARAMETERS.iter().any(|risky| {
+            if risky.ends_with('=') {
+                value.starts_with(risky)
+            } else if risky.contains('=') {
+                value == *risky
+            } else {
+                value
+                    .strip_prefix(risky)
+                    .is_some_and(|rest| rest.is_empty() || rest.starts_with('='))
+            }
+        })
+    }
+}
+
+/// A word with a leading `-` reads as an option to a tool that takes the
+/// line apart, and `--` hands the rest of the line to init.
 impl Rule for KernelParameterRule {
     const KIND: NameKind = NameKind::KernelParameter;
 
@@ -56,7 +92,9 @@ impl Rule for KernelParameterRule {
             character.is_ascii_alphanumeric() || PARAMETER_MARKS.contains(character)
         };
 
-        check_shape(value, MAX_KERNEL_PARAMETER_CHARS, allowed)?;
+        check_shape(value, MAX_KERNEL_PARAMETER_CHARS, |first| {
+            allowed(first) && !"-=".contains(first)
+        })?;
         check_characters(value, allowed)
     }
 }
@@ -111,8 +149,9 @@ fn check_quotable(value: &str) -> Result<(), Reason> {
 
 /// A path that also survives the unquoted expansion in `/etc/grub.d`.
 fn check_path(value: &str) -> Result<(), Reason> {
-    check_quotable(value)?;
-    check_characters(value, |character| !PATH_UNQUOTED.contains(character))
+    check_characters(value, |character| {
+        character.is_ascii_alphanumeric() || PATH_MARKS.contains(character)
+    })
 }
 
 /// An absolute path without `.`, `..` or empty components whose name ends

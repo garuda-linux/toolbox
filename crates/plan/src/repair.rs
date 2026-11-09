@@ -32,7 +32,7 @@ pub const ROOT_SUBVOLUME: &str = "@";
 pub const ESP_FOLDER: &str = "boot/efi";
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "kind", rename_all = "kebab-case")]
+#[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum RepairRoot {
     /// A partition or mapped device with the file system on it.
     Open { device: VolumeDevice },
@@ -60,6 +60,7 @@ impl RootLayout {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct InstalledSystem {
     pub root: RepairRoot,
     pub layout: RootLayout,
@@ -74,7 +75,7 @@ impl InstalledSystem {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "kind", rename_all = "kebab-case")]
+#[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum RepairWork {
     /// Only the boot menu is generated again. systemd-boot keeps its images
     /// on `esp`, which a UEFI machine names. GRUB does not mount it.

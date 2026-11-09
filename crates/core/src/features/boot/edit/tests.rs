@@ -17,14 +17,18 @@ fn code(change: Edit) -> &'static str {
     edit(change, &mut ChangeSet::default(), &grub()).map_or_else(|problem| problem.code(), |()| "")
 }
 
+fn add(text: &str) -> Edit {
+    Edit::AddParameter {
+        text: text.to_owned(),
+        confirmed: false,
+    }
+}
+
 #[test]
 fn broken_values_name_their_rule() {
     assert_eq!(code(Edit::Default(String::new())), "empty");
     assert_eq!(code(Edit::Timeout(301)), "invalid");
-    assert_eq!(
-        code(Edit::AddParameter("a b".to_owned())),
-        "invalid-character"
-    );
+    assert_eq!(code(add("a b")), "invalid-character");
     assert_eq!(
         code(Edit::Background("/etc/passwd".to_owned())),
         "wrong-type"
@@ -42,14 +46,7 @@ fn good_values_are_queued() {
     let snapshot = grub();
 
     assert_eq!(edit(Edit::Timeout(10), &mut changes, &snapshot), Ok(()));
-    assert_eq!(
-        edit(
-            Edit::AddParameter("loglevel=3".to_owned()),
-            &mut changes,
-            &snapshot
-        ),
-        Ok(())
-    );
+    assert_eq!(edit(add("loglevel=3"), &mut changes, &snapshot), Ok(()));
     assert_eq!(
         edit(Edit::Flag(Flag::SysRq, true), &mut changes, &snapshot),
         Ok(())
@@ -91,7 +88,27 @@ fn every_broken_rule_has_its_code() {
 
 #[test]
 fn an_edit_names_the_value_a_refusal_shows() {
-    assert_eq!(Edit::AddParameter("a b".to_owned()).value(), "a b");
+    assert_eq!(add("a b").value(), "a b");
     assert_eq!(Edit::Timeout(301).value(), "301");
     assert_eq!(Edit::Submenus(true).value(), "");
+}
+
+/// `init=/bin/sh` boots into a root shell, so the page asks first.
+#[test]
+fn a_risky_parameter_waits_for_a_confirm() {
+    let mut changes = ChangeSet::default();
+    let snapshot = grub();
+    let asked = |confirmed| Edit::AddParameter {
+        text: "init=/bin/sh".to_owned(),
+        confirmed,
+    };
+
+    assert_eq!(code(asked(false)), "needs-confirm");
+    assert_eq!(
+        edit(asked(false), &mut changes, &snapshot),
+        Err(EditProblem::NeedsConfirm)
+    );
+    assert!(changes.is_empty());
+    assert_eq!(edit(asked(true), &mut changes, &snapshot), Ok(()));
+    assert!(!changes.is_empty());
 }

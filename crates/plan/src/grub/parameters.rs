@@ -10,11 +10,16 @@ use crate::KernelParameter;
 /// More than any real command line holds.
 const MAX_PARAMETERS: usize = 128;
 
-/// More parameters than a command line holds.
+/// The words joined by blanks, as they land in the file.
+const MAX_BYTES: usize = 1024;
+
+/// A list longer than a command line holds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
-#[error("more than {max} kernel parameters")]
-pub struct InvalidKernelParameters {
-    pub max: usize,
+pub enum InvalidKernelParameters {
+    #[error("more than {max} kernel parameters")]
+    TooMany { max: usize },
+    #[error("a kernel command line longer than {max} bytes")]
+    TooLong { max: usize },
 }
 
 /// `GRUB_CMDLINE_LINUX_DEFAULT` as its words, in order.
@@ -25,12 +30,24 @@ pub struct KernelParameters(Vec<KernelParameter>);
 impl KernelParameters {
     /// # Errors
     ///
-    /// [`InvalidKernelParameters`] for more than `MAX_PARAMETERS`.
+    /// [`InvalidKernelParameters`] for more than `MAX_PARAMETERS` or
+    /// `MAX_BYTES`.
     pub fn new(parameters: Vec<KernelParameter>) -> Result<Self, InvalidKernelParameters> {
         if parameters.len() > MAX_PARAMETERS {
-            return Err(InvalidKernelParameters {
+            return Err(InvalidKernelParameters::TooMany {
                 max: MAX_PARAMETERS,
             });
+        }
+
+        let blanks = parameters.len().saturating_sub(1);
+        let bytes = parameters
+            .iter()
+            .map(|parameter| parameter.as_str().len())
+            .sum::<usize>()
+            + blanks;
+
+        if bytes > MAX_BYTES {
+            return Err(InvalidKernelParameters::TooLong { max: MAX_BYTES });
         }
 
         Ok(Self(parameters))

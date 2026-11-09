@@ -42,6 +42,7 @@ pub enum Mode {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Request {
     pub version: u32,
     pub mode: Mode,
@@ -230,7 +231,7 @@ impl From<(u16, u16)> for TerminalSize {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "kebab-case")]
+#[serde(tag = "type", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum Answer {
     Input {
         #[serde(deserialize_with = "capped_input")]

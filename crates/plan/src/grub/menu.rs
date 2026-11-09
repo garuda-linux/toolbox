@@ -26,6 +26,7 @@ const MAX_TITLE_CHARS: usize = 512;
 const MAX_ENTRIES: usize = 1000;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct MenuEntry {
     /// What `GRUB_DEFAULT` takes: the entry's own id, after the ids of the
     /// submenus around it (`gnulinux-advanced-…>gnulinux-linux-zen-…`).
@@ -40,6 +41,7 @@ pub struct MenuEntry {
 
 /// The answer to `garuda-toolbox-helper read grub-menu`.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct GrubMenu {
     pub entries: Vec<MenuEntry>,
 }

@@ -4,6 +4,7 @@
 
 mod listing;
 mod sdboot;
+mod show;
 #[cfg(test)]
 mod tests;
 
@@ -15,7 +16,7 @@ use serde::Serialize;
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{
-    BootCommand, BootKey, BootSet, DkmsBuild, DkmsCommand, KernelArgs, ParamCommand, Read,
+    BootCommand, BootKey, BootSet, DkmsBuild, DkmsCommand, KernelArgs, ParamCommand,
 };
 use toolbox_core::domains::DkmsBuilds;
 use toolbox_core::features::boot::edit::{Edit, EditProblem, edit};
@@ -36,8 +37,7 @@ use super::change::{Refused, fresh, page_edit, why};
 use super::filter::print_all;
 use super::names::kernel_names;
 use super::out::failure;
-use super::settings::on_off_text;
-use super::{json, print, system, unavailable};
+use super::{system, unavailable};
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct BootView {
@@ -68,15 +68,22 @@ pub fn command(command: BootCommand, runtime: &Runtime, out: &mut dyn Write) -> 
     match command {
         BootCommand::Show(read) if sdboot => sdboot::show(read, &snapshot, out),
         BootCommand::Entries(read) if sdboot => sdboot::entries(read, out),
-        BootCommand::Show(read) => show(read, &snapshot, out),
-        BootCommand::Entries(read) => entries(read, out),
+        BootCommand::Show(read) => show::show(read, &snapshot, out),
+        BootCommand::Entries(read) => show::entries(read, out),
         BootCommand::Set(args) if sdboot => sdboot::set(&args, &snapshot, runtime, out),
         BootCommand::Set(args) => {
             let planned = set(&args, &snapshot);
             run(planned, args.confirm, None, runtime, out)
         }
         BootCommand::Param(ParamCommand::Add(args)) => {
-            let planned = boot_edit(Edit::AddParameter(args.parameter.to_string()), &snapshot);
+            let planned = boot_edit(
+                Edit::AddParameter {
+                    text: args.parameter.to_string(),
+                    confirmed: args.force,
+                },
+                &snapshot,
+            );
+
             run(planned, args.confirm, None, runtime, out)
         }
         BootCommand::Param(ParamCommand::Remove(args)) => {
@@ -305,74 +312,19 @@ pub fn edit_onto(
     )
 }
 
-fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
-    let Some(now) = shown(snapshot, &ChangeSet::default()) else {
-        return unavailable("GRUB is not the boot loader here", out);
-    };
-
-    let view = BootView {
-        default: now.default,
-        remember: now.remember,
-        timeout: now.timeout,
-        parameters: now
-            .parameters
-            .map(|parameters| parameters.iter().map(ToString::to_string).collect()),
-        submenus: now.submenus,
-        os_prober: now.os_prober,
-        background: now.background,
-        theme: now.theme,
-    };
-
-    let text = if read.json {
-        json(&view)
-    } else {
-        let timeout = view
-            .timeout
-            .map_or_else(String::new, |seconds| seconds.to_string());
-
-        let parameters = view
-            .parameters
-            .as_ref()
-            .map_or_else(String::new, |list| list.join(" "));
-
-        let paint = crate::paint();
-        let facts = paint.facts(
-            "Boot menu",
-            &[
-                ("default", &view.default),
-                ("remember", on_off_text(view.remember)),
-                ("timeout", &timeout),
-                ("parameters", &parameters),
-                ("submenus", on_off_text(view.submenus)),
-                ("os-prober", on_off_text(view.os_prober)),
-                ("background", &view.background),
-                ("theme", &view.theme),
-            ],
-        );
-
-        format!(
-            "{facts}\n{}\n",
-            paint.hint("garuda-toolbox boot set <setting> <value>")
-        )
-    };
-
-    write!(out, "{text}").ok();
-    Exit::Success
+fn on_off(value: &str) -> Result<bool, Refused> {
+    super::settings::on_off(value).map_err(Refused::Rule)
 }
 
-fn entries(read: Read, out: &mut dyn Write) -> Exit {
-    match read_menu() {
-        Some(menu) => print(
-            read,
-            &toolbox_core::features::boot::view::entries(Some(&menu)),
-            out,
-            entry_listing,
-        ),
-        None => unavailable("the boot menu could not be read", out),
+fn path_or_none(value: &str) -> String {
+    if value == "none" {
+        String::new()
+    } else {
+        value.to_owned()
     }
 }
 
-fn read_menu() -> Option<GrubMenu> {
+pub(super) fn read_menu() -> Option<GrubMenu> {
     let source = SystemBootMenu::system(Arc::new(super::root::helper()));
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::Known(menu) => Some(menu),
@@ -384,17 +336,5 @@ fn read_menu() -> Option<GrubMenu> {
             tracing::warn!("the boot menu was not read: {other:?}");
             None
         }
-    }
-}
-
-fn on_off(value: &str) -> Result<bool, Refused> {
-    super::settings::on_off(value).map_err(Refused::Rule)
-}
-
-fn path_or_none(value: &str) -> String {
-    if value == "none" {
-        String::new()
-    } else {
-        value.to_owned()
     }
 }

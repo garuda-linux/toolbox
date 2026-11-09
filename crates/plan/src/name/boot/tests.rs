@@ -1,3 +1,7 @@
+mod paths;
+
+use proptest::prelude::*;
+
 use crate::{
     GrubPicture, GrubState, GrubThemeFile, KernelParameter, MenuEntryId, PlymouthTheme, Reason,
 };
@@ -114,6 +118,62 @@ fn a_kernel_parameter_is_bounded_and_not_empty() {
     );
 }
 
+/// A word with a leading `-` reads as an option to tools that take the
+/// line apart, and `--` hands the rest of the line to init.
+#[test]
+fn a_kernel_parameter_starts_with_neither_a_dash_nor_an_equals_sign() {
+    for (parameter, first) in [
+        ("-x", '-'),
+        ("--", '-'),
+        ("-", '-'),
+        ("=x", '='),
+        ("=", '='),
+    ] {
+        assert_eq!(
+            KernelParameter::new(parameter).unwrap_err().reason(),
+            Reason::InvalidStart(first),
+            "{parameter:?}"
+        );
+    }
+
+    KernelParameter::new("a-b=c").unwrap();
+}
+
+#[test]
+fn risky_kernel_parameters_are_known_by_their_key() {
+    for risky in [
+        "init=/bin/sh",
+        "rd.break",
+        "rd.break=pre-mount",
+        "systemd.unit=emergency.target",
+        "systemd.debug-shell",
+        "systemd.debug-shell=1",
+        "lockdown=none",
+        "module.sig_enforce=0",
+        "selinux=0",
+        "apparmor=0",
+    ] {
+        assert!(KernelParameter::new(risky).unwrap().is_risky(), "{risky}");
+    }
+
+    for plain in [
+        "quiet",
+        "splash",
+        "initrd=/boot/initramfs-linux.img",
+        "init_on_alloc=1",
+        "rd.breaking",
+        "rd.luks.uuid=x",
+        "systemd.unit_x=1",
+        "systemd.debug-shellx",
+        "lockdown",
+        "selinux=1",
+        "apparmor=1",
+        "security=apparmor",
+    ] {
+        assert!(!KernelParameter::new(plain).unwrap().is_risky(), "{plain}");
+    }
+}
+
 #[test]
 fn a_plymouth_theme_is_one_folder_name_and_never_an_option() {
     for theme in PLYMOUTH_THEMES.lines() {
@@ -199,7 +259,7 @@ fn a_menu_entry_id_cannot_leave_its_quotes() {
 fn pictures_and_themes_are_plain_absolute_paths_of_their_type() {
     for picture in [
         "/usr/share/wallpapers/garuda/Dr460nized.png",
-        "/boot/grub/it's.jpeg",
+        "/boot/grub/background-2.jpeg",
         "/a.tga",
     ] {
         GrubPicture::new(picture).unwrap();
@@ -274,4 +334,23 @@ fn invalid_values_do_not_deserialize() {
     serde_json::from_str::<MenuEntryId>("\"a$b\"").unwrap_err();
     serde_json::from_str::<GrubPicture>("\"/a/../b.png\"").unwrap_err();
     serde_json::from_str::<GrubThemeFile>("\"theme.txt\"").unwrap_err();
+}
+
+proptest! {
+    #[test]
+    fn a_kernel_parameter_never_starts_with_a_dash_or_an_equals_sign(
+        first in "[-=]",
+        rest in r"[A-Za-z0-9_.,:=/@+%!~^\[\]-]{0,40}",
+    ) {
+        let value = format!("{first}{rest}");
+        let start = first.chars().next().unwrap();
+
+        prop_assert_eq!(
+            KernelParameter::new(&value).unwrap_err().reason(),
+            Reason::InvalidStart(start)
+        );
+        let behind = format!("a{value}");
+
+        prop_assert!(KernelParameter::new(&behind).is_ok());
+    }
 }

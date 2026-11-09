@@ -98,6 +98,9 @@ pub const fn driver(refusal: DriverRefusal) -> &'static str {
 /// `value` is the value as the user gave it, which the page's text names.
 pub fn boot_edit(problem: EditProblem, value: &str) -> String {
     match problem {
+        EditProblem::NeedsConfirm => format!(
+            "`{value}` opens a root shell at boot or switches a security layer off\npass --force if that is what you want"
+        ),
         EditProblem::Refused(BootRefusal::Unavailable) => {
             "this system has no /etc/default/grub, so there is nothing to change".to_owned()
         }

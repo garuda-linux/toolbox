@@ -13,7 +13,9 @@ use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page, Probed, Readiness};
 use toolbox_core::features::boot::{Flag, kernel};
-use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, empty_state, pill_button};
+use toolbox_gui_kit::widgets::{
+    ButtonKind, DialogWidth, Question, Tone, banner, empty_state, pill_button, question,
+};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
 use toolbox_system::{FailedProbes, Host, Menu, Probe};
@@ -144,7 +146,13 @@ impl BootPage {
 
         if let Some(added) = kernel::show(ui, context, page, &mut self.parameter) {
             self.sent = Some(added.clone());
-            send(context, Edit::AddParameter(added));
+            send(
+                context,
+                Edit::AddParameter {
+                    text: added,
+                    confirmed: false,
+                },
+            );
         }
     }
 }
@@ -163,10 +171,48 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
+    if refusal.code == "needs-confirm" {
+        risky(ui.ctx(), context, &refusal.value);
+        return;
+    }
+
     let id = format!("boot-refused-{}", refusal.code);
     let text = i18n::text_with(ui.ctx(), &id, &[("value", &refusal.value)]);
     if refusal_banner(ui, Tone::Error, &text, "boot-dismiss") {
         context.commands.send(BootCommand::DismissRefusal);
+    }
+}
+
+/// The question before a parameter that opens a root shell at boot or
+/// switches a security layer off.
+fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) {
+    let title = i18n::text_with(ctx, "boot-risky-title", &[("value", value)]);
+    let body = i18n::text(ctx, "boot-risky-body");
+    let close = i18n::text(ctx, "dialog-close");
+    let cancel = i18n::text(ctx, "boot-risky-cancel");
+    let confirm = i18n::text(ctx, "boot-risky-confirm");
+    let texts = Question {
+        title: &title,
+        close: &close,
+        body: &body,
+        cancel: &cancel,
+        confirm: &confirm,
+        kind: ButtonKind::Danger,
+        width: DialogWidth::Small,
+    };
+
+    let asked = question(ctx, egui::Id::unique("toolbox_gui::boot::risky"), texts);
+
+    match (asked.confirmed, asked.done) {
+        (true, _) => send(
+            context,
+            Edit::AddParameter {
+                text: value.to_owned(),
+                confirmed: true,
+            },
+        ),
+        (false, true) => context.commands.send(BootCommand::DismissRefusal),
+        (false, false) => {}
     }
 }
 

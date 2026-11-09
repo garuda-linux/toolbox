@@ -6,7 +6,7 @@ use super::{ConfigFilePath, ConfigText};
 use crate::protocol::{DecodeError, decode};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "result", rename_all = "kebab-case")]
+#[serde(tag = "result", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum FetchAnswer {
     Text {
         /// The file the text is of: the path that was asked for, or where

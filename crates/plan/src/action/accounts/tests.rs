@@ -299,12 +299,12 @@ fn account_actions_refuse_bad_names_when_decoded() {
     .unwrap();
 }
 
+/// A secret travels on its own line, never inside the request.
 #[test]
-fn a_password_field_in_a_request_is_ignored() {
-    let action: RootAction =
-        serde_json::from_str(r#"{"kind":"set-password","user":"nico","password":"x"}"#).unwrap();
+fn a_password_field_in_a_request_is_refused() {
+    let line = r#"{"kind":"set-password","user":"nico","password":"x"}"#;
 
-    assert_eq!(action.secret(), None);
+    serde_json::from_str::<RootAction>(line).unwrap_err();
 }
 
 #[test]

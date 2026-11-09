@@ -29,6 +29,7 @@ impl fmt::Display for LoaderTimeout {
 
 /// `None` leaves systemd-boot's own default.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct LoaderSettings {
     pub timeout: Option<LoaderTimeout>,
     pub default: Option<LoaderDefault>,

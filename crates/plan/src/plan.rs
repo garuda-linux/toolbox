@@ -27,6 +27,7 @@ impl fmt::Display for StepId {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Step<A> {
     pub id: StepId,
     pub action: A,

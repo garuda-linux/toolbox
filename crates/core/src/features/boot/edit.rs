@@ -30,7 +30,11 @@ pub enum Edit {
     },
     Submenus(bool),
     OsProber(bool),
-    AddParameter(String),
+    /// `confirmed` once the user said yes to a risky one.
+    AddParameter {
+        text: String,
+        confirmed: bool,
+    },
     RemoveParameter(String),
     Flag(Flag, bool),
     /// A picture's full path, `""` for none.
@@ -45,6 +49,8 @@ pub enum EditProblem {
     Refused(Refusal),
     Invalid(InvalidName),
     OutOfRange,
+    /// One of `RISKY_PARAMETERS` that the user has not confirmed yet.
+    NeedsConfirm,
 }
 
 impl Edit {
@@ -53,7 +59,7 @@ impl Edit {
     pub fn value(&self) -> String {
         match self {
             Self::Default(text)
-            | Self::AddParameter(text)
+            | Self::AddParameter { text, confirmed: _ }
             | Self::RemoveParameter(text)
             | Self::Background(text)
             | Self::Theme(text)
@@ -74,6 +80,7 @@ impl EditProblem {
             Self::Refused(refusal) => refusal.as_str(),
             Self::Invalid(error) => rule(error),
             Self::OutOfRange => "invalid",
+            Self::NeedsConfirm => "needs-confirm",
         }
     }
 }
@@ -103,7 +110,15 @@ pub fn edit(change: Edit, changes: &mut ChangeSet, snapshot: &Snapshot) -> Resul
         }
         Edit::Submenus(on) => set(GrubSetting::Submenus(on), changes, snapshot),
         Edit::OsProber(on) => set(GrubSetting::OsProber(on), changes, snapshot),
-        Edit::AddParameter(text) => add_parameter(KernelParameter::new(text)?, changes, snapshot),
+        Edit::AddParameter { text, confirmed } => {
+            let parameter = KernelParameter::new(text)?;
+
+            if parameter.is_risky() && !confirmed {
+                return Err(EditProblem::NeedsConfirm);
+            }
+
+            add_parameter(parameter, changes, snapshot)
+        }
         Edit::RemoveParameter(text) => remove_parameter(&text, changes, snapshot),
         Edit::Flag(flag, on) => set_flag(flag, Toggle::from_on(on), changes, snapshot),
         Edit::Background(path) => {

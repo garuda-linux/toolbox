@@ -264,3 +264,38 @@ fn what_is_written_reads_back() {
         Some(german)
     );
 }
+
+/// `locale-gen` splits a line on ASCII blanks only. Changed: the first
+/// enabled line of the Lima file with a no-break space for its blank.
+#[test]
+fn a_no_break_space_does_not_part_a_line() {
+    let line = LOCALE_GEN
+        .lines()
+        .find(|line| LocaleEntry::parse(line).is_some())
+        .unwrap();
+
+    let joined = line.replacen(' ', "\u{a0}", 1);
+
+    assert_eq!(LocaleEntry::parse(&joined), None);
+    assert_eq!(
+        LocaleEntry::parse(&line.replacen(' ', "\t", 1)),
+        LocaleEntry::parse(line)
+    );
+}
+
+/// Changed: the enabled line of the Lima file with a comment after it,
+/// and with blanks before it. `locale-gen` (glibc 2.44) generates nothing
+/// for the first and drops the blanks of the second.
+#[test]
+fn a_trailing_comment_spoils_the_line_and_leading_blanks_do_not() {
+    let line = LOCALE_GEN
+        .lines()
+        .find(|line| LocaleEntry::parse(line).is_some())
+        .unwrap();
+
+    assert_eq!(LocaleEntry::parse(&format!("{line} # mine")), None);
+    assert_eq!(
+        LocaleEntry::parse(&format!(" \t{line}")),
+        LocaleEntry::parse(line)
+    );
+}

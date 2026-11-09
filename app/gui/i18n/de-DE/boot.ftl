@@ -15,6 +15,11 @@ boot-vm = Du nutzt eine virtuelle Maschine. Der Splash-Screen funktioniert dort 
 
 # Why an edit was not queued.
 boot-refused-unavailable = Auf diesem System fehlt /etc/default/grub, daher gibt es nichts zu ändern.
+# The question before a kernel parameter such as init=/bin/sh. $value is the parameter.
+boot-risky-title = { $value } hinzufügen?
+boot-risky-body = Dieser Parameter öffnet beim Start eine root-Shell oder schaltet eine Schutzschicht ab. Jeder am Computer könnte ihn dann übernehmen. Füge ihn nur hinzu, wenn du weißt, wofür du ihn brauchst.
+boot-risky-confirm = Parameter hinzufügen
+boot-risky-cancel = Abbrechen
 boot-refused-custom-command-line = Die Kernel-Befehlszeile lässt sich hier nicht ändern. Bearbeite /etc/default/grub auf der Seite „Konfigurationsdateien“.
 boot-refused-too-many-parameters = Die Kernel-Befehlszeile ist voll.
 boot-refused-unknown-theme = Kein installiertes Plymouth-Theme: { $value }

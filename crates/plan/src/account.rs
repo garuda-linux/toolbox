@@ -101,6 +101,7 @@ pub enum InvalidNewUser {
 pub struct NewUser(NewUserParts);
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct NewUserParts {
     pub name: UserName,
     pub full_name: FullName,
@@ -166,6 +167,7 @@ pub enum HomeFolder {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct AccountLock {
     pub user: UserName,
     pub locked: bool,
@@ -173,6 +175,7 @@ pub struct AccountLock {
 
 /// Names and flags only, never a hash.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ShadowLocks {
     pub locks: Vec<AccountLock>,
 }

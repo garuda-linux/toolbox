@@ -26,6 +26,7 @@ const BUILTIN: [&str; 3] = ["C", "POSIX", "C.UTF-8"];
 
 /// One line of `locale.gen`, also one of `/usr/share/i18n/SUPPORTED`.
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct LocaleEntry {
     pub locale: LocaleName,
     pub charset: Charset,
@@ -49,9 +50,12 @@ struct Parts<'name> {
 
 impl LocaleEntry {
     /// The entry of a line that holds exactly a locale and a character
-    /// set, as `locale-gen` reads it.
+    /// set, as `locale-gen` reads it. glibc 2.44's script reads each line
+    /// with `read -r locale charset`: ASCII blanks part it, and anything
+    /// after the charset, a trailing comment too, ends up in the charset,
+    /// so `localedef` fails and that locale is never generated.
     pub fn parse(line: &str) -> Option<Self> {
-        let mut words = line.split_whitespace();
+        let mut words = line.split([' ', '\t']).filter(|word| !word.is_empty());
         let (Some(locale), Some(charset), None) = (words.next(), words.next(), words.next()) else {
             return None;
         };

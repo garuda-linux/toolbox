@@ -119,7 +119,17 @@ parameters with their own switch below show on the switches instead.
 A parameter is one word of letters, digits and `_ - . , : = / @ + % ! ~ ^ [ ]`.
 Blanks, quotes, backslashes and dollar signs are refused, and the page says
 why above the settings. This keeps a typing mistake from breaking the file,
-which the system reads as a script.
+which the system reads as a script. A parameter cannot start with `-` or
+`=`, and the whole line holds at most 1024 characters.
+
+Some parameters open a root shell at boot or switch a security layer off:
+`init=`, `rd.break`, `systemd.unit=`, `systemd.debug-shell`, `lockdown=`,
+`module.sig_enforce`, `selinux=0` and `apparmor=0`. Before one of them is
+queued, the page asks **Add … ?**. On the command line it needs `--force`:
+
+```console
+$ garuda-toolbox boot param add systemd.unit=rescue.target --force
+```
 
 A command line that already holds such characters (for example
 `acpi_osi="Windows 2015"`) is shown as it is and not changed here. Edit

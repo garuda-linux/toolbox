@@ -168,7 +168,12 @@ impl<'de> Deserialize<'de> for UserId {
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "kind", content = "path", rename_all = "kebab-case")]
+#[serde(
+    tag = "kind",
+    content = "path",
+    rename_all = "kebab-case",
+    deny_unknown_fields
+)]
 pub enum NewHome {
     /// useradd picks the path (`/home/<name>`) and makes the folder from
     /// `/etc/skel`.
@@ -180,6 +185,7 @@ pub enum NewHome {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct HomeChange {
     pub home: HomeDirectory,
     /// Without it only the account's entry changes.

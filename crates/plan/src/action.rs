@@ -35,7 +35,7 @@ use crate::{
 
 /// Work that needs root. Runs in `garuda-toolbox-helper`.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "kind", rename_all = "kebab-case")]
+#[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum RootAction {
     InstallPackages {
         packages: TargetList<PackageName>,

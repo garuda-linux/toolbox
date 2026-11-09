@@ -1,4 +1,5 @@
 mod protected;
+mod unknown_fields;
 
 use super::{
     Answer, DecodeError, Event, Failure, MAX_INPUT_BYTES, MAX_LINE_BYTES, MAX_STEPS, Mode, Outcome,

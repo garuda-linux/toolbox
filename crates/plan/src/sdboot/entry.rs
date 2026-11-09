@@ -19,6 +19,7 @@ pub enum EntryKind {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct LoaderEntry {
     pub id: LoaderEntryId,
     pub title: String,

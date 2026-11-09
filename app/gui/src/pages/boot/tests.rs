@@ -1,3 +1,5 @@
+mod risky;
+
 use std::sync::Arc;
 
 use egui::accesskit::Role;
@@ -159,7 +161,10 @@ fn parameters_are_added_and_removed() {
         sent(&harness),
         [
             edit(Edit::RemoveParameter("loglevel=3".to_owned())),
-            edit(Edit::AddParameter("nowatchdog".to_owned())),
+            edit(Edit::AddParameter {
+                text: "nowatchdog".to_owned(),
+                confirmed: false,
+            }),
         ]
     );
 }

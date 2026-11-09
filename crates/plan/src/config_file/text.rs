@@ -41,6 +41,7 @@ validated_string!(ConfigText, InvalidConfigText, redacted);
 /// a second writer, not against an attacker: whoever can write the file
 /// as root needs no collision.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Fingerprint {
     bytes: u64,
     hash: u64,
@@ -57,6 +58,7 @@ pub struct ConfigWrite {
 }
 
 #[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
 struct RawConfigWrite {
     path: ConfigFilePath,
     content: ConfigText,

@@ -223,6 +223,18 @@
     "boot-refused-unavailable": {
       "string": "Auf diesem System fehlt /etc/default/grub, daher gibt es nichts zu ändern."
     },
+    "boot-risky-title": {
+      "string": "{value} hinzufügen?"
+    },
+    "boot-risky-body": {
+      "string": "Dieser Parameter öffnet beim Start eine root-Shell oder schaltet eine Schutzschicht ab. Jeder am Computer könnte ihn dann übernehmen. Füge ihn nur hinzu, wenn du weißt, wofür du ihn brauchst."
+    },
+    "boot-risky-confirm": {
+      "string": "Parameter hinzufügen"
+    },
+    "boot-risky-cancel": {
+      "string": "Abbrechen"
+    },
     "boot-refused-custom-command-line": {
       "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Bearbeite /etc/default/grub auf der Seite „Konfigurationsdateien“."
     },

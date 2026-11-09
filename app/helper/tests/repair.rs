@@ -147,17 +147,21 @@ fn a_layout_of_the_caller_s_choice_does_not_exist() -> TestResult {
     Ok(())
 }
 
-/// The request decodes, but its own mapper and mount point are not read:
-/// the run is the same as without them.
+/// A request that names its own mapper or mount point is refused whole:
+/// the helper picks both itself.
 #[test]
-fn a_mapper_or_mount_point_of_the_caller_s_choice_changes_nothing() -> TestResult {
+fn a_mapper_or_mount_point_of_the_caller_s_choice_is_refused() -> TestResult {
     let chosen = r#"{"kind":"repair-boot","system":{"root":{"kind":"locked","partition":"/dev/sda2","mapper":"../x"},"layout":"plain","mount":"/"},"work":{"kind":"regenerate-config"}}"#;
     let plain = r#"{"kind":"repair-boot","system":{"root":{"kind":"locked","partition":"/dev/sda2"},"layout":"plain"},"work":{"kind":"regenerate-config"}}"#;
 
     let with = helper(&["apply"], &request_line("dry-run", chosen))?;
     let without = helper(&["apply"], &request_line("dry-run", plain))?;
 
-    assert!(with.status.success(), "{}", with.stderr);
-    assert_eq!(events(&with)?, events(&without)?);
+    assert!(
+        !with.status.success(),
+        "a field the request has not was taken"
+    );
+    assert!(without.status.success(), "{}", without.stderr);
+    assert_ne!(events(&with)?, events(&without)?);
     Ok(())
 }

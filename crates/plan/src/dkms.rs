@@ -8,6 +8,7 @@ use crate::procedure::{Command, Program};
 use crate::{DkmsModuleName, DkmsVersion, KernelRelease};
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct DkmsBuild {
     pub module: DkmsModuleName,
     pub version: DkmsVersion,

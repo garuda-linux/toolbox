@@ -68,7 +68,9 @@ one. The rules with a reason the code does not show:
   tree root trusts, such as `/etc/systemd/system`.
 - GRUB values (`MenuEntryId`, `GrubPicture`, `GrubThemeFile`) have no `"`,
   `\`, `$` or backtick and are escaped by `toolbox_plan::quote`, because
-  `grub-mkconfig` sources `/etc/default/grub` as root.
+  `grub-mkconfig` sources `/etc/default/grub` as root. `GrubPicture` and
+  `GrubThemeFile` take only ASCII letters, digits and `_ . - / + @ , = :`,
+  because `/etc/grub.d/00_header` writes them unquoted into `grub.cfg`.
 
 The helper repeats what only the wire shows: `DeleteUser`, locking and
 `SetHomeFolder` refuse a user id, `DeleteGroup` a group id outside 1000 to

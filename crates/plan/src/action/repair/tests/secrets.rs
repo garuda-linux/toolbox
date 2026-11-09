@@ -89,7 +89,7 @@ fn a_repair_of_an_open_root_takes_no_secret() {
 }
 
 #[test]
-fn a_passphrase_field_in_the_request_is_ignored() {
+fn a_passphrase_field_in_the_request_is_refused() {
     let line = serde_json::json!({
         "kind": "repair-boot",
         "system": {
@@ -100,9 +100,7 @@ fn a_passphrase_field_in_the_request_is_ignored() {
         "passphrase": "smuggled",
     });
 
-    let decoded: RootAction = serde_json::from_value(line).unwrap();
-
-    assert_eq!(decoded.secret(), None);
+    serde_json::from_value::<RootAction>(line).unwrap_err();
 }
 
 #[test]

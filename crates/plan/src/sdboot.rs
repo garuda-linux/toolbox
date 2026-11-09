@@ -27,6 +27,7 @@ pub const ENTRIES_FOLDER: &str = "loader/entries";
 pub const MAX_ENTRIES: usize = 256;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct SdBootMenu {
     pub settings: LoaderSettings,
     pub entries: Vec<LoaderEntry>,

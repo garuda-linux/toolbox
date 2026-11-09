@@ -12,6 +12,11 @@ boot-vm = You are running in a virtual machine. The boot splash works there in a
 
 # Why an edit was not queued.
 boot-refused-unavailable = This system has no /etc/default/grub, so there is nothing to change.
+# The question before a kernel parameter such as init=/bin/sh. $value is the parameter.
+boot-risky-title = Add { $value }?
+boot-risky-body = This parameter opens a root shell at boot or switches a security layer off. Anyone at the computer could then take it over. Add it only if you know why you need it.
+boot-risky-confirm = Add the parameter
+boot-risky-cancel = Cancel
 boot-refused-custom-command-line = The kernel command line is not changed here. Edit /etc/default/grub on the Config Files page.
 boot-refused-too-many-parameters = The kernel command line is full.
 boot-refused-unknown-theme = This is not an installed Plymouth theme: { $value }

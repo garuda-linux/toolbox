@@ -4,10 +4,13 @@
 .SH NAME
 garuda\-toolbox\-boot\-param\-add \- Add a kernel parameter
 .SH SYNOPSIS
-\fBgaruda\-toolbox boot param add\fR [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIPARAMETER\fR> 
+\fBgaruda\-toolbox boot param add\fR [\fB\-\-force\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIPARAMETER\fR> 
 .SH DESCRIPTION
 Add a kernel parameter
 .SH OPTIONS
+.TP
+\fB\-\-force\fR
+Add one that opens a root shell at boot or switches a security layer off, such as `init=` or `selinux=0`. Removing needs none
 .TP
 \fB\-y\fR, \fB\-\-yes\fR
 Do not ask, carry the change out. Needed without a terminal

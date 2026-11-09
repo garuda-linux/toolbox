@@ -83,7 +83,10 @@ pub fn build(
         Queueable::Parameter(args, wish) => {
             let parameter = args.parameter.to_string();
             let edit = match wish {
-                Toggle::On => Edit::AddParameter(parameter),
+                Toggle::On => Edit::AddParameter {
+                    text: parameter,
+                    confirmed: args.force,
+                },
                 Toggle::Off => Edit::RemoveParameter(parameter),
             };
 
