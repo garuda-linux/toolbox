@@ -25,7 +25,7 @@ use toolbox_gui::network::{DryRunActions, DryRunAddress, NetworkSetup};
 use toolbox_gui::packages::PackagesSetup;
 use toolbox_gui::pictures::{FALLBACK_THEME, Pictures, SystemPictures};
 use toolbox_gui::power::{DryRunPower, Logind, Power};
-use toolbox_gui::queue::Queue;
+use toolbox_gui::queue::{Queue, Restored};
 use toolbox_gui::reader::ReaderHandle;
 use toolbox_gui::share::ShareLink;
 use toolbox_gui::users::UsersSetup;
@@ -263,7 +263,7 @@ pub fn news_reader(handle: &Handle, ctx: &egui::Context, dry_run: bool) -> Reade
 /// The queue restored from `file`, written there after every change. A
 /// failed write wakes the window, which tells of it.
 pub fn kept_queue(
-    changes: ChangeSet,
+    (changes, restored): (ChangeSet, Restored),
     file: PathBuf,
     handle: &Handle,
     ctx: &egui::Context,
@@ -273,5 +273,6 @@ pub fn kept_queue(
         file,
         handle,
         toolbox_gui::waking::repaint(ctx.clone()),
+        restored,
     )
 }

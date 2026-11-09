@@ -33,6 +33,7 @@ impl App {
             }
             HomeCommand::StartInstaller => self.start_installer(),
             HomeCommand::SetupFinished => self.state.setup_finished = true,
+            HomeCommand::DismissProblem => self.home_problem = None,
             HomeCommand::Refresh => {
                 self.status.refresh();
                 self.facts.refresh();

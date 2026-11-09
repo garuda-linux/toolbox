@@ -36,6 +36,13 @@ keeps the queue.
 Waiting changes stay when you quit the app. They are there again on the
 next start.
 
+On that start, **Apply** waits until every page has checked the restored
+changes against the system. A queued lock, account removal or group
+change waits for the lock state of the accounts, a queued AUR build for
+the package list of the AUR. The app reads both by itself. While it
+waits, **Apply** is greyed out and its tooltip says what it waits for. If
+that part cannot be read, remove the change from the list.
+
 ## Apply
 
 1. Click **Apply** on the pill, or **Apply 3 changes** at the end of the

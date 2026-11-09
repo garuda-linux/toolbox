@@ -5,6 +5,7 @@
 
 mod add;
 mod build;
+mod ready;
 mod said;
 mod show;
 mod store;
@@ -99,6 +100,13 @@ pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut dyn Write) ->
 /// The queue as the window would show it against `snapshot`, after every
 /// page's guard.
 pub fn restored(saved: &SavedChanges, snapshot: &Snapshot) -> ChangeSet {
+    let mut changes = restore(saved, snapshot);
+    Unchecked::all().recheck(&mut changes, snapshot);
+    changes
+}
+
+/// The queue `saved` against `snapshot`, before any page's guard.
+fn restore(saved: &SavedChanges, snapshot: &Snapshot) -> ChangeSet {
     let mut changes = ChangeSet::default();
     match domains::all() {
         Ok(domains) => {
@@ -109,7 +117,6 @@ pub fn restored(saved: &SavedChanges, snapshot: &Snapshot) -> ChangeSet {
         Err(error) => tracing::error!("the change domains are broken: {error}"),
     }
 
-    Unchecked::all().recheck(&mut changes, snapshot);
     changes
 }
 
@@ -301,7 +308,7 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> 
         catalogs,
         system,
         runtime,
-        aur: _,
+        aur,
     } = *context;
 
     if store.in_window() {
@@ -318,7 +325,11 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> 
         Err(problem) => return Failed::Store(problem).say(out),
     };
 
-    let changes = restored(&saved, system);
+    let changes = match ready::checked(&saved, system, &ready::SystemReads { aur }) {
+        Ok(changes) => changes,
+        Err(refusal) => return ready::refused(refusal, out),
+    };
+
     let (planned, owners) = planned(&changes);
     let ended = apply::carry_out_steps(
         planned.clone(),

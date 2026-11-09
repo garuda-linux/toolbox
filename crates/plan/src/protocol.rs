@@ -93,8 +93,8 @@ impl Request {
     pub fn parse(line: &str) -> Result<Self, RequestError> {
         let malformed = |error: DecodeError| RequestError::Malformed(error.to_string());
 
-        // Before the full decode: another version's request may hold
-        // actions unknown here, and the version is the reason to report.
+        // The version first: another version's actions may be unknown here.
+        // Decoding twice costs milliseconds, so a `RawValue` pass is not worth it.
         let Head { version } = decode(line).map_err(malformed)?;
 
         if version != PROTOCOL_VERSION {

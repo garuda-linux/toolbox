@@ -11,7 +11,8 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
 use toolbox_core::Snapshot;
-use toolbox_core::domains::InstalledPackages;
+use toolbox_core::domains::{InstalledPackages, SyncPackages};
+use toolbox_core::features::kernels::LinuxPackages;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::testing::PATIENCE;
 use toolbox_gui::{App, Setup, apply, snapshot};
@@ -35,9 +36,13 @@ pub type Reading = (
     Arc<AtomicUsize>,
 );
 
+/// With every part the guards of the package queue check against, so a
+/// restored queue may apply.
 fn installed(names: &[&str]) -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(packages(names)));
+    snapshot.insert(SyncPackages::default());
+    snapshot.insert(LinuxPackages::default());
     snapshot
 }
 
@@ -64,7 +69,7 @@ pub fn app_with(dry_run: bool) -> Reading {
         };
 
         let setup = Setup {
-            queue: Queue::in_memory(changes),
+            queue: Queue::restored_in_memory(changes),
             snapshot: Some(snapshot::spawn(
                 &handle,
                 toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
@@ -276,6 +281,30 @@ fn apply_waits_for_the_first_read() {
 
     harness.key_press_modifiers(Modifiers::COMMAND, Key::Enter);
     step_until(&mut harness, "the plan's end", shows("All changes applied"));
+}
+
+/// Fails closed: a read without the kernel packages leaves the kernels'
+/// guard waiting, so the restored packages never apply unchecked.
+#[test]
+fn apply_waits_while_a_guard_lacks_its_part() {
+    let (mut harness, _runtime, answer, _reads) = app();
+    let mut lacking = Snapshot::default();
+    lacking.insert(InstalledPackages(packages(&[])));
+    lacking.insert(SyncPackages::default());
+    answer.send((lacking, Vec::new())).unwrap();
+    first_read(&mut harness);
+    harness.run();
+
+    let apply = harness.get_by_label("Apply");
+    assert!(apply.accesskit_node().is_disabled());
+    assert_eq!(
+        apply.accesskit_node().description().as_deref(),
+        Some("Apply waits until the system has been read.")
+    );
+
+    harness.key_press_modifiers(Modifiers::COMMAND, Key::Enter);
+    harness.step();
+    assert!(harness.query_by_label("Console").is_none());
 }
 
 /// How far above the window's bottom the side panels end: the status

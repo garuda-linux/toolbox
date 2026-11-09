@@ -8,10 +8,10 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use egui::accesskit::Role;
 use egui_kittest::Harness;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
-use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User};
-use toolbox_core::{ChangeSet, Snapshot};
+use toolbox_core::domains::{AccountLocks, Accounts, AvailableShells, CurrentUser, Group, User};
+use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::users::UsersSetup;
 use toolbox_gui::{App, Setup, snapshot};
@@ -103,6 +103,21 @@ fn system() -> Snapshot {
 }
 
 pub fn users() -> Fixture {
+    let mut fixture = restored(ChangeSet::default());
+    let harness = fixture.harness();
+    harness
+        .get_by_role_and_label(Role::Tab, "Users and Groups")
+        .click();
+    step_until(harness, "the lock flags", |harness| {
+        harness.query_by_label("Locked").is_some()
+    });
+    settle(harness);
+    fixture
+}
+
+/// The app on its start page after the first read, with `changes` as the
+/// queue an earlier run left.
+fn restored(changes: ChangeSet) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let helper = Arc::new(Helper::default());
@@ -113,7 +128,7 @@ pub fn users() -> Fixture {
         App::new(
             cc,
             Setup {
-                queue: Queue::in_memory(ChangeSet::default()),
+                queue: Queue::restored_in_memory(changes),
                 snapshot: Some(snapshot::spawn(
                     &handle,
                     toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
@@ -129,19 +144,28 @@ pub fn users() -> Fixture {
     });
 
     first_read(&mut harness);
-    harness
-        .get_by_role_and_label(Role::Tab, "Users and Groups")
-        .click();
-    step_until(&mut harness, "the lock flags", |harness| {
-        harness.query_by_label("Locked").is_some()
-    });
-    settle(&mut harness);
 
     Fixture {
         harness,
         helper,
         _runtime: runtime,
     }
+}
+
+/// The window asks the root helper program for the flags a restored lock
+/// needs, also while the Users page is closed.
+#[test]
+fn a_restored_lock_reads_the_flags_before_apply() {
+    let mut changes = ChangeSet::default();
+    changes.want::<AccountLocks>(name("grace"), Toggle::On, &Snapshot::default());
+    let mut fixture = restored(changes);
+    let harness = fixture.harness();
+
+    step_until(harness, "Apply after the flags", |harness| {
+        !harness.get_by_label("Apply").accesskit_node().is_disabled()
+    });
+
+    assert_eq!(fixture.helper.0.load(Ordering::SeqCst), 1);
 }
 
 #[test]

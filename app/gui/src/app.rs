@@ -216,7 +216,8 @@ impl App {
             units: setup.units,
             unit_lists: Units::default(),
             restart_refused: crossbeam_channel::unbounded(),
-            home_problem: None,
+            home_problem: (setup.queue_lost > 0)
+                .then_some(HomeProblem::QueueLost(setup.queue_lost)),
             diagnostics: Diagnostics::new(setup.diagnostics),
             boot: Boot::new(setup.boot, cc.egui_ctx.clone()),
             network: Network::new(setup.network, cc.egui_ctx.clone()),
@@ -293,7 +294,7 @@ impl eframe::App for App {
         let _ui = tracing::trace_span!("app ui").entered();
         self.remember_page();
         let changes = self.queue.views();
-        let first_read = self.first_read();
+        let held = self.apply_held();
         let snapshot = self.current_snapshot();
         let context = PageContext {
             snapshot: &snapshot,
@@ -346,7 +347,7 @@ impl eframe::App for App {
             changes: &changes,
             changes_ui: &mut self.changes_ui,
             reading: &self.reading,
-            first_read,
+            held,
             toasts: &mut self.toasts,
         };
 

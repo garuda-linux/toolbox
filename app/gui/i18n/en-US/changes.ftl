@@ -28,6 +28,11 @@ changes-apply = Apply
 changes-keep = Keep them
 # Tag of a change whose last apply stopped before all its steps ended well.
 change-unfinished = Did not finish
+# Why Apply is disabled. A queue restored from an earlier run waits until
+# every page has checked it against the system.
+changes-wait-read = Apply waits until the system has been read.
+changes-wait-locks = Apply waits for the lock state of the accounts. The Users and groups page says when it cannot be read.
+changes-wait-aur = Apply waits for the package list of the AUR. The Packages page says when it cannot be read.
 
 # $name is what the change is about.
 

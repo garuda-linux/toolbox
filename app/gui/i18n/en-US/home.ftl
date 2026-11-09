@@ -164,3 +164,10 @@ home-news-arch = Arch
 home-news-manual = Manual step
 # $title is the post's title, as its site gives it.
 home-news-open = Open { $title }
+# Over Home when saved changes did not come back at start. $count is how many.
+home-queue-lost =
+    { $count ->
+        [one] One queued change could not be restored. The log file says why.
+       *[other] { $count } queued changes could not be restored. The log file says why.
+    }
+home-queue-lost-dismiss = Dismiss

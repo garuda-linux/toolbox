@@ -178,3 +178,32 @@ fn a_change_saved_without_an_outcome_is_untried() {
 
     assert_eq!(saved.changes[0].outcome, Outcome::Untried);
 }
+
+/// Another version may have changed the shape, the version is still the
+/// reason to report.
+#[test]
+fn a_file_of_another_shape_reports_its_version() {
+    let text = json!({ "version": SAVED_VERSION + 1, "queue": [] }).to_string();
+
+    assert_eq!(
+        SavedChanges::parse(&text),
+        Err(RestoreProblem::Version(SAVED_VERSION + 1))
+    );
+}
+
+#[test]
+fn a_saved_queue_parses_as_it_was_written() {
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(package("mpv"), Toggle::On, &Snapshot::default());
+    let text = serde_json::to_string(&changes.to_saved()).unwrap();
+
+    assert_eq!(SavedChanges::parse(&text), Ok(changes.to_saved()));
+}
+
+#[test]
+fn text_that_is_no_queue_is_unreadable() {
+    assert!(matches!(
+        SavedChanges::parse("{\"version\":"),
+        Err(RestoreProblem::Unreadable(_))
+    ));
+}

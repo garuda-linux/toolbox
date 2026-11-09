@@ -45,12 +45,11 @@ pub struct ChangesState {
     pub confirming: Option<UiCommand>,
 }
 
-/// What is queued, and whether Apply still waits for the first read of
-/// the system.
+/// What is queued, and the id of the text that says why Apply waits.
 #[derive(Clone, Copy, Debug)]
 pub struct Queued<'view> {
     pub changes: &'view [ChangeView],
-    pub first_read: bool,
+    pub held: Option<&'static str>,
 }
 
 /// In `band`, the room below the page, while the Console is closed.
@@ -97,7 +96,7 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     badge.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Label, true, &label));
 
     let review = review_button(ui, state);
-    let (apply, show) = apply_button(ui, queued.first_read, commands, removes);
+    let (apply, show) = apply_button(ui, queued.held, commands, removes);
     if show {
         state.open = true;
     }
@@ -115,7 +114,7 @@ fn overlays(
 ) {
     let Queued {
         changes: list,
-        first_read,
+        held,
     } = queued;
 
     // It rises from the pill's side while it fades in. Closed, it goes at
@@ -138,7 +137,7 @@ fn overlays(
             .fade_in(false)
             .show(ctx, |ui| {
                 ui.multiply_opacity(shown);
-                popover(ui, list, first_read, commands);
+                popover(ui, list, held, commands);
             });
     }
 
@@ -154,7 +153,7 @@ fn pill(
     state: &mut ChangesState,
     commands: &CommandSender,
 ) -> Rect {
-    let (count, first_read) = (queued.changes.len(), queued.first_read);
+    let (count, held) = (queued.changes.len(), queued.held);
     let removes = queued.changes.iter().any(ChangeView::removes);
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
@@ -171,7 +170,7 @@ fn pill(
             review_button(ui, state);
 
             // Open, the list carries the one Apply.
-            if !state.open && apply_button(ui, first_read, commands, removes).1 {
+            if !state.open && apply_button(ui, held, commands, removes).1 {
                 state.open = true;
             }
         });
@@ -212,18 +211,12 @@ fn review_button(ui: &mut Ui, state: &mut ChangesState) -> egui::Response {
 /// something, so a removal queued days ago is never applied unseen.
 fn apply_button(
     ui: &mut Ui,
-    first_read: bool,
+    held: Option<&'static str>,
     commands: &CommandSender,
     removes: bool,
 ) -> (egui::Response, bool) {
-    // Until then the pages' guards have not checked a restored queue.
     let text = i18n::text(ui.ctx(), "changes-apply");
-    let apply = ui
-        .add_enabled_ui(!first_read, |ui| {
-            pill_button(ui, &text, ButtonKind::Primary)
-        })
-        .inner;
-
+    let apply = apply_pill(ui, &text, held);
     if apply.clicked() && !removes {
         commands.send(UiCommand::Apply);
     }
@@ -232,7 +225,31 @@ fn apply_button(
     (apply, show)
 }
 
-fn popover(ui: &mut Ui, changes: &[ChangeView], first_read: bool, commands: &CommandSender) {
+/// A disabled button tells no screen reader why, so the reason goes into
+/// its description as well as its tooltip.
+fn apply_pill(ui: &mut Ui, text: &str, held: Option<&'static str>) -> egui::Response {
+    let apply = ui
+        .add_enabled_ui(held.is_none(), |ui| {
+            pill_button(ui, text, ButtonKind::Primary)
+        })
+        .inner;
+
+    let Some(id) = held else {
+        return apply;
+    };
+
+    let why = i18n::text(ui.ctx(), id).into_owned();
+    ui.ctx()
+        .accesskit_node_builder(apply.id, |node| node.set_description(why.as_str()));
+    apply.on_disabled_hover_text(why)
+}
+
+fn popover(
+    ui: &mut Ui,
+    changes: &[ChangeView],
+    held: Option<&'static str>,
+    commands: &CommandSender,
+) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     let count = changes.len().to_string();
@@ -281,13 +298,13 @@ fn popover(ui: &mut Ui, changes: &[ChangeView], first_read: bool, commands: &Com
             );
             ui.add_space(tokens.sizes.card_gap);
 
-            footer(ui, &count, first_read, commands);
+            footer(ui, &count, held, commands);
         },
     );
 }
 
 /// Remove all at the left, Apply at the right.
-fn footer(ui: &mut Ui, count: &str, first_read: bool, commands: &CommandSender) {
+fn footer(ui: &mut Ui, count: &str, held: Option<&'static str>, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     ui.horizontal(|ui| {
         let remove_all = i18n::text(&ctx, "changes-remove-all-ask");
@@ -296,12 +313,10 @@ fn footer(ui: &mut Ui, count: &str, first_read: bool, commands: &CommandSender) 
         }
 
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            ui.add_enabled_ui(!first_read, |ui| {
-                let apply = i18n::text_with(&ctx, "changes-apply-all", &[("count", count)]);
-                if pill_button(ui, &apply, ButtonKind::Primary).clicked() {
-                    commands.send(UiCommand::Apply);
-                }
-            });
+            let text = i18n::text_with(&ctx, "changes-apply-all", &[("count", count)]);
+            if apply_pill(ui, &text, held).clicked() {
+                commands.send(UiCommand::Apply);
+            }
         });
     });
 }

@@ -4111,6 +4111,15 @@
     "change-unfinished": {
       "string": "Nicht abgeschlossen"
     },
+    "changes-wait-read": {
+      "string": "Übernehmen wartet, bis das System gelesen ist."
+    },
+    "changes-wait-locks": {
+      "string": "Übernehmen wartet auf den Sperrstatus der Konten. Die Seite Benutzer und Gruppen meldet, wenn er nicht gelesen werden kann."
+    },
+    "changes-wait-aur": {
+      "string": "Übernehmen wartet auf die Paketliste des AUR. Die Seite Pakete meldet, wenn sie nicht gelesen werden kann."
+    },
     "change-account-lock": {
       "string": "Konto {name} sperren"
     },
@@ -5313,6 +5322,12 @@
     },
     "home-news-open": {
       "string": "{title} öffnen"
+    },
+    "home-queue-lost": {
+      "string": "{count, plural, one {Eine vorgemerkte Änderung konnte nicht wiederhergestellt werden. Die Logdatei nennt den Grund.} other {{count} vorgemerkte Änderungen konnten nicht wiederhergestellt werden. Die Logdatei nennt den Grund.}}"
+    },
+    "home-queue-lost-dismiss": {
+      "string": "Ausblenden"
     }
   },
   "kernels": {

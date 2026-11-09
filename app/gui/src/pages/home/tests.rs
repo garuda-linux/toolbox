@@ -1,3 +1,5 @@
+mod lost;
+
 use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 

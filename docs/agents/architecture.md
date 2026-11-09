@@ -222,10 +222,16 @@ instead. The `selftest` feature of `toolbox-gui` turns on the one of
   `features::Unchecked` runs each guard of `features::GUARDS` once over it,
   as soon as the snapshot holds the part the guard needs. A page that
   queues changes adds its guard, the same function the page calls.
+- A guard that waits fails closed: `Queue::plan` refuses with
+  `Refusal::GuardsWaiting` while `Unchecked::holding` names a guard with
+  a queued change of one of its `Guard::domains`. Apply stays disabled
+  and says why (`changes-wait-*`).
 - No probe reads `AccountLockFlags` or the AUR names. The app adds them
   to every snapshot after the probe (`combine` in
-  `app/gui/src/app/services.rs`), so a guard that needs them waits for
-  the Users or Packages page's read.
+  `app/gui/src/app/services.rs`) and asks the Users or Packages read
+  itself once a held guard waits for them (`read_held_parts`).
+  `queue apply` reads them the same way (`crates/commands/src/queue/ready.rs`)
+  and exits 5 when a guard still waits.
 
 ### Stages
 

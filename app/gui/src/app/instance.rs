@@ -73,10 +73,15 @@ impl App {
     }
 
     /// The window closes: later starts may still arrive, but nothing
-    /// raises it any more.
+    /// raises it any more. The queue is written here, as the runtime
+    /// stops its writer task soon after.
     pub(super) fn leave(&self) {
         if let Some(arrivals) = &self.arrivals {
             arrivals.close();
+        }
+
+        if let Err(failure) = self.queue.flush() {
+            tracing::warn!("{failure}");
         }
     }
 }

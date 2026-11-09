@@ -5,13 +5,17 @@
 #[cfg(test)]
 mod tests;
 
+use std::io::Write as _;
 use std::path::PathBuf;
 
 use tokio::runtime::Handle;
-use toolbox_core::{SAVED_VERSION, SavedChanges, Snapshot, domains};
+use toolbox_core::{ChangeSet, RestoreProblem, SAVED_VERSION, SavedChanges, Snapshot, domains};
 use toolbox_instance::bus::queue::{Refusal, Window};
 use toolbox_services::queue::edit::QueueEdit;
-use toolbox_services::queue::{read, store};
+use toolbox_services::queue::{Restored, keep_aside, read, store};
+
+use super::said::changes;
+use crate::paint;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Problem {
@@ -51,22 +55,40 @@ impl Store for File {
     /// Restored against no system, so the file's every valid change
     /// comes back. A broken file is an empty queue, as for the window.
     fn saved(&self) -> Result<SavedChanges, Problem> {
-        Ok(read(&self.path, &Snapshot::default()).to_saved())
+        Ok(self.restored().0.to_saved())
     }
 
     fn edit(&self, edit: &QueueEdit) -> Result<(), Problem> {
+        let file = |error: std::io::Error| Problem::File(error.to_string());
         let domains = domains::all().map_err(|error| Problem::File(error.to_string()))?;
-        let mut changes = read(&self.path, &Snapshot::default());
+        let (mut changes, restored) = self.restored();
 
         for problem in edit.apply(&mut changes, &domains, &Snapshot::default()) {
             tracing::warn!("dropped a change for the queue: {problem}");
         }
 
         if let Some(folder) = self.path.parent() {
-            std::fs::create_dir_all(folder).map_err(|error| Problem::File(error.to_string()))?;
+            std::fs::create_dir_all(folder).map_err(file)?;
         }
 
-        store(&self.path, &changes.to_saved()).map_err(|error| Problem::File(error.to_string()))
+        if restored == Restored::Lossy {
+            keep_aside(&self.path).map_err(file)?;
+        }
+
+        store(&self.path, &changes.to_saved()).map_err(file)
+    }
+}
+
+impl File {
+    /// The file's queue. What could not be restored is told in one
+    /// `warning:` line, as the next write would lose it unseen.
+    fn restored(&self) -> (ChangeSet, Restored) {
+        let (changes, problems) = read(&self.path, &Snapshot::default());
+        if let Some(line) = lost(&problems) {
+            writeln!(std::io::stderr(), "{}", paint().warning(&line)).ok();
+        }
+
+        (changes, Restored::of(&problems))
     }
 }
 
@@ -116,4 +138,26 @@ pub fn open(runtime: &Handle, path: PathBuf) -> Result<Box<dyn Store>, Problem> 
             Err(Problem::Window(Refusal::NoAnswer))
         }
     }
+}
+
+/// The warning for `problems`, `None` when nothing was lost.
+fn lost(problems: &[RestoreProblem]) -> Option<String> {
+    let first = problems.first()?;
+    let line = match first {
+        RestoreProblem::Version(_) | RestoreProblem::Unreadable(_) => {
+            format!("the queued changes could not be restored: {first}")
+        }
+        RestoreProblem::UnknownDomain(_)
+        | RestoreProblem::Invalid {
+            domain: _,
+            reason: _,
+        } => format!(
+            "{} could not be restored, the log says why",
+            changes(problems.len())
+        ),
+    };
+
+    Some(format!(
+        "{line}. The old queue is kept in changes.json.bak once it changes"
+    ))
 }

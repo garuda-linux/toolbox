@@ -173,10 +173,13 @@ impl App {
     }
 
     /// Opens the Console, so the password dialog and the output are seen.
-    /// Waits for the first read, so the pages' guards checked a restored
-    /// queue before it runs. Returns whether the run started.
+    /// Waits until every page's guard checked a restored queue, so it never
+    /// runs what a page refuses. Returns whether the run started.
     fn apply_queue(&mut self) -> bool {
-        let plan = self.queue.plan();
+        let Ok(plan) = self.queue.plan() else {
+            return false;
+        };
+
         if plan.is_empty() || self.first_read() || self.console.running() {
             return false;
         }

@@ -4124,6 +4124,16 @@
       "string": "Did not finish",
       "developer_comment": "Tag of a change whose last apply stopped before all its steps ended well."
     },
+    "changes-wait-read": {
+      "string": "Apply waits until the system has been read.",
+      "developer_comment": "Why Apply is disabled. A queue restored from an earlier run waits until\nevery page has checked it against the system."
+    },
+    "changes-wait-locks": {
+      "string": "Apply waits for the lock state of the accounts. The Users and groups page says when it cannot be read."
+    },
+    "changes-wait-aur": {
+      "string": "Apply waits for the package list of the AUR. The Packages page says when it cannot be read."
+    },
     "change-account-lock": {
       "string": "Lock the account {name}"
     },
@@ -5368,6 +5378,13 @@
     "home-news-open": {
       "string": "Open {title}",
       "developer_comment": "$title is the post's title, as its site gives it."
+    },
+    "home-queue-lost": {
+      "string": "{count, plural, one {One queued change could not be restored. The log file says why.} other {{count} queued changes could not be restored. The log file says why.}}",
+      "developer_comment": "Over Home when saved changes did not come back at start. $count is how many."
+    },
+    "home-queue-lost-dismiss": {
+      "string": "Dismiss"
     }
   },
   "kernels": {

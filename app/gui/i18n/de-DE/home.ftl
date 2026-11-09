@@ -164,3 +164,10 @@ home-news-arch = Arch
 home-news-manual = Manueller Eingriff
 # $title is the post's title, as its site gives it.
 home-news-open = { $title } öffnen
+# Over Home when saved changes did not come back at start. $count is how many.
+home-queue-lost =
+    { $count ->
+        [one] Eine vorgemerkte Änderung konnte nicht wiederhergestellt werden. Die Logdatei nennt den Grund.
+       *[other] { $count } vorgemerkte Änderungen konnten nicht wiederhergestellt werden. Die Logdatei nennt den Grund.
+    }
+home-queue-lost-dismiss = Ausblenden

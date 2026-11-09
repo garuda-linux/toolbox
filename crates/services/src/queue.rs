@@ -4,23 +4,22 @@
 mod answer;
 mod applying;
 pub mod edit;
+mod file;
 #[cfg(test)]
 mod tests;
 
-use std::io::ErrorKind;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
-use crossbeam_channel::Receiver;
 use tokio::runtime::Handle;
-use tokio::sync::watch;
-use toolbox_config::write_atomic;
-use toolbox_core::features::Unchecked;
-use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, SavedChanges, Snapshot, domains};
+use toolbox_core::features::{Refusal, Unchecked};
+use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, Snapshot};
 use toolbox_plan::{Plan, PlannedAction, StepId};
 
 use self::applying::Applying;
 use self::edit::QueueEdit;
-use crate::waking::{self, Wake};
+use self::file::Writer;
+pub use self::file::{Restored, keep_aside, read, store};
+use crate::waking::Wake;
 
 /// The queue file was not written. The queue stays in memory, so only a
 /// restart loses it.
@@ -35,11 +34,9 @@ pub struct NotKept {
 #[derive(Debug)]
 pub struct Queue {
     changes: ChangeSet,
-    /// The newest state for the writer task. `None` keeps the queue in
-    /// memory, as tests do.
-    writer: Option<watch::Sender<SavedChanges>>,
-    /// The writer task's failed writes, for the window to tell of.
-    not_kept: Option<Receiver<NotKept>>,
+    /// The task that writes the file. `None` keeps the queue in memory,
+    /// as tests do.
+    writer: Option<Writer>,
     /// The pages' guards the queue has not met yet. The queue restored
     /// from `changes.json` came before the first snapshot, so each guard
     /// runs once, with the first snapshot that holds what it checks.
@@ -51,58 +48,63 @@ pub struct Queue {
 }
 
 impl Queue {
-    /// A queue that is never written, for tests.
+    /// A queue that is never written, for tests: changes the user queued
+    /// in this session, which met every guard when they were queued.
     pub fn in_memory(changes: ChangeSet) -> Self {
         Self {
-            unchecked: unchecked(&changes),
+            unchecked: Unchecked::default(),
             changes,
             writer: None,
-            not_kept: None,
             revision: 0,
             applying: Applying::None,
+        }
+    }
+
+    /// [`Queue::in_memory`] as a restored queue, whose guards still wait.
+    pub fn restored_in_memory(changes: ChangeSet) -> Self {
+        Self {
+            unchecked: unchecked(&changes),
+            ..Self::in_memory(changes)
         }
     }
 
     /// A queue written to `path` after every change. One task writes, so
     /// writes keep their order, and a burst of changes is written once.
     /// A failed write wakes the window through `wake`.
-    pub fn with_file(changes: ChangeSet, path: PathBuf, runtime: &Handle, wake: Wake) -> Self {
-        let (writer, mut newest) = watch::channel(changes.to_saved());
-        newest.mark_unchanged();
-        let (failed, not_kept) = waking::channel(wake);
-
-        drop(runtime.spawn(async move {
-            while newest.changed().await.is_ok() {
-                let saved = newest.borrow_and_update().clone();
-                let path = path.clone();
-                match tokio::task::spawn_blocking(move || write(path, &saved)).await {
-                    Ok(Ok(())) => {}
-                    Ok(Err(failure)) => {
-                        tracing::warn!("{failure}");
-                        failed.send(failure);
-                    }
-                    Err(_stopped) => {
-                        tracing::warn!("the queue writer stopped");
-                        return;
-                    }
-                }
-            }
-        }));
+    pub fn with_file(
+        changes: ChangeSet,
+        path: PathBuf,
+        runtime: &Handle,
+        wake: Wake,
+        restored: Restored,
+    ) -> Self {
+        let writer = Writer::spawn(changes.to_saved(), path, runtime, wake, restored);
 
         Self {
             unchecked: unchecked(&changes),
             changes,
             writer: Some(writer),
-            not_kept: Some(not_kept),
             revision: 0,
             applying: Applying::None,
         }
     }
 
     /// The newest failed write since the last call, so the window tells
-    /// of a burst of failures once.
-    pub fn not_kept(&self) -> Option<NotKept> {
-        self.not_kept.as_ref()?.try_iter().last()
+    /// of a burst of failures once. A writer task that stopped is started
+    /// once more first.
+    pub fn not_kept(&mut self) -> Option<NotKept> {
+        self.writer.as_mut()?.failure()
+    }
+
+    /// Writes the queue on the calling thread, for the window's close.
+    ///
+    /// # Errors
+    ///
+    /// [`NotKept`] when the file cannot be written.
+    pub fn flush(&self) -> Result<(), NotKept> {
+        self.writer
+            .as_ref()
+            .map_or(Ok(()), |writer| writer.flush(&self.changes.to_saved()))
     }
 
     /// Drops what `snapshot` shows the system already fulfils (an apply
@@ -170,10 +172,28 @@ impl Queue {
         self.save();
     }
 
+    /// # Errors
+    ///
+    /// While a page's guard has not checked a restored change yet.
+    pub fn ready(&self) -> Result<(), Refusal> {
+        self.unchecked.ready(&self.changes)
+    }
+
+    /// The guards that hold a restored change back until the snapshot
+    /// holds their part, so the window asks for the parts a page reads.
+    pub fn holding(&self) -> impl Iterator<Item = &'static str> + '_ {
+        self.unchecked.holding(&self.changes)
+    }
+
     /// The steps that carry out the queue, in the planner's order.
-    #[must_use = "the plan does nothing until applied"]
-    pub fn plan(&self) -> Plan {
-        toolbox_core::plan(&self.changes)
+    ///
+    /// # Errors
+    ///
+    /// While a page's guard has not checked a restored change yet: the
+    /// plan could run what that page refuses.
+    pub fn plan(&self) -> Result<Plan, Refusal> {
+        self.ready()?;
+        Ok(toolbox_core::plan(&self.changes))
     }
 
     /// Apply sent `plan`, made of this queue. A plan that is not this
@@ -235,7 +255,7 @@ impl Queue {
     fn save(&mut self) {
         self.revision = self.revision.wrapping_add(1);
         if let Some(writer) = &self.writer {
-            writer.send_replace(self.changes.to_saved());
+            writer.send(self.changes.to_saved());
         }
     }
 }
@@ -247,63 +267,4 @@ fn unchecked(changes: &ChangeSet) -> Unchecked {
     } else {
         Unchecked::all()
     }
-}
-
-/// The queue saved at `path`, compared with `snapshot`. A missing or
-/// broken file is an empty queue: a lost queue is annoying, an app that
-/// cannot start is worse.
-pub fn read(path: &Path, snapshot: &Snapshot) -> ChangeSet {
-    let mut changes = ChangeSet::default();
-    let text = match std::fs::read_to_string(path) {
-        Ok(text) => text,
-        Err(error) if error.kind() == ErrorKind::NotFound => return changes,
-        Err(error) => {
-            tracing::warn!(
-                "cannot read the queued changes in {}: {error}",
-                path.display()
-            );
-            return changes;
-        }
-    };
-
-    let saved = match serde_json::from_str::<SavedChanges>(&text) {
-        Ok(saved) => saved,
-        Err(error) => {
-            tracing::warn!("cannot understand {}: {error}", path.display());
-            return changes;
-        }
-    };
-
-    match domains::all() {
-        Ok(domains) => {
-            for problem in domains.restore(&mut changes, &saved, snapshot) {
-                tracing::warn!("dropped a queued change: {problem}");
-            }
-        }
-        Err(error) => tracing::error!("the change domains are broken: {error}"),
-    }
-
-    changes
-}
-
-/// Keeps `saved` at `path` atomically. An empty queue removes the file
-/// instead of keeping an empty one. Blocks on two file syncs.
-///
-/// # Errors
-///
-/// When the file cannot be written or removed.
-pub fn store(path: &Path, saved: &SavedChanges) -> std::io::Result<()> {
-    if saved.changes.is_empty() {
-        match std::fs::remove_file(path) {
-            Err(error) if error.kind() != ErrorKind::NotFound => Err(error),
-            Ok(()) | Err(_) => Ok(()),
-        }
-    } else {
-        let bytes = serde_json::to_vec_pretty(saved).map_err(std::io::Error::other)?;
-        write_atomic(path, &bytes)
-    }
-}
-
-fn write(path: PathBuf, saved: &SavedChanges) -> Result<(), NotKept> {
-    store(&path, saved).map_err(|source| NotKept { path, source })
 }

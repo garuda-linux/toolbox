@@ -45,6 +45,8 @@ pub struct Setup {
     pub system_language: LanguageIdentifier,
     /// The queued changes, read before the window opens.
     pub queue: Queue,
+    /// Saved changes that could not be restored, named on Home until dismissed.
+    pub queue_lost: usize,
     /// The apply service. `None` leaves Apply without effect.
     pub apply: Option<ApplyHandle>,
     /// Off in tests, which have no display.
@@ -110,6 +112,7 @@ impl Default for Setup {
             look: None,
             system_language: i18n::FALLBACK,
             queue: Queue::in_memory(ChangeSet::default()),
+            queue_lost: 0,
             apply: None,
             system_clipboard: false,
             notifier: None,

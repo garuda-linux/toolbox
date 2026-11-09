@@ -24,6 +24,28 @@ pub struct SavedChanges {
     pub changes: Vec<SavedChange>,
 }
 
+#[derive(Deserialize)]
+struct Head {
+    version: u32,
+}
+
+impl SavedChanges {
+    /// # Errors
+    ///
+    /// [`RestoreProblem::Version`] for a file of another version, checked
+    /// before the shape, which another version may have changed.
+    /// [`RestoreProblem::Unreadable`] for text that is no saved queue.
+    pub fn parse(text: &str) -> Result<Self, RestoreProblem> {
+        let unreadable = |error: serde_json::Error| RestoreProblem::Unreadable(error.to_string());
+        let Head { version } = serde_json::from_str(text).map_err(unreadable)?;
+        if version != SAVED_VERSION {
+            return Err(RestoreProblem::Version(version));
+        }
+
+        serde_json::from_str(text).map_err(unreadable)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SavedChange {
     pub domain: String,
@@ -38,6 +60,8 @@ pub struct SavedChange {
 pub enum RestoreProblem {
     #[error("the saved changes have version {0}, this app reads version {SAVED_VERSION}")]
     Version(u32),
+    #[error("the saved changes cannot be read: {0}")]
+    Unreadable(String),
     #[error("no domain `{0}` exists anymore")]
     UnknownDomain(String),
     #[error("a saved `{domain}` change is invalid: {reason}")]

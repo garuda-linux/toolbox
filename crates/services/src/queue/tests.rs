@@ -5,11 +5,13 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 use tempfile::TempDir;
-use toolbox_core::domains::{DkmsBuilds, InstalledPackages, Packages};
-use toolbox_core::{ChangeSet, Domain as _, Queued, Snapshot, Toggle};
+use toolbox_core::domains::{DkmsBuilds, InstalledPackages, Packages, SyncPackages};
+use toolbox_core::features::Refusal;
+use toolbox_core::features::kernels::LinuxPackages;
+use toolbox_core::{ChangeSet, Domain as _, Queued, RestoreProblem, Snapshot, Toggle};
 use toolbox_plan::{DkmsBuild, DkmsModuleName, DkmsVersion, KernelRelease, PackageName};
 
-use super::{NotKept, Queue, read};
+use super::{NotKept, Queue, Restored, read};
 use crate::testing::PATIENCE;
 use crate::waking::Wake;
 
@@ -38,7 +40,10 @@ fn wait_for(path: &Path, done: impl Fn(&Path) -> bool) {
 fn a_missing_file_is_an_empty_queue() {
     let folder = TempDir::new().unwrap();
 
-    assert!(read(&folder.path().join("changes.json"), &Snapshot::default()).is_empty());
+    let (changes, problems) = read(&folder.path().join("changes.json"), &Snapshot::default());
+
+    assert!(changes.is_empty());
+    assert!(problems.is_empty(), "a first start lost nothing");
 }
 
 #[test]
@@ -47,7 +52,10 @@ fn an_unreadable_file_is_an_empty_queue() {
     let path = folder.path().join("changes.json");
     fs::write(&path, "not json").unwrap();
 
-    assert!(read(&path, &Snapshot::default()).is_empty());
+    let (changes, problems) = read(&path, &Snapshot::default());
+
+    assert!(changes.is_empty());
+    assert!(matches!(problems[..], [RestoreProblem::Unreadable(_)]));
 }
 
 #[test]
@@ -88,18 +96,21 @@ async fn every_change_is_written_and_read_back() {
         path.clone(),
         &tokio::runtime::Handle::current(),
         Wake::none(),
+        Restored::Whole,
     );
 
     queue.remove("packages", "vlc");
 
     let written = path.clone();
     tokio::task::spawn_blocking(move || {
-        wait_for(&written, |file| read(file, &Snapshot::default()).len() == 1);
+        wait_for(&written, |file| {
+            read(file, &Snapshot::default()).0.len() == 1
+        });
     })
     .await
     .unwrap();
 
-    let restored = read(&path, &Snapshot::default());
+    let (restored, _) = read(&path, &Snapshot::default());
     assert_eq!(restored.views()[0].key, "firefox");
 }
 
@@ -114,6 +125,7 @@ async fn an_empty_queue_removes_its_file() {
         path.clone(),
         &tokio::runtime::Handle::current(),
         Wake::none(),
+        Restored::Whole,
     );
 
     queue.clear();
@@ -136,6 +148,7 @@ async fn a_queue_that_cannot_be_written_tells_the_window() {
         blocker.join("changes.json"),
         &tokio::runtime::Handle::current(),
         Wake::new(move || told.store(true, Ordering::SeqCst)),
+        Restored::Whole,
     );
 
     assert!(queue.not_kept().is_none());
@@ -159,12 +172,45 @@ async fn a_queue_that_cannot_be_written_tells_the_window() {
     assert!(queue.not_kept().is_none(), "a failure is told once");
 }
 
+/// What the guards of the packages domain check against, so a restored
+/// queue of packages meets them.
+fn package_parts() -> Snapshot {
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(LinuxPackages::default());
+    snapshot.insert(SyncPackages::default());
+    snapshot.insert(InstalledPackages::default());
+    snapshot
+}
+
+fn checked(changes: ChangeSet) -> Queue {
+    let mut queue = Queue::in_memory(changes);
+    queue.meet(&package_parts());
+    queue
+}
+
 #[test]
 fn the_plan_holds_one_step_per_queued_package() {
-    let queue = Queue::in_memory(two_packages());
+    let queue = checked(two_packages());
 
-    assert_eq!(queue.plan().steps().len(), 1);
-    assert_eq!(Queue::in_memory(ChangeSet::default()).plan().steps(), []);
+    assert_eq!(queue.plan().unwrap().steps().len(), 1);
+    assert_eq!(
+        Queue::in_memory(ChangeSet::default())
+            .plan()
+            .unwrap()
+            .steps(),
+        []
+    );
+}
+
+/// Fails closed: a restored queue the guards have not checked is no plan.
+#[test]
+fn a_restored_queue_is_no_plan_before_its_guards_ran() {
+    let queue = Queue::restored_in_memory(two_packages());
+
+    assert!(matches!(
+        queue.plan(),
+        Err(Refusal::GuardsWaiting { guard: "kernels" })
+    ));
 }
 
 #[test]
@@ -177,9 +223,9 @@ fn one_offs_are_dropped_and_desired_state_stays() {
     };
 
     changes.want::<DkmsBuilds>(build, Queued, &Snapshot::default());
-    let mut queue = Queue::in_memory(changes);
+    let mut queue = checked(changes);
 
-    queue.sent(&queue.plan());
+    queue.sent(&queue.plan().unwrap());
     queue.plan_started();
     queue.plan_finished(|_| true, Some(&|_| true));
 
@@ -298,7 +344,7 @@ fn a_queue_written_by_a_command_reads_back() {
     let path = folder.path().join("changes.json");
 
     super::store(&path, &two_packages().to_saved()).unwrap();
-    assert_eq!(read(&path, &Snapshot::default()).len(), 2);
+    assert_eq!(read(&path, &Snapshot::default()).0.len(), 2);
 
     super::store(&path, &ChangeSet::default().to_saved()).unwrap();
     assert!(!path.exists());
@@ -310,7 +356,7 @@ fn a_queue_written_by_a_command_reads_back() {
 fn a_change_whose_plan_failed_stays_when_the_system_shows_it() {
     let mut queue = Queue::in_memory(two_packages());
 
-    queue.sent(&queue.plan());
+    queue.sent(&queue.plan().unwrap());
     queue.plan_started();
     queue.plan_finished(|_| false, Some(&|_| false));
     queue.meet(&installed(&["firefox", "vlc"]));
@@ -329,7 +375,7 @@ fn a_change_whose_plan_failed_stays_when_the_system_shows_it() {
 fn a_dry_run_marks_no_change() {
     let mut queue = Queue::in_memory(two_packages());
 
-    queue.sent(&queue.plan());
+    queue.sent(&queue.plan().unwrap());
     queue.plan_started();
     queue.plan_finished(|_| false, None);
     queue.meet(&installed(&["firefox", "vlc"]));

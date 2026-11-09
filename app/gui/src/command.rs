@@ -163,6 +163,8 @@ pub enum HomeCommand {
     Refresh,
     /// The Setup Assistant reached its end, so Home stops offering it.
     SetupFinished,
+    /// The note on Home was read.
+    DismissProblem,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

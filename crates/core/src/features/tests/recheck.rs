@@ -8,12 +8,13 @@ use toolbox_state::probes::FailedProbes;
 
 use crate::domains::{
     AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentGrub, CurrentSystemLocale,
-    CurrentUser, EnabledLocales, InstalledPackages, PlymouthState, RemovedUsers, SyncPackages,
+    CurrentUser, EnabledLocales, InstalledPackages, Packages, PlymouthState, RemovedUsers,
+    SyncPackages,
 };
 use crate::features::kernels::LinuxPackages;
 use crate::features::network::ModuleFacts;
 use crate::features::packages::aur::AurNames;
-use crate::features::{GUARDS, Unchecked};
+use crate::features::{GUARDS, Refusal, Unchecked};
 use crate::testing::{package, user_name};
 use crate::{ChangeSet, Queued, Snapshot, Toggle};
 
@@ -31,11 +32,17 @@ fn every_part() -> Snapshot {
 
 /// Every part but the AUR's copy, which the window reads only on demand.
 fn without_aur() -> Snapshot {
+    let mut snapshot = without_page_reads();
+    snapshot.insert(AccountLockFlags::default());
+    snapshot
+}
+
+/// What the probe reads, without the parts only a page's read adds.
+fn without_page_reads() -> Snapshot {
     let mut snapshot = Snapshot::default();
 
     snapshot.insert(Accounts::default());
     snapshot.insert(CurrentUser(user_name("nico")));
-    snapshot.insert(AccountLockFlags::default());
     snapshot.insert(EnabledLocales(BTreeSet::new()));
     snapshot.insert(CurrentSystemLocale(None));
     snapshot.insert(PlymouthState {
@@ -116,9 +123,20 @@ fn restored_locks_wait_for_the_lock_flags() {
 
 #[test]
 fn every_guard_has_an_id_of_its_own() {
-    let ids: BTreeSet<&str> = GUARDS.iter().map(|(id, _)| *id).collect();
+    let ids: BTreeSet<&str> = GUARDS.iter().map(|guard| guard.id).collect();
 
     assert_eq!(ids.len(), GUARDS.len());
+}
+
+#[test]
+fn every_guard_names_known_domains() {
+    let known = crate::domains::all().unwrap().ids();
+
+    for guard in GUARDS {
+        for domain in guard.domains {
+            assert!(known.contains(domain), "{}: {domain}", guard.id);
+        }
+    }
 }
 
 /// An AUR build from the bus or a file waits for the AUR's copy, then
@@ -140,5 +158,84 @@ fn queued_aur_builds_wait_for_the_aur_copy_and_unknown_names_go() {
     assert_eq!(
         changes.queued::<AurPackages>(),
         [(package("yay-bin"), Queued)]
+    );
+}
+
+/// A guard that answers `None` with every part at hand would hold its
+/// domains back for good.
+#[test]
+fn every_guard_runs_on_a_snapshot_with_every_part() {
+    let mut snapshot = every_part();
+    snapshot.insert(LinuxPackages::default());
+
+    for guard in GUARDS {
+        assert!(
+            (guard.run)(&mut ChangeSet::default(), &snapshot).is_some(),
+            "{} waits",
+            guard.id
+        );
+    }
+}
+
+#[test]
+fn a_waiting_guard_holds_back_the_plan_of_its_domains() {
+    let mut unchecked = Unchecked::all();
+    let mut changes = ChangeSet::default();
+    let mut snapshot = without_page_reads();
+    snapshot.insert(LinuxPackages::default());
+    changes.want::<AccountLocks>(user_name("nico"), Toggle::On, &Snapshot::default());
+
+    unchecked.recheck(&mut changes, &snapshot);
+
+    assert_eq!(changes.len(), 1, "the lock waits for the flags");
+    assert_eq!(
+        unchecked.ready(&changes),
+        Err(Refusal::GuardsWaiting {
+            guard: "user-locks"
+        })
+    );
+}
+
+#[test]
+fn a_waiting_guard_holds_back_no_other_domain() {
+    let mut unchecked = Unchecked::all();
+    let mut changes = ChangeSet::default();
+    let mut snapshot = without_page_reads();
+    snapshot.insert(LinuxPackages::default());
+    changes.want::<Packages>(package("htop"), Toggle::On, &Snapshot::default());
+
+    unchecked.recheck(&mut changes, &snapshot);
+
+    assert_eq!(
+        unchecked.waiting().collect::<Vec<_>>(),
+        ["aur-packages", "user-locks"]
+    );
+    assert_eq!(unchecked.ready(&changes), Ok(()));
+}
+
+#[test]
+fn a_queue_before_the_first_read_is_held_back() {
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(package("htop"), Toggle::On, &Snapshot::default());
+
+    assert!(Unchecked::all().ready(&changes).is_err());
+    assert_eq!(Unchecked::default().ready(&changes), Ok(()));
+}
+
+/// Both parts a page read gives are named, so a caller reads them at once.
+#[test]
+fn every_guard_that_holds_a_change_back_is_named() {
+    let mut unchecked = Unchecked::all();
+    let mut changes = ChangeSet::default();
+    let mut snapshot = without_page_reads();
+    snapshot.insert(LinuxPackages::default());
+    changes.want::<AccountLocks>(user_name("nico"), Toggle::On, &Snapshot::default());
+    changes.want::<AurPackages>(package("yay-bin"), Queued, &Snapshot::default());
+
+    unchecked.recheck(&mut changes, &snapshot);
+
+    assert_eq!(
+        unchecked.holding(&changes).collect::<Vec<_>>(),
+        ["user-locks", "aur-packages"]
     );
 }

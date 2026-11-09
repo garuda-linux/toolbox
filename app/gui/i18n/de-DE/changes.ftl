@@ -28,6 +28,9 @@ changes-apply = Übernehmen
 changes-keep = Behalten
 # Tag of a change whose last apply stopped before all its steps ended well.
 change-unfinished = Nicht abgeschlossen
+changes-wait-read = Übernehmen wartet, bis das System gelesen ist.
+changes-wait-locks = Übernehmen wartet auf den Sperrstatus der Konten. Die Seite Benutzer und Gruppen meldet, wenn er nicht gelesen werden kann.
+changes-wait-aur = Übernehmen wartet auf die Paketliste des AUR. Die Seite Pakete meldet, wenn sie nicht gelesen werden kann.
 
 # $name is what the change is about.
 

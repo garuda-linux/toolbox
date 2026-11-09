@@ -11,11 +11,14 @@ mod view;
 mod tests;
 
 use egui::Ui;
+use toolbox_gui_kit::widgets::{Tone, banner};
 use toolbox_gui_kit::{Loadable, UiExt as _};
 use toolbox_news::News;
 use toolbox_system::{CallError, Facts, Host, Status};
 
 use super::{PageContext, PageView};
+use crate::command::HomeCommand;
+use crate::i18n;
 use crate::page::PageId;
 use crate::programs::Programs;
 
@@ -39,6 +42,8 @@ pub enum HomeProblem {
     Restart(CallError),
     /// The system's reason, in English.
     Installer(String),
+    /// This many saved changes did not come back at start.
+    QueueLost(usize),
 }
 
 #[derive(Debug, Default)]
@@ -55,6 +60,7 @@ impl PageView for HomePage {
         let live = host.is_some_and(|host| host.live_iso);
         hero::show(ui, context, host);
         ui.add_space(ui.tokens().sizes.block_gap);
+        queue_lost(ui, context);
 
         if live {
             steps::live(ui, context);
@@ -67,4 +73,21 @@ impl PageView for HomePage {
         next::show(ui, context, host);
         dialogs::show(self, ui.ctx(), context);
     }
+}
+
+/// Saved changes that did not come back at start, until the user read it.
+fn queue_lost(ui: &mut Ui, context: &PageContext<'_>) {
+    let Some(HomeProblem::QueueLost(count)) = context.home.problem else {
+        return;
+    };
+
+    let ctx = ui.ctx().clone();
+    let text = i18n::text_with(&ctx, "home-queue-lost", &[("count", &count.to_string())]);
+    let dismiss = i18n::text(&ctx, "home-queue-lost-dismiss");
+
+    if banner(ui, Tone::Warning, &text, &[&dismiss]) == Some(0) {
+        context.commands.send(HomeCommand::DismissProblem);
+    }
+
+    ui.add_space(ui.tokens().sizes.block_gap);
 }

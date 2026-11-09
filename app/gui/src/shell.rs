@@ -46,8 +46,9 @@ pub struct View<'app> {
     pub changes: &'app [ChangeView],
     pub changes_ui: &'app mut ChangesState,
     pub reading: &'app Reading,
-    /// The first read of the system runs, so the queue may still shrink.
-    pub first_read: bool,
+    /// Why Apply waits, as the id of its text: a restored queue the
+    /// pages' guards have not checked yet.
+    pub held: Option<&'static str>,
     pub toasts: &'app mut Toasts,
 }
 
@@ -75,7 +76,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         changes,
         changes_ui,
         reading,
-        first_read,
+        held,
         toasts,
     } = view;
 
@@ -89,10 +90,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         &[]
     };
 
-    let queued = changes::Queued {
-        changes,
-        first_read,
-    };
+    let queued = changes::Queued { changes, held };
 
     let sheet = console_panel::Sheet {
         open: console_open,

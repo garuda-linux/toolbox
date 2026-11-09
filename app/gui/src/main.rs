@@ -6,6 +6,7 @@ use std::io::Write as _;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::Arc;
+use std::time::Duration;
 
 use clap::FromArgMatches as _;
 use eframe::CreationContext;
@@ -22,6 +23,7 @@ use toolbox_gui::notifications::DesktopNotifier;
 use toolbox_gui::page::PageId;
 use toolbox_gui::pages::kernels::view::{self as kernel_view, dkms_answer};
 use toolbox_gui::programs::Programs;
+use toolbox_gui::queue::Restored;
 use toolbox_gui::reader::ReaderHandle;
 use toolbox_gui::settings::FileStore;
 use toolbox_gui::units::{self, Systemd, UnitsHandle};
@@ -52,6 +54,9 @@ struct Start {
     /// The queue restored from `changes.json`, written there again once
     /// the window can tell of a failed write.
     changes: ChangeSet,
+    restored: Restored,
+    /// How many saved changes did not come back, for Home's banner.
+    lost: usize,
     changes_file: PathBuf,
     catalogs: Catalogs,
     desktops: Vec<String>,
@@ -150,7 +155,7 @@ fn run(
         .enable_all()
         .build()?;
 
-    let Some((instance, _held)) = claim(&runtime, opening) else {
+    let Some((instance, held)) = claim(&runtime, opening) else {
         return Ok(());
     };
 
@@ -160,12 +165,14 @@ fn run(
     // Restored before the system is known. The queue meets the first
     // snapshot once the service read it.
     let changes_file = paths.staged_changes_file();
-    let changes = queue::read(&changes_file, &Snapshot::default());
+    let (changes, problems) = queue::read(&changes_file, &Snapshot::default());
     let settings = load_settings(paths);
 
     let start = Start {
         family: Family::from_current_desktop(&current_desktop),
         changes,
+        restored: Restored::of(&problems),
+        lost: problems.len(),
         changes_file,
         catalogs: Catalogs::load(&catalog_dir(|key| std::env::var_os(key))),
         desktops: toolbox_services::desktop::desktops(&current_desktop),
@@ -187,12 +194,17 @@ fn run(
         ..Default::default()
     };
 
-    eframe::run_native(
+    let ran = eframe::run_native(
         "Garuda Toolbox",
         options,
         Box::new(move |cc| create(cc, start)),
-    )?;
+    );
 
+    // The window wrote the queue on close, a write the task had begun
+    // still gets its moment. The bus name goes first, while its runtime runs.
+    drop(held);
+    runtime.shutdown_timeout(Duration::from_secs(2));
+    ran?;
     Ok(())
 }
 
@@ -218,6 +230,8 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         handle,
         family,
         changes,
+        restored,
+        lost,
         changes_file,
         catalogs,
         desktops,
@@ -236,7 +250,8 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
     let setup = Setup {
         look: Some(look(&handle, &cc.egui_ctx, family, &catalogs)),
         system_language: i18n::language_from_env(|key| std::env::var_os(key)),
-        queue: kept_queue(changes, changes_file, &handle, &cc.egui_ctx),
+        queue: kept_queue((changes, restored), changes_file, &handle, &cc.egui_ctx),
+        queue_lost: lost,
         apply: Some(helper.apply),
         system_clipboard: true,
         notifier: Some(Arc::new(DesktopNotifier::new(handle.clone()))),

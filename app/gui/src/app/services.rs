@@ -6,6 +6,7 @@ use std::sync::Arc;
 
 use toolbox_core::Snapshot;
 use toolbox_core::domains::CurrentLoader;
+use toolbox_core::features::{AUR_PACKAGES, USER_LOCKS};
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::{StepId, UnitScope};
 use toolbox_system::Notification;
@@ -187,6 +188,32 @@ impl App {
         self.snapshot.is_some() && self.reading.get().is_none()
     }
 
+    /// Why Apply waits, as the id of its text. A guard that has not
+    /// checked a restored change fails closed.
+    pub(super) fn apply_held(&self) -> Option<&'static str> {
+        if self.first_read() {
+            return Some("changes-wait-read");
+        }
+
+        self.queue.holding().next().map(|guard| match guard {
+            USER_LOCKS => "changes-wait-locks",
+            AUR_PACKAGES => "changes-wait-aur",
+            _ => "changes-wait-read",
+        })
+    }
+
+    /// No probe reads the lock flags or the AUR's names, so a restored
+    /// change that waits for them would wait until its page is opened.
+    fn read_held_parts(&mut self) {
+        if self.queue.holding().any(|guard| guard == USER_LOCKS) {
+            self.users.open();
+        }
+
+        if self.queue.holding().any(|guard| guard == AUR_PACKAGES) {
+            self.packages.open_aur();
+        }
+    }
+
     pub(super) fn read_system(&self) {
         if let Some(snapshot) = &self.snapshot {
             snapshot.refresh();
@@ -261,6 +288,7 @@ impl App {
         self.take_users();
         self.take_configs();
         self.take_boot_repair(ctx);
+        self.read_held_parts();
         if let Some(error) = self.restart_refused.1.try_iter().last() {
             self.home_problem = Some(HomeProblem::Restart(error));
         }

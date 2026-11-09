@@ -229,6 +229,12 @@ runs, such as an unmount. Either way the command waits for the helper,
 shows the steps that did not run as cancelled, ends with `Cancelled` and
 exit code 130. After `queue apply`, what did not run stays in the queue.
 
+`queue apply` checks a queue an earlier run left as the pages do. For a
+queued lock, account removal or group change it reads the lock state of
+the accounts through the helper, for a queued AUR build the package list
+of the AUR. When one of them cannot be read, nothing runs and the exit
+code is 5.
+
 `SIGTERM` (as `kill` sends it) and `SIGHUP` (a closed terminal) count as
 `Ctrl+c` does: the first lets the running step end, a second stops it.
 The command then ends with 143 for `SIGTERM` or 129 for `SIGHUP`, 128 and
