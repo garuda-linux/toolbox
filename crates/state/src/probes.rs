@@ -10,6 +10,7 @@ mod tests;
 pub enum Probe {
     Packages,
     SyncPackages,
+    PackageGraph,
     Units,
     UserUnits,
     MaskedUnits,

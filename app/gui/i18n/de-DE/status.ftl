@@ -8,6 +8,7 @@ status-probes-failed = Einige Teile des Systems konnten nicht gelesen werden: { 
 # The parts of the system the app reads.
 probe-packages = installierte Pakete
 probe-sync-packages = Pakete der Repositorys
+probe-package-graph = Paketabhängigkeiten
 probe-units = Systemdienste
 probe-user-units = Benutzerdienste
 probe-masked-units = maskierte Systemdienste

@@ -287,19 +287,23 @@ pub fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     };
 
     let package = refusal.package.as_str();
-    let text = if let Refusal::Protected(why) = refusal.refusal {
+    let protected = |id: &str, name: &str, why: toolbox_plan::Protection| {
         let why = i18n::text(ui.ctx(), &format!("protected-{}", why.as_str()));
-        i18n::text_with(
+        i18n::text_with(ui.ctx(), id, &[("name", name), ("why", why.as_ref())])
+    };
+
+    let text = match &refusal.refusal {
+        Refusal::Protected(why) => protected("protected-refused", package, *why),
+        Refusal::TakesAlong(why, along) => protected("protected-along", along.as_str(), *why),
+        other @ (Refusal::NotOffered
+        | Refusal::Unread
+        | Refusal::RunningKernel
+        | Refusal::RunningUnknown
+        | Refusal::LastKernel) => i18n::text_with(
             ui.ctx(),
-            "protected-refused",
-            &[("name", package), ("why", why.as_ref())],
-        )
-    } else {
-        i18n::text_with(
-            ui.ctx(),
-            &format!("packages-refused-{}", refusal.refusal.as_str()),
+            &format!("packages-refused-{}", other.as_str()),
             &[("package", package)],
-        )
+        ),
     };
 
     if refusal_banner(ui, Tone::Error, &text, "packages-dismiss") {

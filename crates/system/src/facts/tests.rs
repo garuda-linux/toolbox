@@ -2,6 +2,7 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 
 use toolbox_plan::{PackageName, UnitName};
+use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
 
 use super::{DiskSpace, FactSources, MachineSource, PackageCount, SystemMachine, probe_facts};
@@ -31,6 +32,10 @@ struct FakeUnits(Vec<UnitName>);
 impl PackageSource for FakeInstalled {
     fn installed(&self) -> Result<InstalledPackages, ProbeError> {
         self.0.clone()
+    }
+
+    fn graph(&self) -> Result<PackageGraph, ProbeError> {
+        self.0.clone().map(|_| PackageGraph::default())
     }
 }
 

@@ -174,10 +174,16 @@ impl TogglePage {
                 let id = format!("kernels-refusal-{}", refusal.as_str());
                 Some(i18n::text_with(&ctx, &id, &[("name", refusal.name())]))
             }
-            Some(refusal @ Refusal::Protected(..)) => {
+            Some(refusal @ (Refusal::Protected(..) | Refusal::TakesAlong(..))) => {
+                let id = if matches!(refusal, Refusal::TakesAlong(..)) {
+                    "protected-along"
+                } else {
+                    "protected-refused"
+                };
+
                 let why = i18n::text(&ctx, &format!("protected-{}", refusal.as_str()));
                 let args = [("name", refusal.name()), ("why", why.as_ref())];
-                Some(i18n::text_with(&ctx, "protected-refused", &args))
+                Some(i18n::text_with(&ctx, id, &args))
             }
             Some(Refusal::Unknown | Refusal::Unmet) | None => None,
         };

@@ -97,27 +97,7 @@ pub struct PackageDetails {
     pub installed: Option<InstalledDetails>,
 }
 
-/// Why no page and no command removes a package.
-#[derive(
-    Clone, Copy, Debug, PartialEq, Eq, serde::Deserialize, strum::IntoStaticStr, strum::EnumIter,
-)]
-#[serde(rename_all = "kebab-case")]
-#[strum(serialize_all = "kebab-case")]
-pub enum Protection {
-    Boot,
-    Root,
-    Login,
-    Network,
-    PackageManager,
-    Desktop,
-}
-
-impl Protection {
-    pub fn as_str(self) -> &'static str {
-        self.into()
-    }
-}
-
-/// The packages `protected.toml` keeps installed, each with its reason.
+/// The installed packages' dependency graph, for the guards that ask what
+/// a `pacman -Rns` takes along.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub struct ProtectedPackages(pub std::collections::BTreeMap<PackageName, Protection>);
+pub struct PackageGraph(pub Vec<LocalNode>);

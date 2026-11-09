@@ -20,6 +20,7 @@ use pacman_conf::PacmanConf;
 use sync::SyncCache;
 use toolbox_plan::PackageName;
 use toolbox_state::kernels::{LinuxPackages, LocalPackage};
+use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
 
 use crate::error::ProbeError;
@@ -37,6 +38,13 @@ pub trait PackageSource: Send + Sync {
     /// [`ProbeError::Unavailable`] without a package manager,
     /// [`ProbeError::Failed`] when it gives no answer.
     fn installed(&self) -> Result<InstalledPackages, ProbeError>;
+
+    /// The installed packages' dependency graph.
+    ///
+    /// # Errors
+    ///
+    /// As [`PackageSource::installed`].
+    fn graph(&self) -> Result<PackageGraph, ProbeError>;
 }
 
 pub trait SyncSource: Send + Sync {
@@ -112,6 +120,19 @@ impl PackageSource for Libalpm {
         Ok(InstalledPackages(names::valid(
             handle.localdb().pkgs().iter().map(|package| package.name()),
         )))
+    }
+
+    fn graph(&self) -> Result<PackageGraph, ProbeError> {
+        let handle = open_local(&self.conf()?)?;
+
+        Ok(PackageGraph(
+            handle
+                .localdb()
+                .pkgs()
+                .iter()
+                .filter_map(|package| index::local_node(package))
+                .collect(),
+        ))
     }
 }
 

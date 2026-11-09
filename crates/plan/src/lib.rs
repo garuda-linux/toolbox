@@ -22,6 +22,7 @@ mod network;
 mod page_name;
 mod plan;
 pub mod procedure;
+mod protected;
 pub mod protocol;
 mod repair;
 mod scheme;
@@ -75,6 +76,7 @@ pub use network::{
 };
 pub use page_name::{InvalidPageName, MAX_PAGE_NAME_BYTES, PageName};
 pub use plan::{Plan, PlannedAction, Segment, Step, StepId};
+pub use protected::{PROTECTED, Protection, protection};
 pub use repair::{
     ESP_FOLDER, EspPlace, InstalledLoader, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed,
     RepairRoot, RepairWork, RootLayout,

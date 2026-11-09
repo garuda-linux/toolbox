@@ -10,7 +10,6 @@ const OTHER_FILES: [&str; FIXED_CATALOGS] = [
     "skel.toml",
     toolbox_catalog::CONFIG_FILES,
     toolbox_catalog::COLOUR_SCHEMES,
-    toolbox_catalog::PROTECTED,
 ];
 
 const ENTRY: &str = "[[section]]\nid = \"s\"\ntitle = \"S\"\nicon = \"x\"\n\n[[section.entry]]\nid = \"a\"\ntitle = \"A\"\ndescription = \"D\"\ncheck = { package = \"a\" }\n";
@@ -37,8 +36,8 @@ fn load_reports_every_broken_catalog() {
     let errors = load(dir.path()).unwrap_err();
     let messages: Vec<String> = errors.iter().map(ToString::to_string).collect();
 
-    // Skel first, then the toggle catalogs, the apps, the config files,
-    // the colour schemes and the protected packages.
+    // Skel first, then the toggle catalogs, the apps, the config files
+    // and the colour schemes.
     let expected: Vec<&str> = std::iter::once(OTHER_FILES[0])
         .chain(TOGGLE_FILES)
         .chain(APPS)
@@ -149,6 +148,32 @@ fn a_write_table_line_no_entry_needs_is_reported() {
     assert_eq!(messages.len(), 1, "{messages:?}");
     assert!(messages[0].contains("config-files.toml"), "{messages:?}");
     assert!(messages[0].contains("\"/etc/sddm.conf.d\""), "{messages:?}");
+}
+
+#[test]
+fn an_entry_that_brings_a_protected_package_along_is_reported() {
+    let source = crate::root().join(SOURCE_DIR);
+    let dir = tempfile::tempdir().unwrap();
+
+    copy_catalogs(&source, dir.path(), "gaming.toml");
+    fs::write(
+        dir.path().join("gaming.toml"),
+        format!("{ENTRY}also = [{{ package = \"sudo\" }}]\n"),
+    )
+    .unwrap();
+
+    let messages: Vec<String> = load(dir.path())
+        .unwrap_err()
+        .iter()
+        .map(ToString::to_string)
+        .collect();
+
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    assert!(messages[0].contains("gaming.toml"), "{messages:?}");
+    assert!(
+        messages[0].contains("\"sudo\" is protected"),
+        "{messages:?}"
+    );
 }
 
 fn copy_catalogs(source: &Path, dir: &Path, left_out: &str) {

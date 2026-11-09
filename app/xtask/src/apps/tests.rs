@@ -370,18 +370,11 @@ fn missing_catalogs_and_non_package_checks_add_no_package() {
 /// that logs everyone in. sudo is its own package and stays listed.
 #[test]
 fn a_command_of_a_protected_package_is_left_out() {
-    let protected = toolbox_catalog::ProtectedCatalog::parse(
-        "[[package]]\nname = \"util-linux\"\nwhy = \"login\"\n\n\
-         [[package]]\nname = \"sudo\"\nwhy = \"root\"\n",
-        "protected.toml",
-    )
-    .unwrap();
-
     let lists = Lists::new(vec![(
         CATEGORIES[6],
         vec![app("su", &["util-linux"]), app("sudo", &["sudo"])],
     )])
-    .without_commands_of(protected.packages());
+    .without_commands_of();
 
     assert_eq!(lists.packages().into_iter().collect::<Vec<_>>(), ["sudo"]);
     assert_eq!(

@@ -9,5 +9,5 @@ pub mod queue;
 
 pub use toolbox_state::packages::{
     IndexEntry, InstallReason, Installed, InstalledDetails, LocalNode, OptionalDependency, Origin,
-    PackageDetails, PackageIndex,
+    PackageDetails, PackageGraph, PackageIndex,
 };

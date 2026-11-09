@@ -196,16 +196,13 @@ fn run(
     Ok(())
 }
 
-/// The snapshot's reader. Its sources: the files the catalogs edit and
-/// the packages no removal takes.
+/// The snapshot's reader. Its sources include the files the catalogs edit.
 fn system_snapshot(
     handle: &Handle,
     ctx: &egui::Context,
     catalogs: &Catalogs,
 ) -> snapshot::SnapshotHandle {
-    let sources = Sources::system()
-        .with_config_edits(catalogs.config_edits())
-        .with_protected(catalogs.protected.packages().clone());
+    let sources = Sources::system().with_config_edits(catalogs.config_edits());
 
     let wake = toolbox_gui::waking::repaint(ctx.clone());
     snapshot::spawn(handle, wake, move || probe_snapshot(&sources))

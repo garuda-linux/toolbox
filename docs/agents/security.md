@@ -63,12 +63,26 @@ The helper repeats what only the wire shows: `DeleteUser`, locking and
 
 ## Protected packages
 
-`data/catalog/protected.toml` lists packages no page and no command
-removes. Every removal asks `features::packages::protected::may_remove`
-in `toolbox-core` first, the switches through
-`features/toggles/guards.rs`, the CLI through
-`crates/commands/src/packages.rs`. A new way to remove a package must ask
-it too. The helper does not repeat this check.
+`toolbox_plan::PROTECTED` (`crates/plan/src/protected.rs`) lists the
+packages no page, no command and no helper request removes. It is
+compiled in, so no missing file can empty it.
+
+- Every removal asks `features::packages::queue::may_remove` in
+  `toolbox-core`: the package itself, then
+  `protected::may_remove_with_cascade` over the whole queued batch, as
+  one `pacman -Rns` takes it. The switches go through
+  `features/toggles/guards.rs`, which checks the entry's `also` packages
+  too. The CLI goes through the same functions. A new way to remove a
+  package must ask them too.
+- The cascade check needs the `PackageGraph` part. Without it no removal
+  passes.
+- The helper refuses a `RemovePackages` step that names a protected
+  package (`Request::validate`), and `RemoveOrphans` keeps protected
+  orphans out of `-Rns` and names them in the Console.
+- `cargo xtask catalog-validate` refuses a protected `also` package. A
+  protected main package is allowed: its switch stays on.
+- A pacman group name expands in the helper. The app blocks it only
+  because it is no installed package.
 
 ## Files the helper writes
 

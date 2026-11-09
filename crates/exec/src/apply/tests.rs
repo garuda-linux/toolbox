@@ -3,6 +3,7 @@ mod secrets;
 
 mod extra;
 mod finish;
+mod orphans;
 mod span;
 
 use std::collections::VecDeque;

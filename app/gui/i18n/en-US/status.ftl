@@ -6,6 +6,7 @@ status-probes-failed = Some parts of the system could not be read: { $parts }
 
 probe-packages = installed packages
 probe-sync-packages = repository packages
+probe-package-graph = package dependencies
 probe-units = system services
 probe-user-units = user services
 probe-masked-units = masked system services

@@ -1,6 +1,7 @@
 use std::collections::BTreeSet;
 
-use toolbox_plan::PackageName;
+use toolbox_plan::{PackageName, Protection};
+use toolbox_state::packages::{InstallReason, LocalNode, PackageGraph};
 
 use super::{Refusal, toggle};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
@@ -10,7 +11,17 @@ fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap_or_else(|error| panic!("{text}: {error}"))
 }
 
-/// gimp installed, inkscape offered, paru installed from elsewhere.
+fn explicit(text: &str, depends: &[&str]) -> LocalNode {
+    LocalNode {
+        name: name(text),
+        depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
+        provides: Vec::new(),
+        reason: InstallReason::Explicit,
+    }
+}
+
+/// gimp installed, inkscape offered, paru installed from elsewhere. The
+/// graph is read and takes nothing along.
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(BTreeSet::from([
@@ -21,6 +32,7 @@ fn snapshot() -> Snapshot {
         name("gimp"),
         name("inkscape"),
     ])));
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 
@@ -101,7 +113,7 @@ fn every_refusal_has_a_code() {
             Refusal::RunningUnknown,
             Refusal::LastKernel,
         ]
-        .map(Refusal::as_str),
+        .map(|refusal| refusal.as_str()),
         [
             "not-offered",
             "unread",
@@ -147,19 +159,57 @@ fn the_running_kernel_is_not_queued_for_removal() {
 #[test]
 fn a_protected_package_is_not_queued_for_removal() {
     let mut snapshot = snapshot();
-    snapshot.insert(toolbox_state::packages::ProtectedPackages(
-        std::collections::BTreeMap::from([(
-            name("gimp"),
-            toolbox_state::packages::Protection::Desktop,
-        )]),
-    ));
+    let mut installed = snapshot.part::<InstalledPackages>().unwrap().0.clone();
+    installed.insert(name("sddm"));
+    snapshot.insert(InstalledPackages(installed));
+    let mut changes = ChangeSet::default();
+
+    assert_eq!(
+        toggle(&name("sddm"), Toggle::Off, &snapshot, &mut changes),
+        Err(Refusal::Protected(Protection::Desktop))
+    );
+    assert!(changes.is_empty());
+}
+
+/// Each removal alone keeps `systemd-libs`, the queued one plus the new
+/// one would take it along.
+#[test]
+fn a_removal_is_checked_together_with_the_queued_ones() {
+    let mut snapshot = snapshot();
+    snapshot.insert(InstalledPackages(BTreeSet::from([
+        name("app-a"),
+        name("app-b"),
+        name("systemd-libs"),
+    ])));
+    snapshot.insert(PackageGraph(vec![
+        explicit("app-a", &["systemd-libs"]),
+        explicit("app-b", &["systemd-libs"]),
+        LocalNode {
+            reason: InstallReason::Dependency,
+            ..explicit("systemd-libs", &[])
+        },
+    ]));
+    let mut changes = ChangeSet::default();
+
+    assert_eq!(
+        toggle(&name("app-a"), Toggle::Off, &snapshot, &mut changes),
+        Ok(())
+    );
+    assert_eq!(
+        toggle(&name("app-b"), Toggle::Off, &snapshot, &mut changes),
+        Err(Refusal::TakesAlong(Protection::Boot, name("systemd-libs")))
+    );
+    assert_eq!(changes.wish::<Packages>(&name("app-b")), None);
+}
+
+#[test]
+fn without_the_dependency_graph_nothing_is_removed() {
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(InstalledPackages(BTreeSet::from([name("gimp")])));
     let mut changes = ChangeSet::default();
 
     assert_eq!(
         toggle(&name("gimp"), Toggle::Off, &snapshot, &mut changes),
-        Err(Refusal::Protected(
-            toolbox_state::packages::Protection::Desktop
-        ))
+        Err(Refusal::Unread)
     );
-    assert!(changes.is_empty());
 }

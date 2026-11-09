@@ -136,25 +136,31 @@ fn tallies_add_up_to_the_page_count() {
     assert_eq!(std::iter::empty::<Tally>().sum::<Tally>(), Tally::default());
 }
 
-/// An installed package the protected catalog keeps shows on, with its
-/// reason, and its switch rests.
+/// An installed package the protected list keeps shows on, with its
+/// reason, and its switch rests. The shipped Components catalog has such
+/// an entry for `networkmanager`.
 #[test]
 fn a_protected_installed_entry_is_kept() {
-    use toolbox_state::packages::{ProtectedPackages, Protection};
+    use toolbox_plan::Protection;
 
-    let catalog = catalog();
+    let text = format!(
+        "{CATALOG}\n[[section]]\nid = \"network\"\ntitle = \"Network\"\nicon = \"network-wired\"\n\n\
+         [[section.entry]]\nid = \"networkmanager\"\ntitle = \"NetworkManager\"\n\
+         description = \"Connections.\"\ncheck = {{ package = \"networkmanager\" }}\n"
+    );
+
+    let catalog = ToggleCatalog::parse(&text, "components.toml").unwrap();
     let mut snapshot = snapshot();
-    snapshot.insert(ProtectedPackages(std::collections::BTreeMap::from([(
-        package("pipewire-support"),
-        Protection::Desktop,
-    )])));
+    snapshot.insert(InstalledPackages(packages(&[
+        "pipewire-support",
+        "networkmanager",
+    ])));
 
     let shown = sections(&catalog, &snapshot, &ChangeSet::default(), &[]);
-    let audio = shown.first().unwrap();
-    let pipewire = audio.entries.first().unwrap();
-    let jack = audio.entries.get(1).unwrap();
+    let network = shown.last().unwrap().entries.first().unwrap();
+    let pipewire = shown.first().unwrap().entries.first().unwrap();
 
-    assert_eq!(pipewire.state.kept, Some(Protection::Desktop));
-    assert!(!pipewire.changeable());
-    assert_eq!(jack.state.kept, None);
+    assert_eq!(network.state.kept, Some(Protection::Network));
+    assert!(!network.changeable());
+    assert_eq!(pipewire.state.kept, None);
 }

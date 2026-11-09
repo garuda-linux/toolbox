@@ -10,6 +10,7 @@ use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState,
 use toolbox_state::kernels::{KernelReleases, LinuxPackages, RunningKernel};
 use toolbox_state::locales::{CurrentSystemLocale, EnabledLocales, LocaleNames, SupportedLocales};
 use toolbox_state::network::ModuleFacts;
+use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{
     AvailableShells, CurrentShells, EnabledUnits, EnabledUserUnits, InstalledPackages, MaskedUnits,
     MaskedUserUnits, OwnBlacklist, SyncPackages, UserConfigStates,
@@ -98,6 +99,11 @@ impl LocaleSource for FakeLocales {
 impl PackageSource for FakePackages {
     fn installed(&self) -> Result<InstalledPackages, ProbeError> {
         self.0.clone()
+    }
+
+    /// Fails as the installed list does, since both read the same database.
+    fn graph(&self) -> Result<PackageGraph, ProbeError> {
+        self.0.clone().map(|_| PackageGraph::default())
     }
 }
 
@@ -245,6 +251,5 @@ pub fn sources(packages: FakePackages, host: FakeHost) -> Sources {
         user_configs: Arc::new(FakeConfigs),
         modules: Arc::new(FakeModules),
         config_edits: Arc::from([]),
-        protected: toolbox_state::packages::ProtectedPackages::default(),
     }
 }

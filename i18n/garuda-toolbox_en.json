@@ -4415,7 +4415,7 @@
     },
     "protected-boot": {
       "string": "Needed to start the system",
-      "developer_comment": "Why the protected catalog keeps an installed package, shown on its row."
+      "developer_comment": "Why the protected list keeps an installed package, shown on its row."
     },
     "protected-root": {
       "string": "Needed for administrator rights"
@@ -4435,6 +4435,10 @@
     "protected-refused": {
       "string": "{name} stays installed. {why}.",
       "developer_comment": "$name is the package, $why one of the reasons above."
+    },
+    "protected-along": {
+      "string": "This removal would also take {name}, which stays installed. {why}.",
+      "developer_comment": "$name is a dependency the removal would take along, $why one of the\nreasons above."
     }
   },
   "configs": {
@@ -7530,6 +7534,9 @@
     },
     "probe-sync-packages": {
       "string": "repository packages"
+    },
+    "probe-package-graph": {
+      "string": "package dependencies"
     },
     "probe-units": {
       "string": "system services"

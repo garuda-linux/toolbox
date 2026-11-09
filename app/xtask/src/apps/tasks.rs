@@ -3,7 +3,7 @@ use std::fmt::Write as _;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use toolbox_catalog::{Check, ProtectedCatalog, ToggleCatalog};
+use toolbox_catalog::{Check, ToggleCatalog};
 use toolbox_plan::PackageName;
 use toolbox_system::{Libalpm, SyncSource};
 
@@ -61,10 +61,7 @@ pub fn wiki_sync(args: &[String]) -> Result<String, Failure> {
         return Err(Failure::Problems(problems));
     }
 
-    let protected = ProtectedCatalog::load(&root().join("data/catalog"))
-        .map_err(|error| Failure::Problems(vec![error.to_string()]))?;
-
-    let lists = Lists::new(found).without_commands_of(protected.packages());
+    let lists = Lists::new(found).without_commands_of();
     let out = options.out.unwrap_or_else(|| root().join(TARGET_DIR));
 
     let shipped = shipped_packages(&root().join(TARGET_DIR))

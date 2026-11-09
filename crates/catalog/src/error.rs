@@ -201,6 +201,8 @@ pub enum Problem {
     BadIcon(String),
     #[error("the icon {0:?} is missing from the icon folder")]
     MissingIcon(String),
+    #[error("the `also` package {0:?} is protected, so the entry could never go off")]
+    ProtectedAlso(String),
     /// `url` is no `https` link with a host, or has blanks or control
     /// characters, or is longer than 2048 bytes.
     #[error("the url {0:?} is no plain https link")]

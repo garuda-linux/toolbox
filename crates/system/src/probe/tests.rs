@@ -1,7 +1,7 @@
 mod boot;
 mod fakes;
+mod graph;
 mod modules;
-mod protected;
 
 use std::collections::BTreeSet;
 use std::sync::Arc;
@@ -15,6 +15,7 @@ use toolbox_plan::{
 use toolbox_state::accounts::{Accounts, CurrentUser, Group, User};
 use toolbox_state::kernels::{KernelReleases, LinuxPackages, RunningKernel};
 use toolbox_state::locales::{CurrentSystemLocale, EnabledLocales, SupportedLocales};
+use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{
     AvailableShells, CurrentShells, EnabledUnits, EnabledUserUnits, InstalledPackages, MaskedUnits,
     MaskedUserUnits, SyncPackages, UserConfigStates,
@@ -129,18 +130,25 @@ fn every_part_is_filled_when_all_probes_answer() {
 }
 
 #[test]
-fn a_missing_package_manager_leaves_only_its_part_out() {
+fn a_missing_package_manager_leaves_only_its_parts_out() {
     let (snapshot, issues) =
         probe_snapshot(&sources(FakePackages(Err(ProbeError::Unavailable)), host()));
 
     assert_eq!(
         issues,
-        vec![ProbeIssue {
-            probe: Probe::Packages,
-            error: ProbeError::Unavailable,
-        }]
+        vec![
+            ProbeIssue {
+                probe: Probe::Packages,
+                error: ProbeError::Unavailable,
+            },
+            ProbeIssue {
+                probe: Probe::PackageGraph,
+                error: ProbeError::Unavailable,
+            }
+        ]
     );
     assert_eq!(snapshot.part::<InstalledPackages>(), None);
+    assert_eq!(snapshot.part::<PackageGraph>(), None);
     assert_eq!(snapshot.part::<EnabledUnits>(), Some(&enabled()));
     assert_eq!(snapshot.part::<Accounts>(), Some(&accounts()));
     assert_eq!(snapshot.part::<CurrentUser>(), Some(&CurrentUser(nico())));

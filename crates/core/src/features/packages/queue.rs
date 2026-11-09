@@ -4,15 +4,15 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_plan::PackageName;
-use toolbox_state::packages::Protection;
+use toolbox_plan::{PackageName, Protection};
 
 use super::protected;
+use super::protected::CascadeRefusal;
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
 use crate::features::kernels;
 use crate::{ChangeSet, Snapshot, Toggle};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr)]
+#[derive(Clone, Debug, PartialEq, Eq, strum::IntoStaticStr)]
 #[strum(serialize_all = "kebab-case")]
 pub enum Refusal {
     /// No configured repository has the package.
@@ -25,8 +25,19 @@ pub enum Refusal {
     RunningUnknown,
     /// The last installed kernel, without which the system does not boot.
     LastKernel,
-    /// The protected catalog keeps the package, for this reason.
+    /// `toolbox_plan::PROTECTED` keeps the package, for this reason.
     Protected(Protection),
+    /// The removal would take this protected dependency along.
+    TakesAlong(Protection, PackageName),
+}
+
+impl From<CascadeRefusal> for Refusal {
+    fn from(refusal: CascadeRefusal) -> Self {
+        match refusal {
+            CascadeRefusal::Unread => Self::Unread,
+            CascadeRefusal::TakesAlong(why, along) => Self::TakesAlong(why, along),
+        }
+    }
 }
 
 impl From<kernels::Refusal> for Refusal {
@@ -40,23 +51,40 @@ impl From<kernels::Refusal> for Refusal {
 }
 
 impl Refusal {
-    pub fn as_str(self) -> &'static str {
+    pub fn as_str(&self) -> &'static str {
         self.into()
     }
 }
 
-/// The protected catalog and the Kernels page's rules, which every
-/// removal of an installed package meets.
+/// The removals queued in the packages domain plus `adding`: the targets
+/// of the next apply's one `pacman -Rns`.
+pub fn removal_batch(changes: &ChangeSet, adding: &[PackageName]) -> Vec<PackageName> {
+    let mut batch: Vec<PackageName> = changes
+        .queued::<Packages>()
+        .into_iter()
+        .filter(|(_, wish)| !wish.is_on())
+        .map(|(package, _)| package)
+        .collect();
+
+    batch.extend(adding.iter().cloned());
+    batch
+}
+
+/// The protected list, what the batch takes along and the Kernels page's
+/// rules, which every removal of an installed package meets.
 ///
 /// # Errors
 ///
-/// [`Refusal::Protected`] or a kernel refusal.
+/// [`Refusal::Protected`], [`Refusal::TakesAlong`], [`Refusal::Unread`]
+/// without the dependency graph, or a kernel refusal.
 pub fn may_remove(
     package: &PackageName,
     changes: &ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
-    protected::may_remove(package, snapshot).map_err(Refusal::Protected)?;
+    protected::may_remove(package).map_err(Refusal::Protected)?;
+    let batch = removal_batch(changes, std::slice::from_ref(package));
+    protected::may_remove_with_cascade(&batch, snapshot)?;
     kernels::may_remove(package, changes, snapshot)?;
     Ok(())
 }

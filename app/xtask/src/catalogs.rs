@@ -9,8 +9,9 @@ use std::path::Path;
 
 use toolbox_catalog::{
     APPS, COMPONENTS, CONFIG_FILES, CatalogError, ColourSchemeCatalog, ConfigFileCatalog, GAMING,
-    Problem, ProtectedCatalog, SETTINGS, SETUP, SkelCatalog, ToggleCatalog,
+    Problem, SETTINGS, SETUP, SkelCatalog, ToggleCatalog,
 };
+use toolbox_plan::protection;
 
 /// The catalog folder, relative to the repository root.
 pub const SOURCE_DIR: &str = "data/catalog";
@@ -41,6 +42,7 @@ pub fn load(dir: &Path) -> Result<Catalogs, Vec<CatalogError>> {
         match ToggleCatalog::load(dir, file) {
             Ok(catalog) => {
                 errors.extend(missing_icons(&catalog, dir, file));
+                errors.extend(protected_also(&catalog, dir, file));
                 loaded.push((file, catalog));
             }
             Err(error) => errors.push(error),
@@ -58,12 +60,8 @@ pub fn load(dir: &Path) -> Result<Catalogs, Vec<CatalogError>> {
         .map_err(|error| errors.push(error))
         .ok();
 
-    let protected = ProtectedCatalog::load(dir)
-        .map_err(|error| errors.push(error))
-        .ok();
-
-    match (skel, config_files, colour_schemes, protected) {
-        (Some(_), Some(config_files), Some(_), Some(_)) if errors.is_empty() => Ok(Catalogs {
+    match (skel, config_files, colour_schemes) {
+        (Some(_), Some(config_files), Some(_)) if errors.is_empty() => Ok(Catalogs {
             toggles,
             config_files,
         }),
@@ -82,6 +80,22 @@ pub fn unused_writable(dir: &Path, catalog: &ConfigFileCatalog) -> Vec<CatalogEr
             source_name: dir.join(CONFIG_FILES).display().to_string(),
             id: line.to_owned(),
             problem: Problem::NotWritable(line.to_owned()),
+        })
+        .collect()
+}
+
+/// Turning an entry off removes its `also` packages, which the guard
+/// would then refuse for a protected one, so such an entry could never go
+/// off. A protected main package is fine: the guard keeps that switch on.
+fn protected_also(catalog: &ToggleCatalog, dir: &Path, file: &str) -> Vec<CatalogError> {
+    catalog
+        .entries()
+        .flat_map(|entry| entry.also().iter().map(move |also| (entry.id(), also)))
+        .filter(|(_, also)| protection(also).is_some())
+        .map(|(id, also)| CatalogError::Invalid {
+            source_name: dir.join(file).display().to_string(),
+            id: id.to_owned(),
+            problem: Problem::ProtectedAlso(also.as_str().to_owned()),
         })
         .collect()
 }

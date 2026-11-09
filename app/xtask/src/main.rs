@@ -14,9 +14,8 @@ use std::process::ExitCode;
 
 use regex::Regex;
 
-/// The catalogs besides the toggle catalogs: skel, config files, colour
-/// schemes and the protected packages.
-const FIXED_CATALOGS: usize = 4;
+/// The catalogs besides the toggle catalogs: skel, config files and colour schemes.
+const FIXED_CATALOGS: usize = 3;
 /// The app's locale folders, relative to the repository root.
 const LOCALES_DIR: &str = "app/gui/i18n";
 const ENGLISH: &str = "en-US";

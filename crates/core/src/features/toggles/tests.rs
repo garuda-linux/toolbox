@@ -7,6 +7,7 @@ mod setup;
 use std::collections::BTreeMap;
 
 use toolbox_catalog::{Check, ToggleCatalog};
+use toolbox_state::packages::PackageGraph;
 
 use super::{EntryState, state, toggle};
 use crate::domains::{
@@ -96,6 +97,7 @@ fn snapshot(installed: &[&str], enabled: &[&str], groups: &[&str]) -> Snapshot {
     ));
     snapshot.insert(nina_in(groups));
     snapshot.insert(CurrentUser(user_name("nico")));
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 

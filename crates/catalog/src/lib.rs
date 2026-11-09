@@ -9,7 +9,6 @@ mod apps;
 mod colour_schemes;
 mod config_files;
 mod error;
-mod protected;
 mod skel;
 mod source;
 mod toggles;
@@ -20,7 +19,6 @@ pub use colour_schemes::{
 };
 pub use config_files::{CONFIG_FILES, ConfigEntry, ConfigFileCatalog, ConfigSection};
 pub use error::{CatalogError, LoadProblem, Problem};
-pub use protected::{PROTECTED, ProtectedCatalog};
 pub use skel::{SKEL_ROOT, SkelCatalog, SkelEntry};
 pub use toggles::{
     COMPONENTS, Check, GAMING, Requires, SETTINGS, SETUP, ToggleCatalog, ToggleEntry,

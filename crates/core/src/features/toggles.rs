@@ -14,8 +14,7 @@ pub mod summary;
 mod tests;
 
 use toolbox_catalog::{Check, ToggleCatalog, ToggleEntry};
-use toolbox_plan::{GroupName, PackageName};
-use toolbox_state::packages::Protection;
+use toolbox_plan::{GroupName, PackageName, Protection};
 
 use crate::domains::{
     Accounts, CurrentUser, EnabledUnits, EnabledUserUnits, Groups, InstalledPackages, Membership,
@@ -51,8 +50,11 @@ pub enum Refusal {
     Account(users::Refusal, Membership),
     /// The Kernels page would keep this kernel.
     Kernel(kernels::Refusal, PackageName),
-    /// The protected catalog keeps this package.
+    /// `toolbox_plan::PROTECTED` keeps this package.
     Protected(Protection, PackageName),
+    /// Removing the entry's packages would take this protected dependency
+    /// along.
+    TakesAlong(Protection, PackageName),
 }
 
 impl Refusal {
@@ -64,7 +66,7 @@ impl Refusal {
             Self::Unmet => "unmet",
             Self::Account(refusal, _) => refusal.as_str(),
             Self::Kernel(refusal, _) => refusal.as_str(),
-            Self::Protected(why, _) => why.as_str(),
+            Self::Protected(why, _) | Self::TakesAlong(why, _) => why.as_str(),
         }
     }
 
@@ -75,7 +77,9 @@ impl Refusal {
             Self::Unknown | Self::Unmet => "",
             Self::Account(users::Refusal::PrimaryGroup, membership) => membership.group.as_str(),
             Self::Account(_, membership) => membership.user.as_str(),
-            Self::Kernel(_, package) | Self::Protected(_, package) => package.as_str(),
+            Self::Kernel(_, package)
+            | Self::Protected(_, package)
+            | Self::TakesAlong(_, package) => package.as_str(),
         }
     }
 }
@@ -89,7 +93,7 @@ pub fn state(
     let system = system_on(entry.check(), snapshot);
     let kept = match entry.check() {
         Check::Package(name) if system == Some(Toggle::On) => {
-            packages::protected::may_remove(name, snapshot).err()
+            packages::protected::may_remove(name).err()
         }
         Check::Package(_)
         | Check::Service(_)

@@ -8,6 +8,7 @@ use egui_kittest::kittest::Queryable as _;
 use egui_kittest::{Harness, SnapshotResults};
 use tokio::runtime::Runtime;
 use toolbox_core::domains::{InstalledPackages, SyncPackages};
+use toolbox_core::features::packages::PackageGraph;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::packages::{PackagesSetup, SampleAur};
 use toolbox_gui::queue::Queue;
@@ -24,6 +25,7 @@ fn system() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(packages(&INSTALLED)));
     snapshot.insert(SyncPackages(packages(&OFFERED)));
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 

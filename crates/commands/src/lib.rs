@@ -362,20 +362,12 @@ fn catalogs() -> Catalogs {
 }
 
 fn snapshot(catalogs: &Catalogs) -> Snapshot {
-    let sources = Sources::system()
-        .with_config_edits(catalogs.config_edits())
-        .with_protected(catalogs.protected.packages().clone());
+    let sources = Sources::system().with_config_edits(catalogs.config_edits());
 
     probe_snapshot(&sources).0
 }
 
-/// The system without the toggle catalogs. The protected packages come
-/// along still, so no command removes one.
+/// The system without the toggle catalogs.
 fn system() -> Snapshot {
-    let dir = catalog_dir(|key| std::env::var_os(key));
-    let protected = toolbox_catalog::ProtectedCatalog::load(&dir)
-        .inspect_err(|error| tracing::error!("no package is protected from removal: {error}"))
-        .unwrap_or_default();
-
-    probe_snapshot(&Sources::system().with_protected(protected.packages().clone())).0
+    probe_snapshot(&Sources::system()).0
 }

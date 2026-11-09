@@ -9,8 +9,8 @@ use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 
 use toolbox_catalog::{
-    APPS, COMPONENTS, Check, ColourSchemeCatalog, GAMING, LoadProblem, ProtectedCatalog, SETTINGS,
-    SETUP, SkelCatalog, ToggleCatalog, ToggleEntry,
+    APPS, COMPONENTS, Check, ColourSchemeCatalog, GAMING, LoadProblem, SETTINGS, SETUP,
+    SkelCatalog, ToggleCatalog, ToggleEntry,
 };
 use toolbox_core::features::discover::Apps;
 use toolbox_plan::UserConfigEdit;
@@ -58,9 +58,6 @@ pub struct Catalogs {
     /// The app's own colour schemes. Empty when the file is unusable, so
     /// the window keeps the desktop's colours.
     pub colour_schemes: ColourSchemeCatalog,
-    /// The packages no removal takes. Empty when the file is unusable,
-    /// which the log says.
-    pub protected: ProtectedCatalog,
 }
 
 impl Default for Toggles {
@@ -85,11 +82,6 @@ impl Catalogs {
                 .ok(),
             colour_schemes: ColourSchemeCatalog::load(dir)
                 .inspect_err(|error| tracing::warn!("the colour schemes are unavailable: {error}"))
-                .unwrap_or_default(),
-            protected: ProtectedCatalog::load(dir)
-                .inspect_err(|error| {
-                    tracing::error!("no package is protected from removal: {error}");
-                })
                 .unwrap_or_default(),
         }
     }

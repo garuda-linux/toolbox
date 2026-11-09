@@ -1,4 +1,5 @@
 use toolbox_state::aur::{AurIndex, AurPackage};
+use toolbox_state::packages::PackageGraph;
 
 use super::{AurCatalog, row_state, toggle};
 use crate::domain::Queued;
@@ -99,6 +100,7 @@ fn a_package_is_found_by_name() {
 fn installed(names: &[&str]) -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(packages(names)));
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 

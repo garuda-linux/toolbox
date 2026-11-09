@@ -35,7 +35,7 @@ row-more = Weitere Aktionen für { $name }
 # The caption left of a sort dropdown.
 common-sort-by = Sortieren nach
 
-# Why the protected catalog keeps an installed package, shown on its row.
+# Why the protected list keeps an installed package, shown on its row.
 protected-boot = Wird für den Systemstart benötigt
 protected-root = Wird für Root-Rechte benötigt
 protected-login = Wird zum Anmelden benötigt
@@ -44,3 +44,6 @@ protected-package-manager = Wird zum Installieren und Aktualisieren von Software
 protected-desktop = Wird vom Desktop benötigt
 # $name is the package, $why one of the reasons above.
 protected-refused = { $name } bleibt installiert. { $why }.
+# $name is a dependency the removal would take along, $why one of the
+# reasons above.
+protected-along = Diese Entfernung würde auch { $name } entfernen, das installiert bleibt. { $why }.

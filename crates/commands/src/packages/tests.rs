@@ -7,6 +7,7 @@ use toolbox_core::features::packages::{
 };
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_plan::{PackageName, PlannedAction, RootAction};
+use toolbox_state::packages::PackageGraph;
 use toolbox_system::{PackageIndexSource, ProbeError};
 
 use super::{PackageInfo, change, found, info_text, listing};
@@ -89,6 +90,7 @@ fn snapshot() -> Snapshot {
         name("gimp"),
         name("inkscape"),
     ])));
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 

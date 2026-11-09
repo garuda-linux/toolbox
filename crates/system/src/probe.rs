@@ -11,7 +11,6 @@ use toolbox_plan::UserConfigEdit;
 use toolbox_state::Snapshot;
 use toolbox_state::accounts::CurrentUser;
 use toolbox_state::boot::{BootLoader, SdBootKernel};
-use toolbox_state::packages::ProtectedPackages;
 pub use toolbox_state::probes::{FailedProbes, Probe};
 
 use crate::accounts::{AccountSource, EtcAccounts};
@@ -46,8 +45,6 @@ pub struct Sources {
     pub modules: Arc<dyn ModuleSource>,
     /// The edits the catalogs offer, so the probe reads only their files.
     pub config_edits: Arc<[UserConfigEdit]>,
-    /// The packages the protected catalog keeps, for every removal guard.
-    pub protected: ProtectedPackages,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -77,19 +74,12 @@ impl Sources {
             user_configs: Arc::new(HomeConfigs::from_env()),
             modules: Arc::new(SystemModules::system()),
             config_edits: Arc::from([]),
-            protected: ProtectedPackages::default(),
         }
     }
 
     #[must_use = "builder methods return the changed sources"]
     pub fn with_config_edits(mut self, edits: Vec<UserConfigEdit>) -> Self {
         self.config_edits = Arc::from(edits);
-        self
-    }
-
-    #[must_use = "builder methods return the changed sources"]
-    pub fn with_protected(mut self, protected: ProtectedPackages) -> Self {
-        self.protected = protected;
         self
     }
 }
@@ -117,6 +107,12 @@ pub fn probe_snapshot(sources: &Sources) -> (Snapshot, Vec<ProbeIssue>) {
         &mut issues,
         Probe::Packages,
         sources.packages.installed(),
+    );
+    insert(
+        &mut snapshot,
+        &mut issues,
+        Probe::PackageGraph,
+        sources.packages.graph(),
     );
     insert(
         &mut snapshot,
@@ -164,7 +160,6 @@ pub fn probe_snapshot(sources: &Sources) -> (Snapshot, Vec<ProbeIssue>) {
     probe_kernels_and_locales(sources, &mut snapshot, &mut issues);
     probe_boot(sources.boot.as_ref(), &mut snapshot, &mut issues);
     snapshot.insert(host);
-    snapshot.insert(sources.protected.clone());
     snapshot.insert(failed_probes(&issues));
 
     (snapshot, issues)

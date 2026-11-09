@@ -1,14 +1,18 @@
 //! The other pages' rules a switch meets: a removal meets the protected
-//! catalog and the Kernels page, a group change the Users page.
+//! list and the Kernels page, a group change the Users page.
 
 use toolbox_catalog::{Check, ToggleEntry};
 
 use super::{Refusal, membership};
-use crate::features::{kernels, packages, users};
+use crate::features::packages::protected::{self, CascadeRefusal};
+use crate::features::packages::queue::removal_batch;
+use crate::features::{kernels, users};
 use crate::{ChangeSet, Snapshot, Toggle};
 
-/// The protected catalog and the Kernels page's guards for the package an
-/// entry removes.
+/// The protected list, what the removal batch takes along and the Kernels
+/// page's guards for the packages an entry removes. The `also` packages
+/// count as removed even when another entry keeps one, which can refuse
+/// more than pacman would, never less.
 pub(super) fn removal_allowed(
     entry: &ToggleEntry,
     wish: Toggle,
@@ -23,8 +27,18 @@ pub(super) fn removal_allowed(
         return Ok(());
     }
 
-    packages::protected::may_remove(name, snapshot)
-        .map_err(|why| Refusal::Protected(why, name.clone()))?;
+    let removed: Vec<_> = std::iter::once(name).chain(entry.also()).cloned().collect();
+
+    for package in &removed {
+        protected::may_remove(package).map_err(|why| Refusal::Protected(why, package.clone()))?;
+    }
+
+    protected::may_remove_with_cascade(&removal_batch(changes, &removed), snapshot).map_err(
+        |refusal| match refusal {
+            CascadeRefusal::Unread => Refusal::Unknown,
+            CascadeRefusal::TakesAlong(why, along) => Refusal::TakesAlong(why, along),
+        },
+    )?;
 
     kernels::may_remove(name, changes, snapshot)
         .map_err(|refusal| Refusal::Kernel(refusal, name.clone()))

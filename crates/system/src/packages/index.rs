@@ -50,16 +50,12 @@ impl PackageIndexSource for Libalpm {
         let mut facts = BTreeMap::new();
 
         for package in handle.localdb().pkgs() {
-            let Ok(name) = PackageName::new(package.name()) else {
+            let Some(node) = local_node(package) else {
                 continue;
             };
 
-            local.push(LocalNode {
-                name: name.clone(),
-                depends: strings(package.depends()),
-                provides: strings(package.provides()),
-                reason: reason(package.reason()),
-            });
+            let name = node.name.clone();
+            local.push(node);
             facts.insert(
                 name,
                 LocalFacts {
@@ -178,6 +174,16 @@ fn installed_details(package: &Pkg) -> InstalledDetails {
             .map(|file| format!("/{}", String::from_utf8_lossy(file.name())))
             .collect(),
     }
+}
+
+/// `None` for a name that is no `PackageName`, which no removal can name.
+pub(super) fn local_node(package: &Pkg) -> Option<LocalNode> {
+    Some(LocalNode {
+        name: PackageName::new(package.name()).ok()?,
+        depends: strings(package.depends()),
+        provides: strings(package.provides()),
+        reason: reason(package.reason()),
+    })
 }
 
 fn strings(dependencies: AlpmList<&Dep>) -> Vec<String> {

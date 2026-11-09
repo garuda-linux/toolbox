@@ -15,8 +15,7 @@ use std::fs;
 use std::path::Path;
 
 pub use clean::{https_url, wiki_text};
-use toolbox_plan::PackageName;
-use toolbox_state::packages::ProtectedPackages;
+use toolbox_plan::{PackageName, protection};
 
 /// Where the catalogs go, relative to the repository root.
 pub const TARGET_DIR: &str = "data/catalog/apps";
@@ -110,7 +109,7 @@ impl Lists {
 
     /// Drops apps that only name a command of a protected package, such as
     /// su in util-linux: their switch would remove the whole package.
-    pub fn without_commands_of(mut self, protected: &ProtectedPackages) -> Self {
+    pub fn without_commands_of(mut self) -> Self {
         for (category, apps) in &mut self.lists {
             apps.retain(|(_, app)| {
                 let Some(package) = app.packages.first() else {
@@ -118,7 +117,7 @@ impl Lists {
                 };
 
                 let command = PackageName::new(package)
-                    .is_ok_and(|name| protected.0.contains_key(&name))
+                    .is_ok_and(|name| protection(&name).is_some())
                     && app.title.to_lowercase() != *package;
 
                 if command {

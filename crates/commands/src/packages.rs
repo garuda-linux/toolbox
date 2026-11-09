@@ -24,8 +24,7 @@ use toolbox_core::domains::{InstalledPackages, SyncPackages};
 use toolbox_core::features::packages::list::{Catalog, Filter};
 use toolbox_core::features::packages::queue::{Refusal, toggle};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
-use toolbox_plan::{PackageName, Plan};
-use toolbox_state::packages::Protection;
+use toolbox_plan::{PackageName, Plan, Protection};
 use toolbox_system::{Libalpm, PackageIndexSource, PackageSource as _, ProbeError};
 
 use super::act::run;
@@ -323,15 +322,20 @@ fn wish_onto(
         kept @ (Refusal::RunningKernel
         | Refusal::RunningUnknown
         | Refusal::LastKernel
-        | Refusal::Protected(_)) => kept_package(package, kept),
+        | Refusal::Protected(_)
+        | Refusal::TakesAlong(..)) => kept_package(package, kept),
     })
 }
 
-/// The protected catalog and the Kernels page's rules, for a removal
-/// asked on another page.
+/// The protected list and the Kernels page's rules, for a removal asked
+/// on another page.
 pub(crate) fn kept_package(package: &PackageName, refusal: Refusal) -> Refused {
     Refused::Rule(match refusal {
         Refusal::Protected(why) => format!("{package} stays installed: {}", protection(why)),
+        Refusal::TakesAlong(why, along) => format!(
+            "{package} stays installed: removing it would also remove {along}, and {}",
+            protection(why)
+        ),
         Refusal::RunningKernel => format!(
             "{package} runs right now, so it stays. Restart with another kernel to remove it."
         ),

@@ -10,10 +10,10 @@ use std::path::Path;
 
 use toolbox_plan::procedure::{Builtin, Command, Invocation};
 use toolbox_plan::protocol::{Event, Mode, Outcome};
-use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserAction};
+use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserAction, protection};
 
 use crate::builtin::SYSTEM_ROOT;
-use crate::report::failure;
+use crate::report::{failure, note};
 use crate::{initramfs, repair, uki};
 
 pub trait Procedure {
@@ -262,11 +262,28 @@ fn with_targets(
     let targets: Result<Vec<PackageName>, _> = lines.iter().map(PackageName::new).collect();
 
     match targets {
-        Ok(targets) => runner.run(
-            step,
-            &run.clone().args(targets.iter().map(PackageName::as_str)),
-            sink,
-        ),
+        Ok(targets) => {
+            // A protected package can turn orphan, `-Rns` must not take it.
+            let (kept, removed): (Vec<_>, Vec<_>) = targets
+                .into_iter()
+                .partition(|target| protection(target).is_some());
+
+            if !kept.is_empty() {
+                let names: Vec<&str> = kept.iter().map(PackageName::as_str).collect();
+                let message = format!("kept, as protected: {}", names.join(" "));
+                note(step, sink, &message, Outcome::Skipped);
+            }
+
+            if removed.is_empty() {
+                return Outcome::Skipped;
+            }
+
+            runner.run(
+                step,
+                &run.clone().args(removed.iter().map(PackageName::as_str)),
+                sink,
+            )
+        }
         Err(error) => failure(
             step,
             sink,

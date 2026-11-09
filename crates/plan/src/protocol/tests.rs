@@ -1,3 +1,5 @@
+mod protected;
+
 use super::{
     Answer, DecodeError, Event, Failure, MAX_INPUT_BYTES, MAX_LINE_BYTES, MAX_STEPS, Mode, Outcome,
     PROTOCOL_VERSION, ProgramAnswer, ReadKind, Request, RequestError, TerminalSize, decode, encode,

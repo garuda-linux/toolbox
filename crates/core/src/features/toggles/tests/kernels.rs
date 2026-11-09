@@ -3,6 +3,7 @@
 
 use toolbox_catalog::ToggleCatalog;
 use toolbox_state::kernels::{LinuxPackages, LocalPackage, RunningKernel};
+use toolbox_state::packages::PackageGraph;
 
 use super::super::{Refusal, toggle};
 use crate::domains::{InstalledPackages, Packages};
@@ -44,6 +45,7 @@ fn only_lts() -> Snapshot {
         release: "6.12.9-1-lts".to_owned(),
         package: Some(package("linux-lts")),
     });
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 

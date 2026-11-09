@@ -184,7 +184,8 @@ pub fn install_onto(
             kept @ (Refusal::RunningKernel
             | Refusal::RunningUnknown
             | Refusal::LastKernel
-            | Refusal::Protected(_)) => super::kept_package(package, kept),
+            | Refusal::Protected(_)
+            | Refusal::TakesAlong(..)) => super::kept_package(package, kept),
         })?;
     }
 

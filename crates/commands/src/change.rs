@@ -135,6 +135,10 @@ pub(super) fn toggle_refused(refusal: toggles::Refusal) -> Refused {
             &package,
             toolbox_core::features::packages::queue::Refusal::Protected(why),
         ),
+        toggles::Refusal::TakesAlong(why, along) => crate::packages::kept_package(
+            &along,
+            toolbox_core::features::packages::queue::Refusal::Protected(why),
+        ),
         toggles::Refusal::Unknown => Refused::page_rule(why::SWITCH_UNKNOWN),
         toggles::Refusal::Unmet => Refused::page_rule(why::SWITCH_UNMET),
         toggles::Refusal::Account(refusal, _) => {

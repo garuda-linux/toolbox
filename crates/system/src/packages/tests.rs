@@ -1,4 +1,5 @@
 mod fixture;
+mod graph;
 mod index;
 mod orphans;
 
