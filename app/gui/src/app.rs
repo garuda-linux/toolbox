@@ -284,7 +284,7 @@ impl eframe::App for App {
         self.take_reading(ctx);
         self.take_services(ctx);
         self.take_reports(ctx);
-        self.answer_queue();
+        self.answer_queue(ctx);
         self.guard_close(ctx);
         self.run_all(ctx, Self::pressed(ctx));
     }

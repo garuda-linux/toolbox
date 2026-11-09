@@ -7411,6 +7411,9 @@
     "toast-queue-not-saved": {
       "string": "Die vorgemerkten Änderungen konnten nicht gespeichert werden. Beim Beenden der App gehen sie verloren."
     },
+    "toast-queue-edited-outside": {
+      "string": "Die vorgemerkten Änderungen wurden über die Befehlszeile geändert."
+    },
     "toast-tool-failed": {
       "string": "{name} wurde mit einem Fehler beendet. Details stehen in der Logdatei."
     },

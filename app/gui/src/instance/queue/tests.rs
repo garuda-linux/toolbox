@@ -1,8 +1,37 @@
 use tokio::sync::oneshot;
-use toolbox_instance::bus::queue::{Ask, Desk as _, Question};
+use toolbox_instance::bus::queue::{Ask, Desk as _, Question, Refusal};
 
 use super::Arrivals;
 use crate::command::CommandBus;
+use crate::instance::WAITING_ASKS;
+
+#[test]
+fn a_question_past_the_bound_is_refused_at_once() {
+    let arrivals = Arrivals::new(CommandBus::new().sender);
+    let mut waiting = Vec::new();
+    for _ in 0..WAITING_ASKS {
+        let (answer, answered) = oneshot::channel();
+        arrivals.ask(Ask {
+            question: Question::Edit("{}".to_owned()),
+            answer,
+        });
+        waiting.push(answered);
+    }
+
+    let (answer, mut refused) = oneshot::channel();
+    arrivals.ask(Ask {
+        question: Question::Changes,
+        answer,
+    });
+
+    assert_eq!(refused.try_recv(), Ok(Err(Refusal::TooMany)));
+    assert!(
+        waiting
+            .iter_mut()
+            .all(|answered| answered.try_recv().is_err())
+    );
+    assert_eq!(arrivals.questions().len(), WAITING_ASKS);
+}
 
 #[test]
 fn a_question_waits_for_the_app_in_its_order() {

@@ -18,6 +18,11 @@ of a line drops that change. **Hide** closes the list again.
 While the [Console](console.md) is open, the same count, **Review** and
 **Apply** sit at the right of the Console's header instead.
 
+While the window is open, a `garuda-toolbox` command that changes the queue
+edits the window's queue and shows the note **The queue was changed from
+the command line.** When 64 such commands wait for the window at once, the
+next one fails with `the window has too many queue commands waiting`.
+
 ## Remove every waiting change
 
 To start over, click **Remove all…** in the list and confirm the question,

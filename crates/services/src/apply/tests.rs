@@ -1,3 +1,4 @@
+mod budget;
 mod finish;
 mod secrets;
 mod size;

@@ -81,6 +81,31 @@ pub struct ApplyHandle {
 #[derive(Clone, Debug)]
 struct Reporter(Waking<Report>);
 
+impl Report {
+    pub const fn output_len(&self) -> usize {
+        match self {
+            Self::Step(Event::Output { step: _, data }) => data.len(),
+            Self::PlanStarted { steps: _ }
+            | Self::Step(_)
+            | Self::Problem(_)
+            | Self::PlanFinished { succeeded: _ }
+            | Self::Busy
+            | Self::CancelWaits => 0,
+        }
+    }
+}
+
+#[cfg(any(test, feature = "testing"))]
+impl ApplyHandle {
+    /// A handle without a service, fed through the sender.
+    #[must_use = "the sender is the only way to feed the handle"]
+    pub fn feeding(wake: Wake) -> (Waking<Report>, Self) {
+        let (commands, _) = unbounded_channel();
+        let (sender, reports) = waking::channel(wake);
+        (sender, Self { commands, reports })
+    }
+}
+
 impl ApplyHandle {
     /// Sending fails only after shutdown, when nobody listens anymore.
     pub fn send(&self, command: ApplyCommand) {
@@ -89,9 +114,23 @@ impl ApplyHandle {
         }
     }
 
-    /// Every report since the last call.
-    pub fn reports(&self) -> impl Iterator<Item = Report> + '_ {
-        self.reports.try_iter()
+    /// Reports in order until they carry `budget` bytes of program output,
+    /// and whether more wait. The window feeds output to its terminal
+    /// within the frame, so a flood is spread over frames instead of one
+    /// that never ends.
+    pub fn reports_within(&self, budget: usize) -> (Vec<Report>, bool) {
+        let mut taken = Vec::new();
+        let mut spent = 0;
+        while spent < budget {
+            let Ok(report) = self.reports.try_recv() else {
+                return (taken, false);
+            };
+
+            spent += report.output_len();
+            taken.push(report);
+        }
+
+        (taken, !self.reports.is_empty())
     }
 
     /// The next report, `None` once the service is gone. For the command

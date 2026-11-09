@@ -7500,6 +7500,10 @@
     "toast-queue-not-saved": {
       "string": "The queued changes could not be saved. They are lost when the app closes."
     },
+    "toast-queue-edited-outside": {
+      "string": "The queue was changed from the command line.",
+      "developer_comment": "A garuda-toolbox queue command changed the window's queued changes."
+    },
     "toast-tool-failed": {
       "string": "{name} ended with an error. The log file says why.",
       "developer_comment": "A program the app started, such as the installer or a Maintenance tool,\nended with an error. $name is its program name."

@@ -80,6 +80,36 @@ fn an_unreadable_file_is_left_to_the_bundled_set() {
 }
 
 #[test]
+fn an_svg_over_the_cap_is_left_to_the_bundled_set() {
+    let folder = TempDir::new().unwrap();
+    let home = folder.path().join("go-home-symbolic.svg");
+    let globe = folder.path().join("globe-symbolic.svg");
+    let padding = "x".repeat(super::MAX_SVG_BYTES);
+    fs::write(&home, format!("<svg><!-- {padding} --></svg>")).unwrap();
+    fs::write(&globe, "x".repeat(super::MAX_SVG_BYTES)).unwrap();
+
+    let mut lookup = Fake::default();
+    lookup
+        .files
+        .insert(("Papirus".into(), "go-home-symbolic".into()), home);
+    lookup
+        .files
+        .insert(("Papirus".into(), "globe-symbolic".into()), globe);
+
+    let icons = theme_icons("Papirus", &lookup);
+
+    assert_eq!(
+        drawn_uri(GO_HOME, &icons),
+        "bytes://icons/bundled/go-home.svg"
+    );
+    assert_eq!(
+        drawn_uri(GLOBE, &icons),
+        "bytes://icons/Papirus/globe.svg",
+        "a file of exactly the cap is still read"
+    );
+}
+
+#[test]
 fn app_pictures_are_found_by_name_in_the_theme() {
     let mut lookup = Fake::default();
     lookup.files.insert(

@@ -25,6 +25,11 @@ pub use self::claim::{Single, claim};
 use crate::command::{AppCommand, CommandSender};
 use crate::page::PageId;
 
+/// Questions the app has not answered yet. Any process of the session can
+/// call, and each edit may carry 256 KiB, so a flood is refused instead of
+/// parked.
+pub const WAITING_ASKS: usize = 64;
+
 /// Brings the window to the front with a token, a port so the tests need
 /// no compositor.
 pub trait Raise: Send + Sync {
@@ -91,6 +96,16 @@ impl Arrival {
             raised,
         }
     }
+
+    /// The collection to start now. Any process of the session can send
+    /// an arrival, and a collection may ask for a password, so a window
+    /// that was not `in_front` only opens the page and waits for a click.
+    pub const fn collection(&self, in_front: bool) -> Option<Selection> {
+        match &self.action {
+            Some(PageAction::Collect(selection)) if in_front => Some(*selection),
+            Some(PageAction::Collect(_)) | None => None,
+        }
+    }
 }
 
 impl Arrivals {
@@ -100,7 +115,7 @@ impl Arrivals {
             commands,
             ctx: OnceLock::new(),
             raise: Mutex::new(None),
-            asks: crossbeam_channel::unbounded(),
+            asks: crossbeam_channel::bounded(WAITING_ASKS),
         }
     }
 

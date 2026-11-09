@@ -59,6 +59,10 @@ const fn refused_words(refusal: Refusal) -> (&'static str, &'static str) {
             "the change is too large to hand to the window",
             "apply part of the queue in the window first",
         ),
+        Refusal::TooMany => (
+            "the window has too many queue commands waiting",
+            "try again in a moment",
+        ),
         Refusal::NoAnswer => (
             "the window did not answer",
             "try again, or close the window",

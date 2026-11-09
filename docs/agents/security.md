@@ -314,6 +314,8 @@ user's, and an apply still asks for the password.
   and decodes it as a `QueueEdit` (`crates/services/src/queue/edit.rs`).
   Anything that does not decode into its domain's value objects refuses
   the whole edit. Each wish then meets every page guard, as a click.
+  At most 64 questions wait for the app (`instance::WAITING_ASKS`), the
+  next is refused as `too-many`. Every edit that lands shows a toast.
 - Nothing on the bus applies the queue. Refusals cross as fixed codes.
 
 ## Network

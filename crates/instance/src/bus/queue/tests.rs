@@ -84,6 +84,15 @@ async fn the_window_s_refusal_crosses_as_its_code() {
 }
 
 #[tokio::test]
+async fn a_full_window_refuses_at_once_as_too_many() {
+    let clerk = Clerk::answering(Some(Err(Refusal::TooMany)));
+
+    let error = queue(&clerk).edit("{}".to_owned()).await.unwrap_err();
+
+    assert_eq!(code(error), "too-many");
+}
+
+#[tokio::test]
 async fn a_text_too_large_never_reaches_the_window() {
     let clerk = Clerk::answering(Some(Ok(String::new())));
 
@@ -133,6 +142,7 @@ fn every_code_names_its_refusal_again() {
         Refusal::Busy,
         Refusal::Invalid,
         Refusal::TooLarge,
+        Refusal::TooMany,
         Refusal::NoAnswer,
         Refusal::Unsupported,
     ] {

@@ -34,6 +34,8 @@ toast-plan-failed = A step failed. Open the Console to see what happened.
 toast-link-failed = The link did not open.
 settings-not-saved = A setting could not be saved.
 toast-queue-not-saved = The queued changes could not be saved. They are lost when the app closes.
+# A garuda-toolbox queue command changed the window's queued changes.
+toast-queue-edited-outside = The queue was changed from the command line.
 # A program the app started, such as the installer or a Maintenance tool,
 # ended with an error. $name is its program name.
 toast-tool-failed = { $name } ended with an error. The log file says why.

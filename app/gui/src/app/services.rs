@@ -17,6 +17,10 @@ use crate::i18n;
 use crate::pages::home::HomeProblem;
 use crate::units::UnitsHandle;
 
+/// The program output one frame feeds to the Console's terminal. A
+/// program that prints faster than that still leaves the window usable.
+const REPORT_BUDGET: usize = 128 * 1024;
+
 impl App {
     /// A bubble only while the user looks elsewhere. The Console says the
     /// same to a user who watches.
@@ -42,11 +46,15 @@ impl App {
     }
 
     pub(super) fn take_reports(&mut self, ctx: &egui::Context) {
-        let reports: Vec<Report> = self
+        let (reports, more) = self
             .apply
             .as_ref()
-            .map(|apply| apply.reports().collect())
+            .map(|apply| apply.reports_within(REPORT_BUDGET))
             .unwrap_or_default();
+
+        if more {
+            ctx.request_repaint();
+        }
 
         for report in reports {
             let finished = match report {

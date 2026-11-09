@@ -101,3 +101,18 @@ fn without_a_raiser_the_app_is_told_to_ask_for_attention() {
         }))]
     );
 }
+
+/// Any process of the session may call. A collection may ask for a
+/// password, so it starts only for a window the user has in front.
+#[test]
+fn a_collection_starts_only_in_a_window_in_front() {
+    let arrival = Arrival::of(&wish("diagnostics", Some("inxi")), true);
+    let inxi = Some(Selection::One(Collector::Inxi));
+
+    assert_eq!(arrival.collection(true), inxi);
+    assert_eq!(arrival.collection(false), None);
+    assert_eq!(
+        Arrival::of(&wish("diagnostics", None), false).collection(true),
+        None
+    );
+}

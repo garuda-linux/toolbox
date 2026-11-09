@@ -35,6 +35,9 @@ pub enum Refusal {
     Busy,
     Invalid,
     TooLarge,
+    /// The window's queue of unanswered questions is full, so a flood of
+    /// calls cannot pile up in it.
+    TooMany,
     /// No answer in time, or the window is closing.
     NoAnswer,
     /// A window of an older version, without the interface.
@@ -68,6 +71,7 @@ impl Refusal {
             Self::Busy => "busy",
             Self::Invalid => "invalid",
             Self::TooLarge => "too-large",
+            Self::TooMany => "too-many",
             Self::NoAnswer => "no-answer",
             Self::Unsupported => "unsupported",
         }
@@ -79,6 +83,7 @@ impl Refusal {
             Self::Busy,
             Self::Invalid,
             Self::TooLarge,
+            Self::TooMany,
             Self::NoAnswer,
             Self::Unsupported,
         ]
