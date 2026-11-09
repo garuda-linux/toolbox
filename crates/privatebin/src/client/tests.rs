@@ -88,7 +88,7 @@ fn one_request_goes_to_the_fixed_server_without_the_key_or_the_text() {
     let body: Value = serde_json::from_str(body).unwrap();
 
     assert_eq!(body["v"], 2_u8);
-    assert_eq!(body["meta"]["expire"], "1year");
+    assert_eq!(body["meta"]["expire"], "1month");
     assert!(body["ct"].as_str().is_some_and(|ct| !ct.is_empty()));
 }
 

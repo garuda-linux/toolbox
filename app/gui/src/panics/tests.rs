@@ -1,6 +1,6 @@
 use std::panic::Location;
 
-use super::{headline, record};
+use super::{MAX_CRASH_BYTES, headline, record};
 
 #[test]
 fn a_panic_is_named_with_its_thread_place_and_message() {
@@ -48,10 +48,50 @@ fn every_panic_is_added_to_the_crash_file_for_the_owner_alone() {
 }
 
 #[test]
+fn a_full_crash_file_moves_aside_once_and_starts_over() {
+    let folder = tempfile::tempdir().unwrap();
+    let file = folder.path().join("crash.log");
+    let older = folder.path().join("crash.log.1");
+    let full = "x".repeat(usize::try_from(MAX_CRASH_BYTES).unwrap() - 4);
+
+    std::fs::write(&older, "the oldest crashes\n").unwrap();
+    std::fs::write(&file, &full).unwrap();
+    record(&file, "abc\n").unwrap();
+    assert!(
+        std::fs::read_to_string(&older).unwrap() == "the oldest crashes\n",
+        "a text that still fits moved the file"
+    );
+
+    record(&file, "panic in main: late\n").unwrap();
+
+    assert_eq!(
+        std::fs::read_to_string(&older).unwrap(),
+        format!("{full}abc\n")
+    );
+    assert_eq!(
+        std::fs::read_to_string(&file).unwrap(),
+        "panic in main: late\n"
+    );
+}
+
+#[test]
 fn a_crash_file_that_cannot_be_written_says_so() {
     let folder = tempfile::tempdir().unwrap();
     let blocker = folder.path().join("not-a-folder");
     std::fs::write(&blocker, "").unwrap();
 
     assert!(record(&blocker.join("crash.log"), "panic in main\n").is_err());
+}
+
+#[test]
+fn a_crash_file_that_is_a_link_is_refused() {
+    let folder = tempfile::tempdir().unwrap();
+    let target = folder.path().join("elsewhere");
+    let file = folder.path().join("crash.log");
+
+    std::fs::write(&target, "").unwrap();
+    std::os::unix::fs::symlink(&target, &file).unwrap();
+
+    record(&file, "panic in main: boom\n").unwrap_err();
+    assert_eq!(std::fs::read_to_string(&target).unwrap(), "");
 }

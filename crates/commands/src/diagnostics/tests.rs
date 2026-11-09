@@ -98,3 +98,12 @@ fn an_upload_that_never_ends_is_a_failure_without_links() {
     assert_eq!(exit, Exit::Failure);
     assert!(!out.contains("Uploaded"), "{out}");
 }
+
+#[test]
+fn the_upload_names_the_count_of_replaced_values_before_it_asks() {
+    let report = "CPU: fast\nmirror 8.8.4.4 and 8.8.4.4 again\n".to_owned();
+    let (exit, out) = run(Outcome::Report(report), true, &["n"]);
+
+    assert_eq!(exit, Exit::Declined);
+    assert!(out.contains("replaced before it goes: 2"), "{out}");
+}

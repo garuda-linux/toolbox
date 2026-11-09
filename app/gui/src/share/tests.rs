@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
+use toolbox_core::features::diagnostics::Known;
 use toolbox_system::share::Upload;
 
 use super::spawn;
@@ -13,6 +14,7 @@ fn a_share_runs_once_at_a_time_and_ends_with_the_link() {
         runtime.handle(),
         crate::waking::Wake::none(),
         Arc::new(DryRunTransport),
+        Known::default(),
     );
 
     let mut upload = Upload::default();

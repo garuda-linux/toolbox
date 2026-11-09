@@ -48,11 +48,29 @@ struct State {
     buffered: VecDeque<String>,
     /// No file will ever open, so nothing is buffered either.
     stderr_only: bool,
+    streak: Streak,
 }
 
 struct Sink {
     file: File,
     size: u64,
+}
+
+/// Lost lines since the last one that landed. A full disk fails every
+/// line, so only the first failure of a streak reaches stderr.
+#[derive(Default)]
+struct Streak {
+    failing: bool,
+}
+
+impl Streak {
+    const fn failed(&mut self) -> bool {
+        !std::mem::replace(&mut self.failing, true)
+    }
+
+    const fn recovered(&mut self) {
+        self.failing = false;
+    }
 }
 
 impl FileLogger {
@@ -83,10 +101,8 @@ impl FileLogger {
         state.reopen(path);
         let buffered = std::mem::take(&mut state.buffered);
 
-        if let Some(sink) = state.sink.as_mut() {
-            for line in buffered {
-                sink.write(&line);
-            }
+        for line in buffered {
+            state.write(&line);
         }
     }
 
@@ -140,9 +156,7 @@ impl FileLogger {
             }
         }
 
-        if let Some(sink) = state.sink.as_mut() {
-            sink.write(line);
-        }
+        state.write(line);
     }
 }
 
@@ -154,55 +168,75 @@ impl State {
             failed: None,
             buffered: VecDeque::new(),
             stderr_only: false,
+            streak: Streak { failing: false },
         }
     }
 
     fn reopen(&mut self, path: &Path) {
-        self.sink = open_sink(path);
-        self.failed = self.sink.is_none().then(Instant::now);
+        match open_sink(path) {
+            Ok(sink) => {
+                self.sink = Some(sink);
+                self.failed = None;
+            }
+            Err(error) => {
+                self.sink = None;
+                self.failed = Some(Instant::now());
+                if self.streak.failed() {
+                    report(&format!("cannot open the log {}: {error}", path.display()));
+                }
+            }
+        }
     }
-}
 
-impl Sink {
-    /// A line that cannot be written is lost: a logger has nowhere to
-    /// report it.
     fn write(&mut self, line: &str) {
-        if self.file.write_all(line.as_bytes()).is_ok() {
-            self.size = self
-                .size
-                .saturating_add(u64::try_from(line.len()).unwrap_or(u64::MAX));
+        // The failed open already started the streak and said so.
+        let Some(sink) = self.sink.as_mut() else {
+            return;
+        };
+
+        match sink.file.write_all(line.as_bytes()) {
+            Ok(()) => {
+                sink.size = sink
+                    .size
+                    .saturating_add(u64::try_from(line.len()).unwrap_or(u64::MAX));
+                self.streak.recovered();
+            }
+            Err(error) => {
+                if self.streak.failed() {
+                    report(&format!("cannot write the log: {error}"));
+                }
+            }
         }
     }
 }
 
-fn open_sink(path: &Path) -> Option<Sink> {
+fn open_sink(path: &Path) -> io::Result<Sink> {
     use std::os::unix::fs::{OpenOptionsExt as _, PermissionsExt as _};
 
     if let Some(dir) = path.parent() {
-        fs::create_dir_all(dir).ok()?;
+        fs::create_dir_all(dir)?;
     }
 
     let file = OpenOptions::new()
         .create(true)
         .append(true)
         .mode(0o600)
-        .open(path)
-        .ok()?;
+        .custom_flags(rustix::fs::OFlags::NOFOLLOW.bits().cast_signed())
+        .open(path)?;
 
-    // The umask may have taken bits off a new file, and a file an older
-    // run wrote keeps its own: the log holds paths, helper errors and
-    // panic backtraces, so it is the owner's alone to read.
+    // The umask or an older run may have left looser bits, and the log
+    // holds paths and backtraces. Set through the open file, not the path.
     let looser = file
         .metadata()
         .is_ok_and(|meta| meta.permissions().mode() & 0o777 != 0o600);
 
     if looser {
-        fs::set_permissions(path, fs::Permissions::from_mode(0o600)).ok();
+        file.set_permissions(fs::Permissions::from_mode(0o600)).ok();
     }
 
     let size = file.metadata().map_or(0, |meta| meta.len());
 
-    Some(Sink { file, size })
+    Ok(Sink { file, size })
 }
 
 /// `x.log` → `x.log.1` → … → `x.log.KEEP` (the oldest is dropped).

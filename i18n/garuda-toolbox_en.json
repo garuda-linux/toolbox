@@ -7324,10 +7324,31 @@
       }
     },
     "share-upload-where": {
-      "string": "The text below goes to bin.garudalinux.org. It is encrypted on this computer, so the server cannot read it, but anyone who has the link can. The server deletes it after one year."
+      "string": "The text below goes to bin.garudalinux.org. It is encrypted on this computer, so the server cannot read it, but anyone who has the link can. The server deletes it after one month."
     },
     "share-upload-check": {
-      "string": "Check it for anything you do not want to share, such as names, addresses or serial numbers."
+      "string": "Check it for anything else you do not want to share. The search marks every match."
+    },
+    "share-upload-replaced-none": {
+      "string": "Nothing in it named you or this computer, as far as the Toolbox can tell."
+    },
+    "share-upload-replaced": {
+      "string": "{count, plural, one {One value that names you or this computer was replaced, such as the user name, the host name, a serial number or a public address.} other {{count} values that name you or this computer were replaced, such as the user name, the host name, serial numbers and public addresses.}}"
+    },
+    "share-upload-search": {
+      "string": "Search the text"
+    },
+    "share-upload-search-hint": {
+      "string": "Search the text"
+    },
+    "share-upload-search-clear": {
+      "string": "Clear the search"
+    },
+    "share-upload-search-next": {
+      "string": "Next match"
+    },
+    "share-upload-search-count": {
+      "string": "{current} of {count}"
     },
     "share-upload-text": {
       "string": "The text that will be uploaded"

@@ -1,6 +1,7 @@
 //! The sharer answers on its own threads, so its notes come through a
 //! channel that wakes the frame.
 
+mod preview;
 #[cfg(test)]
 mod tests;
 pub mod view;
@@ -8,6 +9,7 @@ pub mod view;
 use std::sync::Arc;
 
 use crossbeam_channel::Receiver;
+use toolbox_core::features::diagnostics::Known;
 use toolbox_privatebin::Transport;
 use toolbox_system::share::{ShareNote, ShareSink, Sharer, Upload};
 
@@ -17,6 +19,8 @@ use crate::waking::{self, Wake, Waking};
 pub struct ShareLink {
     sharer: Sharer,
     notes: Receiver<ShareNote>,
+    /// What the shared text must not name.
+    known: Known,
 }
 
 struct Sink(Waking<ShareNote>);
@@ -28,6 +32,11 @@ impl ShareSink for Sink {
 }
 
 impl ShareLink {
+    /// What `link` keeps out of the shared text, nothing without a link.
+    pub fn known_of(link: Option<&Self>) -> Known {
+        link.map(|link| link.known.clone()).unwrap_or_default()
+    }
+
     /// Uploads `text` into `upload`. Returns whether it started: not
     /// without text or while an upload of this link runs.
     pub fn share(&self, upload: &mut Upload, text: String) -> bool {
@@ -59,6 +68,7 @@ pub fn spawn(
     runtime: &tokio::runtime::Handle,
     wake: Wake,
     transport: Arc<dyn Transport>,
+    known: Known,
 ) -> ShareLink {
     let (sender, notes) = waking::channel(wake);
     let sink = Arc::new(Sink(sender));
@@ -66,5 +76,6 @@ pub fn spawn(
     ShareLink {
         sharer: Sharer::new(runtime.clone(), transport, sink),
         notes,
+        known,
     }
 }

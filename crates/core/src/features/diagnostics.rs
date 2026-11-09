@@ -2,6 +2,6 @@
 //! it in the forum are not the one who made it.
 
 pub use toolbox_state::diagnostics::{
-    Access, Attempt, Collector, Outcome, Program, Ran, Refusal, Selection, Source, UploadFailure,
-    full_report, outcome, since_last_pacman_run,
+    Access, Attempt, Collector, Known, Outcome, Program, Ran, Redacted, RedactedKind, Refusal,
+    Selection, Source, UploadFailure, full_report, outcome, redact, since_last_pacman_run,
 };

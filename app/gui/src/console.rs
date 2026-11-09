@@ -4,6 +4,7 @@ mod tests;
 
 use mirror::MirrorWatch;
 use toolbox_core::features::console::ending::Ending;
+use toolbox_core::features::diagnostics::{Known, Redacted, redact};
 use toolbox_plan::protocol::{self, Failure};
 use toolbox_plan::{PackageName, Plan, StepId, TargetList};
 use toolbox_system::share::Upload;
@@ -50,6 +51,8 @@ pub struct Console {
     mirror: MirrorWatch,
     /// Plans started so far, so each one's end shows once as new.
     runs: u64,
+    /// What a shared output must not name.
+    known: Known,
 }
 
 impl Console {
@@ -69,6 +72,14 @@ impl Console {
             output: false,
             share: Upload::default(),
             mirror: MirrorWatch::default(),
+            known: Known::default(),
+        }
+    }
+
+    pub fn knowing(known: Known) -> Self {
+        Self {
+            known,
+            ..Self::new()
         }
     }
 
@@ -208,6 +219,11 @@ impl Console {
 
     pub fn output_text(&self) -> String {
         self.terminal.to_plain_text()
+    }
+
+    /// The output as it may leave the machine.
+    pub fn shareable_output(&self) -> Redacted {
+        redact(&self.output_text(), &self.known)
     }
 
     /// Returns whether it did: not while a plan runs, whose programs still write to it.

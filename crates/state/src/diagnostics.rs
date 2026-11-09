@@ -1,12 +1,14 @@
 //! The report is English whatever the app's language: the people who read
 //! it in the forum are not the one who made it.
 
+mod redact;
 pub mod report;
 mod selection;
 #[cfg(test)]
 mod tests;
 mod upload;
 
+pub use redact::{Kind as RedactedKind, Known, Redacted, redact};
 pub use report::{Attempt, Outcome, Ran, Refusal, full_report, outcome, since_last_pacman_run};
 pub use selection::Selection;
 use toolbox_plan::protocol::ReadKind;

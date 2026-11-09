@@ -11,7 +11,7 @@ use std::sync::mpsc::{Receiver, Sender, channel};
 use tokio::runtime::Handle;
 use toolbox_cli::Exit;
 use toolbox_cli::confirm::{Prompt, consent};
-use toolbox_core::features::diagnostics::Selection;
+use toolbox_core::features::diagnostics::{Outcome, Selection};
 use toolbox_privatebin::Transport;
 use toolbox_system::DiagnosticSource;
 use toolbox_system::diagnostics::page::{Page, State};
@@ -54,8 +54,20 @@ pub fn collect(
     let mut page = Page::default();
 
     handle.send(Request::Collect(selection));
+
+    // A report is followed by its redacted form, the rest ends with
+    // `Finished`.
     while let Ok(note) = notes.recv() {
-        let finished = matches!(note, DiagnosticsNote::Finished(..));
+        let finished = match &note {
+            DiagnosticsNote::Finished(_, outcome) => !matches!(outcome, Outcome::Report(_)),
+            DiagnosticsNote::Shareable(_) => true,
+            DiagnosticsNote::Started(_)
+            | DiagnosticsNote::Collecting(_)
+            | DiagnosticsNote::Cancelled
+            | DiagnosticsNote::UploadStarted
+            | DiagnosticsNote::Uploaded(_) => false,
+        };
+
         page.apply(note);
         if finished {
             break;
@@ -82,11 +94,23 @@ pub fn collect(
     writeln!(out, "\n{}\n", paint.title("Upload", None)).ok();
     let note = "The report goes to bin.garudalinux.org as an encrypted paste. Whoever has the link can read it.";
     writeln!(out, "{}", paint.item(note)).ok();
+
+    let Some(shareable) = page.shareable.take() else {
+        return Exit::Failure;
+    };
+
+    let replaced = format!(
+        "Values that name you or this machine, replaced before it goes: {}",
+        shareable.total()
+    );
+
+    writeln!(out, "{}", paint.item(&replaced)).ok();
+
     if let Some(refused) = consent(prompt, yes, None).exit() {
         return refused;
     }
 
-    handle.send(Request::Upload(page.report.clone()));
+    handle.send(Request::Upload(shareable.into_text()));
     uploaded(&mut page, &notes, out)
 }
 

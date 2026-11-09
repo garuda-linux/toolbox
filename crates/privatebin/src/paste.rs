@@ -26,7 +26,7 @@ const KEY_BITS: u32 = 256;
 const TAG_BITS: u32 = 128;
 /// zlib's default.
 const DEFLATE_LEVEL: u8 = 6;
-const EXPIRE: &str = "1year";
+const EXPIRE: &str = "1month";
 
 type Cipher = AesGcm<Aes256, U16>;
 

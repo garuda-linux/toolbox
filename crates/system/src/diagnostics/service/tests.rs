@@ -6,7 +6,9 @@ use parking_lot::Mutex;
 use tokio::runtime::Handle;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 use toolbox_privatebin::{RequestError, Transport};
-use toolbox_state::diagnostics::{Collector, Outcome, Selection, UploadFailure};
+use toolbox_state::diagnostics::{
+    Collector, Known, Outcome, RedactedKind, Selection, UploadFailure,
+};
 
 use super::{DiagnosticsHandle, DiagnosticsNote, DiagnosticsSink, Request, UploadProblem, serve};
 use crate::DiagnosticSource;
@@ -30,6 +32,14 @@ impl DiagnosticSource for Fake {
             | Collector::Journal
             | Collector::PacmanLog
             | Collector::Dmesg => Some(Outcome::Report(format!("{}\n", collector.as_str()))),
+        }
+    }
+
+    /// The kernel log names this host.
+    fn known(&self) -> Known {
+        Known {
+            host: Some("dmesg".to_owned()),
+            ..Known::default()
         }
     }
 }
@@ -148,6 +158,13 @@ async fn a_collector_reports_its_start_and_its_outcome() {
             Outcome::Report("dmesg\n".to_owned())
         ))
     );
+
+    let Some(DiagnosticsNote::Shareable(shareable)) = heard.recv().await else {
+        panic!("the redacted report follows the report");
+    };
+
+    assert_eq!(shareable.text(), "<host>\n");
+    assert_eq!(shareable.count(RedactedKind::Host), 1);
 
     handle.send(one(Collector::Health));
     heard.recv().await;

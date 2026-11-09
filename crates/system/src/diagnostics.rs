@@ -3,6 +3,7 @@
 //! not reach, and pacman's log.
 
 mod access;
+pub mod known;
 pub mod page;
 pub mod service;
 #[cfg(test)]
@@ -17,11 +18,12 @@ use std::sync::atomic::AtomicBool;
 use std::time::Instant;
 
 pub(crate) use access::{access, pacman_log};
+use known::KnownRoots;
 use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture};
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind};
 use toolbox_pty::strip_ansi;
 use toolbox_state::diagnostics::{
-    Attempt, Collector, Outcome, Program, Ran, Refusal as PlanRefusal, Source, outcome,
+    Attempt, Collector, Known, Outcome, Program, Ran, Refusal as PlanRefusal, Source, outcome,
 };
 
 use crate::command::DEADLINE;
@@ -35,6 +37,12 @@ const REPORT_LOCALE: &str = "C.UTF-8";
 pub trait DiagnosticSource: Send + Sync {
     /// What `collector` delivered, `None` when `cancel` was set meanwhile.
     fn collect(&self, collector: Collector, cancel: &Arc<AtomicBool>) -> Option<Outcome>;
+
+    /// The machine's and the user's names and serials, which an upload
+    /// replaces.
+    fn known(&self) -> Known {
+        Known::default()
+    }
 }
 
 /// Starts one read of the root helper. The app knows where it lives and
@@ -48,6 +56,8 @@ pub struct SystemDiagnostics {
     /// Where the user's programs are looked up, `None` for `PATH`.
     programs: Option<PathBuf>,
     helper: Arc<dyn HelperReads>,
+    /// `None` in tests, which know no names.
+    known: Option<KnownRoots>,
 }
 
 impl SystemDiagnostics {
@@ -57,6 +67,7 @@ impl SystemDiagnostics {
             root: PathBuf::from("/"),
             programs: None,
             helper,
+            known: Some(KnownRoots::system()),
         }
     }
 
@@ -72,6 +83,7 @@ impl SystemDiagnostics {
             root: root.to_owned(),
             programs: Some(programs.to_owned()),
             helper,
+            known: None,
         }
     }
 
@@ -188,6 +200,12 @@ impl DiagnosticSource for SystemDiagnostics {
             Outcome::Failed(reason) => Outcome::Failed(strip_ansi(&reason)),
             shown @ (Outcome::Report(_) | Outcome::Unavailable | Outcome::Refused(_)) => shown,
         })
+    }
+
+    fn known(&self) -> Known {
+        self.known
+            .as_ref()
+            .map_or_else(Known::default, known::of_process)
     }
 }
 

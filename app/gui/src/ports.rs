@@ -37,9 +37,10 @@ use toolbox_plan::protocol::Mode;
 use toolbox_privatebin::{Https, Transport};
 use toolbox_system::mirrors::RateMirrors;
 use toolbox_system::{
-    AddressSource, ConfigFileSource, DryRunEditor, EditFolder, Editing, HelperLocks, KdeGeoIp,
-    Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions, SystemBootMenu,
-    SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork, SystemRepair,
+    AddressSource, ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing,
+    HelperLocks, KdeGeoIp, Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions,
+    SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork,
+    SystemRepair,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";
@@ -108,7 +109,10 @@ pub fn helper_services(handle: &Handle, ctx: &egui::Context) -> HelperServices {
         &launcher,
     )));
 
-    let output_share = toolbox_gui::share::spawn(handle, wake.clone(), Arc::clone(&transport));
+    // A few short files, read once before the first frame.
+    let known = source.known();
+    let output_share =
+        toolbox_gui::share::spawn(handle, wake.clone(), Arc::clone(&transport), known);
 
     let diagnostics = toolbox_gui::diagnostics::spawn(handle, wake, source, transport);
 

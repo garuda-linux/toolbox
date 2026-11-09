@@ -147,7 +147,10 @@ The report is one of `inxi`, `garuda-health`, `systemd-analyze`,
 
 With `--upload` it goes to `bin.garudalinux.org` as an encrypted paste
 after a question, and the link and the delete link are printed. Whoever has
-the link can read the report.
+the link can read the report. The uploaded text has your user name, host
+name, home folder, serials, UUIDs, hardware and public addresses replaced
+([list](diagnostics.md#what-the-upload-replaces)), and the command says how
+many before it asks. The printed report keeps them.
 
 ## Changing the system
 

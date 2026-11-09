@@ -108,7 +108,7 @@ fn the_request_has_privatebins_shape_and_options() {
     let request = as_value(&seal(TEXT, &fixed()).unwrap());
 
     assert_eq!(request["v"], 2_u8);
-    assert_eq!(request["meta"], serde_json::json!({ "expire": "1year" }));
+    assert_eq!(request["meta"], serde_json::json!({ "expire": "1month" }));
     assert_eq!(
         request["adata"],
         serde_json::from_str::<Value>(ADATA).unwrap()

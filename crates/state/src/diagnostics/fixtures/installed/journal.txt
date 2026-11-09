@@ -1,0 +1,1000 @@
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_path_chown now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_path_mkdir now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_path_mknod now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_path_symlink now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_path_link now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_sb_kern_mount now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_task_fix_setgroups now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=67 op=LOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[439]: SYSCALL arch=c000003e syscall=321 success=yes exit=22 a0=5 a1=7fff9f964c40 a2=a8 a3=2 items=0 ppid=1 pid=439 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="systemd-nsresou" exe="/usr/lib/systemd/systemd-nsresourced" key=(null)
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-nsresourced"
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=67 op=UNLOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[439]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=16 a1=0 a2=0 a3=0 items=0 ppid=1 pid=439 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="systemd-nsresou" exe="/usr/lib/systemd/systemd-nsresourced" key=(null)
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-nsresourced"
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-nsresourced[439]: userns-restrict BPF-LSM program userns_restrict_retire_userns_sysctls now attached.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Started Namespace Resource Manager.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-nsresourced comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Finished Create Static Device Nodes in /dev gracefully.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-tmpfiles-setup-dev-early comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Create System Users...
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Finished Create System Users.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-sysusers comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Journal Metrics Report Socket...
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Journal Log Access Socket...
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=68 op=LOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Network Name Resolution...
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Create Static Device Nodes in /dev...
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Listening on Journal Metrics Report Socket.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Listening on Journal Log Access Socket.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Finished Create Static Device Nodes in /dev.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-tmpfiles-setup-dev comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Reached target Preparation for Local File Systems.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Repartition Root Disk skipped, no trigger condition checks were met.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Grow Root File System...
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=23 op=UNLOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=22 op=UNLOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=69 op=LOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=70 op=LOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Rule-based Manager for Device Events and Files...
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-resolved[451]: Positive Trust Anchors:
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-resolved[451]: . IN DS 20326 8 2 e06d44b80b8f1d39a95c0b0d7c65d08458e880409bbc683457104237c7f8ec8d
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-resolved[451]: . IN DS 38696 8 2 683d2d0acb8c9b712a1948b27f741219298d0a450d612c483af444a4c0fb2b16
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-resolved[451]: Negative trust anchors: home.arpa 10.in-addr.arpa 16.172.in-addr.arpa 17.172.in-addr.arpa 18.172.in-addr.arpa 19.172.in-addr.arpa 20.172.in-addr.arpa 21.172.in-addr.arpa 22.172.in-addr.arpa 23.172.in-addr.arpa 24.172.in-addr.arpa 25.172.in-addr.arpa 26.172.in-addr.arpa 27.172.in-addr.arpa 28.172.in-addr.arpa 29.172.in-addr.arpa 30.172.in-addr.arpa 31.172.in-addr.arpa 170.0.0.192.in-addr.arpa 171.0.0.192.in-addr.arpa 168.192.in-addr.arpa d.f.ip6.arpa ipv4only.arpa resolver.arpa corp home internal intranet lan local private test
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-resolved[451]: Using system hostname 'lima-garuda-toolbox-it'.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Started Network Name Resolution.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-resolved comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Reached target Host and Network Name Lookups.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit: BPF prog-id=71 op=LOAD
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Starting Network Time Synchronization...
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-growfs[456]: Successfully resized "/" to 19.4G bytes.
+Nov 09 21:45:32 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-growfs-root comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd[1]: Finished Grow Root File System.
+Nov 09 21:45:32 lima-garuda-toolbox-it systemd-udevd[457]: Using default interface naming scheme 'v261'.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-timesyncd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Network Time Synchronization.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target System Time Set.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-resolved[451]: Switching to fallback DNS server 9.9.9.9#dns.quad9.net.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Rule-based Manager for Device Events and Files.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-udevd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Load Kernel Module configfs skipped, unmet condition check ConditionKernelModuleLoaded=!configfs
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Load Kernel Module fuse skipped, unmet condition check ConditionKernelModuleLoaded=!fuse
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Condition check resulted in /dev/hvc0 being skipped.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Condition check resulted in /dev/ttyS0 being skipped.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Condition check resulted in /dev/disk/by-uuid/6438-BB38 being skipped.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Found device /dev/disk/by-uuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting File System Check on /dev/disk/by-uuid/6438-BB38...
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: mousedev: PS/2 mouse device common for all mice
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: lpc_ich 0000:00:1f.0: I/O space for GPIO uninitialized
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-fsck[498]: fsck.fat 4.2 (2021-01-31)
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-fsck[498]: /dev/vda1: 17 files, 35678/130784 clusters
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished File System Check on /dev/disk/by-uuid/6438-BB38.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-fsck@dev-disk-by\x2duuid-6438\x2dBB38 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: input: PC Speaker as /devices/platform/pcspkr/input/input5
+Nov 09 21:45:33 lima-garuda-toolbox-it nfsrahead[503]: skipping non-NFS device btrfs-1
+Nov 09 21:45:33 lima-garuda-toolbox-it nfsrahead[505]: skipping non-NFS device 11:0
+Nov 09 21:45:33 lima-garuda-toolbox-it nfsrahead[504]: skipping non-NFS device 254:0
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: i801_smbus 0000:00:1f.3: Enabling SMBus device
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: i801_smbus 0000:00:1f.3: SMBus using PCI interrupt
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: i2c i2c-0: Memory type 0x07 not supported yet, not instantiating SPD
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: virtio_net virtio2 enp0s4: renamed from eth0
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Virtual Console Setup...
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: iTCO_wdt iTCO_wdt.1.auto: Found a ICH9 TCO device (Version=2, TCOBASE=0x0660)
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: iTCO_wdt iTCO_wdt.1.auto: initialized. heartbeat=30 sec (nowayout=0)
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-vconsole-setup[508]: Configuration of first virtual console was skipped, ignoring remaining ones.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Virtual Console Setup.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-vconsole-setup comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: TSC scaling supported
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: Nested Virtualization enabled
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: Nested Paging enabled
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: LBR virtualization supported
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: Virtual VMLOAD VMSAVE supported
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: Virtual GIF supported
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kvm_amd: Virtual NMI enabled
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /efi...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /home...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /root...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /srv...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /var/cache...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Virtual Machine and Container Storage (Compatibility) skipped, unmet condition check ConditionPathExists=/var/lib/machines.raw
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target Virtual Machines and Containers.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on Disk Image Download Service Socket.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /var/log...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounting /var/tmp...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /srv.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /home.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /root.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /var/tmp.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /var/cache.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /var/log.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Flush Journal to Persistent Storage...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Mounted /efi.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target Local File Systems.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on Boot Loader Control Service Socket.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on System Extension Image Management.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on Boot Loader UKI Auto-Link on Completed System Update.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on System Extension and Configuration Refresh on Completed System Update.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Set Up Additional Binary Formats skipped, no trigger condition checks were met.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Update Boot Loader Random Seed...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Automatic Boot Loader Update...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Merge System Configuration Images into /etc/ skipped, no trigger condition checks were met.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Save Transient machine-id to Disk skipped, unmet condition check ConditionPathIsMountPoint=/etc/machine-id
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Merge System Extension Images into /usr/ and /opt/ skipped, no trigger condition checks were met.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=72 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Load JSON user/group Records from Credentials...
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: kauditd_printk_skb: 85 callbacks suppressed
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1334 audit(1794257133.299:56): prog-id=72 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=73 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=74 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-journald[389]: Time spent on flushing to /var/log/journal/166ebd1238264e629ad6dc5f70645621 is 6.692ms for 1036 entries.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-journald[389]: System Journal (/var/log/journal/166ebd1238264e629ad6dc5f70645621) is 16M, max 1.9G, 1.9G free.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-userdb-load-credentials comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-boot-update comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-boot-random-seed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-coredumpd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Listen Kernel Core Dump Socket...
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1334 audit(1794257133.299:57): prog-id=73 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Load JSON user/group Records from Credentials.
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1334 audit(1794257133.299:58): prog-id=74 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it bootctl[529]: Skipping "/efi/EFI/systemd/systemd-bootx64.efi", same boot loader version in place already.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-journald[389]: Received client request to flush runtime journal.
+Nov 09 21:45:33 lima-garuda-toolbox-it bootctl[529]: Skipping "/efi/EFI/BOOT/BOOTX64.EFI", same boot loader version in place already.
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.305:59): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-userdb-load-credentials comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Automatic Boot Loader Update.
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.346:60): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-boot-update comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it bootctl[528]: Random seed file /efi/loader/random-seed successfully refreshed (32 bytes).
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.349:61): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-boot-random-seed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it bootctl[528]: Successfully initialized system token in EFI variable with 32 bytes.
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.405:62): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-coredumpd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Update Boot Loader Random Seed.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Listen Kernel Core Dump Socket.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Kernel Core Pattern Register...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Flush Journal to Persistent Storage.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-journal-flush comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.421:63): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-journal-flush comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Create System Files and Directories...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Kernel Core Pattern Register.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-coredump-register comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.427:64): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-coredump-register comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-timesyncd[458]: Network configuration changed, trying to establish connection.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-timesyncd[458]: Network configuration changed, trying to establish connection.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Create System Files and Directories.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-tmpfiles-setup comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Rebuild Dynamic Linker Cache...
+Nov 09 21:45:33 lima-garuda-toolbox-it kernel: audit: type=1130 audit(1794257133.459:65): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-tmpfiles-setup comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Rebuild Journal Catalog...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Record System Boot/Shutdown in UTMP...
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[554]: SYSTEM_BOOT pid=554 uid=0 auid=4294967295 ses=4294967295 msg=' comm="update-utmp" exe="/usr/lib/systemd/systemd-update-utmp" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Record System Boot/Shutdown in UTMP.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-update-utmp comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Rebuild Journal Catalog.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-journal-catalog-update comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Rebuild Dynamic Linker Cache.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=ldconfig comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Update is Completed...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Update is Completed.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-update-done comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target System Initialization.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Refresh existing PGP keys of archlinux-keyring regularly.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Daily rotation of log files.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Daily man-db regeneration.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Update the plocate database daily.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Daily verification of password and group files.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Daily Cleanup of Temporary Directories.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target Boot Completion Check.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target Timer Units.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on D-Bus System Message Bus Socket.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on GnuPG network certificate management daemon for /etc/pacman.d/gnupg.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on GnuPG cryptographic agent and passphrase cache (access for web browsers) for /etc/pacman.d/gnupg.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on GnuPG cryptographic agent and passphrase cache (restricted) for /etc/pacman.d/gnupg.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on GnuPG cryptographic agent (ssh-agent emulation) for /etc/pacman.d/gnupg.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on GnuPG cryptographic agent and passphrase cache for /etc/pacman.d/gnupg.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on GnuPG public key management service for /etc/pacman.d/gnupg.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on Authorization Manager Agent Helper.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on OpenSSH Server Socket (systemd-ssh-generator, AF_UNIX Local).
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on User Login Management Varlink Socket.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Listening on Virtual Machine and Container Registration Service Socket.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target Socket Units.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=75 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting D-Bus System Message Bus...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Mark the Current Boot Loader Entry as Good...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: TPM PCR Barrier (Initialization) skipped, unmet condition check ConditionSecurity=measured-os
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-bless-boot[561]: Marked boot as 'good'. (Boot attempt counter is at 1.)
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Mark the Current Boot Loader Entry as Good.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-bless-boot comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started D-Bus System Message Bus.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=dbus-broker comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Reached target Basic System.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Cloud-init: Single Process...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Restore /run/initramfs on shutdown...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting garuda-toolbox Lima test...
+Nov 09 21:45:33 lima-garuda-toolbox-it dbus-broker-launch[560]: Ready
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started lima-guestagent.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=lima-guestagent comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Clean up modules from old kernels...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Initialize the pacman keyring skipped, unmet condition check ConditionPathExists=!/etc/pacman.d/gnupg/trustdb.gpg
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting SSH Key Generation...
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=76 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it bash[568]: + for i in /usr/lib/modules/[0-9]*
+Nov 09 21:45:33 lima-garuda-toolbox-it bash[568]: + [[ 7.3.1-1-garuda = 7\.3\.1\-1\-garuda ]]
+Nov 09 21:45:33 lima-garuda-toolbox-it bash[568]: + continue
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Home Area Manager...
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=77 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=78 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=79 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it ssh-keygen[569]: ssh-keygen: generating new host keys: MLDSA44-ED25519
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting User Login Management...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: TPM PCR Barrier (User) skipped, unmet condition check ConditionSecurity=measured-os
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Restore /run/initramfs on shutdown.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=dracut-shutdown comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=garuda-toolbox-it comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished garuda-toolbox Lima test.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: linux-modules-cleanup.service: Deactivated successfully.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Clean up modules from old kernels.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: sshdgenkeys.service: Deactivated successfully.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished SSH Key Generation.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=linux-modules-cleanup comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_STOP pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=linux-modules-cleanup comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=sshdgenkeys comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_STOP pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=sshdgenkeys comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it lima-guestagent[567]: time="2026-11-09T21:45:33+01:00" level=info msg="event tick: 3s"
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=80 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[567]: SYSCALL arch=c000003e syscall=321 success=yes exit=6 a0=5 a1=baeccf2ab60 a2=a8 a3=0 items=0 ppid=1 pid=567 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="lima-guestagent" exe="/usr/local/bin/lima-guestagent" key=(null)
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: PROCTITLE proctitle=2F7573722F6C6F63616C2F62696E2F6C696D612D67756573746167656E74006461656D6F6E002D2D736F636B65742D6F776E65720031303030002D2D72756E74696D652D6469723D2F72756E2F6C696D612D67756573746167656E74
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=80 op=UNLOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[567]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=6 a1=0 a2=0 a3=0 items=0 ppid=1 pid=567 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="lima-guestagent" exe="/usr/local/bin/lima-guestagent" key=(null)
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: PROCTITLE proctitle=2F7573722F6C6F63616C2F62696E2F6C696D612D67756573746167656E74006461656D6F6E002D2D736F636B65742D6F776E65720031303030002D2D72756E74696D652D6469723D2F72756E2F6C696D612D67756573746167656E74
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=81 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[567]: SYSCALL arch=c000003e syscall=321 success=yes exit=6 a0=5 a1=baeccf2b470 a2=a8 a3=0 items=0 ppid=1 pid=567 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="lima-guestagent" exe="/usr/local/bin/lima-guestagent" key=(null)
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: PROCTITLE proctitle=2F7573722F6C6F63616C2F62696E2F6C696D612D67756573746167656E74006461656D6F6E002D2D736F636B65742D6F776E65720031303030002D2D72756E74696D652D6469723D2F72756E2F6C696D612D67756573746167656E74
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=82 op=LOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[567]: SYSCALL arch=c000003e syscall=321 success=yes exit=8 a0=5 a1=baeccf2b378 a2=a8 a3=0 items=0 ppid=1 pid=567 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="lima-guestagent" exe="/usr/local/bin/lima-guestagent" key=(null)
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: PROCTITLE proctitle=2F7573722F6C6F63616C2F62696E2F6C696D612D67756573746167656E74006461656D6F6E002D2D736F636B65742D6F776E65720031303030002D2D72756E74696D652D6469723D2F72756E2F6C696D612D67756573746167656E74
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: BPF prog-id=82 op=UNLOAD
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[567]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=8 a1=0 a2=0 a3=0 items=0 ppid=1 pid=567 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="lima-guestagent" exe="/usr/local/bin/lima-guestagent" key=(null)
+Nov 09 21:45:33 lima-garuda-toolbox-it audit: PROCTITLE proctitle=2F7573722F6C6F63616C2F62696E2F6C696D612D67756573746167656E74006461656D6F6E002D2D736F636B65742D6F776E65720031303030002D2D72756E74696D652D6469723D2F72756E2F6C696D612D67756573746167656E74
+Nov 09 21:45:33 lima-garuda-toolbox-it lima-guestagent[567]: time="2026-11-09T21:45:33+01:00" level=info msg="using eBPF ticker with tracepoints: [syscalls:sys_exit_bind]"
+Nov 09 21:45:33 lima-garuda-toolbox-it lima-guestagent[567]: time="2026-11-09T21:45:33+01:00" level=info msg="serving the guest agent on `/run/lima-guestagent.sock`"
+Nov 09 21:45:33 lima-garuda-toolbox-it lima-guestagent[567]: time="2026-11-09T21:45:33+01:00" level=info msg="Monitoring kubernetes services"
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-homed[570]: Watching /home.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Home Area Manager.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-homed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished Home Area Activation.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-homed-activate comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-logind[571]: Watching system buttons on /dev/input/event0 (Power Button)
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-logind[571]: Watching system buttons on /dev/input/event1 (AT Translated Set 2 keyboard)
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-logind[571]: New seat seat0.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started User Login Management.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-logind comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Created slice User Slice of UID 1000.
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting User Runtime Directory /run/user/1000...
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-user-runtime-dir[592]: Successfully configured disk quota for UID 1000 on /tmp to 1.5G
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd-user-runtime-dir[592]: Successfully configured disk quota for UID 1000 on /dev/shm to 1.5G
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Finished User Runtime Directory /run/user/1000.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=user-runtime-dir@1000 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Started Cloud-init: Single Process.
+Nov 09 21:45:33 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=cloud-init-main comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:33 lima-garuda-toolbox-it systemd[1]: Starting Cloud-init: Local Stage (pre-network)...
+Nov 09 21:45:33 lima-garuda-toolbox-it cloud-init[601]: Cloud-init v. 26.2 running 'init-local' at Mon, 09 Nov 2026 20:45:33 +0000. Up 5.80 seconds.
+Nov 09 21:45:34 lima-garuda-toolbox-it kernel: ISO 9660 Extensions: IEEE_P1282
+Nov 09 21:45:34 lima-garuda-toolbox-it kernel: virtio_net virtio2 eth0: renamed from enp0s4
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Finished Cloud-init: Local Stage (pre-network).
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=cloud-init-local comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Reached target Preparation for Network.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Listening on Network Management Resolve Hook Socket.
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=83 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Starting Network Management...
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+Nov 09 21:45:34 lima-garuda-toolbox-it kernel: cfg80211: Loading compiled-in X.509 certificates for regulatory database
+Nov 09 21:45:34 lima-garuda-toolbox-it kernel: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+Nov 09 21:45:34 lima-garuda-toolbox-it kernel: Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+Nov 09 21:45:34 lima-garuda-toolbox-it (udev-worker)[478]: cfg80211: Process '/usr/bin/set-wireless-regdom' failed with exit code 1.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: lo: Link UP
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: lo: Gained carrier
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=84 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=26 a0=5 a1=7ffc251729e0 a2=94 a3=7f7a52acd632 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=84 op=UNLOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=1a a1=0 a2=0 a3=0 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=85 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=26 a0=5 a1=7ffc251729f0 a2=a8 a3=2 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=85 op=UNLOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=1a a1=0 a2=0 a3=0 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=86 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=26 a0=5 a1=7ffc25172850 a2=94 a3=7f7a52ae7080 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=86 op=UNLOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=1a a1=0 a2=0 a3=0 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=87 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=27 a0=5 a1=7ffc251727d0 a2=a8 a3=7f7a52ae7080 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=87 op=UNLOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=1b a1=0 a2=0 a3=0 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=88 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=28 a0=5 a1=7ffc251728a0 a2=a8 a3=5 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=88 op=UNLOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=1c a1=0 a2=0 a3=0 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=89 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=27 a0=5 a1=7ffc251729f0 a2=a8 a3=7f7a52ae7080 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=90 op=LOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=321 success=yes exit=29 a0=5 a1=7ffc251728a0 a2=a8 a3=2 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: BPF prog-id=90 op=UNLOAD
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[615]: SYSCALL arch=c000003e syscall=3 success=yes exit=0 a0=1d a1=0 a2=0 a3=0 items=0 ppid=1 pid=615 auid=4294967295 uid=977 gid=977 euid=977 suid=977 fsuid=977 egid=977 sgid=977 fsgid=977 tty=(none) ses=4294967295 comm="systemd-network" exe="/usr/lib/systemd/systemd-networkd" key=(null)
+Nov 09 21:45:34 lima-garuda-toolbox-it audit: PROCTITLE proctitle="/usr/lib/systemd/systemd-networkd"
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: eth0: Interface name change detected, renamed to enp0s4.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Started Network Management.
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-networkd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Reached target Network.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: enp0s4: Interface name change detected, renamed to eth0.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Starting Enable Persistent Storage in systemd-networkd...
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: eth0: Configuring with /etc/systemd/network/10-cloud-init-eth0.network.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: eth0: Link UP
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: eth0: Gained carrier
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Starting Wait for Network to be Online...
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-networkd[615]: eth0: DHCPv4 address 192.168.5.15/24, gateway 192.168.5.2 acquired from 192.168.5.2
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd-timesyncd[458]: Network configuration changed, trying to establish connection.
+Nov 09 21:45:34 lima-garuda-toolbox-it systemd[1]: Finished Enable Persistent Storage in systemd-networkd.
+Nov 09 21:45:34 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-networkd-persistent-storage comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd-networkd[615]: eth0: Gained IPv6LL
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd-timesyncd[458]: Network configuration changed, trying to establish connection.
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Finished Wait for Network to be Online.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-networkd-wait-online comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Starting Cloud-init: Network Stage...
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: Cloud-init v. 26.2 running 'init' at Mon, 09 Nov 2026 20:45:35 +0000. Up 7.38 seconds.
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +++++++++++++++++++++++++++++++++++++++Net device info+++++++++++++++++++++++++++++++++++++++
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: | Device |  Up  |           Address            |      Mask     | Scope  |     Hw-Address    |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |  eth0  | True |         192.168.5.15         | 255.255.255.0 | global | 52:55:55:1e:44:5b |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |  eth0  | True | fe80::5055:55ff:fe1e:445b/64 |       .       |  link  | 52:55:55:1e:44:5b |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   lo   | True |          127.0.0.1           |   255.0.0.0   |  host  |         .         |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   lo   | True |           ::1/128            |       .       |  host  |         .         |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: ++++++++++++++++++++++++++++++Route IPv4 info++++++++++++++++++++++++++++++
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +-------+-------------+-------------+-----------------+-----------+-------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: | Route | Destination |   Gateway   |     Genmask     | Interface | Flags |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +-------+-------------+-------------+-----------------+-----------+-------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   0   |   0.0.0.0   | 192.168.5.2 |     0.0.0.0     |    eth0   |   UG  |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   1   | 192.168.5.0 |   0.0.0.0   |  255.255.255.0  |    eth0   |   U   |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   2   | 192.168.5.2 |   0.0.0.0   | 255.255.255.255 |    eth0   |   UH  |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   3   | 192.168.5.3 |   0.0.0.0   | 255.255.255.255 |    eth0   |   UH  |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +-------+-------------+-------------+-----------------+-----------+-------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +++++++++++++++++++Route IPv6 info+++++++++++++++++++
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +-------+-------------+---------+-----------+-------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: | Route | Destination | Gateway | Interface | Flags |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +-------+-------------+---------+-----------+-------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   0   |  fe80::/64  |    ::   |    eth0   |   U   |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   2   |    local    |    ::   |    eth0   |   U   |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: |   3   |  multicast  |    ::   |    eth0   |   U   |
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: ci-info: +-------+-------------+---------+-----------+-------+
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: 2026-11-09 20:45:35,628 - loggers.py[DEPRECATED]: Deprecated cloud-config provided: users.0.ssh-authorized-keys:  Deprecated in version 18.3. Use **ssh_authorized_keys** instead., users.0.uid:  Changed in version 22.3. The use of ``string`` type is deprecated. Use an ``integer`` instead.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[669]: ACCT_LOCK pid=669 uid=0 auid=4294967295 ses=4294967295 msg='op=locked-password id=1000 exe="/usr/bin/passwd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it passwd[669]: password for 'user' changed by 'root'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Finished Cloud-init: Network Stage.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=cloud-init-network comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Reached target Cloud-config availability.
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Reached target Network is Online.
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Starting Cloud-init: Config Stage...
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Starting OpenSSH Daemon...
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Starting Permit User Sessions...
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Finished Permit User Sessions.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-user-sessions comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Started Getty on tty1.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=getty@tty1 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Started Serial Getty on hvc0.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=serial-getty@hvc0 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Started Serial Getty on ttyS0.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=serial-getty@ttyS0 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Reached target Login Prompts.
+Nov 09 21:45:35 lima-garuda-toolbox-it sshd[675]: Server listening on 0.0.0.0 port 22.
+Nov 09 21:45:35 lima-garuda-toolbox-it sshd[675]: Server listening on :: port 22.
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Starting User Manager for UID 1000...
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Started OpenSSH Daemon.
+Nov 09 21:45:35 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=sshd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Reached target Multi-User System.
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Reached target Graphical Interface.
+Nov 09 21:45:35 lima-garuda-toolbox-it systemd[1]: Reached target SSH Access Available.
+Nov 09 21:45:35 lima-garuda-toolbox-it cloud-init[601]: Cloud-init v. 26.2 running 'modules:config' at Mon, 09 Nov 2026 20:45:35 +0000. Up 7.81 seconds.
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Generating locales...
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[684]: USER_ACCT pid=684 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/systemd/systemd-executor" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:36 lima-garuda-toolbox-it (systemd)[684]: pam_warn(systemd-user:setcred): function=[pam_sm_setcred] flags=0x8002 service=[systemd-user] terminal=[] user=[user] ruser=[<unknown>] rhost=[<unknown>]
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[684]: CRED_ACQ pid=684 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=? acct="user" exe="/usr/lib/systemd/systemd-executor" hostname=? addr=? terminal=? res=failed'
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[684]: SYSCALL arch=c000003e syscall=1 success=yes exit=4 a0=a a1=7ffea9218c10 a2=4 a3=0 items=0 ppid=1 pid=684 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=1 comm="(systemd)" exe="/usr/lib/systemd/systemd-executor" key=(null)
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: PROCTITLE proctitle="(systemd)"
+Nov 09 21:45:36 lima-garuda-toolbox-it (systemd)[684]: pam_unix(systemd-user:session): session opened for user user(uid=1000) by user(uid=0)
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd-logind[571]: New session '1' of user 'user' with class 'manager' and type 'unspecified'.
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[684]: USER_START pid=684 uid=0 auid=1000 ses=1 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/systemd/systemd-executor" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Queued start job for default target Main User Target.
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=user@1000 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Created slice User Application Slice.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Started Daily Cleanup of User's Temporary Directories.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Reached target Virtual Machines and Containers.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Reached target Paths.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Reached target Timers.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd-timesyncd[458]: Network configuration changed, trying to establish connection.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Starting D-Bus User Message Bus Socket...
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GnuPG network certificate management daemon.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GnuPG cryptographic agent and passphrase cache (access for web browsers).
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GnuPG cryptographic agent and passphrase cache (restricted).
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GnuPG cryptographic agent (ssh-agent emulation).
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GnuPG cryptographic agent and passphrase cache.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GSS User Proxy.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on GnuPG public key management service.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on p11-kit server.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on Socket for the OpenSSH key agent.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on Query the User Interactively for a Password.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on Disk Image Download Service Socket.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on Journal Log Access Socket.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on Virtual Machine and Container Registration Service Socket.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on Simple File System Backed Storage Provider.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Starting Create User Files and Directories...
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Listening on D-Bus User Message Bus Socket.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Reached target Sockets.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Finished Create User Files and Directories.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Reached target Basic System.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Started User Manager for UID 1000.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Started p11-kit server.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Reached target Main User Target.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[684]: Startup finished in 61ms.
+Nov 09 21:45:36 lima-garuda-toolbox-it p11-kit[697]: P11_KIT_SERVER_ADDRESS=unix:path=/run/user/1000/p11-kit/pkcs11; export P11_KIT_SERVER_ADDRESS;
+Nov 09 21:45:36 lima-garuda-toolbox-it p11-kit[697]: P11_KIT_SERVER_PID=697; export P11_KIT_SERVER_PID;
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]:   en_US.UTF-8... done
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Generation complete.
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=91 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=92 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=93 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Starting Locale Service...
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Started Locale Service.
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-localed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Reload requested from client PID 701 ('systemd-localed') (unit systemd-localed.service)...
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Reloading...
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Reloading finished in 78 ms.
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=94 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=71 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=95 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=96 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=69 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=70 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=97 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=45 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=98 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=99 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=46 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=47 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=100 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=51 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=101 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=102 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=52 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=53 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=103 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=76 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=104 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=68 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=105 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=91 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=106 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=107 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=92 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=93 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=108 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=75 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=109 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=48 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=110 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=111 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=49 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=50 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=112 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=83 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=113 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=77 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=114 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=115 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=78 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=79 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=116 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=72 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=117 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=118 op=LOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=73 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: BPF prog-id=74 op=UNLOAD
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd-localed[701]: Changed locale to LANG=en_US.UTF-8.
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Finished Cloud-init: Config Stage.
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=cloud-config comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Starting Cloud-init: Final Stage...
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Cloud-init v. 26.2 running 'modules:final' at Mon, 09 Nov 2026 20:45:36 +0000. Up 8.53 seconds.
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + LIMA_CIDATA_MNT=/mnt/lima-cidata
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ uname -s
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + UNAME=Linux
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' Linux = Darwin ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' Linux = FreeBSD ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' Linux = Linux ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + LIMA_CIDATA_DEV=/dev/disk/by-label/cidata
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + mkdir -p -m 700 /mnt/lima-cidata
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + mount -o ro,mode=0700,dmode=0700,overriderockperm,exec,uid=0 /dev/disk/by-label/cidata /mnt/lima-cidata
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + export LIMA_CIDATA_MNT
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exec /mnt/lima-cidata/boot.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it kernel: ISO 9660 Extensions: IEEE_P1282
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.essential.Linux/00-alpine-user-group.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.essential.Linux/01-alpine-ash-as-bash.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.essential.Linux/10-alpine-prep.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + test -f /etc/alpine-release
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/00-check-rtc-and-wait-ntp.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/00-modprobe.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "fuse"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "tun"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "tap"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "bridge"
+Nov 09 21:45:36 lima-garuda-toolbox-it kernel: bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "veth"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "ip_tables"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "ip6_tables"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "iptable_nat"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "ip6table_nat"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "iptable_filter"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "ip6table_filter"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "nf_tables"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "x_tables"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_MASQUERADE"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_addrtype"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_comment"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_conntrack"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_mark"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_multiport"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_nat"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "xt_tcpudp"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: Loading kernel module "overlay"
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/00-reboot-if-required.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' '' = 1 ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/00-systemd-user-group.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/04-persistent-data-volume.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + test -f /etc/alpine-release
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/05-guest-home.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/05-lima-disks.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + test 0 -gt 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/05-lima-mounts.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + [[ qemu == vz ]]
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/06-enable-mdns-on-systemd.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + [[ -f /sbin/openrc-run ]]
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + command -v systemctl
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + command -v resolvectl
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + enable_mdns_conf_path=/etc/systemd/resolved.conf.d/00-lima-enable-mdns.conf
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + enable_mdns_conf_content=$'[Resolve]\nMulticastDNS=yes\n'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ sha256sum
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ echo $'[Resolve]\nMulticastDNS=yes\n'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ sha256sum
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' 'd1bcb38d7fc0dc6247b2057d76c106e42a5fad1b67b4927417e3535a34142b0d  -' '!=' 'd1bcb38d7fc0dc6247b2057d76c106e42a5fad1b67b4927417e3535a34142b0d  -' ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ resolvectl status
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ sed -n -E 's/^Link +[0-9]+ \(([^)]+)\)/\1/p'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + for iface in $(resolvectl status | sed -n -E 's/^Link +[0-9]+ \(([^)]+)\)/\1/p')
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + resolvectl mdns eth0 yes
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd-timesyncd[458]: Network configuration changed, trying to establish connection.
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/06-etc-hosts.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + sed -i /host.lima.internal/d /etc/hosts
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + echo -e '192.168.5.2\thost.lima.internal'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/07-etc-environment.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ test '!' -f /etc/environment
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ cat /etc/environment
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + orig=$'#\n# This file is parsed by pam_env module\n#\n# Syntax: simple "KEY=VAL" pairs on separate lines\n#\n#LIMA-START\n#LIMA-END'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' -e /etc/environment ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + sed -i /#LIMA-START/,/#LIMA-END/d /etc/environment
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + cat /mnt/lima-cidata/etc_environment
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + command -v loginctl
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: ++ cat /etc/environment
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' $'#\n# This file is parsed by pam_env module\n#\n# Syntax: simple "KEY=VAL" pairs on separate lines\n#\n#LIMA-START\n#LIMA-END' '!=' $'#\n# This file is parsed by pam_env module\n#\n# Syntax: simple "KEY=VAL" pairs on separate lines\n#\n#LIMA-START\n#LIMA-END' ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + echo iid-1794257127
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/08-shell-prompt.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' garuda-toolbox-it = default ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/09-host-dns-setup.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + readonly chain=LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + chain=LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + command -v iptables
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + chain_exists
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat -n --list LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --new-chain LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[845]: NETFILTER_CFG table=nat:2 family=2 entries=2 op=nft_register_chain pid=845 comm="iptables"
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[845]: SYSCALL arch=c000003e syscall=46 success=yes exit=116 a0=3 a1=7fff6aa4a100 a2=0 a3=0 items=0 ppid=843 pid=845 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D6E65772D636861696E004C494D41444E53
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --insert PREROUTING 1 --jump LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[846]: NETFILTER_CFG table=nat:3 family=2 entries=2 op=nft_register_chain pid=846 comm="iptables"
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[846]: SYSCALL arch=c000003e syscall=46 success=yes exit=328 a0=3 a1=7fff63e81b60 a2=0 a3=0 items=0 ppid=843 pid=846 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D696E7365727400505245524F5554494E470031002D2D6A756D70004C494D41444E53
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --insert OUTPUT 1 --jump LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[848]: NETFILTER_CFG table=nat:4 family=2 entries=2 op=nft_register_chain pid=848 comm="iptables"
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[848]: SYSCALL arch=c000003e syscall=46 success=yes exit=320 a0=3 a1=7ffe60a83ea0 a2=0 a3=0 items=0 ppid=843 pid=848 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D696E73657274004F55545055540031002D2D6A756D70004C494D41444E53
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --flush LIMADNS
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' -n 44502 ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' 44502 -ne 0 ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --append LIMADNS --destination 192.168.5.3 --protocol udp --dport 53 --jump DNAT --to-destination 192.168.5.2:44502
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[850]: NETFILTER_CFG table=nat:5 family=2 entries=1 op=nft_register_rule pid=850 comm="iptables"
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[850]: SYSCALL arch=c000003e syscall=46 success=yes exit=536 a0=3 a1=7ffe92e10660 a2=0 a3=0 items=0 ppid=843 pid=850 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D617070656E64004C494D41444E53002D2D64657374696E6174696F6E003139322E3136382E352E33002D2D70726F746F636F6C00756470002D2D64706F7274003533002D2D6A756D7000444E4154002D2D746F2D64657374696E6174696F6E003139322E3136382E35
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' -n 44153 ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' 44153 -ne 0 ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[852]: NETFILTER_CFG table=nat:6 family=2 entries=1 op=nft_register_rule pid=852 comm="iptables"
+Nov 09 21:45:36 lima-garuda-toolbox-it audit[852]: SYSCALL arch=c000003e syscall=46 success=yes exit=536 a0=3 a1=7ffc96df34d0 a2=0 a3=0 items=0 ppid=843 pid=852 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:36 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D617070656E64004C494D41444E53002D2D64657374696E6174696F6E003139322E3136382E352E33002D2D70726F746F636F6C00746370002D2D64706F7274003533002D2D6A756D7000444E4154002D2D746F2D64657374696E6174696F6E003139322E3136382E35
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --append LIMADNS --destination 192.168.5.3 --protocol tcp --dport 53 --jump DNAT --to-destination 192.168.5.2:44153
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/10-alpine-cgroups.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + test -f /etc/alpine-release
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/11-colorterm-environment.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' -d /etc/ssh/sshd_config.d ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' -e /etc/ssh/sshd_config.d/10-acceptenv-colorterm.conf ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:36+01:00| Executing /mnt/lima-cidata/boot.Linux/20-rootless-base.sh
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + command -v systemctl
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' -O /home/user.guest ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + for f in .profile .bashrc .zshrc
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + grep -q '# Lima BEGIN' /home/user.guest/.profile
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + for f in .profile .bashrc .zshrc
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + grep -q '# Lima BEGIN' /home/user.guest/.bashrc
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + for f in .profile .bashrc .zshrc
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + grep -q '# Lima BEGIN' /home/user.guest/.zshrc
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + '[' '!' -e /etc/systemd/system/user@.service.d/lima.conf ']'
+Nov 09 21:45:36 lima-garuda-toolbox-it cloud-init[601]: + systemctl daemon-reload
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Reload requested from client PID 862 ('systemctl') (unit cloud-init-main.service)...
+Nov 09 21:45:36 lima-garuda-toolbox-it systemd[1]: Reloading...
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: Reloading finished in 85 ms.
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=119 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=94 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=120 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=121 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=95 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=96 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=122 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=97 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=123 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=124 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=98 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=99 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=125 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=100 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=126 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=127 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=101 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=102 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=128 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=103 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=129 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=104 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=130 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=105 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=131 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=132 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=106 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=107 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=133 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=108 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=134 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=109 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=135 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=136 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=110 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=111 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=137 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=112 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=138 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=113 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=139 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=140 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=114 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=115 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=141 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=116 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=142 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=143 op=LOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=117 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: BPF prog-id=118 op=UNLOAD
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + sysctl_conf=/etc/sysctl.d/99-lima.conf
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '!' -e /etc/sysctl.d/99-lima.conf ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + for f in /etc/subuid /etc/subgid
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + subuid_begin=524288
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 1000 -ge 524288 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + grep -qw user /etc/subuid
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + for f in /etc/subuid /etc/subgid
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + subuid_begin=524288
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 1000 -ge 524288 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + grep -qw user /etc/subgid
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + systemctl start systemd-logind.service
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + loginctl enable-linger user
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:37+01:00| Executing /mnt/lima-cidata/boot.Linux/25-guestagent-base.sh
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 9p = reverse-sshfs ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + mkdir -p /usr/local/bin
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: Load Kernel Module drm skipped, unmet condition check ConditionKernelModuleLoaded=!drm
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + guestagent_updated=false
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: ++ sha256sum
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: ++ sha256sum
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '9974d87bda0cda050d5266faeeaa276cb0b4e79df16b24ce1dab836d94db3944  -' = '9974d87bda0cda050d5266faeeaa276cb0b4e79df16b24ce1dab836d94db3944  -' ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + echo '/usr/local/bin/lima-guestagent is up-to-date'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: /usr/local/bin/lima-guestagent is up-to-date
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -f /sbin/openrc-run ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + rm -f /home/user.guest/.config/systemd/user/lima-guestagent.service
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 0 '!=' 0 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '' '!=' '' ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + sudo /usr/local/bin/lima-guestagent install-systemd --debug=false --guestagent-updated=false --socket-owner 1000
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[932]: USER_ACCT pid=932 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it sudo[932]:     root : PWD=/ ; USER=root ; COMMAND=/usr/local/bin/lima-guestagent install-systemd --debug=false --guestagent-updated=false --socket-owner 1000
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[932]: CRED_REFR pid=932 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it sudo[932]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[932]: USER_START pid=932 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: time="2026-11-09T21:45:37+01:00" level=info msg="File `/etc/systemd/system/lima-guestagent.service` is up-to-date"
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: time="2026-11-09T21:45:37+01:00" level=info msg="lima-guestagent.service already up-to-date"
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[932]: USER_END pid=932 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:session_close grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[932]: CRED_DISP pid=932 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it sudo[932]: pam_unix(sudo:session): session closed for user root
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:37+01:00| Executing /mnt/lima-cidata/boot.Linux/26-host-services.sh
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + mkdir -p /run/host-services
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + chmod 700 /run/host-services
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + chown -R user /run/host-services
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:37+01:00| Executing /mnt/lima-cidata/boot.Linux/30-install-packages.sh
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + INSTALL_IPTABLES=0
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '' = 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '' = 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 44502 -ne 0 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + INSTALL_IPTABLES=1
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -d /mnt/lima-cidata/provision.dependency ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '' = 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + REMOUNT_VIRTIOFS=0
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + grep -qP '\x7fELF'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: ++ command -v apt-get
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + head -c 4 ''
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: head: cannot open '' for reading: No such file or directory
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + command -v dnf
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + command -v yum
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + command -v pacman
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + pkgs=
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 9p = reverse-sshfs ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + command -v rsync
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -n '' ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 0 = 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[953]: NETFILTER_CFG table=nat:7 family=2 entries=2 op=nft_unregister_rule pid=953 comm="iptables"
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[953]: SYSCALL arch=c000003e syscall=46 success=yes exit=88 a0=3 a1=7ffc48881a60 a2=0 a3=0 items=0 ppid=951 pid=953 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D666C757368004C494D41444E53
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:37+01:00| Executing /mnt/lima-cidata/boot.Linux/35-setup-packages.sh
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 9p = reverse-sshfs ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + SETUP_DNS=0
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -n 44502 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 44502 -ne 0 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + SETUP_DNS=1
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -n 44153 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 44153 -ne 0 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + SETUP_DNS=1
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 1 = 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + /mnt/lima-cidata/boot.Linux/09-host-dns-setup.sh
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + readonly chain=LIMADNS
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + chain=LIMADNS
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + command -v iptables
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + chain_exists
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat -n --list LIMADNS
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --flush LIMADNS
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[954]: NETFILTER_CFG table=nat:8 family=2 entries=1 op=nft_register_rule pid=954 comm="iptables"
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[954]: SYSCALL arch=c000003e syscall=46 success=yes exit=536 a0=3 a1=7ffccf6b1170 a2=0 a3=0 items=0 ppid=951 pid=954 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D617070656E64004C494D41444E53002D2D64657374696E6174696F6E003139322E3136382E352E33002D2D70726F746F636F6C00756470002D2D64706F7274003533002D2D6A756D7000444E4154002D2D746F2D64657374696E6174696F6E003139322E3136382E35
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[955]: NETFILTER_CFG table=nat:9 family=2 entries=1 op=nft_register_rule pid=955 comm="iptables"
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[955]: SYSCALL arch=c000003e syscall=46 success=yes exit=536 a0=3 a1=7ffc24e4b1a0 a2=0 a3=0 items=0 ppid=951 pid=955 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="iptables" exe="/usr/bin/xtables-nft-multi" key=(null)
+Nov 09 21:45:37 lima-garuda-toolbox-it audit: PROCTITLE proctitle=69707461626C6573002D2D7461626C65006E6174002D2D617070656E64004C494D41444E53002D2D64657374696E6174696F6E003139322E3136382E352E33002D2D70726F746F636F6C00746370002D2D64706F7274003533002D2D6A756D7000444E4154002D2D746F2D64657374696E6174696F6E003139322E3136382E35
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -n 44502 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 44502 -ne 0 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --append LIMADNS --destination 192.168.5.3 --protocol udp --dport 53 --jump DNAT --to-destination 192.168.5.2:44502
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' -n 44153 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' 44153 -ne 0 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + iptables --table nat --append LIMADNS --destination 192.168.5.3 --protocol tcp --dport 53 --jump DNAT --to-destination 192.168.5.2:44153
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:37+01:00| Executing /mnt/lima-cidata/boot.Linux/40-install-containerd.sh
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + : default
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + : overlayfs
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '' '!=' 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + '[' '' '!=' 1 ']'
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: + exit 0
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: LIMA 2026-11-09T21:45:37+01:00| Exiting with code 0
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[960]: #############################################################
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[961]: -----BEGIN SSH HOST KEY FINGERPRINTS-----
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[963]: 256 SHA256:AihVeXc5XcKJUuA1qKQE3q/J03G4e2JSzdeLs/8P654 root@lima-garuda-toolbox-it (ECDSA)
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[965]: 256 SHA256:FgD3/B1IV3XqtTb4Hq42wCCZp8QfvIBZnpqAWCo9j1U root@lima-garuda-toolbox-it (ED25519)
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[967]: 3072 SHA256:y+LeonzTHR9tk2kEswF/Mr+i6tTfATCEMJiDCfKC3aw root@lima-garuda-toolbox-it (RSA)
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[968]: -----END SSH HOST KEY FINGERPRINTS-----
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[969]: #############################################################
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Cloud-init v. 26.2 finished at Mon, 09 Nov 2026 20:45:37 +0000. Datasource DataSourceNoCloud [seed=/dev/sr0].  Up 9.02 seconds
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Generating public/private rsa key pair.
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Your identification has been saved in /etc/ssh/ssh_host_rsa_key
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Your public key has been saved in /etc/ssh/ssh_host_rsa_key.pub
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: The key fingerprint is:
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: SHA256:y+LeonzTHR9tk2kEswF/Mr+i6tTfATCEMJiDCfKC3aw root@lima-garuda-toolbox-it
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: The key's randomart image is:
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: +---[RSA 3072]----+
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |o. o oo. .o.     |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |oooo+  ... .+    |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |o o o.    o +=.  |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: | . .       o.=.  |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |  E     S   .o.o |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |       . o. ..B. |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |      ..+..o.+o. |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |   . .++. .o.o . |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |    o+o++.. . .  |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: +----[SHA256]-----+
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Generating public/private ecdsa key pair.
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Your identification has been saved in /etc/ssh/ssh_host_ecdsa_key
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Your public key has been saved in /etc/ssh/ssh_host_ecdsa_key.pub
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: The key fingerprint is:
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: SHA256:AihVeXc5XcKJUuA1qKQE3q/J03G4e2JSzdeLs/8P654 root@lima-garuda-toolbox-it
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: The key's randomart image is:
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: +---[ECDSA 256]---+
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |  oo..  .++=.o.  |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: | o oo o.+.=.+.   |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |. o.o+ o.o .     |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: | .  .o..         |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |      =oS  .     |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |   . +.=o . .    |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |    =.o  . . ..  |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |    ..o.. o .  + |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |     o.o  .+.+E..|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: +----[SHA256]-----+
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Generating public/private ed25519 key pair.
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Your identification has been saved in /etc/ssh/ssh_host_ed25519_key
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: Your public key has been saved in /etc/ssh/ssh_host_ed25519_key.pub
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: The key fingerprint is:
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: SHA256:FgD3/B1IV3XqtTb4Hq42wCCZp8QfvIBZnpqAWCo9j1U root@lima-garuda-toolbox-it
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: The key's randomart image is:
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: +--[ED25519 256]--+
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |    ..o   . ....o|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |  .  .E= . o   ..|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |.+.  .* O . . . .|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |+.o..o X B . o...|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |.  =. + S * ...+ |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |  . .o o o o  o .|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |            .  o |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |             oo .|
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: |            ..oo |
+Nov 09 21:45:37 lima-garuda-toolbox-it cloud-init[601]: +----[SHA256]-----+
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[1]: SERVICE_START pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=cloud-final comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: Finished Cloud-init: Final Stage.
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: Reached target Cloud-init target.
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: Startup finished in 653ms (kernel) + 2.251s (initrd) + 6.136s (userspace) = 9.042s.
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: cloud-init-main.service: Deactivated successfully.
+Nov 09 21:45:37 lima-garuda-toolbox-it audit[1]: SERVICE_STOP pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=cloud-init-main comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:37 lima-garuda-toolbox-it systemd[1]: cloud-init-main.service: Consumed 1.380s CPU time over 3.683s wall clock time, 222M memory peak.
+Nov 09 21:45:37 lima-garuda-toolbox-it kernel: fbcon: Taking over console
+Nov 09 21:45:38 lima-garuda-toolbox-it audit[975]: USER_ACCT pid=975 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:38 lima-garuda-toolbox-it sshd-session[975]: Accepted publickey for user from 192.168.5.2 port 60026 ssh2: ED25519 SHA256:X3+3+dSM/zBspgCO6FRrNv3SIvxoG6N8odjmWc2sz08
+Nov 09 21:45:38 lima-garuda-toolbox-it kernel: kauditd_printk_skb: 233 callbacks suppressed
+Nov 09 21:45:38 lima-garuda-toolbox-it kernel: audit: type=1101 audit(1794257138.993:245): pid=975 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:38 lima-garuda-toolbox-it audit[975]: CRED_ACQ pid=975 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:38 lima-garuda-toolbox-it audit[975]: SYSCALL arch=c000003e syscall=1 success=yes exit=4 a0=6 a1=7ffd7cb6a380 a2=4 a3=0 items=0 ppid=675 pid=975 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=2 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" key=(null)
+Nov 09 21:45:38 lima-garuda-toolbox-it audit: PROCTITLE proctitle=737368642D73657373696F6E3A206E69636F205B706F7374617574685D
+Nov 09 21:45:38 lima-garuda-toolbox-it sshd-session[975]: pam_unix(sshd:session): session opened for user user(uid=1000) by user(uid=0)
+Nov 09 21:45:38 lima-garuda-toolbox-it kernel: audit: type=1103 audit(1794257138.994:246): pid=975 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:38 lima-garuda-toolbox-it kernel: audit: type=1006 audit(1794257138.994:247): pid=975 uid=0 old-auid=4294967295 auid=1000 tty=(none) old-ses=4294967295 ses=2 res=1
+Nov 09 21:45:38 lima-garuda-toolbox-it kernel: audit: type=1300 audit(1794257138.994:247): arch=c000003e syscall=1 success=yes exit=4 a0=6 a1=7ffd7cb6a380 a2=4 a3=0 items=0 ppid=675 pid=975 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=2 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" key=(null)
+Nov 09 21:45:38 lima-garuda-toolbox-it kernel: audit: type=1327 audit(1794257138.994:247): proctitle=737368642D73657373696F6E3A206E69636F205B706F7374617574685D
+Nov 09 21:45:39 lima-garuda-toolbox-it systemd-logind[571]: New session '2' of user 'user' with class 'user' and type 'tty'.
+Nov 09 21:45:39 lima-garuda-toolbox-it systemd[1]: Started Session 2 of User user.
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[975]: USER_START pid=975 uid=0 auid=1000 ses=2 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it kernel: audit: type=1105 audit(1794257139.065:248): pid=975 uid=0 auid=1000 ses=2 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[978]: CRED_ACQ pid=978 uid=0 auid=1000 ses=2 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it kernel: audit: type=1103 audit(1794257139.066:249): pid=978 uid=0 auid=1000 ses=2 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[981]: USER_ACCT pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it kernel: audit: type=1101 audit(1794257139.074:250): pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it sudo[981]:     user : PWD=/home/user.guest ; USER=root ; COMMAND=/usr/bin/cat /mnt/lima-cidata/param.env
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[981]: CRED_REFR pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it sudo[981]: pam_unix(sudo:session): session opened for user root(uid=0) by user(uid=1000)
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[981]: USER_START pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it kernel: audit: type=1110 audit(1794257139.075:251): pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it kernel: audit: type=1105 audit(1794257139.075:252): pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it sudo[981]: pam_unix(sudo:session): session closed for user root
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[981]: USER_END pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:session_close grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[981]: CRED_DISP pid=981 uid=1000 auid=1000 ses=2 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it sshd-session[978]: Received disconnect from 192.168.5.2 port 60026:11: disconnected by user
+Nov 09 21:45:39 lima-garuda-toolbox-it sshd-session[978]: Disconnected from user user 192.168.5.2 port 60026
+Nov 09 21:45:39 lima-garuda-toolbox-it sshd-session[975]: pam_unix(sshd:session): session closed for user user
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[975]: USER_END pid=975 uid=0 auid=1000 ses=2 msg='op=PAM:session_close grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it audit[975]: CRED_DISP pid=975 uid=0 auid=1000 ses=2 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:39 lima-garuda-toolbox-it systemd[1]: session-2.scope: Deactivated successfully.
+Nov 09 21:45:39 lima-garuda-toolbox-it systemd-logind[571]: Session 2 logged out. Waiting for processes to exit.
+Nov 09 21:45:39 lima-garuda-toolbox-it systemd-logind[571]: Removed session 2.
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[985]: USER_ACCT pid=985 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it sshd-session[985]: Accepted publickey for user from 192.168.5.2 port 60040 ssh2: ED25519 SHA256:X3+3+dSM/zBspgCO6FRrNv3SIvxoG6N8odjmWc2sz08
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[985]: CRED_ACQ pid=985 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[985]: SYSCALL arch=c000003e syscall=1 success=yes exit=4 a0=6 a1=7ffc0ad92770 a2=4 a3=0 items=0 ppid=675 pid=985 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=3 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" key=(null)
+Nov 09 21:45:41 lima-garuda-toolbox-it audit: PROCTITLE proctitle=737368642D73657373696F6E3A206E69636F205B706F7374617574685D
+Nov 09 21:45:41 lima-garuda-toolbox-it sshd-session[985]: pam_unix(sshd:session): session opened for user user(uid=1000) by user(uid=0)
+Nov 09 21:45:41 lima-garuda-toolbox-it systemd-logind[571]: New session '3' of user 'user' with class 'user' and type 'tty'.
+Nov 09 21:45:41 lima-garuda-toolbox-it systemd[1]: Started Session 3 of User user.
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[985]: USER_START pid=985 uid=0 auid=1000 ses=3 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[988]: CRED_ACQ pid=988 uid=0 auid=1000 ses=3 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[991]: USER_ACCT pid=991 uid=1000 auid=1000 ses=3 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it sudo[991]:     user : PWD=/home/user.guest ; USER=root ; COMMAND=/usr/bin/cat /mnt/lima-cidata/param.env
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[991]: CRED_REFR pid=991 uid=1000 auid=1000 ses=3 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it sudo[991]: pam_unix(sudo:session): session opened for user root(uid=0) by user(uid=1000)
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[991]: USER_START pid=991 uid=1000 auid=1000 ses=3 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it sudo[991]: pam_unix(sudo:session): session closed for user root
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[991]: USER_END pid=991 uid=1000 auid=1000 ses=3 msg='op=PAM:session_close grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[991]: CRED_DISP pid=991 uid=1000 auid=1000 ses=3 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it sshd-session[988]: Received disconnect from 192.168.5.2 port 60040:11: disconnected by user
+Nov 09 21:45:41 lima-garuda-toolbox-it sshd-session[988]: Disconnected from user user 192.168.5.2 port 60040
+Nov 09 21:45:41 lima-garuda-toolbox-it sshd-session[985]: pam_unix(sshd:session): session closed for user user
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[985]: USER_END pid=985 uid=0 auid=1000 ses=3 msg='op=PAM:session_close grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it audit[985]: CRED_DISP pid=985 uid=0 auid=1000 ses=3 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:41 lima-garuda-toolbox-it systemd[1]: session-3.scope: Deactivated successfully.
+Nov 09 21:45:41 lima-garuda-toolbox-it systemd-logind[571]: Session 3 logged out. Waiting for processes to exit.
+Nov 09 21:45:41 lima-garuda-toolbox-it systemd-logind[571]: Removed session 3.
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[997]: USER_ACCT pid=997 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sshd-session[997]: Accepted publickey for user from 192.168.5.2 port 60050 ssh2: ED25519 SHA256:X3+3+dSM/zBspgCO6FRrNv3SIvxoG6N8odjmWc2sz08
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[997]: CRED_ACQ pid=997 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[997]: SYSCALL arch=c000003e syscall=1 success=yes exit=4 a0=6 a1=7ffefe013f60 a2=4 a3=0 items=0 ppid=675 pid=997 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" key=(null)
+Nov 09 21:45:43 lima-garuda-toolbox-it audit: PROCTITLE proctitle=737368642D73657373696F6E3A206E69636F205B706F7374617574685D
+Nov 09 21:45:43 lima-garuda-toolbox-it sshd-session[997]: pam_unix(sshd:session): session opened for user user(uid=1000) by user(uid=0)
+Nov 09 21:45:43 lima-garuda-toolbox-it systemd-logind[571]: New session '4' of user 'user' with class 'user' and type 'tty'.
+Nov 09 21:45:43 lima-garuda-toolbox-it systemd[1]: Started Session 4 of User user.
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[997]: USER_START pid=997 uid=0 auid=1000 ses=4 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1000]: CRED_ACQ pid=1000 uid=0 auid=1000 ses=4 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1003]: USER_ACCT pid=1003 uid=1000 auid=1000 ses=4 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sudo[1003]:     user : PWD=/home/user.guest ; USER=root ; COMMAND=/usr/bin/cat /mnt/lima-cidata/param.env
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1003]: CRED_REFR pid=1003 uid=1000 auid=1000 ses=4 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sudo[1003]: pam_unix(sudo:session): session opened for user root(uid=0) by user(uid=1000)
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1003]: USER_START pid=1003 uid=1000 auid=1000 ses=4 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sudo[1003]: pam_unix(sudo:session): session closed for user root
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1003]: USER_END pid=1003 uid=1000 auid=1000 ses=4 msg='op=PAM:session_close grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1003]: CRED_DISP pid=1003 uid=1000 auid=1000 ses=4 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1015]: USER_ACCT pid=1015 uid=1000 auid=1000 ses=4 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sudo[1015]:     user : PWD=/home/user.guest ; USER=root ; COMMAND=/usr/bin/cat /mnt/lima-cidata/param.env
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1015]: CRED_REFR pid=1015 uid=1000 auid=1000 ses=4 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sudo[1015]: pam_unix(sudo:session): session opened for user root(uid=0) by user(uid=1000)
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1015]: USER_START pid=1015 uid=1000 auid=1000 ses=4 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it sudo[1015]: pam_unix(sudo:session): session closed for user root
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1015]: USER_END pid=1015 uid=1000 auid=1000 ses=4 msg='op=PAM:session_close grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:43 lima-garuda-toolbox-it audit[1015]: CRED_DISP pid=1015 uid=1000 auid=1000 ses=4 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it audit[1021]: USER_ACCT pid=1021 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it sshd-session[1021]: Accepted publickey for user from 192.168.5.2 port 39908 ssh2: ED25519 SHA256:X3+3+dSM/zBspgCO6FRrNv3SIvxoG6N8odjmWc2sz08
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: kauditd_printk_skb: 35 callbacks suppressed
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1101 audit(1794257145.785:284): pid=1021 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:accounting grantors=pam_access,pam_unix,pam_permit,pam_time acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it audit[1021]: CRED_ACQ pid=1021 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it audit[1021]: SYSCALL arch=c000003e syscall=1 success=yes exit=4 a0=6 a1=7fff0614b900 a2=4 a3=0 items=0 ppid=675 pid=1021 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=5 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" key=(null)
+Nov 09 21:45:45 lima-garuda-toolbox-it audit: PROCTITLE proctitle=737368642D73657373696F6E3A206E69636F205B706F7374617574685D
+Nov 09 21:45:45 lima-garuda-toolbox-it sshd-session[1021]: pam_unix(sshd:session): session opened for user user(uid=1000) by user(uid=0)
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1103 audit(1794257145.786:285): pid=1021 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1006 audit(1794257145.786:286): pid=1021 uid=0 old-auid=4294967295 auid=1000 tty=(none) old-ses=4294967295 ses=5 res=1
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1300 audit(1794257145.786:286): arch=c000003e syscall=1 success=yes exit=4 a0=6 a1=7fff0614b900 a2=4 a3=0 items=0 ppid=675 pid=1021 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=5 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" key=(null)
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1327 audit(1794257145.786:286): proctitle=737368642D73657373696F6E3A206E69636F205B706F7374617574685D
+Nov 09 21:45:45 lima-garuda-toolbox-it systemd-logind[571]: New session '5' of user 'user' with class 'user' and type 'tty'.
+Nov 09 21:45:45 lima-garuda-toolbox-it systemd[1]: Started Session 5 of User user.
+Nov 09 21:45:45 lima-garuda-toolbox-it audit[1021]: USER_START pid=1021 uid=0 auid=1000 ses=5 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1105 audit(1794257145.805:287): pid=1021 uid=0 auid=1000 ses=5 msg='op=PAM:session_open grantors=pam_loginuid,pam_keyinit,pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_lastlog2,pam_mail,pam_umask,pam_systemd,pam_env acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it audit[1024]: CRED_ACQ pid=1024 uid=0 auid=1000 ses=5 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:45 lima-garuda-toolbox-it kernel: audit: type=1103 audit(1794257145.806:288): pid=1024 uid=0 auid=1000 ses=5 msg='op=PAM:setcred grantors=pam_shells,pam_faillock,pam_permit,pam_env,pam_faillock acct="user" exe="/usr/lib/ssh/sshd-session" hostname=192.168.5.2 addr=192.168.5.2 terminal=ssh res=success'
+Nov 09 21:45:48 lima-garuda-toolbox-it lima-guestagent[567]: time="2026-11-09T21:45:48+01:00" level=info msg="SyncTime: system time synchronized with host (drift was -431.117697ms)"
+Nov 09 21:45:48 lima-garuda-toolbox-it systemd-resolved[451]: Clock change detected. Flushing caches.
+Nov 09 21:46:07 lima-garuda-toolbox-it systemd[1]: systemd-localed.service: Deactivated successfully.
+Nov 09 21:46:07 lima-garuda-toolbox-it audit[1]: SERVICE_STOP pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-localed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:07 lima-garuda-toolbox-it kernel: audit: type=1131 audit(1794257167.157:289): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-localed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:07 lima-garuda-toolbox-it audit: BPF prog-id=132 op=UNLOAD
+Nov 09 21:46:07 lima-garuda-toolbox-it audit: BPF prog-id=131 op=UNLOAD
+Nov 09 21:46:07 lima-garuda-toolbox-it audit: BPF prog-id=130 op=UNLOAD
+Nov 09 21:46:07 lima-garuda-toolbox-it kernel: audit: type=1334 audit(1794257167.181:290): prog-id=132 op=UNLOAD
+Nov 09 21:46:07 lima-garuda-toolbox-it kernel: audit: type=1334 audit(1794257167.181:291): prog-id=131 op=UNLOAD
+Nov 09 21:46:07 lima-garuda-toolbox-it kernel: audit: type=1334 audit(1794257167.181:292): prog-id=130 op=UNLOAD
+Nov 09 21:46:07 lima-garuda-toolbox-it systemd-resolved[451]: Using degraded feature set UDP instead of UDP+EDNS0 for DNS server 192.168.5.3.
+Nov 09 21:46:07 lima-garuda-toolbox-it systemd-timesyncd[458]: Contacted time server 139.162.152.20:123 (2.arch.pool.ntp.org).
+Nov 09 21:46:07 lima-garuda-toolbox-it systemd-timesyncd[458]: Initial clock synchronization to Mon 2026-11-09 21:46:07.531146 CET.
+Nov 09 21:46:25 lima-garuda-toolbox-it audit[1068]: USER_ACCT pid=1068 uid=1000 auid=1000 ses=5 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:25 lima-garuda-toolbox-it kernel: audit: type=1101 audit(1794257185.106:293): pid=1068 uid=1000 auid=1000 ses=5 msg='op=PAM:accounting grantors=pam_unix,pam_permit,pam_time acct="user" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:25 lima-garuda-toolbox-it sudo[1068]:     user : PWD=/home/user.guest ; USER=root ; COMMAND=/usr/bin/journalctl -e --no-pager
+Nov 09 21:46:25 lima-garuda-toolbox-it audit[1068]: CRED_REFR pid=1068 uid=1000 auid=1000 ses=5 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:25 lima-garuda-toolbox-it sudo[1068]: pam_unix(sudo:session): session opened for user root(uid=0) by user(uid=1000)
+Nov 09 21:46:25 lima-garuda-toolbox-it kernel: audit: type=1110 audit(1794257185.107:294): pid=1068 uid=1000 auid=1000 ses=5 msg='op=PAM:setcred grantors=pam_faillock,pam_permit,pam_env,pam_faillock acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:25 lima-garuda-toolbox-it audit[1068]: USER_START pid=1068 uid=1000 auid=1000 ses=5 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'
+Nov 09 21:46:25 lima-garuda-toolbox-it kernel: audit: type=1105 audit(1794257185.108:295): pid=1068 uid=1000 auid=1000 ses=5 msg='op=PAM:session_open grantors=pam_systemd_home,pam_limits,pam_unix,pam_permit,pam_systemd acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=? res=success'

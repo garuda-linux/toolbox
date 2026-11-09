@@ -1,10 +1,13 @@
 mod heights;
+mod redacted;
 mod scroll;
 
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
-use toolbox_core::features::diagnostics::{Collector, Refusal, Selection, UploadFailure};
+use toolbox_core::features::diagnostics::{
+    Collector, Known, Refusal, Selection, UploadFailure, redact,
+};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_privatebin::Paste;
 use toolbox_system::diagnostics::page::{Page, State};
@@ -33,10 +36,13 @@ fn sent(harness: &Shown) -> Vec<Command> {
 }
 
 fn report() -> Page {
+    let plain = "kernel: hello\nkernel: oops\n";
+
     Page {
         state: State::Report,
         selection: "dmesg".to_owned(),
-        report: "kernel: hello\nkernel: oops\n".to_owned(),
+        report: plain.to_owned(),
+        shareable: Some(redact(plain, &Known::default())),
         raw: "kernel: hello\n\u{1b}[31mkernel: oops\u{1b}[0m\n".to_owned(),
         ..Page::default()
     }

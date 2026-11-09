@@ -70,3 +70,19 @@ fn messages_keep_no_control_characters() {
         "1970-01-01T00:00:00.000Z INFO  apply: step said [2Kdone\n"
     );
 }
+
+#[test]
+fn a_carriage_return_cannot_overwrite_the_start_of_a_line() {
+    let line = format_record(
+        UNIX_EPOCH,
+        log::Level::Info,
+        "apply",
+        "fake start\rreal\r\nnext",
+        Style::Plain,
+    );
+
+    assert_eq!(
+        line,
+        "1970-01-01T00:00:00.000Z INFO  apply: fake startreal\n    next\n"
+    );
+}

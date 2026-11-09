@@ -1,8 +1,9 @@
 use std::ffi::OsStr;
 use std::path::PathBuf;
 
+use toolbox_plan::ConfigFilePath;
 use toolbox_plan::protocol::{Mode, ReadKind};
-use toolbox_system::HelperReads as _;
+use toolbox_system::{HelperFetch as _, HelperReads as _};
 
 use super::{HelperLauncher, Launcher as _};
 
@@ -170,4 +171,26 @@ fn a_dry_run_has_no_sudo_way() {
     };
 
     assert_eq!(dry.with_sudo(PathBuf::from("/usr/bin/sudo")), None);
+}
+
+#[test]
+fn every_pkexec_command_asks_for_untranslated_words() {
+    let launcher = HelperLauncher::Pkexec {
+        helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
+        pkexec: PathBuf::from("/usr/bin/pkexec"),
+    };
+
+    let path = ConfigFilePath::new("/etc/pacman.conf").unwrap();
+    let apply = launcher.command();
+    let read = launcher.read_command(ReadKind::Journal);
+    let fetch = launcher.fetch_command(&path);
+
+    for command in [apply.as_std(), &read, &fetch] {
+        let locale = command
+            .get_envs()
+            .find(|(key, _)| *key == "LC_ALL")
+            .and_then(|(_, value)| value);
+
+        assert_eq!(locale, Some(OsStr::new("C")), "{command:?}");
+    }
 }

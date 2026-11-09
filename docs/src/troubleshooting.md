@@ -163,12 +163,14 @@ internet connection.
 **Cause**
 
 A bug in Garuda Toolbox. The app writes every such error with the place in
-the code to `~/.local/state/garuda-toolbox/crash.log`.
+the code to `~/.local/state/garuda-toolbox/crash.log`. Once the file reaches
+1 MiB, it is renamed to `crash.log.1` and a new one starts.
 
 **Solution**
 
 1. Close and reopen the page or the app.
-2. Report the problem in the Garuda Linux forum and attach `crash.log`.
+2. Report the problem in the Garuda Linux forum and attach `crash.log`, and
+   `crash.log.1` if it exists.
    Only you can read the file, as it may contain paths of your home folder.
 
 ## Garuda Toolbox is not installed completely

@@ -33,7 +33,8 @@ const fn level_color(level: log::Level) -> &'static str {
 /// lines of multi-line messages are indented.
 ///
 /// Control characters are dropped: a message that quotes program output
-/// could otherwise drive the terminal of whoever reads the log.
+/// could otherwise drive the terminal of whoever reads the log. A carriage
+/// return goes too, or the text after it could hide the start of its line.
 pub fn format_record(
     time: SystemTime,
     level: log::Level,
@@ -43,7 +44,7 @@ pub fn format_record(
 ) -> String {
     let printable: String = message
         .chars()
-        .filter(|ch| !ch.is_control() || matches!(ch, '\t' | '\n' | '\r'))
+        .filter(|ch| !ch.is_control() || matches!(ch, '\t' | '\n'))
         .collect();
 
     let mut lines = printable.trim_end().lines();

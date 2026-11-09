@@ -10,6 +10,8 @@ use std::io::Write as _;
 use std::panic::{Location, PanicHookInfo};
 use std::path::{Path, PathBuf};
 
+const MAX_CRASH_BYTES: u64 = 1024 * 1024;
+
 /// Logs every panic with its place and a backtrace, adds it to
 /// `crash_file`, then runs the hook that was there before.
 ///
@@ -43,7 +45,9 @@ pub fn log_panics(crash_file: PathBuf) {
 }
 
 /// Adds `text` to `file`, readable by the owner alone: backtraces hold
-/// the user's paths.
+/// the user's paths. A file that would grow past [`MAX_CRASH_BYTES`]
+/// replaces `file.1` first, so a panic loop cannot fill the disk and the
+/// crashes before it are still there.
 fn record(file: &Path, text: &str) -> std::io::Result<()> {
     use std::os::unix::fs::OpenOptionsExt as _;
 
@@ -51,10 +55,21 @@ fn record(file: &Path, text: &str) -> std::io::Result<()> {
         fs::create_dir_all(folder)?;
     }
 
+    let adding = u64::try_from(text.len()).unwrap_or(u64::MAX);
+    let full =
+        fs::metadata(file).is_ok_and(|meta| meta.len().saturating_add(adding) > MAX_CRASH_BYTES);
+
+    if full {
+        let mut older = file.as_os_str().to_owned();
+        older.push(".1");
+        fs::rename(file, older)?;
+    }
+
     OpenOptions::new()
         .create(true)
         .append(true)
         .mode(0o600)
+        .custom_flags(rustix::fs::OFlags::NOFOLLOW.bits().cast_signed())
         .open(file)?
         .write_all(text.as_bytes())
 }

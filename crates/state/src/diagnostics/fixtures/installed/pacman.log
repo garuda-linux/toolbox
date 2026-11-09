@@ -1,0 +1,123 @@
+[2026-11-09T21:44:04+0100] [PACMAN] Running 'pacman -Syu --noconfirm --needed dkms v4l2loopback-dkms networkmanager'
+[2026-11-09T21:44:04+0100] [PACMAN] synchronizing package lists
+[2026-11-09T21:44:14+0100] [PACMAN] starting full system upgrade
+[2026-11-09T21:44:26+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-09T21:44:26+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-09T21:44:26+0100] [ALPM] transaction started
+[2026-11-09T21:44:26+0100] [ALPM] installed dkms (3.4.4-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed v4l2loopback-dkms (0.15.4-2)
+[2026-11-09T21:44:26+0100] [ALPM] installed libmm-glib (1.24.2-2)
+[2026-11-09T21:44:26+0100] [ALPM] installed libndp (1.9-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed pcre (8.45-5)
+[2026-11-09T21:44:26+0100] [ALPM] installed slang (2.3.3-4)
+[2026-11-09T21:44:26+0100] [ALPM] installed libnewt (0.52.25-2)
+[2026-11-09T21:44:26+0100] [ALPM] installed nspr (4.40-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed nss (3.133-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed libnm (1.58.1-3)
+[2026-11-09T21:44:26+0100] [ALPM] installed libsodium (1.0.22-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed libpgm (5.3.128-4)
+[2026-11-09T21:44:26+0100] [ALPM] installed zeromq (4.3.5-3)
+[2026-11-09T21:44:26+0100] [ALPM] installed libteam (1.32-3)
+[2026-11-09T21:44:26+0100] [ALPM] installed mobile-broadband-provider-info (20251101-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed duktape (2.7.0-7)
+[2026-11-09T21:44:26+0100] [ALPM] installed polkit (128-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed pcsclite (2.5.3-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed wpa_supplicant (2:2.12-1)
+[2026-11-09T21:44:26+0100] [ALPM] installed networkmanager (1.58.1-3)
+[2026-11-09T21:44:26+0100] [ALPM] upgraded fakeroot (1:2.1.4-1 -> 2:1.37.2-1)
+[2026-11-09T21:44:26+0100] [ALPM] upgraded fastfetch (2.70.0-1 -> 2.71.0-1)
+[2026-11-09T21:44:26+0100] [ALPM] upgraded garuda-hooks (2.16.0-2 -> 2.16.1-1)
+[2026-11-09T21:44:26+0100] [ALPM] upgraded inxi (3.3.41.1-1 -> 3.3.41.1-2)
+[2026-11-09T21:44:26+0100] [ALPM] upgraded python-referencing (0.37.0-3 -> 0.37.0-4)
+[2026-11-09T21:44:26+0100] [ALPM] transaction completed
+[2026-11-09T21:44:26+0100] [ALPM] running '000-garuda-config-agent-post.hook'...
+[2026-11-09T21:44:26+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-09T21:44:26+0100] [ALPM] running '11-glibc-ldconfig.hook'...
+[2026-11-09T21:44:27+0100] [ALPM] running '20-systemd-sysusers.hook'...
+[2026-11-09T21:44:27+0100] [ALPM-SCRIPTLET] Creating group 'polkitd' with GID 102.
+[2026-11-09T21:44:27+0100] [ALPM-SCRIPTLET] Creating group 'pcscd' with GID 967.
+[2026-11-09T21:44:27+0100] [ALPM-SCRIPTLET] Creating user 'pcscd' (PC/SC Smart Card Daemon) with UID 967 and GID 967.
+[2026-11-09T21:44:27+0100] [ALPM-SCRIPTLET] Creating user 'polkitd' (User for polkitd) with UID 102 and GID 102.
+[2026-11-09T21:44:27+0100] [ALPM] running '21-systemd-tmpfiles.hook'...
+[2026-11-09T21:44:27+0100] [ALPM] running '30-systemd-daemon-reload-system.hook'...
+[2026-11-09T21:44:27+0100] [ALPM] running '35-systemd-udev-reload.hook'...
+[2026-11-09T21:44:27+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-09T21:44:27+0100] [ALPM] running '70-dkms-install.hook'...
+[2026-11-09T21:44:27+0100] [ALPM-SCRIPTLET] ==> dkms install --no-depmod v4l2loopback/0.15.4 -k 7.3.1-1-garuda
+[2026-11-09T21:44:30+0100] [ALPM-SCRIPTLET] ==> depmod 7.3.1-1-garuda
+[2026-11-09T21:44:33+0100] [ALPM] running '80-check-broken-packages.hook'...
+[2026-11-09T21:44:33+0100] [ALPM] running '90-dracut-install.hook'...
+[2026-11-09T21:44:33+0100] [ALPM-SCRIPTLET] :: Rebuilding all initramfs due to changes in dracut files.
+[2026-11-09T21:44:33+0100] [ALPM-SCRIPTLET] :: Building initramfs for linux-garuda (7.3.1-1-garuda)
+[2026-11-09T21:44:36+0100] [ALPM-SCRIPTLET] :: Building fallback initramfs for linux-garuda (7.3.1-1-garuda)
+[2026-11-09T21:44:41+0100] [ALPM] running '90-mkinitcpio-install.hook'...
+[2026-11-09T21:44:41+0100] [ALPM] running '95-garuda-kernel-install.hook'...
+[2026-11-09T21:44:43+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-09T21:44:43+0100] [ALPM-SCRIPTLET] Wrote unsigned /var/tmp/kernel-install.staging.BwP3Vi/uki.efi
+[2026-11-09T21:44:43+0100] [ALPM-SCRIPTLET] Using config file: /etc/kernel/uki.conf
+[2026-11-09T21:44:43+0100] [ALPM-SCRIPTLET] Wrote unsigned /efi/EFI/Linux/garuda-7.3.1-1-garuda-fallback.efi
+[2026-11-09T21:44:43+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-09T21:44:43+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-09T21:44:43+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-09T21:44:43+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-09T21:44:43+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-09T21:44:43+0100] [ALPM] running 'dbus-reload.hook'...
+[2026-11-09T21:44:43+0100] [ALPM] running 'garuda-hooks-runner.hook'...
+[2026-11-09T21:44:43+0100] [ALPM] running 'zzz_post.hook'...
+[2026-11-09T21:44:44+0100] [PACMAN] Running 'pacman -U --noconfirm /tmp/garuda-toolbox-6.3.0-1-x86_64.pkg.tar.zst'
+[2026-11-09T21:44:53+0100] [ALPM] running '01-snapshot-reject.hook'...
+[2026-11-09T21:44:53+0100] [ALPM] running '50-garuda-config-agent-pre.hook'...
+[2026-11-09T21:44:53+0100] [ALPM] transaction started
+[2026-11-09T21:44:53+0100] [ALPM] installed default-cursors (3-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed wayland (1.26.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed xkeyboard-config (2.49-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxkbcommon (1.13.2-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed vulkan-icd-loader (1.4.363.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxfixes (6.0.2-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxcursor (1.2.3-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxi (1.8.4-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed double-conversion (3.4.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libb2 (0.98.1-3)
+[2026-11-09T21:44:53+0100] [ALPM] installed libcups (2:2.4.20-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libpciaccess (0.19-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libdrm (2.4.134-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxshmfence (1.3.3-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxxf86vm (1.1.7-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed lm_sensors (1:3.6.2-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed spirv-tools (1:1.4.363.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed mesa (1:26.2.6-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libglvnd (1.7.0-3)
+[2026-11-09T21:44:53+0100] [ALPM] installed libice (1.1.2-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libevdev (1.14.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libgudev (238-4)
+[2026-11-09T21:44:53+0100] [ALPM] installed libwacom (2.20.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed mtdev (1.1.7-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libinput (1.32.0-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libproxy (0.5.12-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libsm (1.2.6-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed libxkbcommon-x11 (1.13.2-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed md4c (0.6.0-2)
+[2026-11-09T21:44:53+0100] [ALPM] installed tslib (1.24-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed xcb-util-renderutil (0.3.10-2)
+[2026-11-09T21:44:53+0100] [ALPM] installed xcb-util (0.4.1-2)
+[2026-11-09T21:44:53+0100] [ALPM] installed xcb-util-image (0.4.1-3)
+[2026-11-09T21:44:53+0100] [ALPM] installed xcb-util-cursor (0.1.6-1)
+[2026-11-09T21:44:53+0100] [ALPM] installed xcb-util-keysyms (0.4.1-5)
+[2026-11-09T21:44:53+0100] [ALPM] installed xcb-util-wm (0.4.2-2)
+[2026-11-09T21:44:53+0100] [ALPM] installed xdg-utils (1.2.1-2)
+[2026-11-09T21:44:53+0100] [ALPM] installed qt6-translations (6.12.0-1)
+[2026-11-09T21:44:54+0100] [ALPM] installed qt6-base (6.12.0-3)
+[2026-11-09T21:44:56+0100] [ALPM] installed breeze-icons (6.31.0-1)
+[2026-11-09T21:44:56+0100] [ALPM] installed garuda-toolbox (6.3.0-1)
+[2026-11-09T21:44:56+0100] [ALPM] transaction completed
+[2026-11-09T21:44:56+0100] [ALPM] running '000-garuda-config-agent-postinst.hook'...
+[2026-11-09T21:44:57+0100] [ALPM] running '25-systemd-hwdb.hook'...
+[2026-11-09T21:44:57+0100] [ALPM] running '30-systemd-daemon-reload-system.hook'...
+[2026-11-09T21:44:57+0100] [ALPM] running '35-systemd-udev-reload.hook'...
+[2026-11-09T21:44:57+0100] [ALPM] running '35-systemd-update.hook'...
+[2026-11-09T21:44:57+0100] [ALPM] running '99-foreign.hook'...
+[2026-11-09T21:44:58+0100] [ALPM-SCRIPTLET] => No foreign/AUR packages found.
+[2026-11-09T21:44:58+0100] [ALPM] running '99-orphans.hook'...
+[2026-11-09T21:44:58+0100] [ALPM-SCRIPTLET] => No orphans found.
+[2026-11-09T21:44:58+0100] [ALPM] running '99-pacnew-check.hook'...
+[2026-11-09T21:44:58+0100] [ALPM] running 'zzz_post.hook'...

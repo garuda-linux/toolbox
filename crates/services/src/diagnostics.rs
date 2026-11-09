@@ -98,18 +98,25 @@ impl Diagnostics {
         self.send(Request::Cancel);
     }
 
-    /// Uploads the plain report. Returns whether it started: not without
-    /// a report, a service or while an upload runs.
+    /// Uploads the redacted report the question showed. Returns whether it
+    /// started: not before it is ready, without a service or while an
+    /// upload runs.
     pub fn upload(&mut self) -> bool {
-        let refused =
-            self.link.is_none() || self.page.report.is_empty() || self.page.share.running();
+        let Some(text) = self
+            .page
+            .shareable
+            .as_ref()
+            .map(|ready| ready.text().to_owned())
+        else {
+            return false;
+        };
 
-        if refused {
+        if self.link.is_none() || text.is_empty() || self.page.share.running() {
             return false;
         }
 
         self.page.start_upload();
-        self.send(Request::Upload(self.page.report.clone()));
+        self.send(Request::Upload(text));
         true
     }
 

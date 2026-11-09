@@ -107,16 +107,18 @@ opens your browser. Select the address and copy it.
 To show the output to someone who helps you, upload it:
 
 1. Open the **⋯** menu and click **Share output…**.
-2. The dialog shows the exact text that will be sent. Read it and check it
-   for anything you do not want to share. A program that writes on
-   meanwhile does not change it.
+2. The dialog shows the exact text that will be sent, with your user name,
+   host name, home folder and public addresses replaced as on
+   [Diagnostics](diagnostics.md#what-the-upload-replaces). Read it and
+   search it for anything else you do not want to share. A program that
+   writes on meanwhile does not change it.
 3. Click **Upload**. One row in the Console says **Uploaded.**, with
    **Copy link** and **Hide**. Its **⋯** menu holds **Open in browser**,
    **Copy delete link** and **Delete now…**.
 
 The upload works like the one on [Diagnostics](diagnostics.md#share-a-report):
 the text goes to `bin.garudalinux.org`, encrypted on your computer, and
-the server deletes it after one year. Nothing is sent before you click
+the server deletes it after one month. Nothing is sent before you click
 **Upload**. **Cancel** sends nothing. With **Copy reports to the
 clipboard** on in Settings, the link goes to the clipboard by itself.
 

@@ -2,21 +2,20 @@
 //! when asked, never logged.
 
 use egui::{Id, Label, ScrollArea, TextEdit, Ui};
-use toolbox_core::features::diagnostics::UploadFailure;
+use toolbox_core::features::diagnostics::{Redacted, UploadFailure};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, banner, card, confirm_buttons,
-    loading_label, menu_button, menu_item, pill_button, rich, text_box, text_field,
+    loading_label, menu_button, menu_item, pill_button, rich, text_field,
 };
 use toolbox_privatebin::{Paste, SERVER};
 use toolbox_system::share::{Upload, UploadProblem};
 
+use super::preview;
 use crate::command::{AppCommand, Command, CommandSender};
 use crate::{i18n, links};
-
-const PREVIEW_HEIGHT: f32 = 240.0;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Subject {
@@ -42,7 +41,7 @@ pub struct ShareView<'a> {
 }
 
 impl Subject {
-    const fn as_str(self) -> &'static str {
+    pub(super) const fn as_str(self) -> &'static str {
         match self {
             Self::Report => "report",
             Self::Output => "output",
@@ -51,7 +50,7 @@ impl Subject {
 }
 
 impl ShareView<'_> {
-    fn text(&self, ctx: &egui::Context, id: &str) -> String {
+    pub(super) fn text(&self, ctx: &egui::Context, id: &str) -> String {
         i18n::text_with(ctx, id, &[("subject", self.subject.as_str())]).into_owned()
     }
 }
@@ -241,12 +240,12 @@ fn field(ui: &mut Ui, label: &str, link: &str, name: &str) {
     ui.add_space(tokens.sizes.control_gap);
 }
 
-/// The open question, if any: the upload with `text`, or the delete.
-/// Returns whether the user agreed to upload `text`.
+/// The open question, if any: the upload of `shareable`, or the delete.
+/// Returns whether the user agreed to upload `shareable`.
 pub fn ask(
     ctx: &egui::Context,
     view: &ShareView<'_>,
-    text: &str,
+    shareable: &Redacted,
     asking: &mut Option<Question>,
 ) -> bool {
     let Some(question) = *asking else {
@@ -254,18 +253,22 @@ pub fn ask(
     };
 
     let words = |id: &str| view.text(ctx, id);
-    let (title, cancel, confirm, kind) = match question {
+
+    // The text to check needs the room, the delete only a sentence.
+    let (title, cancel, confirm, kind, width) = match question {
         Question::Upload => (
             "share-upload-question",
             "share-upload-cancel",
             "share-upload-confirm",
             ButtonKind::Primary,
+            DialogWidth::Wide,
         ),
         Question::Delete => (
             "share-delete-question",
             "share-delete-cancel",
             "share-delete-confirm",
             ButtonKind::Danger,
+            DialogWidth::Medium,
         ),
     };
 
@@ -274,10 +277,10 @@ pub fn ask(
     let id = Id::unique("toolbox_gui::share::question").with(view.subject.as_str());
     let outcome = ModalWrapper::new(id, &title)
         .title_bar(&close)
-        .width(DialogWidth::Medium)
+        .width(width)
         .show(ctx, |ui| {
             match question {
-                Question::Upload => preview(ui, view, text),
+                Question::Upload => preview::show(ui, view, shareable),
                 Question::Delete => {
                     ui.add(Label::new(words("share-delete-detail")).wrap());
                 }
@@ -300,21 +303,6 @@ pub fn ask(
     }
 
     confirmed && question == Question::Upload
-}
-
-fn preview(ui: &mut Ui, view: &ShareView<'_>, text: &str) {
-    let ctx = ui.ctx().clone();
-    ui.add(Label::new(view.text(&ctx, "share-upload-where")).wrap());
-    ui.add(Label::new(view.text(&ctx, "share-upload-check")).wrap());
-    ui.add_space(ui.tokens().sizes.card_gap);
-    let name = view.text(&ctx, "share-upload-text");
-    let mut shown = text;
-    text_box(
-        ui,
-        TextEdit::multiline(&mut shown).font(egui::TextStyle::Monospace),
-        &name,
-        PREVIEW_HEIGHT,
-    );
 }
 
 pub fn copy(ctx: &egui::Context, commands: &CommandSender, text: &str, id: &str) {

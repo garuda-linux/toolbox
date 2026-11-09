@@ -9,8 +9,19 @@ share-upload-question = { $subject ->
     [report] Diesen Bericht hochladen?
    *[output] Diese Ausgabe hochladen?
 }
-share-upload-where = Der folgende Text wird an bin.garudalinux.org gesendet. Er wird bereits auf diesem Computer verschlüsselt, sodass der Server ihn nicht lesen kann. Jeder mit dem Link kann ihn aber lesen. Der Server löscht ihn nach einem Jahr.
-share-upload-check = Prüfe ihn auf Angaben, die du nicht teilen möchtest, etwa Namen, Adressen oder Seriennummern.
+share-upload-where = Der folgende Text wird an bin.garudalinux.org gesendet. Er wird bereits auf diesem Computer verschlüsselt, sodass der Server ihn nicht lesen kann. Jeder mit dem Link kann ihn aber lesen. Der Server löscht ihn nach einem Monat.
+share-upload-check = Prüfe ihn auf weitere Angaben, die du nicht teilen möchtest. Die Suche markiert jeden Treffer.
+share-upload-replaced-none = Soweit die Toolbox es erkennt, nennt der Text weder dich noch diesen Computer.
+share-upload-replaced =
+    { $count ->
+        [one] Ein Wert, der dich oder diesen Computer nennt, wurde ersetzt, etwa der Benutzername, der Rechnername, eine Seriennummer oder eine öffentliche Adresse.
+       *[other] { $count } Werte, die dich oder diesen Computer nennen, wurden ersetzt, etwa der Benutzername, der Rechnername, Seriennummern und öffentliche Adressen.
+    }
+share-upload-search = Text durchsuchen
+share-upload-search-hint = Text durchsuchen
+share-upload-search-clear = Suche leeren
+share-upload-search-next = Nächster Treffer
+share-upload-search-count = { $current } von { $count }
 share-upload-text = Hochzuladender Text
 share-upload-cancel = Abbrechen
 share-upload-confirm = Hochladen

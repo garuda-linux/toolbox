@@ -79,7 +79,9 @@ impl PageView for DiagnosticsPage {
             status(ui, context);
         }
 
-        if share::ask(ui.ctx(), &view, &page.report, &mut self.asking) {
+        if let Some(shareable) = &page.shareable
+            && share::ask(ui.ctx(), &view, shareable, &mut self.asking)
+        {
             context.commands.send(DiagnosticsCommand::Upload);
         }
     }
@@ -156,9 +158,11 @@ impl DiagnosticsPage {
         }
 
         let share = i18n::text(&ctx, "diagnostics-share");
-        let uploading = page.share.running();
+
+        // The redacted report follows the report in a moment.
+        let ready = page.shareable.is_some() && !page.share.running();
         let shared = ui
-            .add_enabled_ui(!uploading, |ui| pill_button(ui, &share, ButtonKind::Soft))
+            .add_enabled_ui(ready, |ui| pill_button(ui, &share, ButtonKind::Soft))
             .inner
             .on_hover_text(i18n::text(&ctx, "diagnostics-share-tooltip"));
 

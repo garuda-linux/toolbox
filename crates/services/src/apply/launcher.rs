@@ -135,7 +135,10 @@ impl HelperLauncher {
         let mut command = match self {
             Self::Pkexec { helper, pkexec } => {
                 let mut command = std::process::Command::new(pkexec);
-                command.arg(helper);
+
+                // `pkexec::refusal` tells refusals apart by pkexec's English
+                // words. The helper sets its programs' locale itself.
+                command.env("LC_ALL", "C").arg(helper);
                 command
             }
             Self::Sudo { helper, sudo } => {

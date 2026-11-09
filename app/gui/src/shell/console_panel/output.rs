@@ -1,7 +1,10 @@
 //! What the question shows is kept until it is answered, so the text
 //! that goes out is the text the user read, even while a plan writes on.
 
+use std::sync::Arc;
+
 use egui::{Id, Ui};
+use toolbox_core::features::diagnostics::Redacted;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{menu_button, menu_item};
 
@@ -14,7 +17,7 @@ use crate::share::view::{self as share, Question, ShareView, Subject};
 struct Asking {
     question: Option<Question>,
     /// Shared, as egui hands temp data out by clone every frame.
-    text: std::sync::Arc<str>,
+    shareable: Arc<Redacted>,
 }
 
 fn asking_id() -> Id {
@@ -51,7 +54,7 @@ pub(super) fn menu(ui: &mut Ui, console: &Console, commands: &CommandSender) {
         if sharing.inner.clicked() {
             let asking = Asking {
                 question: Some(Question::Upload),
-                text: console.output_text().into(),
+                shareable: Arc::new(console.shareable_output()),
             };
 
             ctx.data_mut(|data| data.insert_temp(asking_id(), asking));
@@ -82,12 +85,12 @@ pub(super) fn share(ui: &mut Ui, console: &Console, commands: &CommandSender) {
         ui.add_space(ui.tokens().sizes.control_gap);
     }
 
-    if share::ask(&ctx, &view, &asking.text, &mut asking.question) {
-        commands.send(ConsoleCommand::Share(asking.text.to_string()));
+    if share::ask(&ctx, &view, &asking.shareable, &mut asking.question) {
+        commands.send(ConsoleCommand::Share(asking.shareable.text().to_owned()));
     }
 
     if asking.question.is_none() {
-        asking.text = std::sync::Arc::from("");
+        asking.shareable = Arc::default();
     }
 
     ctx.data_mut(|data| data.insert_temp(asking_id(), asking));

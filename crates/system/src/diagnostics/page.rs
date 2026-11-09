@@ -7,7 +7,7 @@ mod tests;
 use std::time::Instant;
 
 use toolbox_pty::strip_ansi;
-use toolbox_state::diagnostics::{Collector, Outcome, Refusal};
+use toolbox_state::diagnostics::{Collector, Outcome, Redacted, Refusal};
 
 use super::service::DiagnosticsNote;
 use crate::share::{ShareNote, Upload};
@@ -39,12 +39,14 @@ pub struct Page {
     pub part: String,
     /// Its place among the collectors of a full report, from 1.
     pub step: i32,
-    /// The report as plain text: what is copied, shown before an upload
-    /// and uploaded.
+    /// The report as plain text: what is copied.
     pub report: String,
     /// The report as the programs printed it, colours included. Only ever
     /// shown, never copied or sent.
     pub raw: String,
+    /// The plain report as it may leave the machine: what the upload
+    /// question shows and the upload sends. `None` until it is ready.
+    pub shareable: Option<Redacted>,
     pub problem: String,
     pub share: Upload,
 }
@@ -80,6 +82,10 @@ impl Page {
                 selection.as_str().clone_into(&mut self.selection);
                 self.clear_result();
                 self.finish(outcome)
+            }
+            DiagnosticsNote::Shareable(redacted) => {
+                self.shareable = Some(redacted);
+                Changed::Status
             }
             DiagnosticsNote::Cancelled => {
                 self.state = State::Idle;
@@ -145,6 +151,7 @@ impl Page {
     fn clear_result(&mut self) {
         self.report.clear();
         self.raw.clear();
+        self.shareable = None;
         self.problem.clear();
         self.part.clear();
         self.step = 0_i32;

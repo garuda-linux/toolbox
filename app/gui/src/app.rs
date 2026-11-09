@@ -195,7 +195,7 @@ impl App {
             changes_ui: ChangesState::default(),
             snap: shell::Snap::default(),
             fold: fold::Fold::default(),
-            console: Console::new(),
+            console: Console::knowing(ShareLink::known_of(setup.output_share.as_ref())),
             apply: setup.apply,
             clipboard: setup.system_clipboard.then(|| SystemClipboard::of(cc)),
             notifier: setup.notifier,

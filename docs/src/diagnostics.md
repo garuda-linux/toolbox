@@ -100,8 +100,10 @@ and gives you a link to post in the forum.
 1. Collect a report.
 2. Click **Share report…**.
 3. Read the text in the **Upload this report?** dialog. It is exactly what
-   will be uploaded: plain text without colours. Check it for anything you do
-   not want to share, such as names, addresses or serial numbers.
+   will be uploaded: plain text without colours, with the values that name
+   you or this computer replaced (see below). The dialog says how many were
+   replaced. Type in **Search the text** to mark every match, for example
+   of a name, and **Next match** to jump to the next one.
 4. Click **Upload**. **Cancel** uploads nothing.
 
 ![The question before an upload, with the text that goes out](images/diagnostics-upload.png)
@@ -113,8 +115,31 @@ paste, **Hide** removes the link.
 > **Warning:** Anyone who has the whole link can read the report. The report
 > is encrypted on your computer before it is sent. The key is the part of the
 > link after `#`, which the server never sees, so the server cannot read the
-> report. The server deletes it after one year. To remove it earlier, see
+> report. The server deletes it after one month. To remove it earlier, see
 > below.
+
+### What the upload replaces
+
+Before the dialog opens, the Toolbox replaces these values in the text it
+uploads. The report on the page and **Copy report** keep them.
+
+| Value                                                  | Placeholder                   |
+| ------------------------------------------------------ | ----------------------------- |
+| Your user name, as a whole word                        | `<user>`                      |
+| Your home folder                                       | `<home>`                      |
+| The computer's host name, as a whole word              | `<host>`                      |
+| Serial numbers of the computer that your user can read | `<serial-1>`, `<serial-2>`, … |
+| UUIDs of disks and partitions                          | `<uuid-1>`, …                 |
+| Hardware (MAC) addresses                               | `<mac-1>`, …                  |
+| Public and link-local IP addresses                     | `<ip-1>`, …                   |
+
+One value keeps its number through the whole text, so a helper still sees
+that two lines name the same disk. Private addresses such as
+`192.168.1.10`, loopback and documentation addresses stay.
+
+> **Note:** The replacement finds only what it knows or what has a fixed
+> shape. A name in a file path of another user, an email address or a
+> Wi-Fi network name stays. Search the text for them before you upload.
 
 ### Delete an uploaded report
 

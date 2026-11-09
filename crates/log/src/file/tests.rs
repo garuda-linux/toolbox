@@ -224,7 +224,52 @@ fn an_unmakable_folder_is_no_sink() {
     let blocker = dir.path().join("file");
     fs::write(&blocker, "").unwrap();
 
-    assert!(open_sink(&blocker.join("app.log")).is_none());
+    assert!(open_sink(&blocker.join("app.log")).is_err());
+}
+
+#[test]
+fn a_failure_streak_is_reported_once() {
+    let mut streak = Streak::default();
+
+    assert!(streak.failed(), "the first failure was not reported");
+    assert!(
+        !streak.failed(),
+        "a failure in the same streak was reported"
+    );
+
+    streak.recovered();
+    assert!(
+        streak.failed(),
+        "a new streak after a success was not reported"
+    );
+}
+
+#[test]
+fn a_log_that_cannot_open_starts_a_streak_until_a_line_lands() {
+    let dir = tempfile::tempdir().unwrap();
+    let blocker = dir.path().join("state");
+    let path = blocker.join("app.log");
+    fs::write(&blocker, "").unwrap();
+
+    let logger = FileLogger::open_retrying(path, Duration::ZERO);
+    logger.write_line("lost\n");
+    assert!(logger.state.lock().streak.failing);
+
+    fs::remove_file(&blocker).unwrap();
+    logger.write_line("kept\n");
+    assert!(!logger.state.lock().streak.failing);
+}
+
+#[test]
+fn a_line_that_cannot_be_written_starts_a_streak() {
+    let logger = FileLogger::open(PathBuf::from("/dev/full"));
+
+    assert!(logger.state.lock().sink.is_some(), "/dev/full did not open");
+    logger.write_line("lost\n");
+
+    let state = logger.state.lock();
+    assert!(state.streak.failing);
+    assert_eq!(state.sink.as_ref().map(|sink| sink.size), Some(0));
 }
 
 #[test]
@@ -289,4 +334,19 @@ fn a_quiet_terminal_keeps_the_lines_in_the_file_only() {
             .contains("cli: answer printed"),
         "the line did not reach the file"
     );
+}
+
+/// Another program could put a link where the log goes, and the app
+/// would then append to the file it points at.
+#[test]
+fn a_log_path_that_is_a_link_is_refused() {
+    let dir = tempfile::tempdir().unwrap();
+    let target = dir.path().join("elsewhere");
+    let path = dir.path().join("app.log");
+
+    fs::write(&target, "").unwrap();
+    std::os::unix::fs::symlink(&target, &path).unwrap();
+
+    assert!(open_sink(&path).is_err());
+    assert_eq!(fs::read_to_string(&target).unwrap(), "");
 }

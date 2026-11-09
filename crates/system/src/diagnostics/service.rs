@@ -13,7 +13,8 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::runtime::Handle;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 use toolbox_privatebin::{Paste, Transport};
-use toolbox_state::diagnostics::{Collector, Outcome, Selection, full_report};
+use toolbox_pty::strip_ansi;
+use toolbox_state::diagnostics::{Collector, Outcome, Redacted, Selection, full_report, redact};
 
 use crate::DiagnosticSource;
 use crate::share::{ShareNote, ShareSink, Sharer, UploadProblem};
@@ -31,6 +32,9 @@ pub enum DiagnosticsNote {
     Started(Selection),
     Collecting(Collector),
     Finished(Selection, Outcome),
+    /// The finished report as it may leave the machine. Comes right
+    /// after its `Finished`.
+    Shareable(Redacted),
     Cancelled,
     UploadStarted,
     Uploaded(Result<Paste, UploadProblem>),
@@ -55,6 +59,7 @@ struct Done {
     selection: Selection,
     /// `None` after a cancel.
     outcome: Option<Outcome>,
+    shareable: Option<Redacted>,
 }
 
 struct Service {
@@ -118,18 +123,24 @@ impl Service {
         self.sink.note(DiagnosticsNote::Started(selection));
         self.run = Some(Run { id, cancel });
 
-        let work = self
-            .runtime
-            .spawn_blocking(move || run(selection, source.as_ref(), &flag, sink.as_ref()));
+        let work = self.runtime.spawn_blocking(move || {
+            let outcome = run(selection, source.as_ref(), &flag, sink.as_ref());
+            let shareable = match &outcome {
+                Some(Outcome::Report(text)) => Some(redact(&strip_ansi(text), &source.known())),
+                Some(_) | None => None,
+            };
+
+            (outcome, shareable)
+        });
 
         // A panic in the blocking work ends as a failed collection.
         let results = self.results.clone();
 
         self.runtime.spawn(async move {
-            let outcome = work.await.unwrap_or_else(|_| {
-                Some(Outcome::Failed(
-                    "the diagnostics collection stopped before it answered".to_owned(),
-                ))
+            let (outcome, shareable) = work.await.unwrap_or_else(|_| {
+                let failed = "the diagnostics collection stopped before it answered";
+
+                (Some(Outcome::Failed(failed.to_owned())), None)
             });
 
             // The service ends with the app. Nobody waits then.
@@ -138,6 +149,7 @@ impl Service {
                     id,
                     selection,
                     outcome,
+                    shareable,
                 })
                 .ok();
         });
@@ -164,6 +176,10 @@ impl Service {
                 tracing::info!("diagnostics collected: {}", done.selection.as_str());
                 self.sink
                     .note(DiagnosticsNote::Finished(done.selection, outcome));
+
+                if let Some(shareable) = done.shareable {
+                    self.sink.note(DiagnosticsNote::Shareable(shareable));
+                }
             }
             None => self.sink.note(DiagnosticsNote::Cancelled),
         }

@@ -7,6 +7,7 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
+use toolbox_core::features::diagnostics::Known;
 use toolbox_gui::diagnostics::DryRunTransport;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, PreferencesSetup, Setup, apply, share};
@@ -53,6 +54,7 @@ fn applied_with(script: String, copy: bool) -> (Harness<'static, App>, Runtime) 
                 &handle,
                 toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
                 Arc::new(DryRunTransport),
+                Known::default(),
             )),
             preferences,
             ..Setup::default()

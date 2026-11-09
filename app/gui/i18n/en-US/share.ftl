@@ -9,8 +9,19 @@ share-upload-question = { $subject ->
     [report] Upload this report?
    *[output] Upload this output?
 }
-share-upload-where = The text below goes to bin.garudalinux.org. It is encrypted on this computer, so the server cannot read it, but anyone who has the link can. The server deletes it after one year.
-share-upload-check = Check it for anything you do not want to share, such as names, addresses or serial numbers.
+share-upload-where = The text below goes to bin.garudalinux.org. It is encrypted on this computer, so the server cannot read it, but anyone who has the link can. The server deletes it after one month.
+share-upload-check = Check it for anything else you do not want to share. The search marks every match.
+share-upload-replaced-none = Nothing in it named you or this computer, as far as the Toolbox can tell.
+share-upload-replaced =
+    { $count ->
+        [one] One value that names you or this computer was replaced, such as the user name, the host name, a serial number or a public address.
+       *[other] { $count } values that name you or this computer were replaced, such as the user name, the host name, serial numbers and public addresses.
+    }
+share-upload-search = Search the text
+share-upload-search-hint = Search the text
+share-upload-search-clear = Clear the search
+share-upload-search-next = Next match
+share-upload-search-count = { $current } of { $count }
 share-upload-text = The text that will be uploaded
 share-upload-cancel = Cancel
 share-upload-confirm = Upload
