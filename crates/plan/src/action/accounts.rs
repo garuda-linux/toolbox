@@ -29,6 +29,10 @@ pub fn create_user(user: &NewUser) -> Vec<Invocation> {
         NewHome::Absent => command.arg("-M"),
     };
 
+    if let NewHome::At(home) = &user.home {
+        steps.push(Invocation::Builtin(Builtin::RequireSafeHome(home.clone())));
+    }
+
     if let Some(uid) = user.uid {
         command = command.args(["-u", &uid.to_string()]);
     }

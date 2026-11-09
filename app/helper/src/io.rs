@@ -16,6 +16,10 @@ const SECRET_LINE_OVERHEAD: usize = 32;
 
 const USAGE_EXIT: u8 = 2;
 
+/// A full queue holds the reader back, so the app waits and the root
+/// helper's memory stays bounded whatever the app sends.
+pub const ANSWER_QUEUE: usize = 64;
+
 /// Flushed per line, so the app sees output as it happens.
 pub struct StdoutSink;
 
@@ -124,7 +128,7 @@ pub fn spawn_answer_reader<R>(mut input: R) -> Receiver<Answer>
 where
     R: BufRead + Send + 'static,
 {
-    let (sender, receiver) = mpsc::channel();
+    let (sender, receiver) = mpsc::sync_channel(ANSWER_QUEUE);
 
     let reader = std::thread::Builder::new()
         .name("answers".to_owned())

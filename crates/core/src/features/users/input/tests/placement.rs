@@ -60,6 +60,7 @@ fn a_typed_home_folder_gets_the_code_of_its_rule() {
         ("/srv/ada/", "home-invalid-component"),
         ("/srv/a:b", "home-invalid-character"),
         ("/srv/ada ", "home-outer-blank"),
+        ("/tmp/ada", "home-outside-roots"),
     ] {
         assert_eq!(home(text).err(), Some(code), "{text}");
     }

@@ -66,7 +66,10 @@ fn a_new_user_takes_the_defaults_unless_the_dialog_says_otherwise() {
             &snapshot
         )
         .unwrap(),
-        ["useradd -m -d /srv/grace -u 1500 -- grace"]
+        [
+            "check the folders above /srv/grace",
+            "useradd -m -d /srv/grace -u 1500 -- grace"
+        ]
     );
     assert_eq!(
         placed_grace(

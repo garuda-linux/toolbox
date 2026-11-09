@@ -179,7 +179,7 @@ fn a_restored_change_of_roots_account_is_dropped() {
         (
             "home-folders",
             json!("root"),
-            json!({ "home": "/root2", "move_files": false }),
+            json!({ "home": "/srv/root2", "move_files": false }),
         ),
     ]);
 

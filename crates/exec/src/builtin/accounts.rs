@@ -6,6 +6,7 @@
 mod tests;
 
 use std::ops::RangeInclusive;
+use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 use std::{fs, io};
 
@@ -19,6 +20,8 @@ use crate::report::{failure, note};
 /// Root, system accounts and `nobody` (65534) lie outside, and files on
 /// disk refer to them.
 const ORDINARY_IDS: RangeInclusive<u32> = FIRST_USER_ID..=LAST_USER_ID;
+
+const WORLD_WRITABLE: u32 = 0o002;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Listed {
@@ -73,7 +76,8 @@ pub fn require_ordinary_user(
 }
 
 /// Fails when `home` exists, also as a dangling link: `usermod -d <home>
-/// -m` would write it into `/etc/passwd` and then refuse to move.
+/// -m` would write it into `/etc/passwd` and then refuse to move. Fails
+/// too below a folder everyone may write.
 pub fn require_free_home(
     root: &Path,
     step: StepId,
@@ -81,6 +85,10 @@ pub fn require_free_home(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     let path = root.join(home.as_str().trim_start_matches('/'));
+
+    if let Some(refusal) = shared_ancestor(root, &path, home) {
+        return failure(step, sink, &refusal);
+    }
 
     match fs::symlink_metadata(&path) {
         Ok(_) => failure(
@@ -93,6 +101,45 @@ pub fn require_free_home(
         }
         Err(error) => failure(step, sink, &format!("cannot check {home}: {error}")),
     }
+}
+
+/// Fails below a folder everyone may write, where `useradd -m` would make
+/// the home. A home that exists already is fine: useradd only takes it.
+pub fn require_safe_home(
+    root: &Path,
+    step: StepId,
+    home: &HomeDirectory,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    let path = root.join(home.as_str().trim_start_matches('/'));
+
+    shared_ancestor(root, &path, home)
+        .map_or(Outcome::Succeeded, |refusal| failure(step, sink, &refusal))
+}
+
+/// Below a folder anyone may write, another user can put a link on the
+/// way to `path` between this check and the program that makes or moves
+/// the home. Every folder up to `root` that exists counts, followed as the
+/// program follows it.
+fn shared_ancestor(root: &Path, path: &Path, home: &HomeDirectory) -> Option<String> {
+    for ancestor in path
+        .ancestors()
+        .skip(1)
+        .take_while(|folder| folder.starts_with(root))
+    {
+        match fs::metadata(ancestor) {
+            Ok(folder) if folder.permissions().mode() & WORLD_WRITABLE != 0 => {
+                return Some(format!(
+                    "a folder above {home} is writable for everyone, so it is not used"
+                ));
+            }
+            Ok(_) => {}
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+            Err(error) => return Some(format!("cannot check the folders above {home}: {error}")),
+        }
+    }
+
+    None
 }
 
 pub fn require_user_group(

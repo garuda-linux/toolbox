@@ -106,6 +106,7 @@ users-home-not-absolute = Das Home-Verzeichnis muss ein absoluter Pfad sein, etw
 users-home-invalid-character = Das Home-Verzeichnis darf keine Doppelpunkte, Zeilenumbrüche oder anderen Steuerzeichen enthalten.
 users-home-outer-blank = Das Home-Verzeichnis darf nicht mit einem Leerzeichen beginnen oder enden.
 users-home-invalid-component = Das Home-Verzeichnis darf kein „..“, keinen einzelnen Punkt, keine doppelten Schrägstriche und keinen abschließenden Schrägstrich enthalten.
+users-home-outside-roots = Das Home-Verzeichnis muss unter /home, /srv, /var/lib oder /opt liegen.
 
 users-full-name-too-long = Der vollständige Name ist zu lang.
 users-full-name-invalid-character = Der vollständige Name darf keine Doppelpunkte, Kommas, Gleichheitszeichen, Anführungszeichen oder Zeilenumbrüche enthalten.

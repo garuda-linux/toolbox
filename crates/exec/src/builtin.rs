@@ -93,11 +93,10 @@ pub fn execute(
             edit_locale_gen(root, entry, *on),
         ),
         Builtin::SetSystemLocale(locale) => system_locale(root, step, locale, sink),
-        Builtin::RequireOrdinaryUser(user) => {
-            accounts::require_ordinary_user(root, step, user, sink)
-        }
+        Builtin::RequireOrdinaryUser(who) => accounts::require_ordinary_user(root, step, who, sink),
         Builtin::RequireUserGroup(group) => accounts::require_user_group(root, step, group, sink),
         Builtin::RequireFreeHome(folder) => accounts::require_free_home(root, step, folder, sink),
+        Builtin::RequireSafeHome(folder) => accounts::require_safe_home(root, step, folder, sink),
         Builtin::WriteConfigFile(write) => config_file::execute(root, step, write, sink),
         Builtin::WriteHomeFile(write) => home_write(home, step, write, sink),
         Builtin::EditModprobeBlacklist { module, on } => changed(

@@ -206,8 +206,8 @@ fn a_held_lock_fails_its_step_with_the_holder() {
 #[test]
 fn an_uncheckable_home_fails_its_step() {
     let root = tempfile::tempdir().unwrap();
-    fs::write(root.path().join("etc"), "").unwrap();
-    let builtin = Builtin::RequireFreeHome(HomeDirectory::new("/etc/taken").unwrap());
+    fs::write(root.path().join("srv"), "").unwrap();
+    let builtin = Builtin::RequireFreeHome(HomeDirectory::new("/srv/taken").unwrap());
 
     assert_failed(outcome_of(root.path(), &builtin));
 }

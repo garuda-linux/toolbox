@@ -156,6 +156,8 @@ pub enum Builtin {
     /// home into `/etc/passwd` before it refuses a folder that exists, so a
     /// move onto one would leave the account pointing at a foreign folder.
     RequireFreeHome(HomeDirectory),
+    /// Fails below a folder everyone may write, where `useradd -m` makes the home.
+    RequireSafeHome(HomeDirectory),
     /// Fails for a group with an id outside [`FIRST_USER_ID`] to
     /// [`crate::LAST_USER_ID`]: packages own those and files on disk refer
     /// to them.
@@ -207,6 +209,10 @@ pub enum Builtin {
 }
 
 impl fmt::Display for Builtin {
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one arm per builtin, a new builtin fails to compile until it says what it does"
+    )]
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::RemoveDatabaseLock => {
@@ -238,17 +244,16 @@ impl fmt::Display for Builtin {
             Self::EditUserConfig { edit, on } => f.write_str(&edit.describe(*on)),
             Self::EditLocaleGen { entry, on } => {
                 let verb = if *on { "enable" } else { "comment out" };
-
                 write!(f, "{verb} `{entry}` in /{LOCALE_GEN}")
             }
             Self::RequireOrdinaryUser(user) => ordinary_user_check(f, user),
             Self::RequireFreeHome(home) => write!(f, "check that {home} does not exist yet"),
+            Self::RequireSafeHome(home) => write!(f, "check the folders above {home}"),
             Self::RequireUserGroup(group) => write!(f, "check that {group} is not a system group"),
             Self::WriteConfigFile(write) => write.fmt(f),
             Self::WriteHomeFile(write) => write.fmt(f),
             Self::EditModprobeBlacklist { module, on } => {
                 let verb = if *on { "add" } else { "remove" };
-
                 write!(f, "{verb} `blacklist {module}` in /{MODPROBE_BLACKLIST}")
             }
             Self::EditGrubDefaults(settings) => write!(f, "set {settings} in /{GRUB_DEFAULTS}"),

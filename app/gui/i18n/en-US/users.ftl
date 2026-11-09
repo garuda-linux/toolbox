@@ -106,6 +106,7 @@ users-home-not-absolute = The home folder is a full path that starts with a slas
 users-home-invalid-character = The home folder cannot hold a colon, a line break or another control character.
 users-home-outer-blank = The home folder cannot start or end with a blank.
 users-home-invalid-component = The home folder cannot hold “..”, a single dot, two slashes in a row or a slash at the end.
+users-home-outside-roots = The home folder must lie below /home, /srv, /var/lib or /opt.
 
 users-full-name-too-long = The full name is too long.
 users-full-name-invalid-character = The full name cannot hold a colon, comma, equals sign, quotation mark or line break.

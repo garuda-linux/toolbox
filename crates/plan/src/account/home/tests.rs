@@ -1,18 +1,27 @@
 use super::{
-    HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID, MAX_HOME_BYTES,
-    NewHome, UserId,
+    HOME_ROOTS, HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID,
+    MAX_HOME_BYTES, NewHome, UserId,
 };
 use crate::account::tests::PASSWD;
 
-/// The `nobody` (65534) of the passwd is above [`LAST_USER_ID`].
+/// The `nobody` (65534) of the passwd is above [`LAST_USER_ID`]. Root's
+/// `/root` and mail's `/var/spool/mail` lie outside the [`HOME_ROOTS`].
 #[test]
-fn real_home_folders_pass_and_user_ids_stop_at_the_last_one() {
+fn real_home_folders_below_the_roots_pass_and_user_ids_stop_at_the_last_one() {
     for line in PASSWD.lines() {
         let fields: Vec<&str> = line.split(':').collect();
         let home = fields[5];
 
-        if home != "/" {
-            assert_eq!(HomeDirectory::new(home).unwrap().as_str(), home);
+        match home {
+            "/" => {}
+            _ if HOME_ROOTS.iter().any(|root| home.starts_with(root)) => {
+                assert_eq!(HomeDirectory::new(home).unwrap().as_str(), home);
+            }
+            _ => assert_eq!(
+                HomeDirectory::new(home),
+                Err(InvalidHomeDirectory::OutsideRoots),
+                "{line}"
+            ),
         }
 
         let id: u32 = fields[2].parse().unwrap();
@@ -34,10 +43,40 @@ fn home_folders_are_plain_absolute_paths() {
         "/home/Ada Lovelace",
         "/home/josé",
         "/var/lib/-odd",
-        "/data",
+        "/opt/ada",
     ] {
         assert_eq!(HomeDirectory::new(path).unwrap().as_str(), path);
     }
+}
+
+/// A home in a tree root trusts would hand the user files there, one
+/// below a shared folder races the check against another user.
+#[test]
+fn home_folders_outside_the_roots_are_refused() {
+    for path in [
+        "/etc/systemd/system/x.service.d",
+        "/tmp/ada",
+        "/var/tmp/ada",
+        "/dev/shm/ada",
+        "/root",
+        "/data",
+        "/home",
+        "/srv",
+        "/var/lib",
+        "/opt",
+        "/homes/ada",
+        "/optional/ada",
+        "/var/library/ada",
+        "/usr/lib/ada",
+    ] {
+        assert_eq!(
+            HomeDirectory::new(path),
+            Err(InvalidHomeDirectory::OutsideRoots),
+            "{path}"
+        );
+    }
+
+    serde_json::from_str::<HomeDirectory>("\"/etc/cron.d/ada\"").unwrap_err();
 }
 
 #[test]
@@ -92,6 +131,7 @@ fn every_refusal_of_a_home_folder_has_its_own_code() {
         InvalidHomeDirectory::InvalidCharacter(':'),
         InvalidHomeDirectory::InvalidComponent,
         InvalidHomeDirectory::OuterBlank,
+        InvalidHomeDirectory::OutsideRoots,
     ]
     .map(InvalidHomeDirectory::as_str);
 

@@ -1,12 +1,39 @@
-use std::io::Cursor;
+use std::io::{BufRead, Cursor, Read};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Duration;
 
 use toolbox_plan::protocol::{Answer, MAX_LINE_BYTES, Mode, Request, RequestError, encode};
 use toolbox_plan::{RootAction, Step, StepId};
 
-use super::{read_request, spawn_answer_reader};
+use super::{ANSWER_QUEUE, read_request, spawn_answer_reader};
 
 const SECRET: &str = "correct horse battery staple";
+
+/// Stdin that tells the test how far the reader got.
+struct Watched {
+    input: Cursor<String>,
+    consumed: Arc<AtomicU64>,
+}
+
+impl Read for Watched {
+    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+        let read = self.input.read(buf)?;
+        self.consumed.store(self.input.position(), Ordering::SeqCst);
+        Ok(read)
+    }
+}
+
+impl BufRead for Watched {
+    fn fill_buf(&mut self) -> std::io::Result<&[u8]> {
+        self.input.fill_buf()
+    }
+
+    fn consume(&mut self, amount: usize) {
+        self.input.consume(amount);
+        self.consumed.store(self.input.position(), Ordering::SeqCst);
+    }
+}
 
 fn request_line() -> String {
     let request = Request::new(
@@ -166,4 +193,27 @@ fn a_dry_run_reads_no_secret_line() {
 
     assert_eq!(secret_of(&request), None);
     assert_eq!(input.position(), 0);
+}
+
+/// A runner that takes no answers holds the reader back instead of
+/// letting the queue grow, and nothing queued is lost.
+#[test]
+fn a_full_answer_queue_holds_the_reader_back_and_drops_nothing() {
+    let sent = ANSWER_QUEUE * 2;
+    let all = encode(&Answer::Cancel).unwrap().repeat(sent);
+    let total = u64::try_from(all.len()).unwrap();
+    let consumed = Arc::new(AtomicU64::new(0));
+
+    let answers = spawn_answer_reader(Watched {
+        input: Cursor::new(all),
+        consumed: Arc::clone(&consumed),
+    });
+
+    std::thread::sleep(Duration::from_millis(300));
+
+    assert!(
+        consumed.load(Ordering::SeqCst) < total,
+        "the reader read past a full queue"
+    );
+    assert_eq!(answers.iter().count(), sent);
 }

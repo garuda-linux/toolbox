@@ -129,7 +129,7 @@ pub struct EditUser {
     #[arg(long = "remove-group", value_name = "GROUP")]
     pub remove_groups: Vec<GroupName>,
 
-    /// A new home folder: its full path.
+    /// A new home folder: its full path below /home, /srv, /var/lib or /opt.
     #[arg(long, value_name = "PATH")]
     pub home: Option<HomeDirectory>,
 

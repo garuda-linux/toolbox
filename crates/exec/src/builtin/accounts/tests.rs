@@ -1,4 +1,7 @@
+mod ancestors;
+
 use std::fs;
+use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 
 use toolbox_plan::procedure::Builtin;
@@ -162,4 +165,33 @@ fn a_home_move_needs_a_folder_that_does_not_exist_yet() {
 
     assert_failed(outcome);
     assert!(text.contains("/srv/people/taken exists already"), "{text}");
+}
+
+/// The sticky bit of `/tmp` keeps others from removing a link, never from
+/// placing one before usermod moves the files.
+#[test]
+fn a_home_move_below_a_folder_everyone_may_write_is_refused() {
+    let dir = tempfile::tempdir().unwrap();
+    let home = Builtin::RequireFreeHome(HomeDirectory::new("/srv/shared/ada").unwrap());
+    let shared = dir.path().join("srv/shared");
+
+    fs::create_dir_all(&shared).unwrap();
+
+    for (mode, refused) in [
+        (0o755, false),
+        (0o775, false),
+        (0o777, true),
+        (0o1777, true),
+    ] {
+        fs::set_permissions(&shared, fs::Permissions::from_mode(mode)).unwrap();
+
+        let (outcome, text) = run(dir.path(), &home);
+
+        if refused {
+            assert_failed(outcome);
+            assert!(text.contains("writable for everyone"), "{mode:o}: {text}");
+        } else {
+            assert_eq!(outcome, Outcome::Succeeded, "{mode:o}: {text}");
+        }
+    }
 }

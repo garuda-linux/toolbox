@@ -12,6 +12,11 @@ use crate::component::has_plain_components;
 /// `PATH_MAX` is far larger, but no home folder lives that deep.
 pub const MAX_HOME_BYTES: usize = 255;
 
+/// Elsewhere usermod and useradd would put files the user owns into a
+/// tree root trusts, such as `/etc/systemd/system`, or below a shared
+/// folder such as `/tmp`.
+pub const HOME_ROOTS: [&str; 4] = ["/home/", "/srv/", "/var/lib/", "/opt/"];
+
 /// `SYS_UID_MAX` and `UID_MAX` of `/etc/login.defs`: system accounts end
 /// below the first, accounts of people at the second.
 pub const LAST_SYSTEM_USER_ID: u32 = 999;
@@ -31,6 +36,8 @@ pub enum InvalidHomeDirectory {
     InvalidComponent,
     #[error("the home folder starts or ends with a blank")]
     OuterBlank,
+    #[error("the home folder is not below /home, /srv, /var/lib or /opt")]
+    OutsideRoots,
 }
 
 impl InvalidHomeDirectory {
@@ -42,11 +49,13 @@ impl InvalidHomeDirectory {
             Self::InvalidCharacter(_) => "home-invalid-character",
             Self::InvalidComponent => "home-invalid-component",
             Self::OuterBlank => "home-outer-blank",
+            Self::OutsideRoots => "home-outside-roots",
         }
     }
 }
 
-/// An absolute path below `/` such as `/home/ada`, without `..`.
+/// An absolute path below one of the [`HOME_ROOTS`] such as `/home/ada`,
+/// without `..`.
 ///
 /// It starts with `/`, so it can never be read as an option. It holds no
 /// `:` (the separator of `/etc/passwd`) and no control character, and
@@ -62,8 +71,8 @@ impl HomeDirectory {
     ///
     /// [`InvalidHomeDirectory`] for an empty, overlong or relative path,
     /// `/` itself, one with a control character or `:`, with blanks
-    /// around it, or with an empty, `.` or `..` component (which covers
-    /// `//` and a trailing `/`).
+    /// around it, with an empty, `.` or `..` component (which covers
+    /// `//` and a trailing `/`), or outside the [`HOME_ROOTS`].
     pub fn new(value: impl Into<String>) -> Result<Self, InvalidHomeDirectory> {
         let value = value.into();
 
@@ -94,6 +103,10 @@ impl HomeDirectory {
 
         if !has_plain_components(rest) {
             return Err(InvalidHomeDirectory::InvalidComponent);
+        }
+
+        if !HOME_ROOTS.iter().any(|root| value.starts_with(root)) {
+            return Err(InvalidHomeDirectory::OutsideRoots);
         }
 
         Ok(Self(value))

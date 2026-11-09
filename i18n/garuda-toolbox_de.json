@@ -4410,6 +4410,9 @@
     },
     "protected-refused": {
       "string": "{name} bleibt installiert. {why}."
+    },
+    "protected-along": {
+      "string": "Diese Entfernung würde auch {name} entfernen, das installiert bleibt. {why}."
     }
   },
   "configs": {
@@ -7440,6 +7443,9 @@
     "probe-sync-packages": {
       "string": "Pakete der Repositorys"
     },
+    "probe-package-graph": {
+      "string": "Paketabhängigkeiten"
+    },
     "probe-units": {
       "string": "Systemdienste"
     },
@@ -7952,6 +7958,9 @@
     },
     "users-home-invalid-component": {
       "string": "Das Home-Verzeichnis darf kein „..“, keinen einzelnen Punkt, keine doppelten Schrägstriche und keinen abschließenden Schrägstrich enthalten."
+    },
+    "users-home-outside-roots": {
+      "string": "Das Home-Verzeichnis muss unter /home, /srv, /var/lib oder /opt liegen."
     },
     "users-full-name-too-long": {
       "string": "Der vollständige Name ist zu lang."

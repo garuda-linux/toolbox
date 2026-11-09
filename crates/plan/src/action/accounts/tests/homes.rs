@@ -29,7 +29,10 @@ fn a_new_user_can_get_its_home_at_another_path() {
 
     assert_eq!(
         shown(&RootAction::CreateUser { user }),
-        ["useradd -m -d /srv/people/ada -- ada"]
+        [
+            "check the folders above /srv/people/ada",
+            "useradd -m -d /srv/people/ada -- ada"
+        ]
     );
 }
 
@@ -72,6 +75,7 @@ fn a_system_account_takes_every_option_in_a_fixed_order() {
     assert_eq!(
         shown(&RootAction::CreateUser { user }),
         [
+            "check the folders above /var/lib/My Service",
             "check that /usr/bin/fish is listed in /etc/shells",
             "useradd -r -m -d '/var/lib/My Service' -u 450 -c 'Ada Lovelace' -s /usr/bin/fish -G audio -- ada",
         ]

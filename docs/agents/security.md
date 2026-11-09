@@ -63,6 +63,9 @@ one. The rules with a reason the code does not show:
 - No name starts with `-`, so no value reads as an option.
 - `FullName`, `HomeDirectory` and `ShellPath` have no `:`, so they cannot
   add a field to `/etc/passwd`.
+- `HomeDirectory` lies below `/home/`, `/srv/`, `/var/lib/` or `/opt/`
+  (`HOME_ROOTS`). Elsewhere `usermod -d -m` would hand the user files in a
+  tree root trusts, such as `/etc/systemd/system`.
 - GRUB values (`MenuEntryId`, `GrubPicture`, `GrubThemeFile`) have no `"`,
   `\`, `$` or backtick and are escaped by `toolbox_plan::quote`, because
   `grub-mkconfig` sources `/etc/default/grub` as root.
@@ -71,7 +74,10 @@ The helper repeats what only the wire shows: `DeleteUser`, locking and
 `SetHomeFolder` refuse a user id, `DeleteGroup` a group id outside 1000 to
 60000, `CreateUser` and `SetShell` a shell not in `/etc/shells`,
 `SetSystemLocale` a locale not enabled in `/etc/locale.gen`,
-`SetHomeFolder -m` a taken target.
+`SetHomeFolder -m` a taken target, and `SetHomeFolder -m` and `CreateUser`
+with a chosen home one below any folder everyone may write
+(the sticky bit too), because another user could place a link there
+between the check and the move.
 
 ## Protected packages
 

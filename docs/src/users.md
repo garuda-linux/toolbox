@@ -74,8 +74,9 @@ app cannot tell whether another administrator could still log in.
    `/etc/shells` are offered.
 6. Optionally enter a **Home folder** as a full path such as
    `/srv/people/ada`. Left empty, the account gets the usual folder
-   `/home/<user name>`. The path cannot hold `..`, a colon or a line break,
-   and it cannot be the home folder of another account.
+   `/home/<user name>`. The path lies below `/home`, `/srv`, `/var/lib` or
+   `/opt`. It cannot hold `..`, a colon or a line break, and it cannot be the
+   home folder of another account.
 7. Optionally enter a **User ID**. Left empty, the system picks the next
    free one. An account of a person takes a number from 1000 to 60000, a
    system account one below 1000. A number another account has is refused.
@@ -160,8 +161,8 @@ they are.
 
 1. Click **Edit…** on the user's row.
 2. Enter the new path in **Home folder**. It is a full path such as
-   `/srv/people/ada`, without `..`, a colon or a line break, and not the home
-   folder of another account.
+   `/srv/people/ada` below `/home`, `/srv`, `/var/lib` or `/opt`, without
+   `..`, a colon or a line break, and not the home folder of another account.
 3. Decide about the files with **Move the files to the new folder**. The
    dialog says below it what will happen.
 4. Click **Queue changes**, then apply the queue.
@@ -242,6 +243,8 @@ The page says why above the list or in the dialog. Group cards on the
 | Add a user or group whose name exists already                       | Names are unique. A new user also gets a group of its own name   |
 | Change the home folder of your own account                          | `usermod` refuses an account that runs programs                  |
 | Give an account the home folder of another one                      | Two accounts would share every file                              |
+| Put a home folder outside `/home`, `/srv`, `/var/lib` and `/opt`    | The user would own files where the system trusts only root       |
+| Move the files below a folder everyone may write, such as `/tmp`    | Another user could swap the folder before the files arrive       |
 | Ask for a user ID that is taken or out of range                     | IDs are unique, and people and services have ranges of their own |
 
 An administrator whose password is locked, or queued to be locked, does not
