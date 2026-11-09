@@ -48,6 +48,7 @@ fn image_menu(conf: &str) -> SdBootMenu {
             uki("garuda-7.3.1-1-garuda-fallback.efi", FALLBACK),
             uki("garuda-7.3.1-1-garuda.efi", UKI),
         ],
+        ..SdBootMenu::default()
     }
 }
 

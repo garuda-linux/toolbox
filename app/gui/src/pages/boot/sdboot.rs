@@ -4,10 +4,10 @@ mod tests;
 
 use egui::Ui;
 use toolbox_core::features::boot::kernel_default;
-use toolbox_gui_kit::icons;
-use toolbox_gui_kit::widgets::card;
+use toolbox_gui_kit::widgets::{Tone, banner, card};
+use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::LoaderDefault;
-use toolbox_plan::sdboot::LoaderSetting;
+use toolbox_plan::sdboot::{LoaderSetting, MAX_ENTRIES, SdBootMenu};
 use toolbox_system::Menu;
 
 use super::{heading, note};
@@ -20,6 +20,11 @@ pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
     let menu = context.boot.menu();
 
     heading(ui, icons::FORMAT_LIST_UNORDERED, "boot-menu");
+
+    if let Some(sdboot) = menu.sdboot() {
+        counts(ui, sdboot);
+    }
+
     card(ui, |ui| {
         if let Some(sdboot) = menu.sdboot() {
             menu::show(ui, context, sdboot);
@@ -31,6 +36,36 @@ pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
             fact(ui, "boot-default", &state);
         }
     });
+}
+
+fn counts(ui: &mut Ui, menu: &SdBootMenu) {
+    if menu.skipped == 0 && menu.cut == 0 {
+        return;
+    }
+
+    let ctx = ui.ctx().clone();
+    let limit = MAX_ENTRIES.to_string();
+    let mut sentences = Vec::new();
+
+    if menu.skipped > 0 {
+        let count = menu.skipped.to_string();
+
+        sentences.push(i18n::text_with(
+            &ctx,
+            "boot-sdboot-skipped",
+            &[("count", &count)],
+        ));
+    }
+
+    if menu.cut > 0 {
+        let count = menu.cut.to_string();
+        let args = [("count", count.as_str()), ("limit", limit.as_str())];
+
+        sentences.push(i18n::text_with(&ctx, "boot-sdboot-cut", &args));
+    }
+
+    banner(ui, Tone::Warning, &sentences.join(" "), &[]);
+    ui.add_space(ui.tokens().sizes.card_gap);
 }
 
 /// The kernel's image is saved by its flavour, as the menu card saves it.

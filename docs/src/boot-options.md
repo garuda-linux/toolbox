@@ -229,6 +229,10 @@ built afterwards.
 The EFI system partition is readable by root only, so reading the menu may
 ask for an administrator's password.
 
+A warning over the card names entry files that could not be read and
+entries past the first 256, which the page leaves out. The page changes
+none of these files.
+
 ### Change kernel parameters on systemd-boot
 
 **Kernel parameters** works as described in

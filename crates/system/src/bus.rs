@@ -7,7 +7,7 @@ mod tests;
 
 use std::io;
 
-pub use client::{CALL_TIMEOUT, call, connect};
+pub use client::{CALL_TIMEOUT, INTERACTIVE_TIMEOUT, call, call_with_timeout, connect};
 use zbus::DBusError as _;
 
 const UNAVAILABLE: [&str; 2] = [

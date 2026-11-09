@@ -61,7 +61,11 @@ pub trait BootSource: Send + Sync {
     /// [`ProbeError::Unavailable`] without `systemd-detect-virt`.
     fn virtual_machine(&self) -> Result<VirtualMachine, ProbeError>;
 
-    fn loader(&self) -> BootLoader;
+    /// # Errors
+    ///
+    /// [`ProbeError::Failed`] when a file that names the loader cannot be
+    /// read.
+    fn loader(&self) -> Result<BootLoader, ProbeError>;
 
     /// # Errors
     ///
@@ -233,7 +237,7 @@ impl BootSource for SystemBoot {
         Ok(VirtualMachine(finished.status.success() && named))
     }
 
-    fn loader(&self) -> BootLoader {
+    fn loader(&self) -> Result<BootLoader, ProbeError> {
         sdboot::loader(&self.root)
     }
 
@@ -277,7 +281,7 @@ impl SystemBootMenu {
 
 impl BootMenuSource for SystemBootMenu {
     fn menu(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
-        if sdboot::loader(&self.root) == BootLoader::SystemdBoot {
+        if sdboot::loader(&self.root) == Ok(BootLoader::SystemdBoot) {
             return self.sdboot_menu(cancel);
         }
 

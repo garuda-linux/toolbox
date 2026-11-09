@@ -129,3 +129,15 @@ boot-sdboot-parameters-detail = Jeder Parameter ist ein Wort wie nowatchdog oder
 boot-sdboot-parameters-custom = Die Kernel-Befehlszeile enthält Anführungszeichen oder andere Zeichen, die diese Seite nicht bearbeiten kann: { $line } Bearbeite /etc/kernel/cmdline stattdessen auf der Seite „Konfigurationsdateien“.
 boot-sdboot-cmdline-running = /etc/kernel/cmdline gibt es noch nicht, daher sind das die Parameter, mit denen das System gestartet ist. Die erste Änderung legt die Datei an.
 boot-sdboot-no-cmdline = Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit.
+# Over the menu card. $count is how many entry files could not be read.
+boot-sdboot-skipped =
+    { $count ->
+        [one] Ein Booteintrag konnte nicht gelesen werden.
+       *[other] { $count } Booteinträge konnten nicht gelesen werden.
+    }
+# $count is how many entries are left out, $limit how many the page shows.
+boot-sdboot-cut =
+    { $count ->
+        [one] Ein weiterer Eintrag fehlt, die Seite zeigt die ersten { $limit }.
+       *[other] { $count } weitere Einträge fehlen, die Seite zeigt die ersten { $limit }.
+    }

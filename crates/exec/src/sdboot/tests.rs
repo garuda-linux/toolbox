@@ -1,8 +1,9 @@
 use std::fs;
+use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 
 use toolbox_plan::KernelRelease;
-use toolbox_plan::sdboot::{LoaderSettings, LoaderTimeout};
+use toolbox_plan::sdboot::{LoaderSettings, LoaderTimeout, MAX_ENTRIES};
 
 use super::sdboot_menu as menu;
 
@@ -142,4 +143,69 @@ fn without_a_mounted_esp_there_is_no_menu() {
     write(dir.path(), "proc/self/mountinfo", without.as_bytes());
 
     menu(dir.path()).unwrap_err();
+}
+
+/// The image's mount table with the lines before its ESP repeated 30
+/// times, as a machine full of container mounts has it.
+#[test]
+fn an_esp_far_down_a_long_mount_table_is_found() {
+    let dir = tempfile::tempdir().unwrap();
+    image(dir.path());
+    let table = String::from_utf8(MOUNTINFO.to_vec()).unwrap();
+    let (before, from_esp) = table.split_at(table.find("58 43 254:1 / /efi ").unwrap());
+    let long = format!("{}{from_esp}", before.repeat(30));
+
+    assert!(long.len() > 64_usize << 10_u32);
+    write(dir.path(), "proc/self/mountinfo", long.as_bytes());
+
+    assert_eq!(menu(dir.path()).unwrap().entries.len(), 2);
+}
+
+/// The image's UKI also lies in the entries folder as a `.conf`,
+/// which is no text, and its fallback UKI is made unreadable. The menu
+/// keeps the main UKI and counts the two it could not read.
+#[test]
+fn entries_that_cannot_be_read_are_counted() {
+    if rustix::process::geteuid().is_root() {
+        return;
+    }
+
+    let dir = tempfile::tempdir().unwrap();
+    image(dir.path());
+    write(dir.path(), "efi/loader/entries/binary.conf", UKI);
+
+    let fallback = dir
+        .path()
+        .join("efi/EFI/Linux/garuda-7.3.1-1-garuda-fallback.efi");
+
+    fs::set_permissions(&fallback, fs::Permissions::from_mode(0o000)).unwrap();
+
+    let menu = menu(dir.path()).unwrap();
+
+    assert_eq!(menu.entries.len(), 1);
+    assert_eq!(menu.skipped, 2);
+    assert_eq!(menu.cut, 0);
+}
+
+/// The image's UKI is copied under more names than the menu
+/// holds, each copy cut to the header's second 512 bytes, so each counts
+/// as an entry titled by its name.
+#[test]
+fn entries_past_the_limit_are_cut_and_counted() {
+    let dir = tempfile::tempdir().unwrap();
+    image(dir.path());
+
+    for number in 0..MAX_ENTRIES {
+        write(
+            dir.path(),
+            &format!("efi/EFI/Linux/copy-{number:03}.efi"),
+            &UKI[0x200..0x400],
+        );
+    }
+
+    let menu = menu(dir.path()).unwrap();
+
+    assert_eq!(menu.entries.len(), MAX_ENTRIES);
+    assert_eq!(menu.cut, 2);
+    assert_eq!(menu.skipped, 0);
 }

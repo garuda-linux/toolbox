@@ -291,7 +291,7 @@ fn probe_boot(boot: &dyn BootSource, snapshot: &mut Snapshot, issues: &mut Vec<P
         .and_then(|state| state.current.clone());
 
     insert(snapshot, issues, Probe::Plymouth, plymouth);
-    let loader = boot.loader();
+    let loader = take(issues, Probe::BootLoader, boot.loader()).unwrap_or(BootLoader::Unknown);
 
     snapshot.insert(loader);
 

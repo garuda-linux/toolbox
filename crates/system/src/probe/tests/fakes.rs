@@ -216,8 +216,8 @@ impl BootSource for FakeBoot {
         Ok(VirtualMachine(false))
     }
 
-    fn loader(&self) -> BootLoader {
-        BootLoader::Grub
+    fn loader(&self) -> Result<BootLoader, ProbeError> {
+        Ok(BootLoader::Grub)
     }
 
     fn kernel_cmdline(&self) -> Result<KernelCmdline, ProbeError> {

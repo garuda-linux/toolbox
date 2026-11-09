@@ -118,10 +118,6 @@ impl SettingsSource for EtcSettings {
                     Err(ProbeError::Unavailable)
                 }
             }
-            Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
-                tracing::debug!("{} is not readable: {error}", path.display());
-                Err(ProbeError::Unavailable)
-            }
             Err(error) => Err(from_io(path.display(), &error)),
         }
     }

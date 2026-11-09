@@ -1,3 +1,5 @@
+mod counts;
+
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Snapshot;
@@ -58,6 +60,7 @@ fn image_menu(conf: &str) -> Menu {
             uki("garuda-7.3.1-1-garuda-fallback.efi", FALLBACK),
             uki("garuda-7.3.1-1-garuda.efi", UKI),
         ],
+        ..SdBootMenu::default()
     }))
 }
 

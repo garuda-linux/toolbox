@@ -107,8 +107,14 @@ SSH, user services cannot be read at all.
 
 **Solution**
 
-1. Fix the cause, then click **Read again** in the message, or press `F5`.
-2. The round arrow in the status bar reads the whole system again.
+1. Point at or focus the **i** button after the message in the status bar.
+   It lists each part with the error the system gave, for example
+   `/etc/kernel/install.conf: Permission denied`.
+2. Fix the cause, then click **Read again** in the message, or press `F5`.
+3. The round arrow in the status bar reads the whole system again.
+
+When the boot loader itself cannot be read, the Boot Options page shows
+neither GRUB nor systemd-boot settings until the read works.
 
 ## Something is not available on this system
 

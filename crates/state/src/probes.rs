@@ -23,6 +23,7 @@ pub enum Probe {
     WifiBackend,
     GarudaUpdate,
     ModuleBlacklist,
+    BootLoader,
     Grub,
     KernelCmdline,
     Plymouth,

@@ -96,41 +96,39 @@ impl PackageIndexSource for Libalpm {
         Ok(PackageIndex { entries, local })
     }
 
+    /// The cached sync read names the repository and version, so only a
+    /// package that is not installed opens one sync database, its own.
     fn details(&self, package: &PackageName) -> Result<Option<PackageDetails>, ProbeError> {
         let conf = self.conf()?;
         let handle = open_local(&conf)?;
-        let sync = conf.db_path.join("sync");
-
-        for repo in &conf.repos {
-            if sync.join(format!("{repo}.db")).is_file() {
-                handle
-                    .register_syncdb(repo.as_str(), SigLevel::NONE)
-                    .map_err(failed(repo))?;
-            }
-        }
-
-        let name = package.as_str();
-        let offered = handle
-            .syncdbs()
-            .iter()
-            .find_map(|db| db.pkg(name).ok().map(|found| (db.name().to_owned(), found)));
-
-        let local = handle.localdb().pkg(name).ok();
-
-        let shown: &Pkg = match (local, &offered) {
-            (Some(installed), _) => installed,
-            (None, Some((_, found))) => found,
-            (None, None) => return Ok(None),
+        let sync = match self.sync.read(&conf) {
+            Ok(sync) => Some(sync),
+            Err(ProbeError::Unavailable) => None,
+            Err(error) => return Err(error),
         };
 
-        let (origin, version) = offered.as_ref().map_or_else(
+        let offered = sync
+            .as_ref()
+            .and_then(|sync| sync.entries.iter().find(|entry| entry.name == *package));
+
+        let name = package.as_str();
+        let local = handle.localdb().pkg(name).ok();
+
+        let shown: &Pkg = match (local, offered.map(|entry| &entry.origin)) {
+            (Some(installed), _) => installed,
+            (None, Some(Origin::Repository(repo))) => {
+                let db = handle
+                    .register_syncdb(repo.as_str(), SigLevel::NONE)
+                    .map_err(failed(repo))?;
+
+                db.pkg(name).map_err(failed(repo))?
+            }
+            (None, _) => return Ok(None),
+        };
+
+        let (origin, version) = offered.map_or_else(
             || (Origin::Foreign, shown.version().to_string()),
-            |(repo, found)| {
-                (
-                    Origin::Repository(repo.clone()),
-                    found.version().to_string(),
-                )
-            },
+            |entry| (entry.origin.clone(), entry.version.clone()),
         );
 
         Ok(Some(PackageDetails {

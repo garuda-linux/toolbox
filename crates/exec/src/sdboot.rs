@@ -16,10 +16,21 @@ const MOUNTINFO: &str = "proc/self/mountinfo";
 const ESP_CANDIDATES: [&str; 3] = ["efi", "boot", "boot/efi"];
 
 const MAX_TEXT_BYTES: u64 = 64 << 10;
+
+/// Containers and snap mounts make tables far past 64 KiB, and a cut one
+/// can hide the ESP line.
+const MAX_MOUNTINFO_BYTES: u64 = 1 << 20;
+
 const MAX_OS_RELEASE_BYTES: u32 = 64 << 10;
 
 /// `.uname` holds one kernel release.
 const MAX_UNAME_BYTES: u32 = 256;
+
+struct Listing {
+    found: Vec<(String, PathBuf)>,
+    skipped: usize,
+    cut: usize,
+}
 
 /// # Errors
 ///
@@ -33,53 +44,93 @@ pub fn sdboot_menu(root: &Path) -> io::Result<SdBootMenu> {
         Err(error) => return Err(error),
     };
 
-    let mut entries: Vec<LoaderEntry> = files(&esp.join(UKI_FOLDER), ".efi")?
-        .into_iter()
-        .filter_map(|(name, path)| uki(&name, &path))
+    let ukis = files(&esp.join(UKI_FOLDER), ".efi")?;
+    let type_one = files(&esp.join(ENTRIES_FOLDER), ".conf")?;
+    let listed = ukis.found.len() + type_one.found.len();
+
+    let entries: Vec<LoaderEntry> = ukis
+        .found
+        .iter()
+        .filter_map(|(name, path)| uki(name, path))
         .chain(
-            files(&esp.join(ENTRIES_FOLDER), ".conf")?
-                .into_iter()
-                .filter_map(|(name, path)| LoaderEntry::type_one(&name, &text(&path).ok()?)),
+            type_one
+                .found
+                .iter()
+                .filter_map(|(name, path)| LoaderEntry::type_one(name, &text(path).ok()?)),
         )
         .collect();
 
-    entries.truncate(MAX_ENTRIES);
+    let mut menu = SdBootMenu {
+        settings,
+        skipped: ukis.skipped + type_one.skipped + (listed - entries.len()),
+        cut: ukis.cut + type_one.cut,
+        entries,
+    };
 
-    Ok(SdBootMenu { settings, entries })
+    menu.cut_to_limit();
+    Ok(menu)
 }
 
 pub fn esp(root: &Path) -> io::Result<&'static str> {
-    let place = || text(&root.join(MOUNTINFO)).map(|mountinfo| esp_place(&mountinfo));
+    let place = || {
+        text_up_to(&root.join(MOUNTINFO), MAX_MOUNTINFO_BYTES)
+            .map(|mountinfo| esp_place(&mountinfo))
+    };
 
     if let Some(place) = place()? {
         return Ok(place);
     }
 
     for candidate in ESP_CANDIDATES {
-        let _opened = root.join(candidate).join("EFI").exists();
+        // The lookup alone mounts it, whatever it answers.
+        drop(fs::metadata(root.join(candidate).join("EFI")));
     }
 
     place()?.ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, "no ESP is mounted"))
 }
 
 /// The ESP is FAT, which has no links, so a plain listing is all there is.
-fn files(folder: &Path, suffix: &str) -> io::Result<Vec<(String, PathBuf)>> {
-    let listing = match fs::read_dir(folder) {
-        Ok(listing) => listing,
-        Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(Vec::new()),
+fn files(folder: &Path, suffix: &str) -> io::Result<Listing> {
+    let mut listing = Listing {
+        found: Vec::new(),
+        skipped: 0,
+        cut: 0,
+    };
+
+    let entries = match fs::read_dir(folder) {
+        Ok(entries) => entries,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(listing),
         Err(error) => return Err(error),
     };
 
-    let mut found: Vec<(String, PathBuf)> = listing
-        .filter_map(Result::ok)
-        .filter(|entry| entry.file_type().is_ok_and(|kind| !kind.is_dir()))
-        .filter_map(|entry| Some((entry.file_name().into_string().ok()?, entry.path())))
-        .filter(|(name, _)| name.to_ascii_lowercase().ends_with(suffix))
-        .take(MAX_ENTRIES)
-        .collect();
+    for entry in entries {
+        let Ok(entry) = entry else {
+            listing.skipped += 1;
+            continue;
+        };
 
-    found.sort();
-    Ok(found)
+        if entry.file_type().is_ok_and(|kind| kind.is_dir()) {
+            continue;
+        }
+
+        let Ok(name) = entry.file_name().into_string() else {
+            listing.skipped += 1;
+            continue;
+        };
+
+        if !name.to_ascii_lowercase().ends_with(suffix) {
+            continue;
+        }
+
+        if listing.found.len() == MAX_ENTRIES {
+            listing.cut += 1;
+        } else {
+            listing.found.push((name, entry.path()));
+        }
+    }
+
+    listing.found.sort();
+    Ok(listing)
 }
 
 /// A UKI the header reader cannot make out still boots, so it keeps its
@@ -117,11 +168,13 @@ fn uki(name: &str, path: &Path) -> Option<LoaderEntry> {
 }
 
 fn text(path: &Path) -> io::Result<String> {
+    text_up_to(path, MAX_TEXT_BYTES)
+}
+
+fn text_up_to(path: &Path, max: u64) -> io::Result<String> {
     let mut content = Vec::new();
 
-    File::open(path)?
-        .take(MAX_TEXT_BYTES)
-        .read_to_end(&mut content)?;
+    File::open(path)?.take(max).read_to_end(&mut content)?;
 
     String::from_utf8(content)
         .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, "the file is no text"))

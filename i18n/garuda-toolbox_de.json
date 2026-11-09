@@ -540,6 +540,12 @@
     },
     "boot-sdboot-no-cmdline": {
       "string": "Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit."
+    },
+    "boot-sdboot-skipped": {
+      "string": "{count, plural, one {Ein Booteintrag konnte nicht gelesen werden.} other {{count} Booteinträge konnten nicht gelesen werden.}}"
+    },
+    "boot-sdboot-cut": {
+      "string": "{count, plural, one {Ein weiterer Eintrag fehlt, die Seite zeigt die ersten {limit}.} other {{count} weitere Einträge fehlen, die Seite zeigt die ersten {limit}.}}"
     }
   },
   "bootrepair": {
@@ -7461,6 +7467,9 @@
     "status-probes-failed": {
       "string": "Einige Teile des Systems konnten nicht gelesen werden: {parts}"
     },
+    "status-probes-reasons": {
+      "string": "Warum sie nicht gelesen werden konnten:\n{reasons}"
+    },
     "probe-packages": {
       "string": "installierte Pakete"
     },
@@ -7505,6 +7514,9 @@
     },
     "probe-module-blacklist": {
       "string": "Blacklist der Kernelmodule"
+    },
+    "probe-boot-loader": {
+      "string": "Bootloader"
     },
     "probe-grub": {
       "string": "Bootmenü (GRUB)"

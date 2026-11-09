@@ -14,6 +14,10 @@ use super::{CallError, Method, classify};
 
 pub const CALL_TIMEOUT: Duration = Duration::from_secs(10);
 
+/// polkit's dialog waits for the user, but a call nobody answers must
+/// still end.
+pub const INTERACTIVE_TIMEOUT: Duration = Duration::from_secs(300);
+
 /// # Errors
 ///
 /// The failure to reach the bus, classified.
@@ -37,8 +41,28 @@ where
     B: Serialize + DynamicType + Sync,
     R: DeserializeOwned + Type,
 {
-    let reply = tokio::time::timeout(
-        CALL_TIMEOUT,
+    call_with_timeout(connection, method, body, CALL_TIMEOUT).await
+}
+
+/// [`call`] for a method whose service takes longer than [`CALL_TIMEOUT`]
+/// on purpose, such as a check that waits for its own test page.
+///
+/// # Errors
+///
+/// [`CallError::Failed`] on a bus error or a reply that does not fit `R`,
+/// after `timeout`.
+pub async fn call_with_timeout<B, R>(
+    connection: &Connection,
+    method: &Method,
+    body: &B,
+    timeout: Duration,
+) -> Result<R, CallError>
+where
+    B: Serialize + DynamicType + Sync,
+    R: DeserializeOwned + Type,
+{
+    let reply = bounded(
+        timeout,
         connection.call_method(
             Some(method.destination),
             method.path,
@@ -47,12 +71,20 @@ where
             body,
         ),
     )
-    .await
-    .map_err(|_elapsed| CallError::Failed("timed out".to_owned()))?
-    .map_err(|error| classify(&error))?;
+    .await?;
 
     reply
         .body()
         .deserialize::<R>()
+        .map_err(|error| classify(&error))
+}
+
+pub(super) async fn bounded<T>(
+    timeout: Duration,
+    reply: impl Future<Output = Result<T, zbus::Error>>,
+) -> Result<T, CallError> {
+    tokio::time::timeout(timeout, reply)
+        .await
+        .map_err(|_elapsed| CallError::Failed("timed out".to_owned()))?
         .map_err(|error| classify(&error))
 }

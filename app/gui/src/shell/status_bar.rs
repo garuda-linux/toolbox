@@ -14,7 +14,7 @@ use toolbox_system::Probe;
 
 use crate::command::{AppCommand, CommandSender};
 use crate::i18n;
-use crate::snapshot::Reading;
+use crate::snapshot::{FailedRead, Reading};
 
 /// Keeps the bar's room at the window's bottom while there is a dry run
 /// or a failed part. Returns where [`fill`] draws it.
@@ -66,6 +66,7 @@ pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, dry_run: bool, commands:
             if !failed.is_empty() {
                 part(row, &mut said);
                 row.warning_label(&failed_text(&ctx, failed));
+                reasons_button(row, failed);
                 let again = i18n::text(&ctx, "common-read-again");
                 if icon_button(row, icons::VIEW_REFRESH, &again).clicked() {
                     commands.send(AppCommand::ReadSystem);
@@ -138,18 +139,41 @@ pub fn floating(ctx: &Context, page: Rect, reading: &Reading, dry_run: bool) {
         });
 }
 
-fn failed(reading: &Reading) -> &[Probe] {
+fn failed(reading: &Reading) -> &[FailedRead] {
     reading
         .get()
         .map_or(&[][..], |probed| probed.failed.as_slice())
 }
 
-fn failed_text(ctx: &Context, failed: &[Probe]) -> String {
+fn part_name(ctx: &Context, probe: Probe) -> String {
+    i18n::text(ctx, &format!("probe-{}", probe.as_str())).into_owned()
+}
+
+fn failed_text(ctx: &Context, failed: &[FailedRead]) -> String {
     let parts = failed
         .iter()
-        .map(|probe| i18n::text(ctx, &format!("probe-{}", probe.as_str())))
+        .map(|read| part_name(ctx, read.probe))
         .collect::<Vec<_>>()
         .join(", ");
 
     i18n::text_with(ctx, "status-probes-failed", &[("parts", &parts)]).into_owned()
+}
+
+/// The reasons are system messages, too long for the bar. The button's
+/// name carries them, so a screen reader reads them on focus, and the
+/// tooltip shows them on hover and on keyboard focus.
+fn reasons_button(ui: &mut Ui, failed: &[FailedRead]) {
+    let ctx = ui.ctx().clone();
+    let reasons = failed
+        .iter()
+        .map(|read| format!("{}: {}", part_name(&ctx, read.probe), read.reason))
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let alt = i18n::text_with(&ctx, "status-probes-reasons", &[("reasons", &reasons)]);
+    let button = icon_button(ui, icons::HELP_ABOUT, &alt);
+
+    if button.has_focus() {
+        button.show_tooltip_text(alt.as_ref());
+    }
 }

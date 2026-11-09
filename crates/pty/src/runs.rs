@@ -24,14 +24,26 @@ fn apply(style: &mut Style, params: &str) {
             continue;
         }
 
-        match code.parse::<u8>().unwrap_or(0) {
-            0 => *style = Style::default(),
-            1 => style.bold = true,
-            22 => style.bold = false,
-            39 => style.fg = Color::Foreground,
-            basic @ 30..=37 => style.fg = Color::Indexed(basic - 30),
-            bright @ 90..=97 => style.fg = Color::Indexed(bright - 90 + 8),
-            38 => style.fg = extended(&mut codes),
+        // `ESC[m` is a reset, so an empty code counts as 0.
+        let number = if code.is_empty() {
+            Some(0)
+        } else {
+            code.parse::<u8>().ok()
+        };
+
+        match number {
+            Some(0) => *style = Style::default(),
+            Some(1) => style.bold = true,
+            Some(22) => style.bold = false,
+            Some(39) => style.fg = Color::Foreground,
+            Some(basic @ 30..=37) => style.fg = Color::Indexed(basic - 30),
+            Some(bright @ 90..=97) => style.fg = Color::Indexed(bright - 90 + 8),
+            Some(38) => style.fg = extended(&mut codes),
+            // The view draws no background or underline colour, but their
+            // parameters must not be read as codes of their own.
+            Some(48 | 58) => {
+                extended(&mut codes);
+            }
             _ => {}
         }
     }

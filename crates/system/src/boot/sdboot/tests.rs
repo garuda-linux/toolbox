@@ -45,7 +45,7 @@ fn the_image_is_a_systemd_boot_system() {
     std::fs::create_dir_all(dir.path().join("sys/firmware/efi/efivars")).unwrap();
     std::fs::write(dir.path().join(LOADER_INFO_PATH), LOADER_INFO).unwrap();
 
-    assert_eq!(loader(dir.path()), BootLoader::SystemdBoot);
+    assert_eq!(loader(dir.path()), Ok(BootLoader::SystemdBoot));
 }
 
 #[test]
@@ -53,7 +53,7 @@ fn a_garuda_grub_install_is_a_grub_system() {
     let dir = tempfile::tempdir().unwrap();
     write(dir.path(), "etc/default/grub", GRUB_DEFAULTS);
 
-    assert_eq!(loader(dir.path()), BootLoader::Grub);
+    assert_eq!(loader(dir.path()), Ok(BootLoader::Grub));
 }
 
 #[test]
@@ -128,4 +128,18 @@ fn a_readable_esp_is_read_without_the_helper() {
     };
 
     assert_eq!(menu.entries[0].title, "Garuda Linux");
+}
+
+/// `/etc/kernel/install.conf` is a folder, so it cannot be read
+/// and the loader stays unknown instead of falling back to GRUB.
+#[test]
+fn an_unreadable_install_conf_fails_the_loader_read() {
+    let dir = tempfile::tempdir().unwrap();
+    write(dir.path(), "etc/default/grub", GRUB_DEFAULTS);
+    std::fs::create_dir_all(dir.path().join("etc/kernel/install.conf")).unwrap();
+
+    assert!(matches!(
+        loader(dir.path()),
+        Err(ProbeError::Failed(reason)) if reason.contains("install.conf")
+    ));
 }

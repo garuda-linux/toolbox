@@ -16,7 +16,7 @@ use zbus::OwnedVariant;
 use super::network_manager::{
     CHECK_CONNECTIVITY, CONNECTIVITY_PROPERTY, connectivity_from_value, connectivity_property_body,
 };
-use crate::bus::{CallError, call, connect};
+use crate::bus::{CallError, call, call_with_timeout, connect};
 
 /// NetworkManager's own check waits for its test page. The page shows
 /// "unknown" rather than wait longer.
@@ -100,14 +100,15 @@ pub async fn connectivity(recheck: bool) -> Connectivity {
     };
 
     if recheck {
-        let check = call::<_, u32>(&connection, &CHECK_CONNECTIVITY, &());
+        let check =
+            call_with_timeout::<_, u32>(&connection, &CHECK_CONNECTIVITY, &(), CHECK_TIMEOUT);
 
-        match tokio::time::timeout(CHECK_TIMEOUT, check).await {
-            Ok(Ok(code)) => return Connectivity::from_code(code),
-            Ok(Err(CallError::Unavailable)) => return Connectivity::Unknown,
-            // A session that may not ask for a check may still read.
-            Ok(Err(error)) => tracing::debug!("NetworkManager did not check: {error}"),
-            Err(_) => tracing::debug!("NetworkManager's check took too long"),
+        match check.await {
+            Ok(code) => return Connectivity::from_code(code),
+            Err(CallError::Unavailable) => return Connectivity::Unknown,
+            // A session that may not ask for a check, or a check that took
+            // too long, still leaves the state of the last one to read.
+            Err(error) => tracing::debug!("NetworkManager did not check: {error}"),
         }
     }
 

@@ -1,9 +1,38 @@
 use std::io;
 use std::sync::Arc;
+use std::time::Duration;
 
 use zbus::fdo;
 
-use super::{CallError, classify};
+use super::client::bounded;
+use super::{CALL_TIMEOUT, CallError, classify};
+
+const LONGER: Duration = Duration::from_secs(15);
+
+fn silent_bus() -> impl Future<Output = Result<(), zbus::Error>> {
+    std::future::pending()
+}
+
+#[tokio::test(start_paused = true)]
+async fn a_longer_timeout_outlasts_the_default_one() {
+    let started = tokio::time::Instant::now();
+
+    let answer = bounded(LONGER, silent_bus()).await;
+
+    assert_eq!(answer, Err(CallError::Failed("timed out".to_owned())));
+    assert_eq!(started.elapsed(), LONGER);
+    assert!(started.elapsed() > CALL_TIMEOUT);
+}
+
+#[tokio::test(start_paused = true)]
+async fn a_bus_that_answers_in_time_is_not_cut_off() {
+    let late = async {
+        tokio::time::sleep(CALL_TIMEOUT + Duration::from_secs(1)).await;
+        Ok(7_u32)
+    };
+
+    assert_eq!(bounded(LONGER, late).await, Ok(7));
+}
 
 #[test]
 fn a_missing_service_is_unavailable() {

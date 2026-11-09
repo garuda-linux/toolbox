@@ -191,7 +191,7 @@ fn the_old_space_check_name_reads_as_on() {
 }
 
 #[test]
-fn an_unreadable_garuda_update_config_is_unavailable() {
+fn an_unreadable_garuda_update_config_is_a_failure() {
     if running_as_root() {
         return;
     }
@@ -202,7 +202,10 @@ fn an_unreadable_garuda_update_config_is_unavailable() {
     fs::write(folder.join("config"), GARUDA_UPDATE).unwrap();
     fs::set_permissions(folder.join("config"), fs::Permissions::from_mode(0o000)).unwrap();
 
-    assert_eq!(settings.garuda_update(), Err(ProbeError::Unavailable));
+    assert!(matches!(
+        settings.garuda_update(),
+        Err(ProbeError::Failed(reason)) if reason.contains("garuda-update/config")
+    ));
 }
 
 /// The own file as the helper writes it, and the VM's `systemd.conf` with

@@ -217,3 +217,23 @@ fn the_details_of_an_offered_package_come_from_its_repository() {
     assert_eq!(details.installed, None);
     assert_eq!(alpm.details(&name("nothing")), Ok(None));
 }
+
+/// Without a synced database the page still shows what is installed, as a
+/// package of no repository.
+#[test]
+fn without_a_synced_database_an_installed_package_is_foreign() {
+    let system = System::new(&["core"]);
+    system.install_captured(&[GIMP]);
+
+    let details = details(&system, "gimp");
+
+    assert_eq!(details.origin, Origin::Foreign);
+    assert_eq!(details.version, "3.2.6-2");
+    assert!(details.installed.is_some());
+}
+
+/// extra's gimp is never asked for, core's comes first.
+#[test]
+fn an_installed_package_shows_the_version_of_the_first_repository() {
+    assert_eq!(details(&system(), "gimp").version, "3.2.6-2");
+}

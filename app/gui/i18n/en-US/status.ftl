@@ -3,6 +3,9 @@ status-reading = Reading the system…
 status-dry-run = Test mode: nothing is changed.
 # $parts lists the parts by their names below, joined by commas.
 status-probes-failed = Some parts of the system could not be read: { $parts }
+# The info button after it. $reasons is one line per part with its error.
+status-probes-reasons = Why they could not be read:
+    { $reasons }
 
 probe-packages = installed packages
 probe-sync-packages = repository packages
@@ -19,6 +22,7 @@ probe-hblock = ad blocking (hBlock)
 probe-wifi-backend = Wi-Fi backend
 probe-garuda-update = garuda-update settings
 probe-module-blacklist = blocked kernel modules
+probe-boot-loader = boot loader
 probe-grub = boot menu (GRUB)
 probe-kernel-cmdline = kernel command line (systemd-boot)
 probe-plymouth = boot splash (Plymouth)

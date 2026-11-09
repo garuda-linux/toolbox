@@ -130,6 +130,12 @@ fn status_bar_with_failed_probes() {
     );
     harness.run();
 
+    assert!(
+        harness
+            .query_by_label_contains("system services: no bus\nusers and groups: no bus")
+            .is_some()
+    );
+
     harness.snapshot("status/failed_dark");
 }
 

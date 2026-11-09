@@ -546,6 +546,14 @@
     },
     "boot-sdboot-no-cmdline": {
       "string": "This system has no /etc/kernel/cmdline. Its boot entries carry their own parameters."
+    },
+    "boot-sdboot-skipped": {
+      "string": "{count, plural, one {One boot entry could not be read.} other {{count} boot entries could not be read.}}",
+      "developer_comment": "Over the menu card. $count is how many entry files could not be read."
+    },
+    "boot-sdboot-cut": {
+      "string": "{count, plural, one {One more entry is left out, the page shows the first {limit}.} other {{count} more entries are left out, the page shows the first {limit}.}}",
+      "developer_comment": "$count is how many entries are left out, $limit how many the page shows."
     }
   },
   "bootrepair": {
@@ -7558,6 +7566,10 @@
       "string": "Some parts of the system could not be read: {parts}",
       "developer_comment": "$parts lists the parts by their names below, joined by commas."
     },
+    "status-probes-reasons": {
+      "string": "Why they could not be read:\n{reasons}",
+      "developer_comment": "The info button after it. $reasons is one line per part with its error."
+    },
     "probe-packages": {
       "string": "installed packages"
     },
@@ -7602,6 +7614,9 @@
     },
     "probe-module-blacklist": {
       "string": "blocked kernel modules"
+    },
+    "probe-boot-loader": {
+      "string": "boot loader"
     },
     "probe-grub": {
       "string": "boot menu (GRUB)"

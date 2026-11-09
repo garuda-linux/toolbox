@@ -30,6 +30,10 @@ pub const MAX_ENTRIES: usize = 256;
 pub struct SdBootMenu {
     pub settings: LoaderSettings,
     pub entries: Vec<LoaderEntry>,
+    /// Entry files that could not be read or are no entry.
+    pub skipped: usize,
+    /// Entries past [`MAX_ENTRIES`], left out.
+    pub cut: usize,
 }
 
 impl SdBootMenu {
@@ -39,8 +43,15 @@ impl SdBootMenu {
     pub fn parse(line: &str) -> Result<Self, DecodeError> {
         let mut menu: Self = decode(line)?;
 
-        menu.entries.truncate(MAX_ENTRIES);
+        menu.cut_to_limit();
         Ok(menu)
+    }
+
+    pub fn cut_to_limit(&mut self) {
+        let over = self.entries.len().saturating_sub(MAX_ENTRIES);
+
+        self.entries.truncate(MAX_ENTRIES);
+        self.cut = self.cut.saturating_add(over);
     }
 
     pub fn choosable(&self) -> impl Iterator<Item = &LoaderEntry> {

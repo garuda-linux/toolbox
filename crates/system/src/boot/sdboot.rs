@@ -14,7 +14,7 @@ use toolbox_plan::sdboot::{KERNEL_CMDLINE, SdBootMenu};
 use toolbox_state::boot::{BootLoader, KernelCmdline};
 
 use super::{MenuRead, SystemBootMenu};
-use crate::error::ProbeError;
+use crate::error::{ProbeError, from_io};
 use crate::files;
 use crate::pkexec::{self, HelperRun};
 
@@ -51,17 +51,25 @@ impl SystemBootMenu {
     }
 }
 
-pub(super) fn loader(root: &Path) -> BootLoader {
-    let info = std::fs::read(root.join(LOADER_INFO)).ok();
-    let install_conf = files::read_optional(&root.join(INSTALL_CONF))
-        .ok()
-        .flatten();
+/// # Errors
+///
+/// [`ProbeError::Failed`] when `LoaderInfo` or `install.conf` exists but
+/// cannot be read: a guess would show the wrong loader's page.
+pub(super) fn loader(root: &Path) -> Result<BootLoader, ProbeError> {
+    let info_path = root.join(LOADER_INFO);
+    let info = match std::fs::read(&info_path) {
+        Ok(info) => Some(info),
+        Err(error) if error.kind() == io::ErrorKind::NotFound => None,
+        Err(error) => return Err(from_io(info_path.display(), &error)),
+    };
 
-    BootLoader::detect(
+    let install_conf = files::read_optional(&root.join(INSTALL_CONF))?;
+
+    Ok(BootLoader::detect(
         info.as_deref(),
         root.join(GRUB_DEFAULTS).exists(),
         install_conf.as_deref(),
-    )
+    ))
 }
 
 pub(super) fn kernel_cmdline(root: &Path) -> Result<KernelCmdline, ProbeError> {

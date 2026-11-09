@@ -4,7 +4,9 @@ use std::fmt::Debug;
 
 use tokio::runtime::Handle;
 use toolbox_plan::UnitScope;
-use toolbox_system::{CallError, REBOOT, classify, connect, reboot_body};
+use toolbox_system::{
+    CallError, INTERACTIVE_TIMEOUT, REBOOT, call_with_timeout, connect, reboot_body,
+};
 
 use crate::spawn::spawn_logged;
 use crate::waking::Waking;
@@ -48,20 +50,8 @@ impl Power for DryRunPower {
     }
 }
 
-/// polkit may show its dialog for as long as the user takes, so the call
-/// has no deadline.
 async fn reboot() -> Result<(), CallError> {
     let connection = connect(UnitScope::System).await?;
 
-    connection
-        .call_method(
-            Some(REBOOT.destination),
-            REBOOT.path,
-            Some(REBOOT.interface),
-            REBOOT.name,
-            &reboot_body(),
-        )
-        .await
-        .map(drop)
-        .map_err(|error| classify(&error))
+    call_with_timeout(&connection, &REBOOT, &reboot_body(), INTERACTIVE_TIMEOUT).await
 }
