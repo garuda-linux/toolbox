@@ -73,6 +73,8 @@ const PLACES: &[Place] = &[
         Names::Drivers,
     ),
     (&["network", "drivers", "allow"], "module", Names::Drivers),
+    (&["network", "drivers", "load"], "module", Names::Drivers),
+    (&["network", "drivers", "unload"], "module", Names::Drivers),
     (&["packages", "install"], "packages", Names::OfferedPackages),
     (&["packages", "remove"], "package", Names::InstalledPackages),
     (&["packages", "show"], "package", Names::InstalledPackages),

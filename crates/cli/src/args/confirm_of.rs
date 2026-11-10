@@ -5,7 +5,7 @@ use super::{
     AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, Confirm, DkmsCommand,
     DriversCommand, GroupsCommand, KernelsCommand, LocalesCommand, MaintenanceCommand,
     NetworkCommand, PackagesCommand, PacksCommand, ParamCommand, QueueCommand, ServicesCommand,
-    SetupCommand, ToggleCommand, UsersCommand,
+    SetupCommand, ToggleCommand, TweaksCommand, UsersCommand,
 };
 
 impl Command {
@@ -23,6 +23,9 @@ impl Command {
             Self::Packages(PackagesCommand::Remove(args)) => Some(args.confirm),
             Self::Kernels(command) => kernels(command),
             Self::Maintenance(MaintenanceCommand::Run(args)) => Some(args.confirm),
+            Self::Maintenance(MaintenanceCommand::Reset(args)) if args.list.is_none() => {
+                Some(args.confirm)
+            }
             Self::Dkms(DkmsCommand::Build(args)) => Some(args.confirm),
             Self::Locales(command) => locales(command),
             Self::Users(command) => users(command),
@@ -32,8 +35,12 @@ impl Command {
             Self::Boot(command) => boot(command),
             Self::Configs(ConfigsCommand::Edit(args)) => Some(args.confirm),
             Self::Network(NetworkCommand::Drivers(
-                DriversCommand::Blacklist(args) | DriversCommand::Allow(args),
+                DriversCommand::Blacklist(args)
+                | DriversCommand::Allow(args)
+                | DriversCommand::Load(args)
+                | DriversCommand::Unload(args),
             )) => Some(args.confirm),
+            Self::Tweaks(command) => tweaks(command),
             Self::BootRepair(BootRepairCommand::Regenerate(args)) => Some(args.confirm),
             Self::BootRepair(BootRepairCommand::Reinstall(args)) => Some(args.repair.confirm),
             Self::Setup(SetupCommand::Apply(args)) => Some(args.confirm),
@@ -45,7 +52,7 @@ impl Command {
             | Self::Toggle(ToggleCommand::List(_))
             | Self::Apps(AppsCommand::List(_))
             | Self::Packages(PackagesCommand::Search(_) | PackagesCommand::Show(_))
-            | Self::Maintenance(MaintenanceCommand::List(_))
+            | Self::Maintenance(MaintenanceCommand::List(_) | MaintenanceCommand::Reset(_))
             | Self::Dkms(DkmsCommand::List(_))
             | Self::Groups(GroupsCommand::List(_))
             | Self::Configs(ConfigsCommand::List(_) | ConfigsCommand::Show(_))
@@ -76,6 +83,16 @@ const fn services(command: &ServicesCommand) -> Option<Confirm> {
         | ServicesCommand::Disable(args)
         | ServicesCommand::Mask(args)
         | ServicesCommand::Unmask(args) => Some(args.confirm),
+    }
+}
+
+const fn tweaks(command: &TweaksCommand) -> Option<Confirm> {
+    match command {
+        TweaksCommand::List(_) => None,
+        TweaksCommand::Dns(args) => Some(args.confirm),
+        TweaksCommand::WifiBackend(args) => Some(args.confirm),
+        TweaksCommand::Hblock(args) => Some(args.confirm),
+        TweaksCommand::UpdateFlag(args) => Some(args.confirm),
     }
 }
 

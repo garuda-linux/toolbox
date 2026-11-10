@@ -59,6 +59,15 @@ pub enum Refusal {
     Unavailable,
 }
 
+/// Why a load or an unload was not taken.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SwitchRefusal {
+    /// The list shows network drivers only.
+    NotListed,
+    AlreadyLoaded,
+    NotLoaded,
+}
+
 impl DriverState {
     pub fn as_str(self) -> &'static str {
         self.into()
@@ -209,4 +218,30 @@ pub fn plan_unload(module: &KernelModule) -> Plan {
     Plan::root(RootAction::UnloadModule {
         module: module.clone(),
     })
+}
+
+/// What the drivers list's button does for `module`: a load while it is
+/// not loaded, an unload while it is.
+///
+/// # Errors
+///
+/// [`SwitchRefusal`] for a module the list lacks, or one already in the
+/// wanted state.
+pub fn plan_switch(
+    module: &KernelModule,
+    load: Toggle,
+    facts: &ModuleFacts,
+) -> Result<Plan, SwitchRefusal> {
+    let rows = driver_rows(facts, &ChangeSet::default());
+    let row = rows
+        .iter()
+        .find(|row| row.name == *module)
+        .ok_or(SwitchRefusal::NotListed)?;
+
+    match (load, row.loaded) {
+        (Toggle::On, false) => Ok(plan_load(module)),
+        (Toggle::Off, true) => Ok(plan_unload(module)),
+        (Toggle::On, true) => Err(SwitchRefusal::AlreadyLoaded),
+        (Toggle::Off, false) => Err(SwitchRefusal::NotLoaded),
+    }
 }

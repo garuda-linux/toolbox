@@ -46,6 +46,33 @@ pub enum MaintenanceCommand {
                             garuda-toolbox maintenance run remote-full-fix --yes"
     )]
     Run(TaskArgs),
+
+    /// Put programs' settings back to Garuda's own, from /etc/skel. The
+    /// replaced files are kept as backups beside them.
+    #[command(after_help = "Examples:\n  garuda-toolbox maintenance reset list\n  \
+                            garuda-toolbox maintenance reset bash fish")]
+    Reset(ResetArgs),
+}
+
+#[derive(Debug, Args)]
+#[command(args_conflicts_with_subcommands = true, subcommand_negates_reqs = true)]
+pub struct ResetArgs {
+    #[command(subcommand)]
+    pub list: Option<ResetList>,
+
+    /// The settings, as `maintenance reset list` prints them.
+    #[arg(required = true, value_parser = id)]
+    pub entries: Vec<String>,
+
+    #[command(flatten)]
+    pub confirm: Confirm,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum ResetList {
+    /// List the settings that can be reset, with the files each replaces.
+    #[command(after_help = "Example:\n  garuda-toolbox maintenance reset list --json")]
+    List(ReadList),
 }
 
 #[derive(Debug, Args)]

@@ -10,8 +10,8 @@ use toolbox_cli::args::{
     AppsCommand, BootCommand, BootSet, Command, DkmsBuild, DkmsCommand, DriversCommand, EditUser,
     EntryArgs, GroupArgs, GroupsCommand, KernelArgs, KernelsCommand, LocaleArgs, LocalesCommand,
     MaintenanceCommand, ModuleArgs, NetworkCommand, PackageArgs, PackageInstall, PackagesCommand,
-    ParamArgs, ParamCommand, RemoveUser, TaskArgs, ToggleCommand, UnitArgs, UnitChange, UserArgs,
-    UsersCommand,
+    ParamArgs, ParamCommand, RemoveUser, TaskArgs, ToggleCommand, TweaksCommand, UnitArgs,
+    UnitChange, UserArgs, UsersCommand,
 };
 use toolbox_core::Toggle;
 use toolbox_core::features::maintenance::page::OPERATION_KEYS;
@@ -39,6 +39,7 @@ pub enum Queueable<'a> {
     BootSet(&'a BootSet),
     Parameter(&'a ParamArgs, Toggle),
     Driver(&'a ModuleArgs, Toggle),
+    Tweak(&'a TweaksCommand),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -77,7 +78,8 @@ impl Queueable<'_> {
             | Self::Group(..)
             | Self::BootSet(_)
             | Self::Parameter(..)
-            | Self::Driver(..) => None,
+            | Self::Driver(..)
+            | Self::Tweak(_) => None,
         }
     }
 }
@@ -172,6 +174,12 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
         Command::Network(NetworkCommand::Drivers(DriversCommand::Allow(args))) => {
             Ok(Queueable::Driver(args, Toggle::Off))
         }
+        Command::Tweaks(
+            tweak @ (TweaksCommand::Dns(_)
+            | TweaksCommand::WifiBackend(_)
+            | TweaksCommand::Hblock(_)
+            | TweaksCommand::UpdateFlag(_)),
+        ) => Ok(Queueable::Tweak(tweak)),
         Command::Status(_)
         | Command::Doctor(_)
         | Command::Pages(_)
@@ -189,6 +197,7 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
         | Command::Boot(_)
         | Command::Configs(_)
         | Command::Network(_)
+        | Command::Tweaks(_)
         | Command::BootRepair(_)
         | Command::Setup(_)
         | Command::Settings(_)

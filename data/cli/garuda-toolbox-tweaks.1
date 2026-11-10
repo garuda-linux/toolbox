@@ -1,0 +1,61 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-tweaks 1  "garuda-toolbox 6.3.0" 
+.SH NAME
+garuda\-toolbox\-tweaks \- Choose the DNS servers, the Wi\-Fi backend, hblock and garuda\-update\*(Aqs options, as the System Tweaks page does
+.SH SYNOPSIS
+\fBgaruda\-toolbox tweaks\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+Choose the DNS servers, the Wi\-Fi backend, hblock and garuda\-update\*(Aqs options, as the System Tweaks page does
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-tweaks\-list(1)
+List the DNS servers, the Wi\-Fi backend, hblock and the options of garuda\-update, each as it is now
+.TP
+garuda\-toolbox\-tweaks\-dns(1)
+Choose the DNS servers NetworkManager uses
+.TP
+garuda\-toolbox\-tweaks\-wifi\-backend(1)
+Choose the program NetworkManager runs Wi\-Fi with
+.TP
+garuda\-toolbox\-tweaks\-hblock(1)
+Block ads and trackers system\-wide with hblock
+.TP
+garuda\-toolbox\-tweaks\-update\-flag(1)
+Switch an option of garuda\-update
+.SH EXTRA
+Example:
+  garuda\-toolbox tweaks dns cloudflare
+.SH "SEE ALSO"
+garuda\-toolbox(1)

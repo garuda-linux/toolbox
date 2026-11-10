@@ -335,6 +335,9 @@ For example:
 $ garuda-toolbox maintenance list
 $ garuda-toolbox maintenance run clean-package-cache
 $ garuda-toolbox maintenance run remote-full-fix
+$ garuda-toolbox maintenance run rank-mirrors
+$ garuda-toolbox maintenance reset list
+$ garuda-toolbox maintenance reset bash fish
 ```
 
 `maintenance list` prints every task and repair of the Maintenance page
@@ -342,6 +345,16 @@ with its id, and marks those that are not available here and those that
 ask first. `maintenance run <id>` runs one now, as its **Run now** button
 does. The repairs that reinstall packages or throw settings away (marked
 "asks first") want their id typed instead of `y`, or `--yes`.
+
+`maintenance run rank-mirrors` is the page's **Refresh Chaotic-AUR
+mirrors**: `rate-mirrors` ranks the mirrors by speed, then the fastest are
+saved as root. Without `rate-mirrors` its package is installed first.
+Ranking takes a few minutes.
+
+`maintenance reset list` prints the **Application settings** that
+`/etc/skel` holds, each with the files in your home folder it replaces.
+`maintenance reset <id>...` lists those files, asks, and copies Garuda's
+defaults over them. Each replaced file is kept as a backup beside it.
 
 ### Users and groups
 
@@ -447,6 +460,7 @@ For example:
 $ garuda-toolbox network show
 $ garuda-toolbox network radio wifi off
 $ garuda-toolbox network drivers blacklist r8169
+$ garuda-toolbox network drivers unload r8169
 $ garuda-toolbox network public-address
 $ garuda-toolbox network ping garudalinux.org --count 4
 $ garuda-toolbox network traceroute garudalinux.org
@@ -454,9 +468,28 @@ $ garuda-toolbox network traceroute garudalinux.org
 
 `radio` switches Wi-Fi, Bluetooth or flight mode at once.
 `drivers blacklist` keeps a driver from loading at the next start,
-`drivers allow` lets it load again. `public-address` asks geoip.kde.org,
+`drivers allow` lets it load again. `drivers load` and `drivers unload`
+do it now, until the next start, as the driver's **Load** and **Unload**
+buttons do. `public-address` asks geoip.kde.org,
 as the page's **Show public address** does, and nothing is kept. `ping` and
 `traceroute` run in the terminal and change nothing.
+
+### System Tweaks
+
+For example:
+
+```console
+$ garuda-toolbox tweaks list
+$ garuda-toolbox tweaks dns cloudflare
+$ garuda-toolbox tweaks wifi-backend iwd
+$ garuda-toolbox tweaks hblock on
+$ garuda-toolbox tweaks update-flag update-aur on
+```
+
+`tweaks list` prints the DNS servers, the Wi-Fi backend, hblock and each
+option of garuda-update as they are now. The other commands change one of
+them, as the page's choices do, and `queue add` queues them. The login
+shell is `users edit <user> --shell`.
 
 ### Boot Repair
 

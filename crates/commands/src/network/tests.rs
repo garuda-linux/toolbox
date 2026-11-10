@@ -1,12 +1,21 @@
 use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, ModuleArgs, Read};
 use toolbox_core::Snapshot;
-use toolbox_core::features::network::{DefaultRoute, Device, Radio, RadioAccess, RadioTarget};
+use toolbox_core::features::network::{
+    DefaultRoute, Device, ModuleFacts, Radio, RadioAccess, RadioTarget, loaded_modules,
+    network_modules,
+};
 use toolbox_plan::{HostName, Toggle};
 use toolbox_system::{NetworkSource, ProbeError};
 
-use super::{address_shown, blacklist, ping, status, traceroute, view};
+use super::{address_shown, blacklist, ping, status, switch, traceroute, view};
+use crate::change::Refused;
 use crate::out::{Out, Settings};
+
+/// `/proc/modules` and `modules.dep` of a laptop whose network runs on
+/// `r8169` and `mt7921e`.
+const MODULES_DEP: &str = toolbox_system::testing::network::modules::BARE_METAL_MODULES_DEP;
+const PROC_MODULES: &str = toolbox_system::testing::network::modules::BARE_METAL_PROC_MODULES;
 
 struct Broken;
 
@@ -206,4 +215,51 @@ fn the_public_address_is_an_object_under_json() {
         "{\n  \"schema\": 1,\n  \"address\": \"192.0.2.1\"\n}\n"
     );
     assert_eq!(address_shown(address, false), "192.0.2.1\n");
+}
+
+fn module_args(name: &str) -> ModuleArgs {
+    ModuleArgs {
+        module: name.parse().unwrap(),
+        confirm: Confirm::default(),
+    }
+}
+
+/// The laptop's loaded modules and its kernel's network drivers.
+fn laptop() -> Snapshot {
+    let mut snapshot = Snapshot::default();
+
+    snapshot.insert(ModuleFacts {
+        loaded: loaded_modules(PROC_MODULES),
+        modules: network_modules(MODULES_DEP),
+        blacklists: Vec::new(),
+    });
+    snapshot
+}
+
+#[test]
+fn a_driver_loads_and_unloads_as_the_list_offers() {
+    switch(&module_args("mt76_usb"), Toggle::On, &laptop()).unwrap();
+    switch(&module_args("r8169"), Toggle::Off, &laptop()).unwrap();
+}
+
+#[test]
+fn a_driver_already_in_that_state_is_nothing_to_do() {
+    let refused = switch(&module_args("r8169"), Toggle::On, &laptop()).unwrap_err();
+
+    assert!(matches!(refused, Refused::NothingToDo(_)), "{refused:?}");
+}
+
+#[test]
+fn a_module_that_is_no_network_driver_names_the_nearest_one() {
+    let refused = switch(&module_args("r8168"), Toggle::On, &laptop()).unwrap_err();
+
+    assert!(matches!(refused, Refused::Unknown(_)), "{refused:?}");
+    assert!(refused.message().contains("r8169"), "{refused:?}");
+}
+
+#[test]
+fn without_the_drivers_read_nothing_loads() {
+    let refused = switch(&module_args("r8169"), Toggle::On, &Snapshot::default()).unwrap_err();
+
+    assert!(matches!(refused, Refused::Unavailable(_)), "{refused:?}");
 }

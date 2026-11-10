@@ -6,7 +6,7 @@ mod reads;
 mod tests;
 
 use toolbox_aur::AurSource;
-use toolbox_cli::args::{DkmsBuild, KernelArgs};
+use toolbox_cli::args::{DkmsBuild, KernelArgs, ParamArgs};
 use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::kernels::kernels_of;
@@ -86,22 +86,33 @@ pub fn build(
         Queueable::BootSet(args) => {
             boot::edit_onto(boot::setting(args, snapshot)?, snapshot, changes)
         }
-        Queueable::Parameter(args, wish) => {
-            let parameter = args.parameter.to_string();
-            let edit = match wish {
-                Toggle::On => Edit::AddParameter {
-                    text: parameter,
-                    confirmed: args.force,
-                },
-                Toggle::Off => Edit::RemoveParameter(parameter),
-            };
-
-            boot::edit_onto(edit, snapshot, changes)
+        Queueable::Parameter(args, wish) => parameter(args, wish, snapshot, changes),
+        Queueable::Tweak(tweak) => {
+            crate::tweaks::onto(tweak, snapshot, changes);
+            Ok(())
         }
         Queueable::Driver(args, on) => {
             network::blacklist_onto(args, Toggle::from_on(on.is_on()), snapshot, changes)
         }
     }
+}
+
+fn parameter(
+    args: &ParamArgs,
+    wish: Toggle,
+    snapshot: &Snapshot,
+    changes: &mut ChangeSet,
+) -> Result<(), Refused> {
+    let parameter = args.parameter.to_string();
+    let edit = match wish {
+        Toggle::On => Edit::AddParameter {
+            text: parameter,
+            confirmed: args.force,
+        },
+        Toggle::Off => Edit::RemoveParameter(parameter),
+    };
+
+    boot::edit_onto(edit, snapshot, changes)
 }
 
 fn kernel(

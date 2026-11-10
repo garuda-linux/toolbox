@@ -256,7 +256,7 @@ pub fn group_names(snapshot: &Snapshot) -> Vec<String> {
 pub fn task_ids() -> Vec<String> {
     OPERATION_KEYS
         .into_iter()
-        .chain([AUR_UPGRADE])
+        .chain([AUR_UPGRADE, crate::mirrors::RANK_MIRRORS])
         .map(str::to_owned)
         .chain(repairs(|_| true).into_iter().map(|row| row.repair))
         .collect()

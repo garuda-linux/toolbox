@@ -26,6 +26,7 @@ use toolbox_services::programs::Programs;
 use toolbox_services::units::{Systemd, UnitList, UnitLister as _};
 
 use super::change::{self, KernelChange, Refused, UnitLookup};
+use super::mirrors::RANK_MIRRORS;
 use super::out::Listing;
 use super::terminal::Terminal;
 use super::{apply, catalogs, snapshot, system, unavailable};
@@ -142,6 +143,10 @@ pub fn kernel(
 }
 
 pub fn task(args: &TaskArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
+    if args.task == RANK_MIRRORS {
+        return super::mirrors::rank(args.confirm, runtime, out);
+    }
+
     let snapshot = system();
     let found = Programs::check().garuda_update;
     match change::task(&args.task, upgrader(&snapshot, found)) {
@@ -154,7 +159,7 @@ pub fn tasks(read: &ReadList, out: &mut Out<'_>) -> Exit {
     let exists = |path: &Path| path.exists();
     let common = OPERATION_KEYS
         .into_iter()
-        .chain([AUR_UPGRADE])
+        .chain([AUR_UPGRADE, RANK_MIRRORS])
         .map(|id| TaskRow {
             id: id.to_owned(),
             available: true,

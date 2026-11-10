@@ -96,6 +96,14 @@ pub enum DriversCommand {
         after_help = "Example:\n  garuda-toolbox network drivers allow r8169"
     )]
     Allow(ModuleArgs),
+
+    /// Load a driver now, until the next start.
+    #[command(after_help = "Example:\n  garuda-toolbox network drivers load mt76_usb")]
+    Load(ModuleArgs),
+
+    /// Unload a driver now. Its network drops until it is loaded again.
+    #[command(after_help = "Example:\n  garuda-toolbox network drivers unload r8169")]
+    Unload(ModuleArgs),
 }
 
 #[derive(Debug, Args)]

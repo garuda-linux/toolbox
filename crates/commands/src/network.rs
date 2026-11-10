@@ -13,7 +13,8 @@ use toolbox_cli::args::{
 };
 use toolbox_cli::output::{Mark, Row};
 use toolbox_core::features::network::{
-    ModuleFacts, RadioKind, RadioTarget, driver_rows, plan_ping, plan_traceroute, set_blacklisted,
+    ModuleFacts, RadioKind, RadioTarget, Refusal as DriverRefusal, SwitchRefusal, driver_rows,
+    plan_ping, plan_switch, plan_traceroute, set_blacklisted,
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{Bounded, HostName, Plan, Toggle};
@@ -69,6 +70,14 @@ pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) ->
             let planned = blacklist(&args, Toggle::Off, &system());
             run(planned, args.confirm, None, runtime, out)
         }
+        NetworkCommand::Drivers(DriversCommand::Load(args)) => {
+            let planned = switch(&args, Toggle::On, &system());
+            run(planned, args.confirm, None, runtime, out)
+        }
+        NetworkCommand::Drivers(DriversCommand::Unload(args)) => {
+            let planned = switch(&args, Toggle::Off, &system());
+            run(planned, args.confirm, None, runtime, out)
+        }
         NetworkCommand::PublicAddress(read) => public_address(read, out),
         NetworkCommand::Ping(args) => {
             let planned = ping(&args.host, args.count, args.timeout);
@@ -79,6 +88,33 @@ pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) ->
             tests(planned, runtime, out)
         }
     }
+}
+
+/// The driver loaded or unloaded at once, as the drivers list's button
+/// does.
+///
+/// # Errors
+///
+/// [`Refused`] without the drivers' read, for a module the list lacks,
+/// or one already in that state.
+pub fn switch(args: &ModuleArgs, load: Toggle, snapshot: &Snapshot) -> Result<Plan, Refused> {
+    let facts = snapshot.part::<ModuleFacts>().ok_or_else(|| {
+        Refused::Unavailable(why::driver(DriverRefusal::Unavailable).into_owned())
+    })?;
+
+    plan_switch(&args.module, load, facts).map_err(|refusal| {
+        let line = why::driver_switch(refusal).into_owned();
+        match refusal {
+            SwitchRefusal::NotListed => {
+                let rows = driver_rows(facts, &ChangeSet::default());
+                Refused::Unknown(line).hinted(
+                    args.module.as_str(),
+                    rows.iter().map(|row| row.name.as_str()),
+                )
+            }
+            SwitchRefusal::AlreadyLoaded | SwitchRefusal::NotLoaded => Refused::NothingToDo(line),
+        }
+    })
 }
 
 /// # Errors

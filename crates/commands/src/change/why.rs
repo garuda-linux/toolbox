@@ -11,7 +11,7 @@ use toolbox_core::features::boot::Refusal as BootRefusal;
 use toolbox_core::features::boot::edit::EditProblem;
 use toolbox_core::features::bootrepair::Refusal as RepairRefusal;
 use toolbox_core::features::locales::Refusal as LocaleRefusal;
-use toolbox_core::features::network::Refusal as DriverRefusal;
+use toolbox_core::features::network::{Refusal as DriverRefusal, SwitchRefusal};
 use toolbox_core::features::users::Refusal as AccountRefusal;
 use toolbox_plan::Reason;
 use toolbox_services::i18n::{FALLBACK, text_in, text_with_in};
@@ -48,6 +48,16 @@ pub fn driver(refusal: DriverRefusal) -> Cow<'static, str> {
     let id = match refusal {
         DriverRefusal::OtherFile => "cli-driver-other-file",
         DriverRefusal::Unavailable => "cli-driver-unavailable",
+    };
+
+    text_in(FALLBACK, id)
+}
+
+pub fn driver_switch(refusal: SwitchRefusal) -> Cow<'static, str> {
+    let id = match refusal {
+        SwitchRefusal::NotListed => "cli-driver-not-listed",
+        SwitchRefusal::AlreadyLoaded => "cli-driver-loaded",
+        SwitchRefusal::NotLoaded => "cli-driver-not-loaded",
     };
 
     text_in(FALLBACK, id)

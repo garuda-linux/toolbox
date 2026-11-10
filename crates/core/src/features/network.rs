@@ -13,8 +13,8 @@ mod tools;
 
 pub use drivers::{
     BlacklistEntry, Category, DriverFilter, DriverRow, DriverState, ModuleFacts, NetworkModule,
-    Refusal, driver_rows, loaded_modules, network_modules, plan_load, plan_unload,
-    recheck_blacklist, set_blacklisted, visible,
+    Refusal, SwitchRefusal, driver_rows, loaded_modules, network_modules, plan_load, plan_switch,
+    plan_unload, recheck_blacklist, set_blacklisted, visible,
 };
 pub use status::{
     Connectivity, DefaultRoute, GEOCLUE, Radio, RadioAccess, RadioKind, RadioSummary, RadioTarget,

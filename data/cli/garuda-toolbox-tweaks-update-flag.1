@@ -1,0 +1,80 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-tweaks-update-flag 1  "garuda-toolbox 6.3.0" 
+.SH NAME
+garuda\-toolbox\-tweaks\-update\-flag \- Switch an option of garuda\-update
+.SH SYNOPSIS
+\fBgaruda\-toolbox tweaks update\-flag\fR [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIFLAG\fR> <\fISTATE\fR> 
+.SH DESCRIPTION
+Switch an option of garuda\-update
+.SH OPTIONS
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIFLAG\fR>
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+skip\-mirrorlist
+.IP \(bu 2
+update\-aur
+.IP \(bu 2
+pacman\-noconfirm
+.IP \(bu 2
+no\-check\-space
+.RE
+.TP
+<\fISTATE\fR>
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+on
+.IP \(bu 2
+off
+.RE
+.SH EXTRA
+Example:
+  garuda\-toolbox tweaks update\-flag update\-aur on
+.SH "SEE ALSO"
+garuda\-toolbox\-tweaks(1), garuda\-toolbox(1)

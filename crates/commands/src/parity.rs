@@ -7,9 +7,14 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("account-locks", &["users", "lock", "guest"]),
     ("aur-packages", &["packages", "install", "--aur", "yay-bin"]),
     ("dkms-modules", &["dkms", "build"]),
+    ("dns", &["tweaks", "dns", "cloudflare"]),
     (
         "full-names",
         &["users", "edit", "ada", "--full-name", "Ada"],
+    ),
+    (
+        "garuda-update-flags",
+        &["tweaks", "update-flag", "skip-mirrorlist", "on"],
     ),
     ("grub-settings", &["boot", "set", "timeout", "3"]),
     ("loader-settings", &["boot", "set", "editor", "off"]),
@@ -46,25 +51,26 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
         "user-units",
         &["services", "enable", "foo.service", "--user"],
     ),
+    ("hblock", &["tweaks", "hblock", "on"]),
+    ("wifi-backend", &["tweaks", "wifi-backend", "iwd"]),
 ];
 
 /// Domains the window queues that no command does yet, each with why.
-pub const NO_COMMAND: &[(&str, &str)] = &[
-    ("dns", "set on the System Tweaks page only"),
-    ("garuda-update-flags", "set on the System Tweaks page only"),
-    ("hblock", "set on the System Tweaks page only"),
-    ("wifi-backend", "set on the System Tweaks page only"),
-];
+pub const NO_COMMAND: &[(&str, &str)] = &[];
 
 pub const AT_ONCE: &[(&str, &[&str])] = &[
     ("add user", &["users", "add", "grace", "--password-stdin"]),
     ("set password", &["users", "password", "ada"]),
     ("service now", &["services", "restart", "sshd.service"]),
     ("update", &["update", "--aur"]),
+    ("rank mirrors", &["maintenance", "run", "rank-mirrors"]),
+    ("settings reset", &["maintenance", "reset", "fish"]),
     ("report", &["diagnostics", "inxi", "--upload"]),
     ("config file", &["configs", "edit", "pacman-config"]),
     ("radio", &["network", "radio", "wifi", "off"]),
     ("public address", &["network", "public-address"]),
+    ("driver load", &["network", "drivers", "load", "mt76_usb"]),
+    ("driver unload", &["network", "drivers", "unload", "r8169"]),
     ("ping", &["network", "ping", "garudalinux.org"]),
     ("traceroute", &["network", "traceroute", "garudalinux.org"]),
     ("boot repair", &["bootrepair", "regenerate", "/dev/sda2"]),

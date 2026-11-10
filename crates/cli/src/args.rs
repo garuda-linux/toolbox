@@ -19,13 +19,15 @@ mod queue;
 mod status;
 mod system;
 mod tools;
+mod tweaks;
 
 pub use accounts::{
     AddUser, EditUser, GroupArgs, GroupsCommand, PasswordArgs, PasswordSource, RemoveUser,
     UserArgs, UsersCommand, UsersList,
 };
 pub use change::{
-    EntryArgs, KernelArgs, KernelsCommand, MaintenanceCommand, TaskArgs, UnitArgs, UnitChange,
+    EntryArgs, KernelArgs, KernelsCommand, MaintenanceCommand, ResetArgs, ResetList, TaskArgs,
+    UnitArgs, UnitChange,
 };
 use clap::{Args, Parser, Subcommand};
 pub use guide::{GuideCommand, GuideShow};
@@ -48,6 +50,7 @@ pub use system::{
 };
 use toolbox_plan::{MAX_PAGE_NAME_BYTES, PageName};
 pub use tools::{Completions, Help};
+pub use tweaks::{DnsArgs, HblockArgs, TweaksCommand, UpdateFlagArgs, WifiBackendArgs};
 
 use crate::output::ColorMode;
 
@@ -267,6 +270,15 @@ pub enum Command {
         after_help = "Example:\n  garuda-toolbox network show"
     )]
     Network(NetworkCommand),
+
+    /// Choose the DNS servers, the Wi-Fi backend, hblock and garuda-update's
+    /// options, as the System Tweaks page does.
+    #[command(
+        display_order = 13,
+        subcommand,
+        after_help = "Example:\n  garuda-toolbox tweaks dns cloudflare"
+    )]
+    Tweaks(TweaksCommand),
 
     /// Repair the boot of an installed system, from the live ISO.
     #[command(

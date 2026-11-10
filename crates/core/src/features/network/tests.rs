@@ -1,6 +1,7 @@
 mod blacklist;
 mod drivers;
 mod hardware;
+mod switching;
 
 use std::net::IpAddr;
 

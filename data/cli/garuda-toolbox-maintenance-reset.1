@@ -1,0 +1,62 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-maintenance-reset 1  "garuda-toolbox 6.3.0" 
+.SH NAME
+garuda\-toolbox\-maintenance\-reset \- Put programs\*(Aq settings back to Garuda\*(Aqs own, from /etc/skel. The replaced files are kept as backups beside them
+.SH SYNOPSIS
+\fBgaruda\-toolbox maintenance reset\fR [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIENTRIES\fR> [\fIsubcommands\fR]
+.SH DESCRIPTION
+Put programs\*(Aq settings back to Garuda\*(Aqs own, from /etc/skel. The replaced files are kept as backups beside them
+.SH OPTIONS
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIENTRIES\fR>
+The settings, as `maintenance reset list` prints them
+.SH SUBCOMMANDS
+.TP
+garuda\-toolbox\-maintenance\-reset\-list(1)
+List the settings that can be reset, with the files each replaces
+.SH EXTRA
+Examples:
+  garuda\-toolbox maintenance reset list
+  garuda\-toolbox maintenance reset bash fish
+.SH "SEE ALSO"
+garuda\-toolbox\-maintenance(1), garuda\-toolbox(1)

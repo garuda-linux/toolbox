@@ -1,0 +1,65 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-tweaks-wifi-backend 1  "garuda-toolbox 6.3.0" 
+.SH NAME
+garuda\-toolbox\-tweaks\-wifi\-backend \- Choose the program NetworkManager runs Wi\-Fi with
+.SH SYNOPSIS
+\fBgaruda\-toolbox tweaks wifi\-backend\fR [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIBACKEND\fR> 
+.SH DESCRIPTION
+Choose the program NetworkManager runs Wi\-Fi with
+.SH OPTIONS
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
+.TP
+\fB\-\-dry\-run\fR
+Print the plan and stop, without asking and without changing anything
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIBACKEND\fR>
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+iwd
+.IP \(bu 2
+wpa\-supplicant
+.RE
+.SH EXTRA
+Example:
+  garuda\-toolbox tweaks wifi\-backend iwd
+.SH "SEE ALSO"
+garuda\-toolbox\-tweaks(1), garuda\-toolbox(1)

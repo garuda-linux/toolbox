@@ -17,6 +17,7 @@ mod help;
 mod interrupt;
 pub mod lists;
 pub mod locales;
+mod mirrors;
 pub mod names;
 pub mod network;
 mod out;
@@ -26,6 +27,7 @@ mod pager;
 mod parity;
 mod queue;
 mod reads;
+mod reset;
 mod root;
 pub mod settings;
 pub mod setup;
@@ -33,6 +35,7 @@ mod spinner;
 mod start;
 pub mod status;
 mod terminal;
+mod tweaks;
 pub mod window;
 mod written;
 
@@ -175,6 +178,9 @@ fn dispatch(command: Command, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         }
         Command::Maintenance(MaintenanceCommand::List(read)) => act::tasks(&read, out),
         Command::Maintenance(MaintenanceCommand::Run(args)) => act::task(&args, runtime, out),
+        Command::Maintenance(MaintenanceCommand::Reset(args)) => {
+            reset::command(&args, runtime, out)
+        }
         Command::Kernels(KernelsCommand::Default(args)) => {
             boot::kernel_default(&args, runtime, out)
         }
@@ -185,6 +191,7 @@ fn dispatch(command: Command, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         Command::Boot(command) => boot::command(command, runtime, out),
         Command::Configs(command) => configs::command(command, runtime, out),
         Command::Network(command) => network::command(command, runtime, out),
+        Command::Tweaks(command) => tweaks::command(&command, runtime, out),
         Command::Packages(command) => packages::command(command, runtime, out),
         Command::BootRepair(command) => bootrepair::command(command, runtime, out),
         Command::Setup(command) => setup::command(command, runtime, out),

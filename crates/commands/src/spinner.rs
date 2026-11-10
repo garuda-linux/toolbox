@@ -57,14 +57,19 @@ impl Drop for Spinner {
 /// for JSON output, `--quiet`, standard error that is no terminal or a
 /// `TERM=dumb` one, which cannot clear a line, show none.
 pub fn while_reading<T>(quiet: bool, read: impl FnOnce() -> T) -> T {
+    while_working(quiet, READING, read)
+}
+
+/// [`while_reading`] with its own `text`.
+pub fn while_working<T>(quiet: bool, text: &'static str, work: impl FnOnce() -> T) -> T {
     let spinner = wanted(
         std::io::stderr().is_terminal(),
         std::env::var_os("TERM").is_some_and(|term| term == "dumb"),
         quiet,
     )
-    .then(|| Spinner::on(std::io::stderr(), READING, PACE));
+    .then(|| Spinner::on(std::io::stderr(), text, PACE));
 
-    let found = read();
+    let found = work();
     drop(spinner);
     found
 }

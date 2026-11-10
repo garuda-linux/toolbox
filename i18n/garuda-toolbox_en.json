@@ -4495,6 +4495,15 @@
     "cli-driver-unavailable": {
       "string": "the drivers of this system could not be read"
     },
+    "cli-driver-not-listed": {
+      "string": "this is no network driver of this system, see `network drivers list`"
+    },
+    "cli-driver-loaded": {
+      "string": "this driver is loaded already"
+    },
+    "cli-driver-not-loaded": {
+      "string": "this driver is not loaded"
+    },
     "cli-boot-needs-confirm": {
       "string": "`{value}` opens a root shell at boot or switches a security layer off\npass --force if that is what you want"
     },

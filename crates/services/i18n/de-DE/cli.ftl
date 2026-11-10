@@ -38,6 +38,9 @@ cli-locale-not-enabled = diese Locale ist nicht eingeschaltet, schalte sie zuers
 
 cli-driver-other-file = eine andere Treiber-Einstellungsdatei in modprobe.d sperrt diesen Treiber, Garuda Toolbox ändert nur seine eigene Datei
 cli-driver-unavailable = die Treiber dieses Systems konnten nicht gelesen werden
+cli-driver-not-listed = das ist kein Netzwerktreiber dieses Systems, siehe `network drivers list`
+cli-driver-loaded = dieser Treiber ist schon geladen
+cli-driver-not-loaded = dieser Treiber ist nicht geladen
 
 cli-boot-needs-confirm =
     `{ $value }` öffnet beim Start eine Root-Shell oder schaltet eine Sicherheitsschicht ab

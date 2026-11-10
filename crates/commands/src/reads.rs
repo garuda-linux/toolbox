@@ -7,8 +7,9 @@ mod tests;
 use toolbox_cli::args::{
     AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, DkmsCommand,
     DriversCommand, GroupsCommand, GuideCommand, KernelsCommand, LocalesCommand,
-    MaintenanceCommand, NetworkCommand, PackagesCommand, PacksCommand, QueueCommand,
-    ServicesCommand, SettingsCommand, SetupCommand, ToggleCommand, UsersCommand,
+    MaintenanceCommand, NetworkCommand, PackagesCommand, PacksCommand, QueueCommand, ResetArgs,
+    ResetList, ServicesCommand, SettingsCommand, SetupCommand, ToggleCommand, TweaksCommand,
+    UsersCommand,
 };
 
 pub const fn json_read(command: &Command) -> bool {
@@ -26,13 +27,21 @@ pub const fn read_json(command: &Command) -> Option<bool> {
         Command::Kernels(KernelsCommand::List(list)) => list.read.json,
         Command::Locales(LocalesCommand::List(list)) => list.read.json,
         Command::Users(UsersCommand::List(list)) => list.read.json,
-        Command::Maintenance(MaintenanceCommand::List(list))
+        Command::Maintenance(
+            MaintenanceCommand::List(list)
+            | MaintenanceCommand::Reset(ResetArgs {
+                list: Some(ResetList::List(list)),
+                entries: _,
+                confirm: _,
+            }),
+        )
         | Command::Dkms(DkmsCommand::List(list))
         | Command::Locales(LocalesCommand::Packs(PacksCommand::List(list)))
         | Command::Groups(GroupsCommand::List(list))
         | Command::Configs(ConfigsCommand::List(list))
         | Command::Network(NetworkCommand::Drivers(DriversCommand::List(list)))
         | Command::Setup(SetupCommand::List(list))
+        | Command::Tweaks(TweaksCommand::List(list))
         | Command::Settings(SettingsCommand::List(list)) => list.json,
         Command::Doctor(read)
         | Command::Pages(read)
@@ -59,6 +68,7 @@ pub const fn read_json(command: &Command) -> Option<bool> {
         | Command::Boot(_)
         | Command::Configs(_)
         | Command::Network(_)
+        | Command::Tweaks(_)
         | Command::BootRepair(_)
         | Command::Setup(_)
         | Command::Settings(_)
