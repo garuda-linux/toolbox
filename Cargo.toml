@@ -56,6 +56,8 @@ epaint-color-fonts = { package = "epaint", version = "0.37", default-features = 
 skrifa = "0.49"
 egui-wgpu = { version = "0.37", default-features = false }
 egui_extras = { version = "0.37", default-features = false, features = ["file", "image", "svg"] }
+# egui_extras's own, for the options of the theme icon worker.
+resvg = { version = "0.45", default-features = false }
 clap = { version = "4.6", default-features = false, features = ["std", "color", "derive", "help", "usage", "error-context", "suggestions", "wrap_help"] }
 anstyle = "1"
 clap_complete = { version = "4.6", features = ["unstable-dynamic"] }

@@ -6,7 +6,7 @@
 
 mod action_row;
 mod banner;
-mod buttons;
+pub(crate) mod buttons;
 mod card;
 mod check;
 mod check_row;
@@ -31,7 +31,7 @@ mod number;
 mod page;
 mod press;
 mod property;
-mod removable;
+pub(crate) mod removable;
 mod row_menu;
 mod search;
 mod secret;

@@ -34,9 +34,9 @@ use crate::ui_ext::icon_image;
 const PILL_PADDING_X: f32 = 16.0;
 const ICON_PADDING: f32 = 7.0;
 /// A glyph whose picture has no size of its own.
-const GLYPH: f32 = 18.0;
+pub const GLYPH: f32 = 18.0;
 pub(super) const SMALL_BUTTON: f32 = 26.0;
-const SMALL_GLYPH: f32 = 16.0;
+pub const SMALL_GLYPH: f32 = 16.0;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ButtonKind {

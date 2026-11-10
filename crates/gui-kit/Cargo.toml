@@ -16,6 +16,7 @@ zeroize.workspace = true
 # Only for its color_fonts feature, which egui does not pass through.
 epaint-color-fonts.workspace = true
 egui_extras.workspace = true
+resvg.workspace = true
 egui-wgpu.workspace = true
 parking_lot.workspace = true
 toolbox-terminal.workspace = true

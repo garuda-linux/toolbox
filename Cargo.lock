@@ -5580,6 +5580,7 @@ dependencies = [
  "image",
  "jxl-oxide",
  "parking_lot 0.13.0",
+ "resvg",
  "skrifa 0.49.0",
  "toolbox-pty",
  "toolbox-terminal",

@@ -14,7 +14,7 @@ const TARGET: f32 = 24.0;
 /// Room around the target inside the tag.
 const INSET: f32 = 2.0;
 const PADDING_X: f32 = 10.0;
-const GLYPH: f32 = 12.0;
+pub const GLYPH: f32 = 12.0;
 
 /// `text` on a tag with a remove cross that `alt` names. Returns whether
 /// the cross was clicked.

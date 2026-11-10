@@ -54,7 +54,7 @@ fn svg_files_of_the_theme_are_read_and_others_are_left_to_the_bundled_set() {
 
     assert_eq!(
         drawn_uri(GO_HOME, &icons),
-        "bytes://icons/Papirus/go-home.svg"
+        "bytes://icons/theme/Papirus/go-home.svg"
     );
     assert_eq!(drawn_uri(GLOBE, &icons), "bytes://icons/bundled/globe.svg");
     assert_eq!(
@@ -104,7 +104,7 @@ fn an_svg_over_the_cap_is_left_to_the_bundled_set() {
     );
     assert_eq!(
         drawn_uri(GLOBE, &icons),
-        "bytes://icons/Papirus/globe.svg",
+        "bytes://icons/theme/Papirus/globe.svg",
         "a file of exactly the cap is still read"
     );
 }
@@ -153,7 +153,7 @@ fn a_glyph_is_read_from_the_symbolic_name_only() {
 
     assert_eq!(
         drawn_uri(GO_HOME, &icons),
-        "bytes://icons/Papirus/go-home.svg"
+        "bytes://icons/theme/Papirus/go-home.svg"
     );
     assert_eq!(
         GO_HOME

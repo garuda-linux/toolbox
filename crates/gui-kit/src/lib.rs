@@ -38,6 +38,10 @@ pub use ui_ext::UiExt;
 pub fn install(ctx: &Context) {
     jxl::register();
     egui_extras::install_image_loaders(ctx);
+    if !ctx.is_loader_installed(icons::ThemeLoader::ID) {
+        ctx.add_image_loader(std::sync::Arc::new(icons::ThemeLoader::default()));
+    }
+
     ctx.set_fonts(fonts::definitions(&[], None));
     fonts::apply_sizes(ctx, None, None);
     theme::apply(

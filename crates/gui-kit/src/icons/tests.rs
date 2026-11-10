@@ -85,7 +85,7 @@ fn a_theme_icon_is_drawn_instead_of_the_bundled_one() {
 
     let image = GO_HOME.image(Some(&theme), Color32::WHITE);
 
-    assert_eq!(uri_of(&image), "bytes://icons/Papirus/go-home.svg");
+    assert_eq!(uri_of(&image), "bytes://icons/theme/Papirus/go-home.svg");
 }
 
 #[test]

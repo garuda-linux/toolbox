@@ -246,6 +246,7 @@ impl App {
         self.apply_palettes(ctx);
         self.apply_choices(ctx);
         icons::use_theme(ctx, desktop.icons.clone());
+        icons::warm(ctx);
         self.catalog_pictures.clone_from(&desktop.app_icons);
         if let Some(pictures) = &self.pictures {
             let theme = desktop

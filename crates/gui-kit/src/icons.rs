@@ -5,6 +5,7 @@
 //! Each constant embeds its bundled file, so a missing one fails the
 //! build, as Rerun's `re_ui` icons do.
 
+mod loader;
 mod mask;
 #[cfg(test)]
 mod tests;
@@ -14,6 +15,8 @@ use std::sync::Arc;
 
 use egui::{Color32, Context, Id, Image};
 
+use self::loader::THEME_URI;
+pub use self::loader::{ThemeLoader, warm};
 use self::mask::mask;
 
 macro_rules! bundled {
@@ -283,7 +286,7 @@ impl Icon {
         let themed = theme.filter(|_| self.themed).and_then(|theme| {
             let file = theme.files.get(self.name)?;
             let image = Image::from_bytes(
-                format!("bytes://icons/{}/{}.svg", theme.theme, self.name),
+                format!("{THEME_URI}{}/{}.svg", theme.theme, self.name),
                 Arc::clone(&file.svg),
             );
 

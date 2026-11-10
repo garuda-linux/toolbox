@@ -11,7 +11,7 @@ use crate::tokens::{self, Tokens};
 
 /// An icon is this much taller than a line of body text, so it reads as
 /// one with the text beside it.
-const ICON_OVER_TEXT: f32 = 6.0;
+pub(crate) const ICON_OVER_TEXT: f32 = 6.0;
 
 pub trait UiExt {
     fn ui(&self) -> &Ui;
