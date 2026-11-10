@@ -28,7 +28,7 @@ const UNIT_TYPES: [&str; 11] = [
     ".swap",
 ];
 
-const MAX_PACKAGE_CHARS: usize = 255;
+pub(super) const MAX_PACKAGE_CHARS: usize = 255;
 const MAX_UNIT_CHARS: usize = 255;
 const MAX_ACCOUNT_CHARS: usize = 32;
 const MAX_LOCALE_CHARS: usize = 64;

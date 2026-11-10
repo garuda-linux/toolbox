@@ -8,7 +8,7 @@ use std::sync::LazyLock;
 
 use serde::{Deserialize, Serialize};
 use toolbox_plan::{
-    PackageName, Plan, PlannedAction, RemoteAction, RootAction, Upgrader, UserAction,
+    KnownPackage, PackageName, Plan, PlannedAction, RemoteAction, RootAction, Upgrader, UserAction,
 };
 
 use self::page::upgrader;
@@ -17,13 +17,11 @@ use crate::domains::InstalledPackages;
 use crate::features::live::plan_chroot;
 use crate::{ChangeSet, Snapshot};
 
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
 pub static GARUDA_UPDATE_PACKAGE: LazyLock<PackageName> =
-    LazyLock::new(|| PackageName::new("garuda-update").expect("`garuda-update` is a package name"));
+    LazyLock::new(|| const { KnownPackage::new("garuda-update") }.name());
 
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
 pub static RATE_MIRRORS_PACKAGE: LazyLock<PackageName> =
-    LazyLock::new(|| PackageName::new("rate-mirrors").expect("`rate-mirrors` is a package name"));
+    LazyLock::new(|| const { KnownPackage::new("rate-mirrors") }.name());
 
 /// Cleaning up comes after every root stage that installs or removes
 /// packages, and before the user's session so it adds no second helper
@@ -222,15 +220,14 @@ impl Tool {
     /// The package that provides the tool, to offer its installation when
     /// it is missing.
     pub fn package(self) -> PackageName {
-        let name = match self {
-            Self::ArchMirrors => "reflector-simple",
-            Self::BtrfsAssistant => "btrfs-assistant",
-            Self::EditRepositories => "pace",
-            Self::MergePacdiff => "meld",
+        let known = match self {
+            Self::ArchMirrors => const { KnownPackage::new("reflector-simple") },
+            Self::BtrfsAssistant => const { KnownPackage::new("btrfs-assistant") },
+            Self::EditRepositories => const { KnownPackage::new("pace") },
+            Self::MergePacdiff => const { KnownPackage::new("meld") },
         };
 
-        PackageName::new(name)
-            .unwrap_or_else(|_| unreachable!("the tool packages are valid names (tested)"))
+        known.name()
     }
 }
 

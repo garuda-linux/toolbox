@@ -3,21 +3,20 @@
 
 use std::sync::LazyLock;
 
-use toolbox_plan::{HopLimit, HostName, PackageName, PingCount, PingTimeout, Plan, UserAction};
+use toolbox_plan::{
+    HopLimit, HostName, KnownPackage, PackageName, PingCount, PingTimeout, Plan, UserAction,
+};
 
 use crate::domains::{InstalledPackages, Packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// The hotspot tool the page offers.
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
-pub static HOTSPOT_PACKAGE: LazyLock<PackageName> = LazyLock::new(|| {
-    PackageName::new("linux-wifi-hotspot").expect("`linux-wifi-hotspot` is a package name")
-});
+pub static HOTSPOT_PACKAGE: LazyLock<PackageName> =
+    LazyLock::new(|| const { KnownPackage::new("linux-wifi-hotspot") }.name());
 /// What that package installs for the desktop.
 pub const HOTSPOT_PROGRAM: &str = "/usr/bin/wihotspot-gui";
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
 pub static TRACEROUTE_PACKAGE: LazyLock<PackageName> =
-    LazyLock::new(|| PackageName::new("traceroute").expect("`traceroute` is a package name"));
+    LazyLock::new(|| const { KnownPackage::new("traceroute") }.name());
 
 /// Whether a button can start its program or first has to queue the
 /// package.

@@ -66,8 +66,9 @@ pub use mirrorlist::{InvalidMirrorlist, Mirrorlist};
 pub use name::{
     ADMIN_GROUPS, BootloaderId, Charset, DiskDevice, DkmsModuleName, DkmsVersion, GroupName,
     GrubPicture, GrubThemeFile, HostName, InvalidName, KernelModule, KernelParameter,
-    KernelRelease, LoaderDefault, LoaderEntryId, LocaleName, MenuEntryId, Name, NameKind,
-    PackageName, PartitionDevice, PlymouthTheme, Reason, Rule, UnitName, UserName, VolumeDevice,
+    KernelRelease, KnownPackage, LoaderDefault, LoaderEntryId, LocaleName, MenuEntryId, Name,
+    NameKind, PackageName, PartitionDevice, PlymouthTheme, Reason, Rule, UnitName, UserName,
+    VolumeDevice,
 };
 pub use network::{
     DEFAULT_HOPS, DEFAULT_PING_TIMEOUT, DEFAULT_PINGS, DEFAULT_TEST_HOST, HopLimit,

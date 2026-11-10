@@ -6,15 +6,14 @@ mod tests;
 
 use std::sync::LazyLock;
 
-use toolbox_plan::{PackageName, PlannedAction, RootAction};
+use toolbox_plan::{KnownPackage, PackageName, PlannedAction, RootAction};
 pub use toolbox_state::settings::HblockState;
 
 use super::install;
 use crate::domain::{Domain, Single, Stage, Staged, Summary, Toggle};
 
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
 static HBLOCK: LazyLock<PackageName> =
-    LazyLock::new(|| PackageName::new("hblock").expect("`hblock` is a package name"));
+    LazyLock::new(|| const { KnownPackage::new("hblock") }.name());
 
 /// After the services: the timer is a unit, and hblock downloads its lists
 /// before a Wi-Fi backend switch restarts NetworkManager.

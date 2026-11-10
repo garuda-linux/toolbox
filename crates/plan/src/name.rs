@@ -6,6 +6,7 @@
 
 mod boot;
 mod disk;
+mod known;
 mod loader;
 mod rules;
 #[cfg(test)]
@@ -17,6 +18,7 @@ use std::marker::PhantomData;
 
 pub use boot::{GrubPicture, GrubThemeFile, KernelParameter, MenuEntryId, PlymouthTheme};
 pub use disk::{BootloaderId, DiskDevice, PartitionDevice, VolumeDevice};
+pub use known::KnownPackage;
 pub use loader::{LoaderDefault, LoaderEntryId};
 pub use rules::{
     ADMIN_GROUPS, Charset, DkmsModuleName, DkmsVersion, GroupName, HostName, KernelModule,

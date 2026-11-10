@@ -17,8 +17,8 @@ pub use picture::PictureSource;
 pub use recheck::{recheck, recheck_grub};
 pub use sdboot::{is_protected, kernel, kernel_default};
 use toolbox_plan::{
-    DefaultEntry, GrubKey, GrubSetting, GrubState, KernelParameter, KernelParameters, MenuEntryId,
-    PackageName, PlymouthTheme,
+    DefaultEntry, GrubKey, GrubSetting, GrubState, KernelParameter, KernelParameters, KnownPackage,
+    MenuEntryId, PackageName, PlymouthTheme,
 };
 pub use toolbox_state::boot::VirtualMachine;
 
@@ -28,9 +28,8 @@ use crate::domains::{
 };
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
 pub static PLYMOUTH_PACKAGE: LazyLock<PackageName> =
-    LazyLock::new(|| PackageName::new("plymouth").expect("`plymouth` is a package name"));
+    LazyLock::new(|| const { KnownPackage::new("plymouth") }.name());
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]
 #[strum(serialize_all = "kebab-case")]

@@ -6,15 +6,15 @@ mod tests;
 
 use std::sync::LazyLock;
 
-use toolbox_plan::{DnsProvider, PackageName, PlannedAction, RootAction, WifiBackend};
+use toolbox_plan::{
+    DnsProvider, KnownPackage, PackageName, PlannedAction, RootAction, WifiBackend,
+};
 pub use toolbox_state::settings::{CurrentDns, CurrentWifiBackend};
 
 use super::{each, install};
 use crate::domain::{Domain, Single, Stage, Staged, Summary};
 
-#[expect(clippy::expect_used, reason = "a constant name, parsed by a test")]
-static IWD: LazyLock<PackageName> =
-    LazyLock::new(|| PackageName::new("iwd").expect("`iwd` is a package name"));
+static IWD: LazyLock<PackageName> = LazyLock::new(|| const { KnownPackage::new("iwd") }.name());
 
 pub struct Dns;
 
