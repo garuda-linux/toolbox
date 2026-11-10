@@ -48,10 +48,6 @@ license-files = []
 crate = "notify"
 allow = ["CC0-1.0"]
 
-[[licenses.exceptions]]
-crate = "xxhash-rust"
-allow = ["BSL-1.0"]
-
 
 [licenses.private]
 ignore = true

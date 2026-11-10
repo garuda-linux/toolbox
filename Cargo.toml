@@ -69,7 +69,7 @@ fluent-templates = "0.15"
 fluent-syntax = "0.12"
 freedesktop-icons = "0.4"
 fontdb = "0.24"
-notify = "=9.0.0-rc.7"
+notify = "8.2"
 unicode-width = "0.2"
 zeroize = "1.9"
 egui_kittest = { version = "0.37", features = ["eframe", "snapshot", "wgpu"] }
