@@ -151,9 +151,11 @@ pub trait Domain: 'static {
     /// otherwise for an action, where they run.
     const STAGE: Stage;
     /// One-off work (clean the cache, upgrade the system) rather than a
-    /// state of the system. No probe can see that it ran, so
-    /// [`crate::ChangeSet::drop_done_one_offs`] removes it once its steps
-    /// succeeded.
+    /// state of the system. No probe sees that it ran, so
+    /// [`crate::ChangeSet::drop_done_one_offs`] drops it once the steps of
+    /// the change planned alone succeeded. [`Domain::plan`] therefore gives
+    /// a change the same actions alone as in a batch, never one shared
+    /// with another change (`changes/tests/one_offs.rs`).
     const ONE_OFF: bool = false;
 
     /// This domain's part of `snapshot`, `None` while no probe delivered it
