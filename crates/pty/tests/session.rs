@@ -7,6 +7,9 @@ use toolbox_pty::{Chunk, Exit, PtyCommand, Session, TerminalSize, strip_ansi};
 
 const PATIENCE: Duration = Duration::from_secs(10);
 
+/// Set in the copy of this test binary that starts with Ctrl+C ignored.
+const IGNORING: &str = "TOOLBOX_PTY_TEST_IGNORING";
+
 fn shell(script: &str) -> PtyCommand {
     PtyCommand::new("sh").args(["-c", script])
 }
@@ -286,25 +289,50 @@ fn a_finished_session_keeps_its_exit() {
     assert_eq!(session.try_wait().unwrap(), Some(Exit::Code(0)));
 }
 
+fn ctrl_c_and_quit(status: &str) -> Option<u64> {
+    let line = status
+        .lines()
+        .find_map(|line| line.strip_prefix("SigIgn:"))?;
+
+    let ignored = u64::from_str_radix(line.trim(), 16).ok()?;
+
+    Some(ignored & ((1_u64 << (libc::SIGINT - 1_i32)) | (1_u64 << (libc::SIGQUIT - 1_i32))))
+}
+
+/// An app started with `&` from a shell ignores SIGINT and SIGQUIT, and
+/// every child inherits that. The test binary runs itself in that state.
 #[test]
-#[expect(
-    unsafe_code,
-    reason = "ignores SIGINT in this process as a script started with & does"
-)]
 fn a_program_takes_ctrl_c_even_when_the_app_ignores_it() {
-    let set = |handler| {
-        for signal in [libc::SIGINT, libc::SIGQUIT] {
-            // SAFETY: a signal disposition has no other effect on this
-            // process, and the default comes back before the test ends.
-            unsafe { libc::signal(signal, handler) };
-        }
-    };
+    let copy = std::process::Command::new("env")
+        .arg("--ignore-signal=INT,QUIT")
+        .arg(std::env::current_exe().unwrap())
+        .args([
+            "--exact",
+            "the_program_of_an_app_ignoring_ctrl_c",
+            "--include-ignored",
+        ])
+        .env(IGNORING, "1")
+        .output()
+        .unwrap();
 
-    set(libc::SIG_IGN);
-    let spawned = Session::spawn(&shell("grep '^SigIgn' /proc/self/status"));
-    set(libc::SIG_DFL);
+    // libtest also succeeds when the name matches no test.
+    let report = String::from_utf8_lossy(&copy.stdout);
+    assert!(copy.status.success(), "{report}");
+    assert!(report.contains("1 passed"), "{report}");
+}
 
-    let mut session = spawned.unwrap();
+#[test]
+#[ignore = "run by a_program_takes_ctrl_c_even_when_the_app_ignores_it"]
+fn the_program_of_an_app_ignoring_ctrl_c() {
+    assert!(std::env::var_os(IGNORING).is_some());
+    let own = std::fs::read_to_string("/proc/self/status").unwrap();
+    assert_ne!(
+        ctrl_c_and_quit(&own).unwrap(),
+        0,
+        "the copy should start ignoring"
+    );
+
+    let mut session = Session::spawn(&shell("cat /proc/self/status")).unwrap();
     let mut out = String::new();
     assert!(read_until_closed(
         &session,
@@ -313,9 +341,10 @@ fn a_program_takes_ctrl_c_even_when_the_app_ignores_it() {
     ));
     assert_eq!(finished(&mut session), Some(Exit::Code(0)));
 
-    let line = plain_lines(&out).join("");
-    let ignored = u64::from_str_radix(line.trim_start_matches("SigIgn:").trim(), 16).unwrap();
-    let ctrl_c = 1_u64 << (libc::SIGINT - 1_i32);
-    let quit = 1_u64 << (libc::SIGQUIT - 1_i32);
-    assert_eq!(ignored & (ctrl_c | quit), 0, "ignored signals {line}");
+    let child = plain_lines(&out).join("\n");
+    assert_eq!(
+        ctrl_c_and_quit(&child).unwrap(),
+        0,
+        "ignored signals in {child}"
+    );
 }
