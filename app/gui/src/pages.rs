@@ -63,21 +63,14 @@ use toolbox_plan::{PackageName, UnitScope};
 use tweaks::TweaksPage;
 use users::UsersPage;
 
-use crate::boot::Boot;
-use crate::bootrepair::BootRepair;
 use crate::catalogs::{CatalogId, Catalogs};
 use crate::command::CommandSender;
-use crate::configs::Configs;
 use crate::desktop::icon_files::AppIcons;
-use crate::diagnostics::Diagnostics;
-use crate::maintenance::Maintenance;
-use crate::network::Network;
-use crate::packages::Packages;
 use crate::page::PageId;
+use crate::page_service::{Provides, Services};
 use crate::pictures::Pictures;
 use crate::settings::SettingsView;
 use crate::units::Units;
-use crate::users::Users;
 
 /// What every page reads, built each frame.
 pub struct PageContext<'app> {
@@ -96,14 +89,8 @@ pub struct PageContext<'app> {
     pub busy: bool,
     pub units: &'app Units,
     pub home: HomeFacts<'app>,
-    pub maintenance: &'app Maintenance,
-    pub diagnostics: &'app Diagnostics,
-    pub boot: &'app Boot,
-    pub network: &'app Network,
-    pub packages: &'app Packages,
-    pub users: &'app Users,
-    pub configs: &'app Configs,
-    pub boot_repair: &'app BootRepair,
+    /// Each page asks [`PageContext::service`] for its own.
+    pub services: &'app Services,
     pub plans: Plans,
     /// The session's `XDG_CURRENT_DESKTOP`, for entries of one desktop.
     pub desktops: &'app [String],
@@ -117,6 +104,16 @@ pub struct PageContext<'app> {
     pub commands: &'app CommandSender,
     /// What the Settings page shows.
     pub preferences: SettingsView<'app>,
+}
+
+impl PageContext<'_> {
+    /// The page's own service, such as `context.service::<Boot>()`.
+    pub fn service<T>(&self) -> &T
+    where
+        Services: Provides<T>,
+    {
+        self.services.service()
+    }
 }
 
 /// The last refused click of each page, until dismissed or a later click

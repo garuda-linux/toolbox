@@ -29,23 +29,16 @@ use toolbox_news::News;
 pub use toolbox_services::testing::{PATIENCE, poll, until};
 use toolbox_system::{Facts, Status};
 
-use crate::boot::Boot;
-use crate::bootrepair::BootRepair;
 use crate::catalogs::Catalogs;
 use crate::command::{self, Command, CommandReceiver, CommandSender};
-use crate::configs::Configs;
-use crate::diagnostics::Diagnostics;
-use crate::maintenance::Maintenance;
-use crate::network::Network;
-use crate::packages::Packages;
 use crate::page::PageId;
+use crate::page_service::Services;
 use crate::pages::home::{HomeFacts, HomeProblem};
 use crate::pages::kernels::view::DkmsReading;
 use crate::pages::{PageContext, PageView, Plans, Refusals};
 use crate::programs::Programs;
 use crate::settings::{MotionChoice, SettingsView, ThemeChoice};
 use crate::units::Units;
-use crate::users::Users;
 
 /// The window a page is drawn in, as the app's own tests use.
 const WIDTH: f32 = 1024.0;
@@ -86,14 +79,7 @@ pub struct PageFixture {
     pub setup_finished: bool,
     pub programs: Option<Programs>,
     pub problem: Option<HomeProblem>,
-    pub maintenance: Maintenance,
-    pub diagnostics: Diagnostics,
-    pub boot: Boot,
-    pub network: Network,
-    pub packages: Packages,
-    pub users: Users,
-    pub configs: Configs,
-    pub boot_repair: BootRepair,
+    pub services: Services,
     pub plans: Plans,
     pub desktops: Vec<String>,
     pub settings: Settings,
@@ -129,14 +115,7 @@ impl Default for PageFixture {
             setup_finished: false,
             programs: None,
             problem: None,
-            maintenance: Maintenance::default(),
-            diagnostics: Diagnostics::default(),
-            boot: Boot::default(),
-            network: Network::default(),
-            packages: Packages::default(),
-            users: Users::default(),
-            configs: Configs::default(),
-            boot_repair: BootRepair::default(),
+            services: Services::default(),
             plans: Plans::default(),
             desktops: Vec::new(),
             settings: Settings::default(),
@@ -176,14 +155,7 @@ impl PageFixture {
                 programs_failed: false,
                 problem: self.problem.as_ref(),
             },
-            maintenance: &self.maintenance,
-            diagnostics: &self.diagnostics,
-            boot: &self.boot,
-            network: &self.network,
-            packages: &self.packages,
-            users: &self.users,
-            configs: &self.configs,
-            boot_repair: &self.boot_repair,
+            services: &self.services,
             plans: self.plans,
             desktops: &self.desktops,
             version: crate::FIXED_VERSION,

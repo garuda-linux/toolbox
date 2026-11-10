@@ -16,13 +16,17 @@ use toolbox_system::share::{Upload, UploadProblem};
 use super::DiagnosticsPage;
 use crate::command::{AppCommand, Command, DiagnosticsCommand};
 use crate::diagnostics::Diagnostics;
+use crate::page_service::Services;
 use crate::testing::{PageFixture, PageState, button_kind};
 
 type Shown = Harness<'static, PageState<DiagnosticsPage>>;
 
 fn page(shown: Page) -> Shown {
     let mut harness = PageFixture {
-        diagnostics: Diagnostics::showing(shown),
+        services: Services {
+            diagnostics: Diagnostics::showing(shown),
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
     .harness(DiagnosticsPage::default());

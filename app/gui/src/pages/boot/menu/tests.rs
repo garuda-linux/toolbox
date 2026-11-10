@@ -18,7 +18,7 @@ fn the_entry_list_is_built_once_until_the_menu_changes() {
         GrubPlatform::Efi,
     )));
 
-    harness.state_mut().fixture.boot = Boot::showing(other, None, None);
+    harness.state_mut().fixture.services.boot = Boot::showing(other, None, None);
     harness.run_steps(3);
     assert_eq!(harness.state().page.entries.builds(), 2);
 }

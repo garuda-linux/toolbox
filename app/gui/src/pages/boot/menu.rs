@@ -16,6 +16,7 @@ use toolbox_plan::GrubKey;
 use toolbox_system::Menu;
 
 use super::{WIDE_CONTROL, heading, queued, send};
+use crate::boot::Boot;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
@@ -62,12 +63,17 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut E
 /// the menu does not list comes first, so it still shows.
 fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut EntryRows) {
     let ctx = ui.ctx().clone();
-    let menu = context.boot.menu();
+    let menu = context.service::<Boot>().menu();
     let changes = context.changes;
     let remembered = page.remember();
     let value = page.entry_value(menu.known());
     let listed = page.entry_listed(menu.known());
-    let rest = (context.boot.menu_identity(), listed, Look::of(ui));
+    let rest = (
+        context.service::<Boot>().menu_identity(),
+        listed,
+        Look::of(ui),
+    );
+
     let rows: Arc<Vec<(String, String)>> = entries.get(&[&value], rest, || {
         let mut rows: Vec<(String, String)> = view::entries(menu.known())
             .into_iter()
@@ -123,7 +129,7 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
 fn remember(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let ctx = ui.ctx().clone();
     let changes = context.changes;
-    let menu = context.boot.menu().known();
+    let menu = context.service::<Boot>().menu().known();
     let on = page.remember();
     let tag = queued(&ctx, view::is_queued(changes, GrubKey::SaveDefault));
     if !flipped(ui, "boot-remember", tag.as_deref(), on) {

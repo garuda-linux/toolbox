@@ -22,7 +22,7 @@ use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
-use crate::maintenance::MaintenanceProblem;
+use crate::maintenance::{Maintenance, MaintenanceProblem};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub enum Tab {
@@ -106,7 +106,7 @@ impl PageView for MaintenancePage {
 /// Why the last tool did not start or the mirrors were not ranked, until
 /// dismissed.
 fn problem(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(problem) = context.maintenance.problem() else {
+    let Some(problem) = context.service::<Maintenance>().problem() else {
         return;
     };
 

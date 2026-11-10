@@ -15,7 +15,7 @@ use super::row::{self, PackageRow, Row};
 use super::{PackagesPage, aur, pending_updates, shows_aur};
 use crate::command::PackagesCommand;
 use crate::i18n;
-use crate::packages::Read;
+use crate::packages::{Packages, Read};
 use crate::pages::header::{refresh_header, search};
 use crate::pages::rows::refusal_banner;
 use crate::pages::{PageContext, plan_running};
@@ -62,7 +62,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
 
     // The AUR needs none of pacman's databases, so its chip stays under
     // the notice when they cannot be read.
-    let (catalog, unread) = match context.packages.index() {
+    let (catalog, unread) = match context.service::<Packages>().index() {
         Read::Known(catalog) => (Arc::clone(catalog), false),
         Read::Loading => {
             ui.vertical_centered(|ui| {
@@ -264,7 +264,7 @@ pub fn nothing(page: &mut PackagesPage, ui: &mut Ui) {
 }
 
 fn unreadable_index(ui: &mut Ui, context: &PageContext<'_>) {
-    let id = if matches!(context.packages.index(), Read::Unavailable) {
+    let id = if matches!(context.service::<Packages>().index(), Read::Unavailable) {
         "packages-unavailable"
     } else {
         "packages-failed"

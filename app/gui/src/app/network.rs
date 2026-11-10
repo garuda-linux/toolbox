@@ -12,22 +12,23 @@ use toolbox_plan::Toggle;
 use super::App;
 use crate::command::NetworkCommand;
 use crate::i18n;
-use crate::page::PageId;
 use crate::pages::NetworkRefusal;
 
 impl App {
     pub(super) fn run_network(&mut self, ctx: &egui::Context, command: NetworkCommand) {
         match command {
             NetworkCommand::Refresh => {
-                self.network.refresh();
+                self.services.network.refresh();
                 self.read_system();
                 if let Some(units) = &self.units {
                     units.refresh(toolbox_plan::UnitScope::System);
                 }
             }
-            NetworkCommand::SetRadio { target, blocked } => self.network.set_radio(target, blocked),
-            NetworkCommand::LookupAddress => self.network.lookup_address(),
-            NetworkCommand::ForgetAddress => self.network.forget_address(),
+            NetworkCommand::SetRadio { target, blocked } => {
+                self.services.network.set_radio(target, blocked);
+            }
+            NetworkCommand::LookupAddress => self.services.network.lookup_address(),
+            NetworkCommand::ForgetAddress => self.services.network.forget_address(),
             NetworkCommand::StartService(unit) => {
                 if let Some(plan) = plan_start(unit) {
                     self.run_at_once(plan);
@@ -62,14 +63,6 @@ impl App {
             NetworkCommand::OpenHotspot => self.open_hotspot(ctx),
             NetworkCommand::DismissRefusal => self.refusals.network = None,
         }
-    }
-
-    pub(super) fn take_network(&mut self) {
-        if self.state.page == PageId::Network {
-            self.network.open();
-        }
-
-        self.network.take();
     }
 
     fn blacklist(&mut self, module: &toolbox_plan::KernelModule, on: bool) {

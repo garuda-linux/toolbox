@@ -14,6 +14,7 @@ use toolbox_plan::{ConfigFilePath, ConfigText, EditCopy, Editor, FetchRefusal};
 use super::ConfigsPage;
 use crate::command::{Command, ConfigsCommand};
 use crate::configs::Configs;
+use crate::page_service::Services;
 use crate::pages::Refusals;
 use crate::testing::{PageFixture, PageState};
 
@@ -132,7 +133,10 @@ pub fn viewing() -> Viewing {
 pub fn page(configs: Configs, refusals: Refusals) -> Shown {
     let mut harness = PageFixture {
         refusals,
-        configs,
+        services: Services {
+            configs,
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
     .harness(ConfigsPage::default());

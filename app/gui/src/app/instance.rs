@@ -71,7 +71,7 @@ impl App {
         let aur_on = self.prefs.setup.settings.packages.show_aur;
 
         if aur_on && !self.queue.changes().queued::<AurPackages>().is_empty() {
-            self.packages.open_aur();
+            self.services.packages.open_aur();
         }
     }
 

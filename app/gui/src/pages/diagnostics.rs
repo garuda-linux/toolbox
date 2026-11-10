@@ -20,6 +20,7 @@ use toolbox_system::diagnostics::page::State;
 use super::header::title_header;
 use super::{PageContext, PageView};
 use crate::command::DiagnosticsCommand;
+use crate::diagnostics::Diagnostics;
 use crate::i18n;
 use crate::share::view::{self as share, Question, ShareView, Subject, padded_card};
 
@@ -61,7 +62,7 @@ impl PageView for DiagnosticsPage {
         self.picker(ui, context);
         ui.add_space(ui.tokens().sizes.section_gap);
 
-        let page = context.diagnostics.page();
+        let page = context.service::<Diagnostics>().page();
         let view = ShareView {
             upload: &page.share,
             subject: Subject::Report,
@@ -90,7 +91,7 @@ impl PageView for DiagnosticsPage {
 impl DiagnosticsPage {
     fn picker(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
-        let page = context.diagnostics.page();
+        let page = context.service::<Diagnostics>().page();
         let names: Vec<String> = CHOICES
             .iter()
             .map(|choice| name(&ctx, choice.as_str()))
@@ -147,7 +148,7 @@ impl DiagnosticsPage {
 
     fn report_buttons(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
-        let page = context.diagnostics.page();
+        let page = context.service::<Diagnostics>().page();
         if pill_button(ui, &i18n::text(&ctx, "diagnostics-copy"), ButtonKind::Soft).clicked() {
             share::copy(
                 &ctx,
@@ -188,7 +189,7 @@ fn running(ui: &mut Ui, text: &str, detail: &str) {
 
 fn status(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    let page = context.diagnostics.page();
+    let page = context.service::<Diagnostics>().page();
     let selection = name(&ctx, &page.selection);
     let named = |id: &str| i18n::text_with(&ctx, id, &[("name", &selection)]).into_owned();
 

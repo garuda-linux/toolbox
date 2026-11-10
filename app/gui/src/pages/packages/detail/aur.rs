@@ -14,6 +14,7 @@ use toolbox_plan::PackageName;
 use super::super::PackagesPage;
 use super::super::aur::row::AurRow;
 use super::{below, catalog, gone, header_of, loading, rule, split};
+use crate::packages::Packages;
 use crate::pages::PageContext;
 
 pub fn header(
@@ -22,7 +23,7 @@ pub fn header(
     context: &PageContext<'_>,
     package: &PackageName,
 ) {
-    let aur = context.packages.aur().known().map(Arc::clone);
+    let aur = context.service::<Packages>().aur().known().map(Arc::clone);
     let entry = aur.as_ref().and_then(|aur| aur.entry(package));
     let repo = catalog(context).unwrap_or_default();
     let shown = entry.map(|entry| AurRow { entry, repo: &repo });
@@ -35,7 +36,7 @@ pub fn body(
     context: &PageContext<'_>,
     package: &PackageName,
 ) {
-    let Some(aur) = context.packages.aur().known().map(Arc::clone) else {
+    let Some(aur) = context.service::<Packages>().aur().known().map(Arc::clone) else {
         loading(ui);
         return;
     };
@@ -47,7 +48,7 @@ pub fn body(
 
     let repo = catalog(context);
     let details = context
-        .packages
+        .service::<Packages>()
         .details()
         .filter(|details| details.package == *package);
 

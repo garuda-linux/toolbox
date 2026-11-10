@@ -100,7 +100,7 @@ impl App {
         }
     }
 
-    fn run_app(&mut self, ctx: &egui::Context, command: AppCommand) {
+    pub(super) fn run_app(&mut self, ctx: &egui::Context, command: AppCommand) {
         match command {
             AppCommand::RemoveChange { domain, key } => {
                 self.queue.remove(domain, &key);
@@ -137,6 +137,7 @@ impl App {
             AppCommand::Configs(configs) => self.run_configs(configs),
             AppCommand::BootRepair(repair) => self.run_boot_repair(repair),
             AppCommand::Console(console) => self.run_console(console),
+            AppCommand::Answer(answer) => self.answer(ctx, answer),
             // `run` takes these first, as they need the window.
             AppCommand::Activated(arrival) => {
                 tracing::warn!("an activation missed its turn: {arrival:?}");

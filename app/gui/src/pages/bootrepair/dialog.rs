@@ -17,6 +17,7 @@ use toolbox_gui_kit::widgets::{
 use toolbox_plan::{MAX_PASSWORD_BYTES, Password, RootLayout, VolumeDevice};
 
 use super::texts;
+use crate::bootrepair::BootRepair;
 use crate::command::BootRepairCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -95,7 +96,7 @@ impl Dialog {
             .width(DialogWidth::Medium)
             .show(ctx, |ui| {
                 // Outside the live ISO nobody vouches for the disk.
-                if context.boot_repair.offer() != Offer::Live {
+                if context.service::<BootRepair>().offer() != Offer::Live {
                     banner(
                         ui,
                         Tone::Warning,

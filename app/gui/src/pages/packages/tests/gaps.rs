@@ -57,7 +57,8 @@ fn an_aur_rows_capitals_have_as_much_room_above_as_its_last_baseline_below() {
     let mut fixture = fixture(None);
     fixture.settings.packages.show_aur = true;
     let aur = Arc::new(AurCatalog::new(SampleAur.index().unwrap()));
-    fixture.packages = Packages::showing(Read::Known(catalog()), None).with_aur(Read::Known(aur));
+    fixture.services.packages =
+        Packages::showing(Read::Known(catalog()), None).with_aur(Read::Known(aur));
 
     let page = PackagesPage {
         filter: Filter::Aur,

@@ -1,6 +1,7 @@
 //! The root of the UI: the persisted [`State`], the command bus and the
 //! frame loop.
 
+mod answers;
 mod boot;
 mod bootrepair;
 mod closing;
@@ -57,6 +58,7 @@ use crate::network::Network;
 use crate::notifications::Notifier;
 use crate::packages::Packages;
 use crate::page::PageId;
+use crate::page_service::Services;
 use crate::pages::home::{HomeFacts, HomeProblem};
 use crate::pages::kernels::view::Dkms;
 use crate::pages::{PageContext, Pages, Plans, Refusals};
@@ -128,14 +130,7 @@ pub struct App {
     /// Refusals of a restart, sent from logind's task.
     restart_refused: (Waking<CallError>, Receiver<CallError>),
     home_problem: Option<HomeProblem>,
-    maintenance: Maintenance,
-    diagnostics: Diagnostics,
-    boot: Boot,
-    network: Network,
-    packages: Packages,
-    users: Users,
-    configs: Configs,
-    boot_repair: BootRepair,
+    services: Services,
     output_share: Option<ShareLink>,
     /// Told on exit, so no raise touches the closing window.
     arrivals: Option<Arc<Arrivals>>,
@@ -179,8 +174,8 @@ impl App {
         let CommandBus { sender, receiver } = setup.commands.unwrap_or_default();
         let mut maintenance = Maintenance::new(setup.maintenance, cc.egui_ctx.clone());
         maintenance.stock(setup.catalogs.skel.as_ref());
+        maintenance.set_launcher(setup.launcher.clone());
         let app = Self {
-            maintenance,
             pages: preferences::pages_for(&prefs),
             prefs,
             state: restored(cc, setup.open),
@@ -216,13 +211,16 @@ impl App {
             restart_refused: waking::channel(waking::repaint(cc.egui_ctx.clone())),
             home_problem: (setup.queue_lost > 0)
                 .then_some(HomeProblem::QueueLost(setup.queue_lost)),
-            diagnostics: Diagnostics::new(setup.diagnostics),
-            boot: Boot::new(setup.boot, cc.egui_ctx.clone()),
-            network: Network::new(setup.network, cc.egui_ctx.clone()),
-            packages: Packages::new(setup.packages, cc.egui_ctx.clone()),
-            users: Users::new(setup.users, cc.egui_ctx.clone()),
-            configs: Configs::new(setup.configs, cc.egui_ctx.clone()),
-            boot_repair: BootRepair::new(setup.boot_repair, cc.egui_ctx.clone()),
+            services: Services {
+                maintenance,
+                diagnostics: Diagnostics::new(setup.diagnostics),
+                boot: Boot::new(setup.boot, cc.egui_ctx.clone()),
+                network: Network::new(setup.network, cc.egui_ctx.clone()),
+                packages: Packages::new(setup.packages, cc.egui_ctx.clone()),
+                users: Users::new(setup.users, cc.egui_ctx.clone()),
+                configs: Configs::new(setup.configs, cc.egui_ctx.clone()),
+                boot_repair: BootRepair::new(setup.boot_repair, cc.egui_ctx.clone()),
+            },
             output_share: setup.output_share,
             arrivals: setup.arrivals,
             plans: Plans::default(),
@@ -316,14 +314,7 @@ impl eframe::App for App {
                 programs_failed: self.programs.reading().error().is_some(),
                 problem: self.home_problem.as_ref(),
             },
-            maintenance: &self.maintenance,
-            diagnostics: &self.diagnostics,
-            boot: &self.boot,
-            network: &self.network,
-            packages: &self.packages,
-            users: &self.users,
-            configs: &self.configs,
-            boot_repair: &self.boot_repair,
+            services: &self.services,
             plans: self.plans,
             desktops: &self.desktops,
             version: self.version,

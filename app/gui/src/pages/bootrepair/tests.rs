@@ -11,6 +11,7 @@ use toolbox_system::{DryRunRepair, RepairSource as _};
 use super::BootRepairPage;
 use crate::bootrepair::BootRepair;
 use crate::command::{BootRepairCommand, Command};
+use crate::page_service::Services;
 use crate::testing::{PageFixture, PageState};
 
 /// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free btrfs
@@ -38,7 +39,10 @@ fn locked() -> BootRepair {
 
 fn page(repair: BootRepair, start: BootRepairPage) -> Shown {
     let mut harness = PageFixture {
-        boot_repair: repair,
+        services: Services {
+            boot_repair: repair,
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
     .harness(start);
@@ -247,7 +251,10 @@ fn show_console_is_offered_only_while_the_console_is_hidden() {
     assert!(shows(&hidden, "Show Console"));
 
     let mut open = PageFixture {
-        boot_repair: running(),
+        services: Services {
+            boot_repair: running(),
+            ..Services::default()
+        },
         console_open: true,
         ..PageFixture::default()
     }

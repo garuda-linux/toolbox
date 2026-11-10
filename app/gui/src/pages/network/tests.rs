@@ -23,6 +23,7 @@ use toolbox_plan::{HostName, KernelModule, PingCount, PingTimeout};
 use super::NetworkPage;
 use crate::command::{Command, NetworkCommand};
 use crate::network::{Address, Hardware, Network, Read, StatusRead};
+use crate::page_service::Services;
 use crate::pages::{NetworkRefusal, Refusals};
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
 
@@ -111,7 +112,10 @@ fn page_showing(network: Network, refusals: Refusals) -> Shown {
     snapshot.insert(InstalledPackages(BTreeSet::new()));
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
-        network,
+        services: Services {
+            network,
+            ..Services::default()
+        },
         refusals,
         ..PageFixture::default()
     }

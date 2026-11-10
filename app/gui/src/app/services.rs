@@ -61,21 +61,13 @@ impl App {
         for report in reports {
             let finished = match report {
                 Report::PlanStarted { steps: _ } => {
-                    self.maintenance.plan_started();
-                    self.boot_repair.plan_started();
-                    self.users.plan_started();
                     self.queue.plan_started();
-                    let act = self.configs.plan_started();
-                    self.act_configs(act);
+                    self.services_plan_started(ctx);
                     false
                 }
                 Report::Busy => {
-                    self.maintenance.plan_refused();
-                    self.boot_repair.plan_refused();
-                    self.users.plan_refused();
                     self.queue.plan_refused();
-                    let act = self.configs.plan_refused();
-                    self.act_configs(act);
+                    self.services_plan_refused(ctx);
                     false
                 }
                 Report::Step(_) | Report::Problem(_) | Report::CancelWaits => false,
@@ -120,16 +112,9 @@ impl App {
             (!self.dry_run).then_some(well),
         );
 
-        self.maintenance_finished(succeeded);
-        self.boot.plan_finished();
-        self.network.plan_finished();
-        self.packages.plan_finished();
-        self.users.plan_finished(succeeded);
-        self.boot_repair.plan_finished(succeeded);
         self.plans.finished += 1;
         self.plans.last_succeeded = succeeded;
-        let act = self.configs.plan_finished(succeeded);
-        self.act_configs(act);
+        self.services_plan_finished(ctx, succeeded);
         self.close_after_run(ctx);
 
         self.notify_finished(ctx, succeeded);
@@ -181,7 +166,7 @@ impl App {
             self.queue.meet(&self.seen);
 
             // An apply may have changed what /etc/skel holds.
-            self.maintenance.stock(self.catalogs.skel.as_ref());
+            self.services.maintenance.stock(self.catalogs.skel.as_ref());
         }
     }
 
@@ -207,11 +192,11 @@ impl App {
     /// change that waits for them would wait until its page is opened.
     fn read_held_parts(&mut self) {
         if self.queue.holding().any(|guard| guard == USER_LOCKS) {
-            self.users.open();
+            self.services.users.open();
         }
 
         if self.queue.holding().any(|guard| guard == AUR_PACKAGES) {
-            self.packages.open_aur();
+            self.services.packages.open_aur();
         }
     }
 
@@ -236,9 +221,10 @@ impl App {
             .get()
             .map_or_else(Arc::default, |probed| Arc::clone(&probed.snapshot));
 
-        let flags = self.users.flags();
-        let names = self.packages.aur_names();
+        let flags = self.services.users.flags();
+        let names = self.services.packages.aur_names();
         let loader = self
+            .services
             .boot
             .menu()
             .sdboot()
@@ -280,15 +266,8 @@ impl App {
             self.unit_lists = lists;
         }
 
-        self.take_maintenance();
-        self.take_diagnostics(ctx);
+        self.take_page_services(ctx);
         self.take_output_share(ctx);
-        self.take_boot();
-        self.take_network();
-        self.take_packages();
-        self.take_users();
-        self.take_configs();
-        self.take_boot_repair(ctx);
         self.read_held_parts();
         if let Some(error) = self.restart_refused.1.try_iter().last() {
             self.home_problem = Some(HomeProblem::Restart(error));

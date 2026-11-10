@@ -26,7 +26,8 @@ fn on(
 ) -> egui_kittest::Harness<'static, crate::testing::PageState<PackagesPage>> {
     let mut fixture = fixture(None);
     fixture.settings.packages.show_aur = true;
-    fixture.packages = Packages::showing(Read::Known(catalog()), None).with_aur(Read::Known(aur()));
+    fixture.services.packages =
+        Packages::showing(Read::Known(catalog()), None).with_aur(Read::Known(aur()));
 
     let mut harness = fixture.harness(page);
     harness.run();
@@ -190,7 +191,8 @@ fn the_updates_chip_counts_the_aur_updates_home_counts() {
 fn the_aur_chip_works_without_pacmans_databases() {
     let mut fixture = PageFixture::default();
     fixture.settings.packages.show_aur = true;
-    fixture.packages = Packages::showing(Read::Unavailable, None).with_aur(Read::Known(aur()));
+    fixture.services.packages =
+        Packages::showing(Read::Unavailable, None).with_aur(Read::Known(aur()));
 
     let mut harness = fixture.harness(aur_page());
     harness.run();
@@ -207,7 +209,8 @@ fn the_aur_chip_works_without_pacmans_databases() {
 fn without_pacmans_databases_the_other_chips_show_only_the_notice() {
     let mut fixture = PageFixture::default();
     fixture.settings.packages.show_aur = true;
-    fixture.packages = Packages::showing(Read::Unavailable, None).with_aur(Read::Known(aur()));
+    fixture.services.packages =
+        Packages::showing(Read::Unavailable, None).with_aur(Read::Known(aur()));
 
     let mut harness = fixture.harness(PackagesPage::default());
     harness.run();

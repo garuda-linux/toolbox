@@ -15,6 +15,7 @@ use toolbox_system::{Host, Menu, MenuRead};
 use super::BootPage;
 use crate::boot::{Boot, BootRefusal, FileKind};
 use crate::command::{BootCommand, Command};
+use crate::page_service::Services;
 use crate::testing::captures::GRUB_CFG;
 use crate::testing::{PageFixture, PageState};
 
@@ -44,7 +45,10 @@ pub(super) fn menu() -> Menu {
 pub(super) fn page(snapshot: Snapshot, boot: Boot) -> Shown {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
-        boot,
+        services: Services {
+            boot,
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
     .harness(BootPage::default());
@@ -256,7 +260,10 @@ fn a_queued_change_is_marked() {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
         changes,
-        boot: Boot::showing(menu(), None, None),
+        services: Services {
+            boot: Boot::showing(menu(), None, None),
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
     .harness(BootPage::default());

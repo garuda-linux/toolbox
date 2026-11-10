@@ -16,6 +16,7 @@ use toolbox_system::skel::shelf::{Outcome, SkelRow};
 use super::MaintenancePage;
 use crate::command::{Command, MaintenanceCommand};
 use crate::maintenance::{Maintenance, MaintenanceProblem};
+use crate::page_service::Services;
 use crate::programs::Programs;
 use crate::testing::{PLAN_RUNNING, PageFixture, PageState, button_kind};
 
@@ -46,7 +47,10 @@ fn page(fixture: PageFixture) -> Page {
 fn with(programs: Programs, maintenance: Maintenance) -> PageFixture {
     PageFixture {
         programs: Some(programs),
-        maintenance,
+        services: Services {
+            maintenance,
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
 }
@@ -253,7 +257,7 @@ fn a_chosen_setting_is_reset_after_the_question_lists_its_files() {
     );
 
     maintenance.choose("kitty", Toggle::On);
-    harness.state_mut().fixture.maintenance = maintenance;
+    harness.state_mut().fixture.services.maintenance = maintenance;
     harness.run();
     harness.get_by_label("Reset selected…").click();
     harness.run();

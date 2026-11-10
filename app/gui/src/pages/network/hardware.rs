@@ -8,7 +8,7 @@ use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, card, empty_state, pill
 use toolbox_gui_kit::{UiExt as _, icons};
 
 use crate::i18n;
-use crate::network::{Hardware, Read};
+use crate::network::{Hardware, Network, Read};
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row};
 use crate::share::view::copy;
@@ -18,7 +18,7 @@ const COPY_WIDTH: f32 = 150.0;
 pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let hardware = context.network.hardware();
+    let hardware = context.service::<Network>().hardware();
     let devices = hardware.map(devices).unwrap_or_default();
 
     ui.horizontal(|ui| {

@@ -18,6 +18,7 @@ use toolbox_plan::PackageName;
 use super::{PackagesPage, row};
 use crate::command::{Command, PackagesCommand};
 use crate::packages::{Details, Packages, Read};
+use crate::page_service::Services;
 use crate::testing::{
     PageFixture, assert_header, assert_rows_hold_their_content, assert_text_beside_picture,
     body_font, measured, picture_beside, rect_of,
@@ -108,7 +109,10 @@ pub(super) fn fixture(details: Option<Details>) -> PageFixture {
     snapshot.insert(SyncPackages(BTreeSet::from(offered)));
 
     PageFixture {
-        packages: Packages::showing(Read::Known(catalog()), details),
+        services: Services {
+            packages: Packages::showing(Read::Known(catalog()), details),
+            ..Services::default()
+        },
         ..PageFixture::with_snapshot(snapshot)
     }
 }
@@ -247,7 +251,10 @@ fn space_on_a_row_opens_its_details_and_escape_goes_back() {
 #[test]
 fn an_unreadable_index_offers_to_read_again() {
     let fixture = PageFixture {
-        packages: Packages::showing(Read::Failed, None),
+        services: Services {
+            packages: Packages::showing(Read::Failed, None),
+            ..Services::default()
+        },
         ..PageFixture::default()
     };
 

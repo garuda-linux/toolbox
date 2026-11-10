@@ -22,6 +22,7 @@ use super::header::{refresh_header, search};
 use super::rows::refusal_banner;
 use super::{PageContext, PageView};
 use crate::command::ConfigsCommand;
+use crate::configs::Configs;
 use crate::i18n;
 
 const MIN_TEXT_HEIGHT: f32 = 120.0;
@@ -66,7 +67,7 @@ impl PageView for ConfigsPage {
         list::show(ui, context, &mut self.search, &mut self.expanded);
 
         let ctx = ui.ctx().clone();
-        let configs = context.configs;
+        let configs = context.service::<Configs>();
         let session = configs.session();
         match (session.phase() == Phase::Review, self.review_closed) {
             (false, _) => self.review_closed = false,
@@ -83,7 +84,7 @@ impl PageView for ConfigsPage {
 impl ConfigsPage {
     fn status(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
-        let session = context.configs.session();
+        let session = context.service::<Configs>().session();
         let Some(text) = texts::status(&ctx, session) else {
             return;
         };

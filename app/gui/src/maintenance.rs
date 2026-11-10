@@ -12,6 +12,7 @@ mod sample;
 mod tests;
 
 use std::path::Path;
+use std::sync::Arc;
 
 use jobs::Jobs;
 pub use jobs::MaintenanceSetup;
@@ -51,6 +52,8 @@ pub struct Maintenance {
     opening: Opening,
     /// `None` in tests that need no jobs: nothing is ranked or reset.
     jobs: Option<Jobs>,
+    /// Starts the tool that waited for its install.
+    launcher: Option<Arc<dyn Launcher>>,
 }
 
 impl Maintenance {
@@ -59,6 +62,14 @@ impl Maintenance {
             jobs: setup.map(|setup| Jobs::new(setup, ctx)),
             ..Self::default()
         }
+    }
+
+    pub fn set_launcher(&mut self, launcher: Option<Arc<dyn Launcher>>) {
+        self.launcher = launcher;
+    }
+
+    pub fn launcher(&self) -> Option<Arc<dyn Launcher>> {
+        self.launcher.clone()
     }
 
     /// Offers what `/etc/skel` holds now of `catalog`.

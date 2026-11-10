@@ -22,7 +22,7 @@ use super::PackagesPage;
 use super::detail::day;
 use crate::command::{PackagesCommand, UiCommand};
 use crate::i18n;
-use crate::packages::Read;
+use crate::packages::{Packages, Read};
 use crate::page::PageId;
 use crate::pages::PageContext;
 
@@ -35,7 +35,7 @@ pub fn rows_of(page: &mut PackagesPage, context: &PageContext<'_>) -> Option<Arc
         context.commands.send(PackagesCommand::OpenAur);
     }
 
-    let catalog = context.packages.aur().known()?;
+    let catalog = context.service::<Packages>().aur().known()?;
     let search = page.search.clone();
     Some(page.aur_view.get(&[&search], Same::of(catalog), || {
         let _build = tracing::trace_span!("filter aur packages").entered();
@@ -73,7 +73,7 @@ pub fn body(
     places: Option<&[usize]>,
 ) {
     let ctx = ui.ctx().clone();
-    let catalog = match context.packages.aur() {
+    let catalog = match context.service::<Packages>().aur() {
         Read::Known(catalog) => Arc::clone(catalog),
         Read::Loading => {
             ui.vertical_centered(|ui| {
@@ -126,7 +126,7 @@ pub fn body(
 /// Where the list comes from and what its packages are, one line under
 /// the chips as [`off_hint`] is, once the copy is read.
 pub fn note(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(catalog) = context.packages.aur().known() else {
+    let Some(catalog) = context.service::<Packages>().aur().known() else {
         return;
     };
 

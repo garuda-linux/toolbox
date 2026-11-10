@@ -23,7 +23,7 @@ use super::PackagesPage;
 use super::row::{self, PackageRow, Row};
 use crate::command::PackagesCommand;
 use crate::i18n;
-use crate::packages::Read;
+use crate::packages::{Packages, Read};
 use crate::pages::rows::{Initial, package_picture};
 use crate::pages::{PageContext, plan_running};
 
@@ -178,7 +178,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
     }
 
     let Some(details) = context
-        .packages
+        .service::<Packages>()
         .details()
         .filter(|details| details.package == package)
     else {
@@ -270,7 +270,11 @@ fn rule(ui: &mut Ui) {
 }
 
 fn catalog(context: &PageContext<'_>) -> Option<Arc<Catalog>> {
-    context.packages.index().known().map(Arc::clone)
+    context
+        .service::<Packages>()
+        .index()
+        .known()
+        .map(Arc::clone)
 }
 
 fn loading(ui: &mut Ui) {

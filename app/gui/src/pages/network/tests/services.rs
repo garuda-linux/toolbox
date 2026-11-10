@@ -7,6 +7,7 @@ use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
 use toolbox_plan::UnitName;
 
 use super::{NetworkPage, facts, network};
+use crate::page_service::Services;
 use crate::testing::PageFixture;
 use crate::units::{UnitListing, Units};
 
@@ -24,7 +25,10 @@ fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
     snapshot.insert(facts());
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
-        network: network(),
+        services: Services {
+            network: network(),
+            ..Services::default()
+        },
         units: Units {
             system: UnitListing::Loaded(Arc::new(vec![manager])),
             ..Units::default()

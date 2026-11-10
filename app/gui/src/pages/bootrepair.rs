@@ -21,6 +21,7 @@ use toolbox_plan::RootLayout;
 use self::dialog::Dialog;
 use super::header::refresh_header;
 use super::{PageContext, PageView};
+use crate::bootrepair::BootRepair;
 use crate::command::BootRepairCommand;
 use crate::i18n;
 
@@ -54,7 +55,7 @@ impl PageView for BootRepairPage {
         let _ui = tracing::trace_span!("boot repair ui").entered();
         let ctx = ui.ctx().clone();
         let text = |id: &str| i18n::text(&ctx, id).into_owned();
-        let repair = context.boot_repair;
+        let repair = context.service::<BootRepair>();
         notes(ui, context);
 
         let state = page::state(repair.offer(), repair.facts());
@@ -112,7 +113,7 @@ impl PageView for BootRepairPage {
 fn notes(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let repair = context.boot_repair;
+    let repair = context.service::<BootRepair>();
     if repair.offer() == Offer::Test {
         banner(ui, Tone::Warning, &text("repair-test-mode"), &[]);
         ui.add_space(ui.tokens().sizes.card_gap);
@@ -135,7 +136,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
 fn progress(ui: &mut Ui, context: &PageContext<'_>, dismiss: &str) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let progress = context.boot_repair.progress();
+    let progress = context.service::<BootRepair>().progress();
     let Some(said) = texts::progress(&ctx, progress) else {
         return;
     };

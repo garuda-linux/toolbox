@@ -11,11 +11,12 @@ use toolbox_system::skel::shelf::SkelRow;
 use super::heading;
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, confirming: &mut bool) {
     let ctx = ui.ctx().clone();
-    let shelf = context.maintenance.shelf();
+    let shelf = context.service::<Maintenance>().shelf();
     heading(ui, icons::DOCUMENT_REVERT, "maintenance-reset");
     if shelf.rows().is_empty() {
         empty_state(
@@ -65,7 +66,11 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, confirming: &mut bool) {
 }
 
 fn entry_row(ui: &mut Ui, context: &PageContext<'_>, entry: &SkelRow, resetting: bool) {
-    let on = context.maintenance.shelf().is_chosen(&entry.entry);
+    let on = context
+        .service::<Maintenance>()
+        .shelf()
+        .is_chosen(&entry.entry);
+
     let files = entry.targets.join("\n");
     let line = i18n::text_with(
         ui.ctx(),
@@ -88,7 +93,7 @@ fn entry_row(ui: &mut Ui, context: &PageContext<'_>, entry: &SkelRow, resetting:
 }
 
 fn outcome(ui: &mut Ui, context: &PageContext<'_>) {
-    let shelf = context.maintenance.shelf();
+    let shelf = context.service::<Maintenance>().shelf();
     let outcome = shelf.outcome();
     if !outcome.done || shelf.resetting() {
         return;
@@ -108,7 +113,7 @@ fn outcome(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 fn ask(ctx: &egui::Context, context: &PageContext<'_>, confirming: &mut bool) {
-    let shelf = context.maintenance.shelf();
+    let shelf = context.service::<Maintenance>().shelf();
     let count = shelf.chosen_count().to_string();
     let title = i18n::text_with(ctx, "maintenance-reset-question", &[("count", &count)]);
     let close = i18n::text(ctx, "dialog-close");

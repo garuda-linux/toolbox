@@ -10,7 +10,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 
 use crate::command::NetworkCommand;
 use crate::i18n;
-use crate::network::{Address, Read};
+use crate::network::{Address, Network, Read};
 use crate::pages::rows::more::{item, more};
 use crate::pages::setting_row::{Words, row, stated_row, switch_row};
 use crate::pages::{PageContext, heading};
@@ -54,7 +54,7 @@ fn fact(ui: &mut Ui, first: bool, title: &str, value: Value<'_>) {
 
 fn connection(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    let network = context.network;
+    let network = context.service::<Network>();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     heading(ui, icons::NETWORK_CONNECT, "network-connection");
 
@@ -115,7 +115,7 @@ const fn internet_state(connectivity: Option<Connectivity>) -> (&'static str, To
 fn address(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let address = context.network.address();
+    let address = context.service::<Network>().address();
     let shown = match address {
         Address::NotAsked => String::new(),
         Address::Loading => text("network-address-asking"),
@@ -164,7 +164,7 @@ fn address(ui: &mut Ui, context: &PageContext<'_>) {
 fn radios(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     heading(ui, icons::PREFERENCES_SYSTEM_BLUETOOTH, "network-radios");
-    let status = context.network.status();
+    let status = context.service::<Network>().status();
     let radios = status
         .and_then(|status| status.radios.known())
         .map_or(&[][..], Vec::as_slice);
@@ -172,7 +172,7 @@ fn radios(ui: &mut Ui, context: &PageContext<'_>) {
     let access = status.map_or(RadioAccess::Allowed, |status| status.access);
     let any = radios.iter().any(|radio| radio.kind.is_some());
 
-    notes(ui, access, any, context.network.radio_failed());
+    notes(ui, access, any, context.service::<Network>().radio_failed());
     let allowed = access == RadioAccess::Allowed;
     card(ui, |ui| {
         for (first, kind, target, id) in [

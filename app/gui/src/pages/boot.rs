@@ -23,6 +23,7 @@ use toolbox_system::{FailedProbes, Host, Menu, Probe};
 use super::header::refresh_header;
 use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
+use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::heading;
@@ -135,7 +136,7 @@ impl BootPage {
     fn kernel(&mut self, ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
         if let Some(sent) = self.sent.take() {
             let refused = context
-                .boot
+                .service::<Boot>()
                 .refusal()
                 .is_some_and(|refusal| refusal.value == sent);
 
@@ -167,7 +168,7 @@ fn vm_banner(ui: &mut Ui, context: &PageContext<'_>, splash: bool) {
 
 /// Why the last edit was not queued, until dismissed.
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = context.boot.refusal() else {
+    let Some(refusal) = context.service::<Boot>().refusal() else {
         return;
     };
 
@@ -218,11 +219,11 @@ fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) {
 
 /// A kernel the Kernels page proposed as the default, until answered.
 fn proposal(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
-    let Some(kernel) = context.boot.proposal() else {
+    let Some(kernel) = context.service::<Boot>().proposal() else {
         return;
     };
 
-    let menu = context.boot.menu();
+    let menu = context.service::<Boot>().menu();
     let entry = menu.kernel_entry(kernel);
     let current = page.entry_value(menu.known());
     let state = if matches!(menu, Menu::NotAsked | Menu::Loading) {

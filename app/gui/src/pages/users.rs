@@ -25,6 +25,7 @@ use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::UsersCommand;
 use crate::i18n;
+use crate::users::Users;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
@@ -165,7 +166,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
         }
     }
 
-    let run = context.users.run();
+    let run = context.service::<Users>().run();
     if let Some(text) = texts::run(&ctx, run) {
         let tone = match run {
             PageRun::Failed(..) => Tone::Error,
@@ -185,7 +186,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
         ui.add_space(ui.tokens().sizes.card_gap);
     }
 
-    if let Some(text) = texts::locks(&ctx, context.users.locks()) {
+    if let Some(text) = texts::locks(&ctx, context.service::<Users>().locks()) {
         banner(ui, Tone::Neutral, &text, &[]);
         ui.add_space(ui.tokens().sizes.card_gap);
     }

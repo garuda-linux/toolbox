@@ -181,7 +181,10 @@ prints the `String` as the usage error.
    `PageId::ALL` drives the sidebar, the palette and the start options.
 5. A service in `app/gui/src/<name>.rs` for reads outside the snapshot, and
    its dry-run stand-in in `ports.rs` when the read changes or leaves the
-   machine.
+   machine. It implements `PageService` (`app/gui/src/page_service.rs`) and
+   answers with `AppCommand`s. Its field in `Services`, its line in
+   `Services::all_mut` and its `Provides` impl are all `App` needs. The
+   page reads it with `context.service::<Name>()`.
 6. Texts in `crates/services/i18n/en-US/<name>.ftl` and `de-DE/<name>.ftl`.
 7. CLI commands (`crates/cli/src/args/*`, `crates/commands/src/*`).
    `crates/commands/src/parity.rs` fails for a queue domain without one.

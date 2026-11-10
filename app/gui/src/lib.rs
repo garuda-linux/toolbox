@@ -20,6 +20,7 @@ pub mod network;
 pub mod news;
 pub mod notifications;
 pub mod packages;
+pub mod page_service;
 pub mod page_ui;
 pub mod pages;
 pub mod panics;

@@ -1,12 +1,11 @@
 //! What the app does with a click on Boot options and with the page's
 //! background results.
 
-use toolbox_core::domains::{BootLoader, LoaderSettingsDomain};
+use toolbox_core::domains::LoaderSettingsDomain;
 use toolbox_core::features::boot::edit::{Edit, edit};
-use toolbox_core::features::boot::grub;
 
 use super::App;
-use crate::boot::{BootRefusal, FileKind};
+use crate::boot::BootRefusal;
 use crate::command::BootCommand;
 use crate::page::PageId;
 
@@ -21,63 +20,34 @@ impl App {
                     LoaderSettingsDomain::want(changes, setting, snapshot);
                 });
             }
-            BootCommand::DismissRefusal => self.boot.set_refusal(None),
+            BootCommand::DismissRefusal => self.services.boot.set_refusal(None),
             BootCommand::Refresh => {
-                self.boot.refresh();
+                self.services.boot.refresh();
                 self.read_system();
             }
             BootCommand::Choose {
                 kind,
                 title,
                 filter,
-            } => self.boot.choose(kind, &title, &filter),
+            } => self.services.boot.choose(kind, &title, &filter),
             BootCommand::Propose(kernel) => {
-                self.boot.propose(Some(kernel));
+                self.services.boot.propose(Some(kernel));
                 self.state.page = PageId::Boot;
             }
-            BootCommand::DropProposal => self.boot.propose(None),
-        }
-    }
-
-    /// The menu's first read waits for the page, and a chosen file is
-    /// queued as soon as it comes.
-    pub(super) fn take_boot(&mut self) {
-        if self.state.page == PageId::Boot {
-            let snapshot = self.current_snapshot();
-            let sdboot = snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot);
-
-            self.boot.open(sdboot || grub(&snapshot).is_ok());
-        }
-
-        let before = self.boot.menu_identity();
-        let picked = self.boot.take();
-
-        // The systemd-boot settings come with the menu, and a wish the file
-        // now meets drops out of the queue.
-        if self.boot.menu_identity() != before {
-            self.combine();
-            self.queue.meet(&self.seen);
-        }
-
-        if let Some(picked) = picked {
-            let change = match picked.kind {
-                FileKind::Background => Edit::Background(picked.path),
-                FileKind::Theme => Edit::Theme(picked.path),
-            };
-
-            self.edit_boot(change);
+            BootCommand::DropProposal => self.services.boot.propose(None),
         }
     }
 
     /// A refusal stays on the page until dismissed or the next edit is taken.
-    fn edit_boot(&mut self, change: Edit) {
+    pub(super) fn edit_boot(&mut self, change: Edit) {
         let value = change.value();
         let snapshot = self.current_snapshot();
         let result = self.queue.edit(&snapshot, |changes, snapshot| {
             edit(change, changes, snapshot)
         });
 
-        self.boot
+        self.services
+            .boot
             .set_refusal(result.err().map(|problem| BootRefusal {
                 code: problem.code(),
                 value,

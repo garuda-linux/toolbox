@@ -14,6 +14,7 @@ use crate::command::{UserEdit, UsersCommand};
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::more::text_item;
+use crate::users::Users;
 
 const CONTROLS_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.row_actions_narrow;
 
@@ -65,7 +66,7 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow<'_>) {
             status_dot(ui, &text("users-tag-you"), Tone::Accent);
         }
 
-        if context.users.locks().of(&row.user.name) == Some(true) {
+        if context.service::<Users>().locks().of(&row.user.name) == Some(true) {
             status_dot(ui, &text("users-tag-locked"), Tone::Warning);
         }
 
@@ -150,7 +151,7 @@ fn menu(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow<'_>, dialog: &mut 
     }
 
     if !row.current {
-        let known = context.users.locks().of(name);
+        let known = context.service::<Users>().locks().of(name);
         let action = LockAction::of(row.queued.lock, known);
         let id = match action {
             Some(LockAction::Lock) => "users-lock",

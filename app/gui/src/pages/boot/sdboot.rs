@@ -11,13 +11,14 @@ use toolbox_plan::sdboot::{LoaderSetting, MAX_ENTRIES, SdBootMenu};
 use toolbox_system::Menu;
 
 use super::{heading, note};
+use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row};
 
 pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
-    let menu = context.boot.menu();
+    let menu = context.service::<Boot>().menu();
 
     heading(ui, icons::FORMAT_LIST_UNORDERED, "boot-menu");
 
@@ -70,11 +71,11 @@ fn counts(ui: &mut Ui, menu: &SdBootMenu) {
 
 /// The kernel's image is saved by its flavour, as the menu card saves it.
 pub fn proposal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(kernel) = context.boot.proposal() else {
+    let Some(kernel) = context.service::<Boot>().proposal() else {
         return;
     };
 
-    let menu = context.boot.menu();
+    let menu = context.service::<Boot>().menu();
     let Some(sdboot) = menu.sdboot() else {
         let state = if matches!(menu, Menu::NotAsked | Menu::Loading) {
             "loading"

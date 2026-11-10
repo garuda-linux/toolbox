@@ -10,6 +10,7 @@ use toolbox_gui_kit::palette::{self, Palette};
 use toolbox_gui_kit::terminal_colors::{Ansi, resolve};
 use toolbox_pty::Run;
 
+use crate::diagnostics::Diagnostics;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::share::view::padded_card;
@@ -19,7 +20,7 @@ use crate::share::view::padded_card;
 const MIN_HEIGHT: f32 = 240.0;
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
-    let lines = context.diagnostics.lines();
+    let lines = context.service::<Diagnostics>().lines();
     let palette = palette::current(ui.ctx());
     let ansi = Ansi::of(&palette, ui.visuals().dark_mode);
     let font = TextStyle::Monospace.resolve(ui.style());

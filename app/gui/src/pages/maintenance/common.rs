@@ -9,6 +9,7 @@ use toolbox_gui_kit::widgets::{ButtonKind, card, card_row, loading_label};
 use super::{heading, plan_button, row};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
 use crate::pages::rows::more::{item, more};
 
@@ -96,7 +97,7 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
     let ctx = ui.ctx().clone();
     let id = format!("maintenance-tool-{}", tool.tool);
     let mut detail = i18n::text(&ctx, &format!("{id}-detail")).into_owned();
-    let ranking = tool.tool == CHAOTIC_MIRRORS && context.maintenance.ranking();
+    let ranking = tool.tool == CHAOTIC_MIRRORS && context.service::<Maintenance>().ranking();
     let note = if ranking {
         Some("maintenance-ranking")
     } else if tool.installed {

@@ -7,23 +7,22 @@ use super::App;
 use crate::apply::ApplyCommand;
 use crate::command::ConfigsCommand;
 use crate::configs::Act;
-use crate::page::PageId;
 use crate::pages::ConfigsRefusal;
 
 impl App {
     pub(super) fn run_configs(&mut self, command: ConfigsCommand) {
         let act = match command {
             ConfigsCommand::Refresh => {
-                self.configs.refresh();
+                self.services.configs.refresh();
                 None
             }
             ConfigsCommand::Open(key) => {
-                let result = self.configs.open_home(&key);
+                let result = self.services.configs.open_home(&key);
                 self.refuse_configs(result, key);
                 None
             }
             ConfigsCommand::Edit(key) => {
-                let (result, act) = match self.configs.edit(&key) {
+                let (result, act) = match self.services.configs.edit(&key) {
                     Ok(act) => (Ok(()), act),
                     Err(code) => (Err(code), None),
                 };
@@ -32,20 +31,20 @@ impl App {
                 act
             }
             ConfigsCommand::View(key) => {
-                let result = self.configs.view(&key);
+                let result = self.services.configs.view(&key);
                 self.refuse_configs(result, key);
                 None
             }
             ConfigsCommand::CloseView => {
-                self.configs.close_view();
+                self.services.configs.close_view();
                 None
             }
-            ConfigsCommand::Apply => self.configs.apply(),
-            ConfigsCommand::EditAgain => self.configs.edit_again(),
-            ConfigsCommand::Reread => self.configs.reread(),
-            ConfigsCommand::Discard => self.configs.discard(),
+            ConfigsCommand::Apply => self.services.configs.apply(),
+            ConfigsCommand::EditAgain => self.services.configs.edit_again(),
+            ConfigsCommand::Reread => self.services.configs.reread(),
+            ConfigsCommand::Discard => self.services.configs.discard(),
             ConfigsCommand::Dismiss => {
-                self.configs.dismiss();
+                self.services.configs.dismiss();
                 None
             }
             ConfigsCommand::ShowConsole => {
@@ -66,29 +65,12 @@ impl App {
         match act {
             Some(Act::Run(plan)) => {
                 if !self.run_at_once(plan) {
-                    let next = self.configs.plan_refused();
+                    let next = self.services.configs.plan_refused();
                     self.act_configs(next);
                 }
             }
             Some(Act::Cancel) => self.to_service(ApplyCommand::Cancel),
             None => {}
-        }
-    }
-
-    /// The page looks for its files once it shows, and takes what its
-    /// work brought. An edit that needs the user brings the page back.
-    pub(super) fn take_configs(&mut self) {
-        if self.state.page == PageId::Configs {
-            self.configs.open();
-        }
-
-        let taken = self.configs.take();
-        for act in taken.acts {
-            self.act_configs(Some(act));
-        }
-
-        if taken.review {
-            self.state.console_open = false;
         }
     }
 

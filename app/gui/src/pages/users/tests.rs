@@ -15,6 +15,7 @@ use toolbox_system::Locks;
 
 use super::UsersPage;
 use crate::command::{Command, UserEdit, UsersCommand};
+use crate::page_service::Services;
 use crate::pages::{Refusals, UsersRefusal};
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
 use crate::users::Users;
@@ -86,7 +87,10 @@ pub fn page(users: Users, refusals: Refusals) -> Shown {
 pub fn page_on(snapshot: Snapshot, users: Users, refusals: Refusals) -> Shown {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
-        users,
+        services: Services {
+            users,
+            ..Services::default()
+        },
         refusals,
         ..PageFixture::default()
     }
@@ -288,7 +292,10 @@ fn every_row_offers_edit_and_its_menu_at_its_right() {
 fn the_menu_rests_the_password_while_a_plan_runs() {
     let mut harness = PageFixture {
         snapshot: Arc::new(system()),
-        users: unlocked(),
+        services: Services {
+            users: unlocked(),
+            ..Services::default()
+        },
         busy: true,
         ..PageFixture::default()
     }

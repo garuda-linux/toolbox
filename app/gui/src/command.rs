@@ -111,6 +111,8 @@ pub enum AppCommand {
     Configs(ConfigsCommand),
     BootRepair(BootRepairCommand),
     Console(ConsoleCommand),
+    /// What a page service asks for once its work came in.
+    Answer(crate::page_service::Answer),
     /// Another start asked for the window, maybe on a page.
     Activated(Arrival),
 }

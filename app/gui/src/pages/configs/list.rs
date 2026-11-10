@@ -11,6 +11,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::texts;
 use crate::command::ConfigsCommand;
+use crate::configs::Configs;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::more::{item, more};
@@ -46,7 +47,7 @@ pub fn show(
 ) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let configs = context.configs;
+    let configs = context.service::<Configs>();
     let catalog = match configs.catalog() {
         Ok(catalog) => catalog,
         Err(problem) => {
@@ -262,8 +263,8 @@ fn action(ui: &mut Ui, context: &PageContext<'_>, row: &Row) -> bool {
 }
 
 /// One file is edited at a time, and not while another plan runs.
-const fn editable(context: &PageContext<'_>) -> bool {
-    context.configs.session().phase().is_free() && !context.busy
+fn editable(context: &PageContext<'_>) -> bool {
+    context.service::<Configs>().session().phase().is_free() && !context.busy
 }
 
 fn hover(ctx: &egui::Context, row: &Row) -> String {
