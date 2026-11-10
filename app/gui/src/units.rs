@@ -169,7 +169,8 @@ fn failure(scope: UnitScope, error: &CallError) -> UnitsFailure {
     match error {
         CallError::Unavailable => UnitsFailure::Unavailable,
         CallError::Denied => UnitsFailure::Denied,
-        CallError::Failed(reason) => {
+        CallError::Failed(_) | CallError::Bus { error: _ } => {
+            let reason = error.reason().unwrap_or_default();
             tracing::warn!("listing the {} units: {reason}", scope.as_str());
             UnitsFailure::Failed
         }

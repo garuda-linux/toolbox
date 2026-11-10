@@ -181,6 +181,10 @@ fn lost(problems: &[RestoreProblem]) -> Option<String> {
         | RestoreProblem::Invalid {
             domain: _,
             reason: _,
+        }
+        | RestoreProblem::Malformed {
+            domain: _,
+            error: _,
         } => format!(
             "{} could not be restored, the log says why",
             changes(problems.len())

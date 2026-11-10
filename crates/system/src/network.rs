@@ -135,7 +135,7 @@ impl NetworkSource for SystemNetwork {
         let entries = match std::fs::read_dir(&folder) {
             Ok(entries) => entries,
             Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(Vec::new()),
-            Err(error) => return Err(from_io(folder.display(), &error)),
+            Err(error) => return Err(from_io(folder.display(), error)),
         };
 
         let mut switches: Vec<PathBuf> = entries

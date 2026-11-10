@@ -4,6 +4,7 @@
 #[cfg(test)]
 mod tests;
 
+use std::borrow::Cow;
 use std::path::PathBuf;
 use std::time::SystemTime;
 
@@ -46,7 +47,7 @@ pub struct Overview<'status> {
     pub health_messages: Vec<&'status str>,
     /// What the facts read adds, quiet until it was read.
     pub machine: MachineChecks<'status>,
-    pub failed: Vec<(Check, &'status str)>,
+    pub failed: Vec<(Check, Cow<'status, str>)>,
     /// The checks that gave an answer, in the order the all clear lists.
     pub ran: Vec<Check>,
 }
@@ -213,9 +214,10 @@ fn listed(updates: &[PendingUpdate], aur: bool) -> impl Iterator<Item = Pending<
     })
 }
 
-fn reason<T>(result: &Result<T, ProbeError>) -> Option<&str> {
+fn reason<T>(result: &Result<T, ProbeError>) -> Option<Cow<'_, str>> {
     match result {
-        Err(ProbeError::Failed(reason)) => Some(reason),
+        Err(ProbeError::Failed(reason)) => Some(Cow::Borrowed(reason)),
+        Err(error @ ProbeError::Io { what: _, error: _ }) => error.reason().map(Cow::Owned),
         Ok(_) | Err(ProbeError::Unavailable) => None,
     }
 }

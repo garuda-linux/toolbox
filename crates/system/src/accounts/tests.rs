@@ -101,7 +101,10 @@ fn an_unreadable_file_is_a_failure() {
 
     let accounts = EtcAccounts::new(etc.path());
 
-    assert!(matches!(accounts.accounts(), Err(ProbeError::Failed(_))));
+    assert!(matches!(
+        accounts.accounts(),
+        Err(ProbeError::Io { what: _, error: _ })
+    ));
 }
 
 #[test]

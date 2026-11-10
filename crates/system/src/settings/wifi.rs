@@ -32,7 +32,7 @@ const IWD: &str = "iwd";
 /// folder, [`ProbeError::Failed`] when it cannot be listed.
 pub(super) fn backend(root: &Path) -> Result<WifiBackend, ProbeError> {
     let folder = root.join(NETWORKMANAGER_CONF_D);
-    let own = names(&folder).map_err(|error| from_io(folder.display(), &error))?;
+    let own = names(&folder).map_err(|error| from_io(folder.display(), error))?;
     let boot = optional_names(&root.join(BOOT_CONF_D));
     let packaged = optional_names(&root.join(PACKAGE_CONF_D));
 

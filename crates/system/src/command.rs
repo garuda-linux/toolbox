@@ -88,7 +88,7 @@ pub fn run_within(
     )
     .map_err(|error| match error {
         CaptureError::Missing => ProbeError::Unavailable,
-        CaptureError::Failed(error) => from_io(&command_line, &error),
+        CaptureError::Failed(error) => from_io(&command_line, error),
         CaptureError::TimedOut => ProbeError::Failed(format!(
             "{command_line}: no answer within {} s, stopped",
             deadline.as_secs_f32()

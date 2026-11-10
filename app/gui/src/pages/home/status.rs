@@ -154,7 +154,9 @@ fn restart_problem(ui: &mut Ui, context: &PageContext<'_>) {
 
     let id = match error {
         CallError::Denied => "home-restart-denied",
-        CallError::Unavailable | CallError::Failed(_) => "home-restart-failed",
+        CallError::Unavailable | CallError::Failed(_) | CallError::Bus { error: _ } => {
+            "home-restart-failed"
+        }
     };
 
     banner(ui, Tone::Error, &i18n::text(ui.ctx(), id), &[]);

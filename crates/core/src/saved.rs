@@ -7,6 +7,7 @@
 mod tests;
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -56,7 +57,7 @@ pub struct SavedChange {
     pub outcome: Outcome,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum RestoreProblem {
     #[error("the saved changes have version {0}, this app reads version {SAVED_VERSION}")]
     Version(u32),
@@ -66,7 +67,26 @@ pub enum RestoreProblem {
     UnknownDomain(String),
     #[error("a saved `{domain}` change is invalid: {reason}")]
     Invalid { domain: String, reason: String },
+    /// The item or wish does not decode. Shared so the problem stays
+    /// `Clone`.
+    #[error("a saved `{domain}` change is invalid: {error}")]
+    Malformed {
+        domain: String,
+        #[source]
+        error: Arc<serde_json::Error>,
+    },
 }
+
+/// `serde_json`'s errors have no equality, so two count as equal when they
+/// read the same.
+impl PartialEq for RestoreProblem {
+    fn eq(&self, other: &Self) -> bool {
+        self.to_string() == other.to_string()
+            && std::mem::discriminant(self) == std::mem::discriminant(other)
+    }
+}
+
+impl Eq for RestoreProblem {}
 
 /// Two domains with one id: the saved changes of one would come back as
 /// the other's.
@@ -137,9 +157,9 @@ fn restore<D>(
 where
     D: Domain,
 {
-    let invalid = |error: serde_json::Error| RestoreProblem::Invalid {
+    let invalid = |error: serde_json::Error| RestoreProblem::Malformed {
         domain: saved.domain.clone(),
-        reason: error.to_string(),
+        error: Arc::new(error),
     };
 
     let item: D::Item = serde_json::from_value(saved.item.clone()).map_err(invalid)?;

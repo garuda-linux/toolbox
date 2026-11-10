@@ -75,5 +75,11 @@ fn other_errors_keep_their_name_and_text() {
 fn errors_without_a_name_keep_their_text() {
     let error = zbus::Error::Failure("handshake".to_owned());
 
-    assert_eq!(classify(&error), CallError::Failed(error.to_string()));
+    assert_eq!(
+        classify(&error),
+        CallError::Bus {
+            error: error.clone()
+        }
+    );
+    assert_eq!(classify(&error).reason(), Some(error.to_string()));
 }

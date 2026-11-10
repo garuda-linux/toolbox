@@ -60,7 +60,7 @@ pub(super) fn loader(root: &Path) -> Result<BootLoader, ProbeError> {
     let info = match std::fs::read(&info_path) {
         Ok(info) => Some(info),
         Err(error) if error.kind() == io::ErrorKind::NotFound => None,
-        Err(error) => return Err(from_io(info_path.display(), &error)),
+        Err(error) => return Err(from_io(info_path.display(), error)),
     };
 
     let install_conf = files::read_optional(&root.join(INSTALL_CONF))?;

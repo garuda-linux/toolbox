@@ -117,8 +117,8 @@ fn dkms(args: &DkmsBuild, snapshot: &Snapshot, changes: &mut ChangeSet) -> Resul
     let entries = match Dkms::system().status() {
         Ok(entries) => entries,
         Err(ProbeError::Unavailable) => Vec::new(),
-        Err(ProbeError::Failed(reason)) => {
-            tracing::warn!("dkms status: {reason}");
+        Err(error) => {
+            tracing::warn!("dkms status: {error}");
             return Err(Refused::Unavailable(
                 "not available: dkms could not list its modules".to_owned(),
             ));

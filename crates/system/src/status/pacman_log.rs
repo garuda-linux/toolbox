@@ -61,7 +61,7 @@ impl UpdateLogSource for PacmanLog {
     fn last_update(&self) -> Result<Option<SystemTime>, ProbeError> {
         let mut file = open_log(&self.path)?;
 
-        last_in_tail(&mut file, TAIL_BYTES).map_err(|error| unreadable(&self.path, &error))
+        last_in_tail(&mut file, TAIL_BYTES).map_err(|error| unreadable(&self.path, error))
     }
 }
 
@@ -69,8 +69,8 @@ impl UpdateLogSource for PacmanLog {
 /// depends on the file system (tmpfs seeks to 0 and reads nothing, a "no
 /// update").
 fn open_log(path: &Path) -> Result<File, ProbeError> {
-    let file = File::open(path).map_err(|error| unreadable(path, &error))?;
-    let kind = file.metadata().map_err(|error| unreadable(path, &error))?;
+    let file = File::open(path).map_err(|error| unreadable(path, error))?;
+    let kind = file.metadata().map_err(|error| unreadable(path, error))?;
 
     if !kind.is_file() {
         return Err(ProbeError::Failed(format!("{} is no file", path.display())));
@@ -151,7 +151,7 @@ fn completed_at(line: &str) -> Option<SystemTime> {
         .flatten()
 }
 
-fn unreadable(path: &Path, error: &io::Error) -> ProbeError {
+fn unreadable(path: &Path, error: io::Error) -> ProbeError {
     if error.kind() == io::ErrorKind::PermissionDenied {
         tracing::info!("{}: {error}", path.display());
         ProbeError::Unavailable

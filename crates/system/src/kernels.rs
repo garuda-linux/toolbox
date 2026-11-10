@@ -108,7 +108,7 @@ impl KernelSource for SystemKernels {
     fn releases(&self) -> Result<KernelReleases, ProbeError> {
         let folder = self.root.join(MODULES);
         let entries =
-            std::fs::read_dir(&folder).map_err(|error| from_io(folder.display(), &error))?;
+            std::fs::read_dir(&folder).map_err(|error| from_io(folder.display(), error))?;
 
         let mut releases: Vec<KernelRelease> = entries
             .filter_map(Result::ok)

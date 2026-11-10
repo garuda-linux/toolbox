@@ -163,7 +163,9 @@ impl LinuxPackageSource for Libalpm {
         let sync = match self.sync.read(&conf) {
             Ok(read) => read.linux.clone(),
             Err(ProbeError::Unavailable) => Vec::new(),
-            Err(error @ ProbeError::Failed(_)) => return Err(error),
+            Err(error @ (ProbeError::Failed(_) | ProbeError::Io { what: _, error: _ })) => {
+                return Err(error);
+            }
         };
 
         Ok(LinuxPackages { sync, local })

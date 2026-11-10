@@ -121,7 +121,7 @@ fn conf_files(folder: &Path) -> Vec<PathBuf> {
         Ok(entries) => entries,
         Err(error) => {
             if error.kind() != std::io::ErrorKind::NotFound {
-                tracing::debug!("{}", from_io(folder.display(), &error));
+                tracing::debug!("{}", from_io(folder.display(), error));
             }
 
             return Vec::new();

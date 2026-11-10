@@ -108,7 +108,7 @@ impl MachineSource for SystemMachine {
 /// The bytes of the plain files right in `folder`. pacman keeps its
 /// downloads there, a sub folder holds partial downloads only.
 fn folder_size(folder: &Path) -> Result<u64, ProbeError> {
-    let entries = fs::read_dir(folder).map_err(|error| from_io(folder.display(), &error))?;
+    let entries = fs::read_dir(folder).map_err(|error| from_io(folder.display(), error))?;
 
     Ok(entries
         .filter_map(Result::ok)

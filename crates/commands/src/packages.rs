@@ -141,7 +141,7 @@ fn installed() -> Result<BTreeSet<PackageName>, ProbeError> {
     match Libalpm::system().installed() {
         Ok(installed) => Ok(installed.0),
         Err(ProbeError::Unavailable) => Ok(BTreeSet::new()),
-        Err(error @ ProbeError::Failed(_)) => Err(error),
+        Err(error) => Err(error),
     }
 }
 
@@ -225,8 +225,9 @@ fn aur_unreadable(error: &AurError, out: &mut Out<'_>) -> Exit {
 fn unreadable(error: &ProbeError, out: &mut Out<'_>) -> Exit {
     match error {
         ProbeError::Unavailable => unavailable("pacman's databases could not be read", out),
-        ProbeError::Failed(reason) => {
-            failure(out, "pacman's databases could not be read", reason);
+        ProbeError::Failed(_) | ProbeError::Io { what: _, error: _ } => {
+            let reason = error.reason().unwrap_or_default();
+            failure(out, "pacman's databases could not be read", &reason);
             Exit::Failure
         }
     }

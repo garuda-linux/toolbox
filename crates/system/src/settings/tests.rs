@@ -204,7 +204,7 @@ fn an_unreadable_garuda_update_config_is_a_failure() {
 
     assert!(matches!(
         settings.garuda_update(),
-        Err(ProbeError::Failed(reason)) if reason.contains("garuda-update/config")
+        Err(ProbeError::Io { what, error: _ }) if what.contains("garuda-update/config")
     ));
 }
 

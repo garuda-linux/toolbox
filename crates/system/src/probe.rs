@@ -89,7 +89,7 @@ pub fn failed_probes(issues: &[ProbeIssue]) -> FailedProbes {
     FailedProbes::new(
         issues
             .iter()
-            .filter(|issue| matches!(issue.error, ProbeError::Failed(_)))
+            .filter(|issue| issue.error.is_failure())
             .map(|issue| issue.probe),
     )
 }

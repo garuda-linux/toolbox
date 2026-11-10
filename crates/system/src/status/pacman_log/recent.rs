@@ -22,7 +22,7 @@ impl RecentLogSource for PacmanLog {
     fn recent(&self) -> Result<String, ProbeError> {
         let mut file = open_log(&self.path)?;
 
-        tail_text(&mut file, RECENT_BYTES).map_err(|error| unreadable(&self.path, &error))
+        tail_text(&mut file, RECENT_BYTES).map_err(|error| unreadable(&self.path, error))
     }
 }
 

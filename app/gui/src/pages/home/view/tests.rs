@@ -89,8 +89,8 @@ fn only_a_failed_check_is_listed_with_its_reason() {
     assert_eq!(
         overview.failed,
         [
-            (Check::Updates, "no database"),
-            (Check::Health, "no garuda-health"),
+            (Check::Updates, "no database".into()),
+            (Check::Health, "no garuda-health".into()),
         ]
     );
     assert_eq!(Overview::of(&quiet(), now()).failed, []);

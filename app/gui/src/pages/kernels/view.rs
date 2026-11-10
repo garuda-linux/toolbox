@@ -195,7 +195,8 @@ pub fn dkms_answer(answer: Result<Vec<DkmsEntry>, ProbeError>) -> Result<Dkms, D
     match answer {
         Ok(entries) => Ok(Dkms::Modules(entries)),
         Err(ProbeError::Unavailable) => Ok(Dkms::NotInstalled),
-        Err(ProbeError::Failed(reason)) => {
+        Err(error) => {
+            let reason = error.reason().unwrap_or_default();
             tracing::warn!("dkms status: {reason}");
             Err(DkmsFailure(reason))
         }

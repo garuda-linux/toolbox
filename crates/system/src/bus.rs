@@ -23,7 +23,7 @@ const DENIED: [&str; 3] = [
     "org.freedesktop.DBus.Error.AuthFailed",
 ];
 
-#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+#[derive(Clone, Debug, PartialEq, thiserror::Error)]
 pub enum CallError {
     /// No bus, or no service on it, for example a desktop without a
     /// notification daemon.
@@ -34,6 +34,27 @@ pub enum CallError {
     Denied,
     #[error("call failed: {0}")]
     Failed(String),
+    /// The bus's own error, kept as the source.
+    #[error("call failed: {error}")]
+    Bus {
+        #[source]
+        error: zbus::Error,
+    },
+}
+
+/// zbus compares its errors without claiming `Eq`. The other variants
+/// are plain values.
+impl Eq for CallError {}
+
+impl CallError {
+    /// What went wrong in words, for a log line.
+    pub fn reason(&self) -> Option<String> {
+        match self {
+            Self::Unavailable | Self::Denied => None,
+            Self::Failed(reason) => Some(reason.clone()),
+            Self::Bus { error } => Some(error.to_string()),
+        }
+    }
 }
 
 pub struct Method {
@@ -66,7 +87,9 @@ pub fn classify(error: &zbus::Error) -> CallError {
         return CallError::Unavailable;
     }
 
-    CallError::Failed(error.to_string())
+    CallError::Bus {
+        error: error.clone(),
+    }
 }
 
 fn from_name(name: &str, description: Option<&str>) -> CallError {

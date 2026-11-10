@@ -10,7 +10,7 @@ use parking_lot::Mutex;
 use tokio::runtime::Handle;
 use toolbox_core::Snapshot;
 use toolbox_gui_kit::Loadable;
-use toolbox_system::{Probe, ProbeError, ProbeIssue};
+use toolbox_system::{Probe, ProbeIssue};
 
 use crate::reader::{self, ReaderHandle};
 use crate::waking::Wake;
@@ -57,12 +57,11 @@ fn probed(snapshot: Snapshot, issues: &[ProbeIssue]) -> Probed {
         snapshot: Arc::new(snapshot),
         failed: issues
             .iter()
-            .filter_map(|issue| match &issue.error {
-                ProbeError::Failed(reason) => Some(FailedRead {
+            .filter_map(|issue| {
+                issue.error.reason().map(|reason| FailedRead {
                     probe: issue.probe,
-                    reason: reason.clone(),
-                }),
-                ProbeError::Unavailable => None,
+                    reason,
+                })
             })
             .collect(),
     }

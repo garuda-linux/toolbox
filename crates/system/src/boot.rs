@@ -203,7 +203,7 @@ impl BootSource for SystemBoot {
     fn plymouth(&self) -> Result<PlymouthState, ProbeError> {
         let folder = self.root.join(PLYMOUTH_THEMES);
         let entries =
-            std::fs::read_dir(&folder).map_err(|error| from_io(folder.display(), &error))?;
+            std::fs::read_dir(&folder).map_err(|error| from_io(folder.display(), error))?;
 
         let mut themes: Vec<PlymouthTheme> = entries
             .filter_map(Result::ok)

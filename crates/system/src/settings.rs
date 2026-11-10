@@ -118,7 +118,7 @@ impl SettingsSource for EtcSettings {
                     Err(ProbeError::Unavailable)
                 }
             }
-            Err(error) => Err(from_io(path.display(), &error)),
+            Err(error) => Err(from_io(path.display(), error)),
         }
     }
 

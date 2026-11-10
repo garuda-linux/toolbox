@@ -114,7 +114,8 @@ pub fn dkms(command: DkmsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit 
         match super::spinner::while_reading(quiet || out.quiet(), || Dkms::system().status()) {
             Ok(entries) => entries,
             Err(ProbeError::Unavailable) => Vec::new(),
-            Err(ProbeError::Failed(reason)) => {
+            Err(error) => {
+                let reason = error.reason().unwrap_or_default();
                 tracing::warn!("dkms status: {reason}");
                 failure(out, "dkms could not list its modules", &reason);
                 return Exit::Unavailable;

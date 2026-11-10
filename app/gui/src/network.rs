@@ -72,8 +72,8 @@ impl<T> Read<T> {
         match result {
             Ok(value) => Self::Known(value),
             Err(ProbeError::Unavailable) => Self::Unavailable,
-            Err(ProbeError::Failed(reason)) => {
-                tracing::warn!("{what}: {reason}");
+            Err(error) => {
+                tracing::warn!("{what}: {}", error.reason().unwrap_or_default());
                 Self::Failed
             }
         }
