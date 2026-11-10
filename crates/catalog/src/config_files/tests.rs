@@ -58,7 +58,7 @@ fn problem(text: &str) -> (String, Problem) {
         other @ (CatalogError::Read { path: _, error: _ }
         | CatalogError::Syntax {
             source_name: _,
-            message: _,
+            error: _,
         }) => panic!("not an invalid entry: {other}"),
     }
 }
@@ -124,7 +124,7 @@ fn unknown_fields_and_broken_toml_are_syntax_errors() {
             ConfigFileCatalog::parse(&text, SOURCE).unwrap_err(),
             CatalogError::Syntax {
                 source_name: _,
-                message: _
+                error: _
             }
         ));
     }

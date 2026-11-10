@@ -6,7 +6,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde::Deserialize;
 
 use super::{ToggleCatalog, ToggleEntry};
-use crate::Problem;
+use crate::{EntryProblem, Problem};
 
 type Graph<'a> = BTreeMap<&'a str, &'a [String]>;
 
@@ -44,14 +44,14 @@ impl Requires {
 
 /// The first entry, in file order, whose `requires` is an empty list, names
 /// a missing entry or itself, or starts a cycle.
-pub fn check(catalog: &ToggleCatalog) -> Result<(), (String, Problem)> {
+pub fn check(catalog: &ToggleCatalog) -> Result<(), EntryProblem> {
     let graph: Graph<'_> = catalog
         .entries()
         .map(|entry| (entry.id(), entry.requires().ids()))
         .collect();
 
     for entry in catalog.entries() {
-        check_targets(entry, &graph).map_err(|problem| (entry.id().to_owned(), problem))?;
+        check_targets(entry, &graph).map_err(|problem| EntryProblem::new(entry.id(), problem))?;
     }
 
     let mut done = BTreeSet::new();
@@ -60,7 +60,7 @@ pub fn check(catalog: &ToggleCatalog) -> Result<(), (String, Problem)> {
         let mut path = Vec::new();
 
         if let Some((start, cycle)) = find_cycle(entry.id(), &graph, &mut path, &mut done) {
-            return Err((start.to_owned(), Problem::RequirementCycle(cycle)));
+            return Err(EntryProblem::new(start, Problem::RequirementCycle(cycle)));
         }
     }
 

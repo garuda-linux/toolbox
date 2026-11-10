@@ -18,7 +18,7 @@ pub use colour_schemes::{
     COLOUR_SCHEMES, ColourScheme, ColourSchemeCatalog, SchemeColours, SchemeMode, SchemeTiles,
 };
 pub use config_files::{CONFIG_FILES, ConfigEntry, ConfigFileCatalog, ConfigSection};
-pub use error::{CatalogError, LoadProblem, Problem};
+pub use error::{CatalogError, EntryProblem, LoadProblem, Problem};
 pub use skel::{SKEL_ROOT, SkelCatalog, SkelEntry};
 pub use toggles::{
     COMPONENTS, Check, GAMING, Requires, SETTINGS, SETUP, ToggleCatalog, ToggleEntry,

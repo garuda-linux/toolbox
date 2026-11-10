@@ -14,7 +14,7 @@ fn unreadable() -> CatalogError {
 fn every_kind_of_failure_has_its_own_code() {
     let syntax = CatalogError::Syntax {
         source_name: "gaming.toml".to_owned(),
-        message: "line 3".to_owned(),
+        error: toml::from_str::<toml::Table>("= 3").unwrap_err(),
     };
 
     let invalid = CatalogError::Invalid {

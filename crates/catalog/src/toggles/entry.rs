@@ -3,16 +3,14 @@ use std::collections::BTreeSet;
 use toolbox_plan::{ConfigReload, GroupName, PackageName, UnitName, text};
 
 use super::{Check, RawCheck, RawEntry, Requires, ToggleEntry, conflicts, extras, user_config};
-use crate::{Problem, source};
+use crate::{EntryProblem, Problem, source};
 
 impl RawEntry {
-    pub(super) fn validate(
-        self,
-        seen: &mut BTreeSet<String>,
-    ) -> Result<ToggleEntry, (String, Problem)> {
+    pub(super) fn validate(self, seen: &mut BTreeSet<String>) -> Result<ToggleEntry, EntryProblem> {
         let id = self.id.clone();
 
-        self.build(seen).map_err(|problem| (id, problem))
+        self.build(seen)
+            .map_err(|problem| EntryProblem::new(id, problem))
     }
 
     fn build(self, seen: &mut BTreeSet<String>) -> Result<ToggleEntry, Problem> {

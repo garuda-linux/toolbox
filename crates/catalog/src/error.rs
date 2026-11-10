@@ -15,11 +15,12 @@ pub enum CatalogError {
         #[source]
         error: io::Error,
     },
-    #[error("{source_name}: {message}")]
+    #[error("{source_name}: {error}")]
     Syntax {
         source_name: String,
-        /// The parser's message with line and column.
-        message: String,
+        /// The parser's error, its message with line and column.
+        #[source]
+        error: toml::de::Error,
     },
     #[error("{source_name}: entry {id:?}: {problem}")]
     Invalid {
@@ -36,7 +37,7 @@ impl CatalogError {
             Self::Read { path: _, error: _ } => "unreadable",
             Self::Syntax {
                 source_name: _,
-                message: _,
+                error: _,
             } => "syntax",
             Self::Invalid {
                 source_name: _,
@@ -77,6 +78,23 @@ impl LoadProblem {
     }
 }
 
+/// The entry `id` breaks a rule of its catalog, before the catalog's name
+/// is added to make a [`CatalogError::Invalid`].
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct EntryProblem {
+    pub id: String,
+    pub problem: Problem,
+}
+
+impl EntryProblem {
+    pub fn new(id: impl Into<String>, problem: Problem) -> Self {
+        Self {
+            id: id.into(),
+            problem,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
 pub enum Problem {
     #[error("the id must be lowercase words joined by dashes")]
@@ -85,7 +103,7 @@ pub enum Problem {
     DuplicateId,
     /// Another entry of the same catalog watches the same state, so one
     /// switch would flip the other.
-    #[error("another entry watches {0:?}")]
+    #[error("another entry watches {0}")]
     DuplicateCheck(String),
     /// Another config file entry points at the same path, so an edit in
     /// one would show in the other.

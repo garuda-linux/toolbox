@@ -231,7 +231,7 @@ fn an_unknown_mode_or_field_is_a_syntax_error() {
                 ColourSchemeCatalog::parse(&text, "test.toml"),
                 Err(CatalogError::Syntax {
                     source_name: _,
-                    message: _
+                    error: _
                 })
             ),
             "{text}"

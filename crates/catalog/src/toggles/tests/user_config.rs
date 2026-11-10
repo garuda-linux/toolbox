@@ -161,7 +161,7 @@ fn unknown_fields_of_a_user_config_are_syntax_errors() {
         ToggleCatalog::parse(&text, "test.toml"),
         Err(CatalogError::Syntax {
             source_name: _,
-            message: _
+            error: _
         })
     ));
 }

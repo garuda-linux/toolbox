@@ -42,7 +42,7 @@ where
 {
     toml::from_str(text).map_err(|error| CatalogError::Syntax {
         source_name: source_name.to_owned(),
-        message: error.to_string(),
+        error,
     })
 }
 

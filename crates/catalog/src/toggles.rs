@@ -30,6 +30,7 @@ mod tests;
 mod user_config;
 
 use std::collections::BTreeSet;
+use std::fmt;
 use std::path::{Path, PathBuf};
 
 pub use extras::is_web_url;
@@ -40,7 +41,7 @@ use toolbox_plan::{ConfigReload, GroupName, PackageName, UnitName, UserConfigEdi
 use user_config::{RawUserFile, RawUserIni, RawUserJson};
 
 use crate::source::{RawCatalog, RawSection};
-use crate::{CatalogError, Problem, source};
+use crate::{CatalogError, EntryProblem, source};
 
 pub const COMPONENTS: &str = "components.toml";
 pub const SETTINGS: &str = "settings.toml";
@@ -120,6 +121,19 @@ enum RawCheck {
     UserJson(RawUserJson),
 }
 
+/// The check as the catalog spells its kind, then what it watches.
+impl fmt::Display for Check {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Package(package) => write!(f, "package {package}"),
+            Self::Service(unit) => write!(f, "service {unit}"),
+            Self::UserService(unit) => write!(f, "user-service {unit}"),
+            Self::Group(group) => write!(f, "group {group}"),
+            Self::UserConfig(edit) => write!(f, "user-config {edit}"),
+        }
+    }
+}
+
 impl ToggleCatalog {
     /// # Errors
     ///
@@ -152,7 +166,7 @@ impl ToggleCatalog {
             sections.push(
                 section
                     .validate(&mut seen)
-                    .map_err(|(id, problem)| invalid(id, problem))?,
+                    .map_err(|EntryProblem { id, problem }| invalid(id, problem))?,
             );
         }
 
@@ -161,7 +175,7 @@ impl ToggleCatalog {
         requires::check(&catalog)
             .and_then(|()| conflicts::check(&catalog))
             .and_then(|()| duplicates::check(&catalog))
-            .map_err(|(id, problem)| invalid(id, problem))?;
+            .map_err(|EntryProblem { id, problem }| invalid(id, problem))?;
 
         Ok(catalog)
     }
@@ -224,11 +238,11 @@ impl ToggleSection {
 }
 
 impl RawSection<RawEntry> {
-    fn validate(self, seen: &mut BTreeSet<String>) -> Result<ToggleSection, (String, Problem)> {
+    fn validate(self, seen: &mut BTreeSet<String>) -> Result<ToggleSection, EntryProblem> {
         if let Err(problem) = source::claim_id(&self.id, seen)
             .and_then(|()| source::check_section(&self.title, &self.icon, self.entry.len()))
         {
-            return Err((self.id.clone(), problem));
+            return Err(EntryProblem::new(self.id.clone(), problem));
         }
 
         let entries = self

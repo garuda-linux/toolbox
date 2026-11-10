@@ -69,7 +69,7 @@ fn also_takes_tables_of_a_known_kind_only() {
                 ToggleCatalog::parse(&gamemode(also), "test.toml"),
                 Err(CatalogError::Syntax {
                     source_name: _,
-                    message: _
+                    error: _
                 })
             ),
             "{also}"

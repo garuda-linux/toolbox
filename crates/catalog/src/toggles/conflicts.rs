@@ -10,7 +10,7 @@
 use std::collections::BTreeSet;
 
 use super::{ToggleCatalog, ToggleEntry};
-use crate::Problem;
+use crate::{EntryProblem, Problem};
 
 /// The entry's `conflicts` as written, `None` when the field is missing.
 pub fn list(raw: Option<Vec<String>>) -> Result<Vec<String>, Problem> {
@@ -33,7 +33,7 @@ pub fn list(raw: Option<Vec<String>>) -> Result<Vec<String>, Problem> {
 
 /// The first entry, in file order, whose `conflicts` names itself, an id
 /// that is no entry of the file, or an id it also requires.
-pub fn check(catalog: &ToggleCatalog) -> Result<(), (String, Problem)> {
+pub fn check(catalog: &ToggleCatalog) -> Result<(), EntryProblem> {
     let known: BTreeSet<&str> = catalog.entries().map(ToggleEntry::id).collect();
 
     for entry in catalog.entries() {
@@ -48,7 +48,7 @@ pub fn check(catalog: &ToggleCatalog) -> Result<(), (String, Problem)> {
                 Problem::UnknownConflict(other.clone())
             };
 
-            return Err((entry.id().to_owned(), problem));
+            return Err(EntryProblem::new(entry.id(), problem));
         }
     }
 

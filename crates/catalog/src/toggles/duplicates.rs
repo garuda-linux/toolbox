@@ -5,16 +5,19 @@
 use std::collections::BTreeSet;
 
 use super::ToggleCatalog;
-use crate::Problem;
+use crate::{EntryProblem, Problem};
 
-pub fn check(catalog: &ToggleCatalog) -> Result<(), (String, Problem)> {
+pub fn check(catalog: &ToggleCatalog) -> Result<(), EntryProblem> {
     let mut seen = BTreeSet::new();
 
     for entry in catalog.entries() {
         if !seen.insert(entry.check()) {
-            let watched = format!("{:?}", entry.check());
+            let watched = entry.check().to_string();
 
-            return Err((entry.id().to_owned(), Problem::DuplicateCheck(watched)));
+            return Err(EntryProblem::new(
+                entry.id(),
+                Problem::DuplicateCheck(watched),
+            ));
         }
     }
 

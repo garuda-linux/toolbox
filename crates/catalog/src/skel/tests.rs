@@ -79,7 +79,7 @@ fn syntax_errors_and_unknown_fields_name_the_file() {
             Err(
                 error @ CatalogError::Syntax {
                     source_name: _,
-                    message: _,
+                    error: _,
                 },
             ) => {
                 assert!(error.to_string().starts_with("test.toml: "), "{error}");
