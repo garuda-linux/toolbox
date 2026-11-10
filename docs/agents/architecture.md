@@ -132,8 +132,8 @@ tint. The header band shows the blur under a neutral scrim.
 ## Errors
 
 A function that can fail returns its own error type, derived with
-`thiserror`. `toolbox-exec` writes `Display` and `Error` by hand, as the
-helper links it and its dependency list stays small. `Result<_, String>`
+`thiserror`, the helper's crates included. A wrapped error stays its
+`#[source]`, behind an `Arc` where the type must stay `Clone`. `Result<_, String>`
 only in `toolbox-xtask`, `toolbox-lint` and clap value parsers
 (`crates/cli/src/args*`, `crates/commands/src/settings.rs`), because clap
 prints the `String` as the usage error.
