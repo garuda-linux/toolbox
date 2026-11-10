@@ -12,6 +12,7 @@ use toolbox_core::features::packages::{
     IndexEntry, InstallReason, Installed, InstalledDetails, LocalNode, Origin, PackageDetails,
     PackageIndex,
 };
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_plan::PackageName;
 

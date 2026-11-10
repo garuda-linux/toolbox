@@ -1,6 +1,7 @@
 use toolbox_plan::{PlannedAction, RootAction, TargetList, UnitOperation, UnitScope, UserAction};
 
 mod critical;
+mod queue;
 
 use super::{
     ActiveState, FileState, Filter, UnitInfo, UnitOrder, does_nothing, pick, plan_control,

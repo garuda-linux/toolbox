@@ -4,6 +4,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::Toggle;
 use toolbox_core::domains::Packages;
+use toolbox_core::testing::Queue as _;
 use toolbox_gui_kit::testing::filled_rect;
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{dim_opacity, hue_of};

@@ -1,13 +1,12 @@
 //! What the app does with a click on the Kernels page.
 
-use toolbox_core::features::kernels::{install_missing_headers, toggle};
+use toolbox_core::features::kernels::{install_missing_headers, set_builds, set_headers, toggle};
 use toolbox_plan::Toggle;
 
 use super::App;
 use crate::command::{KernelCommand, KernelEdit};
 use crate::pages::KernelRefusal;
 use crate::pages::kernels::view::Listing;
-use crate::pages::kernels::{set_builds, set_headers};
 
 impl App {
     pub(super) fn run_kernel(&mut self, command: KernelCommand) {

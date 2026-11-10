@@ -13,7 +13,8 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{BootRepairCommand, Read, RepairArgs};
 use toolbox_cli::confirm::Prompt;
 use toolbox_cli::output::Row;
-use toolbox_core::features::bootrepair::page::{target as chosen_target, targets};
+use toolbox_core::Toggle;
+use toolbox_core::features::bootrepair::page::{Booted, Offer, target as chosen_target, targets};
 use toolbox_core::features::bootrepair::{
     Encryption, Firmware, Refusal, RepairFacts, Target, Wish, plan_regenerate, plan_reinstall,
 };
@@ -117,7 +118,7 @@ pub fn repair(
 
     let wish = Wish {
         system: device,
-        layout: None,
+        layout: args.layout,
         passphrase,
     };
 
@@ -155,14 +156,18 @@ pub fn pick_target(
         .ok_or_else(|| Refused::Unknown("no boot target found, pass --target".to_owned()))
 }
 
+/// As the page: offered on the live ISO, or with `--boot-repair` for a
+/// test, which also wants `--trust-disk`.
 fn offered(live: bool, args: &RepairArgs) -> Result<(), Refused> {
-    match (live, args.boot_repair, args.trust_disk) {
-        (true, _, _) | (false, true, true) => Ok(()),
-        (false, false, _) => Err(Refused::Rule(format!(
+    let offer = Offer::of(Booted::of_live(live), Toggle::from_on(args.boot_repair));
+
+    match (offer, args.trust_disk) {
+        (Offer::Live, _) | (Offer::Test, true) => Ok(()),
+        (Offer::Hidden, _) => Err(Refused::Rule(format!(
             "Boot Repair runs on the live ISO, pass --boot-repair to test it ({})",
             Refusal::NotOffered.as_str()
         ))),
-        (false, true, false) => Err(Refused::Rule(
+        (Offer::Test, false) => Err(Refused::Rule(
             "outside the live ISO the chosen system's own programs run as root\n\
              pass --trust-disk if nobody else could write to that disk"
                 .to_owned(),

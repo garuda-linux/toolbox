@@ -18,13 +18,13 @@ use toolbox_cli::args::{
     BootCommand, BootKey, BootSet, DkmsBuild, DkmsCommand, KernelArgs, ParamCommand,
 };
 use toolbox_cli::output::ColorMode;
-use toolbox_core::domains::DkmsBuilds;
 use toolbox_core::features::boot::edit::{Edit, EditProblem, edit};
 use toolbox_core::features::boot::{Flag, shown};
 use toolbox_core::features::kernels::{
-    DkmsEntry, DkmsState, KernelReleases, LinuxPackages, builds, kernels as list_kernels,
+    DkmsEntry, DkmsState, KernelReleases, LinuxPackages, builds_for, kernels as list_kernels,
+    set_builds,
 };
-use toolbox_core::{ChangeSet, Queued, Snapshot};
+use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{DkmsBuild as Build, GrubMenu, PackageName, Plan};
 use toolbox_state::boot::BootLoader;
 use toolbox_system::{
@@ -252,9 +252,7 @@ pub fn build_onto(
                 .as_ref()
                 .is_none_or(|wanted| kernel.name == *wanted)
         })
-        .filter(|kernel| kernel.is_installed() && kernel.headers_installed)
-        .filter_map(|kernel| releases.0.get(&kernel.name))
-        .flat_map(|release| builds(release, entries))
+        .flat_map(|kernel| builds_for(kernel, &releases, entries))
         .collect();
 
     if missing.is_empty() {
@@ -263,10 +261,7 @@ pub fn build_onto(
         ));
     }
 
-    for one in missing {
-        changes.want::<DkmsBuilds>(one, Queued, snapshot);
-    }
-
+    set_builds(&missing, Toggle::On, changes, snapshot);
     Ok(())
 }
 

@@ -1,5 +1,6 @@
 use toolbox_core::domains::{AurPackages, InstalledPackages, Packages};
 use toolbox_core::features::packages::aur::AurNames;
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
 use toolbox_instance::bus::queue::{Question, Refusal};
 

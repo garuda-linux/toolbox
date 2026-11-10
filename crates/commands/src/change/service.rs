@@ -1,6 +1,5 @@
 use toolbox_cli::args::UnitChange;
-use toolbox_core::domains::{SystemUnitMasks, SystemUnits, UserUnitMasks, UserUnits};
-use toolbox_core::features::services::{ActiveState, does_nothing, plan_control};
+use toolbox_core::features::services::{self, ActiveState, UnitWish, does_nothing, plan_control};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{Plan, UnitName, UnitOperation, UnitScope};
 
@@ -105,16 +104,16 @@ fn queued(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) {
-    let on = matches!(change, UnitChange::Enable | UnitChange::Mask);
+    let on = Toggle::from_on(matches!(change, UnitChange::Enable | UnitChange::Mask));
+    let wish = match change {
+        UnitChange::Mask | UnitChange::Unmask => UnitWish::Masked(on),
+        UnitChange::Enable
+        | UnitChange::Disable
+        | UnitChange::Start
+        | UnitChange::Stop
+        | UnitChange::Restart
+        | UnitChange::Reload => UnitWish::AtBoot(on),
+    };
 
-    match (change, scope) {
-        (UnitChange::Mask | UnitChange::Unmask, UnitScope::System) => {
-            changes.want::<SystemUnitMasks>(unit, Toggle::from_on(on), snapshot);
-        }
-        (UnitChange::Mask | UnitChange::Unmask, UnitScope::User) => {
-            changes.want::<UserUnitMasks>(unit, Toggle::from_on(on), snapshot);
-        }
-        (_, UnitScope::System) => changes.want::<SystemUnits>(unit, Toggle::from_on(on), snapshot),
-        (_, UnitScope::User) => changes.want::<UserUnits>(unit, Toggle::from_on(on), snapshot),
-    }
+    services::queue(changes, scope, unit, wish, snapshot);
 }

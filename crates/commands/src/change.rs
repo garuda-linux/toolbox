@@ -8,9 +8,10 @@ pub(crate) mod why;
 
 use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::Exit;
-use toolbox_core::domains::Packages;
 use toolbox_core::features::discover::Apps;
-use toolbox_core::features::kernels::{Kernel, lacks_headers};
+use toolbox_core::features::kernels::{
+    self, Kernel, Listed, RunningKernel, lacks_headers, running,
+};
 use toolbox_core::features::maintenance::page::{asks_first, run_now_plan};
 use toolbox_core::features::toggles;
 use toolbox_core::{ChangeSet, Snapshot, Toggle, plan};
@@ -212,16 +213,19 @@ pub fn kernel_onto(
             )
         })?;
 
+    let listed = Listed {
+        kernels,
+        running: snapshot
+            .part::<RunningKernel>()
+            .and_then(|booted| running(booted, kernels)),
+    };
+
     match change {
-        KernelChange::Install => {
-            changes.want::<Packages>(kernel.name.clone(), Toggle::On, snapshot);
-        }
-        KernelChange::Remove => {
-            // The same rules as the Kernels page, also when nobody knows
-            // which kernel runs or this is the last one.
-            toolbox_core::features::kernels::may_remove(&kernel.name, changes, snapshot)
+        // The page's own click: the kernel with its headers.
+        KernelChange::Install | KernelChange::Remove => {
+            let wish = Toggle::from_on(change == KernelChange::Install);
+            kernels::toggle(kernel, wish, listed, changes, snapshot)
                 .map_err(|refusal| crate::packages::kept_package(name, refusal.into()))?;
-            changes.want::<Packages>(kernel.name.clone(), Toggle::Off, snapshot);
         }
         KernelChange::Headers if kernel.installed.is_none() => {
             return Err(Refused::Rule(format!("{name} is not installed")));
@@ -232,7 +236,7 @@ pub fn kernel_onto(
             )));
         }
         KernelChange::Headers => {
-            changes.want::<Packages>(kernel.headers.clone(), Toggle::On, snapshot);
+            kernels::set_headers(kernel, Toggle::On, changes, snapshot);
         }
     }
 

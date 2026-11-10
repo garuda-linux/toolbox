@@ -6,6 +6,7 @@
 //! rule leaves out `linux-firmware`, `linux-api-headers`, the docs and the
 //! tools without naming them.
 
+mod edits;
 #[cfg(test)]
 mod tests;
 
@@ -17,6 +18,7 @@ pub use toolbox_state::kernels::{
     RepoPackage, RunningKernel, builds, modules, parse_status,
 };
 
+pub use self::edits::{build_release, builds_for, set_builds, set_headers};
 use crate::domains::Packages;
 use crate::{ChangeSet, Snapshot, Toggle};
 

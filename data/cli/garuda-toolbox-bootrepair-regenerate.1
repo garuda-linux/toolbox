@@ -4,7 +4,7 @@
 .SH NAME
 garuda\-toolbox\-bootrepair\-regenerate \- Build the boot files of an installed system again: GRUB\*(Aqs menu, or systemd\-boot\*(Aqs kernel images
 .SH SYNOPSIS
-\fBgaruda\-toolbox bootrepair regenerate\fR [\fB\-\-passphrase\-stdin\fR] [\fB\-\-boot\-repair\fR] [\fB\-\-trust\-disk\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-json\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fISYSTEM\fR> 
+\fBgaruda\-toolbox bootrepair regenerate\fR [\fB\-\-passphrase\-stdin\fR] [\fB\-\-boot\-repair\fR] [\fB\-\-trust\-disk\fR] [\fB\-\-layout\fR \fILAYOUT\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-json\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fISYSTEM\fR> 
 .SH DESCRIPTION
 Build the boot files of an installed system again: GRUB\*(Aqs menu, or systemd\-boot\*(Aqs kernel images
 .SH OPTIONS
@@ -18,17 +18,27 @@ Run on an installed system too, for testing. The helper still refuses a disk the
 \fB\-\-trust\-disk\fR
 Outside the live ISO, run the chosen system\*(Aqs own grub\-install, mkinitcpio and bootctl as root. Anyone who could write to that disk could put code there
 .TP
+\fB\-\-layout\fR \fI<LAYOUT>\fR
+Where the system lies on a btrfs or encrypted partition: `plain` at its top, or `subvolume` in Garuda\*(Aqs `@`. Without it `@`
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+plain
+.IP \(bu 2
+subvolume
+.RE
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
 \fB\-y\fR, \fB\-\-yes\fR
 Do not ask, carry the change out. Needed without a terminal
 .TP
 \fB\-\-dry\-run\fR
 Print the plan and stop, without asking and without changing anything
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Print the programs\*(Aq own words under an error
-.TP
-\fB\-\-json\fR
-Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
 .TP
 \fB\-\-no\-pager\fR
 Print long text directly instead of through `$PAGER`
@@ -47,6 +57,9 @@ always
 .IP \(bu 2
 never
 .RE
+.TP
+\fB\-\-json\fR
+Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
 .TP
 \fB\-\-width\fR \fI<COLUMNS>\fR
 Cut long cells to this many columns

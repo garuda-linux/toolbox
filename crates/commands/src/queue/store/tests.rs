@@ -1,6 +1,7 @@
 use tempfile::TempDir;
 use toolbox_cli::output::{Paint, Style};
 use toolbox_core::domains::Packages;
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_services::queue::edit::QueueEdit;
 

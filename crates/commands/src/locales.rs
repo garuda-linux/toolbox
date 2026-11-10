@@ -6,7 +6,8 @@ use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{LocaleArgs, LocalesCommand, PackArgs, PacksCommand, ReadList};
 use toolbox_cli::output::{Mark, Row};
-use toolbox_core::domains::{InstalledPackages, Packages, SyncPackages};
+use toolbox_core::domains::{InstalledPackages, SyncPackages};
+use toolbox_core::features::locales::view::toggle_pack;
 use toolbox_core::features::locales::{
     all_rows, choose_system, language_packs, toggle, wanted_enabled,
 };
@@ -162,7 +163,7 @@ pub fn pack(args: &PackArgs, want: Toggle, snapshot: &Snapshot) -> Result<Plan, 
     })?;
 
     let mut changes = ChangeSet::default();
-    changes.want::<Packages>(package, want, snapshot);
+    toggle_pack(&package, want, &mut changes, snapshot);
     Ok(toolbox_core::plan(&changes))
 }
 

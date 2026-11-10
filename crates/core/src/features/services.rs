@@ -18,6 +18,8 @@ use toolbox_plan::{
 pub use toolbox_state::services::{ActiveState, FileState, UnitInfo};
 
 use super::search::{Needle, Searchable};
+use crate::domains::{SystemUnitMasks, SystemUnits, UserUnitMasks, UserUnits};
+use crate::{ChangeSet, Snapshot, Toggle};
 
 /// Units the session lives on: stopping one ends the graphical session,
 /// the network or the password dialog.
@@ -40,6 +42,14 @@ pub struct Filter {
     pub search: String,
     pub include_disabled: bool,
     pub hide_inactive: bool,
+}
+
+/// What the Services page queues for a unit: whether it starts at boot,
+/// or whether it is masked.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum UnitWish {
+    AtBoot(Toggle),
+    Masked(Toggle),
 }
 
 /// The page starts with what runs: disabled units left out and inactive
@@ -166,4 +176,27 @@ pub fn plan_control(operation: UnitOperation, scope: UnitScope, unit: UnitName) 
 #[must_use = "a plan does nothing until it is run"]
 pub fn plan_logs(scope: UnitScope, unit: UnitName) -> Plan {
     Plan::user(UserAction::UnitLogs { unit, scope })
+}
+
+/// Queues `wish` for `unit` of `scope`. One the system already has is not
+/// queued.
+pub fn queue(
+    changes: &mut ChangeSet,
+    scope: UnitScope,
+    unit: UnitName,
+    wish: UnitWish,
+    snapshot: &Snapshot,
+) {
+    match (wish, scope) {
+        (UnitWish::AtBoot(on), UnitScope::System) => {
+            changes.want::<SystemUnits>(unit, on, snapshot);
+        }
+        (UnitWish::AtBoot(on), UnitScope::User) => changes.want::<UserUnits>(unit, on, snapshot),
+        (UnitWish::Masked(on), UnitScope::System) => {
+            changes.want::<SystemUnitMasks>(unit, on, snapshot);
+        }
+        (UnitWish::Masked(on), UnitScope::User) => {
+            changes.want::<UserUnitMasks>(unit, on, snapshot);
+        }
+    }
 }

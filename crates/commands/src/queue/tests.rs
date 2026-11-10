@@ -2,6 +2,7 @@ use std::cell::RefCell;
 
 use toolbox_cli::Exit;
 use toolbox_core::domains::{InstalledPackages, Packages, all};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Summary, Toggle, planned};
 use toolbox_instance::bus::queue::Refusal;
 use toolbox_services::queue::edit::QueueEdit;

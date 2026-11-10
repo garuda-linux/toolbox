@@ -1,5 +1,6 @@
 use toolbox_cli::Exit;
 use toolbox_core::domains::{NewGroups, Packages};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Queued, Snapshot, Summary, Toggle};
 use toolbox_services::queue::edit::Removal;
 

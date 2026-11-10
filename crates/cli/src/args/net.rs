@@ -1,8 +1,11 @@
 //! The arguments of the Network, Config Files, Boot Repair and Setup
 //! Assistant pages.
 
+use clap::builder::{PossibleValuesParser, TypedValueParser as _};
 use clap::{Args, Subcommand, ValueEnum};
-use toolbox_plan::{DEFAULT_HOPS, DEFAULT_PING_TIMEOUT, DEFAULT_PINGS, HostName, KernelModule};
+use toolbox_plan::{
+    DEFAULT_HOPS, DEFAULT_PING_TIMEOUT, DEFAULT_PINGS, HostName, KernelModule, RootLayout,
+};
 
 use super::change::id;
 use super::{Confirm, Read, ReadList};
@@ -217,6 +220,12 @@ pub struct RepairArgs {
     #[arg(long)]
     pub trust_disk: bool,
 
+    /// Where the system lies on a btrfs or encrypted partition: `plain`
+    /// at its top, or `subvolume` in Garuda's `@`. Without it `@`.
+    #[arg(long, value_parser = PossibleValuesParser::new(RootLayout::ALL.map(RootLayout::as_str))
+        .try_map(|name: String| layout(&name)))]
+    pub layout: Option<RootLayout>,
+
     #[command(flatten)]
     pub confirm: Confirm,
 }
@@ -251,4 +260,13 @@ pub struct SetupApply {
 
     #[command(flatten)]
     pub confirm: Confirm,
+}
+
+/// The layout called `name`. The possible values were checked first, so
+/// the error stays a fallback.
+fn layout(name: &str) -> Result<RootLayout, String> {
+    RootLayout::ALL
+        .into_iter()
+        .find(|layout| layout.as_str() == name)
+        .ok_or_else(|| format!("no layout is called `{name}`"))
 }

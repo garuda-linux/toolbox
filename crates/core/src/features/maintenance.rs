@@ -154,6 +154,11 @@ impl Operations {
     pub fn want(changes: &mut ChangeSet, task: Task, snapshot: &Snapshot) {
         changes.want::<Self>(task.operation(), task, snapshot);
     }
+
+    /// Takes the queued `operation` back.
+    pub fn unqueue(changes: &mut ChangeSet, operation: Operation) {
+        changes.remove::<Self>(&operation);
+    }
 }
 
 impl Domain for Operations {

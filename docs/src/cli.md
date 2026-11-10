@@ -373,7 +373,9 @@ $ garuda-toolbox groups add media
 `users add` creates the account and sets its password at once. The
 password is never an argument: it is asked twice on the terminal without
 echo, or read from the first line of standard input with
-`--password-stdin`. `--admin` puts the account into `wheel`, `--group`
+`--password-stdin`. `--admin` puts the account into `wheel`, and is
+refused on a system without that group, as the page offers no
+**Administrator** switch there. `--group`
 into further groups. `users edit` changes the full name, the login shell
 (one of `/etc/shells`), the groups and the home folder. `lock` and
 `unlock` lock and unlock the password. `remove` keeps the home folder
@@ -506,8 +508,10 @@ found. `regenerate` generates a system's boot menu again, `reinstall`
 installs GRUB again onto the EFI system partition (or the disk on a BIOS
 machine), the usual one without `--target`. A locked system's passphrase
 is asked without echo, or read from standard input with
-`--passphrase-stdin`. A disk the running system uses is never touched.
-`--boot-repair` lets it run on an installed system, for testing.
+`--passphrase-stdin`. A system on btrfs or an encrypted partition is
+repaired in Garuda's `@` subvolume, `--layout plain` when it lies at the
+top of the partition instead. A disk the running system uses is never
+touched. `--boot-repair` lets it run on an installed system, for testing.
 
 ### Setup Assistant and settings
 

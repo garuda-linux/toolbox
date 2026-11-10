@@ -51,6 +51,8 @@ pub enum RootLayout {
 }
 
 impl RootLayout {
+    pub const ALL: [Self; 2] = [Self::Plain, Self::Subvolume];
+
     pub const fn as_str(self) -> &'static str {
         match self {
             Self::Plain => "plain",

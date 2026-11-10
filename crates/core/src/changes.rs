@@ -27,7 +27,7 @@ impl ChangeSet {
     /// Records the wish for `item`, replacing an earlier one and its outcome.
     /// A wish the system fulfils removes the item, so toggling twice leaves
     /// nothing queued. One that does not [`Domain::fits`] changes nothing.
-    pub fn want<D>(&mut self, item: D::Item, wish: D::Wish, snapshot: &Snapshot)
+    pub(crate) fn want<D>(&mut self, item: D::Item, wish: D::Wish, snapshot: &Snapshot)
     where
         D: Domain,
     {
@@ -97,7 +97,7 @@ impl ChangeSet {
         })
     }
 
-    pub fn remove<D>(&mut self, item: &D::Item)
+    pub(crate) fn remove<D>(&mut self, item: &D::Item)
     where
         D: Domain,
     {

@@ -1,7 +1,6 @@
 //! The Kernels page: the installed kernels and the ones the repositories
 //! offer, with headers and DKMS modules.
 
-mod edits;
 #[cfg(test)]
 mod fixtures;
 mod row;
@@ -9,7 +8,6 @@ mod row;
 mod tests;
 pub mod view;
 
-pub use edits::{set_builds, set_headers};
 use egui::Ui;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{

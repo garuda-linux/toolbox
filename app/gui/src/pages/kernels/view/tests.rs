@@ -1,5 +1,6 @@
 use toolbox_core::domains::{DkmsBuilds, Packages};
 use toolbox_core::features::kernels::{ModuleState, RunningKernel};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Queued, Snapshot, Toggle};
 use toolbox_system::ProbeError;
 

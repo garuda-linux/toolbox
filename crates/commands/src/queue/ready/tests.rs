@@ -5,6 +5,7 @@ use toolbox_cli::Exit;
 use toolbox_core::domains::{AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentUser};
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::features::{Guard, Refusal};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
 use toolbox_plan::{PackageName, UserName};
 

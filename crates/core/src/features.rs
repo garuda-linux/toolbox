@@ -19,6 +19,7 @@ pub mod status;
 #[cfg(test)]
 mod tests;
 pub mod toggles;
+pub mod tweaks;
 pub mod users;
 
 use std::collections::BTreeSet;

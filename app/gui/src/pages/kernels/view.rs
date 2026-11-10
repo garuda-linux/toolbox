@@ -3,12 +3,12 @@ mod tests;
 
 use toolbox_core::domains::{DkmsBuilds, Packages};
 use toolbox_core::features::kernels::{
-    DkmsEntry, Kernel, KernelReleases, Listed, ModuleState, ModuleStatus, RunningKernel, builds,
-    kernels_of, lacks_headers, modules,
+    DkmsEntry, Kernel, KernelReleases, Listed, ModuleState, ModuleStatus, RunningKernel,
+    build_release, builds_for, kernels_of, lacks_headers, modules,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_gui_kit::Loadable;
-use toolbox_plan::{DkmsBuild, KernelRelease, PackageName};
+use toolbox_plan::{DkmsBuild, PackageName};
 use toolbox_system::ProbeError;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -86,17 +86,8 @@ impl Listing {
         }
     }
 
-    /// The release dkms builds for: only an installed kernel with headers.
-    fn buildable(&self, kernel: &Kernel) -> Option<&KernelRelease> {
-        (kernel.is_installed() && kernel.headers_installed)
-            .then(|| self.releases.0.get(&kernel.name))
-            .flatten()
-    }
-
     pub fn builds(&self, kernel: &Kernel, dkms: &DkmsReading) -> Vec<DkmsBuild> {
-        self.buildable(kernel)
-            .map(|release| builds(release, entries(dkms)))
-            .unwrap_or_default()
+        builds_for(kernel, &self.releases, entries(dkms))
     }
 
     pub fn all_builds(&self, dkms: &DkmsReading) -> Vec<DkmsBuild> {
@@ -133,7 +124,7 @@ impl Listing {
         changes: &ChangeSet,
         dkms: &DkmsReading,
     ) -> Row<'listing> {
-        let release = self.buildable(kernel);
+        let release = build_release(kernel, &self.releases);
         let modules = release.map_or_else(Vec::new, |release| {
             modules(release, entries(dkms))
                 .into_iter()

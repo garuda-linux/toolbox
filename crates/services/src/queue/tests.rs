@@ -8,6 +8,7 @@ use tempfile::TempDir;
 use toolbox_core::domains::{DkmsBuilds, InstalledPackages, Packages, SyncPackages};
 use toolbox_core::features::kernels::LinuxPackages;
 use toolbox_core::features::{Guard, Refusal};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Domain as _, Queued, RestoreProblem, Snapshot, Toggle};
 use toolbox_plan::{DkmsBuild, DkmsModuleName, DkmsVersion, KernelRelease, PackageName};
 

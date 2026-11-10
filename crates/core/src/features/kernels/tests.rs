@@ -1,3 +1,4 @@
+mod edits;
 mod guard;
 mod headers;
 mod recheck;

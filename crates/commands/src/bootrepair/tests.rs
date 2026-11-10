@@ -3,6 +3,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, RepairArgs};
 use toolbox_cli::confirm::Prompt;
 use toolbox_core::features::bootrepair::{Encryption, Firmware, RepairFacts, parse_lsblk};
+use toolbox_plan::{Plan, PlannedAction, RootAction, RootLayout};
 
 use super::{pick_target, repair};
 use crate::change::Refused;
@@ -55,6 +56,7 @@ fn args(system: &str) -> RepairArgs {
         passphrase_stdin: false,
         boot_repair: true,
         trust_disk: false,
+        layout: None,
         confirm: Confirm::default(),
     }
 }
@@ -153,4 +155,31 @@ fn an_installed_system_needs_trust_in_the_disk() {
     };
 
     assert!(words.contains("--trust-disk"), "{words}");
+}
+
+fn layout_of(plan: &Plan) -> RootLayout {
+    match &plan.steps()[0].action {
+        PlannedAction::Root(RootAction::RepairBoot {
+            system,
+            work: _,
+            passphrase: _,
+        }) => system.layout,
+        other @ (PlannedAction::Root(_) | PlannedAction::User(_)) => panic!("no repair: {other:?}"),
+    }
+}
+
+/// The btrfs system of the capture repairs in Garuda's `@`, unless
+/// `--layout` says it lies at the top.
+#[test]
+fn the_layout_given_reaches_the_repair() {
+    let plain = RepairArgs {
+        layout: Some(RootLayout::Plain),
+        ..args("/dev/nvme1n1p2")
+    };
+
+    let usual = repair(&facts(), &args("/dev/nvme1n1p2"), None, &mut NoTerminal).unwrap();
+    let chosen = repair(&facts(), &plain, None, &mut NoTerminal).unwrap();
+
+    assert_eq!(layout_of(&usual), RootLayout::Subvolume);
+    assert_eq!(layout_of(&chosen), RootLayout::Plain);
 }

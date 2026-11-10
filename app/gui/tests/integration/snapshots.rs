@@ -8,6 +8,7 @@ use egui::{Key, Modifiers, Theme};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use egui_kittest::{Harness, SnapshotResults};
 use toolbox_core::domains::{Hblock, Packages};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Single, Snapshot, Toggle};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup};

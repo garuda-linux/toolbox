@@ -1,5 +1,6 @@
 use serde_json::json;
 use toolbox_core::domains::{InstalledPackages, Packages, all};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, SAVED_VERSION, Snapshot, Toggle};
 use toolbox_plan::PackageName;
 

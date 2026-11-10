@@ -34,6 +34,10 @@ pub fn account(refusal: AccountRefusal) -> Cow<'static, str> {
     text_in(FALLBACK, account_id(refusal))
 }
 
+pub fn no_admin_group() -> Cow<'static, str> {
+    text_in(FALLBACK, "cli-account-no-admin-group")
+}
+
 pub fn locale(refusal: LocaleRefusal) -> Cow<'static, str> {
     let id = match refusal {
         LocaleRefusal::SystemLocale => "cli-locale-system-locale",

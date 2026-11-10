@@ -1,5 +1,5 @@
-use toolbox_core::domains::{Dns, GarudaUpdateFlags, Hblock, LoginShells, WifiBackends};
-use toolbox_core::{Single, Toggle};
+use toolbox_core::Toggle;
+use toolbox_core::features::tweaks::{self, Tweak};
 use toolbox_system::Host;
 
 use super::App;
@@ -14,23 +14,22 @@ impl App {
         // `sudo -u`, so it is no stand-in before that.
         let user = snapshot.part::<Host>().and_then(|host| host.user.clone());
 
-        self.queue
-            .edit(&snapshot, |changes, snapshot| match command {
-                TweakCommand::Shell(shell) => {
-                    if let Some(user) = user {
-                        changes.want::<LoginShells>(user, shell, snapshot);
-                    }
-                }
-                TweakCommand::Dns(provider) => changes.want::<Dns>(Single, provider, snapshot),
-                TweakCommand::Wifi(backend) => {
-                    changes.want::<WifiBackends>(Single, backend, snapshot);
-                }
-                TweakCommand::Hblock(on) => {
-                    changes.want::<Hblock>(Single, Toggle::from_on(on), snapshot);
-                }
-                TweakCommand::Flag(flag, on) => {
-                    changes.want::<GarudaUpdateFlags>(flag, Toggle::from_on(on), snapshot);
-                }
-            });
+        let tweak = match command {
+            TweakCommand::Shell(shell) => {
+                let Some(user) = user else {
+                    return;
+                };
+
+                Tweak::Shell(user, shell)
+            }
+            TweakCommand::Dns(provider) => Tweak::Dns(provider),
+            TweakCommand::Wifi(backend) => Tweak::Wifi(backend),
+            TweakCommand::Hblock(on) => Tweak::Hblock(Toggle::from_on(on)),
+            TweakCommand::Flag(flag, on) => Tweak::Flag(flag, Toggle::from_on(on)),
+        };
+
+        self.queue.edit(&snapshot, |changes, snapshot| {
+            tweaks::queue(changes, tweak, snapshot);
+        });
     }
 }

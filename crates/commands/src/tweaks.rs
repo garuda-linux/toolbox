@@ -9,11 +9,9 @@ use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{ReadList, TweaksCommand};
 use toolbox_cli::output::{Mark, Row};
-use toolbox_core::domains::{
-    CurrentDns, CurrentWifiBackend, Dns, GarudaUpdateConfig, GarudaUpdateFlags, Hblock,
-    HblockState, WifiBackends,
-};
-use toolbox_core::{ChangeSet, Single, Snapshot, Toggle};
+use toolbox_core::domains::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig, HblockState};
+use toolbox_core::features::tweaks::{self, Tweak};
+use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::GarudaUpdateFlag;
 
 use crate::act::run;
@@ -57,23 +55,15 @@ pub fn command(command: &TweaksCommand, runtime: &Runtime, out: &mut Out<'_>) ->
 /// The page's wish behind `command`, onto `changes`. A wish the system
 /// already fulfils is not queued, as on the page. `list` wishes nothing.
 pub fn onto(command: &TweaksCommand, snapshot: &Snapshot, changes: &mut ChangeSet) {
-    match command {
-        TweaksCommand::List(_) => {}
-        TweaksCommand::Dns(args) => changes.want::<Dns>(Single, args.provider, snapshot),
-        TweaksCommand::WifiBackend(args) => {
-            changes.want::<WifiBackends>(Single, args.backend, snapshot);
-        }
-        TweaksCommand::Hblock(args) => {
-            changes.want::<Hblock>(Single, Toggle::from_on(args.state.on()), snapshot);
-        }
-        TweaksCommand::UpdateFlag(args) => {
-            changes.want::<GarudaUpdateFlags>(
-                args.flag,
-                Toggle::from_on(args.state.on()),
-                snapshot,
-            );
-        }
-    }
+    let tweak = match command {
+        TweaksCommand::List(_) => return,
+        TweaksCommand::Dns(args) => Tweak::Dns(args.provider),
+        TweaksCommand::WifiBackend(args) => Tweak::Wifi(args.backend),
+        TweaksCommand::Hblock(args) => Tweak::Hblock(Toggle::from_on(args.state.on())),
+        TweaksCommand::UpdateFlag(args) => Tweak::Flag(args.flag, Toggle::from_on(args.state.on())),
+    };
+
+    tweaks::queue(changes, tweak, snapshot);
 }
 
 fn rows(snapshot: &Snapshot) -> Vec<TweakRow> {

@@ -227,10 +227,14 @@ only `/usr/share/garuda-toolbox/catalog` and never the source tree.
 - The item is the key of a change, the wish its value. A second wish
   replaces the first. Work to do has the wish `Queued`. `ChangeSet::want`
   ignores a wish that `Domain::fits` refuses.
+- `ChangeSet::want` and `remove` are `pub(crate)`. The window and the
+  command line queue through one `features::<page>` function per click,
+  such as `tweaks::queue` or `services::queue`, so both keep the page's
+  rules. Tests of other crates import `toolbox_core::testing::Queue`.
 - A restored queue was queued before the system was known.
-  `features::Unchecked` runs each guard of `features::GUARDS` once over it,
-  as soon as the snapshot holds the part the guard needs. A page that
-  queues changes adds its guard, the same function the page calls.
+  `features::Unchecked` runs each `features::Guard` once over it, as soon
+  as the snapshot holds the part the guard needs. A page that queues
+  changes adds its `Guard` variant, the same function the page calls.
 - A guard that waits fails closed: `Queue::plan` refuses with
   `Refusal::GuardsWaiting` while `Unchecked::holding` names a guard with
   a queued change of one of its `Guard::domains`. Apply stays disabled

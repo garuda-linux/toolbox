@@ -7,6 +7,7 @@ use egui::accesskit::Role;
 use egui::{Key, Modifiers};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::domains::{InstalledPackages, Packages, SyncPackages};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_gui_kit::toasts::ToastKind;
 

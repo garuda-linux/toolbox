@@ -11,6 +11,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
 use toolbox_core::domains::{AccountLocks, Accounts, AvailableShells, CurrentUser, Group, User};
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::users::UsersSetup;

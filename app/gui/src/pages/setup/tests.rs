@@ -6,6 +6,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::domains::Packages;
 use toolbox_core::features::console::ending::Ending;
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Toggle};
 use toolbox_plan::PackageName;
 

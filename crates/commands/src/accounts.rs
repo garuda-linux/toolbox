@@ -17,7 +17,7 @@ use toolbox_core::features::users::home::set_home;
 use toolbox_core::features::users::now::{new_user, plan_add_user, plan_set_password};
 use toolbox_core::features::users::{
     Refusal, accounts, add_group, remove_group, remove_user, set_full_name, set_groups, set_locked,
-    set_shell,
+    set_shell, view,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{FullName, GroupName, HomeChange, HomeFolder, Password, Plan, UserName};
@@ -27,8 +27,6 @@ use super::change::{Refused, fresh, page_edit, why};
 use super::terminal::{Terminal, wipe, without_line_end};
 use super::{groups, system, users};
 use crate::out::Out;
-
-const ADMIN_GROUP: &str = "wheel";
 
 pub fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
@@ -118,7 +116,12 @@ pub fn add(args: &AddUser, snapshot: &Snapshot, prompt: &mut dyn Prompt) -> Resu
     let mut groups = args.groups.iter().cloned().collect::<BTreeSet<_>>();
 
     if args.admin {
-        groups.insert(group_name(ADMIN_GROUP)?);
+        // The add-user dialog's Administrator switch, which a system
+        // without the admin group does not offer.
+        let admin = view::admin_group(snapshot, &ChangeSet::default())
+            .ok_or_else(|| Refused::Rule(why::no_admin_group().into_owned()))?;
+
+        groups.insert(admin.clone());
     }
 
     let user = new_user(name, full_name, shell, groups, snapshot).map_err(rule)?;
@@ -325,12 +328,6 @@ fn read_password(
 
     Password::new(without_line_end(text))
         .map_err(|invalid| Refused::Rule(format!("the password is not usable: {invalid}")))
-}
-
-fn group_name(text: &str) -> Result<GroupName, Refused> {
-    GroupName::new(text).map_err(|_invalid| {
-        Refused::Unknown(format!("`{text}` is no group name, see `groups list`"))
-    })
 }
 
 fn full_name(text: &str) -> Result<FullName, Refused> {

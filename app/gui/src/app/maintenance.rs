@@ -73,7 +73,7 @@ impl App {
             if on {
                 Operations::want(changes, task, snapshot);
             } else {
-                changes.remove::<Operations>(&task.operation());
+                Operations::unqueue(changes, task.operation());
             }
         });
     }

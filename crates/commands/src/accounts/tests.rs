@@ -8,6 +8,7 @@ use toolbox_core::{Snapshot, Toggle};
 use toolbox_plan::{GroupName, PlannedAction, RootAction, ShellPath, UserName};
 
 use super::{add, edit, group, lock, remove};
+use crate::change::Refused;
 
 /// Answers with fixed lines: the secret questions get `secrets` in turn,
 /// standard input gives `stdin`.
@@ -240,4 +241,25 @@ fn an_unknown_account_or_group_hints_at_the_closest_one() {
 
     let group_refused = group(&group_typo, Toggle::Off, &snapshot()).unwrap_err();
     assert!(group_refused.message().ends_with("did you mean `audio`?"));
+}
+
+/// The add-user dialog offers no Administrator switch without `wheel`.
+#[test]
+fn an_admin_without_a_wheel_group_is_refused() {
+    let mut system = snapshot();
+    let mut accounts = system.part::<Accounts>().unwrap().clone();
+    accounts
+        .groups
+        .retain(|group| group.name.as_str() != "wheel");
+    system.insert(accounts);
+
+    let mut prompt = Answers {
+        terminal: true,
+        secrets: vec!["s3cret!\n", "s3cret!\n"],
+        stdin: None,
+    };
+
+    let refused = add(&add_args("grace"), &system, &mut prompt).unwrap_err();
+
+    assert!(matches!(refused, Refused::Rule(_)), "{refused:?}");
 }

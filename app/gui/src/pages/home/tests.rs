@@ -7,6 +7,7 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::domains::Packages;
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Toggle};
 use toolbox_gui_kit::Loadable;
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};

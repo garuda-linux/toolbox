@@ -6,6 +6,7 @@ use egui_kittest::kittest::Queryable as _;
 use egui_kittest::{Harness, HarnessBuilder};
 use tokio::runtime::Runtime;
 use toolbox_core::domains::Packages;
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_gui::{App, Setup};
 use toolbox_plan::PackageName;

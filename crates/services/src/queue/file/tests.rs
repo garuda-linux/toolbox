@@ -3,6 +3,7 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 use toolbox_core::domains::Packages;
+use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, RestoreProblem, SAVED_VERSION, Snapshot, Toggle};
 use toolbox_plan::PackageName;
 

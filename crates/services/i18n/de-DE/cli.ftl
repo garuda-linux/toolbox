@@ -18,6 +18,7 @@ cli-account-unknown-group = eine der Gruppen gibt es nicht, oder sie wird gerade
 cli-account-root = das ist ein Root-Konto, Garuda Toolbox ändert es nicht
 cli-account-current-user = mit diesem Konto bist du angemeldet, es kann sich nicht selbst sperren oder entfernen
 cli-account-system-account = das ist ein Systemkonto, nur Konten von Personen lassen sich entfernen
+cli-account-no-admin-group = dieses System hat keine wheel-Gruppe, der ein neues Konto beitreten kann, daher kann es kein Administrator sein
 cli-account-outside-user-range = dieses Konto hat eine Benutzer-ID außerhalb von 1000 bis 60000, darum bleibt es, wie es ist
 cli-account-last-admin = das ist das letzte Mitglied der Gruppen wheel und sudo, ohne eines könnte niemand dieses System verwalten
 cli-account-last-admin-lock = das ist das letzte Mitglied der Gruppen wheel und sudo, mit gesperrtem Passwort könnte niemand dieses System verwalten

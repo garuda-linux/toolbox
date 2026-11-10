@@ -33,6 +33,7 @@ tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "pr
 tracing.workspace = true
 
 [dev-dependencies]
+toolbox-core = { workspace = true, features = ["testing"] }
 tokio = { workspace = true, features = ["rt-multi-thread"] }
 toolbox-services = { workspace = true, features = ["testing"] }
 toolbox-plan = { workspace = true, features = ["testing"] }
