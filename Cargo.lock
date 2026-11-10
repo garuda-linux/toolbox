@@ -5533,7 +5533,6 @@ dependencies = [
  "kittest",
  "notify",
  "parking_lot 0.13.0",
- "raw-window-handle",
  "rustix 1.1.6",
  "serde",
  "serde_json",
@@ -5619,12 +5618,9 @@ name = "toolbox-instance"
 version = "6.3.0"
 dependencies = [
  "parking_lot 0.13.0",
- "rustix 1.1.6",
  "tokio",
  "toolbox-plan",
  "tracing",
- "wayland-client",
- "wayland-protocols",
  "zbus 6.2.1",
 ]
 

@@ -77,7 +77,7 @@ also a command line tool that can do everything the window can.
 
 The changes pill at the bottom right lists the queued changes in plain words, each one removable, and applies them
 together. The Console shows the running apply as a terminal that takes keyboard input. A command palette (`Ctrl+K`)
-finds pages, commands, Maintenance operations and apps. A second start brings the running window to the front instead
+finds pages, commands, Maintenance operations and apps. A second start brings the running window back instead
 of opening another one.
 
 ### Command line

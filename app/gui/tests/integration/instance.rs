@@ -106,7 +106,7 @@ fn a_command_that_only_reads_the_queue_shows_no_note() {
 }
 
 #[test]
-fn a_window_raised_with_a_token_asks_for_nothing_more() {
+fn a_window_opened_for_its_start_asks_for_nothing_more() {
     let (mut harness, commands) = app();
 
     commands.send(AppCommand::Activated(Arrival {

@@ -390,6 +390,6 @@ fn install(cc: &CreationContext<'_>, arrivals: Option<&Arrivals>) {
     }
 
     if let Some(arrivals) = arrivals {
-        crate::instance::ready(arrivals, &cc.egui_ctx, cc, cc);
+        arrivals.set_context(cc.egui_ctx.clone());
     }
 }

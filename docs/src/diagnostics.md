@@ -183,8 +183,8 @@ $ garuda-toolbox --page diagnostics --action inxi
 ```
 
 `--action` takes `inxi`, `garuda-health`, `systemd-analyze`, `journalctl`,
-`pacman`, `dmesg` or `all`. When the app is already running, its window comes
-to the front and opens the page. It runs the collector only when the window
+`pacman`, `dmesg` or `all`. When the app is already running, its window asks
+to come to the front and opens the page. It runs the collector only when the window
 was already in front, because a collector may ask for a password. Otherwise
 click the collector's button. An upload never starts this way.
 

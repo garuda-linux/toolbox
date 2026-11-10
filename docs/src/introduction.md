@@ -12,10 +12,10 @@ password once per apply through the usual password dialog of your desktop.
 ## Start the app
 
 Open **Garuda Toolbox** from the application menu, or run `garuda-toolbox`.
-A second start brings the open window to the front instead of opening a new
-one. A minimized window opens again. Some desktops only let a window come
-to the front when the start came from their own launcher. Otherwise the
-window's taskbar entry asks for your attention instead.
+A second start brings the open window back instead of opening a new one. A
+minimized window opens again. On X11 the window comes to the front. On
+Wayland the desktop decides, and the window's taskbar entry asks for your
+attention instead.
 
 To open a page directly, start the app with `--page` and the page's id, for
 example `garuda-toolbox --page maintenance`. `garuda-toolbox pages` lists

@@ -54,7 +54,6 @@ egui = "0.37"
 # Without color_fonts the system colour emoji font draws nothing.
 epaint-color-fonts = { package = "epaint", version = "0.37", default-features = false, features = ["color_fonts"] }
 skrifa = "0.49"
-raw-window-handle = "0.6"
 egui-wgpu = { version = "0.37", default-features = false }
 egui_extras = { version = "0.37", default-features = false, features = ["file", "image", "svg"] }
 clap = { version = "4.6", default-features = false, features = ["std", "color", "derive", "help", "usage", "error-context", "suggestions", "wrap_help"] }
@@ -106,9 +105,6 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"
 toml = "1"
 tree-sitter = "0.27"
 tree-sitter-rust = "0.24"
-# `system`: shares winit's Wayland connection through the system libwayland-client.
-wayland-client = { version = "0.31", features = ["system"] }
-wayland-protocols = { version = "0.32", features = ["client", "staging"] }
 zbus = { version = "6", default-features = false, features = ["tokio"] }
 
 # Unwinding stays on so a panicking service ends only its own task.

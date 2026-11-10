@@ -9,9 +9,9 @@ use crate::i18n;
 use crate::instance::Arrival;
 
 impl App {
-    /// Shows the window, opens the page and starts its action. Without a
-    /// token used on Wayland the compositor decides, so the window also
-    /// asks for focus (X11 honours it) and for attention.
+    /// Shows the window, opens the page and starts its action. On Wayland
+    /// the compositor decides, so the window asks for focus (X11 honours
+    /// it) and for attention.
     pub(super) fn arrive(&mut self, ctx: &egui::Context, arrival: &Arrival) {
         let minimized = ctx.input(|input| input.viewport().minimized.unwrap_or(false));
         let in_front = self.focused && !minimized;
@@ -75,14 +75,9 @@ impl App {
         }
     }
 
-    /// The window closes: later starts may still arrive, but nothing
-    /// raises it any more. The queue is written here, as the runtime
-    /// stops its writer task soon after.
+    /// The window closes. The queue is written here, as the runtime stops
+    /// its writer task soon after.
     pub(super) fn leave(&self) {
-        if let Some(arrivals) = &self.arrivals {
-            arrivals.close();
-        }
-
         if let Err(failure) = self.queue.flush() {
             tracing::warn!("{failure}");
         }

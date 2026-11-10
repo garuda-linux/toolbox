@@ -46,8 +46,9 @@ A name the system does not have ends with a hint when a close one exists:
 | `--setup-assistant` | Opens the window on the Setup Assistant.                               |
 | `--boot-repair`     | Shows Boot Repair on an installed system too, for testing it.          |
 
-If the window is open already, the running window comes to the front and
-opens the page. No second window opens.
+If the window is open already, the running window opens the page and asks to
+come to the front ([Introduction](introduction.md) says when it does). No
+second window opens.
 
 The diagnostics page takes a report as its action:
 

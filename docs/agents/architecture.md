@@ -92,7 +92,7 @@ Link rules (check with `cargo tree -p <crate> --edges normal`):
 | `toolbox-privatebin` | PrivateBin v2 paste format and upload                                          | take a server from input, log a link                       |
 | `toolbox-aur`        | the AUR from its daily dump only (`Cache`, `parse`)                            | call the RPC, build a URL from input, ask twice a day      |
 | `toolbox-news`       | Garuda's and Arch's RSS feeds (`Cache`, `Feeds`)                               | build a URL from input, ask more than every six hours      |
-| `toolbox-instance`   | single instance: `activation`, `bus`, `raise` (`xdg_activation_v1`)            | ask more than window, page and queue, decode a queue edit  |
+| `toolbox-instance`   | single instance: `activation`, `bus`                                           | ask more than window, page and queue, decode a queue edit  |
 | `toolbox-cli`        | clap arguments, exit codes, `output::Paint`, `Prompt`                          | run a command or touch the system                          |
 | `toolbox-gui-kit`    | tokens, theme, icons, fonts, widgets, toasts, `terminal_view`, `frost`         | pick a colour outside the tokens                           |
 | `toolbox-services`   | what the window and the CLI share (`apply`, `queue`, `page`, `i18n`, ...)      | link egui, `toolbox-gui-kit` or a root helper crate        |
