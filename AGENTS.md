@@ -102,7 +102,7 @@ every release. `scripts/release.sh` asks for it.
   polkit (systemd1, login1). Argv only, no shell strings. No `sudo` except
   the [CLI fallback](docs/agents/security.md#sudo-on-the-command-line).
   `paru` runs as the user.
-- Every visible string is a Fluent text in `app/gui/i18n/en-US` with its
+- Every visible string is a Fluent text in `crates/services/i18n/en-US` with its
   German counterpart, looked up by id.
 - No `std::sync` lock across `.await`, blocking work in `spawn_blocking`,
   the egui frame never blocks.

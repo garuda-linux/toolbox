@@ -18,7 +18,7 @@ use regex::Regex;
 /// The catalogs besides the toggle catalogs: skel, config files and colour schemes.
 const FIXED_CATALOGS: usize = 3;
 /// The app's locale folders, relative to the repository root.
-const LOCALES_DIR: &str = "app/gui/i18n";
+const LOCALES_DIR: &str = "crates/services/i18n";
 const ENGLISH: &str = "en-US";
 
 /// Name, argument synopsis and function of every task.

@@ -304,7 +304,7 @@ i18n-import:
   script:
     - status=0
     - nix develop --command cargo xtask i18n-import || status=$?
-    - git add app/gui/i18n
+    - git add crates/services/i18n
     - |
       if git diff --staged --quiet; then
         echo "No changes to the Fluent files."

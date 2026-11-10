@@ -1,4 +1,4 @@
-//! The app's texts: Fluent files under `app/gui/i18n/<language>/`,
+//! The app's texts: Fluent files under `crates/services/i18n/<language>/`,
 //! compiled in by `fluent-templates`. Each lookup names its language, so
 //! the window and the command line read the same texts.
 
@@ -17,6 +17,8 @@ use parking_lot::Mutex;
 
 /// The language every text exists in and the others fall back to.
 pub const FALLBACK: LanguageIdentifier = langid!("en-US");
+/// The Fluent files' folder, for the tests that read them as files.
+pub const DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/i18n");
 /// The environment variables gettext reads, in its order.
 const LOCALE_VARIABLES: [&str; 4] = ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"];
 
@@ -27,8 +29,7 @@ type Texts = HashMap<LanguageIdentifier, HashMap<String, &'static str>>;
 
 fluent_templates::static_loader! {
     static TEXTS = {
-        // The files stay beside the app, where xtask and Transifex look.
-        locales: "../../app/gui/i18n",
+        locales: "i18n",
         fallback_language: "en-US",
         // egui lays out no bidirectional text, so the isolation marks
         // Fluent puts around arguments would only show as boxes.

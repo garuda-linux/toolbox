@@ -128,7 +128,7 @@ The checks that must pass are listed in [`AGENTS.md`](AGENTS.md#checks-all-must-
 
 ### Translations
 
-The app's texts are [Fluent](https://projectfluent.org/) files in [`app/gui/i18n/`](app/gui/i18n), one folder per
+The app's texts are [Fluent](https://projectfluent.org/) files in [`crates/services/i18n/`](crates/services/i18n), one folder per
 language. Translators work on [Transifex](https://www.transifex.com/), see
 [`docs/agents/translations.md`](docs/agents/translations.md).
 

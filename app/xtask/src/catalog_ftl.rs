@@ -1,5 +1,5 @@
 //! The catalog texts as Fluent messages for the app: one
-//! `catalog.ftl` per locale in `app/gui/i18n`. English comes from the
+//! `catalog.ftl` per locale in `crates/services/i18n`. English comes from the
 //! TOML. Other locales keep what their file already translates and fall
 //! back to English with a mark for the translators.
 

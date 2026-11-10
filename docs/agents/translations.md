@@ -1,10 +1,10 @@
 # Translations and Transifex
 
 Transifex reads no Fluent. `cargo xtask i18n-export` writes
-`app/gui/i18n/en-US/*.ftl` (the source of truth, never written by the
+`crates/services/i18n/en-US/*.ftl` (the source of truth, never written by the
 import) as Structured JSON to `i18n/garuda-toolbox_en.json`.
 `cargo xtask i18n-import` writes `i18n/garuda-toolbox_<code>.json` back
-into `app/gui/i18n/<locale>/*.ftl`. Both take `--check`.
+into `crates/services/i18n/<locale>/*.ftl`. Both take `--check`.
 
 ## The conversion
 

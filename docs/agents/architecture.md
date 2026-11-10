@@ -182,7 +182,7 @@ prints the `String` as the usage error.
 5. A service in `app/gui/src/<name>.rs` for reads outside the snapshot, and
    its dry-run stand-in in `ports.rs` when the read changes or leaves the
    machine.
-6. Texts in `app/gui/i18n/en-US/<name>.ftl` and `de-DE/<name>.ftl`.
+6. Texts in `crates/services/i18n/en-US/<name>.ftl` and `de-DE/<name>.ftl`.
 7. CLI commands (`crates/cli/src/args/*`, `crates/commands/src/*`).
    `crates/commands/src/parity.rs` fails for a queue domain without one.
 8. Integration tests and snapshots (`app/gui/tests/integration/<name>.rs`)

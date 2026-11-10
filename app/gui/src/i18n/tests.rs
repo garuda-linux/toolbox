@@ -27,7 +27,7 @@ fn ids_of(locale: &Path) -> BTreeSet<String> {
 
 #[test]
 fn every_locale_has_the_same_message_ids() {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("i18n");
+    let root = Path::new(toolbox_services::i18n::DIR);
     let english = ids_of(&root.join("en-US"));
 
     for locale in available() {
@@ -41,7 +41,7 @@ fn every_locale_has_the_same_message_ids() {
 
 #[test]
 fn every_probe_has_a_name() {
-    let english = ids_of(&Path::new(env!("CARGO_MANIFEST_DIR")).join("i18n/en-US"));
+    let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
 
     for probe in Probe::iter() {
         let id = format!("probe-{}", probe.as_str());
@@ -79,7 +79,7 @@ fn catalog_texts_come_translated_or_as_the_catalog_says() {
 
 #[test]
 fn every_account_refusal_has_a_text() {
-    let english = ids_of(&Path::new(env!("CARGO_MANIFEST_DIR")).join("i18n/en-US"));
+    let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
 
     for refusal in toolbox_core::features::users::Refusal::iter() {
         let id = format!("account-refusal-{}", refusal.as_str());
