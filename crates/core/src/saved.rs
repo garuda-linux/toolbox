@@ -100,6 +100,7 @@ type Restore = fn(&mut ChangeSet, &SavedChange, &Snapshot) -> Result<(), Restore
 struct Entry {
     restore: Restore,
     codes: &'static [SummaryCode],
+    one_off: bool,
 }
 
 #[derive(Default)]
@@ -118,6 +119,7 @@ impl Domains {
         let entry = Entry {
             restore: restore::<D>,
             codes: D::CODES,
+            one_off: D::ONE_OFF,
         };
 
         match self.entries.insert(D::ID, entry) {
@@ -130,6 +132,19 @@ impl Domains {
     /// them, such as the command line's.
     pub fn ids(&self) -> Vec<&'static str> {
         let mut ids: Vec<&'static str> = self.entries.keys().copied().collect();
+        ids.sort_unstable();
+        ids
+    }
+
+    /// The ids of the [`Domain::ONE_OFF`] domains, sorted.
+    pub fn one_offs(&self) -> Vec<&'static str> {
+        let mut ids: Vec<&'static str> = self
+            .entries
+            .iter()
+            .filter(|(_id, entry)| entry.one_off)
+            .map(|(id, _entry)| *id)
+            .collect();
+
         ids.sort_unstable();
         ids
     }

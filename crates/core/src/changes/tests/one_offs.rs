@@ -5,7 +5,7 @@
 
 use toolbox_plan::{DkmsBuild, DkmsModuleName, DkmsVersion, KernelRelease};
 
-use crate::domain::{Queued, Toggle};
+use crate::domain::{Domain as _, Queued, Toggle};
 use crate::domains::{AccountLocks, DkmsBuilds, Packages};
 use crate::features::maintenance::{Operation, Operations, Task};
 use crate::test_support::{all_steps_succeeded, package, user_name};
@@ -56,4 +56,13 @@ fn every_one_off_change_leaves_the_queue_once_the_whole_batch_succeeded() {
         1,
         "a state change waits for the next probe"
     );
+}
+
+/// A new one-off domain needs its two changes in [`batch`] too.
+#[test]
+fn the_batch_holds_every_one_off_domain() {
+    let mut covered = vec![AccountLocks::ID, DkmsBuilds::ID, Operations::ID];
+    covered.sort_unstable();
+
+    assert_eq!(crate::domains::all().unwrap().one_offs(), covered);
 }

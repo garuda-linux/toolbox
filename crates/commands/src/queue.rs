@@ -260,7 +260,10 @@ fn add(args: &QueueAdd, context: &Context<'_>, out: &mut Out<'_>) -> Exit {
     let added = add_change(store, system, |changes| {
         let sources = build::Sources {
             catalogs,
-            runtime,
+            system: &build::LiveReads {
+                runtime,
+                color: out.settings().color,
+            },
             aur,
         };
 

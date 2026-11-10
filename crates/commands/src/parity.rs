@@ -7,20 +7,14 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("account-locks", &["users", "lock", "guest"]),
     ("aur-packages", &["packages", "install", "--aur", "yay-bin"]),
     ("dkms-modules", &["dkms", "build"]),
-    ("dns", &["toggle", "on", "cloudflare-dns"]),
     (
         "full-names",
         &["users", "edit", "ada", "--full-name", "Ada"],
-    ),
-    (
-        "garuda-update-flags",
-        &["toggle", "on", "garuda-update-skip-mirrorlist"],
     ),
     ("grub-settings", &["boot", "set", "timeout", "3"]),
     ("loader-settings", &["boot", "set", "editor", "off"]),
     ("sdboot-kernel", &["boot", "param", "add", "nowatchdog"]),
     ("groups", &["users", "edit", "ada", "--add-group", "wheel"]),
-    ("hblock", &["toggle", "on", "hblock"]),
     (
         "home-folders",
         &["users", "edit", "ada", "--home", "/home/lovelace"],
@@ -34,7 +28,7 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
         "module-blacklist",
         &["network", "drivers", "blacklist", "r8169"],
     ),
-    ("new-groups", &["groups", "add", "media"]),
+    ("new-groups", &["groups", "add", "family"]),
     ("operations", &["maintenance", "run", "clean-package-cache"]),
     ("packages", &["apps", "install", "firefox"]),
     ("plymouth-theme", &["boot", "set", "plymouth", "bgrt"]),
@@ -43,7 +37,7 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("system-locale", &["locales", "system", "de_DE.UTF-8"]),
     ("unit-masks", &["services", "mask", "cups.service"]),
     ("units", &["services", "enable", "sshd.service"]),
-    ("user-configs", &["toggle", "on", "skel-kitty"]),
+    ("user-configs", &["toggle", "on", "kde-borderless-maximize"]),
     (
         "user-unit-masks",
         &["services", "mask", "foo.service", "--user"],
@@ -52,7 +46,14 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
         "user-units",
         &["services", "enable", "foo.service", "--user"],
     ),
-    ("wifi-backend", &["toggle", "on", "iwd"]),
+];
+
+/// Domains the window queues that no command does yet, each with why.
+pub const NO_COMMAND: &[(&str, &str)] = &[
+    ("dns", "set on the System Tweaks page only"),
+    ("garuda-update-flags", "set on the System Tweaks page only"),
+    ("hblock", "set on the System Tweaks page only"),
+    ("wifi-backend", "set on the System Tweaks page only"),
 ];
 
 pub const AT_ONCE: &[(&str, &[&str])] = &[

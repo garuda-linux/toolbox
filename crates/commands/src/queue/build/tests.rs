@@ -1,17 +1,23 @@
+mod parity;
+
 use std::collections::BTreeSet;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use tokio::runtime::Runtime;
 use toolbox_aur::{Answer, AurError, AurSource, Cache, Clock, RequestError, Transport, Validators};
 use toolbox_cli::args::{Confirm, PackageInstall};
 use toolbox_core::domains::{AurPackages, InstalledPackages};
 use toolbox_core::features::packages::aur::{AurIndex, AurPackage};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::PackageName;
+use toolbox_plan::sdboot::SdBootMenu;
+use toolbox_plan::{PackageName, UnitScope};
 use toolbox_services::catalogs::Catalogs;
+use toolbox_services::units::UnitList;
+use toolbox_state::kernels::DkmsEntry;
+use toolbox_state::services::UnitInfo;
+use toolbox_system::ProbeError;
 
-use super::{Sources, build};
+use super::{Sources, SystemReads, build};
 use crate::change::Refused;
 use crate::queue::add::Queueable;
 
@@ -48,6 +54,33 @@ struct Fixed;
 impl Clock for Fixed {
     fn now(&self) -> i64 {
         1_736_467_200
+    }
+}
+
+/// The running system from memory: its units, its DKMS modules, its
+/// systemd-boot menu and garuda-update installed.
+#[derive(Default)]
+struct FakeSystem {
+    units: Vec<UnitInfo>,
+    dkms: Vec<DkmsEntry>,
+    menu: Option<SdBootMenu>,
+}
+
+impl SystemReads for FakeSystem {
+    fn units(&self, _scope: UnitScope) -> UnitList {
+        Ok(Arc::new(self.units.clone()))
+    }
+
+    fn dkms(&self) -> Result<Vec<DkmsEntry>, ProbeError> {
+        Ok(self.dkms.clone())
+    }
+
+    fn garuda_update(&self) -> bool {
+        true
+    }
+
+    fn boot_menu(&self) -> Option<SdBootMenu> {
+        self.menu.clone()
     }
 }
 
@@ -93,11 +126,10 @@ fn system() -> Snapshot {
 
 fn add(names: &[&str], aur: &dyn AurSource, changes: &mut ChangeSet) -> Result<(), Refused> {
     let args = args(names);
-    let runtime = Runtime::new().unwrap();
     let catalogs = Catalogs::default();
     let sources = Sources {
         catalogs: &catalogs,
-        runtime: &runtime,
+        system: &FakeSystem::default(),
         aur,
     };
 

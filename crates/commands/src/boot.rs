@@ -3,7 +3,7 @@
 //! [`edit`], so a bad value names the rule the page names.
 
 mod listing;
-mod sdboot;
+pub mod sdboot;
 mod show;
 #[cfg(test)]
 mod tests;

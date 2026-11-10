@@ -11,10 +11,10 @@ use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, KernelArgs, Read};
 use toolbox_cli::output::ColorMode;
-use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain, SdBootKernel};
 use toolbox_core::features::boot::view::EntryRow;
 use toolbox_core::features::boot::{self as boot, kernel};
+use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
 use toolbox_plan::{LoaderDefault, PackageName, Plan};
 use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
@@ -125,7 +125,7 @@ pub fn entries(read: Read, out: &mut Out<'_>) -> Exit {
     }
 }
 
-fn read_menu(color: ColorMode) -> Option<SdBootMenu> {
+pub fn read_menu(color: ColorMode) -> Option<SdBootMenu> {
     let source = SystemBootMenu::system(Arc::new(crate::root::helper(color)));
 
     match source.menu(&Arc::new(AtomicBool::new(false))) {
@@ -193,14 +193,53 @@ pub fn default_kernel(
     Ok(LoaderSetting::Default(Some(default)))
 }
 
+/// [`set`]'s change onto `changes`, for `queue add`. Only a setting of
+/// the loader itself reads `menu`.
+///
+/// # Errors
+///
+/// As [`set`] refuses, or [`Refused::Unavailable`] when the menu could
+/// not be read.
+pub fn set_onto(
+    args: &BootSet,
+    menu: impl FnOnce() -> Option<SdBootMenu>,
+    snapshot: &Snapshot,
+    changes: &mut ChangeSet,
+) -> Result<(), Refused> {
+    if is_kernel_key(args.key) {
+        return super::edit_onto(super::setting(args, snapshot)?, snapshot, changes);
+    }
+
+    let menu = menu().ok_or_else(|| {
+        Refused::Unavailable("not available: the systemd-boot menu could not be read".to_owned())
+    })?;
+
+    want_onto(
+        loader_setting(args.key, &args.value, &menu)?,
+        &menu,
+        snapshot,
+        changes,
+    );
+    Ok(())
+}
+
 fn queue(setting: LoaderSetting, menu: &SdBootMenu, snapshot: &Snapshot) -> Result<Plan, Refused> {
+    fresh(|changes| {
+        want_onto(setting, menu, snapshot, changes);
+        Ok(())
+    })
+}
+
+fn want_onto(
+    setting: LoaderSetting,
+    menu: &SdBootMenu,
+    snapshot: &Snapshot,
+    changes: &mut ChangeSet,
+) {
     let mut state = snapshot.clone();
 
     state.insert(CurrentLoader(menu.settings.clone()));
-    fresh(|changes| {
-        LoaderSettingsDomain::want(changes, setting, &state);
-        Ok(())
-    })
+    LoaderSettingsDomain::want(changes, setting, &state);
 }
 
 /// # Errors

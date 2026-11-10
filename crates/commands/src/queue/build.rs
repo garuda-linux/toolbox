@@ -1,12 +1,13 @@
 //! A queueable change's wishes onto the queue: the system read the way
 //! the command that runs it now reads it, then that command's own rules.
 
+mod reads;
 #[cfg(test)]
 mod tests;
 
-use tokio::runtime::Runtime;
 use toolbox_aur::AurSource;
 use toolbox_cli::args::{DkmsBuild, KernelArgs};
+use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::kernels::kernels_of;
 use toolbox_core::features::maintenance::Operations;
@@ -14,19 +15,19 @@ use toolbox_core::features::maintenance::page::{task, upgrader};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::UnitScope;
 use toolbox_services::catalogs::Catalogs;
-use toolbox_services::programs::Programs;
-use toolbox_system::{Dkms, DkmsSource as _, ProbeError};
+use toolbox_system::ProbeError;
 
+pub use self::reads::{LiveReads, SystemReads};
 use super::add::Queueable;
 use crate::act::{toggle_pages, unit_lookup};
 use crate::change::{self, KernelChange, Refused};
 use crate::{accounts, boot, locales, network, packages};
 
 /// What a change may read besides the snapshot: the catalogs, the
-/// runtime for the unit lookup and the AUR's copy.
+/// running system and the AUR's copy.
 pub struct Sources<'a> {
     pub catalogs: &'a Catalogs,
-    pub runtime: &'a Runtime,
+    pub system: &'a dyn SystemReads,
     pub aur: &'a dyn AurSource,
 }
 
@@ -41,7 +42,7 @@ pub fn build(
 ) -> Result<(), Refused> {
     let Sources {
         catalogs,
-        runtime,
+        system,
         aur,
     } = *sources;
 
@@ -53,8 +54,8 @@ pub fn build(
             change::app_onto(&catalogs.apps.apps, &args.id, want, snapshot, changes)
         }
         Queueable::Unit(unit_change, args) => {
-            let (lookup, known) = unit_lookup(args, runtime);
             let scope = UnitScope::from_user(args.user);
+            let (lookup, known) = unit_lookup(args, &system.units(scope));
             change::service_onto(unit_change, scope, &args.unit, lookup, snapshot, changes).map_err(
                 |refused| refused.hinted(args.unit.as_str(), known.iter().map(String::as_str)),
             )
@@ -63,20 +64,25 @@ pub fn build(
         Queueable::Package(args, want) => packages::change_onto(args, want, snapshot, changes),
         Queueable::Install(args) => packages::install_onto(args, aur, snapshot, changes),
         Queueable::Task(args) => {
-            let upgrader = upgrader(snapshot, Programs::check().garuda_update);
+            let upgrader = upgrader(snapshot, system.garuda_update());
             let task = task(&args.task, upgrader)
                 .ok_or_else(|| Refused::Unknown(format!("no task is called `{}`", args.task)))?;
 
             Operations::want(changes, task, snapshot);
             Ok(())
         }
-        Queueable::Dkms(args) => dkms(args, snapshot, changes),
+        Queueable::Dkms(args) => dkms(args, system, snapshot, changes),
         Queueable::Locale(args, want) => locales::switch_onto(args, want, snapshot, changes),
         Queueable::SystemLocale(args) => locales::system_locale_onto(args, snapshot, changes),
         Queueable::EditUser(args) => accounts::edit_onto(args, snapshot, changes),
         Queueable::Lock(args, locked) => accounts::lock_onto(args, locked, snapshot, changes),
         Queueable::RemoveUser(args) => accounts::remove_onto(args, snapshot, changes),
         Queueable::Group(args, wanted) => accounts::group_onto(args, wanted, snapshot, changes),
+        Queueable::BootSet(args)
+            if snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot) =>
+        {
+            boot::sdboot::set_onto(args, || system.boot_menu(), snapshot, changes)
+        }
         Queueable::BootSet(args) => {
             boot::edit_onto(boot::setting(args, snapshot)?, snapshot, changes)
         }
@@ -113,8 +119,13 @@ fn kernel(
     change::kernel_onto(&kernels, &args.kernel, kernel_change, snapshot, changes)
 }
 
-fn dkms(args: &DkmsBuild, snapshot: &Snapshot, changes: &mut ChangeSet) -> Result<(), Refused> {
-    let entries = match Dkms::system().status() {
+fn dkms(
+    args: &DkmsBuild,
+    system: &dyn SystemReads,
+    snapshot: &Snapshot,
+    changes: &mut ChangeSet,
+) -> Result<(), Refused> {
+    let entries = match system.dkms() {
         Ok(entries) => entries,
         Err(ProbeError::Unavailable) => Vec::new(),
         Err(error) => {

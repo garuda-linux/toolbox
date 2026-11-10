@@ -1,19 +1,25 @@
 use clap::Parser as _;
 use toolbox_cli::args::Cli;
 
-use super::{AT_ONCE, COMMANDS};
+use super::{AT_ONCE, COMMANDS, NO_COMMAND};
 
+/// Every domain has a command or a reason why not, and no line names a
+/// domain that is gone.
 #[test]
 fn every_kind_of_queued_change_has_a_command() {
-    let domains = toolbox_core::domains::all().unwrap();
-    let covered: Vec<&str> = COMMANDS.iter().map(|(id, _command)| *id).collect();
+    let mut listed: Vec<&str> = COMMANDS
+        .iter()
+        .map(|(id, _command)| *id)
+        .chain(NO_COMMAND.iter().map(|(id, _why)| *id))
+        .collect();
 
-    for id in domains.ids() {
-        assert!(
-            covered.contains(&id),
-            "the window queues `{id}` changes, but no command does: add one and its line in `COMMANDS`"
-        );
-    }
+    listed.sort_unstable();
+
+    assert_eq!(
+        listed,
+        toolbox_core::domains::all().unwrap().ids(),
+        "each domain needs its line in `COMMANDS`, or in `NO_COMMAND` with why"
+    );
 }
 
 #[test]

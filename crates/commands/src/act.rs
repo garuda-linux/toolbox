@@ -23,7 +23,7 @@ use toolbox_core::features::services::{asks_first as asks_first_unit, critical};
 use toolbox_plan::{Plan, UnitOperation, UnitScope};
 use toolbox_services::catalogs::Catalogs;
 use toolbox_services::programs::Programs;
-use toolbox_services::units::{Systemd, UnitLister as _};
+use toolbox_services::units::{Systemd, UnitList, UnitLister as _};
 
 use super::change::{self, KernelChange, Refused, UnitLookup};
 use super::out::Listing;
@@ -78,7 +78,7 @@ pub fn app(args: &EntryArgs, want: Toggle, runtime: &Runtime, out: &mut Out<'_>)
 /// is refused as the page does.
 pub fn service(change: UnitChange, args: &UnitArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let scope = UnitScope::from_user(args.user);
-    let (lookup, known) = unit_lookup(args, runtime);
+    let (lookup, known) = unit_lookup(args, &runtime.block_on(Systemd.list(scope)));
 
     // What the session lives on wants its name typed, as the window asks.
     let asks = match change {
@@ -105,8 +105,7 @@ pub fn service(change: UnitChange, args: &UnitArgs, runtime: &Runtime, out: &mut
 }
 
 /// The unit names are for a hint at a typo.
-pub fn unit_lookup(args: &UnitArgs, runtime: &Runtime) -> (UnitLookup, Vec<String>) {
-    let listed = runtime.block_on(Systemd.list(UnitScope::from_user(args.user)));
+pub fn unit_lookup(args: &UnitArgs, listed: &UnitList) -> (UnitLookup, Vec<String>) {
     let known = listed
         .iter()
         .flat_map(|units| units.iter())
