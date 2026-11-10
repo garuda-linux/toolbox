@@ -11,7 +11,6 @@ use toolbox_catalog::{ConfigFileCatalog, LoadProblem};
 use toolbox_core::features::configs::session::{Changes, Compared, EditedFile, Fetched, Problem};
 use toolbox_core::features::configs::viewing::Viewed;
 use toolbox_core::features::configs::{Diff, Listing, Target, choose_editor};
-use toolbox_exec::refusal_text;
 use toolbox_plan::{ConfigFilePath, ConfigText, EditCopy, Editor, FetchRefusal, InvalidConfigText};
 use toolbox_services::configs::specs;
 use toolbox_system::{ConfigFileSource, EditFolder, Editing, ReadProblem};
@@ -348,7 +347,8 @@ fn read_home(file: &std::path::Path) -> Result<ConfigText, Problem> {
 }
 
 fn refused(reason: FetchRefusal) -> Problem {
-    Problem::new(reason.as_str(), refusal_text(reason))
+    // The page's own sentence names every refusal, see `RESTATED`.
+    Problem::new(reason.as_str(), "")
 }
 
 fn changes(original: ConfigText, edited: ConfigText) -> Compared {

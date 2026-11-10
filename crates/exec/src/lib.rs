@@ -26,7 +26,6 @@ pub use builtin::FileChange;
 pub use capture::{CaptureError, Captured, Exited, MAX_ERROR_BYTES, Policy, capture, run_captured};
 pub use config_file::{
     ConfigRead, Found, MAX_FOLDER_FILES, ReadError, WriteError, inspect, read_config_file,
-    refusal_text,
 };
 pub use located::editor as locate_editor;
 pub use pty_runner::{Environment, PtyRunner};

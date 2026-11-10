@@ -18,7 +18,8 @@ use std::{fmt, io};
 use resolve::{Unresolved, resolve};
 use rustix::fs::{AtFlags, FileType};
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchRefusal, InvalidConfigText, MAX_CONFIG_BYTES};
-pub use write::{WriteError, execute, refusal_text};
+use write::refusal_text;
+pub use write::{WriteError, execute};
 
 use crate::secure::{self, Attributes, Unreadable};
 
