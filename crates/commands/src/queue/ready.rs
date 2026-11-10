@@ -13,7 +13,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::output::ColorMode;
 use toolbox_core::domains::AccountLockFlags;
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
-use toolbox_core::features::{AUR_PACKAGES, Refusal, USER_LOCKS, Unchecked};
+use toolbox_core::features::{Guard, Refusal, Unchecked};
 use toolbox_core::{ChangeSet, SavedChanges, Snapshot};
 use toolbox_system::{HelperLocks, LockSource as _};
 
@@ -72,10 +72,13 @@ pub fn checked(
     let mut unchecked = Unchecked::all();
     unchecked.recheck(&mut changes, system);
 
-    let locks = unchecked.holding(&changes).any(|guard| guard == USER_LOCKS);
+    let locks = unchecked
+        .holding(&changes)
+        .any(|guard| guard == Guard::UserLocks);
+
     let aur = unchecked
         .holding(&changes)
-        .any(|guard| guard == AUR_PACKAGES);
+        .any(|guard| guard == Guard::AurPackages);
 
     if locks || aur {
         let mut snapshot = system.clone();
@@ -97,15 +100,25 @@ pub fn checked(
 pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {
     let Refusal::GuardsWaiting { guard } = refusal;
     let (error, hint) = match guard {
-        USER_LOCKS => (
+        Guard::UserLocks => (
             "a queued account change waits for the lock state of the accounts",
             "the helper did not answer: try again, or take the change back with garuda-toolbox queue remove",
         ),
-        AUR_PACKAGES => (
+        Guard::AurPackages => (
             "a queued AUR build waits for the package list of the AUR",
             "the list could not be read: try again later, or take the build back with garuda-toolbox queue remove",
         ),
-        _ => (
+        Guard::Users
+        | Guard::Memberships
+        | Guard::Kernels
+        | Guard::Locales
+        | Guard::LanguagePacks
+        | Guard::Plymouth
+        | Guard::Grub
+        | Guard::ModuleBlacklist
+        | Guard::NewGroups
+        | Guard::Hblock
+        | Guard::WifiBackend => (
             "a queued change waits for a part of the system that could not be read",
             "try again, or take the change back with garuda-toolbox queue remove",
         ),

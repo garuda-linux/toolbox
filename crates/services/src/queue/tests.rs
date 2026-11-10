@@ -6,8 +6,8 @@ use std::time::{Duration, Instant};
 
 use tempfile::TempDir;
 use toolbox_core::domains::{DkmsBuilds, InstalledPackages, Packages, SyncPackages};
-use toolbox_core::features::Refusal;
 use toolbox_core::features::kernels::LinuxPackages;
+use toolbox_core::features::{Guard, Refusal};
 use toolbox_core::{ChangeSet, Domain as _, Queued, RestoreProblem, Snapshot, Toggle};
 use toolbox_plan::{DkmsBuild, DkmsModuleName, DkmsVersion, KernelRelease, PackageName};
 
@@ -209,7 +209,9 @@ fn a_restored_queue_is_no_plan_before_its_guards_ran() {
 
     assert!(matches!(
         queue.plan(),
-        Err(Refusal::GuardsWaiting { guard: "kernels" })
+        Err(Refusal::GuardsWaiting {
+            guard: Guard::Kernels
+        })
     ));
 }
 

@@ -55,6 +55,7 @@ impl Domain for UserConfigs {
 
     const ID: &'static str = "user-configs";
     const STAGE: Stage = Stage::USER_SESSION;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::UserConfigOff, SummaryCode::UserConfigOn];
 
     fn is_satisfied(
         item: &UserConfigEdit,

@@ -17,6 +17,7 @@ impl Domain for LoginShells {
 
     const ID: &'static str = "login-shells";
     const STAGE: Stage = Stage::ACCOUNTS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::LoginShell];
 
     fn is_satisfied(item: &UserName, wish: &ShellPath, state: &CurrentShells) -> bool {
         state.0.get(item) == Some(wish)

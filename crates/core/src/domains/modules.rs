@@ -21,6 +21,7 @@ impl Domain for ModuleBlacklist {
 
     const ID: &'static str = "module-blacklist";
     const STAGE: Stage = Stage::FILES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::DriverAllow, SummaryCode::DriverBlacklist];
 
     fn is_satisfied(item: &KernelModule, wish: &Toggle, state: &OwnBlacklist) -> bool {
         state.0.contains(item) == wish.is_on()

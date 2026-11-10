@@ -4,7 +4,9 @@
 #[cfg(test)]
 mod tests;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::IntoStaticStr, strum::EnumIter)]
+#[derive(
+    Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, strum::IntoStaticStr, strum::EnumIter,
+)]
 #[strum(serialize_all = "kebab-case")]
 pub enum SummaryCode {
     AccountLock,
@@ -67,6 +69,7 @@ pub enum SummaryCode {
     RemoveOrphans,
     SdbootParameters,
     SdbootParametersNone,
+    SdbootPlymouthTheme,
     SystemLocale,
     UnitDisable,
     UnitEnable,
@@ -172,6 +175,7 @@ impl SummaryCode {
             | Self::RemoveOrphans
             | Self::SdbootParameters
             | Self::SdbootParametersNone
+            | Self::SdbootPlymouthTheme
             | Self::SystemLocale
             | Self::UnitDisable
             | Self::UnitEnable

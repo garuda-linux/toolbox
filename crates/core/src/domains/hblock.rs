@@ -30,6 +30,7 @@ impl Domain for Hblock {
 
     const ID: &'static str = "hblock";
     const STAGE: Stage = Stage::new(Stage::SERVICES.rank() + 10);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::HblockOff, SummaryCode::HblockOn];
 
     fn is_satisfied(_item: &Single, wish: &Toggle, state: &HblockState) -> bool {
         state.0 == wish.is_on()

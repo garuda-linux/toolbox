@@ -41,6 +41,7 @@ impl Domain for NewGroups {
 
     const ID: &'static str = "new-groups";
     const STAGE: Stage = accounts::NEW_GROUPS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::GroupAdd];
 
     fn is_satisfied(item: &GroupName, _wish: &Queued, state: &Accounts) -> bool {
         state.group(item).is_some()
@@ -67,6 +68,7 @@ impl Domain for AccountLocks {
     const ID: &'static str = "account-locks";
     const ONE_OFF: bool = true;
     const STAGE: Stage = accounts::LOCKS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::AccountLock, SummaryCode::AccountUnlock];
 
     fn state(_snapshot: &Snapshot) -> Option<&()> {
         Some(&())
@@ -105,6 +107,7 @@ impl Domain for FullNames {
 
     const ID: &'static str = "full-names";
     const STAGE: Stage = accounts::FULL_NAMES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::FullNameClear, SummaryCode::FullNameSet];
 
     fn is_satisfied(item: &UserName, wish: &FullName, state: &Accounts) -> bool {
         state
@@ -139,6 +142,7 @@ impl Domain for HomeFolders {
 
     const ID: &'static str = "home-folders";
     const STAGE: Stage = accounts::HOME_FOLDERS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::HomeFolder];
 
     fn is_satisfied(item: &UserName, wish: &HomeChange, state: &Accounts) -> bool {
         state
@@ -169,6 +173,10 @@ impl Domain for RemovedUsers {
 
     const ID: &'static str = "removed-users";
     const STAGE: Stage = accounts::REMOVED_USERS;
+    const CODES: &'static [SummaryCode] = &[
+        SummaryCode::UserRemoveKeepHome,
+        SummaryCode::UserRemoveWithHome,
+    ];
 
     fn is_satisfied(item: &UserName, _wish: &HomeFolder, state: &Accounts) -> bool {
         state.user(item).is_none()
@@ -200,6 +208,7 @@ impl Domain for RemovedGroups {
 
     const ID: &'static str = "removed-groups";
     const STAGE: Stage = accounts::REMOVED_GROUPS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::GroupRemove];
 
     fn is_satisfied(item: &GroupName, _wish: &Queued, state: &Accounts) -> bool {
         state.group(item).is_none()

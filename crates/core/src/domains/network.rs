@@ -30,6 +30,7 @@ impl Domain for Dns {
 
     const ID: &'static str = "dns";
     const STAGE: Stage = Stage::FILES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::Dns];
 
     fn is_satisfied(_item: &Single, wish: &DnsProvider, state: &CurrentDns) -> bool {
         state.0 == *wish
@@ -55,6 +56,7 @@ impl Domain for WifiBackends {
 
     const ID: &'static str = "wifi-backend";
     const STAGE: Stage = Stage::new(Stage::SERVICES.rank() + 20);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::WifiBackend];
 
     fn is_satisfied(_item: &Single, wish: &WifiBackend, state: &CurrentWifiBackend) -> bool {
         state.0 == *wish

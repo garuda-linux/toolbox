@@ -149,6 +149,9 @@ pub trait Domain: 'static {
     /// Where the domain's changes are listed and, unless `plan` says
     /// otherwise for an action, where they run.
     const STAGE: Stage;
+    /// Every code [`Domain::summary`] can give, so each code has one
+    /// domain that words it.
+    const CODES: &'static [SummaryCode];
     /// One-off work (clean the cache, upgrade the system) rather than a
     /// state of the system. No probe sees that it ran, so
     /// [`crate::ChangeSet::drop_done_one_offs`] drops it once the steps of

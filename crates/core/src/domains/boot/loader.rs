@@ -27,6 +27,23 @@ impl Domain for LoaderSettingsDomain {
 
     const ID: &'static str = "loader-settings";
     const STAGE: Stage = Stage::BOOT;
+    const CODES: &'static [SummaryCode] = &[
+        SummaryCode::LoaderAutoEntriesOff,
+        SummaryCode::LoaderAutoEntriesOn,
+        SummaryCode::LoaderAutoEntriesUnset,
+        SummaryCode::LoaderAutoFirmwareOff,
+        SummaryCode::LoaderAutoFirmwareOn,
+        SummaryCode::LoaderAutoFirmwareUnset,
+        SummaryCode::LoaderDefault,
+        SummaryCode::LoaderDefaultSaved,
+        SummaryCode::LoaderDefaultUnset,
+        SummaryCode::LoaderEditorOff,
+        SummaryCode::LoaderEditorOn,
+        SummaryCode::LoaderEditorUnset,
+        SummaryCode::LoaderTimeout,
+        SummaryCode::LoaderTimeoutMenu,
+        SummaryCode::LoaderTimeoutUnset,
+    ];
 
     fn fits(item: &LoaderKey, wish: &LoaderSetting) -> bool {
         wish.loader_key() == *item

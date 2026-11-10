@@ -25,6 +25,7 @@ impl Domain for Locales {
 
     const ID: &'static str = "locales";
     const STAGE: Stage = Stage::LOCALES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::LocaleDisable, SummaryCode::LocaleEnable];
 
     fn is_satisfied(item: &LocaleEntry, wish: &Toggle, state: &EnabledLocales) -> bool {
         state.0.contains(item) == wish.is_on()
@@ -64,6 +65,7 @@ impl Domain for SystemLocales {
 
     const ID: &'static str = "system-locale";
     const STAGE: Stage = Stage::new(Stage::LOCALES.rank() + 10);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::SystemLocale];
 
     fn is_satisfied(_item: &Single, wish: &LocaleName, state: &CurrentSystemLocale) -> bool {
         state

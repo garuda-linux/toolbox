@@ -28,6 +28,7 @@ impl Domain for SystemUnits {
 
     const ID: &'static str = "units";
     const STAGE: Stage = Stage::SERVICES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::UnitDisable, SummaryCode::UnitEnable];
 
     fn is_satisfied(item: &UnitName, wish: &Toggle, state: &EnabledUnits) -> bool {
         state.0.contains(item) == wish.is_on()
@@ -65,6 +66,8 @@ impl Domain for UserUnits {
 
     const ID: &'static str = "user-units";
     const STAGE: Stage = Stage::USER_SESSION;
+    const CODES: &'static [SummaryCode] =
+        &[SummaryCode::UserUnitDisable, SummaryCode::UserUnitEnable];
 
     fn is_satisfied(item: &UnitName, wish: &Toggle, state: &EnabledUserUnits) -> bool {
         state.0.contains(item) == wish.is_on()

@@ -4,7 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use toolbox_cli::Exit;
 use toolbox_core::domains::{AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentUser};
 use toolbox_core::features::packages::aur::AurNames;
-use toolbox_core::features::{AUR_PACKAGES, Refusal, USER_LOCKS};
+use toolbox_core::features::{Guard, Refusal};
 use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
 use toolbox_plan::{PackageName, UserName};
 
@@ -80,7 +80,9 @@ fn a_restored_lock_without_the_flags_is_refused() {
 
     assert_eq!(
         checked(&lock(), &system(), &reads).err(),
-        Some(Refusal::GuardsWaiting { guard: USER_LOCKS })
+        Some(Refusal::GuardsWaiting {
+            guard: Guard::UserLocks
+        })
     );
 }
 
@@ -104,7 +106,7 @@ fn a_refusal_names_what_is_missing_and_exits_unavailable() {
 
     let exit = refused(
         Refusal::GuardsWaiting {
-            guard: AUR_PACKAGES,
+            guard: Guard::AurPackages,
         },
         &mut Out::new(&mut out, Settings::default()),
     );

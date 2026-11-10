@@ -21,6 +21,7 @@ impl Domain for AurPackages {
     /// A build may need what the repository stage installs, and the DKMS
     /// stage may build a module an AUR package ships.
     const STAGE: Stage = Stage::new(300);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::AurInstall];
 
     fn is_satisfied(item: &PackageName, _wish: &Queued, state: &InstalledPackages) -> bool {
         state.0.contains(item)

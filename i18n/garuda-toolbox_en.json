@@ -4234,6 +4234,9 @@
     "change-sdboot-parameters-none": {
       "string": "Build the kernel images without parameters"
     },
+    "change-sdboot-plymouth-theme": {
+      "string": "Build the kernel images with the boot splash theme {name}"
+    },
     "change-grub-save-default-on": {
       "string": "Remember the entry picked in the boot menu"
     },

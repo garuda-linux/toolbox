@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use toolbox_core::Snapshot;
 use toolbox_core::domains::CurrentLoader;
-use toolbox_core::features::{AUR_PACKAGES, USER_LOCKS};
+use toolbox_core::features::Guard;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::protocol::Mode;
 use toolbox_plan::{StepId, UnitScope};
@@ -182,20 +182,34 @@ impl App {
         }
 
         self.queue.holding().next().map(|guard| match guard {
-            USER_LOCKS => "changes-wait-locks",
-            AUR_PACKAGES => "changes-wait-aur",
-            _ => "changes-wait-read",
+            Guard::UserLocks => "changes-wait-locks",
+            Guard::AurPackages => "changes-wait-aur",
+            Guard::Users
+            | Guard::Memberships
+            | Guard::Kernels
+            | Guard::Locales
+            | Guard::LanguagePacks
+            | Guard::Plymouth
+            | Guard::Grub
+            | Guard::ModuleBlacklist
+            | Guard::NewGroups
+            | Guard::Hblock
+            | Guard::WifiBackend => "changes-wait-read",
         })
     }
 
     /// No probe reads the lock flags or the AUR's names, so a restored
     /// change that waits for them would wait until its page is opened.
     fn read_held_parts(&mut self) {
-        if self.queue.holding().any(|guard| guard == USER_LOCKS) {
+        if self.queue.holding().any(|guard| guard == Guard::UserLocks) {
             self.services.users.open();
         }
 
-        if self.queue.holding().any(|guard| guard == AUR_PACKAGES) {
+        if self
+            .queue
+            .holding()
+            .any(|guard| guard == Guard::AurPackages)
+        {
             self.services.packages.open_aur();
         }
     }

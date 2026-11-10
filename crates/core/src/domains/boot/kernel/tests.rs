@@ -1,9 +1,9 @@
 use toolbox_plan::{KernelParameters, PlymouthTheme};
 use toolbox_state::boot::KernelCmdline;
 
-use super::{KernelSetting, SdBootKernel, SdBootKernelDomain};
+use super::{KernelKey, KernelSetting, SdBootKernel, SdBootKernelDomain};
 use crate::test_support::{commands, failed_at, outcomes, stopped_at};
-use crate::{ChangeSet, Snapshot, plan};
+use crate::{ChangeSet, Domain as _, Snapshot, Summary, SummaryCode, plan};
 
 /// `/etc/kernel/cmdline` of the Garuda Lima image.
 const CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
@@ -123,5 +123,18 @@ fn a_failed_uki_rebuild_keeps_the_theme_queued() {
     assert_eq!(
         outcomes(&changes),
         [("plymouth-theme".to_owned(), failed_at(2))]
+    );
+}
+
+/// The images are rebuilt with the theme, which the Plymouth page's own
+/// change does not do, so the queue words the two apart.
+#[test]
+fn a_theme_for_the_images_names_the_rebuild() {
+    assert_eq!(
+        SdBootKernelDomain::summary(
+            &KernelKey::PlymouthTheme,
+            &KernelSetting::PlymouthTheme(theme())
+        ),
+        Summary::of(SummaryCode::SdbootPlymouthTheme, "garuda-dr460nized")
     );
 }

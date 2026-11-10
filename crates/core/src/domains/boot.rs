@@ -45,6 +45,23 @@ impl Domain for GrubDefaults {
 
     const ID: &'static str = "grub-settings";
     const STAGE: Stage = Stage::BOOT;
+    const CODES: &'static [SummaryCode] = &[
+        SummaryCode::GrubBackground,
+        SummaryCode::GrubBackgroundNone,
+        SummaryCode::GrubDefault,
+        SummaryCode::GrubDefaultSaved,
+        SummaryCode::GrubOsProberOff,
+        SummaryCode::GrubOsProberOn,
+        SummaryCode::GrubParameters,
+        SummaryCode::GrubParametersNone,
+        SummaryCode::GrubSaveDefaultOff,
+        SummaryCode::GrubSaveDefaultOn,
+        SummaryCode::GrubSubmenusOff,
+        SummaryCode::GrubSubmenusOn,
+        SummaryCode::GrubTheme,
+        SummaryCode::GrubThemeNone,
+        SummaryCode::GrubTimeout,
+    ];
 
     fn fits(item: &GrubKey, wish: &GrubSetting) -> bool {
         wish.key() == *item
@@ -135,6 +152,7 @@ impl Domain for PlymouthThemes {
 
     const ID: &'static str = "plymouth-theme";
     const STAGE: Stage = Stage::new(Stage::BOOT.rank() + 10);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::PlymouthTheme];
 
     fn is_satisfied(_item: &Single, wish: &PlymouthTheme, state: &PlymouthState) -> bool {
         state.current.as_ref() == Some(wish)

@@ -3,6 +3,7 @@
 
 use std::collections::BTreeSet;
 
+use strum::IntoEnumIterator as _;
 use toolbox_plan::{GrubState, HomeFolder};
 use toolbox_state::probes::FailedProbes;
 
@@ -14,7 +15,7 @@ use crate::domains::{
 use crate::features::kernels::LinuxPackages;
 use crate::features::network::ModuleFacts;
 use crate::features::packages::aur::AurNames;
-use crate::features::{GUARDS, Refusal, Unchecked};
+use crate::features::{Guard, Refusal, Unchecked};
 use crate::test_support::{package, user_name};
 use crate::{ChangeSet, Queued, Snapshot, Toggle};
 
@@ -122,19 +123,12 @@ fn restored_locks_wait_for_the_lock_flags() {
 }
 
 #[test]
-fn every_guard_has_an_id_of_its_own() {
-    let ids: BTreeSet<&str> = GUARDS.iter().map(|guard| guard.id).collect();
-
-    assert_eq!(ids.len(), GUARDS.len());
-}
-
-#[test]
 fn every_guard_names_known_domains() {
     let known = crate::domains::all().unwrap().ids();
 
-    for guard in GUARDS {
-        for domain in guard.domains {
-            assert!(known.contains(domain), "{}: {domain}", guard.id);
+    for guard in Guard::iter() {
+        for domain in guard.domains() {
+            assert!(known.contains(domain), "{guard:?}: {domain}");
         }
     }
 }
@@ -168,11 +162,10 @@ fn every_guard_runs_on_a_snapshot_with_every_part() {
     let mut snapshot = every_part();
     snapshot.insert(LinuxPackages::default());
 
-    for guard in GUARDS {
+    for guard in Guard::iter() {
         assert!(
-            (guard.run)(&mut ChangeSet::default(), &snapshot).is_some(),
-            "{} waits",
-            guard.id
+            guard.recheck()(&mut ChangeSet::default(), &snapshot).is_some(),
+            "{guard:?} waits"
         );
     }
 }
@@ -191,7 +184,7 @@ fn a_waiting_guard_holds_back_the_plan_of_its_domains() {
     assert_eq!(
         unchecked.ready(&changes),
         Err(Refusal::GuardsWaiting {
-            guard: "user-locks"
+            guard: Guard::UserLocks
         })
     );
 }
@@ -208,7 +201,7 @@ fn a_waiting_guard_holds_back_no_other_domain() {
 
     assert_eq!(
         unchecked.waiting().collect::<Vec<_>>(),
-        ["aur-packages", "user-locks"]
+        [Guard::UserLocks, Guard::AurPackages]
     );
     assert_eq!(unchecked.ready(&changes), Ok(()));
 }
@@ -236,6 +229,6 @@ fn every_guard_that_holds_a_change_back_is_named() {
 
     assert_eq!(
         unchecked.holding(&changes).collect::<Vec<_>>(),
-        ["user-locks", "aur-packages"]
+        [Guard::UserLocks, Guard::AurPackages]
     );
 }

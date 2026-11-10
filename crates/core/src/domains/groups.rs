@@ -29,6 +29,7 @@ impl Domain for Groups {
 
     const ID: &'static str = "groups";
     const STAGE: Stage = accounts::MEMBERSHIPS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::GroupJoin, SummaryCode::GroupLeave];
 
     fn is_satisfied(item: &Membership, wish: &Toggle, state: &Accounts) -> bool {
         state.is_member(&item.user, &item.group) == wish.is_on()

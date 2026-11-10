@@ -22,6 +22,7 @@ impl Domain for DkmsBuilds {
     const ID: &'static str = "dkms-modules";
     const ONE_OFF: bool = true;
     const STAGE: Stage = Stage::DKMS_BUILDS;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::DkmsBuild];
 
     fn state(_snapshot: &Snapshot) -> Option<&()> {
         Some(&())

@@ -20,6 +20,8 @@ impl Domain for Packages {
 
     const ID: &'static str = "packages";
     const STAGE: Stage = Stage::PACKAGES;
+    const CODES: &'static [SummaryCode] =
+        &[SummaryCode::PackageInstall, SummaryCode::PackageRemove];
 
     fn is_satisfied(item: &PackageName, wish: &Toggle, state: &InstalledPackages) -> bool {
         state.0.contains(item) == wish.is_on()

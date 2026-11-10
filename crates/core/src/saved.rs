@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::domain::Domain;
-use crate::{ChangeSet, Outcome, Snapshot};
+use crate::{ChangeSet, Outcome, Snapshot, SummaryCode};
 
 /// Bumped when the file's shape changes. Older files are then dropped
 /// instead of misread.
@@ -96,9 +96,15 @@ pub struct DuplicateDomain(pub &'static str);
 
 type Restore = fn(&mut ChangeSet, &SavedChange, &Snapshot) -> Result<(), RestoreProblem>;
 
+/// What the registry keeps of one domain type.
+struct Entry {
+    restore: Restore,
+    codes: &'static [SummaryCode],
+}
+
 #[derive(Default)]
 pub struct Domains {
-    restorers: HashMap<&'static str, Restore>,
+    entries: HashMap<&'static str, Entry>,
 }
 
 impl Domains {
@@ -109,7 +115,12 @@ impl Domains {
     where
         D: Domain,
     {
-        match self.restorers.insert(D::ID, restore::<D>) {
+        let entry = Entry {
+            restore: restore::<D>,
+            codes: D::CODES,
+        };
+
+        match self.entries.insert(D::ID, entry) {
             None => Ok(self),
             Some(_) => Err(DuplicateDomain(D::ID)),
         }
@@ -118,9 +129,16 @@ impl Domains {
     /// The ids of the domains, sorted, so a list can be checked against
     /// them, such as the command line's.
     pub fn ids(&self) -> Vec<&'static str> {
-        let mut ids: Vec<&'static str> = self.restorers.keys().copied().collect();
+        let mut ids: Vec<&'static str> = self.entries.keys().copied().collect();
         ids.sort_unstable();
         ids
+    }
+
+    /// Every domain's [`Domain::CODES`], each code with its domain's id.
+    pub fn codes(&self) -> impl Iterator<Item = (&'static str, SummaryCode)> + '_ {
+        self.entries
+            .iter()
+            .flat_map(|(id, entry)| entry.codes.iter().map(|code| (*id, *code)))
     }
 
     /// Queues every saved change again, compared with `snapshot` like a new
@@ -140,9 +158,9 @@ impl Domains {
             .changes
             .iter()
             .filter_map(|change| {
-                self.restorers.get(change.domain.as_str()).map_or_else(
+                self.entries.get(change.domain.as_str()).map_or_else(
                     || Some(RestoreProblem::UnknownDomain(change.domain.clone())),
-                    |restore| restore(changes, change, snapshot).err(),
+                    |entry| (entry.restore)(changes, change, snapshot).err(),
                 )
             })
             .collect()

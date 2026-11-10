@@ -59,6 +59,7 @@ change-grub-parameters = Kernel mit { $name } starten
 change-grub-parameters-none = Kernel ohne zusätzliche Parameter starten
 change-sdboot-parameters = Kernel-Images mit { $name } bauen
 change-sdboot-parameters-none = Kernel-Images ohne Parameter bauen
+change-sdboot-plymouth-theme = Kernel-Images mit dem Splash-Screen-Theme { $name } bauen
 change-grub-save-default-on = Zuletzt gewählten Eintrag im Bootmenü merken
 change-grub-save-default-off = Zuletzt gewählten Eintrag im Bootmenü nicht mehr merken
 change-grub-submenus-on = Ältere Kernel in einem Untermenü gruppieren

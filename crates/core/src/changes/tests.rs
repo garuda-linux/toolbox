@@ -22,6 +22,7 @@ impl Domain for Chores {
     const ID: &'static str = "chores";
     const ONE_OFF: bool = true;
     const STAGE: Stage = Stage::REPOSITORIES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::HblockOn, SummaryCode::HblockOff];
 
     fn state(_snapshot: &Snapshot) -> Option<&()> {
         Some(&())
@@ -72,6 +73,7 @@ impl Domain for BadSave {
 
     const ID: &'static str = "bad-save";
     const STAGE: Stage = Stage::REPOSITORIES;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::PackageInstall];
 
     fn state(_snapshot: &Snapshot) -> Option<&()> {
         Some(&())

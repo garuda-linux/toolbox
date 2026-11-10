@@ -31,6 +31,7 @@ impl Domain for SystemUnitMasks {
 
     const ID: &'static str = "unit-masks";
     const STAGE: Stage = Stage::new(Stage::SERVICES.rank() - 10);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::UnitMask, SummaryCode::UnitUnmask];
 
     fn is_satisfied(item: &UnitName, wish: &Toggle, state: &MaskedUnits) -> bool {
         state.0.contains(item) == wish.is_on()
@@ -68,6 +69,7 @@ impl Domain for UserUnitMasks {
 
     const ID: &'static str = "user-unit-masks";
     const STAGE: Stage = Stage::new(Stage::USER_SESSION.rank() - 10);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::UserUnitMask, SummaryCode::UserUnitUnmask];
 
     fn is_satisfied(item: &UnitName, wish: &Toggle, state: &MaskedUserUnits) -> bool {
         state.0.contains(item) == wish.is_on()

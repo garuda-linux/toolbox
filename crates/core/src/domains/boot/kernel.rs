@@ -64,6 +64,11 @@ impl Domain for SdBootKernelDomain {
     /// After the loader settings: a failed one leaves the slow rebuild
     /// undone.
     const STAGE: Stage = Stage::new(Stage::BOOT.rank() + 10);
+    const CODES: &'static [SummaryCode] = &[
+        SummaryCode::SdbootParameters,
+        SummaryCode::SdbootParametersNone,
+        SummaryCode::SdbootPlymouthTheme,
+    ];
 
     fn fits(item: &KernelKey, wish: &KernelSetting) -> bool {
         wish.key() == *item
@@ -120,7 +125,7 @@ impl Domain for SdBootKernelDomain {
                 Summary::of(SummaryCode::SdbootParameters, list.to_string())
             }
             KernelSetting::PlymouthTheme(theme) => {
-                Summary::of(SummaryCode::PlymouthTheme, theme.as_str())
+                Summary::of(SummaryCode::SdbootPlymouthTheme, theme.as_str())
             }
         }
     }

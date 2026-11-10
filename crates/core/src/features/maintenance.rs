@@ -164,6 +164,13 @@ impl Domain for Operations {
     const ID: &'static str = "operations";
     const ONE_OFF: bool = true;
     const STAGE: Stage = Stage::REPOSITORIES;
+    const CODES: &'static [SummaryCode] = &[
+        SummaryCode::CleanPackageCache,
+        SummaryCode::RefreshKeyring,
+        SummaryCode::RemoveDatabaseLock,
+        SummaryCode::RemoveOrphans,
+        SummaryCode::UpgradeSystem,
+    ];
 
     fn state(_snapshot: &Snapshot) -> Option<&()> {
         Some(&())

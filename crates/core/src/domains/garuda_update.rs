@@ -19,6 +19,10 @@ impl Domain for GarudaUpdateFlags {
 
     const ID: &'static str = "garuda-update-flags";
     const STAGE: Stage = Stage::FILES;
+    const CODES: &'static [SummaryCode] = &[
+        SummaryCode::GarudaUpdateFlagOff,
+        SummaryCode::GarudaUpdateFlagOn,
+    ];
 
     fn is_satisfied(item: &GarudaUpdateFlag, wish: &Toggle, state: &GarudaUpdateConfig) -> bool {
         state.0.contains(item) == wish.is_on()

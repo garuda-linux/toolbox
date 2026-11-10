@@ -11,7 +11,7 @@ mod tests;
 use std::path::PathBuf;
 
 use tokio::runtime::Handle;
-use toolbox_core::features::{Refusal, Unchecked};
+use toolbox_core::features::{Guard, Refusal, Unchecked};
 use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, Snapshot};
 use toolbox_plan::{Plan, PlannedAction, StepId};
 
@@ -181,7 +181,7 @@ impl Queue {
 
     /// The guards that hold a restored change back until the snapshot
     /// holds their part, so the window asks for the parts a page reads.
-    pub fn holding(&self) -> impl Iterator<Item = &'static str> + '_ {
+    pub fn holding(&self) -> impl Iterator<Item = Guard> + '_ {
         self.unchecked.holding(&self.changes)
     }
 

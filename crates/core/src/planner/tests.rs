@@ -22,6 +22,7 @@ impl Domain for Keyring {
 
     const ID: &'static str = "keyring";
     const STAGE: Stage = Stage::new(Stage::REPOSITORIES.rank() + 10);
+    const CODES: &'static [SummaryCode] = &[SummaryCode::RefreshKeyring];
 
     fn is_satisfied(_item: &String, _wish: &String, (): &()) -> bool {
         false
@@ -51,6 +52,7 @@ impl Domain for Mirrors {
 
     const ID: &'static str = "a-mirrors";
     const STAGE: Stage = Keyring::STAGE;
+    const CODES: &'static [SummaryCode] = &[SummaryCode::RefreshKeyring];
 
     fn is_satisfied(_item: &String, _wish: &String, (): &()) -> bool {
         false
