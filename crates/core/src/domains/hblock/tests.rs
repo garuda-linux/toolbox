@@ -3,7 +3,7 @@ use toolbox_plan::{PlannedAction, RootAction};
 use super::{Hblock, HblockState};
 use crate::domain::{Summary, Toggle};
 use crate::test_support::actions;
-use crate::{ChangeSet, Single, Snapshot};
+use crate::{ChangeSet, Single, Snapshot, SummaryCode};
 
 fn snapshot(on: bool) -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -51,6 +51,6 @@ fn switching_off_installs_nothing() {
             .views()
             .first()
             .map(|view| (view.key.clone(), view.summary.clone())),
-        Some(("hblock".to_owned(), Summary::plain("hblock-off")))
+        Some(("hblock".to_owned(), Summary::plain(SummaryCode::HblockOff)))
     );
 }

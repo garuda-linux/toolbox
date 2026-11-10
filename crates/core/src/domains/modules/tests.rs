@@ -5,7 +5,7 @@ use toolbox_plan::KernelModule;
 use super::{ModuleBlacklist, OwnBlacklist};
 use crate::domain::{Summary, Toggle};
 use crate::test_support::{commands, restored, views};
-use crate::{ChangeSet, Snapshot, plan};
+use crate::{ChangeSet, Snapshot, SummaryCode, plan};
 
 fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()
@@ -63,12 +63,12 @@ fn each_module_is_one_edit_of_the_apps_own_file() {
             (
                 "module-blacklist",
                 "r8169".to_owned(),
-                Summary::of("driver-blacklist", "r8169")
+                Summary::of(SummaryCode::DriverBlacklist, "r8169")
             ),
             (
                 "module-blacklist",
                 "wl".to_owned(),
-                Summary::of("driver-allow", "wl")
+                Summary::of(SummaryCode::DriverAllow, "wl")
             ),
         ]
     );

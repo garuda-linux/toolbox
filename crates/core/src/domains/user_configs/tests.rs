@@ -8,7 +8,7 @@ use toolbox_plan::{
 use super::{UserConfigStates, UserConfigWish, UserConfigs};
 use crate::domain::{Summary, Toggle};
 use crate::test_support::{actions, failed_at, outcomes, restored, stopped_at, unit, views};
-use crate::{ChangeSet, Snapshot, plan};
+use crate::{ChangeSet, Snapshot, SummaryCode, plan};
 
 fn audio() -> UserConfigEdit {
     UserConfigEdit::File {
@@ -122,7 +122,7 @@ fn the_review_key_names_file_and_key() {
             "user-configs",
             "~/.config/discord/settings.json SKIP_HOST_UPDATE".to_owned(),
             Summary::of(
-                "user-config-off",
+                SummaryCode::UserConfigOff,
                 "~/.config/discord/settings.json SKIP_HOST_UPDATE"
             )
         )]

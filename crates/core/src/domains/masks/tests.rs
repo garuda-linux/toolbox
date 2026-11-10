@@ -4,7 +4,7 @@ use super::{MaskedUnits, MaskedUserUnits, SystemUnitMasks, UserUnitMasks};
 use crate::domain::{Domain as _, Summary, Toggle};
 use crate::domains::{EnabledUnits, EnabledUserUnits, SystemUnits, UserUnits};
 use crate::test_support::{restored, sided, unit};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -80,11 +80,11 @@ fn masks_are_keyed_by_unit_and_name_it_in_their_sentence() {
     assert_eq!(SystemUnitMasks::key(&unit("cups.service")), "cups.service");
     assert_eq!(
         UserUnitMasks::summary(&unit("psd.service"), &Toggle::On),
-        Summary::of("user-unit-mask", "psd.service")
+        Summary::of(SummaryCode::UserUnitMask, "psd.service")
     );
     assert_eq!(
         SystemUnitMasks::summary(&unit("cups.service"), &Toggle::Off),
-        Summary::of("unit-unmask", "cups.service")
+        Summary::of(SummaryCode::UnitUnmask, "cups.service")
     );
     assert_eq!(SystemUnitMasks::ID, "unit-masks");
     assert_eq!(UserUnitMasks::ID, "user-unit-masks");

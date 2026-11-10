@@ -7,6 +7,7 @@ use toolbox_plan::{GarudaUpdateFlag, RootAction};
 pub use toolbox_state::settings::GarudaUpdateConfig;
 
 use super::each;
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 pub struct GarudaUpdateFlags;
@@ -40,8 +41,8 @@ impl Domain for GarudaUpdateFlags {
     fn summary(item: &GarudaUpdateFlag, wish: &Toggle) -> Summary {
         Summary::toggle(
             *wish,
-            "garuda-update-flag-on",
-            "garuda-update-flag-off",
+            SummaryCode::GarudaUpdateFlagOn,
+            SummaryCode::GarudaUpdateFlagOff,
             item.as_str(),
         )
     }

@@ -9,6 +9,7 @@ use toolbox_plan::{LocaleEntry, LocaleName, PlannedAction, RootAction, same_loca
 pub use toolbox_state::locales::{CurrentSystemLocale, EnabledLocales};
 
 use super::each;
+use crate::SummaryCode;
 use crate::domain::{Domain, Single, Stage, Staged, Summary, Toggle};
 
 pub struct Locales;
@@ -47,7 +48,12 @@ impl Domain for Locales {
     named_key!();
 
     fn summary(item: &LocaleEntry, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "locale-enable", "locale-disable", item.to_string())
+        Summary::toggle(
+            *wish,
+            SummaryCode::LocaleEnable,
+            SummaryCode::LocaleDisable,
+            item.to_string(),
+        )
     }
 }
 
@@ -77,6 +83,6 @@ impl Domain for SystemLocales {
     single_key!();
 
     fn summary(_item: &Single, wish: &LocaleName) -> Summary {
-        Summary::of("system-locale", wish.to_string())
+        Summary::of(SummaryCode::SystemLocale, wish.to_string())
     }
 }

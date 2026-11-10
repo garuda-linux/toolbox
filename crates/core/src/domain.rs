@@ -16,6 +16,7 @@ pub use toolbox_state::Toggle;
 
 use crate::Snapshot;
 use crate::outcome::Outcome;
+use crate::summary_code::SummaryCode;
 
 /// The wish of a domain whose changes are work to do, not a state to
 /// reach: being queued says it all, so no "off" can be filed.
@@ -79,27 +80,27 @@ impl Staged {
 /// page takes no key apart.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Summary {
-    pub code: &'static str,
+    pub code: SummaryCode,
     /// What the sentence names, in the order of its placeables.
     pub values: Vec<String>,
 }
 
 impl Summary {
-    pub const fn plain(code: &'static str) -> Self {
+    pub const fn plain(code: SummaryCode) -> Self {
         Self {
             code,
             values: Vec::new(),
         }
     }
 
-    pub fn of(code: &'static str, value: impl Into<String>) -> Self {
+    pub fn of(code: SummaryCode, value: impl Into<String>) -> Self {
         Self {
             code,
             values: vec![value.into()],
         }
     }
 
-    pub fn pair(code: &'static str, first: impl Into<String>, second: impl Into<String>) -> Self {
+    pub fn pair(code: SummaryCode, first: impl Into<String>, second: impl Into<String>) -> Self {
         Self {
             code,
             values: vec![first.into(), second.into()],
@@ -108,8 +109,8 @@ impl Summary {
 
     pub fn toggle(
         wish: Toggle,
-        on: &'static str,
-        off: &'static str,
+        on: SummaryCode,
+        off: SummaryCode,
         value: impl Into<String>,
     ) -> Self {
         Self::of(if wish.is_on() { on } else { off }, value)
@@ -126,13 +127,11 @@ pub struct ChangeView {
 }
 
 impl ChangeView {
-    /// Whether applying it takes away something the user has: a package,
-    /// a group or an account. Such a queue is shown before it is applied.
-    pub fn removes(&self) -> bool {
-        matches!(
-            self.summary.code,
-            "package-remove" | "group-remove" | "user-remove-keep-home" | "user-remove-with-home"
-        )
+    /// Whether applying it takes away something the user has or can reach,
+    /// see [`SummaryCode::destructive`]. Such a queue is shown before it is
+    /// applied.
+    pub const fn removes(&self) -> bool {
+        self.summary.code.destructive()
     }
 }
 

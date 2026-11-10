@@ -5,6 +5,7 @@ use toolbox_plan::{GroupName, RootAction, UserName};
 
 use super::accounts::{self, Accounts};
 use super::each;
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -53,9 +54,9 @@ impl Domain for Groups {
 
     fn summary(item: &Membership, wish: &Toggle) -> Summary {
         let code = if wish.is_on() {
-            "group-join"
+            SummaryCode::GroupJoin
         } else {
-            "group-leave"
+            SummaryCode::GroupLeave
         };
 
         Summary::pair(code, item.user.as_str(), item.group.as_str())

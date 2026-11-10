@@ -180,16 +180,22 @@ fn operations_have_stable_kebab_case_keys() {
         .map(|view| (view.domain, view.key, view.summary))
         .collect();
 
-    let operation = |key: &'static str| ("operations", key.to_owned(), Summary::plain(key));
+    let operation = |operation: Operation| {
+        (
+            "operations",
+            operation.key().to_owned(),
+            Summary::plain(operation.code()),
+        )
+    };
 
     assert_eq!(
         views,
         [
-            operation("refresh-keyring"),
-            operation("remove-database-lock"),
-            operation("upgrade-system"),
-            operation("remove-orphans"),
-            operation("clean-package-cache"),
+            operation(Operation::RefreshKeyring),
+            operation(Operation::RemoveDatabaseLock),
+            operation(Operation::UpgradeSystem),
+            operation(Operation::RemoveOrphans),
+            operation(Operation::CleanPackageCache),
         ]
     );
 }

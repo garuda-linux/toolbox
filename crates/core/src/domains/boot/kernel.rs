@@ -6,7 +6,7 @@ use toolbox_plan::{KernelParameters, PlannedAction, PlymouthTheme, RootAction};
 pub use toolbox_state::boot::SdBootKernel;
 
 use crate::domain::{Domain, Stage, Staged, Summary};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -114,10 +114,14 @@ impl Domain for SdBootKernelDomain {
     fn summary(_item: &KernelKey, wish: &KernelSetting) -> Summary {
         match wish {
             KernelSetting::Parameters(list) if list.iter().next().is_none() => {
-                Summary::plain("sdboot-parameters-none")
+                Summary::plain(SummaryCode::SdbootParametersNone)
             }
-            KernelSetting::Parameters(list) => Summary::of("sdboot-parameters", list.to_string()),
-            KernelSetting::PlymouthTheme(theme) => Summary::of("plymouth-theme", theme.as_str()),
+            KernelSetting::Parameters(list) => {
+                Summary::of(SummaryCode::SdbootParameters, list.to_string())
+            }
+            KernelSetting::PlymouthTheme(theme) => {
+                Summary::of(SummaryCode::PlymouthTheme, theme.as_str())
+            }
         }
     }
 }

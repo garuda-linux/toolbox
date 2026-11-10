@@ -3,12 +3,12 @@ mod one_offs;
 use std::collections::BTreeSet;
 
 use super::ChangeSet;
-use crate::Snapshot;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 use crate::domains::{
     EnabledUnits, EnabledUserUnits, Groups, InstalledPackages, Packages, SystemUnits, UserUnits,
 };
 use crate::test_support::{membership, nina_in, package, unit, views};
+use crate::{Snapshot, SummaryCode};
 
 /// Work that leaves no state behind, like the maintenance operations: it
 /// needs no probe and is done once an apply succeeded.
@@ -38,7 +38,7 @@ impl Domain for Chores {
     named_key!();
 
     fn summary(item: &String, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "chore-on", "chore-off", item)
+        Summary::toggle(*wish, SummaryCode::HblockOn, SummaryCode::HblockOff, item)
     }
 }
 
@@ -88,7 +88,7 @@ impl Domain for BadSave {
     named_key!();
 
     fn summary(item: &String, _wish: &BadWish) -> Summary {
-        Summary::of("bad-save", item)
+        Summary::of(SummaryCode::PackageInstall, item)
     }
 }
 
@@ -194,12 +194,12 @@ fn views_come_in_plan_order_with_their_summary() {
             (
                 "packages",
                 "docker".to_owned(),
-                Summary::of("package-install", "docker")
+                Summary::of(SummaryCode::PackageInstall, "docker")
             ),
             (
                 "units",
                 "docker.socket".to_owned(),
-                Summary::of("unit-enable", "docker.socket")
+                Summary::of(SummaryCode::UnitEnable, "docker.socket")
             ),
         ]
     );

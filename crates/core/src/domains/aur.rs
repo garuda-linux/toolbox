@@ -7,6 +7,7 @@ mod tests;
 use toolbox_plan::{PackageName, PlannedAction, UserAction};
 
 use super::{InstalledPackages, batch, staged};
+use crate::SummaryCode;
 use crate::domain::{Domain, Queued, Stage, Staged, Summary};
 
 pub struct AurPackages;
@@ -36,6 +37,6 @@ impl Domain for AurPackages {
     named_key!();
 
     fn summary(item: &PackageName, _wish: &Queued) -> Summary {
-        Summary::of("aur-install", item.as_str())
+        Summary::of(SummaryCode::AurInstall, item.as_str())
     }
 }

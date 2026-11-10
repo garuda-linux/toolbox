@@ -15,7 +15,7 @@ fn queue() -> ChangeSet {
 }
 
 fn worded(summary: &Summary) -> String {
-    format!("{} {}", summary.code, summary.values.join(" "))
+    format!("{} {}", summary.code.as_str(), summary.values.join(" "))
 }
 
 fn shown() -> Vec<ChangeRow> {

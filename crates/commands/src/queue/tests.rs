@@ -81,7 +81,7 @@ fn want(
 }
 
 fn words(summary: &Summary) -> String {
-    summary.code.to_owned()
+    summary.code.as_str().to_owned()
 }
 
 #[test]

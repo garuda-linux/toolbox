@@ -10,8 +10,8 @@ use toolbox_plan::{FullName, GroupName, HomeChange, HomeFolder, RootAction, User
 
 use super::accounts::{self, Accounts};
 use super::each;
-use crate::Snapshot;
 use crate::domain::{Domain, Queued, Stage, Staged, Summary, Toggle};
+use crate::{Snapshot, SummaryCode};
 
 /// Before the memberships, so one apply can add a group and fill it.
 pub struct NewGroups;
@@ -55,7 +55,7 @@ impl Domain for NewGroups {
     named_key!();
 
     fn summary(item: &GroupName, _wish: &Queued) -> Summary {
-        Summary::of("group-add", item.as_str())
+        Summary::of(SummaryCode::GroupAdd, item.as_str())
     }
 }
 
@@ -89,7 +89,12 @@ impl Domain for AccountLocks {
     named_key!();
 
     fn summary(item: &UserName, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "account-lock", "account-unlock", item.as_str())
+        Summary::toggle(
+            *wish,
+            SummaryCode::AccountLock,
+            SummaryCode::AccountUnlock,
+            item.as_str(),
+        )
     }
 }
 
@@ -120,9 +125,9 @@ impl Domain for FullNames {
 
     fn summary(item: &UserName, wish: &FullName) -> Summary {
         if wish.is_empty() {
-            Summary::of("full-name-clear", item.as_str())
+            Summary::of(SummaryCode::FullNameClear, item.as_str())
         } else {
-            Summary::pair("full-name-set", item.as_str(), wish.as_str())
+            Summary::pair(SummaryCode::FullNameSet, item.as_str(), wish.as_str())
         }
     }
 }
@@ -153,7 +158,7 @@ impl Domain for HomeFolders {
     named_key!();
 
     fn summary(item: &UserName, wish: &HomeChange) -> Summary {
-        Summary::pair("home-folder", item.as_str(), wish.home.as_str())
+        Summary::pair(SummaryCode::HomeFolder, item.as_str(), wish.home.as_str())
     }
 }
 
@@ -180,8 +185,8 @@ impl Domain for RemovedUsers {
 
     fn summary(item: &UserName, wish: &HomeFolder) -> Summary {
         let code = match wish {
-            HomeFolder::Delete => "user-remove-with-home",
-            HomeFolder::Keep => "user-remove-keep-home",
+            HomeFolder::Delete => SummaryCode::UserRemoveWithHome,
+            HomeFolder::Keep => SummaryCode::UserRemoveKeepHome,
         };
 
         Summary::of(code, item.as_str())
@@ -209,6 +214,6 @@ impl Domain for RemovedGroups {
     named_key!();
 
     fn summary(item: &GroupName, _wish: &Queued) -> Summary {
-        Summary::of("group-remove", item.as_str())
+        Summary::of(SummaryCode::GroupRemove, item.as_str())
     }
 }

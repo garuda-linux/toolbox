@@ -9,6 +9,7 @@ use toolbox_plan::{KernelModule, RootAction};
 pub use toolbox_state::parts::OwnBlacklist;
 
 use super::each;
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 pub struct ModuleBlacklist;
@@ -38,6 +39,11 @@ impl Domain for ModuleBlacklist {
     named_key!();
 
     fn summary(item: &KernelModule, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "driver-blacklist", "driver-allow", item.as_str())
+        Summary::toggle(
+            *wish,
+            SummaryCode::DriverBlacklist,
+            SummaryCode::DriverAllow,
+            item.as_str(),
+        )
     }
 }

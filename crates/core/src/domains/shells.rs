@@ -5,6 +5,7 @@ use toolbox_plan::{RootAction, ShellPath, UserName};
 pub use toolbox_state::parts::{AvailableShells, CurrentShells};
 
 use super::each;
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary};
 
 pub struct LoginShells;
@@ -34,6 +35,6 @@ impl Domain for LoginShells {
     /// The summary has no access to the snapshot, so the page shows the
     /// current shell beside it.
     fn summary(item: &UserName, wish: &ShellPath) -> Summary {
-        Summary::pair("login-shell", item.as_str(), wish.as_str())
+        Summary::pair(SummaryCode::LoginShell, item.as_str(), wish.as_str())
     }
 }

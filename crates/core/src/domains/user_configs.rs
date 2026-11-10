@@ -13,6 +13,7 @@ use toolbox_plan::{
 };
 pub use toolbox_state::parts::UserConfigStates;
 
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 /// Whether the edit should be in place, and what must read it again.
@@ -104,8 +105,8 @@ impl Domain for UserConfigs {
     fn summary(item: &UserConfigEdit, wish: &UserConfigWish) -> Summary {
         Summary::toggle(
             wish.toggle,
-            "user-config-on",
-            "user-config-off",
+            SummaryCode::UserConfigOn,
+            SummaryCode::UserConfigOff,
             item.to_string(),
         )
     }

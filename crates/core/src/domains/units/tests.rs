@@ -1,6 +1,7 @@
 use toolbox_plan::{PlannedAction, TargetList, UserAction};
 
 use super::{EnabledUserUnits, USER_TEARDOWN, UserUnits};
+use crate::SummaryCode;
 use crate::domain::{Domain as _, Staged, Summary, Toggle};
 use crate::test_support::unit;
 
@@ -34,7 +35,7 @@ fn user_unit_changes_are_named_like_their_unit() {
     assert_eq!(UserUnits::key(&unit("a.service")), "a.service");
     assert_eq!(
         UserUnits::summary(&unit("a.service"), &Toggle::Off),
-        Summary::of("user-unit-disable", "a.service")
+        Summary::of(SummaryCode::UserUnitDisable, "a.service")
     );
     assert!(UserUnits::is_satisfied(
         &unit("a.service"),

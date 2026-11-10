@@ -16,6 +16,7 @@ pub mod features;
 mod outcome;
 mod planner;
 mod saved;
+mod summary_code;
 #[cfg(test)]
 mod test_support;
 #[cfg(any(test, feature = "testing"))]
@@ -28,4 +29,5 @@ pub use planner::{plan, planned};
 pub use saved::{
     Domains, DuplicateDomain, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges,
 };
+pub use summary_code::SummaryCode;
 pub use toolbox_state::Snapshot;

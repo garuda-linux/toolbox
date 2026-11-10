@@ -8,6 +8,7 @@ use toolbox_plan::{PackageName, PlannedAction, RootAction};
 pub use toolbox_state::parts::{InstalledPackages, SyncPackages};
 
 use super::{batch, split, staged};
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 pub struct Packages;
@@ -42,6 +43,11 @@ impl Domain for Packages {
     named_key!();
 
     fn summary(item: &PackageName, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "package-install", "package-remove", item.as_str())
+        Summary::toggle(
+            *wish,
+            SummaryCode::PackageInstall,
+            SummaryCode::PackageRemove,
+            item.as_str(),
+        )
     }
 }

@@ -8,7 +8,7 @@ use crate::domains::Packages;
 use crate::test_support::{
     actions, failed_at, locale, locale_entry, outcomes, package, restored, stopped_at, views,
 };
-use crate::{ChangeSet, Single, Snapshot};
+use crate::{ChangeSet, Single, Snapshot, SummaryCode};
 
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -72,12 +72,12 @@ fn the_review_page_gets_the_line_and_the_new_language() {
             (
                 "locales",
                 "de_DE.UTF-8 UTF-8".to_owned(),
-                Summary::of("locale-enable", "de_DE.UTF-8 UTF-8")
+                Summary::of(SummaryCode::LocaleEnable, "de_DE.UTF-8 UTF-8")
             ),
             (
                 "system-locale",
                 "system-locale".to_owned(),
-                Summary::of("system-locale", "de_DE.UTF-8")
+                Summary::of(SummaryCode::SystemLocale, "de_DE.UTF-8")
             ),
         ]
     );

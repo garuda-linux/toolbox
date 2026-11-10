@@ -8,6 +8,7 @@ use toolbox_plan::{PlannedAction, RootAction, UnitName, UserAction};
 pub use toolbox_state::parts::{EnabledUnits, EnabledUserUnits};
 
 use super::{batch, split, staged};
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 /// The user's teardown runs before the system's, so the root steps of an
@@ -48,7 +49,12 @@ impl Domain for SystemUnits {
     named_key!();
 
     fn summary(item: &UnitName, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "unit-enable", "unit-disable", item.as_str())
+        Summary::toggle(
+            *wish,
+            SummaryCode::UnitEnable,
+            SummaryCode::UnitDisable,
+            item.as_str(),
+        )
     }
 }
 
@@ -82,8 +88,8 @@ impl Domain for UserUnits {
     fn summary(item: &UnitName, wish: &Toggle) -> Summary {
         Summary::toggle(
             *wish,
-            "user-unit-enable",
-            "user-unit-disable",
+            SummaryCode::UserUnitEnable,
+            SummaryCode::UserUnitDisable,
             item.as_str(),
         )
     }

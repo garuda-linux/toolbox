@@ -10,6 +10,7 @@ use toolbox_plan::{KnownPackage, PackageName, PlannedAction, RootAction};
 pub use toolbox_state::settings::HblockState;
 
 use super::install;
+use crate::SummaryCode;
 use crate::domain::{Domain, Single, Stage, Staged, Summary, Toggle};
 
 static HBLOCK: LazyLock<PackageName> =
@@ -61,9 +62,9 @@ impl Domain for Hblock {
 
     fn summary(_item: &Single, wish: &Toggle) -> Summary {
         Summary::plain(if wish.is_on() {
-            "hblock-on"
+            SummaryCode::HblockOn
         } else {
-            "hblock-off"
+            SummaryCode::HblockOff
         })
     }
 }

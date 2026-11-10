@@ -12,6 +12,7 @@ use toolbox_plan::{
 pub use toolbox_state::settings::{CurrentDns, CurrentWifiBackend};
 
 use super::{each, install};
+use crate::SummaryCode;
 use crate::domain::{Domain, Single, Stage, Staged, Summary};
 
 static IWD: LazyLock<PackageName> = LazyLock::new(|| const { KnownPackage::new("iwd") }.name());
@@ -43,7 +44,7 @@ impl Domain for Dns {
     single_key!();
 
     fn summary(_item: &Single, wish: &DnsProvider) -> Summary {
-        Summary::of("dns", wish.as_str())
+        Summary::of(SummaryCode::Dns, wish.as_str())
     }
 }
 
@@ -82,6 +83,6 @@ impl Domain for WifiBackends {
     single_key!();
 
     fn summary(_item: &Single, wish: &WifiBackend) -> Summary {
-        Summary::of("wifi-backend", wish.as_str())
+        Summary::of(SummaryCode::WifiBackend, wish.as_str())
     }
 }

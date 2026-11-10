@@ -6,7 +6,7 @@ use toolbox_plan::{PlannedAction, RootAction};
 pub use toolbox_state::boot::CurrentLoader;
 
 use crate::domain::{Domain, Stage, Staged, Summary};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 pub struct LoaderSettingsDomain;
 
@@ -57,7 +57,7 @@ impl Domain for LoaderSettingsDomain {
     }
 
     fn summary(_item: &LoaderKey, wish: &LoaderSetting) -> Summary {
-        let switch = |on: Option<bool>, [yes, no, unset]: [&'static str; 3]| {
+        let switch = |on: Option<bool>, [yes, no, unset]: [SummaryCode; 3]| {
             Summary::plain(match on {
                 Some(true) => yes,
                 Some(false) => no,
@@ -67,41 +67,41 @@ impl Domain for LoaderSettingsDomain {
 
         match wish {
             LoaderSetting::Timeout(Some(LoaderTimeout::Seconds(seconds))) => {
-                Summary::of("loader-timeout", seconds.to_string())
+                Summary::of(SummaryCode::LoaderTimeout, seconds.to_string())
             }
             LoaderSetting::Timeout(Some(word)) => {
-                Summary::of("loader-timeout-menu", word.to_string())
+                Summary::of(SummaryCode::LoaderTimeoutMenu, word.to_string())
             }
-            LoaderSetting::Timeout(None) => Summary::plain("loader-timeout-unset"),
+            LoaderSetting::Timeout(None) => Summary::plain(SummaryCode::LoaderTimeoutUnset),
             LoaderSetting::Default(Some(default)) if default.as_str() == "@saved" => {
-                Summary::plain("loader-default-saved")
+                Summary::plain(SummaryCode::LoaderDefaultSaved)
             }
             LoaderSetting::Default(Some(default)) => {
-                Summary::of("loader-default", default.as_str())
+                Summary::of(SummaryCode::LoaderDefault, default.as_str())
             }
-            LoaderSetting::Default(None) => Summary::plain("loader-default-unset"),
+            LoaderSetting::Default(None) => Summary::plain(SummaryCode::LoaderDefaultUnset),
             LoaderSetting::Editor(on) => switch(
                 *on,
                 [
-                    "loader-editor-on",
-                    "loader-editor-off",
-                    "loader-editor-unset",
+                    SummaryCode::LoaderEditorOn,
+                    SummaryCode::LoaderEditorOff,
+                    SummaryCode::LoaderEditorUnset,
                 ],
             ),
             LoaderSetting::AutoEntries(on) => switch(
                 *on,
                 [
-                    "loader-auto-entries-on",
-                    "loader-auto-entries-off",
-                    "loader-auto-entries-unset",
+                    SummaryCode::LoaderAutoEntriesOn,
+                    SummaryCode::LoaderAutoEntriesOff,
+                    SummaryCode::LoaderAutoEntriesUnset,
                 ],
             ),
             LoaderSetting::AutoFirmware(on) => switch(
                 *on,
                 [
-                    "loader-auto-firmware-on",
-                    "loader-auto-firmware-off",
-                    "loader-auto-firmware-unset",
+                    SummaryCode::LoaderAutoFirmwareOn,
+                    SummaryCode::LoaderAutoFirmwareOff,
+                    SummaryCode::LoaderAutoFirmwareUnset,
                 ],
             ),
         }

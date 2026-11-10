@@ -5,7 +5,7 @@ use toolbox_plan::{PlannedAction, RootAction, ShellPath};
 use super::{CurrentShells, LoginShells};
 use crate::domain::Summary;
 use crate::test_support::{actions, user_name};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 fn shell(path: &str) -> ShellPath {
     ShellPath::new(path).unwrap()
@@ -64,6 +64,6 @@ fn the_review_names_the_user_and_the_new_shell() {
     assert_eq!(view.key, "nico");
     assert_eq!(
         view.summary,
-        Summary::pair("login-shell", "nico", "/usr/bin/zsh")
+        Summary::pair(SummaryCode::LoginShell, "nico", "/usr/bin/zsh")
     );
 }

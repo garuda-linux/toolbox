@@ -8,7 +8,7 @@ use super::{GarudaUpdateConfig, GarudaUpdateFlags};
 use crate::domain::{Summary, Toggle};
 use crate::domains::{Dns, Hblock, LoginShells, WifiBackends};
 use crate::test_support::{actions, restored, user_name};
-use crate::{ChangeSet, Single, Snapshot};
+use crate::{ChangeSet, Single, Snapshot, SummaryCode};
 
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -60,11 +60,11 @@ fn each_switch_is_its_own_step() {
         [
             (
                 "skip-mirrorlist".to_owned(),
-                Summary::of("garuda-update-flag-on", "skip-mirrorlist")
+                Summary::of(SummaryCode::GarudaUpdateFlagOn, "skip-mirrorlist")
             ),
             (
                 "update-aur".to_owned(),
-                Summary::of("garuda-update-flag-off", "update-aur")
+                Summary::of(SummaryCode::GarudaUpdateFlagOff, "update-aur")
             ),
         ]
     );

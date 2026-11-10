@@ -9,7 +9,7 @@ use crate::domains::{
     SystemUnits, UserUnits,
 };
 use crate::test_support::{membership, nina_in, package, sided, unit};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 /// A domain defined outside the core, as a later feature would: it plugs
 /// into the change set, the views and the planner without core changes.
@@ -37,7 +37,7 @@ impl Domain for Keyring {
     named_key!();
 
     fn summary(_item: &String, wish: &String) -> Summary {
-        Summary::of("keyring", wish)
+        Summary::of(SummaryCode::RefreshKeyring, wish)
     }
 }
 
@@ -72,7 +72,7 @@ impl Domain for Mirrors {
     named_key!();
 
     fn summary(_item: &String, wish: &String) -> Summary {
-        Summary::of("keyring", wish)
+        Summary::of(SummaryCode::RefreshKeyring, wish)
     }
 }
 
@@ -153,7 +153,7 @@ fn a_new_domain_plugs_in_at_its_stage() {
     );
     assert_eq!(
         changes.views().first().map(|view| view.summary.clone()),
-        Some(Summary::of("keyring", "refresh"))
+        Some(Summary::of(SummaryCode::RefreshKeyring, "refresh"))
     );
 }
 

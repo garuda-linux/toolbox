@@ -6,7 +6,7 @@ use crate::domains::Packages;
 use crate::test_support::{
     commands, failed_at, outcomes, package, plymouth_theme, restored, stopped_at, views,
 };
-use crate::{ChangeSet, Single, Snapshot, domains, plan};
+use crate::{ChangeSet, Single, Snapshot, SummaryCode, domains, plan};
 
 const DEFAULTS: &str = "GRUB_DEFAULT=0\nGRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\n";
 const REBUILD: &str = "dracut-rebuild, or mkinitcpio -P where dracut-rebuild is not installed";
@@ -135,22 +135,22 @@ fn the_review_page_gets_the_sentence_and_the_new_value() {
             (
                 "grub-settings",
                 "timeout".to_owned(),
-                Summary::of("grub-timeout", "3")
+                Summary::of(SummaryCode::GrubTimeout, "3")
             ),
             (
                 "grub-settings",
                 "submenus".to_owned(),
-                Summary::plain("grub-submenus-off")
+                Summary::plain(SummaryCode::GrubSubmenusOff)
             ),
             (
                 "grub-settings",
                 "os-prober".to_owned(),
-                Summary::plain("grub-os-prober-on")
+                Summary::plain(SummaryCode::GrubOsProberOn)
             ),
             (
                 "plymouth-theme",
                 "plymouth-theme".to_owned(),
-                Summary::of("plymouth-theme", "spinner")
+                Summary::of(SummaryCode::PlymouthTheme, "spinner")
             ),
         ]
     );
@@ -298,27 +298,27 @@ fn a_cleared_value_and_the_last_booted_entry_have_sentences_of_their_own() {
 
     assert_eq!(
         summary(GrubSetting::Default(DefaultEntry::Saved)),
-        Summary::plain("grub-default-saved")
+        Summary::plain(SummaryCode::GrubDefaultSaved)
     );
     assert_eq!(
         summary(parameters("")),
-        Summary::plain("grub-parameters-none")
+        Summary::plain(SummaryCode::GrubParametersNone)
     );
     assert_eq!(
         summary(parameters("quiet splash")),
-        Summary::of("grub-parameters", "quiet splash")
+        Summary::of(SummaryCode::GrubParameters, "quiet splash")
     );
     assert_eq!(
         summary(GrubSetting::Background(None)),
-        Summary::plain("grub-background-none")
+        Summary::plain(SummaryCode::GrubBackgroundNone)
     );
     assert_eq!(
         summary(GrubSetting::Theme(None)),
-        Summary::plain("grub-theme-none")
+        Summary::plain(SummaryCode::GrubThemeNone)
     );
     assert_eq!(
         summary(GrubSetting::SaveDefault(true)),
-        Summary::plain("grub-save-default-on")
+        Summary::plain(SummaryCode::GrubSaveDefaultOn)
     );
 }
 

@@ -1,4 +1,5 @@
 use super::{InstalledPackages, Packages};
+use crate::SummaryCode;
 use crate::domain::{Domain as _, Summary, Toggle};
 use crate::test_support::{package, packages};
 
@@ -32,6 +33,6 @@ fn package_changes_are_named_like_their_package() {
     assert_eq!(Packages::key(&package("mpv")), "mpv");
     assert_eq!(
         Packages::summary(&package("mpv"), &Toggle::Off),
-        Summary::of("package-remove", "mpv")
+        Summary::of(SummaryCode::PackageRemove, "mpv")
     );
 }

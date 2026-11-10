@@ -7,7 +7,7 @@ use super::{AccountLocks, FullNames, HomeFolders, NewGroups, RemovedGroups, Remo
 use crate::domain::{Queued, Summary, Toggle};
 use crate::domains::{Accounts, CurrentShells, Groups, LoginShells};
 use crate::test_support::{group, group_name, membership, restored, user, user_name, views};
-use crate::{ChangeSet, Snapshot, plan};
+use crate::{ChangeSet, Snapshot, SummaryCode, plan};
 
 fn snapshot() -> Snapshot {
     let mut nico = user("nico", 1000, 1000);
@@ -181,22 +181,22 @@ fn the_review_page_gets_keys_and_summaries() {
             (
                 "groups",
                 "ada wheel".to_owned(),
-                Summary::pair("group-join", "ada", "wheel")
+                Summary::pair(SummaryCode::GroupJoin, "ada", "wheel")
             ),
             (
                 "full-names",
                 "ada".to_owned(),
-                Summary::pair("full-name-set", "ada", "Ada")
+                Summary::pair(SummaryCode::FullNameSet, "ada", "Ada")
             ),
             (
                 "account-locks",
                 "nico".to_owned(),
-                Summary::of("account-unlock", "nico")
+                Summary::of(SummaryCode::AccountUnlock, "nico")
             ),
             (
                 "removed-users",
                 "ada".to_owned(),
-                Summary::of("user-remove-with-home", "ada")
+                Summary::of(SummaryCode::UserRemoveWithHome, "ada")
             ),
         ]
     );

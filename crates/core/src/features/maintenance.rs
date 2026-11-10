@@ -16,7 +16,7 @@ use self::page::upgrader;
 use crate::domain::{Domain, Stage, Staged, Summary};
 use crate::domains::InstalledPackages;
 use crate::features::live::plan_chroot;
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 pub static GARUDA_UPDATE_PACKAGE: LazyLock<PackageName> =
     LazyLock::new(|| const { KnownPackage::new("garuda-update") }.name());
@@ -88,6 +88,17 @@ impl Operation {
             Self::UpgradeSystem => "upgrade-system",
             Self::RemoveOrphans => "remove-orphans",
             Self::CleanPackageCache => "clean-package-cache",
+        }
+    }
+
+    /// The code of its sentence, spelled as its key.
+    pub const fn code(self) -> SummaryCode {
+        match self {
+            Self::RefreshKeyring => SummaryCode::RefreshKeyring,
+            Self::RemoveDatabaseLock => SummaryCode::RemoveDatabaseLock,
+            Self::UpgradeSystem => SummaryCode::UpgradeSystem,
+            Self::RemoveOrphans => SummaryCode::RemoveOrphans,
+            Self::CleanPackageCache => SummaryCode::CleanPackageCache,
         }
     }
 }
@@ -181,9 +192,8 @@ impl Domain for Operations {
         item.key().to_owned()
     }
 
-    /// The operation's key is the code of its sentence.
     fn summary(item: &Operation, _wish: &Task) -> Summary {
-        Summary::plain(item.key())
+        Summary::plain(item.code())
     }
 }
 

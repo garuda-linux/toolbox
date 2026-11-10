@@ -17,7 +17,7 @@ pub use self::kernel::{KernelKey, KernelSetting, SdBootKernel, SdBootKernelDomai
 pub use self::loader::{CurrentLoader, LoaderSettingsDomain};
 use super::each;
 use crate::domain::{Domain, Single, Stage, Staged, Summary};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, SummaryCode};
 
 /// The variables of `/etc/default/grub`, each queued under its
 /// [`GrubKey`] with the [`GrubSetting`] it should get as the wish.
@@ -85,23 +85,45 @@ impl Domain for GrubDefaults {
         };
 
         match wish {
-            GrubSetting::Default(DefaultEntry::Saved) => Summary::plain("grub-default-saved"),
+            GrubSetting::Default(DefaultEntry::Saved) => {
+                Summary::plain(SummaryCode::GrubDefaultSaved)
+            }
             GrubSetting::Default(DefaultEntry::Entry(entry)) => {
-                Summary::of("grub-default", entry.as_str())
+                Summary::of(SummaryCode::GrubDefault, entry.as_str())
             }
-            GrubSetting::Timeout(seconds) => Summary::of("grub-timeout", seconds.to_string()),
-            GrubSetting::KernelParameters(_) => {
-                named(wish.value(), "grub-parameters", "grub-parameters-none")
+            GrubSetting::Timeout(seconds) => {
+                Summary::of(SummaryCode::GrubTimeout, seconds.to_string())
             }
-            GrubSetting::Submenus(on) => switch(*on, "grub-submenus-on", "grub-submenus-off"),
-            GrubSetting::SaveDefault(on) => {
-                switch(*on, "grub-save-default-on", "grub-save-default-off")
-            }
-            GrubSetting::OsProber(on) => switch(*on, "grub-os-prober-on", "grub-os-prober-off"),
-            GrubSetting::Background(_) => {
-                named(wish.value(), "grub-background", "grub-background-none")
-            }
-            GrubSetting::Theme(_) => named(wish.value(), "grub-theme", "grub-theme-none"),
+            GrubSetting::KernelParameters(_) => named(
+                wish.value(),
+                SummaryCode::GrubParameters,
+                SummaryCode::GrubParametersNone,
+            ),
+            GrubSetting::Submenus(on) => switch(
+                *on,
+                SummaryCode::GrubSubmenusOn,
+                SummaryCode::GrubSubmenusOff,
+            ),
+            GrubSetting::SaveDefault(on) => switch(
+                *on,
+                SummaryCode::GrubSaveDefaultOn,
+                SummaryCode::GrubSaveDefaultOff,
+            ),
+            GrubSetting::OsProber(on) => switch(
+                *on,
+                SummaryCode::GrubOsProberOn,
+                SummaryCode::GrubOsProberOff,
+            ),
+            GrubSetting::Background(_) => named(
+                wish.value(),
+                SummaryCode::GrubBackground,
+                SummaryCode::GrubBackgroundNone,
+            ),
+            GrubSetting::Theme(_) => named(
+                wish.value(),
+                SummaryCode::GrubTheme,
+                SummaryCode::GrubThemeNone,
+            ),
         }
     }
 }
@@ -129,6 +151,6 @@ impl Domain for PlymouthThemes {
     single_key!();
 
     fn summary(_item: &Single, wish: &PlymouthTheme) -> Summary {
-        Summary::of("plymouth-theme", wish.to_string())
+        Summary::of(SummaryCode::PlymouthTheme, wish.to_string())
     }
 }

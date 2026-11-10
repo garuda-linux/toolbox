@@ -14,6 +14,7 @@ use toolbox_state::parts::{MaskedUnits, MaskedUserUnits};
 
 use super::units::USER_TEARDOWN;
 use super::{batch, split, staged};
+use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 const SYSTEM_MASK: Stage = Stage::new(Stage::TEARDOWN.rank() + 5);
@@ -51,7 +52,12 @@ impl Domain for SystemUnitMasks {
     named_key!();
 
     fn summary(item: &UnitName, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "unit-mask", "unit-unmask", item.as_str())
+        Summary::toggle(
+            *wish,
+            SummaryCode::UnitMask,
+            SummaryCode::UnitUnmask,
+            item.as_str(),
+        )
     }
 }
 
@@ -83,6 +89,11 @@ impl Domain for UserUnitMasks {
     named_key!();
 
     fn summary(item: &UnitName, wish: &Toggle) -> Summary {
-        Summary::toggle(*wish, "user-unit-mask", "user-unit-unmask", item.as_str())
+        Summary::toggle(
+            *wish,
+            SummaryCode::UserUnitMask,
+            SummaryCode::UserUnitUnmask,
+            item.as_str(),
+        )
     }
 }

@@ -1,6 +1,7 @@
 use toolbox_plan::{PlannedAction, TargetList, UserAction};
 
 use super::AurPackages;
+use crate::SummaryCode;
 use crate::domain::{Domain as _, Queued, Stage, Staged, Summary};
 use crate::domains::InstalledPackages;
 use crate::test_support::{package, packages};
@@ -46,6 +47,6 @@ fn an_aur_install_is_named_like_its_package() {
     assert_eq!(AurPackages::key(&package("yay-bin")), "yay-bin");
     assert_eq!(
         AurPackages::summary(&package("yay-bin"), &Queued),
-        Summary::of("aur-install", "yay-bin")
+        Summary::of(SummaryCode::AurInstall, "yay-bin")
     );
 }

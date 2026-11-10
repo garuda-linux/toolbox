@@ -9,8 +9,8 @@ mod tests;
 use toolbox_plan::{DkmsBuild, RootAction};
 
 use super::each;
-use crate::Snapshot;
 use crate::domain::{Domain, Queued, Stage, Staged, Summary};
+use crate::{Snapshot, SummaryCode};
 
 pub struct DkmsBuilds;
 
@@ -46,7 +46,7 @@ impl Domain for DkmsBuilds {
 
     fn summary(item: &DkmsBuild, _wish: &Queued) -> Summary {
         Summary::pair(
-            "dkms-build",
+            SummaryCode::DkmsBuild,
             format!("{}/{}", item.module, item.version),
             item.kernel.as_str(),
         )
