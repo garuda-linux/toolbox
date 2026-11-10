@@ -139,8 +139,13 @@ impl Store for InWindow {
     }
 
     fn edit(&self, edit: &QueueEdit) -> Result<(), Problem> {
+        let text = edit.to_text().map_err(|error| {
+            tracing::warn!("cannot write the edit for the window: {error}");
+            Problem::Window(Refusal::Invalid)
+        })?;
+
         self.runtime
-            .block_on(self.window.edit(&edit.to_text()))
+            .block_on(self.window.edit(&text))
             .map_err(Problem::Window)
     }
 }

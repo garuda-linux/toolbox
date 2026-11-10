@@ -38,8 +38,11 @@ impl ChangeSet {
 
         if is_satisfied::<D>(&item, &wish, snapshot) {
             self.remove::<D>(&item);
-        } else {
-            self.queue_mut::<D>().changes.insert(item, Entry::new(wish));
+            return;
+        }
+
+        if let Some(queue) = self.queue_mut::<D>() {
+            queue.changes.insert(item, Entry::new(wish));
         }
     }
 
@@ -55,14 +58,18 @@ impl ChangeSet {
         D: Domain,
     {
         if outcome.is_failed() {
-            self.queue_mut::<D>()
-                .changes
-                .insert(item, Entry { wish, outcome });
+            if let Some(queue) = self.queue_mut::<D>() {
+                queue.changes.insert(item, Entry { wish, outcome });
+            }
+
             return;
         }
 
         self.want::<D>(item.clone(), wish, snapshot);
-        if let Some(entry) = self.queue_mut::<D>().changes.get_mut(&item) {
+        if let Some(entry) = self
+            .queue_mut::<D>()
+            .and_then(|queue| queue.changes.get_mut(&item))
+        {
             entry.outcome = outcome;
         }
     }
@@ -94,7 +101,9 @@ impl ChangeSet {
     where
         D: Domain,
     {
-        self.queue_mut::<D>().changes.remove(item);
+        if let Some(queue) = self.queue_mut::<D>() {
+            queue.changes.remove(item);
+        }
     }
 
     /// Returns whether one was queued.
@@ -215,18 +224,24 @@ impl ChangeSet {
             .and_then(|queue| queue.as_any().downcast_ref())
     }
 
-    fn queue_mut<D>(&mut self) -> &mut DomainQueue<D>
+    /// `None` only if the queue under `D`'s type id belongs to another
+    /// domain, which `queue_mut` itself never stores.
+    fn queue_mut<D>(&mut self) -> Option<&mut DomainQueue<D>>
     where
         D: Domain,
     {
-        let slot = self
+        let queue = self
             .queues
             .entry(TypeId::of::<D>())
-            .or_insert_with(|| Box::new(DomainQueue::<D>::default()));
+            .or_insert_with(|| Box::new(DomainQueue::<D>::default()))
+            .as_any_mut()
+            .downcast_mut();
 
-        slot.as_any_mut().downcast_mut().unwrap_or_else(|| {
-            unreachable!("the queue stored under a domain's type id belongs to that domain")
-        })
+        if queue.is_none() {
+            tracing::error!("the queue of {} holds another domain's changes", D::ID);
+        }
+
+        queue
     }
 }
 

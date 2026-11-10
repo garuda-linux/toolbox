@@ -3,6 +3,7 @@ use toolbox_system::{Menu, MenuRead};
 
 use super::{LOADER_CONF, image_menu, shown};
 
+#[expect(clippy::unreachable, reason = "the image is a systemd-boot capture")]
 fn with_counts(skipped: usize, cut: usize) -> Menu {
     let Menu::Read(MenuRead::SdBoot(mut menu)) = image_menu(LOADER_CONF) else {
         unreachable!("the image's menu is a systemd-boot menu");

@@ -144,10 +144,13 @@ impl QueueEdit {
     }
 
     /// The edit as the bus and the tests carry it.
-    pub fn to_text(&self) -> String {
-        serde_json::to_string(self).unwrap_or_else(|error| {
-            unreachable!("an edit of strings and JSON values always serialises: {error}")
-        })
+    ///
+    /// # Errors
+    ///
+    /// What `serde_json` refuses, which an edit of strings and JSON values
+    /// never gives.
+    pub fn to_text(&self) -> Result<String, serde_json::Error> {
+        serde_json::to_string(self)
     }
 }
 

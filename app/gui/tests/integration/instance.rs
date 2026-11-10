@@ -87,7 +87,7 @@ fn an_edit_from_a_command_shows_a_note() {
     let (mut harness, arrivals) = with_desk();
     let edit = QueueEdit::between(&ChangeSet::default(), &installing(&["firefox"]));
 
-    let mut answered = ask(&arrivals, Question::Edit(edit.to_text()));
+    let mut answered = ask(&arrivals, Question::Edit(edit.to_text().unwrap()));
     harness.run();
 
     assert_eq!(answered.try_recv(), Ok(Ok(String::new())));

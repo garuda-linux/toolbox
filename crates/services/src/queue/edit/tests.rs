@@ -72,7 +72,7 @@ fn an_added_wish_the_system_fulfils_is_not_queued() {
 fn an_edit_survives_its_text() {
     let edit = QueueEdit::between(&queued(&["vlc"]), &queued(&["steam"]));
 
-    assert_eq!(parse(&edit.to_text()), Ok(edit));
+    assert_eq!(parse(&edit.to_text().unwrap()), Ok(edit));
 }
 
 #[test]

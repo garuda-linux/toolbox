@@ -34,6 +34,7 @@ impl RowAction<Fake> for Never {
         Err("services-why-masked")
     }
 
+    #[expect(clippy::unreachable, reason = "a resting action never runs")]
     fn run(&self, _item: &Fake, _run: Run<'_>) {
         unreachable!("a resting action does not run");
     }

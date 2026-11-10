@@ -30,7 +30,11 @@ fn an_edit_from_a_command_is_queued() {
     let edit = QueueEdit::between(&ChangeSet::default(), &firefox());
 
     queue
-        .answer(Question::Edit(edit.to_text()), false, &Snapshot::default())
+        .answer(
+            Question::Edit(edit.to_text().unwrap()),
+            false,
+            &Snapshot::default(),
+        )
         .unwrap();
 
     assert_eq!(queue.changes().len(), 1);
@@ -41,7 +45,11 @@ fn no_edit_while_the_window_applies_its_queue() {
     let mut queue = Queue::in_memory(ChangeSet::default());
     let edit = QueueEdit::between(&ChangeSet::default(), &firefox());
 
-    let answer = queue.answer(Question::Edit(edit.to_text()), true, &Snapshot::default());
+    let answer = queue.answer(
+        Question::Edit(edit.to_text().unwrap()),
+        true,
+        &Snapshot::default(),
+    );
 
     assert_eq!(answer, Err(Refusal::Busy));
     assert!(queue.changes().is_empty());
@@ -75,7 +83,7 @@ fn an_aur_build_the_copy_lacks_goes_once_the_copy_is_known() {
     system.insert(InstalledPackages::default());
     let edit = QueueEdit::between(&ChangeSet::default(), &wanted);
     queue
-        .answer(Question::Edit(edit.to_text()), false, &system)
+        .answer(Question::Edit(edit.to_text().unwrap()), false, &system)
         .unwrap();
     assert_eq!(queue.changes().len(), 2, "the builds wait for the copy");
 
