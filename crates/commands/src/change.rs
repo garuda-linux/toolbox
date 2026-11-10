@@ -139,8 +139,8 @@ pub(super) fn toggle_refused(refusal: toggles::Refusal) -> Refused {
             &along,
             toolbox_core::features::packages::queue::Refusal::Protected(why),
         ),
-        toggles::Refusal::Unknown => Refused::page_rule(why::SWITCH_UNKNOWN),
-        toggles::Refusal::Unmet => Refused::page_rule(why::SWITCH_UNMET),
+        toggles::Refusal::Unknown => Refused::page_rule(why::switch_unknown()),
+        toggles::Refusal::Unmet => Refused::page_rule(why::switch_unmet()),
         toggles::Refusal::Account(refusal, _) => {
             Refused::page_rule(why::membership(refusal, &name))
         }

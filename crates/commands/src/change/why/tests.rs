@@ -6,7 +6,7 @@ use toolbox_core::features::network::Refusal as DriverRefusal;
 use toolbox_core::features::users::Refusal as AccountRefusal;
 use toolbox_plan::GrubPicture;
 
-use super::{SWITCH_UNKNOWN, SWITCH_UNMET, account, boot_edit, driver, locale, membership, repair};
+use super::{account, boot_edit, driver, locale, membership, repair, switch_unknown, switch_unmet};
 
 fn one_line(text: &str) {
     assert!(!text.contains('\n'), "{text}");
@@ -67,13 +67,13 @@ fn every_refusal_has_its_own_english_line() {
     ];
 
     let lines: Vec<String> = repairs
-        .map(|refusal| repair(refusal).to_owned())
+        .map(|refusal| repair(refusal).into_owned())
         .into_iter()
-        .chain(accounts.map(|refusal| account(refusal).to_owned()))
-        .chain(locales.map(|refusal| locale(refusal).to_owned()))
-        .chain(drivers.map(|refusal| driver(refusal).to_owned()))
+        .chain(accounts.map(|refusal| account(refusal).into_owned()))
+        .chain(locales.map(|refusal| locale(refusal).into_owned()))
+        .chain(drivers.map(|refusal| driver(refusal).into_owned()))
         .chain(boots.map(|refusal| boot_edit(EditProblem::Refused(refusal), "x")))
-        .chain([SWITCH_UNKNOWN.to_owned(), SWITCH_UNMET.to_owned()])
+        .chain([switch_unknown().into_owned(), switch_unmet().into_owned()])
         .collect();
 
     for line in &lines {
