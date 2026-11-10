@@ -72,6 +72,8 @@ fontdb = "0.24"
 notify = "8.2"
 unicode-width = "0.2"
 zeroize = "1.9"
+# Safe close-on-exec by number, which rustix only offers through `borrow_raw`.
+close_fds = "0.3"
 egui_kittest = { version = "0.37", features = ["eframe", "snapshot", "wgpu"] }
 kittest = "0.5"
 image = { version = "0.25", default-features = false, features = ["gif", "ico", "png"] }

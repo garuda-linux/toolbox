@@ -13,6 +13,7 @@ path = "src/main.rs"
 [dependencies]
 toolbox-exec.workspace = true
 toolbox-plan.workspace = true
+close_fds.workspace = true
 log.workspace = true
 rustix = { workspace = true, features = ["process", "fs", "net", "termios", "stdio", "thread"] }
 signal-hook.workspace = true

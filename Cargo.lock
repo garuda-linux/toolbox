@@ -991,6 +991,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "close_fds"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3bc416f33de9d59e79e57560f450d21ff8393adcf1cdfc3e6d8fb93d5f88a2ed"
+dependencies = [
+ "cfg-if",
+ "libc",
+]
+
+[[package]]
 name = "cmov"
 version = "0.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5586,6 +5596,7 @@ dependencies = [
 name = "toolbox-helper"
 version = "6.3.0"
 dependencies = [
+ "close_fds",
  "log",
  "parking_lot 0.13.0",
  "rustix 1.1.6",
