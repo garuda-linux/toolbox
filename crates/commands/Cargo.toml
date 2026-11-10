@@ -29,10 +29,11 @@ rustix = { workspace = true, features = ["event", "fs", "process", "termios"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
-tokio.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "process", "signal"] }
 tracing.workspace = true
 
 [dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread"] }
 toolbox-services = { workspace = true, features = ["testing"] }
 toolbox-plan = { workspace = true, features = ["testing"] }
 toolbox-pty = { workspace = true, features = ["testing"] }
