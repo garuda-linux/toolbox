@@ -13,7 +13,7 @@ use toolbox_state::configs::{ConfigEntryLocation, ConfigEntrySpec, Found, Link};
 
 use super::{ConfigFileSource as _, HelperFetch, ReadProblem, SystemConfigFiles};
 use crate::pkexec::Refusal;
-use crate::testing::running_as_root;
+use crate::test_support::running_as_root;
 
 /// Stands in for pkexec and the helper: a script that prints an answer.
 struct Script(PathBuf);

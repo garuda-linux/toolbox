@@ -16,8 +16,7 @@ use crate::testing::{PageFixture, PageState};
 /// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free btrfs
 /// Garuda on `/dev/nvme1n1p2` with the EFI system partition
 /// `/dev/nvme1n1p1`.
-const BARE_METAL: &str =
-    include_str!("../../../../../crates/core/src/features/bootrepair/fixtures/bare-metal.json");
+const BARE_METAL: &str = toolbox_state::testing::features::bootrepair::BARE_METAL_JSON;
 
 type Shown = Harness<'static, PageState<BootRepairPage>>;
 

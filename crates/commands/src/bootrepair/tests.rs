@@ -9,8 +9,7 @@ use crate::change::Refused;
 
 /// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free second
 /// Garuda on `nvme1n1p2`.
-const BARE_METAL: &str =
-    include_str!("../../../core/src/features/bootrepair/fixtures/bare-metal.json");
+const BARE_METAL: &str = toolbox_state::testing::features::bootrepair::BARE_METAL_JSON;
 
 struct NoTerminal;
 

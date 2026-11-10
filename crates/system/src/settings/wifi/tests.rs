@@ -6,7 +6,7 @@ use toolbox_plan::WifiBackend;
 use super::{backend, backend_of};
 use crate::ProbeError;
 use crate::settings::tests::{CONNECTIVITY_CONF, NETWORKMANAGER_CONF, conf_d};
-use crate::testing::write;
+use crate::test_support::write;
 
 /// The drop-in the helper writes for iwd.
 fn iwd() -> &'static str {

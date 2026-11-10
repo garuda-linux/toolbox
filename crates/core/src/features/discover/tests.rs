@@ -7,7 +7,7 @@ use toolbox_catalog::ToggleCatalog;
 use super::{AppOrder, Apps, Hit, arrange, icon_name};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
 use crate::features::search::Needle;
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const INTERNET: &str = r#"

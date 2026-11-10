@@ -15,8 +15,7 @@ use toolbox_system::{PackageIndexSource, ProbeError, RecentLogSource};
 use super::{Packages, PackagesSetup, Read};
 use crate::testing::until;
 
-const LIMA_LOG: &str =
-    include_str!("../../../../crates/system/src/status/pacman_log/fixtures/pacman.log");
+const LIMA_LOG: &str = toolbox_state::testing::status::pacman_log::PACMAN_LOG;
 
 /// gimp installed as in the Lima VM, whose pacman log names it once.
 #[derive(Default)]

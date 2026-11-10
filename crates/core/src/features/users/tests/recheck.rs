@@ -8,7 +8,7 @@ use super::admins::with_admins;
 use super::{queued, snapshot};
 use crate::Snapshot;
 use crate::domains::CurrentUser;
-use crate::testing::{lock_flags, restore_saved, user_name};
+use crate::test_support::{lock_flags, restore_saved, user_name};
 
 /// `ada` runs the app, `nico` stays the only admin.
 fn ada_runs_the_app() -> Snapshot {

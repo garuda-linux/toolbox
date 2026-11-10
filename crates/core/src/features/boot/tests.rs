@@ -16,7 +16,7 @@ use super::{
 use crate::domains::{
     CurrentGrub, GrubDefaults, InstalledPackages, Packages, PlymouthState, PlymouthThemes,
 };
-use crate::testing::{package, packages, plymouth_theme};
+use crate::test_support::{package, packages, plymouth_theme};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 pub(super) const ARCH: &str =

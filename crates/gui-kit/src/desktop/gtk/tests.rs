@@ -9,7 +9,7 @@ use super::parse;
 
 /// `gtk-4.0/gtk.css` of Sweet-Dark, the GTK theme Garuda's skel names.
 /// It defines the GTK 3 names only.
-const SWEET_DARK: &str = include_str!("fixtures/theme-gtk-4.0.css");
+const SWEET_DARK: &str = crate::testing::desktop::gtk::THEME_GTK_4_0_CSS;
 /// The same theme's `gtk-3.0/gtk.css`.
 const SWEET_DARK_GTK3: &str = include_str!("fixtures/theme-gtk-3.0.css");
 

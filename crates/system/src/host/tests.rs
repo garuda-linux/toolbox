@@ -21,9 +21,9 @@ const STAT: &str = include_str!("fixtures/proc-stat");
 const BOOTED: u64 = 1_794_155_377;
 const STATUS: &str = include_str!("fixtures/proc-self-status");
 const RELEASE: &str = include_str!("fixtures/garuda-release");
-const OS_RELEASE: &str = include_str!("fixtures/os-release");
+const OS_RELEASE: &str = crate::testing::host::OS_RELEASE;
 /// The Lima VM's accounts: `user` is 1000, `guest` 1001, `nopass` 1002.
-const PASSWD: &str = include_str!("../accounts/fixtures/passwd");
+const PASSWD: &str = toolbox_plan::testing::accounts::PASSWD;
 
 fn env(pairs: &[(&str, &str)]) -> impl Fn(&str) -> Option<OsString> + Send + Sync + use<> {
     let pairs: Vec<(String, String)> = pairs

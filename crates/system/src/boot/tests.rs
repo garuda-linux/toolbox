@@ -9,9 +9,9 @@ use toolbox_state::boot::{PlymouthState, VirtualMachine};
 
 use super::{BootSource as _, SystemBoot};
 use crate::ProbeError;
-use crate::testing::{fake_program, write};
+use crate::test_support::{fake_program, write};
 
-const DEFAULT_GRUB: &str = include_str!("../../../plan/src/grub/fixtures/installed/default-grub");
+const DEFAULT_GRUB: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
 
 const PLYMOUTHD_CONF: &str = include_str!("fixtures/plymouthd.conf");
 const PLYMOUTHD_DEFAULTS: &str = include_str!("fixtures/plymouthd.defaults");

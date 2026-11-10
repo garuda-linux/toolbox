@@ -14,7 +14,7 @@ use crate::features::locales::{
     Filter, LanguageName, LocaleNames, PackOrder, SupportedLocales, pack_order, parse_supported,
     pick, toggle,
 };
-use crate::testing::{locale, locale_entry, package, packages};
+use crate::test_support::{locale, locale_entry, package, packages};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 fn locales(snapshot: &Snapshot, changes: &ChangeSet, filter: &Filter) -> Vec<LocaleRow> {

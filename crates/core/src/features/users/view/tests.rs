@@ -4,7 +4,7 @@ use super::{Shown, accounts_known, admin_group, choices, group_names, groups, sh
 use crate::domains::{Accounts, AvailableShells};
 use crate::features::users::listing::{GroupOrder, UserOrder};
 use crate::features::users::{add_group, set_full_name, set_shell};
-use crate::testing::{group, group_name, user, user_name};
+use crate::test_support::{group, group_name, user, user_name};
 use crate::{ChangeSet, Snapshot};
 
 fn shell(path: &str) -> ShellPath {

@@ -8,7 +8,7 @@ use super::super::{
 };
 use super::{groups, queued, snapshot};
 use crate::domains::{AccountLocks, Accounts, CurrentUser, Groups, RemovedUsers};
-use crate::testing::{group, lock_flags, membership, user_name};
+use crate::test_support::{group, lock_flags, membership, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// The fixture with `admins` as the group that grants sudo, holding

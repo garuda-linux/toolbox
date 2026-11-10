@@ -3,7 +3,7 @@ use super::super::listing::{GroupOrder, UserOrder, arrange_groups, arrange_users
 use super::super::rows::{group_choices, group_rows, user_rows};
 use super::super::view::group_names;
 use crate::domains::{Accounts, CurrentUser};
-use crate::testing::{group, group_name, user, user_name};
+use crate::test_support::{group, group_name, user, user_name};
 use crate::{ChangeSet, Snapshot};
 
 /// Four accounts whose fields each sort another way.

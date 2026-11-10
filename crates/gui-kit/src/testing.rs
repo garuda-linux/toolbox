@@ -3,6 +3,7 @@
 //! already uses them.
 
 mod caps;
+pub mod desktop;
 
 pub use caps::{cap_off_centre, capitals_top, deep_descent_font, last_baseline_within, test_fonts};
 use egui_kittest::HarnessBuilder;

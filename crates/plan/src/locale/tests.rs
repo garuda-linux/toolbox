@@ -4,11 +4,11 @@ use super::{LocaleEntry, is_builtin_locale, same_locale, set_system_lang, system
 use crate::LocaleName;
 
 /// `/etc/locale.gen` of the Lima image, written by cloud-init.
-const LOCALE_GEN: &str = include_str!("../../../system/src/locales/fixtures/locale.gen");
+const LOCALE_GEN: &str = crate::testing::locales::LOCALE_GEN;
 /// `/usr/share/i18n/SUPPORTED` of the Lima image.
-const SUPPORTED: &str = include_str!("../../../system/src/locales/fixtures/SUPPORTED");
+const SUPPORTED: &str = crate::testing::locales::SUPPORTED;
 /// `/etc/locale.conf` of the Lima image.
-const LOCALE_CONF: &str = include_str!("../../../system/src/locales/fixtures/locale.conf");
+const LOCALE_CONF: &str = crate::testing::locales::LOCALE_CONF;
 
 fn entry(line: &str) -> LocaleEntry {
     LocaleEntry::parse(line).unwrap()

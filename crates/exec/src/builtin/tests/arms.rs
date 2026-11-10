@@ -8,7 +8,7 @@ use toolbox_plan::{
 };
 
 use super::*;
-use crate::testing::assert_failed;
+use crate::test_support::assert_failed;
 
 #[test]
 fn installing_the_mirrorlist_is_one_step() {
@@ -45,12 +45,12 @@ fn accounts_and_homes_are_checked_as_steps() {
     fs::create_dir_all(root.path().join("etc")).unwrap();
     fs::write(
         root.path().join("etc/passwd"),
-        include_str!("../../../../system/src/accounts/fixtures/passwd"),
+        toolbox_plan::testing::accounts::PASSWD,
     )
     .unwrap();
     fs::write(
         root.path().join("etc/group"),
-        include_str!("../../../../system/src/accounts/fixtures/group"),
+        crate::testing::accounts::GROUP,
     )
     .unwrap();
 
@@ -115,7 +115,7 @@ fn grub_settings_are_one_step() {
     fs::create_dir_all(root.path().join("etc/default")).unwrap();
     fs::write(
         root.path().join("etc/default/grub"),
-        include_str!("../../../../plan/src/grub/fixtures/installed/default-grub"),
+        toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB,
     )
     .unwrap();
     let builtin = Builtin::EditGrubDefaults(
@@ -138,8 +138,8 @@ fn grub_settings_are_one_step() {
 /// one hblock wrote there.
 #[test]
 fn writing_a_config_file_is_one_step() {
-    let old = include_str!("../../../../system/src/settings/fixtures/hosts");
-    let new = include_str!("../../../../system/src/settings/fixtures/hosts-hblock");
+    let old = crate::testing::settings::HOSTS;
+    let new = crate::testing::settings::HOSTS_HBLOCK;
     let root = tempfile::tempdir().unwrap();
     fs::create_dir_all(root.path().join("etc")).unwrap();
     fs::write(root.path().join("etc/hosts"), old).unwrap();

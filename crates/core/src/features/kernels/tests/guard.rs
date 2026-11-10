@@ -3,7 +3,7 @@
 use super::super::{LinuxPackages, Refusal, RunningKernel, may_remove};
 use super::{local, repo};
 use crate::domains::{InstalledPackages, Packages};
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `linux` runs. `linux-lts` is installed beside it.

@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use super::{MaskedUnits, MaskedUserUnits, SystemUnitMasks, UserUnitMasks};
 use crate::domain::{Domain as _, Summary, Toggle};
 use crate::domains::{EnabledUnits, EnabledUserUnits, SystemUnits, UserUnits};
-use crate::testing::{restored, sided, unit};
+use crate::test_support::{restored, sided, unit};
 use crate::{ChangeSet, Snapshot};
 
 fn snapshot() -> Snapshot {

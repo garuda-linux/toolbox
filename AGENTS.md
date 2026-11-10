@@ -80,6 +80,9 @@ every release. `scripts/release.sh` asks for it.
   (treefmt and `.editorconfig` skip `fixtures/`). An edge case changes the
   capture inside the test and names the change. Personal data is stripped
   before a capture lands: user and host names, serials, UUIDs, home paths.
+  A capture the tests of several crates read lives in the innermost of
+  them, as a const in its `testing` module (feature `testing`) named by
+  the module path that parses it. Never `include_str!` across crates.
 - A user-visible feature has self-test steps (happy path plus one edge
   case), kittest tests, a page in `docs/src/` and CLI commands. It works
   with the keyboard alone and passes one Orca pass.

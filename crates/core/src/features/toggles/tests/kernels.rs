@@ -8,7 +8,7 @@ use toolbox_state::packages::PackageGraph;
 use super::super::{Refusal, toggle};
 use crate::domains::{InstalledPackages, Packages};
 use crate::features::kernels;
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const KERNELS: &str = r#"

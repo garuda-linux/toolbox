@@ -11,7 +11,7 @@ use toolbox_plan::protocol::ReadKind;
 use toolbox_state::diagnostics::{Collector, Outcome};
 
 use super::{DiagnosticSource as _, HelperReads, SystemDiagnostics};
-use crate::testing::{runnable_script, write};
+use crate::test_support::{runnable_script, write};
 
 pub struct FakeHelper {
     script: PathBuf,

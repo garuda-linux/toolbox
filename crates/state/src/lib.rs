@@ -18,6 +18,8 @@ pub mod probes;
 pub mod services;
 pub mod settings;
 pub mod snapshot;
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 pub mod toggle;
 
 pub use snapshot::Snapshot;

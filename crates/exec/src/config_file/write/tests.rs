@@ -12,7 +12,7 @@ use toolbox_plan::{ConfigWrite, FetchRefusal, Fingerprint, StepId};
 use super::{WriteError, execute, write_config_file, write_real};
 use crate::builtin::FileChange;
 use crate::config_file::tests::{BACKUPS, path, text};
-use crate::testing::printed;
+use crate::test_support::printed;
 
 /// A root folder with `etc/fstab` (mode 0640).
 fn system() -> TempDir {

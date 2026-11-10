@@ -9,12 +9,12 @@ use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{GroupName, HomeDirectory, UserName};
 
 use super::{Listed, group_id, user_id};
-use crate::testing::{assert_failed, run_builtin as run};
+use crate::test_support::{assert_failed, run_builtin as run};
 
 /// `/etc/passwd` and `/etc/group` of the Lima Garuda image, the user
 /// renamed to `user`.
-const PASSWD: &str = include_str!("../../../../system/src/accounts/fixtures/passwd");
-const GROUP: &str = include_str!("../../../../system/src/accounts/fixtures/group");
+const PASSWD: &str = toolbox_plan::testing::accounts::PASSWD;
+const GROUP: &str = crate::testing::accounts::GROUP;
 
 fn etc(root: &Path) {
     etc_with(root, PASSWD);

@@ -9,11 +9,10 @@ use toolbox_plan::protocol::{Event, Outcome};
 use toolbox_plan::{GarudaUpdateFlag, Mirrorlist, ShellPath, StepId};
 
 use super::{LockRemoval, execute, install_mirrorlist, lock_holder, remove_database_lock};
-use crate::testing::{assert_failed, run_builtin};
+use crate::test_support::{assert_failed, run_builtin};
 
 /// `/etc/pacman.d/chaotic-mirrorlist` as the package ships it in Lima.
-const SHIPPED_MIRRORLIST: &str =
-    include_str!("../../../plan/src/mirrorlist/fixtures/chaotic-mirrorlist");
+const SHIPPED_MIRRORLIST: &str = toolbox_plan::testing::mirrorlist::CHAOTIC_MIRRORLIST;
 
 fn outcome_of(root: &Path, builtin: &Builtin) -> Outcome {
     run_builtin(root, builtin).0
@@ -98,10 +97,7 @@ fn entries_that_are_not_processes_are_ignored() {
 
 /// What `rate-mirrors --save` wrote for Chaotic-AUR in Lima.
 fn mirrorlist() -> Mirrorlist {
-    Mirrorlist::new(
-        include_str!("../../../plan/src/mirrorlist/fixtures/rate-mirrors-chaotic").to_owned(),
-    )
-    .unwrap()
+    Mirrorlist::new(toolbox_plan::testing::mirrorlist::RATE_MIRRORS_CHAOTIC.to_owned()).unwrap()
 }
 
 #[test]
@@ -149,7 +145,7 @@ fn root_with_shells() -> tempfile::TempDir {
     fs::create_dir_all(root.path().join("etc")).unwrap();
     fs::write(
         root.path().join("etc/shells"),
-        include_str!("../../../system/src/accounts/fixtures/shells"),
+        crate::testing::accounts::SHELLS,
     )
     .unwrap();
     root

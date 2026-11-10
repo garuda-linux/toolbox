@@ -34,6 +34,9 @@ tracing.workspace = true
 
 [dev-dependencies]
 toolbox-services = { workspace = true, features = ["testing"] }
+toolbox-plan = { workspace = true, features = ["testing"] }
+toolbox-pty = { workspace = true, features = ["testing"] }
+toolbox-state = { workspace = true, features = ["testing"] }
 tempfile.workspace = true
 
 [lints]

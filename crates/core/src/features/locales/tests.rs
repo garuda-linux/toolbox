@@ -11,11 +11,11 @@ use super::{
     system_choices, toggle, wanted_enabled, wanted_system,
 };
 use crate::domains::{CurrentSystemLocale, EnabledLocales, Locales, SystemLocales};
-use crate::testing::{locale, locale_entry};
+use crate::test_support::{locale, locale_entry};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 /// `/usr/share/i18n/SUPPORTED` of the Lima VM, 502 lines.
-const SUPPORTED: &str = include_str!("../../../../system/src/locales/fixtures/SUPPORTED");
+const SUPPORTED: &str = toolbox_plan::testing::locales::SUPPORTED;
 
 /// The languages the tests keep of [`SUPPORTED`].
 const KEPT: [&str; 4] = ["de_DE", "en_GB", "en_US", "sr_RS"];

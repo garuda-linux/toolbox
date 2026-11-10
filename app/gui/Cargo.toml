@@ -71,7 +71,11 @@ egui_kittest = { workspace = true, optional = true }
 [dev-dependencies]
 toolbox-gui-kit = { workspace = true, features = ["testing"] }
 toolbox-services = { workspace = true, features = ["testing"] }
-toolbox-system = { workspace = true, features = ["selftest"] }
+toolbox-system = { workspace = true, features = ["selftest", "testing"] }
+toolbox-core = { workspace = true, features = ["testing"] }
+toolbox-plan = { workspace = true, features = ["testing"] }
+toolbox-pty = { workspace = true, features = ["testing"] }
+toolbox-state = { workspace = true, features = ["testing"] }
 tempfile.workspace = true
 toolbox-exec.workspace = true
 egui_kittest.workspace = true

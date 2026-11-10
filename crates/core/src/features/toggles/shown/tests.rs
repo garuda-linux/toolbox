@@ -2,7 +2,7 @@ use toolbox_catalog::ToggleCatalog;
 
 use super::{Tally, sections, unknown};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const CATALOG: &str = r#"

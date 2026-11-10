@@ -7,16 +7,16 @@ use crate::{
 };
 
 /// `/proc/cmdline` of the Lima image, booted by GRUB.
-const LIMA_CMDLINE: &str = include_str!("../../../../system/src/host/fixtures/proc-cmdline");
+const LIMA_CMDLINE: &str = crate::testing::host::PROC_CMDLINE;
 /// `/proc/cmdline` of the Garuda live ISO, booted by systemd-boot.
-const LIVE_CMDLINE: &str = include_str!("../../../../system/src/host/fixtures/live/proc-cmdline");
+const LIVE_CMDLINE: &str = crate::testing::host::LIVE_PROC_CMDLINE;
 /// `/etc/default/grub` of a used Garuda install.
-const INSTALLED_GRUB: &str = include_str!("../../grub/fixtures/installed/default-grub");
-const GRUB_CFG: &str = include_str!("../../grub/fixtures/installed/grub.cfg");
+const INSTALLED_GRUB: &str = crate::testing::grub::INSTALLED_DEFAULT_GRUB;
+const GRUB_CFG: &str = crate::testing::grub::INSTALLED_GRUB_CFG;
 const GRUB_BTRFS: &str = include_str!("../../grub/fixtures/installed/grub-btrfs.cfg");
-const LIMA_GRUB: &str = include_str!("../../grub/fixtures/lima/default-grub");
+const LIMA_GRUB: &str = crate::testing::grub::LIMA_DEFAULT_GRUB;
 /// `ls -1 /usr/share/plymouth/themes/` of the Lima image.
-const PLYMOUTH_THEMES: &str = include_str!("../../../../system/src/boot/fixtures/plymouth-themes");
+const PLYMOUTH_THEMES: &str = crate::testing::boot::PLYMOUTH_THEMES;
 
 #[test]
 fn the_words_of_a_real_grub_command_line_pass() {

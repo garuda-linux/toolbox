@@ -6,7 +6,7 @@ use crate::domain::Queued;
 use crate::domains::{AurPackages, InstalledPackages, Packages};
 use crate::features::packages::list::RowState;
 use crate::features::packages::queue::Refusal;
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 fn aur(name: &str, description: &str, popularity: f64) -> AurPackage {

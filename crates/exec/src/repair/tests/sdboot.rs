@@ -17,8 +17,8 @@ use super::super::{Lacking, boot_loader_steps, installed_system};
 use super::{mounted, run};
 
 /// `/etc/fstab` and `/etc/kernel/install.conf` of the Garuda Lima image.
-const FSTAB: &str = include_str!("../../../../plan/src/repair/fixtures/sdboot-fstab");
-const INSTALL_CONF: &str = include_str!("../../../../state/src/boot/fixtures/install.conf");
+const FSTAB: &str = toolbox_plan::testing::repair::SDBOOT_FSTAB;
+const INSTALL_CONF: &str = toolbox_plan::testing::boot::INSTALL_CONF;
 
 fn image(root: &Path) {
     let system = mounted(root);

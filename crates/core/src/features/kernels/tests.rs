@@ -11,7 +11,7 @@ use super::{
     install_missing_headers, kernels, lacks_headers, toggle,
 };
 use crate::domains::{InstalledPackages, Packages};
-use crate::testing::package;
+use crate::test_support::package;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 fn release(name: &str) -> KernelRelease {

@@ -11,7 +11,7 @@ use super::super::rows::user_rows;
 use super::super::{Refusal, remove_user};
 use super::{queued, snapshot};
 use crate::domains::{Accounts, HomeFolders};
-use crate::testing::user_name;
+use crate::test_support::user_name;
 use crate::{ChangeSet, Snapshot, plan};
 
 fn home(path: &str) -> HomeDirectory {

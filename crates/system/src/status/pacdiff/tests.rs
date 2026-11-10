@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use super::{MergeSource as _, Pacdiff, parse_files};
 use crate::ProbeError;
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 /// `pacdiff -o` as root in the Lima VM.
 const PACDIFF: &str = include_str!("fixtures/pacdiff-o.stdout");

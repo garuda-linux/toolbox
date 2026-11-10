@@ -1,50 +1,48 @@
+use std::fs;
+use std::path::Path;
+
+use toolbox_system::testing::network::BARE_METAL_SYS_BUS_USB_DEVICES;
+
 use crate::features::network::{DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices};
-
-/// A file of the laptop's `/sys/bus/usb/devices` capture.
-macro_rules! sysfs {
-    ($file:expr) => {
-        include_str!(concat!(
-            "../../../../../system/src/network/fixtures/bare-metal/sys-bus-usb-devices/",
-            $file
-        ))
-    };
-}
-
-/// The first interface of the captured USB device `$device`.
-macro_rules! first_interface {
-    ($device:literal) => {
-        UsbInterface::from_sysfs(
-            sysfs!(concat!($device, "/idVendor")),
-            sysfs!(concat!($device, "/idProduct")),
-            [
-                sysfs!(concat!($device, ":1.0/bInterfaceClass")),
-                sysfs!(concat!($device, ":1.0/bInterfaceSubClass")),
-                sysfs!(concat!($device, ":1.0/bInterfaceProtocol")),
-            ],
-        )
-        .unwrap()
-    };
-}
 
 /// A bare-metal laptop: a Realtek Ethernet port and a `MediaTek` MT7922 Wi-Fi
 /// card, the MT7922's Bluetooth on USB as a Foxconn device.
-const LAPTOP_LSPCI: &str =
-    include_str!("../../../../../system/src/network/fixtures/bare-metal/lspci-nn");
-const LAPTOP_LSUSB: &str =
-    include_str!("../../../../../system/src/network/fixtures/bare-metal/lsusb");
+const LAPTOP_LSPCI: &str = toolbox_system::testing::network::BARE_METAL_LSPCI_NN;
+const LAPTOP_LSUSB: &str = toolbox_system::testing::network::BARE_METAL_LSUSB;
 /// The Lima VM, with one virtio network device and no USB device but
 /// the root hubs.
-const LIMA_LSPCI: &str = include_str!("../../../../../system/src/network/fixtures/lspci-nn");
-const LIMA_LSUSB: &str = include_str!("../../../../../system/src/network/fixtures/lsusb.stdout");
+const LIMA_LSPCI: &str = toolbox_system::testing::network::LSPCI_NN;
+const LIMA_LSUSB: &str = toolbox_system::testing::network::LSUSB_STDOUT;
+
+/// A file of the laptop's `/sys/bus/usb/devices` capture.
+fn sysfs(file: &str) -> String {
+    fs::read_to_string(Path::new(BARE_METAL_SYS_BUS_USB_DEVICES).join(file)).unwrap()
+}
+
+/// The first interface of the captured USB device `device`.
+fn first_interface(device: &str) -> UsbInterface {
+    let class = [
+        sysfs(&format!("{device}:1.0/bInterfaceClass")),
+        sysfs(&format!("{device}:1.0/bInterfaceSubClass")),
+        sysfs(&format!("{device}:1.0/bInterfaceProtocol")),
+    ];
+
+    UsbInterface::from_sysfs(
+        &sysfs(&format!("{device}/idVendor")),
+        &sysfs(&format!("{device}/idProduct")),
+        class.each_ref().map(String::as_str),
+    )
+    .unwrap()
+}
 
 /// The first interface of the Foxconn device `3-2`.
 fn laptop_bluetooth() -> UsbInterface {
-    first_interface!("3-2")
+    first_interface("3-2")
 }
 
 /// The first interface of the RTL8153 `2-1.4.4`, vendor specific.
 fn laptop_ethernet() -> UsbInterface {
-    first_interface!("2-1.4.4")
+    first_interface("2-1.4.4")
 }
 
 fn line_of<'text>(listing: &'text str, start: &str) -> &'text str {
@@ -145,17 +143,17 @@ fn without_its_interfaces_a_usb_device_is_kinded_by_its_name() {
 
 #[test]
 fn sysfs_values_that_are_no_hex_numbers_are_refused() {
-    let vendor = sysfs!("3-2/idVendor");
-    let product = sysfs!("3-2/idProduct");
-    let class = sysfs!("3-2:1.0/bInterfaceClass");
+    let vendor = sysfs("3-2/idVendor");
+    let product = sysfs("3-2/idProduct");
+    let class = sysfs("3-2:1.0/bInterfaceClass");
     let rest = [
-        sysfs!("3-2:1.0/bInterfaceSubClass"),
-        sysfs!("3-2:1.0/bInterfaceProtocol"),
+        sysfs("3-2:1.0/bInterfaceSubClass"),
+        sysfs("3-2:1.0/bInterfaceProtocol"),
     ];
 
     // Edit: the vendor of the capture emptied, then its class made `zz`.
-    assert!(UsbInterface::from_sysfs("", product, [class, rest[0], rest[1]]).is_none());
-    assert!(UsbInterface::from_sysfs(vendor, product, ["zz\n", rest[0], rest[1]]).is_none());
+    assert!(UsbInterface::from_sysfs("", &product, [&class, &rest[0], &rest[1]]).is_none());
+    assert!(UsbInterface::from_sysfs(&vendor, &product, ["zz\n", &rest[0], &rest[1]]).is_none());
 }
 
 #[test]

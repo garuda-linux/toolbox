@@ -3,7 +3,7 @@ use toolbox_plan::{DkmsBuild, DkmsModuleName, DkmsVersion, KernelRelease};
 use super::DkmsBuilds;
 use crate::domain::{Queued, Toggle};
 use crate::domains::Packages;
-use crate::testing::{commands, package, restored};
+use crate::test_support::{commands, package, restored};
 use crate::{ChangeSet, Snapshot, plan};
 
 fn build(module: &str, version: &str, kernel: &str) -> DkmsBuild {
@@ -62,7 +62,7 @@ fn builds_stay_through_snapshots_and_leave_after_a_successful_apply() {
     changes.reconcile(&empty);
     assert_eq!(changes.len(), 1);
 
-    crate::testing::all_steps_succeeded(&mut changes);
+    crate::test_support::all_steps_succeeded(&mut changes);
     assert!(changes.is_empty());
 }
 

@@ -4,7 +4,7 @@ use super::snapshot;
 use crate::domains::{EnabledUserUnits, Packages, SystemUnits, UserUnits};
 use crate::features::toggles::summary::summary;
 use crate::features::toggles::{state, toggle};
-use crate::testing::{package, unit};
+use crate::test_support::{package, unit};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const SETUP: &str = r#"

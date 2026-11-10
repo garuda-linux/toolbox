@@ -11,15 +11,15 @@ use crate::features::boot::tests::{system, with_plymouth};
 use crate::features::boot::{
     Flag, VirtualMachine, plymouth_queued, set, set_flag, set_plymouth_theme, set_remember,
 };
-use crate::testing::plymouth_theme;
+use crate::test_support::plymouth_theme;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `/etc/default/grub` and `grub.cfg` of a Garuda Mokka install, UUIDs
 /// of `grub.cfg` replaced by `x`.
-const DEFAULTS: &str = include_str!("../../../../../plan/src/grub/fixtures/installed/default-grub");
-const GRUB_CFG: &str = include_str!("../../../../../plan/src/grub/fixtures/installed/grub.cfg");
+const DEFAULTS: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
+const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;
 /// `/etc/default/grub` of the Lima VM, with Garuda's own GRUB theme.
-const LIMA_DEFAULTS: &str = include_str!("../../../../../plan/src/grub/fixtures/lima/default-grub");
+const LIMA_DEFAULTS: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
 
 const MASKED: &str = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 const COMMAND_LINE: &str = "GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3'";

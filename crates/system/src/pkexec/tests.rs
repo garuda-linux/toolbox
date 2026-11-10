@@ -3,7 +3,7 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
 use super::{HelperRun, Refusal, ask, reason, refusal};
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 const LIMIT: usize = 1 << 20;
 

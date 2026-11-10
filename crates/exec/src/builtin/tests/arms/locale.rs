@@ -5,10 +5,10 @@ use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{LocaleEntry, LocaleName};
 
 use super::outcome_of;
-use crate::testing::assert_failed;
+use crate::test_support::assert_failed;
 
 /// `/etc/locale.gen` of the Lima Garuda image, only `en_US.UTF-8` enabled.
-const LOCALE_GEN: &str = include_str!("../../../../../system/src/locales/fixtures/locale.gen");
+const LOCALE_GEN: &str = toolbox_plan::testing::locales::LOCALE_GEN;
 
 fn locale_root() -> tempfile::TempDir {
     let root = tempfile::tempdir().unwrap();
@@ -44,7 +44,7 @@ fn the_system_locale_is_one_step() {
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Succeeded);
     assert_eq!(
         fs::read_to_string(root.path().join("etc/locale.conf")).unwrap(),
-        include_str!("../../../../../system/src/locales/fixtures/locale.conf")
+        toolbox_plan::testing::locales::LOCALE_CONF
     );
 
     let unwanted = Builtin::SetSystemLocale(LocaleName::new("de_DE.UTF-8").unwrap());

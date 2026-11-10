@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 
 use super::Accounts;
-use crate::testing::{NOBODY_ID, group, group_name, user, user_name};
+use crate::test_support::{NOBODY_ID, group, group_name, user, user_name};
 
 fn accounts() -> Accounts {
     let mut nico = user("nico", 1000, 1000);

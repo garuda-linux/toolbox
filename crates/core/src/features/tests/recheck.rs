@@ -15,7 +15,7 @@ use crate::features::kernels::LinuxPackages;
 use crate::features::network::ModuleFacts;
 use crate::features::packages::aur::AurNames;
 use crate::features::{GUARDS, Refusal, Unchecked};
-use crate::testing::{package, user_name};
+use crate::test_support::{package, user_name};
 use crate::{ChangeSet, Queued, Snapshot, Toggle};
 
 /// A removal no guard lets through: nobody of that name exists.

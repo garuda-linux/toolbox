@@ -11,12 +11,12 @@ use toolbox_plan::{GrubMenu, GrubPlatform, PackageName};
 use super::super::{BootMenuSource as _, Menu, MenuRead, SystemBootMenu};
 use crate::HelperReads;
 use crate::pkexec::Refusal;
-use crate::testing::{fake_program, runnable_script, running_as_root, write};
+use crate::test_support::{fake_program, runnable_script, running_as_root, write};
 
 /// A used Garuda Mokka install, every UUID masked.
-const GRUB_CFG: &str = include_str!("../../../../plan/src/grub/fixtures/installed/grub.cfg");
+const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;
 /// The Lima image with `linux-garuda` and `linux-lts`.
-const LIMA_GRUB_CFG: &str = include_str!("../../../../plan/src/grub/fixtures/lima/grub.cfg");
+const LIMA_GRUB_CFG: &str = toolbox_plan::testing::grub::LIMA_GRUB_CFG;
 const MASKED: &str = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 /// Stands in for `pkexec <helper> read grub-menu` with a fixed program.

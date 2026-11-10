@@ -5,11 +5,11 @@ use std::time::{Duration, Instant};
 use super::{
     MirrorRanking as _, RANKING_DEADLINE, RankProblem, RateMirrors, rank_within, stderr_tail,
 };
-use crate::testing::runnable_script;
+use crate::test_support::runnable_script;
 
 /// The file `rate-mirrors --save <file> chaotic-aur` 0.33.0 saved in the
 /// Lima VM, 28 servers below its log.
-const RATED: &str = include_str!("../../../plan/src/mirrorlist/fixtures/rate-mirrors-chaotic");
+const RATED: &str = toolbox_plan::testing::mirrorlist::RATE_MIRRORS_CHAOTIC;
 
 /// A stand-in for `rate-mirrors`: `--save <file> chaotic-aur`, so the
 /// file is the second argument.

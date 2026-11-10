@@ -1,5 +1,5 @@
 use super::{PageRun, RunKind};
-use crate::testing::user_name;
+use crate::test_support::user_name;
 
 fn running(kind: RunKind, user: &str) -> PageRun {
     PageRun::Running(kind, user_name(user))

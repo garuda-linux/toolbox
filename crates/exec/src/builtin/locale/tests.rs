@@ -7,12 +7,12 @@ use toolbox_plan::{LocaleEntry, LocaleName};
 
 use super::{SystemLocaleChange, edit_locale_gen, set_system_locale};
 use crate::builtin::FileChange;
-use crate::testing::mode;
+use crate::test_support::mode;
 
 /// `/etc/locale.gen` and `/etc/locale.conf` of the Lima Garuda image,
 /// written by cloud-init with only `en_US.UTF-8` enabled.
-const LOCALE_GEN: &str = include_str!("../../../../system/src/locales/fixtures/locale.gen");
-const LOCALE_CONF: &str = include_str!("../../../../system/src/locales/fixtures/locale.conf");
+const LOCALE_GEN: &str = toolbox_plan::testing::locales::LOCALE_GEN;
+const LOCALE_CONF: &str = toolbox_plan::testing::locales::LOCALE_CONF;
 
 fn system(locale_gen: Option<&str>) -> (TempDir, PathBuf) {
     let root = tempfile::tempdir().unwrap();

@@ -3,7 +3,7 @@ use toolbox_plan::{DefaultEntry, GrubKey, GrubSetting, GrubState, GrubTimeout, K
 use super::{CurrentGrub, GrubDefaults, PlymouthState, PlymouthThemes};
 use crate::domain::{Domain as _, Summary, Toggle};
 use crate::domains::Packages;
-use crate::testing::{
+use crate::test_support::{
     commands, failed_at, outcomes, package, plymouth_theme, restored, stopped_at, views,
 };
 use crate::{ChangeSet, Single, Snapshot, domains, plan};

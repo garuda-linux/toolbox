@@ -4,7 +4,7 @@ use super::{mirror_missing, retry_after_upgrade};
 
 /// What pacman 7 printed in a terminal when the mirror answered 404 for
 /// `cowsay`, colours and carriage returns included.
-const PACMAN_7: &str = include_str!("fixtures/pacman-404.stdout");
+const PACMAN_7: &str = crate::testing::features::packages::mirror::PACMAN_404_STDOUT;
 
 /// The curl error of [`PACMAN_7`], which the edits below change.
 const CURL_404: &str = "The requested URL returned error: 404";

@@ -6,7 +6,7 @@ use std::collections::BTreeSet;
 use super::super::language_packs;
 use super::entries;
 use crate::domains::{InstalledPackages, SyncPackages};
-use crate::testing::packages;
+use crate::test_support::packages;
 
 #[test]
 fn packs_fit_the_language_and_an_installed_program() {

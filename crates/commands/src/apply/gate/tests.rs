@@ -10,7 +10,7 @@ const SUDO: &str = include_str!("fixtures/sudo-prompt");
 /// `cryptsetup open` in `script(1)`, with a wrong passphrase.
 const CRYPTSETUP: &str = include_str!("fixtures/cryptsetup-prompt");
 /// pacman asking for a `java-runtime` provider, then whether to install.
-const PACMAN: &str = include_str!("../../../../pty/tests/fixtures/pacman-provider.txt");
+const PACMAN: &str = toolbox_pty::testing::PACMAN_PROVIDER_TXT;
 
 const SUDO_QUESTION: &str = "[sudo] password for guest: ";
 

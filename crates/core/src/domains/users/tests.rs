@@ -6,7 +6,7 @@ use toolbox_plan::{FullName, HomeChange, HomeDirectory, HomeFolder, PlannedActio
 use super::{AccountLocks, FullNames, HomeFolders, NewGroups, RemovedGroups, RemovedUsers};
 use crate::domain::{Queued, Summary, Toggle};
 use crate::domains::{Accounts, CurrentShells, Groups, LoginShells};
-use crate::testing::{group, group_name, membership, restored, user, user_name, views};
+use crate::test_support::{group, group_name, membership, restored, user, user_name, views};
 use crate::{ChangeSet, Snapshot, plan};
 
 fn snapshot() -> Snapshot {
@@ -141,7 +141,7 @@ fn locks_are_one_off_work_that_leaves_after_an_apply() {
         ["usermod -U -- ada", "usermod -L -- nico", "userdel -- ada"]
     );
 
-    crate::testing::all_steps_succeeded(&mut changes);
+    crate::test_support::all_steps_succeeded(&mut changes);
 
     assert_eq!(shown(&changes), ["userdel -- ada"]);
 }

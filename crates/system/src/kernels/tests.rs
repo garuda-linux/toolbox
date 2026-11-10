@@ -8,7 +8,7 @@ use toolbox_state::kernels::{DkmsState, KernelReleases, RunningKernel};
 
 use super::{Dkms, DkmsSource as _, KernelSource as _, SystemKernels};
 use crate::ProbeError;
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 /// The Lima VM with `linux-garuda` only.
 const IMAGE_RELEASE: &str = include_str!("fixtures/image/osrelease");
@@ -17,12 +17,10 @@ const IMAGE_PKGBASE: &str = include_str!("fixtures/image/pkgbase");
 const TWO_RELEASE: &str = include_str!("fixtures/two/osrelease");
 const TWO_PKGBASE: &str = include_str!("fixtures/two/pkgbase");
 
-const DKMS_INSTALLED: &str =
-    include_str!("../../../state/src/kernels/dkms/fixtures/installed.stdout");
-const DKMS_ADDED: &str = include_str!("../../../state/src/kernels/dkms/fixtures/added.stdout");
-const DKMS_BROKEN: &str = include_str!("../../../state/src/kernels/dkms/fixtures/broken.stdout");
-const DKMS_BROKEN_ERR: &str =
-    include_str!("../../../state/src/kernels/dkms/fixtures/broken.stderr");
+const DKMS_INSTALLED: &str = toolbox_state::testing::kernels::dkms::INSTALLED_STDOUT;
+const DKMS_ADDED: &str = toolbox_state::testing::kernels::dkms::ADDED_STDOUT;
+const DKMS_BROKEN: &str = toolbox_state::testing::kernels::dkms::BROKEN_STDOUT;
+const DKMS_BROKEN_ERR: &str = toolbox_state::testing::kernels::dkms::BROKEN_STDERR;
 
 /// The `usr/lib/modules` folders of a capture with lines of
 /// `<folder>\t<pkgbase>`. An empty pkgbase writes no file.

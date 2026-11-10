@@ -5,9 +5,9 @@ use super::system;
 use crate::ChangeSet;
 
 /// `/etc/default/grub` of the Lima VM, with Garuda's own GRUB theme.
-const LIMA: &str = include_str!("../../../../../plan/src/grub/fixtures/lima/default-grub");
+const LIMA: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
 /// `/etc/default/grub` of a Garuda Mokka install, with no picture.
-const MOKKA: &str = include_str!("../../../../../plan/src/grub/fixtures/installed/default-grub");
+const MOKKA: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
 const THEME_PICTURE: &str = "/usr/share/grub/themes/garuda/background.png";
 const WALLPAPER_LINE: &str = "#GRUB_BACKGROUND=\"/path/to/wallpaper\"";
 

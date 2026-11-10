@@ -19,7 +19,7 @@ use super::{
 use crate::domains::{
     AccountLocks, Accounts, AvailableShells, CurrentUser, FullNames, LoginShells, RemovedUsers,
 };
-use crate::testing::{NOBODY_ID, group, group_name, membership, user, user_name};
+use crate::test_support::{NOBODY_ID, group, group_name, membership, user, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `nico` runs the app and is the only admin. `ada` is a second person,

@@ -11,16 +11,16 @@ use zbus::OwnedVariant;
 use super::network_manager::connectivity_from_value;
 use super::{NetworkPrograms, NetworkSource as _, SystemNetwork, parse_default_route};
 use crate::ProbeError;
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 /// The Lima VM with a `wg0` link added after its DHCP route.
 const ROUTES: &str = include_str!("fixtures/ip-route-default-two.json");
 const LAPTOP_ROUTE: &str = include_str!("fixtures/bare-metal/ip-route-default.json");
 const LAPTOP_RFKILL: &str = include_str!("fixtures/bare-metal/rfkill");
-const LAPTOP_LSPCI: &str = include_str!("fixtures/bare-metal/lspci-nn");
-const LAPTOP_LSUSB: &str = include_str!("fixtures/bare-metal/lsusb");
-const VM_LSPCI: &str = include_str!("fixtures/lspci-nn");
-const VM_LSUSB: &str = include_str!("fixtures/lsusb.stdout");
+const LAPTOP_LSPCI: &str = crate::testing::network::BARE_METAL_LSPCI_NN;
+const LAPTOP_LSUSB: &str = crate::testing::network::BARE_METAL_LSUSB;
+const VM_LSPCI: &str = crate::testing::network::LSPCI_NN;
+const VM_LSUSB: &str = crate::testing::network::LSUSB_STDOUT;
 
 /// What `ip -json route show default dev lo` printed on the laptop: the
 /// answer of a machine without a default route.

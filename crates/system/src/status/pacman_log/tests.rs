@@ -10,10 +10,10 @@ use crate::ProbeError;
 
 /// `/var/log/pacman.log` of a Lima session: an upgrade, installs, a
 /// reinstall, a downgrade and a removal.
-pub(super) const LOG: &str = include_str!("fixtures/pacman.log");
+pub(super) const LOG: &str = toolbox_state::testing::status::pacman_log::PACMAN_LOG;
 /// The last 1500 lines of the log of an installed Garuda. They start in
 /// the middle of a transaction.
-const INSTALLED: &str = include_str!("fixtures/installed-pacman.log");
+const INSTALLED: &str = toolbox_state::testing::status::pacman_log::INSTALLED_PACMAN_LOG;
 
 /// `2026-11-08T17:36:00+0100`, the last `transaction completed` in [`LOG`].
 pub(super) const LAST: u64 = 1_794_155_760;

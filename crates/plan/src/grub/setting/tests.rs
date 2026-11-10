@@ -6,9 +6,9 @@ use crate::{
 };
 
 /// `/etc/default/grub` of the Garuda Lima image, close to GRUB's stock file.
-const LIMA: &str = include_str!("../fixtures/lima/default-grub");
+const LIMA: &str = crate::testing::grub::LIMA_DEFAULT_GRUB;
 /// `/etc/default/grub` of a used Garuda Mokka install.
-const INSTALLED: &str = include_str!("../fixtures/installed/default-grub");
+const INSTALLED: &str = crate::testing::grub::INSTALLED_DEFAULT_GRUB;
 const LIMA_THEME: &str = "/usr/share/grub/themes/garuda/theme.txt";
 const INSTALLED_THEME: &str = "/usr/share/grub/themes/catppuccin-mocha/theme.txt";
 

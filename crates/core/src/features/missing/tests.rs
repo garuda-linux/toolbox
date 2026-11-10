@@ -3,7 +3,7 @@ use toolbox_state::probes::{FailedProbes, Probe};
 
 use super::{recheck_hblock, recheck_new_groups, recheck_wifi_backend};
 use crate::domains::{Accounts, CurrentWifiBackend, Hblock, HblockState, NewGroups, WifiBackends};
-use crate::testing::group_name;
+use crate::test_support::group_name;
 use crate::{ChangeSet, Queued, Single, Snapshot, Toggle};
 
 fn restored() -> ChangeSet {

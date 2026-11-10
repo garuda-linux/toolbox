@@ -19,6 +19,9 @@ rustix = { workspace = true, features = ["process", "fs", "net", "termios", "std
 signal-hook.workspace = true
 
 [dev-dependencies]
+toolbox-plan = { workspace = true, features = ["testing"] }
+toolbox-state = { workspace = true, features = ["testing"] }
+toolbox-system = { workspace = true, features = ["testing"] }
 parking_lot.workspace = true
 tempfile.workspace = true
 

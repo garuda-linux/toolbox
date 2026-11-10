@@ -3,9 +3,7 @@ use toolbox_plan::{PackageName, Plan, PlannedAction, RootAction, StepId, TargetL
 use super::MirrorWatch;
 
 /// pacman 7 in a terminal when the mirror answered 404 for `cowsay`.
-const MISSING: &str = include_str!(
-    "../../../../../crates/core/src/features/packages/mirror/fixtures/pacman-404.stdout"
-);
+const MISSING: &str = toolbox_core::testing::features::packages::mirror::PACMAN_404_STDOUT;
 
 fn packages(names: &[&str]) -> TargetList<PackageName> {
     TargetList::new(

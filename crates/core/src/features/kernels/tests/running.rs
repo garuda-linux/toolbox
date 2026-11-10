@@ -3,7 +3,7 @@ use crate::Snapshot;
 use crate::features::kernels::{
     KernelReleases, LinuxPackages, RunningKernel, kernels, kernels_of, running,
 };
-use crate::testing::package;
+use crate::test_support::package;
 
 #[test]
 fn the_snapshot_gives_the_kernels_and_the_one_that_runs() {

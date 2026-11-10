@@ -3,7 +3,7 @@ use crate::LoaderDefault;
 
 /// `/efi/loader/loader.conf` of the Garuda Lima image, as `bootctl
 /// install` writes it.
-const IMAGE: &str = include_str!("../fixtures/loader.conf");
+const IMAGE: &str = crate::testing::sdboot::LOADER_CONF;
 
 /// What garuda-common-settings' config agent rule appends.
 const COMMON_SETTINGS: &str = "auto-firmware yes\nauto-reboot yes\nauto-poweroff yes\n";

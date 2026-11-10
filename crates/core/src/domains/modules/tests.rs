@@ -4,7 +4,7 @@ use toolbox_plan::KernelModule;
 
 use super::{ModuleBlacklist, OwnBlacklist};
 use crate::domain::{Summary, Toggle};
-use crate::testing::{commands, restored, views};
+use crate::test_support::{commands, restored, views};
 use crate::{ChangeSet, Snapshot, plan};
 
 fn module(name: &str) -> KernelModule {

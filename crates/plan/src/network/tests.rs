@@ -7,9 +7,7 @@ use crate::{HostName, KernelModule, OutOfRange, Reason};
 
 /// `/usr/lib/modprobe.d/systemd.conf` of the Lima image: comments and
 /// `options` lines, no blacklist.
-const SYSTEMD_CONF: &str = include_str!(
-    "../../../system/src/network/modules/fixtures/root/usr/lib/modprobe.d/systemd.conf"
-);
+const SYSTEMD_CONF: &str = crate::testing::network::modules::ROOT_USR_LIB_MODPROBE_D_SYSTEMD_CONF;
 
 fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()

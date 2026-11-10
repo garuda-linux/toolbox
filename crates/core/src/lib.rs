@@ -17,7 +17,9 @@ mod outcome;
 mod planner;
 mod saved;
 #[cfg(test)]
-mod testing;
+mod test_support;
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 
 pub use changes::ChangeSet;
 pub use domain::{ChangeView, Domain, Queued, Single, Stage, Staged, Summary, Toggle};

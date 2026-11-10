@@ -2,7 +2,7 @@ use super::super::{Refusal, add_group, remove_group, set_groups};
 use super::{groups, queued, snapshot};
 use crate::ChangeSet;
 use crate::domains::{Groups, NewGroups, RemovedGroups};
-use crate::testing::{group_name, membership, user_name};
+use crate::test_support::{group_name, membership, user_name};
 
 #[test]
 fn groups_are_added_once_and_system_or_primary_groups_stay() {

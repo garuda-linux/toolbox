@@ -5,7 +5,7 @@ use serde_json::json;
 use super::{Domains, DuplicateDomain, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges};
 use crate::domain::Toggle;
 use crate::domains::{Groups, InstalledPackages, NewGroups, Packages};
-use crate::testing::{membership, package};
+use crate::test_support::{membership, package};
 use crate::{ChangeSet, Outcome, Queued, Snapshot, planned};
 
 fn domains() -> Domains {
@@ -129,7 +129,7 @@ fn a_second_domain_with_the_same_id_is_refused() {
 fn work_to_do_is_saved_without_a_wish() {
     let mut changes = ChangeSet::default();
     changes.want::<NewGroups>(
-        crate::testing::group_name("crafts"),
+        crate::test_support::group_name("crafts"),
         Queued,
         &Snapshot::default(),
     );

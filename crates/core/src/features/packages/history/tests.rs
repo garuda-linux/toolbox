@@ -4,12 +4,10 @@ use super::{HistoryAction, HistoryEntry, history};
 
 /// The Lima session: `htop` installed, reinstalled, downgraded from the
 /// archive and removed, with the hooks and scriptlet output between.
-const LIMA_LOG: &str =
-    include_str!("../../../../../system/src/status/pacman_log/fixtures/pacman.log");
+const LIMA_LOG: &str = toolbox_state::testing::status::pacman_log::PACMAN_LOG;
 /// The last lines of the log of a Garuda install in QEMU, with `kwin`
 /// upgraded three times and `linux-zen` installed and removed.
-const INSTALLED_LOG: &str =
-    include_str!("../../../../../system/src/status/pacman_log/fixtures/installed-pacman.log");
+const INSTALLED_LOG: &str = toolbox_state::testing::status::pacman_log::INSTALLED_PACMAN_LOG;
 
 /// One whole line of [`LIMA_LOG`], for the edits that break it.
 fn htop_installed() -> &'static str {

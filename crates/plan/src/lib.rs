@@ -31,6 +31,8 @@ mod secret;
 mod settings;
 mod shell;
 mod shown;
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 pub mod text;
 mod user_config;
 

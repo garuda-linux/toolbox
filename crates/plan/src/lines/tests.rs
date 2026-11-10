@@ -1,7 +1,7 @@
 use super::{ending, entries, lossy, push_line};
 
 /// `/etc/passwd` of the Lima image, its user renamed to `user`.
-const PASSWD: &str = include_str!("../../../system/src/accounts/fixtures/passwd");
+const PASSWD: &str = crate::testing::accounts::PASSWD;
 
 #[test]
 fn ending_names_the_line_break() {

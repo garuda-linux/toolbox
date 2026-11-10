@@ -6,6 +6,10 @@ license.workspace = true
 rust-version.workspace = true
 publish.workspace = true
 
+[features]
+# The captures in `testing`, for the tests of other crates.
+testing = []
+
 [dependencies]
 tracing.workspace = true
 rustix = { workspace = true, features = ["fs", "process"] }
@@ -14,6 +18,8 @@ toolbox-plan.workspace = true
 toolbox-pty.workspace = true
 
 [dev-dependencies]
+toolbox-plan = { workspace = true, features = ["testing"] }
+toolbox-state = { workspace = true, features = ["testing"] }
 serde_json.workspace = true
 tempfile.workspace = true
 

@@ -2,7 +2,7 @@ use toolbox_plan::{DnsProvider, PlannedAction, WifiBackend};
 
 use super::{CurrentDns, CurrentWifiBackend, Dns, WifiBackends};
 use crate::domain::Summary;
-use crate::testing::{failed_at, outcomes, stopped_at};
+use crate::test_support::{failed_at, outcomes, stopped_at};
 use crate::{ChangeSet, Single, Snapshot, plan};
 
 fn snapshot() -> Snapshot {

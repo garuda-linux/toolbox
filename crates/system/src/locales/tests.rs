@@ -10,18 +10,18 @@ use toolbox_state::locales::{CurrentSystemLocale, EnabledLocales};
 use super::{EtcLocales, LocaleSource as _};
 use crate::ProbeError;
 
-const SUPPORTED: &str = include_str!("fixtures/SUPPORTED");
+const SUPPORTED: &str = toolbox_plan::testing::locales::SUPPORTED;
 /// Written by cloud-init in the Lima VM, with `en_US.UTF-8` only.
-const LOCALE_GEN: &str = include_str!("fixtures/locale.gen");
-const LOCALE_CONF: &str = include_str!("fixtures/locale.conf");
+const LOCALE_GEN: &str = toolbox_plan::testing::locales::LOCALE_GEN;
+const LOCALE_CONF: &str = toolbox_plan::testing::locales::LOCALE_CONF;
 
 const SOURCES: [(&str, &[u8]); 5] = [
     (
         "ca_ES@valencia",
         include_bytes!("fixtures/locales/ca_ES@valencia"),
     ),
-    ("de_DE", include_bytes!("fixtures/locales/de_DE")),
-    ("eo", include_bytes!("fixtures/locales/eo")),
+    ("de_DE", crate::testing::locales::LOCALES_DE_DE.as_bytes()),
+    ("eo", crate::testing::locales::LOCALES_EO.as_bytes()),
     ("ja_JP", include_bytes!("fixtures/locales/ja_JP")),
     (
         "sr_RS@latin",

@@ -6,7 +6,7 @@ use std::time::{Duration, Instant};
 
 use super::super::{ConfigFileSource as _, ReadProblem};
 use super::System;
-use crate::testing::running_as_root;
+use crate::test_support::running_as_root;
 
 #[test]
 fn a_set_flag_ends_the_wait_for_the_helper_as_cancelled() {

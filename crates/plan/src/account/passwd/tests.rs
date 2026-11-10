@@ -2,7 +2,7 @@ use super::{PasswdEntry, passwd_entries};
 use crate::lines::lossy;
 
 /// `/etc/passwd` of the Lima image, its user renamed to `user`.
-const PASSWD: &str = include_str!("../../../../system/src/accounts/fixtures/passwd");
+const PASSWD: &str = crate::testing::accounts::PASSWD;
 
 #[test]
 fn every_entry_of_a_real_passwd_parses() {

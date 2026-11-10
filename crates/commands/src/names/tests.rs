@@ -24,9 +24,9 @@ check = { package = "docker" }
 "#;
 
 /// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
-const GRUB_CFG: &str = include_str!("../../../plan/src/grub/fixtures/installed/grub.cfg");
+const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;
 /// `/usr/share/i18n/SUPPORTED` of the Lima VM.
-const SUPPORTED: &str = include_str!("../../../system/src/locales/fixtures/SUPPORTED");
+const SUPPORTED: &str = toolbox_plan::testing::locales::SUPPORTED;
 
 fn user(name: &str, uid: u32) -> User {
     User {

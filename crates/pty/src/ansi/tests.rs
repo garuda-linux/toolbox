@@ -3,7 +3,7 @@ use super::{ESCAPE, strip_ansi};
 /// What `script(1)` caught of pacman asking about a conflict and about a
 /// provider, colours, cursor codes and carriage returns included.
 const CONFLICT: &str = include_str!("../../tests/fixtures/pacman-conflict.txt");
-const PROVIDER: &str = include_str!("../../tests/fixtures/pacman-provider.txt");
+const PROVIDER: &str = crate::testing::PACMAN_PROVIDER_TXT;
 
 #[test]
 fn ansi_is_stripped() {

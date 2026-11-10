@@ -7,7 +7,7 @@ use crate::capture::{
     CaptureError, Exited, MAX_ERROR_BYTES, MAX_INPUT_BYTES, Policy, run_captured,
 };
 use crate::pty_runner::Environment;
-use crate::testing::gone;
+use crate::test_support::gone;
 
 const SHORT: Duration = Duration::from_millis(200);
 /// Far below the sleeps of the scripts, far above a loaded test machine.

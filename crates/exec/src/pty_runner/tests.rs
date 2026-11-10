@@ -13,7 +13,7 @@ use toolbox_pty::{DEFAULT_SIZE, Exit, PtyCommand, Session};
 
 use super::{Environment, Guard, PtyRunner, pty_command};
 use crate::apply::Runner as _;
-use crate::testing::printed;
+use crate::test_support::printed;
 
 /// Nanoseconds this thread spent on a CPU so far.
 fn cpu_time() -> u64 {

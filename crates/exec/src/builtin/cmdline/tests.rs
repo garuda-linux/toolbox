@@ -8,7 +8,7 @@ use super::write_kernel_cmdline;
 use crate::builtin::FileChange;
 
 /// `/etc/kernel/cmdline` of the Garuda Lima image.
-const CMDLINE: &str = include_str!("../../../../state/src/boot/fixtures/kernel-cmdline");
+const CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
 
 fn image(root: &Path) {
     fs::create_dir_all(root.join("etc/kernel")).unwrap();

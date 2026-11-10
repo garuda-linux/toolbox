@@ -8,19 +8,17 @@ use toolbox_plan::{ConfigWord, HomePath, StepId, UserConfigEdit};
 
 use super::edit_user_config;
 use crate::builtin::{FileChange, execute};
-use crate::testing::{assert_failed, mode};
+use crate::test_support::{assert_failed, mode};
 
 /// The `kwinrc` that `kwriteconfig6` wrote with the switch on in Lima.
-const KWRITECONFIG_KWINRC: &str = include_str!("../../../../plan/src/user_config/fixtures/kwinrc");
+const KWRITECONFIG_KWINRC: &str = toolbox_plan::testing::user_config::KWINRC;
 
 /// The `kwinrc` of a used Plasma session on a Garuda install, with the
 /// switch on.
-const SESSION_KWINRC: &str =
-    include_str!("../../../../plan/src/user_config/fixtures/installed/kwinrc");
+const SESSION_KWINRC: &str = toolbox_plan::testing::user_config::INSTALLED_KWINRC;
 
 /// Discord's `settings.json` of the same install.
-const DISCORD: &str =
-    include_str!("../../../../plan/src/user_config/fixtures/installed/discord-settings.json");
+const DISCORD: &str = toolbox_plan::testing::user_config::INSTALLED_DISCORD_SETTINGS_JSON;
 
 fn word(value: &str) -> ConfigWord {
     ConfigWord::new(value).unwrap()

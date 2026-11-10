@@ -19,8 +19,7 @@ use crate::desktop::files::DesktopFiles;
 const WAIT: Duration = Duration::from_secs(10);
 
 /// `/usr/share/color-schemes/BreezeDark.colors`, whose window is 32,35,38.
-const BREEZE_DARK: &str =
-    include_str!("../../../../../crates/gui-kit/src/desktop/kde/fixtures/BreezeDark.colors");
+const BREEZE_DARK: &str = toolbox_gui_kit::testing::desktop::kde::BREEZEDARK_COLORS;
 
 /// [`BREEZE_DARK`] with its window colour edited to a light grey.
 fn light() -> String {

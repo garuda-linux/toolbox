@@ -4,7 +4,7 @@
 use super::{snapshot, toggle};
 use crate::domains::Locales;
 use crate::features::locales::recheck;
-use crate::testing::locale_entry;
+use crate::test_support::locale_entry;
 use crate::{ChangeSet, Toggle};
 
 #[test]

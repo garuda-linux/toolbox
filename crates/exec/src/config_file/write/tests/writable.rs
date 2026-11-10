@@ -11,7 +11,7 @@ use toolbox_plan::{ConfigWrite, Fingerprint, StepId};
 
 use super::super::super::tests::{BACKUPS, path, text};
 use super::super::{WriteError, execute};
-use crate::testing::printed;
+use crate::test_support::printed;
 
 const OLD: &str = "root ALL=(ALL) ALL\n";
 

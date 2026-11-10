@@ -12,17 +12,13 @@ use toolbox_core::features::packages::{
 use toolbox_plan::PackageName;
 use toolbox_system::{Libalpm, PackageIndexSource, ProbeError, RecentLogSource};
 
-const CAPTURED: &str = concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../crates/system/src/packages/fixtures/alpm/var/lib/pacman/local"
-);
+const CAPTURED: &str = toolbox_system::testing::packages::ALPM_LOCAL;
 
 /// The entries copied from the capture, named like their folders.
 const ENTRIES: [&str; 3] = ["ALPM_DB_VERSION", "gegl-0.4.72-3", "gimp-3.2.6-2"];
 
 /// pacman's log of the install that put gimp 3.2.6-2 on the Lima VM.
-const PACMAN_LOG: &str =
-    include_str!("../../../../../crates/system/src/status/pacman_log/fixtures/pacman.log");
+const PACMAN_LOG: &str = toolbox_state::testing::status::pacman_log::PACMAN_LOG;
 
 /// gimp and gegl as captured, babl, a leftover dependency, paru built
 /// from the AUR, and inkscape and krita on offer.

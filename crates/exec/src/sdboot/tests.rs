@@ -9,12 +9,10 @@ use super::sdboot_menu as menu;
 
 /// Files of the Garuda Lima image. A UKI is cut after `.uname`, the last
 /// part the read takes.
-const MOUNTINFO: &[u8] = include_bytes!("../../../plan/src/sdboot/fixtures/mountinfo");
-const LOADER_CONF: &[u8] = include_bytes!("../../../plan/src/sdboot/fixtures/loader.conf");
-const UKI: &[u8] =
-    include_bytes!("../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head");
-const FALLBACK: &[u8] =
-    include_bytes!("../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda-fallback.efi.head");
+const MOUNTINFO: &[u8] = toolbox_plan::testing::sdboot::MOUNTINFO.as_bytes();
+const LOADER_CONF: &[u8] = toolbox_plan::testing::sdboot::LOADER_CONF.as_bytes();
+const UKI: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
+const FALLBACK: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_EFI_HEAD;
 
 fn write(root: &Path, path: &str, content: &[u8]) {
     let path = root.join(path);

@@ -14,7 +14,7 @@ use crate::domains::{
     CurrentUser, EnabledUnits, Groups, InstalledPackages, Packages, SystemUnits, UserConfigStates,
     UserConfigWish, UserConfigs,
 };
-use crate::testing::{membership, nina_in, package, packages, unit, user_name};
+use crate::test_support::{membership, nina_in, package, packages, unit, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const CATALOG: &str = r#"

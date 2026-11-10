@@ -4,7 +4,7 @@ use tempfile::TempDir;
 
 use super::{GarudaHealth, HealthIssue, HealthLevel, HealthSource as _, parse_health};
 use crate::ProbeError;
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 /// `garuda-health --json` 1.11.1 in the Lima VM, which exited with 1.
 const REPORT: &str = include_str!("fixtures/garuda-health.json");

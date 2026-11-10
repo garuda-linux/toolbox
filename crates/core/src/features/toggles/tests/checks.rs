@@ -5,7 +5,7 @@ use toolbox_plan::UnitName;
 
 use super::super::{state, toggle};
 use crate::domains::{Accounts, CurrentUser, EnabledUserUnits, Groups, Packages, UserUnits};
-use crate::testing::{group, membership, package, unit, user, user_name};
+use crate::test_support::{group, membership, package, unit, user, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const CHECKS: &str = r#"

@@ -3,14 +3,12 @@ use crate::bootrepair::Encryption;
 
 /// `lsblk` with [`LSBLK_ARGUMENTS`] on the Garuda live ISO in QEMU with
 /// an empty 30 GiB disk.
-const LIVE: &str = include_str!("../fixtures/live.json");
+const LIVE: &str = crate::testing::bootrepair::LIVE_JSON;
 /// The same on the installed Lima VM, one btrfs system on `/dev/vda`.
-const LIMA_BTRFS: &str =
-    include_str!("../../../../core/src/features/bootrepair/fixtures/lima-btrfs.json");
+const LIMA_BTRFS: &str = crate::testing::features::bootrepair::LIMA_BTRFS_JSON;
 
 /// The same with a second disk, LUKS on the whole disk and LVM inside.
-const LIMA_LVM_ON_LUKS: &str =
-    include_str!("../../../../core/src/features/bootrepair/fixtures/lima-lvm-on-luks.json");
+const LIMA_LVM_ON_LUKS: &str = crate::testing::features::bootrepair::LIMA_LVM_ON_LUKS_JSON;
 
 const LIVE_DISK_SIZE: u64 = 32_212_254_720;
 const LIMA_DISK_SIZE: u64 = 21_474_836_480;

@@ -8,7 +8,7 @@ use toolbox_state::parts::{InstalledPackages, SyncPackages};
 use super::{DiskSpace, FactSources, MachineSource, PackageCount, SystemMachine, probe_facts};
 use crate::ProbeError;
 use crate::packages::{OrphanSource, PackageSource, SyncSource};
-use crate::testing::write;
+use crate::test_support::write;
 use crate::units::FailedUnitSource;
 
 /// The Lima VM's running kernel and its `/proc/stat`, whose `btime` is

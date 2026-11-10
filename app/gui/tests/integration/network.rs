@@ -23,8 +23,7 @@ use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError};
 use crate::common::{Fixture, SMALLEST, TALL, WIDTH, open_tab, packages, window};
 use crate::system::{first_read, settle, step_until};
 
-const LAPTOP_LSPCI: &str =
-    include_str!("../../../../crates/system/src/network/fixtures/bare-metal/lspci-nn");
+const LAPTOP_LSPCI: &str = toolbox_system::testing::network::BARE_METAL_LSPCI_NN;
 
 /// One Wi-Fi radio, a router, the PCI cards of a bare-metal laptop and no
 /// lsusb.

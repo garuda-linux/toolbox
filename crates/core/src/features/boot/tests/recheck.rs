@@ -6,7 +6,7 @@ use toolbox_plan::{GrubKey, GrubSetting, GrubTimeout, KernelParameters};
 use super::super::{recheck, recheck_grub};
 use super::{ARCH, system, with_plymouth};
 use crate::domains::{GrubDefaults, PlymouthThemes};
-use crate::testing::plymouth_theme;
+use crate::test_support::plymouth_theme;
 use crate::{ChangeSet, Single, Snapshot};
 
 const QUOTED: &str = "GRUB_CMDLINE_LINUX_DEFAULT='quiet acpi_osi=\"Windows 2015\"'\n";

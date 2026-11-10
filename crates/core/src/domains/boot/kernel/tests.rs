@@ -2,11 +2,11 @@ use toolbox_plan::{KernelParameters, PlymouthTheme};
 use toolbox_state::boot::KernelCmdline;
 
 use super::{KernelSetting, SdBootKernel, SdBootKernelDomain};
-use crate::testing::{commands, failed_at, outcomes, stopped_at};
+use crate::test_support::{commands, failed_at, outcomes, stopped_at};
 use crate::{ChangeSet, Snapshot, plan};
 
 /// `/etc/kernel/cmdline` of the Garuda Lima image.
-const CMDLINE: &str = include_str!("../../../../../state/src/boot/fixtures/kernel-cmdline");
+const CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
 
 fn image() -> Snapshot {
     let mut snapshot = Snapshot::default();

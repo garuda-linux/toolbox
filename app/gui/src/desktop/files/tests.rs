@@ -8,22 +8,16 @@ use toolbox_gui_kit::desktop::family::Family;
 use super::{DesktopFiles, is_look_file};
 
 /// `~/.config/kdeglobals` of a Garuda Mokka install.
-const MOKKA_KDEGLOBALS: &str =
-    include_str!("../../../../../crates/gui-kit/src/desktop/kde/fixtures/installed/kdeglobals");
+const MOKKA_KDEGLOBALS: &str = toolbox_gui_kit::testing::desktop::kde::INSTALLED_KDEGLOBALS;
 /// Garuda's `/etc/skel/.config/gtk-3.0/settings.ini`, which names
 /// Sweet-Dark.
-const SKEL_GTK3_SETTINGS: &str = include_str!(
-    "../../../../../crates/gui-kit/src/desktop/fixtures/skel/etc/skel/.config/gtk-3.0/settings.ini"
-);
-const SKEL_GTK4_SETTINGS: &str = include_str!(
-    "../../../../../crates/gui-kit/src/desktop/fixtures/skel/etc/skel/.config/gtk-4.0/settings.ini"
-);
-const SKEL_GTK4_CSS: &str = include_str!(
-    "../../../../../crates/gui-kit/src/desktop/fixtures/skel/etc/skel/.config/gtk-4.0/gtk.css"
-);
+const SKEL_GTK3_SETTINGS: &str =
+    toolbox_gui_kit::testing::desktop::SKEL_ETC_SKEL_CONFIG_GTK_3_0_SETTINGS_INI;
+const SKEL_GTK4_SETTINGS: &str =
+    toolbox_gui_kit::testing::desktop::SKEL_ETC_SKEL_CONFIG_GTK_4_0_SETTINGS_INI;
+const SKEL_GTK4_CSS: &str = toolbox_gui_kit::testing::desktop::SKEL_ETC_SKEL_CONFIG_GTK_4_0_GTK_CSS;
 /// Sweet-Dark's `gtk-4.0/gtk.css`.
-const SWEET_DARK: &str =
-    include_str!("../../../../../crates/gui-kit/src/desktop/gtk/fixtures/theme-gtk-4.0.css");
+const SWEET_DARK: &str = toolbox_gui_kit::testing::desktop::gtk::THEME_GTK_4_0_CSS;
 
 fn files_in(home: &Path) -> DesktopFiles {
     let home = home.to_owned();

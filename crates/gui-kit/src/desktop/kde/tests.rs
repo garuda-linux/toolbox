@@ -10,9 +10,9 @@ use crate::desktop::FontSpec;
 
 /// `~/.config/kdeglobals` of a Garuda Mokka install: Catppuccin colours,
 /// Qt 5 font strings.
-const MOKKA: &str = include_str!("fixtures/installed/kdeglobals");
+const MOKKA: &str = crate::testing::desktop::kde::INSTALLED_KDEGLOBALS;
 /// `/usr/share/color-schemes/BreezeDark.colors`.
-const BREEZE_DARK: &str = include_str!("fixtures/BreezeDark.colors");
+const BREEZE_DARK: &str = crate::testing::desktop::kde::BREEZEDARK_COLORS;
 /// Garuda's `/etc/skel/.config/kdeglobals`: fonts in the Qt 6 form and
 /// no colours.
 const SKEL: &str = include_str!("../fixtures/skel/etc/skel/.config/kdeglobals");

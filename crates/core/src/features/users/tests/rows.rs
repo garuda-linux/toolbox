@@ -4,7 +4,7 @@ use super::super::rows::{group_choices, group_rows, user_rows};
 use super::super::{add_group, remove_group, set_groups, set_locked};
 use super::{groups, snapshot};
 use crate::domains::Accounts;
-use crate::testing::{group_name, lock_flags, user_name};
+use crate::test_support::{group_name, lock_flags, user_name};
 use crate::{ChangeSet, Toggle};
 
 #[test]

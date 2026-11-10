@@ -2,11 +2,11 @@ use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout};
 
 use super::{CurrentLoader, LoaderSettingsDomain};
-use crate::testing::commands;
+use crate::test_support::commands;
 use crate::{ChangeSet, Snapshot, plan};
 
 /// `/efi/loader/loader.conf` of the Garuda Lima image.
-const IMAGE: &str = include_str!("../../../../../plan/src/sdboot/fixtures/loader.conf");
+const IMAGE: &str = toolbox_plan::testing::sdboot::LOADER_CONF;
 
 fn image() -> Snapshot {
     let mut snapshot = Snapshot::default();

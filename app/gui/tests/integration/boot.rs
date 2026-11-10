@@ -22,11 +22,11 @@ use crate::common::{Fixture, TALL, window};
 use crate::system::{first_read, shows, step_until};
 
 /// `/etc/default/grub` of the Lima VM.
-const DEFAULTS: &str = include_str!("../../../../crates/plan/src/grub/fixtures/lima/default-grub");
+const DEFAULTS: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
 
 /// The menu grub-mkconfig wrote on the Lima VM, with linux-lts and
 /// linux-garuda.
-const GRUB_CFG: &str = include_str!("../../../../crates/plan/src/grub/fixtures/lima/grub.cfg");
+const GRUB_CFG: &str = toolbox_plan::testing::grub::LIMA_GRUB_CFG;
 
 struct Source;
 

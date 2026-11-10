@@ -9,15 +9,13 @@ use crate::domains::{
     BootLoader, GrubDefaults, InstalledPackages, PlymouthState, PlymouthThemes, SdBootKernel,
     SdBootKernelDomain,
 };
-use crate::testing::{packages, plymouth_theme};
+use crate::test_support::{packages, plymouth_theme};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 /// `/etc/kernel/cmdline` of the Garuda Lima image and `/proc/cmdline` of
 /// the Garuda live ISO.
-pub(in crate::features::boot) const CMDLINE: &str =
-    include_str!("../../../../../state/src/boot/fixtures/kernel-cmdline");
-pub(in crate::features::boot) const LIVE: &str =
-    include_str!("../../../../../system/src/host/fixtures/live/proc-cmdline");
+pub(in crate::features::boot) const CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
+pub(in crate::features::boot) const LIVE: &str = toolbox_plan::testing::host::LIVE_PROC_CMDLINE;
 
 pub(in crate::features::boot) fn image(line: &str, installed: &[&str]) -> Snapshot {
     let mut snapshot = Snapshot::default();

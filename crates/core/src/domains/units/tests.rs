@@ -2,7 +2,7 @@ use toolbox_plan::{PlannedAction, TargetList, UserAction};
 
 use super::{EnabledUserUnits, USER_TEARDOWN, UserUnits};
 use crate::domain::{Domain as _, Staged, Summary, Toggle};
-use crate::testing::unit;
+use crate::test_support::unit;
 
 #[test]
 fn user_units_disable_at_teardown_and_enable_in_the_user_session() {

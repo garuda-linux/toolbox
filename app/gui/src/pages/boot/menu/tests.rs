@@ -5,8 +5,7 @@ use super::super::tests::{grub_system, menu, page};
 use crate::boot::Boot;
 
 /// The `grub.cfg` of the Lima VM, another menu than the one of `menu()`.
-const OTHER_CFG: &str =
-    include_str!("../../../../../../crates/plan/src/grub/fixtures/lima/grub.cfg");
+const OTHER_CFG: &str = toolbox_plan::testing::grub::LIMA_GRUB_CFG;
 
 #[test]
 fn the_entry_list_is_built_once_until_the_menu_changes() {

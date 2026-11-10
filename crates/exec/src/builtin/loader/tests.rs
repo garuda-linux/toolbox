@@ -7,8 +7,8 @@ use super::edit_loader_conf;
 use crate::builtin::FileChange;
 
 /// Files of the Garuda Lima image.
-const MOUNTINFO: &[u8] = include_bytes!("../../../../plan/src/sdboot/fixtures/mountinfo");
-const LOADER_CONF: &str = include_str!("../../../../plan/src/sdboot/fixtures/loader.conf");
+const MOUNTINFO: &[u8] = toolbox_plan::testing::sdboot::MOUNTINFO.as_bytes();
+const LOADER_CONF: &str = toolbox_plan::testing::sdboot::LOADER_CONF;
 
 fn image(root: &Path) {
     fs::create_dir_all(root.join("proc/self")).unwrap();

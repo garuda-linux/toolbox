@@ -5,7 +5,7 @@ const KEY: &str = "SKIP_HOST_UPDATE";
 
 /// `~/.config/discord/settings.json` of a used install, no flag in it and
 /// no line break at its end.
-const DISCORD: &str = include_str!("../fixtures/installed/discord-settings.json");
+const DISCORD: &str = crate::testing::user_config::INSTALLED_DISCORD_SETTINGS_JSON;
 
 /// Edit: the real file with `"SKIP_HOST_UPDATE": <value>` as its first key.
 fn with_flag(value: &str) -> String {

@@ -7,7 +7,7 @@ use super::{
     AurUpdateSource as _, Checkupdates, Paru, PendingUpdate, UpdateSource as _, parse_updates,
 };
 use crate::ProbeError;
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 /// `checkupdates --nocolor` in the Lima VM, one pending update.
 const CHECKUPDATES: &str = include_str!("fixtures/checkupdates.stdout");

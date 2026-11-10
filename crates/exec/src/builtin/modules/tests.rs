@@ -6,14 +6,13 @@ use toolbox_plan::KernelModule;
 
 use super::edit_modprobe_blacklist;
 use crate::builtin::FileChange;
-use crate::testing::mode;
+use crate::test_support::mode;
 
 const FILE: &str = "etc/modprobe.d/garuda-toolbox-blacklist.conf";
 
 /// `/usr/lib/modprobe.d/systemd.conf` of the Lima Garuda image.
-const SYSTEMD_CONF: &str = include_str!(
-    "../../../../system/src/network/modules/fixtures/root/usr/lib/modprobe.d/systemd.conf"
-);
+const SYSTEMD_CONF: &str =
+    toolbox_plan::testing::network::modules::ROOT_USR_LIB_MODPROBE_D_SYSTEMD_CONF;
 
 fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()

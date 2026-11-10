@@ -8,7 +8,7 @@ use super::{answer, caller_of};
 use crate::testing::{PASSWD, SHADOW};
 
 /// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
-const GRUB_CFG: &str = include_str!("../../../../crates/plan/src/grub/fixtures/installed/grub.cfg");
+const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;
 
 /// A GRUB password as `grub-mkpasswd-pbkdf2` makes one, which the
 /// captured file has not.

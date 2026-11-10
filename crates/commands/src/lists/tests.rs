@@ -231,9 +231,9 @@ fn a_user_row_as_json_has_its_id_and_name() {
 #[test]
 fn a_locale_row_as_json_has_the_name_the_commands_take() {
     let mut snapshot = Snapshot::default();
-    snapshot.insert(SupportedLocales(parse_supported(include_str!(
-        "../../../system/src/locales/fixtures/SUPPORTED"
-    ))));
+    snapshot.insert(SupportedLocales(parse_supported(
+        toolbox_plan::testing::locales::SUPPORTED,
+    )));
 
     let rows: Vec<serde_json::Value> = locales(&snapshot)
         .iter()

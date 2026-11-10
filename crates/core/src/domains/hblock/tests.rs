@@ -2,7 +2,7 @@ use toolbox_plan::{PlannedAction, RootAction};
 
 use super::{Hblock, HblockState};
 use crate::domain::{Summary, Toggle};
-use crate::testing::actions;
+use crate::test_support::actions;
 use crate::{ChangeSet, Single, Snapshot};
 
 fn snapshot(on: bool) -> Snapshot {

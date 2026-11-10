@@ -9,9 +9,7 @@ use super::{app, script, unfocus, wait_for};
 
 /// pacman's install of cowsay from a mirror that answers 404, as it
 /// printed it.
-const PACMAN_404: &str = include_str!(
-    "../../../../../crates/core/src/features/packages/mirror/fixtures/pacman-404.stdout"
-);
+const PACMAN_404: &str = toolbox_core::testing::features::packages::mirror::PACMAN_404_STDOUT;
 
 /// The install's step failed on a file its mirror no longer has, with
 /// pacman's exit code.

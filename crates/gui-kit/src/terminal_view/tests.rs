@@ -13,7 +13,7 @@ const HINT: &str = "Ctrl+Tab leaves the terminal.";
 
 /// What `script(1)` caught of pacman asking for a `java-runtime` provider
 /// and then whether to install.
-const PACMAN_PROVIDER: &[u8] = include_bytes!("../../../pty/tests/fixtures/pacman-provider.txt");
+const PACMAN_PROVIDER: &[u8] = toolbox_pty::testing::PACMAN_PROVIDER_TXT.as_bytes();
 
 struct Console {
     terminal: Terminal,

@@ -1,7 +1,7 @@
 use super::{read, read_optional};
 use crate::ProbeError;
 
-const PASSWD: &str = include_str!("../accounts/fixtures/passwd");
+const PASSWD: &str = toolbox_plan::testing::accounts::PASSWD;
 
 /// The Lima VM's `passwd` with a Latin-1 byte as root's full name.
 #[test]

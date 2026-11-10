@@ -4,7 +4,7 @@ use toolbox_plan::{PlannedAction, RootAction, ShellPath};
 
 use super::{CurrentShells, LoginShells};
 use crate::domain::Summary;
-use crate::testing::{actions, user_name};
+use crate::test_support::{actions, user_name};
 use crate::{ChangeSet, Snapshot};
 
 fn shell(path: &str) -> ShellPath {

@@ -13,20 +13,20 @@ use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig
 
 use super::{EtcSettings, SettingsSource as _, blocks_domains, parse_dns};
 use crate::ProbeError;
-use crate::testing::{running_as_root, write};
+use crate::test_support::{running_as_root, write};
 
 /// The Lima VM's `/etc/hosts` before and after `hblock`, the latter cut
 /// to its first 80 lines.
-const HOSTS: &str = include_str!("fixtures/hosts");
-const HBLOCK_HOSTS: &str = include_str!("fixtures/hosts-hblock");
+const HOSTS: &str = toolbox_exec::testing::settings::HOSTS;
+const HBLOCK_HOSTS: &str = toolbox_exec::testing::settings::HOSTS_HBLOCK;
 /// As garuda-update ships it, every variable commented out.
-const GARUDA_UPDATE: &str = include_str!("fixtures/garuda-update-config");
+const GARUDA_UPDATE: &str = toolbox_plan::testing::settings::GARUDA_UPDATE_CONFIG;
 pub(super) const NETWORKMANAGER_CONF: &str =
-    include_str!("fixtures/networkmanager/etc/NetworkManager/NetworkManager.conf");
+    toolbox_exec::testing::settings::NETWORKMANAGER_ETC_NETWORKMANAGER_NETWORKMANAGER_CONF;
 pub(super) const CONNECTIVITY_CONF: &str =
-    include_str!("fixtures/networkmanager/usr/lib/NetworkManager/conf.d/20-connectivity.conf");
+    toolbox_exec::testing::settings::NETWORKMANAGER_USR_LIB_NETWORKMANAGER_CONF_D_20_CONNECTIVITY_CONF;
 const SYSTEMD_MODPROBE: &str =
-    include_str!("../network/modules/fixtures/root/usr/lib/modprobe.d/systemd.conf");
+    toolbox_plan::testing::network::modules::ROOT_USR_LIB_MODPROBE_D_SYSTEMD_CONF;
 
 fn system() -> (TempDir, EtcSettings) {
     let root = tempfile::tempdir().unwrap();

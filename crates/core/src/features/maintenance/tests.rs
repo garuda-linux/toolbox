@@ -8,7 +8,7 @@ use super::{
 };
 use crate::domain::Summary;
 use crate::domains::InstalledPackages;
-use crate::testing::{package, packages, restored};
+use crate::test_support::{package, packages, restored};
 use crate::{ChangeSet, Snapshot, domains, plan};
 
 const UPGRADE: Task = Task::UpgradeSystem {
@@ -87,7 +87,7 @@ fn unqueuing_what_is_not_queued_leaves_nothing() {
 fn a_successful_apply_empties_the_operations_queue() {
     let mut changes = queue(&[UPGRADE, Task::RemoveOrphans]);
 
-    crate::testing::all_steps_succeeded(&mut changes);
+    crate::test_support::all_steps_succeeded(&mut changes);
 
     assert!(changes.is_empty());
 }

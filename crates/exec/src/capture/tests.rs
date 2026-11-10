@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 
 use super::{CaptureError, Captured, MAX_ERROR_BYTES, Policy, Tail, capture};
 use crate::pty_runner::Environment;
-use crate::testing::gone;
+use crate::test_support::gone;
 
 const LIMIT: usize = 1 << 20;
 

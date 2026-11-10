@@ -6,8 +6,7 @@ use serde_json::{Map, Value};
 
 /// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a second
 /// Garuda on `nvme1n1`, two empty card readers.
-pub const BARE_METAL: &str =
-    include_str!("../../../core/src/features/bootrepair/fixtures/bare-metal.json");
+pub const BARE_METAL: &str = crate::testing::features::bootrepair::BARE_METAL_JSON;
 
 /// `nvme0n1` of [`BARE_METAL`].
 const LAPTOP_DISK: &str = "/blockdevices/3/children";

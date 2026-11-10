@@ -15,6 +15,8 @@ mod session;
 mod size;
 mod spawn;
 mod style;
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 mod writer;
 
 pub use ansi::{is_plain_text_char, strip_ansi};

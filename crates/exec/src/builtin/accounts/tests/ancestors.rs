@@ -8,7 +8,7 @@ use toolbox_plan::HomeDirectory;
 use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::Outcome;
 
-use crate::testing::{assert_failed, run_builtin as run};
+use crate::test_support::{assert_failed, run_builtin as run};
 
 fn home() -> HomeDirectory {
     HomeDirectory::new("/srv/shared/people/ada").unwrap()

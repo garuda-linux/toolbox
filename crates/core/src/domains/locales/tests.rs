@@ -5,7 +5,7 @@ use toolbox_plan::{PlannedAction, RootAction};
 use super::{CurrentSystemLocale, EnabledLocales, Locales, SystemLocales};
 use crate::domain::{Summary, Toggle};
 use crate::domains::Packages;
-use crate::testing::{
+use crate::test_support::{
     actions, failed_at, locale, locale_entry, outcomes, package, restored, stopped_at, views,
 };
 use crate::{ChangeSet, Single, Snapshot};

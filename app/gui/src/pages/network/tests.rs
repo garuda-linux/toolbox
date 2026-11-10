@@ -28,8 +28,7 @@ use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of
 
 /// `lspci -nn` of a bare-metal laptop: a Realtek Ethernet port and a `MediaTek`
 /// Wi-Fi card.
-const LAPTOP_LSPCI: &str =
-    include_str!("../../../../../crates/system/src/network/fixtures/bare-metal/lspci-nn");
+const LAPTOP_LSPCI: &str = toolbox_system::testing::network::BARE_METAL_LSPCI_NN;
 
 type Shown = Harness<'static, PageState<NetworkPage>>;
 

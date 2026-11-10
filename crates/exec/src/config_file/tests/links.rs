@@ -18,7 +18,7 @@ use super::super::{
 };
 use super::{BACKUPS, fifo, path, refused, text};
 use crate::builtin::FileChange;
-use crate::testing::printed;
+use crate::test_support::printed;
 
 const OLD: &str = "old = 1\n";
 const NEW: &str = "new = 2\n";

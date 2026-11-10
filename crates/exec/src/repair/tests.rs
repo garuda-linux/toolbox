@@ -11,7 +11,7 @@ use toolbox_plan::{REPAIR_ROOT, RepairMount, RepairNeed};
 
 use super::testing::Machine;
 use super::{Lacking, installed_system, prepare_mount};
-use crate::testing::run_builtin as run;
+use crate::test_support::run_builtin as run;
 
 fn mounted(root: &Path) -> PathBuf {
     root.join(REPAIR_ROOT)

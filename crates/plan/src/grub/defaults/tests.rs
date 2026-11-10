@@ -3,9 +3,9 @@ use proptest::prelude::*;
 use super::{grub_value, quote, set_grub_value, unset_grub_value};
 
 /// `/etc/default/grub` of the Garuda Lima image, close to GRUB's stock file.
-const LIMA: &str = include_str!("../fixtures/lima/default-grub");
+const LIMA: &str = crate::testing::grub::LIMA_DEFAULT_GRUB;
 /// `/etc/default/grub` of a used Garuda Mokka install, with single quotes.
-const INSTALLED: &str = include_str!("../fixtures/installed/default-grub");
+const INSTALLED: &str = crate::testing::grub::INSTALLED_DEFAULT_GRUB;
 
 fn sourced(value: &str) -> std::process::Output {
     let dir = tempfile::tempdir().unwrap();

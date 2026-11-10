@@ -7,7 +7,7 @@ use toolbox_plan::{
 
 use super::{UserConfigStates, UserConfigWish, UserConfigs};
 use crate::domain::{Summary, Toggle};
-use crate::testing::{actions, failed_at, outcomes, restored, stopped_at, unit, views};
+use crate::test_support::{actions, failed_at, outcomes, restored, stopped_at, unit, views};
 use crate::{ChangeSet, Snapshot, plan};
 
 fn audio() -> UserConfigEdit {

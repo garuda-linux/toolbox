@@ -7,7 +7,7 @@ use super::super::Refusal;
 use super::super::now::{check_new_name, new_user, plan_add_user, plan_set_password};
 use super::{groups, snapshot};
 use crate::Snapshot;
-use crate::testing::user_name;
+use crate::test_support::user_name;
 
 const SECRET: &str = "correct horse battery staple";
 

@@ -5,7 +5,7 @@ use serde_json::{Value, json};
 use super::super::{LinuxPackages, RunningKernel, recheck};
 use super::{local, repo, wish};
 use crate::domains::InstalledPackages;
-use crate::testing::{package, packages, restore_saved};
+use crate::test_support::{package, packages, restore_saved};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `linux` runs, `linux-lts` is installed beside it, both with headers.

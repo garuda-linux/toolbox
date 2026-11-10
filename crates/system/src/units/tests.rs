@@ -7,7 +7,7 @@ use super::{
     parse_listed,
 };
 use crate::ProbeError;
-use crate::testing::{fake_program, on_path};
+use crate::test_support::{fake_program, on_path};
 
 /// The listings of the Lima VM, each from the argv of [`list_args`] with
 /// its `--state`, or from `list-units --state=failed`.

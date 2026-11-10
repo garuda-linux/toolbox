@@ -2,8 +2,8 @@ use super::{EspPlace, InstalledLoader};
 
 /// `/etc/fstab` and `/etc/kernel/install.conf` of the Garuda Lima image,
 /// and `/etc/fstab` of a Garuda GRUB install (the `garuda-uefi` VM).
-const FSTAB: &str = include_str!("../fixtures/sdboot-fstab");
-const INSTALL_CONF: &str = include_str!("../../../../state/src/boot/fixtures/install.conf");
+const FSTAB: &str = crate::testing::repair::SDBOOT_FSTAB;
+const INSTALL_CONF: &str = crate::testing::boot::INSTALL_CONF;
 const GRUB_FSTAB: &str = include_str!("../fixtures/grub-fstab");
 
 #[test]

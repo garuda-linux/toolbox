@@ -20,8 +20,7 @@ use crate::testing::{PageFixture, PageState};
 
 /// `/etc/default/grub` of a Garuda Mokka install, the install of
 /// [`GRUB_CFG`]. The file names the Catppuccin theme.
-const DEFAULTS: &str =
-    include_str!("../../../../../crates/plan/src/grub/fixtures/installed/default-grub");
+const DEFAULTS: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
 const THEME: &str = "/usr/share/grub/themes/catppuccin-mocha/theme.txt";
 const MASKED: &str = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 

@@ -6,7 +6,7 @@ use super::{
     ActiveState, FileState, Filter, UnitInfo, UnitOrder, does_nothing, pick, plan_control,
     plan_logs,
 };
-use crate::testing::unit;
+use crate::test_support::unit;
 
 fn listed<'units>(
     units: &'units [UnitInfo],

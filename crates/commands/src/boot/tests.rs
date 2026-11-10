@@ -9,8 +9,8 @@ use super::{build, default_kernel, set};
 
 /// `/etc/default/grub` and `grub.cfg` of a Garuda Mokka install, UUIDs
 /// of `grub.cfg` replaced by `x`.
-const DEFAULTS: &str = include_str!("../../../plan/src/grub/fixtures/installed/default-grub");
-const GRUB_CFG: &str = include_str!("../../../plan/src/grub/fixtures/installed/grub.cfg");
+const DEFAULTS: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
+const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;
 
 fn grub() -> Snapshot {
     let mut snapshot = Snapshot::default();

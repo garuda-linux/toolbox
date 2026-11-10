@@ -9,9 +9,9 @@ pub use toolbox_state::bootrepair::sample::{BARE_METAL, laptop_from_the_live_iso
 pub const INSTALLED: &str = include_str!("../fixtures/installed.json");
 /// The Lima VM with a second disk that is LUKS without a partition
 /// table, LVM inside and `vg0-root` mounted.
-pub const LVM_ON_LUKS: &str = include_str!("../fixtures/lima-lvm-on-luks.json");
+pub const LVM_ON_LUKS: &str = toolbox_state::testing::features::bootrepair::LIMA_LVM_ON_LUKS_JSON;
 /// The Garuda live ISO in QEMU with an empty disk.
-pub const LIVE: &str = include_str!("../../../../../state/src/bootrepair/fixtures/live.json");
+pub const LIVE: &str = toolbox_state::testing::bootrepair::LIVE_JSON;
 
 /// `vg0-root` and `vg0-swap` below `vdb` of the LVM listing.
 const VG0_ROOT: &str = "/blockdevices/2/children/0/children/0";

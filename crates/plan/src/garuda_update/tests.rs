@@ -4,7 +4,7 @@ use super::GarudaUpdateFlag;
 
 /// `/etc/garuda/garuda-update/config` as garuda-update ships it, every
 /// variable commented out and no line break at the end.
-const SHIPPED: &str = include_str!("../../../system/src/settings/fixtures/garuda-update-config");
+const SHIPPED: &str = crate::testing::settings::GARUDA_UPDATE_CONFIG;
 
 #[test]
 fn keys_and_ids_name_every_flag() {

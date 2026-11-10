@@ -3,9 +3,9 @@ use proptest::prelude::*;
 use super::{InvalidMirrorlist, MAX_MIRRORLIST_BYTES, Mirrorlist};
 
 /// `/etc/pacman.d/chaotic-mirrorlist` of the Lima image.
-const CHAOTIC: &str = include_str!("fixtures/chaotic-mirrorlist");
+const CHAOTIC: &str = crate::testing::mirrorlist::CHAOTIC_MIRRORLIST;
 /// What `rate-mirrors --save` writes for chaotic-aur, its log as comments.
-const RATED: &str = include_str!("fixtures/rate-mirrors-chaotic");
+const RATED: &str = crate::testing::mirrorlist::RATE_MIRRORS_CHAOTIC;
 
 #[test]
 fn a_real_mirrorlist_is_accepted() {

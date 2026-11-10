@@ -18,19 +18,12 @@ use crate::boot::Boot;
 use crate::command::{BootCommand, Command};
 
 /// Files of the Garuda Lima image.
-const LOADER_CONF: &str =
-    include_str!("../../../../../../crates/plan/src/sdboot/fixtures/loader.conf");
-const KERNEL_CMDLINE: &str =
-    include_str!("../../../../../../crates/state/src/boot/fixtures/kernel-cmdline");
+const LOADER_CONF: &str = toolbox_plan::testing::sdboot::LOADER_CONF;
+const KERNEL_CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
 /// `/proc/cmdline` of the Garuda live ISO.
-const LIVE_CMDLINE: &str =
-    include_str!("../../../../../../crates/system/src/host/fixtures/live/proc-cmdline");
-const UKI: &[u8] = include_bytes!(
-    "../../../../../../crates/plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head"
-);
-const FALLBACK: &[u8] = include_bytes!(
-    "../../../../../../crates/plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda-fallback.efi.head"
-);
+const LIVE_CMDLINE: &str = toolbox_plan::testing::host::LIVE_PROC_CMDLINE;
+const UKI: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
+const FALLBACK: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_EFI_HEAD;
 
 fn section(image: &[u8], name: &str) -> String {
     let found = sections(image)

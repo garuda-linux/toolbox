@@ -5,12 +5,12 @@ use super::super::{
     parse_identification, source_name,
 };
 use super::{all, rows, snapshot};
-use crate::testing::{locale, package};
+use crate::test_support::{locale, package};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `/usr/share/i18n/locales/de_DE` and `eo` of the Lima VM.
-const GERMAN: &str = include_str!("../../../../../system/src/locales/fixtures/locales/de_DE");
-const ESPERANTO: &str = include_str!("../../../../../system/src/locales/fixtures/locales/eo");
+const GERMAN: &str = toolbox_system::testing::locales::LOCALES_DE_DE;
+const ESPERANTO: &str = toolbox_system::testing::locales::LOCALES_EO;
 
 fn name(language: &str, territory: &str) -> LanguageName {
     LanguageName {

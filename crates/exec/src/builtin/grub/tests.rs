@@ -8,10 +8,10 @@ use toolbox_plan::{
 
 use super::edit_grub_defaults;
 use crate::builtin::FileChange;
-use crate::testing::mode;
+use crate::test_support::mode;
 
 /// `/etc/default/grub` of a Garuda Mokka install.
-const BEFORE: &str = include_str!("../../../../plan/src/grub/fixtures/installed/default-grub");
+const BEFORE: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
 
 /// What `settings` makes of it, line by line.
 fn after() -> String {

@@ -5460,6 +5460,7 @@ dependencies = [
  "toolbox-instance",
  "toolbox-plan",
  "toolbox-privatebin",
+ "toolbox-pty",
  "toolbox-services",
  "toolbox-state",
  "toolbox-system",
@@ -5491,6 +5492,7 @@ dependencies = [
  "toolbox-catalog",
  "toolbox-plan",
  "toolbox-state",
+ "toolbox-system",
  "tracing",
 ]
 
@@ -5504,6 +5506,7 @@ dependencies = [
  "toolbox-fs",
  "toolbox-plan",
  "toolbox-pty",
+ "toolbox-state",
  "tracing",
 ]
 
@@ -5557,6 +5560,7 @@ dependencies = [
  "toolbox-privatebin",
  "toolbox-pty",
  "toolbox-services",
+ "toolbox-state",
  "toolbox-system",
  "toolbox-terminal",
  "tracing",
@@ -5577,6 +5581,7 @@ dependencies = [
  "jxl-oxide",
  "parking_lot 0.13.0",
  "skrifa 0.49.0",
+ "toolbox-pty",
  "toolbox-terminal",
  "tracing",
  "unicode-width",
@@ -5602,6 +5607,8 @@ dependencies = [
  "tempfile",
  "toolbox-exec",
  "toolbox-plan",
+ "toolbox-state",
+ "toolbox-system",
 ]
 
 [[package]]

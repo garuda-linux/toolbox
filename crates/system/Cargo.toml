@@ -9,7 +9,8 @@ publish.workspace = true
 [features]
 # The dry run's sample machine, left out of a release.
 selftest = ["toolbox-state/selftest"]
-# Constructors the GUI tests need to read captured system files.
+# Constructors the GUI tests need to read captured system files, and the
+# captures in `testing` for the tests of other crates.
 testing = []
 
 [dependencies]
@@ -34,8 +35,10 @@ toolbox-privatebin.workspace = true
 tempfile.workspace = true
 
 [dev-dependencies]
+toolbox-exec = { workspace = true, features = ["testing"] }
+toolbox-plan = { workspace = true, features = ["testing"] }
 tokio = { workspace = true, features = ["test-util"] }
-toolbox-state = { workspace = true, features = ["selftest"] }
+toolbox-state = { workspace = true, features = ["selftest", "testing"] }
 
 [lints]
 workspace = true

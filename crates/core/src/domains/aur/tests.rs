@@ -3,7 +3,7 @@ use toolbox_plan::{PlannedAction, TargetList, UserAction};
 use super::AurPackages;
 use crate::domain::{Domain as _, Queued, Stage, Staged, Summary};
 use crate::domains::InstalledPackages;
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 
 #[test]
 fn an_aur_install_is_done_once_the_package_is_installed() {

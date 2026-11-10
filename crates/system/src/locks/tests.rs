@@ -8,7 +8,7 @@ use toolbox_plan::protocol::ReadKind;
 use super::{HelperLocks, LockProblem, LockSource as _, parse};
 use crate::HelperReads;
 use crate::pkexec::Refusal;
-use crate::testing::runnable_script;
+use crate::test_support::runnable_script;
 
 /// Runs its script in place of pkexec and the helper.
 struct Script(PathBuf);

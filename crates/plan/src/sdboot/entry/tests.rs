@@ -4,8 +4,8 @@ use crate::{KernelRelease, LoaderEntryId};
 
 /// The first bytes of the Garuda Lima image's UKIs, up to the end of
 /// `.uname`.
-const UKI: &[u8] = include_bytes!("../fixtures/garuda-7.3.1-1-garuda.efi.head");
-const FALLBACK: &[u8] = include_bytes!("../fixtures/garuda-7.3.1-1-garuda-fallback.efi.head");
+const UKI: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
+const FALLBACK: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_EFI_HEAD;
 
 fn id(value: &str) -> LoaderEntryId {
     LoaderEntryId::new(value).unwrap()

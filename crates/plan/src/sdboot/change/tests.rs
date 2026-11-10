@@ -4,11 +4,11 @@ use crate::sdboot::{LoaderEntry, LoaderSettings, LoaderTimeout, sections};
 
 /// `/efi/loader/loader.conf` of the Garuda Lima image, and the lines
 /// garuda-common-settings' config agent rule appends to it.
-const IMAGE: &str = include_str!("../fixtures/loader.conf");
+const IMAGE: &str = crate::testing::sdboot::LOADER_CONF;
 const COMMON_SETTINGS: &str = "auto-firmware yes\nauto-reboot yes\nauto-poweroff yes\n";
 
-const UKI: &[u8] = include_bytes!("../fixtures/garuda-7.3.1-1-garuda.efi.head");
-const FALLBACK: &[u8] = include_bytes!("../fixtures/garuda-7.3.1-1-garuda-fallback.efi.head");
+const UKI: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
+const FALLBACK: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_EFI_HEAD;
 
 fn change(settings: Vec<LoaderSetting>) -> LoaderChange {
     LoaderChange::new(settings).unwrap()

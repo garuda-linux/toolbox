@@ -20,7 +20,7 @@ const UKI_TOOLS: [&str; 2] = [
 ];
 
 /// `/etc/kernel/cmdline` of the Garuda Lima image.
-const IMAGE: &str = include_str!("../../../../crates/state/src/boot/fixtures/kernel-cmdline");
+const IMAGE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
 
 #[test]
 fn the_kernel_cmdline_is_written_and_the_old_one_kept() -> TestResult {

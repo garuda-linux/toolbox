@@ -1,7 +1,7 @@
 use super::esp_place;
 
 /// `/proc/self/mountinfo` of the Garuda Lima image.
-const IMAGE: &str = include_str!("../fixtures/mountinfo");
+const IMAGE: &str = crate::testing::sdboot::MOUNTINFO;
 
 #[test]
 fn the_images_esp_is_at_efi() {

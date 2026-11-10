@@ -8,7 +8,7 @@ use crate::domains::{
     EnabledUnits, EnabledUserUnits, Groups, InstalledPackages, Packages, SystemUnitMasks,
     SystemUnits, UserUnits,
 };
-use crate::testing::{membership, nina_in, package, sided, unit};
+use crate::test_support::{membership, nina_in, package, sided, unit};
 use crate::{ChangeSet, Snapshot};
 
 /// A domain defined outside the core, as a later feature would: it plugs

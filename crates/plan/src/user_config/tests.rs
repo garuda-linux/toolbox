@@ -3,11 +3,11 @@ use super::{
 };
 
 /// `~/.config/kwinrc` after `kwriteconfig6` set the key in the Lima image.
-const WRITTEN: &[u8] = include_bytes!("fixtures/kwinrc");
+const WRITTEN: &[u8] = crate::testing::user_config::KWINRC.as_bytes();
 /// `~/.config/kwinrc` of a used Plasma session with the key on.
-const USED: &str = include_str!("fixtures/installed/kwinrc");
+const USED: &str = crate::testing::user_config::INSTALLED_KWINRC;
 /// `~/.config/discord/settings.json` of a used install, without the flag.
-const DISCORD: &[u8] = include_bytes!("fixtures/installed/discord-settings.json");
+const DISCORD: &[u8] = crate::testing::user_config::INSTALLED_DISCORD_SETTINGS_JSON.as_bytes();
 
 fn path(value: &str) -> HomePath {
     HomePath::new(value).unwrap()

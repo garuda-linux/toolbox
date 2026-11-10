@@ -1,6 +1,6 @@
 use super::{InstalledPackages, Packages};
 use crate::domain::{Domain as _, Summary, Toggle};
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 
 fn installed(names: &[&str]) -> InstalledPackages {
     InstalledPackages(packages(names))

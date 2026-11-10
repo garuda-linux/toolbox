@@ -7,7 +7,7 @@ use toolbox_plan::{
 use super::{GarudaUpdateConfig, GarudaUpdateFlags};
 use crate::domain::{Summary, Toggle};
 use crate::domains::{Dns, Hblock, LoginShells, WifiBackends};
-use crate::testing::{actions, restored, user_name};
+use crate::test_support::{actions, restored, user_name};
 use crate::{ChangeSet, Single, Snapshot};
 
 fn snapshot() -> Snapshot {

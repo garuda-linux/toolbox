@@ -6,7 +6,7 @@ use toolbox_catalog::ToggleCatalog;
 use super::super::{Refusal, toggle};
 use super::snapshot;
 use crate::features::users;
-use crate::testing::membership;
+use crate::test_support::membership;
 use crate::{ChangeSet, Toggle};
 
 const OWN_GROUP: &str = r#"

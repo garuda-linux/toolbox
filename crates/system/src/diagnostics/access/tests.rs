@@ -5,7 +5,7 @@ use crate::diagnostics::testing::{Machine, report};
 use crate::diagnostics::tests::DMESG_RESTRICT;
 
 /// `/var/log/pacman.log` of a Lima session.
-const LOG: &str = include_str!("../../status/pacman_log/fixtures/pacman.log");
+const LOG: &str = toolbox_state::testing::status::pacman_log::PACMAN_LOG;
 /// The last `[PACMAN] Running` line of [`LOG`].
 const LAST_RUN: &str =
     "[2026-11-08T17:35:39+0100] [PACMAN] Running 'pacman -S --noconfirm garuda-common-settings'\n";

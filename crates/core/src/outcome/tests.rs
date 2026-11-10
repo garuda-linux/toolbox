@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use toolbox_plan::StepId;
 
 use crate::domains::{InstalledPackages, Packages};
-use crate::testing::{failed_at, outcomes, package, stopped_at};
+use crate::test_support::{failed_at, outcomes, package, stopped_at};
 use crate::{ChangeSet, Outcome, Snapshot, Toggle, planned};
 
 fn installed(names: &[&str]) -> Snapshot {

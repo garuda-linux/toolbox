@@ -32,8 +32,7 @@ use crate::common::{HEIGHT, installing, packages, window};
 
 /// pacman asks for a provider of java-runtime, takes the default and
 /// asks to proceed, captured through a PTY.
-pub const PACMAN_INSTALL: &str =
-    include_str!("../../../../crates/pty/tests/fixtures/pacman-provider.txt");
+pub const PACMAN_INSTALL: &str = toolbox_pty::testing::PACMAN_PROVIDER_TXT;
 
 /// The package the install in [`PACMAN_INSTALL`] was asked for.
 pub const JAVA: &[&str] = &["java-runtime"];

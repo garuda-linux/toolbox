@@ -1,10 +1,10 @@
 use super::{set, value};
 
 /// `~/.config/kwinrc` after `kwriteconfig6` set one key in the Lima image.
-const WRITTEN: &str = include_str!("../fixtures/kwinrc");
+const WRITTEN: &str = crate::testing::user_config::KWINRC;
 /// `~/.config/kwinrc` of a used Plasma session, nested `[Tiling]` groups
 /// and all.
-const USED: &str = include_str!("../fixtures/installed/kwinrc");
+const USED: &str = crate::testing::user_config::INSTALLED_KWINRC;
 
 const KEY: &str = "BorderlessMaximizedWindows";
 

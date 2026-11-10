@@ -1,7 +1,7 @@
 use super::sdboot::{CMDLINE, LIVE, image};
 use crate::features::boot::view::{Page, parameters_line, parameters_queued, plymouth_shown};
 use crate::features::boot::{Flag, remove_parameter, set_flag, set_plymouth_theme};
-use crate::testing::plymouth_theme;
+use crate::test_support::plymouth_theme;
 use crate::{ChangeSet, Toggle};
 
 /// The switches own `quiet`, so the chips show the rest in order.

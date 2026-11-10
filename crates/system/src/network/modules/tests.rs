@@ -6,7 +6,7 @@ use toolbox_state::network::{Category, ModuleFacts};
 
 use super::{ModuleSource as _, SystemModules};
 use crate::ProbeError;
-use crate::testing::write;
+use crate::test_support::write;
 
 const RELEASE: &str = include_str!("fixtures/osrelease");
 const PROC_MODULES: &str = include_str!("fixtures/proc-modules");
@@ -14,9 +14,10 @@ const MODULES_DEP: &str = include_str!("fixtures/modules.dep");
 /// The Lima VM with the Broadcom `wl` driver built by DKMS and loaded, next
 /// to a USB Wi-Fi stick.
 const PROC_MODULES_WIFI: &str = include_str!("fixtures/proc-modules-wifi");
-const MODULES_DEP_DKMS: &str = include_str!("fixtures/modules.dep-dkms");
+const MODULES_DEP_DKMS: &str = crate::testing::network::modules::MODULES_DEP_DKMS;
 /// The only modprobe files of the Lima VM, from its `usr/lib/modprobe.d`.
-const SYSTEMD_CONF: &str = include_str!("fixtures/root/usr/lib/modprobe.d/systemd.conf");
+const SYSTEMD_CONF: &str =
+    toolbox_plan::testing::network::modules::ROOT_USR_LIB_MODPROBE_D_SYSTEMD_CONF;
 const README: &str = include_str!("fixtures/root/usr/lib/modprobe.d/README");
 
 fn system_with(proc_modules: &str, modules_dep: &str) -> (TempDir, SystemModules) {

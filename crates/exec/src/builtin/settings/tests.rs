@@ -7,21 +7,19 @@ use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, WifiBackend};
 use super::{
     FileChange, set_garuda_update_flag, shell_is_listed, write_dns_config, write_wifi_backend,
 };
-use crate::testing::mode;
+use crate::test_support::mode;
 
 /// `/etc/NetworkManager/NetworkManager.conf` of the Lima Garuda image,
 /// whose `conf.d` beside it is empty.
-const NETWORKMANAGER_CONF: &str = include_str!(
-    "../../../../system/src/settings/fixtures/networkmanager/etc/NetworkManager/NetworkManager.conf"
-);
+const NETWORKMANAGER_CONF: &str =
+    crate::testing::settings::NETWORKMANAGER_ETC_NETWORKMANAGER_NETWORKMANAGER_CONF;
 
 /// `/etc/shells` of the Lima Garuda image.
-const SHELLS: &str = include_str!("../../../../system/src/accounts/fixtures/shells");
+const SHELLS: &str = crate::testing::accounts::SHELLS;
 
 /// `/etc/garuda/garuda-update/config` as garuda-update ships it, without
 /// a line break at the end.
-const GARUDA_UPDATE: &str =
-    include_str!("../../../../system/src/settings/fixtures/garuda-update-config");
+const GARUDA_UPDATE: &str = toolbox_plan::testing::settings::GARUDA_UPDATE_CONFIG;
 
 fn system_with_network_manager() -> (TempDir, PathBuf) {
     let root = tempfile::tempdir().unwrap();
@@ -173,9 +171,8 @@ fn iwd_writes_the_backend_drop_in() {
 #[test]
 fn wpa_supplicant_removes_both_backend_drop_ins() {
     let (root, conf_d) = system_with_network_manager();
-    let connectivity = include_str!(
-        "../../../../system/src/settings/fixtures/networkmanager/usr/lib/NetworkManager/conf.d/20-connectivity.conf"
-    );
+    let connectivity =
+        crate::testing::settings::NETWORKMANAGER_USR_LIB_NETWORKMANAGER_CONF_D_20_CONNECTIVITY_CONF;
 
     fs::write(
         conf_d.join("20_wifi_backend_rani.conf"),

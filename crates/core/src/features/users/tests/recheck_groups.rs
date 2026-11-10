@@ -6,7 +6,7 @@ use serde_json::json;
 use super::super::recheck_groups;
 use super::{queued, snapshot};
 use crate::Snapshot;
-use crate::testing::restore_saved;
+use crate::test_support::restore_saved;
 
 #[test]
 fn a_restored_membership_the_page_refuses_is_dropped() {

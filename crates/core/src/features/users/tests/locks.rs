@@ -8,7 +8,7 @@ use super::super::{Refusal, membership_allowed, recheck, recheck_locks, remove_u
 use super::admins::{with_admins, with_wheel};
 use super::{queued, snapshot};
 use crate::domains::{AccountLockFlags, AccountLocks, CurrentUser, RemovedUsers};
-use crate::testing::{lock_flags, membership, restore_saved, user_name};
+use crate::test_support::{lock_flags, membership, restore_saved, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `nico` and `ada` in `wheel`, `http` running the app, and the helper's

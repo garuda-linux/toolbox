@@ -3,7 +3,7 @@ use toolbox_catalog::ToggleCatalog;
 use super::snapshot;
 use crate::domains::{Packages, SyncPackages};
 use crate::features::toggles::{is_offered, state, toggle};
-use crate::testing::{package, packages};
+use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const GAMING: &str = r#"

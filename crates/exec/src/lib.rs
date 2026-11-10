@@ -16,7 +16,9 @@ mod report;
 mod sdboot;
 mod secure;
 #[cfg(test)]
-mod testing;
+mod test_support;
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 mod uki;
 
 pub use apply::{EventSink, Procedure, Runner, apply, step_span};

@@ -5,9 +5,9 @@ use super::{GrubMenu, GrubPlatform, MAX_ENTRIES, MenuEntry};
 use crate::protocol::encode;
 
 /// `grub.cfg` of a used Garuda Mokka install, every UUID masked.
-const INSTALLED: &str = include_str!("../fixtures/installed/grub.cfg");
+const INSTALLED: &str = crate::testing::grub::INSTALLED_GRUB_CFG;
 /// `grub.cfg` of the Lima image with two kernels and a test superuser.
-const LIMA: &str = include_str!("../fixtures/lima/grub.cfg");
+const LIMA: &str = crate::testing::grub::LIMA_GRUB_CFG;
 /// `grub-btrfs.cfg` of the same install, ten snapshots.
 const SNAPSHOTS: &str = include_str!("../fixtures/installed/grub-btrfs.cfg");
 

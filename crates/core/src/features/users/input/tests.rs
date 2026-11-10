@@ -7,7 +7,7 @@ use toolbox_plan::{GroupName, ShellPath, UserName};
 use super::{NewAccount, name, new_account};
 use crate::Snapshot;
 use crate::domains::{Accounts, AvailableShells};
-use crate::testing::{group, group_name, user};
+use crate::test_support::{group, group_name, user};
 
 fn filled<'fields>(
     name: &'fields str,

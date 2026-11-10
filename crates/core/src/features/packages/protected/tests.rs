@@ -3,7 +3,7 @@ use toolbox_state::packages::{InstallReason, LocalNode, PackageGraph};
 
 use super::{CascadeRefusal, may_remove, may_remove_with_cascade};
 use crate::Snapshot;
-use crate::testing::package;
+use crate::test_support::package;
 
 fn node(name: &str, reason: InstallReason, depends: &[&str]) -> LocalNode {
     LocalNode {

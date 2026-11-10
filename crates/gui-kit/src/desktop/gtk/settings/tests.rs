@@ -4,7 +4,7 @@ use crate::desktop::FontSpec;
 /// `~/.config/gtk-3.0/settings.ini` of a Garuda Mokka install.
 const MOKKA: &str = include_str!("../fixtures/installed/gtk-3.0-settings.ini");
 /// Garuda's `/etc/skel/.config/gtk-4.0/settings.ini`.
-const SKEL: &str = include_str!("../../fixtures/skel/etc/skel/.config/gtk-4.0/settings.ini");
+const SKEL: &str = crate::testing::desktop::SKEL_ETC_SKEL_CONFIG_GTK_4_0_SETTINGS_INI;
 
 /// [`SKEL`] with its font line edited to `font`.
 fn skel_font(font: &str) -> Option<FontSpec> {

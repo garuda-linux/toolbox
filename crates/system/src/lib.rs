@@ -34,7 +34,9 @@ pub mod skel;
 mod status;
 pub mod systemd;
 #[cfg(test)]
-mod testing;
+mod test_support;
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 mod units;
 mod user_configs;
 

@@ -6,7 +6,7 @@ use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 use crate::domains::{
     EnabledUnits, EnabledUserUnits, Groups, InstalledPackages, Packages, SystemUnits, UserUnits,
 };
-use crate::testing::{membership, nina_in, package, unit, views};
+use crate::test_support::{membership, nina_in, package, unit, views};
 
 /// Work that leaves no state behind, like the maintenance operations: it
 /// needs no probe and is done once an apply succeeded.
@@ -224,7 +224,7 @@ fn one_off_changes_survive_a_reconcile_but_not_a_successful_apply() {
     changes.reconcile(&snapshot());
     assert_eq!(changes.len(), 2);
 
-    crate::testing::all_steps_succeeded(&mut changes);
+    crate::test_support::all_steps_succeeded(&mut changes);
 
     let keys: Vec<String> = changes.views().into_iter().map(|view| view.key).collect();
     assert_eq!(keys, ["mpv"]);

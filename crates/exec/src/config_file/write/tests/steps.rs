@@ -5,7 +5,7 @@ use toolbox_plan::{ConfigFilePath, ConfigWrite, FetchRefusal, Fingerprint, StepI
 
 use super::super::{ReadError, WriteError, execute, refusal_text};
 use super::text;
-use crate::testing::printed;
+use crate::test_support::printed;
 
 fn write(root: &std::path::Path, name: &str) -> (Outcome, String) {
     let mut events = Vec::new();

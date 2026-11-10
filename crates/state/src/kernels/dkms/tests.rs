@@ -4,11 +4,11 @@ use super::{DkmsEntry, DkmsState, ModuleState, builds, modules, parse_status};
 
 // `dkms status` as root in the Lima VM, dkms 3.x with two kernels. The
 // steps between the four captures are not logged, only their output.
-const INSTALLED: &str = include_str!("fixtures/installed.stdout");
+const INSTALLED: &str = crate::testing::kernels::dkms::INSTALLED_STDOUT;
 const ONE_KERNEL_MISSING: &str = include_str!("fixtures/one-kernel-missing.stdout");
-const ADDED: &str = include_str!("fixtures/added.stdout");
-const BROKEN: &str = include_str!("fixtures/broken.stdout");
-const BROKEN_STDERR: &str = include_str!("fixtures/broken.stderr");
+const ADDED: &str = crate::testing::kernels::dkms::ADDED_STDOUT;
+const BROKEN: &str = crate::testing::kernels::dkms::BROKEN_STDOUT;
+const BROKEN_STDERR: &str = crate::testing::kernels::dkms::BROKEN_STDERR;
 
 const GARUDA: &str = "7.3.1-1-garuda";
 const LTS: &str = "6.18.60-1-lts";

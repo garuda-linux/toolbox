@@ -7,22 +7,19 @@ use crate::features::network::{
     BlacklistEntry, Category, DriverFilter, DriverRow, DriverState, ModuleFacts, Refusal,
     driver_rows, loaded_modules, network_modules, plan_load, plan_unload, set_blacklisted, visible,
 };
-use crate::testing::commands;
+use crate::test_support::commands;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 pub(super) const OWN_FILE: &str = "/etc/modprobe.d/garuda-toolbox-blacklist.conf";
 pub(super) const BROADCOM_FILE: &str = "/usr/lib/modprobe.d/broadcom-wl.conf";
 
 /// The network lines of `modules.dep` of a bare-metal laptop.
-const MODULES_DEP: &str =
-    include_str!("../../../../../system/src/network/modules/fixtures/bare-metal/modules.dep");
+const MODULES_DEP: &str = toolbox_system::testing::network::modules::BARE_METAL_MODULES_DEP;
 /// The Lima VM after DKMS builds, `wl` and `v4l2loopback` below `updates/`.
-const MODULES_DEP_DKMS: &str =
-    include_str!("../../../../../system/src/network/modules/fixtures/modules.dep-dkms");
+const MODULES_DEP_DKMS: &str = toolbox_system::testing::network::modules::MODULES_DEP_DKMS;
 /// `/proc/modules` of the laptop: `mt7921e` for its Wi-Fi, `btusb` for
 /// its Bluetooth, `r8169` for its Ethernet port.
-const PROC_MODULES: &str =
-    include_str!("../../../../../system/src/network/modules/fixtures/bare-metal/proc-modules");
+const PROC_MODULES: &str = toolbox_system::testing::network::modules::BARE_METAL_PROC_MODULES;
 
 pub(super) fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()

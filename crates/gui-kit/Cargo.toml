@@ -27,6 +27,7 @@ jxl-oxide.workspace = true
 egui_kittest = { workspace = true, optional = true }
 
 [dev-dependencies]
+toolbox-pty = { workspace = true, features = ["testing"] }
 egui_kittest.workspace = true
 
 [lints]

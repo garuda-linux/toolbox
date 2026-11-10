@@ -2,7 +2,7 @@ use super::{Section, sections};
 
 /// The first bytes of the Garuda Lima image's UKI, up to the end of
 /// `.uname`.
-const UKI: &[u8] = include_bytes!("../fixtures/garuda-7.3.1-1-garuda.efi.head");
+const UKI: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
 
 /// As `objdump -h` lists them for that UKI.
 #[test]

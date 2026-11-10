@@ -9,11 +9,11 @@ use crate::ProbeError;
 
 /// The Lima VM after `guest` and `nopass` were added. The login name of
 /// the VM's own account was replaced with `user`.
-const PASSWD: &str = include_str!("fixtures/passwd");
-const GROUP: &str = include_str!("fixtures/group");
+const PASSWD: &str = toolbox_plan::testing::accounts::PASSWD;
+const GROUP: &str = toolbox_exec::testing::accounts::GROUP;
 /// The same VM before `guest` was added.
 const IMAGE_PASSWD: &str = include_str!("fixtures/image/passwd");
-const SHELLS: &str = include_str!("fixtures/shells");
+const SHELLS: &str = toolbox_exec::testing::accounts::SHELLS;
 
 fn user(name: &str) -> UserName {
     UserName::new(name).unwrap()

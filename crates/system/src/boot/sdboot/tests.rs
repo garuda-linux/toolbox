@@ -7,7 +7,7 @@ use toolbox_plan::protocol::ReadKind;
 use toolbox_state::boot::BootLoader;
 
 use super::loader;
-use crate::testing::write;
+use crate::test_support::write;
 use crate::{
     BootMenuSource as _, BootSource as _, HelperReads, MenuRead, ProbeError, SystemBoot,
     SystemBootMenu,
@@ -15,14 +15,12 @@ use crate::{
 
 /// Files of the Garuda Lima image, and the `/etc/default/grub` of a Garuda
 /// GRUB install.
-const LOADER_INFO: &[u8] = include_bytes!("../../../../state/src/boot/fixtures/LoaderInfo");
-const KERNEL_CMDLINE: &str = include_str!("../../../../state/src/boot/fixtures/kernel-cmdline");
-const PROC_CMDLINE: &str = include_str!("../../host/fixtures/proc-cmdline");
-const MOUNTINFO: &str = include_str!("../../../../plan/src/sdboot/fixtures/mountinfo");
-const UKI: &[u8] =
-    include_bytes!("../../../../plan/src/sdboot/fixtures/garuda-7.3.1-1-garuda.efi.head");
-const GRUB_DEFAULTS: &str =
-    include_str!("../../../../plan/src/grub/fixtures/installed/default-grub");
+const LOADER_INFO: &[u8] = toolbox_state::testing::boot::LOADERINFO.as_bytes();
+const KERNEL_CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
+const PROC_CMDLINE: &str = toolbox_plan::testing::host::PROC_CMDLINE;
+const MOUNTINFO: &str = toolbox_plan::testing::sdboot::MOUNTINFO;
+const UKI: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
+const GRUB_DEFAULTS: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
 
 const LOADER_INFO_PATH: &str =
     "sys/firmware/efi/efivars/LoaderInfo-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f";

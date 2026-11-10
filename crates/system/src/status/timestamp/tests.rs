@@ -12,7 +12,7 @@ fn at(seconds: u64) -> Option<SystemTime> {
 
 #[test]
 fn real_stamps_are_the_ones_of_the_log() {
-    let log = include_str!("../pacman_log/fixtures/pacman.log");
+    let log = toolbox_state::testing::status::pacman_log::PACMAN_LOG;
 
     assert!(log.starts_with(&format!("[{LIMA}]")));
 }

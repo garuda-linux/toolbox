@@ -9,7 +9,7 @@ use super::{
 };
 use crate::domains::InstalledPackages;
 use crate::features::maintenance::Operations;
-use crate::testing::package;
+use crate::test_support::package;
 use crate::{ChangeSet, Snapshot};
 
 fn root_action(id: &str) -> Option<RootAction> {

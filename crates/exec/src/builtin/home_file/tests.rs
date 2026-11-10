@@ -5,13 +5,13 @@ use std::path::Path;
 use toolbox_plan::{ConfigText, Fingerprint, HomePath, HomeWrite};
 
 use super::write_home_file;
-use crate::testing::mode;
+use crate::test_support::mode;
 
 const FILE: &str = ".config/kwinrc";
 const BACKUP: &str = ".local/state/garuda-toolbox/backups/.config/kwinrc";
 
 /// The `kwinrc` of a used Plasma session on a Garuda install.
-const OLD: &str = include_str!("../../../../plan/src/user_config/fixtures/installed/kwinrc");
+const OLD: &str = toolbox_plan::testing::user_config::INSTALLED_KWINRC;
 
 /// Edit: the drag of the wobbly windows effect lowered from 85 to 50, the
 /// one setting a user changes in the editor.

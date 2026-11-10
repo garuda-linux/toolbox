@@ -16,10 +16,9 @@ const CLOSED: Access = Access {
 };
 
 /// `/var/log/pacman.log` of the Lima VM.
-const PACMAN_LOG: &str = include_str!("../../../system/src/status/pacman_log/fixtures/pacman.log");
+const PACMAN_LOG: &str = crate::testing::status::pacman_log::PACMAN_LOG;
 /// The last 1500 lines of it on the installed Garuda system.
-const INSTALLED_PACMAN_LOG: &str =
-    include_str!("../../../system/src/status/pacman_log/fixtures/installed-pacman.log");
+const INSTALLED_PACMAN_LOG: &str = crate::testing::status::pacman_log::INSTALLED_PACMAN_LOG;
 
 fn ran(output: &str, errors: &str, code: i32) -> Attempt {
     Attempt::Ran(Ran {

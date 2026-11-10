@@ -3,9 +3,9 @@ use crate::UserName;
 
 /// `/etc/shadow` of the Lima image with every salt and hash replaced by
 /// `x`, the `$` fields and the lock sign kept.
-pub(super) const SHADOW: &str = include_str!("fixtures/shadow");
+pub(super) const SHADOW: &str = crate::testing::account::SHADOW;
 /// `/etc/passwd` of the Lima image, its user renamed to `user`.
-pub(super) const PASSWD: &str = include_str!("../../../system/src/accounts/fixtures/passwd");
+pub(super) const PASSWD: &str = crate::testing::accounts::PASSWD;
 
 /// Edit: the locked `guest` hash unlocked, plus a line with a name no
 /// account has and a line with no fields.

@@ -7,10 +7,9 @@ use super::answer;
 use crate::testing::SHADOW;
 
 /// `/etc/default/grub` of a Garuda install in QEMU.
-const DEFAULT_GRUB: &str =
-    include_str!("../../../../crates/plan/src/grub/fixtures/installed/default-grub");
+const DEFAULT_GRUB: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
 /// The Lima VM's `/etc/os-release`.
-const OS_RELEASE: &str = include_str!("../../../../crates/system/src/host/fixtures/os-release");
+const OS_RELEASE: &str = toolbox_system::testing::host::OS_RELEASE;
 
 fn path(text: &str) -> ConfigFilePath {
     ConfigFilePath::new(text).unwrap()

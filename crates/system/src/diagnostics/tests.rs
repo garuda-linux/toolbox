@@ -9,7 +9,7 @@ use toolbox_state::diagnostics::{Access, Collector, Outcome};
 
 use super::testing::{Machine, cancel_after, report};
 use super::{DiagnosticSource as _, access};
-use crate::testing::running_as_root;
+use crate::test_support::running_as_root;
 
 /// Room for the notice that says the start of the output was cut.
 const NOTICE_SLACK: usize = 100;

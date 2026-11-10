@@ -2,11 +2,11 @@ use super::{BootLoader, KernelCmdline};
 
 /// Files of the Garuda Lima image: the raw EFI variable from efivarfs,
 /// `/etc/kernel/install.conf` and `/etc/kernel/cmdline`.
-const LOADER_INFO: &[u8] = include_bytes!("fixtures/LoaderInfo");
-const INSTALL_CONF: &str = include_str!("fixtures/install.conf");
-const KERNEL_CMDLINE: &str = include_str!("fixtures/kernel-cmdline");
+const LOADER_INFO: &[u8] = crate::testing::boot::LOADERINFO.as_bytes();
+const INSTALL_CONF: &str = toolbox_plan::testing::boot::INSTALL_CONF;
+const KERNEL_CMDLINE: &str = crate::testing::boot::KERNEL_CMDLINE;
 /// `/proc/cmdline` of the Garuda live ISO.
-const LIVE_CMDLINE: &str = include_str!("../../../system/src/host/fixtures/live/proc-cmdline");
+const LIVE_CMDLINE: &str = toolbox_plan::testing::host::LIVE_PROC_CMDLINE;
 
 #[test]
 fn the_image_is_found_by_its_loader_info() {

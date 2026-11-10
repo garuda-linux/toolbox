@@ -13,7 +13,7 @@ use super::{
 };
 use crate::domains::InstalledPackages;
 use crate::features::services::{ActiveState, FileState, UnitInfo};
-use crate::testing::{commands, packages};
+use crate::test_support::{commands, packages};
 use crate::{ChangeSet, Snapshot};
 
 fn radio(kind: Option<RadioKind>, soft: bool, hard: bool) -> Radio {

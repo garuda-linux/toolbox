@@ -6,7 +6,7 @@ use toolbox_state::bootrepair::{Firmware, RepairFacts, System, Tool};
 
 use super::{DryRunRepair, RepairSource as _, SystemRepair};
 use crate::error::ProbeError;
-use crate::testing::fake_program;
+use crate::test_support::fake_program;
 
 const LAPTOP_SYSTEMS: [&str; 3] = ["/dev/nvme0n1p1", "/dev/nvme0n1p3", "/dev/nvme1n1p2"];
 
