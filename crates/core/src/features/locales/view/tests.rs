@@ -267,10 +267,15 @@ fn only_listed_packs_are_queued() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
 
-    assert!(!toggle_pack(&package("vim"), true, &mut changes, &snapshot));
+    assert!(!toggle_pack(
+        &package("vim"),
+        Toggle::On,
+        &mut changes,
+        &snapshot
+    ));
     assert!(toggle_pack(
         &package("firefox-i18n-en-us"),
-        true,
+        Toggle::On,
         &mut changes,
         &snapshot
     ));
@@ -285,21 +290,21 @@ fn a_locale_taken_back_takes_its_queued_packs_with_it() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
     let german = locale_entry("de_DE.UTF-8 UTF-8");
-    toggle(&german, true, &mut changes, &snapshot).unwrap();
+    toggle(&german, Toggle::On, &mut changes, &snapshot).unwrap();
     assert!(toggle_pack(
         &package("firefox-i18n-de"),
-        true,
+        Toggle::On,
         &mut changes,
         &snapshot
     ));
     assert!(toggle_pack(
         &package("firefox-i18n-en-us"),
-        true,
+        Toggle::On,
         &mut changes,
         &snapshot
     ));
 
-    toggle(&german, false, &mut changes, &snapshot).unwrap();
+    toggle(&german, Toggle::Off, &mut changes, &snapshot).unwrap();
 
     assert_eq!(changes.wish::<Packages>(&package("firefox-i18n-de")), None);
     assert_eq!(

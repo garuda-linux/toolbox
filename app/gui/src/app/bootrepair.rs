@@ -2,7 +2,7 @@
 //! at once in the Console and is never queued. A refused click stays on
 //! the page until dismissed or the next click is taken.
 
-use toolbox_core::features::bootrepair::page::Offer;
+use toolbox_core::features::bootrepair::page::{Booted, Offer};
 use toolbox_core::features::bootrepair::{Refusal, Target, Wish, plan_regenerate, plan_reinstall};
 use toolbox_system::Host;
 
@@ -69,7 +69,7 @@ impl App {
     pub(super) fn take_boot_repair(&mut self, ctx: &egui::Context) {
         let live = self.seen.part::<Host>().is_some_and(|host| host.live_iso);
 
-        self.boot_repair.see_live(live);
+        self.boot_repair.see_live(Booted::of_live(live));
         page_ui::offer_boot_repair(ctx, self.boot_repair.offered());
         if self.state.page == PageId::BootRepair {
             if self.boot_repair.offered() {

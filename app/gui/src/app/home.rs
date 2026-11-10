@@ -3,8 +3,9 @@
 use std::path::Path;
 
 use toolbox_core::features::live::{INSTALLER, INSTALLER_ARGS};
-use toolbox_core::features::maintenance::{RunNow, queue_upgrade};
+use toolbox_core::features::maintenance::{Program, RunNow, queue_upgrade};
 use toolbox_core::features::recent::remember;
+use toolbox_plan::Toggle;
 
 use super::App;
 use crate::command::HomeCommand;
@@ -19,7 +20,12 @@ impl App {
                 let snapshot = self.current_snapshot();
                 let garuda_update = self.garuda_update();
                 self.queue.edit(&snapshot, |changes, snapshot| {
-                    queue_upgrade(on, changes, snapshot, garuda_update);
+                    queue_upgrade(
+                        Toggle::from_on(on),
+                        changes,
+                        snapshot,
+                        Program::of_found(garuda_update),
+                    );
                 });
             }
             // The page disables Restart while a plan runs. A command from
@@ -45,7 +51,11 @@ impl App {
     }
 
     fn run_now(&mut self, run: RunNow) {
-        let plan = run.plan(&self.current_snapshot(), self.garuda_update());
+        let plan = run.plan(
+            &self.current_snapshot(),
+            Program::of_found(self.garuda_update()),
+        );
+
         self.run_at_once(plan);
     }
 

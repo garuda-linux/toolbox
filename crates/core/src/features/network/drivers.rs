@@ -157,7 +157,7 @@ pub fn visible<'rows>(rows: &'rows [DriverRow], filter: &DriverFilter) -> Vec<&'
 /// do.
 pub fn set_blacklisted(
     module: &KernelModule,
-    on: bool,
+    wish: Toggle,
     facts: &ModuleFacts,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
@@ -166,7 +166,7 @@ pub fn set_blacklisted(
         return Err(Refusal::OtherFile);
     }
 
-    changes.want::<ModuleBlacklist>(module.clone(), Toggle::from_on(on), snapshot);
+    changes.want::<ModuleBlacklist>(module.clone(), wish, snapshot);
     Ok(())
 }
 

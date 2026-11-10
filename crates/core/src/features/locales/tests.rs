@@ -161,7 +161,7 @@ fn enabled_only_keeps_what_is_on_or_queued() {
     let mut changes = ChangeSet::default();
     toggle(
         &locale_entry("de_DE.UTF-8 UTF-8"),
-        true,
+        Toggle::On,
         &mut changes,
         &snapshot,
     )
@@ -198,14 +198,14 @@ fn a_click_queues_one_change_and_a_second_takes_it_back() {
     let mut changes = ChangeSet::default();
     let german = locale_entry("de_DE.UTF-8 UTF-8");
 
-    toggle(&german, true, &mut changes, &snapshot).unwrap();
+    toggle(&german, Toggle::On, &mut changes, &snapshot).unwrap();
     assert_eq!(changes.wish::<Locales>(&german), Some(&Toggle::On));
     assert_eq!(
         wanted_enabled(&snapshot, &changes),
         entries(&["de_DE.UTF-8 UTF-8", "en_US.UTF-8 UTF-8"])
     );
 
-    toggle(&german, false, &mut changes, &snapshot).unwrap();
+    toggle(&german, Toggle::Off, &mut changes, &snapshot).unwrap();
     assert!(changes.is_empty());
 }
 
@@ -221,7 +221,7 @@ fn the_locale_of_the_system_language_cannot_be_disabled() {
     assert_eq!(
         toggle(
             &locale_entry("en_US.UTF-8 UTF-8"),
-            false,
+            Toggle::Off,
             &mut changes,
             &snapshot
         ),
@@ -233,7 +233,7 @@ fn the_locale_of_the_system_language_cannot_be_disabled() {
     choose_system(locale("de_DE.UTF-8"), &mut changes, &snapshot).unwrap();
     toggle(
         &locale_entry("en_US.UTF-8 UTF-8"),
-        false,
+        Toggle::Off,
         &mut changes,
         &snapshot,
     )
@@ -241,7 +241,7 @@ fn the_locale_of_the_system_language_cannot_be_disabled() {
     assert_eq!(
         toggle(
             &locale_entry("de_DE.UTF-8 UTF-8"),
-            false,
+            Toggle::Off,
             &mut changes,
             &snapshot
         ),
@@ -256,7 +256,7 @@ fn at_least_one_locale_stays_enabled() {
 
     toggle(
         &locale_entry("en_US.UTF-8 UTF-8"),
-        false,
+        Toggle::Off,
         &mut changes,
         &snapshot,
     )
@@ -264,7 +264,7 @@ fn at_least_one_locale_stays_enabled() {
     assert_eq!(
         toggle(
             &locale_entry("de_DE.UTF-8 UTF-8"),
-            false,
+            Toggle::Off,
             &mut changes,
             &snapshot
         ),
@@ -285,7 +285,7 @@ fn the_system_language_is_chosen_among_enabled_or_queued_locales() {
 
     toggle(
         &locale_entry("de_DE.UTF-8 UTF-8"),
-        true,
+        Toggle::On,
         &mut changes,
         &snapshot,
     )
@@ -309,7 +309,7 @@ fn the_system_language_is_chosen_among_enabled_or_queued_locales() {
     assert_eq!(
         toggle(
             &locale_entry("de_DE.UTF-8 UTF-8"),
-            false,
+            Toggle::Off,
             &mut changes,
             &snapshot
         ),
@@ -329,9 +329,9 @@ fn a_queued_locale_can_be_taken_back_without_any_enabled_one() {
     let mut changes = ChangeSet::default();
     let german = locale_entry("de_DE.UTF-8 UTF-8");
 
-    toggle(&german, true, &mut changes, &snapshot).unwrap();
+    toggle(&german, Toggle::On, &mut changes, &snapshot).unwrap();
     assert_eq!(changes.len(), 1);
 
-    toggle(&german, false, &mut changes, &snapshot).unwrap();
+    toggle(&german, Toggle::Off, &mut changes, &snapshot).unwrap();
     assert!(changes.is_empty());
 }

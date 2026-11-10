@@ -19,7 +19,7 @@ use toolbox_gui_kit::terminal_view::TerminalView;
 use toolbox_gui_kit::theme::{CARD_RADIUS, PILL_HEIGHT};
 use toolbox_gui_kit::widgets::{Tone, banner, card, line, rich, status_word};
 use toolbox_gui_kit::{UiExt as _, tokens};
-use toolbox_plan::protocol::Failure;
+use toolbox_plan::protocol::{Failure, Mode};
 
 use crate::apply::Problem;
 use crate::command::{AppCommand, CommandSender, UiCommand};
@@ -147,7 +147,7 @@ fn header(
                 Tone::Accent,
             ),
             Status::Succeeded => {
-                let (text, tone) = ending_word(&ctx, console.ending(dry_run));
+                let (text, tone) = ending_word(&ctx, console.ending(Mode::of_dry_run(dry_run)));
                 status_word(ui, &text, tone)
             }
             Status::Failed => {

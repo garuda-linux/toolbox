@@ -5,8 +5,8 @@ use std::path::PathBuf;
 
 use tempfile::TempDir;
 use toolbox_plan::{
-    DNS_CONFIG, DnsProvider, GarudaUpdateFlag, KernelModule, WIFI_BACKEND_CONFIG, WifiBackend,
-    set_blacklisted,
+    DNS_CONFIG, DnsProvider, GarudaUpdateFlag, KernelModule, Toggle, WIFI_BACKEND_CONFIG,
+    WifiBackend, set_blacklisted,
 };
 use toolbox_state::parts::OwnBlacklist;
 use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig, HblockState};
@@ -215,9 +215,9 @@ fn the_own_blacklist_file_lists_its_modules() {
     let (root, settings) = system();
     let module = |name: &str| KernelModule::new(name).unwrap();
     let own = set_blacklisted(
-        &set_blacklisted("", &module("mt76-usb"), true),
+        &set_blacklisted("", &module("mt76-usb"), Toggle::On),
         &module("wl"),
-        true,
+        Toggle::On,
     );
 
     write(

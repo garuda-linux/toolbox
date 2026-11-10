@@ -16,7 +16,7 @@ use toolbox_core::features::network::{
     ModuleFacts, RadioKind, RadioTarget, driver_rows, plan_ping, plan_traceroute, set_blacklisted,
 };
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{Bounded, HostName, Plan};
+use toolbox_plan::{Bounded, HostName, Plan, Toggle};
 use toolbox_system::{
     AddressProblem, KdeGeoIp, NetworkActions as _, NetworkSource, SystemActions, SystemNetwork,
     lookup_address,
@@ -62,11 +62,11 @@ pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) ->
         NetworkCommand::Radio(args) => radio(args.radio, args.state.on(), out),
         NetworkCommand::Drivers(DriversCommand::List(read)) => drivers(&read, out),
         NetworkCommand::Drivers(DriversCommand::Blacklist(args)) => {
-            let planned = blacklist(&args, true, &system());
+            let planned = blacklist(&args, Toggle::On, &system());
             run(planned, args.confirm, None, runtime, out)
         }
         NetworkCommand::Drivers(DriversCommand::Allow(args)) => {
-            let planned = blacklist(&args, false, &system());
+            let planned = blacklist(&args, Toggle::Off, &system());
             run(planned, args.confirm, None, runtime, out)
         }
         NetworkCommand::PublicAddress(read) => public_address(read, out),
@@ -85,8 +85,8 @@ pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) ->
 ///
 /// [`Refused`] for a module that is no network driver here, or what the
 /// page refuses.
-pub fn blacklist(args: &ModuleArgs, on: bool, snapshot: &Snapshot) -> Result<Plan, Refused> {
-    fresh(|changes| blacklist_onto(args, on, snapshot, changes))
+pub fn blacklist(args: &ModuleArgs, wish: Toggle, snapshot: &Snapshot) -> Result<Plan, Refused> {
+    fresh(|changes| blacklist_onto(args, wish, snapshot, changes))
 }
 
 /// # Errors
@@ -94,16 +94,17 @@ pub fn blacklist(args: &ModuleArgs, on: bool, snapshot: &Snapshot) -> Result<Pla
 /// As [`blacklist`].
 pub fn blacklist_onto(
     args: &ModuleArgs,
-    on: bool,
+    wish: Toggle,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
+    let on = wish.is_on();
     let facts = snapshot
         .part::<ModuleFacts>()
         .ok_or_else(|| Refused::Rule("the drivers could not be read".to_owned()))?;
 
     page_edit(changes, snapshot, why::driver, |changes, snapshot| {
-        set_blacklisted(&args.module, on, facts, changes, snapshot)
+        set_blacklisted(&args.module, Toggle::from_on(on), facts, changes, snapshot)
     })
 }
 

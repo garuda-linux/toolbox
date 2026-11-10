@@ -12,7 +12,7 @@ use std::path::Path;
 use toolbox_plan::procedure::SHELLS;
 use toolbox_plan::{
     DNS_CONFIG, DnsProvider, GARUDA_UPDATE_CONFIG, GarudaUpdateFlag, NETWORKMANAGER_CONF_D,
-    OLD_WIFI_BACKEND_CONFIG, ShellPath, WIFI_BACKEND_CONFIG, WifiBackend,
+    OLD_WIFI_BACKEND_CONFIG, ShellPath, Toggle, WIFI_BACKEND_CONFIG, WifiBackend,
 };
 
 use crate::secure;
@@ -79,12 +79,12 @@ pub fn write_wifi_backend(root: &Path, backend: WifiBackend) -> io::Result<FileC
 pub fn set_garuda_update_flag(
     root: &Path,
     flag: GarudaUpdateFlag,
-    on: bool,
+    wish: Toggle,
 ) -> io::Result<FileChange> {
     let (folder, name) = secure::split(GARUDA_UPDATE_CONFIG)?;
     let dir = secure::create_dirs(root, folder)?;
     let current = secure::read_text(&dir, name)?.unwrap_or_default();
-    let wanted = flag.set(&current, on);
+    let wanted = flag.set(&current, wish);
 
     super::rewritten(&dir, name, &current, &wanted, None)
 }

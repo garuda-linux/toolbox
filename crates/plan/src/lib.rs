@@ -34,6 +34,7 @@ mod shown;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
 pub mod text;
+mod toggle;
 mod user_config;
 
 pub use account::{
@@ -94,6 +95,7 @@ pub use settings::{
     WifiBackend,
 };
 pub use shell::{InvalidShellPath, ShellPath};
+pub use toggle::Toggle;
 pub use user_config::{
     ConfigReload, ConfigWord, EditError, HomePath, InvalidConfigWord, InvalidHomePath, Rewrite,
     UserConfigEdit,

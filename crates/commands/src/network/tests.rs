@@ -2,7 +2,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, ModuleArgs, Read};
 use toolbox_core::Snapshot;
 use toolbox_core::features::network::{DefaultRoute, Device, Radio, RadioAccess, RadioTarget};
-use toolbox_plan::HostName;
+use toolbox_plan::{HostName, Toggle};
 use toolbox_system::{NetworkSource, ProbeError};
 
 use super::{address_shown, blacklist, ping, status, traceroute, view};
@@ -88,7 +88,7 @@ fn without_the_drivers_read_nothing_is_blacklisted() {
         confirm: Confirm::default(),
     };
 
-    let refused = blacklist(&args, true, &Snapshot::default()).unwrap_err();
+    let refused = blacklist(&args, Toggle::On, &Snapshot::default()).unwrap_err();
     assert!(refused.message().contains("drivers could not be read"));
 }
 

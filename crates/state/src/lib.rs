@@ -20,7 +20,6 @@ pub mod settings;
 pub mod snapshot;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
-pub mod toggle;
 
 pub use snapshot::{Part, Snapshot};
-pub use toggle::Toggle;
+pub use toolbox_plan::Toggle;

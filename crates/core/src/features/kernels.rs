@@ -178,11 +178,12 @@ pub fn running<'kernels>(
 /// or it is the last one left.
 pub fn toggle(
     kernel: &Kernel,
-    on: bool,
+    wish: Toggle,
     listed: Listed<'_>,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
+    let on = wish.is_on();
     match (kernel.is_installed(), on) {
         (true, true) => unqueue(kernel, Toggle::Off, changes),
         (false, true) => {

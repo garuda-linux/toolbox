@@ -5,7 +5,7 @@ mod tests;
 use mirror::MirrorWatch;
 use toolbox_core::features::console::ending::Ending;
 use toolbox_core::features::diagnostics::{Known, Redacted, redact};
-use toolbox_plan::protocol::{self, Failure};
+use toolbox_plan::protocol::{self, Failure, Mode};
 use toolbox_plan::{PackageName, Plan, StepId, TargetList};
 use toolbox_system::share::Upload;
 use toolbox_terminal::{Terminal, TerminalSize};
@@ -211,13 +211,9 @@ impl Console {
         self.rejected.as_deref()
     }
 
-    pub fn ending(&self, dry_run: bool) -> Ending {
+    pub fn ending(&self, mode: Mode) -> Ending {
         let count = |wanted: StepState| self.steps.iter().filter(|row| row.state == wanted).count();
-        Ending::of(
-            dry_run,
-            count(StepState::Succeeded),
-            count(StepState::Skipped),
-        )
+        Ending::of(mode, count(StepState::Succeeded), count(StepState::Skipped))
     }
 
     pub const fn has_output(&self) -> bool {

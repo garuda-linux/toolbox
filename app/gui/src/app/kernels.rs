@@ -1,6 +1,7 @@
 //! What the app does with a click on the Kernels page.
 
 use toolbox_core::features::kernels::{install_missing_headers, toggle};
+use toolbox_plan::Toggle;
 
 use super::App;
 use crate::command::{KernelCommand, KernelEdit};
@@ -37,7 +38,13 @@ impl App {
                 };
 
                 let result = self.queue.edit(&snapshot, |changes, snapshot| {
-                    toggle(found, on, listing.listed(), changes, snapshot)
+                    toggle(
+                        found,
+                        Toggle::from_on(on),
+                        listing.listed(),
+                        changes,
+                        snapshot,
+                    )
                 });
 
                 self.refusals.kernel = result
@@ -47,14 +54,19 @@ impl App {
             KernelEdit::Headers { kernel, on } => {
                 if let Some(found) = listing.kernel(&kernel) {
                     self.queue.edit(&snapshot, |changes, snapshot| {
-                        set_headers(found, on, changes, snapshot)
+                        set_headers(found, Toggle::from_on(on), changes, snapshot)
                     });
                 }
             }
             KernelEdit::Builds { kernel, on } => {
                 if let Some(found) = listing.kernel(&kernel) {
                     self.queue.edit(&snapshot, |changes, snapshot| {
-                        set_builds(&listing.builds(found, &dkms), on, changes, snapshot);
+                        set_builds(
+                            &listing.builds(found, &dkms),
+                            Toggle::from_on(on),
+                            changes,
+                            snapshot,
+                        );
                     });
                 }
             }
@@ -65,7 +77,7 @@ impl App {
             }
             KernelEdit::AllBuilds => {
                 self.queue.edit(&snapshot, |changes, snapshot| {
-                    set_builds(&listing.all_builds(&dkms), true, changes, snapshot);
+                    set_builds(&listing.all_builds(&dkms), Toggle::On, changes, snapshot);
                 });
             }
         }

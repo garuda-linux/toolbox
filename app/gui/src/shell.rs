@@ -17,6 +17,7 @@ use toolbox_gui_kit::widgets::{
     PageParts, cover_page_bottom, page_layout_shaped, start_page_entry,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
+use toolbox_plan::protocol::Mode;
 
 use crate::command::CommandSender;
 use crate::console::Console;
@@ -80,7 +81,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         toasts,
     } = view;
 
-    let status = status_bar::show(ui, reading, dry_run);
+    let status = status_bar::show(ui, reading, Mode::of_dry_run(dry_run));
     sidebar::show(ui, page, sidebar_expanded, snap.sidebar, commands);
 
     // A page with its own way to apply shows the queue as empty.
@@ -122,14 +123,15 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         changes::floating(ui.ctx(), room, queued, changes_ui, commands);
     }
 
-    status.inspect(|rect| status_bar::fill(ui, *rect, reading, dry_run, commands));
+    status
+        .inspect(|rect| status_bar::fill(ui, *rect, reading, Mode::of_dry_run(dry_run), commands));
     let ctx = ui.ctx().clone();
     let texts = ToastTexts {
         name: &i18n::text(&ctx, "toast-name"),
         close: &i18n::text(&ctx, "dialog-close"),
     };
 
-    status_bar::floating(&ctx, page_rect, reading, dry_run);
+    status_bar::floating(&ctx, page_rect, reading, Mode::of_dry_run(dry_run));
     toasts.show(&ctx, page_rect, texts);
     palette.show(&ctx, context, commands);
 }

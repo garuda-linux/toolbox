@@ -7,6 +7,7 @@ mod tests;
 use serde_json::{Map, Value};
 
 use super::EditError;
+use crate::Toggle;
 
 /// Whether the object in `text` has `key` set to `true`. Anything that is
 /// no JSON object counts as off.
@@ -21,7 +22,8 @@ pub fn is_on(text: &str, key: &str) -> bool {
 ///
 /// [`EditError::InvalidJson`] or [`EditError::NotJsonObject`]: a file the
 /// edit cannot understand stays as it is.
-pub fn set(text: &str, key: &str, on: bool) -> Result<Option<String>, EditError> {
+pub fn set(text: &str, key: &str, wish: Toggle) -> Result<Option<String>, EditError> {
+    let on = wish.is_on();
     let mut object = object(text)?;
 
     let changed = if on {

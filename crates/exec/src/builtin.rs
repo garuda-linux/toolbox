@@ -28,7 +28,7 @@ use toolbox_plan::procedure::{Builtin, CHAOTIC_MIRRORLIST, DATABASE_LOCK, SHELLS
 use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{
     DNS_CONFIG, GARUDA_UPDATE_CONFIG, GRUB_DEFAULTS, HomeWrite, LOCALE_CONF, LOCALE_GEN,
-    LocaleName, MODPROBE_BLACKLIST, Mirrorlist, NETWORKMANAGER_CONF_D, ShellPath, StepId,
+    LocaleName, MODPROBE_BLACKLIST, Mirrorlist, NETWORKMANAGER_CONF_D, ShellPath, StepId, Toggle,
     UserConfigEdit, WIFI_BACKEND_CONFIG,
 };
 pub use user_config::edit_user_config;
@@ -83,14 +83,14 @@ pub fn execute(
             step,
             sink,
             &format!("/{GARUDA_UPDATE_CONFIG}"),
-            set_garuda_update_flag(root, *flag, *on),
+            set_garuda_update_flag(root, *flag, Toggle::from_on(*on)),
         ),
         Builtin::EditUserConfig { edit, on } => user_config(home, step, edit, *on, sink),
         Builtin::EditLocaleGen { entry, on } => changed(
             step,
             sink,
             &format!("/{LOCALE_GEN}"),
-            edit_locale_gen(root, entry, *on),
+            edit_locale_gen(root, entry, Toggle::from_on(*on)),
         ),
         Builtin::SetSystemLocale(locale) => system_locale(root, step, locale, sink),
         Builtin::RequireOrdinaryUser(who) => accounts::require_ordinary_user(root, step, who, sink),
@@ -103,7 +103,7 @@ pub fn execute(
             step,
             sink,
             &format!("/{MODPROBE_BLACKLIST}"),
-            edit_modprobe_blacklist(root, module, *on),
+            edit_modprobe_blacklist(root, module, Toggle::from_on(*on)),
         ),
         Builtin::EditGrubDefaults(settings) => changed(
             step,
@@ -300,7 +300,12 @@ fn user_config(
             // The display form, with the leading `~/` the user knows.
             let file = edit.path().to_string();
 
-            changed(step, sink, &file, edit_user_config(home, edit, on))
+            changed(
+                step,
+                sink,
+                &file,
+                edit_user_config(home, edit, Toggle::from_on(on)),
+            )
         }
         None => failure(
             step,

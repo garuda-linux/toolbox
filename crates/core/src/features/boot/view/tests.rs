@@ -242,7 +242,13 @@ fn remembering_empties_the_default_and_the_splash_queues_plymouth() {
     let state = system(DEFAULTS, &[]);
     let mut changes = ChangeSet::default();
 
-    set_remember(true, MenuEntryId::new("0").unwrap(), &mut changes, &state).unwrap();
+    set_remember(
+        Toggle::On,
+        MenuEntryId::new("0").unwrap(),
+        &mut changes,
+        &state,
+    )
+    .unwrap();
     set_flag(Flag::Splash, Toggle::On, &mut changes, &state).unwrap();
 
     let menu = menu();

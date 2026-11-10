@@ -7,6 +7,7 @@ use toolbox_core::features::network::{
     plan_traceroute, plan_unload, set_blacklisted, toggle_install,
 };
 use toolbox_gui_kit::toasts::ToastKind;
+use toolbox_plan::Toggle;
 
 use super::App;
 use crate::command::NetworkCommand;
@@ -82,7 +83,7 @@ impl App {
         };
 
         let result = self.queue.edit(&snapshot, |changes, snapshot| {
-            set_blacklisted(module, on, facts, changes, snapshot)
+            set_blacklisted(module, Toggle::from_on(on), facts, changes, snapshot)
         });
 
         self.refusals.network = result.err().map(|refusal| NetworkRefusal {

@@ -27,7 +27,7 @@ use crate::settings::{
 use crate::{
     ConfigWrite, DnsProvider, GarudaUpdateFlag, GroupName, GrubSettings, HomeDirectory, HomeWrite,
     InstalledSystem, KernelModule, KernelParameters, LocaleEntry, LocaleName, Mirrorlist,
-    RepairWork, ShellPath, UserConfigEdit, UserName, WifiBackend,
+    RepairWork, ShellPath, Toggle, UserConfigEdit, UserName, WifiBackend,
 };
 
 /// Where [`Builtin::InstallMirrorlist`] writes, relative to `/`.
@@ -243,7 +243,7 @@ impl fmt::Display for Builtin {
                     write!(f, "comment out {name} in /{GARUDA_UPDATE_CONFIG}")
                 }
             }
-            Self::EditUserConfig { edit, on } => f.write_str(&edit.describe(*on)),
+            Self::EditUserConfig { edit, on } => f.write_str(&edit.describe(Toggle::from_on(*on))),
             Self::EditLocaleGen { entry, on } => {
                 let verb = if *on { "enable" } else { "comment out" };
                 write!(f, "{verb} `{entry}` in /{LOCALE_GEN}")

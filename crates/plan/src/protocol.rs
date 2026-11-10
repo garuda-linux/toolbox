@@ -77,6 +77,17 @@ pub enum RequestError {
     Protected { step: StepId, package: PackageName },
 }
 
+impl Mode {
+    /// The mode of a `--dry-run` flag or the self-test's variable.
+    pub const fn of_dry_run(dry_run: bool) -> Self {
+        if dry_run { Self::DryRun } else { Self::Run }
+    }
+
+    pub const fn is_dry_run(self) -> bool {
+        matches!(self, Self::DryRun)
+    }
+}
+
 impl Request {
     #[must_use = "a request does nothing until it is sent"]
     pub const fn new(mode: Mode, steps: Vec<Step<RootAction>>) -> Self {

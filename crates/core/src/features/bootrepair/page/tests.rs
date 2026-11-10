@@ -1,16 +1,18 @@
-use toolbox_plan::{DiskDevice, RootLayout};
+use toolbox_plan::{DiskDevice, RootLayout, Toggle};
 
-use super::{Facts, Offer, Progress, State, layout, state, system, target, targets, usual_target};
+use super::{
+    Booted, Facts, Offer, Progress, State, layout, state, system, target, targets, usual_target,
+};
 use crate::features::bootrepair::tests::listings::{BARE_METAL, laptop_from_the_live_iso};
 use crate::features::bootrepair::tests::{esp, facts};
 use crate::features::bootrepair::{Firmware, RepairFacts, Target, Tool};
 
 #[test]
 fn the_page_shows_on_the_live_iso_or_with_the_flag() {
-    assert_eq!(Offer::of(true, false), Offer::Live);
-    assert_eq!(Offer::of(true, true), Offer::Live);
-    assert_eq!(Offer::of(false, true), Offer::Test);
-    assert_eq!(Offer::of(false, false), Offer::Hidden);
+    assert_eq!(Offer::of(Booted::Live, Toggle::Off), Offer::Live);
+    assert_eq!(Offer::of(Booted::Live, Toggle::On), Offer::Live);
+    assert_eq!(Offer::of(Booted::Installed, Toggle::On), Offer::Test);
+    assert_eq!(Offer::of(Booted::Installed, Toggle::Off), Offer::Hidden);
 }
 
 #[test]

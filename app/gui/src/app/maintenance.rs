@@ -1,8 +1,8 @@
 use std::path::Path;
 
-use toolbox_core::features::maintenance::Operations;
 use toolbox_core::features::maintenance::page::{rescue_install, run_now_plan, task, upgrader};
-use toolbox_plan::Plan;
+use toolbox_core::features::maintenance::{Operations, Program};
+use toolbox_plan::{Plan, Toggle};
 
 use super::App;
 use crate::command::MaintenanceCommand;
@@ -33,12 +33,14 @@ impl App {
                 }
             }
             MaintenanceCommand::InstallGarudaUpdate => {
-                if let Some(plan) = rescue_install(self.garuda_update()) {
+                if let Some(plan) = rescue_install(Program::of_found(self.garuda_update())) {
                     self.run_at_once(plan);
                 }
             }
             MaintenanceCommand::DismissProblem => self.maintenance.dismiss_problem(),
-            MaintenanceCommand::Choose { entry, on } => self.maintenance.choose(&entry, on),
+            MaintenanceCommand::Choose { entry, on } => {
+                self.maintenance.choose(&entry, Toggle::from_on(on));
+            }
             MaintenanceCommand::Reset => self.maintenance.reset(self.catalogs.skel.as_ref()),
             MaintenanceCommand::Reveal(tab) => {
                 self.pages.show_maintenance_tab(tab);

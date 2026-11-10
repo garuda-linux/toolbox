@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use tokio::runtime::Runtime;
 use toolbox_core::features::bootrepair::RepairFacts;
-use toolbox_core::features::bootrepair::page::{Facts, Offer, Progress};
+use toolbox_core::features::bootrepair::page::{Booted, Facts, Offer, Progress};
 use toolbox_system::{DryRunRepair, ProbeError, RepairSource};
 
 use super::{BootRepair, BootRepairSetup};
@@ -57,7 +57,7 @@ fn an_installed_system_hides_the_page_and_reads_nothing() {
 fn the_live_iso_offers_the_page_and_reads_once() {
     let (_runtime, source, mut repair) = repair(false);
 
-    repair.see_live(true);
+    repair.see_live(Booted::Live);
     assert_eq!(repair.offer(), Offer::Live);
 
     repair.open();

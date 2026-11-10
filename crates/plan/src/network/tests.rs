@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use super::{
     HopLimit, PingCount, PingTimeout, blacklist_entry, blacklisted_modules, set_blacklisted,
 };
-use crate::{HostName, KernelModule, OutOfRange, Reason};
+use crate::{HostName, KernelModule, OutOfRange, Reason, Toggle};
 
 /// `/usr/lib/modprobe.d/systemd.conf` of the Lima image: comments and
 /// `options` lines, no blacklist.
@@ -122,7 +122,7 @@ fn a_dash_and_an_underscore_name_the_same_module() {
 #[test]
 fn the_first_entry_starts_the_file_with_its_origin() {
     assert_eq!(
-        set_blacklisted("", &module("r8169"), true),
+        set_blacklisted("", &module("r8169"), Toggle::On),
         "# Written by Garuda Toolbox (Network, Drivers). Edit it there.\nblacklist r8169\n"
     );
 }
@@ -140,7 +140,7 @@ fn a_real_modprobe_file_without_blacklist_lines_lists_nothing() {
 #[test]
 fn an_entry_is_appended_and_every_other_line_stays() {
     assert_eq!(
-        set_blacklisted(SYSTEMD_CONF, &module("mt76-usb"), true),
+        set_blacklisted(SYSTEMD_CONF, &module("mt76-usb"), Toggle::On),
         format!("{SYSTEMD_CONF}blacklist mt76_usb\n")
     );
 
@@ -148,7 +148,7 @@ fn an_entry_is_appended_and_every_other_line_stays() {
     let before = format!("{SYSTEMD_CONF}blacklist wl");
 
     assert_eq!(
-        set_blacklisted(&before, &module("mt76-usb"), true),
+        set_blacklisted(&before, &module("mt76-usb"), Toggle::On),
         format!("{before}\nblacklist mt76_usb\n")
     );
 }
@@ -157,7 +157,10 @@ fn an_entry_is_appended_and_every_other_line_stays() {
 fn a_listed_module_is_not_listed_twice() {
     let before = "blacklist mt76-usb\n";
 
-    assert_eq!(set_blacklisted(before, &module("mt76_usb"), true), before);
+    assert_eq!(
+        set_blacklisted(before, &module("mt76_usb"), Toggle::On),
+        before
+    );
 }
 
 #[test]
@@ -165,8 +168,8 @@ fn taking_a_module_off_removes_each_of_its_lines_only() {
     let before = "# mine\nblacklist wl\nblacklist b43\r\nblacklist wl # twice\noptions wl x=1\n";
 
     assert_eq!(
-        set_blacklisted(before, &module("wl"), false),
+        set_blacklisted(before, &module("wl"), Toggle::Off),
         "# mine\nblacklist b43\r\noptions wl x=1\n"
     );
-    assert_eq!(set_blacklisted(before, &module("ssb"), false), before);
+    assert_eq!(set_blacklisted(before, &module("ssb"), Toggle::Off), before);
 }

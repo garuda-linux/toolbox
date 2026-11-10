@@ -12,6 +12,7 @@ use std::collections::BTreeSet;
 
 use serde::{Deserialize, Serialize};
 
+use crate::Toggle;
 use crate::lines::{ending, push_line};
 
 /// Relative to `/`, like every path the helper writes below its root.
@@ -89,7 +90,8 @@ impl GarudaUpdateFlag {
     /// `config` with the switch set. On turns every assignment of the key
     /// into `KEY=1`, or else revives the first commented one, or else
     /// appends the line. Off comments every assignment out as `# KEY=1`.
-    pub fn set(self, config: &str, on: bool) -> String {
+    pub fn set(self, config: &str, wish: Toggle) -> String {
+        let on = wish.is_on();
         let key = self.key();
         let wanted = if on {
             format!("{key}=1")

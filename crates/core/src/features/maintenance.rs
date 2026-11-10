@@ -8,7 +8,8 @@ use std::sync::LazyLock;
 
 use serde::{Deserialize, Serialize};
 use toolbox_plan::{
-    KnownPackage, PackageName, Plan, PlannedAction, RemoteAction, RootAction, Upgrader, UserAction,
+    KnownPackage, PackageName, Plan, PlannedAction, RemoteAction, RootAction, Toggle, Upgrader,
+    UserAction,
 };
 
 use self::page::upgrader;
@@ -48,6 +49,14 @@ pub enum Task {
     UpgradeSystem { upgrader: Upgrader },
     RemoveOrphans,
     CleanPackageCache,
+}
+
+/// Whether garuda-update's program is there, for a snapshot that does not
+/// list the installed packages yet.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Program {
+    Found,
+    Missing,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -105,11 +114,16 @@ impl Task {
     }
 }
 
+impl Program {
+    pub const fn of_found(found: bool) -> Self {
+        if found { Self::Found } else { Self::Missing }
+    }
+}
+
 impl RunNow {
-    /// `garuda_update` says whether its program is there, for a snapshot
-    /// without the installed packages.
     #[must_use = "a plan does nothing until it is run"]
-    pub fn plan(self, snapshot: &Snapshot, garuda_update: bool) -> Plan {
+    pub fn plan(self, snapshot: &Snapshot, program: Program) -> Plan {
+        let garuda_update = program == Program::Found;
         match self {
             Self::UpgradeSystem => plan_now(upgrade(snapshot, garuda_update)),
             Self::AurUpgrade => plan_aur_upgrade(),
@@ -274,7 +288,9 @@ pub fn upgrade_queued(changes: &ChangeSet) -> bool {
         .any(|(operation, _)| *operation == Operation::UpgradeSystem)
 }
 
-pub fn queue_upgrade(on: bool, changes: &mut ChangeSet, snapshot: &Snapshot, garuda_update: bool) {
+pub fn queue_upgrade(wish: Toggle, changes: &mut ChangeSet, snapshot: &Snapshot, program: Program) {
+    let garuda_update = program == Program::Found;
+    let on = wish.is_on();
     if on {
         Operations::want(changes, upgrade(snapshot, garuda_update), snapshot);
     } else {

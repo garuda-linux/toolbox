@@ -2,6 +2,7 @@ use std::fs;
 use std::path::Path;
 
 use toolbox_catalog::SkelCatalog;
+use toolbox_plan::Toggle;
 
 use super::{Outcome, Shelf, SkelRow, offered, reset};
 
@@ -61,7 +62,7 @@ fn fish_chosen(skel: &tempfile::TempDir) -> (SkelCatalog, Shelf) {
     let mut shelf = Shelf::default();
 
     shelf.stock(offered(&catalog, skel.path()));
-    shelf.choose("fish", true);
+    shelf.choose("fish", Toggle::On);
     (catalog, shelf)
 }
 
@@ -118,13 +119,13 @@ fn nothing_is_chosen_at_first() {
 fn choosing_counts_each_entry_once() {
     let mut shelf = shelf();
 
-    shelf.choose("fish", true);
-    shelf.choose("fish", true);
+    shelf.choose("fish", Toggle::On);
+    shelf.choose("fish", Toggle::On);
 
     assert_eq!(shelf.chosen_count(), 1);
     assert!(shelf.is_chosen("fish"));
 
-    shelf.choose("fish", false);
+    shelf.choose("fish", Toggle::Off);
 
     assert_eq!(shelf.chosen_count(), 0);
     assert!(!shelf.is_chosen("fish"));
@@ -134,7 +135,7 @@ fn choosing_counts_each_entry_once() {
 fn an_entry_the_page_does_not_offer_cannot_be_chosen() {
     let mut shelf = shelf();
 
-    shelf.choose("zsh", true);
+    shelf.choose("zsh", Toggle::On);
 
     assert_eq!(shelf.chosen_count(), 0);
 }
@@ -143,8 +144,8 @@ fn an_entry_the_page_does_not_offer_cannot_be_chosen() {
 fn an_entry_that_left_the_list_is_no_longer_chosen() {
     let mut shelf = shelf();
 
-    shelf.choose("fish", true);
-    shelf.choose("bash", true);
+    shelf.choose("fish", Toggle::On);
+    shelf.choose("bash", Toggle::On);
     shelf.stock(vec![row("bash", "Bash", &["/etc/skel/.bashrc_garuda"])]);
 
     assert_eq!(shelf.chosen_count(), 1);
@@ -222,7 +223,7 @@ fn a_reset_is_busy_from_its_start_until_its_outcome_arrives() {
     assert_eq!(shelf.begin_reset(&catalog), None, "nothing is chosen");
     assert!(!shelf.resetting());
 
-    shelf.choose("fish", true);
+    shelf.choose("fish", Toggle::On);
 
     let entries = shelf.begin_reset(&catalog).unwrap();
 
@@ -251,8 +252,8 @@ fn a_reset_is_busy_from_its_start_until_its_outcome_arrives() {
 #[test]
 fn the_question_names_the_home_files_a_reset_replaces() {
     let mut shelf = shelf();
-    shelf.choose("fish", true);
-    shelf.choose("bash", true);
+    shelf.choose("fish", Toggle::On);
+    shelf.choose("bash", Toggle::On);
 
     assert_eq!(
         shelf.chosen_targets(),

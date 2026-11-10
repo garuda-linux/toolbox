@@ -105,9 +105,12 @@ pub fn edit(change: Edit, changes: &mut ChangeSet, snapshot: &Snapshot) -> Resul
             let timeout = GrubTimeout::new(seconds).map_err(|_out| EditProblem::OutOfRange)?;
             set(GrubSetting::Timeout(timeout), changes, snapshot)
         }
-        Edit::Remember { on, fallback } => {
-            set_remember(on, MenuEntryId::new(fallback)?, changes, snapshot)
-        }
+        Edit::Remember { on, fallback } => set_remember(
+            Toggle::from_on(on),
+            MenuEntryId::new(fallback)?,
+            changes,
+            snapshot,
+        ),
         Edit::Submenus(on) => set(GrubSetting::Submenus(on), changes, snapshot),
         Edit::OsProber(on) => set(GrubSetting::OsProber(on), changes, snapshot),
         Edit::AddParameter { text, confirmed } => {

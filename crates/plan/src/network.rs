@@ -6,7 +6,7 @@ mod tests;
 use std::collections::BTreeSet;
 
 use crate::lines::push_line;
-use crate::{Bounded, KernelModule};
+use crate::{Bounded, KernelModule, Toggle};
 
 /// The only modprobe file the app writes, relative to `/`. Files of
 /// packages and of the administrator are read, never changed.
@@ -50,7 +50,8 @@ pub fn blacklisted_modules(config: &str) -> BTreeSet<KernelModule> {
 
 /// `config` with `module` blacklisted or not. Every other line stays. A
 /// new file starts with a line that says who wrote it.
-pub fn set_blacklisted(config: &str, module: &KernelModule, on: bool) -> String {
+pub fn set_blacklisted(config: &str, module: &KernelModule, wish: Toggle) -> String {
+    let on = wish.is_on();
     let listed = blacklisted_modules(config).contains(module);
 
     if on == listed {

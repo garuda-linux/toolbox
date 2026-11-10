@@ -49,7 +49,7 @@ use toolbox_cli::args::{
     Update,
 };
 use toolbox_cli::output::{ColorMode, Row, json};
-use toolbox_core::features::maintenance::RunNow;
+use toolbox_core::features::maintenance::{Program, RunNow};
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_plan::protocol::Mode;
 use toolbox_plan::{Plan, UnitScope};
@@ -351,9 +351,9 @@ fn update(args: &Update, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     let garuda_update = Programs::check().garuda_update;
 
-    let mut plans = vec![RunNow::UpgradeSystem.plan(&snapshot, garuda_update)];
+    let mut plans = vec![RunNow::UpgradeSystem.plan(&snapshot, Program::of_found(garuda_update))];
     if args.aur {
-        plans.push(RunNow::AurUpgrade.plan(&snapshot, garuda_update));
+        plans.push(RunNow::AurUpgrade.plan(&snapshot, Program::of_found(garuda_update)));
     }
 
     let plan = Plan::new(

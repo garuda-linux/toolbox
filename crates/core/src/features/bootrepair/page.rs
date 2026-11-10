@@ -1,9 +1,23 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_plan::{DiskDevice, RootLayout};
+use toolbox_plan::{DiskDevice, RootLayout, Toggle};
 
 use super::{Firmware, RepairFacts, System, Target};
+
+/// What the app runs on: the live ISO, where Boot Repair belongs, or an
+/// installed system.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Booted {
+    Live,
+    Installed,
+}
+
+impl Booted {
+    pub const fn of_live(live: bool) -> Self {
+        if live { Self::Live } else { Self::Installed }
+    }
+}
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Offer {
@@ -58,11 +72,11 @@ pub struct TargetChoice {
 
 impl Offer {
     /// The live ISO offers the page, `--boot-repair` (`forced`) too.
-    pub const fn of(live: bool, forced: bool) -> Self {
-        match (live, forced) {
-            (true, _) => Self::Live,
-            (false, true) => Self::Test,
-            (false, false) => Self::Hidden,
+    pub const fn of(booted: Booted, forced: Toggle) -> Self {
+        match (booted, forced) {
+            (Booted::Live, _) => Self::Live,
+            (Booted::Installed, Toggle::On) => Self::Test,
+            (Booted::Installed, Toggle::Off) => Self::Hidden,
         }
     }
 }

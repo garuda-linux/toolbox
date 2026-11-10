@@ -6,7 +6,7 @@ use parking_lot::Mutex;
 use tokio::runtime::Runtime;
 use toolbox_catalog::SkelCatalog;
 use toolbox_core::features::maintenance::page::{CHAOTIC_MIRRORS, LaunchCause, ToolRow, tools};
-use toolbox_plan::{Mirrorlist, PackageName, Plan, PlannedAction, RootAction};
+use toolbox_plan::{Mirrorlist, PackageName, Plan, PlannedAction, RootAction, Toggle};
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
 use super::{Maintenance, MaintenanceProblem, MaintenanceSetup};
@@ -224,7 +224,7 @@ fn a_reset_copies_the_chosen_settings_into_the_home() {
 
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), home.path(), skel.path());
     maintenance.stock(Some(&catalog));
-    maintenance.choose("kitty", true);
+    maintenance.choose("kitty", Toggle::On);
     maintenance.reset(Some(&catalog));
 
     assert!(maintenance.shelf().resetting());

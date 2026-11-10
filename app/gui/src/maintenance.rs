@@ -23,7 +23,7 @@ use toolbox_core::features::maintenance::page::{
     self, CHAOTIC_MIRRORS, LaunchCause, RATE_MIRRORS_PROGRAM, ToolRow,
 };
 use toolbox_core::features::maintenance::{RATE_MIRRORS_PACKAGE, Tool};
-use toolbox_plan::{Plan, RootAction};
+use toolbox_plan::{Plan, RootAction, Toggle};
 use toolbox_system::mirrors::RankProblem;
 use toolbox_system::skel::shelf::{self, Shelf};
 
@@ -113,8 +113,8 @@ impl Maintenance {
     }
 
     /// Chooses the settings `entry` for the reset, or drops it.
-    pub fn choose(&mut self, entry: &str, on: bool) {
-        self.shelf.choose(entry, on);
+    pub fn choose(&mut self, entry: &str, wish: Toggle) {
+        self.shelf.choose(entry, wish);
     }
 
     pub fn dismiss_problem(&mut self) {

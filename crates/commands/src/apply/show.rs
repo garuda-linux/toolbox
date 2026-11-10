@@ -11,7 +11,7 @@ use std::time::Instant;
 use toolbox_cli::output::{INDENT, Mark, Paint, Row, Style};
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::StepId;
-use toolbox_plan::protocol::{Event, Outcome};
+use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_services::apply::{Problem, Report};
 use toolbox_system::pkexec::Refusal;
 
@@ -52,7 +52,8 @@ pub struct Show {
 }
 
 impl Show {
-    pub fn new(style: Style, dry_run: bool, clock: Clock) -> Self {
+    pub fn new(style: Style, mode: Mode, clock: Clock) -> Self {
+        let dry_run = mode.is_dry_run();
         Self {
             paint: Paint::new(style),
             words: Words::Hinted,

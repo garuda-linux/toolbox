@@ -10,6 +10,7 @@ use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::theme::RADIUS;
 use toolbox_gui_kit::widgets::icon_button;
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
+use toolbox_plan::protocol::Mode;
 use toolbox_system::Probe;
 
 use crate::command::{AppCommand, CommandSender};
@@ -21,7 +22,8 @@ use crate::snapshot::{FailedRead, Reading};
 ///
 /// The room comes first, so the page's panels fit above it, and the bar
 /// draws last, so the keyboard meets it after the page.
-pub fn show(ui: &mut Ui, reading: &Reading, dry_run: bool) -> Option<Rect> {
+pub fn show(ui: &mut Ui, reading: &Reading, mode: Mode) -> Option<Rect> {
+    let dry_run = mode.is_dry_run();
     if !bar_shows(reading, dry_run) {
         return None;
     }
@@ -46,7 +48,8 @@ pub fn show(ui: &mut Ui, reading: &Reading, dry_run: bool) -> Option<Rect> {
 }
 
 /// The bar's messages and its Read again in `rect`, which [`show`] kept.
-pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, dry_run: bool, commands: &CommandSender) {
+pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, mode: Mode, commands: &CommandSender) {
+    let dry_run = mode.is_dry_run();
     let failed = failed(reading);
     let padding = ui.tokens().sizes.status_bar_padding;
     let mut bar = ui.new_child(egui::UiBuilder::new().max_rect(rect));
@@ -113,7 +116,8 @@ fn bar_shows(reading: &Reading, dry_run: bool) -> bool {
 
 /// A read in progress while the bar is away: a note over the bottom left
 /// of `page`, which moves nothing.
-pub fn floating(ctx: &Context, page: Rect, reading: &Reading, dry_run: bool) {
+pub fn floating(ctx: &Context, page: Rect, reading: &Reading, mode: Mode) {
+    let dry_run = mode.is_dry_run();
     if bar_shows(reading, dry_run) || !reading.is_loading() {
         return;
     }

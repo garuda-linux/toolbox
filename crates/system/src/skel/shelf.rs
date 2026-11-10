@@ -6,6 +6,7 @@ use std::path::Path;
 use std::time::SystemTime;
 
 use toolbox_catalog::{SkelCatalog, SkelEntry};
+use toolbox_plan::Toggle;
 
 /// `files` are full skel paths, for the confirmation that lists what gets replaced.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -47,7 +48,8 @@ impl Shelf {
         &self.rows
     }
 
-    pub fn choose(&mut self, entry: &str, on: bool) {
+    pub fn choose(&mut self, entry: &str, wish: Toggle) {
+        let on = wish.is_on();
         if !on {
             self.chosen.remove(entry);
             return;

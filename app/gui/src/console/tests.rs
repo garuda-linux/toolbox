@@ -1,7 +1,7 @@
 use toolbox_core::features::console::HelperFailure;
 use toolbox_core::features::console::ending::Ending;
 use toolbox_plan::StepId;
-use toolbox_plan::protocol::{Event, Failure, Outcome};
+use toolbox_plan::protocol::{Event, Failure, Mode, Outcome};
 use toolbox_system::pkexec::Refusal;
 use toolbox_terminal::TerminalSize;
 
@@ -212,8 +212,8 @@ fn the_ending_counts_the_steps_that_had_nothing_to_do() {
 
     console.take(Report::PlanFinished { succeeded: true });
 
-    assert_eq!(console.ending(false), Ending::Partly { skipped: 1 });
-    assert_eq!(console.ending(true), Ending::Tested);
+    assert_eq!(console.ending(Mode::Run), Ending::Partly { skipped: 1 });
+    assert_eq!(console.ending(Mode::DryRun), Ending::Tested);
 }
 
 fn output(console: &mut Console, data: &str) {

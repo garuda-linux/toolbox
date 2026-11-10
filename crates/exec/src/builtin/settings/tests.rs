@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use tempfile::TempDir;
-use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, WifiBackend};
+use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, Toggle, WifiBackend};
 
 use super::{
     FileChange, set_garuda_update_flag, shell_is_listed, write_dns_config, write_wifi_backend,
@@ -202,7 +202,7 @@ fn a_garuda_update_switch_creates_folder_and_file() {
     let root = tempfile::tempdir().unwrap();
 
     assert_eq!(
-        set_garuda_update_flag(root.path(), GarudaUpdateFlag::UpdateAur, true).unwrap(),
+        set_garuda_update_flag(root.path(), GarudaUpdateFlag::UpdateAur, Toggle::On).unwrap(),
         FileChange::Written
     );
 
@@ -224,7 +224,7 @@ fn a_garuda_update_switch_revives_its_shipped_line_and_back() {
     let (root, config) = root_with_garuda_update(GARUDA_UPDATE);
 
     assert_eq!(
-        set_garuda_update_flag(root.path(), GarudaUpdateFlag::SkipMirrorlist, true).unwrap(),
+        set_garuda_update_flag(root.path(), GarudaUpdateFlag::SkipMirrorlist, Toggle::On).unwrap(),
         FileChange::Written
     );
     assert_eq!(
@@ -232,12 +232,12 @@ fn a_garuda_update_switch_revives_its_shipped_line_and_back() {
         GARUDA_UPDATE.replace("# SKIP_MIRRORLIST=1", "SKIP_MIRRORLIST=1")
     );
     assert_eq!(
-        set_garuda_update_flag(root.path(), GarudaUpdateFlag::SkipMirrorlist, false).unwrap(),
+        set_garuda_update_flag(root.path(), GarudaUpdateFlag::SkipMirrorlist, Toggle::Off).unwrap(),
         FileChange::Written
     );
     assert_eq!(fs::read_to_string(&config).unwrap(), GARUDA_UPDATE);
     assert_eq!(
-        set_garuda_update_flag(root.path(), GarudaUpdateFlag::SkipMirrorlist, false).unwrap(),
+        set_garuda_update_flag(root.path(), GarudaUpdateFlag::SkipMirrorlist, Toggle::Off).unwrap(),
         FileChange::Unchanged
     );
 }
@@ -249,7 +249,7 @@ fn a_garuda_update_switch_keeps_the_rest_of_the_file() {
     let own = format!("{GARUDA_UPDATE}\nMY_OWN=\"x y\"\n");
     let (root, config) = root_with_garuda_update(&own);
 
-    set_garuda_update_flag(root.path(), GarudaUpdateFlag::UpdateAur, true).unwrap();
+    set_garuda_update_flag(root.path(), GarudaUpdateFlag::UpdateAur, Toggle::On).unwrap();
 
     assert_eq!(
         fs::read_to_string(&config).unwrap(),
@@ -261,7 +261,7 @@ fn a_garuda_update_switch_keeps_the_rest_of_the_file() {
 fn the_space_check_revives_the_shipped_line() {
     let (root, config) = root_with_garuda_update(GARUDA_UPDATE);
 
-    set_garuda_update_flag(root.path(), GarudaUpdateFlag::NoCheckSpace, true).unwrap();
+    set_garuda_update_flag(root.path(), GarudaUpdateFlag::NoCheckSpace, Toggle::On).unwrap();
 
     assert_eq!(
         fs::read_to_string(&config).unwrap(),
@@ -274,7 +274,7 @@ fn switching_off_without_a_file_creates_nothing() {
     let root = tempfile::tempdir().unwrap();
 
     assert_eq!(
-        set_garuda_update_flag(root.path(), GarudaUpdateFlag::NoCheckSpace, false).unwrap(),
+        set_garuda_update_flag(root.path(), GarudaUpdateFlag::NoCheckSpace, Toggle::Off).unwrap(),
         FileChange::Unchanged
     );
     assert!(!root.path().join("etc/garuda/garuda-update/config").exists());
@@ -284,6 +284,6 @@ fn switching_off_without_a_file_creates_nothing() {
 fn a_config_that_is_not_text_is_left_alone() {
     let (root, config) = root_with_garuda_update([0xff_u8, 0xfe_u8]);
 
-    set_garuda_update_flag(root.path(), GarudaUpdateFlag::UpdateAur, true).unwrap_err();
+    set_garuda_update_flag(root.path(), GarudaUpdateFlag::UpdateAur, Toggle::On).unwrap_err();
     assert_eq!(fs::read(config).unwrap(), [0xff_u8, 0xfe_u8]);
 }

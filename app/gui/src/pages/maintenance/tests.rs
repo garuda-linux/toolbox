@@ -9,6 +9,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::maintenance::page::LaunchCause;
 use toolbox_gui_kit::widgets::ButtonKind;
+use toolbox_plan::Toggle;
 use toolbox_system::mirrors::RankProblem;
 use toolbox_system::skel::shelf::{Outcome, SkelRow};
 
@@ -251,7 +252,7 @@ fn a_chosen_setting_is_reset_after_the_question_lists_its_files() {
         })]
     );
 
-    maintenance.choose("kitty", true);
+    maintenance.choose("kitty", Toggle::On);
     harness.state_mut().fixture.maintenance = maintenance;
     harness.run();
     harness.get_by_label("Reset selected…").click();
@@ -325,7 +326,7 @@ fn only_the_system_update_leads_the_common_tab() {
 #[test]
 fn the_reset_question_answers_with_danger() {
     let mut maintenance = Maintenance::showing(None, false, vec![kitty()], None);
-    maintenance.choose("kitty", true);
+    maintenance.choose("kitty", Toggle::On);
     let mut harness = page(with(programs(), maintenance));
     open_tab(&mut harness, "Reset settings");
     harness.get_by_label("Reset selected…").click();

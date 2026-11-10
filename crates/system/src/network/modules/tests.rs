@@ -1,7 +1,7 @@
 use std::fs;
 
 use tempfile::TempDir;
-use toolbox_plan::{KernelModule, set_blacklisted};
+use toolbox_plan::{KernelModule, Toggle, set_blacklisted};
 use toolbox_state::network::{Category, ModuleFacts};
 
 use super::{ModuleSource as _, SystemModules};
@@ -95,7 +95,7 @@ fn a_dkms_driver_is_a_loaded_wireless_module() {
 #[test]
 fn every_conf_file_of_the_modprobe_folders_is_read_and_named() {
     let (root, modules) = system();
-    let own = set_blacklisted("", &KernelModule::new("r8169").unwrap(), true);
+    let own = set_blacklisted("", &KernelModule::new("r8169").unwrap(), Toggle::On);
 
     write(
         root.path(),

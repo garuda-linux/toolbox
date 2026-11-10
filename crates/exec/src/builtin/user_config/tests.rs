@@ -4,7 +4,7 @@ use std::path::Path;
 
 use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::{Event, Outcome};
-use toolbox_plan::{ConfigWord, HomePath, StepId, UserConfigEdit};
+use toolbox_plan::{ConfigWord, HomePath, StepId, Toggle, UserConfigEdit};
 
 use super::edit_user_config;
 use crate::builtin::{FileChange, execute};
@@ -59,21 +59,21 @@ fn a_file_is_created_with_its_folders_and_removed_again() {
     let path = ".config/wireplumber/wireplumber.conf.d/disable-suspension.conf";
 
     assert_eq!(
-        edit_user_config(home.path(), &audio(), true).unwrap(),
+        edit_user_config(home.path(), &audio(), Toggle::On).unwrap(),
         FileChange::Written
     );
     assert_eq!(read(home.path(), path), "monitor.alsa.rules = []\n");
     assert_eq!(
-        edit_user_config(home.path(), &audio(), true).unwrap(),
+        edit_user_config(home.path(), &audio(), Toggle::On).unwrap(),
         FileChange::Unchanged
     );
     assert_eq!(
-        edit_user_config(home.path(), &audio(), false).unwrap(),
+        edit_user_config(home.path(), &audio(), Toggle::Off).unwrap(),
         FileChange::Removed
     );
     assert!(!home.path().join(path).exists());
     assert_eq!(
-        edit_user_config(home.path(), &audio(), false).unwrap(),
+        edit_user_config(home.path(), &audio(), Toggle::Off).unwrap(),
         FileChange::Unchanged
     );
 }
@@ -96,7 +96,7 @@ fn json(text: &str) -> serde_json::Value {
 fn a_fresh_kwinrc_is_what_kwriteconfig_writes() {
     let home = tempfile::tempdir().unwrap();
 
-    edit_user_config(home.path(), &kwin(), true).unwrap();
+    edit_user_config(home.path(), &kwin(), Toggle::On).unwrap();
 
     assert_eq!(read(home.path(), ".config/kwinrc"), KWRITECONFIG_KWINRC);
 }
@@ -111,16 +111,16 @@ fn an_existing_kwinrc_keeps_everything_else_and_its_mode() {
     fs::set_permissions(&kwinrc, fs::Permissions::from_mode(0o600)).unwrap();
 
     assert_eq!(
-        edit_user_config(home.path(), &kwin(), true).unwrap(),
+        edit_user_config(home.path(), &kwin(), Toggle::On).unwrap(),
         FileChange::Unchanged
     );
 
-    edit_user_config(home.path(), &kwin(), false).unwrap();
+    edit_user_config(home.path(), &kwin(), Toggle::Off).unwrap();
 
     assert_eq!(read(home.path(), ".config/kwinrc"), session_kwinrc_off());
     assert_eq!(mode(&kwinrc), 0o600);
 
-    edit_user_config(home.path(), &kwin(), true).unwrap();
+    edit_user_config(home.path(), &kwin(), Toggle::On).unwrap();
 
     assert_eq!(read(home.path(), ".config/kwinrc"), SESSION_KWINRC);
 }
@@ -133,7 +133,7 @@ fn discord_keeps_its_other_settings() {
     fs::create_dir_all(settings.parent().unwrap()).unwrap();
     fs::write(&settings, DISCORD).unwrap();
 
-    edit_user_config(home.path(), &discord(), true).unwrap();
+    edit_user_config(home.path(), &discord(), Toggle::On).unwrap();
 
     let mut wanted = json(DISCORD);
     wanted["SKIP_HOST_UPDATE"] = serde_json::Value::Bool(true);
@@ -143,7 +143,7 @@ fn discord_keeps_its_other_settings() {
         wanted
     );
 
-    edit_user_config(home.path(), &discord(), false).unwrap();
+    edit_user_config(home.path(), &discord(), Toggle::Off).unwrap();
 
     assert_eq!(
         json(&read(home.path(), ".config/discord/settings.json")),
@@ -162,7 +162,7 @@ fn invalid_json_is_left_alone_and_fails() {
     fs::create_dir_all(settings.parent().unwrap()).unwrap();
     fs::write(&settings, cut).unwrap();
 
-    let error = edit_user_config(home.path(), &discord(), true).unwrap_err();
+    let error = edit_user_config(home.path(), &discord(), Toggle::On).unwrap_err();
 
     assert!(error.to_string().contains("not valid JSON"), "{error}");
     assert_eq!(read(home.path(), ".config/discord/settings.json"), cut);
@@ -179,7 +179,7 @@ fn a_symlinked_file_stays_a_link_and_its_target_changes() {
     fs::write(dotfiles.join("kwinrc"), session_kwinrc_off()).unwrap();
     symlink(dotfiles.join("kwinrc"), &kwinrc).unwrap();
 
-    edit_user_config(home.path(), &kwin(), true).unwrap();
+    edit_user_config(home.path(), &kwin(), Toggle::On).unwrap();
 
     assert!(
         fs::symlink_metadata(&kwinrc)
@@ -236,7 +236,7 @@ fn a_file_in_the_way_of_the_target_is_an_error() {
 
     fs::write(home.path().join(".config"), "").unwrap();
 
-    edit_user_config(home.path(), &audio(), true).unwrap_err();
+    edit_user_config(home.path(), &audio(), Toggle::On).unwrap_err();
 }
 
 #[test]
@@ -245,7 +245,7 @@ fn a_folder_is_no_ini_file() {
 
     fs::create_dir_all(home.path().join(".config/kwinrc")).unwrap();
 
-    edit_user_config(home.path(), &kwin(), true).unwrap_err();
+    edit_user_config(home.path(), &kwin(), Toggle::On).unwrap_err();
 }
 
 #[test]
@@ -264,7 +264,7 @@ fn a_write_failure_keeps_no_temporary_file() {
     )
     .unwrap();
 
-    edit_user_config(home.path(), &kwin(), true).unwrap_err();
+    edit_user_config(home.path(), &kwin(), Toggle::On).unwrap_err();
 
     let left: Vec<_> = fs::read_dir(home.path().join(".config"))
         .unwrap()

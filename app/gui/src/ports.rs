@@ -33,6 +33,7 @@ use toolbox_gui::reader::ReaderHandle;
 use toolbox_gui::share::ShareLink;
 use toolbox_gui::users::UsersSetup;
 use toolbox_news::{Feeds, News, NewsSource};
+use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_privatebin::{Https, Transport};
 use toolbox_system::mirrors::RateMirrors;
@@ -60,10 +61,11 @@ pub struct HelperServices {
 /// that fails tells of it through `commands`.
 pub fn machine(
     handle: &Handle,
-    dry_run: bool,
+    mode: Mode,
     commands: CommandSender,
     ctx: &egui::Context,
 ) -> (Arc<dyn Power>, Arc<dyn Launcher>) {
+    let dry_run = mode.is_dry_run();
     if dry_run {
         return (Arc::new(DryRunPower), Arc::new(DryRunLauncher));
     }
@@ -76,7 +78,8 @@ pub fn machine(
 
 /// A self-test build's dry run ranks a fixed list, so its self-test asks
 /// no mirror. Ranking writes nothing, so a release's dry run ranks too.
-pub fn maintenance(handle: &Handle, dry_run: bool) -> MaintenanceSetup {
+pub fn maintenance(handle: &Handle, mode: Mode) -> MaintenanceSetup {
+    let dry_run = mode.is_dry_run();
     let mirrors = dry_run
         .then(samples::mirrors)
         .flatten()
@@ -142,7 +145,8 @@ pub fn helper_services(handle: &Handle, ctx: &egui::Context) -> HelperServices {
 
 /// The page reads the real machine in a dry run too. Only the radio
 /// switches and the address request are stand-ins then.
-pub fn network(handle: &Handle, dry_run: bool) -> NetworkSetup {
+pub fn network(handle: &Handle, mode: Mode) -> NetworkSetup {
+    let dry_run = mode.is_dry_run();
     let source: Arc<dyn NetworkSource> = Arc::new(SystemNetwork::system());
     let (actions, address): (Arc<dyn NetworkActions>, Arc<dyn AddressSource>) = if dry_run {
         (Arc::new(DryRunActions), Arc::new(DryRunAddress))
@@ -227,7 +231,9 @@ fn self_test_configs(
 /// dry run, whose page must neither depend on the disks it runs on nor
 /// show them. Reading them writes nothing, so a release's dry run reads
 /// them too.
-pub fn repair(handle: &Handle, dry_run: bool, forced: bool) -> BootRepairSetup {
+pub fn repair(handle: &Handle, mode: Mode, test: Toggle) -> BootRepairSetup {
+    let forced = test.is_on();
+    let dry_run = mode.is_dry_run();
     let source = dry_run
         .then(samples::repair)
         .flatten()
@@ -243,7 +249,8 @@ pub fn repair(handle: &Handle, dry_run: bool, forced: bool) -> BootRepairSetup {
 /// The page reads libalpm and pacman's log, which change nothing, so a
 /// dry run reads the real machine too. The AUR is a download, which a
 /// self-test build's dry run answers with a sample.
-pub fn packages(handle: &Handle, dry_run: bool) -> PackagesSetup {
+pub fn packages(handle: &Handle, mode: Mode) -> PackagesSetup {
+    let dry_run = mode.is_dry_run();
     let aur = dry_run
         .then(samples::aur)
         .flatten()
@@ -268,7 +275,8 @@ fn news(dry_run: bool) -> Arc<dyn NewsSource> {
 
 /// The news, read once at start and on Read again. The cache decides
 /// whether that asks the sites.
-pub fn news_reader(handle: &Handle, ctx: &egui::Context, dry_run: bool) -> ReaderHandle<News> {
+pub fn news_reader(handle: &Handle, ctx: &egui::Context, mode: Mode) -> ReaderHandle<News> {
+    let dry_run = mode.is_dry_run();
     let source = news(dry_run);
     toolbox_gui::reader::spawn_fallible(
         handle,

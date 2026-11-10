@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 use std::{fs, io};
 
 use toolbox_fs::{Permissions, Replace};
-use toolbox_plan::{Rewrite, UserConfigEdit};
+use toolbox_plan::{Rewrite, Toggle, UserConfigEdit};
 
 use super::settings::FileChange;
 
@@ -23,11 +23,15 @@ const NEW_FILE: Replace<'static> = Replace::new(Permissions::Umask(0o666));
 ///
 /// When the file cannot be read or written, or the edit refuses its
 /// content (not text, not a JSON object).
-pub fn edit_user_config(home: &Path, edit: &UserConfigEdit, on: bool) -> io::Result<FileChange> {
+pub fn edit_user_config(
+    home: &Path,
+    edit: &UserConfigEdit,
+    wish: Toggle,
+) -> io::Result<FileChange> {
     let target = resolve(&home.join(edit.path().as_str()))?;
     let current = read_optional(&target)?;
     let rewrite = edit
-        .rewrite(current.as_deref(), on)
+        .rewrite(current.as_deref(), wish)
         .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
 
     match rewrite {

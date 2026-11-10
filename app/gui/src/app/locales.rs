@@ -4,6 +4,7 @@
 
 use toolbox_core::features::locales::view::{add_missing_packs, toggle_pack};
 use toolbox_core::features::locales::{Refusal, choose_system, toggle};
+use toolbox_plan::Toggle;
 
 use super::App;
 use crate::command::LocaleCommand;
@@ -15,7 +16,7 @@ impl App {
         match command {
             LocaleCommand::Toggle { entry, on } => {
                 let result = self.queue.edit(&snapshot, |changes, snapshot| {
-                    toggle(&entry, on, changes, snapshot)
+                    toggle(&entry, Toggle::from_on(on), changes, snapshot)
                 });
 
                 self.refuse_locale(result, entry.locale.as_str());
@@ -30,7 +31,7 @@ impl App {
             }
             LocaleCommand::TogglePack { package, on } => {
                 let listed = self.queue.edit(&snapshot, |changes, snapshot| {
-                    toggle_pack(&package, on, changes, snapshot)
+                    toggle_pack(&package, Toggle::from_on(on), changes, snapshot)
                 });
 
                 if !listed {

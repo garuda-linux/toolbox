@@ -225,7 +225,12 @@ fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut Out<'_>) -> Ended {
     } else {
         let dry_run = launcher.mode() == Mode::DryRun;
         Look::Text(
-            Show::new(out.paint().style(), dry_run, Box::new(Instant::now)).verbose(out.verbose()),
+            Show::new(
+                out.paint().style(),
+                Mode::of_dry_run(dry_run),
+                Box::new(Instant::now),
+            )
+            .verbose(out.verbose()),
         )
     };
 

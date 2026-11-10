@@ -11,7 +11,7 @@ use std::os::fd::OwnedFd;
 use std::path::Path;
 
 use toolbox_plan::{
-    LOCALE_CONF, LOCALE_GEN, LocaleEntry, LocaleName, is_builtin_locale, set_system_lang,
+    LOCALE_CONF, LOCALE_GEN, LocaleEntry, LocaleName, Toggle, is_builtin_locale, set_system_lang,
 };
 
 use super::FileChange;
@@ -32,8 +32,8 @@ pub enum SystemLocaleChange {
 ///
 /// When `etc` is missing or reached through a symlink, the file is not
 /// UTF-8, or the write fails.
-pub fn edit_locale_gen(root: &Path, entry: &LocaleEntry, on: bool) -> io::Result<FileChange> {
-    edit(root, LOCALE_GEN, |current| entry.set(current, on))
+pub fn edit_locale_gen(root: &Path, entry: &LocaleEntry, wish: Toggle) -> io::Result<FileChange> {
+    edit(root, LOCALE_GEN, |current| entry.set(current, wish))
 }
 
 /// Sets `LANG` in `/etc/locale.conf` below `root`, unless `/etc/locale.gen`

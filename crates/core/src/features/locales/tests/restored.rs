@@ -49,7 +49,7 @@ fn an_allowed_restored_switch_off_keeps_its_wish() {
 
     toggle(
         &locale_entry("de_DE.UTF-8 UTF-8"),
-        false,
+        Toggle::Off,
         &mut changes,
         &snapshot,
     )
@@ -66,7 +66,7 @@ fn a_restored_switch_on_is_kept() {
 
     toggle(
         &locale_entry("de_DE.UTF-8 UTF-8"),
-        true,
+        Toggle::On,
         &mut changes,
         &snapshot,
     )

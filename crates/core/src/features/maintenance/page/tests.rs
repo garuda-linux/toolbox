@@ -8,7 +8,7 @@ use super::{
     repairs, rescue_install, run_now_plan, task, tools, upgrader,
 };
 use crate::domains::InstalledPackages;
-use crate::features::maintenance::Operations;
+use crate::features::maintenance::{Operations, Program};
 use crate::test_support::package;
 use crate::{ChangeSet, Snapshot};
 
@@ -180,7 +180,7 @@ fn the_repairs_come_in_the_order_of_the_page() {
 
 #[test]
 fn a_missing_garuda_update_is_installed_by_one_step() {
-    let plan = rescue_install(false).expect("a missing garuda-update has a plan");
+    let plan = rescue_install(Program::Missing).expect("a missing garuda-update has a plan");
     let step = plan.steps().first().map(|step| &step.action);
 
     assert_eq!(plan.steps().len(), 1);
@@ -193,7 +193,7 @@ fn a_missing_garuda_update_is_installed_by_one_step() {
 
 #[test]
 fn an_installed_garuda_update_needs_no_install() {
-    assert!(rescue_install(true).is_none());
+    assert!(rescue_install(Program::Found).is_none());
 }
 
 #[test]

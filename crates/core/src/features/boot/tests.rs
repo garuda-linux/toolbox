@@ -84,7 +84,7 @@ fn without_the_grub_file_nothing_is_shown_and_nothing_queues() {
         Err(Refusal::Unavailable)
     );
     assert_eq!(
-        set_remember(true, entry("0"), &mut changes, &empty),
+        set_remember(Toggle::On, entry("0"), &mut changes, &empty),
         Err(Refusal::Unavailable)
     );
     assert_eq!(
@@ -291,7 +291,7 @@ fn remembering_sets_both_variables_and_forgetting_names_an_entry_again() {
     let state = system(ARCH, &[]);
     let mut changes = ChangeSet::default();
 
-    set_remember(true, entry("fallback"), &mut changes, &state).unwrap();
+    set_remember(Toggle::On, entry("fallback"), &mut changes, &state).unwrap();
     assert_eq!(
         GrubDefaults::queued(&changes, GrubKey::Default),
         Some(GrubSetting::Default(DefaultEntry::Saved))
@@ -302,13 +302,19 @@ fn remembering_sets_both_variables_and_forgetting_names_an_entry_again() {
     );
     assert!(shown(&state, &changes).unwrap().remember);
 
-    set_remember(false, entry("fallback"), &mut changes, &state).unwrap();
+    set_remember(Toggle::Off, entry("fallback"), &mut changes, &state).unwrap();
     assert!(changes.is_empty(), "the file names entry 0 already");
 
     let saved = system("GRUB_DEFAULT=saved\nGRUB_SAVEDEFAULT=true\n", &[]);
 
     assert!(shown(&saved, &changes).unwrap().remember);
-    set_remember(false, entry("gnulinux-simple-1"), &mut changes, &saved).unwrap();
+    set_remember(
+        Toggle::Off,
+        entry("gnulinux-simple-1"),
+        &mut changes,
+        &saved,
+    )
+    .unwrap();
     assert_eq!(
         GrubDefaults::queued(&changes, GrubKey::Default),
         Some(GrubSetting::Default(DefaultEntry::Entry(entry(

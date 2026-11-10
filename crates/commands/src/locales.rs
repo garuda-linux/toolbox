@@ -111,7 +111,7 @@ pub fn switch_onto(
         })?;
 
     page_edit(changes, snapshot, why::locale, |changes, snapshot| {
-        toggle(&entry, want == Toggle::On, changes, snapshot)
+        toggle(&entry, want, changes, snapshot)
     })
 }
 

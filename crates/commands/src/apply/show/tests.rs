@@ -4,7 +4,7 @@ use std::time::{Duration, Instant};
 use toolbox_cli::output::Style;
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::StepId;
-use toolbox_plan::protocol::{Event, Failure, Outcome};
+use toolbox_plan::protocol::{Event, Failure, Mode, Outcome};
 use toolbox_services::apply::{Problem, Report};
 use toolbox_system::pkexec::Refusal;
 
@@ -26,7 +26,7 @@ fn shown(reports: &[Report], dry_run: bool, style: Style) -> String {
 }
 
 fn timed(reports: &[Report], dry_run: bool, style: Style, tick: Duration) -> String {
-    let mut show = Show::new(style, dry_run, ticking(tick));
+    let mut show = Show::new(style, Mode::of_dry_run(dry_run), ticking(tick));
 
     reports.iter().map(|report| show.report(report)).collect()
 }
@@ -244,7 +244,12 @@ fn a_step_that_never_started_ends_without_a_time() {
 #[test]
 fn a_cancelled_run_says_so_and_how_long_it_ran() {
     let step = StepId::new(0);
-    let mut show = Show::new(Style::Plain, false, ticking(Duration::from_millis(4_200)));
+    let mut show = Show::new(
+        Style::Plain,
+        Mode::Run,
+        ticking(Duration::from_millis(4_200)),
+    );
+
     let mut text = String::new();
 
     text.push_str(&show.report(&started()));

@@ -140,11 +140,12 @@ pub fn set(
 ///
 /// [`Refusal::Unavailable`] without `/etc/default/grub`.
 pub fn set_remember(
-    on: bool,
+    wish: Toggle,
     fallback: MenuEntryId,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
+    let on = wish.is_on();
     let state = grub(snapshot)?;
     let default = if on {
         DefaultEntry::Saved

@@ -8,7 +8,9 @@ mod tests;
 use std::io;
 use std::path::Path;
 
-use toolbox_plan::{KernelModule, MODPROBE_BLACKLIST, blacklisted_modules, set_blacklisted};
+use toolbox_plan::{
+    KernelModule, MODPROBE_BLACKLIST, Toggle, blacklisted_modules, set_blacklisted,
+};
 
 use super::FileChange;
 use crate::secure;
@@ -23,8 +25,9 @@ use crate::secure;
 pub fn edit_modprobe_blacklist(
     root: &Path,
     module: &KernelModule,
-    on: bool,
+    wish: Toggle,
 ) -> io::Result<FileChange> {
+    let on = wish.is_on();
     let (folder, name) = secure::split(MODPROBE_BLACKLIST)?;
 
     let dir = if on {
@@ -41,7 +44,7 @@ pub fn edit_modprobe_blacklist(
 
     let current = secure::read_text(&dir, name)?.unwrap_or_default();
 
-    let wanted = set_blacklisted(&current, module, on);
+    let wanted = set_blacklisted(&current, module, wish);
 
     if wanted == current {
         return Ok(FileChange::Unchanged);

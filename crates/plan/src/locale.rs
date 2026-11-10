@@ -11,7 +11,7 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::lines::{ending, push_line};
-use crate::{Charset, LocaleName};
+use crate::{Charset, LocaleName, Toggle};
 
 /// Relative to `/`, like every path the helper writes below its root.
 pub const LOCALE_GEN: &str = "etc/locale.gen";
@@ -73,7 +73,8 @@ impl LocaleEntry {
     /// `config` with the entry switched on or off. On keeps an enabled
     /// line, or else revives the first commented one, or else appends the
     /// line. Off comments every enabled line of the entry out.
-    pub fn set(&self, config: &str, on: bool) -> String {
+    pub fn set(&self, config: &str, wish: Toggle) -> String {
+        let on = wish.is_on();
         let enabled = config
             .split_inclusive('\n')
             .any(|line| self.classify(line) == Line::Enabled);

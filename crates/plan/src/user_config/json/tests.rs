@@ -1,5 +1,5 @@
 use super::{is_on, set};
-use crate::EditError;
+use crate::{EditError, Toggle};
 
 const KEY: &str = "SKIP_HOST_UPDATE";
 
@@ -32,7 +32,7 @@ fn on_means_the_key_is_true() {
 /// edit adds one line and the final line break.
 #[test]
 fn turning_on_keeps_the_other_keys_in_their_order() {
-    let after = set(DISCORD, KEY, true).unwrap().unwrap();
+    let after = set(DISCORD, KEY, Toggle::On).unwrap().unwrap();
 
     assert_eq!(
         after,
@@ -45,7 +45,7 @@ fn turning_on_keeps_the_other_keys_in_their_order() {
 
 #[test]
 fn turning_off_removes_only_the_key() {
-    let after = set(&with_flag("true"), KEY, false).unwrap().unwrap();
+    let after = set(&with_flag("true"), KEY, Toggle::Off).unwrap().unwrap();
 
     assert_eq!(after, format!("{DISCORD}\n"));
 }
@@ -53,31 +53,34 @@ fn turning_off_removes_only_the_key() {
 #[test]
 fn a_missing_or_blank_file_is_an_empty_object() {
     assert_eq!(
-        set("", KEY, true).unwrap().unwrap(),
+        set("", KEY, Toggle::On).unwrap().unwrap(),
         "{\n  \"SKIP_HOST_UPDATE\": true\n}\n"
     );
-    assert_eq!(set(" \n", KEY, false).unwrap(), None);
+    assert_eq!(set(" \n", KEY, Toggle::Off).unwrap(), None);
 }
 
 #[test]
 fn a_file_already_as_wanted_is_left_alone() {
-    assert_eq!(set(&with_flag("true"), KEY, true).unwrap(), None);
-    assert_eq!(set(DISCORD, KEY, false).unwrap(), None);
+    assert_eq!(set(&with_flag("true"), KEY, Toggle::On).unwrap(), None);
+    assert_eq!(set(DISCORD, KEY, Toggle::Off).unwrap(), None);
 }
 
 #[test]
 fn a_false_flag_turns_true_in_its_place() {
     assert_eq!(
-        set(&with_flag("false"), KEY, true).unwrap(),
+        set(&with_flag("false"), KEY, Toggle::On).unwrap(),
         Some(format!("{}\n", with_flag("true")))
     );
 }
 
 #[test]
 fn refuses_what_is_no_json_object() {
-    assert_eq!(set("[1, 2]", KEY, true), Err(EditError::NotJsonObject));
+    assert_eq!(
+        set("[1, 2]", KEY, Toggle::On),
+        Err(EditError::NotJsonObject)
+    );
     assert!(matches!(
-        set(cut(), KEY, true),
+        set(cut(), KEY, Toggle::On),
         Err(EditError::InvalidJson(_))
     ));
 }

@@ -1,6 +1,7 @@
 use std::collections::BTreeSet;
 
 use super::GarudaUpdateFlag;
+use crate::Toggle;
 
 /// `/etc/garuda/garuda-update/config` as garuda-update ships it, every
 /// variable commented out and no line break at the end.
@@ -34,7 +35,7 @@ fn only_uncommented_ones_count_as_on() {
 #[test]
 fn the_space_check_is_written_under_the_shipped_name() {
     assert_eq!(
-        GarudaUpdateFlag::NoCheckSpace.set(SHIPPED, true),
+        GarudaUpdateFlag::NoCheckSpace.set(SHIPPED, Toggle::On),
         SHIPPED.replace("# NO_SPACE_CHECK=1", "NO_SPACE_CHECK=1")
     );
 }
@@ -63,7 +64,7 @@ fn switching_the_space_check_off_comments_the_old_name_out_too() {
     let old = format!("{SHIPPED}\nNO_CHECK_SPACE=1\n");
 
     assert_eq!(
-        GarudaUpdateFlag::NoCheckSpace.set(&old, false),
+        GarudaUpdateFlag::NoCheckSpace.set(&old, Toggle::Off),
         format!("{SHIPPED}\n# NO_CHECK_SPACE=1\n")
     );
 }
@@ -105,7 +106,7 @@ fn a_similar_key_is_a_different_switch() {
 #[test]
 fn switching_on_revives_the_commented_line_in_place() {
     assert_eq!(
-        GarudaUpdateFlag::SkipMirrorlist.set(SHIPPED, true),
+        GarudaUpdateFlag::SkipMirrorlist.set(SHIPPED, Toggle::On),
         SHIPPED.replace("# SKIP_MIRRORLIST=1", "SKIP_MIRRORLIST=1")
     );
 }
@@ -116,21 +117,24 @@ fn switching_on_rewrites_an_existing_assignment() {
     let config = SHIPPED.replace("# PACMAN_NOCONFIRM=1", "PACMAN_NOCONFIRM=0");
 
     assert_eq!(
-        GarudaUpdateFlag::PacmanNoconfirm.set(&config, true),
+        GarudaUpdateFlag::PacmanNoconfirm.set(&config, Toggle::On),
         SHIPPED.replace("# PACMAN_NOCONFIRM=1", "PACMAN_NOCONFIRM=1")
     );
 }
 
 #[test]
 fn switching_on_appends_a_missing_key() {
-    assert_eq!(GarudaUpdateFlag::UpdateAur.set("", true), "UPDATE_AUR=1\n");
+    assert_eq!(
+        GarudaUpdateFlag::UpdateAur.set("", Toggle::On),
+        "UPDATE_AUR=1\n"
+    );
 
     // Edit: the shipped file with a line break at its end and its
     // `UPDATE_AUR` line removed.
     let without = format!("{SHIPPED}\n").replace("# UPDATE_AUR=1\n", "");
 
     assert_eq!(
-        GarudaUpdateFlag::UpdateAur.set(&without, true),
+        GarudaUpdateFlag::UpdateAur.set(&without, Toggle::On),
         format!("{without}UPDATE_AUR=1\n")
     );
 }
@@ -145,7 +149,7 @@ fn switching_off_comments_every_assignment_out() {
     );
 
     assert_eq!(
-        GarudaUpdateFlag::UpdateAur.set(&config, false),
+        GarudaUpdateFlag::UpdateAur.set(&config, Toggle::Off),
         format!(
             "{}\n# UPDATE_AUR=1",
             SHIPPED.replace("# UPDATE_AUR=1\n", "# UPDATE_AUR=1\r\n")
@@ -156,7 +160,7 @@ fn switching_off_comments_every_assignment_out() {
 #[test]
 fn switching_off_what_is_not_set_changes_nothing() {
     for flag in GarudaUpdateFlag::ALL {
-        assert_eq!(flag.set(SHIPPED, false), SHIPPED, "{flag:?}");
+        assert_eq!(flag.set(SHIPPED, Toggle::Off), SHIPPED, "{flag:?}");
     }
 }
 
@@ -164,7 +168,11 @@ fn switching_off_what_is_not_set_changes_nothing() {
 fn a_written_switch_reads_back() {
     for flag in GarudaUpdateFlag::ALL {
         for on in [true, false] {
-            assert_eq!(flag.is_on(&flag.set(SHIPPED, on)), on, "{flag:?} {on}");
+            assert_eq!(
+                flag.is_on(&flag.set(SHIPPED, Toggle::from_on(on))),
+                on,
+                "{flag:?} {on}"
+            );
         }
     }
 }

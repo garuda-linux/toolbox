@@ -30,6 +30,8 @@ use toolbox_gui::units::{self, Systemd, UnitsHandle};
 use toolbox_gui::{App, Setup, i18n, log_folder, panics, queue, reader, snapshot};
 use toolbox_gui_kit::desktop::family::Family;
 use toolbox_log::subscriber;
+use toolbox_plan::Toggle;
+use toolbox_plan::protocol::Mode;
 use toolbox_system::{
     Dkms, DkmsSource as _, FactSources, Facts, Sources, Status, StatusSources, probe_facts,
     probe_snapshot, probe_status,
@@ -249,10 +251,11 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
     } = start;
 
     let helper = helper_services(&handle, &cc.egui_ctx);
+    let mode = Mode::of_dry_run(helper.dry_run);
 
     let readers = readers(&handle, &cc.egui_ctx, &settings);
     let commands = instance.commands.sender.clone();
-    let (power, starter) = machine(&handle, helper.dry_run, commands, &cc.egui_ctx);
+    let (power, starter) = machine(&handle, mode, commands, &cc.egui_ctx);
     let setup = Setup {
         look: Some(look(&handle, &cc.egui_ctx, family, &catalogs)),
         system_language: i18n::language_from_env(|key| std::env::var_os(key)),
@@ -264,18 +267,18 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         dkms: Some(readers.dkms),
         status: Some(readers.status),
         facts: Some(readers.facts),
-        news: Some(news_reader(&handle, &cc.egui_ctx, helper.dry_run)),
+        news: Some(news_reader(&handle, &cc.egui_ctx, mode)),
         programs: Some(readers.programs),
         units: Some(readers.units),
         pictures: Some(pictures(&cc.egui_ctx)),
         power: Some(power),
         launcher: Some(starter),
-        maintenance: Some(maintenance(&handle, helper.dry_run)),
-        network: Some(network(&handle, helper.dry_run)),
-        packages: Some(packages(&handle, helper.dry_run)),
+        maintenance: Some(maintenance(&handle, mode)),
+        network: Some(network(&handle, mode)),
+        packages: Some(packages(&handle, mode)),
         users: Some(helper.users),
         configs: Some(helper.configs),
-        boot_repair: Some(repair(&handle, helper.dry_run, boot_repair)),
+        boot_repair: Some(repair(&handle, mode, Toggle::from_on(boot_repair))),
         open,
         commands: Some(instance.commands),
         arrivals: instance.arrivals,

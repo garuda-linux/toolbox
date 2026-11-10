@@ -13,7 +13,7 @@ use std::path::Path;
 use std::process::Command;
 
 use toolbox_plan::protocol::{Mode, Outcome};
-use toolbox_plan::{LocaleEntry, LocaleName, RootAction};
+use toolbox_plan::{LocaleEntry, LocaleName, RootAction, Toggle};
 
 use super::common::{TestResult, helper, request};
 use super::{apply, in_test_image, printed, restore, saved};
@@ -84,7 +84,11 @@ fn an_enabled_locale_is_generated_and_a_disabled_one_is_gone() -> TestResult {
 
     let enabled = fs::read_to_string(LOCALE_GEN)?;
 
-    assert_eq!(enabled, entry.set(&before, true), "only that line changes");
+    assert_eq!(
+        enabled,
+        entry.set(&before, Toggle::On),
+        "only that line changes"
+    );
     assert!(generated()?.contains(&name), "{:?}", generated()?);
 
     assert_eq!(
@@ -97,7 +101,10 @@ fn an_enabled_locale_is_generated_and_a_disabled_one_is_gone() -> TestResult {
         apply(vec![switch(&entry, false), RootAction::GenerateLocales])?,
         [Outcome::Succeeded, Outcome::Succeeded]
     );
-    assert_eq!(fs::read_to_string(LOCALE_GEN)?, entry.set(&enabled, false));
+    assert_eq!(
+        fs::read_to_string(LOCALE_GEN)?,
+        entry.set(&enabled, Toggle::Off)
+    );
     assert!(!generated()?.contains(&name), "{:?}", generated()?);
 
     restore(LOCALE_GEN, file.as_deref())?;

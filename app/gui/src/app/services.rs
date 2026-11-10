@@ -8,6 +8,7 @@ use toolbox_core::Snapshot;
 use toolbox_core::domains::CurrentLoader;
 use toolbox_core::features::{AUR_PACKAGES, USER_LOCKS};
 use toolbox_gui_kit::toasts::ToastKind;
+use toolbox_plan::protocol::Mode;
 use toolbox_plan::{StepId, UnitScope};
 use toolbox_system::Notification;
 
@@ -86,7 +87,7 @@ impl App {
 
             self.console.take(report);
             if finished {
-                self.plans.last_ending = self.console.ending(self.dry_run);
+                self.plans.last_ending = self.console.ending(Mode::of_dry_run(self.dry_run));
             }
         }
 

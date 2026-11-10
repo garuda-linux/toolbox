@@ -270,7 +270,14 @@ fn a_blacklist_click_queues_and_a_second_takes_it_back() {
     let state = snapshot(&[]);
     let mut changes = ChangeSet::default();
 
-    set_blacklisted(&module("mt76-usb"), true, &facts, &mut changes, &state).unwrap();
+    set_blacklisted(
+        &module("mt76-usb"),
+        Toggle::On,
+        &facts,
+        &mut changes,
+        &state,
+    )
+    .unwrap();
 
     assert_eq!(
         changes.wish::<ModuleBlacklist>(&module("mt76_usb")),
@@ -281,7 +288,14 @@ fn a_blacklist_click_queues_and_a_second_takes_it_back() {
         Some(Toggle::On)
     );
 
-    set_blacklisted(&module("mt76_usb"), false, &facts, &mut changes, &state).unwrap();
+    set_blacklisted(
+        &module("mt76_usb"),
+        Toggle::Off,
+        &facts,
+        &mut changes,
+        &state,
+    )
+    .unwrap();
     assert!(changes.is_empty());
 }
 
@@ -291,7 +305,7 @@ fn an_own_entry_can_be_queued_for_removal() {
     let state = snapshot(&["wl"]);
     let mut changes = ChangeSet::default();
 
-    set_blacklisted(&module("wl"), false, &facts, &mut changes, &state).unwrap();
+    set_blacklisted(&module("wl"), Toggle::Off, &facts, &mut changes, &state).unwrap();
 
     assert_eq!(
         changes.wish::<ModuleBlacklist>(&module("wl")),
@@ -306,11 +320,11 @@ fn a_blacklist_of_another_file_is_not_changed_here() {
     let mut changes = ChangeSet::default();
 
     assert_eq!(
-        set_blacklisted(&module("b43"), false, &facts, &mut changes, &state),
+        set_blacklisted(&module("b43"), Toggle::Off, &facts, &mut changes, &state),
         Err(Refusal::OtherFile)
     );
     assert_eq!(
-        set_blacklisted(&module("b43"), true, &facts, &mut changes, &state),
+        set_blacklisted(&module("b43"), Toggle::On, &facts, &mut changes, &state),
         Err(Refusal::OtherFile)
     );
     assert!(changes.is_empty());

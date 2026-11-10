@@ -119,7 +119,7 @@ pub fn system_choice_names(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<(Str
 /// is queued from here.
 pub fn toggle_pack(
     package: &PackageName,
-    on: bool,
+    wish: Toggle,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> bool {
@@ -127,7 +127,7 @@ pub fn toggle_pack(
         .is_some_and(|packs| packs.iter().any(|pack| pack.package == *package));
 
     if listed {
-        changes.want::<Packages>(package.clone(), Toggle::from_on(on), snapshot);
+        changes.want::<Packages>(package.clone(), wish, snapshot);
     }
 
     listed

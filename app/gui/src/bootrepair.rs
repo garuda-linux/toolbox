@@ -13,7 +13,8 @@ use std::sync::Arc;
 
 use tokio::runtime::Handle;
 use toolbox_core::features::bootrepair::RepairFacts;
-use toolbox_core::features::bootrepair::page::{Facts, Offer, Progress};
+use toolbox_core::features::bootrepair::page::{Booted, Facts, Offer, Progress};
+use toolbox_plan::Toggle;
 use toolbox_system::{ProbeError, RepairSource};
 
 use crate::lane::{Lane, OneRead};
@@ -73,7 +74,7 @@ impl BootRepair {
             ..Self::default()
         };
 
-        state.see_live(false);
+        state.see_live(Booted::Installed);
         state
     }
 
@@ -94,8 +95,8 @@ impl BootRepair {
     }
 
     /// It may come after the start, so the offer is worked out again on every look.
-    pub const fn see_live(&mut self, live: bool) {
-        self.offer = Offer::of(live, self.forced);
+    pub const fn see_live(&mut self, booted: Booted) {
+        self.offer = Offer::of(booted, Toggle::from_on(self.forced));
     }
 
     pub fn open(&mut self) {

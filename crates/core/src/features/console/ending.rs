@@ -1,3 +1,4 @@
+use toolbox_plan::protocol::Mode;
 #[cfg(test)]
 mod tests;
 
@@ -15,7 +16,8 @@ pub enum Ending {
 }
 
 impl Ending {
-    pub const fn of(dry_run: bool, done: usize, skipped: usize) -> Self {
+    pub const fn of(mode: Mode, done: usize, skipped: usize) -> Self {
+        let dry_run = mode.is_dry_run();
         match (dry_run, done, skipped) {
             (true, _, _) => Self::Tested,
             (false, _, 0) => Self::Applied,

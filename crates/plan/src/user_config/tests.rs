@@ -1,6 +1,7 @@
 use super::{
     ConfigWord, EditError, HomePath, InvalidConfigWord, InvalidHomePath, Rewrite, UserConfigEdit,
 };
+use crate::Toggle;
 
 /// `~/.config/kwinrc` after `kwriteconfig6` set the key in the Lima image.
 const WRITTEN: &[u8] = crate::testing::user_config::KWINRC.as_bytes();
@@ -113,12 +114,18 @@ fn a_file_is_written_or_removed() {
     let content = b"monitor.alsa.rules = []\n".as_slice();
 
     assert_eq!(
-        file().rewrite(None, true),
+        file().rewrite(None, Toggle::On),
         Ok(Rewrite::Write("monitor.alsa.rules = []\n".to_owned()))
     );
-    assert_eq!(file().rewrite(Some(content), true), Ok(Rewrite::Unchanged));
-    assert_eq!(file().rewrite(Some(b"old"), false), Ok(Rewrite::Remove));
-    assert_eq!(file().rewrite(None, false), Ok(Rewrite::Unchanged));
+    assert_eq!(
+        file().rewrite(Some(content), Toggle::On),
+        Ok(Rewrite::Unchanged)
+    );
+    assert_eq!(
+        file().rewrite(Some(b"old"), Toggle::Off),
+        Ok(Rewrite::Remove)
+    );
+    assert_eq!(file().rewrite(None, Toggle::Off), Ok(Rewrite::Unchanged));
 }
 
 /// Edit: the used kwinrc with its `[Windows]` group taken out.
@@ -147,11 +154,11 @@ fn an_ini_key_is_on_with_its_on_value() {
 #[test]
 fn turning_an_ini_key_on_creates_it_in_a_fresh_file() {
     assert_eq!(
-        kwin().rewrite(None, true),
+        kwin().rewrite(None, Toggle::On),
         Ok(Rewrite::Write(String::from_utf8(WRITTEN.to_vec()).unwrap()))
     );
     assert_eq!(
-        kwin().rewrite(Some(without_windows().as_bytes()), true),
+        kwin().rewrite(Some(without_windows().as_bytes()), Toggle::On),
         Ok(Rewrite::Write(format!(
             "{}\n[Windows]\nBorderlessMaximizedWindows=true\n",
             without_windows()
@@ -161,13 +168,13 @@ fn turning_an_ini_key_on_creates_it_in_a_fresh_file() {
 
 #[test]
 fn turning_an_ini_key_off_only_touches_an_existing_entry() {
-    assert_eq!(kwin().rewrite(None, false), Ok(Rewrite::Unchanged));
+    assert_eq!(kwin().rewrite(None, Toggle::Off), Ok(Rewrite::Unchanged));
     assert_eq!(
-        kwin().rewrite(Some(without_windows().as_bytes()), false),
+        kwin().rewrite(Some(without_windows().as_bytes()), Toggle::Off),
         Ok(Rewrite::Unchanged)
     );
     assert_eq!(
-        kwin().rewrite(Some(USED.as_bytes()), false),
+        kwin().rewrite(Some(USED.as_bytes()), Toggle::Off),
         Ok(Rewrite::Write(
             USED.replace("Windows=true", "Windows=false")
         ))
@@ -177,11 +184,11 @@ fn turning_an_ini_key_off_only_touches_an_existing_entry() {
 #[test]
 fn files_that_are_no_text_are_refused() {
     assert_eq!(
-        kwin().rewrite(Some(&[0xff, 0xfe]), true),
+        kwin().rewrite(Some(&[0xff, 0xfe]), Toggle::On),
         Err(EditError::NotText)
     );
     assert_eq!(
-        discord().rewrite(Some(&[0xff, 0xfe]), true),
+        discord().rewrite(Some(&[0xff, 0xfe]), Toggle::On),
         Err(EditError::NotText)
     );
     assert!(!kwin().is_on(Some(&[0xff, 0xfe])));
@@ -191,18 +198,18 @@ fn files_that_are_no_text_are_refused() {
 fn a_json_flag_keeps_the_other_settings() {
     assert!(!discord().is_on(Some(DISCORD)));
 
-    let Ok(Rewrite::Write(on)) = discord().rewrite(Some(DISCORD), true) else {
+    let Ok(Rewrite::Write(on)) = discord().rewrite(Some(DISCORD), Toggle::On) else {
         panic!("the flag is not written");
     };
 
     assert!(on.contains("\"BACKGROUND_COLOR\": \"#121214\""));
     assert!(discord().is_on(Some(on.as_bytes())));
     assert_eq!(
-        discord().rewrite(Some(b"[]"), true),
+        discord().rewrite(Some(b"[]"), Toggle::On),
         Err(EditError::NotJsonObject)
     );
     assert_eq!(
-        discord().rewrite(None, true),
+        discord().rewrite(None, Toggle::On),
         Ok(Rewrite::Write(
             "{\n  \"SKIP_HOST_UPDATE\": true\n}\n".to_owned()
         ))
@@ -224,14 +231,17 @@ fn names_and_descriptions_say_which_file_and_key() {
         "~/.config/discord/settings.json SKIP_HOST_UPDATE"
     );
     assert_eq!(
-        kwin().describe(true),
+        kwin().describe(Toggle::On),
         "set BorderlessMaximizedWindows=true in [Windows] of ~/.config/kwinrc"
     );
     assert_eq!(
-        discord().describe(false),
+        discord().describe(Toggle::Off),
         "remove \"SKIP_HOST_UPDATE\" from ~/.config/discord/settings.json"
     );
-    assert_eq!(file().describe(false), format!("rm -f {}", file().path()));
+    assert_eq!(
+        file().describe(Toggle::Off),
+        format!("rm -f {}", file().path())
+    );
 }
 
 #[test]
@@ -264,9 +274,12 @@ fn paths_and_words_parse_from_str_and_borrow_as_str() {
 
 #[test]
 fn turning_on_names_the_file_and_the_value() {
-    assert_eq!(file().describe(true), format!("write {}", file().path()));
     assert_eq!(
-        discord().describe(true),
+        file().describe(Toggle::On),
+        format!("write {}", file().path())
+    );
+    assert_eq!(
+        discord().describe(Toggle::On),
         "set \"SKIP_HOST_UPDATE\": true in ~/.config/discord/settings.json"
     );
 }

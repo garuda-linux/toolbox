@@ -12,13 +12,13 @@ fn headers_queue_for_a_kernel_that_lacks_them_and_go_back() {
     let lts = listing.kernel(&package("linux-lts")).unwrap();
     let mut changes = ChangeSet::default();
 
-    assert!(set_headers(lts, true, &mut changes, &snapshot));
+    assert!(set_headers(lts, Toggle::On, &mut changes, &snapshot));
     assert_eq!(
         changes.wish::<Packages>(&package("linux-lts-headers")),
         Some(&Toggle::On)
     );
 
-    assert!(set_headers(lts, false, &mut changes, &snapshot));
+    assert!(set_headers(lts, Toggle::Off, &mut changes, &snapshot));
     assert!(changes.is_empty());
 }
 
@@ -30,9 +30,9 @@ fn a_kernel_with_headers_queues_none() {
     let zen = listing.kernel(&package("linux-zen")).unwrap();
     let mut changes = ChangeSet::default();
 
-    assert!(!set_headers(linux, true, &mut changes, &snapshot));
+    assert!(!set_headers(linux, Toggle::On, &mut changes, &snapshot));
     assert!(
-        !set_headers(zen, true, &mut changes, &snapshot),
+        !set_headers(zen, Toggle::On, &mut changes, &snapshot),
         "not installed"
     );
     assert!(changes.is_empty());
@@ -45,10 +45,10 @@ fn builds_queue_and_go_back() {
     let builds = listing.all_builds(&dkms());
     let mut changes = ChangeSet::default();
 
-    set_builds(&builds, true, &mut changes, &snapshot);
+    set_builds(&builds, Toggle::On, &mut changes, &snapshot);
     assert_eq!(builds, [vboxhost_build()]);
     assert!(changes.wish::<DkmsBuilds>(&vboxhost_build()).is_some());
 
-    set_builds(&builds, false, &mut changes, &snapshot);
+    set_builds(&builds, Toggle::Off, &mut changes, &snapshot);
     assert!(changes.is_empty());
 }

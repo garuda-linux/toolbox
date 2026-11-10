@@ -16,6 +16,8 @@ pub use path::{ConfigWord, HomePath, InvalidConfigWord, InvalidHomePath};
 pub use reload::ConfigReload;
 use serde::{Deserialize, Serialize};
 
+use crate::Toggle;
+
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum UserConfigEdit {
@@ -99,7 +101,8 @@ impl UserConfigEdit {
     ///
     /// [`EditError`] for an INI or JSON file that is not text, or a JSON
     /// file that holds no object.
-    pub fn rewrite(&self, current: Option<&[u8]>, on: bool) -> Result<Rewrite, EditError> {
+    pub fn rewrite(&self, current: Option<&[u8]>, wish: Toggle) -> Result<Rewrite, EditError> {
+        let on = wish.is_on();
         match self {
             Self::File { path: _, content } => Ok(match (current, on) {
                 (Some(bytes), true) if bytes == content.as_bytes() => Rewrite::Unchanged,
@@ -127,12 +130,15 @@ impl UserConfigEdit {
                     ini::set(text, group.as_str(), key.as_str(), value.as_str()),
                 ))
             }
-            Self::JsonFlag { path: _, key } => Ok(json::set(text_of(current)?, key.as_str(), on)?
-                .map_or(Rewrite::Unchanged, Rewrite::Write)),
+            Self::JsonFlag { path: _, key } => {
+                Ok(json::set(text_of(current)?, key.as_str(), wish)?
+                    .map_or(Rewrite::Unchanged, Rewrite::Write))
+            }
         }
     }
 
-    pub fn describe(&self, on: bool) -> String {
+    pub fn describe(&self, wish: Toggle) -> String {
+        let on = wish.is_on();
         match self {
             Self::File { path, content: _ } => {
                 if on {

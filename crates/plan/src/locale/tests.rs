@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 
 use super::{LocaleEntry, is_builtin_locale, same_locale, set_system_lang, system_lang};
-use crate::LocaleName;
+use crate::{LocaleName, Toggle};
 
 /// `/etc/locale.gen` of the Lima image, written by cloud-init.
 const LOCALE_GEN: &str = crate::testing::locales::LOCALE_GEN;
@@ -76,7 +76,7 @@ fn only_uncommented_lines_are_enabled() {
 #[test]
 fn enabling_removes_only_the_comment_sign_of_that_line() {
     let shipped = shipped();
-    let changed = entry("de_DE.UTF-8 UTF-8").set(&shipped, true);
+    let changed = entry("de_DE.UTF-8 UTF-8").set(&shipped, Toggle::On);
 
     assert_eq!(
         changed,
@@ -91,7 +91,7 @@ fn enabling_removes_only_the_comment_sign_of_that_line() {
 #[test]
 fn the_character_set_tells_two_lines_of_a_locale_apart() {
     let shipped = shipped();
-    let changed = entry("de_DE ISO-8859-1").set(&shipped, true);
+    let changed = entry("de_DE ISO-8859-1").set(&shipped, Toggle::On);
 
     assert_eq!(
         changed,
@@ -106,7 +106,7 @@ fn the_character_set_tells_two_lines_of_a_locale_apart() {
 #[test]
 fn the_header_examples_are_never_revived() {
     let edited = LOCALE_GEN.replacen('\n', "\n#  en_US ISO-8859-1\n", 1);
-    let changed = entry("en_US ISO-8859-1").set(&edited, true);
+    let changed = entry("en_US ISO-8859-1").set(&edited, Toggle::On);
 
     assert!(changed.contains("#  en_US ISO-8859-1\n"));
     assert!(changed.ends_with("\nen_US ISO-8859-1\n"));
@@ -117,14 +117,14 @@ fn a_locale_missing_from_the_file_is_appended() {
     let austrian = entry("de_AT.UTF-8 UTF-8");
 
     assert_eq!(
-        austrian.set(LOCALE_GEN, true),
+        austrian.set(LOCALE_GEN, Toggle::On),
         format!("{LOCALE_GEN}de_AT.UTF-8 UTF-8\n")
     );
-    assert_eq!(austrian.set("", true), "de_AT.UTF-8 UTF-8\n");
+    assert_eq!(austrian.set("", Toggle::On), "de_AT.UTF-8 UTF-8\n");
 
     // Edit: the real file without its last line break.
     assert_eq!(
-        austrian.set(LOCALE_GEN.trim_end(), true),
+        austrian.set(LOCALE_GEN.trim_end(), Toggle::On),
         format!("{LOCALE_GEN}de_AT.UTF-8 UTF-8\n")
     );
 }
@@ -139,7 +139,7 @@ fn disabling_comments_every_line_of_the_entry_out() {
     );
 
     assert_eq!(
-        entry("en_US.UTF-8 UTF-8").set(&config, false),
+        entry("en_US.UTF-8 UTF-8").set(&config, Toggle::Off),
         config
             .replace("\nen_US.UTF-8 UTF-8\r\n", "\n#en_US.UTF-8 UTF-8\r\n")
             .replace("  en_US.UTF-8   UTF-8\n", "  #en_US.UTF-8   UTF-8\n")
@@ -150,10 +150,16 @@ fn disabling_comments_every_line_of_the_entry_out() {
 fn a_file_that_is_already_as_wanted_stays_byte_for_byte() {
     let shipped = shipped();
 
-    assert_eq!(entry("en_US.UTF-8 UTF-8").set(&shipped, true), shipped);
-    assert_eq!(entry("de_DE.UTF-8 UTF-8").set(&shipped, false), shipped);
     assert_eq!(
-        entry("de_DE.UTF-8 UTF-8").set(LOCALE_GEN, false),
+        entry("en_US.UTF-8 UTF-8").set(&shipped, Toggle::On),
+        shipped
+    );
+    assert_eq!(
+        entry("de_DE.UTF-8 UTF-8").set(&shipped, Toggle::Off),
+        shipped
+    );
+    assert_eq!(
+        entry("de_DE.UTF-8 UTF-8").set(LOCALE_GEN, Toggle::Off),
         LOCALE_GEN
     );
 }
@@ -161,10 +167,10 @@ fn a_file_that_is_already_as_wanted_stays_byte_for_byte() {
 #[test]
 fn off_then_on_gives_the_first_file_back() {
     let english = entry("en_US.UTF-8 UTF-8");
-    let off = english.set(LOCALE_GEN, false);
+    let off = english.set(LOCALE_GEN, Toggle::Off);
 
     assert!(off.ends_with("\n#en_US.UTF-8 UTF-8\n"));
-    assert_eq!(english.set(&off, true), LOCALE_GEN);
+    assert_eq!(english.set(&off, Toggle::On), LOCALE_GEN);
 }
 
 #[test]

@@ -10,10 +10,11 @@ use toolbox_plan::DkmsBuild;
 /// the queued ones back. Returns whether the queue changed.
 pub fn set_headers(
     kernel: &Kernel,
-    on: bool,
+    wish: Toggle,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> bool {
+    let on = wish.is_on();
     let queued = changes.wish::<Packages>(&kernel.headers) == Some(&Toggle::On);
 
     match (on, queued) {
@@ -29,7 +30,13 @@ pub fn set_headers(
     }
 }
 
-pub fn set_builds(builds: &[DkmsBuild], on: bool, changes: &mut ChangeSet, snapshot: &Snapshot) {
+pub fn set_builds(
+    builds: &[DkmsBuild],
+    wish: Toggle,
+    changes: &mut ChangeSet,
+    snapshot: &Snapshot,
+) {
+    let on = wish.is_on();
     for build in builds {
         if on {
             changes.want::<DkmsBuilds>(build.clone(), Queued, snapshot);

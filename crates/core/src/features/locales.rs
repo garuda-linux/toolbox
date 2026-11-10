@@ -143,10 +143,11 @@ fn lets_through(row: &LocaleRow, filter: &Filter, needle: &Needle) -> bool {
 /// without its locale, or no locale at all.
 pub fn toggle(
     entry: &LocaleEntry,
-    on: bool,
+    wish: Toggle,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
+    let on = wish.is_on();
     if !on {
         if let Some(refusal) = refuses_off(entry, snapshot, changes) {
             return Err(refusal);

@@ -230,7 +230,8 @@ fn remote_key(action: RemoteAction) -> String {
 
 /// The install of garuda-update, which the Rescue tab's repairs need,
 /// while it is missing.
-pub fn rescue_install(garuda_update: bool) -> Option<Plan> {
+pub fn rescue_install(program: super::Program) -> Option<Plan> {
+    let garuda_update = program == super::Program::Found;
     (!garuda_update).then(|| install(&GARUDA_UPDATE_PACKAGE))
 }
 
