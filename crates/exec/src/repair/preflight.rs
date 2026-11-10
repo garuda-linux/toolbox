@@ -197,7 +197,7 @@ fn unused(
         // every disk counts as used.
         let Some(device) = system.nodes.block_device(Path::new(&mount.source), true) else {
             return Err(PreflightError::NoNode {
-                source: mount.source,
+                device: mount.source,
                 point: mount.point,
             });
         };
@@ -208,7 +208,7 @@ fn unused(
             Ok(used) => used,
             Err(error) => {
                 return Err(PreflightError::MountDisks {
-                    source: mount.source,
+                    device: mount.source,
                     error,
                 });
             }
@@ -217,7 +217,7 @@ fn unused(
         if let Some(disk) = used.intersection(&wanted).next() {
             return Err(PreflightError::InUse {
                 disk: disk.clone(),
-                source: mount.source,
+                device: mount.source,
                 point: mount.point,
             });
         }

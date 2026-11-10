@@ -11,9 +11,9 @@ mod resolve;
 mod tests;
 mod write;
 
+use std::io;
 use std::os::fd::OwnedFd;
 use std::path::Path;
-use std::{fmt, io};
 
 use resolve::{Unresolved, resolve};
 use rustix::fs::{AtFlags, FileType};
@@ -55,29 +55,13 @@ pub struct ConfigRead {
     pub content: ConfigText,
 }
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum ReadError {
+    #[error("{}", refusal_text(*.0))]
     Refused(FetchRefusal),
     /// Reading failed, for the app usually because only root may.
-    Failed(io::Error),
-}
-
-impl fmt::Display for ReadError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Refused(reason) => f.write_str(refusal_text(*reason)),
-            Self::Failed(error) => write!(f, "{error}"),
-        }
-    }
-}
-
-impl std::error::Error for ReadError {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        match self {
-            Self::Failed(error) => Some(error),
-            Self::Refused(_) => None,
-        }
-    }
+    #[error("{0}")]
+    Failed(#[source] io::Error),
 }
 
 impl From<Unreadable> for ReadError {

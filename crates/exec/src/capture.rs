@@ -12,6 +12,7 @@ mod process;
 mod tests;
 
 use std::collections::VecDeque;
+use std::io;
 use std::os::fd::OwnedFd;
 use std::os::unix::net::UnixStream;
 use std::os::unix::process::CommandExt as _;
@@ -19,7 +20,6 @@ use std::process::{Command, ExitStatus, Stdio};
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 use std::time::{Duration, Instant};
-use std::{fmt, io};
 
 use crate::pty_runner::Environment;
 
@@ -61,14 +61,19 @@ pub struct Exited {
     pub truncated: bool,
 }
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum CaptureError {
+    #[error("the program is not installed")]
     Missing,
-    Failed(io::Error),
+    #[error("{0}")]
+    Failed(#[source] io::Error),
+    #[error("cancelled")]
     Cancelled,
+    #[error("the program took too long")]
     TimedOut,
     /// It printed more than the limit of a policy that counts that as an
     /// error.
+    #[error("the program printed too much")]
     TooLarge,
 }
 
@@ -145,27 +150,6 @@ impl<'input> Policy<'input> {
     /// The deadline as a point in time. One too far away never passes.
     fn end(&self, started: Instant) -> Option<Instant> {
         started.checked_add(self.deadline?)
-    }
-}
-
-impl fmt::Display for CaptureError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Missing => f.write_str("the program is not installed"),
-            Self::Failed(error) => write!(f, "{error}"),
-            Self::Cancelled => f.write_str("cancelled"),
-            Self::TimedOut => f.write_str("the program took too long"),
-            Self::TooLarge => f.write_str("the program printed too much"),
-        }
-    }
-}
-
-impl std::error::Error for CaptureError {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        match self {
-            Self::Failed(error) => Some(error),
-            Self::Missing | Self::Cancelled | Self::TimedOut | Self::TooLarge => None,
-        }
     }
 }
 

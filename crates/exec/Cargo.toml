@@ -15,6 +15,7 @@ tracing.workspace = true
 rustix = { workspace = true, features = ["fs", "process"] }
 toolbox-fs.workspace = true
 toolbox-plan.workspace = true
+thiserror.workspace = true
 toolbox-pty.workspace = true
 
 [dev-dependencies]

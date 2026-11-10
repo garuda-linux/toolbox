@@ -5503,6 +5503,7 @@ dependencies = [
  "rustix 1.1.6",
  "serde_json",
  "tempfile",
+ "thiserror 2.0.21",
  "toolbox-fs",
  "toolbox-plan",
  "toolbox-pty",

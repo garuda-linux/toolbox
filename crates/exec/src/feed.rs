@@ -6,10 +6,10 @@
 #[cfg(test)]
 mod tests;
 
+use std::io;
 use std::process::Output;
 use std::sync::Arc;
 use std::time::Duration;
-use std::{fmt, io};
 
 use toolbox_plan::procedure::Command;
 use toolbox_plan::protocol::{Event, Outcome};
@@ -25,27 +25,14 @@ use crate::report::{ended, failure};
 /// hold the helper, which no cancel reaches here.
 pub const FEED_DEADLINE: Duration = Duration::from_secs(120);
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 enum FeedError {
-    Failed(io::Error),
+    #[error("{0}")]
+    Failed(#[source] io::Error),
     /// It ran longer than this and was killed.
+    #[error("it did not end within {} seconds and was stopped", .0.as_secs())]
     Late(Duration),
 }
-
-impl fmt::Display for FeedError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Failed(error) => write!(f, "{error}"),
-            Self::Late(deadline) => write!(
-                f,
-                "it did not end within {} seconds and was stopped",
-                deadline.as_secs()
-            ),
-        }
-    }
-}
-
-impl std::error::Error for FeedError {}
 
 /// Runs `command`, writes `input` to it and closes the pipe. A cancel does
 /// not reach it: these programs finish in a moment, and a half-set

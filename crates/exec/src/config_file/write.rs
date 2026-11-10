@@ -5,8 +5,8 @@
 #[cfg(test)]
 mod tests;
 
+use std::io;
 use std::path::Path;
-use std::{fmt, io};
 
 use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{ConfigFilePath, ConfigText, ConfigWrite, FetchRefusal, Fingerprint, StepId};
@@ -21,38 +21,18 @@ use crate::secure::{self, Attributes};
 /// A backup may hold what the file kept from other users.
 const PRIVATE_MODE: u32 = 0o600;
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum WriteError {
+    #[error("{}", refusal_text(*.0))]
     Refused(FetchRefusal),
     /// The asked path passed the write table, but its links lead to a
     /// file outside it.
-    NotWritable {
-        real: ConfigFilePath,
-    },
+    #[error("the toolbox never writes {real}")]
+    NotWritable { real: ConfigFilePath },
+    #[error("the file changed since it was opened")]
     Changed,
-    Failed(io::Error),
-}
-
-impl fmt::Display for WriteError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Refused(reason) => f.write_str(refusal_text(*reason)),
-            Self::NotWritable { real } => {
-                write!(f, "the toolbox never writes {real}")
-            }
-            Self::Changed => f.write_str("the file changed since it was opened"),
-            Self::Failed(error) => write!(f, "{error}"),
-        }
-    }
-}
-
-impl std::error::Error for WriteError {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        match self {
-            Self::Failed(error) => Some(error),
-            Self::Refused(_) | Self::NotWritable { real: _ } | Self::Changed => None,
-        }
-    }
+    #[error("{0}")]
+    Failed(#[source] io::Error),
 }
 
 impl From<ReadError> for WriteError {

@@ -52,7 +52,7 @@ fn failed_lookups_name_the_device_and_the_system_file() {
     );
 
     let mounts = PreflightError::MountDisks {
-        source: "/dev/nvme0n1p2".to_owned(),
+        device: "/dev/nvme0n1p2".to_owned(),
         error: std::io::Error::other("gone"),
     };
 
