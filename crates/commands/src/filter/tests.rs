@@ -3,7 +3,7 @@ use toolbox_cli::output::{Mark, Row};
 
 use super::{Filter, Named, kept, narrow, print, services, summary, toggles};
 use crate::lists::{LocaleRow, ServiceRow, ToggleRow};
-use crate::out::Listing;
+use crate::out::{Listing, Out, Settings};
 
 const FAKES: [Fake; 3] = [
     Fake {
@@ -118,7 +118,13 @@ fn json_holds_only_the_kept_rows() {
     };
 
     let mut out = Vec::new();
-    print(&list, &FAKES, &Filter::all(), &mut out, fake_listing);
+    print(
+        &list,
+        &FAKES,
+        &Filter::all(),
+        &mut Out::new(&mut out, Settings::default()),
+        fake_listing,
+    );
 
     let text = String::from_utf8(out).unwrap();
     assert!(text.contains("steam") && !text.contains("docker"), "{text}");
@@ -132,7 +138,13 @@ fn text_says_how_many_are_shown() {
     };
 
     let mut out = Vec::new();
-    print(&list, &FAKES, &Filter::all(), &mut out, fake_listing);
+    print(
+        &list,
+        &FAKES,
+        &Filter::all(),
+        &mut Out::new(&mut out, Settings::default()),
+        fake_listing,
+    );
 
     let text = String::from_utf8(out).unwrap();
     assert!(text.contains("3, 2 on, 2 shown"), "{text}");

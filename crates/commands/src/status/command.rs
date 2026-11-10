@@ -1,7 +1,7 @@
 //! `garuda-toolbox status`: the facts read from the system once, or with
 //! `--watch` again and again.
 
-use std::io::Write;
+use std::io::Write as _;
 use std::thread;
 use std::time::{Duration, Instant, SystemTime};
 
@@ -16,22 +16,23 @@ use toolbox_system::{
 use super::watch::{Shape, Watch, watch};
 use super::{StatusView, brief, needs_attention, text, view};
 use crate::interrupt::{self, Stopper};
-use crate::{out, paint, spinner};
+use crate::out::Out;
+use crate::spinner;
 
 const LOOK_AGAIN: Duration = Duration::from_millis(100);
 
-pub fn status(args: StatusArgs, runtime: &Handle, out: &mut dyn Write) -> Exit {
+pub fn status(args: StatusArgs, runtime: &Handle, out: &mut Out<'_>) -> Exit {
     if args.watch {
         return watched(args, runtime, out);
     }
 
-    let view = read(args.read.json);
+    let view = read(args.read.json || out.quiet());
     let text = if args.read.json {
         json(&view)
     } else if args.brief {
         format!("{}\n", brief(&view))
     } else {
-        text(&view, paint(), out::verbose())
+        text(&view, out.paint(), out.verbose())
     };
 
     write!(out, "{text}").ok();
@@ -42,32 +43,34 @@ pub fn status(args: StatusArgs, runtime: &Handle, out: &mut dyn Write) -> Exit {
     }
 }
 
-fn watched(args: StatusArgs, runtime: &Handle, out: &mut dyn Write) -> Exit {
+fn watched(args: StatusArgs, runtime: &Handle, out: &mut Out<'_>) -> Exit {
     let shape = if args.read.json {
         Shape::Json
     } else if args.brief {
         Shape::Brief
     } else {
         Shape::Text {
-            paint: paint(),
-            verbose: out::verbose(),
+            paint: out.paint(),
+            verbose: out.verbose(),
         }
     };
 
+    let quiet = args.read.json || out.quiet();
     let mut stopper = Stopper::new(interrupt::listen(runtime));
     let interval = args.interval.duration();
 
     watch(
         Watch::new(shape),
-        || read(args.read.json),
+        || read(quiet),
         || waited(&mut stopper, interval),
         || jiff::Zoned::now().strftime("%H:%M").to_string(),
         out,
     )
 }
 
-fn read(json: bool) -> StatusView {
-    let (found, facts, restart) = spinner::while_reading(json, || {
+/// `quiet` leaves the spinner out.
+fn read(quiet: bool) -> StatusView {
+    let (found, facts, restart) = spinner::while_reading(quiet, || {
         let found = probe_status(&StatusSources::system());
         let facts = probe_facts(&FactSources::system());
         (found, facts, SystemHost::from_process().is_reboot_pending())

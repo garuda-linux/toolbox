@@ -6,6 +6,7 @@ use toolbox_plan::HostName;
 use toolbox_system::{NetworkSource, ProbeError};
 
 use super::{address_shown, blacklist, ping, status, traceroute, view};
+use crate::out::{Out, Settings};
 
 struct Broken;
 
@@ -96,7 +97,12 @@ fn a_failed_read_is_no_missing_router_and_ends_as_a_failure() {
     assert_eq!(view(&Broken).unread, ["router", "radios"]);
 
     let mut out = Vec::new();
-    let exit = status(Read { json: false }, &Broken, &mut out);
+    let exit = status(
+        Read { json: false },
+        &Broken,
+        &mut Out::new(&mut out, Settings::default()),
+    );
+
     let text = String::from_utf8(out).unwrap();
 
     assert_eq!(exit, Exit::Failure);
@@ -151,7 +157,11 @@ fn the_radios_are_a_marked_list() {
 #[test]
 fn a_failed_read_keeps_the_program_s_words_out_of_the_output() {
     let mut out = Vec::new();
-    status(Read { json: false }, &Broken, &mut out);
+    status(
+        Read { json: false },
+        &Broken,
+        &mut Out::new(&mut out, Settings::default()),
+    );
     let text = String::from_utf8(out).unwrap();
 
     assert!(!text.contains("rfkill refused"), "{text}");
@@ -161,7 +171,11 @@ fn a_failed_read_keeps_the_program_s_words_out_of_the_output() {
 #[test]
 fn an_unread_router_is_not_none_and_leaves_no_gap_for_its_error() {
     let mut out = Vec::new();
-    status(Read { json: false }, &NoRoute, &mut out);
+    status(
+        Read { json: false },
+        &NoRoute,
+        &mut Out::new(&mut out, Settings::default()),
+    );
     let text = String::from_utf8(out).unwrap();
 
     assert!(text.contains("router     not read\n"), "{text}");
@@ -172,7 +186,11 @@ fn an_unread_router_is_not_none_and_leaves_no_gap_for_its_error() {
 #[test]
 fn json_stays_json_when_a_read_fails() {
     let mut out = Vec::new();
-    status(Read { json: true }, &Broken, &mut out);
+    status(
+        Read { json: true },
+        &Broken,
+        &mut Out::new(&mut out, Settings::default()),
+    );
 
     serde_json::from_slice::<serde_json::Value>(&out).unwrap();
 }

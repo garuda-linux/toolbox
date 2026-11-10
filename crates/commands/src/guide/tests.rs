@@ -5,6 +5,7 @@ use toolbox_guide::Guide;
 use toolbox_plan::PageName;
 
 use super::{list, show, terminal};
+use crate::out::{Out, Settings};
 
 const SUMMARY: &str = "# Summary\n\n# System\n\n- [Kernels](kernels.md)\n";
 
@@ -20,9 +21,9 @@ fn page() -> String {
     terminal::page(kernels, plain(), 40)
 }
 
-fn run(command: impl FnOnce(&mut Vec<u8>) -> Exit) -> (Exit, String) {
+fn run(command: impl FnOnce(&mut Out<'_>) -> Exit) -> (Exit, String) {
     let mut out = Vec::new();
-    let exit = command(&mut out);
+    let exit = command(&mut Out::new(&mut out, Settings::default()));
     let text = String::from_utf8(out).unwrap_or_default();
     (exit, text.replace(": ", ":"))
 }

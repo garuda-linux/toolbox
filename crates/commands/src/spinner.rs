@@ -60,7 +60,7 @@ pub fn while_reading<T>(quiet: bool, read: impl FnOnce() -> T) -> T {
     let spinner = wanted(
         std::io::stderr().is_terminal(),
         std::env::var_os("TERM").is_some_and(|term| term == "dumb"),
-        quiet || super::out::quiet(),
+        quiet,
     )
     .then(|| Spinner::on(std::io::stderr(), READING, PACE));
 

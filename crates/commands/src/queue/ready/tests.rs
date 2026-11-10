@@ -9,6 +9,7 @@ use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
 use toolbox_plan::{PackageName, UserName};
 
 use super::{PageReads, checked, refused};
+use crate::out::{Out, Settings};
 
 /// Answers what it was given and counts how often it was asked.
 #[derive(Default)]
@@ -105,7 +106,7 @@ fn a_refusal_names_what_is_missing_and_exits_unavailable() {
         Refusal::GuardsWaiting {
             guard: AUR_PACKAGES,
         },
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     let said = String::from_utf8(out).unwrap();

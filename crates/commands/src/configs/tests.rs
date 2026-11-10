@@ -5,11 +5,15 @@ use toolbox_plan::{ConfigFilePath, ConfigText, HomePath, PlannedAction, RootActi
 use toolbox_system::ReadProblem;
 
 use super::{FileRow, file_listing, read_problem, unknown, write_back};
+use crate::out::{Out, Settings};
 
 #[test]
 fn a_key_the_catalog_lacks_ends_as_not_available() {
     let mut out = Vec::new();
-    assert_eq!(unknown("nope", &mut out), Exit::Unavailable);
+    assert_eq!(
+        unknown("nope", &mut Out::new(&mut out, Settings::default())),
+        Exit::Unavailable
+    );
 }
 
 fn text(content: &str) -> ConfigText {

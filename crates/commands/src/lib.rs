@@ -66,8 +66,8 @@ use written::Written;
 
 use self::change::KernelChange;
 use self::lists::listing;
-use self::out::{Listing, print, unavailable};
-pub use self::out::{error_text, paint, say_error};
+use self::out::{Json, Listing, Out, Settings, print, unavailable};
+pub use self::out::{error_text, say_error};
 use self::pager::Pager;
 pub use self::start::{parse_failed, usage};
 use self::terminal::Terminal;
@@ -88,11 +88,16 @@ pub struct Options {
 }
 
 pub fn main(command: Command, options: Options) -> Exit {
-    out::set_verbose(options.verbose);
-    out::configure(options.color, options.width, options.quiet);
+    let settings = Settings {
+        color: options.color,
+        width: options.width,
+        quiet: options.quiet,
+        verbose: options.verbose,
+        json: Json::Off,
+    };
 
     match Runtime::new() {
-        Ok(runtime) => run(command, &runtime, options.no_pager),
+        Ok(runtime) => run(command, &runtime, options.no_pager, settings),
         Err(error) => {
             tracing::error!("no runtime for the command: {error}");
             Exit::Failure
@@ -100,93 +105,102 @@ pub fn main(command: Command, options: Options) -> Exit {
     }
 }
 
-pub fn run(command: Command, runtime: &Runtime, no_pager: bool) -> Exit {
+fn run(command: Command, runtime: &Runtime, no_pager: bool, mut settings: Settings) -> Exit {
     if let Some(confirm) = command.confirm()
         && confirm.json
     {
         // Checked before anything asks, a password included.
         if confirm.cannot_ask() {
-            return apply::cannot_ask();
+            return apply::cannot_ask(settings);
         }
 
-        out::set_json_lines(true);
+        settings.json = Json::Lines;
+    } else if reads::json_read(&command) {
+        settings.json = Json::Read;
+    } else {
+        settings.json = Json::Off;
     }
 
-    out::set_json_read(reads::json_read(&command));
-
     if let Some((pager, input)) = Pager::open(&command, no_pager, runtime) {
-        let mut out = Written::new(std::io::BufWriter::new(input));
-        let exit = dispatch(command, runtime, &mut out);
-        let exit = out.finish(exit);
+        let mut written = Written::new(std::io::BufWriter::new(input));
+        let (exit, kept) = written_out(command, runtime, &mut written, settings);
+        let exit = written::ended(written.finish(exit), kept, settings);
         pager.wait();
         return exit;
     }
 
-    let mut out = Written::new(std::io::stdout().lock());
-    let exit = dispatch(command, runtime, &mut out);
-    let exit = out.finish(exit);
-    write!(std::io::stderr(), "{}", out::kept_errors(exit)).ok();
-    exit
+    let mut written = Written::new(std::io::stdout().lock());
+    let (exit, kept) = written_out(command, runtime, &mut written, settings);
+    written::ended(written.finish(exit), kept, settings)
 }
 
-fn dispatch(command: Command, runtime: &Runtime, mut out: &mut dyn Write) -> Exit {
+fn written_out(
+    command: Command,
+    runtime: &Runtime,
+    writer: &mut dyn Write,
+    settings: Settings,
+) -> (Exit, Vec<out::Said>) {
+    let mut out = Out::new(writer, settings);
+    let exit = dispatch(command, runtime, &mut out);
+    (exit, out.into_kept())
+}
+
+fn dispatch(command: Command, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     match command {
-        Command::Status(args) => status::status(args, runtime.handle(), &mut out),
-        Command::Doctor(read) => doctor::run(read, runtime, &mut out),
-        Command::Pages(read) => pages(read, &mut out),
-        Command::Guide(command) => guide::command(command, &mut out),
-        Command::Diagnostics(args) => diagnose(&args, runtime, &mut out),
-        Command::Toggle(ToggleCommand::List(list)) => toggle(&list, &mut out),
-        Command::Apps(AppsCommand::List(list)) => apps(&list, &mut out),
-        Command::Update(args) => update(&args, runtime, &mut out),
+        Command::Status(args) => status::status(args, runtime.handle(), out),
+        Command::Doctor(read) => doctor::run(read, runtime, out),
+        Command::Pages(read) => pages(read, out),
+        Command::Guide(command) => guide::command(command, out),
+        Command::Diagnostics(args) => diagnose(&args, runtime, out),
+        Command::Toggle(ToggleCommand::List(list)) => toggle(&list, out),
+        Command::Apps(AppsCommand::List(list)) => apps(&list, out),
+        Command::Update(args) => update(&args, runtime, out),
         Command::Services(command) => match command.change() {
-            Ok((change, unit)) => act::service(change, unit, runtime, &mut out),
-            Err(list) => services(list, runtime, &mut out),
+            Ok((change, unit)) => act::service(change, unit, runtime, out),
+            Err(list) => services(list, runtime, out),
         },
-        Command::Toggle(ToggleCommand::On(args)) => {
-            act::toggle(&args, Toggle::On, runtime, &mut out)
-        }
-        Command::Toggle(ToggleCommand::Off(args)) => {
-            act::toggle(&args, Toggle::Off, runtime, &mut out)
-        }
-        Command::Apps(AppsCommand::Install(args)) => act::app(&args, Toggle::On, runtime, &mut out),
-        Command::Apps(AppsCommand::Remove(args)) => act::app(&args, Toggle::Off, runtime, &mut out),
-        Command::Kernels(KernelsCommand::List(list)) => kernels(&list, &mut out),
+        Command::Toggle(ToggleCommand::On(args)) => act::toggle(&args, Toggle::On, runtime, out),
+        Command::Toggle(ToggleCommand::Off(args)) => act::toggle(&args, Toggle::Off, runtime, out),
+        Command::Apps(AppsCommand::Install(args)) => act::app(&args, Toggle::On, runtime, out),
+        Command::Apps(AppsCommand::Remove(args)) => act::app(&args, Toggle::Off, runtime, out),
+        Command::Kernels(KernelsCommand::List(list)) => kernels(&list, out),
         Command::Kernels(KernelsCommand::Install(args)) => {
-            act::kernel(&args, KernelChange::Install, runtime, &mut out)
+            act::kernel(&args, KernelChange::Install, runtime, out)
         }
         Command::Kernels(KernelsCommand::Remove(args)) => {
-            act::kernel(&args, KernelChange::Remove, runtime, &mut out)
+            act::kernel(&args, KernelChange::Remove, runtime, out)
         }
         Command::Kernels(KernelsCommand::Headers(args)) => {
-            act::kernel(&args, KernelChange::Headers, runtime, &mut out)
+            act::kernel(&args, KernelChange::Headers, runtime, out)
         }
-        Command::Maintenance(MaintenanceCommand::List(read)) => act::tasks(&read, &mut out),
-        Command::Maintenance(MaintenanceCommand::Run(args)) => act::task(&args, runtime, &mut out),
+        Command::Maintenance(MaintenanceCommand::List(read)) => act::tasks(&read, out),
+        Command::Maintenance(MaintenanceCommand::Run(args)) => act::task(&args, runtime, out),
         Command::Kernels(KernelsCommand::Default(args)) => {
-            boot::kernel_default(&args, runtime, &mut out)
+            boot::kernel_default(&args, runtime, out)
         }
-        Command::Dkms(dkms) => boot::dkms(dkms, runtime, &mut out),
-        Command::Locales(command) => locales::command(command, runtime, &mut out),
-        Command::Users(command) => accounts::users_command(command, runtime, &mut out),
-        Command::Groups(command) => accounts::groups_command(command, runtime, &mut out),
-        Command::Boot(command) => boot::command(command, runtime, &mut out),
-        Command::Configs(command) => configs::command(command, runtime, &mut out),
-        Command::Network(command) => network::command(command, runtime, &mut out),
-        Command::Packages(command) => packages::command(command, runtime, &mut out),
-        Command::BootRepair(command) => bootrepair::command(command, runtime, &mut out),
-        Command::Setup(command) => setup::command(command, runtime, &mut out),
-        Command::Settings(command) => settings::command(command, &mut out),
-        Command::Queue(command) => queue::command(command, runtime, &mut out),
-        Command::Completions(args) => help::completions(&args, &mut out),
-        Command::Help(args) => help::help(&args, &mut out),
+        Command::Dkms(dkms) => boot::dkms(dkms, runtime, out),
+        Command::Locales(command) => locales::command(command, runtime, out),
+        Command::Users(command) => accounts::users_command(command, runtime, out),
+        Command::Groups(command) => accounts::groups_command(command, runtime, out),
+        Command::Boot(command) => boot::command(command, runtime, out),
+        Command::Configs(command) => configs::command(command, runtime, out),
+        Command::Network(command) => network::command(command, runtime, out),
+        Command::Packages(command) => packages::command(command, runtime, out),
+        Command::BootRepair(command) => bootrepair::command(command, runtime, out),
+        Command::Setup(command) => setup::command(command, runtime, out),
+        Command::Settings(command) => settings::command(command, out),
+        Command::Queue(command) => queue::command(command, runtime, out),
+        Command::Completions(args) => help::completions(&args, out),
+        Command::Help(args) => help::help(&args, out),
     }
 }
 
-fn services(list: &ServicesList, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+fn services(list: &ServicesList, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let scope = UnitScope::from_user(list.user);
 
-    let listed = spinner::while_reading(list.read.json, || runtime.block_on(Systemd.list(scope)));
+    let listed = spinner::while_reading(list.read.json || out.quiet(), || {
+        runtime.block_on(Systemd.list(scope))
+    });
 
     match listed {
         Ok(units) => filter::print(
@@ -203,7 +217,7 @@ fn services(list: &ServicesList, runtime: &Runtime, out: &mut dyn Write) -> Exit
     }
 }
 
-fn toggle(list: &ToggleList, out: &mut dyn Write) -> Exit {
+fn toggle(list: &ToggleList, out: &mut Out<'_>) -> Exit {
     let catalogs = catalogs();
     let pages: Vec<(TogglePage, &ToggleCatalog)> = [
         (TogglePage::Components, &catalogs.components),
@@ -223,7 +237,7 @@ fn toggle(list: &ToggleList, out: &mut dyn Write) -> Exit {
     })
 }
 
-fn apps(list: &AppsList, out: &mut dyn Write) -> Exit {
+fn apps(list: &AppsList, out: &mut Out<'_>) -> Exit {
     let catalogs = catalogs();
     let rows = lists::apps(
         &catalogs.apps.apps,
@@ -236,8 +250,8 @@ fn apps(list: &AppsList, out: &mut dyn Write) -> Exit {
     })
 }
 
-fn kernels(list: &KernelsList, out: &mut dyn Write) -> Exit {
-    match spinner::while_reading(list.read.json, || lists::kernels(&system())) {
+fn kernels(list: &KernelsList, out: &mut Out<'_>) -> Exit {
+    match spinner::while_reading(list.read.json || out.quiet(), || lists::kernels(&system())) {
         Some(rows) => filter::print(
             &list.read,
             &rows,
@@ -249,8 +263,8 @@ fn kernels(list: &KernelsList, out: &mut dyn Write) -> Exit {
     }
 }
 
-fn locales(list: &LocalesList, out: &mut dyn Write) -> Exit {
-    let rows = spinner::while_reading(list.read.json, || lists::locales(&system()));
+fn locales(list: &LocalesList, out: &mut Out<'_>) -> Exit {
+    let rows = spinner::while_reading(list.read.json || out.quiet(), || lists::locales(&system()));
     filter::print(
         &list.read,
         &rows,
@@ -262,7 +276,7 @@ fn locales(list: &LocalesList, out: &mut dyn Write) -> Exit {
 
 /// The people's accounts and root, every account with `all`. `--json`
 /// leaves out the same ones.
-fn users(list: &ReadList, all: bool, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
+fn users(list: &ReadList, all: bool, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
     match lists::users(snapshot) {
         Some(rows) => {
             let (shown, hidden) = lists::people(rows, all);
@@ -272,14 +286,14 @@ fn users(list: &ReadList, all: bool, snapshot: &Snapshot, out: &mut dyn Write) -
     }
 }
 
-fn groups(list: &ReadList, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
+fn groups(list: &ReadList, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
     match lists::groups(snapshot) {
         Some(rows) => filter::print_all(list, &rows, out, listing::groups),
         None => unavailable("the accounts could not be read", out),
     }
 }
 
-fn pages(read: Read, out: &mut dyn Write) -> Exit {
+fn pages(read: Read, out: &mut Out<'_>) -> Exit {
     let rows: Vec<PageRow> = PageId::ALL
         .iter()
         .map(|page| PageRow {
@@ -301,7 +315,7 @@ fn pages(read: Read, out: &mut dyn Write) -> Exit {
     })
 }
 
-fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     if args.confirm.json {
         say_error(
             out,
@@ -310,7 +324,7 @@ fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut dyn Write) -> Exit 
         return Exit::Usage;
     }
 
-    let launcher = Arc::new(root::helper());
+    let launcher = Arc::new(root::helper(out.settings().color));
     let transport: Arc<dyn Transport> = if launcher.mode() == Mode::DryRun {
         Arc::new(DryRunTransport)
     } else {
@@ -326,12 +340,14 @@ fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut dyn Write) -> Exit 
         runtime.handle(),
         Arc::new(SystemDiagnostics::system(launcher)),
         transport,
-        &mut Terminal,
+        &mut Terminal {
+            color: out.settings().color,
+        },
         out,
     )
 }
 
-fn update(args: &Update, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+fn update(args: &Update, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     let garuda_update = Programs::check().garuda_update;
 
@@ -351,8 +367,10 @@ fn update(args: &Update, runtime: &Runtime, out: &mut dyn Write) -> Exit {
         args.confirm,
         None,
         runtime.handle(),
-        root::launcher(),
-        &mut Terminal,
+        root::launcher(out.settings().color),
+        &mut Terminal {
+            color: out.settings().color,
+        },
         out,
     )
 }

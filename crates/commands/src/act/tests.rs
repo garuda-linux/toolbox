@@ -4,6 +4,7 @@ use toolbox_cli::output::Mark;
 
 use super::{TaskRow, task_listing};
 use crate::change::Refused;
+use crate::out::{Out, Settings};
 
 fn row(id: &str, available: bool, asks_first: bool) -> TaskRow {
     TaskRow {
@@ -49,7 +50,13 @@ fn a_refusal_under_json_is_one_error_line() {
     };
 
     let mut out = Vec::new();
-    let exit = super::run(Err(refused), confirm, None, &runtime, &mut out);
+    let exit = super::run(
+        Err(refused),
+        confirm,
+        None,
+        &runtime,
+        &mut Out::new(&mut out, Settings::default()),
+    );
 
     assert_eq!(exit, Exit::Unavailable);
     assert_eq!(
@@ -74,7 +81,13 @@ fn nothing_to_do_under_json_is_an_empty_plan_and_ends_with_0() {
     };
 
     let mut out = Vec::new();
-    let exit = super::run(Err(nothing), confirm, None, &runtime, &mut out);
+    let exit = super::run(
+        Err(nothing),
+        confirm,
+        None,
+        &runtime,
+        &mut Out::new(&mut out, Settings::default()),
+    );
 
     assert_eq!(exit, Exit::Success);
     assert_eq!(

@@ -5,7 +5,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 use std::path::PathBuf;
 
 use clap::ValueEnum as _;
@@ -22,6 +22,7 @@ use toolbox_plan::SchemeId;
 use toolbox_services::catalogs::catalog_dir;
 
 use super::out::Listing;
+use crate::out::Out;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct SettingRow {
@@ -47,14 +48,14 @@ pub enum SettingError {
     NotInFile,
 }
 
-pub fn command(command: SettingsCommand, out: &mut dyn Write) -> Exit {
+pub fn command(command: SettingsCommand, out: &mut Out<'_>) -> Exit {
     let paths = Paths::from_process();
     let file = paths.settings_file();
     let autostart = Autostart::new(paths.autostart_dir(), PathBuf::from(DESKTOP_FILE));
     let loaded = Settings::load(&file);
     if let Some(problem) = &loaded.problem {
         let text = format!("the settings file is unusable, the defaults are shown: {problem}");
-        writeln!(out, "{}", crate::paint().warning(&text)).ok();
+        writeln!(out, "{}", out.paint().warning(&text)).ok();
     }
 
     let settings = loaded.settings;
@@ -288,7 +289,7 @@ fn scheme_name(id: Option<&SchemeId>) -> String {
     id.map_or_else(|| "system".to_owned(), ToString::to_string)
 }
 
-fn usage(message: &str, out: &mut dyn Write) -> Exit {
+fn usage(message: &str, out: &mut Out<'_>) -> Exit {
     crate::say_error(out, message);
     Exit::Usage
 }

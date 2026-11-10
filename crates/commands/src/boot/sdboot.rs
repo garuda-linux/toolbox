@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
@@ -10,6 +10,7 @@ use serde::Serialize;
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, KernelArgs, Read};
+use toolbox_cli::output::ColorMode;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain, SdBootKernel};
 use toolbox_core::features::boot::view::EntryRow;
@@ -22,6 +23,7 @@ use super::entry_listing;
 use crate::act::run;
 use crate::change::{Refused, fresh};
 use crate::names::kernel_names;
+use crate::out::Out;
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
 
@@ -79,8 +81,8 @@ pub fn rows(menu: &SdBootMenu) -> Vec<EntryRow> {
         .collect()
 }
 
-pub fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
-    let Some(menu) = read_menu() else {
+pub fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
+    let Some(menu) = read_menu(out.settings().color) else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 
@@ -94,7 +96,7 @@ pub fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
             .as_ref()
             .map_or_else(String::new, |list| list.join(" "));
 
-        let paint = crate::paint();
+        let paint = out.paint();
 
         let facts = paint.facts(
             "Boot menu (systemd-boot)",
@@ -116,15 +118,15 @@ pub fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
     Exit::Success
 }
 
-pub fn entries(read: Read, out: &mut dyn Write) -> Exit {
-    match read_menu() {
+pub fn entries(read: Read, out: &mut Out<'_>) -> Exit {
+    match read_menu(out.settings().color) {
         Some(menu) => print(read, &rows(&menu), out, entry_listing),
         None => unavailable("the systemd-boot menu could not be read", out),
     }
 }
 
-fn read_menu() -> Option<SdBootMenu> {
-    let source = SystemBootMenu::system(Arc::new(crate::root::helper()));
+fn read_menu(color: ColorMode) -> Option<SdBootMenu> {
+    let source = SystemBootMenu::system(Arc::new(crate::root::helper(color)));
 
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::SdBoot(menu) => Some(menu),
@@ -139,13 +141,13 @@ fn read_menu() -> Option<SdBootMenu> {
     }
 }
 
-pub fn set(args: &BootSet, snapshot: &Snapshot, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn set(args: &BootSet, snapshot: &Snapshot, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     // The page's own edits know where systemd-boot keeps them.
     if is_kernel_key(args.key) {
         return run(super::set(args, snapshot), args.confirm, None, runtime, out);
     }
 
-    let Some(menu) = read_menu() else {
+    let Some(menu) = read_menu(out.settings().color) else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 
@@ -159,9 +161,9 @@ pub fn kernel_default(
     args: &KernelArgs,
     snapshot: &Snapshot,
     runtime: &Runtime,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
-    let Some(menu) = read_menu() else {
+    let Some(menu) = read_menu(out.settings().color) else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 

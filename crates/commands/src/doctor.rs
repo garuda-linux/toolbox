@@ -8,7 +8,7 @@ mod facts;
 mod tests;
 
 use std::fmt::Write as _;
-use std::io::Write;
+use std::io::Write as _;
 
 use serde::Serialize;
 use tokio::runtime::Runtime;
@@ -18,7 +18,8 @@ use toolbox_cli::output::{Mark, Paint, Row, json};
 
 pub use self::checks::checks;
 pub use self::facts::Facts;
-use super::{out, spinner};
+use super::spinner;
+use crate::out::Out;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "kebab-case")]
@@ -93,14 +94,14 @@ pub fn text(checks: &[Check], paint: Paint) -> String {
 }
 
 /// Gathers the facts, prints the checks and exits 9 when one needs a fix.
-pub fn run(read: Read, runtime: &Runtime, out: &mut dyn Write) -> Exit {
-    let facts = spinner::while_reading(read.json, || facts::gather(runtime));
+pub fn run(read: Read, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
+    let facts = spinner::while_reading(read.json || out.quiet(), || facts::gather(runtime));
     let found = checks(&facts);
 
     let shown = if read.json {
         json(&found)
     } else {
-        text(&found, out::paint())
+        text(&found, out.paint())
     };
 
     write!(out, "{shown}").ok();

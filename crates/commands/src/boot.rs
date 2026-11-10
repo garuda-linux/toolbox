@@ -8,7 +8,6 @@ mod show;
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
@@ -18,6 +17,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{
     BootCommand, BootKey, BootSet, DkmsBuild, DkmsCommand, KernelArgs, ParamCommand,
 };
+use toolbox_cli::output::ColorMode;
 use toolbox_core::domains::DkmsBuilds;
 use toolbox_core::features::boot::edit::{Edit, EditProblem, edit};
 use toolbox_core::features::boot::{Flag, shown};
@@ -38,6 +38,7 @@ use super::filter::print_all;
 use super::names::kernel_names;
 use super::out::failure;
 use super::{system, unavailable};
+use crate::out::Out;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct BootView {
@@ -61,7 +62,7 @@ pub struct ModuleRow {
     pub state: &'static str,
 }
 
-pub fn command(command: BootCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: BootCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     let sdboot = snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot);
 
@@ -93,13 +94,13 @@ pub fn command(command: BootCommand, runtime: &Runtime, out: &mut dyn Write) -> 
     }
 }
 
-pub fn kernel_default(args: &KernelArgs, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn kernel_default(args: &KernelArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     if snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot) {
         return sdboot::kernel_default(args, &snapshot, runtime, out);
     }
 
-    let Some(menu) = read_menu() else {
+    let Some(menu) = read_menu(out.settings().color) else {
         return unavailable("the boot menu could not be read", out);
     };
 
@@ -107,17 +108,18 @@ pub fn kernel_default(args: &KernelArgs, runtime: &Runtime, out: &mut dyn Write)
     run(planned, args.confirm, None, runtime, out)
 }
 
-pub fn dkms(command: DkmsCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn dkms(command: DkmsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let quiet = !matches!(&command, DkmsCommand::List(read) if !read.json);
-    let entries = match super::spinner::while_reading(quiet, || Dkms::system().status()) {
-        Ok(entries) => entries,
-        Err(ProbeError::Unavailable) => Vec::new(),
-        Err(ProbeError::Failed(reason)) => {
-            tracing::warn!("dkms status: {reason}");
-            failure(out, "dkms could not list its modules", &reason);
-            return Exit::Unavailable;
-        }
-    };
+    let entries =
+        match super::spinner::while_reading(quiet || out.quiet(), || Dkms::system().status()) {
+            Ok(entries) => entries,
+            Err(ProbeError::Unavailable) => Vec::new(),
+            Err(ProbeError::Failed(reason)) => {
+                tracing::warn!("dkms status: {reason}");
+                failure(out, "dkms could not list its modules", &reason);
+                return Exit::Unavailable;
+            }
+        };
 
     match command {
         DkmsCommand::List(list) => print_all(&list, &module_rows(&entries), out, module_listing),
@@ -324,8 +326,8 @@ fn path_or_none(value: &str) -> String {
     }
 }
 
-pub(super) fn read_menu() -> Option<GrubMenu> {
-    let source = SystemBootMenu::system(Arc::new(super::root::helper()));
+pub(super) fn read_menu(color: ColorMode) -> Option<GrubMenu> {
+    let source = SystemBootMenu::system(Arc::new(super::root::helper(color)));
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::Known(menu) => Some(menu),
         other @ (MenuRead::SdBoot(_)

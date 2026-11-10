@@ -12,7 +12,7 @@ mod planned;
 mod show;
 mod typing;
 
-use std::io::{IsTerminal as _, Write};
+use std::io::{IsTerminal as _, Write as _};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -21,7 +21,7 @@ use tokio::runtime::Handle;
 use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_cli::confirm::{Prompt, consent};
-use toolbox_cli::output::{Paint, Style};
+use toolbox_cli::output::{ColorMode, Paint};
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{Plan, StepId};
@@ -36,6 +36,7 @@ pub(super) use self::planned::planned;
 use self::planned::planned_out;
 use self::show::Show;
 use super::interrupt::{self, Stopper};
+use crate::out::{Out, Settings};
 
 const LOOK_AGAIN: Duration = Duration::from_millis(100);
 
@@ -55,14 +56,15 @@ struct Attempt<'a> {
 
 enum Look {
     Text(Show),
-    Json(Events),
+    /// With the paint of notes on standard error.
+    Json(Events, Paint),
 }
 
 impl Look {
     fn report(&mut self, report: &Report) -> String {
         match self {
             Self::Text(show) => show.report(report),
-            Self::Json(events) => events.report(report),
+            Self::Json(events, _) => events.report(report),
         }
     }
 
@@ -70,8 +72,8 @@ impl Look {
     fn note(&mut self, text: &str) -> String {
         match self {
             Self::Text(show) => show.note(text),
-            Self::Json(_) => {
-                writeln!(std::io::stderr(), "{}", warned().warning(text)).ok();
+            Self::Json(_, warned) => {
+                writeln!(std::io::stderr(), "{}", warned.warning(text)).ok();
                 String::new()
             }
         }
@@ -113,7 +115,7 @@ pub fn carry_out(
     runtime: &Handle,
     launcher: Arc<dyn Launcher>,
     prompt: &mut dyn Prompt,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     carry_out_steps(plan, confirm, typed, runtime, launcher, prompt, out).exit
 }
@@ -131,13 +133,13 @@ pub fn carry_out_steps(
     runtime: &Handle,
     launcher: Arc<dyn Launcher>,
     prompt: &mut dyn Prompt,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Ended {
     if confirm.cannot_ask() {
-        return Ended::early(cannot_ask());
+        return Ended::early(cannot_ask(out.settings()));
     }
 
-    let paint = super::paint();
+    let paint = out.paint();
     if let Some(exit) = planned_out(paint, &plan, confirm, out) {
         return Ended::early(exit);
     }
@@ -169,7 +171,7 @@ pub fn carry_out_steps(
                 writeln!(
                     std::io::stderr(),
                     "{}",
-                    warned().warning(super::root::SUDO_NOTE)
+                    warned(out.settings().color).warning(super::root::SUDO_NOTE)
                 )
                 .ok();
             } else {
@@ -195,19 +197,19 @@ pub fn carry_out_steps(
 
 /// `--json` without `--yes` or `--dry-run`: nothing on standard output, the
 /// reason on standard error.
-pub fn cannot_ask() -> Exit {
-    let paint = warned();
+pub fn cannot_ask(settings: Settings) -> Exit {
+    let paint = warned(settings.color);
     let error = paint.error("--json cannot ask before a change");
     let hint = paint.hint("pass --yes to carry it out, or --dry-run to see the plan");
     writeln!(std::io::stderr(), "{error}\n{hint}").ok();
     Exit::NeedsYes
 }
 
-fn warned() -> Paint {
-    Paint::new(super::out::style_on(std::io::stderr().is_terminal()))
+fn warned(color: ColorMode) -> Paint {
+    Paint::new(super::out::style_on(color, std::io::stderr().is_terminal()))
 }
 
-fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut dyn Write) -> Ended {
+fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut Out<'_>) -> Ended {
     let Attempt {
         runtime,
         launcher,
@@ -216,10 +218,15 @@ fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut dyn Write) -> Ended {
     } = attempt;
 
     let look = if json {
-        Look::Json(Events::new(Box::new(Instant::now)))
+        Look::Json(
+            Events::new(Box::new(Instant::now)),
+            warned(out.settings().color),
+        )
     } else {
         let dry_run = launcher.mode() == Mode::DryRun;
-        Look::Text(Show::new(style(), dry_run, Box::new(Instant::now)))
+        Look::Text(
+            Show::new(out.paint().style(), dry_run, Box::new(Instant::now)).verbose(out.verbose()),
+        )
     };
 
     let stopper = Stopper::new(interrupt::listen(runtime));
@@ -272,7 +279,7 @@ fn follow(
     mut stopper: Stopper,
     mut look: Look,
     quiet: bool,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Ended {
     let mut ended = Ended::early(Exit::Failure);
     let mut cancelled = false;
@@ -338,7 +345,7 @@ fn follow(
     ended
 }
 
-fn stop(run: &Running, press: u8, look: &mut Look, out: &mut dyn Write) {
+fn stop(run: &Running, press: u8, look: &mut Look, out: &mut Out<'_>) {
     if let Some(command) = interrupt::command(press) {
         run.service.send(command);
     }
@@ -355,10 +362,4 @@ const fn exit_of(succeeded: bool, stopped: Option<Exit>) -> Exit {
         (false, Some(signal)) => signal,
         (false, None) => Exit::Failure,
     }
-}
-
-/// The look of the step lines, which leave room for the marks a terminal
-/// shows.
-fn style() -> Style {
-    super::paint().style()
 }

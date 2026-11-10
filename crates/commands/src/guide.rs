@@ -3,7 +3,7 @@ mod tests;
 
 pub mod terminal;
 
-use std::io::Write;
+use std::io::Write as _;
 
 use serde::Serialize;
 use toolbox_cli::Exit;
@@ -12,7 +12,7 @@ use toolbox_cli::output::{Paint, Row, Style, json};
 use toolbox_guide::Page;
 
 use crate::filter::{self, Named};
-use crate::out::{self, Listing};
+use crate::out::{self, Listing, Out};
 
 /// The width text wraps at when the output is no terminal.
 const PIPE_WIDTH: usize = 80;
@@ -51,14 +51,14 @@ impl Named for GuideRow {
     }
 }
 
-pub fn command(command: GuideCommand, out: &mut dyn Write) -> Exit {
+pub fn command(command: GuideCommand, out: &mut Out<'_>) -> Exit {
     match command {
         GuideCommand::List(list) => self::list(&list, out),
         GuideCommand::Show(args) => show(&args, out),
     }
 }
 
-fn list(list: &ReadList, out: &mut dyn Write) -> Exit {
+fn list(list: &ReadList, out: &mut Out<'_>) -> Exit {
     let rows: Vec<GuideRow> = toolbox_guide::embedded()
         .pages()
         .iter()
@@ -87,7 +87,7 @@ fn list(list: &ReadList, out: &mut dyn Write) -> Exit {
     })
 }
 
-fn show(args: &GuideShow, out: &mut dyn Write) -> Exit {
+fn show(args: &GuideShow, out: &mut Out<'_>) -> Exit {
     let file = format!("{}.md", args.page.as_ref());
     let Some(page) = toolbox_guide::embedded().page(&file) else {
         let what = format!(
@@ -98,7 +98,7 @@ fn show(args: &GuideShow, out: &mut dyn Write) -> Exit {
         return out::unavailable(&what, out);
     };
 
-    let paint = out::paint();
+    let paint = out.paint();
     if args.read.json {
         let shown = Shown {
             page: name_of(page),
@@ -120,7 +120,7 @@ fn show(args: &GuideShow, out: &mut dyn Write) -> Exit {
         return Exit::Success;
     }
 
-    let width = out::columns().unwrap_or(PIPE_WIDTH);
+    let width = out.columns().unwrap_or(PIPE_WIDTH);
     write!(out, "{}", terminal::page(page, paint, width)).ok();
     Exit::Success
 }

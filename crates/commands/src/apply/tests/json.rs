@@ -9,6 +9,7 @@ use toolbox_services::apply::Launcher;
 
 use super::{Answers, Refusing, helper, plan};
 use crate::apply::carry_out;
+use crate::out::{Out, Settings};
 
 fn json(yes: bool, dry_run: bool) -> Confirm {
     Confirm {
@@ -33,7 +34,7 @@ fn carried(plan: Plan, confirm: Confirm, launcher: Arc<dyn Launcher>) -> (Exit, 
         runtime.handle(),
         launcher,
         &mut terminal,
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     let text = String::from_utf8(out).unwrap();

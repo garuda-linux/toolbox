@@ -7,7 +7,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 use std::path::Path;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
@@ -31,6 +31,7 @@ use toolbox_system::{ConfigFileSource, EditFolder, ReadProblem, SystemConfigFile
 use super::act::run;
 use super::out::{self, Listing as Shown};
 use super::unavailable;
+use crate::out::Out;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct FileRow {
@@ -60,12 +61,12 @@ impl Drop for Removed<'_> {
     }
 }
 
-pub fn command(command: ConfigsCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: ConfigsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let Ok(catalog) = ConfigFileCatalog::load(&catalog_dir(|key| std::env::var_os(key))) else {
         return unavailable("the config files catalog could not be read", out);
     };
 
-    let source = SystemConfigFiles::system(Arc::new(super::root::helper()));
+    let source = SystemConfigFiles::system(Arc::new(super::root::helper(out.settings().color)));
     let listing = source.listing(&specs(&catalog));
 
     match command {
@@ -112,7 +113,7 @@ fn list(
     list: &ReadList,
     catalog: &ConfigFileCatalog,
     listing: &Listing,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     super::filter::print_all(list, &files(catalog, listing), out, file_listing)
 }
@@ -161,7 +162,7 @@ fn show(
     catalog: &ConfigFileCatalog,
     listing: &Listing,
     source: &dyn ConfigFileSource,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     let found = view_target(catalog, listing, key)
         .map(Target::Root)
@@ -199,7 +200,7 @@ fn edit(
     listing: &Listing,
     source: &dyn ConfigFileSource,
     runtime: &Runtime,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     if args.confirm.json {
         // The editor takes the terminal, which JSON Lines leave to nobody.
@@ -303,7 +304,7 @@ fn review(
     original: &ConfigText,
     args: &ConfigEdit,
     runtime: &Runtime,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     let ended = edit_in_place(editor, Path::new(copy.as_str()), out);
     if ended != Exit::Success {
@@ -338,7 +339,7 @@ fn review(
 
 /// The editor on `file`, in this terminal, as the user. The path is
 /// absolute, so no editor reads it as an option.
-fn edit_in_place(editor: Editor, file: &Path, out: &mut dyn Write) -> Exit {
+fn edit_in_place(editor: Editor, file: &Path, out: &mut Out<'_>) -> Exit {
     let program = toolbox_system::locate_editor(editor.program())
         .unwrap_or_else(|| editor.program().path().into());
 
@@ -363,7 +364,7 @@ fn edit_in_place(editor: Editor, file: &Path, out: &mut dyn Write) -> Exit {
     }
 }
 
-fn unknown(key: &str, out: &mut dyn Write) -> Exit {
+fn unknown(key: &str, out: &mut Out<'_>) -> Exit {
     crate::say_error(
         out,
         &format!("no config file is called `{key}`, see `configs list`"),
@@ -371,7 +372,7 @@ fn unknown(key: &str, out: &mut dyn Write) -> Exit {
 
     let known = super::names::config_keys();
     if let Some(hint) = did_you_mean(key, known.iter().map(String::as_str)) {
-        writeln!(out, "{}", crate::paint().hint(&hint)).ok();
+        writeln!(out, "{}", out.paint().hint(&hint)).ok();
     }
 
     Exit::Unavailable

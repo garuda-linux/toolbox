@@ -4,12 +4,13 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 
 use toolbox_cli::Exit;
 use toolbox_cli::output::{Paint, json_line};
 
 use super::{StatusView, brief, text};
+use crate::out::Out;
 
 pub enum Shape {
     Text { paint: Paint, verbose: bool },
@@ -57,7 +58,7 @@ pub fn watch(
     mut read: impl FnMut() -> StatusView,
     mut stopped: impl FnMut() -> bool,
     clock: impl Fn() -> String,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     loop {
         let view = read();

@@ -11,6 +11,7 @@ use toolbox_plan::{Plan, PlannedAction, RootAction, StepId};
 use super::{Script, plan, run, terminal};
 use crate::apply::carry_out;
 use crate::interrupt;
+use crate::out::{Out, Settings};
 
 #[test]
 fn a_cancelled_step_ends_the_command_as_cancelled() {
@@ -93,7 +94,7 @@ fn the_first_ctrl_c_lets_the_step_end_and_skips_the_rest() {
         runtime.handle(),
         finishing_helper(),
         &mut terminal(&[]),
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     ended.store(true, Ordering::Relaxed);

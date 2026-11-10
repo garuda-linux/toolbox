@@ -5,7 +5,6 @@
 mod tests;
 
 use std::collections::BTreeSet;
-use std::io::Write;
 
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
@@ -27,20 +26,35 @@ use super::act::run;
 use super::change::{Refused, fresh, page_edit, why};
 use super::terminal::{Terminal, wipe, without_line_end};
 use super::{groups, system, users};
+use crate::out::Out;
 
 const ADMIN_GROUP: &str = "wheel";
 
-pub fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     match command {
         UsersCommand::List(list) => users(&list.read, list.all, &snapshot, out),
         UsersCommand::Add(args) => {
-            let planned = add(&args, &snapshot, &mut Terminal);
+            let planned = add(
+                &args,
+                &snapshot,
+                &mut Terminal {
+                    color: out.settings().color,
+                },
+            );
+
             run(planned, args.confirm, None, runtime, out)
         }
         UsersCommand::Edit(args) => run(edit(&args, &snapshot), args.confirm, None, runtime, out),
         UsersCommand::Password(args) => {
-            let planned = password(&args, &snapshot, &mut Terminal);
+            let planned = password(
+                &args,
+                &snapshot,
+                &mut Terminal {
+                    color: out.settings().color,
+                },
+            );
+
             run(planned, args.confirm, None, runtime, out)
         }
         UsersCommand::Lock(args) => run(
@@ -59,13 +73,14 @@ pub fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut dyn Wri
         ),
         UsersCommand::Remove(args) => {
             let typed = args.delete_home.then(|| args.user.to_string());
+
             let planned = remove(&args, &snapshot);
             run(planned, args.confirm, typed.as_deref(), runtime, out)
         }
     }
 }
 
-pub fn groups_command(command: GroupsCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn groups_command(command: GroupsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     match command {
         GroupsCommand::List(list) => groups(&list, &snapshot, out),

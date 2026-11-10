@@ -13,6 +13,7 @@ use toolbox_plan::{Plan, RootAction, StepId};
 use toolbox_services::apply::Launcher;
 
 use super::carry_out;
+use crate::out::{Out, Settings};
 
 struct Script(String);
 
@@ -105,7 +106,7 @@ fn run(plan: Plan, yes: bool, prompt: &mut Answers, outcome: Outcome) -> (Exit, 
         runtime.handle(),
         helper(outcome),
         prompt,
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     (exit, String::from_utf8(out).unwrap())
@@ -193,7 +194,7 @@ fn through(words: &'static str, prompt: &mut Answers) -> (Exit, String) {
         runtime.handle(),
         launcher,
         prompt,
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     (exit, String::from_utf8(out).unwrap())
@@ -272,7 +273,7 @@ fn a_dry_run_prints_the_plan_and_never_asks_or_runs() {
         runtime.handle(),
         helper(Outcome::Succeeded),
         &mut piped,
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     let out = String::from_utf8(out).unwrap();

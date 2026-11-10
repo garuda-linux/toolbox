@@ -16,13 +16,22 @@ use toolbox_services::apply::{Problem, Report};
 use toolbox_system::pkexec::Refusal;
 
 use super::elapsed::elapsed;
-use crate::out::{failure_text, verbose};
+use crate::out::failure_text;
 
 /// Where the time of a step comes from, so the tests can set it.
 pub type Clock = Box<dyn Fn() -> Instant>;
 
+/// A failed step's program words: a hint how to see them, or with
+/// `--verbose` the words.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Words {
+    Hinted,
+    Shown,
+}
+
 pub struct Show {
     paint: Paint,
+    words: Words,
     /// Lines that wait for their mark start this far in, so their text
     /// lines up with the marked ones.
     room: &'static str,
@@ -46,6 +55,7 @@ impl Show {
     pub fn new(style: Style, dry_run: bool, clock: Clock) -> Self {
         Self {
             paint: Paint::new(style),
+            words: Words::Hinted,
             room: if style == Style::Color { "  " } else { "" },
             closing: if dry_run {
                 "Test mode, nothing was changed"
@@ -61,6 +71,12 @@ impl Show {
             at_start: true,
             cancelled: None,
         }
+    }
+
+    #[must_use = "the verbose show is only of use once it reports"]
+    pub const fn verbose(mut self, verbose: bool) -> Self {
+        self.words = if verbose { Words::Shown } else { Words::Hinted };
+        self
     }
 
     /// The text `report` adds, maybe none.
@@ -159,7 +175,13 @@ impl Show {
                 format!("{error}\n{}", self.paint.hint(hint))
             }
             Problem::HelperFailed { kind, detail } => {
-                let text = failure_text(self.paint, failed(*kind), detail, verbose());
+                let text = failure_text(
+                    self.paint,
+                    failed(*kind),
+                    detail,
+                    self.words == Words::Shown,
+                );
+
                 text.trim_end_matches('\n').to_owned()
             }
         };

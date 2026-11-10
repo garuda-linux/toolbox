@@ -8,7 +8,7 @@ mod rows;
 mod tests;
 
 use std::collections::BTreeSet;
-use std::io::Write;
+use std::io::Write as _;
 
 pub use aur::{AurInfo, AurRow, aur_info_text, aur_listing};
 pub use rows::{PackageInfo, PackageRow, info_text, listing};
@@ -18,7 +18,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{
     PackageArgs, PackageInstall, PackageShow, PackagesCommand, PackagesSearch,
 };
-use toolbox_cli::output::json;
+use toolbox_cli::output::{Paint, json};
 use toolbox_config::Paths;
 use toolbox_core::domains::{InstalledPackages, SyncPackages};
 use toolbox_core::features::packages::list::{Catalog, Filter};
@@ -31,8 +31,9 @@ use super::act::run;
 use super::change::{Refused, fresh};
 use super::out::{failure, print};
 use super::{spinner, system, unavailable};
+use crate::out::Out;
 
-pub fn command(command: PackagesCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: PackagesCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     match command {
         PackagesCommand::Search(args) if args.aur => search_aur(&args, &aur_copy(), out),
         PackagesCommand::Search(args) => search(&args, &Libalpm::system(), out),
@@ -90,15 +91,18 @@ pub fn found(
         .collect())
 }
 
-fn search(args: &PackagesSearch, source: &dyn PackageIndexSource, out: &mut dyn Write) -> Exit {
-    match spinner::while_reading(args.read.json, || found(args, source)) {
+fn search(args: &PackagesSearch, source: &dyn PackageIndexSource, out: &mut Out<'_>) -> Exit {
+    match spinner::while_reading(args.read.json || out.quiet(), || found(args, source)) {
         Ok(rows) => print(args.read, &rows, out, listing),
         Err(error) => unreadable(&error, out),
     }
 }
 
-fn show(args: &PackageShow, source: &dyn PackageIndexSource, out: &mut dyn Write) -> Exit {
-    let read = spinner::while_reading(args.read.json, || source.details(&args.package));
+fn show(args: &PackageShow, source: &dyn PackageIndexSource, out: &mut Out<'_>) -> Exit {
+    let read = spinner::while_reading(args.read.json || out.quiet(), || {
+        source.details(&args.package)
+    });
+
     let details = match read {
         Ok(Some(details)) => details,
         Ok(None) => {
@@ -109,6 +113,7 @@ fn show(args: &PackageShow, source: &dyn PackageIndexSource, out: &mut dyn Write
                     args.package
                 ),
             );
+
             return Exit::Usage;
         }
         Err(error) => return unreadable(&error, out),
@@ -118,7 +123,7 @@ fn show(args: &PackageShow, source: &dyn PackageIndexSource, out: &mut dyn Write
     if args.read.json {
         write!(out, "{}", json(&info)).ok();
     } else {
-        write!(out, "{}", info_text(&info)).ok();
+        write!(out, "{}", info_text(out.paint(), &info)).ok();
     }
 
     Exit::Success
@@ -148,22 +153,22 @@ fn listed(values: &[String]) -> String {
     }
 }
 
-fn facts_text(title: &str, facts: &[(&str, String)]) -> String {
+fn facts_text(paint: Paint, title: &str, facts: &[(&str, String)]) -> String {
     let pairs: Vec<(&str, &str)> = facts
         .iter()
         .map(|(name, value)| (*name, value.as_str()))
         .collect();
 
-    super::paint().facts(title, &pairs)
+    paint.facts(title, &pairs)
 }
 
-fn search_aur(args: &PackagesSearch, aur: &dyn AurSource, out: &mut dyn Write) -> Exit {
+fn search_aur(args: &PackagesSearch, aur: &dyn AurSource, out: &mut Out<'_>) -> Exit {
     let installed = match installed() {
         Ok(installed) => installed,
         Err(error) => return unreadable(&error, out),
     };
 
-    let read = spinner::while_reading(args.read.json, || {
+    let read = spinner::while_reading(args.read.json || out.quiet(), || {
         aur::found(args.text.as_deref(), aur, &installed)
     });
 
@@ -173,13 +178,13 @@ fn search_aur(args: &PackagesSearch, aur: &dyn AurSource, out: &mut dyn Write) -
     }
 }
 
-fn show_aur(args: &PackageShow, aur: &dyn AurSource, out: &mut dyn Write) -> Exit {
+fn show_aur(args: &PackageShow, aur: &dyn AurSource, out: &mut Out<'_>) -> Exit {
     let installed = match installed() {
         Ok(installed) => installed,
         Err(error) => return unreadable(&error, out),
     };
 
-    let read = spinner::while_reading(args.read.json, || {
+    let read = spinner::while_reading(args.read.json || out.quiet(), || {
         aur::aur_info(&args.package, aur, &installed)
     });
 
@@ -201,13 +206,13 @@ fn show_aur(args: &PackageShow, aur: &dyn AurSource, out: &mut dyn Write) -> Exi
     if args.read.json {
         write!(out, "{}", json(&info)).ok();
     } else {
-        write!(out, "{}", aur_info_text(&info)).ok();
+        write!(out, "{}", aur_info_text(out.paint(), &info)).ok();
     }
 
     Exit::Success
 }
 
-fn aur_unreadable(error: &AurError, out: &mut dyn Write) -> Exit {
+fn aur_unreadable(error: &AurError, out: &mut Out<'_>) -> Exit {
     match error {
         AurError::Waiting { next } => unavailable(&aur::waiting_text(*next), out),
         AurError::Download(reason) | AurError::Storage(reason) => {
@@ -217,7 +222,7 @@ fn aur_unreadable(error: &AurError, out: &mut dyn Write) -> Exit {
     }
 }
 
-fn unreadable(error: &ProbeError, out: &mut dyn Write) -> Exit {
+fn unreadable(error: &ProbeError, out: &mut Out<'_>) -> Exit {
     match error {
         ProbeError::Unavailable => unavailable("pacman's databases could not be read", out),
         ProbeError::Failed(reason) => {

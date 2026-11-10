@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 use std::net::IpAddr;
 use std::sync::Arc;
 
@@ -26,6 +26,7 @@ use super::act::run;
 use super::change::{Refused, fresh, page_edit, why};
 use super::out::{Listing, failure};
 use super::{json, system, unavailable};
+use crate::out::Out;
 
 #[derive(Debug, Default, PartialEq, Eq, Serialize)]
 pub struct StatusView {
@@ -55,7 +56,7 @@ struct PublicAddress {
     address: String,
 }
 
-pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     match command {
         NetworkCommand::Show(read) => status(read, &SystemNetwork::system(), out),
         NetworkCommand::Radio(args) => radio(args.radio, args.state.on(), out),
@@ -168,12 +169,12 @@ pub fn view(source: &dyn NetworkSource) -> StatusView {
     }
 }
 
-fn status(read: Read, source: &dyn NetworkSource, out: &mut dyn Write) -> Exit {
-    let view = super::spinner::while_reading(read.json, || view(source));
+fn status(read: Read, source: &dyn NetworkSource, out: &mut Out<'_>) -> Exit {
+    let view = super::spinner::while_reading(read.json || out.quiet(), || view(source));
     if read.json {
         write!(out, "{}", json(&view)).ok();
     } else {
-        let paint = crate::paint();
+        let paint = out.paint();
         let absent = if view.unread.contains(&"router") {
             "not read"
         } else {
@@ -211,7 +212,7 @@ fn status(read: Read, source: &dyn NetworkSource, out: &mut dyn Write) -> Exit {
 
 /// The switch runs at once through rfkill or NetworkManager, as the page
 /// does, so it asks nothing.
-fn radio(radio: Radio, on: bool, out: &mut dyn Write) -> Exit {
+fn radio(radio: Radio, on: bool, out: &mut Out<'_>) -> Exit {
     let (target, blocked) = match radio {
         Radio::Wifi => (RadioTarget::Wifi, !on),
         Radio::Bluetooth => (RadioTarget::Bluetooth, !on),
@@ -228,7 +229,7 @@ fn radio(radio: Radio, on: bool, out: &mut dyn Write) -> Exit {
     }
 }
 
-fn drivers(read: &ReadList, out: &mut dyn Write) -> Exit {
+fn drivers(read: &ReadList, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     let Some(facts) = snapshot.part::<ModuleFacts>() else {
         return unavailable("the drivers could not be read", out);
@@ -306,7 +307,7 @@ pub fn radio_listing(view: &StatusView) -> Listing<'static> {
     }
 }
 
-fn public_address(read: Read, out: &mut dyn Write) -> Exit {
+fn public_address(read: Read, out: &mut Out<'_>) -> Exit {
     match lookup_address(&KdeGeoIp::new()) {
         Ok(address) => {
             write!(out, "{}", address_shown(address, read.json)).ok();
@@ -339,7 +340,7 @@ fn address_shown(address: IpAddr, as_json: bool) -> String {
 }
 
 /// The tests change nothing, so they run without a question.
-fn tests(planned: Result<Plan, Refused>, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+fn tests(planned: Result<Plan, Refused>, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let confirm = Confirm {
         yes: true,
         dry_run: false,

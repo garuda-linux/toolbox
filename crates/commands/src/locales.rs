@@ -1,8 +1,6 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
-
 use serde::Serialize;
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
@@ -19,6 +17,7 @@ use super::act::run;
 use super::change::{Refused, fresh, page_edit, why};
 use super::out::Listing;
 use super::{locales, system, unavailable};
+use crate::out::Out;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct PackRow {
@@ -29,7 +28,7 @@ pub struct PackRow {
     pub installed: bool,
 }
 
-pub fn command(command: LocalesCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: LocalesCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     // The list reads the system behind its own spinner.
     if let LocalesCommand::List(list) = command {
         return locales(&list, out);
@@ -186,7 +185,7 @@ pub fn pack_rows(snapshot: &Snapshot) -> Option<Vec<PackRow>> {
     )
 }
 
-fn packs(read: &ReadList, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
+fn packs(read: &ReadList, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
     match pack_rows(snapshot) {
         Some(rows) => super::filter::print_all(read, &rows, out, pack_listing),
         None => unavailable("pacman's databases could not be read", out),

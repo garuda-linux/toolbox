@@ -6,11 +6,11 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
 use std::sync::Arc;
 
 use toolbox_aur::AurSource;
 use toolbox_cli::Exit;
+use toolbox_cli::output::ColorMode;
 use toolbox_core::domains::AccountLockFlags;
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
 use toolbox_core::features::{AUR_PACKAGES, Refusal, USER_LOCKS, Unchecked};
@@ -18,6 +18,7 @@ use toolbox_core::{ChangeSet, SavedChanges, Snapshot};
 use toolbox_system::{HelperLocks, LockSource as _};
 
 use super::said::say;
+use crate::out::Out;
 
 /// The parts of a snapshot only a read outside the probe gives.
 pub trait PageReads {
@@ -29,12 +30,14 @@ pub trait PageReads {
 }
 
 pub struct SystemReads<'a> {
+    /// For the note when the helper goes through sudo.
+    pub color: ColorMode,
     pub aur: &'a dyn AurSource,
 }
 
 impl PageReads for SystemReads<'_> {
     fn locks(&self) -> Option<AccountLockFlags> {
-        HelperLocks(Arc::new(crate::root::helper()))
+        HelperLocks(Arc::new(crate::root::helper(self.color)))
             .locks()
             .inspect_err(|problem| {
                 tracing::warn!("the lock state of accounts is unknown: {problem:?}");
@@ -91,7 +94,7 @@ pub fn checked(
     Ok(changes)
 }
 
-pub fn refused(refusal: Refusal, out: &mut dyn Write) -> Exit {
+pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {
     let Refusal::GuardsWaiting { guard } = refusal;
     let (error, hint) = match guard {
         USER_LOCKS => (

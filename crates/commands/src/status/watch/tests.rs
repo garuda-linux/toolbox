@@ -4,6 +4,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::output::{Paint, Style};
 
 use super::{Shape, Watch, watch};
+use crate::out::{Out, Settings};
 use crate::status::{Package, Part, StatusView};
 
 fn view(updates: usize) -> StatusView {
@@ -89,7 +90,7 @@ fn a_watch_reads_until_ctrl_c_and_ends_with_0() {
         || reads.pop_front().unwrap(),
         || waits.pop_front().unwrap(),
         || "09:00".to_owned(),
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     assert_eq!(exit, Exit::Success);

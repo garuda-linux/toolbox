@@ -5,7 +5,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 
 use serde::Serialize;
 use tokio::runtime::Runtime;
@@ -25,6 +25,7 @@ use super::change::{Refused, why};
 use super::out::{Listing, failure};
 use super::terminal::{Terminal, without_line_end};
 use super::{json, system};
+use crate::out::Out;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct SystemRow {
@@ -44,7 +45,7 @@ pub struct Status {
     pub targets: Vec<String>,
 }
 
-pub fn command(command: BootRepairCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: BootRepairCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let live = system().part::<Host>().is_some_and(|host| host.live_iso);
     let facts = match SystemRepair::system().facts() {
         Ok(facts) => facts,
@@ -57,15 +58,30 @@ pub fn command(command: BootRepairCommand, runtime: &Runtime, out: &mut dyn Writ
     match command {
         BootRepairCommand::Show(read) => status(read, live, &facts, out),
         BootRepairCommand::Regenerate(args) => {
-            let planned =
-                offered(live, &args).and_then(|()| repair(&facts, &args, None, &mut Terminal));
+            let planned = offered(live, &args).and_then(|()| {
+                repair(
+                    &facts,
+                    &args,
+                    None,
+                    &mut Terminal {
+                        color: out.settings().color,
+                    },
+                )
+            });
 
             run(planned, args.confirm, None, runtime, out)
         }
         BootRepairCommand::Reinstall(args) => {
             let planned = offered(live, &args.repair).and_then(|()| {
                 let target = pick_target(&facts, &args.repair.system, args.target.as_deref())?;
-                repair(&facts, &args.repair, Some(&target), &mut Terminal)
+                repair(
+                    &facts,
+                    &args.repair,
+                    Some(&target),
+                    &mut Terminal {
+                        color: out.settings().color,
+                    },
+                )
             });
 
             run(planned, args.repair.confirm, None, runtime, out)
@@ -173,7 +189,7 @@ fn passphrase(args: &RepairArgs, prompt: &mut dyn Prompt) -> Result<Password, Re
         .map_err(|invalid| Refused::Rule(format!("the passphrase is not usable: {invalid}")))
 }
 
-fn status(read: Read, live: bool, facts: &RepairFacts, out: &mut dyn Write) -> Exit {
+fn status(read: Read, live: bool, facts: &RepairFacts, out: &mut Out<'_>) -> Exit {
     let view = Status {
         offered: live,
         firmware: match facts.firmware {
@@ -202,7 +218,7 @@ fn status(read: Read, live: bool, facts: &RepairFacts, out: &mut dyn Write) -> E
         return Exit::Success;
     }
 
-    let paint = crate::paint();
+    let paint = out.paint();
     let live = if live { "yes" } else { "no" };
     let summary = paint.facts(
         "Boot repair",

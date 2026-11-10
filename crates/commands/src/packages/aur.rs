@@ -9,7 +9,7 @@ use std::collections::BTreeSet;
 
 use serde::Serialize;
 use toolbox_aur::{AurError, AurSource, package_page};
-use toolbox_cli::output::{Mark, Row};
+use toolbox_cli::output::{Mark, Paint, Row};
 use toolbox_core::features::packages::aur::{AurCatalog, AurPackage, row_state, toggle};
 use toolbox_core::features::packages::queue::Refusal;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
@@ -227,7 +227,7 @@ pub fn aur_listing(rows: &[AurRow]) -> Listing<'_> {
 }
 
 /// The facts of one AUR package, the lists joined by commas.
-pub fn aur_info_text(info: &AurInfo) -> String {
+pub fn aur_info_text(paint: Paint, info: &AurInfo) -> String {
     let none = || "none".to_owned();
     let facts: Vec<(&str, String)> = vec![
         ("description", info.description.clone()),
@@ -256,7 +256,7 @@ pub fn aur_info_text(info: &AurInfo) -> String {
         ("keywords", listed(&info.keywords)),
     ];
 
-    facts_text(&info.name, &facts)
+    facts_text(paint, &info.name, &facts)
 }
 
 /// Why there is no copy yet, with the day of the next allowed download.

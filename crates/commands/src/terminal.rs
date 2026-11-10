@@ -13,13 +13,16 @@ use rustix::termios::{
 };
 use toolbox_cli::Exit;
 use toolbox_cli::confirm::Prompt;
-use toolbox_cli::output::Paint;
+use toolbox_cli::output::{ColorMode, Paint};
 use toolbox_plan::MAX_PASSWORD_BYTES;
 
 /// Standard input and output for the question before a change: both must
 /// be a terminal, an answer piped in could not have read the question.
-#[derive(Clone, Copy, Debug, Default)]
-pub struct Terminal;
+#[derive(Clone, Copy, Debug)]
+pub struct Terminal {
+    /// `--color`, for the question.
+    pub color: ColorMode,
+}
 
 impl Prompt for Terminal {
     fn is_terminal(&self) -> bool {
@@ -31,7 +34,7 @@ impl Prompt for Terminal {
 
         // A blank line sets the question apart from the plan above it. The
         // terminal is one by definition, the flags and NO_COLOR still count.
-        let paint = Paint::new(super::out::style_on(true));
+        let paint = Paint::new(super::out::style_on(self.color, true));
         write!(tty, "\n{} ", paint.question(question.trim_end())).ok()?;
         tty.flush().ok()?;
 

@@ -1,7 +1,7 @@
 //! The plan as the command line shows it before it runs: a list of steps,
 //! or JSON Lines under `--json`.
 
-use std::io::Write;
+use std::io::Write as _;
 
 use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
@@ -9,15 +9,11 @@ use toolbox_cli::output::{Paint, Row};
 use toolbox_plan::Plan;
 
 use super::events;
+use crate::out::Out;
 
 /// Shows the plan. `Some` when the command ends here: a dry run, nothing
 /// to do, or a step that would ask under `--json`.
-pub fn planned_out(
-    paint: Paint,
-    plan: &Plan,
-    confirm: Confirm,
-    out: &mut dyn Write,
-) -> Option<Exit> {
+pub fn planned_out(paint: Paint, plan: &Plan, confirm: Confirm, out: &mut Out<'_>) -> Option<Exit> {
     if confirm.json {
         let typing = plan
             .steps()

@@ -21,7 +21,7 @@ fn output_that_reached_its_reader_keeps_the_exit_code() {
     let mut out = Written::new(Vec::new());
     write!(out, "rows").ok();
 
-    assert_eq!(out.finish(Exit::Attention), Exit::Attention);
+    assert_eq!(out.finish(Exit::Attention), Ok(Exit::Attention));
 }
 
 #[test]
@@ -29,7 +29,7 @@ fn output_that_failed_ends_as_a_failure() {
     let mut out = Written::new(Failing(io::ErrorKind::StorageFull));
     write!(out, "rows").ok();
 
-    assert_eq!(out.finish(Exit::Success), Exit::Failure);
+    assert_eq!(out.finish(Exit::Success), Err(io::ErrorKind::StorageFull));
 }
 
 #[test]
@@ -37,5 +37,5 @@ fn a_reader_that_stopped_reading_ends_the_command_quietly() {
     let mut out = Written::new(Failing(io::ErrorKind::BrokenPipe));
     write!(out, "rows").ok();
 
-    assert_eq!(out.finish(Exit::Success), Exit::Success);
+    assert_eq!(out.finish(Exit::Success), Ok(Exit::Success));
 }

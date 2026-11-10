@@ -1,6 +1,6 @@
 //! `boot show` and `boot entries`: the GRUB settings and the menu.
 
-use std::io::Write;
+use std::io::Write as _;
 
 use toolbox_cli::Exit;
 use toolbox_cli::args::Read;
@@ -9,10 +9,11 @@ use toolbox_core::{ChangeSet, Snapshot};
 
 use super::listing::entry_listing;
 use super::{BootView, read_menu};
+use crate::out::Out;
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
 
-pub(super) fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit {
+pub(super) fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
     let Some(now) = shown(snapshot, &ChangeSet::default()) else {
         return unavailable("GRUB is not the boot loader here", out);
     };
@@ -42,7 +43,7 @@ pub(super) fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit
             .as_ref()
             .map_or_else(String::new, |list| list.join(" "));
 
-        let paint = crate::paint();
+        let paint = out.paint();
         let facts = paint.facts(
             "Boot menu",
             &[
@@ -67,8 +68,8 @@ pub(super) fn show(read: Read, snapshot: &Snapshot, out: &mut dyn Write) -> Exit
     Exit::Success
 }
 
-pub(super) fn entries(read: Read, out: &mut dyn Write) -> Exit {
-    match read_menu() {
+pub(super) fn entries(read: Read, out: &mut Out<'_>) -> Exit {
+    match read_menu(out.settings().color) {
         Some(menu) => print(
             read,
             &toolbox_core::features::boot::view::entries(Some(&menu)),

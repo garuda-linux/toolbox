@@ -11,6 +11,7 @@ use toolbox_system::diagnostics::page::Page;
 use toolbox_system::diagnostics::service::DiagnosticsNote;
 
 use super::collect;
+use crate::out::{Out, Settings};
 
 struct Fixed(Outcome);
 
@@ -43,7 +44,7 @@ fn run(outcome: Outcome, upload: bool, answers: &[&'static str]) -> (Exit, Strin
         Arc::new(Fixed(outcome)),
         Arc::new(DryRunTransport),
         &mut Answers(answers.iter().copied().collect()),
-        &mut out,
+        &mut Out::new(&mut out, Settings::default()),
     );
 
     (exit, String::from_utf8(out).unwrap())
@@ -92,7 +93,12 @@ fn an_upload_that_never_ends_is_a_failure_without_links() {
     drop(notes);
 
     let mut out = Vec::new();
-    let exit = super::uploaded(&mut Page::default(), &heard, &mut out);
+    let exit = super::uploaded(
+        &mut Page::default(),
+        &heard,
+        &mut Out::new(&mut out, Settings::default()),
+    );
+
     let out = String::from_utf8(out).unwrap();
 
     assert_eq!(exit, Exit::Failure);

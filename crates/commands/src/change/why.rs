@@ -1,5 +1,5 @@
 //! The English line of each page rule. The command line has no window to
-//! show the page's text, so these say the same as `app/gui/i18n/en-US`
+//! show the page's text, so these say the same as `crates/services/i18n/en-US`
 //! in one line. Fluent stays out of the CLI on purpose.
 
 #[cfg(test)]

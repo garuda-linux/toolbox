@@ -103,7 +103,7 @@ fn an_aur_package_shows_its_facts_and_its_page() {
 
     assert_eq!(info.aur_page, "https://aur.archlinux.org/packages/paru");
     assert!(!info.installed);
-    let text = aur_info_text(&info);
+    let text = aur_info_text(crate::out::paint(crate::out::Settings::default()), &info);
     for fact in ["2025-01-10", "cargo", "MIT", "someone", "votes"] {
         assert!(text.contains(fact), "{fact} in {text}");
     }

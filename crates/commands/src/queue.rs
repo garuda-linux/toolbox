@@ -12,7 +12,7 @@ mod store;
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 
 use tokio::runtime::Runtime;
 use toolbox_aur::{AurSource, Cache};
@@ -33,7 +33,8 @@ use self::store::{Problem, Store};
 use super::change::Refused;
 use super::out::write_listing;
 use super::terminal::Terminal;
-use super::{apply, catalogs, paint, root, snapshot, spinner};
+use super::{apply, catalogs, root, snapshot, spinner};
+use crate::out::Out;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Failed {
@@ -54,13 +55,13 @@ struct Context<'a> {
     aur: &'a dyn AurSource,
 }
 
-pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let quiet = matches!(&command, QueueCommand::Show(read) if read.json);
     let catalogs = catalogs();
-    let system = spinner::while_reading(quiet, || snapshot(&catalogs));
+    let system = spinner::while_reading(quiet || out.quiet(), || snapshot(&catalogs));
     let path = Paths::from_process().staged_changes_file();
 
-    let store = match store::open(runtime.handle(), path) {
+    let store = match store::open(runtime.handle(), path, out.paint()) {
         Ok(store) => store,
         Err(problem) => return Failed::Store(problem).say(out),
     };
@@ -84,7 +85,15 @@ pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut dyn Write) ->
             }
         }
         QueueCommand::Clear(args) => {
-            if let Some(exit) = consent(&mut Terminal, args.yes, None).exit() {
+            if let Some(exit) = consent(
+                &mut Terminal {
+                    color: out.settings().color,
+                },
+                args.yes,
+                None,
+            )
+            .exit()
+            {
                 return exit;
             }
 
@@ -209,7 +218,7 @@ fn edit(store: &dyn Store, edit: &QueueEdit) -> Result<(), Failed> {
     store.edit(edit).map_err(Failed::Store)
 }
 
-fn add(args: &QueueAdd, context: &Context<'_>, out: &mut dyn Write) -> Exit {
+fn add(args: &QueueAdd, context: &Context<'_>, out: &mut Out<'_>) -> Exit {
     let Context {
         store,
         catalogs,
@@ -235,10 +244,16 @@ fn add(args: &QueueAdd, context: &Context<'_>, out: &mut dyn Write) -> Exit {
         }
     };
 
-    if let Some(exit) = change
-        .typed()
-        .and_then(|name| consent(&mut Terminal, false, Some(&name)).exit())
-    {
+    if let Some(exit) = change.typed().and_then(|name| {
+        consent(
+            &mut Terminal {
+                color: out.settings().color,
+            },
+            false,
+            Some(&name),
+        )
+        .exit()
+    }) {
         return exit;
     }
 
@@ -258,7 +273,7 @@ fn add(args: &QueueAdd, context: &Context<'_>, out: &mut dyn Write) -> Exit {
     }
 }
 
-fn show(store: &dyn Store, system: &Snapshot, read: Read, out: &mut dyn Write) -> Exit {
+fn show(store: &dyn Store, system: &Snapshot, read: Read, out: &mut Out<'_>) -> Exit {
     let saved = match store.saved() {
         Ok(saved) => saved,
         Err(problem) => return Failed::Store(problem).say(out),
@@ -291,18 +306,18 @@ fn show(store: &dyn Store, system: &Snapshot, read: Read, out: &mut dyn Write) -
     let hint = listing.hint.take();
     let exit = write_listing(listing, out);
     if !plan.steps().is_empty() {
-        write!(out, "\n{}", apply::planned(paint(), &plan)).ok();
+        write!(out, "\n{}", apply::planned(out.paint(), &plan)).ok();
     }
 
     if let Some(hint) = hint {
-        writeln!(out, "\n{}", paint().hint(&hint)).ok();
+        writeln!(out, "\n{}", out.paint().hint(&hint)).ok();
     }
 
     exit
 }
 
 /// The window's queue belongs to the window, so a change never runs twice.
-fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> Exit {
+fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out<'_>) -> Exit {
     let Context {
         store,
         catalogs,
@@ -325,7 +340,12 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> 
         Err(problem) => return Failed::Store(problem).say(out),
     };
 
-    let changes = match ready::checked(&saved, system, &ready::SystemReads { aur }) {
+    let reads = ready::SystemReads {
+        color: out.settings().color,
+        aur,
+    };
+
+    let changes = match ready::checked(&saved, system, &reads) {
         Ok(changes) => changes,
         Err(refusal) => return ready::refused(refusal, out),
     };
@@ -336,8 +356,10 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut dyn Write) -> 
         confirm,
         None,
         runtime.handle(),
-        root::launcher(),
-        &mut Terminal,
+        root::launcher(out.settings().color),
+        &mut Terminal {
+            color: out.settings().color,
+        },
         out,
     );
 

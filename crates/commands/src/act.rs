@@ -5,7 +5,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 use std::path::Path;
 
 use serde::Serialize;
@@ -29,6 +29,7 @@ use super::change::{self, KernelChange, Refused, UnitLookup};
 use super::out::Listing;
 use super::terminal::Terminal;
 use super::{apply, catalogs, snapshot, system, unavailable};
+use crate::out::Out;
 
 #[derive(Clone, Serialize)]
 struct TaskRow {
@@ -43,7 +44,7 @@ impl super::filter::Named for TaskRow {
     }
 }
 
-pub fn toggle(args: &EntryArgs, want: Toggle, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn toggle(args: &EntryArgs, want: Toggle, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let catalogs = catalogs();
     let planned = change::toggle(
         &toggle_pages(&catalogs),
@@ -67,7 +68,7 @@ pub fn toggle_pages(catalogs: &Catalogs) -> Vec<&ToggleCatalog> {
     .collect()
 }
 
-pub fn app(args: &EntryArgs, want: Toggle, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn app(args: &EntryArgs, want: Toggle, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let catalogs = catalogs();
     let planned = change::app(&catalogs.apps.apps, &args.id, want, &snapshot(&catalogs));
     run(planned, args.confirm, None, runtime, out)
@@ -75,12 +76,7 @@ pub fn app(args: &EntryArgs, want: Toggle, runtime: &Runtime, out: &mut dyn Writ
 
 /// A service changed, its state read first so a start of a running unit
 /// is refused as the page does.
-pub fn service(
-    change: UnitChange,
-    args: &UnitArgs,
-    runtime: &Runtime,
-    out: &mut dyn Write,
-) -> Exit {
+pub fn service(change: UnitChange, args: &UnitArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let scope = UnitScope::from_user(args.user);
     let (lookup, known) = unit_lookup(args, runtime);
 
@@ -135,7 +131,7 @@ pub fn kernel(
     args: &KernelArgs,
     change: KernelChange,
     runtime: &Runtime,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     let snapshot = system();
     let Some((kernels, _)) = kernels_of(&snapshot) else {
@@ -146,7 +142,7 @@ pub fn kernel(
     run(planned, args.confirm, None, runtime, out)
 }
 
-pub fn task(args: &TaskArgs, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn task(args: &TaskArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     let found = Programs::check().garuda_update;
     match change::task(&args.task, upgrader(&snapshot, found)) {
@@ -155,7 +151,7 @@ pub fn task(args: &TaskArgs, runtime: &Runtime, out: &mut dyn Write) -> Exit {
     }
 }
 
-pub fn tasks(read: &ReadList, out: &mut dyn Write) -> Exit {
+pub fn tasks(read: &ReadList, out: &mut Out<'_>) -> Exit {
     let exists = |path: &Path| path.exists();
     let common = OPERATION_KEYS
         .into_iter()
@@ -207,7 +203,7 @@ pub fn run(
     confirm: Confirm,
     typed: Option<&str>,
     runtime: &Runtime,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
 ) -> Exit {
     match planned {
         Ok(plan) => apply::carry_out(
@@ -215,8 +211,10 @@ pub fn run(
             confirm,
             typed,
             runtime.handle(),
-            super::root::launcher(),
-            &mut Terminal,
+            super::root::launcher(out.settings().color),
+            &mut Terminal {
+                color: out.settings().color,
+            },
             out,
         ),
         Err(Refused::NothingToDo(_)) if confirm.json => {
@@ -228,7 +226,7 @@ pub fn run(
             refused.exit()
         }
         Err(refused) => {
-            writeln!(out, "{}", refused.line(crate::paint())).ok();
+            writeln!(out, "{}", refused.line(out.paint())).ok();
             refused.exit()
         }
     }

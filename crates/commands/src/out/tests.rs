@@ -114,20 +114,20 @@ fn a_read_failure_under_json_carries_the_program_text() {
 /// lines, and a change its JSON Lines on standard output.
 #[test]
 fn a_read_under_json_keeps_its_error_for_the_object_alone() {
-    use super::{Sink, sink};
+    use super::{Json, Sink, sink};
 
-    assert_eq!(sink(false, true), Sink::Kept);
-    assert_eq!(sink(false, false), Sink::Text);
-    assert_eq!(sink(true, false), Sink::Line);
+    assert_eq!(sink(Json::Read), Sink::Kept);
+    assert_eq!(sink(Json::Off), Sink::Text);
+    assert_eq!(sink(Json::Lines), Sink::Line);
 }
 
 /// Standard output is gone, so under any `--json` the object on standard
 /// error is all a script gets.
 #[test]
 fn lost_output_under_any_json_is_kept_for_its_object() {
-    use super::{Sink, lost_sink};
+    use super::{Json, Sink, lost_sink};
 
-    assert_eq!(lost_sink(true, false), Sink::Kept);
-    assert_eq!(lost_sink(false, true), Sink::Kept);
-    assert_eq!(lost_sink(false, false), Sink::Text);
+    assert_eq!(lost_sink(Json::Lines), Sink::Kept);
+    assert_eq!(lost_sink(Json::Read), Sink::Kept);
+    assert_eq!(lost_sink(Json::Off), Sink::Text);
 }

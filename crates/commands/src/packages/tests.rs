@@ -184,7 +184,7 @@ fn the_facts_name_every_field() {
         installed: None,
     };
 
-    let text = info_text(&info);
+    let text = info_text(crate::out::paint(crate::out::Settings::default()), &info);
     for fact in ["extra", "2.0 KiB", "GPL-3.0-or-later", "depends on", "gegl"] {
         assert!(text.contains(fact), "{fact} in {text}");
     }

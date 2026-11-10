@@ -4,8 +4,6 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
-
 use tokio::runtime::Runtime;
 use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::Exit;
@@ -17,8 +15,9 @@ use toolbox_plan::Plan;
 use super::act::run;
 use super::change::{Refused, toggle_refused};
 use super::{catalogs, snapshot, toggle};
+use crate::out::Out;
 
-pub fn command(command: SetupCommand, runtime: &Runtime, out: &mut dyn Write) -> Exit {
+pub fn command(command: SetupCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     match command {
         SetupCommand::List(read) => toggle(
             &ToggleList {

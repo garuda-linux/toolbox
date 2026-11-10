@@ -6,7 +6,7 @@ mod named;
 #[cfg(test)]
 mod tests;
 
-use std::io::Write;
+use std::io::Write as _;
 
 use serde::Serialize;
 use toolbox_cli::Exit;
@@ -17,6 +17,7 @@ use toolbox_cli::output::json;
 
 use super::lists::{KernelRow, LocaleRow, ServiceRow, ToggleRow};
 use super::out::{self, Listing};
+use crate::out::Out;
 
 type Wanted<'a, T> = Box<dyn Fn(&T) -> bool + 'a>;
 
@@ -89,7 +90,7 @@ pub fn print<T>(
     list: &ReadList,
     rows: &[T],
     filter: &Filter<'_, T>,
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
     show: impl Fn(&[T]) -> Listing<'_>,
 ) -> Exit
 where
@@ -112,7 +113,7 @@ where
 pub fn print_all<T>(
     list: &ReadList,
     rows: &[T],
-    out: &mut dyn Write,
+    out: &mut Out<'_>,
     show: impl Fn(&[T]) -> Listing<'_>,
 ) -> Exit
 where

@@ -3,7 +3,7 @@
 //! seconds, the text shows them as people read them.
 
 use serde::Serialize;
-use toolbox_cli::output::{Mark, Row, size};
+use toolbox_cli::output::{Mark, Paint, Row, size};
 use toolbox_core::features::packages::{
     IndexEntry, InstallReason, OptionalDependency, Origin, PackageDetails,
 };
@@ -155,7 +155,7 @@ pub fn listing(rows: &[PackageRow]) -> Listing<'_> {
 }
 
 /// The facts of one package, the lists joined by commas.
-pub fn info_text(info: &PackageInfo) -> String {
+pub fn info_text(paint: Paint, info: &PackageInfo) -> String {
     let optional: Vec<String> = info
         .optional
         .iter()
@@ -199,7 +199,7 @@ pub fn info_text(info: &PackageInfo) -> String {
         ),
     ];
 
-    facts_text(&info.name, &facts)
+    facts_text(paint, &info.name, &facts)
 }
 
 fn repository(origin: &Origin) -> Option<String> {

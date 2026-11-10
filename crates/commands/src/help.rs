@@ -1,22 +1,23 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::{IsTerminal as _, Write};
+use std::io::{IsTerminal as _, Write as _};
 
 use toolbox_cli::Exit;
 use toolbox_cli::args::{Completions, Help};
 use toolbox_cli::output::Style;
 
 use super::out::{say_error, style_on};
+use crate::out::Out;
 
-pub fn completions(args: &Completions, out: &mut dyn Write) -> Exit {
+pub fn completions(args: &Completions, out: &mut Out<'_>) -> Exit {
     toolbox_cli::complete::registration(args.shell, out);
     Exit::Success
 }
 
 /// The long help of the command the words name, the whole program without
 /// words. A word that is no command ends with a usage error.
-pub fn help(args: &Help, out: &mut dyn Write) -> Exit {
+pub fn help(args: &Help, out: &mut Out<'_>) -> Exit {
     let mut command = toolbox_cli::command();
 
     for name in &args.command {
@@ -28,7 +29,7 @@ pub fn help(args: &Help, out: &mut dyn Write) -> Exit {
         command = found;
     }
 
-    let style = style_on(std::io::stdout().is_terminal());
+    let style = style_on(out.settings().color, std::io::stdout().is_terminal());
     write!(out, "{}", long_help(&command, style)).ok();
     Exit::Success
 }
