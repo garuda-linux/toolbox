@@ -4,7 +4,6 @@ mod app;
 pub mod boot;
 pub mod bootrepair;
 pub mod catalogs;
-mod clipboard;
 pub mod command;
 pub mod configs;
 pub mod console;

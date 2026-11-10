@@ -49,8 +49,6 @@ pub struct Setup {
     pub queue_lost: usize,
     /// The apply service. `None` leaves Apply without effect.
     pub apply: Option<ApplyHandle>,
-    /// Off in tests, which have no display.
-    pub system_clipboard: bool,
     pub notifier: Option<Arc<dyn Notifier>>,
     /// Reads the system. `None` leaves the queue unchecked.
     pub snapshot: Option<SnapshotHandle>,
@@ -114,7 +112,6 @@ impl Default for Setup {
             queue: Queue::in_memory(ChangeSet::default()),
             queue_lost: 0,
             apply: None,
-            system_clipboard: false,
             notifier: None,
             snapshot: None,
             dkms: None,

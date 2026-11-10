@@ -9,14 +9,17 @@ mod tests;
 use egui::accesskit::{Live, Role};
 use egui::{
     Color32, Event, EventFilter, FocusDirection, Modifiers, Pos2, Rect, Response, Sense, TextStyle,
-    Ui, Vec2, WidgetInfo, pos2, vec2,
+    Ui, Vec2, ViewportCommand, WidgetInfo, pos2, vec2,
 };
-use toolbox_terminal::{CellPoint, Screen, Terminal, TerminalSize};
+use toolbox_terminal::{CellPoint, Screen, Terminal, TerminalSize, encode_paste};
 
 use self::input::{Input, translate};
 use self::paint::{Look, paint};
 use crate::palette::{self, Palette};
 use crate::tokens;
+
+/// How long, in seconds, a Ctrl+Shift+V waits for eframe's paste.
+const PASTE_WAIT: f64 = 1.0;
 
 /// The keys that stay with the program while the Console has focus.
 /// Ctrl+Tab leaves instead (see [`input::Input::Leave`]).
@@ -41,9 +44,6 @@ pub struct TerminalView<'a> {
 pub struct TerminalOutput {
     pub response: Response,
     pub bytes: Vec<u8>,
-    /// Ctrl+Shift+V: the app reads its clipboard and sends it through
-    /// `toolbox_terminal::encode_paste`.
-    pub paste: bool,
     /// The size that fills the widget. The caller clamps it and resizes
     /// the terminal and the program together.
     pub fitting: TerminalSize,
@@ -104,7 +104,7 @@ impl<'a> TerminalView<'a> {
 
         let (events, held) = ui.input(|input| (input.events.clone(), input.modifiers));
         let mut bytes = Vec::new();
-        let paste = self.keys(ui, &response, (&events, held), &mut bytes);
+        self.keys(ui, &response, (&events, held), &mut bytes);
         bytes.extend(pointer::handle(
             ui,
             &response,
@@ -138,7 +138,6 @@ impl<'a> TerminalView<'a> {
         TerminalOutput {
             response,
             bytes,
-            paste,
             fitting: grid.fitting(),
         }
     }
@@ -158,22 +157,40 @@ impl<'a> TerminalView<'a> {
         });
     }
 
-    /// Returns whether a paste was asked.
+    /// Ctrl+Shift+V asks eframe for the clipboard, which comes back as a
+    /// paste event in a following frame. The first paste after the ask is
+    /// the clipboard's text. Any other is a plain Ctrl+V, which the
+    /// program gets as ^V. An empty clipboard sends no paste, so the ask
+    /// runs out after [`PASTE_WAIT`].
     fn keys(
         &mut self,
         ui: &Ui,
         response: &Response,
         (events, held): (&[Event], Modifiers),
         bytes: &mut Vec<u8>,
-    ) -> bool {
+    ) {
+        let asked_id = response.id.with("paste-asked");
+        let now = ui.input(|input| input.time);
+        let mut asked = ui
+            .ctx()
+            .data_mut(|data| data.remove_temp::<f64>(asked_id))
+            .filter(|at| now - at < PASTE_WAIT);
+
         if !response.has_focus() {
-            return false;
+            return;
         }
 
         ui.memory_mut(|memory| memory.set_focus_lock_filter(response.id, LOCKED));
-        let mut paste = false;
 
         for event in events {
+            if let Event::Paste(text) = event
+                && asked.take().is_some()
+            {
+                self.terminal.scroll_to_bottom();
+                bytes.extend(encode_paste(text, self.terminal.key_mode()));
+                continue;
+            }
+
             match translate(event, held, self.terminal.key_mode()) {
                 Input::Bytes(typed) => {
                     self.terminal.scroll_to_bottom();
@@ -184,7 +201,10 @@ impl<'a> TerminalView<'a> {
                         ui.ctx().copy_text(self.terminal.selection_text(start, end));
                     }
                 }
-                Input::Paste => paste = true,
+                Input::Paste => {
+                    ui.ctx().send_viewport_cmd(ViewportCommand::RequestPaste);
+                    asked = Some(now);
+                }
                 Input::Leave { backward } => ui.memory_mut(|memory| {
                     memory.move_focus(if backward {
                         FocusDirection::Previous
@@ -196,7 +216,9 @@ impl<'a> TerminalView<'a> {
             }
         }
 
-        paste
+        if let Some(at) = asked {
+            ui.ctx().data_mut(|data| data.insert_temp(asked_id, at));
+        }
     }
 }
 

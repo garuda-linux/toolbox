@@ -44,7 +44,6 @@ use crate::apply::ApplyHandle;
 use crate::boot::Boot;
 use crate::bootrepair::BootRepair;
 use crate::catalogs::Catalogs;
-use crate::clipboard::SystemClipboard;
 use crate::command::{CommandBus, CommandReceiver, CommandSender};
 use crate::configs::Configs;
 use crate::console::Console;
@@ -106,7 +105,6 @@ pub struct App {
     fold: fold::Fold,
     console: Console,
     apply: Option<ApplyHandle>,
-    clipboard: Option<SystemClipboard>,
     notifier: Option<Arc<dyn Notifier>>,
     snapshot: Option<SnapshotHandle>,
     reading: Reading,
@@ -197,7 +195,6 @@ impl App {
             fold: fold::Fold::default(),
             console: Console::knowing(ShareLink::known_of(setup.output_share.as_ref())),
             apply: setup.apply,
-            clipboard: setup.system_clipboard.then(|| SystemClipboard::of(cc)),
             notifier: setup.notifier,
             snapshot: setup.snapshot,
             reading: Reading::default(),

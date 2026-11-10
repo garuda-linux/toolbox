@@ -7,7 +7,6 @@ use toolbox_plan::Plan;
 use super::App;
 use crate::apply::ApplyCommand;
 use crate::catalogs::CatalogId;
-use crate::clipboard::SystemClipboard;
 use crate::command::{AppCommand, Command, Sent, UiCommand};
 use crate::page::PageId;
 use crate::page_ui;
@@ -113,7 +112,6 @@ impl App {
             AppCommand::ConsoleResize(size) => {
                 self.to_service(ApplyCommand::Resize(size));
             }
-            AppCommand::PasteClipboard => self.paste(),
             AppCommand::ReadSystem => self.read_system(),
             AppCommand::ToggleEntry {
                 catalog,
@@ -196,17 +194,6 @@ impl App {
         self.queue.sent(&plan);
         self.to_service(ApplyCommand::Run(plan));
         true
-    }
-
-    fn paste(&mut self) {
-        let Some(text) = self.clipboard.as_mut().and_then(SystemClipboard::text) else {
-            return;
-        };
-
-        let terminal = self.console.terminal_mut();
-        let bytes = toolbox_terminal::encode_paste(&text, terminal.key_mode());
-        terminal.scroll_to_bottom();
-        self.to_service(ApplyCommand::Input(bytes));
     }
 
     pub(super) fn to_service(&self, command: ApplyCommand) {

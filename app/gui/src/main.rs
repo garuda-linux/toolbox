@@ -259,7 +259,6 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         queue: kept_queue((changes, restored), changes_file, &handle, &cc.egui_ctx),
         queue_lost: lost,
         apply: Some(helper.apply),
-        system_clipboard: true,
         notifier: Some(Arc::new(DesktopNotifier::new(handle.clone()))),
         snapshot: Some(system_snapshot(&handle, &cc.egui_ctx, &catalogs)),
         dkms: Some(readers.dkms),

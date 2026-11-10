@@ -15,7 +15,7 @@ pub enum Input {
     Bytes(Vec<u8>),
     /// Ctrl+Shift+C: copy the selection.
     Copy,
-    /// Ctrl+Shift+V: paste the clipboard, which the app reads.
+    /// Ctrl+Shift+V: paste the clipboard.
     Paste,
     /// Ctrl+Tab and Ctrl+Shift+Tab: move focus out of the Console.
     Leave {

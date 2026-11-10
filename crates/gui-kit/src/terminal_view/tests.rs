@@ -4,7 +4,7 @@ use egui::accesskit::{Live, Role};
 use egui::{Key, Modifiers};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_terminal::{Terminal, TerminalSize};
+use toolbox_terminal::{Terminal, TerminalSize, encode_paste};
 
 use super::{TerminalOutput, TerminalView};
 use crate::testing::harness;
@@ -18,7 +18,6 @@ const PACMAN_PROVIDER: &[u8] = include_bytes!("../../../pty/tests/fixtures/pacma
 struct Console {
     terminal: Terminal,
     bytes: Vec<u8>,
-    paste: bool,
     fitting: Option<TerminalSize>,
 }
 
@@ -33,7 +32,6 @@ fn console(text: &[u8]) -> Harness<'static, Console> {
     let state = Console {
         terminal,
         bytes: Vec::new(),
-        paste: false,
         fitting: None,
     };
 
@@ -44,14 +42,12 @@ fn console(text: &[u8]) -> Harness<'static, Console> {
             let TerminalOutput {
                 response: _,
                 bytes,
-                paste,
                 fitting,
             } = TerminalView::new(&mut console.terminal, "Console")
                 .hint(HINT)
                 .show(ui);
 
             console.bytes.extend(bytes);
-            console.paste |= paste;
             console.fitting = Some(fitting);
         },
         state,
@@ -115,11 +111,7 @@ fn tab_and_escape_stay_with_the_program() {
     assert_eq!(harness.state().bytes, b"\t\x1b");
 }
 
-#[test]
-fn ctrl_shift_v_asks_for_the_clipboard() {
-    let mut harness = console(b"");
-    focus(&mut harness);
-
+fn ctrl_shift_v(harness: &mut Harness<'_, Console>) {
     harness.key_press_modifiers(
         Modifiers {
             ctrl: true,
@@ -129,9 +121,39 @@ fn ctrl_shift_v_asks_for_the_clipboard() {
         },
         Key::V,
     );
+    harness.step();
+}
+
+/// eframe answers the request with the clipboard as a paste event in the
+/// next frame, which kittest leaves to the test.
+#[test]
+fn ctrl_shift_v_pastes_the_clipboard_it_asked_for() {
+    let mut harness = console(b"");
+    focus(&mut harness);
+
+    ctrl_shift_v(&mut harness);
+    harness.event(egui::Event::Paste("echo hi\n".to_owned()));
+    harness.step();
+
+    let mode = harness.state().terminal.key_mode();
+    assert_eq!(harness.state().bytes, encode_paste("echo hi\n", mode));
+}
+
+/// kittest counts a quarter second per frame, so five frames outlast the ask.
+#[test]
+fn a_paste_after_the_ask_ran_out_stays_ctrl_v() {
+    let mut harness = console(b"");
+    focus(&mut harness);
+
+    ctrl_shift_v(&mut harness);
+    for _ in 0_u8..5 {
+        harness.step();
+    }
+
+    harness.event(egui::Event::Paste("echo hi\n".to_owned()));
     harness.run();
 
-    assert!(harness.state().paste);
+    assert_eq!(harness.state().bytes, b"\x16");
 }
 
 #[test]

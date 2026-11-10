@@ -77,8 +77,6 @@ pub enum AppCommand {
     /// Bytes for the running program: keys, mouse, terminal replies.
     ConsoleInput(Vec<u8>),
     ConsoleResize(TerminalSize),
-    /// Ctrl+Shift+V in the Console: the app reads its clipboard.
-    PasteClipboard,
     /// The status bar's Read again, after parts of the system could not
     /// be read.
     ReadSystem,

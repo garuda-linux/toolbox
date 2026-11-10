@@ -347,10 +347,6 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
         commands.send(AppCommand::ConsoleInput(output.bytes));
     }
 
-    if output.paste {
-        commands.send(AppCommand::PasteClipboard);
-    }
-
     if let Some(size) = console.resize(output.fitting) {
         commands.send(AppCommand::ConsoleResize(size));
     }

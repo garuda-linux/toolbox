@@ -50,7 +50,6 @@ ashpd.workspace = true
 crossbeam-channel.workspace = true
 eframe.workspace = true
 egui.workspace = true
-egui-winit.workspace = true
 fluent-templates.workspace = true
 fontdb.workspace = true
 freedesktop-icons.workspace = true
