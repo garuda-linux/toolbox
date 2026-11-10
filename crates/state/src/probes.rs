@@ -66,3 +66,5 @@ impl FailedProbes {
         self.0.contains(&probe)
     }
 }
+
+impl crate::Part for FailedProbes {}

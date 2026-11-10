@@ -22,5 +22,5 @@ pub mod snapshot;
 pub mod testing;
 pub mod toggle;
 
-pub use snapshot::Snapshot;
+pub use snapshot::{Part, Snapshot};
 pub use toggle::Toggle;

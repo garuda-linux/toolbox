@@ -101,3 +101,5 @@ pub struct PackageDetails {
 /// a `pacman -Rns` takes along.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct PackageGraph(pub Vec<LocalNode>);
+
+impl crate::Part for PackageGraph {}

@@ -42,3 +42,9 @@ pub struct RunningKernel {
 /// files below `/usr/lib/modules`.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct KernelReleases(pub BTreeMap<PackageName, KernelRelease>);
+
+impl crate::Part for KernelReleases {}
+
+impl crate::Part for LinuxPackages {}
+
+impl crate::Part for RunningKernel {}

@@ -11,6 +11,13 @@ use std::collections::HashMap;
 use std::fmt;
 use std::sync::Arc;
 
+/// A type a probe delivers whole. The marker keeps any other value, such
+/// as a bare `String` that two probes could both mean, out of the store.
+pub trait Part: Send + Sync + 'static {}
+
+/// The state of a domain that needs none.
+impl Part for () {}
+
 /// A copy shares its parts with the original, so the store can add a part
 /// no probe reads (the lock flags) to a snapshot the pages share already.
 #[derive(Clone, Default)]
@@ -21,7 +28,7 @@ pub struct Snapshot {
 impl Snapshot {
     pub fn insert<T>(&mut self, part: T)
     where
-        T: Send + Sync + 'static,
+        T: Part,
     {
         self.parts.insert(TypeId::of::<T>(), Arc::new(part));
     }
@@ -29,7 +36,7 @@ impl Snapshot {
     /// The part of type `T`, or `None` while no probe has delivered it.
     pub fn part<T>(&self) -> Option<&T>
     where
-        T: Send + Sync + 'static,
+        T: Part,
     {
         self.parts
             .get(&TypeId::of::<T>())

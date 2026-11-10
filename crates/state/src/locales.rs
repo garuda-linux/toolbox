@@ -15,6 +15,10 @@ pub struct EnabledLocales(pub BTreeSet<LocaleEntry>);
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct CurrentSystemLocale(pub Option<LocaleName>);
 
+impl crate::Part for CurrentSystemLocale {}
+impl crate::Part for EnabledLocales {}
+impl crate::Part for SupportedLocales {}
+
 /// The entries of a `SUPPORTED` file. Arch ships one `locale charset` per
 /// line, glibc's own file has `locale/charset \` lines below a variable
 /// name. Both are read.

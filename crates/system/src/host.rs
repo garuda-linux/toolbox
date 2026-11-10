@@ -214,6 +214,8 @@ where
     }
 }
 
+impl toolbox_state::Part for Host {}
+
 /// The second field of `Uid:` in `/proc/<pid>/status`: real, effective,
 /// saved and file system user id follow each other.
 fn effective_uid(status: &str) -> Option<u32> {

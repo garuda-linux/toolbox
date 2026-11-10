@@ -128,3 +128,9 @@ impl Accounts {
             .is_some_and(|entry| self.users.iter().any(|user| user.gid == entry.gid))
     }
 }
+
+impl crate::Part for AccountLockFlags {}
+
+impl crate::Part for CurrentUser {}
+
+impl crate::Part for Accounts {}

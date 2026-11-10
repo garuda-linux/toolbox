@@ -144,6 +144,8 @@ impl AurCatalog {
     }
 }
 
+impl toolbox_state::Part for AurNames {}
+
 fn rank(name: &str, wanted: &str) -> Rank {
     if wanted.is_empty() {
         Rank::Elsewhere

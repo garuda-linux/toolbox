@@ -30,6 +30,8 @@ impl LocaleNames {
     }
 }
 
+impl crate::Part for LocaleNames {}
+
 /// The file of glibc's locale sources that defines `locale`: the name
 /// without its character set, the modifier kept (`ca_ES.UTF-8@valencia`
 /// is defined by `ca_ES@valencia`).

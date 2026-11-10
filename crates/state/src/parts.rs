@@ -39,3 +39,23 @@ pub struct AvailableShells(pub Vec<ShellPath>);
 /// is missing, so its change stays queued.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct UserConfigStates(pub BTreeMap<UserConfigEdit, bool>);
+
+impl crate::Part for CurrentShells {}
+
+impl crate::Part for EnabledUnits {}
+
+impl crate::Part for EnabledUserUnits {}
+
+impl crate::Part for InstalledPackages {}
+
+impl crate::Part for OwnBlacklist {}
+
+impl crate::Part for AvailableShells {}
+
+impl crate::Part for MaskedUnits {}
+
+impl crate::Part for MaskedUserUnits {}
+
+impl crate::Part for SyncPackages {}
+
+impl crate::Part for UserConfigStates {}

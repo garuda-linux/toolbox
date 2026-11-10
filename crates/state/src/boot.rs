@@ -94,6 +94,13 @@ pub struct PlymouthState {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct VirtualMachine(pub bool);
 
+impl crate::Part for CurrentGrub {}
+impl crate::Part for CurrentLoader {}
+impl crate::Part for PlymouthState {}
+impl crate::Part for SdBootKernel {}
+impl crate::Part for BootLoader {}
+impl crate::Part for VirtualMachine {}
+
 fn loader_name(variable: &[u8]) -> Option<String> {
     let units: Vec<u16> = variable
         .get(ATTRIBUTE_BYTES..)?

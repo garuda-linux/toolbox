@@ -267,7 +267,7 @@ fn insert<T>(
     probe: Probe,
     result: Result<T, ProbeError>,
 ) where
-    T: Send + Sync + 'static,
+    T: toolbox_state::Part,
 {
     if let Some(part) = take(issues, probe, result) {
         snapshot.insert(part);

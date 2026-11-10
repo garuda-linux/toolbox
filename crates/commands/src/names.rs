@@ -301,7 +301,7 @@ fn toggle_catalogs(catalogs: &Catalogs) -> Vec<&ToggleCatalog> {
 /// A snapshot of the one part that was read, else an empty one.
 fn with<T>(found: Result<T, ProbeError>) -> Snapshot
 where
-    T: Send + Sync + 'static,
+    T: toolbox_state::Part,
 {
     let mut snapshot = Snapshot::default();
     if let Ok(part) = found {

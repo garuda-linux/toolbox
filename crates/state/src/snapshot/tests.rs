@@ -1,10 +1,14 @@
-use super::Snapshot;
+use super::{Part, Snapshot};
 
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Kernels(Vec<String>);
 
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Locales(Vec<String>);
+
+impl Part for Kernels {}
+
+impl Part for Locales {}
 
 #[test]
 fn a_missing_part_is_none() {

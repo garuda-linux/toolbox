@@ -143,7 +143,7 @@ pub trait Domain: 'static {
     type Item: Clone + Debug + Ord + Serialize + DeserializeOwned + Send + Sync + 'static;
     type Wish: Clone + Debug + PartialEq + Serialize + DeserializeOwned + Send + Sync + 'static;
     /// The part of the [`crate::Snapshot`] this domain compares with.
-    type State: Send + Sync + 'static;
+    type State: toolbox_state::Part;
 
     /// Stable name, used by the UI and in logs.
     const ID: &'static str;

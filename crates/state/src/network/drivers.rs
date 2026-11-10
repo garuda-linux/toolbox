@@ -68,6 +68,8 @@ impl Category {
     }
 }
 
+impl crate::Part for ModuleFacts {}
+
 /// The network modules `modules.dep` of a kernel lists: everything below
 /// `kernel/drivers/net`, plus the few known ones that live elsewhere.
 /// Sorted by name, each once.

@@ -16,3 +16,11 @@ pub struct HblockState(pub bool);
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct GarudaUpdateConfig(pub BTreeSet<GarudaUpdateFlag>);
+
+impl crate::Part for CurrentDns {}
+
+impl crate::Part for CurrentWifiBackend {}
+
+impl crate::Part for GarudaUpdateConfig {}
+
+impl crate::Part for HblockState {}
