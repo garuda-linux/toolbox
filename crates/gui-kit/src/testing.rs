@@ -3,7 +3,6 @@
 //! already uses them.
 
 mod caps;
-mod render;
 
 pub use caps::{cap_off_centre, capitals_top, deep_descent_font, last_baseline_within, test_fonts};
 use egui_kittest::HarnessBuilder;
@@ -24,8 +23,6 @@ pub fn harness_with_font<State>(
     height: f32,
     font: Option<FontFile>,
 ) -> HarnessBuilder<State> {
-    render::one_thread();
-
     // One render state for the snapshots and the live blur, as eframe
     // shares its own.
     let state = egui_kittest::wgpu::create_render_state(
