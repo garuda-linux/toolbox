@@ -127,10 +127,11 @@ for suite in "${suite_list[@]}"; do
     GARUDA_TOOLBOX_CATALOG_DIR=/tmp/toolbox/data/catalog SELFTEST_ROOT=/tmp/toolbox/runs \
     bash scripts/selftest.sh $(printf '%q' "$suite") >/tmp/toolbox/$suite.log 2>&1 &"
 
-  # The Tracy client listens on the VM's loopback only.
+  # The Tracy client listens on every address, IPv6 as well, so only the
+  # port is matched.
   listening=false
   for _ in $(seq 120); do
-    if vm ss -ltn 2>/dev/null | grep -q '127.0.0.1:8086'; then
+    if vm ss -Hltn 2>/dev/null | grep -q ':8086 '; then
       listening=true
       break
     fi
@@ -138,7 +139,9 @@ for suite in "${suite_list[@]}"; do
   done
 
   $listening || {
-    echo "lima-profile.sh: $suite never started profiling, see /tmp/toolbox/$suite.log in the VM" >&2
+    echo "lima-profile.sh: $suite never started profiling:" >&2
+    vm tail -n 20 "/tmp/toolbox/$suite.log" >&2 || true
+    vm tail -n 20 "/tmp/toolbox/runs/$suite/out.log" >&2 || true
     status=1
     continue
   }
