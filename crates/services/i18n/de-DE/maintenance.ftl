@@ -27,6 +27,7 @@ maintenance-op-refresh-keyring-detail = Die neuesten Schlüssel herunterladen, m
 maintenance-op-refresh-keyring-queue = Aktualisieren vormerken
 maintenance-op-remove-database-lock = pacman-Sperre entfernen
 maintenance-op-remove-database-lock-detail = Die Sperre eines abgebrochenen Updates löschen. Solange pacman läuft, bleibt sie erhalten.
+maintenance-op-aur-upgrade-detail = Die aus dem AUR gebauten Pakete mit paru aktualisieren, das seine Fragen im Terminal stellt.
 maintenance-op-remove-database-lock-queue = Entsperren vormerken
 
 maintenance-tools = Werkzeuge

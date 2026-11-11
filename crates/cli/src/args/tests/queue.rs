@@ -1,11 +1,11 @@
-use super::super::{Command, QueueCommand, ToggleCommand};
+use super::super::{Command, Group, QueueCommand, ToggleCommand};
 use super::parse;
 
 fn queue(argv: &[&str]) -> QueueCommand {
     let mut words = vec!["queue"];
     words.extend_from_slice(argv);
     match parse(&words).unwrap().command {
-        Some(Command::Queue(command)) => command,
+        Some(Command::Queue(Group(command))) => command,
         other => panic!("not a queue command: {other:?}"),
     }
 }

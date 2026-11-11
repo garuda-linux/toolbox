@@ -11,8 +11,8 @@ use crate::apply::{Problem, Report};
 fn started(console: &mut Console) {
     console.take(Report::PlanStarted {
         steps: vec![
-            (StepId::new(1), "pacman -S firefox".to_owned()),
-            (StepId::new(2), "systemctl enable sshd".to_owned()),
+            (StepId::new(1), vec!["pacman -S firefox".to_owned()]),
+            (StepId::new(2), vec!["systemctl enable sshd".to_owned()]),
         ],
     });
 }

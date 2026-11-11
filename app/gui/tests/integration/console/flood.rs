@@ -23,7 +23,7 @@ fn flood() -> Vec<Report> {
 
     [
         Report::PlanStarted {
-            steps: vec![(step, "pacman -S java-runtime".to_owned())],
+            steps: vec![(step, vec!["pacman -S java-runtime".to_owned()])],
         },
         Report::Step(Event::Started { step }),
     ]

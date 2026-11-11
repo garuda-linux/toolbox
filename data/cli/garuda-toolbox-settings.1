@@ -4,10 +4,16 @@
 .SH NAME
 garuda\-toolbox\-settings \- Show and change the app\*(Aqs own settings
 .SH SYNOPSIS
-\fBgaruda\-toolbox settings\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+\fBgaruda\-toolbox settings\fR [\fB\-\-json\fR] [\fB\-\-search\fR \fITEXT\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIsubcommands\fR]
 .SH DESCRIPTION
 Show and change the app\*(Aqs own settings
 .SH OPTIONS
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
+.TP
+\fB\-\-search\fR \fI<TEXT>\fR
+Only the rows whose name contains this text, in any case
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print the programs\*(Aq own words under an error
@@ -49,7 +55,8 @@ One setting\*(Aqs value
 garuda\-toolbox\-settings\-set(1)
 Change one setting. The window takes it at its next start
 .SH EXTRA
-Example:
-  garuda\-toolbox settings list
+Examples:
+  garuda\-toolbox settings
+  garuda\-toolbox settings set aur on
 .SH "SEE ALSO"
 garuda\-toolbox(1)

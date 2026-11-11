@@ -49,7 +49,8 @@ pub fn load(dir: &Path) -> Result<Catalogs, Vec<CatalogError>> {
         }
     }
 
-    errors.extend(shared_app_ids(&loaded, dir));
+    errors.extend(shared_ids(&loaded, dir, &APPS));
+    errors.extend(shared_ids(&loaded, dir, &TOGGLE_FILES));
     let toggles = loaded.into_iter().map(|(_, catalog)| catalog).collect();
 
     let config_files = ConfigFileCatalog::load(dir)
@@ -117,14 +118,15 @@ fn missing_icons(catalog: &ToggleCatalog, dir: &Path, file: &str) -> Vec<Catalog
         .collect()
 }
 
-/// The Discover page toggles entries by id over all categories, so an id
-/// may appear in one apps catalog only.
-fn shared_app_ids(loaded: &[(&str, ToggleCatalog)], dir: &Path) -> Vec<CatalogError> {
+/// The Discover page toggles entries by id over all categories, and
+/// `toggle on <id>` over every page, so an id may appear once among the
+/// apps catalogs and once among the page catalogs.
+fn shared_ids(loaded: &[(&str, ToggleCatalog)], dir: &Path, files: &[&str]) -> Vec<CatalogError> {
     let mut seen = BTreeSet::new();
 
     loaded
         .iter()
-        .filter(|(file, _)| APPS.contains(file))
+        .filter(|(file, _)| files.contains(file))
         .flat_map(|(file, catalog)| catalog.entries().map(move |entry| (file, entry.id())))
         .filter(|(_, id)| !seen.insert(*id))
         .map(|(file, id)| CatalogError::Invalid {

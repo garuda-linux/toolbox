@@ -267,7 +267,12 @@ fn rotate(path: &Path) {
 
 /// One line on stderr, which never touches the log file.
 fn report(message: &str) {
-    writeln!(io::stderr(), "garuda-toolbox: {message}").ok();
+    write!(io::stderr(), "{}", warning_line(message)).ok();
+}
+
+/// Plain, as this crate knows neither the terminal nor `--color`.
+fn warning_line(message: &str) -> String {
+    format!("warning: {message}\n")
 }
 
 #[cfg(test)]

@@ -35,7 +35,7 @@ fn started() -> Report {
     Report::PlanStarted {
         steps: vec![(
             StepId::new(0),
-            "systemctl restart -- sshd.service".to_owned(),
+            vec!["systemctl restart -- sshd.service".to_owned()],
         )],
     }
 }
@@ -199,8 +199,8 @@ fn each_step_counts_up_and_ends_with_how_long_it_took() {
         &[
             Report::PlanStarted {
                 steps: vec![
-                    (first, "pacman-key --refresh-keys".to_owned()),
-                    (second, "pacman -Syu".to_owned()),
+                    (first, vec!["pacman-key --refresh-keys".to_owned()]),
+                    (second, vec!["pacman -Syu".to_owned()]),
                 ],
             },
             Report::Step(Event::Started { step: first }),

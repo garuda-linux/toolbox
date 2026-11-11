@@ -1,11 +1,12 @@
 use std::path::PathBuf;
 use std::time::{Duration, SystemTime};
 
+use toolbox_cli::Exit;
 use toolbox_cli::output::{Paint, Style};
 use toolbox_plan::PackageName;
 use toolbox_system::{HealthIssue, HealthLevel, PendingUpdate, ProbeError, Status};
 
-use super::{Part, brief, needs_attention, text, view};
+use super::{Part, brief, exit, needs_attention, text, view};
 
 const DAY: Duration = Duration::from_hours(24);
 
@@ -310,4 +311,34 @@ fn a_pending_restart_alone_needs_attention() {
 
     assert_eq!(brief(&shown), "restart needed");
     assert!(needs_attention(&shown));
+}
+
+#[test]
+fn a_part_that_failed_ends_with_failure() {
+    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let mut found = calm(now);
+    found.updates = Err(ProbeError::Failed("no network".to_owned()));
+    let shown = view(&found, &Ok(false), now);
+
+    assert_eq!(exit(&shown), Exit::Failure);
+}
+
+#[test]
+fn a_part_not_available_is_no_failure() {
+    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let mut found = calm(now);
+    found.aur_updates = Err(ProbeError::Unavailable);
+    let shown = view(&found, &Err(ProbeError::Unavailable), now);
+
+    assert_eq!(exit(&shown), Exit::Success);
+}
+
+#[test]
+fn attention_wins_over_a_part_that_failed() {
+    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let mut found = calm(now);
+    found.aur_updates = Err(ProbeError::Failed("no network".to_owned()));
+    let shown = view(&found, &Ok(true), now);
+
+    assert_eq!(exit(&shown), Exit::Attention);
 }

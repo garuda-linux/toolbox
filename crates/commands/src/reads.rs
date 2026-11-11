@@ -6,7 +6,7 @@ mod tests;
 
 use toolbox_cli::args::{
     AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, DkmsCommand,
-    DriversCommand, GroupsCommand, GuideCommand, KernelsCommand, LocalesCommand,
+    DriversCommand, Group, GroupsCommand, GuideCommand, KernelsCommand, LocalesCommand,
     MaintenanceCommand, NetworkCommand, PackagesCommand, PacksCommand, QueueCommand, ResetArgs,
     ResetList, ServicesCommand, SettingsCommand, SetupCommand, ToggleCommand, TweaksCommand,
     UsersCommand,
@@ -18,10 +18,16 @@ pub const fn json_read(command: &Command) -> bool {
 
 /// `Some(json)` for a command that only reads, with whether it reads as
 /// JSON. The pager and the JSON errors both go by this one table.
+#[expect(
+    clippy::too_many_lines,
+    reason = "one table with an arm per read, so a new command must say whether it reads"
+)]
 pub const fn read_json(command: &Command) -> Option<bool> {
-    let json = match command {
+    Some(match command {
         Command::Status(args) => args.read.json,
         Command::Services(ServicesCommand::List(list)) => list.read.json,
+        Command::Services(ServicesCommand::Show(show)) => show.read.json,
+        Command::Toggle(ToggleCommand::Show(show)) => show.read.json,
         Command::Toggle(ToggleCommand::List(list)) => list.read.json,
         Command::Apps(AppsCommand::List(list)) => list.read.json,
         Command::Kernels(KernelsCommand::List(list)) => list.read.json,
@@ -39,21 +45,23 @@ pub const fn read_json(command: &Command) -> Option<bool> {
         | Command::Locales(LocalesCommand::Packs(PacksCommand::List(list)))
         | Command::Groups(GroupsCommand::List(list))
         | Command::Configs(ConfigsCommand::List(list))
-        | Command::Network(NetworkCommand::Drivers(DriversCommand::List(list)))
+        | Command::Network(Group(NetworkCommand::Drivers(DriversCommand::List(list))))
         | Command::Setup(SetupCommand::List(list))
-        | Command::Tweaks(TweaksCommand::List(list))
-        | Command::Settings(SettingsCommand::List(list)) => list.json,
+        | Command::Tweaks(Group(TweaksCommand::List(list)))
+        | Command::Settings(Group(SettingsCommand::List(list)))
+        | Command::Guide(Group(GuideCommand::List(list))) => list.json,
         Command::Doctor(read)
         | Command::Pages(read)
-        | Command::Boot(BootCommand::Show(read) | BootCommand::Entries(read))
-        | Command::Network(NetworkCommand::Show(read) | NetworkCommand::PublicAddress(read))
+        | Command::Boot(Group(BootCommand::Show(read) | BootCommand::Entries(read)))
+        | Command::Network(Group(
+            NetworkCommand::Show(read) | NetworkCommand::PublicAddress(read),
+        ))
         | Command::BootRepair(BootRepairCommand::Show(read))
-        | Command::Queue(QueueCommand::Show(read)) => read.json,
-        Command::Settings(SettingsCommand::Get(args)) => args.read.json,
+        | Command::Queue(Group(QueueCommand::Show(read))) => read.json,
+        Command::Settings(Group(SettingsCommand::Get(args))) => args.read.json,
         Command::Packages(PackagesCommand::Search(search)) => search.read.json,
         Command::Packages(PackagesCommand::Show(show)) => show.read.json,
-        Command::Guide(GuideCommand::List(list)) => list.read().json,
-        Command::Guide(GuideCommand::Show(show)) => show.read.json,
+        Command::Guide(Group(GuideCommand::Show(show))) => show.read.json,
         Command::Diagnostics(_)
         | Command::Services(_)
         | Command::Toggle(_)
@@ -76,7 +84,5 @@ pub const fn read_json(command: &Command) -> Option<bool> {
         | Command::Completions(_)
         | Command::Help(_)
         | Command::Update(_) => return None,
-    };
-
-    Some(json)
+    })
 }

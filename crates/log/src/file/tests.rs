@@ -350,3 +350,11 @@ fn a_log_path_that_is_a_link_is_refused() {
     assert!(open_sink(&path).is_err());
     assert_eq!(fs::read_to_string(&target).unwrap(), "");
 }
+
+#[test]
+fn a_log_problem_reads_as_a_warning_of_the_command_line() {
+    assert_eq!(
+        warning_line("cannot write the log: disk full"),
+        "warning: cannot write the log: disk full\n"
+    );
+}

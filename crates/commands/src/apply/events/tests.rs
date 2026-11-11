@@ -3,7 +3,10 @@ use std::time::{Duration, Instant};
 
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::protocol::{Event, Failure, Outcome};
-use toolbox_plan::{PackageName, Plan, PlannedAction, RootAction, StepId, TargetList, UserAction};
+use toolbox_plan::{
+    PackageName, Plan, PlannedAction, RootAction, ShellPath, StepId, TargetList, UserAction,
+    UserName,
+};
 use toolbox_services::apply::{Problem, Report};
 use toolbox_system::pkexec::Refusal;
 
@@ -28,10 +31,10 @@ fn lines(reports: &[Report]) -> String {
 fn two_steps() -> Report {
     Report::PlanStarted {
         steps: vec![
-            (StepId::new(1), "pacman-key --refresh-keys".to_owned()),
+            (StepId::new(1), vec!["pacman-key --refresh-keys".to_owned()]),
             (
                 StepId::new(2),
-                "systemctl restart -- sshd.service".to_owned(),
+                vec!["systemctl restart -- sshd.service".to_owned()],
             ),
         ],
     }
@@ -51,12 +54,30 @@ fn the_plan_is_one_line_with_every_step() {
     let line = planned(&plan);
 
     assert!(
-        line.starts_with(r#"{"schema":1,"event":"plan","steps":[{"step":1,"command":"pacman-key"#),
+        line.starts_with(r#"{"schema":1,"event":"plan","steps":[{"step":1,"command":["pacman-key"#),
         "{line}"
     );
-    assert!(line.contains(r#"},{"step":2,"command":""#), "{line}");
-    assert!(line.ends_with("}]}\n"), "{line}");
+    assert!(line.contains(r#"},{"step":2,"command":["#), "{line}");
+    assert!(line.ends_with("]}]}\n"), "{line}");
     assert_eq!(line.lines().count(), 1, "{line}");
+}
+
+#[test]
+fn each_part_of_a_step_is_its_own_string() {
+    let plan = Plan::new([PlannedAction::Root(RootAction::SetShell {
+        user: UserName::new("nico").unwrap(),
+        shell: ShellPath::new("/usr/bin/fish").unwrap(),
+    })]);
+
+    assert_eq!(
+        planned(&plan),
+        concat!(
+            r#"{"schema":1,"event":"plan","steps":[{"step":1,"command":["#,
+            r#""check that /usr/bin/fish is listed in /etc/shells","#,
+            r#""chsh -s /usr/bin/fish -- nico"]}]}"#,
+            "\n"
+        )
+    );
 }
 
 #[test]
@@ -90,7 +111,7 @@ fn a_run_is_started_output_finished_and_done() {
     assert_eq!(
         text,
         concat!(
-            r#"{"schema":1,"event":"started","step":2,"of":2,"command":"systemctl restart -- sshd.service"}"#,
+            r#"{"schema":1,"event":"started","step":2,"of":2,"command":["systemctl restart -- sshd.service"]}"#,
             "\n",
             r#"{"schema":1,"event":"output","step":2,"line":"one"}"#,
             "\n",

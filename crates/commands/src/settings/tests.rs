@@ -137,6 +137,25 @@ fn the_settings_list_has_a_summary_and_a_hint() {
     assert!(listing.hint.unwrap().contains("settings set"));
 }
 
+#[test]
+fn each_setting_says_what_it_takes() {
+    use super::setting_listing;
+
+    let listed = rows(&Settings::default(), false);
+    let listing = setting_listing(&listed);
+    let update_check = listing
+        .rows
+        .iter()
+        .find(|row| row.cells[0] == "update-check")
+        .unwrap();
+
+    assert_eq!(
+        update_check.cells[2],
+        "Minutes between update checks (5 to 1440), or `never`"
+    );
+    assert!(listing.rows.iter().all(|row| !row.cells[2].is_empty()));
+}
+
 /// The value is a word of its own, the one `settings set log-level` takes,
 /// never the program's name for it.
 #[test]

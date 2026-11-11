@@ -242,7 +242,7 @@ check = { package = "droidcam" }
 icon = "droidcam.png"
 
 [[section.entry]]
-id = "easyeffects"
+id = "gaming-easyeffects"
 title = "EasyEffects"
 description = "Audio Effects for Pipewire applications"
 check = { package = "easyeffects" }

@@ -96,7 +96,7 @@ async fn run(plan: Plan, launcher: impl Launcher + 'static) -> Vec<Report> {
 
 fn started() -> Report {
     Report::PlanStarted {
-        steps: vec![(StepId::new(1), "pacman-key --refresh-keys".to_owned())],
+        steps: vec![(StepId::new(1), vec!["pacman-key --refresh-keys".to_owned()])],
     }
 }
 

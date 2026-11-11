@@ -169,7 +169,7 @@ description = "Official Telegram Desktop client"
 check = { package = "telegram-desktop" }
 
 [[section.entry]]
-id = "discord"
+id = "setup-discord"
 title = "Discord"
 description = "All-in-one voice and text chat"
 check = { package = "discord" }
@@ -229,7 +229,7 @@ description = "Slack Desktop client"
 check = { package = "slack-desktop" }
 
 [[section.entry]]
-id = "mumble"
+id = "setup-mumble"
 title = "Mumble"
 description = "Low-latency, high quality voice chat software"
 check = { package = "mumble" }
@@ -349,14 +349,14 @@ description = "Official assortment of Ansible collections"
 check = { package = "ansible" }
 
 [[section.entry]]
-id = "docker"
+id = "setup-docker"
 title = "Docker"
 description = "Pack, ship and run applications as containers"
 check = { package = "docker" }
 also = [{ package = "docker-compose" }, { service = "docker.socket" }]
 
 [[section.entry]]
-id = "podman"
+id = "setup-podman"
 title = "Podman"
 description = "Daemonless container engine for managing containers"
 check = { package = "podman-docker" }
@@ -392,13 +392,13 @@ title = "Gaming"
 icon = "applications-games"
 
 [[section.entry]]
-id = "aisleriot"
+id = "setup-aisleriot"
 title = "Aisleriot"
 description = "Collection of patience card games"
 check = { package = "aisleriot" }
 
 [[section.entry]]
-id = "mari0"
+id = "setup-mari0"
 title = "Mari0"
 description = "Mario game with Portal gun mechanics"
 check = { package = "mari0" }
@@ -434,32 +434,32 @@ description = "Classic 2D jump'n'run sidescroller game"
 check = { package = "supertux" }
 
 [[section.entry]]
-id = "luanti"
+id = "setup-luanti"
 title = "Luanti"
 description = "Voxel-based game engine"
 check = { package = "luanti" }
 also = [{ package = "luanti-server" }]
 
 [[section.entry]]
-id = "0ad"
+id = "setup-0ad"
 title = "0 A.D."
 description = "3D historically-based real-time strategy game"
 check = { package = "0ad" }
 
 [[section.entry]]
-id = "teeworlds"
+id = "setup-teeworlds"
 title = "Teeworlds"
 description = "Fast-paced multiplayer 2D shooter game"
 check = { package = "teeworlds" }
 
 [[section.entry]]
-id = "xonotic"
+id = "setup-xonotic"
 title = "Xonotic"
 description = "Fast-paced cross-platform first person shooter"
 check = { package = "xonotic" }
 
 [[section.entry]]
-id = "hedgewars"
+id = "setup-hedgewars"
 title = "Hedgewars"
 description = "Turn-based strategy artillery game"
 check = { package = "hedgewars" }
@@ -1001,13 +1001,13 @@ title = "Other"
 icon = "applications-other"
 
 [[section.entry]]
-id = "droidcam"
+id = "setup-droidcam"
 title = "Droidcam"
 description = "Turn your phone/tablet into a webcam"
 check = { package = "droidcam" }
 
 [[section.entry]]
-id = "soundwire"
+id = "setup-soundwire"
 title = "Soundwire"
 description = "Transmit audio from your PC to other devices"
 check = { package = "soundwire" }
@@ -1109,13 +1109,13 @@ description = "Cross-platform video editor"
 check = { package = "shotcut" }
 
 [[section.entry]]
-id = "obs-studio"
+id = "setup-obs-studio"
 title = "OBS Studio"
 description = "Software for live streaming and recording"
 check = { package = "obs-studio" }
 
 [[section.entry]]
-id = "vlc"
+id = "setup-vlc"
 title = "VLC"
 description = "Cross-platform multimedia player"
 check = { package = "vlc" }
@@ -1152,7 +1152,7 @@ check = { package = "gnome-boxes" }
 also = [{ service = "libvirtd.service" }]
 
 [[section.entry]]
-id = "virt-manager"
+id = "setup-virt-manager"
 title = "Virtual Machine Manager"
 description = "Desktop user interface for managing virtual machines"
 check = { package = "virt-manager-meta" }

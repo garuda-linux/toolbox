@@ -114,6 +114,33 @@ fn an_app_id_in_two_categories_is_reported() {
     );
 }
 
+/// `toggle on <id>` looks over every page, so an id names one switch.
+#[test]
+fn a_switch_id_on_two_pages_is_reported() {
+    let source = crate::root().join(SOURCE_DIR);
+    let dir = tempfile::tempdir().unwrap();
+
+    copy_catalogs(&source, dir.path(), "gaming.toml");
+    fs::write(
+        dir.path().join("gaming.toml"),
+        ENTRY.replace("id = \"a\"", "id = \"pipewire-support\""),
+    )
+    .unwrap();
+
+    let messages: Vec<String> = load(dir.path())
+        .unwrap_err()
+        .iter()
+        .map(ToString::to_string)
+        .collect();
+
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    assert!(messages[0].contains("gaming.toml"), "{messages:?}");
+    assert!(
+        messages[0].contains("\"pipewire-support\": the id is used twice"),
+        "{messages:?}"
+    );
+}
+
 /// The helper's write table may not keep a folder the page stopped
 /// offering.
 #[test]

@@ -66,7 +66,7 @@ fn toggle(id: &str, state: &'static str) -> ToggleRow {
 }
 
 #[test]
-fn toggles_are_marked_on_off_and_unknown() {
+fn toggles_are_marked_and_say_on_off_or_unknown() {
     let rows = [
         toggle("a", "on"),
         toggle("b", "off"),
@@ -79,9 +79,9 @@ fn toggles_are_marked_on_off_and_unknown() {
     assert_eq!(
         listing.rows,
         [
-            Row::cells(Mark::On, &["a", "A"]),
-            Row::cells(Mark::Off, &["b", "B"]),
-            Row::cells(Mark::Unknown, &["c", "C"]),
+            Row::cells(Mark::On, &["a", "on", "A"]),
+            Row::cells(Mark::Off, &["b", "off", "B"]),
+            Row::cells(Mark::Unknown, &["c", "unknown", "C"]),
         ]
     );
     assert_eq!(

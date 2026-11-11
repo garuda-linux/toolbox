@@ -4,10 +4,13 @@
 .SH NAME
 garuda\-toolbox\-queue \- Queue changes as the window does, then apply them as one plan. While the window runs, its own queue
 .SH SYNOPSIS
-\fBgaruda\-toolbox queue\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+\fBgaruda\-toolbox queue\fR [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIsubcommands\fR]
 .SH DESCRIPTION
 Queue changes as the window does, then apply them as one plan. While the window runs, its own queue
 .SH OPTIONS
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print the programs\*(Aq own words under an error
@@ -57,7 +60,7 @@ Carry out the whole queue as one plan, with one password
 .SH EXTRA
 Examples:
   garuda\-toolbox queue add apps install firefox
-  garuda\-toolbox queue show
+  garuda\-toolbox queue
   garuda\-toolbox queue apply
 .SH "SEE ALSO"
 garuda\-toolbox(1)

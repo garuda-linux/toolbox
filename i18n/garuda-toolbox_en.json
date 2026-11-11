@@ -1470,10 +1470,10 @@
     "catalog-gaming-droidcam-description": {
       "string": "A tool to turn your phone/tablet into a wireless/usb webcam"
     },
-    "catalog-gaming-easyeffects": {
+    "catalog-gaming-gaming-easyeffects": {
       "string": "EasyEffects"
     },
-    "catalog-gaming-easyeffects-description": {
+    "catalog-gaming-gaming-easyeffects-description": {
       "string": "Audio Effects for Pipewire applications"
     },
     "catalog-gaming-goverlay": {
@@ -2382,10 +2382,10 @@
     "catalog-setup-telegram-description": {
       "string": "Official Telegram Desktop client"
     },
-    "catalog-setup-discord": {
+    "catalog-setup-setup-discord": {
       "string": "Discord"
     },
-    "catalog-setup-discord-description": {
+    "catalog-setup-setup-discord-description": {
       "string": "All-in-one voice and text chat"
     },
     "catalog-setup-neochat": {
@@ -2442,10 +2442,10 @@
     "catalog-setup-slack-description": {
       "string": "Slack Desktop client"
     },
-    "catalog-setup-mumble": {
+    "catalog-setup-setup-mumble": {
       "string": "Mumble"
     },
-    "catalog-setup-mumble-description": {
+    "catalog-setup-setup-mumble-description": {
       "string": "Low-latency, high quality voice chat software"
     },
     "catalog-setup-twitch-gui": {
@@ -2559,16 +2559,16 @@
     "catalog-setup-ansible-description": {
       "string": "Official assortment of Ansible collections"
     },
-    "catalog-setup-docker": {
+    "catalog-setup-setup-docker": {
       "string": "Docker"
     },
-    "catalog-setup-docker-description": {
+    "catalog-setup-setup-docker-description": {
       "string": "Pack, ship and run applications as containers"
     },
-    "catalog-setup-podman": {
+    "catalog-setup-setup-podman": {
       "string": "Podman"
     },
-    "catalog-setup-podman-description": {
+    "catalog-setup-setup-podman-description": {
       "string": "Daemonless container engine for managing containers"
     },
     "catalog-setup-jenkins": {
@@ -2598,16 +2598,16 @@
     "catalog-setup-gaming": {
       "string": "Gaming"
     },
-    "catalog-setup-aisleriot": {
+    "catalog-setup-setup-aisleriot": {
       "string": "Aisleriot"
     },
-    "catalog-setup-aisleriot-description": {
+    "catalog-setup-setup-aisleriot-description": {
       "string": "Collection of patience card games"
     },
-    "catalog-setup-mari0": {
+    "catalog-setup-setup-mari0": {
       "string": "Mari0"
     },
-    "catalog-setup-mari0-description": {
+    "catalog-setup-setup-mari0-description": {
       "string": "Mario game with Portal gun mechanics"
     },
     "catalog-setup-kapman": {
@@ -2640,34 +2640,34 @@
     "catalog-setup-super-tux-description": {
       "string": "Classic 2D jump'n'run sidescroller game"
     },
-    "catalog-setup-luanti": {
+    "catalog-setup-setup-luanti": {
       "string": "Luanti"
     },
-    "catalog-setup-luanti-description": {
+    "catalog-setup-setup-luanti-description": {
       "string": "Voxel-based game engine"
     },
-    "catalog-setup-0ad": {
+    "catalog-setup-setup-0ad": {
       "string": "0 A.D."
     },
-    "catalog-setup-0ad-description": {
+    "catalog-setup-setup-0ad-description": {
       "string": "3D historically-based real-time strategy game"
     },
-    "catalog-setup-teeworlds": {
+    "catalog-setup-setup-teeworlds": {
       "string": "Teeworlds"
     },
-    "catalog-setup-teeworlds-description": {
+    "catalog-setup-setup-teeworlds-description": {
       "string": "Fast-paced multiplayer 2D shooter game"
     },
-    "catalog-setup-xonotic": {
+    "catalog-setup-setup-xonotic": {
       "string": "Xonotic"
     },
-    "catalog-setup-xonotic-description": {
+    "catalog-setup-setup-xonotic-description": {
       "string": "Fast-paced cross-platform first person shooter"
     },
-    "catalog-setup-hedgewars": {
+    "catalog-setup-setup-hedgewars": {
       "string": "Hedgewars"
     },
-    "catalog-setup-hedgewars-description": {
+    "catalog-setup-setup-hedgewars-description": {
       "string": "Turn-based strategy artillery game"
     },
     "catalog-setup-graphics": {
@@ -3168,16 +3168,16 @@
     "catalog-setup-other": {
       "string": "Other"
     },
-    "catalog-setup-droidcam": {
+    "catalog-setup-setup-droidcam": {
       "string": "Droidcam"
     },
-    "catalog-setup-droidcam-description": {
+    "catalog-setup-setup-droidcam-description": {
       "string": "Turn your phone/tablet into a webcam"
     },
-    "catalog-setup-soundwire": {
+    "catalog-setup-setup-soundwire": {
       "string": "Soundwire"
     },
-    "catalog-setup-soundwire-description": {
+    "catalog-setup-setup-soundwire-description": {
       "string": "Transmit audio from your PC to other devices"
     },
     "catalog-setup-variety": {
@@ -3270,16 +3270,16 @@
     "catalog-setup-shotcut-description": {
       "string": "Cross-platform video editor"
     },
-    "catalog-setup-obs-studio": {
+    "catalog-setup-setup-obs-studio": {
       "string": "OBS Studio"
     },
-    "catalog-setup-obs-studio-description": {
+    "catalog-setup-setup-obs-studio-description": {
       "string": "Software for live streaming and recording"
     },
-    "catalog-setup-vlc": {
+    "catalog-setup-setup-vlc": {
       "string": "VLC"
     },
-    "catalog-setup-vlc-description": {
+    "catalog-setup-setup-vlc-description": {
       "string": "Cross-platform multimedia player"
     },
     "catalog-setup-sm-player": {
@@ -3309,10 +3309,10 @@
     "catalog-setup-gnome-boxes-description": {
       "string": "Simple application to access virtual systems"
     },
-    "catalog-setup-virt-manager": {
+    "catalog-setup-setup-virt-manager": {
       "string": "Virtual Machine Manager"
     },
-    "catalog-setup-virt-manager-description": {
+    "catalog-setup-setup-virt-manager-description": {
       "string": "Desktop user interface for managing virtual machines"
     },
     "catalog-setup-genymotion": {
@@ -5935,6 +5935,9 @@
     },
     "maintenance-op-remove-database-lock-detail": {
       "string": "Delete a lock left behind by an interrupted update. Nothing happens while pacman runs."
+    },
+    "maintenance-op-aur-upgrade-detail": {
+      "string": "Update the packages built from the AUR with paru, which asks its questions in the terminal."
     },
     "maintenance-op-remove-database-lock-queue": {
       "string": "Queue unlock"

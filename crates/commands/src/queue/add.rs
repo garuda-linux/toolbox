@@ -8,10 +8,10 @@ mod tests;
 
 use toolbox_cli::args::{
     AppsCommand, BootCommand, BootSet, Command, DkmsBuild, DkmsCommand, DriversCommand, EditUser,
-    EntryArgs, GroupArgs, GroupsCommand, KernelArgs, KernelsCommand, LocaleArgs, LocalesCommand,
-    MaintenanceCommand, ModuleArgs, NetworkCommand, PackageArgs, PackageInstall, PackagesCommand,
-    ParamArgs, ParamCommand, RemoveUser, TaskArgs, ToggleCommand, TweaksCommand, UnitArgs,
-    UnitChange, UserArgs, UsersCommand,
+    EntryArgs, Group, GroupArgs, GroupsCommand, KernelArgs, KernelsCommand, LocaleArgs,
+    LocalesCommand, MaintenanceCommand, ModuleArgs, NetworkCommand, PackageArgs, PackageInstall,
+    PackagesCommand, ParamArgs, ParamCommand, RemoveUser, TaskArgs, ToggleCommand, TweaksCommand,
+    UnitArgs, UnitChange, UserArgs, UsersCommand,
 };
 use toolbox_core::Toggle;
 use toolbox_core::features::maintenance::page::OPERATION_KEYS;
@@ -161,25 +161,25 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
         Command::Users(UsersCommand::Remove(args)) => Ok(Queueable::RemoveUser(args)),
         Command::Groups(GroupsCommand::Add(args)) => Ok(Queueable::Group(args, Toggle::On)),
         Command::Groups(GroupsCommand::Remove(args)) => Ok(Queueable::Group(args, Toggle::Off)),
-        Command::Boot(BootCommand::Set(args)) => Ok(Queueable::BootSet(args)),
-        Command::Boot(BootCommand::Param(ParamCommand::Add(args))) => {
+        Command::Boot(Group(BootCommand::Set(args))) => Ok(Queueable::BootSet(args)),
+        Command::Boot(Group(BootCommand::Param(ParamCommand::Add(args)))) => {
             Ok(Queueable::Parameter(args, Toggle::On))
         }
-        Command::Boot(BootCommand::Param(ParamCommand::Remove(args))) => {
+        Command::Boot(Group(BootCommand::Param(ParamCommand::Remove(args)))) => {
             Ok(Queueable::Parameter(args, Toggle::Off))
         }
-        Command::Network(NetworkCommand::Drivers(DriversCommand::Blacklist(args))) => {
+        Command::Network(Group(NetworkCommand::Drivers(DriversCommand::Blacklist(args)))) => {
             Ok(Queueable::Driver(args, Toggle::On))
         }
-        Command::Network(NetworkCommand::Drivers(DriversCommand::Allow(args))) => {
+        Command::Network(Group(NetworkCommand::Drivers(DriversCommand::Allow(args)))) => {
             Ok(Queueable::Driver(args, Toggle::Off))
         }
-        Command::Tweaks(
+        Command::Tweaks(Group(
             tweak @ (TweaksCommand::Dns(_)
             | TweaksCommand::WifiBackend(_)
             | TweaksCommand::Hblock(_)
             | TweaksCommand::UpdateFlag(_)),
-        ) => Ok(Queueable::Tweak(tweak)),
+        )) => Ok(Queueable::Tweak(tweak)),
         Command::Status(_)
         | Command::Doctor(_)
         | Command::Pages(_)

@@ -1,8 +1,8 @@
 use clap::CommandFactory as _;
 
 use super::super::{
-    AppsCommand, Cli, Command, DriversCommand, KernelsCommand, LocalesCommand, NetworkCommand,
-    PackagesCommand,
+    AppsCommand, Cli, Command, DriversCommand, Group, KernelsCommand, LocalesCommand,
+    NetworkCommand, PackagesCommand,
 };
 use super::parse;
 
@@ -25,11 +25,11 @@ fn packages_list_is_packages_search() {
 fn drivers_block_is_blacklist() {
     assert!(matches!(
         command(&["network", "drivers", "block", "r8169"]),
-        Command::Network(NetworkCommand::Drivers(DriversCommand::Blacklist(_)))
+        Command::Network(Group(NetworkCommand::Drivers(DriversCommand::Blacklist(_))))
     ));
     assert!(matches!(
         command(&["network", "drivers", "blacklist", "r8169"]),
-        Command::Network(NetworkCommand::Drivers(DriversCommand::Blacklist(_)))
+        Command::Network(Group(NetworkCommand::Drivers(DriversCommand::Blacklist(_))))
     ));
 }
 
@@ -49,11 +49,11 @@ fn locales_set_system_is_locales_system() {
 fn drivers_unblock_is_allow() {
     assert!(matches!(
         command(&["network", "drivers", "unblock", "r8169"]),
-        Command::Network(NetworkCommand::Drivers(DriversCommand::Allow(_)))
+        Command::Network(Group(NetworkCommand::Drivers(DriversCommand::Allow(_))))
     ));
     assert!(matches!(
         command(&["network", "drivers", "allow", "r8169"]),
-        Command::Network(NetworkCommand::Drivers(DriversCommand::Allow(_)))
+        Command::Network(Group(NetworkCommand::Drivers(DriversCommand::Allow(_))))
     ));
 }
 

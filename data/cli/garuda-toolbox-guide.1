@@ -4,10 +4,16 @@
 .SH NAME
 garuda\-toolbox\-guide \- Read the user guide in the terminal
 .SH SYNOPSIS
-\fBgaruda\-toolbox guide\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+\fBgaruda\-toolbox guide\fR [\fB\-\-json\fR] [\fB\-\-search\fR \fITEXT\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIsubcommands\fR]
 .SH DESCRIPTION
 Read the user guide in the terminal
 .SH OPTIONS
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
+.TP
+\fB\-\-search\fR \fI<TEXT>\fR
+Only the rows whose name contains this text, in any case
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print the programs\*(Aq own words under an error
@@ -47,7 +53,7 @@ garuda\-toolbox\-guide\-show(1)
 Print a page of the user guide
 .SH EXTRA
 Examples:
-  garuda\-toolbox guide list
+  garuda\-toolbox guide
   garuda\-toolbox guide show kernels
 .SH "SEE ALSO"
 garuda\-toolbox(1)

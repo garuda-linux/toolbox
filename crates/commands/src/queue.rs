@@ -290,7 +290,7 @@ fn show(store: &dyn Store, system: &Snapshot, read: Read, out: &mut Out<'_>) -> 
         let steps = plan
             .steps()
             .iter()
-            .map(|step| step.action.command_lines().join(" "))
+            .map(|step| step.action.command_lines())
             .collect();
 
         write!(

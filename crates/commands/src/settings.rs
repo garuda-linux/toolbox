@@ -186,7 +186,8 @@ pub fn get_text(read: Read, settings: &Settings, key: SettingKey, autostart: boo
     }
 }
 
-/// The settings, both columns plain enough to need no names.
+/// The settings, the columns plain enough to need no names. What a setting
+/// takes is its help text from `settings set --help`.
 pub fn setting_listing(rows: &[SettingRow]) -> Listing<'_> {
     Listing {
         title: "Settings",
@@ -194,10 +195,18 @@ pub fn setting_listing(rows: &[SettingRow]) -> Listing<'_> {
         head: &[],
         rows: rows
             .iter()
-            .map(|row| Row::plain(vec![row.key.to_owned(), row.value.clone()]))
+            .map(|row| Row::plain(vec![row.key.to_owned(), row.value.clone(), about(row.key)]))
             .collect(),
         hint: Some("garuda-toolbox settings set <setting> <value>".to_owned()),
     }
+}
+
+fn about(key: &str) -> String {
+    SettingKey::from_str(key, false)
+        .ok()
+        .and_then(|key| key.to_possible_value())
+        .and_then(|value| value.get_help().map(ToString::to_string))
+        .unwrap_or_default()
 }
 
 const fn key_name(key: SettingKey) -> &'static str {

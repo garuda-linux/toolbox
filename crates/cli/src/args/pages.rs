@@ -2,7 +2,7 @@ use clap::{Args, Subcommand, ValueEnum};
 use toolbox_plan::PageName;
 use toolbox_state::diagnostics::Selection;
 
-use super::change::{EntryArgs, UnitArgs, UnitChange};
+use super::change::{EntryArgs, EntryShow, UnitArgs, UnitChange, UnitShow};
 use super::{Confirm, ReadList, name};
 
 #[derive(Debug, Args)]
@@ -29,6 +29,11 @@ pub enum ServicesCommand {
     /// List the services and their state.
     #[command(after_help = "Example:\n  garuda-toolbox services list --user")]
     List(ServicesList),
+
+    /// Show one service: its description, its state and whether it starts
+    /// at boot.
+    #[command(after_help = "Example:\n  garuda-toolbox services show bluetooth")]
+    Show(UnitShow),
 
     /// Start a service now. Refused when it runs already.
     #[command(after_help = "Example:\n  garuda-toolbox services start bluetooth.service")]
@@ -63,15 +68,23 @@ pub enum ServicesCommand {
     Unmask(UnitArgs),
 }
 
+/// A services command that changes nothing.
+#[derive(Debug)]
+pub enum ServicesRead<'a> {
+    List(&'a ServicesList),
+    Show(&'a UnitShow),
+}
+
 impl ServicesCommand {
     /// The change and its unit.
     ///
     /// # Errors
     ///
-    /// The list's arguments for `list`, which changes nothing.
-    pub const fn change(&self) -> Result<(UnitChange, &UnitArgs), &ServicesList> {
+    /// The read's arguments for `list` and `show`, which change nothing.
+    pub const fn change(&self) -> Result<(UnitChange, &UnitArgs), ServicesRead<'_>> {
         Ok(match self {
-            Self::List(list) => return Err(list),
+            Self::List(list) => return Err(ServicesRead::List(list)),
+            Self::Show(show) => return Err(ServicesRead::Show(show)),
             Self::Start(unit) => (UnitChange::Start, unit),
             Self::Stop(unit) => (UnitChange::Stop, unit),
             Self::Restart(unit) => (UnitChange::Restart, unit),
@@ -115,6 +128,10 @@ pub enum ToggleCommand {
     /// List the switches and whether each is on.
     #[command(after_help = "Example:\n  garuda-toolbox toggle list --page gaming")]
     List(ToggleList),
+
+    /// Show one switch: its page, whether it is on and what it installs.
+    #[command(after_help = "Example:\n  garuda-toolbox toggle show pipewire-support")]
+    Show(EntryShow),
 
     /// Turn a switch on, with what it needs.
     #[command(after_help = "Example:\n  garuda-toolbox toggle on pipewire-support")]

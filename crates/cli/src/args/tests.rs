@@ -1,16 +1,19 @@
 mod aliases;
 mod confirm;
+mod defaults;
+mod global;
 mod queue;
+mod show;
+mod units;
 
-use clap::Parser as _;
 use toolbox_plan::PageName;
 use toolbox_state::diagnostics::{Collector, Selection};
 
 use super::pages::Report;
-use super::{Cli, Command, ServicesCommand, ToggleCommand, TogglePage};
+use super::{Cli, Command, Group, ServicesCommand, ToggleCommand, TogglePage};
 
 pub(super) fn parse(args: &[&str]) -> Result<Cli, clap::Error> {
-    Cli::try_parse_from(std::iter::once("garuda-toolbox").chain(args.iter().copied()))
+    Cli::try_from_words(std::iter::once("garuda-toolbox").chain(args.iter().copied()))
 }
 
 #[test]
@@ -298,7 +301,7 @@ fn read_verbs_are_list_and_show_with_the_old_names_as_aliases() {
         let cli = parse(&["network", verb]).unwrap();
         assert!(matches!(
             cli.command,
-            Some(Command::Network(NetworkCommand::Show(_)))
+            Some(Command::Network(Group(NetworkCommand::Show(_))))
         ));
 
         let repair = parse(&["bootrepair", verb]).unwrap();
@@ -314,7 +317,7 @@ fn settings_get_takes_json() {
     use super::{SettingKey, SettingsCommand};
 
     let cli = parse(&["settings", "get", "language", "--json"]).unwrap();
-    let Some(Command::Settings(SettingsCommand::Get(get))) = cli.command else {
+    let Some(Command::Settings(Group(SettingsCommand::Get(get)))) = cli.command else {
         panic!("not settings get");
     };
 

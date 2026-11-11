@@ -10,6 +10,7 @@ mod tests;
 mod accounts;
 mod change;
 mod confirm_of;
+mod group;
 mod guide;
 mod list;
 mod net;
@@ -20,16 +21,18 @@ mod status;
 mod system;
 mod tools;
 mod tweaks;
+mod window;
 
 pub use accounts::{
     AddUser, EditUser, GroupArgs, GroupsCommand, PasswordArgs, PasswordSource, RemoveUser,
     UserArgs, UsersCommand, UsersList,
 };
 pub use change::{
-    EntryArgs, KernelArgs, KernelsCommand, MaintenanceCommand, ResetArgs, ResetList, TaskArgs,
-    UnitArgs, UnitChange,
+    EntryArgs, EntryShow, KernelArgs, KernelsCommand, MaintenanceCommand, ResetArgs, ResetList,
+    TaskArgs, UnitArgs, UnitChange, UnitShow,
 };
 use clap::{Args, Parser, Subcommand};
+pub use group::{Defaulted, Group};
 pub use guide::{GuideCommand, GuideShow};
 pub use list::{KernelsList, LocalesList, ReadList, Search};
 pub use net::{
@@ -39,8 +42,8 @@ pub use net::{
 };
 pub use packages::{PackageArgs, PackageInstall, PackageShow, PackagesCommand, PackagesSearch};
 pub use pages::{
-    AppsCommand, AppsList, Diagnostics, ServicesCommand, ServicesList, ToggleCommand, ToggleList,
-    TogglePage, Update,
+    AppsCommand, AppsList, Diagnostics, ServicesCommand, ServicesList, ServicesRead, ToggleCommand,
+    ToggleList, TogglePage, Update,
 };
 pub use queue::{QueueAdd, QueueClear, QueueCommand, QueueRemove};
 pub use status::{Interval, StatusArgs};
@@ -70,7 +73,6 @@ Examples:
     version,
     about = ABOUT,
     after_help = EXAMPLES,
-    args_conflicts_with_subcommands = true,
     disable_help_subcommand = true
 )]
 pub struct Cli {
@@ -142,10 +144,9 @@ pub enum Command {
     /// Read the user guide in the terminal.
     #[command(
         display_order = 21,
-        subcommand,
-        after_help = "Examples:\n  garuda-toolbox guide list\n  garuda-toolbox guide show kernels"
+        after_help = "Examples:\n  garuda-toolbox guide\n  garuda-toolbox guide show kernels"
     )]
-    Guide(GuideCommand),
+    Guide(Group<GuideCommand>),
 
     /// List the pages of the window, for `--page`.
     #[command(display_order = 2, after_help = "Example:\n  garuda-toolbox pages")]
@@ -250,10 +251,9 @@ pub enum Command {
     /// Set the boot menu: default entry, timeout, kernel parameters, looks.
     #[command(
         display_order = 14,
-        subcommand,
-        after_help = "Example:\n  garuda-toolbox boot set timeout 3"
+        after_help = "Examples:\n  garuda-toolbox boot\n  garuda-toolbox boot set timeout 3"
     )]
-    Boot(BootCommand),
+    Boot(Group<BootCommand>),
 
     /// Show and edit config files, the system's and your own.
     #[command(
@@ -266,19 +266,17 @@ pub enum Command {
     /// Show the connection and switch radios, drivers and network tests.
     #[command(
         display_order = 13,
-        subcommand,
-        after_help = "Example:\n  garuda-toolbox network show"
+        after_help = "Examples:\n  garuda-toolbox network\n  garuda-toolbox network radio wifi off"
     )]
-    Network(NetworkCommand),
+    Network(Group<NetworkCommand>),
 
     /// Choose the DNS servers, the Wi-Fi backend, hblock and garuda-update's
     /// options, as the System Tweaks page does.
     #[command(
         display_order = 13,
-        subcommand,
-        after_help = "Example:\n  garuda-toolbox tweaks dns cloudflare"
+        after_help = "Examples:\n  garuda-toolbox tweaks\n  garuda-toolbox tweaks dns cloudflare"
     )]
-    Tweaks(TweaksCommand),
+    Tweaks(Group<TweaksCommand>),
 
     /// Repair the boot of an installed system, from the live ISO.
     #[command(
@@ -301,10 +299,9 @@ pub enum Command {
     /// Show and change the app's own settings.
     #[command(
         display_order = 19,
-        subcommand,
-        after_help = "Example:\n  garuda-toolbox settings list"
+        after_help = "Examples:\n  garuda-toolbox settings\n  garuda-toolbox settings set aur on"
     )]
-    Settings(SettingsCommand),
+    Settings(Group<SettingsCommand>),
 
     /// Update the system now, and the AUR packages with `--aur`.
     #[command(
@@ -318,11 +315,10 @@ pub enum Command {
     /// While the window runs, its own queue.
     #[command(
         display_order = 21,
-        subcommand,
         after_help = "Examples:\n  garuda-toolbox queue add apps install firefox\n  \
-                      garuda-toolbox queue show\n  garuda-toolbox queue apply"
+                      garuda-toolbox queue\n  garuda-toolbox queue apply"
     )]
-    Queue(QueueCommand),
+    Queue(Group<QueueCommand>),
 
     /// Print the completion hook for a shell, which asks this program for
     /// the names at each Tab.

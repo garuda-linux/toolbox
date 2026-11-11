@@ -9,7 +9,6 @@ use std::process::ExitCode;
 use std::sync::Arc;
 use std::time::Duration;
 
-use clap::FromArgMatches as _;
 use eframe::CreationContext;
 use tokio::runtime::Handle;
 use toolbox_cli::Cli;
@@ -89,7 +88,7 @@ fn main() -> ExitCode {
 
     let parsed = toolbox_cli::command()
         .try_get_matches()
-        .and_then(|matches| Cli::from_arg_matches(&matches));
+        .and_then(|matches| Cli::try_from_matches(&matches));
 
     let cli = match parsed {
         Ok(cli) => cli,

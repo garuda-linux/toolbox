@@ -93,9 +93,9 @@ impl Console {
             Report::PlanStarted { steps } => {
                 self.steps = steps
                     .into_iter()
-                    .map(|(id, command)| StepRow {
+                    .map(|(id, lines)| StepRow {
                         id,
-                        command: without_comment(&command).to_owned(),
+                        command: without_comment(&lines.join(" ")).to_owned(),
                         state: StepState::Waiting,
                     })
                     .collect();

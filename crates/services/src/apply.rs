@@ -45,7 +45,7 @@ pub enum Report {
     /// Every step with its command lines, for the step list and so a dry
     /// run's success can be checked against what was really sent.
     PlanStarted {
-        steps: Vec<(StepId, String)>,
+        steps: Vec<(StepId, Vec<String>)>,
     },
     /// A step's progress or output, from the helper or the app.
     Step(Event),
@@ -250,7 +250,7 @@ async fn run_plan(plan: Plan, run: &mut Run<'_>, launcher: &dyn Launcher) -> boo
     let listed = plan
         .steps()
         .iter()
-        .map(|step| (step.id, step.action.command_lines().join(" ")))
+        .map(|step| (step.id, step.action.command_lines()))
         .collect();
 
     run.reporter.report(Report::PlanStarted { steps: listed });

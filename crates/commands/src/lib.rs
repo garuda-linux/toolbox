@@ -29,11 +29,13 @@ mod queue;
 mod reads;
 mod reset;
 mod root;
+pub mod services;
 pub mod settings;
 pub mod setup;
 mod spinner;
 mod start;
 pub mod status;
+mod switches;
 mod terminal;
 mod tweaks;
 pub mod window;
@@ -44,26 +46,23 @@ use std::sync::Arc;
 
 use serde::Serialize;
 use tokio::runtime::Runtime;
-use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{
-    AppsCommand, AppsList, Command, Diagnostics, KernelsCommand, KernelsList, LocalesList,
-    MaintenanceCommand, Read, ReadList, ServicesList, ToggleCommand, ToggleList, TogglePage,
-    Update,
+    AppsCommand, AppsList, Command, Diagnostics, Group, KernelsCommand, KernelsList, LocalesList,
+    MaintenanceCommand, Read, ReadList, ServicesRead, ToggleCommand, Update,
 };
 use toolbox_cli::output::{ColorMode, Row, json};
 use toolbox_core::features::maintenance::{Program, RunNow};
 use toolbox_core::{Snapshot, Toggle};
+use toolbox_plan::Plan;
 use toolbox_plan::protocol::Mode;
-use toolbox_plan::{Plan, UnitScope};
 use toolbox_privatebin::{Https, Transport};
 use toolbox_services::apply::Launcher as _;
 use toolbox_services::catalogs::{Catalogs, catalog_dir};
 use toolbox_services::diagnostics::DryRunTransport;
+use toolbox_services::i18n;
 use toolbox_services::page::PageId;
 use toolbox_services::programs::Programs;
-use toolbox_services::units::{Systemd, UnitLister as _};
-use toolbox_services::{desktop, i18n};
 use toolbox_system::{Sources, SystemDiagnostics, probe_snapshot};
 use written::Written;
 
@@ -153,14 +152,16 @@ fn dispatch(command: Command, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         Command::Status(args) => status::status(args, runtime.handle(), out),
         Command::Doctor(read) => doctor::run(read, runtime, out),
         Command::Pages(read) => pages(read, out),
-        Command::Guide(command) => guide::command(command, out),
+        Command::Guide(Group(command)) => guide::command(command, out),
         Command::Diagnostics(args) => diagnose(&args, runtime, out),
-        Command::Toggle(ToggleCommand::List(list)) => toggle(&list, out),
+        Command::Toggle(ToggleCommand::List(list)) => switches::list(&list, out),
+        Command::Toggle(ToggleCommand::Show(show)) => switches::show(&show, out),
         Command::Apps(AppsCommand::List(list)) => apps(&list, out),
         Command::Update(args) => update(&args, runtime, out),
         Command::Services(command) => match command.change() {
             Ok((change, unit)) => act::service(change, unit, runtime, out),
-            Err(list) => services(list, runtime, out),
+            Err(ServicesRead::List(list)) => services::list(list, runtime, out),
+            Err(ServicesRead::Show(show)) => services::show(show, runtime, out),
         },
         Command::Toggle(ToggleCommand::On(args)) => act::toggle(&args, Toggle::On, runtime, out),
         Command::Toggle(ToggleCommand::Off(args)) => act::toggle(&args, Toggle::Off, runtime, out),
@@ -188,60 +189,18 @@ fn dispatch(command: Command, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         Command::Locales(command) => locales::command(command, runtime, out),
         Command::Users(command) => accounts::users_command(command, runtime, out),
         Command::Groups(command) => accounts::groups_command(command, runtime, out),
-        Command::Boot(command) => boot::command(command, runtime, out),
+        Command::Boot(Group(command)) => boot::command(command, runtime, out),
         Command::Configs(command) => configs::command(command, runtime, out),
-        Command::Network(command) => network::command(command, runtime, out),
-        Command::Tweaks(command) => tweaks::command(&command, runtime, out),
+        Command::Network(Group(command)) => network::command(command, runtime, out),
+        Command::Tweaks(Group(command)) => tweaks::command(&command, runtime, out),
         Command::Packages(command) => packages::command(command, runtime, out),
         Command::BootRepair(command) => bootrepair::command(command, runtime, out),
         Command::Setup(command) => setup::command(command, runtime, out),
-        Command::Settings(command) => settings::command(command, out),
-        Command::Queue(command) => queue::command(command, runtime, out),
+        Command::Settings(Group(command)) => settings::command(command, out),
+        Command::Queue(Group(command)) => queue::command(command, runtime, out),
         Command::Completions(args) => help::completions(&args, out),
         Command::Help(args) => help::help(&args, out),
     }
-}
-
-fn services(list: &ServicesList, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
-    let scope = UnitScope::from_user(list.user);
-
-    let listed = spinner::while_reading(list.read.json || out.quiet(), || {
-        runtime.block_on(Systemd.list(scope))
-    });
-
-    match listed {
-        Ok(units) => filter::print(
-            &list.read,
-            &lists::services(&units),
-            &filter::services(list),
-            out,
-            |rows| listing::services(rows, list.user),
-        ),
-        Err(error) => {
-            tracing::warn!("the units could not be listed: {error}");
-            unavailable("the services could not be read", out)
-        }
-    }
-}
-
-fn toggle(list: &ToggleList, out: &mut Out<'_>) -> Exit {
-    let catalogs = catalogs();
-    let pages: Vec<(TogglePage, &ToggleCatalog)> = [
-        (TogglePage::Components, &catalogs.components),
-        (TogglePage::Tweaks, &catalogs.settings),
-        (TogglePage::Gaming, &catalogs.gaming),
-        (TogglePage::Setup, &catalogs.setup),
-    ]
-    .into_iter()
-    .filter(|(page, _)| list.page.is_none_or(|wanted| wanted == *page))
-    .filter_map(|(page, toggles)| toggles.catalog.as_ref().ok().map(|found| (page, found)))
-    .collect();
-
-    let current = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
-    let rows = lists::toggles(&pages, &snapshot(&catalogs), &desktop::desktops(&current));
-    filter::print(&list.read, &rows, &filter::toggles(list), out, |rows| {
-        listing::toggles(rows, "Switches", "garuda-toolbox toggle on <id>")
-    })
 }
 
 fn apps(list: &AppsList, out: &mut Out<'_>) -> Exit {

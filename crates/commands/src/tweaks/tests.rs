@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 
 use clap::Parser as _;
-use toolbox_cli::args::{Cli, Command, TweaksCommand};
+use toolbox_cli::args::{Cli, Command, Group, TweaksCommand};
 use toolbox_core::domains::{
     CurrentDns, CurrentWifiBackend, Dns, GarudaUpdateConfig, GarudaUpdateFlags, Hblock,
     HblockState, WifiBackends,
@@ -17,7 +17,7 @@ fn tweak(words: &[&str]) -> TweaksCommand {
         .chain(words.iter().copied());
 
     match Cli::try_parse_from(argv).unwrap().command {
-        Some(Command::Tweaks(command)) => command,
+        Some(Command::Tweaks(Group(command))) => command,
         other => panic!("not a tweak: {other:?}"),
     }
 }

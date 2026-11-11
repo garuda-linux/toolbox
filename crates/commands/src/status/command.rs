@@ -14,7 +14,7 @@ use toolbox_system::{
 };
 
 use super::watch::{Shape, Watch, watch};
-use super::{StatusView, brief, needs_attention, text, view};
+use super::{StatusView, brief, exit, text, view};
 use crate::interrupt::{self, Stopper};
 use crate::out::Out;
 use crate::spinner;
@@ -36,11 +36,7 @@ pub fn status(args: StatusArgs, runtime: &Handle, out: &mut Out<'_>) -> Exit {
     };
 
     write!(out, "{text}").ok();
-    if needs_attention(&view) {
-        Exit::Attention
-    } else {
-        Exit::Success
-    }
+    exit(&view)
 }
 
 fn watched(args: StatusArgs, runtime: &Handle, out: &mut Out<'_>) -> Exit {

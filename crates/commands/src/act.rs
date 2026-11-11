@@ -189,7 +189,7 @@ fn task_listing(rows: &[TaskRow]) -> Listing<'_> {
                 (true, false) => (Mark::On, ""),
             };
 
-            Row::new(mark, vec![row.id.clone(), note.to_owned()])
+            Row::new(mark, vec![row.id.clone(), note.to_owned(), about(&row.id)])
         })
         .collect();
 
@@ -200,6 +200,19 @@ fn task_listing(rows: &[TaskRow]) -> Listing<'_> {
         rows,
         hint: Some("garuda-toolbox maintenance run <task>".to_owned()),
     }
+}
+
+/// What the task does, in the English words of the Maintenance page.
+fn about(id: &str) -> String {
+    let key = if id == RANK_MIRRORS {
+        "maintenance-tool-chaotic-mirrors-detail".to_owned()
+    } else if id == AUR_UPGRADE || OPERATION_KEYS.contains(&id) {
+        format!("maintenance-op-{id}-detail")
+    } else {
+        format!("maintenance-repair-{id}-detail")
+    };
+
+    toolbox_services::i18n::text_or_in(&toolbox_services::i18n::FALLBACK, &key, "").into_owned()
 }
 
 pub fn run(

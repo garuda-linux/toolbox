@@ -2,9 +2,9 @@
 //! shaped here, the app checks them against the system and the catalogs.
 
 use clap::{Args, Subcommand, ValueEnum};
-use toolbox_plan::{PackageName, UnitName};
+use toolbox_plan::{PackageName, Reason, UnitName};
 
-use super::{Confirm, KernelsList, ReadList};
+use super::{Confirm, KernelsList, Read, ReadList};
 
 /// Longer ids name no entry of a catalog, unit or package.
 const ID_MAX: usize = 128;
@@ -12,7 +12,9 @@ const ID_MAX: usize = 128;
 /// One service and where it lives.
 #[derive(Debug, Args)]
 pub struct UnitArgs {
-    /// The unit, for example `bluetooth.service`.
+    /// The unit, for example `bluetooth.service`. Without a type it is a
+    /// service.
+    #[arg(value_parser = unit)]
     pub unit: UnitName,
 
     /// One of your own services instead of the system's.
@@ -21,6 +23,33 @@ pub struct UnitArgs {
 
     #[command(flatten)]
     pub confirm: Confirm,
+}
+
+/// One service to read.
+#[derive(Debug, Args)]
+pub struct UnitShow {
+    /// The unit, for example `bluetooth.service`. Without a type it is a
+    /// service.
+    #[arg(value_parser = unit)]
+    pub unit: UnitName,
+
+    /// One of your own services instead of the system's.
+    #[arg(long)]
+    pub user: bool,
+
+    #[command(flatten)]
+    pub read: Read,
+}
+
+/// One switch to read, by its id as `toggle list` prints it.
+#[derive(Debug, Args)]
+pub struct EntryShow {
+    /// The id, as the list command prints it.
+    #[arg(value_parser = id)]
+    pub id: String,
+
+    #[command(flatten)]
+    pub read: Read,
 }
 
 /// One catalog entry by its id, as `toggle list` or `apps list` prints it.
@@ -135,6 +164,16 @@ pub enum UnitChange {
     Disable,
     Mask,
     Unmask,
+}
+
+/// A unit as systemctl takes it: a name without a known type is a service.
+fn unit(text: &str) -> Result<UnitName, String> {
+    match UnitName::new(text) {
+        Err(error) if error.reason() == Reason::UnknownUnitType => {
+            UnitName::new(format!("{text}.service")).map_err(|_suffixed| error.to_string())
+        }
+        named => named.map_err(|error| error.to_string()),
+    }
 }
 
 /// An id of a unit, a package or a catalog entry: letters, digits and the

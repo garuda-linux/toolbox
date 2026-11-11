@@ -84,7 +84,10 @@ impl Show {
     pub fn report(&mut self, report: &Report) -> String {
         match report {
             Report::PlanStarted { steps } => {
-                self.steps.clone_from(steps);
+                self.steps = steps
+                    .iter()
+                    .map(|(id, lines)| (*id, lines.join(" ")))
+                    .collect();
                 self.started = Some((self.clock)());
                 String::new()
             }

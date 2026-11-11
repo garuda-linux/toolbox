@@ -31,16 +31,23 @@ pub fn usage(message: &str) -> Exit {
     Exit::Usage
 }
 
-/// clap's error. Help, the version and text output print as clap prints
-/// them and end the process. A wrong argument under `--json` becomes the
-/// error object with code 2.
+/// clap's error. Help and the version print as clap prints them.
+///
+/// A wrong argument is an `error:` line and a `hint:` line as the app's own
+/// errors are, under `--json` the error object with code 2.
 pub fn parse_failed(error: &clap::Error) -> Exit {
-    if !error.use_stderr() || !json_asked(std::env::args_os().skip(1)) {
+    let rendered = error.render().to_string();
+    if !error.use_stderr() || !rendered.starts_with("error: ") {
         error.exit();
     }
 
-    let said = clap_said(&error.render().to_string());
-    write!(std::io::stderr(), "{}", error_object(&said, Exit::Usage)).ok();
+    let shown = if json_asked(std::env::args_os().skip(1)) {
+        error_object(&clap_said(&rendered), Exit::Usage)
+    } else {
+        error_text(&clap_text(&rendered))
+    };
+
+    write!(std::io::stderr(), "{shown}").ok();
     Exit::Usage
 }
 
@@ -52,19 +59,58 @@ fn usage_text(message: &str, json: bool) -> String {
     }
 }
 
-/// clap's first line is the message, its `tip:` lines the hint. The usage
-/// line under them is left out, `--help` shows it.
 fn clap_said(rendered: &str) -> Said {
+    Said::new(&clap_text(rendered), None)
+}
+
+/// clap's error as the app words its own: the first line the message, the
+/// arguments listed under it joined to it, `tip:` lines and the bracketed
+/// values the hint. The usage block is left out. Without another hint the
+/// `--help` of the command the usage line names is the hint.
+fn clap_text(rendered: &str) -> String {
     let mut lines = rendered.lines();
     let first = lines.next().unwrap_or_default();
-    let message = first.strip_prefix("error: ").unwrap_or(first);
-    let tips: Vec<&str> = lines
-        .filter_map(|line| line.trim().strip_prefix("tip: "))
-        .collect();
+    let mut message = first.strip_prefix("error: ").unwrap_or(first).to_owned();
+    let mut listed: Vec<&str> = Vec::new();
+    let mut hints: Vec<&str> = Vec::new();
+    let mut command: Option<String> = None;
 
-    if tips.is_empty() {
-        Said::new(message, None)
-    } else {
-        Said::new(&format!("{message}\n{}", tips.join(" ")), None)
+    for line in lines {
+        let trimmed = line.trim();
+        if let Some(usage) = line.strip_prefix("Usage: ") {
+            command = Some(command_of(usage));
+        } else if let Some(tip) = trimmed.strip_prefix("tip: ") {
+            hints.push(tip);
+        } else if let Some(values) = trimmed
+            .strip_prefix('[')
+            .and_then(|rest| rest.strip_suffix(']'))
+        {
+            hints.push(values);
+        } else if command.is_none() && line.starts_with(' ') && !trimmed.is_empty() {
+            listed.push(trimmed);
+        } else {
+            // A blank line, the second line of a usage, and the closing
+            // pointer to `--help`, which the hint replaces.
+        }
     }
+
+    if !listed.is_empty() {
+        message = format!("{message} {}", listed.join(", "));
+    }
+
+    let help = command.map(|command| format!("{command} --help"));
+    match (hints.is_empty(), help) {
+        (false, _) => format!("{message}\n{}", hints.join(" ")),
+        (true, Some(help)) => format!("{message}\n{help}"),
+        (true, None) => message,
+    }
+}
+
+/// `garuda-toolbox toggle on` of `garuda-toolbox toggle on <ID>`.
+fn command_of(usage: &str) -> String {
+    usage
+        .split_whitespace()
+        .take_while(|word| !word.starts_with(['[', '<', '-']))
+        .collect::<Vec<_>>()
+        .join(" ")
 }

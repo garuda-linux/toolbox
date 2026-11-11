@@ -27,6 +27,7 @@ maintenance-op-refresh-keyring-detail = Download the newest keys that prove the 
 maintenance-op-refresh-keyring-queue = Queue refresh
 maintenance-op-remove-database-lock = Remove the pacman lock
 maintenance-op-remove-database-lock-detail = Delete a lock left behind by an interrupted update. Nothing happens while pacman runs.
+maintenance-op-aur-upgrade-detail = Update the packages built from the AUR with paru, which asks its questions in the terminal.
 maintenance-op-remove-database-lock-queue = Queue unlock
 
 maintenance-tools = Tools

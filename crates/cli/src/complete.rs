@@ -28,6 +28,7 @@ const UNIT: Names = Names::Services { user: false };
 const PLACES: &[Place] = &[
     (&[], "page", Names::Pages),
     (&["apps", "list"], "category", Names::AppCategories),
+    (&["services", "show"], "unit", UNIT),
     (&["services", "start"], "unit", UNIT),
     (&["services", "stop"], "unit", UNIT),
     (&["services", "restart"], "unit", UNIT),
@@ -36,6 +37,7 @@ const PLACES: &[Place] = &[
     (&["services", "disable"], "unit", UNIT),
     (&["services", "mask"], "unit", UNIT),
     (&["services", "unmask"], "unit", UNIT),
+    (&["toggle", "show"], "id", Names::Switches),
     (&["toggle", "on"], "id", Names::Switches),
     (&["toggle", "off"], "id", Names::Switches),
     (&["apps", "install"], "id", Names::Apps),

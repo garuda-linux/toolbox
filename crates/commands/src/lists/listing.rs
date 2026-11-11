@@ -65,7 +65,7 @@ pub fn toggles<'a>(rows: &'a [ToggleRow], title: &'a str, hint: &str) -> Listing
                     _ => Mark::Unknown,
                 };
 
-                Row::cells(mark, &[&row.id, &row.name])
+                Row::cells(mark, &[&row.id, row.state, &row.name])
             })
             .collect(),
         hint: Some(hint.to_owned()),

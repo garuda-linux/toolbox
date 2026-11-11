@@ -4,10 +4,13 @@
 .SH NAME
 garuda\-toolbox\-boot \- Set the boot menu: default entry, timeout, kernel parameters, looks
 .SH SYNOPSIS
-\fBgaruda\-toolbox boot\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+\fBgaruda\-toolbox boot\fR [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIsubcommands\fR]
 .SH DESCRIPTION
 Set the boot menu: default entry, timeout, kernel parameters, looks
 .SH OPTIONS
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print the programs\*(Aq own words under an error
@@ -52,7 +55,8 @@ Change one setting of the boot menu, then regenerate it
 garuda\-toolbox\-boot\-param(1)
 Add or remove a kernel parameter
 .SH EXTRA
-Example:
+Examples:
+  garuda\-toolbox boot
   garuda\-toolbox boot set timeout 3
 .SH "SEE ALSO"
 garuda\-toolbox(1)

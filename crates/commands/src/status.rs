@@ -10,6 +10,7 @@ use std::fmt::Write as _;
 use std::time::SystemTime;
 
 use serde::Serialize;
+use toolbox_cli::Exit;
 use toolbox_cli::output::Paint;
 use toolbox_core::features::status::days_since;
 use toolbox_system::{Facts, HealthLevel, PendingUpdate, ProbeError, Status};
@@ -109,11 +110,7 @@ pub fn view(status: &Status, restart: &Result<bool, ProbeError>, now: SystemTime
 /// health finding and a short `error:` line per part that failed. The
 /// programs' own words follow only with `verbose`.
 pub fn text(view: &StatusView, paint: Paint, verbose: bool) -> String {
-    let mut rows: Vec<(&str, Shown)> = rows(view).into_iter().collect();
-    if let Some(read) = &view.facts {
-        rows.extend(facts::rows(read));
-    }
-
+    let rows = every_row(view);
     let mut facts: Vec<(&str, &str)> = Vec::new();
     let mut failed: Vec<(&str, &str)> = Vec::new();
     for (label, shown) in &rows {
@@ -150,6 +147,31 @@ pub fn brief(view: &StatusView) -> String {
 /// Whether `status` exits with [`toolbox_cli::Exit::Attention`].
 pub fn needs_attention(view: &StatusView) -> bool {
     !attention(view).is_empty()
+}
+
+/// Something to do wins over a part that could not be read: the answer
+/// says what to do either way.
+pub fn exit(view: &StatusView) -> Exit {
+    let failed = every_row(view)
+        .iter()
+        .any(|(_, shown)| matches!(shown, Shown::Failed(_)));
+
+    if needs_attention(view) {
+        Exit::Attention
+    } else if failed {
+        Exit::Failure
+    } else {
+        Exit::Success
+    }
+}
+
+fn every_row(view: &StatusView) -> Vec<(&'static str, Shown)> {
+    let mut rows: Vec<(&str, Shown)> = rows(view).into_iter().collect();
+    if let Some(read) = &view.facts {
+        rows.extend(facts::rows(read));
+    }
+
+    rows
 }
 
 /// The things to do, each counted. Info findings ask for nothing.

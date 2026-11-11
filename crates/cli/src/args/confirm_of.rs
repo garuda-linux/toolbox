@@ -3,7 +3,7 @@
 
 use super::{
     AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, Confirm, DkmsCommand,
-    DriversCommand, GroupsCommand, KernelsCommand, LocalesCommand, MaintenanceCommand,
+    DriversCommand, Group, GroupsCommand, KernelsCommand, LocalesCommand, MaintenanceCommand,
     NetworkCommand, PackagesCommand, PacksCommand, ParamCommand, QueueCommand, ServicesCommand,
     SetupCommand, ToggleCommand, TweaksCommand, UsersCommand,
 };
@@ -32,24 +32,24 @@ impl Command {
             Self::Groups(GroupsCommand::Add(args) | GroupsCommand::Remove(args)) => {
                 Some(args.confirm)
             }
-            Self::Boot(command) => boot(command),
+            Self::Boot(Group(command)) => boot(command),
             Self::Configs(ConfigsCommand::Edit(args)) => Some(args.confirm),
-            Self::Network(NetworkCommand::Drivers(
+            Self::Network(Group(NetworkCommand::Drivers(
                 DriversCommand::Blacklist(args)
                 | DriversCommand::Allow(args)
                 | DriversCommand::Load(args)
                 | DriversCommand::Unload(args),
-            )) => Some(args.confirm),
-            Self::Tweaks(command) => tweaks(command),
+            ))) => Some(args.confirm),
+            Self::Tweaks(Group(command)) => tweaks(command),
             Self::BootRepair(BootRepairCommand::Regenerate(args)) => Some(args.confirm),
             Self::BootRepair(BootRepairCommand::Reinstall(args)) => Some(args.repair.confirm),
             Self::Setup(SetupCommand::Apply(args)) => Some(args.confirm),
-            Self::Queue(QueueCommand::Apply(confirm)) => Some(*confirm),
+            Self::Queue(Group(QueueCommand::Apply(confirm))) => Some(*confirm),
             Self::Status(_)
             | Self::Doctor(_)
             | Self::Pages(_)
             | Self::Guide(_)
-            | Self::Toggle(ToggleCommand::List(_))
+            | Self::Toggle(ToggleCommand::List(_) | ToggleCommand::Show(_))
             | Self::Apps(AppsCommand::List(_))
             | Self::Packages(PackagesCommand::Search(_) | PackagesCommand::Show(_))
             | Self::Maintenance(MaintenanceCommand::List(_) | MaintenanceCommand::Reset(_))
@@ -60,12 +60,12 @@ impl Command {
             | Self::BootRepair(BootRepairCommand::Show(_))
             | Self::Setup(SetupCommand::List(_))
             | Self::Settings(_)
-            | Self::Queue(
+            | Self::Queue(Group(
                 QueueCommand::Show(_)
                 | QueueCommand::Add(_)
                 | QueueCommand::Remove(_)
                 | QueueCommand::Clear(_),
-            )
+            ))
             | Self::Completions(_)
             | Self::Help(_) => None,
         }
@@ -74,7 +74,7 @@ impl Command {
 
 const fn services(command: &ServicesCommand) -> Option<Confirm> {
     match command {
-        ServicesCommand::List(_) => None,
+        ServicesCommand::List(_) | ServicesCommand::Show(_) => None,
         ServicesCommand::Start(args)
         | ServicesCommand::Stop(args)
         | ServicesCommand::Restart(args)

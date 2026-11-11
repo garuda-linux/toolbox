@@ -25,7 +25,8 @@ pub struct ChangeRow {
 #[derive(Debug, Serialize)]
 pub struct Shown<'a> {
     pub changes: &'a [ChangeRow],
-    pub steps: Vec<String>,
+    /// Each step's command lines.
+    pub steps: Vec<Vec<String>>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

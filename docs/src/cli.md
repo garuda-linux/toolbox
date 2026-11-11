@@ -70,7 +70,9 @@ too and take `--json` as well (`configs show` prints the file itself).
 | `guide list`                                                      | The pages of the [user guide](guide.md), in the order of its parts.   |
 | `guide show <page>`                                               | One page of the user guide as text, for example `guide show kernels`. |
 | `services list [--user]`                                          | The system's services, or your own with `--user`.                     |
+| `services show <unit> [--user]`                                   | One service: its description, state and whether it starts at boot.    |
 | `toggle list [--page components\|system-settings\|gaming\|setup]` | The switches and whether each is on.                                  |
+| `toggle show <id>`                                                | One switch: its page, state, what tells it is on and what it brings.  |
 | `apps list [--category <category>]`                               | The App Catalog's apps and whether each is installed.                 |
 | `packages search [<text>] [--installed\|--orphans]`               | Repository and installed packages whose name or description matches.  |
 | `packages show <package>`                                         | One package: repository, version, size, dependencies, files.          |
@@ -82,6 +84,11 @@ too and take `--json` as well (`configs show` prints the file itself).
 A switch shows `on`, `off`, or `unknown` when its state could not be read.
 `doctor` ends with exit code 9 when a part the toolbox needs is missing
 or broken (see [Exit codes](#exit-codes)).
+Some groups run a read when no command follows them: `tweaks`,
+`settings` and `guide` are their `list`, `network`, `boot` and `queue`
+their `show`. The read's options go on the group too, so `tweaks --json`
+is `tweaks list --json`. They never go before another command of the
+group: `tweaks --json dns cloudflare` is refused.
 Old names still work: `dkms status`, `network status` and `bootrepair
 status` are the same as `dkms list`, `network show` and `bootrepair show`.
 Some commands have a second name: `packages list` is `packages search`,
@@ -116,7 +123,8 @@ output holds the result alone.
 `status --brief` prints one line for a login message or a status bar,
 such as `2 updates, 1 warning, disk space low` or `all good`. Parts that
 could not be read are left out. `status` ends with exit code 9 when
-something needs attention (see [Exit codes](#exit-codes)).
+something needs attention, else with 1 when a part could not be read
+(see [Exit codes](#exit-codes)).
 
 Besides the update check, `status` names the installed packages (with
 the foreign ones), the running kernel, the uptime, the free space on
@@ -264,6 +272,9 @@ $ garuda-toolbox services mask cups.service --user
 | `services disable <unit>` | Stops starting it at boot.                         |
 | `services mask <unit>`    | Masks it, so nothing can start it.                 |
 | `services unmask <unit>`  | Unmasks it.                                        |
+
+A unit without a type is a service, as for `systemctl`: `services start
+bluetooth` starts `bluetooth.service`.
 
 `--user` changes one of your own services instead of the system's. As on
 the Services page, starting a service that runs already or stopping one
@@ -542,7 +553,7 @@ kept with the window and only changed there.
 
 ## Output options
 
-These go after the command, as `-v` does:
+These go before or after the command, as `-v` does:
 
 | Option                        | What it does                                                                                  |
 | ----------------------------- | --------------------------------------------------------------------------------------------- |
@@ -733,7 +744,9 @@ error. Each line has `"schema": 1` and an `event`:
 | `done`     | `ok`: `true` when every step ended well           | Last.                                                        |
 
 `step` counts from 1 in the order of the plan, `of` is the number of
-steps and `command` the step's command line as text. `outcome` is
+steps and `command` an array of the step's command lines, in the order
+they run. A shell change, for example, first checks `/etc/shells`, then
+runs `chsh`. `outcome` is
 `done`, `failed`, `cancelled` or `skipped` (a dry run of the helper, or
 a step with nothing to do). `seconds` is how long the step took, to the
 millisecond. `hint` says what helps and `detail` holds the program's own
@@ -751,8 +764,8 @@ words, as in the errors of a read.
 For example, a restart of `sshd.service`:
 
 ```json
-{"schema":1,"event":"plan","steps":[{"step":1,"command":"systemctl restart -- sshd.service"}]}
-{"schema":1,"event":"started","step":1,"of":1,"command":"systemctl restart -- sshd.service"}
+{"schema":1,"event":"plan","steps":[{"step":1,"command":["systemctl restart -- sshd.service"]}]}
+{"schema":1,"event":"started","step":1,"of":1,"command":["systemctl restart -- sshd.service"]}
 {"schema":1,"event":"finished","step":1,"outcome":"done","seconds":0.412}
 {"schema":1,"event":"done","ok":true}
 ```
@@ -780,7 +793,9 @@ reason is the `reason` of a read's JSON error.
 | 130  | `interrupted` | `Ctrl+c` stopped it.                                                                                                                                                              |
 | 143  | `terminated`  | `SIGTERM` stopped it, such as `kill`. A change stops as with `Ctrl+c`.                                                                                                            |
 
-`status` ends with 0 also when some facts could not be read, and `status
---watch` when `Ctrl+c`, `SIGTERM` or `SIGHUP` ends it. 7 and 10
+A read that prints an `error:` line ends with 1 or a code above it, also
+when it printed what it could read. `status` ends with 1 when a part
+could not be read and nothing needs attention, 9 wins over it. `status
+--watch` ends with 0 when `Ctrl+c`, `SIGTERM` or `SIGHUP` ends it. 7 and 10
 are no longer given: 7 meant a change that would do nothing, which ends
 with 0, and 10 a cancelled change, which ends with 130, 143 or 129.

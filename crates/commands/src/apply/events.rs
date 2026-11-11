@@ -27,7 +27,7 @@ enum Line<'a> {
     Started {
         step: usize,
         of: usize,
-        command: &'a str,
+        command: &'a [String],
     },
     Output {
         step: usize,
@@ -55,7 +55,7 @@ enum Line<'a> {
 #[derive(Serialize)]
 struct Planned<'a> {
     step: usize,
-    command: &'a str,
+    command: &'a [String],
 }
 
 #[derive(Clone, Copy, Serialize)]
@@ -69,8 +69,8 @@ enum Ended {
 }
 
 pub struct Events {
-    /// The plan's steps in their order, each with its command line.
-    steps: Vec<(StepId, String)>,
+    /// The plan's steps in their order, each with its command lines.
+    steps: Vec<(StepId, Vec<String>)>,
     begun: HashMap<StepId, Instant>,
     clock: Clock,
     /// Output of the running step after its last line break.
@@ -126,11 +126,11 @@ impl Events {
         index.map_or(0, |index| index + 1)
     }
 
-    fn command(&self, step: StepId) -> &str {
+    fn command(&self, step: StepId) -> &[String] {
         self.steps
             .iter()
             .find(|(id, _)| *id == step)
-            .map_or("", |(_, command)| command.as_str())
+            .map_or(&[], |(_, command)| command.as_slice())
     }
 
     /// One `output` line for each line `data` completes. The rest waits
@@ -188,10 +188,10 @@ impl Events {
 
 /// The `plan` line, the steps numbered from 1.
 pub fn planned(plan: &Plan) -> String {
-    let commands: Vec<String> = plan
+    let commands: Vec<Vec<String>> = plan
         .steps()
         .iter()
-        .map(|step| step.action.command_lines().join(" "))
+        .map(|step| step.action.command_lines())
         .collect();
 
     let steps = commands

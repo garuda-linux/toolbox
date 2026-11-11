@@ -1,6 +1,6 @@
 //! A queued change is typed as its own command after `queue add`, so every change command, its checks and its help serve the queue too.
 
-use clap::{Args, CommandFactory as _, Parser as _, Subcommand};
+use clap::{Args, CommandFactory as _, Subcommand};
 
 use super::{Cli, Command, Confirm, Read};
 
@@ -78,7 +78,7 @@ impl QueueAdd {
     /// clap's own error for words that are no command.
     pub fn command(&self) -> Result<Command, clap::Error> {
         let words = std::iter::once("garuda-toolbox").chain(self.change.iter().map(String::as_str));
-        let cli = Cli::try_parse_from(words)?;
+        let cli = Cli::try_from_words(words)?;
 
         cli.command.ok_or_else(|| {
             Cli::command().error(
