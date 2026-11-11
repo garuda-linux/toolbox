@@ -14,8 +14,6 @@ use crate::command::ConfigsCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 
-const ROOM_BELOW: f32 = 220.0;
-
 /// Whether the user closed the review without an answer, which keeps
 /// the changes.
 pub fn show(ctx: &Context, context: &PageContext<'_>, session: &Session) -> bool {
@@ -29,10 +27,16 @@ pub fn show(ctx: &Context, context: &PageContext<'_>, session: &Session) -> bool
     let outcome = ModalWrapper::new(Id::unique("toolbox_gui::configs::review"), &title)
         .title_bar(&close)
         .width(DialogWidth::Wide)
+        .full_height()
         .show(ctx, |ui| {
-            words(ui, session, changes, &path);
-            diff(ui, changes);
-            buttons(ui, context, session)
+            super::filled(
+                ui,
+                |ui| {
+                    words(ui, session, changes, &path);
+                    diff(ui, changes);
+                },
+                |ui| buttons(ui, context, session),
+            )
         });
 
     if let Some(command) = outcome.inner {
@@ -142,10 +146,10 @@ fn words(ui: &mut Ui, session: &Session, changes: &Changes, path: &str) {
 fn diff(ui: &mut Ui, changes: &Changes) {
     let tokens = ui.tokens();
     let name = i18n::text(ui.ctx(), "configs-review-diff").into_owned();
-    let height = (ui.available_height() - ROOM_BELOW).max(super::MIN_TEXT_HEIGHT);
+    let height = ui.available_height().max(super::MIN_TEXT_HEIGHT);
     let area = ScrollArea::both()
         .max_height(height)
-        .auto_shrink([false, true])
+        .auto_shrink([false, false])
         .show(ui, |ui| {
             for line in changes.plain.lines() {
                 // Diff markup is jargon: the hunk header becomes the lines it
@@ -188,7 +192,6 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let failed = !session.problem().code.is_empty();
-    ui.add_space(ui.tokens().sizes.dialog_gap);
     let mut labels = vec![
         text("configs-discard-ask"),
         text("configs-edit-again"),

@@ -19,6 +19,16 @@ pub fn text_box(ui: &mut Ui, edit: TextEdit<'_>, name: &str, max_height: f32) ->
     text_box_at(ui, edit, name, max_height, None)
 }
 
+/// [`text_box`] that takes all the room below it, however short its
+/// text, for a dialog that is as tall as the window.
+pub fn text_box_filling(ui: &mut Ui, edit: TextEdit<'_>, name: &str) -> Response {
+    let height = 2.0_f32
+        .mul_add(-f32::from(PADDING_Y), ui.available_height())
+        .max(0.0);
+
+    boxed(ui, edit, name, (height, false), None)
+}
+
 /// [`text_box`] scrolled so the character at `shown`, counted in
 /// characters, sits in the middle of the box.
 pub fn text_box_at(
@@ -28,6 +38,21 @@ pub fn text_box_at(
     max_height: f32,
     shown: Option<usize>,
 ) -> Response {
+    boxed(ui, edit, name, (max_height, true), shown)
+}
+
+/// `max_height` is the most the scrolled room takes, `shrink` whether a
+/// shorter text shrinks it.
+fn boxed(
+    ui: &mut Ui,
+    edit: TextEdit<'_>,
+    name: &str,
+    (max_height, shrink): (f32, bool),
+    shown: Option<usize>,
+) -> Response {
+    // A filling box takes clicks below a short text as well.
+    let least = if shrink { 0.0 } else { max_height };
+
     // The fill depends on the focus the text only reports once drawn.
     let fill_slot = ui.painter().add(Shape::Noop);
     let framed = Frame::NONE
@@ -36,10 +61,12 @@ pub fn text_box_at(
             ScrollArea::both()
                 .id_salt(("text_box", name))
                 .max_height(max_height)
+                .auto_shrink([true, shrink])
                 .show(ui, |ui| {
                     let output = edit
                         .frame(Frame::NONE)
                         .desired_width(f32::INFINITY)
+                        .min_size(egui::vec2(0.0, least))
                         .show(ui);
 
                     if let Some(index) = shown {

@@ -6,16 +6,13 @@ use toolbox_core::features::configs::viewing::{Phase, Viewing};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
     ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, pill_width,
-    text_box,
+    text_box_filling,
 };
 
 use super::texts;
 use crate::command::ConfigsCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-
-/// What the buttons and the words above the text take.
-const ROOM_BELOW: f32 = 180.0;
 
 pub fn show(ctx: &Context, context: &PageContext<'_>, viewing: &Viewing) {
     let path = viewing.path().map(ToString::to_string).unwrap_or_default();
@@ -24,9 +21,13 @@ pub fn show(ctx: &Context, context: &PageContext<'_>, viewing: &Viewing) {
     let outcome = ModalWrapper::new(Id::unique("toolbox_gui::configs::view"), &title)
         .title_bar(&close)
         .width(DialogWidth::Wide)
+        .full_height()
         .show(ctx, |ui| {
-            body(ui, viewing, &path);
-            buttons(ui, context, viewing)
+            super::filled(
+                ui,
+                |ui| body(ui, viewing, &path),
+                |ui| buttons(ui, context, viewing),
+            )
         });
 
     if outcome.closed || outcome.inner {
@@ -72,21 +73,14 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
     ui.add_space(ui.tokens().sizes.card_gap);
 
     let mut text = read.content.as_str();
-    let height = (ui.available_height() - ROOM_BELOW).max(super::MIN_TEXT_HEIGHT);
     let name = i18n::text_with(&ctx, "configs-view-title", &[("path", path)]).into_owned();
-    text_box(
-        ui,
-        TextEdit::multiline(&mut text).code_editor(),
-        &name,
-        height,
-    );
+    text_box_filling(ui, TextEdit::multiline(&mut text).code_editor(), &name);
 }
 
 /// Copy all and Close. Returns whether Close was clicked.
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    ui.add_space(ui.tokens().sizes.dialog_gap);
     let labels = [text("configs-copy-all"), text("configs-close")];
     ui.horizontal(|ui| {
         let gap = ui.tokens().sizes.control_gap;

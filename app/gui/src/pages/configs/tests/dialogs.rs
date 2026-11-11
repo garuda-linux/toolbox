@@ -6,6 +6,10 @@ use super::{listed, page, reviewing, reviewing_of, sent, shows, viewing};
 use crate::command::{Command, ConfigsCommand};
 use crate::pages::{ConfigsRefusal, Refusals};
 
+/// How far a dialog that fills the window keeps its buttons from the
+/// window's bottom: the window margin and the card padding, with room.
+const FILLED_BOTTOM: f32 = 48.0;
+
 #[test]
 fn the_review_shows_the_changes_and_saves_on_request() {
     let configs = listed().with(reviewing(), Viewing::default());
@@ -131,4 +135,33 @@ fn the_review_of_a_file_of_the_user_asks_for_no_password() {
         summary.contains("~/.local/state/garuda-toolbox/backups/.bashrc"),
         "{summary}"
     );
+}
+
+fn button_room_below(harness: &super::Shown, label: &str) -> f32 {
+    let button = harness.query_all_by_label(label).last().unwrap().rect();
+    harness.ctx.content_rect().bottom() - button.bottom()
+}
+
+#[test]
+fn a_short_review_still_fills_the_window() {
+    let harness = page(
+        listed().with(reviewing(), Viewing::default()),
+        Refusals::default(),
+    );
+
+    let below = button_room_below(&harness, "Save");
+
+    assert!(below < FILLED_BOTTOM, "Save sits {below} above the bottom");
+}
+
+#[test]
+fn a_shown_file_fills_the_window() {
+    let harness = page(
+        listed().with(Session::default(), viewing()),
+        Refusals::default(),
+    );
+
+    let below = button_room_below(&harness, "Close");
+
+    assert!(below < FILLED_BOTTOM, "Close sits {below} above the bottom");
 }

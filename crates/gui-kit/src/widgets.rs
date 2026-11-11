@@ -100,6 +100,6 @@ pub use skeleton::{after_skeleton, hold_content, skeleton_rows};
 pub use status_tile::{paint_status_tile, status_tile, status_word};
 pub use switch::switch;
 pub use text::{line, rich};
-pub use text_box::{text_box, text_box_at};
+pub use text_box::{text_box, text_box_at, text_box_filling};
 pub use text_link::{counted_disclosure, disclosure, text_button, text_link};
 pub use tile::link_tile;

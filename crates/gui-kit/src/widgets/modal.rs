@@ -47,6 +47,7 @@ pub struct ModalWrapper<'a> {
     close: Option<&'a str>,
     fade_in: bool,
     width: DialogWidth,
+    fill: bool,
 }
 
 /// What [`ModalWrapper::show`] returns: the content's result, and whether
@@ -80,6 +81,7 @@ impl<'a> ModalWrapper<'a> {
             close: None,
             fade_in: true,
             width: DialogWidth::Small,
+            fill: false,
         }
     }
 
@@ -94,6 +96,14 @@ impl<'a> ModalWrapper<'a> {
     #[must_use = "a dialog does nothing until shown"]
     pub const fn instant(mut self) -> Self {
         self.fade_in = false;
+        self
+    }
+
+    /// As tall as the window allows, for a text that should not open in
+    /// a dialog that jumps as it loads or leaves most of the window unused.
+    #[must_use = "a dialog does nothing until shown"]
+    pub const fn full_height(mut self) -> Self {
+        self.fill = true;
         self
     }
 
@@ -132,6 +142,10 @@ impl<'a> ModalWrapper<'a> {
                 ui.set_width(self.width.points(&sizes).min(room.x));
 
                 ui.set_max_height(room.y);
+                if self.fill {
+                    ui.set_min_height(room.y);
+                }
+
                 focus::holder(ui, self.id, self.name);
 
                 if let Some(close) = self.close {

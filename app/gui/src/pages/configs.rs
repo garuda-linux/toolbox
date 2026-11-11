@@ -154,3 +154,14 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
         context.commands.send(ConfigsCommand::DismissRefusal);
     }
 }
+
+/// A full height dialog's `body` above, its `buttons` at the bottom edge.
+fn filled<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui), buttons: impl FnOnce(&mut Ui) -> R) -> R {
+    ui.with_layout(egui::Layout::bottom_up(egui::Align::Min), |ui| {
+        let chosen = buttons(ui);
+        ui.add_space(ui.tokens().sizes.dialog_gap);
+        ui.with_layout(egui::Layout::top_down(egui::Align::Min), body);
+        chosen
+    })
+    .inner
+}
