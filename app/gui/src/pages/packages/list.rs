@@ -5,8 +5,8 @@ use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
 use toolbox_core::features::packages::queue::Refusal;
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state,
-    loading_indicator, page_toolbar, pill_button,
+    ButtonKind, ListItem, RowHeights, RowList, Rows, Tone, banner, counted_chips, dimmed,
+    empty_state, loading_indicator, page_toolbar, pill_button,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
@@ -23,6 +23,34 @@ use crate::pages::{PageContext, plan_running};
 struct AurChip {
     /// `None` until the AUR's copy is read.
     count: Option<usize>,
+}
+
+/// The rows of `places` in `entries`, each built only when the list draws
+/// it: the AUR alone has about a hundred thousand.
+pub struct Picked<'a, E, F> {
+    pub places: &'a [usize],
+    pub entries: &'a [E],
+    pub row: F,
+}
+
+impl<'a, E, I, F> Rows for Picked<'a, E, F>
+where
+    I: ListItem,
+    F: Fn(&'a E) -> I,
+{
+    type Item<'b>
+        = I
+    where
+        Self: 'b;
+
+    fn len(&self) -> usize {
+        self.places.len()
+    }
+
+    fn get(&self, index: usize) -> Option<I> {
+        let place = *self.places.get(index)?;
+        self.entries.get(place).map(&self.row)
+    }
 }
 
 pub fn header(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
@@ -132,12 +160,11 @@ fn rows(
     catalog: &Catalog,
     places: &[usize],
 ) {
-    let entries = catalog.entries();
-    let shown: Vec<Row<'_>> = places
-        .iter()
-        .filter_map(|&place| entries.get(place))
-        .map(|entry| Row { entry, catalog })
-        .collect();
+    let shown = Picked {
+        places,
+        entries: catalog.entries(),
+        row: |entry| Row { entry, catalog },
+    };
 
     let list = i18n::text(ui.ctx(), "page-packages");
     if let Some(package) = shown_rows(page, ui, context, &shown, ("packages", &list)) {
@@ -148,15 +175,16 @@ fn rows(
 /// One list under its id salt and name. Returns the package whose row
 /// asked for its detail view, which the caller opens on its own side.
 #[must_use = "a dropped package loses the click that asked to open it"]
-pub fn shown_rows<R>(
+pub fn shown_rows<'rows, S>(
     page: &mut PackagesPage,
     ui: &mut Ui,
     context: &PageContext<'_>,
-    shown: &[R],
+    shown: &'rows S,
     (salt, list): (&'static str, &str),
 ) -> Option<PackageName>
 where
-    R: PackageRow,
+    S: Rows,
+    S::Item<'rows>: PackageRow,
 {
     let heights = RowHeights::Fixed(row::height(ui));
     let revealed = page.back_to.as_ref().map(|name| name.as_str().to_owned());
@@ -166,7 +194,7 @@ where
         .reveal(revealed.as_deref())
         .show(ui, shown, |ui, item, state| {
             dimmed(ui, context.busy, |ui| {
-                if row::show(ui, context, page, item, state) {
+                if row::show(ui, context, page, &item, state) {
                     opened = Some(item.package().clone());
                 }
             });
@@ -174,9 +202,11 @@ where
 
     if holds
         || revealed.is_none()
-        || !shown
-            .iter()
-            .any(|item| Some(item.package().as_str()) == revealed.as_deref())
+        || !(0..shown.len()).any(|index| {
+            shown
+                .get(index)
+                .is_some_and(|item| Some(item.package().as_str()) == revealed.as_deref())
+        })
     {
         page.back_to = None;
     }

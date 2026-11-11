@@ -26,6 +26,22 @@ pub trait ListItem {
     fn name(&self) -> &str;
 }
 
+/// What a list shows, row by row. A slice is one, and a page with many
+/// rows builds only those asked for, so a frame costs the rows on screen.
+pub trait Rows {
+    type Item<'a>: ListItem
+    where
+        Self: 'a;
+
+    fn len(&self) -> usize;
+
+    fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    fn get(&self, index: usize) -> Option<Self::Item<'_>>;
+}
+
 impl<T: ListItem + ?Sized> ListItem for &T {
     fn key(&self) -> &str {
         (**self).key()
@@ -33,6 +49,51 @@ impl<T: ListItem + ?Sized> ListItem for &T {
 
     fn name(&self) -> &str {
         (**self).name()
+    }
+}
+
+impl<T: ListItem> Rows for [T] {
+    type Item<'a>
+        = &'a T
+    where
+        T: 'a;
+
+    fn len(&self) -> usize {
+        <[T]>::len(self)
+    }
+
+    fn get(&self, index: usize) -> Option<&T> {
+        <[T]>::get(self, index)
+    }
+}
+
+impl<T: ListItem, const N: usize> Rows for [T; N] {
+    type Item<'a>
+        = &'a T
+    where
+        T: 'a;
+
+    fn len(&self) -> usize {
+        N
+    }
+
+    fn get(&self, index: usize) -> Option<&T> {
+        self.as_slice().get(index)
+    }
+}
+
+impl<T: ListItem> Rows for Vec<T> {
+    type Item<'a>
+        = &'a T
+    where
+        T: 'a;
+
+    fn len(&self) -> usize {
+        Self::len(self)
+    }
+
+    fn get(&self, index: usize) -> Option<&T> {
+        <[T]>::get(self, index)
     }
 }
 
@@ -88,14 +149,14 @@ impl<'a> RowList<'a> {
     /// Returns whether the row [`Self::reveal`] asked for holds the focus
     /// since the last frame. Until it does, ask again: a dialog that just
     /// closed keeps the focus from the page for one more frame.
-    pub fn show<T>(
+    pub fn show<'rows, R>(
         self,
         ui: &mut Ui,
-        items: &[T],
-        mut body: impl FnMut(&mut Ui, &T, &RowState),
+        items: &'rows R,
+        mut body: impl FnMut(&mut Ui, R::Item<'rows>, &RowState),
     ) -> bool
     where
-        T: ListItem,
+        R: Rows + ?Sized,
     {
         let list = ui.make_persistent_id(self.salt);
         let builder = UiBuilder::new()
@@ -104,9 +165,10 @@ impl<'a> RowList<'a> {
 
         card(ui, |ui| {
             ui.scope_builder(builder, |ui| {
+                // Only for the frame a page asks to reveal a row.
                 let revealed = self
                     .reveal
-                    .filter(|key| items.iter().any(|item| item.key() == *key));
+                    .filter(|key| position(items, |item| item.key() == *key).is_some());
 
                 let holds = revealed
                     .is_some_and(|key| ui.memory(|memory| memory.has_focus(row_id(list, key))));
@@ -131,6 +193,11 @@ impl<'a> RowList<'a> {
                         continue;
                     };
 
+                    let id = row_id(list, item.key());
+                    if ui.memory(|memory| memory.has_focus(id)) {
+                        remember_focused(ui, list, index);
+                    }
+
                     let top = offsets.top(index);
                     if top > at {
                         ui.add_space(top - at);
@@ -139,7 +206,7 @@ impl<'a> RowList<'a> {
 
                     let asked = keys.moved_to.is_none() && current == Some(index);
                     let place = row::Place {
-                        id: row_id(list, item.key()),
+                        id,
                         index,
                         fixed,
                         toggle: asked && keys.toggle,
@@ -161,34 +228,31 @@ impl<'a> RowList<'a> {
         .inner
     }
 
-    fn offsets<T>(self, ui: &Ui, list: Id, items: &[T]) -> Offsets
+    fn offsets<R>(self, ui: &Ui, list: Id, items: &R) -> Offsets
     where
-        T: ListItem,
+        R: Rows + ?Sized,
     {
         match self.heights {
             RowHeights::Fixed(height) => Offsets::Fixed {
                 height,
                 count: items.len(),
             },
-            RowHeights::Measured { estimate } => Offsets::measured(
+            RowHeights::Measured { estimate } => Offsets::measured((0..items.len()).map(|index| {
                 items
-                    .iter()
-                    .map(|item| row::remembered(ui, row_id(list, item.key())).unwrap_or(estimate)),
-            ),
+                    .get(index)
+                    .and_then(|item| row::remembered(ui, row_id(list, item.key())))
+                    .unwrap_or(estimate)
+            })),
         }
     }
 }
 
-fn navigate<T>(ui: &Ui, list: Id, items: &[T]) -> (Option<usize>, keys::RowKeys)
+fn navigate<R>(ui: &Ui, list: Id, items: &R) -> (Option<usize>, keys::RowKeys)
 where
-    T: ListItem,
+    R: Rows + ?Sized,
 {
     let focused = ui.memory(egui::Memory::focused);
-    let current = focused.and_then(|focused| {
-        items
-            .iter()
-            .position(|item| row_id(list, item.key()) == focused)
-    });
+    let current = focused.and_then(|focused| focused_index(ui, list, items, focused));
 
     let Some(current) = current else {
         return (None, keys::RowKeys::default());
@@ -202,9 +266,55 @@ where
     if let Some(item) = items.get(target) {
         let id = row_id(list, item.key());
         ui.memory_mut(|memory| memory.request_focus(id));
+        remember_focused(ui, list, target);
     }
 
     (Some(target), keys)
+}
+
+/// The index of the focused row. The one remembered when it took the
+/// focus is checked first, so a frame reads one row, not all of them.
+fn focused_index<R>(ui: &Ui, list: Id, items: &R, focused: Id) -> Option<usize>
+where
+    R: Rows + ?Sized,
+{
+    let remembered = ui.data(|data| data.get_temp::<usize>(focus_memory(list)));
+    let still = remembered.filter(|&index| {
+        items
+            .get(index)
+            .is_some_and(|item| row_id(list, item.key()) == focused)
+    });
+
+    if still.is_some() {
+        return still;
+    }
+
+    // The focus is in another widget, or the rows moved under it. One
+    // search per focus change and per row count: a row that is focused
+    // later is drawn and remembered first.
+    let searched = list.with("focus-searched");
+    let asked = (focused, items.len());
+    if ui.data(|data| data.get_temp::<(Id, usize)>(searched)) == Some(asked) {
+        return None;
+    }
+
+    ui.data_mut(|data| data.insert_temp(searched, asked));
+    position(items, |item| row_id(list, item.key()) == focused)
+}
+
+fn remember_focused(ui: &Ui, list: Id, index: usize) {
+    ui.data_mut(|data| data.insert_temp(focus_memory(list), index));
+}
+
+fn focus_memory(list: Id) -> Id {
+    list.with("focused-row")
+}
+
+fn position<R>(items: &R, mut found: impl FnMut(&R::Item<'_>) -> bool) -> Option<usize>
+where
+    R: Rows + ?Sized,
+{
+    (0..items.len()).find(|&index| items.get(index).is_some_and(|item| found(&item)))
 }
 
 fn row_id(list: Id, key: &str) -> Id {

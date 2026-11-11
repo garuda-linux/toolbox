@@ -75,7 +75,7 @@ pub use layout::{
 pub use letter_tile::{hue_of, initial, paint_letter_tile};
 pub use link_row::link_row;
 use list::text_line_height;
-pub use list::{ListItem, RowHeights, RowList, RowState, row_height, text_block_height};
+pub use list::{ListItem, RowHeights, RowList, RowState, Rows, row_height, text_block_height};
 pub use loading::{loading_dots, loading_indicator, loading_label};
 pub use menu::{menu_action, menu_button, menu_heading, menu_item};
 pub use metric::{MetricKind, MetricText, metric};

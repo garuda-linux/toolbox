@@ -59,6 +59,9 @@ pub fn package_picture(
 /// tile while it loads or when it cannot be read. Returns whether the
 /// picture was painted.
 pub fn picture_or_initial(ui: &Ui, uri: &str, at: Rect, initial: Initial<'_>) -> bool {
+    // Trace: egui rasterizes an SVG in the frame that first draws it.
+    let _picture = tracing::trace_span!("row picture").entered();
+
     // The drawn size, so a vector picture is drawn at it rather than at
     // its own, often far larger, size.
     let image = Image::new(uri)

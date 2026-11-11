@@ -56,6 +56,7 @@ pub fn show(
     commands: &CommandSender,
     pill: impl FnOnce(&mut Ui),
 ) -> bool {
+    let _ui = tracing::trace_span!("console ui").entered();
     let At { sheet, place } = at;
     let tokens = tokens::current(ctx);
     let frame = Frame::new()

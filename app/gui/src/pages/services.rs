@@ -181,7 +181,7 @@ impl ServicesPage {
         let _rows = tracing::trace_span!("rows").entered();
         RowList::new(("units", self.scope), &list, RowHeights::Fixed(height)).show(
             ui,
-            &rows,
+            rows.as_slice(),
             |ui, row, state| dimmed(ui, context.busy, |ui| row::show(ui, context, row, state)),
         );
     }

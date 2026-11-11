@@ -86,6 +86,7 @@ impl<'a> TerminalView<'a> {
     }
 
     pub fn show(mut self, ui: &mut Ui) -> TerminalOutput {
+        let _ui = tracing::trace_span!("terminal view").entered();
         let font = TextStyle::Monospace.resolve(ui.style());
         let cell =
             ui.fonts_mut(|fonts| vec2(fonts.glyph_width(&font, 'M'), fonts.row_height(&font)));

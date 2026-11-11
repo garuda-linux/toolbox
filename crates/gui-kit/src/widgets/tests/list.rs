@@ -1,3 +1,5 @@
+mod rows;
+
 use egui::accesskit::Role;
 use egui::{Key, Modifiers, Rangef, ScrollArea, Ui};
 use egui_kittest::Harness;

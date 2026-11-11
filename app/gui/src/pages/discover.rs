@@ -136,7 +136,7 @@ impl DiscoverPage {
 
         let holds = RowList::new("apps", &list, heights)
             .reveal(revealed.as_deref())
-            .show(ui, &rows, |ui, app, state| {
+            .show(ui, rows.as_slice(), |ui, app, state| {
                 dimmed(ui, context.busy, |ui| row::show(ui, context, app, state));
             });
 

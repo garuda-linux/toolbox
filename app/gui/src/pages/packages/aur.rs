@@ -109,12 +109,11 @@ pub fn body(
         return;
     }
 
-    let entries = catalog.entries();
-    let shown: Vec<AurRow<'_>> = places
-        .iter()
-        .filter_map(|&place| entries.get(place))
-        .map(|entry| AurRow { entry, repo })
-        .collect();
+    let shown = super::list::Picked {
+        places,
+        entries: catalog.entries(),
+        row: |entry| AurRow { entry, repo },
+    };
 
     let list = i18n::text(&ctx, "packages-filter-aur");
     let rows = ("packages-aur", list.as_ref());

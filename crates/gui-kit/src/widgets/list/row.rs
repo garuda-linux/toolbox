@@ -27,12 +27,14 @@ pub struct Place {
 pub fn show<T>(
     ui: &mut Ui,
     place: Place,
-    item: &T,
-    body: &mut impl FnMut(&mut Ui, &T, &RowState),
+    item: T,
+    body: &mut impl FnMut(&mut Ui, T, &RowState),
 ) -> f32
 where
     T: ListItem,
 {
+    // The body takes the item, the screen reader's name is set after it.
+    let name = item.name().to_owned();
     let start = ui.cursor().top();
     divider(ui, place.index == 0);
     let backdrop = ui.painter().add(Shape::Noop);
@@ -75,7 +77,7 @@ where
     });
 
     let response = inner.response;
-    response.widget_info(|| WidgetInfo::labeled(Role::ListItem, ui.is_enabled(), item.name()));
+    response.widget_info(|| WidgetInfo::labeled(Role::ListItem, ui.is_enabled(), &name));
 
     focus(ui, &response);
     paint_hover(ui, backdrop, &response);
