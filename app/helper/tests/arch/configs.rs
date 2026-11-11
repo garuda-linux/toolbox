@@ -293,11 +293,14 @@ fn a_link_out_of_the_config_folders_is_neither_read_nor_written() -> TestResult 
         FetchRefusal::Dangling,
         "leads to no file",
     )?;
+
+    // The write checks the real path first, and the toolbox writes no
+    // file in /etc/pacman.d.
     refused_link(
         "folder.conf",
         "/etc/pacman.d",
         FetchRefusal::NotRegular,
-        "not a regular file",
+        "the toolbox never writes /etc/pacman.d",
     )?;
     assert!(!Path::new(GONE).exists(), "a dangling link made a file");
     fs::remove_file(victim)?;

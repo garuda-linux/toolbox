@@ -53,7 +53,7 @@ GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet splash mitigations=off\"
 GRUB_CMDLINE_LINUX=\"\"
 
 # Uncomment one of them for the gfx desired, a image background or a gfxtheme
-GRUB_BACKGROUND=\"/usr/share/toolbox-test/it's.png\"
+GRUB_BACKGROUND=\"/usr/share/toolbox-test/back-1+2.png\"
 #GRUB_THEME=\"/path/to/gfxtheme\"
 
 # Uncomment to make GRUB remember the last selection.
@@ -76,7 +76,9 @@ fn settings() -> Result<GrubSettings, Box<dyn Error>> {
         GrubSetting::Submenus(false),
         GrubSetting::SaveDefault(true),
         GrubSetting::OsProber(true),
-        GrubSetting::Background(Some(GrubPicture::new("/usr/share/toolbox-test/it's.png")?)),
+        GrubSetting::Background(Some(GrubPicture::new(
+            "/usr/share/toolbox-test/back-1+2.png",
+        )?)),
     ])?)
 }
 
@@ -121,7 +123,7 @@ fn grub_settings_change_only_their_lines_of_the_real_file() -> TestResult {
     // A real shell reads the values back as they were asked for.
     assert_eq!(
         String::from_utf8_lossy(&sourced.stdout),
-        "gnulinux-advanced-1>gnulinux-linux-lts-1|/usr/share/toolbox-test/it's.png|loglevel=3 quiet splash mitigations=off"
+        "gnulinux-advanced-1>gnulinux-linux-lts-1|/usr/share/toolbox-test/back-1+2.png|loglevel=3 quiet splash mitigations=off"
     );
     Ok(())
 }
