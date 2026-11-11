@@ -8,7 +8,8 @@ mod clear;
 mod place;
 
 use egui::{
-    Align2, Area, Context, CornerRadius, Id, Label, Margin, Order, Rect, Stroke, Ui, Vec2, vec2,
+    Align2, Area, Context, CornerRadius, Id, Label, LayerId, Margin, Order, Rect, Stroke, Ui, Vec2,
+    vec2,
 };
 use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
@@ -29,6 +30,10 @@ use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::i18n;
 use crate::i18n::changes::sentence;
 
+/// Under the dialogs' layer, so a dialog's scrim covers the pill as it
+/// covers the page. egui raises an area in the first frame it shows, which
+/// on the dialogs' layer put a returning pill over a dialog's buttons.
+const LAYER: Order = Order::Middle;
 const POPOVER_WIDTH: f32 = 380.0;
 /// The list's height before it scrolls, in points.
 const LIST_HEIGHT: f32 = 320.0;
@@ -70,14 +75,16 @@ pub fn floating(
 
     let inset = tokens::current(ctx).sizes.corner_inset.x;
     let corner = band.right_center() - vec2(inset, 0.0);
-    let pill_rect = Area::new(Id::unique("toolbox_gui::changes::pill"))
-        .order(Order::Foreground)
+    let id = Id::unique("toolbox_gui::changes::pill");
+    let pill_rect = Area::new(id)
+        .order(LAYER)
         .pivot(Align2::RIGHT_CENTER)
         .fixed_pos(corner)
         .show(ctx, |ui| pill(ui, queued, state, commands))
         .response
         .rect;
 
+    ctx.move_to_top(LayerId::new(LAYER, id));
     overlays(ctx, pill_rect, queued, state, commands);
 }
 
@@ -139,7 +146,7 @@ fn overlays(
         let placed = place(pill, ctx.content_rect(), fit, gap);
         let (corner, pivot) = placed.corner(pill, gap, (1.0 - shown) * motion::POPOVER_RISE);
         Area::new(id)
-            .order(Order::Foreground)
+            .order(LAYER)
             .pivot(pivot)
             .fixed_pos(corner)
             .fade_in(false)
@@ -148,6 +155,9 @@ fn overlays(
                 let measured = popover(ui, list, (held, placed.list), commands);
                 ui.data_mut(|data| data.insert_temp(fit_id, measured));
             });
+
+        // Above the page's header and the Console's sheet on the same layer.
+        ctx.move_to_top(LayerId::new(LAYER, id));
     }
 
     if state.confirming == Some(UiCommand::ClearChanges) {
