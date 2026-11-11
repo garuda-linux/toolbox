@@ -88,6 +88,14 @@ fn rows(catalog: &SkelCatalog, skel_root: &Path) -> Vec<ResetRow> {
         .collect()
 }
 
+/// The ids `maintenance reset` takes, for completion.
+pub fn ids(catalog: &SkelCatalog, skel_root: &Path) -> Vec<String> {
+    rows(catalog, skel_root)
+        .into_iter()
+        .map(|row| row.id)
+        .collect()
+}
+
 fn list(read: &ReadList, catalog: &SkelCatalog, skel_root: &Path, out: &mut Out<'_>) -> Exit {
     filter::print_all(read, &rows(catalog, skel_root), out, |rows| Listing {
         title: "Settings to reset",

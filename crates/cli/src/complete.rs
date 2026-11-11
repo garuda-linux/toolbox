@@ -46,6 +46,7 @@ const PLACES: &[Place] = &[
     (&["kernels", "default"], "kernel", Names::Kernels),
     (&["dkms", "build"], "kernel", Names::Kernels),
     (&["maintenance", "run"], "task", Names::Tasks),
+    (&["maintenance", "reset"], "entries", Names::ResetEntries),
     (&["locales", "enable"], "locale", Names::Locales),
     (&["locales", "disable"], "locale", Names::Locales),
     (&["locales", "system"], "locale", Names::Locales),
@@ -144,6 +145,8 @@ pub enum Names {
     SetupChoices,
     /// The kernel parameters the boot menu sets now.
     KernelParameters,
+    /// The settings `maintenance reset` can put back.
+    ResetEntries,
 }
 
 /// The names of a kind, as the app finds them now.
@@ -277,7 +280,8 @@ fn wanted(names: Names, words: &[String]) -> Option<Names> {
         | Names::ColourSchemes { dark: _ }
         | Names::GuidePages
         | Names::SetupChoices
-        | Names::KernelParameters => Some(names),
+        | Names::KernelParameters
+        | Names::ResetEntries => Some(names),
     }
 }
 

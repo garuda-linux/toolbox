@@ -25,6 +25,7 @@ fn fake(names: Names) -> Vec<String> {
         Names::GuidePages => &["kernels", "packages"],
         Names::SetupChoices => &["firefox", "strawberry-player"],
         Names::KernelParameters => &["quiet", "nowatchdog"],
+        Names::ResetEntries => &["bash", "fish"],
         Names::Kernels
         | Names::Locales
         | Names::Users
@@ -233,6 +234,18 @@ fn packs_pages_choices_and_parameters_complete() {
     assert_eq!(
         completed(&["garuda-toolbox", "boot", "param", "remove", "no"]),
         ["nowatchdog"]
+    );
+}
+
+#[test]
+fn reset_offers_the_settings_for_each_entry() {
+    assert_eq!(
+        completed(&["garuda-toolbox", "maintenance", "reset", "fi"]),
+        ["fish"]
+    );
+    assert_eq!(
+        completed(&["garuda-toolbox", "maintenance", "reset", "fish", "ba"]),
+        ["bash"]
     );
 }
 

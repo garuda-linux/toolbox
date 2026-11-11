@@ -17,7 +17,9 @@ use std::path::Path;
 use std::process::Command;
 use std::time::Duration;
 
-use toolbox_catalog::{ColourSchemeCatalog, ConfigFileCatalog, SchemeMode, ToggleCatalog};
+use toolbox_catalog::{
+    ColourSchemeCatalog, ConfigFileCatalog, SKEL_ROOT, SchemeMode, ToggleCatalog,
+};
 use toolbox_cli::args::{BootKey, SettingKey};
 use toolbox_cli::complete::Names;
 use toolbox_core::domains::AvailableShells;
@@ -119,6 +121,10 @@ fn read(names: Names) -> Vec<String> {
             .map(|setup| switch_ids(&[setup]))
             .unwrap_or_default(),
         Names::KernelParameters => parameter_names(&with(SystemBoot::system().grub())),
+        Names::ResetEntries => catalogs()
+            .skel
+            .map(|catalog| super::reset::ids(&catalog, Path::new(SKEL_ROOT)))
+            .unwrap_or_default(),
     }
 }
 

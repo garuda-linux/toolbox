@@ -7,7 +7,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_cli::confirm::Prompt;
 
-use super::{Folders, carry_out, chosen};
+use super::{Folders, carry_out, chosen, ids};
 use crate::change::Refused;
 use crate::out::{Out, Settings};
 
@@ -60,6 +60,14 @@ fn reset_with(confirm: Confirm, answer: &'static str, skel: &TempDir, home: &Tem
         &mut Answer(answer),
         &mut Out::new(&mut sink, Settings::default()),
     )
+}
+
+/// Completion offers only what the skel folder has.
+#[test]
+fn the_ids_are_the_settings_skel_has() {
+    let (skel, _home) = folders();
+
+    assert_eq!(ids(&catalog(), skel.path()), ["fish"]);
 }
 
 fn home_fish(home: &TempDir) -> String {
