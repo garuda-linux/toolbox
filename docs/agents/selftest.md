@@ -4,7 +4,9 @@
 `selftest` feature and runs it on headless weston with the software Vulkan
 driver. It prints `SELFTEST PASS` or `FAIL` and writes `result` for
 `scripts/selftest-junit.sh`. Shots land in the run's `shots/`, the app's
-output in `out.log`.
+output in `out.log`. `SELFTEST_BINARY` runs a build of the `selftest`
+feature instead of building one, as `scripts/lima-profile.sh` does in a VM
+without cargo.
 
 - Suites live in `app/gui/src/selftest/`, one file per page, listed in
   `SUITES` in `app/gui/src/selftest.rs`.

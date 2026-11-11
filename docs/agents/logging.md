@@ -35,7 +35,12 @@
   (debug) around window commands. `Command::for_log` hides Console input.
 - Never hold an entered span across `.await`, use `Instrument`.
 - `--features profiling` on `toolbox-gui` sends trace spans to Tracy on
-  localhost, one frame per egui frame.
+  localhost, one frame per egui frame. The client is pinned to the Tracy
+  that nixpkgs ships (`nix run nixpkgs#tracy`), the protocols must match.
+- `scripts/lima-profile.sh [--suite LIST]` records self-test suites
+  (default `packages-arch,kernels`) on the Garuda Lima VM into
+  `.claude/tracy/vm-<suite>.tracy`, read with `tracy-csvexport`. The VM
+  renders on the CPU, so only CPU zones count. Needs KVM and podman.
 
 ## Rules
 

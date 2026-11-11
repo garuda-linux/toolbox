@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #   scripts/selftest.sh [suite]
+# SELFTEST_BINARY names a garuda-toolbox built with the selftest feature,
+# which is run instead of building one, as scripts/lima-profile.sh does
+# in a VM without cargo.
 set -euo pipefail
 
 repo=$(cd "$(dirname "$0")/.." && pwd)
@@ -16,8 +19,12 @@ command -v weston >/dev/null || {
   exit 2
 }
 
-cargo build --quiet --manifest-path "$repo/Cargo.toml" \
-  -p toolbox-helper -p toolbox-gui --features toolbox-gui/selftest
+binary=${SELFTEST_BINARY:-}
+if [ -z "$binary" ]; then
+  cargo build --quiet --manifest-path "$repo/Cargo.toml" \
+    -p toolbox-helper -p toolbox-gui --features toolbox-gui/selftest
+  binary="${CARGO_TARGET_DIR:-$repo/target}/debug/garuda-toolbox"
+fi
 
 if [ -n "${SELFTEST_ROOT:-}" ]; then
   dir="$SELFTEST_ROOT/$suite"
@@ -84,7 +91,7 @@ vulkan=()
 [ -z "${TOOLBOX_TEST_VULKAN:-}" ] || vulkan=("VK_DRIVER_FILES=$TOOLBOX_TEST_VULKAN")
 
 env -u DISPLAY -u DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY=selftest "${vulkan[@]}" \
-  timeout "$run_timeout" "${CARGO_TARGET_DIR:-$repo/target}/debug/garuda-toolbox" "${flags[@]}" >"$dir/out.log" 2>&1 || status=$?
+  timeout "$run_timeout" "$binary" "${flags[@]}" >"$dir/out.log" 2>&1 || status=$?
 
 verdict=$(cat "$dir/shots/result" 2>/dev/null || echo "FAIL: no verdict (exit $status), see $dir/out.log")
 # Read by scripts/selftest-junit.sh.
