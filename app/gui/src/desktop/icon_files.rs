@@ -2,6 +2,7 @@
 //! glyphs for the app's icons, and the theme's pictures for the apps the
 //! catalogs offer.
 
+mod names;
 #[cfg(test)]
 mod tests;
 
@@ -12,6 +13,8 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use toolbox_gui_kit::icons::{ALL, ThemeIcons};
+
+pub use self::names::{IconNames, Indexed};
 
 /// A glyph is a few KiB. The frame rasterizes the file, so a larger one
 /// from a broken or hostile theme would stall it.

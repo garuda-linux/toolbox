@@ -17,7 +17,7 @@ use toolbox_plan::PackageName;
 use toolbox_system::{AppIconSource, AppStreamIcons};
 
 use self::budget::Budget;
-use crate::desktop::icon_files::{IconLookup, SystemIcons};
+use crate::desktop::icon_files::{IconLookup, IconNames, Indexed, SystemIcons};
 
 /// The icon theme spec's own fallback, which has app pictures, used
 /// while the desktop names no theme.
@@ -40,7 +40,7 @@ pub struct Layered<L, S> {
     cache: Option<S>,
 }
 
-pub type SystemPictures = Layered<SystemIcons, AppStreamIcons>;
+pub type SystemPictures = Layered<Indexed<SystemIcons>, AppStreamIcons>;
 
 #[derive(Debug, Default)]
 struct Known {
@@ -81,7 +81,10 @@ impl<L: IconLookup, S: AppIconSource> Layered<L, S> {
 
 impl SystemPictures {
     pub fn system() -> Self {
-        Self::new(SystemIcons::APPS, AppStreamIcons::system)
+        Self::new(
+            Indexed::new(SystemIcons::APPS, IconNames::system),
+            AppStreamIcons::system,
+        )
     }
 }
 
