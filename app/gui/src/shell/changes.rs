@@ -4,10 +4,11 @@
 //! question.
 
 mod badge;
+mod clear;
+mod place;
 
 use egui::{
-    Align2, Area, Context, CornerRadius, Id, Label, Margin, Order, Pos2, Rect, Stroke, Ui, Vec2,
-    vec2,
+    Align2, Area, Context, CornerRadius, Id, Label, Margin, Order, Rect, Stroke, Ui, Vec2, vec2,
 };
 use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
@@ -15,14 +16,16 @@ use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::motion::{self, Timing};
 use toolbox_gui_kit::theme::POPOVER_RADIUS;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, Question, Tone, icon_button, pill_button, pill_button_at_least,
-    pill_width, question, rich, split_row, tag,
+    ButtonKind, Tone, icon_button, pill_button, pill_button_at_least, pill_width, rich, split_row,
+    tag,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
 use self::badge::badge;
+use self::clear::ask_to_clear;
+use self::place::{Fit, place};
 use super::PANE_TITLE;
-use crate::command::{AppCommand, Command, CommandSender, UiCommand};
+use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::i18n;
 use crate::i18n::changes::sentence;
 
@@ -128,16 +131,22 @@ fn overlays(
     let shown = motion::presence(ctx, id.with("shown"), state.open, timing);
     if state.open {
         let gap = tokens::current(ctx).sizes.popover_gap;
-        let rise = (1.0 - shown) * motion::POPOVER_RISE;
-        let above = Pos2::new(pill.right(), pill.top() - gap + rise);
+        let fit_id = id.with("fit");
+        let fit = ctx
+            .data(|data| data.get_temp::<Fit>(fit_id))
+            .unwrap_or_default();
+
+        let placed = place(pill, ctx.content_rect(), fit, gap);
+        let (corner, pivot) = placed.corner(pill, gap, (1.0 - shown) * motion::POPOVER_RISE);
         Area::new(id)
             .order(Order::Foreground)
-            .pivot(Align2::RIGHT_BOTTOM)
-            .fixed_pos(above)
+            .pivot(pivot)
+            .fixed_pos(corner)
             .fade_in(false)
             .show(ctx, |ui| {
                 ui.multiply_opacity(shown);
-                popover(ui, list, held, commands);
+                let measured = popover(ui, list, (held, placed.list), commands);
+                ui.data_mut(|data| data.insert_temp(fit_id, measured));
             });
     }
 
@@ -244,17 +253,21 @@ fn apply_pill(ui: &mut Ui, text: &str, held: Option<&'static str>) -> egui::Resp
     apply.on_disabled_hover_text(why)
 }
 
+/// `list` is the list's height before it scrolls. Returns the heights
+/// the popover measured.
 fn popover(
     ui: &mut Ui,
     changes: &[ChangeView],
-    held: Option<&'static str>,
+    (held, list): (Option<&'static str>, f32),
     commands: &CommandSender,
-) {
+) -> Fit {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     let count = changes.len().to_string();
+    let mut shown = 0.0;
+    let mut whole = 0.0;
 
-    raised(
+    let rect = raised(
         ui,
         CornerRadius::same(POPOVER_RADIUS),
         tokens.sizes.popover_padding,
@@ -281,13 +294,16 @@ fn popover(
             });
             ui.add_space(tokens.sizes.control_gap);
 
-            egui::ScrollArea::vertical()
-                .max_height(LIST_HEIGHT)
+            let scrolled = egui::ScrollArea::vertical()
+                .max_height(list)
                 .show(ui, |ui| {
                     for change in changes {
                         row(ui, change, commands);
                     }
                 });
+
+            shown = scrolled.inner_rect.height();
+            whole = scrolled.content_size.y;
 
             ui.add_space(tokens.sizes.control_gap);
             let top = ui.cursor().top();
@@ -301,6 +317,12 @@ fn popover(
             footer(ui, &count, held, commands);
         },
     );
+
+    Fit {
+        chrome: rect.height() - shown,
+        list: whole,
+        most: LIST_HEIGHT,
+    }
 }
 
 /// Remove all at the left, Apply at the right.
@@ -360,37 +382,4 @@ fn raised(ui: &mut Ui, radius: CornerRadius, margin: Margin, body: impl FnOnce(&
         .show(ui, body)
         .response
         .rect
-}
-
-/// The question for [`UiCommand::ClearChanges`], which the app asks before
-/// it removes anything.
-fn ask_to_clear(
-    ctx: &Context,
-    count: &str,
-    confirming: &mut Option<UiCommand>,
-    commands: &CommandSender,
-) {
-    let title = i18n::text(ctx, "command-clear-changes");
-    let close = i18n::text(ctx, "dialog-close");
-    let body = i18n::text_with(ctx, "changes-remove-all-question", &[("count", count)]);
-    let cancel = i18n::text(ctx, "changes-keep");
-    let confirm = i18n::text(ctx, "changes-remove-all");
-    let texts = Question {
-        title: &title,
-        close: &close,
-        body: &body,
-        cancel: &cancel,
-        confirm: &confirm,
-        kind: ButtonKind::Danger,
-        width: DialogWidth::Small,
-    };
-
-    let asked = question(ctx, Id::unique("toolbox_gui::changes::clear"), texts);
-    if asked.confirmed {
-        commands.send(Command::Confirmed(UiCommand::ClearChanges));
-    }
-
-    if asked.done {
-        *confirming = None;
-    }
 }
