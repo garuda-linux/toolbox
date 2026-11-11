@@ -1,11 +1,14 @@
 //! The plan as the command line shows it before it runs: a list of steps,
 //! or JSON Lines under `--json`.
 
+#[cfg(test)]
+mod tests;
+
 use std::io::Write as _;
 
 use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
-use toolbox_cli::output::{Paint, Row};
+use toolbox_cli::output::{INDENT, Paint, Row};
 use toolbox_plan::Plan;
 
 use super::events;
@@ -70,7 +73,11 @@ pub fn planned(paint: Paint, plan: &Plan) -> String {
     let rows: Vec<Row> = plan
         .steps()
         .iter()
-        .map(|step| Row::plain(vec![step.action.command_lines().join(" ")]))
+        .flat_map(|step| step.action.command_lines().into_iter().enumerate())
+        .map(|(part, line)| match part {
+            0 => Row::plain(vec![line]),
+            _ => Row::plain(vec![format!("{INDENT}{line}")]),
+        })
         .collect();
 
     paint.list("Planned", Some(&summary), &[], &rows)
