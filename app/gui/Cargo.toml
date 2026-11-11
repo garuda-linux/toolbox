@@ -22,7 +22,7 @@ required-features = ["testing"]
 
 [features]
 selftest = ["dep:kittest", "dep:image", "toolbox-services/selftest", "toolbox-system/selftest"]
-profiling = ["dep:tracing-tracy"]
+profiling = ["dep:tracing-tracy", "dep:tracy-client", "dep:tracy-client-sys"]
 testing = ["dep:egui_kittest", "toolbox-gui-kit/testing", "toolbox-services/testing", "toolbox-system/testing"]
 
 [dependencies]
@@ -67,6 +67,9 @@ zbus.workspace = true
 kittest = { workspace = true, optional = true }
 image = { workspace = true, optional = true }
 tracing-tracy = { workspace = true, optional = true }
+# Unused in code: they pin the Tracy protocol, see the workspace entry.
+tracy-client = { workspace = true, optional = true }
+tracy-client-sys = { workspace = true, optional = true }
 egui_kittest = { workspace = true, optional = true }
 
 [dev-dependencies]

@@ -78,7 +78,11 @@ egui_kittest = { version = "0.37", features = ["eframe", "snapshot", "wgpu"] }
 kittest = "0.5"
 image = { version = "0.25", default-features = false, features = ["gif", "ico", "png"] }
 jxl-oxide = { version = "0.12", default-features = false, features = ["image"] }
-tracing-tracy = { version = "0.12", default-features = false, features = ["enable", "broadcast", "only-localhost"] }
+# Tracy 0.13.1, the profiler nixpkgs ships: the protocol must match.
+# tracing-tracy 0.11.4 alone would take a client of Tracy 0.14.
+tracing-tracy = { version = "=0.11.4", default-features = false, features = ["enable", "broadcast", "only-localhost"] }
+tracy-client = { version = "=0.18.4", default-features = false }
+tracy-client-sys = { version = "=0.28.0", default-features = false }
 
 criterion = "0.8"
 futures-lite = { version = "2", default-features = false }
