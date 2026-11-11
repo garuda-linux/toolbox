@@ -88,6 +88,7 @@ images=$(jq -nc --arg l "$location" --arg d "${GARUDA_LIMA_IMAGE_DIGEST:-}" \
 name=garuda-toolbox-profile
 lima_dir=${LIMA_HOME:-$HOME/.lima}/$name
 tunnel=
+run=
 
 vm() {
   limactl shell --workdir / "$name" -- "$@"
@@ -96,6 +97,7 @@ vm() {
 # shellcheck disable=SC2329 # run by the trap
 cleanup() {
   [ -z "$tunnel" ] || kill "$tunnel" 2>/dev/null || true
+  [ -z "$run" ] || kill "$run" 2>/dev/null || true
   $keep && return
   limactl delete --force "$name" >/dev/null 2>&1 || true
 }
@@ -121,11 +123,14 @@ for suite in "${suite_list[@]}"; do
   capture=$captures/vm-$suite.tracy
   echo "Suite $suite"
 
-  # The build's own source path does not exist in the VM, so the catalog
-  # comes from the copy.
-  vm bash -c "cd /tmp/toolbox && nohup env SELFTEST_BINARY=/tmp/toolbox/garuda-toolbox \
+  # The build's source path is not in the VM, so the catalog comes from the
+  # copy. Run from here: a job backgrounded inside the VM never wrote its log.
+  # Tracy refuses to start on the VM's CPU, which reports no invariant TSC.
+  log=$captures/vm-$suite.log
+  vm env SELFTEST_BINARY=/tmp/toolbox/garuda-toolbox \
     GARUDA_TOOLBOX_CATALOG_DIR=/tmp/toolbox/data/catalog SELFTEST_ROOT=/tmp/toolbox/runs \
-    bash scripts/selftest.sh $(printf '%q' "$suite") >/tmp/toolbox/$suite.log 2>&1 &"
+    TRACY_NO_INVARIANT_CHECK=1 bash /tmp/toolbox/scripts/selftest.sh "$suite" >"$log" 2>&1 &
+  run=$!
 
   # The Tracy client listens on every address, IPv6 as well, so only the
   # port is matched.
@@ -135,12 +140,16 @@ for suite in "${suite_list[@]}"; do
       listening=true
       break
     fi
+    kill -0 "$run" 2>/dev/null || break
     sleep 1
   done
 
   $listening || {
-    echo "lima-profile.sh: $suite never started profiling:" >&2
-    vm tail -n 20 "/tmp/toolbox/$suite.log" >&2 || true
+    echo "lima-profile.sh: $suite never started profiling, $log says:" >&2
+    kill "$run" 2>/dev/null || true
+    wait "$run" 2>/dev/null || true
+    run=
+    tail -n 20 "$log" >&2
     vm tail -n 20 "/tmp/toolbox/runs/$suite/out.log" >&2 || true
     status=1
     continue
@@ -154,6 +163,8 @@ for suite in "${suite_list[@]}"; do
   nix shell nixpkgs#tracy -c tracy-capture -o "$capture" -f -a 127.0.0.1 >/dev/null || status=1
   kill "$tunnel" 2>/dev/null || true
   tunnel=
+  wait "$run" 2>/dev/null || true
+  run=
 
   verdict=$(vm cat "/tmp/toolbox/runs/$suite/shots/result" 2>/dev/null || echo "no verdict")
   echo "  $verdict, capture: $capture"
