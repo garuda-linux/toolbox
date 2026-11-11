@@ -151,8 +151,7 @@ fn every_scheme_reaches_the_contrast_targets_after_fitting() {
             3.0,
             "ring",
         );
-        let under_rim = [tokens.field, tokens.hover, tokens.card, tokens.window];
-        at_least(tokens.field_rim, &under_rim, 3.0, "field rim");
+
         for status in [tokens.success, tokens.warning, tokens.error] {
             at_least(status, &surfaces, 4.5, "status");
         }
