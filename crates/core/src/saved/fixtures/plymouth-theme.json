@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "plymouth-theme",
+      "item": null,
+      "wish": "bgrt"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::domain::Domain;
+use crate::domain::{Domain, Stage};
 use crate::{ChangeSet, Outcome, Snapshot, SummaryCode};
 
 /// Bumped when the file's shape changes. Older files are then dropped
@@ -101,6 +101,7 @@ struct Entry {
     restore: Restore,
     codes: &'static [SummaryCode],
     one_off: bool,
+    stage: Stage,
 }
 
 #[derive(Default)]
@@ -120,6 +121,7 @@ impl Domains {
             restore: restore::<D>,
             codes: D::CODES,
             one_off: D::ONE_OFF,
+            stage: D::STAGE,
         };
 
         match self.entries.insert(D::ID, entry) {
@@ -147,6 +149,11 @@ impl Domains {
 
         ids.sort_unstable();
         ids
+    }
+
+    /// Every domain's [`Domain::STAGE`], with its id.
+    pub fn stages(&self) -> impl Iterator<Item = (&'static str, Stage)> + '_ {
+        self.entries.iter().map(|(id, entry)| (*id, entry.stage))
     }
 
     /// Every domain's [`Domain::CODES`], each code with its domain's id.

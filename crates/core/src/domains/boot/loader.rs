@@ -26,7 +26,7 @@ impl Domain for LoaderSettingsDomain {
     type Wish = LoaderSetting;
 
     const ID: &'static str = "loader-settings";
-    const STAGE: Stage = Stage::BOOT;
+    const STAGE: Stage = Stage::new(Stage::BOOT.rank() + 1);
     const CODES: &'static [SummaryCode] = &[
         SummaryCode::LoaderAutoEntriesOff,
         SummaryCode::LoaderAutoEntriesOn,

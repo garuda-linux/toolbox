@@ -20,7 +20,7 @@ impl Domain for ModuleBlacklist {
     type Wish = Toggle;
 
     const ID: &'static str = "module-blacklist";
-    const STAGE: Stage = Stage::FILES;
+    const STAGE: Stage = Stage::new(Stage::FILES.rank() + 2);
     const CODES: &'static [SummaryCode] = &[SummaryCode::DriverAllow, SummaryCode::DriverBlacklist];
 
     fn is_satisfied(item: &KernelModule, wish: &Toggle, state: &OwnBlacklist) -> bool {

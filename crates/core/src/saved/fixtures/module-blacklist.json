@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "module-blacklist",
+      "item": "r8169",
+      "wish": "on"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "system-locale",
+      "item": null,
+      "wish": "de_DE.UTF-8"
+    }
+  ]
+}

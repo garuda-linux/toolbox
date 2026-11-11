@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "account-locks",
+      "item": "guest",
+      "wish": "on"
+    }
+  ]
+}

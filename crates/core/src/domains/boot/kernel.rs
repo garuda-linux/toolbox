@@ -63,7 +63,7 @@ impl Domain for SdBootKernelDomain {
     const ID: &'static str = "sdboot-kernel";
     /// After the loader settings: a failed one leaves the slow rebuild
     /// undone.
-    const STAGE: Stage = Stage::new(Stage::BOOT.rank() + 10);
+    const STAGE: Stage = Stage::new(Stage::BOOT.rank() + 11);
     const CODES: &'static [SummaryCode] = &[
         SummaryCode::SdbootParameters,
         SummaryCode::SdbootParametersNone,

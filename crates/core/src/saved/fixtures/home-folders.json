@@ -1,0 +1,13 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "home-folders",
+      "item": "ada",
+      "wish": {
+        "home": "/home/lovelace",
+        "move_files": false
+      }
+    }
+  ]
+}

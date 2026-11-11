@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "login-shells",
+      "item": "ada",
+      "wish": "/usr/bin/fish"
+    }
+  ]
+}

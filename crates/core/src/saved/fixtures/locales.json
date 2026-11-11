@@ -1,0 +1,13 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "locales",
+      "item": {
+        "locale": "de_DE.UTF-8",
+        "charset": "UTF-8"
+      },
+      "wish": "on"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "dkms-modules",
+      "item": {
+        "module": "v4l2loopback",
+        "version": "0.15.4",
+        "kernel": "6.18.60-1-lts"
+      },
+      "wish": null
+    }
+  ]
+}

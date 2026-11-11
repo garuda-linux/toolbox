@@ -1,0 +1,13 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "grub-settings",
+      "item": "timeout",
+      "wish": {
+        "key": "timeout",
+        "value": 3
+      }
+    }
+  ]
+}

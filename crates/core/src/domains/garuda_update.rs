@@ -18,7 +18,7 @@ impl Domain for GarudaUpdateFlags {
     type Wish = Toggle;
 
     const ID: &'static str = "garuda-update-flags";
-    const STAGE: Stage = Stage::FILES;
+    const STAGE: Stage = Stage::new(Stage::FILES.rank() + 1);
     const CODES: &'static [SummaryCode] = &[
         SummaryCode::GarudaUpdateFlagOff,
         SummaryCode::GarudaUpdateFlagOn,

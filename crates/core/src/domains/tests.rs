@@ -48,3 +48,20 @@ fn every_change_code_belongs_to_one_domain() {
     assert_eq!(missing, []);
     assert_eq!(shared, []);
 }
+
+/// The planner orders changes by stage alone, so two domains on one
+/// stage would fall back to an order nobody chose.
+#[test]
+fn every_domain_runs_at_a_stage_of_its_own() {
+    let mut owners: BTreeMap<u16, Vec<&str>> = BTreeMap::new();
+    for (domain, stage) in super::all().unwrap().stages() {
+        owners.entry(stage.rank()).or_default().push(domain);
+    }
+
+    let shared: Vec<(u16, Vec<&str>)> = owners
+        .into_iter()
+        .filter(|(_, domains)| domains.len() > 1)
+        .collect();
+
+    assert_eq!(shared, []);
+}

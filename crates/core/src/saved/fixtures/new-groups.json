@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "new-groups",
+      "item": "family",
+      "wish": null
+    }
+  ]
+}

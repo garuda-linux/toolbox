@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "user-units",
+      "item": "foo.service",
+      "wish": "on"
+    }
+  ]
+}

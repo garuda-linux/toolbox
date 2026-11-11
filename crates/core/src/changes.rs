@@ -205,6 +205,8 @@ impl ChangeSet {
     fn in_plan_order(&self) -> impl Iterator<Item = &dyn Queue> {
         let mut queues: Vec<&dyn Queue> = self.queues.values().map(AsRef::as_ref).collect();
 
+        // Registered domains never share a stage (`domains/tests.rs`), so
+        // the id only keeps test domains of one stage in a fixed order.
         queues.sort_by_key(|queue| (queue.stage(), queue.domain()));
         queues.into_iter()
     }

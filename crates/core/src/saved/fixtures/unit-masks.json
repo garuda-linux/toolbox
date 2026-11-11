@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "unit-masks",
+      "item": "cups.service",
+      "wish": "on"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "wifi-backend",
+      "item": null,
+      "wish": "iwd"
+    }
+  ]
+}

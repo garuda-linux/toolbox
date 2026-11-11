@@ -1,0 +1,10 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "removed-groups",
+      "item": "media",
+      "wish": null
+    }
+  ]
+}

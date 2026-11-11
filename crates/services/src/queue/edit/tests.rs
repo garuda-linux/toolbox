@@ -4,7 +4,7 @@ use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, SAVED_VERSION, Snapshot, Toggle};
 use toolbox_plan::PackageName;
 
-use super::{Invalid, MAX_EDITS, QueueEdit, Removal};
+use super::{Invalid, MAX_EDITS, QUEUE_EDIT_VERSION, QueueEdit, Removal};
 
 fn package(name: &str) -> PackageName {
     name.parse().unwrap()
@@ -80,29 +80,49 @@ fn an_edit_survives_its_text() {
 fn text_that_is_no_edit_is_refused() {
     assert_eq!(parse("rm -rf /"), Err(Invalid::Shape));
     assert_eq!(
-        parse(r#"{"version":5,"remove":[],"add":[],"run":"now"}"#),
+        parse(&edit_text(&json!({"remove": [], "add": [], "run": "now"}))),
         Err(Invalid::Shape)
     );
+}
 
+/// The edit's own shape and the shape of the changes it carries change
+/// for different reasons, so each has its version and either refuses.
+#[test]
+fn an_edit_of_another_version_or_with_changes_of_another_is_refused() {
+    let edit = |version: u32, saved: u32| {
+        json!({"version": version, "saved_version": saved, "remove": [], "add": []}).to_string()
+    };
+
+    parse(&edit(QUEUE_EDIT_VERSION, SAVED_VERSION)).unwrap();
     assert_eq!(
-        parse(r#"{"version":1,"remove":[],"add":[]}"#),
+        parse(&edit(QUEUE_EDIT_VERSION + 1, SAVED_VERSION)),
+        Err(Invalid::Version)
+    );
+    assert_eq!(
+        parse(&edit(QUEUE_EDIT_VERSION, SAVED_VERSION + 1)),
         Err(Invalid::Version)
     );
 }
 
+/// An edit of this build's versions with `fields` beside them.
+fn edit_text(fields: &serde_json::Value) -> String {
+    let mut text = json!({"version": QUEUE_EDIT_VERSION, "saved_version": SAVED_VERSION});
+    if let (Some(text), Some(fields)) = (text.as_object_mut(), fields.as_object()) {
+        text.extend(fields.clone());
+    }
+
+    text.to_string()
+}
+
 #[test]
 fn a_change_of_an_unknown_domain_or_with_a_bad_value_is_refused() {
-    let version = SAVED_VERSION;
-    let unknown =
-        format!(r#"{{"version":{version},"remove":[{{"domain":"shell","key":"x"}}],"add":[]}}"#);
+    let unknown = edit_text(&json!({"remove": [{"domain": "shell", "key": "x"}], "add": []}));
+    let bad_package = edit_text(&json!({
+        "remove": [],
+        "add": [{"domain": "packages", "item": "-rf", "wish": "on"}],
+    }));
 
-    let bad_package = format!(
-        r#"{{"version":{version},"remove":[],"add":[{{"domain":"packages","item":"-rf","wish":"on"}}]}}"#
-    );
-
-    let control = format!(
-        r#"{{"version":{version},"remove":[{{"domain":"packages","key":"a\nb"}}],"add":[]}}"#
-    );
+    let control = edit_text(&json!({"remove": [{"domain": "packages", "key": "a\nb"}], "add": []}));
 
     assert_eq!(parse(&unknown), Err(Invalid::Domain));
     assert_eq!(parse(&bad_package), Err(Invalid::Change));
@@ -115,7 +135,7 @@ fn an_edit_with_too_many_changes_is_refused() {
         .map(|n| json!({"domain": "packages", "key": format!("p{n}")}))
         .collect();
 
-    let text = json!({"version": SAVED_VERSION, "remove": removals, "add": []}).to_string();
+    let text = edit_text(&json!({"remove": removals, "add": []}));
 
     assert_eq!(parse(&text), Err(Invalid::TooMany));
 }

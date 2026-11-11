@@ -65,7 +65,7 @@ impl Domain for UserUnits {
     type Wish = Toggle;
 
     const ID: &'static str = "user-units";
-    const STAGE: Stage = Stage::USER_SESSION;
+    const STAGE: Stage = Stage::new(Stage::USER_SESSION.rank() + 1);
     const CODES: &'static [SummaryCode] =
         &[SummaryCode::UserUnitDisable, SummaryCode::UserUnitEnable];
 

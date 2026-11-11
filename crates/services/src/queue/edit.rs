@@ -17,6 +17,10 @@ use toolbox_core::{
 /// More than any page queues at once, far below what slows the window.
 pub const MAX_EDITS: usize = 512;
 
+/// Bumped when the edit's own shape changes. The changes it carries are
+/// saved changes, which [`SAVED_VERSION`] counts.
+pub const QUEUE_EDIT_VERSION: u32 = 1;
+
 /// Keys are names and paths, never longer than this.
 const MAX_KEY_BYTES: usize = 512;
 
@@ -24,6 +28,8 @@ const MAX_KEY_BYTES: usize = 512;
 #[serde(deny_unknown_fields)]
 pub struct QueueEdit {
     pub version: u32,
+    /// The [`SAVED_VERSION`] of `add`.
+    pub saved_version: u32,
     pub remove: Vec<Removal>,
     pub add: Vec<SavedChange>,
 }
@@ -54,7 +60,8 @@ impl QueueEdit {
         let old = before.to_saved().changes;
 
         Self {
-            version: SAVED_VERSION,
+            version: QUEUE_EDIT_VERSION,
+            saved_version: SAVED_VERSION,
             remove: before
                 .views()
                 .into_iter()
@@ -72,7 +79,8 @@ impl QueueEdit {
 
     pub const fn removing(removals: Vec<Removal>) -> Self {
         Self {
-            version: SAVED_VERSION,
+            version: QUEUE_EDIT_VERSION,
+            saved_version: SAVED_VERSION,
             remove: removals,
             add: Vec::new(),
         }
@@ -89,7 +97,7 @@ impl QueueEdit {
     pub fn parse(text: &str, domains: &Domains) -> Result<Self, Invalid> {
         let edit: Self = serde_json::from_str(text).map_err(|_shape| Invalid::Shape)?;
 
-        if edit.version != SAVED_VERSION {
+        if edit.version != QUEUE_EDIT_VERSION || edit.saved_version != SAVED_VERSION {
             return Err(Invalid::Version);
         }
 
@@ -136,7 +144,7 @@ impl QueueEdit {
         }
 
         let added = SavedChanges {
-            version: self.version,
+            version: self.saved_version,
             changes: self.add.clone(),
         };
 
