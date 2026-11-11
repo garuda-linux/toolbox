@@ -18,20 +18,35 @@ pub fn completions(args: &Completions, out: &mut Out<'_>) -> Exit {
 /// The long help of the command the words name, the whole program without
 /// words. A word that is no command ends with a usage error.
 pub fn help(args: &Help, out: &mut Out<'_>) -> Exit {
-    let mut command = toolbox_cli::command();
-
-    for name in &args.command {
-        let Some(found) = command.find_subcommand(name).cloned() else {
+    let command = match named(&args.command) {
+        Ok(command) => command,
+        Err(name) => {
             say_error(out, &format!("no command `{name}`"));
             return Exit::Usage;
-        };
-
-        command = found;
-    }
+        }
+    };
 
     let style = style_on(out.settings().color, std::io::stdout().is_terminal());
     write!(out, "{}", long_help(&command, style)).ok();
     Exit::Success
+}
+
+/// The command the words name, or the first word that names none.
+///
+/// Only a built command hands its global flags and its full name down to
+/// its subcommands.
+fn named(words: &[String]) -> Result<clap::Command, &str> {
+    let mut command = toolbox_cli::command();
+    command.build();
+
+    for name in words {
+        command = command
+            .find_subcommand(name)
+            .cloned()
+            .ok_or(name.as_str())?;
+    }
+
+    Ok(command)
 }
 
 fn long_help(command: &clap::Command, style: Style) -> String {
