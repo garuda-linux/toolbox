@@ -8,8 +8,8 @@ use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::grub;
 use toolbox_core::features::bootrepair::page::Booted;
+use toolbox_services::diagnostics::page::Changed;
 use toolbox_system::Host;
-use toolbox_system::diagnostics::page::Changed;
 
 use super::{Answer, PageService};
 use crate::boot::{Boot, FileKind};

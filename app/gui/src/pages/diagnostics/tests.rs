@@ -10,8 +10,8 @@ use toolbox_core::features::diagnostics::{
 };
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_privatebin::Paste;
-use toolbox_system::diagnostics::page::{Page, State};
-use toolbox_system::share::{Upload, UploadProblem};
+use toolbox_services::diagnostics::page::{Page, State};
+use toolbox_services::share::{Upload, UploadProblem};
 
 use super::DiagnosticsPage;
 use crate::command::{AppCommand, Command, DiagnosticsCommand};

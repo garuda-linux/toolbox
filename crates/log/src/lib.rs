@@ -5,7 +5,6 @@
 //! `[general] log_level` and can change while running. Records are also
 //! echoed to stderr, so a program started in a terminal shows its log there.
 
-pub mod calendar;
 mod file;
 mod format;
 pub mod subscriber;

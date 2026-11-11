@@ -7,7 +7,7 @@ use toolbox_core::features::console::ending::Ending;
 use toolbox_core::features::diagnostics::{Known, Redacted, redact};
 use toolbox_plan::protocol::{self, Failure, Mode};
 use toolbox_plan::{PackageName, Plan, StepId, TargetList};
-use toolbox_system::share::Upload;
+use toolbox_services::share::Upload;
 use toolbox_terminal::{Terminal, TerminalSize};
 
 use crate::apply::{Problem, Report};

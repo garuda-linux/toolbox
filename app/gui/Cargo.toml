@@ -39,6 +39,7 @@ toolbox-gui-kit.workspace = true
 toolbox-guide.workspace = true
 toolbox-https.workspace = true
 toolbox-instance.workspace = true
+toolbox-calendar.workspace = true
 toolbox-log.workspace = true
 toolbox-plan.workspace = true
 toolbox-privatebin.workspace = true

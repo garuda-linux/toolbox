@@ -1,5 +1,5 @@
 use egui_kittest::kittest::Queryable as _;
-use toolbox_system::diagnostics::page::{Page, State};
+use toolbox_services::diagnostics::page::{Page, State};
 
 use super::page;
 

@@ -4,8 +4,6 @@
 
 mod access;
 pub mod known;
-pub mod page;
-pub mod service;
 #[cfg(test)]
 mod testing;
 #[cfg(test)]

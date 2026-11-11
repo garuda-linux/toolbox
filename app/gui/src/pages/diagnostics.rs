@@ -15,7 +15,7 @@ use toolbox_gui_kit::widgets::{
     ButtonKind, Select, Tone, banner, card, empty_state, loading_label, pill_button, rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_system::diagnostics::page::State;
+use toolbox_services::diagnostics::page::State;
 
 use super::header::title_header;
 use super::{PageContext, PageView};

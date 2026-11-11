@@ -1,7 +1,7 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::diagnostics::{Known, redact};
-use toolbox_system::diagnostics::page::Page;
+use toolbox_services::diagnostics::page::Page;
 
 use super::{page, report};
 

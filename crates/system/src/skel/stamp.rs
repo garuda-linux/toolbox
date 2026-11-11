@@ -3,7 +3,7 @@ mod tests;
 
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use toolbox_log::calendar::Utc;
+use toolbox_calendar::Utc;
 
 /// `now` in UTC as `YYYYMMDD-HHMMSS`. A time before 1970 counts as the
 /// epoch.

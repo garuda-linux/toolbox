@@ -9,10 +9,8 @@ use std::sync::Arc;
 use tokio::runtime::Handle;
 use toolbox_core::features::network::{Connectivity, RadioTarget};
 use toolbox_https::RequestError;
-use toolbox_system::{
-    AddressProblem, AddressSource, Checked, NetworkActions, NetworkSource, ProbeError,
-    connectivity, lookup_address,
-};
+use toolbox_services::address::{AddressProblem, AddressSource, lookup_address};
+use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError, connectivity};
 
 use super::{Hardware, Read, StatusRead};
 use crate::lane::Lane;

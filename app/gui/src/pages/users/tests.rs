@@ -11,7 +11,7 @@ use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User}
 use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{GroupName, ShellPath, UserName};
-use toolbox_system::Locks;
+use toolbox_services::locks::Locks;
 
 use super::UsersPage;
 use crate::command::{Command, UserEdit, UsersCommand};

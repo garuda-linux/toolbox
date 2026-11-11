@@ -11,7 +11,7 @@ use toolbox_gui_kit::widgets::{
     loading_label, menu_button, menu_item, pill_button, rich, text_field,
 };
 use toolbox_privatebin::{Paste, SERVER};
-use toolbox_system::share::{Upload, UploadProblem};
+use toolbox_services::share::{Upload, UploadProblem};
 
 use super::preview;
 use crate::command::{AppCommand, Command, CommandSender};

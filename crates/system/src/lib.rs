@@ -29,7 +29,6 @@ mod power;
 mod probe;
 mod repair;
 mod settings;
-pub mod share;
 pub mod skel;
 mod status;
 pub mod systemd;
@@ -61,10 +60,10 @@ pub use facts::{
 pub use host::{Host, HostRoots, HostSource, ProcessEnv, SystemHost};
 pub use kernels::{Dkms, DkmsSource, KernelSource, SystemKernels};
 pub use locales::{EtcLocales, LocaleSource};
-pub use locks::{HelperLocks, LockProblem, LockSource, Locks};
+pub use locks::{HelperLocks, LockProblem, LockSource};
 pub use network::{
-    AddressProblem, AddressSource, Checked, KdeGeoIp, ModuleSource, NetworkActions, NetworkSource,
-    SystemActions, SystemModules, SystemNetwork, connectivity, lookup_address,
+    Checked, ModuleSource, NetworkActions, NetworkSource, SystemActions, SystemModules,
+    SystemNetwork, connectivity,
 };
 pub use notify::{NOTIFY, Notification, NotifyBody, notify_body};
 pub use packages::{

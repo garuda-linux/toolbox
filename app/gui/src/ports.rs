@@ -36,12 +36,12 @@ use toolbox_news::{Feeds, News, NewsSource};
 use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_privatebin::{Https, Transport};
+use toolbox_services::address::{AddressSource, KdeGeoIp};
 use toolbox_system::mirrors::RateMirrors;
 use toolbox_system::{
-    AddressSource, ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing,
-    HelperLocks, KdeGeoIp, Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions,
-    SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork,
-    SystemRepair,
+    ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing, HelperLocks,
+    Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions, SystemBootMenu,
+    SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork, SystemRepair,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";

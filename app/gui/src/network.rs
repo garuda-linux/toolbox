@@ -17,7 +17,8 @@ use jobs::{Jobs, Landed};
 use toolbox_core::features::network::{
     Connectivity, DefaultRoute, Device, Radio, RadioAccess, RadioTarget,
 };
-use toolbox_system::{AddressProblem, ProbeError};
+use toolbox_services::address::AddressProblem;
+use toolbox_system::ProbeError;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub enum Read<T> {

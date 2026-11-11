@@ -5,6 +5,8 @@
 //! The service answers on its own threads, so its notes come through a
 //! channel that wakes the frame.
 
+pub mod page;
+pub mod service;
 #[cfg(test)]
 mod tests;
 
@@ -15,11 +17,9 @@ use toolbox_core::features::diagnostics::Selection;
 use toolbox_privatebin::{RequestError, Transport};
 use toolbox_pty::{Run, styled_lines};
 use toolbox_system::DiagnosticSource;
-use toolbox_system::diagnostics::page::{Changed, Page, State};
-use toolbox_system::diagnostics::service::{
-    self, DiagnosticsHandle, DiagnosticsNote, DiagnosticsSink, Request,
-};
 
+use self::page::{Changed, Page, State};
+use self::service::{DiagnosticsHandle, DiagnosticsNote, DiagnosticsSink, Request};
 use crate::waking::{self, Wake, Waking};
 
 /// The paste server's answer in a dry run: the upload goes nowhere and

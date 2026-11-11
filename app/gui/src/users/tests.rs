@@ -6,8 +6,9 @@ use std::time::Duration;
 use tokio::runtime::Runtime;
 use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_plan::UserName;
+use toolbox_services::locks::Locks;
 use toolbox_system::pkexec::Refusal;
-use toolbox_system::{LockProblem, LockSource, Locks};
+use toolbox_system::{LockProblem, LockSource};
 
 use super::{Users, UsersSetup};
 use crate::testing::until;

@@ -16,7 +16,8 @@ use tokio::runtime::Handle;
 use toolbox_core::domains::AccountLockFlags;
 use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_plan::UserName;
-use toolbox_system::{LockProblem, LockSource, Locks};
+use toolbox_services::locks::Locks;
+use toolbox_system::{LockProblem, LockSource};
 
 use crate::lane::{Lane, OneRead};
 

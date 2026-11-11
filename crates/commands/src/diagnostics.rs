@@ -13,10 +13,10 @@ use toolbox_cli::Exit;
 use toolbox_cli::confirm::{Prompt, consent};
 use toolbox_core::features::diagnostics::{Outcome, Selection};
 use toolbox_privatebin::Transport;
+use toolbox_services::diagnostics::page::{Page, State};
+use toolbox_services::diagnostics::service::{self, DiagnosticsNote, DiagnosticsSink, Request};
+use toolbox_services::share::{Upload, UploadProblem};
 use toolbox_system::DiagnosticSource;
-use toolbox_system::diagnostics::page::{Page, State};
-use toolbox_system::diagnostics::service::{self, DiagnosticsNote, DiagnosticsSink, Request};
-use toolbox_system::share::{Upload, UploadProblem};
 
 use crate::out::Out;
 

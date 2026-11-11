@@ -3,7 +3,7 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_gui_kit::theme::PILL_HEIGHT;
-use toolbox_system::diagnostics::page::Page;
+use toolbox_services::diagnostics::page::Page;
 
 use super::page;
 

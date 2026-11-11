@@ -18,10 +18,8 @@ use toolbox_core::features::network::{
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{Bounded, HostName, Plan, Toggle};
-use toolbox_system::{
-    AddressProblem, KdeGeoIp, NetworkActions as _, NetworkSource, SystemActions, SystemNetwork,
-    lookup_address,
-};
+use toolbox_services::address::{AddressProblem, KdeGeoIp, lookup_address};
+use toolbox_system::{NetworkActions as _, NetworkSource, SystemActions, SystemNetwork};
 
 use super::act::run;
 use super::change::{Refused, fresh, page_edit, why};

@@ -5411,6 +5411,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "toolbox-calendar"
+version = "6.3.0"
+
+[[package]]
 name = "toolbox-catalog"
 version = "6.3.0"
 dependencies = [
@@ -5545,6 +5549,7 @@ dependencies = [
  "thiserror 2.0.21",
  "tokio",
  "toolbox-aur",
+ "toolbox-calendar",
  "toolbox-catalog",
  "toolbox-cli",
  "toolbox-commands",
@@ -5650,6 +5655,7 @@ dependencies = [
  "parking_lot 0.13.0",
  "rustix 1.1.6",
  "tempfile",
+ "toolbox-calendar",
  "tracing",
  "tracing-log",
  "tracing-subscriber",
@@ -5731,10 +5737,12 @@ dependencies = [
  "toolbox-config",
  "toolbox-core",
  "toolbox-exec",
+ "toolbox-https",
  "toolbox-instance",
  "toolbox-plan",
  "toolbox-privatebin",
  "toolbox-pty",
+ "toolbox-state",
  "toolbox-system",
  "tracing",
 ]
@@ -5764,12 +5772,10 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.21",
  "tokio",
+ "toolbox-calendar",
  "toolbox-catalog",
  "toolbox-exec",
- "toolbox-https",
- "toolbox-log",
  "toolbox-plan",
- "toolbox-privatebin",
  "toolbox-pty",
  "toolbox-state",
  "tracing",

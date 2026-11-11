@@ -11,7 +11,7 @@ use std::sync::Arc;
 use crossbeam_channel::Receiver;
 use toolbox_core::features::diagnostics::Known;
 use toolbox_privatebin::Transport;
-use toolbox_system::share::{ShareNote, ShareSink, Sharer, Upload};
+use toolbox_services::share::{ShareNote, ShareSink, Sharer, Upload};
 
 use crate::waking::{self, Wake, Waking};
 

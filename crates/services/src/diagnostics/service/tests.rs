@@ -9,9 +9,9 @@ use toolbox_privatebin::{RequestError, Transport};
 use toolbox_state::diagnostics::{
     Collector, Known, Outcome, RedactedKind, Selection, UploadFailure,
 };
+use toolbox_system::DiagnosticSource;
 
 use super::{DiagnosticsHandle, DiagnosticsNote, DiagnosticsSink, Request, UploadProblem, serve};
-use crate::DiagnosticSource;
 
 /// Answers every collector with its own name. Inxi blocks until it is
 /// cancelled, like a program that hangs.

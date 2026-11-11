@@ -1,6 +1,6 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::calendar::Utc;
+use toolbox_calendar::Utc;
 
 #[cfg(test)]
 mod tests;

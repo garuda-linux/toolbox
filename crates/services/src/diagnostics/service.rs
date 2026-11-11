@@ -15,8 +15,8 @@ use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 use toolbox_privatebin::{Paste, Transport};
 use toolbox_pty::strip_ansi;
 use toolbox_state::diagnostics::{Collector, Outcome, Redacted, Selection, full_report, redact};
+use toolbox_system::DiagnosticSource;
 
-use crate::DiagnosticSource;
 use crate::share::{ShareNote, ShareSink, Sharer, UploadProblem};
 
 #[derive(Debug)]

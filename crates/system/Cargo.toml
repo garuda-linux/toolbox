@@ -26,12 +26,10 @@ toolbox-exec.workspace = true
 toolbox-catalog.workspace = true
 toolbox-plan.workspace = true
 toolbox-state.workspace = true
-toolbox-log.workspace = true
+toolbox-calendar.workspace = true
 toolbox-pty.workspace = true
 zbus.workspace = true
 tokio = { workspace = true, features = ["rt", "sync", "macros", "time"] }
-toolbox-https.workspace = true
-toolbox-privatebin.workspace = true
 tempfile.workspace = true
 
 [dev-dependencies]

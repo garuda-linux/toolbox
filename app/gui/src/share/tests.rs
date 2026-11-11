@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use toolbox_core::features::diagnostics::Known;
-use toolbox_system::share::Upload;
+use toolbox_services::share::Upload;
 
 use super::spawn;
 use crate::diagnostics::DryRunTransport;

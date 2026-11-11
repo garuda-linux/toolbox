@@ -17,6 +17,7 @@ toolbox-catalog = { path = "crates/catalog" }
 toolbox-cli = { path = "crates/cli" }
 toolbox-commands = { path = "crates/commands" }
 toolbox-config = { path = "crates/config" }
+toolbox-calendar = { path = "crates/calendar" }
 toolbox-core = { path = "crates/core" }
 toolbox-exec = { path = "crates/exec" }
 toolbox-fs = { path = "crates/fs" }

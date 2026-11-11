@@ -1,6 +1,6 @@
 use egui::Context;
 use toolbox_core::features::users::run::PageRun;
-use toolbox_system::Locks;
+use toolbox_services::locks::Locks;
 
 use crate::i18n;
 

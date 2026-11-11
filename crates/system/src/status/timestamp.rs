@@ -9,9 +9,7 @@ mod tests;
 
 use std::time::{Duration, SystemTime};
 
-use toolbox_log::calendar::{
-    SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, days_from_civil,
-};
+use toolbox_calendar::{SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, days_from_civil};
 
 /// The moment `text` names, `None` when it is no timestamp of either
 /// format. RFC 3339 offsets (`+02:00`, `Z`) are read too.

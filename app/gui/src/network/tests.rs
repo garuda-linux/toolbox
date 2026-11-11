@@ -8,7 +8,8 @@ use toolbox_core::features::network::{
     Connectivity, DefaultRoute, Device, Radio, RadioAccess, RadioKind, RadioTarget,
 };
 use toolbox_https::RequestError;
-use toolbox_system::{AddressSource, Checked, NetworkActions, NetworkSource, ProbeError};
+use toolbox_services::address::AddressSource;
+use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError};
 
 use super::{Address, Network, NetworkSetup, Read};
 use crate::testing::until;

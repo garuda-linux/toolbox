@@ -4,10 +4,10 @@ use std::sync::atomic::AtomicBool;
 use tokio::runtime::Runtime;
 use toolbox_core::features::diagnostics::{Collector, Outcome, Selection};
 use toolbox_system::DiagnosticSource;
-use toolbox_system::diagnostics::page::State;
-use toolbox_system::share::Upload;
 
+use super::page::State;
 use super::{Diagnostics, DryRunTransport, spawn};
+use crate::share::Upload;
 use crate::testing::until;
 
 /// Answers dmesg with a red line and the journal with nothing.

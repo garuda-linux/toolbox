@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 pub use actions::{Checked, NetworkActions, SystemActions};
 pub use modules::{ModuleSource, SystemModules};
-pub use online::{AddressProblem, AddressSource, KdeGeoIp, connectivity, lookup_address};
+pub use online::connectivity;
 use serde::Deserialize;
 use toolbox_state::network::{
     DefaultRoute, Device, Radio, RadioAccess, RadioKind, RadioTarget, pci_devices,

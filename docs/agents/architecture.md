@@ -59,7 +59,7 @@ toolbox-gui (bin garuda-toolbox)
   ├─ toolbox-system ─ toolbox-exec ─ toolbox-pty, toolbox-fs
   ├─ toolbox-gui-kit ─ toolbox-terminal ─ toolbox-pty
   ├─ toolbox-privatebin, toolbox-news, toolbox-aur ─ toolbox-https
-  └─ toolbox-config, toolbox-log, toolbox-instance, toolbox-cli
+  └─ toolbox-config, toolbox-log, toolbox-calendar, toolbox-instance, toolbox-cli
 toolbox-helper (bin, root) ─ toolbox-plan, toolbox-exec
 dev only: toolbox-lint, toolbox-xtask
 ```
@@ -69,37 +69,41 @@ Link rules (check with `cargo tree -p <crate> --edges normal`):
 - Only `toolbox-gui` and `toolbox-gui-kit` link egui, so
   `cargo nextest run -p toolbox-commands` builds without it.
 - `toolbox-helper` links `toolbox-plan` and `toolbox-exec` only.
-- `toolbox-pty`, `toolbox-fs` and `toolbox-https` link nothing of the
-  workspace. Every outside request goes through `toolbox-https`, so the
-  HTTPS rules live in one place.
+- `toolbox-pty`, `toolbox-fs`, `toolbox-https` and `toolbox-calendar`
+  link nothing of the workspace. Every outside request goes through
+  `toolbox-https`, so the HTTPS rules live in one place.
+- `toolbox-system` links neither `toolbox-https`, `toolbox-privatebin` nor
+  `toolbox-log`. The upload, the public address and the pages' states are
+  `toolbox-services`'s.
 
-| Crate                | Holds                                                                          | Must not                                                   |
-| -------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| `toolbox-plan`       | value objects, `RootAction`, `UserAction`, `Plan`, helper protocol, validation | do I/O                                                     |
-| `toolbox-state`      | snapshot parts, lsblk and dkms parsing, reports                                | do I/O, be linked by the helper                            |
-| `toolbox-pty`        | programs in a PTY, process group cancel, `strip_ansi`, `styled_lines`          | know actions or egui                                       |
-| `toolbox-terminal`   | the Console's emulator: bytes in, styled rows and cursor out, keys to bytes    | know egui or the helper                                    |
-| `toolbox-guide`      | `docs/src` built in by `build.rs`, search, link and picture tests              | link egui, read files at run time                          |
-| `toolbox-exec`       | plan steps in PTYs, `capture`, `secure` (`openat2`), `preflight`, builtins     | link a derive crate                                        |
-| `toolbox-fs`         | atomic replace (`replace_at`, `replace`)                                       | link anything but rustix                                   |
-| `toolbox-helper`     | `apply`, `read <kind>`, `logs <kind>`, `fetch <path>`                          | run free-form commands                                     |
-| `toolbox-system`     | ports to the running system as traits plus adapters, status probes             | decide, hold UI state                                      |
-| `toolbox-catalog`    | TOML schemas, loader and validation for `data/catalog/`                        | probe the system                                           |
-| `toolbox-core`       | `ChangeSet`, `Snapshot`, the planner, `features/<name>`                        | do I/O                                                     |
-| `toolbox-config`     | settings file, XDG paths, autostart link                                       |                                                            |
-| `toolbox-log`        | rotating log file, see [logging.md](logging.md)                                | look up XDG folders                                        |
-| `toolbox-https`      | the one HTTPS agent (`Https`, `Rules` per caller, `Clock`)                     | follow a redirect, read a body past its cap, know a server |
-| `toolbox-privatebin` | PrivateBin v2 paste format and upload                                          | take a server from input, log a link                       |
-| `toolbox-aur`        | the AUR from its daily dump only (`Cache`, `parse`)                            | call the RPC, build a URL from input, ask twice a day      |
-| `toolbox-news`       | Garuda's and Arch's RSS feeds (`Cache`, `Feeds`)                               | build a URL from input, ask more than every six hours      |
-| `toolbox-instance`   | single instance: `activation`, `bus`                                           | ask more than window, page and queue, decode a queue edit  |
-| `toolbox-cli`        | clap arguments, exit codes, `output::Paint`, `Prompt`                          | run a command or touch the system                          |
-| `toolbox-gui-kit`    | tokens, theme, icons, fonts, widgets, toasts, `terminal_view`, `frost`         | pick a colour outside the tokens                           |
-| `toolbox-services`   | what the window and the CLI share (`apply`, `queue`, `page`, `i18n`, ...)      | link egui, `toolbox-gui-kit` or a root helper crate        |
-| `toolbox-gui`        | `app/*`, `shell/*`, `pages/*`, GUI services, `ports.rs`, `selftest/*`          | hold feature logic                                         |
-| `toolbox-commands`   | every subcommand, its output, Ctrl+C handling                                  | link egui or `toolbox-gui-kit`                             |
-| `toolbox-lint`       | comment and shape rules for Rust                                               | ship                                                       |
-| `toolbox-xtask`      | the `cargo xtask` commands                                                     | ship                                                       |
+| Crate                | Holds                                                                                                 | Must not                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `toolbox-plan`       | value objects, `RootAction`, `UserAction`, `Plan`, helper protocol, validation                        | do I/O                                                     |
+| `toolbox-state`      | snapshot parts, lsblk and dkms parsing, reports                                                       | do I/O, be linked by the helper                            |
+| `toolbox-pty`        | programs in a PTY, process group cancel, `strip_ansi`, `styled_lines`                                 | know actions or egui                                       |
+| `toolbox-terminal`   | the Console's emulator: bytes in, styled rows and cursor out, keys to bytes                           | know egui or the helper                                    |
+| `toolbox-guide`      | `docs/src` built in by `build.rs`, search, link and picture tests                                     | link egui, read files at run time                          |
+| `toolbox-exec`       | plan steps in PTYs, `capture`, `secure` (`openat2`), `preflight`, builtins                            | link a derive crate                                        |
+| `toolbox-fs`         | atomic replace (`replace_at`, `replace`)                                                              | link anything but rustix                                   |
+| `toolbox-helper`     | `apply`, `read <kind>`, `logs <kind>`, `fetch <path>`                                                 | run free-form commands                                     |
+| `toolbox-system`     | ports to the running system as traits plus adapters, status probes                                    | decide, hold UI state, send a request outside the machine  |
+| `toolbox-catalog`    | TOML schemas, loader and validation for `data/catalog/`                                               | probe the system                                           |
+| `toolbox-core`       | `ChangeSet`, `Snapshot`, the planner, `features/<name>`                                               | do I/O                                                     |
+| `toolbox-config`     | settings file, XDG paths, autostart link                                                              |                                                            |
+| `toolbox-log`        | rotating log file, see [logging.md](logging.md)                                                       | look up XDG folders                                        |
+| `toolbox-calendar`   | UTC calendar arithmetic (`Utc`) for timestamps and backup names                                       | read a clock or a time zone database                       |
+| `toolbox-https`      | the one HTTPS agent (`Https`, `Rules` per caller, `Clock`)                                            | follow a redirect, read a body past its cap, know a server |
+| `toolbox-privatebin` | PrivateBin v2 paste format and upload                                                                 | take a server from input, log a link                       |
+| `toolbox-aur`        | the AUR from its daily dump only (`Cache`, `parse`)                                                   | call the RPC, build a URL from input, ask twice a day      |
+| `toolbox-news`       | Garuda's and Arch's RSS feeds (`Cache`, `Feeds`)                                                      | build a URL from input, ask more than every six hours      |
+| `toolbox-instance`   | single instance: `activation`, `bus`                                                                  | ask more than window, page and queue, decode a queue edit  |
+| `toolbox-cli`        | clap arguments, exit codes, `output::Paint`, `Prompt`                                                 | run a command or touch the system                          |
+| `toolbox-gui-kit`    | tokens, theme, icons, fonts, widgets, toasts, `terminal_view`, `frost`                                | pick a colour outside the tokens                           |
+| `toolbox-services`   | what the window and the CLI share (`apply`, `queue`, `diagnostics`, `share`, `address`, `locks`, ...) | link egui, `toolbox-gui-kit` or a root helper crate        |
+| `toolbox-gui`        | `app/*`, `shell/*`, `pages/*`, GUI services, `ports.rs`, `selftest/*`                                 | hold feature logic                                         |
+| `toolbox-commands`   | every subcommand, its output, Ctrl+C handling                                                         | link egui or `toolbox-gui-kit`                             |
+| `toolbox-lint`       | comment and shape rules for Rust                                                                      | ship                                                       |
+| `toolbox-xtask`      | the `cargo xtask` commands                                                                            | ship                                                       |
 
 ### Frost
 

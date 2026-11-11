@@ -4,11 +4,11 @@
 //! `http` or `https` one.
 
 use egui::{Context, Ui};
+use toolbox_calendar::Utc;
 use toolbox_cli::output::size;
 use toolbox_core::features::packages::detail::web_address;
 use toolbox_core::features::packages::{InstallReason, PackageDetails};
 use toolbox_gui_kit::widgets::{PropertyTexts, property_list, text_link};
-use toolbox_log::calendar::Utc;
 
 use crate::i18n;
 use crate::pages::packages::row::repository;

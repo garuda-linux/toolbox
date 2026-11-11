@@ -250,14 +250,14 @@ fn clearing_the_output_hides_the_last_share_link_too() {
     started(&mut console);
     output(&mut console, "done\r\n");
     console.take(Report::PlanFinished { succeeded: true });
-    *console.share_mut() = toolbox_system::share::Upload::Done(toolbox_privatebin::Paste {
+    *console.share_mut() = toolbox_services::share::Upload::Done(toolbox_privatebin::Paste {
         link: "https://bin.example/?a#key".to_owned(),
         delete_link: String::new(),
     });
 
     assert!(console.clear_output());
 
-    assert_eq!(console.share(), &toolbox_system::share::Upload::Idle);
+    assert_eq!(console.share(), &toolbox_services::share::Upload::Idle);
 }
 
 #[test]

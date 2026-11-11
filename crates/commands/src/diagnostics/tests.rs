@@ -6,9 +6,9 @@ use toolbox_cli::Exit;
 use toolbox_cli::confirm::Prompt;
 use toolbox_core::features::diagnostics::{Collector, Outcome, Selection};
 use toolbox_services::diagnostics::DryRunTransport;
+use toolbox_services::diagnostics::page::Page;
+use toolbox_services::diagnostics::service::DiagnosticsNote;
 use toolbox_system::DiagnosticSource;
-use toolbox_system::diagnostics::page::Page;
-use toolbox_system::diagnostics::service::DiagnosticsNote;
 
 use super::collect;
 use crate::out::{Out, Settings};
