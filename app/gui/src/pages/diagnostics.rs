@@ -12,7 +12,8 @@ use egui::{Label, Ui};
 use toolbox_core::features::diagnostics::{Collector, Selection};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Select, Tone, banner, card, empty_state, loading_label, pill_button, rich,
+    BodyShape, ButtonKind, Select, Tone, banner, card, empty_state, loading_label, pill_button,
+    rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_services::diagnostics::page::State;
@@ -60,7 +61,7 @@ impl PageView for DiagnosticsPage {
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let _ui = tracing::trace_span!("diagnostics ui").entered();
         self.picker(ui, context);
-        ui.add_space(ui.tokens().sizes.section_gap);
+        ui.add_space(ui.tokens().sizes.card_gap);
 
         let page = context.service::<Diagnostics>().page();
         let view = ShareView {
@@ -71,7 +72,7 @@ impl PageView for DiagnosticsPage {
         };
 
         if share::status(ui, &view, &mut self.asking) {
-            ui.add_space(ui.tokens().sizes.section_gap);
+            ui.add_space(ui.tokens().sizes.card_gap);
         }
 
         if page.state == State::Report && !page.report.is_empty() {
@@ -85,6 +86,11 @@ impl PageView for DiagnosticsPage {
         {
             context.commands.send(DiagnosticsCommand::Upload);
         }
+    }
+
+    /// The report box fills the window below the picker.
+    fn shape(&self) -> BodyShape {
+        BodyShape::Filled
     }
 }
 

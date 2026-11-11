@@ -62,7 +62,7 @@ pub use chip::{
 pub use dim::{dim_opacity, dim_picture, dimmed};
 pub use empty::{empty_state, error_row};
 pub use field::{forget_text, text_field, text_field_with_unit};
-pub use focus::focus_ring;
+pub use focus::{focus_ring, install as install_focus};
 use heading::mark_heading;
 pub use heading::{
     SectionHeading, minor_heading, page_header, page_toolbar, section_heading, section_intro,

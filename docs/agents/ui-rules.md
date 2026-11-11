@@ -57,9 +57,13 @@ Rules for pages, gui-kit widgets and the command line's output.
 - Every colour and size comes from the tokens in `crates/gui-kit`. Focus
   rings use `accent_ring` (3:1), accent text `accent_text` (4.5:1).
   Selection uses the accent tint.
-- Text reaches 4.5:1 on every fill it sits on. Fields and controls have a
-  3:1 edge, on filled fields a rim round the whole shape (`field_rim`). A
-  focused field shows the focus ring in place of the rim, never both.
+- A focus ring shows only when the keyboard moved the focus, as a
+  browser's `:focus-visible`: a click focuses without it, the next key
+  brings it back (`widgets/focus.rs`).
+- Text reaches 4.5:1 on every fill it sits on. Controls have a 3:1 edge.
+  Text fields are the exception: their fill alone marks them, with no rim
+  at rest (decided 2026-11-11), the focus ring when the keyboard focuses
+  them.
 - A number field with a unit centres both as one group ("5 s"). A number
   alone ends at the right.
 - Frosted surfaces: see [Frost](architecture.md#frost).

@@ -1,16 +1,22 @@
-//! The two shapes of a page's body: one column in a scroll area, or wide
-//! panes that scroll on their own.
+//! The shapes of a page's body: one column in a scroll area, the same
+//! column filling the window down to a card's gap, or wide panes that
+//! scroll on their own.
 
 use egui::{Rect, ScrollArea, Ui, UiBuilder, pos2};
 
 use super::{column, column_rect};
 use crate::motion;
 use crate::theme::CONTENT_WIDTH;
+use crate::tokens::Sizes;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum BodyShape {
     #[default]
     Column,
+    /// A column whose last block fills the window. It ends `card_gap`
+    /// above the bottom, the gap between its cards, not the page padding
+    /// a column that scrolls keeps under its end.
+    Filled,
     /// Up to `width` wide and as tall as the page, without a scroll area,
     /// for a page whose panes scroll on their own, such as a reader with
     /// its contents beside the text.
@@ -30,9 +36,17 @@ pub(super) struct Room {
 }
 
 impl BodyShape {
+    /// The room under the body's end.
+    pub(super) fn bottom(self, sizes: &Sizes) -> f32 {
+        match self {
+            Self::Filled => sizes.card_gap,
+            Self::Column | Self::Panes { width: _ } => f32::from(sizes.page_padding.bottom),
+        }
+    }
+
     pub(super) const fn width(self) -> f32 {
         match self {
-            Self::Column => CONTENT_WIDTH,
+            Self::Column | Self::Filled => CONTENT_WIDTH,
             Self::Panes { width } => width,
         }
     }

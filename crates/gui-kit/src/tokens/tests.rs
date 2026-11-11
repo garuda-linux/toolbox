@@ -335,15 +335,3 @@ fn status_and_secondary_text_stay_readable_on_every_fill_they_sit_on() {
         }
     }
 }
-
-#[test]
-fn the_rim_of_a_field_reads_three_to_one_on_its_fill_and_what_it_sits_on() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let tokens = Tokens::derive(&Palette::fallback(theme), theme);
-
-        for fill in [tokens.field, tokens.hover, tokens.card, tokens.window] {
-            let ratio = contrast(tokens.field_rim, fill);
-            assert!(ratio >= 3.0, "{theme:?}: {ratio}");
-        }
-    }
-}

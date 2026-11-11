@@ -56,3 +56,25 @@ fn only_the_report_scrolls_and_the_page_stays() {
     );
     assert!((harness.get_by_label("Collect").rect().top() - collect.top()).abs() < 0.5);
 }
+
+/// A page that fills the window keeps between its report and the bottom
+/// edge the gap its cards keep between them.
+#[test]
+fn a_long_report_runs_down_to_a_card_gap_above_the_bottom() {
+    let harness = page(long_report());
+    let report = harness.get_by_role(egui::accesskit::Role::Document).rect();
+
+    // kittest shows the page in a default central panel, whose margin the
+    // app's window does not have.
+    let panel = egui::Frame::central_panel(&harness.ctx.global_style()).inner_margin;
+    let bottom = harness.ctx.content_rect().bottom() - f32::from(panel.bottom);
+    let gap = toolbox_gui_kit::tokens::current(&harness.ctx)
+        .sizes
+        .card_gap;
+
+    assert!(
+        (bottom - report.bottom() - gap).abs() < 0.5,
+        "the report ends {} above the bottom",
+        bottom - report.bottom()
+    );
+}

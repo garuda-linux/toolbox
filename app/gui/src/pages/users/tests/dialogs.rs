@@ -315,8 +315,11 @@ fn more_options_folds_open_behind_a_chevron_on_the_label_column() {
     );
 }
 
+/// No list scrolls inside the scrolling dialog: every group is a row of
+/// the dialog's body, one under the other, and the last one Tab reaches
+/// comes into sight.
 #[test]
-fn many_groups_scroll_in_a_list_of_five_and_a_half_rows() {
+fn many_groups_are_rows_of_the_dialogs_own_scrolling_body() {
     let mut snapshot = system();
     let mut accounts = snapshot
         .part::<Accounts>()
@@ -340,12 +343,30 @@ fn many_groups_scroll_in_a_list_of_five_and_a_half_rows() {
         .get_by_role_and_label(Role::CheckBox, "group00")
         .rect();
 
-    let below = harness.get_by_label("Add user now").rect();
+    let last = harness
+        .get_by_role_and_label(Role::CheckBox, "group19")
+        .rect();
+
     let row = toolbox_gui_kit::widgets::CHECK_ROW_HEIGHT;
 
     assert!(
-        below.top() - first.top() < row * 9.0,
-        "the list runs {} down to the button",
-        below.top() - first.top()
+        last.top() - first.top() >= row * 19.0,
+        "the rows run {} apart, as if they scrolled in a list",
+        last.top() - first.top()
+    );
+
+    harness
+        .get_by_role_and_label(Role::CheckBox, "group19")
+        .focus();
+    harness.run();
+
+    let shown = harness
+        .get_by_role_and_label(Role::CheckBox, "group19")
+        .rect();
+
+    let buttons = harness.get_by_label("Add user now").rect();
+    assert!(
+        shown.bottom() <= buttons.top(),
+        "{shown:?} under {buttons:?}"
     );
 }

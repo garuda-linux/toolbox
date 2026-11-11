@@ -49,8 +49,6 @@ pub struct Tokens {
     pub sidebar_edge: Color32,
     /// At least 3:1 against the field fill, so a button's shape reads on a banner.
     pub rim: Color32,
-    /// 3:1 against the fill at rest, under the pointer and on the cards it sits on (WCAG 1.4.11).
-    pub field_rim: Color32,
     pub text: Color32,
     pub secondary: Color32,
     pub dim: Color32,
@@ -132,7 +130,6 @@ impl Tokens {
             outline: surfaces.outline,
             sidebar_edge: surfaces.outline,
             rim: readable(mix(text, card, 0.5), surfaces.field, DIM_CONTRAST),
-            field_rim: surfaces.field_rim(text),
             text,
             secondary,
             dim: readable(mix(text, card, 0.5), card, DIM_CONTRAST),
@@ -185,15 +182,6 @@ impl Surfaces {
     fn secondary(&self, text: Color32, theme: Theme) -> Color32 {
         let first = description(text, self.card, self.window, secondary_contrast(theme));
         fitted(first, &self.under_text(), SECONDARY_CONTRAST)
-    }
-
-    fn field_rim(&self, text: Color32) -> Color32 {
-        let start = mix(text, self.card, 0.5);
-        fitted(
-            start,
-            &[self.field, self.hover, self.card, self.window],
-            DIM_CONTRAST,
-        )
     }
 
     /// The sidebar and the status bar follow from the window.

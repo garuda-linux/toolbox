@@ -31,7 +31,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
     let sizes = ui.tokens().sizes;
     let around = 2.0_f32.mul_add(
         f32::from(sizes.card_padding.top.max(sizes.card_padding.bottom)),
-        f32::from(sizes.page_padding.bottom),
+        sizes.card_gap,
     );
 
     let height = (ui.clip_rect().bottom() - ui.cursor().top() - around).max(MIN_HEIGHT);

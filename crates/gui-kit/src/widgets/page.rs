@@ -88,7 +88,7 @@ pub fn page_layout_shaped<P, H, B, F>(
 
     let foot = Remembered::of(ui, "page footer");
     let footer_top = outer.bottom() - foot.height;
-    let bottom = f32::from(sizes.page_padding.bottom);
+    let bottom = shape.bottom(&sizes);
     let (view_bottom, floor) = body_reach(ui, outer, line, footer_top);
 
     let (area, changed) = body_area(ui, &salt);
@@ -106,7 +106,9 @@ pub fn page_layout_shaped<P, H, B, F>(
             body::panes(ui, room, widest, |inner| body(page, inner));
             (0.0, 0.0)
         }
-        BodyShape::Column => body::scrolled(ui, area, room, |inner| body(page, inner)),
+        BodyShape::Column | BodyShape::Filled => {
+            body::scrolled(ui, area, room, |inner| body(page, inner))
+        }
     };
 
     if head.height > 0.0 && offset > 0.5 {

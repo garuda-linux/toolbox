@@ -16,7 +16,6 @@ use crate::tokens;
 
 /// Room between a field's round ends and its text.
 pub(super) const PADDING_X: i8 = 14;
-const RIM: f32 = 1.0;
 
 /// `edit` as a filled pill [`PILL_HEIGHT`] tall, the look of the search
 /// field. The caller keeps its width, alignment, hint and font.
@@ -106,20 +105,13 @@ fn whole_points(points: f32) -> i8 {
 }
 
 /// A field's fill in `slot` on `field` with `radius` corners, a step
-/// lighter while it holds the focus.
-///
-/// The soft fill alone does not reach 3:1 on a card, so a thin rim round
-/// the whole shape carries the field's edge. A focused field shows the
-/// focus ring in its place, so a field never has two frames.
+/// lighter while it holds the focus. No rim: the fill alone marks the
+/// field, decided against the 3:1 edge a rim gave (Nico, 2026-11-11).
 pub(super) fn paint_field(ui: &Ui, slot: ShapeIdx, field: Rect, radius: u8, focused: bool) {
     let tokens = tokens::current(ui.ctx());
-    let (fill, rim) = if focused {
-        (tokens.hover, Stroke::NONE)
-    } else {
-        (tokens.field, Stroke::new(RIM, tokens.field_rim))
-    };
+    let fill = if focused { tokens.hover } else { tokens.field };
 
-    let shape = RectShape::new(field, radius, fill, rim, StrokeKind::Inside);
+    let shape = RectShape::new(field, radius, fill, Stroke::NONE, StrokeKind::Inside);
     ui.painter().set(slot, shape);
     if focused {
         ring_around(ui, field, radius);

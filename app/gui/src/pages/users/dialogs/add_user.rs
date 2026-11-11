@@ -11,9 +11,7 @@ use toolbox_core::features::users::input::{self, AddForm, NewAccount, add_blocke
 use toolbox_core::features::users::now::check_new_name;
 use toolbox_core::features::users::{Refusal, view};
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::widgets::{
-    ButtonKind, CHECK_ROW_HEIGHT, Select, check_row, disclosure, text_field,
-};
+use toolbox_gui_kit::widgets::{ButtonKind, Select, check_row, disclosure, text_field};
 use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, ShellPath, UserName};
 
 use super::password::PasswordPair;
@@ -22,9 +20,6 @@ use crate::command::UsersCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::users::texts;
-
-/// The groups the Add user list shows before it scrolls.
-const GROUPS_SHOWN: f32 = 5.5;
 
 #[derive(Default)]
 pub struct AddUser {
@@ -283,39 +278,22 @@ impl AddUser {
 
         let names = view::group_names(context.snapshot, context.changes, &self.search);
 
-        // A system has dozens of groups. Half a row more than fits shows
-        // that the list scrolls.
-        let row = CHECK_ROW_HEIGHT + ui.spacing().item_spacing.y;
-        let mut focused = None;
-        let list = egui::ScrollArea::vertical()
-            .id_salt("users-other-groups")
-            .max_height(row * GROUPS_SHOWN)
-            // Inside the dialog's own scrolling body egui would give the
-            // list only its 64 point default.
-            .min_scrolled_height(row * GROUPS_SHOWN)
-            .auto_shrink([false, true])
-            .show(ui, |ui| {
-                for group in names.iter().filter(|group| Some(*group) != admin) {
-                    let on = self.groups.contains(group);
-                    let box_row = check_row(ui, on, group.as_str(), "", true);
-                    if box_row.gained_focus() {
-                        focused = Some(box_row.rect);
-                    }
+        // Rows of the dialog's own scrolling body, never a list scrolling
+        // inside it: the search above narrows a system's dozens of groups.
+        for group in names.iter().filter(|group| Some(*group) != admin) {
+            let on = self.groups.contains(group);
+            let box_row = check_row(ui, on, group.as_str(), "", true);
+            if box_row.gained_focus() {
+                box_row.scroll_to_me(None);
+            }
 
-                    if box_row.clicked() {
-                        if on {
-                            self.groups.remove(group);
-                        } else {
-                            self.groups.insert(group.clone());
-                        }
-                    }
+            if box_row.clicked() {
+                if on {
+                    self.groups.remove(group);
+                } else {
+                    self.groups.insert(group.clone());
                 }
-            });
-
-        // The list scrolls only itself to a box. The dialog around it must
-        // bring the list into sight too, or Tab lands on a hidden box.
-        if let Some(box_rect) = focused {
-            ui.scroll_to_rect(box_rect.intersect(list.inner_rect), None);
+            }
         }
 
         ui.add_space(ui.tokens().sizes.card_gap);
