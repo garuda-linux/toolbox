@@ -20,11 +20,20 @@ y | Y) ;;
 esac
 
 version=$(cz bump --get-next)
+today=$(date +%F)
 cz bump --files-only --yes
+
+# Software centres list the versions from the metainfo.
+metainfo=data/org.garudalinux.toolbox.metainfo.xml
+sed -i "s|^  <releases>$|&\n    <release version=\"$version\" date=\"$today\"/>|" "$metainfo"
+if ! grep -q "<release version=\"$version\"" "$metainfo"; then
+  echo "no <releases> in $metainfo to add $version to" >&2
+  exit 1
+fi
 
 if grep -q '^## Unreleased$' CHANGELOG.md; then
   link="https://gitlab.com/garuda-linux/applications/toolbox/-/releases/$version"
-  sed -i "s|^## Unreleased$|## [$version]($link) — $(date +%F)|" CHANGELOG.md
+  sed -i "s|^## Unreleased$|## [$version]($link) — $today|" CHANGELOG.md
 else
   git-cliff --unreleased --tag "$version" --prepend CHANGELOG.md
 fi

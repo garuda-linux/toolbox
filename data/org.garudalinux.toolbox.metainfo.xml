@@ -37,6 +37,10 @@
       <image>https://gitlab.com/garuda-linux/applications/toolbox/-/raw/main/app/gui/tests/snapshots/maintenance/common_dark.png</image>
     </screenshot>
   </screenshots>
+  <!-- scripts/release.sh adds each version at the top, the notes stay in CHANGELOG.md. -->
+  <releases>
+    <release version="6.3.0" date="2026-09-09"/>
+  </releases>
   <launchable type="desktop-id">garuda-toolbox.desktop</launchable>
   <icon type="stock">garuda-toolbox</icon>
   <developer id="org.garudalinux">

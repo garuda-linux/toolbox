@@ -40,8 +40,9 @@
   task alone.
 - `scripts/release.sh` cuts a release, as in the other Garuda repositories.
   `cz bump --files-only` writes the version to `Cargo.toml`,
-  `packaging/PKGBUILD` and `nix/package.nix` (`.cz.yaml`), git-cliff
-  prepends the release to `CHANGELOG.md` (`cliff.toml`), then one
+  `packaging/PKGBUILD` and `nix/package.nix` (`.cz.yaml`), the version and
+  date go to the top of `<releases>` in the metainfo, git-cliff prepends
+  the release to `CHANGELOG.md` (`cliff.toml`), then one
   `chore(release): <version>` commit and the tag. Prepending keeps earlier
   entries, the Electron app's releases up to 6.3.0 too. A hand-written
   `## Unreleased` section becomes the release's entry instead, as for the
