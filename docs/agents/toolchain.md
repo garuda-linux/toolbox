@@ -93,6 +93,11 @@ boot.
 - `GARUDA_LIMA_IMAGE` is the qcow2, a path or a URL (default
   `target/lima/garuda-lima.qcow2`). `GARUDA_LIMA_IMAGE_DIGEST` takes
   `sha256:<hex>` for a URL. Lima downloads and caches it.
+- Without `GARUDA_LIMA_IMAGE` and without the default file,
+  `scripts/lima-image.sh` downloads the official image, the package
+  `garuda-lima` version `latest` of image-builder (GitLab project
+  88656556), and checks it against the SHA-256 of the newest upload the
+  package lists. A run on another day may test a newer image.
 - The image boots with systemd-boot and UKIs, ESP at `/efi`. The Boot
   page, Boot Repair, `kernels default` and Plymouth have no checks here.
   The first three need GRUB, and on systemd-boot an initramfs rebuild does

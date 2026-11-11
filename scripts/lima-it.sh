@@ -9,7 +9,8 @@
 #           accounts and sdboot. Each one after the first starts from a snapshot
 #           taken after the setup.
 # GARUDA_LIMA_IMAGE is a path or URL of the qcow2, GARUDA_LIMA_IMAGE_DIGEST
-# its optional "sha256:<hex>" for a URL.
+# its optional "sha256:<hex>" for a URL. Unset, target/lima/garuda-lima.qcow2
+# is used, downloaded from image-builder's packages when it is missing.
 # shellcheck source-path=SCRIPTDIR
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -56,6 +57,12 @@ for tool in limactl jq; do
 done
 
 image=${GARUDA_LIMA_IMAGE:-target/lima/garuda-lima.qcow2}
+if [ -z "${GARUDA_LIMA_IMAGE:-}" ]; then
+  # shellcheck source=scripts/lima-image.sh
+  source scripts/lima-image.sh
+  lima_image "$image" || exit 2
+fi
+
 case $image in
 http://* | https://*) location=$image ;;
 *)
