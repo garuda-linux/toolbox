@@ -19,7 +19,6 @@ fn normal_dependencies() -> Result<Vec<String>, Box<dyn Error>> {
 
     let output = Command::new(cargo)
         .args(["tree", "--frozen", "--edges", "normal", "--prefix", "none"])
-        .args(["--target", "all"])
         .args(["--format", "{p}", "-p", "toolbox-helper", "--manifest-path"])
         .arg(manifest)
         .output()?;
