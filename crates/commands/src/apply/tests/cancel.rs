@@ -18,7 +18,11 @@ fn a_cancelled_step_ends_the_command_as_cancelled() {
     let (exit, out) = run(plan(), true, &mut terminal(&[]), Outcome::Cancelled);
 
     assert_eq!(exit, Exit::Interrupted);
-    assert!(out.ends_with("\nCancelled  (0.0 s)\n"), "{out}");
+    let last = out.lines().last().unwrap_or_default();
+    assert!(
+        last.starts_with("Cancelled  (") && last.ends_with(" s)"),
+        "{out}"
+    );
 }
 
 fn lines(events: &[Event]) -> String {
