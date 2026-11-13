@@ -4,6 +4,7 @@
 //! question.
 
 mod badge;
+mod buttons;
 mod clear;
 mod place;
 
@@ -16,13 +17,11 @@ use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::motion::{self, Timing};
 use toolbox_gui_kit::theme::POPOVER_RADIUS;
-use toolbox_gui_kit::widgets::{
-    ButtonKind, Tone, icon_button, pill_button, pill_button_at_least, pill_width, rich, split_row,
-    tag,
-};
+use toolbox_gui_kit::widgets::{ButtonKind, Tone, icon_button, pill_button, rich, split_row, tag};
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
 use self::badge::badge;
+use self::buttons::{apply_button, apply_pill, review_button, show_console_button};
 use self::clear::ask_to_clear;
 use self::place::{Fit, place};
 use super::PANE_TITLE;
@@ -58,6 +57,18 @@ pub struct ChangesState {
 pub struct Queued<'view> {
     pub changes: &'view [ChangeView],
     pub held: Option<&'static str>,
+    pub running: bool,
+    pub console_open: bool,
+}
+
+fn pill_words(ctx: &Context, count: &str, running: bool) -> String {
+    let id = if running {
+        "changes-running"
+    } else {
+        "changes-pill"
+    };
+
+    i18n::text_with(ctx, id, &[("count", count)]).into_owned()
 }
 
 /// In `band`, the room below the page, while the Console is closed.
@@ -85,7 +96,7 @@ pub fn floating(
         .rect;
 
     ctx.move_to_top(LayerId::new(LAYER, id));
-    overlays(ctx, pill_rect, queued, state, commands);
+    overlays(ctx, (pill_rect, None), queued, state, commands);
 }
 
 /// In the Console's header while it is open, so nothing floats over the
@@ -101,7 +112,7 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     let count = queued.changes.len().to_string();
     let removes = queued.changes.iter().any(ChangeView::removes);
     let badge = badge(ui, &count);
-    let words = i18n::text_with(&ctx, "changes-pill", &[("count", &count)]);
+    let words = pill_words(&ctx, &count, queued.running);
     let label = format!("{count} {words}");
     badge.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Label, true, &label));
 
@@ -112,12 +123,13 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     }
 
     let rect = apply.rect.union(review.rect).union(badge.rect);
-    overlays(&ctx, rect, queued, state, commands);
+    overlays(&ctx, (rect, Some(ui.layer_id())), queued, state, commands);
 }
 
+/// `sheet` is the Console's layer when the pill sits in its header.
 fn overlays(
     ctx: &Context,
-    pill: Rect,
+    (pill, sheet): (Rect, Option<LayerId>),
     queued: Queued<'_>,
     state: &mut ChangesState,
     commands: &CommandSender,
@@ -125,6 +137,8 @@ fn overlays(
     let Queued {
         changes: list,
         held,
+        running: _,
+        console_open: _,
     } = queued;
 
     // It rises from the pill's side while it fades in. Closed, it goes at
@@ -156,8 +170,14 @@ fn overlays(
                 ui.data_mut(|data| data.insert_temp(fit_id, measured));
             });
 
-        // Above the page's header and the Console's sheet on the same layer.
-        ctx.move_to_top(LayerId::new(LAYER, id));
+        // Above the page's header on the same layer. egui keeps the last
+        // order of areas that all rise each frame, which left a list
+        // opened again under the sheet, so there it hangs off the sheet.
+        let layer = LayerId::new(LAYER, id);
+        ctx.move_to_top(layer);
+        if let Some(sheet) = sheet {
+            ctx.set_sublayer(sheet, layer);
+        }
     }
 
     if state.confirming == Some(UiCommand::ClearChanges) {
@@ -183,10 +203,14 @@ fn pill(
         ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
             ui.add_space(tokens.sizes.inset);
             badge(ui, &count_text);
-            let text = i18n::text_with(&ctx, "changes-pill", &[("count", &count_text)]);
+            let text = pill_words(&ctx, &count_text, queued.running);
             ui.label(rich(ui, &text, Weight::SemiBold, BODY, tokens.text));
             ui.add_space(tokens.sizes.tight_gap);
-            review_button(ui, state);
+            if queued.running && !queued.console_open {
+                show_console_button(ui, commands);
+            } else {
+                review_button(ui, state);
+            }
 
             // Open, the list carries the one Apply.
             if !state.open && apply_button(ui, held, commands, removes).1 {
@@ -194,73 +218,6 @@ fn pill(
             }
         });
     })
-}
-
-fn review_button(ui: &mut Ui, state: &mut ChangesState) -> egui::Response {
-    let toggle = if state.open {
-        "changes-hide"
-    } else {
-        "changes-review"
-    };
-
-    // As wide as the longer of its two texts, so the pill keeps its width.
-    let width = ["changes-review", "changes-hide"]
-        .map(|id| pill_width(ui, &i18n::text(ui.ctx(), id)))
-        .into_iter()
-        .fold(0.0, f32::max);
-
-    let review = pill_button_at_least(ui, &i18n::text(ui.ctx(), toggle), ButtonKind::Soft, width);
-    if review.clicked() {
-        state.open = !state.open;
-        state.keyed = !review.clicked_by(egui::PointerButton::Primary);
-    }
-
-    if state.open && ui.input(|input| input.key_pressed(egui::Key::Escape)) {
-        state.open = false;
-        review.request_focus();
-    }
-
-    let open = state.open;
-    ui.ctx()
-        .accesskit_node_builder(review.id, |node| node.set_expanded(open));
-    review
-}
-
-/// Applies the queue, or says to show it first when it `removes`
-/// something, so a removal queued days ago is never applied unseen.
-fn apply_button(
-    ui: &mut Ui,
-    held: Option<&'static str>,
-    commands: &CommandSender,
-    removes: bool,
-) -> (egui::Response, bool) {
-    let text = i18n::text(ui.ctx(), "changes-apply");
-    let apply = apply_pill(ui, &text, held);
-    if apply.clicked() && !removes {
-        commands.send(UiCommand::Apply);
-    }
-
-    let show = apply.clicked() && removes;
-    (apply, show)
-}
-
-/// A disabled button tells no screen reader why, so the reason goes into
-/// its description as well as its tooltip.
-fn apply_pill(ui: &mut Ui, text: &str, held: Option<&'static str>) -> egui::Response {
-    let apply = ui
-        .add_enabled_ui(held.is_none(), |ui| {
-            pill_button(ui, text, ButtonKind::Primary)
-        })
-        .inner;
-
-    let Some(id) = held else {
-        return apply;
-    };
-
-    let why = i18n::text(ui.ctx(), id).into_owned();
-    ui.ctx()
-        .accesskit_node_builder(apply.id, |node| node.set_description(why.as_str()));
-    apply.on_disabled_hover_text(why)
 }
 
 /// `list` is the list's height before it scrolls. Returns the heights

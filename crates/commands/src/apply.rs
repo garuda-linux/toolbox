@@ -144,6 +144,8 @@ pub fn carry_out_steps(
         return Ended::early(exit);
     }
 
+    set_apart(prompt, confirm.yes, out);
+
     if let Some(exit) = consent(prompt, confirm.yes, typed).exit() {
         if exit == Exit::NeedsYes {
             let error = paint.error("no terminal to ask on");
@@ -203,6 +205,14 @@ pub fn cannot_ask(settings: Settings) -> Exit {
     let hint = paint.hint("pass --yes to carry it out, or --dry-run to see the plan");
     writeln!(std::io::stderr(), "{error}\n{hint}").ok();
     Exit::NeedsYes
+}
+
+/// A blank line between printed text and the question after it. A
+/// question with nothing printed above goes without, it would look stray.
+pub fn set_apart(prompt: &dyn Prompt, yes: bool, out: &mut Out<'_>) {
+    if !yes && prompt.is_terminal() {
+        writeln!(out).ok();
+    }
 }
 
 fn warned(color: ColorMode) -> Paint {

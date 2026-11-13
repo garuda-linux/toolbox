@@ -31,6 +31,23 @@ fn a_text_box_is_named_for_screen_readers() {
 }
 
 #[test]
+fn a_text_box_is_as_wide_as_the_room_whatever_its_text() {
+    let mut harness = harness(400.0, 300.0).build_ui(|ui| {
+        let mut text = "one line";
+        text_box(ui, TextEdit::multiline(&mut text), NAME, 160.0);
+    });
+
+    harness.run();
+
+    let frame = harness.get_by_role_and_label(Role::MultilineTextInput, NAME);
+    let width = frame.rect().width();
+    assert!(
+        width > 300.0,
+        "the box is {width} px wide in a 400 px window"
+    );
+}
+
+#[test]
 fn a_filling_text_box_takes_the_room_below_a_short_text() {
     let mut harness = harness(400.0, 300.0).build_ui(|ui| {
         let mut text = "one line";

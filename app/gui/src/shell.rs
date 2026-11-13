@@ -6,6 +6,8 @@ mod status_bar;
 
 pub use changes::ChangesState;
 pub use console_panel::focus::on_open as focus_console_on_open;
+#[cfg(any(test, feature = "testing"))]
+pub use console_panel::layer as console_layer;
 use egui::{CentralPanel, Frame, Panel, Rect, Ui};
 pub use palette::Palette;
 #[cfg(any(test, feature = "testing"))]
@@ -84,14 +86,13 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
     let status = status_bar::show(ui, reading, Mode::of_dry_run(dry_run));
     sidebar::show(ui, page, sidebar_expanded, snap.sidebar, commands);
 
-    // A page with its own way to apply shows the queue as empty.
-    let changes = if pages.view(page).queue_shown().shows(changes_ui.open) {
-        changes
-    } else {
-        &[]
+    let changes = shown_changes(pages, page, changes_ui.open, changes);
+    let queued = changes::Queued {
+        changes,
+        held,
+        running: console.running(),
+        console_open,
     };
-
-    let queued = changes::Queued { changes, held };
 
     let sheet = console_panel::Sheet {
         open: console_open,
@@ -134,6 +135,20 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
     status_bar::floating(&ctx, page_rect, reading, Mode::of_dry_run(dry_run));
     toasts.show(&ctx, page_rect, texts);
     palette.show(&ctx, context, commands);
+}
+
+/// A page with its own way to apply shows the queue as empty.
+fn shown_changes<'list>(
+    pages: &mut Pages,
+    page: PageId,
+    open: bool,
+    changes: &'list [ChangeView],
+) -> &'list [ChangeView] {
+    if pages.view(page).queue_shown().shows(open) {
+        changes
+    } else {
+        &[]
+    }
 }
 
 fn changes_band(ui: &mut Ui) -> Rect {

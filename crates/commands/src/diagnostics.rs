@@ -107,6 +107,7 @@ pub fn collect(
     );
 
     writeln!(out, "{}", paint.item(&replaced)).ok();
+    crate::apply::set_apart(prompt, yes, out);
 
     if let Some(refused) = consent(prompt, yes, None).exit() {
         return refused;

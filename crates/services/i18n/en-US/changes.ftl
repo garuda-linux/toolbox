@@ -6,7 +6,13 @@ changes-pill =
         [one] change queued
        *[other] changes queued
     }
+changes-running =
+    { $count ->
+        [one] Applying change
+       *[other] Applying changes
+    }
 changes-review = Review
+changes-show-console = Show
 changes-hide = Hide
 changes-together = Applied together, one password
 changes-apply-all =

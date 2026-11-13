@@ -32,10 +32,9 @@ impl Prompt for Terminal {
     fn ask(&mut self, question: &str) -> Option<String> {
         let mut tty = tty()?;
 
-        // A blank line sets the question apart from the plan above it. The
-        // terminal is one by definition, the flags and NO_COLOR still count.
+        // The terminal is one by definition, the flags and NO_COLOR still count.
         let paint = Paint::new(super::out::style_on(self.color, true));
-        write!(tty, "\n{} ", paint.question(question.trim_end())).ok()?;
+        write!(tty, "{} ", paint.question(question.trim_end())).ok()?;
         tty.flush().ok()?;
 
         let mut answer = String::new();

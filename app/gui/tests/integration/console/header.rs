@@ -1,6 +1,6 @@
 use egui_kittest::kittest::Queryable as _;
 
-use super::settle::wait_for;
+use super::settle::{SETTLE, wait_for};
 use super::{JAVA, app, succeeding_script};
 
 #[test]
@@ -20,6 +20,31 @@ fn the_queued_count_is_centred_on_review_and_apply() {
         "the count's middle is at {}, Review's at {}",
         count.center().y,
         review.center().y
+    );
+}
+
+/// While the list is shut the sheet alone rises to the top, so a list
+/// opened again from its header would paint under it.
+#[test]
+fn the_queue_list_opened_again_paints_above_the_console() {
+    let (mut harness, _runtime) = app(succeeding_script(), JAVA);
+    harness.get_by_label("Apply").click();
+    harness.step();
+    wait_for(&mut harness, "All changes applied");
+
+    for toggle in ["Review", "Hide", "Review"] {
+        harness.get_by_label(toggle).click();
+        harness.run_steps(SETTLE);
+    }
+
+    let title = harness.get_by_label("Queued changes").rect().center();
+    let list = harness.ctx.layer_id_at(title).expect("the list's layer");
+    let painted: Vec<egui::LayerId> = harness.ctx.memory(|memory| memory.layer_ids().collect());
+    let at = |layer| painted.iter().position(|painted| *painted == layer);
+
+    assert!(
+        at(list) > at(toolbox_gui::testing::console_layer()),
+        "the list paints before the Console: {painted:?}"
     );
 }
 

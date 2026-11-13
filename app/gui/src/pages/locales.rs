@@ -136,7 +136,7 @@ impl LocalesPage {
         }
 
         system_language(ui, context);
-        ui.add_space(ui.tokens().sizes.section_gap);
+        ui.add_space(ui.tokens().sizes.card_gap);
         self.chips(ui);
         ui.add_space(ui.tokens().sizes.card_gap);
 

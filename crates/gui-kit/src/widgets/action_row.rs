@@ -11,8 +11,8 @@ const ACTIONS_GAP: f32 = 14.0;
 const WIDTH_REASON: &str = "action_row width";
 const HEIGHT_REASON: &str = "action_row height";
 
-/// The tile and the title's capitals start together near the row's top, and the actions are centred on the whole row.
-/// A row too narrow for both puts the actions on a line under the words.
+/// The tile, the words and the actions are centred on the row. A row too
+/// narrow for both puts the actions on a line under the words.
 #[derive(Clone, Copy, Debug)]
 #[must_use = "a row shows nothing until `show` is called"]
 pub struct ActionRow<'text> {
@@ -58,9 +58,8 @@ impl<'text> ActionRow<'text> {
 
         let beside = actions.is_some() && words_room >= MIN_TEXT_WIDTH;
 
-        // The actions centre on a row as tall as the tile, last frame's
-        // words or last frame's actions. Tile and words keep to the top,
-        // so the title stays level with the tile however many lines follow.
+        // The row is as tall as the tile, last frame's words or last frame's
+        // actions. Tile, words and actions all centre on it.
         let height_id = width_id.with("height");
         let height_was = ui.data(|data| data.get_temp::<f32>(height_id));
         let words_id = width_id.with("words");
@@ -82,6 +81,16 @@ impl<'text> ActionRow<'text> {
         let words_height = words_was.unwrap_or_default() + drop;
         let line = edge.max(actions_height).max(words_height);
 
+        // Tile and words centre on the row beside the actions, so a single
+        // line of words sits level with the tile and the actions alike.
+        // Only they come down: the actions centre on the line by themselves.
+        let block = edge.max(words_height);
+        let lower = if beside {
+            ((line - block) / 2.0).max(0.0)
+        } else {
+            0.0
+        };
+
         let drawn = ui.horizontal_top(|ui| {
             // The words sit a picture gap from the tile, as in every row
             // with a picture, and the actions further off.
@@ -97,12 +106,12 @@ impl<'text> ActionRow<'text> {
             }
 
             let words_width = words_room.max(0.0);
-            let words = raised(ui, (rise, words_width), raised_id, |ui| {
+            let words = raised(ui, (rise - lower, words_width), raised_id, |ui| {
                 ui.set_width(words_width);
                 self.words(ui);
             });
 
-            remember_width(ui, words_id, words_was, words - drop, HEIGHT_REASON);
+            remember_width(ui, words_id, words_was, words - drop - lower, HEIGHT_REASON);
 
             if let Some(actions) = actions {
                 let measures = Measures {
@@ -116,7 +125,7 @@ impl<'text> ActionRow<'text> {
             slot
         });
 
-        self.badge(ui, drawn.inner.center() + vec2(0.0, drop));
+        self.badge(ui, drawn.inner.center() + vec2(0.0, drop + lower));
     }
 
     fn stacked(

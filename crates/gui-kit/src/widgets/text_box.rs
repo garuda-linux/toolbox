@@ -61,7 +61,7 @@ fn boxed(
             ScrollArea::both()
                 .id_salt(("text_box", name))
                 .max_height(max_height)
-                .auto_shrink([true, shrink])
+                .auto_shrink([false, shrink])
                 .show(ui, |ui| {
                     let output = edit
                         .frame(Frame::NONE)

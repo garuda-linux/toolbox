@@ -38,6 +38,7 @@ use crate::pages::kernels::view::DkmsReading;
 use crate::pages::{PageContext, PageView, Plans, Refusals};
 use crate::programs::Programs;
 use crate::settings::{MotionChoice, SettingsView, ThemeChoice};
+pub use crate::shell::console_layer;
 use crate::units::Units;
 
 /// The window a page is drawn in, as the app's own tests use.

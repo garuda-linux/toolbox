@@ -45,6 +45,15 @@ fn folders() -> (TempDir, TempDir) {
 }
 
 fn reset_with(confirm: Confirm, answer: &'static str, skel: &TempDir, home: &TempDir) -> Exit {
+    reset_out(confirm, answer, skel, home).0
+}
+
+fn reset_out(
+    confirm: Confirm,
+    answer: &'static str,
+    skel: &TempDir,
+    home: &TempDir,
+) -> (Exit, String) {
     let entries = chosen(&["fish".to_owned()], &catalog(), skel.path()).unwrap();
     let folders = Folders {
         skel_root: skel.path(),
@@ -53,13 +62,24 @@ fn reset_with(confirm: Confirm, answer: &'static str, skel: &TempDir, home: &Tem
 
     let mut sink = Vec::new();
 
-    carry_out(
+    let exit = carry_out(
         &entries,
         confirm,
         &folders,
         &mut Answer(answer),
         &mut Out::new(&mut sink, Settings::default()),
-    )
+    );
+
+    (exit, String::from_utf8(sink).unwrap())
+}
+
+#[test]
+fn a_blank_line_sets_the_question_apart_from_the_files() {
+    let (skel, home) = folders();
+
+    let (_, out) = reset_out(Confirm::default(), "n", &skel, &home);
+
+    assert!(out.ends_with("kept as a backup beside it.\n\n"), "{out:?}");
 }
 
 /// Completion offers only what the skel folder has.

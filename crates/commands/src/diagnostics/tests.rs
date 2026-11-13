@@ -113,3 +113,10 @@ fn the_upload_names_the_count_of_replaced_values_before_it_asks() {
     assert_eq!(exit, Exit::Declined);
     assert!(out.contains("replaced before it goes: 2"), "{out}");
 }
+
+#[test]
+fn a_blank_line_sets_the_upload_question_apart() {
+    let (_, out) = run(Outcome::Report("CPU: fast".to_owned()), true, &["n"]);
+
+    assert!(out.ends_with("replaced before it goes: 0\n\n"), "{out:?}");
+}

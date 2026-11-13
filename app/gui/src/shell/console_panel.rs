@@ -5,6 +5,8 @@ mod mirror;
 mod output;
 mod sheet;
 
+#[cfg(any(test, feature = "testing"))]
+pub use sheet::layer;
 pub use sheet::{Place, cover, out};
 #[cfg(test)]
 mod tests;
@@ -231,24 +233,32 @@ fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
         Frame::new()
             .inner_margin(tokens.sizes.steps_padding)
             .show(ui, |ui| {
-                ScrollArea::vertical()
-                    .max_height(STEPS_HEIGHT)
-                    .show(ui, |ui| {
-                        ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
-                        for step in steps {
-                            ui.horizontal(|ui| {
-                                ui.allocate_ui(vec2(column, STEP_ROW_HEIGHT), |ui| {
-                                    ui.set_min_width(column);
-                                    step_state(ui, step.state, dry_run);
-                                });
-                                let command =
-                                    rich(ui, &step.command, Weight::Regular, SMALL, tokens.text)
-                                        .family(egui::FontFamily::Monospace);
+                ui.scope(|ui| {
+                    toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
+                    ScrollArea::vertical()
+                        .max_height(STEPS_HEIGHT)
+                        .show(ui, |ui| {
+                            ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
+                            for step in steps {
+                                ui.horizontal(|ui| {
+                                    ui.allocate_ui(vec2(column, STEP_ROW_HEIGHT), |ui| {
+                                        ui.set_min_width(column);
+                                        step_state(ui, step.state, dry_run);
+                                    });
+                                    let command = rich(
+                                        ui,
+                                        &step.command,
+                                        Weight::Regular,
+                                        SMALL,
+                                        tokens.text,
+                                    )
+                                    .family(egui::FontFamily::Monospace);
 
-                                ui.add(egui::Label::new(command).truncate());
-                            });
-                        }
-                    });
+                                    ui.add(egui::Label::new(command).truncate());
+                                });
+                            }
+                        });
+                });
             });
     });
     ui.add_space(tokens.sizes.heading_gap);

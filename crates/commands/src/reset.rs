@@ -173,6 +173,10 @@ fn carry_out(
         return Exit::Success;
     }
 
+    if !confirm.json {
+        crate::apply::set_apart(prompt, confirm.yes, out);
+    }
+
     if let Some(refused) = consent(prompt, confirm.yes, None).exit() {
         return refused;
     }

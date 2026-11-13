@@ -6,7 +6,13 @@ changes-pill =
         [one] Änderung vorgemerkt
        *[other] Änderungen vorgemerkt
     }
+changes-running =
+    { $count ->
+        [one] Änderung wird übernommen
+       *[other] Änderungen werden übernommen
+    }
 changes-review = Ansehen
+changes-show-console = Zeigen
 changes-hide = Ausblenden
 changes-together = Eine Passwortabfrage für alle Änderungen
 changes-apply-all =

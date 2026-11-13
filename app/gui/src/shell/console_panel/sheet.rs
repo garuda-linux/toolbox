@@ -86,7 +86,7 @@ pub fn show(
 
     // The page header lies in the same order of layers. A click on it
     // raises it, the sheet stays above it.
-    ctx.move_to_top(egui::LayerId::new(Order::Middle, area_id()));
+    ctx.move_to_top(layer());
 
     let mut dragged_shut = false;
     area.fixed_pos(rect.min).show(ctx, |ui| {
@@ -236,6 +236,10 @@ fn height_id() -> Id {
 
 fn area_id() -> Id {
     Id::unique("toolbox_gui::console::sheet")
+}
+
+pub fn layer() -> egui::LayerId {
+    egui::LayerId::new(Order::Middle, area_id())
 }
 
 /// Where the sheet covered the page last frame, none while it was gone

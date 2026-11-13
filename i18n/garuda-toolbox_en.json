@@ -4113,8 +4113,14 @@
       "string": "{count, plural, one {change queued} other {changes queued}}",
       "developer_comment": "The floating pill at the bottom right. $count is how many."
     },
+    "changes-running": {
+      "string": "{count, plural, one {Applying change} other {Applying changes}}"
+    },
     "changes-review": {
       "string": "Review"
+    },
+    "changes-show-console": {
+      "string": "Show"
     },
     "changes-hide": {
       "string": "Hide"

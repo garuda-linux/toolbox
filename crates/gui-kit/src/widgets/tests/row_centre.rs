@@ -142,6 +142,46 @@ fn action(lines: u8) -> (Rect, Rect, Rect, f32, Option<f32>) {
     (title, button, content, capitals, baseline)
 }
 
+/// Two buttons stacked, taller than the tile and a one line title.
+fn tall_actions() -> (Rect, Rect) {
+    let mut harness = harness(800.0, 400.0).build_ui_state(
+        |ui, (content, actions): &mut (Rect, Rect)| {
+            card(ui, |ui| {
+                let drawn = card_row(ui, true, |ui| {
+                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system").show(
+                        ui,
+                        |ui| {
+                            *actions = ui
+                                .vertical(|ui| {
+                                    _ = pill_button(ui, "Run now", ButtonKind::Soft);
+                                    _ = pill_button(ui, "Later", ButtonKind::Soft);
+                                })
+                                .response
+                                .rect;
+                        },
+                    );
+                });
+
+                *content = content_of(ui, drawn.response.rect);
+            });
+        },
+        (Rect::NOTHING, Rect::NOTHING),
+    );
+
+    harness.run();
+    *harness.state()
+}
+
+#[test]
+fn actions_taller_than_the_tile_sit_in_the_middle_of_the_row() {
+    let (content, actions) = tall_actions();
+
+    assert!(
+        (actions.center().y - content.center().y).abs() < SAME,
+        "actions at {actions:?}, row content {content:?}"
+    );
+}
+
 /// The tile's top is checked against the title's letters in
 /// `action_row_tile`. Words lower than the tile end on a baseline, which
 /// keeps as much room to the row's edge as the capitals do.
