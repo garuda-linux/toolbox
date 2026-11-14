@@ -11,6 +11,7 @@ use super::{
     system_choices, toggle, wanted_enabled, wanted_system,
 };
 use crate::domains::{CurrentSystemLocale, EnabledLocales, Locales, SystemLocales};
+use crate::features::RefusalText as _;
 use crate::test_support::{locale, locale_entry};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
@@ -318,7 +319,7 @@ fn the_system_language_is_chosen_among_enabled_or_queued_locales() {
 
     choose_system(locale("en_US.UTF-8"), &mut changes, &snapshot).unwrap();
     assert_eq!(changes.wish::<SystemLocales>(&Single), None);
-    assert_eq!(Refusal::NotEnabled.as_str(), "not-enabled");
+    assert_eq!(Refusal::NotEnabled.code(), "not-enabled");
 }
 
 /// Where nothing is known about the locales (no `locale.gen`), a queued

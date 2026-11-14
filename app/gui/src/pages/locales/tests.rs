@@ -9,13 +9,15 @@ use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentSystemLocale, EnabledLocales, InstalledPackages, SyncPackages};
 use toolbox_core::features::locales::{
-    LanguageName, LocaleNames, SupportedLocales, parse_supported,
+    LanguageName, LocaleNames, Refusal, SupportedLocales, parse_supported,
 };
 use toolbox_plan::{LocaleEntry, LocaleName, PackageName};
 
 use super::LocalesPage;
 use crate::command::{Command, LocaleCommand};
-use crate::pages::{LocaleRefusal, Refusals};
+use crate::locales::Locales;
+use crate::page_service::Services;
+use crate::refused::Refused;
 use crate::testing::{PageFixture, PageState, assert_header, rect_of};
 
 type Shown = Harness<'static, PageState<LocalesPage>>;
@@ -52,10 +54,9 @@ fn system() -> Snapshot {
     snapshot
 }
 
-fn page(snapshot: Snapshot, refusals: Refusals) -> Shown {
+fn page(snapshot: Snapshot) -> Shown {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
-        refusals,
         ..PageFixture::default()
     }
     .harness(LocalesPage::default());
@@ -70,7 +71,7 @@ fn sent(harness: &Shown) -> Vec<Command> {
 
 #[test]
 fn a_system_without_locale_gen_says_so() {
-    let harness = page(Snapshot::default(), Refusals::default());
+    let harness = page(Snapshot::default());
 
     assert!(
         harness
@@ -81,7 +82,7 @@ fn a_system_without_locale_gen_says_so() {
 
 #[test]
 fn a_switch_queues_its_locale() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
 
     harness
         .get_by_role_and_label(Role::CheckBox, "de_DE.UTF-8")
@@ -99,7 +100,7 @@ fn a_switch_queues_its_locale() {
 
 #[test]
 fn other_character_sets_show_once_utf8_only_is_off() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
 
     assert_eq!(
         harness
@@ -121,7 +122,7 @@ fn other_character_sets_show_once_utf8_only_is_off() {
 
 #[test]
 fn a_search_without_a_match_says_so() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
 
     harness.get_by_label("Search locales").click();
     harness.run();
@@ -133,7 +134,7 @@ fn a_search_without_a_match_says_so() {
 
 #[test]
 fn the_system_language_is_picked_among_the_enabled_locales() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
 
     harness
         .get_by_role_and_label(Role::ComboBox, "System language")
@@ -154,15 +155,23 @@ fn the_system_language_is_picked_among_the_enabled_locales() {
 
 #[test]
 fn a_refused_click_names_the_locale_until_dismissed() {
-    let refusals = Refusals {
-        locale: Some(LocaleRefusal {
-            code: "system-locale",
-            locale: "en_US.UTF-8".to_owned(),
-        }),
-        ..Refusals::default()
-    };
+    let mut locales = Locales::default();
+    locales.set_refusal(Some(Refused {
+        refusal: Refusal::SystemLocale,
+        subject: "en_US.UTF-8".to_owned(),
+    }));
 
-    let mut harness = page(system(), refusals);
+    let mut harness = PageFixture {
+        snapshot: Arc::new(system()),
+        services: Services {
+            locales,
+            ..Services::default()
+        },
+        ..PageFixture::default()
+    }
+    .harness(LocalesPage::default());
+
+    harness.run();
 
     assert!(
         harness
@@ -181,7 +190,7 @@ fn a_refused_click_names_the_locale_until_dismissed() {
 
 #[test]
 fn the_packs_tab_counts_and_queues_the_missing_packs() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
 
     harness
         .get_by_role_and_label(Role::RadioButton, "Language packs")
@@ -211,7 +220,7 @@ fn the_packs_tab_counts_and_queues_the_missing_packs() {
 
 #[test]
 fn the_header_stays_put_and_the_toolbar_holds_search_or_sort() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
     let texts = (
         "Languages",
         "The languages, number and date formats this system can use, and translations for your programs.",

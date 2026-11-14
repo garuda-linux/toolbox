@@ -11,6 +11,7 @@ pub use lead::{LeadChip, LeadSections, NoLead};
 use listed::{Listed, SectionChip, SectionRows};
 use toolbox_catalog::LoadProblem;
 use toolbox_core::Snapshot;
+use toolbox_core::features::protection_text_id;
 use toolbox_core::features::toggles::Refusal;
 use toolbox_core::features::toggles::shown::{self as view, Section, Tally};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
@@ -23,9 +24,12 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use super::header::{search, title_header};
 use super::rows::{Look, refusal_banner};
 use super::{PageContext, plan_running};
+use crate::artwork::Artwork;
 use crate::catalogs::CatalogId;
 use crate::command::AppCommand;
 use crate::i18n;
+use crate::refused::Shown as _;
+use crate::toggle_pages::TogglePages;
 
 #[derive(Debug)]
 pub struct TogglePage {
@@ -143,7 +147,8 @@ impl TogglePage {
         };
 
         let icons = context
-            .app_icons
+            .service::<Artwork>()
+            .app_icons()
             .map(|icons| std::ptr::from_ref(icons).addr());
 
         let rest = (
@@ -165,28 +170,17 @@ impl TogglePage {
 
     fn notices(&self, ui: &mut Ui, context: &PageContext<'_>, unknown: usize) {
         let ctx = ui.ctx().clone();
-        let refused = match context.refusals.catalogs.get(&self.catalog) {
-            Some(refusal @ Refusal::Account(..)) => {
-                let id = format!("account-refusal-{}", refusal.as_str());
-                Some(i18n::text_with(&ctx, &id, &[("name", refusal.name())]))
-            }
-            Some(refusal @ Refusal::Kernel(..)) => {
-                let id = format!("kernels-refusal-{}", refusal.as_str());
-                Some(i18n::text_with(&ctx, &id, &[("name", refusal.name())]))
-            }
-            Some(refusal @ (Refusal::Protected(..) | Refusal::TakesAlong(..))) => {
-                let id = if matches!(refusal, Refusal::TakesAlong(..)) {
-                    "protected-along"
-                } else {
-                    "protected-refused"
-                };
-
-                let why = i18n::text(&ctx, &format!("protected-{}", refusal.as_str()));
-                let args = [("name", refusal.name()), ("why", why.as_ref())];
-                Some(i18n::text_with(&ctx, id, &args))
-            }
-            Some(Refusal::Unknown | Refusal::Unmet) | None => None,
-        };
+        let refused = context
+            .service::<TogglePages>()
+            .refusal(self.catalog)
+            .and_then(|refused| match refused.refusal {
+                Refusal::Account(_) | Refusal::Kernel(_) => Some(refused.text(&ctx)),
+                Refusal::Protected(why) | Refusal::TakesAlong(why) => {
+                    let why = i18n::text(&ctx, &protection_text_id(why));
+                    Some(refused.text_with(&ctx, &[("why", why.as_ref())]))
+                }
+                Refusal::Unknown | Refusal::Unmet => None,
+            });
 
         if let Some(text) = refused
             && refusal_banner(ui, Tone::Warning, &text, "toggles-dismiss")

@@ -74,12 +74,6 @@ impl DriverState {
     }
 }
 
-impl Refusal {
-    pub fn as_str(self) -> &'static str {
-        self.into()
-    }
-}
-
 impl Searchable for DriverRow {
     fn texts(&self) -> impl Iterator<Item = &str> {
         iter::once(self.name.as_str())

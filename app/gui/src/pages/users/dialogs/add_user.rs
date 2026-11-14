@@ -6,6 +6,7 @@ use std::collections::BTreeSet;
 use std::fmt;
 
 use egui::{Context, TextEdit, Ui};
+use toolbox_core::features::RefusalText as _;
 use toolbox_core::features::users::home::check_uid;
 use toolbox_core::features::users::input::{self, AddForm, NewAccount, add_blocker};
 use toolbox_core::features::users::now::check_new_name;
@@ -109,10 +110,10 @@ impl AddUser {
         let snapshot = context.snapshot;
         let named = |code: &str| texts::problem(ctx, code, &self.name);
         let name = input::name(&self.name)
-            .and_then(|user: UserName| check_new_name(&user, snapshot).map_err(Refusal::as_str));
+            .and_then(|user: UserName| check_new_name(&user, snapshot).map_err(Refusal::code));
 
         let uid = input::user_id(&self.uid)
-            .and_then(|uid| check_uid(uid, self.system, snapshot).map_err(Refusal::as_str));
+            .and_then(|uid| check_uid(uid, self.system, snapshot).map_err(Refusal::code));
 
         let problems = Problems {
             name: name.err().filter(|_| !self.name.is_empty()).map(named),

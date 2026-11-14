@@ -5,6 +5,7 @@ use toolbox_plan::{ConfigFilePath, ConfigText, ConfigWrite, EditCopy, Editor};
 use super::{
     Changes, Compared, EditWrite, EditedFile, Fetched, Phase, Problem, Session, Stage, Work,
 };
+use crate::features::configs::Refusal;
 
 const OLD: &str = "a = 1\n";
 const NEW: &str = "a = 2\n";
@@ -131,9 +132,9 @@ fn one_edit_at_a_time() {
     let mut reading = Session::default();
 
     reading.start(path()).unwrap();
-    assert_eq!(reading.start(path()), Err("busy"));
-    assert_eq!(editing().start(path()), Err("busy"));
-    assert_eq!(reviewing().start(path()), Err("busy"));
+    assert_eq!(reading.start(path()), Err(Refusal::Busy));
+    assert_eq!(editing().start(path()), Err(Refusal::Busy));
+    assert_eq!(reviewing().start(path()), Err(Refusal::Busy));
 
     let mut saved = reviewing();
 

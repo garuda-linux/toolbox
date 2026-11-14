@@ -3,6 +3,7 @@ use std::sync::Arc;
 use egui::Ui;
 use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
 use toolbox_core::features::packages::queue::Refusal;
+use toolbox_core::features::protection_text_id;
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, Rows, Tone, banner, counted_chips, dimmed,
@@ -19,6 +20,7 @@ use crate::packages::{Packages, Read};
 use crate::pages::header::{refresh_header, search};
 use crate::pages::rows::refusal_banner;
 use crate::pages::{PageContext, plan_running};
+use crate::refused::Shown as _;
 
 struct AurChip {
     /// `None` until the AUR's copy is read.
@@ -312,29 +314,23 @@ pub fn unreadable(ui: &mut Ui, context: &PageContext<'_>, id: &str) {
 }
 
 pub fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = &context.refusals.packages else {
+    let Some(refusal) = context.service::<Packages>().refusal() else {
         return;
     };
 
-    let package = refusal.package.as_str();
-    let protected = |id: &str, name: &str, why: toolbox_plan::Protection| {
-        let why = i18n::text(ui.ctx(), &format!("protected-{}", why.as_str()));
-        i18n::text_with(ui.ctx(), id, &[("name", name), ("why", why.as_ref())])
-    };
-
-    let text = match &refusal.refusal {
-        Refusal::Protected(why) => protected("protected-refused", package, *why),
-        Refusal::TakesAlong(why, along) => protected("protected-along", along.as_str(), *why),
-        other @ (Refusal::NotOffered
+    let why = match refusal.refusal {
+        Refusal::Protected(why) | Refusal::TakesAlong(why) => {
+            Some(i18n::text(ui.ctx(), &protection_text_id(why)).into_owned())
+        }
+        Refusal::NotOffered
         | Refusal::Unread
         | Refusal::RunningKernel
         | Refusal::RunningUnknown
-        | Refusal::LastKernel) => i18n::text_with(
-            ui.ctx(),
-            &format!("packages-refused-{}", other.as_str()),
-            &[("package", package)],
-        ),
+        | Refusal::LastKernel => None,
     };
+
+    let more: Vec<_> = why.as_deref().map(|why| ("why", why)).into_iter().collect();
+    let text = refusal.text_with(ui.ctx(), &more);
 
     if refusal_banner(ui, Tone::Error, &text, "packages-dismiss") {
         context.commands.send(PackagesCommand::DismissRefusal);

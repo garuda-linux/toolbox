@@ -4,7 +4,6 @@ use egui_kittest::kittest::Queryable as _;
 use toolbox_gui_kit::testing::{painted_text_within, rims_around};
 
 use super::{page, system};
-use crate::pages::Refusals;
 use crate::testing::rect_of;
 
 const NAME: &str = "American English (United States), en_US.UTF-8";
@@ -14,7 +13,7 @@ const BESIDE_SIDEBAR: f32 = 776.0;
 
 #[test]
 fn the_system_language_shows_its_whole_name() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
     harness.set_size(vec2(BESIDE_SIDEBAR, 900.0));
     harness.run();
 
@@ -26,7 +25,7 @@ fn the_system_language_shows_its_whole_name() {
 #[test]
 fn a_narrow_window_keeps_the_system_language_inside_the_page() {
     let width = 420.0;
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
     harness.set_size(vec2(width, 900.0));
     harness.run();
 
@@ -36,7 +35,7 @@ fn a_narrow_window_keeps_the_system_language_inside_the_page() {
 
 #[test]
 fn queue_all_missing_has_no_rim_as_the_kernels_banner_buttons() {
-    let mut harness = page(system(), Refusals::default());
+    let mut harness = page(system());
     harness
         .get_by_role_and_label(Role::RadioButton, "Language packs")
         .click();

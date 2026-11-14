@@ -3,6 +3,7 @@
 
 mod answer;
 mod applying;
+mod clicked;
 pub mod edit;
 mod file;
 #[cfg(test)]

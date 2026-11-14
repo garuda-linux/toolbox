@@ -2,7 +2,7 @@
 //! offer, with headers and DKMS modules.
 
 #[cfg(test)]
-mod fixtures;
+pub(crate) mod fixtures;
 mod row;
 #[cfg(test)]
 mod tests;
@@ -22,6 +22,8 @@ use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{KernelCommand, KernelEdit};
 use crate::i18n;
+use crate::kernels::Kernels;
+use crate::refused::Shown as _;
 
 /// Placeholder rows while the system is read, about as many kernels as a
 /// system has installed and on offer.
@@ -76,7 +78,7 @@ fn listing(ui: &mut Ui, context: &PageContext<'_>) {
 
     notices(ui, context, &listing);
 
-    let rows = listing.rows(context.changes, context.dkms);
+    let rows = listing.rows(context.changes, context.service::<Kernels>().dkms());
     let (installed, available): (Vec<&Row<'_>>, Vec<&Row<'_>>) =
         rows.iter().partition(|row| row.kernel.is_installed());
 
@@ -100,12 +102,11 @@ fn header(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refused) = &context.refusals.kernel else {
+    let Some(refused) = context.service::<Kernels>().refusal() else {
         return;
     };
 
-    let id = format!("kernels-refusal-{}", refused.refusal.as_str());
-    let text = i18n::text_with(ui.ctx(), &id, &[("name", refused.kernel.as_str())]);
+    let text = refused.text(ui.ctx());
     if refusal_banner(ui, Tone::Warning, &text, "kernels-dismiss") {
         context.commands.send(KernelCommand::DismissRefusal);
     }
@@ -115,8 +116,10 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
 fn notices(ui: &mut Ui, context: &PageContext<'_>, listing: &Listing) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let missing_builds = listing.modules_missing(context.changes, context.dkms);
-    let dkms = match (context.dkms.error(), context.dkms.get()) {
+    let dkms = context.service::<Kernels>().dkms();
+    let missing_builds = listing.modules_missing(context.changes, dkms);
+
+    let dkms = match (dkms.error(), dkms.get()) {
         (Some(_), _) => {
             let text = i18n::text(&ctx, "kernels-dkms-failed");
             let again = i18n::text(&ctx, "common-read-again");

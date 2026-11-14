@@ -24,11 +24,11 @@ packages-nothing-matches-detail = The search looks at the names and descriptions
 packages-clear-search = Clear search
 
 # Why a click queued nothing.
-packages-refused-not-offered = { $package } cannot be installed: no configured repository offers it.
-packages-refused-unread = { $package } cannot be queued yet: the installed packages are still being read.
-packages-refused-running-kernel = { $package } is the kernel that runs right now, so it stays installed.
-packages-refused-running-unknown = { $package } stays: the kernel that runs right now is not known, so no kernel can be removed. Restart the computer and try again.
-packages-refused-last-kernel = { $package } is the last installed kernel. Install another one before you remove it.
+packages-refused-not-offered = { $name } cannot be installed: no configured repository offers it.
+packages-refused-unread = { $name } cannot be queued yet: the installed packages are still being read.
+packages-refused-running-kernel = { $name } is the kernel that runs right now, so it stays installed.
+packages-refused-running-unknown = { $name } stays: the kernel that runs right now is not known, so no kernel can be removed. Restart the computer and try again.
+packages-refused-last-kernel = { $name } is the last installed kernel. Install another one before you remove it.
 packages-dismiss = Dismiss
 # A row button's name for screen readers: $action is the button, such as Install, $name the package.
 packages-action-name = { $action } { $name }

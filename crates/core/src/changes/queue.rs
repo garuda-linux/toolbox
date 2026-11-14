@@ -25,6 +25,7 @@ pub(super) trait Queue: Send + Sync {
     fn set_outcome(&mut self, key: &str, outcome: Outcome);
     fn as_any(&self) -> &dyn Any;
     fn as_any_mut(&mut self) -> &mut dyn Any;
+    fn boxed_clone(&self) -> Box<dyn Queue>;
 }
 
 pub(super) struct DomainQueue<D>
@@ -34,6 +35,7 @@ where
     pub(super) changes: BTreeMap<D::Item, Entry<D::Wish>>,
 }
 
+#[derive(Clone)]
 pub(super) struct Entry<W> {
     pub(super) wish: W,
     pub(super) outcome: Outcome,
@@ -172,6 +174,12 @@ where
 
     fn as_any_mut(&mut self) -> &mut dyn Any {
         self
+    }
+
+    fn boxed_clone(&self) -> Box<dyn Queue> {
+        Box::new(Self {
+            changes: self.changes.clone(),
+        })
     }
 }
 

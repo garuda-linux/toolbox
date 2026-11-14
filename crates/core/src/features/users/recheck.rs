@@ -8,7 +8,7 @@ use crate::domains::{
     AccountLockFlags, AccountLocks, CurrentUser, FullNames, Groups, HomeFolders, LoginShells,
     RemovedGroups, RemovedUsers,
 };
-use crate::features::drop_refused;
+use crate::features::{RefusalText as _, drop_refused};
 use crate::{ChangeSet, Queued, Snapshot, Toggle};
 
 /// Drops every queued removal, leave and account detail the page would
@@ -93,7 +93,7 @@ fn memberships(changes: &mut ChangeSet, snapshot: &Snapshot) -> usize {
 
 fn removed_groups(changes: &mut ChangeSet, accounts: &Accounts) -> usize {
     drop_refused::<RemovedGroups>(changes, "removal of the group", |group, Queued, _| {
-        removable_group(group, accounts).err().map(Refusal::as_str)
+        removable_group(group, accounts).err().map(Refusal::code)
     })
 }
 
@@ -101,7 +101,7 @@ fn locks(changes: &mut ChangeSet, snapshot: &Snapshot) -> usize {
     drop_refused::<AccountLocks>(changes, "lock change of", |user, wish, changes| {
         lockable(user, *wish, changes, snapshot)
             .err()
-            .map(Refusal::as_str)
+            .map(Refusal::code)
     })
 }
 
@@ -132,7 +132,7 @@ fn admin_leaves(changes: &mut ChangeSet, snapshot: &Snapshot) -> usize {
 }
 
 fn warn(what: &str, user: &str, refusal: Refusal) {
-    tracing::warn!("dropped the restored {what} {user}: {}", refusal.as_str());
+    tracing::warn!("dropped the restored {what} {user}: {}", refusal.code());
 }
 
 /// Drops the account details the page would refuse: root, an unknown user,
@@ -146,11 +146,11 @@ fn texts(changes: &mut ChangeSet, snapshot: &Snapshot, accounts: &Accounts) -> u
             Ok(_) => Refusal::ShellNotListed,
         };
 
-        Some(refusal.as_str())
+        Some(refusal.code())
     });
 
     let names = drop_refused::<FullNames>(changes, "full name change of", |user, _, _| {
-        editable(user, accounts).err().map(Refusal::as_str)
+        editable(user, accounts).err().map(Refusal::code)
     });
 
     let homes = drop_refused::<HomeFolders>(changes, "home folder change of", |user, change, _| {
@@ -161,7 +161,7 @@ fn texts(changes: &mut ChangeSet, snapshot: &Snapshot, accounts: &Accounts) -> u
             Ok(_) => return None,
         };
 
-        Some(refusal.as_str())
+        Some(refusal.code())
     });
 
     shells + names + homes

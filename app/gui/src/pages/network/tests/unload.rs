@@ -1,11 +1,11 @@
 use egui_kittest::kittest::Queryable as _;
 
-use super::{Refusals, module, page, sent, tab};
+use super::{module, page, sent, tab};
 use crate::command::{Command, NetworkCommand};
 
 #[test]
 fn unloading_a_driver_asks_first_and_keeps_it_on_no() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Drivers");
 
     harness.get_by_label("Unload…").click();

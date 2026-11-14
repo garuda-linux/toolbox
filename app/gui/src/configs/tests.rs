@@ -6,7 +6,7 @@ use std::time::Duration;
 use tokio::runtime::Runtime;
 use toolbox_catalog::ConfigFileCatalog;
 use toolbox_core::features::configs::session::Phase;
-use toolbox_core::features::configs::{ConfigEntrySpec, Found, Listing, viewing};
+use toolbox_core::features::configs::{ConfigEntrySpec, Found, Listing, Refusal, viewing};
 use toolbox_exec::ConfigRead;
 use toolbox_plan::{
     ConfigFilePath, ConfigText, Editor, HomePath, PlannedAction, RootAction, UserAction,
@@ -223,9 +223,9 @@ fn a_read_only_file_is_viewed_and_never_edited() {
     configs.open();
     settle(&mut configs, |configs, _| configs.listing().is_some());
 
-    assert_eq!(configs.edit("passwd"), Err("read-only"));
+    assert_eq!(configs.edit("passwd"), Err(Refusal::ReadOnly));
     assert_eq!(configs.view("passwd"), Ok(()));
-    assert_eq!(configs.view("passwd"), Err("busy"));
+    assert_eq!(configs.view("passwd"), Err(Refusal::Busy));
 
     settle(&mut configs, |configs, _| {
         configs.viewing().phase() == viewing::Phase::Shown
@@ -234,7 +234,7 @@ fn a_read_only_file_is_viewed_and_never_edited() {
     configs.close_view();
 
     assert_eq!(configs.viewing().phase(), viewing::Phase::Idle);
-    assert_eq!(configs.edit("nothing"), Err("unknown"));
+    assert_eq!(configs.edit("nothing"), Err(Refusal::Unknown));
 }
 
 #[test]

@@ -25,11 +25,11 @@ impl App {
                 };
 
                 let result = self.repair(wish, target);
-                self.refusals.boot_repair = result.err().map(Refusal::as_str);
+                self.services.boot_repair.set_refusal(result.err());
             }
             BootRepairCommand::Forget => self.services.boot_repair.forget(),
             BootRepairCommand::ShowConsole => self.state.console_open = true,
-            BootRepairCommand::DismissRefusal => self.refusals.boot_repair = None,
+            BootRepairCommand::DismissRefusal => {}
         }
     }
 

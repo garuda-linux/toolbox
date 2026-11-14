@@ -8,6 +8,8 @@ use super::KernelsPage;
 use super::fixtures::{dkms, system};
 use super::view::{Dkms, DkmsReading};
 use crate::command::{Command, KernelEdit};
+use crate::kernels::Kernels;
+use crate::page_service::Services;
 use crate::testing::{PageFixture, assert_rows_wait_while_busy};
 
 #[test]
@@ -31,7 +33,10 @@ fn before_the_first_read_placeholder_rows_wait() {
 #[test]
 fn without_dkms_the_page_says_there_is_nothing_to_build() {
     let fixture = PageFixture {
-        dkms: DkmsReading::Loaded(Arc::new(Dkms::NotInstalled)),
+        services: Services {
+            kernels: Kernels::with_dkms(DkmsReading::Loaded(Arc::new(Dkms::NotInstalled))),
+            ..Services::default()
+        },
         ..PageFixture::with_snapshot(system())
     };
 
@@ -135,7 +140,10 @@ fn the_switches_line_up_whatever_sits_beside_them() {
 #[test]
 fn the_first_banner_follows_the_header_without_an_extra_gap() {
     let fixture = PageFixture {
-        dkms: dkms(),
+        services: Services {
+            kernels: Kernels::with_dkms(dkms()),
+            ..Services::default()
+        },
         ..PageFixture::with_snapshot(system())
     };
 

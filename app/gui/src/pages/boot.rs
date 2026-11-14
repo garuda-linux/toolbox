@@ -27,6 +27,7 @@ use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::heading;
+use crate::refused::Shown as _;
 
 /// The width of a row's control: a menu entry's name fits.
 const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
@@ -138,7 +139,7 @@ impl BootPage {
             let refused = context
                 .service::<Boot>()
                 .refusal()
-                .is_some_and(|refusal| refusal.value == sent);
+                .is_some_and(|refusal| refusal.subject == sent);
 
             if !refused && self.parameter == sent {
                 self.parameter.clear();
@@ -172,13 +173,12 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
-    if refusal.code == "needs-confirm" {
-        risky(ui.ctx(), context, &refusal.value);
+    if refusal.refusal.needs_confirm() {
+        risky(ui.ctx(), context, &refusal.subject);
         return;
     }
 
-    let id = format!("boot-refused-{}", refusal.code);
-    let text = i18n::text_with(ui.ctx(), &id, &[("value", &refusal.value)]);
+    let text = refusal.text(ui.ctx());
     if refusal_banner(ui, Tone::Error, &text, "boot-dismiss") {
         context.commands.send(BootCommand::DismissRefusal);
     }

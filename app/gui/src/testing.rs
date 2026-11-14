@@ -34,12 +34,10 @@ use crate::command::{self, Command, CommandReceiver, CommandSender};
 use crate::page::PageId;
 use crate::page_service::Services;
 use crate::pages::home::{HomeFacts, HomeProblem};
-use crate::pages::kernels::view::DkmsReading;
-use crate::pages::{PageContext, PageView, Plans, Refusals};
+use crate::pages::{PageContext, PageView, Plans};
 use crate::programs::Programs;
 use crate::settings::{MotionChoice, SettingsView, ThemeChoice};
 pub use crate::shell::console_layer;
-use crate::units::Units;
 
 /// The window a page is drawn in, as the app's own tests use.
 const WIDTH: f32 = 1024.0;
@@ -66,11 +64,8 @@ pub struct PageFixture {
     /// the queue does.
     pub revision: u64,
     pub catalogs: Catalogs,
-    pub refusals: Refusals,
-    pub dkms: DkmsReading,
     pub busy: bool,
     pub console_open: bool,
-    pub units: Units,
     /// `None` leaves Home without a status, as without a reader.
     pub status: Option<Loadable<Status>>,
     /// `None` leaves Home without its facts, as without a reader.
@@ -104,11 +99,8 @@ impl Default for PageFixture {
             changes: ChangeSet::default(),
             revision: 0,
             catalogs: Catalogs::default(),
-            refusals: Refusals::default(),
-            dkms: DkmsReading::default(),
             busy: false,
             console_open: false,
-            units: Units::default(),
             status: None,
             facts: None,
             news: None,
@@ -141,11 +133,8 @@ impl PageFixture {
             changes: &self.changes,
             revision: self.revision,
             catalogs: &self.catalogs,
-            refusals: &self.refusals,
-            dkms: &self.dkms,
             busy: self.busy,
             console_open: self.console_open,
-            units: &self.units,
             home: HomeFacts {
                 status: self.status.as_ref(),
                 facts: self.facts.as_ref(),
@@ -160,8 +149,6 @@ impl PageFixture {
             plans: self.plans,
             desktops: &self.desktops,
             version: crate::FIXED_VERSION,
-            app_icons: None,
-            pictures: None,
             commands: &self.commands,
             preferences: SettingsView {
                 settings: &self.settings,

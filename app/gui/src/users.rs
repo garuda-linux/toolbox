@@ -5,6 +5,7 @@
 //! Refresh. Every read is a pkexec run, so the page never asks before it
 //! is opened and at most one read is in flight.
 
+mod edits;
 #[cfg(test)]
 mod tests;
 
@@ -20,6 +21,9 @@ use toolbox_services::locks::Locks;
 use toolbox_system::{LockProblem, LockSource};
 
 use crate::lane::{Lane, OneRead};
+use crate::refused::Refused;
+
+pub type UsersRefusal = Refused<toolbox_core::features::users::Refusal>;
 
 type Answer = Result<BTreeMap<UserName, bool>, LockProblem>;
 
@@ -32,6 +36,7 @@ pub struct UsersSetup {
 pub struct Users {
     locks: Locks,
     run: PageRun,
+    refusal: Option<UsersRefusal>,
     reads: OneRead,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
@@ -71,6 +76,15 @@ impl Users {
 
     pub const fn run(&self) -> &PageRun {
         &self.run
+    }
+
+    pub const fn refusal(&self) -> Option<&UsersRefusal> {
+        self.refusal.as_ref()
+    }
+
+    /// For a run the page starts at once, which App sends.
+    pub fn set_refusal(&mut self, refusal: Option<UsersRefusal>) {
+        self.refusal = refusal;
     }
 
     /// The snapshot part the guards check, `None` while unknown.

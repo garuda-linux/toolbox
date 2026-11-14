@@ -6,19 +6,25 @@
 
 mod adapters;
 
-use toolbox_core::Snapshot;
 use toolbox_core::features::boot::edit::Edit;
+use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::Plan;
+use toolbox_services::queue::edit::QueueEdit;
 
+use crate::artwork::Artwork;
 use crate::boot::Boot;
 use crate::bootrepair::BootRepair;
 use crate::command::AppCommand;
 use crate::configs::Configs;
 use crate::diagnostics::Diagnostics;
+use crate::kernels::Kernels;
+use crate::locales::Locales;
 use crate::maintenance::Maintenance;
 use crate::network::Network;
 use crate::packages::Packages;
 use crate::page::PageId;
+use crate::toggle_pages::TogglePages;
+use crate::units::Units;
 use crate::users::Users;
 
 /// What a service asks of App once its work came in.
@@ -42,13 +48,64 @@ pub enum Answer {
     },
     /// Whether the sidebar lists Boot Repair.
     OfferBootRepair(bool),
+    /// A page asks for another one, as Boot options for a kernel the
+    /// Kernels page proposes.
+    ShowPage(PageId),
     /// Boot Repair shows but is no longer offered.
     LeaveBootRepair,
+}
+
+/// What a service made of a command: the queue edit of a click, which App
+/// takes in the same frame, and what App should do next.
+#[derive(Debug, Default)]
+pub struct Handled {
+    /// A service took the command, so App does nothing more with it, also
+    /// for a click that was refused.
+    pub taken: bool,
+    pub edit: Option<QueueEdit>,
+    pub answers: Vec<AppCommand>,
+}
+
+impl Handled {
+    pub const fn taken() -> Self {
+        Self {
+            taken: true,
+            edit: None,
+            answers: Vec::new(),
+        }
+    }
+
+    pub const fn edit(edit: QueueEdit) -> Self {
+        Self {
+            taken: true,
+            edit: Some(edit),
+            answers: Vec::new(),
+        }
+    }
+
+    pub const fn answers(answers: Vec<AppCommand>) -> Self {
+        Self {
+            taken: true,
+            edit: None,
+            answers,
+        }
+    }
 }
 
 /// A page's work off the frame. Each hook answers with what App should
 /// do next, so a service needs nothing of App.
 pub trait PageService {
+    /// A command of the page. `changes` is the queue the click saw, which
+    /// the service never changes itself: it answers with the edit.
+    fn handle(
+        &mut self,
+        _command: &AppCommand,
+        _changes: &ChangeSet,
+        _snapshot: &Snapshot,
+    ) -> Handled {
+        Handled::default()
+    }
+
     /// The results that came in since the last frame. `page` is the page
     /// in view, which a service may start reading for.
     fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
@@ -80,11 +137,17 @@ pub struct Services {
     pub users: Users,
     pub configs: Configs,
     pub boot_repair: BootRepair,
+    pub kernels: Kernels,
+    pub locales: Locales,
+    pub toggle_pages: TogglePages,
+    /// The units systemd lists, which App reads in.
+    pub units: Units,
+    pub artwork: Artwork,
 }
 
 impl Services {
     /// Every service, in the order App feeds them.
-    pub fn all_mut(&mut self) -> [&mut dyn PageService; 8] {
+    pub fn all_mut(&mut self) -> [&mut dyn PageService; 13] {
         [
             &mut self.maintenance,
             &mut self.diagnostics,
@@ -94,6 +157,11 @@ impl Services {
             &mut self.users,
             &mut self.configs,
             &mut self.boot_repair,
+            &mut self.kernels,
+            &mut self.locales,
+            &mut self.toggle_pages,
+            &mut self.units,
+            &mut self.artwork,
         ]
     }
 
@@ -157,5 +225,35 @@ impl Provides<Configs> for Services {
 impl Provides<BootRepair> for Services {
     fn provide(&self) -> &BootRepair {
         &self.boot_repair
+    }
+}
+
+impl Provides<Kernels> for Services {
+    fn provide(&self) -> &Kernels {
+        &self.kernels
+    }
+}
+
+impl Provides<Locales> for Services {
+    fn provide(&self) -> &Locales {
+        &self.locales
+    }
+}
+
+impl Provides<TogglePages> for Services {
+    fn provide(&self) -> &TogglePages {
+        &self.toggle_pages
+    }
+}
+
+impl Provides<Units> for Services {
+    fn provide(&self) -> &Units {
+        &self.units
+    }
+}
+
+impl Provides<Artwork> for Services {
+    fn provide(&self) -> &Artwork {
+        &self.artwork
     }
 }

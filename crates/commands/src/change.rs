@@ -13,7 +13,7 @@ use toolbox_core::features::kernels::{
     self, Kernel, Listed, RunningKernel, lacks_headers, running,
 };
 use toolbox_core::features::maintenance::page::{asks_first, run_now_plan};
-use toolbox_core::features::toggles;
+use toolbox_core::features::{Refused as CoreRefused, toggles};
 use toolbox_core::{ChangeSet, Snapshot, Toggle, plan};
 use toolbox_plan::{PackageName, Plan, Upgrader};
 
@@ -125,26 +125,22 @@ pub fn toggle_onto(
     toggles::toggle(catalog, id, want, snapshot, changes).map_err(toggle_refused)
 }
 
-pub(super) fn toggle_refused(refusal: toggles::Refusal) -> Refused {
-    let name = refusal.name().to_owned();
+pub(super) fn toggle_refused(refused: CoreRefused<toggles::Refusal>) -> Refused {
+    let name = refused.subject;
 
-    match refusal {
-        toggles::Refusal::Kernel(kept, kernel) => {
-            crate::packages::kept_package(&kernel, kept.into())
+    match refused.refusal {
+        toggles::Refusal::Kernel(kept) => crate::packages::kept_package(&name, kept.into(), ""),
+        // Of a dependency the subject is that dependency, which stays.
+        toggles::Refusal::Protected(why) | toggles::Refusal::TakesAlong(why) => {
+            crate::packages::kept_package(
+                &name,
+                toolbox_core::features::packages::queue::Refusal::Protected(why),
+                "",
+            )
         }
-        toggles::Refusal::Protected(why, package) => crate::packages::kept_package(
-            &package,
-            toolbox_core::features::packages::queue::Refusal::Protected(why),
-        ),
-        toggles::Refusal::TakesAlong(why, along) => crate::packages::kept_package(
-            &along,
-            toolbox_core::features::packages::queue::Refusal::Protected(why),
-        ),
         toggles::Refusal::Unknown => Refused::page_rule(why::switch_unknown()),
         toggles::Refusal::Unmet => Refused::page_rule(why::switch_unmet()),
-        toggles::Refusal::Account(refusal, _) => {
-            Refused::page_rule(why::membership(refusal, &name))
-        }
+        toggles::Refusal::Account(refusal) => Refused::page_rule(why::membership(refusal, &name)),
     }
 }
 
@@ -224,8 +220,9 @@ pub fn kernel_onto(
         // The page's own click: the kernel with its headers.
         KernelChange::Install | KernelChange::Remove => {
             let wish = Toggle::from_on(change == KernelChange::Install);
-            kernels::toggle(kernel, wish, listed, changes, snapshot)
-                .map_err(|refusal| crate::packages::kept_package(name, refusal.into()))?;
+            kernels::toggle(kernel, wish, listed, changes, snapshot).map_err(|refusal| {
+                crate::packages::kept_package(name.as_str(), refusal.into(), "")
+            })?;
         }
         KernelChange::Headers if kernel.installed.is_none() => {
             return Err(Refused::Rule(format!("{name} is not installed")));

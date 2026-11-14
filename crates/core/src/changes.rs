@@ -23,6 +23,18 @@ pub struct ChangeSet {
     queues: HashMap<TypeId, Box<dyn Queue>>,
 }
 
+impl Clone for ChangeSet {
+    fn clone(&self) -> Self {
+        Self {
+            queues: self
+                .queues
+                .iter()
+                .map(|(id, queue)| (*id, queue.boxed_clone()))
+                .collect(),
+        }
+    }
+}
+
 impl ChangeSet {
     /// Records the wish for `item`, replacing an earlier one and its outcome.
     /// A wish the system fulfils removes the item, so toggling twice leaves

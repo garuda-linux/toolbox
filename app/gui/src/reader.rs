@@ -64,11 +64,27 @@ impl<T> ReaderHandle<T> {
     }
 }
 
+/// Without a reader, as a service in tests that need none.
+impl<T> Default for Watched<T> {
+    fn default() -> Self {
+        Self::new(None)
+    }
+}
+
 impl<T> Watched<T> {
     pub fn new(handle: Option<ReaderHandle<T>>) -> Self {
         Self {
             handle,
             reading: Loadable::default(),
+        }
+    }
+
+    /// A reading without a reader, for a page test.
+    #[cfg(any(test, feature = "testing"))]
+    pub const fn loaded(reading: Loadable<T>) -> Self {
+        Self {
+            handle: None,
+            reading,
         }
     }
 

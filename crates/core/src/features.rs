@@ -13,6 +13,7 @@ pub mod missing;
 pub mod network;
 pub mod packages;
 pub mod recent;
+mod refusal_text;
 pub mod search;
 pub mod services;
 pub mod status;
@@ -28,6 +29,7 @@ use strum::IntoEnumIterator as _;
 use toolbox_plan::Reason;
 
 pub use self::guard::Guard;
+pub use self::refusal_text::{RefusalText, Refused, protection_text_id};
 use crate::{ChangeSet, Domain, Snapshot};
 
 /// One page's check of a queue restored from disk: how many changes it

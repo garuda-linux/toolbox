@@ -12,12 +12,13 @@ use std::fmt;
 use std::sync::Arc;
 
 use tokio::runtime::Handle;
-use toolbox_core::features::bootrepair::RepairFacts;
 use toolbox_core::features::bootrepair::page::{Booted, Facts, Offer, Progress};
+use toolbox_core::features::bootrepair::{Refusal, RepairFacts};
 use toolbox_plan::Toggle;
 use toolbox_system::{ProbeError, RepairSource};
 
 use crate::lane::{Lane, OneRead};
+use crate::refused::Refused;
 
 type Answer = Result<RepairFacts, ProbeError>;
 
@@ -28,6 +29,9 @@ pub struct BootRepairSetup {
     pub forced: bool,
 }
 
+/// The texts of Boot Repair name nothing.
+pub type RepairRefusal = Refused<Refusal, ()>;
+
 #[derive(Debug, Default)]
 pub struct BootRepair {
     forced: bool,
@@ -35,6 +39,7 @@ pub struct BootRepair {
     facts: Facts,
     progress: Progress,
     reads: OneRead,
+    refusal: Option<RepairRefusal>,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
 }
@@ -59,6 +64,16 @@ impl fmt::Debug for Jobs {
 }
 
 impl BootRepair {
+    pub const fn refusal(&self) -> Option<&RepairRefusal> {
+        self.refusal.as_ref()
+    }
+
+    /// A refused repair stays on the page until dismissed or the next
+    /// one starts.
+    pub fn set_refusal(&mut self, refusal: Option<Refusal>) {
+        self.refusal = refusal.map(|refusal| Refused::new(refusal, ()));
+    }
+
     pub fn new(setup: Option<BootRepairSetup>, ctx: egui::Context) -> Self {
         let Some(setup) = setup else {
             return Self::default();

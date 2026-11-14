@@ -15,7 +15,6 @@ use super::ConfigsPage;
 use crate::command::{Command, ConfigsCommand};
 use crate::configs::Configs;
 use crate::page_service::Services;
-use crate::pages::Refusals;
 use crate::testing::{PageFixture, PageState};
 
 const CATALOG: &str = r#"
@@ -130,9 +129,8 @@ pub fn viewing() -> Viewing {
     viewing
 }
 
-pub fn page(configs: Configs, refusals: Refusals) -> Shown {
+pub fn page(configs: Configs) -> Shown {
     let mut harness = PageFixture {
-        refusals,
         services: Services {
             configs,
             ..Services::default()
@@ -155,7 +153,7 @@ pub fn sent(harness: &Shown) -> Vec<Command> {
 
 #[test]
 fn the_files_show_by_section_with_their_status() {
-    let harness = page(listed(), Refusals::default());
+    let harness = page(listed());
 
     for label in [
         "Bootloader",
@@ -179,7 +177,7 @@ fn the_files_show_by_section_with_their_status() {
 
 #[test]
 fn system_and_home_files_are_edited_a_guarded_one_viewed_and_a_home_one_opened_in_its_app() {
-    let mut harness = page(listed(), Refusals::default());
+    let mut harness = page(listed());
 
     for edit in harness.get_all_by_label("Edit") {
         edit.click();
@@ -210,7 +208,7 @@ fn system_and_home_files_are_edited_a_guarded_one_viewed_and_a_home_one_opened_i
 
 #[test]
 fn a_folders_files_start_where_the_folder_starts() {
-    let mut harness = page(listed(), Refusals::default());
+    let mut harness = page(listed());
     harness.get_by_label("Show the files").click();
     harness.run();
 
@@ -231,7 +229,7 @@ fn a_folders_files_start_where_the_folder_starts() {
 
 #[test]
 fn a_folder_shows_its_files_once_opened() {
-    let mut harness = page(listed(), Refusals::default());
+    let mut harness = page(listed());
 
     assert!(!shows(&harness, "audio.conf"));
 
@@ -245,7 +243,7 @@ fn a_folder_shows_its_files_once_opened() {
 
 #[test]
 fn a_search_without_a_match_says_so() {
-    let mut harness = page(listed(), Refusals::default());
+    let mut harness = page(listed());
 
     harness.get_by_label("Search config files").click();
     harness.run();
@@ -264,7 +262,7 @@ fn a_search_without_a_match_says_so() {
 
 #[test]
 fn before_the_first_look_the_page_says_it_looks() {
-    let harness = page(Configs::default(), Refusals::default());
+    let harness = page(Configs::default());
 
     assert!(shows(&harness, "Looking for config files…"));
 }
@@ -288,7 +286,7 @@ fn a_section_without_a_known_icon_shows_a_plain_text_file() {
 
 #[test]
 fn a_file_with_nothing_to_say_has_no_empty_line_under_its_path() {
-    let harness = page(listed(), Refusals::default());
+    let harness = page(listed());
     let height = |name| {
         harness
             .get_by_role_and_label(Role::ListItem, name)

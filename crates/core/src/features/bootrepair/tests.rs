@@ -11,6 +11,7 @@ use super::{
     Firmware, Refusal, RepairFacts, Target, Tool, Wish, parse_lsblk, plan_regenerate,
     plan_reinstall,
 };
+use crate::features::RefusalText as _;
 
 const PASSPHRASE: &str = "correct horse battery staple";
 
@@ -178,7 +179,7 @@ fn a_locked_system_needs_a_passphrase_and_takes_the_chosen_layout() {
     let locked = "/dev/nvme0n1p1";
 
     assert_eq!(
-        plan_regenerate(&facts, wish(locked)).unwrap_err().as_str(),
+        plan_regenerate(&facts, wish(locked)).unwrap_err().code(),
         "empty"
     );
     for (layout, expected) in [

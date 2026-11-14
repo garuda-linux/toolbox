@@ -247,3 +247,18 @@ fn an_unsavable_change_is_skipped_without_failing_the_save() {
     assert_eq!(saved.changes.len(), 1);
     assert_eq!(saved.changes[0].domain, "packages");
 }
+
+/// A page works out its click on a copy, so the copy keeps each wish and
+/// outcome and an edit of it leaves the queue alone.
+#[test]
+fn a_clone_is_a_copy_the_queue_does_not_share() {
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(package("gimp"), Toggle::Off, &Snapshot::default());
+
+    let mut copy = changes.clone();
+    assert_eq!(copy.to_saved(), changes.to_saved());
+
+    copy.want::<Packages>(package("vlc"), Toggle::On, &Snapshot::default());
+    assert_eq!(copy.len(), 2);
+    assert_eq!(changes.len(), 1);
+}

@@ -100,7 +100,7 @@ network-driver-blacklist = Auf die Blacklist setzen
 network-driver-allow = Von der Blacklist nehmen
 network-driver-unqueue = Zurücknehmen
 # Why a blacklist click was not queued. $driver names the driver.
-network-refused-other-file = { $driver }: Eine andere Datei in modprobe.d setzt diesen Treiber auf die Blacklist. Garuda Toolbox ändert nur seine eigene Datei.
+network-refused-other-file = { $name }: Eine andere Datei in modprobe.d setzt diesen Treiber auf die Blacklist. Garuda Toolbox ändert nur seine eigene Datei.
 network-refused-unavailable = Die Treiber dieses Systems ließen sich nicht lesen.
 
 network-hardware-intro = Netzwerkgeräte laut lspci und lsusb.

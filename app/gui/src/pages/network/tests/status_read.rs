@@ -1,7 +1,7 @@
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::network::{Connectivity, RadioAccess};
 
-use super::{Refusals, network, page_showing};
+use super::{network, page_showing};
 use crate::network::{Address, Network, Read, StatusRead};
 
 fn showing(change: impl FnOnce(&mut StatusRead)) -> Network {
@@ -17,10 +17,7 @@ fn showing(change: impl FnOnce(&mut StatusRead)) -> Network {
 
 #[test]
 fn a_route_that_could_not_be_read_is_not_known_not_absent() {
-    let harness = page_showing(
-        showing(|status| status.route = Read::Failed),
-        Refusals::default(),
-    );
+    let harness = page_showing(showing(|status| status.route = Read::Failed));
 
     assert!(harness.query_all_by_label("Not known").next().is_some());
     assert!(harness.query_by_label("Not available").is_none());
@@ -28,10 +25,7 @@ fn a_route_that_could_not_be_read_is_not_known_not_absent() {
 
 #[test]
 fn without_the_radio_device_a_switch_does_not_claim_on() {
-    let harness = page_showing(
-        showing(|status| status.access = RadioAccess::Missing),
-        Refusals::default(),
-    );
+    let harness = page_showing(showing(|status| status.access = RadioAccess::Missing));
 
     assert!(
         harness

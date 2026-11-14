@@ -20,7 +20,7 @@ use crate::domains::{
     Accounts, CurrentUser, EnabledUnits, EnabledUserUnits, Groups, InstalledPackages, Membership,
     Packages, SyncPackages, SystemUnits, UserConfigStates, UserConfigWish, UserConfigs, UserUnits,
 };
-use crate::features::{kernels, packages, users};
+use crate::features::{RefusalText as _, Refused, kernels, packages, users};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -42,45 +42,52 @@ impl EntryState {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+/// What the refusal names is its [`Refused::subject`]: the kernel, the
+/// protected package, or the account of the membership.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Refusal {
     Unknown,
     Unmet,
-    /// The Users page would refuse the same change of this membership.
-    Account(users::Refusal, Membership),
-    /// The Kernels page would keep this kernel.
-    Kernel(kernels::Refusal, PackageName),
-    /// `toolbox_plan::PROTECTED` keeps this package.
-    Protected(Protection, PackageName),
+    /// The Users page would refuse the same change of the membership.
+    Account(users::Refusal),
+    /// The Kernels page would keep the kernel.
+    Kernel(kernels::Refusal),
+    /// `toolbox_plan::PROTECTED` keeps the package.
+    Protected(Protection),
     /// Removing the entry's packages would take this protected dependency
     /// along.
-    TakesAlong(Protection, PackageName),
+    TakesAlong(Protection),
+}
+
+/// An account or kernel refusal keeps the other page's code, so both pages
+/// share one text.
+impl From<Refusal> for &'static str {
+    fn from(refusal: Refusal) -> Self {
+        match refusal {
+            Refusal::Unknown => "unknown",
+            Refusal::Unmet => "unmet",
+            Refusal::Account(refusal) => refusal.code(),
+            Refusal::Kernel(refusal) => refusal.code(),
+            Refusal::Protected(why) | Refusal::TakesAlong(why) => why.as_str(),
+        }
+    }
 }
 
 impl Refusal {
-    /// An account refusal keeps the Users page's code, so both pages share
-    /// one text.
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Unknown => "unknown",
-            Self::Unmet => "unmet",
-            Self::Account(refusal, _) => refusal.as_str(),
-            Self::Kernel(refusal, _) => refusal.as_str(),
-            Self::Protected(why, _) | Self::TakesAlong(why, _) => why.as_str(),
-        }
+    /// The Users page's text for a membership names the group it is the
+    /// primary group of, else the user.
+    pub(super) fn of_membership(refusal: users::Refusal, membership: &Membership) -> Refused<Self> {
+        let name = if refusal == users::Refusal::PrimaryGroup {
+            membership.group.as_str()
+        } else {
+            membership.user.as_str()
+        };
+
+        Refused::new(Self::Account(refusal), name.to_owned())
     }
 
-    /// The name the Users page's text for the code shows: the group it
-    /// is the primary group of, else the user. Empty without an account.
-    pub fn name(&self) -> &str {
-        match self {
-            Self::Unknown | Self::Unmet => "",
-            Self::Account(users::Refusal::PrimaryGroup, membership) => membership.group.as_str(),
-            Self::Account(_, membership) => membership.user.as_str(),
-            Self::Kernel(_, package)
-            | Self::Protected(_, package)
-            | Self::TakesAlong(_, package) => package.as_str(),
-        }
+    pub(super) fn of_package(self, package: &PackageName) -> Refused<Self> {
+        Refused::new(self, package.as_str().to_owned())
     }
 }
 
@@ -147,11 +154,13 @@ pub fn toggle(
     wish: Toggle,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
-) -> Result<(), Refusal> {
-    let entry = catalog.entry(id).ok_or(Refusal::Unknown)?;
+) -> Result<(), Refused<Refusal>> {
+    let entry = catalog
+        .entry(id)
+        .ok_or_else(|| Refused::new(Refusal::Unknown, id.to_owned()))?;
 
     if wish.is_on() && !is_met(catalog, entry, snapshot, changes) {
-        return Err(Refusal::Unmet);
+        return Err(Refused::new(Refusal::Unmet, id.to_owned()));
     }
 
     // The opposite wish queued means the user takes it back. Without a probe
@@ -195,7 +204,7 @@ fn turn_off_conflicts(
 
     for rival in rivals {
         if let Err(refusal) = toggle(catalog, rival.id(), Toggle::Off, snapshot, changes) {
-            tracing::warn!("{} stays on: {}", rival.id(), refusal.as_str());
+            tracing::warn!("{} stays on: {}", rival.id(), refusal.refusal.code());
         }
     }
 }

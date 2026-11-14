@@ -7,9 +7,9 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::domains::{CurrentGrub, InstalledPackages};
 use toolbox_core::features::boot::Flag;
-use toolbox_core::features::boot::edit::Edit;
+use toolbox_core::features::boot::edit::{Edit, EditProblem};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{GrubMenu, GrubPlatform, GrubState, PackageName};
+use toolbox_plan::{GrubMenu, GrubPlatform, GrubState, InvalidName, NameKind, PackageName, Reason};
 use toolbox_system::{Host, Menu, MenuRead};
 
 use super::BootPage;
@@ -186,10 +186,8 @@ fn a_known_flag_is_a_switch_of_its_own() {
 
 #[test]
 fn a_refused_value_is_named_until_dismissed() {
-    let refusal = BootRefusal {
-        code: "invalid-character",
-        value: "a b".to_owned(),
-    };
+    let invalid = InvalidName::new(NameKind::Package, "a b", Reason::InvalidCharacter(' '));
+    let refusal = BootRefusal::new(EditProblem::Invalid(invalid).code(), "a b".to_owned());
 
     let mut harness = page(grub_system(), Boot::showing(menu(), Some(refusal), None));
 

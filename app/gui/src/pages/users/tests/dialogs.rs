@@ -8,11 +8,10 @@ use toolbox_plan::{FullName, Password};
 
 use super::{group, group_name, name, page, page_on, sent, system, unlocked};
 use crate::command::{Command, UserEdit, UsersCommand};
-use crate::pages::Refusals;
 
 #[test]
 fn a_new_password_runs_once_both_fields_agree() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     harness.get_by_label("ada, Ada Lovelace").click();
     harness.run();
@@ -54,7 +53,7 @@ fn a_new_password_runs_once_both_fields_agree() {
 
 #[test]
 fn a_closed_password_dialog_leaves_no_field_state_behind() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     let states = |shown: &super::Shown| shown.ctx.data(IdTypeMap::count::<TextEditState>);
 
     harness.get_by_label("ada, Ada Lovelace").click();
@@ -84,7 +83,7 @@ fn a_closed_password_dialog_leaves_no_field_state_behind() {
 
 #[test]
 fn the_edit_dialog_queues_only_what_changed() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     harness.get_by_label("ada, Ada Lovelace").click();
     harness.run();
@@ -105,7 +104,7 @@ fn the_edit_dialog_queues_only_what_changed() {
 
 #[test]
 fn a_taken_name_is_refused_while_it_is_typed() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     harness.get_by_label("Add user…").click();
     harness.run();
@@ -120,7 +119,7 @@ fn a_taken_name_is_refused_while_it_is_typed() {
 
 #[test]
 fn a_new_user_is_added_with_the_groups_ticked() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     harness.get_by_label("Add user…").click();
     harness.run();
@@ -181,7 +180,7 @@ fn type_into(harness: &mut super::Shown, role: Role, label: &str, text: &str) {
 
 #[test]
 fn the_add_dialog_asks_the_required_fields_first_and_says_what_holds_it() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     harness.get_by_label("Add user…").click();
     harness.run();
 
@@ -213,7 +212,7 @@ fn the_add_dialog_asks_the_required_fields_first_and_says_what_holds_it() {
 
 #[test]
 fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     harness.set_size(egui::vec2(1024.0, 720.0));
     harness.run();
     harness.get_by_label("Add user…").click();
@@ -251,7 +250,7 @@ fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
 
 #[test]
 fn every_field_of_the_edit_dialog_keeps_one_gap_to_the_next() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     harness.get_by_label("ada, Ada Lovelace").click();
     harness.run();
     harness.get_by_label("Edit ada…").click();
@@ -280,7 +279,7 @@ fn every_field_of_the_edit_dialog_keeps_one_gap_to_the_next() {
 
 #[test]
 fn more_options_folds_open_behind_a_chevron_on_the_label_column() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     harness.get_by_label("Add user…").click();
     harness.run();
 
@@ -333,7 +332,7 @@ fn many_groups_are_rows_of_the_dialogs_own_scrolling_body() {
     }
 
     snapshot.insert(accounts);
-    let mut harness = page_on(snapshot, unlocked(), Refusals::default());
+    let mut harness = page_on(snapshot, unlocked());
     harness.get_by_label("Add user…").click();
     harness.run();
     harness.get_by_label("More options").click();

@@ -3,7 +3,8 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
-use strum::IntoEnumIterator as _;
+use strum::IntoEnumIterator;
+use toolbox_core::features::RefusalText;
 use toolbox_system::Probe;
 
 use super::{available, set_language, text, text_or};
@@ -82,9 +83,41 @@ fn every_account_refusal_has_a_text() {
     let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
 
     for refusal in toolbox_core::features::users::Refusal::iter() {
-        let id = format!("account-refusal-{}", refusal.as_str());
+        let id = format!("account-refusal-{}", refusal.code());
         assert!(english.contains(&id), "{id} is missing");
     }
+}
+
+/// A page shows each refusal by its `text_id`, so a variant without its
+/// text would show the bare id.
+#[test]
+fn every_page_refusal_has_its_text() {
+    use toolbox_core::features::{bootrepair, configs, kernels, locales, network, users};
+
+    fn ids<R>() -> Vec<String>
+    where
+        R: RefusalText + IntoEnumIterator,
+    {
+        R::iter().map(RefusalText::text_id).collect()
+    }
+
+    let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
+    let all = [
+        ids::<users::Refusal>(),
+        ids::<kernels::Refusal>(),
+        ids::<locales::Refusal>(),
+        ids::<network::Refusal>(),
+        ids::<bootrepair::Refusal>(),
+        ids::<configs::Refusal>(),
+    ];
+
+    let missing: Vec<&String> = all
+        .iter()
+        .flatten()
+        .filter(|id| !english.contains(*id))
+        .collect();
+
+    assert!(missing.is_empty(), "no text for {missing:?}");
 }
 
 #[test]

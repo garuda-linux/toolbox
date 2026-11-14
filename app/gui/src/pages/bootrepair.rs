@@ -24,6 +24,7 @@ use super::{PageContext, PageView};
 use crate::bootrepair::BootRepair;
 use crate::command::BootRepairCommand;
 use crate::i18n;
+use crate::refused::Shown as _;
 
 #[derive(Debug, Default)]
 pub struct BootRepairPage {
@@ -121,8 +122,8 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
 
     ui.add(Label::new(text("repair-intro")).wrap());
     let dismiss = text("repair-dismiss");
-    if let Some(code) = context.refusals.boot_repair {
-        let refused = texts::refusal(&ctx, code);
+    if let Some(refusal) = context.service::<BootRepair>().refusal() {
+        let refused = refusal.text(&ctx);
         ui.add_space(ui.tokens().sizes.card_gap);
         if banner(ui, Tone::Error, &refused, &[&dismiss]) == Some(0) {
             context.commands.send(BootRepairCommand::DismissRefusal);

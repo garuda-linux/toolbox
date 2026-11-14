@@ -245,7 +245,7 @@
       "string": "The kernel command line is full."
     },
     "boot-refused-unknown-theme": {
-      "string": "This is not an installed Plymouth theme: {value}"
+      "string": "This is not an installed Plymouth theme: {name}"
     },
     "boot-refused-no-kernel-cmdline": {
       "string": "This system has no /etc/kernel/cmdline. Its boot entries carry their own parameters, so there is nothing to change."
@@ -254,25 +254,25 @@
       "string": "The kernel command line is not changed here. Edit /etc/kernel/cmdline on the Config Files page."
     },
     "boot-refused-protected-parameter": {
-      "string": "{value} stays: without it the system finds no root file system to start."
+      "string": "{name} stays: without it the system finds no root file system to start."
     },
     "boot-refused-empty": {
       "string": "Nothing was entered."
     },
     "boot-refused-too-long": {
-      "string": "This is too long: {value}"
+      "string": "This is too long: {name}"
     },
     "boot-refused-invalid-character": {
-      "string": "This holds a character that is not allowed here, such as a blank, a quote, a backslash or a dollar sign: {value}"
+      "string": "This holds a character that is not allowed here, such as a blank, a quote, a backslash or a dollar sign: {name}"
     },
     "boot-refused-invalid-path": {
-      "string": "This is not a full path to a file: {value}"
+      "string": "This is not a full path to a file: {name}"
     },
     "boot-refused-wrong-type": {
-      "string": "This is not a file of the right type: {value}"
+      "string": "This is not a file of the right type: {name}"
     },
     "boot-refused-invalid": {
-      "string": "This cannot be used here: {value}"
+      "string": "This cannot be used here: {name}"
     },
     "boot-dismiss": {
       "string": "Dismiss"
@@ -4890,6 +4890,16 @@
     },
     "configs-close": {
       "string": "Close"
+    },
+    "configs-refused-unknown": {
+      "string": "This file cannot be opened here.",
+      "developer_comment": "Why a click on a row did nothing."
+    },
+    "configs-refused-busy": {
+      "string": "Another task runs in the Console. Try again when it has finished."
+    },
+    "configs-refused-read-only": {
+      "string": "This file decides who may administer the system or what runs as root, so it is only shown here. Change it in a terminal with sudo."
     }
   },
   "console": {
@@ -5799,14 +5809,14 @@
       "string": "{language} ({territory}), {code}"
     },
     "locales-refused-system-locale": {
-      "string": "{locale} is the system language. Choose another system language before you disable it.",
+      "string": "{name} is the system language. Choose another system language before you disable it.",
       "developer_comment": "Why a click was not queued."
     },
     "locales-refused-last-locale": {
       "string": "At least one locale must stay enabled."
     },
     "locales-refused-not-enabled": {
-      "string": "{locale} is not enabled. Enable the locale first."
+      "string": "{name} is not enabled. Enable the locale first."
     },
     "locales-dismiss": {
       "string": "Dismiss"
@@ -6438,7 +6448,7 @@
       "string": "Take back"
     },
     "network-refused-other-file": {
-      "string": "{driver}: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.",
+      "string": "{name}: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.",
       "developer_comment": "Why a blacklist click was not queued."
     },
     "network-refused-unavailable": {
@@ -6592,20 +6602,20 @@
       "string": "Clear search"
     },
     "packages-refused-not-offered": {
-      "string": "{package} cannot be installed: no configured repository offers it.",
+      "string": "{name} cannot be installed: no configured repository offers it.",
       "developer_comment": "Why a click queued nothing."
     },
     "packages-refused-unread": {
-      "string": "{package} cannot be queued yet: the installed packages are still being read."
+      "string": "{name} cannot be queued yet: the installed packages are still being read."
     },
     "packages-refused-running-kernel": {
-      "string": "{package} is the kernel that runs right now, so it stays installed."
+      "string": "{name} is the kernel that runs right now, so it stays installed."
     },
     "packages-refused-running-unknown": {
-      "string": "{package} stays: the kernel that runs right now is not known, so no kernel can be removed. Restart the computer and try again."
+      "string": "{name} stays: the kernel that runs right now is not known, so no kernel can be removed. Restart the computer and try again."
     },
     "packages-refused-last-kernel": {
-      "string": "{package} is the last installed kernel. Install another one before you remove it."
+      "string": "{name} is the last installed kernel. Install another one before you remove it."
     },
     "packages-dismiss": {
       "string": "Dismiss"

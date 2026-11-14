@@ -5,6 +5,7 @@
 //! The menu may need the root helper, so it is read on a blocking thread
 //! and only once the page was opened, never at start.
 
+mod edits;
 mod jobs;
 pub mod portal;
 #[cfg(test)]
@@ -20,13 +21,8 @@ use toolbox_system::{Menu, MenuRead};
 
 use crate::lane::OneRead;
 
-/// An edit the page did not queue: the code of why, and the value as the
-/// user gave it.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct BootRefusal {
-    pub code: &'static str,
-    pub value: String,
-}
+/// An edit the page did not queue, with the value as the user gave it.
+pub type BootRefusal = crate::refused::Refused<toolbox_core::features::boot::edit::EditCode>;
 
 #[derive(Debug, Default)]
 pub struct Boot {

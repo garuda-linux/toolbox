@@ -2,6 +2,7 @@ use toolbox_plan::{ConfigFilePath, ConfigText};
 
 use super::super::session::Problem;
 use super::{Viewed, Viewing};
+use crate::features::configs::Refusal;
 
 #[derive(Debug, PartialEq, Eq)]
 struct Shown {
@@ -99,7 +100,7 @@ fn a_second_view_waits_for_the_first_read() {
     let mut viewing = Viewing::default();
 
     viewing.start(path("/etc/passwd")).unwrap();
-    assert_eq!(viewing.start(path("/etc/group")), Err("busy"));
+    assert_eq!(viewing.start(path("/etc/group")), Err(Refusal::Busy));
     assert_eq!(shown(&viewing).path, "/etc/passwd");
 }
 

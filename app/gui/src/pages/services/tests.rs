@@ -12,6 +12,7 @@ use toolbox_plan::{UnitName, UnitScope};
 
 use super::{ServicesPage, row};
 use crate::command::{Command, ServiceCommand};
+use crate::page_service::Services;
 use crate::testing::{
     PageFixture, assert_header, assert_rows_hold_their_content, assert_rows_wait_while_busy,
     body_font, measured, rect_of,
@@ -25,9 +26,12 @@ type PageState = crate::testing::PageState<ServicesPage>;
 
 fn listed(units: UnitListing) -> PageFixture {
     PageFixture {
-        units: Units {
-            system: units,
-            user: UnitListing::NotLoaded,
+        services: Services {
+            units: Units {
+                system: units,
+                user: UnitListing::NotLoaded,
+            },
+            ..Services::default()
         },
         ..PageFixture::default()
     }

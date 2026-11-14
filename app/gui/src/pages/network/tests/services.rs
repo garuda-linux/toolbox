@@ -27,11 +27,11 @@ fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
         snapshot: Arc::new(snapshot),
         services: Services {
             network: network(),
+            units: Units {
+                system: UnitListing::Loaded(Arc::new(vec![manager])),
+                ..Units::default()
+            },
             ..Services::default()
-        },
-        units: Units {
-            system: UnitListing::Loaded(Arc::new(vec![manager])),
-            ..Units::default()
         },
         ..PageFixture::default()
     }

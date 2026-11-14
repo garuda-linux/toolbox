@@ -2,17 +2,14 @@
 
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
-use toolbox_core::features::boot::edit::Edit;
+use toolbox_core::features::boot::edit::{Edit, EditProblem};
 
 use super::{edit, grub_system, menu, page, sent};
 use crate::boot::{Boot, BootRefusal};
 use crate::command::{BootCommand, Command};
 
 fn asked() -> super::Shown {
-    let refusal = BootRefusal {
-        code: "needs-confirm",
-        value: "init=/bin/sh".to_owned(),
-    };
+    let refusal = BootRefusal::new(EditProblem::NeedsConfirm.code(), "init=/bin/sh".to_owned());
 
     page(grub_system(), Boot::showing(menu(), Some(refusal), None))
 }

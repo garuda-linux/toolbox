@@ -21,7 +21,8 @@ use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::NetworkCommand;
-use crate::i18n;
+use crate::network::Network;
+use crate::refused::Shown as _;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
@@ -67,7 +68,7 @@ impl PageView for NetworkPage {
         let done = tabbed_header(ui, ids, &tabs, self.tab);
         if let Some(picked) = done.picked {
             self.tab = picked;
-            if context.refusals.network.is_some() {
+            if context.service::<Network>().refusal().is_some() {
                 context.commands.send(NetworkCommand::DismissRefusal);
             }
         }
@@ -113,12 +114,11 @@ impl PageView for NetworkPage {
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = &context.refusals.network else {
+    let Some(refusal) = context.service::<Network>().refusal() else {
         return;
     };
 
-    let id = format!("network-refused-{}", refusal.code);
-    let text = i18n::text_with(ui.ctx(), &id, &[("driver", &refusal.driver)]);
+    let text = refusal.text(ui.ctx());
     if refusal_banner(ui, Tone::Error, &text, "network-dismiss") {
         context.commands.send(NetworkCommand::DismissRefusal);
     }

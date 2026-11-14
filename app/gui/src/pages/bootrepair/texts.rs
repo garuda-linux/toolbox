@@ -83,24 +83,6 @@ pub fn progress(ctx: &Context, progress: Progress) -> Option<String> {
     Some(i18n::text(ctx, id).into_owned())
 }
 
-/// Why a repair did not start.
-pub fn refusal(ctx: &Context, code: &str) -> String {
-    let known = [
-        "not-offered",
-        "unavailable",
-        "unknown-system",
-        "in-use",
-        "unknown-target",
-        "unknown-layout",
-        "empty",
-        "too-long",
-        "control-character",
-    ];
-
-    let code = if known.contains(&code) { code } else { "other" };
-    i18n::text(ctx, &format!("repair-refused-{code}")).into_owned()
-}
-
 /// The layout as the choice on the page names it.
 pub fn layout_short(ctx: &Context, layout: RootLayout) -> String {
     i18n::text(ctx, &format!("repair-layout-{}-short", layout.as_str())).into_owned()

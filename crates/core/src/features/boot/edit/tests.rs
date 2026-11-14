@@ -2,6 +2,7 @@ use toolbox_plan::{GrubState, InvalidName, NameKind, Reason};
 
 use super::{Edit, EditProblem, edit, rule};
 use crate::domains::CurrentGrub;
+use crate::features::RefusalText as _;
 use crate::features::boot::{Flag, Refusal};
 use crate::{ChangeSet, Snapshot};
 
@@ -14,7 +15,8 @@ fn grub() -> Snapshot {
 }
 
 fn code(change: Edit) -> &'static str {
-    edit(change, &mut ChangeSet::default(), &grub()).map_or_else(|problem| problem.code(), |()| "")
+    edit(change, &mut ChangeSet::default(), &grub())
+        .map_or_else(|problem| problem.code().code(), |()| "")
 }
 
 fn add(text: &str) -> Edit {
@@ -69,7 +71,10 @@ fn without_grub_every_edit_is_refused() {
     );
 
     assert_eq!(problem, Err(EditProblem::Refused(Refusal::Unavailable)));
-    assert_eq!(problem.unwrap_err().code(), "unavailable");
+    assert_eq!(
+        problem.unwrap_err().code().text_id(),
+        "boot-refused-unavailable"
+    );
 }
 
 #[test]
@@ -111,4 +116,10 @@ fn a_risky_parameter_waits_for_a_confirm() {
     assert!(changes.is_empty());
     assert_eq!(edit(asked(true), &mut changes, &snapshot), Ok(()));
     assert!(!changes.is_empty());
+}
+
+#[test]
+fn only_a_risky_parameter_asks_instead_of_refusing() {
+    assert!(EditProblem::NeedsConfirm.code().needs_confirm());
+    assert!(!EditProblem::OutOfRange.code().needs_confirm());
 }

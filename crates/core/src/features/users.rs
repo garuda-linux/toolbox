@@ -74,12 +74,6 @@ pub enum Refusal {
     HomeTaken,
 }
 
-impl Refusal {
-    pub fn as_str(self) -> &'static str {
-        self.into()
-    }
-}
-
 /// The account files of `snapshot`.
 ///
 /// # Errors

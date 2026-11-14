@@ -43,12 +43,6 @@ pub enum Refusal {
     NoPassphrase,
 }
 
-impl Refusal {
-    pub fn as_str(self) -> &'static str {
-        self.into()
-    }
-}
-
 /// What the page asks a repair for: the system by its device, the layout
 /// (`None` for the usual one) and the passphrase, which is only read for
 /// a locked system.

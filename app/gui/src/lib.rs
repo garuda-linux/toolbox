@@ -1,6 +1,7 @@
 //! A library beside `main.rs`, so the tests build the same [`App`] the binary runs.
 
 mod app;
+pub mod artwork;
 pub mod boot;
 pub mod bootrepair;
 pub mod catalogs;
@@ -10,9 +11,11 @@ pub mod console;
 pub mod desktop;
 pub mod i18n;
 pub mod instance;
+pub mod kernels;
 pub mod lane;
 pub mod launch;
 pub mod links;
+pub mod locales;
 pub mod maintenance;
 pub mod missing;
 pub mod network;
@@ -28,6 +31,7 @@ pub mod pictures;
 pub mod power;
 pub mod profiling;
 pub mod reader;
+pub mod refused;
 pub mod schemes;
 #[cfg(feature = "selftest")]
 pub mod selftest;
@@ -38,6 +42,7 @@ pub mod snapshot;
 pub mod spawn;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
+pub mod toggle_pages;
 pub mod units;
 pub mod users;
 pub mod waking;

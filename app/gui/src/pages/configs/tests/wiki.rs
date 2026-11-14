@@ -2,11 +2,10 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 
 use super::{listed, page};
-use crate::pages::Refusals;
 
 #[test]
 fn the_wiki_page_waits_in_the_menu_named_after_its_file() {
-    let mut harness = page(listed(), Refusals::default());
+    let mut harness = page(listed());
     harness.run();
     harness.run();
 

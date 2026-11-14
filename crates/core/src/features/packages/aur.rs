@@ -16,8 +16,8 @@ use super::list::RowState;
 use super::queue::Refusal;
 use crate::domain::Queued;
 use crate::domains::{AurPackages, InstalledPackages, Packages};
-use crate::features::drop_refused;
 use crate::features::search::{Needle, folded};
+use crate::features::{Refused, drop_refused};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// The dump with its texts folded once, so a keystroke compares without
@@ -189,10 +189,10 @@ pub fn toggle(
     wish: Toggle,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
-) -> Result<(), Refusal> {
+) -> Result<(), Refused<Refusal, PackageName>> {
     let installed = snapshot
         .part::<InstalledPackages>()
-        .ok_or(Refusal::Unread)?
+        .ok_or_else(|| Refusal::Unread.of(package))?
         .0
         .contains(package);
 

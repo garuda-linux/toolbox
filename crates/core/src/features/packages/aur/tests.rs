@@ -153,6 +153,6 @@ fn nothing_is_queued_before_the_installed_packages_are_known() {
             &Snapshot::default(),
             &mut changes
         ),
-        Err(Refusal::Unread)
+        Err(Refusal::Unread.of(&package("yay-bin")))
     );
 }

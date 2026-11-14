@@ -3,24 +3,29 @@
 
 use std::path::Path;
 
-use toolbox_core::Snapshot;
 use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::grub;
 use toolbox_core::features::bootrepair::page::Booted;
+use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_services::diagnostics::page::Changed;
 use toolbox_system::Host;
 
-use super::{Answer, PageService};
+use super::{Answer, Handled, PageService};
+use crate::artwork::Artwork;
 use crate::boot::{Boot, FileKind};
 use crate::bootrepair::BootRepair;
-use crate::command::AppCommand;
+use crate::command::{AppCommand, BootRepairCommand, ConfigsCommand};
 use crate::configs::Configs;
 use crate::diagnostics::Diagnostics;
+use crate::kernels::Kernels;
+use crate::locales::Locales;
 use crate::maintenance::Maintenance;
 use crate::network::Network;
 use crate::packages::Packages;
 use crate::page::PageId;
+use crate::toggle_pages::TogglePages;
+use crate::units::Units;
 use crate::users::Users;
 
 impl PageService for Maintenance {
@@ -71,6 +76,15 @@ impl PageService for Diagnostics {
 }
 
 impl PageService for Boot {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+
     /// The systemd-boot settings come with the menu, and a wish the file
     /// now meets drops out of the queue.
     fn take(&mut self, page: PageId, snapshot: &Snapshot) -> Vec<AppCommand> {
@@ -99,6 +113,15 @@ impl PageService for Boot {
 }
 
 impl PageService for Network {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
         if page == PageId::Network {
             self.open();
@@ -115,6 +138,15 @@ impl PageService for Network {
 }
 
 impl PageService for Packages {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
         if page == PageId::Packages {
             self.open();
@@ -131,6 +163,15 @@ impl PageService for Packages {
 }
 
 impl PageService for Users {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+
     /// New lock flags join the snapshot the pages share.
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
         if page == PageId::Users {
@@ -157,6 +198,20 @@ impl PageService for Users {
 }
 
 impl PageService for Configs {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        _changes: &ChangeSet,
+        _snapshot: &Snapshot,
+    ) -> Handled {
+        if matches!(command, AppCommand::Configs(ConfigsCommand::DismissRefusal)) {
+            self.set_refusal(None);
+            return Handled::taken();
+        }
+
+        Handled::default()
+    }
+
     /// The page looks for its files once it shows, and takes what its
     /// work brought. An edit that needs the user brings the page back.
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
@@ -183,6 +238,23 @@ impl PageService for Configs {
 }
 
 impl PageService for BootRepair {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        _changes: &ChangeSet,
+        _snapshot: &Snapshot,
+    ) -> Handled {
+        if matches!(
+            command,
+            AppCommand::BootRepair(BootRepairCommand::DismissRefusal)
+        ) {
+            self.set_refusal(None);
+            return Handled::taken();
+        }
+
+        Handled::default()
+    }
+
     /// The live ISO may show up after the start, so the offer is worked
     /// out again on every frame.
     fn take(&mut self, page: PageId, snapshot: &Snapshot) -> Vec<AppCommand> {
@@ -213,6 +285,58 @@ impl PageService for BootRepair {
         Vec::new()
     }
 }
+
+/// dkms only changes through the app's own plans, so it is not read again
+/// when the window comes back.
+impl PageService for Kernels {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+
+    fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
+        self.take_dkms();
+        Vec::new()
+    }
+
+    fn plan_finished(&mut self, _succeeded: bool) -> Vec<AppCommand> {
+        self.read_dkms();
+        Vec::new()
+    }
+}
+
+impl PageService for Locales {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+}
+
+impl PageService for TogglePages {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+}
+
+/// App reads the unit lists in, as the units service also runs the
+/// Services page's controls.
+impl PageService for Units {}
+
+/// The pictures load as rows ask, beside the frame.
+impl PageService for Artwork {}
 
 fn answers(answers: impl IntoIterator<Item = Answer>) -> Vec<AppCommand> {
     answers.into_iter().map(AppCommand::Answer).collect()

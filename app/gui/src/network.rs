@@ -6,6 +6,7 @@
 //! Refresh and after every plan. The reads block or wait for D-Bus, so
 //! they run on the runtime and wake the frame with their result.
 
+mod edits;
 mod jobs;
 #[cfg(test)]
 mod tests;
@@ -62,9 +63,12 @@ pub struct Network {
     address: Address,
     /// The last radio switch failed. A later one that works clears it.
     radio_failed: bool,
+    refusal: Option<NetworkRefusal>,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
 }
+
+pub type NetworkRefusal = crate::refused::Refused<toolbox_core::features::network::Refusal>;
 
 impl<T> Read<T> {
     /// `result` as a read. A failure is logged here, the page only says

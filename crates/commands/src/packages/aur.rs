@@ -177,15 +177,19 @@ pub fn install_onto(
     }
 
     for package in packages {
-        toggle(package, Toggle::On, snapshot, changes).map_err(|refusal| match refusal {
-            Refusal::Unread | Refusal::NotOffered => {
-                Refused::Unavailable("pacman's local database could not be read".to_owned())
+        toggle(package, Toggle::On, snapshot, changes).map_err(|refused| {
+            match refused.refusal {
+                Refusal::Unread | Refusal::NotOffered => {
+                    Refused::Unavailable("pacman's local database could not be read".to_owned())
+                }
+                kept @ (Refusal::RunningKernel
+                | Refusal::RunningUnknown
+                | Refusal::LastKernel
+                | Refusal::Protected(_)
+                | Refusal::TakesAlong(_)) => {
+                    super::kept_package(package.as_str(), kept, refused.subject.as_str())
+                }
             }
-            kept @ (Refusal::RunningKernel
-            | Refusal::RunningUnknown
-            | Refusal::LastKernel
-            | Refusal::Protected(_)
-            | Refusal::TakesAlong(..)) => super::kept_package(package, kept),
         })?;
     }
 

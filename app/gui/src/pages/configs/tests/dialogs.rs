@@ -1,10 +1,11 @@
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use toolbox_core::features::configs::Refusal;
 use toolbox_core::features::configs::session::Session;
 use toolbox_core::features::configs::viewing::Viewing;
 
 use super::{listed, page, reviewing, reviewing_of, sent, shows, viewing};
 use crate::command::{Command, ConfigsCommand};
-use crate::pages::{ConfigsRefusal, Refusals};
+use crate::refused::Refused;
 
 /// How far a dialog that fills the window keeps its buttons from the
 /// window's bottom: the window margin and the card padding, with room.
@@ -13,7 +14,7 @@ const FILLED_BOTTOM: f32 = 48.0;
 #[test]
 fn the_review_shows_the_changes_and_saves_on_request() {
     let configs = listed().with(reviewing(), Viewing::default());
-    let mut harness = page(configs, Refusals::default());
+    let mut harness = page(configs);
 
     assert!(shows(&harness, "Save the changes to /etc/default/grub?"));
     assert!(shows(&harness, "+GRUB_TIMEOUT=2"));
@@ -28,7 +29,7 @@ fn the_review_shows_the_changes_and_saves_on_request() {
 #[test]
 fn a_closed_review_keeps_the_changes_for_later() {
     let configs = listed().with(reviewing(), Viewing::default());
-    let mut harness = page(configs, Refusals::default());
+    let mut harness = page(configs);
 
     harness.get_by_label("Close and keep the edits").click();
     harness.run();
@@ -48,7 +49,7 @@ fn a_closed_review_keeps_the_changes_for_later() {
 #[test]
 fn a_guarded_file_is_shown_and_closed() {
     let configs = listed().with(Session::default(), viewing());
-    let mut harness = page(configs, Refusals::default());
+    let mut harness = page(configs);
 
     assert!(shows(&harness, "The text of /etc/sudoers"));
     assert!(shows(&harness, "Copy all"));
@@ -61,15 +62,13 @@ fn a_guarded_file_is_shown_and_closed() {
 
 #[test]
 fn a_refused_click_says_why_until_dismissed() {
-    let refusals = Refusals {
-        configs: Some(ConfigsRefusal {
-            code: "busy",
-            subject: "grub".to_owned(),
-        }),
-        ..Refusals::default()
-    };
+    let mut configs = listed();
+    configs.set_refusal(Some(Refused {
+        refusal: Refusal::Busy,
+        subject: "grub".to_owned(),
+    }));
 
-    let mut harness = page(listed(), refusals);
+    let mut harness = page(configs);
 
     assert!(shows(
         &harness,
@@ -88,7 +87,7 @@ fn a_refused_click_says_why_until_dismissed() {
 #[test]
 fn the_review_names_the_changed_lines_in_words() {
     let configs = listed().with(reviewing(), Viewing::default());
-    let harness = page(configs, Refusals::default());
+    let harness = page(configs);
 
     assert!(
         harness.query_all_by_label_contains("@@").next().is_none(),
@@ -100,7 +99,7 @@ fn the_review_names_the_changed_lines_in_words() {
 #[test]
 fn discard_asks_first_and_keeps_the_edits_on_no() {
     let configs = listed().with(reviewing(), Viewing::default());
-    let mut harness = page(configs, Refusals::default());
+    let mut harness = page(configs);
 
     harness.get_by_label("Discard…").click();
     harness.run();
@@ -122,7 +121,7 @@ fn discard_asks_first_and_keeps_the_edits_on_no() {
 fn the_review_of_a_file_of_the_user_asks_for_no_password() {
     let home = toolbox_plan::HomePath::new(".bashrc").unwrap();
     let configs = listed().with(reviewing_of(home.into()), Viewing::default());
-    let harness = page(configs, Refusals::default());
+    let harness = page(configs);
 
     let summary = harness
         .get_by_label_contains("Lines added")
@@ -144,10 +143,7 @@ fn button_room_below(harness: &super::Shown, label: &str) -> f32 {
 
 #[test]
 fn a_short_review_still_fills_the_window() {
-    let harness = page(
-        listed().with(reviewing(), Viewing::default()),
-        Refusals::default(),
-    );
+    let harness = page(listed().with(reviewing(), Viewing::default()));
 
     let below = button_room_below(&harness, "Save");
 
@@ -156,10 +152,7 @@ fn a_short_review_still_fills_the_window() {
 
 #[test]
 fn a_shown_file_fills_the_window() {
-    let harness = page(
-        listed().with(Session::default(), viewing()),
-        Refusals::default(),
-    );
+    let harness = page(listed().with(Session::default(), viewing()));
 
     let below = button_room_below(&harness, "Close");
 

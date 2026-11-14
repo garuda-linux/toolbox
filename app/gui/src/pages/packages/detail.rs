@@ -21,6 +21,7 @@ use toolbox_plan::PackageName;
 
 use super::PackagesPage;
 use super::row::{self, PackageRow, Row};
+use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
 use crate::packages::{Packages, Read};
@@ -110,7 +111,7 @@ fn title_picture(ui: &mut Ui, context: &PageContext<'_>, package: &PackageName) 
     let slot = Rect::from_min_size(pos2(room.left(), room.top() + top), Vec2::splat(size));
     package_picture(
         ui,
-        context.pictures,
+        context.service::<Artwork>().pictures(),
         Some(package),
         Initial::named(package),
         slot,

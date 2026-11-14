@@ -3,8 +3,9 @@
 use toolbox_gui_kit::toasts::ToastKind;
 
 use super::App;
+use crate::command::AppCommand;
 use crate::page::PageId;
-use crate::page_service::{Answer, PageService};
+use crate::page_service::{Answer, Handled, PageService};
 use crate::{i18n, page_ui};
 
 impl App {
@@ -17,7 +18,7 @@ impl App {
                 self.combine();
                 self.queue.meet(&self.seen);
             }
-            Answer::EditBoot(edit) => self.edit_boot(edit),
+            Answer::EditBoot(edit) => self.edit_boot(ctx, edit),
             Answer::Configs(act) => self.act_configs(Some(act)),
             Answer::CloseConsole => self.state.console_open = false,
             Answer::Copy { text, toast } => {
@@ -28,6 +29,40 @@ impl App {
             }
             Answer::OfferBootRepair(offered) => page_ui::offer_boot_repair(ctx, offered),
             Answer::LeaveBootRepair => self.state.page = PageId::Home,
+            Answer::ShowPage(page) => self.state.page = page,
+        }
+    }
+
+    /// Offers `command` to every page service before App. Each click's
+    /// edit is taken at once, so the next command of this frame sees it.
+    /// Returns whether a service took the command, so App leaves it, and
+    /// what the services ask for next.
+    pub(super) fn hand_to_services(&mut self, command: &AppCommand) -> (bool, Vec<AppCommand>) {
+        let snapshot = self.current_snapshot();
+        let mut taken = false;
+        let mut asked = Vec::new();
+        for service in self.services.all_mut() {
+            let handled = service.handle(command, self.queue.changes(), &snapshot);
+            if let Some(edit) = handled.edit {
+                self.queue.apply_edit(&edit, &snapshot);
+            }
+
+            taken |= handled.taken;
+            asked.extend(handled.answers);
+        }
+
+        (taken, asked)
+    }
+
+    /// Takes what a service made of a click App ran for it.
+    pub(super) fn take_handled(&mut self, ctx: &egui::Context, handled: Handled) {
+        if let Some(edit) = handled.edit {
+            let snapshot = self.current_snapshot();
+            self.queue.apply_edit(&edit, &snapshot);
+        }
+
+        for command in handled.answers {
+            self.run_app(ctx, command);
         }
     }
 

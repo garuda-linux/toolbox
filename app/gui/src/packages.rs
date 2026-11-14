@@ -7,6 +7,7 @@
 //! copy is read only once its chip shows, and again only on Read again:
 //! a plan changes nothing in it.
 
+mod edits;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 mod sample;
 #[cfg(test)]
@@ -28,6 +29,7 @@ use toolbox_system::{PackageIndexSource, RecentLogSource};
 pub use self::sample::SampleAur;
 use crate::lane::Lane;
 pub use crate::network::Read;
+use crate::refused::Refused;
 
 pub struct PackagesSetup {
     pub runtime: Handle,
@@ -56,9 +58,12 @@ pub struct Packages {
     /// A copy landed since the app last asked.
     aur_landed: bool,
     details: Option<Details>,
+    refusal: Option<PackagesRefusal>,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
 }
+
+pub type PackagesRefusal = Refused<toolbox_core::features::packages::queue::Refusal, PackageName>;
 
 enum Landed {
     Index(Read<Arc<Catalog>>),
@@ -290,6 +295,7 @@ impl Packages {
             aur_names: None,
             aur_landed: false,
             details,
+            refusal: None,
             jobs: None,
         }
     }

@@ -125,7 +125,6 @@ impl App {
 
         // A failed plan may have done part of its work too.
         self.read_system();
-        self.dkms.refresh();
         self.status.refresh();
         self.facts.refresh();
         self.programs.refresh();
@@ -245,19 +244,18 @@ impl App {
         self.seen = joined(&probed, Needs::ALL, &reads).map_or(probed, Arc::new);
     }
 
-    /// dkms, the status and the programs are not read when the window comes
-    /// back: dkms and the programs only change through the app's own plans,
+    /// The status and the programs are not read when the window comes
+    /// back: the programs only change through the app's own plans,
     /// and the status checks reach the network, so they follow their period.
     pub(super) fn take_services(&mut self, ctx: &egui::Context) {
         // A failed read shows on its page, which offers to read again.
-        self.dkms.take();
         self.status.take();
         self.facts.take();
         self.news.take();
         self.programs.take();
 
         if let Some(lists) = self.units.as_mut().and_then(UnitsHandle::changed) {
-            self.unit_lists = lists;
+            self.services.units = lists;
         }
 
         self.take_page_services(ctx);

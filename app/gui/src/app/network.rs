@@ -1,18 +1,16 @@
-//! Driver loads, service starts and the tests run at once in the Console. The blacklist and the hotspot tool wait in the queue.
+//! Driver loads, service starts and the tests run at once in the Console. The
+//! service queues the blacklist and the hotspot tool.
 
 use std::path::Path;
 
 use toolbox_core::features::network::{
-    HOTSPOT_PACKAGE, HOTSPOT_PROGRAM, ModuleFacts, Refusal, plan_load, plan_ping, plan_start,
-    plan_traceroute, plan_unload, set_blacklisted, toggle_install,
+    HOTSPOT_PROGRAM, plan_load, plan_ping, plan_start, plan_traceroute, plan_unload,
 };
 use toolbox_gui_kit::toasts::ToastKind;
-use toolbox_plan::Toggle;
 
 use super::App;
 use crate::command::NetworkCommand;
 use crate::i18n;
-use crate::pages::NetworkRefusal;
 
 impl App {
     pub(super) fn run_network(&mut self, ctx: &egui::Context, command: NetworkCommand) {
@@ -43,7 +41,6 @@ impl App {
 
                 self.run_at_once(plan);
             }
-            NetworkCommand::Blacklist { module, on } => self.blacklist(&module, on),
             NetworkCommand::Ping {
                 host,
                 count,
@@ -54,35 +51,11 @@ impl App {
             NetworkCommand::Traceroute { host, hops } => {
                 self.run_at_once(plan_traceroute(host, hops));
             }
-            NetworkCommand::ToggleHotspot => {
-                let snapshot = self.current_snapshot();
-                self.queue.edit(&snapshot, |changes, snapshot| {
-                    toggle_install(&HOTSPOT_PACKAGE, changes, snapshot)
-                });
-            }
             NetworkCommand::OpenHotspot => self.open_hotspot(ctx),
-            NetworkCommand::DismissRefusal => self.refusals.network = None,
+            NetworkCommand::Blacklist { module: _, on: _ }
+            | NetworkCommand::ToggleHotspot
+            | NetworkCommand::DismissRefusal => {}
         }
-    }
-
-    fn blacklist(&mut self, module: &toolbox_plan::KernelModule, on: bool) {
-        let snapshot = self.current_snapshot();
-        let Some(facts) = snapshot.part::<ModuleFacts>() else {
-            self.refusals.network = Some(NetworkRefusal {
-                code: Refusal::Unavailable.as_str(),
-                driver: module.as_str().to_owned(),
-            });
-            return;
-        };
-
-        let result = self.queue.edit(&snapshot, |changes, snapshot| {
-            set_blacklisted(module, Toggle::from_on(on), facts, changes, snapshot)
-        });
-
-        self.refusals.network = result.err().map(|refusal| NetworkRefusal {
-            code: refusal.as_str(),
-            driver: module.as_str().to_owned(),
-        });
     }
 
     /// The tool asks for root itself, as Maintenance's tools do.

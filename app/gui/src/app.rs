@@ -13,8 +13,6 @@ mod discover;
 mod fold;
 mod home;
 mod instance;
-mod kernels;
-mod locales;
 mod maintenance;
 mod network;
 mod packages;
@@ -42,6 +40,7 @@ use self::preferences::Preferences;
 pub use self::preferences::PreferencesSetup;
 pub use self::setup::{FIXED_VERSION, Setup};
 use crate::apply::ApplyHandle;
+use crate::artwork::Artwork;
 use crate::boot::Boot;
 use crate::bootrepair::BootRepair;
 use crate::catalogs::Catalogs;
@@ -49,9 +48,9 @@ use crate::command::{CommandBus, CommandReceiver, CommandSender};
 use crate::configs::Configs;
 use crate::console::Console;
 use crate::desktop::DesktopLook;
-use crate::desktop::icon_files::AppIcons;
 use crate::diagnostics::Diagnostics;
 use crate::instance::Arrivals;
+use crate::kernels::Kernels;
 use crate::launch::Launcher;
 use crate::maintenance::Maintenance;
 use crate::network::Network;
@@ -60,9 +59,8 @@ use crate::packages::Packages;
 use crate::page::PageId;
 use crate::page_service::Services;
 use crate::pages::home::{HomeFacts, HomeProblem};
-use crate::pages::kernels::view::Dkms;
-use crate::pages::{PageContext, Pages, Plans, Refusals};
-use crate::pictures::{FALLBACK_THEME, Pictures};
+use crate::pages::{PageContext, Pages, Plans};
+use crate::pictures::FALLBACK_THEME;
 use crate::power::Power;
 use crate::programs::Programs;
 use crate::queue::Queue;
@@ -71,7 +69,8 @@ use crate::settings::{MotionChoice, ThemeChoice};
 use crate::share::ShareLink;
 use crate::shell::{ChangesState, Palette};
 use crate::snapshot::{Reading, SnapshotHandle};
-use crate::units::{Units, UnitsHandle};
+use crate::toggle_pages::TogglePages;
+use crate::units::UnitsHandle;
 use crate::users::Users;
 use crate::waking::{self, Waking};
 use crate::{profiling, shell};
@@ -113,19 +112,16 @@ pub struct App {
     /// The window had the focus last frame, so regaining it reads the
     /// system again.
     focused: bool,
-    catalogs: Catalogs,
+    catalogs: Arc<Catalogs>,
     desktops: Vec<String>,
     version: &'static str,
     dry_run: bool,
-    refusals: Refusals,
-    dkms: Watched<Dkms>,
     status: Watched<Status>,
     facts: Watched<Facts>,
     news: Watched<News>,
     programs: Watched<Programs>,
     power: Option<Arc<dyn Power>>,
     units: Option<UnitsHandle>,
-    unit_lists: Units,
     launcher: Option<Arc<dyn Launcher>>,
     /// Refusals of a restart, sent from logind's task.
     restart_refused: (Waking<CallError>, Receiver<CallError>),
@@ -139,9 +135,6 @@ pub struct App {
     /// The probed snapshot plus the lock flags the Users page read.
     seen: Arc<Snapshot>,
     pages: Pages,
-    /// The icon theme's pictures for the catalogs' apps.
-    catalog_pictures: Option<Arc<AppIcons>>,
-    pictures: Option<Pictures>,
     /// Notes about background results, drawn over the page.
     toasts: Toasts,
     prefs: Preferences,
@@ -171,9 +164,10 @@ impl App {
         install(cc, setup.arrivals.as_deref());
 
         let prefs = Preferences::new(setup.preferences, setup.system_language);
+        let catalogs = Arc::new(setup.catalogs);
         let CommandBus { sender, receiver } = setup.commands.unwrap_or_default();
         let mut maintenance = Maintenance::new(setup.maintenance, cc.egui_ctx.clone());
-        maintenance.stock(setup.catalogs.skel.as_ref());
+        maintenance.stock(catalogs.skel.as_ref());
         maintenance.set_launcher(setup.launcher.clone());
         let app = Self {
             pages: preferences::pages_for(&prefs),
@@ -194,12 +188,10 @@ impl App {
             snapshot: setup.snapshot,
             reading: Reading::default(),
             focused: true,
-            catalogs: setup.catalogs,
+            catalogs: Arc::clone(&catalogs),
             desktops: setup.desktops,
             version: setup.version,
             dry_run: setup.dry_run,
-            refusals: Refusals::default(),
-            dkms: Watched::new(setup.dkms),
             status: Watched::new(setup.status),
             facts: Watched::new(setup.facts),
             news: Watched::new(setup.news),
@@ -207,7 +199,6 @@ impl App {
             power: setup.power,
             launcher: setup.launcher,
             units: setup.units,
-            unit_lists: Units::default(),
             restart_refused: waking::channel(waking::repaint(cc.egui_ctx.clone())),
             home_problem: (setup.queue_lost > 0)
                 .then_some(HomeProblem::QueueLost(setup.queue_lost)),
@@ -220,14 +211,16 @@ impl App {
                 users: Users::new(setup.users, cc.egui_ctx.clone()),
                 configs: Configs::new(setup.configs, cc.egui_ctx.clone()),
                 boot_repair: BootRepair::new(setup.boot_repair, cc.egui_ctx.clone()),
+                toggle_pages: TogglePages::new(catalogs),
+                kernels: Kernels::new(setup.dkms),
+                artwork: Artwork::new(setup.pictures),
+                ..Services::default()
             },
             output_share: setup.output_share,
             arrivals: setup.arrivals,
             plans: Plans::default(),
             closing: closing::Closing::default(),
             seen: Arc::default(),
-            catalog_pictures: None,
-            pictures: setup.pictures,
             toasts: Toasts::default(),
         };
 
@@ -245,15 +238,14 @@ impl App {
         self.apply_choices(ctx);
         icons::use_theme(ctx, desktop.icons.clone());
         icons::warm(ctx);
-        self.catalog_pictures.clone_from(&desktop.app_icons);
-        if let Some(pictures) = &self.pictures {
-            let theme = desktop
-                .icons
-                .as_ref()
-                .map_or(FALLBACK_THEME, |icons| icons.theme());
+        let theme = desktop
+            .icons
+            .as_ref()
+            .map_or(FALLBACK_THEME, |icons| icons.theme());
 
-            pictures.set_theme(theme);
-        }
+        self.services
+            .artwork
+            .use_theme(desktop.app_icons.as_ref(), theme);
 
         let emoji = desktop.emoji_font.is_some();
         let fonts = (look.font.clone(), look.fixed_font.clone(), emoji);
@@ -299,11 +291,8 @@ impl eframe::App for App {
             changes: self.queue.changes(),
             revision: self.queue.revision(),
             catalogs: &self.catalogs,
-            refusals: &self.refusals,
-            dkms: self.dkms.reading(),
             busy: self.console.running(),
             console_open: self.state.console_open,
-            units: &self.unit_lists,
             home: HomeFacts {
                 status: self.status.fed(),
                 facts: self.facts.fed(),
@@ -318,8 +307,6 @@ impl eframe::App for App {
             plans: self.plans,
             desktops: &self.desktops,
             version: self.version,
-            app_icons: self.catalog_pictures.as_deref(),
-            pictures: self.pictures.as_ref(),
             commands: &self.sender,
             preferences: preferences::view(&self.prefs, (self.state.theme, self.state.motion)),
         };

@@ -2,11 +2,11 @@ use egui::Key;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 
-use super::{Refusals, page, tab};
+use super::{page, tab};
 
 #[test]
 fn a_host_that_cannot_be_used_is_told_as_a_problem() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     let field = harness.get_by_role_and_label(Role::TextInput, "Host");
@@ -31,7 +31,7 @@ fn a_host_that_cannot_be_used_is_told_as_a_problem() {
 
 #[test]
 fn the_number_fields_are_equally_wide() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     let widths: Vec<f32> = [
@@ -57,7 +57,7 @@ fn the_number_fields_are_equally_wide() {
 
 #[test]
 fn a_number_ends_at_the_right_of_its_field() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     let field = harness
@@ -77,7 +77,7 @@ fn a_number_ends_at_the_right_of_its_field() {
 
 #[test]
 fn the_host_sits_in_the_middle_of_its_field() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     let field = harness

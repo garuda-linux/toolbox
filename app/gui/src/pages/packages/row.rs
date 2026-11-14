@@ -12,6 +12,7 @@ use toolbox_gui_kit::widgets::{
 use toolbox_plan::PackageName;
 
 use super::{PackagesPage, remove};
+use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -146,7 +147,7 @@ where
                 let package = row.package();
                 package_picture(
                     ui,
-                    context.pictures,
+                    context.service::<Artwork>().pictures(),
                     Some(package),
                     Initial::named(package),
                     at,

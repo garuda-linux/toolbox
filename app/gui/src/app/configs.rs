@@ -3,11 +3,13 @@
 //! cancel stops the editor. A refused click stays on the page until
 //! dismissed or the next click is taken.
 
+use toolbox_core::features::configs::Refusal;
+
 use super::App;
 use crate::apply::ApplyCommand;
 use crate::command::ConfigsCommand;
 use crate::configs::Act;
-use crate::pages::ConfigsRefusal;
+use crate::refused::Refused;
 
 impl App {
     pub(super) fn run_configs(&mut self, command: ConfigsCommand) {
@@ -51,10 +53,7 @@ impl App {
                 self.state.console_open = true;
                 None
             }
-            ConfigsCommand::DismissRefusal => {
-                self.refusals.configs = None;
-                None
-            }
+            ConfigsCommand::DismissRefusal => None,
         };
 
         self.act_configs(act);
@@ -74,7 +73,8 @@ impl App {
         }
     }
 
-    fn refuse_configs(&mut self, result: Result<(), &'static str>, subject: String) {
-        self.refusals.configs = result.err().map(|code| ConfigsRefusal { code, subject });
+    fn refuse_configs(&mut self, result: Result<(), Refusal>, subject: String) {
+        let refusal = result.err().map(|refusal| Refused::new(refusal, subject));
+        self.services.configs.set_refusal(refusal);
     }
 }

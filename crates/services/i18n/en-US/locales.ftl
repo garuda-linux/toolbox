@@ -32,9 +32,9 @@ locales-system-choice = { $language }, { $code }
 locales-system-choice-territory = { $language } ({ $territory }), { $code }
 
 # Why a click was not queued.
-locales-refused-system-locale = { $locale } is the system language. Choose another system language before you disable it.
+locales-refused-system-locale = { $name } is the system language. Choose another system language before you disable it.
 locales-refused-last-locale = At least one locale must stay enabled.
-locales-refused-not-enabled = { $locale } is not enabled. Enable the locale first.
+locales-refused-not-enabled = { $name } is not enabled. Enable the locale first.
 locales-dismiss = Dismiss
 
 locales-packs-intro = Language packs for your enabled locales and installed programs. Missing: { $count }

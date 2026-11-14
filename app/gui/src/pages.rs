@@ -31,7 +31,6 @@ pub mod toggles;
 pub mod tweaks;
 pub mod users;
 
-use std::collections::HashMap;
 use std::sync::Arc;
 
 use about::AboutPage;
@@ -46,7 +45,6 @@ use gaming::GamingPage;
 use guide::GuidePage;
 use home::{HomeFacts, HomePage};
 use kernels::KernelsPage;
-use kernels::view::DkmsReading;
 use locales::LocalesPage;
 use maintenance::MaintenancePage;
 use network::NetworkPage;
@@ -55,22 +53,18 @@ use services::ServicesPage;
 use settings::SettingsPage;
 use setup::SetupPage;
 use toolbox_core::features::console::ending::Ending;
-use toolbox_core::features::{kernels as kernels_core, toggles as toggles_core};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{BodyShape, Tone, banner};
-use toolbox_plan::{PackageName, UnitScope};
+use toolbox_plan::UnitScope;
 use tweaks::TweaksPage;
 use users::UsersPage;
 
-use crate::catalogs::{CatalogId, Catalogs};
+use crate::catalogs::Catalogs;
 use crate::command::CommandSender;
-use crate::desktop::icon_files::AppIcons;
 use crate::page::PageId;
 use crate::page_service::{Provides, Services};
-use crate::pictures::Pictures;
 use crate::settings::SettingsView;
-use crate::units::Units;
 
 /// What every page reads, built each frame.
 pub struct PageContext<'app> {
@@ -81,13 +75,10 @@ pub struct PageContext<'app> {
     pub changes: &'app ChangeSet,
     pub revision: u64,
     pub catalogs: &'app Catalogs,
-    pub refusals: &'app Refusals,
-    pub dkms: &'app DkmsReading,
     /// The Console shows, so a page need not offer to show it.
     pub console_open: bool,
     /// A plan runs, so buttons that would start one wait.
     pub busy: bool,
-    pub units: &'app Units,
     pub home: HomeFacts<'app>,
     /// Each page asks [`PageContext::service`] for its own.
     pub services: &'app Services,
@@ -97,10 +88,6 @@ pub struct PageContext<'app> {
     /// The version About shows. Tests show a fixed one, so a release
     /// changes no snapshot.
     pub version: &'static str,
-    /// The icon theme's pictures for the catalogs' apps, once read.
-    pub app_icons: Option<&'app AppIcons>,
-    /// The Discover apps' pictures, looked up as rows show. `None` in tests.
-    pub pictures: Option<&'app Pictures>,
     pub commands: &'app CommandSender,
     /// What the Settings page shows.
     pub preferences: SettingsView<'app>,
@@ -116,61 +103,11 @@ impl PageContext<'_> {
     }
 }
 
-/// The last refused click of each page, until dismissed or a later click
-/// on that page is queued.
-#[derive(Debug, Default)]
-pub struct Refusals {
-    pub catalogs: HashMap<CatalogId, toggles_core::Refusal>,
-    pub kernel: Option<KernelRefusal>,
-    pub locale: Option<LocaleRefusal>,
-    pub network: Option<NetworkRefusal>,
-    pub packages: Option<PackagesRefusal>,
-    pub users: Option<UsersRefusal>,
-    pub configs: Option<ConfigsRefusal>,
-    pub boot_repair: Option<&'static str>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct KernelRefusal {
-    pub refusal: kernels_core::Refusal,
-    pub kernel: PackageName,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct LocaleRefusal {
-    pub code: &'static str,
-    pub locale: String,
-}
-
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Plans {
     pub finished: u64,
     pub last_succeeded: bool,
     pub last_ending: Ending,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ConfigsRefusal {
-    pub code: &'static str,
-    pub subject: String,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct UsersRefusal {
-    pub code: &'static str,
-    pub subject: String,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct PackagesRefusal {
-    pub refusal: toolbox_core::features::packages::queue::Refusal,
-    pub package: PackageName,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct NetworkRefusal {
-    pub code: &'static str,
-    pub driver: String,
 }
 
 /// A page as the shell draws it: the header stays at the top while the

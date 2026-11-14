@@ -13,6 +13,8 @@ pub use file::{EditWrite, EditedFile};
 pub use news::{Changes, Compared, Fetched, Problem, Work};
 use toolbox_plan::{ConfigText, EditCopy, Editor};
 
+use super::Refusal;
+
 pub(super) const BUSY: &str = "busy";
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -107,10 +109,10 @@ impl Session {
 
     /// # Errors
     ///
-    /// `"busy"` while another edit runs or waits for review.
-    pub fn start(&mut self, path: impl Into<EditedFile>) -> Result<Work, &'static str> {
+    /// [`Refusal::Busy`] while another edit runs or waits for review.
+    pub fn start(&mut self, path: impl Into<EditedFile>) -> Result<Work, Refusal> {
         if !self.phase.is_free() {
-            return Err(BUSY);
+            return Err(Refusal::Busy);
         }
 
         let path = path.into();

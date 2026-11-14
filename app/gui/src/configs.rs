@@ -14,7 +14,7 @@ use toolbox_catalog::{ConfigFileCatalog, LoadProblem};
 use toolbox_core::features::configs::session::{EditedFile, Phase, Session, Work};
 use toolbox_core::features::configs::viewing::Viewing;
 use toolbox_core::features::configs::{
-    Listing, Target, edit_plan, target as target_of, view_target, write_plan,
+    Listing, Refusal, Target, edit_plan, target as target_of, view_target, write_plan,
 };
 use toolbox_plan::Plan;
 
@@ -48,9 +48,13 @@ pub struct Configs {
     /// The phase the last [`Configs::take`] saw, so every step that brings
     /// an edit to the user is told once, whatever made it.
     seen: Phase,
+    refusal: Option<ConfigsRefusal>,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
 }
+
+/// The service's own code: an open, an edit or a view it refused.
+pub type ConfigsRefusal = crate::refused::Refused<Refusal>;
 
 impl Default for Configs {
     fn default() -> Self {
@@ -61,12 +65,23 @@ impl Default for Configs {
             session: Session::default(),
             viewing: Viewing::default(),
             seen: Phase::Idle,
+            refusal: None,
             jobs: None,
         }
     }
 }
 
 impl Configs {
+    pub const fn refusal(&self) -> Option<&ConfigsRefusal> {
+        self.refusal.as_ref()
+    }
+
+    /// A refused open, edit or view stays on the page until dismissed or
+    /// the next one is taken.
+    pub fn set_refusal(&mut self, refusal: Option<ConfigsRefusal>) {
+        self.refusal = refusal;
+    }
+
     pub fn new(setup: Option<ConfigsSetup>, ctx: egui::Context) -> Self {
         let Some(setup) = setup else {
             return Self::default();
@@ -113,25 +128,27 @@ impl Configs {
     ///
     /// # Errors
     ///
-    /// `"unknown"` for a row that is no file of the user, or one that is
+    /// [`Refusal::Unknown`] for a row that is no file of the user, or one that is
     /// gone.
-    pub fn open_home(&self, key: &str) -> Result<(), &'static str> {
-        let target = self.target(key).ok_or("unknown")?;
-        let jobs = self.jobs.as_ref().ok_or("unknown")?;
-        jobs.open_home(&target).then_some(()).ok_or("unknown")
+    pub fn open_home(&self, key: &str) -> Result<(), Refusal> {
+        let target = self.target(key).ok_or(Refusal::Unknown)?;
+        let jobs = self.jobs.as_ref().ok_or(Refusal::Unknown)?;
+        jobs.open_home(&target)
+            .then_some(())
+            .ok_or(Refusal::Unknown)
     }
 
     /// Starts the edit of the file behind the row `key`.
     ///
     /// # Errors
     ///
-    /// `"busy"` while another edit is open, `"unknown"` for a row that is
-    /// no file, `"read-only"` for a file the catalog only shows.
-    pub fn edit(&mut self, key: &str) -> Result<Option<Act>, &'static str> {
-        let file: EditedFile = match self.target(key).ok_or("unknown")? {
+    /// [`Refusal::Busy`] while another edit is open, [`Refusal::Unknown`] for a row that is
+    /// no file, [`Refusal::ReadOnly`] for a file the catalog only shows.
+    pub fn edit(&mut self, key: &str) -> Result<Option<Act>, Refusal> {
+        let file: EditedFile = match self.target(key).ok_or(Refusal::Unknown)? {
             // The row offers no edit. A caller that asks anyway learns why
             // before the user edits a copy the helper would never write.
-            Target::Root(path) if !path.is_writable() => return Err("read-only"),
+            Target::Root(path) if !path.is_writable() => return Err(Refusal::ReadOnly),
             Target::Root(path) => path.into(),
             Target::Home(path) => path.into(),
         };
@@ -144,14 +161,14 @@ impl Configs {
     ///
     /// # Errors
     ///
-    /// `"unknown"` for a row with nothing to view, `"busy"` while a read
+    /// [`Refusal::Unknown`] for a row with nothing to view, [`Refusal::Busy`] while a read
     /// for the view runs.
-    pub fn view(&mut self, key: &str) -> Result<(), &'static str> {
+    pub fn view(&mut self, key: &str) -> Result<(), Refusal> {
         let (Ok(catalog), Some(listing)) = (&self.catalog, &self.listing) else {
-            return Err("unknown");
+            return Err(Refusal::Unknown);
         };
 
-        let path = view_target(catalog, listing, key).ok_or("unknown")?;
+        let path = view_target(catalog, listing, key).ok_or(Refusal::Unknown)?;
         let number = self.viewing.start(path.clone())?;
         if let Some(jobs) = &self.jobs {
             jobs.view(number, path);

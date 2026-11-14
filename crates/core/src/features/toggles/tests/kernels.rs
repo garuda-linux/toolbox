@@ -7,7 +7,7 @@ use toolbox_state::packages::PackageGraph;
 
 use super::super::{Refusal, toggle};
 use crate::domains::{InstalledPackages, Packages};
-use crate::features::kernels;
+use crate::features::{RefusalText as _, Refused, kernels};
 use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
@@ -64,9 +64,9 @@ fn the_running_kernel_entry_cannot_be_turned_off() {
 
     assert_eq!(
         refused,
-        Err(Refusal::Kernel(
-            kernels::Refusal::Running,
-            package("linux-lts")
+        Err(Refused::new(
+            Refusal::Kernel(kernels::Refusal::Running),
+            "linux-lts".to_owned()
         ))
     );
     assert_eq!(changes.wish::<Packages>(&package("linux-lts")), None);
@@ -78,8 +78,9 @@ fn the_running_kernel_entry_cannot_be_turned_off() {
 
 #[test]
 fn a_kernel_refusal_names_the_kernel_with_the_kernels_page_code() {
-    let refusal = Refusal::Kernel(kernels::Refusal::LastKernel, package("linux-lts"));
+    let refused = Refusal::Kernel(kernels::Refusal::LastKernel).of_package(&package("linux-lts"));
 
-    assert_eq!(refusal.as_str(), "last-kernel");
-    assert_eq!(refusal.name(), "linux-lts");
+    assert_eq!(refused.refusal.code(), "last-kernel");
+    assert_eq!(refused.refusal.text_id(), "kernels-refusal-last-kernel");
+    assert_eq!(refused.subject, "linux-lts");
 }

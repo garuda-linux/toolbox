@@ -5,6 +5,7 @@ use toolbox_state::packages::{InstallReason, LocalNode, PackageGraph};
 
 use super::{Refusal, toggle};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
+use crate::features::RefusalText;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 fn name(text: &str) -> PackageName {
@@ -83,7 +84,7 @@ fn a_package_no_repository_offers_cannot_be_installed() {
 
     assert_eq!(
         toggle(&name("nothing"), Toggle::On, &snapshot(), &mut changes),
-        Err(Refusal::NotOffered)
+        Err(Refusal::NotOffered.of(&name("nothing")))
     );
     assert_eq!(changes.queued::<Packages>().len(), 0);
 }
@@ -99,7 +100,7 @@ fn without_the_databases_nothing_is_queued() {
             &Snapshot::default(),
             &mut changes
         ),
-        Err(Refusal::Unread)
+        Err(Refusal::Unread.of(&name("gimp")))
     );
 }
 
@@ -113,7 +114,7 @@ fn every_refusal_has_a_code() {
             Refusal::RunningUnknown,
             Refusal::LastKernel,
         ]
-        .map(|refusal| refusal.as_str()),
+        .map(RefusalText::code),
         [
             "not-offered",
             "unread",
@@ -151,7 +152,7 @@ fn the_running_kernel_is_not_queued_for_removal() {
 
     assert_eq!(
         toggle(&name("linux"), Toggle::Off, &snapshot, &mut changes),
-        Err(Refusal::RunningKernel)
+        Err(Refusal::RunningKernel.of(&name("linux")))
     );
     assert_eq!(changes.wish::<Packages>(&name("linux")), None);
 }
@@ -166,7 +167,7 @@ fn a_protected_package_is_not_queued_for_removal() {
 
     assert_eq!(
         toggle(&name("sddm"), Toggle::Off, &snapshot, &mut changes),
-        Err(Refusal::Protected(Protection::Desktop))
+        Err(Refusal::Protected(Protection::Desktop).of(&name("sddm")))
     );
     assert!(changes.is_empty());
 }
@@ -197,7 +198,7 @@ fn a_removal_is_checked_together_with_the_queued_ones() {
     );
     assert_eq!(
         toggle(&name("app-b"), Toggle::Off, &snapshot, &mut changes),
-        Err(Refusal::TakesAlong(Protection::Boot, name("systemd-libs")))
+        Err(Refusal::TakesAlong(Protection::Boot).of(&name("systemd-libs")))
     );
     assert_eq!(changes.wish::<Packages>(&name("app-b")), None);
 }
@@ -210,6 +211,6 @@ fn without_the_dependency_graph_nothing_is_removed() {
 
     assert_eq!(
         toggle(&name("gimp"), Toggle::Off, &snapshot, &mut changes),
-        Err(Refusal::Unread)
+        Err(Refusal::Unread.of(&name("gimp")))
     );
 }

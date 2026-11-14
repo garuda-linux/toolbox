@@ -9,10 +9,10 @@ use toolbox_plan::{PackageName, Protection};
 use super::protected;
 use super::protected::CascadeRefusal;
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
-use crate::features::kernels;
+use crate::features::{Refused, kernels};
 use crate::{ChangeSet, Snapshot, Toggle};
 
-#[derive(Clone, Debug, PartialEq, Eq, strum::IntoStaticStr)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr)]
 #[strum(serialize_all = "kebab-case")]
 pub enum Refusal {
     /// No configured repository has the package.
@@ -27,17 +27,9 @@ pub enum Refusal {
     LastKernel,
     /// `toolbox_plan::PROTECTED` keeps the package, for this reason.
     Protected(Protection),
-    /// The removal would take this protected dependency along.
-    TakesAlong(Protection, PackageName),
-}
-
-impl From<CascadeRefusal> for Refusal {
-    fn from(refusal: CascadeRefusal) -> Self {
-        match refusal {
-            CascadeRefusal::Unread => Self::Unread,
-            CascadeRefusal::TakesAlong(why, along) => Self::TakesAlong(why, along),
-        }
-    }
+    /// The removal would take a protected dependency along, the
+    /// [`Refused::subject`].
+    TakesAlong(Protection),
 }
 
 impl From<kernels::Refusal> for Refusal {
@@ -51,8 +43,16 @@ impl From<kernels::Refusal> for Refusal {
 }
 
 impl Refusal {
-    pub fn as_str(&self) -> &'static str {
-        self.into()
+    pub fn of(self, package: &PackageName) -> Refused<Self, PackageName> {
+        Refused::new(self, package.clone())
+    }
+}
+
+/// A dependency it would take along is what the text names.
+fn cascade(refusal: CascadeRefusal, package: &PackageName) -> Refused<Refusal, PackageName> {
+    match refusal {
+        CascadeRefusal::Unread => Refusal::Unread.of(package),
+        CascadeRefusal::TakesAlong(why, along) => Refused::new(Refusal::TakesAlong(why), along),
     }
 }
 
@@ -81,11 +81,13 @@ pub fn may_remove(
     package: &PackageName,
     changes: &ChangeSet,
     snapshot: &Snapshot,
-) -> Result<(), Refusal> {
-    protected::may_remove(package).map_err(Refusal::Protected)?;
+) -> Result<(), Refused<Refusal, PackageName>> {
+    protected::may_remove(package).map_err(|why| Refusal::Protected(why).of(package))?;
     let batch = removal_batch(changes, std::slice::from_ref(package));
-    protected::may_remove_with_cascade(&batch, snapshot)?;
-    kernels::may_remove(package, changes, snapshot)?;
+    protected::may_remove_with_cascade(&batch, snapshot)
+        .map_err(|refusal| cascade(refusal, package))?;
+    kernels::may_remove(package, changes, snapshot)
+        .map_err(|refusal| Refusal::from(refusal).of(package))?;
     Ok(())
 }
 
@@ -98,16 +100,19 @@ pub fn toggle(
     wish: Toggle,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
-) -> Result<(), Refusal> {
+) -> Result<(), Refused<Refusal, PackageName>> {
     let installed = snapshot
         .part::<InstalledPackages>()
-        .ok_or(Refusal::Unread)?;
+        .ok_or_else(|| Refusal::Unread.of(package))?;
 
     // Taking a removal back needs no repository, the package is there.
     if wish.is_on() && !installed.0.contains(package) {
-        let offered = snapshot.part::<SyncPackages>().ok_or(Refusal::Unread)?;
+        let offered = snapshot
+            .part::<SyncPackages>()
+            .ok_or_else(|| Refusal::Unread.of(package))?;
+
         if !offered.0.contains(package) {
-            return Err(Refusal::NotOffered);
+            return Err(Refusal::NotOffered.of(package));
         }
     }
 

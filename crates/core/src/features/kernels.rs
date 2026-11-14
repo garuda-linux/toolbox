@@ -20,6 +20,7 @@ pub use toolbox_state::kernels::{
 
 pub use self::edits::{build_release, builds_for, set_builds, set_headers};
 use crate::domains::Packages;
+use crate::features::RefusalText as _;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const PREFIX: &str = "linux";
@@ -63,12 +64,6 @@ pub enum Refusal {
 impl Kernel {
     pub const fn is_installed(&self) -> bool {
         self.installed.is_some()
-    }
-}
-
-impl Refusal {
-    pub fn as_str(self) -> &'static str {
-        self.into()
     }
 }
 
@@ -233,7 +228,7 @@ pub fn recheck(changes: &mut ChangeSet, snapshot: &Snapshot) -> Option<usize> {
             tracing::warn!(
                 "dropped the restored removal of {}: {}",
                 kernel.name,
-                refusal.as_str()
+                refusal.code()
             );
             dropped += 1;
         }

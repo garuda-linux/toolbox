@@ -48,12 +48,6 @@ pub enum Refusal {
     ProtectedParameter,
 }
 
-impl Refusal {
-    pub fn as_str(self) -> &'static str {
-        self.into()
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Shown {
     pub default: String,

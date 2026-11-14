@@ -16,7 +16,11 @@
 - UI: one `App` (`app/gui/src/app.rs`) owns the state. Pages implement
   `PageView` (`app/gui/src/pages.rs`) and never change shared state. They
   send commands on the bus (`app/gui/src/command.rs`), and `App::logic`
-  applies them before the next frame. The design system is
+  applies them before the next frame. `PageContext` holds what every page
+  reads (snapshot, queue, catalogs, plans, commands), and a page's own
+  data comes from its service (`context.service::<T>()`): the dkms
+  reading from `Kernels`, the unit lists from `Units`, the app pictures
+  from `Artwork`. The design system is
   `crates/gui-kit`. The window is opaque, blur stays inside it
   ([Frost](#frost)).
 - Console: a full terminal, so full-screen programs such as paru's
@@ -183,12 +187,34 @@ prints the `String` as the usage error.
    `pages/<name>/tests.rs`.
 4. `app/gui/src/pages.rs`: its field and its line in `Pages::view`.
    `PageId::ALL` drives the sidebar, the palette and the start options.
-5. A service in `app/gui/src/<name>.rs` for reads outside the snapshot, and
-   its dry-run stand-in in `ports.rs` when the read changes or leaves the
-   machine. It implements `PageService` (`app/gui/src/page_service.rs`) and
-   answers with `AppCommand`s. Its field in `Services`, its line in
-   `Services::all_mut` and its `Provides` impl are all `App` needs. The
-   page reads it with `context.service::<Name>()`.
+5. A service in `app/gui/src/<name>.rs` for reads outside the snapshot and
+   for the page's clicks, and its dry-run stand-in in `ports.rs` when the
+   read changes or leaves the machine. It implements `PageService`
+   (`app/gui/src/page_service.rs`) and answers with `AppCommand`s. Its
+   field in `Services`, its line in `Services::all_mut` and its `Provides`
+   impl are all `App` needs. The page reads it with
+   `context.service::<Name>()`.
+   - `PageService::handle` gets every command with the queue and the
+     snapshot. It returns `Handled { taken, edit, answers }`. `taken` says
+     the service ran the command, so `App` leaves it, also for a refused
+     click. The edit is a `QueueEdit` of a clone of the queue
+     (`QueueEdit::of_click`), which `App` takes in the same frame through
+     `Queue::apply_edit`. That keeps the met guards, unlike `Queue::take`
+     of the bus. Work that needs `App` goes back as an answer
+     (`AppCommand::ReadSystem`, `Answer::ShowPage`).
+   - The service owns the page's last refused click as a core
+     `features::Refused<R, S = String>`, most through `queue_or_refuse`, or
+     `queue_or_keep` (`app/gui/src/refused.rs`) for a rule that names its
+     own subject, such as a protected dependency. `R` implements
+     `features::RefusalText`, so the text id is `R::TEXT_PREFIX` plus the
+     strum code, and every refusal text names its subject `$name`. A page
+     shows it with `Shown::text`, or `Shown::text_with` for more
+     placeables such as the `$why` of a protected package.
+   - A click that needs `App` state (a run at once, a dialog, the
+     preferences) stays in `app/gui/src/app/<name>.rs` and sets the
+     refusal with the service's `set_refusal`. Its match keeps an empty
+     arm for each command a service takes, as no match on an enum may
+     use a wildcard.
 6. Texts in `crates/services/i18n/en-US/<name>.ftl` and `de-DE/<name>.ftl`.
 7. CLI commands (`crates/cli/src/args/*`, `crates/commands/src/*`).
    `crates/commands/src/parity.rs` fails for a queue domain without one.

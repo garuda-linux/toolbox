@@ -12,6 +12,8 @@ use toolbox_core::features::kernels::{
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::command::{Command, KernelCommand, KernelEdit};
+use toolbox_gui::kernels::Kernels;
+use toolbox_gui::page_service::Services;
 use toolbox_gui::pages::kernels::KernelsPage;
 use toolbox_gui::pages::kernels::view::{Dkms, DkmsReading};
 use toolbox_gui::queue::Queue;
@@ -133,7 +135,12 @@ pub fn kernels(system: Snapshot) -> (Harness<'static, App>, Runtime) {
 
 fn page(system: Snapshot) -> Harness<'static, PageState<KernelsPage>> {
     let fixture = PageFixture {
-        dkms: DkmsReading::Loaded(Arc::new(Dkms::Modules(parse_status(DKMS_STATUS)))),
+        services: Services {
+            kernels: Kernels::with_dkms(DkmsReading::Loaded(Arc::new(Dkms::Modules(
+                parse_status(DKMS_STATUS),
+            )))),
+            ..Services::default()
+        },
         ..PageFixture::with_snapshot(system)
     };
 

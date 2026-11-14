@@ -29,6 +29,18 @@ use super::search::{Needle, Searchable};
 /// no file name holds one.
 const KEY_SEPARATOR: char = '/';
 
+/// Why a click on a row did nothing.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]
+#[strum(serialize_all = "kebab-case")]
+pub enum Refusal {
+    /// The row is no file, or it is gone.
+    Unknown,
+    /// Another edit or read runs.
+    Busy,
+    /// The catalog only shows the file.
+    ReadOnly,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Target {
     Home(HomePath),

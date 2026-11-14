@@ -13,6 +13,7 @@ use toolbox_gui_kit::widgets::{
 
 use super::catalog_text;
 use super::listed::{EntryRow, EntryRows};
+use crate::artwork::Artwork;
 use crate::catalogs::{self, CatalogId};
 use crate::command::AppCommand;
 use crate::i18n;
@@ -196,7 +197,7 @@ pub fn picture_file(
     id: CatalogId,
     entry: &Entry<'_>,
 ) -> Option<PathBuf> {
-    let themed = context.app_icons.and_then(|icons| {
+    let themed = context.service::<Artwork>().app_icons().and_then(|icons| {
         catalogs::icon_names(entry.entry)
             .iter()
             .find_map(|name| icons.get(name).map(Path::to_path_buf))

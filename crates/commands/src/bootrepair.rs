@@ -14,6 +14,7 @@ use toolbox_cli::args::{BootRepairCommand, Read, RepairArgs};
 use toolbox_cli::confirm::Prompt;
 use toolbox_cli::output::Row;
 use toolbox_core::Toggle;
+use toolbox_core::features::RefusalText as _;
 use toolbox_core::features::bootrepair::page::{Booted, Offer, target as chosen_target, targets};
 use toolbox_core::features::bootrepair::{
     Encryption, Firmware, Refusal, RepairFacts, Target, Wish, plan_regenerate, plan_reinstall,
@@ -165,7 +166,7 @@ fn offered(live: bool, args: &RepairArgs) -> Result<(), Refused> {
         (Offer::Live, _) | (Offer::Test, true) => Ok(()),
         (Offer::Hidden, _) => Err(Refused::Rule(format!(
             "Boot Repair runs on the live ISO, pass --boot-repair to test it ({})",
-            Refusal::NotOffered.as_str()
+            Refusal::NotOffered.code()
         ))),
         (Offer::Test, false) => Err(Refused::Rule(
             "outside the live ISO the chosen system's own programs run as root\n\

@@ -313,7 +313,7 @@ fn wish_onto(
         )));
     }
 
-    toggle(package, want, snapshot, changes).map_err(|refusal| match refusal {
+    toggle(package, want, snapshot, changes).map_err(|refused| match refused.refusal {
         Refusal::Unread => Refused::Unavailable("pacman's databases could not be read".to_owned()),
         Refusal::NotOffered => Refused::Unknown(format!(
             "`{package}` is in no configured repository, see `packages search`"
@@ -329,16 +329,17 @@ fn wish_onto(
         | Refusal::RunningUnknown
         | Refusal::LastKernel
         | Refusal::Protected(_)
-        | Refusal::TakesAlong(..)) => kept_package(package, kept),
+        | Refusal::TakesAlong(_)) => kept_package(package.as_str(), kept, refused.subject.as_str()),
     })
 }
 
 /// The protected list and the Kernels page's rules, for a removal asked
-/// on another page.
-pub(crate) fn kept_package(package: &PackageName, refusal: Refusal) -> Refused {
+/// on another page. `along` is the protected dependency a removal would
+/// take along.
+pub(crate) fn kept_package(package: &str, refusal: Refusal, along: &str) -> Refused {
     Refused::Rule(match refusal {
         Refusal::Protected(why) => format!("{package} stays installed: {}", protection(why)),
-        Refusal::TakesAlong(why, along) => format!(
+        Refusal::TakesAlong(why) => format!(
             "{package} stays installed: removing it would also remove {along}, and {}",
             protection(why)
         ),

@@ -12,6 +12,7 @@ use toolbox_gui_kit::widgets::{
 use toolbox_plan::PackageName;
 
 use super::app_row::{AppRow, AppRows, DESCRIPTION_LINES};
+use crate::artwork::Artwork;
 use crate::command::DiscoverCommand;
 use crate::pages::PageContext;
 use crate::pages::rows::{
@@ -43,7 +44,13 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &AppRow, state: &RowSta
                     package: row.package.as_ref().map_or(&row.id, PackageName::as_str),
                 };
 
-                package_picture(ui, context.pictures, row.package.as_ref(), initial, at);
+                package_picture(
+                    ui,
+                    context.service::<Artwork>().pictures(),
+                    row.package.as_ref(),
+                    initial,
+                    at,
+                );
             });
         },
         |ui| {

@@ -66,12 +66,6 @@ impl Default for Filter {
     }
 }
 
-impl Refusal {
-    pub fn as_str(self) -> &'static str {
-        self.into()
-    }
-}
-
 impl Searchable for LocaleRow {
     fn texts(&self) -> impl Iterator<Item = &str> {
         let names = self

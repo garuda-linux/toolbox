@@ -4,11 +4,10 @@ use toolbox_gui_kit::testing::circle_fills;
 use toolbox_gui_kit::tokens;
 
 use super::page;
-use crate::pages::Refusals;
 
 #[test]
 fn the_internet_state_is_a_dot_and_its_word_where_the_values_are() {
-    let harness = page(Refusals::default());
+    let harness = page();
     let title = harness
         .get_by_role_and_label(Role::Label, "Internet")
         .rect();

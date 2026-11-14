@@ -8,6 +8,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User};
+use toolbox_core::features::users::Refusal;
 use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{GroupName, ShellPath, UserName};
@@ -16,7 +17,7 @@ use toolbox_services::locks::Locks;
 use super::UsersPage;
 use crate::command::{Command, UserEdit, UsersCommand};
 use crate::page_service::Services;
-use crate::pages::{Refusals, UsersRefusal};
+use crate::refused::Refused;
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
 use crate::users::Users;
 
@@ -80,18 +81,17 @@ fn unlocked() -> Users {
     Users::showing(Locks::Known(flags), PageRun::None)
 }
 
-pub fn page(users: Users, refusals: Refusals) -> Shown {
-    page_on(system(), users, refusals)
+pub fn page(users: Users) -> Shown {
+    page_on(system(), users)
 }
 
-pub fn page_on(snapshot: Snapshot, users: Users, refusals: Refusals) -> Shown {
+pub fn page_on(snapshot: Snapshot, users: Users) -> Shown {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
         services: Services {
             users,
             ..Services::default()
         },
-        refusals,
         ..PageFixture::default()
     }
     .harness(UsersPage::default());
@@ -106,7 +106,7 @@ pub fn sent(harness: &Shown) -> Vec<Command> {
 
 #[test]
 fn people_show_and_the_service_waits_behind_the_filter() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     assert!(harness.query_by_label("Showing 2 of 3 accounts").is_some());
     assert!(harness.query_by_label("http").is_none());
@@ -121,7 +121,7 @@ fn people_show_and_the_service_waits_behind_the_filter() {
 
 #[test]
 fn the_menu_queues_a_lock() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     harness.get_by_label("More actions for ada").click();
     harness.run();
@@ -140,7 +140,7 @@ fn the_menu_queues_a_lock() {
 #[test]
 fn without_the_lock_state_the_page_says_so_and_locks_nobody() {
     let users = Users::showing(Locks::Unknown, PageRun::None);
-    let mut harness = page(users, Refusals::default());
+    let mut harness = page(users);
 
     assert!(
         harness
@@ -157,7 +157,7 @@ fn without_the_lock_state_the_page_says_so_and_locks_nobody() {
 #[test]
 fn a_failed_run_says_so_and_offers_the_console() {
     let run = PageRun::Failed(RunKind::Password, name("ada"));
-    let mut harness = page(Users::showing(Locks::Unknown, run), Refusals::default());
+    let mut harness = page(Users::showing(Locks::Unknown, run));
 
     assert!(
         harness
@@ -173,15 +173,13 @@ fn a_failed_run_says_so_and_offers_the_console() {
 
 #[test]
 fn a_refused_click_names_the_account_until_dismissed() {
-    let refusals = Refusals {
-        users: Some(UsersRefusal {
-            code: "last-admin",
-            subject: "nico".to_owned(),
-        }),
-        ..Refusals::default()
-    };
+    let mut users = unlocked();
+    users.set_refusal(Some(Refused {
+        refusal: Refusal::LastAdmin,
+        subject: "nico".to_owned(),
+    }));
 
-    let mut harness = page(unlocked(), refusals);
+    let mut harness = page(users);
 
     assert!(
         harness
@@ -200,7 +198,7 @@ fn a_refused_click_names_the_account_until_dismissed() {
 
 #[test]
 fn the_groups_tab_removes_a_group_after_asking() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
 
     harness
         .get_by_role_and_label(Role::RadioButton, "Groups")
@@ -222,7 +220,7 @@ fn the_groups_tab_removes_a_group_after_asking() {
 
 #[test]
 fn the_header_stays_put_and_each_tab_sorts_in_the_toolbar() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     let texts = (
         "Users and Groups",
         "Add users, set passwords, lock accounts and change groups.",
@@ -257,7 +255,7 @@ fn the_header_stays_put_and_each_tab_sorts_in_the_toolbar() {
 
 #[test]
 fn removing_a_group_is_offered_softly_and_confirmed_as_danger() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     harness
         .get_by_role_and_label(Role::RadioButton, "Groups")
         .click();
@@ -271,7 +269,7 @@ fn removing_a_group_is_offered_softly_and_confirmed_as_danger() {
 
 #[test]
 fn every_row_offers_edit_and_its_menu_at_its_right() {
-    let harness = page(unlocked(), Refusals::default());
+    let harness = page(unlocked());
 
     assert!(harness.query_by_label("Set password…").is_none());
     for user in ["ada", "nico"] {
@@ -314,7 +312,7 @@ fn the_menu_rests_the_password_while_a_plan_runs() {
 
 #[test]
 fn the_edit_dialog_shows_the_shell_by_name_and_tells_its_path() {
-    let mut harness = page(unlocked(), Refusals::default());
+    let mut harness = page(unlocked());
     harness
         .get_by_role_and_label(Role::Button, "Edit ada…")
         .click();

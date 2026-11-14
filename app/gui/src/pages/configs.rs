@@ -24,6 +24,7 @@ use super::{PageContext, PageView};
 use crate::command::ConfigsCommand;
 use crate::configs::Configs;
 use crate::i18n;
+use crate::refused::Shown as _;
 
 const MIN_TEXT_HEIGHT: f32 = 120.0;
 
@@ -145,11 +146,11 @@ impl ConfigsPage {
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = &context.refusals.configs else {
+    let Some(refusal) = context.service::<Configs>().refusal() else {
         return;
     };
 
-    let text = texts::problem(ui.ctx(), refusal.code, &refusal.subject);
+    let text = refusal.text(ui.ctx());
     if refusal_banner(ui, Tone::Error, &text, "configs-dismiss") {
         context.commands.send(ConfigsCommand::DismissRefusal);
     }

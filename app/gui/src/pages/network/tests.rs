@@ -15,7 +15,7 @@ use toolbox_core::Snapshot;
 use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::network::{
     BlacklistEntry, Category, Connectivity, DefaultRoute, ModuleFacts, NetworkModule, Radio,
-    RadioAccess, RadioKind, RadioTarget, pci_devices,
+    RadioAccess, RadioKind, RadioTarget, Refusal, pci_devices,
 };
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{HostName, KernelModule, PingCount, PingTimeout};
@@ -24,7 +24,7 @@ use super::NetworkPage;
 use crate::command::{Command, NetworkCommand};
 use crate::network::{Address, Hardware, Network, Read, StatusRead};
 use crate::page_service::Services;
-use crate::pages::{NetworkRefusal, Refusals};
+use crate::refused::Refused;
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
 
 /// `lspci -nn` of a bare-metal laptop: a Realtek Ethernet port and a `MediaTek`
@@ -102,11 +102,11 @@ fn network_with(address: Address) -> Network {
     )
 }
 
-fn page(refusals: Refusals) -> Shown {
-    page_showing(network(), refusals)
+fn page() -> Shown {
+    page_showing(network())
 }
 
-fn page_showing(network: Network, refusals: Refusals) -> Shown {
+fn page_showing(network: Network) -> Shown {
     let mut snapshot = Snapshot::default();
     snapshot.insert(facts());
     snapshot.insert(InstalledPackages(BTreeSet::new()));
@@ -116,7 +116,6 @@ fn page_showing(network: Network, refusals: Refusals) -> Shown {
             network,
             ..Services::default()
         },
-        refusals,
         ..PageFixture::default()
     }
     .harness(NetworkPage::default());
@@ -138,7 +137,7 @@ fn sent(harness: &Shown) -> Vec<Command> {
 
 #[test]
 fn the_status_tab_shows_the_route_and_asks_for_the_address_on_a_click() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
 
     assert!(harness.query_by_label("192.168.1.1").is_some());
     assert!(harness.query_by_label("enp3s0").is_some());
@@ -155,7 +154,7 @@ fn the_status_tab_shows_the_route_and_asks_for_the_address_on_a_click() {
 #[test]
 fn a_known_address_shows_copy_and_keeps_hide_in_the_menu() {
     let known = Address::Known(IpAddr::V4(Ipv4Addr::new(203, 0, 113, 7)));
-    let mut harness = page_showing(network_with(known), Refusals::default());
+    let mut harness = page_showing(network_with(known));
 
     assert!(harness.query_by_label("Copy").is_some());
     assert!(harness.query_by_label("Hide").is_none());
@@ -174,7 +173,7 @@ fn a_known_address_shows_copy_and_keeps_hide_in_the_menu() {
 
 #[test]
 fn the_wifi_switch_blocks_the_radio() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
 
     harness
         .get_by_role_and_label(Role::CheckBox, "Wi-Fi")
@@ -192,7 +191,7 @@ fn the_wifi_switch_blocks_the_radio() {
 
 #[test]
 fn a_driver_the_app_blacklists_can_be_taken_off() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Drivers");
 
     assert!(harness.query_by_label("Showing 3 of 3 drivers").is_some());
@@ -218,7 +217,7 @@ fn a_driver_the_app_blacklists_can_be_taken_off() {
 
 #[test]
 fn a_driver_another_file_blacklists_has_no_blacklist_button() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Drivers");
 
     assert!(
@@ -232,7 +231,7 @@ fn a_driver_another_file_blacklists_has_no_blacklist_button() {
 
 #[test]
 fn a_search_without_a_match_says_so() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Drivers");
 
     harness.get_by_label("Search drivers").click();
@@ -245,7 +244,7 @@ fn a_search_without_a_match_says_so() {
 
 #[test]
 fn the_hardware_tab_lists_the_devices_and_says_what_is_missing() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Hardware");
 
     assert!(
@@ -264,7 +263,7 @@ fn the_hardware_tab_lists_the_devices_and_says_what_is_missing() {
 
 #[test]
 fn ping_runs_with_the_default_host() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     harness.get_by_label("Run ping").click();
@@ -282,7 +281,7 @@ fn ping_runs_with_the_default_host() {
 
 #[test]
 fn traceroute_waits_for_its_package() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     assert!(
@@ -299,15 +298,13 @@ fn traceroute_waits_for_its_package() {
 
 #[test]
 fn a_refused_blacklist_names_the_driver_until_dismissed() {
-    let refusals = Refusals {
-        network: Some(NetworkRefusal {
-            code: "other-file",
-            driver: "r8169".to_owned(),
-        }),
-        ..Refusals::default()
-    };
+    let mut network = network();
+    network.set_refusal(Some(Refused {
+        refusal: Refusal::OtherFile,
+        subject: "r8169".to_owned(),
+    }));
 
-    let mut harness = page(refusals);
+    let mut harness = page_showing(network);
 
     assert!(harness.query_by_label_contains("r8169: another").is_some());
 
@@ -322,7 +319,7 @@ fn a_refused_blacklist_names_the_driver_until_dismissed() {
 
 #[test]
 fn the_header_stays_beside_the_title_and_drivers_get_a_toolbar() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     let texts = (
         "Network",
         "The connection, the radios, the network drivers and tests.",
@@ -340,7 +337,7 @@ fn the_header_stays_beside_the_title_and_drivers_get_a_toolbar() {
 
 #[test]
 fn chip_rows_filter_the_drivers_by_state_and_kind() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Drivers");
     assert!(harness.query_by_role(Role::ComboBox).is_none());
 
@@ -365,7 +362,7 @@ fn chip_rows_filter_the_drivers_by_state_and_kind() {
 
 #[test]
 fn ping_is_no_stronger_than_the_other_tools() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Tools");
 
     assert_eq!(button_kind(&harness, "Run ping"), ButtonKind::Soft);
@@ -373,7 +370,7 @@ fn ping_is_no_stronger_than_the_other_tools() {
 
 #[test]
 fn a_device_copy_button_looks_like_a_button() {
-    let mut harness = page(Refusals::default());
+    let mut harness = page();
     tab(&mut harness, "Hardware");
 
     let copy = harness

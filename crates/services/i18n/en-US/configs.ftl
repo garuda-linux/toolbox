@@ -94,3 +94,7 @@ configs-view-link = { $path } is a link. This is the text of the file it leads t
 configs-copy-all = Copy all
 configs-copied = Copied to the clipboard.
 configs-close = Close
+# Why a click on a row did nothing.
+configs-refused-unknown = This file cannot be opened here.
+configs-refused-busy = Another task runs in the Console. Try again when it has finished.
+configs-refused-read-only = This file decides who may administer the system or what runs as root, so it is only shown here. Change it in a terminal with sudo.

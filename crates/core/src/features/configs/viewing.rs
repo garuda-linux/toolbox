@@ -3,7 +3,8 @@ mod tests;
 
 use toolbox_plan::{ConfigFilePath, ConfigText};
 
-use super::session::{BUSY, Problem};
+use super::Refusal;
+use super::session::Problem;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Phase {
@@ -63,11 +64,11 @@ impl Viewing {
 
     /// # Errors
     ///
-    /// `"busy"` while a read runs, so a second click asks for no second
-    /// password.
-    pub fn start(&mut self, path: ConfigFilePath) -> Result<u64, &'static str> {
+    /// [`Refusal::Busy`] while a read runs, so a second click asks for no
+    /// second password.
+    pub fn start(&mut self, path: ConfigFilePath) -> Result<u64, Refusal> {
         if self.phase == Phase::Reading {
-            return Err(BUSY);
+            return Err(Refusal::Busy);
         }
 
         let asked = self.asked.wrapping_add(1);

@@ -1,12 +1,9 @@
 //! What the app does with a command from the bus or a shortcut.
 
-use toolbox_core::Toggle;
-use toolbox_core::features::toggles;
 use toolbox_plan::Plan;
 
 use super::App;
 use crate::apply::ApplyCommand;
-use crate::catalogs::CatalogId;
 use crate::command::{AppCommand, Command, Sent, UiCommand};
 use crate::page::PageId;
 use crate::page_ui;
@@ -101,6 +98,18 @@ impl App {
     }
 
     pub(super) fn run_app(&mut self, ctx: &egui::Context, command: AppCommand) {
+        let (taken, asked) = self.hand_to_services(&command);
+        if !taken {
+            self.run_own(ctx, command);
+        }
+
+        for next in asked {
+            self.run_app(ctx, next);
+        }
+    }
+
+    /// App's part of `command`, after the page services had theirs.
+    fn run_own(&mut self, ctx: &egui::Context, command: AppCommand) {
         match command {
             AppCommand::RemoveChange { domain, key } => {
                 self.queue.remove(domain, &key);
@@ -113,24 +122,25 @@ impl App {
                 self.to_service(ApplyCommand::Resize(size));
             }
             AppCommand::ReadSystem => self.read_system(),
+            // A page service takes these, see `hand_to_services`.
             AppCommand::ToggleEntry {
-                catalog,
-                entry,
-                wish,
-            } => self.toggle_entry(catalog, &entry, wish),
-            AppCommand::DismissRefusal(catalog) => {
-                drop(self.refusals.catalogs.remove(&catalog));
+                catalog: _,
+                entry: _,
+                wish: _,
+            }
+            | AppCommand::DismissRefusal(_)
+            | AppCommand::Kernel(_)
+            | AppCommand::Boot(_)
+            | AppCommand::Locale(_) => {
+                tracing::warn!("no page service took {command:?}");
             }
             AppCommand::Toast { kind, text } => self.toasts.add(kind, text),
-            AppCommand::Kernel(kernel) => self.run_kernel(kernel),
             AppCommand::Home(home) => self.run_home(home),
             AppCommand::Tweak(tweak) => self.tweak(tweak),
             AppCommand::Service(service) => self.run_service(service),
             AppCommand::Discover(discover) => self.run_discover(discover),
             AppCommand::Maintenance(maintenance) => self.run_maintenance(maintenance),
             AppCommand::Diagnostics(diagnostics) => self.run_diagnostics(diagnostics),
-            AppCommand::Boot(boot) => self.run_boot(boot),
-            AppCommand::Locale(locale) => self.run_locale(locale),
             AppCommand::Network(network) => self.run_network(ctx, network),
             AppCommand::Packages(packages) => self.run_packages(packages),
             AppCommand::Users(users) => self.run_users(users),
@@ -200,24 +210,6 @@ impl App {
     pub(super) fn to_service(&self, command: ApplyCommand) {
         if let Some(apply) = &self.apply {
             apply.send(command);
-        }
-    }
-
-    /// The refusal stays on its page until dismissed or a later click on
-    /// that page is queued.
-    fn toggle_entry(&mut self, catalog: CatalogId, entry: &str, wish: Toggle) {
-        let Ok(toggle_catalog) = &self.catalogs.get(catalog).catalog else {
-            return;
-        };
-
-        let snapshot = self.current_snapshot();
-        let result = self.queue.edit(&snapshot, |changes, snapshot| {
-            toggles::toggle(toggle_catalog, entry, wish, snapshot, changes)
-        });
-
-        match result {
-            Ok(()) => drop(self.refusals.catalogs.remove(&catalog)),
-            Err(refusal) => drop(self.refusals.catalogs.insert(catalog, refusal)),
         }
     }
 }

@@ -28,7 +28,7 @@ use super::rows::{Look, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::ServiceCommand;
 use crate::i18n;
-use crate::units::UnitsFailure;
+use crate::units::{Units, UnitsFailure};
 
 /// Placeholder rows while the first list comes, enough to fill a window.
 const SKELETON_ROWS: usize = 6;
@@ -102,7 +102,7 @@ impl PageView for ServicesPage {
 
         let ctx = ui.ctx().clone();
         let height = row::height(ui);
-        let listed = context.units.get(self.scope);
+        let listed = context.service::<Units>().get(self.scope);
         let first_load = ui.make_persistent_id(("services-content", self.scope));
         let units = match (listed.error(), listed.latest()) {
             (Some(failure), _) => {

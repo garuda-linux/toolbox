@@ -242,7 +242,7 @@
       "string": "Die Kernel-Befehlszeile ist voll."
     },
     "boot-refused-unknown-theme": {
-      "string": "Kein installiertes Plymouth-Theme: {value}"
+      "string": "Kein installiertes Plymouth-Theme: {name}"
     },
     "boot-refused-no-kernel-cmdline": {
       "string": "Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit, daher gibt es nichts zu ändern."
@@ -251,25 +251,25 @@
       "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Bearbeite /etc/kernel/cmdline auf der Seite „Konfigurationsdateien“."
     },
     "boot-refused-protected-parameter": {
-      "string": "{value} bleibt: Ohne diesen Parameter findet das System kein Root-Dateisystem zum Starten."
+      "string": "{name} bleibt: Ohne diesen Parameter findet das System kein Root-Dateisystem zum Starten."
     },
     "boot-refused-empty": {
       "string": "Es wurde nichts eingegeben."
     },
     "boot-refused-too-long": {
-      "string": "Die Eingabe ist zu lang: {value}"
+      "string": "Die Eingabe ist zu lang: {name}"
     },
     "boot-refused-invalid-character": {
-      "string": "Die Eingabe enthält ein unzulässiges Zeichen, etwa ein Leerzeichen, Anführungszeichen, einen Backslash oder ein Dollarzeichen: {value}"
+      "string": "Die Eingabe enthält ein unzulässiges Zeichen, etwa ein Leerzeichen, Anführungszeichen, einen Backslash oder ein Dollarzeichen: {name}"
     },
     "boot-refused-invalid-path": {
-      "string": "Das ist kein vollständiger Dateipfad: {value}"
+      "string": "Das ist kein vollständiger Dateipfad: {name}"
     },
     "boot-refused-wrong-type": {
-      "string": "Die Datei hat den falschen Typ: {value}"
+      "string": "Die Datei hat den falschen Typ: {name}"
     },
     "boot-refused-invalid": {
-      "string": "Dieser Wert ist hier nicht zulässig: {value}"
+      "string": "Dieser Wert ist hier nicht zulässig: {name}"
     },
     "boot-dismiss": {
       "string": "Ausblenden"
@@ -5568,13 +5568,13 @@
       "string": "{language} ({territory}), {code}"
     },
     "locales-refused-system-locale": {
-      "string": "{locale} ist die Systemsprache. Wähle eine andere Systemsprache, bevor du sie deaktivierst."
+      "string": "{name} ist die Systemsprache. Wähle eine andere Systemsprache, bevor du sie deaktivierst."
     },
     "locales-refused-last-locale": {
       "string": "Mindestens eine Locale muss aktiviert bleiben."
     },
     "locales-refused-not-enabled": {
-      "string": "{locale} ist nicht aktiviert. Aktiviere die Locale zuerst."
+      "string": "{name} ist nicht aktiviert. Aktiviere die Locale zuerst."
     },
     "locales-dismiss": {
       "string": "Ausblenden"
@@ -6199,7 +6199,7 @@
       "string": "Zurücknehmen"
     },
     "network-refused-other-file": {
-      "string": "{driver}: Eine andere Datei in modprobe.d setzt diesen Treiber auf die Blacklist. Garuda Toolbox ändert nur seine eigene Datei."
+      "string": "{name}: Eine andere Datei in modprobe.d setzt diesen Treiber auf die Blacklist. Garuda Toolbox ändert nur seine eigene Datei."
     },
     "network-refused-unavailable": {
       "string": "Die Treiber dieses Systems ließen sich nicht lesen."
@@ -6351,19 +6351,19 @@
       "string": "Suche leeren"
     },
     "packages-refused-not-offered": {
-      "string": "{package} lässt sich nicht installieren: Kein eingerichtetes Repository bietet es an."
+      "string": "{name} lässt sich nicht installieren: Kein eingerichtetes Repository bietet es an."
     },
     "packages-refused-unread": {
-      "string": "{package} lässt sich noch nicht vormerken: Die installierten Pakete werden noch eingelesen."
+      "string": "{name} lässt sich noch nicht vormerken: Die installierten Pakete werden noch eingelesen."
     },
     "packages-refused-running-kernel": {
-      "string": "{package} ist der laufende Kernel und bleibt deshalb installiert."
+      "string": "{name} ist der laufende Kernel und bleibt deshalb installiert."
     },
     "packages-refused-running-unknown": {
-      "string": "{package} bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Starte den Computer neu und versuch es noch einmal."
+      "string": "{name} bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Starte den Computer neu und versuch es noch einmal."
     },
     "packages-refused-last-kernel": {
-      "string": "{package} ist der letzte installierte Kernel. Installiere einen anderen, bevor du ihn entfernst."
+      "string": "{name} ist der letzte installierte Kernel. Installiere einen anderen, bevor du ihn entfernst."
     },
     "packages-dismiss": {
       "string": "Ausblenden"

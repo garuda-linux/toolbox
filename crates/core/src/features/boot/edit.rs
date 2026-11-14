@@ -13,7 +13,7 @@ use toolbox_plan::{
 use super::{
     Flag, Refusal, add_parameter, remove_parameter, set, set_flag, set_plymouth_theme, set_remember,
 };
-use crate::features::reason_code;
+use crate::features::{RefusalText as _, reason_code};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// One change the page asks for, as the user typed or picked it.
@@ -74,14 +74,32 @@ impl Edit {
     }
 }
 
+/// What the page keeps of an [`EditProblem`]: its code, which names the
+/// text, without the parts no text shows.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct EditCode(&'static str);
+
+impl EditCode {
+    /// Asks the user instead of refusing.
+    pub fn needs_confirm(self) -> bool {
+        self == EditProblem::NeedsConfirm.code()
+    }
+}
+
+impl From<EditCode> for &'static str {
+    fn from(code: EditCode) -> Self {
+        code.0
+    }
+}
+
 impl EditProblem {
-    pub fn code(&self) -> &'static str {
-        match self {
-            Self::Refused(refusal) => refusal.as_str(),
+    pub fn code(&self) -> EditCode {
+        EditCode(match self {
+            Self::Refused(refusal) => refusal.code(),
             Self::Invalid(error) => rule(error),
             Self::OutOfRange => "invalid",
             Self::NeedsConfirm => "needs-confirm",
-        }
+        })
     }
 }
 

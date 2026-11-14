@@ -15,6 +15,7 @@ use super::Refusal;
 use super::home::{Placement, place};
 use super::now::new_user;
 use crate::Snapshot;
+use crate::features::RefusalText as _;
 
 /// The code for a text that breaks a rule no field message names.
 pub const INVALID: &str = "invalid";
@@ -134,7 +135,7 @@ pub fn new_account(form: &NewAccount<'_>, snapshot: &Snapshot) -> Result<NewUser
     let full_name = FullName::new(form.full_name).map_err(InvalidFullName::as_str)?;
     let shell = match form.shell {
         "" => None,
-        path => Some(ShellPath::new(path).map_err(|_invalid| Refusal::ShellNotListed.as_str())?),
+        path => Some(ShellPath::new(path).map_err(|_invalid| Refusal::ShellNotListed.code())?),
     };
 
     let groups = form.groups.clone().ok_or(INVALID)?;
@@ -148,9 +149,9 @@ pub fn new_account(form: &NewAccount<'_>, snapshot: &Snapshot) -> Result<NewUser
         system: form.system,
     };
 
-    let user = new_user(user, full_name, shell, groups, snapshot).map_err(Refusal::as_str)?;
+    let user = new_user(user, full_name, shell, groups, snapshot).map_err(Refusal::code)?;
 
-    place(user, placement, snapshot).map_err(Refusal::as_str)
+    place(user, placement, snapshot).map_err(Refusal::code)
 }
 
 /// The first thing that keeps "Add user now" from being clicked, in the

@@ -29,9 +29,9 @@ locales-system-choice = { $language }, { $code }
 locales-system-choice-territory = { $language } ({ $territory }), { $code }
 
 # Why a click was not queued.
-locales-refused-system-locale = { $locale } ist die Systemsprache. Wähle eine andere Systemsprache, bevor du sie deaktivierst.
+locales-refused-system-locale = { $name } ist die Systemsprache. Wähle eine andere Systemsprache, bevor du sie deaktivierst.
 locales-refused-last-locale = Mindestens eine Locale muss aktiviert bleiben.
-locales-refused-not-enabled = { $locale } ist nicht aktiviert. Aktiviere die Locale zuerst.
+locales-refused-not-enabled = { $name } ist nicht aktiviert. Aktiviere die Locale zuerst.
 locales-dismiss = Ausblenden
 
 locales-packs-intro = Sprachpakete für deine aktivierten Locales und installierten Programme. Nicht installiert: { $count }

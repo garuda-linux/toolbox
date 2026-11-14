@@ -4,6 +4,7 @@
 mod recheck;
 
 use super::{boot, bootrepair, configs, discover, kernels, locales, network, services, users};
+use crate::features::RefusalText as _;
 
 #[test]
 fn the_codes_of_locales_refusal_stay() {
@@ -12,7 +13,7 @@ fn the_codes_of_locales_refusal_stay() {
         (locales::Refusal::LastLocale, "last-locale"),
         (locales::Refusal::NotEnabled, "not-enabled"),
     ] {
-        assert_eq!(value.as_str(), code);
+        assert_eq!(value.code(), code);
     }
 }
 
@@ -23,7 +24,7 @@ fn the_codes_of_kernels_refusal_stay() {
         (kernels::Refusal::RunningUnknown, "running-unknown"),
         (kernels::Refusal::LastKernel, "last-kernel"),
     ] {
-        assert_eq!(value.as_str(), code);
+        assert_eq!(value.code(), code);
     }
 }
 
@@ -38,7 +39,7 @@ fn the_codes_of_bootrepair_refusal_stay() {
         (bootrepair::Refusal::UnknownLayout, "unknown-layout"),
         (bootrepair::Refusal::NoPassphrase, "empty"),
     ] {
-        assert_eq!(value.as_str(), code);
+        assert_eq!(value.code(), code);
     }
 }
 
@@ -50,7 +51,7 @@ fn the_codes_of_boot_refusal_stay() {
         (boot::Refusal::TooManyParameters, "too-many-parameters"),
         (boot::Refusal::UnknownTheme, "unknown-theme"),
     ] {
-        assert_eq!(value.as_str(), code);
+        assert_eq!(value.code(), code);
     }
 }
 
@@ -75,14 +76,14 @@ fn the_codes_of_users_refusal_stay() {
         (users::Refusal::UidOutOfRange, "uid-out-of-range"),
         (users::Refusal::HomeTaken, "home-taken"),
     ] {
-        assert_eq!(value.as_str(), code);
+        assert_eq!(value.code(), code);
     }
 }
 
 #[test]
 fn the_codes_of_network_refusal_stay() {
-    assert_eq!(network::Refusal::OtherFile.as_str(), "other-file");
-    assert_eq!(network::Refusal::Unavailable.as_str(), "unavailable");
+    assert_eq!(network::Refusal::OtherFile.code(), "other-file");
+    assert_eq!(network::Refusal::Unavailable.code(), "unavailable");
 }
 
 #[test]
@@ -155,7 +156,7 @@ fn the_codes_of_boot_flag_stay() {
 #[test]
 fn a_missing_passphrase_has_the_code_of_an_empty_password() {
     assert_eq!(
-        bootrepair::Refusal::NoPassphrase.as_str(),
+        bootrepair::Refusal::NoPassphrase.code(),
         toolbox_plan::InvalidPassword::Empty.as_str()
     );
 }

@@ -100,7 +100,7 @@ network-driver-blacklist = Queue blacklist
 network-driver-allow = Queue removal from blacklist
 network-driver-unqueue = Take back
 # Why a blacklist click was not queued.
-network-refused-other-file = { $driver }: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.
+network-refused-other-file = { $name }: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.
 network-refused-unavailable = The drivers of this system could not be read.
 
 network-hardware-intro = Network devices as lspci and lsusb list them.

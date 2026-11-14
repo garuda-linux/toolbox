@@ -15,6 +15,7 @@ use crate::pages::rows::more::{item, more};
 use crate::pages::setting_row::{Words, row, stated_row, switch_row};
 use crate::pages::{PageContext, heading};
 use crate::share::view::copy;
+use crate::units::Units;
 
 const VALUE_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_narrow;
 const START_WIDTH: f32 = 120.0;
@@ -257,7 +258,7 @@ fn radio(
 fn services(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     heading(ui, icons::SYSTEM_RUN, "network-services");
-    let listing = &context.units.system;
+    let listing = &context.service::<Units>().system;
     let Some(units) = listing.get() else {
         let id = if listing.error().is_some() {
             "network-services-unknown"

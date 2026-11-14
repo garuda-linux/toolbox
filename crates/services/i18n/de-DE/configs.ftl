@@ -94,3 +94,7 @@ configs-view-link = { $path } ist ein Symlink. Angezeigt wird der Inhalt seines 
 configs-copy-all = Alles kopieren
 configs-copied = In die Zwischenablage kopiert.
 configs-close = Schließen
+# Why a click on a row did nothing.
+configs-refused-unknown = Diese Datei kann hier nicht geöffnet werden.
+configs-refused-busy = In der Konsole läuft gerade etwas anderes. Versuche es erneut, wenn es abgeschlossen ist.
+configs-refused-read-only = Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Bearbeite sie in einem Terminal mit sudo.

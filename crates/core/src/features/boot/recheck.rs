@@ -5,6 +5,7 @@ use toolbox_plan::GrubKey;
 
 use super::{Refusal, grub, kernel, plymouth_has};
 use crate::domains::{GrubDefaults, KernelKey, PlymouthState, PlymouthThemes, SdBootKernelDomain};
+use crate::features::RefusalText as _;
 use crate::{ChangeSet, Single, Snapshot};
 
 /// Drops every queued theme Plymouth does not have installed.
@@ -52,7 +53,7 @@ pub fn recheck_grub(changes: &mut ChangeSet, snapshot: &Snapshot) -> Option<usiz
         changes.remove::<SdBootKernelDomain>(&KernelKey::Parameters);
         tracing::warn!(
             "dropped the restored kernel command line: {}",
-            Refusal::CustomKernelCmdline.as_str()
+            Refusal::CustomKernelCmdline.code()
         );
         return Some(1);
     }
@@ -67,7 +68,7 @@ pub fn recheck_grub(changes: &mut ChangeSet, snapshot: &Snapshot) -> Option<usiz
     changes.remove::<GrubDefaults>(&GrubKey::KernelParameters);
     tracing::warn!(
         "dropped the restored kernel command line: {}",
-        Refusal::CustomCommandLine.as_str()
+        Refusal::CustomCommandLine.code()
     );
     Some(1)
 }
