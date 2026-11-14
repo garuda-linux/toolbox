@@ -13,7 +13,7 @@ use toolbox_gui_kit::icons;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{ButtonKind, Select, card, number_field_with_unit, pill_button};
 use toolbox_plan::GrubKey;
-use toolbox_system::Menu;
+use toolbox_services::boot_menu::Menu;
 
 use super::{WIDE_CONTROL, heading, queued, send};
 use crate::boot::Boot;

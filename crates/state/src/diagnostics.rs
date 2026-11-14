@@ -11,6 +11,7 @@ mod upload;
 pub use redact::{Kind as RedactedKind, Known, Redacted, redact};
 pub use report::{Attempt, Outcome, Ran, Refusal, full_report, outcome, since_last_pacman_run};
 pub use selection::Selection;
+use toolbox_plan::procedure::Program as Tool;
 use toolbox_plan::protocol::ReadKind;
 pub use upload::UploadFailure;
 
@@ -25,38 +26,38 @@ const SYSTEMD_COLORS: &[(&str, &str)] = &[("SYSTEMD_COLORS", "16")];
 /// garuda-inxi decides by `[ -t 1 ]` alone and has no option for colours,
 /// so its report stays plain.
 const INXI: &[Program] = &[Program {
-    name: "garuda-inxi",
+    tool: Tool::GarudaInxi,
     arguments: &[],
     environment: &[],
 }];
 
 const HEALTH: &[Program] = &[Program {
-    name: "garuda-health",
+    tool: Tool::GarudaHealth,
     arguments: &["--forcetty"],
     environment: &[],
 }];
 
 const SYSTEMD_ANALYZE: &[Program] = &[
     Program {
-        name: "systemd-analyze",
+        tool: Tool::SystemdAnalyze,
         arguments: &["blame", "--no-pager"],
         environment: SYSTEMD_COLORS,
     },
     Program {
-        name: "systemd-analyze",
+        tool: Tool::SystemdAnalyze,
         arguments: &["critical-chain", "--no-pager"],
         environment: SYSTEMD_COLORS,
     },
 ];
 
 const JOURNAL: &[Program] = &[Program {
-    name: "journalctl",
+    tool: Tool::Journalctl,
     arguments: &["-e", "--no-pager"],
     environment: SYSTEMD_COLORS,
 }];
 
 const DMESG: &[Program] = &[Program {
-    name: "dmesg",
+    tool: Tool::Dmesg,
     arguments: &["--color=always"],
     environment: &[],
 }];
@@ -81,7 +82,7 @@ pub struct Access {
 /// Fixed here, never from input.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Program {
-    pub name: &'static str,
+    pub tool: Tool,
     pub arguments: &'static [&'static str],
     pub environment: &'static [(&'static str, &'static str)],
 }

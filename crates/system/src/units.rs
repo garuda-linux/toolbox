@@ -7,7 +7,9 @@ mod tests;
 use std::collections::BTreeSet;
 use std::ffi::OsString;
 
+use toolbox_exec::{Environment, locate_program};
 use toolbox_plan::UnitName;
+use toolbox_plan::procedure::Program;
 use toolbox_state::parts::{EnabledUnits, EnabledUserUnits, MaskedUnits, MaskedUserUnits};
 
 use crate::error::ProbeError;
@@ -79,10 +81,10 @@ pub struct Systemctl {
 }
 
 impl Systemctl {
-    /// `systemctl` from `PATH`.
+    /// `systemctl` at its fixed path, see `toolbox_exec::locate_program`.
     #[must_use = "the adapter does nothing until asked"]
     pub fn new() -> Self {
-        Self::with_program("systemctl")
+        Self::with_program(locate_program(Program::Systemctl, Environment::Inherited))
     }
 
     /// Another program with systemctl's interface, looked up like a command.

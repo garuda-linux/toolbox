@@ -210,7 +210,7 @@ fn after_a_failed_apply_the_queue_keeps_what_the_system_shows() {
 /// that applied stayed queued and ran again at the next `queue apply`.
 #[test]
 fn after_an_apply_a_met_loader_setting_leaves_the_queue() {
-    use toolbox_core::domains::LoaderSettingsDomain;
+    use toolbox_core::features::boot::set_loader;
     use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings};
 
     /// The loader.conf of the Garuda Lima image, as the helper reads it once
@@ -235,9 +235,9 @@ fn after_an_apply_a_met_loader_setting_leaves_the_queue() {
     }
 
     let mut queued = ChangeSet::default();
-    LoaderSettingsDomain::want(
-        &mut queued,
+    set_loader(
         LoaderSetting::Timeout(None),
+        &mut queued,
         &Snapshot::default(),
     );
     let kept = Kept::new(&[]);

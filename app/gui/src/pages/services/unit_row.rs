@@ -6,6 +6,7 @@ use std::sync::Arc;
 
 use egui::Ui;
 use egui::text::LayoutJob;
+use toolbox_core::features::services::view::Row;
 use toolbox_core::features::services::{
     ActiveState, FileState, asks_first, critical, does_nothing,
 };
@@ -17,7 +18,6 @@ use toolbox_plan::{UnitName, UnitOperation, UnitScope};
 
 use super::ask::Pending;
 use super::texts;
-use super::view::Row;
 use crate::command::ServiceCommand;
 use crate::i18n;
 use crate::pages::rows::actions::{CopyName, Named, RowAction, RowKind, Run, Section};

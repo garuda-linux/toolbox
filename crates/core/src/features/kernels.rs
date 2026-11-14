@@ -9,6 +9,7 @@
 mod edits;
 #[cfg(test)]
 mod tests;
+pub mod view;
 
 use std::collections::HashMap;
 
@@ -20,7 +21,8 @@ pub use toolbox_state::kernels::{
 
 pub use self::edits::{build_release, builds_for, set_builds, set_headers};
 use crate::domains::Packages;
-use crate::features::RefusalText as _;
+use crate::features::packages::queue;
+use crate::features::{RefusalText as _, Refused};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 const PREFIX: &str = "linux";
@@ -59,6 +61,9 @@ pub enum Refusal {
     RunningUnknown,
     /// Without any kernel the system does not boot.
     LastKernel,
+    /// The rule every package removal meets, such as a protected
+    /// dependency the removal would take along.
+    Package(queue::Refusal),
 }
 
 impl Kernel {
@@ -172,14 +177,15 @@ pub fn running<'kernels>(
 /// # Errors
 ///
 /// [`Refusal`] when the kernel to remove runs, nobody knows which one runs,
-/// or it is the last one left.
+/// it is the last one left, or a package rule keeps it or its headers.
+/// The subject is the package the rule names.
 pub fn toggle(
     kernel: &Kernel,
     wish: Toggle,
     listed: Listed<'_>,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
-) -> Result<(), Refusal> {
+) -> Result<(), Refused<Refusal, PackageName>> {
     let on = wish.is_on();
     match (kernel.is_installed(), on) {
         (true, true) => unqueue(kernel, Toggle::Off, changes),
@@ -189,7 +195,12 @@ pub fn toggle(
         }
         (false, false) => unqueue(kernel, Toggle::On, changes),
         (true, false) => {
-            removable(kernel, listed, changes)?;
+            removable(kernel, listed, changes)
+                .map_err(|refusal| Refused::new(refusal, kernel.name.clone()))?;
+            let both = [kernel.name.clone(), kernel.headers.clone()];
+            queue::protection_allows(&both, changes, snapshot).map_err(|refused| {
+                Refused::new(Refusal::Package(refused.refusal), refused.subject)
+            })?;
             changes.want::<Packages>(kernel.name.clone(), Toggle::Off, snapshot);
             changes.want::<Packages>(kernel.headers.clone(), Toggle::Off, snapshot);
         }

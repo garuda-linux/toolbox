@@ -3,6 +3,7 @@
 
 #[cfg(test)]
 mod tests;
+pub mod view;
 
 use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, UserName, WifiBackend};
 

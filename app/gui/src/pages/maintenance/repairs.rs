@@ -4,7 +4,8 @@
 //! that reinstalls packages or throws away what the user had asks first.
 
 use egui::{Id, Ui};
-use toolbox_core::features::maintenance::page::{RepairRow, asks_first};
+use toolbox_core::features::maintenance::Operation;
+use toolbox_core::features::maintenance::page::{Repair, RepairRow};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
@@ -12,13 +13,38 @@ use toolbox_gui_kit::widgets::{
     ButtonKind, DialogWidth, Question, Tone, banner, card, card_row, loading_label, pill_button,
     question, rich,
 };
+use toolbox_plan::RemoteAction;
 
 use super::{heading, row};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<String>) {
+/// The task whose question is open. Common tasks and repairs share the
+/// dialog.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Asked {
+    Operation(Operation),
+    Repair(Repair),
+}
+
+impl Asked {
+    fn text_id(self) -> String {
+        match self {
+            Self::Operation(operation) => operation.text_id(),
+            Self::Repair(repair) => repair.text_id(),
+        }
+    }
+
+    const fn command(self) -> MaintenanceCommand {
+        match self {
+            Self::Operation(operation) => MaintenanceCommand::RunOperation(operation),
+            Self::Repair(repair) => MaintenanceCommand::RunRepair(repair),
+        }
+    }
+}
+
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
     let ctx = ui.ctx().clone();
     heading(ui, icons::GAMES_SOLVE, "maintenance-repairs");
     let Some(programs) = context.home.programs else {
@@ -43,27 +69,28 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<String>)
         for (index, repair) in programs.repairs.iter().enumerate() {
             card_row(ui, index == 0, |ui| {
                 if repair_row(ui, context, repair) {
-                    if asks_first(&repair.repair) {
-                        *asking = Some(repair.repair.clone());
+                    let asked = Asked::Repair(repair.repair);
+                    if repair.repair.asks_first() {
+                        *asking = Some(asked);
                     } else {
-                        run(context, &repair.repair);
+                        context.commands.send(asked.command());
                     }
                 }
             });
         }
     });
 
-    if let Some(repair) = asking.clone() {
-        ask(&ctx, context, &repair, asking);
+    if let Some(asked) = *asking {
+        ask(&ctx, context, asked, asking);
     }
 }
 
 /// Returns whether its Run was clicked.
 fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> bool {
-    let id = format!("maintenance-repair-{}", repair.repair);
+    let id = repair.repair.text_id();
     let detail = i18n::text(ui.ctx(), &format!("{id}-detail"));
     let mut clicked = false;
-    row(ui, repair_icon(&repair.repair), &id, &detail, |ui| {
+    row(ui, repair_icon(repair.repair), &id, &detail, |ui| {
         // A greyed Run says what brings it.
         if !repair.available {
             let needs = i18n::text_with(
@@ -87,20 +114,15 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
     clicked
 }
 
-/// The question before the task `repair`, which says what is lost. Its
-/// name is the Danger button, so the answer repeats what runs. A repair's
-/// texts are `maintenance-repair-…`, a Common task's `maintenance-op-…`.
+/// The question before the task `asked`, which says what is lost. Its
+/// name is the Danger button, so the answer repeats what runs.
 pub(super) fn ask(
     ctx: &egui::Context,
     context: &PageContext<'_>,
-    repair: &str,
-    asking: &mut Option<String>,
+    asked: Asked,
+    asking: &mut Option<Asked>,
 ) {
-    let id = if repair.starts_with("remote-") {
-        format!("maintenance-repair-{repair}")
-    } else {
-        format!("maintenance-op-{repair}")
-    };
+    let id = asked.text_id();
 
     let name = i18n::text(ctx, &id);
     let title = i18n::text_with(ctx, "maintenance-repair-question", &[("repair", &name)]);
@@ -117,31 +139,25 @@ pub(super) fn ask(
         width: DialogWidth::Small,
     };
 
-    let asked = question(ctx, Id::unique("toolbox_gui::maintenance::repair"), texts);
-    if asked.confirmed {
-        run(context, repair);
+    let asked_now = question(ctx, Id::unique("toolbox_gui::maintenance::repair"), texts);
+    if asked_now.confirmed {
+        context.commands.send(asked.command());
     }
 
-    if asked.done {
+    if asked_now.done {
         *asking = None;
     }
 }
 
-fn run(context: &PageContext<'_>, repair: &str) {
-    context
-        .commands
-        .send(MaintenanceCommand::RunNow(repair.to_owned()));
-}
-
-fn repair_icon(repair: &str) -> Icon {
+const fn repair_icon(repair: Repair) -> Icon {
     match repair {
-        "health-check" => icons::VIEW_TASK,
-        "health-fix" => icons::GAMES_HINT,
-        "remote-fix" => icons::CONFIGURE,
-        "remote-keyring" => icons::SECURITY_HIGH,
-        "remote-full-fix" => icons::RUN_BUILD,
-        "remote-reset-audio" => icons::AUDIO_VOLUME_HIGH,
-        "remote-reset-snapper" => icons::DOCUMENT_REVERT,
-        _ => icons::RUN_INSTALL,
+        Repair::HealthCheck => icons::VIEW_TASK,
+        Repair::HealthFix => icons::GAMES_HINT,
+        Repair::Remote(RemoteAction::Fix) => icons::CONFIGURE,
+        Repair::Remote(RemoteAction::Keyring) => icons::SECURITY_HIGH,
+        Repair::Remote(RemoteAction::FullFix) => icons::RUN_BUILD,
+        Repair::Remote(RemoteAction::ResetAudio) => icons::AUDIO_VOLUME_HIGH,
+        Repair::Remote(RemoteAction::ResetSnapper) => icons::DOCUMENT_REVERT,
+        Repair::Remote(RemoteAction::Reinstall) => icons::RUN_INSTALL,
     }
 }

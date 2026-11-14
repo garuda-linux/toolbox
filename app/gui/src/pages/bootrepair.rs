@@ -22,8 +22,9 @@ use self::dialog::Dialog;
 use super::header::refresh_header;
 use super::{PageContext, PageView};
 use crate::bootrepair::BootRepair;
-use crate::command::BootRepairCommand;
+use crate::command::{AppCommand, BootRepairCommand};
 use crate::i18n;
+use crate::page::PageId;
 use crate::refused::Shown as _;
 
 #[derive(Debug, Default)]
@@ -126,7 +127,9 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
         let refused = refusal.text(&ctx);
         ui.add_space(ui.tokens().sizes.card_gap);
         if banner(ui, Tone::Error, &refused, &[&dismiss]) == Some(0) {
-            context.commands.send(BootRepairCommand::DismissRefusal);
+            context
+                .commands
+                .send(AppCommand::DismissRefusal(PageId::BootRepair));
         }
     }
 

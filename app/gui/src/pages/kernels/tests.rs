@@ -3,12 +3,12 @@ use std::sync::Arc;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_gui_kit::testing::fill_under;
+use toolbox_services::dkms::Dkms;
 
 use super::KernelsPage;
 use super::fixtures::{dkms, system};
-use super::view::{Dkms, DkmsReading};
 use crate::command::{Command, KernelEdit};
-use crate::kernels::Kernels;
+use crate::kernels::{DkmsReading, Kernels};
 use crate::page_service::Services;
 use crate::testing::{PageFixture, assert_rows_wait_while_busy};
 

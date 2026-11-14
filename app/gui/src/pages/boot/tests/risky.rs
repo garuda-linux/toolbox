@@ -6,7 +6,8 @@ use toolbox_core::features::boot::edit::{Edit, EditProblem};
 
 use super::{edit, grub_system, menu, page, sent};
 use crate::boot::{Boot, BootRefusal};
-use crate::command::{BootCommand, Command};
+use crate::command::{AppCommand, Command};
+use crate::page::PageId;
 
 fn asked() -> super::Shown {
     let refusal = BootRefusal::new(EditProblem::NeedsConfirm.code(), "init=/bin/sh".to_owned());
@@ -47,5 +48,8 @@ fn cancel_drops_the_risky_parameter() {
         .click();
     harness.run();
 
-    assert_eq!(sent(&harness), [Command::from(BootCommand::DismissRefusal)]);
+    assert_eq!(
+        sent(&harness),
+        [Command::from(AppCommand::DismissRefusal(PageId::Boot))]
+    );
 }

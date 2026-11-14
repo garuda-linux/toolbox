@@ -9,9 +9,9 @@ use toolbox_gui_kit::widgets::{
     tag,
 };
 use toolbox_gui_kit::{Loadable, tokens};
+use toolbox_services::home::{Overview, Pending};
 
 use super::HomePage;
-use super::view::{Overview, Pending};
 use crate::command::HomeCommand;
 use crate::i18n;
 use crate::pages::PageContext;

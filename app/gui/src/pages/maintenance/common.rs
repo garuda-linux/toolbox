@@ -1,11 +1,11 @@
 use egui::Ui;
-use toolbox_core::features::maintenance::page::{
-    CHAOTIC_MIRRORS, OperationRow, ToolRow, UPGRADE_SYSTEM, asks_first, operations,
-};
+use toolbox_core::features::maintenance::page::{OperationRow, PageTool, ToolRow, operations};
+use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{ButtonKind, card, card_row, loading_label};
 
+use super::repairs::Asked;
 use super::{heading, plan_button, row};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
@@ -14,7 +14,7 @@ use crate::pages::PageContext;
 use crate::pages::rows::more::{item, more};
 
 /// `asking` holds the task whose question is open.
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<String>) {
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
     heading(ui, icons::PACKAGE, "maintenance-operations");
     card(ui, |ui| {
         for (index, operation) in operations(context.changes).iter().enumerate() {
@@ -24,8 +24,8 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<String>)
         }
     });
 
-    if let Some(task) = asking.clone() {
-        super::repairs::ask(ui.ctx(), context, &task, asking);
+    if let Some(asked) = *asking {
+        super::repairs::ask(ui.ctx(), context, asked, asking);
     }
 
     ui.add_space(ui.tokens().sizes.section_gap);
@@ -46,10 +46,10 @@ fn operation_row(
     ui: &mut Ui,
     context: &PageContext<'_>,
     operation: &OperationRow,
-    asking: &mut Option<String>,
+    asking: &mut Option<Asked>,
 ) {
     let ctx = ui.ctx().clone();
-    let id = format!("maintenance-op-{}", operation.operation);
+    let id = operation.operation.text_id();
     let detail = i18n::text(&ctx, &format!("{id}-detail"));
     row(
         ui,
@@ -57,17 +57,17 @@ fn operation_row(
         &id,
         &detail,
         |ui| {
-            let kind = if operation.operation == UPGRADE_SYSTEM {
+            let kind = if operation.operation == Operation::UpgradeSystem {
                 ButtonKind::Primary
             } else {
                 ButtonKind::Soft
             };
 
             if plan_button(ui, context, "maintenance-run-now", kind) {
-                if asks_first(operation.operation) {
-                    *asking = Some(operation.operation.to_owned());
+                if operation.operation.asks_first() {
+                    *asking = Some(Asked::Operation(operation.operation));
                 } else {
-                    let run = MaintenanceCommand::RunNow(operation.operation.to_owned());
+                    let run = MaintenanceCommand::RunOperation(operation.operation);
                     context.commands.send(run);
                 }
             }
@@ -82,7 +82,7 @@ fn operation_row(
             more(ui, &title, |ui| {
                 if item(ui, &queue, !context.busy) {
                     context.commands.send(MaintenanceCommand::Queue {
-                        operation: operation.operation.to_owned(),
+                        operation: operation.operation,
                         on: !operation.queued,
                     });
                 }
@@ -95,14 +95,15 @@ fn operation_row(
 /// it first.
 fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
     let ctx = ui.ctx().clone();
-    let id = format!("maintenance-tool-{}", tool.tool);
+    let id = tool.tool.text_id();
     let mut detail = i18n::text(&ctx, &format!("{id}-detail")).into_owned();
-    let ranking = tool.tool == CHAOTIC_MIRRORS && context.service::<Maintenance>().ranking();
+    let mirrors = tool.tool == PageTool::ChaoticMirrors;
+    let ranking = mirrors && context.service::<Maintenance>().ranking();
     let note = if ranking {
         Some("maintenance-ranking")
     } else if tool.installed {
         None
-    } else if tool.tool == CHAOTIC_MIRRORS {
+    } else if mirrors {
         Some("maintenance-ranker-missing")
     } else {
         Some("maintenance-tool-missing")
@@ -129,27 +130,27 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
         if clicked {
             context
                 .commands
-                .send(MaintenanceCommand::OpenTool(tool.tool.to_owned()));
+                .send(MaintenanceCommand::OpenTool(tool.tool));
         }
     });
 }
 
-fn operation_icon(operation: &str) -> Icon {
+const fn operation_icon(operation: Operation) -> Icon {
     match operation {
-        UPGRADE_SYSTEM => icons::SYSTEM_SOFTWARE_UPDATE,
-        "remove-orphans" => icons::VIEW_LIST_DETAILS,
-        "clean-package-cache" => icons::EDIT_CLEAR_ALL,
-        "refresh-keyring" => icons::SECURITY_HIGH,
-        _ => icons::DOCUMENT_REVERT,
+        Operation::UpgradeSystem => icons::SYSTEM_SOFTWARE_UPDATE,
+        Operation::RemoveOrphans => icons::VIEW_LIST_DETAILS,
+        Operation::CleanPackageCache => icons::EDIT_CLEAR_ALL,
+        Operation::RefreshKeyring => icons::SECURITY_HIGH,
+        Operation::RemoveDatabaseLock => icons::DOCUMENT_REVERT,
     }
 }
 
-fn tool_icon(tool: &str) -> Icon {
+const fn tool_icon(tool: PageTool) -> Icon {
     match tool {
-        "arch-mirrors" => icons::NETWORK_WIRED,
-        CHAOTIC_MIRRORS => icons::NETWORK_CONNECT,
-        "btrfs-assistant" => icons::COMPUTER,
-        "edit-repositories" => icons::DOCUMENT_PROPERTIES,
-        _ => icons::VCS_DIFF,
+        PageTool::Program(Tool::ArchMirrors) => icons::NETWORK_WIRED,
+        PageTool::ChaoticMirrors => icons::NETWORK_CONNECT,
+        PageTool::Program(Tool::BtrfsAssistant) => icons::COMPUTER,
+        PageTool::Program(Tool::EditRepositories) => icons::DOCUMENT_PROPERTIES,
+        PageTool::Program(Tool::MergePacdiff) => icons::VCS_DIFF,
     }
 }

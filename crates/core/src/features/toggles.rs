@@ -326,17 +326,27 @@ fn want(
     }
 }
 
-/// Turning off removes the `-git` build when only that one is installed.
 fn want_package(name: &PackageName, wish: Toggle, snapshot: &Snapshot, changes: &mut ChangeSet) {
-    let installed = snapshot.part::<InstalledPackages>();
-    let only_git = git_variant(name).filter(|git| {
-        installed.is_some_and(|installed| installed.0.contains(git) && !installed.0.contains(name))
-    });
+    let package = if wish.is_on() {
+        name.clone()
+    } else {
+        removed_package(name, snapshot)
+    };
 
-    match only_git {
-        Some(git) if !wish.is_on() => changes.want::<Packages>(git, wish, snapshot),
-        Some(_) | None => changes.want::<Packages>(name.clone(), wish, snapshot),
-    }
+    changes.want::<Packages>(package, wish, snapshot);
+}
+
+/// What turning `name` off removes: the `-git` build when only that one
+/// is installed.
+fn removed_package(name: &PackageName, snapshot: &Snapshot) -> PackageName {
+    let installed = snapshot.part::<InstalledPackages>();
+
+    git_variant(name)
+        .filter(|git| {
+            installed
+                .is_some_and(|installed| installed.0.contains(git) && !installed.0.contains(name))
+        })
+        .unwrap_or_else(|| name.clone())
 }
 
 fn unqueue_package(name: &PackageName, changes: &mut ChangeSet) {

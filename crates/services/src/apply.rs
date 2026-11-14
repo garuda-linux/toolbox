@@ -5,6 +5,7 @@
 //! whichever segment runs. Reports go to the app over a channel that
 //! wakes the frame.
 
+mod gate;
 mod inhibit;
 pub mod launcher;
 mod root;
@@ -24,6 +25,7 @@ use toolbox_plan::{Plan, Segment, StepId};
 use toolbox_system::pkexec::Refusal;
 use tracing::Instrument as _;
 
+use self::gate::OutputGate;
 pub use self::inhibit::Inhibitor;
 pub use self::launcher::{HelperLauncher, Launcher};
 use crate::waking::{self, Wake, Waking};
@@ -76,17 +78,20 @@ pub enum Problem {
 pub struct ApplyHandle {
     commands: UnboundedSender<ApplyCommand>,
     reports: Receiver<Report>,
+    gate: OutputGate,
 }
 
 #[derive(Clone, Debug)]
-struct Reporter(Waking<Report>);
+struct Reporter {
+    reports: Waking<Report>,
+    gate: OutputGate,
+}
 
 impl Report {
     pub const fn output_len(&self) -> usize {
         match self {
-            Self::Step(Event::Output { step: _, data }) => data.len(),
+            Self::Step(event) => output_len(event),
             Self::PlanStarted { steps: _ }
-            | Self::Step(_)
             | Self::Problem(_)
             | Self::PlanFinished { succeeded: _ }
             | Self::Busy
@@ -102,7 +107,13 @@ impl ApplyHandle {
     pub fn feeding(wake: Wake) -> (Waking<Report>, Self) {
         let (commands, _) = unbounded_channel();
         let (sender, reports) = waking::channel(wake);
-        (sender, Self { commands, reports })
+        let handle = Self {
+            commands,
+            reports,
+            gate: OutputGate::default(),
+        };
+
+        (sender, handle)
     }
 }
 
@@ -130,13 +141,16 @@ impl ApplyHandle {
             taken.push(report);
         }
 
+        self.gate.leave(spent);
         (taken, !self.reports.is_empty())
     }
 
     /// The next report, `None` once the service is gone. For the command
     /// line, which has no frame to wait for.
     pub fn wait(&self) -> Option<Report> {
-        self.reports.recv().ok()
+        let report = self.reports.recv().ok()?;
+        self.gate.leave(report.output_len());
+        Some(report)
     }
 
     /// The next report within `wait`, for a command line that also looks
@@ -146,13 +160,27 @@ impl ApplyHandle {
     ///
     /// When `wait` passed without one, or the service is gone.
     pub fn wait_for(&self, wait: Duration) -> Result<Report, RecvTimeoutError> {
-        self.reports.recv_timeout(wait)
+        let report = self.reports.recv_timeout(wait)?;
+        self.gate.leave(report.output_len());
+        Ok(report)
     }
 }
 
 impl Reporter {
     fn report(&self, report: Report) {
-        self.0.send(report);
+        self.reports.send(report);
+    }
+
+    /// A step's event, which waits while too much output is unread.
+    async fn step(&self, event: Event) {
+        self.gate.enter(output_len(&event)).await;
+        self.report(Report::Step(event));
+    }
+
+    /// [`Self::step`] for the blocking thread of the user steps.
+    fn step_blocking(&self, event: Event, runtime: &Handle) {
+        self.gate.enter_blocking(output_len(&event), runtime);
+        self.report(Report::Step(event));
     }
 
     /// Logs the failure once, where it happens, and tells the Console.
@@ -202,11 +230,17 @@ impl Run<'_> {
 pub fn spawn(runtime: &Handle, wake: Wake, launcher: Arc<dyn Launcher>) -> ApplyHandle {
     let (commands, command_queue) = unbounded_channel();
     let (reports, report_queue) = waking::channel(wake);
+    let gate = OutputGate::default();
+    let reporter = Reporter {
+        reports,
+        gate: gate.clone(),
+    };
 
-    drop(runtime.spawn(serve(command_queue, launcher, Reporter(reports))));
+    drop(runtime.spawn(serve(command_queue, launcher, reporter)));
     ApplyHandle {
         commands,
         reports: report_queue,
+        gate,
     }
 }
 
@@ -281,5 +315,19 @@ const fn step_ok(event: &Event) -> Option<bool> {
         | Event::Started { step: _ }
         | Event::Output { step: _, data: _ }
         | Event::Done => None,
+    }
+}
+
+const fn output_len(event: &Event) -> usize {
+    match event {
+        Event::Output { step: _, data } => data.len(),
+        Event::Accepted
+        | Event::Rejected { reason: _ }
+        | Event::Started { step: _ }
+        | Event::Finished {
+            step: _,
+            outcome: _,
+        }
+        | Event::Done => 0,
     }
 }

@@ -26,6 +26,8 @@ mod oneshot;
 #[path = "arch/passwords.rs"]
 mod passwords;
 mod person;
+#[path = "arch/protected.rs"]
+mod protected;
 #[path = "arch/repair.rs"]
 mod repair;
 mod repair_names;
@@ -43,11 +45,13 @@ use common::{Reply, Run, TestResult, events, helper, helper_answering, outcomes,
 use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{Mirrorlist, PackageName, RootAction, TargetList, Upgrader};
 
-const TEST_PACKAGES: [&str; 4] = [
+const TEST_PACKAGES: [&str; 6] = [
     "toolbox-test-a",
     "toolbox-test-dep",
     "toolbox-test-conflict",
     "toolbox-test-up",
+    "toolbox-test-on-protected",
+    "chaotic-mirrorlist",
 ];
 
 /// Runs `actions` for real and returns every step's outcome.

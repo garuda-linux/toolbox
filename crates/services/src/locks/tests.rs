@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use toolbox_plan::UserName;
 use toolbox_system::LockProblem;
-use toolbox_system::pkexec::Refusal;
+use toolbox_system::pkexec::{HelperError, Refusal};
 
 use super::Locks;
 
@@ -32,7 +32,7 @@ fn an_answer_names_each_accounts_flag() {
 #[test]
 fn a_refused_or_failed_read_leaves_the_flags_unknown() {
     let refused = Locks::of_answer(Err(LockProblem::Refused(Refusal::Denied)));
-    let failed = Locks::of_answer(Err(LockProblem::Failed("no answer".to_owned())));
+    let failed = Locks::of_answer(Err(LockProblem::Failed(HelperError::TimedOut)));
 
     for locks in [&refused, &failed, &Locks::NotAsked, &Locks::Loading] {
         assert_eq!(locks.of(&user("nico")), None, "{locks:?}");

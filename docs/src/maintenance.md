@@ -40,7 +40,9 @@ removal leaves behind.
 
 **Remove orphans** and **Clean package cache** ask first, with a red
 button, because they delete packages. Orphan removal also lets pacman list
-the packages and ask in the Console before it removes them.
+the packages and ask in the Console before it removes them. It repeats
+until no orphan is left, as removing one can leave others. A package the
+system needs stays installed and is named in the Console.
 
 All five need your password. While changes are applied, the buttons wait
 for the end and a note at the top says so.

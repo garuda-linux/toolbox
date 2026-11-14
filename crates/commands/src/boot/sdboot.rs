@@ -11,9 +11,9 @@ use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, KernelArgs, Read};
 use toolbox_cli::output::ColorMode;
-use toolbox_core::domains::{CurrentLoader, LoaderSettingsDomain, SdBootKernel};
+use toolbox_core::domains::{CurrentLoader, SdBootKernel};
 use toolbox_core::features::boot::view::EntryRow;
-use toolbox_core::features::boot::{self as boot, kernel};
+use toolbox_core::features::boot::{self as boot, kernel, set_loader};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
 use toolbox_plan::{LoaderDefault, PackageName, Plan};
@@ -134,6 +134,7 @@ pub fn read_menu(color: ColorMode) -> Option<SdBootMenu> {
         | MenuRead::Missing
         | MenuRead::Refused(_)
         | MenuRead::Unknown(_)
+        | MenuRead::Unreadable(_)
         | MenuRead::Cancelled) => {
             tracing::warn!("the systemd-boot menu was not read: {other:?}");
             None
@@ -239,7 +240,7 @@ fn want_onto(
     let mut state = snapshot.clone();
 
     state.insert(CurrentLoader(menu.settings.clone()));
-    LoaderSettingsDomain::want(changes, setting, &state);
+    set_loader(setting, changes, &state);
 }
 
 /// # Errors

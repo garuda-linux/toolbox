@@ -29,7 +29,7 @@ impl GrubDefaults {
     }
 
     /// Queues `setting` under its own variable.
-    pub fn want(changes: &mut ChangeSet, setting: GrubSetting, snapshot: &Snapshot) {
+    pub(crate) fn want(changes: &mut ChangeSet, setting: GrubSetting, snapshot: &Snapshot) {
         changes.want::<Self>(setting.key(), setting, snapshot);
     }
 }

@@ -1,6 +1,8 @@
 //! The text of a password field. It is overwritten when dropped and never
-//! grows past the room it starts with, so no reallocation leaves a copy of
-//! the password behind in freed memory.
+//! grows past the room it starts with, so this buffer leaves no copy of the
+//! password in freed memory. egui's `TextEdit` still copies the text into
+//! its layout and its undo history, which are freed, not overwritten (see
+//! "Secrets" in `docs/agents/security.md`).
 
 #[cfg(test)]
 mod tests;

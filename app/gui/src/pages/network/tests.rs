@@ -1,4 +1,5 @@
 mod internet;
+mod rows;
 mod services;
 mod status_read;
 mod tools;
@@ -21,8 +22,9 @@ use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{HostName, KernelModule, PingCount, PingTimeout};
 
 use super::NetworkPage;
-use crate::command::{Command, NetworkCommand};
+use crate::command::{AppCommand, Command, NetworkCommand};
 use crate::network::{Address, Hardware, Network, Read, StatusRead};
+use crate::page::PageId;
 use crate::page_service::Services;
 use crate::refused::Refused;
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
@@ -313,7 +315,7 @@ fn a_refused_blacklist_names_the_driver_until_dismissed() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(NetworkCommand::DismissRefusal)]
+        [Command::from(AppCommand::DismissRefusal(PageId::Network))]
     );
 }
 

@@ -41,7 +41,10 @@ fn targets_from_a_query_show_as_command_substitution() {
         run: Command::new(Program::Pacman).arg("-Rns"),
     };
 
-    assert_eq!(invocation.to_string(), "pacman -Rns $(pacman -Qtdq)");
+    assert_eq!(
+        invocation.to_string(),
+        "pacman -Rns $(pacman -Qtdq)  # again until it prints nothing"
+    );
 }
 
 #[test]

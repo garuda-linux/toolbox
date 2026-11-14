@@ -3,8 +3,10 @@ mod filter;
 use std::collections::BTreeSet;
 
 use toolbox_catalog::ToggleCatalog;
+use toolbox_plan::Protection;
+use toolbox_state::packages::{InstallReason, LocalNode, PackageGraph};
 
-use super::{AppOrder, Apps, Hit, arrange, icon_name};
+use super::{AppOrder, Apps, Hit, arrange, icon_name, toggles};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
 use crate::features::search::Needle;
 use crate::test_support::{package, packages};
@@ -144,16 +146,57 @@ fn a_click_queues_the_packages_and_a_second_takes_them_back() {
     let snapshot = offering(&["aerc", "w3m"]);
     let mut changes = ChangeSet::default();
 
-    assert!(apps.toggle("aerc", Toggle::On, &snapshot, &mut changes));
+    assert_eq!(
+        apps.toggle("aerc", Toggle::On, &snapshot, &mut changes),
+        Ok(())
+    );
     assert_eq!(
         changes.wish::<Packages>(&package("aerc")),
         Some(&Toggle::On)
     );
     assert_eq!(changes.wish::<Packages>(&package("w3m")), Some(&Toggle::On));
 
-    assert!(apps.toggle("aerc", Toggle::Off, &snapshot, &mut changes));
+    assert_eq!(
+        apps.toggle("aerc", Toggle::Off, &snapshot, &mut changes),
+        Ok(())
+    );
     assert!(changes.is_empty());
-    assert!(!apps.toggle("unknown", Toggle::On, &snapshot, &mut changes));
+    assert_eq!(
+        apps.toggle("unknown", Toggle::On, &snapshot, &mut changes)
+            .map_err(|refused| refused.refusal),
+        Err(toggles::Refusal::Unknown)
+    );
+}
+
+/// `aerc` alone pulled in `efibootmgr`, so its removal is refused with
+/// the reason, not dropped.
+#[test]
+fn a_refused_removal_names_why() {
+    let apps = apps();
+    let mut snapshot = offering(&["aerc", "w3m"]);
+    snapshot.insert(InstalledPackages(packages(&["aerc", "efibootmgr"])));
+    snapshot.insert(PackageGraph(vec![
+        LocalNode {
+            name: package("aerc"),
+            depends: vec!["efibootmgr".to_owned()],
+            provides: Vec::new(),
+            reason: InstallReason::Explicit,
+        },
+        LocalNode {
+            name: package("efibootmgr"),
+            depends: Vec::new(),
+            provides: Vec::new(),
+            reason: InstallReason::Dependency,
+        },
+    ]));
+    let mut changes = ChangeSet::default();
+
+    assert_eq!(
+        apps.toggle("aerc", Toggle::Off, &snapshot, &mut changes)
+            .map_err(|refused| refused.refusal),
+        Err(toggles::Refusal::TakesAlong(Protection::Boot))
+    );
+    assert!(changes.is_empty());
 }
 
 #[test]

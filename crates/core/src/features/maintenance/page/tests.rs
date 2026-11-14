@@ -4,11 +4,11 @@ use std::path::Path;
 use toolbox_plan::{PackageName, PlannedAction, RemoteAction, RootAction, Upgrader};
 
 use super::{
-    LaunchCause, OperationRow, ToolRow, UPGRADE_SYSTEM, asks_first, install, installed, operations,
-    repairs, rescue_install, run_now_plan, task, tools, upgrader,
+    LaunchCause, OperationRow, PageTool, Repair, ToolRow, UPGRADE_SYSTEM, asks_first, install,
+    installed, operations, repairs, rescue_install, run_now_plan, task, tools, upgrader,
 };
 use crate::domains::InstalledPackages;
-use crate::features::maintenance::{Operations, Program};
+use crate::features::maintenance::{Operation, Operations, Program, Tool};
 use crate::test_support::package;
 use crate::{ChangeSet, Snapshot};
 
@@ -78,14 +78,14 @@ fn queued_operations_are_marked() {
     assert_eq!(
         shown.get(1),
         Some(&OperationRow {
-            operation: "remove-orphans",
+            operation: Operation::RemoveOrphans,
             queued: true
         })
     );
     assert_eq!(
         shown.first(),
         Some(&OperationRow {
-            operation: "upgrade-system",
+            operation: Operation::UpgradeSystem,
             queued: false
         })
     );
@@ -95,7 +95,7 @@ fn queued_operations_are_marked() {
 fn the_operations_come_in_the_order_of_the_page() {
     let listed: Vec<&str> = operations(&ChangeSet::default())
         .iter()
-        .map(|row| row.operation)
+        .map(|row| row.operation.key())
         .collect();
 
     assert_eq!(
@@ -116,18 +116,18 @@ fn tools_follow_the_installed_programs() {
     let tools = tools(installed);
 
     assert!(tools.contains(&ToolRow {
-        tool: "edit-repositories",
+        tool: PageTool::Program(Tool::EditRepositories),
         installed: true
     }));
     assert!(tools.contains(&ToolRow {
-        tool: "chaotic-mirrors",
+        tool: PageTool::ChaoticMirrors,
         installed: false
     }));
 }
 
 #[test]
 fn the_tools_come_in_the_order_of_the_page() {
-    let listed: Vec<&str> = tools(|_| false).iter().map(|row| row.tool).collect();
+    let listed: Vec<&str> = tools(|_| false).iter().map(|row| row.tool.key()).collect();
 
     assert_eq!(
         listed,
@@ -147,7 +147,7 @@ fn repairs_follow_the_installed_programs() {
     let available = |repair: &str| {
         repairs
             .iter()
-            .find(|row| row.repair == repair)
+            .find(|row| row.repair.key() == repair)
             .map(|row| row.available)
     };
 
@@ -158,9 +158,9 @@ fn repairs_follow_the_installed_programs() {
 
 #[test]
 fn the_repairs_come_in_the_order_of_the_page() {
-    let listed: Vec<String> = repairs(|_| true)
+    let listed: Vec<&str> = repairs(|_| true)
         .into_iter()
-        .map(|row| row.repair)
+        .map(|row| row.repair.key())
         .collect();
 
     assert_eq!(
@@ -212,9 +212,8 @@ fn a_missing_tool_is_installed_by_one_step() {
 fn a_tool_counts_as_installed_only_when_its_row_found_it() {
     let rows = tools(|path| path == Path::new(super::RATE_MIRRORS_PROGRAM));
 
-    assert!(installed(&rows, super::CHAOTIC_MIRRORS));
-    assert!(!installed(&rows, "btrfs-assistant"));
-    assert!(!installed(&rows, "no-such-tool"));
+    assert!(installed(&rows, PageTool::ChaoticMirrors));
+    assert!(!installed(&rows, PageTool::Program(Tool::BtrfsAssistant)));
 }
 
 #[test]
@@ -231,10 +230,11 @@ fn a_start_failure_says_whether_the_program_is_missing_or_forbidden() {
 
 #[test]
 fn repairs_that_reinstall_or_wipe_ask_first() {
-    let asking: Vec<String> = repairs(|_| true)
+    let asking: Vec<&str> = repairs(|_| true)
         .into_iter()
         .map(|row| row.repair)
-        .filter(|repair| asks_first(repair))
+        .filter(|repair| repair.asks_first() && asks_first(repair.key()))
+        .map(Repair::key)
         .collect();
 
     assert_eq!(
@@ -261,7 +261,69 @@ fn removing_orphans_and_cleaning_the_cache_ask_first() {
 fn each_repair_names_the_program_it_needs() {
     let rows = repairs(|_| false);
 
-    let needs = |id: &str| rows.iter().find(|row| row.repair == id).unwrap().needs;
+    let needs = |id: &str| {
+        rows.iter()
+            .find(|row| row.repair.key() == id)
+            .unwrap()
+            .needs
+    };
+
     assert_eq!(needs("health-check"), "garuda-health");
     assert_eq!(needs("remote-fix"), "garuda-update");
+}
+
+#[test]
+fn every_repair_has_its_key_and_the_text_of_the_repairs_tab() {
+    for repair in Repair::ALL {
+        assert_eq!(Repair::from_key(repair.key()), Some(repair));
+    }
+
+    assert_eq!(
+        Repair::Remote(RemoteAction::FullFix).text_id(),
+        "maintenance-repair-remote-full-fix"
+    );
+    assert_eq!(
+        Repair::HealthCheck.text_id(),
+        "maintenance-repair-health-check"
+    );
+    assert_eq!(Repair::from_key("chroot"), None);
+}
+
+#[test]
+fn a_typed_repair_plans_its_one_step() {
+    let action = |repair: Repair| match &repair.plan().steps().first().unwrap().action {
+        PlannedAction::Root(action) => Some(action.clone()),
+        PlannedAction::User(_) => None,
+    };
+
+    assert_eq!(
+        action(Repair::Remote(RemoteAction::Keyring)),
+        Some(RootAction::GarudaUpdateRemote {
+            action: RemoteAction::Keyring
+        })
+    );
+    assert_eq!(action(Repair::HealthFix), Some(RootAction::GarudaHealthFix));
+    assert_eq!(
+        action(Repair::HealthCheck),
+        None,
+        "the check runs as the user"
+    );
+}
+
+#[test]
+fn an_operation_and_a_tool_have_the_texts_of_the_common_tab() {
+    assert_eq!(
+        Operation::RemoveOrphans.text_id(),
+        "maintenance-op-remove-orphans"
+    );
+    assert!(Operation::CleanPackageCache.asks_first());
+    assert!(!Operation::UpgradeSystem.asks_first());
+    assert_eq!(
+        PageTool::ChaoticMirrors.text_id(),
+        "maintenance-tool-chaotic-mirrors"
+    );
+    assert_eq!(
+        PageTool::Program(Tool::BtrfsAssistant).text_id(),
+        "maintenance-tool-btrfs-assistant"
+    );
 }

@@ -1,12 +1,14 @@
 use egui::Ui;
+use toolbox_core::Snapshot;
 use toolbox_core::features::users::listing::UserOrder;
-use toolbox_core::features::users::rows::UserRow;
 use toolbox_core::features::users::view::{self, Shown};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, chip, empty_state, pill_button, rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_plan::UserName;
 
 use super::dialogs::Dialog;
 use super::{accounts_ready, row};
@@ -23,15 +25,16 @@ const ORDERS: [(UserOrder, &str); 5] = [
 ];
 
 /// A row as the list shows it, named for screen readers by its user and
-/// full name.
-pub struct Item<'rows> {
-    row: UserRow<'rows>,
+/// full name. The account itself is looked up for the rows drawn only.
+#[derive(Debug)]
+pub struct Item {
+    key: UserName,
     name: String,
 }
 
-impl ListItem for Item<'_> {
+impl ListItem for Item {
     fn key(&self) -> &str {
-        self.row.user.name.as_str()
+        self.key.as_str()
     }
 
     fn name(&self) -> &str {
@@ -39,10 +42,14 @@ impl ListItem for Item<'_> {
     }
 }
 
+/// Keyed by the filter and the order besides the search, the system and
+/// the queue.
+pub type Rows = RowCache<(bool, UserOrder, Same<Snapshot>, u64), Vec<Item>>;
+
 pub fn show(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    shown: &mut Shown,
+    (shown, cache): (&mut Shown, &mut Rows),
     dialog: &mut Option<Dialog>,
 ) {
     let ctx = ui.ctx().clone();
@@ -53,7 +60,24 @@ pub fn show(
         return;
     }
 
-    let rows = view::users(context.snapshot, context.changes, shown);
+    let rest = (
+        shown.regular_only,
+        shown.user_order,
+        Same::of(context.snapshot),
+        context.revision,
+    );
+
+    let rows = cache.get(&[&shown.user_search], rest, || {
+        let _build = tracing::trace_span!("build rows").entered();
+        view::users(context.snapshot, context.changes, shown)
+            .iter()
+            .map(|row| Item {
+                key: row.user.name.clone(),
+                name: format!("{}, {}", row.user.name, row.shown_full_name()),
+            })
+            .collect()
+    });
+
     let total = view::users_total(context.snapshot).to_string();
     let count = i18n::text_with(
         &ctx,
@@ -74,18 +98,13 @@ pub fn show(
         return;
     }
 
-    let items: Vec<Item<'_>> = rows
-        .into_iter()
-        .map(|row| Item {
-            name: format!("{}, {}", row.user.name, row.shown_full_name()),
-            row,
-        })
-        .collect();
-
     let name = text("users-list");
     let heights = RowHeights::Fixed(row::height(ui));
-    RowList::new("users-list", &name, heights).show(ui, &items, |ui, item, state| {
-        row::show(ui, context, (&item.row, state), dialog);
+    RowList::new("users-list", &name, heights).show(ui, rows.as_slice(), |ui, item, state| {
+        // The rows come from this snapshot, so each one finds its account.
+        if let Some(user) = view::user(context.snapshot, context.changes, &item.key) {
+            row::show(ui, context, (&user, state), dialog);
+        }
     });
 
     ui.add_space(ui.tokens().sizes.card_gap);

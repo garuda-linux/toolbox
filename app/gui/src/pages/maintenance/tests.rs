@@ -7,7 +7,8 @@ use std::path::Path;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::features::maintenance::page::LaunchCause;
+use toolbox_core::features::maintenance::page::{LaunchCause, PageTool, Repair};
+use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::Toggle;
 use toolbox_system::mirrors::RankProblem;
@@ -91,10 +92,10 @@ fn an_operation_runs_now_or_waits_in_the_queue() {
         sent(&harness),
         [
             Command::from(MaintenanceCommand::Queue {
-                operation: "remove-orphans".to_owned(),
+                operation: Operation::RemoveOrphans,
                 on: true,
             }),
-            Command::from(MaintenanceCommand::RunNow("upgrade-system".to_owned())),
+            Command::from(MaintenanceCommand::RunOperation(Operation::UpgradeSystem)),
         ]
     );
 }
@@ -127,7 +128,7 @@ fn a_missing_tool_offers_its_install_and_the_ranking_says_it_runs() {
     assert_eq!(
         sent(&harness),
         [Command::from(MaintenanceCommand::OpenTool(
-            "btrfs-assistant".to_owned()
+            PageTool::Program(Tool::BtrfsAssistant)
         ))]
     );
 }
@@ -199,8 +200,8 @@ fn repairs_lists_the_repairs_it_can_run() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(MaintenanceCommand::RunNow(
-            "health-check".to_owned()
+        [Command::from(MaintenanceCommand::RunRepair(
+            Repair::HealthCheck
         ))]
     );
 }

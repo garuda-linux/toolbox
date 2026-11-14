@@ -1,4 +1,5 @@
 mod dialogs;
+mod rows;
 
 use std::collections::BTreeMap;
 use std::sync::Arc;
@@ -15,7 +16,8 @@ use toolbox_plan::{GroupName, ShellPath, UserName};
 use toolbox_services::locks::Locks;
 
 use super::UsersPage;
-use crate::command::{Command, UserEdit, UsersCommand};
+use crate::command::{AppCommand, Command, UserEdit, UsersCommand};
+use crate::page::PageId;
 use crate::page_service::Services;
 use crate::refused::Refused;
 use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
@@ -192,7 +194,7 @@ fn a_refused_click_names_the_account_until_dismissed() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(UsersCommand::DismissRefusal)]
+        [Command::from(AppCommand::DismissRefusal(PageId::Users))]
     );
 }
 

@@ -1,79 +1,28 @@
 //! Each service's hooks, in the shape [`PageService`] asks for. The
 //! services keep their own methods, which their tests call.
 
-use std::path::Path;
+mod runs;
+#[cfg(test)]
+mod tests;
 
 use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::grub;
-use toolbox_core::features::bootrepair::page::Booted;
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_services::diagnostics::page::Changed;
-use toolbox_system::Host;
+use toolbox_plan::UnitScope;
 
 use super::{Answer, Handled, PageService};
-use crate::artwork::Artwork;
 use crate::boot::{Boot, FileKind};
-use crate::bootrepair::BootRepair;
-use crate::command::{AppCommand, BootRepairCommand, ConfigsCommand};
-use crate::configs::Configs;
-use crate::diagnostics::Diagnostics;
+use crate::command::AppCommand;
+use crate::home::Home;
 use crate::kernels::Kernels;
 use crate::locales::Locales;
-use crate::maintenance::Maintenance;
 use crate::network::Network;
 use crate::packages::Packages;
 use crate::page::PageId;
 use crate::toggle_pages::TogglePages;
 use crate::units::Units;
 use crate::users::Users;
-
-impl PageService for Maintenance {
-    /// A ranked list comes back as the plan that installs it.
-    fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
-        answers(Self::take(self).map(Answer::RunPlan))
-    }
-
-    fn plan_started(&mut self) -> Vec<AppCommand> {
-        Self::plan_started(self);
-        Vec::new()
-    }
-
-    fn plan_refused(&mut self) -> Vec<AppCommand> {
-        Self::plan_refused(self);
-        Vec::new()
-    }
-
-    /// The last check of the programs may predate the end, so the disk is
-    /// asked.
-    fn plan_finished(&mut self, succeeded: bool) -> Vec<AppCommand> {
-        let launcher = self.launcher();
-        Self::plan_finished(self, succeeded, Path::exists, launcher.as_deref());
-        Vec::new()
-    }
-}
-
-impl PageService for Diagnostics {
-    /// A finished report or upload, for the clipboard.
-    fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
-        let changes = Self::take(self);
-        let copies = changes.into_iter().filter_map(|changed| match changed {
-            Changed::Report { ready: true } => Some(Answer::Copy {
-                text: self.page().report.clone(),
-                toast: "diagnostics-report-copied",
-            }),
-            Changed::Upload { done: true } => self.page().share.paste().map(|paste| Answer::Copy {
-                text: paste.link.clone(),
-                toast: "share-link-copied",
-            }),
-            Changed::Status
-            | Changed::Report { ready: false }
-            | Changed::Upload { done: false } => None,
-        });
-
-        answers(copies)
-    }
-}
 
 impl PageService for Boot {
     fn handle(
@@ -83,6 +32,10 @@ impl PageService for Boot {
         snapshot: &Snapshot,
     ) -> Handled {
         Self::handle(self, command, changes, snapshot)
+    }
+
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Boot, || self.set_refusal(None))
     }
 
     /// The systemd-boot settings come with the menu, and a wish the file
@@ -122,6 +75,10 @@ impl PageService for Network {
         Self::handle(self, command, changes, snapshot)
     }
 
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Network, || self.set_refusal(None))
+    }
+
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
         if page == PageId::Network {
             self.open();
@@ -145,6 +102,10 @@ impl PageService for Packages {
         snapshot: &Snapshot,
     ) -> Handled {
         Self::handle(self, command, changes, snapshot)
+    }
+
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Packages, || self.set_refusal(None))
     }
 
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
@@ -172,6 +133,10 @@ impl PageService for Users {
         Self::handle(self, command, changes, snapshot)
     }
 
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Users, || self.set_refusal(None))
+    }
+
     /// New lock flags join the snapshot the pages share.
     fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
         if page == PageId::Users {
@@ -179,95 +144,6 @@ impl PageService for Users {
         }
 
         answers(Self::take(self).then_some(Answer::Recombine))
-    }
-
-    fn plan_started(&mut self) -> Vec<AppCommand> {
-        Self::plan_started(self);
-        Vec::new()
-    }
-
-    fn plan_refused(&mut self) -> Vec<AppCommand> {
-        Self::plan_refused(self);
-        Vec::new()
-    }
-
-    fn plan_finished(&mut self, succeeded: bool) -> Vec<AppCommand> {
-        Self::plan_finished(self, succeeded);
-        Vec::new()
-    }
-}
-
-impl PageService for Configs {
-    fn handle(
-        &mut self,
-        command: &AppCommand,
-        _changes: &ChangeSet,
-        _snapshot: &Snapshot,
-    ) -> Handled {
-        if matches!(command, AppCommand::Configs(ConfigsCommand::DismissRefusal)) {
-            self.set_refusal(None);
-            return Handled::taken();
-        }
-
-        Handled::default()
-    }
-
-    /// The page looks for its files once it shows, and takes what its
-    /// work brought. An edit that needs the user brings the page back.
-    fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
-        if page == PageId::Configs {
-            self.open();
-        }
-
-        let taken = Self::take(self);
-        let review = taken.review.then_some(Answer::CloseConsole);
-        answers(taken.acts.into_iter().map(Answer::Configs).chain(review))
-    }
-
-    fn plan_started(&mut self) -> Vec<AppCommand> {
-        configs_act(Self::plan_started(self))
-    }
-
-    fn plan_refused(&mut self) -> Vec<AppCommand> {
-        configs_act(Self::plan_refused(self))
-    }
-
-    fn plan_finished(&mut self, succeeded: bool) -> Vec<AppCommand> {
-        configs_act(Self::plan_finished(self, succeeded))
-    }
-}
-
-impl PageService for BootRepair {
-    fn handle(
-        &mut self,
-        command: &AppCommand,
-        _changes: &ChangeSet,
-        _snapshot: &Snapshot,
-    ) -> Handled {
-        if matches!(
-            command,
-            AppCommand::BootRepair(BootRepairCommand::DismissRefusal)
-        ) {
-            self.set_refusal(None);
-            return Handled::taken();
-        }
-
-        Handled::default()
-    }
-
-    /// The live ISO may show up after the start, so the offer is worked
-    /// out again on every frame.
-    fn take(&mut self, page: PageId, snapshot: &Snapshot) -> Vec<AppCommand> {
-        let live = snapshot.part::<Host>().is_some_and(|host| host.live_iso);
-        self.see_live(Booted::of_live(live));
-        let offered = self.offered();
-        let leave = (page == PageId::BootRepair && !offered).then_some(Answer::LeaveBootRepair);
-        if page == PageId::BootRepair && offered {
-            self.open();
-        }
-
-        Self::take(self);
-        answers(std::iter::once(Answer::OfferBootRepair(offered)).chain(leave))
     }
 
     fn plan_started(&mut self) -> Vec<AppCommand> {
@@ -298,6 +174,10 @@ impl PageService for Kernels {
         Self::handle(self, command, changes, snapshot)
     }
 
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Kernels, || self.set_refusal(None))
+    }
+
     fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
         self.take_dkms();
         Vec::new()
@@ -318,6 +198,10 @@ impl PageService for Locales {
     ) -> Handled {
         Self::handle(self, command, changes, snapshot)
     }
+
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Locales, || self.set_refusal(None))
+    }
 }
 
 impl PageService for TogglePages {
@@ -329,19 +213,70 @@ impl PageService for TogglePages {
     ) -> Handled {
         Self::handle(self, command, changes, snapshot)
     }
+
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        Self::dismiss_refusal(self, page)
+    }
 }
 
-/// App reads the unit lists in, as the units service also runs the
-/// Services page's controls.
-impl PageService for Units {}
+impl PageService for Units {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
 
-/// The pictures load as rows ask, beside the frame.
-impl PageService for Artwork {}
+    fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
+        Self::take(self);
+        Vec::new()
+    }
+
+    /// systemd's signals report the change too, this covers a bus that
+    /// dropped them.
+    fn plan_finished(&mut self, _succeeded: bool) -> Vec<AppCommand> {
+        self.refresh(UnitScope::System);
+        self.refresh(UnitScope::User);
+        Vec::new()
+    }
+}
+
+impl PageService for Home {
+    fn handle(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        Self::handle(self, command, changes, snapshot)
+    }
+
+    /// The status and the programs are not read when the window comes
+    /// back: the programs only change through the app's own plans, and
+    /// the status checks reach the network, so they follow their period.
+    fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
+        Self::take(self);
+        Vec::new()
+    }
+
+    fn plan_finished(&mut self, _succeeded: bool) -> Vec<AppCommand> {
+        Self::plan_finished(self);
+        Vec::new()
+    }
+}
 
 fn answers(answers: impl IntoIterator<Item = Answer>) -> Vec<AppCommand> {
     answers.into_iter().map(AppCommand::Answer).collect()
 }
 
-fn configs_act(act: Option<crate::configs::Act>) -> Vec<AppCommand> {
-    answers(act.map(Answer::Configs))
+/// Whether `page` is `own`, whose refusal `clear` drops then.
+fn dismissed(page: PageId, own: PageId, clear: impl FnOnce()) -> bool {
+    let own = page == own;
+    if own {
+        clear();
+    }
+
+    own
 }

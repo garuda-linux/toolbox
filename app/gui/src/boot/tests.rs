@@ -3,7 +3,8 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use tokio::runtime::Runtime;
 use toolbox_plan::{GrubMenu, GrubPlatform};
-use toolbox_system::{BootMenuSource, Menu, MenuRead};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::{BootMenuSource, MenuRead};
 
 use super::{Boot, BootSetup, FileChooser, FileKind, Picked};
 use crate::testing::captures::GRUB_CFG;

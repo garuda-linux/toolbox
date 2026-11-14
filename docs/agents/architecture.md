@@ -211,7 +211,10 @@ prints the `String` as the usage error.
      `features::RefusalText`, so the text id is `R::TEXT_PREFIX` plus the
      strum code, and every refusal text names its subject `$name`. A page
      shows it with `Shown::text`, or `Shown::text_with` for more
-     placeables such as the `$why` of a protected package.
+     placeables such as the `$why` of a protected package. Its banner
+     sends `AppCommand::DismissRefusal(PageId)`, which
+     `PageService::receive` hands to the service's `dismiss_refusal`. A
+     toggle page names its catalog's page (`CatalogId::page`).
    - A click that needs `App` state (a run at once, a dialog, the
      preferences) stays in `app/gui/src/app/<name>.rs` and sets the
      refusal with the service's `set_refusal`. Its match keeps an empty

@@ -25,7 +25,6 @@ pub enum UsersCommand {
     },
     DismissRun,
     ShowConsole,
-    DismissRefusal,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

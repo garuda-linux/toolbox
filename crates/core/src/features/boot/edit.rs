@@ -13,7 +13,7 @@ use toolbox_plan::{
 use super::{
     Flag, Refusal, add_parameter, remove_parameter, set, set_flag, set_plymouth_theme, set_remember,
 };
-use crate::features::{RefusalText as _, reason_code};
+use crate::features::{ReasonCode, RefusalText as _};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// One change the page asks for, as the user typed or picked it.
@@ -74,32 +74,42 @@ impl Edit {
     }
 }
 
-/// What the page keeps of an [`EditProblem`]: its code, which names the
-/// text, without the parts no text shows.
+/// What the page keeps of an [`EditProblem`]: what names the text, without
+/// the parts no text shows.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct EditCode(&'static str);
+pub enum EditCode {
+    Refused(Refusal),
+    /// The rule the value breaks. A number out of range breaks
+    /// [`ReasonCode::Invalid`].
+    Rule(ReasonCode),
+    NeedsConfirm,
+}
 
 impl EditCode {
     /// Asks the user instead of refusing.
     pub fn needs_confirm(self) -> bool {
-        self == EditProblem::NeedsConfirm.code()
+        self == Self::NeedsConfirm
     }
 }
 
 impl From<EditCode> for &'static str {
     fn from(code: EditCode) -> Self {
-        code.0
+        match code {
+            EditCode::Refused(refusal) => refusal.code(),
+            EditCode::Rule(rule) => rule.code(),
+            EditCode::NeedsConfirm => "needs-confirm",
+        }
     }
 }
 
 impl EditProblem {
-    pub fn code(&self) -> EditCode {
-        EditCode(match self {
-            Self::Refused(refusal) => refusal.code(),
-            Self::Invalid(error) => rule(error),
-            Self::OutOfRange => "invalid",
-            Self::NeedsConfirm => "needs-confirm",
-        })
+    pub const fn code(&self) -> EditCode {
+        match self {
+            Self::Refused(refusal) => EditCode::Refused(*refusal),
+            Self::Invalid(error) => EditCode::Rule(rule(error)),
+            Self::OutOfRange => EditCode::Rule(ReasonCode::Invalid),
+            Self::NeedsConfirm => EditCode::NeedsConfirm,
+        }
     }
 }
 
@@ -171,16 +181,16 @@ fn optional<T>(
     }
 }
 
-const fn rule(error: &InvalidName) -> &'static str {
+const fn rule(error: &InvalidName) -> ReasonCode {
     match error.reason() {
         // The page words a character the same wherever it stands.
-        Reason::InvalidStart(character) => reason_code(Reason::InvalidCharacter(character)),
+        Reason::InvalidStart(_) => ReasonCode::InvalidCharacter,
         reason @ (Reason::Empty
         | Reason::TooLong { max: _ }
         | Reason::InvalidCharacter(_)
         | Reason::InvalidComponent
         | Reason::WrongFileType
         | Reason::UnknownUnitType
-        | Reason::UnknownDevice) => reason_code(reason),
+        | Reason::UnknownDevice) => ReasonCode::of(reason),
     }
 }

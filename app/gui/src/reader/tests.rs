@@ -162,6 +162,27 @@ async fn a_watch_keeps_the_newest_reading() {
 }
 
 #[tokio::test]
+async fn each_reading_taken_changes_the_revision_and_nothing_else_does() {
+    let mut watched = Watched::new(Some(start(|| 7)));
+    let first = watched.revision();
+
+    tokio::time::timeout(PATIENCE, async {
+        while watched.latest().is_none() {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+            watched.take();
+        }
+    })
+    .await
+    .unwrap();
+
+    let read = watched.revision();
+    assert_ne!(read, first);
+
+    watched.take();
+    assert_eq!(watched.revision(), read);
+}
+
+#[tokio::test]
 async fn a_failed_read_keeps_the_last_value_beside_its_error() {
     let runs = Arc::new(AtomicUsize::new(0));
     let counted = Arc::clone(&runs);

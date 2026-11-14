@@ -6,9 +6,9 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use tokio::runtime::Runtime;
-use toolbox_gui::pages::kernels::view::Dkms;
 use toolbox_gui::testing::PATIENCE;
 use toolbox_gui::{App, Setup, reader, snapshot};
+use toolbox_services::dkms::Dkms;
 
 use crate::common::{HEIGHT, no_note, window};
 use crate::system::step_until;

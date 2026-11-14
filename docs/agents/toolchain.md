@@ -18,8 +18,10 @@
   binaries carry their dependency list for `cargo audit bin`.
 - The shared CI include is pinned to a commit and the `alpine` and
   `archlinux` images to a digest.
-- Renovate merges minor and patch updates by itself, not majors and not
-  the Nix lock. A crate release waits 7 days before Renovate offers it.
+- Renovate merges minor and patch updates by itself, not majors, not
+  the Nix lock and not the lock file maintenance, which moves transitive
+  crates past the wait. A crate release waits 7 days before Renovate
+  offers it.
 - A new GitLab check job goes into `.release-needs`, unless its rules
   leave it out of tag pipelines.
 

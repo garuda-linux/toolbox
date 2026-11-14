@@ -4,6 +4,7 @@ use std::time::{Duration, SystemTime};
 use toolbox_cli::Exit;
 use toolbox_cli::output::{Paint, Style};
 use toolbox_plan::PackageName;
+use toolbox_services::home::Overview;
 use toolbox_system::{HealthIssue, HealthLevel, PendingUpdate, ProbeError, Status};
 
 use super::{Part, brief, exit, needs_attention, text, view};
@@ -227,7 +228,7 @@ fn calm(now: SystemTime) -> Status {
         updates: Ok(Vec::new()),
         aur_updates: Ok(Vec::new()),
         merges: Ok(Vec::new()),
-        last_update: Ok(Some(now - DAY * 40)),
+        last_update: Ok(Some(now - DAY * 2)),
         health: Ok(Vec::new()),
     }
 }
@@ -247,9 +248,45 @@ fn the_brief_line_names_each_thing_to_do() {
 
     assert_eq!(
         brief(&shown),
-        "2 updates, 1 file to merge, 1 low issue, restart needed"
+        "2 updates, 1 file to merge, last update 16 days ago, 1 low issue, restart needed"
     );
     assert!(needs_attention(&shown));
+}
+
+#[test]
+fn an_update_more_than_two_weeks_ago_needs_attention() {
+    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let mut found = calm(now);
+    found.last_update = Ok(Some(now - DAY * 14));
+    assert_eq!(brief(&view(&found, &Ok(false), now)), "all good");
+
+    found.last_update = Ok(Some(now - DAY * 15));
+    let shown = view(&found, &Ok(false), now);
+
+    assert_eq!(brief(&shown), "last update 15 days ago");
+    assert_eq!(exit(&shown), Exit::Attention);
+}
+
+#[test]
+fn the_window_and_the_command_line_agree_on_attention() {
+    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let mut stale = calm(now);
+    stale.last_update = Ok(Some(now - DAY * 14 - Duration::from_secs(1)));
+    let mut never = calm(now);
+    never.last_update = Ok(None);
+
+    for (found, restart) in [
+        (calm(now), false),
+        (calm(now), true),
+        (status(now), false),
+        (stale, false),
+        (never, false),
+    ] {
+        let home = Overview::of(&found, now).attention(restart);
+        let shown = view(&found, &Ok(restart), now);
+
+        assert_eq!(needs_attention(&shown), home, "{}", brief(&shown));
+    }
 }
 
 #[test]

@@ -6,11 +6,10 @@ use std::collections::BTreeSet;
 use std::fmt;
 
 use egui::{Context, TextEdit, Ui};
-use toolbox_core::features::RefusalText as _;
 use toolbox_core::features::users::home::check_uid;
-use toolbox_core::features::users::input::{self, AddForm, NewAccount, add_blocker};
+use toolbox_core::features::users::input::{self, AddForm, InputProblem, NewAccount, add_blocker};
 use toolbox_core::features::users::now::check_new_name;
-use toolbox_core::features::users::{Refusal, view};
+use toolbox_core::features::users::view;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, Select, check_row, disclosure, text_field};
 use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, ShellPath, UserName};
@@ -106,14 +105,15 @@ impl AddUser {
         &self,
         ctx: &Context,
         context: &PageContext<'_>,
-    ) -> (Result<NewUser, &'static str>, Problems) {
+    ) -> (Result<NewUser, InputProblem>, Problems) {
         let snapshot = context.snapshot;
-        let named = |code: &str| texts::problem(ctx, code, &self.name);
-        let name = input::name(&self.name)
-            .and_then(|user: UserName| check_new_name(&user, snapshot).map_err(Refusal::code));
+        let named = |problem: InputProblem| texts::problem(ctx, problem, &self.name);
+        let name = input::name(&self.name).and_then(|user: UserName| {
+            check_new_name(&user, snapshot).map_err(InputProblem::Refused)
+        });
 
         let uid = input::user_id(&self.uid)
-            .and_then(|uid| check_uid(uid, self.system, snapshot).map_err(Refusal::code));
+            .and_then(|uid| check_uid(uid, self.system, snapshot).map_err(InputProblem::Refused));
 
         let problems = Problems {
             name: name.err().filter(|_| !self.name.is_empty()).map(named),

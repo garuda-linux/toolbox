@@ -5,6 +5,7 @@ use tempfile::TempDir;
 use toolbox_catalog::COMPONENTS;
 
 use super::{AppCatalogs, CatalogId, Toggles, catalog_dir_in};
+use crate::page::PageId;
 
 fn source_tree() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog")
@@ -163,4 +164,18 @@ fn the_colour_schemes_load_and_a_missing_file_leaves_only_the_desktops() {
     let empty = TempDir::new().unwrap();
     let none = super::Catalogs::load(empty.path());
     assert_eq!(none.colour_schemes.schemes(), []);
+}
+
+/// A dismissed refusal names its page, so each catalog needs a page of its own.
+#[test]
+fn each_catalog_has_its_own_page_and_comes_back_from_it() {
+    for catalog in CatalogId::ALL {
+        assert_eq!(CatalogId::of_page(catalog.page()), Some(catalog));
+    }
+
+    assert_eq!(
+        CatalogId::of_page(PageId::SystemSettings),
+        Some(CatalogId::Settings)
+    );
+    assert_eq!(CatalogId::of_page(PageId::Discover), None);
 }

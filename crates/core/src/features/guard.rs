@@ -19,6 +19,9 @@ pub enum Guard {
     Kernels,
     Locales,
     LanguagePacks,
+    /// After the kernels and language packs, so the batch it checks holds
+    /// only the removals they kept.
+    PackageRemovals,
     Plymouth,
     Grub,
     ModuleBlacklist,
@@ -43,7 +46,7 @@ impl Guard {
             ],
             Self::Memberships => &[Groups::ID, RemovedGroups::ID],
             Self::UserLocks => &[RemovedUsers::ID, Groups::ID, AccountLocks::ID],
-            Self::Kernels | Self::LanguagePacks => &[Packages::ID],
+            Self::Kernels | Self::LanguagePacks | Self::PackageRemovals => &[Packages::ID],
             Self::Locales => &[Locales::ID],
             Self::Plymouth => &[PlymouthThemes::ID, SdBootKernelDomain::ID],
             Self::Grub => &[GrubDefaults::ID, SdBootKernelDomain::ID],
@@ -63,6 +66,7 @@ impl Guard {
             Self::Kernels => kernels::recheck,
             Self::Locales => locales::recheck,
             Self::LanguagePacks => locales::view::drop_stranded_packs,
+            Self::PackageRemovals => packages::recheck::recheck,
             Self::Plymouth => boot::recheck,
             Self::Grub => boot::recheck_grub,
             Self::ModuleBlacklist => network::recheck_blacklist,

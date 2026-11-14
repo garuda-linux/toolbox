@@ -90,6 +90,9 @@ so you can still remove it. Categories without such apps are hidden.
   shows. When the installed packages cannot be read, a message above the
   list says so: no switch then shows what is installed, and switching on
   an app that is installed changes nothing.
+- An app whose removal would also remove a package the system needs
+  stays installed. A message above the list names that package, until you
+  dismiss it or switch another app.
 
 ## Where the icons come from
 

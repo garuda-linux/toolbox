@@ -11,7 +11,6 @@ pub use lead::{LeadChip, LeadSections, NoLead};
 use listed::{Listed, SectionChip, SectionRows};
 use toolbox_catalog::LoadProblem;
 use toolbox_core::Snapshot;
-use toolbox_core::features::protection_text_id;
 use toolbox_core::features::toggles::Refusal;
 use toolbox_core::features::toggles::shown::{self as view, Section, Tally};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
@@ -29,7 +28,7 @@ use crate::catalogs::CatalogId;
 use crate::command::AppCommand;
 use crate::i18n;
 use crate::refused::Shown as _;
-use crate::toggle_pages::TogglePages;
+use crate::toggle_pages::{TogglePages, ToggleRefusal};
 
 #[derive(Debug)]
 pub struct TogglePage {
@@ -78,7 +77,10 @@ impl TogglePage {
         );
     }
 
-    pub fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>, lead: &dyn LeadSections) {
+    pub fn ui<L>(&mut self, ui: &mut Ui, context: &PageContext<'_>, (lead, data): (&L, &L::Data))
+    where
+        L: LeadSections,
+    {
         let _ui = tracing::trace_span!("toggles ui").entered();
         let ctx = ui.ctx().clone();
         if self.waits {
@@ -87,7 +89,7 @@ impl TogglePage {
 
         let query = self.search.trim().to_lowercase();
         let listed = self.listed(ui, context, &query);
-        let leads = lead.chips(&ctx, context, &query);
+        let leads = lead.chips(&ctx, data, &query);
         self.notices(ui, context, listed.unknown);
         self.chips(ui, &leads, &listed.chips);
         ui.add_space(ui.tokens().sizes.filters_gap);
@@ -99,7 +101,7 @@ impl TogglePage {
                 .as_deref()
                 .is_none_or(|picked| picked == chip.id)
             {
-                any |= lead.show(ui, context, chip.id, &query);
+                any |= lead.show(ui, (context, data), chip.id, &query);
             }
         }
 
@@ -173,21 +175,14 @@ impl TogglePage {
         let refused = context
             .service::<TogglePages>()
             .refusal(self.catalog)
-            .and_then(|refused| match refused.refusal {
-                Refusal::Account(_) | Refusal::Kernel(_) => Some(refused.text(&ctx)),
-                Refusal::Protected(why) | Refusal::TakesAlong(why) => {
-                    let why = i18n::text(&ctx, &protection_text_id(why));
-                    Some(refused.text_with(&ctx, &[("why", why.as_ref())]))
-                }
-                Refusal::Unknown | Refusal::Unmet => None,
-            });
+            .and_then(|refused| refusal_text(&ctx, refused));
 
         if let Some(text) = refused
             && refusal_banner(ui, Tone::Warning, &text, "toggles-dismiss")
         {
             context
                 .commands
-                .send(AppCommand::DismissRefusal(self.catalog));
+                .send(AppCommand::DismissRefusal(self.catalog.page()));
         }
 
         if context.probed && unknown > 0 {
@@ -336,4 +331,15 @@ pub fn tally_text(ctx: &egui::Context, tally: Tally) -> String {
         &[("on", &on), ("total", &total)],
     )
     .into_owned()
+}
+
+/// `None` for a stale id or an unmet entry, whose switch already rests.
+pub fn refusal_text(ctx: &egui::Context, refused: &ToggleRefusal) -> Option<String> {
+    match refused.refusal {
+        Refusal::Account(_)
+        | Refusal::Kernel(_)
+        | Refusal::Protected(_)
+        | Refusal::TakesAlong(_) => Some(refused.text(ctx)),
+        Refusal::Unknown | Refusal::Unmet => None,
+    }
 }

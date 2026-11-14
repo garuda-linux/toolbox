@@ -6,15 +6,21 @@ pub(super) fn install(packages: &TargetList<PackageName>) -> Command {
     pacman(["-S", "--needed", "--noconfirm", "--"]).args(names(packages))
 }
 
+/// `-Rn` without `-s`, so each round removes only names the helper
+/// checked, and a dependency only an orphan needed is checked in the next.
 pub(super) fn remove_orphans() -> Invocation {
     Invocation::RunWithTargetsFrom {
         query: pacman(["-Qtdq"]),
-        run: remove(),
+        run: pacman(["-Rn", "--noconfirm", "--"]),
     }
 }
 
-pub(super) fn remove() -> Command {
-    pacman(["-Rns", "--noconfirm", "--"])
+/// pacman refuses `--print` with `--nosave`, which changes no target.
+pub(super) fn remove(packages: &TargetList<PackageName>) -> Invocation {
+    Invocation::RunUnlessItRemovesProtected {
+        preview: pacman(["-Rs", "--print", "--print-format", "%n", "--"]).args(names(packages)),
+        run: pacman(["-Rns", "--noconfirm", "--"]).args(names(packages)),
+    }
 }
 
 pub(super) fn refresh_keyring() -> Command {

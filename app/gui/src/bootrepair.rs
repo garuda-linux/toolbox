@@ -17,7 +17,9 @@ use toolbox_core::features::bootrepair::{Refusal, RepairFacts};
 use toolbox_plan::Toggle;
 use toolbox_system::{ProbeError, RepairSource};
 
+use crate::command::{AppCommand, BootRepairCommand};
 use crate::lane::{Lane, OneRead};
+use crate::page_service::Handled;
 use crate::refused::Refused;
 
 type Answer = Result<RepairFacts, ProbeError>;
@@ -148,6 +150,27 @@ impl BootRepair {
 
     pub const fn forget(&mut self) {
         self.progress = self.progress.forgotten();
+    }
+
+    /// A repair runs at once in App's Console, as does its output.
+    pub fn handle(&mut self, command: &AppCommand) -> Handled {
+        let AppCommand::BootRepair(command) = command else {
+            return Handled::default();
+        };
+
+        match command {
+            BootRepairCommand::Refresh => self.refresh(),
+            BootRepairCommand::Forget => self.forget(),
+            BootRepairCommand::Repair {
+                system: _,
+                layout: _,
+                passphrase: _,
+                target: _,
+            }
+            | BootRepairCommand::ShowConsole => return Handled::default(),
+        }
+
+        Handled::taken()
     }
 
     pub fn take(&mut self) {

@@ -23,7 +23,7 @@ fn a_taken_click_is_an_edit_and_clears_the_refusal() {
     });
 
     assert!(slot.is_none());
-    assert_eq!(handled.edit.map(|edit| edit.add.len()), Some(1));
+    assert_eq!(handled.edit.map(|edit| edit.len()), Some(1));
 }
 
 #[test]

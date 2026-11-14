@@ -17,7 +17,7 @@ use crate::testing::{
     PageFixture, assert_header, assert_rows_hold_their_content, assert_rows_wait_while_busy,
     body_font, measured, rect_of,
 };
-use crate::units::{UnitListing, Units, UnitsFailure};
+use crate::units::{UnitListing, UnitLists, Units, UnitsFailure};
 
 const AVAHI: &str = "avahi-daemon.service, Running";
 const SSHD: &str = "sshd.service, Running";
@@ -27,10 +27,10 @@ type PageState = crate::testing::PageState<ServicesPage>;
 fn listed(units: UnitListing) -> PageFixture {
     PageFixture {
         services: Services {
-            units: Units {
+            units: Units::showing(UnitLists {
                 system: units,
                 user: UnitListing::NotLoaded,
-            },
+            }),
             ..Services::default()
         },
         ..PageFixture::default()

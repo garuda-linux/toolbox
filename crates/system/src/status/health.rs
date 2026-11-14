@@ -14,6 +14,8 @@ use std::ffi::OsString;
 
 use serde::Deserialize;
 use serde_json::{Map, Value};
+use toolbox_exec::{Environment, locate_program};
+use toolbox_plan::procedure::Program;
 
 use crate::command;
 use crate::error::ProbeError;
@@ -67,7 +69,10 @@ struct Entry {
 impl GarudaHealth {
     #[must_use = "the adapter does nothing until asked"]
     pub fn new() -> Self {
-        Self::with_program("garuda-health")
+        Self::with_program(locate_program(
+            Program::GarudaHealth,
+            Environment::Inherited,
+        ))
     }
 
     #[must_use = "the adapter does nothing until asked"]

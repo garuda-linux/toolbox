@@ -15,6 +15,8 @@ use toolbox_catalog::{
 use toolbox_core::features::discover::Apps;
 use toolbox_plan::UserConfigEdit;
 
+use crate::page::PageId;
+
 /// The variable that names the catalog folder, for tests and odd installs.
 const DIR_VARIABLE: &str = "GARUDA_TOOLBOX_CATALOG_DIR";
 
@@ -127,6 +129,23 @@ impl Catalogs {
 }
 
 impl CatalogId {
+    pub const ALL: [Self; 4] = [Self::Components, Self::Gaming, Self::Settings, Self::Setup];
+
+    /// The page that shows the catalog.
+    pub const fn page(self) -> PageId {
+        match self {
+            Self::Components => PageId::Components,
+            Self::Gaming => PageId::Gaming,
+            Self::Settings => PageId::SystemSettings,
+            Self::Setup => PageId::Setup,
+        }
+    }
+
+    /// The catalog `page` shows, `None` for a page that shows none.
+    pub fn of_page(page: PageId) -> Option<Self> {
+        Self::ALL.into_iter().find(|catalog| catalog.page() == page)
+    }
+
     pub const fn file(self) -> &'static str {
         match self {
             Self::Components => COMPONENTS,

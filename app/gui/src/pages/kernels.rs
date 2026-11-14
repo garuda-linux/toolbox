@@ -6,23 +6,25 @@ pub(crate) mod fixtures;
 mod row;
 #[cfg(test)]
 mod tests;
-pub mod view;
 
 use egui::Ui;
+use row::Item;
+use toolbox_core::features::kernels::view::{self, Listing};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{
     RowHeights, RowList, Tone, after_skeleton, banner, card, dimmed, hold_content, rich,
     section_heading, skeleton_rows,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
-use view::{Dkms, Listing, Row};
+use toolbox_services::dkms::Dkms;
 
 use super::header::refresh_header;
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
-use crate::command::{KernelCommand, KernelEdit};
+use crate::command::{AppCommand, KernelCommand, KernelEdit};
 use crate::i18n;
 use crate::kernels::Kernels;
+use crate::page::PageId;
 
 /// Placeholder rows while the system is read, about as many kernels as a
 /// system has installed and on offer.
@@ -77,9 +79,11 @@ fn listing(ui: &mut Ui, context: &PageContext<'_>) {
 
     notices(ui, context, &listing);
 
-    let rows = listing.rows(context.changes, context.service::<Kernels>().dkms());
-    let (installed, available): (Vec<&Row<'_>>, Vec<&Row<'_>>) =
-        rows.iter().partition(|row| row.kernel.is_installed());
+    let rows = listing.rows(context.changes, context.service::<Kernels>().dkms_entries());
+    let (installed, available): (Vec<Item<'_, '_>>, Vec<Item<'_, '_>>) = rows
+        .iter()
+        .map(Item)
+        .partition(|item| item.0.kernel.is_installed());
 
     section(ui, context, "kernels-installed", &installed);
     section(ui, context, "kernels-available", &available);
@@ -103,7 +107,9 @@ fn header(ui: &mut Ui, context: &PageContext<'_>) {
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Kernels>().refusal();
     if refused_banner(ui, refused, Tone::Warning, "kernels-dismiss") {
-        context.commands.send(KernelCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Kernels));
     }
 }
 
@@ -111,8 +117,9 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
 fn notices(ui: &mut Ui, context: &PageContext<'_>, listing: &Listing) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let dkms = context.service::<Kernels>().dkms();
-    let missing_builds = listing.modules_missing(context.changes, dkms);
+    let kernels = context.service::<Kernels>();
+    let missing_builds = listing.modules_missing(context.changes, kernels.dkms_entries());
+    let dkms = kernels.dkms();
 
     let dkms = match (dkms.error(), dkms.get()) {
         (Some(_), _) => {
@@ -174,7 +181,7 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, listing: &Listing) {
     }
 }
 
-fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[&Row<'_>]) {
+fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[Item<'_, '_>]) {
     if rows.is_empty() {
         return;
     }
@@ -191,7 +198,9 @@ fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[&Row<'_>]) 
 
     let _rows = tracing::trace_span!("rows").entered();
     RowList::new(id, &title, heights).show(ui, rows, |ui, shown, state| {
-        dimmed(ui, context.busy, |ui| row::show(ui, context, shown, state));
+        dimmed(ui, context.busy, |ui| {
+            row::show(ui, context, shown.0, state);
+        });
     });
     ui.add_space(ui.tokens().sizes.section_gap);
 }

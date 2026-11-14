@@ -42,7 +42,6 @@ pub enum NetworkCommand {
     /// Queues the hotspot tool, or takes it back.
     ToggleHotspot,
     OpenHotspot,
-    DismissRefusal,
 }
 
 impl From<NetworkCommand> for Command {

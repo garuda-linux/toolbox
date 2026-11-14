@@ -267,18 +267,19 @@ fn only_listed_packs_are_queued() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
 
-    assert!(!toggle_pack(
-        &package("vim"),
-        Toggle::On,
-        &mut changes,
-        &snapshot
-    ));
-    assert!(toggle_pack(
-        &package("firefox-i18n-en-us"),
-        Toggle::On,
-        &mut changes,
-        &snapshot
-    ));
+    assert_eq!(
+        toggle_pack(&package("vim"), Toggle::On, &mut changes, &snapshot),
+        Ok(false)
+    );
+    assert_eq!(
+        toggle_pack(
+            &package("firefox-i18n-en-us"),
+            Toggle::On,
+            &mut changes,
+            &snapshot
+        ),
+        Ok(true)
+    );
     assert_eq!(
         changes.wish::<Packages>(&package("firefox-i18n-en-us")),
         Some(&Toggle::On)
@@ -291,18 +292,24 @@ fn a_locale_taken_back_takes_its_queued_packs_with_it() {
     let mut changes = ChangeSet::default();
     let german = locale_entry("de_DE.UTF-8 UTF-8");
     toggle(&german, Toggle::On, &mut changes, &snapshot).unwrap();
-    assert!(toggle_pack(
-        &package("firefox-i18n-de"),
-        Toggle::On,
-        &mut changes,
-        &snapshot
-    ));
-    assert!(toggle_pack(
-        &package("firefox-i18n-en-us"),
-        Toggle::On,
-        &mut changes,
-        &snapshot
-    ));
+    assert_eq!(
+        toggle_pack(
+            &package("firefox-i18n-de"),
+            Toggle::On,
+            &mut changes,
+            &snapshot
+        ),
+        Ok(true)
+    );
+    assert_eq!(
+        toggle_pack(
+            &package("firefox-i18n-en-us"),
+            Toggle::On,
+            &mut changes,
+            &snapshot
+        ),
+        Ok(true)
+    );
 
     toggle(&german, Toggle::Off, &mut changes, &snapshot).unwrap();
 
@@ -328,4 +335,46 @@ fn a_restored_queue_loses_the_packs_of_locales_it_no_longer_has() {
         None,
         "without the package lists nothing is checked"
     );
+}
+
+/// `hunspell-en_us` alone pulled in `efibootmgr`, so the pack stays.
+#[test]
+fn a_pack_removal_meets_the_package_rules() {
+    use toolbox_plan::Protection;
+    use toolbox_state::packages::{InstallReason, LocalNode, PackageGraph};
+
+    use crate::features::Refused;
+    use crate::features::locales::Refusal;
+    use crate::features::packages::queue;
+
+    let mut snapshot = snapshot();
+    snapshot.insert(PackageGraph(vec![
+        LocalNode {
+            name: package("hunspell-en_us"),
+            depends: vec!["efibootmgr".to_owned()],
+            provides: Vec::new(),
+            reason: InstallReason::Explicit,
+        },
+        LocalNode {
+            name: package("efibootmgr"),
+            depends: Vec::new(),
+            provides: Vec::new(),
+            reason: InstallReason::Dependency,
+        },
+    ]));
+    let mut changes = ChangeSet::default();
+
+    assert_eq!(
+        toggle_pack(
+            &package("hunspell-en_us"),
+            Toggle::Off,
+            &mut changes,
+            &snapshot
+        ),
+        Err(Refused::new(
+            Refusal::Package(queue::Refusal::TakesAlong(Protection::Boot)),
+            "efibootmgr".to_owned()
+        ))
+    );
+    assert!(changes.is_empty());
 }

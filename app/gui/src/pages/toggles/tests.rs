@@ -27,7 +27,7 @@ impl PageView for Plain {
     }
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
-        self.0.ui(ui, context, &NoLead);
+        self.0.ui(ui, context, (&NoLead, &()));
     }
 }
 

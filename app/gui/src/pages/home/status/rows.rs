@@ -5,10 +5,10 @@ use toolbox_core::features::maintenance::{Operation, RunNow, upgrade_queued};
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button};
 use toolbox_plan::UnitName;
+use toolbox_services::home::Overview;
 use toolbox_system::HealthLevel;
 
 use super::super::HomePage;
-use super::super::view::Overview;
 use super::{run_button, run_row};
 use crate::command::{HomeCommand, MaintenanceCommand, UiCommand};
 use crate::i18n;
@@ -214,14 +214,10 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
         &[("orphans", &orphans), ("cache", &cache)],
     );
 
-    let keys = [
-        Operation::RemoveOrphans.key(),
-        Operation::CleanPackageCache.key(),
-    ];
-
+    let cleanup = [Operation::RemoveOrphans, Operation::CleanPackageCache];
     let queued = operations(context.changes)
         .iter()
-        .any(|row| row.queued && keys.contains(&row.operation));
+        .any(|row| row.queued && cleanup.contains(&row.operation));
 
     ActionRow::new(icons::EDIT_CLEAR_ALL, Tone::Neutral, &title)
         .detail(&detail)
@@ -233,9 +229,9 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
             };
 
             if pill_button(ui, &i18n::text(&ctx, id), ButtonKind::Soft).clicked() {
-                for operation in keys {
+                for operation in cleanup {
                     context.commands.send(MaintenanceCommand::Queue {
-                        operation: operation.to_owned(),
+                        operation,
                         on: !queued,
                     });
                 }

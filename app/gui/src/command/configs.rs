@@ -16,7 +16,6 @@ pub enum ConfigsCommand {
     Discard,
     Dismiss,
     ShowConsole,
-    DismissRefusal,
 }
 
 impl From<ConfigsCommand> for Command {

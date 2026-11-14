@@ -5,18 +5,22 @@
 use std::path::PathBuf;
 use std::sync::mpsc;
 
+use tokio::runtime::Handle;
 use toolbox_core::features::console::HelperFailure;
 use toolbox_exec::{Environment, EventSink, PtyRunner, apply};
 use toolbox_plan::protocol::{Event, Mode};
 use toolbox_plan::{Step, UserAction};
 
-use super::{Report, Reporter, Run};
+use super::{Reporter, Run};
 
-struct ReportSink(Reporter);
+struct ReportSink {
+    reporter: Reporter,
+    runtime: Handle,
+}
 
 impl EventSink for ReportSink {
     fn send(&mut self, event: Event) {
-        self.0.report(Report::Step(event));
+        self.reporter.step_blocking(event, &self.runtime);
     }
 }
 
@@ -27,7 +31,10 @@ pub async fn run(steps: Vec<Step<UserAction>>, run: &mut Run<'_>, mode: Mode) ->
         answers.send(size).ok();
     }
 
-    let mut sink = ReportSink(run.reporter.clone());
+    let mut sink = ReportSink {
+        reporter: run.reporter.clone(),
+        runtime: Handle::current(),
+    };
 
     // The blocking thread does not inherit the plan's span by itself.
     let plan = tracing::Span::current();

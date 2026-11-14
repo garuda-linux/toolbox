@@ -99,6 +99,7 @@ fn masking_a_user_unit_keeps_user_and_mask_apart() {
             .map(|invocation| match invocation {
                 Invocation::Run(command) => command.arguments().to_vec(),
                 other @ (Invocation::RunWithTargetsFrom { query: _, run: _ }
+                | Invocation::RunUnlessItRemovesProtected { preview: _, run: _ }
                 | Invocation::Builtin(_)
                 | Invocation::Always(_)
                 | Invocation::Cleanup {

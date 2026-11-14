@@ -43,6 +43,19 @@ pub enum Refusal {
     GuardsWaiting { guard: Guard },
 }
 
+/// The rule a typed value breaks, without the parts no text shows.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]
+#[strum(serialize_all = "kebab-case")]
+pub enum ReasonCode {
+    Empty,
+    TooLong,
+    InvalidStart,
+    InvalidCharacter,
+    InvalidPath,
+    WrongType,
+    Invalid,
+}
+
 /// The guards a queue restored from disk has not met yet. It was queued
 /// again before the system was known, so each guard runs once, with the
 /// first snapshot that holds what it checks against.
@@ -107,6 +120,24 @@ impl Unchecked {
     }
 }
 
+impl ReasonCode {
+    pub const fn of(reason: Reason) -> Self {
+        match reason {
+            Reason::Empty => Self::Empty,
+            Reason::TooLong { max: _ } => Self::TooLong,
+            Reason::InvalidStart(_) => Self::InvalidStart,
+            Reason::InvalidCharacter(_) => Self::InvalidCharacter,
+            Reason::InvalidComponent => Self::InvalidPath,
+            Reason::WrongFileType => Self::WrongType,
+            Reason::UnknownUnitType | Reason::UnknownDevice => Self::Invalid,
+        }
+    }
+
+    pub fn code(self) -> &'static str {
+        self.into()
+    }
+}
+
 /// Drops every queued change of `D` that `refusal` gives a reason for,
 /// each with a line in the log. Returns how many went.
 fn drop_refused<D>(
@@ -130,16 +161,4 @@ where
     }
 
     dropped
-}
-
-pub const fn reason_code(reason: Reason) -> &'static str {
-    match reason {
-        Reason::Empty => "empty",
-        Reason::TooLong { max: _ } => "too-long",
-        Reason::InvalidStart(_) => "invalid-start",
-        Reason::InvalidCharacter(_) => "invalid-character",
-        Reason::InvalidComponent => "invalid-path",
-        Reason::WrongFileType => "wrong-type",
-        Reason::UnknownUnitType | Reason::UnknownDevice => "invalid",
-    }
 }

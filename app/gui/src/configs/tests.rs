@@ -173,6 +173,24 @@ fn the_files_are_listed_once_the_page_opens() {
 }
 
 #[test]
+fn each_listing_that_lands_changes_the_revision_and_nothing_else_does() {
+    let (_runtime, _machine, _folder, mut configs) = configs();
+    let first = configs.revision();
+
+    configs.open();
+    settle(&mut configs, |configs, _| configs.listing().is_some());
+    assert_eq!(configs.revision(), first.wrapping_add(1));
+
+    configs.take();
+    assert_eq!(configs.revision(), first.wrapping_add(1));
+
+    configs.refresh();
+    settle(&mut configs, |configs, _| {
+        configs.revision() == first.wrapping_add(2)
+    });
+}
+
+#[test]
 fn a_page_opened_every_frame_still_gets_its_one_listing() {
     let (_runtime, machine, _folder, mut configs) = configs();
 

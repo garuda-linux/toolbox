@@ -1,6 +1,7 @@
 mod accounts;
 mod checks;
 mod gaming;
+mod git;
 mod kernels;
 mod setup;
 

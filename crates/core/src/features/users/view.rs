@@ -8,7 +8,8 @@ use toolbox_plan::{GroupName, ShellPath, UserName};
 use super::ADMIN_GROUPS;
 use super::listing::{GroupOrder, UserOrder, arrange_groups, arrange_users};
 use super::rows::{
-    GroupChoice, GroupRow, QueuedForUser, UserRow, group_choices, group_rows, user_rows,
+    GroupChoice, GroupRow, QueuedForUser, UserRow, group_choices, group_rows, user_row_of,
+    user_rows,
 };
 use crate::domains::{Accounts, AvailableShells};
 use crate::features::search::Needle;
@@ -120,6 +121,17 @@ pub fn users<'snapshot>(
     let mut rows = user_rows(accounts, snapshot, changes, shown.regular_only);
     arrange_users(&mut rows, &shown.user_search, shown.user_order);
     rows
+}
+
+/// The row of the account `name` as [`users`] builds it, for a list that
+/// keeps only the names of its rows.
+pub fn user<'snapshot>(
+    snapshot: &'snapshot Snapshot,
+    changes: &ChangeSet,
+    name: &UserName,
+) -> Option<UserRow<'snapshot>> {
+    let accounts = snapshot.part::<Accounts>()?;
+    user_row_of(name, accounts, snapshot, changes)
 }
 
 pub fn groups(snapshot: &Snapshot, changes: &ChangeSet, shown: &Shown) -> Vec<GroupRow> {

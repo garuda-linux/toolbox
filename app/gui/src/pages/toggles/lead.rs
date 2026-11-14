@@ -31,24 +31,35 @@ impl LeadChip {
 }
 
 pub trait LeadSections {
+    /// What the sections show, read from the system and the queue alone,
+    /// so the page keeps it until either changes.
+    type Data: std::fmt::Debug;
+
+    fn data(&self, context: &PageContext<'_>) -> Self::Data;
+
     /// Each section's chip, in the order they show, its count over the
     /// rows `query` (trimmed, lower case, empty for all) matches.
-    fn chips(&self, ctx: &Context, context: &PageContext<'_>, query: &str) -> Vec<LeadChip>;
+    fn chips(&self, ctx: &Context, data: &Self::Data, query: &str) -> Vec<LeadChip>;
 
     /// Shows section `id` with its rows that match `query` (trimmed, lower
     /// case, empty for all). Returns whether it showed a row.
-    fn show(&self, ui: &mut Ui, context: &PageContext<'_>, id: &str, query: &str) -> bool;
+    fn show(&self, ui: &mut Ui, on: (&PageContext<'_>, &Self::Data), id: &str, query: &str)
+    -> bool;
 }
 
 #[derive(Clone, Copy, Debug)]
 pub struct NoLead;
 
 impl LeadSections for NoLead {
-    fn chips(&self, _ctx: &Context, _context: &PageContext<'_>, _query: &str) -> Vec<LeadChip> {
+    type Data = ();
+
+    fn data(&self, _context: &PageContext<'_>) {}
+
+    fn chips(&self, _ctx: &Context, (): &(), _query: &str) -> Vec<LeadChip> {
         Vec::new()
     }
 
-    fn show(&self, _ui: &mut Ui, _context: &PageContext<'_>, _id: &str, _query: &str) -> bool {
+    fn show(&self, _ui: &mut Ui, _: (&PageContext<'_>, &()), _id: &str, _query: &str) -> bool {
         false
     }
 }

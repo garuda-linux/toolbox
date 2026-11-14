@@ -7,7 +7,7 @@ use toolbox_plan::protocol::ReadKind;
 
 use super::{HelperLocks, LockProblem, LockSource as _, parse};
 use crate::HelperReads;
-use crate::pkexec::Refusal;
+use crate::pkexec::{HelperError, Refusal};
 use crate::test_support::runnable_script;
 
 /// Runs its script in place of pkexec and the helper.
@@ -54,7 +54,7 @@ fn a_helper_that_cannot_start_or_fails_leaves_the_flags_unknown() {
 
     assert!(matches!(
         missing.locks().unwrap_err(),
-        LockProblem::Failed(reason) if reason.contains("cannot start")
+        LockProblem::Failed(HelperError::Missing | HelperError::Start(_))
     ));
 
     let folder = tempfile::tempdir().unwrap();
@@ -63,7 +63,7 @@ fn a_helper_that_cannot_start_or_fails_leaves_the_flags_unknown() {
         refusing(folder.path(), "cannot answer shadow-locks", 1)
             .locks()
             .unwrap_err(),
-        LockProblem::Failed(reason) if reason.contains("cannot answer")
+        LockProblem::Failed(HelperError::Ended { code: Some(1_i32), words }) if words.contains("cannot answer")
     ));
 }
 
@@ -109,6 +109,6 @@ fn an_answer_past_the_cap_leaves_the_flags_unknown() {
 
     assert!(matches!(
         locks.locks().unwrap_err(),
-        LockProblem::Failed(reason) if reason.contains("too long")
+        LockProblem::Failed(HelperError::TooLong)
     ));
 }

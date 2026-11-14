@@ -36,6 +36,7 @@ cli-membership = `{ $name }`: { $why }
 cli-locale-system-locale = this is the system language, choose another system language before you disable it
 cli-locale-last-locale = at least one locale must stay enabled
 cli-locale-not-enabled = this locale is not enabled, enable it first
+cli-locale-package = the package rules keep this language pack installed
 
 cli-driver-other-file = another driver settings file in modprobe.d blacklists this driver, Garuda Toolbox only changes its own file
 cli-driver-unavailable = the drivers of this system could not be read

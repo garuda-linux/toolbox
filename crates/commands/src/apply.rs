@@ -188,7 +188,16 @@ pub fn carry_out_steps(
             };
 
             // Steps of the first try ran too, before pkexec could not ask.
-            let mut second_run = run_once(plan, sudo, out);
+            // They do not run again. A failed or cancelled one does, whole,
+            // with its `Always` part.
+            let done: Vec<_> = first_run
+                .succeeded
+                .iter()
+                .chain(&first_run.skipped)
+                .copied()
+                .collect();
+
+            let mut second_run = run_once(plan.without(&done), sudo, out);
             second_run.succeeded.extend(first_run.succeeded);
             second_run.skipped.extend(first_run.skipped);
             second_run

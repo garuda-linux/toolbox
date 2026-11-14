@@ -2,7 +2,9 @@ use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::{ChangeSet, Snapshot};
 
 use crate::boot::Boot;
-use crate::command::{AppCommand, BootCommand};
+use crate::command::AppCommand;
+use crate::page::PageId;
+use crate::page_service::PageService as _;
 
 /// Without `/etc/default/grub` there is nothing to edit.
 #[test]
@@ -22,10 +24,12 @@ fn an_edit_without_a_known_menu_is_refused_with_its_value() {
     let refusal = boot.refusal().unwrap();
     assert_eq!(refusal.subject, "quiet");
 
-    boot.handle(
-        &AppCommand::Boot(BootCommand::DismissRefusal),
+    let dismissed = boot.receive(
+        &AppCommand::DismissRefusal(PageId::Boot),
         &ChangeSet::default(),
         &Snapshot::default(),
     );
+
+    assert!(dismissed.taken);
     assert!(boot.refusal().is_none());
 }

@@ -4,7 +4,7 @@ use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_instance::bus::queue::Question;
 
 use super::App;
-use crate::command::{DiagnosticsCommand, UiCommand};
+use crate::command::{AppCommand, DiagnosticsCommand, UiCommand};
 use crate::i18n;
 use crate::instance::Arrival;
 
@@ -29,7 +29,10 @@ impl App {
         }
 
         match arrival.collection(in_front) {
-            Some(selection) => self.run_diagnostics(DiagnosticsCommand::Collect(selection)),
+            Some(selection) => {
+                let collect = DiagnosticsCommand::Collect(selection);
+                self.run_app(ctx, AppCommand::Diagnostics(collect));
+            }
             None if arrival.action.is_some() => {
                 tracing::info!("a collection asked from outside waits for a click");
             }

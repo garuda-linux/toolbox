@@ -4,19 +4,24 @@
 #[cfg(test)]
 mod tests;
 
+use toolbox_core::features::kernels::view::Listing;
 use toolbox_core::features::kernels::{
-    self as core_kernels, install_missing_headers, set_builds, set_headers,
+    self as core_kernels, DkmsEntry, install_missing_headers, set_builds, set_headers,
 };
 use toolbox_core::{ChangeSet, Snapshot};
+use toolbox_gui_kit::Loadable;
 use toolbox_plan::{PackageName, Toggle};
+use toolbox_services::dkms::Dkms;
 
 use crate::command::{AppCommand, KernelCommand, KernelEdit};
 use crate::page_service::Handled;
-use crate::pages::kernels::view::{Dkms, DkmsReading, Listing};
 use crate::reader::{ReaderHandle, Watched};
-use crate::refused::{Refused, queue, queue_or_refuse};
+use crate::refused::{Refused, queue, queue_or_keep};
 
 pub type KernelRefusal = Refused<core_kernels::Refusal, PackageName>;
+
+/// What dkms said last. It is slow, so it is no part of the snapshot.
+pub type DkmsReading = Loadable<Dkms>;
 
 #[derive(Debug, Default)]
 pub struct Kernels {
@@ -37,8 +42,18 @@ impl Kernels {
         self.refusal.as_ref()
     }
 
+    pub fn set_refusal(&mut self, refusal: Option<KernelRefusal>) {
+        self.refusal = refusal;
+    }
+
     pub const fn dkms(&self) -> &DkmsReading {
         self.dkms.reading()
+    }
+
+    /// The modules of the last answer, which stay while dkms is asked
+    /// again. Empty until dkms answered.
+    pub fn dkms_entries(&self) -> &[DkmsEntry] {
+        self.dkms().get().map_or(&[], Dkms::entries)
     }
 
     /// The reading a test hands the page, without a reader.
@@ -71,10 +86,6 @@ impl Kernels {
         };
 
         let edit = match command {
-            KernelCommand::DismissRefusal => {
-                self.refusal = None;
-                return Handled::taken();
-            }
             KernelCommand::Edit(edit) => edit,
             KernelCommand::Refresh => {
                 self.dkms.refresh();
@@ -92,7 +103,7 @@ impl Kernels {
                     return Handled::taken();
                 };
 
-                queue_or_refuse(&mut self.refusal, kernel.clone(), changes, |changes| {
+                queue_or_keep(&mut self.refusal, changes, |changes| {
                     core_kernels::toggle(
                         found,
                         Toggle::from_on(*on),
@@ -114,14 +125,14 @@ impl Kernels {
             }),
             KernelEdit::Builds { kernel, on } => {
                 listing.kernel(kernel).map_or_else(Handled::taken, |found| {
-                    let builds = listing.builds(found, self.dkms.reading());
+                    let builds = listing.builds(found, self.dkms_entries());
                     queue(changes, |changes| {
                         set_builds(&builds, Toggle::from_on(*on), changes, snapshot);
                     })
                 })
             }
             KernelEdit::AllBuilds => {
-                let builds = listing.all_builds(self.dkms.reading());
+                let builds = listing.all_builds(self.dkms_entries());
                 queue(changes, |changes| {
                     set_builds(&builds, Toggle::On, changes, snapshot);
                 })

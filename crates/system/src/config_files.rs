@@ -21,7 +21,7 @@ use toolbox_plan::protocol::MAX_LINE_BYTES;
 use toolbox_plan::{ConfigFilePath, Editor, FetchAnswer, FetchRefusal, HomePath};
 use toolbox_state::configs::{ConfigEntryLocation, ConfigEntrySpec, Found, Link, Listing};
 
-use crate::pkexec::{self, HelperRun};
+use crate::pkexec::{self, HelperError, HelperRun};
 
 pub trait HelperFetch: Send + Sync {
     /// The command that prints one [`FetchAnswer`] line for `path`.
@@ -42,7 +42,9 @@ pub enum ReadProblem {
     /// The file is there for nobody to edit through the toolbox.
     Refused(FetchRefusal),
     NotRun(pkexec::Refusal),
-    Failed(String),
+    Failed(HelperError),
+    /// The user may read the file, yet it could not be read.
+    Unreadable(io::ErrorKind),
     Cancelled,
 }
 
@@ -135,7 +137,7 @@ where
                 tracing::info!("{path} is kept from the user, asking the helper");
                 fetch(self.helper.fetch_command(path), cancel)
             }
-            Err(ReadError::Failed(error)) => Err(ReadProblem::Failed(error.to_string())),
+            Err(ReadError::Failed(error)) => Err(ReadProblem::Unreadable(error.kind())),
         }
     }
 
@@ -223,9 +225,8 @@ fn fetch(mut command: Command, cancel: &Arc<AtomicBool>) -> Result<ConfigRead, R
         HelperRun::Cancelled => return Err(ReadProblem::Cancelled),
     };
 
-    let answer = FetchAnswer::parse(line.trim_end()).map_err(|_not_a_file| {
-        ReadProblem::Failed("the helper's answer is no config file".to_owned())
-    })?;
+    let answer = FetchAnswer::parse(line.trim_end())
+        .map_err(|_not_a_file| ReadProblem::Failed(HelperError::Unreadable))?;
 
     match answer {
         FetchAnswer::Text { path, content } => Ok(ConfigRead { path, content }),

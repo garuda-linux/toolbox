@@ -1,5 +1,6 @@
-//! The Packages page's installs and removals, which wait in the queue. A
-//! refused one stays on the page until dismissed or the next is taken.
+//! The Packages page's clicks: the installs and removals, which wait in
+//! the queue, and the package or AUR list it shows. A refused one stays
+//! on the page until dismissed or the next is taken.
 
 #[cfg(test)]
 mod tests;
@@ -16,6 +17,10 @@ use crate::refused::queue_or_keep;
 impl Packages {
     pub const fn refusal(&self) -> Option<&PackagesRefusal> {
         self.refusal.as_ref()
+    }
+
+    pub fn set_refusal(&mut self, refusal: Option<PackagesRefusal>) {
+        self.refusal = refusal;
     }
 
     pub fn handle(
@@ -39,13 +44,16 @@ impl Packages {
                     aur::toggle(package, *wish, snapshot, changes)
                 })
             }
-            PackagesCommand::DismissRefusal => {
-                self.refusal = None;
+            PackagesCommand::Show(package) => {
+                self.show(package);
                 Handled::taken()
             }
-            PackagesCommand::Refresh | PackagesCommand::Show(_) | PackagesCommand::OpenAur => {
-                Handled::default()
+            PackagesCommand::OpenAur => {
+                self.open_aur();
+                Handled::taken()
             }
+            // Home's status and facts count packages too, which App reads.
+            PackagesCommand::Refresh => Handled::default(),
         }
     }
 }

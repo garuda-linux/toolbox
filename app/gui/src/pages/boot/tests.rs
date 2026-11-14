@@ -10,11 +10,13 @@ use toolbox_core::features::boot::Flag;
 use toolbox_core::features::boot::edit::{Edit, EditProblem};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{GrubMenu, GrubPlatform, GrubState, InvalidName, NameKind, PackageName, Reason};
-use toolbox_system::{Host, Menu, MenuRead};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::{Host, MenuRead};
 
 use super::BootPage;
 use crate::boot::{Boot, BootRefusal, FileKind};
-use crate::command::{BootCommand, Command};
+use crate::command::{AppCommand, BootCommand, Command};
+use crate::page::PageId;
 use crate::page_service::Services;
 use crate::testing::captures::GRUB_CFG;
 use crate::testing::{PageFixture, PageState};
@@ -200,7 +202,10 @@ fn a_refused_value_is_named_until_dismissed() {
     harness.get_by_label("Dismiss").click();
     harness.run();
 
-    assert_eq!(sent(&harness), [Command::from(BootCommand::DismissRefusal)]);
+    assert_eq!(
+        sent(&harness),
+        [Command::from(AppCommand::DismissRefusal(PageId::Boot))]
+    );
 }
 
 #[test]
@@ -239,13 +244,11 @@ fn choose_asks_for_the_file_of_its_row() {
 
     assert!(matches!(
         sent(&harness).as_slice(),
-        [Command::App(crate::command::AppCommand::Boot(
-            BootCommand::Choose {
-                kind: FileKind::Theme,
-                title: _,
-                filter: _,
-            }
-        ))]
+        [Command::App(AppCommand::Boot(BootCommand::Choose {
+            kind: FileKind::Theme,
+            title: _,
+            filter: _,
+        }))]
     ));
 }
 

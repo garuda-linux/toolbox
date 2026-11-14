@@ -7,6 +7,8 @@
 
 mod loader;
 mod mask;
+mod picture;
+pub mod svg;
 #[cfg(test)]
 mod tests;
 
@@ -18,6 +20,7 @@ use egui::{Color32, Context, Id, Image};
 use self::loader::THEME_URI;
 pub use self::loader::{ThemeLoader, warm};
 use self::mask::mask;
+pub use self::picture::picture_uri;
 
 macro_rules! bundled {
     ($name:literal) => {

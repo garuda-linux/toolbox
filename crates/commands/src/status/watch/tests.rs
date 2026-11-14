@@ -24,6 +24,7 @@ fn view(updates: usize) -> StatusView {
         health: Part::Ok { value: Vec::new() },
         restart_needed: Part::Ok { value: false },
         facts: None,
+        stale: false,
     }
 }
 

@@ -3,6 +3,7 @@ use std::collections::BTreeSet;
 use egui::{Key, Label, Ui};
 use toolbox_core::features::configs::{Row, RowKind, rows};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, RowState, SectionHeading, empty_state, pill_button,
     rich, row_height, split_row, text_block_height,
@@ -14,16 +15,19 @@ use crate::command::ConfigsCommand;
 use crate::configs::Configs;
 use crate::i18n;
 use crate::pages::PageContext;
+use crate::pages::rows::Look;
 use crate::pages::rows::more::{item, more};
 
 const CONTROLS_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.row_actions_narrow;
 
-struct Item {
+#[derive(Debug)]
+pub struct Item {
     row: Row,
     name: String,
 }
 
-struct Section {
+#[derive(Debug)]
+pub struct Section {
     title: String,
     icon: String,
     items: Vec<Item>,
@@ -39,11 +43,15 @@ impl ListItem for Item {
     }
 }
 
+/// Keyed by the configs' listing revision and the look besides the
+/// search and the open folders.
+pub type Rows = RowCache<(u64, Look), Vec<Section>>;
+
 pub fn show(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    search: &mut String,
-    expanded: &mut BTreeSet<String>,
+    (search, expanded): (&mut String, &mut BTreeSet<String>),
+    cache: &mut Rows,
 ) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
@@ -62,13 +70,23 @@ pub fn show(
         return;
     };
 
-    let sections = sections(&ctx, rows(catalog, listing, expanded, search));
+    // The search first, so a search never passes for an open folder.
+    let texts: Vec<&str> = std::iter::once(search.as_str())
+        .chain(expanded.iter().map(String::as_str))
+        .collect();
+
+    let rest = (configs.revision(), Look::of(ui));
+    let sections = cache.get(&texts, rest, || {
+        let _build = tracing::trace_span!("build rows").entered();
+        sections(&ctx, rows(catalog, listing, expanded, search))
+    });
+
     if sections.is_empty() {
         nothing(ui, search);
         return;
     }
 
-    for section in &sections {
+    for section in sections.iter() {
         let icon = section_icon(&section.icon);
         SectionHeading::new(icon, &section.title, "").show(ui);
         ui.add_space(ui.tokens().sizes.heading_gap);

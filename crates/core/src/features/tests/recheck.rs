@@ -5,6 +5,7 @@ use std::collections::BTreeSet;
 
 use strum::IntoEnumIterator as _;
 use toolbox_plan::{GrubState, HomeFolder};
+use toolbox_state::packages::PackageGraph;
 use toolbox_state::probes::FailedProbes;
 
 use crate::domains::{
@@ -55,6 +56,7 @@ fn without_page_reads() -> Snapshot {
     snapshot.insert(FailedProbes::default());
     snapshot.insert(SyncPackages::default());
     snapshot.insert(InstalledPackages::default());
+    snapshot.insert(PackageGraph::default());
     snapshot
 }
 
@@ -68,7 +70,13 @@ fn a_guard_waits_for_the_part_it_checks_against() {
     removal(&mut changes);
 
     assert_eq!(unchecked.recheck(&mut changes, &Snapshot::default()), 0);
-    assert_eq!(unchecked, Unchecked::all());
+    assert_eq!(
+        unchecked.waiting().collect::<Vec<_>>(),
+        Guard::iter()
+            .filter(|guard| *guard != Guard::PackageRemovals)
+            .collect::<Vec<_>>(),
+        "with no package removal queued that guard needs no part"
+    );
     assert_eq!(unchecked.recheck(&mut changes, &kernels_only), 0);
     assert_eq!(changes.len(), 1, "the accounts are not known yet");
 

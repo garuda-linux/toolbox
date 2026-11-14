@@ -33,6 +33,30 @@ fn while_a_plan_runs_the_entries_wait_and_a_banner_says_why() {
 }
 
 #[test]
+fn a_frame_with_the_same_system_builds_no_choices() {
+    let mut harness = shipped().harness(TweaksPage::default());
+    harness.run();
+    let built = harness.state().page.lead_builds();
+
+    harness.step();
+    harness.step();
+    assert_eq!(harness.state().page.lead_builds(), built);
+
+    harness.state_mut().fixture.revision += 1;
+    harness.run();
+    assert_eq!(harness.state().page.lead_builds(), built + 1);
+
+    harness.state_mut().fixture.snapshot = with_fish().snapshot;
+    harness.run();
+    assert_eq!(harness.state().page.lead_builds(), built + 2);
+    assert!(
+        harness
+            .query_by_role_and_label(Role::ComboBox, "Login shell")
+            .is_some()
+    );
+}
+
+#[test]
 fn while_a_plan_runs_the_dropdowns_wait_too() {
     for busy in [true, false] {
         let mut harness = PageFixture { busy, ..shipped() }.harness(TweaksPage::default());

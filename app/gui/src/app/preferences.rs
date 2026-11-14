@@ -88,7 +88,7 @@ impl App {
             SettingsCommand::Refresh(interval) => {
                 prefs.settings.status.refresh = interval;
                 prefs.save();
-                self.status.every(interval.period());
+                self.services.home.status_every(interval.period());
             }
             SettingsCommand::UserUnits(user) => {
                 prefs.settings.services.show_user_units = user;

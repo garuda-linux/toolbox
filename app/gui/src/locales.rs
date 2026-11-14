@@ -8,11 +8,11 @@ use toolbox_core::features::locales::view::{add_missing_packs, toggle_pack};
 use toolbox_core::features::locales::{self as core_locales, choose_system};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::Toggle;
-use toolbox_services::queue::edit::QueueEdit;
+use toolbox_services::queue::clicked::on_copy;
 
 use crate::command::{AppCommand, LocaleCommand};
 use crate::page_service::Handled;
-use crate::refused::{Refused, queue_or_refuse};
+use crate::refused::{Refused, queue_or_keep, queue_or_refuse};
 
 pub type LocaleRefusal = Refused<core_locales::Refusal>;
 
@@ -54,26 +54,23 @@ impl Locales {
                 })
             }
             LocaleCommand::TogglePack { package, on } => {
-                let (edit, listed) = QueueEdit::of_click(changes, |changes| {
-                    toggle_pack(package, Toggle::from_on(*on), changes, snapshot)
-                });
+                queue_or_keep(&mut self.refusal, changes, |changes| {
+                    let listed = toggle_pack(package, Toggle::from_on(*on), changes, snapshot)?;
+                    if !listed {
+                        tracing::warn!(
+                            "{package} is no listed language pack, so it was not queued"
+                        );
+                    }
 
-                if !listed {
-                    tracing::warn!("{package} is no listed language pack, so it was not queued");
-                }
-
-                Handled::edit(edit)
+                    Ok(())
+                })
             }
             LocaleCommand::AddMissingPacks => {
                 let (edit, added) =
-                    QueueEdit::of_click(changes, |changes| add_missing_packs(changes, snapshot));
+                    on_copy(changes, |changes| add_missing_packs(changes, snapshot));
 
                 tracing::debug!("queued {added} missing language packs");
                 Handled::edit(edit)
-            }
-            LocaleCommand::DismissRefusal => {
-                self.refusal = None;
-                Handled::taken()
             }
             LocaleCommand::Refresh => Handled::answers(vec![AppCommand::ReadSystem]),
         }

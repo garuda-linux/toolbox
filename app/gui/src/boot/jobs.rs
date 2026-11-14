@@ -7,6 +7,7 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use tokio::runtime::Handle;
+use toolbox_system::pkexec::HelperError;
 use toolbox_system::{BootMenuSource, MenuRead};
 
 use crate::lane::Lane;
@@ -76,7 +77,7 @@ impl Jobs {
         self.read.blocking(
             "menu",
             move || source.menu(&cancel),
-            |read| read.unwrap_or_else(|stopped| MenuRead::Unknown(stopped.to_string())),
+            |read| read.unwrap_or(MenuRead::Unknown(HelperError::Stopped)),
         );
     }
 

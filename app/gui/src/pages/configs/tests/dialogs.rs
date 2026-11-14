@@ -4,7 +4,8 @@ use toolbox_core::features::configs::session::Session;
 use toolbox_core::features::configs::viewing::Viewing;
 
 use super::{listed, page, reviewing, reviewing_of, sent, shows, viewing};
-use crate::command::{Command, ConfigsCommand};
+use crate::command::{AppCommand, Command, ConfigsCommand};
+use crate::page::PageId;
 use crate::refused::Refused;
 
 /// How far a dialog that fills the window keeps its buttons from the
@@ -80,7 +81,7 @@ fn a_refused_click_says_why_until_dismissed() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(ConfigsCommand::DismissRefusal)]
+        [Command::from(AppCommand::DismissRefusal(PageId::Configs))]
     );
 }
 

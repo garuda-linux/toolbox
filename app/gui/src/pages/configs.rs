@@ -21,9 +21,10 @@ use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, page_toolbar, pill_butt
 use super::header::{refresh_header, search};
 use super::rows::refused_banner;
 use super::{PageContext, PageView};
-use crate::command::ConfigsCommand;
+use crate::command::{AppCommand, ConfigsCommand};
 use crate::configs::Configs;
 use crate::i18n;
+use crate::page::PageId;
 
 const MIN_TEXT_HEIGHT: f32 = 120.0;
 
@@ -31,6 +32,7 @@ const MIN_TEXT_HEIGHT: f32 = 120.0;
 pub struct ConfigsPage {
     search: String,
     expanded: BTreeSet<String>,
+    rows: list::Rows,
     /// The review dialog was closed, the changes still wait.
     review_closed: bool,
 }
@@ -64,7 +66,12 @@ impl PageView for ConfigsPage {
         let _ui = tracing::trace_span!("configs ui").entered();
         refusal(ui, context);
         self.status(ui, context);
-        list::show(ui, context, &mut self.search, &mut self.expanded);
+        list::show(
+            ui,
+            context,
+            (&mut self.search, &mut self.expanded),
+            &mut self.rows,
+        );
 
         let ctx = ui.ctx().clone();
         let configs = context.service::<Configs>();
@@ -109,7 +116,7 @@ impl ConfigsPage {
             context.commands.send(ConfigsCommand::Dismiss);
         }
 
-        if let (Phase::Failed, Some(detail)) = (phase, texts::detail(session.problem())) {
+        if let (Phase::Failed, Some(detail)) = (phase, session.problem().and_then(texts::detail)) {
             ui.label(egui::RichText::new(detail).small().monospace());
         }
 
@@ -147,7 +154,9 @@ impl ConfigsPage {
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Configs>().refusal();
     if refused_banner(ui, refused, Tone::Error, "configs-dismiss") {
-        context.commands.send(ConfigsCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Configs));
     }
 }
 

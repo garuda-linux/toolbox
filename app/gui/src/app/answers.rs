@@ -42,9 +42,9 @@ impl App {
         let mut taken = false;
         let mut asked = Vec::new();
         for service in self.services.all_mut() {
-            let handled = service.handle(command, self.queue.changes(), &snapshot);
+            let handled = service.receive(command, self.queue.changes(), &snapshot);
             if let Some(edit) = handled.edit {
-                self.queue.apply_edit(&edit, &snapshot);
+                self.queue.take_click(edit);
             }
 
             taken |= handled.taken;
@@ -57,8 +57,7 @@ impl App {
     /// Takes what a service made of a click App ran for it.
     pub(super) fn take_handled(&mut self, ctx: &egui::Context, handled: Handled) {
         if let Some(edit) = handled.edit {
-            let snapshot = self.current_snapshot();
-            self.queue.apply_edit(&edit, &snapshot);
+            self.queue.take_click(edit);
         }
 
         for command in handled.answers {

@@ -3,8 +3,9 @@
 //! current one. Only what changed is queued.
 
 use egui::{Context, Ui};
+use toolbox_core::features::users::input::{self, InputProblem};
 use toolbox_core::features::users::rows::UserRow;
-use toolbox_core::features::users::{input, view};
+use toolbox_core::features::users::view;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, Select, check_row};
 use toolbox_plan::{FullName, HomeChange, HomeDirectory, InvalidFullName, ShellPath, UserName};
@@ -36,7 +37,7 @@ struct Fields {
 struct Changes {
     full_name: Option<Result<FullName, &'static str>>,
     shell: Option<ShellPath>,
-    home: Option<Result<HomeDirectory, &'static str>>,
+    home: Option<Result<HomeDirectory, InputProblem>>,
 }
 
 impl Edit {
@@ -122,7 +123,7 @@ impl Edit {
 
     fn home(&mut self, ui: &mut Ui, ctx: &Context, changes: &Changes) {
         let problem = match &changes.home {
-            Some(Err(code)) => Some(texts::problem(ctx, code, "")),
+            Some(Err(problem)) => Some(texts::problem(ctx, *problem, "")),
             Some(Ok(_)) | None => None,
         };
 

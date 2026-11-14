@@ -7,6 +7,7 @@ use toolbox_core::features::services::{ActiveState, FileState};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, card, pill_button, rich, status_dot};
 use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_plan::UnitScope;
 
 use crate::command::NetworkCommand;
 use crate::i18n;
@@ -258,7 +259,7 @@ fn radio(
 fn services(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     heading(ui, icons::SYSTEM_RUN, "network-services");
-    let listing = &context.service::<Units>().system;
+    let listing = context.service::<Units>().get(UnitScope::System);
     let Some(units) = listing.get() else {
         let id = if listing.error().is_some() {
             "network-services-unknown"

@@ -1,4 +1,5 @@
 mod gaps;
+mod refusal;
 
 use std::collections::BTreeSet;
 use std::path::Path;
@@ -89,6 +90,26 @@ fn a_frame_with_the_same_inputs_builds_no_rows() {
     state.fixture.revision += 1;
     harness.run();
     assert_eq!(harness.state().page.rows.builds(), built + 2);
+}
+
+#[test]
+fn a_frame_with_the_same_search_builds_no_chips() {
+    let mut harness = offered().harness(DiscoverPage::default());
+    harness.run();
+    let built = harness.state().page.chips.builds();
+
+    harness.step();
+    harness.state_mut().page.category = Some("internet".to_owned());
+    harness.run();
+    assert_eq!(harness.state().page.chips.builds(), built);
+
+    harness.state_mut().page.reveal("Floorp");
+    harness.run();
+    assert_eq!(harness.state().page.chips.builds(), built + 1);
+
+    harness.state_mut().fixture.revision += 1;
+    harness.run();
+    assert_eq!(harness.state().page.chips.builds(), built + 2);
 }
 
 #[test]

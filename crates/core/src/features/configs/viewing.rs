@@ -28,7 +28,7 @@ pub struct Viewing {
     phase: Phase,
     path: Option<ConfigFilePath>,
     read: Option<Viewed>,
-    problem: Problem,
+    problem: Option<Problem>,
     /// The number of the last read asked for. A read that runs on after
     /// its dialog closed must not fill the next one.
     asked: u64,
@@ -58,8 +58,8 @@ impl Viewing {
         self.read.as_ref()
     }
 
-    pub const fn problem(&self) -> &Problem {
-        &self.problem
+    pub const fn problem(&self) -> Option<&Problem> {
+        self.problem.as_ref()
     }
 
     /// # Errors
@@ -95,7 +95,7 @@ impl Viewing {
             }
             Err(problem) => {
                 self.phase = Phase::Failed;
-                self.problem = problem;
+                self.problem = Some(problem);
             }
         }
     }

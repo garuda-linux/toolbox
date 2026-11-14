@@ -43,6 +43,25 @@ impl Rows for Many {
     }
 }
 
+/// Measured rows, as many as `count` says.
+struct Measured {
+    count: usize,
+    asked: Cell<usize>,
+}
+
+impl Rows for Measured {
+    type Item<'a> = Row;
+
+    fn len(&self) -> usize {
+        self.count
+    }
+
+    fn get(&self, index: usize) -> Option<Row> {
+        self.asked.set(self.asked.get() + 1);
+        (index < self.count).then(|| Row(format!("row {index}")))
+    }
+}
+
 #[test]
 fn a_frame_asks_only_for_the_rows_it_draws_also_with_one_focused() {
     let mut harness = harness(300.0, 400.0).build_ui_state(
@@ -76,6 +95,87 @@ fn a_frame_asks_only_for_the_rows_it_draws_also_with_one_focused() {
     assert!(
         asked < 100,
         "{asked} of {COUNT} rows asked for in one frame"
+    );
+}
+
+#[test]
+fn a_frame_with_the_same_measured_rows_builds_no_offsets() {
+    let rows = Measured {
+        count: COUNT,
+        asked: Cell::new(0),
+    };
+
+    let mut harness = harness(300.0, 400.0).build_ui_state(
+        |ui, rows: &mut Measured| {
+            ScrollArea::vertical().show(ui, |ui| {
+                let heights = RowHeights::Measured { estimate: 30.0 };
+                RowList::new("measured", "Measured", heights).show(ui, rows, |ui, row, _| {
+                    drop(ui.label(&row.0));
+                });
+            });
+        },
+        rows,
+    );
+
+    harness.run();
+    harness.state().asked.set(0);
+    harness.step();
+    harness.step();
+
+    let asked = harness.state().asked.get();
+    assert!(
+        asked < 200,
+        "{asked} of {COUNT} rows asked for in two frames"
+    );
+
+    harness.state_mut().count = COUNT - 1;
+    harness.state().asked.set(0);
+    harness.step();
+    assert!(
+        harness.state().asked.get() >= COUNT - 1,
+        "the offsets were not built again"
+    );
+}
+
+#[test]
+fn measured_rows_that_swap_places_leave_no_gap() {
+    let rows = |tall_first: bool| {
+        let first = Row("first".to_owned());
+        let (tall, short) = (Row("tall\nrow\nhere".to_owned()), Row("short".to_owned()));
+        if tall_first {
+            vec![first, tall, short]
+        } else {
+            vec![first, short, tall]
+        }
+    };
+
+    let mut harness = harness(300.0, 400.0).build_ui_state(
+        |ui, shown: &mut Vec<Row>| {
+            let heights = RowHeights::Measured { estimate: 30.0 };
+            RowList::new("swapped", "Swapped", heights).show(ui, shown, |ui, row, _| {
+                drop(ui.label(&row.0));
+            });
+        },
+        rows(true),
+    );
+
+    harness.run();
+    *harness.state_mut() = rows(false);
+    harness.run();
+
+    let short = harness
+        .get_by_role_and_label(Role::ListItem, "short")
+        .rect();
+
+    let tall = harness
+        .get_by_role_and_label(Role::ListItem, "tall\nrow\nhere")
+        .rect();
+
+    assert!(
+        (tall.top() - short.bottom()).abs() < 2.0,
+        "short ends at {}, tall starts at {}",
+        short.bottom(),
+        tall.top()
     );
 }
 

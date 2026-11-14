@@ -1,5 +1,6 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use toolbox_core::features::maintenance::Operation;
 
 use super::{page, programs, sent, with};
 use crate::command::{Command, MaintenanceCommand};
@@ -31,8 +32,8 @@ fn removing_orphans_asks_first_and_runs_on_its_danger_button() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(MaintenanceCommand::RunNow(
-            "remove-orphans".to_owned()
+        [Command::from(MaintenanceCommand::RunOperation(
+            Operation::RemoveOrphans
         ))]
     );
 }

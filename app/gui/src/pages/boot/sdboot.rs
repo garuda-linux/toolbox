@@ -8,7 +8,7 @@ use toolbox_gui_kit::widgets::{Tone, banner, card};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderSetting, MAX_ENTRIES, SdBootMenu};
-use toolbox_system::Menu;
+use toolbox_services::boot_menu::Menu;
 
 use super::{heading, note};
 use crate::boot::Boot;

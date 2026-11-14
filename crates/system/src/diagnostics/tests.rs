@@ -251,7 +251,7 @@ fn colour_codes_alone_on_stdout_leave_the_error_text_of_stderr() {
 fn a_timed_out_program_names_itself_and_the_limit() {
     assert_eq!(
         super::timed_out(&toolbox_state::diagnostics::Program {
-            name: "garuda-inxi",
+            tool: toolbox_plan::procedure::Program::GarudaInxi,
             arguments: &[],
             environment: &[],
         }),

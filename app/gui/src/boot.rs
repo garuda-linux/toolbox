@@ -17,7 +17,8 @@ use jobs::Jobs;
 pub use jobs::{BootSetup, FileChooser, FileKind, Picked};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_plan::PackageName;
-use toolbox_system::{Menu, MenuRead};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::MenuRead;
 
 use crate::lane::OneRead;
 

@@ -11,7 +11,6 @@ use crate::command::BootRepairCommand;
 impl App {
     pub(super) fn run_boot_repair(&mut self, command: BootRepairCommand) {
         match command {
-            BootRepairCommand::Refresh => self.services.boot_repair.refresh(),
             BootRepairCommand::Repair {
                 system,
                 layout,
@@ -27,9 +26,9 @@ impl App {
                 let result = self.repair(wish, target);
                 self.services.boot_repair.set_refusal(result.err());
             }
-            BootRepairCommand::Forget => self.services.boot_repair.forget(),
             BootRepairCommand::ShowConsole => self.state.console_open = true,
-            BootRepairCommand::DismissRefusal => {}
+            // The service takes these, see `hand_to_services`.
+            BootRepairCommand::Refresh | BootRepairCommand::Forget => {}
         }
     }
 

@@ -61,7 +61,9 @@ installs the package with `pacman -S --needed`.
 > **Note:** pacman removes the package with `pacman -Rns`, which also
 > removes those dependencies and the package's saved configuration files. The
 > question is an estimate. The Console lists what pacman really removes
-> before it does. Install the package again to get it back.
+> before it does. Install the package again to get it back. When pacman
+> would also remove a package the system needs, the step fails and
+> nothing is removed.
 
 ## Packages from the AUR
 

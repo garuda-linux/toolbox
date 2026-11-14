@@ -1,6 +1,6 @@
 use toolbox_plan::{ConfigFilePath, ConfigText};
 
-use super::super::session::Problem;
+use super::super::session::{Problem, ProblemCode};
 use super::{Viewed, Viewing};
 use crate::features::configs::Refusal;
 
@@ -27,7 +27,7 @@ fn shown(viewing: &Viewing) -> Shown {
         text: read
             .map(|read| read.content.as_str().to_owned())
             .unwrap_or_default(),
-        problem: viewing.problem().code,
+        problem: viewing.problem().map_or("", |problem| problem.code.into()),
     }
 }
 
@@ -85,7 +85,7 @@ fn a_refused_read_says_why() {
     let mut viewing = Viewing::default();
     let number = viewing.start(path("/etc/sudoers")).unwrap();
 
-    viewing.read(number, Err(Problem::new("dismissed", "")));
+    viewing.read(number, Err(Problem::new(ProblemCode::Dismissed, "")));
 
     let view = shown(&viewing);
 

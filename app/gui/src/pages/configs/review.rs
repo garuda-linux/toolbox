@@ -126,14 +126,11 @@ fn words(ui: &mut Ui, session: &Session, changes: &Changes, path: &str) {
     ui.add(Label::new(summary).wrap());
     ui.add_space(ui.tokens().sizes.card_gap);
 
-    let problem = session.problem();
-    let text = match problem.code {
-        "" => return,
-        "write-failed" => {
-            i18n::text_with(&ctx, "configs-review-write-failed", &[("path", path)]).into_owned()
-        }
-        code => texts::problem(&ctx, code, path),
+    let Some(problem) = session.problem() else {
+        return;
     };
+
+    let text = texts::review_problem(&ctx, problem.code, path);
 
     banner(ui, Tone::Error, &text, &[]);
     if let Some(detail) = texts::detail(problem) {
@@ -191,7 +188,7 @@ fn diff(ui: &mut Ui, changes: &Changes) {
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<ConfigsCommand> {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let failed = !session.problem().code.is_empty();
+    let failed = session.problem().is_some();
     let mut labels = vec![
         text("configs-discard-ask"),
         text("configs-edit-again"),

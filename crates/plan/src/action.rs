@@ -277,7 +277,7 @@ impl RootAction {
     pub fn procedure(&self) -> Vec<Invocation> {
         match self {
             Self::InstallPackages { packages } => vec![run(install(packages))],
-            Self::RemovePackages { packages } => vec![run(remove().args(names(packages)))],
+            Self::RemovePackages { packages } => vec![remove(packages)],
             Self::UpgradeSystem { upgrader } => vec![run(upgrade(*upgrader))],
             Self::CleanPackageCache => vec![run(Command::new(Program::Paccache).arg("-ruk0"))],
             Self::RemoveOrphans => vec![remove_orphans()],

@@ -1,5 +1,7 @@
-//! The programs actions may run. A program that is not listed here cannot
-//! be started by the helper.
+//! The programs the app, the command line and actions may run, each at a
+//! fixed path. A program that is not listed here cannot be started by the
+//! helper. The probes and Diagnostics name theirs here too, so no `PATH`
+//! decides which program runs.
 
 use std::path::{Path, PathBuf};
 
@@ -7,6 +9,7 @@ use std::path::{Path, PathBuf};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Program {
     Bootctl,
+    Checkupdates,
     Chfn,
     Chpasswd,
     Chroot,
@@ -18,6 +21,7 @@ pub enum Program {
     DracutRebuild,
     GarudaChroot,
     GarudaHealth,
+    GarudaInxi,
     GarudaUpdate,
     Gpasswd,
     Groupadd,
@@ -30,12 +34,14 @@ pub enum Program {
     /// Garuda's, from garuda-systemd-boot: it hands kernel-install the
     /// initramfs dracut built.
     KernelInstallUki,
+    Less,
     LocaleGen,
     Mkinitcpio,
     Modprobe,
     Mount,
     Nmcli,
     Paccache,
+    Pacdiff,
     Pacman,
     PacmanKey,
     Paru,
@@ -43,6 +49,8 @@ pub enum Program {
     Pkill,
     PlymouthSetDefaultTheme,
     Systemctl,
+    SystemdAnalyze,
+    SystemdDetectVirt,
     Traceroute,
     Umount,
     Useradd,
@@ -65,6 +73,7 @@ impl Program {
     pub const fn path(self) -> &'static str {
         match self {
             Self::Bootctl => "/usr/bin/bootctl",
+            Self::Checkupdates => "/usr/bin/checkupdates",
             Self::Chfn => "/usr/bin/chfn",
             Self::Chpasswd => "/usr/bin/chpasswd",
             Self::Chroot => "/usr/bin/chroot",
@@ -76,6 +85,7 @@ impl Program {
             Self::DracutRebuild => "/usr/bin/dracut-rebuild",
             Self::GarudaChroot => "/usr/bin/garuda-chroot",
             Self::GarudaHealth => "/usr/bin/garuda-health",
+            Self::GarudaInxi => "/usr/bin/garuda-inxi",
             Self::GarudaUpdate => "/usr/bin/garuda-update",
             Self::Gpasswd => "/usr/bin/gpasswd",
             Self::Groupadd => "/usr/bin/groupadd",
@@ -86,12 +96,14 @@ impl Program {
             Self::Journalctl => "/usr/bin/journalctl",
             Self::KernelInstall => "/usr/bin/kernel-install",
             Self::KernelInstallUki => "/usr/lib/garuda/kernel-install-uki",
+            Self::Less => "/usr/bin/less",
             Self::LocaleGen => "/usr/bin/locale-gen",
             Self::Mkinitcpio => "/usr/bin/mkinitcpio",
             Self::Modprobe => "/usr/bin/modprobe",
             Self::Mount => "/usr/bin/mount",
             Self::Nmcli => "/usr/bin/nmcli",
             Self::Paccache => "/usr/bin/paccache",
+            Self::Pacdiff => "/usr/bin/pacdiff",
             Self::Pacman => "/usr/bin/pacman",
             Self::PacmanKey => "/usr/bin/pacman-key",
             Self::Paru => "/usr/bin/paru",
@@ -99,6 +111,8 @@ impl Program {
             Self::Pkill => "/usr/bin/pkill",
             Self::PlymouthSetDefaultTheme => "/usr/bin/plymouth-set-default-theme",
             Self::Systemctl => "/usr/bin/systemctl",
+            Self::SystemdAnalyze => "/usr/bin/systemd-analyze",
+            Self::SystemdDetectVirt => "/usr/bin/systemd-detect-virt",
             Self::Traceroute => "/usr/bin/traceroute",
             Self::Umount => "/usr/bin/umount",
             Self::Useradd => "/usr/bin/useradd",

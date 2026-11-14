@@ -17,6 +17,8 @@ use crate::{motion, tokens};
 /// Where a row goes and what the keys asked of it.
 #[derive(Clone, Copy, Debug)]
 pub struct Place {
+    /// The list's own id, whose kept offsets a new height makes stale.
+    pub list: Id,
     pub id: Id,
     pub index: usize,
     pub fixed: Option<f32>,
@@ -85,7 +87,7 @@ where
     // The divider above counts, so the rows below are placed past it.
     let height = response.rect.bottom() - start;
     if place.fixed.is_none() {
-        remember(ui, place.id, height);
+        remember(ui, place, height);
     }
 
     height
@@ -154,7 +156,8 @@ pub fn remembered(ui: &Ui, id: Id) -> Option<f32> {
     ui.data(|data| data.get_temp::<f32>(height_id(id)))
 }
 
-fn remember(ui: &Ui, id: Id, height: f32) {
+fn remember(ui: &Ui, place: Place, height: f32) {
+    let id = place.id;
     if remembered(ui, id).is_some_and(|known| (known - height).abs() < SETTLED) {
         return;
     }
@@ -162,9 +165,29 @@ fn remember(ui: &Ui, id: Id, height: f32) {
     ui.data_mut(|data| data.insert_temp(height_id(id), height));
 
     // The rows below moved, so the next frame places them anew.
+    heights_changed(ui, place.list);
     ui.ctx().request_repaint();
 }
 
 fn height_id(id: Id) -> Id {
     id.with("height")
+}
+
+/// Counts the measured heights of `list` that changed, so the list
+/// builds its offsets again only then.
+pub fn heights_seen(ui: &Ui, list: Id) -> u64 {
+    ui.data(|data| data.get_temp::<u64>(heights_id(list)))
+        .unwrap_or_default()
+}
+
+/// The kept offsets of `list` no longer fit its rows.
+pub fn heights_changed(ui: &Ui, list: Id) {
+    ui.data_mut(|data| {
+        let seen = data.get_temp_mut_or_default::<u64>(heights_id(list));
+        *seen = seen.wrapping_add(1);
+    });
+}
+
+fn heights_id(list: Id) -> Id {
+    list.with("heights-changed")
 }

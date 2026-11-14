@@ -5,7 +5,7 @@ use tokio::sync::mpsc::unbounded_channel;
 use toolbox_plan::protocol::Mode;
 
 use super::{FakeLauncher, recording_script, root_plan};
-use crate::apply::{ApplyCommand, Reporter, serve};
+use crate::apply::{ApplyCommand, OutputGate, Reporter, serve};
 
 /// The command line's first Ctrl+C reaches the helper as its own answer,
 /// so the running step can end on its own.
@@ -26,7 +26,14 @@ async fn a_finish_during_a_run_reaches_the_helper() {
 
     tokio::time::timeout(
         Duration::from_secs(20),
-        serve(receiver, Arc::new(launcher), Reporter(reports)),
+        serve(
+            receiver,
+            Arc::new(launcher),
+            Reporter {
+                reports,
+                gate: OutputGate::default(),
+            },
+        ),
     )
     .await
     .unwrap();

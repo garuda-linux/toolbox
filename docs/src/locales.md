@@ -79,7 +79,9 @@ The **Language packs** tab lists the packs that fit your enabled locales
 (queued ones included) and belong to a program you have installed.
 
 - Flip a pack's switch (or select it and press `Space`) to queue its
-  installation. Flip an installed pack's switch to queue its removal.
+  installation. Flip an installed pack's switch to queue its removal. A
+  pack whose removal would also remove a package the system needs stays,
+  and a message above the list names that package.
 - **Queue all missing** queues every listed pack that is neither installed
   nor queued. The count beside it, **Missing**, counts exactly these.
 - **Sort by** orders the packs by **Package** (the default), **Program** (the

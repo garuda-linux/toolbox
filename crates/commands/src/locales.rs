@@ -9,7 +9,7 @@ use toolbox_cli::output::{Mark, Row};
 use toolbox_core::domains::{InstalledPackages, SyncPackages};
 use toolbox_core::features::locales::view::toggle_pack;
 use toolbox_core::features::locales::{
-    all_rows, choose_system, language_packs, toggle, wanted_enabled,
+    Refusal as LocaleRefusal, all_rows, choose_system, language_packs, toggle, wanted_enabled,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::Plan;
@@ -163,7 +163,16 @@ pub fn pack(args: &PackArgs, want: Toggle, snapshot: &Snapshot) -> Result<Plan, 
     })?;
 
     let mut changes = ChangeSet::default();
-    toggle_pack(&package, want, &mut changes, snapshot);
+    toggle_pack(&package, want, &mut changes, snapshot).map_err(|refused| {
+        match refused.refusal {
+            LocaleRefusal::Package(kept) => {
+                crate::packages::kept_package(package.as_str(), kept, &refused.subject)
+            }
+            LocaleRefusal::SystemLocale | LocaleRefusal::LastLocale | LocaleRefusal::NotEnabled => {
+                Refused::page_rule(why::locale(refused.refusal))
+            }
+        }
+    })?;
     Ok(toolbox_core::plan(&changes))
 }
 

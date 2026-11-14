@@ -33,6 +33,11 @@ cp "$(build toolbox-test-dep 1.0)" "$repo/"
 cp "$(build toolbox-test-a 1.0 'depends=(toolbox-test-dep)')" "$repo/"
 cp "$(build toolbox-test-conflict 1.0 'conflicts=(toolbox-test-a)')" "$repo/"
 
+# Protected by its name and in no Arch repository, so a removal meets a
+# protected dependency without touching the image's own packages.
+cp "$(build chaotic-mirrorlist 1.0)" "$repo/"
+cp "$(build toolbox-test-on-protected 1.0 'depends=(chaotic-mirrorlist)')" "$repo/"
+
 # Installed at 1.0 in the image, offered at 1.1, so the system upgrade has work.
 cp "$(build toolbox-test-up 1.0)" "$older/"
 cp "$(build toolbox-test-up 1.1)" "$repo/"

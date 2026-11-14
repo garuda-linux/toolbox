@@ -13,6 +13,7 @@ use serde::Serialize;
 use toolbox_cli::Exit;
 use toolbox_cli::output::Paint;
 use toolbox_core::features::status::days_since;
+use toolbox_services::home::Overview;
 use toolbox_system::{Facts, HealthLevel, PendingUpdate, ProbeError, Status};
 
 pub use self::command::status;
@@ -58,6 +59,10 @@ pub struct StatusView {
     /// check alone.
     #[serde(flatten)]
     pub facts: Option<FactsView>,
+    /// Home's answer, kept as a flag because whole days in
+    /// `last_update_days` cannot tell 14 days from just over 14.
+    #[serde(skip)]
+    pub stale: bool,
 }
 
 enum Shown {
@@ -101,6 +106,7 @@ pub fn view(status: &Status, restart: &Result<bool, ProbeError>, now: SystemTime
         }),
         restart_needed: part(restart, |needed| *needed),
         facts: None,
+        stale: Overview::of(status, now).stale,
     }
 }
 
@@ -183,6 +189,12 @@ fn attention(view: &StatusView) -> Vec<String> {
     };
 
     let restart = matches!(view.restart_needed, Part::Ok { value: true });
+    let stale = match &view.last_update_days {
+        Part::Ok { value: Some(days) } if view.stale => {
+            Some(format!("last update {days} days ago"))
+        }
+        Part::Ok { value: _ } | Part::Unavailable | Part::Failed { cause: _ } => None,
+    };
 
     [
         counted(counted_part(&view.updates, Vec::len), "update", "updates"),
@@ -196,6 +208,7 @@ fn attention(view: &StatusView) -> Vec<String> {
             "file to merge",
             "files to merge",
         ),
+        stale,
         counted(at("critical"), "critical issue", "critical issues"),
         counted(at("high"), "high issue", "high issues"),
         counted(at("low"), "low issue", "low issues"),

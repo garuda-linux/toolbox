@@ -9,7 +9,7 @@ use toolbox_plan::UnitName;
 use super::{NetworkPage, facts, network};
 use crate::page_service::Services;
 use crate::testing::PageFixture;
-use crate::units::{UnitListing, Units};
+use crate::units::{UnitListing, UnitLists, Units};
 
 #[test]
 fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
@@ -27,10 +27,10 @@ fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
         snapshot: Arc::new(snapshot),
         services: Services {
             network: network(),
-            units: Units {
+            units: Units::showing(UnitLists {
                 system: UnitListing::Loaded(Arc::new(vec![manager])),
-                ..Units::default()
-            },
+                ..UnitLists::default()
+            }),
             ..Services::default()
         },
         ..PageFixture::default()

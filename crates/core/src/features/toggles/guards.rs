@@ -1,18 +1,17 @@
-//! The other pages' rules a switch meets: a removal meets the protected
-//! list and the Kernels page, a group change the Users page.
+//! The other pages' rules a switch meets: a removal meets the package
+//! rules, a group change the Users page.
 
 use toolbox_catalog::{Check, ToggleEntry};
 
-use super::{Refusal, membership};
-use crate::features::packages::protected::{self, CascadeRefusal};
-use crate::features::packages::queue::removal_batch;
+use super::{Refusal, membership, removed_package};
+use crate::features::packages::queue::{self, Refusal as PackageRefusal};
 use crate::features::{Refused, kernels, users};
 use crate::{ChangeSet, Snapshot, Toggle};
 
-/// The protected list, what the removal batch takes along and the Kernels
-/// page's guards for the packages an entry removes. The `also` packages
-/// count as removed even when another entry keeps one, which can refuse
-/// more than pacman would, never less.
+/// The rules every removal meets, for the package the switch takes away,
+/// which is the `-git` build when only that one is installed, and the
+/// entry's `also` packages. Those count as removed even when another
+/// entry keeps one, which can refuse more than pacman would, never less.
 pub(super) fn removal_allowed(
     entry: &ToggleEntry,
     wish: Toggle,
@@ -27,24 +26,23 @@ pub(super) fn removal_allowed(
         return Ok(());
     }
 
-    let removed: Vec<_> = std::iter::once(name).chain(entry.also()).cloned().collect();
+    let removed: Vec<_> = std::iter::once(removed_package(name, snapshot))
+        .chain(entry.also().iter().cloned())
+        .collect();
 
-    for package in &removed {
-        protected::may_remove(package)
-            .map_err(|why| Refusal::Protected(why).of_package(package))?;
-    }
+    queue::may_remove_all(&removed, changes, snapshot).map_err(|refused| {
+        let refusal = match refused.refusal {
+            PackageRefusal::Protected(why) => Refusal::Protected(why),
+            PackageRefusal::TakesAlong(why) => Refusal::TakesAlong(why),
+            PackageRefusal::RunningKernel => Refusal::Kernel(kernels::Refusal::Running),
+            PackageRefusal::RunningUnknown => Refusal::Kernel(kernels::Refusal::RunningUnknown),
+            PackageRefusal::LastKernel => Refusal::Kernel(kernels::Refusal::LastKernel),
+            PackageRefusal::Unread | PackageRefusal::NotOffered => Refusal::Unknown,
+        };
 
-    protected::may_remove_with_cascade(&removal_batch(changes, &removed), snapshot).map_err(
-        |refusal| match refusal {
-            CascadeRefusal::Unread => Refusal::Unknown.of_package(name),
-            CascadeRefusal::TakesAlong(why, along) => Refusal::TakesAlong(why).of_package(&along),
-        },
-    )?;
-
-    kernels::may_remove(name, changes, snapshot)
-        .map_err(|refusal| Refusal::Kernel(refusal).of_package(name))
+        refusal.of_package(&refused.subject)
+    })
 }
-
 /// The Users page's guards for the membership a group entry changes.
 pub(super) fn account_allowed(
     entry: &ToggleEntry,

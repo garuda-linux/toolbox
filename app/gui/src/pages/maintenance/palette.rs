@@ -10,15 +10,15 @@ use super::Tab;
 pub fn entries() -> Vec<(String, Tab)> {
     let operations = operations(&ChangeSet::default())
         .into_iter()
-        .map(|row| (format!("maintenance-op-{}", row.operation), Tab::Common));
+        .map(|row| (row.operation.text_id(), Tab::Common));
 
     let tools = tools(|_| false)
         .into_iter()
-        .map(|row| (format!("maintenance-tool-{}", row.tool), Tab::Common));
+        .map(|row| (row.tool.text_id(), Tab::Common));
 
     let repairs = repairs(|_| false)
         .into_iter()
-        .map(|row| (format!("maintenance-repair-{}", row.repair), Tab::Repairs));
+        .map(|row| (row.repair.text_id(), Tab::Repairs));
 
     let reset = ("maintenance-tab-reset".to_owned(), Tab::Reset);
 

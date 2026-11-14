@@ -52,7 +52,10 @@ The app refuses to start as root.
 - `no-shell-command`: no `Command::new` of `sh`, `bash` or `/bin/sh`.
 - `program-path`: `Command::new` takes an absolute path or a
   `toolbox_plan::procedure::Program`. The exceptions run as the user:
-  `xdg-open` in `app/gui/src/links.rs`, `curl` in the xtask.
+  `xdg-open` in `app/gui/src/links.rs`, `curl` in the xtask. The lint
+  sees literals only: a program a probe or Diagnostics starts is a
+  `Program` too. The user's own `$PAGER` and `$GARUDA_TOOLBOX_PAGER`
+  (`crates/commands/src/pager.rs`) run as the user named them.
 - `sudo-once`: only `crates/services/src/apply/launcher.rs` names `sudo`.
   The doctor takes `SUDO_NAME` from there.
 - `tests-in-file`: no inline `mod tests {` below `src/`.
@@ -99,9 +102,18 @@ compiled in, so no missing file can empty it.
   package must ask them too.
 - The cascade check needs the `PackageGraph` part. Without it no removal
   passes.
+- A wish from the session bus or a saved queue meets the same checks in
+  the `Guard::PackageRemovals` recheck
+  (`features/packages/recheck.rs`), which drops it with a log line.
 - The helper refuses a `RemovePackages` step that names a protected
-  package (`Request::validate`), and `RemoveOrphans` keeps protected
-  orphans out of `-Rns` and names them in the Console.
+  package (`Request::validate`). Before `-Rns` it asks
+  `pacman -Rs --print` what goes along and fails the step when that
+  holds a protected package (`apply/targets.rs`). pacman refuses
+  `--print` with `--nosave`.
+- `RemoveOrphans` runs `-Rn` in rounds until `-Qtdq` lists nothing new.
+  Without `-s` each round removes only names the helper checked, so a
+  protected package an orphan alone needed stays and is named in the
+  Console.
 - `cargo xtask catalog-validate` refuses a protected `also` package. A
   protected main package is allowed: its switch stays on.
 - A pacman group name expands in the helper. The app blocks it only

@@ -9,7 +9,6 @@ use crate::boot::FileKind;
 pub enum BootCommand {
     Edit(Edit),
     Loader(LoaderSetting),
-    DismissRefusal,
     Refresh,
     Choose {
         kind: FileKind,

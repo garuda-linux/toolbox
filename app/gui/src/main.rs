@@ -21,7 +21,6 @@ use toolbox_gui::desktop::{self, follow};
 use toolbox_gui::instance::{Single, claim};
 use toolbox_gui::notifications::DesktopNotifier;
 use toolbox_gui::page::PageId;
-use toolbox_gui::pages::kernels::view::{self as kernel_view, dkms_answer};
 use toolbox_gui::programs::Programs;
 use toolbox_gui::queue::Restored;
 use toolbox_gui::reader::ReaderHandle;
@@ -31,6 +30,7 @@ use toolbox_gui_kit::desktop::family::Family;
 use toolbox_log::subscriber;
 use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
+use toolbox_services::dkms::{Dkms as DkmsAnswer, dkms_answer};
 use toolbox_system::{
     Dkms, DkmsSource as _, FactSources, Facts, Sources, Status, StatusSources, probe_facts,
     probe_snapshot, probe_status,
@@ -72,7 +72,7 @@ struct Start {
 }
 
 struct Readers {
-    dkms: ReaderHandle<kernel_view::Dkms>,
+    dkms: ReaderHandle<DkmsAnswer>,
     status: ReaderHandle<Status>,
     facts: ReaderHandle<Facts>,
     programs: ReaderHandle<Programs>,

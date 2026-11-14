@@ -1,12 +1,12 @@
 //! On systemd-boot the parameters live in `/etc/kernel/cmdline`, and the
 //! Plymouth theme shares the rebuild of the UKIs with them.
 
-use toolbox_plan::sdboot::{LoaderEntry, SdBootMenu};
+use toolbox_plan::sdboot::{LoaderEntry, LoaderSetting, SdBootMenu};
 use toolbox_plan::{KernelParameters, LoaderDefault, PackageName};
 use toolbox_state::kernels::KernelReleases;
 
 use super::Refusal;
-use crate::domains::{BootLoader, SdBootKernel, SdBootKernelDomain};
+use crate::domains::{BootLoader, LoaderSettingsDomain, SdBootKernel, SdBootKernelDomain};
 use crate::{ChangeSet, Snapshot};
 
 /// Without them the kernel finds no root file system to start.
@@ -45,4 +45,10 @@ pub fn kernel_default(
     let release = snapshot.part::<KernelReleases>()?.0.get(kernel)?;
 
     menu.kernel_entry(release).map(LoaderEntry::default_pattern)
+}
+
+/// Queues a setting of systemd-boot's `loader.conf`, for the window and
+/// the command line alike.
+pub fn set_loader(setting: LoaderSetting, changes: &mut ChangeSet, snapshot: &Snapshot) {
+    LoaderSettingsDomain::want(changes, setting, snapshot);
 }

@@ -75,15 +75,37 @@ pub fn user_rows<'accounts>(
         .users
         .iter()
         .filter(|user| !regular_only || user.is_regular())
-        .map(|user| UserRow {
-            user,
-            uid_text: user.uid.to_string(),
-            groups: accounts.groups_of(&user.name),
-            current: is_current(&user.name, snapshot),
-            editable: editable(&user.name, accounts).is_ok(),
-            queued: queued_for(&user.name, &memberships, changes),
-        })
+        .map(|user| user_row(user, accounts, snapshot, (changes, &memberships)))
         .collect()
+}
+
+/// The row of the account `name` as [`user_rows`] builds it, `None` for
+/// an account `accounts` does not hold.
+pub fn user_row_of<'accounts>(
+    name: &UserName,
+    accounts: &'accounts Accounts,
+    snapshot: &Snapshot,
+    changes: &ChangeSet,
+) -> Option<UserRow<'accounts>> {
+    let user = accounts.users.iter().find(|user| user.name == *name)?;
+    let memberships = queued_memberships(changes);
+    Some(user_row(user, accounts, snapshot, (changes, &memberships)))
+}
+
+fn user_row<'accounts>(
+    user: &'accounts User,
+    accounts: &Accounts,
+    snapshot: &Snapshot,
+    (changes, memberships): (&ChangeSet, &[(Membership, bool)]),
+) -> UserRow<'accounts> {
+    UserRow {
+        user,
+        uid_text: user.uid.to_string(),
+        groups: accounts.groups_of(&user.name),
+        current: is_current(&user.name, snapshot),
+        editable: editable(&user.name, accounts).is_ok(),
+        queued: queued_for(&user.name, memberships, changes),
+    }
 }
 
 pub fn group_rows(accounts: &Accounts, changes: &ChangeSet) -> Vec<GroupRow> {

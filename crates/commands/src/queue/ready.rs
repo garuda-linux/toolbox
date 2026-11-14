@@ -105,6 +105,7 @@ pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {
         | Guard::Kernels
         | Guard::Locales
         | Guard::LanguagePacks
+        | Guard::PackageRemovals
         | Guard::Plymouth
         | Guard::Grub
         | Guard::ModuleBlacklist

@@ -194,3 +194,49 @@ fn every_pkexec_command_asks_for_untranslated_words() {
         assert_eq!(locale, Some(OsStr::new("C")), "{command:?}");
     }
 }
+
+fn through_sudo() -> HelperLauncher {
+    HelperLauncher::Sudo {
+        helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
+        sudo: PathBuf::from("/usr/bin/sudo"),
+    }
+}
+
+/// pkexec's 126 and 127 mean nothing to sudo, whose refusals end with 1.
+#[test]
+fn sudo_is_not_read_with_the_exit_codes_of_pkexec() {
+    let sudo = through_sudo();
+
+    assert!(!sudo.may_refuse(Some(126_i32)));
+    assert!(!sudo.may_refuse(Some(127_i32)));
+    assert!(sudo.may_refuse(Some(1_i32)));
+    assert_eq!(sudo.refusal(Some(127_i32), ""), None);
+}
+
+/// Without the words of sudo, an exit with 1 is the helper's own failure.
+#[test]
+fn sudo_without_its_words_refused_nothing() {
+    assert_eq!(through_sudo().refusal(Some(1_i32), ""), None);
+}
+
+#[test]
+fn a_dry_run_is_never_refused() {
+    let dry = HelperLauncher::DryRun {
+        helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
+    };
+
+    assert!(!dry.may_refuse(Some(127_i32)));
+    assert_eq!(dry.refusal(Some(127_i32), ""), None);
+}
+
+#[test]
+fn sudo_reads_its_words_in_the_c_locale() {
+    let command = through_sudo().command();
+    let locale = command
+        .as_std()
+        .get_envs()
+        .find(|(key, _)| *key == OsStr::new("LC_ALL"))
+        .and_then(|(_, value)| value);
+
+    assert_eq!(locale, Some(OsStr::new("C")));
+}

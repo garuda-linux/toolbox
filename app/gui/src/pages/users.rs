@@ -23,8 +23,9 @@ use self::dialogs::{Dialog, Next};
 use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
-use crate::command::UsersCommand;
+use crate::command::{AppCommand, UsersCommand};
 use crate::i18n;
+use crate::page::PageId;
 use crate::users::Users;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -48,6 +49,8 @@ pub struct UsersPage {
     tab: Tab,
     shown: Shown,
     dialog: Option<Dialog>,
+    users: list::Rows,
+    groups: groups::Rows,
 }
 
 impl Default for UsersPage {
@@ -56,6 +59,8 @@ impl Default for UsersPage {
             tab: Tab::default(),
             shown: Shown::people(),
             dialog: None,
+            users: list::Rows::new(),
+            groups: groups::Rows::new(),
         }
     }
 }
@@ -102,8 +107,18 @@ impl PageView for UsersPage {
         notes(ui, context);
         plan_running(ui, context);
         match self.tab {
-            Tab::Users => list::show(ui, context, &mut self.shown, &mut self.dialog),
-            Tab::Groups => groups::show(ui, context, &mut self.shown, &mut self.dialog),
+            Tab::Users => list::show(
+                ui,
+                context,
+                (&mut self.shown, &mut self.users),
+                &mut self.dialog,
+            ),
+            Tab::Groups => groups::show(
+                ui,
+                context,
+                (&mut self.shown, &mut self.groups),
+                &mut self.dialog,
+            ),
         }
 
         let ctx = ui.ctx().clone();
@@ -161,7 +176,9 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
     let dismiss = i18n::text(&ctx, "users-dismiss");
     let refused = context.service::<Users>().refusal();
     if refused_banner(ui, refused, Tone::Error, "users-dismiss") {
-        context.commands.send(UsersCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Users));
     }
 
     let run = context.service::<Users>().run();

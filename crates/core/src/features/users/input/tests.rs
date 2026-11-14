@@ -4,9 +4,11 @@ use std::collections::BTreeSet;
 
 use toolbox_plan::{GroupName, ShellPath, UserName};
 
-use super::{NewAccount, name, new_account};
+use super::{InputProblem, NewAccount, name, new_account};
 use crate::Snapshot;
 use crate::domains::{Accounts, AvailableShells};
+use crate::features::RefusalText;
+use crate::features::users::Refusal;
 use crate::test_support::{group, group_name, user};
 
 fn filled<'fields>(
@@ -54,7 +56,7 @@ fn typed_names_get_the_code_of_the_rule_they_break() {
     ] {
         let checked: Result<UserName, _> = name(text);
 
-        assert_eq!(checked.err(), Some(code), "{text}");
+        assert_eq!(checked.err().map(RefusalText::code), Some(code), "{text}");
     }
 
     let user: Result<UserName, _> = name("ada_l-2");
@@ -83,7 +85,10 @@ fn the_add_user_fields_are_checked_field_by_field() {
         ),
         (filled("ada", "", "", None), "invalid"),
     ] {
-        assert_eq!(new_account(&input, &snapshot).err(), Some(code));
+        assert_eq!(
+            new_account(&input, &snapshot).err().map(RefusalText::code),
+            Some(code)
+        );
     }
 }
 
@@ -124,7 +129,7 @@ fn a_checked_add_user_form_builds_the_user() {
             &Snapshot::default()
         )
         .err(),
-        Some("unavailable")
+        Some(InputProblem::Refused(Refusal::Unavailable))
     );
 }
 

@@ -4,8 +4,8 @@
 use egui::Ui;
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::{ActionRow, Tone, card, card_row};
+use toolbox_services::home::Overview;
 
-use super::super::view::Overview;
 use crate::i18n;
 
 pub(super) fn all_clear(ui: &mut Ui, overview: &Overview<'_>) {

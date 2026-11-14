@@ -10,12 +10,10 @@ mod news;
 mod tests;
 
 pub use file::{EditWrite, EditedFile};
-pub use news::{Changes, Compared, Fetched, Problem, Work};
+pub use news::{Changes, Compared, Fetched, Problem, ProblemCode, Work};
 use toolbox_plan::{ConfigText, EditCopy, Editor};
 
 use super::Refusal;
-
-pub(super) const BUSY: &str = "busy";
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Phase {
@@ -49,7 +47,7 @@ pub struct Session {
     copy: Option<EditCopy>,
     changes: Option<Changes>,
     original: Option<ConfigText>,
-    problem: Problem,
+    problem: Option<Problem>,
     cancelled: bool,
     editor_failed: bool,
     rereading: bool,
@@ -103,8 +101,8 @@ impl Session {
         self.editor
     }
 
-    pub const fn problem(&self) -> &Problem {
-        &self.problem
+    pub const fn problem(&self) -> Option<&Problem> {
+        self.problem.as_ref()
     }
 
     /// # Errors
@@ -164,15 +162,15 @@ impl Session {
         match self.phase {
             Phase::Starting(Stage::Editor) if self.cancelled => self.end(),
             Phase::Starting(Stage::Editor) if self.changes.is_some() => {
-                self.review_with(Problem::new(BUSY, ""));
+                self.review_with(Problem::new(ProblemCode::Busy, ""));
                 None
             }
             Phase::Starting(Stage::Editor) => {
-                self.fail(Problem::new(BUSY, ""));
+                self.fail(Problem::new(ProblemCode::Busy, ""));
                 self.copy.take().map(Work::RemoveCopy)
             }
             Phase::Starting(Stage::Write) => {
-                self.review_with(Problem::new(BUSY, ""));
+                self.review_with(Problem::new(ProblemCode::Busy, ""));
                 None
             }
             Phase::Idle
@@ -203,7 +201,7 @@ impl Session {
                 self.copy.take().map(Work::RemoveCopy)
             }
             Phase::Running(Stage::Write) => {
-                self.review_with(Problem::new("write-failed", ""));
+                self.review_with(Problem::new(ProblemCode::WriteFailed, ""));
                 None
             }
             Phase::Idle
@@ -229,14 +227,14 @@ impl Session {
             Ok(Compared::Changed(changes)) => {
                 self.original = Some(changes.original.clone());
                 self.changes = Some(changes);
-                self.problem = Problem::default();
+                self.problem = None;
                 self.phase = Phase::Review;
                 None
             }
             // An editor that failed without a change did not do its work,
             // which is not the same as a user who changed nothing.
             Ok(Compared::Unchanged) if self.editor_failed => {
-                self.fail(Problem::new("editor-failed", ""));
+                self.fail(Problem::new(ProblemCode::EditorFailed, ""));
                 self.copy.take().map(Work::RemoveCopy)
             }
             Ok(Compared::Unchanged) => {
@@ -268,7 +266,7 @@ impl Session {
             .as_ref()?
             .write(changes.edited.clone(), changes.original.fingerprint());
 
-        self.problem = Problem::default();
+        self.problem = None;
         self.phase = Phase::Starting(Stage::Write);
         Some(Work::Write(write))
     }
@@ -280,7 +278,7 @@ impl Session {
 
         let work = Work::RunEditor(self.editor?, self.copy.clone()?);
 
-        self.problem = Problem::default();
+        self.problem = None;
         self.phase = Phase::Starting(Stage::Editor);
         Some(work)
     }
@@ -292,7 +290,7 @@ impl Session {
 
         let work = Work::Reread(self.target.clone()?, self.changes.as_ref()?.edited.clone());
 
-        self.problem = Problem::default();
+        self.problem = None;
         self.rereading = true;
         self.editor_failed = false;
         self.phase = Phase::Comparing;
@@ -337,11 +335,11 @@ impl Session {
 
     fn fail(&mut self, problem: Problem) {
         self.phase = Phase::Failed;
-        self.problem = problem;
+        self.problem = Some(problem);
     }
 
     fn review_with(&mut self, problem: Problem) {
         self.phase = Phase::Review;
-        self.problem = problem;
+        self.problem = Some(problem);
     }
 }

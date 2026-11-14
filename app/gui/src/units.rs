@@ -4,6 +4,7 @@
 //! [`watch`] asks for a fresh list on every systemd signal, so the
 //! page follows changes made anywhere, in this app or outside it.
 
+mod edits;
 #[cfg(test)]
 mod tests;
 pub mod watch;
@@ -29,7 +30,7 @@ use crate::waking::Wake;
 /// One list after the burst is enough.
 pub const SETTLE: Duration = Duration::from_millis(300);
 
-/// Why a list failed, as [`Units`] keeps it. The page words it, the
+/// Why a list failed, as [`UnitLists`] keeps it. The page words it, the
 /// reason itself goes to the log.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum UnitsFailure {
@@ -42,9 +43,18 @@ pub enum UnitsFailure {
 pub type UnitListing = Loadable<Vec<UnitInfo>, UnitsFailure>;
 
 #[derive(Clone, Debug, Default)]
-pub struct Units {
+pub struct UnitLists {
     pub system: UnitListing,
     pub user: UnitListing,
+}
+
+/// The Services page's service: the last lists and the task that makes
+/// them.
+#[derive(Debug, Default)]
+pub struct Units {
+    lists: UnitLists,
+    /// `None` in tests that need no lists: nothing is listed.
+    handle: Option<UnitsHandle>,
 }
 
 /// Cloned into the watchers.
@@ -54,10 +64,48 @@ pub struct UnitRequests(UnboundedSender<UnitScope>);
 #[derive(Debug)]
 pub struct UnitsHandle {
     requests: UnitRequests,
-    units: channel::Receiver<Units>,
+    units: channel::Receiver<UnitLists>,
 }
 
 impl Units {
+    pub const fn new(handle: Option<UnitsHandle>) -> Self {
+        Self {
+            lists: UnitLists {
+                system: Loadable::NotLoaded,
+                user: Loadable::NotLoaded,
+            },
+            handle,
+        }
+    }
+
+    /// The lists a test hands the page, without a task.
+    #[cfg(any(test, feature = "testing"))]
+    pub const fn showing(lists: UnitLists) -> Self {
+        Self {
+            lists,
+            handle: None,
+        }
+    }
+
+    pub const fn get(&self, scope: UnitScope) -> &UnitListing {
+        self.lists.get(scope)
+    }
+
+    pub fn refresh(&self, scope: UnitScope) {
+        if let Some(handle) = &self.handle {
+            handle.refresh(scope);
+        }
+    }
+
+    /// The lists that came in since the last frame.
+    pub fn take(&mut self) {
+        if let Some(lists) = self.handle.as_mut().and_then(UnitsHandle::changed) {
+            self.lists = lists;
+        }
+    }
+}
+
+impl UnitLists {
     pub const fn get(&self, scope: UnitScope) -> &UnitListing {
         match scope {
             UnitScope::System => &self.system,
@@ -98,7 +146,7 @@ impl UnitsHandle {
         self.requests.clone()
     }
 
-    pub fn changed(&mut self) -> Option<Units> {
+    pub fn changed(&mut self) -> Option<UnitLists> {
         fresh(&mut self.units)
     }
 }
@@ -113,7 +161,7 @@ pub fn spawn(
     settle: Duration,
 ) -> UnitsHandle {
     let (sender, receiver) = unbounded_channel();
-    let (lists, units) = channel::channel(Units::default());
+    let (lists, units) = channel::channel(UnitLists::default());
     let handle = UnitsHandle {
         requests: UnitRequests(sender),
         units,
@@ -132,7 +180,7 @@ pub fn spawn(
 async fn serve(
     mut requests: UnboundedReceiver<UnitScope>,
     lister: Arc<dyn UnitLister>,
-    outlet: channel::Sender<Units>,
+    outlet: channel::Sender<UnitLists>,
     wake: Wake,
     settle: Duration,
 ) {

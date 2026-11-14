@@ -36,7 +36,7 @@ pub enum Tab {
 pub struct MaintenancePage {
     tab: Tab,
     confirming: bool,
-    asking: Option<String>,
+    asking: Option<repairs::Asked>,
 }
 
 impl Tab {

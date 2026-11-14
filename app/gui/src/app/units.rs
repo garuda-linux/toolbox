@@ -1,9 +1,7 @@
 //! What the app does with a click on the Services page: control a unit at
-//! once, show its journal, queue its boot and mask state, list again.
+//! once and show its journal. Its service takes the other clicks.
 
-use toolbox_core::Toggle;
-use toolbox_core::features::services::{self, UnitWish, plan_control, plan_logs};
-use toolbox_plan::{UnitName, UnitScope};
+use toolbox_core::features::services::{plan_control, plan_logs};
 
 use super::App;
 use crate::command::ServiceCommand;
@@ -21,24 +19,18 @@ impl App {
             ServiceCommand::Logs { scope, unit } => {
                 self.run_at_once(plan_logs(scope, unit));
             }
-            ServiceCommand::Enable { scope, unit, on } => {
-                self.queue_unit(scope, unit, UnitWish::AtBoot(Toggle::from_on(on)));
+            // The service takes these, see `hand_to_services`.
+            ServiceCommand::Enable {
+                scope: _,
+                unit: _,
+                on: _,
             }
-            ServiceCommand::Mask { scope, unit, on } => {
-                self.queue_unit(scope, unit, UnitWish::Masked(Toggle::from_on(on)));
+            | ServiceCommand::Mask {
+                scope: _,
+                unit: _,
+                on: _,
             }
-            ServiceCommand::Refresh(scope) => {
-                if let Some(units) = &self.units {
-                    units.refresh(scope);
-                }
-            }
+            | ServiceCommand::Refresh(_) => {}
         }
-    }
-
-    fn queue_unit(&mut self, scope: UnitScope, unit: UnitName, wish: UnitWish) {
-        let snapshot = self.current_snapshot();
-        self.queue.edit(&snapshot, |changes, snapshot| {
-            services::queue(changes, scope, unit, wish, snapshot);
-        });
     }
 }

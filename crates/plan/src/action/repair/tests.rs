@@ -209,6 +209,7 @@ fn always_command(invocation: &Invocation) -> Option<&Command> {
         } => Some(command),
         Invocation::Run(_)
         | Invocation::RunWithTargetsFrom { query: _, run: _ }
+        | Invocation::RunUnlessItRemovesProtected { preview: _, run: _ }
         | Invocation::Builtin(_)
         | Invocation::Feed {
             command: _,
@@ -305,7 +306,8 @@ fn only_the_listed_programs_run() {
                 }
                 | Invocation::Feed { command, input: _ } => command,
                 Invocation::Builtin(_) => continue,
-                Invocation::RunWithTargetsFrom { query: _, run: _ } => {
+                Invocation::RunWithTargetsFrom { query: _, run: _ }
+                | Invocation::RunUnlessItRemovesProtected { preview: _, run: _ } => {
                     panic!("a repair queries nothing")
                 }
             };

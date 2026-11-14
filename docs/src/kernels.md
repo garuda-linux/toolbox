@@ -64,6 +64,9 @@ removal back.
 > When the app cannot tell which kernel runs, for example after a kernel
 > update removed the running kernel's modules, it removes no kernel at all
 > until you restart the computer.
+>
+> A kernel whose removal would also remove a package the system needs
+> stays as well, and a message above the list names that package.
 
 ## Boot a kernel by default
 

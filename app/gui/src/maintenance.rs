@@ -21,14 +21,18 @@ pub use sample::SampleMirrors;
 use toolbox_catalog::SkelCatalog;
 use toolbox_core::features::maintenance::opening::{Next, Opening};
 use toolbox_core::features::maintenance::page::{
-    self, CHAOTIC_MIRRORS, LaunchCause, RATE_MIRRORS_PROGRAM, ToolRow,
+    self, LaunchCause, PageTool, RATE_MIRRORS_PROGRAM, ToolRow,
 };
 use toolbox_core::features::maintenance::{RATE_MIRRORS_PACKAGE, Tool};
 use toolbox_plan::{Plan, RootAction, Toggle};
+use toolbox_services::shelf::Shelf;
 use toolbox_system::mirrors::RankProblem;
-use toolbox_system::skel::shelf::{self, Shelf};
+use toolbox_system::skel::shelf;
 
+use crate::catalogs::Catalogs;
+use crate::command::{AppCommand, MaintenanceCommand};
 use crate::launch::Launcher;
+use crate::page_service::Handled;
 
 /// Why the last tool did not start or the mirrors were not ranked.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -54,6 +58,9 @@ pub struct Maintenance {
     jobs: Option<Jobs>,
     /// Starts the tool that waited for its install.
     launcher: Option<Arc<dyn Launcher>>,
+    /// Shared with App, which loads them once at the start. The reset
+    /// copies what the skel catalog names.
+    catalogs: Arc<Catalogs>,
 }
 
 impl Maintenance {
@@ -66,6 +73,18 @@ impl Maintenance {
 
     pub fn set_launcher(&mut self, launcher: Option<Arc<dyn Launcher>>) {
         self.launcher = launcher;
+    }
+
+    /// Also offers what `/etc/skel` holds of their skel catalog.
+    pub fn set_catalogs(&mut self, catalogs: Arc<Catalogs>) {
+        self.catalogs = catalogs;
+        self.restock();
+    }
+
+    /// Offers what `/etc/skel` holds now, which an apply may have changed.
+    pub fn restock(&mut self) {
+        let catalogs = Arc::clone(&self.catalogs);
+        self.stock(catalogs.skel.as_ref());
     }
 
     pub fn launcher(&self) -> Option<Arc<dyn Launcher>> {
@@ -82,26 +101,27 @@ impl Maintenance {
         self.shelf.stock(rows);
     }
 
-    /// Opens tool `id`, or returns the install of its package. `tools` is
+    /// Opens `tool`, or returns the install of its package. `tools` is
     /// what the last check found.
     pub fn open_tool(
         &mut self,
-        id: &str,
+        tool: PageTool,
         tools: &[ToolRow],
         launcher: Option<&dyn Launcher>,
     ) -> Option<Plan> {
-        let installed = page::installed(tools, id);
-        if id == CHAOTIC_MIRRORS {
-            if installed {
+        let installed = page::installed(tools, tool);
+        let tool = match tool {
+            PageTool::ChaoticMirrors if installed => {
                 self.rank();
                 return None;
             }
+            PageTool::ChaoticMirrors => {
+                self.opening = Opening::Sent(Next::RankMirrors);
+                return Some(page::install(&RATE_MIRRORS_PACKAGE));
+            }
+            PageTool::Program(tool) => tool,
+        };
 
-            self.opening = Opening::Sent(Next::RankMirrors);
-            return Some(page::install(&RATE_MIRRORS_PACKAGE));
-        }
-
-        let tool = Tool::from_id(id)?;
         if installed {
             self.launch(tool, launcher);
             return None;
@@ -130,6 +150,35 @@ impl Maintenance {
 
     pub fn dismiss_problem(&mut self) {
         self.problem = None;
+    }
+
+    /// The runs, the queue and Refresh need what App holds: the Console
+    /// and garuda-update's program.
+    pub fn handle(&mut self, command: &AppCommand) -> Handled {
+        let AppCommand::Maintenance(command) = command else {
+            return Handled::default();
+        };
+
+        match command {
+            MaintenanceCommand::DismissProblem => self.dismiss_problem(),
+            MaintenanceCommand::Choose { entry, on } => self.choose(entry, Toggle::from_on(*on)),
+            MaintenanceCommand::Reset => {
+                let catalogs = Arc::clone(&self.catalogs);
+                self.reset(catalogs.skel.as_ref());
+            }
+            MaintenanceCommand::RunOperation(_)
+            | MaintenanceCommand::RunRepair(_)
+            | MaintenanceCommand::Queue {
+                operation: _,
+                on: _,
+            }
+            | MaintenanceCommand::OpenTool(_)
+            | MaintenanceCommand::InstallGarudaUpdate
+            | MaintenanceCommand::Reveal(_)
+            | MaintenanceCommand::Refresh => return Handled::default(),
+        }
+
+        Handled::taken()
     }
 
     /// The run of a plan began, the one this page sent if it waits.

@@ -7,6 +7,9 @@ mod tests;
 use std::ffi::OsString;
 use std::path::PathBuf;
 
+use toolbox_exec::{Environment, locate_program};
+use toolbox_plan::procedure::Program;
+
 use crate::command;
 use crate::error::ProbeError;
 
@@ -30,10 +33,10 @@ pub struct Pacdiff {
 }
 
 impl Pacdiff {
-    /// `pacdiff` from `PATH`.
+    /// `pacdiff` at its fixed path.
     #[must_use = "the adapter does nothing until asked"]
     pub fn new() -> Self {
-        Self::with_program("pacdiff")
+        Self::with_program(locate_program(Program::Pacdiff, Environment::Inherited))
     }
 
     /// Another program with pacdiff's interface, looked up like a command.

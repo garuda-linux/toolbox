@@ -385,7 +385,12 @@ fn read_problem(problem: &ReadProblem) -> (String, String) {
         ReadProblem::Refused(reason) => reason.as_str(),
         ReadProblem::NotRun(refusal) => refusal.code(),
         ReadProblem::Cancelled => "cancelled",
-        ReadProblem::Failed(raw) => return ("the file was not read".to_owned(), raw.clone()),
+        ReadProblem::Failed(error) => {
+            return ("the file was not read".to_owned(), error.to_string());
+        }
+        ReadProblem::Unreadable(kind) => {
+            return ("the file was not read".to_owned(), kind.to_string());
+        }
     };
 
     (format!("the file was not read ({code})"), String::new())

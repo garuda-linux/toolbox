@@ -7,13 +7,13 @@ use std::sync::Arc;
 use egui::Ui;
 use egui::text::{LayoutJob, TextWrapping};
 use toolbox_core::features::discover::package;
+use toolbox_core::features::discover::view::Shown;
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{ListItem, highlighted};
 use toolbox_plan::PackageName;
 
 use super::category_title;
-use super::view::Shown;
 use crate::i18n;
 use crate::pages::rows::actions::{CopyName, Named, OpenWebsite, RowKind, Section, Website};
 

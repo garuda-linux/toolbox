@@ -4,7 +4,8 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
-use toolbox_core::domains::{BootLoader, KernelCmdline, LoaderSettingsDomain, SdBootKernel};
+use toolbox_core::domains::{BootLoader, KernelCmdline, SdBootKernel};
+use toolbox_core::features::boot::set_loader;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::App;
 use toolbox_plan::sdboot::{LoaderEntry, LoaderSetting, LoaderSettings, SdBootMenu, sections};
@@ -101,9 +102,9 @@ fn the_menu_is_read_once_the_page_opens() {
 #[test]
 fn a_restored_loader_change_the_file_meets_leaves_without_the_page() {
     let mut changes = ChangeSet::default();
-    LoaderSettingsDomain::want(
-        &mut changes,
+    set_loader(
         LoaderSetting::Timeout(None),
+        &mut changes,
         &Snapshot::default(),
     );
 

@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use tokio::process::Command;
 use toolbox_plan::ConfigFilePath;
 use toolbox_plan::protocol::{Mode, ReadKind};
+use toolbox_system::pkexec::{self, Refusal};
 use toolbox_system::{HelperFetch, HelperReads};
 
 use super::Inhibitor;
@@ -22,6 +23,12 @@ pub const SUDO: &str = "/usr/bin/sudo";
 
 /// The name `PATH` is searched for, which the doctor looks up the same way.
 pub const SUDO_NAME: &str = "sudo";
+
+/// Wrong passwords three times, or a user sudo does not let in.
+const SUDO_DENIED_MARKS: [&str; 2] = ["incorrect password attempt", "is not in the sudoers file"];
+
+/// No terminal to ask on.
+const SUDO_NO_TERMINAL_MARKS: [&str; 2] = ["a terminal is required", "a password is required"];
 
 /// The helper's first argument, which the apply polkit action is bound to.
 const APPLY: &str = "apply";
@@ -44,6 +51,17 @@ pub trait Launcher: Send + Sync {
     /// back. Fakes in tests leave logind alone.
     fn inhibitor(&self) -> Inhibitor {
         Inhibitor::Off
+    }
+
+    /// Why the program that raises the helper did not run it, read from
+    /// its own exit status and words. `None` when the helper ran.
+    /// Whether `code` may be a refusal, before its words are read.
+    fn may_refuse(&self, code: Option<i32>) -> bool {
+        pkexec::refusal(code, "").is_some()
+    }
+
+    fn refusal(&self, code: Option<i32>, stderr: &str) -> Option<Refusal> {
+        pkexec::refusal(code, stderr)
     }
 }
 
@@ -143,7 +161,9 @@ impl HelperLauncher {
             }
             Self::Sudo { helper, sudo } => {
                 let mut command = std::process::Command::new(sudo);
-                command.arg("--").arg(helper);
+
+                // `sudo_refusal` reads sudo's English words.
+                command.env("LC_ALL", "C").arg("--").arg(helper);
                 command
             }
             Self::DryRun { helper } => std::process::Command::new(helper),
@@ -172,6 +192,28 @@ impl Launcher for HelperLauncher {
 
     fn inhibitor(&self) -> Inhibitor {
         Inhibitor::Logind
+    }
+
+    fn may_refuse(&self, code: Option<i32>) -> bool {
+        match self {
+            Self::Pkexec {
+                helper: _,
+                pkexec: _,
+            } => pkexec::refusal(code, "").is_some(),
+            Self::Sudo { helper: _, sudo: _ } => code == Some(1_i32),
+            Self::DryRun { helper: _ } => false,
+        }
+    }
+
+    fn refusal(&self, code: Option<i32>, stderr: &str) -> Option<Refusal> {
+        match self {
+            Self::Pkexec {
+                helper: _,
+                pkexec: _,
+            } => pkexec::refusal(code, stderr),
+            Self::Sudo { helper: _, sudo: _ } => sudo_refusal(code, stderr),
+            Self::DryRun { helper: _ } => None,
+        }
     }
 }
 
@@ -232,5 +274,26 @@ pub fn helper_path() -> PathBuf {
     match beside_app {
         Some(helper) if cfg!(debug_assertions) => helper,
         Some(_) | None => PathBuf::from(INSTALLED_HELPER),
+    }
+}
+
+/// Exit code 1 means a refusal of sudo or a failed helper. sudo's words
+/// in the C locale tell them apart. Unknown words leave the failure to
+/// the helper's report.
+fn sudo_refusal(code: Option<i32>, stderr: &str) -> Option<Refusal> {
+    if code != Some(1_i32) {
+        return None;
+    }
+
+    let words = stderr.to_lowercase();
+    if SUDO_DENIED_MARKS.iter().any(|mark| words.contains(mark)) {
+        Some(Refusal::Denied)
+    } else if SUDO_NO_TERMINAL_MARKS
+        .iter()
+        .any(|mark| words.contains(mark))
+    {
+        Some(Refusal::NoAgent)
+    } else {
+        None
     }
 }

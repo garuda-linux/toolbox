@@ -5,6 +5,7 @@
 //! out what a step asks for: work on a blocking thread, or a plan the app
 //! runs in the Console. No editor ever runs as root.
 
+mod clicks;
 pub(crate) mod jobs;
 #[cfg(test)]
 mod tests;
@@ -40,6 +41,9 @@ pub struct Taken {
 pub struct Configs {
     catalog: Result<ConfigFileCatalog, LoadProblem>,
     listing: Option<Listing>,
+    /// Counts the listings that landed, so the page tells a new listing
+    /// from the one its rows were built from without comparing it.
+    revision: u64,
     /// A listing is on its way. The page opens every frame, and a second
     /// read would make the first one's answer stale before it lands.
     listing_asked: bool,
@@ -61,6 +65,7 @@ impl Default for Configs {
         Self {
             catalog: Ok(ConfigFileCatalog::default()),
             listing: None,
+            revision: 0,
             listing_asked: false,
             session: Session::default(),
             viewing: Viewing::default(),
@@ -102,6 +107,12 @@ impl Configs {
     /// The files of the catalog that exist, `None` before the first look.
     pub const fn listing(&self) -> Option<&Listing> {
         self.listing.as_ref()
+    }
+
+    /// Changes with every listing that lands. The catalog is read once,
+    /// before any.
+    pub const fn revision(&self) -> u64 {
+        self.revision
     }
 
     pub const fn session(&self) -> &Session {
@@ -236,6 +247,7 @@ impl Configs {
             let work = match result {
                 Landed::Listed(listing) => {
                     self.listing = Some(listing);
+                    self.revision = self.revision.wrapping_add(1);
                     self.listing_asked = false;
                     None
                 }

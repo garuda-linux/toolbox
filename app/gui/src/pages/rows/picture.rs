@@ -9,6 +9,7 @@ use egui::load::{SizeHint, TexturePoll};
 use egui::{Image, Rect, TextureOptions, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight, font};
+use toolbox_gui_kit::icons::picture_uri;
 use toolbox_gui_kit::widgets::{paint_letter_tile, title_capitals_top};
 use toolbox_plan::PackageName;
 
@@ -49,7 +50,7 @@ pub fn package_picture(
         return;
     };
 
-    let uri = format!("file://{}", file.display());
+    let uri = picture_uri(&file);
     if picture_or_initial(ui, &uri, at, initial) {
         finder.drawn(ui.ctx(), &uri);
     }
@@ -59,7 +60,7 @@ pub fn package_picture(
 /// tile while it loads or when it cannot be read. Returns whether the
 /// picture was painted.
 pub fn picture_or_initial(ui: &Ui, uri: &str, at: Rect, initial: Initial<'_>) -> bool {
-    // Trace: egui rasterizes an SVG in the frame that first draws it.
+    // Trace: the frame that first draws a picture asks the worker for it.
     let _picture = tracing::trace_span!("row picture").entered();
 
     // The drawn size, so a vector picture is drawn at it rather than at

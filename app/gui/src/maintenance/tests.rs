@@ -5,11 +5,14 @@ use std::sync::Arc;
 use parking_lot::Mutex;
 use tokio::runtime::Runtime;
 use toolbox_catalog::SkelCatalog;
-use toolbox_core::features::maintenance::page::{CHAOTIC_MIRRORS, LaunchCause, ToolRow, tools};
+use toolbox_core::features::maintenance::Tool;
+use toolbox_core::features::maintenance::page::{LaunchCause, PageTool, ToolRow, tools};
 use toolbox_plan::{Mirrorlist, PackageName, Plan, PlannedAction, RootAction, Toggle};
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
 use super::{Maintenance, MaintenanceProblem, MaintenanceSetup};
+use crate::catalogs::Catalogs;
+use crate::command::{AppCommand, MaintenanceCommand};
 use crate::launch::Launcher;
 use crate::testing::poll;
 
@@ -94,7 +97,11 @@ fn a_missing_tool_is_installed_and_opens_once_the_install_ends_well() {
     let launcher = Recorder::default();
 
     let plan = maintenance
-        .open_tool("btrfs-assistant", &none_installed(), Some(&launcher))
+        .open_tool(
+            PageTool::Program(Tool::BtrfsAssistant),
+            &none_installed(),
+            Some(&launcher),
+        )
         .expect("a missing tool is installed first");
 
     assert_eq!(installs(&plan), ["btrfs-assistant"]);
@@ -115,12 +122,20 @@ fn a_refused_or_failed_install_opens_nothing() {
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
     let launcher = Recorder::default();
 
-    maintenance.open_tool("btrfs-assistant", &none_installed(), Some(&launcher));
+    maintenance.open_tool(
+        PageTool::Program(Tool::BtrfsAssistant),
+        &none_installed(),
+        Some(&launcher),
+    );
     maintenance.plan_refused();
     maintenance.plan_started();
     maintenance.plan_finished(true, |_| true, Some(&launcher));
 
-    maintenance.open_tool("btrfs-assistant", &none_installed(), Some(&launcher));
+    maintenance.open_tool(
+        PageTool::Program(Tool::BtrfsAssistant),
+        &none_installed(),
+        Some(&launcher),
+    );
     maintenance.plan_started();
     maintenance.plan_finished(false, |_| true, Some(&launcher));
 
@@ -136,7 +151,11 @@ fn a_tool_that_cannot_start_says_why() {
         ..Recorder::default()
     };
 
-    let plan = maintenance.open_tool("btrfs-assistant", &all_installed(), Some(&launcher));
+    let plan = maintenance.open_tool(
+        PageTool::Program(Tool::BtrfsAssistant),
+        &all_installed(),
+        Some(&launcher),
+    );
 
     assert!(plan.is_none());
     assert!(matches!(
@@ -154,7 +173,7 @@ fn ranked_mirrors_are_installed_by_a_root_step() {
     let runtime = Runtime::new().unwrap();
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
 
-    let plan = maintenance.open_tool(CHAOTIC_MIRRORS, &all_installed(), None);
+    let plan = maintenance.open_tool(PageTool::ChaoticMirrors, &all_installed(), None);
 
     assert!(plan.is_none());
     assert!(maintenance.ranking());
@@ -180,7 +199,7 @@ fn a_failed_ranking_is_the_page_problem() {
         Path::new("/"),
     );
 
-    maintenance.open_tool(CHAOTIC_MIRRORS, &all_installed(), None);
+    maintenance.open_tool(PageTool::ChaoticMirrors, &all_installed(), None);
 
     assert_eq!(settle(&mut maintenance), None);
     assert_eq!(
@@ -195,7 +214,7 @@ fn a_missing_rate_mirrors_is_installed_and_then_ranks() {
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
 
     let plan = maintenance
-        .open_tool(CHAOTIC_MIRRORS, &none_installed(), None)
+        .open_tool(PageTool::ChaoticMirrors, &none_installed(), None)
         .expect("rate-mirrors is installed first");
 
     assert_eq!(installs(&plan), ["rate-mirrors"]);
@@ -241,4 +260,53 @@ fn the_dry_run_ranks_a_fixed_list_at_once() {
     let mirrorlist = super::SampleMirrors.rank().unwrap();
 
     assert!(mirrorlist.as_str().contains("Server = https://"));
+}
+
+#[test]
+fn a_dismissed_problem_and_a_chosen_entry_are_the_services() {
+    let mut maintenance = Maintenance::default();
+
+    for command in [
+        MaintenanceCommand::DismissProblem,
+        MaintenanceCommand::Choose {
+            entry: "kitty".to_owned(),
+            on: true,
+        },
+    ] {
+        let handled = maintenance.handle(&AppCommand::Maintenance(command));
+
+        assert!(handled.taken);
+        assert!(handled.edit.is_none());
+    }
+
+    assert_eq!(maintenance.problem(), None);
+}
+
+/// The service holds the catalogs, so the reset is its own click.
+#[test]
+fn a_reset_click_copies_what_the_shared_skel_catalog_names() {
+    let runtime = Runtime::new().unwrap();
+    let skel = tempfile::tempdir().unwrap();
+    let home = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(skel.path().join(".config")).unwrap();
+    std::fs::write(skel.path().join(".config/kitty.conf"), "font_size 12\n").unwrap();
+
+    let catalog = SkelCatalog::parse(
+        "[[config]]\nid = \"kitty\"\nname = \"Kitty\"\nfiles = [\"/etc/skel/.config/kitty.conf\"]\n",
+        "skel.toml",
+    )
+    .unwrap();
+
+    let mut maintenance = maintenance(&runtime, Ok(MIRRORS), home.path(), skel.path());
+    maintenance.set_catalogs(Arc::new(Catalogs {
+        skel: Some(catalog),
+        ..Catalogs::default()
+    }));
+    maintenance.choose("kitty", Toggle::On);
+
+    let handled = maintenance.handle(&AppCommand::Maintenance(MaintenanceCommand::Reset));
+
+    assert!(handled.taken);
+    assert_eq!(settle(&mut maintenance), None);
+    assert_eq!(maintenance.shelf().outcome().copied, 1);
 }

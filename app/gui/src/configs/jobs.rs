@@ -8,12 +8,14 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use tokio::runtime::Handle;
 use toolbox_catalog::{ConfigFileCatalog, LoadProblem};
-use toolbox_core::features::configs::session::{Changes, Compared, EditedFile, Fetched, Problem};
+use toolbox_core::features::configs::session::{
+    Changes, Compared, EditedFile, Fetched, Problem, ProblemCode,
+};
 use toolbox_core::features::configs::viewing::Viewed;
 use toolbox_core::features::configs::{Diff, Listing, Target, choose_editor};
 use toolbox_plan::{ConfigFilePath, ConfigText, EditCopy, Editor, FetchRefusal, InvalidConfigText};
 use toolbox_services::configs::specs;
-use toolbox_system::{ConfigFileSource, EditFolder, Editing, ReadProblem};
+use toolbox_system::{ConfigFileSource, EditFolder, Editing, ReadProblem, pkexec};
 
 use super::turns::{Turn, Turns};
 use crate::lane::Lane;
@@ -233,7 +235,7 @@ impl Tools {
         let copy = self
             .copies
             .create(name, &original)
-            .map_err(|error| Problem::new("copy-failed", error.to_string()))?;
+            .map_err(|error| Problem::new(ProblemCode::CopyFailed, error.to_string()))?;
 
         tracing::info!(
             "editing a copy of {target} (asked for as {file}) with {}",
@@ -257,10 +259,9 @@ impl Tools {
                 .read(path)
                 .map(|read| (EditedFile::Root(read.path), read.content)),
             EditedFile::Home(path) => {
-                let real = self
-                    .source
-                    .home_file(path)
-                    .ok_or_else(|| Problem::new("read-failed", "there is no home folder"))?;
+                let real = self.source.home_file(path).ok_or_else(|| {
+                    Problem::new(ProblemCode::ReadFailed, "there is no home folder")
+                })?;
 
                 read_home(&real).map(|content| (file.clone(), content))
             }
@@ -270,7 +271,7 @@ impl Tools {
     fn compare(&self, copy: &EditCopy, original: ConfigText) -> Result<Compared, Problem> {
         self.editing
             .after_edit(&self.copies, copy)
-            .map_err(|error| Problem::new("copy-failed", error.to_string()))?;
+            .map_err(|error| Problem::new(ProblemCode::CopyFailed, error.to_string()))?;
 
         self.edited(copy).map(|edited| changes(original, edited))
     }
@@ -288,7 +289,7 @@ impl Tools {
 
         self.editing
             .editor(chosen)
-            .ok_or_else(|| Problem::new("no-editor", ""))
+            .ok_or_else(|| Problem::new(ProblemCode::NoEditor, ""))
     }
 
     fn read(&self, path: &ConfigFilePath) -> Result<Viewed, Problem> {
@@ -306,22 +307,23 @@ impl Tools {
             Ok(Ok(text)) => Ok(text),
             Ok(Err(InvalidConfigText::NotText)) => Err(refused(FetchRefusal::NotText)),
             Ok(Err(InvalidConfigText::TooLarge { max: _ })) => Err(refused(FetchRefusal::TooLarge)),
-            Err(error) => Err(Problem::new("copy-failed", error.to_string())),
+            Err(error) => Err(Problem::new(ProblemCode::CopyFailed, error.to_string())),
         }
     }
 }
 
 /// A step that panicked, in the words of a failed read.
 fn stopped() -> Problem {
-    Problem::new("failed", "the worker stopped")
+    Problem::new(ProblemCode::Failed, "the worker stopped")
 }
 
 fn problem_of(problem: ReadProblem) -> Problem {
     match problem {
         ReadProblem::Refused(reason) => refused(reason),
-        ReadProblem::NotRun(refusal) => Problem::new(refusal.code(), ""),
-        ReadProblem::Failed(reason) => Problem::new("read-failed", reason),
-        ReadProblem::Cancelled => Problem::new("read-failed", "cancelled"),
+        ReadProblem::NotRun(refusal) => Problem::new(not_run(refusal), ""),
+        ReadProblem::Failed(error) => Problem::new(ProblemCode::ReadFailed, error.to_string()),
+        ReadProblem::Unreadable(kind) => Problem::new(ProblemCode::ReadFailed, kind.to_string()),
+        ReadProblem::Cancelled => Problem::new(ProblemCode::ReadFailed, "cancelled"),
     }
 }
 
@@ -331,7 +333,7 @@ fn read_home(file: &std::path::Path) -> Result<ConfigText, Problem> {
         if error.kind() == std::io::ErrorKind::NotFound {
             refused(FetchRefusal::Missing)
         } else {
-            Problem::new("read-failed", error.to_string())
+            Problem::new(ProblemCode::ReadFailed, error.to_string())
         }
     })?;
 
@@ -347,8 +349,18 @@ fn read_home(file: &std::path::Path) -> Result<ConfigText, Problem> {
 }
 
 fn refused(reason: FetchRefusal) -> Problem {
-    // The page's own sentence names every refusal, see `RESTATED`.
-    Problem::new(reason.as_str(), "")
+    // The page's own sentence names every refusal, see `texts::restated`.
+    Problem::new(reason.into(), "")
+}
+
+const fn not_run(refusal: pkexec::Refusal) -> ProblemCode {
+    match refusal {
+        pkexec::Refusal::Dismissed => ProblemCode::Dismissed,
+        pkexec::Refusal::Denied => ProblemCode::Denied,
+        pkexec::Refusal::NoAgent => ProblemCode::NoAgent,
+        pkexec::Refusal::HelperMissing => ProblemCode::HelperMissing,
+        pkexec::Refusal::Broken => ProblemCode::Broken,
+    }
 }
 
 fn changes(original: ConfigText, edited: ConfigText) -> Compared {

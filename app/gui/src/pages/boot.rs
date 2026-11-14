@@ -18,14 +18,16 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
-use toolbox_system::{FailedProbes, Host, Menu, Probe};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::{FailedProbes, Host, Probe};
 
 use super::header::refresh_header;
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::boot::Boot;
-use crate::command::BootCommand;
+use crate::command::{AppCommand, BootCommand};
 use crate::i18n;
+use crate::page::PageId;
 use crate::pages::heading;
 
 /// The width of a row's control: a menu entry's name fits.
@@ -178,7 +180,9 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     }
 
     if refused_banner(ui, Some(refusal), Tone::Error, "boot-dismiss") {
-        context.commands.send(BootCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Boot));
     }
 }
 
@@ -210,7 +214,9 @@ fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) {
                 confirmed: true,
             },
         ),
-        (false, true) => context.commands.send(BootCommand::DismissRefusal),
+        (false, true) => context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Boot)),
         (false, false) => {}
     }
 }

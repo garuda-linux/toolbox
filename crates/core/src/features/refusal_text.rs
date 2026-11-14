@@ -28,6 +28,11 @@ pub trait RefusalText: Copy + Into<&'static str> {
     fn text_id(self) -> String {
         format!("{}-{}", Self::TEXT_PREFIX, self.code())
     }
+
+    /// Why a protected package stays, the `$why` of its text.
+    fn protection(self) -> Option<Protection> {
+        None
+    }
 }
 
 impl<R, S> Refused<R, S> {
@@ -46,10 +51,42 @@ impl RefusalText for super::bootrepair::Refusal {
 
 impl RefusalText for super::kernels::Refusal {
     const TEXT_PREFIX: &'static str = "kernels-refusal";
+
+    fn text_id(self) -> String {
+        match self {
+            Self::Package(refusal) => refusal.text_id(),
+            Self::Running | Self::RunningUnknown | Self::LastKernel => {
+                format!("{}-{}", Self::TEXT_PREFIX, self.code())
+            }
+        }
+    }
+
+    fn protection(self) -> Option<Protection> {
+        match self {
+            Self::Package(refusal) => refusal.protection(),
+            Self::Running | Self::RunningUnknown | Self::LastKernel => None,
+        }
+    }
 }
 
 impl RefusalText for super::locales::Refusal {
     const TEXT_PREFIX: &'static str = "locales-refused";
+
+    fn text_id(self) -> String {
+        match self {
+            Self::Package(refusal) => refusal.text_id(),
+            Self::SystemLocale | Self::LastLocale | Self::NotEnabled => {
+                format!("{}-{}", Self::TEXT_PREFIX, self.code())
+            }
+        }
+    }
+
+    fn protection(self) -> Option<Protection> {
+        match self {
+            Self::Package(refusal) => refusal.protection(),
+            Self::SystemLocale | Self::LastLocale | Self::NotEnabled => None,
+        }
+    }
 }
 
 impl RefusalText for super::network::Refusal {
@@ -75,6 +112,17 @@ impl RefusalText for super::packages::queue::Refusal {
             | Self::LastKernel => format!("{}-{}", Self::TEXT_PREFIX, self.code()),
         }
     }
+
+    fn protection(self) -> Option<Protection> {
+        match self {
+            Self::Protected(why) | Self::TakesAlong(why) => Some(why),
+            Self::NotOffered
+            | Self::Unread
+            | Self::RunningKernel
+            | Self::RunningUnknown
+            | Self::LastKernel => None,
+        }
+    }
 }
 
 /// A switch that meets another page's rule shows that page's text.
@@ -90,6 +138,14 @@ impl RefusalText for super::toggles::Refusal {
             Self::Unknown | Self::Unmet => format!("{}-{}", Self::TEXT_PREFIX, self.code()),
         }
     }
+
+    fn protection(self) -> Option<Protection> {
+        match self {
+            Self::Kernel(refusal) => refusal.protection(),
+            Self::Protected(why) | Self::TakesAlong(why) => Some(why),
+            Self::Account(_) | Self::Unknown | Self::Unmet => None,
+        }
+    }
 }
 
 impl RefusalText for super::boot::edit::EditCode {
@@ -98,6 +154,40 @@ impl RefusalText for super::boot::edit::EditCode {
 
 impl RefusalText for super::configs::Refusal {
     const TEXT_PREFIX: &'static str = "configs-refused";
+}
+
+impl RefusalText for super::configs::session::ProblemCode {
+    const TEXT_PREFIX: &'static str = "configs-problem";
+}
+
+/// A field's rule shows the text of that field, a refusal the page's own.
+impl RefusalText for super::users::input::InputProblem {
+    const TEXT_PREFIX: &'static str = "users-refused";
+
+    fn text_id(self) -> String {
+        match self {
+            Self::Name(rule) => format!("users-name-{}", rule.code()),
+            Self::FullName(rule) => format!("users-full-name-{}", rule.as_str()),
+            // Its code already starts with `home-`.
+            Self::Home(rule) => format!("users-{}", rule.as_str()),
+            Self::Refused(refusal) => refusal.text_id(),
+            Self::UidInvalid => format!("{}-{}", Self::TEXT_PREFIX, self.code()),
+        }
+    }
+}
+
+impl From<super::users::input::InputProblem> for &'static str {
+    fn from(problem: super::users::input::InputProblem) -> Self {
+        use super::users::input::InputProblem;
+
+        match problem {
+            InputProblem::Name(rule) => rule.code(),
+            InputProblem::FullName(rule) => rule.as_str(),
+            InputProblem::Home(rule) => rule.as_str(),
+            InputProblem::Refused(refusal) => refusal.code(),
+            InputProblem::UidInvalid => "uid-invalid",
+        }
+    }
 }
 
 /// The text of why `protection` keeps a package, the `$why` of

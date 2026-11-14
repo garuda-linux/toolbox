@@ -122,9 +122,10 @@ output holds the result alone.
 
 `status --brief` prints one line for a login message or a status bar,
 such as `2 updates, 1 warning, disk space low` or `all good`. Parts that
-could not be read are left out. `status` ends with exit code 9 when
-something needs attention, else with 1 when a part could not be read
-(see [Exit codes](#exit-codes)).
+could not be read are left out. A last update more than 14 days ago needs
+attention as on Home, and the line names it, such as `last update 16 days
+ago`. `status` ends with exit code 9 when something needs attention, else
+with 1 when a part could not be read (see [Exit codes](#exit-codes)).
 
 Besides the update check, `status` names the installed packages (with
 the foreign ones), the running kernel, the uptime, the free space on
@@ -778,20 +779,20 @@ the shape `status --json` has, `schema` included.
 The codes and their reasons keep their meaning in later versions. The
 reason is the `reason` of a read's JSON error.
 
-| Code | Reason        | Meaning                                                                                                                                                                           |
-| ---- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0    | `success`     | Done, also when there was nothing to do, such as starting a running service or a switch already as asked. `status` and `doctor`: nothing needs attention.                         |
-| 1    | `failure`     | A change or a read failed.                                                                                                                                                        |
-| 2    | `usage`       | The arguments were wrong, such as a name that is not well formed.                                                                                                                 |
-| 3    | `declined`    | You answered no.                                                                                                                                                                  |
-| 4    | `needs-yes`   | No terminal to ask on: pass `--yes`.                                                                                                                                              |
-| 5    | `unavailable` | Not available on this system, such as a service, kernel or locale this system does not have.                                                                                      |
-| 6    | `denied`      | The password dialog or the helper turned it down.                                                                                                                                 |
-| 8    | `page-rule`   | Refused by the page's rules, such as removing root or a password that does not match. The page refuses the same click.                                                            |
-| 9    | `attention`   | `status` found something that needs attention: updates, files to merge, health, a restart, low disk space, a failed service, a clean-up. `doctor` found a part missing or broken. |
-| 129  | `hung-up`     | `SIGHUP` stopped it, such as a closed terminal. A change stops as with `Ctrl+c`.                                                                                                  |
-| 130  | `interrupted` | `Ctrl+c` stopped it.                                                                                                                                                              |
-| 143  | `terminated`  | `SIGTERM` stopped it, such as `kill`. A change stops as with `Ctrl+c`.                                                                                                            |
+| Code | Reason        | Meaning                                                                                                                                                                                                                |
+| ---- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | `success`     | Done, also when there was nothing to do, such as starting a running service or a switch already as asked. `status` and `doctor`: nothing needs attention.                                                              |
+| 1    | `failure`     | A change or a read failed.                                                                                                                                                                                             |
+| 2    | `usage`       | The arguments were wrong, such as a name that is not well formed.                                                                                                                                                      |
+| 3    | `declined`    | You answered no.                                                                                                                                                                                                       |
+| 4    | `needs-yes`   | No terminal to ask on: pass `--yes`.                                                                                                                                                                                   |
+| 5    | `unavailable` | Not available on this system, such as a service, kernel or locale this system does not have.                                                                                                                           |
+| 6    | `denied`      | The password dialog or the helper turned it down.                                                                                                                                                                      |
+| 8    | `page-rule`   | Refused by the page's rules, such as removing root or a password that does not match. The page refuses the same click.                                                                                                 |
+| 9    | `attention`   | `status` found something that needs attention: updates, files to merge, a last update more than 14 days ago, health, a restart, low disk space, a failed service, a clean-up. `doctor` found a part missing or broken. |
+| 129  | `hung-up`     | `SIGHUP` stopped it, such as a closed terminal. A change stops as with `Ctrl+c`.                                                                                                                                       |
+| 130  | `interrupted` | `Ctrl+c` stopped it.                                                                                                                                                                                                   |
+| 143  | `terminated`  | `SIGTERM` stopped it, such as `kill`. A change stops as with `Ctrl+c`.                                                                                                                                                 |
 
 A read that prints an `error:` line ends with 1 or a code above it, also
 when it printed what it could read. `status` ends with 1 when a part

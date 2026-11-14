@@ -3,7 +3,9 @@ use toolbox_core::features::kernels::Refusal;
 
 use super::Kernels;
 use crate::command::{AppCommand, KernelCommand, KernelEdit};
-use crate::pages::kernels::fixtures::{package, system};
+use crate::page::PageId;
+use crate::page_service::PageService as _;
+use crate::pages::kernels::fixtures::{dkms, package, system};
 
 fn toggle(kernel: &str, on: bool) -> AppCommand {
     AppCommand::Kernel(KernelCommand::Edit(KernelEdit::Toggle {
@@ -31,7 +33,7 @@ fn a_taken_click_answers_with_its_edit_and_clears_the_refusal() {
 
     let handled = kernels.handle(&toggle("linux-zen", true), &ChangeSet::default(), &system());
 
-    assert!(handled.edit.is_some_and(|edit| !edit.add.is_empty()));
+    assert!(handled.edit.is_some_and(|edit| !edit.is_empty()));
     assert!(kernels.refusal().is_none());
 }
 
@@ -40,13 +42,27 @@ fn dismissing_takes_the_refusal_away() {
     let mut kernels = Kernels::default();
     kernels.handle(&toggle("linux", false), &ChangeSet::default(), &system());
 
-    kernels.handle(
-        &AppCommand::Kernel(KernelCommand::DismissRefusal),
+    let handled = kernels.receive(
+        &AppCommand::DismissRefusal(PageId::Kernels),
         &ChangeSet::default(),
         &system(),
     );
 
+    assert!(handled.taken);
     assert!(kernels.refusal().is_none());
+}
+
+#[test]
+fn modules_stay_while_dkms_is_asked_again() {
+    let mut asked = dkms();
+    asked.start_loading();
+    let answered = Kernels::with_dkms(dkms());
+
+    assert_eq!(
+        Kernels::with_dkms(asked).dkms_entries(),
+        answered.dkms_entries()
+    );
+    assert_eq!(answered.dkms_entries().len(), 2);
 }
 
 #[test]

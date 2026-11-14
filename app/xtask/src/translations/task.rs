@@ -106,6 +106,7 @@ fn codes() -> Vec<String> {
             )
         })
         .filter(|code| code != SOURCE_CODE)
+        .filter(|code| is_locale(&code.replace('_', "-")))
         .collect();
 
     found.sort();

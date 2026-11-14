@@ -1,9 +1,10 @@
 use egui::{Label, Ui};
-use toolbox_core::Toggle;
 use toolbox_core::features::users::listing::GroupOrder;
 use toolbox_core::features::users::rows::GroupRow;
 use toolbox_core::features::users::view::{self, Shown};
+use toolbox_core::{Snapshot, Toggle};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, pill_button, rich, row_height,
     split_row, status_dot, text_block_height,
@@ -25,7 +26,8 @@ const ORDERS: [(GroupOrder, &str); 3] = [
 
 const CONTROLS_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.row_actions_narrow;
 
-struct Item(GroupRow);
+#[derive(Debug)]
+pub struct Item(GroupRow);
 
 impl ListItem for Item {
     fn key(&self) -> &str {
@@ -37,10 +39,13 @@ impl ListItem for Item {
     }
 }
 
+/// Keyed by the order besides the search, the system and the queue.
+pub type Rows = RowCache<(GroupOrder, Same<Snapshot>, u64), Vec<Item>>;
+
 pub fn show(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    shown: &mut Shown,
+    (shown, cache): (&mut Shown, &mut Rows),
     dialog: &mut Option<Dialog>,
 ) {
     let ctx = ui.ctx().clone();
@@ -51,7 +56,20 @@ pub fn show(
         return;
     }
 
-    let rows = view::groups(context.snapshot, context.changes, shown);
+    let rest = (
+        shown.group_order,
+        Same::of(context.snapshot),
+        context.revision,
+    );
+
+    let rows = cache.get(&[&shown.group_search], rest, || {
+        let _build = tracing::trace_span!("build rows").entered();
+        view::groups(context.snapshot, context.changes, shown)
+            .into_iter()
+            .map(Item)
+            .collect()
+    });
+
     if rows.is_empty() {
         let title = i18n::text_with(&ctx, "groups-no-match", &[("search", &shown.group_search)]);
         empty_state(
@@ -67,10 +85,9 @@ pub fn show(
         return;
     }
 
-    let items: Vec<Item> = rows.into_iter().map(Item).collect();
     let name = text("groups-list");
     let heights = RowHeights::Fixed(row_height(ui, text_block_height(ui, 1)));
-    RowList::new("groups-list", &name, heights).show(ui, &items, |ui, item, _state| {
+    RowList::new("groups-list", &name, heights).show(ui, rows.as_slice(), |ui, item, _state| {
         row(ui, context, &item.0, dialog);
     });
 }

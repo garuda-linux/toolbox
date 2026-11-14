@@ -1,5 +1,6 @@
 use egui_kittest::kittest::Queryable as _;
-use toolbox_system::{Menu, MenuRead};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::MenuRead;
 
 use super::{LOADER_CONF, image_menu, shown};
 

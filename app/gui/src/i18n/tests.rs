@@ -109,12 +109,34 @@ fn every_page_refusal_has_its_text() {
         ids::<network::Refusal>(),
         ids::<bootrepair::Refusal>(),
         ids::<configs::Refusal>(),
+        ids::<configs::session::ProblemCode>(),
     ];
 
     let missing: Vec<&String> = all
         .iter()
         .flatten()
         .filter(|id| !english.contains(*id))
+        .collect();
+
+    assert!(missing.is_empty(), "no text for {missing:?}");
+}
+
+/// The Maintenance page names each task and its detail by `text_id`.
+#[test]
+fn every_maintenance_task_has_its_name_and_detail() {
+    use toolbox_core::ChangeSet;
+    use toolbox_core::features::maintenance::page::{Repair, operations, tools};
+
+    let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
+    let names = operations(&ChangeSet::default())
+        .into_iter()
+        .map(|row| row.operation.text_id())
+        .chain(tools(|_| false).into_iter().map(|row| row.tool.text_id()))
+        .chain(Repair::ALL.map(Repair::text_id));
+
+    let missing: Vec<String> = names
+        .flat_map(|id| [format!("{id}-detail"), id])
+        .filter(|id| !english.contains(id))
         .collect();
 
     assert!(missing.is_empty(), "no text for {missing:?}");

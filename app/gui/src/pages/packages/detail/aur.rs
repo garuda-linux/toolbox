@@ -75,7 +75,7 @@ pub fn body(
         rule(ui);
         below::files(page, ui, context, info);
         ui.add_space(ui.tokens().sizes.section_gap);
-        below::history(page, ui, context, &details.history);
+        below::history(page, ui, context, details);
     }
 }
 

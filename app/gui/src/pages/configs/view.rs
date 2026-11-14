@@ -44,8 +44,10 @@ fn body(ui: &mut Ui, viewing: &Viewing, path: &str) {
             loading_label(ui, &text);
         }
         Phase::Failed => {
-            let text = texts::view_problem(&ctx, viewing.problem().code, path);
-            banner(ui, Tone::Error, &text, &[]);
+            if let Some(problem) = viewing.problem() {
+                let text = texts::view_problem(&ctx, problem.code, path);
+                banner(ui, Tone::Error, &text, &[]);
+            }
         }
         Phase::Shown => shown(ui, viewing, path),
     }
@@ -68,7 +70,7 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
         ui.add(Label::new(text).wrap());
     }
 
-    let note = texts::problem(&ctx, "read-only", path);
+    let note = i18n::text_with(&ctx, "configs-problem-read-only", &[("path", path)]);
     ui.add(Label::new(note).wrap());
     ui.add_space(ui.tokens().sizes.card_gap);
 

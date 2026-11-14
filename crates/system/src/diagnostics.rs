@@ -17,7 +17,7 @@ use std::time::Instant;
 
 pub(crate) use access::{access, pacman_log};
 use known::KnownRoots;
-use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture};
+use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture, locate_program};
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind};
 use toolbox_pty::strip_ansi;
 use toolbox_state::diagnostics::{
@@ -25,7 +25,7 @@ use toolbox_state::diagnostics::{
 };
 
 use crate::command::DEADLINE;
-use crate::pkexec::{self, Refusal};
+use crate::pkexec::{self, HelperError, HelperRun, Refusal};
 
 /// English text in UTF-8 whatever the user's language: the report is read
 /// by helpers in the forum.
@@ -105,8 +105,8 @@ impl SystemDiagnostics {
 
     fn run(&self, program: &Program, cancel: &Arc<AtomicBool>) -> Option<Attempt> {
         let mut command = self.programs.as_ref().map_or_else(
-            || Command::new(program.name),
-            |folder| Command::new(folder.join(program.name)),
+            || Command::new(locate_program(program.tool, Environment::Inherited)),
+            |folder| Command::new(folder.join(program.tool.name())),
         );
 
         command
@@ -125,7 +125,7 @@ impl SystemDiagnostics {
 
         tracing::debug!(
             "{} {}: {} after {} ms",
-            program.name,
+            program.tool.name(),
             program.arguments.join(" "),
             describe(&result),
             started.elapsed().as_millis()
@@ -136,13 +136,13 @@ impl SystemDiagnostics {
             Err(CaptureError::Missing) => Some(Attempt::Missing),
             Err(CaptureError::Failed(error)) => Some(Attempt::Failed(format!(
                 "{} could not be started: {error}",
-                program.name
+                program.tool.name()
             ))),
             Err(CaptureError::TimedOut) => Some(timed_out(program)),
             Err(CaptureError::Cancelled) => None,
             Err(CaptureError::TooLarge) => Some(Attempt::Failed(format!(
                 "{} printed too much",
-                program.name
+                program.tool.name()
             ))),
         }
     }
@@ -168,19 +168,11 @@ impl SystemDiagnostics {
             started.elapsed().as_millis()
         );
 
-        match result {
-            Ok(captured) => Some(helper_attempt(&captured)),
-            Err(CaptureError::Missing) => Some(Attempt::Failed(
-                "The helper of Garuda Toolbox or pkexec is not installed.".to_owned(),
-            )),
-            Err(CaptureError::Failed(error)) => Some(Attempt::Failed(format!(
-                "The helper of Garuda Toolbox could not be started: {error}"
-            ))),
-            // Without a deadline and with a tail policy neither can happen.
-            Err(CaptureError::TimedOut | CaptureError::TooLarge) => Some(Attempt::Failed(
-                "The helper of Garuda Toolbox gave no answer".to_owned(),
-            )),
-            Err(CaptureError::Cancelled) => None,
+        match pkexec::sorted(result) {
+            HelperRun::Answered(answer) => Some(answered(&answer)),
+            HelperRun::Refused(refusal) => Some(refused(refusal)),
+            HelperRun::Failed(error) => Some(Attempt::Failed(with_source(&error))),
+            HelperRun::Cancelled => None,
         }
     }
 }
@@ -207,36 +199,24 @@ impl DiagnosticSource for SystemDiagnostics {
     }
 }
 
-/// What the helper's run means: refused by pkexec, an answer line, or a
-/// failure with the helper's own words.
-fn helper_attempt(captured: &Captured) -> Attempt {
-    match pkexec::refusal(captured.code, &captured.errors) {
-        Some(Refusal::Broken) => return Attempt::Failed(pkexec::broken(&captured.errors)),
-        Some(refusal) => return refused(refusal),
-        None => {}
-    }
-
-    match captured.code {
-        Some(0) => match ProgramAnswer::parse(captured.output.trim_end()) {
-            Ok(ProgramAnswer::Ran {
-                output,
-                errors,
-                code,
-                truncated,
-            }) => Attempt::Ran(ran(Captured {
-                output,
-                errors,
-                code,
-                truncated,
-            })),
-            Ok(ProgramAnswer::Missing) => Attempt::Missing,
-            Err(error) => Attempt::Failed(format!(
-                "The answer of the helper of Garuda Toolbox was not understood: {error}"
-            )),
-        },
-        Some(_) | None => Attempt::Failed(format!(
-            "The helper of Garuda Toolbox failed: {}",
-            strip_ansi(captured.errors.trim())
+/// The helper's answer line: what the program printed, or that it is
+/// not installed.
+fn answered(answer: &str) -> Attempt {
+    match ProgramAnswer::parse(answer.trim_end()) {
+        Ok(ProgramAnswer::Ran {
+            output,
+            errors,
+            code,
+            truncated,
+        }) => Attempt::Ran(ran(Captured {
+            output,
+            errors,
+            code,
+            truncated,
+        })),
+        Ok(ProgramAnswer::Missing) => Attempt::Missing,
+        Err(error) => Attempt::Failed(format!(
+            "The answer of the helper of Garuda Toolbox was not understood: {error}"
         )),
     }
 }
@@ -286,7 +266,14 @@ fn describe(result: &Result<Captured, CaptureError>) -> String {
 fn timed_out(program: &Program) -> Attempt {
     Attempt::Failed(format!(
         "{} took longer than {} seconds",
-        program.name,
+        program.tool.name(),
         DEADLINE.as_secs()
     ))
+}
+
+/// The report names why the helper did not start too, such as the
+/// system's own words for a missing file.
+fn with_source(error: &HelperError) -> String {
+    std::error::Error::source(error)
+        .map_or_else(|| error.to_string(), |source| format!("{error}: {source}"))
 }

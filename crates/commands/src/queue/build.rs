@@ -10,12 +10,12 @@ use toolbox_cli::args::{DkmsBuild, KernelArgs, ParamArgs};
 use toolbox_core::domains::BootLoader;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::kernels::kernels_of;
-use toolbox_core::features::maintenance::Operations;
+use toolbox_core::features::maintenance;
 use toolbox_core::features::maintenance::page::{task, upgrader};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::UnitScope;
 use toolbox_services::catalogs::Catalogs;
-use toolbox_system::ProbeError;
+use toolbox_services::dkms::dkms_answer;
 
 pub use self::reads::{LiveReads, SystemReads};
 use super::add::Queueable;
@@ -68,7 +68,7 @@ pub fn build(
             let task = task(&args.task, upgrader)
                 .ok_or_else(|| Refused::Unknown(format!("no task is called `{}`", args.task)))?;
 
-            Operations::want(changes, task, snapshot);
+            maintenance::queue(task, Toggle::On, changes, snapshot);
             Ok(())
         }
         Queueable::Dkms(args) => dkms(args, system, snapshot, changes),
@@ -136,16 +136,9 @@ fn dkms(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    let entries = match system.dkms() {
-        Ok(entries) => entries,
-        Err(ProbeError::Unavailable) => Vec::new(),
-        Err(error) => {
-            tracing::warn!("dkms status: {error}");
-            return Err(Refused::Unavailable(
-                "not available: dkms could not list its modules".to_owned(),
-            ));
-        }
-    };
+    let answer = dkms_answer(system.dkms()).map_err(|_logged| {
+        Refused::Unavailable("not available: dkms could not list its modules".to_owned())
+    })?;
 
-    boot::build_onto(args, &entries, snapshot, changes)
+    boot::build_onto(args, answer.entries(), snapshot, changes)
 }

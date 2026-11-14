@@ -15,9 +15,9 @@ use toolbox_gui_kit::widgets::{
     pill_button, refresh_button, rich, split_row,
 };
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
+use toolbox_services::home::Overview;
 use toolbox_system::{CallError, HealthLevel, Host, Status};
 
-use super::view::Overview;
 use super::{HomePage, HomeProblem};
 use crate::command::HomeCommand;
 use crate::i18n;

@@ -54,6 +54,8 @@ pub enum Refusal {
     LastLocale,
     /// Only an enabled locale can become the system language.
     NotEnabled,
+    /// The rule every package removal meets, for a language pack.
+    Package(crate::features::packages::queue::Refusal),
 }
 
 impl Default for Filter {

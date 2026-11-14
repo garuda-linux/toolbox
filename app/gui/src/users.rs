@@ -18,6 +18,7 @@ use toolbox_core::domains::AccountLockFlags;
 use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_plan::UserName;
 use toolbox_services::locks::Locks;
+use toolbox_system::pkexec::HelperError;
 use toolbox_system::{LockProblem, LockSource};
 
 use crate::lane::{Lane, OneRead};
@@ -168,7 +169,7 @@ impl Users {
         jobs.lane.blocking(
             "locks",
             move || source.locks(),
-            |answer| answer.unwrap_or_else(|stopped| Err(LockProblem::Failed(stopped.to_string()))),
+            |answer| answer.unwrap_or(Err(LockProblem::Failed(HelperError::Stopped))),
         );
     }
 }

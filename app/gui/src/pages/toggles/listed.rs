@@ -193,7 +193,7 @@ impl EntryRow {
             on: entry.state.shown_on(),
             changeable: entry.changeable(),
             picture: entry::picture_file(context, catalog, entry)
-                .map(|file| format!("file://{}", file.display())),
+                .map(|file| icons::picture_uri(&file)),
             tile_package: entry::tile_package(entry.entry).to_owned(),
             website: url
                 .as_ref()

@@ -20,7 +20,6 @@ pub enum BootRepairCommand {
     },
     Forget,
     ShowConsole,
-    DismissRefusal,
 }
 
 impl From<BootRepairCommand> for Command {

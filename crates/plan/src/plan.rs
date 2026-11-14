@@ -102,6 +102,14 @@ impl Plan {
         self.steps.is_empty()
     }
 
+    /// The plan without the steps in `done`, the others keeping their ids,
+    /// so a second try reports under the same numbers.
+    #[must_use = "a plan does nothing until it is run"]
+    pub fn without(mut self, done: &[StepId]) -> Self {
+        self.steps.retain(|step| !done.contains(&step.id));
+        self
+    }
+
     /// The steps grouped into consecutive runs of the same kind, in order.
     /// Each root segment costs one helper start (and at most one password).
     /// Takes the plan: an action may hold a whole config file.

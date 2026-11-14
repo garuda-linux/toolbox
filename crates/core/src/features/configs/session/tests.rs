@@ -6,6 +6,7 @@ use super::{
     Changes, Compared, EditWrite, EditedFile, Fetched, Phase, Problem, Session, Stage, Work,
 };
 use crate::features::configs::Refusal;
+use crate::features::configs::session::ProblemCode::{Dismissed, NotText};
 
 const OLD: &str = "a = 1\n";
 const NEW: &str = "a = 2\n";
@@ -77,8 +78,8 @@ fn reviewing() -> Session {
     session
 }
 
-fn code(session: &Session) -> String {
-    session.problem().code.to_owned()
+fn code(session: &Session) -> &'static str {
+    session.problem().map_or("", |problem| problem.code.into())
 }
 
 fn shown(session: &Session) -> Shown {
@@ -150,7 +151,7 @@ fn a_failed_read_ends_the_edit_with_its_reason() {
     let mut session = Session::default();
 
     session.start(path()).unwrap();
-    assert_eq!(session.fetched(Err(Problem::new("dismissed", ""))), None);
+    assert_eq!(session.fetched(Err(Problem::new(Dismissed, ""))), None);
     assert_eq!(session.phase(), Phase::Failed);
     assert_eq!(code(&session), "dismissed");
 
@@ -195,7 +196,7 @@ fn a_copy_that_is_no_text_ends_the_edit() {
 
     session.plan_finished(true);
     assert_eq!(
-        session.compared(Err(Problem::new("not-text", "the file is no text"))),
+        session.compared(Err(Problem::new(NotText, "the file is no text"))),
         Some(Work::RemoveCopy(copy()))
     );
     assert_eq!(session.phase(), Phase::Failed);
@@ -261,7 +262,7 @@ fn a_file_that_cannot_be_read_again_keeps_the_edit() {
     let mut session = reviewing();
 
     session.reread().unwrap();
-    assert_eq!(session.compared(Err(Problem::new("dismissed", ""))), None);
+    assert_eq!(session.compared(Err(Problem::new(Dismissed, ""))), None);
     assert_eq!(session.phase(), Phase::Review);
     assert_eq!(code(&session), "dismissed");
     assert!(session.changes().is_some());

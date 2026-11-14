@@ -1,5 +1,6 @@
 use toolbox_plan::{GrubMenu, GrubPlatform};
-use toolbox_system::{Menu, MenuRead};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::MenuRead;
 
 use super::super::tests::{grub_system, menu, page};
 use crate::boot::Boot;

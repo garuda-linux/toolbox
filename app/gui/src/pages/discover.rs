@@ -1,15 +1,16 @@
 mod app_row;
+mod chips;
 mod row;
 #[cfg(test)]
 mod tests;
-pub mod view;
 
 use app_row::AppRow;
+use chips::Chips;
 use egui::Ui;
 use toolbox_catalog::LoadProblem;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::InstalledPackages;
-use toolbox_core::features::discover::{AppOrder, Category};
+use toolbox_core::features::discover::{AppOrder, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state,
@@ -18,10 +19,13 @@ use toolbox_gui_kit::widgets::{
 use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::header::{search, title_header};
-use super::rows::{Look, sort_select};
+use super::rows::{Look, refusal_banner, sort_select};
+use super::toggles::refusal_text;
 use super::{PageContext, PageView, plan_running};
 use crate::command::AppCommand;
 use crate::i18n;
+use crate::page::PageId;
+use crate::toggle_pages::TogglePages;
 
 #[derive(Debug, Default)]
 pub struct DiscoverPage {
@@ -29,12 +33,17 @@ pub struct DiscoverPage {
     category: Option<String>,
     order: AppOrder,
     rows: RowCache<RowsKey, Vec<AppRow>>,
+    chips: RowCache<ChipsKey, Chips>,
     /// The title of an app picked in the palette, whose row takes the
     /// focus once it shows.
     revealing: Option<String>,
 }
 
 type RowsKey = (AppOrder, Same<Snapshot>, u64, Look);
+
+/// The chips' texts come from the search, the system, the queue and the
+/// look, never from the picked category or the order.
+type ChipsKey = (Same<Snapshot>, u64, Look);
 
 impl PageView for DiscoverPage {
     fn header(&mut self, ui: &mut Ui, _context: &PageContext<'_>) -> bool {
@@ -85,9 +94,18 @@ impl DiscoverPage {
         notices(ui, context, catalogs.problem.as_ref());
 
         let apps = &catalogs.apps;
-        let categories = apps.categories_matching(&self.search, context.snapshot, context.changes);
-        let category = view::category(&categories, self.category.as_deref());
-        self.filters(ui, &categories, category);
+        let look = Look::of(ui);
+        let chips_rest = (Same::of(context.snapshot), context.revision, look.clone());
+        let chips = self.chips.get(&[&self.search], chips_rest, || {
+            let _build = tracing::trace_span!("build chips").entered();
+            let categories =
+                apps.categories_matching(&self.search, context.snapshot, context.changes);
+
+            Chips::of(&ctx, &categories)
+        });
+
+        let category = view::category(chips.ids(), self.category.as_deref());
+        self.filters(ui, &chips, category);
         ui.add_space(ui.tokens().sizes.header_gap);
 
         let query = view::Query {
@@ -100,7 +118,7 @@ impl DiscoverPage {
             self.order,
             Same::of(context.snapshot),
             context.revision,
-            Look::of(ui),
+            look,
         );
 
         let rows = self
@@ -149,33 +167,18 @@ impl DiscoverPage {
 
     /// The category chips. They count the matches while a search runs and
     /// still pick a category.
-    fn filters(&mut self, ui: &mut Ui, categories: &[Category<'_>], current: Option<&str>) {
-        let ctx = ui.ctx().clone();
-        let all = (
-            i18n::text(&ctx, "discover-all").into_owned(),
-            categories
-                .iter()
-                .map(|category| category.count)
-                .sum::<usize>()
-                .to_string(),
-        );
-
-        let texts: Vec<(Option<&str>, String, String)> = categories
-            .iter()
-            .map(|category| {
-                let id = category.section.id();
-                let title = category_title(&ctx, id, category.section.title());
-                (Some(id), title, category.count.to_string())
-            })
-            .collect();
+    fn filters(&mut self, ui: &mut Ui, chips: &Chips, current: Option<&str>) {
+        let categories = chips.categories.iter().map(|chip| {
+            (
+                Some(chip.id.as_str()),
+                chip.title.as_str(),
+                Some(chip.count.as_str()),
+            )
+        });
 
         let options: Vec<(Option<&str>, &str, Option<&str>)> =
-            std::iter::once((None, all.0.as_str(), Some(all.1.as_str())))
-                .chain(
-                    texts
-                        .iter()
-                        .map(|(id, title, count)| (*id, title.as_str(), Some(count.as_str()))),
-                )
+            std::iter::once((None, chips.all.as_str(), Some(chips.total.as_str())))
+                .chain(categories)
                 .collect();
 
         if let Some(picked) = counted_chips(ui, &options, current) {
@@ -220,6 +223,19 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>
         let text = format!("{} {reason}", i18n::text(&ctx, "discover-problem"));
         banner(ui, Tone::Warning, &text, &[]);
         ui.add_space(ui.tokens().sizes.card_gap);
+    }
+
+    let refused = context
+        .service::<TogglePages>()
+        .app_refusal()
+        .and_then(|refused| refusal_text(&ctx, refused));
+
+    if let Some(text) = refused
+        && refusal_banner(ui, Tone::Warning, &text, "toggles-dismiss")
+    {
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Discover));
     }
 
     // Without the installed packages every switch shows off, and switching

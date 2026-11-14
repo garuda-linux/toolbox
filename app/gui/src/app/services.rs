@@ -1,6 +1,5 @@
 //! What the app takes in from its services each frame: the apply
-//! service's reports, the snapshot and the other readers' readings and
-//! the restart's refusals.
+//! service's reports, the snapshot and what the page services took in.
 
 use std::sync::Arc;
 
@@ -9,8 +8,8 @@ use toolbox_core::domains::{AccountLockFlags, BootLoader, CurrentLoader};
 use toolbox_core::features::Guard;
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_gui_kit::toasts::ToastKind;
+use toolbox_plan::StepId;
 use toolbox_plan::protocol::Mode;
-use toolbox_plan::{StepId, UnitScope};
 use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::Notification;
 
@@ -19,8 +18,6 @@ use crate::apply::{ApplyCommand, Report};
 use crate::console::StepState;
 use crate::i18n;
 use crate::page_service::Services;
-use crate::pages::home::HomeProblem;
-use crate::units::UnitsHandle;
 
 /// The program output one frame feeds to the Console's terminal. A
 /// program that prints faster than that still leaves the window usable.
@@ -125,16 +122,6 @@ impl App {
 
         // A failed plan may have done part of its work too.
         self.read_system();
-        self.status.refresh();
-        self.facts.refresh();
-        self.programs.refresh();
-
-        // systemd's signals report the change too, this covers a bus
-        // that dropped them.
-        if let Some(units) = &self.units {
-            units.refresh(UnitScope::System);
-            units.refresh(UnitScope::User);
-        }
     }
 
     /// Reads the system again when the window comes back to the front, for
@@ -168,7 +155,7 @@ impl App {
             self.queue.meet(&self.seen);
 
             // An apply may have changed what /etc/skel holds.
-            self.services.maintenance.stock(self.catalogs.skel.as_ref());
+            self.services.maintenance.restock();
         }
     }
 
@@ -191,6 +178,7 @@ impl App {
             | Guard::Kernels
             | Guard::Locales
             | Guard::LanguagePacks
+            | Guard::PackageRemovals
             | Guard::Plymouth
             | Guard::Grub
             | Guard::ModuleBlacklist
@@ -244,26 +232,10 @@ impl App {
         self.seen = joined(&probed, Needs::ALL, &reads).map_or(probed, Arc::new);
     }
 
-    /// The status and the programs are not read when the window comes
-    /// back: the programs only change through the app's own plans,
-    /// and the status checks reach the network, so they follow their period.
     pub(super) fn take_services(&mut self, ctx: &egui::Context) {
-        // A failed read shows on its page, which offers to read again.
-        self.status.take();
-        self.facts.take();
-        self.news.take();
-        self.programs.take();
-
-        if let Some(lists) = self.units.as_mut().and_then(UnitsHandle::changed) {
-            self.services.units = lists;
-        }
-
         self.take_page_services(ctx);
         self.take_output_share(ctx);
         self.read_held_parts();
-        if let Some(error) = self.restart_refused.1.try_iter().last() {
-            self.home_problem = Some(HomeProblem::Restart(error));
-        }
 
         // The writer logged why, the toast says that a restart loses it.
         if self.queue.not_kept().is_some() {

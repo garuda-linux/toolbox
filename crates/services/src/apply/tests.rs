@@ -14,7 +14,7 @@ use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, encode};
 use toolbox_plan::{Plan, PlannedAction, RootAction, StepId, UserAction};
 use toolbox_system::pkexec::Refusal;
 
-use super::{ApplyCommand, Launcher, Problem, Report, Reporter, serve};
+use super::{ApplyCommand, Launcher, OutputGate, Problem, Report, Reporter, serve};
 
 struct FakeLauncher {
     script: String,
@@ -72,7 +72,10 @@ async fn run_after(
 ) -> Vec<Report> {
     let (sender, receiver) = unbounded_channel();
     let (reports, report_queue) = crate::waking::channel(crate::waking::Wake::none());
-    let reporter = Reporter(reports);
+    let reporter = Reporter {
+        reports,
+        gate: OutputGate::default(),
+    };
 
     for command in commands {
         sender.send(command).unwrap();

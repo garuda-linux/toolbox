@@ -5,6 +5,8 @@ use std::path::Path;
 
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
+use toolbox_core::features::maintenance::page::Repair;
+use toolbox_plan::RemoteAction;
 
 use super::{disabled, open_tab, page, programs, sent, with};
 use crate::command::{Command, MaintenanceCommand};
@@ -40,8 +42,8 @@ fn a_repair_that_wipes_asks_first_and_runs_on_its_danger_button() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(MaintenanceCommand::RunNow(
-            "remote-full-fix".to_owned()
+        [Command::from(MaintenanceCommand::RunRepair(
+            Repair::Remote(RemoteAction::FullFix)
         ))]
     );
     assert!(harness.query_by_role(Role::Dialog).is_none());

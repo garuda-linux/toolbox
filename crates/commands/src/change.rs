@@ -161,14 +161,18 @@ pub fn app_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    if apps.toggle(id, want, snapshot, changes) {
-        Ok(())
-    } else {
-        Err(
-            Refused::Unknown(format!("the catalog has no app `{id}`, see `apps list`"))
-                .hinted(id, apps.all().map(|hit| hit.entry.id())),
-        )
-    }
+    apps.toggle(id, want, snapshot, changes)
+        .map_err(|refused| match refused.refusal {
+            toggles::Refusal::Unknown => {
+                Refused::Unknown(format!("the catalog has no app `{id}`, see `apps list`"))
+                    .hinted(id, apps.all().map(|hit| hit.entry.id()))
+            }
+            toggles::Refusal::Unmet
+            | toggles::Refusal::Account(_)
+            | toggles::Refusal::Kernel(_)
+            | toggles::Refusal::Protected(_)
+            | toggles::Refusal::TakesAlong(_) => toggle_refused(refused),
+        })
 }
 
 /// A kernel installed or removed, or its headers installed. The kernel
@@ -220,8 +224,9 @@ pub fn kernel_onto(
         // The page's own click: the kernel with its headers.
         KernelChange::Install | KernelChange::Remove => {
             let wish = Toggle::from_on(change == KernelChange::Install);
-            kernels::toggle(kernel, wish, listed, changes, snapshot).map_err(|refusal| {
-                crate::packages::kept_package(name.as_str(), refusal.into(), "")
+            kernels::toggle(kernel, wish, listed, changes, snapshot).map_err(|refused| {
+                let along = refused.subject.as_str();
+                crate::packages::kept_package(name.as_str(), refused.refusal.into(), along)
             })?;
         }
         KernelChange::Headers if kernel.installed.is_none() => {

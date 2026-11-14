@@ -11,10 +11,12 @@ use toolbox_plan::{LocaleEntry, LocaleName, PackageName};
 use crate::domains::{
     CurrentSystemLocale, EnabledLocales, InstalledPackages, Packages, SyncPackages, SystemLocales,
 };
+use crate::features::Refused;
 use crate::features::locales::{
-    LanguageName, LanguagePack, LocaleNames, LocaleRow as Row, PackRow, SupportedLocales, all_rows,
-    language_packs, system_choices as offered, wanted_enabled,
+    LanguageName, LanguagePack, LocaleNames, LocaleRow as Row, PackRow, Refusal, SupportedLocales,
+    all_rows, language_packs, system_choices as offered, wanted_enabled,
 };
+use crate::features::packages::queue;
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 #[derive(Debug, PartialEq, Eq)]
@@ -117,20 +119,39 @@ pub fn system_choice_names(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<(Str
 /// Queues installing or removing the language pack `package`, or takes
 /// that back. Returns whether it is one of the listed packs: nothing else
 /// is queued from here.
+///
+/// # Errors
+///
+/// [`Refusal::Package`] for a removal of an installed pack the package
+/// rules refuse, naming the package they name.
 pub fn toggle_pack(
     package: &PackageName,
     wish: Toggle,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
-) -> bool {
+) -> Result<bool, Refused<Refusal>> {
     let listed = packs_of(snapshot, changes)
         .is_some_and(|packs| packs.iter().any(|pack| pack.package == *package));
 
-    if listed {
-        changes.want::<Packages>(package.clone(), wish, snapshot);
+    if !listed {
+        return Ok(false);
     }
 
-    listed
+    let installed = snapshot
+        .part::<InstalledPackages>()
+        .is_some_and(|installed| installed.0.contains(package));
+
+    if !wish.is_on() && installed {
+        queue::may_remove(package, changes, snapshot).map_err(|refused| {
+            Refused::new(
+                Refusal::Package(refused.refusal),
+                refused.subject.to_string(),
+            )
+        })?;
+    }
+
+    changes.want::<Packages>(package.clone(), wish, snapshot);
+    Ok(true)
 }
 
 /// Queues every listed pack that is neither installed nor queued, the

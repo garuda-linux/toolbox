@@ -3,6 +3,7 @@ use toolbox_cli::output::Mark;
 use toolbox_core::features::configs::session::EditedFile;
 use toolbox_plan::{ConfigFilePath, ConfigText, HomePath, PlannedAction, RootAction, UserAction};
 use toolbox_system::ReadProblem;
+use toolbox_system::pkexec::HelperError;
 
 use super::{FileRow, file_listing, read_problem, unknown, write_back};
 use crate::out::{Out, Settings};
@@ -96,10 +97,13 @@ fn the_list_counts_the_files_that_need_root() {
 #[test]
 fn a_failed_read_keeps_the_program_s_words_out_of_the_line() {
     assert_eq!(
-        read_problem(&ReadProblem::Failed("cat: Permission denied".to_owned())),
+        read_problem(&ReadProblem::Failed(HelperError::Ended {
+            code: Some(1_i32),
+            words: "cat: Permission denied".to_owned(),
+        })),
         (
             "the file was not read".to_owned(),
-            "cat: Permission denied".to_owned()
+            "the helper ended with exit code 1: cat: Permission denied".to_owned()
         )
     );
     assert_eq!(

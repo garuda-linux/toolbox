@@ -1,20 +1,25 @@
 //! A click on the Maintenance page, or an entry of it picked in the palette.
 
+use toolbox_core::features::maintenance::Operation;
+use toolbox_core::features::maintenance::page::{PageTool, Repair};
+
 use super::{AppCommand, Command};
 use crate::pages::maintenance::Tab;
 
-/// The ids are the page's: an operation, a repair or a tool.
+/// Each kind of task has its own command, so each names its own type.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MaintenanceCommand {
-    /// Runs operation or repair `0` at once in the Console.
-    RunNow(String),
+    /// Runs operation `0` at once in the Console.
+    RunOperation(Operation),
+    /// Runs repair `0` at once in the Console.
+    RunRepair(Repair),
     /// Queues operation `operation` for the next apply, or takes it back.
     Queue {
-        operation: String,
+        operation: Operation,
         on: bool,
     },
     /// Opens tool `0`, or installs it first and opens it then.
-    OpenTool(String),
+    OpenTool(PageTool),
     /// Installs garuda-update, which most repairs need.
     InstallGarudaUpdate,
     DismissProblem,

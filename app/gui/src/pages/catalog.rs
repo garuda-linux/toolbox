@@ -4,6 +4,8 @@
 use std::marker::PhantomData;
 
 use egui::Ui;
+use toolbox_core::Snapshot;
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 
 use super::toggles::{LeadSections, TogglePage};
 use super::{PageContext, PageView};
@@ -21,9 +23,17 @@ pub trait CatalogKind {
     fn span() -> tracing::Span;
 }
 
+/// The lead sections' data, keyed by the system and the queue.
+pub type LeadData<K> =
+    RowCache<(Same<Snapshot>, u64), <<K as CatalogKind>::Lead as LeadSections>::Data>;
+
 #[derive(Debug)]
-pub struct CatalogPage<K> {
+pub struct CatalogPage<K>
+where
+    K: CatalogKind,
+{
     toggles: TogglePage,
+    lead: LeadData<K>,
     kind: PhantomData<K>,
 }
 
@@ -31,8 +41,17 @@ impl<K: CatalogKind> Default for CatalogPage<K> {
     fn default() -> Self {
         Self {
             toggles: TogglePage::new(K::CATALOG, K::TITLE, K::SUBTITLE).waiting_for_plans(),
+            lead: RowCache::new(),
             kind: PhantomData,
         }
+    }
+}
+
+#[cfg(test)]
+impl<K: CatalogKind> CatalogPage<K> {
+    /// How often the lead sections' data was built, for the page's tests.
+    pub const fn lead_builds(&self) -> u64 {
+        self.lead.builds()
     }
 }
 
@@ -44,6 +63,12 @@ impl<K: CatalogKind> PageView for CatalogPage<K> {
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let _ui = K::span().entered();
-        self.toggles.ui(ui, context, &K::LEAD);
+        let rest = (Same::of(context.snapshot), context.revision);
+        let data = self.lead.get(&[], rest, || {
+            let _build = tracing::trace_span!("build lead").entered();
+            K::LEAD.data(context)
+        });
+
+        self.toggles.ui(ui, context, (&K::LEAD, &*data));
     }
 }

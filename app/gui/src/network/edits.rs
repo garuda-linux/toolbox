@@ -1,6 +1,6 @@
-//! The Network page's clicks that wait in the queue: the blacklist and
-//! the hotspot tool. A refused one stays on the page until dismissed or
-//! the next blacklist click is taken.
+//! The Network page's clicks that need no run: the queued blacklist and
+//! hotspot tool, the radios and the address. A refused one stays on the
+//! page until dismissed or the next blacklist click is taken.
 
 #[cfg(test)]
 mod tests;
@@ -9,10 +9,10 @@ use toolbox_core::features::network::{
     HOTSPOT_PACKAGE, ModuleFacts, Refusal, set_blacklisted, toggle_install,
 };
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{KernelModule, Toggle};
+use toolbox_plan::{KernelModule, Toggle, UnitScope};
 
 use super::{Network, NetworkRefusal};
-use crate::command::{AppCommand, NetworkCommand};
+use crate::command::{AppCommand, NetworkCommand, ServiceCommand};
 use crate::page_service::Handled;
 use crate::refused::{Refused, queue, queue_or_refuse};
 
@@ -42,18 +42,27 @@ impl Network {
             NetworkCommand::ToggleHotspot => queue(changes, |changes| {
                 toggle_install(&HOTSPOT_PACKAGE, changes, snapshot);
             }),
-            NetworkCommand::DismissRefusal => {
-                self.refusal = None;
+            // The page also lists the system's units, which App reads in.
+            NetworkCommand::Refresh => {
+                self.refresh();
+                Handled::answers(vec![
+                    AppCommand::ReadSystem,
+                    AppCommand::Service(ServiceCommand::Refresh(UnitScope::System)),
+                ])
+            }
+            NetworkCommand::SetRadio { target, blocked } => {
+                self.set_radio(*target, *blocked);
                 Handled::taken()
             }
-            NetworkCommand::Refresh
-            | NetworkCommand::SetRadio {
-                target: _,
-                blocked: _,
+            NetworkCommand::LookupAddress => {
+                self.lookup_address();
+                Handled::taken()
             }
-            | NetworkCommand::LookupAddress
-            | NetworkCommand::ForgetAddress
-            | NetworkCommand::StartService(_)
+            NetworkCommand::ForgetAddress => {
+                self.forget_address();
+                Handled::taken()
+            }
+            NetworkCommand::StartService(_)
             | NetworkCommand::LoadDriver { module: _, load: _ }
             | NetworkCommand::Ping {
                 host: _,

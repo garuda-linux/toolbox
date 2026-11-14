@@ -1,5 +1,5 @@
 //! Driver loads, service starts and the tests run at once in the Console. The
-//! service queues the blacklist and the hotspot tool.
+//! service takes the other clicks.
 
 use std::path::Path;
 
@@ -15,18 +15,6 @@ use crate::i18n;
 impl App {
     pub(super) fn run_network(&mut self, ctx: &egui::Context, command: NetworkCommand) {
         match command {
-            NetworkCommand::Refresh => {
-                self.services.network.refresh();
-                self.read_system();
-                if let Some(units) = &self.units {
-                    units.refresh(toolbox_plan::UnitScope::System);
-                }
-            }
-            NetworkCommand::SetRadio { target, blocked } => {
-                self.services.network.set_radio(target, blocked);
-            }
-            NetworkCommand::LookupAddress => self.services.network.lookup_address(),
-            NetworkCommand::ForgetAddress => self.services.network.forget_address(),
             NetworkCommand::StartService(unit) => {
                 if let Some(plan) = plan_start(unit) {
                     self.run_at_once(plan);
@@ -52,9 +40,16 @@ impl App {
                 self.run_at_once(plan_traceroute(host, hops));
             }
             NetworkCommand::OpenHotspot => self.open_hotspot(ctx),
+            // The service takes these, see `hand_to_services`.
             NetworkCommand::Blacklist { module: _, on: _ }
             | NetworkCommand::ToggleHotspot
-            | NetworkCommand::DismissRefusal => {}
+            | NetworkCommand::Refresh
+            | NetworkCommand::SetRadio {
+                target: _,
+                blocked: _,
+            }
+            | NetworkCommand::LookupAddress
+            | NetworkCommand::ForgetAddress => {}
         }
     }
 

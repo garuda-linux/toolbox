@@ -64,7 +64,7 @@ fn the_own_variable_comes_before_pager_and_less_is_last() {
         Some(words(&["most", "-s"]))
     );
     assert_eq!(argv(None, Some("more")), Some(words(&["more"])));
-    assert_eq!(argv(None, None), Some(words(&["less", "-FRX"])));
+    assert_eq!(argv(None, None), Some(words(&["/usr/bin/less", "-FRX"])));
 }
 
 #[test]
@@ -89,7 +89,7 @@ fn no_terminal_or_no_pager_prints_directly() {
 
     assert_eq!(
         chosen(&list, false, true, None, None),
-        Some(words(&["less", "-FRX"]))
+        Some(words(&["/usr/bin/less", "-FRX"]))
     );
     assert_eq!(chosen(&list, true, true, None, None), None);
     assert_eq!(chosen(&list, false, false, None, None), None);

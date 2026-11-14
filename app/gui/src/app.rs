@@ -8,7 +8,6 @@ mod closing;
 mod commands;
 mod configs;
 mod console;
-mod diagnostics;
 mod discover;
 mod fold;
 mod home;
@@ -19,22 +18,21 @@ mod packages;
 mod preferences;
 mod services;
 mod setup;
-mod tweaks;
+#[cfg(test)]
+mod tests;
 mod units;
 mod users;
 
 use std::sync::Arc;
 
-use crossbeam_channel::Receiver;
 use eframe::CreationContext;
 use serde::{Deserialize, Serialize};
 use tokio::sync::watch;
-use toolbox_core::Snapshot;
+use toolbox_core::{ChangeView, Snapshot};
 use toolbox_gui_kit::desktop::FontSpec;
+use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::toasts::Toasts;
 use toolbox_gui_kit::{fonts, icons};
-use toolbox_news::News;
-use toolbox_system::{CallError, Facts, Status};
 
 use self::preferences::Preferences;
 pub use self::preferences::PreferencesSetup;
@@ -49,6 +47,7 @@ use crate::configs::Configs;
 use crate::console::Console;
 use crate::desktop::DesktopLook;
 use crate::diagnostics::Diagnostics;
+use crate::home::{Home, HomeReaders};
 use crate::instance::Arrivals;
 use crate::kernels::Kernels;
 use crate::launch::Launcher;
@@ -58,22 +57,19 @@ use crate::notifications::Notifier;
 use crate::packages::Packages;
 use crate::page::PageId;
 use crate::page_service::Services;
-use crate::pages::home::{HomeFacts, HomeProblem};
+use crate::pages::home::HomeProblem;
 use crate::pages::{PageContext, Pages, Plans};
 use crate::pictures::FALLBACK_THEME;
-use crate::power::Power;
-use crate::programs::Programs;
 use crate::queue::Queue;
-use crate::reader::{Watched, fresh};
+use crate::reader::fresh;
 use crate::settings::{MotionChoice, ThemeChoice};
 use crate::share::ShareLink;
 use crate::shell::{ChangesState, Palette};
 use crate::snapshot::{Reading, SnapshotHandle};
 use crate::toggle_pages::TogglePages;
-use crate::units::UnitsHandle;
+use crate::units::Units;
 use crate::users::Users;
-use crate::waking::{self, Waking};
-use crate::{profiling, shell};
+use crate::{profiling, shell, waking};
 
 /// What survives a restart. Everything else is rebuilt from the system.
 #[derive(Debug, Deserialize, Serialize)]
@@ -100,6 +96,8 @@ pub struct App {
     receiver: CommandReceiver,
     palette: Palette,
     queue: Queue,
+    /// The queue's rows for the shell, built once per queue revision.
+    views: RowCache<u64, Vec<ChangeView>>,
     changes_ui: ChangesState,
     /// What a shortcut changed this frame, for the shell to jump to.
     snap: shell::Snap,
@@ -116,16 +114,7 @@ pub struct App {
     desktops: Vec<String>,
     version: &'static str,
     dry_run: bool,
-    status: Watched<Status>,
-    facts: Watched<Facts>,
-    news: Watched<News>,
-    programs: Watched<Programs>,
-    power: Option<Arc<dyn Power>>,
-    units: Option<UnitsHandle>,
     launcher: Option<Arc<dyn Launcher>>,
-    /// Refusals of a restart, sent from logind's task.
-    restart_refused: (Waking<CallError>, Receiver<CallError>),
-    home_problem: Option<HomeProblem>,
     services: Services,
     output_share: Option<ShareLink>,
     /// Told on exit, so no raise touches the closing window.
@@ -167,8 +156,19 @@ impl App {
         let catalogs = Arc::new(setup.catalogs);
         let CommandBus { sender, receiver } = setup.commands.unwrap_or_default();
         let mut maintenance = Maintenance::new(setup.maintenance, cc.egui_ctx.clone());
-        maintenance.stock(catalogs.skel.as_ref());
+        maintenance.set_catalogs(Arc::clone(&catalogs));
         maintenance.set_launcher(setup.launcher.clone());
+        let readers = HomeReaders {
+            status: setup.status,
+            facts: setup.facts,
+            news: setup.news,
+            programs: setup.programs,
+        };
+
+        let mut home = Home::new(readers, setup.power, waking::repaint(cc.egui_ctx.clone()));
+        home.set_problem(
+            (setup.queue_lost > 0).then_some(HomeProblem::QueueLost(setup.queue_lost)),
+        );
         let app = Self {
             pages: preferences::pages_for(&prefs),
             prefs,
@@ -179,6 +179,7 @@ impl App {
             receiver,
             palette: Palette::default(),
             queue: setup.queue,
+            views: RowCache::new(),
             changes_ui: ChangesState::default(),
             snap: shell::Snap::default(),
             fold: fold::Fold::default(),
@@ -192,17 +193,9 @@ impl App {
             desktops: setup.desktops,
             version: setup.version,
             dry_run: setup.dry_run,
-            status: Watched::new(setup.status),
-            facts: Watched::new(setup.facts),
-            news: Watched::new(setup.news),
-            programs: Watched::new(setup.programs),
-            power: setup.power,
             launcher: setup.launcher,
-            units: setup.units,
-            restart_refused: waking::channel(waking::repaint(cc.egui_ctx.clone())),
-            home_problem: (setup.queue_lost > 0)
-                .then_some(HomeProblem::QueueLost(setup.queue_lost)),
             services: Services {
+                home,
                 maintenance,
                 diagnostics: Diagnostics::new(setup.diagnostics),
                 boot: Boot::new(setup.boot, cc.egui_ctx.clone()),
@@ -213,6 +206,7 @@ impl App {
                 boot_repair: BootRepair::new(setup.boot_repair, cc.egui_ctx.clone()),
                 toggle_pages: TogglePages::new(catalogs),
                 kernels: Kernels::new(setup.dkms),
+                units: Units::new(setup.units),
                 artwork: Artwork::new(setup.pictures),
                 ..Services::default()
             },
@@ -282,7 +276,10 @@ impl eframe::App for App {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let _ui = tracing::trace_span!("app ui").entered();
         self.remember_page();
-        let changes = self.queue.views();
+        let changes = self
+            .views
+            .get(&[], self.queue.revision(), || self.queue.views());
+
         let held = self.apply_held();
         let snapshot = self.current_snapshot();
         let context = PageContext {
@@ -293,16 +290,10 @@ impl eframe::App for App {
             catalogs: &self.catalogs,
             busy: self.console.running(),
             console_open: self.state.console_open,
-            home: HomeFacts {
-                status: self.status.fed(),
-                facts: self.facts.fed(),
-                news: self.news.fed(),
-                recent: &self.state.recent,
-                setup_finished: self.state.setup_finished,
-                programs: self.programs.latest(),
-                programs_failed: self.programs.reading().error().is_some(),
-                problem: self.home_problem.as_ref(),
-            },
+            home: self
+                .services
+                .home
+                .shown(&self.state.recent, self.state.setup_finished),
             services: &self.services,
             plans: self.plans,
             desktops: &self.desktops,

@@ -36,7 +36,7 @@ impl KernelSetting {
 }
 
 impl SdBootKernelDomain {
-    pub fn want(changes: &mut ChangeSet, setting: KernelSetting, snapshot: &Snapshot) {
+    pub(crate) fn want(changes: &mut ChangeSet, setting: KernelSetting, snapshot: &Snapshot) {
         changes.want::<Self>(setting.key(), setting, snapshot);
     }
 

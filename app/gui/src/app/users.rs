@@ -12,10 +12,6 @@ use crate::refused::Refused;
 impl App {
     pub(super) fn run_users(&mut self, command: UsersCommand) {
         match command {
-            UsersCommand::Refresh => {
-                self.read_system();
-                self.services.users.refresh();
-            }
             UsersCommand::AddUser { user, password } => {
                 let name = user.parts().name.clone();
                 if self.run_unseen(plan_add_user(*user, password)) {
@@ -36,9 +32,12 @@ impl App {
 
                 self.services.users.set_refusal(refusal);
             }
-            UsersCommand::DismissRun => self.services.users.dismiss_run(),
             UsersCommand::ShowConsole => self.state.console_open = true,
-            UsersCommand::Keep(_) | UsersCommand::DismissRefusal | UsersCommand::Edit(_) => {}
+            // The service takes these, see `hand_to_services`.
+            UsersCommand::Keep(_)
+            | UsersCommand::Edit(_)
+            | UsersCommand::Refresh
+            | UsersCommand::DismissRun => {}
         }
     }
 }

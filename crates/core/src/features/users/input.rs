@@ -15,12 +15,22 @@ use super::Refusal;
 use super::home::{Placement, place};
 use super::now::new_user;
 use crate::Snapshot;
-use crate::features::RefusalText as _;
+use crate::features::ReasonCode;
 
-/// The code for a text that breaks a rule no field message names.
-pub const INVALID: &str = "invalid";
-/// The code for a text that is no user id a new account may ask for.
-pub const UID_INVALID: &str = "uid-invalid";
+/// Why a typed value or the account it makes is refused. Each field has
+/// its own family of texts, so a full name and a user name that break the
+/// same rule read differently.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum InputProblem {
+    /// A user or group name. [`ReasonCode::Invalid`] also stands for a
+    /// dialog that handed over no list of groups.
+    Name(ReasonCode),
+    FullName(InvalidFullName),
+    Home(InvalidHomeDirectory),
+    /// No user id a new account may ask for.
+    UidInvalid,
+    Refused(Refusal),
+}
 
 /// The add-user dialog's fields, one typed argument per field.
 ///
@@ -73,15 +83,15 @@ impl AddBlocker {
 }
 
 /// Why a typed account name breaks the rule of shadow-utils.
-pub const fn name_code(error: &InvalidName) -> &'static str {
+pub const fn name_code(error: &InvalidName) -> ReasonCode {
     match error.reason() {
-        Reason::InvalidComponent | Reason::WrongFileType => INVALID,
+        Reason::InvalidComponent | Reason::WrongFileType => ReasonCode::Invalid,
         reason @ (Reason::Empty
         | Reason::TooLong { max: _ }
         | Reason::InvalidStart(_)
         | Reason::InvalidCharacter(_)
         | Reason::UnknownUnitType
-        | Reason::UnknownDevice) => crate::features::reason_code(reason),
+        | Reason::UnknownDevice) => ReasonCode::of(reason),
     }
 }
 
@@ -90,20 +100,20 @@ pub const fn name_code(error: &InvalidName) -> &'static str {
 /// # Errors
 ///
 /// The code of the rule `text` breaks.
-pub fn name<R>(text: &str) -> Result<Name<R>, &'static str>
+pub fn name<R>(text: &str) -> Result<Name<R>, InputProblem>
 where
     R: Rule,
 {
-    Name::new(text).map_err(|error| name_code(&error))
+    Name::new(text).map_err(|error| InputProblem::Name(name_code(&error)))
 }
 
 /// The user id typed into the add-user dialog. Blank lets useradd pick.
 ///
 /// # Errors
 ///
-/// [`UID_INVALID`] for what is no number between 1 and
+/// [`InputProblem::UidInvalid`] for what is no number between 1 and
 /// [`toolbox_plan::LAST_USER_ID`].
-pub fn user_id(text: &str) -> Result<Option<UserId>, &'static str> {
+pub fn user_id(text: &str) -> Result<Option<UserId>, InputProblem> {
     match text.trim() {
         "" => Ok(None),
         digits => digits
@@ -111,7 +121,7 @@ pub fn user_id(text: &str) -> Result<Option<UserId>, &'static str> {
             .ok()
             .and_then(|value| UserId::new(value).ok())
             .map(Some)
-            .ok_or(UID_INVALID),
+            .ok_or(InputProblem::UidInvalid),
     }
 }
 
@@ -120,8 +130,8 @@ pub fn user_id(text: &str) -> Result<Option<UserId>, &'static str> {
 /// # Errors
 ///
 /// The code of the rule `text` breaks.
-pub fn home(text: &str) -> Result<HomeDirectory, &'static str> {
-    HomeDirectory::new(text).map_err(InvalidHomeDirectory::as_str)
+pub fn home(text: &str) -> Result<HomeDirectory, InputProblem> {
+    HomeDirectory::new(text).map_err(InputProblem::Home)
 }
 
 /// The add-user dialog's fields as a user to create.
@@ -130,15 +140,22 @@ pub fn home(text: &str) -> Result<HomeDirectory, &'static str> {
 ///
 /// The code of the first field that breaks a rule, or of the guard that
 /// refuses the user.
-pub fn new_account(form: &NewAccount<'_>, snapshot: &Snapshot) -> Result<NewUser, &'static str> {
+pub fn new_account(form: &NewAccount<'_>, snapshot: &Snapshot) -> Result<NewUser, InputProblem> {
     let user = name(form.name)?;
-    let full_name = FullName::new(form.full_name).map_err(InvalidFullName::as_str)?;
+    let full_name = FullName::new(form.full_name).map_err(InputProblem::FullName)?;
     let shell = match form.shell {
         "" => None,
-        path => Some(ShellPath::new(path).map_err(|_invalid| Refusal::ShellNotListed.code())?),
+        path => Some(
+            ShellPath::new(path)
+                .map_err(|_invalid| InputProblem::Refused(Refusal::ShellNotListed))?,
+        ),
     };
 
-    let groups = form.groups.clone().ok_or(INVALID)?;
+    let groups = form
+        .groups
+        .clone()
+        .ok_or(InputProblem::Name(ReasonCode::Invalid))?;
+
     let placement = Placement {
         home: match (form.no_home, form.home) {
             (true, _) => NewHome::Absent,
@@ -149,9 +166,9 @@ pub fn new_account(form: &NewAccount<'_>, snapshot: &Snapshot) -> Result<NewUser
         system: form.system,
     };
 
-    let user = new_user(user, full_name, shell, groups, snapshot).map_err(Refusal::code)?;
+    let user = new_user(user, full_name, shell, groups, snapshot).map_err(InputProblem::Refused)?;
 
-    place(user, placement, snapshot).map_err(Refusal::code)
+    place(user, placement, snapshot).map_err(InputProblem::Refused)
 }
 
 /// The first thing that keeps "Add user now" from being clicked, in the

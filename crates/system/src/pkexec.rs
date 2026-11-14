@@ -1,6 +1,7 @@
 //! What it means when `pkexec` did not run the root helper. Every caller
 //! of the helper asks here, so a closed dialog reads the same everywhere.
 
+mod error;
 #[cfg(test)]
 mod tests;
 
@@ -10,6 +11,8 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
 use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture};
+
+pub use self::error::HelperError;
 
 const DISMISSED: i32 = 126;
 /// Every other failure of pkexec, told apart by its words on stderr.
@@ -50,9 +53,8 @@ pub enum HelperRun {
     /// Its answer line, as lossy UTF-8.
     Answered(String),
     Refused(Refusal),
-    /// It could not start, failed or printed more than the limit. The
-    /// text names why, with the helper's own words where it has some.
-    Failed(String),
+    /// It could not start, failed or printed more than the limit.
+    Failed(HelperError),
     Cancelled,
 }
 
@@ -88,52 +90,46 @@ impl fmt::Display for Refusal {
 /// deadline: an unanswered password dialog waits for its user, and only
 /// `cancel` ends that wait.
 pub fn ask(command: &mut Command, limit: usize, cancel: &Arc<AtomicBool>) -> HelperRun {
-    match capture(
+    sorted(capture(
         command,
         Environment::Inherited,
         &[],
         &Policy::tail(limit),
         cancel,
-    ) {
-        Ok(captured) => sorted(captured),
-        Err(CaptureError::Missing) => {
-            HelperRun::Failed("the helper of Garuda Toolbox or pkexec is not installed".to_owned())
-        }
-        Err(CaptureError::Failed(error)) => {
-            HelperRun::Failed(format!("cannot start the helper: {error}"))
-        }
-        Err(CaptureError::TimedOut) => HelperRun::Failed("the helper took too long".to_owned()),
-        Err(CaptureError::TooLarge) => {
-            HelperRun::Failed("the helper's answer is too long".to_owned())
-        }
-        Err(CaptureError::Cancelled) => HelperRun::Cancelled,
-    }
+    ))
 }
 
-fn sorted(captured: Captured) -> HelperRun {
+/// What a run of the helper came to, for every caller that starts it.
+pub fn sorted(result: Result<Captured, CaptureError>) -> HelperRun {
+    let captured = match result {
+        Ok(captured) => captured,
+        Err(CaptureError::Missing) => return HelperRun::Failed(HelperError::Missing),
+        Err(CaptureError::Failed(error)) => {
+            return HelperRun::Failed(HelperError::Start(Arc::new(error)));
+        }
+        Err(CaptureError::TimedOut) => return HelperRun::Failed(HelperError::TimedOut),
+        Err(CaptureError::TooLarge) => return HelperRun::Failed(HelperError::TooLong),
+        Err(CaptureError::Cancelled) => return HelperRun::Cancelled,
+    };
+
     match refusal(captured.code, &captured.errors) {
-        Some(Refusal::Broken) => return HelperRun::Failed(broken(&captured.errors)),
+        Some(Refusal::Broken) => {
+            return HelperRun::Failed(HelperError::Pkexec {
+                words: reason(&captured.errors).to_owned(),
+            });
+        }
         Some(refused) => return HelperRun::Refused(refused),
         None => {}
     }
 
     match captured.code {
-        Some(0) if captured.truncated => {
-            HelperRun::Failed("the helper's answer is too long".to_owned())
-        }
+        Some(0) if captured.truncated => HelperRun::Failed(HelperError::TooLong),
         Some(0) => HelperRun::Answered(captured.output),
-        _ => HelperRun::Failed(ended(captured.code, &captured.errors)),
+        code => HelperRun::Failed(HelperError::Ended {
+            code,
+            words: captured.errors.trim().to_owned(),
+        }),
     }
-}
-
-pub(crate) fn broken(stderr: &str) -> String {
-    format!("pkexec cannot run: {}", reason(stderr))
-}
-
-pub(crate) fn ended(code: Option<i32>, stderr: &str) -> String {
-    let ending = code.map_or_else(|| "a signal".to_owned(), |code| format!("exit code {code}"));
-
-    format!("the helper ended with {ending}: {}", stderr.trim())
 }
 
 /// `None` when the helper ran. Silence with 127 is a denial, which polkit

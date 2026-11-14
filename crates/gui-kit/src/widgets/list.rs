@@ -15,6 +15,7 @@ pub use metrics::{row_height, text_block_height};
 use span::Offsets;
 
 use super::card;
+use super::layout::SETTLED;
 
 pub trait ListItem {
     /// Unique within the list and the same from frame to frame, such as
@@ -206,6 +207,7 @@ impl<'a> RowList<'a> {
 
                     let asked = keys.moved_to.is_none() && current == Some(index);
                     let place = row::Place {
+                        list,
                         id,
                         index,
                         fixed,
@@ -213,7 +215,9 @@ impl<'a> RowList<'a> {
                         menu: asked && keys.menu,
                     };
 
-                    at += row::show(ui, place, item, &mut body);
+                    let height = row::show(ui, place, item, &mut body);
+                    check_place(ui, list, (&offsets, index), height);
+                    at += height;
                 }
 
                 let total = offsets.total();
@@ -237,13 +241,51 @@ impl<'a> RowList<'a> {
                 height,
                 count: items.len(),
             },
-            RowHeights::Measured { estimate } => Offsets::measured((0..items.len()).map(|index| {
-                items
-                    .get(index)
-                    .and_then(|item| row::remembered(ui, row_id(list, item.key())))
-                    .unwrap_or(estimate)
-            })),
+            RowHeights::Measured { estimate } => {
+                let measuring = Measuring {
+                    count: items.len(),
+                    estimate: estimate.to_bits(),
+                    seen: row::heights_seen(ui, list),
+                };
+
+                let kept_id = list.with("offsets");
+                let kept = ui.data(|data| data.get_temp::<(Measuring, Offsets)>(kept_id));
+                if let Some((was, offsets)) = kept
+                    && was == measuring
+                {
+                    return offsets;
+                }
+
+                let offsets = Offsets::measured((0..items.len()).map(|index| {
+                    items
+                        .get(index)
+                        .and_then(|item| row::remembered(ui, row_id(list, item.key())))
+                        .unwrap_or(estimate)
+                }));
+
+                ui.data_mut(|data| data.insert_temp(kept_id, (measuring, offsets.clone())));
+                offsets
+            }
         }
+    }
+}
+
+/// What a list's measured offsets come from besides the rows' heights,
+/// whose changes [`row::heights_seen`] counts.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Measuring {
+    count: usize,
+    estimate: u32,
+    seen: u64,
+}
+
+/// A drawn row whose height is not its place in the kept offsets, as
+/// after rows swapped places, makes them stale.
+fn check_place(ui: &Ui, list: Id, (offsets, index): (&Offsets, usize), height: f32) {
+    let slot = offsets.top(index.saturating_add(1)) - offsets.top(index);
+    if matches!(offsets, Offsets::Measured { bottoms: _ }) && (slot - height).abs() >= SETTLED {
+        row::heights_changed(ui, list);
+        ui.ctx().request_repaint();
     }
 }
 

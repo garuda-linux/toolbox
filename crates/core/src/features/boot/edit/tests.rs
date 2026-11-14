@@ -79,7 +79,7 @@ fn without_grub_every_edit_is_refused() {
 
 #[test]
 fn every_broken_rule_has_its_code() {
-    let refused = |reason| rule(&InvalidName::new(NameKind::Package, "x", reason));
+    let refused = |reason| rule(&InvalidName::new(NameKind::Package, "x", reason)).code();
 
     assert_eq!(refused(Reason::Empty), "empty");
     assert_eq!(refused(Reason::TooLong { max: 8 }), "too-long");

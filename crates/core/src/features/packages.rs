@@ -6,6 +6,7 @@ pub mod list;
 pub mod mirror;
 pub mod protected;
 pub mod queue;
+pub mod recheck;
 
 pub use toolbox_state::packages::{
     IndexEntry, InstallReason, Installed, InstalledDetails, LocalNode, OptionalDependency, Origin,

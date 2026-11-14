@@ -1,7 +1,8 @@
 use std::cell::Cell;
 
-use toolbox_core::domains::{AccountLockFlags, CurrentLoader, LoaderSettingsDomain};
+use toolbox_core::domains::{AccountLockFlags, CurrentLoader};
 use toolbox_core::features::Guard;
+use toolbox_core::features::boot::set_loader;
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings, LoaderTimeout};
@@ -55,7 +56,7 @@ impl UnprobedReads for Unknown {
 fn loader_change() -> ChangeSet {
     let mut changes = ChangeSet::default();
     let setting = LoaderSetting::Timeout(Some(LoaderTimeout::Seconds(5)));
-    LoaderSettingsDomain::want(&mut changes, setting, &Snapshot::default());
+    set_loader(setting, &mut changes, &Snapshot::default());
     changes
 }
 

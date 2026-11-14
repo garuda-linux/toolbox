@@ -7,10 +7,12 @@
 
 #[cfg(test)]
 mod tests;
+pub mod view;
 
 use toolbox_catalog::{Check, ToggleCatalog, ToggleEntry, ToggleSection};
 use toolbox_plan::PackageName;
 
+use super::Refused;
 use super::search::{Needle, folded};
 use super::toggles::{self, is_offered};
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -129,19 +131,26 @@ impl Apps {
             .filter(|(_, hit)| is_offered(hit.entry, snapshot, changes))
     }
 
-    /// Queues app `id` on or off. Returns `false` for an unknown id or a
-    /// refused click.
+    /// Queues app `id` on or off.
+    ///
+    /// # Errors
+    ///
+    /// [`toggles::Refusal::Unknown`] for an id no catalog has, else what
+    /// [`toggles::toggle`] refuses.
     pub fn toggle(
         &self,
         id: &str,
         wish: Toggle,
         snapshot: &Snapshot,
         changes: &mut ChangeSet,
-    ) -> bool {
-        self.catalogs
+    ) -> Result<(), Refused<toggles::Refusal>> {
+        let catalog = self
+            .catalogs
             .iter()
             .find(|catalog| catalog.entry(id).is_some())
-            .is_some_and(|catalog| toggles::toggle(catalog, id, wish, snapshot, changes).is_ok())
+            .ok_or_else(|| Refused::new(toggles::Refusal::Unknown, id.to_owned()))?;
+
+        toggles::toggle(catalog, id, wish, snapshot, changes)
     }
 }
 

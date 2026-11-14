@@ -15,7 +15,7 @@ impl LoaderSettingsDomain {
         changes.wish::<Self>(&key).cloned()
     }
 
-    pub fn want(changes: &mut ChangeSet, setting: LoaderSetting, snapshot: &Snapshot) {
+    pub(crate) fn want(changes: &mut ChangeSet, setting: LoaderSetting, snapshot: &Snapshot) {
         changes.want::<Self>(setting.loader_key(), setting, snapshot);
     }
 }

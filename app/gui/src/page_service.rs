@@ -9,7 +9,6 @@ mod adapters;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::Plan;
-use toolbox_services::queue::edit::QueueEdit;
 
 use crate::artwork::Artwork;
 use crate::boot::Boot;
@@ -17,6 +16,7 @@ use crate::bootrepair::BootRepair;
 use crate::command::AppCommand;
 use crate::configs::Configs;
 use crate::diagnostics::Diagnostics;
+use crate::home::Home;
 use crate::kernels::Kernels;
 use crate::locales::Locales;
 use crate::maintenance::Maintenance;
@@ -62,7 +62,7 @@ pub struct Handled {
     /// A service took the command, so App does nothing more with it, also
     /// for a click that was refused.
     pub taken: bool,
-    pub edit: Option<QueueEdit>,
+    pub edit: Option<ChangeSet>,
     pub answers: Vec<AppCommand>,
 }
 
@@ -75,7 +75,7 @@ impl Handled {
         }
     }
 
-    pub const fn edit(edit: QueueEdit) -> Self {
+    pub const fn edit(edit: ChangeSet) -> Self {
         Self {
             taken: true,
             edit: Some(edit),
@@ -106,6 +106,30 @@ pub trait PageService {
         Handled::default()
     }
 
+    /// Drops the last refused click of `page`. Returns whether this
+    /// service keeps that page's refusals.
+    fn dismiss_refusal(&mut self, _page: PageId) -> bool {
+        false
+    }
+
+    /// What App hands every command to. Each page dismisses its refusal
+    /// the same way, so only [`PageService::handle`] differs.
+    fn receive(
+        &mut self,
+        command: &AppCommand,
+        changes: &ChangeSet,
+        snapshot: &Snapshot,
+    ) -> Handled {
+        if let AppCommand::DismissRefusal(page) = command {
+            return Handled {
+                taken: self.dismiss_refusal(*page),
+                ..Handled::default()
+            };
+        }
+
+        self.handle(command, changes, snapshot)
+    }
+
     /// The results that came in since the last frame. `page` is the page
     /// in view, which a service may start reading for.
     fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
@@ -129,6 +153,7 @@ pub trait PageService {
 
 #[derive(Debug, Default)]
 pub struct Services {
+    pub home: Home,
     pub maintenance: Maintenance,
     pub diagnostics: Diagnostics,
     pub boot: Boot,
@@ -140,8 +165,9 @@ pub struct Services {
     pub kernels: Kernels,
     pub locales: Locales,
     pub toggle_pages: TogglePages,
-    /// The units systemd lists, which App reads in.
     pub units: Units,
+    /// Only pages read it: the pictures load as rows ask, beside the
+    /// frame, so App feeds it nothing.
     pub artwork: Artwork,
 }
 
@@ -149,6 +175,7 @@ impl Services {
     /// Every service, in the order App feeds them.
     pub fn all_mut(&mut self) -> [&mut dyn PageService; 13] {
         [
+            &mut self.home,
             &mut self.maintenance,
             &mut self.diagnostics,
             &mut self.boot,
@@ -161,7 +188,6 @@ impl Services {
             &mut self.locales,
             &mut self.toggle_pages,
             &mut self.units,
-            &mut self.artwork,
         ]
     }
 

@@ -20,7 +20,6 @@ pub enum PackagesCommand {
     },
     Show(PackageName),
     OpenAur,
-    DismissRefusal,
 }
 
 impl From<PackagesCommand> for Command {

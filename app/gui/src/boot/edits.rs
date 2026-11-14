@@ -4,8 +4,8 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_core::domains::LoaderSettingsDomain;
 use toolbox_core::features::boot::edit::{Edit, edit};
+use toolbox_core::features::boot::set_loader;
 use toolbox_core::{ChangeSet, Snapshot};
 
 use super::Boot;
@@ -28,12 +28,8 @@ impl Boot {
         match command {
             BootCommand::Edit(change) => self.edit(change.clone(), changes, snapshot),
             BootCommand::Loader(setting) => queue(changes, |changes| {
-                LoaderSettingsDomain::want(changes, setting.clone(), snapshot);
+                set_loader(setting.clone(), changes, snapshot);
             }),
-            BootCommand::DismissRefusal => {
-                self.set_refusal(None);
-                Handled::taken()
-            }
             BootCommand::Refresh => {
                 self.refresh();
                 Handled::answers(vec![AppCommand::ReadSystem])

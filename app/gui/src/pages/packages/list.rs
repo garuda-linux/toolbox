@@ -2,8 +2,6 @@ use std::sync::Arc;
 
 use egui::Ui;
 use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
-use toolbox_core::features::packages::queue::Refusal;
-use toolbox_core::features::protection_text_id;
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, Rows, Tone, banner, counted_chips, dimmed,
@@ -14,9 +12,10 @@ use toolbox_plan::PackageName;
 
 use super::row::{self, PackageRow, Row};
 use super::{PackagesPage, aur, pending_updates, shows_aur};
-use crate::command::PackagesCommand;
+use crate::command::{AppCommand, PackagesCommand};
 use crate::i18n;
 use crate::packages::{Packages, Read};
+use crate::page::PageId;
 use crate::pages::header::{refresh_header, search};
 use crate::pages::rows::refusal_banner;
 use crate::pages::{PageContext, plan_running};
@@ -111,11 +110,11 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         }
     };
 
-    let updates = pending_updates(context);
-    let key = (page.filter, Same::of(&catalog), updates.clone());
+    let status = context.home.status_revision;
+    let key = (page.filter, Same::of(&catalog), status);
     let view = page.view.get(&[&page.search], key, || {
         let _build = tracing::trace_span!("filter packages").entered();
-        catalog.view(page.filter, &page.search, &updates)
+        catalog.view(page.filter, &page.search, &pending_updates(context))
     });
 
     let aur_rows = aur_on.then(|| aur::rows_of(page, context)).flatten();
@@ -318,19 +317,10 @@ pub fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
-    let text = match refusal.refusal {
-        Refusal::Protected(why) | Refusal::TakesAlong(why) => {
-            let why = i18n::text(ui.ctx(), &protection_text_id(why));
-            refusal.text_with(ui.ctx(), &[("why", why.as_ref())])
-        }
-        Refusal::NotOffered
-        | Refusal::Unread
-        | Refusal::RunningKernel
-        | Refusal::RunningUnknown
-        | Refusal::LastKernel => refusal.text(ui.ctx()),
-    };
-
+    let text = refusal.text(ui.ctx());
     if refusal_banner(ui, Tone::Error, &text, "packages-dismiss") {
-        context.commands.send(PackagesCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Packages));
     }
 }

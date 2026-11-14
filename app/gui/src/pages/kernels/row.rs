@@ -1,6 +1,7 @@
 use egui::{Label, Response, Ui};
 use toolbox_core::Toggle;
 use toolbox_core::features::kernels::ModuleState;
+use toolbox_core::features::kernels::view::{Module, Row};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{
@@ -9,7 +10,6 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
-use super::view::{Module, Row};
 use crate::command::{BootCommand, KernelEdit};
 use crate::i18n;
 use crate::pages::PageContext;
@@ -17,13 +17,17 @@ use crate::pages::rows::SWITCH_WIDTH;
 
 const LINES: u8 = 2;
 
-impl ListItem for Row<'_> {
+/// A row of the list. `Row` and [`ListItem`] both come from other crates,
+/// so the trait goes on this wrapper.
+pub struct Item<'rows, 'listing>(pub &'rows Row<'listing>);
+
+impl ListItem for Item<'_, '_> {
     fn key(&self) -> &str {
-        self.kernel.name.as_str()
+        self.0.kernel.name.as_str()
     }
 
     fn name(&self) -> &str {
-        self.kernel.name.as_str()
+        self.0.kernel.name.as_str()
     }
 }
 

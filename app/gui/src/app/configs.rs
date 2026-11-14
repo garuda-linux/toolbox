@@ -1,62 +1,27 @@
-//! What the app does with a click on the Config Files page and with what
-//! its edits ask for: the editor and the write run in the Console, a
-//! cancel stops the editor. A refused click stays on the page until
-//! dismissed or the next click is taken.
-
-use toolbox_core::features::configs::Refusal;
+//! What the app does for the Config Files page: it shows the Console, and
+//! runs the editor and the write in it. A cancel stops the editor.
 
 use super::App;
 use crate::apply::ApplyCommand;
 use crate::command::ConfigsCommand;
 use crate::configs::Act;
-use crate::refused::Refused;
 
 impl App {
-    pub(super) fn run_configs(&mut self, command: ConfigsCommand) {
-        let act = match command {
-            ConfigsCommand::Refresh => {
-                self.services.configs.refresh();
-                None
-            }
-            ConfigsCommand::Open(key) => {
-                let result = self.services.configs.open_home(&key);
-                self.refuse_configs(result, key);
-                None
-            }
-            ConfigsCommand::Edit(key) => {
-                let (result, act) = match self.services.configs.edit(&key) {
-                    Ok(act) => (Ok(()), act),
-                    Err(code) => (Err(code), None),
-                };
-
-                self.refuse_configs(result, key);
-                act
-            }
-            ConfigsCommand::View(key) => {
-                let result = self.services.configs.view(&key);
-                self.refuse_configs(result, key);
-                None
-            }
-            ConfigsCommand::CloseView => {
-                self.services.configs.close_view();
-                None
-            }
-            ConfigsCommand::Apply => self.services.configs.apply(),
-            ConfigsCommand::EditAgain => self.services.configs.edit_again(),
-            ConfigsCommand::Reread => self.services.configs.reread(),
-            ConfigsCommand::Discard => self.services.configs.discard(),
-            ConfigsCommand::Dismiss => {
-                self.services.configs.dismiss();
-                None
-            }
-            ConfigsCommand::ShowConsole => {
-                self.state.console_open = true;
-                None
-            }
-            ConfigsCommand::DismissRefusal => None,
-        };
-
-        self.act_configs(act);
+    pub(super) const fn run_configs(&mut self, command: &ConfigsCommand) {
+        match command {
+            ConfigsCommand::ShowConsole => self.state.console_open = true,
+            // The service takes these, see `hand_to_services`.
+            ConfigsCommand::Refresh
+            | ConfigsCommand::Open(_)
+            | ConfigsCommand::Edit(_)
+            | ConfigsCommand::View(_)
+            | ConfigsCommand::CloseView
+            | ConfigsCommand::Apply
+            | ConfigsCommand::EditAgain
+            | ConfigsCommand::Reread
+            | ConfigsCommand::Discard
+            | ConfigsCommand::Dismiss => {}
+        }
     }
 
     /// A plan the Console cannot take now is refused, as the apply service would.
@@ -71,10 +36,5 @@ impl App {
             Some(Act::Cancel) => self.to_service(ApplyCommand::Cancel),
             None => {}
         }
-    }
-
-    fn refuse_configs(&mut self, result: Result<(), Refusal>, subject: String) {
-        let refusal = result.err().map(|refusal| Refused::new(refusal, subject));
-        self.services.configs.set_refusal(refusal);
     }
 }

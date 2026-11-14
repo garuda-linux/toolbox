@@ -3,16 +3,18 @@
 //! at first, with Show all.
 
 use std::borrow::Cow;
+use std::sync::Arc;
 
 use egui::{Label, Ui};
 use toolbox_core::features::packages::PackageDetails;
 use toolbox_core::features::packages::detail::{HISTORY_SHOWN, file_list, shown};
 use toolbox_core::features::packages::history::HistoryEntry;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, PropertyTexts, RowHeights, RowList, counted_disclosure, disclosure,
+    ButtonKind, ListItem, PropertyTexts, RowHeights, RowList, Rows, counted_disclosure, disclosure,
     loading_indicator, pill_button, property_list, rich, row_height, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
@@ -20,11 +22,12 @@ use toolbox_gui_kit::{UiExt as _, tokens};
 use super::super::PackagesPage;
 use crate::command::AppCommand;
 use crate::i18n;
-use crate::packages::Read;
+use crate::packages::{Details, Read};
 use crate::pages::PageContext;
+use crate::pages::rows::Look;
 
 /// One installed file, keyed by its path.
-struct Line<'a> {
+pub(super) struct Line<'a> {
     text: &'a str,
 }
 
@@ -37,6 +40,36 @@ impl ListItem for Line<'_> {
         self.text
     }
 }
+
+/// The lines of the installed files, each made only when the list draws
+/// it: a package can hold thousands.
+pub(super) struct Files<'a>(pub(super) &'a [String]);
+
+impl<'a> Rows for Files<'a> {
+    type Item<'b>
+        = Line<'a>
+    where
+        Self: 'b;
+
+    fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    fn get(&self, index: usize) -> Option<Line<'a>> {
+        self.0.get(index).map(|file| Line { text: file })
+    }
+}
+
+/// The history's lines as the page shows them, and how many Show all
+/// adds.
+#[derive(Debug, Default)]
+pub struct History {
+    lines: Vec<(String, String)>,
+    hidden: usize,
+}
+
+/// Keyed by the details, whether every line shows and the look.
+pub type HistoryRows = RowCache<(Same<Details>, bool, Look), History>;
 
 /// The files of an installed package: the fold with their count and Copy
 /// list, then one line per file, only the visible ones laid out.
@@ -84,17 +117,11 @@ pub fn files(
         return;
     }
 
-    let items: Vec<Line<'_>> = installed
-        .files
-        .iter()
-        .map(|file| Line { text: file })
-        .collect();
-
     let name = i18n::text(&ctx, "packages-files-list");
     let height = row_height(ui, text_block_height(ui, 0));
     RowList::new("packages-files-list", &name, RowHeights::Fixed(height)).show(
         ui,
-        &items,
+        &Files(&installed.files),
         |ui, line, _| {
             let tokens = tokens::current(ui.ctx());
             ui.add(Label::new(rich(ui, line.text, Weight::Regular, SMALL, tokens.text)).truncate());
@@ -107,7 +134,7 @@ pub fn history(
     page: &mut PackagesPage,
     ui: &mut Ui,
     context: &PageContext<'_>,
-    history: &Read<Vec<HistoryEntry>>,
+    details: &Arc<Details>,
 ) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "packages-history");
@@ -120,7 +147,7 @@ pub fn history(
         return;
     }
 
-    let entries = match history {
+    let entries = match &details.history {
         Read::Known(entries) => entries,
         Read::Loading => {
             loading_indicator(ui, &i18n::text(&ctx, "packages-details-loading"));
@@ -139,12 +166,20 @@ pub fn history(
         return;
     }
 
-    let part = shown(entries, HISTORY_SHOWN, page.unfolded.history_all);
-    let lines: Vec<(String, String)> = part
-        .items
-        .iter()
-        .map(|entry| (entry.shown_when(), change(&ctx, entry)))
-        .collect();
+    let every_line = page.unfolded.history_all;
+    let rest = (Same::of(details), every_line, Look::of(ui));
+    let built = page.history.get(&[], rest, || {
+        let _build = tracing::trace_span!("build rows").entered();
+        let part = shown(entries, HISTORY_SHOWN, every_line);
+        History {
+            lines: part
+                .items
+                .iter()
+                .map(|entry| (entry.shown_when(), change(&ctx, entry)))
+                .collect(),
+            hidden: part.hidden,
+        }
+    });
 
     let copy = |label: &str| label.to_owned();
     let texts = PropertyTexts {
@@ -154,13 +189,13 @@ pub fn history(
 
     ui.scope(|ui| {
         property_list(ui, texts, |list| {
-            for (when, what) in &lines {
+            for (when, what) in &built.lines {
                 list.row(when, what);
             }
         });
     });
 
-    if part.hidden > 0 {
+    if built.hidden > 0 {
         ui.add_space(ui.tokens().sizes.card_gap);
         let all = i18n::text(&ctx, "packages-history-all");
         if pill_button(ui, &all, ButtonKind::Soft).clicked() {

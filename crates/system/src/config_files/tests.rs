@@ -12,7 +12,7 @@ use toolbox_plan::{ConfigFilePath, ConfigText, Editor, FetchRefusal, HomePath};
 use toolbox_state::configs::{ConfigEntryLocation, ConfigEntrySpec, Found, Link};
 
 use super::{ConfigFileSource as _, HelperFetch, ReadProblem, SystemConfigFiles};
-use crate::pkexec::Refusal;
+use crate::pkexec::{HelperError, Refusal};
 use crate::test_support::running_as_root;
 
 /// Stands in for pkexec and the helper: a script that prints an answer.
@@ -246,7 +246,10 @@ fn a_dismissed_password_or_a_broken_answer_is_no_text() {
     system.helper("exit 1\n");
     assert!(matches!(
         system.source().read(&locked, &Arc::default()),
-        Err(ReadProblem::Failed(reason)) if reason.contains("ended with")
+        Err(ReadProblem::Failed(HelperError::Ended {
+            code: Some(1_i32),
+            words: _
+        }))
     ));
 
     for answer in [
@@ -262,7 +265,7 @@ fn a_dismissed_password_or_a_broken_answer_is_no_text() {
         assert!(
             matches!(
                 system.source().read(&locked, &Arc::default()),
-                Err(ReadProblem::Failed(reason)) if reason.contains("no config file")
+                Err(ReadProblem::Failed(HelperError::Unreadable))
             ),
             "{answer}"
         );

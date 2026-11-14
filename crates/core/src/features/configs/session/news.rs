@@ -1,7 +1,7 @@
 //! What goes into an edit and comes out of it: the work a step asks
 //! for and the results the worker threads bring back.
 
-use toolbox_plan::{ConfigText, EditCopy, Editor};
+use toolbox_plan::{ConfigText, EditCopy, Editor, FetchRefusal};
 
 use super::file::{EditWrite, EditedFile};
 
@@ -54,14 +54,57 @@ pub struct Changes {
 
 /// Why a step failed: a code the pages have words for, and the system's own
 /// words when it has some.
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Problem {
-    pub code: &'static str,
+    pub code: ProblemCode,
     pub detail: String,
 }
 
+/// The password dialog's answers mirror `pkexec::Refusal` and the helper's
+/// refusals mirror [`FetchRefusal`], since each has a sentence of its own.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]
+#[strum(serialize_all = "kebab-case")]
+pub enum ProblemCode {
+    Dismissed,
+    Denied,
+    NoAgent,
+    HelperMissing,
+    /// pkexec cannot work on this system.
+    Broken,
+    Missing,
+    Link,
+    Dangling,
+    Outside,
+    NotRegular,
+    TooLarge,
+    NotText,
+    NoEditor,
+    /// Another task holds the Console.
+    Busy,
+    EditorFailed,
+    WriteFailed,
+    CopyFailed,
+    ReadFailed,
+    /// The worker thread of a step stopped without an answer.
+    Failed,
+}
+
+impl From<FetchRefusal> for ProblemCode {
+    fn from(reason: FetchRefusal) -> Self {
+        match reason {
+            FetchRefusal::Missing => Self::Missing,
+            FetchRefusal::Link => Self::Link,
+            FetchRefusal::Dangling => Self::Dangling,
+            FetchRefusal::Outside => Self::Outside,
+            FetchRefusal::NotRegular => Self::NotRegular,
+            FetchRefusal::TooLarge => Self::TooLarge,
+            FetchRefusal::NotText => Self::NotText,
+        }
+    }
+}
+
 impl Problem {
-    pub fn new(code: &'static str, detail: impl Into<String>) -> Self {
+    pub fn new(code: ProblemCode, detail: impl Into<String>) -> Self {
         Self {
             code,
             detail: detail.into(),

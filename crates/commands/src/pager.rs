@@ -1,5 +1,5 @@
 //! Long text through a pager, as git does: lists and shows on a terminal
-//! go through `$GARUDA_TOOLBOX_PAGER`, else `$PAGER`, else `less -FRX`,
+//! go through `$GARUDA_TOOLBOX_PAGER`, else `$PAGER`, else `/usr/bin/less -FRX`,
 //! which quits at once when the text fits one screen and keeps colours.
 //! The pager gets `LESS=FRX` and `LV=-c` when they are unset, so a bare
 //! `PAGER=less` keeps the colours too.
@@ -14,12 +14,13 @@ use std::process::{Child, ChildStdin, Stdio};
 use tokio::runtime::Runtime;
 use tokio::signal::unix::{Signal, SignalKind, signal};
 use toolbox_cli::args::{Command, ConfigsCommand};
+use toolbox_plan::procedure::Program;
 
 use crate::reads::read_json;
 
 const OWN: &str = "GARUDA_TOOLBOX_PAGER";
 
-const LESS: [&str; 2] = ["less", "-FRX"];
+const LESS: [&str; 2] = [Program::Less.path(), "-FRX"];
 
 pub struct Pager {
     child: Child,

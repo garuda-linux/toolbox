@@ -43,6 +43,7 @@ pub fn locale(refusal: LocaleRefusal) -> Cow<'static, str> {
         LocaleRefusal::SystemLocale => "cli-locale-system-locale",
         LocaleRefusal::LastLocale => "cli-locale-last-locale",
         LocaleRefusal::NotEnabled => "cli-locale-not-enabled",
+        LocaleRefusal::Package(_) => "cli-locale-package",
     };
 
     text_in(FALLBACK, id)

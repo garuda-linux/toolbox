@@ -131,20 +131,20 @@ impl App {
             | AppCommand::DismissRefusal(_)
             | AppCommand::Kernel(_)
             | AppCommand::Boot(_)
-            | AppCommand::Locale(_) => {
+            | AppCommand::Locale(_)
+            | AppCommand::Tweak(_)
+            | AppCommand::Diagnostics(_) => {
                 tracing::warn!("no page service took {command:?}");
             }
             AppCommand::Toast { kind, text } => self.toasts.add(kind, text),
             AppCommand::Home(home) => self.run_home(home),
-            AppCommand::Tweak(tweak) => self.tweak(tweak),
             AppCommand::Service(service) => self.run_service(service),
             AppCommand::Discover(discover) => self.run_discover(discover),
-            AppCommand::Maintenance(maintenance) => self.run_maintenance(maintenance),
-            AppCommand::Diagnostics(diagnostics) => self.run_diagnostics(diagnostics),
+            AppCommand::Maintenance(maintenance) => self.run_maintenance(&maintenance),
             AppCommand::Network(network) => self.run_network(ctx, network),
-            AppCommand::Packages(packages) => self.run_packages(packages),
+            AppCommand::Packages(packages) => self.run_packages(&packages),
             AppCommand::Users(users) => self.run_users(users),
-            AppCommand::Configs(configs) => self.run_configs(configs),
+            AppCommand::Configs(configs) => self.run_configs(&configs),
             AppCommand::BootRepair(repair) => self.run_boot_repair(repair),
             AppCommand::Console(console) => self.run_console(console),
             AppCommand::Answer(answer) => self.answer(ctx, answer),

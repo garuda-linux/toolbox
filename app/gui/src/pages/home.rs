@@ -5,7 +5,6 @@ mod news;
 mod next;
 mod status;
 mod steps;
-mod view;
 
 #[cfg(test)]
 mod tests;
@@ -27,6 +26,8 @@ use crate::programs::Programs;
 pub struct HomeFacts<'app> {
     /// `None` without a status reader, as in tests that need none.
     pub status: Option<&'app Loadable<Status>>,
+    /// Changes with every status reading, see [`crate::reader::Watched::revision`].
+    pub status_revision: u64,
     pub facts: Option<&'app Loadable<Facts>>,
     pub news: Option<&'app Loadable<News>>,
     /// `None` until the programs were looked for.

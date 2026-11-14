@@ -2,7 +2,7 @@ use std::process::Command;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
-use super::{HelperRun, Refusal, ask, reason, refusal};
+use super::{HelperError, HelperRun, Refusal, ask, reason, refusal};
 use crate::test_support::fake_program;
 
 const LIMIT: usize = 1 << 20;
@@ -25,9 +25,10 @@ fn a_helper_run_is_answered_refused_or_failed_with_its_words() {
     );
     assert_eq!(
         asked("", "garuda-toolbox-helper: no such file", 1, LIMIT),
-        HelperRun::Failed(
-            "the helper ended with exit code 1: garuda-toolbox-helper: no such file".to_owned()
-        )
+        HelperRun::Failed(HelperError::Ended {
+            code: Some(1_i32),
+            words: "garuda-toolbox-helper: no such file".to_owned(),
+        })
     );
 }
 
@@ -36,7 +37,7 @@ fn a_helper_run_is_answered_refused_or_failed_with_its_words() {
 fn an_answer_past_the_limit_fails() {
     assert_eq!(
         asked("0123456789\n0123456789\n", "", 0, 8),
-        HelperRun::Failed("the helper's answer is too long".to_owned())
+        HelperRun::Failed(HelperError::TooLong)
     );
 }
 
@@ -48,7 +49,7 @@ fn a_missing_helper_and_a_cancel_are_told_apart() {
             LIMIT,
             &Arc::default()
         ),
-        HelperRun::Failed(text) if text.contains("not installed")
+        HelperRun::Failed(HelperError::Missing)
     ));
     assert_eq!(
         ask(
@@ -205,7 +206,9 @@ fn a_broken_pkexec_read_fails_with_its_words() {
 
     assert_eq!(
         run,
-        HelperRun::Failed("pkexec cannot run: pkexec must be setuid root".to_owned())
+        HelperRun::Failed(HelperError::Pkexec {
+            words: "pkexec must be setuid root".to_owned()
+        })
     );
 }
 

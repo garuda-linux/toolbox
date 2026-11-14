@@ -5,10 +5,13 @@
 
 pub mod address;
 pub mod apply;
+pub mod boot_menu;
 pub mod catalogs;
 pub mod configs;
 pub mod desktop;
 pub mod diagnostics;
+pub mod dkms;
+pub mod home;
 pub mod i18n;
 pub mod instance;
 pub mod locks;
@@ -17,6 +20,7 @@ pub mod page;
 pub mod programs;
 pub mod queue;
 pub mod share;
+pub mod shelf;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
 pub mod units;

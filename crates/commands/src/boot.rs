@@ -20,16 +20,13 @@ use toolbox_cli::args::{
 use toolbox_cli::output::ColorMode;
 use toolbox_core::features::boot::edit::{Edit, EditProblem, edit};
 use toolbox_core::features::boot::{Flag, shown};
-use toolbox_core::features::kernels::{
-    DkmsEntry, DkmsState, KernelReleases, LinuxPackages, builds_for, kernels as list_kernels,
-    set_builds,
-};
+use toolbox_core::features::kernels::view::Listing;
+use toolbox_core::features::kernels::{DkmsEntry, DkmsState, set_builds};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{DkmsBuild as Build, GrubMenu, PackageName, Plan};
+use toolbox_services::dkms::{DkmsFailure, dkms_answer};
 use toolbox_state::boot::BootLoader;
-use toolbox_system::{
-    BootMenuSource as _, Dkms, DkmsSource as _, MenuRead, ProbeError, SystemBootMenu,
-};
+use toolbox_system::{BootMenuSource as _, Dkms, DkmsSource as _, MenuRead, SystemBootMenu};
 
 pub use self::listing::{entry_listing, module_listing};
 use super::act::run;
@@ -110,17 +107,14 @@ pub fn kernel_default(args: &KernelArgs, runtime: &Runtime, out: &mut Out<'_>) -
 
 pub fn dkms(command: DkmsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let quiet = !matches!(&command, DkmsCommand::List(read) if !read.json);
-    let entries =
-        match super::spinner::while_reading(quiet || out.quiet(), || Dkms::system().status()) {
-            Ok(entries) => entries,
-            Err(ProbeError::Unavailable) => Vec::new(),
-            Err(error) => {
-                let reason = error.reason().unwrap_or_default();
-                tracing::warn!("dkms status: {reason}");
-                failure(out, "dkms could not list its modules", &reason);
-                return Exit::Unavailable;
-            }
-        };
+    let answer = super::spinner::while_reading(quiet || out.quiet(), || Dkms::system().status());
+    let entries = match dkms_answer(answer) {
+        Ok(answer) => answer.entries().to_vec(),
+        Err(DkmsFailure(reason)) => {
+            failure(out, "dkms could not list its modules", &reason);
+            return Exit::Unavailable;
+        }
+    };
 
     match command {
         DkmsCommand::List(list) => print_all(&list, &module_rows(&entries), out, module_listing),
@@ -226,16 +220,10 @@ pub fn build_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    let releases = snapshot
-        .part::<KernelReleases>()
-        .cloned()
-        .unwrap_or_default();
-
-    let packages = snapshot
-        .part::<LinuxPackages>()
+    let listing = Listing::of(snapshot)
         .ok_or_else(|| Refused::Rule("pacman's databases could not be read".to_owned()))?;
 
-    let kernels = list_kernels(packages, &releases);
+    let kernels = listing.kernels();
 
     if let Some(wanted) = &args.kernel
         && !kernels.iter().any(|kernel| kernel.name == *wanted)
@@ -252,7 +240,7 @@ pub fn build_onto(
                 .as_ref()
                 .is_none_or(|wanted| kernel.name == *wanted)
         })
-        .flat_map(|kernel| builds_for(kernel, &releases, entries))
+        .flat_map(|kernel| listing.builds(kernel, entries))
         .collect();
 
     if missing.is_empty() {
@@ -330,6 +318,7 @@ pub(super) fn read_menu(color: ColorMode) -> Option<GrubMenu> {
         | MenuRead::Missing
         | MenuRead::Refused(_)
         | MenuRead::Unknown(_)
+        | MenuRead::Unreadable(_)
         | MenuRead::Cancelled) => {
             tracing::warn!("the boot menu was not read: {other:?}");
             None

@@ -11,7 +11,8 @@ use toolbox_plan::sdboot::{
     LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
 };
 use toolbox_plan::{KernelRelease, LoaderDefault, PackageName};
-use toolbox_system::{Host, Menu, MenuRead};
+use toolbox_services::boot_menu::Menu;
+use toolbox_system::{Host, MenuRead};
 
 use super::super::tests::{Shown, page};
 use crate::boot::Boot;
@@ -272,8 +273,8 @@ fn the_menu_is_read_when_the_page_shows() {
 /// on the page.
 #[test]
 fn a_menu_that_could_not_be_read_says_why_and_keeps_the_command_line() {
-    let harness = shown(Menu::Read(MenuRead::Unknown(
-        "no ESP is mounted".to_owned(),
+    let harness = shown(Menu::Read(MenuRead::Unreadable(
+        std::io::ErrorKind::NotFound,
     )));
 
     assert!(

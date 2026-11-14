@@ -8,6 +8,7 @@
 mod states;
 #[cfg(test)]
 mod tests;
+pub mod view;
 
 use std::cmp::Ordering;
 

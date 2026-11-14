@@ -42,6 +42,7 @@ pub struct PackagesPage {
     unfolded: Unfolded,
     view: RowCache<ViewKey, View>,
     aur_view: RowCache<Same<AurCatalog>, Vec<usize>>,
+    history: detail::HistoryRows,
     aur_asked: bool,
     removing: Option<remove::Removal>,
     installing: Option<PackageName>,
@@ -66,11 +67,11 @@ pub struct Unfolded {
 }
 
 /// What a view comes from besides the search: the filter, the index and
-/// the pending updates.
+/// the status reading that holds the pending updates.
 type ViewKey = (
     Filter,
     Same<toolbox_core::features::packages::list::Catalog>,
-    BTreeSet<PackageName>,
+    u64,
 );
 
 impl PageView for PackagesPage {

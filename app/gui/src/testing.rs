@@ -68,6 +68,9 @@ pub struct PageFixture {
     pub console_open: bool,
     /// `None` leaves Home without a status, as without a reader.
     pub status: Option<Loadable<Status>>,
+    /// Raise it with every change to `status` after the first frame, as
+    /// the reader does.
+    pub status_revision: u64,
     /// `None` leaves Home without its facts, as without a reader.
     pub facts: Option<Loadable<Facts>>,
     pub news: Option<Loadable<News>>,
@@ -102,6 +105,7 @@ impl Default for PageFixture {
             busy: false,
             console_open: false,
             status: None,
+            status_revision: 0,
             facts: None,
             news: None,
             recent: Vec::new(),
@@ -137,6 +141,7 @@ impl PageFixture {
             console_open: self.console_open,
             home: HomeFacts {
                 status: self.status.as_ref(),
+                status_revision: self.status_revision,
                 facts: self.facts.as_ref(),
                 news: self.news.as_ref(),
                 recent: &self.recent,

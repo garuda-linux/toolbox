@@ -16,17 +16,18 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
+use toolbox_exec::{Environment, locate_program};
+use toolbox_plan::procedure::Program;
 use toolbox_plan::protocol::{MAX_LINE_BYTES, ReadKind};
 use toolbox_plan::sdboot::SdBootMenu;
 use toolbox_plan::{
-    EFI_FIRMWARE, GRUB_CONFIG, GRUB_DEFAULTS, GrubMenu, GrubPlatform, GrubState, PackageName,
-    PlymouthTheme,
+    EFI_FIRMWARE, GRUB_CONFIG, GRUB_DEFAULTS, GrubMenu, GrubPlatform, GrubState, PlymouthTheme,
 };
 use toolbox_state::boot::{BootLoader, CurrentGrub, KernelCmdline, PlymouthState, VirtualMachine};
 
 use crate::diagnostics::HelperReads;
 use crate::error::{ProbeError, from_io};
-use crate::pkexec::{self, HelperRun, Refusal};
+use crate::pkexec::{self, HelperError, HelperRun, Refusal};
 use crate::{command, files};
 
 const PLYMOUTH_THEMES: &str = "usr/share/plymouth/themes";
@@ -35,8 +36,6 @@ const PLYMOUTH_CONFIGS: [&str; 2] = [
     "etc/plymouth/plymouthd.conf",
     "usr/share/plymouth/plymouthd.defaults",
 ];
-
-const DETECT_VIRT: &str = "systemd-detect-virt";
 
 pub trait BootSource: Send + Sync {
     /// The variables of `/etc/default/grub`.
@@ -82,67 +81,11 @@ pub enum MenuRead {
     /// pkexec did not run the helper.
     Refused(Refusal),
     /// Why the menu is not known: the helper failed.
-    Unknown(String),
+    Unknown(HelperError),
+    /// The user may read the menu, yet it could not be read.
+    Unreadable(io::ErrorKind),
     /// The caller set the cancel flag while the helper ran.
     Cancelled,
-}
-
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub enum Menu {
-    #[default]
-    NotAsked,
-    Loading,
-    Read(MenuRead),
-}
-
-impl Menu {
-    pub const fn as_str(&self) -> &'static str {
-        match self {
-            Self::NotAsked => "not-asked",
-            Self::Loading => "loading",
-            Self::Read(MenuRead::Known(_) | MenuRead::SdBoot(_)) => "known",
-            Self::Read(MenuRead::Missing) => "missing",
-            Self::Read(MenuRead::Refused(refusal)) => refusal.code(),
-            Self::Read(MenuRead::Unknown(_) | MenuRead::Cancelled) => "unknown",
-        }
-    }
-
-    pub const fn known(&self) -> Option<&GrubMenu> {
-        match self {
-            Self::Read(MenuRead::Known(menu)) => Some(menu),
-            Self::NotAsked
-            | Self::Loading
-            | Self::Read(
-                MenuRead::SdBoot(_)
-                | MenuRead::Missing
-                | MenuRead::Refused(_)
-                | MenuRead::Unknown(_)
-                | MenuRead::Cancelled,
-            ) => None,
-        }
-    }
-
-    pub const fn sdboot(&self) -> Option<&SdBootMenu> {
-        match self {
-            Self::Read(MenuRead::SdBoot(menu)) => Some(menu),
-            Self::NotAsked
-            | Self::Loading
-            | Self::Read(
-                MenuRead::Known(_)
-                | MenuRead::Missing
-                | MenuRead::Refused(_)
-                | MenuRead::Unknown(_)
-                | MenuRead::Cancelled,
-            ) => None,
-        }
-    }
-
-    /// The id of `kernel`'s menu entry, `""` while unknown.
-    pub fn kernel_entry(&self, kernel: &PackageName) -> &str {
-        self.known()
-            .and_then(|menu| menu.kernel_entry(kernel))
-            .map_or("", |entry| entry.id.as_str())
-    }
 }
 
 /// Reads the boot menu. Blocks and may start the root helper, so call it
@@ -171,7 +114,10 @@ impl SystemBoot {
     /// The running system.
     #[must_use = "the adapter does nothing until asked"]
     pub fn system() -> Self {
-        Self::new("/", DETECT_VIRT)
+        Self::new(
+            "/",
+            locate_program(Program::SystemdDetectVirt, Environment::Inherited),
+        )
     }
 
     /// Another root folder and detection program, for tests.
@@ -269,7 +215,7 @@ impl SystemBootMenu {
 
         match pkexec::ask(&mut command, MAX_LINE_BYTES, cancel) {
             HelperRun::Answered(line) => GrubMenu::parse(line.trim_end()).map_or_else(
-                |_not_a_menu| MenuRead::Unknown("the helper's answer is no menu".to_owned()),
+                |_not_a_menu| MenuRead::Unknown(HelperError::Unreadable),
                 MenuRead::Known,
             ),
             HelperRun::Refused(refusal) => MenuRead::Refused(refusal),
@@ -293,7 +239,7 @@ impl BootMenuSource for SystemBootMenu {
             Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
                 self.ask_helper(cancel)
             }
-            Err(error) => MenuRead::Unknown(error.to_string()),
+            Err(error) => MenuRead::Unreadable(error.kind()),
         }
     }
 }

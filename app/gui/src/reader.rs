@@ -35,6 +35,9 @@ pub struct ReaderHandle<T> {
 pub struct Watched<T> {
     handle: Option<ReaderHandle<T>>,
     reading: Loadable<T>,
+    /// Counts the readings taken, so a page tells a new reading from the
+    /// one its rows were built from without comparing it.
+    revision: u64,
 }
 
 #[derive(Debug)]
@@ -76,6 +79,7 @@ impl<T> Watched<T> {
         Self {
             handle,
             reading: Loadable::default(),
+            revision: 0,
         }
     }
 
@@ -85,12 +89,14 @@ impl<T> Watched<T> {
         Self {
             handle: None,
             reading,
+            revision: 0,
         }
     }
 
     pub fn take(&mut self) {
         if let Some(reading) = self.handle.as_mut().and_then(ReaderHandle::changed) {
             self.reading = reading;
+            self.revision = self.revision.wrapping_add(1);
         }
     }
 
@@ -117,6 +123,11 @@ impl<T> Watched<T> {
             Some(_) => Some(&self.reading),
             None => None,
         }
+    }
+
+    /// Changes with every reading taken.
+    pub const fn revision(&self) -> u64 {
+        self.revision
     }
 
     pub fn latest(&self) -> Option<&T> {

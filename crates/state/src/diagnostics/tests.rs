@@ -34,7 +34,7 @@ fn argv(source: Source) -> Vec<Vec<&'static str>> {
         Source::Programs(programs) => programs
             .iter()
             .map(|program| {
-                std::iter::once(program.name)
+                std::iter::once(program.tool.name())
                     .chain(program.arguments.iter().copied())
                     .collect()
             })

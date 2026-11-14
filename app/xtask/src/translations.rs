@@ -6,6 +6,7 @@
 mod ftl;
 mod icu;
 mod model;
+mod screen;
 mod task;
 #[cfg(test)]
 mod tests;
@@ -234,6 +235,11 @@ fn import_locale(english: &Files, locale: &Files, json: &Json) -> (Files, Vec<St
                 .map(|line| format!("{stem}.ftl: {line}")),
         );
 
+        if let Err(error) = screen::matches_english(stem, english_text, &text) {
+            problems.push(error);
+            continue;
+        }
+
         if text != current {
             changed.insert(stem.clone(), text);
         }
@@ -309,7 +315,7 @@ fn translation(source: &Value, incoming: Option<&Json>) -> Option<Result<Value, 
     let value = match source {
         Value::Plain(_) => {
             let text = incoming.get("string")?.as_str()?;
-            icu::parse(text).map(Value::Plain)
+            screen::screened(text).and_then(icu::parse).map(Value::Plain)
         }
         Value::Choice(Choice {
             var,
@@ -319,7 +325,11 @@ fn translation(source: &Value, incoming: Option<&Json>) -> Option<Result<Value, 
             .iter()
             .map(|(key, _)| {
                 let text = incoming.get(key)?.get("string")?.as_str()?;
-                Some(icu::parse(text).map(|parts| (key.clone(), parts)))
+                Some(
+                    screen::screened(text)
+                        .and_then(icu::parse)
+                        .map(|parts| (key.clone(), parts)),
+                )
             })
             .collect::<Option<Result<Vec<_>, String>>>()?
             .map(|variants| {

@@ -7,6 +7,7 @@ mod tests;
 
 use std::sync::Arc;
 
+pub use below::HistoryRows;
 use egui::{Color32, Key, Rect, Sense, Stroke, Ui, Vec2, pos2, vec2};
 pub use facts::day;
 use toolbox_core::features::packages::PackageDetails;
@@ -199,7 +200,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
             rule(ui);
             below::files(page, ui, context, info);
             ui.add_space(ui.tokens().sizes.section_gap);
-            below::history(page, ui, context, &details.history);
+            below::history(page, ui, context, details);
         }
     }
 }

@@ -2,6 +2,7 @@ use std::time::{Duration, SystemTime};
 
 use toolbox_cli::output::{Paint, Style};
 use toolbox_plan::{PackageName, UnitName};
+use toolbox_services::home::Overview;
 use toolbox_system::{DiskSpace, Facts, PackageCount, ProbeError, Status};
 
 use super::super::{brief, needs_attention, text, view};
@@ -63,6 +64,28 @@ fn a_low_disk_a_failed_service_and_orphans_need_attention() {
         "disk space low, 1 failed service, clean-up due"
     );
     assert!(needs_attention(&shown));
+}
+
+#[test]
+fn the_window_and_the_command_line_agree_on_the_facts() {
+    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let mut low = facts(now);
+    low.disk = Ok(DiskSpace {
+        total: 500 * GB,
+        free: 9 * GB,
+    });
+    let mut cache = facts(now);
+    cache.package_cache = Ok(6 * GB);
+
+    for found in [facts(now), low, cache] {
+        let status = quiet();
+        let home = Overview::of(&status, now)
+            .with_facts(&found)
+            .attention(false);
+        let shown = view(&status, &Ok(false), now).with_facts(&found, now);
+
+        assert_eq!(needs_attention(&shown), home, "{}", brief(&shown));
+    }
 }
 
 #[test]

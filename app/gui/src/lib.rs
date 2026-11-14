@@ -9,6 +9,7 @@ pub mod command;
 pub mod configs;
 pub mod console;
 pub mod desktop;
+pub mod home;
 pub mod i18n;
 pub mod instance;
 pub mod kernels;

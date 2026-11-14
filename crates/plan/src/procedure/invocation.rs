@@ -10,9 +10,16 @@ use crate::protocol::Leftover;
 pub enum Invocation {
     Run(Command),
     /// Runs `query`, then `run` with every line of the query's output as an
-    /// extra argument. Skipped when the query prints nothing.
+    /// extra argument, and again while the query names new targets.
+    /// Skipped when the query prints nothing.
     RunWithTargetsFrom {
         query: Command,
+        run: Command,
+    },
+    /// Runs `preview`, whose lines name every package `run` removes, and
+    /// fails the step without running `run` when one is protected.
+    RunUnlessItRemovesProtected {
+        preview: Command,
         run: Command,
     },
     Builtin(Builtin),
@@ -39,8 +46,15 @@ pub enum Invocation {
 impl fmt::Display for Invocation {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Run(command) => command.fmt(f),
-            Self::RunWithTargetsFrom { query, run } => write!(f, "{run} $({query})"),
+            // The preview changes nothing, so the command shown is what runs.
+            Self::Run(command)
+            | Self::RunUnlessItRemovesProtected {
+                preview: _,
+                run: command,
+            } => command.fmt(f),
+            Self::RunWithTargetsFrom { query, run } => {
+                write!(f, "{run} $({query})  # again until it prints nothing")
+            }
             Self::Builtin(builtin) => builtin.fmt(f),
             Self::Always(command)
             | Self::Cleanup {

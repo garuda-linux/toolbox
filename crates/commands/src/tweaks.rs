@@ -9,7 +9,7 @@ use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{ReadList, TweaksCommand};
 use toolbox_cli::output::{Mark, Row};
-use toolbox_core::domains::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig, HblockState};
+use toolbox_core::features::tweaks::view::{Choices, Flip, Pick};
 use toolbox_core::features::tweaks::{self, Tweak};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::GarudaUpdateFlag;
@@ -66,39 +66,41 @@ pub fn onto(command: &TweaksCommand, snapshot: &Snapshot, changes: &mut ChangeSe
     tweaks::queue(changes, tweak, snapshot);
 }
 
+/// What the page shows with nothing queued.
 fn rows(snapshot: &Snapshot) -> Vec<TweakRow> {
+    let choices = Choices::of(snapshot, &ChangeSet::default(), None);
+
     let row = |id: &str, value: Option<&str>| TweakRow {
         id: id.to_owned(),
         value: value.unwrap_or(NOT_READ).to_owned(),
     };
 
-    let on_off = |on: bool| if on { "on" } else { "off" };
-    let flags = snapshot.part::<GarudaUpdateConfig>();
+    let on_off = |flip: Flip| flip.known.then_some(if flip.on { "on" } else { "off" });
+    let flag_state = |flag: GarudaUpdateFlag| {
+        let flags = choices.flags.as_deref()?;
+        let (_, flip) = flags.iter().find(|(listed, _)| *listed == flag)?;
+        on_off(*flip)
+    };
 
     [
-        row(
-            "dns",
-            snapshot.part::<CurrentDns>().map(|dns| dns.0.as_str()),
-        ),
+        row("dns", shown(&choices.dns).map(|dns| dns.as_str())),
         row(
             "wifi-backend",
-            snapshot
-                .part::<CurrentWifiBackend>()
-                .map(|backend| backend.0.as_str()),
+            shown(&choices.wifi).map(|backend| backend.as_str()),
         ),
-        row(
-            "hblock",
-            snapshot.part::<HblockState>().map(|state| on_off(state.0)),
-        ),
+        row("hblock", on_off(choices.hblock)),
     ]
     .into_iter()
-    .chain(GarudaUpdateFlag::ALL.into_iter().map(|flag| {
-        row(
-            &format!("update-flag {}", flag.as_str()),
-            flags.map(|config| on_off(config.0.contains(&flag))),
-        )
-    }))
+    .chain(
+        GarudaUpdateFlag::ALL
+            .into_iter()
+            .map(|flag| row(&format!("update-flag {}", flag.as_str()), flag_state(flag))),
+    )
     .collect()
+}
+
+fn shown<T>(pick: &Pick<T>) -> Option<&T> {
+    pick.options.get(pick.shown?)
 }
 
 fn list(read: &ReadList, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {

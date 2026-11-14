@@ -5,10 +5,10 @@
 mod tests;
 
 use toolbox_core::ChangeSet;
-use toolbox_core::features::RefusalText;
 pub use toolbox_core::features::Refused;
+use toolbox_core::features::{RefusalText, protection_text_id};
 use toolbox_plan::PackageName;
-use toolbox_services::queue::edit::QueueEdit;
+use toolbox_services::queue::clicked::on_copy;
 
 use crate::i18n;
 use crate::page_service::Handled;
@@ -48,13 +48,20 @@ impl Subject for () {
     }
 }
 
+/// A protected package's text also names why it stays, as `$why`.
 impl<R: RefusalText, S: Subject> Shown for Refused<R, S> {
     fn text_with<'a>(&'a self, ctx: &egui::Context, more: &[(&'static str, &'a str)]) -> String {
+        let why = self
+            .refusal
+            .protection()
+            .map(|why| i18n::text(ctx, &protection_text_id(why)));
+
         let mut args: Vec<_> = self
             .subject
             .name()
             .map(|name| ("name", name))
             .into_iter()
+            .chain(why.as_deref().map(|why| ("why", why)))
             .collect();
 
         args.extend_from_slice(more);
@@ -77,7 +84,7 @@ pub fn queue_or_refuse<R, S>(
 }
 
 pub fn queue(changes: &ChangeSet, click: impl FnOnce(&mut ChangeSet)) -> Handled {
-    Handled::edit(QueueEdit::of_click(changes, click).0)
+    Handled::edit(on_copy(changes, click).0)
 }
 
 /// [`queue_or_refuse`] for a rule that names its own subject, such as a
@@ -87,7 +94,7 @@ pub fn queue_or_keep<R, S>(
     changes: &ChangeSet,
     click: impl FnOnce(&mut ChangeSet) -> Result<(), Refused<R, S>>,
 ) -> Handled {
-    let (edit, result) = QueueEdit::of_click(changes, click);
+    let (edit, result) = on_copy(changes, click);
     match result {
         Ok(()) => {
             *slot = None;

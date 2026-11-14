@@ -4498,6 +4498,9 @@
     "cli-locale-not-enabled": {
       "string": "this locale is not enabled, enable it first"
     },
+    "cli-locale-package": {
+      "string": "the package rules keep this language pack installed"
+    },
     "cli-driver-other-file": {
       "string": "another driver settings file in modprobe.d blacklists this driver, Garuda Toolbox only changes its own file"
     },
@@ -4778,13 +4781,16 @@
     "configs-problem-copy-failed": {
       "string": "The copy for editing could not be used."
     },
-    "configs-problem-unknown": {
-      "string": "This file cannot be opened here."
+    "configs-problem-broken": {
+      "string": "{path} was not read, because pkexec cannot run on this system. Its message is in the log."
+    },
+    "configs-problem-failed": {
+      "string": "The work on {path} stopped unexpectedly. Try again."
     },
     "configs-problem-read-only": {
       "string": "This file decides who may administer the system or what runs as root, so it is only shown here. Change it in a terminal with sudo."
     },
-    "configs-problem-other": {
+    "configs-problem-read-failed": {
       "string": "{path} could not be read."
     },
     "configs-view-too-large": {

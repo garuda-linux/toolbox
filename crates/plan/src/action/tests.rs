@@ -42,6 +42,25 @@ fn remove_packages_removes_unneeded_dependencies_too() {
 }
 
 #[test]
+fn remove_packages_previews_what_goes_along_first() {
+    let action = RootAction::RemovePackages {
+        packages: packages(&["vlc"]),
+    };
+
+    let Some(Invocation::RunUnlessItRemovesProtected { preview, run }) =
+        action.procedure().into_iter().next()
+    else {
+        panic!("{:?}", action.procedure());
+    };
+
+    assert_eq!(
+        preview.to_string(),
+        "pacman -Rs --print --print-format '%n' -- vlc"
+    );
+    assert_eq!(run.to_string(), "pacman -Rns --noconfirm -- vlc");
+}
+
+#[test]
 fn upgrade_with_garuda_update_tells_it_who_is_asking() {
     let action = RootAction::UpgradeSystem {
         upgrader: Upgrader::GarudaUpdate,
@@ -151,7 +170,7 @@ fn remove_orphans_takes_its_targets_from_a_query() {
     assert_eq!(procedure.len(), 1);
     assert_eq!(
         procedure[0].to_string(),
-        "pacman -Rns --noconfirm -- $(pacman -Qtdq)"
+        "pacman -Rn --noconfirm -- $(pacman -Qtdq)  # again until it prints nothing"
     );
 }
 

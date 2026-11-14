@@ -1,5 +1,8 @@
 use std::path::Path;
 
+use toolbox_core::features::maintenance::Tool;
+use toolbox_core::features::maintenance::page::{PageTool, Repair};
+
 use super::Programs;
 
 #[test]
@@ -19,25 +22,27 @@ fn maintenance_sees_its_tools_and_repairs() {
     });
 
     assert!(found.garuda_update);
-    let installed: Vec<&str> = found
+    let installed: Vec<PageTool> = found
         .tools
         .iter()
         .filter(|row| row.installed)
         .map(|row| row.tool)
         .collect();
 
-    assert_eq!(installed, ["edit-repositories"]);
+    assert_eq!(installed, [PageTool::Program(Tool::EditRepositories)]);
 
-    let available: Vec<&str> = found
+    let available: Vec<Repair> = found
         .repairs
         .iter()
         .filter(|row| row.available)
-        .map(|row| row.repair.as_str())
+        .map(|row| row.repair)
         .collect();
 
-    assert_ne!(available, Vec::<&str>::new());
+    assert_ne!(available, Vec::<Repair>::new());
     assert!(
-        available.iter().all(|repair| repair.starts_with("remote-")),
+        available
+            .iter()
+            .all(|repair| matches!(repair, Repair::Remote(_))),
         "{available:?}"
     );
 }

@@ -32,13 +32,16 @@ impl Users {
                 self.refusal = None;
                 queue(changes, |changes| keep_user(user, changes))
             }
-            UsersCommand::DismissRefusal => {
-                self.refusal = None;
+            UsersCommand::Edit(edit) => self.edit(edit, changes, snapshot),
+            UsersCommand::Refresh => {
+                self.refresh();
+                Handled::answers(vec![AppCommand::ReadSystem])
+            }
+            UsersCommand::DismissRun => {
+                self.dismiss_run();
                 Handled::taken()
             }
-            UsersCommand::Edit(edit) => self.edit(edit, changes, snapshot),
-            UsersCommand::Refresh
-            | UsersCommand::AddUser {
+            UsersCommand::AddUser {
                 user: _,
                 password: _,
             }
@@ -46,7 +49,6 @@ impl Users {
                 user: _,
                 password: _,
             }
-            | UsersCommand::DismissRun
             | UsersCommand::ShowConsole => Handled::default(),
         }
     }

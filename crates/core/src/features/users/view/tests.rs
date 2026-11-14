@@ -1,6 +1,9 @@
 use toolbox_plan::{FullName, ShellPath};
 
-use super::{Shown, accounts_known, admin_group, choices, group_names, groups, shells, users};
+use super::{
+    Shown, accounts_known, admin_group, choices, group_names, groups, shells, user as account_row,
+    users,
+};
 use crate::domains::{Accounts, AvailableShells};
 use crate::features::users::listing::{GroupOrder, UserOrder};
 use crate::features::users::{add_group, set_full_name, set_shell};
@@ -80,6 +83,20 @@ fn a_row_shows_and_counts_what_is_queued_for_it() {
     assert_eq!(row.shown_full_name(), "Nico");
     assert_eq!(row.shown_home(), "/home/nico");
     assert_eq!(row.queued.count(), 2);
+}
+
+#[test]
+fn one_account_looked_up_is_its_row_in_the_list() {
+    let snapshot = snapshot();
+    let mut changes = ChangeSet::default();
+    let nico = user_name("nico");
+    set_shell(&nico, shell("/usr/bin/fish"), &mut changes, &snapshot).unwrap();
+
+    let rows = users(&snapshot, &changes, &Shown::people());
+    let listed = rows.iter().find(|row| row.user.name == nico);
+
+    assert_eq!(account_row(&snapshot, &changes, &nico).as_ref(), listed);
+    assert_eq!(account_row(&snapshot, &changes, &user_name("nobody")), None);
 }
 
 #[test]

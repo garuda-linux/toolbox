@@ -14,8 +14,9 @@ use toolbox_core::features::locales::{
 use toolbox_plan::{LocaleEntry, LocaleName, PackageName};
 
 use super::LocalesPage;
-use crate::command::{Command, LocaleCommand};
+use crate::command::{AppCommand, Command, LocaleCommand};
 use crate::locales::Locales;
+use crate::page::PageId;
 use crate::page_service::Services;
 use crate::refused::Refused;
 use crate::testing::{PageFixture, PageState, assert_header, rect_of};
@@ -182,7 +183,7 @@ fn a_refused_click_names_the_locale_until_dismissed() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(LocaleCommand::DismissRefusal)]
+        [Command::from(AppCommand::DismissRefusal(PageId::Locales))]
     );
 }
 

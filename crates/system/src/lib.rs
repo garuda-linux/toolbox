@@ -41,9 +41,7 @@ mod user_configs;
 
 pub use accounts::{AccountSource, EtcAccounts};
 pub use app_icons::{AppIconSource, AppStreamIcons, file_path, file_url};
-pub use boot::{
-    BootMenuSource, BootSource, Menu, MenuRead, SystemBoot, SystemBootMenu, grub_platform,
-};
+pub use boot::{BootMenuSource, BootSource, MenuRead, SystemBoot, SystemBootMenu, grub_platform};
 pub use bus::{
     CALL_TIMEOUT, CallError, INTERACTIVE_TIMEOUT, Method, call, call_with_timeout, classify,
     connect,

@@ -3,11 +3,15 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
 
 use tokio::runtime::Runtime;
-use toolbox_core::features::bootrepair::RepairFacts;
 use toolbox_core::features::bootrepair::page::{Booted, Facts, Offer, Progress};
+use toolbox_core::features::bootrepair::{Refusal, RepairFacts};
+use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_system::{DryRunRepair, ProbeError, RepairSource};
 
 use super::{BootRepair, BootRepairSetup};
+use crate::command::{AppCommand, BootRepairCommand};
+use crate::page::PageId;
+use crate::page_service::PageService as _;
 use crate::testing::until;
 
 #[derive(Default)]
@@ -88,4 +92,33 @@ fn the_flag_shows_the_test_mode_and_a_run_reads_again_after_it_ended() {
     assert_eq!(source.0.load(Ordering::SeqCst), 2);
     repair.forget();
     assert_eq!(repair.progress(), Progress::None);
+}
+
+#[test]
+fn forget_is_the_services_and_a_refusal_goes_when_dismissed() {
+    let mut repair = BootRepair::default();
+    repair.set_refusal(Some(Refusal::NotOffered));
+
+    let forgotten = repair.handle(&AppCommand::BootRepair(BootRepairCommand::Forget));
+    assert!(forgotten.taken);
+    assert!(repair.refusal().is_some());
+
+    let dismissed = repair.receive(
+        &AppCommand::DismissRefusal(PageId::BootRepair),
+        &ChangeSet::default(),
+        &Snapshot::default(),
+    );
+
+    assert!(dismissed.taken);
+    assert!(repair.refusal().is_none());
+}
+
+/// The Console is App's.
+#[test]
+fn show_console_is_left_to_app() {
+    let mut repair = BootRepair::default();
+
+    let handled = repair.handle(&AppCommand::BootRepair(BootRepairCommand::ShowConsole));
+
+    assert!(!handled.taken);
 }

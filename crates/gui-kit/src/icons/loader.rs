@@ -1,17 +1,20 @@
-//! Renders the desktop theme's SVG files on a worker thread. `egui_extras`
-//! renders an SVG inside the frame that first draws it, at every new size,
-//! and a theme file is outside text of any shape.
+//! Renders the desktop theme's SVG files and the apps' pictures on a
+//! worker thread. `egui_extras` renders an SVG inside the frame that first
+//! draws it, at every new size, and both are outside files of any shape.
 
 #[cfg(test)]
 mod tests;
 
 use std::collections::HashMap;
+use std::path::PathBuf;
 use std::sync::mpsc::{self, Sender};
 use std::sync::{Arc, OnceLock};
 
 use egui::load::{Bytes, BytesPoll, ImageLoadResult, ImageLoader, ImagePoll, LoadError, SizeHint};
 use egui::{ColorImage, Context, ImageFit, ImageSize, TextStyle, Vec2, vec2};
 use parking_lot::Mutex;
+
+use super::picture;
 
 /// Where [`super::Icon::image`] puts a theme's file. The bundled glyphs
 /// have their own prefix and stay with `egui_extras`: they are small, ours,
@@ -34,9 +37,16 @@ struct State {
     slots: HashMap<Key, Slot>,
 }
 
+enum Source {
+    /// A theme file, already in egui's bytes.
+    Theme(Bytes),
+    /// An app's picture, which the worker reads.
+    Picture(PathBuf),
+}
+
 struct Job {
     key: Key,
-    bytes: Bytes,
+    source: Source,
     ctx: Context,
 }
 
@@ -69,7 +79,8 @@ impl ImageLoader for ThemeLoader {
     }
 
     fn load(&self, ctx: &Context, uri: &str, size_hint: SizeHint) -> ImageLoadResult {
-        if !uri.starts_with(THEME_URI) {
+        let picture = picture::path_of(uri);
+        if picture.is_none() && !uri.starts_with(THEME_URI) {
             return Err(LoadError::NotSupported);
         }
 
@@ -92,23 +103,25 @@ impl ImageLoader for ThemeLoader {
             }
         }
 
-        match ctx.try_load_bytes(uri) {
-            Ok(BytesPoll::Ready {
-                bytes,
-                size: _,
-                mime: _,
-            }) => {
-                self.state.lock().slots.insert(key.clone(), Slot::Rendering);
-                self.send(Job {
-                    key,
+        let source = match picture {
+            Some(path) => Source::Picture(path.to_path_buf()),
+            None => match ctx.try_load_bytes(uri)? {
+                BytesPoll::Ready {
                     bytes,
-                    ctx: ctx.clone(),
-                });
-                Ok(ImagePoll::Pending { size: None })
-            }
-            Ok(BytesPoll::Pending { size }) => Ok(ImagePoll::Pending { size }),
-            Err(error) => Err(error),
-        }
+                    size: _,
+                    mime: _,
+                } => Source::Theme(bytes),
+                BytesPoll::Pending { size } => return Ok(ImagePoll::Pending { size }),
+            },
+        };
+
+        self.state.lock().slots.insert(key.clone(), Slot::Rendering);
+        self.send(Job {
+            key,
+            source,
+            ctx: ctx.clone(),
+        });
+        Ok(ImagePoll::Pending { size: None })
     }
 
     fn forget(&self, uri: &str) {
@@ -206,13 +219,18 @@ fn spawn(state: Arc<Mutex<State>>) -> Sender<Job> {
     let started = std::thread::Builder::new()
         .name("theme-icons".to_owned())
         .spawn(move || {
-            let options = resvg::usvg::Options::default();
-            for Job { key, bytes, ctx } in jobs {
-                let result = egui_extras::image::load_svg_bytes_with_size(&bytes, key.1, &options)
-                    .map(Arc::new);
+            let options = super::svg::options();
+            for Job { key, source, ctx } in jobs {
+                let result = match &source {
+                    Source::Theme(bytes) => {
+                        egui_extras::image::load_svg_bytes_with_size(bytes, key.1, &options)
+                    }
+                    Source::Picture(path) => picture::decode(path, key.1, &options),
+                }
+                .map(Arc::new);
 
                 if let Err(error) = &result {
-                    tracing::info!("the theme's {} cannot be drawn: {error}", key.0);
+                    tracing::info!("{} cannot be drawn: {error}", key.0);
                 }
 
                 let mut state = state.lock();

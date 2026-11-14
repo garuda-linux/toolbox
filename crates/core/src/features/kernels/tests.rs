@@ -1,12 +1,14 @@
 mod edits;
 mod guard;
 mod headers;
+mod protected;
 mod recheck;
 mod running;
 
 use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_plan::KernelRelease;
+use toolbox_state::packages::PackageGraph;
 
 use super::{
     Kernel, KernelReleases, LinuxPackages, Listed, LocalPackage, Refusal, RepoPackage, kernels,
@@ -62,6 +64,7 @@ fn sample() -> (Vec<Kernel>, Snapshot) {
         package("linux-headers"),
         package("linux-lts"),
     ])));
+    snapshot.insert(PackageGraph::default());
 
     (kernels(&packages, &KernelReleases::default()), snapshot)
 }
@@ -325,7 +328,8 @@ fn the_running_kernel_cannot_be_removed() {
             },
             &mut changes,
             &snapshot
-        ),
+        )
+        .map_err(|refused| refused.refusal),
         Err(Refusal::Running)
     );
     assert!(changes.is_empty());
@@ -344,7 +348,8 @@ fn without_the_running_kernel_no_kernel_is_removed() {
     let mut changes = ChangeSet::default();
 
     assert_eq!(
-        toggle(lts, Toggle::Off, unknown, &mut changes, &snapshot),
+        toggle(lts, Toggle::Off, unknown, &mut changes, &snapshot)
+            .map_err(|refused| refused.refusal),
         Err(Refusal::RunningUnknown)
     );
     assert!(changes.is_empty());
@@ -379,7 +384,8 @@ fn the_last_kernel_cannot_be_removed() {
             zen_runs(&kernels),
             &mut changes,
             &snapshot
-        ),
+        )
+        .map_err(|refused| refused.refusal),
         Err(Refusal::LastKernel)
     );
     assert_eq!(wish(&changes, "linux"), None);

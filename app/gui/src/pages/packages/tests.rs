@@ -1,4 +1,5 @@
 mod gaps;
+mod view;
 
 use std::collections::BTreeSet;
 use std::sync::Arc;

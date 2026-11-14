@@ -16,7 +16,7 @@ use toolbox_state::boot::{BootLoader, KernelCmdline};
 use super::{MenuRead, SystemBootMenu};
 use crate::error::{ProbeError, from_io};
 use crate::files;
-use crate::pkexec::{self, HelperRun};
+use crate::pkexec::{self, HelperError, HelperRun};
 
 const LOADER_INFO: &str =
     "sys/firmware/efi/efivars/LoaderInfo-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f";
@@ -32,7 +32,7 @@ impl SystemBootMenu {
             Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
                 self.ask_helper_sdboot(cancel)
             }
-            Err(error) => MenuRead::Unknown(error.to_string()),
+            Err(error) => MenuRead::Unreadable(error.kind()),
         }
     }
 
@@ -41,7 +41,7 @@ impl SystemBootMenu {
 
         match pkexec::ask(&mut command, MAX_LINE_BYTES, cancel) {
             HelperRun::Answered(line) => SdBootMenu::parse(line.trim_end()).map_or_else(
-                |_not_a_menu| MenuRead::Unknown("the helper's answer is no menu".to_owned()),
+                |_not_a_menu| MenuRead::Unknown(HelperError::Unreadable),
                 MenuRead::SdBoot,
             ),
             HelperRun::Refused(refusal) => MenuRead::Refused(refusal),

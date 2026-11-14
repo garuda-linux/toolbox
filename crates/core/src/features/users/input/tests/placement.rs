@@ -2,8 +2,9 @@ use std::collections::BTreeSet;
 
 use toolbox_plan::{NewHome, UserId};
 
-use super::super::{NewAccount, home, new_account, user_id};
+use super::super::{InputProblem, NewAccount, home, new_account, user_id};
 use super::snapshot;
+use crate::features::RefusalText;
 
 fn account<'fields>(
     home: &'fields str,
@@ -42,7 +43,7 @@ fn a_typed_user_id_is_a_number_in_range_or_blank() {
         "99999999999",
         "+5x",
     ] {
-        assert_eq!(user_id(text), Err("uid-invalid"), "{text}");
+        assert_eq!(user_id(text), Err(InputProblem::UidInvalid), "{text}");
     }
 }
 
@@ -62,7 +63,11 @@ fn a_typed_home_folder_gets_the_code_of_its_rule() {
         ("/srv/ada ", "home-outer-blank"),
         ("/tmp/ada", "home-outside-roots"),
     ] {
-        assert_eq!(home(text).err(), Some(code), "{text}");
+        assert_eq!(
+            home(text).err().map(RefusalText::code),
+            Some(code),
+            "{text}"
+        );
     }
 }
 
@@ -103,6 +108,9 @@ fn the_fields_refuse_bad_placements_with_a_code() {
         (account("", "450", false, false), "uid-out-of-range"),
         (account("", "1500", false, true), "uid-out-of-range"),
     ] {
-        assert_eq!(new_account(&fields, &snapshot).err(), Some(code));
+        assert_eq!(
+            new_account(&fields, &snapshot).err().map(RefusalText::code),
+            Some(code)
+        );
     }
 }

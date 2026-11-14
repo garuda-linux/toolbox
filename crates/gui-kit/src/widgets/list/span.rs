@@ -3,6 +3,8 @@
 //! side so Tab reaches it and scrolls it in, and the focused one wherever
 //! it is, so it keeps the focus.
 
+use std::sync::Arc;
+
 use egui::Rangef;
 
 use super::super::card::DIVIDER;
@@ -11,8 +13,9 @@ use super::super::card::DIVIDER;
 pub enum Offsets {
     /// Every row as tall as the others.
     Fixed { height: f32, count: usize },
-    /// The bottom of each row, the heights added up.
-    Measured { bottoms: Vec<f32> },
+    /// The bottom of each row, the heights added up. Shared, so a list
+    /// keeps them from frame to frame without copying them.
+    Measured { bottoms: Arc<[f32]> },
 }
 
 impl Offsets {
@@ -29,7 +32,7 @@ impl Offsets {
         Self::Measured { bottoms }
     }
 
-    pub const fn count(&self) -> usize {
+    pub fn count(&self) -> usize {
         match self {
             Self::Fixed { height: _, count } => *count,
             Self::Measured { bottoms } => bottoms.len(),

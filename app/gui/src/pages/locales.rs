@@ -22,9 +22,10 @@ use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::{refused_banner, sort_select};
 use super::setting_row::{Words, row};
 use super::{PageContext, PageView, plan_running};
-use crate::command::LocaleCommand;
+use crate::command::{AppCommand, LocaleCommand};
 use crate::i18n;
 use crate::locales::Locales;
+use crate::page::PageId;
 
 const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -75,7 +76,9 @@ impl PageView for LocalesPage {
         if let Some(picked) = done.picked {
             self.tab = picked;
             if context.service::<Locales>().refusal().is_some() {
-                context.commands.send(LocaleCommand::DismissRefusal);
+                context
+                    .commands
+                    .send(AppCommand::DismissRefusal(PageId::Locales));
             }
         }
 
@@ -346,6 +349,8 @@ fn choice(ctx: &egui::Context, code: &str, language: &str, territory: &str) -> S
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Locales>().refusal();
     if refused_banner(ui, refused, Tone::Error, "locales-dismiss") {
-        context.commands.send(LocaleCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Locales));
     }
 }

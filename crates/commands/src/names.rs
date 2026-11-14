@@ -264,7 +264,11 @@ pub fn task_ids() -> Vec<String> {
         .into_iter()
         .chain([AUR_UPGRADE, crate::mirrors::RANK_MIRRORS])
         .map(str::to_owned)
-        .chain(repairs(|_| true).into_iter().map(|row| row.repair))
+        .chain(
+            repairs(|_| true)
+                .into_iter()
+                .map(|row| row.repair.key().to_owned()),
+        )
         .collect()
 }
 

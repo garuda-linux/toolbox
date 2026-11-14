@@ -1,4 +1,5 @@
 mod dialogs;
+mod rows;
 mod status;
 mod wiki;
 

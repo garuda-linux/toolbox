@@ -2,6 +2,7 @@ use std::borrow::Cow;
 
 use egui::{Context, Label, Ui};
 use toolbox_core::features::toggles::shown::Tally;
+use toolbox_core::features::tweaks::view::{Choices, Flip, Pick};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
     ListItem, RowHeights, RowList, RowState, Select, Tone, dimmed, highlighted, row_height,
@@ -10,7 +11,6 @@ use toolbox_gui_kit::widgets::{
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::{GarudaUpdateFlag, ShellPath};
 
-use super::view::{Choices, Flip, Pick};
 use crate::command::TweakCommand;
 use crate::i18n;
 use crate::pages::PageContext;

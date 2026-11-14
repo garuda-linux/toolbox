@@ -88,7 +88,8 @@ pub enum AppCommand {
         entry: String,
         wish: Toggle,
     },
-    DismissRefusal(CatalogId),
+    /// The page's refusal banner was closed.
+    DismissRefusal(PageId),
     /// A note about a background result nobody waited on, at the top
     /// right of the page.
     Toast {
@@ -171,7 +172,6 @@ pub enum HomeCommand {
 pub enum KernelCommand {
     Edit(KernelEdit),
     Refresh,
-    DismissRefusal,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -91,6 +91,30 @@ impl Operation {
         }
     }
 
+    /// The id of its name on the Common tab.
+    pub fn text_id(self) -> String {
+        format!("maintenance-op-{}", self.key())
+    }
+
+    /// Removing orphans and cleaning the cache take what no later click
+    /// brings back.
+    pub const fn asks_first(self) -> bool {
+        match self {
+            Self::RemoveOrphans | Self::CleanPackageCache => true,
+            Self::RefreshKeyring | Self::RemoveDatabaseLock | Self::UpgradeSystem => false,
+        }
+    }
+
+    pub const fn task(self, upgrader: Upgrader) -> Task {
+        match self {
+            Self::RefreshKeyring => Task::RefreshKeyring,
+            Self::RemoveDatabaseLock => Task::RemoveDatabaseLock,
+            Self::UpgradeSystem => Task::UpgradeSystem { upgrader },
+            Self::RemoveOrphans => Task::RemoveOrphans,
+            Self::CleanPackageCache => Task::CleanPackageCache,
+        }
+    }
+
     /// The code of its sentence, spelled as its key.
     pub const fn code(self) -> SummaryCode {
         match self {
@@ -151,12 +175,12 @@ impl RunNow {
 pub struct Operations;
 
 impl Operations {
-    pub fn want(changes: &mut ChangeSet, task: Task, snapshot: &Snapshot) {
+    pub(crate) fn want(changes: &mut ChangeSet, task: Task, snapshot: &Snapshot) {
         changes.want::<Self>(task.operation(), task, snapshot);
     }
 
     /// Takes the queued `operation` back.
-    pub fn unqueue(changes: &mut ChangeSet, operation: Operation) {
+    pub(crate) fn unqueue(changes: &mut ChangeSet, operation: Operation) {
         changes.remove::<Self>(&operation);
     }
 }
@@ -323,5 +347,15 @@ pub fn queue_upgrade(wish: Toggle, changes: &mut ChangeSet, snapshot: &Snapshot,
 fn upgrade(snapshot: &Snapshot, garuda_update: bool) -> Task {
     Task::UpgradeSystem {
         upgrader: upgrader(snapshot, garuda_update),
+    }
+}
+
+/// Queues `task`, or takes it back, for the window and the command line
+/// alike.
+pub fn queue(task: Task, wish: Toggle, changes: &mut ChangeSet, snapshot: &Snapshot) {
+    if wish.is_on() {
+        Operations::want(changes, task, snapshot);
+    } else {
+        Operations::unqueue(changes, task.operation());
     }
 }

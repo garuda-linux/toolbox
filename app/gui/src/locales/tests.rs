@@ -7,6 +7,8 @@ use toolbox_plan::{LocaleEntry, LocaleName};
 
 use super::Locales;
 use crate::command::{AppCommand, LocaleCommand};
+use crate::page::PageId;
+use crate::page_service::PageService as _;
 
 fn entry(line: &str) -> LocaleEntry {
     LocaleEntry::parse(line).unwrap()
@@ -63,11 +65,11 @@ fn an_enabled_locale_is_an_edit_and_dismiss_clears_the_refusal() {
         &system(),
     );
 
-    assert!(handled.edit.is_some_and(|edit| edit.add.len() == 1));
+    assert!(handled.edit.is_some_and(|edit| edit.len() == 1));
     assert!(locales.refusal().is_none());
 
-    locales.handle(
-        &AppCommand::Locale(LocaleCommand::DismissRefusal),
+    locales.receive(
+        &AppCommand::DismissRefusal(PageId::Locales),
         &ChangeSet::default(),
         &system(),
     );

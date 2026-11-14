@@ -20,8 +20,9 @@ use toolbox_gui_kit::widgets::{Tone, page_toolbar};
 use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
-use crate::command::NetworkCommand;
+use crate::command::{AppCommand, NetworkCommand};
 use crate::network::Network;
+use crate::page::PageId;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
@@ -48,6 +49,7 @@ pub struct NetworkPage {
     tab: Tab,
     drivers: DriverFilter,
     tools: tools::Form,
+    driver_rows: drivers::Rows,
 }
 
 impl PageView for NetworkPage {
@@ -68,7 +70,9 @@ impl PageView for NetworkPage {
         if let Some(picked) = done.picked {
             self.tab = picked;
             if context.service::<Network>().refusal().is_some() {
-                context.commands.send(NetworkCommand::DismissRefusal);
+                context
+                    .commands
+                    .send(AppCommand::DismissRefusal(PageId::Network));
             }
         }
 
@@ -101,7 +105,7 @@ impl PageView for NetworkPage {
         plan_running(ui, context);
         match self.tab {
             Tab::Status => status::show(ui, context),
-            Tab::Drivers => drivers::show(ui, context, &mut self.drivers),
+            Tab::Drivers => drivers::show(ui, context, &mut self.drivers, &mut self.driver_rows),
             Tab::Hardware => hardware::show(ui, context),
             Tab::Tools => self.tools.show(ui, context),
         }
@@ -115,6 +119,8 @@ impl PageView for NetworkPage {
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Network>().refusal();
     if refused_banner(ui, refused, Tone::Error, "network-dismiss") {
-        context.commands.send(NetworkCommand::DismissRefusal);
+        context
+            .commands
+            .send(AppCommand::DismissRefusal(PageId::Network));
     }
 }

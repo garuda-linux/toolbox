@@ -67,7 +67,7 @@ fn the_helpers_answers_and_failures_are_told_apart() {
     assert_eq!(
         machine.collect(Collector::Dmesg),
         Outcome::Failed(
-            "The helper of Garuda Toolbox failed: garuda-toolbox-helper: cannot answer dmesg: boom"
+            "the helper ended with exit code 1: garuda-toolbox-helper: cannot answer dmesg: boom"
                 .to_owned()
         )
     );
@@ -182,7 +182,7 @@ fn an_unstartable_helper_fails_with_its_name() {
 
     match &outcome {
         Outcome::Failed(reason) => {
-            assert!(reason.contains("could not be started"), "{outcome:?}");
+            assert!(reason.contains("cannot start the helper"), "{outcome:?}");
         }
         shown @ (Outcome::Report(_) | Outcome::Unavailable | Outcome::Refused(_)) => {
             panic!("an unstartable helper is no report: {shown:?}")

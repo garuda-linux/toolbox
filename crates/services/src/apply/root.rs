@@ -28,6 +28,13 @@ struct NotStarted {
     source: std::io::Error,
 }
 
+/// What the helper's stderr said, and the launcher that reads a refusal
+/// in it.
+struct Complaints<'launcher> {
+    launcher: &'launcher dyn Launcher,
+    words: Option<JoinHandle<String>>,
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Heard {
     Nothing,
@@ -62,7 +69,10 @@ pub async fn run(steps: &[Step<RootAction>], run: &mut Run<'_>, launcher: &dyn L
         return false;
     };
 
-    let complaints = forward_stderr(&mut child);
+    let complaints = Complaints {
+        launcher,
+        words: forward_stderr(&mut child),
+    };
 
     send(&mut stdin, &request).await;
     send_secrets(&mut stdin, &request).await;
@@ -80,7 +90,7 @@ pub async fn run(steps: &[Step<RootAction>], run: &mut Run<'_>, launcher: &dyn L
             line = lines.next_line() => {
                 let Ok(Some(line)) = line else { break };
 
-                let event = report_line(&line, run.reporter);
+                let event = report_line(&line, run.reporter).await;
                 step = step_span(step, event.as_ref(), steps);
                 steps_ok &= event.as_ref().and_then(step_ok) != Some(false);
                 heard = match event {
@@ -170,11 +180,12 @@ fn start(launcher: &dyn Launcher) -> Result<Child, NotStarted> {
         })
 }
 
-/// An unreadable line is none.
-fn report_line(line: &str, reporter: &Reporter) -> Option<Event> {
+/// An unreadable line is none. While too much output is unread it waits,
+/// and so does the read of the helper's pipe.
+async fn report_line(line: &str, reporter: &Reporter) -> Option<Event> {
     match decode::<Event>(line) {
         Ok(event) => {
-            reporter.report(Report::Step(event.clone()));
+            reporter.step(event.clone()).await;
             Some(event)
         }
         Err(error) => {
@@ -188,7 +199,7 @@ async fn finish(
     child: &mut Child,
     steps_ok: bool,
     heard: Heard,
-    complaints: Option<JoinHandle<String>>,
+    complaints: Complaints<'_>,
     reporter: &Reporter,
 ) -> bool {
     let status = match child.wait().await {
@@ -227,21 +238,23 @@ async fn finish(
     steps_ok && status.success()
 }
 
-/// Why pkexec did not run the helper, when its exit code says so. Its
+/// Why pkexec or sudo did not run the helper, when its exit code says so. Its
 /// words are waited for only then: pkexec has ended and nothing it
 /// started holds the pipe.
-async fn refusal(
-    status: ExitStatus,
-    complaints: Option<JoinHandle<String>>,
-) -> Option<(Refusal, String)> {
-    pkexec::refusal(status.code(), "")?;
+async fn refusal(status: ExitStatus, complaints: Complaints<'_>) -> Option<(Refusal, String)> {
+    let Complaints { launcher, words } = complaints;
+    if !launcher.may_refuse(status.code()) {
+        return None;
+    }
 
-    let words = match complaints {
-        Some(complaints) => complaints.await.unwrap_or_default(),
+    let words = match words {
+        Some(reading) => reading.await.unwrap_or_default(),
         None => String::new(),
     };
 
-    pkexec::refusal(status.code(), &words).map(|refusal| (refusal, words))
+    launcher
+        .refusal(status.code(), &words)
+        .map(|refusal| (refusal, words))
 }
 
 /// Logs the helper's stderr and keeps its first bytes for [`refusal`].

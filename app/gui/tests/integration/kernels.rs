@@ -12,14 +12,14 @@ use toolbox_core::features::kernels::{
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::command::{Command, KernelCommand, KernelEdit};
-use toolbox_gui::kernels::Kernels;
+use toolbox_gui::kernels::{DkmsReading, Kernels};
 use toolbox_gui::page_service::Services;
 use toolbox_gui::pages::kernels::KernelsPage;
-use toolbox_gui::pages::kernels::view::{Dkms, DkmsReading};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::testing::{PageFixture, PageState};
 use toolbox_gui::{App, Setup, reader, snapshot};
 use toolbox_plan::{KernelRelease, PackageName};
+use toolbox_services::dkms::Dkms;
 
 use crate::common::{TALL, checkbox as switch, packages, window};
 use crate::system::{first_read, shows, step_until};

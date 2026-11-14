@@ -1,11 +1,14 @@
 mod unload;
 
+use std::sync::Arc;
+
 use egui::{Label, Ui};
 use toolbox_core::Toggle;
 use toolbox_core::features::network::{
     Category, DriverFilter, DriverRow, DriverState, ModuleFacts, driver_rows, visible,
 };
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, named_chips, pill_button, rich,
     row_height, split_row, status_dot, text_block_height,
@@ -34,9 +37,10 @@ const KINDS: [Option<Category>; 4] = [
     Some(Category::Other),
 ];
 
-struct Item<'rows>(&'rows DriverRow);
+#[derive(Debug)]
+struct Item(DriverRow);
 
-impl ListItem for Item<'_> {
+impl ListItem for Item {
     fn key(&self) -> &str {
         self.0.name.as_str()
     }
@@ -46,22 +50,47 @@ impl ListItem for Item<'_> {
     }
 }
 
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter) {
+/// The drivers the filter lets through, out of how many there are.
+#[derive(Debug)]
+pub struct Drivers {
+    total: usize,
+    shown: Vec<Item>,
+}
+
+/// `None` while the snapshot holds no drivers. Keyed by the filter's
+/// state and kind besides its search, the system and the queue.
+pub type Rows = RowCache<
+    (
+        Option<DriverState>,
+        Option<Category>,
+        Same<toolbox_core::Snapshot>,
+        u64,
+    ),
+    Option<Drivers>,
+>;
+
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter, rows: &mut Rows) {
     unload::question(ui.ctx(), context);
-    let Some(rows) = rows(ui, context) else {
+    if !listed(ui, context, Option::as_ref(&drivers(context, filter, rows))) {
         return;
-    };
+    }
 
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     filters(ui, filter);
-    let shown = visible(&rows, filter);
+
+    // A chip picked just now applies in this frame already.
+    let drivers = drivers(context, filter, rows);
+    let Some(Drivers { total, shown }) = drivers.as_ref() else {
+        return;
+    };
+
     let count = i18n::text_with(
         &ctx,
         "network-drivers-count",
         &[
             ("shown", &shown.len().to_string()),
-            ("count", &rows.len().to_string()),
+            ("count", &total.to_string()),
         ],
     );
 
@@ -88,31 +117,59 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter) {
         return;
     }
 
-    let items: Vec<Item<'_>> = shown.into_iter().map(Item).collect();
     let name = text("network-drivers-list");
     let height = row_height(ui, text_block_height(ui, 1));
     RowList::new("network-drivers", &name, RowHeights::Fixed(height)).show(
         ui,
-        &items,
-        |ui, item, _state| row(ui, context, item.0),
+        shown.as_slice(),
+        |ui, item, _state| row(ui, context, &item.0),
     );
 }
 
-/// The rows, or `None` after an empty state that says why there are none.
-fn rows(ui: &mut Ui, context: &PageContext<'_>) -> Option<Vec<DriverRow>> {
+/// The drivers `filter` lets through, from the cache while nothing they
+/// come from changed.
+fn drivers(
+    context: &PageContext<'_>,
+    filter: &DriverFilter,
+    rows: &mut Rows,
+) -> Arc<Option<Drivers>> {
+    let rest = (
+        filter.state,
+        filter.category,
+        Same::of(context.snapshot),
+        context.revision,
+    );
+
+    rows.get(&[&filter.search], rest, || {
+        let _build = tracing::trace_span!("build rows").entered();
+        let facts = context.snapshot.part::<ModuleFacts>()?;
+        let all = driver_rows(facts, context.changes);
+        let shown = visible(&all, filter)
+            .into_iter()
+            .cloned()
+            .map(Item)
+            .collect();
+
+        Some(Drivers {
+            total: all.len(),
+            shown,
+        })
+    })
+}
+
+/// Whether there are drivers, else the empty state that says why not.
+fn listed(ui: &mut Ui, context: &PageContext<'_>, drivers: Option<&Drivers>) -> bool {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let facts = context.snapshot.part::<ModuleFacts>();
-    let rows = facts.map(|facts| driver_rows(facts, context.changes));
-    let (icon, title, detail) = match &rows {
+    let (icon, title, detail) = match drivers {
         _ if !context.probed => (icons::NETWORK_WIRED, "network-drivers-reading", None),
         None => (icons::HELP_ABOUT, "network-drivers-unreadable", None),
-        Some(found) if found.is_empty() => (
+        Some(found) if found.total == 0 => (
             icons::HELP_ABOUT,
             "network-drivers-none",
             Some("network-drivers-none-detail"),
         ),
-        Some(_) => return rows,
+        Some(_) => return true,
     };
 
     empty_state(
@@ -121,7 +178,7 @@ fn rows(ui: &mut Ui, context: &PageContext<'_>) -> Option<Vec<DriverRow>> {
         &text(title),
         &detail.map(text).unwrap_or_default(),
     );
-    None
+    false
 }
 
 fn filters(ui: &mut Ui, filter: &mut DriverFilter) {

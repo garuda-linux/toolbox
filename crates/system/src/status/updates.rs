@@ -6,7 +6,9 @@ mod tests;
 
 use std::ffi::OsString;
 
+use toolbox_exec::{Environment, locate_program};
 use toolbox_plan::PackageName;
+use toolbox_plan::procedure::Program;
 
 use crate::command;
 use crate::error::ProbeError;
@@ -66,10 +68,13 @@ pub struct Paru {
 }
 
 impl Checkupdates {
-    /// `checkupdates` from `PATH`.
+    /// `checkupdates` at its fixed path.
     #[must_use = "the adapter does nothing until asked"]
     pub fn new() -> Self {
-        Self::with_program("checkupdates")
+        Self::with_program(locate_program(
+            Program::Checkupdates,
+            Environment::Inherited,
+        ))
     }
 
     /// Another program with checkupdates' interface, looked up like a
@@ -107,7 +112,7 @@ impl Paru {
     #[must_use = "the adapter does nothing until asked"]
     pub fn new() -> Self {
         Self {
-            program: OsString::from("paru"),
+            program: locate_program(Program::Paru, Environment::Inherited).into(),
             refuse_root: true,
         }
     }

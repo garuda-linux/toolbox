@@ -6,7 +6,7 @@ use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
 use toolbox_plan::{UnitName, UnitScope};
 use toolbox_system::CallError;
 
-use super::{UnitList, UnitLister, Units, UnitsFailure, UnitsHandle, spawn};
+use super::{UnitList, UnitLister, UnitLists, UnitsFailure, UnitsHandle, spawn};
 use crate::testing::PATIENCE;
 
 struct Recorded {
@@ -35,7 +35,7 @@ fn unit(name: &str) -> UnitInfo {
     }
 }
 
-async fn units_where(handle: &mut UnitsHandle, wanted: impl Fn(&Units) -> bool) -> Units {
+async fn units_where(handle: &mut UnitsHandle, wanted: impl Fn(&UnitLists) -> bool) -> UnitLists {
     tokio::time::timeout(PATIENCE, async {
         loop {
             if let Some(units) = handle.changed()
@@ -100,7 +100,7 @@ async fn requests_while_settling_list_each_scope_once() {
 
 #[test]
 fn a_failed_list_keeps_the_last_units_beside_its_failure() {
-    let mut units = Units::default();
+    let mut units = UnitLists::default();
     units.finish(UnitScope::System, Ok(Arc::new(vec![unit("sshd.service")])));
 
     units.finish(

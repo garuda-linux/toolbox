@@ -8,7 +8,6 @@ pub enum LocaleCommand {
     System(LocaleName),
     TogglePack { package: PackageName, on: bool },
     AddMissingPacks,
-    DismissRefusal,
     Refresh,
 }
 

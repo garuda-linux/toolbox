@@ -8,12 +8,11 @@ mod row;
 mod tests;
 mod texts;
 mod unit_row;
-pub mod view;
 
 use std::sync::Arc;
 
 use egui::Ui;
-use toolbox_core::features::services::{Filter, UnitInfo, UnitOrder};
+use toolbox_core::features::services::{Filter, UnitInfo, UnitOrder, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     RowHeights, RowList, after_skeleton, card, dimmed, empty_state, error_row, hold_content,

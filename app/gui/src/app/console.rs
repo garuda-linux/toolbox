@@ -33,7 +33,7 @@ impl App {
             return;
         };
 
-        let upgrader = upgrader(&self.current_snapshot(), self.garuda_update());
+        let upgrader = upgrader(&self.current_snapshot(), self.services.home.garuda_update());
         self.run_at_once(retry_after_upgrade(packages, upgrader));
     }
 

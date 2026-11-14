@@ -88,3 +88,20 @@ fn consecutive_user_steps_share_one_segment() {
 
     assert_eq!(shape(plan), [("user", 2)]);
 }
+
+/// The second try after pkexec could not ask: what ended well stays done,
+/// the rest keeps its number, so the outcomes of both tries add up.
+#[test]
+fn a_plan_without_the_steps_that_ended_well_keeps_the_ids() {
+    let plan = Plan::new([
+        user_step(),
+        PlannedAction::Root(RootAction::RefreshKeyring),
+        PlannedAction::Root(RootAction::RemoveOrphans),
+        user_step(),
+    ]);
+
+    let rest = plan.without(&[StepId::new(1), StepId::new(3)]);
+
+    let ids: Vec<StepId> = rest.steps().iter().map(|step| step.id).collect();
+    assert_eq!(ids, [StepId::new(2), StepId::new(4)]);
+}

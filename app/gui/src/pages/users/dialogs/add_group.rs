@@ -1,5 +1,6 @@
 use egui::Context;
-use toolbox_core::features::users::{input, view};
+use toolbox_core::features::users::input::{self, InputProblem};
+use toolbox_core::features::users::{Refusal, view};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::GroupName;
 
@@ -20,7 +21,9 @@ impl AddGroup {
         let confirm = i18n::text(ctx, "groups-add-confirm");
         let checked = check(&self.name, context);
         let problem = match &checked {
-            Err(code) if !self.name.is_empty() => Some(texts::problem(ctx, code, &self.name)),
+            Err(problem) if !self.name.is_empty() => {
+                Some(texts::problem(ctx, *problem, &self.name))
+            }
             Ok(_) | Err(_) => None,
         };
 
@@ -46,14 +49,14 @@ impl AddGroup {
     }
 }
 
-fn check(text: &str, context: &PageContext<'_>) -> Result<GroupName, &'static str> {
+fn check(text: &str, context: &PageContext<'_>) -> Result<GroupName, InputProblem> {
     let group: GroupName = input::name(text)?;
     let taken = view::groups(context.snapshot, context.changes, &view::Shown::default())
         .iter()
         .any(|row| row.name == group && row.gid.is_some());
 
     if taken {
-        return Err("group-exists");
+        return Err(InputProblem::Refused(Refusal::GroupExists));
     }
 
     Ok(group)

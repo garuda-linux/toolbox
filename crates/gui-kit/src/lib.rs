@@ -37,7 +37,7 @@ pub use ui_ext::UiExt;
 /// harness do. The desktop's look replaces parts of it later.
 pub fn install(ctx: &Context) {
     jxl::register();
-    egui_extras::install_image_loaders(ctx);
+    image_loaders(ctx);
     if !ctx.is_loader_installed(icons::ThemeLoader::ID) {
         ctx.add_image_loader(std::sync::Arc::new(icons::ThemeLoader::default()));
     }
@@ -50,4 +50,25 @@ pub fn install(ctx: &Context) {
         &Palette::fallback(Theme::Dark),
         &Palette::fallback(Theme::Light),
     );
+}
+
+/// The loaders of `egui_extras`, with [`icons::svg::SvgLoader`] in place of its
+/// SVG loader, which would read the files an SVG names.
+fn image_loaders(ctx: &Context) {
+    use std::sync::Arc;
+
+    use egui_extras::loaders::file_loader::FileLoader;
+    use egui_extras::loaders::image_loader::ImageCrateLoader;
+
+    if !ctx.is_loader_installed(FileLoader::ID) {
+        ctx.add_bytes_loader(Arc::new(FileLoader::default()));
+    }
+
+    if !ctx.is_loader_installed(ImageCrateLoader::ID) {
+        ctx.add_image_loader(Arc::new(ImageCrateLoader::default()));
+    }
+
+    if !ctx.is_loader_installed(icons::svg::SvgLoader::ID) {
+        ctx.add_image_loader(Arc::new(icons::svg::SvgLoader::default()));
+    }
 }

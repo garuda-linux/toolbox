@@ -9,12 +9,12 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 use std::time::Duration;
 
-use toolbox_exec::{CaptureError, Environment, Policy, capture};
+use toolbox_exec::{Environment, Policy, capture};
 use toolbox_plan::protocol::{ReadKind, decode};
 use toolbox_plan::{ShadowLocks, UserName};
 
 use crate::HelperReads;
-use crate::pkexec::{self, Refusal};
+use crate::pkexec::{self, HelperError, HelperRun, Refusal};
 
 /// One flag per account. Far more than any system has, far less than a
 /// helper gone wrong could print.
@@ -36,7 +36,7 @@ pub trait LockSource: Send + Sync {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LockProblem {
     Refused(Refusal),
-    Failed(String),
+    Failed(HelperError),
 }
 
 pub struct HelperLocks(pub Arc<dyn HelperReads>);
@@ -50,43 +50,20 @@ impl LockSource for HelperLocks {
             .capped()
             .within(LOCKS_DEADLINE);
 
-        let captured = capture(
+        let answer = match pkexec::sorted(capture(
             &mut self.0.read_command(ReadKind::ShadowLocks),
             Environment::Inherited,
             &[],
             &policy,
             &Arc::default(),
-        )
-        .map_err(|error| LockProblem::Failed(unanswered(&error)))?;
+        )) {
+            HelperRun::Answered(answer) => answer,
+            HelperRun::Refused(refusal) => return Err(LockProblem::Refused(refusal)),
+            HelperRun::Failed(error) => return Err(LockProblem::Failed(error)),
+            HelperRun::Cancelled => return Err(LockProblem::Failed(HelperError::Stopped)),
+        };
 
-        if let Some(refusal) = pkexec::refusal(captured.code, &captured.errors) {
-            return Err(LockProblem::Refused(refusal));
-        }
-
-        if captured.code != Some(0_i32) {
-            return Err(LockProblem::Failed(pkexec::ended(
-                captured.code,
-                &captured.errors,
-            )));
-        }
-
-        parse(&captured.output).ok_or_else(|| {
-            LockProblem::Failed("the helper's answer is not a list of locks".to_owned())
-        })
-    }
-}
-
-fn unanswered(error: &CaptureError) -> String {
-    match error {
-        CaptureError::Missing | CaptureError::Failed(_) => {
-            format!("cannot start the helper: {error}")
-        }
-        CaptureError::TimedOut => format!(
-            "the helper gave no answer within {} seconds",
-            LOCKS_DEADLINE.as_secs()
-        ),
-        CaptureError::TooLarge => "the helper's answer is too long".to_owned(),
-        CaptureError::Cancelled => "the read was cancelled".to_owned(),
+        parse(&answer).ok_or(LockProblem::Failed(HelperError::Unreadable))
     }
 }
 

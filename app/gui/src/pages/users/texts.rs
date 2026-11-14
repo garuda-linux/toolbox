@@ -1,4 +1,6 @@
 use egui::Context;
+use toolbox_core::features::RefusalText as _;
+use toolbox_core::features::users::input::InputProblem;
 use toolbox_core::features::users::run::PageRun;
 use toolbox_services::locks::Locks;
 
@@ -6,16 +8,8 @@ use crate::i18n;
 
 /// Why a change or a typed value was refused. `name` names the account
 /// or group a refusal is about.
-pub fn problem(ctx: &Context, code: &str, name: &str) -> String {
-    let id = if code.starts_with("home-") {
-        format!("users-{code}")
-    } else if is_name_code(code) {
-        format!("users-name-{code}")
-    } else {
-        format!("users-refused-{code}")
-    };
-
-    i18n::text_with(ctx, &id, &[("name", name)]).into_owned()
+pub fn problem(ctx: &Context, problem: InputProblem, name: &str) -> String {
+    i18n::text_with(ctx, &problem.text_id(), &[("name", name)]).into_owned()
 }
 
 pub fn full_name_problem(ctx: &Context, code: &str) -> String {
@@ -61,11 +55,4 @@ pub fn list(ctx: &Context, names: impl IntoIterator<Item = impl AsRef<str>>) -> 
         .map(|name| name.as_ref().to_owned())
         .collect::<Vec<_>>()
         .join(&separator)
-}
-
-fn is_name_code(code: &str) -> bool {
-    matches!(
-        code,
-        "empty" | "too-long" | "invalid-start" | "invalid-character" | "invalid"
-    )
 }

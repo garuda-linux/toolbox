@@ -57,7 +57,9 @@ pub struct Packages {
     aur_names: Option<AurNames>,
     /// A copy landed since the app last asked.
     aur_landed: bool,
-    details: Option<Details>,
+    /// A new allocation with every answer, so a page tells new details from
+    /// the ones its rows were built from without comparing them.
+    details: Option<Arc<Details>>,
     refusal: Option<PackagesRefusal>,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
@@ -116,7 +118,7 @@ impl Packages {
         }
     }
 
-    pub const fn details(&self) -> Option<&Details> {
+    pub const fn details(&self) -> Option<&Arc<Details>> {
         self.details.as_ref()
     }
 
@@ -161,11 +163,11 @@ impl Packages {
             return;
         }
 
-        self.details = Some(Details {
+        self.details = Some(Arc::new(Details {
             package: package.clone(),
             info: Read::Loading,
             history: Read::Loading,
-        });
+        }));
         self.read_details(package);
     }
 
@@ -184,23 +186,27 @@ impl Packages {
                     }
                 }
                 Landed::Info(package, info) => {
-                    if let Some(shown) = self.shown_mut(&package) {
-                        shown.info = *info;
-                    }
+                    self.change_shown(&package, |shown| shown.info = *info);
                 }
                 Landed::History(package, lines) => {
-                    if let Some(shown) = self.shown_mut(&package) {
-                        shown.history = lines;
-                    }
+                    self.change_shown(&package, |shown| shown.history = lines);
                 }
             }
         }
     }
 
-    fn shown_mut(&mut self, package: &PackageName) -> Option<&mut Details> {
-        self.details
+    /// A page that keeps rows of the details names their allocation, so
+    /// changed details get a new one.
+    fn change_shown(&mut self, package: &PackageName, change: impl FnOnce(&mut Details)) {
+        if let Some(shown) = self
+            .details
             .as_mut()
             .filter(|shown| shown.package == *package)
+        {
+            let mut changed = Details::clone(shown);
+            change(&mut changed);
+            *shown = Arc::new(changed);
+        }
     }
 
     fn read_index(&self) {
@@ -286,7 +292,7 @@ impl<T> Read<T> {
 #[cfg(any(test, feature = "testing"))]
 impl Packages {
     /// The state a page test shows, without reads.
-    pub const fn showing(index: Read<Arc<Catalog>>, details: Option<Details>) -> Self {
+    pub fn showing(index: Read<Arc<Catalog>>, details: Option<Details>) -> Self {
         Self {
             opened: true,
             index,
@@ -294,7 +300,7 @@ impl Packages {
             aur: Read::Loading,
             aur_names: None,
             aur_landed: false,
-            details,
+            details: details.map(Arc::new),
             refusal: None,
             jobs: None,
         }

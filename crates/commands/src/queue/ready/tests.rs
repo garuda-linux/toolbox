@@ -4,8 +4,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use toolbox_cli::Exit;
 use toolbox_core::domains::{
     AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentLoader, CurrentUser,
-    LoaderSettingsDomain,
 };
+use toolbox_core::features::boot::set_loader;
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::features::{Guard, Refusal};
 use toolbox_core::testing::Queue as _;
@@ -47,9 +47,9 @@ impl UnprobedReads for Reads {
 
 fn loader_change() -> ChangeSet {
     let mut changes = ChangeSet::default();
-    LoaderSettingsDomain::want(
-        &mut changes,
+    set_loader(
         LoaderSetting::Timeout(None),
+        &mut changes,
         &Snapshot::default(),
     );
     changes

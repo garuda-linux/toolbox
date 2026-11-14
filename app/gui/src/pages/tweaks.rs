@@ -4,12 +4,11 @@
 mod rows;
 #[cfg(test)]
 mod tests;
-pub mod view;
 
 use egui::{Context, Ui};
 use toolbox_core::features::toggles::shown::Tally;
+use toolbox_core::features::tweaks::view::Choices;
 use toolbox_system::Host;
-use view::Choices;
 
 use super::PageContext;
 use super::catalog::{CatalogKind, CatalogPage};
@@ -43,16 +42,27 @@ impl CatalogKind for Tweaks {
 }
 
 impl LeadSections for SystemChoices {
-    fn chips(&self, ctx: &Context, context: &PageContext<'_>, query: &str) -> Vec<LeadChip> {
-        let choices = choices(context);
+    type Data = Choices;
+
+    /// The login shell shown is the one of the account the app runs for.
+    fn data(&self, context: &PageContext<'_>) -> Choices {
+        let user = context
+            .snapshot
+            .part::<Host>()
+            .and_then(|host| host.user.as_ref());
+
+        Choices::of(context.snapshot, context.changes, user)
+    }
+
+    fn chips(&self, ctx: &Context, data: &Choices, query: &str) -> Vec<LeadChip> {
         let shell_network = LeadChip::new(
             ctx,
             SHELL_NETWORK,
             i18n::text(ctx, "tweaks-shell-network"),
-            rows::shell_network_tally(ctx, &choices, query),
+            rows::shell_network_tally(ctx, data, query),
         );
 
-        let garuda_update = choices.flags.map(|flags| {
+        let garuda_update = data.flags.as_ref().map(|flags| {
             let tally = flags
                 .iter()
                 .filter(|(flag, _)| {
@@ -78,22 +88,12 @@ impl LeadSections for SystemChoices {
             .collect()
     }
 
-    fn show(&self, ui: &mut Ui, context: &PageContext<'_>, id: &str, query: &str) -> bool {
-        let choices = choices(context);
+    fn show(&self, ui: &mut Ui, on: (&PageContext<'_>, &Choices), id: &str, query: &str) -> bool {
+        let (context, choices) = on;
         match id {
-            SHELL_NETWORK => rows::shell_network(ui, context, &choices, query),
-            GARUDA_UPDATE => rows::garuda_update(ui, context, &choices, query),
+            SHELL_NETWORK => rows::shell_network(ui, context, choices, query),
+            GARUDA_UPDATE => rows::garuda_update(ui, context, choices, query),
             _ => false,
         }
     }
-}
-
-/// The login shell shown is the one of the account the app runs for.
-fn choices(context: &PageContext<'_>) -> Choices {
-    let user = context
-        .snapshot
-        .part::<Host>()
-        .and_then(|host| host.user.as_ref());
-
-    Choices::of(context.snapshot, context.changes, user)
 }

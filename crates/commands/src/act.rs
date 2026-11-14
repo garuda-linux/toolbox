@@ -16,9 +16,7 @@ use toolbox_cli::args::{Confirm, EntryArgs, KernelArgs, ReadList, TaskArgs, Unit
 use toolbox_cli::output::{Mark, Row};
 use toolbox_core::Toggle;
 use toolbox_core::features::kernels::kernels_of;
-use toolbox_core::features::maintenance::page::{
-    AUR_UPGRADE, OPERATION_KEYS, asks_first, repairs, upgrader,
-};
+use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs, upgrader};
 use toolbox_core::features::services::{asks_first as asks_first_unit, critical};
 use toolbox_plan::{Plan, UnitOperation, UnitScope};
 use toolbox_services::catalogs::Catalogs;
@@ -168,8 +166,8 @@ pub fn tasks(read: &ReadList, out: &mut Out<'_>) -> Exit {
 
     let rows: Vec<TaskRow> = common
         .chain(repairs(exists).into_iter().map(|row| TaskRow {
-            asks_first: asks_first(&row.repair),
-            id: row.repair,
+            asks_first: row.repair.asks_first(),
+            id: row.repair.key().to_owned(),
             available: row.available,
         }))
         .collect();

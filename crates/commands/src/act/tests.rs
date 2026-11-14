@@ -114,7 +114,7 @@ fn every_task_says_what_it_does_in_the_words_of_the_page() {
     let ids = OPERATION_KEYS
         .into_iter()
         .chain([AUR_UPGRADE, RANK_MIRRORS])
-        .chain(repairs.iter().map(|row| row.repair.as_str()));
+        .chain(repairs.iter().map(|row| row.repair.key()));
 
     for id in ids {
         let text = about(id);
