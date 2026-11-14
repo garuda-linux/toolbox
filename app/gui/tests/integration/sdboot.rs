@@ -1,13 +1,13 @@
 use std::sync::Arc;
-use std::sync::atomic::AtomicBool;
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
-use toolbox_core::Snapshot;
-use toolbox_core::domains::{BootLoader, KernelCmdline, SdBootKernel};
+use toolbox_core::domains::{BootLoader, KernelCmdline, LoaderSettingsDomain, SdBootKernel};
+use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::App;
-use toolbox_plan::sdboot::{LoaderEntry, LoaderSettings, SdBootMenu, sections};
+use toolbox_plan::sdboot::{LoaderEntry, LoaderSetting, LoaderSettings, SdBootMenu, sections};
 use toolbox_system::{BootMenuSource, Host, MenuRead};
 
 use crate::common::Fixture;
@@ -30,6 +30,17 @@ impl BootMenuSource for Source {
             ],
             ..SdBootMenu::default()
         })
+    }
+}
+
+/// [`Source`], counting the reads.
+#[derive(Default)]
+struct Counted(AtomicUsize);
+
+impl BootMenuSource for Counted {
+    fn menu(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
+        self.0.fetch_add(1, Ordering::SeqCst);
+        Source.menu(cancel)
     }
 }
 
@@ -82,4 +93,28 @@ fn the_menu_is_read_once_the_page_opens() {
     open_boot(harness);
 
     assert!(harness.query_by_label("console=ttyS0,115200").is_some());
+}
+
+/// No probe reads loader.conf. A restored loader change makes the window
+/// read the menu with the Boot page closed, so a wish the file already
+/// meets leaves the queue instead of running again.
+#[test]
+fn a_restored_loader_change_the_file_meets_leaves_without_the_page() {
+    let mut changes = ChangeSet::default();
+    LoaderSettingsDomain::want(
+        &mut changes,
+        LoaderSetting::Timeout(None),
+        &Snapshot::default(),
+    );
+
+    let source = Arc::new(Counted::default());
+    let menu: Arc<dyn BootMenuSource> = Arc::<Counted>::clone(&source);
+    let mut fixture = crate::boot::app_restoring(system(), menu, changes);
+    let harness = fixture.harness();
+
+    step_until(harness, "the met change to leave", |harness| {
+        harness.query_by_label("change queued").is_none()
+    });
+
+    assert_eq!(source.0.load(Ordering::SeqCst), 1);
 }

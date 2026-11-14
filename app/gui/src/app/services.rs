@@ -5,17 +5,20 @@
 use std::sync::Arc;
 
 use toolbox_core::Snapshot;
-use toolbox_core::domains::CurrentLoader;
+use toolbox_core::domains::{AccountLockFlags, BootLoader, CurrentLoader};
 use toolbox_core::features::Guard;
+use toolbox_core::features::packages::aur::AurNames;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::protocol::Mode;
 use toolbox_plan::{StepId, UnitScope};
+use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::Notification;
 
 use super::App;
 use crate::apply::{ApplyCommand, Report};
 use crate::console::StepState;
 use crate::i18n;
+use crate::page_service::Services;
 use crate::pages::home::HomeProblem;
 use crate::units::UnitsHandle;
 
@@ -198,19 +201,22 @@ impl App {
         })
     }
 
-    /// No probe reads the lock flags or the AUR's names, so a restored
-    /// change that waits for them would wait until its page is opened.
+    /// No probe reads the lock flags, the AUR's names or the loader's
+    /// settings, so a restored change that waits for them would wait until
+    /// its page is opened.
     fn read_held_parts(&mut self) {
-        if self.queue.holding().any(|guard| guard == Guard::UserLocks) {
+        let needs = Needs::of(self.queue.changes(), self.queue.holding());
+        if needs.locks {
             self.services.users.open();
         }
 
-        if self
-            .queue
-            .holding()
-            .any(|guard| guard == Guard::AurPackages)
-        {
+        if needs.aur {
             self.services.packages.open_aur();
+        }
+
+        if needs.loader {
+            let sdboot = self.seen.part::<BootLoader>() == Some(&BootLoader::SystemdBoot);
+            self.services.boot.open(sdboot);
         }
     }
 
@@ -235,34 +241,8 @@ impl App {
             .get()
             .map_or_else(Arc::default, |probed| Arc::clone(&probed.snapshot));
 
-        let flags = self.services.users.flags();
-        let names = self.services.packages.aur_names();
-        let loader = self
-            .services
-            .boot
-            .menu()
-            .sdboot()
-            .map(|menu| CurrentLoader(menu.settings.clone()));
-
-        if flags.is_none() && names.is_none() && loader.is_none() {
-            self.seen = probed;
-            return;
-        }
-
-        let mut snapshot = Snapshot::clone(&probed);
-        if let Some(flags) = flags {
-            snapshot.insert(flags);
-        }
-
-        if let Some(names) = names {
-            snapshot.insert(names.clone());
-        }
-
-        if let Some(loader) = loader {
-            snapshot.insert(loader);
-        }
-
-        self.seen = Arc::new(snapshot);
+        let reads = PageReads(&self.services);
+        self.seen = joined(&probed, Needs::ALL, &reads).map_or(probed, Arc::new);
     }
 
     /// dkms, the status and the programs are not read when the window comes
@@ -308,5 +288,27 @@ impl App {
         };
 
         self.toasts.add(kind, i18n::text(ctx, id));
+    }
+}
+
+/// What the pages' services read last. Every read is cached, so the window
+/// joins them all.
+struct PageReads<'a>(&'a Services);
+
+impl UnprobedReads for PageReads<'_> {
+    fn locks(&self) -> Option<AccountLockFlags> {
+        self.0.users.flags()
+    }
+
+    fn aur_names(&self) -> Option<AurNames> {
+        self.0.packages.aur_names().cloned()
+    }
+
+    fn loader(&self) -> Option<CurrentLoader> {
+        self.0
+            .boot
+            .menu()
+            .sdboot()
+            .map(|menu| CurrentLoader(menu.settings.clone()))
     }
 }

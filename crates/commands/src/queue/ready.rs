@@ -1,7 +1,7 @@
-//! Before `queue apply`: no probe reads the lock flags or the AUR's
-//! names. The window reads them for its pages, the command line reads
-//! them here once a restored change waits for them. A guard that still
-//! waits then fails closed.
+//! Around `queue apply`: no probe reads the lock flags, the AUR's names
+//! or the loader's settings. The command line reads them here once a
+//! restored change waits for them. A guard that still waits then fails
+//! closed.
 
 #[cfg(test)]
 mod tests;
@@ -11,31 +11,24 @@ use std::sync::Arc;
 use toolbox_aur::AurSource;
 use toolbox_cli::Exit;
 use toolbox_cli::output::ColorMode;
-use toolbox_core::domains::AccountLockFlags;
+use toolbox_core::domains::{AccountLockFlags, CurrentLoader};
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
 use toolbox_core::features::{Guard, Refusal, Unchecked};
 use toolbox_core::{ChangeSet, SavedChanges, Snapshot};
+use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::{HelperLocks, LockSource as _};
 
 use super::said::say;
 use crate::out::Out;
 
-/// The parts of a snapshot only a read outside the probe gives.
-pub trait PageReads {
-    /// `None` when the helper gave no flags.
-    fn locks(&self) -> Option<AccountLockFlags>;
-
-    /// `None` when the AUR's copy cannot be read.
-    fn aur_names(&self) -> Option<AurNames>;
-}
-
-pub struct SystemReads<'a> {
+/// The helper's answers and the AUR's copy.
+pub struct HelperReads<'a> {
     /// For the note when the helper goes through sudo.
     pub color: ColorMode,
     pub aur: &'a dyn AurSource,
 }
 
-impl PageReads for SystemReads<'_> {
+impl UnprobedReads for HelperReads<'_> {
     fn locks(&self) -> Option<AccountLockFlags> {
         HelperLocks(Arc::new(crate::root::helper(self.color)))
             .locks()
@@ -53,6 +46,10 @@ impl PageReads for SystemReads<'_> {
             .ok()
             .map(|index| AurCatalog::new(index).names())
     }
+
+    fn loader(&self) -> Option<CurrentLoader> {
+        crate::boot::sdboot::read_menu(self.color).map(|menu| CurrentLoader(menu.settings))
+    }
 }
 
 /// The queue `saved` as it may run against `system`: restored and met by
@@ -66,35 +63,30 @@ impl PageReads for SystemReads<'_> {
 pub fn checked(
     saved: &SavedChanges,
     system: &Snapshot,
-    reads: &dyn PageReads,
+    reads: &dyn UnprobedReads,
 ) -> Result<ChangeSet, Refusal> {
     let mut changes = super::restore(saved, system);
     let mut unchecked = Unchecked::all();
     unchecked.recheck(&mut changes, system);
 
-    let locks = unchecked
-        .holding(&changes)
-        .any(|guard| guard == Guard::UserLocks);
+    // No guard checks the loader. `after` reads it once the run changed it.
+    let needs = Needs {
+        loader: false,
+        ..Needs::of(&changes, unchecked.holding(&changes))
+    };
 
-    let aur = unchecked
-        .holding(&changes)
-        .any(|guard| guard == Guard::AurPackages);
-
-    if locks || aur {
-        let mut snapshot = system.clone();
-        if locks && let Some(flags) = reads.locks() {
-            snapshot.insert(flags);
-        }
-
-        if aur && let Some(names) = reads.aur_names() {
-            snapshot.insert(names);
-        }
-
+    if let Some(snapshot) = joined(system, needs, reads) {
         unchecked.recheck(&mut changes, &snapshot);
     }
 
     unchecked.ready(&changes)?;
     Ok(changes)
+}
+
+/// `probed` after the run of `changes`, with the parts their domains
+/// compare with, so what the run met leaves the queue.
+pub fn after(probed: Snapshot, changes: &ChangeSet, reads: &dyn UnprobedReads) -> Snapshot {
+    joined(&probed, Needs::of(changes, []), reads).unwrap_or(probed)
 }
 
 pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {

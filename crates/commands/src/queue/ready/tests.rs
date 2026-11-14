@@ -2,14 +2,19 @@ use std::cell::Cell;
 use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_cli::Exit;
-use toolbox_core::domains::{AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentUser};
+use toolbox_core::domains::{
+    AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentLoader, CurrentUser,
+    LoaderSettingsDomain,
+};
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::features::{Guard, Refusal};
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
+use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings};
 use toolbox_plan::{PackageName, UserName};
+use toolbox_services::unprobed::UnprobedReads;
 
-use super::{PageReads, checked, refused};
+use super::{after, checked, refused};
 use crate::out::{Out, Settings};
 
 /// Answers what it was given and counts how often it was asked.
@@ -17,11 +22,13 @@ use crate::out::{Out, Settings};
 struct Reads {
     locks: Option<AccountLockFlags>,
     names: Option<AurNames>,
+    loader: Option<CurrentLoader>,
     asked_locks: Cell<usize>,
     asked_names: Cell<usize>,
+    asked_loader: Cell<usize>,
 }
 
-impl PageReads for Reads {
+impl UnprobedReads for Reads {
     fn locks(&self) -> Option<AccountLockFlags> {
         self.asked_locks.set(self.asked_locks.get() + 1);
         self.locks.clone()
@@ -31,6 +38,21 @@ impl PageReads for Reads {
         self.asked_names.set(self.asked_names.get() + 1);
         self.names.clone()
     }
+
+    fn loader(&self) -> Option<CurrentLoader> {
+        self.asked_loader.set(self.asked_loader.get() + 1);
+        self.loader.clone()
+    }
+}
+
+fn loader_change() -> ChangeSet {
+    let mut changes = ChangeSet::default();
+    LoaderSettingsDomain::want(
+        &mut changes,
+        LoaderSetting::Timeout(None),
+        &Snapshot::default(),
+    );
+    changes
 }
 
 fn user(name: &str) -> UserName {
@@ -99,6 +121,40 @@ fn a_restored_build_reads_the_names_of_the_aur() {
     assert!(changes.is_empty(), "the AUR has no such package");
     assert_eq!(reads.asked_names.get(), 1);
     assert_eq!(reads.asked_locks.get(), 0);
+}
+
+/// No guard checks the loader, so `checked` leaves the helper alone.
+#[test]
+fn a_restored_loader_change_reads_nothing_before_the_run() {
+    let reads = Reads::default();
+
+    let changes = checked(&loader_change().to_saved(), &system(), &reads).unwrap();
+
+    assert_eq!(changes.len(), 1);
+    assert_eq!(reads.asked_loader.get(), 0);
+}
+
+#[test]
+fn after_a_run_of_a_loader_change_the_loader_joins_the_snapshot() {
+    let reads = Reads {
+        loader: Some(CurrentLoader(LoaderSettings::default())),
+        ..Reads::default()
+    };
+
+    let snapshot = after(system(), &loader_change(), &reads);
+
+    assert!(snapshot.part::<CurrentLoader>().is_some());
+    assert_eq!(reads.asked_loader.get(), 1);
+    assert_eq!(reads.asked_locks.get() + reads.asked_names.get(), 0);
+}
+
+#[test]
+fn after_a_run_without_a_loader_change_nothing_is_read() {
+    let reads = Reads::default();
+
+    after(system(), &ChangeSet::default(), &reads);
+
+    assert_eq!(reads.asked_loader.get(), 0);
 }
 
 #[test]

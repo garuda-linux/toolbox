@@ -68,6 +68,15 @@ pub fn app() -> Fixture {
 }
 
 pub fn app_with(probed: Snapshot, menu: Arc<dyn BootMenuSource>) -> Fixture {
+    app_restoring(probed, menu, ChangeSet::default())
+}
+
+/// With `changes` as the queue an earlier run left.
+pub fn app_restoring(
+    probed: Snapshot,
+    menu: Arc<dyn BootMenuSource>,
+    changes: ChangeSet,
+) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let mut harness = window(TALL).build_eframe(move |cc| {
@@ -75,7 +84,7 @@ pub fn app_with(probed: Snapshot, menu: Arc<dyn BootMenuSource>) -> Fixture {
         App::new(
             cc,
             Setup {
-                queue: Queue::in_memory(ChangeSet::default()),
+                queue: Queue::restored_in_memory(changes),
                 snapshot: Some(snapshot::spawn(
                     &handle,
                     toolbox_gui::waking::repaint(cc.egui_ctx.clone()),

@@ -343,7 +343,7 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out<'_>) -> Ex
         Err(problem) => return Failed::Store(problem).say(out),
     };
 
-    let reads = ready::SystemReads {
+    let reads = ready::HelperReads {
         color: out.settings().color,
         aur,
     };
@@ -378,7 +378,7 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out<'_>) -> Ex
     if ran
         && let Err(failed) = settle(
             store,
-            &snapshot(catalogs),
+            &ready::after(snapshot(catalogs), &changes, &reads),
             &owners,
             |step| ended.ended_well(step),
             &succeeded,

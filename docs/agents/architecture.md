@@ -248,12 +248,16 @@ only `/usr/share/garuda-toolbox/catalog` and never the source tree.
   `Refusal::GuardsWaiting` while `Unchecked::holding` names a guard with
   a queued change of one of its `Guard::domains`. Apply stays disabled
   and says why (`changes-wait-*`).
-- No probe reads `AccountLockFlags` or the AUR names. The app adds them
-  to every snapshot after the probe (`combine` in
-  `app/gui/src/app/services.rs`) and asks the Users or Packages read
-  itself once a held guard waits for them (`read_held_parts`).
-  `queue apply` reads them the same way (`crates/commands/src/queue/ready.rs`)
-  and exits 5 when a guard still waits.
+- No probe reads `AccountLockFlags`, the AUR names or `CurrentLoader`.
+  `toolbox_services::unprobed` joins them: `Needs::of` names what a queue
+  waits for (a held guard's part, the loader while a loader change is
+  queued), `joined` adds what an `UnprobedReads` knows. The app joins its
+  pages' cached reads into every snapshot (`combine` in
+  `app/gui/src/app/services.rs`) and asks the Users, Packages or Boot read
+  itself once the queue needs it (`read_held_parts`). `queue apply` reads
+  them through the helper (`crates/commands/src/queue/ready.rs`), exits 5
+  when a guard still waits and settles against `ready::after`, so a loader
+  change that applied leaves the queue.
 
 ### Stages
 

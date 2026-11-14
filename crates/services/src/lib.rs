@@ -20,4 +20,5 @@ pub mod share;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
 pub mod units;
+pub mod unprobed;
 pub mod waking;

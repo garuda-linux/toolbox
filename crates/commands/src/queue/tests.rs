@@ -205,3 +205,48 @@ fn after_a_failed_apply_the_queue_keeps_what_the_system_shows() {
     settle(&kept, &after, &owners, |_| true, &[]).unwrap();
     assert_eq!(kept.keys(), ["vlc"]);
 }
+
+/// No probe reads loader.conf. Without the helper's read a loader change
+/// that applied stayed queued and ran again at the next `queue apply`.
+#[test]
+fn after_an_apply_a_met_loader_setting_leaves_the_queue() {
+    use toolbox_core::domains::LoaderSettingsDomain;
+    use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings};
+
+    /// The loader.conf of the Garuda Lima image, as the helper reads it once
+    /// the run wrote it. The image names no timeout.
+    struct Image;
+
+    impl toolbox_services::unprobed::UnprobedReads for Image {
+        fn locks(&self) -> Option<toolbox_core::domains::AccountLockFlags> {
+            None
+        }
+
+        fn aur_names(&self) -> Option<toolbox_core::features::packages::aur::AurNames> {
+            None
+        }
+
+        fn loader(&self) -> Option<toolbox_core::domains::CurrentLoader> {
+            let text = toolbox_plan::testing::sdboot::LOADER_CONF;
+            Some(toolbox_core::domains::CurrentLoader(LoaderSettings::parse(
+                text,
+            )))
+        }
+    }
+
+    let mut queued = ChangeSet::default();
+    LoaderSettingsDomain::want(
+        &mut queued,
+        LoaderSetting::Timeout(None),
+        &Snapshot::default(),
+    );
+    let kept = Kept::new(&[]);
+    *kept.saved.borrow_mut() = queued.to_saved();
+    let changes = restored(&kept.saved().unwrap(), &Snapshot::default());
+    let (_, owners) = planned(&changes);
+
+    let after = super::ready::after(Snapshot::default(), &changes, &Image);
+    settle(&kept, &after, &owners, |_| true, &[]).unwrap();
+
+    assert_eq!(kept.keys(), Vec::<String>::new());
+}
