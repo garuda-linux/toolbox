@@ -20,14 +20,20 @@ pub(super) const PADDING_X: i8 = 14;
 /// `edit` as a filled pill [`PILL_HEIGHT`] tall, the look of the search
 /// field. The caller keeps its width, alignment, hint and font.
 pub fn text_field(ui: &mut Ui, edit: TextEdit<'_>) -> Response {
-    field(ui, edit, None)
+    field(ui, edit, None, true)
 }
 
 /// A [`text_field`] with `unit`, such as "s", right after its text in
 /// the secondary colour, the two centred in the pill as one group. The
 /// unit is only painted, so the field's accessible name has to say it.
 pub fn text_field_with_unit(ui: &mut Ui, edit: TextEdit<'_>, unit: &str) -> Response {
-    field(ui, edit, Some(unit))
+    field(ui, edit, Some(unit), true)
+}
+
+/// A [`text_field_with_unit`] without its own fill or padding, for a
+/// control that paints the pill around it and more.
+pub(super) fn inset_field_with_unit(ui: &mut Ui, edit: TextEdit<'_>, unit: &str) -> Response {
+    field(ui, edit, Some(unit), false)
 }
 
 /// Drops what egui keeps of the field `id` once it is gone. Its undo
@@ -41,7 +47,7 @@ pub fn forget_text(ctx: &Context, id: Id) {
     ctx.data_mut(|data| data.remove::<TextEditState>(id));
 }
 
-fn field(ui: &mut Ui, edit: TextEdit<'_>, unit: Option<&str>) -> Response {
+fn field(ui: &mut Ui, edit: TextEdit<'_>, unit: Option<&str>, filled: bool) -> Response {
     let tokens = tokens::current(ui.ctx());
     let ink = if ui.is_enabled() {
         tokens.secondary
@@ -52,12 +58,13 @@ fn field(ui: &mut Ui, edit: TextEdit<'_>, unit: Option<&str>) -> Response {
     let unit = unit.map(|unit| line(ui, unit, Weight::Regular, BODY, ink));
     let gap = tokens.sizes.text_to_icon;
     let room = unit.as_ref().map_or(0.0, |unit| unit.size().x + gap);
+    let padding = if filled { PADDING_X } else { 0 };
 
     // The text centres left of the middle by half the unit's room, so the
     // text and the unit after it centre as one.
     let margin = Margin {
-        left: PADDING_X,
-        right: PADDING_X.saturating_add(whole_points(room)),
+        left: padding,
+        right: padding.saturating_add(whole_points(room)),
         top: 0,
         bottom: 0,
     };
@@ -77,22 +84,24 @@ fn field(ui: &mut Ui, edit: TextEdit<'_>, unit: Option<&str>) -> Response {
         .show(ui);
 
     let response = output.response.response;
-    paint_field(ui, slot, response.rect, PILL_RADIUS, response.has_focus());
+    if filled {
+        paint_field(ui, slot, response.rect, PILL_RADIUS, response.has_focus());
+    }
 
     if let Some(unit) = unit {
         let text = response.rect - margin;
         let text_end = text.center().x + output.galley.size().x / 2.0;
-        let at = unit_at(&unit, response.rect, text_end + gap);
+        let at = unit_at(&unit, response.rect, text_end + gap, padding);
         ui.painter().galley(at, unit, ink);
     }
 
     response
 }
 
-/// Where `unit` goes when it starts at `left`, kept inside the pill when
-/// a long text pushes it past the end.
-fn unit_at(unit: &Galley, pill: Rect, left: f32) -> Pos2 {
-    let last = pill.right() - f32::from(PADDING_X) - unit.size().x;
+/// Where `unit` goes when it starts at `left`, kept `padding` inside the
+/// pill when a long text pushes it past the end.
+fn unit_at(unit: &Galley, pill: Rect, left: f32, padding: i8) -> Pos2 {
+    let last = pill.right() - f32::from(padding) - unit.size().x;
     let start = pos2(left.min(last), pill.center().y);
     Align2::LEFT_CENTER.anchor_size(start, unit.size()).min
 }

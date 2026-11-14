@@ -113,6 +113,7 @@ boot-file-none = Keines
 boot-file-choose = Wählen…
 boot-file-choose-name = { $name } wählen
 boot-file-clear = Keines verwenden
+boot-file-chooser-failed = Der Dateidialog ließ sich nicht öffnen. Installiere ein Dateiauswahl-Portal wie xdg-desktop-portal-kde oder xdg-desktop-portal-gtk und versuche es dann noch einmal.
 
 # systemd-boot, statt der GRUB-Einstellungen gezeigt.
 boot-sdboot-unset = Vorgabe von systemd-boot

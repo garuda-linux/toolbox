@@ -11,6 +11,7 @@ maintenance-operations = Paketpflege
 maintenance-operations-detail = Vorgemerkte Aufgaben werden mit deinen anderen Änderungen übernommen. Du kannst eine auch sofort in der Konsole ausführen.
 maintenance-run-now = Jetzt ausführen
 maintenance-unqueue = Vormerkung entfernen
+maintenance-queued = Läuft beim Übernehmen
 maintenance-op-upgrade-system = System aktualisieren
 maintenance-op-upgrade-system-detail = Alle Pakete aktualisieren, mit garuda-update samt Snapshots und Prüfungen.
 maintenance-op-upgrade-system-queue = Update vormerken

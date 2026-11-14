@@ -6,8 +6,10 @@
 use egui::text::{LayoutJob, TextFormat};
 use egui::{FontId, Label, ScrollArea, TextStyle, Ui};
 use toolbox_gui_kit::UiExt as _;
+use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::palette::{self, Palette};
 use toolbox_gui_kit::terminal_colors::{Ansi, resolve};
+use toolbox_gui_kit::widgets::rich;
 use toolbox_pty::Run;
 
 use crate::diagnostics::Diagnostics;
@@ -34,10 +36,20 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
         sizes.card_gap,
     );
 
-    let height = (ui.clip_rect().bottom() - ui.cursor().top() - around).max(MIN_HEIGHT);
+    let room = ui.clip_rect().bottom() - ui.cursor().top() - around;
     let label = i18n::text(ui.ctx(), "diagnostics-report-label");
 
+    // The picker may already show another report than the one held here.
+    let tokens = ui.tokens();
+    let selection = &context.service::<Diagnostics>().page().selection;
+    let caption = super::name(ui.ctx(), selection);
+
     padded_card(ui, |ui| {
+        let top = ui.cursor().top();
+        ui.label(rich(ui, &caption, Weight::SemiBold, BODY, tokens.text));
+        ui.add_space(tokens.sizes.caption_gap);
+        let height = (room - (ui.cursor().top() - top)).max(MIN_HEIGHT);
+
         // Long lines run past the edge, a bar at rest says so.
         toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
         ScrollArea::both()

@@ -174,7 +174,7 @@ fn an_upload_keeps_the_report_and_ends_with_a_link_or_a_reason() {
 }
 
 #[test]
-fn a_new_collection_keeps_the_last_upload() {
+fn a_new_collection_takes_the_last_upload_away() {
     let mut page = with_report();
 
     let paste = Paste {
@@ -182,10 +182,14 @@ fn a_new_collection_keeps_the_last_upload() {
         delete_link: String::new(),
     };
 
-    page.apply(DiagnosticsNote::Uploaded(Ok(paste.clone())));
+    page.apply(DiagnosticsNote::Uploaded(Ok(paste)));
     page.apply(DiagnosticsNote::Started(Selection::All));
 
-    assert_eq!(page.share, Upload::Done(paste));
+    assert_eq!(
+        page.share,
+        Upload::Idle,
+        "the old link stayed above the new report"
+    );
 }
 
 #[test]

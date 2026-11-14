@@ -79,23 +79,26 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
     text_box_filling(ui, TextEdit::multiline(&mut text).code_editor(), &name);
 }
 
-/// Copy all and Close. Returns whether Close was clicked.
+/// Copy all, once a text was read, and Close. Returns whether Close was
+/// clicked.
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    let labels = [text("configs-copy-all"), text("configs-close")];
+    let read = viewing.viewed();
+    let copy_all = read.map(|_| text("configs-copy-all"));
+    let close = text("configs-close");
     ui.horizontal(|ui| {
         let gap = ui.tokens().sizes.control_gap;
         ui.spacing_mut().item_spacing.x = gap;
-        let width = labels
+        let width = copy_all
             .iter()
-            .map(|label| pill_width(ui, label))
+            .map(|label| pill_width(ui, label) + gap)
             .sum::<f32>()
-            + gap;
+            + pill_width(ui, &close);
 
         ui.add_space((ui.available_width() - width).max(0.0));
-        if let Some(read) = viewing.viewed()
-            && pill_button(ui, &text("configs-copy-all"), ButtonKind::Soft).clicked()
+        if let (Some(read), Some(copy_all)) = (read, &copy_all)
+            && pill_button(ui, copy_all, ButtonKind::Soft).clicked()
         {
             crate::share::view::copy(
                 &ctx,
@@ -105,7 +108,7 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
             );
         }
 
-        pill_button(ui, &text("configs-close"), ButtonKind::Primary).clicked()
+        pill_button(ui, &close, ButtonKind::Primary).clicked()
     })
     .inner
 }

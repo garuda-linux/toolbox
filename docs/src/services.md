@@ -108,7 +108,8 @@ systemd-logind) asks first, with the risk named and a red button.
 - **The services could not be read** means the request failed for another
   reason.
 
-**Retry** tries again. **No service matches.** means the search or the
+**Retry** tries again. When a list was read before, it stays and the reason
+shows in a banner above it, with **Read again**. **No service matches.** means the search or the
 filters hide everything. The ✕ in the search field empties it.
 
 ## See also

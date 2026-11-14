@@ -59,24 +59,7 @@ impl App {
 
     pub(super) fn run_ui(&mut self, ctx: &egui::Context, command: UiCommand) {
         match command {
-            // A shortcut or an old setting may name a page this system hides.
-            UiCommand::Navigate(page) if !page_ui::listed(ctx, page) => {}
-            UiCommand::Navigate(page) => {
-                // A finished run's Console would cover three quarters of
-                // the next page. A running one stays, its output matters.
-                let finished = !self.console.running()
-                    && self.console.status() != crate::console::Status::Idle;
-
-                if page != self.state.page {
-                    self.pages.view(self.state.page).left(ctx);
-
-                    if finished {
-                        self.state.console_open = false;
-                    }
-                }
-
-                self.state.page = page;
-            }
+            UiCommand::Navigate(page) => self.navigate(ctx, page),
             UiCommand::ToggleSidebar => self.state.sidebar_expanded ^= true,
             UiCommand::ToggleConsole => self.state.console_open ^= true,
             UiCommand::OpenPalette => self.palette.open(),
@@ -95,6 +78,31 @@ impl App {
                 self.run_ui(ctx, UiCommand::Navigate(PageId::Guide));
             }
         }
+    }
+
+    /// The one way to another page, also for a page or a service that asks
+    /// for one, so the old page hears it was left.
+    pub(super) fn navigate(&mut self, ctx: &egui::Context, page: PageId) {
+        // A shortcut, an old setting or a service may name a page this
+        // system hides.
+        if !page_ui::listed(ctx, page) {
+            return;
+        }
+
+        if page != self.state.page {
+            self.pages.view(self.state.page).left(ctx);
+
+            // A finished run's Console would cover three quarters of the
+            // next page. A running one stays, its output matters.
+            let finished =
+                !self.console.running() && self.console.status() != crate::console::Status::Idle;
+
+            if finished {
+                self.state.console_open = false;
+            }
+        }
+
+        self.state.page = page;
     }
 
     pub(super) fn run_app(&mut self, ctx: &egui::Context, command: AppCommand) {
@@ -139,8 +147,8 @@ impl App {
             AppCommand::Toast { kind, text } => self.toasts.add(kind, text),
             AppCommand::Home(home) => self.run_home(home),
             AppCommand::Service(service) => self.run_service(service),
-            AppCommand::Discover(discover) => self.run_discover(discover),
-            AppCommand::Maintenance(maintenance) => self.run_maintenance(&maintenance),
+            AppCommand::Discover(discover) => self.run_discover(ctx, discover),
+            AppCommand::Maintenance(maintenance) => self.run_maintenance(ctx, &maintenance),
             AppCommand::Network(network) => self.run_network(ctx, network),
             AppCommand::Packages(packages) => self.run_packages(&packages),
             AppCommand::Users(users) => self.run_users(users),

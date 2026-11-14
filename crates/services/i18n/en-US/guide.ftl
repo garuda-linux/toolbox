@@ -9,6 +9,8 @@ guide-previous = ← { $page }
 guide-next = { $page } →
 guide-note = Note
 guide-warning = Warning
+guide-copy-code = Copy code
+guide-code-copied = Copied the code to the clipboard.
 guide-hits = { $count ->
     [one] One place found
    *[other] { $count } places found

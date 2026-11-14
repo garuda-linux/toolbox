@@ -41,6 +41,11 @@ pub trait LeadSections {
     /// rows `query` (trimmed, lower case, empty for all) matches.
     fn chips(&self, ctx: &Context, data: &Self::Data, query: &str) -> Vec<LeadChip>;
 
+    /// How many of the rows could not be read, for the page's banner.
+    fn unread(&self, _data: &Self::Data) -> usize {
+        0
+    }
+
     /// Shows section `id` with its rows that match `query` (trimmed, lower
     /// case, empty for all). Returns whether it showed a row.
     fn show(&self, ui: &mut Ui, on: (&PageContext<'_>, &Self::Data), id: &str, query: &str)

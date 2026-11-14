@@ -36,6 +36,9 @@ pub struct Sizes {
     pub inset: f32,
     /// A small picture or icon and the text beside it.
     pub text_to_icon: f32,
+    /// A row's or a page title's text and the controls beside it, and a
+    /// property's label and its value.
+    pub text_to_control: f32,
     /// The tinted square behind a row's icon, and behind a section's or a
     /// one-line row's.
     pub icon_tile: f32,
@@ -79,6 +82,35 @@ pub struct Sizes {
     pub popover_padding: Margin,
     /// Inside the Changes pill, around its buttons.
     pub pill_padding: Margin,
+    /// The Changes popover, and its list's height before it scrolls.
+    pub popover_width: f32,
+    pub changes_list_height: f32,
+    /// The room a queued change keeps at its right for its remove button.
+    pub remove_width: f32,
+    /// The cell of a queued change's dot: its width and the first line's
+    /// height.
+    pub dot_cell: Vec2,
+    /// The count on the Apply button: its height, and the room around the
+    /// digits.
+    pub badge_size: f32,
+    pub badge_padding: f32,
+    /// The Console's list of steps before it scrolls, and one step.
+    pub steps_height: f32,
+    pub step_row_height: f32,
+    /// Below this height the grip lets go of the Console sheet and it
+    /// closes.
+    pub sheet_least: f32,
+    /// The page room the Console sheet always leaves above itself.
+    pub sheet_room_above: f32,
+    /// The Console sheet's grip row, and the bar drawn in it.
+    pub grip_height: f32,
+    pub grip_bar: Vec2,
+    /// The palette's list before it scrolls.
+    pub palette_list_height: f32,
+    /// The collapsed sidebar: one icon row and the panel margins.
+    pub sidebar_collapsed: f32,
+    /// Around a note's content, the same on every side.
+    pub toast_padding: Margin,
     /// A dialog for a short question or a short list, such as the palette.
     pub dialog_small: f32,
     /// A dialog with a form or a few paragraphs.
@@ -125,6 +157,7 @@ impl Sizes {
         tight_gap: 4.0,
         inset: 6.0,
         text_to_icon: 6.0,
+        text_to_control: 16.0,
         icon_tile: 36.0,
         icon_tile_small: 28.0,
         picture_gap: 10.0,
@@ -155,6 +188,21 @@ impl Sizes {
         terminal_padding: Margin::same(12),
         popover_padding: Margin::same(16),
         pill_padding: Margin::same(6),
+        popover_width: 380.0,
+        changes_list_height: 320.0,
+        remove_width: 32.0,
+        dot_cell: vec2(8.0, 18.0),
+        badge_size: 22.0,
+        badge_padding: 12.0,
+        steps_height: 120.0,
+        step_row_height: 20.0,
+        sheet_least: 120.0,
+        sheet_room_above: 48.0,
+        grip_height: 10.0,
+        grip_bar: vec2(40.0, 4.0),
+        palette_list_height: 380.0,
+        sidebar_collapsed: 60.0,
+        toast_padding: Margin::same(12),
         dialog_small: 460.0,
         dialog_medium: 560.0,
         dialog_wide: 720.0,

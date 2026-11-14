@@ -29,7 +29,8 @@ pub fn show(
     dialog: &mut Option<Dialog>,
 ) {
     let focused = state.response.has_focus();
-    if focused && row.editable && ui.input(|input| input.key_pressed(Key::Enter)) {
+    let removing = row.queued.removal.is_some();
+    if focused && row.editable && !removing && ui.input(|input| input.key_pressed(Key::Enter)) {
         *dialog = Some(Dialog::Edit(Edit::new(row)));
     }
 

@@ -98,7 +98,7 @@ where
 
     let (shown, mut picked) = keyed(ui, options, current);
     if let Some(rect) = shown.and_then(|index| rects.get(index)) {
-        pill(ui, *rect, picked.is_some());
+        pill(ui, outer.left(), *rect, picked.is_some());
     }
 
     for (index, ((value, label), (galley, rect))) in options
@@ -157,7 +157,10 @@ where
 
 /// The raised pill under the chosen segment, at `rect`. A click slides
 /// it there, a key moves it at once, as keys never wait for motion.
-fn pill(ui: &Ui, rect: Rect, by_key: bool) {
+///
+/// The slide runs on the offset from `track_left`, so a track that moves
+/// as a whole carries the pill along at once.
+fn pill(ui: &Ui, track_left: f32, rect: Rect, by_key: bool) {
     let ctx = ui.ctx();
     let time = if by_key {
         0.0
@@ -166,9 +169,12 @@ fn pill(ui: &Ui, rect: Rect, by_key: bool) {
     };
 
     let id = ui.scope_id().with("pill");
-    let left = ctx.animate_value_with_time(id.with("left"), rect.left(), time);
+    let offset = ctx.animate_value_with_time(id.with("offset"), rect.left() - track_left, time);
     let width = ctx.animate_value_with_time(id.with("width"), rect.width(), time);
-    let at = Rect::from_min_size(pos2(left, rect.top()), vec2(width, rect.height()));
+    let at = Rect::from_min_size(
+        pos2(track_left + offset, rect.top()),
+        vec2(width, rect.height()),
+    );
 
     let tokens = tokens::current(ctx);
 

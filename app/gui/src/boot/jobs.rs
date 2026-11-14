@@ -18,6 +18,26 @@ pub enum FileKind {
     Theme,
 }
 
+/// What the desktop's file dialog gave back.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Chosen {
+    /// The chosen file's path.
+    File(String),
+    /// The user closed the dialog.
+    Cancelled,
+    /// No dialog could open, as on a desktop without a file chooser
+    /// portal, or it gave back no local file.
+    Failed,
+}
+
+/// What a file dialog answered, with the kind of file it was asked for.
+#[derive(Debug)]
+pub enum Answer {
+    Chose(Picked),
+    Cancelled,
+    Failed,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Picked {
     pub kind: FileKind,
@@ -26,10 +46,8 @@ pub struct Picked {
 
 /// Asks the desktop for one file. Blocks until the user answers.
 pub trait FileChooser: Send + Sync {
-    /// The chosen file's path, `None` when the user cancelled or no
-    /// chooser could open. `title` names the dialog, `filter` the kind
-    /// of file it lists.
-    fn choose(&self, kind: FileKind, title: &str, filter: &str) -> Option<String>;
+    /// `title` names the dialog, `filter` the kind of file it lists.
+    fn choose(&self, kind: FileKind, title: &str, filter: &str) -> Chosen;
 }
 
 pub struct BootSetup {
@@ -45,7 +63,7 @@ pub struct Jobs {
     /// Set when the app ends, so a password dialog no longer holds a read.
     cancel: Arc<AtomicBool>,
     read: Lane<MenuRead>,
-    picked: Lane<Option<Picked>>,
+    picked: Lane<Answer>,
 }
 
 impl fmt::Debug for BootSetup {
@@ -81,16 +99,16 @@ impl Jobs {
         );
     }
 
+    /// A chooser that panicked counts as a dialog that could not open.
     pub fn choose(&self, kind: FileKind, title: String, filter: String) {
         let chooser = Arc::clone(&self.setup.chooser);
         self.picked.blocking(
             "file",
             move || chooser.choose(kind, &title, &filter),
-            move |path| {
-                Some(Picked {
-                    kind,
-                    path: path.ok().flatten()?,
-                })
+            move |chosen| match chosen {
+                Ok(Chosen::File(path)) => Answer::Chose(Picked { kind, path }),
+                Ok(Chosen::Cancelled) => Answer::Cancelled,
+                Ok(Chosen::Failed) | Err(_) => Answer::Failed,
             },
         );
     }
@@ -99,7 +117,8 @@ impl Jobs {
         self.read.landed().pop()
     }
 
-    pub fn picked(&self) -> Option<Picked> {
-        self.picked.landed().into_iter().flatten().last()
+    /// `None` while no dialog answered.
+    pub fn picked(&self) -> Option<Answer> {
+        self.picked.landed().pop()
     }
 }

@@ -6,14 +6,14 @@ use egui::Ui;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page};
 use toolbox_core::features::boot::{Flag, plymouth_queued};
-use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Select, card, icon_button_width, pill_button, pill_width,
+    ButtonKind, Select, Tone, banner, card, icon_button_width, pill_button, pill_width,
 };
+use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::GrubKey;
 
 use super::{WIDE_CONTROL, heading, queued, send};
-use crate::boot::FileKind;
+use crate::boot::{Boot, FileKind};
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -36,6 +36,14 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let background = page.background();
     let theme = page.theme();
     let from_theme = page.background_from_theme();
+
+    // Beside the rows whose Choose did nothing, since a cancelled dialog
+    // and one that never opened look the same otherwise.
+    if context.service::<Boot>().chooser_failed() {
+        let text = i18n::text(&ctx, "boot-file-chooser-failed");
+        banner(ui, Tone::Warning, &text, &[]);
+        ui.add_space(ui.tokens().sizes.card_gap);
+    }
 
     card(ui, |ui| {
         if splash {

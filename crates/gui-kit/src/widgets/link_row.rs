@@ -5,7 +5,8 @@ use egui::{CornerRadius, Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
 use super::press::Pointer;
-use super::{focus_ring, line};
+use super::text::cut;
+use super::{focus_ring, rich};
 use crate::fonts::{BODY, Weight};
 use crate::icons::{self, Icon};
 use crate::theme::RADIUS;
@@ -51,20 +52,29 @@ pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
         page_tile(ui.ctx()),
     );
 
-    let galley = line(ui, title, Weight::Medium, BODY, tokens.text);
+    let chevron = Rect::from_center_size(
+        pos2(rect.right() - PADDING_X - CHEVRON / 2.0, mid),
+        vec2(CHEVRON, CHEVRON),
+    );
+
     let text_left = square.right() + GAP;
+    let room = (chevron.left() - GAP - text_left).max(0.0);
+    let galley = cut(ui, rich(ui, title, Weight::Medium, BODY, tokens.text), room);
+    let was_cut = galley.elided;
     ui.painter().galley(
         pos2(text_left, mid - galley.size().y / 2.0),
         galley,
         tokens.text,
     );
 
-    let chevron = Rect::from_center_size(
-        pos2(rect.right() - PADDING_X - CHEVRON / 2.0, mid),
-        vec2(CHEVRON, CHEVRON),
-    );
-
     icon_image(ui, icons::GO_NEXT, tokens.secondary).paint_at(ui, chevron);
     focus_ring(ui, &response, RADIUS);
-    response
+
+    // The title is whole for screen readers already, the tooltip shows
+    // it whole to the eye.
+    if was_cut {
+        response.on_hover_text(title)
+    } else {
+        response
+    }
 }

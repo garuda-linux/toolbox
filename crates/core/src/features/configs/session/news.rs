@@ -85,6 +85,10 @@ pub enum ProblemCode {
     WriteFailed,
     CopyFailed,
     ReadFailed,
+    /// A file of the user, on a system that names no home folder.
+    NoHome,
+    /// The app closed while the read waited, maybe on a password dialog.
+    Cancelled,
     /// The worker thread of a step stopped without an answer.
     Failed,
 }

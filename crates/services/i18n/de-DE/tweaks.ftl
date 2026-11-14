@@ -3,6 +3,7 @@
 tweaks-shell-network = Shell und Netzwerk
 tweaks-garuda-update = Garuda Update
 tweaks-unavailable = Hier nicht verfügbar
+tweaks-unread = Konnte nicht gelesen werden
 tweaks-other = Sonstiges
 tweaks-queued = Wird beim Übernehmen geändert
 

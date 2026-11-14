@@ -111,6 +111,7 @@ boot-file-none = None
 boot-file-choose = Choose…
 boot-file-choose-name = Choose { $name }
 boot-file-clear = Use none
+boot-file-chooser-failed = The file dialog could not open. Install a file chooser portal, such as xdg-desktop-portal-kde or xdg-desktop-portal-gtk, then choose again.
 
 # systemd-boot, shown instead of the GRUB settings.
 boot-sdboot-unset = systemd-boot's default

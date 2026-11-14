@@ -10,7 +10,7 @@ use super::card::in_card_row;
 use super::check::partial;
 use super::press::{Pointer, faded};
 use super::text::cut;
-use super::{focus_ring, line as text_line, rich};
+use super::{focus_ring, rich};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::theme::RADIUS;
 use crate::tokens;
@@ -94,14 +94,18 @@ fn show(ui: &mut Ui, on: bool, words: Words<'_>, enabled: bool) -> Response {
         response = response.on_hover_text(words.tooltip);
     }
 
-    if ui.is_rect_visible(rect) {
-        paint(ui, &response, on, words, enabled);
+    let was_cut = ui.is_rect_visible(rect) && paint(ui, &response, on, words, enabled);
+
+    // A row with its own tooltip says more than the label already.
+    if was_cut && words.tooltip.is_empty() {
+        response = response.on_hover_text(words.label);
     }
 
     response
 }
 
-fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool) {
+/// Draws the row. Returns whether the label was cut to fit.
+fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool) -> bool {
     let rect = response.rect;
     let tokens = tokens::current(ui.ctx());
     let fade = |color| faded(color, enabled);
@@ -132,10 +136,12 @@ fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool
         );
     }
 
-    let galley = text_line(ui, words.label, Weight::Medium, BODY, fade(tokens.text));
     let text_left = square.right() + GAP;
+    let room = (rect.right() - text_left).max(0.0);
+    let label = rich(ui, words.label, Weight::Medium, BODY, fade(tokens.text));
+    let galley = cut(ui, label, room);
+    let was_cut = galley.elided;
     if let Some(line) = words.line {
-        let room = (rect.right() - text_left).max(0.0);
         let detail = cut(
             ui,
             rich(ui, line, Weight::Regular, SMALL, fade(tokens.secondary)),
@@ -156,6 +162,7 @@ fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool
     }
 
     focus_ring(ui, response, RADIUS);
+    was_cut
 }
 
 fn bleed(rect: Rect) -> Rect {

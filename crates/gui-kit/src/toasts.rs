@@ -13,7 +13,7 @@ mod tests;
 use std::time::Duration;
 
 use egui::{
-    Align2, Context, CornerRadius, Id, Label, LayerId, Margin, Order, Rect, Role, Sense, TextStyle,
+    Align2, Context, CornerRadius, Id, Label, LayerId, Order, Rect, Role, Sense, TextStyle,
     TextWrapMode, Ui, WidgetText, pos2, vec2,
 };
 
@@ -27,15 +27,11 @@ use crate::{icons, tokens};
 const INFO_TIME: Duration = Duration::from_secs(4);
 /// How long an error shows, long enough to read it twice.
 const ERROR_TIME: Duration = Duration::from_secs(10);
-/// A frame's length when egui knows none yet.
-const FRAME: Duration = Duration::from_millis(16);
 /// A note appears with a drop into place and leaves by fading alone.
 const TIMING: Timing = Timing::new(motion::TOAST_ENTER, motion::TOAST_EXIT);
 /// The widest a note grows before its text wraps, short of a narrow page:
 /// room for a sentence of about sixty characters on one line.
 const MAX_WIDTH: f32 = 460.0;
-/// Around a note's content, the same on every side.
-const PADDING: i8 = 12;
 /// From the page area's top right corner, or below its header.
 const OFFSET: egui::Vec2 = vec2(-16.0, 16.0);
 
@@ -47,18 +43,26 @@ pub enum ToastKind {
     Error,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 struct Toast {
     id: u64,
     kind: ToastKind,
     text: String,
-    left: Duration,
+    /// How long it shows, the pauses not counted.
+    time: Duration,
+    /// The `input.time` it leaves at, set on its first drawn frame so a
+    /// note raised after an idle window does not lose that window.
+    deadline: Option<f64>,
+    /// The `input.time` of the first frame that saw the pointer on it or
+    /// the window away, while that lasts.
+    paused: Option<f64>,
+    run_out: bool,
     closed: bool,
 }
 
 impl Toast {
     const fn leaving(&self) -> bool {
-        self.closed || self.left.is_zero()
+        self.closed || self.run_out
     }
 }
 
@@ -78,7 +82,7 @@ pub struct ToastTexts<'a> {
 
 impl Toasts {
     pub fn add(&mut self, kind: ToastKind, text: impl Into<String>) {
-        let left = match kind {
+        let time = match kind {
             ToastKind::Info => INFO_TIME,
             ToastKind::Error => ERROR_TIME,
         };
@@ -87,7 +91,10 @@ impl Toasts {
             id: self.next,
             kind,
             text: text.into(),
-            left,
+            time,
+            deadline: None,
+            paused: None,
+            run_out: false,
             closed: false,
         });
         self.next += 1;
@@ -113,9 +120,7 @@ impl Toasts {
             self.add(kind, text);
         }
 
-        let elapsed =
-            Duration::try_from_secs_f32(ctx.input(|input| input.unstable_dt)).unwrap_or(FRAME);
-
+        let now = ctx.input(|input| input.time);
         let gap = tokens::current(ctx).sizes.card_gap;
         let mut top = page.right_top() + OFFSET;
         let widest = MAX_WIDTH.min(2.0_f32.mul_add(OFFSET.x, page.width()));
@@ -125,7 +130,7 @@ impl Toasts {
 
         for toast in &mut self.shown {
             let id = Id::unique(("toolbox_gui_kit::toast", toast.id));
-            if let Some(wait) = count_down(ctx, toast, id, elapsed) {
+            if let Some(wait) = count_down(ctx, toast, id, now) {
                 next_frame = Some(next_frame.map_or(wait, |other| other.min(wait)));
             }
 
@@ -180,9 +185,11 @@ impl Toasts {
 }
 
 /// Counts the note down while the pointer is off it and the window has
-/// focus, so a note is not missed by someone looking away. Returns how
-/// long until it leaves, while it still waits.
-fn count_down(ctx: &Context, toast: &mut Toast, id: Id, elapsed: Duration) -> Option<Duration> {
+/// focus. Returns how long until it leaves, while it still waits.
+///
+/// egui draws no frame while the window is away, so a pause runs from the
+/// first frame that sees it to the frame it ends on.
+fn count_down(ctx: &Context, toast: &mut Toast, id: Id, now: f64) -> Option<Duration> {
     // Where the note was last frame tells whether the pointer rests on it,
     // so it leaves in the frame its time runs out.
     let layer = LayerId::new(Order::Foreground, id);
@@ -191,12 +198,31 @@ fn count_down(ctx: &Context, toast: &mut Toast, id: Id, elapsed: Duration) -> Op
         .is_some_and(|rect| ctx.rect_contains_pointer(layer, rect));
 
     let away = !ctx.input(|input| input.focused);
-    if toast.leaving() || hovered || away {
+    if toast.leaving() {
         return None;
     }
 
-    toast.left = toast.left.saturating_sub(elapsed);
-    (!toast.left.is_zero()).then_some(toast.left)
+    let mut deadline = *toast.deadline.get_or_insert(now + toast.time.as_secs_f64());
+
+    if hovered || away {
+        if toast.paused.is_none() {
+            toast.paused = Some(now);
+        }
+
+        return None;
+    }
+
+    if let Some(since) = toast.paused.take() {
+        deadline += now - since;
+        toast.deadline = Some(deadline);
+    }
+
+    let wait = Duration::try_from_secs_f64(deadline - now)
+        .ok()
+        .filter(|left| !left.is_zero());
+
+    toast.run_out = wait.is_none();
+    wait
 }
 
 /// Raises a note from a widget, which [`Toasts::show`] takes in on its
@@ -218,7 +244,8 @@ fn note(ui: &mut Ui, toast: &Toast, close: &str, widest: f32) -> bool {
         ToastKind::Error => (Tone::Error, true),
     };
 
-    Glass::raised(ui, CornerRadius::same(CARD_RADIUS), Margin::same(PADDING))
+    let padding = tokens.sizes.toast_padding;
+    Glass::raised(ui, CornerRadius::same(CARD_RADIUS), padding)
         .show(ui, |ui| {
             let edge = TileSize::Line.edge(ui);
             let gap = tokens.sizes.picture_gap;
@@ -226,7 +253,7 @@ fn note(ui: &mut Ui, toast: &Toast, close: &str, widest: f32) -> bool {
             let beside = edge + gap + if closable { gap + button } else { 0.0 };
 
             // The glass's 1 px rim lies outside the padding.
-            let frame = 2.0 * (f32::from(PADDING) + 1.0);
+            let frame = padding.sum().x + 2.0;
             let wrap = (widest - frame - beside).max(0.0);
             let words = rich(ui, &toast.text, Weight::Medium, BODY, tokens.text);
             let galley = WidgetText::from(words).into_galley(

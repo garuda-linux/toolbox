@@ -122,14 +122,7 @@ fn arrow_keys_move_the_palette_row_that_enter_takes() {
     harness.key_press(Key::ArrowDown);
     harness.run();
 
-    let marked: Vec<String> = harness
-        .get_by_role_and_label(Role::Dialog, PALETTE)
-        .query_all_by_role(Role::Button)
-        .filter(|row| row.accesskit_node().toggled() == Some(Toggled::True))
-        .filter_map(|row| row.accesskit_node().label())
-        .collect();
-
-    assert_eq!(marked, ["Users and Groups"]);
+    assert_eq!(marked_rows(&harness), ["Users and Groups"]);
     assert!(
         harness
             .get_by_role_and_label(Role::TextInput, PALETTE)
@@ -141,6 +134,36 @@ fn arrow_keys_move_the_palette_row_that_enter_takes() {
     harness.run();
 
     assert_eq!(harness.query_all_by_label("Users and Groups").count(), 2);
+}
+
+fn marked_rows(harness: &Harness<'_, App>) -> Vec<String> {
+    harness
+        .get_by_role_and_label(Role::Dialog, PALETTE)
+        .query_all_by_role(Role::Button)
+        .filter(|row| row.accesskit_node().toggled() == Some(Toggled::True))
+        .filter_map(|row| row.accesskit_node().label())
+        .collect()
+}
+
+#[test]
+fn a_hovered_palette_row_is_the_one_marked_until_a_key_moves_the_mark() {
+    let mut harness = launch(Setup::default());
+    palette(&mut harness, "ser");
+
+    harness
+        .get_by_role_and_label(Role::Dialog, PALETTE)
+        .get_by_role_and_label(Role::Button, "Users and Groups")
+        .hover();
+    harness.run();
+    assert_eq!(marked_rows(&harness), ["Users and Groups"]);
+
+    harness.key_press(Key::ArrowUp);
+    harness.run();
+    assert_ne!(
+        marked_rows(&harness),
+        ["Users and Groups"],
+        "a resting pointer leaves the key's mark"
+    );
 }
 
 #[test]

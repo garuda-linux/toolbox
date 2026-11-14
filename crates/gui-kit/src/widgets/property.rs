@@ -12,9 +12,6 @@ use crate::fonts::{BODY, Weight};
 use crate::toasts::{self, ToastKind};
 use crate::{icons, tokens};
 
-/// Between the label column and the values.
-const LABEL_GAP: f32 = 16.0;
-
 #[derive(Clone, Copy)]
 pub struct PropertyTexts<'a> {
     /// The copy button's name for a row's label, such as "Copy Kernel".
@@ -108,7 +105,7 @@ pub fn property_list<'a>(
 /// column, a plain one wraps at the list's edge.
 fn value_room(ui: &Ui, copied: bool) -> f32 {
     let button = if copied {
-        LABEL_GAP + SMALL_BUTTON
+        tokens::current(ui.ctx()).sizes.text_to_control + SMALL_BUTTON
     } else {
         0.0
     };
@@ -140,7 +137,7 @@ fn show_row(ui: &mut Ui, label_width: f32, row: Property<'_>, texts: PropertyTex
                 )
                 .inner;
 
-            ui.add_space(LABEL_GAP);
+            ui.add_space(tokens.sizes.text_to_control);
             let room = value_room(ui, copy.is_some());
             ui.allocate_ui_with_layout(vec2(room, 0.0), Layout::top_down(Align::Min), |ui| {
                 ui.set_width(room);
@@ -159,7 +156,7 @@ fn show_row(ui: &mut Ui, label_width: f32, row: Property<'_>, texts: PropertyTex
             });
 
             if let Some(text) = copy {
-                ui.add_space(LABEL_GAP);
+                ui.add_space(tokens.sizes.text_to_control);
                 let alt = (texts.copy)(label);
                 let (rect, response) =
                     ui.allocate_exact_size(vec2(SMALL_BUTTON, SMALL_BUTTON), Sense::click());

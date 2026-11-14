@@ -14,12 +14,6 @@ use super::Sheet;
 
 /// The share of the page the sheet takes when first opened.
 const SHARE: f32 = 0.75;
-/// Below this the grip lets go of the sheet and it closes, in points.
-const SHUT: f32 = 120.0;
-/// The page room the sheet always leaves above itself, in points.
-const ABOVE: f32 = 48.0;
-const BAR: egui::Vec2 = vec2(40.0, 4.0);
-const GRIP_HEIGHT: f32 = 10.0;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Place {
@@ -148,19 +142,24 @@ pub fn terminal_edge(ctx: &Context) -> Stroke {
 fn height(ctx: &Context, room: Rect) -> f32 {
     let kept: Option<f32> = ctx.data_mut(|data| data.get_persisted(height_id()));
     kept.unwrap_or_else(|| room.height() * SHARE)
-        .clamp(SHUT, most(room))
+        .clamp(least(ctx), most(ctx, room))
 }
 
-fn most(room: Rect) -> f32 {
-    (room.height() - ABOVE).max(SHUT)
+fn least(ctx: &Context) -> f32 {
+    tokens::current(ctx).sizes.sheet_least
+}
+
+fn most(ctx: &Context, room: Rect) -> f32 {
+    (room.height() - tokens::current(ctx).sizes.sheet_room_above).max(least(ctx))
 }
 
 /// The bar that shows the sheet can be dragged taller. Its hit area
 /// reaches from the sheet's top edge down past the bar.
 fn drag_bar(ui: &mut Ui, top: f32, label: &str) -> Drag {
     let tokens = tokens::current(ui.ctx());
-    let (row, _) = ui.allocate_exact_size(vec2(ui.available_width(), GRIP_HEIGHT), Sense::hover());
-    let bar = Rect::from_center_size(row.center(), BAR);
+    let size = vec2(ui.available_width(), tokens.sizes.grip_height);
+    let (row, _) = ui.allocate_exact_size(size, Sense::hover());
+    let bar = Rect::from_center_size(row.center(), tokens.sizes.grip_bar);
     let hit = Rect::from_min_max(pos2(row.left(), top), pos2(row.right(), row.bottom()));
 
     let response = ui
@@ -175,7 +174,7 @@ fn drag_bar(ui: &mut Ui, top: f32, label: &str) -> Drag {
         tokens.dim
     };
 
-    ui.painter().rect_filled(bar, BAR.y / 2.0, colour);
+    ui.painter().rect_filled(bar, bar.height() / 2.0, colour);
 
     Drag {
         delta: response.drag_delta().y,
@@ -197,8 +196,9 @@ fn resize(ctx: &Context, room: Rect, full: f32, drag: Drag) -> bool {
             *held
         });
 
-        if held >= SHUT {
-            ctx.data_mut(|data| data.insert_persisted(height_id(), held.min(most(room))));
+        if held >= least(ctx) {
+            let kept = held.min(most(ctx, room));
+            ctx.data_mut(|data| data.insert_persisted(height_id(), kept));
         }
     }
 
@@ -213,7 +213,7 @@ fn resize(ctx: &Context, room: Rect, full: f32, drag: Drag) -> bool {
         both
     });
 
-    let shut = held.is_some_and(|held| held < SHUT);
+    let shut = held.is_some_and(|held| held < least(ctx));
     if shut {
         // It opens again at the height it had before the drag.
         if let Some(start) = start {
@@ -253,10 +253,12 @@ fn cover_id() -> Id {
 }
 
 /// Escape closes the sheet, unless it belongs to what sits above it (a
-/// dialog, an open list) or to the program in the terminal.
+/// dialog, an open list, the Changes popover) or to the program in the
+/// terminal.
 pub fn escape_closes(ctx: &Context) -> bool {
     let busy = ctx.memory(|memory| memory.top_modal_layer().is_some())
         || egui::Popup::is_any_open(ctx)
+        || super::super::changes::popover_shows(ctx)
         || ctx.data(|data| data.get_temp::<bool>(terminal_focus_id()).unwrap_or(false));
 
     !busy && ctx.input_mut(|input| input.consume_key(Modifiers::NONE, Key::Escape))

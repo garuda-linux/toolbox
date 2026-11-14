@@ -112,6 +112,8 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter, r
         );
         if pill_button(ui, &text("network-drivers-clear"), ButtonKind::Soft).clicked() {
             filter.search.clear();
+            filter.state = None;
+            filter.category = None;
         }
 
         return;

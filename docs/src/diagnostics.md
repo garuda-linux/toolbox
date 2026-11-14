@@ -149,6 +149,7 @@ it removes the report from the server.**
 - **Delete now…** asks **Delete the report from the server?** first.
   **Delete** then opens the delete link in your browser. The server removes
   the report at once, and the link to the report stops working for everyone.
+  The page takes both links away.
 - **Copy delete link** copies it, so you can keep it and delete the report
   later, for example when your forum topic is solved.
 

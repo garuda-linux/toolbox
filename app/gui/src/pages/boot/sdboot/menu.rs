@@ -1,10 +1,10 @@
 use egui::Ui;
 use toolbox_core::domains::LoaderSettingsDomain;
-use toolbox_gui_kit::widgets::{Select, number_field_with_unit};
+use toolbox_gui_kit::widgets::Select;
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
 
-use super::super::menu::{TIMEOUT_FIELD_WIDTH, TIMEOUT_MAX, step};
+use super::super::menu::{TIMEOUT_MAX, seconds_field};
 use super::super::{WIDE_CONTROL, queued};
 use crate::command::BootCommand;
 use crate::i18n;
@@ -209,27 +209,9 @@ fn seconds(
     };
 
     let mut value = now.min(TIMEOUT_MAX);
+    seconds_field(ui, ctx, &mut value);
 
-    if step(ui, "−", &i18n::text(ctx, "boot-timeout-less")) {
-        value = value.saturating_sub(1);
-    }
-
-    number_field_with_unit(
-        ui,
-        &mut value,
-        0..=TIMEOUT_MAX,
-        TIMEOUT_FIELD_WIDTH,
-        (
-            &i18n::text(ctx, "boot-timeout-seconds"),
-            &i18n::text(ctx, "boot-timeout-unit"),
-        ),
-    );
-
-    if step(ui, "+", &i18n::text(ctx, "boot-timeout-more")) {
-        value = value.saturating_add(1);
-    }
-
-    Some(LoaderTimeout::Seconds(value.min(TIMEOUT_MAX)))
+    Some(LoaderTimeout::Seconds(value))
 }
 
 /// Three ways, as systemd-boot's own default differs between versions

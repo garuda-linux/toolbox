@@ -4,7 +4,14 @@ use std::ops::RangeInclusive;
 
 use egui::{Align2, Key, Response, TextEdit, Ui};
 
-use super::field::{text_field, text_field_with_unit};
+use super::field::{inset_field_with_unit, text_field, text_field_with_unit};
+
+#[derive(Clone, Copy)]
+enum Look<'a> {
+    Plain,
+    Unit(&'a str),
+    Inset(&'a str),
+}
 
 /// A field for `value`, `width` wide and named `name`. Only digits can be
 /// typed. The number counts once Enter or leaving the field commits it,
@@ -16,7 +23,7 @@ pub fn number_field(
     width: f32,
     name: &str,
 ) -> Response {
-    number(ui, (value, range), width, name, None)
+    number(ui, (value, range), width, name, Look::Plain)
 }
 
 /// A [`number_field`] with `unit`, such as "s", after the number inside
@@ -29,7 +36,19 @@ pub fn number_field_with_unit(
     width: f32,
     (name, unit): (&str, &str),
 ) -> Response {
-    number(ui, (value, range), width, name, Some(unit))
+    number(ui, (value, range), width, name, Look::Unit(unit))
+}
+
+/// A [`number_field_with_unit`] without its own fill, for a control
+/// that paints the pill around it.
+pub(super) fn inset_number_with_unit(
+    ui: &mut Ui,
+    value: &mut u32,
+    range: RangeInclusive<u32>,
+    width: f32,
+    (name, unit): (&str, &str),
+) -> Response {
+    number(ui, (value, range), width, name, Look::Inset(unit))
 }
 
 fn number(
@@ -37,7 +56,7 @@ fn number(
     (value, range): (&mut u32, RangeInclusive<u32>),
     width: f32,
     name: &str,
-    unit: Option<&str>,
+    look: Look<'_>,
 ) -> Response {
     let id = ui.scope_id().with(("number_field", name));
     let typing = ui.data(|data| data.get_temp::<String>(id));
@@ -47,9 +66,10 @@ fn number(
         .desired_width(width)
         .align(Align2::RIGHT_CENTER);
 
-    let response = match unit {
-        Some(unit) => text_field_with_unit(ui, edit, unit),
-        None => text_field(ui, edit),
+    let response = match look {
+        Look::Plain => text_field(ui, edit),
+        Look::Unit(unit) => text_field_with_unit(ui, edit, unit),
+        Look::Inset(unit) => inset_field_with_unit(ui, edit, unit),
     };
 
     let label = name.to_owned();

@@ -66,7 +66,7 @@ impl PageView for BootPage {
             return;
         }
 
-        refusal(ui, context);
+        self.refusal(ui, context);
 
         let readiness = view::state(context.snapshot, probed(context));
         let (icon, title, detail) = match readiness {
@@ -109,7 +109,7 @@ impl BootPage {
     fn sdboot(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let gap = ui.tokens().sizes.section_gap;
 
-        refusal(ui, context);
+        self.refusal(ui, context);
         plan_running(ui, context);
 
         let page = Page::read(context.snapshot, context.changes);
@@ -158,6 +158,14 @@ impl BootPage {
             );
         }
     }
+
+    /// The refusal frame used up `sent` already, so a confirmed risky
+    /// parameter clears the field here.
+    fn refusal(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
+        if refusal(ui, context) {
+            self.parameter.clear();
+        }
+    }
 }
 
 /// The splash works in a limited way in a virtual machine.
@@ -168,15 +176,15 @@ fn vm_banner(ui: &mut Ui, context: &PageContext<'_>, splash: bool) {
     }
 }
 
-/// Why the last edit was not queued, until dismissed.
-fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
+/// Why the last edit was not queued, until dismissed. Returns whether a
+/// risky parameter was confirmed and sent again.
+fn refusal(ui: &mut Ui, context: &PageContext<'_>) -> bool {
     let Some(refusal) = context.service::<Boot>().refusal() else {
-        return;
+        return false;
     };
 
     if refusal.refusal.needs_confirm() {
-        risky(ui.ctx(), context, &refusal.subject);
-        return;
+        return risky(ui.ctx(), context, &refusal.subject);
     }
 
     if refused_banner(ui, Some(refusal), Tone::Error, "boot-dismiss") {
@@ -184,11 +192,13 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
             .commands
             .send(AppCommand::DismissRefusal(PageId::Boot));
     }
+
+    false
 }
 
 /// The question before a parameter that opens a root shell at boot or
-/// switches a security layer off.
-fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) {
+/// switches a security layer off. Returns whether it was confirmed.
+fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) -> bool {
     let title = i18n::text_with(ctx, "boot-risky-title", &[("value", value)]);
     let body = i18n::text(ctx, "boot-risky-body");
     let close = i18n::text(ctx, "dialog-close");
@@ -219,6 +229,8 @@ fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) {
             .send(AppCommand::DismissRefusal(PageId::Boot)),
         (false, false) => {}
     }
+
+    asked.confirmed
 }
 
 /// A kernel the Kernels page proposed as the default, until answered.

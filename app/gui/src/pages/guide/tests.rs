@@ -10,7 +10,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use parking_lot::Mutex;
 
 use super::GuidePage;
-use crate::command::{Command, UiCommand};
+use crate::command::{AppCommand, Command, UiCommand};
 use crate::links::{Opener, install};
 use crate::page::PageId;
 use crate::testing::{PageFixture, PageState};
@@ -185,6 +185,61 @@ fn a_search_lists_the_places_and_one_opens_at_its_heading() {
     assert!(heading_shows(&harness, "Kernels"));
     assert_eq!(harness.state().page.search, "");
     assert_eq!(harness.state().page.file, "kernels.md");
+}
+
+#[test]
+fn a_code_block_copies_its_text_and_says_so() {
+    let mut harness = page_on("packages.md");
+    harness
+        .get_by_role_and_label(Role::Button, "Copy code")
+        .scroll_to_me();
+    harness.run();
+    harness
+        .get_by_role_and_label(Role::Button, "Copy code")
+        .click();
+    harness.step();
+
+    let copied = harness
+        .output()
+        .platform_output
+        .commands
+        .iter()
+        .any(|command| {
+            matches!(command, egui::OutputCommand::CopyText(text)
+            if text.starts_with("$ garuda-toolbox packages search editor\n"))
+        });
+
+    harness.run();
+
+    assert!(copied, "the block's text is on the clipboard");
+    assert!(sent(&harness).iter().any(|command| matches!(
+        command,
+        Command::App(AppCommand::Toast { kind: _, text }) if text == "Copied the code to the clipboard."
+    )));
+}
+
+#[test]
+fn a_search_hit_marks_the_words_it_matched() {
+    let mut harness = page();
+
+    "dkms".clone_into(&mut harness.state_mut().page.search);
+    harness.run();
+
+    let title = "Kernels › Build missing DKMS modules";
+    let painted = toolbox_gui_kit::testing::painted_text(&harness, title)
+        .expect("the hit's title is painted");
+
+    let wash = toolbox_gui_kit::tokens::current(&harness.ctx).accent_soft;
+    let marked: Vec<&str> = painted
+        .galley
+        .job
+        .sections
+        .iter()
+        .filter(|section| section.format.background == wash)
+        .filter_map(|section| title.get(section.byte_range.start.0..section.byte_range.end.0))
+        .collect();
+
+    assert_eq!(marked, ["DKMS"]);
 }
 
 #[test]

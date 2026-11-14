@@ -2,12 +2,11 @@ use egui::{Align, Id, Label, Layout, Rect, Sense, Ui, UiBuilder, Vec2, vec2};
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
 use super::layout::{MIN_TEXT_WIDTH, last_descent, remember_width};
-use super::{Tone, rich};
+use super::{Tone, queued_tag, rich};
 use crate::fonts::{self, BODY, SMALL, Weight};
 use crate::icons::Icon;
 use crate::tokens::{self, Tile};
 
-const ACTIONS_GAP: f32 = 14.0;
 const WIDTH_REASON: &str = "action_row width";
 const HEIGHT_REASON: &str = "action_row height";
 
@@ -20,6 +19,7 @@ pub struct ActionRow<'text> {
     tone: Tone,
     title: &'text str,
     detail: &'text str,
+    queued: &'text str,
 }
 
 impl<'text> ActionRow<'text> {
@@ -29,12 +29,20 @@ impl<'text> ActionRow<'text> {
             tone,
             title,
             detail: "",
+            queued: "",
         }
     }
 
     /// Empty shows none.
     pub const fn detail(mut self, detail: &'text str) -> Self {
         self.detail = detail;
+        self
+    }
+
+    /// The [`queued_tag`] beside the title of a row whose change waits for
+    /// Apply. Empty shows none.
+    pub const fn queued(mut self, label: &'text str) -> Self {
+        self.queued = label;
         self
     }
 
@@ -52,9 +60,10 @@ impl<'text> ActionRow<'text> {
         let width_id = ui.next_auto_id().with("action_row_actions");
         let known = ui.data(|data| data.get_temp::<f32>(width_id));
         let actions_width = known.unwrap_or_default();
-        let tile_gap = tokens::current(ui.ctx()).sizes.picture_gap;
+        let sizes = tokens::current(ui.ctx()).sizes;
+        let (tile_gap, actions_gap) = (sizes.picture_gap, sizes.text_to_control);
         let words_room =
-            ui.available_width() - TileSize::Row.edge(ui) - tile_gap - actions_width - ACTIONS_GAP;
+            ui.available_width() - TileSize::Row.edge(ui) - tile_gap - actions_width - actions_gap;
 
         let beside = actions.is_some() && words_room >= MIN_TEXT_WIDTH;
 
@@ -96,7 +105,7 @@ impl<'text> ActionRow<'text> {
             // with a picture, and the actions further off.
             ui.spacing_mut().item_spacing.x = tile_gap;
             let (slot, _) = ui.allocate_exact_size(Vec2::splat(edge), Sense::hover());
-            ui.spacing_mut().item_spacing.x = ACTIONS_GAP;
+            ui.spacing_mut().item_spacing.x = actions_gap;
             if !beside {
                 let width = ui.available_width();
                 raised(ui, (rise, width), raised_id, |ui| {
@@ -174,7 +183,16 @@ impl<'text> ActionRow<'text> {
     fn words(self, ui: &mut Ui) {
         let tokens = tokens::current(ui.ctx());
         ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
-        ui.label(rich(ui, self.title, Weight::SemiBold, BODY, tokens.text));
+        let title = rich(ui, self.title, Weight::SemiBold, BODY, tokens.text);
+        if self.queued.is_empty() {
+            ui.label(title);
+        } else {
+            ui.horizontal(|ui| {
+                ui.label(title);
+                queued_tag(ui, self.queued, Tone::Accent);
+            });
+        }
+
         if !self.detail.is_empty() {
             let detail = rich(ui, self.detail, Weight::Regular, SMALL, tokens.secondary);
             ui.add(Label::new(detail).wrap());

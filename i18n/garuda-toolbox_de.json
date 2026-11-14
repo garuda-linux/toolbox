@@ -496,6 +496,9 @@
     "boot-file-clear": {
       "string": "Keines verwenden"
     },
+    "boot-file-chooser-failed": {
+      "string": "Der Dateidialog ließ sich nicht öffnen. Installiere ein Dateiauswahl-Portal wie xdg-desktop-portal-kde oder xdg-desktop-portal-gtk und versuche es dann noch einmal."
+    },
     "boot-sdboot-unset": {
       "string": "Vorgabe von systemd-boot"
     },
@@ -723,20 +726,41 @@
     "repair-cancel": {
       "string": "Abbrechen"
     },
-    "repair-does-regenerate": {
-      "string": "Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben. Sonst ändert sich nichts auf dem Datenträger. Ein System mit systemd-boot wird ohne UEFI so nicht repariert."
+    "repair-fact-writes": {
+      "string": "Wird geschrieben"
     },
-    "repair-does-regenerate-uefi": {
-      "string": "Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben. Bei einem System mit systemd-boot werden Initramfs und Kernel-Images neu auf die EFI-Systempartition {esp} gebaut. Sonst ändert sich nichts auf den Datenträgern."
+    "repair-fact-disk": {
+      "string": "Datenträger"
     },
-    "repair-does-uefi": {
-      "string": "Der Bootloader wird auf die EFI-Systempartition {target} auf dem Datenträger {disk} geschrieben und in das Bootmenü der Firmware eingetragen: GRUB als „Garuda“, systemd-boot als „Linux Boot Manager“. Danach werden die Bootdateien des Systems auf {system} (Datenträger {disks}) neu gebaut: das Bootmenü /boot/grub/grub.cfg von GRUB oder die Kernel-Images von systemd-boot."
+    "repair-fact-system": {
+      "string": "System"
     },
-    "repair-does-bios": {
-      "string": "GRUB wird in die ersten Sektoren des Datenträgers {target} geschrieben, anstelle des bisherigen Bootloaders. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf {system} (Datenträger {disks}) neu geschrieben. Ein System mit systemd-boot wird so nicht repariert."
+    "repair-fact-layout": {
+      "string": "Speicherort"
     },
-    "repair-looked-for": {
-      "string": "Erwarteter Speicherort des Systems: {layout}"
+    "repair-writes-regenerate": {
+      "string": "Das Bootmenü /boot/grub/grub.cfg von GRUB"
+    },
+    "repair-writes-regenerate-uefi": {
+      "string": "Das Bootmenü /boot/grub/grub.cfg von GRUB oder Initramfs und Kernel-Images von systemd-boot auf {esp}"
+    },
+    "repair-writes-uefi": {
+      "string": "Der Bootloader auf die EFI-Systempartition {target}, danach die Bootdateien des Systems"
+    },
+    "repair-writes-bios": {
+      "string": "GRUB in die ersten Sektoren des Datenträgers, danach das Bootmenü /boot/grub/grub.cfg"
+    },
+    "repair-then-regenerate": {
+      "string": "Sonst ändert sich nichts auf dem Datenträger, und ein System mit systemd-boot wird ohne UEFI so nicht repariert."
+    },
+    "repair-then-regenerate-uefi": {
+      "string": "Sonst ändert sich nichts auf den Datenträgern."
+    },
+    "repair-then-uefi": {
+      "string": "Der Bootloader wird in das Bootmenü der Firmware eingetragen, GRUB als „Garuda“ und systemd-boot als „Linux Boot Manager“."
+    },
+    "repair-then-bios": {
+      "string": "GRUB ersetzt den bisherigen Bootloader, und ein System mit systemd-boot wird so nicht repariert."
     },
     "repair-runs-now": {
       "string": "Die Reparatur startet sofort und fragt nach dem Passwort eines Administrators. Jeder Befehl erscheint in der Konsole."
@@ -1457,10 +1481,10 @@
     "catalog-gaming-droidcam-description": {
       "string": "Smartphone oder Tablet als Webcam, per WLAN oder USB."
     },
-    "catalog-gaming-easyeffects": {
+    "catalog-gaming-gaming-easyeffects": {
       "string": "EasyEffects"
     },
-    "catalog-gaming-easyeffects-description": {
+    "catalog-gaming-gaming-easyeffects-description": {
       "string": "Audioeffekte für alle PipeWire-Anwendungen."
     },
     "catalog-gaming-goverlay": {
@@ -2369,10 +2393,10 @@
     "catalog-setup-telegram-description": {
       "string": "Offizieller Telegram-Client"
     },
-    "catalog-setup-discord": {
+    "catalog-setup-setup-discord": {
       "string": "Discord"
     },
-    "catalog-setup-discord-description": {
+    "catalog-setup-setup-discord-description": {
       "string": "Sprach- und Textchat in einem"
     },
     "catalog-setup-neochat": {
@@ -2429,10 +2453,10 @@
     "catalog-setup-slack-description": {
       "string": "Desktop-Client für Slack"
     },
-    "catalog-setup-mumble": {
+    "catalog-setup-setup-mumble": {
       "string": "Mumble"
     },
-    "catalog-setup-mumble-description": {
+    "catalog-setup-setup-mumble-description": {
       "string": "Sprachchat mit geringer Latenz und guter Qualität"
     },
     "catalog-setup-twitch-gui": {
@@ -2546,16 +2570,16 @@
     "catalog-setup-ansible-description": {
       "string": "Offizielle Ansible-Sammlungen"
     },
-    "catalog-setup-docker": {
+    "catalog-setup-setup-docker": {
       "string": "Docker"
     },
-    "catalog-setup-docker-description": {
+    "catalog-setup-setup-docker-description": {
       "string": "Verpacken, Verteilen und Starten von Anwendungen als Container"
     },
-    "catalog-setup-podman": {
+    "catalog-setup-setup-podman": {
       "string": "Podman"
     },
-    "catalog-setup-podman-description": {
+    "catalog-setup-setup-podman-description": {
       "string": "Container-Engine ohne Daemon"
     },
     "catalog-setup-jenkins": {
@@ -2585,16 +2609,16 @@
     "catalog-setup-gaming": {
       "string": "Spiele"
     },
-    "catalog-setup-aisleriot": {
+    "catalog-setup-setup-aisleriot": {
       "string": "Aisleriot"
     },
-    "catalog-setup-aisleriot-description": {
+    "catalog-setup-setup-aisleriot-description": {
       "string": "Sammlung von Patience-Kartenspielen"
     },
-    "catalog-setup-mari0": {
+    "catalog-setup-setup-mari0": {
       "string": "Mari0"
     },
-    "catalog-setup-mari0-description": {
+    "catalog-setup-setup-mari0-description": {
       "string": "Mario mit der Portal-Kanone"
     },
     "catalog-setup-kapman": {
@@ -2627,34 +2651,34 @@
     "catalog-setup-super-tux-description": {
       "string": "Klassisches 2D-Jump-'n'-Run"
     },
-    "catalog-setup-luanti": {
+    "catalog-setup-setup-luanti": {
       "string": "Luanti"
     },
-    "catalog-setup-luanti-description": {
+    "catalog-setup-setup-luanti-description": {
       "string": "Voxelbasierte Spiel-Engine"
     },
-    "catalog-setup-0ad": {
+    "catalog-setup-setup-0ad": {
       "string": "0 A.D."
     },
-    "catalog-setup-0ad-description": {
+    "catalog-setup-setup-0ad-description": {
       "string": "Historisches Echtzeit-Strategiespiel in 3D"
     },
-    "catalog-setup-teeworlds": {
+    "catalog-setup-setup-teeworlds": {
       "string": "Teeworlds"
     },
-    "catalog-setup-teeworlds-description": {
+    "catalog-setup-setup-teeworlds-description": {
       "string": "Schneller 2D-Shooter für mehrere Spieler"
     },
-    "catalog-setup-xonotic": {
+    "catalog-setup-setup-xonotic": {
       "string": "Xonotic"
     },
-    "catalog-setup-xonotic-description": {
+    "catalog-setup-setup-xonotic-description": {
       "string": "Schneller Ego-Shooter"
     },
-    "catalog-setup-hedgewars": {
+    "catalog-setup-setup-hedgewars": {
       "string": "Hedgewars"
     },
-    "catalog-setup-hedgewars-description": {
+    "catalog-setup-setup-hedgewars-description": {
       "string": "Rundenbasiertes Artillerie-Strategiespiel"
     },
     "catalog-setup-graphics": {
@@ -3155,16 +3179,16 @@
     "catalog-setup-other": {
       "string": "Sonstiges"
     },
-    "catalog-setup-droidcam": {
+    "catalog-setup-setup-droidcam": {
       "string": "DroidCam"
     },
-    "catalog-setup-droidcam-description": {
+    "catalog-setup-setup-droidcam-description": {
       "string": "Smartphone oder Tablet als Webcam"
     },
-    "catalog-setup-soundwire": {
+    "catalog-setup-setup-soundwire": {
       "string": "SoundWire"
     },
-    "catalog-setup-soundwire-description": {
+    "catalog-setup-setup-soundwire-description": {
       "string": "Übertragung des PC-Tons auf andere Geräte"
     },
     "catalog-setup-variety": {
@@ -3257,16 +3281,16 @@
     "catalog-setup-shotcut-description": {
       "string": "Videoschnitt für viele Plattformen"
     },
-    "catalog-setup-obs-studio": {
+    "catalog-setup-setup-obs-studio": {
       "string": "OBS Studio"
     },
-    "catalog-setup-obs-studio-description": {
+    "catalog-setup-setup-obs-studio-description": {
       "string": "Livestreams und Bildschirmaufnahmen"
     },
-    "catalog-setup-vlc": {
+    "catalog-setup-setup-vlc": {
       "string": "VLC"
     },
-    "catalog-setup-vlc-description": {
+    "catalog-setup-setup-vlc-description": {
       "string": "Mediaplayer für fast alle Formate"
     },
     "catalog-setup-sm-player": {
@@ -3296,10 +3320,10 @@
     "catalog-setup-gnome-boxes-description": {
       "string": "Einfacher Zugriff auf virtuelle Systeme"
     },
-    "catalog-setup-virt-manager": {
+    "catalog-setup-setup-virt-manager": {
       "string": "Virtual Machine Manager"
     },
-    "catalog-setup-virt-manager-description": {
+    "catalog-setup-setup-virt-manager-description": {
       "string": "Desktop-Oberfläche zur Verwaltung virtueller Maschinen"
     },
     "catalog-setup-genymotion": {
@@ -4099,8 +4123,14 @@
     "changes-pill": {
       "string": "{count, plural, one {Änderung vorgemerkt} other {Änderungen vorgemerkt}}"
     },
+    "changes-running": {
+      "string": "{count, plural, one {Änderung wird übernommen} other {Änderungen werden übernommen}}"
+    },
     "changes-review": {
       "string": "Ansehen"
+    },
+    "changes-show-console": {
+      "string": "Zeigen"
     },
     "changes-hide": {
       "string": "Ausblenden"
@@ -4215,6 +4245,9 @@
     },
     "change-sdboot-parameters-none": {
       "string": "Kernel-Images ohne Parameter bauen"
+    },
+    "change-sdboot-plymouth-theme": {
+      "string": "Kernel-Images mit dem Splash-Screen-Theme {name} bauen"
     },
     "change-grub-save-default-on": {
       "string": "Zuletzt gewählten Eintrag im Bootmenü merken"
@@ -4372,6 +4405,164 @@
     },
     "change-wifi-backend": {
       "string": "{name} als WLAN-Backend verwenden"
+    }
+  },
+  "cli": {
+    "cli-switch-unknown": {
+      "string": "der Katalog hat keinen solchen Schalter"
+    },
+    "cli-switch-unmet": {
+      "string": "dieser Schalter braucht einen anderen, der aus ist, schalte zuerst diesen ein"
+    },
+    "cli-repair-not-offered": {
+      "string": "die Startreparatur gibt es nur im Live-System"
+    },
+    "cli-repair-unavailable": {
+      "string": "die Datenträger konnten nicht gelesen werden, darum lässt sich nichts reparieren"
+    },
+    "cli-repair-unknown-system": {
+      "string": "dieses System steht nicht mehr in der Liste, siehe `bootrepair show`"
+    },
+    "cli-repair-in-use": {
+      "string": "das laufende System nutzt diesen Datenträger, darum wird nichts darauf geschrieben"
+    },
+    "cli-repair-unknown-target": {
+      "string": "wähle zuerst, wohin der Bootloader kommt"
+    },
+    "cli-repair-unknown-layout": {
+      "string": "wähle zuerst, wo das System liegt"
+    },
+    "cli-repair-no-passphrase": {
+      "string": "gib die Passphrase der verschlüsselten Partition ein"
+    },
+    "cli-account-unavailable": {
+      "string": "die Benutzerkonten dieses Systems konnten nicht gelesen werden"
+    },
+    "cli-account-unknown-user": {
+      "string": "es gibt keinen Benutzer mit diesem Namen"
+    },
+    "cli-account-unknown-group": {
+      "string": "eine der Gruppen gibt es nicht, oder sie wird gerade entfernt"
+    },
+    "cli-account-root": {
+      "string": "das ist ein Root-Konto, Garuda Toolbox ändert es nicht"
+    },
+    "cli-account-current-user": {
+      "string": "mit diesem Konto bist du angemeldet, es kann sich nicht selbst sperren oder entfernen"
+    },
+    "cli-account-system-account": {
+      "string": "das ist ein Systemkonto, nur Konten von Personen lassen sich entfernen"
+    },
+    "cli-account-no-admin-group": {
+      "string": "dieses System hat keine wheel-Gruppe, der ein neues Konto beitreten kann, daher kann es kein Administrator sein"
+    },
+    "cli-account-outside-user-range": {
+      "string": "dieses Konto hat eine Benutzer-ID außerhalb von 1000 bis 60000, darum bleibt es, wie es ist"
+    },
+    "cli-account-last-admin": {
+      "string": "das ist das letzte Mitglied der Gruppen wheel und sudo, ohne eines könnte niemand dieses System verwalten"
+    },
+    "cli-account-last-admin-lock": {
+      "string": "das ist das letzte Mitglied der Gruppen wheel und sudo, mit gesperrtem Passwort könnte niemand dieses System verwalten"
+    },
+    "cli-account-lock-state-unknown": {
+      "string": "dieses Konto lässt sich nicht sperren, solange unbekannt ist, welche Admins gesperrt sind"
+    },
+    "cli-account-primary-group": {
+      "string": "das ist die primäre Gruppe eines Benutzers, darum bleibt sie"
+    },
+    "cli-account-system-group": {
+      "string": "das ist eine Systemgruppe, installierte Programme verlassen sich auf sie"
+    },
+    "cli-account-user-exists": {
+      "string": "einen Benutzer mit diesem Namen gibt es schon"
+    },
+    "cli-account-group-exists": {
+      "string": "eine Gruppe mit diesem Namen gibt es schon"
+    },
+    "cli-account-shell-not-listed": {
+      "string": "diese Shell steht nicht in /etc/shells"
+    },
+    "cli-account-uid-in-use": {
+      "string": "ein anderes Konto hat diese Benutzer-ID schon"
+    },
+    "cli-account-uid-out-of-range": {
+      "string": "Konten von Personen bekommen eine Benutzer-ID von 1000 bis 60000, Systemkonten eine unter 1000"
+    },
+    "cli-account-home-taken": {
+      "string": "ein anderes Konto hat diesen Home-Ordner schon"
+    },
+    "cli-membership": {
+      "string": "`{name}`: {why}"
+    },
+    "cli-locale-system-locale": {
+      "string": "das ist die Systemsprache, wähle eine andere Systemsprache, bevor du sie abschaltest"
+    },
+    "cli-locale-last-locale": {
+      "string": "mindestens eine Locale muss eingeschaltet bleiben"
+    },
+    "cli-locale-not-enabled": {
+      "string": "diese Locale ist nicht eingeschaltet, schalte sie zuerst ein"
+    },
+    "cli-locale-package": {
+      "string": "die Paketregeln verhindern, dass dieses Sprachpaket entfernt wird"
+    },
+    "cli-driver-other-file": {
+      "string": "eine andere Treiber-Einstellungsdatei in modprobe.d sperrt diesen Treiber, Garuda Toolbox ändert nur seine eigene Datei"
+    },
+    "cli-driver-unavailable": {
+      "string": "die Treiber dieses Systems konnten nicht gelesen werden"
+    },
+    "cli-driver-not-listed": {
+      "string": "das ist kein Netzwerktreiber dieses Systems, siehe `network drivers list`"
+    },
+    "cli-driver-loaded": {
+      "string": "dieser Treiber ist schon geladen"
+    },
+    "cli-driver-not-loaded": {
+      "string": "dieser Treiber ist nicht geladen"
+    },
+    "cli-boot-needs-confirm": {
+      "string": "`{value}` öffnet beim Start eine Root-Shell oder schaltet eine Sicherheitsschicht ab\ngib --force an, wenn du das willst"
+    },
+    "cli-boot-unavailable": {
+      "string": "dieses System hat kein /etc/default/grub, darum gibt es nichts zu ändern"
+    },
+    "cli-boot-custom-command-line": {
+      "string": "die Kernel-Befehlszeile wird hier nicht geändert, bearbeite stattdessen /etc/default/grub"
+    },
+    "cli-boot-too-many-parameters": {
+      "string": "die Kernel-Befehlszeile ist voll"
+    },
+    "cli-boot-unknown-theme": {
+      "string": "`{value}` ist kein installiertes Plymouth-Theme"
+    },
+    "cli-boot-no-kernel-cmdline": {
+      "string": "dieses System hat kein /etc/kernel/cmdline, seine Starteinträge tragen ihre eigenen Parameter"
+    },
+    "cli-boot-custom-kernel-cmdline": {
+      "string": "die Kernel-Befehlszeile wird hier nicht geändert, bearbeite stattdessen /etc/kernel/cmdline"
+    },
+    "cli-boot-protected-parameter": {
+      "string": "`{value}` bleibt, ohne ihn findet das System kein Root-Dateisystem zum Starten"
+    },
+    "cli-boot-empty": {
+      "string": "es wurde nichts eingegeben"
+    },
+    "cli-boot-too-long": {
+      "string": "`{value}` ist zu lang"
+    },
+    "cli-boot-invalid-character": {
+      "string": "`{value}` enthält ein Zeichen, das hier nicht erlaubt ist, etwa ein Leerzeichen, ein Anführungszeichen, einen Backslash oder ein Dollarzeichen"
+    },
+    "cli-boot-invalid-component": {
+      "string": "`{value}` ist kein vollständiger Pfad zu einer Datei"
+    },
+    "cli-boot-wrong-file-type": {
+      "string": "`{value}` ist keine Datei der richtigen Art"
+    },
+    "cli-boot-not-usable": {
+      "string": "`{value}` lässt sich hier nicht verwenden"
     }
   },
   "common": {
@@ -4578,14 +4769,23 @@
     "configs-problem-copy-failed": {
       "string": "Die Arbeitskopie konnte nicht verwendet werden."
     },
-    "configs-problem-unknown": {
-      "string": "Diese Datei kann hier nicht geöffnet werden."
+    "configs-problem-broken": {
+      "string": "{path} wurde nicht gelesen, weil sich pkexec auf diesem System nicht ausführen lässt. Details stehen im Log."
+    },
+    "configs-problem-failed": {
+      "string": "Bei {path} ist unerwartet ein Fehler aufgetreten. Versuche es erneut."
     },
     "configs-problem-read-only": {
       "string": "Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Bearbeite sie in einem Terminal mit sudo."
     },
-    "configs-problem-other": {
+    "configs-problem-read-failed": {
       "string": "{path} konnte nicht gelesen werden."
+    },
+    "configs-problem-no-home": {
+      "string": "{path} wurde nicht gelesen, weil dieses Konto kein Home-Verzeichnis hat."
+    },
+    "configs-problem-cancelled": {
+      "string": "Das Lesen von {path} wurde abgebrochen."
     },
     "configs-view-too-large": {
       "string": "{path} ist größer als 1 MiB und kann hier nicht angezeigt werden."
@@ -4688,6 +4888,15 @@
     },
     "configs-close": {
       "string": "Schließen"
+    },
+    "configs-refused-unknown": {
+      "string": "Diese Datei kann hier nicht geöffnet werden."
+    },
+    "configs-refused-busy": {
+      "string": "In der Konsole läuft gerade etwas anderes. Versuche es erneut, wenn es abgeschlossen ist."
+    },
+    "configs-refused-read-only": {
+      "string": "Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Bearbeite sie in einem Terminal mit sudo."
     }
   },
   "console": {
@@ -5044,6 +5253,12 @@
     },
     "guide-warning": {
       "string": "Warnung"
+    },
+    "guide-copy-code": {
+      "string": "Code kopieren"
+    },
+    "guide-code-copied": {
+      "string": "Der Code wurde in die Zwischenablage kopiert."
     },
     "guide-hits": {
       "string": "{count, plural, one {1 Treffer} other {{count} Treffer}}"
@@ -5406,9 +5621,6 @@
     "kernels-running-note": {
       "string": "Dieser Kernel läuft gerade und kann nicht entfernt werden. Starte mit einem anderen Kernel neu, um ihn zu entfernen."
     },
-    "kernels-headers-installed": {
-      "string": "Header installiert"
-    },
     "kernels-headers-missing": {
       "string": "Header fehlen"
     },
@@ -5420,6 +5632,9 @@
     },
     "kernels-unqueue-headers": {
       "string": "Header nicht mehr vormerken"
+    },
+    "kernels-modules": {
+      "string": "DKMS-Module"
     },
     "kernels-module-installed": {
       "string": "{module} {version}: installiert"
@@ -5662,6 +5877,9 @@
     "maintenance-unqueue": {
       "string": "Vormerkung entfernen"
     },
+    "maintenance-queued": {
+      "string": "Läuft beim Übernehmen"
+    },
     "maintenance-op-upgrade-system": {
       "string": "System aktualisieren"
     },
@@ -5709,6 +5927,9 @@
     },
     "maintenance-op-remove-database-lock-detail": {
       "string": "Die Sperre eines abgebrochenen Updates löschen. Solange pacman läuft, bleibt sie erhalten."
+    },
+    "maintenance-op-aur-upgrade-detail": {
+      "string": "Die aus dem AUR gebauten Pakete mit paru aktualisieren, das seine Fragen im Terminal stellt."
     },
     "maintenance-op-remove-database-lock-queue": {
       "string": "Entsperren vormerken"
@@ -6160,7 +6381,7 @@
       "string": "Kein Treiber passt"
     },
     "network-drivers-clear": {
-      "string": "Suche leeren"
+      "string": "Filter zurücksetzen"
     },
     "network-driver-other-files": {
       "string": "Von {files} auf die Blacklist gesetzt. Garuda Toolbox ändert diese Datei nicht."
@@ -7677,6 +7898,9 @@
     },
     "tweaks-unavailable": {
       "string": "Hier nicht verfügbar"
+    },
+    "tweaks-unread": {
+      "string": "Konnte nicht gelesen werden"
     },
     "tweaks-other": {
       "string": "Sonstiges"

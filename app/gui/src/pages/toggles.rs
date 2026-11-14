@@ -90,7 +90,7 @@ impl TogglePage {
         let query = self.search.trim().to_lowercase();
         let listed = self.listed(ui, context, &query);
         let leads = lead.chips(&ctx, data, &query);
-        self.notices(ui, context, listed.unknown);
+        self.notices(ui, context, listed.unknown + lead.unread(data));
         self.chips(ui, &leads, &listed.chips);
         ui.add_space(ui.tokens().sizes.filters_gap);
 

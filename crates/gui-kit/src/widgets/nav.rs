@@ -4,6 +4,7 @@ use egui::{Color32, CornerRadius, Response, Role, Sense, Ui, WidgetInfo, pos2, v
 
 use super::buttons::glyph_size;
 use super::press::Pointer;
+use super::text::cut;
 use super::{focus_ring, line, rich};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::icons::Icon;
@@ -117,6 +118,7 @@ pub fn nav_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, look: NavLo
     response.widget_info(|| WidgetInfo::labeled(Role::Tab, ui.is_enabled(), label));
     mark_selected(ui, &response, selected);
 
+    let mut was_cut = false;
     if ui.is_rect_visible(rect) {
         let pointer = Pointer::of(&response);
         let hovered = pointer.is_under();
@@ -160,19 +162,15 @@ pub fn nav_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, look: NavLo
                 Weight::Medium
             };
 
-            let galley = line(ui, label, weight, BODY, ink);
-            let at = pos2(
-                glyph_rect.right() + ICON_GAP,
-                rect.center().y - galley.size().y / 2.0,
-            );
-
-            ui.painter().galley(at, galley, ink);
+            let text_left = glyph_rect.right() + ICON_GAP;
+            was_cut = paint_label(ui, rect, text_left, rich(ui, label, weight, BODY, ink), ink);
         }
 
         focus_ring(ui, &response, RADIUS);
     }
 
-    if expanded {
+    // Collapsed, the label shows nowhere else. Cut, it shows in part.
+    if expanded && !was_cut {
         response
     } else {
         response.on_hover_text(label)
@@ -254,4 +252,21 @@ pub(super) fn mark_selected(ui: &Ui, response: &Response, selected: bool) {
         node.clear_toggled();
         node.set_selected(selected);
     });
+}
+
+/// Paints `text` from `text_left` to the padding of `rect`. Returns
+/// whether it was cut.
+fn paint_label(
+    ui: &Ui,
+    rect: egui::Rect,
+    text_left: f32,
+    text: egui::RichText,
+    ink: Color32,
+) -> bool {
+    let room = (rect.right() - PADDING_X - text_left).max(0.0);
+    let galley = cut(ui, text, room);
+    let was_cut = galley.elided;
+    let at = pos2(text_left, rect.center().y - galley.size().y / 2.0);
+    ui.painter().galley(at, galley, ink);
+    was_cut
 }

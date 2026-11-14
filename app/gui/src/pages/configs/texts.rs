@@ -34,6 +34,8 @@ pub fn view_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
         | ProblemCode::WriteFailed
         | ProblemCode::CopyFailed
         | ProblemCode::ReadFailed
+        | ProblemCode::NoHome
+        | ProblemCode::Cancelled
         | ProblemCode::Failed => return problem(ctx, code, path),
     };
 
@@ -63,6 +65,8 @@ pub fn review_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
         | ProblemCode::EditorFailed
         | ProblemCode::CopyFailed
         | ProblemCode::ReadFailed
+        | ProblemCode::NoHome
+        | ProblemCode::Cancelled
         | ProblemCode::Failed => problem(ctx, code, path),
     }
 }
@@ -96,6 +100,8 @@ const fn restated(code: ProblemCode) -> bool {
         | ProblemCode::WriteFailed
         | ProblemCode::CopyFailed
         | ProblemCode::ReadFailed
+        | ProblemCode::NoHome
+        | ProblemCode::Cancelled
         | ProblemCode::Failed => false,
     }
 }

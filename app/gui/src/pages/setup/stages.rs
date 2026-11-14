@@ -118,20 +118,31 @@ pub fn success(ui: &mut Ui, context: &PageContext<'_>, page: &mut SetupPage) {
         context.commands.send(HomeCommand::SetupFinished);
     }
 
-    let ready = match page.ending {
-        Some(Ending::Tested) => "setup-ready-tested",
-        Some(Ending::Nothing) => "setup-ready-nothing",
-        Some(Ending::Applied | Ending::Partly { skipped: _ }) | None => "setup-ready",
+    // Only a run that changed the system has something a restart would start.
+    let (ready, changed) = match page.ending {
+        Some(Ending::Tested) => ("setup-ready-tested", false),
+        Some(Ending::Nothing) => ("setup-ready-nothing", false),
+        Some(Ending::Applied | Ending::Partly { skipped: _ }) => ("setup-ready", true),
+        None => ("setup-ready", false),
     };
 
     paragraph(ui, &text(ready));
-    paragraph(ui, &text("setup-restart-note"));
+    if changed {
+        paragraph(ui, &text("setup-restart-note"));
+    }
+
+    let finish = if changed {
+        ButtonKind::Soft
+    } else {
+        ButtonKind::Primary
+    };
+
     ui.horizontal(|ui| {
-        if pill_button(ui, &text("setup-restart"), ButtonKind::Primary).clicked() {
+        if changed && pill_button(ui, &text("setup-restart"), ButtonKind::Primary).clicked() {
             page.asking_to_restart = true;
         }
 
-        if pill_button(ui, &text("setup-finish-setup"), ButtonKind::Soft).clicked() {
+        if pill_button(ui, &text("setup-finish-setup"), finish).clicked() {
             page.stage = Stage::Welcome;
             context.commands.send(UiCommand::Navigate(PageId::Home));
         }

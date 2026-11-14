@@ -1,5 +1,6 @@
 mod ask;
 mod boot;
+mod failure;
 mod menu;
 
 use std::sync::Arc;
@@ -17,7 +18,7 @@ use crate::testing::{
     PageFixture, assert_header, assert_rows_hold_their_content, assert_rows_wait_while_busy,
     body_font, measured, rect_of,
 };
-use crate::units::{UnitListing, UnitLists, Units, UnitsFailure};
+use crate::units::{UnitListing, UnitLists, Units};
 
 const AVAHI: &str = "avahi-daemon.service, Running";
 const SSHD: &str = "sshd.service, Running";
@@ -57,31 +58,6 @@ fn sshd() -> UnitInfo {
         sub_state: "running".to_owned(),
         ..unit("sshd.service", "OpenSSH Daemon", FileState::Enabled)
     }
-}
-
-#[test]
-fn a_refused_list_says_why_and_offers_a_retry() {
-    let failed = UnitListing::Failed {
-        error: UnitsFailure::Denied,
-        previous: None,
-    };
-
-    let mut harness = listed(failed).harness(ServicesPage::default());
-
-    harness.run();
-    assert!(
-        harness
-            .query_by_label("You are not allowed to read the services.")
-            .is_some()
-    );
-
-    harness.get_by_role_and_label(Role::Button, "Retry").click();
-    harness.run();
-
-    assert_eq!(
-        harness.state().fixture.sent(),
-        [Command::from(ServiceCommand::Refresh(UnitScope::System))]
-    );
 }
 
 #[test]

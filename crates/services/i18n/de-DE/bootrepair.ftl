@@ -57,19 +57,28 @@ repair-failed-run = Die Reparatur ist fehlgeschlagen. Alle Partitionen wurden wi
 repair-busy = Die Reparatur wurde nicht gestartet, weil noch eine andere Aufgabe lief. Versuche es erneut, wenn sie abgeschlossen ist.
 repair-show-console = Konsole anzeigen
 
-# The confirm dialog. $system and $target are devices, $disks and $disk
-# the disks they lie on.
+# The confirm dialog.
 repair-reinstall-title = Bootloader neu installieren?
 repair-regenerate-title = Bootdateien neu bauen?
 repair-reinstall-confirm = Bootloader neu installieren
 repair-regenerate-confirm = Bootdateien neu bauen
 repair-cancel = Abbrechen
-repair-does-regenerate = Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben. Sonst ändert sich nichts auf dem Datenträger. Ein System mit systemd-boot wird ohne UEFI so nicht repariert.
-repair-does-regenerate-uefi = Bei einem GRUB-System wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben. Bei einem System mit systemd-boot werden Initramfs und Kernel-Images neu auf die EFI-Systempartition { $esp } gebaut. Sonst ändert sich nichts auf den Datenträgern.
-repair-does-uefi = Der Bootloader wird auf die EFI-Systempartition { $target } auf dem Datenträger { $disk } geschrieben und in das Bootmenü der Firmware eingetragen: GRUB als „Garuda“, systemd-boot als „Linux Boot Manager“. Danach werden die Bootdateien des Systems auf { $system } (Datenträger { $disks }) neu gebaut: das Bootmenü /boot/grub/grub.cfg von GRUB oder die Kernel-Images von systemd-boot.
-repair-does-bios = GRUB wird in die ersten Sektoren des Datenträgers { $target } geschrieben, anstelle des bisherigen Bootloaders. Danach wird das Bootmenü /boot/grub/grub.cfg des Systems auf { $system } (Datenträger { $disks }) neu geschrieben. Ein System mit systemd-boot wird so nicht repariert.
-# $layout is one of the layouts above.
-repair-looked-for = Erwarteter Speicherort des Systems: { $layout }
+# The labels of the dialog's list of what the repair writes where.
+repair-fact-writes = Wird geschrieben
+repair-fact-disk = Datenträger
+repair-fact-system = System
+repair-fact-layout = Speicherort
+# What the list says the repair writes. $esp and $target are EFI system
+# partitions.
+repair-writes-regenerate = Das Bootmenü /boot/grub/grub.cfg von GRUB
+repair-writes-regenerate-uefi = Das Bootmenü /boot/grub/grub.cfg von GRUB oder Initramfs und Kernel-Images von systemd-boot auf { $esp }
+repair-writes-uefi = Der Bootloader auf die EFI-Systempartition { $target }, danach die Bootdateien des Systems
+repair-writes-bios = GRUB in die ersten Sektoren des Datenträgers, danach das Bootmenü /boot/grub/grub.cfg
+# The one sentence below the list.
+repair-then-regenerate = Sonst ändert sich nichts auf dem Datenträger, und ein System mit systemd-boot wird ohne UEFI so nicht repariert.
+repair-then-regenerate-uefi = Sonst ändert sich nichts auf den Datenträgern.
+repair-then-uefi = Der Bootloader wird in das Bootmenü der Firmware eingetragen, GRUB als „Garuda“ und systemd-boot als „Linux Boot Manager“.
+repair-then-bios = GRUB ersetzt den bisherigen Bootloader, und ein System mit systemd-boot wird so nicht repariert.
 repair-runs-now = Die Reparatur startet sofort und fragt nach dem Passwort eines Administrators. Jeder Befehl erscheint in der Konsole.
 # In the question on an installed system, not on the live ISO.
 repair-trust-disk = Dies ist nicht die Live-ISO. grub-install, mkinitcpio und bootctl des gewählten Systems laufen als root. Repariere nur eine Festplatte, auf die niemand sonst schreiben konnte.

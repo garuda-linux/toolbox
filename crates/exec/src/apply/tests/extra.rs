@@ -5,7 +5,8 @@ use toolbox_plan::procedure::{Builtin, Command, Program};
 use toolbox_plan::protocol::{Failure, Outcome};
 use toolbox_plan::{EditCopy, Editor, SecretInput, StepId, UserAction};
 
-use super::super::{Procedure, run_once, with_targets};
+use super::super::targets::repeated;
+use super::super::{Procedure, run_once};
 use super::FakeRunner;
 use crate::apply::{EventSink, Runner};
 
@@ -99,7 +100,7 @@ fn a_failing_query_fails_its_step() {
     let query = Command::new(Program::Pacman);
     let run = Command::new(Program::Pacman);
 
-    let outcome = with_targets(StepId::new(1), &query, &run, &mut runner, &mut events);
+    let outcome = repeated(StepId::new(1), &query, &run, &mut runner, &mut events);
 
     assert_eq!(
         outcome,

@@ -5,8 +5,8 @@ use toolbox_core::features::kernels::view::{Module, Row};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowState, Tone, named_pill_button, pill_button, pill_width, queued_tag,
-    rich, row_height, split_row, status_dot, switch, text_block_height,
+    ButtonKind, ListItem, RowState, Tone, counted_disclosure, named_pill_button, pill_button,
+    pill_width, queued_tag, rich, row_height, split_row, status_dot, switch, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
@@ -155,33 +155,35 @@ fn text(ui: &mut Ui, row: &Row<'_>) {
     }
 }
 
+/// Installed headers are the normal case, so only missing or queued ones
+/// take a line.
 fn headers(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
+    if row.kernel.headers_installed {
+        return;
+    }
+
     let ctx = ui.ctx().clone();
     let queued = row.headers_queued == Some(Toggle::On);
-    let (state, tone, action) = if row.kernel.headers_installed {
-        ("kernels-headers-installed", Tone::Neutral, None)
-    } else if queued {
+    let (state, tone, action) = if queued {
         (
             "kernels-headers-queued",
             Tone::Accent,
-            Some("kernels-unqueue-headers"),
+            "kernels-unqueue-headers",
         )
     } else if row.lacks_headers {
         (
             "kernels-headers-missing",
             Tone::Warning,
-            Some("kernels-queue-headers"),
+            "kernels-queue-headers",
         )
     } else {
         return;
     };
 
     ui.add_space(ui.tokens().sizes.tight_gap);
-    tags_line(ui, action.is_some(), |ui| {
+    tags_line(ui, true, |ui| {
         queued_tag(ui, &i18n::text(&ctx, state), tone);
-        if let Some(action) = action
-            && waiting_button(ui, context, &i18n::text(&ctx, action)).clicked()
-        {
+        if waiting_button(ui, context, &i18n::text(&ctx, action)).clicked() {
             context.commands.send(KernelEdit::Headers {
                 kernel: row.kernel.name.clone(),
                 on: !queued,
@@ -190,19 +192,44 @@ fn headers(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
     });
 }
 
+/// The modules fold under one line. A kernel with a build to do shows
+/// them open until the user folds them, so what needs work is in sight.
 fn modules(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
     if row.modules.is_empty() {
         return;
     }
 
     let ctx = ui.ctx().clone();
+    let unbuilt = row.unbuilt() > 0;
+    let id = ui.make_persistent_id(("kernel-modules", row.kernel.name.as_str()));
+    let open = ctx
+        .data(|data| data.get_temp::<bool>(id))
+        .unwrap_or(unbuilt);
+
     ui.add_space(ui.tokens().sizes.tight_gap);
-    tags_line(ui, row.unbuilt() > 0, |ui| {
+    tags_line(ui, unbuilt, |ui| {
+        let title = i18n::text(&ctx, "kernels-modules");
+        let count = row.modules.len().to_string();
+        if counted_disclosure(ui, &title, &count, open).clicked() {
+            ctx.data_mut(|data| data.insert_temp(id, !open));
+        }
+
+        if unbuilt {
+            builds_button(ui, context, row);
+        }
+    });
+
+    if !open {
+        return;
+    }
+
+    ui.add_space(ui.tokens().sizes.tight_gap);
+    tags_line(ui, false, |ui| {
         for module in &row.modules {
-            let (id, tone) = module_text(module);
+            let (text_id, tone) = module_text(module);
             let text = i18n::text_with(
                 &ctx,
-                id,
+                text_id,
                 &[
                     ("module", module.status.module.as_str()),
                     ("version", module.status.version.as_str()),
@@ -211,25 +238,24 @@ fn modules(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
 
             queued_tag(ui, &text, tone);
         }
-
-        if row.unbuilt() == 0 {
-            return;
-        }
-
-        let queued = row.builds_queued();
-        let action = if queued {
-            "kernels-unqueue-builds"
-        } else {
-            "kernels-queue-builds"
-        };
-
-        if waiting_button(ui, context, &i18n::text(&ctx, action)).clicked() {
-            context.commands.send(KernelEdit::Builds {
-                kernel: row.kernel.name.clone(),
-                on: !queued,
-            });
-        }
     });
+}
+
+fn builds_button(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
+    let ctx = ui.ctx().clone();
+    let queued = row.builds_queued();
+    let action = if queued {
+        "kernels-unqueue-builds"
+    } else {
+        "kernels-queue-builds"
+    };
+
+    if waiting_button(ui, context, &i18n::text(&ctx, action)).clicked() {
+        context.commands.send(KernelEdit::Builds {
+            kernel: row.kernel.name.clone(),
+            on: !queued,
+        });
+    }
 }
 
 const fn module_text(module: &Module) -> (&'static str, Tone) {

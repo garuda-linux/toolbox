@@ -12,17 +12,16 @@ use super::card::in_card_row;
 use crate::theme::PILL_HEIGHT;
 use crate::tokens;
 
-/// Between a row's text and its controls.
-const SPLIT_GAP: f32 = 16.0;
 /// Narrower than this, a row's text would wrap after every word or two.
 pub const MIN_TEXT_WIDTH: f32 = 240.0;
 /// A measured size that moves less than this, in points, has settled.
 pub(super) const SETTLED: f32 = 0.5;
 
-/// The text's width beside controls `controls` wide in `full`, `None` when
-/// that leaves it less than [`MIN_TEXT_WIDTH`] and the controls go below.
-pub(super) fn text_width(full: f32, controls: f32) -> Option<f32> {
-    let text = (full - controls - SPLIT_GAP).max(0.0);
+/// The text's width beside controls `controls` wide in `full`, `gap` from
+/// them, `None` when that leaves it less than [`MIN_TEXT_WIDTH`] and the
+/// controls go below.
+pub(super) fn text_width(full: f32, controls: f32, gap: f32) -> Option<f32> {
+    let text = (full - controls - gap).max(0.0);
     (controls <= 0.0 || text >= MIN_TEXT_WIDTH).then_some(text)
 }
 
@@ -62,7 +61,8 @@ pub fn split_row<L, R>(
     right: impl FnOnce(&mut Ui) -> R,
 ) -> (L, R) {
     let full = ui.available_width();
-    let Some(left_width) = text_width(full, right_width) else {
+    let gap = tokens::current(ui.ctx()).sizes.text_to_control;
+    let Some(left_width) = text_width(full, right_width, gap) else {
         return stacked(ui, full, right_width, left, right);
     };
 
@@ -110,7 +110,7 @@ pub fn split_row<L, R>(
                 (drawn.inner, taken.height() - title_tail(ui, taken.bottom()))
             });
 
-        ui.add_space(SPLIT_GAP);
+        ui.add_space(gap);
         let height = left.response.rect.height();
         let (left, text_height) = left.inner;
 

@@ -1,3 +1,4 @@
+mod chooser;
 mod risky;
 
 use std::sync::Arc;

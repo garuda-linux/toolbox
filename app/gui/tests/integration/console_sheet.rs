@@ -110,6 +110,21 @@ fn escape_closes_the_console() {
 }
 
 #[test]
+fn escape_with_the_changes_open_closes_them_and_keeps_the_console() {
+    let mut harness = crate::changes::app_with(&["firefox"]);
+    open_console(&mut harness);
+    harness.get_by_label("Review").click();
+    harness.run();
+    assert!(harness.query_by_label("Queued changes").is_some());
+
+    harness.key_press(Key::Escape);
+    harness.run();
+
+    assert!(harness.query_by_label("Queued changes").is_none());
+    assert!(pane(&harness, "Console").is_some());
+}
+
+#[test]
 fn the_sheet_blurs_the_page_under_it() {
     let mut harness = app();
     let sheet = open_console(&mut harness);

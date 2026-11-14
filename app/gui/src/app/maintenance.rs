@@ -7,7 +7,7 @@ use crate::command::MaintenanceCommand;
 use crate::page::PageId;
 
 impl App {
-    pub(super) fn run_maintenance(&mut self, command: &MaintenanceCommand) {
+    pub(super) fn run_maintenance(&mut self, ctx: &egui::Context, command: &MaintenanceCommand) {
         match *command {
             MaintenanceCommand::RunOperation(operation) => {
                 let upgrader =
@@ -45,7 +45,7 @@ impl App {
             | MaintenanceCommand::Reset => {}
             MaintenanceCommand::Reveal(tab) => {
                 self.pages.show_maintenance_tab(tab);
-                self.state.page = PageId::Maintenance;
+                self.navigate(ctx, PageId::Maintenance);
             }
             // The programs reader is Home's, which Maintenance's service cannot reach.
             MaintenanceCommand::Refresh => {

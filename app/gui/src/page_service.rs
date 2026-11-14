@@ -51,8 +51,6 @@ pub enum Answer {
     /// A page asks for another one, as Boot options for a kernel the
     /// Kernels page proposes.
     ShowPage(PageId),
-    /// Boot Repair shows but is no longer offered.
-    LeaveBootRepair,
 }
 
 /// What a service made of a command: the queue edit of a click, which App

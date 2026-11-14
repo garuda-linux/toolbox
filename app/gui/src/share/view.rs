@@ -296,6 +296,9 @@ pub fn ask(
         .filter(|_| confirmed && question == Question::Delete)
     {
         links::open(ctx, &paste.delete_link);
+
+        // The links lead nowhere once the paste is gone.
+        view.commands.send(view.hide.clone());
     }
 
     if outcome.closed || outcome.inner.is_some() {

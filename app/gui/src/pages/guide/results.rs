@@ -1,8 +1,8 @@
 use egui::accesskit::Role;
-use egui::{CornerRadius, Frame, Margin, Sense, Ui, WidgetInfo};
-use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use egui::{CornerRadius, Frame, Label, Margin, Sense, Ui, WidgetInfo};
+use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
-use toolbox_gui_kit::widgets::{empty_state, focus_ring, rich};
+use toolbox_gui_kit::widgets::{empty_state, focus_ring, highlighted, rich};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_guide::Hit;
 
@@ -27,7 +27,7 @@ pub(super) fn show(ui: &mut Ui, hits: &[Hit], query: &str) -> Option<Jump> {
     let mut jump = None;
     for (at, hit) in hits.iter().enumerate() {
         ui.push_id(at, |ui| {
-            if place(ui, hit) {
+            if place(ui, hit, query) {
                 jump = Some(Jump::Page {
                     file: hit.file.clone(),
                     anchor: hit.anchor.clone(),
@@ -41,7 +41,7 @@ pub(super) fn show(ui: &mut Ui, hits: &[Hit], query: &str) -> Option<Jump> {
 }
 
 /// Returns whether it was clicked.
-fn place(ui: &mut Ui, hit: &Hit) -> bool {
+fn place(ui: &mut Ui, hit: &Hit, query: &str) -> bool {
     let tokens = ui.tokens();
     let title = hit.heading.as_ref().map_or_else(
         || hit.page_title.clone(),
@@ -54,14 +54,12 @@ fn place(ui: &mut Ui, hit: &Hit) -> bool {
         .inner_margin(Margin::symmetric(16, 12))
         .show(ui, |ui| {
             ui.set_width(ui.available_width());
-            ui.label(rich(ui, &title, Weight::SemiBold, BODY, tokens.accent_text));
-            ui.label(rich(
-                ui,
-                &hit.snippet,
-                Weight::Regular,
-                SMALL,
-                tokens.secondary,
-            ));
+            let strong = fonts::font(ui.style(), Weight::SemiBold, BODY);
+            let title = highlighted(ui, &title, query, strong, tokens.accent_text);
+            ui.add(Label::new(title).wrap());
+            let small = fonts::font(ui.style(), Weight::Regular, SMALL);
+            let snippet = highlighted(ui, &hit.snippet, query, small, tokens.secondary);
+            ui.add(Label::new(snippet).wrap());
         });
 
     let response = ui.interact(

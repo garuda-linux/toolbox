@@ -11,7 +11,7 @@ use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, EntryRow, Page};
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
-use toolbox_gui_kit::widgets::{ButtonKind, Select, card, number_field_with_unit, pill_button};
+use toolbox_gui_kit::widgets::{Select, SpinTexts, card, spin_field};
 use toolbox_plan::GrubKey;
 use toolbox_services::boot_menu::Menu;
 
@@ -26,10 +26,8 @@ use crate::pages::setting_row::{Words, row, switch_row};
 pub(super) const TIMEOUT_MAX: u32 = 300;
 /// The fallback of a remembered default: the first entry.
 const FIRST_ENTRY: &str = "0";
-/// Room for the timeout's two buttons and its number.
-const TIMEOUT_WIDTH: f32 = 176.0;
-/// "300 s" with the field's padding, as wide as the network tools' numbers.
-pub(super) const TIMEOUT_FIELD_WIDTH: f32 = 72.0;
+/// The timeout's spin field: its two round steppers and "300 s" between.
+pub(super) const TIMEOUT_WIDTH: f32 = 120.0;
 
 /// The default entry's choices as entry and name. The shown default keys
 /// it as its text, beside the menu, whether the menu lists the default,
@@ -148,7 +146,6 @@ fn remember(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     send(context, Edit::Remember { on: !on, fallback });
 }
 
-/// Seconds, with a button for one less and one more beside the number.
 fn timeout(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let ctx = ui.ctx().clone();
     let changes = context.changes;
@@ -173,33 +170,32 @@ fn timeout(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     };
 
     row(ui, false, &words, TIMEOUT_WIDTH, |ui| {
-        ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-            let less = i18n::text(&ctx, "boot-timeout-less");
-            let more = i18n::text(&ctx, "boot-timeout-more");
-            let mut value = seconds;
-            if step(ui, "−", &less) {
-                value = value.saturating_sub(1);
-            }
-
-            let name = i18n::text(&ctx, "boot-timeout-seconds");
-            let unit = i18n::text(&ctx, "boot-timeout-unit");
-            number_field_with_unit(
-                ui,
-                &mut value,
-                0..=TIMEOUT_MAX,
-                TIMEOUT_FIELD_WIDTH,
-                (&name, &unit),
-            );
-            if step(ui, "+", &more) {
-                value += 1;
-            }
-
-            let value = value.min(TIMEOUT_MAX);
-            if value != seconds {
-                send(context, Edit::Timeout(i64::from(value)));
-            }
-        });
+        let mut value = seconds;
+        if seconds_field(ui, &ctx, &mut value) {
+            send(context, Edit::Timeout(i64::from(value)));
+        }
     });
+}
+
+/// The timeout's seconds as one spin field. Returns whether they changed.
+pub(super) fn seconds_field(ui: &mut Ui, ctx: &egui::Context, value: &mut u32) -> bool {
+    let texts = [
+        "boot-timeout-seconds",
+        "boot-timeout-unit",
+        "boot-timeout-less",
+        "boot-timeout-more",
+    ]
+    .map(|id| i18n::text(ctx, id));
+
+    let [name, unit, less, more] = &texts;
+    let spin = SpinTexts {
+        name,
+        unit,
+        less,
+        more,
+    };
+
+    spin_field(ui, value, 0..=TIMEOUT_MAX, TIMEOUT_WIDTH, spin)
 }
 
 /// A row with a switch, titled `id` and described by `<id>-detail`.
@@ -231,14 +227,4 @@ fn label(ctx: &egui::Context, row: &EntryRow) -> String {
         &[("title", &row.title), ("parent", &row.parent)],
     )
     .into_owned()
-}
-
-/// A small button showing `symbol`, which a screen reader calls `name`.
-pub(super) fn step(ui: &mut Ui, symbol: &str, name: &str) -> bool {
-    let response = pill_button(ui, symbol, ButtonKind::Soft);
-    let label = name.to_owned();
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label(label));
-
-    response.clicked()
 }

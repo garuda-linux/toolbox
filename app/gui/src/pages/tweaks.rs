@@ -88,6 +88,10 @@ impl LeadSections for SystemChoices {
             .collect()
     }
 
+    fn unread(&self, data: &Choices) -> usize {
+        rows::unread(data)
+    }
+
     fn show(&self, ui: &mut Ui, on: (&PageContext<'_>, &Choices), id: &str, query: &str) -> bool {
         let (context, choices) = on;
         match id {

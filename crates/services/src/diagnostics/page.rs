@@ -71,6 +71,9 @@ impl Page {
                 self.state = State::Running;
                 selection.as_str().clone_into(&mut self.selection);
                 self.clear_result();
+
+                // The last link belongs to the report this run replaces.
+                self.share.clear();
                 Changed::Report { ready: false }
             }
             DiagnosticsNote::Collecting(collector) => {

@@ -1,6 +1,6 @@
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::configs::Refusal;
-use toolbox_core::features::configs::session::Session;
+use toolbox_core::features::configs::session::{Problem, ProblemCode, Session};
 use toolbox_core::features::configs::viewing::Viewing;
 
 use super::{listed, page, reviewing, reviewing_of, sent, shows, viewing};
@@ -149,6 +149,30 @@ fn a_short_review_still_fills_the_window() {
     let below = button_room_below(&harness, "Save");
 
     assert!(below < FILLED_BOTTOM, "Save sits {below} above the bottom");
+}
+
+#[test]
+fn close_ends_at_the_right_edge_also_when_the_file_was_not_read() {
+    let mut failed = Viewing::default();
+    let number = failed.start(super::path("/etc/sudoers")).unwrap();
+    failed.read(number, Err(Problem::new(ProblemCode::Missing, "")));
+
+    let right = |viewing| {
+        let harness = page(listed().with(Session::default(), viewing));
+        harness
+            .query_all_by_label("Close")
+            .last()
+            .unwrap()
+            .rect()
+            .right()
+    };
+
+    let (shown, refused) = (right(viewing()), right(failed));
+
+    assert!(
+        (shown - refused).abs() < 0.5,
+        "Close ends at {refused}, beside Copy all at {shown}"
+    );
 }
 
 #[test]

@@ -315,7 +315,9 @@ fn translation(source: &Value, incoming: Option<&Json>) -> Option<Result<Value, 
     let value = match source {
         Value::Plain(_) => {
             let text = incoming.get("string")?.as_str()?;
-            screen::screened(text).and_then(icu::parse).map(Value::Plain)
+            screen::screened(text)
+                .and_then(icu::parse)
+                .map(Value::Plain)
         }
         Value::Choice(Choice {
             var,

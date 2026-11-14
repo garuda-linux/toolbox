@@ -6,7 +6,7 @@ use toolbox_plan::{GrubMenu, GrubPlatform};
 use toolbox_services::boot_menu::Menu;
 use toolbox_system::{BootMenuSource, MenuRead};
 
-use super::{Boot, BootSetup, FileChooser, FileKind, Picked};
+use super::{Boot, BootSetup, Chosen, FileChooser, FileKind, Picked};
 use crate::testing::captures::GRUB_CFG;
 use crate::testing::until;
 
@@ -17,6 +17,17 @@ struct Source(AtomicUsize);
 /// Picks the same file every time.
 struct Chooser;
 
+/// Counts its dialogs. Each stays open until `open` is cleared, then the
+/// user cancels it.
+#[derive(Default)]
+struct Held {
+    asked: AtomicUsize,
+    open: AtomicBool,
+}
+
+/// Gives the same answer every time, as a desktop without a portal does.
+struct Broken(Chosen);
+
 impl BootMenuSource for Source {
     fn menu(&self, _cancel: &Arc<AtomicBool>) -> MenuRead {
         self.0.fetch_add(1, Ordering::SeqCst);
@@ -25,8 +36,24 @@ impl BootMenuSource for Source {
 }
 
 impl FileChooser for Chooser {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Option<String> {
-        Some("/usr/share/grub/themes/garuda/theme.txt".to_owned())
+    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+        Chosen::File("/usr/share/grub/themes/garuda/theme.txt".to_owned())
+    }
+}
+
+impl FileChooser for Held {
+    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+        self.asked.fetch_add(1, Ordering::SeqCst);
+        until("the dialog was never closed", || {
+            !self.open.load(Ordering::SeqCst)
+        });
+        Chosen::Cancelled
+    }
+}
+
+impl FileChooser for Broken {
+    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+        self.0.clone()
     }
 }
 
@@ -106,4 +133,61 @@ fn a_chosen_file_comes_back_with_its_kind() {
 
     assert_eq!(picked.kind, FileKind::Theme);
     assert_eq!(picked.path, "/usr/share/grub/themes/garuda/theme.txt");
+}
+
+/// A second dialog would drop the first one's answer.
+#[test]
+fn a_second_choose_waits_until_the_open_dialog_is_answered() {
+    let runtime = Runtime::new().unwrap();
+    let chooser = Arc::new(Held::default());
+    chooser.open.store(true, Ordering::SeqCst);
+    let mut boot = Boot::new(
+        Some(BootSetup {
+            runtime: runtime.handle().clone(),
+            menu: Arc::new(Source::default()),
+            chooser: Arc::<Held>::clone(&chooser),
+        }),
+        egui::Context::default(),
+    );
+
+    boot.choose(FileKind::Theme, "Choose a GRUB theme", "GRUB theme");
+    until("the dialog never opened", || {
+        chooser.asked.load(Ordering::SeqCst) == 1
+    });
+    boot.choose(FileKind::Background, "Choose a picture", "Picture");
+    chooser.open.store(false, Ordering::SeqCst);
+    settle(&mut boot, |boot, _| !boot.choosing());
+
+    boot.choose(FileKind::Background, "Choose a picture", "Picture");
+    until("the cancelled dialog blocked the next one", || {
+        chooser.asked.load(Ordering::SeqCst) == 2
+    });
+    settle(&mut boot, |boot, _| !boot.choosing());
+
+    assert_eq!(chooser.asked.load(Ordering::SeqCst), 2);
+}
+
+fn answered(chosen: Chosen) -> bool {
+    let runtime = Runtime::new().unwrap();
+    let mut boot = Boot::new(
+        Some(BootSetup {
+            runtime: runtime.handle().clone(),
+            menu: Arc::new(Source::default()),
+            chooser: Arc::new(Broken(chosen)),
+        }),
+        egui::Context::default(),
+    );
+
+    boot.choose(FileKind::Theme, "Choose a GRUB theme", "GRUB theme");
+    settle(&mut boot, |boot, _| !boot.choosing());
+    boot.chooser_failed()
+}
+
+/// A dialog that never opened says so, a cancelled one is no failure.
+#[test]
+fn a_dialog_that_could_not_open_is_told_from_a_cancelled_one() {
+    assert_eq!(
+        [answered(Chosen::Failed), answered(Chosen::Cancelled)],
+        [true, false]
+    );
 }

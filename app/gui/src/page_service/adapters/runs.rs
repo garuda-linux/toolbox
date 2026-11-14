@@ -154,7 +154,9 @@ impl PageService for BootRepair {
         let live = snapshot.part::<Host>().is_some_and(|host| host.live_iso);
         self.see_live(Booted::of_live(live));
         let offered = self.offered();
-        let leave = (page == PageId::BootRepair && !offered).then_some(Answer::LeaveBootRepair);
+        let leave =
+            (page == PageId::BootRepair && !offered).then_some(Answer::ShowPage(PageId::Home));
+
         if page == PageId::BootRepair && offered {
             self.open();
         }

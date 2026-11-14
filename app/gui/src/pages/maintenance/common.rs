@@ -3,7 +3,7 @@ use toolbox_core::features::maintenance::page::{OperationRow, PageTool, ToolRow,
 use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
-use toolbox_gui_kit::widgets::{ButtonKind, card, card_row, loading_label};
+use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, card, card_row, loading_label};
 
 use super::repairs::Asked;
 use super::{heading, plan_button, row};
@@ -51,12 +51,17 @@ fn operation_row(
     let ctx = ui.ctx().clone();
     let id = operation.operation.text_id();
     let detail = i18n::text(&ctx, &format!("{id}-detail"));
-    row(
-        ui,
-        operation_icon(operation.operation),
-        &id,
-        &detail,
-        |ui| {
+    let title = i18n::text(&ctx, &id);
+    let queued = if operation.queued {
+        i18n::text(&ctx, "maintenance-queued")
+    } else {
+        "".into()
+    };
+
+    ActionRow::new(operation_icon(operation.operation), Tone::Neutral, &title)
+        .detail(&detail)
+        .queued(&queued)
+        .show(ui, |ui| {
             let kind = if operation.operation == Operation::UpgradeSystem {
                 ButtonKind::Primary
             } else {
@@ -78,7 +83,6 @@ fn operation_row(
                 format!("{id}-queue")
             };
 
-            let title = i18n::text(&ctx, &id);
             more(ui, &title, |ui| {
                 if item(ui, &queue, !context.busy) {
                     context.commands.send(MaintenanceCommand::Queue {
@@ -87,8 +91,7 @@ fn operation_row(
                     });
                 }
             });
-        },
-    );
+        });
 }
 
 /// A missing tool says so below its own detail, and its button installs

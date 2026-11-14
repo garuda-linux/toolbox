@@ -23,11 +23,11 @@ kernels-version-local = { $version }, nicht in den Repositorys
 kernels-version-installed = installiert: { $installed }
 kernels-running-note = Dieser Kernel läuft gerade und kann nicht entfernt werden. Starte mit einem anderen Kernel neu, um ihn zu entfernen.
 
-kernels-headers-installed = Header installiert
 kernels-headers-missing = Header fehlen
 kernels-headers-queued = Header werden beim Übernehmen installiert
 kernels-queue-headers = Header vormerken
 kernels-unqueue-headers = Header nicht mehr vormerken
+kernels-modules = DKMS-Module
 
 # $module and $version name one DKMS module.
 kernels-module-installed = { $module } { $version }: installiert

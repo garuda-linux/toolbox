@@ -173,7 +173,9 @@ fn boot_repair_page() {
     harness.get_by_label("Reinstall the boot loader…").click();
     crate::system::step_until(harness, "the question", |harness| {
         harness
-            .query_all_by_label_contains("is written to the EFI system partition /dev/nvme0n1p2")
+            .query_all_by_label_contains(
+                "The boot loader on the EFI system partition /dev/nvme0n1p2",
+            )
             .next()
             .is_some()
     });

@@ -9,8 +9,7 @@ mod clear;
 mod place;
 
 use egui::{
-    Align2, Area, Context, CornerRadius, Id, Label, LayerId, Margin, Order, Rect, Stroke, Ui, Vec2,
-    vec2,
+    Align2, Area, Context, CornerRadius, Id, Label, LayerId, Margin, Order, Rect, Stroke, Ui, vec2,
 };
 use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
@@ -33,13 +32,6 @@ use crate::i18n::changes::sentence;
 /// covers the page. egui raises an area in the first frame it shows, which
 /// on the dialogs' layer put a returning pill over a dialog's buttons.
 const LAYER: Order = Order::Middle;
-const POPOVER_WIDTH: f32 = 380.0;
-/// The list's height before it scrolls, in points.
-const LIST_HEIGHT: f32 = 320.0;
-/// The room a row keeps at its right for its remove button.
-const REMOVE_WIDTH: f32 = 32.0;
-/// The cell of a row's dot: its width and the first line's height.
-const DOT_CELL: Vec2 = vec2(8.0, 18.0);
 
 /// The pill's own state, which only the window cares about.
 #[derive(Debug, Default)]
@@ -143,7 +135,7 @@ fn overlays(
 
     // It rises from the pill's side while it fades in. Closed, it goes at
     // once, and the next opening starts low again. A key's opening jumps.
-    let id = Id::unique("toolbox_gui::changes::popover");
+    let id = popover_id();
     if state.open && std::mem::take(&mut state.keyed) {
         motion::settle(ctx, id.with("shown"), true);
     }
@@ -239,7 +231,7 @@ fn popover(
         CornerRadius::same(POPOVER_RADIUS),
         tokens.sizes.popover_padding,
         |ui| {
-            ui.set_width(POPOVER_WIDTH);
+            ui.set_width(tokens.sizes.popover_width);
             ui.name_pane(&i18n::text(&ctx, "pane-changes"));
             ui.horizontal(|ui| {
                 ui.label(rich(
@@ -288,7 +280,7 @@ fn popover(
     Fit {
         chrome: rect.height() - shown,
         list: whole,
-        most: LIST_HEIGHT,
+        most: tokens.sizes.changes_list_height,
     }
 }
 
@@ -318,12 +310,13 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
 
     split_row(
         ui,
-        REMOVE_WIDTH,
+        tokens.sizes.remove_width,
         |ui| {
             ui.horizontal_top(|ui| {
-                let (dot, _) = ui.allocate_exact_size(DOT_CELL, egui::Sense::hover());
+                let cell = tokens.sizes.dot_cell;
+                let (dot, _) = ui.allocate_exact_size(cell, egui::Sense::hover());
                 ui.painter()
-                    .circle_filled(dot.center(), DOT_CELL.x / 2.0, tokens.accent);
+                    .circle_filled(dot.center(), cell.x / 2.0, tokens.accent);
                 ui.vertical(|ui| {
                     ui.add(Label::new(rich(ui, &words, Weight::Regular, BODY, tokens.text)).wrap());
                     if change.outcome.is_failed() {
@@ -342,6 +335,17 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
         },
     );
     ui.add_space(tokens.sizes.tight_gap);
+}
+
+/// Whether the popover showed last frame, so a key handled before the
+/// pill draws can leave it to the popover.
+pub fn popover_shows(ctx: &Context) -> bool {
+    let layer = LayerId::new(LAYER, popover_id());
+    ctx.memory(|memory| memory.areas().is_visible(&layer))
+}
+
+fn popover_id() -> Id {
+    Id::unique("toolbox_gui::changes::popover")
 }
 
 fn raised(ui: &mut Ui, radius: CornerRadius, margin: Margin, body: impl FnOnce(&mut Ui)) -> Rect {

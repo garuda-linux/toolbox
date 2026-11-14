@@ -8,13 +8,14 @@ use toolbox_core::domains::Packages;
 use toolbox_core::features::console::ending::Ending;
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Toggle};
+use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::PackageName;
 
 use super::{SetupPage, Stage};
 use crate::catalogs::Catalogs;
 use crate::command::{Command, HomeCommand, UiCommand};
 use crate::pages::Plans;
-use crate::testing::{PageFixture, PageState};
+use crate::testing::{PageFixture, PageState, button_kind};
 
 type Shown = Harness<'static, PageState<SetupPage>>;
 
@@ -98,6 +99,8 @@ fn the_list_jumps_to_the_summary_and_finish_without_picks_shows_success() {
         .get_by_role_and_label(Role::ComboBox, "Go to step")
         .click();
     harness.run();
+    harness.get_by_label("Summary").scroll_to_me();
+    harness.run();
     harness.get_by_label("Summary").click();
     harness.run();
 
@@ -135,6 +138,14 @@ fn an_apply_that_worked_shows_the_success_page() {
 
     assert!(shows(&harness, "Success!"));
     assert!(shows(&harness, "Finish setup"));
+    assert!(shows(&harness, "A restart is recommended"));
+    assert_eq!(button_kind(&harness, "Restart…"), ButtonKind::Primary);
+}
+
+fn leads_with_finish_and_no_restart(harness: &Shown) {
+    assert!(!shows(harness, "A restart is recommended"));
+    assert!(harness.query_by_label("Restart…").is_none());
+    assert_eq!(button_kind(harness, "Finish setup"), ButtonKind::Primary);
 }
 
 #[test]
@@ -153,6 +164,7 @@ fn a_test_run_does_not_call_the_system_ready() {
         "Test mode: nothing was installed or changed."
     ));
     assert!(!shows(&harness, "ready to go"));
+    leads_with_finish_and_no_restart(&harness);
 }
 
 #[test]
@@ -170,6 +182,7 @@ fn a_run_with_nothing_to_do_does_not_call_the_system_ready() {
         "Everything you picked was already in place."
     ));
     assert!(!shows(&harness, "ready to go"));
+    leads_with_finish_and_no_restart(&harness);
 }
 
 #[test]

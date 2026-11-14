@@ -259,9 +259,10 @@ impl Tools {
                 .read(path)
                 .map(|read| (EditedFile::Root(read.path), read.content)),
             EditedFile::Home(path) => {
-                let real = self.source.home_file(path).ok_or_else(|| {
-                    Problem::new(ProblemCode::ReadFailed, "there is no home folder")
-                })?;
+                let real = self
+                    .source
+                    .home_file(path)
+                    .ok_or_else(|| Problem::new(ProblemCode::NoHome, ""))?;
 
                 read_home(&real).map(|content| (file.clone(), content))
             }
@@ -313,17 +314,17 @@ impl Tools {
 }
 
 /// A step that panicked, in the words of a failed read.
-fn stopped() -> Problem {
-    Problem::new(ProblemCode::Failed, "the worker stopped")
+pub(super) fn stopped() -> Problem {
+    Problem::new(ProblemCode::Failed, "")
 }
 
-fn problem_of(problem: ReadProblem) -> Problem {
+pub(super) fn problem_of(problem: ReadProblem) -> Problem {
     match problem {
         ReadProblem::Refused(reason) => refused(reason),
         ReadProblem::NotRun(refusal) => Problem::new(not_run(refusal), ""),
         ReadProblem::Failed(error) => Problem::new(ProblemCode::ReadFailed, error.to_string()),
         ReadProblem::Unreadable(kind) => Problem::new(ProblemCode::ReadFailed, kind.to_string()),
-        ReadProblem::Cancelled => Problem::new(ProblemCode::ReadFailed, "cancelled"),
+        ReadProblem::Cancelled => Problem::new(ProblemCode::Cancelled, ""),
     }
 }
 

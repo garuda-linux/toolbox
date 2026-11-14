@@ -1,12 +1,13 @@
 use egui::{Align, Layout, Rect, ScrollArea, Ui, UiBuilder};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{ButtonKind, named_pill_button, rich, text_link};
 use toolbox_guide::{Guide, Page};
 
 use super::markdown::{self, Reader};
 use super::{GuidePage, Jump};
-use crate::command::UiCommand;
+use crate::command::{AppCommand, UiCommand};
 use crate::i18n;
 use crate::page::PageId;
 use crate::pages::PageContext;
@@ -52,6 +53,13 @@ pub(super) fn show(
         neighbours(column, guide, page, &mut reader);
         column.add_space(column.tokens().sizes.section_gap);
     });
+
+    if reader.copied {
+        context.commands.send(AppCommand::Toast {
+            kind: ToastKind::Info,
+            text: i18n::text(ui.ctx(), "guide-code-copied").into_owned(),
+        });
+    }
 
     let current = reader
         .headings

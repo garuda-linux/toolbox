@@ -1,6 +1,6 @@
 //! Overwritten files are kept as backups beside the originals.
 
-use egui::{Align, Id, Label, Layout, Ui};
+use egui::{Align, Id, Label, Layout, ScrollArea, Ui};
 use toolbox_gui_kit::widgets::{
     ButtonKind, CheckRowTexts, Confirmation, ModalWrapper, Tone, banner, card, card_row,
     check_row_with_line, confirm_buttons, empty_state, loading_label, pill_button, pill_width,
@@ -13,6 +13,9 @@ use crate::command::MaintenanceCommand;
 use crate::i18n;
 use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
+
+/// The room the footer's buttons take under the list, gaps included.
+const BUTTONS_HEIGHT: f32 = 80.0;
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, confirming: &mut bool) {
     let ctx = ui.ctx().clone();
@@ -122,9 +125,17 @@ fn ask(ctx: &egui::Context, context: &PageContext<'_>, confirming: &mut bool) {
         .show(ctx, |ui| {
             ui.add(Label::new(i18n::text(ctx, "maintenance-reset-files")).wrap());
             ui.add_space(ui.tokens().sizes.card_gap);
-            for target in shelf.chosen_targets() {
-                ui.add(Label::new(egui::RichText::new(target).monospace()).wrap());
-            }
+
+            // The dialog is no taller than the window, so a long list
+            // scrolls and leaves Cancel and Reset in sight.
+            ScrollArea::vertical()
+                .max_height((ui.available_height() - BUTTONS_HEIGHT).max(0.0))
+                .auto_shrink([false, true])
+                .show(ui, |ui| {
+                    for target in shelf.chosen_targets() {
+                        ui.add(Label::new(egui::RichText::new(target).monospace()).wrap());
+                    }
+                });
 
             confirm_buttons(
                 ui,

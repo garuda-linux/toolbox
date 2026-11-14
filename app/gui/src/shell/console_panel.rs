@@ -19,7 +19,7 @@ use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::fonts::{BODY, SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
 use toolbox_gui_kit::theme::{CARD_RADIUS, PILL_HEIGHT};
-use toolbox_gui_kit::widgets::{Tone, banner, card, line, rich, status_word};
+use toolbox_gui_kit::widgets::{Tone, banner, card, edge_ring, line, rich, status_word};
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::protocol::{Failure, Mode};
 
@@ -28,11 +28,10 @@ use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::console::{Console, Status, StepRow, StepState};
 use crate::i18n;
 
-/// The step list's height before it scrolls, in points.
-const STEPS_HEIGHT: f32 = 120.0;
-const SHEET_RADIUS: u8 = 16;
+const STEPS_HEIGHT: f32 = tokens::Sizes::DEFAULT.steps_height;
+const SHEET_RADIUS: u8 = toolbox_gui_kit::theme::POPOVER_RADIUS;
 const STATE_SIZE: f32 = BODY * 0.95;
-const STEP_ROW_HEIGHT: f32 = 20.0;
+const STEP_ROW_HEIGHT: f32 = tokens::Sizes::DEFAULT.step_row_height;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Sheet {
@@ -322,7 +321,7 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
     let fill = sheet::terminal_fill(ui.ctx());
     let output = ui
         .allocate_ui(room, |ui| {
-            Frame::new()
+            let framed = Frame::new()
                 .fill(fill)
                 .stroke(sheet::terminal_edge(ui.ctx()))
                 .corner_radius(CornerRadius::same(CARD_RADIUS))
@@ -332,8 +331,17 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
                         .hint(&hint)
                         .ground(fill)
                         .show(ui)
-                })
-                .inner
+                });
+
+            // On the frame's edge, as the box fills its room and a ring
+            // outside it would be cut.
+            edge_ring(
+                ui,
+                &framed.inner.response,
+                framed.response.rect,
+                CARD_RADIUS,
+            );
+            framed.inner
         })
         .inner;
 

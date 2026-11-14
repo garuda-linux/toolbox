@@ -18,7 +18,7 @@ pub fn steps() -> Vec<Step> {
         Step::combo("Root partition"),
         Step::click("/dev/nvme1n1p2 · ROOT · 500.0 GiB · btrfs"),
         Step::button("Build the boot files again…"),
-        Step::WaitContaining("is written again"),
+        Step::WaitContaining("Nothing else on the disk"),
         Step::button("Build the boot files again"),
         Step::WaitContaining("The repair finished without an error"),
         Step::Shot("bootrepair-done"),

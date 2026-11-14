@@ -2,7 +2,7 @@
 //! primary one takes the accent tint and its number in full accent, the
 //! others stay neutral.
 
-use egui::{CursorIcon, Frame, Margin, Response, Role, Sense, Ui, UiBuilder, WidgetInfo};
+use egui::{CursorIcon, Frame, Response, Role, Sense, Ui, UiBuilder, WidgetInfo};
 
 use super::card::light_rim;
 use super::{focus_ring, rich, text_line_height};
@@ -67,7 +67,7 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
                 .fill(fill)
                 .stroke(rim)
                 .corner_radius(CARD_RADIUS)
-                .inner_margin(Margin::same(18))
+                .inner_margin(tokens.sizes.card_padding)
                 .show(ui, |ui| {
                     ui.set_width(ui.available_width());
                     ui.set_min_height(height);

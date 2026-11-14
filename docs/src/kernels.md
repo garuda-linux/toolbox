@@ -22,15 +22,14 @@ The top line names the kernel that runs right now, for example **Running
 kernel: 6.14.0-zen1-1-zen**. Installed kernels come first, then
 **Available**.
 
-| Part                          | Meaning                                                              |
-| ----------------------------- | -------------------------------------------------------------------- |
-| **Running**                   | The kernel the system booted with                                    |
-| `6.14.1.arch1-1 from core`    | The version and the repository pacman takes the kernel from          |
-| `installed 6.14.0.arch1-1`    | The installed version, shown when the repository has another one     |
-| `6.15rc1-1, in no repository` | An installed kernel that none of your repositories offers any more   |
-| **Headers installed**         | The matching headers package is installed                            |
-| **Headers missing**           | It is not. **Headers install with Apply** once it waits in the queue |
-| `nvidia 550.90.07: installed` | A DKMS module and its state for this kernel                          |
+| Part                          | Meaning                                                                                                  |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Running**                   | The kernel the system booted with                                                                        |
+| `6.14.1.arch1-1 from core`    | The version and the repository pacman takes the kernel from                                              |
+| `installed 6.14.0.arch1-1`    | The installed version, shown when the repository has another one                                         |
+| `6.15rc1-1, in no repository` | An installed kernel that none of your repositories offers any more                                       |
+| **Headers missing**           | The matching headers package is not installed. **Headers install with Apply** once it waits in the queue |
+| **DKMS modules**              | The DKMS modules of this kernel, see [Build missing DKMS modules](#build-missing-dkms-modules)           |
 
 A kernel counts as one when its package name starts with `linux` and the same
 repository has a `-headers` package of the same version beside it. That
@@ -98,7 +97,9 @@ Then apply the queue. **Don't install headers** takes the headers back.
 ## Build missing DKMS modules
 
 The app asks `dkms status` which modules are built for which kernel. For every
-installed kernel with headers, the card lists each module:
+installed kernel with headers, the card lists each module under **DKMS
+modules**. The list is folded when every module is installed. Click **DKMS
+modules** to open it. A kernel with a module left to build shows it open.
 
 | State                  | Meaning                                        |
 | ---------------------- | ---------------------------------------------- |

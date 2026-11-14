@@ -14,7 +14,7 @@ mod tests;
 use std::sync::Arc;
 
 use jobs::Jobs;
-pub use jobs::{BootSetup, FileChooser, FileKind, Picked};
+pub use jobs::{BootSetup, Chosen, FileChooser, FileKind, Picked};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_plan::PackageName;
 use toolbox_services::boot_menu::Menu;
@@ -35,6 +35,11 @@ pub struct Boot {
     reads: OneRead,
     refusal: Option<BootRefusal>,
     proposal: Option<PackageName>,
+    /// A file dialog is open. A second one would drop the first's answer.
+    choosing: bool,
+    /// The last file dialog could not open, until the next one is asked
+    /// for.
+    chooser_failed: bool,
 }
 
 impl Boot {
@@ -72,12 +77,26 @@ impl Boot {
         self.refresh();
     }
 
-    /// Asks the desktop for a file of `kind`. Its answer comes from
-    /// [`Self::take`].
-    pub fn choose(&self, kind: FileKind, title: &str, filter: &str) {
+    /// Asks the desktop for a file of `kind`, unless its dialog is open
+    /// already. Its answer comes from [`Self::take`].
+    pub fn choose(&mut self, kind: FileKind, title: &str, filter: &str) {
+        if self.choosing {
+            return;
+        }
+
         if let Some(jobs) = &self.jobs {
+            self.choosing = true;
+            self.chooser_failed = false;
             jobs.choose(kind, title.to_owned(), filter.to_owned());
         }
+    }
+
+    pub const fn choosing(&self) -> bool {
+        self.choosing
+    }
+
+    pub const fn chooser_failed(&self) -> bool {
+        self.chooser_failed
     }
 
     /// Takes the results that came since the last frame. Returns a file
@@ -94,7 +113,16 @@ impl Boot {
             }
         }
 
-        self.jobs.as_ref()?.picked()
+        let answered = self.jobs.as_ref()?.picked()?;
+        self.choosing = false;
+        match answered {
+            jobs::Answer::Chose(picked) => Some(picked),
+            jobs::Answer::Cancelled => None,
+            jobs::Answer::Failed => {
+                self.chooser_failed = true;
+                None
+            }
+        }
     }
 
     pub const fn refusal(&self) -> Option<&BootRefusal> {
@@ -144,5 +172,11 @@ impl Boot {
             proposal,
             ..Self::default()
         }
+    }
+
+    #[must_use = "returns the new value, the old one stays as it was"]
+    pub const fn with_failed_chooser(mut self) -> Self {
+        self.chooser_failed = true;
+        self
     }
 }

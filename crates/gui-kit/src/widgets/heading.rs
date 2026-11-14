@@ -9,10 +9,6 @@ use crate::fonts::{BODY, SECTION, SMALL, TITLE, Weight};
 use crate::icons::Icon;
 use crate::tokens;
 
-/// Between a page's title and the controls beside it, as between a
-/// row's text and its controls.
-const TITLE_GAP: f32 = 16.0;
-
 /// Controls at a heading's right, drawn once it is laid out.
 type Actions<'a> = Box<dyn FnOnce(&mut Ui) + 'a>;
 
@@ -44,7 +40,7 @@ impl<'a> SectionHeading<'a> {
     pub fn show(self, ui: &mut Ui) {
         let tokens = tokens::current(ui.ctx());
         ui.horizontal(|ui| {
-            ui.spacing_mut().item_spacing.x = 10.0;
+            ui.spacing_mut().item_spacing.x = tokens.sizes.picture_gap;
             icon_tile(ui, TileSize::Line, self.icon);
             let title = ui.label(rich(ui, self.title, Weight::Bold, SECTION, tokens.text));
             mark_heading(ui, &title, self.title, 2);
@@ -112,7 +108,7 @@ pub fn page_header(
 
     let full = ui.available_width();
     let title_width = one_line_width(ui, title);
-    let title_room = (full - trailing_width - TITLE_GAP).max(0.0);
+    let title_room = (full - trailing_width - tokens.sizes.text_to_control).max(0.0);
     if trailing_width > 0.0 && title_room < title_width.min(MIN_TEXT_WIDTH) {
         // Stacked under the words, the controls keep their order.
         ui.vertical(|ui| {

@@ -80,7 +80,9 @@ fn the_flag_shows_the_page_in_test_mode_and_a_repair_asks_first() {
 
     assert!(
         harness
-            .query_all_by_label_contains("is written to the EFI system partition /dev/nvme0n1p2")
+            .query_all_by_label_contains(
+                "The boot loader on the EFI system partition /dev/nvme0n1p2"
+            )
             .next()
             .is_some()
     );

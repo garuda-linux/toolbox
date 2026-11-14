@@ -11,6 +11,7 @@ maintenance-operations = Package care
 maintenance-operations-detail = Queue these to apply them with your other changes, or run one now in the Console.
 maintenance-run-now = Run now
 maintenance-unqueue = Remove from queue
+maintenance-queued = Runs with Apply
 maintenance-op-upgrade-system = Update system
 maintenance-op-upgrade-system-detail = Update every package, with snapshots and checks when garuda-update is installed.
 maintenance-op-upgrade-system-queue = Queue update

@@ -11,8 +11,8 @@ use toolbox_core::features::bootrepair::{
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, Tone, banner,
-    confirm_buttons_why, forget_text, rich, text_field,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, PropertyTexts, SecretText, Tone, banner,
+    confirm_buttons_why, forget_text, property_list, rich, text_field,
 };
 use toolbox_plan::{MAX_PASSWORD_BYTES, Password, RootLayout, VolumeDevice};
 
@@ -31,6 +31,14 @@ pub struct Dialog {
     /// Checked when the field changes, as each check copies the text.
     passphrase_ok: bool,
     field: Option<Id>,
+}
+
+/// The question's list of what is written where, and the one sentence of
+/// what follows below it.
+struct Said {
+    writes: String,
+    disk: String,
+    then: String,
 }
 
 impl fmt::Debug for Dialog {
@@ -123,21 +131,39 @@ impl Dialog {
 
     fn body(&mut self, ui: &mut Ui, facts: &RepairFacts, system: &System) {
         let ctx = ui.ctx().clone();
-        ui.add(Label::new(self.does(&ctx, facts, system)).wrap());
-        ui.add_space(ui.tokens().sizes.card_gap);
-        if let Some(layout) = page::layout(system, self.layout) {
-            let layout = texts::layout(&ctx, layout);
-            ui.add(
-                Label::new(i18n::text_with(
-                    &ctx,
-                    "repair-looked-for",
-                    &[("layout", &layout)],
-                ))
-                .wrap(),
-            );
-            ui.add_space(ui.tokens().sizes.card_gap);
-        }
+        let said = self.said(&ctx, facts, system);
+        let lies_in = page::layout(system, self.layout).map(|layout| texts::layout(&ctx, layout));
+        let text = |id: &str| i18n::text(&ctx, id);
+        let (writes, disk, name, lies) = (
+            text("repair-fact-writes"),
+            text("repair-fact-disk"),
+            text("repair-fact-system"),
+            text("repair-fact-layout"),
+        );
 
+        // No value of the list is copied, so its copy words never show.
+        let no_copy = |_: &str| String::new();
+        let words = PropertyTexts {
+            copy: &no_copy,
+            copied: "",
+        };
+
+        // The list sets its own row gap, which must not reach the
+        // sentences below.
+        ui.scope(|ui| {
+            property_list(ui, words, |list| {
+                list.row(&writes, &said.writes);
+                list.row(&disk, &said.disk);
+                list.row(&name, &self.device);
+                if let Some(layout) = &lies_in {
+                    list.row(&lies, layout);
+                }
+            });
+        });
+
+        ui.add_space(ui.tokens().sizes.card_gap);
+        ui.add(Label::new(said.then).wrap());
+        ui.add_space(ui.tokens().sizes.card_gap);
         ui.add(Label::new(i18n::text(&ctx, "repair-runs-now")).wrap());
         if system.encryption == Encryption::Locked {
             ui.add_space(ui.tokens().sizes.card_gap);
@@ -146,10 +172,10 @@ impl Dialog {
 
             // A name above the field, as the other dialogs' fields have,
             // because a placeholder goes once the first letter is typed.
-            let name = i18n::text(&ctx, "repair-passphrase").into_owned();
+            let label = i18n::text(&ctx, "repair-passphrase").into_owned();
             ui.add_space(ui.tokens().sizes.card_gap);
-            let text = ui.tokens().text;
-            ui.label(rich(ui, &name, Weight::SemiBold, BODY, text));
+            let ink = ui.tokens().text;
+            ui.label(rich(ui, &label, Weight::SemiBold, BODY, ink));
             let field = text_field(
                 ui,
                 TextEdit::singleline(&mut self.passphrase)
@@ -164,61 +190,48 @@ impl Dialog {
 
             self.field = Some(field.id);
             ui.ctx()
-                .accesskit_node_builder(field.id, |node| node.set_label(name));
+                .accesskit_node_builder(field.id, |node| node.set_label(label));
         }
     }
 
-    fn does(&self, ctx: &Context, facts: &RepairFacts, system: &System) -> String {
-        let disks = texts::disks(system);
-        let esp = VolumeDevice::new(self.device.as_str())
+    /// The disk is the one written to: the system's own for its boot
+    /// files, else the one that takes the boot loader.
+    fn said(&self, ctx: &Context, facts: &RepairFacts, system: &System) -> Said {
+        let text =
+            |id: &str, words: &[(&'static str, &str)]| i18n::text_with(ctx, id, words).into_owned();
+
+        let rebuilt = VolumeDevice::new(self.device.as_str())
             .ok()
             .and_then(|device| rebuild_esp(facts, &device));
 
-        let text = match (&self.target, esp) {
-            (None, Some(esp)) => i18n::text_with(
-                ctx,
-                "repair-does-regenerate-uefi",
-                &[
-                    ("system", self.device.as_str()),
-                    ("disks", &disks),
-                    ("esp", esp.as_str()),
-                ],
-            ),
-            (None, None) => i18n::text_with(
-                ctx,
-                "repair-does-regenerate",
-                &[("system", &self.device), ("disks", &disks)],
-            ),
-            (Some(Target::Esp(esp)), _) => {
-                let disk = facts
+        match (&self.target, rebuilt) {
+            (None, Some(esp)) => Said {
+                writes: text("repair-writes-regenerate-uefi", &[("esp", esp.as_str())]),
+                disk: texts::disks(system),
+                then: text("repair-then-regenerate-uefi", &[]),
+            },
+            (None, None) => Said {
+                writes: text("repair-writes-regenerate", &[]),
+                disk: texts::disks(system),
+                then: text("repair-then-regenerate", &[]),
+            },
+            (Some(Target::Esp(esp)), _) => Said {
+                writes: text("repair-writes-uefi", &[("target", esp.as_str())]),
+                disk: facts
                     .inventory
                     .esps
                     .iter()
                     .find(|each| each.device == *esp)
                     .map(|each| each.disk.to_string())
-                    .unwrap_or_default();
-
-                let words = [
-                    ("target", esp.as_str()),
-                    ("disk", disk.as_str()),
-                    ("system", &self.device),
-                    ("disks", &disks),
-                ];
-
-                i18n::text_with(ctx, "repair-does-uefi", &words)
-            }
-            (Some(Target::Disk(disk)), _) => {
-                let words = [
-                    ("target", disk.as_str()),
-                    ("system", &self.device),
-                    ("disks", &disks),
-                ];
-
-                i18n::text_with(ctx, "repair-does-bios", &words)
-            }
-        };
-
-        text.into_owned()
+                    .unwrap_or_default(),
+                then: text("repair-then-uefi", &[]),
+            },
+            (Some(Target::Disk(disk)), _) => Said {
+                writes: text("repair-writes-bios", &[]),
+                disk: disk.as_str().to_owned(),
+                then: text("repair-then-bios", &[]),
+            },
+        }
     }
 
     fn send(&self, context: &PageContext<'_>, system: &System, passphrase: Option<Password>) {

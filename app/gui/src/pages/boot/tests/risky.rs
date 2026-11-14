@@ -39,6 +39,22 @@ fn a_risky_parameter_is_added_after_its_question() {
     );
 }
 
+/// The refusal frame already used up the typed parameter's mark, so the
+/// yes clears the field on its own.
+#[test]
+fn a_confirmed_risky_parameter_leaves_the_field_empty() {
+    let mut harness = asked();
+    harness.state_mut().page.parameter = "init=/bin/sh".to_owned();
+    harness.run();
+
+    harness
+        .get_by_role_and_label(Role::Button, "Add the parameter")
+        .click();
+    harness.run();
+
+    assert_eq!(harness.state().page.parameter, "");
+}
+
 #[test]
 fn cancel_drops_the_risky_parameter() {
     let mut harness = asked();

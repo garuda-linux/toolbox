@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use tokio::runtime::Runtime;
 use toolbox_catalog::ConfigFileCatalog;
-use toolbox_core::features::configs::session::Phase;
+use toolbox_core::features::configs::session::{Phase, ProblemCode};
 use toolbox_core::features::configs::{ConfigEntrySpec, Found, Listing, Refusal, viewing};
 use toolbox_exec::ConfigRead;
 use toolbox_plan::{
@@ -274,6 +274,40 @@ fn a_read_behind_the_password_dialog_ends_with_the_page() {
     until("the read never ended", || {
         machine.cancelled.load(Ordering::SeqCst)
     });
+}
+
+/// The page shows a problem's detail as the system's own words, so the
+/// app's own reasons are codes with a Fluent text instead.
+#[test]
+fn a_file_of_the_user_without_a_home_folder_fails_with_a_code_of_its_own() {
+    let (_runtime, _machine, _folder, mut configs) = configs();
+    configs.open();
+    settle(&mut configs, |configs, _| configs.listing().is_some());
+
+    assert_eq!(configs.edit("fish"), Ok(None));
+    settle(&mut configs, |configs, _| {
+        configs.session().phase() == Phase::Failed
+    });
+
+    let problem = configs.session().problem().unwrap();
+    assert_eq!(
+        (problem.code, problem.detail.as_str()),
+        (ProblemCode::NoHome, "")
+    );
+}
+
+#[test]
+fn a_cancelled_read_and_a_stopped_worker_bring_no_english_detail() {
+    let cancelled = super::jobs::problem_of(ReadProblem::Cancelled);
+    let stopped = super::jobs::stopped();
+
+    assert_eq!(
+        [
+            (cancelled.code, cancelled.detail.as_str()),
+            (stopped.code, stopped.detail.as_str())
+        ],
+        [(ProblemCode::Cancelled, ""), (ProblemCode::Failed, "")]
+    );
 }
 
 #[test]

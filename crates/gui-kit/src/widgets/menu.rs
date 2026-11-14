@@ -6,7 +6,8 @@ use egui::{
 };
 
 use super::press::Pointer;
-use super::{focus_ring, icon_button, line};
+use super::text::cut;
+use super::{focus_ring, icon_button, line, rich};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::frost::Glass;
 use crate::icons::{self, Icon};
@@ -95,7 +96,9 @@ fn item(ui: &mut Ui, icon: Option<Icon>, text: &str, room: bool) -> Response {
         left = at.right() + ITEM_INSET;
     }
 
-    let galley = line(ui, text, Weight::Regular, BODY, ink);
+    let label_room = (rect.right() - ITEM_INSET - left).max(0.0);
+    let galley = cut(ui, rich(ui, text, Weight::Regular, BODY, ink), label_room);
+    let was_cut = galley.elided;
     let position = pos2(left, rect.center().y - galley.size().y / 2.0);
     ui.painter().galley(position, galley, ink);
     focus_ring(ui, &response, RADIUS);
@@ -106,7 +109,11 @@ fn item(ui: &mut Ui, icon: Option<Icon>, text: &str, room: bool) -> Response {
         ui.close();
     }
 
-    response
+    if was_cut {
+        response.on_hover_text(text)
+    } else {
+        response
+    }
 }
 
 pub fn menu_heading(ui: &mut Ui, text: &str) {

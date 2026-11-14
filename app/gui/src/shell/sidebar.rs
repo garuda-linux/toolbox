@@ -25,8 +25,8 @@ use crate::i18n;
 use crate::page::{Group, PageId};
 use crate::page_ui::{self, PageLook as _};
 
-/// Width of the collapsed sidebar: one icon row and the panel margins.
-pub const COLLAPSED_WIDTH: f32 = 60.0;
+/// The tests' window layouts need it in a const.
+pub const COLLAPSED_WIDTH: f32 = tokens::Sizes::DEFAULT.sidebar_collapsed;
 const EXPANDED_SALT: &str = "sidebar";
 /// How many frames the open page's entry may take to scroll into place.
 const REVEAL_FRAMES: u8 = 12;
@@ -62,7 +62,7 @@ pub fn show(
         .resizable(false)
         .show_separator_line(false)
         .frame(frame)
-        .exact_size(COLLAPSED_WIDTH);
+        .exact_size(tokens.sizes.sidebar_collapsed);
 
     // egui keys the switch's slide to the expanded panel's id.
     if instant {

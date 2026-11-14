@@ -15,8 +15,8 @@ use egui::Ui;
 use toolbox_core::features::services::{Filter, UnitInfo, UnitOrder, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    RowHeights, RowList, after_skeleton, card, dimmed, empty_state, error_row, hold_content,
-    page_toolbar, skeleton_rows, toggle_chips,
+    RowHeights, RowList, Tone, after_skeleton, banner, card, dimmed, empty_state, error_row,
+    hold_content, page_toolbar, skeleton_rows, toggle_chips,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitScope;
@@ -104,15 +104,19 @@ impl PageView for ServicesPage {
         let listed = context.service::<Units>().get(self.scope);
         let first_load = ui.make_persistent_id(("services-content", self.scope));
         let units = match (listed.error(), listed.latest()) {
-            (Some(failure), _) => {
-                let id = match failure {
-                    UnitsFailure::Unavailable => "services-unavailable",
-                    UnitsFailure::Denied => "services-denied",
-                    UnitsFailure::Failed => "services-failed",
-                };
+            (Some(failure), Some(units)) => {
+                let again = i18n::text(&ctx, "services-refresh");
+                let said = i18n::text(&ctx, failure_text(*failure));
+                if banner(ui, Tone::Error, &said, &[&again]) == Some(0) {
+                    context.commands.send(ServiceCommand::Refresh(self.scope));
+                }
 
+                ui.add_space(ui.tokens().sizes.header_gap);
+                units
+            }
+            (Some(failure), None) => {
                 let retry = i18n::text(&ctx, "services-retry");
-                if error_row(ui, &i18n::text(&ctx, id), &retry) {
+                if error_row(ui, &i18n::text(&ctx, failure_text(*failure)), &retry) {
                     context.commands.send(ServiceCommand::Refresh(self.scope));
                 }
 
@@ -239,5 +243,13 @@ impl ServicesPage {
             Some(Shown::Inactive) => self.filter.hide_inactive ^= true,
             None => {}
         }
+    }
+}
+
+const fn failure_text(failure: UnitsFailure) -> &'static str {
+    match failure {
+        UnitsFailure::Unavailable => "services-unavailable",
+        UnitsFailure::Denied => "services-denied",
+        UnitsFailure::Failed => "services-failed",
     }
 }

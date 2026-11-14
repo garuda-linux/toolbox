@@ -70,6 +70,17 @@ fn an_info_note_goes_after_four_seconds() {
 }
 
 #[test]
+fn a_note_raised_after_an_idle_window_is_still_there_on_its_first_frame() {
+    let mut harness = shown(Toasts::default());
+
+    harness.state_mut().add(ToastKind::Info, "Copied");
+    later(&mut harness, 10.0);
+    harness.step();
+
+    assert_eq!(harness.state().texts(), ["Copied"]);
+}
+
+#[test]
 fn hovering_an_info_note_keeps_it() {
     let mut harness = shown(with(ToastKind::Info, "Copied"));
     harness.get_by_label("Copied").hover();
@@ -306,6 +317,20 @@ fn an_info_note_waits_while_the_window_is_away() {
     assert_eq!(harness.state().texts(), ["Copied"]);
 
     harness.input_mut().focused = true;
+    later(&mut harness, 4.5);
+    assert!(harness.state().is_empty());
+}
+
+#[test]
+fn an_info_note_still_shows_on_the_frame_the_window_comes_back() {
+    let mut harness = shown(with(ToastKind::Info, "Copied"));
+    harness.input_mut().focused = false;
+    harness.step();
+
+    harness.input_mut().focused = true;
+    later(&mut harness, 10.0);
+    assert_eq!(harness.state().texts(), ["Copied"]);
+
     later(&mut harness, 4.5);
     assert!(harness.state().is_empty());
 }

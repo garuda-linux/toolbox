@@ -1,6 +1,6 @@
 use egui::{
-    Align, Atom, Context, Frame, Id, IdSalt, Layout, Margin, Rect, Response, Role, Sense, Shape,
-    TextEdit, TextStyle, Ui, UiBuilder, WidgetInfo, pos2, vec2,
+    Align, Atom, Context, CursorIcon, Frame, Id, IdSalt, Layout, Margin, Rect, Response, Role,
+    Sense, Shape, TextEdit, TextStyle, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 
 use super::buttons::{SMALL_BUTTON, paint_small_button};
@@ -42,7 +42,10 @@ pub fn search_field(
 
     let focused = ui.memory(|memory| memory.has_focus(id));
 
-    let (rect, _) = ui.allocate_exact_size(vec2(width, PILL_HEIGHT), Sense::hover());
+    // Not focusable, so the pill adds no tab stop of its own next to the
+    // text it hands the focus to.
+    let (rect, area) = ui.allocate_exact_size(vec2(width, PILL_HEIGHT), Sense::CLICK);
+    let pill = area.on_hover_cursor(CursorIcon::Text);
     let slot = ui.painter().add(Shape::Noop);
     paint_field(ui, slot, rect, PILL_RADIUS, focused);
 
@@ -87,6 +90,12 @@ pub fn search_field(
             .labelled_by(label.id)
         })
         .inner;
+
+    // Asked after the text edit ran, which drops its focus on a click
+    // outside its own strip.
+    if pill.clicked() {
+        ui.memory_mut(|memory| memory.request_focus(id));
+    }
 
     if !text.is_empty() && clear_button(ui, rect, id, texts.clear) {
         text.clear();

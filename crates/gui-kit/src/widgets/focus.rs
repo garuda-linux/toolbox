@@ -36,6 +36,23 @@ pub(super) fn ring_around(ui: &Ui, rect: Rect, radius: u8) {
     );
 }
 
+/// The ring on `rect`'s own edge while `response` has the focus, for a
+/// box that fills its room to the edge, such as the terminal's frame,
+/// where a ring outside would leave the room.
+pub fn edge_ring(ui: &Ui, response: &Response, rect: Rect, radius: u8) {
+    if !response.has_focus() || !visible(ui) {
+        return;
+    }
+
+    let accent = tokens::current(ui.ctx()).accent_ring;
+    ui.painter().rect_stroke(
+        rect,
+        CornerRadius::same(radius),
+        Stroke::new(2.0, accent),
+        StrokeKind::Inside,
+    );
+}
+
 /// Follows the pointer and the keys at the start of every pass.
 ///
 /// A field takes the focus on the press and draws its ring the frames

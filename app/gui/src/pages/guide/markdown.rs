@@ -8,10 +8,12 @@ use egui::{
     Align, Color32, CornerRadius, Frame, Grid, Label, Layout, Margin, RichText, ScrollArea, Sense,
     Stroke, TextStyle, Ui, vec2,
 };
-use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, SMALL, Weight};
 use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS};
-use toolbox_gui_kit::widgets::{TileSize, Tone, paint_status_tile, rich};
+use toolbox_gui_kit::widgets::{
+    TileSize, Tone, icon_button, icon_button_width, paint_status_tile, rich,
+};
+use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_guide::{Block, Callout, CalloutKind, Code, Heading, Image, List, Table};
 
 use super::Jump;
@@ -30,6 +32,8 @@ pub(super) struct Reader<'target> {
     pub jump: Option<Jump>,
     pub reached: bool,
     pub headings: Vec<(String, f32)>,
+    /// A code block went to the clipboard, which the page tells the user.
+    pub copied: bool,
 }
 
 impl<'target> Reader<'target> {
@@ -39,6 +43,7 @@ impl<'target> Reader<'target> {
             jump: None,
             reached: false,
             headings: Vec::new(),
+            copied: false,
         }
     }
 }
@@ -57,7 +62,7 @@ fn one(ui: &mut Ui, block: &Block, reader: &mut Reader<'_>) {
         Block::Paragraph(text) => spans::show(ui, text, Weight::Regular, reader),
         Block::List(list) => items(ui, list, reader),
         Block::Table(table) => grid(ui, table, reader),
-        Block::Code(code) => code_block(ui, code),
+        Block::Code(code) => code_block(ui, code, reader),
         Block::Callout(callout) => note(ui, callout, reader),
         Block::Image(image) => picture(ui, image),
         Block::Rule => _ = ui.separator(),
@@ -165,17 +170,31 @@ fn cell_text(ui: &mut Ui, cell: &[toolbox_guide::Span], weight: Weight, reader: 
     });
 }
 
-fn code_block(ui: &mut Ui, code: &Code) {
+/// The copy button sits beside the code rather than over it, so it never
+/// hides the end of a long line.
+fn code_block(ui: &mut Ui, code: &Code, reader: &mut Reader<'_>) {
     let tokens = ui.tokens();
+    let alt = i18n::text(ui.ctx(), "guide-copy-code");
     Frame::new()
         .fill(tokens.field)
         .corner_radius(CornerRadius::same(RADIUS))
         .inner_margin(Margin::same(12))
         .show(ui, |ui| {
             ui.set_width(ui.available_width());
-            ScrollArea::horizontal().show(ui, |ui| {
-                let text = RichText::new(&code.text).monospace().color(tokens.text);
-                ui.add(Label::new(text).extend());
+            ui.horizontal_top(|ui| {
+                let gap = ui.spacing().item_spacing.x;
+                let room = ui.available_width() - icon_button_width(ui) - gap;
+                ui.allocate_ui(vec2(room.max(0.0), 0.0), |ui| {
+                    ScrollArea::horizontal().show(ui, |ui| {
+                        let text = RichText::new(&code.text).monospace().color(tokens.text);
+                        ui.add(Label::new(text).extend());
+                    });
+                });
+
+                if icon_button(ui, icons::EDIT_COPY, &alt).clicked() {
+                    ui.ctx().copy_text(code.text.clone());
+                    reader.copied = true;
+                }
             });
         });
 }

@@ -77,3 +77,39 @@ fn an_arrow_key_moves_the_pill_at_once() {
 
     assert!((pill_left(&harness) - user).abs() < 0.5);
 }
+
+/// A collapsing sidebar or a resized window moves the whole track. The
+/// pill moves with it at once instead of sliding after it.
+#[test]
+fn the_pill_moves_with_its_track() {
+    let mut harness = harness(400.0, 120.0)
+        .with_step_dt(1.0 / 60.0)
+        .with_max_steps(60)
+        .build_ui_state(
+            |ui, indent: &mut f32| {
+                ui.horizontal(|ui| {
+                    ui.add_space(*indent);
+                    let options = [(Scope::System, "System"), (Scope::User, "User")];
+                    _ = segmented(ui, "Units", &options, Scope::System);
+                });
+            },
+            0.0_f32,
+        );
+
+    harness
+        .ctx
+        .all_styles_mut(|style| style.animation_time = theme::ANIMATION_TIME);
+    harness.run();
+
+    *harness.state_mut() = 120.0;
+    harness.step();
+    harness.step();
+
+    let raised = Tokens::derive(&Palette::fallback(Theme::Dark), Theme::Dark).raised;
+    let pill = filled_rect(&harness, raised).expect("the pill").left();
+    let system = harness.get_by_label("System").rect().left();
+    assert!(
+        (pill - system).abs() < 0.5,
+        "pill at {pill}, segment at {system}"
+    );
+}

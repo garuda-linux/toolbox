@@ -38,6 +38,7 @@ mod secret;
 mod segmented;
 mod select;
 mod skeleton;
+mod spin;
 mod status_tile;
 mod switch;
 #[cfg(test)]
@@ -62,7 +63,7 @@ pub use chip::{
 pub use dim::{dim_opacity, dim_picture, dimmed};
 pub use empty::{empty_state, error_row};
 pub use field::{forget_text, text_field, text_field_with_unit};
-pub use focus::{focus_ring, install as install_focus};
+pub use focus::{edge_ring, focus_ring, install as install_focus};
 use heading::mark_heading;
 pub use heading::{
     SectionHeading, minor_heading, page_header, page_toolbar, section_heading, section_intro,
@@ -97,6 +98,7 @@ pub use secret::SecretText;
 pub use segmented::{segmented, segmented_width};
 pub use select::Select;
 pub use skeleton::{after_skeleton, hold_content, skeleton_rows};
+pub use spin::{SpinTexts, spin_field};
 pub use status_tile::{paint_status_tile, status_tile, status_word};
 pub use switch::switch;
 pub use text::{line, rich};

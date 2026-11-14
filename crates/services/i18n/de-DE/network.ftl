@@ -85,7 +85,7 @@ network-drivers-unreadable = Die Treiber dieses Systems ließen sich nicht lesen
 network-drivers-none = Keine Netzwerktreiber gefunden
 network-drivers-none-detail = Die Module des laufenden Kernels liegen nicht auf der Festplatte. Starte nach einem Kernel-Update zuerst den Computer neu.
 network-drivers-no-match = Kein Treiber passt
-network-drivers-clear = Suche leeren
+network-drivers-clear = Filter zurücksetzen
 # $files lists the other modprobe files.
 network-driver-other-files = Von { $files } auf die Blacklist gesetzt. Garuda Toolbox ändert diese Datei nicht.
 network-driver-queued-on = Vorgemerkt: auf die Blacklist

@@ -1,16 +1,24 @@
 //! Text a widget cuts to fit ends in "…" and stays readable whole on
 //! hover and for screen readers.
 
+use egui::Theme;
 use egui::accesskit::Role;
-use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use egui_kittest::{Harness, SnapshotResults};
 
-use super::super::{Select, link_tile};
+use super::super::{
+    NavLook, Select, check_row, link_row, link_tile, menu_button, menu_item, nav_row,
+};
 use crate::icons;
 use crate::testing::{harness, painted_text};
 
 const LONG: &str = "Deutsch (Deutschland, mit sehr langer Beschreibung)";
 const DETAIL: &str = "Check the system, clean the caches and repair what broke on the way";
+const GERMAN: &str = "Paketzwischenspeicher leeren und verwaiste Pakete entfernen";
+const NAV: NavLook = NavLook {
+    expanded: true,
+    height: 32.0,
+};
 
 /// Hovers `label` long enough for egui's tooltip delay.
 fn hover<State>(harness: &mut Harness<'_, State>, role: Role, label: &str) {
@@ -155,6 +163,95 @@ fn a_captioned_select_takes_no_more_than_its_full_width() {
     harness.run();
     let (full, used) = widths.get();
     assert!((used - full).abs() < 0.5, "full {full}, used {used}");
+}
+
+/// A menu, a link row, a sidebar entry and a check row, each narrower
+/// than its German label, the menu open.
+fn labels(theme: Theme) -> Harness<'static> {
+    let mut harness = harness(520.0, 360.0).with_theme(theme).build_ui(|ui| {
+        ui.horizontal_top(|ui| {
+            ui.vertical(|ui| {
+                ui.set_width(160.0);
+                nav_row(ui, icons::GO_HOME, GERMAN, false, NAV);
+                ui.add_space(12.0);
+                _ = link_row(ui, icons::TOOLS, GERMAN, Role::Link);
+                ui.add_space(12.0);
+                _ = check_row(ui, true, GERMAN, "", true);
+            });
+
+            ui.add_space(24.0);
+            menu_button(ui, "Actions", |ui| {
+                _ = menu_item(ui, GERMAN);
+            });
+        });
+    });
+
+    harness.run();
+    harness.get_by_label("Actions").click();
+    harness.run();
+    harness
+}
+
+#[test]
+fn painted_one_line_labels_cut_a_long_text() {
+    let harness = labels(Theme::Dark);
+
+    let cut: Vec<bool> = crate::testing::painted(&harness)
+        .into_iter()
+        .filter_map(|shape| {
+            if let egui::Shape::Text(text) = shape
+                && text.galley.text().starts_with("Paket")
+            {
+                Some(text.galley.elided)
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    assert_eq!(cut, [true; 4], "nav, link, check and menu labels");
+}
+
+#[test]
+fn a_cut_menu_item_shows_whole_on_hover() {
+    let mut harness = labels(Theme::Dark);
+
+    hover(&mut harness, Role::MenuItem, GERMAN);
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Label, GERMAN)
+            .is_some(),
+        "no tooltip with the whole entry"
+    );
+}
+
+#[test]
+fn a_cut_link_row_shows_whole_on_hover() {
+    let mut harness = labels(Theme::Dark);
+    harness.key_press(egui::Key::Escape);
+    harness.run();
+
+    hover(&mut harness, Role::Link, GERMAN);
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Label, GERMAN)
+            .is_some(),
+        "no tooltip with the whole title"
+    );
+}
+
+#[test]
+fn cut_labels_in_both_themes() {
+    let mut results = SnapshotResults::new();
+
+    for (theme, name) in [
+        (Theme::Dark, "widgets/cut_labels_dark"),
+        (Theme::Light, "widgets/cut_labels_light"),
+    ] {
+        results.add(labels(theme).try_snapshot(name));
+    }
 }
 
 #[test]

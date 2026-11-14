@@ -27,7 +27,7 @@ pub use capture::{CaptureError, Captured, Exited, MAX_ERROR_BYTES, Policy, captu
 pub use config_file::{
     ConfigRead, Found, MAX_FOLDER_FILES, ReadError, WriteError, inspect, read_config_file,
 };
-pub use located::editor as locate_editor;
+pub use located::{editor as locate_editor, program as locate_program};
 pub use pty_runner::{Environment, PtyRunner};
 pub use repair::{PreflightError, preflight};
 pub use sdboot::sdboot_menu;

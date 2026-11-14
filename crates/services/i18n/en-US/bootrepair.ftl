@@ -57,19 +57,28 @@ repair-failed-run = The repair failed. Nothing stays mounted or unlocked. The Co
 repair-busy = Another task was running, so the repair did not start. Try again when it has finished.
 repair-show-console = Show Console
 
-# The confirm dialog. $system and $target are devices, $disks and $disk
-# the disks they lie on.
+# The confirm dialog.
 repair-reinstall-title = Reinstall the boot loader?
 repair-regenerate-title = Build the boot files again?
 repair-reinstall-confirm = Reinstall the boot loader
 repair-regenerate-confirm = Build the boot files again
 repair-cancel = Cancel
-repair-does-regenerate = On a GRUB system the boot menu /boot/grub/grub.cfg of the system on { $system } (disk { $disks }) is written again. Nothing else on the disk changes. A system with systemd-boot is not repaired this way without UEFI.
-repair-does-regenerate-uefi = On a GRUB system the boot menu /boot/grub/grub.cfg of the system on { $system } (disk { $disks }) is written again. On a system with systemd-boot its initramfs and kernel images are built again onto the EFI system partition { $esp }. Nothing else on the disks changes.
-repair-does-uefi = The boot loader is written to the EFI system partition { $target } on the disk { $disk } and entered into the firmware's boot menu: GRUB as "Garuda", systemd-boot as "Linux Boot Manager". Then the boot files of the system on { $system } (disk { $disks }) are built again: GRUB's boot menu /boot/grub/grub.cfg, or systemd-boot's kernel images.
-repair-does-bios = GRUB is written to the first sectors of the disk { $target }, in place of the boot loader that is there now. Then the boot menu /boot/grub/grub.cfg of the system on { $system } (disk { $disks }) is written again. A system with systemd-boot is not repaired this way.
-# $layout is one of the layouts above.
-repair-looked-for = The system is looked for here: { $layout }
+# The labels of the dialog's list of what the repair writes where.
+repair-fact-writes = Writes
+repair-fact-disk = Disk
+repair-fact-system = System
+repair-fact-layout = Layout
+# What the list says the repair writes. $esp and $target are EFI system
+# partitions.
+repair-writes-regenerate = GRUB's boot menu /boot/grub/grub.cfg
+repair-writes-regenerate-uefi = GRUB's boot menu /boot/grub/grub.cfg, or systemd-boot's initramfs and kernel images on { $esp }
+repair-writes-uefi = The boot loader on the EFI system partition { $target }, then the system's boot files
+repair-writes-bios = GRUB in the first sectors of the disk, then the boot menu /boot/grub/grub.cfg
+# The one sentence below the list.
+repair-then-regenerate = Nothing else on the disk changes, and a system with systemd-boot is not repaired this way without UEFI.
+repair-then-regenerate-uefi = Nothing else on the disks changes.
+repair-then-uefi = The boot loader is entered into the firmware's boot menu, GRUB as "Garuda" and systemd-boot as "Linux Boot Manager".
+repair-then-bios = GRUB takes the place of the boot loader that is there now, and a system with systemd-boot is not repaired this way.
 repair-runs-now = It runs right away and asks for an administrator's password. The Console shows every command.
 # In the question on an installed system, not on the live ISO.
 repair-trust-disk = This is not the live ISO. The chosen system's own grub-install, mkinitcpio and bootctl run as root. Repair only a disk nobody else could write to.

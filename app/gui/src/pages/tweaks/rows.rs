@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use egui::{Context, Label, Ui};
 use toolbox_core::features::toggles::shown::Tally;
-use toolbox_core::features::tweaks::view::{Choices, Flip, Pick};
+use toolbox_core::features::tweaks::view::{Choices, Flip, Pick, Read};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
     ListItem, RowHeights, RowList, RowState, Select, Tone, dimmed, highlighted, row_height,
@@ -92,6 +92,19 @@ pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &str) -> Tal
             total: 1,
         })
         .sum()
+}
+
+/// The pickers whose probe failed, for the banner of what could not be
+/// read. A queued wish shows what will be, as a catalog row's does.
+pub fn unread(choices: &Choices) -> usize {
+    [
+        (choices.shell.read, choices.shell.queued),
+        (choices.dns.read, choices.dns.queued),
+        (choices.wifi.read, choices.wifi.queued),
+    ]
+    .into_iter()
+    .filter(|&(read, queued)| read == Read::Failed && !queued)
+    .count()
 }
 
 pub fn shell_network(
@@ -258,15 +271,16 @@ fn pick_row<T>(
         .and_then(|index| entries.get(index))
         .and_then(|entry| entry.detail.as_deref());
 
-    let placeholder = i18n::text(
-        &ctx,
-        if pick.known {
-            "tweaks-other"
-        } else {
-            "tweaks-unavailable"
-        },
-    );
+    // Before the first probe the value is only not read yet. How that
+    // shows waits for a decision, so the pill stays empty meanwhile.
+    let placeholder = match pick.read {
+        Read::Known => i18n::text(&ctx, "tweaks-other"),
+        Read::Failed => i18n::text(&ctx, "tweaks-unread"),
+        Read::Absent => i18n::text(&ctx, "tweaks-unavailable"),
+        Read::NotYet => Cow::Borrowed(""),
+    };
 
+    let known = pick.read == Read::Known;
     dimmed(ui, context.busy, |ui| {
         split_row(
             ui,
@@ -274,7 +288,7 @@ fn pick_row<T>(
             |ui| text(ui, (id, query), pick.queued.then_some("tweaks-queued")),
             |ui| {
                 let picked = ui
-                    .add_enabled_ui(pick.known && !context.busy, |ui| {
+                    .add_enabled_ui(known && !context.busy, |ui| {
                         Select::new(&title, &names)
                             .selected(pick.shown)
                             .placeholder(&placeholder)

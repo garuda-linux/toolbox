@@ -185,3 +185,16 @@ fn a_refused_radio_switch_is_remembered() {
 
     assert_eq!(machine.switches.load(Ordering::SeqCst), 1);
 }
+
+#[test]
+fn a_refresh_forgets_a_refused_radio_switch() {
+    let runtime = Runtime::new().unwrap();
+    let machine = Arc::new(Machine::default());
+    let mut network = network(&runtime, &machine, true);
+    network.set_radio(RadioTarget::Wifi, true);
+    settle(&mut network, Network::radio_failed);
+
+    network.refresh();
+
+    assert!(!network.radio_failed());
+}

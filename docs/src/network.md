@@ -147,8 +147,8 @@ kernel are not on the disk. That is normal right after a kernel update:
 restart the computer first.
 
 **No driver matches** means the search or the filters hide every driver.
-**Clear search** empties the search field. When the drivers could not be
-read, **Read again** reads them again.
+**Clear filters** empties the search field and shows all states and kinds.
+When the drivers could not be read, **Read again** reads them again.
 
 ## List network hardware
 

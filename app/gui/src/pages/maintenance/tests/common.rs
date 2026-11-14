@@ -1,6 +1,7 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::features::maintenance::Operation;
+use toolbox_core::features::maintenance::{self, Operation, Task};
+use toolbox_plan::Toggle;
 
 use super::{page, programs, sent, with};
 use crate::command::{Command, MaintenanceCommand};
@@ -35,6 +36,26 @@ fn removing_orphans_asks_first_and_runs_on_its_danger_button() {
         [Command::from(MaintenanceCommand::RunOperation(
             Operation::RemoveOrphans
         ))]
+    );
+}
+
+#[test]
+fn a_queued_operation_marks_its_row() {
+    let mut fixture = with(programs(), Maintenance::default());
+    let snapshot = std::sync::Arc::clone(&fixture.snapshot);
+    maintenance::queue(
+        Task::CleanPackageCache,
+        Toggle::On,
+        &mut fixture.changes,
+        &snapshot,
+    );
+
+    let harness = page(fixture);
+
+    assert_eq!(
+        harness.query_all_by_label("Runs with Apply").count(),
+        1,
+        "only the queued row carries the mark"
     );
 }
 

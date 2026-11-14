@@ -82,6 +82,7 @@ fn the_window_and_the_command_line_agree_on_the_facts() {
         let home = Overview::of(&status, now)
             .with_facts(&found)
             .attention(false);
+
         let shown = view(&status, &Ok(false), now).with_facts(&found, now);
 
         assert_eq!(needs_attention(&shown), home, "{}", brief(&shown));

@@ -6,6 +6,7 @@
 mod tests;
 
 use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, UserName, WifiBackend};
+use toolbox_state::probes::{FailedProbes, Probe};
 
 use crate::domains::{
     AvailableShells, CurrentDns, CurrentShells, CurrentWifiBackend, Dns, GarudaUpdateConfig,
@@ -18,8 +19,20 @@ pub struct Pick<T> {
     pub options: Vec<T>,
     /// The option shown, `None` when the value is none of them.
     pub shown: Option<usize>,
-    pub known: bool,
+    pub read: Read,
     pub queued: bool,
+}
+
+/// What became of the system's value of a [`Pick`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Read {
+    Known,
+    /// The first probe has not ended yet.
+    NotYet,
+    /// Its probe failed, so the value may still be there.
+    Failed,
+    /// The system lacks the thing.
+    Absent,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -49,23 +62,30 @@ impl Choices {
 
         let current_shell = user.and_then(|user| snapshot.part::<CurrentShells>()?.0.get(user));
         let config = snapshot.part::<GarudaUpdateConfig>();
+        let shell_probes = [Probe::LoginShells, Probe::AvailableShells, Probe::User];
 
         Self {
             shell: pick(
                 available,
-                current_shell,
+                (current_shell, read(snapshot, current_shell, &shell_probes)),
                 user.and_then(|user| changes.wish::<LoginShells>(user)),
             ),
-            dns: pick(
-                DnsProvider::ALL.to_vec(),
-                snapshot.part::<CurrentDns>().map(|dns| &dns.0),
-                changes.wish::<Dns>(&Single),
-            ),
-            wifi: pick(
-                WifiBackend::ALL.to_vec(),
-                snapshot.part::<CurrentWifiBackend>().map(|wifi| &wifi.0),
-                changes.wish::<WifiBackends>(&Single),
-            ),
+            dns: {
+                let current = snapshot.part::<CurrentDns>().map(|dns| &dns.0);
+                pick(
+                    DnsProvider::ALL.to_vec(),
+                    (current, read(snapshot, current, &[Probe::Dns])),
+                    changes.wish::<Dns>(&Single),
+                )
+            },
+            wifi: {
+                let current = snapshot.part::<CurrentWifiBackend>().map(|wifi| &wifi.0);
+                pick(
+                    WifiBackend::ALL.to_vec(),
+                    (current, read(snapshot, current, &[Probe::WifiBackend])),
+                    changes.wish::<WifiBackends>(&Single),
+                )
+            },
             hblock: flip(
                 snapshot.part::<HblockState>().map(|state| state.0),
                 changes.wish::<Hblock>(&Single),
@@ -83,7 +103,7 @@ impl Choices {
     }
 }
 
-fn pick<T>(options: Vec<T>, current: Option<&T>, queued: Option<&T>) -> Pick<T>
+fn pick<T>(options: Vec<T>, (current, read): (Option<&T>, Read), queued: Option<&T>) -> Pick<T>
 where
     T: PartialEq,
 {
@@ -92,8 +112,21 @@ where
     Pick {
         shown: options.iter().position(|option| Some(option) == shown),
         options,
-        known: current.is_some(),
+        read,
         queued: queued.is_some(),
+    }
+}
+
+/// A snapshot without [`FailedProbes`] was not probed yet.
+fn read<T>(snapshot: &Snapshot, current: Option<&T>, probes: &[Probe]) -> Read {
+    if current.is_some() {
+        return Read::Known;
+    }
+
+    match snapshot.part::<FailedProbes>() {
+        None => Read::NotYet,
+        Some(failed) if probes.iter().any(|probe| failed.contains(*probe)) => Read::Failed,
+        Some(_) => Read::Absent,
     }
 }
 

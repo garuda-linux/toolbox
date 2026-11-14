@@ -1,14 +1,16 @@
 //! The desktop's own file dialog through the XDG file chooser portal, so
 //! it looks native on every desktop that has a portal.
 
+use ashpd::Error;
+use ashpd::desktop::ResponseError;
 use ashpd::desktop::file_chooser::{FileFilter, SelectedFiles};
 use tokio::runtime::Handle;
 use toolbox_system::file_path;
 
-use super::{FileChooser, FileKind};
+use super::{Chosen, FileChooser, FileKind};
 
 /// The portal's chooser. Without a portal nothing opens and the answer is
-/// no file.
+/// a failure, which the page tells from a cancel.
 #[derive(Debug)]
 pub struct PortalChooser {
     runtime: Handle,
@@ -21,7 +23,7 @@ impl PortalChooser {
 }
 
 impl FileChooser for PortalChooser {
-    fn choose(&self, kind: FileKind, title: &str, filter: &str) -> Option<String> {
+    fn choose(&self, kind: FileKind, title: &str, filter: &str) -> Chosen {
         let globs: &[&str] = match kind {
             FileKind::Background => &["*.png", "*.jpg", "*.jpeg", "*.tga"],
             FileKind::Theme => &["*.txt"],
@@ -43,10 +45,20 @@ impl FileChooser for PortalChooser {
         });
 
         match answer {
-            Ok(files) => files.uris().first().and_then(|uri| file_path(uri.as_str())),
+            Ok(files) => {
+                let path = files.uris().first().and_then(|uri| file_path(uri.as_str()));
+                path.map_or_else(
+                    || {
+                        tracing::warn!("the file dialog gave back no local file");
+                        Chosen::Failed
+                    },
+                    Chosen::File,
+                )
+            }
+            Err(Error::Response(ResponseError::Cancelled)) => Chosen::Cancelled,
             Err(error) => {
-                tracing::info!("no file was chosen: {error}");
-                None
+                tracing::warn!("the file dialog could not open: {error}");
+                Chosen::Failed
             }
         }
     }

@@ -12,7 +12,7 @@ use egui_kittest::kittest::Queryable as _;
 use tokio::runtime::Runtime;
 use toolbox_core::domains::CurrentGrub;
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_gui::boot::{BootSetup, FileChooser, FileKind};
+use toolbox_gui::boot::{BootSetup, Chosen, FileChooser, FileKind};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
@@ -39,8 +39,8 @@ impl BootMenuSource for Source {
 }
 
 impl FileChooser for Chooser {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Option<String> {
-        Some("/usr/share/grub/themes/garuda/theme.txt".to_owned())
+    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+        Chosen::File("/usr/share/grub/themes/garuda/theme.txt".to_owned())
     }
 }
 

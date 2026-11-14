@@ -182,6 +182,45 @@ fn without_the_live_blur_the_terminal_box_is_solid() {
     );
 }
 
+fn ringed(harness: &egui_kittest::Harness<'_, crate::console::Console>) -> bool {
+    let tokens = toolbox_gui_kit::tokens::current(&harness.ctx);
+    let frame = toolbox_gui_kit::testing::filled_rect(harness, tokens.terminal).expect("the box");
+    toolbox_gui_kit::testing::rims_in(harness, tokens.accent_ring)
+        .iter()
+        .any(|(rect, _)| {
+            (rect.min - frame.min).length() < 0.5 && (rect.max - frame.max).length() < 0.5
+        })
+}
+
+#[test]
+fn a_terminal_the_keyboard_focused_rings_its_box() {
+    use egui_kittest::kittest::Queryable as _;
+
+    let mut harness = terminal_box(false);
+    assert!(!ringed(&harness), "no ring before the focus");
+
+    harness.get_by_role(egui::accesskit::Role::Terminal).focus();
+    harness.run();
+
+    assert!(ringed(&harness));
+}
+
+#[test]
+fn a_terminal_focused_by_a_click_shows_no_ring() {
+    use egui_kittest::kittest::Queryable as _;
+
+    let mut harness = terminal_box(false);
+    harness.get_by_role(egui::accesskit::Role::Terminal).click();
+    harness.run();
+
+    assert!(
+        harness
+            .get_by_role(egui::accesskit::Role::Terminal)
+            .is_focused()
+    );
+    assert!(!ringed(&harness));
+}
+
 #[test]
 fn the_idle_hint_sits_one_cell_after_the_cursor_on_its_row() {
     let terminal = egui::Rect::from_min_size(egui::pos2(40.0, 30.0), egui::vec2(500.0, 100.0));

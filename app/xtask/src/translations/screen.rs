@@ -62,6 +62,9 @@ pub(super) fn matches_english(stem: &str, english: &str, written: &str) -> Resul
 /// `text`, unless it hides a character from its reviewer.
 pub(super) fn screened(text: &str) -> Result<&str, String> {
     hidden(text).map_or(Ok(text), |letter| {
-        Err(format!("holds the hidden character U+{:04X}", u32::from(letter)))
+        Err(format!(
+            "holds the hidden character U+{:04X}",
+            u32::from(letter)
+        ))
     })
 }

@@ -1,6 +1,7 @@
 //! How a single command runs is the [`Runner`]'s business, so this order of events is tested without root or real programs.
 //! The helper runs root steps with it, the app user steps.
 
+mod targets;
 #[cfg(test)]
 mod tests;
 
@@ -10,10 +11,10 @@ use std::path::Path;
 
 use toolbox_plan::procedure::{Builtin, Command, Invocation};
 use toolbox_plan::protocol::{Event, Failure, Leftover, Mode, Outcome};
-use toolbox_plan::{PackageName, RootAction, SecretInput, Step, StepId, UserAction, protection};
+use toolbox_plan::{RootAction, SecretInput, Step, StepId, UserAction};
 
 use crate::builtin::SYSTEM_ROOT;
-use crate::report::{failure, note};
+use crate::report::failure;
 use crate::{initramfs, repair, uki};
 
 pub trait Procedure {
@@ -131,6 +132,10 @@ fn program_name(procedure: &[Invocation]) -> &'static str {
             | Invocation::Run(command)
             | Invocation::RunWithTargetsFrom {
                 query: _,
+                run: command,
+            }
+            | Invocation::RunUnlessItRemovesProtected {
+                preview: _,
                 run: command,
             }
             | Invocation::Feed { command, input: _ } => command.program().name(),
@@ -258,7 +263,10 @@ fn run_once(
         } => runner.run_always(step, command, sink),
         Invocation::Run(command) => runner.run(step, command, sink),
         Invocation::RunWithTargetsFrom { query, run } => {
-            with_targets(step, query, run, runner, sink)
+            targets::repeated(step, query, run, runner, sink)
+        }
+        Invocation::RunUnlessItRemovesProtected { preview, run } => {
+            targets::unless_protected(step, preview, run, runner, sink)
         }
         Invocation::Builtin(Builtin::RebuildInitramfs { root }) => {
             match initramfs::rebuild(Path::new(SYSTEM_ROOT), *root) {
@@ -298,57 +306,6 @@ fn run_once(
             step,
             sink,
             &format!("the secret for {} did not arrive", command.program().name()),
-        ),
-    }
-}
-
-/// The query's lines become arguments, so each must pass as a package name:
-/// a line like `--overwrite=*` would otherwise turn into an option.
-fn with_targets(
-    step: StepId,
-    query: &Command,
-    run: &Command,
-    runner: &mut dyn Runner,
-    sink: &mut dyn EventSink,
-) -> Outcome {
-    let lines = match runner.query(query) {
-        Ok(lines) => lines,
-        Err(error) => return failure(step, sink, &format!("{query} failed: {error}")),
-    };
-
-    if lines.is_empty() {
-        return Outcome::Skipped;
-    }
-
-    let targets: Result<Vec<PackageName>, _> = lines.iter().map(PackageName::new).collect();
-
-    match targets {
-        Ok(targets) => {
-            // A protected package can turn orphan, `-Rns` must not take it.
-            let (kept, removed): (Vec<_>, Vec<_>) = targets
-                .into_iter()
-                .partition(|target| protection(target).is_some());
-
-            if !kept.is_empty() {
-                let names: Vec<&str> = kept.iter().map(PackageName::as_str).collect();
-                let message = format!("kept, as protected: {}", names.join(" "));
-                note(step, sink, &message, Outcome::Skipped);
-            }
-
-            if removed.is_empty() {
-                return Outcome::Skipped;
-            }
-
-            runner.run(
-                step,
-                &run.clone().args(removed.iter().map(PackageName::as_str)),
-                sink,
-            )
-        }
-        Err(error) => failure(
-            step,
-            sink,
-            &format!("{query} printed something unexpected: {error}"),
         ),
     }
 }

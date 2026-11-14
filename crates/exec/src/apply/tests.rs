@@ -21,7 +21,8 @@ use super::{EventSink, Runner, apply};
 struct FakeRunner {
     ran: Vec<String>,
     outcomes: VecDeque<Outcome>,
-    query_output: Vec<String>,
+    /// One answer per query, then none.
+    queries: VecDeque<Vec<String>>,
     fed: Vec<Vec<u8>>,
     /// Part of a command at which `run` panics, as a bug in a runner would.
     panics_at: Option<&'static str>,
@@ -67,7 +68,7 @@ impl Runner for FakeRunner {
 
     fn query(&mut self, command: &Command) -> io::Result<Vec<String>> {
         self.ran.push(format!("query: {command}"));
-        Ok(self.query_output.clone())
+        Ok(self.queries.pop_front().unwrap_or_default())
     }
 
     fn builtin(&mut self, _step: StepId, builtin: &Builtin, _sink: &mut dyn EventSink) -> Outcome {
@@ -222,7 +223,7 @@ fn a_dry_run_reports_every_step_as_skipped_and_runs_nothing() {
 #[test]
 fn query_targets_are_appended_to_the_command() {
     let mut runner = FakeRunner {
-        query_output: vec!["libfoo".to_owned(), "python-bar".to_owned()],
+        queries: VecDeque::from([vec!["libfoo".to_owned(), "python-bar".to_owned()]]),
         ..FakeRunner::default()
     };
 
@@ -238,7 +239,8 @@ fn query_targets_are_appended_to_the_command() {
         runner.ran,
         [
             "query: pacman -Qtdq",
-            "pacman -Rns --noconfirm -- libfoo python-bar"
+            "pacman -Rn --noconfirm -- libfoo python-bar",
+            "query: pacman -Qtdq"
         ]
     );
 }
@@ -262,7 +264,7 @@ fn an_empty_query_skips_the_command() {
 #[test]
 fn query_output_that_is_not_a_package_name_fails_the_step() {
     let mut runner = FakeRunner {
-        query_output: vec!["--overwrite=*".to_owned()],
+        queries: VecDeque::from([vec!["--overwrite=*".to_owned()]]),
         ..FakeRunner::default()
     };
 

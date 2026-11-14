@@ -502,6 +502,9 @@
     "boot-file-clear": {
       "string": "Use none"
     },
+    "boot-file-chooser-failed": {
+      "string": "The file dialog could not open. Install a file chooser portal, such as xdg-desktop-portal-kde or xdg-desktop-portal-gtk, then choose again."
+    },
     "boot-sdboot-unset": {
       "string": "systemd-boot's default",
       "developer_comment": "systemd-boot, shown instead of the GRUB settings."
@@ -720,7 +723,7 @@
     },
     "repair-reinstall-title": {
       "string": "Reinstall the boot loader?",
-      "developer_comment": "The confirm dialog. $system and $target are devices, $disks and $disk\nthe disks they lie on."
+      "developer_comment": "The confirm dialog."
     },
     "repair-regenerate-title": {
       "string": "Build the boot files again?"
@@ -734,21 +737,44 @@
     "repair-cancel": {
       "string": "Cancel"
     },
-    "repair-does-regenerate": {
-      "string": "On a GRUB system the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. Nothing else on the disk changes. A system with systemd-boot is not repaired this way without UEFI."
+    "repair-fact-writes": {
+      "string": "Writes",
+      "developer_comment": "The labels of the dialog's list of what the repair writes where."
     },
-    "repair-does-regenerate-uefi": {
-      "string": "On a GRUB system the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. On a system with systemd-boot its initramfs and kernel images are built again onto the EFI system partition {esp}. Nothing else on the disks changes."
+    "repair-fact-disk": {
+      "string": "Disk"
     },
-    "repair-does-uefi": {
-      "string": "The boot loader is written to the EFI system partition {target} on the disk {disk} and entered into the firmware's boot menu: GRUB as \"Garuda\", systemd-boot as \"Linux Boot Manager\". Then the boot files of the system on {system} (disk {disks}) are built again: GRUB's boot menu /boot/grub/grub.cfg, or systemd-boot's kernel images."
+    "repair-fact-system": {
+      "string": "System"
     },
-    "repair-does-bios": {
-      "string": "GRUB is written to the first sectors of the disk {target}, in place of the boot loader that is there now. Then the boot menu /boot/grub/grub.cfg of the system on {system} (disk {disks}) is written again. A system with systemd-boot is not repaired this way."
+    "repair-fact-layout": {
+      "string": "Layout"
     },
-    "repair-looked-for": {
-      "string": "The system is looked for here: {layout}",
-      "developer_comment": "$layout is one of the layouts above."
+    "repair-writes-regenerate": {
+      "string": "GRUB's boot menu /boot/grub/grub.cfg",
+      "developer_comment": "What the list says the repair writes. $esp and $target are EFI system\npartitions."
+    },
+    "repair-writes-regenerate-uefi": {
+      "string": "GRUB's boot menu /boot/grub/grub.cfg, or systemd-boot's initramfs and kernel images on {esp}"
+    },
+    "repair-writes-uefi": {
+      "string": "The boot loader on the EFI system partition {target}, then the system's boot files"
+    },
+    "repair-writes-bios": {
+      "string": "GRUB in the first sectors of the disk, then the boot menu /boot/grub/grub.cfg"
+    },
+    "repair-then-regenerate": {
+      "string": "Nothing else on the disk changes, and a system with systemd-boot is not repaired this way without UEFI.",
+      "developer_comment": "The one sentence below the list."
+    },
+    "repair-then-regenerate-uefi": {
+      "string": "Nothing else on the disks changes."
+    },
+    "repair-then-uefi": {
+      "string": "The boot loader is entered into the firmware's boot menu, GRUB as \"Garuda\" and systemd-boot as \"Linux Boot Manager\"."
+    },
+    "repair-then-bios": {
+      "string": "GRUB takes the place of the boot loader that is there now, and a system with systemd-boot is not repaired this way."
     },
     "repair-runs-now": {
       "string": "It runs right away and asks for an administrator's password. The Console shows every command."
@@ -4793,6 +4819,12 @@
     "configs-problem-read-failed": {
       "string": "{path} could not be read."
     },
+    "configs-problem-no-home": {
+      "string": "{path} was not read, because this account has no home folder."
+    },
+    "configs-problem-cancelled": {
+      "string": "Reading {path} was cancelled."
+    },
     "configs-view-too-large": {
       "string": "{path} is larger than 1 MiB, which is too large to show here."
     },
@@ -5279,6 +5311,12 @@
     "guide-warning": {
       "string": "Warning"
     },
+    "guide-copy-code": {
+      "string": "Copy code"
+    },
+    "guide-code-copied": {
+      "string": "Copied the code to the clipboard."
+    },
     "guide-hits": {
       "string": "{count, plural, one {One place found} other {{count} places found}}"
     },
@@ -5650,9 +5688,6 @@
     "kernels-running-note": {
       "string": "This kernel runs right now, so it stays. Restart with another kernel to remove it."
     },
-    "kernels-headers-installed": {
-      "string": "Headers installed"
-    },
     "kernels-headers-missing": {
       "string": "Headers missing"
     },
@@ -5664,6 +5699,9 @@
     },
     "kernels-unqueue-headers": {
       "string": "Don't install headers"
+    },
+    "kernels-modules": {
+      "string": "DKMS modules"
     },
     "kernels-module-installed": {
       "string": "{module} {version}: installed",
@@ -5909,6 +5947,9 @@
     },
     "maintenance-unqueue": {
       "string": "Remove from queue"
+    },
+    "maintenance-queued": {
+      "string": "Runs with Apply"
     },
     "maintenance-op-upgrade-system": {
       "string": "Update system"
@@ -6415,7 +6456,7 @@
       "string": "No driver matches"
     },
     "network-drivers-clear": {
-      "string": "Clear search"
+      "string": "Clear filters"
     },
     "network-driver-other-files": {
       "string": "Blacklisted by {files}. Garuda Toolbox does not change that file."
@@ -7969,6 +8010,9 @@
     },
     "tweaks-unavailable": {
       "string": "Not available on this system"
+    },
+    "tweaks-unread": {
+      "string": "Could not be read"
     },
     "tweaks-other": {
       "string": "Other"

@@ -5,6 +5,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentDns, CurrentWifiBackend};
 use toolbox_plan::{DnsProvider, ShellPath, WifiBackend};
+use toolbox_system::{FailedProbes, Probe};
 
 use super::TweaksPage;
 use crate::catalogs::Catalogs;
@@ -220,4 +221,67 @@ fn every_chip_counts_what_is_on() {
             "{chip} has no count"
         );
     }
+}
+
+/// Without a catalog, since the empty snapshot leaves every catalog row
+/// unread and the banner would count them too.
+fn probed(failed: &[Probe]) -> PageFixture {
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(CurrentWifiBackend(WifiBackend::Iwd));
+    snapshot.insert(FailedProbes::new(failed.iter().copied()));
+
+    PageFixture {
+        snapshot: snapshot.into(),
+        catalogs: Catalogs::default(),
+        ..PageFixture::default()
+    }
+}
+
+fn dns_value(harness: &egui_kittest::Harness<'_, crate::testing::PageState<TweaksPage>>) -> String {
+    harness
+        .get_by_role_and_label(Role::ComboBox, "DNS server")
+        .accesskit_node()
+        .value()
+        .unwrap_or_default()
+}
+
+/// A failed probe may have missed a value the system has, so the picker
+/// joins the banner of what could not be read.
+#[test]
+fn a_picker_whose_probe_failed_counts_into_the_banner_and_is_not_called_unavailable() {
+    let mut harness = probed(&[Probe::Dns]).harness(TweaksPage::default());
+    harness.run();
+
+    assert_ne!(dns_value(&harness), "Not available on this system");
+    assert!(
+        harness
+            .query_by_label_contains("The state of one entry could not be read")
+            .is_some()
+    );
+}
+
+#[test]
+fn a_picker_the_system_lacks_says_so_without_a_banner() {
+    let mut harness = probed(&[]).harness(TweaksPage::default());
+    harness.run();
+
+    assert_eq!(dns_value(&harness), "Not available on this system");
+    assert!(
+        harness
+            .query_by_label_contains("The state of one entry could not be read")
+            .is_none()
+    );
+}
+
+#[test]
+fn before_the_first_probe_no_picker_is_called_unavailable() {
+    let mut harness = PageFixture {
+        probed: false,
+        snapshot: Snapshot::default().into(),
+        ..shipped()
+    }
+    .harness(TweaksPage::default());
+
+    harness.run();
+    assert_ne!(dns_value(&harness), "Not available on this system");
 }

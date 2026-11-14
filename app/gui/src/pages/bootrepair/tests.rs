@@ -115,7 +115,7 @@ fn the_boot_menu_is_written_again_after_asking() {
     // ESP on the system's own disk, which the question names.
     assert!(shows(
         &harness,
-        "kernel images are built again onto the EFI system partition /dev/nvme1n1p1"
+        "systemd-boot's initramfs and kernel images on /dev/nvme1n1p1"
     ));
 
     harness

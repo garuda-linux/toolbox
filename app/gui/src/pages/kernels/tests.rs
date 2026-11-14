@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
+use toolbox_core::features::kernels::parse_status;
 use toolbox_gui_kit::testing::fill_under;
 use toolbox_services::dkms::Dkms;
 
@@ -175,6 +176,69 @@ fn running_is_a_status_dot_like_the_other_row_states() {
     let row = fill_under(&harness, name.center());
 
     assert_eq!(fill, row, "Running sits on its own pill");
+}
+
+#[test]
+fn installed_headers_take_no_line_and_missing_ones_do() {
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    harness.run();
+
+    assert!(harness.query_by_label("Headers installed").is_none());
+    assert!(harness.query_by_label("Headers missing").is_some());
+}
+
+#[test]
+fn built_modules_fold_away_and_a_click_opens_them() {
+    // The fixture's dkms status without vboxhost, so nothing is left to build.
+    let status = "nvidia/550.90.07, 6.14.0-arch3-1, x86_64: installed\n";
+    let fixture = PageFixture {
+        services: Services {
+            kernels: Kernels::with_dkms(DkmsReading::Loaded(Arc::new(Dkms::Modules(
+                parse_status(status),
+            )))),
+            ..Services::default()
+        },
+        ..PageFixture::with_snapshot(system())
+    };
+
+    let mut harness = fixture.harness(KernelsPage);
+    harness.run();
+    assert!(
+        harness
+            .query_by_label("nvidia 550.90.07: installed")
+            .is_none()
+    );
+
+    harness
+        .get_by_role_and_label(Role::Button, "DKMS modules 1")
+        .click();
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_label("nvidia 550.90.07: installed")
+            .is_some()
+    );
+}
+
+#[test]
+fn a_kernel_with_a_build_to_do_shows_its_modules() {
+    let fixture = PageFixture {
+        services: Services {
+            kernels: Kernels::with_dkms(dkms()),
+            ..Services::default()
+        },
+        ..PageFixture::with_snapshot(system())
+    };
+
+    let mut harness = fixture.harness(KernelsPage);
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_label("vboxhost 7.1.6_OSE: missing")
+            .is_some()
+    );
 }
 
 #[test]

@@ -1,6 +1,6 @@
 use egui::{
-    Align, Color32, CornerRadius, Layout, Popup, PopupCloseBehavior, Rect, Response, Role, Sense,
-    Ui, WidgetInfo, pos2, vec2,
+    Align, Color32, CornerRadius, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response,
+    Role, ScrollArea, Sense, Ui, WidgetInfo, pos2, vec2,
 };
 
 use super::menu::{ITEM_INSET, LIST_GAP, MENU_WIDTH, menu_glass};
@@ -20,6 +20,11 @@ const OPTION_HEIGHT: f32 = PILL_HEIGHT;
 /// The widest an open list grows for a long option, such as a shell's
 /// whole store path, before it cuts the option.
 pub(super) const LIST_MAX_WIDTH: f32 = MENU_WIDTH * 2.0;
+/// Between the pill and its open list, and between the list and the
+/// window edge.
+const PILL_GAP: f32 = 6.0;
+/// The outline of the list's glass, outside its padding.
+const LIST_STROKE: f32 = 1.0;
 
 #[derive(Clone, Copy, Debug)]
 #[must_use = "a dropdown shows nothing until `show` is called"]
@@ -162,7 +167,13 @@ impl<'a> Select<'a> {
             (None, false) => response,
         };
 
-        list(ui, &response, options, selected)
+        let picked = list(ui, &response, options, selected);
+
+        // Read after the list ran, which opens or closes it this frame.
+        let open = Popup::is_id_open(ui.ctx(), Popup::default_response_id(&response));
+        ui.ctx()
+            .accesskit_node_builder(response.id, |node| node.set_expanded(open));
+        picked
     }
 }
 
@@ -183,35 +194,84 @@ fn list_width(ui: &Ui, pill: f32, options: &[&str]) -> f32 {
     wanted.clamp(pill, LIST_MAX_WIDTH.max(pill))
 }
 
+/// How tall the options may grow before they scroll: the room on the
+/// roomier side of `pill`, so the popup flips above when that is larger.
+fn list_height(ui: &Ui, pill: Rect) -> f32 {
+    let window = ui.ctx().content_rect();
+    let padding = tokens::current(ui.ctx()).sizes.list_padding.sum().y;
+    let room = (window.bottom() - pill.bottom()).max(pill.top() - window.top());
+    let chrome = LIST_STROKE.mul_add(2.0, PILL_GAP.mul_add(2.0, padding));
+    (room - chrome).max(OPTION_HEIGHT)
+}
+
 /// The open list under `pill`.
 fn list(ui: &Ui, pill: &Response, options: &[&str], selected: Option<usize>) -> Option<usize> {
     let glass = menu_glass(ui);
-    let picked = Popup::from_toggle_button_response(pill)
+    let scrolled_id = Popup::default_response_id(pill).with("scrolled");
+    let height = list_height(ui, pill.rect);
+
+    // A menu, so egui walks its options with the arrow keys.
+    let shown = Popup::from_toggle_button_response(pill)
+        .kind(PopupKind::Menu)
         .close_behavior(PopupCloseBehavior::CloseOnClick)
-        .gap(6.0)
+        .gap(PILL_GAP)
         .width(list_width(ui, pill.rect.width(), options))
         .frame(glass.frame())
         .show(|popup| {
-            glass.inside(popup, |list| {
-                list.spacing_mut().item_spacing.y = LIST_GAP;
-                let mut picked = None;
-                for (index, option) in options.iter().enumerate() {
-                    if option_row(list, option, Some(index) == selected).clicked() {
-                        picked = Some(index);
-                    }
-                }
+            // Once per opening, and not in the sizing pass, which lays the
+            // list out unseen and scrolls nothing.
+            let reveal = !popup.is_sizing_pass()
+                && popup.data(|data| data.get_temp::<bool>(scrolled_id).is_none());
 
-                // The close behaviour only hears the pointer. A pick from the
-                // keyboard or a screen reader closes the list here.
-                if picked.is_some() {
-                    list.close();
-                }
+            if reveal {
+                popup.data_mut(|data| data.insert_temp(scrolled_id, true));
+            }
 
-                picked
+            glass.inside(popup, |inside| {
+                ScrollArea::vertical()
+                    .max_height(height)
+                    .auto_shrink([false, true])
+                    .show(inside, |list| options_in(list, options, selected, reveal))
+                    .inner
             })
-        })?;
+        });
 
-    picked.inner
+    let Some(open) = shown else {
+        ui.data_mut(|data| data.remove::<bool>(scrolled_id));
+        return None;
+    };
+
+    open.inner
+}
+
+/// The rows of an open list. `reveal` scrolls the chosen one into view.
+fn options_in(
+    list: &mut Ui,
+    options: &[&str],
+    selected: Option<usize>,
+    reveal: bool,
+) -> Option<usize> {
+    list.spacing_mut().item_spacing.y = LIST_GAP;
+    let mut picked = None;
+    for (index, option) in options.iter().enumerate() {
+        let chosen = Some(index) == selected;
+        let row = option_row(list, option, chosen);
+        if chosen && reveal {
+            row.scroll_to_me(Some(Align::Center));
+        }
+
+        if row.clicked() {
+            picked = Some(index);
+        }
+    }
+
+    // The close behaviour only hears the pointer. A pick from the
+    // keyboard or a screen reader closes the list here.
+    if picked.is_some() {
+        list.close();
+    }
+
+    picked
 }
 
 /// Draws the pill. Returns whether `shown` was cut to fit.

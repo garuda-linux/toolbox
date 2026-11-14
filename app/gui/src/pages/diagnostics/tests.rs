@@ -1,10 +1,14 @@
 mod heights;
 mod redacted;
 mod scroll;
+mod shown;
+
+use std::sync::Arc;
 
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
+use parking_lot::Mutex;
 use toolbox_core::features::diagnostics::{
     Collector, Known, Refusal, Selection, UploadFailure, redact,
 };
@@ -16,10 +20,21 @@ use toolbox_services::share::{Upload, UploadProblem};
 use super::DiagnosticsPage;
 use crate::command::{AppCommand, Command, DiagnosticsCommand};
 use crate::diagnostics::Diagnostics;
+use crate::links::{Opener, install};
 use crate::page_service::Services;
 use crate::testing::{PageFixture, PageState, button_kind};
 
 type Shown = Harness<'static, PageState<DiagnosticsPage>>;
+
+#[derive(Debug, Default)]
+struct Opened(Mutex<Vec<String>>);
+
+impl Opener for Opened {
+    fn open(&self, url: &str) -> bool {
+        self.0.lock().push(url.to_owned());
+        true
+    }
+}
 
 fn page(shown: Page) -> Shown {
     let mut harness = PageFixture {
@@ -195,6 +210,20 @@ fn an_upload_shows_both_links_and_deleting_asks_first() {
 
     assert!(harness.query_by_role(Role::Dialog).is_none());
     assert_eq!(sent(&harness), []);
+
+    let fake: Arc<dyn Opener> = Arc::new(Opened::default());
+    install(&harness.ctx, fake);
+    harness.get_by_label("Delete now…").click();
+    harness.run();
+    harness
+        .get_by_role_and_label(Role::Button, "Delete")
+        .click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [Command::from(DiagnosticsCommand::HideShare)]
+    );
 }
 
 #[test]

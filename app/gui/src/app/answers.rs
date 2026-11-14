@@ -4,7 +4,6 @@ use toolbox_gui_kit::toasts::ToastKind;
 
 use super::App;
 use crate::command::AppCommand;
-use crate::page::PageId;
 use crate::page_service::{Answer, Handled, PageService};
 use crate::{i18n, page_ui};
 
@@ -28,8 +27,7 @@ impl App {
                 }
             }
             Answer::OfferBootRepair(offered) => page_ui::offer_boot_repair(ctx, offered),
-            Answer::LeaveBootRepair => self.state.page = PageId::Home,
-            Answer::ShowPage(page) => self.state.page = page,
+            Answer::ShowPage(page) => self.navigate(ctx, page),
         }
     }
 

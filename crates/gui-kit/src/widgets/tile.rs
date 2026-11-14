@@ -12,7 +12,6 @@ use crate::tokens::{self, Tokens};
 use crate::ui_ext::icon_image;
 
 const HEIGHT: f32 = 76.0;
-const PADDING: f32 = 18.0;
 const GAP: f32 = 14.0;
 const CHEVRON: f32 = 16.0;
 const LEADING: f32 = 2.0;
@@ -41,15 +40,18 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
         StrokeKind::Inside,
     );
 
+    // The same inset as a card's rows, so a tile's icon lines up with
+    // theirs in one column.
+    let padding = tokens.sizes.row_padding.x;
     let edge = TileSize::Row.edge(ui);
     let badge = Rect::from_center_size(
-        pos2(rect.left() + PADDING + edge / 2.0, rect.center().y),
+        pos2(rect.left() + padding + edge / 2.0, rect.center().y),
         vec2(edge, edge),
     );
 
     paint_icon_tile(ui, badge.center(), TileSize::Row, icon, page_tile(ui.ctx()));
     let text = Rect::from_x_y_ranges(
-        badge.right() + GAP..=rect.right() - PADDING - CHEVRON - GAP,
+        badge.right() + GAP..=rect.right() - padding - CHEVRON - GAP,
         rect.y_range(),
     );
 
@@ -61,7 +63,7 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
     }
 
     let chevron = Rect::from_center_size(
-        pos2(rect.right() - PADDING - CHEVRON / 2.0, rect.center().y),
+        pos2(rect.right() - padding - CHEVRON / 2.0, rect.center().y),
         vec2(CHEVRON, CHEVRON),
     );
 

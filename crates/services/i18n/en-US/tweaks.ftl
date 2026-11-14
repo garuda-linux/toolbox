@@ -2,6 +2,7 @@
 tweaks-shell-network = Shell and network
 tweaks-garuda-update = Garuda Update
 tweaks-unavailable = Not available on this system
+tweaks-unread = Could not be read
 tweaks-other = Other
 tweaks-queued = Changes with Apply
 

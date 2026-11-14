@@ -38,7 +38,7 @@ pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Option<u
     Frame::new()
         .fill(wash)
         .corner_radius(CornerRadius::same(CARD_RADIUS))
-        .inner_margin(Margin::symmetric(16, 12))
+        .inner_margin(Margin::from(tokens.sizes.row_padding))
         .show(ui, |ui| {
             ui.set_width(ui.available_width());
             let gap = ui.spacing().item_spacing.x;

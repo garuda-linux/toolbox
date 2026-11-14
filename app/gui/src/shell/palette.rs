@@ -15,8 +15,6 @@ use crate::pages::discover::category_title;
 use crate::pages::{PageContext, maintenance};
 use crate::{i18n, page_ui};
 
-/// The list's height before it scrolls, in points.
-const LIST_HEIGHT: f32 = 380.0;
 /// At most this many rows: a short text matches hundreds of apps.
 const LIMIT: usize = 50;
 
@@ -83,10 +81,14 @@ impl Palette {
                     .flatten()
                     .map(|row| (row.command.clone(), true));
 
-                let clicked = ScrollArea::vertical()
-                    .max_height(LIST_HEIGHT)
+                let (clicked, pointed) = ScrollArea::vertical()
+                    .max_height(ui.tokens().sizes.palette_list_height)
                     .show(ui, |ui| self.list(ui, &rows, moved, width))
                     .inner;
+
+                if let Some(index) = pointed {
+                    self.marked = index;
+                }
 
                 entered.or(clicked)
             });
@@ -103,15 +105,26 @@ impl Palette {
 
     /// The rows, the marked one shown as selected and scrolled to after a
     /// key `moved` it. Returns a clicked row's command and whether the
-    /// click came from the keyboard.
+    /// click came from the keyboard, and the row the pointer moved onto.
+    ///
+    /// Only a moving pointer takes the mark, so a list scrolled by the
+    /// keys under a resting one keeps the key's mark.
     fn list(
         &self,
         ui: &mut egui::Ui,
         rows: &[Row],
         moved: bool,
         width: f32,
-    ) -> Option<(Command, bool)> {
+    ) -> (Option<(Command, bool)>, Option<usize>) {
+        let pointer_moved = ui.input(|input| {
+            input
+                .events
+                .iter()
+                .any(|event| matches!(event, egui::Event::PointerMoved(_)))
+        });
+
         let mut chosen = None;
+        let mut pointed = None;
         for (index, row) in rows.iter().enumerate() {
             // The marked row is what Enter takes, and its shortcut takes
             // the colour of selected text.
@@ -136,13 +149,17 @@ impl Palette {
                 response.scroll_to_me(None);
             }
 
+            if pointer_moved && response.hovered() {
+                pointed = Some(index);
+            }
+
             if response.clicked() {
                 let by_key = !response.clicked_by(egui::PointerButton::Primary);
                 chosen = Some((row.command.clone(), by_key));
             }
         }
 
-        chosen
+        (chosen, pointed)
     }
 
     /// Moves the mark by the Up and Down pressed this frame, wrapping at

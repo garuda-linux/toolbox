@@ -61,7 +61,8 @@ pub struct Network {
     connectivity: Option<Connectivity>,
     hardware: Option<Hardware>,
     address: Address,
-    /// The last radio switch failed. A later one that works clears it.
+    /// The last radio switch failed. A later one that works or a Refresh
+    /// clears it.
     radio_failed: bool,
     refusal: Option<NetworkRefusal>,
     /// `None` in tests that need no reads: nothing is read.
@@ -129,7 +130,9 @@ impl Network {
         }
     }
 
+    /// A refused switch is old news once the user reads the radios again.
     pub fn refresh(&mut self) {
+        self.radio_failed = false;
         self.read_all(true);
     }
 

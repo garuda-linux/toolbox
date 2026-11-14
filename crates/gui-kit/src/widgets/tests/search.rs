@@ -115,6 +115,91 @@ fn the_caret_of_a_focused_empty_field_leaves_the_hint_readable() {
     );
 }
 
+/// The field and the rect of its pill, so a test can point at the pill's
+/// padding outside the text strip.
+fn pill() -> (Harness<'static, (String, Rect)>, Rect) {
+    let mut harness = harness(400.0, 100.0).build_ui_state(
+        |ui, (text, pill): &mut (String, Rect)| {
+            let left_top = ui.cursor().min;
+            search_field(ui, text, TEXTS, 300.0);
+            *pill = Rect::from_min_size(left_top, egui::vec2(300.0, PILL_HEIGHT));
+        },
+        (String::new(), Rect::NOTHING),
+    );
+
+    harness.run();
+    let rect = harness.state().1;
+    (harness, rect)
+}
+
+fn click_at(harness: &mut Harness<'_, (String, Rect)>, at: egui::Pos2) {
+    let press = |pressed| egui::Event::PointerButton {
+        pos: at,
+        button: egui::PointerButton::Primary,
+        pressed,
+        modifiers: egui::Modifiers::NONE,
+    };
+
+    harness.event(egui::Event::PointerMoved(at));
+    harness.event(press(true));
+    harness.step();
+    harness.event(press(false));
+    harness.run();
+}
+
+#[test]
+fn a_click_on_the_magnifier_side_of_the_pill_focuses_the_field() {
+    let (mut harness, pill) = pill();
+
+    click_at(&mut harness, egui::pos2(pill.left() + 2.0, pill.center().y));
+
+    assert!(
+        harness
+            .get_by_role_and_label(Role::TextInput, "Search services")
+            .is_focused()
+    );
+}
+
+#[test]
+fn a_click_on_the_strip_above_the_text_focuses_the_field() {
+    let (mut harness, pill) = pill();
+
+    click_at(&mut harness, egui::pos2(pill.center().x, pill.top() + 1.0));
+
+    assert!(
+        harness
+            .get_by_role_and_label(Role::TextInput, "Search services")
+            .is_focused()
+    );
+}
+
+#[test]
+fn the_whole_pill_shows_the_text_cursor() {
+    let (mut harness, pill) = pill();
+
+    harness.hover_at(egui::pos2(pill.left() + 2.0, pill.center().y));
+    harness.run();
+
+    assert_eq!(
+        harness.output().platform_output.cursor_icon,
+        egui::CursorIcon::Text
+    );
+}
+
+#[test]
+fn the_pill_adds_no_tab_stop() {
+    let (mut harness, _) = pill();
+
+    harness.key_press(egui::Key::Tab);
+    harness.run();
+
+    assert!(
+        harness
+            .get_by_role_and_label(Role::TextInput, "Search services")
+            .is_focused()
+    );
+}
+
 fn text_field_shown(focused: bool) -> Harness<'static, String> {
     let mut harness = harness(400.0, 100.0).build_ui_state(
         move |ui, text: &mut String| {
