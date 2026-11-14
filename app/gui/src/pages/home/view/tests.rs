@@ -80,8 +80,8 @@ fn updates_are_listed_per_source_repositories_first() {
 #[test]
 fn only_a_failed_check_is_listed_with_its_reason() {
     let mut status = quiet();
-    status.updates = Err(ProbeError::Failed("no database".to_owned()));
-    status.health = Err(ProbeError::Failed("no garuda-health".to_owned()));
+    status.updates = Err(ProbeError::fake("no database"));
+    status.health = Err(ProbeError::fake("no garuda-health"));
 
     let overview = Overview::of(&status, now());
 
@@ -196,9 +196,9 @@ fn a_low_disk_a_failed_unit_and_orphans_need_attention() {
 fn a_fact_that_failed_is_listed_with_its_reason() {
     let status = quiet();
     let mut facts = facts();
-    facts.disk = Err(ProbeError::Failed("statvfs: denied".to_owned()));
+    facts.disk = Err(ProbeError::fake("statvfs: denied"));
     facts.failed_units = Err(ProbeError::Unavailable);
-    facts.orphans = Err(ProbeError::Failed("no database".to_owned()));
+    facts.orphans = Err(ProbeError::fake("no database"));
     let overview = Overview::of(&status, now()).with_facts(&facts);
 
     assert!(overview.failed_check(Check::Disk));

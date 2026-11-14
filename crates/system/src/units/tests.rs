@@ -84,11 +84,11 @@ fn a_failing_program_is_a_failure() {
 
     assert!(matches!(
         systemctl.enabled_units(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
     assert!(matches!(
         systemctl.enabled_user_units(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 
@@ -138,10 +138,10 @@ fn masks_need_a_working_systemctl_too() {
 
     assert_eq!(missing.masked_units(), Err(ProbeError::Unavailable));
     assert_eq!(missing.masked_user_units(), Err(ProbeError::Unavailable));
-    assert!(matches!(failing.masked_units(), Err(ProbeError::Failed(_))));
+    assert!(matches!(failing.masked_units(), Err(error) if error.is_failure()));
     assert!(matches!(
         failing.masked_user_units(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 

@@ -36,7 +36,7 @@ pub trait LocaleSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without glibc's list (a system that
-    /// does not generate its locales), [`ProbeError::Failed`] when it
+    /// does not generate its locales), a failed [`ProbeError`] when it
     /// cannot be read.
     fn supported(&self) -> Result<SupportedLocales, ProbeError>;
 
@@ -45,12 +45,12 @@ pub trait LocaleSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the file and without glibc's
-    /// list, [`ProbeError::Failed`] when it cannot be read.
+    /// list, a failed [`ProbeError`] when it cannot be read.
     fn enabled(&self) -> Result<EnabledLocales, ProbeError>;
 
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the file cannot be read.
+    /// A failed [`ProbeError`] when the file cannot be read.
     fn system_locale(&self) -> Result<CurrentSystemLocale, ProbeError>;
 
     /// What the supported locales are called, from glibc's own sources.

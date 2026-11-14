@@ -131,7 +131,7 @@ fn unknown_levels_are_ignored() {
 fn text_that_is_no_report_fails() {
     for text in ["not json", "[]", r#"{"LOW": "broken"}"#, r#"{"LOW": [1]}"#] {
         assert!(
-            matches!(parse_health(text), Err(ProbeError::Failed(_))),
+            matches!(parse_health(text), Err(error) if error.is_failure()),
             "{text}"
         );
     }
@@ -155,7 +155,7 @@ fn a_failure_without_report_fails() {
     let result = GarudaHealth::with_program(fake).issues();
 
     assert!(
-        matches!(&result, Err(ProbeError::Failed(reason)) if reason.contains("health: complaint")),
+        matches!(&result, Err(ProbeError::Command { command_line: _, status: _, stderr }) if stderr.contains("health: complaint")),
         "{result:?}"
     );
 }

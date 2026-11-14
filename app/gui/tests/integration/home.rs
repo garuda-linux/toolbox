@@ -248,7 +248,7 @@ fn a_refused_restart_says_so() {
 #[test]
 fn a_check_that_failed_shows_its_reason_on_request() {
     let mut status = quiet();
-    status.health = Err(ProbeError::Failed("no garuda-health".to_owned()));
+    status.health = Err(ProbeError::fake("no garuda-health"));
     let (mut harness, _runtime, _power) = home(host(false, false), status);
 
     assert!(
@@ -331,7 +331,7 @@ fn a_quiet_greeting_says_all_is_fine() {
 #[test]
 fn a_failed_updates_check_says_so_not_none() {
     let status = Status {
-        updates: Err(ProbeError::Failed("pacman is busy".to_owned())),
+        updates: Err(ProbeError::fake("pacman is busy")),
         ..quiet()
     };
 
@@ -351,7 +351,7 @@ fn a_failed_updates_check_says_so_not_none() {
 
 #[test]
 fn when_every_check_failed_one_banner_says_it_and_no_all_clear() {
-    let failed = || ProbeError::Failed("no network".to_owned());
+    let failed = || ProbeError::fake("no network");
     let status = Status {
         updates: Err(failed()),
         aur_updates: Err(failed()),

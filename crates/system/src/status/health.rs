@@ -49,7 +49,7 @@ pub trait HealthSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the program,
-    /// [`ProbeError::Failed`] when it fails or prints no report.
+    /// A failed [`ProbeError`] when it fails or prints no report.
     fn issues(&self) -> Result<Vec<HealthIssue>, ProbeError>;
 }
 
@@ -104,8 +104,7 @@ fn parse_health(report: &str) -> Result<Vec<HealthIssue>, ProbeError> {
         return Ok(Vec::new());
     }
 
-    let mut levels: Map<String, Value> =
-        serde_json::from_str(report).map_err(|error| invalid(&error))?;
+    let mut levels: Map<String, Value> = serde_json::from_str(report).map_err(invalid)?;
 
     let mut issues = Vec::new();
 
@@ -114,7 +113,7 @@ fn parse_health(report: &str) -> Result<Vec<HealthIssue>, ProbeError> {
             continue;
         };
 
-        let entries: Vec<Entry> = serde_json::from_value(list).map_err(|error| invalid(&error))?;
+        let entries: Vec<Entry> = serde_json::from_value(list).map_err(invalid)?;
 
         issues.extend(entries.into_iter().filter_map(|entry| {
             let message = entry.description?.trim().to_owned();
@@ -130,6 +129,9 @@ fn parse_health(report: &str) -> Result<Vec<HealthIssue>, ProbeError> {
     Ok(issues)
 }
 
-fn invalid(error: &serde_json::Error) -> ProbeError {
-    ProbeError::Failed(format!("garuda-health --json: {error}"))
+fn invalid(error: serde_json::Error) -> ProbeError {
+    ProbeError::Json {
+        what: "garuda-health --json".to_owned(),
+        error: std::sync::Arc::new(error),
+    }
 }

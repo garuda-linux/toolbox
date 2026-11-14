@@ -68,7 +68,7 @@ async fn only_failed_probes_are_kept() {
                 },
                 ProbeIssue {
                     probe: Probe::Units,
-                    error: ProbeError::Failed("no bus".to_owned()),
+                    error: ProbeError::fake("no bus"),
                 },
             ];
 

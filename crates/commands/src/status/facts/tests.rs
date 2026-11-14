@@ -82,7 +82,7 @@ fn the_text_lists_the_facts_after_the_update_check() {
 fn the_json_names_each_fact_with_its_state() {
     let now = SystemTime::UNIX_EPOCH + DAY * 100;
     let mut found = facts(now);
-    found.orphans = Err(ProbeError::Failed("no database".to_owned()));
+    found.orphans = Err(ProbeError::fake("no database"));
     let shown = view(&quiet(), &Ok(false), now).with_facts(&found, now);
     let json = toolbox_cli::output::json(&shown);
 

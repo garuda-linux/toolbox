@@ -53,7 +53,7 @@ pub use config_files::{
     SystemConfigFiles, SystemEditor,
 };
 pub use diagnostics::{DiagnosticSource, HelperReads, SystemDiagnostics};
-pub use error::ProbeError;
+pub use error::{InvalidValue, ProbeError, Stop};
 pub use facts::{
     DiskSpace, FactSources, Facts, MachineSource, PackageCount, SystemMachine, probe_facts,
 };

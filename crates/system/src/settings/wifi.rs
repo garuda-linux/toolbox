@@ -29,7 +29,7 @@ const IWD: &str = "iwd";
 /// # Errors
 ///
 /// [`ProbeError::Unavailable`] without the administrator's drop-in
-/// folder, [`ProbeError::Failed`] when it cannot be listed.
+/// folder, a failed [`ProbeError`] when it cannot be listed.
 pub(super) fn backend(root: &Path) -> Result<WifiBackend, ProbeError> {
     let folder = root.join(NETWORKMANAGER_CONF_D);
     let own = names(&folder).map_err(|error| from_io(folder.display(), error))?;

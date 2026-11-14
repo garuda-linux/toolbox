@@ -196,7 +196,7 @@ fn a_failing_dkms_without_modules_is_an_error() {
 
     assert!(matches!(
         Dkms::with_program(&program).status(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 

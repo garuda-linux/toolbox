@@ -47,7 +47,7 @@ impl NetworkSource for Machine {
 
     fn set_radio(&self, _target: RadioTarget, _blocked: bool) -> Result<(), ProbeError> {
         self.switches.fetch_add(1, Ordering::SeqCst);
-        Err(ProbeError::Failed("denied".to_owned()))
+        Err(ProbeError::fake("denied"))
     }
 
     fn pci_devices(&self) -> Result<Vec<Device>, ProbeError> {

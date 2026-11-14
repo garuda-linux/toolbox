@@ -19,7 +19,7 @@ use crate::error::ProbeError;
 pub trait RepairSource: Send + Sync {
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when `lsblk` fails or prints something
+    /// A failed [`ProbeError`] when `lsblk` fails or prints something
     /// else than a device list.
     fn facts(&self) -> Result<RepairFacts, ProbeError>;
 }
@@ -96,5 +96,8 @@ impl RepairSource for DryRunRepair {
 }
 
 fn parsed(listing: &str) -> Result<Inventory, ProbeError> {
-    parse_lsblk(listing).map_err(|error| ProbeError::Failed(error.to_string()))
+    parse_lsblk(listing).map_err(|error| ProbeError::Invalid {
+        what: "the disks".to_owned(),
+        error: error.into(),
+    })
 }

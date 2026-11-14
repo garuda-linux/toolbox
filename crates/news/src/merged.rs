@@ -58,7 +58,7 @@ impl NewsSource for Feeds {
         }
 
         let Some(downloaded) = downloaded else {
-            return Err(failure.unwrap_or_else(|| NewsError::Download("no feed".to_owned())));
+            return Err(failure.unwrap_or_else(|| NewsError::NoFeed));
         };
 
         // A post without a date sorts last, its place is unknown.

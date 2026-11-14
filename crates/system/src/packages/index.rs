@@ -20,7 +20,7 @@ pub trait PackageIndexSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without a package manager or without
-    /// any synced database, [`ProbeError::Failed`] when one cannot be read.
+    /// any synced database, a failed [`ProbeError`] when one cannot be read.
     fn index(&self) -> Result<PackageIndex, ProbeError>;
 
     /// One package, from the local database when it is installed, else

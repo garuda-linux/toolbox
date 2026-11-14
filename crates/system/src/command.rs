@@ -41,7 +41,11 @@ impl Finished {
     pub fn failure(&self) -> ProbeError {
         let reason = strip_ansi(self.stderr.lines().next().unwrap_or_default().trim());
 
-        ProbeError::Failed(format!("{} {}: {reason}", self.command_line, self.status))
+        ProbeError::Command {
+            command_line: self.command_line.clone(),
+            status: self.status,
+            stderr: reason,
+        }
     }
 }
 
@@ -89,13 +93,18 @@ pub fn run_within(
     .map_err(|error| match error {
         CaptureError::Missing => ProbeError::Unavailable,
         CaptureError::Failed(error) => from_io(&command_line, error),
-        CaptureError::TimedOut => ProbeError::Failed(format!(
-            "{command_line}: no answer within {} s, stopped",
-            deadline.as_secs_f32()
-        )),
-        CaptureError::Cancelled | CaptureError::TooLarge => {
-            ProbeError::Failed(format!("{command_line}: {error}"))
-        }
+        CaptureError::TimedOut => ProbeError::TimedOut {
+            command_line: command_line.clone(),
+            after: deadline,
+        },
+        CaptureError::Cancelled => ProbeError::Stopped {
+            command_line: command_line.clone(),
+            why: crate::Stop::Cancelled,
+        },
+        CaptureError::TooLarge => ProbeError::Stopped {
+            command_line: command_line.clone(),
+            why: crate::Stop::TooLarge,
+        },
     })?;
 
     tracing::debug!(

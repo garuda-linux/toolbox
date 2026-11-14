@@ -5,7 +5,7 @@ use toolbox_state::bootrepair::sample::laptop_from_the_live_iso;
 use toolbox_state::bootrepair::{Firmware, RepairFacts, System, Tool};
 
 use super::{DryRunRepair, RepairSource as _, SystemRepair};
-use crate::error::ProbeError;
+use crate::error::{InvalidValue, ProbeError};
 use crate::test_support::fake_program;
 
 const LAPTOP_SYSTEMS: [&str; 3] = ["/dev/nvme0n1p1", "/dev/nvme0n1p3", "/dev/nvme1n1p2"];
@@ -76,11 +76,15 @@ fn a_failing_or_babbling_lsblk_is_a_failed_probe() {
 
     assert!(matches!(
         source(root.path(), &failing).facts(),
-        Err(ProbeError::Failed(reason)) if reason.contains("failed to access sysfs")
+        Err(ProbeError::Command { command_line: _, status: _, stderr })
+            if stderr.contains("failed to access sysfs")
     ));
     assert!(matches!(
         source(root.path(), &babbling).facts(),
-        Err(ProbeError::Failed(reason)) if reason.contains("no device list")
+        Err(ProbeError::Invalid {
+            what: _,
+            error: InvalidValue::Listing(_)
+        })
     ));
 }
 

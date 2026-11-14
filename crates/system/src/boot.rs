@@ -44,7 +44,7 @@ pub trait BootSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the file (GRUB is not the boot
-    /// loader), [`ProbeError::Failed`] when it cannot be read.
+    /// loader), a failed [`ProbeError`] when it cannot be read.
     fn grub(&self) -> Result<CurrentGrub, ProbeError>;
 
     /// The installed Plymouth themes and the one in use.
@@ -63,7 +63,7 @@ pub trait BootSource: Send + Sync {
 
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when a file that names the loader cannot be
+    /// A failed [`ProbeError`] when a file that names the loader cannot be
     /// read.
     fn loader(&self) -> Result<BootLoader, ProbeError>;
 

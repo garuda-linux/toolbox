@@ -178,7 +178,7 @@ fn unsynced_databases_leave_only_the_sync_part_out() {
 
 #[test]
 fn without_a_user_only_the_current_user_part_is_missing() {
-    let failed = ProbeError::Failed("USER is not a valid name".to_owned());
+    let failed = ProbeError::fake("USER is not a valid name");
     let (snapshot, issues) = probe_snapshot(&sources(
         FakePackages(Ok(installed())),
         FakeHost {
@@ -204,7 +204,7 @@ fn without_a_user_only_the_current_user_part_is_missing() {
 
 #[test]
 fn failed_host_facts_fall_back_and_are_reported() {
-    let broken = || ProbeError::Failed("broken".to_owned());
+    let broken = || ProbeError::fake("broken");
     let (snapshot, issues) = probe_snapshot(&sources(
         FakePackages(Ok(installed())),
         FakeHost {
@@ -238,7 +238,7 @@ fn failed_host_facts_fall_back_and_are_reported() {
 
 #[test]
 fn failing_mask_probes_leave_only_their_parts_out() {
-    let broken = || ProbeError::Failed("no user manager".to_owned());
+    let broken = || ProbeError::fake("no user manager");
     let sources = Sources {
         units: Arc::new(FakeUnits {
             masked: Err(ProbeError::Unavailable),

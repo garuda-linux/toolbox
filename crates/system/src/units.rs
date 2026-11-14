@@ -38,7 +38,7 @@ pub trait UnitSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without systemd,
-    /// [`ProbeError::Failed`] when the manager gives no answer.
+    /// A failed [`ProbeError`] when the manager gives no answer.
     fn enabled_units(&self) -> Result<EnabledUnits, ProbeError>;
 
     /// Units enabled in the user's own service manager.

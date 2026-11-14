@@ -66,7 +66,7 @@ fn a_missing_pacdiff_is_unavailable() {
 fn a_failing_pacdiff_fails() {
     assert!(matches!(
         Pacdiff::with_program("false").waiting(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 

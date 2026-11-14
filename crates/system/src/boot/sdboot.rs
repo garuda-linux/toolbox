@@ -53,7 +53,7 @@ impl SystemBootMenu {
 
 /// # Errors
 ///
-/// [`ProbeError::Failed`] when `LoaderInfo` or `install.conf` exists but
+/// A failed [`ProbeError`] when `LoaderInfo` or `install.conf` exists but
 /// cannot be read: a guess would show the wrong loader's page.
 pub(super) fn loader(root: &Path) -> Result<BootLoader, ProbeError> {
     let info_path = root.join(LOADER_INFO);

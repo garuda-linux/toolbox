@@ -36,7 +36,7 @@ pub trait PackageSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without a package manager,
-    /// [`ProbeError::Failed`] when it gives no answer.
+    /// A failed [`ProbeError`] when it gives no answer.
     fn installed(&self) -> Result<InstalledPackages, ProbeError>;
 
     /// The installed packages' dependency graph.
@@ -53,7 +53,7 @@ pub trait SyncSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without a package manager or without
-    /// any synced database, [`ProbeError::Failed`] when one cannot be read.
+    /// any synced database, a failed [`ProbeError`] when one cannot be read.
     fn offered(&self) -> Result<SyncPackages, ProbeError>;
 }
 
@@ -64,7 +64,7 @@ pub trait LinuxPackageSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without a package manager,
-    /// [`ProbeError::Failed`] when a database cannot be read.
+    /// A failed [`ProbeError`] when a database cannot be read.
     fn linux_packages(&self) -> Result<LinuxPackages, ProbeError>;
 }
 
@@ -163,9 +163,7 @@ impl LinuxPackageSource for Libalpm {
         let sync = match self.sync.read(&conf) {
             Ok(read) => read.linux.clone(),
             Err(ProbeError::Unavailable) => Vec::new(),
-            Err(error @ (ProbeError::Failed(_) | ProbeError::Io { what: _, error: _ })) => {
-                return Err(error);
-            }
+            Err(error) => return Err(error),
         };
 
         Ok(LinuxPackages { sync, local })
@@ -198,17 +196,19 @@ fn c_path(path: &Path) -> Result<Vec<u8>, ProbeError> {
     let bytes = path.as_os_str().as_bytes();
 
     if bytes.contains(&0_u8) {
-        return Err(ProbeError::Failed(format!(
-            "{}: NUL in the path",
-            path.display()
-        )));
+        return Err(ProbeError::NulInPath {
+            path: path.to_path_buf(),
+        });
     }
 
     Ok(bytes.to_vec())
 }
 
 fn failed(what: &str) -> impl Fn(alpm::Error) -> ProbeError + '_ {
-    move |error| ProbeError::Failed(format!("{what}: {error}"))
+    move |error| ProbeError::Alpm {
+        what: what.to_owned(),
+        error,
+    }
 }
 
 /// Whoever built the package wrote it, so it is outside text.

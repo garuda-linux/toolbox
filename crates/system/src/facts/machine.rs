@@ -33,7 +33,7 @@ pub trait MachineSource: Send + Sync {
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Unavailable`] without `/proc`, [`ProbeError::Failed`]
+    /// [`ProbeError::Unavailable`] without `/proc`, a failed [`ProbeError`]
     /// when `/proc/stat` names no boot time.
     fn booted(&self) -> Result<SystemTime, ProbeError>;
 
@@ -41,7 +41,7 @@ pub trait MachineSource: Send + Sync {
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the file system gives no answer.
+    /// A failed [`ProbeError`] when the file system gives no answer.
     fn disk(&self) -> Result<DiskSpace, ProbeError>;
 
     /// The bytes of the files in pacman's package cache.
@@ -49,7 +49,7 @@ pub trait MachineSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the cache folder,
-    /// [`ProbeError::Failed`] when it cannot be listed.
+    /// A failed [`ProbeError`] when it cannot be listed.
     fn package_cache(&self) -> Result<u64, ProbeError>;
 }
 
@@ -78,7 +78,9 @@ impl MachineSource for SystemMachine {
         let release = release.trim();
 
         if release.is_empty() {
-            return Err(ProbeError::Failed("the kernel names no release".to_owned()));
+            return Err(ProbeError::Missing {
+                what: "the kernel names no release".to_owned(),
+            });
         }
 
         Ok(release.to_owned())
@@ -91,8 +93,10 @@ impl MachineSource for SystemMachine {
     }
 
     fn disk(&self) -> Result<DiskSpace, ProbeError> {
-        let stat = rustix::fs::statvfs(&self.root)
-            .map_err(|error| ProbeError::Failed(format!("{}: {error}", self.root.display())))?;
+        let stat = rustix::fs::statvfs(&self.root).map_err(|error| ProbeError::Syscall {
+            what: self.root.display().to_string(),
+            error,
+        })?;
 
         Ok(DiskSpace {
             total: stat.f_blocks.saturating_mul(stat.f_frsize),

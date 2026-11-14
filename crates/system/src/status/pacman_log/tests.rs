@@ -142,6 +142,6 @@ fn a_folder_instead_of_a_log_fails() {
 
     assert!(matches!(
         PacmanLog::new(folder.path()).last_update(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }

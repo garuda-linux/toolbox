@@ -18,7 +18,9 @@ use toolbox_fs::{Permissions, Replace};
 
 use crate::feed::parse;
 use crate::https::Https;
-use crate::{Clock, News, NewsError, NewsSource, REFRESH_EVERY, Source, SystemClock, Transport};
+use crate::{
+    Clock, News, NewsError, NewsSource, REFRESH_EVERY, Source, StorageStep, SystemClock, Transport,
+};
 
 /// Only the user reads the copy, as the rest of the cache folder.
 const PRIVATE: Permissions = Permissions::Exactly(0o600);
@@ -70,7 +72,7 @@ impl Cache {
 
     /// Downloads when the last attempt is old enough. Returns why the
     /// download failed, `None` when none was due or it worked.
-    fn refresh(&self, stored: &mut Stored, now: i64) -> Result<Option<String>, NewsError> {
+    fn refresh(&self, stored: &mut Stored, now: i64) -> Result<Option<NewsError>, NewsError> {
         // A clock set wrong forward once would block every download until
         // it passed that time. Counting the attempt as now waits from the
         // present, never longer.
@@ -94,12 +96,12 @@ impl Cache {
 
         let body = match self.transport.get(self.source.feed()) {
             Ok(body) => body,
-            Err(error) => return Ok(Some(error.to_string())),
+            Err(error) => return Ok(Some(NewsError::Request(error))),
         };
 
         let posts = match parse(&body, self.source) {
             Ok(posts) => posts,
-            Err(error) => return Ok(Some(error.to_string())),
+            Err(error) => return Ok(Some(NewsError::Feed(error))),
         };
 
         stored.news = Some(News {
@@ -122,16 +124,18 @@ impl Cache {
         match std::fs::read(&file) {
             Ok(bytes) => Ok(serde_json::from_slice(&bytes).unwrap_or_default()),
             Err(error) if error.kind() == ErrorKind::NotFound => Ok(Stored::default()),
-            Err(error) => Err(storage(&error)),
+            Err(error) => Err(storage(StorageStep::Read)(error)),
         }
     }
 
     fn write(&self, stored: &Stored) -> Result<(), NewsError> {
-        std::fs::create_dir_all(&self.folder).map_err(|error| storage(&error))?;
-        let bytes = serde_json::to_vec(stored).map_err(|error| storage(&error))?;
+        std::fs::create_dir_all(&self.folder).map_err(storage(StorageStep::CreateFolder))?;
+        let bytes =
+            serde_json::to_vec(stored).map_err(|error| NewsError::Encode(Arc::new(error)))?;
+
         toolbox_fs::replace(&self.file(), &bytes, &Replace::new(PRIVATE))
             .map(drop)
-            .map_err(|error: io::Error| storage(&error))
+            .map_err(storage(StorageStep::Write))
     }
 }
 
@@ -147,12 +151,9 @@ impl NewsSource for Cache {
         }
 
         stored.news.ok_or_else(|| {
-            failure.map_or_else(
-                || NewsError::Waiting {
-                    next: stored.last_attempt.map_or(now, next_attempt),
-                },
-                NewsError::Download,
-            )
+            failure.unwrap_or_else(|| NewsError::Waiting {
+                next: stored.last_attempt.map_or(now, next_attempt),
+            })
         })
     }
 }
@@ -162,6 +163,9 @@ fn next_attempt(last: i64) -> i64 {
     last.saturating_add(wait)
 }
 
-fn storage(error: &dyn std::fmt::Display) -> NewsError {
-    NewsError::Storage(error.to_string())
+fn storage(step: StorageStep) -> impl Fn(io::Error) -> NewsError {
+    move |error| NewsError::Storage {
+        step,
+        error: Arc::new(error),
+    }
 }

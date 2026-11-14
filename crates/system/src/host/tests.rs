@@ -232,7 +232,7 @@ fn live_iso_reads_the_mount_table() {
     assert_eq!(host.is_live_iso(), Ok(false));
 
     fs::write(roots.proc.join("self/mounts"), "").unwrap();
-    assert!(matches!(host.is_live_iso(), Err(ProbeError::Failed(_))));
+    assert!(matches!(host.is_live_iso(), Err(error) if error.is_failure()));
 }
 
 /// Docker, podman and distrobox run on an overlay root too.
@@ -307,7 +307,7 @@ fn an_update_stamp_without_boot_time_is_not_judged() {
     fs::write(roots.proc.join("stat"), before).unwrap();
     assert!(matches!(
         host.is_reboot_pending(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 

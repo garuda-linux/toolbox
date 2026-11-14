@@ -223,10 +223,9 @@ fn aur_unreadable(error: &AurError, out: &mut Out<'_>) -> Exit {
 }
 
 fn unreadable(error: &ProbeError, out: &mut Out<'_>) -> Exit {
-    match error {
-        ProbeError::Unavailable => unavailable("pacman's databases could not be read", out),
-        ProbeError::Failed(_) | ProbeError::Io { what: _, error: _ } => {
-            let reason = error.reason().unwrap_or_default();
+    match error.reason() {
+        None => unavailable("pacman's databases could not be read", out),
+        Some(reason) => {
             failure(out, "pacman's databases could not be read", &reason);
             Exit::Failure
         }

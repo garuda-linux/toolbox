@@ -191,7 +191,7 @@ fn failed_probes_are_named_in_the_status_bar_which_reads_again() {
     let issues = vec![
         ProbeIssue {
             probe: Probe::Units,
-            error: ProbeError::Failed("no bus".to_owned()),
+            error: ProbeError::fake("no bus"),
         },
         ProbeIssue {
             probe: Probe::Grub,
@@ -199,7 +199,7 @@ fn failed_probes_are_named_in_the_status_bar_which_reads_again() {
         },
         ProbeIssue {
             probe: Probe::Accounts,
-            error: ProbeError::Failed("no passwd".to_owned()),
+            error: ProbeError::fake("no passwd"),
         },
     ];
 
@@ -372,7 +372,7 @@ pub fn failed_units_bar() -> Reading {
     let (mut harness, runtime, answer, reads) = app_with(true);
     let issues = vec![ProbeIssue {
         probe: Probe::Units,
-        error: ProbeError::Failed("no bus".to_owned()),
+        error: ProbeError::fake("no bus"),
     }];
 
     answer.send((Snapshot::default(), issues)).unwrap();

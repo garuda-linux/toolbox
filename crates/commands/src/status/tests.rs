@@ -84,8 +84,8 @@ fn the_json_tells_every_part_by_its_state() {
 
 fn broken(now: SystemTime) -> Status {
     let mut broken = status(now);
-    broken.aur_updates = Err(ProbeError::Failed(
-        "paru -Qua exit status: 1: error: failed to initialize alpm".to_owned(),
+    broken.aur_updates = Err(ProbeError::fake(
+        "paru -Qua exit status: 1: error: failed to initialize alpm",
     ));
     broken
 }
@@ -204,8 +204,8 @@ fn verbose_shows_the_programs_own_words() {
 fn several_failures_share_one_hint() {
     let now = SystemTime::UNIX_EPOCH + DAY * 100;
     let mut found = broken(now);
-    found.updates = Err(ProbeError::Failed(
-        "checkupdates ==> ERROR: Cannot find the fakeroot binary".to_owned(),
+    found.updates = Err(ProbeError::fake(
+        "checkupdates ==> ERROR: Cannot find the fakeroot binary",
     ));
 
     let shown = text(
@@ -296,7 +296,7 @@ fn info_findings_need_no_attention() {
 fn parts_that_could_not_be_read_are_left_out() {
     let now = SystemTime::UNIX_EPOCH + DAY * 100;
     let mut found = calm(now);
-    found.updates = Err(ProbeError::Failed("no network".to_owned()));
+    found.updates = Err(ProbeError::fake("no network"));
     found.aur_updates = Err(ProbeError::Unavailable);
     let shown = view(&found, &Err(ProbeError::Unavailable), now);
 
@@ -317,7 +317,7 @@ fn a_pending_restart_alone_needs_attention() {
 fn a_part_that_failed_ends_with_failure() {
     let now = SystemTime::UNIX_EPOCH + DAY * 100;
     let mut found = calm(now);
-    found.updates = Err(ProbeError::Failed("no network".to_owned()));
+    found.updates = Err(ProbeError::fake("no network"));
     let shown = view(&found, &Ok(false), now);
 
     assert_eq!(exit(&shown), Exit::Failure);
@@ -337,7 +337,7 @@ fn a_part_not_available_is_no_failure() {
 fn attention_wins_over_a_part_that_failed() {
     let now = SystemTime::UNIX_EPOCH + DAY * 100;
     let mut found = calm(now);
-    found.aur_updates = Err(ProbeError::Failed("no network".to_owned()));
+    found.aur_updates = Err(ProbeError::fake("no network"));
     let shown = view(&found, &Ok(true), now);
 
     assert_eq!(exit(&shown), Exit::Attention);

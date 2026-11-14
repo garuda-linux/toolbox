@@ -100,7 +100,7 @@ fn a_small_cache_without_orphans_is_no_row() {
 #[test]
 fn a_failed_check_is_no_all_clear_in_the_greeting() {
     let status = Status {
-        health: Err(ProbeError::Failed("no garuda-health".to_owned())),
+        health: Err(ProbeError::fake("no garuda-health")),
         ..quiet()
     };
 

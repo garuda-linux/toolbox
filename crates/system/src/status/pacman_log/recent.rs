@@ -14,7 +14,7 @@ pub trait RecentLogSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] when the log is missing or not readable
-    /// for the user, [`ProbeError::Failed`] when reading it breaks off.
+    /// for the user, a failed [`ProbeError`] when reading it breaks off.
     fn recent(&self) -> Result<String, ProbeError>;
 }
 

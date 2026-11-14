@@ -146,15 +146,12 @@ fn every_probe_lands_in_its_own_field() {
 #[test]
 fn failures_stay_with_their_field() {
     let (mut sources, _health) = sources(Ok(false));
-    sources.updates = Arc::new(FakeUpdates(Err(ProbeError::Failed("offline".to_owned()))));
+    sources.updates = Arc::new(FakeUpdates(Err(ProbeError::fake("offline"))));
     sources.update_log = Arc::new(FakeLog(Err(ProbeError::Unavailable)));
 
     let status = probe_status(&sources);
 
-    assert_eq!(
-        status.updates,
-        Err(ProbeError::Failed("offline".to_owned()))
-    );
+    assert_eq!(status.updates, Err(ProbeError::fake("offline")));
     assert_eq!(status.last_update, Err(ProbeError::Unavailable));
     assert_eq!(status.merges, Ok(vec![PathBuf::from("/etc/a.pacnew")]));
 }
@@ -183,9 +180,6 @@ fn a_panicking_probe_fails_only_its_field() {
 
     let status = probe_status(&sources);
 
-    assert_eq!(
-        status.updates,
-        Err(ProbeError::Failed("the probe panicked".to_owned()))
-    );
+    assert_eq!(status.updates, Err(ProbeError::Panicked));
     assert_eq!(status.aur_updates, Err(ProbeError::Unavailable));
 }

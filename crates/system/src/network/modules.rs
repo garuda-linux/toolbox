@@ -26,7 +26,7 @@ pub trait ModuleSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without `/proc/modules`,
-    /// [`ProbeError::Failed`] when a file that exists cannot be read.
+    /// A failed [`ProbeError`] when a file that exists cannot be read.
     fn facts(&self) -> Result<ModuleFacts, ProbeError>;
 }
 

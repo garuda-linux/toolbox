@@ -21,11 +21,11 @@ struct Broken;
 
 impl NetworkSource for Broken {
     fn default_route(&self) -> Result<DefaultRoute, ProbeError> {
-        Err(ProbeError::Failed("no route table".to_owned()))
+        Err(ProbeError::fake("no route table"))
     }
 
     fn radios(&self) -> Result<Vec<Radio>, ProbeError> {
-        Err(ProbeError::Failed("rfkill refused".to_owned()))
+        Err(ProbeError::fake("rfkill refused"))
     }
 
     fn radio_access(&self) -> RadioAccess {
@@ -49,7 +49,7 @@ struct NoRoute;
 
 impl NetworkSource for NoRoute {
     fn default_route(&self) -> Result<DefaultRoute, ProbeError> {
-        Err(ProbeError::Failed("no route table".to_owned()))
+        Err(ProbeError::fake("no route table"))
     }
 
     fn radios(&self) -> Result<Vec<Radio>, ProbeError> {

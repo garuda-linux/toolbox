@@ -21,7 +21,7 @@ pub trait AccountSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the account files,
-    /// [`ProbeError::Failed`] when they cannot be read.
+    /// A failed [`ProbeError`] when they cannot be read.
     fn accounts(&self) -> Result<Accounts, ProbeError>;
 
     /// The login shell of every account in `passwd`.
@@ -29,7 +29,7 @@ pub trait AccountSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without `passwd`,
-    /// [`ProbeError::Failed`] when it cannot be read.
+    /// A failed [`ProbeError`] when it cannot be read.
     fn login_shells(&self) -> Result<CurrentShells, ProbeError>;
 
     /// The shells `/etc/shells` allows, in its order.
@@ -37,7 +37,7 @@ pub trait AccountSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the list,
-    /// [`ProbeError::Failed`] when it cannot be read.
+    /// A failed [`ProbeError`] when it cannot be read.
     fn available_shells(&self) -> Result<AvailableShells, ProbeError>;
 }
 

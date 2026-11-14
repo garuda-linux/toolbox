@@ -13,10 +13,11 @@ mod https;
 mod merged;
 mod source;
 
+use std::sync::Arc;
 use std::time::Duration;
 
 pub use cache::Cache;
-pub use feed::Post;
+pub use feed::{FeedError, Post};
 pub use https::Https;
 pub use merged::Feeds;
 use serde::{Deserialize, Serialize};
@@ -53,17 +54,58 @@ pub trait Transport: Send + Sync {
     fn get(&self, url: &str) -> Result<Vec<u8>, RequestError>;
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+/// Equal when of one kind and read the same, as an I/O or JSON error has
+/// no equality of its own.
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum NewsError {
     /// No copy yet and the download failed now.
     #[error("the forum's news could not be downloaded: {0}")]
-    Download(String),
+    Request(#[source] RequestError),
+    /// No copy yet and the feed that came now is no valid XML.
+    #[error("the forum's news could not be downloaded: {0}")]
+    Feed(#[source] FeedError),
+    /// No feed answered and none named why.
+    #[error("the forum's news could not be downloaded: no feed")]
+    NoFeed,
     /// No copy yet, and the last attempt was too recent to try again.
     #[error("the forum's news is not downloaded again before {next}")]
     Waiting {
         /// Seconds since the epoch when the next attempt is allowed.
         next: i64,
     },
+    #[error("the news copy could not be stored: {error}")]
+    Storage {
+        step: StorageStep,
+        #[source]
+        error: Arc<std::io::Error>,
+    },
     #[error("the news copy could not be stored: {0}")]
-    Storage(String),
+    Encode(#[source] Arc<serde_json::Error>),
 }
+
+/// Where keeping the copy broke off.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum StorageStep {
+    Read,
+    CreateFolder,
+    Write,
+}
+
+impl PartialEq for NewsError {
+    fn eq(&self, other: &Self) -> bool {
+        let kinds = match (self, other) {
+            (
+                Self::Storage { step, error: _ },
+                Self::Storage {
+                    step: theirs,
+                    error: _,
+                },
+            ) => step == theirs,
+            (ours, theirs) => std::mem::discriminant(ours) == std::mem::discriminant(theirs),
+        };
+
+        kinds && self.to_string() == other.to_string()
+    }
+}
+
+impl Eq for NewsError {}

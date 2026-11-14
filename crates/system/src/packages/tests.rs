@@ -87,7 +87,7 @@ fn an_unreadable_local_database_is_a_failure() {
 
     assert!(matches!(
         Libalpm::with_config(system.config()).installed(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 

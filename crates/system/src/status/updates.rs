@@ -31,7 +31,7 @@ pub trait UpdateSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the program,
-    /// [`ProbeError::Failed`] when the sync or the program fails.
+    /// A failed [`ProbeError`] when the sync or the program fails.
     fn pending(&self) -> Result<Vec<PendingUpdate>, ProbeError>;
 }
 
@@ -42,7 +42,7 @@ pub trait AurUpdateSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without an AUR helper or as root,
-    /// [`ProbeError::Failed`] when the AUR cannot be asked.
+    /// A failed [`ProbeError`] when the AUR cannot be asked.
     fn pending_aur(&self) -> Result<Vec<PendingUpdate>, ProbeError>;
 }
 

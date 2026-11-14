@@ -17,7 +17,7 @@ pub trait MergeSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without the program,
-    /// [`ProbeError::Failed`] when it fails.
+    /// A failed [`ProbeError`] when it fails.
     fn waiting(&self) -> Result<Vec<PathBuf>, ProbeError>;
 }
 

@@ -46,7 +46,7 @@ pub trait HostSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] when the user id is missing from
-    /// `passwd` (an account from LDAP or sssd), [`ProbeError::Failed`]
+    /// `passwd` (an account from LDAP or sssd), a failed [`ProbeError`]
     /// when `/proc/self/status` names no user id, or a file read error.
     fn user(&self) -> Result<UserName, ProbeError>;
 
@@ -56,21 +56,21 @@ pub trait HostSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without a mount table,
-    /// [`ProbeError::Failed`] when it lists no root.
+    /// A failed [`ProbeError`] when it lists no root.
     fn is_live_iso(&self) -> Result<bool, ProbeError>;
 
     /// The current desktops, empty outside a desktop session.
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the source cannot be read.
+    /// A failed [`ProbeError`] when the source cannot be read.
     fn desktops(&self) -> Result<Vec<String>, ProbeError>;
 
     /// The Garuda edition, `None` when the system does not name one.
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the release file cannot be read.
+    /// A failed [`ProbeError`] when the release file cannot be read.
     fn edition(&self) -> Result<Option<String>, ProbeError>;
 
     /// Whether a system update finished after the last boot.
@@ -78,7 +78,7 @@ pub trait HostSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] when the boot time is unknown,
-    /// [`ProbeError::Failed`] when a source cannot be read.
+    /// A failed [`ProbeError`] when a source cannot be read.
     fn is_reboot_pending(&self) -> Result<bool, ProbeError>;
 }
 
@@ -154,8 +154,9 @@ where
     fn variable(&self, key: &str) -> Result<Option<String>, ProbeError> {
         (self.lookup)(key)
             .map(|value| {
-                value.into_string().map_err(|raw| {
-                    ProbeError::Failed(format!("{key} is not UTF-8: {}", raw.display()))
+                value.into_string().map_err(|raw| ProbeError::NotUtf8 {
+                    what: key.to_owned(),
+                    raw,
                 })
             })
             .transpose()
@@ -168,8 +169,9 @@ where
 {
     fn user(&self) -> Result<UserName, ProbeError> {
         let path = self.roots.proc.join("self/status");
-        let uid = effective_uid(&files::read(&path)?)
-            .ok_or_else(|| ProbeError::Failed(format!("{} names no user id", path.display())))?;
+        let uid = effective_uid(&files::read(&path)?).ok_or_else(|| ProbeError::Missing {
+            what: format!("{} names no user id", path.display()),
+        })?;
 
         let passwd = files::read(&self.roots.etc.join("passwd"))?;
 
@@ -180,8 +182,9 @@ where
         let path = self.roots.proc.join("self/mounts");
         let mounts = files::read(&path)?;
 
-        let live = root_is_live(&mounts)
-            .ok_or_else(|| ProbeError::Failed(format!("{} lists no root", path.display())))?;
+        let live = root_is_live(&mounts).ok_or_else(|| ProbeError::Missing {
+            what: format!("{} lists no root", path.display()),
+        })?;
 
         Ok(live && !self.in_container()?)
     }
@@ -264,7 +267,9 @@ fn parse_boot_time(stat: &str) -> Option<u64> {
 pub fn boot_time(stat: &str) -> Result<SystemTime, ProbeError> {
     parse_boot_time(stat)
         .and_then(|seconds| SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(seconds)))
-        .ok_or_else(|| ProbeError::Failed("no boot time in /proc/stat".to_owned()))
+        .ok_or_else(|| ProbeError::Missing {
+            what: "no boot time in /proc/stat".to_owned(),
+        })
 }
 
 fn parse_desktops(value: &str) -> Vec<String> {

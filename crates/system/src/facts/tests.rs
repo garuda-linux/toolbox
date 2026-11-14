@@ -61,7 +61,7 @@ impl MachineSource for FakeMachine {
     }
 
     fn disk(&self) -> Result<DiskSpace, ProbeError> {
-        Err(ProbeError::Failed("statvfs: denied".to_owned()))
+        Err(ProbeError::fake("statvfs: denied"))
     }
 
     fn package_cache(&self) -> Result<u64, ProbeError> {

@@ -27,21 +27,21 @@ const DKMS: &str = "/usr/bin/dkms";
 pub trait KernelSource: Send + Sync {
     /// # Errors
     ///
-    /// [`ProbeError::Unavailable`] without `/proc`, [`ProbeError::Failed`]
+    /// [`ProbeError::Unavailable`] without `/proc`, a failed [`ProbeError`]
     /// when the release cannot be read.
     fn running(&self) -> Result<RunningKernel, ProbeError>;
 
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without `/usr/lib/modules`,
-    /// [`ProbeError::Failed`] when it cannot be listed.
+    /// A failed [`ProbeError`] when it cannot be listed.
     fn releases(&self) -> Result<KernelReleases, ProbeError>;
 }
 
 pub trait DkmsSource: Send + Sync {
     /// # Errors
     ///
-    /// [`ProbeError::Unavailable`] without dkms, [`ProbeError::Failed`]
+    /// [`ProbeError::Unavailable`] without dkms, a failed [`ProbeError`]
     /// when it prints nothing usable.
     fn status(&self) -> Result<Vec<DkmsEntry>, ProbeError>;
 }
@@ -97,8 +97,10 @@ impl KernelSource for SystemKernels {
 
         // A release that is no single path component names no folder, and
         // no kernel prints one.
-        let release = KernelRelease::new(text.trim())
-            .map_err(|error| ProbeError::Failed(format!("the running kernel: {error}")))?;
+        let release = KernelRelease::new(text.trim()).map_err(|error| ProbeError::Invalid {
+            what: "the running kernel".to_owned(),
+            error: error.into(),
+        })?;
 
         let package = self.package_of(release.as_str());
 

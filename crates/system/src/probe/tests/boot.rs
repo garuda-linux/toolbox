@@ -25,9 +25,7 @@ impl BootSource for UnreadableLoader {
     }
 
     fn loader(&self) -> Result<BootLoader, ProbeError> {
-        Err(ProbeError::Failed(
-            "install.conf: Is a directory".to_owned(),
-        ))
+        Err(ProbeError::fake("install.conf: Is a directory"))
     }
 
     fn kernel_cmdline(&self) -> Result<KernelCmdline, ProbeError> {
@@ -61,7 +59,7 @@ fn the_boot_parts_are_in_the_snapshot() {
 #[test]
 fn only_failed_probes_are_named_in_the_snapshot() {
     let (failed, _) = probe_snapshot(&sources(
-        FakePackages(Err(ProbeError::Failed("locked".to_owned()))),
+        FakePackages(Err(ProbeError::fake("locked"))),
         host(),
     ));
 
@@ -93,7 +91,7 @@ fn an_unreadable_loader_is_unknown_and_named() {
         issues,
         [ProbeIssue {
             probe: Probe::BootLoader,
-            error: ProbeError::Failed("install.conf: Is a directory".to_owned()),
+            error: ProbeError::fake("install.conf: Is a directory"),
         }]
     );
 }

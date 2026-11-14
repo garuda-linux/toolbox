@@ -43,13 +43,13 @@ const MAX_INTERFACE_CHARS: usize = 15;
 pub trait NetworkSource: Send + Sync {
     /// # Errors
     ///
-    /// [`ProbeError::Unavailable`] without `ip`, [`ProbeError::Failed`]
+    /// [`ProbeError::Unavailable`] without `ip`, a failed [`ProbeError`]
     /// when it prints nothing usable.
     fn default_route(&self) -> Result<DefaultRoute, ProbeError>;
 
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the switches cannot be listed.
+    /// A failed [`ProbeError`] when the switches cannot be listed.
     fn radios(&self) -> Result<Vec<Radio>, ProbeError>;
 
     fn radio_access(&self) -> RadioAccess;
@@ -59,19 +59,19 @@ pub trait NetworkSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without `rfkill`,
-    /// [`ProbeError::Failed`] with its first complaint when it refuses.
+    /// A failed [`ProbeError`] with its first complaint when it refuses.
     fn set_radio(&self, target: RadioTarget, blocked: bool) -> Result<(), ProbeError>;
 
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without `lspci`,
-    /// [`ProbeError::Failed`] when it fails.
+    /// A failed [`ProbeError`] when it fails.
     fn pci_devices(&self) -> Result<Vec<Device>, ProbeError>;
 
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without `lsusb`,
-    /// [`ProbeError::Failed`] when it fails.
+    /// A failed [`ProbeError`] when it fails.
     fn usb_devices(&self) -> Result<Vec<Device>, ProbeError>;
 }
 
@@ -191,8 +191,11 @@ impl NetworkSource for SystemNetwork {
 
 /// The first route, as `ip route` prints the preferred one first.
 fn parse_default_route(json: &str) -> Result<DefaultRoute, ProbeError> {
-    let routes: Vec<Route> = serde_json::from_str(json.trim())
-        .map_err(|error| ProbeError::Failed(format!("ip printed no route list: {error}")))?;
+    let routes: Vec<Route> =
+        serde_json::from_str(json.trim()).map_err(|error| ProbeError::Json {
+            what: "ip printed no route list".to_owned(),
+            error: std::sync::Arc::new(error),
+        })?;
 
     Ok(routes
         .into_iter()

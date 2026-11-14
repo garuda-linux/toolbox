@@ -102,7 +102,5 @@ fn probe_health(sources: &StatusSources) -> Result<Vec<HealthIssue>, ProbeError>
 
 /// A probe thread's answer. A panic in an adapter fails only its card.
 fn joined<T>(handle: thread::ScopedJoinHandle<'_, Result<T, ProbeError>>) -> Result<T, ProbeError> {
-    handle
-        .join()
-        .unwrap_or_else(|_| Err(ProbeError::Failed("the probe panicked".to_owned())))
+    handle.join().unwrap_or(Err(ProbeError::Panicked))
 }

@@ -15,7 +15,7 @@ pub trait OrphanSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without a package manager,
-    /// [`ProbeError::Failed`] when the local database cannot be read.
+    /// A failed [`ProbeError`] when the local database cannot be read.
     fn orphans(&self) -> Result<Vec<PackageName>, ProbeError>;
 }
 

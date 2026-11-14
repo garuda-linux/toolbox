@@ -110,7 +110,9 @@ fn offline_without_a_copy_says_why_then_waits() {
 
     assert_eq!(
         cache.news(),
-        Err(NewsError::Download("no network".to_owned()))
+        Err(NewsError::Request(RequestError::NoAnswer(
+            "no network".to_owned()
+        )))
     );
 
     clock.0.fetch_add(hours(1), Ordering::SeqCst);

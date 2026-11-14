@@ -26,7 +26,9 @@ fn feed(posts: Vec<Post>, downloaded: i64) -> Arc<dyn NewsSource> {
 }
 
 fn offline() -> Arc<dyn NewsSource> {
-    Arc::new(Fixed(Err(NewsError::Download("no network".to_owned()))))
+    Arc::new(Fixed(Err(NewsError::Request(
+        crate::RequestError::NoAnswer("no network".to_owned()),
+    ))))
 }
 
 #[test]
@@ -74,6 +76,8 @@ fn every_feed_offline_says_why() {
 
     assert_eq!(
         feeds.news(),
-        Err(NewsError::Download("no network".to_owned()))
+        Err(NewsError::Request(crate::RequestError::NoAnswer(
+            "no network".to_owned()
+        )))
     );
 }

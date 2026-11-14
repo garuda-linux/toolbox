@@ -148,7 +148,7 @@ fn a_dkms_answer_becomes_its_state() {
         Ok(Dkms::NotInstalled)
     );
     assert_eq!(
-        dkms_answer(Err(ProbeError::Failed("no output".to_owned()))),
+        dkms_answer(Err(ProbeError::fake("no output"))),
         Err(DkmsFailure("no output".to_owned()))
     );
     assert_eq!(dkms_answer(Ok(Vec::new())), Ok(Dkms::Modules(Vec::new())));

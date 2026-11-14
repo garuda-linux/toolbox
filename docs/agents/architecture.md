@@ -141,7 +141,9 @@ tint. The header band shows the blur under a neutral scrim.
 
 A function that can fail returns its own error type, derived with
 `thiserror`, the helper's crates included. A wrapped error stays its
-`#[source]`, behind an `Arc` where the type must stay `Clone`. `Result<_, String>`
+`#[source]`, behind an `Arc` where the type must stay `Clone`. A probe
+fails with a typed `ProbeError` variant per cause, never free text. A fake
+fails with `ProbeError::fake` (feature `testing`). `Result<_, String>`
 only in `toolbox-xtask`, `toolbox-lint` and clap value parsers
 (`crates/cli/src/args*`, `crates/commands/src/settings.rs`), because clap
 prints the `String` as the usage error.

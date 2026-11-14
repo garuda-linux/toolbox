@@ -17,7 +17,7 @@ fn the_package_graph_lands_in_the_snapshot() {
 
 #[test]
 fn a_failed_graph_read_is_reported_and_left_out() {
-    let failed = FakePackages(Err(ProbeError::Failed("database locked".to_owned())));
+    let failed = FakePackages(Err(ProbeError::fake("database locked")));
 
     let (snapshot, issues) = probe_snapshot(&sources(failed, host()));
 

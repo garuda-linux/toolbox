@@ -118,7 +118,7 @@ fn checkupdates_exit_1_fails_with_its_complaint() {
     let result = Checkupdates::with_program(fake).pending();
 
     assert!(
-        matches!(&result, Err(ProbeError::Failed(reason)) if reason.contains("fake: complaint")),
+        matches!(&result, Err(ProbeError::Command { command_line: _, status: _, stderr }) if stderr.contains("fake: complaint")),
         "{result:?}"
     );
 }
@@ -157,7 +157,7 @@ fn paru_exit_1_with_an_error_fails() {
     let result = Paru::with_program(fake).pending_aur();
 
     assert!(
-        matches!(&result, Err(ProbeError::Failed(reason)) if reason.contains("aur.archlinux.org")),
+        matches!(&result, Err(ProbeError::Command { command_line: _, status: _, stderr }) if stderr.contains("aur.archlinux.org")),
         "{result:?}"
     );
 }
@@ -169,7 +169,7 @@ fn paru_exit_1_with_output_fails() {
 
     assert!(matches!(
         Paru::with_program(fake).pending_aur(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 
@@ -179,7 +179,7 @@ fn paru_other_exit_codes_fail() {
 
     assert!(matches!(
         Paru::with_program(fake).pending_aur(),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 

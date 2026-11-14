@@ -70,7 +70,7 @@ fn a_failed_status_read_says_so_with_read_again() {
 #[test]
 fn failed_checks_offer_their_details_and_to_read_again() {
     let mut status = quiet();
-    status.health = Err(ProbeError::Failed("no garuda-health".to_owned()));
+    status.health = Err(ProbeError::fake("no garuda-health"));
     let (harness, _runtime, _power) = home(host(false, false), status);
 
     let details = harness.get_by_label("Show details").rect();

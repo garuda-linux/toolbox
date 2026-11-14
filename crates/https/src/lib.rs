@@ -14,6 +14,8 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use ureq::Agent;
+/// The client's own error, the source of [`RequestError::Unreadable`].
+pub use ureq::Error as ClientError;
 use ureq::config::Config;
 use ureq::http::{HeaderName, Response, Uri};
 use ureq::tls::{RootCerts, TlsConfig, TlsProvider};
@@ -38,7 +40,10 @@ pub struct Rules {
 
 /// Why a request got no answer to read. The words are the HTTP client's,
 /// for the log and a message's details. Never a part of an answer.
-#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+///
+/// Two are equal when of one kind and read the same, as the client's
+/// error has no equality of its own.
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum RequestError {
     /// The server was not reached or did not answer in time: no network,
     /// DNS, TLS, a timeout, plain HTTP. The news feed puts a body past its
@@ -53,9 +58,19 @@ pub enum RequestError {
     #[error("the server answered with status {0}")]
     Status(u16),
     /// The answer could not be read, or it is larger than allowed.
+    /// Shared so the error stays `Clone`.
     #[error("the answer could not be read: {0}")]
-    Unreadable(String),
+    Unreadable(#[source] Arc<ureq::Error>),
 }
+
+impl PartialEq for RequestError {
+    fn eq(&self, other: &Self) -> bool {
+        std::mem::discriminant(self) == std::mem::discriminant(other)
+            && self.to_string() == other.to_string()
+    }
+}
+
+impl Eq for RequestError {}
 
 /// Answers what time it is, in seconds since the epoch.
 pub trait Clock: Send + Sync {
@@ -154,7 +169,7 @@ impl Https {
             .with_config()
             .limit(self.max_body_bytes)
             .read_to_string()
-            .map_err(|error| RequestError::Unreadable(error.to_string()))
+            .map_err(|error| RequestError::Unreadable(Arc::new(error)))
     }
 
     /// Every address is a constant, so another host is a mistake in the

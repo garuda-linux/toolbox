@@ -120,7 +120,7 @@ fn text_that_is_no_address_or_interface_name_is_left_out() {
 fn output_that_is_no_route_list_fails() {
     assert!(matches!(
         parse_default_route(LAPTOP_ROUTE.get(..LAPTOP_ROUTE.len() / 2).unwrap()),
-        Err(ProbeError::Failed(_))
+        Err(error) if error.is_failure()
     ));
 }
 
@@ -240,7 +240,12 @@ fn a_refusing_rfkill_reports_its_complaint() {
         },
     );
 
-    let Err(ProbeError::Failed(reason)) = network.set_radio(RadioTarget::Wifi, true) else {
+    let Err(ProbeError::Command {
+        command_line: _,
+        status: _,
+        stderr: reason,
+    }) = network.set_radio(RadioTarget::Wifi, true)
+    else {
         panic!("a refused switch counts as done");
     };
 

@@ -194,7 +194,7 @@ impl BootRepair {
         jobs.lane.blocking(
             "facts",
             move || source.facts(),
-            |answer| answer.unwrap_or_else(|stopped| Err(ProbeError::Failed(stopped.to_string()))),
+            |answer| answer.unwrap_or(Err(ProbeError::Panicked)),
         );
     }
 }

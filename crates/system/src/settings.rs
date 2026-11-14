@@ -27,24 +27,24 @@ pub trait SettingsSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without NetworkManager's drop-in folder,
-    /// [`ProbeError::Failed`] when the drop-in cannot be read.
+    /// A failed [`ProbeError`] when the drop-in cannot be read.
     fn dns(&self) -> Result<CurrentDns, ProbeError>;
 
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the hosts file cannot be read.
+    /// A failed [`ProbeError`] when the hosts file cannot be read.
     fn hblock(&self) -> Result<HblockState, ProbeError>;
 
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without NetworkManager's drop-in folder,
-    /// [`ProbeError::Failed`] when it cannot be listed.
+    /// A failed [`ProbeError`] when it cannot be listed.
     fn wifi_backend(&self) -> Result<CurrentWifiBackend, ProbeError>;
 
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without garuda-update's folder or when
-    /// the config is not readable, [`ProbeError::Failed`] when reading
+    /// the config is not readable, a failed [`ProbeError`] when reading
     /// fails otherwise.
     fn garuda_update(&self) -> Result<GarudaUpdateConfig, ProbeError>;
 
@@ -53,7 +53,7 @@ pub trait SettingsSource: Send + Sync {
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Failed`] when the file cannot be read.
+    /// A failed [`ProbeError`] when the file cannot be read.
     fn module_blacklist(&self) -> Result<OwnBlacklist, ProbeError>;
 }
 

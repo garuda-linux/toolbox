@@ -36,7 +36,7 @@ fn a_program_past_its_deadline_is_stopped_and_has_failed() {
 
     assert!(started.elapsed() < SOON, "the program was waited for");
     assert!(
-        matches!(&error, ProbeError::Failed(text) if text.contains("no answer") && text.contains("sleep 60")),
+        matches!(&error, ProbeError::TimedOut { command_line, after: _ } if command_line.contains("sleep 60")),
         "{error}"
     );
 }
@@ -90,7 +90,13 @@ fn a_child_that_keeps_the_output_open_ends_at_the_deadline() {
 
     assert!(started.elapsed() < SOON, "the output was waited for");
     assert!(
-        matches!(&error, ProbeError::Failed(text) if text.contains("no answer")),
+        matches!(
+            &error,
+            ProbeError::TimedOut {
+                command_line: _,
+                after: _
+            }
+        ),
         "{error}"
     );
 
@@ -114,7 +120,10 @@ fn a_missing_program_is_unavailable() {
 fn a_failed_program_fails_with_its_first_complaint() {
     let error = output(OsStr::new("/bin/sh"), &["-c", "echo broken >&2; exit 1"]).unwrap_err();
 
-    assert!(matches!(&error, ProbeError::Failed(text) if text.contains("broken")));
+    assert!(matches!(
+        &error,
+        ProbeError::Command { command_line: _, status: _, stderr } if stderr.contains("broken")
+    ));
 }
 
 #[test]
@@ -126,11 +135,7 @@ fn a_programs_colour_codes_do_not_reach_the_failure_text() {
         .failure();
 
     assert!(
-        matches!(&error, ProbeError::Failed(text) if text.contains("broken")),
-        "{error}"
-    );
-    assert!(
-        matches!(&error, ProbeError::Failed(text) if !text.contains('\u{1b}')),
+        matches!(&error, ProbeError::Command { command_line: _, status: _, stderr } if stderr == "broken"),
         "{error}"
     );
 }

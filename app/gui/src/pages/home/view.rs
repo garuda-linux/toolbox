@@ -215,9 +215,9 @@ fn listed(updates: &[PendingUpdate], aur: bool) -> impl Iterator<Item = Pending<
 }
 
 fn reason<T>(result: &Result<T, ProbeError>) -> Option<Cow<'_, str>> {
-    match result {
-        Err(ProbeError::Failed(reason)) => Some(Cow::Borrowed(reason)),
-        Err(error @ ProbeError::Io { what: _, error: _ }) => error.reason().map(Cow::Owned),
-        Ok(_) | Err(ProbeError::Unavailable) => None,
-    }
+    result
+        .as_ref()
+        .err()
+        .and_then(ProbeError::reason)
+        .map(Cow::Owned)
 }

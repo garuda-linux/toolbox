@@ -112,7 +112,7 @@ fn status_bar_with_failed_probes() {
     let (mut harness, _runtime, answer, _reads) = crate::system::app();
     let failed = |probe| toolbox_system::ProbeIssue {
         probe,
-        error: toolbox_system::ProbeError::Failed("no bus".to_owned()),
+        error: toolbox_system::ProbeError::fake("no bus"),
     };
 
     let issues = vec![

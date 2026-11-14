@@ -33,7 +33,7 @@ pub trait UpdateLogSource: Send + Sync {
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] when the log is missing or not readable
-    /// for the user, [`ProbeError::Failed`] when reading it breaks off.
+    /// for the user, a failed [`ProbeError`] when reading it breaks off.
     fn last_update(&self) -> Result<Option<SystemTime>, ProbeError>;
 }
 
@@ -73,7 +73,9 @@ fn open_log(path: &Path) -> Result<File, ProbeError> {
     let kind = file.metadata().map_err(|error| unreadable(path, error))?;
 
     if !kind.is_file() {
-        return Err(ProbeError::Failed(format!("{} is no file", path.display())));
+        return Err(ProbeError::NotAFile {
+            path: path.to_path_buf(),
+        });
     }
 
     Ok(file)

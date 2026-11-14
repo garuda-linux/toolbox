@@ -143,11 +143,7 @@ impl Jobs {
         self.lane.blocking(
             "radio",
             move || actions.set_radio(target, blocked),
-            |result| {
-                Landed::Radio(
-                    result.unwrap_or_else(|stopped| Err(ProbeError::Failed(stopped.to_string()))),
-                )
-            },
+            |result| Landed::Radio(result.unwrap_or(Err(ProbeError::Panicked))),
         );
     }
 
