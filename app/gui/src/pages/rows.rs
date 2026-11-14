@@ -15,6 +15,7 @@ use toolbox_gui_kit::tokens::{self, Tokens};
 use toolbox_gui_kit::widgets::{Select, Tone, banner};
 
 use crate::i18n;
+use crate::refused::Shown;
 
 pub const MENU_AND_SWITCH: f32 = 90.0;
 pub const SWITCH_WIDTH: f32 = 40.0;
@@ -73,4 +74,16 @@ pub fn refusal_banner(ui: &mut Ui, tone: Tone, text: &str, dismiss_id: &str) -> 
     let dismissed = banner(ui, tone, text, &[&dismiss]) == Some(0);
     ui.add_space(ui.tokens().sizes.card_gap);
     dismissed
+}
+
+pub fn refused_banner(
+    ui: &mut Ui,
+    refused: Option<&impl Shown>,
+    tone: Tone,
+    dismiss_id: &str,
+) -> bool {
+    refused.is_some_and(|refused| {
+        let text = refused.text(ui.ctx());
+        refusal_banner(ui, tone, &text, dismiss_id)
+    })
 }

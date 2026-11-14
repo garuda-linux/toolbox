@@ -10,12 +10,11 @@ use toolbox_core::features::network::{
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{KernelModule, Toggle};
-use toolbox_services::queue::edit::QueueEdit;
 
 use super::{Network, NetworkRefusal};
 use crate::command::{AppCommand, NetworkCommand};
 use crate::page_service::Handled;
-use crate::refused::{Refused, queue_or_refuse};
+use crate::refused::{Refused, queue, queue_or_refuse};
 
 impl Network {
     pub const fn refusal(&self) -> Option<&NetworkRefusal> {
@@ -40,12 +39,9 @@ impl Network {
             NetworkCommand::Blacklist { module, on } => {
                 self.blacklist(module, *on, changes, snapshot)
             }
-            NetworkCommand::ToggleHotspot => Handled::edit(
-                QueueEdit::of_click(changes, |changes| {
-                    toggle_install(&HOTSPOT_PACKAGE, changes, snapshot);
-                })
-                .0,
-            ),
+            NetworkCommand::ToggleHotspot => queue(changes, |changes| {
+                toggle_install(&HOTSPOT_PACKAGE, changes, snapshot);
+            }),
             NetworkCommand::DismissRefusal => {
                 self.refusal = None;
                 Handled::taken()

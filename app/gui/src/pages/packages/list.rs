@@ -318,19 +318,17 @@ pub fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
-    let why = match refusal.refusal {
+    let text = match refusal.refusal {
         Refusal::Protected(why) | Refusal::TakesAlong(why) => {
-            Some(i18n::text(ui.ctx(), &protection_text_id(why)).into_owned())
+            let why = i18n::text(ui.ctx(), &protection_text_id(why));
+            refusal.text_with(ui.ctx(), &[("why", why.as_ref())])
         }
         Refusal::NotOffered
         | Refusal::Unread
         | Refusal::RunningKernel
         | Refusal::RunningUnknown
-        | Refusal::LastKernel => None,
+        | Refusal::LastKernel => refusal.text(ui.ctx()),
     };
-
-    let more: Vec<_> = why.as_deref().map(|why| ("why", why)).into_iter().collect();
-    let text = refusal.text_with(ui.ctx(), &more);
 
     if refusal_banner(ui, Tone::Error, &text, "packages-dismiss") {
         context.commands.send(PackagesCommand::DismissRefusal);

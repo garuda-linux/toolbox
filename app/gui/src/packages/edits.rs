@@ -18,10 +18,6 @@ impl Packages {
         self.refusal.as_ref()
     }
 
-    pub fn set_refusal(&mut self, refusal: Option<PackagesRefusal>) {
-        self.refusal = refusal;
-    }
-
     pub fn handle(
         &mut self,
         command: &AppCommand,

@@ -76,6 +76,10 @@ pub fn queue_or_refuse<R, S>(
     })
 }
 
+pub fn queue(changes: &ChangeSet, click: impl FnOnce(&mut ChangeSet)) -> Handled {
+    Handled::edit(QueueEdit::of_click(changes, click).0)
+}
+
 /// [`queue_or_refuse`] for a rule that names its own subject, such as a
 /// protected dependency a removal would take along.
 pub fn queue_or_keep<R, S>(

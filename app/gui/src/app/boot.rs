@@ -6,7 +6,6 @@ use toolbox_core::features::boot::edit::Edit;
 use super::App;
 
 impl App {
-    /// A file the chooser picked, which the Boot service answered with.
     pub(super) fn edit_boot(&mut self, ctx: &egui::Context, change: Edit) {
         let snapshot = self.current_snapshot();
         let handled = self

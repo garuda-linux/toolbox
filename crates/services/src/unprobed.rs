@@ -54,10 +54,6 @@ impl Needs {
 
         needs
     }
-
-    pub const fn any(self) -> bool {
-        self.locks || self.aur || self.loader
-    }
 }
 
 /// `probed` with each needed part `reads` knows, or `None` when it added

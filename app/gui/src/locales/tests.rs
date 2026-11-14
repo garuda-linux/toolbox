@@ -66,7 +66,6 @@ fn an_enabled_locale_is_an_edit_and_dismiss_clears_the_refusal() {
     assert!(handled.edit.is_some_and(|edit| edit.add.len() == 1));
     assert!(locales.refusal().is_none());
 
-    locales.set_refusal(None);
     locales.handle(
         &AppCommand::Locale(LocaleCommand::DismissRefusal),
         &ChangeSet::default(),

@@ -19,12 +19,11 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, page_toolbar, pill_button};
 
 use super::header::{refresh_header, search};
-use super::rows::refusal_banner;
+use super::rows::refused_banner;
 use super::{PageContext, PageView};
 use crate::command::ConfigsCommand;
 use crate::configs::Configs;
 use crate::i18n;
-use crate::refused::Shown as _;
 
 const MIN_TEXT_HEIGHT: f32 = 120.0;
 
@@ -146,12 +145,8 @@ impl ConfigsPage {
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = context.service::<Configs>().refusal() else {
-        return;
-    };
-
-    let text = refusal.text(ui.ctx());
-    if refusal_banner(ui, Tone::Error, &text, "configs-dismiss") {
+    let refused = context.service::<Configs>().refusal();
+    if refused_banner(ui, refused, Tone::Error, "configs-dismiss") {
         context.commands.send(ConfigsCommand::DismissRefusal);
     }
 }

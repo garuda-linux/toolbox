@@ -18,11 +18,10 @@ use toolbox_core::features::network::DriverFilter;
 use toolbox_gui_kit::widgets::{Tone, page_toolbar};
 
 use super::header::{TabText, TabbedIds, search, tabbed_header};
-use super::rows::refusal_banner;
+use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::NetworkCommand;
 use crate::network::Network;
-use crate::refused::Shown as _;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
@@ -114,12 +113,8 @@ impl PageView for NetworkPage {
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = context.service::<Network>().refusal() else {
-        return;
-    };
-
-    let text = refusal.text(ui.ctx());
-    if refusal_banner(ui, Tone::Error, &text, "network-dismiss") {
+    let refused = context.service::<Network>().refusal();
+    if refused_banner(ui, refused, Tone::Error, "network-dismiss") {
         context.commands.send(NetworkCommand::DismissRefusal);
     }
 }

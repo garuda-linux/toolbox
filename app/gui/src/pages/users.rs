@@ -21,11 +21,10 @@ use toolbox_gui_kit::{UiExt as _, icons};
 
 use self::dialogs::{Dialog, Next};
 use super::header::{TabText, TabbedIds, search, tabbed_header};
-use super::rows::refusal_banner;
+use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::UsersCommand;
 use crate::i18n;
-use crate::refused::Shown as _;
 use crate::users::Users;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -160,11 +159,9 @@ pub fn accounts_ready(
 fn notes(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let dismiss = i18n::text(&ctx, "users-dismiss");
-    if let Some(refusal) = context.service::<Users>().refusal() {
-        let text = refusal.text(&ctx);
-        if refusal_banner(ui, Tone::Error, &text, "users-dismiss") {
-            context.commands.send(UsersCommand::DismissRefusal);
-        }
+    let refused = context.service::<Users>().refusal();
+    if refused_banner(ui, refused, Tone::Error, "users-dismiss") {
+        context.commands.send(UsersCommand::DismissRefusal);
     }
 
     let run = context.service::<Users>().run();

@@ -7,13 +7,12 @@ mod tests;
 use toolbox_core::domains::LoaderSettingsDomain;
 use toolbox_core::features::boot::edit::{Edit, edit};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_services::queue::edit::QueueEdit;
 
 use super::Boot;
 use crate::command::{AppCommand, BootCommand};
 use crate::page::PageId;
 use crate::page_service::{Answer, Handled};
-use crate::refused::Refused;
+use crate::refused::{queue, queue_or_refuse};
 
 impl Boot {
     pub fn handle(
@@ -28,12 +27,9 @@ impl Boot {
 
         match command {
             BootCommand::Edit(change) => self.edit(change.clone(), changes, snapshot),
-            BootCommand::Loader(setting) => Handled::edit(
-                QueueEdit::of_click(changes, |changes| {
-                    LoaderSettingsDomain::want(changes, setting.clone(), snapshot);
-                })
-                .0,
-            ),
+            BootCommand::Loader(setting) => queue(changes, |changes| {
+                LoaderSettingsDomain::want(changes, setting.clone(), snapshot);
+            }),
             BootCommand::DismissRefusal => {
                 self.set_refusal(None);
                 Handled::taken()
@@ -65,18 +61,8 @@ impl Boot {
     /// own reads.
     pub fn edit(&mut self, change: Edit, changes: &ChangeSet, snapshot: &Snapshot) -> Handled {
         let value = change.value();
-        let (queue_edit, result) =
-            QueueEdit::of_click(changes, |changes| edit(change, changes, snapshot));
-
-        match result {
-            Ok(()) => {
-                self.set_refusal(None);
-                Handled::edit(queue_edit)
-            }
-            Err(problem) => {
-                self.set_refusal(Some(Refused::new(problem.code(), value)));
-                Handled::taken()
-            }
-        }
+        queue_or_refuse(&mut self.refusal, value, changes, |changes| {
+            edit(change, changes, snapshot).map_err(|problem| problem.code())
+        })
     }
 }

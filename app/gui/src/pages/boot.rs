@@ -21,13 +21,12 @@ use toolbox_plan::PackageName;
 use toolbox_system::{FailedProbes, Host, Menu, Probe};
 
 use super::header::refresh_header;
-use super::rows::refusal_banner;
+use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::heading;
-use crate::refused::Shown as _;
 
 /// The width of a row's control: a menu entry's name fits.
 const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
@@ -178,8 +177,7 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     }
 
-    let text = refusal.text(ui.ctx());
-    if refusal_banner(ui, Tone::Error, &text, "boot-dismiss") {
+    if refused_banner(ui, Some(refusal), Tone::Error, "boot-dismiss") {
         context.commands.send(BootCommand::DismissRefusal);
     }
 }

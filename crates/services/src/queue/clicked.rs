@@ -27,13 +27,12 @@ impl Queue {
             }
         };
 
-        let before = self.changes.to_saved();
-        for problem in edit.apply(&mut self.changes, &domains, snapshot) {
-            tracing::warn!("dropped a change of a page: {problem}");
-        }
+        let problems = self.edit(snapshot, |changes, snapshot| {
+            edit.apply(changes, &domains, snapshot)
+        });
 
-        if self.changes.to_saved() != before {
-            self.save();
+        for problem in problems {
+            tracing::warn!("dropped a change of a page: {problem}");
         }
     }
 }

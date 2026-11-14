@@ -63,8 +63,7 @@ impl TogglePages {
             return Handled::default();
         };
 
-        let catalogs = Arc::clone(&self.catalogs);
-        let Ok(toggle_catalog) = &catalogs.get(*catalog).catalog else {
+        let Ok(toggle_catalog) = &self.catalogs.get(*catalog).catalog else {
             return Handled::taken();
         };
 

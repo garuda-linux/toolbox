@@ -10,12 +10,11 @@ use toolbox_core::features::users::{
     set_shell,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
-use toolbox_services::queue::edit::QueueEdit;
 
 use super::Users;
 use crate::command::{AppCommand, UserEdit, UsersCommand};
 use crate::page_service::Handled;
-use crate::refused::queue_or_refuse;
+use crate::refused::{queue, queue_or_refuse};
 
 impl Users {
     pub fn handle(
@@ -31,7 +30,7 @@ impl Users {
         match command {
             UsersCommand::Keep(user) => {
                 self.refusal = None;
-                Handled::edit(QueueEdit::of_click(changes, |changes| keep_user(user, changes)).0)
+                queue(changes, |changes| keep_user(user, changes))
             }
             UsersCommand::DismissRefusal => {
                 self.refusal = None;
@@ -53,50 +52,31 @@ impl Users {
     }
 
     fn edit(&mut self, edit: &UserEdit, changes: &ChangeSet, snapshot: &Snapshot) -> Handled {
-        let slot = &mut self.refusal;
-        match edit {
+        let subject = match edit {
+            UserEdit::SetLocked { user, locked: _ }
+            | UserEdit::SetGroups { user, groups: _ }
+            | UserEdit::SetFullName { user, name: _ }
+            | UserEdit::SetShell { user, shell: _ }
+            | UserEdit::SetHome { user, change: _ }
+            | UserEdit::Remove { user, home: _ } => user.to_string(),
+            UserEdit::AddGroup(group) | UserEdit::RemoveGroup(group) => group.to_string(),
+        };
+
+        let locks = &self.locks;
+        queue_or_refuse(&mut self.refusal, subject, changes, |queued| match edit {
             UserEdit::SetLocked { user, locked } => {
-                let known = self.locks.of(user);
                 let wish = Toggle::from_on(*locked);
-                queue_or_refuse(slot, user.to_string(), changes, |queued| {
-                    core_users::set_locked(user, wish, known, queued, snapshot)
-                })
+                core_users::set_locked(user, wish, locks.of(user), queued, snapshot)
             }
-            UserEdit::SetGroups { user, groups } => {
-                queue_or_refuse(slot, user.to_string(), changes, |queued| {
-                    set_groups(user, groups, queued, snapshot)
-                })
-            }
+            UserEdit::SetGroups { user, groups } => set_groups(user, groups, queued, snapshot),
             UserEdit::SetFullName { user, name } => {
-                queue_or_refuse(slot, user.to_string(), changes, |queued| {
-                    set_full_name(user, name.clone(), queued, snapshot)
-                })
+                set_full_name(user, name.clone(), queued, snapshot)
             }
-            UserEdit::SetShell { user, shell } => {
-                queue_or_refuse(slot, user.to_string(), changes, |queued| {
-                    set_shell(user, shell.clone(), queued, snapshot)
-                })
-            }
-            UserEdit::SetHome { user, change } => {
-                queue_or_refuse(slot, user.to_string(), changes, |queued| {
-                    set_home(user, change.clone(), queued, snapshot)
-                })
-            }
-            UserEdit::Remove { user, home } => {
-                queue_or_refuse(slot, user.to_string(), changes, |queued| {
-                    remove_user(user, *home, queued, snapshot)
-                })
-            }
-            UserEdit::AddGroup(group) => {
-                queue_or_refuse(slot, group.to_string(), changes, |queued| {
-                    add_group(group, queued, snapshot)
-                })
-            }
-            UserEdit::RemoveGroup(group) => {
-                queue_or_refuse(slot, group.to_string(), changes, |queued| {
-                    remove_group(group, queued, snapshot)
-                })
-            }
-        }
+            UserEdit::SetShell { user, shell } => set_shell(user, shell.clone(), queued, snapshot),
+            UserEdit::SetHome { user, change } => set_home(user, change.clone(), queued, snapshot),
+            UserEdit::Remove { user, home } => remove_user(user, *home, queued, snapshot),
+            UserEdit::AddGroup(group) => add_group(group, queued, snapshot),
+            UserEdit::RemoveGroup(group) => remove_group(group, queued, snapshot),
+        })
     }
 }

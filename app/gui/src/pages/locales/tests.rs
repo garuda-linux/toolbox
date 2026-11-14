@@ -55,8 +55,16 @@ fn system() -> Snapshot {
 }
 
 fn page(snapshot: Snapshot) -> Shown {
+    page_with(snapshot, Locales::default())
+}
+
+fn page_with(snapshot: Snapshot, locales: Locales) -> Shown {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
+        services: Services {
+            locales,
+            ..Services::default()
+        },
         ..PageFixture::default()
     }
     .harness(LocalesPage::default());
@@ -161,17 +169,7 @@ fn a_refused_click_names_the_locale_until_dismissed() {
         subject: "en_US.UTF-8".to_owned(),
     }));
 
-    let mut harness = PageFixture {
-        snapshot: Arc::new(system()),
-        services: Services {
-            locales,
-            ..Services::default()
-        },
-        ..PageFixture::default()
-    }
-    .harness(LocalesPage::default());
-
-    harness.run();
+    let mut harness = page_with(system(), locales);
 
     assert!(
         harness

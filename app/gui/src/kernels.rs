@@ -9,13 +9,12 @@ use toolbox_core::features::kernels::{
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{PackageName, Toggle};
-use toolbox_services::queue::edit::QueueEdit;
 
 use crate::command::{AppCommand, KernelCommand, KernelEdit};
 use crate::page_service::Handled;
 use crate::pages::kernels::view::{Dkms, DkmsReading, Listing};
 use crate::reader::{ReaderHandle, Watched};
-use crate::refused::{Refused, queue_or_refuse};
+use crate::refused::{Refused, queue, queue_or_refuse};
 
 pub type KernelRefusal = Refused<core_kernels::Refusal, PackageName>;
 
@@ -36,10 +35,6 @@ impl Kernels {
 
     pub const fn refusal(&self) -> Option<&KernelRefusal> {
         self.refusal.as_ref()
-    }
-
-    pub fn set_refusal(&mut self, refusal: Option<KernelRefusal>) {
-        self.refusal = refusal;
     }
 
     pub const fn dkms(&self) -> &DkmsReading {
@@ -109,32 +104,28 @@ impl Kernels {
             }
             KernelEdit::Headers { kernel, on } => {
                 listing.kernel(kernel).map_or_else(Handled::taken, |found| {
-                    click(changes, |changes| {
+                    queue(changes, |changes| {
                         set_headers(found, Toggle::from_on(*on), changes, snapshot);
                     })
                 })
             }
-            KernelEdit::AllHeaders => click(changes, |changes| {
+            KernelEdit::AllHeaders => queue(changes, |changes| {
                 install_missing_headers(listing.kernels(), changes, snapshot);
             }),
             KernelEdit::Builds { kernel, on } => {
                 listing.kernel(kernel).map_or_else(Handled::taken, |found| {
                     let builds = listing.builds(found, self.dkms.reading());
-                    click(changes, |changes| {
+                    queue(changes, |changes| {
                         set_builds(&builds, Toggle::from_on(*on), changes, snapshot);
                     })
                 })
             }
             KernelEdit::AllBuilds => {
                 let builds = listing.all_builds(self.dkms.reading());
-                click(changes, |changes| {
+                queue(changes, |changes| {
                     set_builds(&builds, Toggle::On, changes, snapshot);
                 })
             }
         }
     }
-}
-
-fn click(changes: &ChangeSet, click: impl FnOnce(&mut ChangeSet)) -> Handled {
-    Handled::edit(QueueEdit::of_click(changes, click).0)
 }

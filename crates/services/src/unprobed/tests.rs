@@ -61,10 +61,7 @@ fn loader_change() -> ChangeSet {
 
 #[test]
 fn an_empty_queue_that_no_guard_holds_needs_nothing() {
-    let needs = Needs::of(&ChangeSet::default(), []);
-
-    assert_eq!(needs, Needs::default());
-    assert!(!needs.any());
+    assert_eq!(Needs::of(&ChangeSet::default(), []), Needs::default());
 }
 
 #[test]

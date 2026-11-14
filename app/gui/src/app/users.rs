@@ -30,10 +30,9 @@ impl App {
                     }
                 });
 
-                let refusal = result.err().map(|refusal| Refused {
-                    refusal,
-                    subject: user.to_string(),
-                });
+                let refusal = result
+                    .err()
+                    .map(|refusal| Refused::new(refusal, user.to_string()));
 
                 self.services.users.set_refusal(refusal);
             }

@@ -19,13 +19,12 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::LocaleName;
 
 use super::header::{TabText, TabbedIds, search, tabbed_header};
-use super::rows::{refusal_banner, sort_select};
+use super::rows::{refused_banner, sort_select};
 use super::setting_row::{Words, row};
 use super::{PageContext, PageView, plan_running};
 use crate::command::LocaleCommand;
 use crate::i18n;
 use crate::locales::Locales;
-use crate::refused::Shown as _;
 
 const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -345,12 +344,8 @@ fn choice(ctx: &egui::Context, code: &str, language: &str, territory: &str) -> S
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refusal) = context.service::<Locales>().refusal() else {
-        return;
-    };
-
-    let text = refusal.text(ui.ctx());
-    if refusal_banner(ui, Tone::Error, &text, "locales-dismiss") {
+    let refused = context.service::<Locales>().refusal();
+    if refused_banner(ui, refused, Tone::Error, "locales-dismiss") {
         context.commands.send(LocaleCommand::DismissRefusal);
     }
 }

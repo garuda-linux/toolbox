@@ -18,12 +18,11 @@ use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use view::{Dkms, Listing, Row};
 
 use super::header::refresh_header;
-use super::rows::refusal_banner;
+use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{KernelCommand, KernelEdit};
 use crate::i18n;
 use crate::kernels::Kernels;
-use crate::refused::Shown as _;
 
 /// Placeholder rows while the system is read, about as many kernels as a
 /// system has installed and on offer.
@@ -102,12 +101,8 @@ fn header(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(refused) = context.service::<Kernels>().refusal() else {
-        return;
-    };
-
-    let text = refused.text(ui.ctx());
-    if refusal_banner(ui, Tone::Warning, &text, "kernels-dismiss") {
+    let refused = context.service::<Kernels>().refusal();
+    if refused_banner(ui, refused, Tone::Warning, "kernels-dismiss") {
         context.commands.send(KernelCommand::DismissRefusal);
     }
 }

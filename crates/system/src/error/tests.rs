@@ -10,7 +10,7 @@ fn json() -> Arc<serde_json::Error> {
 }
 
 #[test]
-fn a_failure_reads_as_before_behind_its_prefix() {
+fn a_failure_reads_its_reason_behind_the_prefix() {
     let timed_out = ProbeError::TimedOut {
         command_line: "sleep 60".to_owned(),
         after: Duration::from_millis(500),
