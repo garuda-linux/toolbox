@@ -104,8 +104,8 @@ pub fn property_list<'a>(
         .fold(0.0_f32, f32::max);
 
     ui.spacing_mut().item_spacing.y = tokens.sizes.control_gap;
-    for (row, galley) in list.rows.into_iter().zip(labels) {
-        show_row(ui, Column { width, galley }, row, texts);
+    for (index, (row, galley)) in list.rows.into_iter().zip(labels).enumerate() {
+        show_row(ui, index, Column { width, galley }, row, texts);
     }
 }
 
@@ -146,14 +146,23 @@ fn value_room(ui: &Ui, copied: bool) -> f32 {
     (ui.available_width() - button).max(0.0)
 }
 
-fn show_row(ui: &mut Ui, column: Column, row: Property<'_>, texts: PropertyTexts<'_>) {
+fn show_row(
+    ui: &mut Ui,
+    index: usize,
+    column: Column,
+    row: Property<'_>,
+    texts: PropertyTexts<'_>,
+) {
     let tokens = tokens::current(ui.ctx());
     let Property { label, copy, value } = row;
     let mut copy_button = None;
     ui.horizontal_top(|ui| {
         ui.spacing_mut().item_spacing.x = 0.0;
         let at = ui.cursor().min;
-        let caption = ui.scope_id().with(("property-label", label));
+
+        // Rows may share a label, such as two addresses, so the row's place
+        // is part of its id.
+        let caption = ui.scope_id().with(("property-label", index, label));
         let widget = matches!(value, Value::Widget(_));
         ui.add_space(column.width + tokens.sizes.text_to_control);
 

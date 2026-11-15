@@ -1,3 +1,5 @@
+mod interfaces;
+mod status;
 #[cfg(test)]
 mod tests;
 
@@ -5,7 +7,9 @@ use std::io::Write as _;
 use std::net::IpAddr;
 use std::sync::Arc;
 
+use interfaces::{InterfaceView, interface_views};
 use serde::Serialize;
+use status::status;
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{
@@ -19,7 +23,9 @@ use toolbox_core::features::network::{
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{Bounded, HostName, Plan, Toggle};
 use toolbox_services::address::{AddressProblem, KdeGeoIp, lookup_address};
-use toolbox_system::{NetworkActions as _, NetworkSource, SystemActions, SystemNetwork};
+use toolbox_system::{
+    NetworkActions as _, NetworkSource, SystemActions, SystemNetwork, system_cards,
+};
 
 use super::act::run;
 use super::change::{Refused, fresh, page_edit, why};
@@ -31,6 +37,9 @@ use crate::out::Out;
 pub struct StatusView {
     pub gateway: Option<String>,
     pub interface: Option<String>,
+    /// One per activated Ethernet or Wi-Fi device. Empty while NetworkManager
+    /// does not run.
+    pub interfaces: Vec<InterfaceView>,
     pub wifi: Option<bool>,
     pub bluetooth: Option<bool>,
     pub flight_mode: bool,
@@ -57,7 +66,12 @@ struct PublicAddress {
 
 pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     match command {
-        NetworkCommand::Show(read) => status(read, &SystemNetwork::system(), out),
+        NetworkCommand::Show(read) => {
+            let interfaces =
+                || interface_views(&runtime.block_on(system_cards()).unwrap_or_default());
+
+            status(read, &SystemNetwork::system(), interfaces, out)
+        }
         NetworkCommand::Radio(args) => radio(args.radio, args.state.on(), out),
         NetworkCommand::Drivers(DriversCommand::List(read)) => drivers(&read, out),
         NetworkCommand::Drivers(DriversCommand::Blacklist(args)) => {
@@ -192,6 +206,7 @@ pub fn view(source: &dyn NetworkSource) -> StatusView {
     };
 
     StatusView {
+        interfaces: Vec::new(),
         gateway: route
             .as_ref()
             .and_then(|route| route.gateway.map(|ip| ip.to_string())),
@@ -201,47 +216,6 @@ pub fn view(source: &dyn NetworkSource) -> StatusView {
         flight_mode: !radios.is_empty() && radios.iter().all(|radio| radio.soft || radio.hard),
         unread,
         reasons,
-    }
-}
-
-fn status(read: Read, source: &dyn NetworkSource, out: &mut Out<'_>) -> Exit {
-    let view = super::spinner::while_reading(read.json || out.quiet(), || view(source));
-    if read.json {
-        write!(out, "{}", json(&view)).ok();
-    } else {
-        let paint = out.paint();
-        let absent = if view.unread.contains(&"router") {
-            "not read"
-        } else {
-            "none"
-        };
-
-        let facts = paint.facts(
-            "Network",
-            &[
-                ("router", view.gateway.as_deref().unwrap_or(absent)),
-                ("interface", view.interface.as_deref().unwrap_or(absent)),
-            ],
-        );
-
-        let radios = radio_listing(&view);
-        let summary = radios.summary.as_deref();
-        let list = paint.list(radios.title, summary, radios.head, &radios.rows);
-        write!(out, "{facts}\n{list}").ok();
-
-        if let Some(hint) = radios.hint {
-            writeln!(out, "\n{}", paint.hint(&hint)).ok();
-        }
-
-        for (what, raw) in &view.reasons {
-            failure(out, what, raw);
-        }
-    }
-
-    if view.unread.is_empty() {
-        Exit::Success
-    } else {
-        Exit::Failure
     }
 }
 

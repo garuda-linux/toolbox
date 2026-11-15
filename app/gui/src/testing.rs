@@ -45,7 +45,7 @@ const HEIGHT: f32 = 900.0;
 
 pub const PLAN_RUNNING: &str = "Changes are being applied. This waits until they are done.";
 /// The collapsed sidebar's width, its margins included.
-pub const COLLAPSED_SIDEBAR: f32 = crate::shell::COLLAPSED_WIDTH;
+pub const COLLAPSED_SIDEBAR: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.sidebar_collapsed;
 /// How far a search field's text starts from the field's left edge.
 const SEARCH_INSET: f32 = 48.0;
 

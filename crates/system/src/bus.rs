@@ -8,7 +8,7 @@ mod tests;
 
 use std::io;
 
-pub use client::{CALL_TIMEOUT, INTERACTIVE_TIMEOUT, call, call_with_timeout, connect};
+pub use client::{CALL_TIMEOUT, INTERACTIVE_TIMEOUT, bounded, call, call_with_timeout, connect};
 pub use shared::{forget_shared, shared};
 use zbus::DBusError as _;
 

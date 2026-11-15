@@ -48,38 +48,40 @@ constants of `crates/gui-kit/src/icons.rs`, bundled in
 
 ## Meanings besides pages
 
-| Meaning                    | Glyph                                         | Where                                                  |
-| -------------------------- | --------------------------------------------- | ------------------------------------------------------ |
-| Search                     | `SYSTEM_SEARCH`                               | sidebar Search (`page_ui::SEARCH_ICON`), search fields |
-| Plain text file            | `TEXT_X_GENERIC`                              | Config Files sections without a known icon             |
-| Information                | `HELP_ABOUT`                                  | banners, toasts, empty states                          |
-| Warning                    | `DIALOG_WARNING`                              | banners, Home rows                                     |
-| Error                      | `DIALOG_ERROR`                                | banners, toasts, empty states, Home rows               |
-| Success                    | `DIALOG_POSITIVE`                             | success banners                                        |
-| Read again, refresh        | `VIEW_REFRESH`                                | header refresh, status bar, Services Reload            |
-| Restart needed             | `SYSTEM_REBOOT`                               | Home status row                                        |
-| Reset to defaults          | `DOCUMENT_REVERT`                             | Maintenance Reset, Reset Snapper                       |
-| Boot menu                  | `FORMAT_LIST_UNORDERED`                       | Boot Options menu heading                              |
-| Health check               | `VIEW_TASK`                                   | Maintenance Repairs                                    |
-| Web service, web page      | `GLOBE`                                       | SearXNG tile, wiki row actions, Config Files           |
-| Exorcist                   | `DRAW_CROSS`                                  | About "Call the exorcist"                              |
-| Game launchers             | `GAMES_CONFIG_BOARD`                          | Gaming catalog section                                 |
-| Appearance                 | `PREFERENCES_DESKTOP_THEME_GLOBAL`            | Settings section, Boot Options "Look"                  |
-| Behaviour, time            | `CHRONOMETER`                                 | Settings section, Home "last update" row               |
-| Bluetooth                  | `PREFERENCES_SYSTEM_BLUETOOTH`                | Network radios, Components section                     |
-| Keys, passwords, firewall  | `SECURITY_HIGH`                               | Maintenance keyring, Vaultwarden, Components Firewall  |
-| Copy                       | `EDIT_COPY`                                   | row actions, property rows                             |
-| Terminal, command          | `UTILITIES_TERMINAL`                          | row actions, kernel parameters, Home steps             |
-| More actions               | `OVERFLOW_MENU`                               | row menus                                              |
-| Repairs                    | `GAMES_SOLVE`                                 | Maintenance Repairs heading                            |
-| Health fix                 | `GAMES_HINT`                                  | Maintenance "Repair system health"                     |
-| Wiki, documentation        | `DOCUMENTATION`                               | About wiki rows                                        |
-| Configuration file preview | `DOCUMENT_PREVIEW`                            | Config Files reading and no-files states               |
-| Picked, done               | `CHECKMARK`                                   | Setup Assistant summary headings                       |
-| Start, Stop                | `MEDIA_PLAYBACK_START`, `MEDIA_PLAYBACK_STOP` | Services row menu                                      |
-| Restart                    | `MEDIA_PLAYLIST_REPEAT`                       | Services row menu                                      |
-| Mask, Unmask               | `OBJECT_LOCKED`, `OBJECT_UNLOCKED`            | Services row menu                                      |
-| Show, hide a password      | `VIEW_VISIBLE`, `VIEW_HIDDEN`                 | password fields (`widgets::secret_field`)              |
+| Meaning                    | Glyph                                         | Where                                                                     |
+| -------------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
+| Search                     | `SYSTEM_SEARCH`                               | sidebar Search (`page_ui::SEARCH_ICON`), search fields                    |
+| Plain text file            | `TEXT_X_GENERIC`                              | Config Files sections without a known icon                                |
+| Information                | `HELP_ABOUT`                                  | banners, toasts, empty states                                             |
+| Warning                    | `DIALOG_WARNING`                              | banners, Home rows                                                        |
+| Error                      | `DIALOG_ERROR`                                | banners, toasts, empty states, Home rows                                  |
+| Success                    | `DIALOG_POSITIVE`                             | success banners                                                           |
+| Read again, refresh        | `VIEW_REFRESH`                                | header refresh, status bar, Services Reload                               |
+| Restart needed             | `SYSTEM_REBOOT`                               | Home status row                                                           |
+| Reset to defaults          | `DOCUMENT_REVERT`                             | Maintenance Reset, Reset Snapper                                          |
+| Boot menu                  | `FORMAT_LIST_UNORDERED`                       | Boot Options menu heading                                                 |
+| Health check               | `VIEW_TASK`                                   | Maintenance Repairs                                                       |
+| Web service, web page      | `GLOBE`                                       | SearXNG tile, wiki row actions, Config Files                              |
+| Exorcist                   | `DRAW_CROSS`                                  | About "Call the exorcist"                                                 |
+| Game launchers             | `GAMES_CONFIG_BOARD`                          | Gaming catalog section                                                    |
+| Appearance                 | `PREFERENCES_DESKTOP_THEME_GLOBAL`            | Settings section, Boot Options "Look"                                     |
+| Behaviour, time            | `CHRONOMETER`                                 | Settings section, Home "last update" row                                  |
+| Bluetooth                  | `PREFERENCES_SYSTEM_BLUETOOTH`                | Network radios, Components section                                        |
+| Wi-Fi network card         | `NETWORK_WIRELESS`                            | Network page interface cards of a Wi-Fi device                            |
+| Wired network card         | `NETWORK_WIRED`                               | Network page interface cards of a wire, drivers and hardware empty states |
+| Keys, passwords, firewall  | `SECURITY_HIGH`                               | Maintenance keyring, Vaultwarden, Components Firewall                     |
+| Copy                       | `EDIT_COPY`                                   | row actions, property rows                                                |
+| Terminal, command          | `UTILITIES_TERMINAL`                          | row actions, kernel parameters, Home steps                                |
+| More actions               | `OVERFLOW_MENU`                               | row menus                                                                 |
+| Repairs                    | `GAMES_SOLVE`                                 | Maintenance Repairs heading                                               |
+| Health fix                 | `GAMES_HINT`                                  | Maintenance "Repair system health"                                        |
+| Wiki, documentation        | `DOCUMENTATION`                               | About wiki rows                                                           |
+| Configuration file preview | `DOCUMENT_PREVIEW`                            | Config Files reading and no-files states                                  |
+| Picked, done               | `CHECKMARK`                                   | Setup Assistant summary headings                                          |
+| Start, Stop                | `MEDIA_PLAYBACK_START`, `MEDIA_PLAYBACK_STOP` | Services row menu                                                         |
+| Restart                    | `MEDIA_PLAYLIST_REPEAT`                       | Services row menu                                                         |
+| Mask, Unmask               | `OBJECT_LOCKED`, `OBJECT_UNLOCKED`            | Services row menu                                                         |
+| Show, hide a password      | `VIEW_VISIBLE`, `VIEW_HIDDEN`                 | password fields (`widgets::secret_field`)                                 |
 
 Page glyphs reused for their topic: `DRIVE_HARDDISK_ROOT` (Config Files
 "Bootloader") and `OFFICE_REPORT` (Settings "Diagnostics").

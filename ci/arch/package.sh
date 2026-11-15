@@ -36,18 +36,20 @@ for variable in CARGO_HOME CARGO_TARGET_DIR; do
     cache+=("$variable=${!variable}")
   fi
 done
-# Rootless podman would otherwise leave files the host user cannot remove.
-trap 'chown -R 0:0 "$out"' EXIT
-chown -R builder: "$work" "$out"
+
+dest=$work/pkgdest
+mkdir -p "$dest"
+chown -R builder: "$work"
 
 # runuser keeps root's HOME, where cargo and the tests could not write.
-runuser -u builder -- env -C "$work/packaging" HOME=/home/builder "${cache[@]}" PKGDEST="$out" \
+runuser -u builder -- env -C "$work/packaging" HOME=/home/builder "${cache[@]}" PKGDEST="$dest" \
   makepkg --noconfirm --force "$@"
+cp "$dest"/garuda-toolbox-*.pkg.tar.* "$out"/
 
 {
   echo "== PKGBUILD"
   namcap "$work/packaging/PKGBUILD" || true
-  for package in "$out"/garuda-toolbox-*.pkg.tar.*; do
+  for package in "$dest"/garuda-toolbox-*.pkg.tar.*; do
     echo "== ${package##*/}"
     namcap "$package" || true
   done

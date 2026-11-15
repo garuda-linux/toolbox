@@ -18,7 +18,7 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::units::{self, UnitList, UnitLister};
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{KernelModule, UnitName, UnitScope};
-use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError};
+use toolbox_system::{Cards, Checked, NetworkActions, NetworkSource, ProbeError};
 
 use crate::common::{Fixture, SMALLEST, TALL, WIDTH, open_tab, packages, window};
 use crate::system::{first_read, settle, step_until};
@@ -96,6 +96,10 @@ impl UnitLister for Units {
 impl NetworkActions for Actions {
     fn connectivity(&self, _recheck: bool) -> Checked {
         Box::pin(async { Connectivity::Full })
+    }
+
+    fn interface_cards(&self) -> Cards {
+        Box::pin(async { Ok(Vec::new()) })
     }
 
     fn set_radio(&self, _target: RadioTarget, _blocked: bool) -> Result<(), ProbeError> {

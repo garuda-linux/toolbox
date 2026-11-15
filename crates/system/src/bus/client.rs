@@ -79,7 +79,13 @@ where
         .map_err(|error| classify(&error))
 }
 
-pub(super) async fn bounded<T>(
+/// For a call whose path is not known until a reply, which [`Method`]
+/// cannot name.
+///
+/// # Errors
+///
+/// [`CallError::Failed`] after `timeout`, the bus's error otherwise.
+pub async fn bounded<T>(
     timeout: Duration,
     reply: impl Future<Output = Result<T, zbus::Error>>,
 ) -> Result<T, CallError> {

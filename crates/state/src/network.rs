@@ -2,6 +2,7 @@ mod address;
 pub mod drivers;
 pub mod hardware;
 
+use std::fmt;
 use std::net::IpAddr;
 
 pub use address::{ADDRESS_SERVICE, public_address};
@@ -56,6 +57,60 @@ pub struct RadioSummary {
     pub hard: bool,
 }
 
+/// One interface of the Network page: an activated Ethernet or Wi-Fi
+/// device with the connection it carries.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct InterfaceCard {
+    /// The active connection's name, the card's title.
+    pub connection: String,
+    /// A kernel name, shown as plain text.
+    pub interface: String,
+    /// `None` when NetworkManager gives no hardware address for the device.
+    pub mac: Option<String>,
+    pub ipv4: Vec<Subnet>,
+    /// Global and unique local addresses first, link-local last.
+    pub ipv6: Vec<Subnet>,
+    /// The servers NetworkManager holds for this interface, IPv4 and IPv6
+    /// together.
+    pub dns: Vec<IpAddr>,
+    pub link: Link,
+}
+
+/// An address with its prefix length, shown as `address/prefix`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Subnet {
+    pub address: IpAddr,
+    pub prefix: u8,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Link {
+    Wired {
+        /// Megabits per second, `None` while the link reports none.
+        speed: Option<u32>,
+    },
+    Wireless {
+        /// `None` when the device has no active access point.
+        ssid: Option<String>,
+        signal: Option<Signal>,
+    },
+}
+
+/// The strength of the active access point, in percent.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Signal {
+    pub percent: u8,
+}
+
+/// The word for a signal strength.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SignalQuality {
+    Excellent,
+    Good,
+    Fair,
+    Weak,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RadioAccess {
     Allowed,
@@ -83,6 +138,25 @@ impl Connectivity {
             4 => Self::Full,
             _ => Self::Unknown,
         }
+    }
+}
+
+impl Signal {
+    /// nmcli's bar thresholds: Excellent over 80, Good over 55, Fair over
+    /// 30, Weak otherwise.
+    pub const fn quality(self) -> SignalQuality {
+        match self.percent {
+            81.. => SignalQuality::Excellent,
+            56..=80 => SignalQuality::Good,
+            31..=55 => SignalQuality::Fair,
+            0..=30 => SignalQuality::Weak,
+        }
+    }
+}
+
+impl fmt::Display for Subnet {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}/{}", self.address, self.prefix)
     }
 }
 

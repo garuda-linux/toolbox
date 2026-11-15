@@ -9,7 +9,7 @@ use toolbox_core::features::network::{
 };
 use toolbox_https::RequestError;
 use toolbox_services::address::AddressSource;
-use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError};
+use toolbox_system::{Cards, Checked, NetworkActions, NetworkSource, ProbeError};
 
 use super::{Address, Network, NetworkSetup, Read};
 use crate::testing::until;
@@ -72,6 +72,10 @@ impl AddressSource for Service {
 impl NetworkActions for Actions {
     fn connectivity(&self, _recheck: bool) -> Checked {
         Box::pin(async { Connectivity::Full })
+    }
+
+    fn interface_cards(&self) -> Cards {
+        Box::pin(async { Ok(Vec::new()) })
     }
 
     fn set_radio(&self, target: RadioTarget, blocked: bool) -> Result<(), ProbeError> {

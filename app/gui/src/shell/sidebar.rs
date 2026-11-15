@@ -25,8 +25,6 @@ use crate::i18n;
 use crate::page::{Group, PageId};
 use crate::page_ui::{self, PageLook as _};
 
-/// The tests' window layouts need it in a const.
-pub const COLLAPSED_WIDTH: f32 = tokens::Sizes::DEFAULT.sidebar_collapsed;
 const EXPANDED_SALT: &str = "sidebar";
 /// How many frames the open page's entry may take to scroll into place.
 const REVEAL_FRAMES: u8 = 12;

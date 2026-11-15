@@ -44,7 +44,7 @@ const MAX_RETRY: Duration = Duration::from_secs(30);
 const HEALTHY: Duration = Duration::from_secs(60);
 
 #[derive(Debug)]
-struct Backoff {
+pub(crate) struct Backoff {
     next: Duration,
     reported: bool,
 }
@@ -61,7 +61,7 @@ impl Default for Backoff {
 impl Backoff {
     /// After a stream that ran for `ran`: the wait before the next one,
     /// and whether this end repeats an outage already reported.
-    fn after(&mut self, ran: Duration) -> (Duration, bool) {
+    pub(crate) fn after(&mut self, ran: Duration) -> (Duration, bool) {
         if ran >= HEALTHY {
             *self = Self::default();
         }

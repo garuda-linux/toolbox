@@ -6,14 +6,18 @@ use std::fmt;
 use std::net::IpAddr;
 use std::sync::Arc;
 
+use crossbeam_channel::Receiver;
 use tokio::runtime::Handle;
-use toolbox_core::features::network::{Connectivity, RadioTarget};
+use toolbox_core::features::network::{Connectivity, InterfaceCard, RadioTarget};
 use toolbox_https::RequestError;
 use toolbox_services::address::{AddressProblem, AddressSource, lookup_address};
-use toolbox_system::{Checked, NetworkActions, NetworkSource, ProbeError, connectivity};
+use toolbox_system::{
+    CallError, Cards, Checked, NetworkActions, NetworkSource, ProbeError, connectivity,
+};
 
-use super::{Hardware, Read, StatusRead};
+use super::{Hardware, Read, StatusRead, live};
 use crate::lane::Lane;
+use crate::waking::{self, Waking};
 
 /// An address no machine has (TEST-NET-3 of RFC 5737), so a self-test
 /// screenshot never shows a real one.
@@ -40,6 +44,8 @@ pub enum Landed {
     Status(StatusRead),
     Connectivity(Connectivity),
     Hardware(Hardware),
+    /// `None` hides the cards, as NetworkManager does not run or failed.
+    Interfaces(Option<Vec<InterfaceCard>>),
     Address(Result<IpAddr, AddressProblem>),
     Radio(Result<(), ProbeError>),
 }
@@ -48,6 +54,9 @@ pub enum Landed {
 pub struct Jobs {
     setup: NetworkSetup,
     lane: Lane<Landed>,
+    /// The live watcher's answers, which wake the frame as the lane's do.
+    answers: Waking<Landed>,
+    live: Receiver<Landed>,
 }
 
 impl AddressSource for DryRunAddress {
@@ -59,6 +68,16 @@ impl AddressSource for DryRunAddress {
 impl NetworkActions for DryRunActions {
     fn connectivity(&self, _recheck: bool) -> Checked {
         Box::pin(connectivity(false))
+    }
+
+    #[cfg(feature = "selftest")]
+    fn interface_cards(&self) -> Cards {
+        Box::pin(std::future::ready(Ok(super::samples::cards())))
+    }
+
+    #[cfg(not(feature = "selftest"))]
+    fn interface_cards(&self) -> Cards {
+        Box::pin(toolbox_system::system_cards())
     }
 
     fn set_radio(&self, target: RadioTarget, blocked: bool) -> Result<(), ProbeError> {
@@ -75,14 +94,37 @@ impl fmt::Debug for NetworkSetup {
 
 impl Jobs {
     pub fn new(setup: NetworkSetup, ctx: egui::Context) -> Self {
+        let (answers, live) = waking::channel(waking::repaint(ctx.clone()));
         Self {
-            lane: Lane::new(setup.runtime.clone(), crate::waking::repaint(ctx)),
+            lane: Lane::new(setup.runtime.clone(), waking::repaint(ctx)),
             setup,
+            answers,
+            live,
         }
     }
 
     pub fn landed(&self) -> Vec<Landed> {
-        self.lane.landed()
+        let mut landed = self.lane.landed();
+        landed.extend(self.live.try_iter());
+        landed
+    }
+
+    /// Starts the live cards, once the page opened.
+    pub fn watch_interfaces(&self) {
+        live::spawn(
+            &self.setup.runtime,
+            Arc::clone(&self.setup.actions),
+            self.answers.clone(),
+        );
+    }
+
+    /// NetworkManager answers over D-Bus, so this waits on the runtime.
+    pub fn read_interfaces(&self) {
+        let cards = self.setup.actions.interface_cards();
+        self.lane.future("interfaces", cards, |joined| {
+            let read = joined.unwrap_or_else(|error| Err(CallError::Failed(error.to_string())));
+            Landed::Interfaces(cards_or_none(read))
+        });
     }
 
     /// A read that panicked leaves its parts failed.
@@ -155,5 +197,21 @@ impl Jobs {
             // A check that died did not check.
             Landed::Connectivity(result.unwrap_or(Connectivity::Unknown))
         });
+    }
+}
+
+/// The cards of a read, or none when NetworkManager does not run: the page
+/// then hides the section. Other failures are logged.
+pub fn cards_or_none(read: Result<Vec<InterfaceCard>, CallError>) -> Option<Vec<InterfaceCard>> {
+    match read {
+        Ok(cards) => Some(cards),
+        Err(error @ (CallError::Unavailable | CallError::Denied)) => {
+            tracing::debug!("no interface cards: {error}");
+            None
+        }
+        Err(error) => {
+            tracing::warn!("the interface cards: {error}");
+            None
+        }
     }
 }

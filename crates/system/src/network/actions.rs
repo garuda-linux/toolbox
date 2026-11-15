@@ -10,17 +10,23 @@ use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
 
-use toolbox_state::network::{Connectivity, RadioTarget};
+use toolbox_state::network::{Connectivity, InterfaceCard, RadioTarget};
 
+use super::interfaces::system_cards;
 use super::online::connectivity;
-use crate::{NetworkSource, ProbeError};
+use crate::{CallError, NetworkSource, ProbeError};
 
 pub type Checked = Pin<Box<dyn Future<Output = Connectivity> + Send>>;
+
+pub type Cards = Pin<Box<dyn Future<Output = Result<Vec<InterfaceCard>, CallError>> + Send>>;
 
 pub trait NetworkActions: Send + Sync {
     /// The way to the internet. `recheck` asks NetworkManager to fetch
     /// its test page first.
     fn connectivity(&self, recheck: bool) -> Checked;
+
+    /// The interface cards, read from NetworkManager over D-Bus.
+    fn interface_cards(&self) -> Cards;
 
     /// Blocks or unblocks a radio. Blocks, so call it off the GUI thread.
     ///
@@ -41,6 +47,10 @@ impl SystemActions {
 impl NetworkActions for SystemActions {
     fn connectivity(&self, recheck: bool) -> Checked {
         Box::pin(connectivity(recheck))
+    }
+
+    fn interface_cards(&self) -> Cards {
+        Box::pin(system_cards())
     }
 
     fn set_radio(&self, target: RadioTarget, blocked: bool) -> Result<(), ProbeError> {

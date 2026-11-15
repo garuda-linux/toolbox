@@ -60,8 +60,8 @@ pub use kernels::{Dkms, DkmsSource, KernelSource, SystemKernels};
 pub use locales::{EtcLocales, LocaleSource};
 pub use locks::{HelperLocks, LockProblem, LockSource};
 pub use network::{
-    Checked, ModuleSource, NetworkActions, NetworkSource, SystemActions, SystemModules,
-    SystemNetwork, connectivity,
+    Cards, Checked, ModuleSource, NetworkActions, NetworkSource, SystemActions, SystemModules,
+    SystemNetwork, connectivity, property_changes, system_cards,
 };
 pub use notify::{NOTIFY, Notification, NotifyBody, notify_body};
 pub use packages::{

@@ -8,6 +8,9 @@
 
 mod edits;
 mod jobs;
+mod live;
+#[cfg(any(test, feature = "selftest"))]
+pub mod samples;
 #[cfg(test)]
 mod tests;
 
@@ -16,7 +19,7 @@ use std::net::IpAddr;
 pub use jobs::{DryRunActions, DryRunAddress, NetworkSetup};
 use jobs::{Jobs, Landed};
 use toolbox_core::features::network::{
-    Connectivity, DefaultRoute, Device, Radio, RadioAccess, RadioTarget,
+    Connectivity, DefaultRoute, Device, InterfaceCard, Radio, RadioAccess, RadioTarget,
 };
 use toolbox_services::address::AddressProblem;
 use toolbox_system::ProbeError;
@@ -60,6 +63,8 @@ pub struct Network {
     status: Option<StatusRead>,
     connectivity: Option<Connectivity>,
     hardware: Option<Hardware>,
+    /// `None` while loading and when NetworkManager does not run: no card.
+    interfaces: Option<Vec<InterfaceCard>>,
     address: Address,
     /// The newest lookup was forgotten while it ran, so its answer is
     /// dropped when it lands. The lane already drops the answers of older
@@ -117,6 +122,10 @@ impl Network {
         self.hardware.as_ref()
     }
 
+    pub fn interfaces(&self) -> Option<&[InterfaceCard]> {
+        self.interfaces.as_deref()
+    }
+
     pub const fn address(&self) -> &Address {
         &self.address
     }
@@ -131,6 +140,9 @@ impl Network {
         if !self.opened {
             self.opened = true;
             self.read_all(true);
+            if let Some(jobs) = &self.jobs {
+                jobs.watch_interfaces();
+            }
         }
     }
 
@@ -183,6 +195,7 @@ impl Network {
                 Landed::Status(status) => self.status = Some(status),
                 Landed::Connectivity(state) => self.connectivity = Some(state),
                 Landed::Hardware(lists) => self.hardware = Some(lists),
+                Landed::Interfaces(cards) => self.interfaces = cards,
                 Landed::Address(_) if self.forgotten => self.forgotten = false,
                 Landed::Address(answer) => self.address = settled(answer),
                 Landed::Radio(result) => {
@@ -200,12 +213,20 @@ impl Network {
             jobs.read_status();
             jobs.check_connectivity(recheck);
             jobs.read_hardware();
+            jobs.read_interfaces();
         }
     }
 }
 
 #[cfg(any(test, feature = "testing"))]
 impl Network {
+    /// The cards a page test shows, with the rest of the state.
+    #[must_use = "the cards are kept in the state it returns"]
+    pub fn with_interfaces(mut self, cards: Vec<InterfaceCard>) -> Self {
+        self.interfaces = Some(cards);
+        self
+    }
+
     /// The state a page test shows, without reads.
     pub fn showing(
         status: Option<StatusRead>,

@@ -1,4 +1,5 @@
 mod address;
+mod cards;
 mod hardware;
 mod internet;
 mod radios;
@@ -84,7 +85,7 @@ fn network_with(address: Address) -> Network {
     let status = StatusRead {
         route: Read::Known(DefaultRoute {
             gateway: Some(IpAddr::V4(Ipv4Addr::new(192, 168, 1, 1))),
-            interface: Some("enp3s0".to_owned()),
+            interface: Some("wlan0".to_owned()),
         }),
         radios: Read::Known(vec![Radio {
             kind: Some(RadioKind::Wifi),
@@ -145,7 +146,7 @@ fn the_status_tab_shows_the_route_and_asks_for_the_address_on_a_click() {
     let mut harness = page();
 
     assert!(harness.query_by_label("192.168.1.1").is_some());
-    assert!(harness.query_by_label("enp3s0").is_some());
+    assert!(harness.query_by_label("wlan0").is_some());
 
     harness.get_by_label("Show public address").click();
     harness.run();

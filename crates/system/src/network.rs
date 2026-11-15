@@ -4,6 +4,7 @@
 //! messages for NetworkManager in [`connectivity`].
 
 mod actions;
+mod interfaces;
 mod modules;
 mod network_manager;
 mod online;
@@ -17,7 +18,8 @@ use std::io;
 use std::net::IpAddr;
 use std::path::PathBuf;
 
-pub use actions::{Checked, NetworkActions, SystemActions};
+pub use actions::{Cards, Checked, NetworkActions, SystemActions};
+pub use interfaces::{property_changes, system_cards};
 pub use modules::{ModuleSource, SystemModules};
 pub use online::connectivity;
 use serde::Deserialize;

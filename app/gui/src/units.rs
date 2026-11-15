@@ -22,6 +22,7 @@ use toolbox_plan::UnitScope;
 pub use toolbox_services::units::{Systemd, UnitList, UnitLister};
 use toolbox_system::CallError;
 use tracing::Instrument as _;
+pub(crate) use watch::Backoff;
 
 use crate::reader::fresh;
 use crate::spawn::spawn_logged;

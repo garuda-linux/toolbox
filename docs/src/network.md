@@ -38,6 +38,15 @@ network manager the line stays **Unknown**.
 **Router** and **Interface** show **None** without a default route and
 **Not available** when the `ip` program is missing.
 
+Below **Connection** each active Ethernet or Wi-Fi interface has a card,
+titled with its connection's name. A card lists the interface, its IPv4
+and IPv6 addresses, the DNS servers for it, its MAC address, and for a
+wire the link speed or for Wi-Fi the network name and the signal, such as
+**Good (57 %)**. Each address, server and MAC address has a copy button.
+The cards come from NetworkManager and update when it reports a change.
+Without NetworkManager no card shows. Bridges, VPN tunnels and disconnected
+interfaces have no card.
+
 ## Show the public address
 
 Your public address is the one the internet sees, usually the address of

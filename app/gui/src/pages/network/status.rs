@@ -1,3 +1,4 @@
+mod interfaces;
 mod radios;
 
 use egui::{Label, Ui};
@@ -34,6 +35,7 @@ enum Value<'a> {
 pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
     connection(ui, context);
     ui.add_space(ui.tokens().sizes.section_gap);
+    interfaces::show(ui, context);
     radios::show(ui, context);
     ui.add_space(ui.tokens().sizes.section_gap);
     services(ui, context);

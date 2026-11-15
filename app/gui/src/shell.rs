@@ -10,8 +10,6 @@ pub use console_panel::focus::on_open as focus_console_on_open;
 pub use console_panel::layer as console_layer;
 use egui::{CentralPanel, Frame, Panel, Rect, Ui};
 pub use palette::Palette;
-#[cfg(any(test, feature = "testing"))]
-pub use sidebar::COLLAPSED_WIDTH;
 use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::BODY;
 use toolbox_gui_kit::toasts::{ToastTexts, Toasts};

@@ -110,6 +110,7 @@ pub const MEDIA_PLAYBACK_STOP: Icon = bundled!("media-playback-stop");
 pub const MEDIA_PLAYLIST_REPEAT: Icon = bundled!("media-playlist-repeat");
 pub const NETWORK_CONNECT: Icon = bundled!("network-connect");
 pub const NETWORK_WIRED: Icon = bundled!("network-wired");
+pub const NETWORK_WIRELESS: Icon = bundled!("network-wireless");
 pub const OBJECT_LOCKED: Icon = bundled!("object-locked");
 pub const OBJECT_UNLOCKED: Icon = bundled!("object-unlocked");
 pub const OFFICE_REPORT: Icon = bundled!("office-report");
@@ -151,7 +152,7 @@ pub const VIEW_TASK: Icon = bundled!("view-task");
 pub const VIEW_VISIBLE: Icon = bundled!("view-visible");
 pub const WINDOW_CLOSE: Icon = bundled!("window-close");
 
-pub const ALL: [Icon; 89] = [
+pub const ALL: [Icon; 90] = [
     APPLICATIONS_DEVELOPMENT,
     APPLICATIONS_GAMES,
     APPLICATIONS_GRAPHICS,
@@ -202,6 +203,7 @@ pub const ALL: [Icon; 89] = [
     MEDIA_PLAYLIST_REPEAT,
     NETWORK_CONNECT,
     NETWORK_WIRED,
+    NETWORK_WIRELESS,
     OBJECT_LOCKED,
     OBJECT_UNLOCKED,
     OFFICE_REPORT,

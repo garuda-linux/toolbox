@@ -1,13 +1,16 @@
+use std::net::IpAddr;
+
 use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, ModuleArgs, Read};
 use toolbox_core::Snapshot;
 use toolbox_core::features::network::{
-    DefaultRoute, Device, ModuleFacts, Radio, RadioAccess, RadioTarget, loaded_modules,
-    network_modules,
+    DefaultRoute, Device, InterfaceCard, Link, ModuleFacts, Radio, RadioAccess, RadioTarget,
+    Signal, Subnet, loaded_modules, network_modules,
 };
 use toolbox_plan::{HostName, Toggle};
 use toolbox_system::{NetworkSource, ProbeError};
 
+use super::interfaces::{interface_views, signal_text};
 use super::{address_shown, blacklist, ping, status, switch, traceroute, view};
 use crate::change::Refused;
 use crate::out::{Out, Settings};
@@ -109,6 +112,7 @@ fn a_failed_read_is_no_missing_router_and_ends_as_a_failure() {
     let exit = status(
         Read { json: false },
         &Broken,
+        Vec::new,
         &mut Out::new(&mut out, Settings::default()),
     );
 
@@ -169,6 +173,7 @@ fn a_failed_read_keeps_the_program_s_words_out_of_the_output() {
     status(
         Read { json: false },
         &Broken,
+        Vec::new,
         &mut Out::new(&mut out, Settings::default()),
     );
     let text = String::from_utf8(out).unwrap();
@@ -183,6 +188,7 @@ fn an_unread_router_is_not_none_and_leaves_no_gap_for_its_error() {
     status(
         Read { json: false },
         &NoRoute,
+        Vec::new,
         &mut Out::new(&mut out, Settings::default()),
     );
     let text = String::from_utf8(out).unwrap();
@@ -198,17 +204,54 @@ fn json_stays_json_when_a_read_fails() {
     status(
         Read { json: true },
         &Broken,
+        Vec::new,
         &mut Out::new(&mut out, Settings::default()),
     );
 
     serde_json::from_slice::<serde_json::Value>(&out).unwrap();
 }
 
+#[test]
+fn a_card_keeps_its_addresses_and_its_link_as_plain_values() {
+    let card = InterfaceCard {
+        connection: "network-3".to_owned(),
+        interface: "wlan0".to_owned(),
+        mac: Some("52:54:00:00:00:07".to_owned()),
+        ipv4: vec![Subnet {
+            address: IpAddr::from([192, 168, 178, 30]),
+            prefix: 24,
+        }],
+        ipv6: Vec::new(),
+        dns: vec![IpAddr::from([192, 168, 178, 1])],
+        link: Link::Wireless {
+            ssid: Some("network-3".to_owned()),
+            signal: Some(Signal { percent: 57 }),
+        },
+    };
+
+    let views = interface_views(&[card]);
+
+    assert_eq!(views.len(), 1);
+    assert_eq!(views[0].ipv4, ["192.168.178.30/24"]);
+    assert_eq!(views[0].dns, ["192.168.178.1"]);
+    assert_eq!(views[0].ssid.as_deref(), Some("network-3"));
+    assert_eq!(views[0].signal, Some(57));
+    assert_eq!(views[0].speed, None);
+}
+
+#[test]
+fn the_signal_word_follows_the_bars_of_nmcli() {
+    assert_eq!(signal_text(90), "Excellent (90 %)");
+    assert_eq!(signal_text(57), "Good (57 %)");
+    assert_eq!(signal_text(40), "Fair (40 %)");
+    assert_eq!(signal_text(10), "Weak (10 %)");
+}
+
 /// A named field tells a script what the value is, as every other read
 /// does.
 #[test]
 fn the_public_address_is_an_object_under_json() {
-    let address = std::net::IpAddr::from([192, 0, 2, 1]);
+    let address = IpAddr::from([192, 0, 2, 1]);
 
     assert_eq!(
         address_shown(address, true),

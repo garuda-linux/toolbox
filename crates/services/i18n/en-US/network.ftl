@@ -142,3 +142,19 @@ network-hotspot-unqueue = Take back
 network-hotspot-unknown = The installed packages could not be read, so it is not known whether the hotspot tool is installed. Read again reads them once more.
 # $reason is the system's own words.
 network-hotspot-not-started = The hotspot tool could not be started: { $reason }
+
+# The interface cards: one per activated Ethernet or Wi-Fi device. $label is the row's name.
+network-copy = Copy { $label }
+network-card-ipv4 = IPv4
+network-card-ipv6 = IPv6
+network-card-dns = DNS
+network-card-mac = MAC
+network-card-speed = Speed
+network-card-ssid = SSID
+network-card-signal = Signal
+network-speed = { $mbps } Mb/s
+network-signal = { $word } ({ $percent } %)
+network-signal-excellent = Excellent
+network-signal-good = Good
+network-signal-fair = Fair
+network-signal-weak = Weak
