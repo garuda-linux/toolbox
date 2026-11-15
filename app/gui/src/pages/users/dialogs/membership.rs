@@ -7,6 +7,7 @@ use std::collections::BTreeSet;
 use egui::{Context, Ui};
 use toolbox_core::features::users::rows::GroupChoice;
 use toolbox_core::features::users::view;
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, check_row};
 use toolbox_plan::{GroupName, UserName};
 
@@ -109,7 +110,8 @@ fn tick(ui: &mut Ui, choice: &GroupChoice, chosen: &mut BTreeSet<GroupName>) {
     );
 
     let on = choice.primary || chosen.contains(&choice.group);
-    if check_row(ui, on, &label, "", !choice.primary).clicked() {
+    let row = ui.enabled_ui(!choice.primary, |ui| check_row(ui, on, &label, ""));
+    if row.inner.clicked() {
         if on {
             chosen.remove(&choice.group);
         } else {

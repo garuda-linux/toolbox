@@ -242,11 +242,14 @@ fn a_search_without_a_match_says_so() {
         .type_text("klingon");
     harness.run();
 
-    assert!(shows(&harness, "No config file matches"));
-    assert!(
+    assert!(shows(&harness, "Nothing matches “klingon”"));
+
+    // The search field's own clear button and the empty state's one.
+    assert_eq!(
         harness
-            .query_by_role_and_label(Role::Button, "Clear search")
-            .is_some()
+            .query_all_by_role_and_label(Role::Button, "Clear search")
+            .count(),
+        2
     );
 }
 

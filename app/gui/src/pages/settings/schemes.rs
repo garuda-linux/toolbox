@@ -48,7 +48,7 @@ pub(super) fn scheme(
             .width(NARROW_CONTROL)
             .show(ui);
 
-        if let Some(&picked) = picked.and_then(|index| ids.get(index))
+        if let Some(&picked) = picked.value.and_then(|index| ids.get(index))
             && picked != current
         {
             send(SettingsCommand::Scheme(mode, picked.cloned()));

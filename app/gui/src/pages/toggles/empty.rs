@@ -9,6 +9,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use super::LeadChip;
 use super::listed::SectionChip;
 use crate::i18n;
+use crate::pages::search_empty::search_empty_state;
 
 /// The section a chip picked, while it hides `matches` entries of other
 /// sections that match the search.
@@ -62,28 +63,21 @@ pub fn show(ui: &mut Ui, search: &str, hidden: Option<&Picked>) -> Option<Clear>
     }
 
     let ctx = ui.ctx().clone();
-    let (title, detail, button) = hidden.map_or_else(
-        || {
-            (
-                i18n::text(&ctx, "toggles-nothing-matches"),
-                i18n::text_with(
-                    &ctx,
-                    "toggles-nothing-matches-detail",
-                    &[("search", search)],
-                ),
-                i18n::text(&ctx, "toggles-clear-search"),
-            )
-        },
-        |picked| {
-            let count = picked.matches.to_string();
-            let named = [("section", picked.title.as_str()), ("search", search)];
-            (
-                i18n::text_with(&ctx, "toggles-nothing-in-section", &named),
-                i18n::text_with(&ctx, "toggles-nothing-in-section-detail", &named),
-                i18n::text_with(&ctx, "toggles-show-all-matches", &[("count", &count)]),
-            )
-        },
-    );
+    let Some(picked) = hidden else {
+        let detail = i18n::text_with(
+            &ctx,
+            "toggles-nothing-matches-detail",
+            &[("search", search)],
+        );
+
+        return search_empty_state(ui, search, &detail).then_some(Clear::Search);
+    };
+
+    let count = picked.matches.to_string();
+    let named = [("section", picked.title.as_str()), ("search", search)];
+    let title = i18n::text_with(&ctx, "toggles-nothing-in-section", &named);
+    let detail = i18n::text_with(&ctx, "toggles-nothing-in-section-detail", &named);
+    let button = i18n::text_with(&ctx, "toggles-show-all-matches", &[("count", &count)]);
 
     empty_state(ui, icons::SYSTEM_SEARCH, &title, &detail);
     ui.add_space(ui.tokens().sizes.card_gap);
@@ -91,9 +85,5 @@ pub fn show(ui: &mut Ui, search: &str, hidden: Option<&Picked>) -> Option<Clear>
         .vertical_centered(|ui| pill_button(ui, &button, ButtonKind::Soft).clicked())
         .inner;
 
-    clicked.then_some(if hidden.is_some() {
-        Clear::Section
-    } else {
-        Clear::Search
-    })
+    clicked.then_some(Clear::Section)
 }

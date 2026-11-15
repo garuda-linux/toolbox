@@ -13,7 +13,7 @@
       "string": "Copied the system details to the clipboard."
     },
     "about-licence": {
-      "string": "Licence"
+      "string": "License"
     },
     "about-licence-value": {
       "string": "GPL 3.0 or later"
@@ -1413,7 +1413,7 @@
       "string": "Gamemode"
     },
     "catalog-gaming-gamemode-description": {
-      "string": "A daemon/lib combo that allows games to request a set of optimisations be temporarily applied to the host OS"
+      "string": "A daemon/lib combo that allows games to request a set of optimizations be temporarily applied to the host OS"
     },
     "catalog-gaming-gamescope-session-steam-git": {
       "string": "Gamescope session (Steam)"
@@ -4618,8 +4618,12 @@
       "developer_comment": "The language's own name, shown in the language picker."
     },
     "search-clear": {
-      "string": "Clear the search",
-      "developer_comment": "The ✕ in a search field that empties it."
+      "string": "Clear search",
+      "developer_comment": "The ✕ in a search field and the button that empties a list's search."
+    },
+    "search-nothing-matches": {
+      "string": "Nothing matches “{search}”",
+      "developer_comment": "The title of a list that the search emptied, with the search as typed."
     },
     "dialog-close": {
       "string": "Close",
@@ -4741,7 +4745,7 @@
     },
     "close-stopping-title": {
       "string": "Stopping the run",
-      "developer_comment": "Shown after Quit was confirmed during a run, until the cancelled run ends and the window closes."
+      "developer_comment": "Shown after Quit was confirmed during a run, until the canceled run ends and the window closes."
     },
     "close-stopping-detail": {
       "string": "The window closes once the run has stopped."
@@ -4763,9 +4767,6 @@
     "configs-search-detail": {
       "string": "The search looks at names, paths, descriptions and the files of folders."
     },
-    "configs-clear-search": {
-      "string": "Clear search"
-    },
     "configs-reading": {
       "string": "Looking for config files…"
     },
@@ -4774,9 +4775,6 @@
     },
     "configs-none": {
       "string": "None of the listed config files exists on this system"
-    },
-    "configs-no-match": {
-      "string": "No config file matches"
     },
     "configs-dismiss": {
       "string": "Dismiss"
@@ -4890,7 +4888,7 @@
       "string": "{path} was not read, because this account has no home folder."
     },
     "configs-problem-cancelled": {
-      "string": "Reading {path} was cancelled."
+      "string": "Reading {path} was canceled."
     },
     "configs-view-too-large": {
       "string": "{path} is larger than 1 MiB, which is too large to show here."
@@ -5093,7 +5091,7 @@
       "developer_comment": "A dry run runs no step."
     },
     "step-cancelled": {
-      "string": "Cancelled"
+      "string": "Canceled"
     },
     "step-failed-exit": {
       "string": "Failed (exit code {code})"
@@ -5325,14 +5323,8 @@
     "discover-problem": {
       "string": "Some categories could not be loaded. The others are shown."
     },
-    "discover-nothing-matches": {
-      "string": "No app matches “{search}”"
-    },
     "discover-nothing-matches-detail": {
       "string": "The search looks at names, descriptions and package names in every category."
-    },
-    "discover-clear-search": {
-      "string": "Clear search"
     },
     "discover-nothing-in-category": {
       "string": "No app in {category} matches “{search}”",
@@ -5948,9 +5940,6 @@
     "locales-none-detail": {
       "string": "The search looks at the names of languages, countries, locales and character sets."
     },
-    "locales-clear-search": {
-      "string": "Clear search"
-    },
     "locales-unavailable": {
       "string": "Locales are not available on this system"
     },
@@ -6164,11 +6153,15 @@
     "maintenance-install-open": {
       "string": "Install and open…"
     },
+    "maintenance-not-installed": {
+      "string": "Not installed",
+      "developer_comment": "The dot beside the title of a tool that is not installed."
+    },
     "maintenance-tool-missing": {
-      "string": "Not installed. Installing it starts at once in the Console and asks for your password, then the tool opens."
+      "string": "Installing it starts at once in the Console and asks for your password, then the tool opens."
     },
     "maintenance-ranker-missing": {
-      "string": "Needs rate-mirrors, which is not installed. Installing it starts at once in the Console and asks for your password, then the ranking starts."
+      "string": "Needs rate-mirrors. Installing it starts at once in the Console and asks for your password, then the ranking starts."
     },
     "maintenance-ranking": {
       "string": "Testing the mirrors. This takes up to five minutes. The Console opens when the new list is ready."
@@ -6285,7 +6278,7 @@
       "string": "Each repair runs in the Console, where it can ask its questions."
     },
     "maintenance-repairs-missing": {
-      "string": "{count, plural, one {The greyed out repairs below need {packages}, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.} other {The greyed out repairs below need {packages}, which are not installed. Installing them unlocks the repairs. It starts at once in the Console and asks for your password.}}",
+      "string": "{count, plural, one {The grayed out repairs below need {packages}, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.} other {The grayed out repairs below need {packages}, which are not installed. Installing them unlocks the repairs. It starts at once in the Console and asks for your password.}}",
       "developer_comment": "$packages lists the missing packages, separated by commas. $count is\nhow many they are."
     },
     "maintenance-install-missing": {
@@ -6867,14 +6860,8 @@
     "packages-no-orphans-detail": {
       "string": "Every package installed as a dependency is still needed by another one."
     },
-    "packages-nothing-matches": {
-      "string": "No package matches “{search}”"
-    },
     "packages-nothing-matches-detail": {
       "string": "The search looks at the names and descriptions under the chip that is picked."
-    },
-    "packages-clear-search": {
-      "string": "Clear search"
     },
     "packages-refused-not-offered": {
       "string": "{name} cannot be installed: no configured repository offers it.",
@@ -7560,13 +7547,13 @@
       "string": "Appearance"
     },
     "settings-behaviour": {
-      "string": "Behaviour"
+      "string": "Behavior"
     },
     "settings-diagnostics": {
       "string": "Diagnostics"
     },
     "settings-appearance-help": {
-      "string": "The language, colours and motion of this window."
+      "string": "The language, colors and motion of this window."
     },
     "settings-behaviour-help": {
       "string": "When Garuda Toolbox starts and how often it checks the system."
@@ -7599,16 +7586,16 @@
       "string": "Light"
     },
     "settings-dark-scheme": {
-      "string": "Dark colour scheme"
+      "string": "Dark color scheme"
     },
     "settings-dark-scheme-description": {
-      "string": "The colours while the theme is dark. System takes the desktop's colours and accent."
+      "string": "The colors while the theme is dark. System takes the desktop's colors and accent."
     },
     "settings-light-scheme": {
-      "string": "Light colour scheme"
+      "string": "Light color scheme"
     },
     "settings-light-scheme-description": {
-      "string": "The colours while the theme is light. System takes the desktop's colours and accent."
+      "string": "The colors while the theme is light. System takes the desktop's colors and accent."
     },
     "settings-scheme-system": {
       "string": "System"
@@ -8215,15 +8202,9 @@
     "toggles-search-hint": {
       "string": "Search this page…"
     },
-    "toggles-nothing-matches": {
-      "string": "Nothing matches the search"
-    },
     "toggles-nothing-matches-detail": {
       "string": "No entry of this page has “{search}” in its name or description.",
       "developer_comment": "$search is what the user typed."
-    },
-    "toggles-clear-search": {
-      "string": "Clear search"
     },
     "toggles-nothing-in-section": {
       "string": "Nothing in {section} matches",
@@ -8457,12 +8438,6 @@
     },
     "users-show-all": {
       "string": "Show all accounts"
-    },
-    "users-no-match": {
-      "string": "No user matches “{search}”"
-    },
-    "users-clear-search": {
-      "string": "Clear search"
     },
     "users-list": {
       "string": "Users"
@@ -8774,7 +8749,7 @@
     },
     "users-add-why-no-name": {
       "string": "Enter a user name.",
-      "developer_comment": "Beside the greyed out \"Add user now\": the first thing it waits for."
+      "developer_comment": "Beside the grayed out \"Add user now\": the first thing it waits for."
     },
     "users-add-why-bad-name": {
       "string": "The user name cannot be used. The note under it says why."
@@ -8895,9 +8870,6 @@
     },
     "groups-unavailable": {
       "string": "Groups are not available"
-    },
-    "groups-no-match": {
-      "string": "No group matches “{search}”"
     },
     "groups-detail": {
       "string": "Group ID {gid}, members: {members}"

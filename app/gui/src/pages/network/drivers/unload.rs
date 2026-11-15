@@ -3,31 +3,28 @@
 //! a module runs is not read, so every unload asks.
 
 use egui::{Context, Id};
-use toolbox_gui_kit::widgets::{self, ButtonKind, DialogWidth, Question};
+use toolbox_gui_kit::widgets::{self, ButtonKind, DialogWidth, Pending, Question};
 use toolbox_plan::KernelModule;
 
 use crate::command::NetworkCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 
-fn asking() -> Id {
-    Id::unique("toolbox_gui::network::unload")
+fn asking() -> Pending<KernelModule> {
+    Pending::new(Id::unique("toolbox_gui::network::unload"))
 }
 
 /// Drops an open question, as when the page is left.
 pub fn forget(ctx: &Context) {
-    ctx.data_mut(|data| data.insert_temp::<Option<KernelModule>>(asking(), None));
+    asking().release(ctx);
 }
 
 pub fn ask(ctx: &Context, module: &KernelModule) {
-    ctx.data_mut(|data| data.insert_temp(asking(), Some(module.clone())));
+    asking().hold(ctx, module.clone());
 }
 
 pub fn question(ctx: &Context, context: &PageContext<'_>) {
-    let Some(module) = ctx
-        .data(|data| data.get_temp::<Option<KernelModule>>(asking()))
-        .flatten()
-    else {
+    let Some(module) = asking().get(ctx) else {
         return;
     };
 
@@ -47,7 +44,7 @@ pub fn question(ctx: &Context, context: &PageContext<'_>) {
         width: DialogWidth::Small,
     };
 
-    let asked = widgets::question(ctx, asking().with("dialog"), texts);
+    let asked = widgets::question(ctx, asking().dialog(), texts);
     if asked.confirmed {
         context.commands.send(NetworkCommand::LoadDriver {
             module,
@@ -56,6 +53,6 @@ pub fn question(ctx: &Context, context: &PageContext<'_>) {
     }
 
     if asked.done {
-        ctx.data_mut(|data| data.insert_temp::<Option<KernelModule>>(asking(), None));
+        asking().release(ctx);
     }
 }

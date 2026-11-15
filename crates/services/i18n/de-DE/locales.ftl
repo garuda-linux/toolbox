@@ -15,7 +15,6 @@ locales-list = Locales
 locales-reading = Locales werden eingelesen…
 locales-none = Keine passende Locale
 locales-none-detail = Die Suche umfasst Namen von Sprachen, Ländern, Locales und Zeichensätzen.
-locales-clear-search = Suche leeren
 locales-unavailable = Locales sind auf diesem System nicht verfügbar
 locales-unavailable-detail = Dieses System erzeugt seine Locales nicht aus /etc/locale.gen.
 locales-enabled = Aktiviert

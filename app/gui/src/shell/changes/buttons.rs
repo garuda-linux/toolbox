@@ -1,3 +1,4 @@
+use toolbox_gui_kit::UiExt as _;
 use egui::Ui;
 use toolbox_gui_kit::widgets::{ButtonKind, pill_button, pill_button_at_least, pill_width};
 
@@ -74,7 +75,7 @@ pub(super) fn apply_button(
 /// its description as well as its tooltip.
 pub(super) fn apply_pill(ui: &mut Ui, text: &str, held: Option<&'static str>) -> egui::Response {
     let apply = ui
-        .add_enabled_ui(held.is_none(), |ui| {
+        .enabled_ui(held.is_none(), |ui| {
             pill_button(ui, text, ButtonKind::Primary)
         })
         .inner;

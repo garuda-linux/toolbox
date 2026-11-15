@@ -102,7 +102,7 @@ fn notice(ui: &mut Ui, context: &PageContext<'_>) {
 
     let dismiss = i18n::text(&ctx, "home-queue-lost-dismiss");
 
-    if banner(ui, Tone::Warning, &text, &[&dismiss]) == Some(0) {
+    if banner(ui, Tone::Warning, &text, &[&dismiss]).value == Some(0) {
         context.commands.send(HomeCommand::DismissProblem);
     }
 

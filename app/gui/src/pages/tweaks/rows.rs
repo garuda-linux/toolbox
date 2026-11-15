@@ -324,7 +324,7 @@ fn pick_row<T>(
                 }
 
                 let picked = ui
-                    .add_enabled_ui(known && !context.busy, |ui| {
+                    .enabled_ui(known && !context.busy, |ui| {
                         Select::new(&title, &names)
                             .selected(pick.shown)
                             .placeholder(&placeholder)
@@ -334,7 +334,7 @@ fn pick_row<T>(
                     })
                     .inner;
 
-                if let Some(entry) = picked.and_then(|index| entries.get(index)) {
+                if let Some(entry) = picked.value.and_then(|index| entries.get(index)) {
                     context.commands.send(entry.command.clone());
                 }
             },
@@ -364,7 +364,10 @@ fn flip_row(
             |ui| lead(ui, (glyph, !flip.known), (id, query), tag),
             |ui| {
                 let enabled = flip.known && !context.busy;
-                let flipped = switch(ui, flip.on, &title, enabled).clicked();
+                let flipped = ui
+                    .enabled_ui(enabled, |ui| switch(ui, flip.on, &title).clicked())
+                    .inner;
+
                 if flipped || (state.toggle && enabled) {
                     context.commands.send(command(!flip.on));
                 }

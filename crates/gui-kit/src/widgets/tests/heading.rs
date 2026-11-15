@@ -5,9 +5,9 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use super::super::{
     SectionHeading, icon_button, icon_button_width, page_header, page_toolbar, pill_button,
 };
-use crate::icons;
 use crate::testing::{harness, spoken_words};
 use crate::widgets::ButtonKind;
+use crate::{UiExt as _, icons};
 
 const TABS: [&str; 4] = ["Status", "Hardware", "Drivers", "Tools"];
 
@@ -89,7 +89,7 @@ fn an_icon_button_is_as_wide_as_its_width_says() {
 
 fn tab_row(ui: &mut Ui) {
     let options: Vec<(usize, &str)> = TABS.iter().copied().enumerate().collect();
-    _ = super::super::segmented(ui, "Tabs", &options, 0);
+    _ = super::super::segmented(ui, "Tabs", "Tabs", &options, 0);
     ui.add_space(8.0);
 }
 
@@ -208,7 +208,10 @@ fn page_titles_and_section_titles_are_headings_for_screen_readers() {
 fn f5_reads_the_page_again_like_its_refresh_button() {
     let mut harness = harness(400.0, 200.0).build_ui_state(
         |ui, read: &mut u32| {
-            if super::super::refresh_button(ui, "Read again") {
+            if super::super::refresh_button(ui, "Read again")
+                .value
+                .is_some()
+            {
                 *read += 1;
             }
         },
@@ -226,8 +229,11 @@ fn f5_reads_the_page_again_like_its_refresh_button() {
 fn f5_leaves_a_disabled_refresh_button_alone() {
     let mut harness = harness(400.0, 200.0).build_ui_state(
         |ui, read: &mut u32| {
-            ui.add_enabled_ui(false, |ui| {
-                if super::super::refresh_button(ui, "Read again") {
+            ui.enabled_ui(false, |ui| {
+                if super::super::refresh_button(ui, "Read again")
+                    .value
+                    .is_some()
+                {
                     *read += 1;
                 }
             });

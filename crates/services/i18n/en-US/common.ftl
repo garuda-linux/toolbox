@@ -6,8 +6,11 @@ app-name = Garuda Toolbox
 # The language's own name, shown in the language picker.
 language-name = English (United States)
 
-# The ✕ in a search field that empties it.
-search-clear = Clear the search
+# The ✕ in a search field and the button that empties a list's search.
+search-clear = Clear search
+
+# The title of a list that the search emptied, with the search as typed.
+search-nothing-matches = Nothing matches “{ $search }”
 
 # The ✕ in a dialog's title bar.
 dialog-close = Close
@@ -67,6 +70,6 @@ missing-catalog-folder = Missing folder
 missing-catalog-reinstall = Reinstall with
 missing-catalog-copy = Copy { $label }
 missing-catalog-copied = Copied to the clipboard.
-# Shown after Quit was confirmed during a run, until the cancelled run ends and the window closes.
+# Shown after Quit was confirmed during a run, until the canceled run ends and the window closes.
 close-stopping-title = Stopping the run
 close-stopping-detail = The window closes once the run has stopped.

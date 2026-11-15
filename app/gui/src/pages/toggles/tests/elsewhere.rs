@@ -18,7 +18,13 @@ fn a_picked_section_without_a_match_offers_all_matches() {
             .query_by_label("Nothing in Printing matches")
             .is_some()
     );
-    assert!(harness.query_by_label("Clear search").is_none());
+    assert_eq!(
+        harness
+            .query_all_by_role_and_label(Role::Button, "Clear search")
+            .count(),
+        1,
+        "only the search field's own clear button shows"
+    );
 
     let button = harness
         .query_all_by_role(Role::Button)
@@ -47,10 +53,14 @@ fn without_a_picked_section_the_empty_state_clears_the_search() {
 
     assert!(
         harness
-            .query_by_label("Nothing matches the search")
+            .query_by_label("Nothing matches “zz-nothing-matches”")
             .is_some()
     );
-    harness.get_by_label("Clear search").click();
+    harness
+        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .last()
+        .expect("the empty state's Clear search")
+        .click();
     harness.run();
 
     assert_eq!(harness.state().page.0.search, "");

@@ -21,7 +21,7 @@ fn chips_report_the_value_clicked() {
     let mut harness = harness(400.0, 120.0).build_ui_state(
         |ui, picked: &mut Option<Scope>| {
             let options = [(Scope::System, "System"), (Scope::User, "User")];
-            if let Some(value) = chips(ui, &options, Scope::System) {
+            if let Some(value) = chips(ui, &options, Scope::System).value {
                 *picked = Some(value);
             }
         },
@@ -42,7 +42,7 @@ fn counted_chips_say_their_count() {
     let mut harness = harness(400.0, 120.0).build_ui_state(
         |ui, picked: &mut Option<Option<&'static str>>| {
             let options = [(None, "All", None), (Some("audio"), "Audio", Some("2/8"))];
-            if let Some(value) = counted_chips(ui, &options, None) {
+            if let Some(value) = counted_chips(ui, &options, None).value {
                 *picked = Some(value);
             }
         },
@@ -67,7 +67,7 @@ fn toggle_chips_are_selected_one_by_one() {
                 (Filter::Inactive, "Hide inactive"),
             ];
 
-            if let Some(value) = toggle_chips(ui, &options, |value| on.contains(&value)) {
+            if let Some(value) = toggle_chips(ui, &options, |value| on.contains(&value)).value {
                 on.push(value);
             }
         },
@@ -89,7 +89,7 @@ fn scopes(current: Scope) -> egui_kittest::Harness<'static, Scope> {
     let mut harness = harness(400.0, 120.0).build_ui_state(
         |ui, current: &mut Scope| {
             let options = [(Scope::System, "System"), (Scope::User, "User")];
-            if let Some(value) = segmented(ui, "Units", &options, *current) {
+            if let Some(value) = segmented(ui, "Units", "Units", &options, *current).value {
                 *current = value;
             }
         },
@@ -170,6 +170,7 @@ fn the_measured_width_is_the_drawn_one() {
             segmented(
                 ui,
                 "Units",
+                "Units",
                 &[(Scope::System, "System"), (Scope::User, "User")],
                 Scope::System,
             );
@@ -189,11 +190,11 @@ fn two_groups_with_the_same_labels_keep_apart() {
     let mut harness = harness(400.0, 160.0).build_ui_state(
         |ui, picked: &mut (Scope, Scope)| {
             let options = [(Scope::System, "On"), (Scope::User, "Off")];
-            if let Some(value) = segmented(ui, "First", &options, picked.0) {
+            if let Some(value) = segmented(ui, "First", "First", &options, picked.0).value {
                 picked.0 = value;
             }
 
-            if let Some(value) = segmented(ui, "Second", &options, picked.1) {
+            if let Some(value) = segmented(ui, "Second", "Second", &options, picked.1).value {
                 picked.1 = value;
             }
         },
@@ -215,12 +216,12 @@ fn named_chip_rows_tell_their_all_chips_apart() {
     let mut harness = harness(400.0, 160.0).build_ui_state(
         |ui, picked: &mut Vec<(&'static str, Option<Scope>)>| {
             let states = [(None, "All"), (Some(Scope::System), "System")];
-            if let Some(value) = named_chips(ui, "State", &states, None) {
+            if let Some(value) = named_chips(ui, "State", "State", &states, None).value {
                 picked.push(("State", value));
             }
 
             let kinds = [(None, "All"), (Some(Scope::User), "User")];
-            if let Some(value) = named_chips(ui, "Kind", &kinds, Some(Scope::User)) {
+            if let Some(value) = named_chips(ui, "Kind", "Kind", &kinds, Some(Scope::User)).value {
                 picked.push(("Kind", value));
             }
         },

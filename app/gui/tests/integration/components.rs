@@ -144,11 +144,15 @@ fn the_search_keeps_matching_entries_and_says_when_none_match() {
     harness.run();
     assert!(
         harness
-            .query_by_label("Nothing matches the search")
+            .query_by_label("Nothing matches “jamesdspzzz”")
             .is_some()
     );
 
-    harness.get_by_label("Clear search").click();
+    harness
+        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .last()
+        .expect("the empty state's Clear search")
+        .click();
     harness.run();
     assert!(
         harness

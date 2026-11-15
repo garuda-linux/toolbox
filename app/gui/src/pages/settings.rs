@@ -159,7 +159,7 @@ fn language(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
             .width(NARROW_CONTROL)
             .show(ui);
 
-        if let Some(code) = picked.and_then(|index| codes.get(index)) {
+        if let Some(code) = picked.value.and_then(|index| codes.get(index)) {
             send(SettingsCommand::Language(code.clone()));
         }
     });
@@ -282,7 +282,7 @@ fn log_level(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
             .width(NARROW_CONTROL)
             .show(ui);
 
-        if let Some((level, _)) = picked.and_then(|index| levels.get(index)) {
+        if let Some((level, _)) = picked.value.and_then(|index| levels.get(index)) {
             send(SettingsCommand::LogLevel(*level));
         }
     });
@@ -312,7 +312,7 @@ fn choice<T>(
     let names: Vec<&str> = labels.iter().map(|(_, name)| *name).collect();
     let width = segmented_width(ui, &names);
     row(ui, false, &words.borrowed(), width, |ui| {
-        let chosen = segmented(ui, &words.title, &labels, current);
+        let chosen = segmented(ui, &words.title, &words.title, &labels, current).value;
         if let Some(value) = chosen.filter(|value| *value != current) {
             picked(value);
         }

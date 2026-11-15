@@ -5,13 +5,13 @@
 use std::sync::Arc;
 
 use egui::{
-    Color32, CornerRadius, EventFilter, Galley, Id, Key, Modifiers, Rect, Response, Role, Sense,
-    StrokeKind, Ui, UiBuilder, WidgetInfo, pos2, vec2,
+    AsIdSalt, Color32, CornerRadius, EventFilter, Galley, Id, Key, Modifiers, Rect, Response, Role,
+    Sense, StrokeKind, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 
 use super::card::light_rim;
-use super::press::Pointer;
-use super::{focus_ring, line};
+use super::press::{Pointer, hover_amount};
+use super::{Choice, focus_ring, line};
 use crate::fonts::{BODY, Weight};
 use crate::motion;
 use crate::theme::{PILL_HEIGHT, PILL_RADIUS};
@@ -44,7 +44,13 @@ fn segment_width(galley: &Galley) -> f32 {
 
 /// One segment per option, the one equal to `current` raised, in a group
 /// called `name`. Returns the option clicked or moved to this frame.
-pub fn segmented<T>(ui: &mut Ui, name: &str, options: &[(T, &str)], current: T) -> Option<T>
+pub fn segmented<T>(
+    ui: &mut Ui,
+    salt: impl AsIdSalt,
+    name: &str,
+    options: &[(T, &str)],
+    current: T,
+) -> Choice<T>
 where
     T: PartialEq + Copy,
 {
@@ -58,15 +64,16 @@ where
     // Taken here, so a wrapping row moves the whole pill to the next line.
     let total = INSET.mul_add(2.0, widths.iter().sum::<f32>());
     let height = PILL_HEIGHT;
-    let (outer, _) = ui.allocate_exact_size(vec2(total, height), Sense::hover());
+    let (outer, response) = ui.allocate_exact_size(vec2(total, height), Sense::hover());
     let builder = UiBuilder::new()
         .max_rect(outer)
-        .id_salt(("segmented", name))
+        .id_salt(("segmented", salt))
         .accessibility_role(Role::RadioGroup)
         .accessibility_label(name);
 
     let group = ui.new_child(builder);
-    segments(&group, outer, (galleys, widths), options, current)
+    let value = segments(&group, outer, (galleys, widths), options, current);
+    Choice { response, value }
 }
 
 fn segments<T>(
@@ -203,10 +210,16 @@ fn segment(ui: &Ui, id: Id, rect: Rect, label: &str, chosen: bool) -> Response {
     response
         .widget_info(|| WidgetInfo::selected(Role::RadioButton, ui.is_enabled(), chosen, label));
 
-    if let Some(fill) = segment_fill(&tokens, chosen, Pointer::of(&response)) {
-        ui.painter()
-            .rect_filled(rect, CornerRadius::same(SEGMENT_RADIUS), fill);
-    }
+    let pointer = Pointer::of(&response);
+    let fill = segment_fill(
+        &tokens,
+        chosen,
+        pointer,
+        hover_amount(ui, &response, pointer),
+    );
+
+    ui.painter()
+        .rect_filled(rect, CornerRadius::same(SEGMENT_RADIUS), fill);
 
     focus_ring(ui, &response, SEGMENT_RADIUS);
     response
@@ -215,14 +228,11 @@ fn segment(ui: &Ui, id: Id, rect: Rect, label: &str, chosen: bool) -> Response {
 /// A segment's own fill: only another one than the chosen, while pressed.
 /// The chosen one sits on the sliding [`pill`], and a hover shows in the
 /// text alone.
-pub(super) const fn segment_fill(
-    tokens: &Tokens,
-    chosen: bool,
-    pointer: Pointer,
-) -> Option<Color32> {
+pub(super) fn segment_fill(tokens: &Tokens, chosen: bool, pointer: Pointer, hover: f32) -> Color32 {
     match (chosen, pointer) {
-        (false, Pointer::Pressed) => Some(tokens.pressed),
-        (true, _) | (false, Pointer::Rest | Pointer::Hovered) => None,
+        (false, Pointer::Pressed) => tokens.pressed,
+        (true, _) => Color32::TRANSPARENT,
+        (false, _) => Color32::TRANSPARENT.lerp_to_gamma(tokens.hover, hover),
     }
 }
 

@@ -5,6 +5,7 @@ use egui::{
     Ui, UiBuilder,
 };
 
+use super::press::{Pointer, hover_amount};
 use crate::theme::{CARD_RADIUS, RADIUS};
 use crate::tokens;
 
@@ -22,6 +23,20 @@ pub fn card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R>
             ui.spacing_mut().item_spacing.y = 0.0;
             body(ui)
         })
+}
+
+/// A [`card`] with the card padding round its body.
+pub fn padded_card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
+    let padding = tokens::current(ui.ctx()).sizes.card_padding;
+    card(ui, |ui| {
+        Frame::new()
+            .inner_margin(padding)
+            .show(ui, |ui| {
+                ui.set_width(ui.available_width());
+                body(ui)
+            })
+            .inner
+    })
 }
 
 /// A 1 px rim of `colour` in light themes only, where white on near
@@ -98,12 +113,22 @@ pub(super) fn row_frame<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> R {
 /// button the row still counts as hovered, but not while something else is dragged across it.
 pub(super) fn paint_hover(ui: &Ui, backdrop: ShapeIdx, response: &Response) {
     let dragging = ui.ctx().dragged_id().is_some();
-    if shows_hover(response.hovered(), response.contains_pointer(), dragging) {
-        let rect = fill_rect(response.rect, ui.pixels_per_point());
-        let tokens = tokens::current(ui.ctx());
-        let fill = Shape::rect_filled(rect, CornerRadius::same(RADIUS), tokens.field);
-        ui.painter().set(backdrop, fill);
-    }
+    let pointer = if shows_hover(response.hovered(), response.contains_pointer(), dragging) {
+        Pointer::Hovered
+    } else {
+        Pointer::Rest
+    };
+
+    let amount = hover_amount(ui, response, pointer);
+    let rect = fill_rect(response.rect, ui.pixels_per_point());
+    let tokens = tokens::current(ui.ctx());
+    let fill = Shape::rect_filled(
+        rect,
+        CornerRadius::same(RADIUS),
+        tokens.field.gamma_multiply(amount),
+    );
+
+    ui.painter().set(backdrop, fill);
 }
 
 /// A row under the pointer shows its fill, also while its own button is

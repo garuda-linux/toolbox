@@ -55,7 +55,7 @@ impl AddUser {
         // inside it: the search above narrows a system's dozens of groups.
         for group in names.iter().filter(|group| Some(*group) != admin) {
             let on = self.groups.contains(group);
-            let box_row = check_row(ui, on, group.as_str(), "", true);
+            let box_row = check_row(ui, on, group.as_str(), "");
             if box_row.gained_focus() {
                 box_row.scroll_to_me(None);
             }

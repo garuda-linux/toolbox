@@ -1,9 +1,9 @@
 //! A tag with its own remove button inside, for a list someone edits
 //! piece by piece, such as kernel parameters.
 
-use egui::{Role, Sense, Ui, WidgetInfo, pos2, vec2};
+use egui::{Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
-use super::chip::TAG_SCALE;
+use super::chip::{TAG_HEIGHT, TAG_SCALE, tag};
 use super::{Tone, focus_ring, line};
 use crate::fonts::Weight;
 use crate::ui_ext::icon_image;
@@ -16,13 +16,25 @@ const INSET: f32 = 2.0;
 const PADDING_X: f32 = 10.0;
 pub const GLYPH: f32 = 12.0;
 
-/// `text` on a tag with a remove cross that `alt` names. Returns whether
-/// the cross was clicked.
-pub fn removable_tag(ui: &mut Ui, text: &str, alt: &str) -> bool {
+/// A [`tag`] for a parameter that stays, with a small lock before it, the
+/// same height as a [`removable_tag`].
+pub fn locked_tag(ui: &mut Ui, text: &str) -> Response {
+    let secondary = tokens::current(ui.ctx()).secondary;
+    ui.horizontal(|ui| {
+        let lock = icon_image(ui, icons::OBJECT_LOCKED, secondary);
+        ui.add(lock.fit_to_exact_size(vec2(GLYPH, GLYPH)));
+        tag(ui, text, Tone::Neutral)
+    })
+    .inner
+}
+
+/// `text` on a tag with a remove cross named `name`. Returns the cross's
+/// response.
+pub fn removable_tag(ui: &mut Ui, text: &str, name: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
     let (fill, ink) = Tone::Neutral.colors(&tokens);
     let galley = line(ui, text, Weight::SemiBold, TAG_SCALE, ink);
-    let height = INSET.mul_add(2.0, TARGET);
+    let height = TAG_HEIGHT;
     let width = PADDING_X + galley.size().x + INSET + TARGET + INSET;
     let (rect, _) = ui.allocate_exact_size(vec2(width, height), Sense::hover());
 
@@ -36,13 +48,13 @@ pub fn removable_tag(ui: &mut Ui, text: &str, alt: &str) -> bool {
     label.widget_info(|| WidgetInfo::labeled(Role::Label, true, text));
 
     let cross_rect = egui::Rect::from_min_size(
-        pos2(rect.right() - INSET - TARGET, rect.top() + INSET),
+        pos2(rect.right() - INSET - TARGET, rect.top()),
         vec2(TARGET, TARGET),
     );
 
     let cross = ui.interact(cross_rect, label.id.with("remove"), Sense::click());
-    cross.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), alt));
-    let cross = cross.on_hover_text(alt);
+    cross.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), name));
+    let cross = cross.on_hover_text(name);
 
     if ui.is_rect_visible(rect) {
         let painter = ui.painter();
@@ -66,5 +78,5 @@ pub fn removable_tag(ui: &mut Ui, text: &str, alt: &str) -> bool {
     }
 
     focus_ring(ui, &cross, u8::MAX);
-    cross.clicked()
+    cross
 }

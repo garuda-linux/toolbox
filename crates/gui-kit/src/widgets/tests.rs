@@ -3,6 +3,7 @@ mod action_row_tile;
 mod banner;
 mod centred;
 mod check_row;
+mod chip_row;
 mod choices;
 mod contrast;
 mod cut;
@@ -64,8 +65,8 @@ use super::{
     menu_button, menu_heading, menu_item, nav_row, page_header, pill_button, search_field,
     section_heading, segmented, switch, tag,
 };
-use crate::icons;
 use crate::testing::harness;
+use crate::{UiExt as _, icons};
 
 const EXPANDED: NavLook = NavLook {
     expanded: true,
@@ -107,7 +108,7 @@ fn page(ui: &mut Ui, state: &mut Gallery) {
                 clear: "Clear the search",
             };
 
-            search_field(ui, &mut state.search, texts, 220.0);
+            search_field(ui, "test-search", &mut state.search, texts, 220.0);
         },
     );
     ui.add_space(12.0);
@@ -122,7 +123,7 @@ fn page(ui: &mut Ui, state: &mut Gallery) {
             ui.horizontal(|ui| {
                 ui.label("PipeWire");
                 tag(ui, "Turns on with Apply", Tone::Accent);
-                if switch(ui, state.on, "PipeWire", true).clicked() {
+                if switch(ui, state.on, "PipeWire").clicked() {
                     state.on = !state.on;
                 }
             });
@@ -131,7 +132,7 @@ fn page(ui: &mut Ui, state: &mut Gallery) {
             ui.horizontal(|ui| {
                 ui.label("JamesDSP");
                 tag(ui, "Needs PipeWire", Tone::Neutral);
-                switch(ui, false, "JamesDSP", false);
+                ui.enabled_ui(false, |ui| switch(ui, false, "JamesDSP"));
             });
         });
     });
@@ -265,6 +266,7 @@ fn a_select_opens_its_options_and_reports_the_pick() {
                 .selected(Some(0))
                 .placeholder("None")
                 .show(ui)
+                .value
             {
                 *picked = Some(index);
             }
@@ -294,6 +296,7 @@ fn a_pick_without_the_pointer_closes_the_list_too() {
             if let Some(index) = Select::new("Login shell", &options)
                 .selected(Some(0))
                 .show(ui)
+                .value
             {
                 *picked = Some(index);
             }
@@ -317,7 +320,9 @@ fn a_pick_without_the_pointer_closes_the_list_too() {
 fn segments_are_radio_buttons_and_report_the_pick() {
     let mut harness = harness(400.0, 120.0).build_ui_state(
         |ui, picked: &mut Option<usize>| {
-            if let Some(index) = segmented(ui, "Units", &[(0, "System"), (1, "User")], 0) {
+            if let Some(index) =
+                segmented(ui, "Units", "Units", &[(0, "System"), (1, "User")], 0).value
+            {
                 *picked = Some(index);
             }
         },

@@ -18,7 +18,7 @@ use toolbox_plan::Toggle;
 use toolbox_system::{ProbeError, RepairSource};
 
 use crate::command::{AppCommand, BootRepairCommand};
-use crate::lane::{Lane, OneRead};
+use crate::lane::Asked;
 use crate::page_service::Handled;
 use crate::refused::Refused;
 
@@ -40,15 +40,9 @@ pub struct BootRepair {
     offer: Offer,
     facts: Facts,
     progress: Progress,
-    reads: OneRead,
     refusal: Option<RepairRefusal>,
     /// `None` in tests that need no reads: nothing is read.
-    jobs: Option<Jobs>,
-}
-
-struct Jobs {
-    source: Arc<dyn RepairSource>,
-    lane: Lane<Answer>,
+    reads: Option<Asked<Answer>>,
 }
 
 impl fmt::Debug for BootRepairSetup {
@@ -56,12 +50,6 @@ impl fmt::Debug for BootRepairSetup {
         f.debug_struct("BootRepairSetup")
             .field("forced", &self.forced)
             .finish_non_exhaustive()
-    }
-}
-
-impl fmt::Debug for Jobs {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Jobs").finish_non_exhaustive()
     }
 }
 
@@ -84,10 +72,18 @@ impl BootRepair {
         let forced = setup.forced;
         let mut state = Self {
             forced,
-            jobs: Some(Jobs {
-                source: setup.source,
-                lane: Lane::new(setup.runtime, crate::waking::repaint(ctx)),
-            }),
+            reads: Some(Asked::new(
+                setup.runtime,
+                crate::waking::repaint(ctx),
+                move |lane| {
+                    let source = Arc::clone(&setup.source);
+                    lane.blocking(
+                        "facts",
+                        move || source.facts(),
+                        |answer| answer.unwrap_or(Err(ProbeError::Panicked)),
+                    );
+                },
+            )),
             ..Self::default()
         };
 
@@ -174,11 +170,7 @@ impl BootRepair {
     }
 
     pub fn take(&mut self) {
-        let Some(jobs) = &self.jobs else {
-            return;
-        };
-
-        let Some(answer) = jobs.lane.landed().pop() else {
+        let Some(answer) = self.reads.as_mut().and_then(Asked::take) else {
             return;
         };
 
@@ -189,36 +181,25 @@ impl BootRepair {
                 Facts::Failed
             }
         };
-
-        if self.reads.landed() {
-            self.read();
-        }
     }
 
     /// A hidden page reads nothing.
     fn read(&mut self) {
-        let Some(jobs) = &self.jobs else {
-            return;
-        };
-
         if self.offer == Offer::Hidden {
             return;
         }
 
-        if !self.reads.start() {
+        let Some(reads) = &mut self.reads else {
+            return;
+        };
+
+        if !reads.read() {
             return;
         }
 
         if !matches!(self.facts, Facts::Known(_)) {
             self.facts = Facts::Loading;
         }
-
-        let source = Arc::clone(&jobs.source);
-        jobs.lane.blocking(
-            "facts",
-            move || source.facts(),
-            |answer| answer.unwrap_or(Err(ProbeError::Panicked)),
-        );
     }
 }
 

@@ -1,6 +1,7 @@
 //! A row of a settings card: the words at the left, the control at the
 //! right or below on a narrow window.
 
+use toolbox_gui_kit::UiExt as _;
 use egui::{Label, Sense, Ui, UiBuilder};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::tokens;
@@ -44,7 +45,9 @@ pub fn switch_row(ui: &mut Ui, first: bool, words: &Words<'_>, on: bool, enabled
         let row_clicked = ui.response().clicked();
         let mut flipped = false;
         row(ui, first, words, SWITCH_ROOM, |ui| {
-            flipped = switch(ui, on, words.title, enabled).clicked();
+            flipped = ui
+                .enabled_ui(enabled, |ui| switch(ui, on, words.title).clicked())
+                .inner;
         });
         flipped || row_clicked
     })

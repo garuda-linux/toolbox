@@ -126,7 +126,7 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
         let last = i18n::text(&ctx, "boot-default-last");
         let enabled = !remembered && !rows.is_empty();
         let picked = ui
-            .add_enabled_ui(enabled, |ui| {
+            .enabled_ui(enabled, |ui| {
                 Select::new(&title, &names)
                     .selected(if remembered { None } else { current })
                     .placeholder(if remembered { &last } else { "" })
@@ -135,7 +135,7 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
             })
             .inner;
 
-        if let Some((entry, _)) = picked.and_then(|index| rows.get(index)) {
+        if let Some((entry, _)) = picked.value.and_then(|index| rows.get(index)) {
             send(context, Edit::Default(entry.clone()));
         }
     });
@@ -198,7 +198,8 @@ fn timeout(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
             let picked = Select::new(&title, &names)
                 .selected(Some(usize::from(seconds.is_none())))
                 .width(width)
-                .show(ui);
+                .show(ui)
+                .value;
 
             let wanted = match (picked, seconds) {
                 (Some(0), None) => Some(i64::from(FIRST_SECONDS)),
@@ -239,7 +240,7 @@ pub(super) fn unread_banner(ui: &mut Ui, context: &PageContext<'_>, menu: &Menu)
     let again = i18n::text(ui.ctx(), "common-read-again");
     let action = (!futile).then_some(&*again);
     let said = i18n::text(ui.ctx(), &format!("boot-default-{}", menu.as_str()));
-    if banner(ui, Tone::Warning, &said, action.as_slice()) == Some(0) {
+    if banner(ui, Tone::Warning, &said, action.as_slice()).value == Some(0) {
         context.commands.send(BootCommand::Refresh);
     }
 }
@@ -270,6 +271,7 @@ pub(super) fn seconds_field(ui: &mut Ui, ctx: &egui::Context, value: &mut u32) -
 
     let [name, unit, less, more] = &texts;
     let spin = SpinTexts {
+        salt: "boot-timeout",
         name,
         unit,
         less,

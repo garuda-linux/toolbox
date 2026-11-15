@@ -1,6 +1,6 @@
 use egui::{
-    Align2, Atom, Context, EventFilter, Id, IdSalt, Key, Modifiers, Response, TextEdit, TextStyle,
-    Ui, vec2,
+    Align2, AsIdSalt, Atom, Context, EventFilter, Id, IdSalt, Key, Modifiers, Response, TextEdit,
+    TextStyle, Ui, vec2,
 };
 
 use super::field::{FieldButton, Parts, field};
@@ -28,12 +28,13 @@ pub fn request_search_focus(ctx: &Context) {
 /// empties a field with text and leaves an empty one.
 pub fn search_field(
     ui: &mut Ui,
+    salt: impl AsIdSalt,
     text: &mut String,
     texts: SearchTexts<'_>,
     width: f32,
 ) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let id = ui.make_persistent_id(("search", texts.name));
+    let id = ui.make_persistent_id(("search", salt));
     if take_focus_request(ui) {
         ui.memory_mut(|memory| memory.request_focus(id));
     }
@@ -67,7 +68,7 @@ pub fn search_field(
 
     let clear = FieldButton {
         icon: icons::WINDOW_CLOSE,
-        alt: texts.clear,
+        name: texts.clear,
     };
 
     let parts = Parts {

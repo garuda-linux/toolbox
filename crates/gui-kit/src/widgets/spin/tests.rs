@@ -16,6 +16,7 @@ fn shown(value: u32) -> Harness<'static, u32> {
     let mut harness = harness(300.0, 80.0).build_ui_state(
         |ui, value: &mut u32| {
             let texts = SpinTexts {
+                salt: NAME,
                 name: NAME,
                 unit: "s",
                 less: LESS,

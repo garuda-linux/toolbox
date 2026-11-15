@@ -12,7 +12,7 @@ pub use picture::{
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{self, BODY, Weight};
 use toolbox_gui_kit::tokens::{self, Tokens};
-use toolbox_gui_kit::widgets::{Select, Tone, banner};
+use toolbox_gui_kit::widgets::{RowState, Select, Tone, banner, switch};
 
 use crate::i18n;
 use crate::refused::Shown;
@@ -63,15 +63,26 @@ where
         .width(ui.tokens().sizes.sort_width)
         .show(ui);
 
-    if let Some((picked, _)) = picked.and_then(|index| orders.get(index)) {
+    if let Some((picked, _)) = picked.value.and_then(|index| orders.get(index)) {
         *order = *picked;
     }
+}
+
+/// The switch at a list row's edge, `enabled` false while the list waits for
+/// a plan. Returns whether it flipped, by a click or by Space on the focused row.
+pub fn row_switch(ui: &mut Ui, state: &RowState, on: bool, name: &str, enabled: bool) -> bool {
+    let enabled = enabled && ui.is_enabled();
+    let clicked = ui
+        .enabled_ui(enabled, |ui| switch(ui, on, name).clicked())
+        .inner;
+
+    clicked || (state.toggle && enabled)
 }
 
 /// Returns whether it was pressed.
 pub fn refusal_banner(ui: &mut Ui, tone: Tone, text: &str, dismiss_id: &str) -> bool {
     let dismiss = i18n::text(ui.ctx(), dismiss_id);
-    let dismissed = banner(ui, tone, text, &[&dismiss]) == Some(0);
+    let dismissed = banner(ui, tone, text, &[&dismiss]).value == Some(0);
     ui.add_space(ui.tokens().sizes.card_gap);
     dismissed
 }

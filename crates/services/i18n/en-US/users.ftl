@@ -28,8 +28,6 @@ users-unavailable-detail = /etc/passwd and /etc/group could not be read.
 users-none-regular = No regular users
 users-none-regular-detail = Clear the filter to see the accounts of the system.
 users-show-all = Show all accounts
-users-no-match = No user matches “{ $search }”
-users-clear-search = Clear search
 users-list = Users
 users-keys = Arrow keys pick an account. Return edits it, the Menu key opens its other actions.
 
@@ -146,7 +144,7 @@ users-groups-search-hint = Search groups…
 users-add-note = The user is created right away. This asks for your own password.
 users-add-confirm = Add user now
 users-add-more = More options
-# Beside the greyed out "Add user now": the first thing it waits for.
+# Beside the grayed out "Add user now": the first thing it waits for.
 users-add-why-no-name = Enter a user name.
 users-add-why-bad-name = The user name cannot be used. The note under it says why.
 users-add-why-no-password = Enter a password.
@@ -193,7 +191,6 @@ groups-order-members = Most members
 groups-list = Groups
 groups-reading = Reading the groups…
 groups-unavailable = Groups are not available
-groups-no-match = No group matches “{ $search }”
 groups-detail = Group ID { $gid }, members: { $members }
 groups-detail-empty = Group ID { $gid }, no members
 groups-detail-new = Not added yet

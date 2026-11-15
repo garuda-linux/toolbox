@@ -11,6 +11,7 @@ mod reset;
 #[cfg(test)]
 mod tests;
 
+use toolbox_gui_kit::UiExt as _;
 use egui::Ui;
 use toolbox_core::features::maintenance::page::LaunchCause;
 use toolbox_gui_kit::icons::Icon;
@@ -192,7 +193,7 @@ fn waiting(ui: &mut Ui, id: &str, count: usize) {
 /// Waits while a plan runs, so it is disabled then.
 fn plan_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, kind: ButtonKind) -> bool {
     let text = i18n::text(ui.ctx(), id);
-    ui.add_enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))
+    ui.enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))
         .inner
         .clicked()
 }

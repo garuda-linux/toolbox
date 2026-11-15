@@ -231,7 +231,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>, tab: Tab) {
             PageRun::None | PageRun::Sent(..) | PageRun::Running(..) => Tone::Neutral,
         };
 
-        if banner(ui, tone, &text, &[&dismiss]) == Some(0) {
+        if banner(ui, tone, &text, &[&dismiss]).value == Some(0) {
             context.commands.send(UsersCommand::DismissRun);
         }
 
@@ -255,7 +255,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>, tab: Tab) {
             &[&again]
         };
 
-        if banner(ui, Tone::Neutral, &text, actions) == Some(0) {
+        if banner(ui, Tone::Neutral, &text, actions).value == Some(0) {
             context.commands.send(UsersCommand::Refresh);
         }
 

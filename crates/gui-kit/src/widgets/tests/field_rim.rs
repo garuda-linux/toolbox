@@ -27,8 +27,8 @@ const KINDS: [fn(&mut Ui); 6] = [
         let response = text_field_with_unit(ui, TextEdit::singleline(&mut text), "min");
         named(ui, &response);
     },
-    |ui| _ = number_field(ui, &mut 5, 0..=10, 72.0, NAME),
-    |ui| _ = number_field_with_unit(ui, &mut 5, 0..=10, 72.0, (NAME, "s")),
+    |ui| _ = number_field(ui, &mut 5, 0..=10, 72.0, (NAME, NAME)),
+    |ui| _ = number_field_with_unit(ui, &mut 5, 0..=10, 72.0, (NAME, NAME, "s")),
     |ui| {
         let texts = SearchTexts {
             name: NAME,
@@ -36,9 +36,16 @@ const KINDS: [fn(&mut Ui); 6] = [
             clear: "Clear the search",
         };
 
-        search_field(ui, &mut String::new(), texts, 300.0);
+        search_field(ui, "test-search", &mut String::new(), texts, 300.0);
     },
-    |ui| _ = text_box(ui, TextEdit::multiline(&mut "one\ntwo"), NAME, 160.0),
+    |ui| {
+        _ = text_box(
+            ui,
+            (NAME, NAME),
+            TextEdit::multiline(&mut "one\ntwo"),
+            160.0,
+        );
+    },
 ];
 
 /// The corners of [`KINDS`] in order: every field takes the control

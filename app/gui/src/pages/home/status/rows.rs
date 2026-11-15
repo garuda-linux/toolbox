@@ -2,8 +2,8 @@ use egui::Ui;
 use toolbox_cli::output::size;
 use toolbox_core::features::maintenance::page::operations;
 use toolbox_core::features::maintenance::{Operation, RunNow, upgrade_queued};
-use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button};
+use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitName;
 use toolbox_services::home::Overview;
 use toolbox_system::HealthLevel;
@@ -147,7 +147,7 @@ pub(super) fn restart(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_
         .show(ui, |ui| {
             let restart = i18n::text(&ctx, "home-restart-button");
             let pressed = ui
-                .add_enabled_ui(!context.busy, |ui| {
+                .enabled_ui(!context.busy, |ui| {
                     pill_button(ui, &restart, ButtonKind::Soft)
                 })
                 .inner;

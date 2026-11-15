@@ -14,8 +14,8 @@ use crate::command::Command;
 use crate::settings::SettingsCommand;
 use crate::testing::{PageFixture, PageState};
 
-const DARK: &str = "Dark colour scheme";
-const LIGHT: &str = "Light colour scheme";
+const DARK: &str = "Dark color scheme";
+const LIGHT: &str = "Light color scheme";
 
 fn page(settings: Settings) -> Harness<'static, PageState<SettingsPage>> {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog");

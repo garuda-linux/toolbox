@@ -2,13 +2,16 @@ use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, vec2};
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
 use super::layout::{MIN_TEXT_WIDTH, last_descent, raised_column, remember_width};
-use super::{Tone, queued_tag, rich};
+use super::{Tone, queued_tag, rich, status_dot};
 use crate::fonts::{self, BODY, SMALL, Weight};
 use crate::icons::Icon;
 use crate::tokens::{self, Tile};
 
 const WIDTH_REASON: &str = "action_row width";
 const HEIGHT_REASON: &str = "action_row height";
+/// A row whose words are taller than the title and three lines of description
+/// keeps its actions on the title line.
+const TALL_ROWS: f32 = 4.0;
 
 /// The tile, the words and the actions are centred on the row. A row too
 /// narrow for both puts the actions on a line under the words.
@@ -20,6 +23,7 @@ pub struct ActionRow<'text> {
     title: &'text str,
     detail: &'text str,
     queued: &'text str,
+    status: Option<(&'text str, Tone)>,
 }
 
 impl<'text> ActionRow<'text> {
@@ -30,12 +34,19 @@ impl<'text> ActionRow<'text> {
             title,
             detail: "",
             queued: "",
+            status: None,
         }
     }
 
     /// Empty shows none.
     pub const fn detail(mut self, detail: &'text str) -> Self {
         self.detail = detail;
+        self
+    }
+
+    /// A [`status_dot`] with `label` beside the title, such as "Not installed".
+    pub const fn status(mut self, label: &'text str, tone: Tone) -> Self {
+        self.status = Some((label, tone));
         self
     }
 
@@ -73,6 +84,7 @@ impl<'text> ActionRow<'text> {
         let height_was = ui.data(|data| data.get_temp::<f32>(height_id));
         let words_id = width_id.with("words");
         let words_was = ui.data(|data| data.get_temp::<f32>(words_id));
+        let anchored = words_was.is_some_and(|words| words > TALL_ROWS * title_line(ui));
 
         // Words that reach below the tile end on a baseline, so the tile and
         // the capitals come down by up to the last line's descent and leave
@@ -124,7 +136,7 @@ impl<'text> ActionRow<'text> {
                     height: (height_id, height_was),
                 };
 
-                actions_beside(ui, line, measures, actions);
+                actions_beside(ui, line, measures, anchored, actions);
             }
 
             slot
@@ -180,7 +192,7 @@ impl<'text> ActionRow<'text> {
         let tokens = tokens::current(ui.ctx());
         ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
         let title = rich(ui, self.title, Weight::SemiBold, BODY, tokens.text);
-        if self.queued.is_empty() {
+        if self.queued.is_empty() && self.status.is_none() {
             ui.label(title);
         } else {
             ui.scope(|ui| {
@@ -190,7 +202,13 @@ impl<'text> ActionRow<'text> {
                 ui.spacing_mut().interact_size.y = 0.0;
                 ui.horizontal(|ui| {
                     ui.label(title);
-                    queued_tag(ui, self.queued, Tone::Accent);
+                    if let Some((label, tone)) = self.status {
+                        status_dot(ui, label, tone);
+                    }
+
+                    if !self.queued.is_empty() {
+                        queued_tag(ui, self.queued, Tone::Accent);
+                    }
                 });
             });
         }
@@ -209,13 +227,27 @@ struct Measures {
 }
 
 /// Keeps the actions in order at the right of a line that never wraps.
-fn actions_beside(ui: &mut Ui, line: f32, measures: Measures, actions: impl FnOnce(&mut Ui)) {
+fn actions_beside(
+    ui: &mut Ui,
+    line: f32,
+    measures: Measures,
+    anchored: bool,
+    actions: impl FnOnce(&mut Ui),
+) {
     let (width_id, width_was) = measures.width;
     let (height_id, height_was) = measures.height;
     let room = vec2(ui.available_width(), 0.0);
-    let drop = height_was.map_or(0.0, |height| (line - height) / 2.0);
+
+    // A tall row keeps the actions beside its title, not beside its middle.
+    let drop = match height_was {
+        Some(height) if anchored => (capital_height(ui) / 2.0 - height / 2.0).max(0.0),
+        Some(height) => (line - height) / 2.0,
+        None => 0.0,
+    };
+
     let drawn = ui.allocate_ui_with_layout(room, Layout::top_down(Align::Min), |ui| {
         ui.add_space(drop);
+
         ui.horizontal_top(|ui| {
             ui.spacing_mut().item_spacing =
                 Vec2::splat(tokens::current(ui.ctx()).sizes.control_gap);
@@ -228,6 +260,28 @@ fn actions_beside(ui: &mut Ui, line: f32, measures: Measures, actions: impl FnOn
     let taken = drawn.inner;
     remember_width(ui, width_id, width_was, taken.width(), WIDTH_REASON);
     remember_width(ui, height_id, height_was, taken.height(), HEIGHT_REASON);
+}
+
+/// The line height of the title, the text of a row's first line.
+fn title_line(ui: &Ui) -> f32 {
+    let line = ui.painter().layout_no_wrap(
+        "H".to_owned(),
+        fonts::font(ui.style(), Weight::SemiBold, BODY),
+        egui::Color32::PLACEHOLDER,
+    );
+
+    line.size().y
+}
+
+/// The height of a capital of the title, as the centre of a row's title.
+fn capital_height(ui: &Ui) -> f32 {
+    let capital = ui.painter().layout_no_wrap(
+        "H".to_owned(),
+        fonts::font(ui.style(), Weight::SemiBold, BODY),
+        egui::Color32::PLACEHOLDER,
+    );
+
+    capital.mesh_bounds.height()
 }
 
 /// How far below the top of the title's label its capitals start. The

@@ -22,7 +22,7 @@ fn equal_texts_have_no_changes() {
     assert!(diff.is_empty());
     assert_eq!((diff.added(), diff.removed()), (0, 0));
     assert_eq!(diff.plain(), "");
-    assert_eq!(diff.colored(), "");
+    assert_eq!(diff.plain(), "");
     assert!(Diff::new("", "").is_empty());
 }
 
@@ -78,23 +78,6 @@ fn a_missing_last_line_break_is_said() {
     assert_eq!(
         Diff::new("a", "a\n").plain(),
         "@@ -1,1 +1,1 @@\n-a\n\\ No line break at the end of the file\n+a\n"
-    );
-}
-
-/// The coloured form goes through the terminal colour converter, so a
-/// file's own escape sequences must not reach it as codes.
-#[test]
-fn the_coloured_form_marks_lines_and_defuses_the_files_control_characters() {
-    let diff = Diff::new("a\n", "\u{1b}[31mred\u{1b}]8;;http://evil\u{7}\tx\n");
-    let colored = diff.colored();
-
-    assert_eq!(
-        colored,
-        "\u{1b}[36m@@ -1,1 +1,1 @@\u{1b}[0m\n\u{1b}[31m-a\u{1b}[0m\n\u{1b}[32m+\u{fffd}[31mred\u{fffd}]8;;http://evil\u{fffd}\tx\u{1b}[0m\n"
-    );
-    assert_eq!(
-        diff.plain(),
-        "@@ -1,1 +1,1 @@\n-a\n+\u{1b}[31mred\u{1b}]8;;http://evil\u{7}\tx\n"
     );
 }
 

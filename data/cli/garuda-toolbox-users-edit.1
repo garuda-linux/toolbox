@@ -4,7 +4,7 @@
 .SH NAME
 garuda\-toolbox\-users\-edit \- Change an account\*(Aqs full name, login shell or groups
 .SH SYNOPSIS
-\fBgaruda\-toolbox users edit\fR [\fB\-\-full\-name\fR \fINAME\fR] [\fB\-\-shell\fR \fIPATH\fR] [\fB\-\-add\-group\fR \fIGROUP\fR] [\fB\-\-remove\-group\fR \fIGROUP\fR] [\fB\-\-home\fR \fIPATH\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-move\-files\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-dry\-run\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-\-json\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIUSER\fR> 
+\fBgaruda\-toolbox users edit\fR [\fB\-\-full\-name\fR \fINAME\fR] [\fB\-\-shell\fR \fIPATH\fR] [\fB\-\-add\-group\fR \fIGROUP\fR] [\fB\-\-remove\-group\fR \fIGROUP\fR] [\fB\-\-home\fR \fIPATH\fR] [\fB\-\-move\-files\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-y\fR|\fB\-\-yes\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-dry\-run\fR] [\fB\-\-json\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIUSER\fR> 
 .SH DESCRIPTION
 Change an account\*(Aqs full name, login shell or groups
 .SH OPTIONS
@@ -24,14 +24,17 @@ Leave a group, as often as needed
 \fB\-\-home\fR \fI<PATH>\fR
 A new home folder: its full path below /home, /srv, /var/lib or /opt
 .TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Print the programs\*(Aq own words under an error
-.TP
 \fB\-\-move\-files\fR
 Move the old home folder\*(Aqs files to the new one
 .TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
 \fB\-\-no\-pager\fR
 Print long text directly instead of through `$PAGER`
+.TP
+\fB\-y\fR, \fB\-\-yes\fR
+Do not ask, carry the change out. Needed without a terminal
 .TP
 \fB\-\-color\fR \fI<WHEN>\fR [default: auto]
 Colour the output: auto, always or never
@@ -48,17 +51,14 @@ always
 never
 .RE
 .TP
-\fB\-y\fR, \fB\-\-yes\fR
-Do not ask, carry the change out. Needed without a terminal
-.TP
 \fB\-\-dry\-run\fR
 Print the plan and stop, without asking and without changing anything
 .TP
-\fB\-\-width\fR \fI<COLUMNS>\fR
-Cut long cells to this many columns
-.TP
 \fB\-\-json\fR
 Print JSON Lines instead of text, for scripts. Needs `\-\-yes` or `\-\-dry\-run`
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
 .TP
 \fB\-q\fR, \fB\-\-quiet\fR
 Leave out the spinner and the hints

@@ -33,7 +33,7 @@ fn a_selected_chip_takes_the_selection_tint() {
 
 #[test]
 fn an_off_switch_has_a_rim_in_light() {
-    let harness = shown(Theme::Light, |ui| _ = switch(ui, false, "Bluetooth", true));
+    let harness = shown(Theme::Light, |ui| _ = switch(ui, false, "Bluetooth"));
 
     let centre = harness.get_by_label("Bluetooth").rect().center();
     let rims = rims_around(&harness, centre);
@@ -44,7 +44,7 @@ fn an_off_switch_has_a_rim_in_light() {
 #[test]
 fn the_chosen_segment_has_a_rim_in_light() {
     let harness = shown(Theme::Light, |ui| {
-        _ = segmented(ui, "Scope", &[(0_u8, "System"), (1, "User")], 0);
+        _ = segmented(ui, "Scope", "Scope", &[(0_u8, "System"), (1, "User")], 0);
     });
 
     let centre = harness.get_by_label("System").rect().center();

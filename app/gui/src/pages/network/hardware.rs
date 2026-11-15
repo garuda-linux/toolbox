@@ -48,6 +48,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
         match pciutils_action(hardware, context) {
             Some((action, wish)) => {
                 if empty_state_action(ui, icons::NETWORK_WIRED, &text(title), &body, &text(action))
+                    .clicked()
                 {
                     queue_pciutils(context, wish);
                 }
@@ -68,7 +69,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
         let offered = action.filter(|_| index == 0);
         let words: Vec<String> = offered.iter().map(|(id, _)| text(id)).collect();
         let actions: Vec<&str> = words.iter().map(String::as_str).collect();
-        if banner(ui, Tone::Warning, note, &actions) == Some(0)
+        if banner(ui, Tone::Warning, note, &actions).value == Some(0)
             && let Some((_, wish)) = offered
         {
             queue_pciutils(context, wish);

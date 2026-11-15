@@ -20,6 +20,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::header::{search, title_header};
 use super::rows::{Look, refusal_banner, sort_select};
+use super::search_empty::search_empty_state;
 use super::toggles::refusal_text;
 use super::{PageContext, PageView, plan_running};
 use crate::command::AppCommand;
@@ -165,7 +166,7 @@ impl DiscoverPage {
 
         // A second click on the picked category shows them all again, as
         // on the toggle pages.
-        if let Some(picked) = counted_chips(ui, &options, current) {
+        if let Some(picked) = counted_chips(ui, &options, current).value {
             self.category = picked
                 .filter(|picked| current != Some(*picked))
                 .map(str::to_owned);
@@ -183,7 +184,7 @@ impl DiscoverPage {
             let title = i18n::text_with(&ctx, "discover-nothing-in-category", &named);
             let detail = i18n::text(&ctx, "discover-nothing-in-category-detail");
             let all = i18n::text_with(&ctx, "discover-show-all-matches", &[("count", &count)]);
-            if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &all) {
+            if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &all).clicked() {
                 self.category = None;
             }
 
@@ -197,10 +198,8 @@ impl DiscoverPage {
             return;
         }
 
-        let title = i18n::text_with(&ctx, "discover-nothing-matches", &[("search", &search)]);
         let detail = i18n::text(&ctx, "discover-nothing-matches-detail");
-        let clear = i18n::text(&ctx, "discover-clear-search");
-        if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &clear) {
+        if search_empty_state(ui, &search, &detail) {
             self.search.clear();
         }
     }
@@ -233,7 +232,7 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>
     if context.probed && context.snapshot.part::<InstalledPackages>().is_none() {
         let again = i18n::text(&ctx, "common-read-again");
         let text = i18n::text(&ctx, "discover-unreadable");
-        if banner(ui, Tone::Warning, &text, &[&again]).is_some() {
+        if banner(ui, Tone::Warning, &text, &[&again]).value.is_some() {
             context.commands.send(AppCommand::ReadSystem);
         }
 

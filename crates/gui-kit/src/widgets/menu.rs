@@ -5,7 +5,7 @@ use egui::{
     CornerRadius, Popup, Rect, Response, Role, Sense, TextStyle, Ui, WidgetInfo, pos2, vec2,
 };
 
-use super::press::Pointer;
+use super::press::{Pointer, hover_fill};
 use super::text::cut;
 use super::{focus_ring, icon_button, line, rich};
 use crate::fonts::{BODY, SMALL, Weight};
@@ -23,8 +23,8 @@ pub(super) const ITEM_INSET: f32 = 10.0;
 /// Between the items of a menu or a list.
 pub(super) const LIST_GAP: f32 = 2.0;
 
-pub fn menu_button(ui: &mut Ui, alt: &str, items: impl FnOnce(&mut Ui)) -> Response {
-    let button = icon_button(ui, icons::OVERFLOW_MENU, alt);
+pub fn menu_button(ui: &mut Ui, name: &str, items: impl FnOnce(&mut Ui)) -> Response {
+    let button = icon_button(ui, icons::OVERFLOW_MENU, name);
     menu_for(ui, &button, false, items);
     button
 }
@@ -83,8 +83,8 @@ fn item(ui: &mut Ui, icon: Option<Icon>, text: &str, room: bool) -> Response {
     response.widget_info(|| WidgetInfo::labeled(Role::MenuItem, ui.is_enabled(), text));
 
     let pointer = Pointer::of(&response);
-    if pointer.is_under() && ui.is_enabled() {
-        let fill = pointer.fill(&tokens, tokens.hover);
+    if ui.is_enabled() {
+        let fill = hover_fill(ui, &response, pointer, &tokens);
         ui.painter()
             .rect_filled(rect, CornerRadius::same(RADIUS), fill);
     }

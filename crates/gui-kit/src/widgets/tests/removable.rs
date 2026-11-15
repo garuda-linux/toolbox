@@ -7,7 +7,7 @@ use crate::testing::{circle_fills, fill_under, harness};
 fn shown() -> egui_kittest::Harness<'static, bool> {
     let mut harness = harness(400.0, 100.0).build_ui_state(
         |ui, removed: &mut bool| {
-            if removable_tag(ui, "quiet", "Remove quiet") {
+            if removable_tag(ui, "quiet", "Remove quiet").clicked() {
                 *removed = true;
             }
         },

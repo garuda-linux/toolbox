@@ -4,7 +4,7 @@ use super::Autostart;
 
 fn setup() -> (tempfile::TempDir, Autostart) {
     let dir = tempfile::tempdir().unwrap();
-    let desktop_file = dir.path().join("share/garuda-toolbox.desktop");
+    let desktop_file = dir.path().join("share/autostart.desktop");
     fs::create_dir_all(desktop_file.parent().unwrap()).unwrap();
     fs::write(&desktop_file, "[Desktop Entry]\n").unwrap();
     let autostart = Autostart::new(dir.path().join("config/autostart"), desktop_file);
@@ -25,10 +25,13 @@ fn enabling_links_the_installed_desktop_file() {
     autostart.enable().unwrap();
 
     assert!(autostart.is_enabled());
-    let link = dir.path().join("config/autostart/garuda-toolbox.desktop");
+    let link = dir
+        .path()
+        .join("config/autostart/org.garudalinux.toolbox.desktop");
+
     assert_eq!(
         fs::read_link(link).unwrap(),
-        dir.path().join("share/garuda-toolbox.desktop")
+        dir.path().join("share/autostart.desktop")
     );
 }
 
@@ -86,12 +89,61 @@ fn disabling_without_a_link_is_fine() {
 fn a_dangling_link_still_counts_as_enabled() {
     let (dir, autostart) = setup();
     autostart.enable().unwrap();
-    fs::remove_file(dir.path().join("share/garuda-toolbox.desktop")).unwrap();
+    fs::remove_file(dir.path().join("share/autostart.desktop")).unwrap();
 
     assert!(autostart.is_enabled());
     assert!(
         !dir.path()
-            .join("config/autostart/garuda-toolbox.desktop")
+            .join("config/autostart/org.garudalinux.toolbox.desktop")
             .exists()
     );
+}
+
+#[test]
+fn the_link_setup_assistant_hands_over_moves_to_the_autostart_entry() {
+    let (dir, autostart) = setup();
+    let folder = dir.path().join("config/autostart");
+    fs::create_dir_all(&folder).unwrap();
+    std::os::unix::fs::symlink(
+        "/usr/share/applications/garuda-toolbox.desktop",
+        folder.join("garuda-toolbox.desktop"),
+    )
+    .unwrap();
+
+    autostart.follow_moves().unwrap();
+
+    assert!(autostart.is_enabled());
+    folder
+        .join("garuda-toolbox.desktop")
+        .symlink_metadata()
+        .unwrap_err();
+}
+
+#[test]
+fn a_link_to_another_file_moves_to_the_autostart_entry() {
+    let (dir, autostart) = setup();
+    let folder = dir.path().join("config/autostart");
+    fs::create_dir_all(&folder).unwrap();
+    let link = folder.join("org.garudalinux.toolbox.desktop");
+    std::os::unix::fs::symlink(
+        "/usr/share/applications/org.garudalinux.toolbox.desktop",
+        &link,
+    )
+    .unwrap();
+
+    autostart.follow_moves().unwrap();
+
+    assert_eq!(
+        fs::read_link(link).unwrap(),
+        dir.path().join("share/autostart.desktop")
+    );
+}
+
+#[test]
+fn following_moves_turns_nothing_on() {
+    let (_dir, autostart) = setup();
+
+    autostart.follow_moves().unwrap();
+
+    assert!(!autostart.is_enabled());
 }

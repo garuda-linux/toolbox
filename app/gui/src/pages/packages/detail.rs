@@ -15,8 +15,8 @@ use toolbox_core::features::packages::list::Catalog;
 use toolbox_gui_kit::fonts::{self, SMALL, TITLE, Weight};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, empty_state, icon_button_width, loading_indicator, named_pill_button, page_header,
-    pill_width, refresh_button, rich, status_dot,
+    ButtonKind, empty_state, icon_button_width, loading_indicator, named_pill_button, padded_card,
+    page_header, pill_width, refresh_button, rich, status_dot,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::PackageName;
@@ -29,7 +29,6 @@ use crate::i18n;
 use crate::packages::{Details, Packages, Read};
 use crate::pages::rows::{Initial, Look, package_picture};
 use crate::pages::{PageContext, plan_running};
-use crate::share::view::padded_card;
 
 /// The content width under which the two columns stack: about a window
 /// of 760 points beside the open sidebar.
@@ -90,7 +89,9 @@ fn header_of<R>(
                     ui.add_space(ui.tokens().sizes.card_gap);
                 }
 
-                refresh = refresh_button(ui, &i18n::text(ui.ctx(), "packages-refresh"));
+                refresh = refresh_button(ui, &i18n::text(ui.ctx(), "packages-refresh"))
+                    .value
+                    .is_some();
             });
 
             if let Some(shown) = shown {

@@ -47,7 +47,7 @@ fn lists(ui: &mut Ui, state: &mut Lists) {
     ScrollArea::vertical().show(ui, |ui| {
         RowList::new("first", "First", RowHeights::Fixed(44.0)).show(ui, first, |ui, item, row| {
             ui.horizontal(|ui| {
-                if switch(ui, false, &format!("Switch {}", item.0), true).clicked() || row.toggle {
+                if switch(ui, false, &format!("Switch {}", item.0)).clicked() || row.toggle {
                     toggled.push(item.0.clone());
                 }
 

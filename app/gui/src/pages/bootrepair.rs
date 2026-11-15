@@ -81,7 +81,7 @@ impl PageView for BootRepairPage {
                     let (title, detail) = (text("repair-failed"), text("repair-failed-detail"));
                     let again = text("common-read-again");
                     let error = icons::DIALOG_ERROR;
-                    if empty_state_action(ui, error, &title, &detail, &again) {
+                    if empty_state_action(ui, error, &title, &detail, &again).clicked() {
                         context.commands.send(BootRepairCommand::Refresh);
                     }
 
@@ -155,7 +155,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
             ui.add_space(gap);
         }
 
-        if banner(ui, Tone::Error, &refused, &[&dismiss]) == Some(0) {
+        if banner(ui, Tone::Error, &refused, &[&dismiss]).value == Some(0) {
             context
                 .commands
                 .send(AppCommand::DismissRefusal(PageId::BootRepair));
@@ -199,7 +199,10 @@ fn progress(ui: &mut Ui, context: &PageContext<'_>, dismiss: &str, below: bool) 
         actions.push(dismiss);
     }
 
-    let picked = banner(ui, tone, &said, &actions).and_then(|index| actions.get(index).copied());
+    let picked = banner(ui, tone, &said, &actions)
+        .value
+        .and_then(|index| actions.get(index).copied());
+
     match picked {
         Some(picked) if picked == &*console => {
             context.commands.send(BootRepairCommand::ShowConsole);

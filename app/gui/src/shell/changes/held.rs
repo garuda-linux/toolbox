@@ -43,7 +43,10 @@ pub fn unread(ui: &mut Ui, reason: &'static str, commands: &CommandSender) {
     if let Some(again) = read_again(reason) {
         let text = i18n::text(ui.ctx(), reason);
         ui.add_space(ui.tokens().sizes.control_gap);
-        if banner(ui, Tone::Warning, &text, &[&*button]).is_some() {
+        if banner(ui, Tone::Warning, &text, &[&*button])
+            .value
+            .is_some()
+        {
             commands.send(again);
             ui.data_mut(|data| data.insert_temp(again_id(), part));
         }
@@ -64,7 +67,7 @@ pub fn unread(ui: &mut Ui, reason: &'static str, commands: &CommandSender) {
 
     let text = i18n::text(ui.ctx(), failed);
     ui.add_space(ui.tokens().sizes.control_gap);
-    ui.add_enabled_ui(false, |ui| banner(ui, Tone::Warning, &text, &[&*button]));
+    ui.enabled_ui(false, |ui| banner(ui, Tone::Warning, &text, &[&*button]));
 }
 
 /// Nothing holds Apply any more, so a later wait is a first read again.

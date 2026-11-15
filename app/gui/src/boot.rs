@@ -20,8 +20,6 @@ use toolbox_plan::PackageName;
 use toolbox_services::boot_menu::Menu;
 use toolbox_system::MenuRead;
 
-use crate::lane::OneRead;
-
 /// An edit the page did not queue, with the value as the user gave it.
 pub type BootRefusal = crate::refused::Refused<toolbox_core::features::boot::edit::EditCode>;
 
@@ -32,7 +30,6 @@ pub struct Boot {
     menu: Arc<Menu>,
     /// `None` in tests that need no jobs: nothing is read or chosen.
     jobs: Option<Jobs>,
-    reads: OneRead,
     refusal: Option<BootRefusal>,
     proposal: Option<PackageName>,
     /// A file dialog is open. A second one would drop the first's answer.
@@ -102,18 +99,12 @@ impl Boot {
     /// Takes the results that came since the last frame. Returns a file
     /// the user chose.
     pub fn take(&mut self) -> Option<Picked> {
-        let jobs = self.jobs.as_ref()?;
-        if let Some(read) = jobs.menu_read() {
-            if read != MenuRead::Cancelled {
-                self.menu = Arc::new(Menu::Read(read));
-            }
-
-            if self.reads.landed() {
-                self.read();
-            }
+        let jobs = self.jobs.as_mut()?;
+        if let Some(read) = jobs.menu_read().filter(|read| *read != MenuRead::Cancelled) {
+            self.menu = Arc::new(Menu::Read(read));
         }
 
-        let answered = self.jobs.as_ref()?.picked()?;
+        let answered = jobs.picked()?;
         self.choosing = false;
         match answered {
             jobs::Answer::Chose(picked) => Some(picked),
@@ -142,11 +133,11 @@ impl Boot {
     }
 
     fn read(&mut self) {
-        let Some(jobs) = &self.jobs else {
+        let Some(jobs) = &mut self.jobs else {
             return;
         };
 
-        if !self.reads.start() {
+        if !jobs.read_menu() {
             return;
         }
 
@@ -154,8 +145,6 @@ impl Boot {
         if !matches!(*self.menu, Menu::Read(_)) {
             self.menu = Arc::new(Menu::Loading);
         }
-
-        jobs.read_menu();
     }
 }
 

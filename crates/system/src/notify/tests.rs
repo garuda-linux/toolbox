@@ -20,7 +20,7 @@ fn a_notification_names_the_app_and_has_no_actions() {
 
     assert_eq!(app, "Garuda Toolbox");
     assert_eq!(replaces, 0_u32);
-    assert_eq!(icon, "garuda-toolbox");
+    assert_eq!(icon, "org.garudalinux.toolbox");
     assert_eq!(summary, "Updates available");
     assert_eq!(body, "12 packages");
     assert_eq!(actions, Vec::<&str>::new());

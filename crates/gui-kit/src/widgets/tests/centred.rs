@@ -78,12 +78,18 @@ fn sort(ui: &mut Ui) {
 }
 
 fn choice(ui: &mut Ui) {
-    segmented(ui, "Theme", &[(0_u8, "Dark"), (1_u8, "Light")], 0_u8);
+    segmented(
+        ui,
+        "Theme",
+        "Theme",
+        &[(0_u8, "Dark"), (1_u8, "Light")],
+        0_u8,
+    );
 }
 
 fn number(ui: &mut Ui) {
     let mut value = 5;
-    number_field(ui, &mut value, 1..=10, 80.0, "Count");
+    number_field(ui, &mut value, 1..=10, 80.0, ("Count", "Count"));
 }
 
 fn field(ui: &mut Ui) {
@@ -232,7 +238,7 @@ fn menu_entries_and_their_icons_are_centred() {
 
 fn at_boot(ui: &mut Ui) {
     ui.add(Label::new("At boot").selectable(false));
-    switch(ui, true, "Start at boot", true);
+    switch(ui, true, "Start at boot");
 }
 
 #[test]
@@ -355,7 +361,7 @@ fn highlighted_title(ui: &mut Ui) {
             });
         },
         |ui| {
-            switch(ui, false, "Ad blocking", true);
+            switch(ui, false, "Ad blocking");
         },
     );
 }

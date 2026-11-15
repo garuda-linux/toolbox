@@ -75,7 +75,7 @@ impl PageView for BootPage {
             Readiness::Failed => {
                 let (title, detail) = (text("boot-failed"), text("boot-failed-detail"));
                 let again = text("common-read-again");
-                if empty_state_action(ui, icons::DIALOG_ERROR, &title, &detail, &again) {
+                if empty_state_action(ui, icons::DIALOG_ERROR, &title, &detail, &again).clicked() {
                     context.commands.send(BootCommand::Refresh);
                 }
             }
@@ -100,7 +100,7 @@ impl BootPage {
 
         vm_banner(ui, context, page.flag(Flag::Splash));
         proposal(ui, context, &page);
-        ui.add_enabled_ui(!context.busy, |ui| {
+        ui.enabled_ui(!context.busy, |ui| {
             menu::show(ui, context, &page, &mut self.entries);
             ui.add_space(ui.tokens().sizes.section_gap);
             self.kernel(ui, context, &page);
@@ -120,7 +120,7 @@ impl BootPage {
 
         vm_banner(ui, context, splash);
         sdboot::proposal(ui, context);
-        ui.add_enabled_ui(!context.busy, |ui| {
+        ui.enabled_ui(!context.busy, |ui| {
             sdboot::menu_card(ui, context);
             ui.add_space(gap);
 
@@ -293,7 +293,7 @@ fn note(
         &[&*close_text]
     };
 
-    match banner(ui, Tone::Accent, &text, actions) {
+    match banner(ui, Tone::Accent, &text, actions).value {
         Some(0) if offer => {
             queue();
             context.commands.send(BootCommand::DropProposal);

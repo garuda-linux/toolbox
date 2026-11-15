@@ -21,7 +21,7 @@ use toolbox_services::locks::Locks;
 use toolbox_system::pkexec::HelperError;
 use toolbox_system::{LockProblem, LockSource};
 
-use crate::lane::{Lane, OneRead};
+use crate::lane::Asked;
 use crate::refused::Refused;
 
 pub type UsersRefusal = Refused<toolbox_core::features::users::Refusal>;
@@ -38,14 +38,8 @@ pub struct Users {
     locks: Locks,
     run: PageRun,
     refusal: Option<UsersRefusal>,
-    reads: OneRead,
     /// `None` in tests that need no reads: nothing is read.
-    jobs: Option<Jobs>,
-}
-
-struct Jobs {
-    setup: UsersSetup,
-    lane: Lane<Answer>,
+    reads: Option<Asked<Answer>>,
 }
 
 impl fmt::Debug for UsersSetup {
@@ -54,18 +48,24 @@ impl fmt::Debug for UsersSetup {
     }
 }
 
-impl fmt::Debug for Jobs {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Jobs").finish_non_exhaustive()
-    }
-}
-
 impl Users {
     pub fn new(setup: Option<UsersSetup>, ctx: egui::Context) -> Self {
         Self {
-            jobs: setup.map(|setup| Jobs {
-                lane: Lane::new(setup.runtime.clone(), crate::waking::repaint(ctx)),
-                setup,
+            reads: setup.map(|setup| {
+                Asked::new(
+                    setup.runtime.clone(),
+                    crate::waking::repaint(ctx),
+                    move |lane| {
+                        let source = Arc::clone(&setup.locks);
+                        lane.blocking(
+                            "locks",
+                            move || source.locks(),
+                            |answer| {
+                                answer.unwrap_or(Err(LockProblem::Failed(HelperError::Stopped)))
+                            },
+                        );
+                    },
+                )
             }),
             ..Self::default()
         }
@@ -131,11 +131,7 @@ impl Users {
     /// Takes the answers since the last frame. Returns whether the lock
     /// flags changed, so the snapshot takes them.
     pub fn take(&mut self) -> bool {
-        let Some(jobs) = &self.jobs else {
-            return false;
-        };
-
-        let Some(answer) = jobs.lane.landed().pop() else {
+        let Some(answer) = self.reads.as_mut().and_then(Asked::take) else {
             return false;
         };
 
@@ -145,32 +141,22 @@ impl Users {
 
         let before = self.flags();
         self.locks = Locks::of_answer(answer);
-        if self.reads.landed() {
-            self.read();
-        }
 
         before != self.flags()
     }
 
     fn read(&mut self) {
-        let Some(jobs) = &self.jobs else {
+        let Some(reads) = &mut self.reads else {
             return;
         };
 
-        if !self.reads.start() {
+        if !reads.read() {
             return;
         }
 
         if !matches!(self.locks, Locks::Known(_)) {
             self.locks = Locks::Loading;
         }
-
-        let source = Arc::clone(&jobs.setup.locks);
-        jobs.lane.blocking(
-            "locks",
-            move || source.locks(),
-            |answer| answer.unwrap_or(Err(LockProblem::Failed(HelperError::Stopped))),
-        );
     }
 }
 

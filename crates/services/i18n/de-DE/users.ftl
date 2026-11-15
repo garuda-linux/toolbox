@@ -28,8 +28,6 @@ users-unavailable-detail = /etc/passwd und /etc/group ließen sich nicht lesen.
 users-none-regular = Keine regulären Benutzer
 users-none-regular-detail = Schalte den Filter ab, um auch Systemkonten zu sehen.
 users-show-all = Alle Konten anzeigen
-users-no-match = Kein Benutzer passt zu „{ $search }“
-users-clear-search = Suche leeren
 users-list = Benutzer
 users-keys = Mit den Pfeiltasten wählst du ein Konto, mit der Eingabetaste bearbeitest du es. Die Menütaste öffnet weitere Aktionen.
 
@@ -193,7 +191,6 @@ groups-order-members = Meiste Mitglieder
 groups-list = Gruppen
 groups-reading = Gruppen werden gelesen…
 groups-unavailable = Gruppen sind nicht verfügbar
-groups-no-match = Keine Gruppe passt zu „{ $search }“
 groups-detail = GID { $gid }, Mitglieder: { $members }
 groups-detail-empty = GID { $gid }, keine Mitglieder
 groups-detail-new = Noch nicht angelegt

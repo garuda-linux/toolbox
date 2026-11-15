@@ -35,8 +35,11 @@ maintenance-tools = Werkzeuge
 maintenance-tools-detail = Jedes Werkzeug öffnet sich in einem eigenen Fenster.
 maintenance-open = Öffnen
 maintenance-install-open = Installieren und öffnen…
-maintenance-tool-missing = Nicht installiert. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug.
-maintenance-ranker-missing = rate-mirrors ist nicht installiert. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung.
+# The dot beside the title of a tool that is not installed.
+maintenance-not-installed = Nicht installiert
+
+maintenance-tool-missing = Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug.
+maintenance-ranker-missing = rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung.
 maintenance-ranking = Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist.
 maintenance-ranking-progress = Spiegelserver werden bewertet…
 maintenance-tool-arch-mirrors = Arch-Spiegelserver aktualisieren

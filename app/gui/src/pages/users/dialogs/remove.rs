@@ -75,7 +75,7 @@ impl RemoveUser {
 
         ui.add_space(ui.spacing().item_spacing.y);
         let label = i18n::text(ctx, "users-remove-delete-home");
-        if check_row(ui, self.delete_home, &label, "", true).clicked() {
+        if check_row(ui, self.delete_home, &label, "").clicked() {
             self.delete_home = !self.delete_home;
         }
 

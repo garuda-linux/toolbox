@@ -57,7 +57,7 @@ pub fn show(
         if reading.error().is_some() && !reading.is_loading() {
             let text = i18n::text(ui.ctx(), "home-status-failed");
             let again = i18n::text(ui.ctx(), "common-read-again");
-            if banner(ui, Tone::Warning, &text, &[&again]) == Some(0) {
+            if banner(ui, Tone::Warning, &text, &[&again]).value == Some(0) {
                 context.commands.send(HomeCommand::Refresh);
             }
         } else {
@@ -146,7 +146,7 @@ fn heading(ui: &mut Ui, context: &PageContext<'_>, reading: &Loadable<Status>) {
         },
         |ui| {
             let name = i18n::text(&ctx, "home-refresh");
-            if refresh_button(ui, &name) {
+            if refresh_button(ui, &name).value.is_some() {
                 context.commands.send(HomeCommand::Refresh);
             }
         },
@@ -188,7 +188,7 @@ fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overvie
     );
 
     let again = i18n::text(&ctx, "common-read-again");
-    match banner(ui, Tone::Warning, &text, &[&action, &again]) {
+    match banner(ui, Tone::Warning, &text, &[&action, &again]).value {
         Some(0) => page.details ^= true,
         Some(_) => context.commands.send(HomeCommand::Refresh),
         None => {}
@@ -210,7 +210,7 @@ fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overvie
 pub fn run_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, run: RunNow, kind: ButtonKind) {
     let text = i18n::text(ui.ctx(), id);
     let pressed = ui
-        .add_enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))
+        .enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))
         .inner;
 
     if pressed.clicked() {

@@ -45,37 +45,33 @@ struct Words<'a> {
 }
 
 /// A check box named `label`, `tooltip` on hover when not empty. A click
-/// on an enabled row reports `clicked`, the caller flips its state.
-pub fn check_row(ui: &mut Ui, on: bool, label: &str, tooltip: &str, enabled: bool) -> Response {
+/// reports `clicked`, the caller flips its state. Disabled through
+/// `add_enabled_ui`.
+pub fn check_row(ui: &mut Ui, on: bool, label: &str, tooltip: &str) -> Response {
     let words = Words {
         label,
         line: None,
         tooltip,
     };
 
-    show(ui, on, words, enabled)
+    show(ui, on, words)
 }
 
-pub fn check_row_with_line(
-    ui: &mut Ui,
-    on: bool,
-    texts: CheckRowTexts<'_>,
-    enabled: bool,
-) -> Response {
+pub fn check_row_with_line(ui: &mut Ui, on: bool, texts: CheckRowTexts<'_>) -> Response {
     let words = Words {
         label: texts.label,
         line: Some(texts.line),
         tooltip: texts.full,
     };
 
-    let response = show(ui, on, words, enabled);
+    let response = show(ui, on, words);
     ui.ctx()
         .accesskit_node_builder(response.id, |node| node.set_description(texts.full));
     response
 }
 
-fn show(ui: &mut Ui, on: bool, words: Words<'_>, enabled: bool) -> Response {
-    let enabled = enabled && ui.is_enabled();
+fn show(ui: &mut Ui, on: bool, words: Words<'_>) -> Response {
+    let enabled = ui.is_enabled();
     let sense = if enabled {
         Sense::click()
     } else {

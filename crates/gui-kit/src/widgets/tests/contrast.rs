@@ -3,7 +3,7 @@ use egui_kittest::kittest::Queryable as _;
 
 use super::super::{SectionHeading, group_label, menu_heading};
 use crate::testing::{fill_under, harness, painted_text, text_colour};
-use crate::{icons, tokens};
+use crate::{UiExt as _, icons, tokens};
 
 fn painted(text: &str, draw: impl FnMut(&mut egui::Ui)) -> (Color32, tokens::Tokens) {
     let mut harness = harness(400.0, 200.0).build_ui(draw);
@@ -55,7 +55,7 @@ fn a_disabled_button_keeps_its_colours_under_egui_s_fade_alone() {
 
     for kind in [ButtonKind::Primary, ButtonKind::Danger, ButtonKind::Soft] {
         let mut harness = harness(400.0, 200.0).build_ui(move |ui| {
-            ui.add_enabled_ui(false, |ui| _ = pill_button(ui, "Add user…", kind));
+            ui.enabled_ui(false, |ui| _ = pill_button(ui, "Add user…", kind));
         });
 
         harness.run();
@@ -88,7 +88,7 @@ fn a_disabled_ghost_button_stays_without_a_fill() {
     use super::super::{ButtonKind, pill_button};
 
     let mut harness = harness(400.0, 200.0).build_ui(|ui| {
-        ui.add_enabled_ui(false, |ui| {
+        ui.enabled_ui(false, |ui| {
             _ = pill_button(ui, "Details", ButtonKind::Ghost);
         });
     });

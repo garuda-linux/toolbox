@@ -113,3 +113,9 @@ fn loader_name(variable: &[u8]) -> Option<String> {
 
     String::from_utf16(&units).ok()
 }
+
+/// Whether GRUB booted a Btrfs snapshot, whose root subvolume lies under
+/// `.snapshots`.
+pub fn booted_from_snapshot(cmdline: &str) -> bool {
+    cmdline.contains(".snapshots")
+}

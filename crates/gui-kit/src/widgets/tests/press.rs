@@ -26,18 +26,21 @@ fn a_pressed_option_deepens_chosen_or_not() {
     let tokens = tokens();
 
     assert_eq!(
-        option_fill(&tokens, true, Pointer::Rest),
-        Some(tokens.accent_soft)
+        option_fill(&tokens, true, Pointer::Rest, 0.0),
+        tokens.accent_soft
     );
-    assert_eq!(option_fill(&tokens, false, Pointer::Rest), None);
+    assert_eq!(
+        option_fill(&tokens, false, Pointer::Rest, 0.0),
+        egui::Color32::TRANSPARENT
+    );
     for chosen in [true, false] {
         assert_eq!(
-            option_fill(&tokens, chosen, Pointer::Hovered),
-            Some(tokens.hover)
+            option_fill(&tokens, chosen, Pointer::Hovered, 1.0),
+            tokens.hover
         );
         assert_eq!(
-            option_fill(&tokens, chosen, Pointer::Pressed),
-            Some(tokens.pressed)
+            option_fill(&tokens, chosen, Pointer::Pressed, 1.0),
+            tokens.pressed
         );
     }
 }
@@ -46,15 +49,21 @@ fn a_pressed_option_deepens_chosen_or_not() {
 fn a_pressed_segment_shows_before_it_is_chosen() {
     let tokens = tokens();
 
-    assert_eq!(segment_fill(&tokens, false, Pointer::Rest), None);
-    assert_eq!(segment_fill(&tokens, false, Pointer::Hovered), None);
     assert_eq!(
-        segment_fill(&tokens, false, Pointer::Pressed),
-        Some(tokens.pressed)
+        segment_fill(&tokens, false, Pointer::Rest, 0.0),
+        egui::Color32::TRANSPARENT
     );
     assert_eq!(
-        segment_fill(&tokens, true, Pointer::Pressed),
-        None,
+        segment_fill(&tokens, false, Pointer::Hovered, 1.0),
+        tokens.hover
+    );
+    assert_eq!(
+        segment_fill(&tokens, false, Pointer::Pressed, 1.0),
+        tokens.pressed
+    );
+    assert_eq!(
+        segment_fill(&tokens, true, Pointer::Pressed, 1.0),
+        egui::Color32::TRANSPARENT,
         "the sliding pill shows the chosen one"
     );
 }

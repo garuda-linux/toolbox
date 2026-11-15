@@ -163,7 +163,15 @@ fn notes_start_beside_the_title_even_with_a_header_and_toolbar() {
             page_toolbar(
                 ui,
                 search,
-                |search, ui| _ = search_field(ui, search, texts, Sizes::DEFAULT.search_width),
+                |search, ui| {
+                    _ = search_field(
+                        ui,
+                        "test-search",
+                        search,
+                        texts,
+                        Sizes::DEFAULT.search_width,
+                    );
+                },
                 |_, _| {},
             );
 

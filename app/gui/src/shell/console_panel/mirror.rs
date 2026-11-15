@@ -18,7 +18,7 @@ pub(super) fn offer(ui: &mut Ui, console: &Console, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     let text = i18n::text(&ctx, "console-mirror-missing");
     let retry = i18n::text(&ctx, "console-update-and-retry");
-    if banner(ui, Tone::Warning, &text, &[&retry]).is_some() {
+    if banner(ui, Tone::Warning, &text, &[&retry]).value.is_some() {
         commands.send(ConsoleCommand::UpdateAndRetry);
     }
 

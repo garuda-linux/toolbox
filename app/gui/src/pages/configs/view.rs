@@ -5,7 +5,8 @@ use egui::{Context, Id, Label, TextEdit, Ui};
 use toolbox_core::features::configs::viewing::{Phase, Viewing};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, text_box,
+    ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, right_buttons,
+    text_box,
 };
 
 use super::texts;
@@ -88,8 +89,8 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
     let room = (super::text_room(ui) - BOX_PADDING).max(super::MIN_TEXT_HEIGHT);
     text_box(
         ui,
+        (&name, &name),
         TextEdit::multiline(&mut text).code_editor(),
-        &name,
         room,
     );
 }
@@ -108,7 +109,7 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
         .chain([close.as_str()])
         .collect();
 
-    super::right_buttons(ui, &labels, |ui| {
+    right_buttons(ui, &labels, |ui| {
         if let (Some(read), Some(copy_all)) = (read, &copy_all)
             && pill_button(ui, copy_all, ButtonKind::Soft).clicked()
         {

@@ -8,15 +8,15 @@ use egui::{Label, Rect, Sense, Ui, pos2, vec2};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    RowState, Tone, line, rich, row_height, row_menu, split_row, status_dot, status_word, switch,
-    tag, text_block_height,
+    RowState, Tone, line, rich, row_height, row_menu, split_row, status_dot, status_word, tag,
+    text_block_height,
 };
 
 use super::unit_row::{UnitRow, UnitRows};
 use crate::command::ServiceCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::{MENU_AND_SWITCH, SWITCH_WIDTH, actions};
+use crate::pages::rows::{MENU_AND_SWITCH, SWITCH_WIDTH, actions, row_switch};
 
 /// Every row's height in the fonts in use: the name and one line of
 /// description.
@@ -82,7 +82,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
             // The menu, then the switch at the edge, the order of the App
             // Catalog's rows and of Tab.
             let busy = i18n::text(ui.ctx(), "services-why-busy");
-            ui.add_enabled_ui(!context.busy, |ui| {
+            ui.enabled_ui(!context.busy, |ui| {
                 row_menu(ui, state, &row.menu, |ui| {
                     actions::menu::<UnitRows>(ui, row, context.commands);
                 })
@@ -92,16 +92,14 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
 
             ui.add_space(ui.tokens().sizes.control_gap);
 
-            // The list waits in a disabled Ui while a plan runs.
-            let enabled = row.switchable && ui.is_enabled();
             let name = i18n::text_with(
                 ui.ctx(),
                 "services-start-at-boot",
                 &[("unit", row.unit.as_str())],
             );
 
-            let flipped = switch(ui, row.enabled, &name, enabled).clicked();
-            if flipped || (state.toggle && enabled) {
+            // The list waits in a disabled Ui while a plan runs.
+            if row_switch(ui, state, row.enabled, &name, row.switchable) {
                 context.commands.send(ServiceCommand::Enable {
                     scope: row.scope,
                     unit: row.unit.clone(),

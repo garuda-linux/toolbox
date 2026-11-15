@@ -54,7 +54,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, confirming: &mut bool) {
                 ui.set_min_width(width);
                 let chosen = shelf.chosen_count() > 0;
                 let button =
-                    ui.add_enabled_ui(chosen, |ui| pill_button(ui, &text, ButtonKind::Primary));
+                    ui.enabled_ui(chosen, |ui| pill_button(ui, &text, ButtonKind::Primary));
 
                 if button.inner.clicked() {
                     *confirming = true;
@@ -87,7 +87,8 @@ fn entry_row(ui: &mut Ui, context: &PageContext<'_>, entry: &SkelRow, resetting:
         full: &files,
     };
 
-    if check_row_with_line(ui, on, texts, !resetting).clicked() {
+    let row = ui.enabled_ui(!resetting, |ui| check_row_with_line(ui, on, texts));
+    if row.inner.clicked() {
         context.commands.send(MaintenanceCommand::Choose {
             entry: entry.entry.clone(),
             on: !on,

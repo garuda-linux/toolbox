@@ -10,7 +10,7 @@ fn a_banner_shows_its_actions_in_order_and_tells_which_was_clicked() {
     let mut harness = harness(800.0, 200.0).build_ui_state(
         |ui, clicked: &mut Option<usize>| {
             let actions = ["Show details", "Read again"];
-            if let Some(index) = banner(ui, Tone::Warning, "3 checks failed.", &actions) {
+            if let Some(index) = banner(ui, Tone::Warning, "3 checks failed.", &actions).value {
                 *clicked = Some(index);
             }
         },
@@ -33,7 +33,7 @@ fn a_banner_shows_its_actions_in_order_and_tells_which_was_clicked() {
 #[test]
 fn a_banner_without_actions_has_no_button() {
     let mut harness = harness(800.0, 200.0)
-        .build_ui(|ui| assert_eq!(banner(ui, Tone::Neutral, "Note.", &[]), None));
+        .build_ui(|ui| assert_eq!(banner(ui, Tone::Neutral, "Note.", &[]).value, None));
 
     harness.run();
 

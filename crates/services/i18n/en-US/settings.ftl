@@ -1,9 +1,9 @@
 
 page-settings-subtitle = How Garuda Toolbox looks, starts and keeps you informed.
 settings-appearance = Appearance
-settings-behaviour = Behaviour
+settings-behaviour = Behavior
 settings-diagnostics = Diagnostics
-settings-appearance-help = The language, colours and motion of this window.
+settings-appearance-help = The language, colors and motion of this window.
 settings-behaviour-help = When Garuda Toolbox starts and how often it checks the system.
 settings-diagnostics-help = What goes into reports and the log file.
 
@@ -15,10 +15,10 @@ settings-theme-description = Light or dark, as the desktop says or always the sa
 settings-theme-desktop = As the desktop
 settings-theme-dark = Dark
 settings-theme-light = Light
-settings-dark-scheme = Dark colour scheme
-settings-dark-scheme-description = The colours while the theme is dark. System takes the desktop's colours and accent.
-settings-light-scheme = Light colour scheme
-settings-light-scheme-description = The colours while the theme is light. System takes the desktop's colours and accent.
+settings-dark-scheme = Dark color scheme
+settings-dark-scheme-description = The colors while the theme is dark. System takes the desktop's colors and accent.
+settings-light-scheme = Light color scheme
+settings-light-scheme-description = The colors while the theme is light. System takes the desktop's colors and accent.
 settings-scheme-system = System
 settings-motion = Reduced motion
 settings-motion-description = Panels and notes appear at once instead of sliding and fading.

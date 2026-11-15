@@ -115,7 +115,7 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
         let current = themes.iter().position(|theme| *theme == shown);
         let none = i18n::text(&ctx, "boot-plymouth-none");
         let picked = ui
-            .add_enabled_ui(installed && !themes.is_empty(), |ui| {
+            .enabled_ui(installed && !themes.is_empty(), |ui| {
                 Select::new(&title, &names)
                     .selected(current)
                     .placeholder(&none)
@@ -124,7 +124,7 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
             })
             .inner;
 
-        if let Some(theme) = picked.and_then(|index| themes.get(index)) {
+        if let Some(theme) = picked.value.and_then(|index| themes.get(index)) {
             send(context, Edit::PlymouthTheme(theme.clone()));
         }
     });
@@ -177,7 +177,7 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
         let clearable = !field.path.is_empty() && field.note.is_none();
         let clear = i18n::text_with(&ctx, "boot-file-clear", &[("name", &title)]);
         let cleared = ui
-            .add_enabled_ui(clearable, |ui| icon_button(ui, icons::WINDOW_CLOSE, &clear))
+            .enabled_ui(clearable, |ui| icon_button(ui, icons::WINDOW_CLOSE, &clear))
             .inner
             .clicked();
 

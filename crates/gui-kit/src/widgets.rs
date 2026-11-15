@@ -11,6 +11,7 @@ mod card;
 mod check;
 mod check_row;
 mod chip;
+mod choice;
 mod dim;
 mod empty;
 mod field;
@@ -34,6 +35,7 @@ mod painted_row;
 mod press;
 mod property;
 pub(crate) mod removable;
+mod roving;
 mod row_menu;
 mod search;
 mod secret;
@@ -55,14 +57,15 @@ pub use action_row::ActionRow;
 pub use banner::banner;
 pub use buttons::{
     ButtonKind, icon_button, icon_button_width, named_pill_button, pill_button,
-    pill_button_at_least, pill_width, refresh_button, sidebar_button,
+    pill_button_at_least, pill_width, refresh_button, right_buttons, sidebar_button,
 };
-pub use card::{card, card_row, card_row_with};
+pub use card::{card, card_row, card_row_with, padded_card};
 pub use check_row::{CHECK_ROW_HEIGHT, CheckRowTexts, check_row, check_row_with_line};
 pub use chip::{
     Tone, chip, chips, counted_chips, link_tag, named_chips, queued_tag, status_dot, tag,
     toggle_chips,
 };
+pub use choice::Choice;
 pub use dim::{dim_opacity, dim_picture, dimmed};
 pub use empty::{empty_state, empty_state_action};
 pub use field::{forget_text, text_field, text_field_with_unit};
@@ -84,8 +87,8 @@ pub use loading::{loading_indicator, loading_label};
 pub use menu::{menu_action, menu_button, menu_heading, menu_item};
 pub use metric::{MetricKind, MetricText, metric};
 pub use modal::{
-    Asked, Confirmation, DialogWidth, ModalOutcome, ModalWrapper, Question, confirm_buttons,
-    confirm_buttons_when, confirm_buttons_why, question,
+    Asked, Confirmation, DialogWidth, ModalOutcome, ModalWrapper, Pending, Question,
+    confirm_buttons, confirm_buttons_when, confirm_buttons_why, question,
 };
 use nav::mark_selected;
 pub use nav::{
@@ -95,7 +98,7 @@ pub use nav::{
 pub use number::{number_field, number_field_with_unit};
 pub use page::{BodyShape, PageParts, cover_page_bottom, page_layout_shaped, start_page_entry};
 pub use property::{PropertyList, PropertyTexts, property_list};
-pub use removable::removable_tag;
+pub use removable::{locked_tag, removable_tag};
 pub use row_menu::{row_context_menu, row_menu};
 pub use search::{SearchTexts, request_search_focus, search_field};
 pub use secret::SecretText;
@@ -106,7 +109,7 @@ pub use skeleton::{SkeletonRows, after_skeleton, hold_content, skeleton_list, sk
 pub use spin::{SpinTexts, spin_field};
 pub use status_tile::{paint_status_tile, status_tile, status_word};
 pub use switch::{switch, tristate_switch};
-pub use text::{line, rich};
+pub use text::{line, mono_small, rich};
 pub use text_box::{text_box, text_box_at, text_box_filling};
 pub use text_link::{counted_disclosure, disclosure, text_button, text_link};
 pub use tile::link_tile;

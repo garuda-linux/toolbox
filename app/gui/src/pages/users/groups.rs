@@ -3,13 +3,13 @@ use toolbox_core::features::users::listing::GroupOrder;
 use toolbox_core::features::users::rows::GroupRow;
 use toolbox_core::features::users::view::{self, Shown};
 use toolbox_core::{Snapshot, Toggle};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, named_pill_button, pill_button,
-    rich, row_height, split_row, status_dot, text_block_height,
+    ButtonKind, ListItem, RowHeights, RowList, Tone, named_pill_button, pill_button, rich,
+    row_height, split_row, status_dot, text_block_height,
 };
-use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::dialogs::{AddGroup, Dialog, RemoveGroup};
 use super::{accounts_ready, texts};
@@ -17,6 +17,7 @@ use crate::command::UserEdit;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::sort_select;
+use crate::pages::search_empty::search_empty_state;
 
 const ORDERS: [(GroupOrder, &str); 3] = [
     (GroupOrder::Name, "groups-order-name"),
@@ -72,14 +73,7 @@ pub fn show(
     });
 
     if rows.is_empty() {
-        let title = i18n::text_with(&ctx, "groups-no-match", &[("search", &shown.group_search)]);
-        empty_state(
-            ui,
-            icons::SYSTEM_SEARCH,
-            &title,
-            &text("groups-search-detail"),
-        );
-        if pill_button(ui, &text("users-clear-search"), ButtonKind::Soft).clicked() {
+        if search_empty_state(ui, &shown.group_search, &text("groups-search-detail")) {
             shown.group_search.clear();
         }
 
@@ -98,7 +92,7 @@ fn toolbar(ui: &mut Ui, dialog: &mut Option<Dialog>, known: bool) {
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     ui.horizontal(|ui| {
         let add = ui
-            .add_enabled_ui(known, |ui| {
+            .enabled_ui(known, |ui| {
                 pill_button(ui, &text("groups-add"), ButtonKind::Primary)
             })
             .inner;

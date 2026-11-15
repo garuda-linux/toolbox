@@ -224,7 +224,7 @@ fn service_row(ui: &mut Ui, context: &PageContext<'_>, first: bool, service: &Se
             if startable {
                 let start = i18n::text(&ctx, "network-service-start");
                 let clicked = ui
-                    .add_enabled_ui(!context.busy, |ui| {
+                    .enabled_ui(!context.busy, |ui| {
                         pill_button(ui, &start, ButtonKind::Soft)
                     })
                     .inner

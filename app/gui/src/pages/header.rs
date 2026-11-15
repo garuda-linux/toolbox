@@ -119,7 +119,7 @@ where
     };
 
     page_header(ui, title, subtitle, width, |ui| {
-        done.picked = segmented(ui, &i18n::text(&ctx, ids.tabs), &options, current);
+        done.picked = segmented(ui, ids.tabs, &i18n::text(&ctx, ids.tabs), &options, current).value;
         ui.add_space(ui.tokens().sizes.card_gap);
         done.refresh = read_again(ui, &i18n::text(&ctx, ids.refresh), reading);
     });
@@ -142,7 +142,7 @@ pub fn search(ui: &mut Ui, text: &mut String, name: &str, hint: &str) -> Respons
     };
 
     let width = ui.tokens().sizes.search_width;
-    search_field(ui, text, texts, width)
+    search_field(ui, texts.name, text, texts, width)
 }
 
 fn tabs_and_refresh_width(ui: &Ui, labels: &[&str]) -> f32 {
@@ -151,6 +151,6 @@ fn tabs_and_refresh_width(ui: &Ui, labels: &[&str]) -> f32 {
 
 /// A disabled Read again also leaves F5 alone, see `refresh_button`.
 fn read_again(ui: &mut Ui, name: &str, reading: bool) -> bool {
-    ui.add_enabled_ui(!reading, |ui| refresh_button(ui, name))
+    ui.enabled_ui(!reading, |ui| refresh_button(ui, name).value.is_some())
         .inner
 }

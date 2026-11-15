@@ -19,7 +19,7 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("discover-queued"),
         field_again,
         nothing,
-        Step::WaitContaining("No app matches"),
+        Step::WaitContaining("Nothing matches"),
         Step::Shot("discover-nothing"),
     ]
 }

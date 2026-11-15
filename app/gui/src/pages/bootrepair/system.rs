@@ -93,6 +93,7 @@ fn layout(ui: &mut Ui, chosen: RootLayout, page: &mut BootRepairPage) {
             .selected(current)
             .width(width)
             .show(ui)
+            .value
             .and_then(|index| LAYOUTS.get(index))
         {
             page.layout = Some(*picked);
@@ -137,7 +138,7 @@ fn repair(
     let mut dialog = None;
     ui.horizontal(|ui| {
         let reinstall = ui
-            .add_enabled_ui(free && target.is_some(), |ui| {
+            .enabled_ui(free && target.is_some(), |ui| {
                 pill_button(ui, &text("repair-reinstall"), ButtonKind::Primary)
             })
             .inner;
@@ -151,7 +152,7 @@ fn repair(
         }
 
         let regenerate = ui
-            .add_enabled_ui(free, |ui| {
+            .enabled_ui(free, |ui| {
                 pill_button(ui, &text("repair-regenerate"), ButtonKind::Soft)
             })
             .inner;
@@ -188,6 +189,7 @@ fn targets(
             .selected(selected)
             .width(width)
             .show(ui)
+            .value
             .and_then(|index| choices.get(index))
         {
             page.target = Some(picked.target.clone());
@@ -213,6 +215,7 @@ fn root(ui: &mut Ui, (facts, system): (&RepairFacts, &System), page: &mut BootRe
             .selected(current)
             .width(width)
             .show(ui)
+            .value
             && let Some(picked) = systems.get(index)
         {
             page.system = Some(picked.device().to_owned());

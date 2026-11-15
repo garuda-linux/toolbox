@@ -55,6 +55,7 @@ pub fn shell_choice(
         )
         .width(ui.available_width())
         .show(ui)
+        .value
     {
         *chosen = index
             .checked_sub(skip)

@@ -176,7 +176,7 @@ fn labels(theme: Theme) -> Harness<'static> {
                 ui.add_space(12.0);
                 _ = link_row(ui, icons::TOOLS, GERMAN, Role::Link);
                 ui.add_space(12.0);
-                _ = check_row(ui, true, GERMAN, "", true);
+                _ = check_row(ui, true, GERMAN, "");
             });
 
             ui.add_space(24.0);

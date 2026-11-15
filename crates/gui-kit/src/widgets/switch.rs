@@ -5,7 +5,7 @@ use egui::accesskit::Toggled;
 use egui::{Color32, Response, Role, Sense, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, pos2, vec2};
 
 use super::focus_ring;
-use super::press::faded;
+use super::press::{Pointer, faded, hover_amount};
 use crate::motion;
 use crate::tokens::{self, DIM_CONTRAST, Tokens, contrast};
 
@@ -13,16 +13,16 @@ pub(super) const SIZE: Vec2 = vec2(40.0, 24.0);
 const TRACK_RADIUS: u8 = 12;
 const KNOB_RADIUS: f32 = 9.0;
 
-/// A click on an enabled one reports `clicked`, the caller flips its state.
-pub fn switch(ui: &mut Ui, on: bool, label: &str, enabled: bool) -> Response {
-    tristate_switch(ui, Some(on), label, enabled)
+/// A click reports `clicked`, the caller flips its state. A disabled
+/// switch sits inside `add_enabled_ui`, which fades it.
+pub fn switch(ui: &mut Ui, on: bool, name: &str) -> Response {
+    tristate_switch(ui, Some(on), name)
 }
 
 /// A [`switch`] whose state may not be known yet, `None`: the knob rests
 /// in the middle of a neutral track and screen readers hear "mixed".
-pub fn tristate_switch(ui: &mut Ui, on: Option<bool>, label: &str, enabled: bool) -> Response {
-    // A disabled Ui, such as a row that waits for a plan, rests it too.
-    let enabled = enabled && ui.is_enabled();
+pub fn tristate_switch(ui: &mut Ui, on: Option<bool>, name: &str) -> Response {
+    let enabled = ui.is_enabled();
     let sense = if enabled {
         Sense::click()
     } else {
@@ -31,9 +31,9 @@ pub fn tristate_switch(ui: &mut Ui, on: Option<bool>, label: &str, enabled: bool
 
     let (rect, response) = ui.allocate_exact_size(SIZE, sense);
     if let Some(on) = on {
-        response.widget_info(|| WidgetInfo::selected(Role::CheckBox, enabled, on, label));
+        response.widget_info(|| WidgetInfo::selected(Role::CheckBox, enabled, on, name));
     } else {
-        response.widget_info(|| WidgetInfo::labeled(Role::CheckBox, enabled, label));
+        response.widget_info(|| WidgetInfo::labeled(Role::CheckBox, enabled, name));
         ui.ctx()
             .accesskit_node_builder(response.id, |node| node.set_toggled(Toggled::Mixed));
     }
@@ -62,13 +62,17 @@ fn paint(ui: &Ui, response: &Response, on: Option<bool>, enabled: bool) {
         (progress, progress)
     });
 
-    let hovered = response.hovered();
+    let press = Pointer::of(response);
     let dark = ui.visuals().dark_mode;
-    let off = match (dark, hovered) {
-        (true, true) | (false, false) => tokens.pressed,
-        (true, false) => tokens.hover,
-        (false, true) => tokens.track_hover,
+    let (rest_off, hover_off) = if dark {
+        (tokens.hover, tokens.pressed)
+    } else {
+        (tokens.pressed, tokens.track_hover)
     };
+
+    let off = rest_off.lerp_to_gamma(hover_off, hover_amount(ui, response, press));
+
+    let hovered = press == Pointer::Hovered;
 
     let on_fill = if hovered {
         tokens.accent_hover

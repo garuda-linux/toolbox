@@ -7,8 +7,7 @@ use egui::{Ui, vec2};
 use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ListItem, RowHeights, RowList, Rows, Tone, chip, dimmed, empty_state, empty_state_action,
-    page_toolbar,
+    ListItem, RowHeights, RowList, Rows, Tone, chip, dimmed, empty_state, page_toolbar,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
@@ -23,6 +22,7 @@ use crate::packages::{Packages, Read};
 use crate::page::PageId;
 use crate::pages::header::{refresh_header, search};
 use crate::pages::rows::refusal_banner;
+use crate::pages::search_empty::search_empty_state;
 use crate::pages::{PageContext, plan_running};
 use crate::refused::Shown as _;
 
@@ -347,10 +347,8 @@ pub fn nothing(page: &mut PackagesPage, ui: &mut Ui) {
         return;
     }
 
-    let title = i18n::text_with(&ctx, "packages-nothing-matches", &[("search", &search)]);
     let detail = i18n::text(&ctx, "packages-nothing-matches-detail");
-    let clear = i18n::text(&ctx, "packages-clear-search");
-    if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &clear) {
+    if search_empty_state(ui, &search, &detail) {
         page.search.clear();
     }
 }

@@ -188,7 +188,7 @@ fn field_with(
 /// A check box with its note shown under it, which a tooltip would only
 /// repeat. Screen readers hear the note as the box's description.
 pub fn check_with_note(ui: &mut Ui, on: bool, label: &str, detail: &str) -> bool {
-    let response = check_row(ui, on, label, "", true);
+    let response = check_row(ui, on, label, "");
     let description = detail.to_owned();
     ui.ctx().accesskit_node_builder(response.id, |node| {
         node.set_description(description);

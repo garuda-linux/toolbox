@@ -1,5 +1,6 @@
 //! A compact row that leads somewhere, for a card of links such as About's
-//! Help: an icon, a title and a chevron, the whole row one target.
+//! Help: an icon, a title and, for a row that leads to a page, a chevron. The
+//! whole row is one target.
 
 use egui::{Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
@@ -18,7 +19,8 @@ const GAP: f32 = 12.0;
 const CHEVRON: f32 = 14.0;
 
 /// A row across the available width. `role` is [`Role::Link`] for one that
-/// opens a page, [`Role::Button`] for one that acts here.
+/// opens a page, with a chevron, and [`Role::Button`] for one that acts here,
+/// without it.
 pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
     let tokens = tokens::current(ui.ctx());
     let row = painted_row(ui, HEIGHT, Sense::click(), 0.0);
@@ -45,22 +47,33 @@ pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
         page_tile(ui.ctx()),
     );
 
+    let leads = role == Role::Link;
     let chevron = Rect::from_center_size(
         pos2(rect.right() - PADDING_X - CHEVRON / 2.0, mid),
         vec2(CHEVRON, CHEVRON),
     );
 
     let text_left = square.right() + GAP;
-    let room = (chevron.left() - GAP - text_left).max(0.0);
+    let end = if leads {
+        chevron.left() - GAP
+    } else {
+        rect.right() - PADDING_X
+    };
+
+    let room = (end - text_left).max(0.0);
     let galley = cut(ui, rich(ui, title, Weight::Medium, BODY, tokens.text), room);
     let was_cut = galley.elided;
+
     ui.painter().galley(
         pos2(text_left, mid - galley.size().y / 2.0),
         galley,
         tokens.text,
     );
 
-    icon_image(ui, icons::GO_NEXT, tokens.secondary).paint_at(ui, chevron);
+    if leads {
+        icon_image(ui, icons::GO_NEXT, tokens.secondary).paint_at(ui, chevron);
+    }
+
     row.paint_ring(ui);
 
     // The title is whole for screen readers already, the tooltip shows

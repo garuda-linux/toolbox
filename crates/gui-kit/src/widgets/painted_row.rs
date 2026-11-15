@@ -4,7 +4,7 @@
 use egui::{CornerRadius, Rect, Response, Sense, Ui, pos2, vec2};
 
 use super::focus_ring;
-use super::press::Pointer;
+use super::press::{Pointer, hover_fill};
 use crate::theme::RADIUS;
 use crate::tokens;
 
@@ -19,11 +19,9 @@ impl PaintedRow {
     pub(super) fn paint_fill(&self, ui: &Ui) {
         let tokens = tokens::current(ui.ctx());
         let pointer = Pointer::of_focusable(&self.response);
-        if pointer.is_under() {
-            let fill = pointer.fill(&tokens, tokens.hover);
-            ui.painter()
-                .rect_filled(self.response.rect, CornerRadius::same(RADIUS), fill);
-        }
+        let fill = hover_fill(ui, &self.response, pointer, &tokens);
+        ui.painter()
+            .rect_filled(self.response.rect, CornerRadius::same(RADIUS), fill);
     }
 
     pub(super) fn paint_ring(&self, ui: &Ui) {

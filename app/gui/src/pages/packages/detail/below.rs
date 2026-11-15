@@ -16,7 +16,7 @@ use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
     ButtonKind, PropertyTexts, SearchTexts, counted_disclosure, disclosure, loading_indicator,
-    pill_button, property_list, rich, search_field,
+    padded_card, pill_button, property_list, rich, search_field,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
@@ -26,7 +26,6 @@ use crate::i18n;
 use crate::packages::{Details, Read};
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
-use crate::share::view::padded_card;
 
 /// The file box is at most this tall, so a package of thousands of files
 /// keeps its history in reach.
@@ -77,7 +76,7 @@ pub fn files(
             let copy = i18n::text(&ctx, "packages-copy-list");
             let enabled = !installed.files.is_empty();
             let clicked = ui
-                .add_enabled_ui(enabled, |ui| pill_button(ui, &copy, ButtonKind::Soft))
+                .enabled_ui(enabled, |ui| pill_button(ui, &copy, ButtonKind::Soft))
                 .inner
                 .clicked();
 
@@ -104,7 +103,7 @@ pub fn files(
         clear: &clear,
     };
 
-    _ = search_field(ui, &mut page.file_filter, texts, FILTER_WIDTH);
+    _ = search_field(ui, texts.name, &mut page.file_filter, texts, FILTER_WIDTH);
     let filter = &page.file_filter;
     let places = page.files.get(&[filter.as_str()], Same::of(details), || {
         let _build = tracing::trace_span!("filter files").entered();

@@ -160,7 +160,7 @@ impl LocalesPage {
             return;
         }
 
-        ui.add_enabled_ui(!context.busy, |ui| list::show(ui, context, &items));
+        ui.enabled_ui(!context.busy, |ui| list::show(ui, context, &items));
     }
 
     fn chips(&mut self, ui: &mut Ui) {
@@ -175,7 +175,8 @@ impl LocalesPage {
         let flipped = toggle_chips(ui, &options, |chip| match chip {
             Chip::Utf8 => filter.utf8_only,
             Chip::Enabled => filter.enabled_only,
-        });
+        })
+        .value;
 
         match flipped {
             Some(Chip::Utf8) => self.filter.utf8_only ^= true,
@@ -224,7 +225,7 @@ impl LocalesPage {
 
         let add = i18n::text(&ctx, "locales-packs-add-missing");
         let action = (missing > 0 && !context.busy).then_some(&*add);
-        if banner(ui, tone, &intro, action.as_slice()) == Some(0) {
+        if banner(ui, tone, &intro, action.as_slice()).value == Some(0) {
             context.commands.send(LocaleCommand::AddMissingPacks);
         }
 
@@ -246,7 +247,7 @@ impl LocalesPage {
             return;
         }
 
-        ui.add_enabled_ui(!context.busy, |ui| packs::show(ui, context, &listed.items));
+        ui.enabled_ui(!context.busy, |ui| packs::show(ui, context, &listed.items));
     }
 
     fn sort(&mut self, ui: &mut Ui) {
@@ -274,7 +275,7 @@ fn unread(ui: &mut Ui, context: &PageContext<'_>, id: &str) {
     let title = i18n::text(&ctx, id);
     let detail = i18n::text(&ctx, &format!("{id}-detail"));
     let again = i18n::text(&ctx, "common-read-again");
-    if empty_state_action(ui, icons::HELP_ABOUT, &title, &detail, &again) {
+    if empty_state_action(ui, icons::HELP_ABOUT, &title, &detail, &again).clicked() {
         context.commands.send(LocaleCommand::Refresh);
     }
 }
@@ -290,8 +291,8 @@ fn nothing(ui: &mut Ui, (icon, id): (Icon, &str), search: &mut String) {
         return;
     }
 
-    let clear = i18n::text(&ctx, "locales-clear-search");
-    if empty_state_action(ui, icon, &title, &detail, &clear) {
+    let clear = i18n::text(&ctx, "search-clear");
+    if empty_state_action(ui, icon, &title, &detail, &clear).clicked() {
         search.clear();
     }
 }

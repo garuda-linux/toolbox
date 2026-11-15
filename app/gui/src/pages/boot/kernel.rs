@@ -5,7 +5,7 @@ use toolbox_core::features::boot::view::{self, Page};
 use toolbox_core::features::boot::{Flag, kernel};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Tone, card, card_row, pill_button, removable_tag, rich, tag, text_field,
+    ButtonKind, card, card_row, locked_tag, pill_button, removable_tag, rich, text_field,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -149,7 +149,7 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
         }
 
         let remove = i18n::text_with(&ctx, "boot-parameter-remove", &[("parameter", item)]);
-        if removable_tag(ui, item, &remove) {
+        if removable_tag(ui, item, &remove).clicked() {
             send(context, Edit::RemoveParameter(item.clone()));
         }
     }
@@ -158,7 +158,7 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
 /// A parameter that stays. Screen readers hear why as its description,
 /// the pointer sees it in a tooltip.
 fn kept_tag(ui: &mut Ui, item: &str, why: &str) {
-    let shown = tag(ui, item, Tone::Neutral);
+    let shown = locked_tag(ui, item);
     let described = why.to_owned();
     ui.ctx()
         .accesskit_node_builder(shown.id, |node| node.set_description(described));

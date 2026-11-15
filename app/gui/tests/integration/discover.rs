@@ -197,12 +197,14 @@ fn a_search_without_hits_says_so_and_clears() {
     type_into(&mut harness, "Search apps", "zzzz-nothing");
     assert!(
         harness
-            .query_by_label("No app matches “zzzz-nothing”")
+            .query_by_label("Nothing matches “zzzz-nothing”")
             .is_some()
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .last()
+        .expect("the empty state's Clear search")
         .click();
     harness.run();
     assert!(row_shown(&harness, "Kate"));

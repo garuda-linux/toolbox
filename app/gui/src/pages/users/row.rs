@@ -171,7 +171,7 @@ fn menu(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow, dialog: &mut Opti
         };
 
         let item = ui
-            .add_enabled_ui(action.is_some(), |ui| menu_item(ui, &text(id)))
+            .enabled_ui(action.is_some(), |ui| menu_item(ui, &text(id)))
             .inner;
 
         if let (true, Some(action)) = (item.clicked(), action) {

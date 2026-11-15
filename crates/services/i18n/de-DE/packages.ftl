@@ -21,9 +21,7 @@ packages-no-updates = Keine ausstehenden Updates
 packages-no-updates-detail = Die Startseite sucht nach Updates. Installierte Pakete mit neuerer Version erscheinen hier.
 packages-no-orphans = Keine verwaisten Pakete
 packages-no-orphans-detail = Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht.
-packages-nothing-matches = Kein Paket passt zu „{ $search }“
 packages-nothing-matches-detail = Durchsucht Namen und Beschreibungen im gewählten Filter.
-packages-clear-search = Suche leeren
 
 # Why a click queued nothing.
 packages-refused-not-offered = { $name } lässt sich nicht installieren: Kein eingerichtetes Repository bietet es an.

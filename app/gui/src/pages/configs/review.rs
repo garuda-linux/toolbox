@@ -4,15 +4,16 @@ mod lines;
 
 use egui::accesskit::Role;
 use egui::{
-    Align2, Context, FontId, Id, Label, Painter, Rect, RichText, ScrollArea, Sense, Stroke,
-    TextStyle, Ui, WidgetInfo, pos2, vec2,
+    Align2, Context, FontId, Id, Label, Painter, Rect, ScrollArea, Sense, Stroke, TextStyle, Ui,
+    WidgetInfo, pos2, vec2,
 };
 use toolbox_core::features::configs::session::{Changes, EditedFile, Session};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
 use toolbox_gui_kit::tokens::Tokens;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, ModalWrapper, Question, Tone, banner, pill_button, question,
+    ButtonKind, DialogWidth, ModalWrapper, Pending, Question, Tone, banner, mono_small,
+    pill_button, question, right_buttons,
 };
 
 use self::lines::{Covered, Kind, Row};
@@ -67,28 +68,20 @@ pub fn show(ctx: &Context, context: &PageContext<'_>, session: &Session) -> bool
         context.commands.send(command);
     }
 
-    if asking_discard(ctx) {
+    if discard_question().get(ctx).is_some() {
         ask_discard(ctx, context, &path);
     }
 
     outcome.closed
 }
 
-fn discard_id() -> Id {
-    Id::unique("toolbox_gui::configs::review::discard")
-}
-
-fn asking_discard(ctx: &Context) -> bool {
-    ctx.data(|data| data.get_temp::<bool>(discard_id()).unwrap_or(false))
+fn discard_question() -> Pending<()> {
+    Pending::new(Id::unique("toolbox_gui::configs::review::discard"))
 }
 
 /// Drops an open question, as when the page is left.
 pub fn forget(ctx: &Context) {
-    set_asking_discard(ctx, false);
-}
-
-fn set_asking_discard(ctx: &Context, asking: bool) {
-    ctx.data_mut(|data| data.insert_temp(discard_id(), asking));
+    discard_question().release(ctx);
 }
 
 /// Discarding throws the user's edits away, so it asks first.
@@ -108,13 +101,13 @@ fn ask_discard(ctx: &Context, context: &PageContext<'_>, path: &str) {
         width: DialogWidth::Small,
     };
 
-    let asked = question(ctx, discard_id().with("dialog"), texts);
+    let asked = question(ctx, discard_question().dialog(), texts);
     if asked.confirmed {
         context.commands.send(ConfigsCommand::Discard);
     }
 
     if asked.done {
-        set_asking_discard(ctx, false);
+        discard_question().release(ctx);
     }
 }
 
@@ -158,7 +151,7 @@ fn words(ui: &mut Ui, session: &Session, changes: &Changes, path: &str) {
 
     banner(ui, Tone::Error, &text, &[]);
     if let Some(detail) = texts::detail(problem) {
-        ui.add(Label::new(RichText::new(detail).small().monospace()).wrap());
+        ui.add(Label::new(mono_small(ui, detail, ui.tokens().text)).wrap());
     }
 
     ui.add_space(ui.tokens().sizes.card_gap);
@@ -320,15 +313,15 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<
         .chain([save.as_str()])
         .collect();
 
-    super::right_buttons(ui, &labels, |ui| {
+    right_buttons(ui, &labels, |ui| {
         let mut chosen = None;
         if pill_button(ui, &discard, ButtonKind::Soft).clicked() {
-            set_asking_discard(ui.ctx(), true);
+            discard_question().hold(ui.ctx(), ());
         }
 
         let idle = !context.busy;
         let again = ui
-            .add_enabled_ui(idle, |ui| pill_button(ui, &edit_again, ButtonKind::Soft))
+            .enabled_ui(idle, |ui| pill_button(ui, &edit_again, ButtonKind::Soft))
             .inner;
 
         if again.clicked() {
@@ -340,7 +333,7 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<
         }
 
         let saved = ui
-            .add_enabled_ui(idle, |ui| pill_button(ui, &save, ButtonKind::Primary))
+            .enabled_ui(idle, |ui| pill_button(ui, &save, ButtonKind::Primary))
             .inner;
 
         if saved.clicked() {

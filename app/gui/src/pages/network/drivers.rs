@@ -10,8 +10,8 @@ use toolbox_core::features::network::{
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, line, named_chips, pill_button,
-    rich, row_height, split_row, status_dot, text_block_height,
+    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, empty_state_action, line,
+    named_chips, pill_button, rich, row_height, split_row, status_dot, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 pub(super) use unload::forget;
@@ -104,13 +104,9 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter, r
     ui.add_space(ui.tokens().sizes.card_gap);
 
     if shown.is_empty() {
-        empty_state(
-            ui,
-            icons::SYSTEM_SEARCH,
-            &text("network-drivers-no-match"),
-            "",
-        );
-        if pill_button(ui, &text("network-drivers-clear"), ButtonKind::Soft).clicked() {
+        let title = text("network-drivers-no-match");
+        let clear = text("network-drivers-clear");
+        if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, "", &clear).clicked() {
             filter.search.clear();
             filter.state = None;
             filter.category = None;
@@ -246,7 +242,7 @@ fn pick<T>(
         });
         ui.add_space(ui.tokens().sizes.control_gap);
 
-        if let Some(picked) = named_chips(ui, name, &options, *current) {
+        if let Some(picked) = named_chips(ui, name, name, &options, *current).value {
             *current = picked;
         }
     });
@@ -354,7 +350,7 @@ fn load_button(ui: &mut Ui, context: &PageContext<'_>, driver: &DriverRow) {
     };
 
     let loaded = ui
-        .add_enabled_ui(!context.busy, |ui| {
+        .enabled_ui(!context.busy, |ui| {
             pill_button(ui, &i18n::text(&ctx, load), ButtonKind::Soft)
         })
         .inner;

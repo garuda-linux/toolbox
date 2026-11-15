@@ -6,7 +6,7 @@ mod digits;
 use std::ops::RangeInclusive;
 
 use egui::accesskit::Role;
-use egui::{Align2, EventFilter, Key, Modifiers, Response, TextEdit, Ui};
+use egui::{Align2, AsIdSalt, EventFilter, Key, Modifiers, Response, TextEdit, Ui};
 
 use self::digits::Digits;
 use super::field::{inset_field_with_unit, text_field, text_field_with_unit};
@@ -18,7 +18,8 @@ enum Look<'a> {
     Inset(&'a str),
 }
 
-/// A field for `value`, `width` wide and named `name`.
+/// A field for `value`, `width` wide, named `name`. `salt` tells it apart
+/// from the other fields of its ui, which may share the name.
 ///
 /// Only digits can be typed. The number counts once Enter or leaving the
 /// field commits it, held to `range`. Escape keeps the value it had. Up
@@ -28,22 +29,22 @@ pub fn number_field(
     value: &mut u32,
     range: RangeInclusive<u32>,
     width: f32,
-    name: &str,
+    (salt, name): (impl AsIdSalt, &str),
 ) -> Response {
-    number(ui, (value, range), width, name, Look::Plain)
+    number(ui, (value, range), width, (salt, name), Look::Plain)
 }
 
 /// A [`number_field`] with `unit`, such as "s", after the number inside
-/// the field, named by the first of `(name, unit)`. The name says the
-/// unit for screen readers, which do not hear the painted one.
+/// the field, named by `name`. The name says the unit for screen readers,
+/// which do not hear the painted one.
 pub fn number_field_with_unit(
     ui: &mut Ui,
     value: &mut u32,
     range: RangeInclusive<u32>,
     width: f32,
-    (name, unit): (&str, &str),
+    (salt, name, unit): (impl AsIdSalt, &str, &str),
 ) -> Response {
-    number(ui, (value, range), width, name, Look::Unit(unit))
+    number(ui, (value, range), width, (salt, name), Look::Unit(unit))
 }
 
 /// A [`number_field_with_unit`] without its own fill, for a control
@@ -53,19 +54,19 @@ pub(super) fn inset_number_with_unit(
     value: &mut u32,
     range: RangeInclusive<u32>,
     width: f32,
-    (name, unit): (&str, &str),
+    (salt, name, unit): (impl AsIdSalt, &str, &str),
 ) -> Response {
-    number(ui, (value, range), width, name, Look::Inset(unit))
+    number(ui, (value, range), width, (salt, name), Look::Inset(unit))
 }
 
 fn number(
     ui: &mut Ui,
     (value, range): (&mut u32, RangeInclusive<u32>),
     width: f32,
-    name: &str,
+    (salt, name): (impl AsIdSalt, &str),
     look: Look<'_>,
 ) -> Response {
-    let id = ui.scope_id().with(("number_field", name));
+    let id = ui.scope_id().with(("number_field", salt));
     let typing = ui.data(|data| data.get_temp::<String>(id));
     let mut digits = Digits(typing.unwrap_or_else(|| value.to_string()));
 

@@ -192,7 +192,7 @@ impl Edit {
 
         let move_label = i18n::text(ctx, "users-move-files");
         let moving = self.fields.move_files;
-        if check_row(ui, moving, &move_label, "", true).clicked() {
+        if check_row(ui, moving, &move_label, "").clicked() {
             self.fields.move_files = !moving;
         }
 

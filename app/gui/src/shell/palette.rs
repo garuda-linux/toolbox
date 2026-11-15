@@ -69,7 +69,7 @@ impl Palette {
                 // Taken before the field sees them, which would move its
                 // cursor with them.
                 let moved = self.move_mark(ui, rows.len());
-                let search = search_field(ui, &mut self.query, texts, width);
+                let search = search_field(ui, texts.name, &mut self.query, texts, width);
                 if search.changed() {
                     self.marked = 0;
                 }

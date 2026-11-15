@@ -1,4 +1,4 @@
-//! The colour scheme pickers in the app: a picked scheme takes the whole
+//! The color scheme pickers in the app: a picked scheme takes the whole
 //! palette at once, System brings the desktop's back, and both are kept.
 
 use std::sync::Arc;
@@ -21,8 +21,8 @@ use toolbox_plan::SchemeId;
 use crate::common::{TALL, launch_in, window};
 use crate::settings::Recorder;
 
-const DARK: &str = "Dark colour scheme";
-const LIGHT: &str = "Light colour scheme";
+const DARK: &str = "Dark color scheme";
+const LIGHT: &str = "Light color scheme";
 
 /// The app with the shipped catalogs in `theme`, on `page`, with
 /// `settings` as the file holds them.

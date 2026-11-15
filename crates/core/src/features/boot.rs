@@ -20,7 +20,7 @@ use toolbox_plan::{
     DefaultEntry, GrubKey, GrubSetting, GrubState, KernelParameter, KernelParameters, KnownPackage,
     MenuEntryId, PackageName, PlymouthTheme,
 };
-pub use toolbox_state::boot::VirtualMachine;
+pub use toolbox_state::boot::{VirtualMachine, booted_from_snapshot};
 
 use crate::domains::{
     CurrentGrub, GrubDefaults, InstalledPackages, KernelSetting, Packages, PlymouthState,

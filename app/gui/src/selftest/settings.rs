@@ -1,6 +1,6 @@
 //! The Settings page: a theme picked and taken back, minutes outside
 //! the limits held to them, the timed checks turned off and on again, and a
-//! colour scheme of each mode picked and
+//! color scheme of each mode picked and
 //! System picked after it. The changes go to the run's own settings file,
 //! never the user's.
 
@@ -33,17 +33,17 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("settings-checks-off"),
         Step::click_checkbox("Check for updates automatically"),
         Step::wait("Time between checks"),
-        Step::combo("Dark colour scheme"),
+        Step::combo("Dark color scheme"),
         option("Nord"),
         Step::Shot("settings-scheme-dark"),
-        Step::combo("Dark colour scheme"),
+        Step::combo("Dark color scheme"),
         option("System"),
         Step::Shot("settings-scheme-system"),
         Step::click("Light"),
-        Step::combo("Light colour scheme"),
+        Step::combo("Light color scheme"),
         option("Catppuccin Latte"),
         Step::Shot("settings-scheme-light"),
-        Step::combo("Light colour scheme"),
+        Step::combo("Light color scheme"),
         option("System"),
         Step::click("As the desktop"),
     ]

@@ -72,13 +72,19 @@ fn dropdown(ui: &mut Ui) -> Rect {
 
 fn choice(ui: &mut Ui) -> Rect {
     let before = ui.cursor().min;
-    segmented(ui, "Theme", &[(0_u8, "Dark"), (1_u8, "Light")], 0_u8);
+    segmented(
+        ui,
+        "Theme",
+        "Theme",
+        &[(0_u8, "Dark"), (1_u8, "Light")],
+        0_u8,
+    );
     Rect::from_min_max(before, ui.min_rect().max)
 }
 
 fn number(ui: &mut Ui) -> Rect {
     let mut value = 5;
-    number_field(ui, &mut value, 1..=10, 80.0, "Count").rect
+    number_field(ui, &mut value, 1..=10, 80.0, ("Count", "Count")).rect
 }
 
 fn kebab(ui: &mut Ui) -> Rect {
@@ -154,7 +160,7 @@ fn nothing(_ui: &mut Ui) -> Rect {
 }
 
 fn toggle(ui: &mut Ui) -> Rect {
-    switch(ui, true, "Probe", true).rect
+    switch(ui, true, "Probe").rect
 }
 
 #[test]

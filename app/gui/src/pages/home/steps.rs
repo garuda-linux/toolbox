@@ -44,7 +44,7 @@ pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
     if context.home.programs_failed {
         let text = i18n::text(&ctx, "home-programs-failed");
         let again = i18n::text(&ctx, "common-read-again");
-        if banner(ui, Tone::Warning, &text, &[&again]) == Some(0) {
+        if banner(ui, Tone::Warning, &text, &[&again]).value == Some(0) {
             context.commands.send(HomeCommand::Refresh);
         }
 

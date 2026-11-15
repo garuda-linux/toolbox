@@ -14,14 +14,6 @@ const CONTEXT: usize = 3;
 /// still correct.
 const MAX_CELLS: usize = 4_000_000;
 
-const ADDED: &str = "\u{1b}[32m";
-const REMOVED: &str = "\u{1b}[31m";
-const HEADER: &str = "\u{1b}[36m";
-const RESET: &str = "\u{1b}[0m";
-
-/// Stands in for a control character of the file, which would otherwise
-/// be read as a part of the colour codes around the line.
-const REPLACEMENT: char = '\u{fffd}';
 
 /// Said for a last line without a line break, like `diff` does.
 const NO_LINE_BREAK: &str = "\\ No line break at the end of the file";
@@ -110,14 +102,7 @@ impl<'text> Diff<'text> {
     /// like `diff -u` prints them. Plain text for the screen reader, copy
     /// and themes without colours.
     pub fn plain(&self) -> String {
-        self.render(false)
-    }
-
-    /// [`Diff::plain`] with terminal colour codes around added and removed
-    /// lines. Control characters of the file are replaced, so nothing of
-    /// its content can act as a code.
-    pub fn colored(&self) -> String {
-        self.render(true)
+        self.render()
     }
 
     fn count(&self, change: Change) -> usize {
@@ -127,23 +112,22 @@ impl<'text> Diff<'text> {
             .count()
     }
 
-    fn render(&self, colors: bool) -> String {
+    fn render(&self) -> String {
         let mut text = String::new();
 
         for hunk in self.hunks() {
             let (old_count, new_count) = counts(hunk.lines);
-            let (open, close) = if colors { (HEADER, RESET) } else { ("", "") };
 
             // Writing to a String cannot fail.
             writeln!(
                 text,
-                "{open}@@ -{},{old_count} +{},{new_count} @@{close}",
+                "@@ -{},{old_count} +{},{new_count} @@",
                 hunk.old_start, hunk.new_start
             )
             .ok();
 
             for line in hunk.lines {
-                push_line(&mut text, *line, colors);
+                push_line(&mut text, *line);
             }
         }
 
@@ -285,11 +269,11 @@ fn cell(table: &[u32], width: usize, row: usize, column: usize) -> u32 {
     table.get(row * width + column).copied().unwrap_or(0)
 }
 
-fn push_line(text: &mut String, line: Line<'_>, colors: bool) {
-    let (mark, color) = match line.change {
-        Change::Same => (' ', ""),
-        Change::Added => ('+', ADDED),
-        Change::Removed => ('-', REMOVED),
+fn push_line(text: &mut String, line: Line<'_>) {
+    let mark = match line.change {
+        Change::Same => ' ',
+        Change::Added => '+',
+        Change::Removed => '-',
     };
 
     let (content, ended) = line
@@ -297,24 +281,8 @@ fn push_line(text: &mut String, line: Line<'_>, colors: bool) {
         .strip_suffix('\n')
         .map_or((line.text, false), |content| (content, true));
 
-    let colored = colors && !color.is_empty();
-
-    if colored {
-        text.push_str(color);
-    }
-
     text.push(mark);
-    text.extend(content.chars().map(|character| {
-        if colors && character.is_control() && character != '\t' {
-            REPLACEMENT
-        } else {
-            character
-        }
-    }));
-
-    if colored {
-        text.push_str(RESET);
-    }
+    text.push_str(content);
 
     text.push('\n');
 

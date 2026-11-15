@@ -11,7 +11,7 @@ const NAME: &str = "The report";
 fn shown() -> Harness<'static> {
     let mut harness = harness(400.0, 300.0).build_ui(|ui| {
         let mut text = "first line\nsecond line\nthird line";
-        text_box(ui, TextEdit::multiline(&mut text), NAME, 160.0);
+        text_box(ui, (NAME, NAME), TextEdit::multiline(&mut text), 160.0);
     });
 
     harness.run();
@@ -34,7 +34,7 @@ fn a_text_box_is_named_for_screen_readers() {
 fn a_text_box_is_as_wide_as_the_room_whatever_its_text() {
     let mut harness = harness(400.0, 300.0).build_ui(|ui| {
         let mut text = "one line";
-        text_box(ui, TextEdit::multiline(&mut text), NAME, 160.0);
+        text_box(ui, (NAME, NAME), TextEdit::multiline(&mut text), 160.0);
     });
 
     harness.run();
@@ -51,7 +51,7 @@ fn a_text_box_is_as_wide_as_the_room_whatever_its_text() {
 fn a_filling_text_box_takes_the_room_below_a_short_text() {
     let mut harness = harness(400.0, 300.0).build_ui(|ui| {
         let mut text = "one line";
-        text_box_filling(ui, TextEdit::multiline(&mut text), NAME);
+        text_box_filling(ui, (NAME, NAME), TextEdit::multiline(&mut text));
     });
 
     harness.run();

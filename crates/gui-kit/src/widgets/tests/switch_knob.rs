@@ -4,13 +4,14 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 use super::super::switch::knobs;
 use super::super::{switch, tristate_switch};
+use crate::UiExt as _;
 use crate::palette::Palette;
 use crate::testing::{circle_fills, harness};
 use crate::tokens::{self, Tokens, contrast};
 
 fn knob(theme: Theme, on: Option<bool>) -> Color32 {
     let mut harness = harness(200.0, 80.0).build_ui(move |ui| {
-        tristate_switch(ui, on, "Wi-Fi", true);
+        tristate_switch(ui, on, "Wi-Fi");
     });
 
     harness.ctx.set_theme(theme);
@@ -44,7 +45,7 @@ fn the_knob_keeps_one_colour_on_and_off_where_it_reads_on_the_accent() {
 #[test]
 fn a_disabled_knob_on_a_light_card_keeps_an_edge() {
     let mut harness = harness(200.0, 80.0).build_ui(|ui| {
-        switch(ui, false, "Wi-Fi", false);
+        ui.enabled_ui(false, |ui| switch(ui, false, "Wi-Fi"));
     });
 
     harness.ctx.set_theme(Theme::Light);
@@ -73,7 +74,7 @@ fn a_disabled_knob_on_a_light_card_keeps_an_edge() {
 #[test]
 fn an_unknown_switch_says_mixed_and_rests_its_knob_in_the_middle() {
     let mut harness = harness(200.0, 80.0).build_ui(|ui| {
-        tristate_switch(ui, None, "Wi-Fi", true);
+        tristate_switch(ui, None, "Wi-Fi");
     });
 
     harness.run();

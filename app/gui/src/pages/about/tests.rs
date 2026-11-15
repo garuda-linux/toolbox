@@ -216,7 +216,7 @@ fn only_technical_facts_offer_a_copy_button() {
         "the version and the system are what a bug report needs"
     );
     assert!(!copy("Made by"), "a name is nothing to paste");
-    assert!(!copy("Licence"), "the licence is nothing to paste");
+    assert!(!copy("License"), "the license is nothing to paste");
 }
 
 #[test]

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Garuda Toolbox
+Exec=garuda-toolbox --autostart
+Icon=org.garudalinux.toolbox
+Terminal=false
+NoDisplay=true

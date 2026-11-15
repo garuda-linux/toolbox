@@ -181,6 +181,16 @@ pub fn apply_sizes(ctx: &Context, ui_points: Option<f32>, fixed_points: Option<f
     });
 }
 
+/// The monospace family at `scale` of the desktop's monospace size.
+pub fn mono(style: &Style, scale: f32) -> FontId {
+    let size = style
+        .text_styles
+        .get(&TextStyle::Monospace)
+        .map_or(DEFAULT_POINTS * PIXELS_PER_POINT, |font| font.size);
+
+    FontId::new(size * scale, FontFamily::Monospace)
+}
+
 pub fn font(style: &Style, weight: Weight, scale: f32) -> FontId {
     let body = style
         .text_styles

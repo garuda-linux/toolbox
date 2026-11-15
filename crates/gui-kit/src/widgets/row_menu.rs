@@ -8,7 +8,7 @@ use super::menu::{MENU_WIDTH, menu_for, menu_glass, menu_items};
 use super::{RowState, icon_button};
 use crate::icons;
 
-/// The ⋯ button `alt` names, with `items` in its menu and on a right
+/// The ⋯ button, named `name`, shows `items` in its menu and on a right
 /// click of the row.
 ///
 /// The Menu key or Shift+F10 on the focused row opens it and moves the
@@ -17,10 +17,10 @@ use crate::icons;
 pub fn row_menu(
     ui: &mut Ui,
     row: &RowState,
-    alt: &str,
+    name: &str,
     mut items: impl FnMut(&mut Ui),
 ) -> Response {
-    let button = icon_button(ui, icons::OVERFLOW_MENU, alt);
+    let button = icon_button(ui, icons::OVERFLOW_MENU, name);
     let enabled = ui.is_enabled();
     let open = enabled && row.menu;
     if open {
@@ -29,7 +29,7 @@ pub fn row_menu(
 
     menu_for(ui, &button, open, &mut items);
     if enabled {
-        context_menu(ui, row, alt, None, &mut items);
+        context_menu(ui, row, name, None, &mut items);
     }
 
     button

@@ -3,7 +3,7 @@
 //! text.
 
 use egui::text::CCursor;
-use egui::{Align, Frame, Margin, Response, ScrollArea, Shape, TextEdit, Ui};
+use egui::{Align, AsIdSalt, Frame, Margin, Response, ScrollArea, Shape, TextEdit, Ui};
 
 use super::field::{PADDING_X, paint_field};
 use crate::theme::CONTROL_RADIUS;
@@ -15,38 +15,47 @@ const PADDING_Y: i8 = 10;
 /// `edit` in a filled box as wide as the room, named `name`, that
 /// scrolls both ways once its text is taller than `max_height`. The
 /// caller keeps the text, font and whether it can be changed.
-pub fn text_box(ui: &mut Ui, edit: TextEdit<'_>, name: &str, max_height: f32) -> Response {
-    text_box_at(ui, edit, name, max_height, None)
+pub fn text_box(
+    ui: &mut Ui,
+    (salt, name): (impl AsIdSalt, &str),
+    edit: TextEdit<'_>,
+    max_height: f32,
+) -> Response {
+    text_box_at(ui, (salt, name), edit, max_height, None)
 }
 
 /// [`text_box`] that takes all the room below it, however short its
 /// text, for a dialog that is as tall as the window.
-pub fn text_box_filling(ui: &mut Ui, edit: TextEdit<'_>, name: &str) -> Response {
+pub fn text_box_filling(
+    ui: &mut Ui,
+    (salt, name): (impl AsIdSalt, &str),
+    edit: TextEdit<'_>,
+) -> Response {
     let height = 2.0_f32
         .mul_add(-f32::from(PADDING_Y), ui.available_height())
         .max(0.0);
 
-    boxed(ui, edit, name, (height, false), None)
+    boxed(ui, (salt, name), edit, (height, false), None)
 }
 
 /// [`text_box`] scrolled so the character at `shown`, counted in
 /// characters, sits in the middle of the box.
 pub fn text_box_at(
     ui: &mut Ui,
+    (salt, name): (impl AsIdSalt, &str),
     edit: TextEdit<'_>,
-    name: &str,
     max_height: f32,
     shown: Option<usize>,
 ) -> Response {
-    boxed(ui, edit, name, (max_height, true), shown)
+    boxed(ui, (salt, name), edit, (max_height, true), shown)
 }
 
 /// `max_height` is the most the scrolled room takes, `shrink` whether a
 /// shorter text shrinks it.
 fn boxed(
     ui: &mut Ui,
+    (salt, name): (impl AsIdSalt, &str),
     edit: TextEdit<'_>,
-    name: &str,
     (max_height, shrink): (f32, bool),
     shown: Option<usize>,
 ) -> Response {
@@ -59,7 +68,7 @@ fn boxed(
         .inner_margin(Margin::symmetric(PADDING_X, PADDING_Y))
         .show(ui, |ui| {
             ScrollArea::both()
-                .id_salt(("text_box", name))
+                .id_salt(("text_box", salt))
                 .max_height(max_height)
                 .auto_shrink([false, shrink])
                 .show(ui, |ui| {

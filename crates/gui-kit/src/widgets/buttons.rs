@@ -23,11 +23,10 @@ use egui::{
 };
 
 use super::card::on_raised;
-use super::press::Pointer;
-use super::{focus_ring, line};
+use super::press::{Pointer, hover_amount};
+use super::{Choice, focus_ring, line};
 use crate::fonts::{BODY, Weight};
 use crate::icons::Icon;
-use crate::motion;
 use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, RADIUS};
 use crate::tokens::{self, Tokens};
 use crate::ui_ext::icon_image;
@@ -89,11 +88,7 @@ impl ButtonKind {
             return self.fill(tokens, pointer);
         }
 
-        let seconds = motion::duration(ui.ctx(), motion::HOVER_FADE);
-        let hover =
-            ui.ctx()
-                .animate_bool_with_time(response.id.with("hover"), pointer.is_under(), seconds);
-
+        let hover = hover_amount(ui, response, pointer);
         self.rest_fill(tokens, on_raised_surface(ui))
             .lerp_to_gamma(self.fill(tokens, Pointer::Hovered), hover)
     }
@@ -166,6 +161,24 @@ pub fn pill_width(ui: &Ui, text: &str) -> f32 {
     PILL_PADDING_X.mul_add(2.0, galley.size().x)
 }
 
+/// One row of pill buttons at the right end of the space. `labels` are the
+/// buttons `add` draws, so the row knows its width before it draws them.
+pub fn right_buttons<R>(ui: &mut Ui, labels: &[&str], add: impl FnOnce(&mut Ui) -> R) -> R {
+    ui.horizontal(|ui| {
+        let gap = tokens::current(ui.ctx()).sizes.control_gap;
+        ui.spacing_mut().item_spacing.x = gap;
+        let width = labels
+            .iter()
+            .map(|label| pill_width(ui, label) + gap)
+            .sum::<f32>()
+            - gap;
+
+        ui.add_space((ui.available_width() - width).max(0.0));
+        add(ui)
+    })
+    .inner
+}
+
 /// How wide an [`icon_button`] is, for a row that makes room for one.
 pub fn icon_button_width(ui: &Ui) -> f32 {
     let glyph = glyph_size(&icon_image(
@@ -178,24 +191,24 @@ pub fn icon_button_width(ui: &Ui) -> f32 {
     ICON_PADDING.mul_add(2.0, glyph)
 }
 
-/// `alt` names it and shows on hover.
-pub fn icon_button(ui: &mut Ui, icon: Icon, alt: &str) -> Response {
+/// `name` names it and shows on hover.
+pub fn icon_button(ui: &mut Ui, icon: Icon, name: &str) -> Response {
     let idle = tokens::current(ui.ctx()).secondary;
-    glyph_button(ui, icon, alt, ICON_PADDING, idle).on_hover_text(alt)
+    glyph_button(ui, icon, name, ICON_PADDING, idle).on_hover_text(name)
 }
 
-pub fn sidebar_button(ui: &mut Ui, icon: Icon, alt: &str) -> Response {
+pub fn sidebar_button(ui: &mut Ui, icon: Icon, name: &str) -> Response {
     let idle = tokens::current(ui.ctx()).sidebar_text;
-    glyph_button(ui, icon, alt, ICON_PADDING, idle).on_hover_text(alt)
+    glyph_button(ui, icon, name, ICON_PADDING, idle).on_hover_text(name)
 }
 
-fn glyph_button(ui: &mut Ui, icon: Icon, alt: &str, padding: f32, idle: Color32) -> Response {
+fn glyph_button(ui: &mut Ui, icon: Icon, name: &str, padding: f32, idle: Color32) -> Response {
     let tokens = tokens::current(ui.ctx());
     let image = icon_image(ui, icon, idle);
     let glyph = glyph_size(&image);
     let size = glyph + vec2(padding, padding) * 2.0;
     let (rect, response) = ui.allocate_exact_size(size, Sense::click());
-    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), alt));
+    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), name));
 
     if ui.is_rect_visible(rect) {
         let pointer = Pointer::of(&response);
@@ -223,8 +236,9 @@ fn glyph_button(ui: &mut Ui, icon: Icon, alt: &str, padding: f32, idle: Color32)
 /// F5 presses it too, so a page is read again from the keyboard alone.
 /// F5 is left to a dialog over the page and to the program in a focused
 /// terminal.
-pub fn refresh_button(ui: &mut Ui, name: &str) -> bool {
-    let clicked = icon_button(ui, crate::icons::VIEW_REFRESH, name).clicked();
+pub fn refresh_button(ui: &mut Ui, name: &str) -> Choice<()> {
+    let button = icon_button(ui, crate::icons::VIEW_REFRESH, name);
+    let clicked = button.clicked();
     let ctx = ui.ctx().clone();
     let free = ui.is_enabled()
         && ctx.memory(egui::Memory::top_modal_layer).is_none()
@@ -233,7 +247,10 @@ pub fn refresh_button(ui: &mut Ui, name: &str) -> bool {
     let pressed =
         free && ui.input_mut(|input| input.consume_key(egui::Modifiers::NONE, egui::Key::F5));
 
-    clicked || pressed
+    Choice {
+        response: button,
+        value: (clicked || pressed).then_some(()),
+    }
 }
 
 /// Marks `ui` as a dialog's surface, so the Soft buttons in it take

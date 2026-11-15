@@ -36,11 +36,15 @@ sed "s|/usr/lib/garuda-toolbox/|$prefix/lib/garuda-toolbox/|g" \
 chmod 644 "$share/polkit-1/actions/org.garudalinux.toolbox.policy"
 
 # Named like the Wayland app_id, so the compositor finds the window's icon.
-install -Dm644 "$repo/data/garuda-toolbox.desktop" "$share/applications/garuda-toolbox.desktop"
+install -Dm644 "$repo/data/org.garudalinux.toolbox.desktop" \
+  "$share/applications/org.garudalinux.toolbox.desktop"
+# Outside the menu folder, so no launcher lists it. Autostart links point here.
+install -Dm644 "$repo/data/org.garudalinux.toolbox.autostart.desktop" \
+  "$share/garuda-toolbox/autostart.desktop"
 install -Dm644 "$repo/data/org.garudalinux.toolbox.metainfo.xml" \
   "$share/metainfo/org.garudalinux.toolbox.metainfo.xml"
 install -Dm644 "$repo/app/gui/assets/garuda-logo.svg" \
-  "$share/icons/hicolor/scalable/apps/garuda-toolbox.svg"
+  "$share/icons/hicolor/scalable/apps/org.garudalinux.toolbox.svg"
 install -Dm644 "$repo/LICENSE" "$share/licenses/garuda-toolbox/LICENSE"
 
 install -Dm644 "$repo/data/cli/garuda-toolbox.bash" \

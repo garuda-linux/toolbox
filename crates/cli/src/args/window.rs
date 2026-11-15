@@ -54,6 +54,8 @@ impl Window {
             Some("--setup-assistant")
         } else if self.boot_repair {
             Some("--boot-repair")
+        } else if self.autostart {
+            Some("--autostart")
         } else {
             None
         }

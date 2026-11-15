@@ -7,7 +7,7 @@ use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{
-    ListItem, RowHeights, RowList, RowState, Tone, rich, row_height, split_row, status_dot, switch,
+    ListItem, RowHeights, RowList, RowState, Tone, rich, row_height, split_row, status_dot,
     text_block_height,
 };
 use toolbox_plan::LocaleEntry;
@@ -15,7 +15,7 @@ use toolbox_plan::LocaleEntry;
 use crate::command::LocaleCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::{Look, SWITCH_WIDTH};
+use crate::pages::rows::{Look, SWITCH_WIDTH, row_switch};
 
 /// One locale as the list shows it, its texts made once.
 #[derive(Debug)]
@@ -181,9 +181,7 @@ pub fn switch_line(ui: &mut Ui, line: &Line<'_>, state: &RowState) -> bool {
         },
         |ui| {
             // The list waits in a disabled Ui while a plan runs.
-            let enabled = ui.is_enabled();
-            let clicked = switch(ui, line.on, line.title, enabled).clicked();
-            flipped = clicked || (state.toggle && enabled);
+            flipped = row_switch(ui, state, line.on, line.title, true);
         },
     );
 

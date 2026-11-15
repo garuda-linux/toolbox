@@ -85,7 +85,8 @@ fn an_unread_state_reports_its_button_centred_under_the_body() {
         |ui, clicked: &mut bool| {
             let title = "The services could not be read";
             let body = "systemd is not reachable.";
-            *clicked |= empty_state_action(ui, icons::DIALOG_ERROR, title, body, "Read again");
+            *clicked |=
+                empty_state_action(ui, icons::DIALOG_ERROR, title, body, "Read again").clicked();
         },
         false,
     );

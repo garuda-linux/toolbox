@@ -40,7 +40,9 @@ fn a_packs_search_without_a_match_offers_to_clear_it() {
 
     assert!(harness.query_by_label("No language pack matches").is_some());
     harness
-        .get_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .last()
+        .expect("the empty state's Clear search")
         .click();
     harness.run();
 
@@ -94,7 +96,9 @@ fn a_locale_search_without_a_match_offers_to_clear_it() {
     harness.run();
 
     harness
-        .get_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .last()
+        .expect("the empty state's Clear search")
         .click();
     harness.run();
 

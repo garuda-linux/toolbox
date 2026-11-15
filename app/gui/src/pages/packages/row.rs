@@ -1,3 +1,4 @@
+use toolbox_gui_kit::UiExt as _;
 use std::borrow::Cow;
 
 use egui::{Context, Label, Sense, Ui, Vec2};
@@ -224,7 +225,7 @@ where
         &[("action", text), ("name", row.package().as_str())],
     );
 
-    ui.add_enabled_ui(!context.busy, |ui| named_pill_button(ui, text, kind, &name))
+    ui.enabled_ui(!context.busy, |ui| named_pill_button(ui, text, kind, &name))
         .inner
         .clicked()
 }

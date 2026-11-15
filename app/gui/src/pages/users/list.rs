@@ -15,6 +15,7 @@ use super::{accounts_ready, row};
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::sort_select;
+use crate::pages::search_empty::search_empty_state;
 
 const ORDERS: [(UserOrder, &str); 5] = [
     (UserOrder::Name, "users-order-name"),
@@ -134,7 +135,7 @@ fn toolbar(
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     ui.horizontal(|ui| {
         let add = ui
-            .add_enabled_ui(known && !context.busy, |ui| {
+            .enabled_ui(known && !context.busy, |ui| {
                 pill_button(ui, &text("users-add"), ButtonKind::Primary)
             })
             .inner;
@@ -169,14 +170,7 @@ fn nobody(ui: &mut Ui, shown: &mut Shown) {
         return;
     }
 
-    let title = i18n::text_with(&ctx, "users-no-match", &[("search", &shown.user_search)]);
-    empty_state(
-        ui,
-        icons::SYSTEM_SEARCH,
-        &title,
-        &text("users-search-detail"),
-    );
-    if pill_button(ui, &text("users-clear-search"), ButtonKind::Soft).clicked() {
+    if search_empty_state(ui, &shown.user_search, &text("users-search-detail")) {
         shown.user_search.clear();
     }
 }

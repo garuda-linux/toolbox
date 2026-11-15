@@ -26,7 +26,7 @@ fn properties() -> Harness<'static, Toasts> {
                 list.row("Running since", "3 days");
                 list.row_with("Retries", None, |value| {
                     let mut retries = 3_u32;
-                    number_field(value, &mut retries, 0..=10, 72.0, "Retries");
+                    number_field(value, &mut retries, 0..=10, 72.0, ("Retries", "Retries"));
                 });
             });
 

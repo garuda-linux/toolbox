@@ -8,6 +8,7 @@
 
 use egui::{Color32, Response, Ui};
 
+use crate::motion;
 use crate::tokens::Tokens;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -64,4 +65,25 @@ pub fn faded(ui: &Ui, color: Color32, enabled: bool) -> Color32 {
     } else {
         ui.visuals().disable(color)
     }
+}
+
+/// How far the hover fill has faded in under `pointer`: 0 at rest, 1 under
+/// the pointer, eased over the hover fade. Every control that fades its
+/// hover uses this one rule.
+pub fn hover_amount(ui: &Ui, response: &Response, pointer: Pointer) -> f32 {
+    let seconds = motion::duration(ui.ctx(), motion::HOVER_FADE);
+    ui.ctx()
+        .animate_bool_with_time(response.id.with("hover"), pointer.is_under(), seconds)
+}
+
+/// The hover fill of a row or item: `tokens.hover` faded in as a pill
+/// button fades, and one step deeper at once while pressed.
+pub fn hover_fill(ui: &Ui, response: &Response, pointer: Pointer, tokens: &Tokens) -> Color32 {
+    if pointer == Pointer::Pressed {
+        return tokens.pressed;
+    }
+
+    tokens
+        .hover
+        .gamma_multiply(hover_amount(ui, response, pointer))
 }

@@ -6,6 +6,7 @@
 //! here.
 
 use egui::{Context, Ui};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{menu_action, menu_heading};
@@ -135,7 +136,7 @@ where
             let possible = action.possible(item);
             let label = i18n::text(&ctx, action.label(item));
             let response = ui
-                .add_enabled_ui(possible.is_ok(), |ui| {
+                .enabled_ui(possible.is_ok(), |ui| {
                     menu_action(ui, action.icon(item), &label)
                 })
                 .inner;

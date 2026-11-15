@@ -33,7 +33,7 @@ fn the_three_sections_show_their_rows() {
 
     for label in [
         "Appearance",
-        "Behaviour",
+        "Behavior",
         "Diagnostics",
         "Language",
         "Theme",
@@ -157,7 +157,7 @@ fn each_section_says_what_it_holds_under_its_heading_without_a_help_button() {
 
     let heading = harness.get_by_label("Appearance").rect();
     let help = harness
-        .get_by_label("The language, colours and motion of this window.")
+        .get_by_label("The language, colors and motion of this window.")
         .rect();
 
     assert!(
@@ -168,7 +168,7 @@ fn each_section_says_what_it_holds_under_its_heading_without_a_help_button() {
 
     let intro = toolbox_gui_kit::testing::painted_text(
         &harness,
-        "The language, colours and motion of this window.",
+        "The language, colors and motion of this window.",
     )
     .and_then(|shape| {
         let size = shape.galley.job.sections.first()?.format.font_id.size;

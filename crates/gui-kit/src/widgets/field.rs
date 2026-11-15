@@ -42,11 +42,11 @@ pub(super) struct Parts<'a> {
     pub(super) pill: bool,
 }
 
-/// A small button at a field's end, such as Clear, named `alt`.
+/// A small button at a field's end, such as Clear, named `name`.
 #[derive(Clone, Copy, Debug)]
 pub(super) struct FieldButton<'a> {
     pub(super) icon: Icon,
-    pub(super) alt: &'a str,
+    pub(super) name: &'a str,
 }
 
 /// `edit` as a filled field [`PILL_HEIGHT`] tall with [`CONTROL_RADIUS`]
@@ -186,10 +186,10 @@ fn space(width: f32) -> Atom<'static> {
 /// Added after the text edit, so it lies over it and takes the click.
 fn field_button(ui: &Ui, field: Id, rect: Rect, button: FieldButton<'_>) -> bool {
     let response = ui.interact(rect, field.with("button"), Sense::click());
-    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), button.alt));
+    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), button.name));
     let pressed = tokens::current(ui.ctx()).pressed;
     paint_small_button(ui, rect, &response, button.icon, pressed);
-    response.on_hover_text(button.alt).clicked()
+    response.on_hover_text(button.name).clicked()
 }
 
 /// `points` rounded up to whole points, as a margin holds them.

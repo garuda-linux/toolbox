@@ -87,7 +87,7 @@ fn drawn() -> (Harness<'static, Rows>, Rows) {
                 .rect;
 
                 let drawn = card_row(ui, false, |ui| {
-                    split_row(ui, 40.0, pictured, |ui| switch(ui, true, PICTURED, true)).0
+                    split_row(ui, 40.0, pictured, |ui| switch(ui, true, PICTURED)).0
                 });
 
                 rows.pictured = drawn.response.rect;

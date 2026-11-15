@@ -15,7 +15,7 @@ const UNIT_WIDTH: f32 = 72.0;
 fn shown(value: u32) -> egui_kittest::Harness<'static, u32> {
     let mut harness = harness(300.0, 80.0).build_ui_state(
         |ui, value: &mut u32| {
-            number_field(ui, value, 1..=30, WIDTH, "Pings");
+            number_field(ui, value, 1..=30, WIDTH, ("Pings", "Pings"));
         },
         value,
     );
@@ -88,7 +88,7 @@ fn letters_are_not_typed_and_escape_keeps_the_value() {
 fn with_unit(value: u32, width: f32) -> egui_kittest::Harness<'static, u32> {
     let mut harness = harness(300.0, 80.0).build_ui_state(
         move |ui, value: &mut u32| {
-            number_field_with_unit(ui, value, 0..=300, width, ("Pings", "s"));
+            number_field_with_unit(ui, value, 0..=300, width, ("Pings", "Pings", "s"));
         },
         value,
     );
@@ -210,4 +210,40 @@ fn a_screen_reader_hears_the_number_and_its_range() {
     assert_eq!(node.numeric_value(), Some(5.0_f64));
     assert_eq!(node.min_numeric_value(), Some(1.0_f64));
     assert_eq!(node.max_numeric_value(), Some(30.0_f64));
+}
+
+/// Two fields named alike keep their own typing. Their ids come from the
+/// salts, so digits typed into the first never show in the second.
+#[test]
+fn fields_named_alike_keep_their_own_typing() {
+    let mut harness = harness(300.0, 120.0).build_ui_state(
+        |ui, values: &mut (u32, u32)| {
+            number_field(ui, &mut values.0, 1..=30, WIDTH, ("first", "Pings"));
+            number_field(ui, &mut values.1, 1..=30, WIDTH, ("second", "Pings"));
+        },
+        (3, 7),
+    );
+
+    harness.run();
+    harness
+        .query_all_by_role_and_label(Role::SpinButton, "Pings")
+        .next()
+        .expect("the first field")
+        .click();
+    harness.run();
+    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
+    harness.run();
+    harness
+        .query_all_by_role_and_label(Role::SpinButton, "Pings")
+        .next()
+        .expect("the first field")
+        .type_text("9");
+    harness.run();
+
+    let values: Vec<Option<String>> = harness
+        .query_all_by_role_and_label(Role::SpinButton, "Pings")
+        .map(|node| node.value())
+        .collect();
+
+    assert_eq!(values, [Some("9".to_owned()), Some("7".to_owned())]);
 }

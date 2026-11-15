@@ -16,7 +16,7 @@ const TEXTS: SearchTexts<'static> = SearchTexts {
 fn field(text: &str) -> Harness<'static, String> {
     let mut harness = harness(400.0, 100.0).build_ui_state(
         |ui, text: &mut String| {
-            search_field(ui, text, TEXTS, 300.0);
+            search_field(ui, "test-search", text, TEXTS, 300.0);
         },
         text.to_owned(),
     );
@@ -97,7 +97,7 @@ fn a_focus_request_no_field_took_lapses() {
     let mut harness = harness(400.0, 100.0).build_ui_state(
         |ui, (shown, text): &mut (bool, String)| {
             if *shown {
-                search_field(ui, text, TEXTS, 300.0);
+                search_field(ui, "test-search", text, TEXTS, 300.0);
             }
         },
         (false, String::new()),
@@ -146,7 +146,7 @@ fn pill() -> (Harness<'static, (String, Rect)>, Rect) {
     let mut harness = harness(400.0, 100.0).build_ui_state(
         |ui, (text, pill): &mut (String, Rect)| {
             let left_top = ui.cursor().min;
-            search_field(ui, text, TEXTS, 300.0);
+            search_field(ui, "test-search", text, TEXTS, 300.0);
             *pill = Rect::from_min_size(left_top, egui::vec2(300.0, PILL_HEIGHT));
         },
         (String::new(), Rect::NOTHING),

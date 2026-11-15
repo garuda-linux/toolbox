@@ -108,7 +108,7 @@ fn listing(ui: &mut Ui, context: &PageContext<'_>, built: Option<&Built>) {
     let Some(built) = built else {
         let said = i18n::text(&ctx, "kernels-unavailable");
         let again = i18n::text(&ctx, "common-read-again");
-        if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again) {
+        if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again).clicked() {
             context.commands.send(KernelCommand::Refresh);
         }
 
@@ -149,7 +149,7 @@ fn header(ui: &mut Ui, context: &PageContext<'_>) {
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Kernels>().refusal();
-    if refused_banner(ui, refused, Tone::Warning, "kernels-dismiss") {
+    if refused_banner(ui, refused, Tone::Error, "kernels-dismiss") {
         context
             .commands
             .send(AppCommand::DismissRefusal(PageId::Kernels));
@@ -167,7 +167,7 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, built: &Built) {
         (Some(_), _) => {
             let text = i18n::text(&ctx, "kernels-dkms-failed");
             let again = i18n::text(&ctx, "common-read-again");
-            if banner(ui, Tone::Warning, &text, &[&again]) == Some(0) {
+            if banner(ui, Tone::Warning, &text, &[&again]).value == Some(0) {
                 context.commands.send(KernelCommand::Refresh);
             }
 
@@ -214,7 +214,7 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, built: &Built) {
 
         let text = i18n::text_with(&ctx, text, &[("count", &count.to_string())]);
         let action = i18n::text(&ctx, action);
-        if banner(ui, Tone::Warning, &text, &[&action]) == Some(0) {
+        if banner(ui, Tone::Warning, &text, &[&action]).value == Some(0) {
             context.commands.send(command);
         }
 

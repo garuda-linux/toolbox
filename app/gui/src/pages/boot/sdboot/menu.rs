@@ -1,5 +1,6 @@
 use egui::Ui;
 use toolbox_core::domains::LoaderSettingsDomain;
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{Select, segmented, segmented_width};
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
@@ -106,7 +107,7 @@ fn default_entry(
     let width = wide_control(ui);
     row(ui, true, &words, width, |ui| {
         let picked = ui
-            .add_enabled_ui(!remembered && !entries.is_empty(), |ui| {
+            .enabled_ui(!remembered && !entries.is_empty(), |ui| {
                 Select::new(&title, &names)
                     .selected(current)
                     .placeholder(&placeholder)
@@ -115,7 +116,7 @@ fn default_entry(
             })
             .inner;
 
-        if let Some(entry) = picked.and_then(|index| entries.get(index)) {
+        if let Some(entry) = picked.value.and_then(|index| entries.get(index)) {
             send(
                 context,
                 LoaderSetting::Default(Some(entry.default_pattern())),
@@ -184,7 +185,8 @@ fn timeout(ui: &mut Ui, context: &PageContext<'_>, settings: &LoaderSettings) {
                 .selected(mode)
                 .placeholder(&i18n::text(&ctx, "boot-sdboot-timeout-menu-disabled"))
                 .width(width)
-                .show(ui);
+                .show(ui)
+                .value;
 
             let wanted = match picked {
                 Some(0) => Some(None),
@@ -241,7 +243,7 @@ fn switch(ui: &mut Ui, context: &PageContext<'_>, key: LoaderKey, value: Option<
     };
 
     row(ui, false, &words, width, |ui| {
-        let picked = segmented(ui, &title, &options, value);
+        let picked = segmented(ui, &title, &title, &options, value).value;
 
         if let Some(wanted) = picked.filter(|wanted| *wanted != value) {
             let setting = match key {

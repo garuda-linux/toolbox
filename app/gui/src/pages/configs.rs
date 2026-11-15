@@ -17,7 +17,7 @@ use toolbox_core::features::configs::session::{Phase, Stage};
 use toolbox_core::features::configs::viewing;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::theme::PILL_HEIGHT;
-use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, page_toolbar, pill_button, pill_width};
+use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, mono_small, page_toolbar, pill_button};
 
 use super::header::{refresh_header, search};
 use super::rows::refused_banner;
@@ -113,12 +113,12 @@ impl ConfigsPage {
         let finished = matches!(phase, Phase::Saved | Phase::Unchanged | Phase::Failed);
         let dismiss = i18n::text(&ctx, "configs-dismiss");
         let action = finished.then_some(dismiss.as_ref());
-        if banner(ui, tone, &text, action.as_slice()) == Some(0) {
+        if banner(ui, tone, &text, action.as_slice()).value == Some(0) {
             context.commands.send(ConfigsCommand::Dismiss);
         }
 
         if let (Phase::Failed, Some(detail)) = (phase, session.problem().and_then(texts::detail)) {
-            ui.label(egui::RichText::new(detail).small().monospace());
+            ui.label(mono_small(ui, detail, ui.tokens().text));
         }
 
         let word = |id: &str| i18n::text(&ctx, id).into_owned();
@@ -175,22 +175,4 @@ fn text_room(ui: &Ui) -> f32 {
     let spacing = ui.spacing().item_spacing.y;
     let buttons = spacing.mul_add(2.0, ui.tokens().sizes.dialog_gap + PILL_HEIGHT);
     (ui.available_height() - buttons).max(MIN_TEXT_HEIGHT)
-}
-
-/// One row of pill buttons at the dialog's right edge. `labels` are the
-/// buttons `add` draws, so the row knows its width before it draws them.
-fn right_buttons<R>(ui: &mut Ui, labels: &[&str], add: impl FnOnce(&mut Ui) -> R) -> R {
-    ui.horizontal(|ui| {
-        let gap = ui.tokens().sizes.control_gap;
-        ui.spacing_mut().item_spacing.x = gap;
-        let width = labels
-            .iter()
-            .map(|label| pill_width(ui, label) + gap)
-            .sum::<f32>()
-            - gap;
-
-        ui.add_space((ui.available_width() - width).max(0.0));
-        add(ui)
-    })
-    .inner
 }

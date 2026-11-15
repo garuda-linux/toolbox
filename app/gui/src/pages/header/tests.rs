@@ -78,7 +78,7 @@ fn the_search_is_named_and_clears_with_the_shared_button() {
 
     harness.run();
     harness
-        .get_by_role_and_label(Role::Button, "Clear the search")
+        .get_by_role_and_label(Role::Button, "Clear search")
         .click();
     harness.run();
 

@@ -165,7 +165,7 @@ fn search_row(ui: &mut Ui, search: &mut Search) -> bool {
             clear: &clear,
         };
 
-        let typed = search_field(ui, &mut search.query, texts, SEARCH_WIDTH).changed();
+        let typed = search_field(ui, texts.name, &mut search.query, texts, SEARCH_WIDTH).changed();
         ui.add_space(ui.tokens().sizes.control_gap);
 
         if typed {
@@ -187,7 +187,7 @@ fn search_row(ui: &mut Ui, search: &mut Search) -> bool {
         }
 
         let pressed = ui
-            .add_enabled_ui(found > 1, |ui| pill_button(ui, &next, ButtonKind::Soft))
+            .enabled_ui(found > 1, |ui| pill_button(ui, &next, ButtonKind::Soft))
             .inner
             .clicked();
 

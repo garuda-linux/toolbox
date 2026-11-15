@@ -27,7 +27,7 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("packages"),
         Step::shortcut(Key::A),
         Step::Text("zz-no-such-package"),
-        Step::WaitEither("No package matches “zz-no-such-package”", UNAVAILABLE),
+        Step::WaitEither("Nothing matches “zz-no-such-package”", UNAVAILABLE),
         Step::Shot("packages-nothing"),
     ]
 }

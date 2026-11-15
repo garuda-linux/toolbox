@@ -12,8 +12,8 @@ is kept at once and takes effect at once.
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | **Language**                        | **System language** (default) or one of the languages the app is translated into. See below                                             |
 | **Theme**                           | **As the desktop** (default), **Dark** or **Light**                                                                                     |
-| **Dark colour scheme**              | **System** (default) or one of the app's dark colour schemes. See below                                                                 |
-| **Light colour scheme**             | **System** (default) or one of the app's light colour schemes. See below                                                                |
+| **Dark color scheme**               | **System** (default) or one of the app's dark color schemes. See below                                                                  |
+| **Light color scheme**              | **System** (default) or one of the app's light color schemes. See below                                                                 |
 | **Reduced motion**                  | **As the system** (default), **On** or **Off**. **On** shows panels and notes at once instead of sliding and fading them                |
 | **Start at login**                  | On or off (default). On opens the window each time you log in                                                                           |
 | **Check for updates automatically** | On (default) or off. While on, **Time between checks** takes 5 to 1440 minutes, 60 by default                                           |
@@ -51,16 +51,16 @@ English.
 > **Note:** Programs that run in the **Console** print in the language of
 > your system, not in the one chosen here.
 
-### Pick a colour scheme
+### Pick a color scheme
 
 By default the window takes the colours and the accent of your desktop.
-To use one of the app's own colour schemes instead, pick it under **Dark
-colour scheme** or **Light colour scheme**. The colours change at once.
+To use one of the app's own color schemes instead, pick it under **Dark
+color scheme** or **Light color scheme**. The colours change at once.
 
-| Picker                  | Colour schemes                                                                                                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Dark colour scheme**  | Catppuccin Frappé, Catppuccin Macchiato, Catppuccin Mocha, Nord, Dracula, Sweet, Tokyo Night, Gruvbox Dark, Solarized Dark, Rosé Pine, Rosé Pine Moon, Everforest Dark, One Dark, Ayu Dark, Ayu Mirage |
-| **Light colour scheme** | Catppuccin Latte, Tokyo Night Day, Nord light, Dracula Alucard, Gruvbox Light, Solarized Light, Rosé Pine Dawn, Everforest Light, Ayu Light                                                            |
+| Picker                 | Color schemes                                                                                                                                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Dark color scheme**  | Catppuccin Frappé, Catppuccin Macchiato, Catppuccin Mocha, Nord, Dracula, Sweet, Tokyo Night, Gruvbox Dark, Solarized Dark, Rosé Pine, Rosé Pine Moon, Everforest Dark, One Dark, Ayu Dark, Ayu Mirage |
+| **Light color scheme** | Catppuccin Latte, Tokyo Night Day, Nord light, Dracula Alucard, Gruvbox Light, Solarized Light, Rosé Pine Dawn, Everforest Light, Ayu Light                                                            |
 
 **Theme** still decides which of the two shows: the dark scheme while the
 window is dark, the light one while it is light. A picked scheme replaces
@@ -77,13 +77,14 @@ To go back to the desktop's colours, pick **System**.
 ### Start the app at login
 
 **Start at login** adds Garuda Toolbox to your desktop's autostart: a link
-named `garuda-toolbox.desktop` in `~/.config/autostart`. Turning it off
+named `org.garudalinux.toolbox.desktop` in `~/.config/autostart`. Turning it off
 removes the link again. It needs no password, and it only affects your
 user. The switch shows whether the link was there when the app started.
+After a boot into a Btrfs snapshot, the app does not start at login.
 
 ### Where the settings are kept
 
-**Language**, **Dark colour scheme**, **Light colour scheme**, **Check
+**Language**, **Dark color scheme**, **Light color scheme**, **Check
 for updates automatically**, **Time between checks**, **Services page opens on**, **Show AUR packages**, **Copy
 reports to the clipboard** and **Log file detail** live in
 `~/.config/garuda-toolbox/settings.toml`,

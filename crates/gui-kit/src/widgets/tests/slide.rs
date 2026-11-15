@@ -21,7 +21,7 @@ fn scopes() -> Harness<'static, Scope> {
         .build_ui_state(
             |ui, current: &mut Scope| {
                 let options = [(Scope::System, "System"), (Scope::User, "User")];
-                if let Some(value) = segmented(ui, "Units", &options, *current) {
+                if let Some(value) = segmented(ui, "Units", "Units", &options, *current).value {
                     *current = value;
                 }
             },
@@ -90,7 +90,7 @@ fn the_pill_moves_with_its_track() {
                 ui.horizontal(|ui| {
                     ui.add_space(*indent);
                     let options = [(Scope::System, "System"), (Scope::User, "User")];
-                    _ = segmented(ui, "Units", &options, Scope::System);
+                    _ = segmented(ui, "Units", "Units", &options, Scope::System);
                 });
             },
             0.0_f32,

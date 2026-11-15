@@ -10,7 +10,7 @@ use tokio::runtime::Handle;
 use toolbox_system::pkexec::HelperError;
 use toolbox_system::{BootMenuSource, MenuRead};
 
-use crate::lane::Lane;
+use crate::lane::{Asked, Lane};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum FileKind {
@@ -62,7 +62,7 @@ pub struct Jobs {
     setup: BootSetup,
     /// Set when the app ends, so a password dialog no longer holds a read.
     cancel: Arc<AtomicBool>,
-    read: Lane<MenuRead>,
+    read: Asked<MenuRead>,
     picked: Lane<Answer>,
 }
 
@@ -80,23 +80,31 @@ impl Drop for Jobs {
 
 impl Jobs {
     pub fn new(setup: BootSetup, ctx: egui::Context) -> Self {
+        let cancel: Arc<AtomicBool> = Arc::default();
+        let read = Asked::new(
+            setup.runtime.clone(),
+            crate::waking::repaint(ctx.clone()),
+            {
+                let menu = Arc::clone(&setup.menu);
+                let cancel = Arc::clone(&cancel);
+                move |lane| {
+                    let source = Arc::clone(&menu);
+                    let cancel = Arc::clone(&cancel);
+                    lane.blocking(
+                        "menu",
+                        move || source.menu(&cancel),
+                        |read| read.unwrap_or(MenuRead::Unknown(HelperError::Stopped)),
+                    );
+                }
+            },
+        );
+
         Self {
-            read: Lane::new(setup.runtime.clone(), crate::waking::repaint(ctx.clone())),
+            read,
             picked: Lane::new(setup.runtime.clone(), crate::waking::repaint(ctx)),
             setup,
-            cancel: Arc::default(),
+            cancel,
         }
-    }
-
-    /// A read that panicked counts as a menu that could not be read.
-    pub fn read_menu(&self) {
-        let source = Arc::clone(&self.setup.menu);
-        let cancel = Arc::clone(&self.cancel);
-        self.read.blocking(
-            "menu",
-            move || source.menu(&cancel),
-            |read| read.unwrap_or(MenuRead::Unknown(HelperError::Stopped)),
-        );
     }
 
     /// A chooser that panicked counts as a dialog that could not open.
@@ -113,8 +121,14 @@ impl Jobs {
         );
     }
 
-    pub fn menu_read(&self) -> Option<MenuRead> {
-        self.read.landed().pop()
+    /// Starts a read of the menu. Returns whether one started.
+    pub fn read_menu(&mut self) -> bool {
+        self.read.read()
+    }
+
+    /// The menu read that landed, if any. A read asked meanwhile starts then.
+    pub fn menu_read(&mut self) -> Option<MenuRead> {
+        self.read.take()
     }
 
     /// `None` while no dialog answered.

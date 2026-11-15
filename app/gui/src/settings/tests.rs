@@ -20,7 +20,7 @@ fn eventually(done: impl Fn() -> bool) -> bool {
 }
 
 fn store(dir: &Path) -> (FileStore, Autostart) {
-    let autostart = Autostart::new(dir.join("autostart"), dir.join("garuda-toolbox.desktop"));
+    let autostart = Autostart::new(dir.join("autostart"), dir.join("autostart.desktop"));
     (
         FileStore::new(dir.join("settings.toml"), autostart.clone()),
         autostart,

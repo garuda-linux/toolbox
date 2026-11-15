@@ -88,7 +88,7 @@ impl Form {
         let offered = [show.as_ref()];
         let actions: &[&str] = if context.console_open { &[] } else { &offered };
         ui.add_space(ui.tokens().sizes.card_gap);
-        if banner(ui, tone, &i18n::text(&ctx, said), actions) == Some(0) {
+        if banner(ui, tone, &i18n::text(&ctx, said), actions).value == Some(0) {
             context.commands.send(UiCommand::ToggleConsole);
         }
     }
@@ -213,14 +213,14 @@ fn buttons(ui: &mut Ui, ready: bool, missing: bool) -> (bool, bool) {
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     ui.horizontal(|ui| {
         let ping = ui
-            .add_enabled_ui(ready, |ui| {
+            .enabled_ui(ready, |ui| {
                 pill_button(ui, &text("network-ping"), ButtonKind::Soft)
             })
             .inner
             .clicked();
 
         let trace = ui
-            .add_enabled_ui(ready && !missing, |ui| {
+            .enabled_ui(ready && !missing, |ui| {
                 pill_button(ui, &text("network-traceroute"), ButtonKind::Soft)
             })
             .inner
@@ -243,7 +243,7 @@ fn number(ui: &mut Ui, title: &str, value: &mut u32, max: u32) {
 
     row(ui, false, &words, NUMBER_WIDTH, |ui| {
         // One width for every number, whatever its digits.
-        number_field(ui, value, 1..=max, NUMBER_FIELD_WIDTH, title);
+        number_field(ui, value, 1..=max, NUMBER_FIELD_WIDTH, (title, title));
     });
 }
 
@@ -267,7 +267,7 @@ fn hotspot(ui: &mut Ui, context: &PageContext<'_>) {
     };
 
     let clicked = ui
-        .add_enabled_ui(state != PackageState::Unknown, |ui| {
+        .enabled_ui(state != PackageState::Unknown, |ui| {
             pill_button(ui, &text(button), ButtonKind::Soft)
         })
         .inner

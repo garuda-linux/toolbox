@@ -23,6 +23,7 @@ pub mod maintenance;
 pub mod network;
 pub mod packages;
 pub mod rows;
+pub mod search_empty;
 pub mod services;
 pub mod setting_row;
 pub mod settings;

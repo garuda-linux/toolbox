@@ -11,7 +11,7 @@ use toolbox_core::Toggle;
 use toolbox_core::features::toggles::shown::{Control, Entry};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, RowState, icon_button_width, pill_button_at_least, pill_width, switch,
+    ButtonKind, RowState, icon_button_width, pill_button_at_least, pill_width, tristate_switch,
 };
 
 use crate::catalogs::CatalogId;
@@ -97,7 +97,10 @@ pub fn width(ui: &Ui, control: Control, setting: Setting) -> f32 {
 pub fn show(ui: &mut Ui, shown: Shown<'_>, state: &RowState) -> bool {
     let response = match shown.control {
         Control::Switch if shown.setting == Setting::Switch => {
-            switch(ui, shown.on, shown.title, shown.enabled)
+            // An unread state shows as mixed, not as off.
+            let on = (!shown.unknown).then_some(shown.on);
+            ui.enabled_ui(shown.enabled, |ui| tristate_switch(ui, on, shown.title))
+                .inner
         }
         Control::Switch | Control::Install | Control::Remove | Control::TakeBack => {
             button(ui, shown)
@@ -142,7 +145,7 @@ fn button(ui: &mut Ui, shown: Shown<'_>) -> egui::Response {
 
     let width = button_width(ui);
     let response = ui
-        .add_enabled_ui(shown.enabled, |ui| {
+        .enabled_ui(shown.enabled, |ui| {
             pill_button_at_least(ui, &text, ButtonKind::Soft, width)
         })
         .inner;

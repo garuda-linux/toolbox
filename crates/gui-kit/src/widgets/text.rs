@@ -3,12 +3,20 @@ use std::sync::Arc;
 use egui::text::TextWrapping;
 use egui::{Color32, Galley, RichText, TextStyle, TextWrapMode, Ui, WidgetText};
 
-use crate::fonts::{self, Weight};
+use crate::fonts::{self, SMALL, Weight};
 
 #[must_use = "the text does nothing until added to a ui"]
 pub fn rich(ui: &Ui, text: &str, weight: Weight, scale: f32, color: Color32) -> RichText {
     RichText::new(text)
         .font(fonts::font(ui.style(), weight, scale))
+        .color(color)
+}
+
+/// Monospace text at the small step, for paths and config lines.
+#[must_use = "the text does nothing until added to a ui"]
+pub fn mono_small(ui: &Ui, text: &str, color: Color32) -> RichText {
+    RichText::new(text)
+        .font(fonts::mono(ui.style(), SMALL))
         .color(color)
 }
 

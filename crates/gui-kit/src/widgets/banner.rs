@@ -7,7 +7,7 @@ use egui::{
 use super::buttons::{pill_button, rimmed_pill_button};
 use super::icon_tile::TileSize;
 use super::status_tile::paint_status_tile;
-use super::{ButtonKind, Tone, rich, split_row};
+use super::{ButtonKind, Choice, Tone, rich, split_row};
 use crate::fonts::{BODY, Weight};
 use crate::icons::Icon;
 use crate::theme::{CARD_RADIUS, PILL_HEIGHT};
@@ -31,11 +31,11 @@ impl Tone {
 }
 
 /// right, in their order. Returns the index of the one clicked.
-pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Option<usize> {
+pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Choice<usize> {
     let tokens = tokens::current(ui.ctx());
     let wash = tone.wash(&tokens);
 
-    Frame::new()
+    let framed = Frame::new()
         .fill(wash)
         .corner_radius(CornerRadius::same(CARD_RADIUS))
         .inner_margin(Margin::from(tokens.sizes.row_padding))
@@ -80,8 +80,12 @@ pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Option<u
                 },
             )
             .1
-        })
-        .inner
+        });
+
+    Choice {
+        response: framed.response,
+        value: framed.inner,
+    }
 }
 
 /// The mark of `tone` centred on the whole of `text`, however many lines

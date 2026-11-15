@@ -4,7 +4,7 @@
 #[cfg(test)]
 mod tests;
 
-use egui::{Color32, Image, Response, Role, TextStyle, Ui, WidgetInfo, vec2};
+use egui::{Color32, Image, InnerResponse, Response, Role, TextStyle, Ui, WidgetInfo, vec2};
 
 use crate::fonts::{BODY, Weight};
 use crate::icons::{self, Icon};
@@ -21,6 +21,18 @@ pub trait UiExt {
 
     fn tokens(&self) -> Tokens {
         tokens::current(self.ui().ctx())
+    }
+
+    /// [`Ui::add_enabled_ui`] that skips the disable when the ui is disabled
+    /// already. egui multiplies the opacity of every disable, so a nested one
+    /// would fade its content twice.
+    fn enabled_ui<R>(&mut self, enabled: bool, add: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
+        let ui = self.ui_mut();
+        if enabled || !ui.is_enabled() {
+            ui.scope(add)
+        } else {
+            ui.add_enabled_ui(false, add)
+        }
     }
 
     /// In the body font as every other text, in the warning colour.

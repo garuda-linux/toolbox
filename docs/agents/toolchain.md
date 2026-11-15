@@ -54,7 +54,7 @@
 
 - `scripts/install.sh` is the only place that knows where files go, for
   both `nix/package.nix` and `packaging/PKGBUILD`.
-- The desktop file is named like the binary and the Wayland app_id
+- The desktop file is named like the Wayland app_id
   (`APP_ID` in `app/gui/src/main.rs`), so the compositor finds its icon.
   Validate it and the metainfo with `desktop-file-validate` and
   `appstreamcli validate --no-net`.

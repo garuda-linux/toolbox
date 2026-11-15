@@ -3,19 +3,21 @@
 //! Escape to leave, and never larger than the window.
 
 mod focus;
+mod pending;
 mod question;
 
 use egui::{
     Align, Align2, AreaState, Color32, Context, CornerRadius, Frame, Id, LayerId, Layout, Margin,
     Modal, Ui, vec2,
 };
+pub use pending::Pending;
 pub use question::{Asked, Question, question};
 
 use super::buttons::mark_raised_surface;
 use super::{ButtonKind, icon_button, pill_button, pill_width, rich};
 use crate::fonts::{BODY, SECTION, Weight};
 use crate::theme::POPOVER_RADIUS;
-use crate::{frost, icons, tokens};
+use crate::{UiExt as _, frost, icons, tokens};
 
 const WINDOW_MARGIN: f32 = 20.0;
 /// Where a top-anchored dialog hangs, as a share of the window's height.
@@ -326,7 +328,7 @@ fn buttons(
             return Some(Confirmation::Cancelled);
         }
 
-        ui.add_enabled_ui(ready, |ui| pill_button(ui, confirm, kind))
+        ui.enabled_ui(ready, |ui| pill_button(ui, confirm, kind))
             .inner
             .clicked()
             .then_some(Confirmation::Confirmed)

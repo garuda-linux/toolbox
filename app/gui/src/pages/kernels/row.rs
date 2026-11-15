@@ -301,7 +301,7 @@ fn waiting_button(ui: &mut Ui, context: &PageContext<'_>, text: &str) -> Respons
         ui.end_row();
     }
 
-    ui.add_enabled_ui(!context.busy, |ui| pill_button(ui, text, ButtonKind::Soft))
+    ui.enabled_ui(!context.busy, |ui| pill_button(ui, text, ButtonKind::Soft))
         .inner
 }
 

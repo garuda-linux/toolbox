@@ -4,9 +4,9 @@ use egui::{
 };
 
 use super::menu::{ITEM_INSET, LIST_GAP, MENU_WIDTH, menu_glass};
-use super::press::Pointer;
+use super::press::{Pointer, hover_amount};
 use super::text::cut;
-use super::{focus_ring, line, rich};
+use super::{Choice, focus_ring, line, rich};
 use crate::fonts::{BODY, Weight};
 use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, RADIUS};
 use crate::tokens::Tokens;
@@ -108,7 +108,7 @@ impl<'a> Select<'a> {
 
     /// Returns the option picked this frame, also when it is the chosen
     /// one.
-    pub fn show(self, ui: &mut Ui) -> Option<usize> {
+    pub fn show(self, ui: &mut Ui) -> Choice<usize> {
         let Some(caption) = self.caption else {
             return self.pill(ui);
         };
@@ -128,7 +128,7 @@ impl<'a> Select<'a> {
         .inner
     }
 
-    fn pill(self, ui: &mut Ui) -> Option<usize> {
+    fn pill(self, ui: &mut Ui) -> Choice<usize> {
         let Self {
             label,
             options,
@@ -173,7 +173,10 @@ impl<'a> Select<'a> {
         let open = Popup::is_id_open(ui.ctx(), Popup::default_response_id(&response));
         ui.ctx()
             .accesskit_node_builder(response.id, |node| node.set_expanded(open));
-        picked
+        Choice {
+            response,
+            value: picked,
+        }
     }
 }
 
@@ -281,7 +284,14 @@ fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
     }
 
     let tokens = tokens::current(ui.ctx());
-    let fill = Pointer::of_focusable(response).fill(&tokens, tokens.field);
+    let pointer = Pointer::of_focusable(response);
+    let fill = if pointer == Pointer::Pressed {
+        tokens.pressed
+    } else {
+        tokens
+            .field
+            .lerp_to_gamma(tokens.hover, hover_amount(ui, response, pointer))
+    };
 
     // A disabled ui fades it once, see `press.rs`.
     let ink = tokens.text;
@@ -319,17 +329,18 @@ fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
 
 /// An option's fill: the chosen one is tinted at rest, any one shows the
 /// hover and press under the pointer.
-pub(super) const fn option_fill(
-    tokens: &Tokens,
-    chosen: bool,
-    pointer: Pointer,
-) -> Option<Color32> {
-    match (pointer, chosen) {
-        (Pointer::Hovered, _) => Some(tokens.hover),
-        (Pointer::Pressed, _) => Some(tokens.pressed),
-        (Pointer::Rest, true) => Some(tokens.accent_soft),
-        (Pointer::Rest, false) => None,
+pub(super) fn option_fill(tokens: &Tokens, chosen: bool, pointer: Pointer, hover: f32) -> Color32 {
+    if pointer == Pointer::Pressed {
+        return tokens.pressed;
     }
+
+    let rest = if chosen {
+        tokens.accent_soft
+    } else {
+        Color32::TRANSPARENT
+    };
+
+    rest.lerp_to_gamma(tokens.hover, hover)
 }
 
 /// Too wide text is cut, shown whole on hover and to screen readers.
@@ -340,10 +351,16 @@ fn option_row(ui: &mut Ui, text: &str, chosen: bool) -> Response {
     response.widget_info(|| WidgetInfo::labeled(Role::ListBoxOption, true, text));
     super::mark_selected(ui, &response, chosen);
 
-    if let Some(fill) = option_fill(&tokens, chosen, Pointer::of(&response)) {
-        ui.painter()
-            .rect_filled(rect, CornerRadius::same(RADIUS), fill);
-    }
+    let pointer = Pointer::of(&response);
+    let fill = option_fill(
+        &tokens,
+        chosen,
+        pointer,
+        hover_amount(ui, &response, pointer),
+    );
+
+    ui.painter()
+        .rect_filled(rect, CornerRadius::same(RADIUS), fill);
 
     let weight = if chosen {
         Weight::SemiBold

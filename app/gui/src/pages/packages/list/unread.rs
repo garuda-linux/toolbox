@@ -26,7 +26,7 @@ pub(super) fn waiting(page: &mut PackagesPage, ui: &mut Ui, aur_on: bool) {
         aur: aur_on.then_some(AurChip { count: None }),
     };
 
-    ui.add_enabled_ui(false, |ui| filters(page, ui, counts));
+    ui.enabled_ui(false, |ui| filters(page, ui, counts));
     ui.add_space(ui.tokens().sizes.header_gap);
     placeholder(ui, "packages-loading");
 }
@@ -56,7 +56,7 @@ pub(super) fn unreadable_page(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let said = i18n::text(&ctx, index_text(context));
     let again = i18n::text(&ctx, "common-read-again");
-    if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again) {
+    if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again).clicked() {
         context.commands.send(PackagesCommand::Refresh);
     }
 }
@@ -68,7 +68,10 @@ pub(super) fn unreadable_index(ui: &mut Ui, context: &PageContext<'_>) {
 pub fn unreadable(ui: &mut Ui, context: &PageContext<'_>, id: &str) {
     let ctx = ui.ctx().clone();
     let again = i18n::text(&ctx, "common-read-again");
-    if banner(ui, Tone::Warning, &i18n::text(&ctx, id), &[&again]).is_some() {
+    if banner(ui, Tone::Warning, &i18n::text(&ctx, id), &[&again])
+        .value
+        .is_some()
+    {
         context.commands.send(PackagesCommand::Refresh);
     }
 }

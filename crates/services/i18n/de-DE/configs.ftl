@@ -4,11 +4,9 @@ configs-refresh = Neu einlesen
 configs-search = Konfigurationsdateien suchen
 configs-search-hint = Konfigurationsdateien suchen…
 configs-search-detail = Durchsucht werden Namen, Pfade, Beschreibungen und die Dateien in Verzeichnissen.
-configs-clear-search = Suche leeren
 configs-reading = Konfigurationsdateien werden gesucht…
 configs-unreadable = Die Liste der Konfigurationsdateien konnte nicht gelesen werden
 configs-none = Keine der aufgeführten Konfigurationsdateien ist auf diesem System vorhanden
-configs-no-match = Keine passende Konfigurationsdatei
 configs-dismiss = Ausblenden
 configs-list = Dateien: { $section }
 

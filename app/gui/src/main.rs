@@ -44,10 +44,10 @@ use self::ports::{
     helper_services, kept_queue, machine, maintenance, network, news_reader, packages, pictures,
     repair,
 };
-use self::start::{load_settings, preferences};
+use self::start::{load_settings, preferences, profiler, skips_autostart};
 
 /// The Wayland `app_id`, the desktop file's name and eframe's storage folder.
-const APP_ID: &str = "garuda-toolbox";
+const APP_ID: &str = "org.garudalinux.toolbox";
 /// The log file is `<log folder>/<PROGRAM>.log`.
 const PROGRAM: &str = "garuda-toolbox";
 
@@ -138,6 +138,7 @@ fn main() -> ExitCode {
     }
 
     let opening = match opening(&cli.window) {
+        Ok(_) if skips_autostart(&cli.window) => return ExitCode::SUCCESS,
         Ok(opening) => opening,
         Err(error) => return toolbox_commands::usage(&error.to_string()).into(),
     };
@@ -342,21 +343,6 @@ fn readers(handle: &Handle, ctx: &egui::Context, settings: &Settings) -> Readers
         programs: reader::spawn(handle, repaint(), "the programs", Programs::check),
         units,
     }
-}
-
-/// Tracy's layer in a profiling build.
-#[cfg(feature = "profiling")]
-#[expect(
-    clippy::unnecessary_wraps,
-    reason = "a build without the feature has no layer"
-)]
-fn profiler() -> Option<subscriber::Profiler> {
-    Some(toolbox_gui::profiling::layer())
-}
-
-#[cfg(not(feature = "profiling"))]
-const fn profiler() -> Option<subscriber::Profiler> {
-    None
 }
 
 fn refuse(message: &str) -> ExitCode {

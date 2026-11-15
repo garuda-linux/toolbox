@@ -4,10 +4,8 @@ toggles-search = Diese Seite durchsuchen
 # The chip that shows every section.
 toggles-all = Alle
 toggles-search-hint = Diese Seite durchsuchen…
-toggles-nothing-matches = Keine Treffer
 # $search is what the user typed.
 toggles-nothing-matches-detail = Kein Eintrag dieser Seite enthält „{ $search }“ im Namen oder in der Beschreibung.
-toggles-clear-search = Suche leeren
 # A chip picked a section without a match while other sections have some. $section is the section's title, $search what the user typed.
 toggles-nothing-in-section = Keine Treffer in { $section }
 toggles-nothing-in-section-detail = Andere Abschnitte haben Einträge mit „{ $search }“ im Namen oder in der Beschreibung.

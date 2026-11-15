@@ -36,7 +36,7 @@ pub(super) fn menu(ui: &mut Ui, console: &Console, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     menu_button(ui, &text("console-output-menu"), |ui| {
-        let copying = ui.add_enabled_ui(output, |ui| menu_item(ui, &text("console-copy-output")));
+        let copying = ui.enabled_ui(output, |ui| menu_item(ui, &text("console-copy-output")));
 
         if copying.inner.clicked() {
             share::copy(
@@ -47,7 +47,7 @@ pub(super) fn menu(ui: &mut Ui, console: &Console, commands: &CommandSender) {
             );
         }
 
-        let sharing = ui.add_enabled_ui(output && !console.share().running(), |ui| {
+        let sharing = ui.enabled_ui(output && !console.share().running(), |ui| {
             menu_item(ui, &text("console-share-output"))
         });
 
@@ -61,7 +61,7 @@ pub(super) fn menu(ui: &mut Ui, console: &Console, commands: &CommandSender) {
         }
 
         // A running plan's programs still write to the terminal.
-        let clearing = ui.add_enabled_ui(console.status() != Status::Running, |ui| {
+        let clearing = ui.enabled_ui(console.status() != Status::Running, |ui| {
             menu_item(ui, &text("console-clear-output"))
         });
 

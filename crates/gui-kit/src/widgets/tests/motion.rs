@@ -66,15 +66,15 @@ fn a_pressed_chip_deepens_selected_or_not() {
     let tokens = tokens();
 
     assert_eq!(
-        chip_fill(&tokens, tokens.field, false, Pointer::Pressed),
+        chip_fill(&tokens, tokens.field, false, Pointer::Pressed, 0.0),
         tokens.pressed
     );
     assert_ne!(
-        chip_fill(&tokens, tokens.text, true, Pointer::Pressed),
+        chip_fill(&tokens, tokens.text, true, Pointer::Pressed, 0.0),
         tokens.text
     );
     assert_eq!(
-        chip_fill(&tokens, tokens.text, true, Pointer::Hovered),
+        chip_fill(&tokens, tokens.text, true, Pointer::Hovered, 1.0),
         tokens.text,
         "a selected chip shows no hover"
     );
@@ -168,7 +168,7 @@ fn switches(ui: &mut Ui, (items, on): &mut (Vec<Item>, Vec<bool>)) {
                 return;
             };
 
-            if switch(ui, *state, &format!("Switch {}", item.0), true).clicked() || row.toggle {
+            if switch(ui, *state, &format!("Switch {}", item.0)).clicked() || row.toggle {
                 *state = !*state;
             }
         });
@@ -236,7 +236,7 @@ fn an_arrow_scrolls_its_row_into_view_at_once() {
     let row = harness.get_by_role_and_label(Role::ListItem, "row 06");
     assert!(row.is_focused());
     assert!(row.rect().bottom() <= 200.0, "{:?}", row.rect());
-    harness.step();
+    harness.run();
     assert_eq!(repaint_delay(&harness), Duration::MAX, "no scroll left");
 }
 

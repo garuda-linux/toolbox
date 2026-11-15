@@ -2,13 +2,14 @@ use egui::accesskit::{Role, Toggled};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 use super::super::{CheckRowTexts, check_row, check_row_with_line};
+use crate::UiExt as _;
 use crate::testing::harness;
 
 #[test]
 fn a_check_row_is_a_check_box_that_reports_the_click() {
     let mut harness = harness(300.0, 120.0).build_ui_state(
         |ui, on: &mut bool| {
-            if check_row(ui, *on, "Kitty", "~/.config/kitty/kitty.conf", true).clicked() {
+            if check_row(ui, *on, "Kitty", "~/.config/kitty/kitty.conf").clicked() {
                 *on ^= true;
             }
         },
@@ -36,7 +37,11 @@ fn a_check_row_is_a_check_box_that_reports_the_click() {
 fn a_disabled_check_row_ignores_clicks() {
     let mut harness = harness(300.0, 120.0).build_ui_state(
         |ui, on: &mut bool| {
-            if check_row(ui, *on, "Kitty", "", false).clicked() {
+            if ui
+                .enabled_ui(false, |ui| check_row(ui, *on, "Kitty", ""))
+                .inner
+                .clicked()
+            {
                 *on ^= true;
             }
         },
@@ -57,7 +62,7 @@ fn the_box_starts_where_the_text_fields_above_it_start() {
     let mut harness = harness(300.0, 120.0).build_ui_state(
         |ui, left: &mut f32| {
             *left = ui.max_rect().left();
-            _ = check_row(ui, true, "Administrator", "", true);
+            _ = check_row(ui, true, "Administrator", "");
         },
         0.0,
     );
@@ -85,7 +90,6 @@ fn a_row_with_a_line_shows_it_under_the_label_and_tells_the_whole_list() {
                 line: "Replaces ~/.config/kitty/kitty.conf, ~/.config/kitty/theme.conf",
                 full,
             },
-            true,
         );
     });
 
@@ -102,7 +106,7 @@ fn outside_a_card_the_fill_and_the_target_are_one_rect() {
         ui.add_space(4.0);
         ui.horizontal(|ui| {
             ui.add_space(20.0);
-            ui.vertical(|ui| _ = check_row(ui, false, "Kitty", "", true));
+            ui.vertical(|ui| _ = check_row(ui, false, "Kitty", ""));
         });
     });
 

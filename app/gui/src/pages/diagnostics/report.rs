@@ -8,7 +8,7 @@ use egui::{Label, ScrollArea, TextStyle, Ui};
 use toolbox_calendar::Utc;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::terminal_colors::Ansi;
-use toolbox_gui_kit::widgets::{SearchTexts, pill_width, rich, search_field};
+use toolbox_gui_kit::widgets::{SearchTexts, padded_card, pill_width, rich, search_field};
 use toolbox_gui_kit::{UiExt as _, palette};
 use toolbox_pty::Run;
 use toolbox_services::diagnostics::view::{self, Row};
@@ -18,7 +18,6 @@ use crate::diagnostics::Diagnostics;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::share::rows::{character_count, layout};
-use crate::share::view::padded_card;
 
 /// The view never shrinks below this, in points, even at the bottom of a
 /// short window.
@@ -117,7 +116,7 @@ impl DiagnosticsPage {
                 clear: &clear,
             };
 
-            search_field(ui, &mut self.query, texts, SEARCH_WIDTH);
+            search_field(ui, texts.name, &mut self.query, texts, SEARCH_WIDTH);
             self.report_buttons(ui, context);
         });
     }

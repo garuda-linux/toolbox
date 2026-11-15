@@ -101,7 +101,7 @@ impl PageView for ServicesPage {
             if let Some(failure) = listed.error() {
                 let said = i18n::text(&ctx, failure_text(*failure, self.scope));
                 let again = i18n::text(&ctx, "common-read-again");
-                if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again) {
+                if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again).clicked() {
                     context.commands.send(ServiceCommand::Refresh(self.scope));
                 }
             } else {
@@ -119,7 +119,7 @@ impl PageView for ServicesPage {
         if let Some(failure) = listed.error() {
             let again = i18n::text(&ctx, "services-refresh");
             let said = i18n::text(&ctx, failure_text(*failure, self.scope));
-            if banner(ui, Tone::Error, &said, &[&again]) == Some(0) {
+            if banner(ui, Tone::Error, &said, &[&again]).value == Some(0) {
                 context.commands.send(ServiceCommand::Refresh(self.scope));
             }
 
@@ -179,7 +179,7 @@ impl ServicesPage {
         let _rows = tracing::trace_span!("rows").entered();
         row::column_caption(ui);
         ui.add_space(ui.tokens().sizes.tight_gap);
-        ui.add_enabled_ui(!context.busy, |ui| {
+        ui.enabled_ui(!context.busy, |ui| {
             RowList::new(("units", self.scope), &list, RowHeights::Fixed(height)).show(
                 ui,
                 built.rows.as_slice(),
@@ -281,7 +281,7 @@ impl ServicesPage {
             .map(|(shown, label, count)| (*shown, &**label, count.as_deref()))
             .collect();
 
-        if let Some(picked) = counted_chips(ui, &options, self.filter.shown) {
+        if let Some(picked) = counted_chips(ui, &options, self.filter.shown).value {
             self.filter.shown = picked;
         }
     }
@@ -297,7 +297,7 @@ fn refused(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let busy = i18n::text(&ctx, "services-busy");
     let dismiss = i18n::text(&ctx, "services-dismiss");
-    if banner(ui, Tone::Warning, &busy, &[&dismiss]) == Some(0) {
+    if banner(ui, Tone::Warning, &busy, &[&dismiss]).value == Some(0) {
         context
             .commands
             .send(AppCommand::DismissRefusal(PageId::Services));

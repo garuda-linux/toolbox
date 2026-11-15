@@ -17,6 +17,7 @@ use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::pages::rows::more::{item, more};
+use crate::pages::search_empty::search_empty_state;
 
 const CONTROLS_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.row_actions_narrow;
 /// Placeholder rows while the files are looked for.
@@ -117,13 +118,7 @@ fn nothing(ui: &mut Ui, search: &mut String) {
         return;
     }
 
-    empty_state(
-        ui,
-        icons::SYSTEM_SEARCH,
-        &text("configs-no-match"),
-        &text("configs-search-detail"),
-    );
-    if pill_button(ui, &text("configs-clear-search"), ButtonKind::Soft).clicked() {
+    if search_empty_state(ui, search, &text("configs-search-detail")) {
         search.clear();
     }
 }
@@ -293,7 +288,7 @@ fn action(ui: &mut Ui, context: &PageContext<'_>, row: &Row) -> bool {
     };
 
     let label = i18n::text(ui.ctx(), id);
-    ui.add_enabled_ui(enabled, |ui| pill_button(ui, &label, ButtonKind::Soft))
+    ui.enabled_ui(enabled, |ui| pill_button(ui, &label, ButtonKind::Soft))
         .inner
         .clicked()
 }

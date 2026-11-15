@@ -11,7 +11,9 @@ use egui::Ui;
 use egui::accesskit::Role;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
-use toolbox_gui_kit::widgets::{PropertyTexts, card, link_row, link_tile, property_list};
+use toolbox_gui_kit::widgets::{
+    PropertyTexts, card, link_row, link_tile, property_list, text_link,
+};
 
 use super::header::title_header;
 use super::{PageContext, PageView};
@@ -192,7 +194,7 @@ fn facts(ui: &mut Ui) {
 }
 
 fn address(ui: &mut Ui, text: &str, url: &str) {
-    if ui.link(text).clicked() {
+    if text_link(ui, text, text).clicked() {
         links::open(ui.ctx(), url);
     }
 }

@@ -1,4 +1,4 @@
-use super::{BootLoader, KernelCmdline};
+use super::{BootLoader, KernelCmdline, booted_from_snapshot};
 
 /// Files of the Garuda Lima image: the raw EFI variable from efivarfs,
 /// `/etc/kernel/install.conf` and `/etc/kernel/cmdline`.
@@ -83,4 +83,23 @@ fn a_line_with_words_the_page_cannot_write_is_kept_as_text_only() {
 
     assert_eq!(cmdline.parameters, None);
     assert!(cmdline.line.starts_with("initrd=\\garuda\\amd-ucode.img "));
+}
+
+#[test]
+fn the_image_and_the_live_iso_run_from_no_snapshot() {
+    assert!(!booted_from_snapshot(toolbox_plan::testing::host::PROC_CMDLINE));
+    assert!(!booted_from_snapshot(LIVE_CMDLINE));
+}
+
+/// The image's line with the root subvolume of snapshot 12, as GRUB's
+/// snapshot entries give it.
+#[test]
+fn a_snapshot_root_subvolume_is_a_snapshot_boot() {
+    let cmdline = toolbox_plan::testing::host::PROC_CMDLINE.replace(
+        "rootflags=subvol=@ ",
+        "rootflags=subvol=@/.snapshots/12/snapshot ",
+    );
+
+    assert_ne!(cmdline, toolbox_plan::testing::host::PROC_CMDLINE);
+    assert!(booted_from_snapshot(&cmdline));
 }

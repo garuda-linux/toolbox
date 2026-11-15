@@ -15,8 +15,8 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{Read, SettingKey, SettingsCommand};
 use toolbox_cli::output::{Row, json};
 use toolbox_config::{
-    Autostart, DESKTOP_FILE, InvalidLanguage, Language, LogLevel, MAX_MINUTES, MIN_MINUTES, Paths,
-    RefreshInterval, Settings,
+    AUTOSTART_ENTRY, Autostart, InvalidLanguage, Language, LogLevel, MAX_MINUTES, MIN_MINUTES,
+    Paths, RefreshInterval, Settings,
 };
 use toolbox_plan::SchemeId;
 use toolbox_services::catalogs::catalog_dir;
@@ -51,7 +51,7 @@ pub enum SettingError {
 pub fn command(command: SettingsCommand, out: &mut Out<'_>) -> Exit {
     let paths = Paths::from_process();
     let file = paths.settings_file();
-    let autostart = Autostart::new(paths.autostart_dir(), PathBuf::from(DESKTOP_FILE));
+    let autostart = Autostart::new(paths.autostart_dir(), PathBuf::from(AUTOSTART_ENTRY));
     let loaded = Settings::load(&file);
     if let Some(problem) = &loaded.problem {
         let text = format!("the settings file is unusable, the defaults are shown: {problem}");

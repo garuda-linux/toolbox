@@ -8,7 +8,7 @@ use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, banner, card, confirm_buttons,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, banner, confirm_buttons,
     loading_label, menu_button, menu_item, pill_button, rich,
 };
 use toolbox_privatebin::{Paste, SERVER};
@@ -89,7 +89,7 @@ pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> 
         }
 
         menu_button(ui, &text("share-link-actions"), |ui| {
-            let open = ui.add_enabled_ui(ours(paste), |ui| menu_item(ui, &text("share-open-link")));
+            let open = ui.enabled_ui(ours(paste), |ui| menu_item(ui, &text("share-open-link")));
 
             if open.inner.clicked() {
                 links::open(&ctx, &paste.link);
@@ -124,7 +124,7 @@ fn running_or_failed(ui: &mut Ui, view: &ShareView<'_>) -> bool {
         Upload::Failed(problem) => {
             let text = failure(&ctx, view, problem);
             let dismiss = i18n::text(&ctx, "share-upload-dismiss");
-            if banner(ui, Tone::Error, &text, &[&dismiss]) == Some(0) {
+            if banner(ui, Tone::Error, &text, &[&dismiss]).value == Some(0) {
                 view.commands.send(view.hide.clone());
             }
         }
@@ -229,19 +229,6 @@ pub fn copy(ctx: &egui::Context, commands: &CommandSender, text: &str, id: &str)
         kind: ToastKind::Info,
         text: i18n::text(ctx, id).into_owned(),
     });
-}
-
-pub fn padded_card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> egui::InnerResponse<R> {
-    let padding = ui.tokens().sizes.card_padding;
-    card(ui, |ui| {
-        egui::Frame::new()
-            .inner_margin(padding)
-            .show(ui, |ui| {
-                ui.set_width(ui.available_width());
-                body(ui)
-            })
-            .inner
-    })
 }
 
 const fn failure_id(kind: UploadFailure) -> &'static str {

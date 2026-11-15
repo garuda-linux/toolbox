@@ -35,8 +35,11 @@ maintenance-tools = Tools
 maintenance-tools-detail = Each tool opens in its own window.
 maintenance-open = Open
 maintenance-install-open = Install and open…
-maintenance-tool-missing = Not installed. Installing it starts at once in the Console and asks for your password, then the tool opens.
-maintenance-ranker-missing = Needs rate-mirrors, which is not installed. Installing it starts at once in the Console and asks for your password, then the ranking starts.
+# The dot beside the title of a tool that is not installed.
+maintenance-not-installed = Not installed
+
+maintenance-tool-missing = Installing it starts at once in the Console and asks for your password, then the tool opens.
+maintenance-ranker-missing = Needs rate-mirrors. Installing it starts at once in the Console and asks for your password, then the ranking starts.
 maintenance-ranking = Testing the mirrors. This takes up to five minutes. The Console opens when the new list is ready.
 maintenance-ranking-progress = Ranking the mirrors…
 maintenance-tool-arch-mirrors = Refresh Arch mirrors
@@ -87,8 +90,8 @@ maintenance-repairs-detail = Each repair runs in the Console, where it can ask i
 # $packages lists the missing packages, separated by commas. $count is
 # how many they are.
 maintenance-repairs-missing = { $count ->
-    [one] The greyed out repairs below need { $packages }, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.
-   *[other] The greyed out repairs below need { $packages }, which are not installed. Installing them unlocks the repairs. It starts at once in the Console and asks for your password.
+    [one] The grayed out repairs below need { $packages }, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.
+   *[other] The grayed out repairs below need { $packages }, which are not installed. Installing them unlocks the repairs. It starts at once in the Console and asks for your password.
 }
 maintenance-install-missing = Install { $packages }
 maintenance-run = Run

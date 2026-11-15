@@ -6,6 +6,7 @@ use toolbox_core::Snapshot;
 use toolbox_core::features::locales::view::{
     system_choice_names, system_choices, system_queued, system_shown,
 };
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{Select, card};
 use toolbox_plan::LocaleName;
@@ -74,7 +75,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, cache: &mut Choices) {
             let current = built.codes.iter().position(|code| code == shown);
             let placeholder = if shown.is_empty() { &*unset } else { shown };
             let picked = ui
-                .add_enabled_ui(!built.codes.is_empty() && !context.busy, |ui| {
+                .enabled_ui(!built.codes.is_empty() && !context.busy, |ui| {
                     Select::new(&title, &options)
                         .selected(current)
                         .placeholder(placeholder)
@@ -84,6 +85,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, cache: &mut Choices) {
                 .inner;
 
             let locale = picked
+                .value
                 .and_then(|index| built.codes.get(index))
                 .and_then(|code| LocaleName::new(code.clone()).ok());
 

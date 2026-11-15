@@ -18,7 +18,7 @@ pub const NOTIFY: Method = Method {
 };
 
 const APP_NAME: &str = "Garuda Toolbox";
-const APP_ICON: &str = "garuda-toolbox";
+const APP_ICON: &str = "org.garudalinux.toolbox";
 
 /// The daemon decides how long the bubble stays.
 const EXPIRE_DEFAULT: i32 = -1;

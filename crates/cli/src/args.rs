@@ -123,6 +123,10 @@ pub struct Window {
     /// helper still refuses to write to a disk the running system uses.
     #[arg(long)]
     pub boot_repair: bool,
+
+    /// Started at login by the autostart entry.
+    #[arg(long, hide = true)]
+    pub autostart: bool,
 }
 
 #[derive(Debug, Subcommand)]

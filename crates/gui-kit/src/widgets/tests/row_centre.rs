@@ -47,7 +47,7 @@ fn split(lines: u8, with_switch: bool) -> Placed {
                         ui,
                         width,
                         |ui| words(ui, lines),
-                        |ui| with_switch.then(|| switch(ui, true, "Bottles", true).rect),
+                        |ui| with_switch.then(|| switch(ui, true, "Bottles").rect),
                     )
                 });
 

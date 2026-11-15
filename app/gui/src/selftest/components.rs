@@ -13,7 +13,7 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("components"),
         search_field,
         no_match,
-        Step::wait("Nothing matches the search"),
+        Step::wait("Nothing matches “zz-nothing-matches”"),
         Step::Shot("components-no-match"),
         Step::click("Clear search"),
         Step::wait("Audio"),

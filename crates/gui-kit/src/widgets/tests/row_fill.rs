@@ -111,7 +111,7 @@ fn a_check_row_on_a_card_row_shows_only_the_card_rows_fill() {
                     full: "~/.config/kitty/kitty.conf",
                 };
 
-                _ = check_row_with_line(ui, true, texts, true);
+                _ = check_row_with_line(ui, true, texts);
             });
         });
     });

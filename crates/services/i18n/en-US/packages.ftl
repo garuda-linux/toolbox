@@ -21,9 +21,7 @@ packages-no-updates = No pending updates
 packages-no-updates-detail = Home checks for updates. Installed packages with a newer version show here.
 packages-no-orphans = No orphans
 packages-no-orphans-detail = Every package installed as a dependency is still needed by another one.
-packages-nothing-matches = No package matches “{ $search }”
 packages-nothing-matches-detail = The search looks at the names and descriptions under the chip that is picked.
-packages-clear-search = Clear search
 
 # Why a click queued nothing.
 packages-refused-not-offered = { $name } cannot be installed: no configured repository offers it.

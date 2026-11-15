@@ -2,12 +2,13 @@ use egui::{Color32, Theme};
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::switch;
+use crate::UiExt as _;
 use crate::testing::{circle_fills, harness, rim_colours_around};
 use crate::tokens::{self, contrast};
 
 fn rim_contrast(theme: Theme, enabled: bool) -> f32 {
     let mut harness = harness(200.0, 80.0).build_ui(move |ui| {
-        switch(ui, false, "Wi-Fi", enabled);
+        ui.enabled_ui(enabled, |ui| switch(ui, false, "Wi-Fi"));
     });
 
     harness.ctx.set_theme(theme);
@@ -35,7 +36,7 @@ fn drawn_knob(in_disabled_ui: bool) -> (Color32, Color32) {
             ui.disable();
         }
 
-        switch(ui, false, "Wi-Fi", false);
+        ui.enabled_ui(false, |ui| switch(ui, false, "Wi-Fi"));
     });
 
     harness.ctx.set_theme(Theme::Dark);

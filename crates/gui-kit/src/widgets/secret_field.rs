@@ -25,12 +25,12 @@ pub fn secret_field(ui: &mut Ui, text: &mut SecretText, texts: SecretTexts<'_>) 
     let button = if revealed {
         FieldButton {
             icon: icons::VIEW_HIDDEN,
-            alt: texts.hide,
+            name: texts.hide,
         }
     } else {
         FieldButton {
             icon: icons::VIEW_VISIBLE,
-            alt: texts.show,
+            name: texts.show,
         }
     };
 

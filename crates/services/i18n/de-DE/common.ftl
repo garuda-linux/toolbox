@@ -6,8 +6,11 @@ app-name = Garuda Toolbox
 # The language's own name, shown in the language picker.
 language-name = Deutsch (Deutschland)
 
-# The ✕ in a search field that empties it.
+# The ✕ in a search field and the button that empties a list's search.
 search-clear = Suche leeren
+
+# The title of a list that the search emptied, with the search as typed.
+search-nothing-matches = Nichts passt zu „{ $search }“
 
 # The ✕ in a dialog's title bar.
 dialog-close = Schließen

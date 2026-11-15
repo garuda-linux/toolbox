@@ -37,7 +37,7 @@ step-succeeded = Done
 step-nothing-to-do = Nothing to do
 # A dry run runs no step.
 step-not-run = Not run (test mode)
-step-cancelled = Cancelled
+step-cancelled = Canceled
 step-failed-exit = Failed (exit code { $code })
 step-failed-signal = Failed (signal { $signal })
 step-failed-unknown = Failed

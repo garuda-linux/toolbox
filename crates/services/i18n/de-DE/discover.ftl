@@ -10,9 +10,7 @@ discover-sort-selected = Ausgewählte zuerst
 discover-actions = Weitere Aktionen für { $name }
 discover-unreadable = Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht an, was installiert ist. Das Installieren einer bereits installierten App bewirkt nichts.
 discover-problem = Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt.
-discover-nothing-matches = Keine App passt zu „{ $search }“
 discover-nothing-matches-detail = Die Suche umfasst Namen, Beschreibungen und Paketnamen in allen Kategorien.
-discover-clear-search = Suche leeren
 # A chip picked a category without a match while others have some. $category is the category's name, $search what the user typed.
 discover-nothing-in-category = Keine App in { $category } passt zu „{ $search }“
 discover-nothing-in-category-detail = Andere Kategorien haben passende Apps.

@@ -110,7 +110,7 @@ impl DiagnosticsPage {
         }
 
         let shared = ui
-            .add_enabled_ui(ready, |ui| pill_button(ui, &share, ButtonKind::Soft))
+            .enabled_ui(ready, |ui| pill_button(ui, &share, ButtonKind::Soft))
             .inner
             .on_hover_text(i18n::text(&ctx, "diagnostics-share-tooltip"));
 

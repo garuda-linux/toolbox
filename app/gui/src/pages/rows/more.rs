@@ -7,6 +7,7 @@
 //! and still asks.
 
 use egui::{Key, Popup, Response, Ui};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{menu_button, menu_item};
 
 use crate::i18n;
@@ -60,7 +61,7 @@ pub fn item(ui: &mut Ui, id: &str, enabled: bool) -> bool {
 }
 
 pub fn text_item(ui: &mut Ui, text: &str, enabled: bool) -> bool {
-    ui.add_enabled_ui(enabled, |ui| menu_item(ui, text))
+    ui.enabled_ui(enabled, |ui| menu_item(ui, text))
         .inner
         .clicked()
 }

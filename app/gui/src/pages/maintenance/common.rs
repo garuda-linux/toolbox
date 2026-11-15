@@ -8,7 +8,7 @@ use toolbox_gui_kit::widgets::{
 };
 
 use super::repairs::Asked;
-use super::{heading, plan_button, row};
+use super::{heading, plan_button};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
 use crate::maintenance::Maintenance;
@@ -74,7 +74,7 @@ fn operation_row(
             };
 
             let queue = i18n::text(&ctx, &queue);
-            let queue = ui.add_enabled_ui(!context.busy, |ui| {
+            let queue = ui.enabled_ui(!context.busy, |ui| {
                 pill_button_at_least(ui, &queue, ButtonKind::Soft, queue_width)
             });
 
@@ -131,7 +131,16 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
         "maintenance-install-open"
     };
 
-    row(ui, tool_icon(tool.tool), &id, &detail, |ui| {
+    let title = i18n::text(&ctx, &id);
+    let words = ActionRow::new(tool_icon(tool.tool), Tone::Neutral, &title).detail(&detail);
+    let not_installed = i18n::text(&ctx, "maintenance-not-installed");
+    let words = if tool.installed {
+        words
+    } else {
+        words.status(&not_installed, Tone::Neutral)
+    };
+
+    words.show(ui, |ui| {
         // The ranking takes minutes, so the row shows it runs where its
         // button was.
         if ranking {

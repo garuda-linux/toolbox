@@ -4703,6 +4703,10 @@
     },
     "close-stopping-detail": {
       "string": "Das Fenster schließt sich, sobald der Vorgang beendet ist."
+    },
+    "search-nothing-matches": {
+      "string": "Nichts passt zu „{search}“",
+      "developer_comment": "The title of a list that the search emptied, with the search as typed."
     }
   },
   "configs": {
@@ -4721,9 +4725,6 @@
     "configs-search-detail": {
       "string": "Durchsucht werden Namen, Pfade, Beschreibungen und die Dateien in Verzeichnissen."
     },
-    "configs-clear-search": {
-      "string": "Suche leeren"
-    },
     "configs-reading": {
       "string": "Konfigurationsdateien werden gesucht…"
     },
@@ -4732,9 +4733,6 @@
     },
     "configs-none": {
       "string": "Keine der aufgeführten Konfigurationsdateien ist auf diesem System vorhanden"
-    },
-    "configs-no-match": {
-      "string": "Keine passende Konfigurationsdatei"
     },
     "configs-dismiss": {
       "string": "Ausblenden"
@@ -5261,14 +5259,8 @@
     "discover-problem": {
       "string": "Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt."
     },
-    "discover-nothing-matches": {
-      "string": "Keine App passt zu „{search}“"
-    },
     "discover-nothing-matches-detail": {
       "string": "Die Suche umfasst Namen, Beschreibungen und Paketnamen in allen Kategorien."
-    },
-    "discover-clear-search": {
-      "string": "Suche leeren"
     },
     "discover-nothing-in-category": {
       "string": "Keine App in {category} passt zu „{search}“"
@@ -5863,9 +5855,6 @@
     "locales-none-detail": {
       "string": "Die Suche umfasst Namen von Sprachen, Ländern, Locales und Zeichensätzen."
     },
-    "locales-clear-search": {
-      "string": "Suche leeren"
-    },
     "locales-unavailable": {
       "string": "Locales sind auf diesem System nicht verfügbar"
     },
@@ -6079,10 +6068,10 @@
       "string": "Installieren und öffnen…"
     },
     "maintenance-tool-missing": {
-      "string": "Nicht installiert. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug."
+      "string": "Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug."
     },
     "maintenance-ranker-missing": {
-      "string": "rate-mirrors ist nicht installiert. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung."
+      "string": "rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung."
     },
     "maintenance-ranking": {
       "string": "Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist."
@@ -6275,6 +6264,10 @@
     },
     "maintenance-repair-needs": {
       "string": "Benötigt {package}"
+    },
+    "maintenance-not-installed": {
+      "string": "Nicht installiert",
+      "developer_comment": "The dot beside the title of a tool that is not installed."
     }
   },
   "network": {
@@ -6730,14 +6723,8 @@
     "packages-no-orphans-detail": {
       "string": "Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht."
     },
-    "packages-nothing-matches": {
-      "string": "Kein Paket passt zu „{search}“"
-    },
     "packages-nothing-matches-detail": {
       "string": "Durchsucht Namen und Beschreibungen im gewählten Filter."
-    },
-    "packages-clear-search": {
-      "string": "Suche leeren"
     },
     "packages-refused-not-offered": {
       "string": "{name} lässt sich nicht installieren: Kein eingerichtetes Repository bietet es an."
@@ -8041,14 +8028,8 @@
     "toggles-search-hint": {
       "string": "Diese Seite durchsuchen…"
     },
-    "toggles-nothing-matches": {
-      "string": "Keine Treffer"
-    },
     "toggles-nothing-matches-detail": {
       "string": "Kein Eintrag dieser Seite enthält „{search}“ im Namen oder in der Beschreibung."
-    },
-    "toggles-clear-search": {
-      "string": "Suche leeren"
     },
     "toggles-nothing-in-section": {
       "string": "Keine Treffer in {section}"
@@ -8272,12 +8253,6 @@
     },
     "users-show-all": {
       "string": "Alle Konten anzeigen"
-    },
-    "users-no-match": {
-      "string": "Kein Benutzer passt zu „{search}“"
-    },
-    "users-clear-search": {
-      "string": "Suche leeren"
     },
     "users-list": {
       "string": "Benutzer"
@@ -8707,9 +8682,6 @@
     },
     "groups-unavailable": {
       "string": "Gruppen sind nicht verfügbar"
-    },
-    "groups-no-match": {
-      "string": "Keine Gruppe passt zu „{search}“"
     },
     "groups-detail": {
       "string": "GID {gid}, Mitglieder: {members}"

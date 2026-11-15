@@ -205,7 +205,7 @@ impl TogglePage {
             let count = unknown.to_string();
             let text = i18n::text_with(&ctx, "toggles-unknown", &[("count", &count)]);
             let again = i18n::text(&ctx, "common-read-again");
-            if banner(ui, Tone::Warning, &text, &[&again]).is_some() {
+            if banner(ui, Tone::Warning, &text, &[&again]).value.is_some() {
                 context.commands.send(AppCommand::ReadSystem);
             }
 
@@ -244,7 +244,7 @@ impl TogglePage {
 
         // A second click on the chosen section shows them all again.
         let current = self.section.as_deref();
-        if let Some(picked) = counted_chips(ui, &options, current) {
+        if let Some(picked) = counted_chips(ui, &options, current).value {
             self.section = picked
                 .filter(|picked| current != Some(*picked))
                 .map(str::to_owned);

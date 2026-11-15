@@ -64,7 +64,7 @@ pub fn bar(
     ui.add_space(ui.tokens().sizes.control_gap);
     ui.horizontal(|ui| {
         let back = ui
-            .add_enabled_ui(current.unwrap_or_default() > 0, |ui| {
+            .enabled_ui(current.unwrap_or_default() > 0, |ui| {
                 pill_button(ui, &text("setup-back"), ButtonKind::Soft)
                     .on_hover_text(text("setup-back-key"))
             })
@@ -93,6 +93,7 @@ pub fn bar(
                 .selected(current)
                 .width(width)
                 .show(ui)
+                .value
                 .and_then(|index| stages.get(index))
             {
                 page.stage = stage.clone();

@@ -23,6 +23,8 @@ use crate::tokens;
 /// `more` name the steppers.
 #[derive(Clone, Copy, Debug)]
 pub struct SpinTexts<'a> {
+    /// Tells the field apart from the other fields of its ui.
+    pub salt: &'a str,
     pub name: &'a str,
     pub unit: &'a str,
     pub less: &'a str,
@@ -50,7 +52,7 @@ pub fn spin_field(
     // The fill goes under every part but follows the number's focus,
     // known only once it is drawn.
     let slot = ui.painter().add(Shape::Noop);
-    let id = ui.scope_id().with(("spin_field", texts.name));
+    let id = ui.scope_id().with(("spin_field", texts.salt));
     let less = Rect::from_min_size(pill.min, vec2(PILL_HEIGHT, PILL_HEIGHT));
     let more = Rect::from_min_size(
         pos2(pill.right() - PILL_HEIGHT, pill.top()),
@@ -72,7 +74,7 @@ pub fn spin_field(
             value,
             range.clone(),
             middle.width(),
-            (texts.name, texts.unit),
+            (texts.salt, texts.name, texts.unit),
         )
     });
 

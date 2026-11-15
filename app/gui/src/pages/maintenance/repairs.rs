@@ -89,7 +89,7 @@ fn missing_banner(ui: &mut Ui, context: &PageContext<'_>, rows: &[RepairRow]) {
     let text = i18n::text_with(&ctx, "maintenance-repairs-missing", &args);
     let install = i18n::text_with(&ctx, "maintenance-install-missing", &args);
     let action = (!context.busy).then_some(&*install);
-    if banner(ui, Tone::Neutral, &text, action.as_slice()) == Some(0) {
+    if banner(ui, Tone::Neutral, &text, action.as_slice()).value == Some(0) {
         context.commands.send(MaintenanceCommand::InstallMissing);
     }
 
@@ -103,7 +103,7 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
     let mut clicked = false;
 
     // The whole row greys, icon and words too, not its button alone.
-    ui.add_enabled_ui(repair.available, |ui| {
+    ui.enabled_ui(repair.available, |ui| {
         row(ui, repair_icon(repair.repair), &id, &detail, |ui| {
             // A greyed Run says what brings it.
             if !repair.available {
@@ -123,7 +123,7 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
 
             // Inside the greyed row a second disable would fade it twice.
             clicked = if repair.available && context.busy {
-                ui.add_enabled_ui(false, |ui| pill_button(ui, &text, ButtonKind::Soft))
+                ui.enabled_ui(false, |ui| pill_button(ui, &text, ButtonKind::Soft))
                     .inner
                     .clicked()
             } else {

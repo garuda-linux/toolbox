@@ -8,12 +8,22 @@ mod tests;
 use std::io;
 use std::path::{Path, PathBuf};
 
-pub const DESKTOP_FILE: &str = "/usr/share/applications/garuda-toolbox.desktop";
+/// Runs `garuda-toolbox --autostart`, which opens nothing after a boot into a
+/// snapshot. Outside the menu folder, so no launcher lists it.
+pub const AUTOSTART_ENTRY: &str = "/usr/share/garuda-toolbox/autostart.desktop";
 
-const LINK_NAME: &str = "garuda-toolbox.desktop";
+const LINK_NAME: &str = "org.garudalinux.toolbox.desktop";
 
-/// Entries of the app under its former name Garuda Rani.
-const LEGACY_NAMES: [&str; 2] = ["garuda-rani.desktop", "org.garudalinux.rani.desktop"];
+/// The entry setup-assistant links when it hands over to the app, under
+/// the app's former desktop file name.
+const HANDED_OVER: &str = "garuda-toolbox.desktop";
+
+/// Entries of the app under its former names, Garuda Rani among them.
+const LEGACY_NAMES: [&str; 3] = [
+    HANDED_OVER,
+    "garuda-rani.desktop",
+    "org.garudalinux.rani.desktop",
+];
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Autostart {
@@ -62,6 +72,25 @@ impl Autostart {
         remove_if_present(&self.link())?;
         self.remove_legacy()?;
         tracing::info!("autostart off");
+        Ok(())
+    }
+
+    /// Moves setup-assistant's link, or a link to another file, onto the
+    /// autostart entry, so the login start keeps its snapshot check.
+    ///
+    /// # Errors
+    ///
+    /// When the link cannot be replaced.
+    pub fn follow_moves(&self) -> io::Result<()> {
+        let elsewhere =
+            std::fs::read_link(self.link()).is_ok_and(|target| target != self.desktop_file);
+
+        let handed_over = self.folder.join(HANDED_OVER).symlink_metadata().is_ok();
+
+        if elsewhere || handed_over {
+            self.enable()?;
+        }
+
         Ok(())
     }
 

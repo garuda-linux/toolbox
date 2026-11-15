@@ -52,11 +52,17 @@ pub fn empty_state(ui: &mut Ui, icon: Icon, title: &str, body: &str) -> Response
 }
 
 /// An [`empty_state`] with a Soft button named `action` centred under
-/// `body`, for a page that could not be read. Returns whether the button
-/// was clicked.
-pub fn empty_state_action(ui: &mut Ui, icon: Icon, title: &str, body: &str, action: &str) -> bool {
+/// `body`, for a page that could not be read. Returns the button's
+/// response.
+pub fn empty_state_action(
+    ui: &mut Ui,
+    icon: Icon,
+    title: &str,
+    body: &str,
+    action: &str,
+) -> Response {
     _ = empty_state(ui, icon, title, body);
     ui.add_space(tokens::current(ui.ctx()).sizes.card_gap);
-    ui.vertical_centered(|ui| pill_button(ui, action, ButtonKind::Soft).clicked())
+    ui.vertical_centered(|ui| pill_button(ui, action, ButtonKind::Soft))
         .inner
 }
