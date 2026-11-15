@@ -119,7 +119,7 @@ fn rfkill_gets_two_fixed_words() {
 }
 
 #[test]
-fn services_show_as_systemd_lists_them() {
+fn installed_services_show_as_systemd_lists_them() {
     let units = [
         unit(
             "NetworkManager.service",
@@ -131,29 +131,23 @@ fn services_show_as_systemd_lists_them() {
             ActiveState::Inactive,
             FileState::Disabled,
         ),
+        // Listed only because something asked for it: no unit file.
+        unit("connman.service", ActiveState::Inactive, FileState::Unknown),
         unit(GEOCLUE, ActiveState::Inactive, FileState::Static),
         unit("sshd.service", ActiveState::Active, FileState::Enabled),
     ];
 
-    let rows: Vec<(&str, bool, &str, &str)> = service_rows(&units)
+    let rows: Vec<(&str, &str, &str)> = service_rows(&units)
         .into_iter()
-        .map(|row| {
-            (
-                row.unit,
-                row.installed,
-                row.active.as_str(),
-                row.file_state.as_str(),
-            )
-        })
+        .map(|row| (row.unit, row.active.as_str(), row.file_state.as_str()))
         .collect();
 
     assert_eq!(
         rows,
         [
-            ("NetworkManager.service", true, "active", "enabled"),
-            ("connman.service", false, "inactive", "unknown"),
-            ("bluetooth.service", true, "inactive", "disabled"),
-            ("geoclue.service", true, "inactive", "static"),
+            ("NetworkManager.service", "active", "enabled"),
+            ("bluetooth.service", "inactive", "disabled"),
+            ("geoclue.service", "inactive", "static"),
         ]
     );
 }

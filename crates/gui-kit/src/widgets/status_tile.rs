@@ -2,9 +2,10 @@
 //! tile of that colour. Banners, notes, error rows, empty states and
 //! status rows draw this one mark, so a status looks the same everywhere.
 
-use egui::{Color32, Pos2, Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
+use egui::{Color32, Pos2, Rect, Response, Role, Sense, Ui, Vec2, vec2};
 
 use super::icon_tile::{TileSize, paint_icon_tile};
+use super::mark_word::mark_and_word;
 use super::{Tone, line, status_dot};
 use crate::fonts::{SMALL, Weight};
 use crate::icons::{self, Icon};
@@ -76,21 +77,11 @@ fn marked_word(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     let edge = TileSize::Line.edge(ui);
     let gap = tokens.sizes.text_to_icon;
     let text = line(ui, label, Weight::Medium, SMALL, tokens.secondary);
-    let size = vec2(edge + gap + text.size().x, text.size().y.max(edge));
-    let (rect, response) = ui.allocate_exact_size(size, Sense::hover());
-
-    response.widget_info(|| WidgetInfo::labeled(Role::Label, true, label));
-
-    if ui.is_rect_visible(rect) {
-        let centre = pos2(rect.left() + edge / 2.0, rect.center().y);
-        paint_status_tile(ui, centre, TileSize::Line, tone);
-        let at = pos2(
-            rect.left() + edge + gap,
-            rect.center().y - text.size().y / 2.0,
-        );
-
-        ui.painter().galley(at, text, tokens.secondary);
-    }
-
-    response
+    mark_and_word(
+        ui,
+        (Vec2::splat(edge), gap),
+        text,
+        (Role::Label, label),
+        |ui, mark| paint_status_tile(ui, mark.center(), TileSize::Line, tone),
+    )
 }

@@ -285,6 +285,41 @@ pub fn rect_of<S>(harness: &Harness<'_, S>, role: Role, label: &str) -> Rect {
     harness.get_by_role_and_label(role, label).rect()
 }
 
+/// The Read again of a failure, below the header's own. The header's
+/// alone would send the same command, so a page without the second one
+/// fails here.
+///
+/// # Panics
+///
+/// When not exactly two Read again buttons show.
+#[expect(clippy::expect_used, reason = "the length was asserted just before")]
+pub fn lowest_read_again<'tree, S>(harness: &'tree Harness<'_, S>) -> egui_kittest::Node<'tree> {
+    let mut buttons: Vec<_> = harness
+        .query_all_by_role_and_label(Role::Button, "Read again")
+        .collect();
+
+    assert_eq!(
+        buttons.len(),
+        2,
+        "the header's Read again and the failure's"
+    );
+    buttons.sort_by(|one, other| one.rect().top().total_cmp(&other.rect().top()));
+    buttons.pop().expect("two buttons")
+}
+
+/// What a click on the failure's Read again of `page` sends, see
+/// [`lowest_read_again`].
+pub fn failure_read_again_sends<P>(fixture: PageFixture, page: P) -> Vec<Command>
+where
+    P: PageView + 'static,
+{
+    let mut harness = fixture.harness(page);
+    harness.run();
+    lowest_read_again(&harness).click();
+    harness.run();
+    harness.state().fixture.sent()
+}
+
 /// Checks the page header of `title` with purpose `subtitle`.
 ///
 /// `control` (when given) sits beside the title, not stacked under the

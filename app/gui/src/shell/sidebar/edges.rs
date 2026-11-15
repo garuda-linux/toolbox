@@ -74,18 +74,12 @@ pub(super) fn section_hides(
     fade.cuts(top, top + height) || past_the_end(ui, entry, density)
 }
 
-/// Whether an entry from `top` lies past the bottom edge. Expanded that is
-/// its middle, as the fade covers all but a sliver of it. The collapsed
-/// rail shows any part of it, cut and faded, so its icons run on to the
-/// edge and show that more follows.
+/// Whether an entry from `top` lies past the bottom edge, by its middle.
+/// Expanded the fade covers all but a sliver of it. The collapsed rail
+/// shows it cut and faded while at least half its icon shows, so its
+/// icons run on to the edge and show that more follows.
 fn past_the_end(ui: &Ui, top: f32, density: Density) -> bool {
-    let shown = if density.expanded {
-        density.row / 2.0
-    } else {
-        0.0
-    };
-
-    top + shown >= ui.clip_rect().bottom() - 0.5
+    top + density.row / 2.0 >= ui.clip_rect().bottom() - 0.5
 }
 
 /// Where the entries end when what follows `page`'s entry, drawn next at

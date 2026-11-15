@@ -80,7 +80,7 @@ fn a_grub_system_shows_its_file_and_menu() {
     assert_eq!(page.entry_value(Some(&menu)), simple());
     assert!(page.entry_listed(Some(&menu)));
     assert!(!is_queued(&changes, GrubKey::Default));
-    assert_eq!(page.timeout(), 5_i32);
+    assert_eq!(page.timeout(), seconds(5));
     assert!(page.timeout_known());
     assert!(!is_queued(&changes, GrubKey::Timeout));
     assert!(!page.remember());
@@ -190,7 +190,7 @@ fn queued_changes_show_on_top() {
     let menu = menu();
 
     assert!(virtual_machine(&state));
-    assert_eq!(Page::read(&state, &changes).timeout(), 12_i32);
+    assert_eq!(Page::read(&state, &changes).timeout(), seconds(12));
     assert!(is_queued(&changes, GrubKey::Timeout));
     assert_eq!(
         Page::read(&state, &changes).entry_value(Some(&menu)),
@@ -306,7 +306,7 @@ fn a_command_line_the_page_leaves_alone_is_shown_as_written() {
         Vec::<String>::new()
     );
     assert!(!Page::read(&snapshot, &changes).flag(Flag::Quiet));
-    assert_eq!(Page::read(&snapshot, &changes).timeout(), 5_i32);
+    assert_eq!(Page::read(&snapshot, &changes).timeout(), seconds(5));
     assert!(!Page::read(&snapshot, &changes).timeout_known());
 }
 
@@ -348,4 +348,18 @@ fn the_queued_plymouth_theme_shows_instead_of_the_current_one() {
     set_plymouth_theme(plymouth_theme("spinner"), &mut changes, &state).unwrap();
 
     assert_eq!(plymouth_shown(&state, &changes), "spinner");
+}
+
+fn seconds(count: i64) -> GrubTimeout {
+    GrubTimeout::new(count).unwrap()
+}
+
+/// The capture with its timeout changed to GRUB's "wait for a key".
+#[test]
+fn a_negative_timeout_waits_for_a_key() {
+    let snapshot = system(&edited("GRUB_TIMEOUT=5", "GRUB_TIMEOUT=-1"), &[]);
+    let page = Page::read(&snapshot, &ChangeSet::default());
+
+    assert_eq!(page.timeout(), GrubTimeout::WaitForKey);
+    assert!(page.timeout_known());
 }

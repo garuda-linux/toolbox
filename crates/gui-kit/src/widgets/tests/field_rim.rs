@@ -68,7 +68,7 @@ fn shown(kind: fn(&mut Ui), theme: Theme, focused: bool) -> Harness<'static> {
             .find(|node| {
                 matches!(
                     node.accesskit_node().role(),
-                    Role::TextInput | Role::MultilineTextInput
+                    Role::TextInput | Role::MultilineTextInput | Role::SpinButton
                 )
             })
             .expect("the field's text")

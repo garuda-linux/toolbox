@@ -13,8 +13,8 @@ use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::discover::{AppOrder, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state,
-    page_toolbar, pill_button, section_heading,
+    RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state, empty_state_action,
+    page_toolbar, section_heading,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -163,8 +163,12 @@ impl DiscoverPage {
                 .chain(categories)
                 .collect();
 
+        // A second click on the picked category shows them all again, as
+        // on the toggle pages.
         if let Some(picked) = counted_chips(ui, &options, current) {
-            self.category = picked.map(str::to_owned);
+            self.category = picked
+                .filter(|picked| current != Some(*picked))
+                .map(str::to_owned);
         }
     }
 
@@ -178,40 +182,26 @@ impl DiscoverPage {
             let named = [("category", category.as_str()), ("search", search.as_str())];
             let title = i18n::text_with(&ctx, "discover-nothing-in-category", &named);
             let detail = i18n::text(&ctx, "discover-nothing-in-category-detail");
-            empty_state(ui, icons::SYSTEM_SEARCH, &title, &detail);
-            ui.add_space(ui.tokens().sizes.card_gap);
-            ui.vertical_centered(|ui| {
-                let all = i18n::text_with(&ctx, "discover-show-all-matches", &[("count", &count)]);
-                if pill_button(ui, &all, ButtonKind::Soft).clicked() {
-                    self.category = None;
-                }
-            });
+            let all = i18n::text_with(&ctx, "discover-show-all-matches", &[("count", &count)]);
+            if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &all) {
+                self.category = None;
+            }
+
             return;
         }
 
-        let (icon, title, detail) = if search.is_empty() {
-            (
-                icons::PACKAGE,
-                i18n::text(&ctx, "discover-none"),
-                i18n::text(&ctx, "discover-none-detail"),
-            )
-        } else {
-            (
-                icons::SYSTEM_SEARCH,
-                i18n::text_with(&ctx, "discover-nothing-matches", &[("search", &search)]),
-                i18n::text(&ctx, "discover-nothing-matches-detail"),
-            )
-        };
+        if search.is_empty() {
+            let title = i18n::text(&ctx, "discover-none");
+            let detail = i18n::text(&ctx, "discover-none-detail");
+            empty_state(ui, icons::PACKAGE, &title, &detail);
+            return;
+        }
 
-        empty_state(ui, icon, &title, &detail);
-        if !search.is_empty() {
-            ui.add_space(ui.tokens().sizes.card_gap);
-            ui.vertical_centered(|ui| {
-                let clear = i18n::text(&ctx, "discover-clear-search");
-                if pill_button(ui, &clear, ButtonKind::Soft).clicked() {
-                    self.search.clear();
-                }
-            });
+        let title = i18n::text_with(&ctx, "discover-nothing-matches", &[("search", &search)]);
+        let detail = i18n::text(&ctx, "discover-nothing-matches-detail");
+        let clear = i18n::text(&ctx, "discover-clear-search");
+        if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &clear) {
+            self.search.clear();
         }
     }
 }

@@ -7,12 +7,13 @@ mod tests;
 
 use std::sync::Arc;
 
-pub use below::HistoryRows;
+pub use below::{FileRows, HistoryRows};
 use egui::{Color32, Key, Rect, Sense, Ui, Vec2, pos2, vec2};
-pub use facts::day;
+pub use facts::{FactRows, day};
 use toolbox_core::features::packages::PackageDetails;
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_gui_kit::fonts::{self, SMALL, TITLE, Weight};
+use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
     ButtonKind, empty_state, icon_button_width, loading_indicator, named_pill_button, page_header,
     pill_width, refresh_button, rich, status_dot,
@@ -25,8 +26,8 @@ use super::row::{self, Act, PackageRow, Row};
 use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
-use crate::packages::{Packages, Read};
-use crate::pages::rows::{Initial, package_picture};
+use crate::packages::{Details, Packages, Read};
+use crate::pages::rows::{Initial, Look, package_picture};
 use crate::pages::{PageContext, plan_running};
 use crate::share::view::padded_card;
 
@@ -211,10 +212,10 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         Read::Known(None) => gone(ui, &package),
         Read::Known(Some(info)) => {
             let catalog = catalog(context);
-            columns(ui, page, context, catalog.as_deref(), info);
+            columns(ui, page, context, catalog.as_deref(), (details, info));
             if info.installed.is_some() {
                 group_gap(ui);
-                below::files(page, ui, context, info);
+                below::files(page, ui, context, (details, info));
             }
 
             group_gap(ui);
@@ -228,12 +229,17 @@ fn columns(
     page: &mut PackagesPage,
     context: &PageContext<'_>,
     catalog: Option<&Catalog>,
-    info: &PackageDetails,
+    (details, info): (&Arc<Details>, &PackageDetails),
 ) {
+    let facts = page.facts.get(&[], (Same::of(details), Look::of(ui)), || {
+        let _build = tracing::trace_span!("build facts").entered();
+        facts::facts(ui.ctx(), info)
+    });
+
     let unfolded = &mut page.unfolded;
     let opened = split(
         ui,
-        |ui| facts::show(ui, info),
+        |ui| facts::grid(ui, &facts),
         |ui| relations::show(ui, unfolded, catalog, info),
     );
 

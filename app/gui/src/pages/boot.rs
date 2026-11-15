@@ -14,7 +14,8 @@ use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page, Probed, Readiness};
 use toolbox_core::features::boot::{Flag, kernel};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, Question, Tone, banner, empty_state, pill_button, question,
+    ButtonKind, DialogWidth, Question, Tone, banner, card, empty_state, empty_state_action,
+    question, row_height, skeleton_rows, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
@@ -29,6 +30,9 @@ use crate::command::{AppCommand, BootCommand};
 use crate::i18n;
 use crate::page::PageId;
 use crate::pages::heading;
+
+/// Placeholder rows while the system is read, as many as the menu card has.
+const SKELETON_ROWS: usize = 3;
 
 #[derive(Debug, Default)]
 pub struct BootPage {
@@ -65,24 +69,26 @@ impl PageView for BootPage {
 
         self.refusal(ui, context);
 
-        let readiness = view::state(context.snapshot, probed(context));
-        let (icon, title, detail) = match readiness {
-            Readiness::Ready => {
-                self.ready(ui, context);
-                return;
+        let text = |id: &str| i18n::text(&ctx, id).into_owned();
+        match view::state(context.snapshot, probed(context)) {
+            Readiness::Ready => self.ready(ui, context),
+            Readiness::Failed => {
+                let (title, detail) = (text("boot-failed"), text("boot-failed-detail"));
+                let again = text("common-read-again");
+                if empty_state_action(ui, icons::DIALOG_ERROR, &title, &detail, &again) {
+                    context.commands.send(BootCommand::Refresh);
+                }
             }
-            Readiness::Failed => (icons::DIALOG_ERROR, "boot-failed", "boot-failed-detail"),
-            Readiness::Missing => (icons::HELP_ABOUT, "boot-missing", "boot-missing-detail"),
-            Readiness::Loading => (icons::DRIVE_HARDDISK_ROOT, "boot-loading", ""),
-        };
-
-        let detail = if detail.is_empty() {
-            String::new()
-        } else {
-            i18n::text(&ctx, detail).into_owned()
-        };
-
-        empty_state(ui, icon, &i18n::text(&ctx, title), &detail);
+            Readiness::Missing => {
+                let (title, detail) = (text("boot-missing"), text("boot-missing-detail"));
+                _ = empty_state(ui, icons::HELP_ABOUT, &title, &detail);
+            }
+            Readiness::Loading => {
+                let height = row_height(ui, text_block_height(ui, 1));
+                let name = text("boot-loading");
+                card(ui, |ui| skeleton_rows(ui, SKELETON_ROWS, height, &name));
+            }
+        }
     }
 }
 
@@ -270,26 +276,31 @@ fn note(
         &[("kernel", kernel.as_str())],
     );
 
-    banner(ui, Tone::Accent, &text, &[]);
-    ui.horizontal(|ui| {
-        if state == "offer" {
-            let label = i18n::text(&ctx, "boot-proposal-queue");
-            if pill_button(ui, &label, ButtonKind::Primary).clicked() {
-                queue();
-                context.commands.send(BootCommand::DropProposal);
-            }
-        }
-
-        let close = if state == "offer" {
+    let offer = state == "offer";
+    let queue_text = i18n::text(&ctx, "boot-proposal-queue");
+    let close_text = i18n::text(
+        &ctx,
+        if offer {
             "boot-proposal-keep"
         } else {
             "boot-proposal-close"
-        };
+        },
+    );
 
-        if pill_button(ui, &i18n::text(&ctx, close), ButtonKind::Soft).clicked() {
+    let actions: &[&str] = if offer {
+        &[&*queue_text, &*close_text]
+    } else {
+        &[&*close_text]
+    };
+
+    match banner(ui, Tone::Accent, &text, actions) {
+        Some(0) if offer => {
+            queue();
             context.commands.send(BootCommand::DropProposal);
         }
-    });
+        Some(_) => context.commands.send(BootCommand::DropProposal),
+        None => {}
+    }
 
     ui.add_space(ui.tokens().sizes.card_gap);
 }

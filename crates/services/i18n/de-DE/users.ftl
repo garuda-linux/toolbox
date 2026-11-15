@@ -64,7 +64,6 @@ users-locks-denied = Es ist nicht bekannt, welche Konten gesperrt sind: Der Pass
 users-locks-no-agent = Es ist nicht bekannt, welche Konten gesperrt sind. In dieser Sitzung läuft kein polkit-Agent (das Programm, das nach deinem Passwort fragt, wenn eine App mehr Rechte braucht), daher erschien keine Passwortabfrage.
 users-locks-helper-missing = Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox ist nicht installiert. Installiere Garuda Toolbox neu.
 users-locks-unknown = Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox konnte es nicht auslesen.
-users-locks-again = „Neu einlesen“ fragt erneut ab.
 
 users-run-password-running = Das Passwort von { $user } wird gesetzt…
 users-run-password-done = Das Passwort von { $user } wurde gesetzt.
@@ -151,7 +150,7 @@ users-add-more = Weitere Optionen
 users-add-why-no-name = Gib einen Benutzernamen ein.
 users-add-why-bad-name = Der Benutzername ist ungültig. Der Grund steht darunter.
 users-add-why-no-password = Gib ein Passwort ein.
-users-add-why-passwords-differ = Die Passwörter stimmen nicht überein.
+users-add-why-no-repeat = Wiederhole das Passwort.
 users-add-why-fields = Ein Feld oben enthält einen Fehler.
 users-add-why-busy = Wartet auf laufende Änderungen.
 
@@ -169,16 +168,16 @@ users-password-confirm = Passwort jetzt setzen
 
 users-groups-title = Gruppen von { $user }
 users-groups-note = Die Änderungen bleiben vorgemerkt, bis du sie übernimmst. Sie gelten ab der nächsten Anmeldung des Benutzers.
-users-choice-detail = GID { $gid }, Mitglieder: { $members }
-users-choice-primary = primäre Gruppe, GID { $gid }, Mitglieder: { $members }
-users-choice-new = neue Gruppe
+users-choice-detail = { $group } (GID { $gid }, Mitglieder: { $members })
+users-choice-primary = { $group } (primäre Gruppe, GID { $gid }, Mitglieder: { $members })
+users-choice-new = { $group } (neue Gruppe)
 
 users-remove-title = Benutzer { $user } entfernen?
 users-remove-goes = Das Entfernen bleibt vorgemerkt, bis du es übernimmst. Entfernt wird:
-users-remove-account = Das Konto { $user } und sein Passwort
-users-remove-group = Die Gruppe { $user }, wenn der Benutzer ihr einziges Mitglied ist
-users-remove-memberships = Seine Mitgliedschaften in: { $groups }
-users-remove-home-goes = Das Home-Verzeichnis { $home } mit allen Dateien darin und das Mail-Postfach
+users-remove-account = • Das Konto { $user } und sein Passwort
+users-remove-group = • Die Gruppe { $user }, wenn der Benutzer ihr einziges Mitglied ist
+users-remove-memberships = • Seine Mitgliedschaften in: { $groups }
+users-remove-home-goes = • Das Home-Verzeichnis { $home } mit allen Dateien darin und das Mail-Postfach
 users-remove-home-stays = Das Home-Verzeichnis { $home } bleibt auf dem Datenträger.
 users-remove-delete-home = Auch das Home-Verzeichnis löschen
 users-remove-confirm = Entfernen vormerken
@@ -201,9 +200,13 @@ groups-detail-new = Noch nicht angelegt
 groups-tag-new = Neu
 groups-tag-system = System
 groups-tag-removed = Entfernen vorgemerkt
-groups-remove = { $group } entfernen…
-groups-unqueue-new = { $group } nicht anlegen
-groups-unqueue-removal = { $group } behalten
+groups-remove = Entfernen…
+# What a screen reader hears for the row button above.
+groups-remove-named = { $group } entfernen…
+groups-unqueue-new = Nicht anlegen
+groups-unqueue-new-named = { $group } nicht anlegen
+groups-unqueue-removal = Behalten
+groups-unqueue-removal-named = { $group } behalten
 groups-remove-title = Gruppe { $group } entfernen?
 groups-remove-detail = Alle Mitglieder verlieren ihre Mitgliedschaft. Dateien der Gruppe behalten ihre GID. Das Entfernen bleibt vorgemerkt, bis du es übernimmst.
 groups-remove-confirm = Entfernen vormerken

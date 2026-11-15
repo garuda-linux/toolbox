@@ -36,8 +36,13 @@ fn a_sidebar_entry_opens_its_page() {
 fn the_sidebar_shows_its_group_headings() {
     let harness = launch(Setup::default());
 
-    for heading in ["INSTALL", "SYSTEM", "CARE"] {
-        assert!(harness.query_by_label(heading).is_some(), "{heading}");
+    for heading in ["Install", "System", "Care"] {
+        assert!(
+            harness
+                .query_by_role_and_label(Role::Heading, heading)
+                .is_some(),
+            "{heading}"
+        );
     }
 }
 
@@ -48,7 +53,12 @@ fn a_collapsed_sidebar_still_names_and_opens_every_page() {
     harness.get_by_label("Collapse sidebar").click();
     harness.run();
 
-    assert!(harness.query_by_label("SYSTEM").is_none(), "headings hide");
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Heading, "System")
+            .is_none(),
+        "headings hide"
+    );
     harness
         .query_all_by_label("Setup Assistant")
         .next()
@@ -59,7 +69,11 @@ fn a_collapsed_sidebar_still_names_and_opens_every_page() {
 
     harness.get_by_label("Expand sidebar").click();
     harness.run();
-    assert!(harness.query_by_label("SYSTEM").is_some());
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Heading, "System")
+            .is_some()
+    );
 }
 
 #[test]

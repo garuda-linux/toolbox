@@ -25,6 +25,10 @@ pub const MAX_SVG_BYTES: usize = 256 * 1024;
 /// environment.
 pub trait IconLookup {
     fn find(&self, theme: &str, name: &str) -> Option<PathBuf>;
+
+    /// Drops what was learned of the folders, after a plan that may have
+    /// installed a picture.
+    fn forget(&self) {}
 }
 
 /// The installed themes, after the icon theme spec.
@@ -69,6 +73,16 @@ impl IconLookup for SystemIcons {
     }
 }
 
+impl<L: IconLookup> IconLookup for Arc<L> {
+    fn find(&self, theme: &str, name: &str) -> Option<PathBuf> {
+        L::find(self, theme, name)
+    }
+
+    fn forget(&self) {
+        L::forget(self);
+    }
+}
+
 impl AppIcons {
     pub fn theme(&self) -> &str {
         &self.theme
@@ -77,6 +91,15 @@ impl AppIcons {
     pub fn get(&self, name: &str) -> Option<&Path> {
         self.files.get(name).map(PathBuf::as_path)
     }
+}
+
+/// The app pictures' lookup, one for the catalogs' apps and the rows that
+/// ask as they show, so the icon folders are walked once for both.
+#[must_use = "nothing is read until a picture is looked up"]
+pub fn app_index(folders: Vec<PathBuf>) -> Arc<Indexed<SystemIcons>> {
+    Arc::new(Indexed::new(SystemIcons::APPS, move || {
+        IconNames::read(&folders)
+    }))
 }
 
 /// The SVG files `theme` has for the app's icons. A PNG of the theme is

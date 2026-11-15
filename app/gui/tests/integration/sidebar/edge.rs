@@ -3,7 +3,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_gui::page::PageId;
 use toolbox_gui::{App, Setup};
-use toolbox_gui_kit::testing::lines_in;
+use toolbox_gui_kit::testing::{lines_in, painted_text_within};
 use toolbox_gui_kit::theme::SIDEBAR_WIDTH;
 use toolbox_gui_kit::tokens;
 
@@ -100,5 +100,24 @@ fn the_header_band_starts_right_beside_the_hairline() {
     assert!(
         (band.left() - SIDEBAR_WIDTH).abs() < 0.01,
         "the band {band:?} does not meet the divider's side at {SIDEBAR_WIDTH}"
+    );
+}
+
+#[test]
+fn the_app_name_starts_where_the_group_headings_do() {
+    let harness = app(Theme::Dark, 1.0);
+    let sidebar = egui::Rect::from_min_max(Pos2::ZERO, egui::pos2(SIDEBAR_WIDTH, HEIGHT));
+    let left = |text: &str| {
+        painted_text_within(&harness, text, sidebar).map_or_else(
+            || panic!("{text} is painted in the sidebar"),
+            |shape| shape.pos.x + shape.galley.rect.left(),
+        )
+    };
+
+    let name = toolbox_gui::i18n::text(&harness.ctx, "app-name");
+    let (title, heading) = (left(&name), left("INSTALL"));
+    assert!(
+        (title - heading).abs() < 0.5,
+        "the app name starts at {title}, the headings at {heading}"
     );
 }

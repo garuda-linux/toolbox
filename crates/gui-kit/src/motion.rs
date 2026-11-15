@@ -144,6 +144,12 @@ pub fn keyboard_marked(ui: &egui::Ui) -> bool {
     })
 }
 
+/// Drops the mark [`mark_keyboard`] left for `id`, as for a row that
+/// left its list.
+pub(crate) fn forget_keyboard(ctx: &Context, id: Id) {
+    ctx.data_mut(|data| data.remove::<f64>(keyboard_id(id)));
+}
+
 fn seen_id(id: Id) -> Id {
     id.with("toolbox_gui_kit::motion::seen")
 }

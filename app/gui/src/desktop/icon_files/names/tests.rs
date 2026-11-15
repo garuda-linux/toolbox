@@ -142,3 +142,28 @@ fn walk_files(folder: &Path) -> usize {
         })
         .sum()
 }
+
+/// A plan may install a picture, which an index read before it lacks.
+#[test]
+fn a_forgotten_index_is_read_again_at_the_next_lookup() {
+    let root = rebuilt();
+    let pictures = root.path().join("usr/share/pixmaps");
+    let lookup = Indexed::new(Walk::default(), {
+        let folders = folders(&root);
+        move || IconNames::read(&folders)
+    });
+
+    assert_eq!(lookup.find("hicolor", "new-app"), None);
+    fs::write(pictures.join("new-app.png"), "").unwrap();
+    assert_eq!(
+        lookup.find("hicolor", "new-app"),
+        None,
+        "read again unasked"
+    );
+
+    lookup.forget();
+    assert_eq!(
+        lookup.find("hicolor", "new-app"),
+        Some(PathBuf::from("/found/new-app"))
+    );
+}

@@ -43,6 +43,10 @@ pub struct PackagesPage {
     view: RowCache<ViewKey, View>,
     aur_view: RowCache<Same<AurCatalog>, Vec<usize>>,
     history: detail::HistoryRows,
+    facts: detail::FactRows,
+    /// The text the detail page's file list is filtered by.
+    file_filter: String,
+    files: detail::FileRows,
     aur_asked: bool,
     removing: Option<remove::Removal>,
     installing: Option<PackageName>,
@@ -58,6 +62,7 @@ pub struct PackagesPage {
 )]
 pub struct Unfolded {
     pub depends: bool,
+    pub libraries: bool,
     pub make_depends: bool,
     pub required_by: bool,
     pub optional: bool,
@@ -143,6 +148,7 @@ impl PackagesPage {
         self.open = Some(package.clone());
         self.open_aur = aur;
         self.unfolded = Unfolded::default();
+        self.file_filter.clear();
         context
             .commands
             .send(PackagesCommand::Show(package.clone()));

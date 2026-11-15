@@ -56,7 +56,7 @@ pub fn rows(
     filter: &Filter,
     cache: &mut Rows,
 ) -> Arc<Vec<LocaleItem>> {
-    let ctx = ui.ctx().clone();
+    let ctx = ui.ctx();
     let rest = (
         filter.utf8_only,
         filter.enabled_only,
@@ -69,7 +69,7 @@ pub fn rows(
         let (rows, shown) = locales(context.snapshot, context.changes);
         pick(&rows, filter)
             .into_iter()
-            .filter_map(|at| Some((rows.get(at)?, shown.get(at)?)))
+            .filter_map(|at| rows.get(at).zip(shown.get(at)))
             .map(|(row, shown)| {
                 let title = if shown.language.is_empty() {
                     shown.locale_code.clone()
@@ -77,7 +77,7 @@ pub fn rows(
                     shown.language.clone()
                 } else {
                     i18n::text_with(
-                        &ctx,
+                        ctx,
                         "locales-title-territory",
                         &[
                             ("language", &shown.language),
@@ -87,16 +87,21 @@ pub fn rows(
                     .into_owned()
                 };
 
-                let detail_id = if shown.system {
-                    "locales-detail-system"
-                } else {
-                    "locales-detail"
+                let charset = shown.unnamed_charset();
+                let detail_id = match (charset.is_some(), shown.system) {
+                    (true, true) => "locales-detail-system",
+                    (true, false) => "locales-detail",
+                    (false, true) => "locales-detail-code-system",
+                    (false, false) => "locales-detail-code",
                 };
 
                 let detail = i18n::text_with(
-                    &ctx,
+                    ctx,
                     detail_id,
-                    &[("code", &shown.locale_code), ("charset", &shown.charset)],
+                    &[
+                        ("code", &shown.locale_code),
+                        ("charset", charset.unwrap_or_default()),
+                    ],
                 );
 
                 LocaleItem {
@@ -135,7 +140,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &LocaleItem, state: &RowSta
         on: item.on,
     };
 
-    if switch_line(ui, context, &line, state) {
+    if switch_line(ui, &line, state) {
         context.commands.send(LocaleCommand::Toggle {
             entry: item.entry.clone(),
             on: !item.on,
@@ -143,12 +148,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &LocaleItem, state: &RowSta
     }
 }
 
-pub fn switch_line(
-    ui: &mut Ui,
-    context: &PageContext<'_>,
-    line: &Line<'_>,
-    state: &RowState,
-) -> bool {
+pub fn switch_line(ui: &mut Ui, line: &Line<'_>, state: &RowState) -> bool {
     let ctx = ui.ctx().clone();
     let mut flipped = false;
     split_row(
@@ -180,7 +180,8 @@ pub fn switch_line(
             );
         },
         |ui| {
-            let enabled = !context.busy;
+            // The list waits in a disabled Ui while a plan runs.
+            let enabled = ui.is_enabled();
             let clicked = switch(ui, line.on, line.title, enabled).clicked();
             flipped = clicked || (state.toggle && enabled);
         },

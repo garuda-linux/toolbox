@@ -2,7 +2,7 @@ mod unload;
 
 use std::sync::Arc;
 
-use egui::{Label, Ui};
+use egui::{Align, Galley, Label, Layout, Ui, vec2};
 use toolbox_core::Toggle;
 use toolbox_core::features::network::{
     Category, DriverFilter, DriverRow, DriverState, ModuleFacts, driver_rows, visible,
@@ -10,8 +10,8 @@ use toolbox_core::features::network::{
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, named_chips, pill_button, rich,
-    row_height, split_row, status_dot, text_block_height,
+    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, line, named_chips, pill_button,
+    rich, row_height, split_row, status_dot, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 pub(super) use unload::forget;
@@ -186,24 +186,43 @@ fn listed(ui: &mut Ui, context: &PageContext<'_>, drivers: Option<&Drivers>) -> 
 fn filters(ui: &mut Ui, filter: &mut DriverFilter) {
     let states = STATES.map(|state| state.map_or("network-drivers-all", state_id));
     let kinds = KINDS.map(|kind| kind.map_or("network-drivers-all", kind_id));
+    let names = ["network-drivers-state", "network-drivers-kind"]
+        .map(|id| i18n::text(ui.ctx(), id).into_owned());
+
+    // Both names take one column, so the two chip rows start at one x.
+    let column = names
+        .iter()
+        .map(|name| caption(ui, name).size().x)
+        .fold(0.0_f32, f32::max);
+
     pick(
         ui,
-        "network-drivers-state",
+        (&names[0], column),
         (&STATES, &states),
         &mut filter.state,
     );
     ui.add_space(ui.tokens().sizes.control_gap);
     pick(
         ui,
-        "network-drivers-kind",
+        (&names[1], column),
         (&KINDS, &kinds),
         &mut filter.category,
     );
     ui.add_space(ui.tokens().sizes.card_gap);
 }
 
-fn pick<T>(ui: &mut Ui, label: &str, (values, ids): (&[T], &[&str]), current: &mut T)
-where
+fn caption(ui: &Ui, name: &str) -> Arc<Galley> {
+    line(ui, name, Weight::Medium, SMALL, ui.tokens().secondary)
+}
+
+/// One chip row behind its visible name, `column` wide. The group keeps the
+/// name too, so each row's "All" tells which row it belongs to.
+fn pick<T>(
+    ui: &mut Ui,
+    (name, column): (&str, f32),
+    (values, ids): (&[T], &[&str]),
+    current: &mut T,
+) where
     T: Copy + PartialEq,
 {
     let ctx = ui.ctx().clone();
@@ -218,9 +237,19 @@ where
         .zip(names.iter().map(String::as_str))
         .collect();
 
-    if let Some(picked) = named_chips(ui, &i18n::text(&ctx, label), &options, *current) {
-        *current = picked;
-    }
+    ui.horizontal(|ui| {
+        let height = caption(ui, name).size().y;
+        let layout = Layout::left_to_right(Align::Center);
+        ui.allocate_ui_with_layout(vec2(column, height), layout, |ui| {
+            ui.set_min_width(column);
+            ui.label(rich(ui, name, Weight::Medium, SMALL, ui.tokens().secondary));
+        });
+        ui.add_space(ui.tokens().sizes.control_gap);
+
+        if let Some(picked) = named_chips(ui, name, &options, *current) {
+            *current = picked;
+        }
+    });
 }
 
 fn row(ui: &mut Ui, context: &PageContext<'_>, driver: &DriverRow) {
@@ -256,11 +285,9 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, driver: &DriverRow) {
 
                 status_dot(ui, &i18n::text(&ctx, state), tone);
 
-                status_dot(
-                    ui,
-                    &i18n::text(&ctx, kind_id(driver.category)),
-                    Tone::Neutral,
-                );
+                // A kind is no state, so it gets no dot.
+                let kind = i18n::text(&ctx, kind_id(driver.category));
+                ui.label(rich(ui, &kind, Weight::Regular, SMALL, tokens.secondary));
             });
 
             // An empty line would hold the name above its button.

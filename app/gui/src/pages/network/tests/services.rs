@@ -55,3 +55,32 @@ fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
 
     assert!(dot, "no dot before Running");
 }
+
+#[test]
+fn a_service_that_is_not_installed_is_not_listed() {
+    let manager = UnitInfo {
+        name: UnitName::new("NetworkManager.service").unwrap(),
+        description: "Network Manager".to_owned(),
+        active: ActiveState::Active,
+        sub_state: "running".to_owned(),
+        file_state: FileState::Enabled,
+    };
+
+    let mut harness = PageFixture {
+        services: Services {
+            network: network(),
+            units: Units::showing(UnitLists {
+                system: UnitListing::Loaded(Arc::new(vec![manager])),
+                ..UnitLists::default()
+            }),
+            ..Services::default()
+        },
+        ..PageFixture::default()
+    }
+    .harness(NetworkPage::default());
+
+    harness.run();
+
+    assert!(harness.query_by_label("ConnMan").is_none());
+    assert!(harness.query_by_label("Not installed").is_none());
+}

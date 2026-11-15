@@ -38,6 +38,9 @@ pub struct TerminalView<'a> {
     hint: Option<&'a str>,
     /// What the grid lies on, [`crate::Tokens::terminal`] unless set.
     ground: Option<Color32>,
+    /// Whether a program runs in it. Without one the cursor hides, as
+    /// nothing reads what is typed.
+    running: bool,
 }
 
 #[derive(Debug)]
@@ -67,6 +70,7 @@ impl<'a> TerminalView<'a> {
             label,
             hint: None,
             ground: None,
+            running: true,
         }
     }
 
@@ -82,6 +86,14 @@ impl<'a> TerminalView<'a> {
     #[must_use = "the view does nothing until shown"]
     pub const fn ground(mut self, ground: Color32) -> Self {
         self.ground = Some(ground);
+        self
+    }
+
+    /// Whether a program runs in the terminal, true unless set. While none
+    /// does, the cursor hides.
+    #[must_use = "the view does nothing until shown"]
+    pub const fn running(mut self, running: bool) -> Self {
+        self.running = running;
         self
     }
 
@@ -129,6 +141,7 @@ impl<'a> TerminalView<'a> {
             ansi: &tokens.terminal_ansi,
             font: &font,
             ground: self.ground.unwrap_or(terminal),
+            running: self.running,
         };
 
         let selection = pointer::selection(ui, response.id);
@@ -146,10 +159,12 @@ impl<'a> TerminalView<'a> {
     /// The text on screen as the node's value. It is a polite live region
     /// only while the last line asks something, such as a password or a
     /// Y/n prompt, so progress output does not flood the screen reader.
+    ///
+    /// The text is built only while a screen reader asks for the tree.
     fn speak(&self, ui: &Ui, response: &Response, view: &Screen) {
-        let text = screen_text(view);
-        let asks = asks(&text);
         ui.ctx().accesskit_node_builder(response.id, |node| {
+            let text = screen_text(view);
+            let asks = asks(&text);
             node.set_value(text);
             node.set_live(if asks { Live::Polite } else { Live::Off });
             if let Some(hint) = self.hint {

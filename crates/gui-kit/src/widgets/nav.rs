@@ -12,7 +12,9 @@ use crate::theme::RADIUS;
 use crate::tokens;
 use crate::ui_ext::icon_image;
 
-const PADDING_X: f32 = 12.0;
+/// Entries and headings start their icon and text this far in, and a
+/// sidebar's own lines line up with them.
+pub const NAV_INSET: f32 = 12.0;
 const ICON_GAP: f32 = 12.0;
 /// The group labels' tracking, in points, as small capitals want.
 const TRACKING: f32 = 0.7;
@@ -145,7 +147,7 @@ pub fn nav_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, look: NavLo
         let image = icon_image(ui, icon, ink);
         let glyph = glyph_size(&image);
         let icon_left = if expanded {
-            rect.left() + PADDING_X
+            rect.left() + NAV_INSET
         } else {
             rect.center().x - glyph.x / 2.0
         };
@@ -192,9 +194,11 @@ pub fn group_label(ui: &mut Ui, text: &str, compact: bool) {
         ui.spacing_mut().interact_size.y = 0.0;
     }
 
+    // The capitals are a look only. Screen readers get the words as
+    // written, and a heading to jump to.
     ui.horizontal(|ui| {
-        ui.add_space(PADDING_X);
-        ui.label(
+        ui.add_space(NAV_INSET);
+        let shown = ui.label(
             rich(
                 ui,
                 &text.to_uppercase(),
@@ -204,6 +208,8 @@ pub fn group_label(ui: &mut Ui, text: &str, compact: bool) {
             )
             .extra_letter_spacing(TRACKING),
         );
+
+        super::mark_heading(ui, &shown, text, 2);
     });
 
     ui.spacing_mut().interact_size.y = saved;
@@ -239,7 +245,7 @@ pub fn nav_divider(ui: &mut Ui, room: f32) {
     );
 
     ui.painter().hline(
-        (rect.left() + PADDING_X)..=(rect.right() - PADDING_X),
+        (rect.left() + NAV_INSET)..=(rect.right() - NAV_INSET),
         rect.center().y,
         egui::Stroke::new(1.0, tokens.sidebar_edge),
     );
@@ -263,7 +269,7 @@ fn paint_label(
     text: egui::RichText,
     ink: Color32,
 ) -> bool {
-    let room = (rect.right() - PADDING_X - text_left).max(0.0);
+    let room = (rect.right() - NAV_INSET - text_left).max(0.0);
     let galley = cut(ui, text, room);
     let was_cut = galley.elided;
     let at = pos2(text_left, rect.center().y - galley.size().y / 2.0);

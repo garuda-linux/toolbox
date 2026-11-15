@@ -19,6 +19,8 @@ pub struct Look<'a> {
     pub ansi: &'a Ansi,
     pub font: &'a FontId,
     pub ground: Color32,
+    /// A program runs and reads what is typed, so the cursor shows.
+    pub running: bool,
 }
 
 pub fn paint(
@@ -49,7 +51,9 @@ pub fn paint(
         }
     }
 
-    paint_cursor(painter, grid, screen, look);
+    if look.running {
+        paint_cursor(painter, grid, screen, look);
+    }
 }
 
 fn paint_run(

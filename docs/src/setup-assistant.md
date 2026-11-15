@@ -82,7 +82,7 @@ way round. When the other branch is installed, it is queued for removal.
 When the apply worked and the queue is empty again, the assistant shows
 **Success!** and recommends a restart. **Restart…** restarts the computer
 after one more question. **Finish setup** returns to Home. Below them,
-buttons open the **Garuda forum**, the **Garuda Linux wiki** and the
+links open the **Garuda forum**, the **Garuda Linux wiki** and the
 **Arch Linux wiki** in your web browser. The changes pill stays hidden on
 this page.
 

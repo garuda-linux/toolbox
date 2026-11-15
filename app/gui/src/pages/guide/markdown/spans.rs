@@ -44,7 +44,12 @@ fn one(ui: &mut Ui, span: &Span, weight: Weight, reader: &mut Reader<'_>) {
 
     // The pages name the app's ⋯ buttons. Inter has no U+22EF, so the
     // ellipsis it has stands in.
-    let words = span.text.replace('⋯', "…");
+    let words = if span.text.contains('⋯') {
+        span.text.replace('⋯', "…")
+    } else {
+        span.text.clone()
+    };
+
     let leading = font.size * LEADING;
     let mut text = RichText::new(words)
         .font(font)
@@ -55,7 +60,8 @@ fn one(ui: &mut Ui, span: &Span, weight: Weight, reader: &mut Reader<'_>) {
         text = text.italics();
     }
 
-    if span.style.code {
+    // A table's stripes would show a second fill around the chip.
+    if span.style.code && !reader.in_table {
         text = text.background_color(tokens.field);
     }
 

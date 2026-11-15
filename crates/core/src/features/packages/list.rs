@@ -1,12 +1,12 @@
 #[cfg(test)]
 mod tests;
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_plan::PackageName;
 use toolbox_state::packages::{IndexEntry, LocalNode, PackageIndex};
 
-use super::graph::orphans;
+use super::graph::{dependency_name, orphans};
 use crate::domains::{InstalledPackages, Packages};
 use crate::features::search::{Needle, folded};
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -46,6 +46,9 @@ pub struct Catalog {
     index: PackageIndex,
     folded: Vec<String>,
     orphans: BTreeSet<PackageName>,
+    /// Every name an installed package provides, with the first package
+    /// that does, so a detail page finds a soname without a scan.
+    providers: BTreeMap<String, PackageName>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -74,11 +77,20 @@ impl Catalog {
             .collect();
 
         let orphans = orphans(&index.local);
+        let mut providers = BTreeMap::new();
+        for node in &index.local {
+            for provided in &node.provides {
+                providers
+                    .entry(dependency_name(provided).to_owned())
+                    .or_insert_with(|| node.name.clone());
+            }
+        }
 
         Self {
             index,
             folded,
             orphans,
+            providers,
         }
     }
 
@@ -98,6 +110,11 @@ impl Catalog {
             .ok()?;
 
         entries.get(place)
+    }
+
+    /// The first installed package that provides `name`.
+    pub fn provider(&self, name: &str) -> Option<&PackageName> {
+        self.providers.get(name)
     }
 
     pub fn is_orphan(&self, name: &PackageName) -> bool {

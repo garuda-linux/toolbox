@@ -376,13 +376,12 @@ fn changes(original: ConfigText, edited: ConfigText) -> Compared {
     }
 
     let diff = Diff::new(original.as_str(), edited.as_str());
-    let (plain, colored) = (diff.plain(), diff.colored());
+    let plain = diff.plain();
     let (added, removed) = (diff.added(), diff.removed());
     Compared::Changed(Changes {
         original,
         edited,
         plain,
-        colored,
         added,
         removed,
     })

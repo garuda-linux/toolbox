@@ -50,7 +50,8 @@ fn position(stops: &[String], name: &str) -> usize {
 
 #[test]
 fn the_header_comes_before_the_body_and_the_status_bar_last() {
-    let mut harness = app(PageId::Services);
+    // The search shows once a list exists, so the units are read first.
+    let (mut harness, _runtime) = crate::services::services();
     let stops = stops(&mut harness);
 
     let home = position(&stops, "Home");

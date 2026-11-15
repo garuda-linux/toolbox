@@ -1,4 +1,6 @@
 mod look;
+mod packs;
+mod unread;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
@@ -196,7 +198,11 @@ fn the_packs_tab_counts_and_queues_the_missing_packs() {
         .click();
     harness.run();
 
-    assert!(harness.query_by_label_contains("Missing: 1").is_some());
+    assert!(
+        harness
+            .query_by_label_contains("One pack is not installed.")
+            .is_some()
+    );
 
     harness.get_by_label("Queue all missing").click();
     harness.run();
@@ -235,6 +241,11 @@ fn the_header_stays_put_and_the_toolbar_holds_search_or_sort() {
     harness.run();
 
     assert_eq!(rect_of(&harness, Role::RadioButton, "Locales"), tab);
+    assert_eq!(
+        rect_of(&harness, Role::TextInput, "Search language packs"),
+        search,
+        "the toolbar keeps its shape"
+    );
     let refresh = rect_of(&harness, Role::Button, "Read again");
 
     let sort = rect_of(&harness, Role::ComboBox, "Sort language packs");

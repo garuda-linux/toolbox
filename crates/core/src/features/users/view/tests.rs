@@ -1,7 +1,7 @@
 use toolbox_plan::{FullName, ShellPath};
 
 use super::{
-    Shown, accounts_known, admin_group, choices, group_names, groups, shells, user as account_row,
+    Shown, accounts_known, admin_group, choices, choices_holding, group_names, groups, shells,
     users,
 };
 use crate::domains::{Accounts, AvailableShells};
@@ -86,17 +86,18 @@ fn a_row_shows_and_counts_what_is_queued_for_it() {
 }
 
 #[test]
-fn one_account_looked_up_is_its_row_in_the_list() {
+fn the_membership_search_keeps_the_groups_holding_it() {
     let snapshot = snapshot();
-    let mut changes = ChangeSet::default();
-    let nico = user_name("nico");
-    set_shell(&nico, shell("/usr/bin/fish"), &mut changes, &snapshot).unwrap();
+    let changes = ChangeSet::default();
+    let every = choices(&user_name("ada"), &snapshot, &changes);
 
-    let rows = users(&snapshot, &changes, &Shown::people());
-    let listed = rows.iter().find(|row| row.user.name == nico);
+    let found: Vec<&str> = choices_holding(&every, "WHE")
+        .iter()
+        .map(|choice| choice.group.as_str())
+        .collect();
 
-    assert_eq!(account_row(&snapshot, &changes, &nico).as_ref(), listed);
-    assert_eq!(account_row(&snapshot, &changes, &user_name("nobody")), None);
+    assert_eq!(found, ["wheel"]);
+    assert_eq!(choices_holding(&every, "").len(), every.len());
 }
 
 #[test]

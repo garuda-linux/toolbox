@@ -1,9 +1,11 @@
 use egui::accesskit::Role;
-use egui::{Key, TextEdit};
-use egui_kittest::kittest::Queryable as _;
+use egui::epaint::text::CharIndex;
+use egui::{Key, TextBuffer as _, TextEdit};
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 use super::super::{number_field, number_field_with_unit, text_field_with_unit};
 use super::committed;
+use super::digits::Digits;
 use crate::testing::{harness, painted_text, text_colour};
 
 const WIDTH: f32 = 72.0;
@@ -24,13 +26,13 @@ fn shown(value: u32) -> egui_kittest::Harness<'static, u32> {
 
 fn type_and_press(harness: &mut egui_kittest::Harness<'static, u32>, text: &str, key: Key) {
     harness
-        .get_by_role_and_label(Role::TextInput, "Pings")
+        .get_by_role_and_label(Role::SpinButton, "Pings")
         .click();
     harness.run();
     harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
     harness.run();
     harness
-        .get_by_role_and_label(Role::TextInput, "Pings")
+        .get_by_role_and_label(Role::SpinButton, "Pings")
         .type_text(text);
     harness.run();
     harness.key_press(key);
@@ -50,7 +52,7 @@ fn a_typed_number_is_held_to_the_range_and_bad_text_keeps_the_value() {
 fn the_digits_end_at_the_right_of_the_field() {
     let harness = shown(5);
     let field = harness
-        .get_by_role_and_label(Role::TextInput, "Pings")
+        .get_by_role_and_label(Role::SpinButton, "Pings")
         .rect();
 
     let digits = painted_text(&harness, "5").expect("the number is painted");
@@ -102,10 +104,10 @@ fn painted_at<State>(harness: &egui_kittest::Harness<'_, State>, text: &str) -> 
 
 fn assert_centred_group<State>(
     harness: &egui_kittest::Harness<'_, State>,
-    name: &str,
+    (role, name): (Role, &str),
     (digits, unit): (&str, &str),
 ) {
-    let field = harness.get_by_role_and_label(Role::TextInput, name).rect();
+    let field = harness.get_by_role_and_label(role, name).rect();
     let digits = painted_at(harness, digits);
     let unit = painted_at(harness, unit);
     let gap = unit.left() - digits.right();
@@ -122,7 +124,7 @@ fn assert_centred_group<State>(
 fn a_number_and_its_unit_are_one_group_centred_in_the_field() {
     for (value, digits) in [(5, "5"), (300, "300")] {
         let harness = with_unit(value, UNIT_WIDTH);
-        assert_centred_group(&harness, "Pings", (digits, "s"));
+        assert_centred_group(&harness, (Role::SpinButton, "Pings"), (digits, "s"));
     }
 
     let harness = with_unit(5, UNIT_WIDTH);
@@ -143,7 +145,7 @@ fn a_text_field_with_a_unit_centres_the_two_as_well() {
     });
 
     harness.run();
-    assert_centred_group(&harness, "Minutes", ("60", "min"));
+    assert_centred_group(&harness, (Role::TextInput, "Minutes"), ("60", "min"));
 }
 
 #[test]
@@ -152,4 +154,60 @@ fn a_field_with_a_unit_still_takes_only_the_number() {
     type_and_press(&mut harness, "12", Key::Enter);
 
     assert_eq!(*harness.state(), 12);
+}
+
+#[test]
+fn a_letter_typed_between_digits_leaves_the_caret_after_the_digits() {
+    let mut digits = Digits("12".to_owned());
+
+    assert_eq!(digits.insert_text("x", CharIndex(1)), 0);
+    assert_eq!(digits.insert_text("a3b", CharIndex(1)), 1);
+    assert_eq!(digits.as_str(), "132");
+}
+
+fn focused(value: u32) -> egui_kittest::Harness<'static, u32> {
+    let mut harness = shown(value);
+    harness
+        .get_by_role_and_label(Role::SpinButton, "Pings")
+        .click();
+    harness.run();
+    harness
+}
+
+#[test]
+fn up_and_down_step_the_number_at_once_and_keep_to_the_range() {
+    let mut harness = focused(5);
+
+    harness.key_press(Key::ArrowUp);
+    harness.run();
+    assert_eq!(*harness.state(), 6);
+
+    harness.key_press(Key::ArrowDown);
+    harness.run();
+    harness.key_press(Key::ArrowDown);
+    harness.run();
+    assert_eq!(*harness.state(), 4);
+
+    let mut at_end = focused(30);
+    at_end.key_press(Key::ArrowUp);
+    at_end.run();
+    assert_eq!(*at_end.state(), 30);
+    assert!(
+        at_end
+            .get_by_role_and_label(Role::SpinButton, "Pings")
+            .accesskit_node()
+            .is_focused(),
+        "Up keeps the focus in the field"
+    );
+}
+
+#[test]
+fn a_screen_reader_hears_the_number_and_its_range() {
+    let harness = shown(5);
+    let node = harness.get_by_role_and_label(Role::SpinButton, "Pings");
+    let node = node.accesskit_node();
+
+    assert_eq!(node.numeric_value(), Some(5.0_f64));
+    assert_eq!(node.min_numeric_value(), Some(1.0_f64));
+    assert_eq!(node.max_numeric_value(), Some(30.0_f64));
 }

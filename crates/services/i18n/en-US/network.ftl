@@ -31,7 +31,7 @@ network-address-asking = Asking…
 network-address-failed = Could not be found out
 network-address-show = Show public address
 network-address-again = Try again
-network-address-copy = Copy
+network-address-copy = Copy public address
 network-address-hide = Hide
 network-address-note = The public address is asked from geoip.kde.org only when you click the button. It is not saved.
 
@@ -54,7 +54,6 @@ network-service-NetworkManager-service = NetworkManager
 network-service-connman-service = ConnMan
 network-service-bluetooth-service = Bluetooth
 network-service-geoclue-service = Location service (GeoClue)
-network-service-missing = Not installed
 network-service-running = Running
 network-service-failed = Failed
 network-service-starting = Starting
@@ -115,6 +114,8 @@ network-hardware-pci-missing = PCI devices are not listed: lspci is not installe
 network-hardware-pci-failed = PCI devices are not listed: lspci failed.
 network-hardware-usb-missing = USB devices are not listed: lsusb is not installed (package usbutils).
 network-hardware-usb-failed = USB devices are not listed: lsusb failed.
+network-hardware-queue-pciutils = Queue pciutils
+network-hardware-unqueue-pciutils = Take back pciutils
 
 network-tests = Connection tests
 network-tests-detail = Both tests run with your own rights and show their output in the Console.

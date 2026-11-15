@@ -8,26 +8,29 @@ use toolbox_calendar::Utc;
 use toolbox_cli::output::size;
 use toolbox_core::features::packages::detail::web_address;
 use toolbox_core::features::packages::{InstallReason, PackageDetails};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{PropertyTexts, property_list, text_link};
 
 use crate::i18n;
+use crate::packages::Details;
 use crate::pages::packages::row::repository;
+use crate::pages::rows::Look;
 
+/// The facts of the shown details, keyed by them and the look.
+pub type FactRows = RowCache<(Same<Details>, Look), Vec<Fact>>;
+
+#[derive(Debug)]
 pub struct Fact {
     pub label: String,
     pub value: Value,
 }
 
+#[derive(Debug)]
 pub enum Value {
     Plain(String),
     /// A version, which someone may paste into a bug report.
     Copied(String),
     Web(String, String),
-}
-
-pub fn show(ui: &mut Ui, info: &PackageDetails) {
-    let facts = facts(ui.ctx(), info);
-    grid(ui, &facts);
 }
 
 pub fn grid(ui: &mut Ui, facts: &[Fact]) {
@@ -60,7 +63,7 @@ pub fn grid(ui: &mut Ui, facts: &[Fact]) {
 
 /// The rows of the grid. Lists that are empty and the installed rows of a
 /// package that is not installed are left out.
-fn facts(ctx: &Context, info: &PackageDetails) -> Vec<Fact> {
+pub fn facts(ctx: &Context, info: &PackageDetails) -> Vec<Fact> {
     let fact = |id: &str, value: Value| Fact {
         label: i18n::text(ctx, id).into_owned(),
         value,

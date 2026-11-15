@@ -15,7 +15,7 @@ use toolbox_core::features::diagnostics::Collector;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    BodyShape, ButtonKind, Tone, banner, card, loading_label, pill_button, rich,
+    BodyShape, ButtonKind, Tone, banner, card, loading_label, pill_button, pill_width, rich,
 };
 use toolbox_services::diagnostics::page::State;
 
@@ -31,8 +31,6 @@ pub struct DiagnosticsPage {
     asking: Option<Question>,
     /// The report rows are unfolded while a report shows.
     rows_open: bool,
-    /// Long lines wrap at the viewer's edge instead of scrolling sideways.
-    wrap: bool,
     query: String,
     shown: report::Shown,
 }
@@ -104,6 +102,13 @@ impl DiagnosticsPage {
 
         // The redacted report follows the report in a moment.
         let ready = page.shareable.is_some() && !page.share.running();
+
+        // The scope that disables the button never wraps in the line it
+        // sits in, so a button that would run past the card wraps first.
+        if ui.available_size_before_wrap().x < pill_width(ui, &share) {
+            ui.end_row();
+        }
+
         let shared = ui
             .add_enabled_ui(ready, |ui| pill_button(ui, &share, ButtonKind::Soft))
             .inner

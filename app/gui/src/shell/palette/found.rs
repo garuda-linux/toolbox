@@ -3,7 +3,12 @@
 //! Discover apps whose title holds it. Each row knows its section and the
 //! tile it shows.
 
+use std::rc::Rc;
+use std::sync::Arc;
+
 use egui::Context;
+use fluent_templates::LanguageIdentifier;
+use toolbox_core::Snapshot;
 use toolbox_core::features::discover::package;
 use toolbox_core::features::search::Needle;
 use toolbox_gui_kit::icons::{self, Icon};
@@ -39,6 +44,7 @@ pub enum Look {
     },
 }
 
+#[derive(Debug)]
 pub struct Row {
     pub name: String,
     pub detail: String,
@@ -47,6 +53,38 @@ pub struct Row {
     pub section: Section,
     pub look: Look,
     pub command: Command,
+}
+
+/// What the found rows depend on, so the palette finds them again only
+/// when one of these changes and not on every frame it is open.
+#[derive(Debug)]
+pub struct Asked {
+    query: String,
+    revision: u64,
+    language: LanguageIdentifier,
+    /// Held, so a new snapshot is told from the last by identity.
+    snapshot: Arc<Snapshot>,
+    boot_repair: bool,
+}
+
+impl Asked {
+    fn of(ctx: &Context, context: &PageContext<'_>, query: &str) -> Self {
+        Self {
+            query: query.to_owned(),
+            revision: context.revision,
+            language: i18n::language(ctx),
+            snapshot: Arc::clone(context.snapshot),
+            boot_repair: listed(ctx, PageId::BootRepair),
+        }
+    }
+
+    fn same(&self, other: &Self) -> bool {
+        self.query == other.query
+            && self.revision == other.revision
+            && self.language == other.language
+            && Arc::ptr_eq(&self.snapshot, &other.snapshot)
+            && self.boot_repair == other.boot_repair
+    }
 }
 
 impl Section {
@@ -84,10 +122,30 @@ fn command_look(command: UiCommand) -> (Section, Look) {
     (Section::Commands, Look::Glyph(glyph, Hue::Accent))
 }
 
+/// The rows for `query`, kept in `found` while nothing they depend on
+/// differs.
+pub fn cached(
+    found: &mut Option<(Asked, Rc<[Row]>)>,
+    ctx: &Context,
+    context: &PageContext<'_>,
+    query: &str,
+) -> Rc<[Row]> {
+    let asked = Asked::of(ctx, context, query);
+    if let Some((before, rows)) = found.as_ref()
+        && before.same(&asked)
+    {
+        return Rc::clone(rows);
+    }
+
+    let rows: Rc<[Row]> = matches(ctx, context, query).into();
+    *found = Some((asked, Rc::clone(&rows)));
+    rows
+}
+
 /// Every page and command whose name holds the typed text, then the
 /// Maintenance entries and the apps this system offers whose title holds
 /// it. Those two only show for a typed text, there are too many to list.
-pub fn matches(ctx: &Context, context: &PageContext<'_>, query: &str) -> Vec<Row> {
+fn matches(ctx: &Context, context: &PageContext<'_>, query: &str) -> Vec<Row> {
     let needle = Needle::new(query);
     let pages = PageId::ALL
         .into_iter()

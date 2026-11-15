@@ -7,11 +7,15 @@ use egui::{Context, Id, TextBuffer, Ui};
 use toolbox_gui_kit::widgets::{ButtonKind, SecretText, forget_text};
 use toolbox_plan::{InvalidPassword, MAX_PASSWORD_BYTES, Password, UserName};
 
-use super::{Next, dialog, note, password_field};
+use super::{Next, busy_why, dialog_why, note, password_field};
 use crate::command::UsersCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::users::texts;
+
+/// One byte past the longest password, so a longer paste is cut to a text
+/// the check calls too long instead of to a valid password.
+const ROOM: usize = MAX_PASSWORD_BYTES + 1;
 
 pub struct PasswordForm {
     user: UserName,
@@ -39,12 +43,13 @@ impl PasswordForm {
         let title = i18n::text_with(ctx, "users-password-title", &[("user", user)]);
         let confirm = i18n::text(ctx, "users-password-confirm");
         let ready = self.pair.agreed() && !context.busy;
+        let why = busy_why(ctx, context);
         let pair = &mut self.pair;
-        let (next, confirmed) = dialog(
+        let (next, confirmed) = dialog_why(
             ctx,
             "password",
             (&title, &confirm, ButtonKind::Primary),
-            ready,
+            (why.as_deref(), ready),
             |ui| {
                 note(ui, &i18n::text(ctx, "users-password-note"));
                 ui.add_space(ui.spacing().item_spacing.y);
@@ -138,8 +143,8 @@ impl PasswordPair {
 impl Default for PasswordPair {
     fn default() -> Self {
         Self {
-            first: SecretText::with_room(MAX_PASSWORD_BYTES),
-            second: SecretText::with_room(MAX_PASSWORD_BYTES),
+            first: SecretText::with_room(ROOM),
+            second: SecretText::with_room(ROOM),
             check: Check::default(),
             fields: Vec::new(),
         }

@@ -92,7 +92,7 @@ fn a_small_cache_without_orphans_is_no_row() {
 }
 
 #[test]
-fn a_failed_check_is_no_all_clear_in_the_greeting() {
+fn a_failed_check_is_said_once_by_its_banner() {
     let status = Status {
         health: Err(ProbeError::fake("no garuda-health")),
         ..quiet()
@@ -102,8 +102,18 @@ fn a_failed_check_is_no_all_clear_in_the_greeting() {
 
     assert!(
         harness
-            .query_by_label("Some checks could not run")
+            .query_by_label_contains("One check could not run")
             .is_some()
     );
+    assert!(
+        harness
+            .query_by_label("Some checks could not run")
+            .is_none()
+    );
     assert!(harness.query_by_label("Everything is fine").is_none());
+    assert!(
+        harness
+            .query_by_label("Maintain and set up your system.")
+            .is_some()
+    );
 }

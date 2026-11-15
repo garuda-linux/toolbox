@@ -3,8 +3,8 @@
 
 mod title;
 
-use egui::{Align, Id, Layout, Ui, UiBuilder, vec2};
-pub(super) use title::{capitals_in_line, last_descent, slack_below};
+use egui::{Align, Id, Layout, Ui, UiBuilder, Vec2, vec2};
+pub(super) use title::{capitals_in_line, last_descent, raised_column, slack_below};
 use title::{tail_id, title_tail};
 pub use title::{title_capitals_top, title_line, title_line_height};
 
@@ -16,6 +16,33 @@ use crate::tokens;
 pub const MIN_TEXT_WIDTH: f32 = 240.0;
 /// A measured size that moves less than this, in points, has settled.
 pub(super) const SETTLED: f32 = 0.5;
+
+/// What a remembered size that moved does to the frame.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum Redraw {
+    /// The first measurement discards its pass, later ones repaint.
+    FirstDiscards,
+    /// Every change discards the pass, for a band whose old size would
+    /// show for one frame.
+    Discards,
+}
+
+/// A size kept from one frame for the next.
+pub(super) trait Measure: Copy + Send + Sync + 'static {
+    fn moved(self, now: Self) -> bool;
+}
+
+impl Measure for f32 {
+    fn moved(self, now: Self) -> bool {
+        moved(self, now)
+    }
+}
+
+impl Measure for Vec2 {
+    fn moved(self, now: Self) -> bool {
+        (now - self).length() > SETTLED
+    }
+}
 
 /// The text's width beside controls `controls` wide in `full`, `gap` from
 /// them, `None` when that leaves it less than [`MIN_TEXT_WIDTH`] and the
@@ -31,17 +58,31 @@ pub(super) fn moved(was: f32, now: f32) -> bool {
 
 /// Keeps the width `now` for `id` unless it settled at `kept`.
 pub(super) fn remember_width(ui: &Ui, id: Id, kept: Option<f32>, now: f32, reason: &'static str) {
-    if kept.is_none_or(|was| moved(was, now)) {
+    remember(ui, id, kept, now, (Redraw::FirstDiscards, reason));
+}
+
+/// Keeps the size `now` for `id` unless it settled at `kept`, the one
+/// store of every size measured to lay out the next frame.
+pub(super) fn remember<T>(
+    ui: &Ui,
+    id: Id,
+    kept: Option<T>,
+    now: T,
+    (redraw, reason): (Redraw, &'static str),
+) where
+    T: Measure,
+{
+    if kept.is_none_or(|was| was.moved(now)) {
         ui.data_mut(|data| data.insert_temp(id, now));
-        remeasured(ui, kept.is_none(), reason);
+        remeasured(ui, kept.is_none() || redraw == Redraw::Discards, reason);
     }
 }
 
-/// Redraws after a size changed. Only a first measurement's pass is
-/// discarded, as egui's Grid does, because a discard repeats the clicks
-/// of that pass. Later changes only repaint.
-fn remeasured(ui: &Ui, first: bool, reason: &'static str) {
-    if first {
+/// Redraws after a size changed. A discard repeats the clicks of its
+/// pass, so egui's Grid discards only a first measurement's, and so do
+/// the sizes that do not ask for [`Redraw::Discards`].
+pub(super) fn remeasured(ui: &Ui, discard: bool, reason: &'static str) {
+    if discard {
         ui.ctx().request_discard(reason);
     } else {
         ui.ctx().request_repaint();
@@ -97,7 +138,7 @@ pub fn split_row<L, R>(
                 ui.set_width(left_width);
 
                 // Only this room is the space above and below the text.
-                ui.spacing_mut().item_spacing = egui::Vec2::ZERO;
+                ui.spacing_mut().item_spacing = Vec2::ZERO;
                 ui.add_space(text_room);
                 ui.data_mut(|data| data.remove_temp::<[f32; 2]>(tail_id()));
                 let drawn = ui.scope(|ui| {

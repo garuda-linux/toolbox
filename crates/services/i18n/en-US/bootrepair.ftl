@@ -4,14 +4,13 @@
 
 page-boot-repair-subtitle = Install the boot loader of a system that does not start again, or build its boot files again.
 repair-refresh = Read again
-repair-intro = Use this page when an installed system does not start anymore. It installs the boot loader of that system again, GRUB or systemd-boot, or builds its boot files again: GRUB's boot menu, or systemd-boot's kernel images.
 repair-asks-first = Each repair asks first and names the partition and the disk it writes to. A GRUB system with /boot on a partition of its own, or with its EFI system partition somewhere else than /boot/efi, is not repaired here.
 repair-test-mode = Test mode: this page is meant for the live system and shows here only because Garuda Toolbox was started with --boot-repair. Nothing is written to a disk the running system uses.
 repair-dismiss = Dismiss
 
 repair-reading = Reading the disks…
 repair-failed = The disks could not be read
-repair-failed-detail = The log says why. Use Refresh to try once more.
+repair-failed-detail = The log says why. Read again tries once more.
 repair-missing = Boot repair cannot work on this system
 repair-missing-detail = These programs are missing: { $tools }. Install them and use Refresh.
 repair-none = No installed system was found

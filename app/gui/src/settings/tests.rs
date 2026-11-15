@@ -51,3 +51,21 @@ fn start_at_login_sets_and_takes_back_the_link() {
     store.set_autostart(false);
     assert!(eventually(|| !autostart.is_enabled()));
 }
+
+#[test]
+fn a_change_is_written_before_the_store_is_gone() {
+    let dir = tempfile::tempdir().unwrap();
+    let (store, autostart) = store(dir.path());
+    let mut settings = Settings::default();
+    settings.status.refresh = RefreshInterval::Minutes(45);
+
+    store.save(settings.clone());
+    store.set_autostart(true);
+    drop(store);
+
+    assert_eq!(
+        Settings::load(&dir.path().join("settings.toml")).settings,
+        settings
+    );
+    assert!(autostart.is_enabled());
+}

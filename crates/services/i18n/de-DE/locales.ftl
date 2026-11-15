@@ -7,6 +7,8 @@ locales-queued = Wird beim Übernehmen geändert
 
 locales-search = Locales durchsuchen
 locales-search-hint = Locales durchsuchen…
+locales-packs-search = Sprachpakete durchsuchen
+locales-packs-search-hint = Sprachpakete durchsuchen…
 locales-filter-utf8 = Nur UTF-8
 locales-filter-enabled = Nur aktivierte
 locales-list = Locales
@@ -21,6 +23,8 @@ locales-disabled = Deaktiviert
 locales-title-territory = { $language } ({ $territory })
 locales-detail = { $code }, { $charset }
 locales-detail-system = { $code }, { $charset }, Systemsprache
+locales-detail-code = { $code }
+locales-detail-code-system = { $code }, Systemsprache
 
 locales-system = Systemsprache
 locales-system-detail = Die Systemsprache gilt ab der nächsten Anmeldung. Zur Auswahl stehen nur aktivierte Locales. Aktiviere deshalb zuerst eine Locale in der Liste unten.
@@ -34,7 +38,11 @@ locales-refused-last-locale = Mindestens eine Locale muss aktiviert bleiben.
 locales-refused-not-enabled = { $name } ist nicht aktiviert. Aktiviere die Locale zuerst.
 locales-dismiss = Ausblenden
 
-locales-packs-intro = Sprachpakete für deine aktivierten Locales und installierten Programme. Nicht installiert: { $count }
+locales-packs-intro =
+    Sprachpakete für deine aktivierten Locales und installierten Programme. { $count ->
+        [one] Ein Paket ist nicht installiert.
+       *[other] { $count } Pakete sind nicht installiert.
+    }
 locales-packs-intro-plain = Sprachpakete für deine aktivierten Locales und installierten Programme.
 locales-packs-add-missing = Alle fehlenden vormerken
 locales-packs-sort = Sprachpakete sortieren
@@ -46,6 +54,8 @@ locales-packs-list = Sprachpakete
 locales-packs-reading = Sprachpakete werden eingelesen…
 locales-packs-none = Keine Sprachpakete gefunden
 locales-packs-none-detail = Kein installiertes Programm hat ein Sprachpaket für eine aktivierte Locale.
+locales-packs-no-match = Kein passendes Sprachpaket
+locales-packs-no-match-detail = Die Suche umfasst Namen von Paketen, Programmen, Sprachen und Ländern.
 locales-packs-unavailable = Sprachpakete sind auf diesem System nicht verfügbar
 locales-packs-unavailable-detail = Die Paketdatenbanken von pacman konnten nicht gelesen werden.
 locales-pack-installed = Installiert

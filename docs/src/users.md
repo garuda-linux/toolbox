@@ -150,7 +150,8 @@ with it. Other ways in, such as an SSH key, keep working. Unlocking
    names the group with its group ID and the number of its members. The
    primary group is ticked and cannot be cleared. There is no way to tick
    every group at once, because that would also make the user an
-   administrator and give it the groups of the system.
+   administrator and give it the groups of the system. The search field
+   above the list finds a group by name.
 3. Click **Queue changes**, then apply the queue.
 
 Each change runs `gpasswd -a` or `gpasswd -d`. It takes effect at the user's
@@ -177,8 +178,9 @@ own, shows the reason in place of its field.
 2. Enter the new path in **Home folder**. It is a full path such as
    `/srv/people/ada` below `/home`, `/srv`, `/var/lib` or `/opt`, without
    `..`, a colon or a line break, and not the home folder of another account.
-3. Decide about the files with **Move the files to the new folder**. The
-   dialog says below it what will happen.
+3. Decide about the files with **Move the files to the new folder**, which
+   shows once the path differs from the current one. The dialog says below
+   it what will happen.
 4. Click **Queue changes**, then apply the queue.
 
 | **Move the files to the new folder** | What applying does (`usermod`)                                                                                  |
@@ -233,7 +235,8 @@ right away, and users can be put into it before you apply.
 To remove one, click the button at the end of its row and confirm with
 **Queue removal**. Its members leave it. Files that belong to the group keep
 its number as their group. The same button takes a queued group or a queued
-removal back.
+removal back. System groups and the primary group of a user have no such
+button, because their removal would be refused.
 
 ## What the page refuses
 

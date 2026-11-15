@@ -198,3 +198,35 @@ fn a_refresh_forgets_a_refused_radio_switch() {
 
     assert!(!network.radio_failed());
 }
+
+#[test]
+fn an_answer_that_lands_after_a_forget_is_dropped() {
+    let runtime = Runtime::new().unwrap();
+    let machine = Arc::new(Machine::default());
+    let mut network = network(&runtime, &machine, true);
+
+    network.lookup_address();
+    network.forget_address();
+    assert_eq!(*network.address(), Address::NotAsked);
+
+    // The answer gets the time to land before the look.
+    std::thread::sleep(Duration::from_millis(50));
+    network.take();
+
+    assert_eq!(*network.address(), Address::NotAsked);
+}
+
+#[test]
+fn a_new_ask_after_a_forget_shows_its_own_answer() {
+    let runtime = Runtime::new().unwrap();
+    let machine = Arc::new(Machine::default());
+    let mut network = network(&runtime, &machine, true);
+
+    network.lookup_address();
+    network.forget_address();
+    network.lookup_address();
+    settle(&mut network, |shown| *shown.address() != Address::Loading);
+
+    let known: IpAddr = "203.0.113.7".parse().unwrap();
+    assert_eq!(*network.address(), Address::Known(known));
+}

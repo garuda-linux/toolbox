@@ -1,4 +1,5 @@
 use std::cmp::Reverse;
+use std::sync::LazyLock;
 
 use egui::{InputState, Key, KeyboardShortcut, Modifiers};
 
@@ -17,6 +18,19 @@ const PAGE_KEYS: [Key; 9] = [
     Key::Num8,
     Key::Num9,
 ];
+
+/// The app's shortcuts never change, so the frame does not list and rank
+/// them again.
+static BOUND: LazyLock<Vec<(KeyboardShortcut, UiCommand)>> = LazyLock::new(|| {
+    let pages = PageId::ALL.into_iter().map(UiCommand::Navigate);
+    let bound = UiCommand::ACTIONS
+        .into_iter()
+        .chain(pages)
+        .filter_map(|command| Some((command.shortcut()?, command)))
+        .collect();
+
+    ranked(bound)
+});
 
 impl UiCommand {
     pub fn shortcut(self) -> Option<KeyboardShortcut> {
@@ -42,32 +56,33 @@ impl UiCommand {
     /// widget sees it too. While a text field has the focus, the ones that
     /// edit text there leave it to the field.
     pub fn pressed(input: &mut InputState, text_focused: bool) -> Vec<Self> {
-        let pages = PageId::ALL.into_iter().map(Self::Navigate);
-        let bound = Self::ACTIONS
-            .into_iter()
-            .chain(pages)
-            .filter_map(|command| Some((command.shortcut()?, command)))
-            .collect();
-
-        consume(input, text_focused, bound)
+        consume(input, text_focused, &BOUND)
     }
 }
 
 /// egui counts Ctrl+Shift+S as Ctrl+S pressed too, as Shift and
 /// Alt sometimes only make a key, so the shortcut with the most modifiers
-/// is tried first and takes the press.
+/// comes first and takes the press.
+pub fn ranked<C>(mut bound: Vec<(KeyboardShortcut, C)>) -> Vec<(KeyboardShortcut, C)> {
+    bound.sort_by_key(|(shortcut, _)| Reverse(modifier_count(shortcut.modifiers)));
+    bound
+}
+
+/// The commands of the shortcuts pressed, tried in the order of `bound`,
+/// which [`ranked`] makes.
 pub fn consume<C>(
     input: &mut InputState,
     text_focused: bool,
-    mut bound: Vec<(KeyboardShortcut, C)>,
-) -> Vec<C> {
-    bound.sort_by_key(|(shortcut, _)| Reverse(modifier_count(shortcut.modifiers)));
-
+    bound: &[(KeyboardShortcut, C)],
+) -> Vec<C>
+where
+    C: Copy,
+{
     bound
-        .into_iter()
+        .iter()
         .filter(|(shortcut, _)| !(text_focused && edits_text(*shortcut)))
         .filter(|(shortcut, _)| input.consume_shortcut(shortcut))
-        .map(|(_, command)| command)
+        .map(|(_, command)| *command)
         .collect()
 }
 

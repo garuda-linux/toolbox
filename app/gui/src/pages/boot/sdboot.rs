@@ -22,21 +22,21 @@ pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
 
     heading(ui, icons::FORMAT_LIST_UNORDERED, "boot-menu");
 
-    if let Some(sdboot) = menu.sdboot() {
-        counts(ui, sdboot);
-    }
-
-    card(ui, |ui| {
-        if let Some(sdboot) = menu.sdboot() {
-            menu::show(ui, context, sdboot);
+    let state = format!("boot-default-{}", menu.as_str());
+    let Some(sdboot) = menu.sdboot() else {
+        // The command line below is known without the menu, so the page
+        // stays and only this part says why the menu is missing.
+        if matches!(menu, Menu::Read(_)) {
+            super::menu::unread_banner(ui, context, menu);
         } else {
-            // The command line below is known without the menu, so the page
-            // stays and this row says why the menu is missing.
-            let state = format!("boot-default-{}", menu.as_str());
-
-            fact(ui, "boot-default", &state);
+            card(ui, |ui| fact(ui, "boot-default", &state));
         }
-    });
+
+        return;
+    };
+
+    counts(ui, sdboot);
+    card(ui, |ui| menu::show(ui, context, sdboot));
 }
 
 fn counts(ui: &mut Ui, menu: &SdBootMenu) {

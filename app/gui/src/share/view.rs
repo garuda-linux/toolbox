@@ -56,8 +56,8 @@ impl ShareView<'_> {
     }
 }
 
-/// The link in one row: Copy link, the other link actions (open, the
-/// delete link) in a ⋯ menu, and Hide.
+/// The link in one row: Copy link, Hide, then the other link actions
+/// (open, the delete link) in a ⋯ menu at the end, as a row's menu is.
 ///
 /// Else the failure or the running upload, nothing before the first upload.
 /// Returns whether it drew anything.
@@ -84,6 +84,10 @@ pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> 
             copy(&ctx, view.commands, &paste.link, "share-link-copied");
         }
 
+        if pill_button(ui, &text("share-hide"), ButtonKind::Soft).clicked() {
+            view.commands.send(view.hide.clone());
+        }
+
         menu_button(ui, &text("share-link-actions"), |ui| {
             let open = ui.add_enabled_ui(ours(paste), |ui| menu_item(ui, &text("share-open-link")));
 
@@ -104,10 +108,6 @@ pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> 
                 *asking = Some(Question::Delete);
             }
         });
-
-        if pill_button(ui, &text("share-hide"), ButtonKind::Soft).clicked() {
-            view.commands.send(view.hide.clone());
-        }
     });
 
     true
@@ -217,6 +217,7 @@ pub fn ask(
 
     if outcome.closed || outcome.inner.is_some() {
         *asking = None;
+        preview::forget(ctx, view.subject);
     }
 
     confirmed && question == Question::Upload

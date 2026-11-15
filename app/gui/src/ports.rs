@@ -21,6 +21,7 @@ use toolbox_gui::bootrepair::BootRepairSetup;
 use toolbox_gui::catalogs::{DEVELOPMENT, catalog_dir};
 use toolbox_gui::command::CommandSender;
 use toolbox_gui::configs::ConfigsSetup;
+use toolbox_gui::desktop::icon_files::{Indexed, SystemIcons};
 use toolbox_gui::diagnostics::{DiagnosticsLink, DryRunTransport};
 use toolbox_gui::launch::{DryRunLauncher, Launcher, SystemLauncher};
 use toolbox_gui::maintenance::MaintenanceSetup;
@@ -169,8 +170,8 @@ pub fn network(handle: &Handle, mode: Mode) -> NetworkSetup {
 
 /// The look may never change, as without a session bus, so the pictures
 /// start from the fallback theme.
-pub fn pictures(ctx: &egui::Context) -> Pictures {
-    let pictures = Pictures::spawn(ctx.clone(), SystemPictures::system());
+pub fn pictures(ctx: &egui::Context, theme: Arc<Indexed<SystemIcons>>) -> Pictures {
+    let pictures = Pictures::spawn(ctx.clone(), SystemPictures::system(theme));
     pictures.set_theme(FALLBACK_THEME);
     pictures
 }

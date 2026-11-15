@@ -67,7 +67,8 @@ pub enum AddBlocker {
     NoName,
     BadName,
     NoPassword,
-    PasswordsDiffer,
+    /// The second field is still empty, so no note under it says so.
+    NoRepeat,
     /// A field says what is wrong below it.
     Fields,
 }
@@ -78,7 +79,7 @@ impl AddBlocker {
             Self::NoName => "no-name",
             Self::BadName => "bad-name",
             Self::NoPassword => "no-password",
-            Self::PasswordsDiffer => "passwords-differ",
+            Self::NoRepeat => "no-repeat",
             Self::Fields => "fields",
         }
     }
@@ -182,9 +183,9 @@ pub fn add_blocker(form: &AddForm<'_>) -> Option<AddBlocker> {
         Some(AddBlocker::BadName)
     } else if form.first.is_empty() {
         Some(AddBlocker::NoPassword)
-    } else if form.first != form.second {
-        Some(AddBlocker::PasswordsDiffer)
-    } else if !form.password_ok || !form.rest_ok {
+    } else if form.second.is_empty() {
+        Some(AddBlocker::NoRepeat)
+    } else if form.first != form.second || !form.password_ok || !form.rest_ok {
         Some(AddBlocker::Fields)
     } else {
         None

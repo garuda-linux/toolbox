@@ -17,6 +17,9 @@ pub static HOTSPOT_PACKAGE: LazyLock<PackageName> =
 pub const HOTSPOT_PROGRAM: &str = "/usr/bin/wihotspot-gui";
 pub static TRACEROUTE_PACKAGE: LazyLock<PackageName> =
     LazyLock::new(|| const { KnownPackage::new("traceroute") }.name());
+/// What lists the PCI devices, network cards among them.
+pub static PCIUTILS_PACKAGE: LazyLock<PackageName> =
+    LazyLock::new(|| const { KnownPackage::new("pciutils") }.name());
 
 /// Whether a button can start its program or first has to queue the
 /// package.

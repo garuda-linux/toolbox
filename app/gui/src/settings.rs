@@ -10,6 +10,7 @@ mod tests;
 
 use std::path::PathBuf;
 use std::sync::mpsc::{Sender, channel};
+use std::thread::JoinHandle;
 
 use egui::Context;
 use serde::{Deserialize, Serialize};
@@ -65,10 +66,13 @@ pub trait SettingsStore: Send + Sync + std::fmt::Debug {
 }
 
 /// `settings.toml` and the autostart link, written by one thread in the
-/// order the changes came.
+/// order the changes came. Dropping it waits for the writes, so a change
+/// just before quitting still lands.
 #[derive(Debug)]
 pub struct FileStore {
-    jobs: Sender<Job>,
+    /// `None` only while the store is dropped.
+    jobs: Option<Sender<Job>>,
+    worker: Option<JoinHandle<()>>,
 }
 
 #[derive(Debug)]
@@ -121,15 +125,23 @@ impl FileStore {
                 }
             });
 
-        if let Err(error) = worker {
-            tracing::warn!("no thread to save the settings: {error}");
-        }
+        let worker = worker
+            .inspect_err(|error| tracing::warn!("no thread to save the settings: {error}"))
+            .ok();
 
-        Self { jobs }
+        Self {
+            jobs: Some(jobs),
+            worker,
+        }
     }
 
     fn send(&self, job: Job) {
-        if self.jobs.send(job).is_err() {
+        let sent = self
+            .jobs
+            .as_ref()
+            .is_some_and(|jobs| jobs.send(job).is_ok());
+
+        if !sent {
             tracing::warn!("a setting was not saved: the settings thread is gone");
         }
     }
@@ -142,6 +154,19 @@ impl SettingsStore for FileStore {
 
     fn set_autostart(&self, on: bool) {
         self.send(Job::Autostart(on));
+    }
+}
+
+/// The closed channel ends the thread's loop once the queued writes are
+/// done.
+impl Drop for FileStore {
+    fn drop(&mut self) {
+        drop(self.jobs.take());
+        if let Some(worker) = self.worker.take()
+            && worker.join().is_err()
+        {
+            tracing::warn!("the settings thread ended in a panic");
+        }
     }
 }
 

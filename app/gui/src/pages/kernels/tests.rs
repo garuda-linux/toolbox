@@ -1,3 +1,5 @@
+mod cache;
+
 use std::sync::Arc;
 
 use egui::accesskit::Role;
@@ -8,10 +10,10 @@ use toolbox_services::dkms::Dkms;
 
 use super::KernelsPage;
 use super::fixtures::{dkms, system};
-use crate::command::{Command, KernelEdit};
+use crate::command::{Command, KernelCommand, KernelEdit};
 use crate::kernels::{DkmsReading, Kernels};
 use crate::page_service::Services;
-use crate::testing::{PLAN_RUNNING, PageFixture};
+use crate::testing::{PLAN_RUNNING, PageFixture, failure_read_again_sends};
 
 fn with_dkms(reading: DkmsReading) -> PageFixture {
     PageFixture {
@@ -30,7 +32,7 @@ fn before_the_first_read_placeholder_rows_wait() {
         ..PageFixture::default()
     };
 
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
 
     harness.run();
 
@@ -42,10 +44,18 @@ fn before_the_first_read_placeholder_rows_wait() {
 }
 
 #[test]
+fn unread_package_databases_offer_to_read_again() {
+    assert_eq!(
+        failure_read_again_sends(PageFixture::default(), KernelsPage::default()),
+        [Command::from(KernelCommand::Refresh)]
+    );
+}
+
+#[test]
 fn without_dkms_the_page_says_there_is_nothing_to_build() {
     let fixture = with_dkms(DkmsReading::Loaded(Arc::new(Dkms::NotInstalled)));
 
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
 
     harness.run();
 
@@ -58,7 +68,7 @@ fn without_dkms_the_page_says_there_is_nothing_to_build() {
 
 #[test]
 fn while_dkms_is_asked_an_indicator_says_so() {
-    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage::default());
 
     harness.run();
 
@@ -77,7 +87,7 @@ fn while_a_plan_runs_the_kernels_wait_and_a_banner_says_why() {
             ..PageFixture::with_snapshot(system())
         };
 
-        let mut harness = fixture.harness(KernelsPage);
+        let mut harness = fixture.harness(KernelsPage::default());
         harness.run();
 
         let install = harness.get_by_role_and_label(Role::Button, "Install linux-zen");
@@ -92,7 +102,7 @@ fn while_a_plan_runs_the_kernels_wait_and_a_banner_says_why() {
 
 #[test]
 fn space_on_a_focused_kernel_asks_for_its_change() {
-    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage::default());
     harness.run();
     harness
         .get_by_role_and_label(Role::ListItem, "linux-lts")
@@ -114,7 +124,7 @@ fn space_on_a_focused_kernel_asks_for_its_change() {
 #[test]
 fn set_as_default_sits_at_the_right_beside_the_button() {
     let fixture = PageFixture::with_snapshot(system());
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
 
     let default = harness
@@ -140,7 +150,7 @@ fn set_as_default_sits_at_the_right_beside_the_button() {
 #[test]
 fn the_buttons_line_up_whatever_sits_beside_them() {
     let fixture = PageFixture::with_snapshot(system());
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
 
     let rect = |name: &str| harness.get_by_role_and_label(Role::Button, name).rect();
@@ -163,7 +173,7 @@ fn the_buttons_line_up_whatever_sits_beside_them() {
 
 #[test]
 fn the_running_kernel_has_a_resting_remove_button_and_no_row_a_switch() {
-    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage::default());
     harness.run();
 
     let remove = harness.get_by_role_and_label(Role::Button, "Remove linux");
@@ -173,7 +183,7 @@ fn the_running_kernel_has_a_resting_remove_button_and_no_row_a_switch() {
 
 #[test]
 fn a_click_on_the_row_beside_its_button_asks_for_nothing() {
-    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage::default());
     harness.run();
 
     harness
@@ -188,7 +198,7 @@ fn a_click_on_the_row_beside_its_button_asks_for_nothing() {
 fn the_first_banner_follows_the_header_without_an_extra_gap() {
     let fixture = with_dkms(dkms());
 
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
 
     let running = harness.get_by_label_contains("Running kernel:").rect();
@@ -207,7 +217,7 @@ fn the_first_banner_follows_the_header_without_an_extra_gap() {
 #[test]
 fn running_is_a_status_dot_like_the_other_row_states() {
     let fixture = PageFixture::with_snapshot(system());
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
 
     let running = harness.get_by_label("Running").rect();
@@ -220,7 +230,7 @@ fn running_is_a_status_dot_like_the_other_row_states() {
 
 #[test]
 fn installed_headers_take_no_line_and_missing_ones_do() {
-    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage::default());
     harness.run();
 
     assert!(harness.query_by_label("Headers installed").is_none());
@@ -235,7 +245,7 @@ fn built_modules_fold_away_and_a_click_opens_them() {
         status,
     )))));
 
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
     assert!(
         harness
@@ -259,7 +269,7 @@ fn built_modules_fold_away_and_a_click_opens_them() {
 fn a_kernel_with_a_build_to_do_shows_its_modules() {
     let fixture = with_dkms(dkms());
 
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
 
     assert!(
@@ -272,7 +282,7 @@ fn a_kernel_with_a_build_to_do_shows_its_modules() {
 #[test]
 fn the_headers_tag_and_its_button_share_one_centre_line() {
     let fixture = PageFixture::with_snapshot(system());
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
 
     let tag = harness.get_by_label("Headers missing").rect();

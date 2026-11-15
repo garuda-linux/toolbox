@@ -1,7 +1,6 @@
 use egui::{Label, Rect, Ui};
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::card::DIVIDER;
 use super::super::{
     ButtonKind, ListItem, RowHeights, RowList, Select, card, card_row, icon_button, number_field,
     pill_button, rich, row_height, segmented, split_row, switch, text_block_height, title_line,
@@ -236,9 +235,17 @@ fn text_in_a_row_with_a_control_sits_where_it_does_without_one() {
             .map_or_else(|| panic!("{text} was not painted"), |shape| shape.pos.y)
     };
 
-    // Both rows are as tall, so a title one row height and the divider
-    // below the other has the same place in its row.
-    let lower = top("gamers") - top("wheel") - *harness.state() - DIVIDER;
+    // Both rows are as tall, so a title has the same place in its row.
+    // The divider takes its pixel out of a row of a fractional height, so
+    // each title is measured from its own row.
+    let row = |name: &str| {
+        harness
+            .get_by_role_and_label(egui::accesskit::Role::ListItem, name)
+            .rect()
+            .top()
+    };
+
+    let lower = (top("gamers") - row("gamers")) - (top("wheel") - row("wheel"));
     assert!(
         lower.abs() < 0.5,
         "the title beside a button sits {lower} lower"

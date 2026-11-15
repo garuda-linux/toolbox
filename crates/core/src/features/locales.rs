@@ -6,7 +6,7 @@ pub mod view;
 use std::collections::BTreeSet;
 use std::iter;
 
-pub use packs::{LanguagePack, PackOrder, PackRow, language_packs, pack_order};
+pub use packs::{LanguagePack, PackOrder, PackRow, language_packs, pack_order, pack_pick};
 use toolbox_plan::{LocaleEntry, LocaleName, is_builtin_locale};
 pub use toolbox_state::locales::{
     LanguageName, LocaleNames, SupportedLocales, parse_identification, parse_supported, source_name,

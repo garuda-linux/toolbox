@@ -91,7 +91,6 @@ home-next-review =
 
 # $days counts whole days since the last update.
 home-summary-fine = Everything is fine
-home-summary-unknown = Some checks could not run
 home-summary-attention =
     { $count ->
         [one] One thing needs attention

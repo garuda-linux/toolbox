@@ -9,6 +9,7 @@ use toolbox_gui::settings::FileStore;
 use toolbox_log::subscriber;
 use tracing::level_filters::LevelFilter;
 
+/// The settings, with the log detail they ask for. A broken file still gives the defaults, and the log says what was wrong.
 pub fn load_settings(paths: &Paths) -> Settings {
     let loaded = Settings::load(&paths.settings_file());
 

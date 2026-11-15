@@ -2,13 +2,14 @@
 //! primary one takes the accent tint and its number in full accent, the
 //! others stay neutral.
 
-use egui::{CursorIcon, Frame, Response, Role, Sense, Ui, UiBuilder, WidgetInfo};
+use egui::{Color32, CursorIcon, Frame, Response, Role, Sense, Ui, UiBuilder, WidgetInfo};
 
 use super::card::light_rim;
+use super::press::Pointer;
 use super::{focus_ring, rich, text_line_height};
 use crate::fonts::{SECTION, SMALL, TITLE, Weight};
 use crate::theme::CARD_RADIUS;
-use crate::tokens;
+use crate::tokens::{self, Tokens};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MetricKind {
@@ -63,8 +64,14 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
 
     let response = ui
         .scope_builder(UiBuilder::new().sense(sense), |ui| {
+            let pointer = if leads {
+                Pointer::of_focusable(&ui.response())
+            } else {
+                Pointer::Rest
+            };
+
             Frame::new()
-                .fill(fill)
+                .fill(lit(&tokens, fill, pointer))
                 .stroke(rim)
                 .corner_radius(CARD_RADIUS)
                 .inner_margin(tokens.sizes.card_padding)
@@ -80,8 +87,11 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
                             value.map_or((detail, false), |value| (value, true)),
                             (size, number),
                         );
-                        let below = if value.is_some() { detail } else { "" };
-                        ui.label(rich(ui, below, Weight::Regular, SMALL, muted));
+
+                        // An unknown value says its detail in its place already.
+                        if value.is_some() && !detail.is_empty() {
+                            ui.label(rich(ui, detail, Weight::Regular, SMALL, muted));
+                        }
                     });
                 });
         })
@@ -101,10 +111,20 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
     response
 }
 
+/// The card's fill under the pointer, as a link tile's. The accent tint
+/// deepens rather than turn neutral.
+fn lit(tokens: &Tokens, rest: Color32, pointer: Pointer) -> Color32 {
+    match pointer {
+        Pointer::Rest => rest,
+        Pointer::Hovered | Pointer::Pressed if rest == tokens.accent_tint => tokens.tint_pressed,
+        Pointer::Hovered | Pointer::Pressed => pointer.fill(tokens, rest),
+    }
+}
+
 /// The value, or the reason it is not known in its place. Every value line
 /// takes the primary's height, so the details of a row of figures share one
 /// baseline.
-fn value_line(ui: &mut Ui, (text, known): (&str, bool), (size, colour): (f32, egui::Color32)) {
+fn value_line(ui: &mut Ui, (text, known): (&str, bool), (size, colour): (f32, Color32)) {
     let line = text_line_height(ui, Weight::Bold, TITLE);
     let secondary = tokens::current(ui.ctx()).secondary;
     let layout = egui::Layout::bottom_up(egui::Align::Min);

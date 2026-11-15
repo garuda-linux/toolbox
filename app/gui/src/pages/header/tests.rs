@@ -1,9 +1,12 @@
 use egui::accesskit::Role;
 use egui_kittest::Harness;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_plan::UnitScope;
 
-use super::{Tabbed, TabbedIds, refresh_header, search, tabbed_header};
+use super::{
+    Tabbed, TabbedIds, refresh_header, refresh_header_reading, search, tabbed_header,
+    tabbed_header_reading,
+};
 
 const IDS: TabbedIds<'static> = TabbedIds {
     title: "page-services",
@@ -80,4 +83,52 @@ fn the_search_is_named_and_clears_with_the_shared_button() {
     harness.run();
 
     assert_eq!(harness.state(), "");
+}
+
+/// Read again waits while a read runs, so a press shows it was taken and
+/// F5 sends no second read.
+#[test]
+fn read_again_waits_while_a_read_runs() {
+    let mut harness = toolbox_gui_kit::testing::harness(900.0, 200.0).build_ui_state(
+        |ui, pressed: &mut bool| {
+            *pressed |= refresh_header_reading(
+                ui,
+                ("page-kernels", "kernels-subtitle"),
+                "kernels-refresh",
+                true,
+            );
+        },
+        false,
+    );
+
+    harness.run();
+    let button = harness.get_by_role(Role::Button);
+    assert!(button.accesskit_node().is_disabled());
+
+    harness.key_press(egui::Key::F5);
+    harness.run();
+    assert!(!*harness.state());
+}
+
+#[test]
+fn a_tabbed_read_again_waits_while_a_read_runs() {
+    let mut harness = toolbox_gui_kit::testing::harness(900.0, 200.0).build_ui_state(
+        |ui, done: &mut Option<Tabbed<UnitScope>>| {
+            let scopes = [UnitScope::System, UnitScope::User];
+            *done = Some(tabbed_header_reading(
+                ui,
+                IDS,
+                &scopes,
+                UnitScope::System,
+                true,
+            ));
+        },
+        None,
+    );
+
+    harness.run();
+    harness.key_press(egui::Key::F5);
+    harness.run();
+
+    assert!(harness.state().is_some_and(|done| !done.refresh));
 }

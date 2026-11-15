@@ -39,6 +39,7 @@ boot-default-dismissed = The password dialog was closed, so the boot menu was no
 boot-default-denied = The boot menu was not read: the password dialog was closed or the password was not accepted. Its entries are not listed. Read again tries once more.
 boot-default-no-agent = The boot menu was not read, because no password dialog could appear: this desktop session runs no polkit authentication agent. Its entries are not listed.
 boot-default-helper-missing = The boot menu was not read, because the helper of Garuda Toolbox is not installed. Its entries are not listed. Reinstall Garuda Toolbox.
+boot-default-broken = The boot menu was not read, because pkexec cannot run on this system. Its entries are not listed.
 boot-default-unknown = The boot menu could not be read, so its entries are not listed. Read again tries once more.
 boot-default-not-asked = The boot menu has not been read yet. Read again reads it.
 boot-default-loading = Reading the boot menu…
@@ -49,7 +50,7 @@ boot-entry-unlisted = { $entry } (not in the boot menu)
 boot-remember = Remember the last entry
 boot-remember-detail = Makes the entry you booted last the default for the next start.
 boot-timeout = Menu timeout
-boot-timeout-detail = The seconds the menu waits before it boots the default entry.
+boot-timeout-detail = How long the menu waits before it boots the default entry.
 boot-timeout-unknown = The file holds a timeout that is no number. Choosing one here replaces it.
 boot-timeout-seconds = Menu timeout in seconds
 # The unit after the timeout's number, the symbol for seconds.

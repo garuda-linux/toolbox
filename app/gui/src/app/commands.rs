@@ -4,7 +4,7 @@ use toolbox_plan::Plan;
 
 use super::App;
 use crate::apply::{ApplyCommand, PlanId};
-use crate::command::{AppCommand, Command, Sent, UiCommand};
+use crate::command::{AppCommand, Command, DiscoverCommand, PackagesCommand, Sent, UiCommand};
 use crate::page::PageId;
 use crate::page_service::Owner;
 use crate::page_ui;
@@ -171,43 +171,49 @@ impl App {
     /// run. A plan that runs already keeps it, and the buttons wait for its
     /// end. Returns the id `plan` was sent under, `None` when it was not.
     pub(super) fn run_at_once(&mut self, plan: Plan) -> Option<PlanId> {
-        if self.console.running() {
-            return None;
-        }
-
-        self.state.console_open = true;
-        self.changes_ui.open = false;
-        Some(self.send_plan(plan))
+        let id = self.send_plan(plan)?;
+        self.show_run();
+        Some(id)
     }
 
     /// [`Self::run_at_once`] for a plan whose start `owner` waits for.
     /// Returns whether `plan` was sent.
     pub(super) fn run_owned(&mut self, plan: Plan, owner: Owner) -> bool {
-        let sent = self.run_at_once(plan);
-        if let Some(id) = sent {
-            self.services.waiting.sent(id, owner);
+        let sent = self.run_unseen(plan, owner);
+        if sent {
+            self.show_run();
         }
 
-        sent.is_some()
+        sent
     }
 
     /// Runs `plan` past the queue with the Console closed, for a page that
     /// shows the outcome itself and waits for the start as `owner`.
     /// Returns whether `plan` was sent.
     pub(super) fn run_unseen(&mut self, plan: Plan, owner: Owner) -> bool {
-        if self.console.running() {
+        let Some(id) = self.send_plan(plan) else {
             return false;
-        }
+        };
 
-        let id = self.send_plan(plan);
         self.services.waiting.sent(id, owner);
         true
     }
 
-    fn send_plan(&mut self, plan: Plan) -> PlanId {
+    /// `None` while another plan runs, which keeps the Console.
+    fn send_plan(&mut self, plan: Plan) -> Option<PlanId> {
+        if self.console.running() {
+            return None;
+        }
+
         let id = self.console.plan_sent(&plan);
         self.to_service(ApplyCommand::Run { id, plan });
-        id
+        Some(id)
+    }
+
+    /// The list of changes would only cover the run.
+    const fn show_run(&mut self) {
+        self.state.console_open = true;
+        self.changes_ui.open = false;
     }
 
     /// Opens the Console, so the password dialog and the output are seen.
@@ -222,19 +228,52 @@ impl App {
             return false;
         }
 
-        self.state.console_open = true;
-
-        // The Console shows the run, the list would only cover it.
-        self.changes_ui.open = false;
         self.queue.sent(&plan);
-        let id = self.send_plan(plan);
-        self.services.waiting.sent(id, Owner::Queue);
-        true
+        self.run_owned(plan, Owner::Queue)
     }
 
     pub(super) fn to_service(&self, command: ApplyCommand) {
         if let Some(apply) = &self.apply {
             apply.send(command);
+        }
+    }
+}
+
+/// The clicks of Discover and Packages that need App beyond their
+/// services: a reveal opens Discover, and Refresh on Packages also reads
+/// Home's status and facts.
+impl App {
+    pub(super) fn run_discover(&mut self, ctx: &egui::Context, command: DiscoverCommand) {
+        match command {
+            DiscoverCommand::Reveal(title) => {
+                self.pages.reveal_app(&title);
+                self.navigate(ctx, PageId::Discover);
+            }
+            // `TogglePages` takes these, see `hand_to_services`.
+            DiscoverCommand::Toggle { app: _, wish: _ } => {
+                tracing::warn!("no page service took {command:?}");
+            }
+        }
+    }
+
+    pub(super) fn run_packages(&mut self, command: &PackagesCommand) {
+        match command {
+            PackagesCommand::Refresh => {
+                self.services.packages.refresh();
+                self.read_system();
+                self.services.home.refresh_packages();
+            }
+            // The service takes these, see `hand_to_services`.
+            PackagesCommand::Show(_)
+            | PackagesCommand::OpenAur
+            | PackagesCommand::Toggle {
+                package: _,
+                wish: _,
+            }
+            | PackagesCommand::ToggleAur {
+                package: _,
+                wish: _,
+            } => {}
         }
     }
 }

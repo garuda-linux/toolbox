@@ -61,6 +61,10 @@ pub struct Network {
     connectivity: Option<Connectivity>,
     hardware: Option<Hardware>,
     address: Address,
+    /// The newest lookup was forgotten while it ran, so its answer is
+    /// dropped when it lands. The lane already drops the answers of older
+    /// lookups, so one flag is enough.
+    forgotten: bool,
     /// The last radio switch failed. A later one that works or a Refresh
     /// clears it.
     radio_failed: bool,
@@ -157,15 +161,18 @@ impl Network {
 
         if self.address != Address::Loading {
             self.address = Address::Loading;
+            self.forgotten = false;
             jobs.lookup_address();
         }
     }
 
     /// Forgets the address, so it shows only while the user wants it.
     pub fn forget_address(&mut self) {
-        if self.address != Address::Loading {
-            self.address = Address::NotAsked;
+        if self.address == Address::Loading {
+            self.forgotten = true;
         }
+
+        self.address = Address::NotAsked;
     }
 
     pub fn take(&mut self) {
@@ -176,6 +183,7 @@ impl Network {
                 Landed::Status(status) => self.status = Some(status),
                 Landed::Connectivity(state) => self.connectivity = Some(state),
                 Landed::Hardware(lists) => self.hardware = Some(lists),
+                Landed::Address(_) if self.forgotten => self.forgotten = false,
                 Landed::Address(answer) => self.address = settled(answer),
                 Landed::Radio(result) => {
                     self.radio_failed = result.is_err();

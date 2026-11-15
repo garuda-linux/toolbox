@@ -7,7 +7,7 @@ use egui::accesskit::Role;
 use egui::{Key, Modifiers, Theme};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use egui_kittest::{Harness, SnapshotResults};
-use toolbox_core::domains::{Hblock, Packages};
+use toolbox_core::domains::{Hblock, Packages, SyncPackages};
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Single, Snapshot, Toggle};
 use toolbox_gui::queue::Queue;
@@ -242,12 +242,24 @@ fn discover_page() {
     let dir = tempfile::TempDir::new().unwrap();
     let jxl = dir.path().join("aerc.jxl");
     std::fs::write(&jxl, PINK).unwrap();
+
+    // Each picture is its own app's, so the shot shows no wrong one. aerc's
+    // is the one colour above, a pink square that takes the letter's place.
     let table = Table(vec![
-        ("firefox", source_tree().join("icons/gaming/bottles.svg")),
+        ("mumble", source_tree().join("icons/gaming/mumble.svg")),
         ("aerc", jxl),
     ]);
 
-    let (mut harness, _runtime) = pictured(source_catalogs(), system(), Some(table));
+    let mut offered = system();
+    let mut sync = offered
+        .part::<SyncPackages>()
+        .map(|sync| sync.0.clone())
+        .unwrap_or_default();
+
+    sync.extend(crate::common::packages(&["mumble"]));
+    offered.insert(SyncPackages(sync));
+
+    let (mut harness, _runtime) = pictured(source_catalogs(), offered, Some(table));
     chip(&mut harness, "Internet");
     harness
         .get_by_role_and_label(Role::Button, "Install Firefox")

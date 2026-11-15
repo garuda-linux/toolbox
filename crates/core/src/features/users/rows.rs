@@ -28,8 +28,8 @@ impl QueuedForUser {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct UserRow<'accounts> {
-    pub user: &'accounts User,
+pub struct UserRow {
+    pub user: User,
     /// The user id as the search finds it, written once with the row.
     pub uid_text: String,
     pub groups: BTreeSet<GroupName>,
@@ -49,6 +49,8 @@ pub struct GroupRow {
     pub members: BTreeSet<UserName>,
     /// Packages own it: it cannot be removed.
     pub system: bool,
+    /// An account's primary group, which `groupdel` refuses to remove.
+    pub primary: bool,
     pub queued: Option<Toggle>,
 }
 
@@ -63,12 +65,12 @@ pub struct GroupChoice {
     pub members: usize,
 }
 
-pub fn user_rows<'accounts>(
-    accounts: &'accounts Accounts,
+pub fn user_rows(
+    accounts: &Accounts,
     snapshot: &Snapshot,
     changes: &ChangeSet,
     regular_only: bool,
-) -> Vec<UserRow<'accounts>> {
+) -> Vec<UserRow> {
     let memberships = queued_memberships(changes);
 
     accounts
@@ -79,27 +81,14 @@ pub fn user_rows<'accounts>(
         .collect()
 }
 
-/// The row of the account `name` as [`user_rows`] builds it, `None` for
-/// an account `accounts` does not hold.
-pub fn user_row_of<'accounts>(
-    name: &UserName,
-    accounts: &'accounts Accounts,
-    snapshot: &Snapshot,
-    changes: &ChangeSet,
-) -> Option<UserRow<'accounts>> {
-    let user = accounts.users.iter().find(|user| user.name == *name)?;
-    let memberships = queued_memberships(changes);
-    Some(user_row(user, accounts, snapshot, (changes, &memberships)))
-}
-
-fn user_row<'accounts>(
-    user: &'accounts User,
+fn user_row(
+    user: &User,
     accounts: &Accounts,
     snapshot: &Snapshot,
     (changes, memberships): (&ChangeSet, &[(Membership, bool)]),
-) -> UserRow<'accounts> {
+) -> UserRow {
     UserRow {
-        user,
+        user: user.clone(),
         uid_text: user.uid.to_string(),
         groups: accounts.groups_of(&user.name),
         current: is_current(&user.name, snapshot),
@@ -115,6 +104,7 @@ pub fn group_rows(accounts: &Accounts, changes: &ChangeSet) -> Vec<GroupRow> {
         gid_text: group.gid.to_string(),
         members: accounts.members_of(&group.name),
         system: group.is_system(),
+        primary: accounts.is_primary_of_someone(&group.name),
         queued: changes
             .wish::<RemovedGroups>(&group.name)
             .map(|_| Toggle::Off),
@@ -126,6 +116,7 @@ pub fn group_rows(accounts: &Accounts, changes: &ChangeSet) -> Vec<GroupRow> {
         gid_text: String::new(),
         members: BTreeSet::new(),
         system: false,
+        primary: false,
         queued: Some(Toggle::On),
     });
 

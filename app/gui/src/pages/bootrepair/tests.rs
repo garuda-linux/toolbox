@@ -1,4 +1,5 @@
 mod dialog;
+mod unread;
 
 use egui::accesskit::Role;
 use egui_kittest::Harness;
@@ -285,7 +286,10 @@ fn a_sections_sentence_sits_under_its_heading_like_on_maintenance() {
         .get_by_label_contains("Each repair asks first")
         .rect();
 
-    let intro = harness.get_by_label_contains("Use this page when").rect();
+    let purpose = harness
+        .get_by_label("Install the boot loader of a system that does not start again, or build its boot files again.")
+        .rect();
+
     let section = harness.get_by_label("Installed system").rect();
 
     assert!(
@@ -293,9 +297,46 @@ fn a_sections_sentence_sits_under_its_heading_like_on_maintenance() {
         "{} px between the heading and its sentence",
         sentence.top() - heading.bottom()
     );
+
+    // Without a banner nothing pads the body past the header's own gap.
+    let most = gaps.section_gap + gaps.header_gap;
+    let gap = section.top() - purpose.bottom();
     assert!(
-        section.top() - intro.bottom() >= gaps.section_gap,
-        "{} px between the intro and the first section",
-        section.top() - intro.bottom()
+        gap < most,
+        "{gap} px between the header and the first section"
+    );
+}
+
+/// The header's purpose line says what the page is for, a paragraph
+/// under it would say it twice.
+#[test]
+fn no_intro_repeats_the_header() {
+    for repair in [
+        live(),
+        BootRepair::showing(Offer::Hidden, sample(), Progress::None),
+    ] {
+        let harness = page(repair, BootRepairPage::default());
+
+        assert!(!shows(&harness, "Use this page when"));
+    }
+}
+
+/// Show Console belongs to the line about the run, so it sits in its
+/// banner at the right.
+#[test]
+fn show_console_sits_in_the_running_banner() {
+    let running = BootRepair::showing(Offer::Live, sample(), Progress::Running);
+    let harness = page(running, BootRepairPage::default());
+
+    let said = harness
+        .get_by_label_contains("The repair is running.")
+        .rect();
+
+    let button = harness.get_by_label("Show Console").rect();
+
+    assert!(button.left() >= said.right(), "{button:?} {said:?}");
+    assert!(
+        button.top() < said.bottom(),
+        "Show Console sits below the banner"
     );
 }

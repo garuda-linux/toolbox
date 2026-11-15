@@ -5,6 +5,7 @@
 //! near the visible part of the scroll view are laid out.
 
 mod keys;
+pub(super) mod memory;
 mod metrics;
 mod row;
 pub(super) mod span;
@@ -160,6 +161,7 @@ impl<'a> RowList<'a> {
         R: Rows + ?Sized,
     {
         let list = ui.make_persistent_id(self.salt);
+        memory::sweep(ui, list, items);
         let builder = UiBuilder::new()
             .accessibility_role(Role::List)
             .accessibility_label(self.name);

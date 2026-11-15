@@ -16,6 +16,7 @@ use std::sync::{Arc, Weak};
 #[derive(Debug)]
 pub struct RowCache<R, V> {
     kept: Option<Kept<R, V>>,
+    #[cfg(any(test, feature = "testing"))]
     builds: u64,
 }
 
@@ -36,6 +37,7 @@ impl<R, V> RowCache<R, V> {
     pub const fn new() -> Self {
         Self {
             kept: None,
+            #[cfg(any(test, feature = "testing"))]
             builds: 0,
         }
     }
@@ -59,7 +61,11 @@ impl<R: PartialEq, V> RowCache<R, V> {
         }
 
         let rows = Arc::new(build());
-        self.builds = self.builds.saturating_add(1);
+        #[cfg(any(test, feature = "testing"))]
+        {
+            self.builds = self.builds.saturating_add(1);
+        }
+
         self.kept = Some(Kept {
             texts: texts.iter().map(|text| (*text).to_owned()).collect(),
             rest,
@@ -70,6 +76,7 @@ impl<R: PartialEq, V> RowCache<R, V> {
     }
 
     /// How often the rows were built, for tests.
+    #[cfg(any(test, feature = "testing"))]
     pub const fn builds(&self) -> u64 {
         self.builds
     }

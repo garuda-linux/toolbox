@@ -54,6 +54,31 @@ fn clear_empties_the_field_and_puts_the_focus_back() {
 }
 
 #[test]
+fn escape_empties_a_field_with_text_first_then_leaves_it() {
+    let mut harness = field("ssh");
+    let focused = |shown: &Harness<'_, String>| {
+        shown
+            .get_by_role_and_label(Role::TextInput, "Search services")
+            .is_focused()
+    };
+
+    harness
+        .get_by_role_and_label(Role::TextInput, "Search services")
+        .focus();
+    harness.run();
+    harness.key_press(egui::Key::Escape);
+    harness.run();
+
+    assert_eq!(harness.state(), "");
+    assert!(focused(&harness), "the first Escape keeps the focus");
+
+    harness.key_press(egui::Key::Escape);
+    harness.run();
+
+    assert!(!focused(&harness), "the second Escape leaves the field");
+}
+
+#[test]
 fn a_focus_request_focuses_the_field() {
     let mut harness = field("");
 

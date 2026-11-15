@@ -1,6 +1,8 @@
 mod callout;
 mod contents;
+mod links;
 mod picture;
+mod table;
 
 use std::sync::Arc;
 

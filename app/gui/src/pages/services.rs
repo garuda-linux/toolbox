@@ -15,8 +15,8 @@ use egui::Ui;
 use toolbox_core::features::services::{Counts, Filter, Shown, UnitInfo, UnitOrder, counts, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, RowHeights, RowList, Tone, after_skeleton, banner, card, counted_chips, dimmed,
-    empty_state, error_row, hold_content, page_toolbar, pill_button, skeleton_rows,
+    ButtonKind, RowHeights, RowList, Tone, after_skeleton, banner, card, counted_chips,
+    empty_state, empty_state_action, hold_content, page_toolbar, pill_button, skeleton_rows,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitScope;
@@ -98,11 +98,10 @@ impl PageView for ServicesPage {
         let listed = context.service::<Units>().get(self.scope);
         let first_load = ui.make_persistent_id(("services-content", self.scope));
         let Some(units) = listed.latest() else {
-            self.filters(ui, None);
-            ui.add_space(ui.tokens().sizes.header_gap);
             if let Some(failure) = listed.error() {
-                let retry = i18n::text(&ctx, "services-retry");
-                if error_row(ui, &i18n::text(&ctx, failure_text(*failure)), &retry) {
+                let said = i18n::text(&ctx, failure_text(*failure, self.scope));
+                let again = i18n::text(&ctx, "common-read-again");
+                if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again) {
                     context.commands.send(ServiceCommand::Refresh(self.scope));
                 }
             } else {
@@ -115,11 +114,11 @@ impl PageView for ServicesPage {
         };
 
         let built = self.built(ui, context, units);
-        self.filters(ui, Some(built.counts));
+        self.filters(ui, built.counts);
         ui.add_space(ui.tokens().sizes.header_gap);
         if let Some(failure) = listed.error() {
             let again = i18n::text(&ctx, "services-refresh");
-            let said = i18n::text(&ctx, failure_text(*failure));
+            let said = i18n::text(&ctx, failure_text(*failure, self.scope));
             if banner(ui, Tone::Error, &said, &[&again]) == Some(0) {
                 context.commands.send(ServiceCommand::Refresh(self.scope));
             }
@@ -178,11 +177,15 @@ impl ServicesPage {
 
         let list = i18n::text(&ctx, "page-services");
         let _rows = tracing::trace_span!("rows").entered();
-        RowList::new(("units", self.scope), &list, RowHeights::Fixed(height)).show(
-            ui,
-            built.rows.as_slice(),
-            |ui, row, state| dimmed(ui, context.busy, |ui| row::show(ui, context, row, state)),
-        );
+        row::column_caption(ui);
+        ui.add_space(ui.tokens().sizes.tight_gap);
+        ui.add_enabled_ui(!context.busy, |ui| {
+            RowList::new(("units", self.scope), &list, RowHeights::Fixed(height)).show(
+                ui,
+                built.rows.as_slice(),
+                |ui, row, state| row::show(ui, context, row, state),
+            );
+        });
     }
 
     /// The search finds units the picked chip hides: one click shows
@@ -234,6 +237,16 @@ impl ServicesPage {
             context.commands.send(ServiceCommand::Refresh(self.scope));
         }
 
+        // Search and sort narrow a list, so they wait for one.
+        if context
+            .service::<Units>()
+            .get(self.scope)
+            .latest()
+            .is_none()
+        {
+            return;
+        }
+
         page_toolbar(
             ui,
             self,
@@ -254,12 +267,12 @@ impl ServicesPage {
         sort_select(ui, "services-sort", &orders, &mut self.order);
     }
 
-    /// One chip per choice, counted once the list was read.
-    fn filters(&mut self, ui: &mut Ui, counts: Option<Counts>) {
+    /// One counted chip per choice.
+    fn filters(&mut self, ui: &mut Ui, counts: Counts) {
         let ctx = ui.ctx().clone();
         let labels = Shown::EVERY.map(|shown| {
             let label = i18n::text(&ctx, &format!("services-show-{}", shown.as_str()));
-            let count = counts.map(|known| known.of(shown).to_string());
+            let count = Some(counts.of(shown).to_string());
             (shown, label, count)
         });
 
@@ -293,10 +306,15 @@ fn refused(ui: &mut Ui, context: &PageContext<'_>) {
     ui.add_space(ui.tokens().sizes.header_gap);
 }
 
-const fn failure_text(failure: UnitsFailure) -> &'static str {
-    match failure {
-        UnitsFailure::Unavailable => "services-unavailable",
-        UnitsFailure::Denied => "services-denied",
-        UnitsFailure::Failed => "services-failed",
+/// The user's own manager can fail while the system's answers, so each
+/// tab names its own.
+const fn failure_text(failure: UnitsFailure, scope: UnitScope) -> &'static str {
+    match (scope, failure) {
+        (UnitScope::System, UnitsFailure::Unavailable) => "services-unavailable",
+        (UnitScope::System, UnitsFailure::Denied) => "services-denied",
+        (UnitScope::System, UnitsFailure::Failed) => "services-failed",
+        (UnitScope::User, UnitsFailure::Unavailable) => "services-user-unavailable",
+        (UnitScope::User, UnitsFailure::Denied) => "services-user-denied",
+        (UnitScope::User, UnitsFailure::Failed) => "services-user-failed",
     }
 }

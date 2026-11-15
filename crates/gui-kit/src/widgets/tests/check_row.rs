@@ -95,3 +95,32 @@ fn a_row_with_a_line_shows_it_under_the_label_and_tells_the_whole_list() {
     assert!(row.rect().height() > 40.0, "no room for the line");
     assert_eq!(row.accesskit_node().description().as_deref(), Some(full));
 }
+
+#[test]
+fn outside_a_card_the_fill_and_the_target_are_one_rect() {
+    let mut harness = harness(300.0, 120.0).build_ui(|ui| {
+        ui.add_space(4.0);
+        ui.horizontal(|ui| {
+            ui.add_space(20.0);
+            ui.vertical(|ui| _ = check_row(ui, false, "Kitty", "", true));
+        });
+    });
+
+    harness.run();
+    harness
+        .get_by_role_and_label(Role::CheckBox, "Kitty")
+        .hover();
+    harness.run();
+
+    let target = harness
+        .get_by_role_and_label(Role::CheckBox, "Kitty")
+        .rect();
+
+    let hover = crate::tokens::current(&harness.ctx).hover;
+    let fill = crate::testing::filled_rect(&harness, hover).expect("the row is lit");
+
+    assert!(
+        (fill.left() - target.left()).abs() < 0.5 && (fill.right() - target.right()).abs() < 0.5,
+        "the fill {fill:?}, the target {target:?}"
+    );
+}

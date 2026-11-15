@@ -6,17 +6,20 @@ mod tests;
 
 use std::sync::Arc;
 
-use egui::Ui;
+use egui::{Align, Layout, Ui};
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, EntryRow, Page};
-use toolbox_gui_kit::icons;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
-use toolbox_gui_kit::widgets::{Select, SpinTexts, card, spin_field};
-use toolbox_plan::GrubKey;
+use toolbox_gui_kit::widgets::{Select, SpinTexts, Tone, banner, card, spin_field};
+use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_plan::{GrubKey, GrubTimeout};
 use toolbox_services::boot_menu::Menu;
+use toolbox_system::MenuRead;
+use toolbox_system::pkexec::Refusal;
 
 use super::{heading, queued, send};
 use crate::boot::Boot;
+use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
@@ -24,10 +27,15 @@ use crate::pages::setting_row::{Words, row, switch_row, wide_control};
 
 /// The timeout's limits, in seconds.
 pub(super) const TIMEOUT_MAX: u32 = 300;
+/// The seconds a timeout gets when it turns from a mode into seconds.
+pub(super) const FIRST_SECONDS: u32 = 5;
 /// The fallback of a remembered default: the first entry.
 const FIRST_ENTRY: &str = "0";
 /// The timeout's spin field: its two round steppers and "300 s" between.
 pub(super) const TIMEOUT_WIDTH: f32 = 120.0;
+/// The mode dropdown with the seconds field beside it.
+const TIMEOUT_CONTROL_WIDTH: f32 = 400.0;
+const TIMEOUT_SELECT_WIDTH: f32 = 160.0;
 
 /// The default entry's choices as entry and name. The shown default keys
 /// it as its text, beside the menu, whether the menu lists the default,
@@ -37,6 +45,12 @@ pub type EntryRows = RowCache<(Same<Menu>, bool, Look), Vec<(String, String)>>;
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut EntryRows) {
     let ctx = ui.ctx().clone();
     heading(ui, icons::FORMAT_LIST_UNORDERED, "boot-menu");
+    let menu = context.service::<Boot>().menu();
+    if unread(menu) {
+        unread_banner(ui, context, menu);
+        ui.add_space(ui.tokens().sizes.card_gap);
+    }
+
     card(ui, |ui| {
         default_entry(ui, context, page, entries);
         remember(ui, context, page);
@@ -86,8 +100,11 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
         rows
     });
 
+    // The banner over the card says why the menu is missing.
     let description = if remembered {
         i18n::text(&ctx, "boot-default-remembered")
+    } else if unread(menu) {
+        i18n::text(&ctx, "boot-default-known")
     } else {
         i18n::text(&ctx, &format!("boot-default-{}", menu.as_str()))
     };
@@ -147,19 +164,24 @@ fn remember(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     send(context, Edit::Remember { on: !on, fallback });
 }
 
+/// Seconds or a menu that waits for a key, the two ways GRUB reads its
+/// number, as systemd-boot's timeout row shows its modes.
 fn timeout(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let ctx = ui.ctx().clone();
     let changes = context.changes;
-
-    // GRUB reads a negative timeout as waiting for a key, which the field
-    // cannot show, so it starts from 0.
-    let seconds = u32::try_from(page.timeout()).unwrap_or(0).min(TIMEOUT_MAX);
+    let seconds = page.timeout().seconds();
     let description = if page.timeout_known() {
         i18n::text(&ctx, "boot-timeout-detail")
     } else {
         i18n::text(&ctx, "boot-timeout-unknown")
     };
 
+    let modes = [
+        i18n::text(&ctx, "boot-sdboot-timeout-seconds"),
+        i18n::text(&ctx, "boot-sdboot-timeout-menu-force"),
+    ];
+
+    let names: Vec<&str> = modes.iter().map(|mode| &**mode).collect();
     let title = i18n::text(&ctx, "boot-timeout");
     let tag = queued(&ctx, view::is_queued(changes, GrubKey::Timeout));
     let words = Words {
@@ -170,12 +192,70 @@ fn timeout(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
         queued: tag.as_deref(),
     };
 
-    row(ui, false, &words, TIMEOUT_WIDTH, |ui| {
-        let mut value = seconds;
-        if seconds_field(ui, &ctx, &mut value) {
-            send(context, Edit::Timeout(i64::from(value)));
-        }
+    let (reserved, width) = timeout_widths(ui, seconds.is_some());
+    row(ui, false, &words, reserved, |ui| {
+        ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
+            let picked = Select::new(&title, &names)
+                .selected(Some(usize::from(seconds.is_none())))
+                .width(width)
+                .show(ui);
+
+            let wanted = match (picked, seconds) {
+                (Some(0), None) => Some(i64::from(FIRST_SECONDS)),
+                (Some(1), Some(_)) => Some(i64::from(GrubTimeout::WaitForKey)),
+                (_, Some(now)) => {
+                    let mut value = now.min(TIMEOUT_MAX);
+                    seconds_field(ui, &ctx, &mut value).then_some(i64::from(value))
+                }
+                (_, None) => None,
+            };
+
+            if let Some(wanted) = wanted {
+                send(context, Edit::Timeout(wanted));
+            }
+        });
     });
+}
+
+/// The room a timeout row reserves and its dropdown's width: as wide as
+/// the other dropdowns, unless the seconds need room beside it.
+pub(super) fn timeout_widths(ui: &Ui, in_seconds: bool) -> (f32, f32) {
+    if in_seconds {
+        (TIMEOUT_CONTROL_WIDTH, TIMEOUT_SELECT_WIDTH)
+    } else {
+        let wide = wide_control(ui);
+        (wide, wide)
+    }
+}
+
+/// Why the menu could not be read, with Read again where a second read
+/// can work. Without an agent or the helper it is refused alike.
+pub(super) fn unread_banner(ui: &mut Ui, context: &PageContext<'_>, menu: &Menu) {
+    let futile = matches!(
+        menu,
+        Menu::Read(MenuRead::Refused(Refusal::NoAgent | Refusal::HelperMissing))
+    );
+
+    let again = i18n::text(ui.ctx(), "common-read-again");
+    let action = (!futile).then_some(&*again);
+    let said = i18n::text(ui.ctx(), &format!("boot-default-{}", menu.as_str()));
+    if banner(ui, Tone::Warning, &said, action.as_slice()) == Some(0) {
+        context.commands.send(BootCommand::Refresh);
+    }
+}
+
+/// A menu that was asked for and not read. A missing one is no failure:
+/// GRUB has not built it yet.
+const fn unread(menu: &Menu) -> bool {
+    matches!(
+        menu,
+        Menu::Read(
+            MenuRead::Refused(_)
+                | MenuRead::Unknown(_)
+                | MenuRead::Unreadable(_)
+                | MenuRead::Cancelled
+        )
+    )
 }
 
 /// The timeout's seconds as one spin field. Returns whether they changed.

@@ -35,19 +35,32 @@ pub(super) fn light_rim(ui: &Ui, colour: Color32) -> Stroke {
 }
 
 pub fn card_row<R>(ui: &mut Ui, first: bool, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
+    card_row_with(ui, first, true, body)
+}
+
+/// A [`card_row`] that shows the hover fill only when `activatable`, as
+/// a row a click acts on. A row of facts or of its own buttons alone
+/// stays still under the pointer.
+pub fn card_row_with<R>(
+    ui: &mut Ui,
+    first: bool,
+    activatable: bool,
+    body: impl FnOnce(&mut Ui) -> R,
+) -> InnerResponse<R> {
     divider(ui, first);
     let backdrop = ui.painter().add(Shape::Noop);
     let inner = ui.scope_builder(UiBuilder::new().sense(Sense::hover()), |ui| {
         let response = ui.response();
         let dragging = ui.ctx().dragged_id().is_some();
-        mark_raised(
-            ui,
-            shows_hover(response.hovered(), response.contains_pointer(), dragging),
-        );
+        let lit = shows_hover(response.hovered(), response.contains_pointer(), dragging);
+        mark_raised(ui, activatable && lit);
         row_frame(ui, body)
     });
 
-    paint_hover(ui, backdrop, &inner.response);
+    if activatable {
+        paint_hover(ui, backdrop, &inner.response);
+    }
+
     inner
 }
 
@@ -115,6 +128,11 @@ pub(super) fn fill_rect(row: Rect, pixels_per_point: f32) -> Rect {
 
 fn raised_id(ui: Id) -> Id {
     ui.with("toolbox_gui_kit::raised")
+}
+
+/// Drops the mark [`mark_raised`] left for the ui of `scope`.
+pub(super) fn forget_raised(ui: &Ui, scope: Id) {
+    ui.data_mut(|data| data.remove::<bool>(raised_id(scope)));
 }
 
 pub(super) fn mark_raised(ui: &Ui, raised: bool) {

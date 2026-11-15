@@ -1,5 +1,6 @@
 //! What App does for the page services, which know nothing of it.
 
+use toolbox_core::features::boot::edit::Edit;
 use toolbox_gui_kit::toasts::ToastKind;
 
 use super::App;
@@ -34,6 +35,18 @@ impl App {
         }
     }
 
+    /// A file the Boot options page's chooser picked, which comes back as
+    /// an answer of its service.
+    fn edit_boot(&mut self, ctx: &egui::Context, change: Edit) {
+        let snapshot = self.current_snapshot();
+        let handled = self
+            .services
+            .boot
+            .edit(change, self.queue.changes(), &snapshot);
+
+        self.take_handled(ctx, handled);
+    }
+
     /// Offers `command` to every page service before App. Each click's
     /// edit is taken at once, so the next command of this frame sees it.
     /// Returns whether a service took the command, so App leaves it, and
@@ -61,25 +74,14 @@ impl App {
             self.queue.take_click(edit);
         }
 
-        for command in handled.answers {
-            self.run_app(ctx, command);
-        }
+        self.run_asked(ctx, handled.answers);
     }
 
     /// Every service's results since the last frame, and what it asks for.
     pub(super) fn take_page_services(&mut self, ctx: &egui::Context) {
         let page = self.state.page;
         let snapshot = self.current_snapshot();
-        let asked: Vec<_> = self
-            .services
-            .all_mut()
-            .into_iter()
-            .flat_map(|service| service.take(page, &snapshot))
-            .collect();
-
-        for command in asked {
-            self.run_app(ctx, command);
-        }
+        self.ask_services(ctx, |service| service.take(page, &snapshot));
     }
 
     /// Only the sender of `plan` hears of its start, so a sender whose
@@ -95,15 +97,7 @@ impl App {
             Owner::Maintenance | Owner::Users | Owner::Configs | Owner::BootRepair => {}
         }
 
-        let asked = self
-            .services
-            .owned_mut(owner)
-            .map(PageService::plan_started)
-            .unwrap_or_default();
-
-        for command in asked {
-            self.run_app(ctx, command);
-        }
+        self.ask_owner(ctx, owner, |service| service.plan_started());
     }
 
     pub(super) fn services_plan_refused(&mut self, ctx: &egui::Context, plan: PlanId) {
@@ -117,25 +111,34 @@ impl App {
             Owner::Maintenance | Owner::Users | Owner::Configs | Owner::BootRepair => {}
         }
 
-        let asked = self
-            .services
-            .owned_mut(owner)
-            .map(PageService::plan_refused)
-            .unwrap_or_default();
-
-        for command in asked {
-            self.run_app(ctx, command);
-        }
+        self.ask_owner(ctx, owner, |service| service.plan_refused());
     }
 
     pub(super) fn services_plan_finished(&mut self, ctx: &egui::Context, succeeded: bool) {
-        let asked: Vec<_> = self
-            .services
-            .all_mut()
-            .into_iter()
-            .flat_map(|service| service.plan_finished(succeeded))
-            .collect();
+        self.ask_services(ctx, |service| service.plan_finished(succeeded));
+    }
 
+    fn ask_services(
+        &mut self,
+        ctx: &egui::Context,
+        ask: impl FnMut(&mut dyn PageService) -> Vec<AppCommand>,
+    ) {
+        let asked: Vec<_> = self.services.all_mut().into_iter().flat_map(ask).collect();
+
+        self.run_asked(ctx, asked);
+    }
+
+    fn ask_owner(
+        &mut self,
+        ctx: &egui::Context,
+        owner: Owner,
+        ask: impl FnOnce(&mut dyn PageService) -> Vec<AppCommand>,
+    ) {
+        let asked = self.services.owned_mut(owner).map(ask).unwrap_or_default();
+        self.run_asked(ctx, asked);
+    }
+
+    fn run_asked(&mut self, ctx: &egui::Context, asked: Vec<AppCommand>) {
         for command in asked {
             self.run_app(ctx, command);
         }

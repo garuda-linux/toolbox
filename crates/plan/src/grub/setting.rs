@@ -11,7 +11,8 @@ use serde::{Deserialize, Serialize};
 
 use super::defaults::{grub_value, set_grub_value, unset_grub_value};
 use super::parameters::KernelParameters;
-use crate::{Bounded, GrubPicture, GrubThemeFile, MenuEntryId};
+use super::timeout::GrubTimeout;
+use crate::{GrubPicture, GrubThemeFile, MenuEntryId};
 
 /// What `GRUB_DEFAULT` holds when GRUB boots the entry it booted last.
 const SAVED: &str = "saved";
@@ -26,9 +27,6 @@ const SUBMENUS_OFF: [&str; 3] = ["y", "yes", "true"];
 /// No variable of GRUB itself: garuda-boot-options writes its background
 /// picture there.
 const MENU_PICTURE: &str = "GRUB_MENU_PICTURE";
-
-/// Seconds the menu waits.
-pub type GrubTimeout = Bounded<0, 300>;
 
 /// No other line of the file is touched.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -193,7 +191,7 @@ impl GrubSetting {
     pub fn is_met_by(&self, state: &GrubState) -> bool {
         match self {
             Self::Default(entry) => state.default == entry.as_str(),
-            Self::Timeout(seconds) => state.timeout == Some(i64::from(seconds.get())),
+            Self::Timeout(timeout) => timeout.is_met_by(state.timeout),
             Self::KernelParameters(parameters) => state.parameters.as_ref() == Some(parameters),
             Self::Submenus(shown) => state.submenus == *shown,
             Self::SaveDefault(on) => state.save_default == *on,

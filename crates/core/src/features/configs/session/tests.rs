@@ -47,7 +47,6 @@ fn changed(original: &str, edited: &str) -> Compared {
         original: text(original),
         edited: text(edited),
         plain: "-a = 1\n+a = 2\n".to_owned(),
-        colored: String::new(),
         added: 1,
         removed: 1,
     })

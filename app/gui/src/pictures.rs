@@ -1,6 +1,8 @@
 //! About 1,700 apps would make a lookup of every one at start slow, so only
 //! the rows on screen ask, a background task answers, and each answer is
 //! kept until the icon theme changes.
+//!
+//! A miss is asked again after a plan, which may have installed the app.
 
 mod budget;
 #[cfg(test)]
@@ -8,7 +10,8 @@ mod tests;
 
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use crossbeam_channel::{Receiver, Sender};
 use egui::Context;
@@ -17,7 +20,7 @@ use toolbox_plan::PackageName;
 use toolbox_system::{AppIconSource, AppStreamIcons};
 
 use self::budget::Budget;
-use crate::desktop::icon_files::{IconLookup, IconNames, Indexed, SystemIcons};
+use crate::desktop::icon_files::{IconLookup, Indexed, SystemIcons};
 
 /// The icon theme spec's own fallback, which has app pictures, used
 /// while the desktop names no theme.
@@ -29,33 +32,49 @@ const KEPT: usize = 120;
 
 pub trait PictureFinder: Send + 'static {
     fn find(&mut self, theme: &str, package: &PackageName) -> Option<PathBuf>;
+
+    /// Drops what was learned of the disk, so the next find reads it again.
+    fn forget(&mut self) {}
 }
 
 /// The icon theme under the package's plain name first (`brave-bin`
 /// shows `brave`), then the `AppStream` icon cache, read at its first
-/// use.
+/// use and again after [`PictureFinder::forget`].
 pub struct Layered<L, S> {
     theme: L,
-    read: Option<Box<dyn FnOnce() -> S + Send>>,
+    read: Box<dyn Fn() -> S + Send>,
     cache: Option<S>,
 }
 
-pub type SystemPictures = Layered<Indexed<SystemIcons>, AppStreamIcons>;
+pub type SystemPictures = Layered<Arc<Indexed<SystemIcons>>, AppStreamIcons>;
 
 #[derive(Debug, Default)]
 struct Known {
     theme: Option<String>,
+    /// Counts the forgets, so an answer to an ask from before one is
+    /// dropped.
+    round: u64,
     files: HashMap<PackageName, Lookup>,
 }
 
 #[derive(Debug)]
 enum Lookup {
     Asked,
-    Done(Option<PathBuf>),
+    Done(Option<Arc<Path>>),
+}
+
+enum Ask {
+    Find {
+        theme: String,
+        round: u64,
+        package: PackageName,
+    },
+    Forget,
 }
 
 struct Answer {
     theme: String,
+    round: u64,
     package: PackageName,
     file: Option<PathBuf>,
 }
@@ -63,28 +82,26 @@ struct Answer {
 /// The UI's end. Only the UI thread uses it, so the answers it keeps sit
 /// in a `RefCell` and the pages ask through a shared reference.
 pub struct Pictures {
-    asks: Sender<(String, PackageName)>,
+    asks: Sender<Ask>,
     answers: Receiver<Answer>,
     known: RefCell<Known>,
     budget: RefCell<Budget>,
 }
 
 impl<L: IconLookup, S: AppIconSource> Layered<L, S> {
-    pub fn new(theme: L, read: impl FnOnce() -> S + Send + 'static) -> Self {
+    pub fn new(theme: L, read: impl Fn() -> S + Send + 'static) -> Self {
         Self {
             theme,
-            read: Some(Box::new(read)),
+            read: Box::new(read),
             cache: None,
         }
     }
 }
 
 impl SystemPictures {
-    pub fn system() -> Self {
-        Self::new(
-            Indexed::new(SystemIcons::APPS, IconNames::system),
-            AppStreamIcons::system,
-        )
+    /// `theme` is the lookup the catalogs' app pictures use too.
+    pub fn system(theme: Arc<Indexed<SystemIcons>>) -> Self {
+        Self::new(theme, AppStreamIcons::system)
     }
 }
 
@@ -100,12 +117,17 @@ where
             return Some(file);
         }
 
-        if let Some(read) = self.read.take() {
+        if self.cache.is_none() {
             let _read = tracing::debug_span!("read", what = "the AppStream icon cache").entered();
-            self.cache = Some(read());
+            self.cache = Some((self.read)());
         }
 
         self.cache.as_ref()?.icon_file(package.as_str())
+    }
+
+    fn forget(&mut self) {
+        self.theme.forget();
+        self.cache = None;
     }
 }
 
@@ -113,7 +135,7 @@ impl Pictures {
     /// Starts the background thread. It ends with the returned value, so
     /// it never holds up the shutdown of a runtime as a blocking task would.
     pub fn spawn(ctx: Context, mut finder: impl PictureFinder) -> Self {
-        let (asks, asked) = crossbeam_channel::unbounded::<(String, PackageName)>();
+        let (asks, asked) = crossbeam_channel::unbounded::<Ask>();
         let (answer, answers) = crossbeam_channel::unbounded();
 
         // A thread that cannot start behaves like one that ended at once:
@@ -121,10 +143,21 @@ impl Pictures {
         let started = std::thread::Builder::new()
             .name("pictures".to_owned())
             .spawn(move || {
-                for (theme, package) in asked {
+                for ask in asked {
+                    let Ask::Find {
+                        theme,
+                        round,
+                        package,
+                    } = ask
+                    else {
+                        finder.forget();
+                        continue;
+                    };
+
                     let file = finder.find(&theme, &package);
                     let sent = answer.send(Answer {
                         theme,
+                        round,
                         package,
                         file,
                     });
@@ -159,26 +192,49 @@ impl Pictures {
         }
     }
 
-    pub fn file(&self, package: &PackageName) -> Option<PathBuf> {
+    /// Asks again for every app that had no picture, and for those still
+    /// asked, as their answers may predate the plan.
+    pub fn forget_misses(&self) {
+        let mut known = self.known.borrow_mut();
+        known.round = known.round.wrapping_add(1);
+        known
+            .files
+            .retain(|_, lookup| matches!(lookup, Lookup::Done(Some(_))));
+
+        // An error means the task ended, which has nothing to forget.
+        self.asks.send(Ask::Forget).ok();
+    }
+
+    pub fn file(&self, package: &PackageName) -> Option<Arc<Path>> {
         let mut borrowed = self.known.borrow_mut();
-        let known = &mut *borrowed;
-        let theme = known.theme.clone()?;
+        let Known {
+            theme,
+            round,
+            files,
+        } = &mut *borrowed;
+
+        let theme = theme.as_deref()?;
 
         for answer in self.answers.try_iter() {
-            if answer.theme == theme {
-                known
-                    .files
-                    .insert(answer.package, Lookup::Done(answer.file));
+            if answer.theme == theme && answer.round == *round {
+                let file = answer.file.map(Arc::from);
+                files.insert(answer.package, Lookup::Done(file));
             }
         }
 
-        match known.files.get(package) {
+        match files.get(package) {
             Some(Lookup::Done(file)) => file.clone(),
             Some(Lookup::Asked) => None,
             None => {
+                let ask = Ask::Find {
+                    theme: theme.to_owned(),
+                    round: *round,
+                    package: package.clone(),
+                };
+
                 // An error means the task ended. The row shows no picture.
-                self.asks.send((theme, package.clone())).ok();
-                known.files.insert(package.clone(), Lookup::Asked);
+                self.asks.send(ask).ok();
+                files.insert(package.clone(), Lookup::Asked);
                 None
             }
         }

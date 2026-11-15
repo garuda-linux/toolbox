@@ -98,3 +98,30 @@ fn with_the_setting_on_a_finished_report_is_copied_at_once() {
             .is_some()
     );
 }
+
+#[test]
+fn the_report_header_stays_inside_its_card_beside_the_sidebar() {
+    let mut fixture = diagnostics_page(false);
+    let harness = fixture.harness();
+
+    collect(harness);
+
+    let card = harness
+        .get_by_role_and_label(Role::Document, "Diagnostics report")
+        .rect();
+
+    let window = harness.ctx.content_rect();
+    assert!(card.right() < window.right(), "the card {card:?}");
+
+    for (role, name) in [
+        (Role::TextInput, "Search the report"),
+        (Role::Button, "Copy report"),
+        (Role::Button, "Share report…"),
+    ] {
+        let control = harness.get_by_role_and_label(role, name).rect();
+        assert!(
+            card.contains_rect(control),
+            "{name} at {control:?} leaves the card {card:?}"
+        );
+    }
+}

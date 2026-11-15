@@ -17,12 +17,10 @@ Under **Reports** each report has a row that says what it holds. Click
 collected meanwhile, and the report appears below. While a report shows, the
 rows fold into **Collect another report**. Click it to unfold them.
 
-A long report scrolls in its own box, which fills the window. Its header
-line names the report, the time it was collected (in UTC) and how many lines
-it has, followed by these controls:
+A long report scrolls in its own box, which fills the window. Long lines
+break at the box's edge. Its header line names the report, the time it was
+collected (in UTC) and how many lines it has, followed by these controls:
 
-- **Wrap lines** breaks long lines at the box's edge. Off, they scroll
-  sideways, as in a terminal.
 - **Search the report** shows only the lines that hold the text you type, in
   any case. Its **×** shows every line again.
 - **Copy report** and **Share report…**, see below.

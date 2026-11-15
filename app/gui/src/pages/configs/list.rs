@@ -5,8 +5,8 @@ use toolbox_core::features::configs::{Row, RowKind, rows};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, RowState, SectionHeading, empty_state, pill_button,
-    rich, row_height, split_row, text_block_height,
+    ButtonKind, ListItem, RowHeights, RowList, RowState, SectionHeading, card, empty_state,
+    pill_button, rich, row_height, skeleton_rows, split_row, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -19,6 +19,8 @@ use crate::pages::rows::Look;
 use crate::pages::rows::more::{item, more};
 
 const CONTROLS_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.row_actions_narrow;
+/// Placeholder rows while the files are looked for.
+const SKELETON_ROWS: usize = 5;
 
 #[derive(Debug)]
 pub struct Item {
@@ -66,7 +68,9 @@ pub fn show(
     };
 
     let Some(listing) = configs.listing() else {
-        empty_state(ui, icons::DOCUMENT_PREVIEW, &text("configs-reading"), "");
+        let name = text("configs-reading");
+        let height = row_height(ui, text_block_height(ui, 2));
+        card(ui, |ui| skeleton_rows(ui, SKELETON_ROWS, height, &name));
         return;
     };
 
@@ -174,6 +178,20 @@ fn row(
 }
 
 fn words(ui: &mut Ui, item: &Item) {
+    if item.row.kind != RowKind::Child {
+        lines(ui, item);
+        return;
+    }
+
+    // The files of an opened folder sit in from its title, so they read as
+    // its contents and not as more files of the section.
+    ui.horizontal_top(|ui| {
+        ui.add_space(ui.spacing().indent);
+        ui.vertical(|ui| lines(ui, item));
+    });
+}
+
+fn lines(ui: &mut Ui, item: &Item) {
     let ctx = ui.ctx().clone();
     let tokens = ui.tokens();
     let row = &item.row;

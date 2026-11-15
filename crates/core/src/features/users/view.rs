@@ -8,8 +8,7 @@ use toolbox_plan::{GroupName, ShellPath, UserName};
 use super::ADMIN_GROUPS;
 use super::listing::{GroupOrder, UserOrder, arrange_groups, arrange_users};
 use super::rows::{
-    GroupChoice, GroupRow, QueuedForUser, UserRow, group_choices, group_rows, user_row_of,
-    user_rows,
+    GroupChoice, GroupRow, QueuedForUser, UserRow, group_choices, group_rows, user_rows,
 };
 use crate::domains::{Accounts, AvailableShells};
 use crate::features::search::Needle;
@@ -32,7 +31,6 @@ pub struct Shown {
     pub user_order: UserOrder,
     pub group_search: String,
     pub group_order: GroupOrder,
-    pub new_group_search: String,
 }
 
 impl Shown {
@@ -76,7 +74,7 @@ impl QueuedForUser {
     }
 }
 
-impl UserRow<'_> {
+impl UserRow {
     pub fn shown_full_name(&self) -> &str {
         self.queued
             .full_name
@@ -109,11 +107,7 @@ pub fn users_total(snapshot: &Snapshot) -> usize {
         .map_or(0, |accounts| accounts.users.len())
 }
 
-pub fn users<'snapshot>(
-    snapshot: &'snapshot Snapshot,
-    changes: &ChangeSet,
-    shown: &Shown,
-) -> Vec<UserRow<'snapshot>> {
+pub fn users(snapshot: &Snapshot, changes: &ChangeSet, shown: &Shown) -> Vec<UserRow> {
     let Some(accounts) = snapshot.part::<Accounts>() else {
         return Vec::new();
     };
@@ -121,17 +115,6 @@ pub fn users<'snapshot>(
     let mut rows = user_rows(accounts, snapshot, changes, shown.regular_only);
     arrange_users(&mut rows, &shown.user_search, shown.user_order);
     rows
-}
-
-/// The row of the account `name` as [`users`] builds it, for a list that
-/// keeps only the names of its rows.
-pub fn user<'snapshot>(
-    snapshot: &'snapshot Snapshot,
-    changes: &ChangeSet,
-    name: &UserName,
-) -> Option<UserRow<'snapshot>> {
-    let accounts = snapshot.part::<Accounts>()?;
-    user_row_of(name, accounts, snapshot, changes)
 }
 
 pub fn groups(snapshot: &Snapshot, changes: &ChangeSet, shown: &Shown) -> Vec<GroupRow> {
@@ -183,4 +166,17 @@ pub fn choices(user: &UserName, snapshot: &Snapshot, changes: &ChangeSet) -> Vec
         .part::<Accounts>()
         .map(|accounts| group_choices(user, accounts, changes))
         .unwrap_or_default()
+}
+
+/// The choices whose group name holds `search`, in any case, for the
+/// search of the membership dialog.
+pub fn choices_holding<'choices>(
+    choices: &'choices [GroupChoice],
+    search: &str,
+) -> Vec<&'choices GroupChoice> {
+    let needle = Needle::new(search);
+    choices
+        .iter()
+        .filter(|choice| needle.finds(&choice.group))
+        .collect()
 }

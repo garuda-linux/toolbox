@@ -1,6 +1,7 @@
 use egui::Ui;
 use toolbox_core::Snapshot;
 use toolbox_core::features::users::listing::UserOrder;
+use toolbox_core::features::users::rows::UserRow;
 use toolbox_core::features::users::view::{self, Shown};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
@@ -8,7 +9,6 @@ use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, chip, empty_state, pill_button, rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_plan::UserName;
 
 use super::dialogs::Dialog;
 use super::{accounts_ready, row};
@@ -25,16 +25,16 @@ const ORDERS: [(UserOrder, &str); 5] = [
 ];
 
 /// A row as the list shows it, named for screen readers by its user and
-/// full name. The account itself is looked up for the rows drawn only.
+/// full name. The row is built once per cache key, not per frame.
 #[derive(Debug)]
 pub struct Item {
-    key: UserName,
+    row: UserRow,
     name: String,
 }
 
 impl ListItem for Item {
     fn key(&self) -> &str {
-        self.key.as_str()
+        self.row.user.name.as_str()
     }
 
     fn name(&self) -> &str {
@@ -56,7 +56,8 @@ pub fn show(
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let known = view::accounts_known(context.snapshot);
     toolbar(ui, context, shown, dialog, known);
-    if !accounts_ready(ui, context, "users-reading", "users-unavailable") {
+    let ids = ("users-reading", "users-unavailable");
+    if !accounts_ready(ui, context, ids, row::height(ui)) {
         return;
     }
 
@@ -70,10 +71,10 @@ pub fn show(
     let rows = cache.get(&[&shown.user_search], rest, || {
         let _build = tracing::trace_span!("build rows").entered();
         view::users(context.snapshot, context.changes, shown)
-            .iter()
+            .into_iter()
             .map(|row| Item {
-                key: row.user.name.clone(),
                 name: format!("{}, {}", row.user.name, row.shown_full_name()),
+                row,
             })
             .collect()
     });
@@ -100,12 +101,17 @@ pub fn show(
 
     let name = text("users-list");
     let heights = RowHeights::Fixed(row::height(ui));
+    let mut focused = false;
     RowList::new("users-list", &name, heights).show(ui, rows.as_slice(), |ui, item, state| {
-        // The rows come from this snapshot, so each one finds its account.
-        if let Some(user) = view::user(context.snapshot, context.changes, &item.key) {
-            row::show(ui, context, (&user, state), dialog);
-        }
+        focused |= state.response.has_focus();
+        row::show(ui, context, (&item.row, state), dialog);
     });
+
+    // Only keyboard use needs the keys, and a mouse visit would read the
+    // same sentence every time.
+    if !focused {
+        return;
+    }
 
     ui.add_space(ui.tokens().sizes.card_gap);
     ui.label(rich(

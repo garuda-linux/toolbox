@@ -14,13 +14,28 @@ use crate::command::HomeCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 
-/// The installer and the repair shell, each where its program exists.
+/// The installer and the repair shell, each where its program exists. With
+/// neither and nothing to tell the heading stays away, as it would head
+/// nothing.
 pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
+    let programs = context.home.programs.cloned().unwrap_or_default();
+    let failed_start = match context.home.problem {
+        Some(HomeProblem::Installer(reason)) => Some(reason),
+        Some(HomeProblem::Restart(_) | HomeProblem::QueueLost(_) | HomeProblem::Busy) | None => {
+            None
+        }
+    };
+
+    let tools = programs.installer || programs.chroot;
+    if !tools && failed_start.is_none() && !context.home.programs_failed {
+        return;
+    }
+
     heading(ui, "home-live");
     ui.add_space(ui.tokens().sizes.card_gap);
 
-    if let Some(HomeProblem::Installer(reason)) = context.home.problem {
+    if let Some(reason) = failed_start {
         let text = i18n::text_with(&ctx, "home-install-failed", &[("reason", reason)]);
         banner(ui, Tone::Error, &text, &[]);
         ui.add_space(ui.tokens().sizes.card_gap);
@@ -36,8 +51,7 @@ pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
         ui.add_space(ui.tokens().sizes.card_gap);
     }
 
-    let programs = context.home.programs.cloned().unwrap_or_default();
-    if !programs.installer && !programs.chroot {
+    if !tools {
         return;
     }
 

@@ -25,10 +25,14 @@ pub const TILE_RADIUS: u8 = 10;
 /// The tile behind a section's icon, [`crate::tokens::Sizes::icon_tile_small`].
 pub const SMALL_TILE_RADIUS: u8 = 8;
 /// Buttons, the select, the search field and segmented controls.
-pub const PILL_HEIGHT: f32 = 34.0;
+///
+/// Controls keep to three heights: 24 for tags, switches and the small
+/// buttons in a field, this for controls, menu entries and chips, and 40
+/// for check and link rows.
+pub const PILL_HEIGHT: f32 = 32.0;
 /// The round ends of the search field and segmented controls, half of
 /// [`PILL_HEIGHT`].
-pub const PILL_RADIUS: u8 = 17;
+pub const PILL_RADIUS: u8 = 16;
 pub const SIDEBAR_WIDTH: f32 = 248.0;
 /// The column the pages' content keeps to on wide windows.
 pub const CONTENT_WIDTH: f32 = 880.0;
@@ -86,7 +90,7 @@ fn write(style: &mut Style, tokens: &Tokens) {
     let spacing = &mut style.spacing;
     spacing.item_spacing = vec2(sizes.control_gap, sizes.caption_gap);
     spacing.button_padding = vec2(14.0, 7.0);
-    spacing.interact_size = vec2(40.0, 30.0);
+    spacing.interact_size = vec2(40.0, PILL_HEIGHT);
     spacing.menu_margin = sizes.list_padding;
     spacing.window_margin = sizes.popover_padding;
     let handle = handle_opacity(tokens);

@@ -29,11 +29,7 @@ pub fn locks(ctx: &Context, locks: &Locks) -> Option<String> {
         Locks::Loading => Some(i18n::text(ctx, "users-locks-loading").into_owned()),
         Locks::Refused(_) | Locks::Unknown => {
             let id = format!("users-locks-{}", locks.code());
-            Some(format!(
-                "{} {}",
-                i18n::text(ctx, &id),
-                i18n::text(ctx, "users-locks-again")
-            ))
+            Some(i18n::text(ctx, &id).into_owned())
         }
     }
 }

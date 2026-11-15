@@ -37,6 +37,19 @@ fn a_sidebar_group_label_is_secondary_text() {
 }
 
 #[test]
+fn a_sidebar_group_label_is_a_heading_heard_as_written() {
+    let mut harness = harness(400.0, 200.0).build_ui(|ui| group_label(ui, "System", false));
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_role_and_label(egui::accesskit::Role::Heading, "System")
+            .is_some()
+    );
+    assert!(harness.query_by_label("SYSTEM").is_none());
+}
+
+#[test]
 fn a_disabled_button_keeps_its_colours_under_egui_s_fade_alone() {
     use super::super::{ButtonKind, pill_button};
 
@@ -89,5 +102,23 @@ fn a_disabled_ghost_button_stays_without_a_fill() {
     for quiet in [tokens.field, tokens.hover] {
         assert_ne!(under, Some(quiet.gamma_multiply(alpha)));
         assert_ne!(under, Some(quiet));
+    }
+}
+
+#[test]
+fn a_warning_tag_takes_a_wash_of_its_colour_as_success_and_error_do() {
+    use super::super::Tone;
+    use crate::palette::Palette;
+
+    for theme in [egui::Theme::Dark, egui::Theme::Light] {
+        let tokens = tokens::Tokens::derive(&Palette::fallback(theme), theme);
+        let (fill, ink) = Tone::Warning.colors(&tokens);
+
+        assert_eq!(fill, tokens.tag_wash(tokens.warning), "{theme:?}");
+        assert!(
+            tokens::contrast(ink, fill) >= 4.5,
+            "{theme:?}: {} on the wash",
+            tokens::contrast(ink, fill)
+        );
     }
 }

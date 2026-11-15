@@ -62,7 +62,13 @@ impl PageView for HomePage {
         let _ui = tracing::trace_span!("home ui").entered();
         let host = context.snapshot.part::<Host>();
         let live = host.is_some_and(|host| host.live_iso);
-        hero::show(ui, context, host);
+        let overview = context
+            .home
+            .status
+            .and_then(Loadable::get)
+            .map(|status| status::overview(status, context));
+
+        hero::show(ui, context, host, overview.as_ref());
         ui.add_space(ui.tokens().sizes.block_gap);
         notice(ui, context);
 
@@ -71,8 +77,8 @@ impl PageView for HomePage {
         if live {
             steps::live(ui, context);
         } else {
-            stats::show(ui, context);
-            status::show(self, ui, context, host);
+            stats::show(ui, context, overview.as_ref());
+            status::show(self, ui, context, host, overview.as_ref());
             news::show(ui, context);
         }
 

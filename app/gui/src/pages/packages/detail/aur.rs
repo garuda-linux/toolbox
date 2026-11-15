@@ -72,7 +72,7 @@ pub fn body(
 
     if let (Some(info), Some(details)) = (local, details) {
         group_gap(ui);
-        below::files(page, ui, context, info);
+        below::files(page, ui, context, (details, info));
         group_gap(ui);
         below::history(page, ui, context, details);
     }

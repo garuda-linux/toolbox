@@ -56,6 +56,11 @@ impl Kernels {
         self.dkms().get().map_or(&[], Dkms::entries)
     }
 
+    /// Changes with every dkms answer, so the page knows its rows are old.
+    pub const fn dkms_revision(&self) -> u64 {
+        self.dkms.revision()
+    }
+
     /// The reading a test hands the page, without a reader.
     #[cfg(any(test, feature = "testing"))]
     pub fn with_dkms(dkms: DkmsReading) -> Self {

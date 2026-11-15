@@ -11,7 +11,7 @@ use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::{empty_state, page_header};
 
-use super::toggles::TogglePage;
+use super::toggles::{Steps, TogglePage};
 use super::{PageContext, PageView, QueueShown};
 use crate::catalogs::CatalogId;
 use crate::i18n;
@@ -34,6 +34,10 @@ pub struct SetupPage {
     review_at: Option<u64>,
     /// How the assistant's own apply read. `None` when Finish skipped it.
     ending: Option<Ending>,
+    /// The picks the queue last held while a review was open, with the
+    /// queue revision they were read at. The apply empties the queue, so
+    /// the success page names them from here.
+    applied: Option<(u64, stages::Picks)>,
     asking_to_restart: bool,
     told_home: bool,
 }
@@ -45,6 +49,7 @@ impl Default for SetupPage {
             stage: Stage::default(),
             review_at: None,
             ending: None,
+            applied: None,
             asking_to_restart: false,
             told_home: false,
         }
@@ -84,11 +89,17 @@ impl PageView for SetupPage {
             return;
         }
 
+        self.forget_gone_step(&steps);
+        self.remember_picks(&ctx, context);
         self.finish_when_applied(context);
         match self.stage.clone() {
             Stage::Welcome => stages::welcome(ui, steps.len()),
             Stage::Step(id) => {
-                let step = steps.iter().enumerate().find(|(_, (each, _))| *each == id);
+                let step = steps
+                    .pairs()
+                    .enumerate()
+                    .find(|(_, (each, _))| *each == id.as_str());
+
                 if let Some((index, (_, title))) = step {
                     stages::step_heading(ui, (index + 1, steps.len()), title);
                 }
@@ -138,6 +149,28 @@ impl PageView for SetupPage {
 }
 
 impl SetupPage {
+    /// A step whose section no longer lists, as a new reading of the
+    /// system hid all its entries, has no place in the list, so the
+    /// assistant starts over where the list does.
+    fn forget_gone_step(&mut self, steps: &Steps) {
+        if let Stage::Step(id) = &self.stage
+            && !steps.is_empty()
+            && !steps.pairs().any(|(each, _)| each == id.as_str())
+        {
+            self.stage = Stage::Welcome;
+        }
+    }
+
+    fn remember_picks(&mut self, ctx: &egui::Context, context: &PageContext<'_>) {
+        let read = self.applied.as_ref().map(|(revision, _)| *revision);
+        if self.review_at.is_none() || context.changes.is_empty() || read == Some(context.revision)
+        {
+            return;
+        }
+
+        self.applied = stages::Picks::of(ctx, context).map(|picks| (context.revision, picks));
+    }
+
     fn finish_when_applied(&mut self, context: &PageContext<'_>) {
         let Some(at) = self.review_at else {
             return;

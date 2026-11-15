@@ -41,6 +41,13 @@ impl<const MIN: u32, const MAX: u32> Bounded<MIN, MAX> {
     pub const fn get(self) -> u32 {
         self.0
     }
+
+    /// `value`, or the end of the range it lies past.
+    pub fn nearest(value: i64) -> Self {
+        let inside = value.clamp(i64::from(MIN), i64::from(MAX));
+
+        Self(u32::try_from(inside).unwrap_or(MAX))
+    }
 }
 
 impl<const MIN: u32, const MAX: u32> TryFrom<i64> for Bounded<MIN, MAX> {

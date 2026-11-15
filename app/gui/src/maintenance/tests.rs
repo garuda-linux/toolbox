@@ -1,3 +1,5 @@
+mod after_install;
+
 use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;

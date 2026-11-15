@@ -105,24 +105,21 @@ fn a_missing_tool_offers_its_install_and_the_ranking_says_it_runs() {
     let ranking = Maintenance::showing(None, true, Vec::new(), None);
     let mut harness = page(with(programs(), ranking));
 
-    assert_eq!(disabled(&harness, "Install and open…"), [true, false]);
+    assert_eq!(disabled(&harness, "Install and open…"), [false]);
     assert!(
         harness
             .query_by_label_contains("Testing the mirrors")
             .is_some()
     );
+    assert!(
+        harness
+            .query_by_role_and_label(Role::ProgressIndicator, "Ranking the mirrors…")
+            .is_some()
+    );
 
-    harness
-        .get_all_by_label("Install and open…")
-        .nth(1)
-        .unwrap()
-        .scroll_to_me();
+    harness.get_by_label("Install and open…").scroll_to_me();
     harness.run();
-    harness
-        .get_all_by_label("Install and open…")
-        .nth(1)
-        .unwrap()
-        .click();
+    harness.get_by_label("Install and open…").click();
     harness.run();
 
     assert_eq!(

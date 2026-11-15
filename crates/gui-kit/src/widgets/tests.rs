@@ -46,6 +46,7 @@ mod select_width;
 mod selection;
 mod skeleton;
 mod slide;
+mod switch_knob;
 mod switch_rim;
 mod text_box;
 mod text_link;
@@ -161,7 +162,7 @@ fn actions(ui: &mut Ui, state: &mut Gallery) {
 }
 
 fn app(theme: Theme) -> Harness<'static, Gallery> {
-    let mut harness = harness(820.0, 440.0)
+    let mut harness = harness(820.0, 460.0)
         .with_theme(theme)
         .build_ui_state(gallery, Gallery::default());
 

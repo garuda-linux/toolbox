@@ -1,6 +1,6 @@
 use egui::{Rect, Shape};
 use egui_kittest::Harness;
-use toolbox_gui::page::PageId;
+use toolbox_gui::page::{Group, PageId};
 use toolbox_gui::{App, Setup};
 use toolbox_gui_kit::testing::painted_text;
 use toolbox_gui_kit::theme::SIDEBAR_WIDTH;
@@ -121,7 +121,7 @@ fn the_collapsed_rail_fades_its_last_entry_above_hidden_ones() {
 
         let last = icons
             .iter()
-            .filter(|icon| icon.entry.top() < bottom - 0.5)
+            .filter(|icon| icon.entry.center().y < bottom - 0.5)
             .max_by(|one, other| one.entry.top().total_cmp(&other.entry.top()))
             .expect("an entry above the cut edge");
 
@@ -149,7 +149,10 @@ fn the_collapsed_rail_leaves_no_empty_band_above_the_foot() {
     for height in [SMALLEST.1, 600.0, HEIGHT] {
         let rail = collapsed_rail(height);
         let bottom = rail.bottom;
-        let reach = tokens::current(&rail.harness.ctx).sizes.nav_row_height;
+
+        // An entry of which less than half the icon would show hides, so half
+        // a row more may stand empty.
+        let reach = tokens::current(&rail.harness.ctx).sizes.nav_row_height * 1.5;
 
         let lowest = rail_icons(&rail)
             .iter()
@@ -161,5 +164,31 @@ fn the_collapsed_rail_leaves_no_empty_band_above_the_foot() {
             bottom - lowest <= reach,
             "{height}: the rail shows nothing from {lowest} to the cut edge at {bottom}"
         );
+    }
+}
+
+#[test]
+fn the_collapsed_rail_hides_an_entry_of_which_less_than_half_the_icon_shows() {
+    for height in [SMALLEST.1, 600.0, 720.0, HEIGHT] {
+        let rail = collapsed_rail(height);
+        let bottom = rail.bottom;
+        let foot: Vec<Rect> = rail
+            .entries
+            .iter()
+            .filter(|(page, _)| page.group() == Group::App)
+            .map(|(_, rect)| *rect)
+            .collect();
+
+        for icon in rail_icons(&rail) {
+            let listed = !foot.contains(&icon.entry);
+            let speck = listed && icon.entry.center().y >= bottom && icon.shown.top() < bottom;
+            assert!(
+                !speck || icon.strength <= 0.01,
+                "{height}: the entry at {:?} shows {:?} above the cut edge at {bottom} at {}",
+                icon.entry,
+                icon.shown,
+                icon.strength
+            );
+        }
     }
 }

@@ -6,8 +6,8 @@ use toolbox_core::{Snapshot, Toggle};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, pill_button, rich, row_height,
-    split_row, status_dot, text_block_height,
+    ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, named_pill_button, pill_button,
+    rich, row_height, split_row, status_dot, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -52,7 +52,8 @@ pub fn show(
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let known = view::accounts_known(context.snapshot);
     toolbar(ui, dialog, known);
-    if !accounts_ready(ui, context, "groups-reading", "groups-unavailable") {
+    let ids = ("groups-reading", "groups-unavailable");
+    if !accounts_ready(ui, context, ids, group_height(ui)) {
         return;
     }
 
@@ -86,7 +87,7 @@ pub fn show(
     }
 
     let name = text("groups-list");
-    let heights = RowHeights::Fixed(row_height(ui, text_block_height(ui, 1)));
+    let heights = RowHeights::Fixed(group_height(ui));
     RowList::new("groups-list", &name, heights).show(ui, rows.as_slice(), |ui, item, _state| {
         row(ui, context, &item.0, dialog);
     });
@@ -108,6 +109,10 @@ fn toolbar(ui: &mut Ui, dialog: &mut Option<Dialog>, known: bool) {
     });
 
     ui.add_space(ui.tokens().sizes.card_gap);
+}
+
+fn group_height(ui: &Ui) -> f32 {
+    row_height(ui, text_block_height(ui, 1))
 }
 
 fn row(ui: &mut Ui, context: &PageContext<'_>, group: &GroupRow, dialog: &mut Option<Dialog>) {
@@ -159,19 +164,27 @@ fn detail(ctx: &egui::Context, group: &GroupRow) -> String {
     .into_owned()
 }
 
-/// Remove, or take the queued change back. A system group has none.
+/// Remove, or take the queued change back. A system group and an
+/// account's primary group have none, as the removal would be refused.
 fn button(ui: &mut Ui, context: &PageContext<'_>, group: &GroupRow, dialog: &mut Option<Dialog>) {
     let ctx = ui.ctx().clone();
-    let name = group.name.as_str();
     let (id, ask) = match group.queued {
         Some(Toggle::On) => ("groups-unqueue-new", false),
         Some(Toggle::Off) => ("groups-unqueue-removal", false),
-        None if group.system => return,
+        None if group.system || group.primary => return,
         None => ("groups-remove", true),
     };
 
-    let label = i18n::text_with(&ctx, id, &[("group", name)]);
-    if !pill_button(ui, &label, ButtonKind::Soft).clicked() {
+    // Every row shows the same words, so the column stays straight and
+    // each button names its group for a screen reader.
+    let label = i18n::text(&ctx, id);
+    let name = i18n::text_with(
+        &ctx,
+        &format!("{id}-named"),
+        &[("group", group.name.as_str())],
+    );
+
+    if !named_pill_button(ui, &label, ButtonKind::Soft, &name).clicked() {
         return;
     }
 

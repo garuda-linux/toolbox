@@ -3,7 +3,7 @@
 
 use std::collections::BTreeSet;
 
-use super::super::language_packs;
+use super::super::{LanguageName, LanguagePack, PackOrder, PackRow, language_packs, pack_pick};
 use super::entries;
 use crate::domains::{InstalledPackages, SyncPackages};
 use crate::test_support::packages;
@@ -90,4 +90,50 @@ fn no_enabled_locale_or_no_repository_gives_no_packs() {
         ),
         []
     );
+}
+
+fn pack_row(package: &str, base: &str, code: &str, language: &str, territory: &str) -> PackRow {
+    PackRow {
+        pack: LanguagePack {
+            package: crate::test_support::package(package),
+            base: crate::test_support::package(base),
+            locale: crate::test_support::locale(code),
+        },
+        name: Some(LanguageName {
+            language: language.to_owned(),
+            territory: territory.to_owned(),
+        }),
+        installed: false,
+        queued: None,
+    }
+}
+
+#[test]
+fn the_pack_search_finds_package_program_language_and_country() {
+    let rows = [
+        pack_row(
+            "firefox-i18n-de",
+            "firefox",
+            "de_DE.UTF-8",
+            "German",
+            "Germany",
+        ),
+        pack_row(
+            "hunspell-en_us",
+            "hunspell",
+            "en_US.UTF-8",
+            "American English",
+            "United States",
+        ),
+    ];
+
+    let found = |search| pack_pick(&rows, PackOrder::Package, search);
+
+    assert_eq!(found(""), [0, 1]);
+    assert_eq!(found("HUNSPELL"), [1]);
+    assert_eq!(found("firefox"), [0]);
+    assert_eq!(found("german"), [0]);
+    assert_eq!(found("united"), [1]);
+    assert_eq!(found("de_de"), [0]);
+    assert_eq!(found("klingon"), [0_usize; 0]);
 }

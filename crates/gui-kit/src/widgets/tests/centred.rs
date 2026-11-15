@@ -104,7 +104,7 @@ fn the_text_of_every_control_is_centred_in_and_outside_a_row() {
         (dropdown, "English", Role::ComboBox, "Language"),
         (sort, "Name", Role::ComboBox, "Sort"),
         (choice, "Dark", Role::RadioButton, "Dark"),
-        (number, "5", Role::TextInput, "Count"),
+        (number, "5", Role::SpinButton, "Count"),
         (field, "Hello", Role::TextInput, "Name"),
     ];
 
@@ -299,8 +299,8 @@ fn a_tags_words_share_the_line_of_the_words_beside_it_and_sit_in_its_middle() {
         );
         let tag = node_rect(&harness, Role::Label, "Linked");
         assert!(
-            (tag.height() - 22.0).abs() < 0.5,
-            "{what}: the tag is {} tall, not 22",
+            (tag.height() - 24.0).abs() < 0.5,
+            "{what}: the tag is {} tall, not 24",
             tag.height()
         );
         assert_centred(&harness, &format!("tag, {what}"), "Linked", tag);

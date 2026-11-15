@@ -6,6 +6,10 @@
 
 mod found;
 mod row;
+#[cfg(test)]
+mod tests;
+
+use std::rc::Rc;
 
 use egui::{Context, Id, Key, Modifiers, ScrollArea};
 use toolbox_gui_kit::UiExt as _;
@@ -13,7 +17,7 @@ use toolbox_gui_kit::widgets::{
     DialogWidth, ModalWrapper, SearchTexts, menu_heading, search_field,
 };
 
-use self::found::Row;
+use self::found::{Asked, Row};
 use crate::command::{Command, CommandSender};
 use crate::i18n;
 use crate::pages::PageContext;
@@ -25,6 +29,8 @@ pub struct Palette {
     query: String,
     /// The row Enter takes, back to the first as the text changes.
     marked: usize,
+    /// The rows of the last frame, while their inputs hold.
+    found: Option<(Asked, Rc<[Row]>)>,
 }
 
 impl Palette {
@@ -41,7 +47,7 @@ impl Palette {
             return;
         }
 
-        let rows = found::matches(ctx, context, &self.query);
+        let rows = found::cached(&mut self.found, ctx, context, &self.query);
 
         let title = i18n::text(ctx, "command-open-palette");
         let hint = i18n::text(ctx, "palette-search");
@@ -97,6 +103,11 @@ impl Palette {
         if let Some((command, by_key)) = modal.inner {
             send(commands, command, by_key);
             self.open = false;
+        }
+
+        // A closed palette need not keep the snapshot its rows were found in.
+        if !self.open {
+            self.found = None;
         }
     }
 

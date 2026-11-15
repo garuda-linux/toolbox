@@ -1,10 +1,11 @@
 //! The right column of the detail page: what the package depends on,
 //! what requires it and what it can use, each with its count. A name a
 //! known package answers to opens that package. Long lists show their
-//! first names and "+N more".
+//! first names and "+N more", the sonames of libraries wait behind
+//! "+N libraries".
 
 use egui::{Label, Ui};
-use toolbox_core::features::packages::detail::{NAMES_SHOWN, shown, target};
+use toolbox_core::features::packages::detail::{NAMES_SHOWN, by_kind, shown, target};
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_core::features::packages::{OptionalDependency, PackageDetails};
 use toolbox_gui_kit::fonts::{BODY, Weight};
@@ -26,13 +27,7 @@ pub fn show(
     let gap = gap(ui);
     let lookup = |value: &str| target(catalog?, value);
 
-    let depends = names(
-        ui,
-        "packages-depends",
-        &info.depends,
-        &lookup,
-        &mut unfolded.depends,
-    );
+    let depends = dependencies(ui, &info.depends, &lookup, unfolded);
 
     ui.add_space(gap);
 
@@ -58,6 +53,54 @@ pub fn show(
 
 pub fn gap(ui: &Ui) -> f32 {
     ui.tokens().sizes.section_gap / 2.0
+}
+
+/// What the package depends on: the packages with "+N more", then the
+/// sonames of its libraries behind "+N libraries", as they only repeat
+/// what the packages bring.
+pub fn dependencies(
+    ui: &mut Ui,
+    values: &[String],
+    lookup: &dyn Fn(&str) -> Option<PackageName>,
+    unfolded: &mut Unfolded,
+) -> Option<PackageName> {
+    heading(ui, "packages-depends", values.len());
+    if values.is_empty() {
+        none(ui);
+        return None;
+    }
+
+    let kinds = by_kind(values);
+    let part = shown(&kinds.packages, NAMES_SHOWN, unfolded.depends);
+    let mut opened = None;
+    text_line(ui, |ui| {
+        ui.spacing_mut().item_spacing.x = ui.tokens().sizes.card_gap;
+        for value in part.items {
+            let clicked = name(ui, value, lookup);
+            if opened.is_none() {
+                opened = clicked;
+            }
+        }
+
+        more(ui, part.hidden, &mut unfolded.depends);
+        if kinds.libraries.is_empty() {
+            return;
+        }
+
+        if !unfolded.libraries {
+            libraries(ui, kinds.libraries.len(), &mut unfolded.libraries);
+            return;
+        }
+
+        for value in &kinds.libraries {
+            let clicked = name(ui, value, lookup);
+            if opened.is_none() {
+                opened = clicked;
+            }
+        }
+    });
+
+    opened
 }
 
 /// `lookup` answers is a link to that package.
@@ -150,6 +193,16 @@ fn more(ui: &mut Ui, hidden: usize, all: &mut bool) {
     let count = hidden.to_string();
     let text = i18n::text_with(&ctx, "packages-more", &[("count", &count)]);
     let name = i18n::text_with(&ctx, "packages-more-name", &[("count", &count)]);
+    if text_button(ui, &text, &name).clicked() {
+        *all = true;
+    }
+}
+
+fn libraries(ui: &mut Ui, count: usize, all: &mut bool) {
+    let ctx = ui.ctx().clone();
+    let count = count.to_string();
+    let text = i18n::text_with(&ctx, "packages-libraries", &[("count", &count)]);
+    let name = i18n::text_with(&ctx, "packages-libraries-name", &[("count", &count)]);
     if text_button(ui, &text, &name).clicked() {
         *all = true;
     }

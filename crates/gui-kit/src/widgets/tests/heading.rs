@@ -6,7 +6,7 @@ use super::super::{
     SectionHeading, icon_button, icon_button_width, page_header, page_toolbar, pill_button,
 };
 use crate::icons;
-use crate::testing::harness;
+use crate::testing::{harness, spoken_words};
 use crate::widgets::ButtonKind;
 
 const TABS: [&str; 4] = ["Status", "Hardware", "Drivers", "Tools"];
@@ -293,4 +293,20 @@ fn the_tabs_stay_on_the_title_line_while_the_title_fits_beside_them() {
         (tabs.center().y - title.center().y).abs() < 0.5,
         "the tabs {tabs:?} left the title's line {title:?}"
     );
+}
+
+#[test]
+fn a_section_intro_leaves_no_empty_label() {
+    let mut harness = harness(600.0, 200.0).build_ui(|ui| {
+        super::super::section_intro(ui, icons::RUN_BUILD, "Installed", "The kernels on disk.");
+    });
+
+    harness.run();
+
+    let empty = harness
+        .query_all_by_role(Role::Label)
+        .filter(|node| spoken_words(node).is_empty())
+        .count();
+
+    assert_eq!(empty, 0, "a label with no words");
 }

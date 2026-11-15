@@ -16,7 +16,9 @@ Rules for pages, gui-kit widgets and the command line's output.
   content runs under it. The body starts `header_gap` below it.
 - Switching page or tab starts at the top. Dialogs, the Console and a
   refresh keep the scroll position.
-- Row actions sit at the right, on the middle of the whole row. When the
+- Row actions sit at the right, on the middle of the whole row. On a row
+  taller than about three lines they sit on its title line instead, so
+  they stay beside the name they act on (decided 2026-11-15). When the
   text would get less than `MIN_TEXT_WIDTH` they drop under it
   (`ActionRow`, `split_row`).
 - The leading tile or picture and the title start at the row's top. A
@@ -28,6 +30,9 @@ Rules for pages, gui-kit widgets and the command line's output.
   from the last baseline to its bottom edge (`title_line`, `ActionRow`).
   Tiles, pictures and tags start at the capitals. A text shorter than a
   control is centred on the row.
+- Controls take one of three heights: 24, 32 or 40. Tags and small
+  buttons are 24 (`TAG_HEIGHT`, `SMALL_BUTTON`), pills, chips and menu
+  entries 32 (`PILL_HEIGHT`), link and check rows 40 (decided L-16a).
 - Tags have one size (`TAG_HEIGHT`) and sit on the line's middle.
 - A row's title, its tags and every description line start at one x.
 - Text is centred on its capitals, not on egui's line box
@@ -129,6 +134,12 @@ Rules for pages, gui-kit widgets and the command line's output.
   not read the whole list.
 - A part that could not be read gets one banner with **Read again**, not a
   line on every row.
+- A page that could not be read at all shows a centred empty state with
+  **Read again** under it (`widgets::empty_state_action`). Its button
+  sends what the header's **Read again** and F5 send.
+- A page that waits for its main content shows skeleton rows in the card
+  shape of the rows to come (`widgets::skeleton_list`), named by what is
+  read. Three dots are only for a short wait inside a loaded page.
 - Cut text ends in "…" and shows whole in a tooltip and to screen readers.
 - Copy buttons only on technical values (versions, addresses, device
   paths, UUIDs).

@@ -1,7 +1,9 @@
+use std::borrow::Cow;
+
 use egui::{Context, Label, Sense, Ui, Vec2};
 use toolbox_cli::output::size;
 use toolbox_core::Toggle;
-use toolbox_core::features::packages::list::{self, Catalog, row_state};
+use toolbox_core::features::packages::list::{self, Catalog, Filter, row_state};
 use toolbox_core::features::packages::{IndexEntry, InstallReason, Origin};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
@@ -19,6 +21,8 @@ use crate::pages::PageContext;
 use crate::pages::rows::{Initial, package_picture, picture_height, picture_slot};
 
 const LINES: u8 = 2;
+/// The state word of an installed package without a queued change.
+const INSTALLED: &str = "packages-installed";
 /// As large as a link row's chevron.
 const CHEVRON: f32 = 14.0;
 
@@ -136,8 +140,13 @@ pub fn show<R>(
 where
     R: PackageRow,
 {
-    let button = button_text(ui, context, row);
+    let standing = row.state(context);
+    let button = button_of(ui.ctx(), standing);
     let width = pill_width(ui, &button.0) + ui.spacing().item_spacing.x + CHEVRON;
+
+    // The Installed chip says it of every row already.
+    let word = word_of::<R>(standing)
+        .filter(|(id, _)| !(page.filter == Filter::Installed && *id == INSTALLED));
 
     split_row(
         ui,
@@ -145,7 +154,7 @@ where
         |ui| {
             ui.horizontal_top(|ui| {
                 let at = picture_slot(ui, false);
-                ui.vertical(|ui| text(ui, context, row));
+                ui.vertical(|ui| text(ui, row, word));
                 let package = row.package();
                 package_picture(
                     ui,
@@ -178,18 +187,21 @@ fn chevron(ui: &mut Ui) {
 }
 
 /// The button's text and what it does.
-pub fn button_text<R>(ui: &Ui, context: &PageContext<'_>, row: &R) -> (String, Act)
+pub fn button_text<R>(ui: &Ui, context: &PageContext<'_>, row: &R) -> (Cow<'static, str>, Act)
 where
     R: PackageRow,
 {
-    let state = row.state(context);
+    button_of(ui.ctx(), row.state(context))
+}
+
+fn button_of(ctx: &Context, state: list::RowState) -> (Cow<'static, str>, Act) {
     let (id, act) = match state.queued {
         Some(wish) => ("packages-take-back", Act::TakeBack(wish)),
         None if state.installed => ("packages-remove", Act::Remove),
         None => ("packages-install", Act::Install),
     };
 
-    (i18n::text(ui.ctx(), id).into_owned(), act)
+    (i18n::text(ctx, id), act)
 }
 
 /// The row's and the detail header's button. Its name carries the
@@ -222,11 +234,17 @@ pub fn state_word<R>(context: &PageContext<'_>, row: &R) -> Option<(&'static str
 where
     R: PackageRow,
 {
-    let state = row.state(context);
+    word_of::<R>(row.state(context))
+}
+
+const fn word_of<R>(state: list::RowState) -> Option<(&'static str, Tone)>
+where
+    R: PackageRow,
+{
     match state.queued {
         Some(Toggle::On) => Some((R::INSTALLS, Tone::Accent)),
         Some(Toggle::Off) => Some(("packages-removes", Tone::Accent)),
-        None if state.installed => Some(("packages-installed", Tone::Success)),
+        None if state.installed => Some((INSTALLED, Tone::Success)),
         None => None,
     }
 }
@@ -240,7 +258,7 @@ pub const fn undone(wish: Toggle) -> Toggle {
     }
 }
 
-fn text<R>(ui: &mut Ui, context: &PageContext<'_>, row: &R)
+fn text<R>(ui: &mut Ui, row: &R, word: Option<(&'static str, Tone)>)
 where
     R: PackageRow,
 {
@@ -260,7 +278,7 @@ where
         );
 
         row.marks(ui);
-        if let Some((id, tone)) = state_word(context, row) {
+        if let Some((id, tone)) = word {
             status_dot(ui, &i18n::text(&ctx, id), tone);
         }
     });
@@ -269,10 +287,9 @@ where
     // them.
     ui.scope(|ui| {
         ui.spacing_mut().item_spacing.y = 0.0;
-        for line in [row.description().to_owned(), row.detail_line(&ctx)] {
-            ui.add(
-                Label::new(rich(ui, &line, Weight::Regular, SMALL, tokens.secondary)).truncate(),
-            );
+        let detail = row.detail_line(&ctx);
+        for line in [row.description(), detail.as_str()] {
+            ui.add(Label::new(rich(ui, line, Weight::Regular, SMALL, tokens.secondary)).truncate());
         }
     });
 }

@@ -94,3 +94,22 @@ fn a_new_account_that_was_added_leaves_the_dialog_closed() {
 
     assert!(harness.query_by_label("Add user now").is_none());
 }
+
+/// The note is about the whole dialog, so it leads instead of reading as
+/// the description of More options.
+#[test]
+fn the_note_that_the_user_is_added_at_once_leads_the_dialog() {
+    let mut harness = page(unlocked());
+    harness.get_by_label("Add user…").click();
+    harness.run();
+
+    let note = harness
+        .get_by_label_contains("The user is created right away")
+        .rect();
+
+    let full_name = harness
+        .get_by_role_and_label(Role::TextInput, "Full name")
+        .rect();
+
+    assert!(note.bottom() < full_name.top(), "{note:?} {full_name:?}");
+}

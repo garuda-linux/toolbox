@@ -34,7 +34,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
     ui.add_space(ui.tokens().sizes.section_gap);
     heading(ui, icons::TOOLS, "maintenance-tools");
     let Some(programs) = context.home.programs else {
-        loading_label(ui, &i18n::text(ui.ctx(), "maintenance-tools"));
+        super::waiting(ui, "maintenance-tools", Tool::ALL.len() + 1);
         return;
     };
 
@@ -132,13 +132,14 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
     };
 
     row(ui, tool_icon(tool.tool), &id, &detail, |ui| {
-        let clicked = ui
-            .add_enabled_ui(!ranking, |ui| {
-                plan_button(ui, context, button, ButtonKind::Soft)
-            })
-            .inner;
+        // The ranking takes minutes, so the row shows it runs where its
+        // button was.
+        if ranking {
+            loading_label(ui, &i18n::text(&ctx, "maintenance-ranking-progress"));
+            return;
+        }
 
-        if clicked {
+        if plan_button(ui, context, button, ButtonKind::Soft) {
             context
                 .commands
                 .send(MaintenanceCommand::OpenTool(tool.tool));

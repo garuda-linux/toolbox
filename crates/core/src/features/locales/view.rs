@@ -43,6 +43,19 @@ pub struct LanguagePackRow {
     pub queued: &'static str,
 }
 
+impl LocaleRow {
+    /// The character set when the code does not name it after its dot,
+    /// as `de_DE` for ISO-8859-1 does not and `en_US.UTF-8` does.
+    pub fn unnamed_charset(&self) -> Option<&str> {
+        let code = self.locale_code.split('@').next().unwrap_or_default();
+        let named = code
+            .split_once('.')
+            .is_some_and(|(_, charset)| charset == self.charset);
+
+        (!named).then_some(self.charset.as_str())
+    }
+}
+
 pub fn locales_known(snapshot: &Snapshot) -> bool {
     snapshot.part::<SupportedLocales>().is_some() && snapshot.part::<EnabledLocales>().is_some()
 }

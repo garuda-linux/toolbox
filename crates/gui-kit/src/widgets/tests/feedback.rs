@@ -5,8 +5,9 @@ use egui::{Theme, ViewportId};
 use egui_kittest::kittest::Queryable as _;
 use egui_kittest::{Harness, SnapshotResults};
 
+use super::super::loading::loading_dots;
 use super::super::{
-    ButtonKind, card, dimmed, empty_state, error_row, loading_dots, loading_indicator, pill_button,
+    ButtonKind, card, dimmed, empty_state, empty_state_action, loading_indicator, pill_button,
     skeleton_rows,
 };
 use crate::testing::harness;
@@ -79,23 +80,25 @@ fn with_less_motion_the_loading_indicator_stands_still() {
 }
 
 #[test]
-fn an_error_row_reports_retry() {
-    let mut harness = harness(600.0, 120.0).build_ui_state(
-        |ui, retried: &mut bool| {
-            *retried |= error_row(ui, "The services could not be read.", "Retry");
+fn an_unread_state_reports_its_button_centred_under_the_body() {
+    let mut harness = harness(600.0, 300.0).build_ui_state(
+        |ui, clicked: &mut bool| {
+            let title = "The services could not be read";
+            let body = "systemd is not reachable.";
+            *clicked |= empty_state_action(ui, icons::DIALOG_ERROR, title, body, "Read again");
         },
         false,
     );
 
     harness.run();
-    assert!(
-        harness
-            .query_by_label("The services could not be read.")
-            .is_some()
-    );
-    harness.get_by_role_and_label(Role::Button, "Retry").click();
-    harness.run();
+    let body = harness.get_by_label("systemd is not reachable.").rect();
+    let button = harness.get_by_role_and_label(Role::Button, "Read again");
+    let rect = button.rect();
+    assert!(rect.top() > body.bottom(), "{rect:?} under {body:?}");
+    assert!((rect.center().x - body.center().x).abs() < 1.0, "{rect:?}");
 
+    button.click();
+    harness.run();
     assert!(*harness.state());
 }
 
@@ -123,10 +126,16 @@ fn feedback_in_both_themes() {
         (Theme::Dark, "widgets/feedback_dark"),
         (Theme::Light, "widgets/feedback_light"),
     ] {
-        let mut harness = harness(640.0, 388.0).with_theme(theme).build_ui(|ui| {
+        let mut harness = harness(640.0, 540.0).with_theme(theme).build_ui(|ui| {
             card(ui, |ui| skeleton_rows(ui, 2, 68.0, "Reading the services…"));
             ui.add_space(12.0);
-            error_row(ui, "The services could not be read.", "Retry");
+            _ = empty_state_action(
+                ui,
+                icons::DIALOG_ERROR,
+                "The services could not be read",
+                "systemd is not reachable.",
+                "Read again",
+            );
             empty_state(
                 ui,
                 icons::SYSTEM_SEARCH,

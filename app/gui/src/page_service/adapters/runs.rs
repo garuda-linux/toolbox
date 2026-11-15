@@ -149,9 +149,11 @@ impl PageService for BootRepair {
     }
 
     /// The live ISO may show up after the start, so the offer is worked
-    /// out again on every frame.
+    /// out again on every frame. The sidebar hears only of a change, App
+    /// tells it the first offer.
     fn take(&mut self, page: PageId, snapshot: &Snapshot) -> Vec<AppCommand> {
         let live = snapshot.part::<Host>().is_some_and(|host| host.live_iso);
+        let before = self.offered();
         self.see_live(Booted::of_live(live));
         let offered = self.offered();
         let leave =
@@ -162,7 +164,8 @@ impl PageService for BootRepair {
         }
 
         Self::take(self);
-        answers(std::iter::once(Answer::OfferBootRepair(offered)).chain(leave))
+        let changed = (offered != before).then_some(Answer::OfferBootRepair(offered));
+        answers(changed.into_iter().chain(leave))
     }
 
     fn plan_started(&mut self) -> Vec<AppCommand> {

@@ -1,8 +1,9 @@
-use toolbox_plan::{GrubState, InvalidName, NameKind, Reason};
+use toolbox_plan::{GrubState, GrubTimeout, InvalidName, NameKind, Reason};
 
 use super::{Edit, EditProblem, edit, rule};
 use crate::domains::CurrentGrub;
 use crate::features::RefusalText as _;
+use crate::features::boot::view::Page;
 use crate::features::boot::{Flag, Refusal};
 use crate::{ChangeSet, Snapshot};
 
@@ -122,4 +123,19 @@ fn a_risky_parameter_waits_for_a_confirm() {
 fn only_a_risky_parameter_asks_instead_of_refusing() {
     assert!(EditProblem::NeedsConfirm.code().needs_confirm());
     assert!(!EditProblem::OutOfRange.code().needs_confirm());
+}
+
+/// GRUB's -1 is the menu that waits for a key. No other negative number
+/// is written.
+#[test]
+fn a_timeout_of_minus_one_queues_waiting_for_a_key() {
+    let mut changes = ChangeSet::default();
+    let snapshot = grub();
+
+    assert_eq!(edit(Edit::Timeout(-1), &mut changes, &snapshot), Ok(()));
+    assert_eq!(
+        Page::read(&snapshot, &changes).timeout(),
+        GrubTimeout::WaitForKey
+    );
+    assert_eq!(code(Edit::Timeout(-2)), "invalid");
 }

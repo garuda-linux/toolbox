@@ -74,7 +74,7 @@ fn an_aur_build_asks_first_and_waits_in_the_queue() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Install")
+        .get_by_role_and_label(Role::Button, "Build and install")
         .click();
     harness.run();
 

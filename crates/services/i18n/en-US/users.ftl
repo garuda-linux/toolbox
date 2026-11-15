@@ -64,7 +64,6 @@ users-locks-denied = Which accounts are locked is not known: the password dialog
 users-locks-no-agent = Which accounts are locked is not known: no password dialog could appear, because this desktop session runs no polkit authentication agent (the program that asks for your password when an app needs more rights).
 users-locks-helper-missing = Which accounts are locked is not known: the helper of Garuda Toolbox is not installed. Reinstall Garuda Toolbox.
 users-locks-unknown = Which accounts are locked is not known: the helper of Garuda Toolbox could not read it.
-users-locks-again = Read again asks once more.
 
 users-run-password-running = Setting the password of { $user }…
 users-run-password-done = The password of { $user } is set.
@@ -151,7 +150,7 @@ users-add-more = More options
 users-add-why-no-name = Enter a user name.
 users-add-why-bad-name = The user name cannot be used. The note under it says why.
 users-add-why-no-password = Enter a password.
-users-add-why-passwords-differ = The passwords do not match.
+users-add-why-no-repeat = Repeat the password.
 users-add-why-fields = A field above says what is wrong.
 users-add-why-busy = Waits until the changes being applied are done.
 
@@ -169,16 +168,16 @@ users-password-confirm = Set password now
 
 users-groups-title = Groups of { $user }
 users-groups-note = Changes wait in the queue until you apply them. They take effect at the user's next login.
-users-choice-detail = group ID { $gid }, members: { $members }
-users-choice-primary = primary group, group ID { $gid }, members: { $members }
-users-choice-new = new group
+users-choice-detail = { $group } (group ID { $gid }, members: { $members })
+users-choice-primary = { $group } (primary group, group ID { $gid }, members: { $members })
+users-choice-new = { $group } (new group)
 
 users-remove-title = Remove the user { $user }?
 users-remove-goes = The removal waits in the queue until you apply it. This goes:
-users-remove-account = The account { $user } and its password
-users-remove-group = The group { $user }, when the user is its only member
-users-remove-memberships = Its membership in: { $groups }
-users-remove-home-goes = The home folder { $home } with every file in it, and the mail spool
+users-remove-account = • The account { $user } and its password
+users-remove-group = • The group { $user }, when the user is its only member
+users-remove-memberships = • Its membership in: { $groups }
+users-remove-home-goes = • The home folder { $home } with every file in it, and the mail spool
 users-remove-home-stays = The home folder { $home } stays on the disk.
 users-remove-delete-home = Also delete the home folder
 users-remove-confirm = Queue removal
@@ -201,9 +200,13 @@ groups-detail-new = Not added yet
 groups-tag-new = New
 groups-tag-system = System
 groups-tag-removed = Removal queued
-groups-remove = Remove { $group }…
-groups-unqueue-new = Don't add { $group }
-groups-unqueue-removal = Keep { $group }
+groups-remove = Remove…
+# What a screen reader hears for the row button above.
+groups-remove-named = Remove { $group }…
+groups-unqueue-new = Don't add
+groups-unqueue-new-named = Don't add { $group }
+groups-unqueue-removal = Keep
+groups-unqueue-removal-named = Keep { $group }
 groups-remove-title = Remove the group { $group }?
 groups-remove-detail = Its members leave it. Files that belong to the group keep its number as their group. The removal waits in the queue until you apply it.
 groups-remove-confirm = Queue removal

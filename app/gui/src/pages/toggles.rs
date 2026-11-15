@@ -9,6 +9,7 @@ mod tests;
 use std::sync::Arc;
 
 use egui::Ui;
+pub use entry::paint_glyph;
 pub use lead::{LeadChip, LeadSections, NoLead};
 use listed::{Listed, SectionChip, SectionRows};
 use toolbox_catalog::LoadProblem;
@@ -41,11 +42,16 @@ pub struct TogglePage {
     /// Its rows rest while a plan runs, see [`TogglePage::waiting_for_plans`].
     waits: bool,
     listed: RowCache<ListedKey, Listed>,
+    leads: RowCache<LeadKey, Vec<LeadChip>>,
 }
 
 /// What the catalog's rows come from besides the search: the system, the
 /// queue, whether it was read, the icon theme's pictures and the look.
 type ListedKey = (Same<Snapshot>, u64, bool, Option<usize>, Look);
+
+/// What the lead chips come from besides the search: the lead data, read
+/// from the system and the queue alone, and the look.
+type LeadKey = (Same<Snapshot>, u64, Look);
 
 impl TogglePage {
     pub const fn new(catalog: CatalogId, title: &'static str, subtitle: &'static str) -> Self {
@@ -57,6 +63,7 @@ impl TogglePage {
             section: None,
             waits: false,
             listed: RowCache::new(),
+            leads: RowCache::new(),
         }
     }
 
@@ -90,13 +97,17 @@ impl TogglePage {
 
         let query = self.search.trim().to_lowercase();
         let listed = self.listed(ui, context, &query);
-        let leads = lead.chips(&ctx, data, &query);
+        let rest = (Same::of(context.snapshot), context.revision, Look::of(ui));
+        let leads = self
+            .leads
+            .get(&[query.as_str()], rest, || lead.chips(&ctx, data, &query));
+
         self.notices(ui, context, listed.unknown + lead.unread(data));
         self.chips(ui, &leads, &listed.chips);
         ui.add_space(ui.tokens().sizes.filters_gap);
 
         let mut any = false;
-        for chip in &leads {
+        for chip in &*leads {
             if self
                 .section
                 .as_deref()
@@ -121,12 +132,10 @@ impl TogglePage {
         }
     }
 
-    pub fn steps(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> Vec<(String, String)> {
-        self.listed(ui, context, "")
-            .chips
-            .iter()
-            .map(|chip| (chip.id.clone(), chip.title.clone()))
-            .collect()
+    /// The catalog's sections, shared with the cache, so a frame that asks
+    /// twice copies no title.
+    pub fn steps(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> Steps {
+        Steps(self.listed(ui, context, ""))
     }
 
     /// The notices and the rows of the section `id` alone, without its
@@ -213,11 +222,11 @@ impl TogglePage {
             .chain(sections.iter().map(|chip| chip.tally))
             .sum();
 
-        let read = sections.iter().all(|chip| chip.read);
-        let all_count = count_text(&ctx, tally, read);
+        let read = sections.iter().all(|chip| chip.read) && leads.iter().all(|lead| lead.read);
+        let all_count = shown_count(&ctx, tally, read);
         let leads = leads
             .iter()
-            .map(|lead| (Some(lead.id), &*lead.title, Some(lead.count.as_str())));
+            .map(|lead| (Some(lead.id), &*lead.title, lead.count.as_deref()));
 
         let sections = sections.iter().map(|chip| {
             (
@@ -228,7 +237,7 @@ impl TogglePage {
         });
 
         let options: Vec<(Option<&str>, &str, Option<&str>)> =
-            std::iter::once((None, &*all, Some(all_count.as_str())))
+            std::iter::once((None, &*all, all_count.as_deref()))
                 .chain(leads)
                 .chain(sections)
                 .collect();
@@ -287,6 +296,28 @@ impl TogglePage {
     }
 }
 
+/// The Setup Assistant's steps: each catalog section's id and title.
+#[derive(Clone, Debug, Default)]
+pub struct Steps(Arc<Listed>);
+
+impl Steps {
+    pub fn is_empty(&self) -> bool {
+        self.0.chips.is_empty()
+    }
+
+    /// Each step's id and title, in order.
+    pub fn pairs(&self) -> impl Iterator<Item = (&str, &str)> {
+        self.0
+            .chips
+            .iter()
+            .map(|chip| (chip.id.as_str(), chip.title.as_str()))
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.chips.len()
+    }
+}
+
 /// A catalog text in the user's language, else the catalog's English.
 pub fn catalog_text(ctx: &egui::Context, catalog: CatalogId, id: &str, english: &str) -> String {
     i18n::text_or(ctx, &format!("catalog-{}-{id}", catalog.as_str()), english).into_owned()
@@ -321,6 +352,12 @@ pub fn count_text(ctx: &egui::Context, tally: Tally, read: bool) -> String {
 
     let total = tally.total.to_string();
     i18n::text_with(ctx, "toggles-section-count-unread", &[("total", &total)]).into_owned()
+}
+
+/// [`count_text`], or none while nothing countable shows, since "0/0"
+/// counts nothing.
+pub fn shown_count(ctx: &egui::Context, tally: Tally, read: bool) -> Option<String> {
+    (tally.total > 0).then(|| count_text(ctx, tally, read))
 }
 
 /// `None` for a stale id or an unmet entry, whose switch already rests.

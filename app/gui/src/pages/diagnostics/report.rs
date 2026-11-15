@@ -1,17 +1,15 @@
 //! The report with the programs' colours, in the theme's ANSI palette as
 //! the Console has it, under a header line: the report's name, when it
-//! came in, its line count, then Wrap, the search and the report's
-//! buttons. A report holds up to megabytes, so only the rows in view are
-//! laid out. Long lines scroll sideways as in a terminal, or wrap.
+//! came in, its line count, then the search and the report's buttons. A
+//! report holds up to megabytes, so only the rows in view are laid out.
+//! Long lines wrap at the edge.
 
-use egui::text::{LayoutJob, TextFormat};
-use egui::{FontId, Label, ScrollArea, TextStyle, Ui};
+use egui::{Label, ScrollArea, TextStyle, Ui};
 use toolbox_calendar::Utc;
-use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
-use toolbox_gui_kit::palette::{self, Palette};
-use toolbox_gui_kit::terminal_colors::{Ansi, resolve};
-use toolbox_gui_kit::widgets::{SearchTexts, chip, rich, search_field};
+use toolbox_gui_kit::terminal_colors::Ansi;
+use toolbox_gui_kit::widgets::{SearchTexts, pill_width, rich, search_field};
+use toolbox_gui_kit::{UiExt as _, palette};
 use toolbox_pty::Run;
 use toolbox_services::diagnostics::view::{self, Row};
 
@@ -19,6 +17,7 @@ use super::DiagnosticsPage;
 use crate::diagnostics::Diagnostics;
 use crate::i18n;
 use crate::pages::PageContext;
+use crate::share::rows::{character_count, layout};
 use crate::share::view::padded_card;
 
 /// The view never shrinks below this, in points, even at the bottom of a
@@ -61,24 +60,21 @@ impl DiagnosticsPage {
             let height = (room - (ui.cursor().top() - top)).max(MIN_HEIGHT);
 
             // A monospaced font fits this many characters in each row.
+            // Lines always wrap, as in the upload preview, so the report
+            // never scrolls sideways.
             let glyph = ui.fonts_mut(|fonts| fonts.glyph_width(&font, 'M'));
-            let wrap = self.wrap;
-            let columns = wrap.then(|| character_count(ui.available_width() / glyph.max(1.0)));
-            let rows = self.rows(lines, columns);
+            let columns = character_count(ui.available_width() / glyph.max(1.0));
+            let rows = self.rows(lines, Some(columns));
 
-            // Long lines run past the edge, a bar at rest says so.
             toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
-            let area = if wrap {
-                ScrollArea::vertical()
-            } else {
-                ScrollArea::both()
-            };
 
-            area.id_salt("diagnostics-report")
+            // show_rows counts the spacing of this ui between rows.
+            ui.spacing_mut().item_spacing.y = 0.0;
+            ScrollArea::vertical()
+                .id_salt("diagnostics-report")
                 .auto_shrink([false, true])
                 .max_height(height)
                 .show_rows(ui, row_height, rows.len(), |ui, shown| {
-                    ui.spacing_mut().item_spacing.y = 0.0;
                     for row in rows.get(shown).unwrap_or_default() {
                         let runs = lines.get(row.line).map_or(&[][..], Vec::as_slice);
                         let job = layout(runs, *row, &font, (&ansi, &palette));
@@ -103,11 +99,14 @@ impl DiagnosticsPage {
         ui.horizontal_wrapped(|ui| {
             ui.label(rich(ui, &caption, Weight::SemiBold, BODY, tokens.text));
             ui.label(rich(ui, &meta, Weight::Regular, SMALL, tokens.secondary));
-            ui.add_space(tokens.sizes.text_to_control);
 
-            let wrap = i18n::text(&ctx, "diagnostics-wrap");
-            if chip(ui, &wrap, None, self.wrap).clicked() {
-                self.wrap ^= true;
+            // The controls move under the title together rather than one
+            // by one, so the search stays beside the buttons it filters for.
+            let controls = tokens.sizes.text_to_control + controls_width(ui);
+            if ui.available_size_before_wrap().x < controls {
+                ui.end_row();
+            } else {
+                ui.add_space(tokens.sizes.text_to_control);
             }
 
             let name = i18n::text(&ctx, "diagnostics-search");
@@ -161,25 +160,13 @@ fn meta(ctx: &egui::Context, collected: Option<u64>, line_count: usize) -> Strin
     .into_owned()
 }
 
-/// The whole characters that fit `room`, at least one.
-#[expect(
-    clippy::as_conversions,
-    clippy::cast_possible_truncation,
-    clippy::cast_sign_loss,
-    reason = "a row holds a few hundred characters at most"
-)]
-const fn character_count(room: f32) -> usize {
-    let whole = room as usize;
-    if whole == 0 { 1 } else { whole }
-}
-
-/// The piece of one line `row` holds as one job, each run in its colour.
-fn layout(runs: &[Run], row: Row, font: &FontId, (ansi, palette): (&Ansi, &Palette)) -> LayoutJob {
-    let mut job = LayoutJob::default();
-    for (text, run) in view::piece(runs, row.start, row.end) {
-        let color = resolve(run.style.fg, ansi, palette);
-        job.append(&text, 0.0, TextFormat::simple(font.clone(), color));
-    }
-
-    job
+/// The search and the report's two buttons side by side.
+fn controls_width(ui: &Ui) -> f32 {
+    let ctx = ui.ctx();
+    let gap = ui.spacing().item_spacing.x;
+    ["diagnostics-copy", "diagnostics-share"]
+        .iter()
+        .map(|id| gap + pill_width(ui, &i18n::text(ctx, id)))
+        .sum::<f32>()
+        + SEARCH_WIDTH
 }

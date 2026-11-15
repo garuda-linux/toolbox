@@ -4,8 +4,8 @@ use toolbox_core::features::console::ending::Ending;
 use toolbox_core::features::toggles::summary::summary as queued;
 use toolbox_gui_kit::fonts::{SECTION, Weight};
 use toolbox_gui_kit::widgets::{
-    self as widgets, ActionRow, ButtonKind, DialogWidth, Question, Tone, card, card_row,
-    pill_button, rich,
+    self as widgets, ActionRow, ButtonKind, DialogWidth, Question, TileSize, Tone, card, card_row,
+    pill_button, rich, status_tile, text_link,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -23,10 +23,80 @@ const LINKS: [(&str, &str); 3] = [
     ("setup-arch-wiki", about::ARCH_WIKI),
 ];
 
+/// The names of what the assistant's picks queue, as the summary and the
+/// success page list them.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Picks {
+    install: Vec<String>,
+    remove: Vec<String>,
+    units: Vec<String>,
+}
+
+impl Picks {
+    /// `None` while the catalog could not be read.
+    pub fn of(ctx: &egui::Context, context: &PageContext<'_>) -> Option<Self> {
+        let Ok(catalog) = &context.catalogs.setup.catalog else {
+            return None;
+        };
+
+        let picks = queued(catalog, context.snapshot, context.changes);
+        let names = |entries: &[&ToggleEntry]| -> Vec<String> {
+            entries
+                .iter()
+                .map(|entry| catalog_text(ctx, CatalogId::Setup, entry.id(), entry.title()))
+                .collect()
+        };
+
+        Some(Self {
+            install: names(&picks.install),
+            remove: names(&picks.remove),
+            units: picks
+                .units
+                .iter()
+                .chain(&picks.user_units)
+                .map(ToString::to_string)
+                .collect(),
+        })
+    }
+
+    const fn is_empty(&self) -> bool {
+        self.install.is_empty() && self.remove.is_empty() && self.units.is_empty()
+    }
+
+    /// A row per kind of change that has one, headed by the text `ids`
+    /// name for installs, removals and services.
+    fn card(&self, ui: &mut Ui, [install, remove, units]: [&str; 3]) {
+        let ctx = ui.ctx().clone();
+        let groups = [
+            (install, &self.install),
+            (remove, &self.remove),
+            (units, &self.units),
+        ];
+
+        card(ui, |ui| {
+            let shown = groups.iter().filter(|(_, listed)| !listed.is_empty());
+            for (index, (id, listed)) in shown.enumerate() {
+                let count = listed.len().to_string();
+                let heading = i18n::text_with(&ctx, id, &[("count", &count)]);
+                let listing = listed.join(", ");
+                card_row(ui, index == 0, |ui| {
+                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, &heading)
+                        .detail(&listing)
+                        .show_without_actions(ui);
+                });
+            }
+        });
+    }
+}
+
 fn title(ui: &mut Ui, text: &str) {
+    label(ui, text);
+    ui.add_space(ui.tokens().sizes.heading_gap);
+}
+
+fn label(ui: &mut Ui, text: &str) {
     let color = ui.tokens().text;
     ui.label(rich(ui, text, Weight::Bold, SECTION, color));
-    ui.add_space(ui.tokens().sizes.heading_gap);
 }
 
 fn paragraph(ui: &mut Ui, text: &str) {
@@ -61,50 +131,16 @@ pub fn step_heading(ui: &mut Ui, (number, count): (usize, usize), name: &str) {
 pub fn summary(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     title(ui, &i18n::text(&ctx, "setup-summary"));
-    let Ok(catalog) = &context.catalogs.setup.catalog else {
+    let Some(picks) = Picks::of(&ctx, context) else {
         return;
     };
 
-    let picks = queued(catalog, context.snapshot, context.changes);
     if picks.is_empty() {
         paragraph(ui, &i18n::text(&ctx, "setup-nothing"));
         return;
     }
 
-    let names = |entries: &[&ToggleEntry]| -> Vec<String> {
-        entries
-            .iter()
-            .map(|entry| catalog_text(&ctx, CatalogId::Setup, entry.id(), entry.title()))
-            .collect()
-    };
-
-    let units: Vec<String> = picks
-        .units
-        .iter()
-        .chain(&picks.user_units)
-        .map(ToString::to_string)
-        .collect();
-
-    card(ui, |ui| {
-        let groups = [
-            ("setup-install", names(&picks.install)),
-            ("setup-remove", names(&picks.remove)),
-            ("setup-units", units),
-        ];
-
-        let shown = groups.iter().filter(|(_, listed)| !listed.is_empty());
-        for (index, (id, listed)) in shown.enumerate() {
-            let count = listed.len().to_string();
-            let heading = i18n::text_with(&ctx, id, &[("count", &count)]);
-            let listing = listed.join(", ");
-            card_row(ui, index == 0, |ui| {
-                ActionRow::new(icons::CHECKMARK, Tone::Neutral, &heading)
-                    .detail(&listing)
-                    .show_without_actions(ui);
-            });
-        }
-    });
-
+    picks.card(ui, ["setup-install", "setup-remove", "setup-units"]);
     ui.add_space(ui.tokens().sizes.card_gap);
     paragraph(ui, &i18n::text(&ctx, "setup-review-note"));
 }
@@ -112,7 +148,12 @@ pub fn summary(ui: &mut Ui, context: &PageContext<'_>) {
 pub fn success(ui: &mut Ui, context: &PageContext<'_>, page: &mut SetupPage) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    title(ui, &text("setup-success"));
+    ui.horizontal(|ui| {
+        _ = status_tile(ui, TileSize::Row, Tone::Success);
+        label(ui, &text("setup-success"));
+    });
+    ui.add_space(ui.tokens().sizes.heading_gap);
+
     if !page.told_home {
         page.told_home = true;
         context.commands.send(HomeCommand::SetupFinished);
@@ -127,6 +168,14 @@ pub fn success(ui: &mut Ui, context: &PageContext<'_>, page: &mut SetupPage) {
     };
 
     paragraph(ui, &text(ready));
+    if changed
+        && let Some((_, picks)) = &page.applied
+        && !picks.is_empty()
+    {
+        picks.card(ui, ["setup-installed", "setup-removed", "setup-enabled"]);
+        ui.add_space(ui.tokens().sizes.card_gap);
+    }
+
     if changed {
         paragraph(ui, &text("setup-restart-note"));
     }
@@ -148,18 +197,25 @@ pub fn success(ui: &mut Ui, context: &PageContext<'_>, page: &mut SetupPage) {
         }
     });
 
-    ui.add_space(ui.tokens().sizes.card_gap);
-    ui.horizontal(|ui| {
-        for (id, url) in LINKS {
-            if pill_button(ui, &text(id), ButtonKind::Soft).clicked() {
-                crate::links::open(&ctx, url);
-            }
-        }
-    });
+    ui.add_space(ui.tokens().sizes.block_gap);
+    links(ui, &text);
 
     if page.asking_to_restart {
         restart(&ctx, context, page);
     }
+}
+
+fn links(ui: &mut Ui, text: &impl Fn(&str) -> String) {
+    let ctx = ui.ctx().clone();
+    ui.horizontal_wrapped(|ui| {
+        ui.spacing_mut().item_spacing.x = ui.tokens().sizes.block_gap;
+        for (id, url) in LINKS {
+            let name = text(id);
+            if text_link(ui, &name, &name).on_hover_text(url).clicked() {
+                crate::links::open(&ctx, url);
+            }
+        }
+    });
 }
 
 fn restart(ctx: &egui::Context, context: &PageContext<'_>, page: &mut SetupPage) {

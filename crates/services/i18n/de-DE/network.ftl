@@ -29,7 +29,7 @@ network-address-asking = Wird abgefragt…
 network-address-failed = Konnte nicht ermittelt werden
 network-address-show = Öffentliche Adresse anzeigen
 network-address-again = Erneut versuchen
-network-address-copy = Kopieren
+network-address-copy = Öffentliche Adresse kopieren
 network-address-hide = Ausblenden
 network-address-note = Die öffentliche Adresse wird erst beim Klick auf die Schaltfläche bei geoip.kde.org abgefragt und nicht gespeichert.
 
@@ -52,7 +52,6 @@ network-service-NetworkManager-service = NetworkManager
 network-service-connman-service = ConnMan
 network-service-bluetooth-service = Bluetooth
 network-service-geoclue-service = Ortungsdienst (GeoClue)
-network-service-missing = Nicht installiert
 network-service-running = Läuft
 network-service-failed = Fehlgeschlagen
 network-service-starting = Wird gestartet
@@ -115,6 +114,8 @@ network-hardware-pci-missing = PCI-Geräte werden nicht angezeigt: lspci ist nic
 network-hardware-pci-failed = PCI-Geräte werden nicht angezeigt: lspci ist fehlgeschlagen.
 network-hardware-usb-missing = USB-Geräte werden nicht angezeigt: lsusb ist nicht installiert (Paket usbutils).
 network-hardware-usb-failed = USB-Geräte werden nicht angezeigt: lsusb ist fehlgeschlagen.
+network-hardware-queue-pciutils = pciutils vormerken
+network-hardware-unqueue-pciutils = pciutils zurücknehmen
 
 network-tests = Verbindungstests
 network-tests-detail = Beide Tests laufen mit deinen Benutzerrechten und zeigen ihre Ausgabe in der Konsole.

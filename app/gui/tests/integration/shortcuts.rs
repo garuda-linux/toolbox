@@ -102,8 +102,8 @@ fn escape_closes_the_palette() {
 
 #[test]
 fn ctrl_f_puts_the_cursor_into_the_page_search() {
-    let mut harness = launch(Setup::default());
-    press(&mut harness, Key::Num7);
+    // The search shows once a list exists, so the units are read first.
+    let (mut harness, _runtime) = crate::services::services();
 
     press(&mut harness, Key::F);
 

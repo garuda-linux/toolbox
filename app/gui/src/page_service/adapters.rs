@@ -12,6 +12,7 @@ use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::UnitScope;
 
 use super::{Answer, Handled, PageService};
+use crate::artwork::Artwork;
 use crate::boot::{Boot, FileKind};
 use crate::command::AppCommand;
 use crate::home::Home;
@@ -270,6 +271,14 @@ impl PageService for Home {
         Vec::new()
     }
 
+    fn plan_finished(&mut self, _succeeded: bool) -> Vec<AppCommand> {
+        Self::plan_finished(self);
+        Vec::new()
+    }
+}
+
+/// A failed plan may have installed some of its packages too.
+impl PageService for Artwork {
     fn plan_finished(&mut self, _succeeded: bool) -> Vec<AppCommand> {
         Self::plan_finished(self);
         Vec::new()

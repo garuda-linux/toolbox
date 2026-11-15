@@ -135,9 +135,10 @@ tint. The header band shows the blur under a neutral scrim.
   until they reach 4.5:1 on the solid `terminal` and the thinnest glass.
 - `cover_page_bottom` ends the scroll area at the Console's top while the
   page paints on under the sheet, so the blur shows the page.
-- `sidebar`, `pane`, the status bar and the Console sheet are `window` with
-  `header_scrim` on it, opaque, so every text that reads on `window` reads
-  there (`tokens/tests/sidebar.rs`).
+- `sidebar` is `window` with `header_scrim` on it, opaque, so every text
+  that reads on `window` reads there (`tokens/tests/sidebar.rs`). The
+  status bar and the Console sheet are `pane`, which stands apart from the
+  `terminal` and from `sidebar`.
 
 ## Errors
 
@@ -164,7 +165,9 @@ prints the `String` as the usage error.
 - Slow reads run through `reader` on blocking threads. Requests during a
   read become one more read. The snapshot reads at start, after every plan
   and when the window comes to the front. Page reads go through a `Lane`:
-  only the newest answer of each kind lands.
+  only the newest answer of each kind lands. A read a page asks for again
+  and again (open, Refresh, after a plan) is an `Asked`: one runs at a
+  time, and asks meanwhile become one more read.
 - `apply` runs root segments through the helper, user segments in the app.
 - Every background result wakes the frame with `ctx.request_repaint()`.
 - A panic in a task reaches the log and the crash file (`panics.rs`).
@@ -219,7 +222,11 @@ prints the `String` as the usage error.
      toggle page names its catalog's page (`CatalogId::page`).
    - A click that needs `App` state (a run at once, a dialog, the
      preferences) stays in `app/gui/src/app/<name>.rs` and sets the
-     refusal with the service's `set_refusal`. Its match keeps an empty
+     refusal with the service's `set_refusal`. A page whose part is a
+     single short match keeps it in `app/commands.rs` instead, an answer
+     in `app/answers.rs`. Its command enum lives in
+     `app/gui/src/command/<name>.rs`, or in `command.rs` with its `From`
+     in `command/conversions.rs` when it is a few lines. Its match keeps an empty
      arm for each command a service takes, as no match on an enum may
      use a wildcard.
 6. Texts in `crates/services/i18n/en-US/<name>.ftl` and `de-DE/<name>.ftl`.

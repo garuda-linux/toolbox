@@ -58,7 +58,7 @@ impl RemoveUser {
         let user = self.user.as_str();
         let home = self.home.as_str();
         let with = |id: &str, key: &'static str, value: &str| {
-            format!("• {}", i18n::text_with(ctx, id, &[(key, value)]))
+            i18n::text_with(ctx, id, &[(key, value)]).into_owned()
         };
 
         ui.add(Label::new(i18n::text(ctx, "users-remove-goes")).wrap());

@@ -64,6 +64,7 @@ fn group_rows_show_members_queued_groups_and_what_can_go() {
     assert_eq!(find("makers").queued, Some(Toggle::Off));
     assert_eq!(find("wheel").queued, None);
     assert!(find("wheel").system && !find("makers").system);
+    assert!(find("nico").primary && !find("makers").primary && !find("crafts").primary);
     assert_eq!(
         find("makers").members,
         BTreeSet::from([user_name("ada"), user_name("nico")])

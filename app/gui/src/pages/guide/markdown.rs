@@ -3,10 +3,11 @@
 //! reader.
 
 mod spans;
+mod table;
 
 use egui::{
-    Align, Color32, CornerRadius, Frame, Grid, Label, Layout, Margin, RichText, ScrollArea, Sense,
-    Stroke, TextStyle, Ui, vec2,
+    Align, Color32, CornerRadius, Frame, Label, Layout, Margin, RichText, ScrollArea, Sense,
+    TextStyle, Ui, vec2,
 };
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, Weight};
 use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS};
@@ -14,13 +15,11 @@ use toolbox_gui_kit::widgets::{
     TileSize, Tone, icon_button, icon_button_width, paint_status_tile, rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_guide::{Block, Callout, CalloutKind, Code, Heading, List, Table};
+use toolbox_guide::{Block, Callout, CalloutKind, Code, Heading, List};
 
 use super::Jump;
 use crate::i18n;
 
-/// The widest a table cell runs before its text wraps.
-const CELL_WIDTH: f32 = 340.0;
 /// The room for a list item's bullet or number.
 const MARKER_WIDTH: f32 = 26.0;
 const PAGE_TITLE: f32 = 1.8;
@@ -30,12 +29,13 @@ const MINOR: f32 = 1.15;
 pub(super) struct Reader<'target> {
     pub target: Option<&'target str>,
     pub jump: Option<Jump>,
-    pub reached: bool,
     pub headings: Vec<(String, f32)>,
     /// A code block went to the clipboard, which the page tells the user.
     pub copied: bool,
     /// The source and description of the picture clicked to see it large.
     pub enlarged: Option<(String, String)>,
+    /// The spans drawn now sit in a table cell.
+    pub in_table: bool,
 }
 
 impl<'target> Reader<'target> {
@@ -43,10 +43,10 @@ impl<'target> Reader<'target> {
         Self {
             target,
             jump: None,
-            reached: false,
             headings: Vec::new(),
             copied: false,
             enlarged: None,
+            in_table: false,
         }
     }
 }
@@ -64,7 +64,7 @@ fn one(ui: &mut Ui, block: &Block, reader: &mut Reader<'_>) {
         Block::Heading(heading) => title(ui, heading, reader),
         Block::Paragraph(text) => spans::show(ui, text, Weight::Regular, reader),
         Block::List(list) => items(ui, list, reader),
-        Block::Table(table) => grid(ui, table, reader),
+        Block::Table(table) => table::show(ui, table, reader),
         Block::Code(code) => code_block(ui, code, reader),
         Block::Callout(callout) => note(ui, callout, reader),
         Block::Image(image) => super::picture::show(ui, image, reader),
@@ -98,7 +98,6 @@ fn title(ui: &mut Ui, heading: &Heading, reader: &mut Reader<'_>) {
 
     if reader.target == Some(heading.anchor.as_str()) {
         shown.scroll_to_me(Some(Align::TOP));
-        reader.reached = true;
     }
 
     if heading.level > 1 {
@@ -134,43 +133,6 @@ fn items(ui: &mut Ui, list: &List, reader: &mut Reader<'_>) {
             });
         });
     }
-}
-
-fn grid(ui: &mut Ui, table: &Table, reader: &mut Reader<'_>) {
-    let tokens = ui.tokens();
-    Frame::new()
-        .stroke(Stroke::new(1.0, tokens.outline))
-        .corner_radius(CornerRadius::same(RADIUS))
-        .inner_margin(Margin::same(12))
-        .show(ui, |ui| {
-            ScrollArea::horizontal().show(ui, |ui| {
-                Grid::new("table")
-                    .striped(true)
-                    .spacing(vec2(20.0, 10.0))
-                    .show(ui, |ui| {
-                        for cell in &table.head {
-                            cell_text(ui, cell, Weight::SemiBold, reader);
-                        }
-
-                        ui.end_row();
-
-                        for row in &table.rows {
-                            for cell in row {
-                                cell_text(ui, cell, Weight::Regular, reader);
-                            }
-
-                            ui.end_row();
-                        }
-                    });
-            });
-        });
-}
-
-fn cell_text(ui: &mut Ui, cell: &[toolbox_guide::Span], weight: Weight, reader: &mut Reader<'_>) {
-    ui.vertical(|ui| {
-        ui.set_max_width(CELL_WIDTH);
-        spans::show(ui, cell, weight, reader);
-    });
 }
 
 /// The copy button sits beside the code rather than over it, so it never

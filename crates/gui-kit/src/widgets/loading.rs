@@ -8,6 +8,7 @@ use std::time::Duration;
 use egui::{Rect, Response, Role, Sense, TextStyle, Ui, WidgetInfo, pos2, vec2};
 
 use super::line;
+use super::mark_word::mark_and_word;
 use crate::fonts::{BODY, Weight};
 use crate::{theme, tokens};
 
@@ -25,7 +26,7 @@ pub fn loading_indicator(ui: &mut Ui, reason: &str) -> Response {
 
 /// The dots beside words that already say what is waited for, such as a
 /// status tag. They carry no name, so a screen reader hears the words once.
-pub fn loading_dots(ui: &mut Ui) -> Response {
+pub(super) fn loading_dots(ui: &mut Ui) -> Response {
     let height = ui.text_style_height(&TextStyle::Body);
     let (rect, response) = ui.allocate_exact_size(dots_size(height), Sense::hover());
     paint_dots(ui, rect);
@@ -37,22 +38,13 @@ pub fn loading_label(ui: &mut Ui, text: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
     let height = ui.text_style_height(&TextStyle::Body);
     let galley = line(ui, text, Weight::Regular, BODY, tokens.secondary);
-    let dots = dots_size(height);
-    let gap = tokens.sizes.text_to_icon;
-    let size = vec2(dots.x + gap + galley.size().x, height.max(galley.size().y));
-    let (rect, response) = ui.allocate_exact_size(size, Sense::hover());
-    response.widget_info(|| WidgetInfo::labeled(Role::ProgressIndicator, true, text));
-
-    let dots_rect = Rect::from_min_size(pos2(rect.left(), rect.center().y - dots.y / 2.0), dots);
-    paint_dots(ui, dots_rect);
-    let at = pos2(
-        dots_rect.right() + gap,
-        rect.center().y - galley.size().y / 2.0,
-    );
-
-    ui.painter().galley(at, galley, tokens.secondary);
-
-    response
+    mark_and_word(
+        ui,
+        (dots_size(height), tokens.sizes.text_to_icon),
+        galley,
+        (Role::ProgressIndicator, text),
+        paint_dots,
+    )
 }
 
 fn dots_size(height: f32) -> egui::Vec2 {

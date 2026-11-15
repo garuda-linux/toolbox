@@ -3,7 +3,7 @@
 use egui::{Align, Label, Layout, Rect, Ui, UiBuilder, pos2, vec2};
 
 use super::icon_tile::{TileSize, icon_tile};
-use super::layout::{MIN_TEXT_WIDTH, SETTLED};
+use super::layout::{MIN_TEXT_WIDTH, Redraw, remember};
 use super::rich;
 use crate::fonts::{BODY, SECTION, SMALL, TITLE, Weight};
 use crate::icons::Icon;
@@ -44,13 +44,16 @@ impl<'a> SectionHeading<'a> {
             icon_tile(ui, TileSize::Line, self.icon);
             let title = ui.label(rich(ui, self.title, Weight::Bold, SECTION, tokens.text));
             mark_heading(ui, &title, self.title, 2);
-            ui.label(rich(
-                ui,
-                self.detail,
-                Weight::Regular,
-                SMALL,
-                tokens.secondary,
-            ));
+            if !self.detail.is_empty() {
+                ui.label(rich(
+                    ui,
+                    self.detail,
+                    Weight::Regular,
+                    SMALL,
+                    tokens.secondary,
+                ));
+            }
+
             if let Some((width, actions)) = self.trailing {
                 ui.allocate_ui_with_layout(
                     vec2(ui.available_width().max(width), 0.0),
@@ -241,11 +244,14 @@ fn trailing_slot(
         .response
         .rect;
 
-    if (controls.size() - measured).length() > SETTLED {
-        ui.data_mut(|data| data.insert_temp(measured_id, controls.size()));
-        ui.ctx()
-            .request_discard("the header controls changed their size");
-    }
+    let reason = "the header controls changed their size";
+    remember(
+        ui,
+        measured_id,
+        Some(measured),
+        controls.size(),
+        (Redraw::Discards, reason),
+    );
 
     controls
 }

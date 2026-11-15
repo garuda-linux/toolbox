@@ -8,17 +8,18 @@ use egui::{
 
 use super::card::in_card_row;
 use super::check::partial;
-use super::press::{Pointer, faded};
+use super::painted_row::{PaintedRow, painted_row};
+use super::press::faded;
+use super::rich;
 use super::text::cut;
-use super::{focus_ring, rich};
 use crate::fonts::{BODY, SMALL, Weight};
-use crate::theme::RADIUS;
 use crate::tokens;
 
 pub const CHECK_ROW_HEIGHT: f32 = 40.0;
 const HEIGHT_WITH_LINE: f32 = 56.0;
-/// How far the hover fill reaches left of the box, into the margin, so
-/// the box lines up with the fields and text of its column.
+/// How far the target, its hover fill and its ring reach left of the box,
+/// into the margin, so the box lines up with the fields and text of its
+/// column.
 const PADDING_X: f32 = 12.0;
 const BOX: f32 = 18.0;
 const BOX_RADIUS: u8 = 4;
@@ -87,14 +88,21 @@ fn show(ui: &mut Ui, on: bool, words: Words<'_>, enabled: bool) -> Response {
         CHECK_ROW_HEIGHT
     };
 
-    let width = ui.available_width();
-    let (rect, mut response) = ui.allocate_exact_size(vec2(width, height), sense);
+    // Outside a card row the fill reaches into the margin, so the box
+    // lines up with the column. A card row paints its own fill.
+    let inside = in_card_row(ui);
+    let bleed = if inside { 0.0 } else { PADDING_X };
+    let row = painted_row(ui, height, sense, bleed);
+    let mut response = row.response.clone();
     response.widget_info(|| WidgetInfo::selected(Role::CheckBox, enabled, on, words.label));
     if !words.tooltip.is_empty() {
         response = response.on_hover_text(words.tooltip);
     }
 
-    let was_cut = ui.is_rect_visible(rect) && paint(ui, &response, on, words, enabled);
+    // A second, wider fill inside a card row's own would nest two.
+    let lit = enabled && !inside;
+    let was_cut =
+        ui.is_rect_visible(row.response.rect) && paint(ui, &row, on, words, (enabled, lit));
 
     // A row with its own tooltip says more than the label already.
     if was_cut && words.tooltip.is_empty() {
@@ -105,17 +113,18 @@ fn show(ui: &mut Ui, on: bool, words: Words<'_>, enabled: bool) -> Response {
 }
 
 /// Draws the row. Returns whether the label was cut to fit.
-fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool) -> bool {
-    let rect = response.rect;
+fn paint(
+    ui: &Ui,
+    row: &PaintedRow,
+    on: bool,
+    words: Words<'_>,
+    (enabled, lit): (bool, bool),
+) -> bool {
+    let rect = row.content;
     let tokens = tokens::current(ui.ctx());
     let fade = |color| faded(ui, color, enabled);
-
-    // A second, wider fill inside a card row's own would nest two.
-    let under = Pointer::of_focusable(response);
-    if enabled && under.is_under() && !in_card_row(ui) {
-        let fill = under.fill(&tokens, tokens.hover);
-        ui.painter()
-            .rect_filled(bleed(rect), CornerRadius::same(RADIUS), fill);
+    if lit {
+        row.paint_fill(ui);
     }
 
     let mid = rect.center().y;
@@ -161,10 +170,6 @@ fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool
         );
     }
 
-    focus_ring(ui, response, RADIUS);
+    row.paint_ring(ui);
     was_cut
-}
-
-fn bleed(rect: Rect) -> Rect {
-    Rect::from_min_max(pos2(rect.left() - PADDING_X, rect.top()), rect.max)
 }

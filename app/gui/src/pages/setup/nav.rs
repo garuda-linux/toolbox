@@ -16,6 +16,7 @@ use super::{SetupPage, Stage};
 use crate::command::UiCommand;
 use crate::i18n;
 use crate::pages::PageContext;
+use crate::pages::toggles::Steps;
 
 const NARROW_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_narrow;
 
@@ -24,8 +25,8 @@ const NARROW_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_cont
 const BAR_HEIGHT: f32 = 4.0;
 const BAR_RADIUS: u8 = 2;
 
-pub fn stages(ctx: &egui::Context, steps: &[(String, String)]) -> Vec<(Stage, String)> {
-    let numbered = steps.iter().enumerate().map(|(index, (id, title))| {
+pub fn stages(ctx: &egui::Context, steps: &Steps) -> Vec<(Stage, String)> {
+    let numbered = steps.pairs().enumerate().map(|(index, (id, title))| {
         let number = (index + 1).to_string();
         let name = i18n::text_with(
             ctx,
@@ -33,7 +34,7 @@ pub fn stages(ctx: &egui::Context, steps: &[(String, String)]) -> Vec<(Stage, St
             &[("number", &number), ("title", title)],
         );
 
-        (Stage::Step(id.clone()), name.into_owned())
+        (Stage::Step(id.to_owned()), name.into_owned())
     });
 
     std::iter::once((
@@ -65,6 +66,7 @@ pub fn bar(
         let back = ui
             .add_enabled_ui(current.unwrap_or_default() > 0, |ui| {
                 pill_button(ui, &text("setup-back"), ButtonKind::Soft)
+                    .on_hover_text(text("setup-back-key"))
             })
             .inner;
 
@@ -76,7 +78,10 @@ pub fn bar(
         // stays put while Next changes its words.
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             let next = next_label(context, page);
-            if pill_button(ui, &text(next), ButtonKind::Primary).clicked() {
+            let pressed = pill_button(ui, &text(next), ButtonKind::Primary)
+                .on_hover_text(text("setup-next-key"));
+
+            if pressed.clicked() {
                 moved |= forward(context, page, stages, current);
             }
 
@@ -96,16 +101,6 @@ pub fn bar(
         });
     });
 
-    let secondary = ui.tokens().secondary;
-    ui.vertical_centered(|ui| {
-        ui.label(rich(
-            ui,
-            &text("setup-keys"),
-            Weight::Regular,
-            SMALL,
-            secondary,
-        ));
-    });
     moved
 }
 
@@ -236,6 +231,9 @@ fn forward(
         page.review_at.get_or_insert(context.plans.finished);
         context.commands.send(UiCommand::ReviewChanges);
     } else {
+        // No apply ran, so an earlier one has nothing to say here.
+        page.ending = None;
+        page.applied = None;
         page.stage = Stage::Success;
     }
 

@@ -3,8 +3,14 @@
     "page-about-subtitle": {
       "string": "Wartung und Einrichtung für dein Garuda Linux."
     },
-    "about-version": {
-      "string": "Version"
+    "about-hero-credits": {
+      "string": "Vom Garuda-Linux-Team"
+    },
+    "about-copy-details": {
+      "string": "Systemdetails kopieren"
+    },
+    "about-details-copied": {
+      "string": "Systemdetails in die Zwischenablage kopiert."
     },
     "about-licence": {
       "string": "Lizenz"
@@ -187,6 +193,9 @@
     },
     "account-refusal-home-taken": {
       "string": "Dieses Home-Verzeichnis wird bereits von einem anderen Konto verwendet."
+    },
+    "account-refusal-busy": {
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind."
     }
   },
   "boot": {
@@ -298,6 +307,9 @@
     "boot-default-helper-missing": {
       "string": "Die Einträge des Bootmenüs fehlen, weil das Hilfsprogramm von Garuda Toolbox nicht installiert ist. Installiere Garuda Toolbox neu."
     },
+    "boot-default-broken": {
+      "string": "Die Einträge des Bootmenüs fehlen, weil pkexec auf diesem System nicht laufen kann."
+    },
     "boot-default-unknown": {
       "string": "Das Bootmenü konnte nicht gelesen werden, daher fehlen seine Einträge. Mit „Neu einlesen“ versuchst du es erneut."
     },
@@ -329,7 +341,7 @@
       "string": "Wartezeit des Menüs"
     },
     "boot-timeout-detail": {
-      "string": "Wie viele Sekunden das Menü wartet, bevor es den Standardeintrag startet."
+      "string": "Wie lange das Menü wartet, bevor es den Standardeintrag startet."
     },
     "boot-timeout-unknown": {
       "string": "Die eingetragene Wartezeit ist keine Zahl. Wählst du hier einen Wert, wird sie ersetzt."
@@ -502,6 +514,9 @@
     "boot-sdboot-unset": {
       "string": "Vorgabe von systemd-boot"
     },
+    "boot-sdboot-segment-default": {
+      "string": "Vorgabe"
+    },
     "boot-sdboot-on": {
       "string": "An"
     },
@@ -569,9 +584,6 @@
     },
     "repair-refresh": {
       "string": "Neu einlesen"
-    },
-    "repair-intro": {
-      "string": "Startet ein installiertes System nicht mehr, kannst du hier seinen Bootloader neu installieren, GRUB oder systemd-boot, oder seine Bootdateien neu bauen: das Bootmenü von GRUB oder die Kernel-Images von systemd-boot."
     },
     "repair-asks-first": {
       "string": "Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. GRUB-Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert."
@@ -1436,159 +1448,6 @@
     "catalog-gaming-vkbasalt-description": {
       "string": "Nachbearbeitungsebene für Vulkan mit Effekten wie CAS, FXAA, SMAA und Debanding."
     },
-    "catalog-gaming-misc": {
-      "string": "Sonstiges"
-    },
-    "catalog-gaming-antimicrox": {
-      "string": "AntimicroX"
-    },
-    "catalog-gaming-antimicrox-description": {
-      "string": "Tastatur- und Maussteuerung über die Tasten deines Gamepads."
-    },
-    "catalog-gaming-anydesk-bin": {
-      "string": "AnyDesk"
-    },
-    "catalog-gaming-anydesk-bin-description": {
-      "string": "Schneller Fernzugriff auf andere Rechner."
-    },
-    "catalog-gaming-corectrl": {
-      "string": "CoreCtrl"
-    },
-    "catalog-gaming-corectrl-description": {
-      "string": "Steuerung von CPU und Grafikkarte über Profile."
-    },
-    "catalog-gaming-discord": {
-      "string": "Discord"
-    },
-    "catalog-gaming-discord-description": {
-      "string": "Sprach- und Textchat für Gamer."
-    },
-    "catalog-gaming-vesktop": {
-      "string": "Vesktop"
-    },
-    "catalog-gaming-vesktop-description": {
-      "string": "Anpassbare, datenschutzfreundliche Desktop-App für Discord."
-    },
-    "catalog-gaming-displaycal": {
-      "string": "DisplayCAL"
-    },
-    "catalog-gaming-displaycal-description": {
-      "string": "Kalibrierung und Vermessung deines Bildschirms mit Argyll CMS."
-    },
-    "catalog-gaming-droidcam": {
-      "string": "DroidCam"
-    },
-    "catalog-gaming-droidcam-description": {
-      "string": "Smartphone oder Tablet als Webcam, per WLAN oder USB."
-    },
-    "catalog-gaming-gaming-easyeffects": {
-      "string": "EasyEffects"
-    },
-    "catalog-gaming-gaming-easyeffects-description": {
-      "string": "Audioeffekte für alle PipeWire-Anwendungen."
-    },
-    "catalog-gaming-goverlay": {
-      "string": "GOverlay"
-    },
-    "catalog-gaming-goverlay-description": {
-      "string": "Oberfläche, mit der du Overlays für Vulkan und OpenGL verwaltest."
-    },
-    "catalog-gaming-gwe": {
-      "string": "GWE"
-    },
-    "catalog-gaming-gwe-description": {
-      "string": "Überwachung und Steuerung von NVIDIA-Grafikkarten."
-    },
-    "catalog-gaming-gameconqueror": {
-      "string": "Game Conqueror"
-    },
-    "catalog-gaming-gameconqueror-description": {
-      "string": "Speichersuche in laufenden Programmen, etwa nach der Adresse einer Variablen."
-    },
-    "catalog-gaming-input-remapper-git": {
-      "string": "Input Remapper"
-    },
-    "catalog-gaming-input-remapper-git-description": {
-      "string": "Neue Tastenbelegung für deine Eingabegeräte."
-    },
-    "catalog-gaming-keyboard-visualizer-git": {
-      "string": "Keyboard Visualizer"
-    },
-    "catalog-gaming-keyboard-visualizer-git-description": {
-      "string": "Lichtshow zur Musik für deine RGB-Beleuchtung mit OpenRGB."
-    },
-    "catalog-gaming-mumble": {
-      "string": "Mumble"
-    },
-    "catalog-gaming-mumble-description": {
-      "string": "Freier Sprachchat mit geringer Latenz und guter Qualität."
-    },
-    "catalog-gaming-noisetorch": {
-      "string": "NoiseTorch"
-    },
-    "catalog-gaming-noisetorch-description": {
-      "string": "Unterdrückung von Störgeräuschen deines Mikrofons in Echtzeit."
-    },
-    "catalog-gaming-nyrna": {
-      "string": "Nyrna"
-    },
-    "catalog-gaming-nyrna-description": {
-      "string": "Anhalten und späteres Fortsetzen von Spielen und Anwendungen."
-    },
-    "catalog-gaming-obs-studio": {
-      "string": "OBS Studio"
-    },
-    "catalog-gaming-obs-studio-description": {
-      "string": "Freie Software für Livestreams und Aufnahmen."
-    },
-    "catalog-gaming-openrgb": {
-      "string": "OpenRGB"
-    },
-    "catalog-gaming-openrgb-description": {
-      "string": "Steuerung von RGB-Beleuchtung ohne die Software der Hersteller."
-    },
-    "catalog-gaming-oversteer": {
-      "string": "Oversteer"
-    },
-    "catalog-gaming-oversteer-description": {
-      "string": "Einstellungen für Lenkräder von Logitech."
-    },
-    "catalog-gaming-piper": {
-      "string": "Piper"
-    },
-    "catalog-gaming-piper-description": {
-      "string": "Einstellungen für Gaming-Mäuse."
-    },
-    "catalog-gaming-polychromatic": {
-      "string": "Polychromatic"
-    },
-    "catalog-gaming-polychromatic-description": {
-      "string": "Steuerung der RGB-Beleuchtung von Razer-Geräten über OpenRazer."
-    },
-    "catalog-gaming-sc-controller": {
-      "string": "SC Controller"
-    },
-    "catalog-gaming-sc-controller-description": {
-      "string": "Treiber, Tastenbelegung und Oberfläche für Steam Controller, DS4 und ähnliche Controller."
-    },
-    "catalog-gaming-soundwire": {
-      "string": "SoundWire"
-    },
-    "catalog-gaming-soundwire-description": {
-      "string": "Drahtlose Übertragung des PC-Tons auf dein Android-Smartphone oder andere PCs."
-    },
-    "catalog-gaming-streamlink-twitch-gui-bin": {
-      "string": "Streamlink Twitch GUI"
-    },
-    "catalog-gaming-streamlink-twitch-gui-bin-description": {
-      "string": "Twitch-Browser für Streamlink."
-    },
-    "catalog-gaming-vlc": {
-      "string": "VLC"
-    },
-    "catalog-gaming-vlc-description": {
-      "string": "Player für fast alle Video- und Audioformate, auch DVDs."
-    },
     "catalog-gaming-controllers": {
       "string": "Controller"
     },
@@ -2233,6 +2092,159 @@
     },
     "catalog-gaming-mgba-qt-description": {
       "string": "Schneller, genauer Emulator für den Game Boy Advance."
+    },
+    "catalog-gaming-misc": {
+      "string": "Sonstiges"
+    },
+    "catalog-gaming-antimicrox": {
+      "string": "AntimicroX"
+    },
+    "catalog-gaming-antimicrox-description": {
+      "string": "Tastatur- und Maussteuerung über die Tasten deines Gamepads."
+    },
+    "catalog-gaming-anydesk-bin": {
+      "string": "AnyDesk"
+    },
+    "catalog-gaming-anydesk-bin-description": {
+      "string": "Schneller Fernzugriff auf andere Rechner."
+    },
+    "catalog-gaming-corectrl": {
+      "string": "CoreCtrl"
+    },
+    "catalog-gaming-corectrl-description": {
+      "string": "Steuerung von CPU und Grafikkarte über Profile."
+    },
+    "catalog-gaming-discord": {
+      "string": "Discord"
+    },
+    "catalog-gaming-discord-description": {
+      "string": "Sprach- und Textchat für Gamer."
+    },
+    "catalog-gaming-vesktop": {
+      "string": "Vesktop"
+    },
+    "catalog-gaming-vesktop-description": {
+      "string": "Anpassbare, datenschutzfreundliche Desktop-App für Discord."
+    },
+    "catalog-gaming-displaycal": {
+      "string": "DisplayCAL"
+    },
+    "catalog-gaming-displaycal-description": {
+      "string": "Kalibrierung und Vermessung deines Bildschirms mit Argyll CMS."
+    },
+    "catalog-gaming-droidcam": {
+      "string": "DroidCam"
+    },
+    "catalog-gaming-droidcam-description": {
+      "string": "Smartphone oder Tablet als Webcam, per WLAN oder USB."
+    },
+    "catalog-gaming-gaming-easyeffects": {
+      "string": "EasyEffects"
+    },
+    "catalog-gaming-gaming-easyeffects-description": {
+      "string": "Audioeffekte für alle PipeWire-Anwendungen."
+    },
+    "catalog-gaming-goverlay": {
+      "string": "GOverlay"
+    },
+    "catalog-gaming-goverlay-description": {
+      "string": "Oberfläche, mit der du Overlays für Vulkan und OpenGL verwaltest."
+    },
+    "catalog-gaming-gwe": {
+      "string": "GWE"
+    },
+    "catalog-gaming-gwe-description": {
+      "string": "Überwachung und Steuerung von NVIDIA-Grafikkarten."
+    },
+    "catalog-gaming-gameconqueror": {
+      "string": "Game Conqueror"
+    },
+    "catalog-gaming-gameconqueror-description": {
+      "string": "Speichersuche in laufenden Programmen, etwa nach der Adresse einer Variablen."
+    },
+    "catalog-gaming-input-remapper-git": {
+      "string": "Input Remapper"
+    },
+    "catalog-gaming-input-remapper-git-description": {
+      "string": "Neue Tastenbelegung für deine Eingabegeräte."
+    },
+    "catalog-gaming-keyboard-visualizer-git": {
+      "string": "Keyboard Visualizer"
+    },
+    "catalog-gaming-keyboard-visualizer-git-description": {
+      "string": "Lichtshow zur Musik für deine RGB-Beleuchtung mit OpenRGB."
+    },
+    "catalog-gaming-mumble": {
+      "string": "Mumble"
+    },
+    "catalog-gaming-mumble-description": {
+      "string": "Freier Sprachchat mit geringer Latenz und guter Qualität."
+    },
+    "catalog-gaming-noisetorch": {
+      "string": "NoiseTorch"
+    },
+    "catalog-gaming-noisetorch-description": {
+      "string": "Unterdrückung von Störgeräuschen deines Mikrofons in Echtzeit."
+    },
+    "catalog-gaming-nyrna": {
+      "string": "Nyrna"
+    },
+    "catalog-gaming-nyrna-description": {
+      "string": "Anhalten und späteres Fortsetzen von Spielen und Anwendungen."
+    },
+    "catalog-gaming-obs-studio": {
+      "string": "OBS Studio"
+    },
+    "catalog-gaming-obs-studio-description": {
+      "string": "Freie Software für Livestreams und Aufnahmen."
+    },
+    "catalog-gaming-openrgb": {
+      "string": "OpenRGB"
+    },
+    "catalog-gaming-openrgb-description": {
+      "string": "Steuerung von RGB-Beleuchtung ohne die Software der Hersteller."
+    },
+    "catalog-gaming-oversteer": {
+      "string": "Oversteer"
+    },
+    "catalog-gaming-oversteer-description": {
+      "string": "Einstellungen für Lenkräder von Logitech."
+    },
+    "catalog-gaming-piper": {
+      "string": "Piper"
+    },
+    "catalog-gaming-piper-description": {
+      "string": "Einstellungen für Gaming-Mäuse."
+    },
+    "catalog-gaming-polychromatic": {
+      "string": "Polychromatic"
+    },
+    "catalog-gaming-polychromatic-description": {
+      "string": "Steuerung der RGB-Beleuchtung von Razer-Geräten über OpenRazer."
+    },
+    "catalog-gaming-sc-controller": {
+      "string": "SC Controller"
+    },
+    "catalog-gaming-sc-controller-description": {
+      "string": "Treiber, Tastenbelegung und Oberfläche für Steam Controller, DS4 und ähnliche Controller."
+    },
+    "catalog-gaming-soundwire": {
+      "string": "SoundWire"
+    },
+    "catalog-gaming-soundwire-description": {
+      "string": "Drahtlose Übertragung des PC-Tons auf dein Android-Smartphone oder andere PCs."
+    },
+    "catalog-gaming-streamlink-twitch-gui-bin": {
+      "string": "Streamlink Twitch GUI"
+    },
+    "catalog-gaming-streamlink-twitch-gui-bin-description": {
+      "string": "Twitch-Browser für Streamlink."
+    },
+    "catalog-gaming-vlc": {
+      "string": "VLC"
+    },
+    "catalog-gaming-vlc-description": {
+      "string": "Player für fast alle Video- und Audioformate, auch DVDs."
     },
     "catalog-setup-audio": {
       "string": "Audio"
@@ -3176,45 +3188,6 @@
     "catalog-setup-homebank-description": {
       "string": "Einfache, kostenlose Haushaltsbuchführung"
     },
-    "catalog-setup-other": {
-      "string": "Sonstiges"
-    },
-    "catalog-setup-setup-droidcam": {
-      "string": "DroidCam"
-    },
-    "catalog-setup-setup-droidcam-description": {
-      "string": "Smartphone oder Tablet als Webcam"
-    },
-    "catalog-setup-setup-soundwire": {
-      "string": "SoundWire"
-    },
-    "catalog-setup-setup-soundwire-description": {
-      "string": "Übertragung des PC-Tons auf andere Geräte"
-    },
-    "catalog-setup-variety": {
-      "string": "Variety"
-    },
-    "catalog-setup-variety-description": {
-      "string": "Wechsel des Hintergrundbilds in festen Abständen"
-    },
-    "catalog-setup-conky": {
-      "string": "Conky"
-    },
-    "catalog-setup-conky-description": {
-      "string": "Schlanker Systemmonitor auf dem Desktop"
-    },
-    "catalog-setup-keepass-xc": {
-      "string": "KeePassXC"
-    },
-    "catalog-setup-keepass-xc-description": {
-      "string": "Passwortmanager für viele Plattformen"
-    },
-    "catalog-setup-yakuake": {
-      "string": "Yakuake"
-    },
-    "catalog-setup-yakuake-description": {
-      "string": "Drop-down-Terminal"
-    },
     "catalog-setup-pkgmngrs": {
       "string": "Software-Center"
     },
@@ -3331,6 +3304,45 @@
     },
     "catalog-setup-genymotion-description": {
       "string": "Virtuelle Umgebung für Android"
+    },
+    "catalog-setup-other": {
+      "string": "Sonstiges"
+    },
+    "catalog-setup-setup-droidcam": {
+      "string": "DroidCam"
+    },
+    "catalog-setup-setup-droidcam-description": {
+      "string": "Smartphone oder Tablet als Webcam"
+    },
+    "catalog-setup-setup-soundwire": {
+      "string": "SoundWire"
+    },
+    "catalog-setup-setup-soundwire-description": {
+      "string": "Übertragung des PC-Tons auf andere Geräte"
+    },
+    "catalog-setup-variety": {
+      "string": "Variety"
+    },
+    "catalog-setup-variety-description": {
+      "string": "Wechsel des Hintergrundbilds in festen Abständen"
+    },
+    "catalog-setup-conky": {
+      "string": "Conky"
+    },
+    "catalog-setup-conky-description": {
+      "string": "Schlanker Systemmonitor auf dem Desktop"
+    },
+    "catalog-setup-keepass-xc": {
+      "string": "KeePassXC"
+    },
+    "catalog-setup-keepass-xc-description": {
+      "string": "Passwortmanager für viele Plattformen"
+    },
+    "catalog-setup-yakuake": {
+      "string": "Yakuake"
+    },
+    "catalog-setup-yakuake-description": {
+      "string": "Drop-down-Terminal"
     },
     "catalog-config-files-audio": {
       "string": "Audio"
@@ -4171,6 +4183,12 @@
     "changes-wait-aur": {
       "string": "Übernehmen wartet auf die Paketliste des AUR. Die Seite Pakete meldet, wenn sie nicht gelesen werden kann."
     },
+    "changes-unread-locks": {
+      "string": "Übernehmen wartet: Der Sperrstatus der Konten konnte nicht gelesen werden."
+    },
+    "changes-unread-aur": {
+      "string": "Übernehmen wartet: Die Paketliste des AUR konnte nicht gelesen werden."
+    },
     "change-account-lock": {
       "string": "Konto {name} sperren"
     },
@@ -4513,6 +4531,9 @@
     "cli-driver-unavailable": {
       "string": "die Treiber dieses Systems konnten nicht gelesen werden"
     },
+    "cli-busy": {
+      "string": "es werden noch andere Änderungen übernommen, versuche es erneut, sobald sie fertig sind"
+    },
     "cli-driver-not-listed": {
       "string": "das ist kein Netzwerktreiber dieses Systems, siehe `network drivers list`"
     },
@@ -4596,6 +4617,18 @@
     "close-running-quit": {
       "string": "Abbrechen und beenden"
     },
+    "close-edit-question": {
+      "string": "Beenden, ohne die Bearbeitung zu übernehmen?"
+    },
+    "close-edit-detail": {
+      "string": "Deine Änderungen an einer Konfigurationsdatei sind noch nicht geschrieben. Beim Beenden gehen sie verloren."
+    },
+    "close-edit-keep": {
+      "string": "Weiter bearbeiten"
+    },
+    "close-edit-quit": {
+      "string": "Verwerfen und beenden"
+    },
     "common-plan-running": {
       "string": "Es werden gerade Änderungen übernommen. Bis dahin lässt sich hier nichts ändern."
     },
@@ -4644,11 +4677,32 @@
     "protected-along": {
       "string": "Diese Entfernung würde auch {name} entfernen, das installiert bleibt. {why}."
     },
-    "missing-catalog": {
-      "string": "Garuda Toolbox ist nicht vollständig installiert: Der Ordner {dir} fehlt. Installiere das Paket garuda-toolbox neu und starte die App dann erneut."
-    },
     "missing-catalog-quit": {
       "string": "Beenden"
+    },
+    "missing-catalog-title": {
+      "string": "Garuda Toolbox ist nicht vollständig installiert"
+    },
+    "missing-catalog-body": {
+      "string": "Ein Ordner, den es braucht, fehlt. Installiere das Paket garuda-toolbox neu und starte die App dann erneut."
+    },
+    "missing-catalog-folder": {
+      "string": "Fehlender Ordner"
+    },
+    "missing-catalog-reinstall": {
+      "string": "Neu installieren mit"
+    },
+    "missing-catalog-copy": {
+      "string": "{label} kopieren"
+    },
+    "missing-catalog-copied": {
+      "string": "In die Zwischenablage kopiert."
+    },
+    "close-stopping-title": {
+      "string": "Vorgang wird abgebrochen"
+    },
+    "close-stopping-detail": {
+      "string": "Das Fenster schließt sich, sobald der Vorgang beendet ist."
     }
   },
   "configs": {
@@ -5055,11 +5109,17 @@
     "page-diagnostics-subtitle": {
       "string": "Systemberichte für Forenbeiträge und Fehlermeldungen."
     },
-    "diagnostics-report-picker": {
-      "string": "Bericht auswählen"
+    "diagnostics-reports": {
+      "string": "Berichte"
+    },
+    "diagnostics-another": {
+      "string": "Weiteren Bericht erstellen"
     },
     "diagnostics-collect": {
       "string": "Erstellen"
+    },
+    "diagnostics-collect-name": {
+      "string": "{name} erstellen"
     },
     "diagnostics-cancel": {
       "string": "Abbrechen"
@@ -5106,9 +5166,6 @@
     "diagnostics-all-description": {
       "string": "Alles oben Genannte in einem Bericht. Kann zweimal nach deinem Passwort fragen."
     },
-    "diagnostics-idle": {
-      "string": "Wähle einen Bericht und klicke auf „Erstellen“."
-    },
     "diagnostics-idle-detail": {
       "string": "Der Bericht bleibt auf diesem Computer, solange du ihn nicht teilst."
     },
@@ -5148,6 +5205,21 @@
     "diagnostics-report-label": {
       "string": "Diagnosebericht"
     },
+    "diagnostics-lines": {
+      "string": "{count, plural, one {eine Zeile} other {{count} Zeilen}}"
+    },
+    "diagnostics-collected": {
+      "string": "· erstellt um {time} UTC · {lines}"
+    },
+    "diagnostics-collected-unknown": {
+      "string": "· {lines}"
+    },
+    "diagnostics-search": {
+      "string": "Bericht durchsuchen"
+    },
+    "diagnostics-search-clear": {
+      "string": "Suche leeren"
+    },
     "diagnostics-copy": {
       "string": "Bericht kopieren"
     },
@@ -5183,9 +5255,6 @@
     "discover-actions": {
       "string": "Weitere Aktionen für {name}"
     },
-    "discover-palette-app": {
-      "string": "App"
-    },
     "discover-unreadable": {
       "string": "Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht an, was installiert ist. Das Installieren einer bereits installierten App bewirkt nichts."
     },
@@ -5200,6 +5269,15 @@
     },
     "discover-clear-search": {
       "string": "Suche leeren"
+    },
+    "discover-nothing-in-category": {
+      "string": "Keine App in {category} passt zu „{search}“"
+    },
+    "discover-nothing-in-category-detail": {
+      "string": "Andere Kategorien haben passende Apps."
+    },
+    "discover-show-all-matches": {
+      "string": "{count, plural, one {Den Treffer zeigen} other {Alle {count} Treffer zeigen}}"
     },
     "discover-none": {
       "string": "Keine Apps vorhanden"
@@ -5263,8 +5341,17 @@
     "guide-copy-code": {
       "string": "Code kopieren"
     },
+    "guide-enlarge": {
+      "string": "Größer anzeigen: {alt}"
+    },
     "guide-code-copied": {
       "string": "Der Code wurde in die Zwischenablage kopiert."
+    },
+    "guide-page-missing": {
+      "string": "Das Handbuch hat keine Seite „{page}“, daher wurde seine erste Seite geöffnet."
+    },
+    "guide-picture-missing": {
+      "string": "Das Bild fehlt."
     },
     "guide-hits": {
       "string": "{count, plural, one {1 Treffer} other {{count} Treffer}}"
@@ -5463,9 +5550,6 @@
     "home-summary-fine": {
       "string": "Alles in Ordnung"
     },
-    "home-summary-unknown": {
-      "string": "Einige Prüfungen konnten nicht ausgeführt werden"
-    },
     "home-summary-attention": {
       "string": "{count, plural, one {Ein Punkt braucht deine Aufmerksamkeit} other {{count} Punkte brauchen deine Aufmerksamkeit}}"
     },
@@ -5475,23 +5559,44 @@
     "home-summary-updated": {
       "string": "{days, plural, one {· letztes Update gestern} other {· letztes Update vor {days} Tagen}}"
     },
-    "home-fact-packages": {
-      "string": "{count, plural, one {Ein Paket} other {{count} Pakete}}"
+    "home-stat-updates": {
+      "string": "Updates"
     },
-    "home-fact-packages-foreign": {
-      "string": "{count} Pakete · {foreign} aus dem AUR"
+    "home-stat-updates-none": {
+      "string": "Aktuell"
     },
-    "home-fact-kernel-days": {
-      "string": "{amount, plural, one {{kernel} · läuft seit einem Tag} other {{kernel} · läuft seit {amount} Tagen}}"
+    "home-stat-updates-count": {
+      "string": "{count, plural, one {Eines verfügbar} other {{count} verfügbar}}"
     },
-    "home-fact-kernel-new": {
-      "string": "{kernel} · läuft seit weniger als einer Stunde"
+    "home-stat-disk": {
+      "string": "Speicher"
     },
-    "home-fact-kernel-hours": {
-      "string": "{amount, plural, one {{kernel} · läuft seit einer Stunde} other {{kernel} · läuft seit {amount} Stunden}}"
+    "home-stat-disk-free": {
+      "string": "{free} frei"
     },
-    "home-fact-disk": {
-      "string": "{free} frei auf /"
+    "home-stat-health": {
+      "string": "Zustand"
+    },
+    "home-stat-health-fine": {
+      "string": "Keine Probleme"
+    },
+    "home-stat-health-warnings": {
+      "string": "Warnungen"
+    },
+    "home-stat-health-errors": {
+      "string": "Probleme gefunden"
+    },
+    "home-stat-last-update": {
+      "string": "Letztes Update"
+    },
+    "home-stat-last-update-today": {
+      "string": "Heute"
+    },
+    "home-stat-last-update-days": {
+      "string": "{days, plural, one {Gestern} other {Vor {days} Tagen}}"
+    },
+    "home-stat-unknown": {
+      "string": "Unbekannt"
     },
     "home-disk": {
       "string": "Wenig Speicherplatz"
@@ -5734,6 +5839,12 @@
     "locales-search-hint": {
       "string": "Locales durchsuchen…"
     },
+    "locales-packs-search": {
+      "string": "Sprachpakete durchsuchen"
+    },
+    "locales-packs-search-hint": {
+      "string": "Sprachpakete durchsuchen…"
+    },
     "locales-filter-utf8": {
       "string": "Nur UTF-8"
     },
@@ -5776,6 +5887,12 @@
     "locales-detail-system": {
       "string": "{code}, {charset}, Systemsprache"
     },
+    "locales-detail-code": {
+      "string": "{code}"
+    },
+    "locales-detail-code-system": {
+      "string": "{code}, Systemsprache"
+    },
     "locales-system": {
       "string": "Systemsprache"
     },
@@ -5804,7 +5921,7 @@
       "string": "Ausblenden"
     },
     "locales-packs-intro": {
-      "string": "Sprachpakete für deine aktivierten Locales und installierten Programme. Nicht installiert: {count}"
+      "string": "Sprachpakete für deine aktivierten Locales und installierten Programme. {count, plural, one {Ein Paket ist nicht installiert.} other {{count} Pakete sind nicht installiert.}}"
     },
     "locales-packs-intro-plain": {
       "string": "Sprachpakete für deine aktivierten Locales und installierten Programme."
@@ -5838,6 +5955,12 @@
     },
     "locales-packs-none-detail": {
       "string": "Kein installiertes Programm hat ein Sprachpaket für eine aktivierte Locale."
+    },
+    "locales-packs-no-match": {
+      "string": "Kein passendes Sprachpaket"
+    },
+    "locales-packs-no-match-detail": {
+      "string": "Die Suche umfasst Namen von Paketen, Programmen, Sprachen und Ländern."
     },
     "locales-packs-unavailable": {
       "string": "Sprachpakete sind auf diesem System nicht verfügbar"
@@ -5964,6 +6087,9 @@
     "maintenance-ranking": {
       "string": "Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist."
     },
+    "maintenance-ranking-progress": {
+      "string": "Spiegelserver werden bewertet…"
+    },
     "maintenance-tool-arch-mirrors": {
       "string": "Arch-Spiegelserver aktualisieren"
     },
@@ -6002,6 +6128,9 @@
     },
     "maintenance-problem-launch": {
       "string": "{tool} konnte nicht gestartet werden: {reason}"
+    },
+    "maintenance-problem-launch-absent": {
+      "string": "Die Installation ist fertig, aber {reason} fehlt, daher wurde {tool} nicht gestartet."
     },
     "maintenance-problem-mirrors-timeout": {
       "string": "Die Bewertung der Chaotic-AUR-Spiegelserver dauerte länger als fünf Minuten und wurde abgebrochen. Die Liste der Spiegelserver ist unverändert."
@@ -6069,8 +6198,8 @@
     "maintenance-repairs-missing": {
       "string": "{count, plural, one {Die ausgegrauten Reparaturen brauchen {packages}, das nicht installiert ist. Installiere es, um sie freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.} other {Die ausgegrauten Reparaturen brauchen {packages}, die nicht installiert sind. Installiere sie, um die Reparaturen freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.}}"
     },
-    "maintenance-install-garuda-update": {
-      "string": "garuda-update installieren"
+    "maintenance-install-missing": {
+      "string": "{packages} installieren"
     },
     "maintenance-run": {
       "string": "Ausführen"
@@ -6237,7 +6366,7 @@
       "string": "Erneut versuchen"
     },
     "network-address-copy": {
-      "string": "Kopieren"
+      "string": "Öffentliche Adresse kopieren"
     },
     "network-address-hide": {
       "string": "Ausblenden"
@@ -6298,9 +6427,6 @@
     },
     "network-service-geoclue-service": {
       "string": "Ortungsdienst (GeoClue)"
-    },
-    "network-service-missing": {
-      "string": "Nicht installiert"
     },
     "network-service-running": {
       "string": "Läuft"
@@ -6437,6 +6563,9 @@
     "network-refused-unavailable": {
       "string": "Die Treiber dieses Systems ließen sich nicht lesen."
     },
+    "network-refused-busy": {
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind."
+    },
     "network-hardware-intro": {
       "string": "Netzwerkgeräte laut lspci und lsusb."
     },
@@ -6470,6 +6599,12 @@
     "network-hardware-usb-failed": {
       "string": "USB-Geräte werden nicht angezeigt: lsusb ist fehlgeschlagen."
     },
+    "network-hardware-queue-pciutils": {
+      "string": "pciutils vormerken"
+    },
+    "network-hardware-unqueue-pciutils": {
+      "string": "pciutils zurücknehmen"
+    },
     "network-tests": {
       "string": "Verbindungstests"
     },
@@ -6499,6 +6634,21 @@
     },
     "network-traceroute-missing": {
       "string": "Für Traceroute fehlt das Paket traceroute."
+    },
+    "network-ping-finished": {
+      "string": "Ping ist fertig. Die Ausgabe steht in der Konsole."
+    },
+    "network-ping-failed": {
+      "string": "Ping endete mit einem Fehler. Die Konsole zeigt den Grund."
+    },
+    "network-traceroute-finished": {
+      "string": "Traceroute ist fertig. Die Ausgabe steht in der Konsole."
+    },
+    "network-traceroute-failed": {
+      "string": "Traceroute endete mit einem Fehler. Die Konsole zeigt den Grund."
+    },
+    "network-show-console": {
+      "string": "Konsole anzeigen"
     },
     "network-hotspot": {
       "string": "WLAN-Hotspot"
@@ -6561,6 +6711,12 @@
     },
     "packages-none-detail": {
       "string": "Die Repositorys bieten keine an und es ist keines installiert."
+    },
+    "packages-updates-loading": {
+      "string": "Updates werden gesucht…"
+    },
+    "packages-updates-failed": {
+      "string": "Die Updates ließen sich nicht prüfen."
     },
     "packages-no-updates": {
       "string": "Keine ausstehenden Updates"
@@ -6634,6 +6790,9 @@
     "packages-remove-title": {
       "string": "{package} entfernen?"
     },
+    "packages-remove-required": {
+      "string": "{count, plural, one {1 installiertes Paket braucht es. pacman entfernt nichts, solange es bleibt:} other {{count} installierte Pakete brauchen es. pacman entfernt nichts, solange sie bleiben:}}"
+    },
     "packages-remove-alone": {
       "string": "Nur dieses Paket wird entfernt. Es hat keine Abhängigkeiten mitgebracht, die sonst kein Paket braucht."
     },
@@ -6663,6 +6822,12 @@
     },
     "packages-more-name": {
       "string": "{count} weitere anzeigen"
+    },
+    "packages-libraries": {
+      "string": "{count, plural, one {+1 Bibliothek} other {+{count} Bibliotheken}}"
+    },
+    "packages-libraries-name": {
+      "string": "{count, plural, one {1 Bibliothek anzeigen} other {{count} Bibliotheken anzeigen}}"
     },
     "packages-details-loading": {
       "string": "Paket wird eingelesen…"
@@ -6745,6 +6910,15 @@
     "packages-files-list": {
       "string": "Installierte Dateien"
     },
+    "packages-files-filter": {
+      "string": "Dateien filtern"
+    },
+    "packages-files-filter-clear": {
+      "string": "Filter leeren"
+    },
+    "packages-files-none": {
+      "string": "Keine Datei passt zu „{filter}“."
+    },
     "packages-history": {
       "string": "Verlauf"
     },
@@ -6813,6 +6987,9 @@
     },
     "packages-aur-install-body": {
       "string": "Das Paket wird aus einem Skript der Community auf deinem Computer gebaut. paru zeigt dir das Build-Skript vorher in der Konsole."
+    },
+    "packages-aur-install-confirm": {
+      "string": "Bauen und installieren"
     },
     "packages-aur-maintainer": {
       "string": "Betreuer"
@@ -6947,11 +7124,17 @@
     "services-search-hint": {
       "string": "Dienste durchsuchen…"
     },
-    "services-hide-disabled": {
-      "string": "Deaktivierte ausblenden"
+    "services-show-running": {
+      "string": "Laufend"
     },
-    "services-hide-inactive": {
-      "string": "Inaktive ausblenden"
+    "services-show-enabled": {
+      "string": "Aktiviert"
+    },
+    "services-show-failed": {
+      "string": "Fehlgeschlagen"
+    },
+    "services-show-all": {
+      "string": "Alle"
     },
     "services-refresh": {
       "string": "Neu einlesen"
@@ -6980,11 +7163,26 @@
     "services-failed": {
       "string": "Die Dienste konnten nicht gelesen werden."
     },
-    "services-retry": {
-      "string": "Erneut versuchen"
+    "services-user-unavailable": {
+      "string": "Das systemd deines Benutzers ist nicht erreichbar."
+    },
+    "services-user-denied": {
+      "string": "Keine Berechtigung, die Dienste deines Benutzers zu lesen."
+    },
+    "services-user-failed": {
+      "string": "Die Dienste deines Benutzers konnten nicht gelesen werden."
     },
     "services-none-detail": {
       "string": "Ändere die Suche oder die Filter, um mehr Dienste zu sehen."
+    },
+    "services-show-every": {
+      "string": "{count, plural, one {Den einen Treffer zeigen} other {Alle {count} Treffer zeigen}}"
+    },
+    "services-busy": {
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind."
+    },
+    "services-dismiss": {
+      "string": "Ausblenden"
     },
     "services-why-busy": {
       "string": "Erst möglich, wenn die laufenden Änderungen abgeschlossen sind."
@@ -7279,20 +7477,17 @@
     "settings-autostart-description": {
       "string": "Öffnet das Fenster bei jeder Anmeldung."
     },
-    "settings-refresh": {
-      "string": "Nach Updates suchen"
+    "settings-refresh-auto": {
+      "string": "Automatisch nach Updates suchen"
     },
-    "settings-refresh-description": {
-      "string": "Jede Prüfung lädt die Paketlisten herunter und fragt das AUR (Arch User Repository) ab."
+    "settings-refresh-auto-description": {
+      "string": "Jede Prüfung lädt die Paketlisten herunter und fragt das AUR (Arch User Repository) ab. Ausgeschaltet sucht die Startseite nur, wenn du auf „Neu einlesen“ klickst."
     },
-    "settings-refresh-ask": {
-      "string": "Nur manuell"
+    "settings-refresh-interval": {
+      "string": "Zeit zwischen den Prüfungen"
     },
-    "settings-refresh-ask-description": {
-      "string": "Die Startseite sucht dann nur nach Updates, wenn du auf „Neu einlesen“ klickst."
-    },
-    "settings-refresh-off": {
-      "string": "Aus, solange „Nur manuell“ aktiv ist."
+    "settings-refresh-interval-description": {
+      "string": "Von alle 5 Minuten bis einmal am Tag (1440 Minuten)."
     },
     "settings-refresh-minutes": {
       "string": "Prüfintervall in Minuten"
@@ -7392,8 +7587,14 @@
     "setup-go-to": {
       "string": "Zu Schritt springen"
     },
-    "setup-keys": {
-      "string": "Alt+Rechts: weiter, Alt+Links: zurück."
+    "setup-progress": {
+      "string": "Schritt {number} von {count}"
+    },
+    "setup-back-key": {
+      "string": "Alt+Links"
+    },
+    "setup-next-key": {
+      "string": "Alt+Rechts"
     },
     "setup-install": {
       "string": "Zu installierende Apps: {count}"
@@ -7427,6 +7628,15 @@
     },
     "setup-ready-nothing": {
       "string": "Alles, was du ausgewählt hast, war schon eingerichtet."
+    },
+    "setup-installed": {
+      "string": "Installierte Apps: {count}"
+    },
+    "setup-removed": {
+      "string": "Entfernte Apps: {count}"
+    },
+    "setup-enabled": {
+      "string": "Aktivierte Dienste: {count}"
     },
     "setup-restart-note": {
       "string": "Ein Neustart wird empfohlen, damit alle neuen Programme und Dienste richtig starten."
@@ -7513,26 +7723,6 @@
         "developer_comment": "Used when `subject` is `output`."
       }
     },
-    "share-uploaded": {
-      "report": {
-        "string": "Hochgeladen. Jeder mit diesem Link kann den Bericht lesen:",
-        "developer_comment": "Used when `subject` is `report`."
-      },
-      "output": {
-        "string": "Hochgeladen. Jeder mit diesem Link kann die Ausgabe lesen:",
-        "developer_comment": "Used when `subject` is `output`."
-      }
-    },
-    "share-link": {
-      "report": {
-        "string": "Link zum hochgeladenen Bericht",
-        "developer_comment": "Used when `subject` is `report`."
-      },
-      "output": {
-        "string": "Link zur hochgeladenen Ausgabe",
-        "developer_comment": "Used when `subject` is `output`."
-      }
-    },
     "share-copy-link": {
       "string": "Link kopieren"
     },
@@ -7544,16 +7734,6 @@
     },
     "share-open-link": {
       "string": "Im Browser öffnen"
-    },
-    "share-delete-link": {
-      "report": {
-        "string": "Löschlink: Beim Öffnen wird der Bericht vom Server entfernt.",
-        "developer_comment": "Used when `subject` is `report`."
-      },
-      "output": {
-        "string": "Löschlink: Beim Öffnen wird die Ausgabe vom Server entfernt.",
-        "developer_comment": "Used when `subject` is `output`."
-      }
     },
     "share-copy-delete-link": {
       "string": "Löschlink kopieren"
@@ -7637,6 +7817,15 @@
     },
     "palette-search": {
       "string": "Seiten und Befehle durchsuchen"
+    },
+    "palette-group-pages": {
+      "string": "Seiten"
+    },
+    "palette-group-commands": {
+      "string": "Befehle"
+    },
+    "palette-group-apps": {
+      "string": "Apps"
     },
     "command-apply": {
       "string": "Änderungen übernehmen"
@@ -7861,8 +8050,20 @@
     "toggles-clear-search": {
       "string": "Suche leeren"
     },
+    "toggles-nothing-in-section": {
+      "string": "Keine Treffer in {section}"
+    },
+    "toggles-nothing-in-section-detail": {
+      "string": "Andere Abschnitte haben Einträge mit „{search}“ im Namen oder in der Beschreibung."
+    },
+    "toggles-show-all-matches": {
+      "string": "{count, plural, one {Den Treffer zeigen} other {Alle {count} Treffer zeigen}}"
+    },
     "toggles-section-count": {
       "string": "{on}/{total}"
+    },
+    "toggles-section-count-unread": {
+      "string": "?/{total}"
     },
     "toggles-unknown": {
       "string": "{count, plural, one {Der Zustand eines Eintrags konnte nicht gelesen werden. Sein Schalter zeigt eventuell den falschen Zustand.} other {Der Zustand von {count} Einträgen konnte nicht gelesen werden. Ihre Schalter zeigen eventuell den falschen Zustand.}}"
@@ -7879,11 +8080,14 @@
     "toggles-turns-on": {
       "string": "Wird beim Übernehmen eingeschaltet"
     },
+    "toggles-enable": {
+      "string": "Aktivieren"
+    },
+    "toggles-disable": {
+      "string": "Deaktivieren"
+    },
     "toggles-turns-off": {
       "string": "Wird beim Übernehmen ausgeschaltet"
-    },
-    "toggles-website": {
-      "string": "Website von {name}"
     },
     "toggles-dismiss": {
       "string": "Ausblenden"
@@ -8159,9 +8363,6 @@
     "users-locks-unknown": {
       "string": "Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox konnte es nicht auslesen."
     },
-    "users-locks-again": {
-      "string": "„Neu einlesen“ fragt erneut ab."
-    },
     "users-run-password-running": {
       "string": "Das Passwort von {user} wird gesetzt…"
     },
@@ -8236,6 +8437,9 @@
     },
     "users-refused-home-taken": {
       "string": "Dieses Home-Verzeichnis gehört bereits einem anderen Konto."
+    },
+    "users-refused-busy": {
+      "string": "Es werden noch andere Änderungen übernommen, deshalb wurde für {name} nichts geändert. Versuche es erneut, sobald sie fertig sind."
     },
     "users-refused-unavailable": {
       "string": "Die Benutzerkonten dieses Systems ließen sich nicht lesen."
@@ -8312,6 +8516,9 @@
     "users-field-full-name": {
       "string": "Vollständiger Name"
     },
+    "users-field-full-name-hint": {
+      "string": "Optional. Der Benutzername darunter folgt seinem ersten Wort, bis du ihn selbst änderst."
+    },
     "users-field-shell": {
       "string": "Login-Shell"
     },
@@ -8387,8 +8594,8 @@
     "users-add-why-no-password": {
       "string": "Gib ein Passwort ein."
     },
-    "users-add-why-passwords-differ": {
-      "string": "Die Passwörter stimmen nicht überein."
+    "users-add-why-no-repeat": {
+      "string": "Wiederhole das Passwort."
     },
     "users-add-why-fields": {
       "string": "Ein Feld oben enthält einen Fehler."
@@ -8433,13 +8640,13 @@
       "string": "Die Änderungen bleiben vorgemerkt, bis du sie übernimmst. Sie gelten ab der nächsten Anmeldung des Benutzers."
     },
     "users-choice-detail": {
-      "string": "GID {gid}, Mitglieder: {members}"
+      "string": "{group} (GID {gid}, Mitglieder: {members})"
     },
     "users-choice-primary": {
-      "string": "primäre Gruppe, GID {gid}, Mitglieder: {members}"
+      "string": "{group} (primäre Gruppe, GID {gid}, Mitglieder: {members})"
     },
     "users-choice-new": {
-      "string": "neue Gruppe"
+      "string": "{group} (neue Gruppe)"
     },
     "users-remove-title": {
       "string": "Benutzer {user} entfernen?"
@@ -8448,16 +8655,16 @@
       "string": "Das Entfernen bleibt vorgemerkt, bis du es übernimmst. Entfernt wird:"
     },
     "users-remove-account": {
-      "string": "Das Konto {user} und sein Passwort"
+      "string": "• Das Konto {user} und sein Passwort"
     },
     "users-remove-group": {
-      "string": "Die Gruppe {user}, wenn der Benutzer ihr einziges Mitglied ist"
+      "string": "• Die Gruppe {user}, wenn der Benutzer ihr einziges Mitglied ist"
     },
     "users-remove-memberships": {
-      "string": "Seine Mitgliedschaften in: {groups}"
+      "string": "• Seine Mitgliedschaften in: {groups}"
     },
     "users-remove-home-goes": {
-      "string": "Das Home-Verzeichnis {home} mit allen Dateien darin und das Mail-Postfach"
+      "string": "• Das Home-Verzeichnis {home} mit allen Dateien darin und das Mail-Postfach"
     },
     "users-remove-home-stays": {
       "string": "Das Home-Verzeichnis {home} bleibt auf dem Datenträger."
@@ -8523,12 +8730,21 @@
       "string": "Entfernen vorgemerkt"
     },
     "groups-remove": {
+      "string": "Entfernen…"
+    },
+    "groups-remove-named": {
       "string": "{group} entfernen…"
     },
     "groups-unqueue-new": {
+      "string": "Nicht anlegen"
+    },
+    "groups-unqueue-new-named": {
       "string": "{group} nicht anlegen"
     },
     "groups-unqueue-removal": {
+      "string": "Behalten"
+    },
+    "groups-unqueue-removal-named": {
       "string": "{group} behalten"
     },
     "groups-remove-title": {

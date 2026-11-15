@@ -1,4 +1,5 @@
 mod below;
+mod libraries;
 mod lines;
 
 use egui::accesskit::Role;
@@ -136,13 +137,13 @@ fn a_dependency_opens_its_package_and_back_walks_the_chain_to_the_list() {
 #[test]
 fn a_name_no_package_answers_to_is_plain_text() {
     let harness = showing(gimp_with(|info| {
-        info.depends = vec!["libfoo.so=1-64".to_owned()];
+        info.depends = vec!["foo-utils>=1".to_owned()];
     }));
 
-    assert!(harness.query_by_label("libfoo.so=1-64").is_some());
+    assert!(harness.query_by_label("foo-utils>=1").is_some());
     assert!(
         harness
-            .query_by_role_and_label(Role::Link, "libfoo.so=1-64")
+            .query_by_role_and_label(Role::Link, "foo-utils>=1")
             .is_none()
     );
 }
@@ -206,7 +207,7 @@ fn the_files_start_folded_and_copy_list_copies_them_all() {
         .click();
     harness.run();
     assert_eq!(expanded(&harness, "Files 1"), Some(true));
-    assert!(listed(&harness, "/usr/bin/gimp"));
+    assert!(harness.query_by_label("/usr/bin/gimp").is_some());
 }
 
 #[test]

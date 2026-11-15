@@ -10,8 +10,8 @@ use egui::{Frame, Panel, Ui, UiBuilder};
 use toolbox_gui_kit::fonts::Weight;
 use toolbox_gui_kit::theme::SIDEBAR_WIDTH;
 use toolbox_gui_kit::widgets::{
-    EdgeFade, group_label, group_label_height, nav_divider, nav_divider_height, nav_row, rich,
-    sidebar_button,
+    EdgeFade, NAV_INSET, group_label, group_label_height, nav_divider, nav_divider_height, nav_row,
+    rich, sidebar_button,
 };
 use toolbox_gui_kit::{UiExt as _, icons, motion, tokens};
 
@@ -103,6 +103,13 @@ pub fn show(
             // would come on top.
             ui.spacing_mut().scroll.fade.strength = 0.0;
             let height = density.pages_height(ui.ctx(), label, false);
+
+            // Read every frame, also while an app page is open and no entry
+            // of the list is, so a return to the same page reveals it again.
+            if newly_current(ui, current) {
+                ui.data_mut(|data| data.insert_temp(revealing_id(), REVEAL_FRAMES));
+            }
+
             let list = list_area(ui).show(ui, |ui| {
                 let fade = EdgeFade::of(ui, height, density.row);
                 pages(ui, current, density, commands, Some(fade))
@@ -133,7 +140,7 @@ fn title(ui: &mut Ui, expanded: bool, commands: &CommandSender) {
 
     ui.horizontal(|ui| {
         if expanded {
-            ui.add_space(tokens.sizes.inset);
+            ui.add_space(NAV_INSET);
             ui.label(rich(
                 ui,
                 &i18n::text(&ctx, "app-name"),
@@ -174,6 +181,7 @@ fn pages(
     list: Option<EdgeFade>,
 ) -> Listed {
     let foot = list.is_none();
+    let rail = !foot && !density.expanded;
     let fade = list.unwrap_or_else(|| EdgeFade::of(ui, 0.0, density.row));
     ui.spacing_mut().item_spacing.y = density.gap;
     let start = ui.cursor().top();
@@ -217,8 +225,8 @@ fn pages(
         end = end.or(ends);
         let rows = egui::Rangef::new(ui.cursor().top(), ui.cursor().top() + density.row);
         let name = i18n::text(ui.ctx(), page.text_id());
-        let opacity = strength(ui, &fade, rows, page == current, ends);
-        cut |= !foot && !density.expanded && rows.shrink(0.5).contains(ui.clip_rect().bottom());
+
+        let opacity = rail_strength(ui, &fade, rows, rail, (page == current, ends, &mut cut));
         let row = faded(ui, opacity, |ui| {
             nav_row(ui, page.icon(), &name, page == current, density.look())
         });
@@ -242,7 +250,7 @@ fn pages(
     }
 
     let open = open.filter(|_| !foot);
-    let scroll = open.and_then(|entry| scroll_to_open(ui, current, &stops, entry));
+    let scroll = open.and_then(|entry| scroll_to_open(ui, &stops, entry));
 
     Listed {
         scroll,
@@ -264,6 +272,25 @@ fn strength(ui: &Ui, fade: &EdgeFade, rows: egui::Rangef, open: bool, ends: Opti
     fade.opacity(rows.min + past, rows.max + past)
 }
 
+/// [`strength`] of an entry over `rows`, which sets `cut` when the `rail`
+/// draws it cut by the bottom edge. Less than half an icon on the rail
+/// reads as a speck, not as more to follow, so it hides.
+fn rail_strength(
+    ui: &Ui,
+    fade: &EdgeFade,
+    rows: egui::Rangef,
+    rail: bool,
+    (open, ends, cut): (bool, Option<f32>, &mut bool),
+) -> f32 {
+    let bottom = ui.clip_rect().bottom();
+    if rail && rows.center() >= bottom - 0.5 {
+        return 0.0;
+    }
+
+    *cut |= rail && rows.max > bottom + 0.5;
+    strength(ui, fade, rows, open, ends)
+}
+
 /// A cut list scrolls on by up to one stop past its last entry, so the
 /// last entries too can show with a whole one at the top.
 fn room_past_the_end(ui: &mut Ui, stops: &[f32]) {
@@ -275,11 +302,8 @@ fn room_past_the_end(ui: &mut Ui, stops: &[f32]) {
     ui.allocate_space(egui::vec2(0.0, step.fold(0.0, f32::max)));
 }
 
-fn scroll_to_open(ui: &Ui, current: PageId, stops: &[f32], entry: egui::Rect) -> Option<f32> {
-    let id = ui.scope_id().with("revealing");
-    if newly_current(ui, current) {
-        ui.data_mut(|data| data.insert_temp(id, REVEAL_FRAMES));
-    }
+fn scroll_to_open(ui: &Ui, stops: &[f32], entry: egui::Rect) -> Option<f32> {
+    let id = revealing_id();
 
     // The sidebar's layout settles over the first frames, so the entry
     // keeps scrolling into place until it holds. Then the user may scroll
@@ -291,6 +315,12 @@ fn scroll_to_open(ui: &Ui, current: PageId, stops: &[f32], entry: egui::Rect) ->
         None => _ = data.remove_temp::<u8>(id),
     });
     by
+}
+
+/// How many frames the open page's entry may still scroll into place, set
+/// in [`show`] once it became the open page.
+fn revealing_id() -> egui::Id {
+    egui::Id::unique("toolbox_gui::sidebar::revealing")
 }
 
 /// A heading above a named group, or a little room while collapsed, at

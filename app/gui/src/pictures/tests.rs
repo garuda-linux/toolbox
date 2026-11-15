@@ -39,6 +39,22 @@ impl IconLookup for Theme {
     }
 }
 
+/// Has `kate`'s picture once `installed` holds it, as after a plan.
+struct Installs {
+    installed: std::sync::Arc<parking_lot::Mutex<Option<PathBuf>>>,
+    forgot: crossbeam_channel::Sender<()>,
+}
+
+impl PictureFinder for Installs {
+    fn find(&mut self, _theme: &str, _package: &PackageName) -> Option<PathBuf> {
+        self.installed.lock().clone()
+    }
+
+    fn forget(&mut self) {
+        self.forgot.send(()).unwrap();
+    }
+}
+
 struct Cache(&'static [(&'static str, &'static str)]);
 
 impl AppIconSource for Cache {
@@ -72,7 +88,7 @@ fn settle(pictures: &Pictures, name: &str) -> Option<PathBuf> {
     loop {
         pictures.file(&package);
         if !pictures.waiting(&package) || Instant::now() > deadline {
-            return pictures.file(&package);
+            return pictures.file(&package).map(|file| file.to_path_buf());
         }
 
         std::thread::sleep(Duration::from_millis(5));
@@ -129,12 +145,12 @@ fn another_theme_looks_again() {
 #[test]
 fn the_theme_comes_first_under_the_plain_name_then_the_cache() {
     let theme = Theme(&[("brave", "/theme/brave.svg")]);
-    let cache = Cache(&[
-        ("brave-bin", "/cache/brave.jxl"),
-        ("aerc", "/cache/aerc.jxl"),
-    ]);
-
-    let mut finder = Layered::new(theme, move || cache);
+    let mut finder = Layered::new(theme, || {
+        Cache(&[
+            ("brave-bin", "/cache/brave.jxl"),
+            ("aerc", "/cache/aerc.jxl"),
+        ])
+    });
 
     assert_eq!(
         finder.find("Breeze", &package("brave-bin")),
@@ -152,4 +168,46 @@ fn counted(entries: &[(&str, &str, &str)]) -> (Table, crossbeam_channel::Receive
     let mut finder = table(entries);
     finder.asked = Some(sender);
     (finder, receiver)
+}
+
+#[test]
+fn a_miss_is_asked_again_once_a_plan_may_have_installed_the_app() {
+    let installed = std::sync::Arc::default();
+    let (forgot, forgotten) = crossbeam_channel::unbounded();
+    let finder = Installs {
+        installed: std::sync::Arc::clone(&installed),
+        forgot,
+    };
+
+    let pictures = Pictures::spawn(egui::Context::default(), finder);
+    pictures.set_theme("Breeze");
+    assert_eq!(settle(&pictures, "kate"), None);
+
+    *installed.lock() = Some(PathBuf::from("/i/kate.svg"));
+    assert_eq!(
+        settle(&pictures, "kate"),
+        None,
+        "a miss was asked again unasked"
+    );
+
+    pictures.forget_misses();
+    assert_eq!(settle(&pictures, "kate"), Some("/i/kate.svg".into()));
+    assert_eq!(forgotten.try_iter().count(), 1);
+}
+
+#[test]
+fn the_layers_forget_the_index_and_read_the_cache_again() {
+    let reads = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let counted = std::sync::Arc::clone(&reads);
+    let mut finder = Layered::new(Theme(&[]), move || {
+        counted.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        Cache(&[])
+    });
+
+    finder.find("Breeze", &package("kate"));
+    finder.find("Breeze", &package("aerc"));
+    finder.forget();
+    finder.find("Breeze", &package("kate"));
+
+    assert_eq!(reads.load(std::sync::atomic::Ordering::SeqCst), 2);
 }

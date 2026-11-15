@@ -192,7 +192,7 @@ impl Sizes {
         changes_list_height: 320.0,
         remove_width: 32.0,
         dot_cell: vec2(8.0, 18.0),
-        badge_size: 22.0,
+        badge_size: 24.0,
         badge_padding: 12.0,
         steps_height: 120.0,
         step_row_height: 20.0,

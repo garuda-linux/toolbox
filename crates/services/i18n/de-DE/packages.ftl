@@ -48,6 +48,10 @@ packages-removes = Zu entfernen
 packages-no-repository = kein Repository
 
 packages-remove-title = { $package } entfernen?
+packages-remove-required = { $count ->
+        [one] 1 installiertes Paket braucht es. pacman entfernt nichts, solange es bleibt:
+       *[other] { $count } installierte Pakete brauchen es. pacman entfernt nichts, solange sie bleiben:
+    }
 packages-remove-alone = Nur dieses Paket wird entfernt. Es hat keine Abhängigkeiten mitgebracht, die sonst kein Paket braucht.
 packages-remove-along = { $count ->
         [one] Zusätzlich wird 1 Abhängigkeit entfernt, die kein anderes Paket braucht:
@@ -64,6 +68,14 @@ packages-back-to = ← { $package }
 packages-back-to-name = Zurück zu { $package }
 packages-more = +{ $count } weitere
 packages-more-name = { $count } weitere anzeigen
+packages-libraries = { $count ->
+        [one] +1 Bibliothek
+       *[other] +{ $count } Bibliotheken
+    }
+packages-libraries-name = { $count ->
+        [one] 1 Bibliothek anzeigen
+       *[other] { $count } Bibliotheken anzeigen
+    }
 packages-details-loading = Paket wird eingelesen…
 packages-details-failed = Das Paket ließ sich nicht lesen.
 packages-gone = { $package } steht in keiner Paketdatenbank mehr
@@ -95,6 +107,9 @@ packages-copy-list = Liste kopieren
 packages-files-copied = Die Dateiliste wurde in die Zwischenablage kopiert.
 # What screen readers call the list of files.
 packages-files-list = Installierte Dateien
+packages-files-filter = Dateien filtern
+packages-files-filter-clear = Filter leeren
+packages-files-none = Keine Datei passt zu „{ $filter }“.
 
 packages-history = Verlauf
 packages-history-all = Alle anzeigen
@@ -127,6 +142,7 @@ packages-aur-votes = { $count ->
 
 packages-aur-install-title = { $package } aus dem AUR bauen?
 packages-aur-install-body = Das Paket wird aus einem Skript der Community auf deinem Computer gebaut. paru zeigt dir das Build-Skript vorher in der Konsole.
+packages-aur-install-confirm = Bauen und installieren
 
 packages-aur-maintainer = Betreuer
 packages-aur-orphaned = Keiner (verwaist)

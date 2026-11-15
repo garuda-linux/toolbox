@@ -25,6 +25,6 @@ pub use toolbox_state::network::hardware::{
     Device, DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices,
 };
 pub use tools::{
-    HOTSPOT_PACKAGE, HOTSPOT_PROGRAM, PackageState, TRACEROUTE_PACKAGE, package_state, plan_ping,
-    plan_traceroute, toggle_install,
+    HOTSPOT_PACKAGE, HOTSPOT_PROGRAM, PCIUTILS_PACKAGE, PackageState, TRACEROUTE_PACKAGE,
+    package_state, plan_ping, plan_traceroute, toggle_install,
 };

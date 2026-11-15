@@ -151,6 +151,23 @@ pub fn takes_along(targets: &[PackageName], local: &[LocalNode]) -> Vec<PackageN
     names
 }
 
+/// The installed packages that need `package`, sorted by name. pacman does
+/// not remove a package they need while they stay.
+pub fn required_by(package: &PackageName, local: &[LocalNode]) -> Vec<PackageName> {
+    let graph = Graph::new(local);
+    let Some(&index) = graph.by_name.get(package.as_str()) else {
+        return Vec::new();
+    };
+
+    let mut names: Vec<PackageName> = graph
+        .users_of(index)
+        .filter_map(|&user| local.get(user).map(|node| node.name.clone()))
+        .collect();
+
+    names.sort();
+    names
+}
+
 pub fn orphans(local: &[LocalNode]) -> BTreeSet<PackageName> {
     let graph = Graph::new(local);
 

@@ -10,8 +10,7 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, Question, Tone, banner, card, card_row, loading_label, pill_button,
-    question, rich,
+    ButtonKind, DialogWidth, Question, Tone, banner, card, card_row, pill_button, question, rich,
 };
 use toolbox_plan::{PackageName, RemoteAction};
 
@@ -48,7 +47,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
     let ctx = ui.ctx().clone();
     heading(ui, icons::GAMES_SOLVE, "maintenance-repairs");
     let Some(programs) = context.home.programs else {
-        loading_label(ui, &i18n::text(&ctx, "maintenance-repairs"));
+        super::waiting(ui, "maintenance-repairs", Repair::ALL.len());
         return;
     };
 
@@ -102,25 +101,35 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
     let id = repair.repair.text_id();
     let detail = i18n::text(ui.ctx(), &format!("{id}-detail"));
     let mut clicked = false;
-    row(ui, repair_icon(repair.repair), &id, &detail, |ui| {
-        // A greyed Run says what brings it.
-        if !repair.available {
-            let needs = i18n::text_with(
-                ui.ctx(),
-                "maintenance-repair-needs",
-                &[("package", repair.needs.as_str())],
-            );
 
-            let secondary = ui.tokens().secondary;
-            ui.label(rich(ui, &needs, Weight::Regular, SMALL, secondary));
-        }
+    // The whole row greys, icon and words too, not its button alone.
+    ui.add_enabled_ui(repair.available, |ui| {
+        row(ui, repair_icon(repair.repair), &id, &detail, |ui| {
+            // A greyed Run says what brings it.
+            if !repair.available {
+                let needs = i18n::text_with(
+                    ui.ctx(),
+                    "maintenance-repair-needs",
+                    &[("package", repair.needs.as_str())],
+                );
 
-        let text = i18n::text(ui.ctx(), "maintenance-run");
-        let enabled = repair.available && !context.busy;
-        clicked = ui
-            .add_enabled_ui(enabled, |ui| pill_button(ui, &text, ButtonKind::Soft))
-            .inner
-            .clicked();
+                let sizes = ui.tokens().sizes;
+                let secondary = ui.tokens().secondary;
+                ui.label(rich(ui, &needs, Weight::Regular, SMALL, secondary));
+                ui.add_space(sizes.text_to_control - sizes.control_gap);
+            }
+
+            let text = i18n::text(ui.ctx(), "maintenance-run");
+
+            // Inside the greyed row a second disable would fade it twice.
+            clicked = if repair.available && context.busy {
+                ui.add_enabled_ui(false, |ui| pill_button(ui, &text, ButtonKind::Soft))
+                    .inner
+                    .clicked()
+            } else {
+                pill_button(ui, &text, ButtonKind::Soft).clicked()
+            };
+        });
     });
 
     clicked

@@ -31,7 +31,10 @@ impl Shelf {
         &self.rows
     }
 
+    /// Also clears the last reset's outcome, as its banner would speak of
+    /// an older choice.
     pub fn choose(&mut self, entry: &str, wish: Toggle) {
+        self.outcome = Outcome::default();
         let on = wish.is_on();
         if !on {
             self.chosen.remove(entry);

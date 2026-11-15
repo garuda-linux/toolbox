@@ -429,9 +429,10 @@ $ garuda-toolbox dkms build --kernel linux-lts
 ```
 
 `boot set` takes the page's settings: `default` (an id of `boot entries`),
-`timeout` (0 to 300 seconds), `remember`, `submenus`, `os-prober`,
-`quiet`, `splash`, `mitigations-off` and `sysrq` (`on` or `off`),
-`background` and `theme` (a full path or `none`) and `plymouth` (a theme).
+`timeout` (0 to 300 seconds, or -1 to wait for a key), `remember`,
+`submenus`, `os-prober`, `quiet`, `splash`, `mitigations-off` and `sysrq`
+(`on` or `off`), `background` and `theme` (a full path or `none`) and
+`plymouth` (a theme).
 Each change writes `/etc/default/grub` and generates the boot menu again.
 On systemd-boot, `boot set` writes `loader.conf` instead and takes
 `default` (an id of `boot entries`, `saved` or `none`), `timeout` (seconds,

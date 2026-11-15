@@ -1,6 +1,9 @@
+use std::fmt::Write as _;
+
+use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::configs::Refusal;
-use toolbox_core::features::configs::session::{Problem, ProblemCode, Session};
+use toolbox_core::features::configs::session::{Changes, Problem, ProblemCode, Session};
 use toolbox_core::features::configs::viewing::Viewing;
 use toolbox_gui_kit::testing::{fill_under, painted_text_within};
 
@@ -12,6 +15,10 @@ use crate::refused::Refused;
 /// How far a dialog that fills the window keeps its buttons from the
 /// window's bottom: the window margin and the card padding, with room.
 const FILLED_BOTTOM: f32 = 48.0;
+
+/// A dialog as tall as a few lines of text keeps far more room below
+/// its buttons, centred in the 900 point high window.
+const GROWN_BOTTOM: f32 = 150.0;
 
 #[test]
 fn the_review_shows_the_changes_and_saves_on_request() {
@@ -173,44 +180,169 @@ fn button_room_below(harness: &super::Shown, label: &str) -> f32 {
     harness.ctx.content_rect().bottom() - button.bottom()
 }
 
+/// The right edges of the title bar's `close` and of the last `footer` button.
+fn right_edges(harness: &super::Shown, close: &str, footer: &str) -> (f32, f32) {
+    let title = harness.query_all_by_label(close).next().unwrap().rect();
+    let button = harness.query_all_by_label(footer).last().unwrap().rect();
+    (title.right(), button.right())
+}
+
+/// `count` numbered lines, as a long file or its diff.
+fn numbered(mark: &str, count: u32) -> String {
+    (0..count).fold(String::new(), |mut text, number| {
+        writeln!(text, "{mark}line {number}").unwrap();
+        text
+    })
+}
+
+fn long_review() -> Session {
+    let (original, edited) = (numbered("", 300), numbered("new ", 300));
+    let plain = format!(
+        "@@ -1,300 +1,300 @@\n{}{}",
+        numbered("-", 300),
+        numbered("+new ", 300)
+    );
+
+    super::reviewing_with(
+        super::path("/etc/default/grub").into(),
+        Changes {
+            original: super::text(&original),
+            edited: super::text(&edited),
+            plain,
+            added: 300,
+            removed: 300,
+        },
+    )
+}
+
 #[test]
-fn a_short_review_still_fills_the_window() {
+fn a_short_review_is_as_tall_as_its_diff() {
     let harness = page(listed().with(reviewing(), Viewing::default()));
 
     let below = button_room_below(&harness, "Save");
 
-    assert!(below < FILLED_BOTTOM, "Save sits {below} above the bottom");
+    assert!(below > GROWN_BOTTOM, "Save sits {below} above the bottom");
 }
 
 #[test]
-fn close_ends_at_the_right_edge_also_when_the_file_was_not_read() {
-    let mut failed = Viewing::default();
-    let number = failed.start(super::path("/etc/sudoers")).unwrap();
-    failed.read(number, Err(Problem::new(ProblemCode::Missing, "")));
+fn a_long_review_grows_to_the_window_and_keeps_its_buttons_in_it() {
+    let harness = page(listed().with(long_review(), Viewing::default()));
 
-    let right = |viewing| {
-        let harness = page(listed().with(Session::default(), viewing));
-        harness
-            .query_all_by_label("Close")
-            .last()
-            .unwrap()
-            .rect()
-            .right()
-    };
-
-    let (shown, refused) = (right(viewing()), right(failed));
+    let below = button_room_below(&harness, "Save");
 
     assert!(
-        (shown - refused).abs() < 0.5,
-        "Close ends at {refused}, beside Copy all at {shown}"
+        (0.0..FILLED_BOTTOM).contains(&below),
+        "Save sits {below} above the bottom"
     );
 }
 
 #[test]
-fn a_shown_file_fills_the_window() {
+fn a_short_file_is_shown_in_a_dialog_as_tall_as_its_text() {
     let harness = page(listed().with(Session::default(), viewing()));
 
     let below = button_room_below(&harness, "Close");
 
-    assert!(below < FILLED_BOTTOM, "Close sits {below} above the bottom");
+    assert!(below > GROWN_BOTTOM, "Close sits {below} above the bottom");
+}
+
+#[test]
+fn a_long_file_grows_to_the_window_and_keeps_close_in_it() {
+    let long = numbered("", 300);
+    let harness = page(listed().with(Session::default(), super::viewing_of(&long)));
+
+    let below = button_room_below(&harness, "Close");
+
+    assert!(
+        (0.0..FILLED_BOTTOM).contains(&below),
+        "Close sits {below} above the bottom"
+    );
+}
+
+#[test]
+fn a_file_being_read_or_not_read_shows_in_a_small_dialog() {
+    let mut failed = Viewing::default();
+    let number = failed.start(super::path("/etc/sudoers")).unwrap();
+    failed.read(number, Err(Problem::new(ProblemCode::Missing, "")));
+    let mut reading = Viewing::default();
+    reading.start(super::path("/etc/sudoers")).unwrap();
+
+    let shown = page(listed().with(Session::default(), viewing()));
+    let (shown_right, _) = right_edges(&shown, "Close", "Close");
+
+    for (phase, viewing) in [("failed", failed), ("reading", reading)] {
+        let harness = page(listed().with(Session::default(), viewing));
+        let (title, button) = right_edges(&harness, "Close", "Close");
+
+        assert!(
+            title < shown_right - 50.0,
+            "{phase}: the dialog ends at {title}, as wide as a shown file at {shown_right}"
+        );
+        assert!(
+            (title - button).abs() < 1.0,
+            "{phase}: Close ends at {button}, the dialog at {title}"
+        );
+    }
+}
+
+#[test]
+fn the_buttons_end_at_the_dialogs_right_edge() {
+    let viewed = page(listed().with(Session::default(), viewing()));
+    let reviewed = page(listed().with(reviewing(), Viewing::default()));
+
+    for (dialog, (title, button)) in [
+        ("view", right_edges(&viewed, "Close", "Close")),
+        (
+            "review",
+            right_edges(&reviewed, "Close and keep the edits", "Save"),
+        ),
+    ] {
+        assert!(
+            (title - button).abs() < 1.0,
+            "{dialog}: the last button ends at {button}, the dialog at {title}"
+        );
+    }
+}
+
+/// The dialog's padding is the same on every side, so its centre is the
+/// middle between its title's left and Close's right, and between the
+/// title's top and the last button's bottom.
+fn assert_centred(harness: &super::Shown, title: &str, close: &str, last: &str) {
+    let heading = harness.get_by_role_and_label(Role::Heading, title).rect();
+    let close = harness.query_all_by_label(close).next().unwrap().rect();
+    let button = harness.query_all_by_label(last).last().unwrap().rect();
+    let centre = egui::pos2(
+        f32::midpoint(heading.left(), close.right()),
+        f32::midpoint(heading.top().min(close.top()), button.bottom()),
+    );
+
+    let off = centre - harness.ctx.content_rect().center();
+
+    assert!(
+        off.x.abs() <= 1.0 && off.y.abs() <= 1.0,
+        "{title}: the dialog's centre is {off:?} from the window's centre"
+    );
+}
+
+#[test]
+fn a_file_read_while_its_dialog_shows_stays_centred_as_the_dialog_grows() {
+    let mut reading = Viewing::default();
+    reading.start(super::path("/etc/sudoers")).unwrap();
+    let mut harness = page(listed().with(Session::default(), reading));
+
+    harness.state_mut().fixture.services.configs = listed().with(Session::default(), viewing());
+    harness.step();
+
+    assert_centred(&harness, "The text of /etc/sudoers", "Close", "Close");
+}
+
+#[test]
+fn the_review_sits_in_the_windows_centre() {
+    let harness = page(listed().with(reviewing(), Viewing::default()));
+
+    assert_centred(
+        &harness,
+        "Save the changes to /etc/default/grub?",
+        "Close and keep the edits",
+        "Save",
+    );
 }

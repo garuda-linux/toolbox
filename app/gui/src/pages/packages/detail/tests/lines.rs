@@ -75,21 +75,30 @@ fn the_history_starts_one_card_padding_into_its_card() {
     );
 }
 
-/// The files' card starts one caption gap under the fold's line, which
-/// is as tall as Copy list beside it.
+/// The filter sits a tight gap under the fold's line, which is as tall as
+/// Copy list beside it, and the files' card a control gap under the filter.
 #[test]
-fn the_files_card_starts_one_caption_gap_under_copy_list() {
+fn the_files_card_starts_under_the_filter_under_copy_list() {
     let harness = unfolded();
 
     let file = text_top(&harness, "/usr/bin/gimp");
     let card = card_top(&harness, file);
 
     let copy = rect_of(&harness, Role::Button, "Copy list");
-    let gap = tokens::current(&harness.ctx).sizes.caption_gap;
+    let filter = harness.get_by_label("Filter files").rect();
+    let sizes = tokens::current(&harness.ctx).sizes;
+
+    // egui puts its item spacing after every widget, on top of the gap.
+    let spacing = harness.ctx.global_style().spacing.item_spacing.y;
     assert!(
-        (card - copy.bottom() - gap).abs() < 0.5,
-        "the files' card {} under Copy list",
-        card - copy.bottom()
+        (filter.top() - copy.bottom() - sizes.tight_gap - spacing).abs() < 0.5,
+        "the filter {} under Copy list",
+        filter.top() - copy.bottom()
+    );
+    assert!(
+        (card - filter.bottom() - sizes.control_gap - spacing).abs() < 0.5,
+        "the files' card {} under the filter",
+        card - filter.bottom()
     );
 }
 

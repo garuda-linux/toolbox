@@ -1,3 +1,5 @@
+mod unread;
+
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
@@ -5,11 +7,13 @@ use egui::{Ui, vec2};
 use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Rows, Tone, banner, chip, dimmed, empty_state,
-    loading_indicator, page_toolbar, pill_button,
+    ListItem, RowHeights, RowList, Rows, Tone, chip, dimmed, empty_state, empty_state_action,
+    page_toolbar,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
+pub use unread::unreadable;
+use unread::{placeholder, unreadable_index, unreadable_page, waiting};
 
 use super::row::{self, PackageRow, Row};
 use super::{PackagesPage, Updates, aur, shows_aur};
@@ -99,7 +103,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         page.filter = Filter::Installed;
     }
 
-    let Some((catalog, unread)) = read_catalog(ui, context, aur_on) else {
+    let Some((catalog, unread)) = read_catalog(page, ui, context, aur_on) else {
         return;
     };
 
@@ -167,6 +171,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
 /// The repositories' catalog and whether it could not be read, `None` when
 /// the page shows nothing else.
 fn read_catalog(
+    page: &mut PackagesPage,
     ui: &mut Ui,
     context: &PageContext<'_>,
     aur_on: bool,
@@ -176,13 +181,11 @@ fn read_catalog(
     match context.service::<Packages>().index() {
         Read::Known(catalog) => Some((Arc::clone(catalog), false)),
         Read::Loading => {
-            ui.vertical_centered(|ui| {
-                loading_indicator(ui, &i18n::text(ui.ctx(), "packages-loading"));
-            });
+            waiting(page, ui, aur_on);
             None
         }
         Read::Unavailable | Read::Failed if !aur_on => {
-            unreadable_index(ui, context);
+            unreadable_page(ui, context);
             None
         }
         Read::Unavailable | Read::Failed => {
@@ -254,15 +257,13 @@ where
     opened
 }
 
-/// Draws the loading line or the failure banner of the Updates chip.
+/// Draws the placeholder rows or the failure banner of the Updates chip.
 /// Returns whether the updates are known, so the rows may show.
 fn updates_read(ui: &mut Ui, context: &PageContext<'_>, updates: &Updates) -> bool {
     match updates {
         Updates::Known(_) => true,
         Updates::Unread => {
-            ui.vertical_centered(|ui| {
-                loading_indicator(ui, &i18n::text(ui.ctx(), "packages-updates-loading"));
-            });
+            placeholder(ui, "packages-updates-loading");
             false
         }
         Updates::Failed => {
@@ -348,31 +349,9 @@ pub fn nothing(page: &mut PackagesPage, ui: &mut Ui) {
 
     let title = i18n::text_with(&ctx, "packages-nothing-matches", &[("search", &search)]);
     let detail = i18n::text(&ctx, "packages-nothing-matches-detail");
-    empty_state(ui, icons::SYSTEM_SEARCH, &title, &detail);
-    ui.add_space(ui.tokens().sizes.card_gap);
-    ui.vertical_centered(|ui| {
-        let clear = i18n::text(&ctx, "packages-clear-search");
-        if pill_button(ui, &clear, ButtonKind::Soft).clicked() {
-            page.search.clear();
-        }
-    });
-}
-
-fn unreadable_index(ui: &mut Ui, context: &PageContext<'_>) {
-    let id = if matches!(context.service::<Packages>().index(), Read::Unavailable) {
-        "packages-unavailable"
-    } else {
-        "packages-failed"
-    };
-
-    unreadable(ui, context, id);
-}
-
-pub fn unreadable(ui: &mut Ui, context: &PageContext<'_>, id: &str) {
-    let ctx = ui.ctx().clone();
-    let again = i18n::text(&ctx, "common-read-again");
-    if banner(ui, Tone::Warning, &i18n::text(&ctx, id), &[&again]).is_some() {
-        context.commands.send(PackagesCommand::Refresh);
+    let clear = i18n::text(&ctx, "packages-clear-search");
+    if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &clear) {
+        page.search.clear();
     }
 }
 

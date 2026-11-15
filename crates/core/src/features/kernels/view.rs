@@ -19,8 +19,8 @@ pub struct Listing {
 }
 
 #[derive(Debug)]
-pub struct Row<'listing> {
-    pub kernel: &'listing Kernel,
+pub struct Row {
+    pub kernel: Kernel,
     pub queued: Option<Toggle>,
     pub running: bool,
     pub headers_queued: Option<Toggle>,
@@ -80,7 +80,7 @@ impl Listing {
             .collect()
     }
 
-    pub fn rows(&self, changes: &ChangeSet, dkms: &[DkmsEntry]) -> Vec<Row<'_>> {
+    pub fn rows(&self, changes: &ChangeSet, dkms: &[DkmsEntry]) -> Vec<Row> {
         self.kernels
             .iter()
             .map(|kernel| self.row(kernel, changes, dkms))
@@ -101,12 +101,8 @@ impl Listing {
             .count()
     }
 
-    fn row<'listing>(
-        &'listing self,
-        kernel: &'listing Kernel,
-        changes: &ChangeSet,
-        dkms: &[DkmsEntry],
-    ) -> Row<'listing> {
+    /// The row owns its kernel, so a page keeps rows without the listing.
+    fn row(&self, kernel: &Kernel, changes: &ChangeSet, dkms: &[DkmsEntry]) -> Row {
         let release = build_release(kernel, &self.releases);
         let modules = release.map_or_else(Vec::new, |release| {
             modules(release, dkms)
@@ -129,7 +125,7 @@ impl Listing {
         let queued = changes.wish::<Packages>(&kernel.name).copied();
 
         Row {
-            kernel,
+            kernel: kernel.clone(),
             queued,
             running: self.running.as_ref() == Some(&kernel.name),
             headers_queued: changes.wish::<Packages>(&kernel.headers).copied(),
@@ -140,7 +136,7 @@ impl Listing {
     }
 }
 
-impl Row<'_> {
+impl Row {
     /// The same buttons as a package of Components. A queued wish offers
     /// Take back, so a restored queue never strands the running kernel.
     pub const fn control(&self) -> Control {

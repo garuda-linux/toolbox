@@ -42,6 +42,7 @@ boot-default-dismissed = Die Passwortabfrage wurde geschlossen, daher fehlen die
 boot-default-denied = Die Einträge des Bootmenüs fehlen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen. Mit „Neu einlesen“ versuchst du es erneut.
 boot-default-no-agent = Die Einträge des Bootmenüs fehlen, weil keine Passwortabfrage erscheinen konnte: In dieser Sitzung läuft kein polkit-Agent.
 boot-default-helper-missing = Die Einträge des Bootmenüs fehlen, weil das Hilfsprogramm von Garuda Toolbox nicht installiert ist. Installiere Garuda Toolbox neu.
+boot-default-broken = Die Einträge des Bootmenüs fehlen, weil pkexec auf diesem System nicht laufen kann.
 boot-default-unknown = Das Bootmenü konnte nicht gelesen werden, daher fehlen seine Einträge. Mit „Neu einlesen“ versuchst du es erneut.
 boot-default-not-asked = Das Bootmenü wurde noch nicht gelesen. Mit „Neu einlesen“ liest du es ein.
 boot-default-loading = Das Bootmenü wird eingelesen…
@@ -52,7 +53,7 @@ boot-entry-unlisted = { $entry } (nicht im Bootmenü)
 boot-remember = Letzten Eintrag merken
 boot-remember-detail = Macht den zuletzt gestarteten Eintrag zum Standard für den nächsten Start.
 boot-timeout = Wartezeit des Menüs
-boot-timeout-detail = Wie viele Sekunden das Menü wartet, bevor es den Standardeintrag startet.
+boot-timeout-detail = Wie lange das Menü wartet, bevor es den Standardeintrag startet.
 boot-timeout-unknown = Die eingetragene Wartezeit ist keine Zahl. Wählst du hier einen Wert, wird sie ersetzt.
 boot-timeout-seconds = Wartezeit des Menüs in Sekunden
 # The unit after the timeout's number, the symbol for seconds.

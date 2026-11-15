@@ -5,15 +5,28 @@ use toolbox_plan::PackageName;
 
 use super::graph::dependency_name;
 use super::list::Catalog;
+use crate::features::search::Needle;
 
 pub const NAMES_SHOWN: usize = 12;
 
 pub const HISTORY_SHOWN: usize = 5;
 
+/// What a soname dependency ends in before its version, as
+/// `libavcodec.so=63-64`.
+const LIBRARY_END: &str = ".so";
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct Shown<'a, T> {
     pub items: &'a [T],
     pub hidden: usize,
+}
+
+/// A dependency list as the detail page shows it: the packages, then the
+/// sonames of libraries, each part in the list's order.
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct ByKind<'a> {
+    pub packages: Vec<&'a str>,
+    pub libraries: Vec<&'a str>,
 }
 
 /// The package a dependency string leads to: the package of its name,
@@ -26,15 +39,19 @@ pub fn target(catalog: &Catalog, dependency: &str) -> Option<PackageName> {
         return Some(named);
     }
 
-    catalog
-        .local()
+    catalog.provider(wanted).cloned()
+}
+
+pub fn by_kind(dependencies: &[String]) -> ByKind<'_> {
+    let (libraries, packages) = dependencies
         .iter()
-        .find(|node| {
-            node.provides
-                .iter()
-                .any(|provided| dependency_name(provided) == wanted)
-        })
-        .map(|node| node.name.clone())
+        .map(String::as_str)
+        .partition(|dependency| dependency_name(dependency).ends_with(LIBRARY_END));
+
+    ByKind {
+        packages,
+        libraries,
+    }
 }
 
 pub fn shown<T>(items: &[T], limit: usize, all: bool) -> Shown<'_, T> {
@@ -58,6 +75,18 @@ pub fn file_list(files: &[String]) -> String {
         text.push('\n');
         text
     })
+}
+
+/// The places in `files` of the paths that hold `filter`, in either case.
+/// An empty filter keeps every path.
+pub fn matching_files(files: &[String], filter: &str) -> Vec<usize> {
+    let needle = Needle::new(filter);
+    files
+        .iter()
+        .enumerate()
+        .filter(|(_, file)| needle.is_in(file))
+        .map(|(place, _)| place)
+        .collect()
 }
 
 /// A web link as the detail page shows it, without `https://` and a

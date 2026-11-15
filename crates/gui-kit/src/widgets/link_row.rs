@@ -1,19 +1,18 @@
 //! A compact row that leads somewhere, for a card of links such as About's
 //! Help: an icon, a title and a chevron, the whole row one target.
 
-use egui::{CornerRadius, Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
+use egui::{Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
-use super::press::Pointer;
+use super::painted_row::painted_row;
+use super::rich;
 use super::text::cut;
-use super::{focus_ring, rich};
 use crate::fonts::{BODY, Weight};
 use crate::icons::{self, Icon};
-use crate::theme::RADIUS;
 use crate::tokens;
 use crate::ui_ext::icon_image;
 
-const HEIGHT: f32 = 44.0;
+const HEIGHT: f32 = 40.0;
 const PADDING_X: f32 = 12.0;
 const GAP: f32 = 12.0;
 const CHEVRON: f32 = 14.0;
@@ -22,21 +21,15 @@ const CHEVRON: f32 = 14.0;
 /// opens a page, [`Role::Button`] for one that acts here.
 pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let width = ui.available_width();
-    let (rect, response) = ui.allocate_exact_size(vec2(width, HEIGHT), Sense::click());
+    let row = painted_row(ui, HEIGHT, Sense::click(), 0.0);
+    let (rect, response) = (row.content, row.response.clone());
     response.widget_info(|| WidgetInfo::labeled(role, ui.is_enabled(), title));
 
     if !ui.is_rect_visible(rect) {
         return response;
     }
 
-    let pointer = Pointer::of_focusable(&response);
-    if pointer.is_under() {
-        let fill = pointer.fill(&tokens, tokens.hover);
-        ui.painter()
-            .rect_filled(rect, CornerRadius::same(RADIUS), fill);
-    }
-
+    row.paint_fill(ui);
     let mid = rect.center().y;
     let edge = TileSize::Line.edge(ui);
     let square = Rect::from_center_size(
@@ -68,7 +61,7 @@ pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
     );
 
     icon_image(ui, icons::GO_NEXT, tokens.secondary).paint_at(ui, chevron);
-    focus_ring(ui, &response, RADIUS);
+    row.paint_ring(ui);
 
     // The title is whole for screen readers already, the tooltip shows
     // it whole to the eye.

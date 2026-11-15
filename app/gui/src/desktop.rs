@@ -20,9 +20,10 @@ use self::icon_files::AppIcons;
 #[derive(Clone, Debug, PartialEq)]
 pub struct DesktopLook {
     pub look: Look,
-    pub ui_fonts: Vec<FontFile>,
-    pub fixed_font: Option<FontFile>,
-    /// Shared, as the font is megabytes.
+    /// Shared, as each look change hands the frame a copy and the fonts
+    /// are megabytes.
+    pub ui_fonts: Arc<[FontFile]>,
+    pub fixed_font: Option<Arc<FontFile>>,
     pub emoji_font: Option<Arc<FontFile>>,
     pub icons: Option<Arc<ThemeIcons>>,
     pub app_icons: Option<Arc<AppIcons>>,
@@ -32,7 +33,7 @@ impl Default for DesktopLook {
     fn default() -> Self {
         Self {
             look: Look::resolve(&Sources::default()),
-            ui_fonts: Vec::new(),
+            ui_fonts: Arc::default(),
             fixed_font: None,
             emoji_font: None,
             icons: None,
@@ -43,7 +44,7 @@ impl Default for DesktopLook {
 
 #[must_use = "the definitions do nothing until set on the context"]
 pub fn font_definitions(desktop: &DesktopLook) -> FontDefinitions {
-    let mut definitions = fonts::definitions(&desktop.ui_fonts, desktop.fixed_font.as_ref());
+    let mut definitions = fonts::definitions(&desktop.ui_fonts, desktop.fixed_font.as_deref());
     if let Some(emoji) = &desktop.emoji_font {
         fonts::add_fallback(&mut definitions, emoji);
     }

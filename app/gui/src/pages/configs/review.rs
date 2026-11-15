@@ -12,8 +12,7 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
 use toolbox_gui_kit::tokens::Tokens;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, ModalWrapper, Question, Tone, banner, pill_button, pill_width,
-    question,
+    ButtonKind, DialogWidth, ModalWrapper, Question, Tone, banner, pill_button, question,
 };
 
 use self::lines::{Covered, Kind, Row};
@@ -53,9 +52,8 @@ pub fn show(ctx: &Context, context: &PageContext<'_>, session: &Session) -> bool
     let outcome = ModalWrapper::new(Id::unique("toolbox_gui::configs::review"), &title)
         .title_bar(&close)
         .width(DialogWidth::Wide)
-        .full_height()
         .show(ctx, |ui| {
-            super::filled(
+            super::stacked(
                 ui,
                 |ui| {
                     words(ui, session, changes, &path);
@@ -189,14 +187,14 @@ fn diff(ui: &mut Ui, changes: &Changes) {
     };
 
     let name = i18n::text(&ctx, "configs-review-diff").into_owned();
-    let height = ui.available_height().max(super::MIN_TEXT_HEIGHT);
+    let height = super::text_room(ui);
     let area = ui
         .scope(|ui| {
             // show_rows counts the spacing of this ui between rows.
             ui.spacing_mut().item_spacing.y = 0.0;
             ScrollArea::both()
                 .max_height(height)
-                .auto_shrink([false, false])
+                .auto_shrink([false, true])
                 .show_rows(ui, look.height, rows.lines.len(), |ui, range| {
                     ui.set_min_width(look.extent);
                     let width = look.extent.max(ui.available_width());
@@ -309,58 +307,46 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let failed = session.problem().is_some();
-    let mut labels = vec![
+    let (discard, edit_again, compare_again, save) = (
         text("configs-discard-ask"),
         text("configs-edit-again"),
+        text("configs-compare-again"),
         text("configs-save"),
-    ];
+    );
 
-    if failed {
-        labels.push(text("configs-compare-again"));
-    }
+    let labels: Vec<&str> = [discard.as_str(), edit_again.as_str()]
+        .into_iter()
+        .chain(failed.then_some(compare_again.as_str()))
+        .chain([save.as_str()])
+        .collect();
 
-    ui.horizontal(|ui| {
-        let gap = ui.tokens().sizes.control_gap;
-        ui.spacing_mut().item_spacing.x = gap;
-        let count = f32::from(u8::try_from(labels.len()).unwrap_or(u8::MAX));
-        let buttons = labels
-            .iter()
-            .map(|label| pill_width(ui, label))
-            .sum::<f32>();
-
-        let width = gap.mul_add(count - 1.0, buttons);
-        ui.add_space((ui.available_width() - width).max(0.0));
+    super::right_buttons(ui, &labels, |ui| {
         let mut chosen = None;
-        if pill_button(ui, &text("configs-discard-ask"), ButtonKind::Soft).clicked() {
+        if pill_button(ui, &discard, ButtonKind::Soft).clicked() {
             set_asking_discard(ui.ctx(), true);
         }
 
         let idle = !context.busy;
         let again = ui
-            .add_enabled_ui(idle, |ui| {
-                pill_button(ui, &text("configs-edit-again"), ButtonKind::Soft)
-            })
+            .add_enabled_ui(idle, |ui| pill_button(ui, &edit_again, ButtonKind::Soft))
             .inner;
 
         if again.clicked() {
             chosen = Some(ConfigsCommand::EditAgain);
         }
 
-        if failed && pill_button(ui, &text("configs-compare-again"), ButtonKind::Soft).clicked() {
+        if failed && pill_button(ui, &compare_again, ButtonKind::Soft).clicked() {
             chosen = Some(ConfigsCommand::Reread);
         }
 
-        let save = ui
-            .add_enabled_ui(idle, |ui| {
-                pill_button(ui, &text("configs-save"), ButtonKind::Primary)
-            })
+        let saved = ui
+            .add_enabled_ui(idle, |ui| pill_button(ui, &save, ButtonKind::Primary))
             .inner;
 
-        if save.clicked() {
+        if saved.clicked() {
             chosen = Some(ConfigsCommand::Apply);
         }
 
         chosen
     })
-    .inner
 }

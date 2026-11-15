@@ -93,7 +93,8 @@ one the file named before, or the first one of the list.
 ## Change how long the menu waits
 
 Set **Menu timeout** to the seconds the menu waits before it boots the default
-entry, from 0 to 300. With 0 the menu does not wait at all.
+entry, from 0 to 300. With 0 the menu does not wait at all. Pick **The menu
+waits for a key** in its list to keep the menu open until a key is pressed.
 
 ## Show or hide submenus and other systems
 

@@ -10,6 +10,8 @@ locales-queued = Changes with Apply
 
 locales-search = Search locales
 locales-search-hint = Search locales…
+locales-packs-search = Search language packs
+locales-packs-search-hint = Search language packs…
 locales-filter-utf8 = UTF-8 only
 locales-filter-enabled = Enabled only
 locales-list = Locales
@@ -24,6 +26,8 @@ locales-disabled = Disabled
 locales-title-territory = { $language } ({ $territory })
 locales-detail = { $code }, { $charset }
 locales-detail-system = { $code }, { $charset }, system language
+locales-detail-code = { $code }
+locales-detail-code-system = { $code }, system language
 
 locales-system = System language
 locales-system-detail = The system language takes effect at the next login. Only enabled locales are offered: enable a locale in the list below first.
@@ -37,7 +41,11 @@ locales-refused-last-locale = At least one locale must stay enabled.
 locales-refused-not-enabled = { $name } is not enabled. Enable the locale first.
 locales-dismiss = Dismiss
 
-locales-packs-intro = Language packs for your enabled locales and installed programs. Missing: { $count }
+locales-packs-intro =
+    Language packs for your enabled locales and installed programs. { $count ->
+        [one] One pack is not installed.
+       *[other] { $count } packs are not installed.
+    }
 locales-packs-intro-plain = Language packs for your enabled locales and installed programs.
 locales-packs-add-missing = Queue all missing
 locales-packs-sort = Sort language packs
@@ -49,6 +57,8 @@ locales-packs-list = Language packs
 locales-packs-reading = Reading the language packs…
 locales-packs-none = No language packs found
 locales-packs-none-detail = No installed program has a language pack for an enabled locale.
+locales-packs-no-match = No language pack matches
+locales-packs-no-match-detail = The search looks at the names of packs, programs, languages and countries.
 locales-packs-unavailable = Language packs are not available on this system
 locales-packs-unavailable-detail = The package databases of pacman could not be read.
 locales-pack-installed = Installed

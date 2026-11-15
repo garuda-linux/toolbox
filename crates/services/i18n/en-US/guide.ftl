@@ -13,6 +13,8 @@ guide-copy-code = Copy code
 # What screen readers call a picture, which a click shows large. $alt is its description.
 guide-enlarge = Show larger: { $alt }
 guide-code-copied = Copied the code to the clipboard.
+guide-page-missing = The guide has no page “{ $page }”, so its first page opened.
+guide-picture-missing = The picture is missing.
 guide-hits = { $count ->
     [one] One place found
    *[other] { $count } places found

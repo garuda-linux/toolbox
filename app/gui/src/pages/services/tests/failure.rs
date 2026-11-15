@@ -6,17 +6,20 @@ use toolbox_plan::UnitScope;
 
 use super::{ServicesPage, listed, sshd};
 use crate::command::{Command, ServiceCommand};
-use crate::testing::rect_of;
-use crate::units::{UnitListing, UnitsFailure};
+use crate::page_service::Services;
+use crate::testing::{PageFixture, failure_read_again_sends, rect_of};
+use crate::units::{UnitListing, UnitLists, Units, UnitsFailure};
 
-#[test]
-fn a_refused_list_says_why_and_offers_a_retry() {
-    let failed = UnitListing::Failed {
+const fn refused() -> UnitListing {
+    UnitListing::Failed {
         error: UnitsFailure::Denied,
         previous: None,
-    };
+    }
+}
 
-    let mut harness = listed(failed).harness(ServicesPage::default());
+#[test]
+fn a_refused_list_says_why_and_offers_to_read_again() {
+    let mut harness = listed(refused()).harness(ServicesPage::default());
 
     harness.run();
     assert!(
@@ -25,11 +28,8 @@ fn a_refused_list_says_why_and_offers_a_retry() {
             .is_some()
     );
 
-    harness.get_by_role_and_label(Role::Button, "Retry").click();
-    harness.run();
-
     assert_eq!(
-        harness.state().fixture.sent(),
+        failure_read_again_sends(listed(refused()), ServicesPage::default()),
         [Command::from(ServiceCommand::Refresh(UnitScope::System))]
     );
 }
@@ -65,4 +65,57 @@ fn a_failed_relist_keeps_the_units_that_were_read() {
         harness.state().fixture.sent(),
         [Command::from(ServiceCommand::Refresh(UnitScope::System))]
     );
+}
+
+/// Only the user manager failed: the System tab's systemd is fine.
+#[test]
+fn a_user_list_that_failed_names_the_user_manager() {
+    let fixture = PageFixture {
+        services: Services {
+            units: Units::showing(UnitLists {
+                system: UnitListing::Loaded(Arc::new(vec![sshd()])),
+                user: UnitListing::Failed {
+                    error: UnitsFailure::Unavailable,
+                    previous: None,
+                },
+            }),
+            ..Services::default()
+        },
+        ..PageFixture::default()
+    };
+
+    let mut page = ServicesPage::default();
+    page.show_scope(UnitScope::User);
+    let mut harness = fixture.harness(page);
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_label("Your user's systemd is not reachable.")
+            .is_some()
+    );
+    assert!(
+        harness
+            .query_by_label("systemd is not reachable.")
+            .is_none()
+    );
+}
+
+/// Chips, search and sort narrow a list, so they wait for one.
+#[test]
+fn without_a_list_no_chip_search_or_sort_shows() {
+    for listing in [UnitListing::NotLoaded, refused()] {
+        let mut harness = listed(listing).harness(ServicesPage::default());
+        harness.run();
+
+        assert!(harness.query_by_label("Search services").is_none());
+        assert!(harness.query_by_label("Sort services").is_none());
+        assert!(harness.query_by_label_contains("Running").is_none());
+    }
+
+    let mut harness =
+        listed(UnitListing::Loaded(Arc::new(vec![sshd()]))).harness(ServicesPage::default());
+
+    harness.run();
+    assert!(harness.query_by_label("Search services").is_some());
 }

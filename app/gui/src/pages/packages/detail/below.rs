@@ -1,21 +1,22 @@
 //! The parts under the columns: the installed files, folded at first,
-//! with Copy list, and the package's newest lines of pacman's log, open
-//! at first, with Show all.
+//! with Copy list and a filter, and the package's newest lines of
+//! pacman's log, open at first, with Show all.
 
 use std::borrow::Cow;
 use std::sync::Arc;
 
-use egui::{Label, Ui};
+use egui::accesskit::Role;
+use egui::{Label, RichText, ScrollArea, TextStyle, Ui, WidgetInfo};
 use toolbox_core::features::packages::PackageDetails;
-use toolbox_core::features::packages::detail::{HISTORY_SHOWN, file_list, shown};
+use toolbox_core::features::packages::detail::{HISTORY_SHOWN, file_list, matching_files, shown};
 use toolbox_core::features::packages::history::HistoryEntry;
-use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, PropertyTexts, RowHeights, RowList, Rows, counted_disclosure, disclosure,
-    loading_indicator, pill_button, property_list, rich, row_height, text_block_height,
+    ButtonKind, PropertyTexts, SearchTexts, counted_disclosure, disclosure, loading_indicator,
+    pill_button, property_list, rich, search_field,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
@@ -27,39 +28,11 @@ use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::share::view::padded_card;
 
-/// One installed file, keyed by its path.
-pub(super) struct Line<'a> {
-    text: &'a str,
-}
+/// The file box is at most this tall, so a package of thousands of files
+/// keeps its history in reach.
+const FILES_HEIGHT: f32 = 320.0;
 
-impl ListItem for Line<'_> {
-    fn key(&self) -> &str {
-        self.text
-    }
-
-    fn name(&self) -> &str {
-        self.text
-    }
-}
-
-/// The lines of the installed files, each made only when the list draws
-/// it: a package can hold thousands.
-pub(super) struct Files<'a>(pub(super) &'a [String]);
-
-impl<'a> Rows for Files<'a> {
-    type Item<'b>
-        = Line<'a>
-    where
-        Self: 'b;
-
-    fn len(&self) -> usize {
-        self.0.len()
-    }
-
-    fn get(&self, index: usize) -> Option<Line<'a>> {
-        self.0.get(index).map(|file| Line { text: file })
-    }
-}
+const FILTER_WIDTH: f32 = 240.0;
 
 /// The history's lines as the page shows them, and how many Show all
 /// adds.
@@ -72,13 +45,17 @@ pub struct History {
 /// Keyed by the details, whether every line shows and the look.
 pub type HistoryRows = RowCache<(Same<Details>, bool, Look), History>;
 
+/// The places of the files under the filter, keyed by the details.
+pub type FileRows = RowCache<Same<Details>, Vec<usize>>;
+
 /// The files of an installed package: the fold with their count and Copy
-/// list, then one line per file, only the visible ones laid out.
+/// list, then the filter and one monospaced line per file in a box of
+/// its own, only the visible lines laid out.
 pub fn files(
     page: &mut PackagesPage,
     ui: &mut Ui,
     context: &PageContext<'_>,
-    info: &PackageDetails,
+    (details, info): (&Arc<Details>, &PackageDetails),
 ) {
     let Some(installed) = &info.installed else {
         return;
@@ -118,16 +95,65 @@ pub fn files(
         return;
     }
 
-    let name = i18n::text(&ctx, "packages-files-list");
-    let height = row_height(ui, text_block_height(ui, 0));
-    RowList::new("packages-files-list", &name, RowHeights::Fixed(height)).show(
-        ui,
-        &Files(&installed.files),
-        |ui, line, _| {
-            let tokens = tokens::current(ui.ctx());
-            ui.add(Label::new(rich(ui, line.text, Weight::Regular, SMALL, tokens.text)).truncate());
-        },
-    );
+    ui.add_space(ui.tokens().sizes.tight_gap);
+    let name = i18n::text(&ctx, "packages-files-filter");
+    let clear = i18n::text(&ctx, "packages-files-filter-clear");
+    let texts = SearchTexts {
+        name: &name,
+        hint: &name,
+        clear: &clear,
+    };
+
+    _ = search_field(ui, &mut page.file_filter, texts, FILTER_WIDTH);
+    let filter = &page.file_filter;
+    let places = page.files.get(&[filter.as_str()], Same::of(details), || {
+        let _build = tracing::trace_span!("filter files").entered();
+        matching_files(&installed.files, filter)
+    });
+
+    ui.add_space(ui.tokens().sizes.control_gap);
+    if places.is_empty() {
+        let tokens = tokens::current(&ctx);
+        let none = i18n::text_with(&ctx, "packages-files-none", &[("filter", filter.trim())]);
+        ui.add(Label::new(rich(ui, &none, Weight::Regular, BODY, tokens.secondary)).wrap());
+        return;
+    }
+
+    file_lines(ui, &installed.files, &places);
+}
+
+/// The lines of `places` in `files`, in a box that scrolls on its own.
+fn file_lines(ui: &mut Ui, files: &[String], places: &[usize]) {
+    let tokens = tokens::current(ui.ctx());
+    let font = TextStyle::Monospace.resolve(ui.style());
+    let height = ui.fonts_mut(|fonts| fonts.row_height(&font));
+    let label = i18n::text(ui.ctx(), "packages-files-list");
+
+    padded_card(ui, |ui| {
+        // A long list runs past the box's edge, a bar at rest says so.
+        toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
+
+        // show_rows counts the spacing of this ui between rows.
+        ui.spacing_mut().item_spacing.y = 0.0;
+        ScrollArea::vertical()
+            .id_salt("packages-files")
+            .auto_shrink([false, true])
+            .max_height(FILES_HEIGHT)
+            .show_rows(ui, height, places.len(), |ui, shown| {
+                let lines = places
+                    .get(shown)
+                    .unwrap_or_default()
+                    .iter()
+                    .filter_map(|&place| files.get(place));
+
+                for file in lines {
+                    let text = RichText::new(file).font(font.clone()).color(tokens.text);
+                    ui.add(Label::new(text).truncate());
+                }
+            });
+    })
+    .response
+    .widget_info(|| WidgetInfo::labeled(Role::Document, true, &*label));
 }
 
 /// The fold of the history, then its newest lines and Show all.

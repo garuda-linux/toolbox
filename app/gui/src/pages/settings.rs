@@ -5,13 +5,12 @@ mod tests;
 
 use std::borrow::Cow;
 
-use egui::{Context, Label, Ui};
+use egui::{Context, Ui};
 use toolbox_catalog::SchemeMode;
 use toolbox_config::{LogLevel, RefreshInterval};
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
-use toolbox_gui_kit::widgets::{SectionHeading, Select, card, rich, segmented, segmented_width};
+use toolbox_gui_kit::widgets::{Select, card, section_intro, segmented, segmented_width};
 
 use self::minutes::MinutesField;
 use super::header::title_header;
@@ -132,12 +131,8 @@ impl Texts {
 /// rather than behind a button.
 fn section(ui: &mut Ui, id: &str, icon: Icon) {
     let ctx = ui.ctx().clone();
-    let tokens = ui.tokens();
     let help = i18n::text(&ctx, &format!("{id}-help"));
-    SectionHeading::new(icon, &i18n::text(&ctx, id), "").show(ui);
-    ui.add_space(tokens.sizes.tight_gap);
-    ui.add(Label::new(rich(ui, &help, Weight::Regular, SMALL, tokens.secondary)).wrap());
-    ui.add_space(tokens.sizes.heading_gap);
+    section_intro(ui, icon, &i18n::text(&ctx, id), &help);
 }
 
 fn language(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {

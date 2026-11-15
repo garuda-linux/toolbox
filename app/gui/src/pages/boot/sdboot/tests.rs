@@ -1,4 +1,7 @@
 mod counts;
+mod kept;
+mod queued;
+mod refused;
 mod segments;
 
 use egui::accesskit::Role;
@@ -18,6 +21,7 @@ use toolbox_system::{Host, MenuRead};
 use super::super::tests::{Shown, page};
 use crate::boot::Boot;
 use crate::command::{BootCommand, Command};
+use crate::testing::lowest_read_again;
 
 /// Files of the Garuda Lima image.
 const LOADER_CONF: &str = toolbox_plan::testing::sdboot::LOADER_CONF;
@@ -153,7 +157,7 @@ fn a_timeout_in_seconds_shows_its_number() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::TextInput, "Menu timeout in seconds")
+            .query_by_role_and_label(Role::SpinButton, "Menu timeout in seconds")
             .is_some()
     );
 }
@@ -265,7 +269,7 @@ fn the_menu_is_read_when_the_page_shows() {
 /// on the page.
 #[test]
 fn a_menu_that_could_not_be_read_says_why_and_keeps_the_command_line() {
-    let harness = shown(Menu::Read(MenuRead::Unreadable(
+    let mut harness = shown(Menu::Read(MenuRead::Unreadable(
         std::io::ErrorKind::NotFound,
     )));
 
@@ -279,6 +283,10 @@ fn a_menu_that_could_not_be_read_says_why_and_keeps_the_command_line() {
             .query_by_label_contains("rootflags=subvol=@")
             .is_some()
     );
+
+    lowest_read_again(&harness).click();
+    harness.run();
+    assert_eq!(sent(&harness), [Command::from(BootCommand::Refresh)]);
 }
 
 /// As on NixOS, which writes its own entries.

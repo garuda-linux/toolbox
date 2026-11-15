@@ -4,6 +4,7 @@ mod ports;
 mod start;
 
 use std::io::Write as _;
+use std::panic::AssertUnwindSafe;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::Arc;
@@ -17,6 +18,8 @@ use toolbox_config::{Paths, Settings};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::catalogs::{Catalogs, catalog_dir};
 use toolbox_gui::desktop::files::DesktopFiles;
+use toolbox_gui::desktop::follow::CatalogApps;
+use toolbox_gui::desktop::icon_files::{Indexed, SystemIcons, app_index};
 use toolbox_gui::desktop::{self, follow};
 use toolbox_gui::instance::{Single, claim};
 use toolbox_gui::notifications::DesktopNotifier;
@@ -201,17 +204,21 @@ fn run(
         ..Default::default()
     };
 
-    let ran = eframe::run_native(
-        "Garuda Toolbox",
-        options,
-        Box::new(move |cc| create(cc, start)),
-    );
+    // A panic of the UI thread is caught only to bound the shutdown: a
+    // dropped runtime waits for its blocking tasks without a limit.
+    let ran = std::panic::catch_unwind(AssertUnwindSafe(move || {
+        eframe::run_native(
+            "Garuda Toolbox",
+            options,
+            Box::new(move |cc| create(cc, start)),
+        )
+    }));
 
     // The window wrote the queue on close, a write the task had begun
     // still gets its moment. The bus name goes first, while its runtime runs.
     drop(held);
     runtime.shutdown_timeout(Duration::from_secs(2));
-    ran?;
+    ran.unwrap_or_else(|panic| std::panic::resume_unwind(panic))?;
     Ok(())
 }
 
@@ -255,8 +262,9 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
     let readers = readers(&handle, &cc.egui_ctx, &settings);
     let commands = instance.commands.sender.clone();
     let (power, starter) = machine(&handle, mode, commands, &cc.egui_ctx);
+    let (desktop_look, app_pictures) = look(&handle, &cc.egui_ctx, family, &catalogs);
     let setup = Setup {
-        look: Some(look(&handle, &cc.egui_ctx, family, &catalogs)),
+        look: Some(desktop_look),
         system_language: i18n::language_from_env(|key| std::env::var_os(key)),
         queue: kept_queue((changes, restored), changes_file, &handle, &cc.egui_ctx),
         queue_lost: lost,
@@ -269,7 +277,7 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         news: Some(news_reader(&handle, &cc.egui_ctx, mode)),
         programs: Some(readers.programs),
         units: Some(readers.units),
-        pictures: Some(pictures(&cc.egui_ctx)),
+        pictures: Some(pictures(&cc.egui_ctx, app_pictures)),
         power: Some(power),
         launcher: Some(starter),
         maintenance: Some(maintenance(&handle, mode)),
@@ -292,11 +300,16 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
     };
 
     #[cfg(feature = "selftest")]
-    if let Some((dir, suite)) = toolbox_gui::selftest::requested(|key| std::env::var_os(key)) {
-        toolbox_gui::selftest::install(&cc.egui_ctx, dir, &suite)?;
-    }
+    start_selftest(&cc.egui_ctx)?;
 
     Ok(Box::new(App::new(cc, setup)))
+}
+
+#[cfg(feature = "selftest")]
+fn start_selftest(ctx: &egui::Context) -> Result<(), String> {
+    toolbox_gui::selftest::requested(|key| std::env::var_os(key)).map_or(Ok(()), |(dir, suite)| {
+        toolbox_gui::selftest::install(ctx, dir, &suite)
+    })
 }
 
 /// The slow reads besides the snapshot. The status checks again on the
@@ -331,8 +344,6 @@ fn readers(handle: &Handle, ctx: &egui::Context, settings: &Settings) -> Readers
     }
 }
 
-/// The settings, with the log detail they ask for. A broken file still
-/// gives the defaults, and the log says what was wrong.
 /// Tracy's layer in a profiling build.
 #[cfg(feature = "profiling")]
 #[expect(
@@ -361,17 +372,29 @@ fn refuse(message: &str) -> ExitCode {
     ExitCode::FAILURE
 }
 
+/// The look the desktop sets, and the app pictures' lookup, which the
+/// catalogs' apps and the rows that ask as they show share.
 fn look(
     handle: &Handle,
     ctx: &egui::Context,
     family: Family,
     catalogs: &Catalogs,
-) -> tokio::sync::watch::Receiver<desktop::DesktopLook> {
-    follow::spawn(
+) -> (
+    tokio::sync::watch::Receiver<desktop::DesktopLook>,
+    Arc<Indexed<SystemIcons>>,
+) {
+    let files = DesktopFiles::from_process();
+    let pictures = app_index(files.icon_folders());
+    let look = follow::spawn(
         handle,
         ctx.clone(),
         family,
-        DesktopFiles::from_process(),
-        catalogs.app_icon_names().into(),
-    )
+        files,
+        CatalogApps {
+            names: catalogs.app_icon_names().into(),
+            pictures: Arc::clone(&pictures),
+        },
+    );
+
+    (look, pictures)
 }

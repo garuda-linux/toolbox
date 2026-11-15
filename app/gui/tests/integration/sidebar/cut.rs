@@ -276,12 +276,12 @@ pub(super) fn collapsed_rail(height: f32) -> Rail {
     }
 }
 
-/// A collapsed rail parts two groups with a line exactly while any part
-/// of the second group's first entry shows above the cut edge. That entry
-/// then draws cut and faded, so the rail shows that more follows, and no
-/// line hangs at the edge with nothing below.
+/// A collapsed rail parts two groups with a line exactly while at least
+/// half the icon of the second group's first entry shows above the cut
+/// edge. That entry then draws cut and faded, so the rail shows that more
+/// follows, and no line hangs at the edge with nothing below.
 #[test]
-fn a_collapsed_divider_shows_while_its_next_entry_reaches_into_sight() {
+fn a_collapsed_divider_shows_while_half_its_next_icon_shows() {
     for height in [SMALLEST.1, 600.0, HEIGHT] {
         let rail = collapsed_rail(height);
         let bottom = rail.bottom;
@@ -300,10 +300,10 @@ fn a_collapsed_divider_shows_while_its_next_entry_reaches_into_sight() {
 
             if let Some(next) = next {
                 assert!(
-                    next.top() < bottom - 0.5,
+                    next.center().y < bottom - 0.5,
                     "{height}: the line at {line} parts nothing, its next entry \
-                     starts at {} past the cut edge at {bottom}",
-                    next.top()
+                     has its middle at {} past the cut edge at {bottom}",
+                    next.center().y
                 );
             }
         }
@@ -314,7 +314,7 @@ fn a_collapsed_divider_shows_while_its_next_entry_reaches_into_sight() {
             };
 
             let parted = before.group() != page.group() && page.group().heading_id().is_some();
-            if parted && first.top() < bottom - 0.5 {
+            if parted && first.center().y < bottom - 0.5 {
                 assert!(
                     rail.dividers
                         .iter()

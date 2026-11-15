@@ -33,7 +33,7 @@ impl App {
             return;
         };
 
-        if ctx.input(|input| input.focused) {
+        if ctx.input(looked_at) {
             return;
         }
 
@@ -128,7 +128,7 @@ impl App {
     /// changes made outside the app meanwhile, and lets the queue meet each
     /// new snapshot once.
     pub(super) fn take_reading(&mut self, ctx: &egui::Context) {
-        let focused = ctx.input(|input| input.focused);
+        let focused = ctx.input(looked_at);
         if focused && !self.focused {
             self.read_system();
         }
@@ -220,8 +220,8 @@ impl App {
         }
     }
 
-    /// The latest snapshot with the lock flags the Users page read, or an
-    /// empty one before the first read.
+    /// The latest snapshot joined by [`Self::combine`], or an empty one
+    /// before the first read.
     pub(super) fn current_snapshot(&self) -> Arc<Snapshot> {
         Arc::clone(&self.seen)
     }
@@ -288,4 +288,12 @@ impl UnprobedReads for PageReads<'_> {
             .sdboot()
             .map(|menu| CurrentLoader(menu.settings.clone()))
     }
+}
+
+/// While the window is hidden eframe runs no pass, so `input.focused`
+/// stays that of the last shown frame. The raw input and the viewport are
+/// current.
+pub(super) fn looked_at(input: &egui::InputState) -> bool {
+    let viewport = input.viewport();
+    input.raw.focused && viewport.minimized != Some(true) && viewport.occluded != Some(true)
 }

@@ -18,7 +18,9 @@ services-none = No service matches.
 services-unavailable = systemd is not reachable.
 services-denied = You are not allowed to read the services.
 services-failed = The services could not be read.
-services-retry = Retry
+services-user-unavailable = Your user's systemd is not reachable.
+services-user-denied = You are not allowed to read your user's services.
+services-user-failed = Your user's services could not be read.
 services-none-detail = Change the search or the filters to see more services.
 # A button under "No service matches." that picks the All chip. $count is how many units the search finds there.
 services-show-every =

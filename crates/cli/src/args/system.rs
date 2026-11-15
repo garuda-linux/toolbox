@@ -114,7 +114,7 @@ pub struct BootSet {
 pub enum BootKey {
     /// The entry that boots by default, as `boot entries` prints it.
     Default,
-    /// Seconds the menu shows, 0 to 300.
+    /// Seconds the menu shows, 0 to 300, or -1 to wait for a key.
     Timeout,
     /// Boot the entry that booted last (on or off).
     Remember,

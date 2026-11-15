@@ -8,12 +8,13 @@ mod edit;
 mod membership;
 mod password;
 mod remove;
+mod shell;
 
 use egui::{Context, Id, Label, Response, TextEdit, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, SecretTexts,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, SecretTexts, check_row,
     confirm_buttons_when, confirm_buttons_why, rich, secret_field, text_field,
 };
 
@@ -170,14 +171,54 @@ fn field_with(
     ui.ctx()
         .accesskit_node_builder(response.id, |node| node.set_label(name));
 
-    let (note, color) = problem.map_or((hint, tokens.secondary), |problem| (problem, tokens.error));
+    // A problem looks as the note of a setting row does (`setting_row`).
+    let (note, weight, color) = problem
+        .map_or((hint, Weight::Regular, tokens.secondary), |problem| {
+            (problem, Weight::Medium, tokens.warning)
+        });
 
     if !note.is_empty() {
-        ui.add(Label::new(rich(ui, note, Weight::Regular, SMALL, color)).wrap());
+        ui.add(Label::new(rich(ui, note, weight, SMALL, color)).wrap());
     }
 
     ui.add_space(tokens.sizes.card_gap);
     response
+}
+
+/// A check box with its note shown under it, which a tooltip would only
+/// repeat. Screen readers hear the note as the box's description.
+pub fn check_with_note(ui: &mut Ui, on: bool, label: &str, detail: &str) -> bool {
+    let response = check_row(ui, on, label, "", true);
+    let description = detail.to_owned();
+    ui.ctx().accesskit_node_builder(response.id, |node| {
+        node.set_description(description);
+    });
+
+    note(ui, detail);
+    response.clicked()
+}
+
+/// The search over the groups of a dialog, named for screen readers.
+pub fn group_search(ui: &mut Ui, search: &mut String) {
+    let hint = i18n::text(ui.ctx(), "users-groups-search-hint").into_owned();
+    let field = text_field(
+        ui,
+        TextEdit::singleline(search)
+            .hint_text(hint)
+            .desired_width(f32::INFINITY)
+            .align(egui::Align2::LEFT_CENTER),
+    );
+
+    let name = i18n::text(ui.ctx(), "users-groups-search").into_owned();
+    ui.ctx()
+        .accesskit_node_builder(field.id, |node| node.set_label(name));
+}
+
+/// Why a dialog's button waits while a plan runs, `None` while it may run.
+pub fn busy_why(ctx: &Context, context: &PageContext<'_>) -> Option<String> {
+    context
+        .busy
+        .then(|| i18n::text(ctx, "users-add-why-busy").into_owned())
 }
 
 pub fn note(ui: &mut Ui, text: &str) {

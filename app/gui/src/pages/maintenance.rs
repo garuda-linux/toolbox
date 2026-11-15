@@ -14,10 +14,13 @@ mod tests;
 use egui::Ui;
 use toolbox_core::features::maintenance::page::LaunchCause;
 use toolbox_gui_kit::icons::Icon;
-use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button, section_intro};
+use toolbox_gui_kit::widgets::{
+    ActionRow, ButtonKind, SkeletonRows, Tone, card, pill_button, row_height, section_intro,
+    skeleton_list, text_block_height,
+};
 use toolbox_system::mirrors::RankProblem;
 
-use super::header::{TabText, TabbedIds, tabbed_header};
+use super::header::{TabText, TabbedIds, tabbed_header_reading};
 use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::MaintenanceCommand;
@@ -56,15 +59,26 @@ impl TabText for Tab {
 }
 
 impl MaintenancePage {
-    /// Opens `tab`, for the palette and the self-test.
+    /// Opens `tab`, for the palette and the self-test. An open question
+    /// belongs to the tab it was asked on, so it closes unanswered.
     pub const fn show_tab(&mut self, tab: Tab) {
+        self.close_questions();
         self.tab = tab;
+    }
+
+    const fn close_questions(&mut self) {
+        self.confirming = false;
+        self.asking = None;
     }
 }
 
 impl PageView for MaintenancePage {
     fn place(&self) -> u64 {
         super::place_of(&self.tab)
+    }
+
+    fn left(&mut self, _ctx: &egui::Context) {
+        self.close_questions();
     }
 
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
@@ -76,9 +90,10 @@ impl PageView for MaintenancePage {
         };
 
         let tabs = [Tab::Common, Tab::Reset, Tab::Repairs];
-        let done = tabbed_header(ui, ids, &tabs, self.tab);
-        if let Some(picked) = done.picked {
-            self.tab = picked;
+        let reading = context.home.programs.is_none() && !context.home.programs_failed;
+        let done = tabbed_header_reading(ui, ids, &tabs, self.tab, reading);
+        if let Some(picked) = done.picked.filter(|picked| *picked != self.tab) {
+            self.show_tab(picked);
         }
 
         if done.refresh {
@@ -121,6 +136,7 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
                 LaunchCause::Missing => "maintenance-problem-launch-missing",
                 LaunchCause::Denied => "maintenance-problem-launch-denied",
                 LaunchCause::Other => "maintenance-problem-launch",
+                LaunchCause::AbsentAfterInstall => "maintenance-problem-launch-absent",
             };
 
             let name = i18n::text(&ctx, &format!("maintenance-tool-{tool}"));
@@ -158,6 +174,19 @@ fn row(ui: &mut Ui, icon: Icon, id: &str, detail: &str, actions: impl FnOnce(&mu
     ActionRow::new(icon, Tone::Neutral, &title)
         .detail(detail)
         .show(ui, actions);
+}
+
+/// `count` placeholder rows of a card whose programs are still looked
+/// for, named by the section's title `id`.
+fn waiting(ui: &mut Ui, id: &str, count: usize) {
+    let name = i18n::text(ui.ctx(), id);
+    let rows = SkeletonRows {
+        count,
+        row_height: row_height(ui, text_block_height(ui, 2)),
+        leading: true,
+    };
+
+    card(ui, |ui| skeleton_list(ui, rows, &name));
 }
 
 /// Waits while a plan runs, so it is disabled then.

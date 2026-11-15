@@ -119,7 +119,7 @@ fn install_asks_about_the_build_script_before_it_queues() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Install")
+        .get_by_role_and_label(Role::Button, "Build and install")
         .click();
     harness.run();
 

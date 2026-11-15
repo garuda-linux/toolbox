@@ -275,11 +275,11 @@ fn a_packed_group_heading_has_more_room_above_than_below() {
     };
 
     for (heading, above, below) in [
-        ("INSTALL", PageId::Home, PageId::Setup),
-        ("SYSTEM", PageId::Discover, PageId::Services),
-        ("CARE", PageId::Boot, PageId::Maintenance),
+        ("Install", PageId::Home, PageId::Setup),
+        ("System", PageId::Discover, PageId::Services),
+        ("Care", PageId::Boot, PageId::Maintenance),
     ] {
-        let label = harness.get_by_label(heading).rect();
+        let label = harness.get_by_role_and_label(Role::Heading, heading).rect();
         let over = label.top() - rect(above).bottom();
         let under = rect(below).top() - label.bottom();
 
@@ -302,11 +302,11 @@ fn a_packed_group_heading_keeps_ten_above_and_four_below() {
     };
 
     for (heading, above, below) in [
-        ("INSTALL", PageId::Home, PageId::Setup),
-        ("SYSTEM", PageId::Discover, PageId::Services),
-        ("CARE", PageId::Boot, PageId::Maintenance),
+        ("Install", PageId::Home, PageId::Setup),
+        ("System", PageId::Discover, PageId::Services),
+        ("Care", PageId::Boot, PageId::Maintenance),
     ] {
-        let label = harness.get_by_label(heading).rect();
+        let label = harness.get_by_role_and_label(Role::Heading, heading).rect();
         let over = label.top() - rect(above).bottom();
         let under = rect(below).top() - label.bottom();
 

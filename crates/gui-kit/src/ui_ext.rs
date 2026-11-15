@@ -4,10 +4,12 @@
 #[cfg(test)]
 mod tests;
 
-use egui::{Color32, Image, Response, RichText, Role, TextStyle, Ui, WidgetInfo, vec2};
+use egui::{Color32, Image, Response, Role, TextStyle, Ui, WidgetInfo, vec2};
 
+use crate::fonts::{BODY, Weight};
 use crate::icons::{self, Icon};
 use crate::tokens::{self, Tokens};
+use crate::widgets::rich;
 
 /// An icon is this much taller than a line of body text, so it reads as
 /// one with the text beside it.
@@ -21,19 +23,11 @@ pub trait UiExt {
         tokens::current(self.ui().ctx())
     }
 
-    /// An icon that says something on its own, named `alt` for screen
-    /// readers.
-    fn icon(&mut self, icon: Icon, alt: &str) -> Response {
-        let ui = self.ui_mut();
-        let tint = ui.visuals().text_color();
-        let image = icon_image(ui, icon, tint).alt_text(alt);
-        ui.add(image)
-    }
-
+    /// In the body font as every other text, in the warning colour.
     fn warning_label(&mut self, text: &str) -> Response {
         let ui = self.ui_mut();
-        let color = tokens::current(ui.ctx()).warning;
-        ui.label(RichText::new(text).color(color))
+        let colour = tokens::current(ui.ctx()).warning;
+        ui.label(rich(ui, text, Weight::Regular, BODY, colour))
     }
 
     /// Pulsing dots with what is being waited for, one line tall.

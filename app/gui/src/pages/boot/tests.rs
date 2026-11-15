@@ -1,5 +1,8 @@
 mod chooser;
+mod parameter;
+mod proposal;
 mod risky;
+mod unread;
 
 use std::sync::Arc;
 
@@ -129,7 +132,7 @@ fn the_timeout_steps_by_a_second_and_switches_flip() {
 fn the_timeout_is_a_pill_field_that_takes_typed_seconds() {
     let mut harness = ready();
     let name = "Menu timeout in seconds";
-    let field = harness.get_by_role_and_label(Role::TextInput, name).rect();
+    let field = harness.get_by_role_and_label(Role::SpinButton, name).rect();
     let unit = toolbox_gui_kit::testing::painted_text_within(&harness, "s", field);
 
     assert!((field.height() - toolbox_gui_kit::theme::PILL_HEIGHT).abs() < 0.5);

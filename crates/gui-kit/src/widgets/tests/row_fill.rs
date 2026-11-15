@@ -5,7 +5,8 @@ use egui_kittest::kittest::Queryable as _;
 
 use super::super::card::{HOVER_INSET, fill_rect};
 use super::super::{
-    CheckRowTexts, ListItem, RowHeights, RowList, card, card_row, check_row_with_line,
+    CheckRowTexts, ListItem, RowHeights, RowList, card, card_row, card_row_with,
+    check_row_with_line,
 };
 use crate::testing::{filled_rect, filled_rects, harness, lines_in};
 use crate::tokens;
@@ -135,4 +136,26 @@ fn a_check_row_on_a_card_row_shows_only_the_card_rows_fill() {
         filled_rect(&harness, theme.field).is_some(),
         "no card row fill"
     );
+}
+
+#[test]
+fn a_row_a_click_does_nothing_on_stays_still_under_the_pointer() {
+    for activatable in [true, false] {
+        let mut harness = harness(400.0, 200.0).build_ui(move |ui| {
+            card(ui, |ui| {
+                card_row_with(ui, true, activatable, |ui| _ = ui.label("Kernel 6.14"));
+            });
+        });
+
+        harness.run();
+        harness.get_by_label("Kernel 6.14").hover();
+        harness.run();
+
+        let field = tokens::current(&harness.ctx).field;
+        assert_eq!(
+            filled_rect(&harness, field).is_some(),
+            activatable,
+            "activatable: {activatable}"
+        );
+    }
 }

@@ -3,7 +3,7 @@ use egui::{OutputCommand, Theme};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use egui_kittest::{Harness, SnapshotResults};
 
-use super::super::{PropertyTexts, property_list};
+use super::super::{PropertyTexts, number_field, property_list};
 use crate::testing::harness;
 use crate::toasts::{ToastTexts, Toasts};
 
@@ -25,8 +25,8 @@ fn properties() -> Harness<'static, Toasts> {
                 list.row_copied("Kernel", "6.14.0-arch3-1");
                 list.row("Running since", "3 days");
                 list.row_with("Retries", None, |value| {
-                    let mut retries = 3_u8;
-                    value.add(egui::DragValue::new(&mut retries));
+                    let mut retries = 3_u32;
+                    number_field(value, &mut retries, 0..=10, 72.0, "Retries");
                 });
             });
 
@@ -193,5 +193,20 @@ fn a_label_starts_on_the_line_of_its_text() {
     assert!(
         (label.top() - value.top()).abs() < 0.5,
         "the label at {label:?}, its value at {value:?}"
+    );
+}
+
+#[test]
+fn the_copy_button_centres_on_the_line_of_its_value() {
+    let harness = properties();
+
+    let value = harness.get_by_label("6.14.0-arch3-1").rect();
+    let button = harness
+        .get_by_role_and_label(Role::Button, "Copy Kernel")
+        .rect();
+
+    assert!(
+        (value.center().y - button.center().y).abs() < 1.0,
+        "the value at {value:?}, its button at {button:?}"
     );
 }

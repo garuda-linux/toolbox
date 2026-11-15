@@ -1,3 +1,4 @@
+mod looked_at;
 mod runs;
 
 use egui_kittest::Harness;

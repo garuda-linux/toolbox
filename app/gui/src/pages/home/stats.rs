@@ -8,6 +8,7 @@ use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
 use toolbox_gui_kit::widgets::{TileSize, Tone, focus_ring, rich, status_tile};
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
+use toolbox_services::home::Overview;
 use toolbox_services::home::stats::{Figure, Standing, Stat, Tile, tiles};
 use toolbox_system::HealthLevel;
 
@@ -20,11 +21,9 @@ use crate::pages::maintenance::Tab;
 const MIN_TILE_WIDTH: f32 = 180.0;
 
 /// The tiles of the status read and the facts, unknown until each is read.
-pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
-    let status = context.home.status.and_then(Loadable::get);
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, overview: Option<&Overview<'_>>) {
     let facts = context.home.facts.and_then(Loadable::get);
-    let overview = status.map(|status| super::status::overview(status, context));
-    let shown = tiles(overview.as_ref(), facts);
+    let shown = tiles(overview, facts);
 
     let gap = ui.tokens().sizes.card_gap;
     let room = ui.available_width();

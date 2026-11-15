@@ -1,4 +1,6 @@
+mod dots;
 mod gaps;
+mod remove;
 mod unread;
 mod view;
 
@@ -7,7 +9,7 @@ use std::sync::Arc;
 
 use egui::Key;
 use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::domains::{InstalledPackages, Packages as PackagesDomain, SyncPackages};
 use toolbox_core::features::packages::list::{Catalog, Filter};
 use toolbox_core::features::packages::{
@@ -24,7 +26,7 @@ use crate::packages::{Details, Packages, Read};
 use crate::page_service::Services;
 use crate::testing::{
     PageFixture, assert_header, assert_rows_hold_their_content, assert_text_beside_picture,
-    body_font, measured, picture_beside, rect_of,
+    body_font, failure_read_again_sends, measured, picture_beside, rect_of,
 };
 
 pub(super) fn name(text: &str) -> PackageName {
@@ -251,31 +253,37 @@ fn space_on_a_row_opens_its_details_and_escape_goes_back() {
     assert!(listed(&harness, "leftover"));
 }
 
-#[test]
-fn an_unreadable_index_offers_to_read_again() {
-    let fixture = PageFixture {
+fn indexed(index: Read<Arc<Catalog>>) -> PageFixture {
+    PageFixture {
         services: Services {
-            packages: Packages::showing(Read::Failed, None),
+            packages: Packages::showing(index, None),
             ..Services::default()
         },
         ..PageFixture::default()
-    };
+    }
+}
 
-    let mut harness = fixture.harness(PackagesPage::default());
+#[test]
+fn an_unreadable_index_offers_to_read_again() {
+    assert_eq!(
+        failure_read_again_sends(indexed(Read::Failed), PackagesPage::default()),
+        [Command::from(PackagesCommand::Refresh)]
+    );
+}
 
+#[test]
+fn before_the_index_is_read_placeholder_rows_wait_under_resting_chips() {
+    let mut harness = indexed(Read::Loading).harness(PackagesPage::default());
     harness.run();
 
-    let banner = harness.query_all_by_label("Read again").last().unwrap();
-    banner.click();
-    harness.run();
-
+    let name = "Reading the package lists…";
     assert!(
         harness
-            .state()
-            .fixture
-            .sent()
-            .contains(&Command::from(PackagesCommand::Refresh))
+            .query_by_role_and_label(Role::ProgressIndicator, name)
+            .is_some()
     );
+    let installed = harness.get_by_role_and_label(Role::Button, "Installed");
+    assert!(installed.accesskit_node().is_disabled());
 }
 
 #[test]

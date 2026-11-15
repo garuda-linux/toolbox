@@ -96,6 +96,21 @@ impl DesktopFiles {
         }
     }
 
+    /// The folders `freedesktop-icons` searches: `icons` and `pixmaps` of
+    /// every XDG data folder, `~/.icons` and `/usr/share/pixmaps`.
+    pub fn icon_folders(&self) -> Vec<PathBuf> {
+        let mut folders: Vec<PathBuf> = self
+            .data_dirs
+            .iter()
+            .chain([&self.data_home])
+            .flat_map(|data| [data.join("icons"), data.join("pixmaps")])
+            .collect();
+
+        folders.push(self.home.join(".icons"));
+        folders.push(PathBuf::from("/usr/share/pixmaps"));
+        folders
+    }
+
     fn read_gtk(&self) -> Read {
         let settings = GTK_VERSIONS
             .iter()

@@ -4,7 +4,6 @@
 
 page-boot-repair-subtitle = Bootloader oder Bootdateien eines Systems reparieren, das nicht mehr startet.
 repair-refresh = Neu einlesen
-repair-intro = Startet ein installiertes System nicht mehr, kannst du hier seinen Bootloader neu installieren, GRUB oder systemd-boot, oder seine Bootdateien neu bauen: das Bootmenü von GRUB oder die Kernel-Images von systemd-boot.
 repair-asks-first = Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. GRUB-Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert.
 repair-test-mode = Testmodus: Diese Seite ist für das Live-System gedacht und erscheint hier nur, weil Garuda Toolbox mit --boot-repair gestartet wurde. Datenträger des laufenden Systems bleiben unberührt.
 repair-dismiss = Ausblenden

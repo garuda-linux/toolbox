@@ -3,7 +3,7 @@ use toolbox_state::packages::{
     IndexEntry, InstallReason, Installed, LocalNode, Origin, PackageIndex,
 };
 
-use super::{Shown, file_list, shown, target, web_address};
+use super::{Shown, by_kind, file_list, matching_files, shown, target, web_address};
 use crate::features::packages::list::Catalog;
 
 fn name(text: &str) -> PackageName {
@@ -25,7 +25,11 @@ fn entry(text: &str, installed: bool) -> IndexEntry {
 }
 
 fn catalog() -> Catalog {
-    Catalog::new(PackageIndex {
+    Catalog::new(catalog_index())
+}
+
+fn catalog_index() -> PackageIndex {
+    PackageIndex {
         entries: vec![
             entry("bash", true),
             entry("glibc", true),
@@ -45,7 +49,7 @@ fn catalog() -> Catalog {
                 reason: InstallReason::Dependency,
             },
         ],
-    })
+    }
 }
 
 #[test]
@@ -118,4 +122,55 @@ fn an_address_that_is_no_web_link_is_no_link() {
     assert_eq!(web_address("file:///etc/passwd"), None);
     assert_eq!(web_address("--help"), None);
     assert_eq!(web_address("https://"), None);
+}
+
+#[test]
+fn the_first_installed_package_that_provides_a_name_answers_for_it() {
+    let mut index = catalog_index();
+    index.local.push(LocalNode {
+        name: name("zsh"),
+        depends: Vec::new(),
+        provides: vec!["sh".to_owned()],
+        reason: InstallReason::Explicit,
+    });
+
+    assert_eq!(target(&Catalog::new(index), "sh"), Some(name("bash")));
+}
+
+/// mpv's own dependencies, as its pacman database entry lists them.
+#[test]
+fn package_names_come_first_and_the_sonames_of_libraries_after() {
+    let depends = [
+        "ffmpeg",
+        "libasound.so=2-64",
+        "glibc",
+        "libavcodec.so=63-64",
+        "libGL.so",
+    ]
+    .map(str::to_owned);
+
+    let split = by_kind(&depends);
+
+    assert_eq!(split.packages, ["ffmpeg", "glibc"]);
+    assert_eq!(
+        split.libraries,
+        ["libasound.so=2-64", "libavcodec.so=63-64", "libGL.so"]
+    );
+}
+
+#[test]
+fn a_package_named_like_a_library_is_a_package() {
+    let depends = ["libsoup3", "libso.sos"].map(str::to_owned);
+
+    assert_eq!(by_kind(&depends).libraries, Vec::<&str>::new());
+}
+
+#[test]
+fn the_file_filter_matches_any_part_of_a_path_in_either_case() {
+    let files = ["/usr/", "/usr/bin/gimp", "/usr/share/GIMP/"].map(str::to_owned);
+
+    assert_eq!(matching_files(&files, ""), [0, 1, 2]);
+    assert_eq!(matching_files(&files, "gimp"), [1, 2]);
+    assert_eq!(matching_files(&files, " bin/G "), [1]);
+    assert_eq!(matching_files(&files, "kate"), Vec::<usize>::new());
 }

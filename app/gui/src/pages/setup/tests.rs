@@ -1,3 +1,5 @@
+mod finish;
+
 use std::path::Path;
 
 use egui::accesskit::Role;
@@ -238,7 +240,7 @@ fn back_and_next_stay_at_the_bottom_of_the_page() {
             .bottom,
     );
 
-    // Only the key hint's line lies between Next and the page padding.
+    // No line lies between Next and the page padding.
     let room = window.bottom() - padding - next.bottom();
     assert!(
         (0.0..40.0).contains(&room),
@@ -271,15 +273,13 @@ fn the_step_list_is_centred_under_the_page_whatever_next_says() {
         .get_by_role_and_label(Role::ComboBox, "Go to step")
         .rect();
 
-    let hint = harness
-        .get_by_label("Alt+Right goes on, Alt+Left goes back.")
-        .rect();
+    let bar = harness.get_by_role(Role::ProgressIndicator).rect();
 
     assert!(
-        (list.center().x - hint.center().x).abs() < 1.0,
+        (list.center().x - bar.center().x).abs() < 1.0,
         "the list's centre is at {} but the page's at {}",
         list.center().x,
-        hint.center().x,
+        bar.center().x,
     );
 }
 

@@ -15,11 +15,14 @@ mod picture;
 mod results;
 
 use egui::{Rect, ScrollArea, Ui, UiBuilder, pos2};
+use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{BodyShape, page_toolbar};
+use toolbox_guide::Hit;
 
 use super::header::{search, title_header};
 use super::{PageContext, PageView};
-use crate::links;
+use crate::command::AppCommand;
+use crate::{i18n, links};
 
 /// The widest the three panes get together.
 const WIDTH: f32 = 1240.0;
@@ -50,6 +53,10 @@ pub struct GuidePage {
     /// The open page changed, so it starts at its top.
     fresh: bool,
     search: String,
+    /// The last search and its hits, kept while the search stays.
+    found: (String, Vec<Hit>),
+    /// A page asked for that the guide lacks, until the toast says so.
+    missing: Option<String>,
     /// The source and description of the picture shown large.
     lightbox: Option<(String, String)>,
 }
@@ -61,6 +68,8 @@ impl Default for GuidePage {
             target: None,
             fresh: true,
             search: String::new(),
+            found: (String::new(), Vec::new()),
+            missing: None,
             lightbox: None,
         }
     }
@@ -68,17 +77,31 @@ impl Default for GuidePage {
 
 impl GuidePage {
     /// Opens the guide page `file`, at `anchor` when given. A file the
-    /// guide lacks opens the first page.
+    /// guide lacks opens the first page, and a toast says so.
     pub fn show(&mut self, file: &str, anchor: Option<&str>) {
         let known = toolbox_guide::embedded().page(file).is_some();
         file.clone_into(&mut self.file);
         if !known {
+            tracing::warn!("the guide has no page {file}");
+            self.missing = Some(file.to_owned());
             toolbox_guide::FIRST_PAGE.clone_into(&mut self.file);
         }
 
         self.target = anchor.filter(|_| known).map(str::to_owned);
         self.fresh = true;
         self.search.clear();
+    }
+
+    fn results(&mut self, ui: &mut Ui, middle: Rect) -> Option<Jump> {
+        let query = self.search.trim();
+        if self.found.0 != query {
+            self.found = (query.to_owned(), toolbox_guide::embedded().search(query));
+        }
+
+        let hits = &self.found.1;
+        pane(ui, middle, ("guide-results", query), |places| {
+            results::show(places, hits, query)
+        })
     }
 
     fn follow(&mut self, ctx: &egui::Context, jump: Jump) {
@@ -105,6 +128,13 @@ impl PageView for GuidePage {
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let _ui = tracing::trace_span!("guide ui").entered();
         let guide = toolbox_guide::embedded();
+        if let Some(file) = self.missing.take() {
+            context.commands.send(AppCommand::Toast {
+                kind: ToastKind::Error,
+                text: i18n::text_with(ui.ctx(), "guide-page-missing", &[("page", &file)])
+                    .into_owned(),
+            });
+        }
 
         // Shown before the article, so the click that asked for it is not
         // also taken as a click on the large picture or beside it.
@@ -141,9 +171,10 @@ impl PageView for GuidePage {
         if query.is_empty() {
             let shown = article::show(ui, middle, guide, self, context);
             jump = jump.or(shown.jump);
-            if shown.reached {
-                self.target = None;
-            }
+
+            // Every heading of the page is drawn each frame, so a target
+            // not reached in one is not on the page.
+            self.target = None;
 
             if shown.enlarged.is_some() {
                 self.lightbox = shown.enlarged;
@@ -162,11 +193,7 @@ impl PageView for GuidePage {
                 jump = jump.or(picked);
             }
         } else {
-            let hits = guide.search(query);
-            let picked = pane(ui, middle, ("guide-results", query), |places| {
-                results::show(places, &hits, query)
-            });
-
+            let picked = self.results(ui, middle);
             jump = jump.or(picked);
         }
 

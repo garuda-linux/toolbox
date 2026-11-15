@@ -16,7 +16,8 @@ use egui::Ui;
 use toolbox_core::features::configs::session::{Phase, Stage};
 use toolbox_core::features::configs::viewing;
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, page_toolbar, pill_button};
+use toolbox_gui_kit::theme::PILL_HEIGHT;
+use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, page_toolbar, pill_button, pill_width};
 
 use super::header::{refresh_header, search};
 use super::rows::refused_banner;
@@ -160,13 +161,36 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     }
 }
 
-/// A full height dialog's `body` above, its `buttons` at the bottom edge.
-fn filled<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui), buttons: impl FnOnce(&mut Ui) -> R) -> R {
-    ui.with_layout(egui::Layout::bottom_up(egui::Align::Min), |ui| {
-        let chosen = buttons(ui);
-        ui.add_space(ui.tokens().sizes.dialog_gap);
-        ui.with_layout(egui::Layout::top_down(egui::Align::Min), body);
-        chosen
+/// A dialog's `body` above its `buttons`, together as tall as they need
+/// up to the window's height, so a one-line error gets no empty page.
+fn stacked<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui), buttons: impl FnOnce(&mut Ui) -> R) -> R {
+    body(ui);
+    ui.add_space(ui.tokens().sizes.dialog_gap);
+    buttons(ui)
+}
+
+/// How tall a scrolled text in a [`stacked`] body may be: the room left
+/// once the buttons below it have theirs.
+fn text_room(ui: &Ui) -> f32 {
+    let spacing = ui.spacing().item_spacing.y;
+    let buttons = spacing.mul_add(2.0, ui.tokens().sizes.dialog_gap + PILL_HEIGHT);
+    (ui.available_height() - buttons).max(MIN_TEXT_HEIGHT)
+}
+
+/// One row of pill buttons at the dialog's right edge. `labels` are the
+/// buttons `add` draws, so the row knows its width before it draws them.
+fn right_buttons<R>(ui: &mut Ui, labels: &[&str], add: impl FnOnce(&mut Ui) -> R) -> R {
+    ui.horizontal(|ui| {
+        let gap = ui.tokens().sizes.control_gap;
+        ui.spacing_mut().item_spacing.x = gap;
+        let width = labels
+            .iter()
+            .map(|label| pill_width(ui, label) + gap)
+            .sum::<f32>()
+            - gap;
+
+        ui.add_space((ui.available_width() - width).max(0.0));
+        add(ui)
     })
     .inner
 }

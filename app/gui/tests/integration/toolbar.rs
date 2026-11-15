@@ -19,7 +19,9 @@ fn sort_width(page: &str, sort: &str) -> f32 {
 
 #[test]
 fn every_sort_dropdown_has_one_width() {
-    let services = sort_width("Services", "Sort services");
+    // The services' sort shows once a list exists, so the units are read first.
+    let (harness, _runtime) = crate::services::services();
+    let services = harness.get_by_label("Sort services").rect().width();
     let catalog = sort_width("App Catalog", "Sort apps");
 
     assert!(

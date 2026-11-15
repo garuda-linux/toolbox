@@ -1,6 +1,9 @@
 mod add_user;
 mod dialogs;
 mod edit;
+mod groups;
+mod membership;
+mod password;
 mod rows;
 
 use std::collections::BTreeMap;
@@ -100,6 +103,18 @@ pub fn page_on(snapshot: Snapshot, users: Users) -> Shown {
     }
     .harness(UsersPage::default());
 
+    harness.run();
+    harness
+}
+
+/// The page with the dialog `entry` of the row menu of `user` open.
+pub fn from_menu(user: &str, entry: &str) -> Shown {
+    let mut harness = page(unlocked());
+    harness
+        .get_by_label(&format!("More actions for {user}"))
+        .click();
+    harness.run();
+    harness.get_by_label(entry).click();
     harness.run();
     harness
 }

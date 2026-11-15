@@ -43,11 +43,8 @@ pub struct Changes {
     /// The file as it is now, which the write must still find.
     pub original: ConfigText,
     pub edited: ConfigText,
-    /// For the screen reader and for themes without colours: `+` and `-`
-    /// in front of the lines.
+    /// `+` and `-` in front of the lines, as `diff -u` prints them.
     pub plain: String,
-    /// The same with terminal colour codes.
-    pub colored: String,
     pub added: usize,
     pub removed: usize,
 }

@@ -21,7 +21,7 @@ use crate::tokens::{self, Tokens};
 const INSET: f32 = 3.0;
 const PADDING_X: f32 = 16.0;
 /// Round ends of a segment, half its height inside the inset.
-const SEGMENT_RADIUS: u8 = 14;
+const SEGMENT_RADIUS: u8 = 13;
 
 /// How wide [`segmented`] draws `labels`, for a row that places it before
 /// drawing.

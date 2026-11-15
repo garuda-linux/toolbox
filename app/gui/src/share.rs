@@ -2,6 +2,7 @@
 //! channel that wakes the frame.
 
 mod preview;
+pub mod rows;
 #[cfg(test)]
 mod tests;
 pub mod view;

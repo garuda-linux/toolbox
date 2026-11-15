@@ -18,7 +18,6 @@ const TEXT_WIDTH: f32 = 760.0;
 #[derive(Debug, Default)]
 pub(super) struct Shown {
     pub jump: Option<Jump>,
-    pub reached: bool,
     pub current: Option<String>,
     /// The picture to show large: its source and description.
     pub enlarged: Option<(String, String)>,
@@ -47,7 +46,7 @@ pub(super) fn show(
     let mut reader = Reader::new(state.target.as_deref());
     let mut inner = ui.new_child(UiBuilder::new().max_rect(rect));
     let view_top = rect.top();
-    area.show(&mut inner, |column| {
+    let scrolled = area.show(&mut inner, |column| {
         column.set_width(column.available_width());
         column.set_max_width(TEXT_WIDTH.min(column.available_width()));
         top_line(column, page, context);
@@ -63,17 +62,27 @@ pub(super) fn show(
         });
     }
 
-    let current = reader
-        .headings
-        .iter()
-        .take_while(|(_, top)| *top <= view_top + 24.0)
-        .last()
-        .or_else(|| reader.headings.first())
-        .map(|(anchor, _)| anchor.clone());
+    // The last headings of a page may never reach the top of the view, so
+    // the end of the page marks the last one.
+    let view = scrolled.inner_rect.height();
+    let page_height = scrolled.content_size.y;
+    let at_end =
+        page_height > view && scrolled.state.clamped_offset().y + view >= page_height - 1.0;
+
+    let current = if at_end {
+        reader.headings.last()
+    } else {
+        reader
+            .headings
+            .iter()
+            .take_while(|(_, top)| *top <= view_top + 24.0)
+            .last()
+            .or_else(|| reader.headings.first())
+    }
+    .map(|(anchor, _)| anchor.clone());
 
     Shown {
         jump: reader.jump,
-        reached: reader.reached,
         current,
         enlarged: reader.enlarged,
     }

@@ -97,3 +97,20 @@ fn a_greyed_repair_names_the_package_it_needs() {
     assert_eq!(harness.query_all_by_label("Needs garuda-update").count(), 6);
     assert!(harness.query_by_label("Needs garuda-health").is_none());
 }
+
+/// A greyed repair greys as a whole, its title and the package it needs
+/// too, not its Run alone.
+#[test]
+fn a_greyed_repair_greys_its_whole_row() {
+    let programs = Programs::found(|path| path == Path::new("/usr/bin/garuda-health"));
+    let mut harness = page(with(programs, Maintenance::default()));
+    open_tab(&mut harness, "Repairs");
+
+    assert_eq!(disabled(&harness, "System health check"), [false]);
+    assert_eq!(disabled(&harness, "Reset audio"), [true]);
+    assert!(
+        disabled(&harness, "Needs garuda-update")
+            .iter()
+            .all(|rests| *rests)
+    );
+}

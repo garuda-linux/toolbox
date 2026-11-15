@@ -310,6 +310,9 @@
     "boot-default-helper-missing": {
       "string": "The boot menu was not read, because the helper of Garuda Toolbox is not installed. Its entries are not listed. Reinstall Garuda Toolbox."
     },
+    "boot-default-broken": {
+      "string": "The boot menu was not read, because pkexec cannot run on this system. Its entries are not listed."
+    },
     "boot-default-unknown": {
       "string": "The boot menu could not be read, so its entries are not listed. Read again tries once more."
     },
@@ -341,7 +344,7 @@
       "string": "Menu timeout"
     },
     "boot-timeout-detail": {
-      "string": "The seconds the menu waits before it boots the default entry."
+      "string": "How long the menu waits before it boots the default entry."
     },
     "boot-timeout-unknown": {
       "string": "The file holds a timeout that is no number. Choosing one here replaces it."
@@ -591,9 +594,6 @@
     "repair-refresh": {
       "string": "Read again"
     },
-    "repair-intro": {
-      "string": "Use this page when an installed system does not start anymore. It installs the boot loader of that system again, GRUB or systemd-boot, or builds its boot files again: GRUB's boot menu, or systemd-boot's kernel images."
-    },
     "repair-asks-first": {
       "string": "Each repair asks first and names the partition and the disk it writes to. A GRUB system with /boot on a partition of its own, or with its EFI system partition somewhere else than /boot/efi, is not repaired here."
     },
@@ -610,7 +610,7 @@
       "string": "The disks could not be read"
     },
     "repair-failed-detail": {
-      "string": "The log says why. Use Refresh to try once more."
+      "string": "The log says why. Read again tries once more."
     },
     "repair-missing": {
       "string": "Boot repair cannot work on this system"
@@ -1463,159 +1463,6 @@
     "catalog-gaming-vkbasalt-description": {
       "string": "A Vulkan post-processing layer. Some of the effects are CAS, FXAA, SMAA, deband"
     },
-    "catalog-gaming-misc": {
-      "string": "Miscellaneous"
-    },
-    "catalog-gaming-antimicrox": {
-      "string": "AntimicroX"
-    },
-    "catalog-gaming-antimicrox-description": {
-      "string": "Graphical program used to map keyboard buttons & mouse controls to a gamepad"
-    },
-    "catalog-gaming-anydesk-bin": {
-      "string": "AnyDesk"
-    },
-    "catalog-gaming-anydesk-bin-description": {
-      "string": "The Fast Remote Desktop Application"
-    },
-    "catalog-gaming-corectrl": {
-      "string": "CoreCtrl"
-    },
-    "catalog-gaming-corectrl-description": {
-      "string": "Core control application"
-    },
-    "catalog-gaming-discord": {
-      "string": "Discord"
-    },
-    "catalog-gaming-discord-description": {
-      "string": "All-in-one voice and text chat for gamers"
-    },
-    "catalog-gaming-vesktop": {
-      "string": "Vesktop"
-    },
-    "catalog-gaming-vesktop-description": {
-      "string": "Vesktop is a customizable and privacy friendly Discord desktop app"
-    },
-    "catalog-gaming-displaycal": {
-      "string": "DisplayCAL"
-    },
-    "catalog-gaming-displaycal-description": {
-      "string": "Open Source Display Calibration and Characterization powered by Argyll CMS"
-    },
-    "catalog-gaming-droidcam": {
-      "string": "DroidCam"
-    },
-    "catalog-gaming-droidcam-description": {
-      "string": "A tool to turn your phone/tablet into a wireless/usb webcam"
-    },
-    "catalog-gaming-gaming-easyeffects": {
-      "string": "EasyEffects"
-    },
-    "catalog-gaming-gaming-easyeffects-description": {
-      "string": "Audio Effects for Pipewire applications"
-    },
-    "catalog-gaming-goverlay": {
-      "string": "GOverlay"
-    },
-    "catalog-gaming-goverlay-description": {
-      "string": "A GUI to help manage Vulkan/OpenGL overlays"
-    },
-    "catalog-gaming-gwe": {
-      "string": "GWE"
-    },
-    "catalog-gaming-gwe-description": {
-      "string": "A system utility for controlling NVIDIA GPUs"
-    },
-    "catalog-gaming-gameconqueror": {
-      "string": "Game Conqueror"
-    },
-    "catalog-gaming-gameconqueror-description": {
-      "string": "Memory scanner designed to isolate the address of an arbitrary variable in an executing process"
-    },
-    "catalog-gaming-input-remapper-git": {
-      "string": "Input remapper"
-    },
-    "catalog-gaming-input-remapper-git-description": {
-      "string": "A tool to change and program the mapping of your input device buttons"
-    },
-    "catalog-gaming-keyboard-visualizer-git": {
-      "string": "Keyboard visualizer"
-    },
-    "catalog-gaming-keyboard-visualizer-git-description": {
-      "string": "Turn your OpenRGB-supported RGB setup into a spectacular light show for your music"
-    },
-    "catalog-gaming-mumble": {
-      "string": "Mumble"
-    },
-    "catalog-gaming-mumble-description": {
-      "string": "An Open Source, low-latency, high quality voice chat software"
-    },
-    "catalog-gaming-noisetorch": {
-      "string": "Noisetorch"
-    },
-    "catalog-gaming-noisetorch-description": {
-      "string": "Real-time microphone noise suppression on Linux"
-    },
-    "catalog-gaming-nyrna": {
-      "string": "Nyrna"
-    },
-    "catalog-gaming-nyrna-description": {
-      "string": "Suspend games and applications at any time and resume whenever you wish"
-    },
-    "catalog-gaming-obs-studio": {
-      "string": "OBS Studio"
-    },
-    "catalog-gaming-obs-studio-description": {
-      "string": "Free, open source software for live streaming and recording"
-    },
-    "catalog-gaming-openrgb": {
-      "string": "OpenRGB"
-    },
-    "catalog-gaming-openrgb-description": {
-      "string": "Open source RGB lighting control that doesn't depend on manufacturer software"
-    },
-    "catalog-gaming-oversteer": {
-      "string": "Oversteer"
-    },
-    "catalog-gaming-oversteer-description": {
-      "string": "Graphical application to configure Logitech Wheels"
-    },
-    "catalog-gaming-piper": {
-      "string": "Piper"
-    },
-    "catalog-gaming-piper-description": {
-      "string": "GTK application to configure gaming mice"
-    },
-    "catalog-gaming-polychromatic": {
-      "string": "Polychromatic"
-    },
-    "catalog-gaming-polychromatic-description": {
-      "string": "RGB lighting management front-end application for OpenRazer"
-    },
-    "catalog-gaming-sc-controller": {
-      "string": "Sc-controller"
-    },
-    "catalog-gaming-sc-controller-description": {
-      "string": "User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers"
-    },
-    "catalog-gaming-soundwire": {
-      "string": "SoundWire"
-    },
-    "catalog-gaming-soundwire-description": {
-      "string": "Wirelessly transmit any audio from your PC to your Android phone or other PCs"
-    },
-    "catalog-gaming-streamlink-twitch-gui-bin": {
-      "string": "StreamLink Twitch GUI"
-    },
-    "catalog-gaming-streamlink-twitch-gui-bin-description": {
-      "string": "A multi platform Twitch.tv browser for Streamlink"
-    },
-    "catalog-gaming-vlc": {
-      "string": "VLC"
-    },
-    "catalog-gaming-vlc-description": {
-      "string": "Multi-platform MPEG, VCD/DVD, and DivX player"
-    },
     "catalog-gaming-controllers": {
       "string": "Controller support"
     },
@@ -2260,6 +2107,159 @@
     },
     "catalog-gaming-mgba-qt-description": {
       "string": "A Nintendo Gameboy Advance Emulator focusing on speed and accuracy"
+    },
+    "catalog-gaming-misc": {
+      "string": "Miscellaneous"
+    },
+    "catalog-gaming-antimicrox": {
+      "string": "AntimicroX"
+    },
+    "catalog-gaming-antimicrox-description": {
+      "string": "Graphical program used to map keyboard buttons & mouse controls to a gamepad"
+    },
+    "catalog-gaming-anydesk-bin": {
+      "string": "AnyDesk"
+    },
+    "catalog-gaming-anydesk-bin-description": {
+      "string": "The Fast Remote Desktop Application"
+    },
+    "catalog-gaming-corectrl": {
+      "string": "CoreCtrl"
+    },
+    "catalog-gaming-corectrl-description": {
+      "string": "Core control application"
+    },
+    "catalog-gaming-discord": {
+      "string": "Discord"
+    },
+    "catalog-gaming-discord-description": {
+      "string": "All-in-one voice and text chat for gamers"
+    },
+    "catalog-gaming-vesktop": {
+      "string": "Vesktop"
+    },
+    "catalog-gaming-vesktop-description": {
+      "string": "Vesktop is a customizable and privacy friendly Discord desktop app"
+    },
+    "catalog-gaming-displaycal": {
+      "string": "DisplayCAL"
+    },
+    "catalog-gaming-displaycal-description": {
+      "string": "Open Source Display Calibration and Characterization powered by Argyll CMS"
+    },
+    "catalog-gaming-droidcam": {
+      "string": "DroidCam"
+    },
+    "catalog-gaming-droidcam-description": {
+      "string": "A tool to turn your phone/tablet into a wireless/usb webcam"
+    },
+    "catalog-gaming-gaming-easyeffects": {
+      "string": "EasyEffects"
+    },
+    "catalog-gaming-gaming-easyeffects-description": {
+      "string": "Audio Effects for Pipewire applications"
+    },
+    "catalog-gaming-goverlay": {
+      "string": "GOverlay"
+    },
+    "catalog-gaming-goverlay-description": {
+      "string": "A GUI to help manage Vulkan/OpenGL overlays"
+    },
+    "catalog-gaming-gwe": {
+      "string": "GWE"
+    },
+    "catalog-gaming-gwe-description": {
+      "string": "A system utility for controlling NVIDIA GPUs"
+    },
+    "catalog-gaming-gameconqueror": {
+      "string": "Game Conqueror"
+    },
+    "catalog-gaming-gameconqueror-description": {
+      "string": "Memory scanner designed to isolate the address of an arbitrary variable in an executing process"
+    },
+    "catalog-gaming-input-remapper-git": {
+      "string": "Input remapper"
+    },
+    "catalog-gaming-input-remapper-git-description": {
+      "string": "A tool to change and program the mapping of your input device buttons"
+    },
+    "catalog-gaming-keyboard-visualizer-git": {
+      "string": "Keyboard visualizer"
+    },
+    "catalog-gaming-keyboard-visualizer-git-description": {
+      "string": "Turn your OpenRGB-supported RGB setup into a spectacular light show for your music"
+    },
+    "catalog-gaming-mumble": {
+      "string": "Mumble"
+    },
+    "catalog-gaming-mumble-description": {
+      "string": "An Open Source, low-latency, high quality voice chat software"
+    },
+    "catalog-gaming-noisetorch": {
+      "string": "Noisetorch"
+    },
+    "catalog-gaming-noisetorch-description": {
+      "string": "Real-time microphone noise suppression on Linux"
+    },
+    "catalog-gaming-nyrna": {
+      "string": "Nyrna"
+    },
+    "catalog-gaming-nyrna-description": {
+      "string": "Suspend games and applications at any time and resume whenever you wish"
+    },
+    "catalog-gaming-obs-studio": {
+      "string": "OBS Studio"
+    },
+    "catalog-gaming-obs-studio-description": {
+      "string": "Free, open source software for live streaming and recording"
+    },
+    "catalog-gaming-openrgb": {
+      "string": "OpenRGB"
+    },
+    "catalog-gaming-openrgb-description": {
+      "string": "Open source RGB lighting control that doesn't depend on manufacturer software"
+    },
+    "catalog-gaming-oversteer": {
+      "string": "Oversteer"
+    },
+    "catalog-gaming-oversteer-description": {
+      "string": "Graphical application to configure Logitech Wheels"
+    },
+    "catalog-gaming-piper": {
+      "string": "Piper"
+    },
+    "catalog-gaming-piper-description": {
+      "string": "GTK application to configure gaming mice"
+    },
+    "catalog-gaming-polychromatic": {
+      "string": "Polychromatic"
+    },
+    "catalog-gaming-polychromatic-description": {
+      "string": "RGB lighting management front-end application for OpenRazer"
+    },
+    "catalog-gaming-sc-controller": {
+      "string": "Sc-controller"
+    },
+    "catalog-gaming-sc-controller-description": {
+      "string": "User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers"
+    },
+    "catalog-gaming-soundwire": {
+      "string": "SoundWire"
+    },
+    "catalog-gaming-soundwire-description": {
+      "string": "Wirelessly transmit any audio from your PC to your Android phone or other PCs"
+    },
+    "catalog-gaming-streamlink-twitch-gui-bin": {
+      "string": "StreamLink Twitch GUI"
+    },
+    "catalog-gaming-streamlink-twitch-gui-bin-description": {
+      "string": "A multi platform Twitch.tv browser for Streamlink"
+    },
+    "catalog-gaming-vlc": {
+      "string": "VLC"
+    },
+    "catalog-gaming-vlc-description": {
+      "string": "Multi-platform MPEG, VCD/DVD, and DivX player"
     },
     "catalog-setup-audio": {
       "string": "Audio"
@@ -3203,45 +3203,6 @@
     "catalog-setup-homebank-description": {
       "string": "Free, easy, personal accounting"
     },
-    "catalog-setup-other": {
-      "string": "Other"
-    },
-    "catalog-setup-setup-droidcam": {
-      "string": "Droidcam"
-    },
-    "catalog-setup-setup-droidcam-description": {
-      "string": "Turn your phone/tablet into a webcam"
-    },
-    "catalog-setup-setup-soundwire": {
-      "string": "Soundwire"
-    },
-    "catalog-setup-setup-soundwire-description": {
-      "string": "Transmit audio from your PC to other devices"
-    },
-    "catalog-setup-variety": {
-      "string": "Variety"
-    },
-    "catalog-setup-variety-description": {
-      "string": "Changes the wallpaper on a regular interval"
-    },
-    "catalog-setup-conky": {
-      "string": "Conky"
-    },
-    "catalog-setup-conky-description": {
-      "string": "Light-weight system monitor"
-    },
-    "catalog-setup-keepass-xc": {
-      "string": "KeePassXC"
-    },
-    "catalog-setup-keepass-xc-description": {
-      "string": "Cross-platform password manager"
-    },
-    "catalog-setup-yakuake": {
-      "string": "Yakuake"
-    },
-    "catalog-setup-yakuake-description": {
-      "string": "Drop-down terminal emulator"
-    },
     "catalog-setup-pkgmngrs": {
       "string": "Software centers"
     },
@@ -3358,6 +3319,45 @@
     },
     "catalog-setup-genymotion-description": {
       "string": "Virtual environment for Android"
+    },
+    "catalog-setup-other": {
+      "string": "Other"
+    },
+    "catalog-setup-setup-droidcam": {
+      "string": "Droidcam"
+    },
+    "catalog-setup-setup-droidcam-description": {
+      "string": "Turn your phone/tablet into a webcam"
+    },
+    "catalog-setup-setup-soundwire": {
+      "string": "Soundwire"
+    },
+    "catalog-setup-setup-soundwire-description": {
+      "string": "Transmit audio from your PC to other devices"
+    },
+    "catalog-setup-variety": {
+      "string": "Variety"
+    },
+    "catalog-setup-variety-description": {
+      "string": "Changes the wallpaper on a regular interval"
+    },
+    "catalog-setup-conky": {
+      "string": "Conky"
+    },
+    "catalog-setup-conky-description": {
+      "string": "Light-weight system monitor"
+    },
+    "catalog-setup-keepass-xc": {
+      "string": "KeePassXC"
+    },
+    "catalog-setup-keepass-xc-description": {
+      "string": "Cross-platform password manager"
+    },
+    "catalog-setup-yakuake": {
+      "string": "Yakuake"
+    },
+    "catalog-setup-yakuake-description": {
+      "string": "Drop-down terminal emulator"
     },
     "catalog-config-files-audio": {
       "string": "Audio"
@@ -4716,12 +4716,35 @@
       "string": "This removal would also take {name}, which stays installed. {why}.",
       "developer_comment": "$name is a dependency the removal would take along, $why one of the\nreasons above."
     },
-    "missing-catalog": {
-      "string": "Garuda Toolbox is not installed completely: the folder {dir} is missing. Reinstall the garuda-toolbox package, then start the app again.",
-      "developer_comment": "The whole window of a release whose catalog files are not installed. $dir is the folder."
-    },
     "missing-catalog-quit": {
-      "string": "Quit"
+      "string": "Quit",
+      "developer_comment": "The button that closes the missing-catalog window."
+    },
+    "missing-catalog-title": {
+      "string": "Garuda Toolbox is not installed completely",
+      "developer_comment": "The missing-catalog window: a title, what to do, then the missing folder and the reinstall command, each with a copy button. $label is the row's name."
+    },
+    "missing-catalog-body": {
+      "string": "A folder it needs is missing. Reinstall the garuda-toolbox package, then start the app again."
+    },
+    "missing-catalog-folder": {
+      "string": "Missing folder"
+    },
+    "missing-catalog-reinstall": {
+      "string": "Reinstall with"
+    },
+    "missing-catalog-copy": {
+      "string": "Copy {label}"
+    },
+    "missing-catalog-copied": {
+      "string": "Copied to the clipboard."
+    },
+    "close-stopping-title": {
+      "string": "Stopping the run",
+      "developer_comment": "Shown after Quit was confirmed during a run, until the cancelled run ends and the window closes."
+    },
+    "close-stopping-detail": {
+      "string": "The window closes once the run has stopped."
     }
   },
   "configs": {
@@ -5255,9 +5278,6 @@
     "diagnostics-collected-unknown": {
       "string": "· {lines}"
     },
-    "diagnostics-wrap": {
-      "string": "Wrap lines"
-    },
     "diagnostics-search": {
       "string": "Search the report"
     },
@@ -5395,6 +5415,12 @@
     },
     "guide-code-copied": {
       "string": "Copied the code to the clipboard."
+    },
+    "guide-page-missing": {
+      "string": "The guide has no page “{page}”, so its first page opened."
+    },
+    "guide-picture-missing": {
+      "string": "The picture is missing."
     },
     "guide-hits": {
       "string": "{count, plural, one {One place found} other {{count} places found}}"
@@ -5595,9 +5621,6 @@
     "home-summary-fine": {
       "string": "Everything is fine",
       "developer_comment": "$days counts whole days since the last update."
-    },
-    "home-summary-unknown": {
-      "string": "Some checks could not run"
     },
     "home-summary-attention": {
       "string": "{count, plural, one {One thing needs attention} other {{count} things need attention}}"
@@ -5901,6 +5924,12 @@
     "locales-search-hint": {
       "string": "Search locales…"
     },
+    "locales-packs-search": {
+      "string": "Search language packs"
+    },
+    "locales-packs-search-hint": {
+      "string": "Search language packs…"
+    },
     "locales-filter-utf8": {
       "string": "UTF-8 only"
     },
@@ -5943,6 +5972,12 @@
     "locales-detail-system": {
       "string": "{code}, {charset}, system language"
     },
+    "locales-detail-code": {
+      "string": "{code}"
+    },
+    "locales-detail-code-system": {
+      "string": "{code}, system language"
+    },
     "locales-system": {
       "string": "System language"
     },
@@ -5972,7 +6007,7 @@
       "string": "Dismiss"
     },
     "locales-packs-intro": {
-      "string": "Language packs for your enabled locales and installed programs. Missing: {count}"
+      "string": "Language packs for your enabled locales and installed programs. {count, plural, one {One pack is not installed.} other {{count} packs are not installed.}}"
     },
     "locales-packs-intro-plain": {
       "string": "Language packs for your enabled locales and installed programs."
@@ -6006,6 +6041,12 @@
     },
     "locales-packs-none-detail": {
       "string": "No installed program has a language pack for an enabled locale."
+    },
+    "locales-packs-no-match": {
+      "string": "No language pack matches"
+    },
+    "locales-packs-no-match-detail": {
+      "string": "The search looks at the names of packs, programs, languages and countries."
     },
     "locales-packs-unavailable": {
       "string": "Language packs are not available on this system"
@@ -6132,6 +6173,9 @@
     "maintenance-ranking": {
       "string": "Testing the mirrors. This takes up to five minutes. The Console opens when the new list is ready."
     },
+    "maintenance-ranking-progress": {
+      "string": "Ranking the mirrors…"
+    },
     "maintenance-tool-arch-mirrors": {
       "string": "Refresh Arch mirrors"
     },
@@ -6171,6 +6215,9 @@
     },
     "maintenance-problem-launch": {
       "string": "{tool} could not be started: {reason}"
+    },
+    "maintenance-problem-launch-absent": {
+      "string": "The install ended, but {reason} is not there, so {tool} did not start."
     },
     "maintenance-problem-mirrors-timeout": {
       "string": "Ranking the Chaotic-AUR mirrors took longer than five minutes and was stopped. The list of mirrors is unchanged."
@@ -6410,7 +6457,7 @@
       "string": "Try again"
     },
     "network-address-copy": {
-      "string": "Copy"
+      "string": "Copy public address"
     },
     "network-address-hide": {
       "string": "Hide"
@@ -6471,9 +6518,6 @@
     },
     "network-service-geoclue-service": {
       "string": "Location service (GeoClue)"
-    },
-    "network-service-missing": {
-      "string": "Not installed"
     },
     "network-service-running": {
       "string": "Running"
@@ -6646,6 +6690,12 @@
     },
     "network-hardware-usb-failed": {
       "string": "USB devices are not listed: lsusb failed."
+    },
+    "network-hardware-queue-pciutils": {
+      "string": "Queue pciutils"
+    },
+    "network-hardware-unqueue-pciutils": {
+      "string": "Take back pciutils"
     },
     "network-tests": {
       "string": "Connection tests"
@@ -6838,6 +6888,9 @@
       "string": "Remove {package}?",
       "developer_comment": "The question before a removal."
     },
+    "packages-remove-required": {
+      "string": "{count, plural, one {1 installed package needs it. pacman removes nothing while it stays:} other {{count} installed packages need it. pacman removes nothing while they stay:}}"
+    },
     "packages-remove-alone": {
       "string": "It is removed alone: it pulled in no dependency that nothing else needs."
     },
@@ -6870,6 +6923,12 @@
     },
     "packages-more-name": {
       "string": "Show {count} more"
+    },
+    "packages-libraries": {
+      "string": "{count, plural, one {+1 library} other {+{count} libraries}}"
+    },
+    "packages-libraries-name": {
+      "string": "{count, plural, one {Show 1 library} other {Show {count} libraries}}"
     },
     "packages-details-loading": {
       "string": "Reading the package…"
@@ -6954,6 +7013,15 @@
       "string": "Installed files",
       "developer_comment": "What screen readers call the list of files."
     },
+    "packages-files-filter": {
+      "string": "Filter files"
+    },
+    "packages-files-filter-clear": {
+      "string": "Clear the filter"
+    },
+    "packages-files-none": {
+      "string": "No file matches “{filter}”."
+    },
     "packages-history": {
       "string": "History"
     },
@@ -7026,6 +7094,9 @@
     },
     "packages-aur-install-body": {
       "string": "Built from a community script on your computer. paru shows the build script in the Console before it builds."
+    },
+    "packages-aur-install-confirm": {
+      "string": "Build and install"
     },
     "packages-aur-maintainer": {
       "string": "Maintainer"
@@ -7200,8 +7271,14 @@
     "services-failed": {
       "string": "The services could not be read."
     },
-    "services-retry": {
-      "string": "Retry"
+    "services-user-unavailable": {
+      "string": "Your user's systemd is not reachable."
+    },
+    "services-user-denied": {
+      "string": "You are not allowed to read your user's services."
+    },
+    "services-user-failed": {
+      "string": "Your user's services could not be read."
     },
     "services-none-detail": {
       "string": "Change the search or the filters to see more services."
@@ -7628,8 +7705,12 @@
       "string": "Step {number} of {count}",
       "developer_comment": "Over the progress bar. $number is the step, $count all of them."
     },
-    "setup-keys": {
-      "string": "Alt+Right goes on, Alt+Left goes back."
+    "setup-back-key": {
+      "string": "Alt+Left",
+      "developer_comment": "Tooltips of Back and Next: the keys that press them."
+    },
+    "setup-next-key": {
+      "string": "Alt+Right"
     },
     "setup-install": {
       "string": "Apps to install: {count}"
@@ -7665,6 +7746,16 @@
     "setup-ready-nothing": {
       "string": "Everything you picked was already in place.",
       "developer_comment": "Every step found its part already done."
+    },
+    "setup-installed": {
+      "string": "Apps installed: {count}",
+      "developer_comment": "The success page. $count is how many."
+    },
+    "setup-removed": {
+      "string": "Apps removed: {count}"
+    },
+    "setup-enabled": {
+      "string": "Services enabled: {count}"
     },
     "setup-restart-note": {
       "string": "A restart is recommended, so every new program and service starts as it should."
@@ -8236,6 +8327,9 @@
     },
     "tweaks-flag-no-check-space-description": {
       "string": "Skip checking available disk space before installing packages."
+    },
+    "tweaks-not-read": {
+      "string": "Not known"
     }
   },
   "users": {
@@ -8411,9 +8505,6 @@
     },
     "users-locks-unknown": {
       "string": "Which accounts are locked is not known: the helper of Garuda Toolbox could not read it."
-    },
-    "users-locks-again": {
-      "string": "Read again asks once more."
     },
     "users-run-password-running": {
       "string": "Setting the password of {user}…"
@@ -8648,8 +8739,8 @@
     "users-add-why-no-password": {
       "string": "Enter a password."
     },
-    "users-add-why-passwords-differ": {
-      "string": "The passwords do not match."
+    "users-add-why-no-repeat": {
+      "string": "Repeat the password."
     },
     "users-add-why-fields": {
       "string": "A field above says what is wrong."
@@ -8694,13 +8785,13 @@
       "string": "Changes wait in the queue until you apply them. They take effect at the user's next login."
     },
     "users-choice-detail": {
-      "string": "group ID {gid}, members: {members}"
+      "string": "{group} (group ID {gid}, members: {members})"
     },
     "users-choice-primary": {
-      "string": "primary group, group ID {gid}, members: {members}"
+      "string": "{group} (primary group, group ID {gid}, members: {members})"
     },
     "users-choice-new": {
-      "string": "new group"
+      "string": "{group} (new group)"
     },
     "users-remove-title": {
       "string": "Remove the user {user}?"
@@ -8709,16 +8800,16 @@
       "string": "The removal waits in the queue until you apply it. This goes:"
     },
     "users-remove-account": {
-      "string": "The account {user} and its password"
+      "string": "• The account {user} and its password"
     },
     "users-remove-group": {
-      "string": "The group {user}, when the user is its only member"
+      "string": "• The group {user}, when the user is its only member"
     },
     "users-remove-memberships": {
-      "string": "Its membership in: {groups}"
+      "string": "• Its membership in: {groups}"
     },
     "users-remove-home-goes": {
-      "string": "The home folder {home} with every file in it, and the mail spool"
+      "string": "• The home folder {home} with every file in it, and the mail spool"
     },
     "users-remove-home-stays": {
       "string": "The home folder {home} stays on the disk."
@@ -8784,12 +8875,22 @@
       "string": "Removal queued"
     },
     "groups-remove": {
-      "string": "Remove {group}…"
+      "string": "Remove…"
+    },
+    "groups-remove-named": {
+      "string": "Remove {group}…",
+      "developer_comment": "What a screen reader hears for the row button above."
     },
     "groups-unqueue-new": {
+      "string": "Don't add"
+    },
+    "groups-unqueue-new-named": {
       "string": "Don't add {group}"
     },
     "groups-unqueue-removal": {
+      "string": "Keep"
+    },
+    "groups-unqueue-removal-named": {
       "string": "Keep {group}"
     },
     "groups-remove-title": {

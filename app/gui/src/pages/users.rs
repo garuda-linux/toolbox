@@ -16,8 +16,11 @@ mod texts;
 use egui::Ui;
 use toolbox_core::features::users::run::{PageRun, Retry, RetryStep};
 use toolbox_core::features::users::view::{self, Shown};
-use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, empty_state, page_toolbar, pill_button};
+use toolbox_gui_kit::widgets::{
+    ButtonKind, Tone, banner, card, empty_state, page_toolbar, pill_button, skeleton_rows,
+};
 use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_services::locks::Locks;
 
 use self::dialogs::{AddUser, Dialog, Next};
 use super::header::{TabText, TabbedIds, search, tabbed_header};
@@ -27,6 +30,10 @@ use crate::command::{AppCommand, UsersCommand};
 use crate::i18n;
 use crate::page::PageId;
 use crate::users::Users;
+
+/// Placeholder rows while the accounts are read, about as many as a
+/// computer of one person has.
+const SKELETON_ROWS: usize = 4;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
@@ -110,7 +117,7 @@ impl PageView for UsersPage {
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let _ui = tracing::trace_span!("users ui").entered();
-        notes(ui, context);
+        notes(ui, context, self.tab);
         plan_running(ui, context);
         match self.tab {
             Tab::Users => list::show(
@@ -181,17 +188,19 @@ impl UsersPage {
     }
 }
 
-/// Whether the accounts were read, else the empty state that says why.
+/// Whether the accounts were read, else placeholder rows of `row_height`
+/// while they are read or the empty state that says why they were not.
 pub fn accounts_ready(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    reading_id: &str,
-    unavailable_id: &str,
+    (reading_id, unavailable_id): (&str, &str),
+    row_height: f32,
 ) -> bool {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     if !context.probed {
-        empty_state(ui, icons::USER_OTHERS, &text(reading_id), "");
+        let name = text(reading_id);
+        card(ui, |ui| skeleton_rows(ui, SKELETON_ROWS, row_height, &name));
         return false;
     }
 
@@ -204,7 +213,7 @@ pub fn accounts_ready(
     true
 }
 
-fn notes(ui: &mut Ui, context: &PageContext<'_>) {
+fn notes(ui: &mut Ui, context: &PageContext<'_>, tab: Tab) {
     let ctx = ui.ctx().clone();
     let dismiss = i18n::text(&ctx, "users-dismiss");
     let refused = context.service::<Users>().refusal();
@@ -234,8 +243,22 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>) {
         ui.add_space(ui.tokens().sizes.card_gap);
     }
 
-    if let Some(text) = texts::locks(&ctx, context.service::<Users>().locks()) {
-        banner(ui, Tone::Neutral, &text, &[]);
+    // Locks belong to accounts, so the Groups tab does not repeat it.
+    let locks = context.service::<Users>().locks();
+    if tab == Tab::Users
+        && let Some(text) = texts::locks(&ctx, locks)
+    {
+        let again = i18n::text(&ctx, "users-refresh");
+        let actions: &[&str] = if matches!(locks, Locks::Loading) {
+            &[]
+        } else {
+            &[&again]
+        };
+
+        if banner(ui, Tone::Neutral, &text, actions) == Some(0) {
+            context.commands.send(UsersCommand::Refresh);
+        }
+
         ui.add_space(ui.tokens().sizes.card_gap);
     }
 }

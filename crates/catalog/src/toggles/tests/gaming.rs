@@ -13,10 +13,10 @@ fn the_shipped_gaming_catalog_has_its_seven_sections() {
             "launchers",
             "compatibility",
             "tools",
-            "misc",
             "controllers",
             "games",
-            "emulators"
+            "emulators",
+            "misc"
         ]
     );
     assert_eq!(catalog.entries().count(), 156);

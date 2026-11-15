@@ -50,3 +50,28 @@ fn the_list_scrolled_to_the_open_page_starts_on_a_whole_entry() {
         );
     }
 }
+
+/// A heading too long for "On this page" wraps to a second line rather
+/// than end in "…".
+#[test]
+fn a_long_outline_entry_wraps_to_two_lines() {
+    let mut harness = page();
+    harness.set_size(vec2(1440.0, 900.0));
+    harness.state_mut().page.show("components.md", None);
+    harness.run();
+
+    let short = harness
+        .query_all_by_role(Role::Link)
+        .find(|link| link.accesskit_node().label().as_deref() == Some("Kernels"))
+        .expect("Kernels is listed")
+        .rect();
+
+    let long = harness
+        .get_by_role_and_label(Role::Link, "When the state of entries could not be read")
+        .rect();
+
+    assert!(
+        long.height() > short.height() * 1.4,
+        "{long:?} is one line, as {short:?}"
+    );
+}

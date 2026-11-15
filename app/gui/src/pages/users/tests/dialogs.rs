@@ -183,9 +183,23 @@ fn the_add_dialog_asks_the_required_fields_first_and_says_what_holds_it() {
     type_into(&mut harness, Role::TextInput, "User name", "grace");
     assert!(harness.query_by_label("Enter a password.").is_some());
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
+    assert!(harness.query_by_label("Repeat the password.").is_some());
+
+    // The note under the field says it, so the footer only points there.
+    type_into(
+        &mut harness,
+        Role::PasswordInput,
+        "Repeat the password",
+        "s3cre",
+    );
     assert!(
         harness
-            .query_by_label("The passwords do not match.")
+            .query_by_label("The two passwords differ.")
+            .is_some()
+    );
+    assert!(
+        harness
+            .query_by_label("A field above says what is wrong.")
             .is_some()
     );
 }

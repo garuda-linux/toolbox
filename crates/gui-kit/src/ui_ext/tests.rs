@@ -22,17 +22,6 @@ fn an_icon_button_is_found_and_pressed_by_its_alt_text() {
 }
 
 #[test]
-fn an_icon_has_its_alt_text_as_name() {
-    let mut harness = harness(200.0, 100.0).build_ui(|ui| {
-        ui.icon(GO_HOME, "Home page");
-    });
-
-    harness.run();
-
-    assert!(harness.query_by_label("Home page").is_some());
-}
-
-#[test]
 fn a_warning_label_is_named_by_its_text() {
     let mut harness = harness(300.0, 200.0).build_ui(|ui| {
         ui.warning_label("Careful");

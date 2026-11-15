@@ -1,7 +1,7 @@
 //! The sidebar's list once it scrolls: its cut edges and where it stops.
 
-use egui::Rect;
 use egui::accesskit::Role;
+use egui::{Key, Rect};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_gui::page::{Group, PageId};
@@ -11,9 +11,9 @@ use toolbox_gui_kit::tokens;
 
 use super::cut::app_on;
 use super::{entry_name, foot_top};
-use crate::common::{HEIGHT, SMALLEST, launch_in, window};
+use crate::common::{HEIGHT, SMALLEST, launch_in, palette, wheel, window};
 
-const HEADINGS: [&str; 3] = ["INSTALL", "SYSTEM", "CARE"];
+const HEADINGS: [&str; 3] = ["Install", "System", "Care"];
 
 fn first_below(harness: &Harness<'_, App>, top: f32) -> Rect {
     let entries = PageId::ALL
@@ -27,7 +27,7 @@ fn first_below(harness: &Harness<'_, App>, top: f32) -> Rect {
 
     let headings = HEADINGS
         .into_iter()
-        .map(|heading| harness.get_by_label(heading).rect());
+        .map(|heading| harness.get_by_role_and_label(Role::Heading, heading).rect());
 
     entries
         .chain(headings)
@@ -193,9 +193,43 @@ fn a_heading_keeps_room_above_even_when_the_list_scrolls() {
         .get_by_role_and_label(Role::Tab, &entry_name(&harness, PageId::Home))
         .rect();
 
-    let heading = harness.get_by_label("INSTALL").rect();
+    let heading = harness
+        .get_by_role_and_label(Role::Heading, "Install")
+        .rect();
+
     assert!(
         heading.top() - home.bottom() >= 4.0,
         "the heading {heading:?} sticks to the entry above {home:?}"
+    );
+}
+
+#[test]
+fn a_return_from_an_app_page_scrolls_the_open_page_back_into_the_sidebar() {
+    let mut harness = app_on(600.0, PageId::Diagnostics);
+    let diagnostics = entry_name(&harness, PageId::Diagnostics);
+    let settings = entry_name(&harness, PageId::Settings);
+    harness.get_by_role_and_label(Role::Tab, &settings).click();
+    harness.run();
+
+    wheel(&harness, egui::pos2(100.0, 200.0), egui::vec2(0.0, 2000.0));
+    harness.run();
+    let entry =
+        |shown: &Harness<'_, App>| shown.get_by_role_and_label(Role::Tab, &diagnostics).rect();
+
+    let hidden = entry(&harness);
+    assert!(
+        hidden.bottom() > foot_top(&harness) + 0.5,
+        "the scrolled list still shows {hidden:?}"
+    );
+
+    palette(&mut harness, &diagnostics);
+    harness.key_press(Key::Enter);
+    harness.run();
+
+    let back = entry(&harness);
+    let foot = foot_top(&harness);
+    assert!(
+        back.bottom() <= foot + 0.5,
+        "the open page's entry {back:?} stays under the foot at {foot}"
     );
 }

@@ -1,9 +1,12 @@
+mod counts;
+mod tiles;
+
 use std::path::Path;
 
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::Snapshot;
-use toolbox_core::domains::{CurrentDns, CurrentWifiBackend};
+use toolbox_core::domains::{CurrentDns, CurrentWifiBackend, HblockState};
 use toolbox_plan::{DnsProvider, ShellPath, WifiBackend};
 use toolbox_system::{FailedProbes, Probe};
 
@@ -15,11 +18,14 @@ const STORE_FISH: &str = "/nix/store/rdxc7wg0r196bf6cicanfgcdkqhq9m9l-fish-4.9/b
 const STORE_BASH: &str =
     "/nix/store/4bj2kxdm1462fzcc2i2s4dn33g2angcc-bash-interactive-5.3p3/bin/bash";
 
+type Shown = egui_kittest::Harness<'static, crate::testing::PageState<TweaksPage>>;
+
 fn shipped() -> PageFixture {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog");
     let mut snapshot = Snapshot::default();
     snapshot.insert(CurrentDns(DnsProvider::Default));
     snapshot.insert(CurrentWifiBackend(WifiBackend::Iwd));
+    snapshot.insert(HblockState(false));
 
     PageFixture {
         catalogs: Catalogs::load(&dir),
@@ -129,10 +135,10 @@ fn every_section_counts_what_is_on() {
         .rect();
 
     let beside = harness
-        .query_all_by_label("0/4")
+        .query_all_by_label("0/1")
         .any(|count| (count.rect().center().y - heading.center().y).abs() < heading.height());
 
-    assert!(beside, "Shell and network does not count what is on");
+    assert!(beside, "Shell and network does not count its one switch");
     assert!(harness.query_by_label("4 settings").is_none());
 }
 
@@ -212,7 +218,7 @@ fn every_chip_counts_what_is_on() {
     let mut harness = shipped().harness(TweaksPage::default());
     harness.run();
 
-    for chip in ["Shell and network 0/4", "All"] {
+    for chip in ["Shell and network 0/1", "All"] {
         assert!(
             harness
                 .query_all_by_role(Role::Button)
@@ -237,7 +243,7 @@ fn probed(failed: &[Probe]) -> PageFixture {
     }
 }
 
-fn dns_value(harness: &egui_kittest::Harness<'_, crate::testing::PageState<TweaksPage>>) -> String {
+fn dns_value(harness: &Shown) -> String {
     harness
         .get_by_role_and_label(Role::ComboBox, "DNS server")
         .accesskit_node()
@@ -265,7 +271,18 @@ fn a_picker_the_system_lacks_says_so_without_a_banner() {
     let mut harness = probed(&[]).harness(TweaksPage::default());
     harness.run();
 
-    assert_eq!(dns_value(&harness), "Not available on this system");
+    assert!(
+        harness
+            .query_by_role_and_label(Role::ComboBox, "DNS server")
+            .is_none(),
+        "a dropdown that never opens"
+    );
+    assert!(
+        harness
+            .query_all_by_label("Not available on this system")
+            .next()
+            .is_some()
+    );
     assert!(
         harness
             .query_by_label_contains("The state of one entry could not be read")

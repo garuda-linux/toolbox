@@ -5,7 +5,7 @@ use crate::features::toggles::shown::Control;
 use crate::testing::features::kernels::{dkms, package, system, vboxhost_build};
 use crate::{ChangeSet, Queued, Snapshot, Toggle};
 
-fn row<'rows, 'listing>(rows: &'rows [Row<'listing>], name: &str) -> &'rows Row<'listing> {
+fn row<'rows>(rows: &'rows [Row], name: &str) -> &'rows Row {
     rows.iter()
         .find(|row| row.kernel.name.as_str() == name)
         .unwrap()

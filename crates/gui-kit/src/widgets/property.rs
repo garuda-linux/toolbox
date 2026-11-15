@@ -4,7 +4,9 @@
 
 use std::sync::Arc;
 
-use egui::{Align, Galley, Id, Label, Layout, Pos2, Rect, Role, Sense, Ui, WidgetInfo, vec2};
+use egui::{
+    Align, Galley, Id, Label, Layout, Pos2, Rect, Role, Sense, Ui, Vec2, WidgetInfo, pos2, vec2,
+};
 
 use super::buttons::{SMALL_BUTTON, paint_small_button};
 use super::{line, rich};
@@ -148,62 +150,64 @@ fn show_row(ui: &mut Ui, column: Column, row: Property<'_>, texts: PropertyTexts
     let tokens = tokens::current(ui.ctx());
     let Property { label, copy, value } = row;
     let mut copy_button = None;
-    let row_rect = ui
-        .horizontal_top(|ui| {
-            ui.spacing_mut().item_spacing.x = 0.0;
-            let at = ui.cursor().min;
-            let caption = ui.scope_id().with(("property-label", label));
-            let widget = matches!(value, Value::Widget(_));
-            ui.add_space(column.width + tokens.sizes.text_to_control);
+    ui.horizontal_top(|ui| {
+        ui.spacing_mut().item_spacing.x = 0.0;
+        let at = ui.cursor().min;
+        let caption = ui.scope_id().with(("property-label", label));
+        let widget = matches!(value, Value::Widget(_));
+        ui.add_space(column.width + tokens.sizes.text_to_control);
 
-            let room = value_room(ui, copy.is_some());
-            let shown = ui
-                .allocate_ui_with_layout(vec2(room, 0.0), Layout::top_down(Align::Min), |ui| {
-                    ui.set_width(room);
-                    show_value(ui, value, caption);
-                })
-                .response
-                .rect;
+        let room = value_room(ui, copy.is_some());
+        let shown = ui
+            .allocate_ui_with_layout(vec2(room, 0.0), Layout::top_down(Align::Min), |ui| {
+                ui.set_width(room);
+                show_value(ui, value, caption);
+            })
+            .response
+            .rect;
 
-            // A control is taller than the label's text, so the label
-            // centres on the control's line. Text starts on the label's.
-            let first = shown.height().min(ui.spacing().interact_size.y);
-            let drop = if widget {
-                ((first - column.galley.size().y) / 2.0).max(0.0)
-            } else {
-                0.0
-            };
+        // A control is taller than the label's text, so the label
+        // centres on the control's line. Text starts on the label's.
+        let first = shown.height().min(ui.spacing().interact_size.y);
+        let drop = if widget {
+            ((first - column.galley.size().y) / 2.0).max(0.0)
+        } else {
+            0.0
+        };
 
-            paint_caption(ui, caption, label, column.galley, at + vec2(0.0, drop));
+        // The button centres on the first line, as the label does.
+        let line_middle = at.y + drop + column.galley.size().y / 2.0;
+        paint_caption(ui, caption, label, column.galley, at + vec2(0.0, drop));
 
-            if let Some(text) = copy {
-                ui.add_space(tokens.sizes.text_to_control);
-                let alt = (texts.copy)(label);
-                let (rect, response) =
-                    ui.allocate_exact_size(vec2(SMALL_BUTTON, SMALL_BUTTON), Sense::click());
+        if let Some(text) = copy {
+            ui.add_space(tokens.sizes.text_to_control);
+            let alt = (texts.copy)(label);
+            let (slot, _) =
+                ui.allocate_exact_size(vec2(SMALL_BUTTON, SMALL_BUTTON), Sense::hover());
 
-                response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), &alt));
+            let rect = Rect::from_center_size(
+                pos2(slot.center().x, line_middle),
+                Vec2::splat(SMALL_BUTTON),
+            );
 
-                copy_button = Some((rect, response.on_hover_text(alt), text));
-            } else {
-                // A row without the button keeps its height, so every row
-                // of the list is as tall.
-                ui.allocate_exact_size(vec2(0.0, SMALL_BUTTON), Sense::hover());
-            }
-        })
-        .response
-        .rect;
+            let response = ui.interact(rect, caption.with("copy"), Sense::click());
+
+            response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), &alt));
+
+            copy_button = Some((rect, response.on_hover_text(alt), text));
+        } else {
+            // A row without the button keeps its height, so every row
+            // of the list is as tall.
+            ui.allocate_exact_size(vec2(0.0, SMALL_BUTTON), Sense::hover());
+        }
+    });
 
     let Some((rect, response, text)) = copy_button else {
         return;
     };
 
-    // Always in the tab order, so a keyboard reaches it, but drawn only for
-    // the row under the pointer or the button with the focus.
-    if ui.rect_contains_pointer(row_rect) || response.has_focus() {
-        let hover = tokens::current(ui.ctx()).hover;
-        paint_small_button(ui, rect, &response, icons::EDIT_COPY, hover);
-    }
+    let hover = tokens::current(ui.ctx()).hover;
+    paint_small_button(ui, rect, &response, icons::EDIT_COPY, hover);
 
     if response.clicked() {
         ui.ctx().copy_text(text);

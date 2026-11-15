@@ -1,3 +1,5 @@
+mod charset;
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use super::{

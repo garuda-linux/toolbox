@@ -144,7 +144,7 @@ fn page(system: Snapshot) -> Harness<'static, PageState<KernelsPage>> {
         ..PageFixture::with_snapshot(system)
     };
 
-    let mut harness = fixture.harness(KernelsPage);
+    let mut harness = fixture.harness(KernelsPage::default());
     harness.run();
     harness
 }

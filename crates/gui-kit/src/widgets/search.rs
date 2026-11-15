@@ -1,4 +1,7 @@
-use egui::{Align2, Atom, Context, Id, IdSalt, Response, TextEdit, TextStyle, Ui, vec2};
+use egui::{
+    Align2, Atom, Context, EventFilter, Id, IdSalt, Key, Modifiers, Response, TextEdit, TextStyle,
+    Ui, vec2,
+};
 
 use super::field::{FieldButton, Parts, field};
 use super::rich;
@@ -21,7 +24,8 @@ pub fn request_search_focus(ctx: &Context) {
 }
 
 /// A [`super::text_field`] `width` wide with the search glyph before the
-/// text. Its clear button empties it and puts the focus back.
+/// text. Its clear button empties it and puts the focus back. Escape
+/// empties a field with text and leaves an empty one.
 pub fn search_field(
     ui: &mut Ui,
     text: &mut String,
@@ -32,6 +36,16 @@ pub fn search_field(
     let id = ui.make_persistent_id(("search", texts.name));
     if take_focus_request(ui) {
         ui.memory_mut(|memory| memory.request_focus(id));
+    }
+
+    // Taken before the text sees it, so the field keeps the focus. Once
+    // empty, Escape leaves the field as before.
+    let escaped = !text.is_empty()
+        && ui.memory(|memory| memory.has_focus(id))
+        && ui.input_mut(|input| input.consume_key(Modifiers::NONE, Key::Escape));
+
+    if escaped {
+        text.clear();
     }
 
     let hint = rich(ui, texts.hint, Weight::Regular, BODY, tokens.secondary);
@@ -70,13 +84,29 @@ pub fn search_field(
         .text_color(tokens.text)
         .desired_width(width);
 
-    let (response, cleared) = field(ui, edit, parts);
+    let (mut response, cleared) = field(ui, edit, parts);
+    if escaped {
+        response.mark_changed();
+    }
+
     ui.ctx()
         .accesskit_node_builder(response.id, |node| node.set_label(texts.name));
 
     if cleared {
         text.clear();
         ui.memory_mut(|memory| memory.request_focus(id));
+    }
+
+    // egui lets go of the focus on Escape before any widget sees it. A
+    // field with text keeps Escape for itself, to empty it.
+    if response.has_focus() {
+        let filter = EventFilter {
+            horizontal_arrows: true,
+            escape: !text.is_empty(),
+            ..EventFilter::default()
+        };
+
+        ui.memory_mut(|memory| memory.set_focus_lock_filter(id, filter));
     }
 
     response

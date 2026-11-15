@@ -31,3 +31,4 @@ tweaks-flag-pacman-noconfirm = pacman ohne Rückfragen
 tweaks-flag-pacman-noconfirm-description = Führt die Paketverwaltung pacman ohne Rückfragen aus, damit Updates schneller durchlaufen. Bei jeder Frage wird die Standardantwort gewählt.
 tweaks-flag-no-check-space = Speicherplatz nicht prüfen
 tweaks-flag-no-check-space-description = Prüft vor dem Installieren von Paketen nicht, ob genug Speicherplatz frei ist.
+tweaks-not-read = Unbekannt

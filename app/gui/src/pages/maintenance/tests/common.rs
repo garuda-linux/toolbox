@@ -1,11 +1,15 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use toolbox_core::features::maintenance::page::LaunchCause;
 use toolbox_core::features::maintenance::{self, Operation, Task};
 use toolbox_plan::Toggle;
 
-use super::{page, programs, sent, with};
+use super::{open_tab, page, programs, sent, with};
 use crate::command::{Command, MaintenanceCommand};
-use crate::maintenance::Maintenance;
+use crate::maintenance::{Maintenance, MaintenanceProblem};
+use crate::pages::PageView as _;
+use crate::pages::maintenance::{MaintenancePage, Tab};
+use crate::testing::PageFixture;
 
 #[test]
 fn removing_orphans_asks_first_and_runs_on_its_danger_button() {
@@ -61,7 +65,7 @@ fn a_queued_operation_marks_its_row() {
 
 #[test]
 fn queue_sits_beside_run_now_and_rests_while_a_plan_runs() {
-    let harness = page(crate::testing::PageFixture {
+    let harness = page(PageFixture {
         busy: true,
         ..with(programs(), Maintenance::default())
     });
@@ -92,5 +96,62 @@ fn a_queued_operation_offers_to_take_it_back() {
             operation: Operation::CleanPackageCache,
             on: false,
         })]
+    );
+}
+
+#[test]
+fn before_the_programs_are_found_placeholder_rows_wait() {
+    for (tab, title) in [("Common", "Tools"), ("Repairs", "Repairs")] {
+        let mut harness = page(PageFixture::default());
+        open_tab(&mut harness, tab);
+
+        let waiting = harness.get_by_role_and_label(Role::ProgressIndicator, title);
+        assert!(waiting.rect().height() > 100.0, "{tab}: rows, not a line");
+    }
+}
+
+/// A question belongs to its tab, and to the page: another tab or page
+/// closes it unanswered.
+#[test]
+fn a_question_closes_when_its_tab_or_page_is_left() {
+    let leaves: [fn(&mut MaintenancePage, &egui::Context); 2] = [
+        |shown, _| shown.show_tab(Tab::Repairs),
+        |shown, ctx| shown.left(ctx),
+    ];
+
+    for leave in leaves {
+        let mut harness = page(with(programs(), Maintenance::default()));
+        harness
+            .query_all_by_label("Run now")
+            .nth(1)
+            .unwrap()
+            .click();
+        harness.run();
+        assert!(harness.query_by_role(Role::Dialog).is_some());
+
+        let ctx = harness.ctx.clone();
+        leave(&mut harness.state_mut().page, &ctx);
+        harness.run();
+
+        assert!(harness.query_by_role(Role::Dialog).is_none());
+        assert_eq!(sent(&harness), []);
+    }
+}
+
+#[test]
+fn a_tool_missing_after_its_install_names_the_program() {
+    let problem = MaintenanceProblem::Launch {
+        tool: "btrfs-assistant",
+        cause: LaunchCause::AbsentAfterInstall,
+        reason: "/usr/bin/btrfs-assistant-launcher".to_owned(),
+    };
+
+    let maintenance = Maintenance::showing(Some(problem), false, Vec::new(), None);
+    let harness = page(with(programs(), maintenance));
+
+    assert!(
+        harness
+            .query_by_label_contains("is not there, so Btrfs Assistant did not start.")
+            .is_some()
     );
 }

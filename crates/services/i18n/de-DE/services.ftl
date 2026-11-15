@@ -18,7 +18,9 @@ services-none = Keine passenden Dienste.
 services-unavailable = systemd ist nicht erreichbar.
 services-denied = Keine Berechtigung, die Dienste zu lesen.
 services-failed = Die Dienste konnten nicht gelesen werden.
-services-retry = Erneut versuchen
+services-user-unavailable = Das systemd deines Benutzers ist nicht erreichbar.
+services-user-denied = Keine Berechtigung, die Dienste deines Benutzers zu lesen.
+services-user-failed = Die Dienste deines Benutzers konnten nicht gelesen werden.
 services-none-detail = Ändere die Suche oder die Filter, um mehr Dienste zu sehen.
 services-show-every =
     { $count ->

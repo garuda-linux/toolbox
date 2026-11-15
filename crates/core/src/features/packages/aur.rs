@@ -27,6 +27,8 @@ pub struct AurCatalog {
     index: AurIndex,
     names: Vec<String>,
     texts: Vec<String>,
+    /// The places in the most popular first, so a search needs no sort.
+    popular: Vec<usize>,
 }
 
 /// The names of the AUR's copy, a part the window adds to its snapshot
@@ -69,10 +71,21 @@ impl AurCatalog {
             })
             .collect();
 
+        let mut popular: Vec<usize> = (0..index.packages.len()).collect();
+        let popularity = |place: &usize| {
+            index
+                .packages
+                .get(*place)
+                .map_or(0.0_f64, |package| package.popularity)
+        };
+
+        popular.sort_by(|left, right| popularity(right).total_cmp(&popularity(left)));
+
         Self {
             index,
             names,
             texts,
+            popular,
         }
     }
 
@@ -117,30 +130,27 @@ impl AurCatalog {
     pub fn view(&self, search: &str) -> Vec<usize> {
         let needle = Needle::new(search);
         let wanted = needle.as_str();
+        let (mut exact, mut starts, mut elsewhere) = (Vec::new(), Vec::new(), Vec::new());
 
-        let mut found: Vec<(Rank, usize)> = self
-            .names
-            .iter()
-            .zip(&self.texts)
-            .enumerate()
-            .filter(|(_, (_, text))| text.contains(wanted))
-            .map(|(place, (name, _))| (rank(name, wanted), place))
-            .collect();
+        for &place in &self.popular {
+            let (Some(name), Some(text)) = (self.names.get(place), self.texts.get(place)) else {
+                continue;
+            };
 
-        let popularity = |place: usize| {
-            self.index
-                .packages
-                .get(place)
-                .map_or(0.0_f64, |package| package.popularity)
-        };
+            if text.contains(wanted) {
+                let part = match rank(name, wanted) {
+                    Rank::Exact => &mut exact,
+                    Rank::Starts => &mut starts,
+                    Rank::Elsewhere => &mut elsewhere,
+                };
 
-        found.sort_by(|(left_rank, left), (right_rank, right)| {
-            left_rank
-                .cmp(right_rank)
-                .then_with(|| popularity(*right).total_cmp(&popularity(*left)))
-        });
+                part.push(place);
+            }
+        }
 
-        found.into_iter().map(|(_, place)| place).collect()
+        exact.extend(starts);
+        exact.extend(elsewhere);
+        exact
     }
 }
 

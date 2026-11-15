@@ -6,14 +6,15 @@ mod focus;
 mod question;
 
 use egui::{
-    Align, Align2, Color32, Context, CornerRadius, Frame, Id, LayerId, Layout, Margin, Modal, Ui,
-    vec2,
+    Align, Align2, AreaState, Color32, Context, CornerRadius, Frame, Id, LayerId, Layout, Margin,
+    Modal, Ui, vec2,
 };
 pub use question::{Asked, Question, question};
 
 use super::buttons::mark_raised_surface;
 use super::{ButtonKind, icon_button, pill_button, pill_width, rich};
 use crate::fonts::{BODY, SECTION, Weight};
+use crate::theme::POPOVER_RADIUS;
 use crate::{frost, icons, tokens};
 
 const WINDOW_MARGIN: f32 = 20.0;
@@ -161,12 +162,17 @@ impl<'a> ModalWrapper<'a> {
 
         let sizes = tokens::current(ctx).sizes;
 
-        // Card padding on all four sides, not egui's menu-sized popup margin,
-        // so Close and the footer buttons keep the text's room from the edge.
-        let frame =
-            Frame::popup(&ctx.global_style()).inner_margin(Margin::same(sizes.card_padding.left));
+        // Card padding, not the popup margin, so Close and the buttons keep
+        // the text's room from the edge. Corners and shadow are the menus',
+        // so its menus read as of one kind with it.
+        let style = ctx.global_style();
+        let frame = Frame::popup(&style)
+            .inner_margin(Margin::same(sizes.card_padding.left))
+            .corner_radius(CornerRadius::same(POPOVER_RADIUS))
+            .shadow(style.visuals.popup_shadow);
 
         backdrop(ctx, area.layer());
+        let last_size = AreaState::load(ctx, self.id).and_then(|state| state.size);
         focus::shown(ctx, self.id);
 
         let mut closed = false;
@@ -197,6 +203,12 @@ impl<'a> ModalWrapper<'a> {
 
                 content(ui)
             });
+
+        // egui places an area by the size it had last frame, so a dialog whose
+        // content grew or shrank would show one frame off the centre.
+        if last_size.is_some_and(|size| size != modal.response.rect.size()) {
+            ctx.request_discard("the dialog changed its size");
+        }
 
         let beside = modal.backdrop_response.clicked();
         let asked = modal.should_close();

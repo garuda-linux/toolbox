@@ -6,7 +6,6 @@ mod rows;
 mod tests;
 
 use egui::{Context, Ui};
-use toolbox_core::features::toggles::shown::Tally;
 use toolbox_core::features::tweaks::view::Choices;
 use toolbox_system::Host;
 
@@ -63,22 +62,11 @@ impl LeadSections for SystemChoices {
         );
 
         let garuda_update = data.flags.as_ref().map(|flags| {
-            let tally = flags
-                .iter()
-                .filter(|(flag, _)| {
-                    rows::matches(ctx, &format!("tweaks-flag-{}", flag.as_str()), query)
-                })
-                .map(|(_, flip)| Tally {
-                    on: usize::from(flip.on),
-                    total: 1,
-                })
-                .sum();
-
             LeadChip::new(
                 ctx,
                 GARUDA_UPDATE,
                 i18n::text(ctx, "tweaks-garuda-update"),
-                tally,
+                rows::garuda_update_tally(ctx, flags, query),
             )
         });
 

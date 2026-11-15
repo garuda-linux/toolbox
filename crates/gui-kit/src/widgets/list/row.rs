@@ -9,8 +9,8 @@ use egui::{
 
 use super::super::card::{divider, fill_rect, mark_raised, paint_hover, row_frame, shows_hover};
 use super::super::focus::ring_around;
-use super::super::layout::{SETTLED, remember_width};
-use super::{ListItem, RowState};
+use super::super::layout::{SETTLED, moved, remeasured};
+use super::{ListItem, RowState, memory};
 use crate::theme::RADIUS;
 use crate::{motion, tokens};
 
@@ -73,7 +73,7 @@ where
         mark_raised(ui, lit);
 
         match place.fixed {
-            Some(height) => centred_frame(ui, height, place.id, |ui| body(ui, item, &state)),
+            Some(height) => centred_frame(ui, height, place, |ui| body(ui, item, &state)),
             None => row_frame(ui, |ui| body(ui, item, &state)),
         }
     });
@@ -96,10 +96,9 @@ where
 /// A row of a fixed height around `body`, its content centred in the
 /// slot by the height it took last frame, so a row with fewer lines than
 /// the list's tallest leaves no gap under its text.
-fn centred_frame(ui: &mut Ui, height: f32, id: Id, body: impl FnOnce(&mut Ui)) {
+fn centred_frame(ui: &mut Ui, height: f32, place: Place, body: impl FnOnce(&mut Ui)) {
     let sizes = tokens::current(ui.ctx()).sizes;
-    let content_id = id.with("content");
-    let known = ui.data(|data| data.get_temp::<f32>(content_id));
+    let known = memory::get(ui, place.id).content;
     let top = known.map_or(sizes.row_padding.y, |content| {
         ((height - content) / 2.0).max(0.0)
     });
@@ -115,7 +114,12 @@ fn centred_frame(ui: &mut Ui, height: f32, id: Id, body: impl FnOnce(&mut Ui)) {
             });
 
             let content = drawn.response.rect.height();
-            remember_width(ui, content_id, known, content, "fixed row content");
+            if known.is_none_or(|was| moved(was, content)) {
+                memory::update(ui, (place.list, place.id), |row| {
+                    row.content = Some(content);
+                });
+                remeasured(ui, known.is_none(), "fixed row content");
+            }
         });
 }
 
@@ -153,7 +157,7 @@ fn focus(ui: &Ui, response: &Response) {
 
 /// The height row `id` took when last laid out.
 pub fn remembered(ui: &Ui, id: Id) -> Option<f32> {
-    ui.data(|data| data.get_temp::<f32>(height_id(id)))
+    memory::get(ui, id).height
 }
 
 fn remember(ui: &Ui, place: Place, height: f32) {
@@ -162,15 +166,11 @@ fn remember(ui: &Ui, place: Place, height: f32) {
         return;
     }
 
-    ui.data_mut(|data| data.insert_temp(height_id(id), height));
+    memory::update(ui, (place.list, id), |row| row.height = Some(height));
 
     // The rows below moved, so the next frame places them anew.
     heights_changed(ui, place.list);
     ui.ctx().request_repaint();
-}
-
-fn height_id(id: Id) -> Id {
-    id.with("height")
 }
 
 /// Counts the measured heights of `list` that changed, so the list

@@ -188,182 +188,6 @@ description = "A Vulkan post-processing layer. Some of the effects are CAS, FXAA
 check = { package = "vkbasalt" }
 
 [[section]]
-id = "misc"
-title = "Miscellaneous"
-icon = "view-list-details"
-
-[[section.entry]]
-id = "antimicrox"
-title = "AntimicroX"
-description = "Graphical program used to map keyboard buttons & mouse controls to a gamepad"
-check = { package = "antimicrox" }
-icon = "antimicrox.png"
-
-[[section.entry]]
-id = "anydesk-bin"
-title = "AnyDesk"
-description = "The Fast Remote Desktop Application"
-check = { package = "anydesk-bin" }
-icon = "anydesk.svg"
-
-[[section.entry]]
-id = "corectrl"
-title = "CoreCtrl"
-description = "Core control application"
-check = { package = "corectrl" }
-icon = "corectrl.png"
-
-[[section.entry]]
-id = "discord"
-title = "Discord"
-description = "All-in-one voice and text chat for gamers"
-check = { package = "discord" }
-icon = "discord.png"
-
-[[section.entry]]
-id = "vesktop"
-title = "Vesktop"
-description = "Vesktop is a customizable and privacy friendly Discord desktop app"
-check = { package = "vesktop" }
-icon = "vesktop.svg"
-
-[[section.entry]]
-id = "displaycal"
-title = "DisplayCAL"
-description = "Open Source Display Calibration and Characterization powered by Argyll CMS"
-check = { package = "displaycal" }
-icon = "displaycal.png"
-
-[[section.entry]]
-id = "droidcam"
-title = "DroidCam"
-description = "A tool to turn your phone/tablet into a wireless/usb webcam"
-check = { package = "droidcam" }
-icon = "droidcam.png"
-
-[[section.entry]]
-id = "gaming-easyeffects"
-title = "EasyEffects"
-description = "Audio Effects for Pipewire applications"
-check = { package = "easyeffects" }
-icon = "easyeffects.svg"
-
-[[section.entry]]
-id = "goverlay"
-title = "GOverlay"
-description = "A GUI to help manage Vulkan/OpenGL overlays"
-check = { package = "goverlay" }
-icon = "goverlay.png"
-
-[[section.entry]]
-id = "gwe"
-title = "GWE"
-description = "A system utility for controlling NVIDIA GPUs"
-check = { package = "gwe" }
-icon = "gwe.png"
-
-[[section.entry]]
-id = "gameconqueror"
-title = "Game Conqueror"
-description = "Memory scanner designed to isolate the address of an arbitrary variable in an executing process"
-check = { package = "gameconqueror" }
-
-[[section.entry]]
-id = "input-remapper-git"
-title = "Input remapper"
-description = "A tool to change and program the mapping of your input device buttons"
-check = { package = "input-remapper-git" }
-
-[[section.entry]]
-id = "keyboard-visualizer-git"
-title = "Keyboard visualizer"
-description = "Turn your OpenRGB-supported RGB setup into a spectacular light show for your music"
-check = { package = "keyboard-visualizer-git" }
-
-[[section.entry]]
-id = "mumble"
-title = "Mumble"
-description = "An Open Source, low-latency, high quality voice chat software"
-check = { package = "mumble" }
-icon = "mumble.svg"
-
-[[section.entry]]
-id = "noisetorch"
-title = "Noisetorch"
-description = "Real-time microphone noise suppression on Linux"
-check = { package = "noisetorch" }
-icon = "noisetorch.png"
-
-[[section.entry]]
-id = "nyrna"
-title = "Nyrna"
-description = "Suspend games and applications at any time and resume whenever you wish"
-check = { package = "nyrna" }
-icon = "nyrna.png"
-
-[[section.entry]]
-id = "obs-studio"
-title = "OBS Studio"
-description = "Free, open source software for live streaming and recording"
-check = { package = "obs-studio" }
-icon = "obs.svg"
-
-[[section.entry]]
-id = "openrgb"
-title = "OpenRGB"
-description = "Open source RGB lighting control that doesn't depend on manufacturer software"
-check = { package = "openrgb" }
-icon = "openrgb.png"
-
-[[section.entry]]
-id = "oversteer"
-title = "Oversteer"
-description = "Graphical application to configure Logitech Wheels"
-check = { package = "oversteer" }
-icon = "oversteer.svg"
-
-[[section.entry]]
-id = "piper"
-title = "Piper"
-description = "GTK application to configure gaming mice"
-check = { package = "piper" }
-icon = "piper.svg"
-
-[[section.entry]]
-id = "polychromatic"
-title = "Polychromatic"
-description = "RGB lighting management front-end application for OpenRazer"
-check = { package = "polychromatic" }
-icon = "polychromatic_green.svg"
-
-[[section.entry]]
-id = "sc-controller"
-title = "Sc-controller"
-description = "User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers"
-check = { package = "sc-controller" }
-
-[[section.entry]]
-id = "soundwire"
-title = "SoundWire"
-description = "Wirelessly transmit any audio from your PC to your Android phone or other PCs"
-check = { package = "soundwire" }
-icon = "soundwire.png"
-
-[[section.entry]]
-id = "streamlink-twitch-gui-bin"
-title = "StreamLink Twitch GUI"
-description = "A multi platform Twitch.tv browser for Streamlink"
-check = { package = "streamlink-twitch-gui-bin" }
-icon = "streamlink-twitch.png"
-
-[[section.entry]]
-id = "vlc"
-title = "VLC"
-description = "Multi-platform MPEG, VCD/DVD, and DivX player"
-check = { package = "vlc" }
-icon = "vlc.svg"
-
-[[section]]
 id = "controllers"
 title = "Controller support"
 icon = "input-gamepad"
@@ -1115,3 +939,179 @@ title = "mGBA"
 description = "A Nintendo Gameboy Advance Emulator focusing on speed and accuracy"
 check = { package = "mgba-qt" }
 icon = "mgba.png"
+
+[[section]]
+id = "misc"
+title = "Miscellaneous"
+icon = "view-list-details"
+
+[[section.entry]]
+id = "antimicrox"
+title = "AntimicroX"
+description = "Graphical program used to map keyboard buttons & mouse controls to a gamepad"
+check = { package = "antimicrox" }
+icon = "antimicrox.png"
+
+[[section.entry]]
+id = "anydesk-bin"
+title = "AnyDesk"
+description = "The Fast Remote Desktop Application"
+check = { package = "anydesk-bin" }
+icon = "anydesk.svg"
+
+[[section.entry]]
+id = "corectrl"
+title = "CoreCtrl"
+description = "Core control application"
+check = { package = "corectrl" }
+icon = "corectrl.png"
+
+[[section.entry]]
+id = "discord"
+title = "Discord"
+description = "All-in-one voice and text chat for gamers"
+check = { package = "discord" }
+icon = "discord.png"
+
+[[section.entry]]
+id = "vesktop"
+title = "Vesktop"
+description = "Vesktop is a customizable and privacy friendly Discord desktop app"
+check = { package = "vesktop" }
+icon = "vesktop.svg"
+
+[[section.entry]]
+id = "displaycal"
+title = "DisplayCAL"
+description = "Open Source Display Calibration and Characterization powered by Argyll CMS"
+check = { package = "displaycal" }
+icon = "displaycal.png"
+
+[[section.entry]]
+id = "droidcam"
+title = "DroidCam"
+description = "A tool to turn your phone/tablet into a wireless/usb webcam"
+check = { package = "droidcam" }
+icon = "droidcam.png"
+
+[[section.entry]]
+id = "gaming-easyeffects"
+title = "EasyEffects"
+description = "Audio Effects for Pipewire applications"
+check = { package = "easyeffects" }
+icon = "easyeffects.svg"
+
+[[section.entry]]
+id = "goverlay"
+title = "GOverlay"
+description = "A GUI to help manage Vulkan/OpenGL overlays"
+check = { package = "goverlay" }
+icon = "goverlay.png"
+
+[[section.entry]]
+id = "gwe"
+title = "GWE"
+description = "A system utility for controlling NVIDIA GPUs"
+check = { package = "gwe" }
+icon = "gwe.png"
+
+[[section.entry]]
+id = "gameconqueror"
+title = "Game Conqueror"
+description = "Memory scanner designed to isolate the address of an arbitrary variable in an executing process"
+check = { package = "gameconqueror" }
+
+[[section.entry]]
+id = "input-remapper-git"
+title = "Input remapper"
+description = "A tool to change and program the mapping of your input device buttons"
+check = { package = "input-remapper-git" }
+
+[[section.entry]]
+id = "keyboard-visualizer-git"
+title = "Keyboard visualizer"
+description = "Turn your OpenRGB-supported RGB setup into a spectacular light show for your music"
+check = { package = "keyboard-visualizer-git" }
+
+[[section.entry]]
+id = "mumble"
+title = "Mumble"
+description = "An Open Source, low-latency, high quality voice chat software"
+check = { package = "mumble" }
+icon = "mumble.svg"
+
+[[section.entry]]
+id = "noisetorch"
+title = "Noisetorch"
+description = "Real-time microphone noise suppression on Linux"
+check = { package = "noisetorch" }
+icon = "noisetorch.png"
+
+[[section.entry]]
+id = "nyrna"
+title = "Nyrna"
+description = "Suspend games and applications at any time and resume whenever you wish"
+check = { package = "nyrna" }
+icon = "nyrna.png"
+
+[[section.entry]]
+id = "obs-studio"
+title = "OBS Studio"
+description = "Free, open source software for live streaming and recording"
+check = { package = "obs-studio" }
+icon = "obs.svg"
+
+[[section.entry]]
+id = "openrgb"
+title = "OpenRGB"
+description = "Open source RGB lighting control that doesn't depend on manufacturer software"
+check = { package = "openrgb" }
+icon = "openrgb.png"
+
+[[section.entry]]
+id = "oversteer"
+title = "Oversteer"
+description = "Graphical application to configure Logitech Wheels"
+check = { package = "oversteer" }
+icon = "oversteer.svg"
+
+[[section.entry]]
+id = "piper"
+title = "Piper"
+description = "GTK application to configure gaming mice"
+check = { package = "piper" }
+icon = "piper.svg"
+
+[[section.entry]]
+id = "polychromatic"
+title = "Polychromatic"
+description = "RGB lighting management front-end application for OpenRazer"
+check = { package = "polychromatic" }
+icon = "polychromatic_green.svg"
+
+[[section.entry]]
+id = "sc-controller"
+title = "Sc-controller"
+description = "User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers"
+check = { package = "sc-controller" }
+
+[[section.entry]]
+id = "soundwire"
+title = "SoundWire"
+description = "Wirelessly transmit any audio from your PC to your Android phone or other PCs"
+check = { package = "soundwire" }
+icon = "soundwire.png"
+
+[[section.entry]]
+id = "streamlink-twitch-gui-bin"
+title = "StreamLink Twitch GUI"
+description = "A multi platform Twitch.tv browser for Streamlink"
+check = { package = "streamlink-twitch-gui-bin" }
+icon = "streamlink-twitch.png"
+
+[[section.entry]]
+id = "vlc"
+title = "VLC"
+description = "Multi-platform MPEG, VCD/DVD, and DivX player"
+check = { package = "vlc" }
+icon = "vlc.svg"

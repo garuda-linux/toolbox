@@ -1,5 +1,6 @@
-use egui::{Color32, Response, Role, Sense, Ui, UiBuilder, WidgetInfo, vec2};
+use egui::{Color32, Response, Role, Sense, Ui, UiBuilder, Vec2, WidgetInfo, vec2};
 
+use super::mark_word::mark_and_word;
 use super::press::Pointer;
 use super::{focus_ring, line};
 use crate::fonts::{CAPTION, SMALL, Weight};
@@ -9,8 +10,8 @@ const CHIP_HEIGHT: f32 = 32.0;
 const CHIP_RADIUS: u8 = 16;
 const CHIP_PADDING_X: f32 = 14.0;
 const CHIP_GAP: f32 = 7.0;
-const TAG_HEIGHT: f32 = 22.0;
-const TAG_RADIUS: u8 = 11;
+const TAG_HEIGHT: f32 = 24.0;
+const TAG_RADIUS: u8 = 12;
 const TAG_PADDING_X: f32 = 10.0;
 pub(super) const TAG_SCALE: f32 = CAPTION;
 const DOT: f32 = 7.0;
@@ -43,7 +44,7 @@ impl Tone {
         match self {
             Self::Accent => (tokens.accent_soft, tokens.accent),
             Self::Neutral => (tokens.hover, tokens.secondary),
-            Self::Warning => (tokens.hover, tokens.warning),
+            Self::Warning => (tokens.tag_wash(tokens.warning), tokens.warning),
             Self::Success => (tokens.tag_wash(tokens.success), tokens.success),
             Self::Error => (tokens.tag_wash(tokens.error), tokens.error),
         }
@@ -107,25 +108,16 @@ pub fn queued_tag(ui: &mut Ui, label: &str, tone: Tone) -> Response {
 pub fn status_dot(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     let tokens = tokens::current(ui.ctx());
     let text = line(ui, label, Weight::Medium, SMALL, tokens.secondary);
-    let height = text.size().y.max(DOT);
-    let (rect, response) =
-        ui.allocate_exact_size(vec2(DOT + DOT_GAP + text.size().x, height), Sense::hover());
-
-    response.widget_info(|| WidgetInfo::labeled(Role::Label, true, label));
-
-    if ui.is_rect_visible(rect) {
-        let centre = egui::pos2(rect.left() + DOT / 2.0, rect.center().y);
-        ui.painter()
-            .circle_filled(centre, DOT / 2.0, tone.dot(&tokens));
-        let at = egui::pos2(
-            rect.left() + DOT + DOT_GAP,
-            rect.center().y - text.size().y / 2.0,
-        );
-
-        ui.painter().galley(at, text, tokens.secondary);
-    }
-
-    response
+    let dot = tone.dot(&tokens);
+    mark_and_word(
+        ui,
+        (Vec2::splat(DOT), DOT_GAP),
+        text,
+        (Role::Label, label),
+        |ui, mark| {
+            ui.painter().circle_filled(mark.center(), DOT / 2.0, dot);
+        },
+    )
 }
 
 /// A chip's fill: a hover shows on an unselected chip only, a press on

@@ -30,3 +30,4 @@ tweaks-flag-pacman-noconfirm = Non-interactive pacman
 tweaks-flag-pacman-noconfirm-description = Run pacman, the package manager, without asking you to confirm, for a faster update. It then takes its default answer to every question.
 tweaks-flag-no-check-space = Skip disk space check
 tweaks-flag-no-check-space-description = Skip checking available disk space before installing packages.
+tweaks-not-read = Not known

@@ -20,12 +20,12 @@ use toolbox_core::features::users::now::check_new_name;
 use toolbox_core::features::users::run::{Retry, RunKind};
 use toolbox_core::features::users::view;
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::widgets::{ButtonKind, check_row, disclosure};
+use toolbox_gui_kit::widgets::{ButtonKind, disclosure};
 use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, UserName};
 
-use self::more::shell_choice;
 use super::password::PasswordPair;
-use super::{Next, dialog_why, field, note};
+use super::shell::{ShellDefault, shell_choice};
+use super::{Next, check_with_note, dialog_why, field, note};
 use crate::command::UsersCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -91,6 +91,10 @@ impl AddUser {
             (&title, &confirm, ButtonKind::Primary),
             (why.as_deref(), ready),
             |ui| {
+                // It is about the whole dialog. Under the last option it
+                // read as that option's description.
+                note(ui, &i18n::text(ctx, "users-add-note"));
+                ui.add_space(ui.spacing().item_spacing.y);
                 self.required(ui, ctx, context, &problems);
 
                 // Kept by egui, so the dialog opens again as it was left.
@@ -104,12 +108,10 @@ impl AddUser {
 
                 if open {
                     ui.add_space(ui.tokens().sizes.card_gap);
-                    shell_choice(ui, ctx, context, &mut self.shell);
+                    shell_choice(ui, context, &mut self.shell, ShellDefault::Offered);
                     self.place(ui, ctx, &problems);
                     self.other_groups(ui, ctx, context);
                 }
-
-                note(ui, &i18n::text(ctx, "users-add-note"));
             },
         );
 
@@ -271,11 +273,10 @@ impl AddUser {
         if let Some(group) = view::admin_group(context.snapshot, context.changes) {
             let label = text("users-admin");
             let detail = i18n::text_with(ctx, "users-admin-detail", &[("group", group.as_str())]);
-            if check_row(ui, self.admin, &label, &detail, true).clicked() {
+            if check_with_note(ui, self.admin, &label, &detail) {
                 self.admin = !self.admin;
             }
 
-            note(ui, &detail);
             ui.add_space(ui.tokens().sizes.card_gap);
         }
     }

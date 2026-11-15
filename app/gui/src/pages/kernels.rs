@@ -7,13 +7,17 @@ mod row;
 #[cfg(test)]
 mod tests;
 
+use std::sync::Arc;
+
 use egui::Ui;
 use row::Item;
-use toolbox_core::features::kernels::view::{self, Listing};
+use toolbox_core::Snapshot;
+use toolbox_core::features::kernels::view::{self, Listing, Row};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    RowHeights, RowList, Tone, after_skeleton, banner, card, dimmed, hold_content, rich,
-    section_heading, skeleton_rows,
+    RowHeights, RowList, Tone, after_skeleton, banner, card, dimmed, empty_state_action,
+    hold_content, rich, section_heading, skeleton_rows,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_services::dkms::Dkms;
@@ -31,7 +35,20 @@ use crate::page::PageId;
 const SKELETON_ROWS: usize = 4;
 
 #[derive(Debug, Default)]
-pub struct KernelsPage;
+pub struct KernelsPage {
+    shown: Shown,
+}
+
+/// The rows and counts of one system, queue and dkms answer. `None`
+/// without the package databases.
+type Shown = RowCache<(Same<Snapshot>, u64, u64), Option<Built>>;
+
+#[derive(Debug)]
+struct Built {
+    rows: Vec<Row>,
+    headers_missing: usize,
+    modules_missing: usize,
+}
 
 impl PageView for KernelsPage {
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
@@ -55,32 +72,58 @@ impl PageView for KernelsPage {
             return;
         }
 
-        after_skeleton(ui, first_load, |ui| listing(ui, context));
+        let built = self.built(context);
+        after_skeleton(ui, first_load, |ui| {
+            listing(ui, context, (*built).as_ref());
+        });
+    }
+}
+
+impl KernelsPage {
+    fn built(&mut self, context: &PageContext<'_>) -> Arc<Option<Built>> {
+        let kernels = context.service::<Kernels>();
+        let rest = (
+            Same::of(context.snapshot),
+            context.revision,
+            kernels.dkms_revision(),
+        );
+
+        self.shown.get(&[], rest, || {
+            let _build = tracing::trace_span!("build rows").entered();
+            let found = Listing::of(context.snapshot)?;
+            let dkms = kernels.dkms_entries();
+
+            Some(Built {
+                rows: found.rows(context.changes, dkms),
+                headers_missing: found.headers_missing(context.changes),
+                modules_missing: found.modules_missing(context.changes, dkms),
+            })
+        })
     }
 }
 
 /// The kernels once the system was read, or why there are none.
-fn listing(ui: &mut Ui, context: &PageContext<'_>) {
+fn listing(ui: &mut Ui, context: &PageContext<'_>, built: Option<&Built>) {
     let ctx = ui.ctx().clone();
-    let Some(listing) = Listing::of(context.snapshot) else {
-        banner(
-            ui,
-            Tone::Warning,
-            &i18n::text(&ctx, "kernels-unavailable"),
-            &[],
-        );
+    let Some(built) = built else {
+        let said = i18n::text(&ctx, "kernels-unavailable");
+        let again = i18n::text(&ctx, "common-read-again");
+        if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again) {
+            context.commands.send(KernelCommand::Refresh);
+        }
+
         return;
     };
 
-    if listing.kernels().is_empty() {
+    if built.rows.is_empty() {
         banner(ui, Tone::Neutral, &i18n::text(&ctx, "kernels-none"), &[]);
         return;
     }
 
-    notices(ui, context, &listing);
+    notices(ui, context, built);
 
-    let rows = listing.rows(context.changes, context.service::<Kernels>().dkms_entries());
-    let (installed, available): (Vec<Item<'_, '_>>, Vec<Item<'_, '_>>) = rows
+    let (installed, available): (Vec<Item<'_>>, Vec<Item<'_>>) = built
+        .rows
         .iter()
         .map(Item)
         .partition(|item| item.0.kernel.is_installed());
@@ -114,12 +157,11 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 /// What dkms said, and the banners that queue what is missing.
-fn notices(ui: &mut Ui, context: &PageContext<'_>, listing: &Listing) {
+fn notices(ui: &mut Ui, context: &PageContext<'_>, built: &Built) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let kernels = context.service::<Kernels>();
-    let missing_builds = listing.modules_missing(context.changes, kernels.dkms_entries());
-    let dkms = kernels.dkms();
+    let missing_builds = built.modules_missing;
+    let dkms = context.service::<Kernels>().dkms();
 
     let dkms = match (dkms.error(), dkms.get()) {
         (Some(_), _) => {
@@ -150,10 +192,9 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, listing: &Listing) {
         ui.add_space(ui.tokens().sizes.card_gap);
     }
 
-    let missing_headers = listing.headers_missing(context.changes);
     let offers = [
         (
-            missing_headers,
+            built.headers_missing,
             "kernels-headers-banner",
             "kernels-queue-all-headers",
             KernelEdit::AllHeaders,
@@ -181,7 +222,7 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, listing: &Listing) {
     }
 }
 
-fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[Item<'_, '_>]) {
+fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[Item<'_>]) {
     if rows.is_empty() {
         return;
     }

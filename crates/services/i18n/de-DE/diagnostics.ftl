@@ -49,7 +49,6 @@ diagnostics-lines =
     }
 diagnostics-collected = · erstellt um { $time } UTC · { $lines }
 diagnostics-collected-unknown = · { $lines }
-diagnostics-wrap = Zeilen umbrechen
 diagnostics-search = Bericht durchsuchen
 diagnostics-search-clear = Suche leeren
 

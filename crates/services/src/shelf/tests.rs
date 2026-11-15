@@ -265,3 +265,15 @@ fn the_question_names_the_home_files_a_reset_replaces() {
         ]
     );
 }
+
+#[test]
+fn the_next_choice_clears_the_last_outcome() {
+    let skel = skel_folder();
+    let home = tempfile::tempdir().unwrap();
+    let (catalog, mut shelf) = fish_chosen(&skel);
+    reset_chosen(&mut shelf, &catalog, skel.path(), home.path());
+
+    shelf.choose("bash", Toggle::On);
+
+    assert_eq!(*shelf.outcome(), Outcome::default());
+}

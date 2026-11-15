@@ -11,10 +11,13 @@ mod system;
 mod tests;
 mod texts;
 
-use egui::{Label, Ui};
+use egui::Ui;
 use toolbox_core::features::bootrepair::Target;
 use toolbox_core::features::bootrepair::page::{self, Offer, Progress, State};
-use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, empty_state, pill_button};
+use toolbox_gui_kit::widgets::{
+    Tone, banner, card, empty_state, empty_state_action, row_height, skeleton_rows,
+    text_block_height,
+};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::RootLayout;
 
@@ -26,6 +29,9 @@ use crate::command::{AppCommand, BootRepairCommand};
 use crate::i18n;
 use crate::page::PageId;
 use crate::refused::Shown as _;
+
+/// Placeholder rows while the disks are read, as many as the system card has.
+const SKELETON_ROWS: usize = 4;
 
 #[derive(Debug, Default)]
 pub struct BootRepairPage {
@@ -66,13 +72,21 @@ impl PageView for BootRepairPage {
         let Some(facts) = facts.filter(|_| state == State::Ready) else {
             match state {
                 State::Hidden => empty_state(ui, icon, &text("repair-hidden"), ""),
-                State::Loading => empty_state(ui, icon, &text("repair-reading"), ""),
-                State::Failed => empty_state(
-                    ui,
-                    icon,
-                    &text("repair-failed"),
-                    &text("repair-failed-detail"),
-                ),
+                State::Loading => {
+                    let height = row_height(ui, text_block_height(ui, 1));
+                    let name = text("repair-reading");
+                    card(ui, |ui| skeleton_rows(ui, SKELETON_ROWS, height, &name)).inner
+                }
+                State::Failed => {
+                    let (title, detail) = (text("repair-failed"), text("repair-failed-detail"));
+                    let again = text("common-read-again");
+                    let error = icons::DIALOG_ERROR;
+                    if empty_state_action(ui, error, &title, &detail, &again) {
+                        context.commands.send(BootRepairCommand::Refresh);
+                    }
+
+                    return;
+                }
                 State::Missing | State::Ready => {
                     let tools = facts
                         .map(|facts| {
@@ -118,55 +132,81 @@ impl PageView for BootRepairPage {
     }
 }
 
+/// The banners above the page's content, with room under them only when
+/// one shows.
 fn notes(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    let text = |id: &str| i18n::text(&ctx, id).into_owned();
+    let gap = ui.tokens().sizes.card_gap;
     let repair = context.service::<BootRepair>();
-    if repair.offer() == Offer::Test {
-        banner(ui, Tone::Warning, &text("repair-test-mode"), &[]);
-        ui.add_space(ui.tokens().sizes.card_gap);
+    let mut shown = repair.offer() == Offer::Test;
+    if shown {
+        banner(
+            ui,
+            Tone::Warning,
+            &i18n::text(&ctx, "repair-test-mode"),
+            &[],
+        );
     }
 
-    ui.add(Label::new(text("repair-intro")).wrap());
-    let dismiss = text("repair-dismiss");
-    if let Some(refusal) = context.service::<BootRepair>().refusal() {
+    let dismiss = i18n::text(&ctx, "repair-dismiss");
+    if let Some(refusal) = repair.refusal() {
         let refused = refusal.text(&ctx);
-        ui.add_space(ui.tokens().sizes.card_gap);
+        if shown {
+            ui.add_space(gap);
+        }
+
         if banner(ui, Tone::Error, &refused, &[&dismiss]) == Some(0) {
             context
                 .commands
                 .send(AppCommand::DismissRefusal(PageId::BootRepair));
         }
+
+        shown = true;
     }
 
-    progress(ui, context, &dismiss);
-    ui.add_space(ui.tokens().sizes.section_gap);
+    if progress(ui, context, &dismiss, shown) || shown {
+        ui.add_space(ui.tokens().sizes.section_gap);
+    }
 }
 
-fn progress(ui: &mut Ui, context: &PageContext<'_>, dismiss: &str) {
+/// The run's line, with Show Console in it while the Console is hidden.
+/// Returns whether it showed.
+fn progress(ui: &mut Ui, context: &PageContext<'_>, dismiss: &str, below: bool) -> bool {
     let ctx = ui.ctx().clone();
-    let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let progress = context.service::<BootRepair>().progress();
     let Some(said) = texts::progress(&ctx, progress) else {
-        return;
+        return false;
     };
 
-    ui.add_space(ui.tokens().sizes.card_gap);
+    if below {
+        ui.add_space(ui.tokens().sizes.card_gap);
+    }
 
-    let (tone, action) = match progress {
-        Progress::Succeeded => (Tone::Success, Some(dismiss)),
-        Progress::Failed => (Tone::Error, Some(dismiss)),
-        Progress::Busy => (Tone::Warning, Some(dismiss)),
-        Progress::None | Progress::Waiting | Progress::Running => (Tone::Neutral, None),
+    let (tone, dismissable) = match progress {
+        Progress::Succeeded => (Tone::Success, true),
+        Progress::Failed => (Tone::Error, true),
+        Progress::Busy => (Tone::Warning, true),
+        Progress::None | Progress::Waiting | Progress::Running => (Tone::Neutral, false),
     };
 
-    if banner(ui, tone, &said, action.as_slice()) == Some(0) {
-        context.commands.send(BootRepairCommand::Forget);
+    let console = i18n::text(&ctx, "repair-show-console");
+    let mut actions = Vec::new();
+    if !context.console_open {
+        actions.push(&*console);
     }
 
-    if !context.console_open
-        && pill_button(ui, &text("repair-show-console"), ButtonKind::Soft).clicked()
-    {
-        context.commands.send(BootRepairCommand::ShowConsole);
+    if dismissable {
+        actions.push(dismiss);
     }
+
+    let picked = banner(ui, tone, &said, &actions).and_then(|index| actions.get(index).copied());
+    match picked {
+        Some(picked) if picked == &*console => {
+            context.commands.send(BootRepairCommand::ShowConsole);
+        }
+        Some(_) => context.commands.send(BootRepairCommand::Forget),
+        None => {}
+    }
+
+    true
 }

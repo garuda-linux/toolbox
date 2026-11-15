@@ -5,8 +5,7 @@ use egui::{Context, Id, Label, TextEdit, Ui};
 use toolbox_core::features::configs::viewing::{Phase, Viewing};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, pill_width,
-    text_box_filling,
+    ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, text_box,
 };
 
 use super::texts;
@@ -14,16 +13,26 @@ use crate::command::ConfigsCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 
+/// The frame `text_box` draws above and below its scrolled room.
+const BOX_PADDING: f32 = 20.0;
+
 pub fn show(ctx: &Context, context: &PageContext<'_>, viewing: &Viewing) {
     let path = viewing.path().map(ToString::to_string).unwrap_or_default();
     let title = i18n::text_with(ctx, "configs-view-title", &[("path", &path)]);
     let close = i18n::text(ctx, "dialog-close");
+
+    // Only a read text needs the width, a line saying it is read or why
+    // it was not fits a small dialog.
+    let width = match viewing.phase() {
+        Phase::Shown => DialogWidth::Wide,
+        Phase::Idle | Phase::Reading | Phase::Failed => DialogWidth::Small,
+    };
+
     let outcome = ModalWrapper::new(Id::unique("toolbox_gui::configs::view"), &title)
         .title_bar(&close)
-        .width(DialogWidth::Wide)
-        .full_height()
+        .width(width)
         .show(ctx, |ui| {
-            super::filled(
+            super::stacked(
                 ui,
                 |ui| body(ui, viewing, &path),
                 |ui| buttons(ui, context, viewing),
@@ -76,7 +85,13 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
 
     let mut text = read.content.as_str();
     let name = i18n::text_with(&ctx, "configs-view-title", &[("path", path)]).into_owned();
-    text_box_filling(ui, TextEdit::multiline(&mut text).code_editor(), &name);
+    let room = (super::text_room(ui) - BOX_PADDING).max(super::MIN_TEXT_HEIGHT);
+    text_box(
+        ui,
+        TextEdit::multiline(&mut text).code_editor(),
+        &name,
+        room,
+    );
 }
 
 /// Copy all, once a text was read, and Close. Returns whether Close was
@@ -87,16 +102,13 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
     let read = viewing.viewed();
     let copy_all = read.map(|_| text("configs-copy-all"));
     let close = text("configs-close");
-    ui.horizontal(|ui| {
-        let gap = ui.tokens().sizes.control_gap;
-        ui.spacing_mut().item_spacing.x = gap;
-        let width = copy_all
-            .iter()
-            .map(|label| pill_width(ui, label) + gap)
-            .sum::<f32>()
-            + pill_width(ui, &close);
+    let labels: Vec<&str> = copy_all
+        .iter()
+        .map(String::as_str)
+        .chain([close.as_str()])
+        .collect();
 
-        ui.add_space((ui.available_width() - width).max(0.0));
+    super::right_buttons(ui, &labels, |ui| {
         if let (Some(read), Some(copy_all)) = (read, &copy_all)
             && pill_button(ui, copy_all, ButtonKind::Soft).clicked()
         {
@@ -110,5 +122,4 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
 
         pill_button(ui, &close, ButtonKind::Primary).clicked()
     })
-    .inner
 }

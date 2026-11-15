@@ -104,7 +104,11 @@ fn a_new_locale_brings_its_language_packs() {
     let pack = |name| harness.query_by_role_and_label(Role::CheckBox, name);
     assert!(pack("firefox-i18n-de").is_some());
     assert!(pack("firefox-i18n-fr").is_none());
-    assert!(harness.query_by_label_contains("Missing: 2").is_some());
+    assert!(
+        harness
+            .query_by_label_contains("2 packs are not installed.")
+            .is_some()
+    );
 }
 
 #[test]

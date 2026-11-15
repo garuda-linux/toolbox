@@ -58,9 +58,9 @@ impl TextKey {
     }
 }
 
-impl Searchable for UserRow<'_> {
+impl Searchable for UserRow {
     fn texts(&self) -> impl Iterator<Item = &str> {
-        let user = self.user;
+        let user = &self.user;
 
         [
             user.name.as_str(),
@@ -91,13 +91,13 @@ impl Searchable for GroupName {
 
 /// Keeps the users with `search` in their name, user id, full name, home
 /// folder, shell or a group name (any case), ordered by `order`.
-pub fn arrange_users(rows: &mut Vec<UserRow<'_>>, search: &str, order: UserOrder) {
+pub fn arrange_users(rows: &mut Vec<UserRow>, search: &str, order: UserOrder) {
     let needle = Needle::new(search);
 
     rows.retain(|row| needle.finds(row));
 
     rows.sort_by_cached_key(|row| {
-        let user = row.user;
+        let user = &row.user;
         let text = match order {
             UserOrder::Name | UserOrder::Id => None,
             UserOrder::FullName => Some(user.full_name()),
@@ -107,7 +107,7 @@ pub fn arrange_users(rows: &mut Vec<UserRow<'_>>, search: &str, order: UserOrder
 
         let id = (order == UserOrder::Id).then_some(user.uid);
 
-        (text.map(TextKey::of), id, &user.name)
+        (text.map(TextKey::of), id, user.name.clone())
     });
 }
 

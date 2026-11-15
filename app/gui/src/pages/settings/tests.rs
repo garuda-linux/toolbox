@@ -5,6 +5,7 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_config::{LogLevel, RefreshInterval, Settings};
+use toolbox_gui_kit::fonts::{BODY, Weight};
 
 use super::SettingsPage;
 use crate::command::Command;
@@ -164,6 +165,19 @@ fn each_section_says_what_it_holds_under_its_heading_without_a_help_button() {
         "the help sits under its heading"
     );
     assert!(harness.query_by_label("Help for Appearance").is_none());
+
+    let intro = toolbox_gui_kit::testing::painted_text(
+        &harness,
+        "The language, colours and motion of this window.",
+    )
+    .and_then(|shape| {
+        let size = shape.galley.job.sections.first()?.format.font_id.size;
+        Some(size)
+    });
+
+    let style = harness.ctx.global_style();
+    let body = toolbox_gui_kit::fonts::font(&style, Weight::Regular, BODY).size;
+    assert_eq!(intro, Some(body), "an intro as other pages have");
 }
 
 #[test]

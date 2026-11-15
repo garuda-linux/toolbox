@@ -8,7 +8,7 @@
 use egui::{Align2, Area, Context, Frame, Id, Order, Panel, Rect, Ui};
 use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::theme::RADIUS;
-use toolbox_gui_kit::widgets::icon_button;
+use toolbox_gui_kit::widgets::{TileSize, Tone, icon_button, status_tile};
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::protocol::Mode;
 use toolbox_system::Probe;
@@ -37,14 +37,18 @@ pub fn show(ui: &mut Ui, reading: &Reading, mode: Mode) -> Option<Rect> {
         .data(|data| data.get_temp::<f32>(height_id()))
         .unwrap_or_else(|| ui.spacing().interact_size.y + padding.sum().y);
 
-    let inner = Panel::bottom("status")
+    let shown = Panel::bottom("status")
         .show_separator_line(false)
         .frame(frame)
         .exact_size(height)
-        .show(ui, |ui| ui.max_rect())
-        .inner;
+        .show(ui, |ui| ui.max_rect());
 
-    Some(inner)
+    // The pane fill alone hardly parts the bar from a page of the same
+    // shade in light.
+    let bar = shown.response.rect;
+    let outline = egui::Stroke::new(1.0, ui.tokens().outline);
+    ui.painter().hline(bar.x_range(), bar.top() + 0.5, outline);
+    Some(shown.inner)
 }
 
 /// The bar's messages and its Read again in `rect`, which [`show`] kept.
@@ -58,7 +62,7 @@ pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, mode: Mode, commands: &C
             let ctx = row.ctx().clone();
             let mut said = dry_run;
             if dry_run {
-                row.warning_label(&i18n::text(&ctx, "status-dry-run"));
+                message(row, &i18n::text(&ctx, "status-dry-run"));
             }
 
             if reading.is_loading() {
@@ -68,7 +72,7 @@ pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, mode: Mode, commands: &C
 
             if !failed.is_empty() {
                 part(row, &mut said);
-                row.warning_label(&failed_text(&ctx, failed));
+                message(row, &failed_text(&ctx, failed));
                 reasons_button(row, failed);
                 let again = i18n::text(&ctx, "common-read-again");
                 if icon_button(row, icons::VIEW_REFRESH, &again).clicked() {
@@ -86,6 +90,14 @@ pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, mode: Mode, commands: &C
         ui.ctx()
             .request_discard("the status bar changed its height");
     }
+}
+
+/// A message the bar holds a while, led by its tile, so it reads as a
+/// state without its colour.
+fn message(ui: &mut Ui, text: &str) {
+    status_tile(ui, TileSize::Line, Tone::Warning);
+    let colour = ui.tokens().text;
+    ui.label(egui::RichText::new(text).color(colour));
 }
 
 fn height_id() -> Id {

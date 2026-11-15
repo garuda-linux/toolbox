@@ -1,14 +1,13 @@
-//! What a page shows instead of its list: nothing to show, or a list that
-//! did not load with a way to try again.
+//! What a page shows instead of its list: nothing to show, or a list
+//! that could not be read with a way to read it again.
 
-use egui::{Align, Label, Layout, Response, Ui, vec2};
+use egui::{Label, Response, Ui, vec2};
 
 use super::icon_tile::TileSize;
 use super::status_tile::status_tile;
-use super::{ButtonKind, Tone, pill_button, rich, split_row};
+use super::{ButtonKind, Tone, pill_button, rich};
 use crate::fonts::{BODY, Weight};
 use crate::icons::Icon;
-use crate::theme::PILL_HEIGHT;
 use crate::tokens;
 use crate::ui_ext::icon_image;
 
@@ -52,25 +51,12 @@ pub fn empty_state(ui: &mut Ui, icon: Icon, title: &str, body: &str) -> Response
     .inner
 }
 
-/// `message` beside the error mark, and a Retry button named
-/// `retry_label` at the right. Returns whether Retry was clicked.
-pub fn error_row(ui: &mut Ui, message: &str, retry_label: &str) -> bool {
-    let tokens = tokens::current(ui.ctx());
-    let button_width = super::buttons::pill_width(ui, retry_label);
-
-    split_row(
-        ui,
-        button_width,
-        |ui| {
-            // As tall as the button, so the message sits level with it.
-            let room = vec2(ui.available_width(), PILL_HEIGHT);
-            let layout = Layout::left_to_right(Align::Center);
-            ui.allocate_ui_with_layout(room, layout, |ui| {
-                _ = status_tile(ui, TileSize::Line, Tone::Error);
-                ui.add(Label::new(rich(ui, message, Weight::Medium, BODY, tokens.text)).wrap());
-            });
-        },
-        |ui| pill_button(ui, retry_label, ButtonKind::Soft).clicked(),
-    )
-    .1
+/// An [`empty_state`] with a Soft button named `action` centred under
+/// `body`, for a page that could not be read. Returns whether the button
+/// was clicked.
+pub fn empty_state_action(ui: &mut Ui, icon: Icon, title: &str, body: &str, action: &str) -> bool {
+    _ = empty_state(ui, icon, title, body);
+    ui.add_space(tokens::current(ui.ctx()).sizes.card_gap);
+    ui.vertical_centered(|ui| pill_button(ui, action, ButtonKind::Soft).clicked())
+        .inner
 }

@@ -122,3 +122,32 @@ fn only_the_look_files_count_as_changes() {
     assert!(is_look_file(&home.path().join(".config/gtk-4.0/gtk.css")));
     assert!(!is_look_file(&home.path().join(".config/kwinrc")));
 }
+
+/// The folders `freedesktop-icons` searches, from the same variables the
+/// look files come from. A relative data folder counts as not set.
+#[test]
+fn the_icon_folders_follow_the_data_folders() {
+    let files = DesktopFiles::from_env(|key| match key {
+        "HOME" => Some(OsString::from("/home/user")),
+        "XDG_DATA_HOME" => Some(OsString::from("relative/share")),
+        "XDG_DATA_DIRS" => Some(OsString::from("/opt/share:relative:/usr/share")),
+        _ => None,
+    });
+
+    let folders: Vec<_> = files.icon_folders();
+
+    assert_eq!(
+        folders,
+        [
+            "/opt/share/icons",
+            "/opt/share/pixmaps",
+            "/usr/share/icons",
+            "/usr/share/pixmaps",
+            "/home/user/.local/share/icons",
+            "/home/user/.local/share/pixmaps",
+            "/home/user/.icons",
+            "/usr/share/pixmaps",
+        ]
+        .map(std::path::PathBuf::from)
+    );
+}

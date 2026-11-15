@@ -1,9 +1,10 @@
 //! One unit: its name with tags for its state, its description, the
-//! boot switch and the menu of what runs at once or waits.
+//! boot switch and the menu of what runs at once or waits. One caption
+//! above the list names the switches' column.
 
 use std::sync::Arc;
 
-use egui::{Label, Ui};
+use egui::{Label, Rect, Sense, Ui, pos2, vec2};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{
@@ -15,7 +16,7 @@ use super::unit_row::{UnitRow, UnitRows};
 use crate::command::ServiceCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::{MENU_AND_SWITCH, actions};
+use crate::pages::rows::{MENU_AND_SWITCH, SWITCH_WIDTH, actions};
 
 /// Every row's height in the fonts in use: the name and one line of
 /// description.
@@ -30,19 +31,28 @@ pub fn announced(state: &RowState, tone: Tone) -> bool {
     tone == Tone::Error || state.response.has_focus()
 }
 
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowState) {
+/// "At boot" centred over the switches at the rows' right edge.
+pub fn column_caption(ui: &mut Ui) {
     let caption = i18n::text(ui.ctx(), "services-at-boot");
     let secondary = ui.tokens().secondary;
-    let caption_width = line(ui, &caption, Weight::Regular, SMALL, secondary)
-        .size()
-        .x;
+    let size = line(ui, &caption, Weight::Regular, SMALL, secondary).size();
+    let inset = ui.tokens().sizes.row_padding.x;
+    let (room, _) = ui.allocate_exact_size(vec2(ui.available_width(), size.y), Sense::hover());
+    let middle = room.right() - inset - SWITCH_WIDTH / 2.0;
+    let at = Rect::from_min_size(pos2(middle - size.x / 2.0, room.top()), size);
 
-    let caption_room = caption_width + ui.tokens().sizes.text_to_icon;
+    ui.put(
+        at,
+        Label::new(rich(ui, &caption, Weight::Regular, SMALL, secondary)).selectable(false),
+    );
+}
+
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowState) {
     let live = announced(state, row.state.1);
 
     split_row(
         ui,
-        MENU_AND_SWITCH + caption_room,
+        MENU_AND_SWITCH,
         |ui| {
             toolbox_gui_kit::widgets::title_line(ui, false, |ui| {
                 ui.add(Label::new(Arc::clone(&row.title)).truncate());
@@ -53,7 +63,12 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
                 }
 
                 if let Some((file, hint)) = &row.file {
-                    tag(ui, file, Tone::Neutral).on_hover_text(hint.as_ref());
+                    // The focused row shows it too, so the keyboard reaches
+                    // what the pointer does.
+                    let shown = tag(ui, file, Tone::Neutral).on_hover_text(hint.as_ref());
+                    if state.response.has_focus() {
+                        shown.show_tooltip_text(hint.as_ref());
+                    }
                 }
 
                 for queued in &row.queued {
@@ -64,8 +79,8 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
             ui.add(Label::new(Arc::clone(&row.description)).truncate());
         },
         |ui| {
-            // The menu, the switch's caption, then the switch at the edge,
-            // the order of the App Catalog's rows and of Tab.
+            // The menu, then the switch at the edge, the order of the App
+            // Catalog's rows and of Tab.
             let busy = i18n::text(ui.ctx(), "services-why-busy");
             ui.add_enabled_ui(!context.busy, |ui| {
                 row_menu(ui, state, &row.menu, |ui| {
@@ -76,12 +91,9 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
             .on_disabled_hover_text(busy);
 
             ui.add_space(ui.tokens().sizes.control_gap);
-            ui.add(
-                Label::new(rich(ui, &caption, Weight::Regular, SMALL, secondary)).selectable(false),
-            );
-            ui.add_space(ui.tokens().sizes.text_to_icon - ui.spacing().item_spacing.x);
 
-            let enabled = row.switchable && !context.busy;
+            // The list waits in a disabled Ui while a plan runs.
+            let enabled = row.switchable && ui.is_enabled();
             let name = i18n::text_with(
                 ui.ctx(),
                 "services-start-at-boot",

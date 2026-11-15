@@ -5,28 +5,31 @@
 #[cfg(test)]
 mod tests;
 
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt;
-use std::sync::Arc;
 
 use crossbeam_channel::Receiver;
-use parking_lot::Mutex;
 use tokio::runtime::Handle;
 use tokio::task::{JoinError, JoinHandle};
 
 use crate::spawn::spawn_logged;
 use crate::waking::{self, Wake, Waking};
 
+/// What starts one read of an [`Asked`].
+type Start<T> = Box<dyn Fn(&Lane<T>) + Send>;
+
 struct Ticket {
     kind: &'static str,
     number: u64,
 }
 
+/// Only the UI thread asks and takes, so the newest tickets need no lock.
 pub struct Lane<T> {
     runtime: Handle,
     sender: Waking<(Ticket, T)>,
     receiver: Receiver<(Ticket, T)>,
-    newest: Arc<Mutex<HashMap<&'static str, u64>>>,
+    newest: RefCell<HashMap<&'static str, u64>>,
 }
 
 /// One read of a page's own at a time. Asks that come while it runs
@@ -37,9 +40,26 @@ pub struct OneRead {
     again: bool,
 }
 
+/// A page's read of one kind that it asks for again and again, as on
+/// opening the page and on Refresh: a [`Lane`] with a [`OneRead`], and
+/// what starts the read. What the page shows meanwhile stays the page's.
+pub struct Asked<T> {
+    lane: Lane<T>,
+    reads: OneRead,
+    start: Start<T>,
+}
+
 impl<T> fmt::Debug for Lane<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Lane").finish_non_exhaustive()
+    }
+}
+
+impl<T> fmt::Debug for Asked<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Asked")
+            .field("reads", &self.reads)
+            .finish_non_exhaustive()
     }
 }
 
@@ -52,7 +72,7 @@ impl<T: Send + 'static> Lane<T> {
             runtime,
             sender,
             receiver,
-            newest: Arc::default(),
+            newest: RefCell::default(),
         }
     }
 
@@ -99,7 +119,7 @@ impl<T: Send + 'static> Lane<T> {
     /// The answers that arrived, without those a newer read of their kind
     /// has made stale.
     pub fn landed(&self) -> Vec<T> {
-        let newest = self.newest.lock();
+        let newest = self.newest.borrow();
 
         self.receiver
             .try_iter()
@@ -109,12 +129,9 @@ impl<T: Send + 'static> Lane<T> {
     }
 
     fn ticket(&self, kind: &'static str) -> Ticket {
-        let number = {
-            let mut newest = self.newest.lock();
-            let number = newest.get(kind).map_or(0, |last| last + 1);
-            newest.insert(kind, number);
-            number
-        };
+        let mut newest = self.newest.borrow_mut();
+        let number = newest.get(kind).map_or(0, |last| last + 1);
+        newest.insert(kind, number);
 
         Ticket { kind, number }
     }
@@ -136,5 +153,39 @@ impl OneRead {
     pub fn landed(&mut self) -> bool {
         self.running = false;
         std::mem::take(&mut self.again)
+    }
+}
+
+impl<T: Send + 'static> Asked<T> {
+    /// `start` asks the lane for one read, of one kind.
+    #[must_use = "nothing is read until the page asks"]
+    pub fn new(runtime: Handle, wake: Wake, start: impl Fn(&Lane<T>) + Send + 'static) -> Self {
+        Self {
+            lane: Lane::new(runtime, wake),
+            reads: OneRead::default(),
+            start: Box::new(start),
+        }
+    }
+
+    /// Starts a read. While one runs it is asked for once that landed.
+    /// Returns whether one started, so the page shows it loads.
+    pub fn read(&mut self) -> bool {
+        let started = self.reads.start();
+        if started {
+            (self.start)(&self.lane);
+        }
+
+        started
+    }
+
+    /// The answer that landed since the last frame, if any. A read asked
+    /// meanwhile starts then.
+    pub fn take(&mut self) -> Option<T> {
+        let answer = self.lane.landed().pop()?;
+        if self.reads.landed() {
+            self.read();
+        }
+
+        Some(answer)
     }
 }

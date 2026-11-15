@@ -14,6 +14,7 @@ use toolbox_state::locales::LanguageName;
 
 use crate::Toggle;
 use crate::domains::{InstalledPackages, SyncPackages};
+use crate::features::search::Needle;
 
 const INFIXES: [&str; 5] = ["-i18n", "-l10n", "-help", "-spell", "-lang"];
 
@@ -52,6 +53,18 @@ impl PackRow {
     /// Neither installed nor queued: what Queue All Missing queues.
     pub const fn is_missing(&self) -> bool {
         !self.installed && self.queued.is_none()
+    }
+
+    fn found_by(&self, needle: &Needle) -> bool {
+        let named = self
+            .name
+            .as_ref()
+            .is_some_and(|name| needle.is_in(&name.language) || needle.is_in(&name.territory));
+
+        named
+            || needle.is_in(self.pack.package.as_str())
+            || needle.is_in(self.pack.base.as_str())
+            || needle.is_in(self.pack.locale.as_str())
     }
 
     fn language(&self) -> String {
@@ -151,4 +164,15 @@ fn compare(left: &PackRow, right: &PackRow, order: PackOrder) -> Ordering {
     };
 
     first.then_with(|| left.pack.package.cmp(&right.pack.package))
+}
+
+/// The places of the rows `search` finds, in `order`: in the package, the
+/// program, the locale, or the language and country names.
+pub fn pack_pick(rows: &[PackRow], order: PackOrder, search: &str) -> Vec<usize> {
+    let needle = Needle::new(search);
+
+    pack_order(rows, order)
+        .into_iter()
+        .filter(|at| rows.get(*at).is_some_and(|row| row.found_by(&needle)))
+        .collect()
 }

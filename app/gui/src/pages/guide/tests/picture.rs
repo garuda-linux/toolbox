@@ -1,7 +1,9 @@
 use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 use super::page;
+use crate::pages::guide::markdown::Reader;
+use crate::pages::guide::picture::show;
 
 const ALT: &str = "The Config Files page with its file list";
 
@@ -90,4 +92,42 @@ fn a_picture_has_an_outline_of_its_own() {
         .any(|(rim, width)| (width - 1.0).abs() < 0.01 && rim.expand(2.0).contains_rect(picture));
 
     assert!(framed, "no 1 px outline round {picture:?}");
+}
+
+/// The picture's button says the description, so the caption under it
+/// stays out of a screen reader's way.
+#[test]
+fn a_screen_reader_hears_the_description_once() {
+    let mut harness = page();
+    harness.state_mut().page.show("config-files.md", None);
+    harness.run();
+
+    let caption = harness.get_by_role_and_label(Role::Label, ALT);
+
+    assert!(caption.accesskit_node().is_hidden());
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, &format!("Show larger: {ALT}"))
+            .is_some()
+    );
+}
+
+#[test]
+fn a_missing_picture_leaves_a_placeholder_over_its_spoken_caption() {
+    let image = toolbox_guide::Image {
+        src: "images/gone.png".to_owned(),
+        alt: "A picture that is gone".to_owned(),
+    };
+
+    let harness = toolbox_gui_kit::testing::harness(600.0, 400.0).build_ui(move |ui| {
+        let mut reader = Reader::new(None);
+        show(ui, &image, &mut reader);
+    });
+
+    let placeholder = harness.get_by_label("The picture is missing.").rect();
+    let caption = harness.get_by_label("A picture that is gone");
+
+    assert!(!caption.accesskit_node().is_hidden());
+    assert!(caption.rect().top() > placeholder.bottom());
+    assert!(harness.query_by_role(Role::Button).is_none());
 }

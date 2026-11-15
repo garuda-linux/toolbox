@@ -1,4 +1,7 @@
+mod address;
+mod hardware;
 mod internet;
+mod radios;
 mod rows;
 mod services;
 mod status_read;
@@ -158,7 +161,7 @@ fn a_known_address_shows_copy_and_keeps_hide_in_the_menu() {
     let known = Address::Known(IpAddr::V4(Ipv4Addr::new(203, 0, 113, 7)));
     let mut harness = page_showing(network_with(known));
 
-    assert!(harness.query_by_label("Copy").is_some());
+    assert!(harness.query_by_label("Copy public address").is_some());
     assert!(harness.query_by_label("Hide").is_none());
     harness
         .get_by_label("More actions for Public address")

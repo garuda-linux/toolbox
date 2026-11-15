@@ -249,3 +249,92 @@ fn the_idle_hint_sits_one_cell_after_the_cursor_on_its_row() {
         hint.center().y
     );
 }
+
+/// The rects the sheet fully out in a 600 by 400 room painted, with the
+/// clip of each, the sheet's top and the outline colour.
+fn sheet_rects() -> (
+    Vec<(egui::Rect, egui::epaint::RectShape)>,
+    f32,
+    egui::Color32,
+) {
+    let room = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(600.0, 400.0));
+    let place = super::Place { room, out: 1.0 };
+    let frame = egui::Frame::new().corner_radius(8);
+    let mut harness = toolbox_gui_kit::testing::harness(600.0, 400.0).build_ui(move |ui| {
+        _ = super::sheet::show(ui.ctx(), place, "Resize", frame, |_| {});
+    });
+
+    harness.run();
+    let top = super::cover(&harness.ctx).expect("the sheet shows").top();
+    let rects = harness
+        .output()
+        .shapes
+        .iter()
+        .filter_map(|clipped| {
+            if let egui::Shape::Rect(rect) = &clipped.shape {
+                Some((clipped.clip_rect, rect.clone()))
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    let outline = toolbox_gui_kit::tokens::current(&harness.ctx).outline;
+    (rects, top, outline)
+}
+
+#[test]
+fn the_sheet_has_a_hairline_on_its_top_edge() {
+    let (rects, top, outline) = sheet_rects();
+    let edged = rects.iter().any(|(clip, rect)| {
+        rect.stroke.color == outline
+            && rect.stroke.width >= 1.0
+            && (rect.rect.top() - top).abs() < 0.5
+            && clip.top() <= top + 0.5
+            && clip.bottom() > top
+    });
+
+    assert!(edged, "no hairline at the sheet's top {top}: {rects:?}");
+}
+
+#[test]
+fn the_sheet_casts_its_shadow_up_over_the_page_only() {
+    let (rects, top, _) = sheet_rects();
+    let shadows: Vec<_> = rects
+        .iter()
+        .filter(|(_, rect)| rect.blur_width > 0.0)
+        .collect();
+
+    assert!(
+        shadows
+            .iter()
+            .any(|(clip, rect)| rect.rect.top() < top && clip.bottom() <= top + 0.5),
+        "no shadow above the sheet's top {top}: {rects:?}"
+    );
+    assert!(
+        shadows.iter().all(|(clip, _)| clip.bottom() <= top + 0.5),
+        "a shadow reaches under the sheet's glass: {shadows:?}"
+    );
+}
+
+fn has_block_cursor(harness: &egui_kittest::Harness<'_, crate::console::Console>) -> bool {
+    let text = toolbox_gui_kit::palette::current(&harness.ctx).text;
+    !toolbox_gui_kit::testing::filled_rects(harness, text).is_empty()
+}
+
+#[test]
+fn an_idle_terminal_shows_no_cursor() {
+    assert!(!has_block_cursor(&terminal_box(false)));
+}
+
+#[test]
+fn a_running_plan_shows_the_terminal_cursor() {
+    let mut harness = terminal_box(false);
+    harness.state_mut().take(crate::apply::Report::PlanStarted {
+        plan: crate::apply::PlanId::new(1),
+        steps: vec![(StepId::new(1), vec!["pacman -S firefox".to_owned()])],
+    });
+    harness.run();
+
+    assert!(has_block_cursor(&harness));
+}

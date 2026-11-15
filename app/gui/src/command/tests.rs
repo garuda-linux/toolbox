@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use egui::{Event, InputState, Key, KeyboardShortcut, Modifiers};
 
-use super::shortcuts::consume;
+use super::shortcuts::{consume, ranked};
 use super::{AppCommand, Command, ConsoleCommand, UiCommand, channel};
 use crate::page::PageId;
 
@@ -95,11 +95,11 @@ fn a_text_field_keeps_the_keys_that_edit_text() {
 
     let mut space = pressing(Modifiers::NONE, Key::Space);
     let mut undo = pressing(Modifiers::COMMAND, Key::Z);
-    assert_eq!(consume(&mut space, true, bound()), [""; 0]);
-    assert_eq!(consume(&mut undo, true, bound()), [""; 0]);
+    assert_eq!(consume(&mut space, true, &ranked(bound())), [""; 0]);
+    assert_eq!(consume(&mut undo, true, &ranked(bound())), [""; 0]);
 
     let mut unfocused = pressing(Modifiers::NONE, Key::Space);
-    assert_eq!(consume(&mut unfocused, false, bound()), ["play"]);
+    assert_eq!(consume(&mut unfocused, false, &ranked(bound())), ["play"]);
 }
 
 #[test]
@@ -127,8 +127,8 @@ fn the_shortcut_with_the_most_modifiers_takes_the_press() {
     let mut both = pressing(Modifiers::COMMAND | Modifiers::SHIFT, Key::S);
     let mut one = pressing(Modifiers::COMMAND, Key::S);
 
-    assert_eq!(consume(&mut both, false, bound()), ["save as"]);
-    assert_eq!(consume(&mut one, false, bound()), ["save"]);
+    assert_eq!(consume(&mut both, false, &ranked(bound())), ["save as"]);
+    assert_eq!(consume(&mut one, false, &ranked(bound())), ["save"]);
 }
 
 #[test]

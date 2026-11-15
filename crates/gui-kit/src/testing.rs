@@ -262,3 +262,15 @@ fn rects<'frame, State>(
         }
     })
 }
+
+/// What a screen reader says for `node`: its label, or the value egui
+/// gives a label's text.
+pub fn spoken_words(node: &egui_kittest::Node<'_>) -> String {
+    use egui_kittest::kittest::NodeT as _;
+
+    let node = node.accesskit_node();
+    node.label()
+        .filter(|label| !label.is_empty())
+        .or_else(|| node.value())
+        .unwrap_or_default()
+}

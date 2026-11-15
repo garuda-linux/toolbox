@@ -12,9 +12,6 @@ use crate::domains::{
 };
 use crate::{ChangeSet, Single, Snapshot};
 
-/// The seconds GRUB waits when the file names no timeout.
-const DEFAULT_TIMEOUT: i64 = 5;
-
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct EntryRow {
     #[serde(rename = "id")]
@@ -47,7 +44,7 @@ pub struct Probed {
 pub struct Page {
     default: String,
     remember: bool,
-    timeout: i32,
+    timeout: GrubTimeout,
     timeout_known: bool,
     submenus: bool,
     os_prober: bool,
@@ -69,7 +66,7 @@ impl Page {
 
         let Some(queued) = shown(snapshot, changes) else {
             return Self {
-                timeout: clamped(DEFAULT_TIMEOUT),
+                timeout: GrubTimeout::default(),
                 ..Self::default()
             };
         };
@@ -86,7 +83,9 @@ impl Page {
         Self {
             flags_queued: differing(&flags, &current),
             remember: queued.remember,
-            timeout: clamped(queued.timeout.unwrap_or(DEFAULT_TIMEOUT)),
+            timeout: queued
+                .timeout
+                .map_or_else(GrubTimeout::default, GrubTimeout::nearest),
             timeout_known: queued.timeout.is_some(),
             submenus: queued.submenus,
             os_prober: queued.os_prober,
@@ -109,7 +108,7 @@ impl Page {
         let flags = set_flags(list);
 
         Self {
-            timeout: clamped(DEFAULT_TIMEOUT),
+            timeout: GrubTimeout::default(),
             parameters_editable: list.is_some(),
             parameter_items: items(list),
             flags_queued: differing(&flags, &set_flags(current)),
@@ -131,8 +130,9 @@ impl Page {
         self.remember
     }
 
-    /// Clamped to what the timeout field offers.
-    pub const fn timeout(&self) -> i32 {
+    /// Seconds clamped to what the timeout field offers. GRUB waits for a
+    /// key on any negative number.
+    pub const fn timeout(&self) -> GrubTimeout {
         self.timeout
     }
 
@@ -223,11 +223,6 @@ fn differing(flags: &[Flag], current: &[Flag]) -> Vec<&'static str> {
         .filter(|flag| flags.contains(flag) != current.contains(flag))
         .map(Flag::as_str)
         .collect()
-}
-
-fn clamped(seconds: i64) -> i32 {
-    let bounded = seconds.clamp(GrubTimeout::MIN.into(), GrubTimeout::MAX.into());
-    i32::try_from(bounded).unwrap_or(i32::MAX)
 }
 
 pub fn state(snapshot: &Snapshot, probed: Probed) -> Readiness {

@@ -7,12 +7,14 @@ mod defaults;
 mod menu;
 mod parameters;
 mod setting;
+mod timeout;
 
 pub use menu::{GrubMenu, GrubPlatform, MenuEntry};
 pub use parameters::{InvalidKernelParameters, KernelParameters};
 pub use setting::{
-    DefaultEntry, GrubKey, GrubSetting, GrubSettings, GrubState, GrubTimeout, InvalidGrubSettings,
+    DefaultEntry, GrubKey, GrubSetting, GrubSettings, GrubState, InvalidGrubSettings,
 };
+pub use timeout::GrubTimeout;
 
 /// The file the page edits, relative to `/`. A system without it does
 /// not boot with GRUB, and the helper never creates it.

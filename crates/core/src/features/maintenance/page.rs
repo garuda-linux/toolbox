@@ -92,6 +92,9 @@ pub enum LaunchCause {
     Missing,
     Denied,
     Other,
+    /// Its install ended well, yet the program is not where it should be,
+    /// so the system has no error of its own to show.
+    AbsentAfterInstall,
 }
 
 impl Repair {

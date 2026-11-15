@@ -1,3 +1,4 @@
+mod memory;
 mod rows;
 
 use egui::accesskit::Role;

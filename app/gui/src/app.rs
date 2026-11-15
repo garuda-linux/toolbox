@@ -2,19 +2,16 @@
 //! frame loop.
 
 mod answers;
-mod boot;
 mod bootrepair;
 mod closing;
 mod commands;
 mod configs;
 mod console;
-mod discover;
 mod fold;
 mod home;
 mod instance;
 mod maintenance;
 mod network;
-mod packages;
 mod preferences;
 mod services;
 mod setup;
@@ -30,6 +27,7 @@ use serde::{Deserialize, Serialize};
 use tokio::sync::watch;
 use toolbox_core::{ChangeView, Snapshot};
 use toolbox_gui_kit::desktop::FontSpec;
+use toolbox_gui_kit::icons::ThemeIcons;
 use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::toasts::Toasts;
 use toolbox_gui_kit::{fonts, icons};
@@ -92,6 +90,9 @@ pub struct App {
     /// The fonts in use, so a look that names the same ones does not
     /// rebuild egui's font atlas. The last: the emoji font is in.
     fonts: (Option<FontSpec>, Option<FontSpec>, bool),
+    /// The icon theme's glyphs in use. Rasterizing them takes a while, and
+    /// most look changes keep the theme.
+    glyphs: Option<Arc<ThemeIcons>>,
     sender: CommandSender,
     receiver: CommandReceiver,
     palette: Palette,
@@ -121,7 +122,8 @@ pub struct App {
     arrivals: Option<Arc<Arrivals>>,
     plans: Plans,
     closing: closing::Closing,
-    /// The probed snapshot plus the lock flags the Users page read.
+    /// The probed snapshot joined with what the pages read beside it: the
+    /// lock flags, the AUR's names and the settings of systemd-boot.
     seen: Arc<Snapshot>,
     pages: Pages,
     /// Notes about background results, drawn over the page.
@@ -175,6 +177,7 @@ impl App {
             state: restored(cc, setup.open),
             look: setup.look,
             fonts: (None, None, false),
+            glyphs: None,
             sender,
             receiver,
             palette: Palette::default(),
@@ -221,6 +224,7 @@ impl App {
         app.apply_language(&cc.egui_ctx);
         app.apply_palettes(&cc.egui_ctx);
         app.apply_choices(&cc.egui_ctx);
+        crate::page_ui::offer_boot_repair(&cc.egui_ctx, app.services.boot_repair.offered());
         app
     }
 
@@ -230,8 +234,17 @@ impl App {
         self.prefs.palettes = (look.dark, look.light);
         self.apply_palettes(ctx);
         self.apply_choices(ctx);
-        icons::use_theme(ctx, desktop.icons.clone());
-        icons::warm(ctx);
+        let same_glyphs = match (&self.glyphs, &desktop.icons) {
+            (Some(old), Some(new)) => Arc::ptr_eq(old, new),
+            (old, new) => old.is_none() && new.is_none(),
+        };
+
+        if !same_glyphs {
+            self.glyphs.clone_from(&desktop.icons);
+            icons::use_theme(ctx, desktop.icons.clone());
+            icons::warm(ctx);
+        }
+
         let theme = desktop
             .icons
             .as_ref()

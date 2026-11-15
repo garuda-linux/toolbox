@@ -1,7 +1,7 @@
 use egui::Role;
 
 use super::super::{
-    ActionRow, SectionHeading, Tone, banner, empty_state, error_row, link_row, link_tile,
+    ActionRow, SectionHeading, Tone, banner, empty_state, empty_state_action, link_row, link_tile,
 };
 use crate::icons;
 use crate::testing::{circle_fills, filled_rect, harness, tinted_rects};
@@ -126,13 +126,19 @@ fn every_banner_marks_its_status_with_the_status_tile() {
 }
 
 #[test]
-fn error_rows_empty_states_and_status_rows_use_the_same_tile() {
+fn unread_states_empty_states_and_status_rows_use_the_same_tile() {
     let mut row = harness_of(|ui| {
-        _ = error_row(ui, "The list did not load.", "Retry");
+        _ = empty_state_action(
+            ui,
+            icons::DIALOG_ERROR,
+            "The list did not load",
+            "",
+            "Read again",
+        );
     });
 
     row.run();
-    assert_status_mark(&row, Tone::Error, "an error row");
+    assert_status_mark(&row, Tone::Error, "an unread state");
 
     let mut empty = harness_of(|ui| {
         _ = empty_state(ui, icons::DIALOG_ERROR, "Nothing was read", "");

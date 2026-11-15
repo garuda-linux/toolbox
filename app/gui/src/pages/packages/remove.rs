@@ -1,10 +1,11 @@
-//! The question before a removal: what `pacman -Rns` takes along, the
+//! The question before a removal: the installed packages that need it,
+//! which make pacman refuse, and what `pacman -Rns` takes along, the
 //! dependencies nothing else needs. pacman lists the real set in the
 //! Console.
 
-use egui::{Context, Id, Label, ScrollArea};
+use egui::{Context, Id, Label, ScrollArea, Ui};
 use toolbox_core::Toggle;
-use toolbox_core::features::packages::graph::takes_along;
+use toolbox_core::features::packages::graph::{required_by, takes_along};
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
@@ -23,14 +24,23 @@ const LIST_HEIGHT: f32 = 240.0;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Removal {
     pub package: PackageName,
+    /// The installed packages that need it.
+    pub required: Vec<PackageName>,
     pub along: Vec<PackageName>,
 }
 
 impl Removal {
-    /// Works out what goes along once, when the question opens.
+    /// Works out who needs it and what goes along once, when the question
+    /// opens.
     pub fn of(package: PackageName, catalog: &Catalog) -> Self {
-        let along = takes_along(std::slice::from_ref(&package), catalog.local());
-        Self { package, along }
+        let local = catalog.local();
+        let required = required_by(&package, local);
+        let along = takes_along(std::slice::from_ref(&package), local);
+        Self {
+            package,
+            required,
+            along,
+        }
     }
 }
 
@@ -47,30 +57,25 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
         .title_bar(&close)
         .width(DialogWidth::Small)
         .show(ctx, |ui| {
-            let count = removal.along.len().to_string();
-            let intro = if removal.along.is_empty() {
-                i18n::text(ctx, "packages-remove-alone")
+            if !removal.required.is_empty() {
+                let count = removal.required.len().to_string();
+                let intro = i18n::text_with(ctx, "packages-remove-required", &[("count", &count)]);
+                names(
+                    ui,
+                    &intro,
+                    &removal.required,
+                    "packages-remove-required-list",
+                );
+                ui.add_space(ui.tokens().sizes.card_gap);
+            }
+
+            if removal.along.is_empty() {
+                let alone = i18n::text(ctx, "packages-remove-alone");
+                ui.add(Label::new(rich(ui, &alone, Weight::Regular, BODY, tokens.text)).wrap());
             } else {
-                i18n::text_with(ctx, "packages-remove-along", &[("count", &count)])
-            };
-
-            ui.add(Label::new(rich(ui, &intro, Weight::Regular, BODY, tokens.text)).wrap());
-
-            if !removal.along.is_empty() {
-                ui.add_space(ui.tokens().sizes.control_gap);
-                ScrollArea::vertical()
-                    .max_height(LIST_HEIGHT)
-                    .show(ui, |ui| {
-                        for package in &removal.along {
-                            ui.label(rich(
-                                ui,
-                                package.as_str(),
-                                Weight::Medium,
-                                BODY,
-                                tokens.text,
-                            ));
-                        }
-                    });
+                let count = removal.along.len().to_string();
+                let intro = i18n::text_with(ctx, "packages-remove-along", &[("count", &count)]);
+                names(ui, &intro, &removal.along, "packages-remove-along-list");
             }
 
             ui.add_space(ui.tokens().sizes.control_gap);
@@ -98,4 +103,25 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
         None if modal.closed => page.removing = None,
         None => {}
     }
+}
+
+/// `intro`, then `packages` in a box that scrolls once they are many.
+fn names(ui: &mut Ui, intro: &str, packages: &[PackageName], salt: &str) {
+    let tokens = tokens::current(ui.ctx());
+    ui.add(Label::new(rich(ui, intro, Weight::Regular, BODY, tokens.text)).wrap());
+    ui.add_space(ui.tokens().sizes.control_gap);
+    ScrollArea::vertical()
+        .id_salt(salt)
+        .max_height(LIST_HEIGHT)
+        .show(ui, |ui| {
+            for package in packages {
+                ui.label(rich(
+                    ui,
+                    package.as_str(),
+                    Weight::Medium,
+                    BODY,
+                    tokens.text,
+                ));
+            }
+        });
 }

@@ -166,8 +166,12 @@ fn the_add_button_names_the_first_thing_that_holds_it() {
         Some(AddBlocker::NoPassword)
     );
     assert_eq!(
+        add_blocker(&form("ada", true, "one", "")),
+        Some(AddBlocker::NoRepeat)
+    );
+    assert_eq!(
         add_blocker(&form("ada", true, "one", "two")),
-        Some(AddBlocker::PasswordsDiffer)
+        Some(AddBlocker::Fields)
     );
     assert_eq!(add_blocker(&form("ada", true, "one", "one")), None);
 

@@ -4,19 +4,12 @@ use toolbox_gui_kit::widgets::{Select, segmented, segmented_width};
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
 
-use super::super::menu::{TIMEOUT_MAX, seconds_field};
+use super::super::menu::{FIRST_SECONDS, TIMEOUT_MAX, seconds_field, timeout_widths};
 use super::super::queued;
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row, switch_row, wide_control};
-
-const FIRST_SECONDS: u32 = 5;
-
-/// The mode dropdown with the seconds field beside it.
-const TIMEOUT_CONTROL_WIDTH: f32 = 400.0;
-
-const TIMEOUT_SELECT_WIDTH: f32 = 160.0;
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, menu: &SdBootMenu) {
     let settings = wanted(&menu.settings, context);
@@ -60,6 +53,19 @@ fn tag(context: &PageContext<'_>, ctx: &egui::Context, key: LoaderKey) -> Option
     )
 }
 
+/// The default entry and remembering the last one both write `default`.
+/// A queued `@saved` marks the remember row, any other value the entry.
+fn default_tag(context: &PageContext<'_>, ctx: &egui::Context, remember: bool) -> Option<String> {
+    let queued_default = LoaderSettingsDomain::queued(context.changes, LoaderKey::Default);
+    let marks = matches!(
+        queued_default,
+        Some(LoaderSetting::Default(default))
+            if (default == Some(LoaderDefault::saved())) == remember
+    );
+
+    queued(ctx, marks)
+}
+
 fn send(context: &PageContext<'_>, setting: LoaderSetting) {
     context.commands.send(BootCommand::Loader(setting));
 }
@@ -88,7 +94,7 @@ fn default_entry(
 
     let title = i18n::text(&ctx, "boot-default");
     let description = i18n::text(&ctx, "boot-default-known");
-    let tag = tag(context, &ctx, LoaderKey::Default);
+    let tag = default_tag(context, &ctx, false);
     let words = Words {
         title: &title,
         description: &description,
@@ -125,7 +131,7 @@ fn remember(ui: &mut Ui, context: &PageContext<'_>, settings: &LoaderSettings) {
     let on = settings.default.as_ref() == Some(&LoaderDefault::saved());
     let title = i18n::text(&ctx, "boot-remember");
     let description = i18n::text(&ctx, "boot-remember-detail");
-    let tag = tag(context, &ctx, LoaderKey::Default);
+    let tag = default_tag(context, &ctx, true);
     let words = Words {
         title: &title,
         description: &description,
@@ -171,15 +177,7 @@ fn timeout(ui: &mut Ui, context: &PageContext<'_>, settings: &LoaderSettings) {
         current: None,
     };
 
-    // As wide as the other selects, unless the seconds need room beside it.
-    let in_seconds = mode == Some(1);
-    let wide = wide_control(ui);
-    let (reserved, width) = if in_seconds {
-        (TIMEOUT_CONTROL_WIDTH, TIMEOUT_SELECT_WIDTH)
-    } else {
-        (wide, wide)
-    };
-
+    let (reserved, width) = timeout_widths(ui, mode == Some(1));
     row(ui, false, &words, reserved, |ui| {
         ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
             let picked = Select::new(&title, &names)

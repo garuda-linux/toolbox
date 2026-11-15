@@ -1,10 +1,13 @@
 //! The guide's pages at the left, under the parts of the summary, the
 //! open one marked.
 
+use std::sync::Arc;
+
 use egui::accesskit::Role;
+use egui::text::TextWrapping;
 use egui::{
-    Align, Align2, CornerRadius, Rect, Response, Sense, TextStyle, TextWrapMode, Ui, WidgetInfo,
-    WidgetText, pos2, vec2,
+    Align, Align2, CornerRadius, FontSelection, Rect, Response, Sense, Ui, WidgetInfo, WidgetText,
+    pos2, vec2,
 };
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
@@ -16,6 +19,7 @@ use super::Jump;
 
 const ENTRY_HEIGHT: f32 = 30.0;
 const INSET: f32 = 10.0;
+const MAX_LINES: usize = 2;
 
 /// `reveal` scrolls the open page's entry into view, as it does when the
 /// page changed.
@@ -72,31 +76,41 @@ fn reveal_whole(ui: &Ui, tops: &[f32], middle: f32) {
 }
 
 /// One page of the list, a link that shows whether it is open. A title
-/// wider than the entry ends in "…" and shows whole in a tooltip.
+/// wider than the entry wraps to a second line, and one longer still ends
+/// in "…" and shows whole in a tooltip.
 pub(super) fn entry(ui: &mut Ui, title: &str, selected: bool) -> Response {
     let tokens = ui.tokens();
     let width = ui.available_width();
-    let (rect, response) = ui.allocate_exact_size(vec2(width, ENTRY_HEIGHT), Sense::click());
-    response.widget_info(|| WidgetInfo::labeled(Role::Link, ui.is_enabled(), title));
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_selected(selected));
-
     let (weight, colour) = if selected {
         (Weight::SemiBold, tokens.on_tint)
     } else {
         (Weight::Regular, tokens.text)
     };
 
-    let room = rect.shrink2(vec2(INSET, 0.0));
     let text = WidgetText::from(rich(ui, title, weight, BODY, colour));
-    let galley = text.into_galley(
-        ui,
-        Some(TextWrapMode::Truncate),
-        room.width(),
-        TextStyle::Body,
-    );
+    let mut job = Arc::unwrap_or_clone(text.into_layout_job(
+        ui.style(),
+        FontSelection::Default,
+        Align::Center,
+    ));
 
+    job.wrap = TextWrapping {
+        max_width: INSET.mul_add(-2.0, width).max(0.0),
+        max_rows: MAX_LINES,
+        break_anywhere: false,
+        overflow_character: Some('…'),
+    };
+
+    let galley = ui.painter().layout_job(job);
     let cut = galley.elided;
+
+    // One line keeps the entry's height. A second adds its own.
+    let line = galley.rows.first().map_or(0.0, |row| row.height());
+    let height = ENTRY_HEIGHT + (galley.size().y - line).max(0.0);
+    let (rect, response) = ui.allocate_exact_size(vec2(width, height), Sense::click());
+    response.widget_info(|| WidgetInfo::labeled(Role::Link, ui.is_enabled(), title));
+    ui.ctx()
+        .accesskit_node_builder(response.id, |node| node.set_selected(selected));
 
     if ui.is_rect_visible(rect) {
         let fill = if selected {
@@ -112,6 +126,7 @@ pub(super) fn entry(ui: &mut Ui, title: &str, selected: bool) -> Response {
                 .rect_filled(rect, CornerRadius::same(RADIUS), fill);
         }
 
+        let room = rect.shrink2(vec2(INSET, 0.0));
         let at = Align2::LEFT_CENTER
             .align_size_within_rect(galley.size(), room)
             .min;

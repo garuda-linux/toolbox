@@ -25,7 +25,7 @@ pub fn height(ui: &Ui) -> f32 {
 pub fn show(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (row, state): (&UserRow<'_>, &RowState),
+    (row, state): (&UserRow, &RowState),
     dialog: &mut Option<Dialog>,
 ) {
     let focused = state.response.has_focus();
@@ -42,7 +42,7 @@ pub fn show(
     );
 }
 
-fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow<'_>) {
+fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow) {
     let ctx = ui.ctx().clone();
     let tokens = ui.tokens();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
@@ -63,8 +63,9 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow<'_>) {
             );
         }
 
+        // Accent marks a queued change on every page, which this is not.
         if row.current {
-            status_dot(ui, &text("users-tag-you"), Tone::Accent);
+            status_dot(ui, &text("users-tag-you"), Tone::Neutral);
         }
 
         if context.service::<Users>().locks().of(&row.user.name) == Some(true) {
@@ -103,19 +104,26 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow<'_>) {
 fn controls(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (row, state): (&UserRow<'_>, &RowState),
+    (row, state): (&UserRow, &RowState),
     dialog: &mut Option<Dialog>,
 ) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     if !row.editable {
-        ui.label(rich(
+        // The controls lie in a row that never wraps, so a longer
+        // translation ran past the row's edge. Two lines fit its height.
+        let note = rich(
             ui,
             &text("users-root"),
             Weight::Regular,
             SMALL,
             ui.tokens().secondary,
-        ));
+        );
+
+        ui.vertical(|ui| {
+            ui.set_max_width(CONTROLS_WIDTH);
+            ui.add(Label::new(note).wrap());
+        });
         return;
     }
 
@@ -141,7 +149,7 @@ fn controls(
 }
 
 /// An account queued for removal gets no new password.
-fn menu(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow<'_>, dialog: &mut Option<Dialog>) {
+fn menu(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow, dialog: &mut Option<Dialog>) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let name = &row.user.name;

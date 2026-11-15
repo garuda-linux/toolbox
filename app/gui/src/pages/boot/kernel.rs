@@ -115,6 +115,12 @@ fn parameters(
                 .accesskit_node_builder(field.id, |node| node.set_label(name));
 
             let entered = field.lost_focus() && ui.input(|input| input.key_pressed(Key::Enter));
+            if entered {
+                // egui drops the focus on Enter, the next parameter goes
+                // into the same field.
+                field.request_focus();
+            }
+
             let add = i18n::text(&ctx, "boot-parameter-add");
             let clicked = pill_button(ui, &add, ButtonKind::Soft).clicked();
             if (entered || clicked) && !typed.trim().is_empty() {
@@ -138,7 +144,7 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
         if !page.removable(item) {
             let kept = i18n::text_with(&ctx, "boot-parameter-kept", &[("parameter", item)]);
 
-            tag(ui, item, Tone::Neutral).on_hover_text(kept);
+            kept_tag(ui, item, &kept);
             continue;
         }
 
@@ -147,4 +153,14 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
             send(context, Edit::RemoveParameter(item.clone()));
         }
     }
+}
+
+/// A parameter that stays. Screen readers hear why as its description,
+/// the pointer sees it in a tooltip.
+fn kept_tag(ui: &mut Ui, item: &str, why: &str) {
+    let shown = tag(ui, item, Tone::Neutral);
+    let described = why.to_owned();
+    ui.ctx()
+        .accesskit_node_builder(shown.id, |node| node.set_description(described));
+    shown.on_hover_text(why);
 }

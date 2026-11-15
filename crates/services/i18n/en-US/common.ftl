@@ -58,6 +58,15 @@ protected-refused = { $name } stays installed. { $why }.
 # $name is a dependency the removal would take along, $why one of the
 # reasons above.
 protected-along = This removal would also take { $name }, which stays installed. { $why }.
-# The whole window of a release whose catalog files are not installed. $dir is the folder.
-missing-catalog = Garuda Toolbox is not installed completely: the folder { $dir } is missing. Reinstall the garuda-toolbox package, then start the app again.
+# The button that closes the missing-catalog window.
 missing-catalog-quit = Quit
+# The missing-catalog window: a title, what to do, then the missing folder and the reinstall command, each with a copy button. $label is the row's name.
+missing-catalog-title = Garuda Toolbox is not installed completely
+missing-catalog-body = A folder it needs is missing. Reinstall the garuda-toolbox package, then start the app again.
+missing-catalog-folder = Missing folder
+missing-catalog-reinstall = Reinstall with
+missing-catalog-copy = Copy { $label }
+missing-catalog-copied = Copied to the clipboard.
+# Shown after Quit was confirmed during a run, until the cancelled run ends and the window closes.
+close-stopping-title = Stopping the run
+close-stopping-detail = The window closes once the run has stopped.

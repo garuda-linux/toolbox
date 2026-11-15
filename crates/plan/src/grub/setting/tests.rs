@@ -281,7 +281,7 @@ fn settings_round_trip_through_json_and_check_their_values() {
 
     for hostile in [
         r#"{"key":"timeout","value":301}"#,
-        r#"{"key":"timeout","value":-1}"#,
+        r#"{"key":"timeout","value":-2}"#,
         r#"{"key":"kernel-parameters","value":["quiet\" ; reboot ; \""]}"#,
         r#"{"key":"kernel-parameters","value":["a b"]}"#,
         r#"{"key":"default","value":{"entry":"$(reboot)"}}"#,

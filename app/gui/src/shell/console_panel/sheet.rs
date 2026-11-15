@@ -115,6 +115,7 @@ pub fn show(
 
     let mut dragged_shut = false;
     area.fixed_pos(rect.min).show(ctx, |ui| {
+        super::rim::shadow(ui, room, rect, frame.corner_radius);
         ui.set_clip_rect(rect);
         frost::backdrop(ui.painter(), whole, frame.corner_radius);
         let mut sheet_ui = ui.new_child(
@@ -132,6 +133,8 @@ pub fn show(
                 contents,
             );
         });
+
+        super::rim::top_edge(ui, rect, frame.corner_radius);
     });
 
     Shown {

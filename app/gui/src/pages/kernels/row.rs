@@ -20,9 +20,9 @@ const LINES: u8 = 2;
 
 /// A row of the list. `Row` and [`ListItem`] both come from other crates,
 /// so the trait goes on this wrapper.
-pub struct Item<'rows, 'listing>(pub &'rows Row<'listing>);
+pub struct Item<'rows>(pub &'rows Row);
 
-impl ListItem for Item<'_, '_> {
+impl ListItem for Item<'_> {
     fn key(&self) -> &str {
         self.0.kernel.name.as_str()
     }
@@ -38,7 +38,7 @@ pub fn estimate(ui: &Ui) -> f32 {
     row_height(ui, text_block_height(ui, LINES))
 }
 
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>, state: &RowState) {
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, state: &RowState) {
     let name = row.kernel.name.as_str();
     let details = row.kernel.is_installed() && row.queued != Some(Toggle::Off);
     let gap = ui.tokens().sizes.control_gap;
@@ -93,7 +93,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>, state: &RowSt
     );
 }
 
-fn title(ui: &mut Ui, row: &Row<'_>) {
+fn title(ui: &mut Ui, row: &Row) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     toolbox_gui_kit::widgets::title_line(ui, true, |ui| {
@@ -112,10 +112,10 @@ fn title(ui: &mut Ui, row: &Row<'_>) {
     });
 }
 
-fn text(ui: &mut Ui, row: &Row<'_>) {
+fn text(ui: &mut Ui, row: &Row) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let kernel = row.kernel;
+    let kernel = &row.kernel;
 
     if !kernel.description.is_empty() {
         let description = rich(
@@ -167,7 +167,7 @@ fn text(ui: &mut Ui, row: &Row<'_>) {
 
 /// Installed headers are the normal case, so only missing or queued ones
 /// take a line.
-fn headers(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
+fn headers(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
     if row.kernel.headers_installed {
         return;
     }
@@ -204,7 +204,7 @@ fn headers(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
 
 /// The modules fold under one line. A kernel with a build to do shows
 /// them open until the user folds them, so what needs work is in sight.
-fn modules(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
+fn modules(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
     if row.modules.is_empty() {
         return;
     }
@@ -251,7 +251,7 @@ fn modules(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
     });
 }
 
-fn builds_button(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
+fn builds_button(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
     let ctx = ui.ctx().clone();
     let queued = row.builds_queued();
     let action = if queued {
@@ -307,7 +307,7 @@ fn waiting_button(ui: &mut Ui, context: &PageContext<'_>, text: &str) -> Respons
 
 /// Opens Boot options with this kernel's menu entry offered as the
 /// default. Nothing changes until it is taken there.
-fn default_link(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>) {
+fn default_link(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
     let ctx = ui.ctx().clone();
     let name = row.kernel.name.as_str();
     let text = i18n::text(&ctx, "kernels-set-default");

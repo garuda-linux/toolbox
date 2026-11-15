@@ -7,15 +7,15 @@
 //! move says why in its place, and a refused value holds the button.
 
 use egui::{Context, Ui};
+use toolbox_core::features::users::Refusal;
 use toolbox_core::features::users::account::{AccountEdit, check_account};
 use toolbox_core::features::users::home::home_movable;
 use toolbox_core::features::users::input::{self, InputProblem};
 use toolbox_core::features::users::rows::UserRow;
-use toolbox_core::features::users::{Refusal, view};
-use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::widgets::{ButtonKind, Select, check_row};
+use toolbox_gui_kit::widgets::{ButtonKind, check_row};
 use toolbox_plan::{FullName, HomeChange, HomeDirectory, InvalidFullName, ShellPath, UserName};
 
+use super::shell::{ShellDefault, shell_choice};
 use super::{Next, dialog_why, field, note, title};
 use crate::command::UserEdit;
 use crate::i18n;
@@ -25,6 +25,8 @@ use crate::pages::users::texts;
 #[derive(Debug)]
 pub struct Edit {
     user: UserName,
+    /// The folder the account has now, before any queued move.
+    current_home: String,
     start: Fields,
     fields: Fields,
 }
@@ -44,8 +46,14 @@ struct Changes {
     home: Option<Result<HomeDirectory, InputProblem>>,
 }
 
+impl Changes {
+    const fn any(&self) -> bool {
+        self.full_name.is_some() || self.shell.is_some() || self.home.is_some()
+    }
+}
+
 impl Edit {
-    pub fn new(row: &UserRow<'_>) -> Self {
+    pub fn new(row: &UserRow) -> Self {
         let start = Fields {
             full_name: row.shown_full_name().to_owned(),
             shell: row.shown_shell().to_owned(),
@@ -55,6 +63,7 @@ impl Edit {
 
         Self {
             user: row.user.name.clone(),
+            current_home: row.user.home.clone(),
             fields: start.clone(),
             start,
         }
@@ -71,7 +80,7 @@ impl Edit {
             .and_then(|typed| check_account(&self.user, typed, context.snapshot).err());
 
         let why = refusal.map(|code| refused(ctx, code, user));
-        let ready = matches!((&edit, refusal), (Some(_), None)) && self.fields != self.start;
+        let ready = matches!((&edit, refusal), (Some(_), None)) && changes.any();
         let (next, confirmed) = dialog_why(
             ctx,
             "edit",
@@ -94,7 +103,11 @@ impl Edit {
 
     fn changes(&self) -> Changes {
         let (now, start) = (&self.fields, &self.start);
-        let moved = now.move_files != start.move_files;
+
+        // The move flag alone changes only a queued move: the files of the
+        // folder the account has stay where they are.
+        let elsewhere = now.home != self.current_home;
+        let moved = elsewhere && now.move_files != start.move_files;
         Changes {
             full_name: (now.full_name != start.full_name)
                 .then(|| FullName::new(now.full_name.clone()).map_err(InvalidFullName::as_str)),
@@ -143,7 +156,7 @@ impl Edit {
             &mut self.fields.full_name,
             problem.as_deref(),
         );
-        shell(ui, ctx, context, &mut self.fields.shell);
+        shell_choice(ui, context, &mut self.fields.shell, ShellDefault::Left);
         match home_movable(&self.user, context.snapshot) {
             Ok(()) => self.home(ui, ctx, changes),
             Err(refusal) => {
@@ -170,6 +183,13 @@ impl Edit {
             &mut self.fields.home,
             problem.as_deref(),
         );
+
+        // Moving means nothing until the folder differs from the one the
+        // account has.
+        if self.fields.home == self.current_home {
+            return;
+        }
+
         let move_label = i18n::text(ctx, "users-move-files");
         let moving = self.fields.move_files;
         if check_row(ui, moving, &move_label, "", true).clicked() {
@@ -183,7 +203,7 @@ impl Edit {
         };
 
         let words = [
-            ("old", self.start.home.as_str()),
+            ("old", self.current_home.as_str()),
             ("new", self.fields.home.as_str()),
             ("user", self.user.as_str()),
         ];
@@ -203,30 +223,4 @@ fn home_refused(ctx: &Context, refusal: Refusal, user: &str) -> String {
     } else {
         refused(ctx, refusal, user)
     }
-}
-
-/// The login shell, one of those `/etc/shells` lists.
-fn shell(ui: &mut Ui, ctx: &Context, context: &PageContext<'_>, chosen: &mut String) {
-    let shells = view::shells(context.snapshot);
-    let shown = ShellPath::names(shells);
-    let names: Vec<&str> = shown.iter().map(String::as_str).collect();
-    let current = shells.iter().position(|shell| shell.as_str() == chosen);
-    let label = i18n::text(ctx, "users-field-shell");
-    title(ui, &label);
-    if let Some(picked) = Select::new(&label, &names)
-        .selected(current)
-        .detail(
-            current
-                .and_then(|index| shells.get(index))
-                .map(ShellPath::as_str),
-        )
-        .width(ui.available_width())
-        .show(ui)
-        .and_then(|index| shells.get(index))
-    {
-        picked.as_str().clone_into(chosen);
-    }
-
-    note(ui, &i18n::text(ctx, "users-field-shell-hint"));
-    ui.add_space(ui.tokens().sizes.card_gap);
 }

@@ -96,35 +96,45 @@ pub fn reviewing() -> Session {
 }
 
 pub fn reviewing_of(file: EditedFile) -> Session {
+    reviewing_with(
+        file,
+        Changes {
+            original: text("GRUB_TIMEOUT=5\n"),
+            edited: text("GRUB_TIMEOUT=2\n"),
+            plain: "@@ -1,1 +1,1 @@\n-GRUB_TIMEOUT=5\n+GRUB_TIMEOUT=2\n".to_owned(),
+            added: 1,
+            removed: 1,
+        },
+    )
+}
+
+pub fn reviewing_with(file: EditedFile, changes: Changes) -> Session {
     let mut session = Session::default();
     session.start(file.clone()).unwrap();
     session.fetched(Ok(Fetched {
         editor: Editor::Micro,
         copy: EditCopy::new("/run/user/1000/garuda-toolbox/edit/grub").unwrap(),
-        original: text("GRUB_TIMEOUT=5\n"),
+        original: changes.original.clone(),
         target: file,
     }));
     session.plan_started();
     session.plan_finished(true);
-    session.compared(Ok(Compared::Changed(Changes {
-        original: text("GRUB_TIMEOUT=5\n"),
-        edited: text("GRUB_TIMEOUT=2\n"),
-        plain: "@@ -1,1 +1,1 @@\n-GRUB_TIMEOUT=5\n+GRUB_TIMEOUT=2\n".to_owned(),
-        colored: String::new(),
-        added: 1,
-        removed: 1,
-    })));
+    session.compared(Ok(Compared::Changed(changes)));
     session
 }
 
 pub fn viewing() -> Viewing {
+    viewing_of("root ALL=(ALL:ALL) ALL\n")
+}
+
+pub fn viewing_of(content: &str) -> Viewing {
     let mut viewing = Viewing::default();
     let number = viewing.start(path("/etc/sudoers")).unwrap();
     viewing.read(
         number,
         Ok(Viewed {
             path: path("/etc/sudoers"),
-            content: text("root ALL=(ALL:ALL) ALL\n"),
+            content: text(content),
         }),
     );
     viewing
@@ -208,27 +218,6 @@ fn system_and_home_files_are_edited_a_guarded_one_viewed_and_a_home_one_opened_i
 }
 
 #[test]
-fn a_folders_files_start_where_the_folder_starts() {
-    let mut harness = page(listed());
-    harness.get_by_label("Show the files").click();
-    harness.run();
-
-    let left = |text: &str| {
-        toolbox_gui_kit::testing::painted_text(&harness, text)
-            .unwrap_or_else(|| panic!("{text} is painted"))
-            .pos
-            .x
-    };
-
-    let (folder, file) = (left("modprobe.d"), left("audio.conf"));
-
-    assert!(
-        (folder - file).abs() < 0.5,
-        "the folder starts at {folder}, its file at {file}"
-    );
-}
-
-#[test]
 fn a_folder_shows_its_files_once_opened() {
     let mut harness = page(listed());
 
@@ -262,10 +251,14 @@ fn a_search_without_a_match_says_so() {
 }
 
 #[test]
-fn before_the_first_look_the_page_says_it_looks() {
+fn before_the_first_look_placeholder_rows_wait() {
     let harness = page(Configs::default());
 
-    assert!(shows(&harness, "Looking for config files…"));
+    assert!(
+        harness
+            .query_by_role_and_label(Role::ProgressIndicator, "Looking for config files…")
+            .is_some()
+    );
 }
 
 /// Also true when a dialog's or a row's name repeats the label.

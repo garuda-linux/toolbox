@@ -36,7 +36,9 @@ fn the_console_opens_over_three_quarters_of_the_page() {
         (sheet.top() - top).abs() < 40.0,
         "sheet {sheet:?} against a top of {top} in {page:?}"
     );
-    assert!((sheet.bottom() - page.bottom()).abs() < 24.0, "{sheet:?}");
+
+    // The pane ends with the terminal, above the sheet's bottom padding.
+    assert!((sheet.bottom() - page.bottom()).abs() < 32.0, "{sheet:?}");
 }
 
 #[test]
@@ -204,5 +206,38 @@ fn the_sheet_blurs_the_page_under_it() {
             .iter()
             .any(|rect| rect.top() <= sheet.top() + 1.0 && rect.width() >= sheet.width() - 1.0),
         "no blur under the sheet at {sheet:?}: {blurred:?}"
+    );
+}
+
+#[test]
+fn the_terminal_reaches_the_sheets_padding_and_its_hint_sits_on_its_bottom_edge() {
+    let hint = "Ctrl+Tab leaves the terminal.";
+    let mut harness = app();
+    open_console(&mut harness);
+    harness
+        .get_by_role_and_label(Role::Terminal, "Console output")
+        .click();
+    harness.run();
+
+    let sizes = toolbox_gui_kit::tokens::current(&harness.ctx).sizes;
+    let spacing = harness.ctx.global_style().spacing.item_spacing.y;
+    let terminal = harness
+        .get_by_role_and_label(Role::Terminal, "Console output")
+        .rect();
+
+    let frame = terminal.bottom() + f32::from(sizes.terminal_padding.bottom);
+    let page = pane(&harness, "Page").expect("page");
+    let band = page.bottom() - frame;
+    let room = f32::from(sizes.sheet_padding.bottom) + spacing;
+    assert!(
+        band <= room + 1.0,
+        "{band} below the terminal's frame at {frame}, the sheet's padding is {room}"
+    );
+
+    let shown = toolbox_gui_kit::testing::painted_text(&harness, hint).expect("the hint shows");
+    let line = egui::Rect::from_min_size(shown.pos, shown.galley.size());
+    assert!(
+        line.top() < frame && line.bottom() > frame,
+        "the hint {line:?} is not on the frame's bottom edge at {frame}"
     );
 }

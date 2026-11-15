@@ -49,6 +49,10 @@ packages-no-repository = no repository
 
 # The question before a removal.
 packages-remove-title = Remove { $package }?
+packages-remove-required = { $count ->
+        [one] 1 installed package needs it. pacman removes nothing while it stays:
+       *[other] { $count } installed packages need it. pacman removes nothing while they stay:
+    }
 packages-remove-alone = It is removed alone: it pulled in no dependency that nothing else needs.
 packages-remove-along = { $count ->
         [one] It takes along 1 dependency that nothing else needs:
@@ -66,6 +70,14 @@ packages-back-to-name = Back to { $package }
 # Shows the rest of a list of names.
 packages-more = +{ $count } more
 packages-more-name = Show { $count } more
+packages-libraries = { $count ->
+        [one] +1 library
+       *[other] +{ $count } libraries
+    }
+packages-libraries-name = { $count ->
+        [one] Show 1 library
+       *[other] Show { $count } libraries
+    }
 packages-details-loading = Reading the package…
 packages-details-failed = The package could not be read.
 packages-gone = { $package } is no longer in any package database
@@ -97,6 +109,9 @@ packages-copy-list = Copy list
 packages-files-copied = The file list was copied to the clipboard.
 # What screen readers call the list of files.
 packages-files-list = Installed files
+packages-files-filter = Filter files
+packages-files-filter-clear = Clear the filter
+packages-files-none = No file matches “{ $filter }”.
 
 packages-history = History
 packages-history-all = Show all
@@ -131,6 +146,7 @@ packages-aur-votes = { $count ->
 # The question before an AUR build.
 packages-aur-install-title = Build { $package } from the AUR?
 packages-aur-install-body = Built from a community script on your computer. paru shows the build script in the Console before it builds.
+packages-aur-install-confirm = Build and install
 
 packages-aur-maintainer = Maintainer
 packages-aur-orphaned = Nobody, orphaned

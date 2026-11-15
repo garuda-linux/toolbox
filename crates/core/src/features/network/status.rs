@@ -19,8 +19,6 @@ pub const GEOCLUE: &str = "geoclue.service";
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ServiceRow {
     pub unit: &'static str,
-    /// systemd knows a unit file of that name.
-    pub installed: bool,
     pub active: ActiveState,
     pub file_state: FileState,
 }
@@ -56,21 +54,23 @@ pub fn flight_mode(radios: &[Radio]) -> bool {
     shown.peek().is_some() && shown.all(|radio| radio.soft || radio.hard)
 }
 
-/// [`SERVICES`] and [`GEOCLUE`] as systemd lists them. A unit systemd
-/// does not list is not installed.
+/// The installed ones of [`SERVICES`] and [`GEOCLUE`] as systemd lists
+/// them. A unit systemd does not list, or lists without a unit file, is
+/// not installed and left out.
 pub fn service_rows(units: &[UnitInfo]) -> Vec<ServiceRow> {
     SERVICES
         .into_iter()
         .chain([GEOCLUE])
-        .map(|name| {
-            let unit = units.iter().find(|unit| unit.name.as_str() == name);
+        .filter_map(|name| {
+            let unit = units
+                .iter()
+                .find(|unit| unit.name.as_str() == name && unit.file_state != FileState::Unknown)?;
 
-            ServiceRow {
+            Some(ServiceRow {
                 unit: name,
-                installed: unit.is_some_and(|unit| unit.file_state != FileState::Unknown),
-                active: unit.map_or(ActiveState::Inactive, |unit| unit.active),
-                file_state: unit.map_or(FileState::Unknown, |unit| unit.file_state),
-            }
+                active: unit.active,
+                file_state: unit.file_state,
+            })
         })
         .collect()
 }

@@ -1,23 +1,32 @@
+mod text;
+
 use std::borrow::Cow;
 
-use egui::{Context, Label, Ui};
+use egui::{Context, Ui};
 use toolbox_core::features::toggles::shown::Tally;
 use toolbox_core::features::tweaks::view::{Choices, Flip, Pick, Read};
-use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
+use toolbox_gui_kit::fonts::{BODY, Weight};
+use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
-    ListItem, RowHeights, RowList, RowState, Select, Tone, dimmed, highlighted, row_height,
-    section_heading, split_row, status_dot, switch, text_block_height,
+    ListItem, RowHeights, RowList, RowState, Select, dimmed, rich, row_height, section_heading,
+    split_row, switch, text_block_height,
 };
-use toolbox_gui_kit::{UiExt as _, icons, tokens};
+use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::{GarudaUpdateFlag, ShellPath};
 
+use self::text::lead;
+pub(super) use self::text::matches;
 use crate::command::TweakCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::SWITCH_WIDTH;
-use crate::pages::toggles::tally_text;
+use crate::pages::rows::{SWITCH_WIDTH, picture_height};
+use crate::pages::toggles::shown_count;
 
 const NARROW_CONTROL: f32 = tokens::Sizes::DEFAULT.setting_control_narrow;
+
+/// Each section's glyph, on its heading and on the tile of its rows.
+const SHELL_NETWORK_GLYPH: Icon = icons::NETWORK_WIRED;
+const GARUDA_UPDATE_GLYPH: Icon = icons::SYSTEM_SOFTWARE_UPDATE;
 
 struct Tweak<T> {
     id: Cow<'static, str>,
@@ -77,21 +86,43 @@ impl Choice {
 /// line of it.
 fn heights(ui: &Ui) -> RowHeights {
     RowHeights::Measured {
-        estimate: row_height(ui, text_block_height(ui, 1)),
+        estimate: row_height(ui, text_block_height(ui, 1).max(picture_height(ui, true))),
     }
 }
 
-/// What is on of the "Shell and network" rows `query` matches. Only ad
-/// blocking is a switch, the pickers are never on.
-pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &str) -> Tally {
-    Choice::ALL
-        .into_iter()
-        .filter(|choice| matches(ctx, choice.text_id(), query))
-        .map(|choice| Tally {
-            on: usize::from(matches!(choice, Choice::Hblock) && choices.hblock.on),
+/// What is on of the "Shell and network" switches `query` matches, and
+/// whether their state was read. Only ad blocking is one, a picker is
+/// never on and so counts for nothing.
+pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &str) -> (Tally, bool) {
+    let shown = matches(ctx, Choice::Hblock.text_id(), query);
+    let tally = Tally {
+        on: usize::from(shown && choices.hblock.on),
+        total: usize::from(shown),
+    };
+
+    (tally, choices.hblock.known)
+}
+
+/// What is on of the Garuda Update flags `query` matches, and whether
+/// their state was read.
+pub fn garuda_update_tally(
+    ctx: &Context,
+    flags: &[(GarudaUpdateFlag, Flip)],
+    query: &str,
+) -> (Tally, bool) {
+    let matching = flags
+        .iter()
+        .filter(|(flag, _)| matches(ctx, &format!("tweaks-flag-{}", flag.as_str()), query));
+
+    let tally = matching
+        .clone()
+        .map(|(_, flip)| Tally {
+            on: usize::from(flip.on),
             total: 1,
         })
-        .sum()
+        .sum();
+
+    (tally, matching.into_iter().all(|(_, flip)| flip.known))
 }
 
 /// The pickers whose probe failed, for the banner of what could not be
@@ -129,8 +160,9 @@ pub fn shell_network(
         .collect();
 
     let title = i18n::text(&ctx, "tweaks-shell-network");
-    let count = tally_text(&ctx, shell_network_tally(&ctx, choices, query));
-    section_heading(ui, icons::NETWORK_WIRED, &title, &count);
+    let (tally, read) = shell_network_tally(&ctx, choices, query);
+    let count = shown_count(&ctx, tally, read).unwrap_or_default();
+    section_heading(ui, SHELL_NETWORK_GLYPH, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
     let _rows = tracing::trace_span!("rows").entered();
     RowList::new(super::SHELL_NETWORK, &title, heights(ui)).show(
@@ -163,7 +195,7 @@ pub fn shell_network(
                     flip_row(
                         ui,
                         context,
-                        (choice.text_id(), state, query),
+                        (SHELL_NETWORK_GLYPH, choice.text_id(), state, query),
                         choices.hblock,
                         TweakCommand::Hblock,
                     );
@@ -199,15 +231,11 @@ pub fn garuda_update(
         return false;
     }
 
-    let tally = Tally {
-        on: matching.iter().filter(|(_, flip, _)| flip.on).count(),
-        total: matching.len(),
-    };
-
-    let count = tally_text(&ctx, tally);
+    let (tally, read) = garuda_update_tally(&ctx, flags, query);
+    let count = shown_count(&ctx, tally, read).unwrap_or_default();
 
     let title = i18n::text(&ctx, "tweaks-garuda-update");
-    section_heading(ui, icons::SYSTEM_SOFTWARE_UPDATE, &title, &count);
+    section_heading(ui, GARUDA_UPDATE_GLYPH, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
     let matching: Vec<Tweak<(GarudaUpdateFlag, Flip)>> = matching
         .into_iter()
@@ -220,9 +248,8 @@ pub fn garuda_update(
         &matching,
         |ui, tweak, state| {
             let (flag, flip) = tweak.what;
-            flip_row(ui, context, (&tweak.id, state, query), flip, |on| {
-                TweakCommand::Flag(flag, on)
-            });
+            let row = (GARUDA_UPDATE_GLYPH, tweak.id.as_ref(), state, query);
+            flip_row(ui, context, row, flip, |on| TweakCommand::Flag(flag, on));
         },
     );
     ui.add_space(ui.tokens().sizes.section_gap);
@@ -271,22 +298,31 @@ fn pick_row<T>(
         .and_then(|index| entries.get(index))
         .and_then(|entry| entry.detail.as_deref());
 
-    // Before the first probe the value is only not read yet. How that
-    // shows waits for a decision, so the pill stays empty meanwhile.
+    // Before the first probe the value is only not read yet, which a
+    // toggle row's switch says with the same words.
     let placeholder = match pick.read {
         Read::Known => i18n::text(&ctx, "tweaks-other"),
         Read::Failed => i18n::text(&ctx, "tweaks-unread"),
         Read::Absent => i18n::text(&ctx, "tweaks-unavailable"),
-        Read::NotYet => Cow::Borrowed(""),
+        Read::NotYet => i18n::text(&ctx, "tweaks-not-read"),
     };
 
     let known = pick.read == Read::Known;
+    let queued = pick.queued.then_some("tweaks-queued");
     dimmed(ui, context.busy, |ui| {
         split_row(
             ui,
             NARROW_CONTROL,
-            |ui| text(ui, (id, query), pick.queued.then_some("tweaks-queued")),
+            |ui| lead(ui, (SHELL_NETWORK_GLYPH, !known), (id, query), queued),
             |ui| {
+                // Nothing to pick from is no control, so it reads as a
+                // fact rather than a dropdown that never opens.
+                if pick.read == Read::Absent {
+                    let secondary = ui.tokens().secondary;
+                    ui.label(rich(ui, &placeholder, Weight::Regular, BODY, secondary));
+                    return;
+                }
+
                 let picked = ui
                     .add_enabled_ui(known && !context.busy, |ui| {
                         Select::new(&title, &names)
@@ -310,7 +346,7 @@ fn pick_row<T>(
 fn flip_row(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (id, state, query): (&str, &RowState, &str),
+    (glyph, id, state, query): (Icon, &str, &RowState, &str),
     flip: Flip,
     command: impl Fn(bool) -> TweakCommand,
 ) {
@@ -325,7 +361,7 @@ fn flip_row(
         split_row(
             ui,
             SWITCH_WIDTH,
-            |ui| text(ui, (id, query), tag),
+            |ui| lead(ui, (glyph, !flip.known), (id, query), tag),
             |ui| {
                 let enabled = flip.known && !context.busy;
                 let flipped = switch(ui, flip.on, &title, enabled).clicked();
@@ -335,34 +371,4 @@ fn flip_row(
             },
         );
     });
-}
-
-fn text(ui: &mut Ui, (id, query): (&str, &str), queued: Option<&str>) {
-    let ctx = ui.ctx().clone();
-    let tokens = tokens::current(&ctx);
-    toolbox_gui_kit::widgets::title_line(ui, true, |ui| {
-        let title = i18n::text(&ctx, id);
-        let strong = fonts::font(ui.style(), Weight::SemiBold, BODY);
-        ui.label(highlighted(ui, &title, query, strong, tokens.text));
-        if let Some(queued) = queued {
-            status_dot(ui, &i18n::text(&ctx, queued), Tone::Accent);
-        }
-    });
-
-    let description = i18n::text(&ctx, &format!("{id}-description"));
-    let small = fonts::font(ui.style(), Weight::Regular, SMALL);
-    let description = highlighted(ui, &description, query, small, tokens.secondary);
-    ui.add(Label::new(description).wrap());
-}
-
-/// Whether `query` (trimmed, lower case, empty for all) is in the title
-/// or description of `id`, as the user reads them.
-pub(super) fn matches(ctx: &Context, id: &str, query: &str) -> bool {
-    query.is_empty()
-        || [
-            i18n::text(ctx, id),
-            i18n::text(ctx, &format!("{id}-description")),
-        ]
-        .iter()
-        .any(|text| text.to_lowercase().contains(query))
 }

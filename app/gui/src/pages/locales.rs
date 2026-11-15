@@ -3,29 +3,31 @@
 
 mod list;
 mod packs;
+mod system;
 #[cfg(test)]
 mod tests;
 
 use egui::Ui;
-use toolbox_core::features::locales::view::{
-    locales_known, pack_rows, packs_known, packs_missing, system_choice_names, system_choices,
-    system_queued, system_shown,
-};
+use toolbox_core::features::locales::view::{locales_known, packs_known};
 use toolbox_core::features::locales::{Filter, PackOrder};
+use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Select, Tone, banner, card, empty_state, page_toolbar, pill_button, toggle_chips,
+    Tone, banner, card, empty_state, empty_state_action, page_toolbar, row_height, skeleton_rows,
+    text_block_height, toggle_chips,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_plan::LocaleName;
 
 use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::{refused_banner, sort_select};
-use super::setting_row::{Words, row, wide_control};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, LocaleCommand};
 use crate::i18n;
 use crate::locales::Locales;
 use crate::page::PageId;
+
+/// Placeholder rows while the system is read, about as many locales as
+/// fill a window.
+const SKELETON_ROWS: usize = 8;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
@@ -53,9 +55,12 @@ enum Chip {
 pub struct LocalesPage {
     tab: Tab,
     filter: Filter,
+    /// The Language packs tab's own search, kept across a tab switch.
+    pack_search: String,
     order: PackOrder,
     locales: list::Rows,
     packs: packs::Rows,
+    system: system::Choices,
 }
 
 impl PageView for LocalesPage {
@@ -88,10 +93,19 @@ impl PageView for LocalesPage {
         page_toolbar(
             ui,
             self,
-            |page, ui| {
-                if page.tab == Tab::Locales {
+            |page, ui| match page.tab {
+                Tab::Locales => {
                     let field = &mut page.filter.search;
                     _ = search(ui, field, "locales-search", "locales-search-hint");
+                }
+                Tab::Packs => {
+                    let field = &mut page.pack_search;
+                    _ = search(
+                        ui,
+                        field,
+                        "locales-packs-search",
+                        "locales-packs-search-hint",
+                    );
                 }
             },
             |page, ui| {
@@ -119,16 +133,12 @@ impl LocalesPage {
     fn locales(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
         if !context.probed {
-            empty_state(
-                ui,
-                icons::LANGUAGES,
-                &i18n::text(&ctx, "locales-reading"),
-                "",
-            );
+            reading(ui, "locales-reading");
             return;
         }
 
         if !locales_known(context.snapshot) {
+            // No locale.gen is how the system is made, not a failed read.
             empty_state(
                 ui,
                 icons::HELP_ABOUT,
@@ -138,26 +148,15 @@ impl LocalesPage {
             return;
         }
 
-        system_language(ui, context);
+        system::show(ui, context, &mut self.system);
         ui.add_space(ui.tokens().sizes.card_gap);
         self.chips(ui);
         ui.add_space(ui.tokens().sizes.card_gap);
 
         let items = list::rows(ui, context, &self.filter, &mut self.locales);
         if items.is_empty() {
-            empty_state(
-                ui,
-                icons::SYSTEM_SEARCH,
-                &i18n::text(&ctx, "locales-none"),
-                &i18n::text(&ctx, "locales-none-detail"),
-            );
-
-            let clear = i18n::text(&ctx, "locales-clear-search");
-            if !self.filter.search.is_empty() && pill_button(ui, &clear, ButtonKind::Soft).clicked()
-            {
-                self.filter.search.clear();
-            }
-
+            let shown = (icons::SYSTEM_SEARCH, "locales-none");
+            nothing(ui, shown, &mut self.filter.search);
             return;
         }
 
@@ -188,26 +187,23 @@ impl LocalesPage {
     fn packs(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
         if !context.probed {
-            empty_state(
-                ui,
-                icons::PACKAGE,
-                &i18n::text(&ctx, "locales-packs-reading"),
-                "",
-            );
+            reading(ui, "locales-packs-reading");
             return;
         }
 
         if !packs_known(context.snapshot, context.changes) {
-            empty_state(
-                ui,
-                icons::HELP_ABOUT,
-                &i18n::text(&ctx, "locales-packs-unavailable"),
-                &i18n::text(&ctx, "locales-packs-unavailable-detail"),
-            );
+            unread(ui, context, "locales-packs-unavailable");
             return;
         }
 
-        let missing = packs_missing(&pack_rows(context.snapshot, context.changes));
+        let listed = packs::rows(
+            ui,
+            context,
+            (self.order, &self.pack_search),
+            &mut self.packs,
+        );
+
+        let missing = listed.missing;
         let intro = if missing > 0 {
             i18n::text_with(
                 &ctx,
@@ -234,8 +230,7 @@ impl LocalesPage {
 
         ui.add_space(ui.tokens().sizes.card_gap);
 
-        let items = packs::rows(ui, context, self.order, &mut self.packs);
-        if items.is_empty() {
+        if listed.all == 0 {
             empty_state(
                 ui,
                 icons::PACKAGE,
@@ -245,7 +240,13 @@ impl LocalesPage {
             return;
         }
 
-        ui.add_enabled_ui(!context.busy, |ui| packs::show(ui, context, &items));
+        if listed.items.is_empty() {
+            let shown = (icons::SYSTEM_SEARCH, "locales-packs-no-match");
+            nothing(ui, shown, &mut self.pack_search);
+            return;
+        }
+
+        ui.add_enabled_ui(!context.busy, |ui| packs::show(ui, context, &listed.items));
     }
 
     fn sort(&mut self, ui: &mut Ui) {
@@ -260,90 +261,39 @@ impl LocalesPage {
     }
 }
 
-fn system_language(ui: &mut Ui, context: &PageContext<'_>) {
+/// Placeholder rows of a tab's list, named by `id`.
+fn reading(ui: &mut Ui, id: &str) {
+    let name = i18n::text(ui.ctx(), id);
+    let height = row_height(ui, text_block_height(ui, 1));
+    card(ui, |ui| skeleton_rows(ui, SKELETON_ROWS, height, &name));
+}
+
+/// A tab whose list could not be read: `id` above its `-detail`.
+fn unread(ui: &mut Ui, context: &PageContext<'_>, id: &str) {
     let ctx = ui.ctx().clone();
-    let (snapshot, changes) = (context.snapshot, context.changes);
-    let codes = system_choices(snapshot, changes);
-    let names: Vec<String> = codes
-        .iter()
-        .zip(system_choice_names(snapshot, changes))
-        .map(|(code, (language, territory))| choice(&ctx, code, &language, &territory))
-        .collect();
-
-    let shown = system_shown(snapshot, changes);
-    let title = i18n::text(&ctx, "locales-system");
-    let description = i18n::text(&ctx, "locales-system-detail");
-    let queued = (!system_queued(changes).is_empty()).then(|| i18n::text(&ctx, "locales-queued"));
-    let words = Words {
-        current: None,
-        title: &title,
-        description: &description,
-        note: None,
-        queued: queued.as_deref(),
-    };
-
-    let unset = i18n::text(&ctx, "locales-system-unset");
-    let width = system_width(
-        ui,
-        names.iter().map(String::as_str).chain([&*unset, &*shown]),
-    );
-
-    card(ui, |ui| {
-        row(ui, true, &words, width, |ui| {
-            let options: Vec<&str> = names.iter().map(String::as_str).collect();
-            let current = codes.iter().position(|code| *code == shown);
-            let placeholder = if shown.is_empty() { &*unset } else { &shown };
-            let picked = ui
-                .add_enabled_ui(!codes.is_empty() && !context.busy, |ui| {
-                    Select::new(&title, &options)
-                        .selected(current)
-                        .placeholder(placeholder)
-                        .width(width.min(ui.available_width()))
-                        .show(ui)
-                })
-                .inner;
-
-            let locale = picked
-                .and_then(|index| codes.get(index))
-                .and_then(|code| LocaleName::new(code.clone()).ok());
-
-            if let Some(locale) = locale {
-                context.commands.send(LocaleCommand::System(locale));
-            }
-        });
-    });
+    let title = i18n::text(&ctx, id);
+    let detail = i18n::text(&ctx, &format!("{id}-detail"));
+    let again = i18n::text(&ctx, "common-read-again");
+    if empty_state_action(ui, icons::HELP_ABOUT, &title, &detail, &again) {
+        context.commands.send(LocaleCommand::Refresh);
+    }
 }
 
-/// How wide the system language's dropdown is: as wide as its longest
-/// name, so the locale code at its end shows whole, from the settings'
-/// wide control up to the widest an open list grows. The whole code
-/// outweighs the 40 % cap of the other wide controls here.
-fn system_width<'a>(ui: &Ui, shown: impl Iterator<Item = &'a str>) -> f32 {
-    Select::fitting_width(ui, shown).max(wide_control(ui))
-}
-
-fn choice(ctx: &egui::Context, code: &str, language: &str, territory: &str) -> String {
-    if language.is_empty() {
-        return code.to_owned();
+/// A list the search or the chips leave empty: `id` above its `-detail`,
+/// with Clear search under it while there is a search to clear.
+fn nothing(ui: &mut Ui, (icon, id): (Icon, &str), search: &mut String) {
+    let ctx = ui.ctx().clone();
+    let title = i18n::text(&ctx, id);
+    let detail = i18n::text(&ctx, &format!("{id}-detail"));
+    if search.is_empty() {
+        _ = empty_state(ui, icon, &title, &detail);
+        return;
     }
 
-    let (id, args) = if territory.is_empty() {
-        (
-            "locales-system-choice",
-            vec![("language", language), ("code", code)],
-        )
-    } else {
-        (
-            "locales-system-choice-territory",
-            vec![
-                ("language", language),
-                ("territory", territory),
-                ("code", code),
-            ],
-        )
-    };
-
-    i18n::text_with(ctx, id, &args).into_owned()
+    let clear = i18n::text(&ctx, "locales-clear-search");
+    if empty_state_action(ui, icon, &title, &detail, &clear) {
+        search.clear();
+    }
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {

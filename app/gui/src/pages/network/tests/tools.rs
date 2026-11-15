@@ -101,7 +101,7 @@ fn the_number_fields_are_equally_wide() {
     ]
     .map(|name| {
         harness
-            .get_by_role_and_label(Role::TextInput, name)
+            .get_by_role_and_label(Role::SpinButton, name)
             .rect()
             .width()
     })
@@ -121,7 +121,7 @@ fn a_number_ends_at_the_right_of_its_field() {
     tab(&mut harness, "Tools");
 
     let field = harness
-        .get_by_role_and_label(Role::TextInput, "Number of pings")
+        .get_by_role_and_label(Role::SpinButton, "Number of pings")
         .rect();
 
     let digits = toolbox_gui_kit::testing::painted_text(&harness, "4").expect("painted");

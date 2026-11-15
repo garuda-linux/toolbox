@@ -38,4 +38,12 @@ impl Artwork {
             pictures.set_theme(theme);
         }
     }
+
+    /// A plan may have installed an app, whose picture an earlier miss
+    /// would hide until the next start.
+    pub fn plan_finished(&self) {
+        if let Some(pictures) = &self.pictures {
+            pictures.forget_misses();
+        }
+    }
 }

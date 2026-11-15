@@ -15,17 +15,26 @@ pub struct LeadChip {
     /// What is on of the rows the search matched, for the chip and the
     /// All chip's sum.
     pub tally: Tally,
-    /// Such as "2/4", beside the title.
-    pub count: String,
+    /// Whether every state the tally counts was read.
+    pub read: bool,
+    /// Such as "2/4" or "?/4" beside the title, none while the search
+    /// shows nothing to count.
+    pub count: Option<String>,
 }
 
 impl LeadChip {
-    pub fn new(ctx: &Context, id: &'static str, title: Cow<'static, str>, tally: Tally) -> Self {
+    pub fn new(
+        ctx: &Context,
+        id: &'static str,
+        title: Cow<'static, str>,
+        (tally, read): (Tally, bool),
+    ) -> Self {
         Self {
             id,
             title,
             tally,
-            count: super::tally_text(ctx, tally),
+            read,
+            count: super::shown_count(ctx, tally, read),
         }
     }
 }

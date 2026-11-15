@@ -25,7 +25,7 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
     let close = i18n::text(ctx, "dialog-close");
     let body = i18n::text(ctx, "packages-aur-install-body");
     let cancel = i18n::text(ctx, "packages-cancel");
-    let confirm = i18n::text(ctx, "packages-install");
+    let confirm = i18n::text(ctx, "packages-aur-install-confirm");
     let texts = Question {
         title: &title,
         close: &close,

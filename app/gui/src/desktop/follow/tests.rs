@@ -55,7 +55,10 @@ async fn the_look_follows_an_edited_kdeglobals() {
         egui::Context::default(),
         Family::Kde,
         files,
-        Vec::new().into(),
+        super::CatalogApps {
+            names: Vec::new().into(),
+            pictures: crate::desktop::icon_files::app_index(Vec::new()),
+        },
     );
 
     let first = next_look(&mut receiver).await;

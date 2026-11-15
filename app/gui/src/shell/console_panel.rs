@@ -3,6 +3,7 @@ pub mod focus;
 mod idle;
 mod mirror;
 mod output;
+mod rim;
 mod sheet;
 
 #[cfg(any(test, feature = "testing"))]
@@ -11,10 +12,7 @@ pub use sheet::{Place, cover, out};
 #[cfg(test)]
 mod tests;
 
-use egui::{
-    Align, Color32, Context, CornerRadius, Frame, Layout, ScrollArea, Sense, TextStyle, Ui,
-    WidgetText, vec2,
-};
+use egui::{Align, Color32, Context, CornerRadius, Frame, Layout, ScrollArea, Ui, vec2};
 use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
@@ -302,24 +300,14 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
     let label = i18n::text(ui.ctx(), "console-terminal");
     let hint = i18n::text(ui.ctx(), "console-leave-hint");
 
-    // The hint's line is kept whether it shows or not, so focus never
-    // resizes the terminal and with it the program.
-    let gap = tokens.sizes.tight_gap;
-    let hint_job = rich(ui, &hint, Weight::Regular, SMALL, tokens.secondary);
-    let hint_galley = WidgetText::from(hint_job).into_galley(
-        ui,
-        Some(egui::TextWrapMode::Truncate),
-        ui.available_width(),
-        TextStyle::Body,
-    );
-
     // egui puts its item spacing after the terminal too. Room left over
     // would let the resizable sheet grow by it on every frame.
-    let below = hint_galley.size().y + gap + ui.spacing().item_spacing.y;
+    let below = ui.spacing().item_spacing.y;
     let room = (ui.available_size() - vec2(0.0, below)).max(egui::Vec2::ZERO);
     let idle = !console.has_output();
+    let running = console.running();
     let fill = sheet::terminal_fill(ui.ctx());
-    let output = ui
+    let (output, frame) = ui
         .allocate_ui(room, |ui| {
             let framed = Frame::new()
                 .fill(fill)
@@ -330,6 +318,7 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
                     TerminalView::new(console.terminal_mut(), &label)
                         .hint(&hint)
                         .ground(fill)
+                        .running(running)
                         .show(ui)
                 });
 
@@ -341,7 +330,7 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
                 framed.response.rect,
                 CARD_RADIUS,
             );
-            framed.inner
+            (framed.inner, framed.response.rect)
         })
         .inner;
 
@@ -354,12 +343,9 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
 
     let focused = output.response.has_focus();
     sheet::terminal_focused(ui.ctx(), focused);
-
-    ui.add_space(gap);
-    let (line, _) = ui.allocate_exact_size(hint_galley.size(), Sense::hover());
     if focused {
         // Spoken already as the terminal's description.
-        ui.painter().galley(line.min, hint_galley, tokens.secondary);
+        idle::leave_hint(ui, frame, &hint, fill);
     }
 
     if !output.bytes.is_empty() {

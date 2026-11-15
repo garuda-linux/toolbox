@@ -37,7 +37,13 @@ enum Row {
     Restart,
 }
 
-pub fn show(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
+pub fn show(
+    page: &mut HomePage,
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    host: Option<&Host>,
+    overview: Option<&Overview<'_>>,
+) {
     let Some(reading) = context.home.status else {
         return;
     };
@@ -47,7 +53,7 @@ pub fn show(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, host: O
     ui.add_space(ui.tokens().sizes.card_gap);
     restart_problem(ui, context);
 
-    let Some(status) = reading.get() else {
+    let Some(overview) = overview else {
         if reading.error().is_some() && !reading.is_loading() {
             let text = i18n::text(ui.ctx(), "home-status-failed");
             let again = i18n::text(ui.ctx(), "common-read-again");
@@ -61,13 +67,12 @@ pub fn show(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, host: O
         return;
     };
 
-    let overview = overview(status, context);
-    failures(page, ui, context, &overview);
+    failures(page, ui, context, overview);
 
     let reboot = host.is_some_and(|host| host.reboot_pending);
     if !overview.attention(reboot) {
         if overview.failed.is_empty() {
-            checks::all_clear(ui, &overview);
+            checks::all_clear(ui, overview);
         }
 
         return;
@@ -75,16 +80,16 @@ pub fn show(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, host: O
 
     card(ui, |ui| {
         let _rows = tracing::trace_span!("rows").entered();
-        for (index, row) in rows(&overview, reboot).into_iter().flatten().enumerate() {
+        for (index, row) in rows(overview, reboot).into_iter().flatten().enumerate() {
             card_row(ui, index == 0, |ui| match row {
-                Row::Updates => rows::updates(page, ui, context, &overview),
-                Row::Aur => rows::aur(page, ui, context, &overview),
+                Row::Updates => rows::updates(page, ui, context, overview),
+                Row::Aur => rows::aur(page, ui, context, overview),
                 Row::Stale => rows::stale(ui, context),
-                Row::Merges => rows::merges(ui, &overview),
+                Row::Merges => rows::merges(ui, overview),
                 Row::Disk => rows::disk(ui, context),
-                Row::Services => rows::services(ui, context, &overview),
-                Row::Cleanup => rows::cleanup(ui, context, &overview),
-                Row::Health(level) => rows::health(ui, context, &overview, level),
+                Row::Services => rows::services(ui, context, overview),
+                Row::Cleanup => rows::cleanup(ui, context, overview),
+                Row::Health(level) => rows::health(ui, context, overview, level),
                 Row::Restart => rows::restart(page, ui, context),
             });
         }

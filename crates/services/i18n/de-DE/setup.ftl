@@ -19,7 +19,9 @@ setup-next = Weiter
 setup-go-to = Zu Schritt springen
 # Over the progress bar. $number is the step, $count all of them.
 setup-progress = Schritt { $number } von { $count }
-setup-keys = Alt+Rechts: weiter, Alt+Links: zurück.
+# Tooltips of Back and Next: the keys that press them.
+setup-back-key = Alt+Links
+setup-next-key = Alt+Rechts
 
 # The summary. $count is how many, $names lists them.
 setup-install = Zu installierende Apps: { $count }
@@ -36,6 +38,10 @@ setup-ready = Dein System ist eingerichtet und einsatzbereit.
 setup-ready-tested = Testmodus: Es wurde nichts installiert oder geändert.
 # Every step found its part already done.
 setup-ready-nothing = Alles, was du ausgewählt hast, war schon eingerichtet.
+# The success page. $count is how many.
+setup-installed = Installierte Apps: { $count }
+setup-removed = Entfernte Apps: { $count }
+setup-enabled = Aktivierte Dienste: { $count }
 setup-restart-note = Ein Neustart wird empfohlen, damit alle neuen Programme und Dienste richtig starten.
 setup-restart = Neu starten…
 setup-finish-setup = Einrichtung abschließen

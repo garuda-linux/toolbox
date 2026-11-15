@@ -996,48 +996,6 @@ description = "Free, easy, personal accounting"
 check = { package = "homebank" }
 
 [[section]]
-id = "other"
-title = "Other"
-icon = "applications-other"
-
-[[section.entry]]
-id = "setup-droidcam"
-title = "Droidcam"
-description = "Turn your phone/tablet into a webcam"
-check = { package = "droidcam" }
-
-[[section.entry]]
-id = "setup-soundwire"
-title = "Soundwire"
-description = "Transmit audio from your PC to other devices"
-check = { package = "soundwire" }
-
-[[section.entry]]
-id = "variety"
-title = "Variety"
-description = "Changes the wallpaper on a regular interval"
-check = { package = "variety" }
-
-[[section.entry]]
-id = "conky"
-title = "Conky"
-description = "Light-weight system monitor"
-check = { package = "conky" }
-also = [{ package = "conky-manager2" }]
-
-[[section.entry]]
-id = "keepass-xc"
-title = "KeePassXC"
-description = "Cross-platform password manager"
-check = { package = "keepassxc" }
-
-[[section.entry]]
-id = "yakuake"
-title = "Yakuake"
-description = "Drop-down terminal emulator"
-check = { package = "yakuake" }
-
-[[section]]
 id = "pkgmngrs"
 title = "Software centers"
 icon = "system-software-install"
@@ -1164,3 +1122,45 @@ title = "Genymotion"
 description = "Virtual environment for Android"
 check = { package = "genymotion" }
 also = [{ package = "virtualbox-meta" }]
+
+[[section]]
+id = "other"
+title = "Other"
+icon = "applications-other"
+
+[[section.entry]]
+id = "setup-droidcam"
+title = "Droidcam"
+description = "Turn your phone/tablet into a webcam"
+check = { package = "droidcam" }
+
+[[section.entry]]
+id = "setup-soundwire"
+title = "Soundwire"
+description = "Transmit audio from your PC to other devices"
+check = { package = "soundwire" }
+
+[[section.entry]]
+id = "variety"
+title = "Variety"
+description = "Changes the wallpaper on a regular interval"
+check = { package = "variety" }
+
+[[section.entry]]
+id = "conky"
+title = "Conky"
+description = "Light-weight system monitor"
+check = { package = "conky" }
+also = [{ package = "conky-manager2" }]
+
+[[section.entry]]
+id = "keepass-xc"
+title = "KeePassXC"
+description = "Cross-platform password manager"
+check = { package = "keepassxc" }
+
+[[section.entry]]
+id = "yakuake"
+title = "Yakuake"
+description = "Drop-down terminal emulator"
+check = { package = "yakuake" }

@@ -228,8 +228,10 @@ impl Maintenance {
             Some(Next::Tool(tool)) if exists(Path::new(tool.program())) => {
                 self.launch(tool, launcher);
             }
+            Some(Next::Tool(tool)) => self.absent(PageTool::Program(tool), tool.program()),
             Some(Next::RankMirrors) if exists(Path::new(RATE_MIRRORS_PROGRAM)) => self.rank(),
-            Some(Next::Tool(_) | Next::RankMirrors) | None => {}
+            Some(Next::RankMirrors) => self.absent(PageTool::ChaoticMirrors, RATE_MIRRORS_PROGRAM),
+            None => {}
         }
     }
 
@@ -272,14 +274,29 @@ impl Maintenance {
         }
     }
 
+    /// A second ranking while one runs would test every mirror twice.
     fn rank(&mut self) {
         let Some(jobs) = &self.jobs else {
             return;
         };
 
+        if self.ranking {
+            return;
+        }
+
         self.ranking = true;
         self.problem = None;
         jobs.rank();
+    }
+
+    /// Without this the "Install and open…" click would end in silence.
+    fn absent(&mut self, tool: PageTool, program: &str) {
+        tracing::error!("{program} is missing after its install ended well");
+        self.problem = Some(MaintenanceProblem::Launch {
+            tool: tool.key(),
+            cause: LaunchCause::AbsentAfterInstall,
+            reason: program.to_owned(),
+        });
     }
 
     /// A failure is logged here and kept for the page.

@@ -12,7 +12,7 @@ use toolbox_plan::PackageName;
 
 use super::super::super::Unfolded;
 use super::super::facts::{Fact, Value, day, grid, installed, web};
-use super::super::relations::{gap, names, optional};
+use super::super::relations::{dependencies, gap, names, optional};
 use crate::i18n;
 
 const AUR_HOST: &str = "aur.archlinux.org";
@@ -93,13 +93,7 @@ pub fn relations(
     lookup: &dyn Fn(&str) -> Option<PackageName>,
 ) -> Option<PackageName> {
     let space = gap(ui);
-    let depends = names(
-        ui,
-        "packages-depends",
-        &entry.depends,
-        lookup,
-        &mut unfolded.depends,
-    );
+    let depends = dependencies(ui, &entry.depends, lookup, unfolded);
 
     ui.add_space(space);
     let make = names(

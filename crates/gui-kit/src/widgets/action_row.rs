@@ -1,7 +1,7 @@
-use egui::{Align, Id, Label, Layout, Rect, Sense, Ui, UiBuilder, Vec2, vec2};
+use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, vec2};
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
-use super::layout::{MIN_TEXT_WIDTH, last_descent, remember_width};
+use super::layout::{MIN_TEXT_WIDTH, last_descent, raised_column, remember_width};
 use super::{Tone, queued_tag, rich};
 use crate::fonts::{self, BODY, SMALL, Weight};
 use crate::icons::Icon;
@@ -250,19 +250,7 @@ pub(super) fn capitals_top(ui: &Ui) -> f32 {
 /// that much puts the capitals, and so the tile, at the row's top, which
 /// leaves the tile as much room to the card's edge above as below.
 fn raised(ui: &mut Ui, (rise, width): (f32, f32), id: Id, body: impl FnOnce(&mut Ui)) -> f32 {
-    let room = ui.available_rect_before_wrap();
-    let column = Rect::from_min_size(
-        room.min - vec2(0.0, rise),
-        vec2(width, room.height() + rise),
-    );
-
-    let mut child = ui.new_child(
-        UiBuilder::new()
-            .id_salt(id)
-            .max_rect(column)
-            .layout(Layout::top_down(Align::Min)),
-    );
-
+    let (mut child, room) = raised_column(ui, (rise, width), id);
     body(&mut child);
 
     let below = (child.min_rect().bottom() - room.top()).max(0.0);

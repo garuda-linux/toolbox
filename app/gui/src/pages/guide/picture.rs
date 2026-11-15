@@ -15,6 +15,7 @@ use super::markdown::Reader;
 use crate::i18n;
 
 const OUTLINE: f32 = 1.0;
+const PLACEHOLDER_HEIGHT: f32 = 120.0;
 const SHADOW: Shadow = Shadow {
     offset: [0, 2],
     blur: 12,
@@ -22,11 +23,12 @@ const SHADOW: Shadow = Shadow {
     color: egui::Color32::TRANSPARENT,
 };
 
-/// A picture of the guide with its description under it, or the
-/// description alone when the guide lacks the picture.
+/// A picture of the guide with its description under it, or a placeholder
+/// when the guide lacks the picture.
 pub(super) fn show(ui: &mut Ui, image: &Image, reader: &mut Reader<'_>) {
     let tokens = ui.tokens();
-    if let Some(bytes) = toolbox_guide::image(&image.src) {
+    let shown = toolbox_guide::image(&image.src);
+    if let Some(bytes) = shown {
         let width = OUTLINE.mul_add(-2.0, ui.available_width()).max(0.0);
         let size = shown_size(bytes, vec2(width, f32::INFINITY));
         let name = i18n::text_with(ui.ctx(), "guide-enlarge", &[("alt", &image.alt)]);
@@ -40,15 +42,44 @@ pub(super) fn show(ui: &mut Ui, image: &Image, reader: &mut Reader<'_>) {
         if response.clicked() {
             reader.enlarged = Some((image.src.clone(), image.alt.clone()));
         }
+    } else {
+        placeholder(ui);
     }
 
-    ui.label(rich(
+    let caption = ui.label(rich(
         ui,
         &image.alt,
         Weight::Regular,
         SMALL,
         tokens.secondary,
     ));
+
+    // The picture's button already says the description, so a screen
+    // reader would hear it twice.
+    if shown.is_some() {
+        ui.ctx()
+            .accesskit_node_builder(caption.id, egui::accesskit::Node::set_hidden);
+    }
+}
+
+/// Stands where a picture the guide lacks would be, so the description
+/// under it still reads as a caption.
+fn placeholder(ui: &mut Ui) {
+    let tokens = ui.tokens();
+    let text = i18n::text(ui.ctx(), "guide-picture-missing");
+    let size = vec2(ui.available_width(), PLACEHOLDER_HEIGHT);
+    let (rect, _) = ui.allocate_exact_size(size, Sense::hover());
+    let corners = CornerRadius::same(CARD_RADIUS);
+    ui.painter().rect(
+        rect,
+        corners,
+        tokens.field,
+        Stroke::new(OUTLINE, tokens.outline),
+        egui::StrokeKind::Inside,
+    );
+
+    let words = rich(ui, &text, Weight::Regular, SMALL, tokens.secondary);
+    ui.put(rect, egui::Label::new(words));
 }
 
 /// The picture `src` over the page, until it is closed. Returns whether it

@@ -44,18 +44,9 @@ pub fn title_line<R>(ui: &mut Ui, wrap: bool, add: impl FnOnce(&mut Ui) -> R) ->
     }
 
     let rise = capitals_in_line(ui, title_font(ui), wrap, line) - last_descent(ui);
-    let room = ui.available_rect_before_wrap();
-    let column = egui::Rect::from_min_size(
-        room.min - vec2(0.0, rise),
-        vec2(room.width(), room.height() + rise),
-    );
-
-    let mut child = ui.new_child(
-        UiBuilder::new()
-            .id_salt(ui.next_auto_id().with("title_line"))
-            .max_rect(column)
-            .layout(Layout::top_down(Align::Min)),
-    );
+    let width = ui.available_rect_before_wrap().width();
+    let salt = ui.next_auto_id().with("title_line");
+    let (mut child, room) = raised_column(ui, (rise, width), salt);
 
     let inner = lines(&mut child);
     let taken = child.min_rect();
@@ -138,6 +129,30 @@ pub(in crate::widgets) fn capitals_in_line(
         .layout_no_wrap("H".to_owned(), font, egui::Color32::PLACEHOLDER);
 
     (line - capital.rect.height()) / 2.0 + capital.mesh_bounds.top()
+}
+
+/// A column `width` wide that starts `rise` above the cursor, for words
+/// whose capitals rather than their line box start at the top. Returns it
+/// and the room it started in, whose top the caller measures from.
+pub(in crate::widgets) fn raised_column(
+    ui: &mut Ui,
+    (rise, width): (f32, f32),
+    salt: Id,
+) -> (Ui, egui::Rect) {
+    let room = ui.available_rect_before_wrap();
+    let column = egui::Rect::from_min_size(
+        room.min - vec2(0.0, rise),
+        vec2(width, room.height() + rise),
+    );
+
+    let child = ui.new_child(
+        UiBuilder::new()
+            .id_salt(salt)
+            .max_rect(column)
+            .layout(Layout::top_down(Align::Min)),
+    );
+
+    (child, room)
 }
 
 pub(super) fn tail_id() -> Id {

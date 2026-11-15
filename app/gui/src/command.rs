@@ -8,11 +8,8 @@
 pub mod boot;
 pub mod bootrepair;
 pub mod configs;
-pub mod console;
 mod conversions;
 pub mod diagnostics;
-pub mod discover;
-pub mod locales;
 pub mod maintenance;
 pub mod network;
 pub mod packages;
@@ -29,17 +26,14 @@ use toolbox_core::features::maintenance::RunNow;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::protocol::TerminalSize;
 use toolbox_plan::{
-    DnsProvider, GarudaUpdateFlag, PackageName, ShellPath, UnitName, UnitOperation, UnitScope,
-    WifiBackend,
+    DnsProvider, GarudaUpdateFlag, LocaleEntry, LocaleName, PackageName, ShellPath, UnitName,
+    UnitOperation, UnitScope, WifiBackend,
 };
 
 pub use self::boot::BootCommand;
 pub use self::bootrepair::BootRepairCommand;
 pub use self::configs::ConfigsCommand;
-pub use self::console::ConsoleCommand;
 pub use self::diagnostics::DiagnosticsCommand;
-pub use self::discover::DiscoverCommand;
-pub use self::locales::LocaleCommand;
 pub use self::maintenance::MaintenanceCommand;
 pub use self::network::NetworkCommand;
 pub use self::packages::PackagesCommand;
@@ -152,6 +146,33 @@ pub enum TweakCommand {
     Wifi(WifiBackend),
     Hblock(bool),
     Flag(GarudaUpdateFlag, bool),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum DiscoverCommand {
+    Toggle { app: String, wish: Toggle },
+    Reveal(String),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum LocaleCommand {
+    Toggle { entry: LocaleEntry, on: bool },
+    System(LocaleName),
+    TogglePack { package: PackageName, on: bool },
+    AddMissingPacks,
+    Refresh,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ConsoleCommand {
+    /// Uploads `0`, the output the user saw in the question and agreed to.
+    Share(String),
+    HideShare,
+    /// Updates the system, then runs the install that met a file its
+    /// mirror no longer has again, as one plan.
+    UpdateAndRetry,
+    /// Empties the terminal once no plan runs.
+    ClearOutput,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

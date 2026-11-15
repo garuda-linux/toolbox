@@ -51,7 +51,6 @@ diagnostics-lines =
     }
 diagnostics-collected = · collected { $time } UTC · { $lines }
 diagnostics-collected-unknown = · { $lines }
-diagnostics-wrap = Wrap lines
 diagnostics-search = Search the report
 diagnostics-search-clear = Clear the search
 

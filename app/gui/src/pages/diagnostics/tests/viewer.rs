@@ -1,4 +1,4 @@
-//! The viewer's search keeps the lines that hold it, Wrap cuts a long line
+//! The viewer's search keeps the lines that hold it, a long line wraps
 //! at the edge, and the rows fold while a report shows.
 
 use egui_kittest::kittest::Queryable as _;
@@ -31,12 +31,12 @@ fn the_search_keeps_only_the_lines_that_hold_it() {
 }
 
 #[test]
-fn wrap_cuts_a_long_line_into_rows_that_fit() {
-    let mut harness = page(with_long_line());
-    assert_eq!(harness.query_all_by_label_contains("xxxx").count(), 1);
-
-    harness.get_by_label("Wrap lines").click();
-    harness.run();
+fn a_long_line_wraps_into_rows_that_fit_and_nothing_scrolls_sideways() {
+    let harness = page(with_long_line());
+    assert!(
+        harness.query_by_label("Wrap lines").is_none(),
+        "the report always wraps"
+    );
 
     let report = harness.get_by_role(egui::accesskit::Role::Document).rect();
     let mut rows: Vec<egui::Rect> = Vec::new();

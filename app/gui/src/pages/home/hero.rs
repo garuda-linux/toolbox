@@ -5,6 +5,7 @@ use egui::{Label, Ui, vec2};
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, SMALL, Weight};
 use toolbox_gui_kit::widgets::{Tone, rich, status_dot};
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
+use toolbox_services::home::Overview;
 use toolbox_system::Host;
 
 use super::logo;
@@ -14,7 +15,12 @@ use crate::pages::PageContext;
 
 const LOGO_SIZE: f32 = 64.0;
 
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
+pub fn show(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    host: Option<&Host>,
+    overview: Option<&Overview<'_>>,
+) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     let live = host.is_some_and(|host| host.live_iso);
@@ -35,7 +41,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
             if live {
                 subtitle(ui, "home-subtitle");
             } else {
-                summary(ui, context, host);
+                summary(ui, context, host, overview);
             }
         });
     });
@@ -47,10 +53,16 @@ fn subtitle(ui: &mut Ui, id: &str) {
     ui.label(rich(ui, &text, Weight::Regular, BODY, tokens.secondary));
 }
 
-fn summary(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
-    let reading = context.home.status;
-    let Some(status) = reading.and_then(Loadable::get) else {
-        let checking = reading.is_some_and(Loadable::is_loading);
+/// The banner under the greeting names checks that could not run, so the
+/// greeting does not repeat it and makes no all clear either.
+fn summary(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    host: Option<&Host>,
+    overview: Option<&Overview<'_>>,
+) {
+    let Some(overview) = overview else {
+        let checking = context.home.status.is_some_and(Loadable::is_loading);
         subtitle(
             ui,
             if checking {
@@ -62,16 +74,16 @@ fn summary(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
         return;
     };
 
+    let reboot = host.is_some_and(|host| host.reboot_pending);
+    let count = attention_rows(overview, reboot);
+    if count == 0 && !overview.failed.is_empty() {
+        subtitle(ui, "home-subtitle");
+        return;
+    }
+
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let overview = super::status::overview(status, context);
-
-    let reboot = host.is_some_and(|host| host.reboot_pending);
-    let count = attention_rows(&overview, reboot);
-    let (text, tone) = if count == 0 && !overview.failed.is_empty() {
-        // Nothing found is no all clear while some checks could not run.
-        (i18n::text(&ctx, "home-summary-unknown"), Tone::Warning)
-    } else if count == 0 {
+    let (text, tone) = if count == 0 {
         (i18n::text(&ctx, "home-summary-fine"), Tone::Success)
     } else {
         let count = count.to_string();

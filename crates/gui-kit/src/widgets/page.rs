@@ -8,7 +8,7 @@ use body::Room;
 use egui::epaint::{Mesh, Vertex, WHITE_UV};
 use egui::{Color32, Rect, ScrollArea, Shape, Ui, UiBuilder, pos2, vec2};
 
-use super::layout::moved;
+use super::layout::{Redraw, remember};
 use crate::theme::CONTENT_WIDTH;
 use crate::{frost, motion, tokens};
 
@@ -40,10 +40,13 @@ impl Remembered {
 
     /// Redraws this frame when the height changed, so no frame shows the old height.
     fn update(self, ui: &Ui, height: f32, reason: &'static str) {
-        if moved(self.height, height) {
-            ui.data_mut(|data| data.insert_temp(self.id, height));
-            ui.ctx().request_discard(reason);
-        }
+        remember(
+            ui,
+            self.id,
+            Some(self.height),
+            height,
+            (Redraw::Discards, reason),
+        );
     }
 }
 

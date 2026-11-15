@@ -41,7 +41,7 @@ fn the_steppers_sit_inside_the_one_fill_at_its_ends() {
     let harness = shown(5);
     let less = harness.get_by_role_and_label(Role::Button, LESS).rect();
     let more = harness.get_by_role_and_label(Role::Button, MORE).rect();
-    let number = harness.get_by_role_and_label(Role::TextInput, NAME).rect();
+    let number = harness.get_by_role_and_label(Role::SpinButton, NAME).rect();
     let field = crate::tokens::current(&harness.ctx).field;
 
     let fill = filled_rects(&harness, field)
@@ -65,7 +65,7 @@ fn the_steppers_sit_inside_the_one_fill_at_its_ends() {
 #[test]
 fn the_number_and_its_unit_are_painted_between_the_steppers() {
     let harness = shown(5);
-    let number = harness.get_by_role_and_label(Role::TextInput, NAME).rect();
+    let number = harness.get_by_role_and_label(Role::SpinButton, NAME).rect();
 
     assert!(painted_text_within(&harness, "5", number).is_some());
     assert!(painted_text_within(&harness, "s", number).is_some());
@@ -91,11 +91,13 @@ fn the_steppers_step_by_one_and_stop_at_the_range() {
 fn a_typed_number_counts_once_enter_commits_it() {
     let mut harness = shown(5);
 
-    harness.get_by_role_and_label(Role::TextInput, NAME).click();
+    harness
+        .get_by_role_and_label(Role::SpinButton, NAME)
+        .click();
     harness.run();
     harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
     harness
-        .get_by_role_and_label(Role::TextInput, NAME)
+        .get_by_role_and_label(Role::SpinButton, NAME)
         .type_text("7");
     harness.key_press(Key::Enter);
     harness.run();

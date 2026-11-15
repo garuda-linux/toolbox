@@ -92,7 +92,7 @@ pub fn shown(snapshot: &Snapshot, changes: &ChangeSet) -> Option<Shown> {
     for (_, setting) in changes.queued::<GrubDefaults>() {
         match setting {
             GrubSetting::Default(entry) => entry.as_str().clone_into(&mut shown.default),
-            GrubSetting::Timeout(seconds) => shown.timeout = Some(i64::from(seconds.get())),
+            GrubSetting::Timeout(seconds) => shown.timeout = Some(i64::from(seconds)),
             GrubSetting::KernelParameters(list) => shown.parameters = Some(list),
             GrubSetting::Submenus(on) => shown.submenus = on,
             GrubSetting::SaveDefault(on) => shown.remember = on,

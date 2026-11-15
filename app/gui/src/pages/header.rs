@@ -43,6 +43,17 @@ pub fn title_header(ui: &mut Ui, title: &str, subtitle: &str) {
 
 /// Returns whether Read again was clicked or F5 pressed.
 pub fn refresh_header(ui: &mut Ui, title: &str, subtitle: &str, refresh: &str) -> bool {
+    refresh_header_reading(ui, (title, subtitle), refresh, false)
+}
+
+/// [`refresh_header`] whose Read again waits while `reading`, so a press
+/// shows that it was taken and F5 sends no second read.
+pub fn refresh_header_reading(
+    ui: &mut Ui,
+    (title, subtitle): (&str, &str),
+    refresh: &str,
+    reading: bool,
+) -> bool {
     let ctx = ui.ctx().clone();
     let mut pressed = false;
     page_header(
@@ -50,7 +61,7 @@ pub fn refresh_header(ui: &mut Ui, title: &str, subtitle: &str, refresh: &str) -
         &i18n::text(&ctx, title),
         &i18n::text(&ctx, subtitle),
         icon_button_width(ui),
-        |ui| pressed = refresh_button(ui, &i18n::text(&ctx, refresh)),
+        |ui| pressed = read_again(ui, &i18n::text(&ctx, refresh), reading),
     );
 
     pressed
@@ -60,20 +71,35 @@ pub fn tabbed_header<T>(ui: &mut Ui, ids: TabbedIds<'_>, tabs: &[T], current: T)
 where
     T: TabText,
 {
+    tabbed_header_reading(ui, ids, tabs, current, false)
+}
+
+/// [`tabbed_header`] whose Read again waits while `reading`.
+pub fn tabbed_header_reading<T>(
+    ui: &mut Ui,
+    ids: TabbedIds<'_>,
+    tabs: &[T],
+    current: T,
+    reading: bool,
+) -> Tabbed<T>
+where
+    T: TabText,
+{
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, ids.title);
     let subtitle = i18n::text(&ctx, ids.subtitle);
-    tabbed_header_of(ui, (&title, &subtitle), ids, tabs, current)
+    tabbed_header_of(ui, (&title, &subtitle), ids, (tabs, current), reading)
 }
 
-/// such as a package's name and description. `ids.title` and
-/// `ids.subtitle` are not read.
+/// A tabbed header whose title and subtitle are given as words rather
+/// than text ids, such as a package's name and description. `ids.title`
+/// and `ids.subtitle` are not read.
 pub fn tabbed_header_of<T>(
     ui: &mut Ui,
     (title, subtitle): (&str, &str),
     ids: TabbedIds<'_>,
-    tabs: &[T],
-    current: T,
+    (tabs, current): (&[T], T),
+    reading: bool,
 ) -> Tabbed<T>
 where
     T: TabText,
@@ -95,7 +121,7 @@ where
     page_header(ui, title, subtitle, width, |ui| {
         done.picked = segmented(ui, &i18n::text(&ctx, ids.tabs), &options, current);
         ui.add_space(ui.tokens().sizes.card_gap);
-        done.refresh = refresh_button(ui, &i18n::text(&ctx, ids.refresh));
+        done.refresh = read_again(ui, &i18n::text(&ctx, ids.refresh), reading);
     });
 
     done
@@ -121,4 +147,10 @@ pub fn search(ui: &mut Ui, text: &mut String, name: &str, hint: &str) -> Respons
 
 fn tabs_and_refresh_width(ui: &Ui, labels: &[&str]) -> f32 {
     segmented_width(ui, labels) + ui.tokens().sizes.card_gap + icon_button_width(ui)
+}
+
+/// A disabled Read again also leaves F5 alone, see `refresh_button`.
+fn read_again(ui: &mut Ui, name: &str, reading: bool) -> bool {
+    ui.add_enabled_ui(!reading, |ui| refresh_button(ui, name))
+        .inner
 }

@@ -146,7 +146,9 @@ pub fn setting(args: &BootSet, snapshot: &Snapshot) -> Result<Edit, Refused> {
     let change = match args.key {
         BootKey::Default => Edit::Default(value.to_owned()),
         BootKey::Timeout => Edit::Timeout(value.parse().map_err(|_nan| {
-            Refused::Rule(format!("`{value}` is no number of seconds, 0 to 300"))
+            Refused::Rule(format!(
+                "`{value}` is no number of seconds, 0 to 300, or -1 to wait for a key"
+            ))
         })?),
         BootKey::Remember => Edit::Remember {
             on: on_off(value)?,

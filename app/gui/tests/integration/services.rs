@@ -174,7 +174,7 @@ fn the_user_scope_says_why_it_has_no_units() {
 
     assert!(
         harness
-            .query_by_label("systemd is not reachable.")
+            .query_by_label("Your user's systemd is not reachable.")
             .is_some()
     );
 }

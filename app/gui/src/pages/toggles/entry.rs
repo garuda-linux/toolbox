@@ -114,7 +114,7 @@ pub fn show(
 
 /// The glyph on the page's tile. It fills the picture slot rather than an
 /// icon tile's edge, so the row lines up with the rows that have pictures.
-fn paint_glyph(ui: &Ui, at: Rect, glyph: Icon) {
+pub fn paint_glyph(ui: &Ui, at: Rect, glyph: Icon) {
     let tile = page_tile(ui.ctx());
     ui.painter()
         .rect_filled(at, CornerRadius::same(PICTURE_RADIUS), tile.fill);

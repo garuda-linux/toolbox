@@ -1,7 +1,7 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::features::users::account::AccountEdit;
-use toolbox_plan::FullName;
+use toolbox_plan::{FullName, HomeChange, HomeDirectory};
 
 use super::dialogs::type_into;
 use super::{name, page, sent, unlocked};
@@ -81,5 +81,41 @@ fn every_field_of_the_edit_dialog_keeps_one_gap_to_the_next() {
     assert!(
         (after_field - after_hint).abs() < 1.0,
         "{after_field} px after a field, {after_hint} px after a hint"
+    );
+}
+
+/// Moving files only means something for a new folder, so the choice and
+/// its warning wait for one.
+#[test]
+fn the_move_choice_shows_once_the_home_folder_changed() {
+    let mut harness = edit_dialog("ada, Ada Lovelace", "ada");
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::CheckBox, "Move the files to the new folder")
+            .is_none()
+    );
+    assert!(harness.query_by_label_contains("Applying this").is_none());
+
+    type_into(&mut harness, Role::TextInput, "Home folder", "2");
+    harness
+        .get_by_role_and_label(Role::CheckBox, "Move the files to the new folder")
+        .click();
+    harness.run();
+    harness.get_by_label("Queue changes").click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [Command::from(UserEdit::Set {
+            user: name("ada"),
+            edit: AccountEdit {
+                home: Some(HomeChange {
+                    home: HomeDirectory::new("/home/ada2").unwrap(),
+                    move_files: true,
+                }),
+                ..AccountEdit::default()
+            },
+        })]
     );
 }

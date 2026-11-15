@@ -21,7 +21,7 @@ use toolbox_gui_kit::icons::ThemeIcons;
 
 use super::files::{DesktopFiles, Read, is_look_file};
 use super::font_files::FontFinder;
-use super::icon_files::{AppIcons, SystemIcons, app_icons, theme_icons};
+use super::icon_files::{AppIcons, Indexed, SystemIcons, app_icons, theme_icons};
 use super::{DesktopLook, portal};
 use crate::spawn::spawn_logged;
 
@@ -52,6 +52,13 @@ struct Kept {
     apps: Option<Arc<AppIcons>>,
 }
 
+/// The apps the catalogs offer, whose pictures follow the icon theme, and
+/// the lookup the rows that ask as they show share.
+pub struct CatalogApps {
+    pub names: Arc<[String]>,
+    pub pictures: Arc<Indexed<SystemIcons>>,
+}
+
 /// Starts following the desktop. The receiver holds the newest look, the
 /// fallback until the first read lands.
 pub fn spawn(
@@ -59,13 +66,13 @@ pub fn spawn(
     ctx: Context,
     family: Family,
     files: DesktopFiles,
-    app_names: Arc<[String]>,
+    apps: CatalogApps,
 ) -> watch::Receiver<DesktopLook> {
     let (sender, receiver) = watch::channel(DesktopLook::default());
     spawn_logged(
         runtime,
         "desktop look",
-        follow(sender, ctx, family, files, app_names),
+        follow(sender, ctx, family, files, apps),
     );
     receiver
 }
@@ -75,7 +82,7 @@ async fn follow(
     ctx: Context,
     family: Family,
     files: DesktopFiles,
-    app_names: Arc<[String]>,
+    apps: CatalogApps,
 ) {
     let settings = portal::connect().await;
     let mut portal_changes = portal::changes(settings.as_ref()).await;
@@ -104,8 +111,8 @@ async fn follow(
 
         let look = DesktopLook {
             look: Look::resolve(&sources),
-            ui_fonts: read.ui_fonts,
-            fixed_font: read.fixed_font,
+            ui_fonts: read.ui_fonts.into(),
+            fixed_font: read.fixed_font.map(Arc::new),
             emoji_font: read.emoji_font,
             icons: kept.icons.clone(),
             app_icons: kept.apps.clone(),
@@ -121,10 +128,10 @@ async fn follow(
         if kept.apps.is_none()
             && let Some(theme) = kept.icons.as_ref().map(|icons| icons.theme().to_owned())
         {
-            let names = Arc::clone(&app_names);
+            let names = Arc::clone(&apps.names);
+            let pictures = Arc::clone(&apps.pictures);
             let found =
-                tokio::task::spawn_blocking(move || app_icons(&theme, &names, &SystemIcons::APPS))
-                    .await;
+                tokio::task::spawn_blocking(move || app_icons(&theme, &names, &pictures)).await;
 
             if let Ok(found) = found {
                 kept.apps = Some(Arc::new(found));

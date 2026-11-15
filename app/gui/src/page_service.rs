@@ -169,15 +169,15 @@ pub struct Services {
     pub locales: Locales,
     pub toggle_pages: TogglePages,
     pub units: Units,
-    /// Only pages read it: the pictures load as rows ask, beside the
-    /// frame, so App feeds it nothing.
+    /// The pictures load as rows ask, beside the frame, so App only tells
+    /// it of a plan's end.
     pub artwork: Artwork,
     pub waiting: Waiting,
 }
 
 impl Services {
     /// Every service, in the order App feeds them.
-    pub fn all_mut(&mut self) -> [&mut dyn PageService; 13] {
+    pub fn all_mut(&mut self) -> [&mut dyn PageService; 14] {
         [
             &mut self.home,
             &mut self.maintenance,
@@ -192,6 +192,7 @@ impl Services {
             &mut self.locales,
             &mut self.toggle_pages,
             &mut self.units,
+            &mut self.artwork,
         ]
     }
 

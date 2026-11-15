@@ -2,6 +2,7 @@ mod flood;
 mod focus;
 mod header;
 mod mirror;
+mod quit;
 mod settle;
 
 use std::sync::Arc;

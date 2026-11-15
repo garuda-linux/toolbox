@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use toolbox_plan::PackageName;
 use toolbox_state::packages::{InstallReason, LocalNode};
 
-use super::{dependency_name, orphans, takes_along};
+use super::{dependency_name, orphans, required_by, takes_along};
 
 fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap_or_else(|error| panic!("{text}: {error}"))
@@ -133,4 +133,33 @@ fn a_package_required_through_what_it_provides_is_no_orphan() {
     ];
 
     assert_eq!(orphans(&local).len(), 0);
+}
+
+#[test]
+fn the_packages_that_need_a_package_are_named_by_name() {
+    let local = [
+        explicit("gimp", &["gegl>=0.4", "glib2"]),
+        explicit("inkscape", &["glib2"]),
+        dependency("gegl", &["glib2"]),
+        dependency("glib2", &[]),
+    ];
+
+    assert_eq!(
+        required_by(&name("glib2"), &local),
+        names(&["gegl", "gimp", "inkscape"])
+    );
+    assert_eq!(required_by(&name("gimp"), &local), names(&[]));
+    assert_eq!(required_by(&name("kate"), &local), names(&[]));
+}
+
+#[test]
+fn a_package_needed_through_what_it_provides_names_its_users() {
+    let local = [
+        explicit("bash", &[]),
+        node("dash", InstallReason::Explicit, &[], &["sh"]),
+        explicit("makepkg", &["sh"]),
+    ];
+
+    assert_eq!(required_by(&name("bash"), &local), names(&[]));
+    assert_eq!(required_by(&name("dash"), &local), names(&["makepkg"]));
 }
