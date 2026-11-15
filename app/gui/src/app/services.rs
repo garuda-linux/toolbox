@@ -10,6 +10,7 @@ use toolbox_core::features::packages::aur::AurNames;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::Mode;
+use toolbox_services::locks::Locks;
 use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::Notification;
 
@@ -17,6 +18,7 @@ use super::App;
 use crate::apply::{ApplyCommand, Report};
 use crate::console::StepState;
 use crate::i18n;
+use crate::network::Read;
 use crate::page_service::Services;
 
 /// The program output one frame feeds to the Console's terminal. A
@@ -60,18 +62,16 @@ impl App {
 
         for report in reports {
             let finished = match report {
-                Report::PlanStarted { steps: _ } => {
-                    self.queue.plan_started();
-                    self.services_plan_started(ctx);
+                Report::PlanStarted { plan, steps: _ } => {
+                    self.services_plan_started(ctx, plan);
                     false
                 }
-                Report::Busy => {
-                    self.queue.plan_refused();
-                    self.services_plan_refused(ctx);
+                Report::Busy { plan } => {
+                    self.services_plan_refused(ctx, plan);
                     false
                 }
                 Report::Step(_) | Report::Problem(_) | Report::CancelWaits => false,
-                Report::PlanFinished { succeeded } => {
+                Report::PlanFinished { plan: _, succeeded } => {
                     self.plan_finished(ctx, succeeded);
                     true
                 }
@@ -164,15 +164,22 @@ impl App {
     }
 
     /// Why Apply waits, as the id of its text. A guard that has not
-    /// checked a restored change fails closed.
+    /// checked a restored change fails closed. A read that failed says
+    /// so, as the Changes popover then offers to read it again.
     pub(super) fn apply_held(&self) -> Option<&'static str> {
         if self.first_read() {
             return Some("changes-wait-read");
         }
 
         self.queue.holding().next().map(|guard| match guard {
-            Guard::UserLocks => "changes-wait-locks",
-            Guard::AurPackages => "changes-wait-aur",
+            Guard::UserLocks => match self.services.users.locks() {
+                Locks::Refused(_) | Locks::Unknown => "changes-unread-locks",
+                Locks::NotAsked | Locks::Loading | Locks::Known(_) => "changes-wait-locks",
+            },
+            Guard::AurPackages => match self.services.packages.aur() {
+                Read::Failed => "changes-unread-aur",
+                Read::Loading | Read::Unavailable | Read::Known(_) => "changes-wait-aur",
+            },
             Guard::Users
             | Guard::Memberships
             | Guard::Kernels

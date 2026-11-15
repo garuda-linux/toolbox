@@ -15,6 +15,8 @@ packages-filter-all = All
 
 packages-none = No packages to show
 packages-none-detail = The repositories offer none and none is installed.
+packages-updates-loading = Checking for updates…
+packages-updates-failed = Updates could not be checked.
 packages-no-updates = No pending updates
 packages-no-updates-detail = Home checks for updates. Installed packages with a newer version show here.
 packages-no-orphans = No orphans

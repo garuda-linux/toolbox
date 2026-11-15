@@ -5,10 +5,10 @@ use toolbox_plan::{PackageName, PlannedAction, RemoteAction, RootAction, Upgrade
 
 use super::{
     LaunchCause, OperationRow, PageTool, Repair, ToolRow, UPGRADE_SYSTEM, asks_first, install,
-    installed, operations, repairs, rescue_install, run_now_plan, task, tools, upgrader,
+    installed, missing, operations, repairs, rescue_install, run_now_plan, task, tools, upgrader,
 };
 use crate::domains::InstalledPackages;
-use crate::features::maintenance::{Operation, Operations, Program, Tool};
+use crate::features::maintenance::{Operation, Operations, Tool};
 use crate::test_support::package;
 use crate::{ChangeSet, Snapshot};
 
@@ -178,22 +178,50 @@ fn the_repairs_come_in_the_order_of_the_page() {
     );
 }
 
-#[test]
-fn a_missing_garuda_update_is_installed_by_one_step() {
-    let plan = rescue_install(Program::Missing).expect("a missing garuda-update has a plan");
-    let step = plan.steps().first().map(|step| &step.action);
-
-    assert_eq!(plan.steps().len(), 1);
-    assert!(matches!(
-        step,
-        Some(PlannedAction::Root(RootAction::InstallPackages { packages }))
-            if packages.iter().map(PackageName::as_str).eq(["garuda-update"])
-    ));
+fn installed_by(plan: &toolbox_plan::Plan) -> Vec<&str> {
+    match plan.steps().first().map(|step| &step.action) {
+        Some(PlannedAction::Root(RootAction::InstallPackages { packages })) => {
+            packages.iter().map(PackageName::as_str).collect()
+        }
+        Some(PlannedAction::Root(_) | PlannedAction::User(_)) | None => Vec::new(),
+    }
 }
 
 #[test]
-fn an_installed_garuda_update_needs_no_install() {
-    assert!(rescue_install(Program::Found).is_none());
+fn a_missing_garuda_update_is_installed_by_one_step() {
+    let rows = repairs(|path| path != Path::new(super::GARUDA_UPDATE_PROGRAM));
+    let plan = rescue_install(&rows).expect("a missing garuda-update has a plan");
+
+    assert_eq!(plan.steps().len(), 1);
+    assert_eq!(installed_by(&plan), ["garuda-update"]);
+}
+
+#[test]
+fn every_missing_package_is_named_once_and_installed_by_one_step() {
+    let rows = repairs(|_| false);
+    let named: Vec<&str> = missing(&rows)
+        .into_iter()
+        .map(PackageName::as_str)
+        .collect();
+
+    let plan = rescue_install(&rows).expect("missing packages have a plan");
+
+    assert_eq!(named, ["garuda-health", "garuda-update"]);
+    assert_eq!(plan.steps().len(), 1);
+    assert_eq!(installed_by(&plan), ["garuda-health", "garuda-update"]);
+}
+
+#[test]
+fn a_missing_garuda_health_alone_is_installed_too() {
+    let rows = repairs(|path| path == Path::new(super::GARUDA_UPDATE_PROGRAM));
+    let plan = rescue_install(&rows).expect("a missing garuda-health has a plan");
+
+    assert_eq!(installed_by(&plan), ["garuda-health"]);
+}
+
+#[test]
+fn installed_repair_programs_need_no_install() {
+    assert!(rescue_install(&repairs(|_| true)).is_none());
 }
 
 #[test]
@@ -266,6 +294,7 @@ fn each_repair_names_the_program_it_needs() {
             .find(|row| row.repair.key() == id)
             .unwrap()
             .needs
+            .to_string()
     };
 
     assert_eq!(needs("health-check"), "garuda-health");

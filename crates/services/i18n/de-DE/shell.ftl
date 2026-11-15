@@ -8,6 +8,11 @@ console-idle = Es werden keine Änderungen übernommen
 
 # The command palette (Ctrl+K).
 palette-search = Seiten und Befehle durchsuchen
+# Labels over the palette's groups of rows. The Maintenance group takes
+# the page's name.
+palette-group-pages = Seiten
+palette-group-commands = Befehle
+palette-group-apps = Apps
 command-apply = Änderungen übernehmen
 command-toggle-sidebar = Seitenleiste ein- oder ausblenden
 command-toggle-console = Konsole ein- oder ausblenden

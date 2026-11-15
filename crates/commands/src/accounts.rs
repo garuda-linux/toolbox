@@ -13,11 +13,10 @@ use toolbox_cli::args::{
     UserArgs, UsersCommand,
 };
 use toolbox_cli::confirm::Prompt;
-use toolbox_core::features::users::home::set_home;
+use toolbox_core::features::users::account::{AccountEdit, set_account};
 use toolbox_core::features::users::now::{new_user, plan_add_user, plan_set_password};
 use toolbox_core::features::users::{
-    Refusal, accounts, add_group, remove_group, remove_user, set_full_name, set_groups, set_locked,
-    set_shell, view,
+    Refusal, accounts, add_group, remove_group, remove_user, set_groups, set_locked, view,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{FullName, GroupName, HomeChange, HomeFolder, Password, Plan, UserName};
@@ -148,27 +147,18 @@ pub fn edit_onto(
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
     let user = &args.user;
-    let full_name = args.full_name.clone();
-    let shell = args.shell.clone();
     let wanted = wanted_groups(user, &args.add_groups, &args.remove_groups, snapshot)?;
-    let home = args.home.clone().map(|home| HomeChange {
-        home,
-        move_files: args.move_files,
-    });
+    let account = AccountEdit {
+        full_name: args.full_name.clone(),
+        shell: args.shell.clone(),
+        home: args.home.clone().map(|home| HomeChange {
+            home,
+            move_files: args.move_files,
+        }),
+    };
 
     page_edit(changes, snapshot, why::account, |changes, snapshot| {
-        if let Some(full_name) = full_name {
-            set_full_name(user, full_name, changes, snapshot)?;
-        }
-
-        if let Some(home) = home {
-            set_home(user, home, changes, snapshot)?;
-        }
-
-        if let Some(shell) = shell {
-            set_shell(user, shell, changes, snapshot)?;
-        }
-
+        set_account(user, account, changes, snapshot)?;
         wanted.map_or(Ok(()), |wanted| {
             set_groups(user, &wanted, changes, snapshot)
         })

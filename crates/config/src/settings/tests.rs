@@ -3,7 +3,8 @@ use std::time::Duration;
 
 use toolbox_plan::SchemeId;
 
-use super::{Language, Loaded, LogLevel, RefreshInterval, Settings};
+use super::{Language, Loaded, LogLevel, Settings};
+use crate::RefreshInterval;
 
 const INTERVALS: [(RefreshInterval, &str, Option<u64>); 8] = [
     (RefreshInterval::Off, "off", None),
@@ -132,17 +133,72 @@ fn refresh_intervals_read_from_their_short_names() {
 
 #[test]
 fn refresh_intervals_write_their_short_names() {
-    for (interval, text, _) in INTERVALS {
+    for (interval, text, _) in INTERVALS.into_iter().skip(1) {
         let mut settings = Settings::default();
-        settings.status.refresh = interval;
+        settings.status.set(interval);
 
         let written = toml::to_string_pretty(&settings).unwrap();
 
+        assert!(written.contains("automatic = true"), "{written}");
         assert!(
             written.contains(&format!("refresh = \"{text}\"")),
             "{written}"
         );
     }
+}
+
+#[test]
+fn checks_turned_off_keep_their_minutes_in_the_file() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("settings.toml");
+    let mut settings = Settings::default();
+    settings.status.set(RefreshInterval::Minutes(30));
+    settings.status.set(RefreshInterval::Off);
+
+    settings.save(&path).unwrap();
+
+    let written = fs::read_to_string(&path).unwrap();
+    assert!(written.contains("automatic = false"), "{written}");
+    assert!(written.contains("refresh = \"30m\""), "{written}");
+
+    let loaded = Settings::load(&path);
+    assert!(loaded.problem.is_none(), "{:?}", loaded.problem);
+    assert_eq!(loaded.settings.status.refresh, RefreshInterval::Off);
+    assert_eq!(
+        loaded.settings.status.turned(true),
+        RefreshInterval::Minutes(30)
+    );
+}
+
+#[test]
+fn the_flag_reads_beside_the_minutes() {
+    let off = load("[status]\nautomatic = false\nrefresh = \"45m\"\n");
+    let on = load("[status]\nautomatic = true\nrefresh = \"45m\"\n");
+
+    assert!(off.problem.is_none(), "{:?}", off.problem);
+    assert_eq!(off.settings.status.refresh, RefreshInterval::Off);
+    assert_eq!(off.settings.status.minutes(), 45);
+    assert_eq!(on.settings.status.refresh, RefreshInterval::Minutes(45));
+}
+
+#[test]
+fn an_older_file_without_the_flag_still_reads() {
+    let off = load("[status]\nrefresh = \"off\"\n");
+    let timed = load("[status]\nrefresh = \"45m\"\n");
+
+    assert!(off.problem.is_none(), "{:?}", off.problem);
+    assert_eq!(off.settings.status.refresh, RefreshInterval::Off);
+    assert_eq!(off.settings.status.minutes(), 60);
+    assert!(timed.problem.is_none(), "{:?}", timed.problem);
+    assert_eq!(timed.settings.status.refresh, RefreshInterval::Minutes(45));
+}
+
+#[test]
+fn an_older_off_beside_a_bad_field_stays_off() {
+    let loaded = load("[general]\nlog_level = \"loud\"\n[status]\nrefresh = \"off\"\n");
+
+    assert!(loaded.problem.is_some());
+    assert_eq!(loaded.settings.status.refresh, RefreshInterval::Off);
 }
 
 #[test]

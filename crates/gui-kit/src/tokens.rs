@@ -31,6 +31,10 @@ const SECONDARY_CONTRAST: f32 = 4.5;
 const LIGHT_SECONDARY_CONTRAST: f32 = 6.0;
 /// WCAG 1.4.11 for text no one reads and the edge of a control.
 pub(crate) const DIM_CONTRAST: f32 = 3.0;
+/// The dialog scrim's darkness. The blurred light window turns muddy grey
+/// under more, the dark one needs more to step back behind the dialog.
+const LIGHT_DIALOG_SCRIM: f32 = 0.25;
+const DARK_DIALOG_SCRIM: f32 = 0.45;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Tokens {
@@ -43,6 +47,9 @@ pub struct Tokens {
     pub card: Color32,
     pub raised: Color32,
     pub field: Color32,
+    /// A Soft button's fill on a dialog. The field fill all but melts into
+    /// a dark dialog, a white one already sets it apart.
+    pub field_on_raised: Color32,
     pub hover: Color32,
     pub pressed: Color32,
     pub outline: Color32,
@@ -85,6 +92,8 @@ pub struct Tokens {
     pub frost_raised: Color32,
     /// Thinner than `frost_raised`, as the blur under it shows through.
     pub frost_raised_blurred: Color32,
+    /// Over the blurred window under a dialog.
+    pub scrim: Color32,
     pub shadow: Color32,
     pub tiles: Tiles,
     pub sizes: Sizes,
@@ -98,7 +107,6 @@ impl Tokens {
         let (card, accent) = (surfaces.card, palette.accent);
         let text = readable(ink, card, TEXT_CONTRAST);
 
-        let error = fitted(palette.error, &surfaces.under_text(), SECONDARY_CONTRAST);
         let secondary = surfaces.secondary(text, theme);
 
         let (tint, tint_pressed) = tints(card, accent, theme);
@@ -109,7 +117,7 @@ impl Tokens {
         let sidebar = surfaces.window.blend(header_scrim);
 
         let soft = mix(card, accent, 0.16);
-        let on_error = readable(card, error, SECONDARY_CONTRAST);
+        let (error, on_error, error_hover, error_pressed) = error_inks(palette.error, &surfaces);
 
         let (accent_hover, accent_pressed, terminal, shadow) =
             shades(theme, accent, &surfaces, base, ink);
@@ -125,6 +133,7 @@ impl Tokens {
             card,
             raised: card,
             field: surfaces.field,
+            field_on_raised: surfaces.field_on_raised,
             hover: surfaces.hover,
             pressed: surfaces.pressed,
             outline: surfaces.outline,
@@ -147,8 +156,8 @@ impl Tokens {
             warning: fitted(palette.warning, &surfaces.under_text(), SECONDARY_CONTRAST),
             error,
             on_error,
-            error_hover: mix(error, on_error, 0.12),
-            error_pressed: mix(error, on_error, 0.22),
+            error_hover,
+            error_pressed,
             track_hover: track_hover(theme, surfaces.pressed, text),
             terminal,
             terminal_glass,
@@ -157,6 +166,7 @@ impl Tokens {
             header_scrim,
             frost_raised: veil(card, secondary),
             frost_raised_blurred: thin(card, secondary, &surfaces.under_blur(sidebar, accent)),
+            scrim: dialog_scrim(theme),
             shadow,
             tiles: Tiles::derive(card, palette, text, theme),
             sizes: Sizes::DEFAULT,
@@ -171,6 +181,7 @@ struct Surfaces {
     pane: Color32,
     card: Color32,
     field: Color32,
+    field_on_raised: Color32,
     hover: Color32,
     pressed: Color32,
     outline: Color32,
@@ -213,15 +224,20 @@ impl Surfaces {
                 pane: mix(base, Color32::BLACK, 0.2),
                 card: mix(base, Color32::BLACK, 0.08),
                 field: mix(base, ink, 0.03),
+                // Halfway to the hover fill, so a hover still shows a step.
+                field_on_raised: mix(base, ink, 0.055),
                 hover: mix(base, ink, 0.08),
                 pressed: mix(base, ink, 0.14),
                 outline: mix(base, ink, 0.1),
             },
+            // The window stays near the desktop's colour, so white cards
+            // stand out from it.
             Theme::Light => Self {
-                window: mix(base, Color32::WHITE, 0.55),
+                window: mix(base, Color32::WHITE, 0.35),
                 pane: base,
                 card: Color32::WHITE,
                 field: mix(base, ink, 0.05),
+                field_on_raised: mix(base, ink, 0.05),
                 hover: mix(base, ink, 0.1),
                 pressed: mix(base, ink, 0.16),
                 outline: mix(base, ink, 0.12),
@@ -283,6 +299,19 @@ const fn secondary_contrast(theme: Theme) -> f32 {
     }
 }
 
+/// The error colour fitted to every surface text sits on, the text on an
+/// error fill, and that fill under the pointer and pressed.
+fn error_inks(error: Color32, surfaces: &Surfaces) -> (Color32, Color32, Color32, Color32) {
+    let error = fitted(error, &surfaces.under_text(), SECONDARY_CONTRAST);
+    let on_error = readable(surfaces.card, error, SECONDARY_CONTRAST);
+    (
+        error,
+        on_error,
+        mix(error, on_error, 0.12),
+        mix(error, on_error, 0.22),
+    )
+}
+
 fn tints(card: Color32, accent: Color32, theme: Theme) -> (Color32, Color32) {
     let tint = mix(card, accent, tint_share(theme));
     (tint, mix(tint, accent, 0.15))
@@ -293,8 +322,18 @@ fn tints(card: Color32, accent: Color32, theme: Theme) -> (Color32, Color32) {
 const fn tint_share(theme: Theme) -> f32 {
     match theme {
         Theme::Dark => 0.10,
-        Theme::Light => 0.24,
+        Theme::Light => 0.27,
     }
+}
+
+/// Black in both themes, so the window steps back behind the dialog.
+fn dialog_scrim(theme: Theme) -> Color32 {
+    let share = match theme {
+        Theme::Dark => DARK_DIALOG_SCRIM,
+        Theme::Light => LIGHT_DIALOG_SCRIM,
+    };
+
+    Color32::BLACK.gamma_multiply(share)
 }
 
 /// `color` moved until it reaches `ratio` on each of `fills`, which share

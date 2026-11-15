@@ -33,7 +33,9 @@ impl App {
             Program::of_found(self.services.home.garuda_update()),
         );
 
-        self.run_at_once(plan);
+        if self.run_at_once(plan).is_none() {
+            self.services.home.set_problem(Some(HomeProblem::Busy));
+        }
     }
 
     /// The installer asks for root itself. The launcher is shared with

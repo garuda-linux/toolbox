@@ -6,7 +6,7 @@ use egui::text::CCursor;
 use egui::{Align, Frame, Margin, Response, ScrollArea, Shape, TextEdit, Ui};
 
 use super::field::{PADDING_X, paint_field};
-use crate::theme::RADIUS;
+use crate::theme::CONTROL_RADIUS;
 
 /// Room above and below the text, so its first line does not touch the
 /// box's top.
@@ -90,7 +90,7 @@ fn boxed(
         ui,
         fill_slot,
         framed.response.rect,
-        RADIUS,
+        CONTROL_RADIUS,
         response.has_focus(),
     );
 

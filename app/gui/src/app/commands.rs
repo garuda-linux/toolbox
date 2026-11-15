@@ -3,9 +3,10 @@
 use toolbox_plan::Plan;
 
 use super::App;
-use crate::apply::ApplyCommand;
+use crate::apply::{ApplyCommand, PlanId};
 use crate::command::{AppCommand, Command, Sent, UiCommand};
 use crate::page::PageId;
+use crate::page_service::Owner;
 use crate::page_ui;
 
 impl App {
@@ -168,29 +169,45 @@ impl App {
 
     /// Runs `plan` past the queue and opens the Console, which shows the
     /// run. A plan that runs already keeps it, and the buttons wait for its
-    /// end. Returns whether `plan` was sent.
-    pub(super) fn run_at_once(&mut self, plan: Plan) -> bool {
+    /// end. Returns the id `plan` was sent under, `None` when it was not.
+    pub(super) fn run_at_once(&mut self, plan: Plan) -> Option<PlanId> {
         if self.console.running() {
-            return false;
+            return None;
         }
 
         self.state.console_open = true;
         self.changes_ui.open = false;
-        self.console.plan_sent(&plan);
-        self.to_service(ApplyCommand::Run(plan));
-        true
+        Some(self.send_plan(plan))
+    }
+
+    /// [`Self::run_at_once`] for a plan whose start `owner` waits for.
+    /// Returns whether `plan` was sent.
+    pub(super) fn run_owned(&mut self, plan: Plan, owner: Owner) -> bool {
+        let sent = self.run_at_once(plan);
+        if let Some(id) = sent {
+            self.services.waiting.sent(id, owner);
+        }
+
+        sent.is_some()
     }
 
     /// Runs `plan` past the queue with the Console closed, for a page that
-    /// shows the outcome itself. Returns whether `plan` was sent.
-    pub(super) fn run_unseen(&mut self, plan: Plan) -> bool {
+    /// shows the outcome itself and waits for the start as `owner`.
+    /// Returns whether `plan` was sent.
+    pub(super) fn run_unseen(&mut self, plan: Plan, owner: Owner) -> bool {
         if self.console.running() {
             return false;
         }
 
-        self.console.plan_sent(&plan);
-        self.to_service(ApplyCommand::Run(plan));
+        let id = self.send_plan(plan);
+        self.services.waiting.sent(id, owner);
         true
+    }
+
+    fn send_plan(&mut self, plan: Plan) -> PlanId {
+        let id = self.console.plan_sent(&plan);
+        self.to_service(ApplyCommand::Run { id, plan });
+        id
     }
 
     /// Opens the Console, so the password dialog and the output are seen.
@@ -209,9 +226,9 @@ impl App {
 
         // The Console shows the run, the list would only cover it.
         self.changes_ui.open = false;
-        self.console.plan_sent(&plan);
         self.queue.sent(&plan);
-        self.to_service(ApplyCommand::Run(plan));
+        let id = self.send_plan(plan);
+        self.services.waiting.sent(id, Owner::Queue);
         true
     }
 

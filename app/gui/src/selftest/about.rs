@@ -1,6 +1,6 @@
-//! The About page: the facts and the links show, and the exorcist answers
-//! in a dialog that Escape closes. No link is clicked, a run must not open
-//! the browser.
+//! The About page: the hero, the facts and the links show, the system
+//! details are copied, and the exorcist answers in a dialog that Escape
+//! closes. No link is clicked, a run must not open the browser.
 
 use egui::Key;
 
@@ -11,9 +11,11 @@ pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
         Step::tab("About"),
-        Step::wait("Version"),
+        Step::wait("Copy system details"),
         Step::wait("Garuda Linux wiki"),
         Step::Shot("about"),
+        Step::button("Copy system details"),
+        Step::wait("Copied the system details to the clipboard."),
         Step::button("Call the exorcist"),
         Step::WaitContaining("special voodoo"),
         Step::wait("Issue tracker"),

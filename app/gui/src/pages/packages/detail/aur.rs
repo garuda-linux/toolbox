@@ -8,12 +8,11 @@ use toolbox_core::features::packages::aur::{AurCatalog, AurPackage};
 use toolbox_core::features::packages::detail::target;
 use toolbox_core::features::packages::graph::dependency_name;
 use toolbox_core::features::packages::list::Catalog;
-use toolbox_gui_kit::UiExt as _;
 use toolbox_plan::PackageName;
 
 use super::super::PackagesPage;
 use super::super::aur::row::AurRow;
-use super::{below, catalog, gone, header_of, loading, rule, split};
+use super::{below, catalog, gone, group_gap, header_of, loading, split};
 use crate::packages::Packages;
 use crate::pages::PageContext;
 
@@ -72,9 +71,9 @@ pub fn body(
     }
 
     if let (Some(info), Some(details)) = (local, details) {
-        rule(ui);
+        group_gap(ui);
         below::files(page, ui, context, info);
-        ui.add_space(ui.tokens().sizes.section_gap);
+        group_gap(ui);
         below::history(page, ui, context, details);
     }
 }

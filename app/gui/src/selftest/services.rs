@@ -11,7 +11,7 @@ pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
         Step::shortcut(Key::Num7),
-        Step::wait("Hide inactive"),
+        Step::wait("Search services"),
         Step::WaitGone("Reading the services…"),
         Step::Shot("services"),
         Step::click("User"),

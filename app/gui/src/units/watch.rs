@@ -1,6 +1,9 @@
-//! Live updates: one watcher per bus asks for a fresh list on every
-//! systemd signal. Without a bus the page still lists on request, only
-//! live updates wait for the bus to come back.
+//! Live updates: one watcher per bus asks for a fresh list whenever the
+//! set of units or their files change.
+//!
+//! Without a bus the page still lists on request, only live updates wait
+//! for the bus to come back. The watchers start once a page that shows
+//! units opened.
 
 #[cfg(test)]
 mod tests;
@@ -11,12 +14,25 @@ use futures_lite::StreamExt as _;
 use tokio::runtime::Handle;
 use tokio::time::Instant;
 use toolbox_plan::UnitScope;
-use toolbox_system::systemd::{SUBSCRIBE, SYSTEMD_DESTINATION};
-use toolbox_system::{CallError, call, classify, connect};
-use zbus::{MatchRule, MessageStream};
+use toolbox_system::systemd::{MANAGER_INTERFACE, MANAGER_PATH, SUBSCRIBE, SYSTEMD_DESTINATION};
+use toolbox_system::{CallError, call, classify, forget_shared, shared};
+use zbus::{Connection, MatchRule, MessageStream};
 
 use super::UnitRequests;
 use crate::spawn::spawn_logged;
+
+/// The manager's signals that change what the lists show.
+///
+/// A unit loaded or gone, a job's end (a start, stop or restart), changed
+/// unit files and a reload. Property changes of single units, which
+/// transient scopes and timers send all the time, list nothing.
+pub const RELISTING: [&str; 5] = [
+    "UnitNew",
+    "UnitRemoved",
+    "JobRemoved",
+    "UnitFilesChanged",
+    "Reloading",
+];
 
 /// Live updates retry this long between attempts, doubling each time.
 const FIRST_RETRY: Duration = Duration::from_secs(1);
@@ -57,11 +73,13 @@ impl Backoff {
     }
 }
 
-/// Starts a watcher for each bus. They run as long as the app.
+/// Starts a watcher for each bus, which waits for the first page that
+/// shows units. They run as long as the app.
 pub fn spawn(runtime: &Handle, requests: &UnitRequests) {
     for scope in [UnitScope::System, UnitScope::User] {
         let requests = requests.clone();
         spawn_logged(runtime, "unit watch", async move {
+            requests.opened().await;
             watch_with(scope, &requests, || live(scope, requests.clone())).await;
         });
     }
@@ -99,23 +117,36 @@ where
     }
 }
 
-/// One live stream: subscribes and reports signals until the bus drops.
-/// A fresh stream lists again, so a reconnect never shows stale units.
+/// One live stream on the connection the lists share: subscribes and
+/// reports signals until the bus drops. A fresh stream lists again, so a
+/// reconnect never shows stale units. Its end drops the connection, so
+/// the next one connects again.
 async fn live(scope: UnitScope, requests: UnitRequests) -> Result<(), CallError> {
-    let connection = connect(scope).await?;
+    let ended = follow(scope, &requests).await;
+    forget_shared(scope);
+    ended
+}
+
+async fn follow(scope: UnitScope, requests: &UnitRequests) -> Result<(), CallError> {
+    let connection = shared(scope).await?;
 
     // systemd only sends its manager signals to subscribed clients.
     call::<_, ()>(&connection, &SUBSCRIBE, &()).await?;
 
-    let rule = MatchRule::builder()
-        .msg_type(zbus::message::Type::Signal)
-        .sender(SYSTEMD_DESTINATION)
-        .build()
-        .map_err(|error| classify(&error))?;
+    let [
+        unit_new,
+        unit_removed,
+        job_removed,
+        files_changed,
+        reloading,
+    ] = RELISTING;
 
-    let mut signals = MessageStream::for_match_rule(rule, &connection, None)
-        .await
-        .map_err(|error| classify(&error))?;
+    let mut signals = manager_signal(&connection, unit_new)
+        .await?
+        .or(manager_signal(&connection, unit_removed).await?)
+        .or(manager_signal(&connection, job_removed).await?)
+        .or(manager_signal(&connection, files_changed).await?)
+        .or(manager_signal(&connection, reloading).await?);
 
     requests.refresh(scope);
     while signals.next().await.is_some() {
@@ -123,4 +154,24 @@ async fn live(scope: UnitScope, requests: UnitRequests) -> Result<(), CallError>
     }
 
     Ok(())
+}
+
+/// The manager's signal `member`, matched by the bus, so other signals
+/// never wake the app.
+async fn manager_signal(
+    connection: &Connection,
+    member: &'static str,
+) -> Result<MessageStream, CallError> {
+    let rule = MatchRule::builder()
+        .msg_type(zbus::message::Type::Signal)
+        .sender(SYSTEMD_DESTINATION)
+        .path(MANAGER_PATH)
+        .interface(MANAGER_INTERFACE)
+        .member(member)
+        .build()
+        .map_err(|error| classify(&error))?;
+
+    MessageStream::for_match_rule(rule, connection, None)
+        .await
+        .map_err(|error| classify(&error))
 }

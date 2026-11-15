@@ -58,6 +58,7 @@ maintenance-problem-mirrors-timeout = Ranking the Chaotic-AUR mirrors took longe
 maintenance-problem-mirrors-start = The ranking program rate-mirrors could not be started, so the Chaotic-AUR mirrors were not ranked: { $reason }
 maintenance-problem-mirrors-exit = Ranking the Chaotic-AUR mirrors failed, so their list is unchanged. Check your internet connection and try again.
 maintenance-problem-mirrors-invalid = Ranking gave no usable list of mirrors. The Chaotic-AUR list is unchanged.
+maintenance-problem-busy = Other changes are still being applied, so this did not start. Start it again once they are done.
 maintenance-problem-dismiss = Dismiss
 
 maintenance-reset = Application settings
@@ -81,8 +82,13 @@ maintenance-reset-confirm = Reset
 
 maintenance-repairs = Repairs
 maintenance-repairs-detail = Each repair runs in the Console, where it can ask its questions.
-maintenance-repairs-missing = The greyed out repairs below need garuda-update, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.
-maintenance-install-garuda-update = Install garuda-update
+# $packages lists the missing packages, separated by commas. $count is
+# how many they are.
+maintenance-repairs-missing = { $count ->
+    [one] The greyed out repairs below need { $packages }, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.
+   *[other] The greyed out repairs below need { $packages }, which are not installed. Installing them unlocks the repairs. It starts at once in the Console and asks for your password.
+}
+maintenance-install-missing = Install { $packages }
 maintenance-run = Run
 maintenance-repair-health-check = System health check
 maintenance-repair-health-check-detail = Look for common problems with garuda-health.

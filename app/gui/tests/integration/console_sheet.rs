@@ -62,9 +62,9 @@ fn the_page_above_the_console_still_takes_clicks() {
                 && node
                     .accesskit_node()
                     .label()
-                    .is_some_and(|label| label.contains("Setup Assistant"))
+                    .is_some_and(|label| label.starts_with("Updates"))
         })
-        .expect("the Setup Assistant tile above the sheet");
+        .expect("the Updates tile above the sheet");
 
     tile.click();
     harness.run();
@@ -75,7 +75,7 @@ fn the_page_above_the_console_still_takes_clicks() {
     );
     assert!(
         harness
-            .query_by_label_contains("Select the software")
+            .query_by_label_contains("Keep the system in a good state")
             .is_some(),
         "the click reached the page"
     );
@@ -96,6 +96,75 @@ fn the_grip_bar_drags_the_sheet_taller() {
     let taller = pane(&harness, "Console").expect("open");
 
     assert!(taller.top() < sheet.top() - 80.0, "{taller:?} {sheet:?}");
+}
+
+fn focus_grip(harness: &mut Harness<'static, App>) {
+    harness
+        .get_by_role_and_label(Role::Splitter, "Resize the Console")
+        .focus();
+    harness.run();
+}
+
+fn press(harness: &mut Harness<'static, App>, key: Key) -> egui::Rect {
+    harness.key_press(key);
+    harness.run();
+    pane(harness, "Console").expect("open")
+}
+
+#[test]
+fn up_and_down_on_the_focused_grip_resize_the_sheet() {
+    let mut harness = app();
+    let sheet = open_console(&mut harness);
+    focus_grip(&mut harness);
+
+    let taller = press(&mut harness, Key::ArrowUp);
+    assert!(taller.top() < sheet.top() - 8.0, "{taller:?} {sheet:?}");
+
+    let back = press(&mut harness, Key::ArrowDown);
+    assert!((back.top() - sheet.top()).abs() < 1.0, "{back:?} {sheet:?}");
+    assert!(
+        harness
+            .get_by_role_and_label(Role::Splitter, "Resize the Console")
+            .is_focused(),
+        "the arrows kept the focus on the grip"
+    );
+}
+
+#[test]
+fn home_and_end_take_the_sheet_to_its_most_and_least_height() {
+    let mut harness = app();
+    let sheet = open_console(&mut harness);
+    focus_grip(&mut harness);
+
+    let most = press(&mut harness, Key::Home);
+    let least = press(&mut harness, Key::End);
+
+    assert!(most.top() < sheet.top() - 80.0, "{most:?} {sheet:?}");
+    assert!(least.top() > sheet.top() + 80.0, "{least:?} {sheet:?}");
+    assert!(pane(&harness, "Console").is_some(), "End leaves it open");
+}
+
+#[test]
+fn the_focused_grip_shows_its_ring_and_tells_its_height() {
+    let mut harness = app();
+    open_console(&mut harness);
+    focus_grip(&mut harness);
+
+    let grip = harness.get_by_role_and_label(Role::Splitter, "Resize the Console");
+    let ring = toolbox_gui_kit::tokens::current(&harness.ctx).accent_ring;
+    let rect = grip.rect();
+    let share = grip.accesskit_node().numeric_value();
+
+    assert!(
+        toolbox_gui_kit::testing::rims_in(&harness, ring)
+            .iter()
+            .any(|(rim, _)| rim.intersects(rect)),
+        "no ring on the grip at {rect:?}"
+    );
+    assert!(
+        share.is_some_and(|share| share > 50.0_f64 && share <= 100.0_f64),
+        "{share:?}"
+    );
 }
 
 #[test]

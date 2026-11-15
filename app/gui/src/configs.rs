@@ -123,6 +123,21 @@ impl Configs {
         &self.viewing
     }
 
+    /// The user edited a file and has not written it yet, so closing the
+    /// window would drop the edit.
+    pub const fn unapplied(&self) -> bool {
+        matches!(self.session.phase(), Phase::Comparing | Phase::Review)
+    }
+
+    /// The window closes. The private copies go now, as one may hold the
+    /// text of a file only root reads. It blocks, which the end of the
+    /// app allows.
+    pub fn leave(&self) {
+        if let Some(jobs) = &self.jobs {
+            jobs.clear_copies();
+        }
+    }
+
     /// The page shows: its first look lists the files.
     pub fn open(&mut self) {
         if self.listing.is_none() && !self.listing_asked {

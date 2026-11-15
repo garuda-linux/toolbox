@@ -1,4 +1,4 @@
-//! Pill buttons in four strengths and the frameless icon button.
+//! Buttons in four strengths and the frameless icon button.
 //!
 //! One rule for every page, so a button's weight tells what it does:
 //!
@@ -18,16 +18,17 @@
 //!   `ActionRow` do this.
 
 use egui::{
-    Color32, CornerRadius, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo, vec2,
+    Color32, CornerRadius, Id, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo,
+    vec2,
 };
 
 use super::card::on_raised;
-use super::press::{Pointer, faded};
+use super::press::Pointer;
 use super::{focus_ring, line};
 use crate::fonts::{BODY, Weight};
 use crate::icons::Icon;
 use crate::motion;
-use crate::theme::{PILL_HEIGHT, PILL_RADIUS, RADIUS};
+use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, RADIUS};
 use crate::tokens::{self, Tokens};
 use crate::ui_ext::icon_image;
 
@@ -72,6 +73,15 @@ impl ButtonKind {
         }
     }
 
+    /// The fill at rest. On a dialog a Soft button takes `field_on_raised`.
+    const fn rest_fill(self, tokens: &Tokens, on_dialog: bool) -> Color32 {
+        if on_dialog && matches!(self, Self::Soft) {
+            tokens.field_on_raised
+        } else {
+            self.fill(tokens, Pointer::Rest)
+        }
+    }
+
     /// A press shows at once, as the finger expects it.
     fn fill_now(self, ui: &Ui, response: &Response, tokens: &Tokens) -> Color32 {
         let pointer = Pointer::of(response);
@@ -84,7 +94,7 @@ impl ButtonKind {
             ui.ctx()
                 .animate_bool_with_time(response.id.with("hover"), pointer.is_under(), seconds);
 
-        self.fill(tokens, Pointer::Rest)
+        self.rest_fill(tokens, on_raised_surface(ui))
             .lerp_to_gamma(self.fill(tokens, Pointer::Hovered), hover)
     }
 }
@@ -127,29 +137,23 @@ fn pill(ui: &mut Ui, text: &str, kind: ButtonKind, rimmed: bool, width: f32) -> 
     response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), text));
 
     if ui.is_rect_visible(rect) {
+        // A disabled Ui fades the button's own colours, the rule in
+        // `press.rs`, so a Ghost stays without a fill.
         let (fill, ink) = (kind.fill_now(ui, &response, &tokens), kind.ink(&tokens));
-
-        // A disabled button of any kind turns quiet, so it reads as
-        // waiting. A faded accent fill would leave its label unreadable.
-        let (fill, ink) = if ui.is_enabled() {
-            (fill, ink)
-        } else {
-            (tokens.field, tokens.secondary)
-        };
 
         // A focused button shows the ring alone. A rim inside it would
         // draw a second outline a few points in.
         let rim = if rimmed && !response.has_focus() {
-            Stroke::new(1.0, faded(tokens.rim, ui.is_enabled()))
+            Stroke::new(1.0, tokens.rim)
         } else {
             Stroke::NONE
         };
 
         ui.painter()
-            .rect(rect, PILL_RADIUS, fill, rim, StrokeKind::Inside);
+            .rect(rect, CONTROL_RADIUS, fill, rim, StrokeKind::Inside);
         let position = rect.center() - galley.size() / 2.0;
         ui.painter().galley(position, galley, ink);
-        focus_ring(ui, &response, PILL_RADIUS);
+        focus_ring(ui, &response, CONTROL_RADIUS);
     }
 
     response
@@ -230,6 +234,23 @@ pub fn refresh_button(ui: &mut Ui, name: &str) -> bool {
         free && ui.input_mut(|input| input.consume_key(egui::Modifiers::NONE, egui::Key::F5));
 
     clicked || pressed
+}
+
+/// Marks `ui` as a dialog's surface, so the Soft buttons in it take
+/// `field_on_raised`.
+pub(super) fn mark_raised_surface(ui: &Ui) {
+    ui.data_mut(|data| data.insert_temp(raised_surface_id(ui.scope_id()), true));
+}
+
+fn on_raised_surface(ui: &Ui) -> bool {
+    ui.stack().iter().any(|frame| {
+        ui.data(|data| data.get_temp::<bool>(raised_surface_id(frame.scope_id)))
+            .unwrap_or(false)
+    })
+}
+
+fn raised_surface_id(scope: Id) -> Id {
+    scope.with("toolbox_gui_kit::raised_surface")
 }
 
 pub(super) fn glyph_size(image: &egui::Image<'_>) -> egui::Vec2 {

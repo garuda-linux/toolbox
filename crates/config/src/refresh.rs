@@ -1,6 +1,11 @@
-//! How often the system status is checked again: `"off"`, or minutes
-//! written as `"45m"`, whole hours as `"3h"`, so the files older versions
-//! wrote (`30m`, `1h`, `3h`, `6h`) read and write unchanged.
+//! How often the system status is checked again: minutes written as
+//! `"45m"`, whole hours as `"3h"`, so the files older versions wrote (`30m`,
+//! `1h`, `3h`, `6h`) read and write unchanged.
+//!
+//! The `[status]` section keeps the on and off flag beside the minutes, so
+//! turning the checks off and on again keeps a custom period. Files of
+//! older versions had no flag and wrote `refresh = "off"` instead, which
+//! still reads as off at the usual hour.
 
 use std::fmt;
 use std::time::Duration;
@@ -24,9 +29,102 @@ pub enum RefreshInterval {
     Minutes(u16),
 }
 
+/// The `[status]` section of the settings file.
+///
+/// Change `refresh` through [`Status::set`], so the minutes survive while
+/// the checks are off.
+#[derive(Clone, Debug, Eq, Serialize, Deserialize)]
+#[serde(from = "StatusFile", into = "StatusFile")]
+pub struct Status {
+    pub refresh: RefreshInterval,
+    /// The minutes of the last timed interval, read only while `refresh` is
+    /// off. [`Status::minutes`] is the value to show.
+    pub kept: u16,
+}
+
+/// The section as written: the flag first, then the minutes.
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize)]
+#[serde(default)]
+struct StatusFile {
+    /// `None` in a file of an older version, which had no flag.
+    automatic: Option<bool>,
+    refresh: RefreshInterval,
+}
+
 impl Default for RefreshInterval {
     fn default() -> Self {
         Self::Minutes(DEFAULT_MINUTES)
+    }
+}
+
+impl Default for Status {
+    fn default() -> Self {
+        Self {
+            refresh: RefreshInterval::default(),
+            kept: DEFAULT_MINUTES,
+        }
+    }
+}
+
+/// Two sections are equal when they write the same file, whatever an
+/// assignment to `refresh` left in the kept minutes.
+impl PartialEq for Status {
+    fn eq(&self, other: &Self) -> bool {
+        self.refresh == other.refresh && self.minutes() == other.minutes()
+    }
+}
+
+impl Status {
+    /// The minutes the checks run at while on, kept while they are off.
+    pub const fn minutes(&self) -> u16 {
+        match self.refresh {
+            RefreshInterval::Minutes(minutes) => minutes,
+            RefreshInterval::Off => self.kept,
+        }
+    }
+
+    pub const fn set(&mut self, refresh: RefreshInterval) {
+        if let RefreshInterval::Minutes(minutes) = refresh {
+            self.kept = minutes;
+        }
+
+        self.refresh = refresh;
+    }
+
+    /// The interval of the checks turned on at the kept minutes, or off.
+    pub const fn turned(&self, on: bool) -> RefreshInterval {
+        if on {
+            RefreshInterval::Minutes(self.minutes())
+        } else {
+            RefreshInterval::Off
+        }
+    }
+}
+
+impl From<StatusFile> for Status {
+    fn from(file: StatusFile) -> Self {
+        let kept = match file.refresh {
+            RefreshInterval::Minutes(minutes) => minutes,
+            RefreshInterval::Off => DEFAULT_MINUTES,
+        };
+
+        let on = file.automatic.unwrap_or(true) && file.refresh != RefreshInterval::Off;
+        let refresh = if on {
+            RefreshInterval::Minutes(kept)
+        } else {
+            RefreshInterval::Off
+        };
+
+        Self { refresh, kept }
+    }
+}
+
+impl From<Status> for StatusFile {
+    fn from(status: Status) -> Self {
+        Self {
+            automatic: Some(status.refresh != RefreshInterval::Off),
+            refresh: RefreshInterval::Minutes(status.minutes()),
+        }
     }
 }
 

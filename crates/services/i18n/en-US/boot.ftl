@@ -110,11 +110,12 @@ boot-file-none = None
 # $name is the field's name, such as GRUB theme.
 boot-file-choose = Choose…
 boot-file-choose-name = Choose { $name }
-boot-file-clear = Use none
+boot-file-clear = Clear { $name }
 boot-file-chooser-failed = The file dialog could not open. Install a file chooser portal, such as xdg-desktop-portal-kde or xdg-desktop-portal-gtk, then choose again.
 
 # systemd-boot, shown instead of the GRUB settings.
 boot-sdboot-unset = systemd-boot's default
+boot-sdboot-segment-default = Default
 boot-sdboot-on = On
 boot-sdboot-off = Off
 boot-sdboot-default-first = The first entry of the menu

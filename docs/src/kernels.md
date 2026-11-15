@@ -38,27 +38,28 @@ packages.
 
 ## Install a kernel
 
-1. Turn on the switch of the kernel under **Available**, for example
+1. Click **Install** on the kernel under **Available**, for example
    `linux-lts`. The row then says **Installs with Apply**.
 2. Apply the queue.
 
-The kernel and its headers are installed together. Turn the switch off
-again to take a queued kernel back.
+The kernel and its headers are installed together. Click **Take back**
+to take a queued kernel back.
 
 ## Remove a kernel
 
-1. Turn off the switch of an installed kernel. The row then says
+1. Click **Remove** on an installed kernel. The row then says
    **Removes with Apply**.
 2. Apply the queue.
 
-The headers go with the kernel. Turn the switch on again to take a queued
+The headers go with the kernel. Click **Take back** to take a queued
 removal back.
 
-> **Warning:** A system without a kernel does not boot. The switch of the
-> kernel that runs right now is greyed out and says why. The app also
-> refuses to remove the last installed kernel, and says so above the list.
-> Kernels that are only queued for installation do not count: install the
-> new kernel first, reboot into it, then remove the old one.
+> **Warning:** A system without a kernel does not boot. The **Remove**
+> button of the kernel that runs right now is greyed out and the row
+> says why. The app also refuses to remove the last installed kernel,
+> and says so above the list. Kernels that are only queued for
+> installation do not count: install the new kernel first, reboot into
+> it, then remove the old one.
 >
 > When the app cannot tell which kernel runs, for example after a kernel
 > update removed the running kernel's modules, it removes no kernel at all

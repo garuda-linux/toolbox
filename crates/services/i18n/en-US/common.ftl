@@ -12,11 +12,22 @@ search-clear = Clear the search
 # The ✕ in a dialog's title bar.
 dialog-close = Close
 
+# The eye in a password field while its text shows as dots.
+password-show = Show password
+# The eye in a password field while its text shows.
+password-hide = Hide password
+
 # Asked when the window is closed while changes are being applied.
 close-running-question = Quit while changes are being applied?
 close-running-detail = Quitting cancels the run. A step that is halfway done, such as a package update, may leave the system in a broken state.
 close-running-keep = Keep running
 close-running-quit = Cancel and quit
+
+# Asked when the window is closed while Config Files shows an edit that was not applied.
+close-edit-question = Quit without applying your edit?
+close-edit-detail = The changes you made to a configuration file are not written yet. Quitting discards them.
+close-edit-keep = Keep editing
+close-edit-quit = Discard and quit
 
 # The banner of a page whose switches and menus wait while a plan runs.
 common-plan-running = Changes are being applied. This waits until they are done.

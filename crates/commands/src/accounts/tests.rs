@@ -194,6 +194,24 @@ fn an_unlisted_shell_is_refused() {
     edit(&args, &snapshot()).unwrap_err();
 }
 
+/// The dialog's rule: one edit, all of it or nothing.
+#[test]
+fn a_refused_home_folder_takes_the_new_full_name_along() {
+    let args = EditUser {
+        user: "nico".parse().unwrap(),
+        full_name: Some("Nico J.".parse().unwrap()),
+        shell: None,
+        add_groups: Vec::new(),
+        remove_groups: Vec::new(),
+        home: Some("/srv/nico".parse().unwrap()),
+        move_files: true,
+        confirm: Confirm::default(),
+    };
+
+    let refused = edit(&args, &snapshot()).unwrap_err();
+    assert_eq!(refused.exit(), Exit::PageRule);
+}
+
 #[test]
 fn the_running_user_cannot_lock_or_remove_itself() {
     let me = UserArgs {

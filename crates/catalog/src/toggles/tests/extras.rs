@@ -30,6 +30,7 @@ fn without_also_nothing_comes_along() {
 
     assert_eq!(entry.also(), []);
     assert_eq!(entry.icon(), None);
+    assert_eq!(entry.glyph(), None);
 }
 
 #[test]
@@ -162,6 +163,24 @@ fn an_icon_is_a_plain_file_name() {
         assert_eq!(
             problem_of(&gamemode(&format!("icon = \"{icon}\"\n"))).2,
             Problem::BadIcon(icon.to_owned())
+        );
+    }
+}
+
+#[test]
+fn a_glyph_is_a_freedesktop_icon_name() {
+    let catalog =
+        ToggleCatalog::parse(&gamemode("glyph = \"audio-volume-high\"\n"), "test.toml").unwrap();
+
+    assert_eq!(
+        catalog.entry("gamemode").unwrap().glyph(),
+        Some("audio-volume-high")
+    );
+
+    for glyph in ["", "steam.png", "Audio", "a b", "-a", "a-", "../a"] {
+        assert_eq!(
+            problem_of(&gamemode(&format!("glyph = \"{glyph}\"\n"))).2,
+            Problem::BadGlyph(glyph.to_owned())
         );
     }
 }

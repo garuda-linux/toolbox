@@ -1,4 +1,5 @@
 mod lost;
+mod steps;
 
 use std::sync::Arc;
 use std::time::{Duration, SystemTime};
@@ -16,8 +17,9 @@ use toolbox_plan::PackageName;
 use toolbox_system::{DiskSpace, Facts, PackageCount, Status};
 
 use super::HomePage;
-use crate::command::{Command, UiCommand};
+use crate::command::{Command, MaintenanceCommand, UiCommand};
 use crate::page::PageId;
+use crate::pages::maintenance::Tab;
 use crate::testing::{PageFixture, PageState};
 
 const GB: u64 = 1_000_000_000;
@@ -235,25 +237,99 @@ fn greeted() -> Shown {
 }
 
 #[test]
-fn the_package_count_is_a_tag_like_the_other_facts_and_opens_packages() {
+fn four_stat_tiles_share_one_line_and_open_the_maintenance_tab_that_acts() {
     let mut harness = greeted();
-    let packages = harness
-        .get_by_role_and_label(Role::Link, "1462 packages · 12 AUR")
-        .rect();
+    let names = [
+        "Updates: Up to date",
+        "Health: No problems",
+        "Last update: 16 days ago",
+    ];
 
-    let kernel = harness.get_by_label_contains("6.17.7-zen1-1-zen").rect();
+    let tops: Vec<f32> = names
+        .iter()
+        .map(|name| harness.get_by_role_and_label(Role::Link, name).rect().top())
+        .chain(std::iter::once(
+            harness.get_by_label_contains("Disk: ").rect().top(),
+        ))
+        .collect();
 
-    assert!((packages.height() - kernel.height()).abs() < 0.5);
-    assert!((packages.center().y - kernel.center().y).abs() < 0.5);
+    assert!(
+        tops.iter().all(|top| (top - tops[0]).abs() < 0.5),
+        "{tops:?}"
+    );
+    assert!(
+        harness.query_by_label_contains("packages").is_none(),
+        "no fact pills"
+    );
 
     harness
-        .get_by_role_and_label(Role::Link, "1462 packages · 12 AUR")
+        .get_by_role_and_label(Role::Link, "Health: No problems")
+        .click();
+    harness.run();
+    harness
+        .get_by_role_and_label(Role::Link, "Updates: Up to date")
         .click();
     harness.run();
 
     assert_eq!(
         harness.state().fixture.sent(),
-        [Command::from(UiCommand::Navigate(PageId::Packages))]
+        [
+            Command::from(MaintenanceCommand::Reveal(Tab::Repairs)),
+            Command::from(MaintenanceCommand::Reveal(Tab::Common)),
+        ]
+    );
+}
+
+#[test]
+fn unread_figures_say_so() {
+    let harness = page(PageFixture::default());
+
+    assert!(link(&harness, "Updates: Not known"));
+    assert!(link(&harness, "Disk: Not known"));
+}
+
+#[test]
+fn a_part_that_draws_nothing_leaves_a_single_gap() {
+    let harness = page(PageFixture::default());
+    let tile = harness
+        .get_by_role_and_label(Role::Link, "Updates: Not known")
+        .rect();
+
+    let next = harness.get_by_label("Next steps").rect();
+
+    let gap = toolbox_gui_kit::tokens::current(&harness.ctx)
+        .sizes
+        .block_gap;
+
+    // Item spacing comes on top of the gap, a second gap would double it.
+    let between = next.top() - tile.bottom();
+    assert!(
+        between >= gap && between < gap * 1.5,
+        "{between} between the tiles and Next steps, one gap is {gap}"
+    );
+}
+
+#[test]
+fn three_steps_share_one_line() {
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(
+        PackageName::new("strawberry").unwrap(),
+        Toggle::On,
+        &toolbox_core::Snapshot::default(),
+    );
+    let harness = page(PageFixture {
+        changes,
+        ..PageFixture::default()
+    });
+
+    let tops: Vec<f32> = ["Review changes", "Setup Assistant", "Maintenance"]
+        .iter()
+        .map(|name| harness.get_by_role_and_label(Role::Link, name).rect().top())
+        .collect();
+
+    assert!(
+        tops.iter().all(|top| (top - tops[0]).abs() < 0.5),
+        "{tops:?}"
     );
 }
 

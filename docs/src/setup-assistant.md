@@ -17,8 +17,8 @@ the assistant directly.
 1. The first page explains what happens and how many categories there are.
    Click **Next**.
 2. Each step shows the apps of one category as rows with an icon, a name
-   and a short description. Turn on the switch of a row to pick the app.
-   The row says **Turns on with Apply**.
+   and a short description. Click **Install** on a row to pick the app.
+   The row says **Installs with Apply**, and **Take back** drops the pick.
 3. Click **Next** to go on, also when you want nothing from a category.
    **Back** returns to the step before. Your picks stay.
 4. To go straight to a category, open the list between **Back** and
@@ -28,6 +28,8 @@ the assistant directly.
 
 **Back**, the list and **Next** stay at the bottom of the page, also when a
 category has more apps than fit, so you can reach them without scrolling.
+Above them a thin bar fills up as you go, under a line such as **Step 3 of
+16**. On the first page and the **Summary** the line names the page instead.
 
 The heading names the step, for example "Step 1 of 16: Audio". The count
 is the number of categories the first page names. After the last category
@@ -39,12 +41,12 @@ close the app.
 
 ## Remove apps you do not want
 
-Apps that are already installed show as checked. Turn one off and its row
-says **Turns off with Apply**. It is removed together with the rest when you
-apply.
+Apps that are already installed say **Installed**. Click **Remove** on one
+and its row says **Removes with Apply**. It is removed together with the
+rest when you apply.
 
 > **Note:** Removing an app also removes the dependencies nothing else
-> needs. Turn the switch on again before you apply to keep the app.
+> needs. Click **Take back** before you apply to keep the app.
 
 ## What comes along with an app
 
@@ -101,8 +103,8 @@ can fix the cause and apply again from **Review**.
 | ----------- | --------------------------------------------- |
 | `Alt+Right` | **Next**, on the Summary **Review and apply** |
 | `Alt+Left`  | **Back**                                      |
-| `Tab`       | Moves through the switches and the buttons    |
-| `Space`     | Turns the focused switch on or off            |
+| `Tab`       | Moves through the rows and the buttons        |
+| `Space`     | Presses the button of the selected row        |
 
 After **Next** or **Back** the focus stays where it was, so the keys work
 from anywhere on the page.

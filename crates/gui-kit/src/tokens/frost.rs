@@ -10,6 +10,9 @@ const FROST_MOST: f32 = 0.96;
 /// what lies under them stays muted and the terminal's box shows, and no
 /// more, so their blur shows as soft shapes.
 pub(super) const SCRIM_LEAST: f32 = 0.2;
+/// The header's scrim takes more, so an accent control scrolled under the
+/// band blurs into a faint hue rather than a coloured smear.
+const HEADER_SCRIM_LEAST: f32 = 0.32;
 /// A frosted surface without a blur behind it lets no more than this
 /// much of the sharp page through.
 const VEIL_LEAST: f32 = 0.86;
@@ -18,15 +21,16 @@ const EXTREMES: [Color32; 2] = [Color32::WHITE, Color32::BLACK];
 
 impl super::Surfaces {
     /// The header's scrim over the live blur, black in a dark theme and
-    /// white in a light one, as thin as each text keeps 4.5:1 over the
-    /// app's surfaces, so the blur shows.
+    /// white in a light one, at least [`HEADER_SCRIM_LEAST`] and as thin
+    /// as each text keeps 4.5:1 over the app's surfaces, so the blur shows.
     pub(super) fn scrim(&self, theme: Theme, texts: [Color32; 2]) -> Color32 {
         let neutral = neutral(theme);
         let surfaces = self.under_text();
         neutral.gamma_multiply(least_band(|alpha| {
-            texts
-                .iter()
-                .all(|text| reads(*text, neutral, alpha, &surfaces))
+            alpha >= HEADER_SCRIM_LEAST - f32::EPSILON
+                && texts
+                    .iter()
+                    .all(|text| reads(*text, neutral, alpha, &surfaces))
         }))
     }
 

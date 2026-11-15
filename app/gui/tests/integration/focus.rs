@@ -62,7 +62,12 @@ fn the_header_comes_before_the_body_and_the_status_bar_last() {
 
     let sidebar = position(&stops, "Services");
     let search = position(&stops, "Search services");
-    let filter = position(&stops, "Hide disabled");
+
+    // The chip carries its count once the units were read.
+    let filter = stops
+        .iter()
+        .position(|stop| stop.starts_with("Running"))
+        .unwrap_or_else(|| panic!("the Running chip is no Tab stop: {stops:?}"));
 
     assert!(sidebar < search, "the sidebar after the header: {stops:?}");
     assert!(search < filter, "the body before the header: {stops:?}");
@@ -122,12 +127,14 @@ fn a_rows_controls_take_tab_from_left_to_right() {
 
     let app = stops[menu].trim_start_matches("More for ").to_owned();
 
+    // The button is named by its action and the app, as Install AbiWord.
+    let control = format!(" {app}");
     assert!(
         stops
             .iter()
-            .rposition(|stop| *stop == app)
-            .is_some_and(|switch| menu < switch),
-        "the menu of {app} sits left of its switch and comes first"
+            .rposition(|stop| stop.ends_with(&control) && !stop.starts_with("More for "))
+            .is_some_and(|button| menu < button),
+        "the menu of {app} sits left of its button and comes first"
     );
 }
 

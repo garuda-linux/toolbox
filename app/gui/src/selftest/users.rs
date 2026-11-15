@@ -10,6 +10,9 @@ use super::step::Step;
 pub fn steps() -> Vec<Step> {
     let [field, bad_name] = Step::type_into("User name", "Bad Name");
 
+    // A login typed by hand stays when the full name changes after it.
+    let [full_name_field, full_name] = Step::type_into("Full name", "Grace Hopper");
+
     vec![
         Step::WaitGone("Reading the system…"),
         Step::tab("Users and Groups"),
@@ -20,6 +23,9 @@ pub fn steps() -> Vec<Step> {
         Step::button("Add user…"),
         field,
         bad_name,
+        Step::WaitContaining("Names start with a lowercase letter"),
+        full_name_field,
+        full_name,
         Step::WaitContaining("Names start with a lowercase letter"),
         Step::disabled_button("Add user now"),
         Step::Shot("users-add"),

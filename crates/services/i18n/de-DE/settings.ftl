@@ -28,11 +28,10 @@ settings-motion-full = Aus
 
 settings-autostart = Beim Anmelden starten
 settings-autostart-description = Öffnet das Fenster bei jeder Anmeldung.
-settings-refresh = Nach Updates suchen
-settings-refresh-description = Jede Prüfung lädt die Paketlisten herunter und fragt das AUR (Arch User Repository) ab.
-settings-refresh-ask = Nur manuell
-settings-refresh-ask-description = Die Startseite sucht dann nur nach Updates, wenn du auf „Neu einlesen“ klickst.
-settings-refresh-off = Aus, solange „Nur manuell“ aktiv ist.
+settings-refresh-auto = Automatisch nach Updates suchen
+settings-refresh-auto-description = Jede Prüfung lädt die Paketlisten herunter und fragt das AUR (Arch User Repository) ab. Ausgeschaltet sucht die Startseite nur, wenn du auf „Neu einlesen“ klickst.
+settings-refresh-interval = Zeit zwischen den Prüfungen
+settings-refresh-interval-description = Von alle 5 Minuten bis einmal am Tag (1440 Minuten).
 settings-refresh-minutes = Prüfintervall in Minuten
 settings-refresh-unit = Min.
 settings-refresh-clamped = Das Intervall liegt zwischen 5 Minuten und einem Tag. Verwendet werden daher { $minutes } Minuten.

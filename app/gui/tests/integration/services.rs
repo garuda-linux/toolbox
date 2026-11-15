@@ -104,7 +104,7 @@ pub fn open_menu(harness: &mut Harness<'static, App>, unit: &str) {
 }
 
 #[test]
-fn running_and_failed_units_show_and_the_chips_add_the_others() {
+fn running_units_show_and_the_chips_pick_the_others() {
     let (mut harness, _runtime) = services();
 
     assert!(
@@ -112,11 +112,15 @@ fn running_and_failed_units_show_and_the_chips_add_the_others() {
         "the sub state repeats"
     );
     assert!(harness.query_by_label("Running").is_some());
-    assert!(harness.query_by_label("Failed").is_some());
+    assert!(!listed(&harness, "bluetooth.service"));
     assert!(!listed(&harness, "cups.service"));
 
-    harness.get_by_label("Hide disabled").click();
-    harness.get_by_label("Hide inactive").click();
+    harness.get_by_label("Failed 1").click();
+    harness.run();
+    assert!(listed(&harness, "bluetooth.service"));
+    assert!(harness.query_by_label("Failed").is_some());
+
+    harness.get_by_label("All 3").click();
     harness.run();
     assert!(listed(&harness, "cups.service"));
 }
@@ -180,6 +184,11 @@ fn the_search_keeps_matching_units() {
     let (mut harness, _runtime) = services();
 
     type_into(&mut harness, "Search services", "blue");
+
+    // The Running chip stays picked, the failed match waits behind it.
+    assert!(!listed(&harness, "bluetooth.service"));
+    harness.get_by_label("Show the one match").click();
+    harness.run();
 
     assert!(listed(&harness, "bluetooth.service"));
     assert!(!listed(&harness, "sshd.service"));

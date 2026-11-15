@@ -10,6 +10,8 @@ guide-next = { $page } →
 guide-note = Hinweis
 guide-warning = Warnung
 guide-copy-code = Code kopieren
+# What screen readers call a picture, which a click shows large. $alt is its description.
+guide-enlarge = Größer anzeigen: { $alt }
 guide-code-copied = Der Code wurde in die Zwischenablage kopiert.
 guide-hits = { $count ->
     [one] 1 Treffer

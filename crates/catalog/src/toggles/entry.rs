@@ -26,6 +26,7 @@ impl RawEntry {
             reload,
             desktop,
             icon,
+            glyph,
             url,
         } = self;
 
@@ -42,6 +43,7 @@ impl RawEntry {
             reload: user_config::reload(reload.as_deref(), edits_config)?,
             desktops: extras::desktops(desktop)?,
             icon: extras::icon(icon)?,
+            glyph: extras::glyph(glyph)?,
             url: extras::url(url)?,
             id,
             title,
@@ -100,6 +102,13 @@ impl ToggleEntry {
     /// The entry's picture: a file name in [`ToggleCatalog::icon_dir`].
     pub fn icon(&self) -> Option<&str> {
         self.icon.as_deref()
+    }
+
+    /// The freedesktop name of the glyph the entry's row shows in place of
+    /// a picture, so a catalog of system parts reads as one set rather than
+    /// a mix of app pictures and letter tiles.
+    pub fn glyph(&self) -> Option<&str> {
+        self.glyph.as_deref()
     }
 
     /// The website of what the entry installs: an `https` URL with a host,

@@ -1,6 +1,8 @@
-//! The logo in the desktop's accent. Its violet facets turn to the accent's
-//! hue and keep their lightness, so the logo keeps its look on any desktop
-//! colour. The dark copy is lightened for a dark surface.
+//! The logo in the desktop's accent, also the About page's hero.
+//!
+//! Its violet facets turn to the accent's hue and keep their lightness, so
+//! the logo keeps its look on any desktop colour. The dark copy is lightened
+//! for a dark surface.
 
 #[cfg(test)]
 mod tests;

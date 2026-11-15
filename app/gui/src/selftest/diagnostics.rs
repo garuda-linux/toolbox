@@ -1,7 +1,7 @@
 //! The Diagnostics page on the real system: the full report collected,
-//! which always holds its headings, whatever this machine lacks. Then its
-//! upload is asked for, turned down once and sent to the dry-run paste
-//! server, which keeps nothing.
+//! which always holds its headings, whatever this machine lacks, and read
+//! with its lines wrapped. Then its upload is asked for, turned down once
+//! and sent to the dry-run paste server, which keeps nothing.
 
 use super::step::Step;
 
@@ -10,13 +10,15 @@ pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
         Step::tab("Diagnostics"),
-        Step::wait("Choose a report and click Collect."),
+        Step::wait("Reports"),
         Step::Shot("diagnostics"),
-        Step::combo("Report to collect"),
-        Step::click("Full report"),
-        Step::click("Collect"),
+        Step::button("Collect Full report"),
         Step::wait("Copy report"),
         Step::Shot("diagnostics-report"),
+        // Long lines wrap at the viewer's edge and scroll sideways again.
+        Step::click("Wrap lines"),
+        Step::Shot("diagnostics-wrapped"),
+        Step::click("Wrap lines"),
         Step::click("Share report…"),
         Step::wait("Upload this report?"),
         Step::click("Cancel"),
@@ -25,7 +27,7 @@ pub fn steps() -> Vec<Step> {
         Step::wait("Upload this report?"),
         Step::Shot("diagnostics-question"),
         Step::click("Upload"),
-        Step::wait("Link to the uploaded report"),
+        Step::wait("Copy link"),
         Step::Shot("diagnostics-uploaded"),
     ]
 }

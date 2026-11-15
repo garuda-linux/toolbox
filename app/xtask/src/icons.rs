@@ -17,10 +17,11 @@ use crate::{Failure, catalogs, regex, root};
 /// What a theme name looks like. Files, addresses and sentences do not.
 static THEME_NAME: LazyLock<Regex> = LazyLock::new(|| regex("^[a-z][a-z0-9-]*[a-z0-9]$"));
 
-static CATALOG_ICON: LazyLock<Regex> = LazyLock::new(|| regex(r#"^\s*icon\s*=\s*"([^"]*)""#));
+static CATALOG_ICON: LazyLock<Regex> =
+    LazyLock::new(|| regex(r#"^\s*(?:icon|glyph)\s*=\s*"([^"]*)""#));
 
-/// The theme names of a catalog file: an `icon` with a file ending names a
-/// file of the app instead.
+/// The theme names of a catalog file, its `icon` and `glyph` lines: an
+/// `icon` with a file ending names a file of the app instead.
 pub fn catalog_names(text: &str) -> Vec<String> {
     text.lines()
         .filter_map(|line| CATALOG_ICON.captures(line)?.get(1))

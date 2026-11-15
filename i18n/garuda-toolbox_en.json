@@ -3,8 +3,14 @@
     "page-about-subtitle": {
       "string": "Maintain and set up your Garuda Linux system."
     },
-    "about-version": {
-      "string": "Version"
+    "about-hero-credits": {
+      "string": "Made by the Garuda Linux team"
+    },
+    "about-copy-details": {
+      "string": "Copy system details"
+    },
+    "about-details-copied": {
+      "string": "Copied the system details to the clipboard."
     },
     "about-licence": {
       "string": "Licence"
@@ -188,6 +194,9 @@
     },
     "account-refusal-home-taken": {
       "string": "Another account already has this home folder."
+    },
+    "account-refusal-busy": {
+      "string": "Other changes are still being applied, so this did not run. Try again once they are done."
     }
   },
   "boot": {
@@ -500,7 +509,7 @@
       "string": "Choose {name}"
     },
     "boot-file-clear": {
-      "string": "Use none"
+      "string": "Clear {name}"
     },
     "boot-file-chooser-failed": {
       "string": "The file dialog could not open. Install a file chooser portal, such as xdg-desktop-portal-kde or xdg-desktop-portal-gtk, then choose again."
@@ -508,6 +517,9 @@
     "boot-sdboot-unset": {
       "string": "systemd-boot's default",
       "developer_comment": "systemd-boot, shown instead of the GRUB settings."
+    },
+    "boot-sdboot-segment-default": {
+      "string": "Default"
     },
     "boot-sdboot-on": {
       "string": "On"
@@ -4191,6 +4203,13 @@
     "changes-wait-aur": {
       "string": "Apply waits for the package list of the AUR. The Packages page says when it cannot be read."
     },
+    "changes-unread-locks": {
+      "string": "Apply waits: the lock state of the accounts could not be read.",
+      "developer_comment": "Why Apply is disabled after a read failed, for example when the password\nprompt was closed. The popover shows it with a Read again button."
+    },
+    "changes-unread-aur": {
+      "string": "Apply waits: the package list of the AUR could not be read."
+    },
     "change-account-lock": {
       "string": "Lock the account {name}"
     },
@@ -4533,6 +4552,10 @@
     "cli-driver-unavailable": {
       "string": "the drivers of this system could not be read"
     },
+    "cli-busy": {
+      "string": "other changes are still being applied, try again once they are done",
+      "developer_comment": "A change refused because other changes are still being applied."
+    },
     "cli-driver-not-listed": {
       "string": "this is no network driver of this system, see `network drivers list`"
     },
@@ -4602,6 +4625,14 @@
       "string": "Close",
       "developer_comment": "The ✕ in a dialog's title bar."
     },
+    "password-show": {
+      "string": "Show password",
+      "developer_comment": "The eye in a password field while its text shows as dots."
+    },
+    "password-hide": {
+      "string": "Hide password",
+      "developer_comment": "The eye in a password field while its text shows."
+    },
     "close-running-question": {
       "string": "Quit while changes are being applied?",
       "developer_comment": "Asked when the window is closed while changes are being applied."
@@ -4614,6 +4645,19 @@
     },
     "close-running-quit": {
       "string": "Cancel and quit"
+    },
+    "close-edit-question": {
+      "string": "Quit without applying your edit?",
+      "developer_comment": "Asked when the window is closed while Config Files shows an edit that was not applied."
+    },
+    "close-edit-detail": {
+      "string": "The changes you made to a configuration file are not written yet. Quitting discards them."
+    },
+    "close-edit-keep": {
+      "string": "Keep editing"
+    },
+    "close-edit-quit": {
+      "string": "Discard and quit"
     },
     "common-plan-running": {
       "string": "Changes are being applied. This waits until they are done.",
@@ -5100,11 +5144,19 @@
     "page-diagnostics-subtitle": {
       "string": "Reports about this computer for a forum post or a bug report."
     },
-    "diagnostics-report-picker": {
-      "string": "Report to collect"
+    "diagnostics-reports": {
+      "string": "Reports"
+    },
+    "diagnostics-another": {
+      "string": "Collect another report",
+      "developer_comment": "Unfolds the report rows while a report shows."
     },
     "diagnostics-collect": {
       "string": "Collect"
+    },
+    "diagnostics-collect-name": {
+      "string": "Collect {name}",
+      "developer_comment": "What screen readers call a row's Collect. $name is the report's name."
     },
     "diagnostics-cancel": {
       "string": "Cancel"
@@ -5151,12 +5203,9 @@
     "diagnostics-all-description": {
       "string": "All of the above in one report. May ask for your password twice."
     },
-    "diagnostics-idle": {
-      "string": "Choose a report and click Collect.",
-      "developer_comment": "Where the collection stands."
-    },
     "diagnostics-idle-detail": {
-      "string": "The report stays on this computer unless you share it."
+      "string": "The report stays on this computer unless you share it.",
+      "developer_comment": "Where the collection stands."
     },
     "diagnostics-collecting": {
       "string": "Collecting {name}…"
@@ -5196,6 +5245,25 @@
     "diagnostics-report-label": {
       "string": "Diagnostics report"
     },
+    "diagnostics-lines": {
+      "string": "{count, plural, one {one line} other {{count} lines}}",
+      "developer_comment": "The report's header line. $time is when it came in, as 14:05."
+    },
+    "diagnostics-collected": {
+      "string": "· collected {time} UTC · {lines}"
+    },
+    "diagnostics-collected-unknown": {
+      "string": "· {lines}"
+    },
+    "diagnostics-wrap": {
+      "string": "Wrap lines"
+    },
+    "diagnostics-search": {
+      "string": "Search the report"
+    },
+    "diagnostics-search-clear": {
+      "string": "Clear the search"
+    },
     "diagnostics-copy": {
       "string": "Copy report"
     },
@@ -5231,12 +5299,8 @@
     "discover-actions": {
       "string": "More for {name}"
     },
-    "discover-palette-app": {
-      "string": "App",
-      "developer_comment": "The rows of the command palette that open an app on this page."
-    },
     "discover-unreadable": {
-      "string": "The installed apps could not be read, so no switch shows what is installed. Switching an installed app on changes nothing."
+      "string": "The installed apps could not be read, so no row shows what is installed. Installing an installed app changes nothing."
     },
     "discover-problem": {
       "string": "Some categories could not be loaded. The others are shown."
@@ -5249,6 +5313,17 @@
     },
     "discover-clear-search": {
       "string": "Clear search"
+    },
+    "discover-nothing-in-category": {
+      "string": "No app in {category} matches “{search}”",
+      "developer_comment": "A chip picked a category without a match while others have some. $category is the category's name, $search what the user typed."
+    },
+    "discover-nothing-in-category-detail": {
+      "string": "Other categories have apps that match."
+    },
+    "discover-show-all-matches": {
+      "string": "{count, plural, one {Show the match} other {Show all {count} matches}}",
+      "developer_comment": "$count is how many apps of every category match the search."
     },
     "discover-none": {
       "string": "No apps to show"
@@ -5313,6 +5388,10 @@
     },
     "guide-copy-code": {
       "string": "Copy code"
+    },
+    "guide-enlarge": {
+      "string": "Show larger: {alt}",
+      "developer_comment": "What screen readers call a picture, which a click shows large. $alt is its description."
     },
     "guide-code-copied": {
       "string": "Copied the code to the clipboard."
@@ -5529,24 +5608,47 @@
     "home-summary-updated": {
       "string": "{days, plural, one {· last update yesterday} other {· last update {days} days ago}}"
     },
-    "home-fact-packages": {
-      "string": "{count, plural, one {One package} other {{count} packages}}",
-      "developer_comment": "$kernel is as uname prints it, $free a size such as \"38.2 GiB\"."
+    "home-stat-updates": {
+      "string": "Updates",
+      "developer_comment": "The stat tiles under the greeting: a name, then its figure."
     },
-    "home-fact-packages-foreign": {
-      "string": "{count} packages · {foreign} AUR"
+    "home-stat-updates-none": {
+      "string": "Up to date"
     },
-    "home-fact-kernel-days": {
-      "string": "{amount, plural, one {{kernel} · up one day} other {{kernel} · up {amount} days}}"
+    "home-stat-updates-count": {
+      "string": "{count, plural, one {One available} other {{count} available}}"
     },
-    "home-fact-kernel-new": {
-      "string": "{kernel} · up less than an hour"
+    "home-stat-disk": {
+      "string": "Disk"
     },
-    "home-fact-kernel-hours": {
-      "string": "{amount, plural, one {{kernel} · up one hour} other {{kernel} · up {amount} hours}}"
+    "home-stat-disk-free": {
+      "string": "{free} free",
+      "developer_comment": "$free is a size such as \"38.2 GiB\"."
     },
-    "home-fact-disk": {
-      "string": "{free} free on /"
+    "home-stat-health": {
+      "string": "Health"
+    },
+    "home-stat-health-fine": {
+      "string": "No problems"
+    },
+    "home-stat-health-warnings": {
+      "string": "Warnings"
+    },
+    "home-stat-health-errors": {
+      "string": "Problems found"
+    },
+    "home-stat-last-update": {
+      "string": "Last update"
+    },
+    "home-stat-last-update-today": {
+      "string": "Today"
+    },
+    "home-stat-last-update-days": {
+      "string": "{days, plural, one {Yesterday} other {{days} days ago}}"
+    },
+    "home-stat-unknown": {
+      "string": "Not known",
+      "developer_comment": "A figure not read yet, or whose check could not run."
     },
     "home-disk": {
       "string": "Disk space is low"
@@ -5635,6 +5737,10 @@
     },
     "home-queue-lost-dismiss": {
       "string": "Dismiss"
+    },
+    "home-busy": {
+      "string": "Other changes are still being applied, so this did not start. Start it again once they are done.",
+      "developer_comment": "A run from Home did not start, as other changes are being applied."
     }
   },
   "kernels": {
@@ -6078,6 +6184,9 @@
     "maintenance-problem-mirrors-invalid": {
       "string": "Ranking gave no usable list of mirrors. The Chaotic-AUR list is unchanged."
     },
+    "maintenance-problem-busy": {
+      "string": "Other changes are still being applied, so this did not start. Start it again once they are done."
+    },
     "maintenance-problem-dismiss": {
       "string": "Dismiss"
     },
@@ -6129,10 +6238,11 @@
       "string": "Each repair runs in the Console, where it can ask its questions."
     },
     "maintenance-repairs-missing": {
-      "string": "The greyed out repairs below need garuda-update, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password."
+      "string": "{count, plural, one {The greyed out repairs below need {packages}, which is not installed. Installing it unlocks them. It starts at once in the Console and asks for your password.} other {The greyed out repairs below need {packages}, which are not installed. Installing them unlocks the repairs. It starts at once in the Console and asks for your password.}}",
+      "developer_comment": "$packages lists the missing packages, separated by commas. $count is\nhow many they are."
     },
-    "maintenance-install-garuda-update": {
-      "string": "Install garuda-update"
+    "maintenance-install-missing": {
+      "string": "Install {packages}"
     },
     "maintenance-run": {
       "string": "Run"
@@ -6501,6 +6611,9 @@
     "network-refused-unavailable": {
       "string": "The drivers of this system could not be read."
     },
+    "network-refused-busy": {
+      "string": "Other changes are still being applied, so this did not run. Try again once they are done."
+    },
     "network-hardware-intro": {
       "string": "Network devices as lspci and lsusb list them."
     },
@@ -6564,6 +6677,22 @@
     "network-traceroute-missing": {
       "string": "Traceroute needs the package traceroute, which is not installed."
     },
+    "network-ping-finished": {
+      "string": "Ping finished. Its output is in the Console.",
+      "developer_comment": "After a test ran in the Console, under its buttons."
+    },
+    "network-ping-failed": {
+      "string": "Ping ended with an error. The Console shows why."
+    },
+    "network-traceroute-finished": {
+      "string": "Traceroute finished. Its output is in the Console."
+    },
+    "network-traceroute-failed": {
+      "string": "Traceroute ended with an error. The Console shows why."
+    },
+    "network-show-console": {
+      "string": "Show Console"
+    },
     "network-hotspot": {
       "string": "Wi-Fi hotspot"
     },
@@ -6626,6 +6755,12 @@
     },
     "packages-none-detail": {
       "string": "The repositories offer none and none is installed."
+    },
+    "packages-updates-loading": {
+      "string": "Checking for updates…"
+    },
+    "packages-updates-failed": {
+      "string": "Updates could not be checked."
     },
     "packages-no-updates": {
       "string": "No pending updates"
@@ -7025,11 +7160,18 @@
     "services-search-hint": {
       "string": "Search services…"
     },
-    "services-hide-disabled": {
-      "string": "Hide disabled"
+    "services-show-running": {
+      "string": "Running",
+      "developer_comment": "Chips: one is picked, each shows what it names."
     },
-    "services-hide-inactive": {
-      "string": "Hide inactive"
+    "services-show-enabled": {
+      "string": "Enabled"
+    },
+    "services-show-failed": {
+      "string": "Failed"
+    },
+    "services-show-all": {
+      "string": "All"
     },
     "services-refresh": {
       "string": "Read again"
@@ -7063,6 +7205,17 @@
     },
     "services-none-detail": {
       "string": "Change the search or the filters to see more services."
+    },
+    "services-show-every": {
+      "string": "{count, plural, one {Show the one match} other {Show all {count} matches}}",
+      "developer_comment": "A button under \"No service matches.\" that picks the All chip. $count is how many units the search finds there."
+    },
+    "services-busy": {
+      "string": "Other changes are still being applied, so this did not run. Try again once they are done.",
+      "developer_comment": "A start, stop or journal did not run, as other changes are being applied."
+    },
+    "services-dismiss": {
+      "string": "Dismiss"
     },
     "services-why-busy": {
       "string": "Waits until the changes being applied are done.",
@@ -7361,20 +7514,17 @@
     "settings-autostart-description": {
       "string": "Opens the window each time you log in."
     },
-    "settings-refresh": {
-      "string": "Check for updates"
+    "settings-refresh-auto": {
+      "string": "Check for updates automatically"
     },
-    "settings-refresh-description": {
-      "string": "Each check downloads the package lists and asks the AUR (Arch User Repository)."
+    "settings-refresh-auto-description": {
+      "string": "Each check downloads the package lists and asks the AUR (Arch User Repository). Turned off, Home checks only when you click Read again."
     },
-    "settings-refresh-ask": {
-      "string": "Only when I ask"
+    "settings-refresh-interval": {
+      "string": "Time between checks"
     },
-    "settings-refresh-ask-description": {
-      "string": "Then Home checks for updates only when you click Read again."
-    },
-    "settings-refresh-off": {
-      "string": "Off while Only when I ask is on."
+    "settings-refresh-interval-description": {
+      "string": "From every 5 minutes to once a day (1440 minutes)."
     },
     "settings-refresh-minutes": {
       "string": "Minutes between checks"
@@ -7473,6 +7623,10 @@
     },
     "setup-go-to": {
       "string": "Go to step"
+    },
+    "setup-progress": {
+      "string": "Step {number} of {count}",
+      "developer_comment": "Over the progress bar. $number is the step, $count all of them."
     },
     "setup-keys": {
       "string": "Alt+Right goes on, Alt+Left goes back."
@@ -7597,48 +7751,18 @@
         "developer_comment": "The upload and its link.\nUsed when `subject` is `output`."
       }
     },
-    "share-uploaded": {
-      "report": {
-        "string": "Uploaded. Anyone who has this link can read the report:",
-        "developer_comment": "Used when `subject` is `report`."
-      },
-      "output": {
-        "string": "Uploaded. Anyone who has this link can read the output:",
-        "developer_comment": "Used when `subject` is `output`."
-      }
-    },
-    "share-link": {
-      "report": {
-        "string": "Link to the uploaded report",
-        "developer_comment": "Used when `subject` is `report`."
-      },
-      "output": {
-        "string": "Link to the uploaded output",
-        "developer_comment": "Used when `subject` is `output`."
-      }
-    },
     "share-copy-link": {
       "string": "Copy link"
     },
     "share-uploaded-short": {
       "string": "Uploaded.",
-      "developer_comment": "The one row a place with little room shows after an upload."
+      "developer_comment": "The row after an upload."
     },
     "share-link-actions": {
       "string": "More link actions"
     },
     "share-open-link": {
       "string": "Open in browser"
-    },
-    "share-delete-link": {
-      "report": {
-        "string": "Delete link: opening it removes the report from the server.",
-        "developer_comment": "Used when `subject` is `report`."
-      },
-      "output": {
-        "string": "Delete link: opening it removes the output from the server.",
-        "developer_comment": "Used when `subject` is `output`."
-      }
     },
     "share-copy-delete-link": {
       "string": "Copy delete link"
@@ -7724,6 +7848,16 @@
     "palette-search": {
       "string": "Search pages and commands",
       "developer_comment": "The command palette (Ctrl+K)."
+    },
+    "palette-group-pages": {
+      "string": "Pages",
+      "developer_comment": "Labels over the palette's groups of rows. The Maintenance group takes\nthe page's name."
+    },
+    "palette-group-commands": {
+      "string": "Commands"
+    },
+    "palette-group-apps": {
+      "string": "Apps"
     },
     "command-apply": {
       "string": "Apply changes"
@@ -7957,9 +8091,24 @@
     "toggles-clear-search": {
       "string": "Clear search"
     },
+    "toggles-nothing-in-section": {
+      "string": "Nothing in {section} matches",
+      "developer_comment": "A chip picked a section without a match while other sections have some. $section is the section's title, $search what the user typed."
+    },
+    "toggles-nothing-in-section-detail": {
+      "string": "Other sections have entries with “{search}” in their name or description."
+    },
+    "toggles-show-all-matches": {
+      "string": "{count, plural, one {Show the match} other {Show all {count} matches}}",
+      "developer_comment": "$count is how many entries of the whole page match the search."
+    },
     "toggles-section-count": {
       "string": "{on}/{total}",
       "developer_comment": "$on and $total are counts of the entries of a section, a chip or the page, shown as \"2/8\"."
+    },
+    "toggles-section-count-unread": {
+      "string": "?/{total}",
+      "developer_comment": "The count while some states could not be read, so how many are on is not known. $total is the count of entries."
     },
     "toggles-unknown": {
       "string": "{count, plural, one {The state of one entry could not be read, so its switch may show the wrong state.} other {The state of {count} entries could not be read, so their switches may show the wrong state.}}"
@@ -7977,12 +8126,14 @@
     "toggles-turns-on": {
       "string": "Turns on with Apply"
     },
+    "toggles-enable": {
+      "string": "Enable"
+    },
+    "toggles-disable": {
+      "string": "Disable"
+    },
     "toggles-turns-off": {
       "string": "Turns off with Apply"
-    },
-    "toggles-website": {
-      "string": "Website of {name}",
-      "developer_comment": "$name is the entry's title."
     },
     "toggles-dismiss": {
       "string": "Dismiss"
@@ -8339,6 +8490,9 @@
     "users-refused-home-taken": {
       "string": "Another account already has this home folder."
     },
+    "users-refused-busy": {
+      "string": "Other changes are still being applied, so nothing was changed for {name}. Try again once they are done."
+    },
     "users-refused-unavailable": {
       "string": "The user accounts of this system could not be read."
     },
@@ -8413,6 +8567,9 @@
     },
     "users-field-full-name": {
       "string": "Full name"
+    },
+    "users-field-full-name-hint": {
+      "string": "Optional. The user name below follows its first word until you change it."
     },
     "users-field-shell": {
       "string": "Login shell"

@@ -2,8 +2,12 @@
 
 page-diagnostics-subtitle = Systemberichte für Forenbeiträge und Fehlermeldungen.
 
-diagnostics-report-picker = Bericht auswählen
+diagnostics-reports = Berichte
+# Unfolds the report rows while a report shows.
+diagnostics-another = Weiteren Bericht erstellen
 diagnostics-collect = Erstellen
+# What screen readers call a row's Collect. $name is the report's name.
+diagnostics-collect-name = { $name } erstellen
 diagnostics-cancel = Abbrechen
 
 diagnostics-inxi = Systeminformationen
@@ -21,7 +25,6 @@ diagnostics-dmesg-description = Kernelmeldungen aus dmesg. Fragt nach deinem Pas
 diagnostics-all = Vollständiger Bericht
 diagnostics-all-description = Alles oben Genannte in einem Bericht. Kann zweimal nach deinem Passwort fragen.
 
-diagnostics-idle = Wähle einen Bericht und klicke auf „Erstellen“.
 diagnostics-idle-detail = Der Bericht bleibt auf diesem Computer, solange du ihn nicht teilst.
 diagnostics-collecting = { $name } wird erstellt…
 # $step counts from 1.
@@ -37,6 +40,18 @@ diagnostics-helper-missing = { $name } wurde nicht erstellt: Das Hilfsprogramm v
 # $reason is the program's own words.
 diagnostics-failed = { $name } ist fehlgeschlagen: { $reason }
 diagnostics-report-label = Diagnosebericht
+
+# The report's header line. $time is when it came in, as 14:05.
+diagnostics-lines =
+    { $count ->
+        [one] eine Zeile
+       *[other] { $count } Zeilen
+    }
+diagnostics-collected = · erstellt um { $time } UTC · { $lines }
+diagnostics-collected-unknown = · { $lines }
+diagnostics-wrap = Zeilen umbrechen
+diagnostics-search = Bericht durchsuchen
+diagnostics-search-clear = Suche leeren
 
 diagnostics-copy = Bericht kopieren
 diagnostics-share = Bericht teilen…

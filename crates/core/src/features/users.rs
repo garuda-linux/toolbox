@@ -2,6 +2,7 @@
 //! becomes a queued change. Changes that carry a password do not queue,
 //! they become a plan that runs at once (`now`).
 
+pub mod account;
 mod guards;
 pub mod home;
 pub mod input;
@@ -72,6 +73,9 @@ pub enum Refusal {
     UidOutOfRange,
     /// Another account lives in the folder.
     HomeTaken,
+    /// A new account or password, which runs at once, did not start, as
+    /// another plan runs. Only the window says it.
+    Busy,
 }
 
 /// The account files of `snapshot`.

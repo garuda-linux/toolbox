@@ -3,15 +3,18 @@
 use toolbox_gui_kit::toasts::ToastKind;
 
 use super::App;
+use crate::apply::PlanId;
 use crate::command::AppCommand;
-use crate::page_service::{Answer, Handled, PageService};
+use crate::page_service::{Answer, Handled, Owner, PageService};
 use crate::{i18n, page_ui};
 
 impl App {
     pub(super) fn answer(&mut self, ctx: &egui::Context, answer: Answer) {
         match answer {
-            Answer::RunPlan(plan) => {
-                self.run_at_once(plan);
+            Answer::InstallMirrorlist(plan) => {
+                if !self.run_owned(plan, Owner::Mirrorlist) {
+                    self.services.maintenance.mirrorlist_refused();
+                }
             }
             Answer::Recombine => {
                 self.combine();
@@ -79,26 +82,46 @@ impl App {
         }
     }
 
-    pub(super) fn services_plan_started(&mut self, ctx: &egui::Context) {
-        let asked: Vec<_> = self
+    /// Only the sender of `plan` hears of its start, so a sender whose
+    /// own plan is refused never takes another plan's run for its own.
+    pub(super) fn services_plan_started(&mut self, ctx: &egui::Context, plan: PlanId) {
+        let Some(owner) = self.services.waiting.answered(plan) else {
+            return;
+        };
+
+        match owner {
+            Owner::Queue => self.queue.plan_started(),
+            Owner::Mirrorlist => self.services.maintenance.mirrorlist_started(),
+            Owner::Maintenance | Owner::Users | Owner::Configs | Owner::BootRepair => {}
+        }
+
+        let asked = self
             .services
-            .all_mut()
-            .into_iter()
-            .flat_map(PageService::plan_started)
-            .collect();
+            .owned_mut(owner)
+            .map(PageService::plan_started)
+            .unwrap_or_default();
 
         for command in asked {
             self.run_app(ctx, command);
         }
     }
 
-    pub(super) fn services_plan_refused(&mut self, ctx: &egui::Context) {
-        let asked: Vec<_> = self
+    pub(super) fn services_plan_refused(&mut self, ctx: &egui::Context, plan: PlanId) {
+        let Some(owner) = self.services.waiting.answered(plan) else {
+            return;
+        };
+
+        match owner {
+            Owner::Queue => self.queue.plan_refused(),
+            Owner::Mirrorlist => self.services.maintenance.mirrorlist_refused(),
+            Owner::Maintenance | Owner::Users | Owner::Configs | Owner::BootRepair => {}
+        }
+
+        let asked = self
             .services
-            .all_mut()
-            .into_iter()
-            .flat_map(PageService::plan_refused)
-            .collect();
+            .owned_mut(owner)
+            .map(PageService::plan_refused)
+            .unwrap_or_default();
 
         for command in asked {
             self.run_app(ctx, command);

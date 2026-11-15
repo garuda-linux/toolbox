@@ -6,14 +6,16 @@
 mod badge;
 mod buttons;
 mod clear;
+mod held;
 mod place;
 
 use egui::{
-    Align2, Area, Context, CornerRadius, Id, Label, LayerId, Margin, Order, Rect, Stroke, Ui, vec2,
+    Align2, Area, Context, CornerRadius, Frame, Id, Label, LayerId, Margin, Order, Popup,
+    PopupCloseBehavior, PopupKind, Rect, RectAlign, Stroke, Ui, vec2,
 };
 use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
-use toolbox_gui_kit::frost::Glass;
+use toolbox_gui_kit::frost::{self, Glass};
 use toolbox_gui_kit::motion::{self, Timing};
 use toolbox_gui_kit::theme::POPOVER_RADIUS;
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, icon_button, pill_button, rich, split_row, tag};
@@ -22,6 +24,7 @@ use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use self::badge::badge;
 use self::buttons::{apply_button, apply_pill, review_button, show_console_button};
 use self::clear::ask_to_clear;
+use self::held::unread;
 use self::place::{Fit, place};
 use super::PANE_TITLE;
 use crate::command::{AppCommand, CommandSender, UiCommand};
@@ -87,8 +90,9 @@ pub fn floating(
         .response
         .rect;
 
-    ctx.move_to_top(LayerId::new(LAYER, id));
-    overlays(ctx, (pill_rect, None), queued, state, commands);
+    let layer = LayerId::new(LAYER, id);
+    ctx.move_to_top(layer);
+    overlays(ctx, (pill_rect, layer), queued, state, commands);
 }
 
 /// In the Console's header while it is open, so nothing floats over the
@@ -115,13 +119,13 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     }
 
     let rect = apply.rect.union(review.rect).union(badge.rect);
-    overlays(&ctx, (rect, Some(ui.layer_id())), queued, state, commands);
+    overlays(&ctx, (rect, ui.layer_id()), queued, state, commands);
 }
 
-/// `sheet` is the Console's layer when the pill sits in its header.
+/// `pill` is where the pill lies and its layer.
 fn overlays(
     ctx: &Context,
-    (pill, sheet): (Rect, Option<LayerId>),
+    pill: (Rect, LayerId),
     queued: Queued<'_>,
     state: &mut ChangesState,
     commands: &CommandSender,
@@ -133,8 +137,9 @@ fn overlays(
         console_open: _,
     } = queued;
 
-    // It rises from the pill's side while it fades in. Closed, it goes at
-    // once, and the next opening starts low again. A key's opening jumps.
+    // It rises from the pill's side while egui fades it in. Closed, it
+    // goes at once, and the next opening starts low again. A key's opening
+    // does not rise.
     let id = popover_id();
     if state.open && std::mem::take(&mut state.keyed) {
         motion::settle(ctx, id.with("shown"), true);
@@ -142,34 +147,21 @@ fn overlays(
 
     let timing = Timing::new(motion::POPOVER_ENTER, 0.0);
     let shown = motion::presence(ctx, id.with("shown"), state.open, timing);
-    if state.open {
-        let gap = tokens::current(ctx).sizes.popover_gap;
-        let fit_id = id.with("fit");
-        let fit = ctx
-            .data(|data| data.get_temp::<Fit>(fit_id))
-            .unwrap_or_default();
 
-        let placed = place(pill, ctx.content_rect(), fit, gap);
-        let (corner, pivot) = placed.corner(pill, gap, (1.0 - shown) * motion::POPOVER_RISE);
-        Area::new(id)
-            .order(LAYER)
-            .pivot(pivot)
-            .fixed_pos(corner)
-            .fade_in(false)
-            .show(ctx, |ui| {
-                ui.multiply_opacity(shown);
-                let measured = popover(ui, list, (held, placed.list), commands);
-                ui.data_mut(|data| data.insert_temp(fit_id, measured));
-            });
+    // egui puts every popup on the dialogs' layer, so over a dialog the
+    // popover steps aside. It stays open and comes back after it.
+    let dialog =
+        state.confirming.is_some() || ctx.memory(|memory| memory.top_modal_layer().is_some());
 
-        // Above the page's header on the same layer. egui keeps the last
-        // order of areas that all rise each frame, which left a list
-        // opened again under the sheet, so there it hangs off the sheet.
-        let layer = LayerId::new(LAYER, id);
-        ctx.move_to_top(layer);
-        if let Some(sheet) = sheet {
-            ctx.set_sublayer(sheet, layer);
-        }
+    if state.open && !dialog {
+        let rise = (1.0 - shown) * motion::POPOVER_RISE;
+        popover_at(
+            ctx,
+            (pill.0, pill.1, rise),
+            (list, held),
+            &mut state.open,
+            commands,
+        );
     }
 
     if state.confirming == Some(UiCommand::ClearChanges) {
@@ -212,76 +204,125 @@ fn pill(
     })
 }
 
-/// `list` is the list's height before it scrolls. Returns the heights
-/// the popover measured.
+/// The popover above or below `pill`, `rise` points from its resting
+/// place toward the pill. egui closes it on a click beside it and on
+/// Escape.
+fn popover_at(
+    ctx: &Context,
+    (pill, parent, rise): (Rect, LayerId, f32),
+    (list, held): (&[ChangeView], Option<&'static str>),
+    open: &mut bool,
+    commands: &CommandSender,
+) {
+    let sizes = tokens::current(ctx).sizes;
+    let fit_id = popover_id().with("fit");
+    let fit = ctx
+        .data(|data| data.get_temp::<Fit>(fit_id))
+        .unwrap_or_default();
+
+    // Its own choice of side, as egui's would not shorten the list where
+    // neither side has room.
+    let placed = place(pill, ctx.content_rect(), fit, sizes.popover_gap);
+    let (align, toward) = if placed.above {
+        (RectAlign::TOP_END, rise)
+    } else {
+        (RectAlign::BOTTOM_END, -rise)
+    };
+
+    let glass = glass(ctx);
+    let anchor = pill.translate(vec2(0.0, toward));
+    let popup = Popup::new(popover_id(), ctx.clone(), anchor, parent)
+        .align(align)
+        .align_alternatives(&[])
+        .gap(sizes.popover_gap)
+        .frame(glass.frame())
+        .close_behavior(PopupCloseBehavior::CloseOnClickOutside)
+        .open_bool(open)
+        .show(|ui| glass.inside(ui, |ui| popover(ui, list, (held, placed.list), commands)));
+
+    if let Some(shown) = popup {
+        let (scrolled, whole) = shown.inner;
+        let measured = Fit {
+            chrome: shown.response.rect.height() - scrolled,
+            list: whole,
+            most: sizes.changes_list_height,
+        };
+
+        ctx.data_mut(|data| data.insert_temp(fit_id, measured));
+    }
+}
+
+/// [`Glass::raised`] for a popup, which takes its frame before it has a
+/// `Ui`.
+fn glass(ctx: &Context) -> Glass {
+    let tokens = tokens::current(ctx);
+    let frame = Frame::new()
+        .stroke(Stroke::new(1.0, tokens.outline))
+        .corner_radius(CornerRadius::same(POPOVER_RADIUS))
+        .inner_margin(tokens.sizes.popover_padding)
+        .shadow(ctx.global_style().visuals.popup_shadow);
+
+    Glass::new(frame, frost::raised(ctx))
+}
+
+/// `list` is the list's height before it scrolls. Returns the height the
+/// list showed and its whole height.
 fn popover(
     ui: &mut Ui,
     changes: &[ChangeView],
     (held, list): (Option<&'static str>, f32),
     commands: &CommandSender,
-) -> Fit {
+) -> (f32, f32) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     let count = changes.len().to_string();
-    let mut shown = 0.0;
-    let mut whole = 0.0;
 
-    let rect = raised(
-        ui,
-        CornerRadius::same(POPOVER_RADIUS),
-        tokens.sizes.popover_padding,
-        |ui| {
-            ui.set_width(tokens.sizes.popover_width);
-            ui.name_pane(&i18n::text(&ctx, "pane-changes"));
-            ui.horizontal(|ui| {
-                ui.label(rich(
-                    ui,
-                    &i18n::text(&ctx, "changes-title"),
-                    Weight::Bold,
-                    PANE_TITLE,
-                    tokens.text,
-                ));
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    ui.label(rich(
-                        ui,
-                        &i18n::text(&ctx, "changes-together"),
-                        Weight::Regular,
-                        SMALL,
-                        tokens.secondary,
-                    ));
-                });
-            });
-            ui.add_space(tokens.sizes.control_gap);
+    ui.set_width(tokens.sizes.popover_width);
+    ui.name_pane(&i18n::text(&ctx, "pane-changes"));
+    ui.horizontal(|ui| {
+        ui.label(rich(
+            ui,
+            &i18n::text(&ctx, "changes-title"),
+            Weight::Bold,
+            PANE_TITLE,
+            tokens.text,
+        ));
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            ui.label(rich(
+                ui,
+                &i18n::text(&ctx, "changes-together"),
+                Weight::Regular,
+                SMALL,
+                tokens.secondary,
+            ));
+        });
+    });
+    ui.add_space(tokens.sizes.control_gap);
 
-            let scrolled = egui::ScrollArea::vertical()
-                .max_height(list)
-                .show(ui, |ui| {
-                    for change in changes {
-                        row(ui, change, commands);
-                    }
-                });
+    let scrolled = egui::ScrollArea::vertical()
+        .max_height(list)
+        .show(ui, |ui| {
+            for change in changes {
+                row(ui, change, commands);
+            }
+        });
 
-            shown = scrolled.inner_rect.height();
-            whole = scrolled.content_size.y;
-
-            ui.add_space(tokens.sizes.control_gap);
-            let top = ui.cursor().top();
-            ui.painter().hline(
-                ui.max_rect().x_range(),
-                top,
-                Stroke::new(1.0, tokens.outline),
-            );
-            ui.add_space(tokens.sizes.card_gap);
-
-            footer(ui, &count, held, commands);
-        },
-    );
-
-    Fit {
-        chrome: rect.height() - shown,
-        list: whole,
-        most: tokens.sizes.changes_list_height,
+    match held {
+        Some(reason) => unread(ui, reason, commands),
+        None => held::forget(ui.ctx()),
     }
+
+    ui.add_space(tokens.sizes.control_gap);
+    let top = ui.cursor().top();
+    ui.painter().hline(
+        ui.max_rect().x_range(),
+        top,
+        Stroke::new(1.0, tokens.outline),
+    );
+    ui.add_space(tokens.sizes.card_gap);
+
+    footer(ui, &count, held, commands);
+    (scrolled.inner_rect.height(), scrolled.content_size.y)
 }
 
 /// Remove all at the left, Apply at the right.
@@ -340,7 +381,7 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
 /// Whether the popover showed last frame, so a key handled before the
 /// pill draws can leave it to the popover.
 pub fn popover_shows(ctx: &Context) -> bool {
-    let layer = LayerId::new(LAYER, popover_id());
+    let layer = LayerId::new(PopupKind::Popup.order(), popover_id());
     ctx.memory(|memory| memory.areas().is_visible(&layer))
 }
 

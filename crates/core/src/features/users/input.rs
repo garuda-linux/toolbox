@@ -1,6 +1,7 @@
 //! Text from the page's dialogs turned into value objects, with the code
 //! the page shows a message for when a text breaks a rule.
 
+mod login;
 #[cfg(test)]
 mod tests;
 
@@ -11,6 +12,7 @@ use toolbox_plan::{
     NewHome, NewUser, Reason, Rule, ShellPath, UserId,
 };
 
+pub use self::login::login_from_full_name;
 use super::Refusal;
 use super::home::{Placement, place};
 use super::now::new_user;

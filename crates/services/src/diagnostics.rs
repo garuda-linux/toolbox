@@ -9,11 +9,13 @@ pub mod page;
 pub mod service;
 #[cfg(test)]
 mod tests;
+pub mod view;
 
 use std::sync::Arc;
 
 use crossbeam_channel::Receiver;
 use toolbox_core::features::diagnostics::Selection;
+use toolbox_https::Clock;
 use toolbox_privatebin::{RequestError, Transport};
 use toolbox_pty::{Run, styled_lines};
 use toolbox_system::DiagnosticSource;
@@ -29,6 +31,8 @@ const DRY_RUN_ANSWER: &str = r#"{"status":0,"id":"dryrun0000000000","deletetoken
 pub struct DiagnosticsLink {
     handle: DiagnosticsHandle,
     notes: Receiver<DiagnosticsNote>,
+    /// Stamps a finished report. A fixed one keeps snapshots stable.
+    clock: Arc<dyn Clock>,
 }
 
 /// Stands in for the paste server in a dry run and its self-test.
@@ -127,16 +131,18 @@ impl Diagnostics {
     /// Takes the notes that came since the last frame. Returns what they
     /// changed, in order.
     pub fn take(&mut self) -> Vec<Changed> {
-        let notes: Vec<DiagnosticsNote> = self
-            .link
-            .as_ref()
-            .map(|link| link.notes.try_iter().collect())
-            .unwrap_or_default();
+        let Some(link) = self.link.as_ref() else {
+            return Vec::new();
+        };
 
-        notes
-            .into_iter()
+        link.notes
+            .try_iter()
             .map(|note| {
                 let changed = self.page.apply(note);
+                if changed == (Changed::Report { ready: true }) {
+                    self.page.collected = u64::try_from(link.clock.now()).ok();
+                }
+
                 if matches!(changed, Changed::Report { ready: _ }) {
                     self.lines = if self.page.state == State::Report {
                         styled_lines(&self.page.raw)
@@ -176,6 +182,7 @@ pub fn spawn(
     wake: Wake,
     source: Arc<dyn DiagnosticSource>,
     transport: Arc<dyn Transport>,
+    clock: Arc<dyn Clock>,
 ) -> DiagnosticsLink {
     let (sender, notes) = waking::channel(wake);
     let sink = Arc::new(Sink(sender));
@@ -183,5 +190,6 @@ pub fn spawn(
     DiagnosticsLink {
         handle: service::spawn(runtime, source, transport, sink),
         notes,
+        clock,
     }
 }

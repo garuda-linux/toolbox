@@ -2,9 +2,10 @@ use toolbox_plan::{PlannedAction, RootAction, TargetList, UnitOperation, UnitSco
 
 mod critical;
 mod queue;
+mod shown;
 
 use super::{
-    ActiveState, FileState, Filter, UnitInfo, UnitOrder, does_nothing, pick, plan_control,
+    ActiveState, FileState, Filter, Shown, UnitInfo, UnitOrder, does_nothing, pick, plan_control,
     plan_logs,
 };
 use crate::test_support::unit;
@@ -72,8 +73,14 @@ fn names(units: &[&UnitInfo]) -> Vec<String> {
 fn everything() -> Filter {
     Filter {
         search: String::new(),
-        include_disabled: true,
-        hide_inactive: false,
+        shown: Shown::All,
+    }
+}
+
+fn only(shown: Shown) -> Filter {
+    Filter {
+        shown,
+        ..everything()
     }
 }
 
@@ -135,8 +142,7 @@ fn the_default_filter_shows_what_runs() {
         Filter::default(),
         Filter {
             search: String::new(),
-            include_disabled: false,
-            hide_inactive: true,
+            shown: Shown::Running,
         }
     );
 }
@@ -191,45 +197,6 @@ fn surrounding_spaces_in_the_search_are_ignored() {
     assert_eq!(
         names(&listed(&units, &filter, UnitOrder::Name)),
         ["cups.socket"]
-    );
-}
-
-#[test]
-fn disabled_units_can_be_left_out() {
-    let units = units();
-    let filter = Filter {
-        include_disabled: false,
-        ..everything()
-    };
-
-    assert_eq!(
-        names(&listed(&units, &filter, UnitOrder::Name)),
-        [
-            "bluetooth.service",
-            "sshd.service",
-            "systemd-journald.service"
-        ]
-    );
-}
-
-/// A failed unit is what the user most likely came for, so hiding the
-/// inactive ones keeps it.
-#[test]
-fn hiding_inactive_units_keeps_failed_ones() {
-    let units = units();
-    let filter = Filter {
-        hide_inactive: true,
-        ..everything()
-    };
-
-    assert_eq!(
-        names(&listed(&units, &filter, UnitOrder::Name)),
-        [
-            "avahi-daemon.service",
-            "bluetooth.service",
-            "sshd.service",
-            "systemd-journald.service"
-        ]
     );
 }
 

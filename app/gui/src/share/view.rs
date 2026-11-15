@@ -1,14 +1,15 @@
 //! The links hold the key to the paste, so they are only shown and copied
 //! when asked, never logged.
 
-use egui::{Id, Label, ScrollArea, TextEdit, Ui};
+use egui::{Id, Label, Ui};
 use toolbox_core::features::diagnostics::{Redacted, UploadFailure};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
+use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, banner, card, confirm_buttons,
-    loading_label, menu_button, menu_item, pill_button, rich, text_field,
+    loading_label, menu_button, menu_item, pill_button, rich,
 };
 use toolbox_privatebin::{Paste, SERVER};
 use toolbox_services::share::{Upload, UploadProblem};
@@ -55,19 +56,11 @@ impl ShareView<'_> {
     }
 }
 
-/// The link, the failure or the running upload. Nothing before the first
-/// upload. Returns whether it drew anything.
-pub fn status(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> bool {
-    let Some(paste) = view.upload.paste() else {
-        return running_or_failed(ui, view);
-    };
-
-    padded_card(ui, |ui| links_of(ui, view, paste, asking));
-    true
-}
-
-/// As [`status`] in one row, for a place with little room: Copy link,
-/// the other link actions in a ⋯ menu, and Hide.
+/// The link in one row: Copy link, the other link actions (open, the
+/// delete link) in a ⋯ menu, and Hide.
+///
+/// Else the failure or the running upload, nothing before the first upload.
+/// Returns whether it drew anything.
 pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> bool {
     let Some(paste) = view.upload.paste() else {
         return running_or_failed(ui, view);
@@ -76,6 +69,9 @@ pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> 
     let ctx = ui.ctx().clone();
     let text = |id: &str| view.text(&ctx, id);
     ui.horizontal(|ui| {
+        // As tall as the buttons before the text comes, so it centres on
+        // their middle and not on egui's shorter row.
+        ui.set_min_height(PILL_HEIGHT);
         ui.label(rich(
             ui,
             &text("share-uploaded-short"),
@@ -153,91 +149,9 @@ fn failure(ctx: &egui::Context, view: &ShareView<'_>, problem: &UploadProblem) -
     .into_owned()
 }
 
-fn links_of(ui: &mut Ui, view: &ShareView<'_>, paste: &Paste, asking: &mut Option<Question>) {
-    let ctx = ui.ctx().clone();
-    let text = |id: &str| view.text(&ctx, id);
-
-    field(
-        ui,
-        &text("share-uploaded"),
-        &paste.link,
-        &text("share-link"),
-    );
-    ui.horizontal_wrapped(|ui| {
-        if pill_button(ui, &text("share-copy-link"), ButtonKind::Primary).clicked() {
-            copy(&ctx, view.commands, &paste.link, "share-link-copied");
-        }
-
-        let open = ui.add_enabled_ui(ours(paste), |ui| {
-            pill_button(ui, &text("share-open-link"), ButtonKind::Soft)
-        });
-
-        if open.inner.clicked() {
-            links::open(&ctx, &paste.link);
-        }
-
-        if pill_button(ui, &text("share-hide"), ButtonKind::Soft).clicked() {
-            view.commands.send(view.hide.clone());
-        }
-    });
-
-    ui.add_space(ui.tokens().sizes.card_gap);
-    let delete = text("share-delete-link");
-    field(ui, &delete, &paste.delete_link, &delete);
-    ui.horizontal_wrapped(|ui| {
-        if pill_button(ui, &text("share-copy-delete-link"), ButtonKind::Soft).clicked() {
-            copy(
-                &ctx,
-                view.commands,
-                &paste.delete_link,
-                "share-delete-link-copied",
-            );
-        }
-
-        if pill_button(ui, &text("share-delete-now"), ButtonKind::Soft).clicked() {
-            *asking = Some(Question::Delete);
-        }
-    });
-}
-
 /// Only the paste server's own links open, whatever came back.
 fn ours(paste: &Paste) -> bool {
     paste.link.starts_with(&format!("{SERVER}/?"))
-}
-
-/// A link to read and select, never to edit, with `label` above it.
-fn field(ui: &mut Ui, label: &str, link: &str, name: &str) {
-    let tokens = ui.tokens();
-    ui.add(Label::new(rich(ui, label, Weight::SemiBold, BODY, tokens.text)).wrap());
-
-    // A card leaves no room between its items, the gaps here are the
-    // form's own.
-    ui.add_space(tokens.sizes.caption_gap);
-
-    // The link is longer than the card, so it scrolls with a bar at rest
-    // instead of ending at the field's edge.
-    ui.scope(|ui| {
-        toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
-        ScrollArea::horizontal()
-            .id_salt(("share-link", name))
-            .show(ui, |ui| {
-                let mut shown = link;
-                let response = text_field(
-                    ui,
-                    TextEdit::singleline(&mut shown)
-                        .clip_text(false)
-                        .desired_width(ui.available_width())
-                        .font(egui::TextStyle::Monospace)
-                        .align(egui::Align2::LEFT_CENTER),
-                );
-
-                response.widget_info(|| {
-                    egui::WidgetInfo::labeled(egui::accesskit::Role::TextInput, true, name)
-                });
-            });
-    });
-
-    ui.add_space(tokens.sizes.control_gap);
 }
 
 /// The open question, if any: the upload of `shareable`, or the delete.

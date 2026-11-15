@@ -207,3 +207,35 @@ fn the_actions_keep_their_gap_from_the_words() {
         "the wrapped detail ends {gap} before the button"
     );
 }
+
+fn row_height(queued: &'static str) -> f32 {
+    let mut harness = harness(700.0, 200.0).build_ui_state(
+        move |ui, drawn: &mut Rect| {
+            *drawn = ui
+                .scope(|ui| {
+                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system")
+                        .detail("Installs the newest versions of every package.")
+                        .queued(queued)
+                        .show(ui, |ui| {
+                            _ = pill_button(ui, "Run now", ButtonKind::Soft);
+                        });
+                })
+                .response
+                .rect;
+        },
+        Rect::NOTHING,
+    );
+
+    harness.run();
+    harness.state().height()
+}
+
+#[test]
+fn a_queued_row_is_as_tall_as_one_at_rest() {
+    let (rest, queued) = (row_height(""), row_height("Runs with Apply"));
+
+    assert!(
+        (queued - rest).abs() < 0.5,
+        "{queued} tall queued, {rest} at rest"
+    );
+}

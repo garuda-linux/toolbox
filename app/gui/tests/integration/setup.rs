@@ -86,7 +86,7 @@ fn a_pick_reaches_the_queue_and_the_summary() {
     harness.get_by_label("Next").click();
     harness.run();
     harness
-        .get_by_role_and_label(Role::CheckBox, "Strawberry Player")
+        .get_by_role_and_label(Role::Button, "Install Strawberry Player")
         .click();
     harness.run();
     assert!(
@@ -127,7 +127,7 @@ fn summary_with_a_pick(harness: &mut Harness<'static, App>) {
     harness.get_by_label("Next").click();
     harness.run();
     harness
-        .get_by_role_and_label(Role::CheckBox, "Strawberry Player")
+        .get_by_role_and_label(Role::Button, "Install Strawberry Player")
         .click();
     harness.run();
     harness.get_by_label("Next").click();

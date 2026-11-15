@@ -5,6 +5,7 @@
 mod tests;
 
 mod exorcist;
+mod hero;
 
 use egui::Ui;
 use egui::accesskit::Role;
@@ -101,8 +102,10 @@ impl PageView for AboutPage {
     }
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
-        let version = context.version;
         let _ui = tracing::trace_span!("about ui").entered();
+        hero::show(ui, context);
+        ui.add_space(ui.tokens().sizes.section_gap);
+
         let called = &mut self.exorcist;
         if ui.available_width() >= SIDE_BY_SIDE {
             // Both cards take the taller one's height of the last pass, so
@@ -118,11 +121,7 @@ impl PageView for AboutPage {
                 // shrinks again, after a language change for example.
                 let facts = card(left, |column| {
                     column.set_min_height(tallest);
-                    column
-                        .scope(|column| facts(column, version))
-                        .response
-                        .rect
-                        .height()
+                    column.scope(facts).response.rect.height()
                 });
 
                 let help = card(right, |column| {
@@ -142,7 +141,7 @@ impl PageView for AboutPage {
                 ui.ctx().request_repaint();
             }
         } else {
-            card(ui, |ui| facts(ui, version));
+            card(ui, facts);
             ui.add_space(ui.tokens().sizes.card_gap);
             card(ui, |ui| help(ui, called));
         }
@@ -158,8 +157,9 @@ impl PageView for AboutPage {
     }
 }
 
-/// The version and the addresses can be copied.
-fn facts(ui: &mut Ui, version_value: &str) {
+/// The credits and the legal facts. The addresses can be copied, the
+/// version stands in the hero.
+fn facts(ui: &mut Ui) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id);
     let copy = |label: &str| i18n::text_with(&ctx, "about-copy", &[("label", label)]).into_owned();
@@ -169,8 +169,7 @@ fn facts(ui: &mut Ui, version_value: &str) {
         copied: &copied,
     };
 
-    let (version, licence, made_by, bugs, website) = (
-        text("about-version"),
+    let (licence, made_by, bugs, website) = (
         text("about-licence"),
         text("about-made-by"),
         text("about-bugs"),
@@ -182,7 +181,6 @@ fn facts(ui: &mut Ui, version_value: &str) {
     let padding = ui.tokens().sizes.card_padding;
     egui::Frame::new().inner_margin(padding).show(ui, |ui| {
         property_list(ui, texts, |list| {
-            list.row_copied(&version, version_value);
             list.row(&licence, &licence_value);
             list.row(&made_by, &made_by_value);
             list.row_with(&bugs, Some(BUGS), |row| address(row, &tracker, BUGS));
@@ -246,9 +244,14 @@ fn community(ui: &mut Ui) {
 
 /// `body` gets the width of one tile.
 pub fn tiles(ui: &mut Ui, most: Option<u8>, body: impl FnOnce(&mut Ui, f32)) {
+    tiles_at_least(ui, most, TILE_WIDTH, body);
+}
+
+/// [`tiles`] with tiles no narrower than `least`.
+pub fn tiles_at_least(ui: &mut Ui, most: Option<u8>, least: f32, body: impl FnOnce(&mut Ui, f32)) {
     let gap = ui.tokens().sizes.card_gap;
     let room = ui.available_width();
-    let fit = ((room + gap) / (TILE_WIDTH + gap)).floor();
+    let fit = ((room + gap) / (least + gap)).floor();
     let columns = fit.clamp(1.0, most.map_or(f32::INFINITY, f32::from));
 
     // Down to whole pixels: a hair over the room makes the wrapping line

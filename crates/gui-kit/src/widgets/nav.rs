@@ -6,7 +6,7 @@ use super::buttons::glyph_size;
 use super::press::Pointer;
 use super::text::cut;
 use super::{focus_ring, line, rich};
-use crate::fonts::{BODY, SMALL, Weight};
+use crate::fonts::{BODY, CAPTION, Weight};
 use crate::icons::Icon;
 use crate::theme::RADIUS;
 use crate::tokens;
@@ -16,7 +16,7 @@ const PADDING_X: f32 = 12.0;
 const ICON_GAP: f32 = 12.0;
 /// The group labels' tracking, in points, as small capitals want.
 const TRACKING: f32 = 0.7;
-const LABEL_SCALE: f32 = SMALL * 0.85;
+const LABEL_SCALE: f32 = CAPTION;
 /// Above a group label in a sidebar that is not packed.
 const LABEL_ROOM: f32 = 4.0;
 /// How opaque an entry at a cut edge of a scrolled list stays.

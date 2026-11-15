@@ -92,6 +92,7 @@ users-refused-uid-invalid = The user ID is a whole number from 1 to 60000.
 users-refused-uid-in-use = Another account already has this user ID.
 users-refused-uid-out-of-range = Accounts of people take a user ID from 1000 to 60000, system accounts one below 1000.
 users-refused-home-taken = Another account already has this home folder.
+users-refused-busy = Other changes are still being applied, so nothing was changed for { $name }. Try again once they are done.
 users-refused-unavailable = The user accounts of this system could not be read.
 
 users-name-empty = Enter a name.
@@ -122,6 +123,7 @@ users-add-title = Add a user
 users-field-name = User name
 users-field-name-hint = Lowercase letters, digits, hyphens and underscores, at most 32 characters.
 users-field-full-name = Full name
+users-field-full-name-hint = Optional. The user name below follows its first word until you change it.
 users-field-shell = Login shell
 users-field-shell-hint = Only shells listed in /etc/shells can be chosen.
 users-shell-default = System default

@@ -59,16 +59,18 @@ pub(super) fn section_hides(
     group: Group,
     density: Density,
 ) -> bool {
-    let (room, height) = match group.heading_id() {
-        Some(_) if density.expanded => {
-            (density.label_room, group_label_height(ui, density.compact))
-        }
-        Some(_) => (0.0, nav_divider_height(density.divider)),
+    let (room, height, below) = match group.heading_id() {
+        Some(_) if density.expanded => (
+            density.label_room,
+            group_label_height(ui, density.compact),
+            density.label_below,
+        ),
+        Some(_) => (0.0, nav_divider_height(density.divider), 0.0),
         None => return false,
     };
 
     let top = start + room;
-    let entry = top + height + density.gap;
+    let entry = top + height + below + density.gap;
     fade.cuts(top, top + height) || past_the_end(ui, entry, density)
 }
 

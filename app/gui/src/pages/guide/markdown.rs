@@ -8,13 +8,13 @@ use egui::{
     Align, Color32, CornerRadius, Frame, Grid, Label, Layout, Margin, RichText, ScrollArea, Sense,
     Stroke, TextStyle, Ui, vec2,
 };
-use toolbox_gui_kit::fonts::{self, BODY, SECTION, SMALL, Weight};
+use toolbox_gui_kit::fonts::{self, BODY, SECTION, Weight};
 use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS};
 use toolbox_gui_kit::widgets::{
     TileSize, Tone, icon_button, icon_button_width, paint_status_tile, rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_guide::{Block, Callout, CalloutKind, Code, Heading, Image, List, Table};
+use toolbox_guide::{Block, Callout, CalloutKind, Code, Heading, List, Table};
 
 use super::Jump;
 use crate::i18n;
@@ -34,6 +34,8 @@ pub(super) struct Reader<'target> {
     pub headings: Vec<(String, f32)>,
     /// A code block went to the clipboard, which the page tells the user.
     pub copied: bool,
+    /// The source and description of the picture clicked to see it large.
+    pub enlarged: Option<(String, String)>,
 }
 
 impl<'target> Reader<'target> {
@@ -44,6 +46,7 @@ impl<'target> Reader<'target> {
             reached: false,
             headings: Vec::new(),
             copied: false,
+            enlarged: None,
         }
     }
 }
@@ -64,7 +67,7 @@ fn one(ui: &mut Ui, block: &Block, reader: &mut Reader<'_>) {
         Block::Table(table) => grid(ui, table, reader),
         Block::Code(code) => code_block(ui, code, reader),
         Block::Callout(callout) => note(ui, callout, reader),
-        Block::Image(image) => picture(ui, image),
+        Block::Image(image) => super::picture::show(ui, image, reader),
         Block::Rule => _ = ui.separator(),
     }
 }
@@ -252,43 +255,4 @@ fn mark_tile(ui: &mut Ui, tone: Tone) {
     let (room, _) = ui.allocate_exact_size(vec2(edge, top + edge), Sense::hover());
     let centre = egui::pos2(room.center().x, room.top() + top + edge / 2.0);
     paint_status_tile(ui, centre, TileSize::Row, tone);
-}
-
-fn shown_size(bytes: &[u8], width: f32) -> Option<egui::Vec2> {
-    let (picture_width, picture_height) = toolbox_guide::image_size(bytes)?;
-    let picture_width = f32::from(u16::try_from(picture_width).ok()?);
-    let picture_height = f32::from(u16::try_from(picture_height).ok()?);
-
-    (picture_width > 0.0).then(|| vec2(width, width * picture_height / picture_width))
-}
-
-/// A picture of the guide with its description under it, or the
-/// description alone when the guide lacks the picture.
-fn picture(ui: &mut Ui, image: &Image) {
-    let tokens = ui.tokens();
-    if let Some(bytes) = toolbox_guide::image(&image.src) {
-        let width = ui.available_width();
-        let uri = format!("bytes://guide/{}", image.src);
-
-        // The picture is decoded on a thread of its own. No spinner shows
-        // meanwhile, and its room is kept from the size in its header, so
-        // the words below it never move.
-        let picture = egui::Image::from_bytes(uri, bytes)
-            .corner_radius(CornerRadius::same(CARD_RADIUS))
-            .alt_text(&image.alt)
-            .show_loading_spinner(false);
-
-        match shown_size(bytes, width) {
-            Some(size) => ui.add_sized(size, picture.fit_to_exact_size(size)),
-            None => ui.add(picture.fit_to_exact_size(vec2(width, f32::INFINITY))),
-        };
-    }
-
-    ui.label(rich(
-        ui,
-        &image.alt,
-        Weight::Regular,
-        SMALL,
-        tokens.secondary,
-    ));
 }

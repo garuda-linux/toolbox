@@ -36,6 +36,17 @@ fn a_fresh_page_is_idle_without_text_or_upload() {
 }
 
 #[test]
+fn a_report_keeps_when_it_came_in_until_the_next_start() {
+    let mut page = with_report();
+    assert_eq!(page.collected, None, "a page reads no clock itself");
+
+    page.collected = Some(1_792_327_265_u64);
+
+    page.apply(DiagnosticsNote::Started(Selection::All));
+    assert_eq!(page.collected, None);
+}
+
+#[test]
 fn a_start_shows_the_run_and_takes_the_old_report_away() {
     let mut page = with_report();
 

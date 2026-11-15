@@ -178,6 +178,7 @@ fn services_filter_by_state_and_boot() {
         service("b.service", "active", false),
         service("c.service", "failed", true),
         service("d.service", "inactive", true),
+        service("e.service", "activating", false),
     ];
 
     let names = |list: ServicesList| -> Vec<String> {
@@ -188,7 +189,8 @@ fn services_filter_by_state_and_boot() {
 
     assert_eq!(
         names(services_list(true, false, false)),
-        ["a.service", "b.service"]
+        ["a.service", "b.service", "e.service"],
+        "a unit changing state counts as running, as on the page"
     );
     assert_eq!(names(services_list(false, true, false)), ["c.service"]);
     assert_eq!(names(services_list(true, false, true)), ["a.service"]);

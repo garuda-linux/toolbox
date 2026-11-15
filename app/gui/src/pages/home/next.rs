@@ -13,10 +13,14 @@ use crate::i18n;
 use crate::page::PageId;
 use crate::page_ui::{self, PageLook as _};
 use crate::pages::PageContext;
-use crate::pages::about::tiles;
+use crate::pages::about::tiles_at_least;
 
 /// How many steps fit one row.
 const STEPS: u8 = 3;
+
+/// Narrower than the About tiles, so three steps share one line in the
+/// default window.
+const STEP_WIDTH: f32 = 220.0;
 
 /// Review while changes wait, the Setup Assistant until it ran once on
 /// an installed system, then Maintenance and Diagnostics.
@@ -51,9 +55,18 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
     heading(ui, "home-next");
     ui.add_space(ui.tokens().sizes.card_gap);
 
-    tiles(ui, Some(STEPS), |ui, width| {
-        for (icon, title, subtitle, command) in steps.into_iter().flatten().take(usize::from(STEPS))
-        {
+    // As many columns as steps while they fit, so no line holds a lone
+    // tile beside free room.
+    let shown: Vec<_> = steps
+        .into_iter()
+        .flatten()
+        .take(usize::from(STEPS))
+        .collect();
+
+    let columns = u8::try_from(shown.len()).unwrap_or(STEPS).max(1);
+
+    tiles_at_least(ui, Some(columns), STEP_WIDTH, |ui, width| {
+        for (icon, title, subtitle, command) in shown {
             if link_tile(ui, icon, &title, &subtitle, width).clicked() {
                 context.commands.send(command);
             }

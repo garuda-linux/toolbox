@@ -12,11 +12,22 @@ search-clear = Suche leeren
 # The ✕ in a dialog's title bar.
 dialog-close = Schließen
 
+# The eye in a password field while its text shows as dots.
+password-show = Passwort anzeigen
+# The eye in a password field while its text shows.
+password-hide = Passwort ausblenden
+
 # Asked when the window is closed while changes are being applied.
 close-running-question = Beenden, obwohl gerade Änderungen übernommen werden?
 close-running-detail = Beenden bricht den Vorgang ab. Wird ein Schritt wie eine Paketaktualisierung mittendrin abgebrochen, kann das System danach beschädigt sein.
 close-running-keep = Weiterlaufen lassen
 close-running-quit = Abbrechen und beenden
+
+# Asked when the window is closed while Config Files shows an edit that was not applied.
+close-edit-question = Beenden, ohne die Bearbeitung zu übernehmen?
+close-edit-detail = Deine Änderungen an einer Konfigurationsdatei sind noch nicht geschrieben. Beim Beenden gehen sie verloren.
+close-edit-keep = Weiter bearbeiten
+close-edit-quit = Verwerfen und beenden
 
 # The banner of a page whose switches and menus wait while a plan runs.
 common-plan-running = Es werden gerade Änderungen übernommen. Bis dahin lässt sich hier nichts ändern.

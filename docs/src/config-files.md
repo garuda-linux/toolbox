@@ -86,8 +86,9 @@ as if you had opened it from the file manager.
    you want, save and quit the editor.
 4. The page comes back with the dialog `Save the changes to <file>?`. It shows
    every changed line with a few lines around it, under a heading such as
-   **Lines 3 to 6**: added lines start with `+`, removed lines with `-`. It
-   also names the file that will be written when that is another one (see
+   **Lines 3 to 6**: added lines start with `+` on a green row, removed lines
+   with `-` on a red row. Two columns at the left number each line, in the
+   file as it is and in your edited copy. It also names the file that will be written when that is another one (see
    [Files that are links](#files-that-are-links)).
 5. Click **Save**. A password dialog asks for an administrator, and the
    Console shows the write.

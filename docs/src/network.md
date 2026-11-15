@@ -179,7 +179,9 @@ On the **Tools** tab under **Connection tests**:
    and click **Run traceroute** beside it.
 
 Both run with your own rights and show their output in the Console. Click
-**Cancel** there to stop one early.
+**Cancel** there to stop one early. Once a test ended, a note under the
+buttons says whether it finished or ended with an error. While the Console
+is closed, **Show Console** in the note opens it.
 
 When the host is not a name or address, the buttons are greyed out and
 the **Host** row says **Enter a host name or an IP address, for example

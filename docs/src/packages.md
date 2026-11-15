@@ -9,7 +9,9 @@ apps, see [App Catalog](discover.md).
 
 The page reads pacman's package databases as they are. It never syncs
 them, so it is as fresh as the last system update. When the databases
-cannot be read, the page says so and offers **Read again**.
+cannot be read, the page says so and offers **Read again**. While the AUR
+is turned on, the **AUR** chip is then picked and still works. The other
+chips are greyed out and show no number.
 
 ## Find a package
 
@@ -24,7 +26,10 @@ The chips above the list pick what it shows:
 | **AUR**       | The packages of the AUR, only while the AUR is turned on in **Settings**   |
 
 **Updates** holds the repository updates and the AUR updates that **Home**
-found, so both show the same number.
+found, so both show the same number. Until the check for updates has
+answered, the chip shows no number and its list says **Checking for
+updates…**. When the check failed, the list says **Updates could not be
+checked.** with **Read again**.
 
 To narrow the list, type in **Search packages** at the top. The search
 looks at names and descriptions under the chip that is picked. While you
@@ -112,7 +117,11 @@ An installed AUR package is removed like any other package, see
 ## See a package's details
 
 Click a row, or select it and press `Space`, to open its details on one
-page. **← Packages** (or `Esc`) goes back to the list.
+page. The arrow at the right of each row shows that it opens. **←
+Packages** (or `Esc`) goes back to the list. On the details, **Install**
+is the main button of the page.
+
+The details come in cards:
 
 - At the left: the description, then the repository, installed size,
   licenses, groups, install date and install reason, the website, and
@@ -126,7 +135,7 @@ page. **← Packages** (or `Esc`) goes back to the list.
 - **History:** the newest 5 changes pacman made to the package. **Show
   all** lists every one the log still holds.
 
-In a narrow window the right column moves under the left one.
+In a narrow window the right card moves under the left one.
 
 Click a name in a dependency list to open that package. The back button
 then names the package you came from, so **←** walks back through the

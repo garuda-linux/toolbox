@@ -1,27 +1,18 @@
-//! The greeting: whom it greets, what needs attention and the facts of
-//! the system below it.
-
-use std::time::{Duration, SystemTime};
+//! The greeting: whom it greets and what needs attention. The stat tiles
+//! below it hold the system's figures.
 
 use egui::{Label, Ui, vec2};
-use toolbox_cli::output::size;
-use toolbox_core::features::status::disk_low;
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, SMALL, Weight};
-use toolbox_gui_kit::widgets::{Tone, link_tag, rich, status_dot, tag};
+use toolbox_gui_kit::widgets::{Tone, rich, status_dot};
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
-use toolbox_system::{Facts, Host, PackageCount};
+use toolbox_system::Host;
 
 use super::logo;
 use super::status::attention_rows;
-use crate::command::UiCommand;
 use crate::i18n;
-use crate::page::PageId;
 use crate::pages::PageContext;
 
 const LOGO_SIZE: f32 = 64.0;
-
-const HOUR: Duration = Duration::from_hours(1);
-const DAY: Duration = Duration::from_hours(24);
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
     let ctx = ui.ctx().clone();
@@ -45,7 +36,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
                 subtitle(ui, "home-subtitle");
             } else {
                 summary(ui, context, host);
-                facts(ui, context);
             }
         });
     });
@@ -107,80 +97,4 @@ fn summary(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
             ui.label(rich(ui, &updated, Weight::Regular, SMALL, tokens.secondary));
         }
     });
-}
-
-fn facts(ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(facts) = context.home.facts.and_then(Loadable::get) else {
-        return;
-    };
-
-    ui.add_space(ui.tokens().sizes.tight_gap);
-    ui.horizontal_wrapped(|ui| {
-        if let Ok(count) = &facts.packages {
-            let text = packages_text(ui.ctx(), *count);
-            if link_tag(ui, &text, Tone::Neutral).clicked() {
-                context.commands.send(UiCommand::Navigate(PageId::Packages));
-            }
-        }
-
-        if let Ok(kernel) = &facts.kernel {
-            tag(ui, &kernel_text(ui.ctx(), kernel, facts), Tone::Neutral);
-        }
-
-        if let Ok(disk) = &facts.disk {
-            let free = size(disk.free);
-            let text = i18n::text_with(ui.ctx(), "home-fact-disk", &[("free", &free)]);
-            let tone = if disk_low(disk.free, disk.total) {
-                Tone::Warning
-            } else {
-                Tone::Neutral
-            };
-
-            tag(ui, &text, tone);
-        }
-    });
-}
-
-fn packages_text(ctx: &egui::Context, count: PackageCount) -> String {
-    let installed = count.installed.to_string();
-    count
-        .foreign
-        .filter(|foreign| *foreign > 0)
-        .map_or_else(
-            || i18n::text_with(ctx, "home-fact-packages", &[("count", &installed)]),
-            |foreign| {
-                i18n::text_with(
-                    ctx,
-                    "home-fact-packages-foreign",
-                    &[("count", &installed), ("foreign", &foreign.to_string())],
-                )
-            },
-        )
-        .into_owned()
-}
-
-fn kernel_text(ctx: &egui::Context, kernel: &str, facts: &Facts) -> String {
-    let Some(up) = facts
-        .booted
-        .as_ref()
-        .ok()
-        .and_then(|booted| SystemTime::now().duration_since(*booted).ok())
-    else {
-        return kernel.to_owned();
-    };
-
-    let (id, amount) = if up < HOUR {
-        ("home-fact-kernel-new", 0)
-    } else if up >= DAY {
-        ("home-fact-kernel-days", up.as_secs() / DAY.as_secs())
-    } else {
-        ("home-fact-kernel-hours", up.as_secs() / HOUR.as_secs())
-    };
-
-    i18n::text_with(
-        ctx,
-        id,
-        &[("kernel", kernel), ("amount", &amount.to_string())],
-    )
-    .into_owned()
 }

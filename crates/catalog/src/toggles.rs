@@ -18,7 +18,8 @@
 //!
 //! Entries that edit a config file in the user's home have their own
 //! checks and fields, see the `user_config` module. `also`, `desktop`,
-//! `icon` and `url` are in the `extras` module, `conflicts` in its own.
+//! `icon`, `glyph` and `url` are in the `extras` module, `conflicts` in its
+//! own.
 
 mod conflicts;
 mod duplicates;
@@ -78,6 +79,7 @@ pub struct ToggleEntry {
     reload: Option<ConfigReload>,
     desktops: Vec<String>,
     icon: Option<String>,
+    glyph: Option<String>,
     url: Option<String>,
 }
 
@@ -106,6 +108,7 @@ struct RawEntry {
     reload: Option<String>,
     desktop: Option<Vec<String>>,
     icon: Option<String>,
+    glyph: Option<String>,
     url: Option<String>,
 }
 

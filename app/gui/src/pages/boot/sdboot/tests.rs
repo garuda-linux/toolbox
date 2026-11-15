@@ -1,4 +1,5 @@
 mod counts;
+mod segments;
 
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
@@ -127,15 +128,6 @@ fn remembering_the_last_entry_queues_saved() {
         sent(&harness),
         [loader(LoaderSetting::Default(Some(LoaderDefault::saved())))]
     );
-}
-
-#[test]
-fn a_switch_takes_on_off_or_systemd_boots_own_default() {
-    let mut harness = shown(image_menu(LOADER_CONF));
-
-    pick(&mut harness, "Edit entries at boot", "Off");
-
-    assert_eq!(sent(&harness), [loader(LoaderSetting::Editor(Some(false)))]);
 }
 
 #[test]

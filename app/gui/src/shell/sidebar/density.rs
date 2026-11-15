@@ -19,6 +19,9 @@ pub(super) struct Density {
     /// Above a packed group heading: the room the packed list leaves,
     /// shared out, so the heading does not cling to the entry above it.
     pub(super) label_room: f32,
+    /// Below a packed group heading, beside the gap between entries, so
+    /// it reads as the heading of the entries under it.
+    pub(super) label_below: f32,
     pub(super) expanded: bool,
 }
 
@@ -32,6 +35,7 @@ impl Density {
             top_gap: sizes.control_gap,
             compact: false,
             label_room: 0.0,
+            label_below: 0.0,
             expanded,
         }
     }
@@ -45,6 +49,7 @@ impl Density {
             top_gap: sizes.nav_group_gap_compact,
             compact: true,
             label_room: 0.0,
+            label_below: 0.0,
             expanded,
         }
     }
@@ -61,11 +66,13 @@ impl Density {
         let mut packed = Self::compact(sizes, expanded);
         let headings = Self::headings(ui.ctx());
         if expanded && headings > 0.0 {
+            // A heading keeps its room even when the list scrolls, or it
+            // reads as part of the entry above. Each side counts the gap
+            // between entries that egui puts there too.
+            packed.label_below = (sizes.tight_gap - packed.gap).max(0.0);
             let spare = available - packed.needed(ui);
-
-            // A heading keeps a little room above even when the list
-            // scrolls, or it reads as part of the entry above.
-            packed.label_room = (spare / headings).clamp(sizes.tight_gap, sizes.nav_group_gap);
+            let least = (sizes.heading_gap - packed.gap).max(0.0);
+            packed.label_room = (spare / headings).max(least);
         }
 
         packed
@@ -103,7 +110,9 @@ impl Density {
             if group != Some(page.group()) {
                 group = Some(page.group());
                 height += match page.group().heading_id() {
-                    Some(_) if self.expanded => self.label_room + label + self.gap,
+                    Some(_) if self.expanded => {
+                        self.label_room + label + self.label_below + self.gap
+                    }
                     Some(_) => nav_divider_height(self.divider) + self.gap,
                     None => self.group_gap,
                 };

@@ -4,10 +4,9 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_core::features::users::home::set_home;
+use toolbox_core::features::users::account::set_account;
 use toolbox_core::features::users::{
-    self as core_users, add_group, keep_user, remove_group, remove_user, set_full_name, set_groups,
-    set_shell,
+    self as core_users, add_group, keep_user, remove_group, remove_user, set_groups,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 
@@ -57,9 +56,7 @@ impl Users {
         let subject = match edit {
             UserEdit::SetLocked { user, locked: _ }
             | UserEdit::SetGroups { user, groups: _ }
-            | UserEdit::SetFullName { user, name: _ }
-            | UserEdit::SetShell { user, shell: _ }
-            | UserEdit::SetHome { user, change: _ }
+            | UserEdit::Set { user, edit: _ }
             | UserEdit::Remove { user, home: _ } => user.to_string(),
             UserEdit::AddGroup(group) | UserEdit::RemoveGroup(group) => group.to_string(),
         };
@@ -71,11 +68,10 @@ impl Users {
                 core_users::set_locked(user, wish, locks.of(user), queued, snapshot)
             }
             UserEdit::SetGroups { user, groups } => set_groups(user, groups, queued, snapshot),
-            UserEdit::SetFullName { user, name } => {
-                set_full_name(user, name.clone(), queued, snapshot)
-            }
-            UserEdit::SetShell { user, shell } => set_shell(user, shell.clone(), queued, snapshot),
-            UserEdit::SetHome { user, change } => set_home(user, change.clone(), queued, snapshot),
+            UserEdit::Set {
+                user,
+                edit: account,
+            } => set_account(user, account.clone(), queued, snapshot),
             UserEdit::Remove { user, home } => remove_user(user, *home, queued, snapshot),
             UserEdit::AddGroup(group) => add_group(group, queued, snapshot),
             UserEdit::RemoveGroup(group) => remove_group(group, queued, snapshot),

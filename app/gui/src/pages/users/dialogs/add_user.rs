@@ -1,21 +1,31 @@
 //! Creates a user and sets its password at once. Each field says what is
 //! wrong with it while it is typed. Core builds the account from the
 //! fields, so the dialog and the queue apply the same rules.
+//!
+//! The full name comes first and proposes the login until that is typed
+//! by hand. A failed run opens the dialog again as it was sent, without
+//! the passwords, which went with the run.
+
+mod more;
 
 use std::collections::BTreeSet;
 use std::fmt;
 
-use egui::{Context, TextEdit, Ui};
+use egui::{Context, Ui};
 use toolbox_core::features::users::home::check_uid;
-use toolbox_core::features::users::input::{self, AddForm, InputProblem, NewAccount, add_blocker};
+use toolbox_core::features::users::input::{
+    self, AddForm, InputProblem, NewAccount, add_blocker, login_from_full_name,
+};
 use toolbox_core::features::users::now::check_new_name;
+use toolbox_core::features::users::run::{Retry, RunKind};
 use toolbox_core::features::users::view;
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::widgets::{ButtonKind, Select, check_row, disclosure, text_field};
-use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, ShellPath, UserName};
+use toolbox_gui_kit::widgets::{ButtonKind, check_row, disclosure};
+use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, UserName};
 
+use self::more::shell_choice;
 use super::password::PasswordPair;
-use super::{Next, dialog_why, field, note, title};
+use super::{Next, dialog_why, field, note};
 use crate::command::UsersCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -23,8 +33,11 @@ use crate::pages::users::texts;
 
 #[derive(Default)]
 pub struct AddUser {
-    name: String,
     full_name: String,
+    name: String,
+    /// Whether the login was typed by hand, so the full name no longer
+    /// proposes it.
+    login: Login,
     /// Empty for the system's default shell.
     shell: String,
     home: String,
@@ -35,6 +48,16 @@ pub struct AddUser {
     admin: bool,
     groups: BTreeSet<GroupName>,
     search: String,
+    /// The account the dialog sent when it closed, `None` before.
+    sent: Option<UserName>,
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+enum Login {
+    /// Follows the full name.
+    #[default]
+    Proposed,
+    Typed,
 }
 
 /// What each field says is wrong with it, `None` where nothing is.
@@ -81,7 +104,7 @@ impl AddUser {
 
                 if open {
                     ui.add_space(ui.tokens().sizes.card_gap);
-                    self.identity(ui, ctx, context, &problems);
+                    shell_choice(ui, ctx, context, &mut self.shell);
                     self.place(ui, ctx, &problems);
                     self.other_groups(ui, ctx, context);
                 }
@@ -91,6 +114,7 @@ impl AddUser {
         );
 
         if confirmed && let (Ok(user), Some(password)) = (account, self.password.password()) {
+            self.sent = Some(user.parts().name.clone());
             context.commands.send(UsersCommand::AddUser {
                 user: Box::new(user),
                 password,
@@ -98,6 +122,27 @@ impl AddUser {
         }
 
         next
+    }
+
+    /// The fields as sent, without the passwords, to open again when the
+    /// run fails. `None` when the dialog closed without sending.
+    pub fn retry(&self) -> Option<Retry<Box<Self>>> {
+        let user = self.sent.clone()?;
+        let form = Self {
+            full_name: self.full_name.clone(),
+            name: self.name.clone(),
+            login: self.login,
+            shell: self.shell.clone(),
+            home: self.home.clone(),
+            uid: self.uid.clone(),
+            no_home: self.no_home,
+            system: self.system,
+            admin: self.admin,
+            groups: self.groups.clone(),
+            ..Self::default()
+        };
+
+        Some(Retry::new(Box::new(form), RunKind::NewAccount, user))
     }
 
     /// The account the fields make, and each field's problem.
@@ -178,7 +223,8 @@ impl AddUser {
         Some(i18n::text(ctx, &format!("users-add-why-{code}")).into_owned())
     }
 
-    /// The name, the password and whether the account may administer.
+    /// The full name, the login, the password and whether the account may
+    /// administer.
     fn required(
         &mut self,
         ui: &mut Ui,
@@ -187,13 +233,39 @@ impl AddUser {
         problems: &Problems,
     ) {
         let text = |id: &str| i18n::text(ctx, id).into_owned();
-        let labels = (text("users-field-name"), text("users-field-name-hint"));
-        field(
+        let full_labels = (
+            text("users-field-full-name"),
+            text("users-field-full-name-hint"),
+        );
+
+        let full_name = field(
             ui,
-            (&labels.0, &labels.1),
+            (&full_labels.0, &full_labels.1),
+            &mut self.full_name,
+            problems.full_name.as_deref(),
+        );
+
+        if full_name.changed() && self.login == Login::Proposed {
+            self.name = login_from_full_name(&self.full_name);
+        }
+
+        let login_labels = (text("users-field-name"), text("users-field-name-hint"));
+        let login = field(
+            ui,
+            (&login_labels.0, &login_labels.1),
             &mut self.name,
             problems.name.as_deref(),
         );
+
+        // Emptied by hand, the login follows the full name again.
+        if login.changed() {
+            self.login = if self.name.is_empty() {
+                Login::Proposed
+            } else {
+                Login::Typed
+            };
+        }
+
         self.password.show(ui, ctx);
 
         if let Some(group) = view::admin_group(context.snapshot, context.changes) {
@@ -207,137 +279,4 @@ impl AddUser {
             ui.add_space(ui.tokens().sizes.card_gap);
         }
     }
-
-    fn identity(
-        &mut self,
-        ui: &mut Ui,
-        ctx: &Context,
-        context: &PageContext<'_>,
-        problems: &Problems,
-    ) {
-        let text = |id: &str| i18n::text(ctx, id).into_owned();
-        let full_name = text("users-field-full-name");
-        field(
-            ui,
-            (&full_name, ""),
-            &mut self.full_name,
-            problems.full_name.as_deref(),
-        );
-
-        shell_choice(ui, ctx, context, &mut self.shell);
-    }
-
-    fn place(&mut self, ui: &mut Ui, ctx: &Context, problems: &Problems) {
-        let text = |id: &str| i18n::text(ctx, id).into_owned();
-        if !self.no_home {
-            let labels = (text("users-field-home"), text("users-field-home-hint"));
-            field(
-                ui,
-                (&labels.0, &labels.1),
-                &mut self.home,
-                problems.home.as_deref(),
-            );
-        }
-
-        let labels = (text("users-field-uid"), text("users-field-uid-hint"));
-        field(
-            ui,
-            (&labels.0, &labels.1),
-            &mut self.uid,
-            problems.uid.as_deref(),
-        );
-        for (on, id) in [
-            (&mut self.no_home, "users-no-home"),
-            (&mut self.system, "users-system"),
-        ] {
-            let detail = text(&format!("{id}-detail"));
-            if check_row(ui, *on, &text(id), &detail, true).clicked() {
-                *on = !*on;
-            }
-
-            note(ui, &detail);
-        }
-
-        ui.add_space(ui.tokens().sizes.card_gap);
-    }
-
-    /// The groups besides the administrators.
-    fn other_groups(&mut self, ui: &mut Ui, ctx: &Context, context: &PageContext<'_>) {
-        let admin = view::admin_group(context.snapshot, context.changes);
-        title(ui, &i18n::text(ctx, "users-other-groups"));
-        let search = text_field(
-            ui,
-            TextEdit::singleline(&mut self.search)
-                .hint_text(i18n::text(ctx, "users-groups-search-hint"))
-                .desired_width(f32::INFINITY)
-                .align(egui::Align2::LEFT_CENTER),
-        );
-
-        let name = i18n::text(ctx, "users-groups-search").into_owned();
-        ui.ctx()
-            .accesskit_node_builder(search.id, |node| node.set_label(name));
-
-        let names = view::group_names(context.snapshot, context.changes, &self.search);
-
-        // Rows of the dialog's own scrolling body, never a list scrolling
-        // inside it: the search above narrows a system's dozens of groups.
-        for group in names.iter().filter(|group| Some(*group) != admin) {
-            let on = self.groups.contains(group);
-            let box_row = check_row(ui, on, group.as_str(), "", true);
-            if box_row.gained_focus() {
-                box_row.scroll_to_me(None);
-            }
-
-            if box_row.clicked() {
-                if on {
-                    self.groups.remove(group);
-                } else {
-                    self.groups.insert(group.clone());
-                }
-            }
-        }
-
-        ui.add_space(ui.tokens().sizes.card_gap);
-    }
-}
-
-/// The login shell: the system's default first, then what `/etc/shells`
-/// lists. Empty `chosen` is the default.
-fn shell_choice(ui: &mut Ui, ctx: &Context, context: &PageContext<'_>, chosen: &mut String) {
-    let text = |id: &str| i18n::text(ctx, id).into_owned();
-    let shells = view::shells(context.snapshot);
-    let default = text("users-shell-default");
-    let shown = ShellPath::names(shells);
-    let names: Vec<&str> = std::iter::once(default.as_str())
-        .chain(shown.iter().map(String::as_str))
-        .collect();
-
-    let picked = shells.iter().position(|shell| shell.as_str() == chosen);
-    let current = if chosen.is_empty() {
-        Some(0)
-    } else {
-        picked.map(|index| index + 1)
-    };
-
-    let label = text("users-field-shell");
-    title(ui, &label);
-    if let Some(index) = Select::new(&label, &names)
-        .selected(current)
-        .detail(
-            picked
-                .and_then(|index| shells.get(index))
-                .map(ShellPath::as_str),
-        )
-        .width(ui.available_width())
-        .show(ui)
-    {
-        *chosen = index
-            .checked_sub(1)
-            .and_then(|index| shells.get(index))
-            .map(|shell| shell.as_str().to_owned())
-            .unwrap_or_default();
-    }
-
-    note(ui, &text("users-field-shell-hint"));
-    ui.add_space(ui.tokens().sizes.card_gap);
 }

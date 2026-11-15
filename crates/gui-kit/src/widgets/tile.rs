@@ -2,8 +2,9 @@ use egui::{CornerRadius, Rect, Response, Role, Sense, StrokeKind, Ui, WidgetInfo
 
 use super::card::light_rim;
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
+use super::list::text_line_height;
 use super::press::Pointer;
-use super::text::cut;
+use super::text::{cut, cut_lines};
 use super::{focus_ring, rich};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::icons::{self, Icon};
@@ -11,14 +12,17 @@ use crate::theme::CARD_RADIUS;
 use crate::tokens::{self, Tokens};
 use crate::ui_ext::icon_image;
 
+/// A larger desktop font grows a tile past this, never shrinks it.
 const HEIGHT: f32 = 76.0;
 const GAP: f32 = 14.0;
 const CHEVRON: f32 = 16.0;
 const LEADING: f32 = 2.0;
+const SUBTITLE_LINES: u8 = 2;
 
 pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f32) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let (rect, mut response) = ui.allocate_exact_size(vec2(width, HEIGHT), Sense::click());
+    let size = vec2(width, height(ui, &tokens));
+    let (rect, mut response) = ui.allocate_exact_size(size, Sense::click());
     response.widget_info(|| WidgetInfo::labeled(Role::Link, ui.is_enabled(), title));
     ui.ctx()
         .accesskit_node_builder(response.id, |node| node.set_description(subtitle));
@@ -74,6 +78,15 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
     response
 }
 
+/// Room for the title and [`SUBTITLE_LINES`] of subtitle whatever the
+/// subtitle says, so the tiles of one line are as tall.
+fn height(ui: &Ui, tokens: &Tokens) -> f32 {
+    let title = text_line_height(ui, Weight::SemiBold, BODY);
+    let subtitle = text_line_height(ui, Weight::Regular, SMALL);
+    let text = subtitle.mul_add(f32::from(SUBTITLE_LINES), title + LEADING);
+    tokens.sizes.row_padding.y.mul_add(2.0, text).max(HEIGHT)
+}
+
 /// Returns whether either was cut.
 fn paint_text(ui: &Ui, tokens: &Tokens, area: Rect, title: &str, subtitle: &str) -> bool {
     let width = area.width().max(0.0);
@@ -83,10 +96,11 @@ fn paint_text(ui: &Ui, tokens: &Tokens, area: Rect, title: &str, subtitle: &str)
         width,
     );
 
-    let subtitle = cut(
+    let subtitle = cut_lines(
         ui,
         rich(ui, subtitle, Weight::Regular, SMALL, tokens.secondary),
         width,
+        usize::from(SUBTITLE_LINES),
     );
 
     let was_cut = title.elided || subtitle.elided;

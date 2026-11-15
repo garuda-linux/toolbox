@@ -1,6 +1,7 @@
 use super::{Listing, Row};
 use crate::domains::{DkmsBuilds, Packages};
 use crate::features::kernels::{ModuleState, RunningKernel};
+use crate::features::toggles::shown::Control;
 use crate::testing::features::kernels::{dkms, package, system, vboxhost_build};
 use crate::{ChangeSet, Queued, Snapshot, Toggle};
 
@@ -133,4 +134,19 @@ fn the_listing_finds_the_running_kernel_and_the_builds() {
     assert!(listing.kernel(&package("linux-nope")).is_none());
     assert_eq!(listing.builds(linux, &dkms()), [vboxhost_build()]);
     assert_eq!(listing.builds(lts, &dkms()), []);
+}
+
+#[test]
+fn a_kernel_offers_install_remove_or_take_back() {
+    let snapshot = system();
+    let listing = Listing::of(&snapshot).unwrap();
+    let mut changes = ChangeSet::default();
+
+    changes.want::<Packages>(package("linux-lts"), Toggle::Off, &snapshot);
+
+    let rows = listing.rows(&changes, &dkms());
+
+    assert_eq!(row(&rows, "linux").control(), Control::Remove);
+    assert_eq!(row(&rows, "linux-zen").control(), Control::Install);
+    assert_eq!(row(&rows, "linux-lts").control(), Control::TakeBack);
 }

@@ -2,6 +2,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::configs::Refusal;
 use toolbox_core::features::configs::session::{Problem, ProblemCode, Session};
 use toolbox_core::features::configs::viewing::Viewing;
+use toolbox_gui_kit::testing::{fill_under, painted_text_within};
 
 use super::{listed, page, reviewing, reviewing_of, sent, shows, viewing};
 use crate::command::{AppCommand, Command, ConfigsCommand};
@@ -95,6 +96,36 @@ fn the_review_names_the_changed_lines_in_words() {
         "no raw hunk header"
     );
     assert!(shows(&harness, "Line 1"));
+}
+
+#[test]
+fn the_review_numbers_each_line_and_tints_the_changed_ones() {
+    let harness = page(listed().with(reviewing(), Viewing::default()));
+    let tokens = toolbox_gui_kit::tokens::current(&harness.ctx);
+
+    for (line, text, wash) in [
+        ("+GRUB_TIMEOUT=2", "GRUB_TIMEOUT=2", tokens.success),
+        ("-GRUB_TIMEOUT=5", "GRUB_TIMEOUT=5", tokens.error),
+    ] {
+        let row = harness.get_by_label(line).rect();
+        let painted = |shown: &str| {
+            let shape = painted_text_within(&harness, shown, row)
+                .unwrap_or_else(|| panic!("{shown} is not inside the row of {line}"));
+
+            shape.galley.rect.translate(shape.pos.to_vec2())
+        };
+
+        let (number, content) = (painted("1"), painted(text));
+        assert!(
+            number.right() < content.left(),
+            "{line}: the number comes first"
+        );
+        assert_eq!(
+            fill_under(&harness, row.center()),
+            Some(tokens.banner_wash(wash)),
+            "{line}"
+        );
+    }
 }
 
 #[test]

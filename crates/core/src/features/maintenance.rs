@@ -21,6 +21,9 @@ use crate::{ChangeSet, Snapshot, SummaryCode};
 pub static GARUDA_UPDATE_PACKAGE: LazyLock<PackageName> =
     LazyLock::new(|| const { KnownPackage::new("garuda-update") }.name());
 
+pub static GARUDA_HEALTH_PACKAGE: LazyLock<PackageName> =
+    LazyLock::new(|| const { KnownPackage::new("garuda-health") }.name());
+
 pub static RATE_MIRRORS_PACKAGE: LazyLock<PackageName> =
     LazyLock::new(|| const { KnownPackage::new("rate-mirrors") }.name());
 

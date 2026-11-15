@@ -6,7 +6,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use parking_lot::Mutex;
 
 use super::AboutPage;
-use crate::command::Command;
+use crate::command::{AppCommand, Command};
 use crate::links::{Opener, install};
 use crate::testing::{PageFixture, PageState};
 
@@ -48,6 +48,26 @@ fn the_version_and_licence_show() {
 
     assert!(harness.query_by_label(crate::FIXED_VERSION).is_some());
     assert!(harness.query_by_label("GPL 3.0 or later").is_some());
+}
+
+#[test]
+fn the_hero_names_the_app_above_its_version_and_copies_the_system_details() {
+    let (mut harness, _) = page();
+    let name = harness.get_by_label("Garuda Toolbox").rect();
+    let version = harness.get_by_label(crate::FIXED_VERSION).rect();
+    let credits = harness.get_by_label("Made by the Garuda Linux team").rect();
+
+    assert!(name.bottom() <= version.top(), "{name:?} {version:?}");
+    assert!(version.bottom() <= credits.top(), "{version:?} {credits:?}");
+
+    harness.get_by_label("Copy system details").click();
+    harness.run();
+
+    assert!(matches!(
+        harness.state().fixture.sent().as_slice(),
+        [Command::App(AppCommand::Toast { text, kind: _ })]
+            if text == "Copied the system details to the clipboard."
+    ));
 }
 
 #[test]
@@ -191,7 +211,10 @@ fn only_technical_facts_offer_a_copy_button() {
         harness.query_by_label(&named).is_some()
     };
 
-    assert!(copy("Version"), "the version is what a bug report needs");
+    assert!(
+        harness.query_by_label("Copy system details").is_some(),
+        "the version and the system are what a bug report needs"
+    );
     assert!(!copy("Made by"), "a name is nothing to paste");
     assert!(!copy("Licence"), "the licence is nothing to paste");
 }

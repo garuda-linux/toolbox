@@ -18,8 +18,8 @@ pub enum Applying {
 }
 
 impl Applying {
-    /// Plans run one after the other, so the next start after the sending
-    /// is this plan's start.
+    /// The window calls it only for the start reported under the id the
+    /// plan was sent with, so another plan's start never counts.
     pub fn started(self) -> Self {
         match self {
             Self::Sent(plan, owners) => Self::Running(plan, owners),

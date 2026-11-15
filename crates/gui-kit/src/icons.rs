@@ -141,15 +141,17 @@ pub const USER_OTHERS: Icon = bundled!("user-others");
 pub const UTILITIES_TERMINAL: Icon = bundled!("utilities-terminal");
 pub const VCS_DIFF: Icon = bundled!("vcs-diff");
 pub const VIEW_CERTIFICATE: Icon = bundled!("view-certificate");
+pub const VIEW_HIDDEN: Icon = bundled!("view-hidden");
 pub const VIEW_LIST_DETAILS: Icon = bundled!("view-list-details");
 pub const VIEW_LIST_ICONS: Icon = bundled!("view-list-icons");
 pub const VIEW_MEDIA_EQUALIZER: Icon = bundled!("view-media-equalizer");
 pub const VIEW_PIM_TASKS: Icon = bundled!("view-pim-tasks");
 pub const VIEW_REFRESH: Icon = bundled!("view-refresh");
 pub const VIEW_TASK: Icon = bundled!("view-task");
+pub const VIEW_VISIBLE: Icon = bundled!("view-visible");
 pub const WINDOW_CLOSE: Icon = bundled!("window-close");
 
-pub const ALL: [Icon; 87] = [
+pub const ALL: [Icon; 89] = [
     APPLICATIONS_DEVELOPMENT,
     APPLICATIONS_GAMES,
     APPLICATIONS_GRAPHICS,
@@ -230,12 +232,14 @@ pub const ALL: [Icon; 87] = [
     UTILITIES_TERMINAL,
     VCS_DIFF,
     VIEW_CERTIFICATE,
+    VIEW_HIDDEN,
     VIEW_LIST_DETAILS,
     VIEW_LIST_ICONS,
     VIEW_MEDIA_EQUALIZER,
     VIEW_PIM_TASKS,
     VIEW_REFRESH,
     VIEW_TASK,
+    VIEW_VISIBLE,
     WINDOW_CLOSE,
 ];
 

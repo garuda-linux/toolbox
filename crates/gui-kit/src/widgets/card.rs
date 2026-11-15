@@ -121,8 +121,8 @@ pub(super) fn mark_raised(ui: &Ui, raised: bool) {
     ui.data_mut(|data| data.insert_temp(raised_id(ui.scope_id()), raised));
 }
 
-/// Whether `ui` or a Ui around it sits on a row's hover fill or a
-/// focused row, where a Soft button at rest has the fill's own colour.
+/// Whether `ui` or a Ui around it sits on a row's hover fill, where a
+/// Soft button at rest has the fill's own colour.
 pub(super) fn on_raised(ui: &Ui) -> bool {
     ui.stack().iter().any(|frame| {
         ui.data(|data| data.get_temp::<bool>(raised_id(frame.scope_id)))

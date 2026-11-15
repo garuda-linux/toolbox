@@ -5,8 +5,10 @@ services-user = Benutzer
 services-scope = Angezeigte Dienste
 services-search = Dienste durchsuchen
 services-search-hint = Dienste durchsuchen…
-services-hide-disabled = Deaktivierte ausblenden
-services-hide-inactive = Inaktive ausblenden
+services-show-running = Laufend
+services-show-enabled = Aktiviert
+services-show-failed = Fehlgeschlagen
+services-show-all = Alle
 services-refresh = Neu einlesen
 services-sort = Dienste sortieren
 services-sort-name = Name
@@ -18,6 +20,14 @@ services-denied = Keine Berechtigung, die Dienste zu lesen.
 services-failed = Die Dienste konnten nicht gelesen werden.
 services-retry = Erneut versuchen
 services-none-detail = Ändere die Suche oder die Filter, um mehr Dienste zu sehen.
+services-show-every =
+    { $count ->
+        [one] Den einen Treffer zeigen
+       *[other] Alle { $count } Treffer zeigen
+    }
+# A start, stop or journal did not run, as other changes are being applied.
+services-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind.
+services-dismiss = Ausblenden
 # Why an action of a unit's menu cannot be picked, shown on hover.
 services-why-busy = Erst möglich, wenn die laufenden Änderungen abgeschlossen sind.
 services-why-masked = Ein maskierter Dienst kann nicht starten. Demaskiere ihn zuerst.

@@ -6,6 +6,7 @@
 //! threads and the frame takes their results.
 
 mod jobs;
+mod mirrorlist;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 mod sample;
 #[cfg(test)]
@@ -16,6 +17,7 @@ use std::sync::Arc;
 
 use jobs::Jobs;
 pub use jobs::MaintenanceSetup;
+use mirrorlist::Install;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub use sample::SampleMirrors;
 use toolbox_catalog::SkelCatalog;
@@ -44,6 +46,8 @@ pub enum MaintenanceProblem {
         reason: String,
     },
     Mirrors(RankProblem),
+    /// A run of the page was not started, as another plan runs.
+    Busy,
 }
 
 #[derive(Debug, Default)]
@@ -51,6 +55,8 @@ pub struct Maintenance {
     problem: Option<MaintenanceProblem>,
     /// The Chaotic-AUR mirrors are being ranked, which takes minutes.
     ranking: bool,
+    /// The install of the last ranked list, until it started.
+    mirrorlist: Install,
     /// The settings reset: what is on offer, what is chosen, what happened.
     shelf: Shelf,
     opening: Opening,
@@ -152,6 +158,11 @@ impl Maintenance {
         self.problem = None;
     }
 
+    /// App did not send a run of the page, as another plan runs.
+    pub fn refuse_busy(&mut self) {
+        self.problem = Some(MaintenanceProblem::Busy);
+    }
+
     /// The runs, the queue and Refresh need what App holds: the Console
     /// and garuda-update's program.
     pub fn handle(&mut self, command: &AppCommand) -> Handled {
@@ -173,7 +184,7 @@ impl Maintenance {
                 on: _,
             }
             | MaintenanceCommand::OpenTool(_)
-            | MaintenanceCommand::InstallGarudaUpdate
+            | MaintenanceCommand::InstallMissing
             | MaintenanceCommand::Reveal(_)
             | MaintenanceCommand::Refresh => return Handled::default(),
         }
@@ -191,14 +202,26 @@ impl Maintenance {
         self.opening = self.opening.refused();
     }
 
+    /// The install of the ranked list began.
+    pub fn mirrorlist_started(&mut self) {
+        self.mirrorlist = std::mem::take(&mut self.mirrorlist).started();
+    }
+
+    /// Another plan was running, so the list waits for its end.
+    pub fn mirrorlist_refused(&mut self) {
+        self.mirrorlist = std::mem::take(&mut self.mirrorlist).refused();
+    }
+
     /// Starts what waited for the install that just ended, when `exists`
     /// finds its program now: the last check may have run before the end.
+    /// A ranked list that waited goes out with the next [`Self::take`].
     pub fn plan_finished(
         &mut self,
         succeeded: bool,
         exists: impl Fn(&Path) -> bool,
         launcher: Option<&dyn Launcher>,
     ) {
+        self.mirrorlist = std::mem::take(&mut self.mirrorlist).finished();
         let (next, left) = self.opening.finished(succeeded);
         self.opening = left;
         match next {
@@ -222,17 +245,25 @@ impl Maintenance {
     }
 
     /// The results that came in since the last frame. A ranked list comes
-    /// back as the plan that installs it.
+    /// back as the plan that installs it, and so does one that waited for
+    /// the end of another plan.
     pub fn take(&mut self) -> Option<Plan> {
         let jobs = self.jobs.as_ref()?;
         if let Some(outcome) = jobs.reset_outcome() {
             self.shelf.finish_reset(outcome);
         }
 
+        if let Some(plan) = self.mirrorlist.due() {
+            return Some(plan);
+        }
+
         let ranked = jobs.ranked()?;
         self.ranking = false;
         match ranked {
-            Ok(mirrorlist) => Some(Plan::root(RootAction::InstallMirrorlist { mirrorlist })),
+            Ok(mirrorlist) => {
+                let plan = Plan::root(RootAction::InstallMirrorlist { mirrorlist });
+                Some(self.mirrorlist.landed(plan))
+            }
             Err(problem) => {
                 tracing::error!("ranking the Chaotic-AUR mirrors failed: {problem}");
                 self.problem = Some(MaintenanceProblem::Mirrors(problem));

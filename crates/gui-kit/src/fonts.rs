@@ -19,14 +19,16 @@ use skrifa::{FontRef, MetadataProvider as _, Tag};
 pub const INTER: &str = "Inter";
 pub const JETBRAINS_MONO: &str = "JetBrains Mono";
 
-/// Page titles.
+/// Page titles. Larger than an even step, as the brand look has them.
 pub const TITLE: f32 = 2.3;
 /// Section headings and dialog titles.
 pub const SECTION: f32 = 1.4;
-/// Labels of rows and buttons, the body size.
+/// Labels of rows and buttons, pane titles, the body size.
 pub const BODY: f32 = 1.0;
-/// Descriptions, counts and tags.
+/// Descriptions, counts and the Console's state.
 pub const SMALL: f32 = 0.92;
+/// Tags and the sidebar's group labels. No text takes a size off these steps.
+pub const CAPTION: f32 = 0.82;
 
 /// KDE's and GNOME's default size, used when the desktop names none.
 const DEFAULT_POINTS: f32 = 10.0;

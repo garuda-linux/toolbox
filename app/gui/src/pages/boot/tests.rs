@@ -276,18 +276,18 @@ fn a_queued_change_is_marked() {
 }
 
 #[test]
-fn use_none_waits_in_the_menu_of_its_row() {
+fn a_file_row_clears_its_file_with_an_inline_button() {
     let mut harness = ready();
 
-    assert!(harness.query_by_label("Use none").is_none());
-    harness
-        .get_by_label("More actions for GRUB theme")
-        .scroll_to_me();
+    assert!(
+        harness
+            .query_by_label("More actions for GRUB theme")
+            .is_none()
+    );
+    harness.get_by_label("Clear GRUB theme").scroll_to_me();
     harness.run();
-    harness.get_by_label("More actions for GRUB theme").click();
-    harness.run();
     harness
-        .get_by_role_and_label(Role::MenuItem, "Use none")
+        .get_by_role_and_label(Role::Button, "Clear GRUB theme")
         .click();
     harness.run();
 
@@ -368,9 +368,7 @@ fn the_new_parameter_hint_is_centred_in_its_field() {
 #[test]
 fn a_long_chosen_path_sits_under_the_words_and_leaves_choose_in_line() {
     let mut harness = ready();
-    harness
-        .get_by_label("More actions for GRUB theme")
-        .scroll_to_me();
+    harness.get_by_label("Clear GRUB theme").scroll_to_me();
     harness.run();
 
     let chooses = [

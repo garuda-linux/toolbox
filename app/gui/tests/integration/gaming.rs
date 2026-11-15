@@ -28,12 +28,12 @@ fn the_launchers_show_and_a_click_queues_one() {
     // Steam up instead of a scroll.
     type_into(&mut harness, "Search this page", "Steam");
     harness
-        .get_by_role_and_label(Role::CheckBox, "Steam")
+        .get_by_role_and_label(Role::Button, "Install Steam")
         .click();
     harness.run();
 
     assert!(harness.query_by_label("change queued").is_some());
-    assert!(harness.query_by_label("Turns on with Apply").is_some());
+    assert!(harness.query_by_label("Installs with Apply").is_some());
 }
 
 #[test]
@@ -45,7 +45,7 @@ fn a_chip_keeps_one_section() {
     assert!(harness.query_by_label("Game launchers").is_none());
     assert!(
         harness
-            .query_by_role_and_label(Role::CheckBox, "Proton CachyOS")
+            .query_by_role_and_label(Role::Button, "Install Proton CachyOS")
             .is_some()
     );
 }

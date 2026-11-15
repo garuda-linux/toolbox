@@ -15,6 +15,8 @@ packages-filter-all = Alle
 
 packages-none = Keine Pakete
 packages-none-detail = Die Repositorys bieten keine an und es ist keines installiert.
+packages-updates-loading = Updates werden gesucht…
+packages-updates-failed = Die Updates ließen sich nicht prüfen.
 packages-no-updates = Keine ausstehenden Updates
 packages-no-updates-detail = Die Startseite sucht nach Updates. Installierte Pakete mit neuerer Version erscheinen hier.
 packages-no-orphans = Keine verwaisten Pakete

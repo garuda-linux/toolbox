@@ -8,13 +8,20 @@ discover-all = Alle
 discover-sort-name = Name
 discover-sort-selected = Ausgewählte zuerst
 discover-actions = Weitere Aktionen für { $name }
-# The rows of the command palette that open an app on this page.
-discover-palette-app = App
-discover-unreadable = Die installierten Apps konnten nicht ermittelt werden. Die Schalter zeigen daher nicht an, was installiert ist. Das Einschalten einer bereits installierten App bewirkt nichts.
+discover-unreadable = Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht an, was installiert ist. Das Installieren einer bereits installierten App bewirkt nichts.
 discover-problem = Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt.
 discover-nothing-matches = Keine App passt zu „{ $search }“
 discover-nothing-matches-detail = Die Suche umfasst Namen, Beschreibungen und Paketnamen in allen Kategorien.
 discover-clear-search = Suche leeren
+# A chip picked a category without a match while others have some. $category is the category's name, $search what the user typed.
+discover-nothing-in-category = Keine App in { $category } passt zu „{ $search }“
+discover-nothing-in-category-detail = Andere Kategorien haben passende Apps.
+# $count is how many apps of every category match the search.
+discover-show-all-matches =
+    { $count ->
+        [one] Den Treffer zeigen
+       *[other] Alle { $count } Treffer zeigen
+    }
 discover-none = Keine Apps vorhanden
 discover-none-detail = Apps, die deine Repositorys nicht anbieten, sind ausgeblendet.
 

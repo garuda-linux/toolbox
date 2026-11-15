@@ -4,7 +4,7 @@ mod row;
 #[cfg(test)]
 mod tests;
 
-use app_row::AppRow;
+use app_row::AppGroup;
 use chips::Chips;
 use egui::Ui;
 use toolbox_catalog::LoadProblem;
@@ -14,7 +14,7 @@ use toolbox_core::features::discover::{AppOrder, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state,
-    page_toolbar, pill_button,
+    page_toolbar, pill_button, section_heading,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -32,7 +32,7 @@ pub struct DiscoverPage {
     search: String,
     category: Option<String>,
     order: AppOrder,
-    rows: RowCache<RowsKey, Vec<AppRow>>,
+    rows: RowCache<RowsKey, Vec<AppGroup>>,
     chips: RowCache<ChipsKey, Chips>,
     /// The title of an app picked in the palette, whose row takes the
     /// focus once it shows.
@@ -121,46 +121,28 @@ impl DiscoverPage {
             look,
         );
 
-        let rows = self
+        let groups = self
             .rows
             .get(&[category.unwrap_or_default(), &self.search], rest, || {
                 let _build = tracing::trace_span!("build rows").entered();
                 let marked = self.search.trim();
-                view::rows(apps, query, context.snapshot, context.changes)
+                view::groups(apps, query, context.snapshot, context.changes)
                     .iter()
-                    .map(|shown| AppRow::of(ui, shown, marked))
+                    .map(|group| AppGroup::of(ui, group, marked))
                     .collect()
             });
 
-        if rows.is_empty() {
-            self.nothing(ui);
+        if groups.is_empty() {
+            let elsewhere = category
+                .filter(|_| chips.matches > 0)
+                .and_then(|id| chips.title(id))
+                .map(|title| (title.to_owned(), chips.matches));
+
+            self.nothing(ui, elsewhere);
             return;
         }
 
-        let list = i18n::text(&ctx, "page-discover");
-
-        // A description of one line makes a shorter row than one of two, so
-        // each row is measured and keeps the card row's padding.
-        let heights = RowHeights::Measured {
-            estimate: row::height(ui),
-        };
-
-        let _rows = tracing::trace_span!("rows").entered();
-        let revealed = self.revealing.as_deref().and_then(|title| {
-            rows.iter()
-                .find(|row| row.title == title)
-                .map(|row| row.id.clone())
-        });
-
-        let holds = RowList::new("apps", &list, heights)
-            .reveal(revealed.as_deref())
-            .show(ui, rows.as_slice(), |ui, app, state| {
-                dimmed(ui, context.busy, |ui| row::show(ui, context, app, state));
-            });
-
-        // Asked again until the row holds the focus. An app the list does
-        // not show is not waited for.
-        if holds || revealed.is_none() {
+        if show_groups(ui, context, &groups, self.revealing.as_deref()) {
             self.revealing = None;
         }
     }
@@ -186,9 +168,27 @@ impl DiscoverPage {
         }
     }
 
-    fn nothing(&mut self, ui: &mut Ui) {
+    /// The empty state. While a picked category hides the matches of
+    /// others, `elsewhere` names it and how many apps match in all.
+    fn nothing(&mut self, ui: &mut Ui, elsewhere: Option<(String, usize)>) {
         let ctx = ui.ctx().clone();
         let search = self.search.trim().to_owned();
+        if let Some((category, matches)) = elsewhere.filter(|_| !search.is_empty()) {
+            let count = matches.to_string();
+            let named = [("category", category.as_str()), ("search", search.as_str())];
+            let title = i18n::text_with(&ctx, "discover-nothing-in-category", &named);
+            let detail = i18n::text(&ctx, "discover-nothing-in-category-detail");
+            empty_state(ui, icons::SYSTEM_SEARCH, &title, &detail);
+            ui.add_space(ui.tokens().sizes.card_gap);
+            ui.vertical_centered(|ui| {
+                let all = i18n::text_with(&ctx, "discover-show-all-matches", &[("count", &count)]);
+                if pill_button(ui, &all, ButtonKind::Soft).clicked() {
+                    self.category = None;
+                }
+            });
+            return;
+        }
+
         let (icon, title, detail) = if search.is_empty() {
             (
                 icons::PACKAGE,
@@ -254,4 +254,49 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>
 /// A category's name in the user's language, else the catalog's English.
 pub fn category_title(ctx: &egui::Context, id: &str, english: &str) -> String {
     i18n::text_or(ctx, &format!("discover-category-{id}"), english).into_owned()
+}
+
+/// Whether the revealed app is done with, so the page stops asking for it.
+fn show_groups(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    groups: &[AppGroup],
+    revealing: Option<&str>,
+) -> bool {
+    // A description of one line makes a shorter row than one of two, so
+    // each row is measured and keeps the card row's padding.
+    let heights = RowHeights::Measured {
+        estimate: row::height(ui),
+    };
+
+    let _rows = tracing::trace_span!("rows").entered();
+    let revealed = revealing.and_then(|title| {
+        groups
+            .iter()
+            .flat_map(|group| &group.rows)
+            .find(|row| row.title == title)
+            .map(|row| row.id.clone())
+    });
+
+    let mut holds = false;
+    for group in groups {
+        section_heading(ui, group.icon, &group.title, &group.count);
+        ui.add_space(ui.tokens().sizes.heading_gap);
+
+        let reveal = revealed
+            .as_deref()
+            .filter(|id| group.rows.iter().any(|row| row.id == *id));
+
+        holds |= RowList::new(&group.id, &group.title, heights)
+            .reveal(reveal)
+            .show(ui, group.rows.as_slice(), |ui, app, state| {
+                dimmed(ui, context.busy, |ui| row::show(ui, context, app, state));
+            });
+
+        ui.add_space(ui.tokens().sizes.section_gap);
+    }
+
+    // Asked again until the row holds the focus. An app the list does
+    // not show is not waited for.
+    holds || revealed.is_none()
 }

@@ -32,6 +32,7 @@ use toolbox_gui::queue::{Queue, Restored};
 use toolbox_gui::reader::ReaderHandle;
 use toolbox_gui::share::ShareLink;
 use toolbox_gui::users::UsersSetup;
+use toolbox_https::SystemClock;
 use toolbox_news::{Feeds, News, NewsSource};
 use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
@@ -117,7 +118,8 @@ pub fn helper_services(handle: &Handle, ctx: &egui::Context) -> HelperServices {
     let output_share =
         toolbox_gui::share::spawn(handle, wake.clone(), Arc::clone(&transport), known);
 
-    let diagnostics = toolbox_gui::diagnostics::spawn(handle, wake, source, transport);
+    let diagnostics =
+        toolbox_gui::diagnostics::spawn(handle, wake, source, transport, Arc::new(SystemClock));
 
     let users = UsersSetup {
         runtime: handle.clone(),

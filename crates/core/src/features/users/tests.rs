@@ -1,3 +1,4 @@
+mod account;
 mod admins;
 mod groups;
 mod home;

@@ -1,8 +1,12 @@
-//! Back, the list of every stage and Next, fixed below each stage but the
-//! last. On the Summary, Next reviews and applies, or shows the success
-//! page when nothing was picked.
+//! Where the assistant stands, then Back, the list of every stage and
+//! Next, fixed below each stage but the last. On the Summary, Next reviews
+//! and applies, or shows the success page when nothing was picked.
 
-use egui::{Align, Layout, Ui};
+#[cfg(test)]
+mod tests;
+
+use egui::accesskit::Role;
+use egui::{Align, CornerRadius, Layout, Rect, Sense, Ui, WidgetInfo, vec2};
 use toolbox_core::features::toggles::summary::summary;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
@@ -14,6 +18,11 @@ use crate::i18n;
 use crate::pages::PageContext;
 
 const NARROW_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_narrow;
+
+/// Thin, so it reads as a mark of where the assistant stands, not as a
+/// control.
+const BAR_HEIGHT: f32 = 4.0;
+const BAR_RADIUS: u8 = 2;
 
 pub fn stages(ctx: &egui::Context, steps: &[(String, String)]) -> Vec<(Stage, String)> {
     let numbered = steps.iter().enumerate().map(|(index, (id, title))| {
@@ -50,6 +59,8 @@ pub fn bar(
     let current = stages.iter().position(|(stage, _)| *stage == page.stage);
     let mut moved = false;
     let middle = ui.max_rect().center().x;
+    progress(ui, page, stages, current.unwrap_or_default());
+    ui.add_space(ui.tokens().sizes.control_gap);
     ui.horizontal(|ui| {
         let back = ui
             .add_enabled_ui(current.unwrap_or_default() > 0, |ui| {
@@ -96,6 +107,90 @@ pub fn bar(
         ));
     });
     moved
+}
+
+/// "Step 3 of 16" (the stage's name on the welcome page and the summary)
+/// over a thin bar filled up to stage `at`, which screen readers hear as a
+/// progress indicator.
+fn progress(ui: &mut Ui, page: &SetupPage, stages: &[(Stage, String)], at: usize) {
+    let ctx = ui.ctx().clone();
+    let tokens = ui.tokens();
+
+    // The welcome page stands before the steps, the summary after.
+    let steps = stages.len().saturating_sub(2);
+    let words = match page.stage {
+        Stage::Step(_) => {
+            let (number, count) = (at.to_string(), steps.to_string());
+            i18n::text_with(
+                &ctx,
+                "setup-progress",
+                &[("number", &number), ("count", &count)],
+            )
+            .into_owned()
+        }
+        Stage::Welcome | Stage::Summary | Stage::Success => stages
+            .get(at)
+            .map(|(_, name)| name.clone())
+            .unwrap_or_default(),
+    };
+
+    ui.label(rich(ui, &words, Weight::Regular, SMALL, tokens.secondary));
+    ui.add_space(tokens.sizes.tight_gap);
+
+    let size = vec2(ui.available_width(), BAR_HEIGHT);
+    let (rect, response) = ui.allocate_exact_size(size, Sense::hover());
+    response.widget_info(|| WidgetInfo::labeled(Role::ProgressIndicator, true, &words));
+    let (value, most) = filled(&page.stage, at, steps);
+    let (value, most) = (whole(value), whole(most));
+    ctx.accesskit_node_builder(response.id, |node| {
+        node.set_numeric_value(value);
+        node.set_min_numeric_value(0.0);
+        node.set_max_numeric_value(most);
+    });
+
+    if !ui.is_rect_visible(rect) {
+        return;
+    }
+
+    let share = if most > 0.0_f64 {
+        value / most
+    } else {
+        0.0_f64
+    };
+
+    let filled = Rect::from_min_size(
+        rect.min,
+        vec2(rect.width() * share_of(share), rect.height()),
+    );
+
+    let radius = CornerRadius::same(BAR_RADIUS);
+    ui.painter().rect_filled(rect, radius, tokens.field);
+    ui.painter().rect_filled(filled, radius, tokens.accent);
+}
+
+/// How many of `steps` the bar fills at stage `at` of the list, so it
+/// says what "Step N of M" says and is full from the last step on.
+const fn filled(stage: &Stage, at: usize, steps: usize) -> (usize, usize) {
+    match stage {
+        Stage::Welcome => (0, steps),
+        Stage::Step(_) => (if at < steps { at } else { steps }, steps),
+        Stage::Summary | Stage::Success => (steps, steps),
+    }
+}
+
+/// A stage count as accesskit takes it.
+fn whole(count: usize) -> f64 {
+    f64::from(u32::try_from(count).unwrap_or(u32::MAX))
+}
+
+/// `share` as the painter takes it, between none and all.
+#[expect(
+    clippy::as_conversions,
+    clippy::cast_possible_truncation,
+    reason = "a share between 0 and 1 loses nothing a pixel shows"
+)]
+const fn share_of(share: f64) -> f32 {
+    (share as f32).clamp(0.0, 1.0)
 }
 
 /// Alt+Right and Alt+Left, which the page took from the input.

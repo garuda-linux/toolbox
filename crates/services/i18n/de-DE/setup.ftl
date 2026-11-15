@@ -17,6 +17,8 @@ setup-summary = Zusammenfassung
 setup-back = Zurück
 setup-next = Weiter
 setup-go-to = Zu Schritt springen
+# Over the progress bar. $number is the step, $count all of them.
+setup-progress = Schritt { $number } von { $count }
 setup-keys = Alt+Rechts: weiter, Alt+Links: zurück.
 
 # The summary. $count is how many, $names lists them.

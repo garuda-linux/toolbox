@@ -8,7 +8,7 @@ use super::press::Pointer;
 use super::text::cut;
 use super::{focus_ring, line, rich};
 use crate::fonts::{BODY, Weight};
-use crate::theme::{PILL_HEIGHT, PILL_RADIUS, RADIUS};
+use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, RADIUS};
 use crate::tokens::Tokens;
 use crate::ui_ext::icon_image;
 use crate::{icons, tokens};
@@ -282,13 +282,11 @@ fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
 
     let tokens = tokens::current(ui.ctx());
     let fill = Pointer::of_focusable(response).fill(&tokens, tokens.field);
-    let ink = if ui.is_enabled() {
-        tokens.text
-    } else {
-        tokens.dim
-    };
 
-    ui.painter().rect_filled(rect, PILL_RADIUS, fill);
+    // A disabled ui fades it once, see `press.rs`.
+    let ink = tokens.text;
+
+    ui.painter().rect_filled(rect, CONTROL_RADIUS, fill);
     let text = Rect::from_min_max(
         pos2(rect.left() + PADDING_X, rect.top()),
         pos2(
@@ -315,7 +313,7 @@ fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
     );
 
     icon_image(ui, icons::GO_DOWN, tokens.secondary).paint_at(ui, chevron);
-    focus_ring(ui, response, PILL_RADIUS);
+    focus_ring(ui, response, CONTROL_RADIUS);
     was_cut
 }
 

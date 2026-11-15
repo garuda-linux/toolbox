@@ -3,17 +3,25 @@
 **Home** opens first. Under the greeting a line says how many things need
 your attention, or **Everything is fine**, and when the last update ran.
 
-Below it, three labels name facts about the system:
+Below it, four tiles show the system's figures. Each has a mark: a green
+tick while the figure is fine, a yellow warning when it needs a look, and
+a grey mark while it is not read yet or its check could not run (the tile
+then says **Not known**).
 
-- the installed packages, with how many come from the AUR. Click it to
-  open [Packages](packages.md).
-- the running kernel and how long the system has been up.
-- the free space on `/`. It turns yellow when the space is low.
+| Tile            | Shows                                                                             | Needs a look when               | Opens                         |
+| --------------- | --------------------------------------------------------------------------------- | ------------------------------- | ----------------------------- |
+| **Updates**     | **Up to date**, or how many updates of the repositories and the AUR are available | Any update is available         | **Maintenance** → **Common**  |
+| **Disk**        | The free space on `/`                                                             | The space is low, see below     | **Maintenance** → **Common**  |
+| **Health**      | **No problems**, **Warnings** or **Problems found** of `garuda-health`            | `garuda-health` found something | **Maintenance** → **Repairs** |
+| **Last update** | **Today**, **Yesterday** or how many days ago                                     | It is more than 14 days ago     | **Maintenance** → **Common**  |
+
+Click a tile, or focus it with `Tab` and press `Enter` or `Space`, to open
+the tab that acts on it.
 
 **System status** lists only what needs your attention. When nothing
 does, a card says how many checks passed and names them.
 
-![The Home page with the facts, System status, News and Next steps](images/home.png)
+![The Home page with the stat tiles, System status, News and Next steps](images/home.png)
 
 ## Status cards
 
@@ -75,12 +83,13 @@ update check failed, for example without a network, one message reads
 - After every apply, successful or not.
 - With **Read again** beside **System status**, or `F5`.
 - Every hour while the app runs. Change this under **Settings** →
-  **Check for updates**, or turn it off with **Only when I ask**.
+  **Time between checks**, or turn **Check for updates automatically**
+  off.
 
 Each check downloads the package lists into a temporary folder and asks
 the AUR, so it needs the network. It never changes the installed system.
 
-The facts under the greeting, the disk, the services and the clean-up are
+The tiles under the greeting, the disk, the services and the clean-up are
 read again at the same times, and also when [Packages](packages.md)
 reads its list again.
 
@@ -100,10 +109,10 @@ without a network too.
 
 ## Next steps
 
-Below the news, **Next steps** offers up to three cards: **Review
-changes** while changes wait, **Setup Assistant** until you have gone
-through it once (not on a live system), then **Maintenance** and
-**Diagnostics**.
+Below the news, **Next steps** offers up to three cards on one line:
+**Review changes** while changes wait, **Setup Assistant** until you have
+gone through it once (not on a live system), then **Maintenance** and
+**Diagnostics**. In a narrow window they wrap onto more lines.
 Every other page is in the sidebar. The links to Garuda Linux's websites
 and community are on **About**.
 

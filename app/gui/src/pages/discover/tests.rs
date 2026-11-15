@@ -16,8 +16,8 @@ use super::DiscoverPage;
 use crate::catalogs::Catalogs;
 use crate::command::{AppCommand, Command, DiscoverCommand};
 use crate::testing::{
-    PageFixture, assert_header, assert_rows_hold_their_parts, assert_rows_wait_while_busy,
-    assert_text_beside_picture, body_font, picture_beside, rect_of,
+    PageFixture, assert_header, assert_rows_hold_their_parts, assert_text_beside_picture,
+    body_font, picture_beside, rect_of,
 };
 
 /// The shipped apps, with Firefox and Floorp on offer and nothing
@@ -48,8 +48,100 @@ fn searching_firefox() -> DiscoverPage {
 }
 
 #[test]
-fn while_a_plan_runs_the_apps_wait_and_a_banner_says_why() {
-    assert_rows_wait_while_busy(offered, searching_firefox);
+fn while_a_plan_runs_the_install_buttons_rest() {
+    for busy in [true, false] {
+        let fixture = PageFixture { busy, ..offered() };
+        let mut harness = fixture.harness(searching_firefox());
+        harness.run();
+
+        let install = harness.get_by_role_and_label(Role::Button, "Install Firefox");
+        assert_eq!(install.accesskit_node().is_disabled(), busy, "busy {busy}");
+    }
+}
+
+#[test]
+fn an_app_installs_with_a_button_under_its_category_heading() {
+    let mut harness = offered().harness(searching_firefox());
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::CheckBox, "Firefox")
+            .is_none()
+    );
+    harness
+        .get_by_role_and_label(Role::Button, "Install Firefox")
+        .click();
+    harness.run();
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Heading, "Internet")
+            .is_some()
+    );
+
+    assert_eq!(
+        harness.state().fixture.sent(),
+        [Command::from(DiscoverCommand::Toggle {
+            app: "firefox".to_owned(),
+            wish: Toggle::On,
+        })]
+    );
+}
+
+#[test]
+fn every_category_lists_under_its_own_heading() {
+    let mut harness = offered().harness(DiscoverPage::default());
+    harness.run();
+
+    let headings: Vec<String> = harness
+        .query_all_by_role(Role::Heading)
+        .filter_map(|node| node.accesskit_node().label())
+        .collect();
+
+    assert!(
+        headings.iter().any(|heading| heading == "Internet"),
+        "{headings:?}"
+    );
+    assert!(
+        harness.query_all_by_role(Role::List).next().is_some(),
+        "the category's apps are a list"
+    );
+}
+
+/// Firefox and Floorp match "Firefox" in Internet, Kate in Documents
+/// does not.
+#[test]
+fn a_picked_category_without_a_match_offers_all_matches() {
+    let mut fixture = offered();
+    let mut snapshot = Snapshot::clone(&fixture.snapshot);
+    snapshot.insert(SyncPackages(BTreeSet::from([
+        "firefox".parse().unwrap(),
+        "floorp".parse().unwrap(),
+        "kate".parse().unwrap(),
+    ])));
+    fixture.snapshot = std::sync::Arc::new(snapshot);
+
+    let mut harness = fixture.harness(searching_firefox());
+    harness.state_mut().page.category = Some("documents".to_owned());
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_label_contains("No app in Documents matches")
+            .is_some()
+    );
+
+    harness
+        .get_by_role_and_label(Role::Button, "Show all 2 matches")
+        .click();
+    harness.run();
+
+    assert_eq!(harness.state().page.category, None);
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, "Install Firefox")
+            .is_some()
+    );
 }
 
 #[test]
@@ -113,7 +205,7 @@ fn a_frame_with_the_same_search_builds_no_chips() {
 }
 
 #[test]
-fn space_on_a_focused_app_flips_its_switch() {
+fn space_on_a_focused_app_asks_for_its_install() {
     let mut harness = offered().harness(searching_firefox());
     harness.run();
     harness

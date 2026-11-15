@@ -32,7 +32,12 @@ use crate::waking::{self, Wake, Waking};
 
 #[derive(Debug)]
 pub enum ApplyCommand {
-    Run(Plan),
+    /// `id` comes back in the plan's reports, so its sender tells them
+    /// from those of another plan.
+    Run {
+        id: PlanId,
+        plan: Plan,
+    },
     /// Bytes for the running program, as the terminal encodes keys.
     Input(Vec<u8>),
     Resize(TerminalSize),
@@ -47,6 +52,7 @@ pub enum Report {
     /// Every step with its command lines, for the step list and so a dry
     /// run's success can be checked against what was really sent.
     PlanStarted {
+        plan: PlanId,
         steps: Vec<(StepId, Vec<String>)>,
     },
     /// A step's progress or output, from the helper or the app.
@@ -54,10 +60,14 @@ pub enum Report {
     /// A problem outside any step: pkexec refused, the helper died, …
     Problem(Problem),
     PlanFinished {
+        plan: PlanId,
         succeeded: bool,
     },
-    /// Another plan runs already. The new one is refused, never queued.
-    Busy,
+    /// Another plan runs already. The new one, `plan`, is refused, never
+    /// queued.
+    Busy {
+        plan: PlanId,
+    },
     /// Cancel came while pkexec still asks for the password. pkexec is
     /// left alone, so the cancel takes effect once the dialog is answered.
     CancelWaits,
@@ -72,6 +82,11 @@ pub enum Problem {
     /// [`HelperFailure::MissingSecret`], which has none.
     HelperFailed { kind: HelperFailure, detail: String },
 }
+
+/// Names a sent plan. Its sender counts them, so two plans sent within
+/// one frame still tell their reports apart.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct PlanId(u64);
 
 /// The app's side of the service: commands in, reports out.
 #[derive(Debug)]
@@ -91,12 +106,27 @@ impl Report {
     pub const fn output_len(&self) -> usize {
         match self {
             Self::Step(event) => output_len(event),
-            Self::PlanStarted { steps: _ }
+            Self::PlanStarted { plan: _, steps: _ }
             | Self::Problem(_)
-            | Self::PlanFinished { succeeded: _ }
-            | Self::Busy
+            | Self::PlanFinished {
+                plan: _,
+                succeeded: _,
+            }
+            | Self::Busy { plan: _ }
             | Self::CancelWaits => 0,
         }
+    }
+}
+
+impl PlanId {
+    pub const fn new(number: u64) -> Self {
+        Self(number)
+    }
+
+    /// The id of the plan its sender sends after this one.
+    #[must_use = "returns the next id, this one stays as it was"]
+    pub const fn next(self) -> Self {
+        Self(self.0.wrapping_add(1))
     }
 }
 
@@ -213,8 +243,8 @@ impl Run<'_> {
             }
             ApplyCommand::Cancel => Some(Answer::Cancel),
             ApplyCommand::Finish => Some(Answer::Finish),
-            ApplyCommand::Run(_) => {
-                self.reporter.report(Report::Busy);
+            ApplyCommand::Run { id, plan: _ } => {
+                self.reporter.report(Report::Busy { plan: id });
                 None
             }
         }
@@ -253,7 +283,7 @@ async fn serve(
 
     while let Some(command) = commands.recv().await {
         match command {
-            ApplyCommand::Run(plan) => {
+            ApplyCommand::Run { id, plan } => {
                 let mut run = Run {
                     commands: &mut commands,
                     reporter: &reporter,
@@ -264,12 +294,15 @@ async fn serve(
                 // files.
                 let span = tracing::info_span!("apply", steps = plan.steps().len());
                 let hold = launcher.inhibitor().hold(launcher.mode()).await;
-                let succeeded = run_plan(plan, &mut run, launcher.as_ref())
+                let succeeded = run_plan(id, plan, &mut run, launcher.as_ref())
                     .instrument(span)
                     .await;
 
                 drop(hold);
-                reporter.report(Report::PlanFinished { succeeded });
+                reporter.report(Report::PlanFinished {
+                    plan: id,
+                    succeeded,
+                });
             }
             ApplyCommand::Resize(new) => size = Some(new),
             ApplyCommand::Input(_) | ApplyCommand::Cancel | ApplyCommand::Finish => {
@@ -279,7 +312,7 @@ async fn serve(
     }
 }
 
-async fn run_plan(plan: Plan, run: &mut Run<'_>, launcher: &dyn Launcher) -> bool {
+async fn run_plan(id: PlanId, plan: Plan, run: &mut Run<'_>, launcher: &dyn Launcher) -> bool {
     tracing::info!("the plan started");
     let listed = plan
         .steps()
@@ -287,7 +320,10 @@ async fn run_plan(plan: Plan, run: &mut Run<'_>, launcher: &dyn Launcher) -> boo
         .map(|step| (step.id, step.action.command_lines()))
         .collect();
 
-    run.reporter.report(Report::PlanStarted { steps: listed });
+    run.reporter.report(Report::PlanStarted {
+        plan: id,
+        steps: listed,
+    });
 
     for segment in plan.into_segments() {
         let succeeded = match segment {

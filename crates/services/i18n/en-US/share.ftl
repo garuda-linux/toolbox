@@ -31,23 +31,11 @@ share-uploading = { $subject ->
     [report] Uploading the report…
    *[output] Uploading the output…
 }
-share-uploaded = { $subject ->
-    [report] Uploaded. Anyone who has this link can read the report:
-   *[output] Uploaded. Anyone who has this link can read the output:
-}
-share-link = { $subject ->
-    [report] Link to the uploaded report
-   *[output] Link to the uploaded output
-}
 share-copy-link = Copy link
-# The one row a place with little room shows after an upload.
+# The row after an upload.
 share-uploaded-short = Uploaded.
 share-link-actions = More link actions
 share-open-link = Open in browser
-share-delete-link = { $subject ->
-    [report] Delete link: opening it removes the report from the server.
-   *[output] Delete link: opening it removes the output from the server.
-}
 share-copy-delete-link = Copy delete link
 share-delete-now = Delete now…
 share-hide = Hide

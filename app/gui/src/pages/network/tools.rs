@@ -15,7 +15,7 @@ use toolbox_plan::{
     PingCount, PingTimeout,
 };
 
-use crate::command::NetworkCommand;
+use crate::command::{NetworkCommand, UiCommand};
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row};
@@ -32,6 +32,21 @@ pub struct Form {
     pings: u32,
     timeout: u32,
     hops: u32,
+    ran: Option<Ran>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Tool {
+    Ping,
+    Traceroute,
+}
+
+/// The last test sent, and how many plans had ended before it: the next
+/// one to end is the test, as the buttons wait while a plan runs.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Ran {
+    tool: Tool,
+    after: u64,
 }
 
 impl Default for Form {
@@ -41,6 +56,7 @@ impl Default for Form {
             pings: DEFAULT_PINGS,
             timeout: DEFAULT_PING_TIMEOUT,
             hops: DEFAULT_HOPS,
+            ran: None,
         }
     }
 }
@@ -50,6 +66,31 @@ impl Form {
         self.tests(ui, context);
         ui.add_space(ui.tokens().sizes.section_gap);
         hotspot(ui, context);
+    }
+
+    /// The output stays in the Console, so the card says the test ended
+    /// and offers the Console while it is closed.
+    fn outcome(&self, ui: &mut Ui, context: &PageContext<'_>) {
+        let Some(ran) = self.ran.filter(|ran| context.plans.finished > ran.after) else {
+            return;
+        };
+
+        let succeeded = context.plans.last_succeeded;
+        let (said, tone) = match (ran.tool, succeeded) {
+            (Tool::Ping, true) => ("network-ping-finished", Tone::Neutral),
+            (Tool::Ping, false) => ("network-ping-failed", Tone::Error),
+            (Tool::Traceroute, true) => ("network-traceroute-finished", Tone::Neutral),
+            (Tool::Traceroute, false) => ("network-traceroute-failed", Tone::Error),
+        };
+
+        let ctx = ui.ctx().clone();
+        let show = i18n::text(&ctx, "network-show-console");
+        let offered = [show.as_ref()];
+        let actions: &[&str] = if context.console_open { &[] } else { &offered };
+        ui.add_space(ui.tokens().sizes.card_gap);
+        if banner(ui, tone, &i18n::text(&ctx, said), actions) == Some(0) {
+            context.commands.send(UiCommand::ToggleConsole);
+        }
     }
 
     fn tests(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
@@ -71,6 +112,7 @@ impl Form {
             banner(ui, Tone::Neutral, &text("network-traceroute-missing"), &[]);
         }
 
+        self.outcome(ui, context);
         let Some(host) = host.filter(|_| ready) else {
             return;
         };
@@ -132,7 +174,7 @@ impl Form {
         entered
     }
 
-    fn ping(&self, context: &PageContext<'_>, host: HostName) {
+    fn ping(&mut self, context: &PageContext<'_>, host: HostName) {
         let (Ok(count), Ok(timeout)) = (
             PingCount::new(i64::from(self.pings)),
             PingTimeout::new(i64::from(self.timeout)),
@@ -145,14 +187,23 @@ impl Form {
             count,
             timeout,
         });
+        self.sent(Tool::Ping, context);
     }
 
-    fn traceroute(&self, context: &PageContext<'_>, host: HostName) {
+    fn traceroute(&mut self, context: &PageContext<'_>, host: HostName) {
         if let Ok(hops) = HopLimit::new(i64::from(self.hops)) {
             context
                 .commands
                 .send(NetworkCommand::Traceroute { host, hops });
+            self.sent(Tool::Traceroute, context);
         }
+    }
+
+    const fn sent(&mut self, tool: Tool, context: &PageContext<'_>) {
+        self.ran = Some(Ran {
+            tool,
+            after: context.plans.finished,
+        });
     }
 }
 

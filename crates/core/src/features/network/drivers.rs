@@ -57,6 +57,9 @@ pub enum Refusal {
     OtherFile,
     /// The drivers were not read yet, or could not be.
     Unavailable,
+    /// A load, a start or a test that runs at once did not start, as
+    /// another plan runs. Only the window says it.
+    Busy,
 }
 
 /// Why a load or an unload was not taken.

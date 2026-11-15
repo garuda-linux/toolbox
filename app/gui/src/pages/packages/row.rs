@@ -1,14 +1,14 @@
-use egui::{Context, Label, Ui};
+use egui::{Context, Label, Sense, Ui, Vec2};
 use toolbox_cli::output::size;
 use toolbox_core::Toggle;
 use toolbox_core::features::packages::list::{self, Catalog, row_state};
 use toolbox_core::features::packages::{IndexEntry, InstallReason, Origin};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
-use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowState, Tone, named_pill_button, pill_width, rich, row_height,
     split_row, status_dot, tag, text_block_height, title_line,
 };
+use toolbox_gui_kit::{icons, tokens};
 use toolbox_plan::PackageName;
 
 use super::{PackagesPage, remove};
@@ -19,6 +19,8 @@ use crate::pages::PageContext;
 use crate::pages::rows::{Initial, package_picture, picture_height, picture_slot};
 
 const LINES: u8 = 2;
+/// As large as a link row's chevron.
+const CHEVRON: f32 = 14.0;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Act {
@@ -135,7 +137,7 @@ where
     R: PackageRow,
 {
     let button = button_text(ui, context, row);
-    let width = pill_width(ui, &button.0);
+    let width = pill_width(ui, &button.0) + ui.spacing().item_spacing.x + CHEVRON;
 
     split_row(
         ui,
@@ -154,10 +156,25 @@ where
                 );
             });
         },
-        |ui| action(ui, page, context, row, &button),
+        |ui| {
+            if action(ui, context, row, &button.0, ButtonKind::Soft) {
+                row.act(page, context, button.1);
+            }
+
+            chevron(ui);
+        },
     );
 
     state.toggle
+}
+
+/// Tells that the row opens the package's page, as a link row's does.
+/// The row itself is the target, so the glyph takes no click.
+fn chevron(ui: &mut Ui) {
+    let ink = tokens::current(ui.ctx()).secondary;
+    let (at, _) = ui.allocate_exact_size(Vec2::splat(CHEVRON), Sense::hover());
+    let theme = icons::theme_in_use(ui.ctx());
+    icons::GO_NEXT.image(theme.as_deref(), ink).paint_at(ui, at);
 }
 
 /// The button's text and what it does.
@@ -176,14 +193,17 @@ where
 }
 
 /// The row's and the detail header's button. Its name carries the
-/// package, as several rows show the same button text.
+/// package, as several rows show the same button text. Whether it was
+/// pressed, as the caller holds the page.
+#[must_use = "the caller holds the page, so it acts on the press"]
 pub fn action<R>(
     ui: &mut Ui,
-    page: &mut PackagesPage,
     context: &PageContext<'_>,
     row: &R,
-    (text, act): &(String, Act),
-) where
+    text: &str,
+    kind: ButtonKind,
+) -> bool
+where
     R: PackageRow,
 {
     let name = i18n::text_with(
@@ -192,16 +212,9 @@ pub fn action<R>(
         &[("action", text), ("name", row.package().as_str())],
     );
 
-    let clicked = ui
-        .add_enabled_ui(!context.busy, |ui| {
-            named_pill_button(ui, text, ButtonKind::Soft, &name)
-        })
+    ui.add_enabled_ui(!context.busy, |ui| named_pill_button(ui, text, kind, &name))
         .inner
-        .clicked();
-
-    if clicked {
-        row.act(page, context, *act);
-    }
+        .clicked()
 }
 
 /// What waits for Apply, else whether it is installed.

@@ -1,16 +1,22 @@
 //! Queues a new full name, login shell or home folder for one user. The
 //! fields start with what the row shows: the queued value, else the
-//! current one. Only what changed is queued.
+//! current one. Only what changed is queued, as one change: a part the
+//! page refuses keeps the others from queueing.
+//!
+//! The guards run while the dialog shows, so a home folder that cannot
+//! move says why in its place, and a refused value holds the button.
 
 use egui::{Context, Ui};
+use toolbox_core::features::users::account::{AccountEdit, check_account};
+use toolbox_core::features::users::home::home_movable;
 use toolbox_core::features::users::input::{self, InputProblem};
 use toolbox_core::features::users::rows::UserRow;
-use toolbox_core::features::users::view;
+use toolbox_core::features::users::{Refusal, view};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, Select, check_row};
 use toolbox_plan::{FullName, HomeChange, HomeDirectory, InvalidFullName, ShellPath, UserName};
 
-use super::{Next, dialog, field, note, title};
+use super::{Next, dialog_why, field, note, title};
 use crate::command::UserEdit;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -19,8 +25,6 @@ use crate::pages::users::texts;
 #[derive(Debug)]
 pub struct Edit {
     user: UserName,
-    /// The account the app runs for: its home folder cannot change.
-    current: bool,
     start: Fields,
     fields: Fields,
 }
@@ -51,7 +55,6 @@ impl Edit {
 
         Self {
             user: row.user.name.clone(),
-            current: row.current,
             fields: start.clone(),
             start,
         }
@@ -62,22 +65,28 @@ impl Edit {
         let title = i18n::text_with(ctx, "users-edit-title", &[("user", user)]);
         let confirm = i18n::text(ctx, "users-queue-changes");
         let changes = self.changes();
-        let ready = !matches!(changes.full_name, Some(Err(_)))
-            && !matches!(changes.home, Some(Err(_)))
-            && self.fields != self.start;
+        let edit = self.account(&changes);
+        let refusal = edit
+            .as_ref()
+            .and_then(|typed| check_account(&self.user, typed, context.snapshot).err());
 
-        let (next, confirmed) = dialog(
+        let why = refusal.map(|code| refused(ctx, code, user));
+        let ready = matches!((&edit, refusal), (Some(_), None)) && self.fields != self.start;
+        let (next, confirmed) = dialog_why(
             ctx,
             "edit",
             (&title, &confirm, ButtonKind::Primary),
-            ready,
+            (why.as_deref(), ready),
             |ui| {
                 self.body(ui, ctx, context, &changes);
             },
         );
 
-        if confirmed {
-            self.send(context, changes);
+        if confirmed && let Some(edit) = edit {
+            context.commands.send(UserEdit::Set {
+                user: self.user.clone(),
+                edit,
+            });
         }
 
         next
@@ -96,6 +105,30 @@ impl Edit {
         }
     }
 
+    /// The edit the fields make, `None` while a typed value is invalid.
+    fn account(&self, changes: &Changes) -> Option<AccountEdit> {
+        let full_name = match &changes.full_name {
+            Some(Ok(name)) => Some(name.clone()),
+            Some(Err(_)) => return None,
+            None => None,
+        };
+
+        let home = match &changes.home {
+            Some(Ok(home)) => Some(HomeChange {
+                home: home.clone(),
+                move_files: self.fields.move_files,
+            }),
+            Some(Err(_)) => return None,
+            None => None,
+        };
+
+        Some(AccountEdit {
+            full_name,
+            shell: changes.shell.clone(),
+            home,
+        })
+    }
+
     fn body(&mut self, ui: &mut Ui, ctx: &Context, context: &PageContext<'_>, changes: &Changes) {
         let text = |id: &str| i18n::text(ctx, id).into_owned();
         let problem = match &changes.full_name {
@@ -111,10 +144,12 @@ impl Edit {
             problem.as_deref(),
         );
         shell(ui, ctx, context, &mut self.fields.shell);
-        if self.current {
-            note(ui, &text("users-home-current-user"));
-        } else {
-            self.home(ui, ctx, changes);
+        match home_movable(&self.user, context.snapshot) {
+            Ok(()) => self.home(ui, ctx, changes),
+            Err(refusal) => {
+                title(ui, &text("users-field-home"));
+                note(ui, &home_refused(ctx, refusal, self.user.as_str()));
+            }
         }
 
         ui.add_space(ui.spacing().item_spacing.y);
@@ -155,32 +190,18 @@ impl Edit {
 
         note(ui, &i18n::text_with(ctx, id, &words));
     }
+}
 
-    fn send(&self, context: &PageContext<'_>, changes: Changes) {
-        let user = &self.user;
-        if let Some(Ok(name)) = changes.full_name {
-            context.commands.send(UserEdit::SetFullName {
-                user: user.clone(),
-                name,
-            });
-        }
+fn refused(ctx: &Context, refusal: Refusal, user: &str) -> String {
+    texts::problem(ctx, InputProblem::Refused(refusal), user)
+}
 
-        if let Some(shell) = changes.shell {
-            context.commands.send(UserEdit::SetShell {
-                user: user.clone(),
-                shell,
-            });
-        }
-
-        if let Some(Ok(home)) = changes.home {
-            context.commands.send(UserEdit::SetHome {
-                user: user.clone(),
-                change: HomeChange {
-                    home,
-                    move_files: self.fields.move_files,
-                },
-            });
-        }
+/// Why the home folder stays, said where its field would be.
+fn home_refused(ctx: &Context, refusal: Refusal, user: &str) -> String {
+    if refusal == Refusal::CurrentUser {
+        i18n::text(ctx, "users-home-current-user").into_owned()
+    } else {
+        refused(ctx, refusal, user)
     }
 }
 

@@ -12,6 +12,7 @@ use super::BootRepairPage;
 use crate::bootrepair::BootRepair;
 use crate::command::{BootRepairCommand, Command};
 use crate::page_service::Services;
+use crate::pages::PageView as _;
 use crate::testing::{PageFixture, PageState};
 
 /// A bare-metal laptop: the running system on `nvme0n1` in LUKS, a free btrfs
@@ -61,6 +62,14 @@ fn sent(harness: &Shown) -> Vec<Command> {
 
 fn shows(harness: &Shown, label: &str) -> bool {
     harness.query_all_by_label_contains(label).next().is_some()
+}
+
+#[test]
+fn the_page_hides_the_queued_changes_as_each_repair_runs_at_once() {
+    let page = BootRepairPage::default();
+
+    assert!(!page.queue_shown().shows(false));
+    assert!(!page.queue_shown().shows(true));
 }
 
 #[test]

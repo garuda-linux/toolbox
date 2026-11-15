@@ -1,14 +1,16 @@
 mod ask;
 mod boot;
 mod failure;
+mod filters;
+mod live;
 mod menu;
 
 use std::sync::Arc;
 
-use egui::accesskit::{Role, Toggled};
+use egui::accesskit::Role;
 use egui::{Key, Modifiers};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
+use toolbox_core::features::services::{ActiveState, FileState, Shown, UnitInfo};
 use toolbox_plan::{UnitName, UnitScope};
 
 use super::{ServicesPage, row};
@@ -87,26 +89,11 @@ fn a_new_list_keeps_the_last_units_on_screen() {
 }
 
 #[test]
-fn a_filter_that_leaves_nothing_says_how_to_see_more() {
-    let disabled = unit("cups.service", "CUPS", FileState::Disabled);
-    let mut harness = loaded(vec![disabled]).harness(ServicesPage::default());
-
-    harness.run();
-
-    assert!(harness.query_by_label("No service matches.").is_some());
-    assert!(
-        harness
-            .query_by_label("Change the search or the filters to see more services.")
-            .is_some()
-    );
-}
-
-#[test]
 fn a_disabled_action_says_why_on_hover() {
     let masked = unit("cups.service", "CUPS", FileState::Masked);
     let mut harness = loaded(vec![masked]).harness(ServicesPage::default());
 
-    harness.state_mut().page.filter.hide_inactive = false;
+    harness.state_mut().page.filter.shown = Shown::All;
 
     harness.run();
 
@@ -303,7 +290,7 @@ fn a_frame_with_the_same_list_builds_no_rows() {
     harness.step();
     assert_eq!(harness.state().page.rows.builds(), built);
 
-    harness.state_mut().page.filter.include_disabled = true;
+    harness.state_mut().page.filter.shown = Shown::All;
     harness.run();
     assert_eq!(harness.state().page.rows.builds(), built + 1);
 }
@@ -348,28 +335,4 @@ fn refresh_sits_beside_the_title_and_the_toolbar_holds_search_and_sort() {
         (sort.center().y - search.center().y).abs() < 0.5,
         "not one toolbar row"
     );
-}
-
-#[test]
-fn hide_disabled_is_on_at_first_and_a_click_lists_them() {
-    let disabled = UnitInfo {
-        active: ActiveState::Active,
-        sub_state: "running".to_owned(),
-        ..unit("cups.service", "CUPS", FileState::Disabled)
-    };
-
-    let mut harness = loaded(vec![disabled]).harness(ServicesPage::default());
-
-    harness.run();
-
-    let chip = harness.get_by_role_and_label(Role::Button, "Hide disabled");
-    assert_eq!(chip.accesskit_node().toggled(), Some(Toggled::True));
-    assert!(harness.query_by_label("No service matches.").is_some());
-
-    harness
-        .get_by_role_and_label(Role::Button, "Hide disabled")
-        .click();
-    harness.run();
-
-    assert!(harness.query_by_label("No service matches.").is_none());
 }

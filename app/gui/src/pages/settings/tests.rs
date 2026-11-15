@@ -3,7 +3,7 @@ mod schemes;
 use egui::Key;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
-use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use egui_kittest::kittest::Queryable as _;
 use toolbox_config::{LogLevel, RefreshInterval, Settings};
 
 use super::SettingsPage;
@@ -38,7 +38,8 @@ fn the_three_sections_show_their_rows() {
         "Theme",
         "Reduced motion",
         "Start at login",
-        "Check for updates",
+        "Check for updates automatically",
+        "Time between checks",
         "Services page opens on",
         "Show AUR packages",
         "Copy reports to the clipboard",
@@ -96,11 +97,11 @@ fn minutes_outside_the_limits_are_held_to_them_with_a_note() {
 }
 
 #[test]
-fn only_when_i_ask_stops_the_checks() {
+fn turning_the_switch_off_stops_the_checks() {
     let mut harness = page(Settings::default());
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "Only when I ask")
+        .get_by_role_and_label(Role::CheckBox, "Check for updates automatically")
         .click();
     harness.run();
 
@@ -166,19 +167,27 @@ fn each_section_says_what_it_holds_under_its_heading_without_a_help_button() {
 }
 
 #[test]
-fn only_when_i_ask_comes_before_the_minutes_it_turns_off() {
-    let mut settings = Settings::default();
-    settings.status.refresh = RefreshInterval::Off;
-    let harness = page(settings);
-
-    let ask = harness
-        .get_by_role_and_label(Role::CheckBox, "Only when I ask")
+fn the_minutes_show_under_the_switch_only_while_the_checks_are_on() {
+    let on = page(Settings::default());
+    let switch = on
+        .get_by_role_and_label(Role::CheckBox, "Check for updates automatically")
         .rect();
 
-    let minutes = harness.get_by_role_and_label(Role::TextInput, "Minutes between checks");
+    let minutes = on
+        .get_by_role_and_label(Role::TextInput, "Minutes between checks")
+        .rect();
 
-    assert!(ask.bottom() <= minutes.rect().top());
-    assert!(minutes.accesskit_node().is_disabled());
+    assert!(switch.bottom() <= minutes.top());
+
+    let mut settings = Settings::default();
+    settings.status.set(RefreshInterval::Off);
+    let off = page(settings);
+
+    assert!(
+        off.query_by_role_and_label(Role::TextInput, "Minutes between checks")
+            .is_none()
+    );
+    assert!(off.query_by_label("Time between checks").is_none());
 }
 
 #[test]
@@ -247,10 +256,11 @@ fn a_click_on_a_switch_rows_words_flips_it() {
 }
 
 #[test]
-fn only_when_i_ask_says_what_it_means_and_why_the_minutes_rest() {
+fn turned_on_again_the_checks_keep_their_last_minutes() {
     let mut settings = Settings::default();
-    settings.status.refresh = RefreshInterval::Off;
-    let harness = page(settings);
+    settings.status.set(RefreshInterval::Minutes(30));
+    settings.status.set(RefreshInterval::Off);
+    let mut harness = page(settings);
 
     assert!(
         harness
@@ -258,11 +268,17 @@ fn only_when_i_ask_says_what_it_means_and_why_the_minutes_rest() {
             .next()
             .is_some()
     );
-    assert!(
-        harness
-            .query_all_by_label_contains("Off while Only when I ask is on")
-            .next()
-            .is_some()
+
+    harness
+        .get_by_role_and_label(Role::CheckBox, "Check for updates automatically")
+        .click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [Command::from(SettingsCommand::Refresh(
+            RefreshInterval::Minutes(30)
+        ))]
     );
 }
 

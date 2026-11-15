@@ -1,4 +1,6 @@
 # `icon` is a freedesktop or Breeze icon name.
+# `glyph` is the entry's symbolic icon, one of the glyphs gui-kit bundles: its
+# topic, `system-run` for a service and `user-others` for a group.
 # `requires = { all = [..] }` needs every listed entry on, `{ any = [..] }` at least one.
 
 [[section]]
@@ -11,48 +13,56 @@ id = "pipewire-support"
 title = "PipeWire"
 description = "The modern standard for handling audio and video streams on Linux. It seamlessly replaces PulseAudio and JACK with much lower latency and better security."
 check = { package = "pipewire-support" }
+glyph = "audio-volume-high"
 
 [[section.entry]]
 id = "jack-support"
 title = "JACK"
 description = "A specialized, low-latency sound server designed for professional audio production. Usually handled natively by PipeWire now."
 check = { package = "jack-support" }
+glyph = "audio-volume-high"
 
 [[section.entry]]
 id = "pulseaudio-support"
 title = "PulseAudio"
 description = "The older, legacy sound server. Kept primarily for compatibility, but PipeWire has largely replaced it."
 check = { package = "pulseaudio-support" }
+glyph = "audio-volume-high"
 
 [[section.entry]]
 id = "group-realtime"
 title = "Realtime group"
 description = "Adds your user to the realtime group, giving audio applications CPU priority to prevent stuttering and latency."
 check = { group = "realtime" }
+glyph = "user-others"
 
 [[section.entry]]
 id = "easyeffects"
 title = "EasyEffects"
 description = "A powerful tool to enhance your microphone quality and audio playback. Highly recommended to install 'Calf Plugins' and 'LSP Plugins' alongside this for a complete experience."
 check = { package = "easyeffects" }
+glyph = "audio-volume-high"
 
 [[section.entry]]
 id = "lsp-plugins"
 title = "LSP Plugins"
 description = "Linux Studio Plugins (LSP). A collection of professional audio tools like equalizers and compressors. Install this to expand EasyEffects' capabilities."
 check = { package = "lsp-plugins-lv2" }
+glyph = "audio-volume-high"
 
 [[section.entry]]
 id = "calf"
 title = "Calf plugins"
 description = "Calf Studio Gear. A high-quality set of audio processing plugins. Install this to give EasyEffects more professional studio effects."
 check = { package = "calf" }
+glyph = "audio-volume-high"
 
 [[section.entry]]
 id = "jamesdsp"
 title = "JamesDSP"
 description = "An audio effect processor for adding bass boost, equalizers, and other effects. It is recommended to try EasyEffects first."
 check = { package = "jamesdsp" }
+glyph = "audio-volume-high"
 requires = { all = ["pipewire-support"] }
 
 [[section]]
@@ -65,12 +75,14 @@ id = "virt-manager"
 title = "Virt Manager"
 description = "A powerful desktop application (GUI) for creating and managing KVM/QEMU virtual machines."
 check = { package = "virt-manager-meta" }
+glyph = "computer"
 
 [[section.entry]]
 id = "enabled-libvirtd"
 title = "Libvirtd"
 description = "The system daemon required to run and manage virtual machines and other virtualization platforms."
 check = { service = "libvirtd.service" }
+glyph = "system-run"
 requires = { all = ["virt-manager"] }
 
 [[section.entry]]
@@ -78,6 +90,7 @@ id = "group-libvirt"
 title = "libvirt users"
 description = "Adds your user to the libvirt group, granting permission to manage advanced KVM/QEMU virtual machines."
 check = { group = "libvirt" }
+glyph = "user-others"
 requires = { all = ["virt-manager"] }
 
 [[section.entry]]
@@ -85,6 +98,7 @@ id = "group-kvm"
 title = "KVM users"
 description = "Adds your user to the kvm group, granting permission to use fast, hardware-accelerated KVM virtual machines."
 check = { group = "kvm" }
+glyph = "user-others"
 requires = { any = ["virt-manager", "qemu"] }
 
 [[section.entry]]
@@ -92,18 +106,21 @@ id = "qemu"
 title = "QEMU"
 description = "A generic, open-source machine emulator and virtualizer. Can run operating systems for any machine, on any machine."
 check = { package = "qemu-desktop" }
+glyph = "computer"
 
 [[section.entry]]
 id = "virtualbox"
 title = "VirtualBox"
 description = "Oracle's popular cross-platform virtualization software. Very user-friendly, though generally slower than KVM/Virt-Manager."
 check = { package = "virtualbox-meta" }
+glyph = "computer"
 
 [[section.entry]]
 id = "group-vboxusers"
 title = "VirtualBox users"
 description = "Adds your user to the vboxusers group, granting permission to use VirtualBox."
 check = { group = "vboxusers" }
+glyph = "user-others"
 requires = { all = ["virtualbox"] }
 
 [[section.entry]]
@@ -111,12 +128,14 @@ id = "qemu-user-static"
 title = "QEMU User Static"
 description = "Can be used to Run foreign architecture binaries natively, i.e. via Podman"
 check = { package = "qemu-user-static" }
+glyph = "computer"
 
 [[section.entry]]
 id = "qemu-user-static-binfmt"
 title = "QEMU Binfmt"
 description = "Register foreign arch handlers in kernel, this can be useful when attempting to run aarch64 container images."
 check = { package = "qemu-user-static-binfmt" }
+glyph = "computer"
 
 [[section]]
 id = "containers"
@@ -128,12 +147,14 @@ id = "docker"
 title = "Docker"
 description = "The industry-standard container engine for packaging and running isolated applications."
 check = { package = "docker" }
+glyph = "package"
 
 [[section.entry]]
 id = "enabled-docker"
 title = "Docker service"
 description = "Runs the background daemon required to manage and run Docker containers."
 check = { service = "docker.service" }
+glyph = "system-run"
 requires = { all = ["docker"] }
 
 [[section.entry]]
@@ -141,6 +162,7 @@ id = "group-docker"
 title = "Docker users"
 description = "Adds your user to the docker group, granting permission to run Docker commands without sudo."
 check = { group = "docker" }
+glyph = "user-others"
 requires = { all = ["docker"] }
 
 [[section.entry]]
@@ -148,6 +170,7 @@ id = "docker-compose"
 title = "Docker Compose"
 description = "A tool for defining and running multi-container Docker applications via configuration files."
 check = { package = "docker-compose" }
+glyph = "package"
 requires = { any = ["docker", "podman"] }
 
 [[section.entry]]
@@ -155,12 +178,14 @@ id = "podman"
 title = "Podman"
 description = "A modern, daemonless alternative to Docker. It runs containers without needing root privileges, offering better security."
 check = { package = "podman" }
+glyph = "package"
 
 [[section.entry]]
 id = "podman-desktop"
 title = "Podman Desktop"
 description = "A graphical application to easily manage, create, and view your Podman containers."
 check = { package = "podman-desktop" }
+glyph = "package"
 requires = { all = ["podman"] }
 
 [[section.entry]]
@@ -168,6 +193,7 @@ id = "podman-docker"
 title = "Podman Docker"
 description = "A compatibility package that aliases the 'docker' command to 'podman', so existing Docker scripts work seamlessly with Podman."
 check = { package = "podman-docker" }
+glyph = "package"
 requires = { all = ["podman"] }
 
 [[section.entry]]
@@ -175,6 +201,7 @@ id = "distrobox"
 title = "Distrobox"
 description = "Creates tightly integrated containers of other Linux distributions. Lets you install and run apps from Ubuntu, Fedora, or Arch natively inside Garuda."
 check = { package = "distrobox" }
+glyph = "package"
 requires = { any = ["podman", "docker"] }
 
 [[section.entry]]
@@ -182,6 +209,7 @@ id = "kontainer"
 title = "Kontainer"
 description = "A native KDE application for managing Distrobox containers with ease."
 check = { package = "kontainer" }
+glyph = "package"
 requires = { all = ["distrobox"] }
 
 [[section.entry]]
@@ -189,6 +217,7 @@ id = "boxbuddy"
 title = "BoxBuddy"
 description = "A graphical app to easily manage and use your Distrobox environments."
 check = { package = "boxbuddy" }
+glyph = "package"
 requires = { all = ["distrobox"] }
 
 [[section.entry]]
@@ -196,6 +225,7 @@ id = "winboat"
 title = "WinBoat"
 description = "Uses containerization to provide seamlessly integrated Windows apps on Linux."
 check = { package = "winboat" }
+glyph = "package"
 requires = { any = ["podman", "docker"] }
 
 [[section]]
@@ -208,12 +238,14 @@ id = "networkmanager"
 title = "NetworkManager"
 description = "The core daemon that configures and manages your Wi-Fi, Ethernet, and VPN connections."
 check = { package = "networkmanager" }
+glyph = "network-wired"
 
 [[section.entry]]
 id = "enabled-networkmanager"
 title = "NetworkManager service"
 description = "Runs the NetworkManager daemon so you can connect to the internet."
 check = { service = "NetworkManager.service" }
+glyph = "system-run"
 requires = { all = ["networkmanager"] }
 
 [[section.entry]]
@@ -221,6 +253,7 @@ id = "enabled-modemmanager"
 title = "ModemManager"
 description = "Runs the daemon required to connect to the internet using mobile broadband (4G/5G USB modems)."
 check = { service = "ModemManager.service" }
+glyph = "system-run"
 requires = { all = ["networkmanager"] }
 
 [[section]]
@@ -233,12 +266,14 @@ id = "bluetooth-support"
 title = "Bluetooth support"
 description = "The BlueZ Linux Bluetooth stack. Provides the core software needed to handle wireless devices."
 check = { package = "bluetooth-support" }
+glyph = "preferences-system-bluetooth"
 
 [[section.entry]]
 id = "enabled-bluetooth"
 title = "Bluetooth service"
 description = "Runs the background service required to pair and connect to Bluetooth devices."
 check = { service = "bluetooth.service" }
+glyph = "system-run"
 requires = { all = ["bluetooth-support"] }
 
 [[section.entry]]
@@ -246,6 +281,7 @@ id = "autoconnect"
 title = "Auto connect"
 description = "Automatically reconnects to your trusted, previously paired Bluetooth devices when they power on."
 check = { package = "bluetooth-autoconnect" }
+glyph = "preferences-system-bluetooth"
 requires = { all = ["bluetooth-support"] }
 
 [[section.entry]]
@@ -253,6 +289,7 @@ id = "autoconnect-enabled"
 title = "Auto connect service"
 description = "Runs the background service that actively handles automatic Bluetooth reconnections."
 check = { service = "bluetooth-autoconnect.service" }
+glyph = "system-run"
 requires = { all = ["autoconnect"] }
 
 [[section]]
@@ -265,18 +302,21 @@ id = "printing-support"
 title = "Printing support"
 description = "CUPS (Common Unix Printing System). The core software needed to connect and print to local or network printers."
 check = { package = "printer-support" }
+glyph = "printer"
 
 [[section.entry]]
 id = "scanning-support"
 title = "SANE"
 description = "SANE (Scanner Access Now Easy). The core software needed to use flatbed and document scanners."
 check = { package = "scanner-support" }
+glyph = "printer"
 
 [[section.entry]]
 id = "enabled-cups"
 title = "CUPS service"
 description = "Runs the CUPS daemon required to handle print jobs and manage printers."
 check = { service = "cups.socket" }
+glyph = "system-run"
 requires = { all = ["printing-support"] }
 
 [[section.entry]]
@@ -284,6 +324,7 @@ id = "enabled-saned"
 title = "SANE network"
 description = "Runs the daemon that allows you to share your scanner over the local network."
 check = { service = "saned.socket" }
+glyph = "system-run"
 requires = { all = ["printing-support"] }
 
 [[section.entry]]
@@ -291,6 +332,7 @@ id = "group-cups"
 title = "CUPS users"
 description = "Adds your user to the cups group, granting permission to manage printers and print queues."
 check = { group = "cups" }
+glyph = "user-others"
 requires = { all = ["printing-support"] }
 
 [[section.entry]]
@@ -298,6 +340,7 @@ id = "group-scanner"
 title = "Scanner users"
 description = "Adds your user to the scanner group, granting permission to use document scanners."
 check = { group = "scanner" }
+glyph = "user-others"
 requires = { all = ["scanning-support"] }
 
 [[section.entry]]
@@ -305,6 +348,7 @@ id = "group-lp"
 title = "LP users"
 description = "Adds your user to the lp (line printer) group, required by some older printing systems."
 check = { group = "lp" }
+glyph = "user-others"
 requires = { all = ["printing-support"] }
 
 [[section]]
@@ -317,12 +361,14 @@ id = "ufw"
 title = "UFW"
 description = "Uncomplicated Firewall. A simpler command-line interface for managing iptables/nftables firewall rules."
 check = { package = "ufw" }
+glyph = "security-high"
 
 [[section.entry]]
 id = "enabled-ufw"
 title = "UFW service"
 description = "Runs the UFW service to enforce your simple firewall rules."
 check = { service = "ufw.service" }
+glyph = "system-run"
 requires = { all = ["ufw"] }
 
 [[section.entry]]
@@ -330,12 +376,14 @@ id = "firewalld"
 title = "Firewalld"
 description = "A dynamic firewall manager that uses zones to dynamically define network trust levels and rules."
 check = { package = "firewalld" }
+glyph = "security-high"
 
 [[section.entry]]
 id = "enabled-firewalld"
 title = "firewalld service"
 description = "Runs the firewalld daemon to protect your system from incoming network connections."
 check = { service = "firewalld.service" }
+glyph = "system-run"
 requires = { all = ["firewalld"] }
 
 [[section.entry]]
@@ -343,12 +391,14 @@ id = "opensnitch"
 title = "OpenSnitch"
 description = "An application-level firewall that alerts you and asks for permission whenever a program tries to connect to the internet."
 check = { package = "opensnitch" }
+glyph = "security-high"
 
 [[section.entry]]
 id = "enabled-opensnitch"
 title = "OpenSnitch service"
 description = "Runs the OpenSnitch daemon to monitor application network traffic."
 check = { service = "opensnitchd.service" }
+glyph = "system-run"
 requires = { all = ["opensnitch"] }
 
 [[section]]
@@ -361,3 +411,4 @@ id = "gns"
 title = "Garuda Nix Subsystem"
 description = "Integrates the Nix package manager, giving you access to thousands of extra software packages. Also provides a NixOS installation sharing settings with Garuda."
 check = { package = "garuda-nix-subsystem" }
+glyph = "package"

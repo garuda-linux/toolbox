@@ -10,10 +10,9 @@ use toolbox_plan::RootLayout;
 use super::dialog::Dialog;
 use super::{BootRepairPage, texts};
 use crate::i18n;
-use crate::pages::setting_row::{Words, row};
+use crate::pages::setting_row::{Words, row, wide_control};
 use crate::pages::{PageContext, heading};
 
-const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
 const LAYOUTS: [RootLayout; 2] = [RootLayout::Subvolume, RootLayout::Plain];
 
 /// Returns the dialog a repair button asks for.
@@ -71,7 +70,8 @@ fn installed(ui: &mut Ui, (facts, system): (&RepairFacts, &System), page: &mut B
 }
 
 fn fact(ui: &mut Ui, (title, detail): (&str, &str), value: &str) {
-    row(ui, false, &words(title, detail), WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, false, &words(title, detail), width, |ui| {
         ui.label(value);
     });
 }
@@ -87,10 +87,11 @@ fn layout(ui: &mut Ui, chosen: RootLayout, page: &mut BootRepairPage) {
 
     let options: Vec<&str> = names.iter().map(String::as_str).collect();
     let current = LAYOUTS.iter().position(|each| *each == chosen);
-    row(ui, false, &words(&title, &detail), WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, false, &words(&title, &detail), width, |ui| {
         if let Some(picked) = Select::new(&title, &options)
             .selected(current)
-            .width(WIDE_CONTROL)
+            .width(width)
             .show(ui)
             .and_then(|index| LAYOUTS.get(index))
         {
@@ -181,10 +182,11 @@ fn targets(
     let lines: Vec<String> = choices.iter().map(texts::target_line).collect();
     let names: Vec<&str> = lines.iter().map(String::as_str).collect();
     let selected = current.and_then(|current| choices.iter().position(|each| each == current));
-    row(ui, true, &words(&title, &detail), WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, true, &words(&title, &detail), width, |ui| {
         if let Some(picked) = Select::new(&title, &names)
             .selected(selected)
-            .width(WIDE_CONTROL)
+            .width(width)
             .show(ui)
             .and_then(|index| choices.get(index))
         {
@@ -205,10 +207,11 @@ fn root(ui: &mut Ui, (facts, system): (&RepairFacts, &System), page: &mut BootRe
 
     let title = i18n::text(&ctx, "repair-root").into_owned();
     let detail = i18n::text(&ctx, "repair-root-detail").into_owned();
-    row(ui, true, &words(&title, &detail), WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, true, &words(&title, &detail), width, |ui| {
         if let Some(index) = Select::new(&title, &names)
             .selected(current)
-            .width(WIDE_CONTROL)
+            .width(width)
             .show(ui)
             && let Some(picked) = systems.get(index)
         {

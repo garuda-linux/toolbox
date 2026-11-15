@@ -38,11 +38,35 @@ const CRITICAL: [&str; 11] = [
     "systemd-logind.service",
 ];
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+/// The page starts with what runs.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Filter {
     pub search: String,
-    pub include_disabled: bool,
-    pub hide_inactive: bool,
+    pub shown: Shown,
+}
+
+/// Which units the list shows. One is picked at a time, so every choice
+/// says what it lets through.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, strum::IntoStaticStr)]
+#[strum(serialize_all = "kebab-case")]
+pub enum Shown {
+    /// Neither stopped nor failed. A unit changing state stays, it is
+    /// worth a look.
+    #[default]
+    Running,
+    /// Starts at boot.
+    Enabled,
+    Failed,
+    All,
+}
+
+/// How many units each choice of [`Shown`] lets through.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Counts {
+    pub running: usize,
+    pub enabled: usize,
+    pub failed: usize,
+    pub all: usize,
 }
 
 /// What the Services page queues for a unit: whether it starts at boot,
@@ -53,14 +77,36 @@ pub enum UnitWish {
     Masked(Toggle),
 }
 
-/// The page starts with what runs: disabled units left out and inactive
-/// ones hidden.
-impl Default for Filter {
-    fn default() -> Self {
-        Self {
-            search: String::new(),
-            include_disabled: false,
-            hide_inactive: true,
+impl Shown {
+    pub const EVERY: [Self; 4] = [Self::Running, Self::Enabled, Self::Failed, Self::All];
+
+    /// Whether a unit in `active` that starts at boot when `at_boot` is
+    /// listed. The command line has only these two facts of a unit.
+    pub const fn keeps(self, active: ActiveState, at_boot: bool) -> bool {
+        match self {
+            Self::Running => !matches!(active, ActiveState::Inactive | ActiveState::Failed),
+            Self::Enabled => at_boot,
+            Self::Failed => matches!(active, ActiveState::Failed),
+            Self::All => true,
+        }
+    }
+
+    pub const fn lets_through(self, unit: &UnitInfo) -> bool {
+        self.keeps(unit.active, matches!(unit.file_state, FileState::Enabled))
+    }
+
+    pub fn as_str(self) -> &'static str {
+        self.into()
+    }
+}
+
+impl Counts {
+    pub const fn of(self, shown: Shown) -> usize {
+        match shown {
+            Shown::Running => self.running,
+            Shown::Enabled => self.enabled,
+            Shown::Failed => self.failed,
+            Shown::All => self.all,
         }
     }
 }
@@ -88,9 +134,23 @@ impl Searchable for UnitInfo {
     }
 }
 
+/// What each choice of [`Shown`] would list with `search`, so the chips
+/// count what a click on them shows.
+pub fn counts(units: &[UnitInfo], search: &str) -> Counts {
+    let needle = Needle::new(search);
+
+    units
+        .iter()
+        .filter(|unit| needle.finds(*unit))
+        .fold(Counts::default(), |counts, unit| Counts {
+            running: counts.running + usize::from(Shown::Running.lets_through(unit)),
+            enabled: counts.enabled + usize::from(Shown::Enabled.lets_through(unit)),
+            failed: counts.failed + usize::from(Shown::Failed.lets_through(unit)),
+            all: counts.all + 1,
+        })
+}
+
 /// The places in `units` of the ones `filter` lets through, in `order`.
-/// Failed units stay when inactive ones are hidden, they are what the
-/// user most likely looks for.
 pub fn pick(units: &[UnitInfo], filter: &Filter, order: UnitOrder) -> Vec<usize> {
     let mut listed = shown(units, filter);
 
@@ -108,8 +168,7 @@ fn shown<'units>(units: &'units [UnitInfo], filter: &Filter) -> Vec<(usize, &'un
         .iter()
         .enumerate()
         .filter(|(_, unit)| search.finds(*unit))
-        .filter(|(_, unit)| filter.include_disabled || unit.file_state != FileState::Disabled)
-        .filter(|(_, unit)| !filter.hide_inactive || unit.active != ActiveState::Inactive)
+        .filter(|(_, unit)| filter.shown.lets_through(unit))
         .collect();
 
     // People scan the list alphabetically, so case must not split it in two.

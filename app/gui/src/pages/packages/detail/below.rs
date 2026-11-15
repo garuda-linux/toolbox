@@ -25,6 +25,7 @@ use crate::i18n;
 use crate::packages::{Details, Read};
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
+use crate::share::view::padded_card;
 
 /// One installed file, keyed by its path.
 pub(super) struct Line<'a> {
@@ -187,7 +188,8 @@ pub fn history(
         copied: "",
     };
 
-    ui.scope(|ui| {
+    ui.add_space(ui.tokens().sizes.tight_gap);
+    padded_card(ui, |ui| {
         property_list(ui, texts, |list| {
             for (when, what) in &built.lines {
                 list.row(when, what);

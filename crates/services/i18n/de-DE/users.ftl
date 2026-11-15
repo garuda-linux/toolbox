@@ -92,6 +92,7 @@ users-refused-uid-invalid = Die UID muss eine ganze Zahl von 1 bis 60000 sein.
 users-refused-uid-in-use = Diese UID ist bereits vergeben.
 users-refused-uid-out-of-range = Reguläre Konten bekommen eine UID von 1000 bis 60000, Systemkonten eine unter 1000.
 users-refused-home-taken = Dieses Home-Verzeichnis gehört bereits einem anderen Konto.
+users-refused-busy = Es werden noch andere Änderungen übernommen, deshalb wurde für { $name } nichts geändert. Versuche es erneut, sobald sie fertig sind.
 users-refused-unavailable = Die Benutzerkonten dieses Systems ließen sich nicht lesen.
 
 users-name-empty = Gib einen Namen ein.
@@ -122,6 +123,7 @@ users-add-title = Benutzer hinzufügen
 users-field-name = Benutzername
 users-field-name-hint = Kleinbuchstaben, Ziffern, Bindestriche und Unterstriche, höchstens 32 Zeichen.
 users-field-full-name = Vollständiger Name
+users-field-full-name-hint = Optional. Der Benutzername darunter folgt seinem ersten Wort, bis du ihn selbst änderst.
 users-field-shell = Login-Shell
 users-field-shell-hint = Zur Wahl stehen nur Shells aus /etc/shells.
 users-shell-default = Systemvorgabe

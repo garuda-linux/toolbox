@@ -14,6 +14,7 @@ use toolbox_cli::args::{
     AppsList, KernelsList, LocalesList, ReadList, Search, ServicesList, ToggleList,
 };
 use toolbox_cli::output::json;
+use toolbox_core::features::services::{ActiveState, Shown};
 
 use super::lists::{KernelRow, LocaleRow, ServiceRow, ToggleRow};
 use super::out::{self, Listing};
@@ -122,11 +123,16 @@ where
     print(list, rows, &Filter::all(), out, show)
 }
 
+/// Each flag keeps what the chip of its name on the Services page lists.
 pub fn services(list: &ServicesList) -> Filter<'static, ServiceRow> {
+    let keeps = |shown: Shown| {
+        move |row: &ServiceRow| shown.keeps(ActiveState::parse(row.active), row.at_boot)
+    };
+
     Filter::all()
-        .only(list.running, |row: &ServiceRow| row.active == "active")
-        .only(list.failed, |row: &ServiceRow| row.active == "failed")
-        .only(list.enabled, |row: &ServiceRow| row.at_boot)
+        .only(list.running, keeps(Shown::Running))
+        .only(list.failed, keeps(Shown::Failed))
+        .only(list.enabled, keeps(Shown::Enabled))
 }
 
 /// An unknown state is neither on nor off.

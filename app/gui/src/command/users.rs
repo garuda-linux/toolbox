@@ -2,9 +2,8 @@
 
 use std::collections::BTreeSet;
 
-use toolbox_plan::{
-    FullName, GroupName, HomeChange, HomeFolder, NewUser, Password, ShellPath, UserName,
-};
+use toolbox_core::features::users::account::AccountEdit;
+use toolbox_plan::{GroupName, HomeFolder, NewUser, Password, UserName};
 
 use super::{AppCommand, Command};
 
@@ -37,17 +36,10 @@ pub enum UserEdit {
         user: UserName,
         groups: BTreeSet<GroupName>,
     },
-    SetFullName {
+    /// The Edit dialog's fields, queued all together or refused as one.
+    Set {
         user: UserName,
-        name: FullName,
-    },
-    SetShell {
-        user: UserName,
-        shell: ShellPath,
-    },
-    SetHome {
-        user: UserName,
-        change: HomeChange,
+        edit: AccountEdit,
     },
     /// Queues the removal of `user`, keeping or deleting its home folder.
     Remove {

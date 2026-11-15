@@ -86,7 +86,7 @@ impl App {
                 }
             }
             SettingsCommand::Refresh(interval) => {
-                prefs.settings.status.refresh = interval;
+                prefs.settings.status.set(interval);
                 prefs.save();
                 self.services.home.status_every(interval.period());
             }

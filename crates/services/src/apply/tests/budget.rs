@@ -1,7 +1,7 @@
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::Event;
 
-use crate::apply::{ApplyHandle, Report};
+use crate::apply::{ApplyHandle, PlanId, Report};
 use crate::waking::Wake;
 
 const KIB: usize = 1024;
@@ -43,13 +43,18 @@ fn reports_without_output_cost_nothing() {
 fn one_report_larger_than_the_budget_still_goes() {
     let (reports, handle) = ApplyHandle::feeding(Wake::none());
     reports.send(output(512 * KIB));
-    reports.send(Report::PlanFinished { succeeded: true });
+    let finished = Report::PlanFinished {
+        plan: PlanId::new(1),
+        succeeded: true,
+    };
+
+    reports.send(finished.clone());
 
     let (first, more) = handle.reports_within(128 * KIB);
     assert_eq!(first, [output(512 * KIB)]);
     assert!(more, "the next report waits for the next frame");
 
     let (rest, after) = handle.reports_within(128 * KIB);
-    assert_eq!(rest, [Report::PlanFinished { succeeded: true }]);
+    assert_eq!(rest, [finished]);
     assert!(!after, "nothing waits after the last report");
 }

@@ -102,6 +102,7 @@ network-driver-unqueue = Take back
 # Why a blacklist click was not queued.
 network-refused-other-file = { $name }: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.
 network-refused-unavailable = The drivers of this system could not be read.
+network-refused-busy = Other changes are still being applied, so this did not run. Try again once they are done.
 
 network-hardware-intro = Network devices as lspci and lsusb list them.
 network-hardware-copy-all = Copy all
@@ -125,6 +126,12 @@ network-hops = Most hops (for traceroute)
 network-ping = Run ping
 network-traceroute = Run traceroute
 network-traceroute-missing = Traceroute needs the package traceroute, which is not installed.
+# After a test ran in the Console, under its buttons.
+network-ping-finished = Ping finished. Its output is in the Console.
+network-ping-failed = Ping ended with an error. The Console shows why.
+network-traceroute-finished = Traceroute finished. Its output is in the Console.
+network-traceroute-failed = Traceroute ended with an error. The Console shows why.
+network-show-console = Show Console
 network-hotspot = Wi-Fi hotspot
 network-hotspot-detail = Share this computer's connection with other devices. The hotspot tool opens in its own window.
 network-hotspot-queued-detail = Share this computer's connection with other devices. This needs the package linux-wifi-hotspot, which waits in the queue until you apply it.

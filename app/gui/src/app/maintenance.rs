@@ -1,10 +1,11 @@
 use toolbox_core::features::maintenance::page::{rescue_install, upgrader};
-use toolbox_core::features::maintenance::{self, Operation, Program};
+use toolbox_core::features::maintenance::{self, Operation};
 use toolbox_plan::{Plan, Toggle};
 
 use super::App;
 use crate::command::MaintenanceCommand;
 use crate::page::PageId;
+use crate::page_service::Owner;
 
 impl App {
     pub(super) fn run_maintenance(&mut self, ctx: &egui::Context, command: &MaintenanceCommand) {
@@ -13,11 +14,9 @@ impl App {
                 let upgrader =
                     upgrader(&self.current_snapshot(), self.services.home.garuda_update());
 
-                self.run_at_once(maintenance::plan_now(operation.task(upgrader)));
+                self.run_on_maintenance(maintenance::plan_now(operation.task(upgrader)));
             }
-            MaintenanceCommand::RunRepair(repair) => {
-                self.run_at_once(repair.plan());
-            }
+            MaintenanceCommand::RunRepair(repair) => self.run_on_maintenance(repair.plan()),
             // Which task is queued depends on garuda-update's program,
             // which Home's service found.
             MaintenanceCommand::Queue { operation, on } => self.queue_operation(operation, on),
@@ -32,11 +31,9 @@ impl App {
                     self.run_for_maintenance(plan);
                 }
             }
-            MaintenanceCommand::InstallGarudaUpdate => {
-                if let Some(plan) =
-                    rescue_install(Program::of_found(self.services.home.garuda_update()))
-                {
-                    self.run_at_once(plan);
+            MaintenanceCommand::InstallMissing => {
+                if let Some(plan) = rescue_install(self.services.home.repairs()) {
+                    self.run_on_maintenance(plan);
                 }
             }
             // The service takes these, see `hand_to_services`.
@@ -57,8 +54,17 @@ impl App {
 
     /// A plan the page waits for: one the Console refused never started.
     pub(super) fn run_for_maintenance(&mut self, plan: Plan) {
-        if !self.run_at_once(plan) {
+        if !self.run_owned(plan, Owner::Maintenance) {
             self.services.maintenance.plan_refused();
+            self.services.maintenance.refuse_busy();
+        }
+    }
+
+    /// A run the page does not wait for. The page says when the Console
+    /// refused it.
+    fn run_on_maintenance(&mut self, plan: Plan) {
+        if self.run_at_once(plan).is_none() {
+            self.services.maintenance.refuse_busy();
         }
     }
 

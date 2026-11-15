@@ -7,6 +7,7 @@ use toolbox_core::features::bootrepair::{Refusal, Target, Wish, plan_regenerate,
 
 use super::App;
 use crate::command::BootRepairCommand;
+use crate::page_service::Owner;
 
 impl App {
     pub(super) fn run_boot_repair(&mut self, command: BootRepairCommand) {
@@ -53,7 +54,7 @@ impl App {
 
         tracing::info!("boot repair: {what}");
         self.services.boot_repair.started();
-        if !self.run_at_once(plan) {
+        if !self.run_owned(plan, Owner::BootRepair) {
             self.services.boot_repair.plan_refused();
         }
 

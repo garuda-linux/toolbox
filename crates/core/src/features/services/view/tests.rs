@@ -2,7 +2,7 @@ use toolbox_plan::{UnitName, UnitScope};
 
 use super::rows;
 use crate::domains::{SystemUnitMasks, SystemUnits, UserUnits};
-use crate::features::services::{ActiveState, FileState, Filter, UnitInfo, UnitOrder};
+use crate::features::services::{ActiveState, FileState, Filter, Shown, UnitInfo, UnitOrder};
 use crate::{ChangeSet, Snapshot, Toggle};
 
 fn unit(name: &str, active: ActiveState, file_state: FileState) -> UnitInfo {
@@ -26,8 +26,7 @@ fn units() -> Vec<UnitInfo> {
 fn everything() -> Filter {
     Filter {
         search: String::new(),
-        include_disabled: true,
-        hide_inactive: false,
+        shown: Shown::All,
     }
 }
 
@@ -48,7 +47,7 @@ fn the_filter_and_order_pick_the_rows() {
         &changes,
     );
 
-    assert_eq!(names(&running), ["bluetooth.service", "sshd.service"]);
+    assert_eq!(names(&running), ["sshd.service"]);
 
     let by_state = rows(
         &units,

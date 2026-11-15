@@ -12,6 +12,11 @@ fn a_catalog_icon_without_a_file_ending_is_a_theme_name() {
 }
 
 #[test]
+fn an_entry_glyph_is_a_theme_name_too() {
+    assert_eq!(catalog_names("glyph = \"printer\"\n"), ["printer"]);
+}
+
+#[test]
 fn the_theme_lists_every_icon_file_and_link_by_name() {
     let dir = tempfile::tempdir().expect("temporary folder");
     let actions = dir.path().join("actions/22");

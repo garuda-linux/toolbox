@@ -115,14 +115,14 @@ pub fn set(
         SettingKey::Language if value == "system" => settings.general.language = None,
         SettingKey::Language => settings.general.language = Some(Language::new(value)?),
         SettingKey::UpdateCheck if value == "never" => {
-            settings.status.refresh = RefreshInterval::Off;
+            settings.status.set(RefreshInterval::Off);
         }
         SettingKey::UpdateCheck => {
             let minutes: u32 = value
                 .parse()
                 .map_err(|_nan| SettingError::Minutes(value.to_owned()))?;
 
-            settings.status.refresh = RefreshInterval::clamped(minutes);
+            settings.status.set(RefreshInterval::clamped(minutes));
         }
         SettingKey::UserServices => settings.services.show_user_units = switch(value)?,
         SettingKey::CopyReports => settings.diagnostics.copy_to_clipboard = switch(value)?,

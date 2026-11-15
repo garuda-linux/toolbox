@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use egui::text::TextWrapping;
 use egui::{Color32, Galley, RichText, TextStyle, TextWrapMode, Ui, WidgetText};
 
 use crate::fonts::{self, Weight};
@@ -23,4 +24,20 @@ pub fn line(ui: &Ui, text: &str, weight: Weight, scale: f32, color: Color32) -> 
 
 pub(super) fn cut(ui: &Ui, text: RichText, width: f32) -> Arc<Galley> {
     WidgetText::from(text).into_galley(ui, Some(TextWrapMode::Truncate), width, TextStyle::Body)
+}
+
+/// Wraps `text` at `width` and cuts it with "…" after `rows` lines.
+pub(super) fn cut_lines(ui: &Ui, text: RichText, width: f32, rows: usize) -> Arc<Galley> {
+    let wrapping = TextWrapping {
+        max_rows: rows,
+        ..TextWrapping::wrap_at_width(width)
+    };
+
+    WidgetText::from(text).into_galley_impl(
+        ui.ctx(),
+        ui.style(),
+        wrapping,
+        TextStyle::Body.into(),
+        ui.text_valign(),
+    )
 }

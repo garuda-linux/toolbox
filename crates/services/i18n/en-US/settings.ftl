@@ -28,11 +28,10 @@ settings-motion-full = Off
 
 settings-autostart = Start at login
 settings-autostart-description = Opens the window each time you log in.
-settings-refresh = Check for updates
-settings-refresh-description = Each check downloads the package lists and asks the AUR (Arch User Repository).
-settings-refresh-ask = Only when I ask
-settings-refresh-ask-description = Then Home checks for updates only when you click Read again.
-settings-refresh-off = Off while Only when I ask is on.
+settings-refresh-auto = Check for updates automatically
+settings-refresh-auto-description = Each check downloads the package lists and asks the AUR (Arch User Repository). Turned off, Home checks only when you click Read again.
+settings-refresh-interval = Time between checks
+settings-refresh-interval-description = From every 5 minutes to once a day (1440 minutes).
 settings-refresh-minutes = Minutes between checks
 settings-refresh-unit = min
 settings-refresh-clamped = Checks run between every 5 minutes and once a day, so this is { $minutes } minutes.

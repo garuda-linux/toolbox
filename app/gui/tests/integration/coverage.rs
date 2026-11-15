@@ -77,7 +77,7 @@ fn the_header_over_scrolled_content() {
     for (theme, name) in [(Theme::Dark, "dark"), (Theme::Light, "light")] {
         let mut harness = page(PageId::Components, theme, WIDE, Setup::default());
         harness
-            .get_by_role_and_label(egui::accesskit::Role::CheckBox, "EasyEffects")
+            .get_by_role_and_label(egui::accesskit::Role::Button, "Install EasyEffects")
             .scroll_to_me();
         harness.run();
         results.add(harness.try_snapshot(format!("coverage/header_scrolled_{name}")));

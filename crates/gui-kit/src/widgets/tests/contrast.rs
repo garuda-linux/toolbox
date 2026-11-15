@@ -1,7 +1,8 @@
 use egui::Color32;
+use egui_kittest::kittest::Queryable as _;
 
 use super::super::{SectionHeading, group_label, menu_heading};
-use crate::testing::{harness, text_colour};
+use crate::testing::{fill_under, harness, painted_text, text_colour};
 use crate::{icons, tokens};
 
 fn painted(text: &str, draw: impl FnMut(&mut egui::Ui)) -> (Color32, tokens::Tokens) {
@@ -36,7 +37,7 @@ fn a_sidebar_group_label_is_secondary_text() {
 }
 
 #[test]
-fn a_disabled_button_of_any_kind_reads_as_a_quiet_one() {
+fn a_disabled_button_keeps_its_colours_under_egui_s_fade_alone() {
     use super::super::{ButtonKind, pill_button};
 
     for kind in [ButtonKind::Primary, ButtonKind::Danger, ButtonKind::Soft] {
@@ -46,16 +47,47 @@ fn a_disabled_button_of_any_kind_reads_as_a_quiet_one() {
 
         harness.run();
         let tokens = tokens::current(&harness.ctx);
-        let text =
-            crate::testing::painted_text(&harness, "Add user…").expect("the text is painted");
+        let (ink, fill) = match kind {
+            ButtonKind::Primary => (tokens.on_accent, tokens.accent),
+            ButtonKind::Danger => (tokens.on_error, tokens.error),
+            ButtonKind::Soft | ButtonKind::Ghost => (tokens.text, tokens.field),
+        };
 
-        let drawn = tokens::mix(
-            tokens.field,
-            text.fallback_color.to_opaque(),
-            f32::from(text.fallback_color.a()) / 255.0,
+        let alpha = harness.ctx.global_style().visuals.disabled_alpha;
+        let text = painted_text(&harness, "Add user…").expect("the text is painted");
+        let centre = harness.get_by_label("Add user…").rect().center();
+
+        assert_eq!(
+            text.fallback_color,
+            ink.gamma_multiply(alpha),
+            "{kind:?}: the label fades once"
         );
+        assert_eq!(
+            fill_under(&harness, centre),
+            Some(fill.gamma_multiply(alpha)),
+            "{kind:?}: the fill fades once"
+        );
+    }
+}
 
-        let ratio = tokens::contrast(drawn, tokens.field);
-        assert!(ratio >= 3.0, "{kind:?} label {ratio:.2}:1 on its fill");
+#[test]
+fn a_disabled_ghost_button_stays_without_a_fill() {
+    use super::super::{ButtonKind, pill_button};
+
+    let mut harness = harness(400.0, 200.0).build_ui(|ui| {
+        ui.add_enabled_ui(false, |ui| {
+            _ = pill_button(ui, "Details", ButtonKind::Ghost);
+        });
+    });
+
+    harness.run();
+    let tokens = tokens::current(&harness.ctx);
+    let alpha = harness.ctx.global_style().visuals.disabled_alpha;
+    let centre = harness.get_by_label("Details").rect().center();
+    let under = fill_under(&harness, centre);
+
+    for quiet in [tokens.field, tokens.hover] {
+        assert_ne!(under, Some(quiet.gamma_multiply(alpha)));
+        assert_ne!(under, Some(quiet));
     }
 }

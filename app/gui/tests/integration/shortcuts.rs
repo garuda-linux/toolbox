@@ -145,6 +145,59 @@ fn marked_rows(harness: &Harness<'_, App>) -> Vec<String> {
         .collect()
 }
 
+fn palette_field(harness: &Harness<'_, App>) -> egui::Rect {
+    harness
+        .get_by_role_and_label(Role::TextInput, PALETTE)
+        .rect()
+}
+
+/// The palette hangs from the top, so a shorter list leaves the field
+/// where the eye is.
+#[test]
+fn the_palette_field_stays_put_as_the_list_shortens() {
+    let mut harness = launch(Setup::default());
+    press(&mut harness, Key::K);
+    let full = palette_field(&harness);
+
+    harness
+        .get_by_role_and_label(Role::TextInput, PALETTE)
+        .type_text("zzzz");
+    harness.run();
+
+    assert_eq!(palette_field(&harness), full);
+}
+
+#[test]
+fn the_palette_lists_pages_and_commands_under_their_labels() {
+    let mut harness = launch(Setup::default());
+    press(&mut harness, Key::K);
+
+    let dialog = harness.get_by_role_and_label(Role::Dialog, PALETTE);
+    let labels: Vec<String> = dialog
+        .query_all_by_role(Role::Label)
+        .filter_map(|node| node.accesskit_node().value())
+        .collect();
+
+    assert!(labels.iter().any(|label| label == "Pages"), "{labels:?}");
+    assert!(labels.iter().any(|label| label == "Commands"), "{labels:?}");
+}
+
+/// The shortcut shows as one cap per key, and a screen reader still hears
+/// it after the name.
+#[test]
+fn a_palette_shortcut_shows_as_keycaps() {
+    let mut harness = launch(Setup::default());
+    palette(&mut harness, "console");
+
+    let named = harness
+        .query_all_by_label_contains("Toggle console")
+        .filter_map(|node| node.accesskit_node().label())
+        .any(|label| label.starts_with("Toggle console ") && label.ends_with('J'));
+
+    assert!(named, "the row's name ends in its shortcut");
+    assert!(toolbox_gui_kit::testing::painted_text(&harness, "J").is_some());
+}
+
 #[test]
 fn a_hovered_palette_row_is_the_one_marked_until_a_key_moves_the_mark() {
     let mut harness = launch(Setup::default());

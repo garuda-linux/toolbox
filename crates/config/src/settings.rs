@@ -15,7 +15,8 @@
 //! show_aur = false       # the AUR chip and its daily download
 //!
 //! [status]
-//! refresh = "1h"         # off, or 5m to 24h, such as 45m or 3h
+//! automatic = true       # false: only when the user asks
+//! refresh = "1h"         # 5m to 24h, such as 45m or 3h, kept while off
 //!
 //! [colours]
 //! dark_scheme = "nord"   # missing: the desktop's colours
@@ -35,7 +36,7 @@ use serde::{Deserialize, Serialize};
 use toolbox_plan::SchemeId;
 
 use crate::file::write_atomic;
-use crate::refresh::RefreshInterval;
+use crate::refresh::Status;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default)]
@@ -73,12 +74,6 @@ pub struct Services {
 pub struct Packages {
     /// Off by default: the list downloads from the AUR, whose packages are community scripts.
     pub show_aur: bool,
-}
-
-#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(default)]
-pub struct Status {
-    pub refresh: RefreshInterval,
 }
 
 /// The window's Theme setting picks which one shows.

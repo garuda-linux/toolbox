@@ -1,7 +1,9 @@
 # The About page.
 
 page-about-subtitle = Maintain and set up your Garuda Linux system.
-about-version = Version
+about-hero-credits = Made by the Garuda Linux team
+about-copy-details = Copy system details
+about-details-copied = Copied the system details to the clipboard.
 about-licence = Licence
 about-licence-value = GPL 3.0 or later
 about-made-by = Made by

@@ -10,11 +10,15 @@ use egui_kittest::kittest::Queryable as _;
 use tokio::runtime::Runtime;
 use toolbox_core::features::diagnostics::{Collector, Outcome};
 use toolbox_gui::diagnostics::{self, DryRunTransport};
+use toolbox_gui::testing::FixedClock;
 use toolbox_gui::{App, PreferencesSetup, Setup};
 use toolbox_system::DiagnosticSource;
 
 use crate::common::{Fixture, TALL, window};
 use crate::system::{shows, step_until};
+
+/// 12:41 UTC, so the report shot keeps its header.
+const COLLECTED: i64 = 1_792_327_265_i64;
 
 /// Every collector answers a short coloured report of its own name.
 struct Fake;
@@ -40,6 +44,7 @@ pub fn diagnostics_page(copy_reports: bool) -> Fixture {
             toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
             Arc::new(Fake),
             Arc::new(DryRunTransport),
+            Arc::new(FixedClock(COLLECTED)),
         );
 
         App::new(
@@ -61,7 +66,7 @@ pub fn diagnostics_page(copy_reports: bool) -> Fixture {
 }
 
 pub fn collect(harness: &mut Harness<'static, App>) {
-    harness.get_by_label("Collect").click();
+    harness.get_by_label("Collect System information").click();
     step_until(harness, "the report", shows("inxi says hello"));
     harness.run();
 }
@@ -75,13 +80,9 @@ fn a_report_is_collected_and_uploaded_to_the_dry_run_server() {
     harness.get_by_label("Share report…").click();
     harness.run();
     harness.get_by_label("Upload").click();
-    step_until(harness, "the link", shows("Link to the uploaded report"));
+    step_until(harness, "the link", shows("Copy link"));
 
-    assert!(
-        harness
-            .query_by_label_contains("Anyone who has this link can read the report")
-            .is_some()
-    );
+    assert!(harness.query_by_label("Uploaded.").is_some());
 }
 
 #[test]

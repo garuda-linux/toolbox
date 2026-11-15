@@ -11,15 +11,17 @@ fn copy(label: &str) -> String {
     format!("Copy {label}")
 }
 
+fn texts() -> PropertyTexts<'static> {
+    PropertyTexts {
+        copy: &copy,
+        copied: "Copied",
+    }
+}
+
 fn properties() -> Harness<'static, Toasts> {
     let mut harness = harness(600.0, 300.0).build_ui_state(
         |ui, toasts: &mut Toasts| {
-            let texts = PropertyTexts {
-                copy: &copy,
-                copied: "Copied",
-            };
-
-            property_list(ui, texts, |list| {
+            property_list(ui, texts(), |list| {
                 list.row_copied("Kernel", "6.14.0-arch3-1");
                 list.row("Running since", "3 days");
                 list.row_with("Retries", None, |value| {
@@ -127,12 +129,7 @@ fn a_plain_fact_has_no_copy_button() {
 #[test]
 fn a_plain_fact_takes_the_same_room_as_one_with_a_copy_button() {
     let mut harness = harness(600.0, 200.0).build_ui(|ui| {
-        let texts = PropertyTexts {
-            copy: &copy,
-            copied: "Copied",
-        };
-
-        property_list(ui, texts, |list| {
+        property_list(ui, texts(), |list| {
             list.row_copied("Version", "0.1.0");
             list.row("Licence", "GPL");
             list.row_copied("Kernel", "6.14");
@@ -152,12 +149,7 @@ fn a_plain_fact_takes_the_same_room_as_one_with_a_copy_button() {
 fn a_plain_fact_wraps_only_at_the_right_of_the_list() {
     let words = "ab ".repeat(60);
     let mut harness = harness(400.0, 300.0).build_ui(move |ui| {
-        let texts = PropertyTexts {
-            copy: &copy,
-            copied: "Copied",
-        };
-
-        property_list(ui, texts, |list| {
+        property_list(ui, texts(), |list| {
             list.row_copied("Version", "0.1.0");
             list.row("Notes", words.trim_end());
         });
@@ -172,5 +164,34 @@ fn a_plain_fact_wraps_only_at_the_right_of_the_list() {
         value.right() > right - 24.0,
         "the value ends at {}",
         value.right()
+    );
+}
+
+#[test]
+fn a_label_centres_on_its_value_control() {
+    let harness = properties();
+
+    let label = harness.get_by_role_and_label(Role::Label, "Retries").rect();
+
+    let spin = harness
+        .get_by_role_and_label(Role::SpinButton, "Retries")
+        .rect();
+
+    assert!(
+        (label.center().y - spin.center().y).abs() < 1.0,
+        "the label at {label:?}, its control at {spin:?}"
+    );
+}
+
+#[test]
+fn a_label_starts_on_the_line_of_its_text() {
+    let harness = properties();
+
+    let label = harness.get_by_label("Running since").rect();
+    let value = harness.get_by_label("3 days").rect();
+
+    assert!(
+        (label.top() - value.top()).abs() < 0.5,
+        "the label at {label:?}, its value at {value:?}"
     );
 }

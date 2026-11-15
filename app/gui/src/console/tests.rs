@@ -6,10 +6,22 @@ use toolbox_system::pkexec::Refusal;
 use toolbox_terminal::TerminalSize;
 
 use super::{Console, Status, StepState};
-use crate::apply::{Problem, Report};
+use crate::apply::{PlanId, Problem, Report};
+
+/// The plan the tests run, and one sent while it runs.
+const FIRST: PlanId = PlanId::new(1);
+const SECOND: PlanId = PlanId::new(2);
+
+const fn finished(succeeded: bool) -> Report {
+    Report::PlanFinished {
+        plan: FIRST,
+        succeeded,
+    }
+}
 
 fn started(console: &mut Console) {
     console.take(Report::PlanStarted {
+        plan: FIRST,
         steps: vec![
             (StepId::new(1), vec!["pacman -S firefox".to_owned()]),
             (StepId::new(2), vec!["systemctl enable sshd".to_owned()]),
@@ -88,7 +100,7 @@ fn the_end_of_the_plan_sets_its_result() {
     let mut console = Console::new();
     started(&mut console);
 
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
 
     assert_eq!(console.status(), Status::Succeeded);
 }
@@ -98,13 +110,25 @@ fn a_refused_second_plan_does_not_overwrite_the_running_one() {
     let mut console = Console::new();
     started(&mut console);
 
-    console.take(Report::Busy);
+    console.take(Report::Busy { plan: SECOND });
     assert!(console.refused());
     assert!(console.running());
     assert_eq!(console.status(), Status::Running);
 
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
     assert_eq!(console.status(), Status::Succeeded);
+}
+
+#[test]
+fn each_sent_plan_gets_a_new_id() {
+    let mut console = Console::new();
+    let plan = toolbox_plan::Plan::root(toolbox_plan::RootAction::RefreshKeyring);
+
+    let first = console.plan_sent(&plan);
+    console.clear_output();
+    let second = console.plan_sent(&plan);
+
+    assert_ne!(first, second, "clearing keeps the count");
 }
 
 #[test]
@@ -115,7 +139,7 @@ fn a_plan_runs_from_its_start_to_its_end() {
     started(&mut console);
     assert!(console.running());
 
-    console.take(Report::PlanFinished { succeeded: false });
+    console.take(finished(false));
     assert!(!console.running());
 }
 
@@ -123,9 +147,9 @@ fn a_plan_runs_from_its_start_to_its_end() {
 fn the_refusal_notice_ends_with_the_running_plan() {
     let mut console = Console::new();
     started(&mut console);
-    console.take(Report::Busy);
+    console.take(Report::Busy { plan: SECOND });
 
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
 
     assert!(!console.refused());
     assert!(!console.running());
@@ -157,7 +181,7 @@ fn a_new_plan_clears_the_last_ones_problem_and_notices() {
         detail: String::new(),
     }));
     console.take(Report::CancelWaits);
-    console.take(Report::PlanFinished { succeeded: false });
+    console.take(finished(false));
 
     started(&mut console);
 
@@ -192,7 +216,7 @@ fn each_started_plan_has_its_own_number() {
     assert_eq!(console.run(), 0);
 
     started(&mut console);
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
     assert_eq!(console.run(), 1, "its end keeps the number");
 
     started(&mut console);
@@ -210,7 +234,7 @@ fn the_ending_counts_the_steps_that_had_nothing_to_do() {
         }));
     }
 
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
 
     assert_eq!(console.ending(Mode::Run), Ending::Partly { skipped: 1 });
     assert_eq!(console.ending(Mode::DryRun), Ending::Tested);
@@ -235,7 +259,7 @@ fn the_output_counts_once_a_program_wrote_and_clears_only_after_the_plan() {
     assert!(!console.clear_output(), "the running plan's output went");
     assert!(console.has_output());
 
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
 
     assert!(console.clear_output());
     assert!(!console.has_output());
@@ -249,7 +273,7 @@ fn clearing_the_output_hides_the_last_share_link_too() {
     let mut console = Console::new();
     started(&mut console);
     output(&mut console, "done\r\n");
-    console.take(Report::PlanFinished { succeeded: true });
+    console.take(finished(true));
     *console.share_mut() = toolbox_services::share::Upload::Done(toolbox_privatebin::Paste {
         link: "https://bin.example/?a#key".to_owned(),
         delete_link: String::new(),

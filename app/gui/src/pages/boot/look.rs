@@ -7,18 +7,17 @@ use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page};
 use toolbox_core::features::boot::{Flag, plymouth_queued};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Select, Tone, banner, card, icon_button_width, pill_button, pill_width,
+    ButtonKind, Select, Tone, banner, card, icon_button, icon_button_width, pill_button, pill_width,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::GrubKey;
 
-use super::{WIDE_CONTROL, heading, queued, send};
+use super::{heading, queued, send};
 use crate::boot::{Boot, FileKind};
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::more::{item, more};
-use crate::pages::setting_row::{Words, row};
+use crate::pages::setting_row::{Words, row, wide_control};
 
 struct FileField<'a> {
     kind: FileKind,
@@ -108,7 +107,8 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
         queued: tag.as_deref(),
     };
 
-    row(ui, true, &words, WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, true, &words, width, |ui| {
         let themes = view::plymouth_themes(snapshot);
         let names: Vec<&str> = themes.iter().map(String::as_str).collect();
         let shown = view::plymouth_shown(snapshot, changes);
@@ -119,7 +119,7 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
                 Select::new(&title, &names)
                     .selected(current)
                     .placeholder(&none)
-                    .width(WIDE_CONTROL)
+                    .width(width)
                     .show(ui)
             })
             .inner;
@@ -172,13 +172,14 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
             });
         }
 
-        // The menu is named after the field, so its item says only
-        // what it does.
+        // It stays in place while there is nothing to clear, so the
+        // Choose buttons of both rows keep one edge.
         let clearable = !field.path.is_empty() && field.note.is_none();
-        let mut cleared = false;
-        more(ui, &title, |ui| {
-            cleared = item(ui, "boot-file-clear", clearable);
-        });
+        let clear = i18n::text_with(&ctx, "boot-file-clear", &[("name", &title)]);
+        let cleared = ui
+            .add_enabled_ui(clearable, |ui| icon_button(ui, icons::WINDOW_CLOSE, &clear))
+            .inner
+            .clicked();
 
         if cleared {
             let none = String::new();

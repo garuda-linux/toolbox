@@ -3,10 +3,14 @@
 //! move, so a wait asks for no frames.
 
 use egui::{
-    Context, CornerRadius, Id, Rect, Response, Role, Sense, Ui, Vec2, WidgetInfo, pos2, vec2,
+    Color32, Context, CornerRadius, Id, Painter, Rect, Response, Role, Sense, Stroke, Ui, Vec2,
+    WidgetInfo, pos2, vec2,
 };
 
+use super::TileSize;
+use super::card::DIVIDER;
 use crate::motion::{self, Timing};
+use crate::theme::TILE_RADIUS;
 use crate::tokens;
 
 /// The share of its room each bar takes, varied by row so the
@@ -19,10 +23,55 @@ const DETAIL_BAR: f32 = 9.0;
 const CONTROL: Vec2 = super::switch::SIZE;
 const BAR_RADIUS: u8 = 4;
 
-/// `count` rows of `row_height`, each with a title bar, a description bar
-/// and a control at the right. Screen readers hear `name` once.
+/// The rows a [`skeleton_list`] stands in for.
+#[derive(Clone, Copy, Debug)]
+pub struct SkeletonRows {
+    pub count: usize,
+    pub row_height: f32,
+    /// A tile before each row's text, for rows that start with an icon,
+    /// so the text does not move when the rows come.
+    pub leading: bool,
+}
+
+/// What every placeholder row of a list shares.
+#[derive(Clone, Copy)]
+struct RowLook {
+    fill: Color32,
+    /// From the row's ends to its parts.
+    padding: f32,
+    /// The leading tile's edge, if the rows have one.
+    tile: Option<f32>,
+    /// From the row's padding to its bars.
+    indent: f32,
+    /// The longest a bar may be.
+    room: f32,
+}
+
+/// `count` rows of `row_height` without a tile, see [`skeleton_list`].
 pub fn skeleton_rows(ui: &mut Ui, count: usize, row_height: f32, name: &str) -> Response {
-    let height = row_height * points(count);
+    let rows = SkeletonRows {
+        count,
+        row_height,
+        leading: false,
+    };
+
+    skeleton_list(ui, rows, name)
+}
+
+/// `rows`, each with a title bar, a description bar and a control at the
+/// right, a divider between them as a card's rows have. Screen readers
+/// hear `name` once.
+pub fn skeleton_list(ui: &mut Ui, rows: SkeletonRows, name: &str) -> Response {
+    let SkeletonRows {
+        count,
+        row_height,
+        leading,
+    } = rows;
+
+    // Every row but the first has its divider's pixel above it, as the
+    // rows that come do.
+    let step = row_height + DIVIDER;
+    let height = step.mul_add(points(count), -DIVIDER).max(0.0);
     let (rect, response) =
         ui.allocate_exact_size(vec2(ui.available_width(), height), Sense::hover());
 
@@ -30,40 +79,63 @@ pub fn skeleton_rows(ui: &mut Ui, count: usize, row_height: f32, name: &str) -> 
 
     let tokens = tokens::current(ui.ctx());
     let padding = tokens.sizes.row_padding;
-    let fill = tokens.hover;
     let painter = ui.painter_at(rect);
-    let room = (padding.x.mul_add(-3.0, rect.width()) - CONTROL.x).clamp(0.0, MAX_BAR);
+    let tile = leading.then(|| TileSize::Row.edge(ui));
+    let indent = tile.map_or(0.0, |edge| edge + tokens.sizes.picture_gap);
+    let room = (padding.x.mul_add(-3.0, rect.width()) - CONTROL.x - indent).clamp(0.0, MAX_BAR);
+    let look = RowLook {
+        fill: tokens.hover,
+        padding: padding.x,
+        tile,
+        indent,
+        room,
+    };
 
     for index in 0..count {
-        let top = row_height.mul_add(points(index), rect.top());
+        let top = step.mul_add(points(index), rect.top());
         let row = Rect::from_min_size(pos2(rect.left(), top), vec2(rect.width(), row_height));
-        if !ui.is_rect_visible(row) {
-            continue;
+        if index > 0 {
+            let line = painter.round_to_pixel_center(top - DIVIDER / 2.0);
+            let ends = (rect.left() + padding.x)..=(rect.right() - padding.x);
+            painter.hline(ends, line, Stroke::new(DIVIDER, tokens.outline));
         }
 
-        let middle = row.center().y;
-        let left = row.left() + padding.x;
-        let title = Rect::from_min_size(
-            pos2(left, middle - TITLE_BAR - 3.0),
-            vec2(room * share(index, 0), TITLE_BAR),
-        );
-
-        let detail = Rect::from_min_size(
-            pos2(left, middle + 3.0),
-            vec2(room * share(index, 1), DETAIL_BAR),
-        );
-
-        let control = Rect::from_center_size(
-            pos2(row.right() - padding.x - CONTROL.x / 2.0, middle),
-            CONTROL,
-        );
-
-        painter.rect_filled(title, CornerRadius::same(BAR_RADIUS), fill);
-        painter.rect_filled(detail, CornerRadius::same(BAR_RADIUS), fill);
-        painter.rect_filled(control, CONTROL.y / 2.0, fill);
+        if ui.is_rect_visible(row) {
+            paint_row(&painter, row, index, look);
+        }
     }
 
     response
+}
+
+fn paint_row(painter: &Painter, row: Rect, index: usize, look: RowLook) {
+    let middle = row.center().y;
+    let fill = look.fill;
+    if let Some(edge) = look.tile {
+        let at = pos2(row.left() + look.padding, middle - edge / 2.0);
+        let square = Rect::from_min_size(at, vec2(edge, edge));
+        painter.rect_filled(square, CornerRadius::same(TILE_RADIUS), fill);
+    }
+
+    let left = row.left() + look.padding + look.indent;
+    let title = Rect::from_min_size(
+        pos2(left, middle - TITLE_BAR - 3.0),
+        vec2(look.room * share(index, 0), TITLE_BAR),
+    );
+
+    let detail = Rect::from_min_size(
+        pos2(left, middle + 3.0),
+        vec2(look.room * share(index, 1), DETAIL_BAR),
+    );
+
+    let control = Rect::from_center_size(
+        pos2(row.right() - look.padding - CONTROL.x / 2.0, middle),
+        CONTROL,
+    );
+
+    painter.rect_filled(title, CornerRadius::same(BAR_RADIUS), fill);
+    painter.rect_filled(detail, CornerRadius::same(BAR_RADIUS), fill);
+    painter.rect_filled(control, CONTROL.y / 2.0, fill);
 }
 
 fn share(index: usize, bar: usize) -> f32 {

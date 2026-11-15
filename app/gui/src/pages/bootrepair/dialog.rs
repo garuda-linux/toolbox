@@ -3,7 +3,7 @@
 
 use std::fmt;
 
-use egui::{Context, Id, Label, TextBuffer, TextEdit, Ui};
+use egui::{Context, Id, Label, TextBuffer, Ui};
 use toolbox_core::features::bootrepair::page::Offer;
 use toolbox_core::features::bootrepair::{
     Encryption, RepairFacts, System, Target, page, rebuild_esp,
@@ -11,8 +11,8 @@ use toolbox_core::features::bootrepair::{
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, PropertyTexts, SecretText, Tone, banner,
-    confirm_buttons_why, forget_text, property_list, rich, text_field,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, PropertyTexts, SecretText, SecretTexts,
+    Tone, banner, confirm_buttons_why, forget_text, property_list, rich, secret_field,
 };
 use toolbox_plan::{MAX_PASSWORD_BYTES, Password, RootLayout, VolumeDevice};
 
@@ -176,13 +176,14 @@ impl Dialog {
             ui.add_space(ui.tokens().sizes.card_gap);
             let ink = ui.tokens().text;
             ui.label(rich(ui, &label, Weight::SemiBold, BODY, ink));
-            let field = text_field(
-                ui,
-                TextEdit::singleline(&mut self.passphrase)
-                    .password(true)
-                    .desired_width(f32::INFINITY)
-                    .align(egui::Align2::LEFT_CENTER),
-            );
+            let (show, hide) = (text("password-show"), text("password-hide"));
+            let secret = SecretTexts {
+                name: &label,
+                show: &show,
+                hide: &hide,
+            };
+
+            let field = secret_field(ui, &mut self.passphrase, secret);
 
             if field.changed() {
                 self.passphrase_ok = Password::new(self.passphrase.as_str().to_owned()).is_ok();

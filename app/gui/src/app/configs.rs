@@ -5,6 +5,7 @@ use super::App;
 use crate::apply::ApplyCommand;
 use crate::command::ConfigsCommand;
 use crate::configs::Act;
+use crate::page_service::Owner;
 
 impl App {
     pub(super) const fn run_configs(&mut self, command: &ConfigsCommand) {
@@ -28,7 +29,7 @@ impl App {
     pub(super) fn act_configs(&mut self, act: Option<Act>) {
         match act {
             Some(Act::Run(plan)) => {
-                if !self.run_at_once(plan) {
+                if !self.run_owned(plan, Owner::Configs) {
                     let next = self.services.configs.plan_refused();
                     self.act_configs(next);
                 }

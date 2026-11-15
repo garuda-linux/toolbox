@@ -1,18 +1,19 @@
 use egui::Ui;
 use toolbox_core::domains::LoaderSettingsDomain;
-use toolbox_gui_kit::widgets::Select;
+use toolbox_gui_kit::widgets::{Select, segmented, segmented_width};
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
 
 use super::super::menu::{TIMEOUT_MAX, seconds_field};
-use super::super::{WIDE_CONTROL, queued};
+use super::super::queued;
 use crate::command::BootCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::setting_row::{Words, row, switch_row};
+use crate::pages::setting_row::{Words, row, switch_row, wide_control};
 
 const FIRST_SECONDS: u32 = 5;
 
+/// The mode dropdown with the seconds field beside it.
 const TIMEOUT_CONTROL_WIDTH: f32 = 400.0;
 
 const TIMEOUT_SELECT_WIDTH: f32 = 160.0;
@@ -96,13 +97,14 @@ fn default_entry(
         current: None,
     };
 
-    row(ui, true, &words, WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, true, &words, width, |ui| {
         let picked = ui
             .add_enabled_ui(!remembered && !entries.is_empty(), |ui| {
                 Select::new(&title, &names)
                     .selected(current)
                     .placeholder(&placeholder)
-                    .width(WIDE_CONTROL)
+                    .width(width)
                     .show(ui)
             })
             .inner;
@@ -169,15 +171,17 @@ fn timeout(ui: &mut Ui, context: &PageContext<'_>, settings: &LoaderSettings) {
         current: None,
     };
 
-    row(ui, false, &words, TIMEOUT_CONTROL_WIDTH, |ui| {
-        ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-            // As wide as the other selects, unless the seconds need room.
-            let width = if mode == Some(1) {
-                TIMEOUT_SELECT_WIDTH
-            } else {
-                WIDE_CONTROL
-            };
+    // As wide as the other selects, unless the seconds need room beside it.
+    let in_seconds = mode == Some(1);
+    let wide = wide_control(ui);
+    let (reserved, width) = if in_seconds {
+        (TIMEOUT_CONTROL_WIDTH, TIMEOUT_SELECT_WIDTH)
+    } else {
+        (wide, wide)
+    };
 
+    row(ui, false, &words, reserved, |ui| {
+        ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
             let picked = Select::new(&title, &names)
                 .selected(mode)
                 .placeholder(&i18n::text(&ctx, "boot-sdboot-timeout-menu-disabled"))
@@ -215,19 +219,20 @@ fn seconds(
 }
 
 /// Three ways, as systemd-boot's own default differs between versions
-/// and the page cannot know it.
+/// and the page cannot know it. Segments show all three at once, where
+/// four dropdowns read alike until opened.
 fn switch(ui: &mut Ui, context: &PageContext<'_>, key: LoaderKey, value: Option<bool>) {
     let ctx = ui.ctx().clone();
     let id = format!("boot-sdboot-{}", key.as_str());
     let title = i18n::text(&ctx, &id);
     let description = i18n::text(&ctx, &format!("{id}-detail"));
-    let choices = [
-        i18n::text(&ctx, "boot-sdboot-unset").into_owned(),
-        i18n::text(&ctx, "boot-sdboot-on").into_owned(),
-        i18n::text(&ctx, "boot-sdboot-off").into_owned(),
-    ];
+    let default = i18n::text(&ctx, "boot-sdboot-segment-default");
+    let on = i18n::text(&ctx, "boot-sdboot-on");
+    let off = i18n::text(&ctx, "boot-sdboot-off");
+    let options = [(None, &*default), (Some(true), &*on), (Some(false), &*off)];
 
-    let names: Vec<&str> = choices.iter().map(String::as_str).collect();
+    let names = [&*default, &*on, &*off];
+    let width = segmented_width(ui, &names);
     let tag = tag(context, &ctx, key);
     let words = Words {
         title: &title,
@@ -237,30 +242,14 @@ fn switch(ui: &mut Ui, context: &PageContext<'_>, key: LoaderKey, value: Option<
         current: None,
     };
 
-    row(ui, false, &words, WIDE_CONTROL, |ui| {
-        let selected = match value {
-            None => 0,
-            Some(true) => 1,
-            Some(false) => 2,
-        };
+    row(ui, false, &words, width, |ui| {
+        let picked = segmented(ui, &title, &options, value);
 
-        let picked = Select::new(&title, &names)
-            .selected(Some(selected))
-            .width(WIDE_CONTROL)
-            .show(ui);
-
-        let wanted = match picked {
-            Some(1) => Some(Some(true)),
-            Some(2) => Some(Some(false)),
-            Some(0) => Some(None),
-            Some(_) | None => None,
-        };
-
-        if let Some(on) = wanted.filter(|on| *on != value) {
+        if let Some(wanted) = picked.filter(|wanted| *wanted != value) {
             let setting = match key {
-                LoaderKey::Editor => LoaderSetting::Editor(on),
-                LoaderKey::AutoEntries => LoaderSetting::AutoEntries(on),
-                LoaderKey::AutoFirmware => LoaderSetting::AutoFirmware(on),
+                LoaderKey::Editor => LoaderSetting::Editor(wanted),
+                LoaderKey::AutoEntries => LoaderSetting::AutoEntries(wanted),
+                LoaderKey::AutoFirmware => LoaderSetting::AutoFirmware(wanted),
                 LoaderKey::Timeout | LoaderKey::Default => return,
             };
 

@@ -106,6 +106,72 @@ fn close_and_escape_close_the_dialog() {
     assert_eq!(escaped.state().answer, None);
 }
 
+/// Whether a dialog, a form when `form`, is still open after a click at
+/// the window's corner, beside it.
+fn open_after_a_click_beside(form: bool) -> bool {
+    let mut harness = harness(600.0, 400.0).build_ui_state(
+        move |ui, open: &mut bool| {
+            if !*open {
+                return;
+            }
+
+            let mut modal = ModalWrapper::new(Id::unique("form"), "Add user").title_bar("Close");
+            if form {
+                modal = modal.form();
+            }
+
+            if modal.show(ui.ctx(), |ui| ui.label("Full name")).closed {
+                *open = false;
+            }
+        },
+        true,
+    );
+
+    harness.run();
+    let at = egui::pos2(5.0, 5.0);
+    let press = |pressed| egui::Event::PointerButton {
+        pos: at,
+        button: egui::PointerButton::Primary,
+        pressed,
+        modifiers: egui::Modifiers::NONE,
+    };
+
+    harness.event(egui::Event::PointerMoved(at));
+    harness.event(press(true));
+    harness.step();
+    harness.event(press(false));
+    harness.run();
+    *harness.state()
+}
+
+#[test]
+fn a_click_beside_closes_a_question_but_not_a_form() {
+    assert!(
+        !open_after_a_click_beside(false),
+        "the question stayed open"
+    );
+    assert!(open_after_a_click_beside(true), "the form closed");
+}
+
+#[test]
+fn escape_still_closes_a_form() {
+    let mut harness = harness(600.0, 400.0).build_ui_state(
+        |ui, open: &mut bool| {
+            if *open {
+                let modal = ModalWrapper::new(Id::unique("form"), "Add user").form();
+                *open = !modal.show(ui.ctx(), |ui| ui.label("Full name")).closed;
+            }
+        },
+        true,
+    );
+
+    harness.run();
+    harness.key_press(Key::Escape);
+    harness.run();
+
+    assert!(!*harness.state());
+}
+
 #[test]
 fn a_dialog_never_grows_past_the_window() {
     let harness = question(300.0, 400.0);

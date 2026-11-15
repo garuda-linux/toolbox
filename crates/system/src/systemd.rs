@@ -15,8 +15,8 @@ use zbus::OwnedObjectPath;
 use crate::bus::Method;
 
 pub const SYSTEMD_DESTINATION: &str = "org.freedesktop.systemd1";
-const MANAGER_PATH: &str = "/org/freedesktop/systemd1";
-const MANAGER_INTERFACE: &str = "org.freedesktop.systemd1.Manager";
+pub const MANAGER_PATH: &str = "/org/freedesktop/systemd1";
+pub const MANAGER_INTERFACE: &str = "org.freedesktop.systemd1.Manager";
 
 /// Loaded units, answered as `a(ssssssouso)`.
 pub const LIST_UNITS: Method = manager("ListUnits");

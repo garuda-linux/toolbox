@@ -56,36 +56,40 @@ app cannot tell whether another administrator could still log in.
 ## Add a user
 
 1. Click **Add user…**.
-2. Enter a **User name**. It starts with a lowercase letter or an underscore
-   and holds only lowercase letters, digits, hyphens and underscores, at most
-   32 characters. The dialog says under the field what is wrong while you
-   type, also when the name is taken. The other fields show their problems
-   the same way.
-3. Enter the password twice.
-4. Tick **Administrator** when the user may install software and change the
+2. Optionally enter a **Full name**. While you type it, the **User name**
+   below follows its first word in lowercase, with umlauts and accents
+   spelled in plain letters: `Jürgen Groß` proposes `juergen`.
+3. Keep the proposed **User name** or type another one. Once you changed it,
+   the full name no longer touches it. Emptied, it follows the full name
+   again. It starts with a lowercase letter or an underscore and holds only
+   lowercase letters, digits, hyphens and underscores, at most 32
+   characters. The dialog says under the field what is wrong while you type,
+   also when the name is taken. The other fields show their problems the
+   same way.
+4. Enter the password twice.
+5. Tick **Administrator** when the user may install software and change the
    system. This puts the user into the group `wheel`. The box is missing when
    the system has no such group.
 
    The other fields are optional and wait under **More options**. Open it to
    change any of them.
 
-5. Optionally enter a **Full name** and pick a **Login shell**. **System
-   default** leaves the choice to the system. Only shells listed in
-   `/etc/shells` are offered.
-6. Optionally enter a **Home folder** as a full path such as
+6. Optionally pick a **Login shell**. **System default** leaves the choice to
+   the system. Only shells listed in `/etc/shells` are offered.
+7. Optionally enter a **Home folder** as a full path such as
    `/srv/people/ada`. Left empty, the account gets the usual folder
    `/home/<user name>`. The path lies below `/home`, `/srv`, `/var/lib` or
    `/opt`. It cannot hold `..`, a colon or a line break, and it cannot be the
    home folder of another account.
-7. Optionally enter a **User ID**. Left empty, the system picks the next
+8. Optionally enter a **User ID**. Left empty, the system picks the next
    free one. An account of a person takes a number from 1000 to 60000, a
    system account one below 1000. A number another account has is refused.
-8. Tick **No home folder** for an account that needs no files of its own,
+9. Tick **No home folder** for an account that needs no files of its own,
    and **System account** for the account of a service. A system account is
    hidden by **Regular users only**.
-9. Tick the other groups the user should be in beside its own one. The
-   search field above the list finds a group by name.
-10. Click **Add user now** and enter your own password when asked. The account
+10. Tick the other groups the user should be in beside its own one. The
+    search field above the list finds a group by name.
+11. Click **Add user now** and enter your own password when asked. The account
     is made right away and does not wait in the queue. While the button is
     greyed out, the text beside it says what it waits for, such as "Enter a
     password."
@@ -96,6 +100,11 @@ account, with its home folder unless you ticked **No home folder**, then
 `chpasswd` sets the password. When the first step fails, the second does not
 run. **Show Console** opens the Console with both steps, for example to read
 why one failed. Afterwards the new user appears in the list.
+
+When the account could not be added, for example because you closed the
+password question, the dialog opens again with everything you entered except
+the two passwords. Enter them again and click **Add user now** once more, or
+**Cancel**.
 
 > **Note:** Adding a user is not offered while changes are being applied.
 > Wait until they are done.
@@ -156,6 +165,11 @@ next login.
 The full name cannot hold a colon, comma, equals sign, quotation mark or line
 break. Room and phone numbers that the account has beside the name stay as
 they are.
+
+What you change in one **Edit…** dialog queues together or not at all. When
+one part is refused, **Queue changes** stays greyed out and the text beside
+it says why. The home folder of an account that cannot move it, such as your
+own, shows the reason in place of its field.
 
 ## Change or move the home folder
 

@@ -42,6 +42,7 @@ pub fn show(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, host: O
         return;
     };
 
+    ui.add_space(ui.tokens().sizes.block_gap);
     heading(ui, context, reading);
     ui.add_space(ui.tokens().sizes.card_gap);
     restart_problem(ui, context);

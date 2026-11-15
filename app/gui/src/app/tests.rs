@@ -1,7 +1,9 @@
+mod runs;
+
 use egui_kittest::Harness;
 
 use super::{App, Setup};
-use crate::apply::Report;
+use crate::apply::{PlanId, Report};
 use crate::command::{AppCommand, Command, DiscoverCommand, MaintenanceCommand};
 use crate::page::PageId;
 use crate::page_service::Answer;
@@ -30,8 +32,14 @@ fn after_a_run() -> Harness<'static, App> {
     let app = harness.state_mut();
     app.state.page = PageId::Home;
     app.state.console_open = true;
-    app.console.take(Report::PlanStarted { steps: Vec::new() });
-    app.console.take(Report::PlanFinished { succeeded: true });
+    app.console.take(Report::PlanStarted {
+        plan: PlanId::new(1),
+        steps: Vec::new(),
+    });
+    app.console.take(Report::PlanFinished {
+        plan: PlanId::new(1),
+        succeeded: true,
+    });
     harness
 }
 

@@ -316,14 +316,17 @@ fn section_start(
         Some(heading) if density.expanded => {
             ui.add_space(density.label_room);
             let height = group_label_height(ui, density.compact);
-            faded(ui, opacity(ui, height), |ui| {
+            let middle = faded(ui, opacity(ui, height), |ui| {
                 group_label(ui, &i18n::text(ui.ctx(), heading), density.compact);
 
                 // Only a packed list scrolls, and packed the heading's row
                 // is its text alone.
                 let text = group_label_height(ui, true);
                 Some(ui.min_rect().bottom() - text / 2.0)
-            })
+            });
+
+            ui.add_space(density.label_below);
+            middle
         }
         Some(_) => {
             let height = nav_divider_height(density.divider);

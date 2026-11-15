@@ -1,35 +1,63 @@
 use std::path::Path;
 use std::time::{Duration, Instant};
 
-use super::{Launcher as _, SystemLauncher, TAIL_LINES, Tail};
+use super::{Launcher as _, SystemLauncher};
 use crate::command::{AppCommand, Command, CommandBus};
-use crate::testing::PATIENCE;
+use crate::testing::{PATIENCE, until};
 
-fn launcher(runtime: &tokio::runtime::Runtime) -> (SystemLauncher, CommandBus) {
+fn launcher(runtime: &tokio::runtime::Runtime, log_dir: &Path) -> (SystemLauncher, CommandBus) {
     let bus = CommandBus::new();
-    let launcher = SystemLauncher::new(
+    let launcher = SystemLauncher::logging_to(
         runtime.handle().clone(),
         bus.sender.clone(),
         egui::Context::default(),
+        Some(log_dir.to_owned()),
     );
 
     (launcher, bus)
 }
 
+/// The files of programs that still write or wrote, below `log_dir`.
+fn stderr_files(log_dir: &Path) -> usize {
+    std::fs::read_dir(log_dir.join("programs")).map_or(0, Iterator::count)
+}
+
 #[test]
-fn a_missing_program_does_not_start() {
+fn a_missing_program_does_not_start_and_leaves_no_file() {
     let runtime = tokio::runtime::Runtime::new().unwrap();
-    let (launcher, _bus) = launcher(&runtime);
+    let dir = tempfile::tempdir().unwrap();
+    let (launcher, _bus) = launcher(&runtime, dir.path());
 
     let started = launcher.start(Path::new("/nonexistent/garuda-installer"), &[]);
 
     assert_eq!(started.unwrap_err().kind(), std::io::ErrorKind::NotFound);
+    until("a program that never ran keeps a file", || {
+        stderr_files(dir.path()) == 0
+    });
+}
+
+/// No pipe ties the program to the window, so its stderr outlives it.
+#[test]
+fn a_running_program_writes_its_stderr_into_a_file_that_goes_at_its_end() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    let (launcher, _bus) = launcher(&runtime, dir.path());
+
+    launcher
+        .start(Path::new("sh"), &["-c", "echo started >&2; sleep 0.5"])
+        .unwrap();
+
+    assert_eq!(stderr_files(dir.path()), 1);
+    until("the file stays after the end", || {
+        stderr_files(dir.path()) == 0
+    });
 }
 
 #[test]
 fn a_tool_that_fails_raises_a_toast_with_its_name() {
     let runtime = tokio::runtime::Runtime::new().unwrap();
-    let (launcher, bus) = launcher(&runtime);
+    let dir = tempfile::tempdir().unwrap();
+    let (launcher, bus) = launcher(&runtime, dir.path());
 
     launcher
         .start(Path::new("ls"), &["/nonexistent/garuda-toolbox"])
@@ -58,7 +86,8 @@ fn a_tool_that_fails_raises_a_toast_with_its_name() {
 #[test]
 fn a_tool_that_ends_well_raises_nothing() {
     let runtime = tokio::runtime::Runtime::new().unwrap();
-    let (launcher, bus) = launcher(&runtime);
+    let dir = tempfile::tempdir().unwrap();
+    let (launcher, bus) = launcher(&runtime, dir.path());
 
     launcher.start(Path::new("true"), &[]).unwrap();
     std::thread::sleep(Duration::from_millis(300));
@@ -67,17 +96,13 @@ fn a_tool_that_ends_well_raises_nothing() {
 }
 
 #[test]
-fn the_tail_keeps_only_the_last_lines() {
-    let mut tail = Tail::default();
-    for number in 0..TAIL_LINES + 2 {
-        tail.push(format!("line {number}"));
-    }
+fn the_files_an_earlier_start_left_are_removed() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(dir.path().join("programs")).unwrap();
+    std::fs::write(dir.path().join("programs/tool-1-0.stderr"), "old\n").unwrap();
 
-    let text = tail.text();
-    assert!(!text.contains("line 1\n"), "{text}");
-    assert!(text.starts_with("line 2"), "{text}");
-    assert!(
-        text.ends_with(&format!("line {}", TAIL_LINES + 1)),
-        "{text}"
-    );
+    let (_launcher, _bus) = launcher(&runtime, dir.path());
+
+    until("the old file stays", || stderr_files(dir.path()) == 0);
 }

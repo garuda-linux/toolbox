@@ -2,22 +2,23 @@
 //! `ModalWrapper`: named for screen readers, a title bar with Close,
 //! Escape to leave, and never larger than the window.
 
-use egui::{
-    Align, Color32, Context, CornerRadius, Frame, Id, LayerId, Layout, Margin, Modal, Ui, vec2,
-};
+mod focus;
+mod question;
 
+use egui::{
+    Align, Align2, Color32, Context, CornerRadius, Frame, Id, LayerId, Layout, Margin, Modal, Ui,
+    vec2,
+};
+pub use question::{Asked, Question, question};
+
+use super::buttons::mark_raised_surface;
 use super::{ButtonKind, icon_button, pill_button, pill_width, rich};
 use crate::fonts::{BODY, SECTION, Weight};
 use crate::{frost, icons, tokens};
 
-mod focus;
-mod question;
-
-pub use question::{Asked, Question, question};
-
 const WINDOW_MARGIN: f32 = 20.0;
-/// The scrim's darkness over the window, as egui's own modal has it.
-const SCRIM: u8 = 100;
+/// Where a top-anchored dialog hangs, as a share of the window's height.
+const TOP_SHARE: f32 = 0.15;
 
 /// How wide a dialog is, by what it holds. The widths are in
 /// [`tokens::Sizes`].
@@ -27,6 +28,8 @@ pub enum DialogWidth {
     Small,
     Medium,
     Wide,
+    /// As wide as the window allows, for a picture shown large.
+    Window,
 }
 
 impl DialogWidth {
@@ -35,6 +38,7 @@ impl DialogWidth {
             Self::Small => sizes.dialog_small,
             Self::Medium => sizes.dialog_medium,
             Self::Wide => sizes.dialog_wide,
+            Self::Window => f32::INFINITY,
         }
     }
 }
@@ -48,10 +52,22 @@ pub struct ModalWrapper<'a> {
     fade_in: bool,
     width: DialogWidth,
     fill: bool,
+    form: bool,
+    place: Place,
+}
+
+/// Where a dialog sits in the window.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Place {
+    Centred,
+    /// Hangs from a line near the top, so a list under its field can
+    /// change length without moving the field.
+    Top,
 }
 
 /// What [`ModalWrapper::show`] returns: the content's result, and whether
-/// the user closed the dialog with Close, Escape or a click beside it.
+/// the user closed the dialog with Close, Escape or a click beside it
+/// (not for a [`ModalWrapper::form`]).
 #[derive(Debug)]
 pub struct ModalOutcome<R> {
     pub inner: R,
@@ -82,7 +98,27 @@ impl<'a> ModalWrapper<'a> {
             fade_in: true,
             width: DialogWidth::Small,
             fill: false,
+            form: false,
+            place: Place::Centred,
         }
+    }
+
+    /// Hangs from a fixed line near the window's top rather than sitting
+    /// in its middle, for a dialog whose list grows and shrinks as the user
+    /// types (the palette): its field stays where the eye is.
+    #[must_use = "a dialog does nothing until shown"]
+    pub const fn top_anchored(mut self) -> Self {
+        self.place = Place::Top;
+        self
+    }
+
+    /// Stays open on a click beside it, as libadwaita and macOS keep a
+    /// form, so a stray click drops nothing typed. Close and Escape still
+    /// leave.
+    #[must_use = "a dialog does nothing until shown"]
+    pub const fn form(mut self) -> Self {
+        self.form = true;
+        self
     }
 
     #[must_use = "a dialog does nothing until shown"]
@@ -114,9 +150,14 @@ impl<'a> ModalWrapper<'a> {
     }
 
     pub fn show<R>(self, ctx: &Context, content: impl FnOnce(&mut Ui) -> R) -> ModalOutcome<R> {
-        let area = Modal::default_area(self.id)
+        let hang = self.hang(ctx);
+        let mut area = Modal::default_area(self.id)
             .accessible_name(self.name)
             .fade_in(self.fade_in);
+
+        if matches!(self.place, Place::Top) {
+            area = area.anchor(Align2::CENTER_TOP, vec2(0.0, hang));
+        }
 
         let sizes = tokens::current(ctx).sizes;
 
@@ -136,6 +177,7 @@ impl<'a> ModalWrapper<'a> {
             .show(ctx, |ui| {
                 let room = (ui.ctx().content_rect().size()
                     - vec2(WINDOW_MARGIN, WINDOW_MARGIN) * 2.0
+                    - vec2(0.0, hang - WINDOW_MARGIN)
                     - frame.total_margin().sum())
                 .max(vec2(0.0, 0.0));
 
@@ -147,6 +189,7 @@ impl<'a> ModalWrapper<'a> {
                 }
 
                 focus::holder(ui, self.id, self.name);
+                mark_raised_surface(ui);
 
                 if let Some(close) = self.close {
                     closed |= title_bar(ui, self.name, close);
@@ -155,9 +198,21 @@ impl<'a> ModalWrapper<'a> {
                 content(ui)
             });
 
+        let beside = modal.backdrop_response.clicked();
+        let asked = modal.should_close();
         ModalOutcome {
-            closed: closed || modal.should_close(),
+            closed: closed || (asked && !(self.form && beside)),
             inner: modal.inner,
+        }
+    }
+
+    /// How far the dialog's top may come to the window's top: a share of
+    /// the window for a [`Self::top_anchored`] one, the margin otherwise.
+    fn hang(&self, ctx: &Context) -> f32 {
+        if matches!(self.place, Place::Top) {
+            (ctx.content_rect().height() * TOP_SHARE).max(WINDOW_MARGIN)
+        } else {
+            WINDOW_MARGIN
         }
     }
 }
@@ -169,7 +224,7 @@ fn backdrop(ctx: &Context, layer: LayerId) {
     let painter = ctx.layer_painter(layer);
     let screen = ctx.content_rect();
     frost::backdrop(&painter, screen, CornerRadius::ZERO);
-    painter.rect_filled(screen, 0.0, Color32::from_black_alpha(SCRIM));
+    painter.rect_filled(screen, 0.0, tokens::current(ctx).scrim);
 }
 
 /// `cancel` and the `confirm` button of `kind` at the dialog's right, the

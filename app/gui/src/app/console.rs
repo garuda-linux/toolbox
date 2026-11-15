@@ -34,7 +34,12 @@ impl App {
         };
 
         let upgrader = upgrader(&self.current_snapshot(), self.services.home.garuda_update());
-        self.run_at_once(retry_after_upgrade(packages, upgrader));
+        if self
+            .run_at_once(retry_after_upgrade(packages, upgrader))
+            .is_none()
+        {
+            self.console.refuse();
+        }
     }
 
     pub(super) fn take_output_share(&mut self, ctx: &egui::Context) {

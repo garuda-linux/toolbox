@@ -30,7 +30,7 @@ use crate::pages::{PageContext, Pages};
 use crate::snapshot::Reading;
 
 /// A pane's title size, the sidebar's and the Changes popover's alike.
-const PANE_TITLE: f32 = BODY * 1.07;
+const PANE_TITLE: f32 = BODY;
 
 /// What the shell draws from. The app owns it, the shell only reads it,
 /// except for state that belongs to the window alone: dragging the

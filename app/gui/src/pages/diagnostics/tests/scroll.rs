@@ -3,6 +3,9 @@ use toolbox_services::diagnostics::page::{Page, State};
 
 use super::page;
 
+/// The folded rows' line above the report.
+const COLLECT: &str = "Collect another report";
+
 fn long_report() -> Page {
     let text = (0_u16..400).fold(String::new(), |mut text, line| {
         use std::fmt::Write as _;
@@ -34,15 +37,15 @@ fn wheel_at(harness: &mut super::Shown, at: egui::Pos2) {
 #[test]
 fn only_the_report_scrolls_and_the_page_stays() {
     let mut harness = page(long_report());
-    let collect = harness.get_by_label("Collect").rect();
+    let collect = harness.get_by_label(COLLECT).rect();
 
-    // Beside the buttons, where only the page could take the wheel.
+    // Beside the folded rows, where only the page could take the wheel.
     wheel_at(
         &mut harness,
         egui::pos2(collect.right() + 200.0, collect.center().y),
     );
     assert!(
-        (harness.get_by_label("Collect").rect().top() - collect.top()).abs() < 0.5,
+        (harness.get_by_label(COLLECT).rect().top() - collect.top()).abs() < 0.5,
         "the page scrolled under a report that fills it"
     );
 
@@ -54,7 +57,7 @@ fn only_the_report_scrolls_and_the_page_stays() {
             .is_none_or(|line| line.rect().top() < first.top()),
         "the report did not scroll"
     );
-    assert!((harness.get_by_label("Collect").rect().top() - collect.top()).abs() < 0.5);
+    assert!((harness.get_by_label(COLLECT).rect().top() - collect.top()).abs() < 0.5);
 }
 
 /// A page that fills the window keeps between its report and the bottom

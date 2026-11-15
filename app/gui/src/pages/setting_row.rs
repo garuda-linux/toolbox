@@ -10,6 +10,9 @@ use toolbox_gui_kit::widgets::{
 
 /// Room for a switch at a row's right, a card gap apart from the words.
 const SWITCH_ROOM: f32 = super::rows::SWITCH_WIDTH + tokens::Sizes::DEFAULT.card_gap;
+/// The share of a row a wide control takes at most, so its words keep the
+/// rest instead of wrapping beside empty room.
+const WIDE_SHARE: f32 = 0.4;
 
 /// The words of one row: its title, what it does, and a note below when
 /// one is due. `queued` is the tag beside the title of a row whose change
@@ -52,6 +55,17 @@ pub fn switch_row(ui: &mut Ui, first: bool, words: &Words<'_>, on: bool, enabled
 /// right or below on a narrow window.
 pub fn row(ui: &mut Ui, first: bool, words: &Words<'_>, width: f32, control: impl FnOnce(&mut Ui)) {
     stated_row(ui, (first, None), words, width, control);
+}
+
+/// The width of a wide control, such as a list of menu entries, in a row of
+/// the card `ui` lays out.
+///
+/// `setting_control_wide`, at most 40 % of the row. Take it once per row, so
+/// the reserved room and the control agree.
+pub fn wide_control(ui: &Ui) -> f32 {
+    tokens::Sizes::DEFAULT
+        .setting_control_wide
+        .min(ui.available_width() * WIDE_SHARE)
 }
 
 /// A [`row`] with a state, such as "Running", as a dot beside the title,

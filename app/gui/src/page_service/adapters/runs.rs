@@ -29,7 +29,7 @@ impl PageService for Maintenance {
 
     /// A ranked list comes back as the plan that installs it.
     fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
-        answers(Self::take(self).map(Answer::RunPlan))
+        answers(Self::take(self).map(Answer::InstallMirrorlist))
     }
 
     fn plan_started(&mut self) -> Vec<AppCommand> {

@@ -223,6 +223,10 @@ pub enum Problem {
     BadIcon(String),
     #[error("the icon {0:?} is missing from the icon folder")]
     MissingIcon(String),
+    /// `glyph` is no freedesktop icon name: lower case letters, digits and
+    /// inner dashes.
+    #[error("the glyph {0:?} is no freedesktop icon name")]
+    BadGlyph(String),
     #[error("the `also` package {0:?} is protected, so the entry could never go off")]
     ProtectedAlso(String),
     /// `url` is no `https` link with a host, or has blanks or control

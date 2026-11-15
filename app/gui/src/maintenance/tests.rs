@@ -189,6 +189,25 @@ fn ranked_mirrors_are_installed_by_a_root_step() {
     ));
 }
 
+/// The ranking landed while an update ran, so the Console refused it.
+#[test]
+fn a_refused_ranked_list_goes_out_after_the_running_plan() {
+    let runtime = Runtime::new().unwrap();
+    let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
+    maintenance.open_tool(PageTool::ChaoticMirrors, &all_installed(), None);
+    let ranked = settle(&mut maintenance).expect("the ranking ends in a plan");
+
+    maintenance.mirrorlist_refused();
+    assert_eq!(maintenance.take(), None, "the update still runs");
+
+    maintenance.plan_finished(true, |_| true, None);
+
+    assert_eq!(maintenance.take(), Some(ranked));
+    maintenance.mirrorlist_started();
+    maintenance.plan_finished(true, |_| true, None);
+    assert_eq!(maintenance.take(), None, "installed once");
+}
+
 #[test]
 fn a_failed_ranking_is_the_page_problem() {
     let runtime = Runtime::new().unwrap();

@@ -65,9 +65,12 @@ impl PageView for SettingsPage {
         section(ui, "settings-behaviour", icons::CHRONOMETER);
         card(ui, |ui| {
             autostart(ui, &view, &send);
-            only_when_asked(ui, &view, &send);
-            self.refresh(ui, &view, &send);
+            if automatic(ui, &view, &send) {
+                self.interval(ui, &view, &send);
+            }
+
             user_units(ui, &view, &send);
+
             aur(ui, &view, &send);
         });
         ui.add_space(ui.tokens().sizes.section_gap);
@@ -81,9 +84,9 @@ impl PageView for SettingsPage {
 }
 
 impl SettingsPage {
-    fn refresh(&mut self, ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
+    /// Drawn only while the checks are on, so no row waits greyed out.
+    fn interval(&mut self, ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
         let ctx = ui.ctx().clone();
-        let refresh = view.settings.status.refresh;
         let held = self.minutes.held().map(|kept| {
             i18n::text_with(
                 &ctx,
@@ -92,30 +95,21 @@ impl SettingsPage {
             )
         });
 
-        let off =
-            (refresh == RefreshInterval::Off).then(|| i18n::text(&ctx, "settings-refresh-off"));
-
         let words = Words {
             current: None,
-            title: &i18n::text(&ctx, "settings-refresh"),
-            description: &i18n::text(&ctx, "settings-refresh-description"),
-            note: held.as_deref().or(off.as_deref()),
+            title: &i18n::text(&ctx, "settings-refresh-interval"),
+            description: &i18n::text(&ctx, "settings-refresh-interval-description"),
+            note: held.as_deref(),
             queued: None,
         };
 
         let name = i18n::text(&ctx, "settings-refresh-minutes");
         let unit = i18n::text(&ctx, "settings-refresh-unit");
+        let minutes = view.settings.status.minutes();
         let field = &mut self.minutes;
         row(ui, false, &words, MINUTES_WIDTH, |ui| {
-            let enabled = refresh != RefreshInterval::Off;
-            let committed = ui
-                .add_enabled_ui(enabled, |ui| {
-                    let texts = (name.as_ref(), unit.as_ref());
-                    field.show(ui, minutes_of(refresh), texts, MINUTES_WIDTH)
-                })
-                .inner;
-
-            if let Some(interval) = committed {
+            let texts = (name.as_ref(), unit.as_ref());
+            if let Some(interval) = field.show(ui, minutes, texts, MINUTES_WIDTH) {
                 send(SettingsCommand::Refresh(interval));
             }
         });
@@ -221,22 +215,20 @@ fn autostart(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
     }
 }
 
-/// Checks only when the user asks. Turned back on, the last minutes stay.
-fn only_when_asked(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
+/// Whether the checks are on after this frame's click, so the interval row
+/// follows the switch at once. Turned back on, the kept minutes return.
+fn automatic(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) -> bool {
     let ctx = ui.ctx().clone();
-    let refresh = view.settings.status.refresh;
-    let words = texts(&ctx, "settings-refresh-ask");
+    let status = &view.settings.status;
+    let words = texts(&ctx, "settings-refresh-auto");
 
-    let asked = refresh == RefreshInterval::Off;
-    if switch_row(ui, false, &words.borrowed(), asked, true) {
-        let next = if asked {
-            RefreshInterval::Minutes(minutes_of(refresh))
-        } else {
-            RefreshInterval::Off
-        };
-
-        send(SettingsCommand::Refresh(next));
+    let on = status.refresh != RefreshInterval::Off;
+    if switch_row(ui, false, &words.borrowed(), on, true) {
+        send(SettingsCommand::Refresh(status.turned(!on)));
+        return !on;
     }
+
+    on
 }
 
 fn user_units(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
@@ -330,13 +322,4 @@ fn choice<T>(
             picked(value);
         }
     });
-}
-
-/// The minutes the field shows: the setting's, or the usual hour while
-/// the checks wait to be asked for.
-const fn minutes_of(refresh: RefreshInterval) -> u16 {
-    match refresh {
-        RefreshInterval::Minutes(minutes) => minutes,
-        RefreshInterval::Off => toolbox_config::DEFAULT_MINUTES,
-    }
 }

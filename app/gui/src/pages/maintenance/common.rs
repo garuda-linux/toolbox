@@ -3,7 +3,9 @@ use toolbox_core::features::maintenance::page::{OperationRow, PageTool, ToolRow,
 use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
-use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, card, card_row, loading_label};
+use toolbox_gui_kit::widgets::{
+    ActionRow, ButtonKind, Tone, card, card_row, loading_label, pill_button_at_least, pill_width,
+};
 
 use super::repairs::Asked;
 use super::{heading, plan_button, row};
@@ -11,15 +13,16 @@ use crate::command::MaintenanceCommand;
 use crate::i18n;
 use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
-use crate::pages::rows::more::{item, more};
 
 /// `asking` holds the task whose question is open.
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
     heading(ui, icons::PACKAGE, "maintenance-operations");
+    let rows = operations(context.changes);
+    let queue_width = queue_width(ui, &rows);
     card(ui, |ui| {
-        for (index, operation) in operations(context.changes).iter().enumerate() {
+        for (index, operation) in rows.iter().enumerate() {
             card_row(ui, index == 0, |ui| {
-                operation_row(ui, context, operation, asking);
+                operation_row(ui, context, (operation, queue_width), asking);
             });
         }
     });
@@ -45,7 +48,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
 fn operation_row(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    operation: &OperationRow,
+    (operation, queue_width): (&OperationRow, f32),
     asking: &mut Option<Asked>,
 ) {
     let ctx = ui.ctx().clone();
@@ -62,6 +65,26 @@ fn operation_row(
         .detail(&detail)
         .queued(&queued)
         .show(ui, |ui| {
+            // Each Queue names its task, so a screen reader tells the rows'
+            // buttons apart.
+            let queue = if operation.queued {
+                "maintenance-unqueue".to_owned()
+            } else {
+                format!("{id}-queue")
+            };
+
+            let queue = i18n::text(&ctx, &queue);
+            let queue = ui.add_enabled_ui(!context.busy, |ui| {
+                pill_button_at_least(ui, &queue, ButtonKind::Soft, queue_width)
+            });
+
+            if queue.inner.clicked() {
+                context.commands.send(MaintenanceCommand::Queue {
+                    operation: operation.operation,
+                    on: !operation.queued,
+                });
+            }
+
             let kind = if operation.operation == Operation::UpgradeSystem {
                 ButtonKind::Primary
             } else {
@@ -76,21 +99,6 @@ fn operation_row(
                     context.commands.send(run);
                 }
             }
-
-            let queue = if operation.queued {
-                "maintenance-unqueue".to_owned()
-            } else {
-                format!("{id}-queue")
-            };
-
-            more(ui, &title, |ui| {
-                if item(ui, &queue, !context.busy) {
-                    context.commands.send(MaintenanceCommand::Queue {
-                        operation: operation.operation,
-                        on: !operation.queued,
-                    });
-                }
-            });
         });
 }
 
@@ -156,4 +164,18 @@ const fn tool_icon(tool: PageTool) -> Icon {
         PageTool::Program(Tool::EditRepositories) => icons::DOCUMENT_PROPERTIES,
         PageTool::Program(Tool::MergePacdiff) => icons::VCS_DIFF,
     }
+}
+
+/// The widest Queue label of every row, queued or not, so all rows'
+/// Queue buttons share one width and their Run now buttons line up.
+fn queue_width(ui: &Ui, rows: &[OperationRow]) -> f32 {
+    rows.iter()
+        .flat_map(|row| {
+            [
+                format!("{}-queue", row.operation.text_id()),
+                "maintenance-unqueue".to_owned(),
+            ]
+        })
+        .map(|id| pill_width(ui, &i18n::text(ui.ctx(), &id)))
+        .fold(0.0_f32, f32::max)
 }

@@ -104,11 +104,11 @@ fn start_at_login_reaches_the_store() {
 }
 
 #[test]
-fn only_when_i_ask_is_saved() {
+fn checks_turned_off_are_saved() {
     let (mut harness, store) = settings();
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "Only when I ask")
+        .get_by_role_and_label(Role::CheckBox, "Check for updates automatically")
         .click();
     harness.run();
 

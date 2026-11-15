@@ -20,6 +20,8 @@ pub(super) struct Shown {
     pub jump: Option<Jump>,
     pub reached: bool,
     pub current: Option<String>,
+    /// The picture to show large: its source and description.
+    pub enlarged: Option<(String, String)>,
 }
 
 pub(super) fn show(
@@ -73,6 +75,7 @@ pub(super) fn show(
         jump: reader.jump,
         reached: reader.reached,
         current,
+        enlarged: reader.enlarged,
     }
 }
 

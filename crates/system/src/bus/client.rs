@@ -1,6 +1,6 @@
-//! A bounded D-Bus call and the bus for a unit scope. Each call opens its
-//! own connection: calls are rare, and a held one would outlive a
-//! restarted service.
+//! A bounded D-Bus call and the bus for a unit scope. Most calls open
+//! their own connection: they are rare. The unit lists read on every
+//! change and share one, see `shared`.
 
 use std::time::Duration;
 

@@ -12,10 +12,10 @@ use egui::{Align2, Id, Rect, Response, Sense, Shape, Ui, WidgetInfo, pos2, vec2}
 use super::field::paint_field;
 use super::focus::focus_ring;
 use super::number::inset_number_with_unit;
-use super::press::{Pointer, faded};
+use super::press::Pointer;
 use super::text::line;
 use crate::fonts::{BODY, Weight};
-use crate::theme::{PILL_HEIGHT, PILL_RADIUS};
+use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, PILL_RADIUS};
 use crate::tokens;
 
 /// The words of a [`spin_field`]. `name` names the number for screen
@@ -81,7 +81,7 @@ pub fn spin_field(
     }
 
     *value = (*value).clamp(*range.start(), *range.end());
-    paint_field(ui, slot, pill, PILL_RADIUS, number.has_focus());
+    paint_field(ui, slot, pill, CONTROL_RADIUS, number.has_focus());
 
     *value != before
 }
@@ -113,7 +113,7 @@ fn paint_stepper(ui: &Ui, rect: Rect, response: &Response, step: Step) {
         Step::More => "+",
     };
 
-    let ink = faded(tokens.text, ui.is_enabled());
+    let ink = tokens.text;
     let glyph = line(ui, symbol, Weight::SemiBold, BODY, ink);
     let at = Align2::CENTER_CENTER
         .anchor_size(rect.center(), glyph.size())

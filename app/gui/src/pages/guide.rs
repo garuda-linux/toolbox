@@ -11,6 +11,7 @@ mod article;
 mod contents;
 mod markdown;
 mod outline;
+mod picture;
 mod results;
 
 use egui::{Rect, ScrollArea, Ui, UiBuilder, pos2};
@@ -49,6 +50,8 @@ pub struct GuidePage {
     /// The open page changed, so it starts at its top.
     fresh: bool,
     search: String,
+    /// The source and description of the picture shown large.
+    lightbox: Option<(String, String)>,
 }
 
 impl Default for GuidePage {
@@ -58,6 +61,7 @@ impl Default for GuidePage {
             target: None,
             fresh: true,
             search: String::new(),
+            lightbox: None,
         }
     }
 }
@@ -101,6 +105,18 @@ impl PageView for GuidePage {
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let _ui = tracing::trace_span!("guide ui").entered();
         let guide = toolbox_guide::embedded();
+
+        // Shown before the article, so the click that asked for it is not
+        // also taken as a click on the large picture or beside it.
+        let open = self
+            .lightbox
+            .as_ref()
+            .is_some_and(|(src, alt)| picture::lightbox(ui.ctx(), src, alt));
+
+        if !open {
+            self.lightbox = None;
+        }
+
         let full = ui.max_rect();
         let reader = PANE_GAP.mul_add(-2.0, full.width() - CONTENTS_WIDTH - OUTLINE_WIDTH);
         let outlined = reader >= READER_MIN;
@@ -127,6 +143,11 @@ impl PageView for GuidePage {
             jump = jump.or(shown.jump);
             if shown.reached {
                 self.target = None;
+            }
+
+            if shown.enlarged.is_some() {
+                self.lightbox = shown.enlarged;
+                ui.ctx().request_repaint();
             }
 
             if outlined && let Some(page) = guide.page(&self.file) {

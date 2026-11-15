@@ -5,15 +5,21 @@
 
 use egui::accesskit::Role;
 use egui::{
-    Align, Area, Color32, Context, CursorIcon, Frame, Id, Key, Layout, Modifiers, Order, Rect,
-    Sense, Stroke, Ui, UiBuilder, WidgetInfo, pos2, vec2,
+    Align, Area, Color32, Context, CursorIcon, EventFilter, Frame, Id, Key, Layout, Modifiers,
+    Order, Rect, Response, Sense, Stroke, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
+use toolbox_gui_kit::widgets::edge_ring;
 use toolbox_gui_kit::{frost, motion, tokens};
 
 use super::Sheet;
 
 /// The share of the page the sheet takes when first opened.
 const SHARE: f32 = 0.75;
+/// How far one press of Up or Down moves the focused grip, in points.
+const KEY_STEP: f32 = 32.0;
+/// The room between the grip's bar and its focus ring, so the ring reads
+/// as the bar's and not as a line of its own.
+const RING_ROOM: f32 = 4.0;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Place {
@@ -32,6 +38,24 @@ pub struct Shown {
 struct Drag {
     delta: f32,
     released: bool,
+    /// The height a key on the focused grip asked for.
+    keyed: Option<f32>,
+}
+
+/// The heights the grip moves between, and the page's, which a screen
+/// reader hears them as a share of.
+#[derive(Clone, Copy, Debug)]
+struct Span {
+    full: f32,
+    least: f32,
+    most: f32,
+    room: f32,
+}
+
+impl Span {
+    fn share(self, height: f32) -> f64 {
+        f64::from((height / self.room.max(1.0) * 100.0).round())
+    }
 }
 
 /// How far the sheet is out, advanced once a frame: 0 gone, 1 fully out.
@@ -71,6 +95,13 @@ pub fn show(
     }
 
     let full = height(ctx, room);
+    let span = Span {
+        full,
+        least: least(ctx),
+        most: most(ctx, room),
+        room: room.height(),
+    };
+
     let top = full.mul_add(-out, room.bottom());
     let rect = Rect::from_min_max(pos2(room.left(), top), room.right_bottom());
     let whole = Rect::from_min_size(rect.min, vec2(room.width(), full));
@@ -94,7 +125,7 @@ pub fn show(
 
         frame.show(&mut sheet_ui, |inner| {
             inner.set_min_size(inner.available_size());
-            let drag = drag_bar(inner, whole.top(), grip);
+            let drag = drag_bar(inner, whole.top(), grip, span);
             dragged_shut = resize(ctx, room, full, drag);
             inner.scope_builder(
                 UiBuilder::new().id_salt("toolbox_gui::console::contents"),
@@ -154,8 +185,9 @@ fn most(ctx: &Context, room: Rect) -> f32 {
 }
 
 /// The bar that shows the sheet can be dragged taller. Its hit area
-/// reaches from the sheet's top edge down past the bar.
-fn drag_bar(ui: &mut Ui, top: f32, label: &str) -> Drag {
+/// reaches from the sheet's top edge down past the bar. It tells screen
+/// readers the sheet's height as a share of the page.
+fn drag_bar(ui: &mut Ui, top: f32, label: &str, span: Span) -> Drag {
     let tokens = tokens::current(ui.ctx());
     let size = vec2(ui.available_width(), tokens.sizes.grip_height);
     let (row, _) = ui.allocate_exact_size(size, Sense::hover());
@@ -166,27 +198,88 @@ fn drag_bar(ui: &mut Ui, top: f32, label: &str) -> Drag {
         .interact(hit, ui.scope_id().with("grip"), Sense::drag())
         .on_hover_cursor(CursorIcon::ResizeVertical);
 
-    response.widget_info(|| WidgetInfo::labeled(Role::Splitter, true, label));
+    response.widget_info(|| {
+        let mut info = WidgetInfo::labeled(Role::Splitter, true, label);
+        info.value = Some(span.share(span.full));
+        info
+    });
 
-    let colour = if response.hovered() || response.dragged() {
+    ui.ctx().accesskit_node_builder(response.id, |node| {
+        node.set_min_numeric_value(span.share(span.least));
+        node.set_max_numeric_value(span.share(span.most));
+    });
+
+    let keyed = keyed(ui, &response, span);
+    let colour = if response.hovered() || response.dragged() || response.has_focus() {
         tokens.secondary
     } else {
         tokens.dim
     };
 
     ui.painter().rect_filled(bar, bar.height() / 2.0, colour);
+    edge_ring(ui, &response, bar.expand(RING_ROOM), u8::MAX);
 
     Drag {
         delta: response.drag_delta().y,
         released: response.drag_stopped(),
+        keyed,
     }
 }
 
-/// Applies the grip's drag to the kept height. Returns whether it let go
-/// below the least height, which closes the sheet at the height it had.
+/// Up and Down move the focused grip a step, Home and End to the most and
+/// the least height. The arrows stay with the grip, as egui would move the
+/// focus with them.
+fn keyed(ui: &Ui, response: &Response, span: Span) -> Option<f32> {
+    if !response.has_focus() {
+        return None;
+    }
+
+    let filter = EventFilter {
+        tab: false,
+        horizontal_arrows: false,
+        vertical_arrows: true,
+        escape: false,
+    };
+
+    ui.memory_mut(|memory| memory.set_focus_lock_filter(response.id, filter));
+
+    let (up, down, home, end) = ui.input_mut(|input| {
+        (
+            input.count_and_consume_key(Modifiers::NONE, Key::ArrowUp),
+            input.count_and_consume_key(Modifiers::NONE, Key::ArrowDown),
+            input.consume_key(Modifiers::NONE, Key::Home),
+            input.consume_key(Modifiers::NONE, Key::End),
+        )
+    });
+
+    if home {
+        return Some(span.most);
+    }
+
+    if end {
+        return Some(span.least);
+    }
+
+    if up == down {
+        return None;
+    }
+
+    let presses = |count: usize| f32::from(u16::try_from(count).unwrap_or(u16::MAX));
+    let height = KEY_STEP.mul_add(presses(up) - presses(down), span.full);
+    Some(height.clamp(span.least, span.most))
+}
+
+/// Applies the grip's drag or key to the kept height. Returns whether a
+/// drag let go below the least height, which closes the sheet at the
+/// height it had.
 fn resize(ctx: &Context, room: Rect, full: f32, drag: Drag) -> bool {
     let start_id = height_id().with("start");
     let held_id = height_id().with("held");
+
+    if let Some(keyed) = drag.keyed {
+        ctx.data_mut(|data| data.insert_persisted(height_id(), keyed));
+        ctx.request_repaint();
+    }
 
     if drag.delta != 0.0 {
         let held: f32 = ctx.data_mut(|data| {

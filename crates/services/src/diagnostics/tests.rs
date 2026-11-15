@@ -8,7 +8,10 @@ use toolbox_system::DiagnosticSource;
 use super::page::State;
 use super::{Diagnostics, DryRunTransport, spawn};
 use crate::share::Upload;
-use crate::testing::until;
+use crate::testing::{FixedClock, until};
+
+/// 2026-10-18 12:41:05 UTC.
+const COLLECTED: i64 = 1_792_327_265_i64;
 
 /// Answers dmesg with a red line and the journal with nothing.
 struct Fake;
@@ -32,6 +35,7 @@ fn diagnostics(runtime: &Runtime) -> Diagnostics {
         crate::waking::Wake::none(),
         Arc::new(Fake),
         Arc::new(DryRunTransport),
+        Arc::new(FixedClock(COLLECTED)),
     );
 
     Diagnostics::new(Some(link))
@@ -57,6 +61,24 @@ fn a_collected_report_is_plain_text_and_coloured_lines() {
     assert_eq!(diagnostics.page().report, "red\nplain\n");
     assert_eq!(diagnostics.lines().len(), 2);
     assert_eq!(diagnostics.lines()[0][0].text, "red");
+}
+
+#[test]
+fn a_collected_report_is_stamped_with_the_clock_and_a_missing_one_is_not() {
+    let runtime = Runtime::new().unwrap();
+    let mut diagnostics = diagnostics(&runtime);
+
+    diagnostics.collect(Selection::One(Collector::Dmesg));
+    settle(&mut diagnostics, |shown| {
+        shown.page().state == State::Report
+    });
+    assert_eq!(diagnostics.page().collected, u64::try_from(COLLECTED).ok());
+
+    diagnostics.collect(Selection::One(Collector::Journal));
+    settle(&mut diagnostics, |shown| {
+        shown.page().state == State::Unavailable
+    });
+    assert_eq!(diagnostics.page().collected, None);
 }
 
 #[test]

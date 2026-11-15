@@ -53,6 +53,7 @@ pub fn driver(refusal: DriverRefusal) -> Cow<'static, str> {
     let id = match refusal {
         DriverRefusal::OtherFile => "cli-driver-other-file",
         DriverRefusal::Unavailable => "cli-driver-unavailable",
+        DriverRefusal::Busy => "cli-busy",
     };
 
     text_in(FALLBACK, id)
@@ -116,6 +117,7 @@ const fn account_id(refusal: AccountRefusal) -> &'static str {
         AccountRefusal::UidInUse => "cli-account-uid-in-use",
         AccountRefusal::UidOutOfRange => "cli-account-uid-out-of-range",
         AccountRefusal::HomeTaken => "cli-account-home-taken",
+        AccountRefusal::Busy => "cli-busy",
     }
 }
 

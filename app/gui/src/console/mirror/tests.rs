@@ -1,9 +1,13 @@
 use toolbox_plan::{PackageName, Plan, PlannedAction, RootAction, StepId, TargetList, Upgrader};
 
 use super::MirrorWatch;
+use crate::apply::PlanId;
 
 /// pacman 7 in a terminal when the mirror answered 404 for `cowsay`.
 const MISSING: &str = toolbox_core::testing::features::packages::mirror::PACMAN_404_STDOUT;
+const FIRST: PlanId = PlanId::new(1);
+const SECOND: PlanId = PlanId::new(2);
+const THIRD: PlanId = PlanId::new(3);
 
 fn packages(names: &[&str]) -> TargetList<PackageName> {
     TargetList::new(
@@ -27,8 +31,8 @@ fn plan() -> Plan {
 }
 
 fn started(watch: &mut MirrorWatch) {
-    watch.sent(&plan());
-    watch.started();
+    watch.sent(FIRST, &plan());
+    watch.started(FIRST);
 }
 
 #[test]
@@ -89,17 +93,33 @@ fn the_next_plan_and_a_refused_one_keep_the_steps_apart() {
     watch.finished(StepId::new(2), false);
 
     // A plan the busy service refused never started.
-    watch.sent(&Plan::root(RootAction::RefreshKeyring));
-    watch.refused();
+    watch.sent(SECOND, &Plan::root(RootAction::RefreshKeyring));
+    watch.refused(SECOND);
     assert!(watch.offer().is_some());
 
-    watch.sent(&Plan::root(RootAction::RefreshKeyring));
-    watch.started();
+    watch.sent(THIRD, &Plan::root(RootAction::RefreshKeyring));
+    watch.started(THIRD);
     assert_eq!(watch.offer(), None);
 
     watch.output(StepId::new(1), MISSING);
     watch.finished(StepId::new(1), false);
     assert_eq!(watch.offer(), None);
+}
+
+/// Two plans sent within one frame: the second is refused, the first
+/// keeps its own install steps.
+#[test]
+fn a_refused_plan_sent_after_the_first_leaves_its_steps_alone() {
+    let mut watch = MirrorWatch::default();
+    watch.sent(FIRST, &plan());
+    watch.sent(SECOND, &Plan::root(RootAction::RefreshKeyring));
+    watch.started(FIRST);
+    watch.refused(SECOND);
+
+    watch.output(StepId::new(2), MISSING);
+    watch.finished(StepId::new(2), false);
+
+    assert_eq!(watch.offer(), Some(&packages(&["cowsay"])));
 }
 
 #[test]

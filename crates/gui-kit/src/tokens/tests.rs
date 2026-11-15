@@ -112,6 +112,38 @@ fn the_light_selection_tint_stands_out_as_much_as_the_dark_one() {
 }
 
 #[test]
+fn a_soft_button_on_a_dark_dialog_stands_further_off_than_the_field_fill() {
+    let tokens = Tokens::derive(&Palette::fallback(Theme::Dark), Theme::Dark);
+
+    let (raised, plain) = (
+        contrast(tokens.field_on_raised, tokens.raised),
+        contrast(tokens.field, tokens.raised),
+    );
+
+    assert!(raised > plain, "{raised:.3} against {plain:.3}");
+
+    assert!(
+        lightness(tokens.field_on_raised) < lightness(tokens.hover),
+        "a hover still shows a step"
+    );
+}
+
+#[test]
+fn a_soft_button_on_a_white_dialog_keeps_the_field_fill() {
+    let tokens = Tokens::derive(&Palette::fallback(Theme::Light), Theme::Light);
+
+    assert_eq!(tokens.field_on_raised, tokens.field);
+}
+
+#[test]
+fn light_cards_stand_out_from_the_window() {
+    let tokens = Tokens::derive(&Palette::fallback(Theme::Light), Theme::Light);
+
+    let ratio = contrast(tokens.card, tokens.window);
+    assert!(ratio >= 1.07, "{ratio:.3}");
+}
+
+#[test]
 fn a_rim_reads_on_the_field_fill() {
     for theme in [Theme::Dark, Theme::Light] {
         let tokens = Tokens::derive(&Palette::fallback(theme), theme);

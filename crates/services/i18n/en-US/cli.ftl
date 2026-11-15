@@ -40,6 +40,8 @@ cli-locale-package = the package rules keep this language pack installed
 
 cli-driver-other-file = another driver settings file in modprobe.d blacklists this driver, Garuda Toolbox only changes its own file
 cli-driver-unavailable = the drivers of this system could not be read
+# A change refused because other changes are still being applied.
+cli-busy = other changes are still being applied, try again once they are done
 cli-driver-not-listed = this is no network driver of this system, see `network drivers list`
 cli-driver-loaded = this driver is loaded already
 cli-driver-not-loaded = this driver is not loaded

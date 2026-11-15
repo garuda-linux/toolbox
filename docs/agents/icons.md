@@ -41,6 +41,10 @@ constants of `crates/gui-kit/src/icons.rs`, bundled in
   `icons::ALL`. A theme with fewer symbolic glyphs mixes its own with the
   bundled ones, all in the same tint.
 - A new meaning needs a glyph no other meaning uses. Add its row below.
+- A toggle entry's `glyph` (a bundled name) replaces its picture and
+  letter tile, on the page's tile in the picture slot. Every Components
+  entry has one: its section's topic glyph, `SYSTEM_RUN` for a service,
+  `USER_OTHERS` for a group.
 
 ## Meanings besides pages
 
@@ -75,6 +79,7 @@ constants of `crates/gui-kit/src/icons.rs`, bundled in
 | Start, Stop                | `MEDIA_PLAYBACK_START`, `MEDIA_PLAYBACK_STOP` | Services row menu                                      |
 | Restart                    | `MEDIA_PLAYLIST_REPEAT`                       | Services row menu                                      |
 | Mask, Unmask               | `OBJECT_LOCKED`, `OBJECT_UNLOCKED`            | Services row menu                                      |
+| Show, hide a password      | `VIEW_VISIBLE`, `VIEW_HIDDEN`                 | password fields (`widgets::secret_field`)              |
 
 Page glyphs reused for their topic: `DRIVE_HARDDISK_ROOT` (Config Files
 "Bootloader") and `OFFICE_REPORT` (Settings "Diagnostics").

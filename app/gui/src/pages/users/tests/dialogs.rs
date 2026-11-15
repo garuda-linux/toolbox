@@ -4,10 +4,10 @@ use egui::util::IdTypeMap;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::domains::Accounts;
 use toolbox_core::features::users::input::{self, NewAccount};
-use toolbox_plan::{FullName, Password};
+use toolbox_plan::Password;
 
 use super::{group, group_name, name, page, page_on, sent, system, unlocked};
-use crate::command::{Command, UserEdit, UsersCommand};
+use crate::command::{Command, UsersCommand};
 
 #[test]
 fn a_new_password_runs_once_both_fields_agree() {
@@ -82,27 +82,6 @@ fn a_closed_password_dialog_leaves_no_field_state_behind() {
 }
 
 #[test]
-fn the_edit_dialog_queues_only_what_changed() {
-    let mut harness = page(unlocked());
-
-    harness.get_by_label("ada, Ada Lovelace").click();
-    harness.run();
-    harness.get_by_label("Edit ada…").click();
-    harness.run();
-    type_into(&mut harness, Role::TextInput, "Full name", " King");
-    harness.get_by_label("Queue changes").click();
-    harness.run();
-
-    assert_eq!(
-        sent(&harness),
-        [Command::from(UserEdit::SetFullName {
-            user: name("ada"),
-            name: FullName::new("Ada Lovelace King").unwrap(),
-        })]
-    );
-}
-
-#[test]
 fn a_taken_name_is_refused_while_it_is_typed() {
     let mut harness = page(unlocked());
 
@@ -171,7 +150,7 @@ fn a_new_user_is_added_with_the_groups_ticked() {
 
 /// Clicks the field `label` names, as typing needs the focus, and types
 /// `text` at its end.
-fn type_into(harness: &mut super::Shown, role: Role, label: &str, text: &str) {
+pub(super) fn type_into(harness: &mut super::Shown, role: Role, label: &str, text: &str) {
     harness.get_by_role_and_label(role, label).click();
     harness.run();
     harness.get_by_role_and_label(role, label).type_text(text);
@@ -190,13 +169,14 @@ fn the_add_dialog_asks_the_required_fields_first_and_says_what_holds_it() {
 
     harness.get_by_label("More options").click();
     harness.run();
+    let full_name = top(&harness, Role::TextInput, "Full name");
     let name = top(&harness, Role::TextInput, "User name");
     let password = top(&harness, Role::PasswordInput, "Password");
     let admin = top(&harness, Role::CheckBox, "Administrator");
-    let full_name = top(&harness, Role::TextInput, "Full name");
+    let uid = top(&harness, Role::TextInput, "User ID");
     assert!(
-        name < password && password < admin && admin < full_name,
-        "{name} {password} {admin} {full_name}"
+        full_name < name && name < password && password < admin && admin < uid,
+        "{full_name} {name} {password} {admin} {uid}"
     );
 
     assert!(harness.query_by_label("Enter a user name.").is_some());
@@ -222,6 +202,7 @@ fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
     assert!(confirm.bottom() <= 720.0, "{confirm:?}");
 
     for (role, label) in [
+        (Role::TextInput, "Full name"),
         (Role::TextInput, "User name"),
         (Role::PasswordInput, "Password"),
         (Role::PasswordInput, "Repeat the password"),
@@ -236,44 +217,15 @@ fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::TextInput, "Full name")
+            .query_by_role_and_label(Role::TextInput, "User ID")
             .is_none()
     );
     harness.get_by_label("More options").click();
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::TextInput, "Full name")
+            .query_by_role_and_label(Role::TextInput, "User ID")
             .is_some()
-    );
-}
-
-#[test]
-fn every_field_of_the_edit_dialog_keeps_one_gap_to_the_next() {
-    let mut harness = page(unlocked());
-    harness.get_by_label("ada, Ada Lovelace").click();
-    harness.run();
-    harness.get_by_label("Edit ada…").click();
-    harness.run();
-
-    let full_name = harness
-        .get_by_role_and_label(Role::TextInput, "Full name")
-        .rect();
-
-    let shell = harness
-        .get_by_role_and_label(Role::Label, "Login shell")
-        .rect();
-
-    let shell_hint = harness.get_by_label_contains("Only shells listed").rect();
-    let home = harness
-        .get_by_role_and_label(Role::Label, "Home folder")
-        .rect();
-
-    let after_field = shell.top() - full_name.bottom();
-    let after_hint = home.top() - shell_hint.bottom();
-    assert!(
-        (after_field - after_hint).abs() < 1.0,
-        "{after_field} px after a field, {after_hint} px after a hint"
     );
 }
 
@@ -300,7 +252,7 @@ fn more_options_folds_open_behind_a_chevron_on_the_label_column() {
     assert!(chevron, "no chevron icon at the start of {more:?}");
     assert!(
         harness
-            .query_by_role_and_label(Role::TextInput, "Full name")
+            .query_by_role_and_label(Role::TextInput, "User ID")
             .is_none()
     );
 
@@ -309,7 +261,7 @@ fn more_options_folds_open_behind_a_chevron_on_the_label_column() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::TextInput, "Full name")
+            .query_by_role_and_label(Role::TextInput, "User ID")
             .is_some()
     );
 }

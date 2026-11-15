@@ -30,9 +30,6 @@ use crate::i18n;
 use crate::page::PageId;
 use crate::pages::heading;
 
-/// The width of a row's control: a menu entry's name fits.
-const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
-
 #[derive(Debug, Default)]
 pub struct BootPage {
     entries: menu::EntryRows,

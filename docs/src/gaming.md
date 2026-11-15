@@ -13,32 +13,33 @@ description holds the text stay. **Nothing matches the search** with
 
 ## Install or remove a gaming app
 
-Each row is one package, for example `steam`, `lutris` or `retroarch`. A
-switch that is on means it is installed.
+Each row is one package, for example `steam`, `lutris` or `retroarch`. An
+installed one says **Installed**.
 
-1. Turn the row's switch on or off, or click the row, or press `Space` on it.
-   Nothing changes yet: the row says **Turns on with Apply** or **Turns off
+1. Click **Install** or **Remove** on the row, or press `Space` on it.
+   Nothing changes yet: the row says **Installs with Apply** or **Removes
    with Apply**.
-2. Flip it back to take the change out of the queue.
+2. Click **Take back** to take the change out of the queue.
 3. Apply the queue, see [Review and apply changes](applying.md).
 
 ## Rows that install more than one package
 
 Some tools need their 32-bit library for 32-bit games. **Gamemode** also
 installs `lib32-gamemode`, and **MangoHud** also installs
-`lib32-mangohud`. Turning the row off removes both packages. The switch
-follows the main package alone.
+`lib32-mangohud`. **Remove** removes both packages. The row follows the
+main package alone.
 
-A `-git` build of a package counts as installed, and turning the row off
-removes that build. Some rows name a `-git` package themselves, for example
+A `-git` build of a package counts as installed, and **Remove** removes
+that build. Some rows name a `-git` package themselves, for example
 `luxtorpeda-git`.
 
 ## Open a game's website
 
-Many games, such as **0 A.D.**, have a button with a browser icon on their
-row. Its tooltip reads "Website of" and the game's name. It opens the
-game's site in your web browser without changing the queue. Only `https`
-sites from the app's own list are opened.
+Many games, such as **0 A.D.**, have **Open website** in the **⋯** menu of
+their row (**Actions for** and the game's name). It opens the game's site
+in your web browser without changing the queue. With the keyboard, select
+the row and press the `Menu` key. Only `https` sites from the app's own
+list are opened.
 
 ## Why some apps are missing
 

@@ -8,6 +8,11 @@ console-idle = No changes are being applied
 
 # The command palette (Ctrl+K).
 palette-search = Search pages and commands
+# Labels over the palette's groups of rows. The Maintenance group takes
+# the page's name.
+palette-group-pages = Pages
+palette-group-commands = Commands
+palette-group-apps = Apps
 command-apply = Apply changes
 command-toggle-sidebar = Toggle sidebar
 command-toggle-console = Toggle console

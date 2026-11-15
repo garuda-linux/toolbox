@@ -1,8 +1,77 @@
-use super::{PageRun, RunKind};
+use super::{PageRun, Retry, RetryStep, RunKind};
 use crate::test_support::user_name;
 
 fn running(kind: RunKind, user: &str) -> PageRun {
     PageRun::Running(kind, user_name(user))
+}
+
+fn retry() -> Retry<&'static str> {
+    Retry::new("form", RunKind::NewAccount, user_name("grace"))
+}
+
+fn step(retry: Retry<&'static str>, run: &PageRun) -> Retry<&'static str> {
+    match retry.step(run) {
+        RetryStep::Wait(waiting) => waiting,
+        RetryStep::Reopen(form) => panic!("reopened {form} at {run:?}"),
+        RetryStep::Forget => panic!("dropped at {run:?}"),
+    }
+}
+
+/// The add-user dialog closes when it sends the account and opens again,
+/// without its passwords, when the account could not be added.
+#[test]
+fn a_failed_run_gives_its_form_back() {
+    let sent = step(
+        retry(),
+        &PageRun::Sent(RunKind::NewAccount, user_name("grace")),
+    );
+
+    let started = step(sent, &running(RunKind::NewAccount, "grace"));
+
+    assert_eq!(
+        started.step(&PageRun::Failed(RunKind::NewAccount, user_name("grace"))),
+        RetryStep::Reopen("form")
+    );
+}
+
+#[test]
+fn a_done_run_drops_its_form() {
+    let started = step(retry(), &running(RunKind::NewAccount, "grace"));
+
+    assert_eq!(
+        started.step(&PageRun::Done(RunKind::NewAccount, user_name("grace"))),
+        RetryStep::Forget
+    );
+}
+
+/// The helper refused the run because another plan ran: nothing was added.
+#[test]
+fn a_refused_run_gives_its_form_back() {
+    let sent = step(
+        retry(),
+        &PageRun::Sent(RunKind::NewAccount, user_name("grace")),
+    );
+
+    assert_eq!(sent.step(&PageRun::None), RetryStep::Reopen("form"));
+}
+
+/// Until its own run started, the outcome of an earlier try or of another
+/// run is not this form's.
+#[test]
+fn an_earlier_outcome_is_not_the_forms() {
+    let before = step(
+        retry(),
+        &PageRun::Failed(RunKind::NewAccount, user_name("grace")),
+    );
+
+    let cleared = step(before, &PageRun::None);
+
+    let other = step(cleared, &running(RunKind::Password, "ada"));
+
+    assert_eq!(
+        other.step(&PageRun::Failed(RunKind::Password, user_name("ada"))),
+        RetryStep::Wait(retry())
+    );
 }
 
 #[test]

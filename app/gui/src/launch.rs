@@ -2,31 +2,27 @@
 //! outlive a closed app window. A task waits for each one, so finished
 //! programs never linger as zombies.
 
+mod stderr;
 #[cfg(test)]
 mod tests;
 
-use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Stdio;
-use std::time::Duration;
 
-use tokio::io::{AsyncBufReadExt as _, BufReader};
-use tokio::process::{Child, ChildStderr, Command};
+use tokio::process::{Child, Command};
 use tokio::runtime::Handle;
+use toolbox_config::Paths;
 use toolbox_gui_kit::toasts::ToastKind;
 
+use self::stderr::StderrFile;
 use crate::command::{AppCommand, CommandSender};
-use crate::i18n;
 use crate::spawn::spawn_logged;
+use crate::{i18n, log_folder};
 
 /// How many of its last stderr lines a failed program's warning carries.
 const TAIL_LINES: usize = 5;
-
-/// How long the stderr reader may still take once the program ended. A
-/// child the program left behind can hold stderr open for good.
-const TAIL_GRACE: Duration = Duration::from_millis(200);
 
 /// Starts programs outside the Console. Dry runs start nothing.
 pub trait Launcher: Debug + Send + Sync {
@@ -45,21 +41,52 @@ pub struct SystemLauncher {
     runtime: Handle,
     commands: CommandSender,
     ctx: egui::Context,
+    /// Where each program's stderr goes. `None` without a log folder, the
+    /// programs' stderr is dropped then.
+    log_dir: Option<PathBuf>,
 }
 
 /// Logs the start instead, for the dry run and its self-test.
 #[derive(Debug)]
 pub struct DryRunLauncher;
 
-#[derive(Debug, Default)]
-struct Tail(VecDeque<String>);
-
 impl SystemLauncher {
-    pub const fn new(runtime: Handle, commands: CommandSender, ctx: egui::Context) -> Self {
+    pub fn new(runtime: Handle, commands: CommandSender, ctx: egui::Context) -> Self {
+        let log_dir = log_folder::log_dir(&Paths::from_process());
+        Self::logging_to(runtime, commands, ctx, log_dir)
+    }
+
+    /// Removes what programs of an earlier start left in `log_dir`.
+    pub fn logging_to(
+        runtime: Handle,
+        commands: CommandSender,
+        ctx: egui::Context,
+        log_dir: Option<PathBuf>,
+    ) -> Self {
+        if let Some(dir) = log_dir.clone() {
+            drop(runtime.spawn_blocking(move || stderr::sweep(&dir)));
+        }
+
         Self {
             runtime,
             commands,
             ctx,
+            log_dir,
+        }
+    }
+
+    /// The file `short`'s stderr goes to, and its handle for the child.
+    fn stderr_for(&self, short: &str) -> (Option<StderrFile>, Stdio) {
+        let Some(dir) = &self.log_dir else {
+            return (None, Stdio::null());
+        };
+
+        match StderrFile::create(dir, short) {
+            Ok((file, handle)) => (Some(file), Stdio::from(handle)),
+            Err(error) => {
+                tracing::warn!("{short} starts without a file for its stderr: {error}");
+                (None, Stdio::null())
+            }
         }
     }
 }
@@ -67,25 +94,32 @@ impl SystemLauncher {
 impl Launcher for SystemLauncher {
     fn start(&self, program: &Path, args: &[&str]) -> io::Result<()> {
         let _entered = self.runtime.enter();
-        let mut child = Command::new(program)
-            .args(args)
-            .stdin(Stdio::null())
-            .stdout(Stdio::null())
-            .stderr(Stdio::piped())
-            .process_group(0)
-            .spawn()?;
-
         let name = program.display().to_string();
         let short = program
             .file_name()
             .map_or_else(|| name.clone(), |file| file.to_string_lossy().into_owned());
 
-        tracing::info!("started {name}");
-        let tail = child
-            .stderr
-            .take()
-            .map(|stderr| self.runtime.spawn(tail(stderr)));
+        let (output, stderr) = self.stderr_for(&short);
+        let spawned = Command::new(program)
+            .args(args)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(stderr)
+            .process_group(0)
+            .spawn();
 
+        let mut child = match spawned {
+            Ok(child) => child,
+            Err(error) => {
+                if let Some(output) = output {
+                    drop(self.runtime.spawn_blocking(move || output.remove()));
+                }
+
+                return Err(error);
+            }
+        };
+
+        tracing::info!("started {name}");
         let commands = self.commands.clone();
         let ctx = self.ctx.clone();
         spawn_logged(&self.runtime, "program watch", async move {
@@ -93,23 +127,21 @@ impl Launcher for SystemLauncher {
                 return;
             };
 
+            let last = match output {
+                Some(output) => tokio::task::spawn_blocking(move || output.finish(TAIL_LINES))
+                    .await
+                    .unwrap_or_default(),
+                None => Vec::new(),
+            };
+
             if status.success() {
                 tracing::debug!("{name} ended with {status}");
                 return;
             }
 
-            let last = match tail {
-                Some(reader) => tokio::time::timeout(TAIL_GRACE, reader)
-                    .await
-                    .ok()
-                    .and_then(Result::ok)
-                    .unwrap_or_default(),
-                None => Tail::default(),
-            };
-
             tracing::warn!(
                 "{name} ended with {status}, its last lines: {}",
-                last.text()
+                last.join("\n")
             );
 
             let text = i18n::text_with(&ctx, "toast-tool-failed", &[("name", &short)]);
@@ -131,36 +163,10 @@ impl Launcher for DryRunLauncher {
     }
 }
 
-impl Tail {
-    fn push(&mut self, line: String) {
-        if self.0.len() == TAIL_LINES {
-            drop(self.0.pop_front());
-        }
-
-        self.0.push_back(line);
-    }
-
-    fn text(&self) -> String {
-        Vec::from_iter(self.0.iter().map(String::as_str)).join("\n")
-    }
-}
-
 async fn ended(child: &mut Child, name: &str) -> Option<std::process::ExitStatus> {
     child
         .wait()
         .await
         .inspect_err(|error| tracing::warn!("lost track of {name}: {error}"))
         .ok()
-}
-
-/// Reads stderr to its end, so a chatty program never blocks on a full
-/// pipe, and keeps the last lines.
-async fn tail(stderr: ChildStderr) -> Tail {
-    let mut lines = BufReader::new(stderr).lines();
-    let mut tail = Tail::default();
-    while let Ok(Some(line)) = lines.next_line().await {
-        tail.push(line);
-    }
-
-    tail
 }

@@ -235,6 +235,30 @@ fn an_edit_runs_the_editor_and_writes_after_the_review() {
     ));
 }
 
+/// Closing the window asks while the review waits, and leaving takes the
+/// private copy along.
+#[test]
+fn a_reviewed_edit_is_unapplied_and_leaving_removes_its_copy() {
+    let (_runtime, _machine, folder, mut configs) = configs();
+    let copies = EditFolder::new(folder.path()).path().to_owned();
+    let count = || std::fs::read_dir(&copies).map_or(0, Iterator::count);
+    configs.open();
+    settle(&mut configs, |configs, _| configs.listing().is_some());
+    assert_eq!(configs.edit("grub"), Ok(None));
+    settle(&mut configs, |_, taken| taken.acts.iter().any(is_editor));
+    assert!(!configs.unapplied(), "the editor did not run yet");
+
+    assert_eq!(configs.plan_started(), None);
+    assert_eq!(configs.plan_finished(true), None);
+    settle(&mut configs, |_, taken| taken.review);
+    assert!(configs.unapplied());
+    assert_eq!(count(), 1);
+
+    configs.leave();
+
+    assert_eq!(count(), 0);
+}
+
 #[test]
 fn a_read_only_file_is_viewed_and_never_edited() {
     let (_runtime, _machine, _folder, mut configs) = configs();

@@ -21,7 +21,7 @@ use toolbox_gui::{App, Setup, reader, snapshot};
 use toolbox_plan::{KernelRelease, PackageName};
 use toolbox_services::dkms::Dkms;
 
-use crate::common::{TALL, checkbox as switch, packages, window};
+use crate::common::{TALL, button, packages, window};
 use crate::system::{first_read, shows, step_until};
 
 /// What dkms lists for [`system`]: `nvidia` built for `linux`.
@@ -169,8 +169,16 @@ fn installed_and_offered_kernels_show_with_the_running_one() {
             .query_by_label("Running kernel: 6.14.0-arch1-1")
             .is_some()
     );
-    assert!(switch(&harness, "linux").accesskit_node().is_disabled());
-    assert!(!switch(&harness, "linux-lts").accesskit_node().is_disabled());
+    assert!(
+        button(&harness, "Remove linux")
+            .accesskit_node()
+            .is_disabled()
+    );
+    assert!(
+        !button(&harness, "Remove linux-lts")
+            .accesskit_node()
+            .is_disabled()
+    );
 }
 
 #[test]
@@ -178,17 +186,17 @@ fn a_click_queues_a_kernel_with_its_headers_and_takes_it_back() {
     let (mut harness, _runtime) = kernels(system(true));
 
     // The row sits under the window's foot until scrolled into sight.
-    switch(&harness, "linux-zen").scroll_to_me();
+    button(&harness, "Install linux-zen").scroll_to_me();
     harness.run();
-    switch(&harness, "linux-zen").click();
+    button(&harness, "Install linux-zen").click();
     harness.run();
     assert!(harness.query_by_label("Installs with Apply").is_some());
     assert!(harness.query_by_label("changes queued").is_some());
 
     // The Changes band covers the page's foot, where the row lies.
-    switch(&harness, "linux-zen").scroll_to_me();
+    button(&harness, "Take back linux-zen").scroll_to_me();
     harness.run();
-    switch(&harness, "linux-zen").click();
+    button(&harness, "Take back linux-zen").click();
     harness.run();
     assert!(harness.query_by_label("Installs with Apply").is_none());
 }
@@ -197,7 +205,7 @@ fn a_click_queues_a_kernel_with_its_headers_and_takes_it_back() {
 fn a_removal_without_a_known_running_kernel_is_refused_until_dismissed() {
     let (mut harness, _runtime) = kernels(system(false));
 
-    switch(&harness, "linux-lts").click();
+    button(&harness, "Remove linux-lts").click();
     harness.run();
     assert!(
         harness
@@ -271,9 +279,9 @@ fn a_click_on_an_offered_kernel_asks_to_install_it() {
     let mut harness = page(system(true));
 
     // The installed kernels fill the window, so the offered one lies below.
-    switch(&harness, "linux-zen").scroll_to_me();
+    button(&harness, "Install linux-zen").scroll_to_me();
     harness.run();
-    switch(&harness, "linux-zen").click();
+    button(&harness, "Install linux-zen").click();
     harness.run();
 
     assert_eq!(
@@ -301,11 +309,11 @@ fn the_version_and_the_running_note_are_secondary_text() {
 }
 
 #[test]
-fn a_long_module_line_wraps_and_keeps_the_switches_in_the_card() {
+fn a_long_module_line_wraps_and_keeps_the_buttons_in_the_card() {
     let (harness, _runtime) = kernels(system(true));
     let builds = harness.get_by_label("Queue module builds").rect();
     let lts = harness
-        .get_by_role_and_label(Role::CheckBox, "linux-lts")
+        .get_by_role_and_label(Role::Button, "Remove linux-lts")
         .rect();
 
     assert!(
@@ -316,7 +324,7 @@ fn a_long_module_line_wraps_and_keeps_the_switches_in_the_card() {
     );
     assert!(
         lts.right() <= harness.ctx.content_rect().right() - 40.0,
-        "the switches end at {}, outside the card",
+        "the buttons end at {}, outside the card",
         lts.right(),
     );
 }

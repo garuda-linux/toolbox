@@ -49,6 +49,9 @@ pub struct Page {
     pub shareable: Option<Redacted>,
     pub problem: String,
     pub share: Upload,
+    /// When the shown report came in, in seconds since the epoch. The
+    /// owner of the clock stamps it, so a page stays plain state.
+    pub collected: Option<u64>,
 }
 
 impl State {
@@ -156,6 +159,7 @@ impl Page {
         self.raw.clear();
         self.shareable = None;
         self.problem.clear();
+        self.collected = None;
         self.part.clear();
         self.step = 0_i32;
     }

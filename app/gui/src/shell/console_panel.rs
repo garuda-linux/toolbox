@@ -16,7 +16,7 @@ use egui::{
     WidgetText, vec2,
 };
 use toolbox_core::features::console::ending::Ending;
-use toolbox_gui_kit::fonts::{BODY, SECTION, SMALL, Weight};
+use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
 use toolbox_gui_kit::theme::{CARD_RADIUS, PILL_HEIGHT};
 use toolbox_gui_kit::widgets::{Tone, banner, card, edge_ring, line, rich, status_word};
@@ -30,7 +30,7 @@ use crate::i18n;
 
 const STEPS_HEIGHT: f32 = tokens::Sizes::DEFAULT.steps_height;
 const SHEET_RADIUS: u8 = toolbox_gui_kit::theme::POPOVER_RADIUS;
-const STATE_SIZE: f32 = BODY * 0.95;
+const STATE_SIZE: f32 = SMALL;
 const STEP_ROW_HEIGHT: f32 = tokens::Sizes::DEFAULT.step_row_height;
 
 #[derive(Clone, Copy, Debug)]

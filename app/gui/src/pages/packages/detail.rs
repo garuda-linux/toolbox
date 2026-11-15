@@ -8,7 +8,7 @@ mod tests;
 use std::sync::Arc;
 
 pub use below::HistoryRows;
-use egui::{Color32, Key, Rect, Sense, Stroke, Ui, Vec2, pos2, vec2};
+use egui::{Color32, Key, Rect, Sense, Ui, Vec2, pos2, vec2};
 pub use facts::day;
 use toolbox_core::features::packages::PackageDetails;
 use toolbox_core::features::packages::list::Catalog;
@@ -21,13 +21,14 @@ use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::PackageName;
 
 use super::PackagesPage;
-use super::row::{self, PackageRow, Row};
+use super::row::{self, Act, PackageRow, Row};
 use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
 use crate::packages::{Packages, Read};
 use crate::pages::rows::{Initial, package_picture};
 use crate::pages::{PageContext, plan_running};
+use crate::share::view::padded_card;
 
 /// The content width under which the two columns stack: about a window
 /// of 760 points beside the open sidebar.
@@ -80,7 +81,11 @@ fn header_of<R>(
             let width = button_width + icon_button_width(ui);
             page_header(ui, package.as_str(), description, width, |ui| {
                 if let (Some(shown), Some(button)) = (shown, &button) {
-                    row::action(ui, page, context, &shown, button);
+                    let (text, act) = button;
+                    if row::action(ui, context, &shown, text, strength(*act)) {
+                        shown.act(page, context, *act);
+                    }
+
                     ui.add_space(ui.tokens().sizes.card_gap);
                 }
 
@@ -95,6 +100,16 @@ fn header_of<R>(
 
     if refresh {
         context.commands.send(PackagesCommand::Refresh);
+    }
+}
+
+/// Installing is what a package's page leads to, so it is the page's one
+/// Primary. Remove opens a question and Take back is a peer of the queue,
+/// both stay Soft.
+const fn strength(act: Act) -> ButtonKind {
+    match act {
+        Act::Install => ButtonKind::Primary,
+        Act::Remove | Act::TakeBack(_) => ButtonKind::Soft,
     }
 }
 
@@ -197,9 +212,12 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         Read::Known(Some(info)) => {
             let catalog = catalog(context);
             columns(ui, page, context, catalog.as_deref(), info);
-            rule(ui);
-            below::files(page, ui, context, info);
-            ui.add_space(ui.tokens().sizes.section_gap);
+            if info.installed.is_some() {
+                group_gap(ui);
+                below::files(page, ui, context, info);
+            }
+
+            group_gap(ui);
             below::history(page, ui, context, details);
         }
     }
@@ -224,51 +242,40 @@ fn columns(
     }
 }
 
-/// Returns the package whose name was clicked.
+/// The facts and the relations, each in its own card, side by side when
+/// there is room. Returns the package whose name was clicked.
 fn split(
     ui: &mut Ui,
     left: impl FnOnce(&mut Ui),
     right: impl FnOnce(&mut Ui) -> Option<PackageName>,
 ) -> Option<PackageName> {
     if ui.available_width() < STACK_BELOW {
-        left(ui);
-        rule(ui);
-        return right(ui);
+        padded_card(ui, left);
+        ui.add_space(ui.tokens().sizes.card_gap);
+        return padded_card(ui, right).inner;
     }
 
-    let top = ui.cursor().top();
-    let middle = ui.cursor().left() + ui.available_width() / 2.0;
     let spacing = ui.spacing().item_spacing.x;
     let mut opened = None;
     ui.scope(|ui| {
         // The gap between the columns only, their own rows keep theirs.
-        ui.spacing_mut().item_spacing.x = ui.tokens().sizes.section_gap;
+        ui.spacing_mut().item_spacing.x = ui.tokens().sizes.card_gap;
         ui.columns(2, |columns| {
             if let [left_ui, right_ui] = columns {
                 left_ui.spacing_mut().item_spacing.x = spacing;
                 right_ui.spacing_mut().item_spacing.x = spacing;
-                left(left_ui);
-                opened = right(right_ui);
+                padded_card(left_ui, left);
+                opened = padded_card(right_ui, right).inner;
             }
         });
     });
 
-    let bottom = ui.cursor().top();
-    let outline = ui.tokens().outline;
-    ui.painter()
-        .vline(middle, top..=bottom, Stroke::new(1.0, outline));
     opened
 }
 
-fn rule(ui: &mut Ui) {
-    let gap = ui.tokens().sizes.card_gap * 2.0;
-    ui.add_space(gap);
-    let width = ui.available_width();
-    let (line, _) = ui.allocate_exact_size(vec2(width, 1.0), Sense::hover());
-    let outline = ui.tokens().outline;
-    ui.painter()
-        .hline(line.x_range(), line.center().y, Stroke::new(1.0, outline));
-    ui.add_space(gap);
+/// The room between two groups of the page.
+fn group_gap(ui: &mut Ui) {
+    ui.add_space(ui.tokens().sizes.section_gap);
 }
 
 fn catalog(context: &PageContext<'_>) -> Option<Arc<Catalog>> {

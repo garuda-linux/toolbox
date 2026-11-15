@@ -145,7 +145,9 @@ fn components_page() {
     let system = read_in_full(crate::components::with_pipewire());
     let (mut harness, _runtime) = crate::components::components(system);
     no_unread_banner(&harness);
-    crate::common::checkbox(&harness, "PulseAudio").click();
+    harness
+        .get_by_role_and_label(Role::Button, "Install PulseAudio")
+        .click();
     harness.run();
 
     let mut results = SnapshotResults::new();
@@ -175,7 +177,7 @@ fn gaming_page() {
 fn kernels_page() {
     let (mut harness, _runtime) = crate::kernels::kernels(crate::kernels::system(true));
     harness
-        .get_by_role_and_label(Role::CheckBox, "linux-zen")
+        .get_by_role_and_label(Role::Button, "Install linux-zen")
         .click();
     harness.run();
 
@@ -248,7 +250,7 @@ fn discover_page() {
     let (mut harness, _runtime) = pictured(source_catalogs(), system(), Some(table));
     chip(&mut harness, "Internet");
     harness
-        .get_by_role_and_label(Role::CheckBox, "Firefox")
+        .get_by_role_and_label(Role::Button, "Install Firefox")
         .click();
 
     // The answers and the decoded pictures come from other threads.
@@ -301,7 +303,7 @@ fn frost_in_light() {
 
 /// `system` as a full read sees it. A part left out would show the
 /// could-not-be-read banner, which the pictures of a normal page should not.
-fn read_in_full(mut system: Snapshot) -> Snapshot {
+pub fn read_in_full(mut system: Snapshot) -> Snapshot {
     use toolbox_core::domains::{
         Accounts, CurrentUser, EnabledUnits, EnabledUserUnits, InstalledPackages, User,
         UserConfigStates,

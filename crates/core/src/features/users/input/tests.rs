@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 
 use toolbox_plan::{GroupName, ShellPath, UserName};
 
-use super::{InputProblem, NewAccount, name, new_account};
+use super::{InputProblem, NewAccount, login_from_full_name, name, new_account};
 use crate::Snapshot;
 use crate::domains::{Accounts, AvailableShells};
 use crate::features::RefusalText;
@@ -184,4 +184,35 @@ fn the_add_button_names_the_first_thing_that_holds_it() {
     };
 
     assert_eq!(add_blocker(&weak), Some(AddBlocker::Fields));
+}
+
+/// The add-user dialog asks the full name first and proposes the login
+/// from its first word that makes one.
+#[test]
+fn the_login_follows_the_first_word_of_the_full_name() {
+    for (full_name, login) in [
+        ("Ada Lovelace", "ada"),
+        ("  Grace   Hopper", "grace"),
+        ("Jürgen Groß", "juergen"),
+        ("Émile Zola", "emile"),
+        ("Øystein Ærø", "oystein"),
+        ("42 Douglas", "douglas"),
+        ("Mary-Kate O'Neil", "mary-kate"),
+        ("-x", "x"),
+        ("李 Lee", "lee"),
+        ("", ""),
+        ("   ", ""),
+    ] {
+        assert_eq!(login_from_full_name(full_name), login, "{full_name}");
+    }
+}
+
+#[test]
+fn a_proposed_login_is_always_a_valid_user_name() {
+    let long = "A".repeat(40);
+
+    let login = login_from_full_name(&long);
+
+    assert_eq!(login.chars().count(), 32);
+    UserName::new(login).unwrap();
 }

@@ -25,7 +25,7 @@ use toolbox_cli::output::{ColorMode, Paint};
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{Plan, StepId};
-use toolbox_services::apply::{self, ApplyCommand, ApplyHandle, Launcher, Problem, Report};
+use toolbox_services::apply::{self, ApplyCommand, ApplyHandle, Launcher, PlanId, Problem, Report};
 use toolbox_services::waking::Wake;
 use toolbox_system::pkexec::Refusal;
 
@@ -39,6 +39,8 @@ use super::interrupt::{self, Stopper};
 use crate::out::{Out, Settings};
 
 const LOOK_AGAIN: Duration = Duration::from_millis(100);
+/// The command line sends one plan to a service of its own.
+const PLAN: PlanId = PlanId::new(1);
 
 struct Running {
     service: ApplyHandle,
@@ -270,12 +272,15 @@ fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut Out<'_>) -> Ended {
         typing::forward_input(&run)
     };
 
-    run.service.send(ApplyCommand::Run(plan));
+    run.service.send(ApplyCommand::Run { id: PLAN, plan });
 
     let ended = follow(&run, stopper, look, quiet, out);
 
     // The reader puts the terminal's echo back before the command ends.
-    run.gate.note(&Report::PlanFinished { succeeded: false });
+    run.gate.note(&Report::PlanFinished {
+        plan: PLAN,
+        succeeded: false,
+    });
     if let Some(typing) = typing
         && typing.join().is_err()
     {
@@ -330,7 +335,9 @@ fn follow(
             }
         }
 
-        if quiet && ended.asked_not && matches!(report, Report::PlanFinished { succeeded: _ }) {
+        let finished = events::finishes(&report);
+
+        if quiet && ended.asked_not && finished {
             break;
         }
 
@@ -351,17 +358,17 @@ fn follow(
                 step,
                 outcome: Outcome::Skipped,
             }) => ended.skipped.push(step),
-            Report::PlanFinished { succeeded } => {
+            Report::PlanFinished { plan: _, succeeded } => {
                 if ended.exit != Exit::Refused {
                     ended.exit = exit_of(succeeded, cancelled.then(|| stopper.exit()));
                 }
 
                 break;
             }
-            Report::PlanStarted { steps: _ }
+            Report::PlanStarted { plan: _, steps: _ }
             | Report::Step(_)
             | Report::Problem(_)
-            | Report::Busy
+            | Report::Busy { plan: _ }
             | Report::CancelWaits => {}
         }
     }

@@ -38,14 +38,17 @@ impl Gate {
                 outcome: _,
             }) => state.running = false,
             Report::Step(Event::Output { step: _, data }) => state.follow(data),
-            Report::PlanFinished { succeeded: _ } => {
+            Report::PlanFinished {
+                plan: _,
+                succeeded: _,
+            } => {
                 state.running = false;
                 state.done = true;
             }
-            Report::PlanStarted { steps: _ }
+            Report::PlanStarted { plan: _, steps: _ }
             | Report::Step(_)
             | Report::Problem(_)
-            | Report::Busy
+            | Report::Busy { plan: _ }
             | Report::CancelWaits => {}
         }
     }

@@ -1,4 +1,5 @@
-//! The facts below the Home greeting and the status rows they add.
+//! The stat tiles below the Home greeting and the status rows the facts
+//! add.
 
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
@@ -8,23 +9,16 @@ use toolbox_system::{DiskSpace, ProbeError, Status};
 use crate::home::{GB, home, home_with, host, quiet, quiet_facts};
 
 #[test]
-fn the_facts_name_packages_kernel_and_free_space() {
+fn the_disk_tile_names_the_free_space_and_opens_maintenance() {
     let (mut harness, _runtime, _power) = home_with(host(false, false), quiet(), quiet_facts());
 
-    assert!(
-        harness
-            .query_by_label("6.17.7-zen1-1-zen · up 4 days")
-            .is_some()
-    );
-    assert!(harness.query_by_label("186.3 GiB free on /").is_some());
-
     harness
-        .get_by_role_and_label(Role::Link, "1462 packages · 12 AUR")
+        .get_by_role_and_label(Role::Link, "Disk: 186.3 GiB free")
         .click();
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::Heading, "Packages")
+            .query_by_role_and_label(Role::Heading, "Maintenance")
             .is_some()
     );
 }

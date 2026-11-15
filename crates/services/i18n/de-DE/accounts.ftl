@@ -18,3 +18,4 @@ account-refusal-shell-not-listed = Diese Shell steht nicht in /etc/shells.
 account-refusal-uid-in-use = Diese UID wird bereits von einem anderen Konto verwendet.
 account-refusal-uid-out-of-range = Konten von Personen erhalten eine UID zwischen 1000 und 60000, Systemkonten eine unter 1000.
 account-refusal-home-taken = Dieses Home-Verzeichnis wird bereits von einem anderen Konto verwendet.
+account-refusal-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind.

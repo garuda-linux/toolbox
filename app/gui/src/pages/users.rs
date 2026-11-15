@@ -14,12 +14,12 @@ mod tests;
 mod texts;
 
 use egui::Ui;
-use toolbox_core::features::users::run::PageRun;
+use toolbox_core::features::users::run::{PageRun, Retry, RetryStep};
 use toolbox_core::features::users::view::{self, Shown};
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, empty_state, page_toolbar, pill_button};
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use self::dialogs::{Dialog, Next};
+use self::dialogs::{AddUser, Dialog, Next};
 use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
@@ -49,6 +49,8 @@ pub struct UsersPage {
     tab: Tab,
     shown: Shown,
     dialog: Option<Dialog>,
+    /// The add-user form while its run goes, without its passwords.
+    retry: Option<Retry<Box<AddUser>>>,
     users: list::Rows,
     groups: groups::Rows,
 }
@@ -59,6 +61,7 @@ impl Default for UsersPage {
             tab: Tab::default(),
             shown: Shown::people(),
             dialog: None,
+            retry: None,
             users: list::Rows::new(),
             groups: groups::Rows::new(),
         }
@@ -67,10 +70,13 @@ impl Default for UsersPage {
 
 impl PageView for UsersPage {
     /// A dialog may hold a password, which must not wait for the return.
+    /// A form kept for a retry would open on an outcome seen too late.
     fn left(&mut self, ctx: &egui::Context) {
         if let Some(mut dialog) = self.dialog.take() {
             dialog.forget(ctx);
         }
+
+        self.retry = None;
     }
 
     fn place(&self) -> u64 {
@@ -125,9 +131,15 @@ impl PageView for UsersPage {
         if let Some(dialog) = &mut self.dialog
             && dialog.show(&ctx, context) == Next::Close
         {
+            if let Dialog::AddUser(form) = dialog {
+                self.retry = form.retry();
+            }
+
             dialog.forget(&ctx);
             self.dialog = None;
         }
+
+        self.give_back(&ctx, context);
     }
 }
 
@@ -145,6 +157,27 @@ impl UsersPage {
         };
 
         search(ui, field, name, hint);
+    }
+
+    /// Opens the add-user dialog again once its run failed or was refused.
+    /// Another dialog the user opened meanwhile stays, the form goes.
+    fn give_back(&mut self, ctx: &egui::Context, context: &PageContext<'_>) {
+        let Some(retry) = self.retry.take() else {
+            return;
+        };
+
+        match retry.step(context.service::<Users>().run()) {
+            RetryStep::Wait(waiting) => self.retry = Some(waiting),
+            RetryStep::Reopen(form) => {
+                if self.dialog.is_none() {
+                    self.dialog = Some(Dialog::AddUser(form));
+
+                    // It shows from the next frame, which nothing else asks for.
+                    ctx.request_repaint();
+                }
+            }
+            RetryStep::Forget => {}
+        }
     }
 }
 

@@ -1,17 +1,19 @@
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use egui::{Label, Ui};
+use egui::{CornerRadius, Label, Rect, Ui, Vec2};
 use toolbox_catalog::{Check, ToggleEntry};
 use toolbox_core::Toggle;
-use toolbox_core::features::toggles::shown::Entry;
-use toolbox_gui_kit::icons;
+use toolbox_core::features::toggles::shown::{Control, Entry};
+use toolbox_gui_kit::UiExt as _;
+use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
-    RowState, Tone, dim_picture, icon_button, icon_button_width, paint_letter_tile, queued_tag,
-    row_context_menu, row_height, split_row, switch, text_block_height,
+    RowState, Tone, dim_picture, page_tile, paint_letter_tile, queued_tag, row_height, row_menu,
+    split_row, status_dot, text_block_height,
 };
 
 use super::catalog_text;
+use super::control::{self, Setting};
 use super::listed::{EntryRow, EntryRows};
 use crate::artwork::Artwork;
 use crate::catalogs::{self, CatalogId};
@@ -19,19 +21,21 @@ use crate::command::AppCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::{
-    Initial, PICTURE_RADIUS, SWITCH_WIDTH, actions, picture_height, picture_or_initial,
-    picture_slot,
+    Initial, PICTURE_RADIUS, actions, picture_height, picture_or_initial, picture_slot,
 };
+
+/// The share of an icon tile's edge its glyph takes, as in gui-kit.
+const GLYPH_SHARE: f32 = 0.56;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Place {
     pub catalog: CatalogId,
-    /// A plan runs, so the switch rests.
+    /// A plan runs, so the control rests.
     pub busy: bool,
 }
 
 /// A row's height before it was laid out: the title and one line of
-/// description. Longer descriptions wrap and grow it.
+/// description. A description of two lines grows it.
 pub fn estimate(ui: &Ui) -> f32 {
     row_height(ui, text_block_height(ui, 1).max(picture_height(ui, true)))
 }
@@ -43,7 +47,13 @@ pub fn show(
     row: &EntryRow,
     state: &RowState,
 ) {
-    let width = SWITCH_WIDTH + row.url.as_ref().map_or(0.0, |_| icon_button_width(ui));
+    let setting = if place.catalog == CatalogId::Settings {
+        Setting::Switch
+    } else {
+        Setting::Button
+    };
+
+    let width = control::width(ui, row.control, setting);
 
     split_row(
         ui,
@@ -53,9 +63,10 @@ pub fn show(
                 let at = picture_slot(ui, true);
                 ui.vertical(|ui| text(ui, row));
 
-                // Its title is dim when the row can't change.
                 dim_picture(ui, at, !row.changeable, |ui| {
-                    if let Some(picture) = &row.picture {
+                    if let Some(glyph) = row.glyph {
+                        paint_glyph(ui, at, glyph);
+                    } else if let Some(picture) = &row.picture {
                         let initial = Initial {
                             shown: &row.title,
                             package: &row.tile_package,
@@ -69,37 +80,50 @@ pub fn show(
             });
         },
         |ui| {
-            let enabled = row.changeable && !place.busy;
-            let response = switch(ui, row.on, &row.title, enabled);
+            // `control::width` reserves exactly menu, gap and control. egui's
+            // item spacing on top would overflow the slot and widen the card
+            // row after row.
+            ui.spacing_mut().item_spacing.x = 0.0;
 
-            // The page banner says it once to the eye, a screen reader
-            // hears it on the row it reads.
-            if row.unknown {
-                let unknown = i18n::text(ui.ctx(), "toggles-state-unknown").into_owned();
-                ui.ctx()
-                    .accesskit_node_builder(response.id, |node| node.set_description(unknown));
-            }
+            // The website and the name are no change, so only the
+            // control rests while a plan runs.
+            row_menu(ui, state, &row.menu, |ui| {
+                actions::menu::<EntryRows>(ui, row, context.commands);
+            });
+            ui.add_space(ui.tokens().sizes.control_gap);
 
-            let flipped = response.clicked();
-            if flipped || (state.toggle && enabled) {
+            let shown = control::Shown {
+                control: row.control,
+                on: row.on,
+                title: &row.title,
+                enabled: row.changeable && !place.busy,
+                unknown: row.unknown,
+                setting,
+            };
+
+            if control::show(ui, shown, state) {
                 context.commands.send(AppCommand::ToggleEntry {
                     catalog: place.catalog,
                     entry: row.id.clone(),
                     wish: if row.on { Toggle::Off } else { Toggle::On },
                 });
             }
-
-            if let (Some(url), Some(name)) = (&row.url, &row.website)
-                && icon_button(ui, icons::GLOBE, name).clicked()
-            {
-                crate::links::open(ui.ctx(), url);
-            }
         },
     );
+}
 
-    row_context_menu(ui, state, &row.menu, |ui| {
-        actions::menu::<EntryRows>(ui, row, context.commands);
-    });
+/// The glyph on the page's tile. It fills the picture slot rather than an
+/// icon tile's edge, so the row lines up with the rows that have pictures.
+fn paint_glyph(ui: &Ui, at: Rect, glyph: Icon) {
+    let tile = page_tile(ui.ctx());
+    ui.painter()
+        .rect_filled(at, CornerRadius::same(PICTURE_RADIUS), tile.fill);
+
+    let theme = icons::theme_in_use(ui.ctx());
+    let edge = at.width() * GLYPH_SHARE;
+    glyph
+        .image(theme.as_deref(), tile.ink)
+        .paint_at(ui, Rect::from_center_size(at.center(), Vec2::splat(edge)));
 }
 
 fn text(ui: &mut Ui, row: &EntryRow) {
@@ -108,9 +132,13 @@ fn text(ui: &mut Ui, row: &EntryRow) {
         if let Some((note, tone)) = &row.note {
             queued_tag(ui, note, *tone);
         }
+
+        if let Some(installed) = &row.installed {
+            status_dot(ui, installed, Tone::Success);
+        }
     });
 
-    ui.add(Label::new(Arc::clone(&row.description)).wrap());
+    ui.add(Label::new(Arc::clone(&row.description)));
 }
 
 /// Whether `query` (trimmed, lower case, empty for all) is in the entry's
@@ -135,11 +163,13 @@ pub fn description(ctx: &egui::Context, id: CatalogId, entry: &Entry<'_>) -> Str
 }
 
 /// What the entry waits for, as a tag beside its title: the apply, or an
-/// entry it needs.
+/// entry it needs. A package installs or removes, a setting turns on or
+/// off.
 pub fn note(
     ctx: &egui::Context,
     id: CatalogId,
     entry: &Entry<'_>,
+    kind: Control,
 ) -> Option<(std::borrow::Cow<'static, str>, Tone)> {
     if let Some(why) = entry.state.kept {
         let text = i18n::text(ctx, &format!("protected-{}", why.as_str()));
@@ -147,12 +177,7 @@ pub fn note(
     }
 
     if let Some(wish) = entry.state.queued {
-        let text = if wish.is_on() {
-            "toggles-turns-on"
-        } else {
-            "toggles-turns-off"
-        };
-
+        let text = control::queued_text(wish, kind);
         return Some((i18n::text(ctx, text), Tone::Accent));
     }
 

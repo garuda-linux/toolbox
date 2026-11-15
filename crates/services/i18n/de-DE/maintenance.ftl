@@ -58,6 +58,7 @@ maintenance-problem-mirrors-timeout = Die Bewertung der Chaotic-AUR-Spiegelserve
 maintenance-problem-mirrors-start = rate-mirrors konnte nicht gestartet werden, die Chaotic-AUR-Spiegelserver wurden nicht bewertet: { $reason }
 maintenance-problem-mirrors-exit = Die Bewertung der Chaotic-AUR-Spiegelserver ist fehlgeschlagen, ihre Liste ist unverändert. Prüfe deine Internetverbindung und versuche es erneut.
 maintenance-problem-mirrors-invalid = Die Bewertung ergab keine brauchbare Liste von Spiegelservern. Die Chaotic-AUR-Liste ist unverändert.
+maintenance-problem-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Starte ihn erneut, sobald sie abgeschlossen sind.
 maintenance-problem-dismiss = Ausblenden
 
 maintenance-reset = App-Einstellungen
@@ -81,8 +82,13 @@ maintenance-reset-confirm = Zurücksetzen
 
 maintenance-repairs = Reparaturen
 maintenance-repairs-detail = Jede Reparatur läuft in der Konsole, damit sie Rückfragen stellen kann.
-maintenance-repairs-missing = Die ausgegrauten Reparaturen brauchen garuda-update, das nicht installiert ist. Installiere es, um sie freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.
-maintenance-install-garuda-update = garuda-update installieren
+# $packages lists the missing packages, separated by commas. $count is
+# how many they are.
+maintenance-repairs-missing = { $count ->
+    [one] Die ausgegrauten Reparaturen brauchen { $packages }, das nicht installiert ist. Installiere es, um sie freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.
+   *[other] Die ausgegrauten Reparaturen brauchen { $packages }, die nicht installiert sind. Installiere sie, um die Reparaturen freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.
+}
+maintenance-install-missing = { $packages } installieren
 maintenance-run = Ausführen
 maintenance-repair-health-check = Systemprüfung
 maintenance-repair-health-check-detail = Mit garuda-health nach häufigen Problemen suchen.

@@ -1,10 +1,11 @@
 //! The header's scrim over the live blur: neutral, muting and thick enough
-//! that the header reads over the brightest page.
+//! that the header reads over the brightest page. And the dialog's scrim.
 
 use egui::Theme;
 
-use super::super::contrast;
+use super::super::{Tokens, contrast};
 use super::{every_tokens, laid_on};
+use crate::palette::Palette;
 
 #[test]
 fn the_scrim_is_neutral_black_in_dark_and_white_in_light() {
@@ -55,7 +56,7 @@ fn the_band_scrim_softens_an_accent_glow_and_lets_the_blur_show() {
         let page = laid_on(tokens.header_scrim, tokens.window);
 
         assert!(
-            (46..=56).contains(&alpha),
+            (80..=92).contains(&alpha),
             "{theme:?} {:?}: alpha {alpha}",
             tokens.accent
         );
@@ -65,4 +66,16 @@ fn the_band_scrim_softens_an_accent_glow_and_lets_the_blur_show() {
             tokens.accent
         );
     }
+}
+
+#[test]
+fn the_dialog_scrim_is_black_and_lighter_over_a_light_window() {
+    let [dark, light] = [Theme::Dark, Theme::Light].map(|theme| {
+        let scrim = Tokens::derive(&Palette::fallback(theme), theme).scrim;
+        assert_eq!([scrim.r(), scrim.g(), scrim.b()], [0; 3], "{theme:?}");
+        scrim.a()
+    });
+
+    assert!((110..=120).contains(&dark), "dark {dark}");
+    assert!((60..=68).contains(&light), "light {light}");
 }

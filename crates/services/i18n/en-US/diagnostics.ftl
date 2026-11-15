@@ -3,8 +3,12 @@
 
 page-diagnostics-subtitle = Reports about this computer for a forum post or a bug report.
 
-diagnostics-report-picker = Report to collect
+diagnostics-reports = Reports
+# Unfolds the report rows while a report shows.
+diagnostics-another = Collect another report
 diagnostics-collect = Collect
+# What screen readers call a row's Collect. $name is the report's name.
+diagnostics-collect-name = Collect { $name }
 diagnostics-cancel = Cancel
 
 diagnostics-inxi = System information
@@ -23,7 +27,6 @@ diagnostics-all = Full report
 diagnostics-all-description = All of the above in one report. May ask for your password twice.
 
 # Where the collection stands.
-diagnostics-idle = Choose a report and click Collect.
 diagnostics-idle-detail = The report stays on this computer unless you share it.
 diagnostics-collecting = Collecting { $name }…
 # $step counts from 1.
@@ -39,6 +42,18 @@ diagnostics-helper-missing = { $name } was not collected: the helper of Garuda T
 # $reason is the program's own words.
 diagnostics-failed = { $name } failed: { $reason }
 diagnostics-report-label = Diagnostics report
+
+# The report's header line. $time is when it came in, as 14:05.
+diagnostics-lines =
+    { $count ->
+        [one] one line
+       *[other] { $count } lines
+    }
+diagnostics-collected = · collected { $time } UTC · { $lines }
+diagnostics-collected-unknown = · { $lines }
+diagnostics-wrap = Wrap lines
+diagnostics-search = Search the report
+diagnostics-search-clear = Clear the search
 
 diagnostics-copy = Copy report
 diagnostics-share = Share report…

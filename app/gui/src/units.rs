@@ -1,8 +1,9 @@
-//! The unit lists of the Services page, from the [`UnitLister`] of
-//! `toolbox-services`.
+//! The unit lists of the Services and Network pages, from the
+//! [`UnitLister`] of `toolbox-services`.
 //!
-//! [`watch`] asks for a fresh list on every systemd signal, so the
-//! page follows changes made anywhere, in this app or outside it.
+//! Nothing is listed or watched before one of these pages opened. Then
+//! [`watch`] asks for a fresh list on every change of the unit set, so
+//! the page follows changes made anywhere, in this app or outside it.
 
 mod edits;
 #[cfg(test)]
@@ -26,8 +27,8 @@ use crate::reader::fresh;
 use crate::spawn::spawn_logged;
 use crate::waking::Wake;
 
-/// A unit change comes with a burst of signals (job, properties, files).
-/// One list after the burst is enough.
+/// A unit change comes with a burst of signals (unit, job, files). One
+/// list after the burst is enough.
 pub const SETTLE: Duration = Duration::from_millis(300);
 
 /// Why a list failed, as [`UnitLists`] keeps it. The page words it, the
@@ -55,16 +56,32 @@ pub struct Units {
     lists: UnitLists,
     /// `None` in tests that need no lists: nothing is listed.
     handle: Option<UnitsHandle>,
+    /// A control or a journal did not start, as another plan runs. It
+    /// stays on the page until dismissed or the next one starts.
+    refused: bool,
 }
 
 /// Cloned into the watchers.
 #[derive(Clone, Debug)]
-pub struct UnitRequests(UnboundedSender<UnitScope>);
+pub struct UnitRequests {
+    sender: UnboundedSender<Request>,
+    /// Whether a page that reads units opened.
+    opened: channel::Receiver<bool>,
+}
 
 #[derive(Debug)]
 pub struct UnitsHandle {
     requests: UnitRequests,
     units: channel::Receiver<UnitLists>,
+    opened: channel::Sender<bool>,
+}
+
+/// A list asked for. One for a signal waits out the burst for
+/// [`SETTLE`], the page's first look and Retry list at once.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Request {
+    scope: UnitScope,
+    settle: bool,
 }
 
 impl Units {
@@ -75,6 +92,7 @@ impl Units {
                 user: Loadable::NotLoaded,
             },
             handle,
+            refused: false,
         }
     }
 
@@ -84,7 +102,17 @@ impl Units {
         Self {
             lists,
             handle: None,
+            refused: false,
         }
+    }
+
+    pub const fn refused(&self) -> bool {
+        self.refused
+    }
+
+    /// Whether App sent the last control or journal, which runs at once.
+    pub const fn set_refused(&mut self, refused: bool) {
+        self.refused = refused;
     }
 
     pub const fn get(&self, scope: UnitScope) -> &UnitListing {
@@ -94,6 +122,14 @@ impl Units {
     pub fn refresh(&self, scope: UnitScope) {
         if let Some(handle) = &self.handle {
             handle.refresh(scope);
+        }
+    }
+
+    /// A page that shows units opened. The first one lists both scopes
+    /// and starts the watchers.
+    pub fn open(&self) {
+        if let Some(handle) = &self.handle {
+            handle.open();
         }
     }
 
@@ -130,16 +166,55 @@ impl UnitLists {
 }
 
 impl UnitRequests {
+    /// For a signal, which comes in a burst.
     pub fn refresh(&self, scope: UnitScope) {
-        if self.0.send(scope).is_err() {
+        self.send(Request {
+            scope,
+            settle: true,
+        });
+    }
+
+    /// Returns once a page that reads units opened.
+    pub async fn opened(&self) {
+        let mut opened = self.opened.clone();
+        let closed = opened.wait_for(|open| *open).await.is_err();
+        if closed {
+            // The app ends, and no page opens anymore.
+            std::future::pending::<()>().await;
+        }
+    }
+
+    fn now(&self, scope: UnitScope) {
+        self.send(Request {
+            scope,
+            settle: false,
+        });
+    }
+
+    fn send(&self, request: Request) {
+        if self.sender.send(request).is_err() {
             tracing::debug!("the units service is gone");
         }
     }
 }
 
 impl UnitsHandle {
+    /// Retry and the end of a plan. Before a page opened nothing shows
+    /// the lists, so nothing is read.
     pub fn refresh(&self, scope: UnitScope) {
-        self.requests.refresh(scope);
+        if *self.opened.borrow() {
+            self.requests.now(scope);
+        }
+    }
+
+    pub fn open(&self) {
+        if self
+            .opened
+            .send_if_modified(|open| !std::mem::replace(open, true))
+        {
+            self.requests.now(UnitScope::System);
+            self.requests.now(UnitScope::User);
+        }
     }
 
     pub fn requests(&self) -> UnitRequests {
@@ -151,8 +226,9 @@ impl UnitsHandle {
     }
 }
 
-/// Starts the service and the first list of each scope. Requests within
-/// `settle` of each other become one list per scope.
+/// Starts the service, which lists once [`UnitsHandle::open`] was called.
+/// A signal's request waits `settle`, and the requests within it become
+/// one list per scope.
 #[must_use = "the handle is the only way to the service"]
 pub fn spawn(
     runtime: &Handle,
@@ -162,13 +238,16 @@ pub fn spawn(
 ) -> UnitsHandle {
     let (sender, receiver) = unbounded_channel();
     let (lists, units) = channel::channel(UnitLists::default());
+    let (opened, watched) = channel::channel(false);
     let handle = UnitsHandle {
-        requests: UnitRequests(sender),
+        requests: UnitRequests {
+            sender,
+            opened: watched,
+        },
         units,
+        opened,
     };
 
-    handle.refresh(UnitScope::System);
-    handle.refresh(UnitScope::User);
     spawn_logged(
         runtime,
         "unit lists",
@@ -178,19 +257,21 @@ pub fn spawn(
 }
 
 async fn serve(
-    mut requests: UnboundedReceiver<UnitScope>,
+    mut requests: UnboundedReceiver<Request>,
     lister: Arc<dyn UnitLister>,
     outlet: channel::Sender<UnitLists>,
     wake: Wake,
     settle: Duration,
 ) {
     while let Some(first) = requests.recv().await {
-        tokio::time::sleep(settle).await;
+        if first.settle {
+            tokio::time::sleep(settle).await;
+        }
 
-        let mut scopes = vec![first];
-        while let Ok(scope) = requests.try_recv() {
-            if !scopes.contains(&scope) {
-                scopes.push(scope);
+        let mut scopes = vec![first.scope];
+        while let Ok(next) = requests.try_recv() {
+            if !scopes.contains(&next.scope) {
+                scopes.push(next.scope);
             }
         }
 

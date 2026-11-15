@@ -79,19 +79,43 @@ pub fn set_home(
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
-    let accounts = accounts(snapshot)?;
+    check_home(user, &change.home, snapshot)?;
+    changes.want::<HomeFolders>(user.clone(), change, snapshot);
+    Ok(())
+}
 
-    in_user_range(editable(user, accounts)?)?;
+/// Whether the home folder of `user` may move at all, before a path is
+/// typed, so the Edit dialog can say so on the field.
+///
+/// # Errors
+///
+/// As [`set_home`], without [`Refusal::HomeTaken`].
+pub fn home_movable(user: &UserName, snapshot: &Snapshot) -> Result<(), Refusal> {
+    in_user_range(editable(user, accounts(snapshot)?)?)?;
 
     if is_current(user, snapshot) {
         return Err(Refusal::CurrentUser);
     }
 
-    if is_taken(&change.home, Some(user), accounts) {
+    Ok(())
+}
+
+/// Whether `home` may become the home folder of `user`.
+///
+/// # Errors
+///
+/// As [`set_home`].
+pub fn check_home(
+    user: &UserName,
+    home: &HomeDirectory,
+    snapshot: &Snapshot,
+) -> Result<(), Refusal> {
+    home_movable(user, snapshot)?;
+
+    if is_taken(home, Some(user), accounts(snapshot)?) {
         return Err(Refusal::HomeTaken);
     }
 
-    changes.want::<HomeFolders>(user.clone(), change, snapshot);
     Ok(())
 }
 

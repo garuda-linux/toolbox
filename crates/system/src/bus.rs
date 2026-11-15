@@ -2,12 +2,14 @@
 //! bounded call itself.
 
 mod client;
+mod shared;
 #[cfg(test)]
 mod tests;
 
 use std::io;
 
 pub use client::{CALL_TIMEOUT, INTERACTIVE_TIMEOUT, call, call_with_timeout, connect};
+pub use shared::{forget_shared, shared};
 use zbus::DBusError as _;
 
 const UNAVAILABLE: [&str; 2] = [

@@ -102,6 +102,7 @@ network-driver-unqueue = Zurücknehmen
 # Why a blacklist click was not queued. $driver names the driver.
 network-refused-other-file = { $name }: Eine andere Datei in modprobe.d setzt diesen Treiber auf die Blacklist. Garuda Toolbox ändert nur seine eigene Datei.
 network-refused-unavailable = Die Treiber dieses Systems ließen sich nicht lesen.
+network-refused-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind.
 
 network-hardware-intro = Netzwerkgeräte laut lspci und lsusb.
 network-hardware-copy-all = Alle kopieren
@@ -125,6 +126,11 @@ network-hops = Maximale Hops (für traceroute)
 network-ping = Ping starten
 network-traceroute = Traceroute starten
 network-traceroute-missing = Für Traceroute fehlt das Paket traceroute.
+network-ping-finished = Ping ist fertig. Die Ausgabe steht in der Konsole.
+network-ping-failed = Ping endete mit einem Fehler. Die Konsole zeigt den Grund.
+network-traceroute-finished = Traceroute ist fertig. Die Ausgabe steht in der Konsole.
+network-traceroute-failed = Traceroute endete mit einem Fehler. Die Konsole zeigt den Grund.
+network-show-console = Konsole anzeigen
 network-hotspot = WLAN-Hotspot
 network-hotspot-detail = Teile die Verbindung dieses Computers mit anderen Geräten. Das Hotspot-Werkzeug öffnet ein eigenes Fenster.
 network-hotspot-queued-detail = Teile die Verbindung dieses Computers mit anderen Geräten. Dafür wird das Paket linux-wifi-hotspot benötigt, das bis zum Übernehmen vorgemerkt bleibt.

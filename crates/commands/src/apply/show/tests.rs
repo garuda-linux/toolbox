@@ -5,10 +5,13 @@ use toolbox_cli::output::Style;
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::{Event, Failure, Mode, Outcome};
-use toolbox_services::apply::{Problem, Report};
+use toolbox_services::apply::{PlanId, Problem, Report};
 use toolbox_system::pkexec::Refusal;
 
 use super::{Clock, Show};
+
+/// The id the plan of a test runs under.
+const PLAN: PlanId = PlanId::new(1);
 
 fn ticking(tick: Duration) -> Clock {
     let start = Instant::now();
@@ -33,6 +36,7 @@ fn timed(reports: &[Report], dry_run: bool, style: Style, tick: Duration) -> Str
 
 fn started() -> Report {
     Report::PlanStarted {
+        plan: PLAN,
         steps: vec![(
             StepId::new(0),
             vec!["systemctl restart -- sshd.service".to_owned()],
@@ -59,7 +63,7 @@ fn a_run_is_a_section_with_its_steps_and_their_output() {
                 data: "line one\nline two\n".to_owned(),
             }),
             finished(Outcome::Succeeded),
-            Report::PlanFinished { succeeded: true },
+            plan_finished(true),
         ],
         false,
         Style::Plain,
@@ -82,7 +86,7 @@ fn a_failed_step_is_an_error_and_the_run_did_not_finish() {
                 cause: Failure::ExitCode { code: 1_i32 },
                 cleanup_failed: Vec::new(),
             }),
-            Report::PlanFinished { succeeded: false },
+            plan_finished(false),
         ],
         false,
         Style::Plain,
@@ -105,7 +109,7 @@ fn a_helper_that_cannot_start_is_an_error_under_the_running_section() {
                 kind: HelperFailure::Start,
                 detail: "/usr/bin/systemctl: no such file".to_owned(),
             }),
-            Report::PlanFinished { succeeded: false },
+            plan_finished(false),
         ],
         false,
         Style::Plain,
@@ -120,11 +124,7 @@ fn a_helper_that_cannot_start_is_an_error_under_the_running_section() {
 #[test]
 fn a_test_run_tells_that_nothing_changed() {
     let text = shown(
-        &[
-            started(),
-            finished(Outcome::Skipped),
-            Report::PlanFinished { succeeded: true },
-        ],
+        &[started(), finished(Outcome::Skipped), plan_finished(true)],
         true,
         Style::Plain,
     );
@@ -143,7 +143,7 @@ fn a_coloured_run_paints_its_sections_and_errors() {
                 cause: Failure::ExitCode { code: 1_i32 },
                 cleanup_failed: Vec::new(),
             }),
-            Report::PlanFinished { succeeded: false },
+            plan_finished(false),
         ],
         false,
         Style::Color,
@@ -198,6 +198,7 @@ fn each_step_counts_up_and_ends_with_how_long_it_took() {
     let text = timed(
         &[
             Report::PlanStarted {
+                plan: PLAN,
                 steps: vec![
                     (first, vec!["pacman-key --refresh-keys".to_owned()]),
                     (second, vec!["pacman -Syu".to_owned()]),
@@ -260,10 +261,17 @@ fn a_cancelled_run_says_so_and_how_long_it_ran() {
     })));
     text.push_str(&show.note("stopping now"));
     text.push_str(&show.report(&finished(Outcome::Cancelled)));
-    text.push_str(&show.report(&Report::PlanFinished { succeeded: false }));
+    text.push_str(&show.report(&plan_finished(false)));
 
     assert_eq!(
         text,
         "\nRunning\n\n  [1/1] systemctl restart -- sshd.service\n    half a line\nwarning: stopping now\n  systemctl restart -- sshd.service was cancelled (4.2 s)\n\nCancelled  (12.6 s)\n"
     );
+}
+
+const fn plan_finished(succeeded: bool) -> Report {
+    Report::PlanFinished {
+        plan: PLAN,
+        succeeded,
+    }
 }

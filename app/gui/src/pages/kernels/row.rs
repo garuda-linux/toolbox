@@ -2,18 +2,19 @@ use egui::{Label, Response, Ui};
 use toolbox_core::Toggle;
 use toolbox_core::features::kernels::ModuleState;
 use toolbox_core::features::kernels::view::{Module, Row};
+use toolbox_core::features::toggles::shown::Control;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowState, Tone, counted_disclosure, named_pill_button, pill_button,
-    pill_width, queued_tag, rich, row_height, split_row, status_dot, switch, text_block_height,
+    pill_width, queued_tag, rich, row_height, split_row, status_dot, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
 use crate::command::{BootCommand, KernelEdit};
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::SWITCH_WIDTH;
+use crate::pages::toggles::control::{self, Setting};
 
 const LINES: u8 = 2;
 
@@ -41,11 +42,12 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>, state: &RowSt
     let name = row.kernel.name.as_str();
     let details = row.kernel.is_installed() && row.queued != Some(Toggle::Off);
     let gap = ui.tokens().sizes.control_gap;
+    let button = control::button_width(ui);
     let right_width = if details {
         let text = i18n::text(ui.ctx(), "kernels-set-default");
-        SWITCH_WIDTH + gap + pill_width(ui, &text)
+        button + gap + pill_width(ui, &text)
     } else {
-        SWITCH_WIDTH
+        button
     };
 
     split_row(
@@ -61,19 +63,27 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row<'_>, state: &RowSt
             }
         },
         |ui| {
+            // `right_width` reserves exactly the buttons and their gap, so
+            // no item spacing on top, or the row overflows its slot.
+            ui.spacing_mut().item_spacing.x = 0.0;
             if details {
-                let spacing = ui.spacing().item_spacing.x;
-                ui.spacing_mut().item_spacing.x = gap;
                 default_link(ui, context, row);
-                ui.spacing_mut().item_spacing.x = spacing;
+                ui.add_space(gap);
             }
 
-            // The running kernel stays, so its switch only takes back what
-            // a restored queue may hold.
-            let enabled = !(row.running && row.kernel.is_installed() && row.queued.is_none());
-            let enabled = enabled && !context.busy;
-            let flipped = switch(ui, row.wanted, name, enabled).clicked();
-            if flipped || (state.toggle && enabled) {
+            // The running kernel stays, so its button rests unless it
+            // takes back what a restored queue may hold.
+            let offered = row.control();
+            let shown = control::Shown {
+                control: offered,
+                on: row.wanted,
+                title: name,
+                enabled: (!row.running || offered != Control::Remove) && !context.busy,
+                unknown: false,
+                setting: Setting::Button,
+            };
+
+            if control::show(ui, shown, state) {
                 context.commands.send(KernelEdit::Toggle {
                     kernel: row.kernel.name.clone(),
                     on: !row.wanted,

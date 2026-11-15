@@ -78,11 +78,13 @@ impl App {
         }
     }
 
-    /// The window closes. The queue is written here, as the runtime stops
-    /// its writer task soon after.
+    /// The window closes. The queue is written and the copies of Config
+    /// Files go here, as the runtime stops its tasks soon after.
     pub(super) fn leave(&self) {
         if let Err(failure) = self.queue.flush() {
             tracing::warn!("{failure}");
         }
+
+        self.services.configs.leave();
     }
 }

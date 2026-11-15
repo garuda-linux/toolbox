@@ -1,7 +1,8 @@
 //! The one focus ring every painted widget shares, so keyboard users see
 //! where they are on every control alike. Like a browser's
 //! `:focus-visible`, a click focuses without the ring, and the next key
-//! brings it back.
+//! brings it back. A text field keeps its ring after a click too, as a
+//! browser rings a focused text input either way.
 
 #[cfg(test)]
 mod tests;
@@ -12,7 +13,7 @@ use egui::{Context, CornerRadius, Event, Id, Rect, Response, Stroke, StrokeKind,
 
 use crate::tokens;
 
-const GAP: u8 = 2;
+pub(super) const GAP: u8 = 2;
 
 pub fn focus_ring(ui: &Ui, response: &Response, radius: u8) {
     if response.has_focus() {
@@ -21,12 +22,17 @@ pub fn focus_ring(ui: &Ui, response: &Response, radius: u8) {
 }
 
 /// The ring around `rect`, for a control whose focus sits on a part of
-/// it, such as a search field's text.
+/// it.
 pub(super) fn ring_around(ui: &Ui, rect: Rect, radius: u8) {
-    if !visible(ui) {
-        return;
+    if visible(ui) {
+        field_ring(ui, rect, radius);
     }
+}
 
+/// The ring around a text field that holds the focus, shown after a
+/// click as well: where the typing goes matters with the pointer too, and
+/// a caret alone is too thin to find.
+pub(super) fn field_ring(ui: &Ui, rect: Rect, radius: u8) {
     let accent = tokens::current(ui.ctx()).accent_ring;
     ui.painter().rect_stroke(
         rect.expand(f32::from(GAP)),

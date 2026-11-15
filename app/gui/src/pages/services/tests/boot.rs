@@ -1,6 +1,6 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::features::services::FileState;
+use toolbox_core::features::services::{FileState, Shown};
 
 use super::{ServicesPage, loaded, sshd_listed, unit};
 
@@ -52,7 +52,7 @@ fn stop_rests_on_a_stopped_unit() {
     let stopped = unit("cups.service", "CUPS", FileState::Enabled);
     let mut harness = loaded(vec![stopped]).harness(ServicesPage::default());
 
-    harness.state_mut().page.filter.hide_inactive = false;
+    harness.state_mut().page.filter.shown = Shown::All;
 
     harness.run();
 

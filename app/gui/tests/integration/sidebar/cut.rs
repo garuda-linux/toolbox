@@ -91,7 +91,7 @@ fn a_cut_edge_fades_softly_into_the_sidebar() {
 
 #[test]
 fn an_uncut_list_lays_no_fade() {
-    let harness = app_on(796.0, PageId::Home);
+    let harness = app_on(960.0, PageId::Home);
 
     assert!(fades(&harness).is_empty(), "{:?}", fades(&harness));
 }

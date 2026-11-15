@@ -83,7 +83,7 @@ impl Show {
     /// The text `report` adds, maybe none.
     pub fn report(&mut self, report: &Report) -> String {
         match report {
-            Report::PlanStarted { steps } => {
+            Report::PlanStarted { plan: _, steps } => {
                 self.steps = steps
                     .iter()
                     .map(|(id, lines)| (*id, lines.join(" ")))
@@ -108,11 +108,11 @@ impl Show {
             }
             Report::Step(Event::Accepted | Event::Done) | Report::CancelWaits => String::new(),
             Report::Problem(problem) => self.problem(problem),
-            Report::Busy => {
+            Report::Busy { plan: _ } => {
                 let text = self.paint.error("another change is still running");
                 self.line(&text)
             }
-            Report::PlanFinished { succeeded } => self.result(*succeeded),
+            Report::PlanFinished { plan: _, succeeded } => self.result(*succeeded),
         }
     }
 

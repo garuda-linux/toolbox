@@ -4,20 +4,22 @@
 use std::path::Path;
 
 use toolbox_core::features::network::{
-    HOTSPOT_PROGRAM, plan_load, plan_ping, plan_start, plan_traceroute, plan_unload,
+    HOTSPOT_PROGRAM, Refusal, plan_load, plan_ping, plan_start, plan_traceroute, plan_unload,
 };
 use toolbox_gui_kit::toasts::ToastKind;
+use toolbox_plan::Plan;
 
 use super::App;
 use crate::command::NetworkCommand;
 use crate::i18n;
+use crate::refused::Refused;
 
 impl App {
     pub(super) fn run_network(&mut self, ctx: &egui::Context, command: NetworkCommand) {
         match command {
             NetworkCommand::StartService(unit) => {
                 if let Some(plan) = plan_start(unit) {
-                    self.run_at_once(plan);
+                    self.run_for_network(plan, unit.to_owned());
                 }
             }
             NetworkCommand::LoadDriver { module, load } => {
@@ -27,17 +29,19 @@ impl App {
                     plan_unload(&module)
                 };
 
-                self.run_at_once(plan);
+                self.run_for_network(plan, module.to_string());
             }
             NetworkCommand::Ping {
                 host,
                 count,
                 timeout,
             } => {
-                self.run_at_once(plan_ping(host, count, timeout));
+                let name = host.to_string();
+                self.run_for_network(plan_ping(host, count, timeout), name);
             }
             NetworkCommand::Traceroute { host, hops } => {
-                self.run_at_once(plan_traceroute(host, hops));
+                let name = host.to_string();
+                self.run_for_network(plan_traceroute(host, hops), name);
             }
             NetworkCommand::OpenHotspot => self.open_hotspot(ctx),
             // The service takes these, see `hand_to_services`.
@@ -50,6 +54,15 @@ impl App {
             }
             | NetworkCommand::LookupAddress
             | NetworkCommand::ForgetAddress => {}
+        }
+    }
+
+    /// A run the page starts at once. One the Console refused stays on
+    /// the page, naming `subject`.
+    fn run_for_network(&mut self, plan: Plan, subject: String) {
+        if self.run_at_once(plan).is_none() {
+            let refused = Refused::new(Refusal::Busy, subject);
+            self.services.network.set_refusal(Some(refused));
         }
     }
 

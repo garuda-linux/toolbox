@@ -12,11 +12,20 @@ computer unless you upload a report yourself.
 
 ## Collect a report
 
-Choose a report in the list at the top and click **Collect**. The line
-under the list says what the report holds. The report appears below, and
-the page says what is being collected meanwhile. A long report scrolls in
-its own box, which fills the window, so the buttons above it stay in view.
-Long lines scroll sideways, as in a terminal.
+Under **Reports** each report has a row that says what it holds. Click
+**Collect** in the row of the report you want. The page says what is being
+collected meanwhile, and the report appears below. While a report shows, the
+rows fold into **Collect another report**. Click it to unfold them.
+
+A long report scrolls in its own box, which fills the window. Its header
+line names the report, the time it was collected (in UTC) and how many lines
+it has, followed by these controls:
+
+- **Wrap lines** breaks long lines at the box's edge. Off, they scroll
+  sideways, as in a terminal.
+- **Search the report** shows only the lines that hold the text you type, in
+  any case. Its **×** shows every line again.
+- **Copy report** and **Share report…**, see below.
 
 | Report                 | What it collects                                                                        | Program                                                                      |
 | ---------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -34,9 +43,9 @@ Things to know:
   for failed units and errors in the journal, in the colours of your desktop
   theme. `garuda-inxi` and pacman's log have none. What you copy or upload
   is always plain text without colours.
-- Starting another collector cancels the one that runs. **Cancel** beside
-  **Collect**, shown while a collector runs, stops it without starting a new
-  one. A **Full report** says which part it is at, for example **Collecting
+- Starting another collector cancels the one that runs. **Cancel**, shown in
+  the running report's row instead of **Collect**, stops it without starting
+  a new one. A **Full report** says which part it is at, for example **Collecting
   Journal (3 of 6)…**.
 - A report is at most 2 MiB per collector. Of a longer output only the end
   is kept, and the first line of the report says so.
@@ -78,8 +87,8 @@ the same, and the other parts are still collected.
 
 ## Copy a report
 
-Click **Copy report** beside **Collect**. **Copy report** and **Share
-report…** show once a report is there. A short note at the top right of the
+Click **Copy report** in the report's header line. **Copy report** and
+**Share report…** show once a report is there. A short note at the top right of the
 window confirms the copy. The copy is plain text without colours, ready to
 paste into a forum post.
 
@@ -108,9 +117,10 @@ and gives you a link to post in the forum.
 
 ![The question before an upload, with the text that goes out](images/diagnostics-upload.png)
 
-When the upload is done, the link appears above the report, with its
-buttons under it. **Copy link** copies it, **Open in browser** opens the
-paste, **Hide** removes the link.
+When the upload is done, one line above the report says **Uploaded.** with
+its buttons. **Copy link** copies the link, **Hide** removes it. The **⋯**
+button, **More link actions**, holds **Open in browser**, which opens the
+paste, and the delete link (see below).
 
 > **Warning:** Anyone who has the whole link can read the report. The report
 > is encrypted on your computer before it is sent. The key is the part of the
@@ -143,8 +153,8 @@ that two lines name the same disk. Private addresses such as
 
 ### Delete an uploaded report
 
-Under the link the page shows a second one, labelled **Delete link: opening
-it removes the report from the server.**
+Each upload also has a delete link: opening it removes the report from the
+server. It waits in the **⋯** menu of the **Uploaded.** line.
 
 - **Delete now…** asks **Delete the report from the server?** first.
   **Delete** then opens the delete link in your browser. The server removes
@@ -187,7 +197,7 @@ $ garuda-toolbox --page diagnostics --action inxi
 `pacman`, `dmesg` or `all`. When the app is already running, its window asks
 to come to the front and opens the page. It runs the collector only when the window
 was already in front, because a collector may ask for a password. Otherwise
-click the collector's button. An upload never starts this way.
+click **Collect** in the collector's row. An upload never starts this way.
 
 To get a report in the terminal instead, without the window, use
 `garuda-toolbox diagnostics inxi`. See [The command line](cli.md).

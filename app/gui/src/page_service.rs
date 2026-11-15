@@ -5,11 +5,13 @@
 //! [`Provides`] impl.
 
 mod adapters;
+mod waiting;
 
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::Plan;
 
+pub use self::waiting::{Owner, Waiting};
 use crate::artwork::Artwork;
 use crate::boot::Boot;
 use crate::bootrepair::BootRepair;
@@ -30,8 +32,9 @@ use crate::users::Users;
 /// What a service asks of App once its work came in.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Answer {
-    /// Runs at once in the Console, unless another plan runs.
-    RunPlan(Plan),
+    /// The install of a ranked mirrorlist, which runs at once in the
+    /// Console. While another plan runs it waits for that plan's end.
+    InstallMirrorlist(Plan),
     /// A part of the system came in: the snapshot is joined again and the
     /// queue meets it.
     Recombine,
@@ -134,12 +137,14 @@ pub trait PageService {
         Vec::new()
     }
 
-    /// A plan began to run, the one this service sent if it waits.
+    /// The plan this service sent began to run. App calls it only for the
+    /// sender of the plan, see [`Waiting`].
     fn plan_started(&mut self) -> Vec<AppCommand> {
         Vec::new()
     }
 
-    /// Another plan was running, so the one sent never started.
+    /// Another plan was running, so the one this service sent never
+    /// started.
     fn plan_refused(&mut self) -> Vec<AppCommand> {
         Vec::new()
     }
@@ -167,6 +172,7 @@ pub struct Services {
     /// Only pages read it: the pictures load as rows ask, beside the
     /// frame, so App feeds it nothing.
     pub artwork: Artwork,
+    pub waiting: Waiting,
 }
 
 impl Services {
@@ -187,6 +193,19 @@ impl Services {
             &mut self.toggle_pages,
             &mut self.units,
         ]
+    }
+
+    /// The service that sent a plan as `owner`. `None` for the queue,
+    /// which is App's, and for the mirrorlist, which App hands to
+    /// Maintenance itself.
+    pub fn owned_mut(&mut self, owner: Owner) -> Option<&mut dyn PageService> {
+        match owner {
+            Owner::Queue | Owner::Mirrorlist => None,
+            Owner::Maintenance => Some(&mut self.maintenance),
+            Owner::Users => Some(&mut self.users),
+            Owner::Configs => Some(&mut self.configs),
+            Owner::BootRepair => Some(&mut self.boot_repair),
+        }
     }
 
     /// The service of type `T`, as a page asks for its own.

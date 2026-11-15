@@ -17,8 +17,8 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("gaming"),
         search_field,
         lutris,
-        Step::click_checkbox("Lutris"),
-        Step::wait("Turns on with Apply"),
+        Step::button("Install Lutris"),
+        Step::wait("Installs with Apply"),
         Step::Shot("gaming-queued"),
     ]
 }

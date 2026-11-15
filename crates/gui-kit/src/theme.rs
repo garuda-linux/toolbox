@@ -11,8 +11,11 @@ use egui::{Color32, Context, CornerRadius, Shadow, Stroke, Style, Theme, vec2};
 use crate::palette::{self, Palette};
 use crate::tokens::{self, Tokens};
 
-/// Buttons, fields, chips and rows.
+/// Rows, hover fills and egui's own widgets.
 pub const RADIUS: u8 = 10;
+/// Buttons, the select and text fields. Filters keep [`PILL_RADIUS`], so a
+/// control reads apart from a chip or the search that narrows a list.
+pub const CONTROL_RADIUS: u8 = RADIUS;
 /// Section cards and the Console's terminal.
 pub const CARD_RADIUS: u8 = 14;
 /// Popovers, menus and sheets.
@@ -23,7 +26,8 @@ pub const TILE_RADIUS: u8 = 10;
 pub const SMALL_TILE_RADIUS: u8 = 8;
 /// Buttons, the select, the search field and segmented controls.
 pub const PILL_HEIGHT: f32 = 34.0;
-/// Their round ends, half of [`PILL_HEIGHT`].
+/// The round ends of the search field and segmented controls, half of
+/// [`PILL_HEIGHT`].
 pub const PILL_RADIUS: u8 = 17;
 pub const SIDEBAR_WIDTH: f32 = 248.0;
 /// The column the pages' content keeps to on wide windows.

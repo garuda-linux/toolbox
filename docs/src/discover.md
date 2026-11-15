@@ -9,30 +9,35 @@ science tools, security tools and utilities.
 ## Browse a category
 
 The chips above the list pick what it shows. **All** (at first) lists the
-apps of every category. A chip such as **Internet** or **Multimedia** shows
-that category alone. The number on each chip counts the apps your system
-can install.
+apps of every category, each category under its own heading with its icon
+and the number of its apps. A chip such as **Internet** or **Multimedia**
+shows that category alone. The number on each chip counts the apps your
+system can install.
 
-Every row shows the app's icon, its name and a short description, with a
-switch at the right. A switch that is on means the app's package is
-installed.
+Every row shows the app's icon, its name and up to two lines of its
+description, with the **⋯** menu and a button at the right: **Install**, or
+**Remove** for an app that says **Installed**. Point at a cut description
+to read it whole.
 
 ## Search
 
 To find an app, type in **Search apps…** at the top. The search looks at
 the names, descriptions and package names of the apps the chosen chip
-shows. With **All** it looks through every category, and each result names
-its category, for example **Internet** next to Firefox. While you search,
-the number on each chip counts its matches, and a chip still picks its
-category. Clear the field to see the whole category again.
+shows. With **All** it looks through every category, and the results show
+under the heading of their category, for example Firefox under
+**Internet**. While you search, the number on each chip counts its
+matches, and a chip still picks its category. Clear the field to see the
+whole category again.
 
 When nothing matches, the page says so, quotes your search text and
-explains what the search looks at.
+explains what the search looks at. When the picked category has no match
+but others do, the page names the category and offers **Show all** with
+the number of matches. It shows every category and keeps the search.
 
 ## Sort the list
 
-**Sort by** at the right of the search field orders the apps of a category
-or of a search.
+**Sort by** at the right of the search field orders the apps within each
+category.
 
 | Choice             | Order                                                                    |
 | ------------------ | ------------------------------------------------------------------------ |
@@ -44,16 +49,16 @@ back down when you queue its removal.
 
 ## Install or remove an app
 
-1. Turn the row's switch on or off, or click the row. Nothing changes yet:
-   the row says **Turns on with Apply** or **Turns off with Apply**.
-2. Flip it back to take the change out of the queue.
+1. Click **Install** or **Remove** on the row. Nothing changes yet: the row
+   says **Installs with Apply** or **Removes with Apply**.
+2. Click **Take back** to take the change out of the queue.
 3. Apply the queue, see [Review and apply changes](applying.md).
 
-When it worked, the switches follow the installed packages and the queue is
+When it worked, the rows follow the installed packages and the queue is
 empty.
 
 > **Note:** Removing an app also removes the dependencies nothing else
-> needs. Turn the switch on again and apply to install it back.
+> needs. Click **Install** and apply to install it back.
 
 ## Open an app's website
 
@@ -64,12 +69,12 @@ list are opened.
 
 ## Use the keyboard
 
-| Key              | What it does                                                   |
-| ---------------- | -------------------------------------------------------------- |
-| `Tab`            | Moves between the search, the chips, the sort box and the list |
-| `Up` and `Down`  | Move through the list                                          |
-| `Space`, `Enter` | Queues or takes back the selected app                          |
-| `Menu`           | Opens the selected app's menu                                  |
+| Key             | What it does                                                   |
+| --------------- | -------------------------------------------------------------- |
+| `Tab`           | Moves between the search, the chips, the sort box and the list |
+| `Up` and `Down` | Move through the apps of one category                          |
+| `Space`         | Presses the selected app's button                              |
+| `Menu`          | Opens the selected app's menu                                  |
 
 ## Why some apps are missing
 
@@ -88,11 +93,11 @@ so you can still remove it. Categories without such apps are hidden.
   for it.
 - On a system without pacman databases the app cannot tell, so every app
   shows. When the installed packages cannot be read, a message above the
-  list says so: no switch then shows what is installed, and switching on
-  an app that is installed changes nothing.
+  list says so: no row then shows what is installed, and installing an
+  app that is installed changes nothing.
 - An app whose removal would also remove a package the system needs
   stays installed. A message above the list names that package, until you
-  dismiss it or switch another app.
+  dismiss it or queue another app.
 
 ## Where the icons come from
 

@@ -25,6 +25,10 @@ A link in the text opens the guide page it names, or the web page in your
 browser. At the end of each page, the links with arrows open the page
 before and after it.
 
+Click a picture, or focus it with `Tab` and press `Enter`, to see it as
+large as the window allows. A click on the large picture, `Esc` or
+**Close** lead back to the page.
+
 ## Open the page the guide explains
 
 Guide pages about a page of the app have an **Open** button at the top

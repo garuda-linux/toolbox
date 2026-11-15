@@ -8,7 +8,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use crossbeam_channel::Receiver;
-use toolbox_core::features::maintenance::page::ToolRow;
+use toolbox_core::features::maintenance::page::{RepairRow, ToolRow};
 use toolbox_core::features::maintenance::{Program, queue_upgrade};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_news::News;
@@ -98,6 +98,14 @@ impl Home {
         self.programs
             .latest()
             .map_or(&[][..], |programs| programs.tools.as_slice())
+    }
+
+    /// The repairs of Maintenance with what each needs, none before the
+    /// first check.
+    pub fn repairs(&self) -> &[RepairRow] {
+        self.programs
+            .latest()
+            .map_or(&[][..], |programs| programs.repairs.as_slice())
     }
 
     pub fn status_every(&self, period: Option<Duration>) {

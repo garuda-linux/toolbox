@@ -123,7 +123,9 @@ tint. The header band shows the blur under a neutral scrim.
 - Every tint and scrim is as thin as its texts keep 4.5:1 over the app's
   own surfaces. `header_scrim` and `terminal_glass` are neutral black or
   white, so nothing under them casts a tint, and never below `SCRIM_LEAST`
-  (`tokens/frost.rs`, `tokens/terminal.rs`). Without the blur the band is
+  (`header_scrim` never below `HEADER_SCRIM_LEAST`, so an accent under the
+  band does not smear) (`tokens/frost.rs`, `tokens/terminal.rs`). The
+  dialog `scrim` is black at a fixed alpha per theme. Without the blur the band is
   the opaque `window` colour and the terminal box the solid `terminal`.
 - The band uses `frost::backdrop_within`, which leaves out shapes outside
   it and shadows, so the sidebar and controls below do not smear in.

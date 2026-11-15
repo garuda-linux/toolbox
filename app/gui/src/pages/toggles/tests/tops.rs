@@ -32,7 +32,7 @@ const CATALOG: &str = concat!(
 struct Placed {
     tile: Rect,
     letters: f32,
-    switch: Rect,
+    control: Rect,
     content: Rect,
 }
 
@@ -64,14 +64,18 @@ fn placed(id: &str, name: &str) -> Placed {
     let shape = painted_text(&harness, name).expect("the title is painted");
     let text = shape.galley.rect.translate(shape.pos.to_vec2());
     let letters = letters_top(&mut harness, text).expect("the title shows light letters");
-    let switch = harness.get_by_role_and_label(Role::CheckBox, name).rect();
+    let control = harness
+        .get_by_role_and_label(Role::Button, &format!("Enable {name}"))
+        .rect();
+
     let row = harness.get_by_role(Role::ListItem).rect();
+
     let padding = tokens::current(&harness.ctx).sizes.row_padding.y;
 
     Placed {
         tile,
         letters,
-        switch,
+        control,
         content: row.shrink2(egui::vec2(0.0, padding)),
     }
 }
@@ -105,9 +109,9 @@ fn the_tile_starts_at_the_titles_letters_however_many_lines_follow() {
             row.content.bottom()
         );
         assert!(
-            (row.switch.center().y - row.content.center().y).abs() < SAME,
-            "{id}: the switch's middle is at {}, the row's at {}",
-            row.switch.center().y,
+            (row.control.center().y - row.content.center().y).abs() < SAME,
+            "{id}: the button's middle is at {}, the row's at {}",
+            row.control.center().y,
             row.content.center().y
         );
     }

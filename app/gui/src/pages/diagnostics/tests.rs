@@ -2,6 +2,7 @@ mod heights;
 mod redacted;
 mod scroll;
 mod shown;
+mod viewer;
 
 use std::sync::Arc;
 
@@ -78,22 +79,14 @@ fn uploaded() -> Page {
 }
 
 #[test]
-fn the_first_view_asks_for_a_report_and_collects_the_picked_one() {
+fn every_report_has_its_row_and_collects_from_it() {
     let mut harness = page(Page::default());
 
-    assert!(
-        harness
-            .query_by_label("Choose a report and click Collect.")
-            .is_some()
-    );
+    assert!(harness.query_by_role(Role::ComboBox).is_none());
+    assert_eq!(harness.query_all_by_label("Collect").count(), 0);
+    assert!(harness.query_by_label("Full report").is_some());
 
-    harness
-        .get_by_role_and_label(Role::ComboBox, "Report to collect")
-        .click();
-    harness.run();
-    harness.get_by_label("Kernel log").click();
-    harness.run();
-    harness.get_by_label("Collect").click();
+    harness.get_by_label("Collect Kernel log").click();
     harness.run();
 
     assert_eq!(
@@ -105,7 +98,7 @@ fn the_first_view_asks_for_a_report_and_collects_the_picked_one() {
 }
 
 #[test]
-fn a_running_full_report_names_its_part_and_can_be_cancelled() {
+fn a_running_full_report_names_its_part_and_its_row_cancels_it() {
     let mut harness = page(Page {
         state: State::Running,
         selection: "all".to_owned(),
@@ -119,6 +112,8 @@ fn a_running_full_report_names_its_part_and_can_be_cancelled() {
             .query_by_label_contains("Collecting Journal (3 of 6)")
             .is_some()
     );
+    assert!(harness.query_by_label("Collect Full report").is_none());
+    assert!(harness.query_by_label("Collect Journal").is_some());
 
     harness.get_by_label("Cancel").click();
     harness.run();
@@ -183,19 +178,18 @@ fn a_refused_collection_says_why() {
 }
 
 #[test]
-fn an_upload_shows_both_links_and_deleting_asks_first() {
+fn an_upload_is_one_row_with_the_delete_link_in_its_menu() {
     let mut harness = page(uploaded());
 
-    assert!(
-        harness
-            .query_by_label("Link to the uploaded report")
-            .is_some()
-    );
+    assert!(harness.query_by_label("Uploaded.").is_some());
+    assert!(harness.query_by_label("Delete now…").is_none(), "collapsed");
 
     // Here and not in the app's snapshots: a real upload's key differs
     // each time.
     harness.snapshot("diagnostics/uploaded_dark");
 
+    harness.get_by_label("More link actions").click();
+    harness.run();
     harness.get_by_label("Delete now…").click();
     harness.run();
 
@@ -213,6 +207,8 @@ fn an_upload_shows_both_links_and_deleting_asks_first() {
 
     let fake: Arc<dyn Opener> = Arc::new(Opened::default());
     install(&harness.ctx, fake);
+    harness.get_by_label("More link actions").click();
+    harness.run();
     harness.get_by_label("Delete now…").click();
     harness.run();
     harness
@@ -253,110 +249,30 @@ fn a_failed_upload_names_the_cause_and_is_dismissed() {
 }
 
 #[test]
-fn the_description_starts_on_the_cards_content_edge_and_keeps_its_distance() {
+fn each_row_says_what_its_report_holds() {
     let harness = page(Page::default());
-    let picker = harness.get_by_label("Report to collect").rect();
-    let description = harness
-        .get_by_label("Hardware, drivers and system overview from garuda-inxi.")
-        .rect();
-
-    let gap = toolbox_gui_kit::tokens::current(&harness.ctx)
-        .sizes
-        .control_gap;
 
     assert!(
-        (description.left() - picker.left()).abs() < 1.0,
-        "description starts at {} but the card's content at {}",
-        description.left(),
-        picker.left(),
+        harness
+            .query_by_label("Hardware, drivers and system overview from garuda-inxi.")
+            .is_some()
     );
     assert!(
-        description.top() - picker.bottom() >= gap,
-        "only {} px between the picker and its description",
-        description.top() - picker.bottom(),
+        harness
+            .query_by_label("All of the above in one report. May ask for your password twice.")
+            .is_some()
     );
 }
 
 #[test]
-fn collect_leads_until_an_upload_then_its_link_does() {
+fn copy_report_leads_until_an_upload_then_its_link_does() {
     let harness = page(report());
-    assert_eq!(button_kind(&harness, "Collect"), ButtonKind::Primary);
+    assert_eq!(button_kind(&harness, "Copy report"), ButtonKind::Primary);
 
     let shared = page(uploaded());
 
-    assert_eq!(button_kind(&shared, "Collect"), ButtonKind::Soft);
+    assert_eq!(button_kind(&shared, "Copy report"), ButtonKind::Soft);
     assert_eq!(button_kind(&shared, "Copy link"), ButtonKind::Primary);
-}
-
-#[test]
-fn the_link_fields_start_where_their_words_start_and_pad_their_text() {
-    let harness = page(uploaded());
-    let words = harness
-        .get_by_label_contains("Anyone who has this link")
-        .rect()
-        .left();
-
-    let field = harness
-        .get_by_role_and_label(Role::TextInput, "Link to the uploaded report")
-        .rect()
-        .left();
-
-    let link =
-        toolbox_gui_kit::testing::painted_text(&harness, "https://bin.garudalinux.org/?abc#key")
-            .expect("the link is painted")
-            .pos
-            .x;
-
-    let padding = harness.ctx.global_style().spacing.button_padding.x;
-    assert!(
-        (field - words).abs() < 1.0,
-        "the field starts at {field}, its words at {words}"
-    );
-    assert!(
-        (link - field - padding).abs() < 1.0,
-        "the link starts {} px inside its field",
-        link - field
-    );
-}
-
-#[test]
-fn each_link_has_its_label_above_and_its_buttons_below_a_gap_apart() {
-    let harness = page(uploaded());
-    let sizes = toolbox_gui_kit::tokens::current(&harness.ctx).sizes;
-    let uploaded = "Uploaded. Anyone who has this link can read the report:";
-    let delete = "Delete link: opening it removes the report from the server.";
-    let parts = [
-        (uploaded, "Link to the uploaded report", "Copy link"),
-        (delete, delete, "Copy delete link"),
-    ];
-
-    for (label, field, button) in parts {
-        let above = harness.get_by_role_and_label(Role::Label, label).rect();
-        let field = harness.get_by_role_and_label(Role::TextInput, field).rect();
-        let button = harness.get_by_label(button).rect();
-        assert!(
-            field.top() - above.bottom() >= sizes.caption_gap - 0.5,
-            "{label}: {} px above its field",
-            field.top() - above.bottom()
-        );
-        assert!(
-            button.top() - field.bottom() >= sizes.control_gap - 0.5,
-            "{label}: {} px between the field and its buttons",
-            button.top() - field.bottom()
-        );
-    }
-
-    let look = |text: &str| {
-        let shape = toolbox_gui_kit::testing::painted_text(&harness, text).expect("painted");
-        let format = &shape.galley.job.sections[0].format;
-        (format.font_id.clone(), format.color)
-    };
-
-    assert_eq!(
-        look(uploaded),
-        look(delete),
-        "two labels of one role differ"
-    );
 }
 
 #[test]
@@ -377,28 +293,5 @@ fn the_text_to_upload_sits_in_a_frame_of_its_own() {
         toolbox_gui_kit::testing::fill_under(&harness, inside),
         toolbox_gui_kit::testing::fill_under(&harness, around),
         "the preview has no fill of its own"
-    );
-}
-
-#[test]
-fn a_running_report_sits_inset_on_a_card_like_the_picker() {
-    let harness = page(Page {
-        state: State::Running,
-        selection: "all".to_owned(),
-        part: "journalctl".to_owned(),
-        step: 3,
-        ..Page::default()
-    });
-
-    let picker = harness.get_by_role(Role::ComboBox).rect();
-    let running = harness
-        .get_by_label("Starting another collector cancels this one.")
-        .rect();
-
-    assert!(
-        (running.left() - picker.left()).abs() < 0.5,
-        "the running text starts at {}, the picker at {}",
-        running.left(),
-        picker.left()
     );
 }

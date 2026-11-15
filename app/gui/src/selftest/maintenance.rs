@@ -7,9 +7,6 @@ use egui::Key;
 
 use super::step::Step;
 
-const ORPHANS: &str = "More actions for Remove orphans";
-const CACHE: &str = "More actions for Clean package cache";
-
 #[must_use = "the steps do nothing until a suite runs them"]
 pub fn steps() -> Vec<Step> {
     vec![
@@ -17,35 +14,19 @@ pub fn steps() -> Vec<Step> {
         Step::tab("Maintenance"),
         Step::wait("Package care"),
         Step::Shot("maintenance"),
-        // Queue sits in each row's ⋯ menu, behind Run now. The menu must be
-        // gone before it opens again, or the click only closes it.
-        Step::click(ORPHANS),
-        Step::click("Queue removal"),
-        Step::WaitGone("Queue removal"),
-        Step::click(ORPHANS),
+        // Each row's Queue sits beside its Run now and turns into Remove
+        // from queue while the task waits.
+        Step::button("Queue removal"),
         Step::wait("Remove from queue"),
-        Step::Shot("maintenance-menu"),
-        Step::click("Remove from queue"),
+        Step::Shot("maintenance-queued"),
+        Step::button("Remove from queue"),
         Step::WaitGone("Remove from queue"),
-        Step::click(ORPHANS),
-        Step::wait("Queue removal"),
-        Step::press(Key::Escape),
-        Step::WaitGone("Queue removal"),
-        Step::click(CACHE),
-        Step::click("Queue cleanup"),
-        Step::WaitGone("Queue cleanup"),
-        Step::click(CACHE),
+        Step::button("Queue cleanup"),
         Step::wait("Remove from queue"),
-        Step::press(Key::Escape),
-        Step::WaitGone("Remove from queue"),
         Step::click("Apply"),
         Step::wait("Test mode: nothing was changed"),
-        // A test run skips every step, so the cleanup stays queued. The
-        // Escape that closes the menu leaves the Console open.
-        Step::click(CACHE),
+        // A test run skips every step, so the cleanup stays queued.
         Step::wait("Remove from queue"),
-        Step::press(Key::Escape),
-        Step::WaitGone("Remove from queue"),
         Step::Shot("maintenance-applied"),
         // A test run prints nothing, so the Console's menu offers only to
         // clear it. Sharing is covered by the integration tests.

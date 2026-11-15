@@ -1,6 +1,6 @@
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::{Event, Outcome};
-use toolbox_services::apply::Report;
+use toolbox_services::apply::{PlanId, Report};
 
 use super::{Gate, asks_secret};
 
@@ -28,7 +28,10 @@ fn output(text: &str) -> Report {
 #[test]
 fn nothing_typed_is_taken_before_a_step_runs() {
     let gate = Gate::default();
-    gate.note(&Report::PlanStarted { steps: Vec::new() });
+    gate.note(&Report::PlanStarted {
+        plan: PlanId::new(1),
+        steps: Vec::new(),
+    });
     gate.note(&Report::Step(Event::Accepted));
 
     assert!(!gate.open());
@@ -51,7 +54,10 @@ fn typed_lines_reach_a_running_step_only() {
 fn the_end_of_the_plan_closes_the_gate_for_good() {
     let gate = Gate::default();
     gate.note(&Report::Step(Event::Started { step: step() }));
-    gate.note(&Report::PlanFinished { succeeded: true });
+    gate.note(&Report::PlanFinished {
+        plan: PlanId::new(1),
+        succeeded: true,
+    });
 
     assert!(!gate.open());
     assert!(gate.done());

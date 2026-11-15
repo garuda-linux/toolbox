@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_aur::AurSource as _;
 use toolbox_core::Toggle;
 use toolbox_core::features::packages::aur::AurCatalog;
@@ -206,7 +206,7 @@ fn the_aur_chip_works_without_pacmans_databases() {
 }
 
 #[test]
-fn without_pacmans_databases_the_other_chips_show_only_the_notice() {
+fn without_pacmans_databases_the_repository_chips_are_off_and_the_aur_is_picked() {
     let mut fixture = PageFixture::default();
     fixture.settings.packages.show_aur = true;
     fixture.services.packages =
@@ -214,11 +214,15 @@ fn without_pacmans_databases_the_other_chips_show_only_the_notice() {
 
     let mut harness = fixture.harness(PackagesPage::default());
     harness.run();
+    harness.run();
 
-    assert!(
-        harness
-            .query_by_role_and_label(Role::Button, "AUR 3")
-            .is_some()
-    );
+    for chip in ["Installed", "Updates", "Orphans", "All"] {
+        let node = harness.get_by_role_and_label(Role::Button, chip);
+        assert!(node.accesskit_node().is_disabled(), "{chip}");
+    }
+
+    let aur_chip = harness.get_by_role_and_label(Role::Button, "AUR 3");
+    assert!(!aur_chip.accesskit_node().is_disabled());
+    assert_eq!(harness.state().page.filter, Filter::Aur);
     assert!(harness.query_by_label("No packages to show").is_none());
 }

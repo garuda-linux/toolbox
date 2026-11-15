@@ -62,8 +62,8 @@ impl<'text> ActionRow<'text> {
         let actions_width = known.unwrap_or_default();
         let sizes = tokens::current(ui.ctx()).sizes;
         let (tile_gap, actions_gap) = (sizes.picture_gap, sizes.text_to_control);
-        let words_room =
-            ui.available_width() - TileSize::Row.edge(ui) - tile_gap - actions_width - actions_gap;
+        let edge = TileSize::Row.edge(ui);
+        let words_room = ui.available_width() - edge - tile_gap - actions_width - actions_gap;
 
         let beside = actions.is_some() && words_room >= MIN_TEXT_WIDTH;
 
@@ -73,7 +73,6 @@ impl<'text> ActionRow<'text> {
         let height_was = ui.data(|data| data.get_temp::<f32>(height_id));
         let words_id = width_id.with("words");
         let words_was = ui.data(|data| data.get_temp::<f32>(words_id));
-        let edge = TileSize::Row.edge(ui);
 
         // Words that reach below the tile end on a baseline, so the tile and
         // the capitals come down by up to the last line's descent and leave
@@ -101,8 +100,6 @@ impl<'text> ActionRow<'text> {
         };
 
         let drawn = ui.horizontal_top(|ui| {
-            // The words sit a picture gap from the tile, as in every row
-            // with a picture, and the actions further off.
             ui.spacing_mut().item_spacing.x = tile_gap;
             let (slot, _) = ui.allocate_exact_size(Vec2::splat(edge), Sense::hover());
             ui.spacing_mut().item_spacing.x = actions_gap;
@@ -114,9 +111,8 @@ impl<'text> ActionRow<'text> {
                 return slot;
             }
 
-            let words_width = words_room.max(0.0);
-            let words = raised(ui, (rise - lower, words_width), raised_id, |ui| {
-                ui.set_width(words_width);
+            let words = raised(ui, (rise - lower, words_room), raised_id, |ui| {
+                ui.set_width(words_room);
                 self.words(ui);
             });
 
@@ -187,9 +183,15 @@ impl<'text> ActionRow<'text> {
         if self.queued.is_empty() {
             ui.label(title);
         } else {
-            ui.horizontal(|ui| {
-                ui.label(title);
-                queued_tag(ui, self.queued, Tone::Accent);
+            ui.scope(|ui| {
+                // `horizontal` reads its least height, the interact height
+                // taller than the title, before its closure runs. Set inside
+                // it, a queued row still grows.
+                ui.spacing_mut().interact_size.y = 0.0;
+                ui.horizontal(|ui| {
+                    ui.label(title);
+                    queued_tag(ui, self.queued, Tone::Accent);
+                });
             });
         }
 
@@ -206,16 +208,14 @@ struct Measures {
     height: (Id, Option<f32>),
 }
 
-/// A line that never wraps measures the actions' own width. The room left
-/// is that width, so they end at the right in their order, the same as on
-/// a line under the words.
+/// Keeps the actions in order at the right of a line that never wraps.
 fn actions_beside(ui: &mut Ui, line: f32, measures: Measures, actions: impl FnOnce(&mut Ui)) {
     let (width_id, width_was) = measures.width;
     let (height_id, height_was) = measures.height;
     let room = vec2(ui.available_width(), 0.0);
     let drop = height_was.map_or(0.0, |height| (line - height) / 2.0);
     let drawn = ui.allocate_ui_with_layout(room, Layout::top_down(Align::Min), |ui| {
-        ui.add_space(drop.max(0.0));
+        ui.add_space(drop);
         ui.horizontal_top(|ui| {
             ui.spacing_mut().item_spacing =
                 Vec2::splat(tokens::current(ui.ctx()).sizes.control_gap);

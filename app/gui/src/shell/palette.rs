@@ -1,22 +1,22 @@
 //! The command palette (Ctrl+K): every page and command by name, filtered
 //! as the user types, then the Discover apps whose title holds the text,
-//! with the Maintenance page's operations, tools and repairs before them.
-//! The typing keeps the focus, Up and Down move the marked row, Enter
-//! takes it.
+//! with the Maintenance page's operations, tools and repairs before them,
+//! each group under its label. The typing keeps the focus, Up and Down
+//! move the marked row, Enter takes it.
 
-use egui::{Button, Context, Id, Key, Modifiers, RichText, ScrollArea, vec2};
-use toolbox_core::features::search::Needle;
+mod found;
+mod row;
+
+use egui::{Context, Id, Key, Modifiers, ScrollArea};
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::widgets::{DialogWidth, ModalWrapper, SearchTexts, search_field};
+use toolbox_gui_kit::widgets::{
+    DialogWidth, ModalWrapper, SearchTexts, menu_heading, search_field,
+};
 
-use crate::command::{Command, CommandSender, DiscoverCommand, MaintenanceCommand, UiCommand};
-use crate::page::PageId;
-use crate::pages::discover::category_title;
-use crate::pages::{PageContext, maintenance};
-use crate::{i18n, page_ui};
-
-/// At most this many rows: a short text matches hundreds of apps.
-const LIMIT: usize = 50;
+use self::found::Row;
+use crate::command::{Command, CommandSender};
+use crate::i18n;
+use crate::pages::PageContext;
 
 /// Whether the palette is open and what was typed. Not persisted.
 #[derive(Debug, Default)]
@@ -25,12 +25,6 @@ pub struct Palette {
     query: String,
     /// The row Enter takes, back to the first as the text changes.
     marked: usize,
-}
-
-struct Row {
-    name: String,
-    detail: String,
-    command: Command,
 }
 
 impl Palette {
@@ -47,13 +41,16 @@ impl Palette {
             return;
         }
 
-        let rows = self.matches(ctx, context);
+        let rows = found::matches(ctx, context, &self.query);
 
         let title = i18n::text(ctx, "command-open-palette");
         let hint = i18n::text(ctx, "palette-search");
         let clear = i18n::text(ctx, "search-clear");
+
+        // From the top, so the field stays put as the list changes length.
         let modal = ModalWrapper::new(Id::unique("toolbox_gui::palette"), &title)
             .instant()
+            .top_anchored()
             .width(DialogWidth::Small)
             .show(ctx, |ui| {
                 let width = ui.available_width();
@@ -103,9 +100,10 @@ impl Palette {
         }
     }
 
-    /// The rows, the marked one shown as selected and scrolled to after a
-    /// key `moved` it. Returns a clicked row's command and whether the
-    /// click came from the keyboard, and the row the pointer moved onto.
+    /// The rows under their group labels, the marked one shown as selected
+    /// and scrolled to after a key `moved` it. Returns a clicked row's
+    /// command and whether the click came from the keyboard, and the row
+    /// the pointer moved onto.
     ///
     /// Only a moving pointer takes the mark, so a list scrolled by the
     /// keys under a resting one keeps the key's mark.
@@ -125,26 +123,15 @@ impl Palette {
 
         let mut chosen = None;
         let mut pointed = None;
+        let mut section = None;
         for (index, row) in rows.iter().enumerate() {
-            // The marked row is what Enter takes, and its shortcut takes
-            // the colour of selected text.
-            let marked = index == self.marked;
-            let colour = if marked {
-                ui.visuals().selection.stroke.color
-            } else {
-                ui.visuals().weak_text_color()
-            };
-
-            let mut button =
-                Button::selectable(marked, row.name.as_str()).min_size(vec2(width, 0.0));
-
-            // egui joins the name and an empty shortcut with a space,
-            // which a screen reader then reads out.
-            if !row.detail.is_empty() {
-                button = button.shortcut_text(RichText::new(&row.detail).color(colour));
+            if section != Some(row.section) {
+                section = Some(row.section);
+                menu_heading(ui, &row.section.label(ui.ctx()));
             }
 
-            let response = ui.add(button);
+            let marked = index == self.marked;
+            let response = row::show(ui, row, marked, width);
             if marked && moved {
                 response.scroll_to_me(None);
             }
@@ -180,72 +167,6 @@ impl Palette {
         let steps = (down + count - up % count) % count;
         self.marked = (marked + steps) % count;
         true
-    }
-
-    /// Every page and command whose name holds the typed text, then the
-    /// apps this system offers whose title holds it. Apps only show for a
-    /// typed text, there are too many to list.
-    fn matches(&self, ctx: &Context, context: &PageContext<'_>) -> Vec<Row> {
-        let needle = Needle::new(&self.query);
-        let pages = PageId::ALL
-            .into_iter()
-            .filter(|page| page_ui::listed(ctx, *page))
-            .map(UiCommand::Navigate);
-
-        // Reviewing has nothing to show while the queue is empty.
-        let review = (!context.changes.is_empty()).then_some(UiCommand::ReviewChanges);
-        let commands = pages
-            .chain(UiCommand::ACTIONS)
-            .chain(review)
-            .filter(|command| *command != UiCommand::OpenPalette)
-            .map(|command| Row {
-                name: i18n::text(ctx, command.text_id()).into_owned(),
-                detail: command
-                    .shortcut()
-                    .map(|shortcut| ctx.format_shortcut(&shortcut))
-                    .unwrap_or_default(),
-                command: command.into(),
-            })
-            .filter(|row| needle.is_in(&row.name));
-
-        let apps = (!needle.is_empty())
-            .then(|| {
-                context
-                    .catalogs
-                    .apps
-                    .apps
-                    .offered(context.snapshot, context.changes)
-            })
-            .into_iter()
-            .flatten()
-            .filter(|(_, hit)| hit.title_matches(&needle))
-            .map(|(_, hit)| {
-                let title = hit.entry.title();
-                let category = category_title(ctx, hit.category.id(), hit.category.title());
-                Row {
-                    name: title.to_owned(),
-                    detail: format!("{} · {category}", i18n::text(ctx, "discover-palette-app")),
-                    command: DiscoverCommand::Reveal(title.to_owned()).into(),
-                }
-            });
-
-        let page = i18n::text(ctx, PageId::Maintenance.text_id());
-        let maintenance = (!needle.is_empty())
-            .then(maintenance::palette::entries)
-            .into_iter()
-            .flatten()
-            .map(|(id, tab)| Row {
-                name: i18n::text(ctx, &id).into_owned(),
-                detail: format!("{page} · {}", i18n::text(ctx, tab.text_id())),
-                command: MaintenanceCommand::Reveal(tab).into(),
-            })
-            .filter(|row| needle.is_in(&row.name));
-
-        commands
-            .chain(maintenance)
-            .chain(apps)
-            .take(LIMIT)
-            .collect()
     }
 }
 

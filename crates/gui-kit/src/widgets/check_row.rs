@@ -108,7 +108,7 @@ fn show(ui: &mut Ui, on: bool, words: Words<'_>, enabled: bool) -> Response {
 fn paint(ui: &Ui, response: &Response, on: bool, words: Words<'_>, enabled: bool) -> bool {
     let rect = response.rect;
     let tokens = tokens::current(ui.ctx());
-    let fade = |color| faded(color, enabled);
+    let fade = |color| faded(ui, color, enabled);
 
     // A second, wider fill inside a card row's own would nest two.
     let under = Pointer::of_focusable(response);

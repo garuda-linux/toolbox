@@ -42,13 +42,14 @@ fn a_click_hides_the_ring_and_a_key_brings_it_back() {
 }
 
 /// The flag follows the pointer from the start of every frame, not only
-/// once a ring would draw, so a field held under the button shows none.
+/// once a ring would draw, so a control that takes the focus on the press
+/// shows none while the button is held. A text edit is such a control.
 #[test]
-fn a_click_into_a_field_shows_no_ring_in_any_frame() {
+fn a_press_that_focuses_hides_the_ring_in_every_frame() {
     let mut harness = harness(300.0, 200.0).build_ui_state(
         |ui, (text, focused, rings): &mut (String, usize, usize)| {
-            // As `paint_field` does: the ring is drawn before the text
-            // edit, from the focus the field held when the frame began.
+            // The ring is asked before the text edit, from the focus it
+            // held when the frame began.
             let id = ui.make_persistent_id("field");
             if ui.memory(|memory| memory.has_focus(id)) {
                 *focused += 1;

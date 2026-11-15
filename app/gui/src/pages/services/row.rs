@@ -7,8 +7,8 @@ use egui::{Label, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    RowState, Tone, line, rich, row_height, row_menu, split_row, status_dot, switch, tag,
-    text_block_height,
+    RowState, Tone, line, rich, row_height, row_menu, split_row, status_dot, status_word, switch,
+    tag, text_block_height,
 };
 
 use super::unit_row::{UnitRow, UnitRows};
@@ -23,6 +23,13 @@ pub fn height(ui: &Ui) -> f32 {
     row_height(ui, text_block_height(ui, 1))
 }
 
+/// Whether screen readers hear the unit's state change: on the row the
+/// keyboard is on, and on a failure wherever it shows. Every row live
+/// would read the whole list at each relist.
+pub fn announced(state: &RowState, tone: Tone) -> bool {
+    tone == Tone::Error || state.response.has_focus()
+}
+
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowState) {
     let caption = i18n::text(ui.ctx(), "services-at-boot");
     let secondary = ui.tokens().secondary;
@@ -31,6 +38,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
         .x;
 
     let caption_room = caption_width + ui.tokens().sizes.text_to_icon;
+    let live = announced(state, row.state.1);
 
     split_row(
         ui,
@@ -38,7 +46,12 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
         |ui| {
             toolbox_gui_kit::widgets::title_line(ui, false, |ui| {
                 ui.add(Label::new(Arc::clone(&row.title)).truncate());
-                status_dot(ui, &row.state.0, row.state.1);
+                if live {
+                    status_word(ui, &row.state.0, row.state.1);
+                } else {
+                    status_dot(ui, &row.state.0, row.state.1);
+                }
+
                 if let Some((file, hint)) = &row.file {
                     tag(ui, file, Tone::Neutral).on_hover_text(hint.as_ref());
                 }

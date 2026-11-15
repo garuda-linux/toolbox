@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use toolbox_catalog::ToggleCatalog;
 use toolbox_plan::PackageName;
 
-use super::{Query, Shown, category, rows};
+use super::{Query, Shown, category, groups, rows};
 use crate::domains::{InstalledPackages, SyncPackages};
 use crate::features::discover::{AppOrder, Apps};
 use crate::features::toggles::is_offered;
@@ -165,6 +165,48 @@ fn a_queued_app_shows_its_wish() {
 
     assert_eq!(shown[0].state.queued, Some(Toggle::On));
     assert!(is_offered(shown[0].hit.entry, &snapshot, &changes));
+}
+
+#[test]
+fn groups_keep_the_catalog_order_and_sort_within_each() {
+    let apps = apps();
+    let snapshot = system(&["firefox"], &["firefox", "aerc", "stellarium"]);
+    let changes = ChangeSet::default();
+
+    let titled: Vec<(&str, Vec<&str>)> = groups(
+        &apps,
+        query(None, "", AppOrder::Selected),
+        &snapshot,
+        &changes,
+    )
+    .iter()
+    .map(|group| (group.category.id(), ids(&group.rows)))
+    .collect();
+
+    assert_eq!(
+        titled,
+        [
+            ("internet", vec!["firefox", "aerc"]),
+            ("science", vec!["stellarium"])
+        ]
+    );
+}
+
+#[test]
+fn a_category_without_a_match_has_no_group() {
+    let apps = apps();
+    let snapshot = system(&[], &["firefox", "aerc", "stellarium"]);
+    let changes = ChangeSet::default();
+
+    let found = groups(
+        &apps,
+        query(None, "planetarium", AppOrder::Name),
+        &snapshot,
+        &changes,
+    );
+
+    let categories: Vec<&str> = found.iter().map(|group| group.category.id()).collect();
+    assert_eq!(categories, ["science"]);
 }
 
 fn query<'text>(category: Option<&'text str>, search: &'text str, order: AppOrder) -> Query<'text> {

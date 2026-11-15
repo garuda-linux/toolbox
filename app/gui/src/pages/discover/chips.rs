@@ -12,6 +12,8 @@ pub struct Chips {
     pub all: String,
     /// How many apps every category has together.
     pub total: String,
+    /// The same as a number, for the empty state of a picked category.
+    pub matches: usize,
     pub categories: Vec<CategoryChip>,
 }
 
@@ -40,11 +42,19 @@ impl Chips {
         Self {
             all: i18n::text(ctx, "discover-all").into_owned(),
             total: total.to_string(),
+            matches: total,
             categories,
         }
     }
 
     pub fn ids(&self) -> impl Iterator<Item = &str> {
         self.categories.iter().map(|chip| chip.id.as_str())
+    }
+
+    pub fn title(&self, id: &str) -> Option<&str> {
+        self.categories
+            .iter()
+            .find(|chip| chip.id == id)
+            .map(|chip| chip.title.as_str())
     }
 }

@@ -20,8 +20,8 @@ pub enum MaintenanceCommand {
     },
     /// Opens tool `0`, or installs it first and opens it then.
     OpenTool(PageTool),
-    /// Installs garuda-update, which most repairs need.
-    InstallGarudaUpdate,
+    /// Installs every package a greyed repair needs, in one plan.
+    InstallMissing,
     DismissProblem,
     /// Chooses settings `entry` for the reset, or drops it.
     Choose {

@@ -89,7 +89,7 @@ impl Events {
 
     pub fn report(&mut self, report: &Report) -> String {
         match report {
-            Report::PlanStarted { steps } => {
+            Report::PlanStarted { plan: _, steps } => {
                 self.steps.clone_from(steps);
                 String::new()
             }
@@ -115,8 +115,8 @@ impl Events {
             Report::Problem(Problem::HelperFailed { kind, detail }) => {
                 error(failed(*kind), Some(detail))
             }
-            Report::Busy => error("another change is still running", None),
-            Report::PlanFinished { succeeded } => done(*succeeded),
+            Report::Busy { plan: _ } => error("another change is still running", None),
+            Report::PlanFinished { plan: _, succeeded } => done(*succeeded),
         }
     }
 
@@ -245,5 +245,16 @@ pub const fn needs_typing(action: &PlannedAction) -> bool {
                 | UserAction::InstallAur { packages: _ }
                 | UserAction::EditFile { editor: _, copy: _ }
         )
+    )
+}
+
+/// Whether `report` ends the plan, so a quiet run stops reading there.
+pub const fn finishes(report: &Report) -> bool {
+    matches!(
+        report,
+        Report::PlanFinished {
+            plan: _,
+            succeeded: _
+        }
     )
 }

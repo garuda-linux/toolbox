@@ -5,9 +5,9 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::Toggle;
 use toolbox_core::domains::Packages;
 use toolbox_core::testing::Queue as _;
-use toolbox_gui_kit::testing::filled_rect;
+use toolbox_gui_kit::testing::filled_rects;
 use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::{dim_opacity, hue_of};
+use toolbox_gui_kit::widgets::{dim_opacity, page_tile};
 use toolbox_plan::PackageName;
 
 use super::super::TogglePage;
@@ -40,15 +40,21 @@ fn page(fixture: PageFixture, search: &str) -> Page {
 
 fn tile_of(harness: &Page, row: &Row) -> Rect {
     let tokens = tokens::current(&harness.ctx);
-    let fill = tokens.tiles.letters().of(hue_of(row.search)).fill;
+    let fill = page_tile(&harness.ctx).fill;
     let fill = if row.faded {
         fill.gamma_multiply(dim_opacity(&tokens))
     } else {
         fill
     };
 
-    let tile = filled_rect(harness, fill).expect("the letter tile is painted");
+    // The section heading's icon tile has the same fill and is smaller.
+    let tile = filled_rects(harness, fill)
+        .into_iter()
+        .find(|rect| (rect.width() - PICTURE_SIZE).abs() < SAME)
+        .expect("the glyph tile is painted");
+
     assert!((tile.width() - PICTURE_SIZE).abs() < SAME, "tile {tile:?}");
+
     tile
 }
 
@@ -104,7 +110,7 @@ fn a_queued_title_starts_where_its_description_does() {
     };
 
     let harness = page(fixture, row.search);
-    assert!(harness.query_by_label("Turns on with Apply").is_some());
+    assert!(harness.query_by_label("Installs with Apply").is_some());
     assert_in_every_state(harness, &row);
 }
 

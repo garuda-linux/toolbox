@@ -1,11 +1,13 @@
 //! Entry fields beside the check: the packages and units that come along
-//! with an entry's package, its desktops, its picture and its website.
+//! with an entry's package, its desktops, its picture, its glyph and its
+//! website.
 //!
 //! ```toml
 //! check = { package = "gamemode" }
 //! also = [{ package = "lib32-gamemode" }, { service = "gamemoded.service" }]
 //! desktop = ["KDE"]
 //! icon = "gamemode.png"
+//! glyph = "input-gamepad"
 //! url = "https://github.com/FeralInteractive/gamemode"
 //! ```
 
@@ -117,6 +119,25 @@ pub fn icon(name: Option<String>) -> Result<Option<String>, Problem> {
         Ok(Some(name))
     } else {
         Err(Problem::BadIcon(name))
+    }
+}
+
+/// A freedesktop name, as a section's `icon`. The app draws only the glyphs
+/// it bundles under such a name, so a file or a path never reaches it.
+pub fn glyph(name: Option<String>) -> Result<Option<String>, Problem> {
+    let Some(name) = name else {
+        return Ok(None);
+    };
+
+    let edges = |letter: char| letter.is_ascii_lowercase() || letter.is_ascii_digit();
+    let freedesktop = name.starts_with(edges)
+        && name.ends_with(edges)
+        && name.chars().all(|letter| edges(letter) || letter == '-');
+
+    if freedesktop {
+        Ok(Some(name))
+    } else {
+        Err(Problem::BadGlyph(name))
     }
 }
 

@@ -21,13 +21,13 @@ The rows under **Package care** on **Common** change the system:
 | **Refresh keyring**        | Downloads the newest signing keys of the package repositories                             |
 | **Remove the pacman lock** | Deletes a lock left behind by an interrupted update                                       |
 
-Each row has **Run now** and a **⋯** button:
+Each row has two buttons:
 
+- **Queue** and the action, for example **Queue update** or **Queue
+  removal**, puts the row into the queue, so it runs with your other
+  changes. The button then says **Remove from queue**. Click it to take the
+  row out of the queue again.
 - **Run now** runs it at once and shows the **Console**.
-- The **⋯** menu holds **Queue** and the action, for example **Queue
-  update** or **Queue removal**. It puts the row into the queue, so it
-  runs with your other changes. The menu then says **Remove from queue**.
-  Click it to take the row out of the queue again.
 
 Queued rows run in a fixed order, whatever order you queued them in: the
 keyring and the lock first, then the update. The clean-up runs after all
@@ -140,10 +140,11 @@ The red button with the repair's name runs it. **Cancel** or `Esc` leaves
 the system as it is.
 
 Every row is shown. A row whose program is missing is greyed out and says
-what it needs, for example **Needs garuda-update**. When garuda-update is
-missing, the tab says so above the rows and offers
-**Install garuda-update**. The installation starts at once in the Console and
-asks for your password. The rows unlock once it is done.
+what it needs, for example **Needs garuda-update**. One note above the rows
+names every missing package, `garuda-health`, `garuda-update` or both, and
+offers to install them all with one button, for example
+**Install garuda-health, garuda-update**. The installation starts at once in
+the Console and asks for your password. The rows unlock once it is done.
 
 ## See also
 

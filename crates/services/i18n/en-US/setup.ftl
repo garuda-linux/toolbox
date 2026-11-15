@@ -15,6 +15,8 @@ setup-summary = Summary
 setup-back = Back
 setup-next = Next
 setup-go-to = Go to step
+# Over the progress bar. $number is the step, $count all of them.
+setup-progress = Step { $number } of { $count }
 setup-keys = Alt+Right goes on, Alt+Left goes back.
 
 setup-install = Apps to install: { $count }

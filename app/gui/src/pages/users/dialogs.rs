@@ -13,8 +13,8 @@ use egui::{Context, Id, Label, Response, TextEdit, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, confirm_buttons_when,
-    confirm_buttons_why, rich, text_field,
+    ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, SecretTexts,
+    confirm_buttons_when, confirm_buttons_why, rich, secret_field, text_field,
 };
 
 pub use self::add_group::AddGroup;
@@ -27,6 +27,8 @@ use crate::i18n;
 use crate::pages::PageContext;
 
 const BUTTONS_HEIGHT: f32 = 80.0;
+/// The dialogs a click beside leaves open: Add user and Edit.
+const FORMS: [&str; 2] = ["add-user", "edit"];
 
 #[derive(Debug)]
 pub enum Dialog {
@@ -92,22 +94,30 @@ pub fn dialog_why(
 ) -> (Next, bool) {
     let close = i18n::text(ctx, "dialog-close");
     let cancel = i18n::text(ctx, "users-cancel");
-    let outcome = ModalWrapper::new(Id::unique(("toolbox_gui::users", salt)), title)
+    let plain = ModalWrapper::new(Id::unique(("toolbox_gui::users", salt)), title)
         .title_bar(&close)
-        .width(DialogWidth::Medium)
-        .show(ctx, |ui| {
-            // A floating bar would cover the right end of the fields.
-            ui.spacing_mut().scroll = egui::style::ScrollStyle::solid();
-            egui::ScrollArea::vertical()
-                .max_height(ui.available_height() - BUTTONS_HEIGHT)
-                .auto_shrink([false, true])
-                .show(ui, body);
+        .width(DialogWidth::Medium);
 
-            match why.filter(|_| !ready) {
-                Some(why) => confirm_buttons_why(ui, &cancel, confirm, kind, Some(why)),
-                None => confirm_buttons_when(ui, &cancel, confirm, kind, ready),
-            }
-        });
+    // A stray click beside would drop all that was typed.
+    let modal = if FORMS.contains(&salt) {
+        plain.form()
+    } else {
+        plain
+    };
+
+    let outcome = modal.show(ctx, |ui| {
+        // A floating bar would cover the right end of the fields.
+        ui.spacing_mut().scroll = egui::style::ScrollStyle::solid();
+        egui::ScrollArea::vertical()
+            .max_height(ui.available_height() - BUTTONS_HEIGHT)
+            .auto_shrink([false, true])
+            .show(ui, body);
+
+        match why.filter(|_| !ready) {
+            Some(why) => confirm_buttons_why(ui, &cancel, confirm, kind, Some(why)),
+            None => confirm_buttons_when(ui, &cancel, confirm, kind, ready),
+        }
+    });
 
     let confirmed = ready && outcome.inner == Some(Confirmation::Confirmed);
     let closed = outcome.closed || outcome.inner.is_some();
@@ -136,15 +146,15 @@ pub fn password_field(
     text: &mut SecretText,
     problem: Option<&str>,
 ) -> Response {
-    field_with(ui, (label, ""), problem, |ui| {
-        text_field(
-            ui,
-            TextEdit::singleline(text)
-                .password(true)
-                .desired_width(f32::INFINITY)
-                .align(egui::Align2::LEFT_CENTER),
-        )
-    })
+    let show = i18n::text(ui.ctx(), "password-show");
+    let hide = i18n::text(ui.ctx(), "password-hide");
+    let texts = SecretTexts {
+        name: label,
+        show: &show,
+        hide: &hide,
+    };
+
+    field_with(ui, (label, ""), problem, |ui| secret_field(ui, text, texts))
 }
 
 fn field_with(

@@ -229,7 +229,16 @@ impl PageService for Units {
         Self::handle(self, command, changes, snapshot)
     }
 
-    fn take(&mut self, _page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
+    fn dismiss_refusal(&mut self, page: PageId) -> bool {
+        dismissed(page, PageId::Services, || self.set_refused(false))
+    }
+
+    /// The Network page shows the system's services too.
+    fn take(&mut self, page: PageId, _snapshot: &Snapshot) -> Vec<AppCommand> {
+        if matches!(page, PageId::Services | PageId::Network) {
+            self.open();
+        }
+
         Self::take(self);
         Vec::new()
     }

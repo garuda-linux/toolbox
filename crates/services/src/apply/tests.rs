@@ -14,7 +14,10 @@ use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, encode};
 use toolbox_plan::{Plan, PlannedAction, RootAction, StepId, UserAction};
 use toolbox_system::pkexec::Refusal;
 
-use super::{ApplyCommand, Launcher, OutputGate, Problem, Report, Reporter, serve};
+use super::{ApplyCommand, Launcher, OutputGate, PlanId, Problem, Report, Reporter, serve};
+
+/// The id the tests send their plan with.
+const PLAN: PlanId = PlanId::new(1);
 
 struct FakeLauncher {
     script: String,
@@ -81,7 +84,7 @@ async fn run_after(
         sender.send(command).unwrap();
     }
 
-    sender.send(ApplyCommand::Run(plan)).unwrap();
+    sender.send(ApplyCommand::Run { id: PLAN, plan }).unwrap();
     drop(sender);
     tokio::time::timeout(
         Duration::from_secs(20),
@@ -99,7 +102,15 @@ async fn run(plan: Plan, launcher: impl Launcher + 'static) -> Vec<Report> {
 
 fn started() -> Report {
     Report::PlanStarted {
+        plan: PLAN,
         steps: vec![(StepId::new(1), vec!["pacman-key --refresh-keys".to_owned()])],
+    }
+}
+
+const fn finished(succeeded: bool) -> Report {
+    Report::PlanFinished {
+        plan: PLAN,
+        succeeded,
     }
 }
 
@@ -125,7 +136,7 @@ async fn a_root_segment_reports_the_helpers_events() {
 
     let mut expected = vec![started()];
     expected.extend(events.into_iter().map(Report::Step));
-    expected.push(Report::PlanFinished { succeeded: true });
+    expected.push(finished(true));
     assert_eq!(reports, expected);
 }
 
@@ -151,10 +162,7 @@ async fn a_failed_root_step_fails_the_plan() {
 
     let reports = run(root_plan(), launcher).await;
 
-    assert_eq!(
-        reports.last(),
-        Some(&Report::PlanFinished { succeeded: false })
-    );
+    assert_eq!(reports.last(), Some(&finished(false)));
 }
 
 #[tokio::test]
@@ -208,7 +216,7 @@ async fn pkexec_refusals_are_told_apart_by_exit_code_and_words() {
             [
                 started(),
                 Report::Problem(Problem::Refused(refusal)),
-                Report::PlanFinished { succeeded: false },
+                finished(false),
             ]
         );
     }
@@ -231,7 +239,7 @@ async fn a_pkexec_that_cannot_run_says_why_and_is_no_denial() {
                 kind: HelperFailure::Pkexec,
                 detail: "pkexec must be setuid root".to_owned(),
             }),
-            Report::PlanFinished { succeeded: false },
+            finished(false),
         ]
     );
 }
@@ -253,10 +261,7 @@ async fn user_steps_run_in_the_app_and_skip_in_a_dry_run() {
         })),
         "{reports:?}"
     );
-    assert_eq!(
-        reports.last(),
-        Some(&Report::PlanFinished { succeeded: true })
-    );
+    assert_eq!(reports.last(), Some(&finished(true)));
 }
 
 #[tokio::test]
@@ -294,8 +299,5 @@ async fn a_helper_that_does_not_start_is_reported_with_the_systems_words() {
         )),
         "{reports:?}"
     );
-    assert_eq!(
-        reports.last(),
-        Some(&Report::PlanFinished { succeeded: false })
-    );
+    assert_eq!(reports.last(), Some(&finished(false)));
 }

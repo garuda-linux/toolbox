@@ -10,7 +10,7 @@ use toolbox_plan::{PackageName, Plan, StepId, TargetList};
 use toolbox_services::share::Upload;
 use toolbox_terminal::{Terminal, TerminalSize};
 
-use crate::apply::{Problem, Report};
+use crate::apply::{PlanId, Problem, Report};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Status {
@@ -51,6 +51,8 @@ pub struct Console {
     mirror: MirrorWatch,
     /// Plans started so far, so each one's end shows once as new.
     runs: u64,
+    /// The id of the last plan sent, so the next one gets a new one.
+    sent: PlanId,
     /// What a shared output must not name.
     known: Known,
 }
@@ -69,6 +71,7 @@ impl Console {
             refused: false,
             cancel_waits: false,
             runs: 0,
+            sent: PlanId::default(),
             output: false,
             share: Upload::default(),
             mirror: MirrorWatch::default(),
@@ -90,7 +93,7 @@ impl Console {
 
     pub fn take(&mut self, report: Report) {
         match report {
-            Report::PlanStarted { steps } => {
+            Report::PlanStarted { plan, steps } => {
                 self.steps = steps
                     .into_iter()
                     .map(|(id, lines)| StepRow {
@@ -105,7 +108,7 @@ impl Console {
                 self.rejected = None;
                 self.refused = false;
                 self.cancel_waits = false;
-                self.mirror.started();
+                self.mirror.started(plan);
             }
             Report::Step(event) => {
                 self.cancel_waits = false;
@@ -115,7 +118,7 @@ impl Console {
                 self.cancel_waits = false;
                 self.problem = Some(problem);
             }
-            Report::PlanFinished { succeeded } => {
+            Report::PlanFinished { plan: _, succeeded } => {
                 self.refused = false;
                 self.status = if succeeded {
                     Status::Succeeded
@@ -124,9 +127,9 @@ impl Console {
                 };
             }
             // A notice beside the run: the running plan keeps its status.
-            Report::Busy => {
+            Report::Busy { plan } => {
                 self.refused = true;
-                self.mirror.refused();
+                self.mirror.refused(plan);
             }
             Report::CancelWaits => self.cancel_waits = true,
         }
@@ -178,10 +181,18 @@ impl Console {
         }
     }
 
-    /// `plan` goes to the apply service, so its install steps are known
-    /// once it starts.
-    pub fn plan_sent(&mut self, plan: &Plan) {
-        self.mirror.sent(plan);
+    /// `plan` goes to the apply service under the returned id, so its
+    /// install steps are known once it starts.
+    pub fn plan_sent(&mut self, plan: &Plan) -> PlanId {
+        self.sent = self.sent.next();
+        self.mirror.sent(self.sent, plan);
+        self.sent
+    }
+
+    /// A plan of a page was not sent because another one runs. The
+    /// Console tells it as it tells the service's refusal.
+    pub const fn refuse(&mut self) {
+        self.refused = true;
     }
 
     /// The packages of a failed install whose mirror lacked a file, for

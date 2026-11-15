@@ -1,17 +1,18 @@
+use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use egui::Ui;
+use egui::{Ui, vec2};
 use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Rows, Tone, banner, counted_chips, dimmed,
-    empty_state, loading_indicator, page_toolbar, pill_button,
+    ButtonKind, ListItem, RowHeights, RowList, Rows, Tone, banner, chip, dimmed, empty_state,
+    loading_indicator, page_toolbar, pill_button,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
 
 use super::row::{self, PackageRow, Row};
-use super::{PackagesPage, aur, pending_updates, shows_aur};
+use super::{PackagesPage, Updates, aur, shows_aur};
 use crate::command::{AppCommand, PackagesCommand};
 use crate::i18n;
 use crate::packages::{Packages, Read};
@@ -24,6 +25,15 @@ use crate::refused::Shown as _;
 struct AurChip {
     /// `None` until the AUR's copy is read.
     count: Option<usize>,
+}
+
+/// What the chips count. A count that is not known shows none.
+struct ChipCounts {
+    /// `None` without pacman's databases.
+    repository: Option<Counts>,
+    updates_known: bool,
+    /// `None` while the AUR is off.
+    aur: Option<AurChip>,
 }
 
 /// The rows of `places` in `entries`, each built only when the list draws
@@ -89,32 +99,26 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         page.filter = Filter::Installed;
     }
 
-    // The AUR needs none of pacman's databases, so its chip stays under
-    // the notice when they cannot be read.
-    let (catalog, unread) = match context.service::<Packages>().index() {
-        Read::Known(catalog) => (Arc::clone(catalog), false),
-        Read::Loading => {
-            ui.vertical_centered(|ui| {
-                loading_indicator(ui, &i18n::text(ui.ctx(), "packages-loading"));
-            });
-            return;
-        }
-        Read::Unavailable | Read::Failed if !aur_on => {
-            unreadable_index(ui, context);
-            return;
-        }
-        Read::Unavailable | Read::Failed => {
-            unreadable_index(ui, context);
-            ui.add_space(ui.tokens().sizes.header_gap);
-            (Arc::new(Catalog::default()), true)
-        }
+    let Some((catalog, unread)) = read_catalog(ui, context, aur_on) else {
+        return;
     };
 
+    // Only the AUR's chip has rows without pacman's databases.
+    if unread {
+        page.filter = Filter::Aur;
+    }
+
+    let updates = Updates::of(context);
     let status = context.home.status_revision;
     let key = (page.filter, Same::of(&catalog), status);
     let view = page.view.get(&[&page.search], key, || {
         let _build = tracing::trace_span!("filter packages").entered();
-        catalog.view(page.filter, &page.search, &pending_updates(context))
+        let pending = match &updates {
+            Updates::Known(pending) => pending.clone(),
+            Updates::Unread | Updates::Failed => BTreeSet::new(),
+        };
+
+        catalog.view(page.filter, &page.search, &pending)
     });
 
     let aur_rows = aur_on.then(|| aur::rows_of(page, context)).flatten();
@@ -122,7 +126,13 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         count: aur_rows.as_ref().map(|rows| rows.len()),
     });
 
-    filters(page, ui, view.counts, aur_chip);
+    let counts = ChipCounts {
+        repository: (!unread).then_some(view.counts),
+        updates_known: updates.is_known(),
+        aur: aur_chip,
+    };
+
+    filters(page, ui, counts);
     match (aur_on, page.filter) {
         (false, _) => aur::off_hint(ui, context),
         (true, Filter::Aur) => aur::note(ui, context),
@@ -142,7 +152,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         return;
     }
 
-    if unread {
+    if page.filter == Filter::Updates && !updates_read(ui, context, &updates) {
         return;
     }
 
@@ -152,6 +162,35 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
     }
 
     rows(page, ui, context, &catalog, &view.rows);
+}
+
+/// The repositories' catalog and whether it could not be read, `None` when
+/// the page shows nothing else.
+fn read_catalog(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    aur_on: bool,
+) -> Option<(Arc<Catalog>, bool)> {
+    // The AUR needs none of pacman's databases, so its chip stays under
+    // the notice when they cannot be read.
+    match context.service::<Packages>().index() {
+        Read::Known(catalog) => Some((Arc::clone(catalog), false)),
+        Read::Loading => {
+            ui.vertical_centered(|ui| {
+                loading_indicator(ui, &i18n::text(ui.ctx(), "packages-loading"));
+            });
+            None
+        }
+        Read::Unavailable | Read::Failed if !aur_on => {
+            unreadable_index(ui, context);
+            None
+        }
+        Read::Unavailable | Read::Failed => {
+            unreadable_index(ui, context);
+            ui.add_space(ui.tokens().sizes.header_gap);
+            Some((Arc::new(Catalog::default()), true))
+        }
+    }
 }
 
 fn rows(
@@ -215,49 +254,74 @@ where
     opened
 }
 
-fn filters(page: &mut PackagesPage, ui: &mut Ui, counts: Counts, aur: Option<AurChip>) {
+/// Draws the loading line or the failure banner of the Updates chip.
+/// Returns whether the updates are known, so the rows may show.
+fn updates_read(ui: &mut Ui, context: &PageContext<'_>, updates: &Updates) -> bool {
+    match updates {
+        Updates::Known(_) => true,
+        Updates::Unread => {
+            ui.vertical_centered(|ui| {
+                loading_indicator(ui, &i18n::text(ui.ctx(), "packages-updates-loading"));
+            });
+            false
+        }
+        Updates::Failed => {
+            unreadable(ui, context, "packages-updates-failed");
+            false
+        }
+    }
+}
+
+/// The repository chips go off without pacman's databases, as their
+/// counts would only be zeros. The AUR's chip needs none of them.
+fn filters(page: &mut PackagesPage, ui: &mut Ui, counts: ChipCounts) {
     let ctx = ui.ctx().clone();
+    let repository = counts.repository;
+    let count = |pick: fn(Counts) -> usize| repository.map(pick);
     let mut chips = vec![
         (
             Filter::Installed,
             "packages-filter-installed",
-            Some(counts.installed),
+            count(|known| known.installed),
         ),
         (
             Filter::Updates,
             "packages-filter-updates",
-            Some(counts.updates),
+            count(|known| known.updates).filter(|_| counts.updates_known),
         ),
         (
             Filter::Orphans,
             "packages-filter-orphans",
-            Some(counts.orphans),
+            count(|known| known.orphans),
         ),
-        (Filter::All, "packages-filter-all", Some(counts.all)),
+        (Filter::All, "packages-filter-all", count(|known| known.all)),
     ];
 
-    if let Some(chip) = aur {
-        chips.push((Filter::Aur, "packages-filter-aur", chip.count));
+    if let Some(aur_chip) = counts.aur {
+        chips.push((Filter::Aur, "packages-filter-aur", aur_chip.count));
     }
 
-    let texts: Vec<(Filter, String, Option<String>)> = chips
-        .iter()
-        .map(|(filter, id, count)| {
-            (
-                *filter,
-                i18n::text(&ctx, id).into_owned(),
-                count.map(|count| count.to_string()),
-            )
-        })
-        .collect();
+    let gap = ui.tokens().sizes.control_gap;
+    let mut picked = None;
+    ui.horizontal_wrapped(|ui| {
+        ui.spacing_mut().item_spacing = vec2(gap, gap);
+        for (filter, id, shown) in chips {
+            let title = i18n::text(&ctx, id);
+            let number = shown.map(|number| number.to_string());
+            let enabled = repository.is_some() || filter == Filter::Aur;
+            let selected = filter == page.filter;
+            let response = ui.add_enabled(enabled, |ui: &mut Ui| {
+                chip(ui, &title, number.as_deref(), selected)
+            });
 
-    let options: Vec<(Filter, &str, Option<&str>)> = texts
-        .iter()
-        .map(|(filter, title, count)| (*filter, title.as_str(), count.as_deref()))
-        .collect();
+            if response.clicked() {
+                picked = Some(filter);
+            }
+        }
+    });
 
-    if let Some(picked) = counted_chips(ui, &options, page.filter) {
-        page.filter = picked;
+    if let Some(filter) = picked {
+        page.filter = filter;
     }
 }
 

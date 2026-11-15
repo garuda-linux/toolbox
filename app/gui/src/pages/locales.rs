@@ -20,14 +20,13 @@ use toolbox_plan::LocaleName;
 
 use super::header::{TabText, TabbedIds, search, tabbed_header};
 use super::rows::{refused_banner, sort_select};
-use super::setting_row::{Words, row};
+use super::setting_row::{Words, row, wide_control};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, LocaleCommand};
 use crate::i18n;
 use crate::locales::Locales;
 use crate::page::PageId;
 
-const WIDE_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_wide;
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 enum Tab {
     #[default]
@@ -317,9 +316,10 @@ fn system_language(ui: &mut Ui, context: &PageContext<'_>) {
 
 /// How wide the system language's dropdown is: as wide as its longest
 /// name, so the locale code at its end shows whole, from the settings'
-/// wide control up to the widest an open list grows.
+/// wide control up to the widest an open list grows. The whole code
+/// outweighs the 40 % cap of the other wide controls here.
 fn system_width<'a>(ui: &Ui, shown: impl Iterator<Item = &'a str>) -> f32 {
-    Select::fitting_width(ui, shown).max(WIDE_CONTROL)
+    Select::fitting_width(ui, shown).max(wide_control(ui))
 }
 
 fn choice(ctx: &egui::Context, code: &str, language: &str, territory: &str) -> String {

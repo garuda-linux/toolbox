@@ -138,6 +138,7 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
 
             i18n::text_with(&ctx, id, &[("reason", problem.reason())])
         }
+        MaintenanceProblem::Busy => i18n::text(&ctx, "maintenance-problem-busy"),
     };
 
     if refusal_banner(ui, Tone::Error, &text, "maintenance-problem-dismiss") {

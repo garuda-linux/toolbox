@@ -20,7 +20,7 @@ use toolbox_plan::RootLayout;
 
 use self::dialog::Dialog;
 use super::header::refresh_header;
-use super::{PageContext, PageView};
+use super::{PageContext, PageView, QueueShown};
 use crate::bootrepair::BootRepair;
 use crate::command::{AppCommand, BootRepairCommand};
 use crate::i18n;
@@ -109,6 +109,12 @@ impl PageView for BootRepairPage {
             dialog.forget(&ctx);
             self.dialog = None;
         }
+    }
+
+    /// Each repair runs at once after its question, so the queue would be a
+    /// second way to act here.
+    fn queue_shown(&self) -> QueueShown {
+        QueueShown::Never
     }
 }
 

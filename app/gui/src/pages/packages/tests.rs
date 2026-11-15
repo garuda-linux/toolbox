@@ -1,4 +1,5 @@
 mod gaps;
+mod unread;
 mod view;
 
 use std::collections::BTreeSet;

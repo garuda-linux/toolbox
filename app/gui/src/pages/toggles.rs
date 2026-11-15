@@ -1,3 +1,5 @@
+pub mod control;
+mod empty;
 mod entry;
 mod lead;
 mod listed;
@@ -13,12 +15,11 @@ use toolbox_catalog::LoadProblem;
 use toolbox_core::Snapshot;
 use toolbox_core::features::toggles::Refusal;
 use toolbox_core::features::toggles::shown::{self as view, Section, Tally};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state,
-    page_toolbar, pill_button, section_heading,
+    RowHeights, RowList, Tone, banner, counted_chips, dimmed, page_toolbar, section_heading,
 };
-use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::header::{search, title_header};
 use super::rows::{Look, refusal_banner};
@@ -110,7 +111,13 @@ impl TogglePage {
         }
 
         if !any {
-            self.nothing_matches(ui);
+            let hidden = empty::elsewhere(self.section.as_deref(), &leads, &listed.chips);
+            let search = self.search.trim().to_owned();
+            match empty::show(ui, &search, hidden.as_ref()) {
+                Some(empty::Clear::Section) => self.section = None,
+                Some(empty::Clear::Search) => self.search.clear(),
+                None => {}
+            }
         }
     }
 
@@ -206,7 +213,8 @@ impl TogglePage {
             .chain(sections.iter().map(|chip| chip.tally))
             .sum();
 
-        let all_count = tally_text(&ctx, tally);
+        let read = sections.iter().all(|chip| chip.read);
+        let all_count = count_text(&ctx, tally, read);
         let leads = leads
             .iter()
             .map(|lead| (Some(lead.id), &*lead.title, Some(lead.count.as_str())));
@@ -277,35 +285,6 @@ impl TogglePage {
 
         true
     }
-
-    fn nothing_matches(&mut self, ui: &mut Ui) {
-        let search = self.search.trim().to_owned();
-        if search.is_empty() {
-            return;
-        }
-
-        let ctx = ui.ctx().clone();
-        let detail = i18n::text_with(
-            &ctx,
-            "toggles-nothing-matches-detail",
-            &[("search", &search)],
-        );
-
-        empty_state(
-            ui,
-            icons::SYSTEM_SEARCH,
-            &i18n::text(&ctx, "toggles-nothing-matches"),
-            &detail,
-        );
-
-        ui.add_space(ui.tokens().sizes.card_gap);
-        ui.vertical_centered(|ui| {
-            let clear = i18n::text(&ctx, "toggles-clear-search");
-            if pill_button(ui, &clear, ButtonKind::Soft).clicked() {
-                self.search.clear();
-            }
-        });
-    }
 }
 
 /// A catalog text in the user's language, else the catalog's English.
@@ -331,6 +310,17 @@ pub fn tally_text(ctx: &egui::Context, tally: Tally) -> String {
         &[("on", &on), ("total", &total)],
     )
     .into_owned()
+}
+
+/// [`tally_text`], or "?/total" while a state it counts is unread, since
+/// how many are on is not known then.
+pub fn count_text(ctx: &egui::Context, tally: Tally, read: bool) -> String {
+    if read {
+        return tally_text(ctx, tally);
+    }
+
+    let total = tally.total.to_string();
+    i18n::text_with(ctx, "toggles-section-count-unread", &[("total", &total)]).into_owned()
 }
 
 /// `None` for a stale id or an unmet entry, whose switch already rests.

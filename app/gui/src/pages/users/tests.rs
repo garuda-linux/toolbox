@@ -1,4 +1,6 @@
+mod add_user;
 mod dialogs;
+mod edit;
 mod rows;
 
 use std::collections::BTreeMap;

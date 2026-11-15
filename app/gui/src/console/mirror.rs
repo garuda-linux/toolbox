@@ -10,13 +10,17 @@ use std::collections::BTreeMap;
 use toolbox_core::features::packages::mirror::mirror_missing;
 use toolbox_plan::{PackageName, Plan, PlannedAction, RootAction, StepId, TargetList};
 
+use crate::apply::PlanId;
+
 /// pacman names the missing file near its end, so an install step keeps
 /// only this much of its newest output.
 const KEPT_OUTPUT: usize = 64 * 1024;
 
 #[derive(Debug, Default)]
 pub struct MirrorWatch {
-    sent: Option<BTreeMap<StepId, TargetList<PackageName>>>,
+    /// The install steps of each plan sent that has not started, as two
+    /// may be on their way at once.
+    sent: BTreeMap<PlanId, BTreeMap<StepId, TargetList<PackageName>>>,
     installs: BTreeMap<StepId, Install>,
     offer: Option<TargetList<PackageName>>,
 }
@@ -28,24 +32,25 @@ struct Install {
 }
 
 impl MirrorWatch {
-    pub fn sent(&mut self, plan: &Plan) {
-        self.sent = Some(
-            plan.steps()
-                .iter()
-                .filter_map(|step| match &step.action {
-                    PlannedAction::Root(RootAction::InstallPackages { packages }) => {
-                        Some((step.id, packages.clone()))
-                    }
-                    PlannedAction::Root(_) | PlannedAction::User(_) => None,
-                })
-                .collect(),
-        );
+    pub fn sent(&mut self, id: PlanId, plan: &Plan) {
+        let installs = plan
+            .steps()
+            .iter()
+            .filter_map(|step| match &step.action {
+                PlannedAction::Root(RootAction::InstallPackages { packages }) => {
+                    Some((step.id, packages.clone()))
+                }
+                PlannedAction::Root(_) | PlannedAction::User(_) => None,
+            })
+            .collect();
+
+        self.sent.insert(id, installs);
     }
 
-    pub fn started(&mut self) {
+    pub fn started(&mut self, id: PlanId) {
         self.installs = self
             .sent
-            .take()
+            .remove(&id)
             .unwrap_or_default()
             .into_iter()
             .map(|(id, packages)| {
@@ -60,8 +65,8 @@ impl MirrorWatch {
         self.offer = None;
     }
 
-    pub fn refused(&mut self) {
-        self.sent = None;
+    pub fn refused(&mut self, id: PlanId) {
+        self.sent.remove(&id);
     }
 
     pub fn output(&mut self, step: StepId, data: &str) {

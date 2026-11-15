@@ -2,7 +2,7 @@ use egui::{Color32, Response, Role, Sense, Ui, UiBuilder, WidgetInfo, vec2};
 
 use super::press::Pointer;
 use super::{focus_ring, line};
-use crate::fonts::{SMALL, Weight};
+use crate::fonts::{CAPTION, SMALL, Weight};
 use crate::tokens::{self, Tokens};
 
 const CHIP_HEIGHT: f32 = 32.0;
@@ -12,7 +12,7 @@ const CHIP_GAP: f32 = 7.0;
 const TAG_HEIGHT: f32 = 22.0;
 const TAG_RADIUS: u8 = 11;
 const TAG_PADDING_X: f32 = 10.0;
-pub(super) const TAG_SCALE: f32 = SMALL * 0.92;
+pub(super) const TAG_SCALE: f32 = CAPTION;
 const DOT: f32 = 7.0;
 const DOT_GAP: f32 = 7.0;
 

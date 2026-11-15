@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::kernels::parse_status;
 use toolbox_gui_kit::testing::fill_under;
 use toolbox_services::dkms::Dkms;
@@ -11,7 +11,17 @@ use super::fixtures::{dkms, system};
 use crate::command::{Command, KernelEdit};
 use crate::kernels::{DkmsReading, Kernels};
 use crate::page_service::Services;
-use crate::testing::{PageFixture, assert_rows_wait_while_busy};
+use crate::testing::{PLAN_RUNNING, PageFixture};
+
+fn with_dkms(reading: DkmsReading) -> PageFixture {
+    PageFixture {
+        services: Services {
+            kernels: Kernels::with_dkms(reading),
+            ..Services::default()
+        },
+        ..PageFixture::with_snapshot(system())
+    }
+}
 
 #[test]
 fn before_the_first_read_placeholder_rows_wait() {
@@ -33,13 +43,7 @@ fn before_the_first_read_placeholder_rows_wait() {
 
 #[test]
 fn without_dkms_the_page_says_there_is_nothing_to_build() {
-    let fixture = PageFixture {
-        services: Services {
-            kernels: Kernels::with_dkms(DkmsReading::Loaded(Arc::new(Dkms::NotInstalled))),
-            ..Services::default()
-        },
-        ..PageFixture::with_snapshot(system())
-    };
+    let fixture = with_dkms(DkmsReading::Loaded(Arc::new(Dkms::NotInstalled)));
 
     let mut harness = fixture.harness(KernelsPage);
 
@@ -67,11 +71,27 @@ fn while_dkms_is_asked_an_indicator_says_so() {
 
 #[test]
 fn while_a_plan_runs_the_kernels_wait_and_a_banner_says_why() {
-    assert_rows_wait_while_busy(|| PageFixture::with_snapshot(system()), || KernelsPage);
+    for busy in [true, false] {
+        let fixture = PageFixture {
+            busy,
+            ..PageFixture::with_snapshot(system())
+        };
+
+        let mut harness = fixture.harness(KernelsPage);
+        harness.run();
+
+        let install = harness.get_by_role_and_label(Role::Button, "Install linux-zen");
+        assert_eq!(install.accesskit_node().is_disabled(), busy, "busy: {busy}");
+        assert_eq!(
+            harness.query_by_label(PLAN_RUNNING).is_some(),
+            busy,
+            "the banner"
+        );
+    }
 }
 
 #[test]
-fn space_on_a_focused_kernel_flips_its_switch() {
+fn space_on_a_focused_kernel_asks_for_its_change() {
     let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
     harness.run();
     harness
@@ -92,7 +112,7 @@ fn space_on_a_focused_kernel_flips_its_switch() {
 }
 
 #[test]
-fn set_as_default_sits_at_the_right_beside_the_switch() {
+fn set_as_default_sits_at_the_right_beside_the_button() {
     let fixture = PageFixture::with_snapshot(system());
     let mut harness = fixture.harness(KernelsPage);
     harness.run();
@@ -101,52 +121,72 @@ fn set_as_default_sits_at_the_right_beside_the_switch() {
         .get_by_label("Set linux-lts as the default boot entry")
         .rect();
 
-    let switch = harness
-        .get_by_role_and_label(Role::CheckBox, "linux-lts")
+    let remove = harness
+        .get_by_role_and_label(Role::Button, "Remove linux-lts")
         .rect();
 
     assert!(
-        default.right() <= switch.left() && switch.left() - default.right() < 24.0,
-        "the button ends at {} and the switch starts at {}",
+        default.right() <= remove.left() && remove.left() - default.right() < 24.0,
+        "the default button ends at {} and Remove starts at {}",
         default.right(),
-        switch.left(),
+        remove.left(),
     );
     assert!(
-        default.top() < switch.bottom() && default.bottom() > switch.top(),
-        "the button is not on the switch's line",
+        default.top() < remove.bottom() && default.bottom() > remove.top(),
+        "the default button is not on Remove's line",
     );
 }
 
 #[test]
-fn the_switches_line_up_whatever_sits_beside_them() {
+fn the_buttons_line_up_whatever_sits_beside_them() {
     let fixture = PageFixture::with_snapshot(system());
     let mut harness = fixture.harness(KernelsPage);
     harness.run();
 
-    let right = |name: &str| {
-        harness
-            .get_by_role_and_label(Role::CheckBox, name)
-            .rect()
-            .right()
-    };
+    let rect = |name: &str| harness.get_by_role_and_label(Role::Button, name).rect();
+    let lts = rect("Remove linux-lts");
+    let zen = rect("Install linux-zen");
 
     assert!(
-        (right("linux-lts") - right("linux-zen")).abs() < 1.0,
+        (lts.right() - zen.right()).abs() < 1.0,
         "linux-lts ends at {} and linux-zen at {}",
-        right("linux-lts"),
-        right("linux-zen"),
+        lts.right(),
+        zen.right(),
+    );
+    assert!(
+        (lts.width() - zen.width()).abs() < 1.0,
+        "Remove is {} wide and Install {}",
+        lts.width(),
+        zen.width(),
     );
 }
 
 #[test]
+fn the_running_kernel_has_a_resting_remove_button_and_no_row_a_switch() {
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    harness.run();
+
+    let remove = harness.get_by_role_and_label(Role::Button, "Remove linux");
+    assert!(remove.accesskit_node().is_disabled());
+    assert!(harness.query_by_role(Role::CheckBox).is_none());
+}
+
+#[test]
+fn a_click_on_the_row_beside_its_button_asks_for_nothing() {
+    let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage);
+    harness.run();
+
+    harness
+        .get_by_role_and_label(Role::Label, "linux-lts")
+        .click();
+    harness.run();
+
+    assert_eq!(harness.state().fixture.sent(), []);
+}
+
+#[test]
 fn the_first_banner_follows_the_header_without_an_extra_gap() {
-    let fixture = PageFixture {
-        services: Services {
-            kernels: Kernels::with_dkms(dkms()),
-            ..Services::default()
-        },
-        ..PageFixture::with_snapshot(system())
-    };
+    let fixture = with_dkms(dkms());
 
     let mut harness = fixture.harness(KernelsPage);
     harness.run();
@@ -191,15 +231,9 @@ fn installed_headers_take_no_line_and_missing_ones_do() {
 fn built_modules_fold_away_and_a_click_opens_them() {
     // The fixture's dkms status without vboxhost, so nothing is left to build.
     let status = "nvidia/550.90.07, 6.14.0-arch3-1, x86_64: installed\n";
-    let fixture = PageFixture {
-        services: Services {
-            kernels: Kernels::with_dkms(DkmsReading::Loaded(Arc::new(Dkms::Modules(
-                parse_status(status),
-            )))),
-            ..Services::default()
-        },
-        ..PageFixture::with_snapshot(system())
-    };
+    let fixture = with_dkms(DkmsReading::Loaded(Arc::new(Dkms::Modules(parse_status(
+        status,
+    )))));
 
     let mut harness = fixture.harness(KernelsPage);
     harness.run();
@@ -223,13 +257,7 @@ fn built_modules_fold_away_and_a_click_opens_them() {
 
 #[test]
 fn a_kernel_with_a_build_to_do_shows_its_modules() {
-    let fixture = PageFixture {
-        services: Services {
-            kernels: Kernels::with_dkms(dkms()),
-            ..Services::default()
-        },
-        ..PageFixture::with_snapshot(system())
-    };
+    let fixture = with_dkms(dkms());
 
     let mut harness = fixture.harness(KernelsPage);
     harness.run();

@@ -16,7 +16,7 @@ use toolbox_gui::catalogs::Catalogs;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 
-use crate::common::{HEIGHT, checkbox, packages, type_into, wheel, window};
+use crate::common::{HEIGHT, packages, type_into, wheel, window};
 use crate::discover::source_catalogs;
 use crate::system::first_read;
 
@@ -35,6 +35,14 @@ check = { group = "nico" }
 
 fn installed(names: &[&str]) -> InstalledPackages {
     InstalledPackages(packages(names))
+}
+
+/// A package row's button, named by what it does and the entry.
+fn button<'harness>(
+    harness: &'harness Harness<'static, App>,
+    name: &'harness str,
+) -> egui_kittest::Node<'harness> {
+    harness.get_by_role_and_label(Role::Button, name)
 }
 
 /// The app on the Components page with `catalogs`, after the first read
@@ -70,10 +78,12 @@ pub fn components(system: Snapshot) -> (Harness<'static, App>, Runtime) {
     app(source_catalogs(), system, false)
 }
 
+/// A system read in full with PipeWire installed, so no section counts
+/// "?".
 pub fn with_pipewire() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(installed(&["pipewire-support"]));
-    snapshot
+    crate::snapshots::read_in_full(snapshot)
 }
 
 #[test]
@@ -81,12 +91,12 @@ fn sections_show_and_a_click_queues_and_takes_back() {
     let (mut harness, _runtime) = components(with_pipewire());
     assert!(harness.query_by_label("1/8").is_some());
 
-    checkbox(&harness, "PulseAudio").click();
+    button(&harness, "Install PulseAudio").click();
     harness.run();
     assert!(harness.query_by_label("change queued").is_some());
-    assert!(harness.query_by_label("Turns on with Apply").is_some());
+    assert!(harness.query_by_label("Installs with Apply").is_some());
 
-    checkbox(&harness, "PulseAudio").click();
+    button(&harness, "Take back PulseAudio").click();
     harness.run();
     assert!(harness.query_by_label("change queued").is_none());
 }
@@ -101,7 +111,7 @@ fn an_entry_waits_for_what_it_needs() {
     type_into(&mut harness, "Search this page", "jamesdsp");
 
     assert!(
-        checkbox(&harness, "JamesDSP")
+        button(&harness, "Install JamesDSP")
             .accesskit_node()
             .is_disabled()
     );
@@ -121,12 +131,12 @@ fn the_search_keeps_matching_entries_and_says_when_none_match() {
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::CheckBox, "JamesDSP")
+            .query_by_role_and_label(Role::Button, "Install JamesDSP")
             .is_some()
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::CheckBox, "PulseAudio")
+            .query_by_role_and_label(Role::Button, "Install PulseAudio")
             .is_none()
     );
 
@@ -142,7 +152,7 @@ fn the_search_keeps_matching_entries_and_says_when_none_match() {
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::CheckBox, "PulseAudio")
+            .query_by_role_and_label(Role::Button, "Install PulseAudio")
             .is_some()
     );
 }
@@ -168,7 +178,7 @@ fn entries_without_a_read_state_are_told_once() {
             .is_some()
     );
 
-    let pulse = harness.get_by_role_and_label(Role::CheckBox, "PulseAudio");
+    let pulse = harness.get_by_role_and_label(Role::Button, "Install PulseAudio");
     assert_eq!(
         pulse.accesskit_node().description().as_deref(),
         Some("State not known."),
@@ -200,7 +210,7 @@ fn a_refused_click_says_why_until_dismissed() {
     system.insert(CurrentUser(user));
     let (mut harness, _runtime) = app(Catalogs::load(folder.path()), system, false);
 
-    checkbox(&harness, "Own group").click();
+    button(&harness, "Disable Own group").click();
     harness.run();
     assert!(
         harness
@@ -238,12 +248,12 @@ fn the_page_header_stays_while_the_page_scrolls() {
     };
 
     let before = search(&harness);
-    let row = checkbox(&harness, "PulseAudio").rect();
+    let row = button(&harness, "Install PulseAudio").rect();
 
     wheel(&harness, row.center(), egui::vec2(0.0, -300.0));
     harness.run();
 
-    let after = checkbox(&harness, "PulseAudio").rect();
+    let after = button(&harness, "Install PulseAudio").rect();
     assert!(after.top() < row.top() - 100.0, "the page scrolled");
     assert_eq!(search(&harness), before);
 }

@@ -4,8 +4,11 @@ services-user = User
 services-scope = Services to show
 services-search = Search services
 services-search-hint = Search services…
-services-hide-disabled = Hide disabled
-services-hide-inactive = Hide inactive
+# Chips: one is picked, each shows what it names.
+services-show-running = Running
+services-show-enabled = Enabled
+services-show-failed = Failed
+services-show-all = All
 services-refresh = Read again
 services-sort = Sort services
 services-sort-name = Name
@@ -17,6 +20,15 @@ services-denied = You are not allowed to read the services.
 services-failed = The services could not be read.
 services-retry = Retry
 services-none-detail = Change the search or the filters to see more services.
+# A button under "No service matches." that picks the All chip. $count is how many units the search finds there.
+services-show-every =
+    { $count ->
+        [one] Show the one match
+       *[other] Show all { $count } matches
+    }
+# A start, stop or journal did not run, as other changes are being applied.
+services-busy = Other changes are still being applied, so this did not run. Try again once they are done.
+services-dismiss = Dismiss
 # Why an action of a unit's menu cannot be picked, shown on hover.
 services-why-busy = Waits until the changes being applied are done.
 services-why-masked = A masked unit cannot start. Unmask it first.

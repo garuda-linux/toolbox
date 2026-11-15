@@ -8,6 +8,17 @@ use std::time::{Duration, Instant};
 pub const PATIENCE: Duration = Duration::from_secs(20);
 const POLL_GAP: Duration = Duration::from_millis(5);
 
+/// Always answers the same instant, so a stamped time does not change
+/// from run to run.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct FixedClock(pub i64);
+
+impl toolbox_https::Clock for FixedClock {
+    fn now(&self) -> i64 {
+        self.0
+    }
+}
+
 /// Calls `step` until it gives a value, a few milliseconds apart. Panics
 /// with `what` once [`PATIENCE`] ran out, so a job that never ends says
 /// which one it was.

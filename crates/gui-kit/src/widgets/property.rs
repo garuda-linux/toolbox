@@ -4,7 +4,7 @@
 
 use std::sync::Arc;
 
-use egui::{Align, Galley, Label, Layout, Role, Sense, Ui, WidgetInfo, vec2};
+use egui::{Align, Galley, Id, Label, Layout, Pos2, Rect, Role, Sense, Ui, WidgetInfo, vec2};
 
 use super::buttons::{SMALL_BUTTON, paint_small_button};
 use super::{line, rich};
@@ -36,6 +36,12 @@ struct Property<'a> {
 enum Value<'a> {
     Text(&'a str),
     Widget(Box<dyn FnOnce(&mut Ui) + 'a>),
+}
+
+/// A row's laid out label and the width of the list's widest one.
+struct Column {
+    width: f32,
+    galley: Arc<Galley>,
 }
 
 impl<'a> PropertyList<'a> {
@@ -96,9 +102,34 @@ pub fn property_list<'a>(
         .fold(0.0_f32, f32::max);
 
     ui.spacing_mut().item_spacing.y = tokens.sizes.control_gap;
-    for row in list.rows {
-        show_row(ui, width, row, texts);
+    for (row, galley) in list.rows.into_iter().zip(labels) {
+        show_row(ui, Column { width, galley }, row, texts);
     }
+}
+
+fn show_value(ui: &mut Ui, value: Value<'_>, caption: Id) {
+    match value {
+        Value::Text(text) => {
+            // A label keeps its text as its value, so with the row's label
+            // as its name a screen reader says both.
+            let ink = tokens::current(ui.ctx()).text;
+            let shown = ui.add(Label::new(rich(ui, text, Weight::Regular, BODY, ink)).wrap());
+            shown.labelled_by(caption);
+        }
+        Value::Widget(show) => ui.label_inputs_by(caption, show),
+    }
+}
+
+/// The label goes in after its value, which it names and whose line it
+/// takes, so `caption` is the id the value was named by.
+fn paint_caption(ui: &mut Ui, caption: Id, label: &str, galley: Arc<Galley>, at: Pos2) {
+    let rect = Rect::from_min_size(at, galley.size());
+    let response = ui.interact(rect, caption, Sense::hover());
+    response.widget_info(|| WidgetInfo::labeled(Role::Label, ui.is_enabled(), label));
+    ui.expand_to_include_rect(rect);
+
+    let ink = tokens::current(ui.ctx()).secondary;
+    ui.painter().galley(rect.min, galley, ink);
 }
 
 /// The width a value gets. Only a copied value gives up the copy button's
@@ -113,47 +144,37 @@ fn value_room(ui: &Ui, copied: bool) -> f32 {
     (ui.available_width() - button).max(0.0)
 }
 
-fn show_row(ui: &mut Ui, label_width: f32, row: Property<'_>, texts: PropertyTexts<'_>) {
+fn show_row(ui: &mut Ui, column: Column, row: Property<'_>, texts: PropertyTexts<'_>) {
     let tokens = tokens::current(ui.ctx());
     let Property { label, copy, value } = row;
     let mut copy_button = None;
     let row_rect = ui
         .horizontal_top(|ui| {
             ui.spacing_mut().item_spacing.x = 0.0;
-            let caption = ui
-                .allocate_ui_with_layout(
-                    vec2(label_width, 0.0),
-                    Layout::top_down(Align::Min),
-                    |ui| {
-                        ui.set_width(label_width);
-                        ui.add(Label::new(rich(
-                            ui,
-                            label,
-                            Weight::Medium,
-                            BODY,
-                            tokens.secondary,
-                        )))
-                    },
-                )
-                .inner;
+            let at = ui.cursor().min;
+            let caption = ui.scope_id().with(("property-label", label));
+            let widget = matches!(value, Value::Widget(_));
+            ui.add_space(column.width + tokens.sizes.text_to_control);
 
-            ui.add_space(tokens.sizes.text_to_control);
             let room = value_room(ui, copy.is_some());
-            ui.allocate_ui_with_layout(vec2(room, 0.0), Layout::top_down(Align::Min), |ui| {
-                ui.set_width(room);
-                match value {
-                    Value::Text(text) => {
-                        // A label keeps its text as its value, so with the row's label as
-                        // its name a screen reader says both.
-                        let shown = ui.add(
-                            Label::new(rich(ui, text, Weight::Regular, BODY, tokens.text)).wrap(),
-                        );
+            let shown = ui
+                .allocate_ui_with_layout(vec2(room, 0.0), Layout::top_down(Align::Min), |ui| {
+                    ui.set_width(room);
+                    show_value(ui, value, caption);
+                })
+                .response
+                .rect;
 
-                        shown.labelled_by(caption.id);
-                    }
-                    Value::Widget(show) => ui.label_inputs_by(caption.id, show),
-                }
-            });
+            // A control is taller than the label's text, so the label
+            // centres on the control's line. Text starts on the label's.
+            let first = shown.height().min(ui.spacing().interact_size.y);
+            let drop = if widget {
+                ((first - column.galley.size().y) / 2.0).max(0.0)
+            } else {
+                0.0
+            };
+
+            paint_caption(ui, caption, label, column.galley, at + vec2(0.0, drop));
 
             if let Some(text) = copy {
                 ui.add_space(tokens.sizes.text_to_control);

@@ -104,25 +104,30 @@ home-summary-updated =
        *[other] · letztes Update vor { $days } Tagen
     }
 
-# $kernel is as uname prints it, $free a size such as "38.2 GiB".
-home-fact-packages =
+# The stat tiles under the greeting: a name, then its figure.
+home-stat-updates = Updates
+home-stat-updates-none = Aktuell
+home-stat-updates-count =
     { $count ->
-        [one] Ein Paket
-       *[other] { $count } Pakete
+        [one] Eines verfügbar
+       *[other] { $count } verfügbar
     }
-home-fact-packages-foreign = { $count } Pakete · { $foreign } aus dem AUR
-home-fact-kernel-days =
-    { $amount ->
-        [one] { $kernel } · läuft seit einem Tag
-       *[other] { $kernel } · läuft seit { $amount } Tagen
+home-stat-disk = Speicher
+# $free is a size such as "38.2 GiB".
+home-stat-disk-free = { $free } frei
+home-stat-health = Zustand
+home-stat-health-fine = Keine Probleme
+home-stat-health-warnings = Warnungen
+home-stat-health-errors = Probleme gefunden
+home-stat-last-update = Letztes Update
+home-stat-last-update-today = Heute
+home-stat-last-update-days =
+    { $days ->
+        [one] Gestern
+       *[other] Vor { $days } Tagen
     }
-home-fact-kernel-new = { $kernel } · läuft seit weniger als einer Stunde
-home-fact-kernel-hours =
-    { $amount ->
-        [one] { $kernel } · läuft seit einer Stunde
-       *[other] { $kernel } · läuft seit { $amount } Stunden
-    }
-home-fact-disk = { $free } frei auf /
+# A figure not read yet, or whose check could not run.
+home-stat-unknown = Unbekannt
 
 home-disk = Wenig Speicherplatz
 home-disk-detail = Entferne verwaiste Pakete, leere den Paket-Cache oder lösche alte Snapshots unter „Wartung“.
@@ -171,3 +176,5 @@ home-queue-lost =
        *[other] { $count } vorgemerkte Änderungen konnten nicht wiederhergestellt werden. Die Logdatei nennt den Grund.
     }
 home-queue-lost-dismiss = Ausblenden
+# A run from Home did not start, as other changes are being applied.
+home-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Starte ihn erneut, sobald sie abgeschlossen sind.

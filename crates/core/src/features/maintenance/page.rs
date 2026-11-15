@@ -6,11 +6,11 @@ mod tests;
 use std::collections::BTreeSet;
 use std::path::Path;
 
-use toolbox_plan::{PackageName, Plan, RemoteAction, Upgrader};
+use toolbox_plan::{PackageName, Plan, RemoteAction, RootAction, TargetList, Upgrader};
 
 use super::{
-    GARUDA_UPDATE_PACKAGE, Operation, Operations, Task, Tool, plan_aur_upgrade, plan_health_check,
-    plan_health_fix, plan_now, plan_remote, upgrader_for,
+    GARUDA_HEALTH_PACKAGE, GARUDA_UPDATE_PACKAGE, Operation, Operations, Task, Tool,
+    plan_aur_upgrade, plan_health_check, plan_health_fix, plan_now, plan_remote, upgrader_for,
 };
 use crate::domains::InstalledPackages;
 use crate::features::live::plan_chroot;
@@ -66,7 +66,7 @@ pub struct RepairRow {
     pub repair: Repair,
     pub available: bool,
     /// The package that brings its program, named while it is missing.
-    pub needs: &'static str,
+    pub needs: PackageName,
 }
 
 /// A task of the Repairs tab, which runs at once in the Console.
@@ -270,12 +270,12 @@ where
             Repair::HealthCheck | Repair::HealthFix => RepairRow {
                 repair,
                 available: health,
-                needs: "garuda-health",
+                needs: GARUDA_HEALTH_PACKAGE.clone(),
             },
             Repair::Remote(_) => RepairRow {
                 repair,
                 available: update,
-                needs: "garuda-update",
+                needs: GARUDA_UPDATE_PACKAGE.clone(),
             },
         })
         .collect()
@@ -291,11 +291,24 @@ pub fn asks_first(id: &str) -> bool {
         .unwrap_or(false)
 }
 
-/// The install of garuda-update, which the Rescue tab's repairs need,
-/// while it is missing.
-pub fn rescue_install(program: super::Program) -> Option<Plan> {
-    let garuda_update = program == super::Program::Found;
-    (!garuda_update).then(|| install(&GARUDA_UPDATE_PACKAGE))
+/// The packages the repairs of `rows` miss, each once, in the order the
+/// rows name them.
+pub fn missing(rows: &[RepairRow]) -> Vec<&PackageName> {
+    let mut missing: Vec<&PackageName> = Vec::new();
+    for row in rows.iter().filter(|row| !row.available) {
+        if !missing.contains(&&row.needs) {
+            missing.push(&row.needs);
+        }
+    }
+
+    missing
+}
+
+/// One install of every package the repairs of `rows` miss, `None` while
+/// none is missing.
+pub fn rescue_install(rows: &[RepairRow]) -> Option<Plan> {
+    let packages = TargetList::new(missing(rows).into_iter().cloned()).ok()?;
+    Some(Plan::root(RootAction::InstallPackages { packages }))
 }
 
 pub fn install(package: &PackageName) -> Plan {

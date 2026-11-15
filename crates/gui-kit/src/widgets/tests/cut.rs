@@ -272,3 +272,26 @@ fn a_select_tells_its_choices_detail_to_screen_readers() {
         Some("/usr/bin/fish")
     );
 }
+
+#[test]
+fn a_tile_wraps_its_subtitle_to_two_lines_before_it_cuts() {
+    const SETUP: &str = "Pick the apps you want and install them in one go";
+    let mut harness = harness(400.0, 200.0).build_ui(|ui| {
+        _ = link_tile(ui, icons::GO_HOME, "Setup Assistant", SETUP, 300.0);
+    });
+
+    harness.run();
+
+    let tile = harness
+        .get_by_role_and_label(Role::Link, "Setup Assistant")
+        .rect();
+
+    let shape = painted_text(&harness, SETUP).expect("the subtitle is painted");
+    assert!(!shape.galley.elided, "the subtitle is cut");
+    let text = shape.galley.rect.translate(shape.pos.to_vec2());
+    assert_eq!(shape.galley.rows.len(), 2, "the subtitle takes two lines");
+    assert!(
+        tile.contains_rect(text),
+        "the subtitle at {text:?} leaves the tile at {tile:?}"
+    );
+}

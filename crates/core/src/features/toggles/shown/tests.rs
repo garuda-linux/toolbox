@@ -1,7 +1,9 @@
-use toolbox_catalog::ToggleCatalog;
+use toolbox_catalog::{Check, ToggleCatalog};
+use toolbox_plan::UnitName;
 
-use super::{Tally, sections, unknown};
+use super::{Control, Entry, Tally, control, sections, unknown};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
+use crate::features::toggles::EntryState;
 use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
@@ -109,6 +111,71 @@ fn entries_without_a_read_state_are_counted() {
     let shown = sections(&catalog, &snapshot, &ChangeSet::default(), &[]);
 
     assert_eq!(unknown(&shown), 2);
+}
+
+#[test]
+fn a_section_without_installed_packages_is_not_read() {
+    let catalog = catalog();
+    let mut unread = Snapshot::default();
+    unread.insert(SyncPackages(packages(&[
+        "pipewire-support",
+        "jack-support",
+    ])));
+
+    let read = sections(&catalog, &snapshot(), &ChangeSet::default(), &[]);
+    let shown = sections(&catalog, &unread, &ChangeSet::default(), &[]);
+
+    assert!(read.first().unwrap().read(|_| true));
+    assert!(!shown.first().unwrap().read(|_| true));
+    assert!(shown.first().unwrap().read(|_| false), "nothing kept");
+}
+
+#[test]
+fn a_queued_wish_counts_as_read() {
+    let catalog = catalog();
+    let mut unread = Snapshot::default();
+    unread.insert(SyncPackages(packages(&["pipewire-support"])));
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(package("pipewire-support"), Toggle::On, &unread);
+
+    let shown = sections(&catalog, &unread, &changes, &[]);
+    let audio = shown.first().unwrap();
+
+    assert!(!audio.entries.first().unwrap().unread());
+    assert!(audio.read(|entry| entry.entry.id() == "pipewire-support"));
+}
+
+#[test]
+fn a_package_installs_removes_or_takes_back() {
+    let catalog = catalog();
+    let snapshot = snapshot();
+    let mut changes = ChangeSet::default();
+    changes.want::<Packages>(package("jack-support"), Toggle::On, &snapshot);
+
+    let shown = sections(&catalog, &snapshot, &changes, &[]);
+    let audio = shown.first().unwrap();
+    let controls: Vec<Control> = audio.entries.iter().map(Entry::control).collect();
+    assert_eq!(controls, [Control::Remove, Control::TakeBack]);
+
+    let fresh = sections(&catalog, &snapshot, &ChangeSet::default(), &[]);
+    let jack = fresh.first().unwrap().entries.get(1).unwrap();
+    assert_eq!(jack.control(), Control::Install);
+}
+
+#[test]
+fn an_unread_package_offers_install_and_a_service_switches() {
+    let unread = EntryState {
+        system: None,
+        queued: None,
+        available: true,
+        kept: None,
+    };
+
+    let pipewire = Check::Package(package("pipewire-support"));
+    let sshd = Check::Service(UnitName::new("sshd.service").unwrap());
+
+    assert_eq!(control(&pipewire, unread), Control::Install);
+    assert_eq!(control(&sshd, unread), Control::Switch);
 }
 
 #[test]

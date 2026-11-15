@@ -16,7 +16,7 @@ pub fn steps() -> Vec<Step> {
         go_to.clone(),
         Step::click("1. Audio"),
         Step::WaitContaining("Step 1 of"),
-        Step::click_checkbox("Strawberry Player"),
+        Step::button("Install Strawberry Player"),
         Step::WaitContaining("with Apply"),
         Step::Shot("setup-step"),
         go_to,

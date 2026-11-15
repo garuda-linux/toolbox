@@ -10,8 +10,9 @@ Rules for pages, gui-kit widgets and the command line's output.
 - A fixed toolbar under the header: search at the left, a labelled
   **Sort by** dropdown at the right. Filter chips scroll with the body.
 - The page paints under the header band. The band shows the live blur
-  under `header_scrim`, a neutral layer just thick enough for the header
-  text. Without the live blur it is solid `window`. A hairline shows once
+  under `header_scrim`, a neutral layer thick enough for the header text
+  and at least a third opaque, so an accent control scrolled under it
+  blurs into a faint hue. Without the live blur it is solid `window`. A hairline shows once
   content runs under it. The body starts `header_gap` below it.
 - Switching page or tab starts at the top. Dialogs, the Console and a
   refresh keep the scroll position.
@@ -35,8 +36,19 @@ Rules for pages, gui-kit widgets and the command line's output.
 - Every row menu entry has an icon, or none of the menu's entries do.
 - A dropdown's open list is as wide as its button or its widest entry, at
   most `LIST_MAX_WIDTH`, and cuts a longer entry.
-- A click anywhere on a row with a switch flips the switch.
-- Every sidebar entry fits down to 796 px window height, below that the
+- A click anywhere on a row with a switch flips the switch. A click
+  beside a row's button presses nothing, `Space` on the focused row does.
+- One row grammar by meaning (`pages/toggles/control.rs`). A page of
+  settings alone (System Tweaks, Services) has switches. A page that
+  mixes settings and packages (Components, Gaming, Setup Assistant, App
+  Catalog) has a button on every row: **Enable** or **Disable** for a
+  setting or a service, **Install**, **Remove** or **Take back** and the
+  word **Installed** for a package. Kernels has the same package
+  buttons, as wide as theirs. Catalog and app rows end in
+  the ⋯ menu before that control and cut their description after two
+  lines.
+- Every sidebar entry fits in its normal spacing down to 960 px window
+  height, the default, and packed down to 820 px. Below that the
   sidebar scrolls. A fade and a hairline mark a cut edge. A group heading
   shows whole or not at all. The open page's entry never fades. A cut
   entry on the collapsed rail draws faded with no band over it, so the
@@ -59,13 +71,28 @@ Rules for pages, gui-kit widgets and the command line's output.
   Selection uses the accent tint.
 - A focus ring shows only when the keyboard moved the focus, as a
   browser's `:focus-visible`: a click focuses without it, the next key
-  brings it back (`widgets/focus.rs`).
+  brings it back (`widgets/focus.rs`). Text fields are the exception:
+  they show the ring the whole time they hold the focus, from a click
+  too, as browsers ring a focused text input (decided 2026-11-14).
 - Text reaches 4.5:1 on every fill it sits on. Controls have a 3:1 edge.
   Text fields are the exception: their fill alone marks them, with no rim
-  at rest (decided 2026-11-11), the focus ring when the keyboard focuses
-  them.
+  at rest (decided 2026-11-11), a lighter fill under the pointer and the
+  focus ring while they hold the focus.
+- A field's glyph, unit and buttons are atoms of its `TextEdit`
+  (`widgets/field.rs`), so the whole pill focuses the text.
 - A number field with a unit centres both as one group ("5 s"). A number
   alone ends at the right.
+- Buttons, dropdowns and text fields have `theme::CONTROL_RADIUS`
+  corners. Filter chips, the search field and segmented controls stay
+  pills (`PILL_RADIUS`), so what narrows a list reads apart from a
+  control.
+- A disabled control has one look: egui's fade of a disabled Ui
+  (`disabled_alpha`) over its own colours, never a swapped colour or a
+  second fade (`widgets/press.rs`). A Ghost button stays transparent.
+- Text sizes come from the steps in `fonts.rs` (`TITLE`, `SECTION`,
+  `BODY`, `SMALL`, `CAPTION`), never a multiple of one.
+- A Soft button on a dialog takes `field_on_raised`. Dialogs dim the
+  window under them with `scrim`.
 - Frosted surfaces: see [Frost](architecture.md#frost).
 - The window is opaque. `sidebar` is `window` under `header_scrim`, so
   sidebar and header band read as one surface.
@@ -86,7 +113,10 @@ Rules for pages, gui-kit widgets and the command line's output.
 ## Lists and states
 
 - Filters are chips with an **All** chip. Counts follow a search. Chips
-  of a toggle page count as "2/8" (on of total), as section headings do.
+  of a toggle page count as "2/8" (on of total), as section headings do,
+  and as "?/8" while a state they count is unread.
+- A picked chip that hides every match of a search keeps its pick. The
+  empty state names it and offers **Show all N matches**.
 - A state (Running, Installed, Failed) is a `widgets::status_dot`, a dot
   and the word in secondary text, as a pill would repeat down the page.
 - A queued change is an accent status dot everywhere
@@ -94,6 +124,9 @@ Rules for pages, gui-kit widgets and the command line's output.
 - A count is no state and shows as plain secondary text.
 - A state that changes while it shows is a `widgets::status_word`, so
   screen readers hear it change.
+- In a long live list (Services) only the focused row and every failure
+  are a `status_word`, the other rows a `status_dot`, so a relist does
+  not read the whole list.
 - A part that could not be read gets one banner with **Read again**, not a
   line on every row.
 - Cut text ends in "…" and shows whole in a tooltip and to screen readers.

@@ -188,6 +188,12 @@ impl Jobs {
         );
     }
 
+    /// Empties the folder of copies on this thread, for the end of the
+    /// app, when no blocking thread may get its turn anymore.
+    pub fn clear_copies(&self) {
+        self.tools.clear();
+    }
+
     pub fn remove(&self, copy: EditCopy) {
         self.quietly(move |tools| {
             if let Err(error) = tools.copies.remove(&copy) {

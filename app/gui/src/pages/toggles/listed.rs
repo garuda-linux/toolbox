@@ -8,13 +8,13 @@ use std::sync::Arc;
 
 use egui::Ui;
 use egui::text::LayoutJob;
-use toolbox_core::features::toggles::shown::{self, Entry, Section, Tally};
+use toolbox_core::features::toggles::shown::{self, Control, Entry, Section, Tally};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{ListItem, Tone, highlighted};
 
-use super::{catalog_text, entry, section_title, tally_text};
+use super::{catalog_text, control, count_text, entry, section_title};
 use crate::catalogs::CatalogId;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -36,7 +36,9 @@ pub struct SectionChip {
     pub id: String,
     pub title: String,
     pub tally: Tally,
-    /// Such as "2/4", beside the title.
+    /// Every entry it counts shows a state.
+    pub read: bool,
+    /// Such as "2/4" beside the title, "?/4" while a state is unread.
     pub count: String,
 }
 
@@ -62,14 +64,18 @@ pub struct EntryRow {
     pub note: Option<(Cow<'static, str>, Tone)>,
     /// A probe could not read what the entry checks.
     pub unknown: bool,
+    pub control: Control,
+    /// "Installed" beside the title of a package that is.
+    pub installed: Option<Cow<'static, str>>,
     pub on: bool,
     pub changeable: bool,
     pub url: Option<String>,
+    /// The catalog's glyph, shown in place of a picture.
+    pub glyph: Option<Icon>,
     /// The picture's address for egui's loaders.
     pub picture: Option<String>,
     /// What picks the hue of the letter tile shown without a picture.
     pub tile_package: String,
-    pub website: Option<String>,
     pub menu: String,
 }
 
@@ -98,12 +104,15 @@ impl Listed {
         let chips = sections
             .iter()
             .map(|section| {
-                let tally = section.tally(|entry| entry::matches(ctx, catalog, entry, query));
+                let matched = |entry: &Entry<'_>| entry::matches(ctx, catalog, entry, query);
+                let tally = section.tally(matched);
+                let read = section.read(matched);
                 SectionChip {
                     id: section.section.id().to_owned(),
                     title: section_title(ctx, catalog, section),
                     tally,
-                    count: tally_text(ctx, tally),
+                    read,
+                    count: count_text(ctx, tally, read),
                 }
             })
             .collect();
@@ -142,13 +151,11 @@ impl SectionRows {
             return None;
         }
 
+        let matched = |entry: &Entry<'_>| entry::matches(ctx, catalog, entry, query);
         Some(Self {
             id: section.section.id().to_owned(),
             title: section_title(ctx, catalog, section),
-            count: tally_text(
-                ctx,
-                section.tally(|entry| entry::matches(ctx, catalog, entry, query)),
-            ),
+            count: count_text(ctx, section.tally(matched), section.read(matched)),
             icon: icons::named(section.section.icon()).unwrap_or(icons::PLUGINS),
             entries,
         })
@@ -176,11 +183,16 @@ impl EntryRow {
         let title_job = highlighted(ui, &title, query, strong, ink);
         let small = fonts::font(ui.style(), Weight::Regular, SMALL);
         let words = entry::description(ctx, catalog, entry);
-        let description = highlighted(ui, &words, query, small, tokens.secondary);
-        let note = entry::note(ctx, catalog, entry);
+        let description = control::cut(highlighted(ui, &words, query, small, tokens.secondary));
+        let control = control::of(catalog, entry);
+        let note = entry::note(ctx, catalog, entry, control);
+        let installed = (control == Control::Remove).then(|| i18n::text(ctx, "packages-installed"));
+
         let name = note
             .as_ref()
-            .map_or_else(|| title.clone(), |(note, _)| format!("{title}, {note}"));
+            .map(|(note, _)| note)
+            .or(installed.as_ref())
+            .map_or_else(|| title.clone(), |note| format!("{title}, {note}"));
 
         let url = entry.entry.url().map(str::to_owned);
         Self {
@@ -189,15 +201,15 @@ impl EntryRow {
             title_job: Arc::new(title_job),
             description: Arc::new(description),
             note,
-            unknown: context.probed && !entry.known() && entry.state.queued.is_none(),
+            unknown: context.probed && entry.unread(),
+            control,
+            installed,
             on: entry.state.shown_on(),
             changeable: entry.changeable(),
+            glyph: entry.entry.glyph().and_then(icons::named),
             picture: entry::picture_file(context, catalog, entry)
                 .map(|file| icons::picture_uri(&file)),
             tile_package: entry::tile_package(entry.entry).to_owned(),
-            website: url
-                .as_ref()
-                .map(|_| i18n::text_with(ctx, "toggles-website", &[("name", &title)]).into_owned()),
             menu: i18n::text_with(ctx, "row-menu", &[("name", &title)]).into_owned(),
             url,
             title,

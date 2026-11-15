@@ -193,7 +193,7 @@ fn setup_assistant() {
     harness.get_by_label("Next").click();
     harness.run();
     harness
-        .get_by_role_and_label(Role::CheckBox, "Strawberry Player")
+        .get_by_role_and_label(Role::Button, "Install Strawberry Player")
         .click();
     harness.run();
     results.add(harness.try_snapshot("setup/step_dark"));

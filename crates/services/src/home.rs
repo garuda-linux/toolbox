@@ -1,6 +1,8 @@
 //! What Home's status shows: the counts of the checks that worked, the
 //! checks that failed, the pending updates and the facts besides them.
 
+pub mod details;
+pub mod stats;
 #[cfg(test)]
 mod tests;
 

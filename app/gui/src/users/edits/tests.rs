@@ -1,7 +1,8 @@
 use toolbox_core::features::users::Refusal;
+use toolbox_core::features::users::account::AccountEdit;
 use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{HomeFolder, UserName};
+use toolbox_plan::{FullName, HomeFolder, UserName};
 
 use crate::command::{AppCommand, UserEdit, UsersCommand};
 use crate::page::PageId;
@@ -21,6 +22,27 @@ fn a_removal_before_the_accounts_are_read_is_refused_with_the_name() {
     let mut users = Users::default();
 
     let handled = users.handle(&remove("ada"), &ChangeSet::default(), &Snapshot::default());
+
+    assert!(handled.edit.is_none());
+    let refused = users.refusal().unwrap();
+    assert_eq!(refused.refusal, Refusal::Unavailable);
+    assert_eq!(refused.subject, "ada");
+}
+
+/// The Edit dialog's fields come as one command, so one refusal names
+/// the account and nothing of the edit is queued.
+#[test]
+fn a_refused_account_edit_queues_none_of_its_parts() {
+    let mut users = Users::default();
+    let edit = AppCommand::Users(UsersCommand::Edit(UserEdit::Set {
+        user: UserName::new("ada").unwrap(),
+        edit: AccountEdit {
+            full_name: Some(FullName::new("Ada King").unwrap()),
+            ..AccountEdit::default()
+        },
+    }));
+
+    let handled = users.handle(&edit, &ChangeSet::default(), &Snapshot::default());
 
     assert!(handled.edit.is_none());
     let refused = users.refusal().unwrap();

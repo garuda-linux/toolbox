@@ -1,18 +1,44 @@
 //! Closing it keeps the changes, and the page offers it again.
 
-use egui::{Context, Id, Label, RichText, ScrollArea, Ui};
-use toolbox_core::features::configs::hunk_lines;
+mod lines;
+
+use egui::accesskit::Role;
+use egui::{
+    Align2, Context, FontId, Id, Label, Painter, Rect, RichText, ScrollArea, Sense, Stroke,
+    TextStyle, Ui, WidgetInfo, pos2, vec2,
+};
 use toolbox_core::features::configs::session::{Changes, EditedFile, Session};
 use toolbox_gui_kit::UiExt as _;
+use toolbox_gui_kit::fonts::{self, SMALL, Weight};
+use toolbox_gui_kit::tokens::Tokens;
 use toolbox_gui_kit::widgets::{
     ButtonKind, DialogWidth, ModalWrapper, Question, Tone, banner, pill_button, pill_width,
     question,
 };
 
+use self::lines::{Covered, Kind, Row};
 use super::texts;
 use crate::command::ConfigsCommand;
 use crate::i18n;
 use crate::pages::PageContext;
+
+/// Room above and below a diff line, so the tints of neighbouring rows
+/// do not touch the text.
+const ROW_PADDING: f32 = 2.0;
+
+/// How the diff's rows are measured, the same for every row.
+struct Look {
+    font: FontId,
+    /// The width of one character of the fixed font.
+    column: f32,
+    /// The width of one gutter's numbers.
+    numbers: f32,
+    gap: f32,
+    height: f32,
+    /// The width the widest line needs, so the sideways scroll reaches it
+    /// before it is in sight.
+    extent: f32,
+}
 
 /// Whether the user closed the review without an answer, which keeps
 /// the changes.
@@ -140,51 +166,145 @@ fn words(ui: &mut Ui, session: &Session, changes: &Changes, path: &str) {
     ui.add_space(ui.tokens().sizes.card_gap);
 }
 
+/// A unified diff with both files' line numbers in a gutter and tinted
+/// added and removed rows. A rewrite near the size cap has tens of
+/// thousands of lines, so only the rows in sight are painted.
 fn diff(ui: &mut Ui, changes: &Changes) {
-    let tokens = ui.tokens();
-    let name = i18n::text(ui.ctx(), "configs-review-diff").into_owned();
+    let ctx = ui.ctx().clone();
+    let rows = lines::cached(&ctx, &changes.plain);
+    let font = TextStyle::Monospace.resolve(ui.style());
+    let (line_height, column) =
+        ctx.fonts_mut(|atlas| (atlas.row_height(&font), atlas.glyph_width(&font, ' ')));
+
+    let gap = ui.tokens().sizes.control_gap;
+    let numbers = column * f32::from(rows.digits);
+    let text_left = numbers.mul_add(2.0, gap * 3.0);
+    let look = Look {
+        font,
+        column,
+        numbers,
+        gap,
+        height: ROW_PADDING.mul_add(2.0, line_height),
+        extent: column.mul_add(f32::from(rows.columns) + 2.0, text_left + gap),
+    };
+
+    let name = i18n::text(&ctx, "configs-review-diff").into_owned();
     let height = ui.available_height().max(super::MIN_TEXT_HEIGHT);
-    let area = ScrollArea::both()
-        .max_height(height)
-        .auto_shrink([false, false])
-        .show(ui, |ui| {
-            for line in changes.plain.lines() {
-                // Diff markup is jargon: the hunk header becomes the lines it
-                // covers, in words.
-                if let Some((first, last)) = hunk_lines(line) {
-                    let count = (last - first + 1).to_string();
-                    let (first, last) = (first.to_string(), last.to_string());
-                    let words = i18n::text_with(
-                        ui.ctx(),
-                        "configs-review-lines",
-                        &[("first", &first), ("last", &last), ("count", &count)],
-                    );
+    let area = ui
+        .scope(|ui| {
+            // show_rows counts the spacing of this ui between rows.
+            ui.spacing_mut().item_spacing.y = 0.0;
+            ScrollArea::both()
+                .max_height(height)
+                .auto_shrink([false, false])
+                .show_rows(ui, look.height, rows.lines.len(), |ui, range| {
+                    ui.set_min_width(look.extent);
+                    let width = look.extent.max(ui.available_width());
+                    for row in rows.lines.get(range).unwrap_or_default() {
+                        paint_row(ui, row, &look, width);
+                    }
+                })
+        })
+        .inner;
 
-                    ui.add_space(ui.tokens().sizes.tight_gap);
-                    ui.label(
-                        RichText::new(words.as_ref())
-                            .small()
-                            .color(tokens.secondary),
-                    );
-                    continue;
-                }
-
-                let color = match line.chars().next() {
-                    Some('+') => tokens.success,
-                    Some('-') => tokens.error,
-                    _ => tokens.secondary,
-                };
-
-                ui.add(Label::new(RichText::new(line).monospace().color(color)).extend());
-            }
-        });
-
-    ui.ctx()
-        .accesskit_node_builder(area.id, |node| node.set_label(name));
+    ctx.accesskit_node_builder(area.id, |node| node.set_label(name));
 }
 
-/// Discard and Edit again at the left, Compare again after a failed save,
-/// Save last.
+fn paint_row(ui: &mut Ui, row: &Row, look: &Look, width: f32) {
+    let tokens = ui.tokens();
+    let (rect, response) = ui.allocate_exact_size(vec2(width, look.height), Sense::hover());
+    let (fill, mark) = match row.kind {
+        Kind::Added => (Some(tokens.banner_wash(tokens.success)), tokens.success),
+        Kind::Removed => (Some(tokens.banner_wash(tokens.error)), tokens.error),
+        Kind::Same | Kind::Note | Kind::Hunk(_) => (None, tokens.secondary),
+    };
+
+    let painter = ui.painter();
+    if let Some(fill) = fill {
+        painter.rect_filled(rect, 0.0, fill);
+    }
+
+    let middle = rect.center().y;
+    let left = paint_numbers(painter, rect, row, look, &tokens);
+
+    let at = pos2(left, middle);
+    let heard = match row.kind {
+        // Diff markup is jargon: the hunk header becomes the lines it
+        // covers, in words.
+        Kind::Hunk(covered) => {
+            let words = lines_in_words(ui.ctx(), covered);
+            let small = fonts::font(ui.style(), Weight::Regular, SMALL);
+            painter.text(at, Align2::LEFT_CENTER, &words, small, tokens.secondary);
+            words
+        }
+        Kind::Same | Kind::Added | Kind::Removed => {
+            let marked = row.line.get(..1).unwrap_or_default();
+            painter.text(at, Align2::LEFT_CENTER, marked, look.font.clone(), mark);
+            let text_at = pos2(look.column.mul_add(2.0, left), middle);
+            let text = row.text();
+            painter.text(
+                text_at,
+                Align2::LEFT_CENTER,
+                text,
+                look.font.clone(),
+                tokens.text,
+            );
+            row.line.clone()
+        }
+        Kind::Note => {
+            painter.text(
+                at,
+                Align2::LEFT_CENTER,
+                &row.line,
+                look.font.clone(),
+                tokens.secondary,
+            );
+            row.line.clone()
+        }
+    };
+
+    response.widget_info(|| WidgetInfo::labeled(Role::Label, true, &heard));
+}
+
+/// The old and the new line number and the gutter's line after them.
+/// Returns where the line's own text starts.
+fn paint_numbers(painter: &Painter, rect: Rect, row: &Row, look: &Look, tokens: &Tokens) -> f32 {
+    let middle = rect.center().y;
+    let mut left = rect.left() + look.gap;
+    for number in [row.old, row.new] {
+        left += look.numbers;
+        if let Some(number) = number {
+            let at = pos2(left, middle);
+            painter.text(
+                at,
+                Align2::RIGHT_CENTER,
+                number,
+                look.font.clone(),
+                tokens.secondary,
+            );
+        }
+
+        left += look.gap;
+    }
+
+    let edge = left - look.gap / 2.0;
+    painter.vline(edge, rect.y_range(), Stroke::new(1.0, tokens.outline));
+    left
+}
+
+fn lines_in_words(ctx: &Context, covered: Covered) -> String {
+    let count = (covered.last - covered.first + 1).to_string();
+    let (first, last) = (covered.first.to_string(), covered.last.to_string());
+    i18n::text_with(
+        ctx,
+        "configs-review-lines",
+        &[("first", &first), ("last", &last), ("count", &count)],
+    )
+    .into_owned()
+}
+
+/// One row at the right: Discard, Edit again, Compare again after a failed
+/// save, Save last.
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<ConfigsCommand> {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();

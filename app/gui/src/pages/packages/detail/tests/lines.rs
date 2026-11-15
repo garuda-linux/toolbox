@@ -51,17 +51,27 @@ fn every_list_starts_one_gap_under_its_heading() {
     );
 }
 
-/// The history's first line starts as far under its fold as the names
-/// beside the facts do under their heading.
+/// The top of the card that holds the text starting at `top`.
+fn card_top<S>(harness: &Harness<'_, S>, top: f32) -> f32 {
+    filled_rects(harness, tokens::current(&harness.ctx).card)
+        .into_iter()
+        .filter(|card| card.top() < top && card.bottom() > top)
+        .map(|card| card.top())
+        .next_back()
+        .expect("the text shows in a card")
+}
+
+/// The history's first line starts the card's padding into its card.
 #[test]
-fn the_history_starts_as_far_under_its_heading_as_the_names() {
+fn the_history_starts_one_card_padding_into_its_card() {
     let harness = unfolded();
 
-    let names = text_top(&harness, "gegl>=0.4") - text_top(&harness, "Depends on");
-    let line = text_top(&harness, "2025-06-01 08:15") - text_top(&harness, "History");
+    let line = text_top(&harness, "2025-06-01 08:15");
+    let into = line - card_top(&harness, line);
+    let padding = f32::from(tokens::current(&harness.ctx).sizes.card_padding.top);
     assert!(
-        (line - names).abs() < 0.5,
-        "the history's first line {line} under its heading, the names {names}"
+        (into - padding).abs() < 0.5,
+        "the history's first line {into} into its card, the padding {padding}"
     );
 }
 
@@ -72,12 +82,7 @@ fn the_files_card_starts_one_caption_gap_under_copy_list() {
     let harness = unfolded();
 
     let file = text_top(&harness, "/usr/bin/gimp");
-    let card = filled_rects(&harness, tokens::current(&harness.ctx).card)
-        .into_iter()
-        .filter(|card| card.top() < file && card.bottom() > file)
-        .map(|card| card.top())
-        .next_back()
-        .expect("the files show in a card");
+    let card = card_top(&harness, file);
 
     let copy = rect_of(&harness, Role::Button, "Copy list");
     let gap = tokens::current(&harness.ctx).sizes.caption_gap;

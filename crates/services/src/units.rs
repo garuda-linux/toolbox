@@ -7,7 +7,7 @@ use futures_lite::future::Boxed;
 use toolbox_core::features::services::UnitInfo;
 use toolbox_plan::UnitScope;
 use toolbox_system::systemd::{LIST_UNIT_FILES, LIST_UNITS, ListUnitsRow, UnitFileRow, unit_infos};
-use toolbox_system::{CallError, call, connect};
+use toolbox_system::{CallError, call, forget_shared, shared};
 
 pub type UnitList = Result<Arc<Vec<UnitInfo>>, CallError>;
 
@@ -22,11 +22,22 @@ pub struct Systemd;
 impl UnitLister for Systemd {
     fn list(&self, scope: UnitScope) -> Boxed<UnitList> {
         Box::pin(async move {
-            let connection = connect(scope).await?;
-            let units: Vec<ListUnitsRow> = call(&connection, &LIST_UNITS, &()).await?;
-            let files: Vec<UnitFileRow> = call(&connection, &LIST_UNIT_FILES, &()).await?;
+            let listed = list(scope).await;
+            if listed.is_err() {
+                forget_shared(scope);
+            }
 
-            Ok(Arc::new(unit_infos(units, files)))
+            listed
         })
     }
+}
+
+/// Over the connection the watcher of the scope shares. A failure drops
+/// it, as the bus may have gone.
+async fn list(scope: UnitScope) -> UnitList {
+    let connection = shared(scope).await?;
+    let units: Vec<ListUnitsRow> = call(&connection, &LIST_UNITS, &()).await?;
+    let files: Vec<UnitFileRow> = call(&connection, &LIST_UNIT_FILES, &()).await?;
+
+    Ok(Arc::new(unit_infos(units, files)))
 }

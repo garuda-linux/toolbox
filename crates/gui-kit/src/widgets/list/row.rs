@@ -70,7 +70,7 @@ where
         let dragging = ui.ctx().dragged_id().is_some();
         let response = &state.response;
         let lit = shows_hover(response.hovered(), response.contains_pointer(), dragging);
-        mark_raised(ui, lit || response.has_focus());
+        mark_raised(ui, lit);
 
         match place.fixed {
             Some(height) => centred_frame(ui, height, place.id, |ui| body(ui, item, &state)),

@@ -1,4 +1,4 @@
-//! Home on the real system: the greeting with its facts, the status once
+//! Home on the real system: the greeting with its stat tiles, the status once
 //! checked, the dry run's sample news, then a fresh check through the
 //! heading's button. A page opened before comes back as a recent chip.
 
@@ -11,11 +11,11 @@ pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
         Step::tab("About"),
-        Step::wait("Version"),
+        Step::wait("Copy system details"),
         Step::shortcut(Key::Num1),
         Step::WaitGone("Checking the system…"),
-        Step::WaitContaining("free on /"),
-        Step::WaitContaining(" · up "),
+        Step::WaitContaining("Disk: "),
+        Step::WaitContaining("Updates: "),
         Step::wait("News"),
         Step::wait("Open Toolbox sample: a new kernel series"),
         Step::wait("Manual step"),
@@ -26,6 +26,6 @@ pub fn steps() -> Vec<Step> {
         Step::wait("Recently used"),
         Step::Shot("home-checked"),
         Step::button("About"),
-        Step::wait("Version"),
+        Step::wait("Copy system details"),
     ]
 }

@@ -145,9 +145,10 @@ pub fn wheel<State>(harness: &Harness<'static, State>, at: Pos2, delta: Vec2) {
     });
 }
 
-pub fn checkbox<'harness, State>(
+/// A row's button, named by what it does and the row.
+pub fn button<'harness, State>(
     harness: &'harness Harness<'static, State>,
-    title: &'harness str,
+    name: &'harness str,
 ) -> egui_kittest::Node<'harness> {
-    harness.get_by_role_and_label(Role::CheckBox, title)
+    harness.get_by_role_and_label(Role::Button, name)
 }

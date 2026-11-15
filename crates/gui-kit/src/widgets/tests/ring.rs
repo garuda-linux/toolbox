@@ -5,6 +5,7 @@ use egui_kittest::kittest::Queryable as _;
 
 use super::super::{ButtonKind, card, card_row, pill_button};
 use crate::testing::harness;
+use crate::theme::CONTROL_RADIUS;
 use crate::tokens;
 
 fn stroked(harness: &Harness<'_>, colour: Color32) -> Vec<(RectShape, Rect)> {
@@ -58,11 +59,13 @@ fn a_focus_ring_in_a_row_is_round_and_whole() {
         "ring {outer:?} around {button:?}"
     );
 
+    // The ring keeps the button's corners at its distance from it.
     let radius = shape.corner_radius;
-    let half = shape.rect.height() / 2.0;
+    let gap = (shape.rect.height() - button.height()) / 2.0;
+    let expected = f32::from(CONTROL_RADIUS) + gap;
     assert!(
-        radius.nw == radius.se && f32::from(radius.nw) >= half,
-        "corners {radius:?} on a {half} half height leave flat ends"
+        radius.nw == radius.se && (f32::from(radius.nw) - expected).abs() < 0.5,
+        "corners {radius:?} round a button with {CONTROL_RADIUS} corners {gap} away"
     );
 }
 

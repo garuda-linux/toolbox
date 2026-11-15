@@ -2,7 +2,7 @@
 //! the Console over several frames, and the window keeps drawing.
 
 use egui_kittest::kittest::Queryable as _;
-use toolbox_gui::apply::{ApplyHandle, Report};
+use toolbox_gui::apply::{ApplyHandle, PlanId, Report};
 use toolbox_gui::waking::Wake;
 use toolbox_gui::{App, Setup};
 use toolbox_plan::StepId;
@@ -23,6 +23,7 @@ fn flood() -> Vec<Report> {
 
     [
         Report::PlanStarted {
+            plan: PlanId::new(1),
             steps: vec![(step, vec!["pacman -S java-runtime".to_owned()])],
         },
         Report::Step(Event::Started { step }),
@@ -34,7 +35,10 @@ fn flood() -> Vec<Report> {
             step,
             outcome: Outcome::Succeeded,
         }),
-        Report::PlanFinished { succeeded: true },
+        Report::PlanFinished {
+            plan: PlanId::new(1),
+            succeeded: true,
+        },
     ])
     .collect()
 }

@@ -1,15 +1,20 @@
 mod artwork;
+mod elsewhere;
+mod grammar;
 mod lefts;
 mod pictures;
 mod tops;
 
+use std::collections::BTreeSet;
 use std::path::Path;
 
 use egui::accesskit::Role;
 use egui::{Key, Modifiers, Ui};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::Toggle;
+use toolbox_core::domains::{Accounts, CurrentUser, EnabledUnits, InstalledPackages};
+use toolbox_core::{Snapshot, Toggle};
+use toolbox_plan::UserName;
 
 use super::{NoLead, TogglePage};
 use crate::catalogs::{CatalogId, Catalogs};
@@ -31,12 +36,31 @@ impl PageView for Plain {
     }
 }
 
+/// The shipped catalogs on a system that was read: nothing installed or
+/// enabled, and a user in no group.
 fn shipped() -> PageFixture {
-    let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog");
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(InstalledPackages(BTreeSet::new()));
+    snapshot.insert(EnabledUnits(BTreeSet::new()));
+    snapshot.insert(Accounts::default());
+    snapshot.insert(CurrentUser(UserName::new("nico").expect("a user name")));
+
     PageFixture {
-        catalogs: Catalogs::load(&dir),
+        catalogs: catalogs(),
+        ..PageFixture::with_snapshot(snapshot)
+    }
+}
+
+/// The shipped catalogs on a system no probe read yet.
+fn unread() -> PageFixture {
+    PageFixture {
+        catalogs: catalogs(),
         ..PageFixture::default()
     }
+}
+
+fn catalogs() -> Catalogs {
+    Catalogs::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog"))
 }
 
 fn page(catalog: CatalogId, search: &str) -> Harness<'static, PageState<Plain>> {
@@ -68,7 +92,7 @@ fn right_click(harness: &mut Harness<'static, PageState<Plain>>, row: &str) {
 }
 
 #[test]
-fn space_on_a_focused_entry_flips_its_switch() {
+fn space_on_a_focused_entry_asks_for_its_change() {
     let mut harness = page(CatalogId::Components, "");
     harness
         .get_by_role_and_label(Role::ListItem, "PipeWire")

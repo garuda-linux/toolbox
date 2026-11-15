@@ -18,7 +18,7 @@ pub fn steps() -> Vec<Step> {
         Step::click("Clear search"),
         Step::wait("Audio"),
         // A package of Arch's own repositories, so plain Arch offers it too.
-        Step::click_checkbox("EasyEffects"),
+        Step::button("Install EasyEffects"),
         Step::WaitContaining("change queued"),
         Step::click("Review"),
         Step::WaitContaining("easyeffects"),

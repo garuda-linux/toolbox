@@ -116,6 +116,22 @@ fn at_the_default_size_titles_are_four_points_and_sections_two_over_the_old_scal
 }
 
 #[test]
+fn the_type_scale_falls_from_title_to_caption() {
+    let steps = [
+        super::TITLE,
+        super::SECTION,
+        super::BODY,
+        super::SMALL,
+        super::CAPTION,
+    ];
+
+    for pair in steps.windows(2) {
+        let [larger, smaller] = pair else { continue };
+        assert!(larger > smaller, "{steps:?}");
+    }
+}
+
+#[test]
 fn a_fallback_goes_last_in_every_family() {
     let mut fonts = definitions(&[desktop_font("Noto Sans", 400)], None);
     add_fallback(&mut fonts, &desktop_font("Noto Color Emoji", 400));

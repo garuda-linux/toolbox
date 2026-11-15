@@ -14,11 +14,20 @@ mounts. systemd calls all of them "units".
   the page on **User**.
 - Type in the search field under the title to filter by name or
   description. The button at its end clears the search.
-- **Hide disabled** leaves out services that are installed but not enabled
-  (on by default). Click it to list them too.
-- **Hide inactive** leaves out services that are not running (on by
-  default). Failed services are always listed because they usually need a
-  look.
+- The chips under the search pick which services the list shows, one at a
+  time. Each chip counts the services it would list for the current
+  search:
+
+  | Chip        | Lists                                                      |
+  | ----------- | ---------------------------------------------------------- |
+  | **Running** | Services that are neither stopped nor failed (the default) |
+  | **Enabled** | Services that start at boot                                |
+  | **Failed**  | Services that failed                                       |
+  | **All**     | Every service                                              |
+
+  `services list --running`, `--enabled` and `--failed` on the command
+  line list the same services.
+
 - **Sort by** at the right of the search orders the list by **Name** (the
   default) or **Problems first**. With **Problems first** the failed services
   come first, then those that are starting, stopping or reloading, then the
@@ -110,7 +119,12 @@ systemd-logind) asks first, with the risk named and a red button.
 
 **Retry** tries again. When a list was read before, it stays and the reason
 shows in a banner above it, with **Read again**. **No service matches.** means the search or the
-filters hide everything. The ✕ in the search field empties it.
+picked chip hides everything. When the search finds services under
+**All**, a button such as **Show all 3 matches** picks **All** and keeps the
+search. The ✕ in the search field empties it.
+
+Screen readers announce a failed service, and the state of the service the
+keyboard is on whenever it changes.
 
 ## See also
 

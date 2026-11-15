@@ -104,25 +104,30 @@ home-summary-updated =
        *[other] · last update { $days } days ago
     }
 
-# $kernel is as uname prints it, $free a size such as "38.2 GiB".
-home-fact-packages =
+# The stat tiles under the greeting: a name, then its figure.
+home-stat-updates = Updates
+home-stat-updates-none = Up to date
+home-stat-updates-count =
     { $count ->
-        [one] One package
-       *[other] { $count } packages
+        [one] One available
+       *[other] { $count } available
     }
-home-fact-packages-foreign = { $count } packages · { $foreign } AUR
-home-fact-kernel-days =
-    { $amount ->
-        [one] { $kernel } · up one day
-       *[other] { $kernel } · up { $amount } days
+home-stat-disk = Disk
+# $free is a size such as "38.2 GiB".
+home-stat-disk-free = { $free } free
+home-stat-health = Health
+home-stat-health-fine = No problems
+home-stat-health-warnings = Warnings
+home-stat-health-errors = Problems found
+home-stat-last-update = Last update
+home-stat-last-update-today = Today
+home-stat-last-update-days =
+    { $days ->
+        [one] Yesterday
+       *[other] { $days } days ago
     }
-home-fact-kernel-new = { $kernel } · up less than an hour
-home-fact-kernel-hours =
-    { $amount ->
-        [one] { $kernel } · up one hour
-       *[other] { $kernel } · up { $amount } hours
-    }
-home-fact-disk = { $free } free on /
+# A figure not read yet, or whose check could not run.
+home-stat-unknown = Not known
 
 home-disk = Disk space is low
 home-disk-detail = Remove orphans, clean the package cache or delete old snapshots on Maintenance.
@@ -171,3 +176,5 @@ home-queue-lost =
        *[other] { $count } queued changes could not be restored. The log file says why.
     }
 home-queue-lost-dismiss = Dismiss
+# A run from Home did not start, as other changes are being applied.
+home-busy = Other changes are still being applied, so this did not start. Start it again once they are done.

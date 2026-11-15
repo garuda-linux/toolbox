@@ -78,11 +78,11 @@ fn disabled(harness: &Page, label: &str) -> Vec<bool> {
 fn an_operation_runs_now_or_waits_in_the_queue() {
     let mut harness = page(with(programs(), Maintenance::default()));
 
-    assert!(harness.query_by_label("Queue removal").is_none());
-    harness
-        .get_by_label("More actions for Remove orphans")
-        .click();
-    harness.run();
+    assert!(
+        harness
+            .query_by_label("More actions for Remove orphans")
+            .is_none()
+    );
     harness.get_by_label("Queue removal").click();
     harness.run();
     harness.get_all_by_label("Run now").next().unwrap().click();
@@ -219,7 +219,38 @@ fn without_garuda_update_repairs_offers_it() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(MaintenanceCommand::InstallGarudaUpdate)]
+        [Command::from(MaintenanceCommand::InstallMissing)]
+    );
+}
+
+#[test]
+fn without_garuda_health_alone_one_banner_offers_it() {
+    let programs = Programs::found(|path| path != Path::new("/usr/bin/garuda-health"));
+    let mut harness = page(with(programs, Maintenance::default()));
+    open_tab(&mut harness, "Repairs");
+
+    assert!(harness.query_by_label("Install garuda-health").is_some());
+}
+
+#[test]
+fn one_banner_names_and_installs_every_missing_package() {
+    let mut harness = page(with(Programs::found(|_| false), Maintenance::default()));
+    open_tab(&mut harness, "Repairs");
+
+    assert!(
+        harness
+            .query_by_label_contains("need garuda-health, garuda-update")
+            .is_some()
+    );
+
+    harness
+        .get_by_label("Install garuda-health, garuda-update")
+        .click();
+    harness.run();
+
+    assert_eq!(
+        sent(&harness),
+        [Command::from(MaintenanceCommand::InstallMissing)]
     );
 }
 

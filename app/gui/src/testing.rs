@@ -26,7 +26,7 @@ use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui_kit::Loadable;
 use toolbox_gui_kit::widgets::{ButtonKind, PageParts, page_layout_shaped};
 use toolbox_news::News;
-pub use toolbox_services::testing::{PATIENCE, poll, until};
+pub use toolbox_services::testing::{FixedClock, PATIENCE, poll, until};
 use toolbox_system::{Facts, Status};
 
 use crate::catalogs::Catalogs;

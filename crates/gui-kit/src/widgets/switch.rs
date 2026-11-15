@@ -10,9 +10,6 @@ use crate::{motion, tokens};
 pub(super) const SIZE: Vec2 = vec2(40.0, 22.0);
 const TRACK_RADIUS: u8 = 11;
 const KNOB_RADIUS: f32 = 8.0;
-/// How much of its rim a disabled switch shows in light themes: enough
-/// to be seen on a white card, below an enabled rim's 3:1.
-const LIGHT_DISABLED_RIM: f32 = 0.75;
 
 /// A click on an enabled one reports `clicked`, the caller flips its state.
 pub fn switch(ui: &mut Ui, on: bool, label: &str, enabled: bool) -> Response {
@@ -66,21 +63,13 @@ pub fn switch(ui: &mut Ui, on: bool, label: &str, enabled: bool) -> Response {
         tokens.accent
     };
 
-    let fade = |color| faded(color, enabled);
+    let fade = |color| faded(ui, color, enabled);
     let track = off.lerp_to_gamma(on_fill, progress);
 
     // The off track is too close to the card to read as a control in
     // either theme. The rim melts into the accent as the switch turns on.
     let rim_colour = tokens.rim.lerp_to_gamma(on_fill, progress);
-    let rim = if enabled || ui.visuals().dark_mode {
-        fade(rim_colour)
-    } else {
-        // A faded rim and track all but vanish on a white card, so the
-        // rim of a disabled switch keeps more of its colour in light.
-        rim_colour.gamma_multiply(LIGHT_DISABLED_RIM)
-    };
-
-    let rim = Stroke::new(1.0, rim);
+    let rim = Stroke::new(1.0, fade(rim_colour));
 
     let painter = ui.painter();
     painter.rect(rect, TRACK_RADIUS, fade(track), rim, StrokeKind::Inside);

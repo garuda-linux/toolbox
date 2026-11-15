@@ -5,7 +5,7 @@
 
 use egui::{Id, Ui};
 use toolbox_core::features::maintenance::Operation;
-use toolbox_core::features::maintenance::page::{Repair, RepairRow};
+use toolbox_core::features::maintenance::page::{Repair, RepairRow, missing};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
@@ -13,7 +13,7 @@ use toolbox_gui_kit::widgets::{
     ButtonKind, DialogWidth, Question, Tone, banner, card, card_row, loading_label, pill_button,
     question, rich,
 };
-use toolbox_plan::RemoteAction;
+use toolbox_plan::{PackageName, RemoteAction};
 
 use super::{heading, row};
 use crate::command::MaintenanceCommand;
@@ -52,18 +52,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
         return;
     };
 
-    if !programs.garuda_update {
-        let text = i18n::text(&ctx, "maintenance-repairs-missing");
-        let install = i18n::text(&ctx, "maintenance-install-garuda-update");
-        let action = (!context.busy).then_some(&*install);
-        if banner(ui, Tone::Neutral, &text, action.as_slice()) == Some(0) {
-            context
-                .commands
-                .send(MaintenanceCommand::InstallGarudaUpdate);
-        }
-
-        ui.add_space(ui.tokens().sizes.card_gap);
-    }
+    missing_banner(ui, context, &programs.repairs);
 
     card(ui, |ui| {
         for (index, repair) in programs.repairs.iter().enumerate() {
@@ -85,6 +74,29 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
     }
 }
 
+/// One banner for every package the greyed repairs need, so one install
+/// unlocks them all.
+fn missing_banner(ui: &mut Ui, context: &PageContext<'_>, rows: &[RepairRow]) {
+    let wanted = missing(rows);
+    if wanted.is_empty() {
+        return;
+    }
+
+    let ctx = ui.ctx().clone();
+    let names: Vec<&str> = wanted.into_iter().map(PackageName::as_str).collect();
+    let packages = names.join(", ");
+    let count = names.len().to_string();
+    let args = [("packages", packages.as_str()), ("count", count.as_str())];
+    let text = i18n::text_with(&ctx, "maintenance-repairs-missing", &args);
+    let install = i18n::text_with(&ctx, "maintenance-install-missing", &args);
+    let action = (!context.busy).then_some(&*install);
+    if banner(ui, Tone::Neutral, &text, action.as_slice()) == Some(0) {
+        context.commands.send(MaintenanceCommand::InstallMissing);
+    }
+
+    ui.add_space(ui.tokens().sizes.card_gap);
+}
+
 /// Returns whether its Run was clicked.
 fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> bool {
     let id = repair.repair.text_id();
@@ -96,7 +108,7 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
             let needs = i18n::text_with(
                 ui.ctx(),
                 "maintenance-repair-needs",
-                &[("package", repair.needs)],
+                &[("package", repair.needs.as_str())],
             );
 
             let secondary = ui.tokens().secondary;

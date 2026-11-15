@@ -7,10 +7,13 @@ use toolbox_plan::{
     PackageName, Plan, PlannedAction, RootAction, ShellPath, StepId, TargetList, UserAction,
     UserName,
 };
-use toolbox_services::apply::{Problem, Report};
+use toolbox_services::apply::{PlanId, Problem, Report};
 use toolbox_system::pkexec::Refusal;
 
 use super::{Clock, Events, error, needs_typing, planned};
+
+/// The id the plan of a test runs under.
+const PLAN: PlanId = PlanId::new(1);
 
 fn ticking(tick: Duration) -> Clock {
     let start = Instant::now();
@@ -30,6 +33,7 @@ fn lines(reports: &[Report]) -> String {
 
 fn two_steps() -> Report {
     Report::PlanStarted {
+        plan: PLAN,
         steps: vec![
             (StepId::new(1), vec!["pacman-key --refresh-keys".to_owned()]),
             (
@@ -105,7 +109,7 @@ fn a_run_is_started_output_finished_and_done() {
             step,
             outcome: Outcome::Succeeded,
         }),
-        Report::PlanFinished { succeeded: true },
+        finished(true),
     ]);
 
     assert_eq!(
@@ -177,7 +181,7 @@ fn a_helper_failure_carries_the_program_text_without_verbose() {
             kind: HelperFailure::Start,
             detail: "pkexec: not found\n".to_owned(),
         }),
-        Report::PlanFinished { succeeded: false },
+        finished(false),
     ]);
 
     assert_eq!(
@@ -211,7 +215,7 @@ fn a_rejected_request_and_a_busy_service_are_errors() {
         step(0, |_| Event::Rejected {
             reason: "unknown action".to_owned(),
         }),
-        Report::Busy,
+        Report::Busy { plan: PLAN },
     ]);
 
     assert_eq!(
@@ -248,4 +252,11 @@ fn paru_needs_typing_and_a_root_step_does_not() {
     assert!(!needs_typing(&PlannedAction::Root(
         RootAction::RefreshKeyring
     )));
+}
+
+const fn finished(succeeded: bool) -> Report {
+    Report::PlanFinished {
+        plan: PLAN,
+        succeeded,
+    }
 }

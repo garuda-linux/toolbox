@@ -187,8 +187,9 @@ For each of them:
 The file dialog comes from the desktop portal (`xdg-desktop-portal`). On a
 desktop without one, **Choose…** opens nothing.
 
-**Use none** in the **⋯** menu beside **Choose…** comments the setting out
-in the file, so GRUB uses none.
+The **×** button beside **Choose…** (screen readers call it **Clear** and the
+row's name) comments the setting out in the file, so GRUB uses none. It is
+greyed out while nothing is set.
 
 A fresh Garuda system sets no picture, so the page shows none. The older
 garuda-boot-options wrote the picture to another variable,
@@ -196,9 +197,9 @@ garuda-boot-options wrote the picture to another variable,
 line, the page shows its picture with the note **Set in /etc/default/grub as
 GRUB_MENU_PICTURE, which some GRUB themes read. Choose a picture to replace
 it.** A picture you choose is written to `GRUB_BACKGROUND` and the
-`GRUB_MENU_PICTURE` line stays as it is. **Use none** is not offered for that
-picture. After you used it on a picture of your own, the `GRUB_MENU_PICTURE`
-picture shows again.
+`GRUB_MENU_PICTURE` line stays as it is. The **×** button is greyed out for
+that picture. After you cleared a picture of your own, the
+`GRUB_MENU_PICTURE` picture shows again.
 
 GRUB reads the file while the computer starts, before your home folder may be
 unlocked. Pick a file on a partition GRUB can read, for example below
@@ -228,8 +229,8 @@ partition:
 - **Menu timeout**: systemd-boot's default, a number of seconds, **The menu
   waits for a key**, or **Hidden unless a key is held at start**.
 - **Edit entries at boot**, **Entries systemd-boot finds itself** and
-  **Firmware settings entry**: on, off, or **systemd-boot's default**, which
-  removes the line so systemd-boot decides.
+  **Firmware settings entry**: three segments, **Default**, **On** and
+  **Off**. **Default** removes the line so systemd-boot decides.
 
 Applying changes only the queued lines. Every other line stays, also the
 ones garuda-common-settings adds, and the old file stays beside it as

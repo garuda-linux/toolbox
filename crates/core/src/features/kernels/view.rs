@@ -8,6 +8,7 @@ use super::{
     build_release, builds_for, kernels_of, lacks_headers, modules,
 };
 use crate::domains::{DkmsBuilds, Packages};
+use crate::features::toggles::shown::Control;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 #[derive(Debug)]
@@ -140,6 +141,16 @@ impl Listing {
 }
 
 impl Row<'_> {
+    /// The same buttons as a package of Components. A queued wish offers
+    /// Take back, so a restored queue never strands the running kernel.
+    pub const fn control(&self) -> Control {
+        match (self.queued, self.kernel.is_installed()) {
+            (Some(_), _) => Control::TakeBack,
+            (None, true) => Control::Remove,
+            (None, false) => Control::Install,
+        }
+    }
+
     pub fn unbuilt(&self) -> usize {
         self.unbuilt_modules().count()
     }

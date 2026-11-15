@@ -51,16 +51,24 @@ async fn units_where(handle: &mut UnitsHandle, wanted: impl Fn(&UnitLists) -> bo
     .unwrap()
 }
 
+/// A settle longer than the patience shows that the first look waits
+/// for none.
 #[tokio::test]
-async fn both_scopes_are_listed_at_start() {
-    let (asked, _answered) = crossbeam_channel::unbounded();
+async fn nothing_is_listed_before_a_page_opens_and_then_both_scopes_at_once() {
+    let (asked, answered) = crossbeam_channel::unbounded();
     let mut handle = spawn(
         &tokio::runtime::Handle::current(),
         crate::waking::Wake::none(),
         Arc::new(Recorded { asked }),
-        Duration::ZERO,
+        PATIENCE * 2_u32,
     );
 
+    handle.refresh(UnitScope::System);
+    tokio::time::sleep(Duration::from_millis(50)).await;
+    assert_eq!(answered.try_iter().count(), 0, "no page opened");
+
+    handle.open();
+    handle.open();
     let units = units_where(&mut handle, |units| {
         units.system.get().is_some() && units.user.error().is_some()
     })
@@ -72,10 +80,15 @@ async fn both_scopes_are_listed_at_start() {
         Some("sshd.service")
     );
     assert_eq!(units.user.error(), Some(&UnitsFailure::Unavailable));
+    assert_eq!(
+        answered.try_iter().count(),
+        2,
+        "a second open lists nothing"
+    );
 }
 
 #[tokio::test]
-async fn requests_while_settling_list_each_scope_once() {
+async fn signals_while_settling_list_each_scope_once() {
     let (asked, answered) = crossbeam_channel::unbounded();
     let mut handle = spawn(
         &tokio::runtime::Handle::current(),
@@ -84,18 +97,24 @@ async fn requests_while_settling_list_each_scope_once() {
         Duration::from_millis(50),
     );
 
-    for _ in 0_u8..5 {
-        handle.refresh(UnitScope::System);
-    }
-
+    handle.open();
     units_where(&mut handle, |units| {
         units.system.get().is_some() && units.user.error().is_some()
     })
     .await;
-    tokio::time::sleep(Duration::from_millis(150)).await;
+
+    let signals = handle.requests();
+    for _ in 0_u8..5 {
+        signals.refresh(UnitScope::System);
+    }
+
+    tokio::time::sleep(Duration::from_millis(200)).await;
 
     let listed: Vec<UnitScope> = answered.try_iter().collect();
-    assert_eq!(listed, [UnitScope::System, UnitScope::User]);
+    assert_eq!(
+        listed,
+        [UnitScope::System, UnitScope::User, UnitScope::System]
+    );
 }
 
 #[test]

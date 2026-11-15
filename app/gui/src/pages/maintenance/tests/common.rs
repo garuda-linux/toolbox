@@ -60,18 +60,37 @@ fn a_queued_operation_marks_its_row() {
 }
 
 #[test]
-fn queue_waits_in_the_menu_and_rests_while_a_plan_runs() {
-    let mut harness = page(crate::testing::PageFixture {
+fn queue_sits_beside_run_now_and_rests_while_a_plan_runs() {
+    let harness = page(crate::testing::PageFixture {
         busy: true,
         ..with(programs(), Maintenance::default())
     });
 
-    assert!(harness.query_by_label("Queue cleanup").is_none());
-    harness
-        .get_by_role_and_label(Role::Button, "More actions for Clean package cache")
-        .click();
+    let queue = harness.get_by_role_and_label(Role::Button, "Queue cleanup");
+    assert!(queue.accesskit_node().is_disabled());
+    assert!(harness.query_by_role(Role::MenuItem).is_none());
+}
+
+#[test]
+fn a_queued_operation_offers_to_take_it_back() {
+    let mut fixture = with(programs(), Maintenance::default());
+    let snapshot = std::sync::Arc::clone(&fixture.snapshot);
+    maintenance::queue(
+        Task::CleanPackageCache,
+        Toggle::On,
+        &mut fixture.changes,
+        &snapshot,
+    );
+
+    let mut harness = page(fixture);
+    harness.get_by_label("Remove from queue").click();
     harness.run();
 
-    let queue = harness.get_by_role_and_label(Role::MenuItem, "Queue cleanup");
-    assert!(queue.accesskit_node().is_disabled());
+    assert_eq!(
+        sent(&harness),
+        [Command::from(MaintenanceCommand::Queue {
+            operation: Operation::CleanPackageCache,
+            on: false,
+        })]
+    );
 }

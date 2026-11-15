@@ -15,12 +15,12 @@ use toolbox_gui_kit::widgets::{Select, SpinTexts, card, spin_field};
 use toolbox_plan::GrubKey;
 use toolbox_services::boot_menu::Menu;
 
-use super::{WIDE_CONTROL, heading, queued, send};
+use super::{heading, queued, send};
 use crate::boot::Boot;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
-use crate::pages::setting_row::{Words, row, switch_row};
+use crate::pages::setting_row::{Words, row, switch_row, wide_control};
 
 /// The timeout's limits, in seconds.
 pub(super) const TIMEOUT_MAX: u32 = 300;
@@ -102,7 +102,8 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
         queued: tag.as_deref(),
     };
 
-    row(ui, true, &words, WIDE_CONTROL, |ui| {
+    let width = wide_control(ui);
+    row(ui, true, &words, width, |ui| {
         let names: Vec<&str> = rows.iter().map(|(_, name)| name.as_str()).collect();
         let current = rows.iter().position(|(entry, _)| *entry == value);
         let last = i18n::text(&ctx, "boot-default-last");
@@ -112,7 +113,7 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
                 Select::new(&title, &names)
                     .selected(if remembered { None } else { current })
                     .placeholder(if remembered { &last } else { "" })
-                    .width(WIDE_CONTROL)
+                    .width(width)
                     .show(ui)
             })
             .inner;

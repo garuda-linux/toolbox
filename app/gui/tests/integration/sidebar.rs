@@ -227,9 +227,19 @@ fn fade_drawn(harness: &Harness<'_, App>) -> bool {
     faded_within(harness, toolbox_gui_kit::theme::SIDEBAR_WIDTH)
 }
 
+/// The default window's height shows every entry in its normal spacing.
 #[test]
-fn a_window_of_796_shows_every_entry_without_scrolling() {
-    let harness = app(796.0, false);
+fn a_window_of_960_shows_every_entry_unpacked_without_scrolling() {
+    let harness = app(960.0, false);
+    let rect = |page: PageId| {
+        harness
+            .get_by_role_and_label(Role::Tab, &entry_name(&harness, page))
+            .rect()
+    };
+
+    let gap = rect(PageId::Components).top() - rect(PageId::Setup).bottom();
+    let normal = tokens::current(&harness.ctx).sizes.nav_gap;
+    assert!((gap - normal).abs() < 0.5, "packed: {gap} between entries");
 
     for page in PageId::ALL
         .into_iter()
@@ -278,6 +288,50 @@ fn a_packed_group_heading_has_more_room_above_than_below() {
             "{heading}: {over} above against {under} below"
         );
     }
+}
+
+/// A short window packs the list, and a heading still keeps 10 points to
+/// the entry above and 4 to the entry below.
+#[test]
+fn a_packed_group_heading_keeps_ten_above_and_four_below() {
+    let harness = app(HEIGHT, false);
+    let rect = |page: PageId| {
+        harness
+            .get_by_role_and_label(Role::Tab, &entry_name(&harness, page))
+            .rect()
+    };
+
+    for (heading, above, below) in [
+        ("INSTALL", PageId::Home, PageId::Setup),
+        ("SYSTEM", PageId::Discover, PageId::Services),
+        ("CARE", PageId::Boot, PageId::Maintenance),
+    ] {
+        let label = harness.get_by_label(heading).rect();
+        let over = label.top() - rect(above).bottom();
+        let under = rect(below).top() - label.bottom();
+
+        assert!(over >= 10.0 - 0.5, "{heading}: {over} above");
+        assert!(under >= 4.0 - 0.5, "{heading}: {under} below");
+    }
+}
+
+/// The packed list fits a window of 820. Earlier releases opened at 760,
+/// which no longer holds the packed headings' room (10 above, 4 below).
+#[test]
+fn a_window_of_820_shows_every_entry_packed_without_scrolling() {
+    let harness = app(820.0, false);
+
+    for page in PageId::ALL
+        .into_iter()
+        .filter(|page| *page != PageId::BootRepair)
+    {
+        assert!(
+            in_sight_unscrolled(&harness, page),
+            "{page:?} needs a scroll"
+        );
+    }
+
+    assert!(!fade_drawn(&harness), "nothing is cut, so no fade");
 }
 
 #[test]

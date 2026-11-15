@@ -75,6 +75,23 @@ fn the_welcome_counts_the_steps_and_next_opens_the_first() {
 }
 
 #[test]
+fn a_thin_bar_says_which_step_of_how_many_shows() {
+    let mut harness = first();
+    let bar = harness.get_by_role(Role::ProgressIndicator);
+    assert_eq!(bar.accesskit_node().numeric_value(), Some(0.0_f64));
+    assert!(bar.rect().height() < 8.0, "{:?}", bar.rect());
+
+    harness.get_by_label("Next").click();
+    harness.run();
+    harness.get_by_label("Next").click();
+    harness.run();
+
+    let second = harness.get_by_role_and_label(Role::ProgressIndicator, "Step 2 of 16");
+    assert_eq!(second.accesskit_node().numeric_value(), Some(2.0_f64));
+    assert_eq!(second.accesskit_node().max_numeric_value(), Some(16.0_f64));
+}
+
+#[test]
 fn alt_and_the_arrows_move_between_the_steps() {
     let mut harness = first();
 
@@ -188,8 +205,15 @@ fn a_run_with_nothing_to_do_does_not_call_the_system_ready() {
 #[test]
 fn the_summary_rows_keep_their_padding_from_the_card_edge() {
     let harness = page(strawberry(), Plans::default(), Stage::Summary);
-    let edge = harness.get_by_label("Summary").rect().left();
+
+    // The bar under the page names the stage too, nearer the middle.
+    let edge = harness
+        .get_all_by_label("Summary")
+        .map(|node| node.rect().left())
+        .fold(f32::INFINITY, f32::min);
+
     let name = harness.get_by_label("Strawberry Player").rect().left();
+
     let padding = toolbox_gui_kit::tokens::current(&harness.ctx)
         .sizes
         .row_padding

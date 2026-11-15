@@ -40,6 +40,8 @@ cli-locale-package = die Paketregeln verhindern, dass dieses Sprachpaket entfern
 
 cli-driver-other-file = eine andere Treiber-Einstellungsdatei in modprobe.d sperrt diesen Treiber, Garuda Toolbox ändert nur seine eigene Datei
 cli-driver-unavailable = die Treiber dieses Systems konnten nicht gelesen werden
+# A change refused because other changes are still being applied.
+cli-busy = es werden noch andere Änderungen übernommen, versuche es erneut, sobald sie fertig sind
 cli-driver-not-listed = das ist kein Netzwerktreiber dieses Systems, siehe `network drivers list`
 cli-driver-loaded = dieser Treiber ist schon geladen
 cli-driver-not-loaded = dieser Treiber ist nicht geladen

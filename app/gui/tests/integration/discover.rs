@@ -113,58 +113,80 @@ pub fn chip(harness: &mut Harness<'static, App>, title: &str) {
     harness.run_steps(8);
 }
 
-fn switch_shown(harness: &Harness<'static, App>, title: &str) -> bool {
+/// The row's spoken name is its title, and what waits or "Installed"
+/// after a comma.
+fn row_shown(harness: &Harness<'static, App>, title: &str) -> bool {
     harness
-        .query_by_role_and_label(Role::CheckBox, title)
-        .is_some()
+        .query_all_by_role(Role::ListItem)
+        .filter_map(|row| row.accesskit_node().label())
+        .any(|name| name == title || name.starts_with(&format!("{title},")))
+}
+
+fn first_row(harness: &Harness<'static, App>) -> String {
+    harness
+        .get_all_by_role(Role::ListItem)
+        .next()
+        .and_then(|node| node.accesskit_node().label())
+        .unwrap()
 }
 
 #[test]
 fn every_category_shows_and_a_chip_picks_one() {
     let (mut harness, _runtime) = discover();
-    assert!(switch_shown(&harness, "Kate"));
-    assert!(switch_shown(&harness, "Firefox"));
+    assert!(row_shown(&harness, "Kate"));
+    assert!(row_shown(&harness, "Firefox"));
 
     chip(&mut harness, "Internet");
 
-    assert!(switch_shown(&harness, "Firefox"));
-    assert!(switch_shown(&harness, "aerc"));
-    assert!(!switch_shown(&harness, "Kate"));
+    assert!(row_shown(&harness, "Firefox"));
+    assert!(row_shown(&harness, "aerc"));
+    assert!(!row_shown(&harness, "Kate"));
 }
 
 #[test]
-fn a_switch_queues_an_app_and_takes_it_back() {
+fn install_queues_an_app_and_take_back_drops_it() {
     let (mut harness, _runtime) = discover();
     chip(&mut harness, "Internet");
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "Firefox")
+        .get_by_role_and_label(Role::Button, "Install Firefox")
         .click();
     harness.run();
     assert!(harness.query_by_label("change queued").is_some());
-    assert!(harness.query_by_label("Turns on with Apply").is_some());
+    assert!(harness.query_by_label("Installs with Apply").is_some());
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "Firefox")
+        .get_by_role_and_label(Role::Button, "Take back Firefox")
         .click();
     harness.run();
     assert!(harness.query_by_label("change queued").is_none());
 }
 
 #[test]
-fn a_search_looks_through_every_category() {
-    let (mut harness, _runtime) = discover();
+fn an_installed_app_offers_remove() {
+    let (harness, _runtime) = discover();
 
-    let before = harness.query_all_by_label("Internet").count();
+    assert!(row_shown(&harness, "Kate, Installed"));
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, "Remove Kate")
+            .is_some()
+    );
+}
+
+#[test]
+fn a_search_looks_through_every_category_under_their_headings() {
+    let (mut harness, _runtime) = discover();
 
     type_into(&mut harness, "Search apps", "gecko");
 
-    assert!(switch_shown(&harness, "Firefox"));
-    assert!(!switch_shown(&harness, "Kate"));
-    assert_eq!(
-        harness.query_all_by_label("Internet").count(),
-        before + 1,
-        "the row names its category"
+    assert!(row_shown(&harness, "Firefox"));
+    assert!(!row_shown(&harness, "Kate"));
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Heading, "Internet")
+            .is_some(),
+        "the rows show under their category"
     );
 }
 
@@ -183,22 +205,18 @@ fn a_search_without_hits_says_so_and_clears() {
         .get_by_role_and_label(Role::Button, "Clear search")
         .click();
     harness.run();
-    assert!(switch_shown(&harness, "Kate"));
+    assert!(row_shown(&harness, "Kate"));
 }
 
 #[test]
+/// Firefox is installed, aerc comes first by name in Internet.
 fn selected_first_puts_installed_apps_on_top() {
-    let (mut harness, _runtime) = discover();
-    type_into(&mut harness, "Search apps", "o");
-    let first = |shown: &Harness<'static, App>| {
-        shown
-            .get_all_by_role(Role::CheckBox)
-            .next()
-            .and_then(|node| node.accesskit_node().label())
-            .unwrap()
-    };
+    let mut installed = system();
+    installed.insert(InstalledPackages(packages(&["firefox", "kate"])));
+    let (mut harness, _runtime) = discover_with(source_catalogs(), installed);
+    chip(&mut harness, "Internet");
 
-    assert_ne!(first(&harness), "Kate");
+    assert_eq!(first_row(&harness), "aerc");
 
     harness
         .get_by_role_and_label(Role::ComboBox, "Sort apps")
@@ -209,7 +227,7 @@ fn selected_first_puts_installed_apps_on_top() {
         .click();
     harness.run();
 
-    assert_eq!(first(&harness), "Kate");
+    assert_eq!(first_row(&harness), "Firefox, Installed");
 }
 
 #[test]
@@ -246,7 +264,7 @@ fn a_broken_category_leaves_the_others_with_a_notice() {
             .query_by_label("Some categories could not be loaded. The others are shown. A catalog file could not be read.")
             .is_some()
     );
-    assert!(switch_shown(&harness, "Stellarium"));
+    assert!(row_shown(&harness, "Stellarium"));
 }
 
 #[test]
@@ -259,8 +277,8 @@ fn the_palette_finds_an_app_and_opens_it_here() {
     harness.key_press(Key::Enter);
     harness.run();
 
-    assert!(switch_shown(&harness, "Firefox"));
-    assert!(!switch_shown(&harness, "Kate"));
+    assert!(row_shown(&harness, "Firefox"));
+    assert!(!row_shown(&harness, "Kate"));
 
     let focused: Vec<String> = harness
         .query_all_by_role(Role::ListItem)
@@ -285,10 +303,10 @@ fn during_a_search_the_chips_count_the_matches_and_still_pick() {
     assert_eq!(internet, "Internet 1");
 
     chip(&mut harness, "Documents");
-    assert!(!switch_shown(&harness, "Firefox"));
+    assert!(!row_shown(&harness, "Firefox"));
 
     chip(&mut harness, "All");
-    assert!(switch_shown(&harness, "Firefox"));
+    assert!(row_shown(&harness, "Firefox"));
 }
 
 #[test]

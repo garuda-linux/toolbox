@@ -4,10 +4,10 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_catalog::{Requires, ToggleCatalog, ToggleEntry, ToggleSection};
+use toolbox_catalog::{Check, Requires, ToggleCatalog, ToggleEntry, ToggleSection};
 
 use super::{EntryState, is_offered, state};
-use crate::{ChangeSet, Snapshot};
+use crate::{ChangeSet, Snapshot, Toggle};
 
 /// A section with the entries to show, never empty.
 #[derive(Debug)]
@@ -29,6 +29,18 @@ pub struct Entry<'catalog> {
 pub struct Tally {
     pub on: usize,
     pub total: usize,
+}
+
+/// How a row offers its change. A package installs and removes, so its
+/// row has a button. A service, a group or a config edit is a setting
+/// with a switch.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Control {
+    Switch,
+    Install,
+    Remove,
+    /// The queued install or removal goes back out of the queue.
+    TakeBack,
 }
 
 impl std::iter::Sum for Tally {
@@ -60,6 +72,15 @@ impl Section<'_> {
                 total: tally.total + 1,
             })
     }
+
+    /// Whether every entry `keep` keeps shows a state, so its count can
+    /// say how many are on.
+    pub fn read(&self, keep: impl Fn(&Entry<'_>) -> bool) -> bool {
+        self.entries
+            .iter()
+            .filter(|entry| keep(entry))
+            .all(|entry| !entry.unread())
+    }
 }
 
 impl Entry<'_> {
@@ -70,6 +91,31 @@ impl Entry<'_> {
 
     pub const fn known(&self) -> bool {
         self.state.system.is_some()
+    }
+
+    /// Neither the system nor the queue says whether it is on.
+    pub const fn unread(&self) -> bool {
+        !self.known() && self.state.queued.is_none()
+    }
+
+    pub const fn control(&self) -> Control {
+        control(self.entry.check(), self.state)
+    }
+}
+
+/// The control of an entry that checks `check` and is in `state`. A
+/// package whose state was not read offers Install, which changes nothing
+/// when it is installed.
+pub const fn control(check: &Check, state: EntryState) -> Control {
+    match check {
+        Check::Package(_) => match (state.queued, state.system) {
+            (Some(_), _) => Control::TakeBack,
+            (None, Some(Toggle::On)) => Control::Remove,
+            (None, Some(Toggle::Off) | None) => Control::Install,
+        },
+        Check::Service(_) | Check::UserService(_) | Check::Group(_) | Check::UserConfig(_) => {
+            Control::Switch
+        }
     }
 }
 

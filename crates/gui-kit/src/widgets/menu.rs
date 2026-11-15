@@ -29,24 +29,34 @@ pub fn menu_button(ui: &mut Ui, alt: &str, items: impl FnOnce(&mut Ui)) -> Respo
     button
 }
 
+/// The menu of `button`. A picked entry hands the focus to `button`, as
+/// the entry goes with the menu: a dialog the entry opens then has an
+/// opener to give the focus back to.
 pub(super) fn menu_for(ui: &Ui, button: &Response, open: bool, items: impl FnOnce(&mut Ui)) {
     if open {
         Popup::open_id(ui.ctx(), Popup::default_response_id(button));
     }
 
     let glass = menu_glass(ui);
-    Popup::menu(button)
+    let picked = Popup::menu(button)
         .width(MENU_WIDTH)
         .frame(glass.frame())
-        .show(|popup| menu_items(glass, popup, items));
+        .show(|popup| menu_items(glass, popup, items))
+        .is_some_and(|shown| shown.inner);
+
+    if picked {
+        button.request_focus();
+    }
 }
 
-/// `items` on `glass`, a list gap apart.
-pub(super) fn menu_items(glass: Glass, popup: &mut Ui, items: impl FnOnce(&mut Ui)) {
+/// `items` on `glass`, a list gap apart. Returns whether an entry closed
+/// the menu.
+pub(super) fn menu_items(glass: Glass, popup: &mut Ui, items: impl FnOnce(&mut Ui)) -> bool {
     glass.inside(popup, |list| {
         list.spacing_mut().item_spacing.y = LIST_GAP;
         items(list);
-    });
+        list.will_parent_close()
+    })
 }
 
 /// The frosted panel every menu and list sits on.
@@ -79,11 +89,8 @@ fn item(ui: &mut Ui, icon: Option<Icon>, text: &str, room: bool) -> Response {
             .rect_filled(rect, CornerRadius::same(RADIUS), fill);
     }
 
-    let ink = if ui.is_enabled() {
-        tokens.text
-    } else {
-        tokens.dim
-    };
+    // A disabled ui fades it once, see `press.rs`.
+    let ink = tokens.text;
 
     let mut left = rect.left() + ITEM_INSET;
     if room {
