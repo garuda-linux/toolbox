@@ -2,6 +2,7 @@
 //! opened as `--setup-assistant` opens it: a pick in a step reaches the
 //! queue and the summary.
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
@@ -14,6 +15,7 @@ use toolbox_gui::{App, Setup, snapshot};
 
 use crate::common::{Fixture, HEIGHT, installing, packages, window};
 use crate::discover::source_catalogs;
+use crate::look::look_for;
 use crate::system::first_read;
 
 /// A system that offers three audio players and has one of them.
@@ -29,19 +31,30 @@ fn system() -> Snapshot {
 }
 
 pub fn assistant() -> Fixture {
-    assistant_with(ChangeSet::default())
+    assistant_on(Theme::Dark)
+}
+
+/// The Setup Assistant drawn on `theme`, with that theme's desktop look.
+pub fn assistant_on(theme: Theme) -> Fixture {
+    assistant_with_on(ChangeSet::default(), theme)
 }
 
 /// [`assistant`] with `queued` waiting from another page.
 fn assistant_with(queued: ChangeSet) -> Fixture {
+    assistant_with_on(queued, Theme::Dark)
+}
+
+fn assistant_with_on(queued: ChangeSet, theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let probed = system();
-    let mut harness = window(HEIGHT).build_eframe(move |cc| {
+    let look = look_for(&runtime, theme);
+    let mut harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (probed.clone(), Vec::new());
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(queued),
                 snapshot: Some(snapshot::spawn(
                     &handle,
@@ -78,17 +91,22 @@ fn the_start_option_opens_the_welcome_with_the_offered_steps() {
     );
 }
 
-#[test]
-fn a_pick_reaches_the_queue_and_the_summary() {
-    let mut fixture = assistant();
-    let harness = fixture.harness();
-
+/// The first step with Strawberry Player picked, as a user picks it.
+pub fn pick_strawberry(harness: &mut Harness<'static, App>) {
     harness.get_by_label("Next").click();
     harness.run();
     harness
         .get_by_role_and_label(Role::Button, "Install Strawberry Player")
         .click();
     harness.run();
+}
+
+#[test]
+fn a_pick_reaches_the_queue_and_the_summary() {
+    let mut fixture = assistant();
+    let harness = fixture.harness();
+
+    pick_strawberry(harness);
     assert!(
         harness
             .query_all_by_label_contains("with Apply")

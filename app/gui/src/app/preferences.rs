@@ -169,6 +169,7 @@ pub(super) fn view(
             .map(Language::as_str),
         theme,
         motion,
+        desktop: prefs.palettes,
     }
 }
 

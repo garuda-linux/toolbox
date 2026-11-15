@@ -6,7 +6,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::{Duration, Instant};
 
 use crossbeam_channel::{Receiver, Sender};
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
@@ -54,14 +54,20 @@ pub fn app() -> Reading {
 
 /// As [`app`], in a dry run when `dry_run`.
 pub fn app_with(dry_run: bool) -> Reading {
+    app_on(dry_run, Theme::Dark)
+}
+
+/// As [`app_with`], drawn on `theme`.
+pub fn app_on(dry_run: bool, theme: Theme) -> Reading {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let (answer, answers): (Sender<Answer>, Receiver<Answer>) = crossbeam_channel::unbounded();
     let reads = Arc::new(AtomicUsize::new(0));
     let counted = Arc::clone(&reads);
     let changes = installing(&["firefox", "vlc"]);
+    let look = crate::look::look_for(&runtime, theme);
 
-    let harness = window(HEIGHT).build_eframe(move |cc| {
+    let harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
         let launcher = Arc::new(FakeLauncher(silent_script()));
         let probe = move || {
             counted.fetch_add(1, Ordering::SeqCst);
@@ -69,6 +75,7 @@ pub fn app_with(dry_run: bool) -> Reading {
         };
 
         let setup = Setup {
+            look,
             queue: Queue::restored_in_memory(changes),
             snapshot: Some(snapshot::spawn(
                 &handle,
@@ -369,7 +376,12 @@ fn a_wait_that_runs_out_leaves_a_screenshot() {
 /// The app in a dry run, after a read that failed on the system services,
 /// with the bar that says so.
 pub fn failed_units_bar() -> Reading {
-    let (mut harness, runtime, answer, reads) = app_with(true);
+    failed_units_bar_on(Theme::Dark)
+}
+
+/// The failed-units bar of [`failed_units_bar`], drawn on `theme`.
+pub fn failed_units_bar_on(theme: Theme) -> Reading {
+    let (mut harness, runtime, answer, reads) = app_on(true, theme);
     let issues = vec![ProbeIssue {
         probe: Probe::Units,
         error: ProbeError::fake("no bus"),

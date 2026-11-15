@@ -9,6 +9,8 @@ Rules for pages, gui-kit widgets and the command line's output.
   while it is enabled and no dialog or focused terminal is in the way.
 - A fixed toolbar under the header: search at the left, a labelled
   **Sort by** dropdown at the right. Filter chips scroll with the body.
+  A chip group wraps onto as many lines as its width needs, with no
+  sideways scroll, no edge fade and no scroll bar.
 - The page paints under the header band. The band shows the live blur
   under `header_scrim`, a neutral layer thick enough for the header text
   and at least a third opaque, so an accent control scrolled under it
@@ -158,6 +160,11 @@ Rules for pages, gui-kit widgets and the command line's output.
   up to `toasts::MAX_WIDTH` before it wraps.
 - Tab order: sidebar, header, page body, status bar last. Controls inside
   a row in visual order.
+- A list and a chip group take one Tab stop (`widgets/roving.rs`). A list's
+  is its last focused row, a chip group's the selected chip. Up and Down
+  (Left and Right on chips) move it, Home and End go to the ends. Tests
+  reach a row by these keys, not by an accessibility focus, which egui
+  ignores on a widget that is not a Tab stop.
 
 ## Texts
 

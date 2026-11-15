@@ -1,14 +1,14 @@
 mod after_install;
 
-use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
 
 use parking_lot::Mutex;
 use tokio::runtime::Runtime;
 use toolbox_catalog::SkelCatalog;
 use toolbox_core::features::maintenance::Tool;
-use toolbox_core::features::maintenance::page::{LaunchCause, PageTool, ToolRow, tools};
+use toolbox_core::features::maintenance::page::{PageTool, ToolRow, tools};
 use toolbox_plan::{Mirrorlist, PackageName, Plan, PlannedAction, RootAction, Toggle};
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
@@ -20,29 +20,23 @@ use crate::testing::poll;
 
 const MIRRORS: &str = "Server = https://cdn-mirror.chaotic.cx/$repo/$arch\n";
 
-/// Remembers every start, or fails each one like a missing program.
+/// Remembers every start.
 #[derive(Debug, Default)]
 struct Recorder {
     started: Mutex<Vec<PathBuf>>,
-    missing: bool,
 }
 
 /// Answers every ranking the same.
 struct Ranking(Result<&'static str, RankProblem>);
 
 impl Launcher for Recorder {
-    fn start(&self, program: &Path, _args: &[&str]) -> io::Result<()> {
-        if self.missing {
-            return Err(io::Error::from(io::ErrorKind::NotFound));
-        }
-
+    fn start(&self, program: &Path, _args: &[&str]) {
         self.started.lock().push(program.to_owned());
-        Ok(())
     }
 }
 
 impl MirrorRanking for Ranking {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
+    fn rank(&self, _cancel: &Arc<AtomicBool>) -> Result<Mirrorlist, RankProblem> {
         self.0.clone().map(|text| Mirrorlist::new(text).unwrap())
     }
 }
@@ -75,6 +69,24 @@ fn settle(maintenance: &mut Maintenance) -> Option<Plan> {
     })
 }
 
+/// The recorder as the launcher the page holds.
+fn as_launcher(launcher: &Arc<Recorder>) -> Arc<dyn Launcher> {
+    let shared: Arc<Recorder> = Arc::clone(launcher);
+    shared
+}
+
+/// Waits for the disk check of a finished install, which lands off the
+/// frame, and acts on it.
+pub(super) fn landed(maintenance: &mut Maintenance) -> Option<Plan> {
+    poll("the disk check never landed", || {
+        if let Some(plan) = maintenance.take() {
+            return Some(Some(plan));
+        }
+
+        (!maintenance.checking()).then_some(None)
+    })
+}
+
 fn installs(plan: &Plan) -> Vec<&str> {
     match plan.steps().first().map(|step| &step.action) {
         Some(PlannedAction::Root(RootAction::InstallPackages { packages })) => {
@@ -96,13 +108,13 @@ fn all_installed() -> Vec<ToolRow> {
 fn a_missing_tool_is_installed_and_opens_once_the_install_ends_well() {
     let runtime = Runtime::new().unwrap();
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
-    let launcher = Recorder::default();
+    let launcher = Arc::new(Recorder::default());
 
     let plan = maintenance
         .open_tool(
             PageTool::Program(Tool::BtrfsAssistant),
             &none_installed(),
-            Some(&launcher),
+            Some(&*launcher),
         )
         .expect("a missing tool is installed first");
 
@@ -110,7 +122,8 @@ fn a_missing_tool_is_installed_and_opens_once_the_install_ends_well() {
     assert!(launcher.started.lock().is_empty());
 
     maintenance.plan_started();
-    maintenance.plan_finished(true, |_| true, Some(&launcher));
+    maintenance.plan_finished(true, |_| true, Some(as_launcher(&launcher)));
+    landed(&mut maintenance);
 
     assert_eq!(
         *launcher.started.lock(),
@@ -122,51 +135,46 @@ fn a_missing_tool_is_installed_and_opens_once_the_install_ends_well() {
 fn a_refused_or_failed_install_opens_nothing() {
     let runtime = Runtime::new().unwrap();
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
-    let launcher = Recorder::default();
+    let launcher = Arc::new(Recorder::default());
 
     maintenance.open_tool(
         PageTool::Program(Tool::BtrfsAssistant),
         &none_installed(),
-        Some(&launcher),
+        Some(&*launcher),
     );
     maintenance.plan_refused();
     maintenance.plan_started();
-    maintenance.plan_finished(true, |_| true, Some(&launcher));
+    maintenance.plan_finished(true, |_| true, Some(as_launcher(&launcher)));
+    landed(&mut maintenance);
 
     maintenance.open_tool(
         PageTool::Program(Tool::BtrfsAssistant),
         &none_installed(),
-        Some(&launcher),
+        Some(&*launcher),
     );
     maintenance.plan_started();
-    maintenance.plan_finished(false, |_| true, Some(&launcher));
+    maintenance.plan_finished(false, |_| true, Some(as_launcher(&launcher)));
+    landed(&mut maintenance);
 
     assert!(launcher.started.lock().is_empty());
 }
 
+/// A failed start is a toast from the launcher, so the page keeps no
+/// problem for it.
 #[test]
-fn a_tool_that_cannot_start_says_why() {
+fn a_tool_is_handed_to_the_launcher_and_keeps_no_problem() {
     let runtime = Runtime::new().unwrap();
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
-    let launcher = Recorder {
-        missing: true,
-        ..Recorder::default()
-    };
+    let launcher = Arc::new(Recorder::default());
 
     let plan = maintenance.open_tool(
         PageTool::Program(Tool::BtrfsAssistant),
         &all_installed(),
-        Some(&launcher),
+        Some(&*launcher),
     );
 
     assert!(plan.is_none());
-    assert!(matches!(
-        maintenance.problem(),
-        Some(MaintenanceProblem::Launch { tool, cause: LaunchCause::Missing, reason: _ })
-            if *tool == "btrfs-assistant"
-    ));
-
-    maintenance.dismiss_problem();
+    assert_eq!(launcher.started.lock().len(), 1);
     assert_eq!(maintenance.problem(), None);
 }
 
@@ -178,8 +186,6 @@ fn ranked_mirrors_are_installed_by_a_root_step() {
     let plan = maintenance.open_tool(PageTool::ChaoticMirrors, &all_installed(), None);
 
     assert!(plan.is_none());
-    assert!(maintenance.ranking());
-
     let ranked = settle(&mut maintenance).expect("the ranking ends in a plan");
 
     assert!(!maintenance.ranking());
@@ -203,11 +209,11 @@ fn a_refused_ranked_list_goes_out_after_the_running_plan() {
     assert_eq!(maintenance.take(), None, "the update still runs");
 
     maintenance.plan_finished(true, |_| true, None);
+    assert_eq!(landed(&mut maintenance), Some(ranked));
 
-    assert_eq!(maintenance.take(), Some(ranked));
     maintenance.mirrorlist_started();
     maintenance.plan_finished(true, |_| true, None);
-    assert_eq!(maintenance.take(), None, "installed once");
+    assert_eq!(landed(&mut maintenance), None, "installed once");
 }
 
 #[test]
@@ -244,8 +250,8 @@ fn a_missing_rate_mirrors_is_installed_and_then_ranks() {
     maintenance.plan_started();
     maintenance.plan_finished(true, |_| true, None);
 
-    assert!(maintenance.ranking());
-    assert!(settle(&mut maintenance).is_some());
+    let ranked = landed(&mut maintenance).or_else(|| settle(&mut maintenance));
+    assert!(ranked.is_some(), "the ranking ends in a plan");
 }
 
 #[test]
@@ -278,7 +284,7 @@ fn a_reset_copies_the_chosen_settings_into_the_home() {
 
 #[test]
 fn the_dry_run_ranks_a_fixed_list_at_once() {
-    let mirrorlist = super::SampleMirrors.rank().unwrap();
+    let mirrorlist = super::SampleMirrors.rank(&Arc::default()).unwrap();
 
     assert!(mirrorlist.as_str().contains("Server = https://"));
 }
@@ -323,6 +329,10 @@ fn a_reset_click_copies_what_the_shared_skel_catalog_names() {
         skel: Some(catalog),
         ..Catalogs::default()
     }));
+    poll("the offer never landed", || {
+        maintenance.take();
+        (!maintenance.shelf().rows().is_empty()).then_some(())
+    });
     maintenance.choose("kitty", Toggle::On);
 
     let handled = maintenance.handle(&AppCommand::Maintenance(MaintenanceCommand::Reset));

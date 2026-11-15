@@ -6,6 +6,7 @@ mod catalog_ftl;
 mod catalog_readable;
 mod catalogs;
 mod cli_docs;
+mod guide_links;
 mod icons;
 mod translations;
 
@@ -22,7 +23,7 @@ const LOCALES_DIR: &str = "crates/services/i18n";
 const ENGLISH: &str = "en-US";
 
 /// Name, argument synopsis and function of every task.
-const TASKS: [(&str, &str, Task); 8] = [
+const TASKS: [(&str, &str, Task); 9] = [
     ("catalog-ftl", "[--check]", catalog_ftl::catalog_ftl),
     (
         "catalog-readable",
@@ -31,6 +32,7 @@ const TASKS: [(&str, &str, Task); 8] = [
     ),
     ("catalog-validate", "[dir]", catalog_validate),
     ("cli-docs", "[--check]", cli_docs::cli_docs),
+    ("guide-links", "", guide_links::guide_links),
     (
         "i18n-export",
         "[--translations] [--check]",

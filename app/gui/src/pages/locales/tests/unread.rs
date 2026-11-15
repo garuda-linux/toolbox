@@ -25,7 +25,9 @@ fn before_the_first_read_placeholder_rows_wait_on_both_tabs() {
         };
 
         let mut harness = fixture.harness(on(tab));
-        harness.run();
+
+        // Read again spins while the system is read, so the frames never settle.
+        harness.run_steps(3);
 
         assert!(
             harness
@@ -34,6 +36,35 @@ fn before_the_first_read_placeholder_rows_wait_on_both_tabs() {
             "{tab:?}"
         );
     }
+}
+
+/// The system is read again on every refresh, not only before the first
+/// reading, so Read again spins while that read runs.
+#[test]
+fn read_again_spins_while_the_system_is_read_again() {
+    let reading = PageFixture {
+        snapshot_reading: true,
+        ..PageFixture::with_snapshot(Snapshot::default())
+    };
+
+    let mut harness = reading.harness(on(Tab::Locales));
+    harness.run_steps(3);
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, "Reading")
+            .is_some()
+    );
+
+    let idle = PageFixture::with_snapshot(Snapshot::default());
+    let mut idle_harness = idle.harness(on(Tab::Locales));
+    idle_harness.run_steps(3);
+
+    assert!(
+        idle_harness
+            .query_by_role_and_label(Role::Button, "Reading")
+            .is_none()
+    );
 }
 
 #[test]

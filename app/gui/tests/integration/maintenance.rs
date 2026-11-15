@@ -2,7 +2,7 @@ use std::path::Path;
 use std::sync::Arc;
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use tempfile::TempDir;
@@ -14,6 +14,7 @@ use toolbox_gui::programs::Programs;
 use toolbox_gui::{App, Setup, reader};
 
 use crate::common::{TALL, open_tab, palette, window};
+use crate::look::look_for;
 use crate::system::{shows, step_until};
 
 const CATALOG: &str = r#"
@@ -51,8 +52,14 @@ fn programs() -> Programs {
 }
 
 pub fn maintenance() -> Fixture {
+    maintenance_on(Theme::Dark)
+}
+
+/// The Maintenance page drawn on `theme`, with that theme's desktop look.
+pub fn maintenance_on(theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
+    let look = look_for(&runtime, theme);
     let skel = tempfile::tempdir().unwrap();
     let home = tempfile::tempdir().unwrap();
     for (file, text) in [
@@ -71,10 +78,11 @@ pub fn maintenance() -> Fixture {
         skel_root: skel.path().to_owned(),
     };
 
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         App::new(
             cc,
             Setup {
+                look,
                 programs: Some(reader::spawn(
                     &handle,
                     toolbox_gui::waking::repaint(cc.egui_ctx.clone()),

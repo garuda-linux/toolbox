@@ -14,6 +14,7 @@ result-*
 
 **/tests/snapshots/**/*.diff.png
 **/tests/snapshots/**/*.new.png
+docs/src/images/*.new.png
 **/tests/snapshots/**/*.old.png
 
 /reference/

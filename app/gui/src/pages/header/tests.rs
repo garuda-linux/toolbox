@@ -4,8 +4,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_plan::UnitScope;
 
 use super::{
-    Tabbed, TabbedIds, refresh_header, refresh_header_reading, search, tabbed_header,
-    tabbed_header_reading,
+    Tabbed, TabbedIds, field_width, refresh_header_reading, search, tabbed_header_reading,
 };
 
 const IDS: TabbedIds<'static> = TabbedIds {
@@ -19,7 +18,13 @@ fn tabbed() -> Harness<'static, Option<Tabbed<UnitScope>>> {
     let mut harness = toolbox_gui_kit::testing::harness(900.0, 200.0).build_ui_state(
         |ui, done: &mut Option<Tabbed<UnitScope>>| {
             let scopes = [UnitScope::System, UnitScope::User];
-            *done = Some(tabbed_header(ui, IDS, &scopes, UnitScope::System));
+            *done = Some(tabbed_header_reading(
+                ui,
+                IDS,
+                &scopes,
+                UnitScope::System,
+                false,
+            ));
         },
         None,
     );
@@ -56,7 +61,12 @@ fn a_click_on_another_tab_is_handed_back() {
 fn f5_reads_again() {
     let mut harness = toolbox_gui_kit::testing::harness(900.0, 200.0).build_ui_state(
         |ui, pressed: &mut bool| {
-            *pressed |= refresh_header(ui, "page-kernels", "kernels-subtitle", "kernels-refresh");
+            *pressed |= refresh_header_reading(
+                ui,
+                ("page-kernels", "kernels-subtitle"),
+                "kernels-refresh",
+                false,
+            );
         },
         false,
     );
@@ -85,8 +95,8 @@ fn the_search_is_named_and_clears_with_the_shared_button() {
     assert_eq!(harness.state(), "");
 }
 
-/// Read again waits while a read runs, so a press shows it was taken and
-/// F5 sends no second read.
+/// While a read runs Read again stays enabled, is named Reading, and a
+/// click or F5 starts no second read.
 #[test]
 fn read_again_waits_while_a_read_runs() {
     let mut harness = toolbox_gui_kit::testing::harness(900.0, 200.0).build_ui_state(
@@ -101,13 +111,24 @@ fn read_again_waits_while_a_read_runs() {
         false,
     );
 
-    harness.run();
-    let button = harness.get_by_role(Role::Button);
-    assert!(button.accesskit_node().is_disabled());
+    harness.run_steps(3);
+    let button = harness.get_by_role_and_label(Role::Button, "Reading");
+    assert!(!button.accesskit_node().is_disabled());
+
+    button.click();
+    harness.run_steps(3);
+    assert!(!*harness.state());
 
     harness.key_press(egui::Key::F5);
-    harness.run();
+    harness.run_steps(3);
     assert!(!*harness.state());
+}
+
+#[test]
+fn a_search_beside_a_sort_keeps_the_width_the_row_leaves() {
+    assert!((field_width(900.0, 240.0) - 240.0).abs() < f32::EPSILON);
+    assert!((field_width(180.0, 240.0) - 180.0).abs() < f32::EPSILON);
+    assert!((field_width(40.0, 240.0) - 120.0).abs() < f32::EPSILON);
 }
 
 #[test]
@@ -126,9 +147,9 @@ fn a_tabbed_read_again_waits_while_a_read_runs() {
         None,
     );
 
-    harness.run();
+    harness.run_steps(3);
     harness.key_press(egui::Key::F5);
-    harness.run();
+    harness.run_steps(3);
 
     assert!(harness.state().is_some_and(|done| !done.refresh));
 }

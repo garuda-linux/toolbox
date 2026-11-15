@@ -42,16 +42,16 @@
 
 ## Names
 
-| Thing          | Name                                                                                                      |
-| -------------- | --------------------------------------------------------------------------------------------------------- |
-| App            | Garuda Toolbox, binary `garuda-toolbox`, Wayland app_id and icon `org.garudalinux.toolbox`                |
-| Root helper    | `/usr/lib/garuda-toolbox/garuda-toolbox-helper` (off `PATH`)                                              |
-| Polkit actions | `org.garudalinux.toolbox.{apply,read,logs,fetch}`                                                         |
-| D-Bus name     | `org.garudalinux.toolbox` (session bus, `org.freedesktop.Application`, `org.garudalinux.toolbox.Queue`)   |
-| Desktop file   | `org.garudalinux.toolbox.desktop`, autostart links point to `/usr/share/garuda-toolbox/autostart.desktop` |
-| XDG dirs       | `garuda-toolbox` (config, state, cache)                                                                   |
-| Environment    | `GARUDA_TOOLBOX_*`                                                                                        |
-| Installed data | `/usr/share/garuda-toolbox/catalog`                                                                       |
+| Thing          | Name                                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| App            | Garuda Toolbox, binary, Wayland app_id and icon `garuda-toolbox`                                        |
+| Root helper    | `/usr/lib/garuda-toolbox/garuda-toolbox-helper` (off `PATH`)                                            |
+| Polkit actions | `org.garudalinux.toolbox.{apply,read,logs,fetch}`                                                       |
+| D-Bus name     | `org.garudalinux.toolbox` (session bus, `org.freedesktop.Application`, `org.garudalinux.toolbox.Queue`) |
+| Desktop file   | `garuda-toolbox.desktop`, autostart links point to `/usr/share/garuda-toolbox/autostart.desktop`        |
+| XDG dirs       | `garuda-toolbox` (config, state, cache)                                                                 |
+| Environment    | `GARUDA_TOOLBOX_*`                                                                                      |
+| Installed data | `/usr/share/garuda-toolbox/catalog`                                                                     |
 
 ## Crates
 

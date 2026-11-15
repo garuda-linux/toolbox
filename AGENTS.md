@@ -57,7 +57,9 @@ cargo xtask catalog-ftl --check
 cargo xtask catalog-readable --check
 cargo xtask i18n-export --check && cargo xtask i18n-import --check
 cargo xtask cli-docs --check
+cargo xtask guide-links
 scripts/selftest.sh [suite]   # headless weston, helper in dry-run mode
+scripts/garuda-selftest.sh [suite...]   # the same in a Garuda container with systemd, real reads
 scripts/arch-it.sh            # helper as root against real pacman in the Arch container
 scripts/arch-package.sh       # makepkg and namcap in the Arch container
 scripts/lima-it.sh [--suite LIST]   # systemd, locales, DKMS, upgrades and faults in a Garuda VM

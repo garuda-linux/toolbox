@@ -9,7 +9,8 @@ use toolbox_config::{RefreshInterval, Settings};
 use toolbox_gui::settings::SettingsStore;
 use toolbox_gui::{App, PreferencesSetup, Setup};
 
-use crate::common::{TALL, window};
+use crate::common::{TALL, shared_runtime, window};
+use crate::look::look_for;
 
 #[derive(Debug, Default)]
 pub struct Kept {
@@ -38,10 +39,17 @@ impl SettingsStore for Recorder {
 }
 
 pub fn settings() -> (Harness<'static, App>, Arc<Recorder>) {
+    settings_on(Theme::Dark)
+}
+
+/// The Settings page drawn on `theme`, with that theme's desktop look.
+pub fn settings_on(theme: Theme) -> (Harness<'static, App>, Arc<Recorder>) {
     let store = Arc::new(Recorder::default());
     let kept = Arc::clone(&store);
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let look = look_for(shared_runtime(), theme);
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let setup = Setup {
+            look,
             preferences: PreferencesSetup {
                 store: Some(kept),
                 ..PreferencesSetup::default()
@@ -161,4 +169,17 @@ fn a_setting_select_takes_the_narrow_control_column() {
         (language - narrow).abs() < 0.5,
         "{language} against {narrow}"
     );
+}
+
+#[test]
+fn the_lower_cards_are_pictured() {
+    let (mut harness, _store) = settings();
+
+    harness
+        .query_all_by_label("Diagnostics")
+        .last()
+        .unwrap()
+        .scroll_to_me();
+    harness.run();
+    harness.snapshot("settings/lower_dark");
 }

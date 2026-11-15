@@ -21,7 +21,8 @@ let
 
   workspace = ''
     cp -r ${src}/Cargo.toml ${src}/Cargo.lock ${src}/rustfmt.toml ${src}/.cargo ${src}/app ${src}/crates .
-    mkdir -p data
+    mkdir -p data docs
+    cp -r ${src}/docs/src docs/
   '';
 
   xtaskCheck =
@@ -109,6 +110,8 @@ in
     ${workspace}
     cp -r ${src}/data/cli data/
   '' "cargo xtask cli-docs --check";
+
+  guide-links = xtaskCheck "check-guide-links" workspace "cargo xtask guide-links";
 
   icons = xtaskCheck "check-icons" ''
     ${workspace}

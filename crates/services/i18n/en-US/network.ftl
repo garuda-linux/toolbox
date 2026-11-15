@@ -141,7 +141,6 @@ network-hotspot-queue = Queue hotspot tool
 network-hotspot-unqueue = Take back
 network-hotspot-unknown = The installed packages could not be read, so it is not known whether the hotspot tool is installed. Read again reads them once more.
 # $reason is the system's own words.
-network-hotspot-not-started = The hotspot tool could not be started: { $reason }
 
 # The interface cards: one per activated Ethernet or Wi-Fi device. $label is the row's name.
 network-copy = Copy { $label }

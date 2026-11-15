@@ -210,7 +210,7 @@ fn the_sheet_blurs_the_page_under_it() {
 }
 
 #[test]
-fn the_terminal_reaches_the_sheets_padding_and_its_hint_sits_on_its_bottom_edge() {
+fn the_terminal_reaches_the_sheets_padding_and_its_hint_sits_in_the_header() {
     let hint = "Ctrl+Tab leaves the terminal.";
     let mut harness = app();
     open_console(&mut harness);
@@ -234,10 +234,12 @@ fn the_terminal_reaches_the_sheets_padding_and_its_hint_sits_on_its_bottom_edge(
         "{band} below the terminal's frame at {frame}, the sheet's padding is {room}"
     );
 
-    let shown = toolbox_gui_kit::testing::painted_text(&harness, hint).expect("the hint shows");
-    let line = egui::Rect::from_min_size(shown.pos, shown.galley.size());
+    let shown = toolbox_gui_kit::testing::painted_text(&harness, hint)
+        .expect("the hint is gone while the terminal has the focus")
+        .visual_bounding_rect();
+
     assert!(
-        line.top() < frame && line.bottom() > frame,
-        "the hint {line:?} is not on the frame's bottom edge at {frame}"
+        shown.bottom() <= terminal.top(),
+        "the hint at {shown:?} is not above the terminal at {terminal:?}"
     );
 }

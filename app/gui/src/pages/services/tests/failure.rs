@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_plan::UnitScope;
 
 use super::{ServicesPage, listed, sshd};
@@ -101,16 +101,22 @@ fn a_user_list_that_failed_names_the_user_manager() {
     );
 }
 
-/// Chips, search and sort narrow a list, so they wait for one.
+/// Chips, search and sort narrow a list, so they show off until one exists.
 #[test]
-fn without_a_list_no_chip_search_or_sort_shows() {
+fn without_a_list_no_chip_search_or_sort_is_on() {
     for listing in [UnitListing::NotLoaded, refused()] {
         let mut harness = listed(listing).harness(ServicesPage::default());
-        harness.run();
+        harness.run_steps(3);
 
-        assert!(harness.query_by_label("Search services").is_none());
-        assert!(harness.query_by_label("Sort services").is_none());
-        assert!(harness.query_by_label_contains("Running").is_none());
+        let search = harness.get_by_label("Search services");
+        assert!(search.accesskit_node().is_disabled());
+        let sort = harness.get_by_label("Sort services");
+        assert!(sort.accesskit_node().is_disabled());
+        let running = harness
+            .query_by_label_contains("Running")
+            .expect("the Running chip");
+
+        assert!(running.accesskit_node().is_disabled());
     }
 
     let mut harness =

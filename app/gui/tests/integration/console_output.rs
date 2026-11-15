@@ -3,6 +3,7 @@
 
 use std::sync::Arc;
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
@@ -23,22 +24,24 @@ const IDLE_HINT: &str = "The output of the next apply shows here.";
 
 /// java-runtime applied with the fake helper, so the Console has output.
 fn applied() -> (Harness<'static, App>, Runtime) {
-    applied_with(succeeding_script(), false)
+    applied_with(succeeding_script(), false, Theme::Dark)
 }
 
 /// java-runtime applied, the fake helper running `script`, an upload's link
 /// copied when `copy`.
-fn applied_with(script: String, copy: bool) -> (Harness<'static, App>, Runtime) {
+pub fn applied_with(script: String, copy: bool, theme: Theme) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
 
     let changes = installing(JAVA);
+    let look = crate::look::look_for(&runtime, theme);
 
-    let mut harness = window(HEIGHT).build_eframe(move |cc| {
+    let mut harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
         let launcher = Arc::new(FakeLauncher(script));
         let mut preferences = PreferencesSetup::default();
         preferences.settings.diagnostics.copy_to_clipboard = copy;
         let setup = Setup {
+            look,
             snapshot: Some(crate::console::installed_after_the_run(
                 &handle,
                 &cc.egui_ctx,
@@ -189,7 +192,7 @@ fn the_link_takes_one_row_and_the_terminal_keeps_its_room() {
 
 #[test]
 fn with_the_setting_on_the_link_goes_to_the_clipboard() {
-    let (mut harness, _runtime) = applied_with(succeeding_script(), true);
+    let (mut harness, _runtime) = applied_with(succeeding_script(), true, Theme::Dark);
 
     shared(&mut harness);
     harness.run();
@@ -236,7 +239,7 @@ fn output_takes_the_place_of_the_idle_hint() {
 
 #[test]
 fn a_plan_that_printed_nothing_can_be_cleared_but_not_copied() {
-    let (mut harness, _runtime) = applied_with(silent_script(), false);
+    let (mut harness, _runtime) = applied_with(silent_script(), false, Theme::Dark);
     harness.get_by_label(MENU).click();
     harness.run();
 
@@ -271,7 +274,7 @@ fn another_page_after_a_finished_run_puts_the_console_away() {
 
 #[test]
 fn a_run_that_printed_nothing_says_so_in_the_terminal() {
-    let (harness, _runtime) = applied_with(silent_script(), false);
+    let (harness, _runtime) = applied_with(silent_script(), false, Theme::Dark);
 
     assert!(harness.query_by_label(IDLE_HINT).is_none());
     assert!(
@@ -279,4 +282,14 @@ fn a_run_that_printed_nothing_says_so_in_the_terminal() {
             .query_by_label("The changes printed nothing.")
             .is_some()
     );
+}
+
+#[test]
+fn the_console_with_output_in_light_and_the_copy_note() {
+    let (mut harness, _runtime) = applied_with(succeeding_script(), false, Theme::Light);
+    harness.snapshot("console/applied_light");
+
+    choose(&mut harness, "Copy output");
+    harness.run();
+    harness.snapshot("console/copied_toast_light");
 }

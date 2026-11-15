@@ -56,8 +56,9 @@ impl<K: CatalogKind> CatalogPage<K> {
 }
 
 impl<K: CatalogKind> PageView for CatalogPage<K> {
-    fn header(&mut self, ui: &mut Ui, _context: &PageContext<'_>) -> bool {
-        self.toggles.header(ui);
+    fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
+        let listed = context.catalogs.get(K::CATALOG).catalog.is_ok();
+        self.toggles.header(ui, listed);
         true
     }
 

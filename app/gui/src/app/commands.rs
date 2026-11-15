@@ -150,7 +150,7 @@ impl App {
             AppCommand::Service(service) => self.run_service(service),
             AppCommand::Discover(discover) => self.run_discover(ctx, discover),
             AppCommand::Maintenance(maintenance) => self.run_maintenance(ctx, &maintenance),
-            AppCommand::Network(network) => self.run_network(ctx, network),
+            AppCommand::Network(network) => self.run_network(network),
             AppCommand::Packages(packages) => self.run_packages(&packages),
             AppCommand::Users(users) => self.run_users(users),
             AppCommand::Configs(configs) => self.run_configs(&configs),

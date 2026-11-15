@@ -149,6 +149,11 @@ impl Configs {
         self.list();
     }
 
+    /// Whether the files are listed, for a Read again that spins meanwhile.
+    pub const fn reading(&self) -> bool {
+        self.listing_asked
+    }
+
     /// Opens the file of the user behind the row `key` in the desktop's
     /// app for it.
     ///

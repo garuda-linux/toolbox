@@ -2,7 +2,7 @@ use egui::Ui;
 use toolbox_cli::output::size;
 use toolbox_core::features::maintenance::page::operations;
 use toolbox_core::features::maintenance::{Operation, RunNow, upgrade_queued};
-use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button};
+use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitName;
 use toolbox_services::home::Overview;
@@ -14,7 +14,6 @@ use crate::command::{HomeCommand, MaintenanceCommand, UiCommand};
 use crate::i18n;
 use crate::page::PageId;
 use crate::pages::PageContext;
-use crate::pages::rows::more::{item, more};
 
 pub(super) fn updates(
     page: &mut HomePage,
@@ -28,30 +27,36 @@ pub(super) fn updates(
     let detail = i18n::text(&ctx, "home-updates-detail");
 
     let queued = upgrade_queued(context.changes);
+    let queue = if queued {
+        "home-unqueue-update"
+    } else {
+        "home-queue-update"
+    };
+
+    let queue = i18n::text(&ctx, queue);
     ActionRow::new(icons::SYSTEM_SOFTWARE_UPDATE, Tone::Neutral, &title)
         .detail(&detail)
-        .show(ui, |ui| {
-            run_button(
-                ui,
-                context,
-                "home-update-now",
-                RunNow::UpgradeSystem,
-                ButtonKind::Primary,
-            );
-            let queue = if queued {
-                "home-unqueue-update"
-            } else {
-                "home-queue-update"
-            };
+        .show_with_body(
+            ui,
+            |ui| {
+                ui.horizontal(|ui| {
+                    if text_button(ui, &queue, &queue).clicked() {
+                        context.commands.send(HomeCommand::QueueUpgrade(!queued));
+                    }
 
-            more(ui, &title, |ui| {
-                if item(ui, queue, true) {
-                    context.commands.send(HomeCommand::QueueUpgrade(!queued));
-                }
-
-                show_packages(page, ui);
-            });
-        });
+                    show_packages(page, ui);
+                });
+            },
+            |ui| {
+                run_button(
+                    ui,
+                    context,
+                    "home-update-now",
+                    RunNow::UpgradeSystem,
+                    ButtonKind::Primary,
+                );
+            },
+        );
 }
 
 pub(super) fn aur(
@@ -66,20 +71,24 @@ pub(super) fn aur(
     let detail = i18n::text(&ctx, "home-aur-detail");
     ActionRow::new(icons::PACKAGE, Tone::Neutral, &title)
         .detail(&detail)
-        .show(ui, |ui| {
-            run_button(
-                ui,
-                context,
-                "home-aur-update",
-                RunNow::AurUpgrade,
-                ButtonKind::Soft,
-            );
-            more(ui, &title, |ui| show_packages(page, ui));
-        });
+        .show_with_body(
+            ui,
+            |ui| show_packages(page, ui),
+            |ui| {
+                run_button(
+                    ui,
+                    context,
+                    "home-aur-update",
+                    RunNow::AurUpgrade,
+                    ButtonKind::Soft,
+                );
+            },
+        );
 }
 
 fn show_packages(page: &mut HomePage, ui: &mut Ui) {
-    if item(ui, "home-show-packages", true) {
+    let text = i18n::text(ui.ctx(), "home-show-packages");
+    if text_link(ui, &text, &text).clicked() {
         page.updates_open = true;
     }
 }

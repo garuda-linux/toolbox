@@ -41,7 +41,8 @@ maintenance-not-installed = Not installed
 maintenance-tool-missing = Installing it starts at once in the Console and asks for your password, then the tool opens.
 maintenance-ranker-missing = Needs rate-mirrors. Installing it starts at once in the Console and asks for your password, then the ranking starts.
 maintenance-ranking = Testing the mirrors. This takes up to five minutes. The Console opens when the new list is ready.
-maintenance-ranking-progress = Ranking the mirrors…
+maintenance-ranking-progress = Ranking mirrors, { $time }
+maintenance-ranking-cancel = Stop ranking
 maintenance-tool-arch-mirrors = Refresh Arch mirrors
 maintenance-tool-arch-mirrors-detail = Choose the fastest Arch Linux mirrors, the servers packages download from, with reflector-simple.
 maintenance-tool-chaotic-mirrors = Refresh Chaotic-AUR mirrors
@@ -55,9 +56,6 @@ maintenance-tool-merge-pacdiff-detail = Compare and merge .pacnew and .pacsave f
 
 # Why a tool did not start or the mirrors were not ranked. $tool is the
 # tool's name, $reason the system's own words.
-maintenance-problem-launch-missing = { $tool } could not be started because it is not installed.
-maintenance-problem-launch-denied = { $tool } could not be started because this account may not run it.
-maintenance-problem-launch = { $tool } could not be started: { $reason }
 maintenance-problem-launch-absent = The install ended, but { $reason } is not there, so { $tool } did not start.
 maintenance-problem-mirrors-timeout = Ranking the Chaotic-AUR mirrors took longer than five minutes and was stopped. The list of mirrors is unchanged.
 maintenance-problem-mirrors-start = The ranking program rate-mirrors could not be started, so the Chaotic-AUR mirrors were not ranked: { $reason }

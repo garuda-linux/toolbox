@@ -32,19 +32,6 @@ impl HistoryAction {
     }
 }
 
-impl HistoryEntry {
-    pub fn shown_when(&self) -> String {
-        match self
-            .when
-            .get(..16)
-            .and_then(|minute| minute.split_once('T'))
-        {
-            Some((date, time)) => format!("{date} {time}"),
-            None => self.when.clone(),
-        }
-    }
-}
-
 /// The changes of `package` in `log`, newest first.
 pub fn history(log: &str, package: &PackageName) -> Vec<HistoryEntry> {
     let mut entries: Vec<HistoryEntry> = log

@@ -45,15 +45,9 @@ impl App {
             return;
         };
 
-        let problem = launcher
-            .start(Path::new(INSTALLER), &INSTALLER_ARGS)
-            .err()
-            .map(|error| {
-                tracing::error!("cannot start the installer: {error}");
-                HomeProblem::Installer(error.to_string())
-            });
-
-        self.services.home.set_problem(problem);
+        // A start that fails is a toast from the launcher.
+        launcher.start(Path::new(INSTALLER), &INSTALLER_ARGS);
+        self.services.home.set_problem(None);
     }
 }
 

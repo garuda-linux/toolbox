@@ -66,7 +66,8 @@ fn card_top<S>(harness: &Harness<'_, S>, top: f32) -> f32 {
 fn the_history_starts_one_card_padding_into_its_card() {
     let harness = unfolded();
 
-    let line = text_top(&harness, "2025-06-01 08:15");
+    let shown = crate::dates::pacman_moment(&harness.ctx, "2025-06-01T08:15:00+0200");
+    let line = text_top(&harness, &shown.expect("a moment"));
     let into = line - card_top(&harness, line);
     let padding = f32::from(tokens::current(&harness.ctx).sizes.card_padding.top);
     assert!(

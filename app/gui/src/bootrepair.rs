@@ -54,6 +54,11 @@ impl fmt::Debug for BootRepairSetup {
 }
 
 impl BootRepair {
+    /// Whether the disks are read, for a Read again that spins meanwhile.
+    pub fn reading(&self) -> bool {
+        self.reads.as_ref().is_some_and(Asked::running)
+    }
+
     pub const fn refusal(&self) -> Option<&RepairRefusal> {
         self.refusal.as_ref()
     }

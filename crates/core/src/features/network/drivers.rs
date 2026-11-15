@@ -60,6 +60,9 @@ pub enum Refusal {
     /// A load, a start or a test that runs at once did not start, as
     /// another plan runs. Only the window says it.
     Busy,
+    /// The rule a package queue meets, for the pciutils the hardware list
+    /// needs. Its text is the packages' text.
+    Package(crate::features::packages::queue::Refusal),
 }
 
 /// Why a load or an unload was not taken.

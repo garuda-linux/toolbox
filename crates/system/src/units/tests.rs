@@ -80,7 +80,8 @@ fn a_missing_program_is_unavailable() {
 
 #[test]
 fn a_failing_program_is_a_failure() {
-    let systemctl = Systemctl::with_program("false");
+    let (_folder, program) = fake_program("", "Failed to connect to bus", 1);
+    let systemctl = Systemctl::with_program(program);
 
     assert!(matches!(
         systemctl.enabled_units(),
@@ -133,8 +134,9 @@ fn masked_units_are_read_the_same_way() {
 
 #[test]
 fn masks_need_a_working_systemctl_too() {
+    let (_folder, program) = fake_program("", "Failed to connect to bus", 1);
     let missing = Systemctl::with_program("toolbox-system-no-such-program");
-    let failing = Systemctl::with_program("false");
+    let failing = Systemctl::with_program(program);
 
     assert_eq!(missing.masked_units(), Err(ProbeError::Unavailable));
     assert_eq!(missing.masked_user_units(), Err(ProbeError::Unavailable));
@@ -204,4 +206,30 @@ fn the_failed_units_come_from_systemctl() {
             UnitName::new("toolbox-fixture-failed.service").unwrap(),
         ])
     );
+}
+
+/// The Lima masked listing with its lines removed. systemctl prints nothing
+/// and exits 1 when no unit has the state (systemd 261.3 for
+/// `--state=masked-runtime`), which is an empty list and not a failure.
+#[test]
+fn a_listing_without_a_matching_unit_is_empty() {
+    let (_folder, program) = fake_program("", "", 1);
+
+    assert_eq!(
+        Systemctl::with_program(program)
+            .masked_units()
+            .map(|masked| masked.0),
+        Ok(BTreeSet::new())
+    );
+}
+
+/// The user scope without its bus exits 1 and says why on stderr.
+#[test]
+fn a_failure_that_names_its_reason_stays_one() {
+    let (_folder, program) = fake_program("", "Failed to connect to user scope bus", 1);
+
+    assert!(matches!(
+        Systemctl::with_program(program).masked_user_units(),
+        Err(error) if error.is_failure()
+    ));
 }

@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
@@ -22,6 +22,7 @@ use toolbox_plan::{KernelRelease, PackageName};
 use toolbox_services::dkms::Dkms;
 
 use crate::common::{TALL, button, packages, window};
+use crate::look::look_for;
 use crate::system::{first_read, shows, step_until};
 
 /// What dkms lists for [`system`]: `nvidia` built for `linux`.
@@ -95,16 +96,23 @@ pub fn system(running: bool) -> Snapshot {
 }
 
 pub fn kernels(system: Snapshot) -> (Harness<'static, App>, Runtime) {
+    kernels_on(system, Theme::Dark)
+}
+
+/// The Kernels page drawn on `theme`, with that theme's desktop look.
+pub fn kernels_on(system: Snapshot, theme: Theme) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
+    let look = look_for(&runtime, theme);
 
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (system.clone(), Vec::new());
         let dkms = || Dkms::Modules(parse_status(DKMS_STATUS));
 
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 snapshot: Some(snapshot::spawn(
                     &handle,

@@ -140,7 +140,6 @@ network-hotspot-queue = Hotspot-Werkzeug vormerken
 network-hotspot-unqueue = Zurücknehmen
 network-hotspot-unknown = Die installierten Pakete ließen sich nicht lesen. Daher ist unklar, ob das Hotspot-Werkzeug installiert ist. „Neu einlesen“ versucht es erneut.
 # $reason is the system's own words.
-network-hotspot-not-started = Das Hotspot-Werkzeug konnte nicht gestartet werden: { $reason }
 
 # The interface cards: one per activated Ethernet or Wi-Fi device. $label is the row's name.
 network-copy = { $label } kopieren

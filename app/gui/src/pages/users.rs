@@ -16,14 +16,12 @@ mod texts;
 use egui::Ui;
 use toolbox_core::features::users::run::{PageRun, Retry, RetryStep};
 use toolbox_core::features::users::view::{self, Shown};
-use toolbox_gui_kit::widgets::{
-    ButtonKind, Tone, banner, card, empty_state, page_toolbar, pill_button, skeleton_rows,
-};
+use toolbox_gui_kit::widgets::{Tone, banner, card, empty_state, page_toolbar, skeleton_rows};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_services::locks::Locks;
 
 use self::dialogs::{AddUser, Dialog, Next};
-use super::header::{TabText, TabbedIds, search, tabbed_header};
+use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, UsersCommand};
@@ -98,7 +96,9 @@ impl PageView for UsersPage {
             refresh: "users-refresh",
         };
 
-        let done = tabbed_header(ui, ids, &[Tab::Users, Tab::Groups], self.tab);
+        let reading = context.service::<Users>().reading();
+        let tabs = [Tab::Users, Tab::Groups];
+        let done = tabbed_header_reading(ui, ids, &tabs, self.tab, reading);
         if let Some(picked) = done.picked {
             self.tab = picked;
         }
@@ -188,6 +188,22 @@ impl UsersPage {
     }
 }
 
+/// A detail line of a row: two lines of it, cut as a catalog row cuts its
+/// description, with the whole text in the tooltip.
+pub fn detail_line(ui: &mut Ui, text: &str) {
+    let font = toolbox_gui_kit::fonts::font(
+        ui.style(),
+        toolbox_gui_kit::fonts::Weight::Regular,
+        toolbox_gui_kit::fonts::SMALL,
+    );
+
+    let secondary = toolbox_gui_kit::tokens::current(ui.ctx()).secondary;
+    let job = toolbox_gui_kit::widgets::highlighted(ui, text, "", font, secondary);
+
+    ui.add(egui::Label::new(crate::pages::toggles::control::cut(job)).wrap())
+        .on_hover_text(text);
+}
+
 /// Whether the accounts were read, else placeholder rows of `row_height`
 /// while they are read or the empty state that says why they were not.
 pub fn accounts_ready(
@@ -231,13 +247,11 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>, tab: Tab) {
             PageRun::None | PageRun::Sent(..) | PageRun::Running(..) => Tone::Neutral,
         };
 
-        if banner(ui, tone, &text, &[&dismiss]).value == Some(0) {
-            context.commands.send(UsersCommand::DismissRun);
-        }
-
         let console = i18n::text(&ctx, "users-show-console");
-        if pill_button(ui, &console, ButtonKind::Soft).clicked() {
-            context.commands.send(UsersCommand::ShowConsole);
+        match banner(ui, tone, &text, &[&dismiss, &console]).value {
+            Some(0) => context.commands.send(UsersCommand::DismissRun),
+            Some(_) => context.commands.send(UsersCommand::ShowConsole),
+            None => {}
         }
 
         ui.add_space(ui.tokens().sizes.card_gap);

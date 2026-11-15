@@ -75,12 +75,17 @@ impl TogglePage {
         self
     }
 
-    pub fn header(&mut self, ui: &mut Ui) {
+    /// The search waits for the catalog's list, as the chips do.
+    pub fn header(&mut self, ui: &mut Ui, listed: bool) {
         title_header(ui, self.title, self.subtitle);
         page_toolbar(
             ui,
             &mut self.search,
-            |text, ui| _ = search(ui, text, "toggles-search", "toggles-search-hint"),
+            |text, ui| {
+                ui.enabled_ui(listed, |ui| {
+                    _ = search(ui, text, "toggles-search", "toggles-search-hint");
+                });
+            },
             |_, _| {},
         );
     }
@@ -103,7 +108,8 @@ impl TogglePage {
             .get(&[query.as_str()], rest, || lead.chips(&ctx, data, &query));
 
         self.notices(ui, context, listed.unknown + lead.unread(data));
-        self.chips(ui, &leads, &listed.chips);
+        let ready = context.catalogs.get(self.catalog).catalog.is_ok();
+        ui.enabled_ui(ready, |ui| self.chips(ui, &leads, &listed.chips));
         ui.add_space(ui.tokens().sizes.filters_gap);
 
         let mut any = false;
@@ -244,7 +250,7 @@ impl TogglePage {
 
         // A second click on the chosen section shows them all again.
         let current = self.section.as_deref();
-        if let Some(picked) = counted_chips(ui, &options, current).value {
+        if let Some(picked) = counted_chips(ui, "toggles-sections", &options, current).value {
             self.section = picked
                 .filter(|picked| current != Some(*picked))
                 .map(str::to_owned);

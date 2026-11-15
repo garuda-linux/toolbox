@@ -1,7 +1,7 @@
 //! A click on the Network page.
 
 use toolbox_core::features::network::RadioTarget;
-use toolbox_plan::{HopLimit, HostName, KernelModule, PingCount, PingTimeout};
+use toolbox_plan::{HopLimit, HostName, KernelModule, PingCount, PingTimeout, Toggle};
 
 use super::{AppCommand, Command};
 
@@ -42,6 +42,11 @@ pub enum NetworkCommand {
     /// Queues the hotspot tool, or takes it back.
     ToggleHotspot,
     OpenHotspot,
+    /// Queues pciutils, the tool that lists the hardware, or takes it
+    /// back. A refusal stays on the page.
+    TogglePciutils {
+        wish: Toggle,
+    },
 }
 
 impl From<NetworkCommand> for Command {

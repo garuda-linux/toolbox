@@ -104,6 +104,11 @@ impl Users {
         self.read();
     }
 
+    /// Whether the accounts are read, for a Read again that spins meanwhile.
+    pub fn reading(&self) -> bool {
+        self.reads.as_ref().is_some_and(Asked::running)
+    }
+
     pub fn started(&mut self, kind: RunKind, user: UserName) {
         self.run = PageRun::Sent(kind, user);
     }

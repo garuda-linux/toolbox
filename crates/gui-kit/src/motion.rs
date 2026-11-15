@@ -15,6 +15,7 @@ use egui::emath::easing;
 use egui::{Context, Id};
 
 use crate::theme;
+use crate::widgets::list::memory;
 
 /// The Console sheet sliding up.
 pub const SHEET_ENTER: f32 = 0.18;
@@ -130,30 +131,19 @@ pub fn settle(ctx: &Context, id: Id, value: bool) {
 /// row whose switch Space flipped. [`keyboard_marked`] finds it.
 pub fn mark_keyboard(ctx: &Context, id: Id) {
     let now = ctx.input(|input| input.time);
-    ctx.data_mut(|data| data.insert_temp(keyboard_id(id), now));
+    memory::write(ctx, id, |row| row.keyboard = Some(now));
 }
 
 /// A key changed what lies inside `ui` a moment ago, so it jumps.
 pub fn keyboard_marked(ui: &egui::Ui) -> bool {
     let now = ui.input(|input| input.time);
-    ui.data(|data| {
-        ui.stack().iter().any(|node| {
-            data.get_temp::<f64>(keyboard_id(node.scope_id))
-                .is_some_and(|at| now - at <= KEYBOARD_HOLD)
-        })
+    ui.stack().iter().any(|node| {
+        memory::get(ui, node.scope_id)
+            .keyboard
+            .is_some_and(|at| now - at <= KEYBOARD_HOLD)
     })
-}
-
-/// Drops the mark [`mark_keyboard`] left for `id`, as for a row that
-/// left its list.
-pub(crate) fn forget_keyboard(ctx: &Context, id: Id) {
-    ctx.data_mut(|data| data.remove::<f64>(keyboard_id(id)));
 }
 
 fn seen_id(id: Id) -> Id {
     id.with("toolbox_gui_kit::motion::seen")
-}
-
-fn keyboard_id(id: Id) -> Id {
-    id.with("toolbox_gui_kit::motion::keyboard")
 }

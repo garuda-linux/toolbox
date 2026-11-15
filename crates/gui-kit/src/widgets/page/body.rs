@@ -66,6 +66,22 @@ pub(super) fn panes(ui: &mut Ui, room: Room, widest: f32, body: impl FnOnce(&mut
     body(&mut inner);
 }
 
+/// Where the scrolled part of the page shows, below the header, while the
+/// body is drawn. A widget that sticks to the top edge needs it, as the
+/// painting clip reaches up under the header.
+pub fn remember_viewport(ctx: &egui::Context, view: Rect) {
+    ctx.data_mut(|data| data.insert_temp(viewport_id(), view));
+}
+
+/// The viewport [`remember_viewport`] kept for the body drawn now.
+pub fn viewport(ctx: &egui::Context) -> Option<Rect> {
+    ctx.data(|data| data.get_temp(viewport_id()))
+}
+
+fn viewport_id() -> egui::Id {
+    egui::Id::unique("toolbox_gui_kit::page::viewport")
+}
+
 pub(super) fn scrolled(
     ui: &mut Ui,
     area: ScrollArea,
@@ -78,6 +94,7 @@ pub(super) fn scrolled(
         // there: the area itself starts below the band, so a control
         // scrolled into sight lands fully below it.
         let mut under = scrolling.clip_rect();
+        remember_viewport(scrolling.ctx(), under);
         under.min.y = room.page_top;
         under.max.y = room.floor;
         scrolling.set_clip_rect(under);

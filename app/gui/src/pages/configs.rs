@@ -19,7 +19,7 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, mono_small, page_toolbar, pill_button};
 
-use super::header::{refresh_header, search};
+use super::header::{refresh_header_reading, search};
 use super::rows::refused_banner;
 use super::{PageContext, PageView};
 use crate::command::{AppCommand, ConfigsCommand};
@@ -44,11 +44,12 @@ impl PageView for ConfigsPage {
     }
 
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
-        if refresh_header(
+        let reading = context.service::<Configs>().reading();
+        if refresh_header_reading(
             ui,
-            "page-configs",
-            "page-configs-subtitle",
+            ("page-configs", "page-configs-subtitle"),
             "configs-refresh",
+            reading,
         ) {
             context.commands.send(ConfigsCommand::Refresh);
         }

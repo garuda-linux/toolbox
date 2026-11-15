@@ -16,6 +16,7 @@ use egui::Context;
 use serde::{Deserialize, Serialize};
 use toolbox_catalog::SchemeMode;
 use toolbox_config::{Autostart, LogLevel, RefreshInterval, Settings};
+use toolbox_gui_kit::palette::Palette;
 use toolbox_gui_kit::toasts::{ToastKind, raise};
 use toolbox_plan::SchemeId;
 
@@ -178,4 +179,6 @@ pub struct SettingsView<'a> {
     pub language: Option<&'a str>,
     pub theme: ThemeChoice,
     pub motion: MotionChoice,
+    /// The desktop's dark and light palettes, which System keeps.
+    pub desktop: (Palette, Palette),
 }

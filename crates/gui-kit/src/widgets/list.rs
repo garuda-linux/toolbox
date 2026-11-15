@@ -1,11 +1,12 @@
-//! Each row is one focusable widget named for its item, with an id from
-//! the item's key, so a row's switch keeps its animation and its focus
-//! when a search drops the rows above it. Up and Down move between the
-//! rows of one card, Tab between the controls and cards. Only the rows
-//! near the visible part of the scroll view are laid out.
+//! Each row is one widget named for its item, with an id from the item's
+//! key, so a row's switch keeps its animation and its focus when a search
+//! drops the rows above it. The list takes one Tab stop, on a row, and Up,
+//! Down, Home and End move it between the rows of the card. Tab reaches the
+//! controls inside a row and the next card. Only the rows near the visible
+//! part of the scroll view are laid out.
 
 mod keys;
-pub(super) mod memory;
+pub mod memory;
 mod metrics;
 mod row;
 pub(super) mod span;
@@ -17,6 +18,7 @@ use span::Offsets;
 
 use super::card;
 use super::layout::SETTLED;
+use super::roving::{Axes, Roving, Setup};
 
 pub trait ListItem {
     /// Unique within the list and the same from frame to frame, such as
@@ -112,6 +114,9 @@ pub enum RowHeights {
 #[derive(Clone, Debug)]
 pub struct RowState {
     pub index: usize,
+    /// The row's id, which its [`ActionRow`](super::ActionRow) and
+    /// [`split_row_in`](super::split_row_in) keep their sizes under.
+    pub row: Id,
     pub response: egui::Response,
     /// Space was pressed on the focused row, or its empty part was
     /// clicked: its switch flips.
@@ -168,19 +173,9 @@ impl<'a> RowList<'a> {
 
         card(ui, |ui| {
             ui.scope_builder(builder, |ui| {
-                // Only for the frame a page asks to reveal a row.
-                let revealed = self
-                    .reveal
-                    .filter(|key| position(items, |item| item.key() == *key).is_some());
-
-                let holds = revealed
-                    .is_some_and(|key| ui.memory(|memory| memory.has_focus(row_id(list, key))));
-
-                if let Some(key) = revealed.filter(|_| !holds) {
-                    ui.memory_mut(|memory| memory.request_focus(row_id(list, key)));
-                }
-
-                let (current, keys) = navigate(ui, list, items);
+                let (roving, holds) = stop_for_frame(ui, list, items, self.reveal);
+                let keys = keys::take(ui, roving.held());
+                let stop = roving.stop();
                 let offsets = self.offsets(ui, list, items);
                 let fixed = match self.heights {
                     RowHeights::Fixed(height) => Some(height),
@@ -191,33 +186,31 @@ impl<'a> RowList<'a> {
                 let clip = ui.clip_rect();
                 let visible = Rangef::new(clip.top() - start, clip.bottom() - start);
                 let mut at = 0.0;
-                for index in offsets.rows_to_draw(visible, current) {
+                for index in offsets.rows_to_draw(visible, Some(stop)) {
                     let Some(item) = items.get(index) else {
                         continue;
                     };
 
                     let id = row_id(list, item.key());
-                    if ui.memory(|memory| memory.has_focus(id)) {
-                        remember_focused(ui, list, index);
-                    }
-
                     let top = offsets.top(index);
                     if top > at {
                         ui.add_space(top - at);
                         at = top;
                     }
 
-                    let asked = keys.moved_to.is_none() && current == Some(index);
+                    let asked = roving.held() == Some(index);
                     let place = row::Place {
                         list,
                         id,
                         index,
                         fixed,
+                        focusable: roving.is_stop(index),
                         toggle: asked && keys.toggle,
                         menu: asked && keys.menu,
                     };
 
-                    let height = row::show(ui, place, item, &mut body);
+                    let (height, response) = row::show(ui, place, item, &mut body);
+                    roving.apply(ui, index, id, &response);
                     check_place(ui, list, (&offsets, index), height);
                     at += height;
                 }
@@ -291,67 +284,45 @@ fn check_place(ui: &Ui, list: Id, (offsets, index): (&Offsets, usize), height: f
     }
 }
 
-fn navigate<R>(ui: &Ui, list: Id, items: &R) -> (Option<usize>, keys::RowKeys)
+/// The list's Tab stop for this frame. A row the page reveals takes the stop
+/// and the focus until it holds them, and `holds` tells whether it does.
+fn stop_for_frame<R>(ui: &Ui, list: Id, items: &R, reveal: Option<&str>) -> (Roving, bool)
 where
     R: Rows + ?Sized,
 {
-    let focused = ui.memory(egui::Memory::focused);
-    let current = focused.and_then(|focused| focused_index(ui, list, items, focused));
+    let mut roving = Roving::read(
+        ui,
+        list,
+        items.len(),
+        |index| id_at(list, items, index),
+        Setup {
+            rest: None,
+            axes: Axes::Vertical,
+        },
+    );
 
-    let Some(current) = current else {
-        return (None, keys::RowKeys::default());
-    };
+    // Only for the frame a page asks to reveal a row.
+    let revealed =
+        reveal.and_then(|key| position(items, |item| item.key() == key).map(|at| (key, at)));
 
-    let keys = keys::take(ui, current, items.len());
-    let Some(target) = keys.moved_to else {
-        return (Some(current), keys);
-    };
+    let holds =
+        revealed.is_some_and(|(key, _)| ui.memory(|memory| memory.has_focus(row_id(list, key))));
 
-    if let Some(item) = items.get(target) {
-        let id = row_id(list, item.key());
-        ui.memory_mut(|memory| memory.request_focus(id));
-        remember_focused(ui, list, target);
+    if let Some((_, index)) = revealed.filter(|_| !holds) {
+        roving.focus(ui, index);
     }
 
-    (Some(target), keys)
+    (roving, holds)
 }
 
-/// The index of the focused row. The one remembered when it took the
-/// focus is checked first, so a frame reads one row, not all of them.
-fn focused_index<R>(ui: &Ui, list: Id, items: &R, focused: Id) -> Option<usize>
+/// The row's id for the Tab stop, the one the stop's index names.
+fn id_at<R>(list: Id, items: &R, index: usize) -> Id
 where
     R: Rows + ?Sized,
 {
-    let remembered = ui.data(|data| data.get_temp::<usize>(focus_memory(list)));
-    let still = remembered.filter(|&index| {
-        items
-            .get(index)
-            .is_some_and(|item| row_id(list, item.key()) == focused)
-    });
-
-    if still.is_some() {
-        return still;
-    }
-
-    // The focus is in another widget, or the rows moved under it. One
-    // search per focus change and per row count: a row that is focused
-    // later is drawn and remembered first.
-    let searched = list.with("focus-searched");
-    let asked = (focused, items.len());
-    if ui.data(|data| data.get_temp::<(Id, usize)>(searched)) == Some(asked) {
-        return None;
-    }
-
-    ui.data_mut(|data| data.insert_temp(searched, asked));
-    position(items, |item| row_id(list, item.key()) == focused)
-}
-
-fn remember_focused(ui: &Ui, list: Id, index: usize) {
-    ui.data_mut(|data| data.insert_temp(focus_memory(list), index));
-}
-
-fn focus_memory(list: Id) -> Id {
-    list.with("focused-row")
+    items
+        .get(index)
+        .map_or(list, |item| row_id(list, item.key()))
 }
 
 fn position<R>(items: &R, mut found: impl FnMut(&R::Item<'_>) -> bool) -> Option<usize>

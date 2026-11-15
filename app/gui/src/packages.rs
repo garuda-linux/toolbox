@@ -1,11 +1,10 @@
 //! What the Packages page keeps between frames: the index of every
 //! package, and the details and history of the package it shows.
 //!
-//! Everything is read by the page itself, once it opened, again on Read
-//! again and after every plan. libalpm and the log block, so the reads
-//! run on the runtime and wake the frame with their result. The AUR's
-//! copy is read only once its chip shows, and again only on Read again:
-//! a plan changes nothing in it.
+//! Reads run when the page opens, on refresh and after every plan. libalpm
+//! and the log block, so the reads run on the runtime and wake the frame
+//! with their result. The AUR's copy is read only once its chip shows, and
+//! again only on Read again: a plan changes nothing in it.
 
 mod edits;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
@@ -47,6 +46,14 @@ pub struct Details {
     pub history: Read<Vec<HistoryEntry>>,
 }
 
+/// The reads that were asked and have not landed yet.
+#[derive(Debug, Default)]
+struct Reads {
+    index: bool,
+    info: bool,
+    history: bool,
+}
+
 #[derive(Debug, Default)]
 pub struct Packages {
     opened: bool,
@@ -61,8 +68,10 @@ pub struct Packages {
     /// the ones its rows were built from without comparing them.
     details: Option<Arc<Details>>,
     refusal: Option<PackagesRefusal>,
-    /// `None` in tests that need no reads: nothing is read.
+    /// `None` in tests that need no reads.
     jobs: Option<Jobs>,
+    /// Which reads run. The old answers stay on screen meanwhile.
+    reads: Reads,
 }
 
 pub type PackagesRefusal = Refused<toolbox_core::features::packages::queue::Refusal, PackageName>;
@@ -92,6 +101,11 @@ impl Packages {
 
     pub const fn index(&self) -> &Read<Arc<Catalog>> {
         &self.index
+    }
+
+    /// Whether a read of the index or of the shown details runs.
+    pub const fn reading(&self) -> bool {
+        self.reads.index || self.reads.info || self.reads.history
     }
 
     pub const fn aur(&self) -> &Read<Arc<AurCatalog>> {
@@ -131,7 +145,7 @@ impl Packages {
     }
 
     /// Reads the index, the AUR's copy once asked and the shown package
-    /// again. The old answers stay on screen until the new ones land.
+    /// again.
     pub fn refresh(&mut self) {
         self.read_local();
         if self.aur_asked {
@@ -140,14 +154,14 @@ impl Packages {
     }
 
     /// A plan may have installed or removed packages, but changed nothing
-    /// of the AUR. Read again, once the page was opened.
+    /// of the AUR. Reads again once the page was opened.
     pub fn plan_finished(&mut self) {
         if self.opened {
             self.read_local();
         }
     }
 
-    fn read_local(&self) {
+    fn read_local(&mut self) {
         self.read_index();
         if let Some(package) = self.details.as_ref().map(|shown| shown.package.clone()) {
             self.read_details(&package);
@@ -177,7 +191,10 @@ impl Packages {
 
         for result in landed.into_iter().flatten() {
             match result {
-                Landed::Index(index) => self.index = index,
+                Landed::Index(index) => {
+                    self.index = index;
+                    self.reads.index = false;
+                }
                 Landed::Aur(aur, names) => {
                     self.aur = aur;
                     if names.is_some() {
@@ -186,17 +203,17 @@ impl Packages {
                     }
                 }
                 Landed::Info(package, info) => {
+                    self.reads.info = false;
                     self.change_shown(&package, |shown| shown.info = *info);
                 }
                 Landed::History(package, lines) => {
+                    self.reads.history = false;
                     self.change_shown(&package, |shown| shown.history = lines);
                 }
             }
         }
     }
 
-    /// A page that keeps rows of the details names their allocation, so
-    /// changed details get a new one.
     fn change_shown(&mut self, package: &PackageName, change: impl FnOnce(&mut Details)) {
         if let Some(shown) = self
             .details
@@ -209,11 +226,12 @@ impl Packages {
         }
     }
 
-    fn read_index(&self) {
+    fn read_index(&mut self) {
         let Some(jobs) = &self.jobs else {
             return;
         };
 
+        self.reads.index = true;
         let source = Arc::clone(&jobs.setup.source);
         jobs.lane.blocking(
             "index",
@@ -250,11 +268,13 @@ impl Packages {
         );
     }
 
-    fn read_details(&self, package: &PackageName) {
+    fn read_details(&mut self, package: &PackageName) {
         let Some(jobs) = &self.jobs else {
             return;
         };
 
+        self.reads.info = true;
+        self.reads.history = true;
         let source = Arc::clone(&jobs.setup.source);
         let wanted = package.clone();
         let answer = package.clone();
@@ -303,6 +323,7 @@ impl Packages {
             details: details.map(Arc::new),
             refusal: None,
             jobs: None,
+            reads: Reads::default(),
         }
     }
 

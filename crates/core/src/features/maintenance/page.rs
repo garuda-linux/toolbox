@@ -85,13 +85,9 @@ pub enum PageTool {
     ChaoticMirrors,
 }
 
-/// Why a program did not start, in the words a user can act on. The
-/// system's own text goes beside it.
+/// Why a launched program is missing, in the words a user can act on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum LaunchCause {
-    Missing,
-    Denied,
-    Other,
     /// Its install ended well, yet the program is not where it should be,
     /// so the system has no error of its own to show.
     AbsentAfterInstall,
@@ -171,18 +167,6 @@ impl PageTool {
     /// The id of its name on the Common tab.
     pub fn text_id(self) -> String {
         format!("maintenance-tool-{}", self.key())
-    }
-}
-
-impl LaunchCause {
-    pub const fn of(kind: std::io::ErrorKind) -> Self {
-        if matches!(kind, std::io::ErrorKind::NotFound) {
-            Self::Missing
-        } else if matches!(kind, std::io::ErrorKind::PermissionDenied) {
-            Self::Denied
-        } else {
-            Self::Other
-        }
     }
 }
 

@@ -47,7 +47,7 @@ use self::ports::{
 use self::start::{load_settings, preferences, profiler, skips_autostart};
 
 /// The Wayland `app_id`, the desktop file's name and eframe's storage folder.
-const APP_ID: &str = "org.garudalinux.toolbox";
+const APP_ID: &str = "garuda-toolbox";
 /// The log file is `<log folder>/<PROGRAM>.log`.
 const PROGRAM: &str = "garuda-toolbox";
 

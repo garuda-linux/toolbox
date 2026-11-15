@@ -1,5 +1,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 use super::{
@@ -89,14 +91,35 @@ fn a_ranking_past_its_deadline_is_stopped() {
     let program = stand_in(folder.path(), "sleep 60");
     let started = Instant::now();
 
-    let problem = rank_within(&program, Duration::from_millis(200)).unwrap_err();
+    let problem = rank_within(&program, Duration::from_millis(200), &Arc::default()).unwrap_err();
 
     assert_eq!(problem, RankProblem::TimedOut);
     assert!(started.elapsed() < Duration::from_secs(10));
 }
 
+#[test]
+fn a_cancel_stops_the_ranking_at_once() {
+    let folder = tempfile::tempdir().unwrap();
+    let program = stand_in(folder.path(), "sleep 60");
+    let cancel = Arc::new(AtomicBool::new(false));
+    let setter = Arc::clone(&cancel);
+    let started = Instant::now();
+    std::thread::Builder::new()
+        .name("cancel-timer".to_owned())
+        .spawn(move || {
+            std::thread::sleep(Duration::from_millis(200));
+            setter.store(true, Ordering::Relaxed);
+        })
+        .unwrap();
+
+    let problem = rank_within(&program, RANKING_DEADLINE, &cancel).unwrap_err();
+
+    assert_eq!(problem, RankProblem::Cancelled);
+    assert!(started.elapsed() < Duration::from_secs(10));
+}
+
 fn rank(program: &Path) -> Result<toolbox_plan::Mirrorlist, RankProblem> {
-    rank_within(program, RANKING_DEADLINE)
+    rank_within(program, RANKING_DEADLINE, &Arc::default())
 }
 
 /// The Lima result with its log stands in for a long complaint.
@@ -114,7 +137,7 @@ fn the_system_ranking_runs_its_program() {
     let folder = tempfile::tempdir().unwrap();
     let program = saving(folder.path(), RATED);
 
-    let mirrorlist = RateMirrors::new(program).rank().unwrap();
+    let mirrorlist = RateMirrors::new(program).rank(&Arc::default()).unwrap();
 
     assert_eq!(mirrorlist.servers(), 28);
 }

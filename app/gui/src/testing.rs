@@ -59,6 +59,7 @@ const SEARCH_INSET: f32 = 48.0;
 pub struct PageFixture {
     pub snapshot: Arc<Snapshot>,
     pub probed: bool,
+    pub snapshot_reading: bool,
     pub changes: ChangeSet,
     /// Raise it with every change to `changes` after the first frame, as
     /// the queue does.
@@ -99,6 +100,7 @@ impl Default for PageFixture {
         Self {
             snapshot: Arc::default(),
             probed: true,
+            snapshot_reading: false,
             changes: ChangeSet::default(),
             revision: 0,
             catalogs: Catalogs::default(),
@@ -134,6 +136,7 @@ impl PageFixture {
         PageContext {
             snapshot: &self.snapshot,
             probed: self.probed,
+            snapshot_reading: self.snapshot_reading,
             changes: &self.changes,
             revision: self.revision,
             catalogs: &self.catalogs,
@@ -161,6 +164,10 @@ impl PageFixture {
                 language: None,
                 theme: ThemeChoice::default(),
                 motion: MotionChoice::default(),
+                desktop: (
+                    toolbox_gui_kit::palette::Palette::fallback(egui::Theme::Dark),
+                    toolbox_gui_kit::palette::Palette::fallback(egui::Theme::Light),
+                ),
             },
         }
     }

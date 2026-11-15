@@ -1,22 +1,26 @@
-use egui::{
-    Align, Color32, CornerRadius, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response,
-    Role, ScrollArea, Sense, Ui, WidgetInfo, pos2, vec2,
-};
+mod options;
 
-use super::menu::{ITEM_INSET, LIST_GAP, MENU_WIDTH, menu_glass};
+use egui::{
+    Align, Color32, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response, Role, ScrollArea,
+    Sense, Ui, WidgetInfo, pos2, vec2,
+};
+#[cfg(test)]
+pub(super) use options::option_fill;
+use options::{SWATCH_GAP, SWATCH_WIDTH, options_in, paint_swatch, swatch_room};
+
+use super::menu::{ITEM_INSET, MENU_WIDTH, menu_glass};
 use super::press::{Pointer, hover_amount};
 use super::text::cut;
 use super::{Choice, focus_ring, line, rich};
 use crate::fonts::{BODY, Weight};
-use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, RADIUS};
-use crate::tokens::Tokens;
+use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT};
 use crate::ui_ext::icon_image;
 use crate::{icons, tokens};
 
 const PADDING_X: f32 = 14.0;
 const CHEVRON: f32 = 16.0;
 /// An option of the open list, as tall as a pill outside a row.
-const OPTION_HEIGHT: f32 = PILL_HEIGHT;
+pub(super) const OPTION_HEIGHT: f32 = PILL_HEIGHT;
 /// The widest an open list grows for a long option, such as a shell's
 /// whole store path, before it cuts the option.
 pub(super) const LIST_MAX_WIDTH: f32 = MENU_WIDTH * 2.0;
@@ -40,6 +44,8 @@ pub struct Select<'a> {
     /// shell's whole path, on hover and for screen readers.
     detail: Option<&'a str>,
     width: f32,
+    /// One colour strip per option, the same order, empty for none.
+    swatches: &'a [[Color32; 3]],
 }
 
 impl<'a> Select<'a> {
@@ -52,6 +58,7 @@ impl<'a> Select<'a> {
             caption: None,
             detail: None,
             width: MENU_WIDTH,
+            swatches: &[],
         }
     }
 
@@ -62,6 +69,13 @@ impl<'a> Select<'a> {
 
     pub const fn placeholder(mut self, placeholder: &'a str) -> Self {
         self.placeholder = placeholder;
+        self
+    }
+
+    /// Colours to show before each option: window, text and accent, in
+    /// that order. The chosen one shows in the closed pill too.
+    pub const fn swatches(mut self, swatches: &'a [[Color32; 3]]) -> Self {
+        self.swatches = swatches;
         self
     }
 
@@ -137,6 +151,7 @@ impl<'a> Select<'a> {
             caption: _,
             detail,
             width,
+            swatches,
         } = self;
 
         let shown = selected
@@ -160,14 +175,15 @@ impl<'a> Select<'a> {
 
         // The value is whole for screen readers already, a tooltip shows
         // it whole to the eye when the pill cut it, or its detail.
-        let cut = paint_pill(ui, &response, rect, shown);
+        let swatch = selected.and_then(|index| swatches.get(index)).copied();
+        let cut = paint_pill(ui, &response, rect, shown, swatch);
         let response = match (detail, cut) {
             (Some(detail), _) => response.on_hover_ui(|tip| _ = tip.label(detail)),
             (None, true) => response.on_hover_ui(|tip| _ = tip.label(shown)),
             (None, false) => response,
         };
 
-        let picked = list(ui, &response, options, selected);
+        let picked = list(ui, &response, options, swatches, selected);
 
         // Read after the list ran, which opens or closes it this frame.
         let open = Popup::is_id_open(ui.ctx(), Popup::default_response_id(&response));
@@ -182,7 +198,7 @@ impl<'a> Select<'a> {
 
 /// How wide the open list is: as wide as its pill or its widest option,
 /// at most [`LIST_MAX_WIDTH`]. A wider option is cut.
-fn list_width(ui: &Ui, pill: f32, options: &[&str]) -> f32 {
+fn list_width(ui: &Ui, pill: f32, options: &[&str], swatch: f32) -> f32 {
     let widest = options
         .iter()
         .map(|option| {
@@ -193,7 +209,7 @@ fn list_width(ui: &Ui, pill: f32, options: &[&str]) -> f32 {
         .fold(0.0, f32::max);
 
     let padding = tokens::current(ui.ctx()).sizes.list_padding.sum().x;
-    let wanted = ITEM_INSET.mul_add(2.0, widest) + padding;
+    let wanted = ITEM_INSET.mul_add(2.0, widest) + padding + swatch;
     wanted.clamp(pill, LIST_MAX_WIDTH.max(pill))
 }
 
@@ -208,7 +224,13 @@ fn list_height(ui: &Ui, pill: Rect) -> f32 {
 }
 
 /// The open list under `pill`.
-fn list(ui: &Ui, pill: &Response, options: &[&str], selected: Option<usize>) -> Option<usize> {
+fn list(
+    ui: &Ui,
+    pill: &Response,
+    options: &[&str],
+    swatches: &[[Color32; 3]],
+    selected: Option<usize>,
+) -> Option<usize> {
     let glass = menu_glass(ui);
     let scrolled_id = Popup::default_response_id(pill).with("scrolled");
     let height = list_height(ui, pill.rect);
@@ -218,7 +240,12 @@ fn list(ui: &Ui, pill: &Response, options: &[&str], selected: Option<usize>) -> 
         .kind(PopupKind::Menu)
         .close_behavior(PopupCloseBehavior::CloseOnClick)
         .gap(PILL_GAP)
-        .width(list_width(ui, pill.rect.width(), options))
+        .width(list_width(
+            ui,
+            pill.rect.width(),
+            options,
+            swatch_room(swatches),
+        ))
         .frame(glass.frame())
         .show(|popup| {
             // Once per opening, and not in the sizing pass, which lays the
@@ -234,7 +261,9 @@ fn list(ui: &Ui, pill: &Response, options: &[&str], selected: Option<usize>) -> 
                 ScrollArea::vertical()
                     .max_height(height)
                     .auto_shrink([false, true])
-                    .show(inside, |list| options_in(list, options, selected, reveal))
+                    .show(inside, |list| {
+                        options_in(list, options, swatches, selected, reveal)
+                    })
                     .inner
             })
         });
@@ -247,38 +276,14 @@ fn list(ui: &Ui, pill: &Response, options: &[&str], selected: Option<usize>) -> 
     open.inner
 }
 
-/// The rows of an open list. `reveal` scrolls the chosen one into view.
-fn options_in(
-    list: &mut Ui,
-    options: &[&str],
-    selected: Option<usize>,
-    reveal: bool,
-) -> Option<usize> {
-    list.spacing_mut().item_spacing.y = LIST_GAP;
-    let mut picked = None;
-    for (index, option) in options.iter().enumerate() {
-        let chosen = Some(index) == selected;
-        let row = option_row(list, option, chosen);
-        if chosen && reveal {
-            row.scroll_to_me(Some(Align::Center));
-        }
-
-        if row.clicked() {
-            picked = Some(index);
-        }
-    }
-
-    // The close behaviour only hears the pointer. A pick from the
-    // keyboard or a screen reader closes the list here.
-    if picked.is_some() {
-        list.close();
-    }
-
-    picked
-}
-
 /// Draws the pill. Returns whether `shown` was cut to fit.
-fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
+fn paint_pill(
+    ui: &Ui,
+    response: &Response,
+    rect: Rect,
+    shown: &str,
+    swatch: Option<[Color32; 3]>,
+) -> bool {
     if !ui.is_rect_visible(rect) {
         return false;
     }
@@ -297,8 +302,13 @@ fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
     let ink = tokens.text;
 
     ui.painter().rect_filled(rect, CONTROL_RADIUS, fill);
+    let before = swatch.map_or(0.0, |colours| {
+        paint_swatch(ui, rect.left() + PADDING_X, rect.center().y, colours);
+        SWATCH_WIDTH + SWATCH_GAP
+    });
+
     let text = Rect::from_min_max(
-        pos2(rect.left() + PADDING_X, rect.top()),
+        pos2(rect.left() + PADDING_X + before, rect.top()),
         pos2(
             rect.right() - PADDING_X - CHEVRON - tokens.sizes.text_to_icon,
             rect.bottom(),
@@ -325,63 +335,4 @@ fn paint_pill(ui: &Ui, response: &Response, rect: Rect, shown: &str) -> bool {
     icon_image(ui, icons::GO_DOWN, tokens.secondary).paint_at(ui, chevron);
     focus_ring(ui, response, CONTROL_RADIUS);
     was_cut
-}
-
-/// An option's fill: the chosen one is tinted at rest, any one shows the
-/// hover and press under the pointer.
-pub(super) fn option_fill(tokens: &Tokens, chosen: bool, pointer: Pointer, hover: f32) -> Color32 {
-    if pointer == Pointer::Pressed {
-        return tokens.pressed;
-    }
-
-    let rest = if chosen {
-        tokens.accent_soft
-    } else {
-        Color32::TRANSPARENT
-    };
-
-    rest.lerp_to_gamma(tokens.hover, hover)
-}
-
-/// Too wide text is cut, shown whole on hover and to screen readers.
-fn option_row(ui: &mut Ui, text: &str, chosen: bool) -> Response {
-    let tokens = tokens::current(ui.ctx());
-    let width = ui.available_width();
-    let (rect, response) = ui.allocate_exact_size(vec2(width, OPTION_HEIGHT), Sense::click());
-    response.widget_info(|| WidgetInfo::labeled(Role::ListBoxOption, true, text));
-    super::mark_selected(ui, &response, chosen);
-
-    let pointer = Pointer::of(&response);
-    let fill = option_fill(
-        &tokens,
-        chosen,
-        pointer,
-        hover_amount(ui, &response, pointer),
-    );
-
-    ui.painter()
-        .rect_filled(rect, CornerRadius::same(RADIUS), fill);
-
-    let weight = if chosen {
-        Weight::SemiBold
-    } else {
-        Weight::Regular
-    };
-
-    let room = ITEM_INSET.mul_add(-2.0, rect.width()).max(0.0);
-    let galley = cut(ui, rich(ui, text, weight, BODY, tokens.text), room);
-    let was_cut = galley.elided;
-    let position = pos2(
-        rect.left() + ITEM_INSET,
-        rect.center().y - galley.size().y / 2.0,
-    );
-
-    ui.painter().galley(position, galley, tokens.text);
-    focus_ring(ui, &response, RADIUS);
-
-    if was_cut {
-        response.on_hover_text(text)
-    } else {
-        response
-    }
 }

@@ -2,6 +2,7 @@ use std::collections::BTreeSet;
 use std::sync::Arc;
 use std::time::Duration;
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use futures_lite::future::Boxed;
@@ -18,9 +19,12 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::units::{self, UnitList, UnitLister};
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{KernelModule, UnitName, UnitScope};
-use toolbox_system::{Cards, Checked, NetworkActions, NetworkSource, ProbeError};
+use toolbox_system::{
+    Cards, Checked, NetworkActions, NetworkSource, Probe, ProbeError, ProbeIssue,
+};
 
 use crate::common::{Fixture, SMALLEST, TALL, WIDTH, open_tab, packages, window};
+use crate::look::look_for;
 use crate::system::{first_read, settle, step_until};
 
 const LAPTOP_LSPCI: &str = toolbox_system::testing::network::BARE_METAL_LSPCI_NN;
@@ -147,11 +151,27 @@ fn system() -> Snapshot {
 }
 
 pub fn network() -> Fixture {
+    network_on(Theme::Dark)
+}
+
+/// The Network page drawn on `theme`, with that theme's desktop look.
+pub fn network_on(theme: Theme) -> Fixture {
+    network_with_on(system(), Vec::new(), theme)
+}
+
+/// The Network page with the system read as `probed` and the read's
+/// `issues`.
+pub fn network_with(probed: Snapshot, issues: Vec<ProbeIssue>) -> Fixture {
+    network_with_on(probed, issues, Theme::Dark)
+}
+
+/// As [`network_with`], drawn on `theme`.
+pub fn network_with_on(probed: Snapshot, issues: Vec<ProbeIssue>, theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
-    let probed = system();
-    let mut harness = window(TALL).build_eframe(move |cc| {
-        let probe = move || (probed.clone(), Vec::new());
+    let look = look_for(&runtime, theme);
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
+        let probe = move || (probed.clone(), issues.clone());
         let units = units::spawn(
             &handle,
             toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
@@ -162,6 +182,7 @@ pub fn network() -> Fixture {
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 snapshot: Some(snapshot::spawn(
                     &handle,
@@ -268,4 +289,19 @@ fn a_long_device_name_wraps_above_its_kind_at_every_width() {
             );
         }
     }
+}
+
+#[test]
+fn the_tools_say_when_the_packages_are_unread() {
+    let issue = ProbeIssue {
+        probe: Probe::Packages,
+        error: ProbeError::fake("no pacman"),
+    };
+
+    let mut fixture = network_with(Snapshot::default(), vec![issue]);
+    let harness = fixture.harness();
+
+    open_tab(harness, "Tools");
+    settle(harness);
+    harness.snapshot("network/error_dark");
 }

@@ -9,6 +9,7 @@ use title::{tail_id, title_tail};
 pub use title::{title_capitals_top, title_line, title_line_height};
 
 use super::card::in_card_row;
+use super::list::memory::{self, Size};
 use crate::theme::PILL_HEIGHT;
 use crate::tokens;
 
@@ -20,8 +21,6 @@ pub(super) const SETTLED: f32 = 0.5;
 /// What a remembered size that moved does to the frame.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum Redraw {
-    /// The first measurement discards its pass, later ones repaint.
-    FirstDiscards,
     /// Every change discards the pass, for a band whose old size would
     /// show for one frame.
     Discards,
@@ -56,9 +55,19 @@ pub(super) fn moved(was: f32, now: f32) -> bool {
     (now - was).abs() > SETTLED
 }
 
-/// Keeps the width `now` for `id` unless it settled at `kept`.
-pub(super) fn remember_width(ui: &Ui, id: Id, kept: Option<f32>, now: f32, reason: &'static str) {
-    remember(ui, id, kept, now, (Redraw::FirstDiscards, reason));
+/// Keeps the size `now` in `field` of `row` unless it settled at `kept`.
+/// A first measurement discards its pass, as [`remember`] does.
+pub(super) fn remember_width(
+    ui: &Ui,
+    (row, field): (Id, Size),
+    kept: Option<f32>,
+    now: f32,
+    reason: &'static str,
+) {
+    if kept.is_none_or(|was| moved(was, now)) {
+        memory::write(ui.ctx(), row, |kept_row| *field(kept_row) = Some(now));
+        remeasured(ui, kept.is_none(), reason);
+    }
 }
 
 /// Keeps the size `now` for `id` unless it settled at `kept`, the one
@@ -101,6 +110,28 @@ pub fn split_row<L, R>(
     left: impl FnOnce(&mut Ui) -> L,
     right: impl FnOnce(&mut Ui) -> R,
 ) -> (L, R) {
+    split_row_at(ui, None, right_width, left, right)
+}
+
+/// [`split_row`] for a list row, `row` being the row's id, so the sizes
+/// it keeps go with the row's memory and the list drops them with the row.
+pub fn split_row_in<L, R>(
+    ui: &mut Ui,
+    row: Id,
+    right_width: f32,
+    left: impl FnOnce(&mut Ui) -> L,
+    right: impl FnOnce(&mut Ui) -> R,
+) -> (L, R) {
+    split_row_at(ui, Some(row), right_width, left, right)
+}
+
+fn split_row_at<L, R>(
+    ui: &mut Ui,
+    row: Option<Id>,
+    right_width: f32,
+    left: impl FnOnce(&mut Ui) -> L,
+    right: impl FnOnce(&mut Ui) -> R,
+) -> (L, R) {
     let full = ui.available_width();
     let gap = tokens::current(ui.ctx()).sizes.text_to_control;
     let Some(left_width) = text_width(full, right_width, gap) else {
@@ -110,8 +141,8 @@ pub fn split_row<L, R>(
     // Last pass's heights centre the text and the controls on each other.
     // Text taller than the controls keeps its place at the row's top, so a
     // row has its text where a row without a control has it.
-    let id = ui.next_auto_id().with("split_row");
-    let known = ui.data(|data| data.get_temp::<[f32; 4]>(id));
+    let row = row.unwrap_or_else(|| ui.next_auto_id().with("split_row"));
+    let known = memory::get(ui, row).split;
     let [text_was, controls_was, measured_was, given_was] =
         known.unwrap_or([0.0, 0.0, right_width, right_width]);
 
@@ -166,7 +197,7 @@ pub fn split_row<L, R>(
 
         let now = [text_height, controls_height, controls_width, right_width];
         if known.is_none_or(|was| was.iter().zip(now).any(|(was, now)| moved(*was, now))) {
-            ui.data_mut(|data| data.insert_temp(id, now));
+            memory::write(ui.ctx(), row, |kept_row| kept_row.split = Some(now));
 
             // Controls of another width were placed from the old one, past
             // the row's edge or short of it. That frame is never shown.
@@ -245,8 +276,8 @@ fn unsqueezed_at<R>(
 /// A right-to-left layout would hand out Tab focus from the right edge
 /// backwards. The lead comes from last frame's width.
 pub fn trailing<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> R {
-    let id = ui.next_auto_id().with("trailing");
-    let width_was = ui.data(|data| data.get_temp::<f32>(id));
+    let row = ui.next_auto_id().with("trailing");
+    let width_was = memory::get(ui, row).trailing;
     let room = ui.available_width();
     let lead = (room - width_was.unwrap_or(room)).max(0.0);
 
@@ -254,7 +285,15 @@ pub fn trailing<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> R {
         let layout = Layout::left_to_right(Align::Center);
         let (inner, width, _) = unsqueezed_at(ui, (lead, room, 0.0), layout, body);
 
-        remember_width(ui, id, width_was, width, "trailing width");
+        remember_width(
+            ui,
+            (row, |kept_row: &mut memory::RowMemory| {
+                &mut kept_row.trailing
+            }),
+            width_was,
+            width,
+            "trailing width",
+        );
         inner
     })
     .inner

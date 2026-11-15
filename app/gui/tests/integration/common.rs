@@ -1,4 +1,5 @@
 use std::collections::BTreeSet;
+use std::sync::OnceLock;
 
 use egui::accesskit::Role;
 use egui::{Event, Key, Modifiers, PointerButton, Pos2, Rect, Vec2};
@@ -8,9 +9,11 @@ use tokio::runtime::Runtime;
 use toolbox_core::domains::Packages;
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
-use toolbox_gui::{App, Setup};
+use toolbox_gui::programs::Programs;
+use toolbox_gui::{App, Setup, reader};
 use toolbox_plan::PackageName;
 
+use crate::captured::sample_reader;
 pub const WIDTH: f32 = 1024.0;
 pub const HEIGHT: f32 = 720.0;
 pub const TALL: f32 = 900.0;
@@ -47,9 +50,44 @@ pub fn launch(setup: Setup) -> Harness<'static, App> {
 }
 
 pub fn launch_in(builder: HarnessBuilder<App>, setup: Setup) -> Harness<'static, App> {
-    let mut harness = builder.build_eframe(move |cc| App::new(cc, setup));
+    launch_with(builder, setup, |setup, _| setup)
+}
+pub fn launch_with(
+    builder: HarnessBuilder<App>,
+    setup: Setup,
+    fill: fn(Setup, &egui::Context) -> Setup,
+) -> Harness<'static, App> {
+    let mut harness = builder.build_eframe(move |cc| {
+        let setup = finish_reads(fill(setup, &cc.egui_ctx), &cc.egui_ctx);
+        App::new(cc, setup)
+    });
+
     harness.run();
     harness
+}
+/// A reader the test does not give finishes at once, as on a system with
+/// nothing to read. Without one a page would wait for its read forever,
+/// and its Read again would spin.
+fn finish_reads(mut setup: Setup, ctx: &egui::Context) -> Setup {
+    if setup.snapshot.is_none() {
+        setup.snapshot = Some(sample_reader(ctx, &setup.catalogs, None));
+    }
+
+    if setup.programs.is_none() {
+        setup.programs = Some(reader::spawn(
+            shared_runtime().handle(),
+            toolbox_gui::waking::repaint(ctx.clone()),
+            "programs",
+            Programs::default,
+        ));
+    }
+
+    setup
+}
+
+pub fn shared_runtime() -> &'static Runtime {
+    static RUNTIME: OnceLock<Runtime> = OnceLock::new();
+    RUNTIME.get_or_init(|| Runtime::new().expect("a runtime for the readers"))
 }
 
 pub fn packages(names: &[&str]) -> BTreeSet<PackageName> {

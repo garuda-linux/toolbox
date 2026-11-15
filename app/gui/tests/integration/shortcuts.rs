@@ -220,11 +220,11 @@ fn a_hovered_palette_row_is_the_one_marked_until_a_key_moves_the_mark() {
 }
 
 #[test]
-fn the_console_shows_how_to_leave_its_terminal_while_it_has_focus() {
+fn the_console_header_names_how_to_leave_its_terminal() {
     let hint = "Ctrl+Tab leaves the terminal.";
     let mut harness = launch(Setup::default());
     press(&mut harness, Key::J);
-    assert!(toolbox_gui_kit::testing::painted_text(&harness, hint).is_none());
+    assert!(toolbox_gui_kit::testing::painted_text(&harness, hint).is_some());
 
     harness
         .get_by_role_and_label(Role::Terminal, "Console output")

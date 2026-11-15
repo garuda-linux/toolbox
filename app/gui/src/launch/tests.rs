@@ -23,14 +23,18 @@ fn stderr_files(log_dir: &Path) -> usize {
 }
 
 #[test]
-fn a_missing_program_does_not_start_and_leaves_no_file() {
+fn a_missing_program_raises_a_toast_and_leaves_no_file() {
     let runtime = tokio::runtime::Runtime::new().unwrap();
     let dir = tempfile::tempdir().unwrap();
-    let (launcher, _bus) = launcher(&runtime, dir.path());
+    let (launcher, bus) = launcher(&runtime, dir.path());
 
-    let started = launcher.start(Path::new("/nonexistent/garuda-installer"), &[]);
+    launcher.start(Path::new("/nonexistent/garuda-installer"), &[]);
 
-    assert_eq!(started.unwrap_err().kind(), std::io::ErrorKind::NotFound);
+    let text = next_toast(&bus);
+    assert!(
+        text.contains("garuda-installer") && text.contains("could not be started"),
+        "{text}"
+    );
     until("a program that never ran keeps a file", || {
         stderr_files(dir.path()) == 0
     });
@@ -43,11 +47,11 @@ fn a_running_program_writes_its_stderr_into_a_file_that_goes_at_its_end() {
     let dir = tempfile::tempdir().unwrap();
     let (launcher, _bus) = launcher(&runtime, dir.path());
 
-    launcher
-        .start(Path::new("sh"), &["-c", "echo started >&2; sleep 0.5"])
-        .unwrap();
+    launcher.start(Path::new("sh"), &["-c", "echo started >&2; sleep 0.5"]);
 
-    assert_eq!(stderr_files(dir.path()), 1);
+    until("the program's stderr file is made", || {
+        stderr_files(dir.path()) == 1
+    });
     until("the file stays after the end", || {
         stderr_files(dir.path()) == 0
     });
@@ -59,28 +63,30 @@ fn a_tool_that_fails_raises_a_toast_with_its_name() {
     let dir = tempfile::tempdir().unwrap();
     let (launcher, bus) = launcher(&runtime, dir.path());
 
-    launcher
-        .start(Path::new("ls"), &["/nonexistent/garuda-toolbox"])
-        .unwrap();
+    launcher.start(Path::new("ls"), &["/nonexistent/garuda-toolbox"]);
 
+    let text = next_toast(&bus);
+    assert!(
+        text.contains("ls") && text.contains("ended with an error"),
+        "{text}"
+    );
+}
+
+/// The text of the first toast the launcher sends.
+fn next_toast(bus: &CommandBus) -> String {
     let until = Instant::now() + PATIENCE;
-    let text = loop {
+    loop {
         if let Some(sent) = bus.receiver.drain().next() {
             let Command::App(AppCommand::Toast { text, kind: _ }) = sent.command else {
                 panic!("not a toast: {:?}", sent.command);
             };
 
-            break text;
+            return text;
         }
 
         assert!(Instant::now() < until, "no toast came");
         std::thread::sleep(Duration::from_millis(20));
-    };
-
-    assert!(
-        text.contains("ls") && text.contains("ended with an error"),
-        "{text}"
-    );
+    }
 }
 
 #[test]
@@ -89,7 +95,7 @@ fn a_tool_that_ends_well_raises_nothing() {
     let dir = tempfile::tempdir().unwrap();
     let (launcher, bus) = launcher(&runtime, dir.path());
 
-    launcher.start(Path::new("true"), &[]).unwrap();
+    launcher.start(Path::new("true"), &[]);
     std::thread::sleep(Duration::from_millis(300));
 
     assert!(bus.receiver.drain().next().is_none());

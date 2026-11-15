@@ -1,13 +1,14 @@
-use egui::{Label, Response, Ui};
+use egui::{Context, Label, Response, Ui};
 use toolbox_core::Toggle;
 use toolbox_core::features::kernels::ModuleState;
 use toolbox_core::features::kernels::view::{Module, Row};
 use toolbox_core::features::toggles::shown::Control;
-use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::fonts::{self, SMALL, Weight};
+use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowState, Tone, counted_disclosure, named_pill_button, pill_button,
-    pill_width, queued_tag, rich, row_height, split_row, status_dot, text_block_height,
+    ActionRow, ButtonKind, ListItem, RowState, Tone, counted_disclosure, highlighted,
+    named_pill_button, pill_button, pill_width, queued_tag, rich, row_height, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
@@ -38,37 +39,37 @@ pub fn estimate(ui: &Ui) -> f32 {
     row_height(ui, text_block_height(ui, LINES))
 }
 
-pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, state: &RowState) {
+/// One kernel as an action row on its section's tile. Its words hold the
+/// description, the versions and what is missing, its buttons the default
+/// and the change.
+pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, state: &RowState) {
     let name = row.kernel.name.as_str();
     let details = row.kernel.is_installed() && row.queued != Some(Toggle::Off);
-    let gap = ui.tokens().sizes.control_gap;
-    let button = control::button_width(ui);
-    let right_width = if details {
-        let text = i18n::text(ui.ctx(), "kernels-set-default");
-        button + gap + pill_width(ui, &text)
-    } else {
-        button
+    let status = status(ui.ctx(), row);
+
+    let words = ActionRow::new(glyph, Tone::Neutral, name).row(state.row);
+    let words = match &status {
+        Some((label, tone)) => words.status(label, *tone),
+        None => words,
     };
 
-    split_row(
+    words.show_with_body(
         ui,
-        right_width,
         |ui| {
-            title(ui, row);
             text(ui, row);
-
             if details {
                 headers(ui, context, row);
                 modules(ui, context, row);
             }
         },
         |ui| {
-            // `right_width` reserves exactly the buttons and their gap, so
-            // no item spacing on top, or the row overflows its slot.
-            ui.spacing_mut().item_spacing.x = 0.0;
+            // Every row reserves the default link's room, so the change
+            // buttons line up whether or not a row has the link.
             if details {
                 default_link(ui, context, row);
-                ui.add_space(gap);
+            } else {
+                let text = i18n::text(ui.ctx(), "kernels-set-default");
+                ui.add_space(pill_width(ui, &text) + ui.tokens().sizes.control_gap);
             }
 
             // The running kernel stays, so its button rests unless it
@@ -93,23 +94,24 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, state: &RowState)
     );
 }
 
-fn title(ui: &mut Ui, row: &Row) {
-    let ctx = ui.ctx().clone();
-    let tokens = tokens::current(&ctx);
-    toolbox_gui_kit::widgets::title_line(ui, true, |ui| {
-        let name = row.kernel.name.as_str();
-        ui.label(rich(ui, name, Weight::SemiBold, BODY, tokens.text));
-
-        let state = match row.queued {
-            Some(Toggle::On) => Some(("kernels-installs", Tone::Accent)),
-            Some(Toggle::Off) => Some(("kernels-removes", Tone::Accent)),
-            None => row.running.then_some(("kernels-running", Tone::Success)),
-        };
-
-        if let Some((id, tone)) = state {
-            status_dot(ui, &i18n::text(&ctx, id), tone);
-        }
-    });
+/// The state beside the name: a queued change, else that the kernel runs.
+fn status(ctx: &Context, row: &Row) -> Option<(String, Tone)> {
+    match row.queued {
+        Some(Toggle::On) => Some((
+            i18n::text(ctx, "kernels-installs").into_owned(),
+            Tone::Accent,
+        )),
+        Some(Toggle::Off) => Some((
+            i18n::text(ctx, "kernels-removes").into_owned(),
+            Tone::Accent,
+        )),
+        None => row.running.then(|| {
+            (
+                i18n::text(ctx, "kernels-running").into_owned(),
+                Tone::Success,
+            )
+        }),
+    }
 }
 
 fn text(ui: &mut Ui, row: &Row) {
@@ -118,15 +120,18 @@ fn text(ui: &mut Ui, row: &Row) {
     let kernel = &row.kernel;
 
     if !kernel.description.is_empty() {
-        let description = rich(
+        // The cut is the catalog rows' own, and the tooltip keeps the whole.
+        let font = fonts::font(ui.style(), Weight::Regular, SMALL);
+        let cut = control::cut(highlighted(
             ui,
             &kernel.description,
-            Weight::Regular,
-            SMALL,
+            "",
+            font,
             tokens.secondary,
-        );
+        ));
 
-        ui.add(Label::new(description).wrap());
+        ui.add(Label::new(cut).wrap())
+            .on_hover_text(&kernel.description);
     }
 
     let mut version = if kernel.repo.is_empty() {

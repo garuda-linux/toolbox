@@ -14,7 +14,6 @@ const CONTEXT: usize = 3;
 /// still correct.
 const MAX_CELLS: usize = 4_000_000;
 
-
 /// Said for a last line without a line break, like `diff` does.
 const NO_LINE_BREAK: &str = "\\ No line break at the end of the file";
 

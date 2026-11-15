@@ -8,8 +8,8 @@ pub const APPS: [&str; 8] = [
     "apps/games.toml",
     "apps/internet.toml",
     "apps/multimedia.toml",
-    "apps/other.toml",
     "apps/science.toml",
     "apps/security.toml",
     "apps/utilities.toml",
+    "apps/other.toml",
 ];

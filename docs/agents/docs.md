@@ -6,18 +6,31 @@ their `docs/src/SUMMARY.md` entries stay in sync.
 
 ## Screenshots
 
-- `docs/src/images/` holds copies of the dark kittest snapshots (Git LFS)
-  after an `UPDATE_SNAPSHOTS=1` run: `<page>.png` from
-  `<page>/page_dark.png`, `<page>-<name>.png` from `<page>/<name>_dark.png`.
-- Exceptions: `boot` (`boot/menu`), `boot-repair` (`bootrepair/page`),
-  `configs` (`configs/list`), `guide` (`guide/wide`), `home`
-  (`shell/home`), `locales` (`locales/locales`), `network`
-  (`network/status`), `services` (`services/menu`), `system-settings`
-  (`tweaks/dropdown`), `users` (`users/users`), `diagnostics-upload`
-  (`diagnostics/question`), `palette-open` (`shell/console_and_palette`).
-- Pages that need pacman databases, `/etc/locale.gen`, GRUB or a user
-  systemd bus take their shots from the `arch-selftest` artifacts. Shots
-  of "not available" states belong only in `troubleshooting.md`.
+- `docs/src/images/` holds the guide's 24 pictures, rendered by the kittest
+  test `guide_images::every_guide_picture_matches_its_render`
+  (`app/gui/tests/integration/guide_images.rs`) from the page fixtures, each
+  in the dark and the light theme. `<name>.png` is the dark capture,
+  `<name>-light.png` the light one.
+- The guide shows `<name>.png` in the dark theme and `<name>-light.png`
+  beside it in the light theme (`toolbox_guide::image_for`). A picture
+  without a light file shows its dark one in both themes.
+- A whole page crops to the page pane (accessible name `Page`). A dialog,
+  a popover, the command palette and the Console crop to their own box.
+  Every crop keeps a 24 px margin, so the shadow and outline stay whole.
+- Regenerate after a change to a page or its fixture, with the
+  `UPDATE_GUIDE_IMAGES=1` variable set for the test (`nix develop`, then
+  `cargo nextest run -p toolbox-gui --features testing -E 'test(every_guide_picture)'`).
+- Without the variable the same test fails when a committed picture
+  differs from a fresh render. Regenerate again when `guide.png` or
+  `guide-light.png` changes: the guide page shows the other pictures, which
+  the binary embeds at build time.
+- A new picture needs an entry in `ALL` in
+  `app/gui/tests/integration/guide_images/captures.rs`, a function that draws
+  its state in a theme, and the image in the page's Markdown.
+- Fixtures that draw a guide picture take a `Theme` and the desktop look of
+  that theme (`look_for` in `tests/integration/look.rs`). A `*_on(theme)`
+  function sits beside each fixture, and the old name keeps the dark theme.
+- Shots of "not available" states belong only in `troubleshooting.md`.
 
 ## Rules
 

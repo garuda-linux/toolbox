@@ -177,7 +177,12 @@ fn the_files_show_by_section_with_their_status() {
     }
 
     let line = |text| shows(&harness, text);
-    assert!(line("Saving asks for an administrator password"));
+    assert!(
+        harness
+            .get_all_by_label("Saving asks for an administrator password")
+            .next()
+            .is_some()
+    );
     assert!(line(
         "Only shown here: it decides who may administer the system or what runs as root"
     ));
@@ -291,9 +296,11 @@ fn a_file_with_nothing_to_say_has_no_empty_line_under_its_path() {
             .height()
     };
 
+    // The root row's sentence is its lock mark now, so both rows are as
+    // tall as their title and path, and neither keeps an empty line.
     assert!(
-        height("Bash") + 10.0 < height("GRUB default"),
-        "Bash is {} tall, GRUB default with its status line {}",
+        (height("Bash") - height("GRUB default")).abs() < 1.0,
+        "Bash is {} tall, GRUB default {}",
         height("Bash"),
         height("GRUB default")
     );

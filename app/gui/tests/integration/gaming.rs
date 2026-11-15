@@ -1,15 +1,20 @@
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use tokio::runtime::Runtime;
 use toolbox_gui::App;
 
 use crate::common::type_into;
-use crate::components::{components, with_pipewire};
+use crate::components::{components_on, with_pipewire};
 
 pub fn gaming() -> (Harness<'static, App>, Runtime) {
-    let (mut harness, runtime) = components(with_pipewire());
+    gaming_on(Theme::Dark)
+}
+
+/// The Gaming page drawn on `theme`, with that theme's desktop look.
+pub fn gaming_on(theme: Theme) -> (Harness<'static, App>, Runtime) {
+    let (mut harness, runtime) = components_on(with_pipewire(), theme);
     harness.key_press_modifiers(Modifiers::COMMAND, Key::Num4);
     harness.run();
     (harness, runtime)

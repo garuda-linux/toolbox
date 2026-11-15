@@ -71,23 +71,29 @@ pub const APPLICATIONS_SYSTEM: Icon = bundled!("applications-system");
 pub const AUDIO_VOLUME_HIGH: Icon = bundled!("audio-volume-high");
 pub const BATTERY_GOOD: Icon = bundled!("battery-good");
 pub const CAMERA_VIDEO: Icon = bundled!("camera-video");
+pub const CHECKBOX: Icon = bundled!("checkbox");
 pub const CHECKMARK: Icon = bundled!("checkmark");
 pub const CHRONOMETER: Icon = bundled!("chronometer");
 pub const COMPUTER: Icon = bundled!("computer");
 pub const CONFIGURE: Icon = bundled!("configure");
 pub const DESKTOP: Icon = bundled!("desktop");
+pub const DIALOG_CANCEL: Icon = bundled!("dialog-cancel");
 pub const DIALOG_ERROR: Icon = state!("dialog-error");
 pub const DIALOG_POSITIVE: Icon = state!("dialog-positive");
 pub const DIALOG_MESSAGES: Icon = bundled!("dialog-messages");
 pub const DIALOG_WARNING: Icon = state!("dialog-warning");
+pub const DIALOG_OK: Icon = bundled!("dialog-ok");
+pub const DIALOG_SCRIPTS: Icon = bundled!("dialog-scripts");
 pub const DOCUMENTATION: Icon = bundled!("documentation");
 pub const DOCUMENT_PROPERTIES: Icon = bundled!("document-properties");
 pub const DOCUMENT_PREVIEW: Icon = bundled!("document-preview");
 pub const DOCUMENT_REVERT: Icon = bundled!("document-revert");
 pub const DRAW_CROSS: Icon = bundled!("draw-cross");
+pub const DRIVE_HARDDISK: Icon = bundled!("drive-harddisk");
 pub const DRIVE_HARDDISK_ROOT: Icon = bundled!("drive-harddisk-root");
 pub const EDIT_CLEAR_ALL: Icon = bundled!("edit-clear-all");
 pub const EDIT_COPY: Icon = bundled!("edit-copy");
+pub const FOLDER_DOWNLOAD: Icon = bundled!("folder-download");
 pub const FORMAT_LIST_UNORDERED: Icon = bundled!("format-list-unordered");
 pub const GAMES_CONFIG_BOARD: Icon = bundled!("games-config-board");
 pub const GAMES_HIGHSCORES: Icon = bundled!("games-highscores");
@@ -109,8 +115,10 @@ pub const MEDIA_PLAYBACK_START: Icon = bundled!("media-playback-start");
 pub const MEDIA_PLAYBACK_STOP: Icon = bundled!("media-playback-stop");
 pub const MEDIA_PLAYLIST_REPEAT: Icon = bundled!("media-playlist-repeat");
 pub const NETWORK_CONNECT: Icon = bundled!("network-connect");
+pub const NETWORK_SERVER: Icon = bundled!("network-server");
 pub const NETWORK_WIRED: Icon = bundled!("network-wired");
 pub const NETWORK_WIRELESS: Icon = bundled!("network-wireless");
+pub const NETWORK_WIRELESS_SIGNAL_GOOD: Icon = bundled!("network-wireless-signal-good");
 pub const OBJECT_LOCKED: Icon = bundled!("object-locked");
 pub const OBJECT_UNLOCKED: Icon = bundled!("object-unlocked");
 pub const OFFICE_REPORT: Icon = bundled!("office-report");
@@ -152,7 +160,7 @@ pub const VIEW_TASK: Icon = bundled!("view-task");
 pub const VIEW_VISIBLE: Icon = bundled!("view-visible");
 pub const WINDOW_CLOSE: Icon = bundled!("window-close");
 
-pub const ALL: [Icon; 90] = [
+pub const ALL: [Icon; 98] = [
     APPLICATIONS_DEVELOPMENT,
     APPLICATIONS_GAMES,
     APPLICATIONS_GRAPHICS,
@@ -164,23 +172,29 @@ pub const ALL: [Icon; 90] = [
     AUDIO_VOLUME_HIGH,
     BATTERY_GOOD,
     CAMERA_VIDEO,
+    CHECKBOX,
     CHECKMARK,
     CHRONOMETER,
     COMPUTER,
     CONFIGURE,
     DESKTOP,
+    DIALOG_CANCEL,
     DIALOG_ERROR,
     DIALOG_POSITIVE,
     DIALOG_MESSAGES,
+    DIALOG_OK,
+    DIALOG_SCRIPTS,
     DIALOG_WARNING,
     DOCUMENTATION,
     DOCUMENT_PROPERTIES,
     DOCUMENT_PREVIEW,
     DOCUMENT_REVERT,
     DRAW_CROSS,
+    DRIVE_HARDDISK,
     DRIVE_HARDDISK_ROOT,
     EDIT_CLEAR_ALL,
     EDIT_COPY,
+    FOLDER_DOWNLOAD,
     FORMAT_LIST_UNORDERED,
     GAMES_CONFIG_BOARD,
     GAMES_HIGHSCORES,
@@ -202,8 +216,10 @@ pub const ALL: [Icon; 90] = [
     MEDIA_PLAYBACK_STOP,
     MEDIA_PLAYLIST_REPEAT,
     NETWORK_CONNECT,
+    NETWORK_SERVER,
     NETWORK_WIRED,
     NETWORK_WIRELESS,
+    NETWORK_WIRELESS_SIGNAL_GOOD,
     OBJECT_LOCKED,
     OBJECT_UNLOCKED,
     OFFICE_REPORT,

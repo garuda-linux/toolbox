@@ -3,7 +3,7 @@
 ## Checks
 
 - Nix (`nix/checks.nix`) runs the checks of
-  [AGENTS.md](../../AGENTS.md#checks-all-must-pass) up to `cli-docs`, not
+  [AGENTS.md](../../AGENTS.md#checks-all-must-pass) up to `guide-links`, not
   the self-test or the container and VM tests. Nothing built by Nix ships.
   Arch (`ci/arch/`) runs the release build on stable Rust, the MSRV check,
   the self-test, the helper integration tests and the PKGBUILD.
@@ -54,7 +54,7 @@
 
 - `scripts/install.sh` is the only place that knows where files go, for
   both `nix/package.nix` and `packaging/PKGBUILD`.
-- The desktop file is named like the Wayland app_id
+- The desktop file is named like the binary and the Wayland app_id
   (`APP_ID` in `app/gui/src/main.rs`), so the compositor finds its icon.
   Validate it and the metainfo with `desktop-file-validate` and
   `appstreamcli validate --no-net`.

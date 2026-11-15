@@ -37,6 +37,8 @@ common-plan-running = Es werden gerade Änderungen übernommen. Bis dahin lässt
 
 # The action of a banner that tells of a failed read.
 common-read-again = Neu einlesen
+# The name of a Read again button while a read runs.
+common-reading = Wird eingelesen
 
 # The actions a row's menu may hold on any page.
 row-open-website = Website öffnen
@@ -72,4 +74,3 @@ missing-catalog-copy = { $label } kopieren
 missing-catalog-copied = In die Zwischenablage kopiert.
 # Shown after Quit was confirmed during a run, until the cancelled run ends and the window closes.
 close-stopping-title = Vorgang wird abgebrochen
-close-stopping-detail = Das Fenster schließt sich, sobald der Vorgang beendet ist.

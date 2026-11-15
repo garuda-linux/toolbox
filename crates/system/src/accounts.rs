@@ -85,7 +85,10 @@ impl AccountSource for EtcAccounts {
 
 /// Entries with a name our rules reject or an id that is no number are
 /// logged and left out: the app could not change them anyway.
-fn accounts(passwd: &str, group: &str) -> Accounts {
+/// The account files parsed as the probe parses them.
+///
+/// The GUI tests feed it the captured text.
+pub fn accounts(passwd: &str, group: &str) -> Accounts {
     let mut users: Vec<User> = passwd_entries(passwd).filter_map(user).collect();
     let mut groups: Vec<Group> = entries(group).filter_map(group_entry).collect();
 
@@ -135,7 +138,7 @@ fn group_entry(entry: &str) -> Option<Group> {
 
 /// Field 7 of each `passwd` entry. Accounts without a shell (login uses
 /// `/bin/sh` then) or with one our rules reject are left out.
-fn login_shells(passwd: &str) -> BTreeMap<UserName, ShellPath> {
+pub fn login_shells(passwd: &str) -> BTreeMap<UserName, ShellPath> {
     passwd_entries(passwd)
         .filter_map(|entry| {
             let name = entry.name;
@@ -149,7 +152,7 @@ fn login_shells(passwd: &str) -> BTreeMap<UserName, ShellPath> {
         .collect()
 }
 
-fn available_shells(list: &str) -> Vec<ShellPath> {
+pub fn available_shells(list: &str) -> Vec<ShellPath> {
     let mut shells: Vec<ShellPath> = Vec::new();
 
     for shell in entries(list).filter_map(|line| ShellPath::new(line).ok()) {

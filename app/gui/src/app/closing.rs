@@ -6,7 +6,7 @@
 use egui::{Context, Id, Label, ViewportCommand};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{ButtonKind, Confirmation, ModalWrapper, confirm_buttons, rich};
-use toolbox_gui_kit::{UiExt as _, terminal_view, tokens};
+use toolbox_gui_kit::{terminal_view, tokens};
 
 use super::App;
 use crate::apply::ApplyCommand;
@@ -19,10 +19,16 @@ pub struct Closing {
     /// The user chose to quit: the window closes once the cancelled plan
     /// ended, and a note says so until then.
     after_run: bool,
-    /// The stopping note was closed. Another close request brings it back.
-    note_closed: bool,
     /// The user chose to drop the edit, so the next close asks no more.
     edit_dropped: bool,
+}
+
+impl Closing {
+    /// The cancel may wait for a step to end, and the window would sit
+    /// there unchanged meanwhile, so the shell shows a note until then.
+    pub(super) const fn stopping(&self) -> bool {
+        self.after_run
+    }
 }
 
 /// What would be lost by closing now.
@@ -81,7 +87,6 @@ impl App {
         // and asks nothing.
         if self.closing.after_run {
             ctx.send_viewport_cmd(ViewportCommand::CancelClose);
-            self.closing.note_closed = false;
             return;
         }
 
@@ -93,21 +98,11 @@ impl App {
 
     pub(super) fn close_after_run(&mut self, ctx: &Context) {
         if std::mem::take(&mut self.closing.after_run) {
-            self.closing.note_closed = false;
             ctx.send_viewport_cmd(ViewportCommand::Close);
         }
     }
 
-    /// The question, then the stopping note in the same frame Quit was
-    /// confirmed, as the run may end on the next.
-    pub(super) fn ask_before_close(&mut self, ctx: &Context) {
-        self.ask(ctx);
-        if self.closing.after_run && !self.closing.note_closed {
-            self.stopping_note(ctx);
-        }
-    }
-
-    fn ask(&mut self, ctx: &Context) {
+    pub(super) fn ask(&mut self, ctx: &Context) {
         if self.closing.asking.is_none() {
             return;
         }
@@ -156,22 +151,6 @@ impl App {
 
         if modal.inner.is_some() || modal.closed {
             self.closing.asking = None;
-        }
-    }
-
-    /// The cancel may wait for a step to end, and the window would sit
-    /// there unchanged meanwhile.
-    fn stopping_note(&mut self, ctx: &Context) {
-        let title = i18n::text(ctx, "close-stopping-title");
-        let close = i18n::text(ctx, "dialog-close");
-        let modal = ModalWrapper::new(Id::unique("toolbox_gui::app::stopping"), &title)
-            .title_bar(&close)
-            .show(ctx, |ui| {
-                ui.loading(&i18n::text(ctx, "close-stopping-detail"));
-            });
-
-        if modal.closed {
-            self.closing.note_closed = true;
         }
     }
 

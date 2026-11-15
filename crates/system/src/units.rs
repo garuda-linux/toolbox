@@ -98,8 +98,13 @@ impl Systemctl {
     fn list(&self, scope: &[&str], state: &str) -> Result<BTreeSet<UnitName>, ProbeError> {
         let state_flag = format!("--state={state}");
         let args = list_args(scope, &state_flag);
+        let finished = command::run(&self.program, &args)?;
 
-        command::output(&self.program, &args).map(|output| parse_listed(&output, state))
+        if finished.status.success() || nothing_listed(&finished) {
+            return Ok(parse_listed(&finished.stdout, state));
+        }
+
+        Err(finished.failure())
     }
 }
 
@@ -158,6 +163,15 @@ fn list_args<'a>(scope: &[&'a str], state_flag: &'a str) -> Vec<&'a str> {
             "--plain",
         ])
         .collect()
+}
+
+/// systemctl exits 1 with nothing printed when no unit has the state, which
+/// is an empty listing. A message on stderr is a failure, such as the user
+/// scope without its bus.
+fn nothing_listed(finished: &command::Finished) -> bool {
+    finished.status.code() == Some(1)
+        && finished.stdout.trim().is_empty()
+        && finished.stderr.trim().is_empty()
 }
 
 /// Lines of `UNIT STATE [PRESET]`. The state is checked again, so a legend

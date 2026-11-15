@@ -1,10 +1,11 @@
 use egui::emath::GuiRounding as _;
 use egui::layers::ShapeIdx;
 use egui::{
-    Color32, CornerRadius, Frame, Id, InnerResponse, Margin, Rect, Response, Sense, Shape, Stroke,
-    Ui, UiBuilder,
+    Color32, CornerRadius, Frame, InnerResponse, Margin, Rect, Response, Sense, Shape, Stroke, Ui,
+    UiBuilder,
 };
 
+use super::list::memory;
 use super::press::{Pointer, hover_amount};
 use crate::theme::{CARD_RADIUS, RADIUS};
 use crate::tokens;
@@ -151,33 +152,22 @@ pub(super) fn fill_rect(row: Rect, pixels_per_point: f32) -> Rect {
     )
 }
 
-fn raised_id(ui: Id) -> Id {
-    ui.with("toolbox_gui_kit::raised")
-}
-
-/// Drops the mark [`mark_raised`] left for the ui of `scope`.
-pub(super) fn forget_raised(ui: &Ui, scope: Id) {
-    ui.data_mut(|data| data.remove::<bool>(raised_id(scope)));
-}
-
 pub(super) fn mark_raised(ui: &Ui, raised: bool) {
-    ui.data_mut(|data| data.insert_temp(raised_id(ui.scope_id()), raised));
+    memory::write(ui.ctx(), ui.scope_id(), |row| row.raised = Some(raised));
 }
 
 /// Whether `ui` or a Ui around it sits on a row's hover fill, where a
 /// Soft button at rest has the fill's own colour.
 pub(super) fn on_raised(ui: &Ui) -> bool {
-    ui.stack().iter().any(|frame| {
-        ui.data(|data| data.get_temp::<bool>(raised_id(frame.scope_id)))
-            .unwrap_or(false)
-    })
+    ui.stack()
+        .iter()
+        .any(|frame| memory::get(ui, frame.scope_id).raised == Some(true))
 }
 
 /// Whether `ui` sits in a card's row, which paints the one fill under
 /// the pointer for all it holds.
 pub(super) fn in_card_row(ui: &Ui) -> bool {
-    ui.stack().iter().any(|frame| {
-        ui.data(|data| data.get_temp::<bool>(raised_id(frame.scope_id)))
-            .is_some()
-    })
+    ui.stack()
+        .iter()
+        .any(|frame| memory::get(ui, frame.scope_id).raised.is_some())
 }

@@ -13,7 +13,7 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use crate::command::PackagesCommand;
+use crate::command::NetworkCommand;
 use crate::i18n;
 use crate::network::{Hardware, Network, Read};
 use crate::pages::PageContext;
@@ -61,8 +61,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     }
 
-    intro(ui, context, &devices);
-    ui.add_space(ui.tokens().sizes.card_gap);
     let action = pciutils_action(hardware, context);
     for (index, note) in reasons.iter().enumerate() {
         // The PCI note comes first, the only one a package helps.
@@ -79,22 +77,26 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
     }
 
     card(ui, |ui| {
+        intro(ui, context, &devices);
+        ui.add_space(ui.tokens().sizes.tight_gap);
         for (index, device) in devices.iter().enumerate() {
             line(ui, context, index == 0, device);
         }
     });
 }
 
-/// The intro wraps at the left, Copy all ends at the right edge as each
-/// line's button does.
+/// The card's header: the intro wraps at the left, Copy all sits at the right
+/// edge as each line's button does.
 fn intro(ui: &mut Ui, context: &PageContext<'_>, devices: &[&Device]) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let all = text("network-hardware-copy-all");
 
     // The lines' buttons sit in from the card's edge by its padding.
+    let padding = ui.tokens().sizes.card_padding;
     let inset = Margin {
-        right: ui.tokens().sizes.card_padding.right,
+        top: padding.top,
+        right: padding.right,
         ..Margin::ZERO
     };
 
@@ -139,10 +141,9 @@ fn pciutils_action(
 }
 
 fn queue_pciutils(context: &PageContext<'_>, wish: Toggle) {
-    context.commands.send(PackagesCommand::Toggle {
-        package: PCIUTILS_PACKAGE.clone(),
-        wish,
-    });
+    context
+        .commands
+        .send(NetworkCommand::TogglePciutils { wish });
 }
 /// The PCI devices, then the USB ones.
 fn devices(hardware: &Hardware) -> Vec<&Device> {

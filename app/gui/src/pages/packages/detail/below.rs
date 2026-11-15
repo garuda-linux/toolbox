@@ -22,10 +22,10 @@ use toolbox_gui_kit::{UiExt as _, tokens};
 
 use super::super::PackagesPage;
 use crate::command::AppCommand;
-use crate::i18n;
 use crate::packages::{Details, Read};
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
+use crate::{dates, i18n};
 
 /// The file box is at most this tall, so a package of thousands of files
 /// keeps its history in reach.
@@ -198,11 +198,7 @@ pub fn history(
         let _build = tracing::trace_span!("build rows").entered();
         let part = shown(entries, HISTORY_SHOWN, every_line);
         History {
-            lines: part
-                .items
-                .iter()
-                .map(|entry| (entry.shown_when(), change(&ctx, entry)))
-                .collect(),
+            lines: part.items.iter().map(|entry| line(&ctx, entry)).collect(),
             hidden: part.hidden,
         }
     });
@@ -229,6 +225,12 @@ pub fn history(
             page.unfolded.history_all = true;
         }
     }
+}
+
+/// The moment of a change in the locale's format, and the change.
+fn line(ctx: &egui::Context, entry: &HistoryEntry) -> (String, String) {
+    let when = dates::pacman_moment(ctx, &entry.when).unwrap_or_else(|| entry.when.clone());
+    (when, change(ctx, entry))
 }
 
 /// "Upgraded 3.0.2-1 → 3.0.4-1".

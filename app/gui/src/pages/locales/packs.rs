@@ -3,17 +3,19 @@ use std::sync::Arc;
 use egui::Ui;
 use toolbox_core::features::locales::view::{pack_rows, packs, packs_missing};
 use toolbox_core::features::locales::{PackOrder, pack_pick};
+use toolbox_core::features::toggles::shown::Control;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ListItem, RowHeights, RowList, RowState, Tone, row_height, text_block_height,
 };
 use toolbox_plan::PackageName;
 
-use super::list::{Line, switch_line};
+use super::list::{Line, line_row};
 use crate::command::LocaleCommand;
 use crate::i18n;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
+use crate::pages::toggles::control::{self, Setting};
 
 /// One pack as the list shows it, its texts made once.
 #[derive(Debug)]
@@ -122,10 +124,28 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &PackItem, state: &RowState
         detail: &item.detail,
         status,
         queued: item.queued,
-        on: item.on,
     };
 
-    if switch_line(ui, &line, state) {
+    // A pack is a package, so it has the package buttons, not a switch.
+    let control = if item.on {
+        Control::Remove
+    } else {
+        Control::Install
+    };
+
+    let shown = control::Shown {
+        control,
+        on: item.on,
+        title: &item.title,
+        enabled: true,
+        unknown: false,
+        setting: Setting::Button,
+    };
+
+    let width = control::button_width(ui);
+    if line_row(ui, state.row, &line, width, |ui| {
+        control::show(ui, shown, state)
+    }) {
         context.commands.send(LocaleCommand::TogglePack {
             package: item.package.clone(),
             on: !item.on,

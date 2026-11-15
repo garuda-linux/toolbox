@@ -39,7 +39,10 @@ pub mod testing;
 mod units;
 mod user_configs;
 
-pub use accounts::{AccountSource, EtcAccounts};
+pub use accounts::{
+    AccountSource, EtcAccounts, accounts as parse_accounts,
+    available_shells as parse_available_shells, login_shells as parse_login_shells,
+};
 pub use app_icons::{AppIconSource, AppStreamIcons, file_path, file_url};
 pub use boot::{BootMenuSource, BootSource, MenuRead, SystemBoot, SystemBootMenu, grub_platform};
 pub use bus::{

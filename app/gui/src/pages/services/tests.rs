@@ -11,6 +11,7 @@ use egui::accesskit::Role;
 use egui::{Key, Modifiers};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::services::{ActiveState, FileState, Shown, UnitInfo};
+use toolbox_gui_kit::testing::{press_until, tab_into};
 use toolbox_plan::{UnitName, UnitScope};
 
 use super::{ServicesPage, row};
@@ -82,7 +83,8 @@ fn a_new_list_keeps_the_last_units_on_screen() {
     })
     .harness(ServicesPage::default());
 
-    harness.run();
+    // Read again spins while the list is read, so the frames never settle.
+    harness.run_steps(3);
 
     assert!(harness.query_by_label("Reading the services…").is_none());
     assert!(harness.query_by_label_contains("OpenSSH Daemon").is_some());
@@ -188,8 +190,13 @@ fn two_listed() -> PageFixture {
 fn focused(fixture: PageFixture, row: &str) -> egui_kittest::Harness<'static, PageState> {
     let mut harness = fixture.harness(ServicesPage::default());
     harness.run();
-    harness.get_by_role_and_label(Role::ListItem, row).focus();
-    harness.run();
+    assert!(tab_into(&mut harness, Role::ListItem));
+    assert!(press_until(
+        &mut harness,
+        Key::ArrowDown,
+        Role::ListItem,
+        row
+    ));
     harness
 }
 
@@ -264,12 +271,17 @@ fn the_menu_key_opens_the_unit_menu_and_escape_closes_it() {
 
 #[test]
 fn while_a_plan_runs_the_menu_key_opens_nothing() {
-    let fixture = PageFixture {
-        busy: true,
-        ..two_listed()
-    };
+    // A row is focused before the plan starts, and a busy page drops that
+    // focus, so the Menu key finds no row to open.
+    let mut harness = focused(two_listed(), SSHD);
+    harness.state_mut().fixture.busy = true;
+    harness.run();
+    assert!(
+        !harness
+            .get_by_role_and_label(Role::ListItem, SSHD)
+            .is_focused()
+    );
 
-    let mut harness = focused(fixture, SSHD);
     harness.key_press(Key::Menu);
     harness.run();
 

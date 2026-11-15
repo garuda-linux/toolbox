@@ -8,7 +8,7 @@ use egui::TextBuffer;
 use egui::epaint::text::CharIndex;
 
 #[derive(Clone, Debug, Default)]
-pub(super) struct Digits(pub(super) String);
+pub struct Digits(pub String);
 
 impl TextBuffer for Digits {
     fn is_mutable(&self) -> bool {

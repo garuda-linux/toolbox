@@ -5,7 +5,7 @@ use std::collections::BTreeSet;
 use std::fs;
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tempfile::TempDir;
@@ -18,6 +18,7 @@ use toolbox_gui::{App, Setup, snapshot};
 
 use crate::common::{HEIGHT, packages, type_into, wheel, window};
 use crate::discover::source_catalogs;
+use crate::look::look_for;
 use crate::system::first_read;
 
 const OWN_GROUP: &str = r#"
@@ -48,12 +49,24 @@ fn button<'harness>(
 /// The app on the Components page with `catalogs`, after the first read
 /// of a system that looks like `system`.
 fn app(catalogs: Catalogs, system: Snapshot, dry_run: bool) -> (Harness<'static, App>, Runtime) {
+    app_on(catalogs, system, dry_run, Theme::Dark)
+}
+
+/// As [`app`], drawn on `theme`.
+fn app_on(
+    catalogs: Catalogs,
+    system: Snapshot,
+    dry_run: bool,
+    theme: Theme,
+) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
+    let look = look_for(&runtime, theme);
 
-    let mut harness = window(HEIGHT).build_eframe(move |cc| {
+    let mut harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (system.clone(), Vec::new());
         let setup = Setup {
+            look,
             queue: Queue::in_memory(ChangeSet::default()),
             snapshot: Some(snapshot::spawn(
                 &handle,
@@ -75,7 +88,12 @@ fn app(catalogs: Catalogs, system: Snapshot, dry_run: bool) -> (Harness<'static,
 }
 
 pub fn components(system: Snapshot) -> (Harness<'static, App>, Runtime) {
-    app(source_catalogs(), system, false)
+    components_on(system, Theme::Dark)
+}
+
+/// The Components page drawn on `theme`, with that theme's desktop look.
+pub fn components_on(system: Snapshot, theme: Theme) -> (Harness<'static, App>, Runtime) {
+    app_on(source_catalogs(), system, false, theme)
 }
 
 /// A system read in full with PipeWire installed, so no section counts

@@ -4,11 +4,16 @@
 
 mod caps;
 pub mod desktop;
+mod gpu;
 
 pub use caps::{cap_off_centre, capitals_top, deep_descent_font, last_baseline_within, test_fonts};
 use egui_kittest::HarnessBuilder;
+use egui_kittest::kittest::Queryable as _;
 
 use crate::fonts::{FontFile, Weight};
+
+/// How many keys a test presses to reach a widget before it gives up.
+const REACH_LIMIT: usize = 60;
 
 /// A harness builder of `width` × `height` points in the fallback look.
 #[must_use = "a builder does nothing until a harness is built from it"]
@@ -31,6 +36,7 @@ pub fn harness_with_font<State>(
         egui_wgpu::RendererOptions::PREDICTABLE,
     );
 
+    gpu::wait_at_exit(&state.device);
     let renderer = egui_kittest::wgpu::WgpuTestRenderer::from_render_state(state.clone());
 
     HarnessBuilder::default()
@@ -261,6 +267,50 @@ fn rects<'frame, State>(
             None
         }
     })
+}
+
+/// Presses Tab until a widget of `role` holds the focus, and tells whether
+/// one did within the presses. A list takes one Tab stop, so this is how a
+/// keyboard user gets into one.
+pub fn tab_into<State>(
+    harness: &mut egui_kittest::Harness<'_, State>,
+    role: egui::accesskit::Role,
+) -> bool {
+    for _ in 0..REACH_LIMIT {
+        let held = harness
+            .query_all(egui_kittest::kittest::by().role(role))
+            .any(|node| node.is_focused());
+
+        if held {
+            return true;
+        }
+
+        harness.key_press(egui::Key::Tab);
+        harness.run();
+    }
+
+    false
+}
+
+/// Presses `key` until the widget `label` of `role` holds the focus, and
+/// tells whether it did within the presses. The arrow keys move a list's
+/// Tab stop to a row this way.
+pub fn press_until<State>(
+    harness: &mut egui_kittest::Harness<'_, State>,
+    key: egui::Key,
+    role: egui::accesskit::Role,
+    label: &str,
+) -> bool {
+    for _ in 0..REACH_LIMIT {
+        if harness.get_by_role_and_label(role, label).is_focused() {
+            return true;
+        }
+
+        harness.key_press(key);
+        harness.run();
+    }
+
+    false
 }
 
 /// What a screen reader says for `node`: its label, or the value egui

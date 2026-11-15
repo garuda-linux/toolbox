@@ -5,7 +5,7 @@ use std::sync::Arc;
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::kernels::parse_status;
-use toolbox_gui_kit::testing::fill_under;
+use toolbox_gui_kit::testing::{fill_under, press_until, tab_into};
 use toolbox_services::dkms::Dkms;
 
 use super::KernelsPage;
@@ -104,10 +104,13 @@ fn while_a_plan_runs_the_kernels_wait_and_a_banner_says_why() {
 fn space_on_a_focused_kernel_asks_for_its_change() {
     let mut harness = PageFixture::with_snapshot(system()).harness(KernelsPage::default());
     harness.run();
-    harness
-        .get_by_role_and_label(Role::ListItem, "linux-lts")
-        .focus();
-    harness.run();
+    assert!(tab_into(&mut harness, Role::ListItem));
+    assert!(press_until(
+        &mut harness,
+        egui::Key::ArrowDown,
+        Role::ListItem,
+        "linux-lts",
+    ));
 
     harness.key_press(egui::Key::Space);
     harness.run();
@@ -294,4 +297,51 @@ fn the_headers_tag_and_its_button_share_one_centre_line() {
         (tag.center().y - button.center().y).abs() < 0.5,
         "tag at {tag:?}, button at {button:?}"
     );
+}
+
+#[test]
+fn a_tall_kernel_row_keeps_set_as_default_and_remove_on_its_title_line() {
+    let mut harness = with_dkms(dkms()).harness(KernelsPage::default());
+    harness.run();
+
+    let title = harness.get_by_role_and_label(Role::Label, "linux").rect();
+    let default = harness
+        .get_by_role_and_label(Role::Button, "Set linux as the default boot entry")
+        .rect();
+
+    let remove = harness
+        .get_by_role_and_label(Role::Button, "Remove linux")
+        .rect();
+
+    assert!(
+        (default.top() - title.top()).abs() < 8.0 && (remove.top() - title.top()).abs() < 8.0,
+        "the title starts at {} and its actions at {} and {}",
+        title.top(),
+        default.top(),
+        remove.top(),
+    );
+}
+
+#[test]
+fn a_click_on_a_tall_kernel_row_beside_its_buttons_asks_for_nothing() {
+    let mut harness = with_dkms(dkms()).harness(KernelsPage::default());
+    harness.run();
+
+    harness.get_by_role_and_label(Role::Label, "linux").click();
+    harness.run();
+
+    assert_eq!(harness.state().fixture.sent(), []);
+}
+
+#[test]
+fn a_click_on_the_middle_of_a_tall_kernel_row_asks_for_nothing() {
+    let mut harness = with_dkms(dkms()).harness(KernelsPage::default());
+    harness.run();
+
+    harness
+        .get_by_role_and_label(Role::ListItem, "linux")
+        .click();
+    harness.run();
+
+    assert_eq!(harness.state().fixture.sent(), []);
 }

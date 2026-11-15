@@ -178,6 +178,11 @@ impl<T: Send + 'static> Asked<T> {
         started
     }
 
+    /// Whether a read runs now, for a Read again that spins meanwhile.
+    pub const fn running(&self) -> bool {
+        self.reads.running
+    }
+
     /// The answer that landed since the last frame, if any. A read asked
     /// meanwhile starts then.
     pub fn take(&mut self) -> Option<T> {

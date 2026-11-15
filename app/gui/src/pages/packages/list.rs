@@ -20,7 +20,7 @@ use crate::command::{AppCommand, PackagesCommand};
 use crate::i18n;
 use crate::packages::{Packages, Read};
 use crate::page::PageId;
-use crate::pages::header::{refresh_header, search};
+use crate::pages::header::{refresh_header_reading, search};
 use crate::pages::rows::refusal_banner;
 use crate::pages::search_empty::search_empty_state;
 use crate::pages::{PageContext, plan_running};
@@ -69,25 +69,33 @@ where
 }
 
 pub fn header(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
-    if refresh_header(
+    let packages = context.service::<Packages>();
+    let reading = packages.reading();
+    let listed = matches!(packages.index(), Read::Known(_))
+        || (shows_aur(context) && matches!(packages.aur(), Read::Known(_)));
+
+    if refresh_header_reading(
         ui,
-        "page-packages",
-        "page-packages-subtitle",
+        ("page-packages", "page-packages-subtitle"),
         "packages-refresh",
+        reading,
     ) {
         context.commands.send(PackagesCommand::Refresh);
     }
 
+    // The search narrows a list, so it waits for one.
     page_toolbar(
         ui,
         page,
         |page, ui| {
-            _ = search(
-                ui,
-                &mut page.search,
-                "packages-search",
-                "packages-search-hint",
-            );
+            ui.enabled_ui(listed, |ui| {
+                _ = search(
+                    ui,
+                    &mut page.search,
+                    "packages-search",
+                    "packages-search-hint",
+                );
+            });
         },
         |_, _| {},
     );
@@ -185,6 +193,7 @@ fn read_catalog(
             None
         }
         Read::Unavailable | Read::Failed if !aur_on => {
+            idle_filters(page, ui, aur_on);
             unreadable_page(ui, context);
             None
         }
@@ -194,6 +203,21 @@ fn read_catalog(
             Some((Arc::new(Catalog::default()), true))
         }
     }
+}
+
+/// The chips while the index cannot be read: the repository's are off and
+/// count nothing, the AUR's stays as far as it is on.
+fn idle_filters(page: &mut PackagesPage, ui: &mut Ui, aur_on: bool) {
+    let aur = aur_on.then_some(AurChip { count: None });
+    filters(
+        page,
+        ui,
+        ChipCounts {
+            repository: None,
+            updates_known: false,
+            aur,
+        },
+    );
 }
 
 fn rows(

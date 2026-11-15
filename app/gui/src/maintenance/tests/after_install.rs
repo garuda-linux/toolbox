@@ -3,7 +3,7 @@
 
 use std::path::Path;
 use std::sync::Arc;
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::time::Duration;
 
 use tokio::runtime::Runtime;
@@ -12,7 +12,9 @@ use toolbox_core::features::maintenance::page::{LaunchCause, PageTool};
 use toolbox_plan::Mirrorlist;
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
-use super::{MIRRORS, Recorder, all_installed, maintenance, none_installed, settle};
+use super::{
+    MIRRORS, Recorder, all_installed, as_launcher, landed, maintenance, none_installed, settle,
+};
 use crate::maintenance::{Maintenance, MaintenanceProblem, MaintenanceSetup};
 
 /// Counts its rankings, each of which answers at once.
@@ -20,7 +22,7 @@ use crate::maintenance::{Maintenance, MaintenanceProblem, MaintenanceSetup};
 struct Counted(Arc<AtomicUsize>);
 
 impl MirrorRanking for Counted {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
+    fn rank(&self, _cancel: &Arc<AtomicBool>) -> Result<Mirrorlist, RankProblem> {
         self.0.fetch_add(1, Ordering::SeqCst);
         Ok(Mirrorlist::new(MIRRORS).unwrap())
     }
@@ -30,15 +32,16 @@ impl MirrorRanking for Counted {
 fn a_tool_still_missing_after_its_install_says_so() {
     let runtime = Runtime::new().unwrap();
     let mut maintenance = maintenance(&runtime, Ok(MIRRORS), Path::new("/"), Path::new("/"));
-    let launcher = Recorder::default();
+    let launcher = Arc::new(Recorder::default());
     maintenance.open_tool(
         PageTool::Program(Tool::BtrfsAssistant),
         &none_installed(),
-        Some(&launcher),
+        Some(&*launcher),
     );
 
     maintenance.plan_started();
-    maintenance.plan_finished(true, |_| false, Some(&launcher));
+    maintenance.plan_finished(true, |_| false, Some(as_launcher(&launcher)));
+    landed(&mut maintenance);
 
     assert!(launcher.started.lock().is_empty());
     assert_eq!(
@@ -59,6 +62,7 @@ fn rate_mirrors_still_missing_after_its_install_says_so() {
 
     maintenance.plan_started();
     maintenance.plan_finished(true, |_| false, None);
+    landed(&mut maintenance);
 
     assert!(!maintenance.ranking());
     assert!(matches!(

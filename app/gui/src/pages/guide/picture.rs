@@ -27,12 +27,13 @@ const SHADOW: Shadow = Shadow {
 /// when the guide lacks the picture.
 pub(super) fn show(ui: &mut Ui, image: &Image, reader: &mut Reader<'_>) {
     let tokens = ui.tokens();
-    let shown = toolbox_guide::image(&image.src);
+    let dark = ui.ctx().theme() == egui::Theme::Dark;
+    let shown = toolbox_guide::image_for(&image.src, dark);
     if let Some(bytes) = shown {
         let width = OUTLINE.mul_add(-2.0, ui.available_width()).max(0.0);
         let size = shown_size(bytes, vec2(width, f32::INFINITY));
         let name = i18n::text_with(ui.ctx(), "guide-enlarge", &[("alt", &image.alt)]);
-        let response = framed(ui, &image.src, bytes, size, &image.alt);
+        let response = framed(ui, picture_key(&image.src, dark), bytes, size, &image.alt);
         response.widget_info(|| egui::WidgetInfo::labeled(Role::Button, true, &*name));
 
         if response.hovered() {
@@ -85,7 +86,8 @@ fn placeholder(ui: &mut Ui) {
 /// The picture `src` over the page, until it is closed. Returns whether it
 /// is still open.
 pub(super) fn lightbox(ctx: &egui::Context, src: &str, alt: &str) -> bool {
-    let Some(bytes) = toolbox_guide::image(src) else {
+    let dark = ctx.theme() == egui::Theme::Dark;
+    let Some(bytes) = toolbox_guide::image_for(src, dark) else {
         return false;
     };
 
@@ -97,19 +99,33 @@ pub(super) fn lightbox(ctx: &egui::Context, src: &str, alt: &str) -> bool {
         .show(ctx, |ui| {
             let room = ui.available_size();
             let size = shown_size(bytes, room);
-            ui.vertical_centered(|ui| framed(ui, src, bytes, size, alt).clicked())
-                .inner
+            ui.vertical_centered(|ui| {
+                framed(ui, picture_key(src, dark), bytes, size, alt).clicked()
+            })
+            .inner
         });
 
     !(outcome.closed || outcome.inner)
 }
 
+/// The image cache key of a picture in a theme. Each theme's capture has its
+/// own key, so the cache keeps both.
+fn picture_key(src: &str, dark: bool) -> String {
+    let theme = if dark { "dark" } else { "light" };
+    format!("bytes://guide/{theme}/{src}")
+}
+
 /// The picture at `size`, its whole room kept from the first frame, in its
 /// outline and shadow. The picture is decoded on a thread of its own and no
 /// spinner shows meanwhile, so the words below it never move.
-fn framed(ui: &mut Ui, src: &str, bytes: &'static [u8], size: Option<Vec2>, alt: &str) -> Response {
+fn framed(
+    ui: &mut Ui,
+    uri: String,
+    bytes: &'static [u8],
+    size: Option<Vec2>,
+    alt: &str,
+) -> Response {
     let tokens = ui.tokens();
-    let uri = format!("bytes://guide/{src}");
     let picture = egui::Image::from_bytes(uri, bytes)
         .corner_radius(CornerRadius::same(CARD_RADIUS))
         .alt_text(alt)

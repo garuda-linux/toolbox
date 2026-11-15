@@ -22,7 +22,7 @@ mod icon_tile;
 mod layout;
 mod letter_tile;
 mod link_row;
-mod list;
+pub(crate) mod list;
 mod loading;
 mod mark_word;
 mod menu;
@@ -57,7 +57,8 @@ pub use action_row::ActionRow;
 pub use banner::banner;
 pub use buttons::{
     ButtonKind, icon_button, icon_button_width, named_pill_button, pill_button,
-    pill_button_at_least, pill_width, refresh_button, right_buttons, sidebar_button,
+    pill_button_at_least, pill_width, refresh_button, refresh_button_busy, right_buttons,
+    sidebar_button,
 };
 pub use card::{card, card_row, card_row_with, padded_card};
 pub use check_row::{CHECK_ROW_HEIGHT, CheckRowTexts, check_row, check_row_with_line};
@@ -67,7 +68,7 @@ pub use chip::{
 };
 pub use choice::Choice;
 pub use dim::{dim_opacity, dim_picture, dimmed};
-pub use empty::{empty_state, empty_state_action};
+pub use empty::{empty_state, empty_state_action, empty_state_with};
 pub use field::{forget_text, text_field, text_field_with_unit};
 pub use focus::{edge_ring, focus_ring, install as install_focus};
 use heading::mark_heading;
@@ -77,7 +78,8 @@ pub use heading::{
 pub use highlight::{highlighted, matches};
 pub use icon_tile::{TileSize, icon_tile, page_tile, paint_icon_tile};
 pub use layout::{
-    MIN_TEXT_WIDTH, split_row, title_capitals_top, title_line, title_line_height, trailing,
+    MIN_TEXT_WIDTH, split_row, split_row_in, title_capitals_top, title_line, title_line_height,
+    trailing,
 };
 pub use letter_tile::{hue_of, initial, paint_letter_tile};
 pub use link_row::link_row;
@@ -95,10 +97,12 @@ pub use nav::{
     EdgeFade, NAV_INSET, NavLook, group_label, group_label_height, nav_divider, nav_divider_height,
     nav_row,
 };
-pub use number::{number_field, number_field_with_unit};
-pub use page::{BodyShape, PageParts, cover_page_bottom, page_layout_shaped, start_page_entry};
+pub use number::{Digits, number_field, number_field_with_unit};
+pub use page::{
+    BodyShape, PageParts, cover_page_bottom, page_layout_shaped, page_viewport, start_page_entry,
+};
 pub use property::{PropertyList, PropertyTexts, property_list};
-pub use removable::{locked_tag, removable_tag};
+pub use removable::{lock_mark, locked_tag, removable_tag};
 pub use row_menu::{row_context_menu, row_menu};
 pub use search::{SearchTexts, request_search_focus, search_field};
 pub use secret::SecretText;

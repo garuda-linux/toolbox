@@ -7,6 +7,7 @@
 
 mod boot;
 mod bootrepair;
+mod captured;
 mod changes;
 mod common;
 mod components;
@@ -20,6 +21,7 @@ mod discover;
 mod focus;
 mod gaming;
 mod guide;
+mod guide_images;
 mod home;
 mod home_facts;
 mod home_health;
@@ -27,6 +29,7 @@ mod home_reads;
 mod instance;
 mod kernels;
 mod locales;
+mod look;
 mod maintenance;
 mod motion;
 mod network;

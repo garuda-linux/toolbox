@@ -144,7 +144,7 @@ fn a_dropdown_caption_and_chevron_sit_on_the_pill_middle() {
 fn a_chip_label_is_centred() {
     for font in test_fonts() {
         let harness = drawn(font.as_ref(), false, |ui| {
-            chips(ui, &[(0_u8, "System"), (1_u8, "User")], 0_u8);
+            chips(ui, "chips", &[(0_u8, "System"), (1_u8, "User")], 0_u8);
         });
 
         let chip = node_rect(&harness, Role::Button, "System");

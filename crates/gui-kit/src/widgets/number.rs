@@ -8,7 +8,7 @@ use std::ops::RangeInclusive;
 use egui::accesskit::Role;
 use egui::{Align2, AsIdSalt, EventFilter, Key, Modifiers, Response, TextEdit, Ui};
 
-use self::digits::Digits;
+pub use self::digits::Digits;
 use super::field::{inset_field_with_unit, text_field, text_field_with_unit};
 
 #[derive(Clone, Copy)]

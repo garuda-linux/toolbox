@@ -17,7 +17,7 @@ use egui::Ui;
 use toolbox_core::features::network::DriverFilter;
 use toolbox_gui_kit::widgets::{Tone, page_toolbar};
 
-use super::header::{TabText, TabbedIds, search, tabbed_header};
+use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, NetworkCommand};
@@ -66,7 +66,8 @@ impl PageView for NetworkPage {
         };
 
         let tabs = [Tab::Status, Tab::Drivers, Tab::Hardware, Tab::Tools];
-        let done = tabbed_header(ui, ids, &tabs, self.tab);
+        let reading = context.service::<Network>().reading();
+        let done = tabbed_header_reading(ui, ids, &tabs, self.tab, reading);
         if let Some(picked) = done.picked {
             self.tab = picked;
             if context.service::<Network>().refusal().is_some() {

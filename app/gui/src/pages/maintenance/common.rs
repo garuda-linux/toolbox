@@ -4,7 +4,8 @@ use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
-    ActionRow, ButtonKind, Tone, card, card_row, loading_label, pill_button_at_least, pill_width,
+    ActionRow, ButtonKind, Tone, card, card_row, loading_label, pill_button, pill_button_at_least,
+    pill_width,
 };
 
 use super::repairs::Asked;
@@ -144,7 +145,24 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
         // The ranking takes minutes, so the row shows it runs where its
         // button was.
         if ranking {
-            loading_label(ui, &i18n::text(&ctx, "maintenance-ranking-progress"));
+            ui.horizontal(|ui| {
+                let elapsed = context
+                    .service::<Maintenance>()
+                    .ranking_elapsed()
+                    .unwrap_or_default()
+                    .as_secs();
+
+                let time = format!("{}:{:02}", elapsed / 60, elapsed % 60);
+
+                loading_label(
+                    ui,
+                    &i18n::text_with(&ctx, "maintenance-ranking-progress", &[("time", &time)]),
+                );
+                let stop = i18n::text(&ctx, "maintenance-ranking-cancel");
+                if pill_button(ui, &stop, ButtonKind::Soft).clicked() {
+                    context.commands.send(MaintenanceCommand::CancelRanking);
+                }
+            });
             return;
         }
 

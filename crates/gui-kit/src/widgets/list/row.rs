@@ -2,14 +2,12 @@
 //! readers hear, the hover fill and the focus ring.
 
 use egui::style::ScrollAnimation;
-use egui::{
-    EventFilter, Frame, Id, Margin, Rect, Response, Role, Sense, Shape, Ui, UiBuilder, WidgetInfo,
-    vec2,
-};
+use egui::{Frame, Id, Margin, Rect, Response, Role, Shape, Ui, UiBuilder, WidgetInfo, vec2};
 
 use super::super::card::{divider, fill_rect, mark_raised, paint_hover, row_frame, shows_hover};
 use super::super::focus::ring_around;
 use super::super::layout::{SETTLED, moved, remeasured};
+use super::super::roving;
 use super::{ListItem, RowState, memory};
 use crate::theme::RADIUS;
 use crate::{motion, tokens};
@@ -21,17 +19,20 @@ pub struct Place {
     pub list: Id,
     pub id: Id,
     pub index: usize,
+    /// Whether the row is the list's Tab stop, the only focusable row.
+    pub focusable: bool,
     pub fixed: Option<f32>,
     pub toggle: bool,
     pub menu: bool,
 }
 
+/// Lays out one row and returns its height with its response.
 pub fn show<T>(
     ui: &mut Ui,
     place: Place,
     item: T,
     body: &mut impl FnMut(&mut Ui, T, &RowState),
-) -> f32
+) -> (f32, Response)
 where
     T: ListItem,
 {
@@ -46,7 +47,10 @@ where
 
     // An id of its own keeps what is inside with the item, wherever the
     // row moves in the list.
-    let mut builder = UiBuilder::new().scope_id(place.id).sense(Sense::click());
+    let mut builder = UiBuilder::new()
+        .scope_id(place.id)
+        .sense(roving::sense(place.focusable));
+
     if let Some(height) = place.fixed {
         let slot = Rect::from_min_size(ui.cursor().min, vec2(ui.available_width(), height));
         builder = builder.max_rect(slot);
@@ -62,6 +66,7 @@ where
         let whole = ui.response();
         let state = RowState {
             index: place.index,
+            row: place.id,
             toggle: place.toggle || whole.clicked(),
             response: whole,
             menu: place.menu,
@@ -90,7 +95,7 @@ where
         remember(ui, place, height);
     }
 
-    height
+    (height, response)
 }
 
 /// A row of a fixed height around `body`, its content centred in the
@@ -124,7 +129,7 @@ fn centred_frame(ui: &mut Ui, height: f32, place: Place, body: impl FnOnce(&mut 
 }
 
 /// A click on the row's empty part focuses it (Rerun's list items), and
-/// a focused row scrolls into view and keeps Up and Down for the list.
+/// a focused row scrolls into view.
 fn focus(ui: &Ui, response: &Response) {
     if response.clicked() {
         response.request_focus();
@@ -144,12 +149,6 @@ fn focus(ui: &Ui, response: &Response) {
     }
 
     if response.has_focus() {
-        let filter = EventFilter {
-            vertical_arrows: true,
-            ..EventFilter::default()
-        };
-
-        ui.memory_mut(|memory| memory.set_focus_lock_filter(response.id, filter));
         let ring = fill_rect(response.rect, ui.pixels_per_point());
         ring_around(ui, ring, RADIUS);
     }

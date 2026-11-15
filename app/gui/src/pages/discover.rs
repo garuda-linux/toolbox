@@ -1,6 +1,7 @@
 mod app_row;
 mod chips;
 mod row;
+mod sticky;
 #[cfg(test)]
 mod tests;
 
@@ -18,7 +19,7 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use super::header::{search, title_header};
+use super::header::{search_beside_sort, title_header};
 use super::rows::{Look, refusal_banner, sort_select};
 use super::search_empty::search_empty_state;
 use super::toggles::refusal_text;
@@ -47,8 +48,8 @@ type RowsKey = (AppOrder, Same<Snapshot>, u64, Look);
 type ChipsKey = (Same<Snapshot>, u64, Look);
 
 impl PageView for DiscoverPage {
-    fn header(&mut self, ui: &mut Ui, _context: &PageContext<'_>) -> bool {
-        self.title(ui);
+    fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
+        self.title(ui, listed(context));
         true
     }
 
@@ -64,16 +65,21 @@ impl DiscoverPage {
         self.revealing = Some(title.to_owned());
     }
 
-    fn title(&mut self, ui: &mut Ui) {
+    /// Search and sort show off until the apps are listed.
+    fn title(&mut self, ui: &mut Ui, listed: bool) {
         title_header(ui, "page-discover", "page-discover-subtitle");
         page_toolbar(
             ui,
             self,
             |page, ui| {
-                let field = &mut page.search;
-                _ = search(ui, field, "discover-search", "discover-search-hint");
+                ui.enabled_ui(listed, |ui| {
+                    let field = &mut page.search;
+                    _ = search_beside_sort(ui, field, "discover-search", "discover-search-hint");
+                });
             },
-            Self::sort,
+            |page, ui| {
+                ui.enabled_ui(listed, |ui| page.sort(ui));
+            },
         );
     }
 
@@ -106,7 +112,7 @@ impl DiscoverPage {
         });
 
         let category = view::category(chips.ids(), self.category.as_deref());
-        self.filters(ui, &chips, category);
+        ui.enabled_ui(listed(context), |ui| self.filters(ui, &chips, category));
         ui.add_space(ui.tokens().sizes.header_gap);
 
         let query = view::Query {
@@ -166,7 +172,7 @@ impl DiscoverPage {
 
         // A second click on the picked category shows them all again, as
         // on the toggle pages.
-        if let Some(picked) = counted_chips(ui, &options, current).value {
+        if let Some(picked) = counted_chips(ui, "discover-categories", &options, current).value {
             self.category = picked
                 .filter(|picked| current != Some(*picked))
                 .map(str::to_owned);
@@ -203,6 +209,11 @@ impl DiscoverPage {
             self.search.clear();
         }
     }
+}
+
+/// Whether the Discover catalogs list at least one app.
+fn listed(context: &PageContext<'_>) -> bool {
+    context.catalogs.apps.apps.all().next().is_some()
 }
 
 fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>) {
@@ -267,9 +278,13 @@ fn show_groups(
             .map(|row| row.id.clone())
     });
 
+    let start = ui.cursor().top();
+    let mut marks = Vec::with_capacity(groups.len());
     let mut holds = false;
     for group in groups {
+        let top = ui.cursor().top() - start;
         section_heading(ui, group.icon, &group.title, &group.count);
+        let heading_bottom = ui.cursor().top() - start;
         ui.add_space(ui.tokens().sizes.heading_gap);
 
         let reveal = revealed
@@ -282,8 +297,16 @@ fn show_groups(
                 dimmed(ui, context.busy, |ui| row::show(ui, context, app, state));
             });
 
+        marks.push(sticky::Mark {
+            top,
+            heading_bottom,
+            end: ui.cursor().top() - start,
+        });
+
         ui.add_space(ui.tokens().sizes.section_gap);
     }
+
+    sticky::paint(ui, groups, &marks, start);
 
     // Asked again until the row holds the focus. An app the list does
     // not show is not waited for.

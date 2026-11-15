@@ -1,29 +1,8 @@
 //! The guide in `docs/src` as built in: every page listed, every link and
 //! picture found. A broken link fails here before a reader finds it.
 
-use super::{Block, Link, Page, built_in, embedded, image, image_size};
-
-fn walk<'page>(blocks: &'page [Block], found: &mut Vec<&'page Block>) {
-    for block in blocks {
-        found.push(block);
-        for child in block.children() {
-            walk(std::slice::from_ref(child), found);
-        }
-    }
-}
-
-fn all_blocks(page: &Page) -> Vec<&Block> {
-    let mut found = Vec::new();
-    walk(&page.blocks, &mut found);
-    found
-}
-
-fn has_anchor(page: &Page, anchor: &str) -> bool {
-    page.blocks
-        .iter()
-        .filter_map(Block::heading)
-        .any(|heading| heading.anchor == anchor)
-}
+use super::links::{all_blocks, broken_links};
+use super::{Block, built_in, embedded, image, image_size};
 
 #[test]
 fn every_page_the_summary_names_is_built_in() {
@@ -44,34 +23,11 @@ fn every_page_in_docs_is_listed_in_the_summary() {
 
 #[test]
 fn every_link_between_pages_finds_its_page_and_heading() {
-    let guide = embedded();
-    let mut broken = Vec::new();
-
-    for page in guide.pages() {
-        for block in all_blocks(page) {
-            for link in block
-                .spans()
-                .into_iter()
-                .filter_map(|span| span.link.as_ref())
-            {
-                let found = match link {
-                    Link::Page { file, anchor } => guide.page(file).is_some_and(|target| {
-                        anchor
-                            .as_ref()
-                            .is_none_or(|anchor| has_anchor(target, anchor))
-                    }),
-                    Link::Anchor(anchor) => has_anchor(page, anchor),
-                    Link::Web(_) => true,
-                };
-
-                if !found {
-                    broken.push(format!("{}: {link:?}", page.file));
-                }
-            }
-        }
-    }
-
-    assert_eq!(broken, Vec::<String>::new(), "broken links");
+    assert_eq!(
+        broken_links(embedded()),
+        Vec::<String>::new(),
+        "broken links"
+    );
 }
 
 #[test]

@@ -10,7 +10,7 @@ use toolbox_gui_kit::widgets::{Tone, dim_picture, highlighted, status_dot};
 
 use crate::i18n;
 use crate::pages::rows::picture_slot;
-use crate::pages::toggles::paint_glyph;
+use crate::pages::toggles::{control, paint_glyph};
 
 /// The row of the text `id`, its tile faded when the row cannot change.
 pub(super) fn lead(
@@ -38,10 +38,11 @@ fn text(ui: &mut Ui, (id, query): (&str, &str), queued: Option<&str>) {
         }
     });
 
-    let description = i18n::text(&ctx, &format!("{id}-description"));
+    // The cut is the catalog rows' own, and the tooltip keeps the whole.
+    let whole = i18n::text(&ctx, &format!("{id}-description")).into_owned();
     let small = fonts::font(ui.style(), Weight::Regular, SMALL);
-    let description = highlighted(ui, &description, query, small, tokens.secondary);
-    ui.add(Label::new(description).wrap());
+    let cut = control::cut(highlighted(ui, &whole, query, small, tokens.secondary));
+    ui.add(Label::new(cut).wrap()).on_hover_text(whole);
 }
 
 /// Whether `query` (trimmed, lower case, empty for all) is in the title

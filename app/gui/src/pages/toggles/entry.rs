@@ -9,7 +9,7 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
     RowState, Tone, dim_picture, page_tile, paint_letter_tile, queued_tag, row_height, row_menu,
-    split_row, status_dot, text_block_height,
+    split_row_in, status_dot, text_block_height,
 };
 
 use super::catalog_text;
@@ -55,8 +55,9 @@ pub fn show(
 
     let width = control::width(ui, row.control, setting);
 
-    split_row(
+    split_row_in(
         ui,
+        state.row,
         width,
         |ui| {
             ui.horizontal_top(|ui| {

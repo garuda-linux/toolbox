@@ -8,10 +8,8 @@ locales-tab-locales = Locales
 locales-tab-packs = Language packs
 locales-queued = Changes with Apply
 
-locales-search = Search locales
-locales-search-hint = Search locales…
-locales-packs-search = Search language packs
-locales-packs-search-hint = Search language packs…
+locales-search = Search locales and packs
+locales-search-hint = Search locales and packs…
 locales-filter-utf8 = UTF-8 only
 locales-filter-enabled = Enabled only
 locales-list = Locales

@@ -22,7 +22,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitScope;
 use unit_row::UnitRow;
 
-use super::header::{TabText, TabbedIds, search, tabbed_header};
+use super::header::{TabText, TabbedIds, search_beside_sort, tabbed_header_reading};
 use super::rows::{Look, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, ServiceCommand};
@@ -98,6 +98,8 @@ impl PageView for ServicesPage {
         let listed = context.service::<Units>().get(self.scope);
         let first_load = ui.make_persistent_id(("services-content", self.scope));
         let Some(units) = listed.latest() else {
+            self.idle_filters(ui);
+            ui.add_space(ui.tokens().sizes.header_gap);
             if let Some(failure) = listed.error() {
                 let said = i18n::text(&ctx, failure_text(*failure, self.scope));
                 let again = i18n::text(&ctx, "common-read-again");
@@ -228,7 +230,8 @@ impl ServicesPage {
         };
 
         let scopes = [UnitScope::System, UnitScope::User];
-        let done = tabbed_header(ui, ids, &scopes, self.scope);
+        let reading = context.service::<Units>().get(self.scope).is_loading();
+        let done = tabbed_header_reading(ui, ids, &scopes, self.scope, reading);
         if let Some(picked) = done.picked {
             self.scope = picked;
         }
@@ -237,25 +240,47 @@ impl ServicesPage {
             context.commands.send(ServiceCommand::Refresh(self.scope));
         }
 
-        // Search and sort narrow a list, so they wait for one.
-        if context
+        // Search and sort narrow a list, so they show off until one exists.
+        let listed = context
             .service::<Units>()
             .get(self.scope)
             .latest()
-            .is_none()
-        {
-            return;
-        }
+            .is_some();
 
         page_toolbar(
             ui,
             self,
             |page, ui| {
-                let field = &mut page.filter.search;
-                _ = search(ui, field, "services-search", "services-search-hint");
+                ui.enabled_ui(listed, |ui| {
+                    let field = &mut page.filter.search;
+                    _ = search_beside_sort(ui, field, "services-search", "services-search-hint");
+                });
             },
-            Self::sort,
+            |page, ui| {
+                ui.enabled_ui(listed, |ui| page.sort(ui));
+            },
         );
+    }
+
+    /// The chips before the first list, all off and counting nothing.
+    fn idle_filters(&self, ui: &mut Ui) {
+        let ctx = ui.ctx().clone();
+        let labels = Shown::EVERY.map(|shown| {
+            (
+                shown,
+                i18n::text(&ctx, &format!("services-show-{}", shown.as_str())),
+            )
+        });
+
+        let options: Vec<(Shown, &str, Option<&str>)> = labels
+            .iter()
+            .map(|(shown, label)| (*shown, &**label, None))
+            .collect();
+
+        let current = self.filter.shown;
+        _ = ui.enabled_ui(false, |ui| {
+            counted_chips(ui, "services-shown", &options, current)
+        });
     }
 
     fn sort(&mut self, ui: &mut Ui) {
@@ -281,7 +306,8 @@ impl ServicesPage {
             .map(|(shown, label, count)| (*shown, &**label, count.as_deref()))
             .collect();
 
-        if let Some(picked) = counted_chips(ui, &options, self.filter.shown).value {
+        if let Some(picked) = counted_chips(ui, "services-shown", &options, self.filter.shown).value
+        {
             self.filter.shown = picked;
         }
     }

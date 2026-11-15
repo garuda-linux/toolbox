@@ -78,7 +78,7 @@ fn locales_page() {
     results.add(harness.try_snapshot("locales/locales_dark"));
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "German (Germany)")
+        .get_by_role_and_label(Role::Button, "Enable German (Germany)")
         .click();
     harness.run();
     harness

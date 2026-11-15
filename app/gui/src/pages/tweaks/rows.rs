@@ -1,3 +1,4 @@
+mod glyphs;
 mod text;
 
 use std::borrow::Cow;
@@ -9,11 +10,12 @@ use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
     ListItem, RowHeights, RowList, RowState, Select, dimmed, rich, row_height, section_heading,
-    split_row, switch, text_block_height,
+    split_row, split_row_in, switch, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::{GarudaUpdateFlag, ShellPath};
 
+use self::glyphs::flag_glyph;
 use self::text::lead;
 pub(super) use self::text::matches;
 use crate::command::TweakCommand;
@@ -24,7 +26,7 @@ use crate::pages::toggles::shown_count;
 
 const NARROW_CONTROL: f32 = tokens::Sizes::DEFAULT.setting_control_narrow;
 
-/// Each section's glyph, on its heading and on the tile of its rows.
+/// Each section's glyph, on its heading. Its rows have glyphs of their own.
 const SHELL_NETWORK_GLYPH: Icon = icons::NETWORK_WIRED;
 const GARUDA_UPDATE_GLYPH: Icon = icons::SYSTEM_SOFTWARE_UPDATE;
 
@@ -170,7 +172,7 @@ pub fn shell_network(
         &matching,
         |ui, tweak, state| {
             let choice = tweak.what;
-            let row = (choice.text_id(), query);
+            let row = (choice.glyph(), choice.text_id(), query);
             match choice {
                 Choice::Shell => {
                     pick_row(ui, context, row, &choices.shell, &shells(&choices.shell));
@@ -195,7 +197,7 @@ pub fn shell_network(
                     flip_row(
                         ui,
                         context,
-                        (SHELL_NETWORK_GLYPH, choice.text_id(), state, query),
+                        (choice.glyph(), choice.text_id(), state, query),
                         choices.hblock,
                         TweakCommand::Hblock,
                     );
@@ -248,7 +250,7 @@ pub fn garuda_update(
         &matching,
         |ui, tweak, state| {
             let (flag, flip) = tweak.what;
-            let row = (GARUDA_UPDATE_GLYPH, tweak.id.as_ref(), state, query);
+            let row = (flag_glyph(flag), tweak.id.as_ref(), state, query);
             flip_row(ui, context, row, flip, |on| TweakCommand::Flag(flag, on));
         },
     );
@@ -286,7 +288,7 @@ fn named<T>(pick: &Pick<T>, entry: impl Fn(&T) -> (String, TweakCommand)) -> Vec
 fn pick_row<T>(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (id, query): (&str, &str),
+    (glyph, id, query): (Icon, &str, &str),
     pick: &Pick<T>,
     entries: &[Entry],
 ) {
@@ -313,7 +315,7 @@ fn pick_row<T>(
         split_row(
             ui,
             NARROW_CONTROL,
-            |ui| lead(ui, (SHELL_NETWORK_GLYPH, !known), (id, query), queued),
+            |ui| lead(ui, (glyph, !known), (id, query), queued),
             |ui| {
                 // Nothing to pick from is no control, so it reads as a
                 // fact rather than a dropdown that never opens.
@@ -358,8 +360,9 @@ fn flip_row(
     });
 
     dimmed(ui, context.busy, |ui| {
-        split_row(
+        split_row_in(
             ui,
+            state.row,
             SWITCH_WIDTH,
             |ui| lead(ui, (glyph, !flip.known), (id, query), tag),
             |ui| {

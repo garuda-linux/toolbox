@@ -192,8 +192,9 @@ fn every_category_has_its_wiki_page_and_file() {
 
     assert_eq!(pages[1], "List_of_games");
     assert_eq!(pages[0], "List_of_applications/Documents");
-    assert_eq!(pages[7], "List_of_applications/Utilities");
-    assert_eq!(CATEGORIES[6].file_name(), "security.toml");
+    assert_eq!(pages[6], "List_of_applications/Utilities");
+    assert_eq!(pages[7], "List_of_applications/Other");
+    assert_eq!(CATEGORIES[5].file_name(), "security.toml");
 
     let files: Vec<String> = CATEGORIES
         .iter()
@@ -372,7 +373,7 @@ fn missing_catalogs_and_non_package_checks_add_no_package() {
 #[test]
 fn a_command_of_a_protected_package_is_left_out() {
     let lists = Lists::new(vec![(
-        CATEGORIES[6],
+        CATEGORIES[5],
         vec![app("su", &["util-linux"]), app("sudo", &["sudo"])],
     )])
     .without_commands_of();

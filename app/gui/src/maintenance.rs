@@ -5,6 +5,7 @@
 //! The ranking and the reset block, so they run on tokio's blocking
 //! threads and the frame takes their results.
 
+mod checks;
 mod jobs;
 mod mirrorlist;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
@@ -22,13 +23,12 @@ use mirrorlist::Install;
 pub use sample::SampleMirrors;
 use toolbox_catalog::SkelCatalog;
 use toolbox_core::features::maintenance::opening::{Next, Opening};
-use toolbox_core::features::maintenance::page::{
-    self, LaunchCause, PageTool, RATE_MIRRORS_PROGRAM, ToolRow,
-};
+use toolbox_core::features::maintenance::page::{self, LaunchCause, PageTool, ToolRow};
 use toolbox_core::features::maintenance::{RATE_MIRRORS_PACKAGE, Tool};
 use toolbox_plan::{Plan, RootAction, Toggle};
 use toolbox_services::shelf::Shelf;
 use toolbox_system::mirrors::RankProblem;
+#[cfg(any(test, feature = "testing"))]
 use toolbox_system::skel::shelf;
 
 use crate::catalogs::Catalogs;
@@ -55,6 +55,8 @@ pub struct Maintenance {
     problem: Option<MaintenanceProblem>,
     /// The Chaotic-AUR mirrors are being ranked, which takes minutes.
     ranking: bool,
+    /// When the ranking under way started, for the time the page shows.
+    ranking_since: Option<std::time::Instant>,
     /// The install of the last ranked list, until it started.
     mirrorlist: Install,
     /// The settings reset: what is on offer, what is chosen, what happened.
@@ -62,6 +64,8 @@ pub struct Maintenance {
     opening: Opening,
     /// `None` in tests that need no jobs: nothing is ranked or reset.
     jobs: Option<Jobs>,
+    /// The install that ended and waits for the disk check to land.
+    checking: Option<Checking>,
     /// Starts the tool that waited for its install.
     launcher: Option<Arc<dyn Launcher>>,
     /// Shared with App, which loads them once at the start. The reset
@@ -90,7 +94,10 @@ impl Maintenance {
     /// Offers what `/etc/skel` holds now, which an apply may have changed.
     pub fn restock(&mut self) {
         let catalogs = Arc::clone(&self.catalogs);
-        self.stock(catalogs.skel.as_ref());
+        match &self.jobs {
+            Some(jobs) => jobs.offer(catalogs),
+            None => self.shelf.stock(Vec::new()),
+        }
     }
 
     pub fn launcher(&self) -> Option<Arc<dyn Launcher>> {
@@ -98,6 +105,7 @@ impl Maintenance {
     }
 
     /// Offers what `/etc/skel` holds now of `catalog`.
+    #[cfg(test)]
     pub fn stock(&mut self, catalog: Option<&SkelCatalog>) {
         let rows = catalog
             .zip(self.jobs.as_ref())
@@ -141,6 +149,11 @@ impl Maintenance {
         self.problem.as_ref()
     }
 
+    /// How long the ranking under way has run.
+    pub fn ranking_elapsed(&self) -> Option<std::time::Duration> {
+        self.ranking_since.map(|since| since.elapsed())
+    }
+
     pub const fn ranking(&self) -> bool {
         self.ranking
     }
@@ -172,6 +185,7 @@ impl Maintenance {
 
         match command {
             MaintenanceCommand::DismissProblem => self.dismiss_problem(),
+            MaintenanceCommand::CancelRanking => self.cancel_ranking(),
             MaintenanceCommand::Choose { entry, on } => self.choose(entry, Toggle::from_on(*on)),
             MaintenanceCommand::Reset => {
                 let catalogs = Arc::clone(&self.catalogs);
@@ -212,29 +226,6 @@ impl Maintenance {
         self.mirrorlist = std::mem::take(&mut self.mirrorlist).refused();
     }
 
-    /// Starts what waited for the install that just ended, when `exists`
-    /// finds its program now: the last check may have run before the end.
-    /// A ranked list that waited goes out with the next [`Self::take`].
-    pub fn plan_finished(
-        &mut self,
-        succeeded: bool,
-        exists: impl Fn(&Path) -> bool,
-        launcher: Option<&dyn Launcher>,
-    ) {
-        self.mirrorlist = std::mem::take(&mut self.mirrorlist).finished();
-        let (next, left) = self.opening.finished(succeeded);
-        self.opening = left;
-        match next {
-            Some(Next::Tool(tool)) if exists(Path::new(tool.program())) => {
-                self.launch(tool, launcher);
-            }
-            Some(Next::Tool(tool)) => self.absent(PageTool::Program(tool), tool.program()),
-            Some(Next::RankMirrors) if exists(Path::new(RATE_MIRRORS_PROGRAM)) => self.rank(),
-            Some(Next::RankMirrors) => self.absent(PageTool::ChaoticMirrors, RATE_MIRRORS_PROGRAM),
-            None => {}
-        }
-    }
-
     /// Copies the chosen settings from `/etc/skel` on a blocking thread.
     pub fn reset(&mut self, catalog: Option<&SkelCatalog>) {
         let Some(jobs) = &self.jobs else {
@@ -250,7 +241,12 @@ impl Maintenance {
     /// back as the plan that installs it, and so does one that waited for
     /// the end of another plan.
     pub fn take(&mut self) -> Option<Plan> {
+        self.land_check();
         let jobs = self.jobs.as_ref()?;
+        if let Some(rows) = jobs.offered() {
+            self.shelf.stock(rows);
+        }
+
         if let Some(outcome) = jobs.reset_outcome() {
             self.shelf.finish_reset(outcome);
         }
@@ -266,11 +262,22 @@ impl Maintenance {
                 let plan = Plan::root(RootAction::InstallMirrorlist { mirrorlist });
                 Some(self.mirrorlist.landed(plan))
             }
+            Err(RankProblem::Cancelled) => {
+                tracing::info!("ranking the Chaotic-AUR mirrors was stopped");
+                None
+            }
             Err(problem) => {
                 tracing::error!("ranking the Chaotic-AUR mirrors failed: {problem}");
                 self.problem = Some(MaintenanceProblem::Mirrors(problem));
                 None
             }
+        }
+    }
+
+    /// The ranking stops at once. Its result, as a cancel, says nothing.
+    fn cancel_ranking(&self) {
+        if let Some(jobs) = &self.jobs {
+            jobs.cancel_rank();
         }
     }
 
@@ -285,6 +292,7 @@ impl Maintenance {
         }
 
         self.ranking = true;
+        self.ranking_since = Some(std::time::Instant::now());
         self.problem = None;
         jobs.rank();
     }
@@ -299,26 +307,25 @@ impl Maintenance {
         });
     }
 
-    /// A failure is logged here and kept for the page.
+    /// A start that fails is a toast from the launcher.
     fn launch(&mut self, tool: Tool, launcher: Option<&dyn Launcher>) {
         let Some(launcher) = launcher else {
             return;
         };
 
-        let program = Path::new(tool.program());
-        self.problem = launcher.start(program, tool.args()).err().map(|error| {
-            tracing::error!("cannot start {}: {error}", program.display());
-            MaintenanceProblem::Launch {
-                tool: tool.id(),
-                cause: LaunchCause::of(error.kind()),
-                reason: error.to_string(),
-            }
-        });
+        self.problem = None;
+        launcher.start(Path::new(tool.program()), tool.args());
     }
 }
 
 #[cfg(any(test, feature = "testing"))]
 impl Maintenance {
+    /// Whether a finished install waits for its disk check.
+    #[cfg(test)]
+    pub const fn checking(&self) -> bool {
+        self.checking.is_some()
+    }
+
     /// What a page test shows: `problem`, a ranking under way or not, the
     /// `rows` on offer for the reset and the last reset's `outcome`.
     pub fn showing(
@@ -340,4 +347,11 @@ impl Maintenance {
             ..Self::default()
         }
     }
+}
+
+/// A finished install whose program the disk check is still looking for.
+#[derive(Debug)]
+struct Checking {
+    next: Next,
+    launcher: Option<Arc<dyn Launcher>>,
 }

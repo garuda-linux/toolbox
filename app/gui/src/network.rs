@@ -58,6 +58,10 @@ pub enum Address {
 }
 
 #[derive(Debug, Default)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "each flag tracks its own read, switch or lookup"
+)]
 pub struct Network {
     opened: bool,
     status: Option<StatusRead>,
@@ -73,6 +77,8 @@ pub struct Network {
     /// The last radio switch failed. A later one that works or a Refresh
     /// clears it.
     radio_failed: bool,
+    /// The radios and routes are read and their answer is not in yet.
+    status_reading: bool,
     refusal: Option<NetworkRefusal>,
     /// `None` in tests that need no reads: nothing is read.
     jobs: Option<Jobs>,
@@ -112,6 +118,12 @@ impl Network {
 
     pub const fn status(&self) -> Option<&StatusRead> {
         self.status.as_ref()
+    }
+
+    /// Whether the radios and routes are read, for a Read again that spins
+    /// meanwhile.
+    pub const fn reading(&self) -> bool {
+        self.status_reading
     }
 
     pub const fn connectivity(&self) -> Option<Connectivity> {
@@ -192,7 +204,10 @@ impl Network {
 
         for result in landed {
             match result {
-                Landed::Status(status) => self.status = Some(status),
+                Landed::Status(status) => {
+                    self.status = Some(status);
+                    self.status_reading = false;
+                }
                 Landed::Connectivity(state) => self.connectivity = Some(state),
                 Landed::Hardware(lists) => self.hardware = Some(lists),
                 Landed::Interfaces(cards) => self.interfaces = cards,
@@ -208,8 +223,9 @@ impl Network {
         }
     }
 
-    fn read_all(&self, recheck: bool) {
+    fn read_all(&mut self, recheck: bool) {
         if let Some(jobs) = &self.jobs {
+            self.status_reading = true;
             jobs.read_status();
             jobs.check_connectivity(recheck);
             jobs.read_hardware();

@@ -6,12 +6,9 @@ use super::{
     LIST_UNIT_FILES, LIST_UNITS, ListUnitsRow, SUBSCRIBE, SYSTEMD_DESTINATION, UnitFileRow,
     unit_infos,
 };
+use crate::testing::systemd::{LIST_UNIT_FILES_JSON, LIST_UNITS_JSON};
 
-/// `busctl --json=short call ... ListUnits` and `ListUnitFiles` in the
-/// Lima VM: `{"type": <signature>, "data": [<the one array>]}`.
-const LIST_UNITS_JSON: &str = include_str!("fixtures/list-units.json");
-const LIST_UNIT_FILES_JSON: &str = include_str!("fixtures/list-unit-files.json");
-
+/// The captures are `{"type": <signature>, "data": [<the one array>]}`.
 fn reply(json: &str) -> serde_json::Value {
     serde_json::from_str(json).unwrap()
 }

@@ -50,6 +50,11 @@ impl Kernels {
         self.dkms.reading()
     }
 
+    /// Whether dkms is asked, for a Read again that spins meanwhile.
+    pub const fn reading(&self) -> bool {
+        self.dkms.reading().is_loading()
+    }
+
     /// The modules of the last answer, which stay while dkms is asked
     /// again. Empty until dkms answered.
     pub fn dkms_entries(&self) -> &[DkmsEntry] {

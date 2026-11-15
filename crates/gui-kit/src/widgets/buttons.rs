@@ -18,8 +18,8 @@
 //!   `ActionRow` do this.
 
 use egui::{
-    Color32, CornerRadius, Id, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo,
-    vec2,
+    Color32, CornerRadius, Id, Rect, Response, Role, Sense, Spinner, Stroke, StrokeKind, Ui,
+    WidgetInfo, vec2,
 };
 
 use super::card::on_raised;
@@ -194,19 +194,20 @@ pub fn icon_button_width(ui: &Ui) -> f32 {
 /// `name` names it and shows on hover.
 pub fn icon_button(ui: &mut Ui, icon: Icon, name: &str) -> Response {
     let idle = tokens::current(ui.ctx()).secondary;
-    glyph_button(ui, icon, name, ICON_PADDING, idle).on_hover_text(name)
+    glyph_button(ui, icon, name, idle, false).on_hover_text(name)
 }
 
 pub fn sidebar_button(ui: &mut Ui, icon: Icon, name: &str) -> Response {
     let idle = tokens::current(ui.ctx()).sidebar_text;
-    glyph_button(ui, icon, name, ICON_PADDING, idle).on_hover_text(name)
+    glyph_button(ui, icon, name, idle, false).on_hover_text(name)
 }
 
-fn glyph_button(ui: &mut Ui, icon: Icon, name: &str, padding: f32, idle: Color32) -> Response {
+/// `spinning` draws a spinner in place of the glyph.
+fn glyph_button(ui: &mut Ui, icon: Icon, name: &str, idle: Color32, spinning: bool) -> Response {
     let tokens = tokens::current(ui.ctx());
     let image = icon_image(ui, icon, idle);
     let glyph = glyph_size(&image);
-    let size = glyph + vec2(padding, padding) * 2.0;
+    let size = glyph + vec2(ICON_PADDING, ICON_PADDING) * 2.0;
     let (rect, response) = ui.allocate_exact_size(size, Sense::click());
     response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), name));
 
@@ -226,7 +227,15 @@ fn glyph_button(ui: &mut Ui, icon: Icon, name: &str, padding: f32, idle: Color32
         let tint = if hovered { tokens.text } else { idle };
 
         let glyph_rect = Rect::from_center_size(rect.center(), glyph);
-        icon_image(ui, icon, tint).paint_at(ui, glyph_rect);
+        if spinning {
+            Spinner::new()
+                .size(glyph.x)
+                .color(tint)
+                .paint_at(ui, glyph_rect);
+        } else {
+            icon_image(ui, icon, tint).paint_at(ui, glyph_rect);
+        }
+
         focus_ring(ui, &response, RADIUS);
     }
 
@@ -237,10 +246,23 @@ fn glyph_button(ui: &mut Ui, icon: Icon, name: &str, padding: f32, idle: Color32
 /// F5 is left to a dialog over the page and to the program in a focused
 /// terminal.
 pub fn refresh_button(ui: &mut Ui, name: &str) -> Choice<()> {
-    let button = icon_button(ui, crate::icons::VIEW_REFRESH, name);
-    let clicked = button.clicked();
+    refresh_button_busy(ui, name, None)
+}
+
+/// [`refresh_button`] that, while `busy` names the read in progress, spins,
+/// is named `busy` and takes neither a click nor F5, so no second read
+/// starts. It stays enabled, so it keeps the focus.
+pub fn refresh_button_busy(ui: &mut Ui, name: &str, busy: Option<&str>) -> Choice<()> {
+    let spinning = busy.is_some();
+    let name = busy.unwrap_or(name);
+    let idle = tokens::current(ui.ctx()).secondary;
+    let button =
+        glyph_button(ui, crate::icons::VIEW_REFRESH, name, idle, spinning).on_hover_text(name);
+
+    let clicked = button.clicked() && !spinning;
     let ctx = ui.ctx().clone();
-    let free = ui.is_enabled()
+    let free = !spinning
+        && ui.is_enabled()
         && ctx.memory(egui::Memory::top_modal_layer).is_none()
         && !crate::terminal_view::owns_keys(&ctx);
 

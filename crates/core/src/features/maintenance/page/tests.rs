@@ -4,8 +4,8 @@ use std::path::Path;
 use toolbox_plan::{PackageName, PlannedAction, RemoteAction, RootAction, Upgrader};
 
 use super::{
-    LaunchCause, OperationRow, PageTool, Repair, ToolRow, UPGRADE_SYSTEM, asks_first, install,
-    installed, missing, operations, repairs, rescue_install, run_now_plan, task, tools, upgrader,
+    OperationRow, PageTool, Repair, ToolRow, UPGRADE_SYSTEM, asks_first, install, installed,
+    missing, operations, repairs, rescue_install, run_now_plan, task, tools, upgrader,
 };
 use crate::domains::InstalledPackages;
 use crate::features::maintenance::{Operation, Operations, Tool};
@@ -242,18 +242,6 @@ fn a_tool_counts_as_installed_only_when_its_row_found_it() {
 
     assert!(installed(&rows, PageTool::ChaoticMirrors));
     assert!(!installed(&rows, PageTool::Program(Tool::BtrfsAssistant)));
-}
-
-#[test]
-fn a_start_failure_says_whether_the_program_is_missing_or_forbidden() {
-    use std::io::ErrorKind;
-
-    assert_eq!(LaunchCause::of(ErrorKind::NotFound), LaunchCause::Missing);
-    assert_eq!(
-        LaunchCause::of(ErrorKind::PermissionDenied),
-        LaunchCause::Denied
-    );
-    assert_eq!(LaunchCause::of(ErrorKind::OutOfMemory), LaunchCause::Other);
 }
 
 #[test]

@@ -6,15 +6,16 @@
 mod tests;
 
 use toolbox_core::features::network::{
-    HOTSPOT_PACKAGE, ModuleFacts, Refusal, set_blacklisted, toggle_install,
+    HOTSPOT_PACKAGE, ModuleFacts, PCIUTILS_PACKAGE, Refusal, set_blacklisted, toggle_install,
 };
+use toolbox_core::features::packages::queue::toggle;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{KernelModule, Toggle, UnitScope};
 
 use super::{Network, NetworkRefusal};
 use crate::command::{AppCommand, NetworkCommand, ServiceCommand};
 use crate::page_service::Handled;
-use crate::refused::{Refused, queue, queue_or_refuse};
+use crate::refused::{Refused, queue, queue_or_keep, queue_or_refuse};
 
 impl Network {
     pub const fn refusal(&self) -> Option<&NetworkRefusal> {
@@ -42,6 +43,16 @@ impl Network {
             NetworkCommand::ToggleHotspot => queue(changes, |changes| {
                 toggle_install(&HOTSPOT_PACKAGE, changes, snapshot);
             }),
+            NetworkCommand::TogglePciutils { wish } => {
+                queue_or_keep(&mut self.refusal, changes, |changes| {
+                    toggle(&PCIUTILS_PACKAGE, *wish, snapshot, changes).map_err(|refused| {
+                        Refused::new(
+                            Refusal::Package(refused.refusal),
+                            refused.subject.as_str().to_owned(),
+                        )
+                    })
+                })
+            }
             // The page also lists the system's units, which App reads in.
             NetworkCommand::Refresh => {
                 self.refresh();

@@ -92,11 +92,11 @@ fn a_system_without_locale_gen_says_so() {
 }
 
 #[test]
-fn a_switch_queues_its_locale() {
+fn a_locale_button_queues_its_locale() {
     let mut harness = page(system());
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "de_DE.UTF-8")
+        .get_by_role_and_label(Role::Button, "Enable de_DE.UTF-8")
         .click();
     harness.run();
 
@@ -115,7 +115,7 @@ fn other_character_sets_show_once_utf8_only_is_off() {
 
     assert_eq!(
         harness
-            .query_all_by_role_and_label(Role::CheckBox, "de_DE")
+            .query_all_by_role_and_label(Role::Button, "Enable de_DE")
             .count(),
         0
     );
@@ -125,7 +125,7 @@ fn other_character_sets_show_once_utf8_only_is_off() {
 
     assert_eq!(
         harness
-            .query_all_by_role_and_label(Role::CheckBox, "de_DE")
+            .query_all_by_role_and_label(Role::Button, "Enable de_DE")
             .count(),
         1
     );
@@ -135,9 +135,11 @@ fn other_character_sets_show_once_utf8_only_is_off() {
 fn a_search_without_a_match_says_so() {
     let mut harness = page(system());
 
-    harness.get_by_label("Search locales").click();
+    harness.get_by_label("Search locales and packs").click();
     harness.run();
-    harness.get_by_label("Search locales").type_text("klingon");
+    harness
+        .get_by_label("Search locales and packs")
+        .type_text("klingon");
     harness.run();
 
     assert!(harness.query_by_label("No locale matches").is_some());
@@ -207,7 +209,7 @@ fn the_packs_tab_counts_and_queues_the_missing_packs() {
     harness.get_by_label("Queue all missing").click();
     harness.run();
     harness
-        .get_by_role_and_label(Role::CheckBox, "firefox-i18n-en-us")
+        .get_by_role_and_label(Role::Button, "Install firefox-i18n-en-us")
         .click();
     harness.run();
 
@@ -232,7 +234,8 @@ fn the_header_stays_put_and_the_toolbar_holds_search_or_sort() {
     );
 
     let tab = rect_of(&harness, Role::RadioButton, "Locales");
-    let search = rect_of(&harness, Role::TextInput, "Search locales");
+    let search = rect_of(&harness, Role::TextInput, "Search locales and packs");
+
     assert_header(&harness, texts, Some(tab), Some(search));
 
     harness
@@ -242,7 +245,7 @@ fn the_header_stays_put_and_the_toolbar_holds_search_or_sort() {
 
     assert_eq!(rect_of(&harness, Role::RadioButton, "Locales"), tab);
     assert_eq!(
-        rect_of(&harness, Role::TextInput, "Search language packs"),
+        rect_of(&harness, Role::TextInput, "Search locales and packs"),
         search,
         "the toolbar keeps its shape"
     );
@@ -257,4 +260,11 @@ fn the_header_stays_put_and_the_toolbar_holds_search_or_sort() {
         sort.top() > refresh.bottom(),
         "the sort is not in the toolbar"
     );
+}
+
+#[test]
+fn a_code_that_names_its_charset_does_not_repeat_it() {
+    let harness = page(system());
+
+    assert!(harness.query_by_label_contains("UTF-8, UTF-8").is_none());
 }

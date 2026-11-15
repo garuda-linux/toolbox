@@ -36,12 +36,9 @@ fn a_quit_confirmed_during_a_run_shows_a_stopping_note_until_the_run_ends() {
     });
 
     harness.get_by_label("Cancel and quit").click();
-    harness.step();
-    harness.step();
-    assert!(
-        harness.query_all_by_label(STOPPING).next().is_some(),
-        "no stopping note"
-    );
+    step_until(&mut harness, "the stopping note", |harness| {
+        harness.query_all_by_label(STOPPING).next().is_some()
+    });
 
     gate.open();
     step_until(&mut harness, "the run to end", |harness| {

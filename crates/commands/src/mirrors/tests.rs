@@ -12,7 +12,10 @@ const RANKED: &str = toolbox_plan::testing::mirrorlist::RATE_MIRRORS_CHAOTIC;
 struct Ranked;
 
 impl MirrorRanking for Ranked {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
+    fn rank(
+        &self,
+        _cancel: &std::sync::Arc<std::sync::atomic::AtomicBool>,
+    ) -> Result<Mirrorlist, RankProblem> {
         Ok(Mirrorlist::new(RANKED.to_owned()).unwrap())
     }
 }
@@ -20,7 +23,10 @@ impl MirrorRanking for Ranked {
 struct Offline;
 
 impl MirrorRanking for Offline {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
+    fn rank(
+        &self,
+        _cancel: &std::sync::Arc<std::sync::atomic::AtomicBool>,
+    ) -> Result<Mirrorlist, RankProblem> {
         Err(RankProblem::Failed(
             "exit status: 1: no mirror answered".to_owned(),
         ))

@@ -8,7 +8,7 @@ use egui::{Label, Rect, Sense, Ui, pos2, vec2};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    RowState, Tone, line, rich, row_height, row_menu, split_row, status_dot, status_word, tag,
+    RowState, Tone, line, rich, row_height, row_menu, split_row_in, status_dot, status_word, tag,
     text_block_height,
 };
 
@@ -50,8 +50,9 @@ pub fn column_caption(ui: &mut Ui) {
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowState) {
     let live = announced(state, row.state.1);
 
-    split_row(
+    split_row_in(
         ui,
+        state.row,
         MENU_AND_SWITCH,
         |ui| {
             toolbox_gui_kit::widgets::title_line(ui, false, |ui| {

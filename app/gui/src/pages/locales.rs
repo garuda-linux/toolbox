@@ -17,7 +17,7 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use super::header::{TabText, TabbedIds, search, tabbed_header};
+use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
 use super::rows::{refused_banner, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, LocaleCommand};
@@ -55,8 +55,6 @@ enum Chip {
 pub struct LocalesPage {
     tab: Tab,
     filter: Filter,
-    /// The Language packs tab's own search, kept across a tab switch.
-    pack_search: String,
     order: PackOrder,
     locales: list::Rows,
     packs: packs::Rows,
@@ -76,7 +74,10 @@ impl PageView for LocalesPage {
             refresh: "locales-refresh",
         };
 
-        let done = tabbed_header(ui, ids, &[Tab::Locales, Tab::Packs], self.tab);
+        // The system's state is read again through the app, so Read again
+        // spins on every refresh and before the first reading.
+        let reading = !context.probed || context.snapshot_reading;
+        let done = tabbed_header_reading(ui, ids, &[Tab::Locales, Tab::Packs], self.tab, reading);
         if let Some(picked) = done.picked {
             self.tab = picked;
             if context.service::<Locales>().refusal().is_some() {
@@ -90,27 +91,30 @@ impl PageView for LocalesPage {
             context.commands.send(LocaleCommand::Refresh);
         }
 
+        // One search for both tabs, so the toolbar keeps its shape.
+        // The toolbar waits for a list to search and sort, as the chips do.
+        let listed = context.probed
+            && match self.tab {
+                Tab::Locales => locales_known(context.snapshot),
+                Tab::Packs => packs_known(context.snapshot, context.changes),
+            };
+
         page_toolbar(
             ui,
             self,
-            |page, ui| match page.tab {
-                Tab::Locales => {
-                    let field = &mut page.filter.search;
-                    _ = search(ui, field, "locales-search", "locales-search-hint");
-                }
-                Tab::Packs => {
-                    let field = &mut page.pack_search;
+            |page, ui| {
+                ui.enabled_ui(listed, |ui| {
                     _ = search(
                         ui,
-                        field,
-                        "locales-packs-search",
-                        "locales-packs-search-hint",
+                        &mut page.filter.search,
+                        "locales-search",
+                        "locales-search-hint",
                     );
-                }
+                });
             },
             |page, ui| {
                 if page.tab == Tab::Packs {
-                    page.sort(ui);
+                    ui.enabled_ui(listed, |ui| page.sort(ui));
                 }
             },
         );
@@ -133,6 +137,9 @@ impl LocalesPage {
     fn locales(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
         if !context.probed {
+            // The chips wait with the list, off and counting nothing.
+            ui.enabled_ui(false, |ui| self.chips(ui));
+            ui.add_space(ui.tokens().sizes.card_gap);
             reading(ui, "locales-reading");
             return;
         }
@@ -172,7 +179,7 @@ impl LocalesPage {
 
         let options = [(Chip::Utf8, &*utf8), (Chip::Enabled, &*enabled)];
         let filter = &self.filter;
-        let flipped = toggle_chips(ui, &options, |chip| match chip {
+        let flipped = toggle_chips(ui, "locales-filters", &options, |chip| match chip {
             Chip::Utf8 => filter.utf8_only,
             Chip::Enabled => filter.enabled_only,
         })
@@ -200,7 +207,7 @@ impl LocalesPage {
         let listed = packs::rows(
             ui,
             context,
-            (self.order, &self.pack_search),
+            (self.order, &self.filter.search),
             &mut self.packs,
         );
 
@@ -243,7 +250,7 @@ impl LocalesPage {
 
         if listed.items.is_empty() {
             let shown = (icons::SYSTEM_SEARCH, "locales-packs-no-match");
-            nothing(ui, shown, &mut self.pack_search);
+            nothing(ui, shown, &mut self.filter.search);
             return;
         }
 

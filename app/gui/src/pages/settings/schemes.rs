@@ -1,9 +1,10 @@
 //! The colour scheme pickers beside Theme: one for dark, one for light,
 //! each with System first, which keeps the desktop's colours.
 
-use egui::Ui;
+use egui::{Color32, Ui};
 use toolbox_catalog::{ColourSchemeCatalog, SchemeMode};
 use toolbox_config::Colours;
+use toolbox_gui_kit::palette::{Palette, colour};
 use toolbox_gui_kit::widgets::Select;
 use toolbox_plan::SchemeId;
 
@@ -15,7 +16,7 @@ use crate::settings::SettingsCommand;
 pub(super) fn scheme(
     ui: &mut Ui,
     mode: SchemeMode,
-    (catalog, colours): (&ColourSchemeCatalog, &Colours),
+    (catalog, colours, desktop): (&ColourSchemeCatalog, &Colours, (Palette, Palette)),
     send: Send<'_>,
 ) {
     let ctx = ui.ctx().clone();
@@ -38,6 +39,19 @@ pub(super) fn scheme(
 
     let shown: Vec<&str> = names.iter().map(String::as_str).collect();
 
+    // System keeps the desktop's colours, so its strip shows them.
+    let own = match mode {
+        SchemeMode::Dark => desktop.0,
+        SchemeMode::Light => desktop.1,
+    };
+
+    let swatches: Vec<[Color32; 3]> = std::iter::once([own.window, own.text, own.accent])
+        .chain(catalog.of(mode).map(|scheme| {
+            let roles = scheme.colours();
+            [roles.window, roles.text, roles.accent].map(|rgb| colour(rgb.bytes()))
+        }))
+        .collect();
+
     // A scheme the catalog lost shows as System, which the window draws.
     let selected = ids.iter().position(|listed| *listed == current).or(Some(0));
 
@@ -46,6 +60,7 @@ pub(super) fn scheme(
         let picked = Select::new(&words.title, &shown)
             .selected(selected)
             .width(NARROW_CONTROL)
+            .swatches(&swatches)
             .show(ui);
 
         if let Some(&picked) = picked.value.and_then(|index| ids.get(index))

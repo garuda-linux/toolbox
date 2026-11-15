@@ -47,6 +47,8 @@ pub struct View<'app> {
     pub changes: &'app [ChangeView],
     pub changes_ui: &'app mut ChangesState,
     pub reading: &'app Reading,
+    /// Quit was confirmed during a run, the window closes once it stopped.
+    pub stopping: bool,
     /// Why Apply waits, as the id of its text: a restored queue the
     /// pages' guards have not checked yet.
     pub held: Option<&'static str>,
@@ -77,6 +79,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         changes,
         changes_ui,
         reading,
+        stopping,
         held,
         toasts,
     } = view;
@@ -130,7 +133,8 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         close: &i18n::text(&ctx, "dialog-close"),
     };
 
-    status_bar::floating(&ctx, page_rect, reading, Mode::of_dry_run(dry_run));
+    corner_note(&ctx, page_rect, reading, dry_run, stopping);
+
     toasts.show(&ctx, page_rect, texts);
     palette.show(&ctx, context, commands);
 }
@@ -211,5 +215,15 @@ fn open_page(ctx: &egui::Context, page: PageId, jump: bool) {
 
     if before.is_some_and(|before| before != page.slug()) && !jump {
         start_page_entry(ctx);
+    }
+}
+
+/// What waits in the page's bottom corner: the quit note while the run
+/// stops, else a read in progress.
+fn corner_note(ctx: &egui::Context, page: Rect, reading: &Reading, dry_run: bool, stopping: bool) {
+    if stopping {
+        status_bar::note(ctx, page, &i18n::text(ctx, "close-stopping-title"));
+    } else {
+        status_bar::floating(ctx, page, reading, Mode::of_dry_run(dry_run));
     }
 }

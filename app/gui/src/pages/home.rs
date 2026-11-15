@@ -84,7 +84,7 @@ impl PageView for HomePage {
 
         ui.add_space(ui.tokens().sizes.block_gap);
         next::show(ui, context, host);
-        dialogs::show(self, ui.ctx(), context);
+        dialogs::show(self, ui.ctx(), context, overview.as_ref());
     }
 }
 

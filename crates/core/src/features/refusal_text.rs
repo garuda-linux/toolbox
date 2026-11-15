@@ -91,6 +91,22 @@ impl RefusalText for super::locales::Refusal {
 
 impl RefusalText for super::network::Refusal {
     const TEXT_PREFIX: &'static str = "network-refused";
+
+    fn text_id(self) -> String {
+        match self {
+            Self::Package(refusal) => refusal.text_id(),
+            Self::OtherFile | Self::Unavailable | Self::Busy => {
+                format!("{}-{}", Self::TEXT_PREFIX, self.code())
+            }
+        }
+    }
+
+    fn protection(self) -> Option<Protection> {
+        match self {
+            Self::Package(refusal) => refusal.protection(),
+            Self::OtherFile | Self::Unavailable | Self::Busy => None,
+        }
+    }
 }
 
 impl RefusalText for super::users::Refusal {

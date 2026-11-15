@@ -150,6 +150,9 @@ fn code_block(ui: &mut Ui, code: &Code, reader: &mut Reader<'_>) {
                 let gap = ui.spacing().item_spacing.x;
                 let room = ui.available_width() - icon_button_width(ui) - gap;
                 ui.allocate_ui(vec2(room.max(0.0), 0.0), |ui| {
+                    // The text box keeps its full width, so the copy button
+                    // sits at the right edge whatever the code's length.
+                    ui.set_min_width(room.max(0.0));
                     ScrollArea::horizontal().show(ui, |ui| {
                         let text = RichText::new(&code.text).monospace().color(tokens.text);
                         ui.add(Label::new(text).extend());

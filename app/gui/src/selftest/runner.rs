@@ -160,10 +160,12 @@ impl Runner {
 
     fn find(&self, role: Option<Role>, label: &str) -> Option<Target> {
         let root = Found(self.tree.as_ref()?.root());
-        let node = role.map_or_else(
-            || root.query_all_by_label(label).next(),
-            |role| root.query_all_by_role_and_label(role, label).next(),
-        )?;
+        let node = role
+            .map_or_else(
+                || root.query_all_by_label(label).next(),
+                |role| root.query_all_by_role_and_label(role, label).next(),
+            )
+            .or_else(|| counted(&root, role?, label))?;
 
         let (node_id, tree_id) = node.0.locate();
         Some(Target {
@@ -186,6 +188,12 @@ impl Runner {
         let Some(target) = self.find(role, label) else {
             return Outcome::Waiting;
         };
+
+        // A control that waits for its data, such as a search before its list,
+        // takes no input yet, so the step waits for it as a user would.
+        if target.disabled {
+            return Outcome::Waiting;
+        }
 
         // A field takes the focus, everything else the click a screen
         // reader sends, so no layer above it gets in the way.
@@ -301,4 +309,21 @@ fn save(path: &Path, image: &ColorImage) -> Result<(), String> {
 /// Whether `elapsed` since the last step lets every slide and fade end.
 pub(super) fn settled(elapsed: Duration) -> bool {
     elapsed > SETTLE
+}
+
+/// A chip says its count after its name ("AUR 3", "All 1/26"), which
+/// changes as lists load, so a step names the chip alone.
+fn counted<'tree>(root: &Found<'tree>, role: Role, label: &str) -> Option<Found<'tree>> {
+    root.query_all_by_role(role).find(|node| {
+        node.accesskit_node()
+            .label()
+            .as_deref()
+            .and_then(|spoken| spoken.strip_prefix(label)?.strip_prefix(' '))
+            .is_some_and(|count| {
+                !count.is_empty()
+                    && count
+                        .chars()
+                        .all(|sign| sign.is_ascii_digit() || sign == '/' || sign == '?')
+            })
+    })
 }

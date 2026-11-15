@@ -1,14 +1,12 @@
 //! Home's dialogs: the pending updates and the restart question.
 
-use std::time::SystemTime;
-
 use egui::{Context, Id, Label, ScrollArea, Ui};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, confirm_buttons, rich, split_row,
     tag,
 };
-use toolbox_gui_kit::{Loadable, tokens};
 use toolbox_services::home::{Overview, Pending};
 
 use super::HomePage;
@@ -19,9 +17,14 @@ use crate::pages::PageContext;
 const LIST_HEIGHT: f32 = 380.0;
 const VERSIONS_WIDTH: f32 = 220.0;
 
-pub fn show(page: &mut HomePage, ctx: &Context, context: &PageContext<'_>) {
+pub fn show(
+    page: &mut HomePage,
+    ctx: &Context,
+    context: &PageContext<'_>,
+    overview: Option<&Overview<'_>>,
+) {
     if page.updates_open {
-        updates(page, ctx, context);
+        updates(page, ctx, overview);
     }
 
     if page.asking_to_restart {
@@ -29,17 +32,9 @@ pub fn show(page: &mut HomePage, ctx: &Context, context: &PageContext<'_>) {
     }
 }
 
-fn updates(page: &mut HomePage, ctx: &Context, context: &PageContext<'_>) {
+fn updates(page: &mut HomePage, ctx: &Context, overview: Option<&Overview<'_>>) {
     let tokens = tokens::current(ctx);
-    let overview = context
-        .home
-        .status
-        .and_then(Loadable::get)
-        .map(|status| Overview::of(status, SystemTime::now()));
-
-    let pending = overview
-        .as_ref()
-        .map_or(&[][..], |overview| &overview.pending);
+    let pending = overview.map_or(&[][..], |overview| &overview.pending);
 
     let title = i18n::text(ctx, "home-pending");
     let close = i18n::text(ctx, "dialog-close");

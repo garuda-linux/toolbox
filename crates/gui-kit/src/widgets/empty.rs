@@ -62,6 +62,23 @@ pub fn empty_state_action(
     action: &str,
 ) -> Response {
     _ = empty_state(ui, icon, title, body);
+    action_button(ui, action)
+}
+
+/// An [`empty_state`] that shows `action` as a Soft button under `body`
+/// only when there is one. Returns the button's response.
+pub fn empty_state_with(
+    ui: &mut Ui,
+    icon: Icon,
+    title: &str,
+    body: &str,
+    action: Option<&str>,
+) -> Option<Response> {
+    _ = empty_state(ui, icon, title, body);
+    action.map(|action| action_button(ui, action))
+}
+
+fn action_button(ui: &mut Ui, action: &str) -> Response {
     ui.add_space(tokens::current(ui.ctx()).sizes.card_gap);
     ui.vertical_centered(|ui| pill_button(ui, action, ButtonKind::Soft))
         .inner

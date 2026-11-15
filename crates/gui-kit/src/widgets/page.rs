@@ -3,8 +3,8 @@ mod body;
 use std::fmt::Debug;
 use std::hash::{BuildHasher as _, BuildHasherDefault, DefaultHasher, Hash};
 
-pub use body::BodyShape;
 use body::Room;
+pub use body::{BodyShape, viewport as page_viewport};
 use egui::epaint::{Mesh, Vertex, WHITE_UV};
 use egui::{Color32, Rect, ScrollArea, Shape, Ui, UiBuilder, pos2, vec2};
 

@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use futures_lite::future::Boxed;
@@ -16,10 +16,14 @@ use toolbox_plan::{UnitName, UnitScope};
 use toolbox_system::CallError;
 
 use crate::common::{HEIGHT, no_note, type_into, window};
+use crate::look::look_for;
 use crate::system::step_until;
 
 /// Three system units, and no session bus for the user's.
 struct Fake;
+
+/// The display manager, the one unit a restart asks about first.
+struct Display;
 
 impl UnitLister for Fake {
     fn list(&self, scope: UnitScope) -> Boxed<UnitList> {
@@ -51,6 +55,22 @@ impl UnitLister for Fake {
     }
 }
 
+impl UnitLister for Display {
+    fn list(&self, scope: UnitScope) -> Boxed<UnitList> {
+        Box::pin(async move {
+            match scope {
+                UnitScope::System => Ok(Arc::new(vec![unit(
+                    "sddm.service",
+                    ActiveState::Active,
+                    "running",
+                    FileState::Enabled,
+                )])),
+                UnitScope::User => Err(CallError::Unavailable),
+            }
+        })
+    }
+}
+
 fn unit(name: &str, active: ActiveState, sub: &str, file_state: FileState) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
@@ -62,20 +82,44 @@ fn unit(name: &str, active: ActiveState, sub: &str, file_state: FileState) -> Un
 }
 
 pub fn services() -> (Harness<'static, App>, Runtime) {
+    services_on(Theme::Dark)
+}
+
+/// The Services page drawn on `theme`, with that theme's desktop look.
+pub fn services_on(theme: Theme) -> (Harness<'static, App>, Runtime) {
+    services_with_on(Arc::new(Fake), "sshd.service", theme)
+}
+
+/// The Services page listing the units of `lister`.
+pub fn services_with(
+    lister: Arc<dyn UnitLister>,
+    unit: &'static str,
+) -> (Harness<'static, App>, Runtime) {
+    services_with_on(lister, unit, Theme::Dark)
+}
+
+/// As [`services_with`], drawn on `theme`.
+pub fn services_with_on(
+    lister: Arc<dyn UnitLister>,
+    unit: &'static str,
+    theme: Theme,
+) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
+    let look = look_for(&runtime, theme);
 
-    let mut harness = window(HEIGHT).build_eframe(move |cc| {
+    let mut harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
         let units = units::spawn(
             &handle,
             toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
-            Arc::new(Fake),
+            lister,
             Duration::ZERO,
         );
 
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 units: Some(units),
                 ..Setup::default()
@@ -84,9 +128,7 @@ pub fn services() -> (Harness<'static, App>, Runtime) {
     });
 
     harness.key_press_modifiers(Modifiers::COMMAND, Key::Num7);
-    step_until(&mut harness, "the units", |harness| {
-        listed(harness, "sshd.service")
-    });
+    step_until(&mut harness, "the units", |harness| listed(harness, unit));
     harness.run();
     (harness, runtime)
 }
@@ -192,4 +234,16 @@ fn the_search_keeps_matching_units() {
 
     assert!(listed(&harness, "bluetooth.service"));
     assert!(!listed(&harness, "sshd.service"));
+}
+
+#[test]
+fn a_restart_of_the_display_manager_asks_first() {
+    let (mut harness, _runtime) = services_with(Arc::new(Display), "sddm.service");
+
+    open_menu(&mut harness, "sddm.service");
+    harness
+        .get_by_role_and_label(Role::MenuItem, "Restart")
+        .click();
+    harness.run();
+    harness.snapshot("services/restart_question_dark");
 }

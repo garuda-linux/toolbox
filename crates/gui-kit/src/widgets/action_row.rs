@@ -2,6 +2,7 @@ use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, vec2};
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
 use super::layout::{MIN_TEXT_WIDTH, last_descent, raised_column, remember_width};
+use super::list::memory::{self, RowMemory};
 use super::{Tone, queued_tag, rich, status_dot};
 use crate::fonts::{self, BODY, SMALL, Weight};
 use crate::icons::Icon;
@@ -9,9 +10,9 @@ use crate::tokens::{self, Tile};
 
 const WIDTH_REASON: &str = "action_row width";
 const HEIGHT_REASON: &str = "action_row height";
-/// A row whose words are taller than the title and three lines of description
-/// keeps its actions on the title line.
-const TALL_ROWS: f32 = 4.0;
+/// A row whose words are taller than the title and about three lines of
+/// text keeps its actions on the title line.
+const TALL_ROWS: f32 = 3.0;
 
 /// The tile, the words and the actions are centred on the row. A row too
 /// narrow for both puts the actions on a line under the words.
@@ -24,6 +25,7 @@ pub struct ActionRow<'text> {
     detail: &'text str,
     queued: &'text str,
     status: Option<(&'text str, Tone)>,
+    row: Option<Id>,
 }
 
 impl<'text> ActionRow<'text> {
@@ -35,7 +37,17 @@ impl<'text> ActionRow<'text> {
             detail: "",
             queued: "",
             status: None,
+            row: None,
         }
+    }
+
+    /// The id of the list row this sits in, from [`RowState::row`], so its
+    /// sizes are dropped with the row.
+    ///
+    /// [`RowState::row`]: super::RowState::row
+    pub const fn row(mut self, row: Id) -> Self {
+        self.row = Some(row);
+        self
     }
 
     /// Empty shows none.
@@ -58,18 +70,38 @@ impl<'text> ActionRow<'text> {
     }
 
     pub fn show(self, ui: &mut Ui, actions: impl FnOnce(&mut Ui)) {
-        self.draw(ui, Some(actions));
+        self.draw(ui, Some(actions), None::<fn(&mut Ui)>);
+    }
+
+    /// [`show`](Self::show) with `body` drawn under the detail, in the
+    /// words' column, for the links and tags a row lists under its text.
+    pub fn show_with_body(
+        self,
+        ui: &mut Ui,
+        body: impl FnOnce(&mut Ui),
+        actions: impl FnOnce(&mut Ui),
+    ) {
+        self.draw(ui, Some(actions), Some(body));
     }
 
     pub fn show_without_actions(self, ui: &mut Ui) {
-        self.draw(ui, None::<fn(&mut Ui)>);
+        self.draw(ui, None::<fn(&mut Ui)>, None::<fn(&mut Ui)>);
     }
 
-    fn draw(self, ui: &mut Ui, actions: Option<impl FnOnce(&mut Ui)>) {
+    fn draw(
+        self,
+        ui: &mut Ui,
+        actions: Option<impl FnOnce(&mut Ui)>,
+        body: Option<impl FnOnce(&mut Ui)>,
+    ) {
         // The actions' width comes from the last frame: they are laid out
         // after the words, which must know the room left for them.
-        let width_id = ui.next_auto_id().with("action_row_actions");
-        let known = ui.data(|data| data.get_temp::<f32>(width_id));
+        let row = self
+            .row
+            .unwrap_or_else(|| ui.next_auto_id().with("action_row"));
+
+        let kept = memory::get(ui, row);
+        let known = kept.actions_width;
         let actions_width = known.unwrap_or_default();
         let sizes = tokens::current(ui.ctx()).sizes;
         let (tile_gap, actions_gap) = (sizes.picture_gap, sizes.text_to_control);
@@ -80,10 +112,7 @@ impl<'text> ActionRow<'text> {
 
         // The row is as tall as the tile, last frame's words or last frame's
         // actions. Tile, words and actions all centre on it.
-        let height_id = width_id.with("height");
-        let height_was = ui.data(|data| data.get_temp::<f32>(height_id));
-        let words_id = width_id.with("words");
-        let words_was = ui.data(|data| data.get_temp::<f32>(words_id));
+        let (height_was, words_was) = (kept.actions_height, kept.words);
         let anchored = words_was.is_some_and(|words| words > TALL_ROWS * title_line(ui));
 
         // Words that reach below the tile end on a baseline, so the tile and
@@ -91,12 +120,8 @@ impl<'text> ActionRow<'text> {
         // as much room above them as under that baseline.
         let drop = words_was.map_or(0.0, |words| (words - edge).clamp(0.0, last_descent(ui)));
         let rise = capitals_top(ui) - drop;
-        let raised_id = width_id.with("raised");
-        let actions_height = if beside {
-            height_was.unwrap_or_default()
-        } else {
-            0.0
-        };
+        let raised_id = row.with("raised");
+        let actions_height = height_was.filter(|_| beside).unwrap_or_default();
 
         let words_height = words_was.unwrap_or_default() + drop;
         let line = edge.max(actions_height).max(words_height);
@@ -118,22 +143,29 @@ impl<'text> ActionRow<'text> {
             if !beside {
                 let width = ui.available_width();
                 raised(ui, (rise, width), raised_id, |ui| {
-                    self.stacked(ui, actions, (width_id, known));
+                    self.stacked(ui, (actions, body), (row, known));
                 });
                 return slot;
             }
 
             let words = raised(ui, (rise - lower, words_room), raised_id, |ui| {
                 ui.set_width(words_room);
-                self.words(ui);
+                self.words(ui, body);
             });
 
-            remember_width(ui, words_id, words_was, words - drop - lower, HEIGHT_REASON);
+            remember_width(
+                ui,
+                (row, |kept_row: &mut RowMemory| &mut kept_row.words),
+                words_was,
+                words - drop - lower,
+                HEIGHT_REASON,
+            );
 
             if let Some(actions) = actions {
                 let measures = Measures {
-                    width: (width_id, known),
-                    height: (height_id, height_was),
+                    row,
+                    width: known,
+                    height: height_was,
                 };
 
                 actions_beside(ui, line, measures, anchored, actions);
@@ -148,11 +180,11 @@ impl<'text> ActionRow<'text> {
     fn stacked(
         self,
         ui: &mut Ui,
-        actions: Option<impl FnOnce(&mut Ui)>,
-        (width_id, known): (Id, Option<f32>),
+        (actions, body): (Option<impl FnOnce(&mut Ui)>, Option<impl FnOnce(&mut Ui)>),
+        (row, known): (Id, Option<f32>),
     ) {
         ui.vertical(|ui| {
-            self.words(ui);
+            self.words(ui, body);
             if let Some(actions) = actions {
                 ui.add_space(tokens::current(ui.ctx()).sizes.caption_gap);
                 let room = ui.available_width();
@@ -168,7 +200,13 @@ impl<'text> ActionRow<'text> {
                 let rect = drawn.response.rect;
                 let one_line = rect.height() <= ui.spacing().interact_size.y * 1.5;
                 let width = if one_line { rect.width() } else { room };
-                remember_width(ui, width_id, known, width, WIDTH_REASON);
+                remember_width(
+                    ui,
+                    (row, |kept_row: &mut RowMemory| &mut kept_row.actions_width),
+                    known,
+                    width,
+                    WIDTH_REASON,
+                );
             }
         });
     }
@@ -188,7 +226,7 @@ impl<'text> ActionRow<'text> {
         paint_icon_tile(ui, centre, TileSize::Row, self.icon, tile);
     }
 
-    fn words(self, ui: &mut Ui) {
+    fn words(self, ui: &mut Ui, body: Option<impl FnOnce(&mut Ui)>) {
         let tokens = tokens::current(ui.ctx());
         ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
         let title = rich(ui, self.title, Weight::SemiBold, BODY, tokens.text);
@@ -217,13 +255,18 @@ impl<'text> ActionRow<'text> {
             let detail = rich(ui, self.detail, Weight::Regular, SMALL, tokens.secondary);
             ui.add(Label::new(detail).wrap());
         }
+
+        if let Some(body) = body {
+            body(ui);
+        }
     }
 }
 
 #[derive(Clone, Copy)]
 struct Measures {
-    width: (Id, Option<f32>),
-    height: (Id, Option<f32>),
+    row: Id,
+    width: Option<f32>,
+    height: Option<f32>,
 }
 
 /// Keeps the actions in order at the right of a line that never wraps.
@@ -234,8 +277,7 @@ fn actions_beside(
     anchored: bool,
     actions: impl FnOnce(&mut Ui),
 ) {
-    let (width_id, width_was) = measures.width;
-    let (height_id, height_was) = measures.height;
+    let (row, width_was, height_was) = (measures.row, measures.width, measures.height);
     let room = vec2(ui.available_width(), 0.0);
 
     // A tall row keeps the actions beside its title, not beside its middle.
@@ -258,8 +300,20 @@ fn actions_beside(
     });
 
     let taken = drawn.inner;
-    remember_width(ui, width_id, width_was, taken.width(), WIDTH_REASON);
-    remember_width(ui, height_id, height_was, taken.height(), HEIGHT_REASON);
+    remember_width(
+        ui,
+        (row, |kept_row: &mut RowMemory| &mut kept_row.actions_width),
+        width_was,
+        taken.width(),
+        WIDTH_REASON,
+    );
+    remember_width(
+        ui,
+        (row, |kept_row: &mut RowMemory| &mut kept_row.actions_height),
+        height_was,
+        taken.height(),
+        HEIGHT_REASON,
+    );
 }
 
 /// The line height of the title, the text of a row's first line.

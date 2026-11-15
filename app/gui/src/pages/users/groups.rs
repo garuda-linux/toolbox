@@ -4,7 +4,7 @@ use toolbox_core::features::users::rows::GroupRow;
 use toolbox_core::features::users::view::{self, Shown};
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, Tone, named_pill_button, pill_button, rich,
@@ -131,9 +131,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, group: &GroupRow, dialog: &mut Op
             });
 
             let detail = detail(&ctx, group);
-            ui.add(
-                Label::new(rich(ui, &detail, Weight::Regular, SMALL, tokens.secondary)).truncate(),
-            );
+            super::detail_line(ui, &detail);
         },
         |ui| button(ui, context, group, dialog),
     );

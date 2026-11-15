@@ -134,7 +134,8 @@ fn the_news_lists_the_newest_posts_with_their_day() {
     assert!(link(&harness, "Open Post 1"));
     assert!(link(&harness, "Open Post 4"));
     assert!(!link(&harness, "Open Post 5"), "four posts only");
-    assert!(harness.query_all_by_label("2026-10-18").next().is_some());
+    let day = crate::dates::day(&harness.ctx, 1_792_327_265);
+    assert!(harness.query_all_by_label(&day).next().is_some());
 }
 
 #[test]

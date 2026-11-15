@@ -23,7 +23,6 @@ use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_plan::PackageName;
 use toolbox_system::ProbeError;
 
-pub(crate) use self::detail::day;
 use super::{PageContext, PageView, place_of};
 use crate::command::PackagesCommand;
 
@@ -44,6 +43,7 @@ pub struct PackagesPage {
     aur_view: RowCache<Same<AurCatalog>, Vec<usize>>,
     history: detail::HistoryRows,
     facts: detail::FactRows,
+    targets: detail::TargetRows,
     /// The text the detail page's file list is filtered by.
     file_filter: String,
     files: detail::FileRows,

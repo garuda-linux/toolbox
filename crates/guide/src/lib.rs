@@ -11,6 +11,7 @@
 mod tests;
 
 mod guide;
+pub mod links;
 pub mod markdown;
 mod search;
 pub mod summary;
@@ -22,6 +23,7 @@ mod built_in {
 use std::sync::LazyLock;
 
 pub use guide::{Guide, GuidePart, Outline, Page};
+pub use links::broken_links;
 pub use markdown::{
     Block, Callout, CalloutKind, Cell, Code, Heading, Image, Link, List, Span, Style, Table,
 };
@@ -31,6 +33,9 @@ pub use summary::{Entry, Part};
 static GUIDE: LazyLock<Guide> = LazyLock::new(|| Guide::new(built_in::SUMMARY, built_in::PAGES));
 
 pub const FIRST_PAGE: &str = "introduction.md";
+
+/// The suffix of a light capture after its picture's stem.
+const LIGHT: &str = "-light.png";
 
 /// The guide built into the binary, parsed on first use.
 pub fn embedded() -> &'static Guide {
@@ -44,6 +49,25 @@ pub fn image(path: &str) -> Option<&'static [u8]> {
         .iter()
         .find(|(name, _)| *name == path)
         .map(|(_, bytes)| *bytes)
+}
+
+/// The picture of `path` for a dark or a light theme.
+///
+/// A picture is the dark capture `name.png`, and its light capture
+/// `name-light.png` beside it is shown in the light theme. The lookup
+/// allocates nothing, as pages ask on every frame.
+pub fn image_for(path: &str, dark: bool) -> Option<&'static [u8]> {
+    let path = path.strip_prefix("./").unwrap_or(path);
+    if !dark
+        && let Some(stem) = path.strip_suffix(".png")
+        && let Some((_, bytes)) = built_in::IMAGES
+            .iter()
+            .find(|(name, _)| name.strip_suffix(LIGHT).is_some_and(|own| own == stem))
+    {
+        return Some(bytes);
+    }
+
+    image(path)
 }
 
 /// Width and height of a PNG from its header, so the page can keep the

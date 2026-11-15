@@ -10,7 +10,8 @@ use egui_kittest::{Harness, SnapshotResults};
 use toolbox_gui::page::PageId;
 use toolbox_gui::{App, Setup};
 
-use crate::common::{HEIGHT, SMALLEST, WIDTH, launch_in};
+use crate::captured::launch_covered;
+use crate::common::{HEIGHT, SMALLEST, WIDTH};
 
 const WIDE: (f32, f32) = (WIDTH, HEIGHT);
 
@@ -24,7 +25,7 @@ fn page(page: PageId, theme: Theme, size: (f32, f32), setup: Setup) -> Harness<'
         ..setup
     };
 
-    launch_in(
+    launch_covered(
         toolbox_gui_kit::testing::harness(size.0, size.1).with_theme(theme),
         setup,
     )

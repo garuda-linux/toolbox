@@ -4,11 +4,11 @@ use std::sync::Arc;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::domains::InstalledPackages;
-use toolbox_core::features::network::{Connectivity, PCIUTILS_PACKAGE};
+use toolbox_core::features::network::Connectivity;
 use toolbox_core::{Snapshot, Toggle};
 
 use super::{NetworkPage, Shown, facts, network, page, sent, tab};
-use crate::command::{Command, PackagesCommand};
+use crate::command::{Command, NetworkCommand};
 use crate::network::{Address, Hardware, Network, Read};
 use crate::page_service::Services;
 use crate::testing::{PageFixture, rect_of};
@@ -68,9 +68,8 @@ fn without_both_tools_one_empty_state_names_both_and_queues_pciutils() {
 
     assert_eq!(
         sent(&harness),
-        [Command::from(PackagesCommand::Toggle {
-            package: PCIUTILS_PACKAGE.clone(),
-            wish: Toggle::On,
+        [Command::from(NetworkCommand::TogglePciutils {
+            wish: Toggle::On
         })]
     );
 }

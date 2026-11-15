@@ -12,7 +12,10 @@ pub use sheet::{Place, cover, out};
 #[cfg(test)]
 mod tests;
 
-use egui::{Align, Color32, Context, CornerRadius, Frame, Layout, ScrollArea, Ui, vec2};
+use egui::{
+    Align, Color32, Context, CornerRadius, Frame, Label, Layout, Rect, ScrollArea, Ui, UiBuilder,
+    vec2,
+};
 use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
@@ -155,7 +158,24 @@ fn header(
             }
         };
 
-        controls::show(ui, console, commands, pill);
+        // The hint takes the room between the state and the controls, cut
+        // there, so a long state or pill never pushes the controls out.
+        let state_end = ui.cursor().min.x + tokens.sizes.caption_gap;
+        let controls = controls::show(ui, console, commands, pill);
+        let room = Rect::from_x_y_ranges(
+            state_end..=(controls - tokens.sizes.caption_gap).max(state_end),
+            ui.min_rect().y_range(),
+        );
+
+        let hint = i18n::text(&ctx, "console-leave-hint");
+        let builder = UiBuilder::new()
+            .max_rect(room)
+            .layout(Layout::left_to_right(Align::Center));
+
+        ui.scope_builder(builder, |ui| {
+            let words = rich(ui, &hint, Weight::Regular, SMALL, tokens.secondary);
+            ui.add(Label::new(words).truncate());
+        });
     });
     ui.add_space(tokens.sizes.heading_gap);
 }
@@ -251,7 +271,7 @@ fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
                                     )
                                     .family(egui::FontFamily::Monospace);
 
-                                    ui.add(egui::Label::new(command).truncate());
+                                    ui.add(Label::new(command).truncate());
                                 });
                             }
                         });
@@ -307,7 +327,7 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
     let idle = !console.has_output();
     let running = console.running();
     let fill = sheet::terminal_fill(ui.ctx());
-    let (output, frame) = ui
+    let output = ui
         .allocate_ui(room, |ui| {
             let framed = Frame::new()
                 .fill(fill)
@@ -330,7 +350,7 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
                 framed.response.rect,
                 CARD_RADIUS,
             );
-            (framed.inner, framed.response.rect)
+            framed.inner
         })
         .inner;
 
@@ -343,10 +363,6 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
 
     let focused = output.response.has_focus();
     sheet::terminal_focused(ui.ctx(), focused);
-    if focused {
-        // Spoken already as the terminal's description.
-        idle::leave_hint(ui, frame, &hint, fill);
-    }
 
     if !output.bytes.is_empty() {
         commands.send(AppCommand::ConsoleInput(output.bytes));

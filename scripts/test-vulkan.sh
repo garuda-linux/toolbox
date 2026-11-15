@@ -12,3 +12,7 @@ fi
 if [ -z "${LP_NUM_THREADS:-}" ]; then
   echo "LP_NUM_THREADS=1" >>"$NEXTEST_ENV"
 fi
+
+# Dates show in the local time zone, so a snapshot taken in one zone would
+# fail in another, such as the Nix build's UTC.
+echo "TZ=UTC" >>"$NEXTEST_ENV"

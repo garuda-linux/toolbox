@@ -21,7 +21,7 @@ fn chips_report_the_value_clicked() {
     let mut harness = harness(400.0, 120.0).build_ui_state(
         |ui, picked: &mut Option<Scope>| {
             let options = [(Scope::System, "System"), (Scope::User, "User")];
-            if let Some(value) = chips(ui, &options, Scope::System).value {
+            if let Some(value) = chips(ui, "chips", &options, Scope::System).value {
                 *picked = Some(value);
             }
         },
@@ -42,7 +42,7 @@ fn counted_chips_say_their_count() {
     let mut harness = harness(400.0, 120.0).build_ui_state(
         |ui, picked: &mut Option<Option<&'static str>>| {
             let options = [(None, "All", None), (Some("audio"), "Audio", Some("2/8"))];
-            if let Some(value) = counted_chips(ui, &options, None).value {
+            if let Some(value) = counted_chips(ui, "counted", &options, None).value {
                 *picked = Some(value);
             }
         },
@@ -67,7 +67,9 @@ fn toggle_chips_are_selected_one_by_one() {
                 (Filter::Inactive, "Hide inactive"),
             ];
 
-            if let Some(value) = toggle_chips(ui, &options, |value| on.contains(&value)).value {
+            if let Some(value) =
+                toggle_chips(ui, "toggle", &options, |value| on.contains(&value)).value
+            {
                 on.push(value);
             }
         },
@@ -216,12 +218,12 @@ fn named_chip_rows_tell_their_all_chips_apart() {
     let mut harness = harness(400.0, 160.0).build_ui_state(
         |ui, picked: &mut Vec<(&'static str, Option<Scope>)>| {
             let states = [(None, "All"), (Some(Scope::System), "System")];
-            if let Some(value) = named_chips(ui, "State", "State", &states, None).value {
+            if let Some(value) = named_chips(ui, "State", &states, None).value {
                 picked.push(("State", value));
             }
 
             let kinds = [(None, "All"), (Some(Scope::User), "User")];
-            if let Some(value) = named_chips(ui, "Kind", "Kind", &kinds, Some(Scope::User)).value {
+            if let Some(value) = named_chips(ui, "Kind", &kinds, Some(Scope::User)).value {
                 picked.push(("Kind", value));
             }
         },

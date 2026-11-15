@@ -146,7 +146,6 @@ pub fn status(ctx: &Context, session: &Session) -> Option<String> {
 pub fn row_status(ctx: &Context, row: &Row) -> String {
     let id = match row.refusal {
         "" if row.read_only => "configs-read-only",
-        "" if row.admin => "configs-admin",
         "" => "",
         "dangling" => "configs-not-edited-dangling",
         "not-regular" => "configs-not-edited-not-regular",

@@ -8,7 +8,7 @@ rust-version.workspace = true
 publish.workspace = true
 
 [features]
-testing = ["dep:egui_kittest"]
+testing = ["dep:egui_kittest", "dep:libc"]
 
 [dependencies]
 egui.workspace = true
@@ -26,6 +26,7 @@ skrifa.workspace = true
 image.workspace = true
 jxl-oxide.workspace = true
 egui_kittest = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
 
 [dev-dependencies]
 toolbox-pty = { workspace = true, features = ["testing"] }

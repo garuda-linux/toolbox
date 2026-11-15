@@ -7,7 +7,7 @@ use egui::{Label, Ui};
 use toolbox_core::Toggle;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
-    RowState, Tone, row_height, row_menu, split_row, status_dot, text_block_height,
+    RowState, Tone, row_height, row_menu, split_row_in, status_dot, text_block_height,
 };
 use toolbox_plan::PackageName;
 
@@ -28,8 +28,9 @@ pub fn height(ui: &Ui) -> f32 {
 }
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &AppRow, state: &RowState) {
-    split_row(
+    split_row_in(
         ui,
+        state.row,
         control::width(ui, row.control, Setting::Button),
         |ui| {
             ui.horizontal_top(|ui| {

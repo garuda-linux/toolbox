@@ -200,9 +200,18 @@ fn an_action_rows_capitals_have_the_room_of_its_last_baseline_and_actions_sit_in
             (above - expected).abs() <= 1.0,
             "{lines} lines: the capitals start {above} under the row's top, {expected} wanted"
         );
-        assert!(
-            (button.center().y - content.center().y).abs() < SAME,
-            "{lines} lines: button at {button:?}, row content {content:?}"
-        );
+        if lines < 3 {
+            assert!(
+                (button.center().y - content.center().y).abs() < SAME,
+                "{lines} lines: button at {button:?}, row content {content:?}"
+            );
+        } else {
+            // Title and three lines of description are taller than the rule
+            // allows, so the actions move up to the title line.
+            assert!(
+                (button.top() - title.top()).abs() < 8.0,
+                "{lines} lines: button at {button:?}, title at {title:?}"
+            );
+        }
     }
 }

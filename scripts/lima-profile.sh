@@ -51,19 +51,9 @@ if $build; then
   source scripts/arch-image.sh
   echo "Building in the Arch container"
 
-  # Thin LTO: the capture compares one build with the next, and fat LTO
-  # takes far longer for the same code.
-  "$engine" run --rm \
-    --volume "$PWD:/src:ro" \
-    --volume "$PWD/$out:/out" \
-    --volume garuda-toolbox-profile-target:/build/profile-target \
-    --volume garuda-toolbox-pkg-cargo:/build/pkg-cargo \
-    --env CARGO_TARGET_DIR=/build/profile-target \
-    --env CARGO_HOME=/build/pkg-cargo \
-    "$image" \
-    bash -c 'cargo build --release --locked --config "profile.release.lto=\"thin\"" \
-      -p toolbox-gui --features toolbox-gui/selftest,toolbox-gui/profiling \
-      && install -m 755 /build/profile-target/release/garuda-toolbox /out/'
+  # shellcheck source=scripts/arch-build.sh
+  source scripts/arch-build.sh
+  arch_build "$out" profile toolbox-gui/selftest,toolbox-gui/profiling
 fi
 
 [ -x "$binary" ] || {

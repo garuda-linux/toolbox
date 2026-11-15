@@ -11,9 +11,9 @@ mod reset;
 #[cfg(test)]
 mod tests;
 
-use toolbox_gui_kit::UiExt as _;
 use egui::Ui;
 use toolbox_core::features::maintenance::page::LaunchCause;
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
     ActionRow, ButtonKind, SkeletonRows, Tone, card, pill_button, row_height, section_intro,
@@ -134,9 +134,6 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
             reason,
         } => {
             let id = match cause {
-                LaunchCause::Missing => "maintenance-problem-launch-missing",
-                LaunchCause::Denied => "maintenance-problem-launch-denied",
-                LaunchCause::Other => "maintenance-problem-launch",
                 LaunchCause::AbsentAfterInstall => "maintenance-problem-launch-absent",
             };
 
@@ -147,7 +144,10 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
             let id = match problem {
                 RankProblem::TimedOut => "maintenance-problem-mirrors-timeout",
                 RankProblem::NotStarted(_) => "maintenance-problem-mirrors-start",
-                RankProblem::Failed(_) => "maintenance-problem-mirrors-exit",
+                RankProblem::Failed(_) | RankProblem::Cancelled => {
+                    "maintenance-problem-mirrors-exit"
+                }
+
                 RankProblem::Unreadable(_) | RankProblem::Invalid(_) => {
                     "maintenance-problem-mirrors-invalid"
                 }

@@ -27,8 +27,9 @@ use crate::testing::{PageFixture, PageState, assert_header, rect_of};
 struct Plain(TogglePage);
 
 impl PageView for Plain {
-    fn header(&mut self, ui: &mut Ui, _context: &PageContext<'_>) -> bool {
-        self.0.header(ui);
+    fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
+        let listed = context.catalogs.get(self.0.catalog).catalog.is_ok();
+        self.0.header(ui, listed);
         true
     }
 

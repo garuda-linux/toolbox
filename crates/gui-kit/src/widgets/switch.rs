@@ -70,15 +70,9 @@ fn paint(ui: &Ui, response: &Response, on: Option<bool>, enabled: bool) {
         (tokens.pressed, tokens.track_hover)
     };
 
-    let off = rest_off.lerp_to_gamma(hover_off, hover_amount(ui, response, press));
-
-    let hovered = press == Pointer::Hovered;
-
-    let on_fill = if hovered {
-        tokens.accent_hover
-    } else {
-        tokens.accent
-    };
+    let hover = hover_amount(ui, response, press);
+    let off = rest_off.lerp_to_gamma(hover_off, hover);
+    let on_fill = tokens.accent.lerp_to_gamma(tokens.accent_hover, hover);
 
     let fade = |color| faded(ui, color, enabled);
     let track = off.lerp_to_gamma(on_fill, lit);

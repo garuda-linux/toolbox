@@ -7,7 +7,7 @@ use std::path::Path;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::features::maintenance::page::{LaunchCause, PageTool, Repair};
+use toolbox_core::features::maintenance::page::{PageTool, Repair};
 use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::Toggle;
@@ -45,6 +45,14 @@ fn page(fixture: PageFixture) -> Page {
     harness
 }
 
+/// A page whose programs are not read yet. Read again spins while they are
+/// read, so its frames never settle.
+fn pending(fixture: PageFixture) -> Page {
+    let mut harness = fixture.harness(MaintenancePage::default());
+    harness.run_steps(3);
+    harness
+}
+
 fn with(programs: Programs, maintenance: Maintenance) -> PageFixture {
     PageFixture {
         programs: Some(programs),
@@ -64,7 +72,9 @@ fn open_tab(harness: &mut Page, tab: &str) {
     harness
         .get_by_role_and_label(Role::RadioButton, tab)
         .click();
-    harness.run();
+
+    // Read again spins while the programs of a fixture are not read.
+    harness.run_steps(3);
 }
 
 fn disabled(harness: &Page, label: &str) -> Vec<bool> {
@@ -113,7 +123,7 @@ fn a_missing_tool_offers_its_install_and_the_ranking_says_it_runs() {
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::ProgressIndicator, "Ranking the mirrors…")
+            .query_by_role_and_label(Role::ProgressIndicator, "Ranking mirrors, 0:00")
             .is_some()
     );
 
@@ -140,34 +150,6 @@ fn a_running_plan_rests_every_button_that_starts_one() {
     assert!(harness.query_by_label(PLAN_RUNNING).is_some());
     assert!(disabled(&harness, "Run now").iter().all(|rests| *rests));
     assert!(disabled(&harness, "Open").iter().all(|rests| *rests));
-}
-
-#[test]
-fn a_tool_that_did_not_start_says_why_until_dismissed() {
-    let problem = MaintenanceProblem::Launch {
-        tool: "btrfs-assistant",
-        cause: LaunchCause::Missing,
-        reason: "No such file".to_owned(),
-    };
-
-    let maintenance = Maintenance::showing(Some(problem), false, Vec::new(), None);
-    let mut harness = page(with(programs(), maintenance));
-
-    assert!(
-        harness
-            .query_by_label_contains(
-                "Btrfs Assistant could not be started because it is not installed."
-            )
-            .is_some()
-    );
-
-    harness.get_by_label("Dismiss").click();
-    harness.run();
-
-    assert_eq!(
-        sent(&harness),
-        [Command::from(MaintenanceCommand::DismissProblem)]
-    );
 }
 
 #[test]

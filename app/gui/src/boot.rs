@@ -116,6 +116,11 @@ impl Boot {
         }
     }
 
+    /// Whether the menu is read, for a Read again that spins meanwhile.
+    pub fn reading(&self) -> bool {
+        self.jobs.as_ref().is_some_and(Jobs::reading)
+    }
+
     pub const fn refusal(&self) -> Option<&BootRefusal> {
         self.refusal.as_ref()
     }

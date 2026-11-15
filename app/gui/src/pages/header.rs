@@ -4,11 +4,15 @@ mod tests;
 use egui::{Response, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
-    SearchTexts, icon_button_width, page_header, refresh_button, search_field, segmented,
+    SearchTexts, icon_button_width, page_header, refresh_button_busy, search_field, segmented,
     segmented_width,
 };
 
 use crate::i18n;
+
+/// The narrowest a toolbar's search field gets before a sort on its right
+/// gives way, so the field keeps its glyph and clear button in view.
+const MIN_SEARCH_WIDTH: f32 = 120.0;
 
 /// A tab of a page, named by its text id.
 pub trait TabText: Copy + PartialEq {
@@ -41,13 +45,9 @@ pub fn title_header(ui: &mut Ui, title: &str, subtitle: &str) {
     );
 }
 
-/// Returns whether Read again was clicked or F5 pressed.
-pub fn refresh_header(ui: &mut Ui, title: &str, subtitle: &str, refresh: &str) -> bool {
-    refresh_header_reading(ui, (title, subtitle), refresh, false)
-}
-
-/// [`refresh_header`] whose Read again waits while `reading`, so a press
-/// shows that it was taken and F5 sends no second read.
+/// Returns whether Read again was clicked or F5 pressed. While `reading`
+/// Read again spins, so a press shows that it was taken and F5 sends no
+/// second read.
 pub fn refresh_header_reading(
     ui: &mut Ui,
     (title, subtitle): (&str, &str),
@@ -67,14 +67,7 @@ pub fn refresh_header_reading(
     pressed
 }
 
-pub fn tabbed_header<T>(ui: &mut Ui, ids: TabbedIds<'_>, tabs: &[T], current: T) -> Tabbed<T>
-where
-    T: TabText,
-{
-    tabbed_header_reading(ui, ids, tabs, current, false)
-}
-
-/// [`tabbed_header`] whose Read again waits while `reading`.
+/// The tabs of a page and its Read again, which spins while `reading`.
 pub fn tabbed_header_reading<T>(
     ui: &mut Ui,
     ids: TabbedIds<'_>,
@@ -127,7 +120,20 @@ where
     done
 }
 
+/// A page's search field, `search_width` wide and never wider than the room
+/// left of the row.
 pub fn search(ui: &mut Ui, text: &mut String, name: &str, hint: &str) -> Response {
+    search_beside(ui, text, name, hint, 0.0)
+}
+
+/// [`search`] on a toolbar that also draws a sort on its right, which
+/// `beside` leaves room for.
+pub fn search_beside_sort(ui: &mut Ui, text: &mut String, name: &str, hint: &str) -> Response {
+    let sizes = ui.tokens().sizes;
+    search_beside(ui, text, name, hint, sizes.sort_width + sizes.card_gap)
+}
+
+fn search_beside(ui: &mut Ui, text: &mut String, name: &str, hint: &str, beside: f32) -> Response {
     let ctx = ui.ctx().clone();
     let (name, hint, clear) = (
         i18n::text(&ctx, name),
@@ -141,16 +147,29 @@ pub fn search(ui: &mut Ui, text: &mut String, name: &str, hint: &str) -> Respons
         clear: &clear,
     };
 
-    let width = ui.tokens().sizes.search_width;
+    let room = ui.available_width() - beside;
+    let width = field_width(room, ui.tokens().sizes.search_width);
     search_field(ui, texts.name, text, texts, width)
+}
+
+/// `wanted`, or less when the `room` left of the row holds no more.
+pub const fn field_width(room: f32, wanted: f32) -> f32 {
+    wanted.min(room).max(MIN_SEARCH_WIDTH)
 }
 
 fn tabs_and_refresh_width(ui: &Ui, labels: &[&str]) -> f32 {
     segmented_width(ui, labels) + ui.tokens().sizes.card_gap + icon_button_width(ui)
 }
 
-/// A disabled Read again also leaves F5 alone, see `refresh_button`.
+/// While a read runs the button spins and is named Reading, and a click or
+/// F5 starts no second read, see `refresh_button_busy`.
 fn read_again(ui: &mut Ui, name: &str, reading: bool) -> bool {
-    ui.enabled_ui(!reading, |ui| refresh_button(ui, name).value.is_some())
-        .inner
+    let busy = reading.then(|| {
+        let ctx = ui.ctx().clone();
+        i18n::text(&ctx, "common-reading").into_owned()
+    });
+
+    refresh_button_busy(ui, name, busy.as_deref())
+        .value
+        .is_some()
 }

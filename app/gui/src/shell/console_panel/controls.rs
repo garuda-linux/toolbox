@@ -11,16 +11,19 @@ use crate::i18n;
 /// which would renumber this group and drop its focus, so the group and
 /// each control keep their own ids. Numbered by place, Close would take
 /// over Cancel's id and the focus with it once Cancel goes.
+///
+/// Returns where the controls start, the room the leave hint may take.
 pub(super) fn show(
     ui: &mut Ui,
     console: &Console,
     commands: &CommandSender,
     pill: impl FnOnce(&mut Ui),
-) {
+) -> f32 {
     let ctx = ui.ctx().clone();
     let gap = tokens::current(&ctx).sizes.card_gap;
     ui.push_id("console-header-controls", |ui| {
         trailing(ui, |ui| {
+            let left = ui.cursor().min.x;
             pill(ui);
             ui.add_space(gap);
 
@@ -53,6 +56,9 @@ pub(super) fn show(
             if close.clicked() {
                 commands.send(UiCommand::ToggleConsole);
             }
-        });
-    });
+
+            left
+        })
+    })
+    .inner
 }

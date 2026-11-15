@@ -4,6 +4,7 @@
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
@@ -15,6 +16,7 @@ use toolbox_gui::{App, PreferencesSetup, Setup};
 use toolbox_system::DiagnosticSource;
 
 use crate::common::{Fixture, TALL, window};
+use crate::look::look_for;
 use crate::system::{shows, step_until};
 
 /// 12:41 UTC, so the report shot keeps its header.
@@ -33,9 +35,15 @@ impl DiagnosticSource for Fake {
 }
 
 pub fn diagnostics_page(copy_reports: bool) -> Fixture {
+    diagnostics_page_on(copy_reports, Theme::Dark)
+}
+
+/// The Diagnostics page drawn on `theme`, with that theme's desktop look.
+pub fn diagnostics_page_on(copy_reports: bool, theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let look = look_for(&runtime, theme);
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let mut preferences = PreferencesSetup::default();
         preferences.settings.diagnostics.copy_to_clipboard = copy_reports;
 
@@ -50,6 +58,7 @@ pub fn diagnostics_page(copy_reports: bool) -> Fixture {
         App::new(
             cc,
             Setup {
+                look,
                 diagnostics: Some(link),
                 preferences,
                 ..Setup::default()

@@ -22,7 +22,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::RootLayout;
 
 use self::dialog::Dialog;
-use super::header::refresh_header;
+use super::header::refresh_header_reading;
 use super::{PageContext, PageView, QueueShown};
 use crate::bootrepair::BootRepair;
 use crate::command::{AppCommand, BootRepairCommand};
@@ -52,7 +52,8 @@ impl PageView for BootRepairPage {
 
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
         let (title, subtitle) = ("page-boot-repair", "page-boot-repair-subtitle");
-        if refresh_header(ui, title, subtitle, "repair-refresh") {
+        let reading = context.service::<BootRepair>().reading();
+        if refresh_header_reading(ui, (title, subtitle), "repair-refresh", reading) {
             context.commands.send(BootRepairCommand::Refresh);
         }
 

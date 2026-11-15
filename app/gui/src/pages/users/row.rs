@@ -5,7 +5,7 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
     ButtonKind, RowState, Tone, menu_item, named_pill_button, pill_button, rich, row_height,
-    row_menu, split_row, status_dot, text_block_height,
+    row_menu, split_row_in, status_dot, text_block_height,
 };
 
 use super::dialogs::{Dialog, Edit, Membership, PasswordForm, RemoveUser};
@@ -34,8 +34,9 @@ pub fn show(
         *dialog = Some(Dialog::Edit(Edit::new(row)));
     }
 
-    split_row(
+    split_row_in(
         ui,
+        state.row,
         CONTROLS_WIDTH,
         |ui| words(ui, context, row),
         |ui| controls(ui, context, (row, state), dialog),
@@ -95,10 +96,10 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow) {
     ];
 
     let detail = i18n::text_with(&ctx, "users-detail", &words);
-    ui.add(Label::new(rich(ui, &detail, Weight::Regular, SMALL, tokens.secondary)).truncate());
+    super::detail_line(ui, &detail);
     let groups = texts::list(&ctx, row.groups.iter().map(toolbox_plan::Name::as_str));
     let groups = i18n::text_with(&ctx, "users-groups-line", &[("groups", &groups)]);
-    ui.add(Label::new(rich(ui, &groups, Weight::Regular, SMALL, tokens.secondary)).truncate());
+    super::detail_line(ui, &groups);
 }
 
 fn controls(

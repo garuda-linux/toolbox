@@ -239,3 +239,36 @@ fn a_queued_row_is_as_tall_as_one_at_rest() {
         "{queued} tall queued, {rest} at rest"
     );
 }
+
+#[test]
+fn a_tall_row_keeps_its_actions_on_the_title_line() {
+    let mut results = egui_kittest::SnapshotResults::new();
+    let mut harness = harness(700.0, 300.0).build_ui(|ui| {
+        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "linux")
+            .detail(
+                "This kernel runs right now, so it stays. Restart with another kernel to \
+                 remove it, and pick the new one in the boot menu after the next restart. \
+                 Until then the running kernel keeps its modules and its headers, so a \
+                 rebuild after an update still finds what it needs.",
+            )
+            .show(ui, |ui| {
+                _ = pill_button(ui, "Set as default…", ButtonKind::Soft);
+                _ = pill_button(ui, "Remove", ButtonKind::Soft);
+            });
+    });
+
+    harness.run();
+    results.add(harness.try_snapshot("widgets/action_row_tall"));
+
+    let title = harness.get_by_label("linux").rect();
+    let action = harness
+        .get_by_role_and_label(Role::Button, "Set as default…")
+        .rect();
+
+    assert!(
+        (action.top() - title.top()).abs() < 4.0,
+        "the action starts at {}, the title at {}",
+        action.top(),
+        title.top(),
+    );
+}

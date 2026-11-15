@@ -346,3 +346,22 @@ fn the_review_sits_in_the_windows_centre() {
         "Save",
     );
 }
+
+#[test]
+fn the_review_of_an_edit_is_pictured() {
+    let mut shown = page(listed().with(reviewing(), Viewing::default()));
+    shown.run();
+
+    shown.snapshot("configs/review_dark");
+}
+
+#[test]
+fn a_file_that_is_no_text_says_why_it_is_not_shown() {
+    let mut refused = Viewing::default();
+    let number = refused.start(super::path("/etc/sudoers")).unwrap();
+    refused.read(number, Err(Problem::new(ProblemCode::NotText, "")));
+    let mut shown = page(listed().with(Session::default(), refused));
+    shown.run();
+
+    shown.snapshot("configs/refused_dark");
+}

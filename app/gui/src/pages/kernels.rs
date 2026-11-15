@@ -14,15 +14,16 @@ use row::Item;
 use toolbox_core::Snapshot;
 use toolbox_core::features::kernels::view::{self, Listing, Row};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     RowHeights, RowList, Tone, after_skeleton, banner, card, dimmed, empty_state_action,
     hold_content, rich, section_heading, skeleton_rows,
 };
-use toolbox_gui_kit::{UiExt as _, icons, tokens};
+use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_services::dkms::Dkms;
 
-use super::header::refresh_header;
+use super::header::refresh_header_reading;
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, KernelCommand, KernelEdit};
@@ -128,13 +129,25 @@ fn listing(ui: &mut Ui, context: &PageContext<'_>, built: Option<&Built>) {
         .map(Item)
         .partition(|item| item.0.kernel.is_installed());
 
-    section(ui, context, "kernels-installed", &installed);
-    section(ui, context, "kernels-available", &available);
+    section(
+        ui,
+        context,
+        ("kernels-installed", icons::CHECKBOX),
+        &installed,
+    );
+    section(
+        ui,
+        context,
+        ("kernels-available", icons::FOLDER_DOWNLOAD),
+        &available,
+    );
 }
 
 fn header(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    if refresh_header(ui, "page-kernels", "kernels-subtitle", "kernels-refresh") {
+    let reading = context.service::<Kernels>().reading();
+    let titles = ("page-kernels", "kernels-subtitle");
+    if refresh_header_reading(ui, titles, "kernels-refresh", reading) {
         context.commands.send(KernelCommand::Refresh);
     }
 
@@ -222,7 +235,9 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, built: &Built) {
     }
 }
 
-fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[Item<'_>]) {
+/// A section of kernels, its heading and its rows on the glyph of the
+/// section.
+fn section(ui: &mut Ui, context: &PageContext<'_>, (id, glyph): (&str, Icon), rows: &[Item<'_>]) {
     if rows.is_empty() {
         return;
     }
@@ -230,7 +245,7 @@ fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[Item<'_>]) 
     let ctx = ui.ctx().clone();
     let count = i18n::text_with(&ctx, "kernels-count", &[("count", &rows.len().to_string())]);
     let title = i18n::text(&ctx, id);
-    section_heading(ui, icons::RUN_BUILD, &title, &count);
+    section_heading(ui, glyph, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
 
     let heights = RowHeights::Measured {
@@ -240,7 +255,7 @@ fn section(ui: &mut Ui, context: &PageContext<'_>, id: &str, rows: &[Item<'_>]) 
     let _rows = tracing::trace_span!("rows").entered();
     RowList::new(id, &title, heights).show(ui, rows, |ui, shown, state| {
         dimmed(ui, context.busy, |ui| {
-            row::show(ui, context, shown.0, state);
+            row::show(ui, context, shown.0, glyph, state);
         });
     });
     ui.add_space(ui.tokens().sizes.section_gap);

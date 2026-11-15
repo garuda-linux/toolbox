@@ -23,6 +23,8 @@ pub enum MaintenanceCommand {
     /// Installs every package a greyed repair needs, in one plan.
     InstallMissing,
     DismissProblem,
+    /// Stops the ranking of the Chaotic-AUR mirrors under way.
+    CancelRanking,
     /// Chooses settings `entry` for the reset, or drops it.
     Choose {
         entry: String,

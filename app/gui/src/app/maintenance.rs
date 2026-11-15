@@ -38,6 +38,7 @@ impl App {
             }
             // The service takes these, see `hand_to_services`.
             MaintenanceCommand::DismissProblem
+            | MaintenanceCommand::CancelRanking
             | MaintenanceCommand::Choose { entry: _, on: _ }
             | MaintenanceCommand::Reset => {}
             MaintenanceCommand::Reveal(tab) => {

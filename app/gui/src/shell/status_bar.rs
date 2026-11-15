@@ -134,6 +134,12 @@ pub fn floating(ctx: &Context, page: Rect, reading: &Reading, mode: Mode) {
         return;
     }
 
+    note(ctx, page, &i18n::text(ctx, "status-reading"));
+}
+
+/// A line with a spinner over the bottom left of `page`, as the reading
+/// note has it.
+pub fn note(ctx: &Context, page: Rect, text: &str) {
     let tokens = tokens::current(ctx);
     let inset = tokens.sizes.corner_inset;
     let glass = Glass::new(
@@ -143,14 +149,14 @@ pub fn floating(ctx: &Context, page: Rect, reading: &Reading, mode: Mode) {
         toolbox_gui_kit::frost::raised(ctx),
     );
 
-    Area::new(Id::unique("toolbox_gui::status_bar::reading"))
+    Area::new(Id::unique("toolbox_gui::status_bar::note"))
         .order(Order::Foreground)
         .pivot(Align2::LEFT_BOTTOM)
         .fixed_pos(page.left_bottom() + egui::vec2(inset.x, -inset.y))
         .interactable(false)
         .show(ctx, |ui| {
             glass.show(ui, |ui| {
-                ui.loading(&i18n::text(ctx, "status-reading"));
+                ui.loading(text);
             });
         });
 }

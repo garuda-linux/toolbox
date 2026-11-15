@@ -242,7 +242,7 @@ fn pick<T>(
         });
         ui.add_space(ui.tokens().sizes.control_gap);
 
-        if let Some(picked) = named_chips(ui, name, name, &options, *current).value {
+        if let Some(picked) = named_chips(ui, name, &options, *current).value {
             *current = picked;
         }
     });

@@ -1,6 +1,7 @@
 mod chips;
 mod gaps;
 mod refusal;
+mod toolbar;
 
 use std::collections::BTreeSet;
 use std::path::Path;

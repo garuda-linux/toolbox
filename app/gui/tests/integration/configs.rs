@@ -7,10 +7,11 @@ use std::path::Path;
 use std::process::Command;
 use std::sync::Arc;
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
-use tokio::runtime::Runtime;
+use tokio::runtime::{Handle, Runtime};
 use toolbox_catalog::{ConfigFileCatalog, LoadProblem};
 use toolbox_core::ChangeSet;
 use toolbox_gui::configs::ConfigsSetup;
@@ -20,6 +21,7 @@ use toolbox_plan::ConfigFilePath;
 use toolbox_system::{DryRunEditor, EditFolder, HelperFetch, SystemConfigFiles};
 
 use crate::common::{TALL, window};
+use crate::look::look_for;
 use crate::system::{settle, step_until};
 
 /// The fixture the self-test uses too.
@@ -48,6 +50,32 @@ impl HelperFetch for NoHelper {
     }
 }
 
+/// The self-test's Config Files fixture, read only. Nothing is written, so
+/// the picture needs no folder of its own.
+pub fn read_only(runtime: &Handle) -> ConfigsSetup {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join(FIXTURE);
+    let copies = EditFolder::new(&std::env::temp_dir().join("garuda-toolbox-coverage"));
+
+    setup_for(runtime, &dir, copies)
+}
+
+fn setup_for(runtime: &Handle, dir: &Path, copies: EditFolder) -> ConfigsSetup {
+    ConfigsSetup {
+        runtime: runtime.clone(),
+        source: Arc::new(SystemConfigFiles::new(
+            dir.join("root"),
+            dir.join("home"),
+            NoHelper,
+        )),
+        catalog: ConfigFileCatalog::load(dir).map_err(|error| LoadProblem::from(&error)),
+        copies,
+        editing: Arc::new(DryRunEditor),
+        visual: None,
+        editor: None,
+        dry_run: true,
+    }
+}
+
 fn copy_fixture(from: &Path, to: &Path) {
     for entry in fs::read_dir(from).unwrap() {
         let entry = entry.unwrap();
@@ -62,6 +90,11 @@ fn copy_fixture(from: &Path, to: &Path) {
 }
 
 pub fn configs() -> Fixture {
+    configs_on(Theme::Dark)
+}
+
+/// The Config Files page drawn on `theme`, with that theme's desktop look.
+pub fn configs_on(theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let folder = tempfile::tempdir().unwrap();
     let dir = folder.path().join("configs");
@@ -69,25 +102,18 @@ pub fn configs() -> Fixture {
     copy_fixture(&Path::new(env!("CARGO_MANIFEST_DIR")).join(FIXTURE), &dir);
     fs::write(dir.join("home/.bashrc"), "# ~/.bashrc\n").unwrap();
 
-    let setup = ConfigsSetup {
-        runtime: runtime.handle().clone(),
-        source: Arc::new(SystemConfigFiles::new(
-            dir.join("root"),
-            dir.join("home"),
-            NoHelper,
-        )),
-        catalog: ConfigFileCatalog::load(&dir).map_err(|error| LoadProblem::from(&error)),
-        copies: EditFolder::new(&folder.path().join("copies")),
-        editing: Arc::new(DryRunEditor),
-        visual: None,
-        editor: None,
-        dry_run: true,
-    };
+    let setup = setup_for(
+        runtime.handle(),
+        &dir,
+        EditFolder::new(&folder.path().join("copies")),
+    );
 
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let look = look_for(&runtime, theme);
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 configs: Some(setup),
                 ..Setup::default()

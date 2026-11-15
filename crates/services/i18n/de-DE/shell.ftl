@@ -44,6 +44,7 @@ toast-queue-edited-outside = Die vorgemerkten Änderungen wurden über die Befeh
 # A program the app started, such as the installer or a Maintenance tool,
 # ended with an error. $name is its program name.
 toast-tool-failed = { $name } wurde mit einem Fehler beendet. Details stehen in der Logdatei.
+toast-tool-not-started = { $name } konnte nicht gestartet werden: { $reason }
 # After Copy name in a row menu.
 toast-copied = „{ $name }“ in die Zwischenablage kopiert.
 

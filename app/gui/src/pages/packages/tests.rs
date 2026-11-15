@@ -18,6 +18,7 @@ use toolbox_core::features::packages::{
 };
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{Snapshot, Toggle};
+use toolbox_gui_kit::testing::{press_until, tab_into};
 use toolbox_plan::PackageName;
 
 use super::{PackagesPage, row};
@@ -231,10 +232,13 @@ fn space_on_a_row_opens_its_details_and_escape_goes_back() {
     let mut harness = fixture(Some(gimp_details())).harness(PackagesPage::default());
     harness.run();
 
-    harness
-        .get_by_role_and_label(Role::ListItem, "gimp")
-        .focus();
-    harness.run();
+    assert!(tab_into(&mut harness, Role::ListItem));
+    assert!(press_until(
+        &mut harness,
+        Key::ArrowDown,
+        Role::ListItem,
+        "gimp"
+    ));
     harness.key_press(Key::Space);
     harness.run();
 
@@ -282,8 +286,12 @@ fn before_the_index_is_read_placeholder_rows_wait_under_resting_chips() {
             .query_by_role_and_label(Role::ProgressIndicator, name)
             .is_some()
     );
-    let installed = harness.get_by_role_and_label(Role::Button, "Installed");
-    assert!(installed.accesskit_node().is_disabled());
+    let chips: Vec<_> = harness
+        .query_all_by_role_and_label(Role::Button, "Installed")
+        .collect();
+
+    assert!(!chips.is_empty());
+    assert!(chips.iter().all(|chip| chip.accesskit_node().is_disabled()));
 }
 
 #[test]

@@ -46,7 +46,7 @@ impl PageService for Maintenance {
     /// asked.
     fn plan_finished(&mut self, succeeded: bool) -> Vec<AppCommand> {
         let launcher = self.launcher();
-        Self::plan_finished(self, succeeded, Path::exists, launcher.as_deref());
+        Self::plan_finished(self, succeeded, Path::exists, launcher);
         Vec::new()
     }
 }

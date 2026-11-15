@@ -35,3 +35,13 @@ without cargo.
   `all`) instrumented.
 - Real root actions are tested by `scripts/arch-it.sh` (see
   [toolchain.md](toolchain.md#arch-integration-tests)).
+
+## On Garuda
+
+`scripts/garuda-selftest.sh [--keep] [--no-build] [suite...]` runs the
+suites in the newest `garuda-distrobox` image with systemd as init, so the
+shots show real reads instead of "could not be read" banners. The Arch
+container builds the binary (`scripts/arch-build.sh`), the Garuda container
+installs weston and lavapipe and runs `scripts/selftest.sh` as a user of its
+own. Shots land in `target/garuda-selftest/runs/`. It needs podman or
+docker and pulls the image on every run.

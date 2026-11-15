@@ -28,6 +28,18 @@ pub fn locked_tag(ui: &mut Ui, text: &str) -> Response {
     .inner
 }
 
+/// A small lock, `name` on hover and for screen readers, for a row that a
+/// password guards: the words stay out of the row's line.
+pub fn lock_mark(ui: &mut Ui, name: &str) -> Response {
+    let secondary = tokens::current(ui.ctx()).secondary;
+    let lock = icon_image(ui, icons::OBJECT_LOCKED, secondary);
+    let response = ui.add(lock.fit_to_exact_size(vec2(GLYPH, GLYPH)));
+    let label = name.to_owned();
+    ui.ctx()
+        .accesskit_node_builder(response.id, |node| node.set_label(label));
+    response.on_hover_text(name)
+}
+
 /// `text` on a tag with a remove cross named `name`. Returns the cross's
 /// response.
 pub fn removable_tag(ui: &mut Ui, text: &str, name: &str) -> Response {

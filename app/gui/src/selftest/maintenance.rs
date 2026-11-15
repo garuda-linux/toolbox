@@ -44,7 +44,7 @@ pub fn steps() -> Vec<Step> {
         // The palette opens the tab that holds a repair.
         Step::shortcut(Key::K),
         Step::Text("reset audio"),
-        Step::WaitContaining("Maintenance · Repairs"),
+        Step::WaitContaining("Reset audio Repairs"),
         Step::Shot("maintenance-palette"),
         Step::press(Key::Enter),
         Step::wait("Repairs"),

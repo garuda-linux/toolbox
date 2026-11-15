@@ -54,6 +54,7 @@ pub fn driver(refusal: DriverRefusal) -> Cow<'static, str> {
         DriverRefusal::OtherFile => "cli-driver-other-file",
         DriverRefusal::Unavailable => "cli-driver-unavailable",
         DriverRefusal::Busy => "cli-busy",
+        DriverRefusal::Package(_) => "cli-driver-package",
     };
 
     text_in(FALLBACK, id)

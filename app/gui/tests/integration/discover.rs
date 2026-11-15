@@ -2,7 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tempfile::TempDir;
@@ -15,7 +15,8 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::PackageName;
 
-use crate::common::{HEIGHT, packages, palette, type_into, window};
+use crate::common::{HEIGHT, packages, palette, type_into, wheel, window};
+use crate::look::look_for;
 use crate::system::first_read;
 
 pub struct Table(pub Vec<(&'static str, PathBuf)>);
@@ -58,10 +59,21 @@ pub fn pictured(
     system: Snapshot,
     pictures: Option<Table>,
 ) -> (Harness<'static, App>, Runtime) {
+    pictured_on(catalogs, system, pictures, Theme::Dark)
+}
+
+/// As [`pictured`], drawn on `theme`.
+pub fn pictured_on(
+    catalogs: Catalogs,
+    system: Snapshot,
+    pictures: Option<Table>,
+    theme: Theme,
+) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
+    let look = look_for(&runtime, theme);
 
-    let mut harness = window(HEIGHT).build_eframe(move |cc| {
+    let mut harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (system.clone(), Vec::new());
         let finder = pictures.map(|table| {
             let found = Pictures::spawn(cc.egui_ctx.clone(), table);
@@ -70,6 +82,7 @@ pub fn pictured(
         });
 
         let setup = Setup {
+            look,
             queue: Queue::in_memory(ChangeSet::default()),
             snapshot: Some(snapshot::spawn(
                 &handle,
@@ -309,6 +322,21 @@ fn during_a_search_the_chips_count_the_matches_and_still_pick() {
 
     chip(&mut harness, "All");
     assert!(row_shown(&harness, "Firefox"));
+}
+
+/// The Internet heading has scrolled above the list's top edge while its
+/// apps still show, so the heading stays at the top edge.
+#[test]
+fn a_group_heading_sticks_under_the_top_while_its_group_scrolls() {
+    let (mut harness, _runtime) = discover();
+
+    // A short window, so the six apps of the system overflow it.
+    harness.set_size(egui::vec2(crate::common::WIDTH, 460.0));
+    harness.run();
+    wheel(&harness, egui::pos2(600.0, 300.0), egui::vec2(0.0, -300.0));
+    harness.run();
+
+    harness.snapshot("discover/sticky_heading");
 }
 
 #[test]

@@ -2,6 +2,6 @@
 Type=Application
 Name=Garuda Toolbox
 Exec=garuda-toolbox --autostart
-Icon=org.garudalinux.toolbox
+Icon=garuda-toolbox
 Terminal=false
 NoDisplay=true

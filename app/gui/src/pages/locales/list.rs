@@ -1,21 +1,23 @@
 use std::sync::Arc;
 
-use egui::{Label, Ui};
+use egui::{Id, Label, Ui};
 use toolbox_core::features::locales::view::locales;
 use toolbox_core::features::locales::{Filter, pick};
-use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_core::features::toggles::shown::Control;
+use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{
-    ListItem, RowHeights, RowList, RowState, Tone, rich, row_height, split_row, status_dot,
-    text_block_height,
+    ListItem, RowHeights, RowList, RowState, Tone, highlighted, rich, row_height, split_row_in,
+    status_dot, text_block_height,
 };
 use toolbox_plan::LocaleEntry;
 
 use crate::command::LocaleCommand;
 use crate::i18n;
 use crate::pages::PageContext;
-use crate::pages::rows::{Look, SWITCH_WIDTH, row_switch};
+use crate::pages::rows::Look;
+use crate::pages::toggles::control::{self, Setting};
 
 /// One locale as the list shows it, its texts made once.
 #[derive(Debug)]
@@ -35,7 +37,6 @@ pub struct Line<'a> {
     pub detail: &'a str,
     pub status: (&'static str, Tone),
     pub queued: bool,
-    pub on: bool,
 }
 
 pub type Rows = RowCache<(bool, bool, Same<toolbox_core::Snapshot>, u64, Look), Vec<LocaleItem>>;
@@ -87,7 +88,11 @@ pub fn rows(
                     .into_owned()
                 };
 
-                let charset = shown.unnamed_charset();
+                // A code such as en_US.UTF-8 already names its charset.
+                let charset = shown
+                    .unnamed_charset()
+                    .filter(|charset| !shown.locale_code.contains(charset));
+
                 let detail_id = match (charset.is_some(), shown.system) {
                     (true, true) => "locales-detail-system",
                     (true, false) => "locales-detail",
@@ -137,10 +142,23 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &LocaleItem, state: &RowSta
         detail: &item.detail,
         status,
         queued: item.queued,
-        on: item.on,
     };
 
-    if switch_line(ui, &line, state) {
+    // A locale is a setting, but this page also lists packages, so a
+    // setting has the Enable and Disable buttons of a mixed page.
+    let shown = control::Shown {
+        control: Control::Switch,
+        on: item.on,
+        title: &item.title,
+        enabled: true,
+        unknown: false,
+        setting: Setting::Button,
+    };
+
+    let width = control::button_width(ui);
+    if line_row(ui, state.row, &line, width, |ui| {
+        control::show(ui, shown, state)
+    }) {
         context.commands.send(LocaleCommand::Toggle {
             entry: item.entry.clone(),
             on: !item.on,
@@ -148,12 +166,21 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &LocaleItem, state: &RowSta
     }
 }
 
-pub fn switch_line(ui: &mut Ui, line: &Line<'_>, state: &RowState) -> bool {
+/// A line with its words and the control `right` draws at the end. Returns
+/// what `right` returned.
+pub fn line_row(
+    ui: &mut Ui,
+    row: Id,
+    line: &Line<'_>,
+    width: f32,
+    right: impl FnOnce(&mut Ui) -> bool,
+) -> bool {
     let ctx = ui.ctx().clone();
-    let mut flipped = false;
-    split_row(
+    let mut picked = false;
+    split_row_in(
         ui,
-        SWITCH_WIDTH,
+        row,
+        width,
         |ui| {
             let tokens = tokens::current(&ctx);
             toolbox_gui_kit::widgets::title_line(ui, false, |ui| {
@@ -168,22 +195,16 @@ pub fn switch_line(ui: &mut Ui, line: &Line<'_>, state: &RowState) -> bool {
                 }
             });
 
-            ui.add(
-                Label::new(rich(
-                    ui,
-                    line.detail,
-                    Weight::Regular,
-                    SMALL,
-                    tokens.secondary,
-                ))
-                .truncate(),
-            );
+            // The cut is the catalog rows' own, and the tooltip keeps the whole.
+            let font = fonts::font(ui.style(), Weight::Regular, SMALL);
+            let cut = control::cut(highlighted(ui, line.detail, "", font, tokens.secondary));
+            ui.add(Label::new(cut).wrap()).on_hover_text(line.detail);
         },
         |ui| {
             // The list waits in a disabled Ui while a plan runs.
-            flipped = row_switch(ui, state, line.on, line.title, true);
+            picked = right(ui);
         },
     );
 
-    flipped
+    picked
 }

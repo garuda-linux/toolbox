@@ -1,4 +1,5 @@
 mod callout;
+mod code;
 mod contents;
 mod links;
 mod picture;

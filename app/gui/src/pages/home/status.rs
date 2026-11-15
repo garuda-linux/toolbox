@@ -12,7 +12,7 @@ use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
     ActionRow, ButtonKind, Tone, banner, card, card_row, icon_button_width, loading_indicator,
-    pill_button, refresh_button, rich, split_row,
+    pill_button, refresh_button_busy, rich, split_row,
 };
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_services::home::Overview;
@@ -146,7 +146,14 @@ fn heading(ui: &mut Ui, context: &PageContext<'_>, reading: &Loadable<Status>) {
         },
         |ui| {
             let name = i18n::text(&ctx, "home-refresh");
-            if refresh_button(ui, &name).value.is_some() {
+            let busy = reading
+                .is_loading()
+                .then(|| i18n::text(&ctx, "common-reading").into_owned());
+
+            if refresh_button_busy(ui, &name, busy.as_deref())
+                .value
+                .is_some()
+            {
                 context.commands.send(HomeCommand::Refresh);
             }
         },

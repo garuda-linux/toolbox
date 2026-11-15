@@ -3,6 +3,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use tokio::runtime::Runtime;
@@ -16,6 +17,7 @@ use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{LocaleEntry, LocaleName};
 
 use crate::common::{Fixture, TALL, packages, window};
+use crate::look::look_for;
 use crate::system::first_read;
 
 fn name(language: &str, territory: &str) -> LanguageName {
@@ -57,14 +59,21 @@ fn system() -> Snapshot {
 }
 
 pub fn languages() -> Fixture {
+    languages_on(Theme::Dark)
+}
+
+/// The Languages page drawn on `theme`, with that theme's desktop look.
+pub fn languages_on(theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let probed = system();
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let look = look_for(&runtime, theme);
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (probed.clone(), Vec::new());
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 snapshot: Some(snapshot::spawn(
                     &handle,
@@ -91,7 +100,7 @@ fn a_new_locale_brings_its_language_packs() {
     let harness = fixture.harness();
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "German (Germany)")
+        .get_by_role_and_label(Role::Button, "Enable German (Germany)")
         .click();
     harness.run();
     assert!(harness.query_by_label("change queued").is_some());
@@ -100,10 +109,16 @@ fn a_new_locale_brings_its_language_packs() {
         .get_by_role_and_label(Role::RadioButton, "Language packs")
         .click();
     harness.run();
-
-    let pack = |name| harness.query_by_role_and_label(Role::CheckBox, name);
-    assert!(pack("firefox-i18n-de").is_some());
-    assert!(pack("firefox-i18n-fr").is_none());
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, "Install firefox-i18n-de")
+            .is_some()
+    );
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, "Install firefox-i18n-fr")
+            .is_none()
+    );
     assert!(
         harness
             .query_by_label_contains("2 packs are not installed.")
@@ -117,7 +132,7 @@ fn the_locale_of_the_system_language_stays_on() {
     let harness = fixture.harness();
 
     harness
-        .get_by_role_and_label(Role::CheckBox, "American English (United States)")
+        .get_by_role_and_label(Role::Button, "Disable American English (United States)")
         .click();
     harness.run();
 
@@ -127,4 +142,16 @@ fn the_locale_of_the_system_language_stays_on() {
             .is_some()
     );
     assert!(harness.query_by_label("change queued").is_none());
+}
+
+#[test]
+fn a_search_without_a_match_says_so() {
+    let mut fixture = languages();
+    let harness = fixture.harness();
+
+    crate::common::type_into(harness, "Search locales and packs", "Klingon");
+    crate::system::step_until(harness, "the empty search", |harness| {
+        harness.query_by_label("No locale matches").is_some()
+    });
+    harness.snapshot("locales/no_match_dark");
 }

@@ -82,6 +82,16 @@ constants of `crates/gui-kit/src/icons.rs`, bundled in
 | Restart                    | `MEDIA_PLAYLIST_REPEAT`                       | Services row menu                                                         |
 | Mask, Unmask               | `OBJECT_LOCKED`, `OBJECT_UNLOCKED`            | Services row menu                                                         |
 | Show, hide a password      | `VIEW_VISIBLE`, `VIEW_HIDDEN`                 | password fields (`widgets::secret_field`)                                 |
+| Login shell                | `DIALOG_SCRIPTS`                              | Tweaks "Login shell" row                                                  |
+| DNS servers                | `NETWORK_SERVER`                              | Tweaks "DNS server" row                                                   |
+| Wi-Fi backend              | `NETWORK_WIRELESS_SIGNAL_GOOD`                | Tweaks "Wi-Fi backend" row                                                |
+| Ad blocking                | `DIALOG_CANCEL`                               | Tweaks "Ad blocking" row                                                  |
+| Mirrorlist refresh         | `VIEW_LIST_DETAILS`                           | Tweaks Garuda Update "Skip mirrorlist refresh" row                        |
+| AUR updates                | `APPLICATIONS_DEVELOPMENT`                    | Tweaks Garuda Update "Update AUR packages" row                            |
+| Non-interactive pacman     | `DIALOG_OK`                                   | Tweaks Garuda Update "Non-interactive pacman" row                         |
+| Disk space check           | `DRIVE_HARDDISK`                              | Tweaks Garuda Update "Skip disk space check" row                          |
+| Installed kernels          | `CHECKBOX`                                    | Kernels "Installed" heading and its rows                                  |
+| Kernels to install         | `FOLDER_DOWNLOAD`                             | Kernels "Available" heading and its rows                                  |
 
 Page glyphs reused for their topic: `DRIVE_HARDDISK_ROOT` (Config Files
 "Bootloader") and `OFFICE_REPORT` (Settings "Diagnostics").

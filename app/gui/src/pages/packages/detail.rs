@@ -9,14 +9,15 @@ use std::sync::Arc;
 
 pub use below::{FileRows, HistoryRows};
 use egui::{Color32, Key, Rect, Sense, Ui, Vec2, pos2, vec2};
-pub use facts::{FactRows, day};
+pub use facts::FactRows;
+pub use relations::TargetRows;
 use toolbox_core::features::packages::PackageDetails;
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_gui_kit::fonts::{self, SMALL, TITLE, Weight};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
     ButtonKind, empty_state, icon_button_width, loading_indicator, named_pill_button, padded_card,
-    page_header, pill_width, refresh_button, rich, status_dot,
+    page_header, pill_width, refresh_button_busy, rich, status_dot,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::PackageName;
@@ -89,7 +90,13 @@ fn header_of<R>(
                     ui.add_space(ui.tokens().sizes.card_gap);
                 }
 
-                refresh = refresh_button(ui, &i18n::text(ui.ctx(), "packages-refresh"))
+                let name = i18n::text(ui.ctx(), "packages-refresh");
+                let busy = context
+                    .service::<Packages>()
+                    .reading()
+                    .then(|| i18n::text(ui.ctx(), "common-reading").into_owned());
+
+                refresh = refresh_button_busy(ui, &name, busy.as_deref())
                     .value
                     .is_some();
             });
@@ -213,7 +220,7 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         Read::Known(None) => gone(ui, &package),
         Read::Known(Some(info)) => {
             let catalog = catalog(context);
-            columns(ui, page, context, catalog.as_deref(), (details, info));
+            columns(ui, page, context, catalog.as_ref(), (details, info));
             if info.installed.is_some() {
                 group_gap(ui);
                 below::files(page, ui, context, (details, info));
@@ -229,7 +236,7 @@ fn columns(
     ui: &mut Ui,
     page: &mut PackagesPage,
     context: &PageContext<'_>,
-    catalog: Option<&Catalog>,
+    catalog: Option<&Arc<Catalog>>,
     (details, info): (&Arc<Details>, &PackageDetails),
 ) {
     let facts = page.facts.get(&[], (Same::of(details), Look::of(ui)), || {
@@ -237,11 +244,17 @@ fn columns(
         facts::facts(ui.ctx(), info)
     });
 
+    let targets = page
+        .targets
+        .get(&[], (Same::of(details), catalog.map(Same::of)), || {
+            relations::resolve(catalog.map(Arc::as_ref), info)
+        });
+
     let unfolded = &mut page.unfolded;
     let opened = split(
         ui,
         |ui| facts::grid(ui, &facts),
-        |ui| relations::show(ui, unfolded, catalog, info),
+        |ui| relations::show(ui, unfolded, &targets, info),
     );
 
     if let Some(package) = opened {

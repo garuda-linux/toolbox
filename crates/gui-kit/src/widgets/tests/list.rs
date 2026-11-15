@@ -1,5 +1,6 @@
 mod memory;
 mod rows;
+mod stop;
 
 use egui::accesskit::Role;
 use egui::{Key, Modifiers, Rangef, ScrollArea, Ui};
@@ -10,7 +11,7 @@ use super::super::list::span::Offsets;
 use super::super::{
     ListItem, RowHeights, RowList, menu_item, row_context_menu, row_menu, switch, text_block_height,
 };
-use crate::testing::harness;
+use crate::testing::{harness, press_until, tab_into};
 
 struct Item(String);
 
@@ -84,9 +85,10 @@ fn shown(first: &[&str], second: &[&str], height: f32) -> Harness<'static, Lists
     harness
 }
 
+/// Reaches a row by the keys: Tab into the list, then Down to the row.
 fn focus_row(harness: &mut Harness<'static, Lists>, name: &str) {
-    harness.get_by_role_and_label(Role::ListItem, name).focus();
-    harness.run();
+    assert!(tab_into(harness, Role::ListItem));
+    assert!(press_until(harness, Key::ArrowDown, Role::ListItem, name));
 }
 
 fn focused(harness: &Harness<'static, Lists>, name: &str) -> bool {

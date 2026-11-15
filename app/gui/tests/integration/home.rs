@@ -1,8 +1,8 @@
-use std::io;
 use std::path::Path;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
@@ -23,6 +23,7 @@ use toolbox_system::{
 };
 
 use crate::common::{TALL, no_note, window};
+use crate::look::look_for;
 use crate::system::{shows, step_until};
 
 pub const GB: u64 = 1_000_000_000;
@@ -44,8 +45,8 @@ impl Power for RefusingPower {
 }
 
 impl Launcher for BrokenLauncher {
-    fn start(&self, _program: &Path, _args: &[&str]) -> io::Result<()> {
-        Err(io::Error::new(io::ErrorKind::NotFound, "no such file"))
+    fn start(&self, _program: &Path, _args: &[&str]) {
+        // A start that fails is a toast from the real launcher, not here.
     }
 }
 
@@ -109,14 +110,24 @@ pub fn home_with(
     status: Status,
     facts: Facts,
 ) -> (Harness<'static, App>, Runtime, Arc<RefusingPower>) {
+    home_with_on(system, status, facts, Theme::Dark)
+}
+
+/// As [`home_with`], drawn on `theme`.
+pub fn home_with_on(
+    system: Snapshot,
+    status: Status,
+    facts: Facts,
+    theme: Theme,
+) -> (Harness<'static, App>, Runtime, Arc<RefusingPower>) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
+    let look = look_for(&runtime, theme);
     let power = Arc::new(RefusingPower::default());
     let shared = Arc::clone(&power);
-    let status = Arc::new(status);
-    let facts = Arc::new(facts);
+    let (status, facts) = (Arc::new(status), Arc::new(facts));
 
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let ctx = cc.egui_ctx.clone();
         let probe = move || (system.clone(), Vec::new());
         let read = move || Status::clone(&status);
@@ -130,6 +141,7 @@ pub fn home_with(
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 snapshot: Some(snapshot::spawn(
                     &handle,
@@ -195,17 +207,16 @@ fn updates_queue_and_list_their_packages() {
 
     assert!(harness.query_by_label("2 updates available").is_some());
 
-    let more = "More actions for 2 updates available";
-    harness.get_by_label(more).click();
-    harness.run();
     harness.get_by_label("Queue update").click();
     harness.run();
     assert!(harness.query_by_label("change queued").is_some());
 
-    harness.get_by_label(more).click();
-    harness.run();
     assert!(harness.query_by_label("Don't update").is_some());
-    harness.get_by_label("Show packages").click();
+    harness
+        .query_all_by_label("Show packages")
+        .next()
+        .expect("the updates row lists its packages")
+        .click();
     harness.run();
     assert!(
         harness
@@ -267,7 +278,7 @@ fn a_check_that_failed_shows_its_reason_on_request() {
 }
 
 #[test]
-fn the_live_iso_offers_its_tools_and_tells_a_failed_start() {
+fn the_live_iso_offers_its_tools_and_leaves_a_failed_start_to_the_launcher() {
     let (mut harness, _runtime, _power) = home(host(true, false), quiet());
 
     assert!(harness.query_by_label("System status").is_none());
@@ -287,7 +298,7 @@ fn the_live_iso_offers_its_tools_and_tells_a_failed_start() {
     assert!(
         harness
             .query_by_label_contains("The installer could not start")
-            .is_some()
+            .is_none()
     );
     assert!(no_note(&harness), "a banner on Home, not a note");
 }

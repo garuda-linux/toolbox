@@ -6,7 +6,7 @@ use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, RowState, SectionHeading, card, empty_state,
-    pill_button, rich, row_height, skeleton_rows, split_row, text_block_height,
+    lock_mark, pill_button, rich, row_height, skeleton_rows, split_row_in, text_block_height,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -164,8 +164,9 @@ fn row(
         state.response.clone().on_hover_text(hint);
     }
 
-    split_row(
+    split_row_in(
         ui,
+        state.row,
         CONTROLS_WIDTH,
         |ui| words(ui, item),
         |ui| controls(ui, context, (row, &item.name), activated, expanded),
@@ -193,6 +194,10 @@ fn lines(ui: &mut Ui, item: &Item) {
     toolbox_gui_kit::widgets::title_line(ui, false, |ui| {
         let title = rich(ui, &item.name, Weight::SemiBold, BODY, tokens.text);
         ui.add(Label::new(title).truncate());
+        if row.admin {
+            lock_mark(ui, &i18n::text(&ctx, "configs-admin"));
+        }
+
         if row.kind == RowKind::Folder {
             let count =
                 i18n::text_with(&ctx, "configs-files", &[("count", &row.count.to_string())]);

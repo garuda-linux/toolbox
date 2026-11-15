@@ -10,8 +10,7 @@ use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_news::{News, Post, Source};
 
 use crate::pages::PageContext;
-use crate::pages::packages::day;
-use crate::{i18n, links};
+use crate::{dates, i18n, links};
 
 /// Home shows the newest few, the sites hold the rest.
 const SHOWN: usize = 4;
@@ -78,7 +77,11 @@ fn row(ui: &mut Ui, post: &Post) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     ui.horizontal(|ui| {
-        let date = post.published.map(day).unwrap_or_default();
+        let date = post
+            .published
+            .map(|seconds| dates::day(&ctx, seconds))
+            .unwrap_or_default();
+
         let height = ui.spacing().interact_size.y;
         let layout = Layout::left_to_right(Align::Center);
         ui.allocate_ui_with_layout(vec2(DATE_WIDTH, height), layout, |ui| {

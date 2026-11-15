@@ -41,7 +41,8 @@ maintenance-not-installed = Nicht installiert
 maintenance-tool-missing = Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug.
 maintenance-ranker-missing = rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung.
 maintenance-ranking = Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist.
-maintenance-ranking-progress = Spiegelserver werden bewertet…
+maintenance-ranking-progress = Spiegelserver werden bewertet, { $time }
+maintenance-ranking-cancel = Bewertung abbrechen
 maintenance-tool-arch-mirrors = Arch-Spiegelserver aktualisieren
 maintenance-tool-arch-mirrors-detail = Mit reflector-simple die schnellsten Arch-Linux-Spiegelserver wählen, von denen Pakete heruntergeladen werden.
 maintenance-tool-chaotic-mirrors = Chaotic-AUR-Spiegelserver aktualisieren
@@ -55,9 +56,6 @@ maintenance-tool-merge-pacdiff-detail = .pacnew- und .pacsave-Dateien nebeneinan
 
 # Why a tool did not start or the mirrors were not ranked. $tool is the
 # tool's name, $reason the system's own words.
-maintenance-problem-launch-missing = { $tool } konnte nicht gestartet werden, weil es nicht installiert ist.
-maintenance-problem-launch-denied = { $tool } konnte nicht gestartet werden, weil dieses Konto es nicht ausführen darf.
-maintenance-problem-launch = { $tool } konnte nicht gestartet werden: { $reason }
 maintenance-problem-launch-absent = Die Installation ist fertig, aber { $reason } fehlt, daher wurde { $tool } nicht gestartet.
 maintenance-problem-mirrors-timeout = Die Bewertung der Chaotic-AUR-Spiegelserver dauerte länger als fünf Minuten und wurde abgebrochen. Die Liste der Spiegelserver ist unverändert.
 maintenance-problem-mirrors-start = rate-mirrors konnte nicht gestartet werden, die Chaotic-AUR-Spiegelserver wurden nicht bewertet: { $reason }

@@ -68,3 +68,12 @@ fn a_hairline_parts_the_bar_from_the_page() {
 
     assert!(parted, "no hairline on the bar above {text:?}");
 }
+
+#[test]
+fn the_failed_probes_bar_in_light() {
+    let (mut harness, _runtime, _answer, _reads) =
+        crate::system::failed_units_bar_on(egui::Theme::Light);
+
+    harness.run();
+    harness.snapshot("status/failed_light");
+}

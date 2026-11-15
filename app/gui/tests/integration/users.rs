@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+use egui::Theme;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
@@ -17,9 +18,10 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::users::UsersSetup;
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{GroupName, ShellPath, UserName};
-use toolbox_system::{LockProblem, LockSource};
+use toolbox_system::{LockProblem, LockSource, Probe, ProbeError, ProbeIssue};
 
 use crate::common::{HEIGHT, type_into, window};
+use crate::look::look_for;
 use crate::system::{first_read, settle, step_until};
 
 /// Answers that `ada` is locked, and counts the reads.
@@ -104,7 +106,12 @@ fn system() -> Snapshot {
 }
 
 pub fn users() -> Fixture {
-    let mut fixture = restored(ChangeSet::default());
+    users_on(Theme::Dark)
+}
+
+/// The Users and Groups page drawn on `theme`, with that theme's desktop look.
+pub fn users_on(theme: Theme) -> Fixture {
+    let mut fixture = restored_on(ChangeSet::default(), system(), Vec::new(), theme);
     let harness = fixture.harness();
     harness
         .get_by_role_and_label(Role::Tab, "Users and Groups")
@@ -119,16 +126,33 @@ pub fn users() -> Fixture {
 /// The app on its start page after the first read, with `changes` as the
 /// queue an earlier run left.
 fn restored(changes: ChangeSet) -> Fixture {
+    restored_with(changes, system(), Vec::new())
+}
+
+/// As [`restored`], with the system read as `probed` and the read's
+/// `issues`.
+fn restored_with(changes: ChangeSet, probed: Snapshot, issues: Vec<ProbeIssue>) -> Fixture {
+    restored_on(changes, probed, issues, Theme::Dark)
+}
+
+/// As [`restored_with`], drawn on `theme`.
+fn restored_on(
+    changes: ChangeSet,
+    probed: Snapshot,
+    issues: Vec<ProbeIssue>,
+    theme: Theme,
+) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let helper = Arc::new(Helper::default());
     let locks = Arc::<Helper>::clone(&helper);
-    let probed = system();
-    let mut harness = window(HEIGHT).build_eframe(move |cc| {
-        let probe = move || (probed.clone(), Vec::new());
+    let look = look_for(&runtime, theme);
+    let mut harness = window(HEIGHT).with_theme(theme).build_eframe(move |cc| {
+        let probe = move || (probed.clone(), issues.clone());
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::restored_in_memory(changes),
                 snapshot: Some(snapshot::spawn(
                     &handle,
@@ -213,4 +237,54 @@ fn a_new_group_shows_as_new_before_it_is_applied() {
 
     assert!(harness.query_by_label("New").is_some());
     assert!(harness.query_by_label("Don't add games").is_some());
+}
+
+#[test]
+fn the_password_groups_and_remove_dialogs_are_pictured() {
+    let mut fixture = users();
+    let harness = fixture.harness();
+
+    harness.get_by_label("More actions for ada").click();
+    harness.run();
+    harness.get_by_label("Set password…").click();
+    harness.run();
+    harness.snapshot("users/password_dark");
+    harness.key_press(egui::Key::Escape);
+    harness.run();
+
+    harness.get_by_label("More actions for ada").click();
+    harness.run();
+    harness.get_by_label("Groups…").click();
+    harness.run();
+    harness.snapshot("users/membership_dark");
+    harness.key_press(egui::Key::Escape);
+    harness.run();
+
+    harness.get_by_label("More actions for ada").click();
+    harness.run();
+    harness.get_by_label("Remove…").click();
+    harness.run();
+    harness.snapshot("users/remove_dark");
+}
+
+#[test]
+fn an_unread_account_list_says_so_on_the_page() {
+    let issue = ProbeIssue {
+        probe: Probe::Accounts,
+        error: ProbeError::fake("no bus"),
+    };
+
+    let mut fixture = restored_with(ChangeSet::default(), Snapshot::default(), vec![issue]);
+    let harness = fixture.harness();
+
+    harness
+        .get_by_role_and_label(Role::Tab, "Users and Groups")
+        .click();
+    step_until(harness, "the unread accounts", |harness| {
+        harness
+            .query_by_label("User accounts are not available")
+            .is_some()
+    });
+    settle(harness);
+    harness.snapshot("users/error_dark");
 }

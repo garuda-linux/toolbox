@@ -6,16 +6,14 @@ use std::path::Path;
 use toolbox_core::features::network::{
     HOTSPOT_PROGRAM, Refusal, plan_load, plan_ping, plan_start, plan_traceroute, plan_unload,
 };
-use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::Plan;
 
 use super::App;
 use crate::command::NetworkCommand;
-use crate::i18n;
 use crate::refused::Refused;
 
 impl App {
-    pub(super) fn run_network(&mut self, ctx: &egui::Context, command: NetworkCommand) {
+    pub(super) fn run_network(&mut self, command: NetworkCommand) {
         match command {
             NetworkCommand::StartService(unit) => {
                 if let Some(plan) = plan_start(unit) {
@@ -43,10 +41,11 @@ impl App {
                 let name = host.to_string();
                 self.run_for_network(plan_traceroute(host, hops), name);
             }
-            NetworkCommand::OpenHotspot => self.open_hotspot(ctx),
+            NetworkCommand::OpenHotspot => self.open_hotspot(),
             // The service takes these, see `hand_to_services`.
             NetworkCommand::Blacklist { module: _, on: _ }
             | NetworkCommand::ToggleHotspot
+            | NetworkCommand::TogglePciutils { wish: _ }
             | NetworkCommand::Refresh
             | NetworkCommand::SetRadio {
                 target: _,
@@ -67,16 +66,10 @@ impl App {
     }
 
     /// The tool asks for root itself, as Maintenance's tools do.
-    fn open_hotspot(&mut self, ctx: &egui::Context) {
-        let Some(launcher) = &self.launcher else {
-            return;
-        };
-
-        if let Err(error) = launcher.start(Path::new(HOTSPOT_PROGRAM), &[]) {
-            tracing::error!("cannot start the hotspot tool: {error}");
-            let reason = error.to_string();
-            let text = i18n::text_with(ctx, "network-hotspot-not-started", &[("reason", &reason)]);
-            self.toasts.add(ToastKind::Error, text);
+    /// A failed start is a toast from the launcher.
+    fn open_hotspot(&self) {
+        if let Some(launcher) = &self.launcher {
+            launcher.start(Path::new(HOTSPOT_PROGRAM), &[]);
         }
     }
 }

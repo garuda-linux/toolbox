@@ -37,6 +37,8 @@ common-plan-running = Changes are being applied. This waits until they are done.
 
 # The action of a banner that tells of a failed read.
 common-read-again = Read again
+# The name of a Read again button while a read runs.
+common-reading = Reading
 
 # The actions a row's menu may hold on any page.
 row-open-website = Open website
@@ -72,4 +74,3 @@ missing-catalog-copy = Copy { $label }
 missing-catalog-copied = Copied to the clipboard.
 # Shown after Quit was confirmed during a run, until the canceled run ends and the window closes.
 close-stopping-title = Stopping the run
-close-stopping-detail = The window closes once the run has stopped.

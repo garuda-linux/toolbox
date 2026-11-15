@@ -8,6 +8,7 @@ pub mod catalogs;
 pub mod command;
 pub mod configs;
 pub mod console;
+pub mod dates;
 pub mod desktop;
 pub mod home;
 pub mod i18n;

@@ -4,28 +4,55 @@
 //! first names and "+N more", the sonames of libraries wait behind
 //! "+N libraries".
 
+use std::collections::BTreeMap;
+
 use egui::{Label, Ui};
 use toolbox_core::features::packages::detail::{NAMES_SHOWN, by_kind, shown, target};
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_core::features::packages::{OptionalDependency, PackageDetails};
 use toolbox_gui_kit::fonts::{BODY, Weight};
+use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{minor_heading, rich, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::PackageName;
 
 use super::super::{Unfolded, text_line};
 use crate::i18n;
+use crate::packages::Details;
+
+/// The package each name in the details leads to, as the catalog answers.
+pub type Targets = BTreeMap<String, PackageName>;
+
+/// The targets of the shown details, keyed by them and the catalog they
+/// were resolved against.
+pub type TargetRows = RowCache<(Same<Details>, Option<Same<Catalog>>), Targets>;
+
+/// Resolves every name the details show once, as a provides lookup scans
+/// the installed packages.
+pub fn resolve(catalog: Option<&Catalog>, info: &PackageDetails) -> Targets {
+    let Some(catalog) = catalog else {
+        return Targets::new();
+    };
+
+    info.depends
+        .iter()
+        .chain(&info.required_by)
+        .map(String::as_str)
+        .chain(info.optional.iter().map(|value| value.name.as_str()))
+        .filter_map(|value| Some((value.to_owned(), target(catalog, value)?)))
+        .collect()
+}
 
 /// Returns the package whose name was clicked.
 pub fn show(
     ui: &mut Ui,
     unfolded: &mut Unfolded,
-    catalog: Option<&Catalog>,
+    targets: &Targets,
     info: &PackageDetails,
 ) -> Option<PackageName> {
     let mut opened = None;
     let gap = gap(ui);
-    let lookup = |value: &str| target(catalog?, value);
+    let lookup = |value: &str| targets.get(value).cloned();
 
     let depends = dependencies(ui, &info.depends, &lookup, unfolded);
 

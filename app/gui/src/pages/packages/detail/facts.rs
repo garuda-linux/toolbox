@@ -4,17 +4,16 @@
 //! `http` or `https` one.
 
 use egui::{Context, Ui};
-use toolbox_calendar::Utc;
 use toolbox_cli::output::size;
 use toolbox_core::features::packages::detail::web_address;
 use toolbox_core::features::packages::{InstallReason, PackageDetails};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{PropertyTexts, property_list, text_link};
 
-use crate::i18n;
 use crate::packages::Details;
 use crate::pages::packages::row::repository;
 use crate::pages::rows::Look;
+use crate::{dates, i18n};
 
 /// The facts of the shown details, keyed by them and the look.
 pub type FactRows = RowCache<(Same<Details>, Look), Vec<Fact>>;
@@ -30,6 +29,7 @@ pub enum Value {
     Plain(String),
     /// A version, which someone may paste into a bug report.
     Copied(String),
+    /// An address and the text that links to it, arrow included.
     Web(String, String),
 }
 
@@ -51,8 +51,7 @@ pub fn grid(ui: &mut Ui, facts: &[Fact]) {
                 Value::Plain(value) => list.row(&fact.label, value),
                 Value::Copied(value) => list.row_copied(&fact.label, value),
                 Value::Web(url, shown) => list.row_with(&fact.label, Some(url), move |cell| {
-                    let text = format!("{shown} ↗");
-                    if text_link(cell, &text, url).on_hover_text(url).clicked() {
+                    if text_link(cell, shown, url).on_hover_text(url).clicked() {
                         crate::links::open(cell.ctx(), url);
                     }
                 }),
@@ -111,7 +110,7 @@ pub fn facts(ctx: &Context, info: &PackageDetails) -> Vec<Fact> {
 pub fn web(url: &str) -> Value {
     web_address(url).map_or_else(
         || Value::Plain(url.to_owned()),
-        |shown| Value::Web(url.to_owned(), shown),
+        |shown| Value::Web(url.to_owned(), format!("{shown} ↗")),
     )
 }
 
@@ -131,17 +130,11 @@ pub fn installed(ctx: &Context, info: &PackageDetails) -> Vec<Fact> {
     };
 
     own.date
-        .map(|date| fact("packages-info-date", day(date)))
+        .map(|date| fact("packages-info-date", dates::day(ctx, date)))
         .into_iter()
         .chain([fact(
             "packages-info-reason",
             i18n::text(ctx, reason).into_owned(),
         )])
         .collect()
-}
-
-/// The day of `seconds` since the epoch, as `2025-01-10`, in UTC.
-pub fn day(seconds: i64) -> String {
-    let date = Utc::from_unix(u64::try_from(seconds).unwrap_or_default());
-    format!("{:04}-{:02}-{:02}", date.year, date.month, date.day)
 }

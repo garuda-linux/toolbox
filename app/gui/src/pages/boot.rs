@@ -22,7 +22,7 @@ use toolbox_plan::PackageName;
 use toolbox_services::boot_menu::Menu;
 use toolbox_system::{FailedProbes, Host, Probe};
 
-use super::header::refresh_header;
+use super::header::refresh_header_reading;
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::boot::Boot;
@@ -51,7 +51,9 @@ impl PageView for BootPage {
             "page-boot-subtitle"
         };
 
-        if refresh_header(ui, "page-boot", subtitle, "boot-refresh") {
+        let reading = context.service::<Boot>().reading();
+        let titles = ("page-boot", subtitle);
+        if refresh_header_reading(ui, titles, "boot-refresh", reading) {
             context.commands.send(BootCommand::Refresh);
         }
 

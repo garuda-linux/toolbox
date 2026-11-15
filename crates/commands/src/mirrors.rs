@@ -53,7 +53,7 @@ fn steps(
     }
 
     let quiet = confirm.json || out.quiet();
-    match spinner::while_working(quiet, RANKING, || ranking.rank()) {
+    match spinner::while_working(quiet, RANKING, || ranking.rank(&std::sync::Arc::default())) {
         Ok(mirrorlist) => carry_out(
             Plan::root(RootAction::InstallMirrorlist { mirrorlist }),
             out,

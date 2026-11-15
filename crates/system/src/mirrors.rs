@@ -9,6 +9,7 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
 use std::time::Duration;
 
 use toolbox_exec::{CaptureError, Environment, Policy, run_captured};
@@ -27,6 +28,8 @@ const KEPT_OUTPUT_BYTES: usize = 64 << 10;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum RankProblem {
     TimedOut,
+    /// The user stopped the ranking, so nothing is wrong.
+    Cancelled,
     NotStarted(String),
     Failed(String),
     Unreadable(String),
@@ -37,6 +40,7 @@ impl fmt::Display for RankProblem {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::TimedOut => f.write_str("rate-mirrors took too long"),
+            Self::Cancelled => f.write_str("rate-mirrors was stopped"),
             Self::NotStarted(reason) => write!(f, "cannot start rate-mirrors: {reason}"),
             Self::Failed(status) => write!(f, "rate-mirrors ended with {status}"),
             Self::Unreadable(reason) => write!(f, "cannot read the ranked mirrors: {reason}"),
@@ -49,7 +53,7 @@ impl RankProblem {
     /// What the system said, empty for a ranking that took too long.
     pub fn reason(&self) -> &str {
         match self {
-            Self::TimedOut => "",
+            Self::TimedOut | Self::Cancelled => "",
             Self::NotStarted(reason)
             | Self::Failed(reason)
             | Self::Unreadable(reason)
@@ -59,10 +63,11 @@ impl RankProblem {
 }
 
 pub trait MirrorRanking: Send + Sync {
-    /// Blocks for minutes, so call it off the GUI thread.
+    /// Blocks for minutes, so call it off the GUI thread. Setting `cancel`
+    /// kills rate-mirrors and returns [`RankProblem::Cancelled`].
     ///
     /// # Errors
-    fn rank(&self) -> Result<Mirrorlist, RankProblem>;
+    fn rank(&self, cancel: &Arc<AtomicBool>) -> Result<Mirrorlist, RankProblem>;
 }
 
 pub struct RateMirrors {
@@ -83,13 +88,17 @@ impl RateMirrors {
 }
 
 impl MirrorRanking for RateMirrors {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
-        rank_within(&self.program, RANKING_DEADLINE)
+    fn rank(&self, cancel: &Arc<AtomicBool>) -> Result<Mirrorlist, RankProblem> {
+        rank_within(&self.program, RANKING_DEADLINE, cancel)
     }
 }
 
 /// `deadline` is a parameter so tests need not wait minutes.
-fn rank_within(program: &Path, deadline: Duration) -> Result<Mirrorlist, RankProblem> {
+fn rank_within(
+    program: &Path,
+    deadline: Duration,
+    cancel: &Arc<AtomicBool>,
+) -> Result<Mirrorlist, RankProblem> {
     let folder = tempfile::tempdir().map_err(|error| RankProblem::NotStarted(error.to_string()))?;
     let file = folder.path().join("chaotic-mirrorlist");
     let mut command = Command::new(program);
@@ -101,14 +110,15 @@ fn rank_within(program: &Path, deadline: Duration) -> Result<Mirrorlist, RankPro
         Environment::Inherited,
         &[],
         &Policy::tail(KEPT_OUTPUT_BYTES).within(deadline),
-        &Arc::default(),
+        cancel,
     )
     .map_err(|error| match error {
         CaptureError::TimedOut => RankProblem::TimedOut,
+        CaptureError::Cancelled => RankProblem::Cancelled,
         CaptureError::Missing | CaptureError::Failed(_) => {
             RankProblem::NotStarted(error.to_string())
         }
-        CaptureError::Cancelled | CaptureError::TooLarge => RankProblem::Failed(error.to_string()),
+        CaptureError::TooLarge => RankProblem::Failed(error.to_string()),
     })?;
 
     if !exited.status.success() {

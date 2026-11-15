@@ -44,6 +44,7 @@ toast-queue-edited-outside = The queue was changed from the command line.
 # A program the app started, such as the installer or a Maintenance tool,
 # ended with an error. $name is its program name.
 toast-tool-failed = { $name } ended with an error. The log file says why.
+toast-tool-not-started = { $name } could not be started: { $reason }
 # After Copy name in a row menu.
 toast-copied = Copied “{ $name }” to the clipboard.
 

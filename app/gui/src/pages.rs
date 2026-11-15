@@ -68,11 +68,17 @@ use crate::page_service::{Provides, Services};
 use crate::settings::SettingsView;
 
 /// What every page reads, built each frame.
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "independent facts each page reads, not states of one thing"
+)]
 pub struct PageContext<'app> {
     /// Shared, so a page tells a new snapshot from the last by identity.
     pub snapshot: &'app Arc<Snapshot>,
     /// A snapshot came in. Before that nothing is read, which is no failure.
     pub probed: bool,
+    /// The system's state is read now, for a Read again that spins meanwhile.
+    pub snapshot_reading: bool,
     pub changes: &'app ChangeSet,
     pub revision: u64,
     pub catalogs: &'app Catalogs,

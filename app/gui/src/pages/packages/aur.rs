@@ -19,12 +19,11 @@ use toolbox_gui_kit::{UiExt as _, tokens};
 
 use self::row::AurRow;
 use super::PackagesPage;
-use super::detail::day;
 use crate::command::{PackagesCommand, UiCommand};
-use crate::i18n;
 use crate::packages::{Packages, Read};
 use crate::page::PageId;
 use crate::pages::PageContext;
+use crate::{dates, i18n};
 
 /// The places of the AUR rows under the search, once the copy is read.
 /// The chip asks for the copy the first time it shows, never before:
@@ -134,7 +133,7 @@ pub fn note(ui: &mut Ui, context: &PageContext<'_>) {
     let text = i18n::text_with(
         &ctx,
         "packages-aur-note",
-        &[("date", &day(catalog.downloaded()))],
+        &[("date", &dates::day(&ctx, catalog.downloaded()))],
     );
 
     let stale = catalog

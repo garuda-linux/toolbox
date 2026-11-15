@@ -98,6 +98,43 @@ fn minutes_outside_the_limits_are_held_to_them_with_a_note() {
 }
 
 #[test]
+fn a_letter_is_not_typed_into_the_minutes() {
+    let mut harness = page(Settings::default());
+    let field = || "Minutes between checks";
+
+    harness
+        .get_by_role_and_label(Role::TextInput, field())
+        .focus();
+    harness.run();
+    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
+    harness
+        .get_by_role_and_label(Role::TextInput, field())
+        .type_text("x");
+    harness.key_press(Key::Enter);
+    harness.run();
+
+    assert_eq!(sent(&harness), []);
+}
+
+#[test]
+fn an_empty_minutes_field_is_refused_with_the_note_and_keeps_the_setting() {
+    let mut harness = page(Settings::default());
+    let field = || "Minutes between checks";
+
+    harness
+        .get_by_role_and_label(Role::TextInput, field())
+        .focus();
+    harness.run();
+    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
+    harness.key_press(Key::Backspace);
+    harness.key_press(Key::Enter);
+    harness.run();
+
+    assert_eq!(sent(&harness), []);
+    assert!(harness.query_by_label_contains("so this is").is_some());
+}
+
+#[test]
 fn turning_the_switch_off_stops_the_checks() {
     let mut harness = page(Settings::default());
 

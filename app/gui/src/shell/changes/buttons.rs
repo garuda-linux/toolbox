@@ -1,5 +1,5 @@
-use toolbox_gui_kit::UiExt as _;
 use egui::Ui;
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, pill_button, pill_button_at_least, pill_width};
 
 use super::ChangesState;

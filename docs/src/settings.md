@@ -77,7 +77,7 @@ To go back to the desktop's colours, pick **System**.
 ### Start the app at login
 
 **Start at login** adds Garuda Toolbox to your desktop's autostart: a link
-named `org.garudalinux.toolbox.desktop` in `~/.config/autostart`. Turning it off
+named `garuda-toolbox.desktop` in `~/.config/autostart`. Turning it off
 removes the link again. It needs no password, and it only affects your
 user. The switch shows whether the link was there when the app started.
 After a boot into a Btrfs snapshot, the app does not start at login.

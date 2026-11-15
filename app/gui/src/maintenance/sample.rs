@@ -1,6 +1,9 @@
 //! The Chaotic-AUR mirrors of a self-test build's dry run. Release builds
 //! leave them out.
 
+use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
+
 use toolbox_plan::Mirrorlist;
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
@@ -15,7 +18,7 @@ const SAMPLE_MIRRORS: &str = "# Chaotic-AUR mirrors of the self-test, never rank
 pub struct SampleMirrors;
 
 impl MirrorRanking for SampleMirrors {
-    fn rank(&self) -> Result<Mirrorlist, RankProblem> {
+    fn rank(&self, _cancel: &Arc<AtomicBool>) -> Result<Mirrorlist, RankProblem> {
         Mirrorlist::new(SAMPLE_MIRRORS).map_err(|error| RankProblem::Invalid(error.to_string()))
     }
 }

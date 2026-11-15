@@ -117,12 +117,3 @@ fn a_cut_or_strange_line_is_left_out() {
         assert_eq!(history(broken, &package("htop")).len(), 0, "{broken:?}");
     }
 }
-
-#[test]
-fn the_time_shows_as_date_and_minute_in_the_log_s_own_zone() {
-    let line = entry("2026-11-08T17:35:15+0100", HistoryAction::Installed, "1");
-    let odd = entry("yesterday", HistoryAction::Installed, "1");
-
-    assert_eq!(line.shown_when(), "2026-11-08 17:35");
-    assert_eq!(odd.shown_when(), "yesterday");
-}

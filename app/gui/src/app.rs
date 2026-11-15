@@ -298,6 +298,7 @@ impl eframe::App for App {
         let context = PageContext {
             snapshot: &snapshot,
             probed: self.reading.get().is_some(),
+            snapshot_reading: self.reading.is_loading(),
             changes: self.queue.changes(),
             revision: self.queue.revision(),
             catalogs: &self.catalogs,
@@ -328,12 +329,13 @@ impl eframe::App for App {
             changes: &changes,
             changes_ui: &mut self.changes_ui,
             reading: &self.reading,
+            stopping: self.closing.stopping(),
             held,
             toasts: &mut self.toasts,
         };
 
         shell::show(ui, view, &self.sender);
-        self.ask_before_close(ui.ctx());
+        self.ask(ui.ctx());
     }
 
     /// eframe's default is a translucent grey, which shows at the edges

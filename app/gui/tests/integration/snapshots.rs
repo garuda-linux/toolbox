@@ -185,7 +185,16 @@ fn kernels_page() {
 }
 
 #[test]
-fn home_page() {
+fn kernels_title_line() {
+    let (mut harness, _runtime) = crate::kernels::kernels(crate::kernels::system(true));
+    harness.run();
+
+    harness.snapshot("kernels/title_line_dark");
+}
+
+/// The Home page with two updates, an AUR update, a last update 16 days
+/// ago and a low health note, as the Home snapshots show it.
+pub fn behind_home() -> toolbox_system::Status {
     use std::time::{Duration, SystemTime};
 
     use toolbox_system::{HealthIssue, HealthLevel};
@@ -202,8 +211,14 @@ fn home_page() {
         message: "The keyring is older than three months.".to_owned(),
         fix_available: true,
     }]);
+    status
+}
 
-    let (mut harness, _runtime, _power) = crate::home::home(crate::home::host(false, true), status);
+#[test]
+fn home_page() {
+    let (mut harness, _runtime, _power) =
+        crate::home::home(crate::home::host(false, true), behind_home());
+
     harness.snapshot("home/page_dark");
 }
 
@@ -357,4 +372,19 @@ fn no_unread_banner(harness: &Harness<'static, App>) {
             .query_by_label_contains("could not be read")
             .map(|node| format!("{:?}", node.accesskit_node()))
     );
+}
+
+#[test]
+fn about_community() {
+    let mut harness = app(Theme::Dark, Setup::default());
+    harness.get_by_label("About").click();
+    harness.run();
+    harness
+        .query_all_by_label("Telegram")
+        .next()
+        .unwrap()
+        .scroll_to_me();
+    harness.run();
+
+    harness.snapshot("about/community_dark");
 }

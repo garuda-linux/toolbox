@@ -69,6 +69,9 @@ ashpd = { version = "0.14", default-features = false, features = ["file_chooser"
 fluent-templates = "0.15"
 fluent-syntax = "0.12"
 freedesktop-icons = "0.4"
+icu_calendar = "2.4"
+icu_datetime = { version = "2.4", features = ["compiled_data"] }
+icu_locale_core = "2.4"
 fontdb = "0.24"
 notify = "8.2"
 unicode-width = "0.2"
@@ -78,6 +81,7 @@ close_fds = "0.3"
 egui_kittest = { version = "0.37", features = ["eframe", "snapshot", "wgpu"] }
 kittest = "0.5"
 image = { version = "0.25", default-features = false, features = ["gif", "ico", "png"] }
+dify = { version = "0.8", default-features = false }
 jxl-oxide = { version = "0.12", default-features = false, features = ["image"] }
 # Tracy 0.13.1, the profiler nixpkgs ships: the protocol must match.
 # tracing-tracy 0.11.4 alone would take a client of Tracy 0.14.

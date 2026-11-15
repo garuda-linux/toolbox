@@ -6,7 +6,7 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 use tokio::runtime::Runtime;
@@ -19,7 +19,8 @@ use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
 use toolbox_system::{BootMenuSource, Host, MenuRead};
 
 use crate::common::{Fixture, TALL, window};
-use crate::system::{first_read, shows, step_until};
+use crate::look::look_for;
+use crate::system::{first_read, settle, shows, step_until};
 
 /// `/etc/default/grub` of the Lima VM.
 const DEFAULTS: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
@@ -64,7 +65,12 @@ fn defaults() -> String {
 }
 
 pub fn app() -> Fixture {
-    app_with(system(), Arc::new(Source))
+    app_on(Theme::Dark)
+}
+
+/// The Boot Options page drawn on `theme`, with that theme's desktop look.
+pub fn app_on(theme: Theme) -> Fixture {
+    app_restoring_on(system(), Arc::new(Source), ChangeSet::default(), theme)
 }
 
 pub fn app_with(probed: Snapshot, menu: Arc<dyn BootMenuSource>) -> Fixture {
@@ -77,13 +83,25 @@ pub fn app_restoring(
     menu: Arc<dyn BootMenuSource>,
     changes: ChangeSet,
 ) -> Fixture {
+    app_restoring_on(probed, menu, changes, Theme::Dark)
+}
+
+/// As [`app_restoring`], drawn on `theme`.
+pub fn app_restoring_on(
+    probed: Snapshot,
+    menu: Arc<dyn BootMenuSource>,
+    changes: ChangeSet,
+    theme: Theme,
+) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let look = look_for(&runtime, theme);
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (probed.clone(), Vec::new());
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::restored_in_memory(changes),
                 snapshot: Some(snapshot::spawn(
                     &handle,
@@ -128,6 +146,8 @@ fn the_kernels_page_proposes_a_kernel_as_the_default() {
         .get_by_label("Set linux-lts as the default boot entry")
         .click();
     step_until(harness, "the offer", shows("Queue as default"));
+    settle(harness);
+    harness.snapshot("boot/proposal_dark");
     harness.get_by_label("Queue as default").click();
     harness.run();
 

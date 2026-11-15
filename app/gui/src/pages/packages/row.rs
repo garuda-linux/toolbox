@@ -1,4 +1,3 @@
-use toolbox_gui_kit::UiExt as _;
 use std::borrow::Cow;
 
 use egui::{Context, Label, Sense, Ui, Vec2};
@@ -9,9 +8,9 @@ use toolbox_core::features::packages::{IndexEntry, InstallReason, Origin};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowState, Tone, named_pill_button, pill_width, rich, row_height,
-    split_row, status_dot, tag, text_block_height, title_line,
+    split_row_in, status_dot, tag, text_block_height, title_line,
 };
-use toolbox_gui_kit::{icons, tokens};
+use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::PackageName;
 
 use super::{PackagesPage, remove};
@@ -145,12 +144,13 @@ where
     let button = button_of(ui.ctx(), standing);
     let width = pill_width(ui, &button.0) + ui.spacing().item_spacing.x + CHEVRON;
 
-    // The Installed chip says it of every row already.
-    let word = word_of::<R>(standing)
-        .filter(|(id, _)| !(page.filter == Filter::Installed && *id == INSTALLED));
+    // The Installed, Updates and Orphans chips say it of every row already.
+    let word =
+        word_of::<R>(standing).filter(|(id, _)| !(*id == INSTALLED && says_installed(page.filter)));
 
-    split_row(
+    split_row_in(
         ui,
+        state.row,
         width,
         |ui| {
             ui.horizontal_top(|ui| {
@@ -176,6 +176,15 @@ where
     );
 
     state.toggle
+}
+
+/// Whether the picked chip lists installed packages only, so their state
+/// word would repeat it.
+const fn says_installed(filter: Filter) -> bool {
+    matches!(
+        filter,
+        Filter::Installed | Filter::Updates | Filter::Orphans
+    )
 }
 
 /// Tells that the row opens the package's page, as a link row's does.

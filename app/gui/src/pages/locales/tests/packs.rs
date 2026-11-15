@@ -13,10 +13,10 @@ fn packs_tab() -> Shown {
 }
 
 fn search(harness: &mut Shown, text: &str) {
-    harness.get_by_label("Search language packs").click();
+    harness.get_by_label("Search locales and packs").click();
     harness.run();
     harness
-        .get_by_label("Search language packs")
+        .get_by_label("Search locales and packs")
         .type_text(text);
     harness.run();
 }
@@ -28,7 +28,7 @@ fn the_packs_search_finds_a_pack_by_its_program() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::CheckBox, "firefox-i18n-en-us")
+            .query_by_role_and_label(Role::Button, "Install firefox-i18n-en-us")
             .is_some()
     );
 }
@@ -48,7 +48,7 @@ fn a_packs_search_without_a_match_offers_to_clear_it() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::CheckBox, "firefox-i18n-en-us")
+            .query_by_role_and_label(Role::Button, "Install firefox-i18n-en-us")
             .is_some()
     );
 }
@@ -90,9 +90,11 @@ fn a_locale_names_its_character_set_once() {
 #[test]
 fn a_locale_search_without_a_match_offers_to_clear_it() {
     let mut harness = page(system());
-    harness.get_by_label("Search locales").click();
+    harness.get_by_label("Search locales and packs").click();
     harness.run();
-    harness.get_by_label("Search locales").type_text("klingon");
+    harness
+        .get_by_label("Search locales and packs")
+        .type_text("klingon");
     harness.run();
 
     harness

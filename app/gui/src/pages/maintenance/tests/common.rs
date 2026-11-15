@@ -4,7 +4,7 @@ use toolbox_core::features::maintenance::page::LaunchCause;
 use toolbox_core::features::maintenance::{self, Operation, Task};
 use toolbox_plan::Toggle;
 
-use super::{open_tab, page, programs, sent, with};
+use super::{open_tab, page, pending, programs, sent, with};
 use crate::command::{Command, MaintenanceCommand};
 use crate::maintenance::{Maintenance, MaintenanceProblem};
 use crate::pages::PageView as _;
@@ -102,7 +102,7 @@ fn a_queued_operation_offers_to_take_it_back() {
 #[test]
 fn before_the_programs_are_found_placeholder_rows_wait() {
     for (tab, title) in [("Common", "Tools"), ("Repairs", "Repairs")] {
-        let mut harness = page(PageFixture::default());
+        let mut harness = pending(PageFixture::default());
         open_tab(&mut harness, tab);
 
         let waiting = harness.get_by_role_and_label(Role::ProgressIndicator, title);

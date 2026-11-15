@@ -87,7 +87,9 @@ fn a_line_with_words_the_page_cannot_write_is_kept_as_text_only() {
 
 #[test]
 fn the_image_and_the_live_iso_run_from_no_snapshot() {
-    assert!(!booted_from_snapshot(toolbox_plan::testing::host::PROC_CMDLINE));
+    assert!(!booted_from_snapshot(
+        toolbox_plan::testing::host::PROC_CMDLINE
+    ));
     assert!(!booted_from_snapshot(LIVE_CMDLINE));
 }
 

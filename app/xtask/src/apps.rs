@@ -28,10 +28,10 @@ pub const CATEGORIES: [Category; 8] = [
     Category::new("games", "Games", "applications-games"),
     Category::new("internet", "Internet", "applications-internet"),
     Category::new("multimedia", "Multimedia", "applications-multimedia"),
-    Category::new("other", "Other", "applications-other"),
     Category::new("science", "Science", "applications-science"),
     Category::new("security", "Security", "preferences-security"),
     Category::new("utilities", "Utilities", "applications-utilities"),
+    Category::new("other", "Other", "applications-other"),
 ];
 
 /// The apps `wiki-sync` found, per category in [`CATEGORIES`] order.

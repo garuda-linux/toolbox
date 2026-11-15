@@ -4531,6 +4531,9 @@
     "cli-driver-unavailable": {
       "string": "die Treiber dieses Systems konnten nicht gelesen werden"
     },
+    "cli-driver-package": {
+      "string": "die Paketregeln behalten dieses Paket installiert"
+    },
     "cli-busy": {
       "string": "es werden noch andere Änderungen übernommen, versuche es erneut, sobald sie fertig sind"
     },
@@ -4596,6 +4599,9 @@
     "search-clear": {
       "string": "Suche leeren"
     },
+    "search-nothing-matches": {
+      "string": "Nichts passt zu „{search}“"
+    },
     "dialog-close": {
       "string": "Schließen"
     },
@@ -4634,6 +4640,9 @@
     },
     "common-read-again": {
       "string": "Neu einlesen"
+    },
+    "common-reading": {
+      "string": "Wird eingelesen"
     },
     "row-open-website": {
       "string": "Website öffnen"
@@ -4700,13 +4709,6 @@
     },
     "close-stopping-title": {
       "string": "Vorgang wird abgebrochen"
-    },
-    "close-stopping-detail": {
-      "string": "Das Fenster schließt sich, sobald der Vorgang beendet ist."
-    },
-    "search-nothing-matches": {
-      "string": "Nichts passt zu „{search}“",
-      "developer_comment": "The title of a list that the search emptied, with the search as typed."
     }
   },
   "configs": {
@@ -5826,16 +5828,10 @@
       "string": "Wird beim Übernehmen geändert"
     },
     "locales-search": {
-      "string": "Locales durchsuchen"
+      "string": "Locales und Pakete durchsuchen"
     },
     "locales-search-hint": {
-      "string": "Locales durchsuchen…"
-    },
-    "locales-packs-search": {
-      "string": "Sprachpakete durchsuchen"
-    },
-    "locales-packs-search-hint": {
-      "string": "Sprachpakete durchsuchen…"
+      "string": "Locales und Pakete durchsuchen…"
     },
     "locales-filter-utf8": {
       "string": "Nur UTF-8"
@@ -6067,6 +6063,9 @@
     "maintenance-install-open": {
       "string": "Installieren und öffnen…"
     },
+    "maintenance-not-installed": {
+      "string": "Nicht installiert"
+    },
     "maintenance-tool-missing": {
       "string": "Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug."
     },
@@ -6077,7 +6076,10 @@
       "string": "Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist."
     },
     "maintenance-ranking-progress": {
-      "string": "Spiegelserver werden bewertet…"
+      "string": "Spiegelserver werden bewertet, {time}"
+    },
+    "maintenance-ranking-cancel": {
+      "string": "Bewertung abbrechen"
     },
     "maintenance-tool-arch-mirrors": {
       "string": "Arch-Spiegelserver aktualisieren"
@@ -6108,15 +6110,6 @@
     },
     "maintenance-tool-merge-pacdiff-detail": {
       "string": ".pacnew- und .pacsave-Dateien nebeneinander vergleichen und zusammenführen. Updates legen sie neben Konfigurationsdateien ab, die du geändert hast."
-    },
-    "maintenance-problem-launch-missing": {
-      "string": "{tool} konnte nicht gestartet werden, weil es nicht installiert ist."
-    },
-    "maintenance-problem-launch-denied": {
-      "string": "{tool} konnte nicht gestartet werden, weil dieses Konto es nicht ausführen darf."
-    },
-    "maintenance-problem-launch": {
-      "string": "{tool} konnte nicht gestartet werden: {reason}"
     },
     "maintenance-problem-launch-absent": {
       "string": "Die Installation ist fertig, aber {reason} fehlt, daher wurde {tool} nicht gestartet."
@@ -6264,10 +6257,6 @@
     },
     "maintenance-repair-needs": {
       "string": "Benötigt {package}"
-    },
-    "maintenance-not-installed": {
-      "string": "Nicht installiert",
-      "developer_comment": "The dot beside the title of a tool that is not installed."
     }
   },
   "network": {
@@ -6664,8 +6653,47 @@
     "network-hotspot-unknown": {
       "string": "Die installierten Pakete ließen sich nicht lesen. Daher ist unklar, ob das Hotspot-Werkzeug installiert ist. „Neu einlesen“ versucht es erneut."
     },
-    "network-hotspot-not-started": {
-      "string": "Das Hotspot-Werkzeug konnte nicht gestartet werden: {reason}"
+    "network-copy": {
+      "string": "{label} kopieren"
+    },
+    "network-card-ipv4": {
+      "string": "IPv4"
+    },
+    "network-card-ipv6": {
+      "string": "IPv6"
+    },
+    "network-card-dns": {
+      "string": "DNS"
+    },
+    "network-card-mac": {
+      "string": "MAC"
+    },
+    "network-card-speed": {
+      "string": "Geschwindigkeit"
+    },
+    "network-card-ssid": {
+      "string": "SSID"
+    },
+    "network-card-signal": {
+      "string": "Signal"
+    },
+    "network-speed": {
+      "string": "{mbps} Mb/s"
+    },
+    "network-signal": {
+      "string": "{word} ({percent} %)"
+    },
+    "network-signal-excellent": {
+      "string": "Ausgezeichnet"
+    },
+    "network-signal-good": {
+      "string": "Gut"
+    },
+    "network-signal-fair": {
+      "string": "Mittel"
+    },
+    "network-signal-weak": {
+      "string": "Schwach"
     }
   },
   "packages": {
@@ -7892,6 +7920,9 @@
     "toast-tool-failed": {
       "string": "{name} wurde mit einem Fehler beendet. Details stehen in der Logdatei."
     },
+    "toast-tool-not-started": {
+      "string": "{name} konnte nicht gestartet werden: {reason}"
+    },
     "toast-copied": {
       "string": "„{name}“ in die Zwischenablage kopiert."
     },
@@ -8170,6 +8201,9 @@
     },
     "tweaks-flag-no-check-space-description": {
       "string": "Prüft vor dem Installieren von Paketen nicht, ob genug Speicherplatz frei ist."
+    },
+    "tweaks-not-read": {
+      "string": "Unbekannt"
     }
   },
   "users": {

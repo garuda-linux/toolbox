@@ -4,7 +4,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use egui::accesskit::Role;
-use egui::{Key, Modifiers};
+use egui::{Key, Modifiers, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use tokio::runtime::Runtime;
@@ -18,6 +18,7 @@ use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, UserName, WifiBacke
 
 use crate::common::{TALL, type_into, window};
 use crate::discover::source_catalogs;
+use crate::look::look_for;
 use crate::system::first_read;
 
 fn user() -> UserName {
@@ -51,15 +52,22 @@ pub fn system() -> Snapshot {
 
 /// The app on System Tweaks after the first read of `system`.
 pub fn tweaks(system: Snapshot) -> (Harness<'static, App>, Runtime) {
+    tweaks_on(system, Theme::Dark)
+}
+
+/// The System Tweaks page drawn on `theme`, with that theme's desktop look.
+pub fn tweaks_on(system: Snapshot, theme: Theme) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let catalogs = source_catalogs();
+    let look = look_for(&runtime, theme);
 
-    let mut harness = window(TALL).build_eframe(move |cc| {
+    let mut harness = window(TALL).with_theme(theme).build_eframe(move |cc| {
         let probe = move || (system.clone(), Vec::new());
         App::new(
             cc,
             Setup {
+                look,
                 queue: Queue::in_memory(ChangeSet::default()),
                 snapshot: Some(snapshot::spawn(
                     &handle,

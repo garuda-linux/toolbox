@@ -6,7 +6,7 @@ use toolbox_core::features::users::view::{self, Shown};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, chip, empty_state, pill_button, rich,
+    ButtonKind, ListItem, RowHeights, RowList, chip, empty_state_with, pill_button, rich,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -162,8 +162,11 @@ fn nobody(ui: &mut Ui, shown: &mut Shown) {
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     if shown.user_search.is_empty() {
         let detail = text("users-none-regular-detail");
-        empty_state(ui, icons::USER_OTHERS, &text("users-none-regular"), &detail);
-        if pill_button(ui, &text("users-show-all"), ButtonKind::Soft).clicked() {
+        let show_all = text("users-show-all");
+        let title = text("users-none-regular");
+        let asked = empty_state_with(ui, icons::USER_OTHERS, &title, &detail, Some(&show_all));
+
+        if asked.is_some_and(|button| button.clicked()) {
             shown.regular_only = false;
         }
 

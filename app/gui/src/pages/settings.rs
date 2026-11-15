@@ -54,7 +54,12 @@ impl PageView for SettingsPage {
         card(ui, |ui| {
             language(ui, &view, &send);
             theme(ui, &view, &send);
-            let schemes = (&context.catalogs.colour_schemes, &view.settings.colours);
+            let schemes = (
+                &context.catalogs.colour_schemes,
+                &view.settings.colours,
+                view.desktop,
+            );
+
             schemes::scheme(ui, SchemeMode::Dark, schemes, &send);
             schemes::scheme(ui, SchemeMode::Light, schemes, &send);
             motion(ui, &view, &send);

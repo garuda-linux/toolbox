@@ -1,13 +1,12 @@
 //! A row of a settings card: the words at the left, the control at the
 //! right or below on a narrow window.
 
-use toolbox_gui_kit::UiExt as _;
 use egui::{Label, Sense, Ui, UiBuilder};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
-use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{
     Tone, card_row, queued_tag, rich, split_row, status_dot, switch, title_line,
 };
+use toolbox_gui_kit::{UiExt as _, tokens};
 
 /// Room for a switch at a row's right, a card gap apart from the words.
 const SWITCH_ROOM: f32 = super::rows::SWITCH_WIDTH + tokens::Sizes::DEFAULT.card_gap;

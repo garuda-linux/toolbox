@@ -11,8 +11,9 @@ use toolbox_core::features::packages::{OptionalDependency, PackageDetails};
 use toolbox_plan::PackageName;
 
 use super::super::super::Unfolded;
-use super::super::facts::{Fact, Value, day, grid, installed, web};
+use super::super::facts::{Fact, Value, grid, installed, web};
 use super::super::relations::{dependencies, gap, names, optional};
+use crate::dates::day;
 use crate::i18n;
 
 const AUR_HOST: &str = "aur.archlinux.org";
@@ -42,12 +43,12 @@ fn facts(ctx: &Context, entry: &AurPackage, local: Option<&PackageDetails>) -> V
             "packages-aur-popularity",
             format!("{:.2}", entry.popularity),
         ),
-        plain("packages-aur-submitted", day(entry.first_submitted)),
-        plain("packages-aur-updated", day(entry.last_modified)),
+        plain("packages-aur-submitted", day(ctx, entry.first_submitted)),
+        plain("packages-aur-updated", day(ctx, entry.last_modified)),
     ];
 
     if let Some(flagged) = entry.out_of_date {
-        facts.push(plain("packages-aur-out-of-date-since", day(flagged)));
+        facts.push(plain("packages-aur-out-of-date-since", day(ctx, flagged)));
     }
 
     if !entry.licenses.is_empty() {
@@ -63,7 +64,7 @@ fn facts(ctx: &Context, entry: &AurPackage, local: Option<&PackageDetails>) -> V
     let page = package_page(&entry.name);
     facts.push(fact(
         "packages-aur-page",
-        Value::Web(page, AUR_HOST.to_owned()),
+        Value::Web(page, format!("{AUR_HOST} ↗")),
     ));
 
     if let Some(info) = local {

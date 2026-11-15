@@ -1413,7 +1413,7 @@
       "string": "Gamemode"
     },
     "catalog-gaming-gamemode-description": {
-      "string": "A daemon/lib combo that allows games to request a set of optimizations be temporarily applied to the host OS"
+      "string": "A daemon/lib combo that allows games to request a set of optimisations be temporarily applied to the host OS"
     },
     "catalog-gaming-gamescope-session-steam-git": {
       "string": "Gamescope session (Steam)"
@@ -4552,6 +4552,9 @@
     "cli-driver-unavailable": {
       "string": "the drivers of this system could not be read"
     },
+    "cli-driver-package": {
+      "string": "the package rules keep this package installed"
+    },
     "cli-busy": {
       "string": "other changes are still being applied, try again once they are done",
       "developer_comment": "A change refused because other changes are still being applied."
@@ -4671,6 +4674,10 @@
       "string": "Read again",
       "developer_comment": "The action of a banner that tells of a failed read."
     },
+    "common-reading": {
+      "string": "Reading",
+      "developer_comment": "The name of a Read again button while a read runs."
+    },
     "row-open-website": {
       "string": "Open website",
       "developer_comment": "The actions a row's menu may hold on any page."
@@ -4746,9 +4753,6 @@
     "close-stopping-title": {
       "string": "Stopping the run",
       "developer_comment": "Shown after Quit was confirmed during a run, until the canceled run ends and the window closes."
-    },
-    "close-stopping-detail": {
-      "string": "The window closes once the run has stopped."
     }
   },
   "configs": {
@@ -5911,16 +5915,10 @@
       "string": "Changes with Apply"
     },
     "locales-search": {
-      "string": "Search locales"
+      "string": "Search locales and packs"
     },
     "locales-search-hint": {
-      "string": "Search locales…"
-    },
-    "locales-packs-search": {
-      "string": "Search language packs"
-    },
-    "locales-packs-search-hint": {
-      "string": "Search language packs…"
+      "string": "Search locales and packs…"
     },
     "locales-filter-utf8": {
       "string": "UTF-8 only"
@@ -6167,7 +6165,10 @@
       "string": "Testing the mirrors. This takes up to five minutes. The Console opens when the new list is ready."
     },
     "maintenance-ranking-progress": {
-      "string": "Ranking the mirrors…"
+      "string": "Ranking mirrors, {time}"
+    },
+    "maintenance-ranking-cancel": {
+      "string": "Stop ranking"
     },
     "maintenance-tool-arch-mirrors": {
       "string": "Refresh Arch mirrors"
@@ -6199,18 +6200,9 @@
     "maintenance-tool-merge-pacdiff-detail": {
       "string": "Compare and merge .pacnew and .pacsave files side by side. An update leaves them beside a config file you changed, with its own new version."
     },
-    "maintenance-problem-launch-missing": {
-      "string": "{tool} could not be started because it is not installed.",
-      "developer_comment": "Why a tool did not start or the mirrors were not ranked. $tool is the\ntool's name, $reason the system's own words."
-    },
-    "maintenance-problem-launch-denied": {
-      "string": "{tool} could not be started because this account may not run it."
-    },
-    "maintenance-problem-launch": {
-      "string": "{tool} could not be started: {reason}"
-    },
     "maintenance-problem-launch-absent": {
-      "string": "The install ended, but {reason} is not there, so {tool} did not start."
+      "string": "The install ended, but {reason} is not there, so {tool} did not start.",
+      "developer_comment": "Why a tool did not start or the mirrors were not ranked. $tool is the\ntool's name, $reason the system's own words."
     },
     "maintenance-problem-mirrors-timeout": {
       "string": "Ranking the Chaotic-AUR mirrors took longer than five minutes and was stopped. The list of mirrors is unchanged."
@@ -6756,10 +6748,6 @@
     },
     "network-hotspot-unknown": {
       "string": "The installed packages could not be read, so it is not known whether the hotspot tool is installed. Read again reads them once more."
-    },
-    "network-hotspot-not-started": {
-      "string": "The hotspot tool could not be started: {reason}",
-      "developer_comment": "$reason is the system's own words."
     },
     "network-copy": {
       "string": "Copy {label}",
@@ -8060,6 +8048,9 @@
     "toast-tool-failed": {
       "string": "{name} ended with an error. The log file says why.",
       "developer_comment": "A program the app started, such as the installer or a Maintenance tool,\nended with an error. $name is its program name."
+    },
+    "toast-tool-not-started": {
+      "string": "{name} could not be started: {reason}"
     },
     "toast-copied": {
       "string": "Copied “{name}” to the clipboard.",

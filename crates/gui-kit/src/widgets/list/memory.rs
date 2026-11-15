@@ -1,14 +1,15 @@
 //! What a list keeps of its rows between frames: one struct per row id,
-//! dropped once the row left the list's items, with the marks the row's
-//! ui left under its id.
+//! holding the sizes and marks the row's widgets left under its id. The
+//! list drops the struct of a row once the row left its items.
 
 use std::hash::{DefaultHasher, Hash as _, Hasher as _};
 
-use egui::{Id, IdSet, Ui};
+use egui::{Context, Id, IdSet, Ui};
 
-use super::super::card::forget_raised;
 use super::{ListItem as _, Rows, row_id};
-use crate::motion;
+
+/// One size a row keeps for the next frame, as a field of [`RowMemory`].
+pub type Size = fn(&mut RowMemory) -> &mut Option<f32>;
 
 /// What one row keeps between frames.
 #[derive(Clone, Copy, Debug, Default)]
@@ -17,6 +18,20 @@ pub struct RowMemory {
     pub height: Option<f32>,
     /// How tall the content of a fixed height row was, to centre it.
     pub content: Option<f32>,
+    /// Whether the row's hover fill is on, so a Soft button on it reads
+    /// as on a raised surface.
+    pub raised: Option<bool>,
+    /// When a key last changed what lies inside the row, so its switch
+    /// jumps instead of sliding.
+    pub keyboard: Option<f64>,
+    /// The width and height of the row's actions and its words.
+    pub actions_width: Option<f32>,
+    pub actions_height: Option<f32>,
+    pub words: Option<f32>,
+    /// The width of the controls at the end of the row's line.
+    pub trailing: Option<f32>,
+    /// The text and controls of a split row, see `split_row`.
+    pub split: Option<[f32; 4]>,
 }
 
 /// The rows of one list that keep memory, and the item set they were
@@ -32,9 +47,16 @@ pub fn get(ui: &Ui, row: Id) -> RowMemory {
         .unwrap_or_default()
 }
 
+/// Changes what `row` keeps, from any ui or context.
+pub fn write(ctx: &Context, row: Id, change: impl FnOnce(&mut RowMemory)) {
+    ctx.data_mut(|data| change(data.get_temp_mut_or_default::<RowMemory>(memory_id(row))));
+}
+
+/// [`write`] for a row of `list`, which the list then sweeps with the rest of
+/// its rows.
 pub fn update(ui: &Ui, (list, row): (Id, Id), change: impl FnOnce(&mut RowMemory)) {
+    write(ui.ctx(), row, change);
     ui.data_mut(|data| {
-        change(data.get_temp_mut_or_default::<RowMemory>(memory_id(row)));
         data.get_temp_mut_or_default::<Kept>(kept_id(list))
             .rows
             .insert(row);
@@ -77,11 +99,6 @@ where
             .rows
             .extend(stay);
     });
-
-    for row in gone {
-        forget_raised(ui, row);
-        motion::forget_keyboard(ui.ctx(), row);
-    }
 }
 
 fn fingerprint<R>(items: &R) -> u64
